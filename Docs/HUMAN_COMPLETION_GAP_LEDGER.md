@@ -157,6 +157,20 @@ component contains at least 99.4% of labelled voxels. These are automatic
 source-mask topology measurements only: they establish neither vessel lumens,
 individual muscle identities, skin layers, nor Numi anatomy.
 
+The [paired-kidney geometry audit](HEALTHY_TOTAL_BODY_CT_PAIRED_KIDNEY_GEOMETRY_20261003.md)
+resolves each aggregate Kidney label into its two 26-connected components in
+all 30 scans. The component centroids are 105–168 mm apart laterally in their
+own RAS+ frames, with a median source-mask occupancy balance of 0.947 between
+the smaller and larger component. These remain external automatic mask
+measurements; cohort-to-Numi registration, expert segmentation review, and
+physical kidney volume and mechanics remain open.
+
+The [Psoas component audit](HEALTHY_TOTAL_BODY_CT_PSOAS_COMPONENTS_20261003.md)
+shows that scan 024's third 26-connected island has 37 voxels (0.0201% of its
+label), while the other 29 cohort masks have two components. This narrows the
+source-mask exception without deciding whether it is a segmentation defect;
+individual muscle identity, subject binding and mechanics remain open.
+
 ## HCM1 source activation map import — 2026-10-03
 
 The [Rodero-2026 HCM1 importer](CARDIAC_RODERO26_HCM_SOURCE_ACTIVATION_20261003.md)

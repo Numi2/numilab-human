@@ -1,0 +1,2451 @@
+{
+  "boundary": "Automatic external CT Psoas source-mask component geometry only. RAS+ centroid ordering and voxel occupancy do not establish named muscle identity, clinical segmentation accuracy, physical volume, Numi subject binding, or mechanics.",
+  "counts": {
+    "measured_scan_count": 30,
+    "more_than_three_component_scan_count": 0,
+    "scan_count": 30,
+    "three_component_scan_count": 1,
+    "two_component_scan_count": 29
+  },
+  "distributions": {
+    "extra_component_smallest_fraction_among_exception_scans": {
+      "maximum": 0.00020118208065770228,
+      "median": 0.00020118208065770228,
+      "minimum": 0.00020118208065770228
+    },
+    "full26_component_count": {
+      "maximum": 3.0,
+      "median": 2.0,
+      "minimum": 2.0
+    },
+    "two_largest_component_balance_ratio": {
+      "maximum": 0.998294152140306,
+      "median": 0.9624042124318624,
+      "minimum": 0.8522045579136972
+    }
+  },
+  "exception_scans": [
+    {
+      "component_count": 3,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -30.08286692458057,
+            -43.09895226903498,
+            -736.7382963204068
+          ],
+          "centroid_voxel_center_ijk": [
+            286.3048557307705,
+            211.36667287650818,
+            515.8443229263695
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.496174821790738,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 203.98811457130248,
+          "voxel_count": 91253
+        },
+        {
+          "centroid_ras_mm": [
+            -24.84955658783781,
+            -56.44267314189187,
+            -597.1271129685479
+          ],
+          "centroid_voxel_center_ijk": [
+            280.94594594594594,
+            197.7027027027027,
+            575.4054054054054
+          ],
+          "component_id": 3,
+          "fraction_of_label_voxels": 0.00020118208065770228,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 0.08271026968031947,
+          "voxel_count": 37
+        },
+        {
+          "centroid_ras_mm": [
+            68.86453625348184,
+            -49.06029621591017,
+            -729.7812226943815
+          ],
+          "centroid_voxel_center_ijk": [
+            184.98271487643458,
+            205.26225667490797,
+            518.812357621757
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5036239961286043,
+          "ras_x_order": 3,
+          "source_mask_occupancy_ml": 207.05062996216841,
+          "voxel_count": 92623
+        }
+      ],
+      "scan_id": "024",
+      "smallest_component_fraction_of_label_voxels": 0.00020118208065770228
+    }
+  ],
+  "method": {
+    "component_centroids": "occupied voxel-centre means transformed through each scan's NIfTI affine",
+    "component_order": "components are ranked by RAS+ X for reporting; this does not confer named muscle or clinical laterality",
+    "connectivity": "full26",
+    "label_id": 36,
+    "label_name": "Psoas",
+    "no_cross_participant_coordinate_pooling": true,
+    "occupancy": "source label voxel count multiplied by affine determinant, expressed in mL"
+  },
+  "predicate_source_sha256": {
+    "healthy_total_body_ct_paired_kidney_audit.py": "075f642e34319cb6ce3654275bf65e2161f005ca71ae8c98ced2ba8b7ffa01f8",
+    "healthy_total_body_ct_psoas_component_audit.py": "f4389464ddb997026cbee1a7ec6f6934d5bf1b20c568b919ffbce6574bce291b",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9"
+  },
+  "qualification": {
+    "clinical_segmentation_accuracy": false,
+    "individual_muscle_identity": false,
+    "muscle_mechanics": false,
+    "numi_subject_binding": false,
+    "physical_muscle_volume": false,
+    "source_label_component_geometry_measured": true
+  },
+  "rows": [
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -47.59804429951123,
+            -55.332934397261056,
+            1753.565993401665
+          ],
+          "centroid_voxel_center_ijk": [
+            304.2403973626995,
+            198.83907517720468,
+            487.5773779011189
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.47561918853933716,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 126.46400234120847,
+          "voxel_count": 56573
+        },
+        {
+          "centroid_ras_mm": [
+            45.96462668392172,
+            -57.030925903936804,
+            1758.063281075117
+          ],
+          "centroid_voxel_center_ijk": [
+            208.43222227566415,
+            197.10033187436872,
+            489.4960159043176
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5243808114606628,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 139.42939596677203,
+          "voxel_count": 62373
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-001.nii.gz",
+      "nifti_uncompressed_sha256": "ae91e4f6dd3a10fa1aea69dcafc82ff2324992fd5305d4e169eb077c80bf859d",
+      "scan_id": "001",
+      "smallest_component_fraction_of_label_voxels": 0.47561918853933716,
+      "source_label_voxel_count": 118946,
+      "total_source_mask_occupancy_ml": 265.8933983079805,
+      "two_largest_component_balance_ratio": 0.9070110464463791,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          610.6845703125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -49.84693785224272,
+            -69.27270531598208,
+            1798.02669126578
+          ],
+          "centroid_voxel_center_ijk": [
+            306.5432643606965,
+            184.56474975643434,
+            506.54525159850056
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5134466308884914,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 346.464378040082,
+          "voxel_count": 154989
+        },
+        {
+          "centroid_ras_mm": [
+            52.95276193160154,
+            -72.79522386460738,
+            1798.094317649706
+          ],
+          "centroid_voxel_center_ijk": [
+            201.27637178204003,
+            180.95769076264205,
+            506.57410244364104
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.48655336911150865,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 328.3172977896811,
+          "voxel_count": 146871
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-002.nii.gz",
+      "nifti_uncompressed_sha256": "e92bab5d759e6babdc1b05b2be6aab62d2e070dafb860dd4663ec2efc4fd1458",
+      "scan_id": "002",
+      "smallest_component_fraction_of_label_voxels": 0.48655336911150865,
+      "source_label_voxel_count": 301860,
+      "total_source_mask_occupancy_ml": 674.781675829763,
+      "two_largest_component_balance_ratio": 0.9476220893095639,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          610.6845703125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "cf220736c292ad33418577dca303d9bb51363efda2b84107d8261c2b42b0871a",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -42.91687804613548,
+            -9.293046393807117,
+            1659.9024446247627
+          ],
+          "centroid_voxel_center_ijk": [
+            299.4468831192427,
+            245.9839204927415,
+            485.6908192372681
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.521696682464455,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 123.0348792685163,
+          "voxel_count": 55039
+        },
+        {
+          "centroid_ras_mm": [
+            36.26397621740057,
+            -9.200861417109252,
+            1665.1678661708327
+          ],
+          "centroid_voxel_center_ijk": [
+            218.3656883533818,
+            246.07831790888014,
+            487.93715939042033
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.478303317535545,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 112.80115995509732,
+          "voxel_count": 50461
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-003.nii.gz",
+      "nifti_uncompressed_sha256": "6e415f90d297355d514a6c2569defe7a72bc4f1b99b82ec99ad05a160113415c",
+      "scan_id": "003",
+      "smallest_component_fraction_of_label_voxels": 0.478303317535545,
+      "source_label_voxel_count": 105500,
+      "total_source_mask_occupancy_ml": 235.83603922361362,
+      "two_largest_component_balance_ratio": 0.9168226166899834,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          521.443115234375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "ccc6db43633f506816cc0e4404980c03ac6b02874041f9c36dda9e08e1b40d32",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -57.690257452947435,
+            -25.12350576517727,
+            1641.7330700293523
+          ],
+          "centroid_voxel_center_ijk": [
+            314.57482363181816,
+            229.77353009645847,
+            453.3105497019201
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5250434440647702,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 220.85653876069958,
+          "voxel_count": 98799
+        },
+        {
+          "centroid_ras_mm": [
+            36.725247013253295,
+            -31.415604999776207,
+            1642.8380323940642
+          ],
+          "centroid_voxel_center_ijk": [
+            217.89334705842862,
+            223.33042048022915,
+            453.7819500078323
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.47495655593522984,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 199.7877741191587,
+          "voxel_count": 89374
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-004.nii.gz",
+      "nifti_uncompressed_sha256": "6414c64691f052ffbbd4065426dac07bd7c46a28c6e7a3431dc559b1b5bd0b73",
+      "scan_id": "004",
+      "smallest_component_fraction_of_label_voxels": 0.47495655593522984,
+      "source_label_voxel_count": 188173,
+      "total_source_mask_occupancy_ml": 420.64431287985826,
+      "two_largest_component_balance_ratio": 0.9046042976143484,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          579.173095703125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "bdcb66b2cf934bc73c7ece8b6ebd48d0743d5401f02a6c23b37dca8ce654521f",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -42.368741081030805,
+            -54.25526807319241,
+            1637.0123032904514
+          ],
+          "centroid_voxel_center_ijk": [
+            299.41254136333555,
+            199.26781932495038,
+            458.6294341495698
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.47044172017902314,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 131.8851985930743,
+          "voxel_count": 60440
+        },
+        {
+          "centroid_ras_mm": [
+            47.89495862079261,
+            -52.01567176476263,
+            1633.5881871033023
+          ],
+          "centroid_voxel_center_ijk": [
+            205.85988094363196,
+            201.5890203571691,
+            457.16863379143086
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5295582798209768,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 148.4581318047619,
+          "voxel_count": 68035
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-005.nii.gz",
+      "nifti_uncompressed_sha256": "1960cad1e2ce55bf22381ec2451bb55fd8bc7712ddaad2087d8fec438a22008c",
+      "scan_id": "005",
+      "smallest_component_fraction_of_label_voxels": 0.47044172017902314,
+      "source_label_voxel_count": 128475,
+      "total_source_mask_occupancy_ml": 280.3433303978362,
+      "two_largest_component_balance_ratio": 0.888366282060704,
+      "voxel_to_world_affine": [
+        [
+          -0.96484375,
+          -0.0,
+          -0.0,
+          246.517578125
+        ],
+        [
+          0.0,
+          0.96484375,
+          -0.0,
+          -246.517578125
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          561.98486328125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "a122cbd1b888539eeb4028673163b967821f6bb7290d29d4cb1409745fbb70ef",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -36.397015919463456,
+            -65.89346441649812,
+            1628.07501739622
+          ],
+          "centroid_voxel_center_ijk": [
+            292.7705443015306,
+            188.02509243750592,
+            446.26157443984454
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.4746473732368662,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 212.20549163467692,
+          "voxel_count": 94929
+        },
+        {
+          "centroid_ras_mm": [
+            57.82263089487961,
+            -55.72310052227087,
+            1617.0853975421571
+          ],
+          "centroid_voxel_center_ijk": [
+            196.2896259636433,
+            198.43954506519464,
+            441.57317026744073
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5253526267631338,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 234.87481176516667,
+          "voxel_count": 105070
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-006.nii.gz",
+      "nifti_uncompressed_sha256": "6558c286caef9ca5c46ebda45f0b632368b0f7b0ac3572d5814210882af278c9",
+      "scan_id": "006",
+      "smallest_component_fraction_of_label_voxels": 0.4746473732368662,
+      "source_label_voxel_count": 199999,
+      "total_source_mask_occupancy_ml": 447.0803033998436,
+      "two_largest_component_balance_ratio": 0.9034833920243647,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          582.037841796875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "845adaf77859da3d806e06b42b10bf0bb2b505eea6bbbc9d32bd030911eda7a1",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -38.019587974027274,
+            -61.99583527402345,
+            1661.6283706835754
+          ],
+          "centroid_voxel_center_ijk": [
+            294.4320580854039,
+            192.0162646794,
+            459.3540872430506
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5004793955780552,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 116.68630721737827,
+          "voxel_count": 52199
+        },
+        {
+          "centroid_ras_mm": [
+            44.87607315219583,
+            -60.52392252910323,
+            1659.8610420607383
+          ],
+          "centroid_voxel_center_ijk": [
+            209.54690109215147,
+            193.52350333019828,
+            458.6001074876677
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4995206044219448,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 116.462765947972,
+          "voxel_count": 52099
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-007.nii.gz",
+      "nifti_uncompressed_sha256": "9ad9ca997a358b529c0967c46f09379a30f040016350f79cb559016ec0803ac8",
+      "scan_id": "007",
+      "smallest_component_fraction_of_label_voxels": 0.4995206044219448,
+      "source_label_voxel_count": 104298,
+      "total_source_mask_occupancy_ml": 233.14907316535027,
+      "two_largest_component_balance_ratio": 0.9980842544876338,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          584.90234375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "931f771fc34332ea160e9f4686381620f9f9de747ea24d9a8ceb6ed5b892a9d9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -50.026722479049,
+            -37.407951951883575,
+            -769.4153119119148
+          ],
+          "centroid_voxel_center_ijk": [
+            306.72736381854617,
+            217.19425720127123,
+            505.4178255500901
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.4878797904332068,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 220.86324499878174,
+          "voxel_count": 98802
+        },
+        {
+          "centroid_ras_mm": [
+            38.396667067921925,
+            -42.76934804860383,
+            -766.1227389819376
+          ],
+          "centroid_voxel_center_ijk": [
+            216.18181292244796,
+            211.70418759822968,
+            506.82250677363055
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5121202095667933,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 231.8368859139355,
+          "voxel_count": 103711
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-008.nii.gz",
+      "nifti_uncompressed_sha256": "97eeaee3cd59ace89206c01f3324ab1d7224bfddf507626b1da37897ca03f027",
+      "scan_id": "008",
+      "smallest_component_fraction_of_label_voxels": 0.4878797904332068,
+      "source_label_voxel_count": 202513,
+      "total_source_mask_occupancy_ml": 452.7001309127172,
+      "two_largest_component_balance_ratio": 0.9526665445324025,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.11474609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "db74b944486d7220434bbd9d99a125f158471449409634e12ec3ecacc903db63",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -35.532107491348086,
+            -13.373928538687181,
+            1645.9709073637086
+          ],
+          "centroid_voxel_center_ijk": [
+            291.88487807114046,
+            241.80509717638432,
+            472.22834158415844
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.48985915651085377,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 195.07105333468644,
+          "voxel_count": 87264
+        },
+        {
+          "centroid_ras_mm": [
+            53.27158270072459,
+            -7.957855509713681,
+            1650.7203467924496
+          ],
+          "centroid_voxel_center_ijk": [
+            200.949899314458,
+            247.3511559580532,
+            474.25455285715856
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5101408434891462,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 203.1475993983349,
+          "voxel_count": 90877
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-009.nii.gz",
+      "nifti_uncompressed_sha256": "f75f7a90bc478b55af626aa43e07ed92550a9caf1c8c3b275b5621f969fffa79",
+      "scan_id": "009",
+      "smallest_component_fraction_of_label_voxels": 0.48985915651085377,
+      "source_label_voxel_count": 178141,
+      "total_source_mask_occupancy_ml": 398.2186527330214,
+      "two_largest_component_balance_ratio": 0.9602429657669157,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          539.067626953125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "77f9da57b2756beed4596bf35596e115575f19969c26a5c6c47ed0499ec9b873",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -47.65604698794175,
+            -48.66918890834492,
+            1650.485284802506
+          ],
+          "centroid_voxel_center_ijk": [
+            304.29979211565234,
+            205.6627505578548,
+            469.2657295977724
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5057829396046958,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 117.20939378778894,
+          "voxel_count": 52433
+        },
+        {
+          "centroid_ras_mm": [
+            39.146501072285986,
+            -44.23997385159271,
+            1654.8192011650483
+          ],
+          "centroid_voxel_center_ijk": [
+            215.41398290197915,
+            210.19826677596907,
+            471.11466994573914
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4942170603953042,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 114.52913396760778,
+          "voxel_count": 51234
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-010.nii.gz",
+      "nifti_uncompressed_sha256": "ced1a296a767ab914920988a0ed807c2b76c4294b9cf45beeea3f029095a8a3d",
+      "scan_id": "010",
+      "smallest_component_fraction_of_label_voxels": 0.4942170603953042,
+      "source_label_voxel_count": 103667,
+      "total_source_mask_occupancy_ml": 231.73852775539675,
+      "two_largest_component_balance_ratio": 0.9771327217591974,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          550.5263671875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "4ebd2e5631d71747fb7337aa46664d4e282673aee06e3f0cb557f2b3f3a5c2c4",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -60.320736840252835,
+            -2.79550972556396,
+            1750.7413890449957
+          ],
+          "centroid_voxel_center_ijk": [
+            317.2684345244189,
+            252.6373980410225,
+            512.0335619944711
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5255501946083618,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 327.49913674365416,
+          "voxel_count": 146505
+        },
+        {
+          "centroid_ras_mm": [
+            40.85050427425148,
+            -11.702343513722951,
+            1749.182079408662
+          ],
+          "centroid_voxel_center_ijk": [
+            213.6690836231665,
+            243.5168002419477,
+            511.3683275366702
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4744498053916381,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 295.65568291673117,
+          "voxel_count": 132260
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-011.nii.gz",
+      "nifti_uncompressed_sha256": "006ccc1a251389c112a2af939ac0f8ace2efbecbcfe3ff5ede63fa7020692921",
+      "scan_id": "011",
+      "smallest_component_fraction_of_label_voxels": 0.4744498053916381,
+      "source_label_voxel_count": 278765,
+      "total_source_mask_occupancy_ml": 623.1548196603853,
+      "two_largest_component_balance_ratio": 0.9027678236237671,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          550.53466796875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "bd0e188f133b22f72c5b09d5236fc2b763190882c169a21f3c628f57637d988d",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -39.12694856675171,
+            -72.59211255178556,
+            1658.4785072224017
+          ],
+          "centroid_voxel_center_ijk": [
+            295.56599533235374,
+            181.1656767469716,
+            453.1201857179902
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.4967581261539783,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 181.03042620327872,
+          "voxel_count": 80983
+        },
+        {
+          "centroid_ras_mm": [
+            48.965300844100454,
+            -71.25013808050952,
+            1653.5374488291973
+          ],
+          "centroid_voxel_center_ijk": [
+            205.35953193564114,
+            182.53985860555827,
+            451.0122257435397
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5032418738460217,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 183.39325742090296,
+          "voxel_count": 82040
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-012.nii.gz",
+      "nifti_uncompressed_sha256": "557dca3a3ebec473ece7934d85f2ad4f5b3494e92b2a74803b39048b8bc10a5e",
+      "scan_id": "012",
+      "smallest_component_fraction_of_label_voxels": 0.4967581261539783,
+      "source_label_voxel_count": 163023,
+      "total_source_mask_occupancy_ml": 364.42368362418165,
+      "two_largest_component_balance_ratio": 0.9871160409556314,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          596.36474609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "346c3ccdb42aaad10ee01633c24681852af47f22e88815c6a32816d195f0df13",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -50.71692625825881,
+            -18.778655618516098,
+            -1161.4259824387648
+          ],
+          "centroid_voxel_center_ijk": [
+            307.434132488457,
+            236.2706566466395,
+            501.26777814268877
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5030368995442221,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 115.71166728276694,
+          "voxel_count": 51763
+        },
+        {
+          "centroid_ras_mm": [
+            32.77413872756071,
+            -25.532952042756847,
+            -1159.6276523721779
+          ],
+          "centroid_voxel_center_ijk": [
+            221.93928194297783,
+            229.35425710821698,
+            502.03498376940826
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4969631004557779,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 114.31453434897776,
+          "voxel_count": 51138
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-013.nii.gz",
+      "nifti_uncompressed_sha256": "e216cc5e8ecb90250a8d9129426baf56527c3be40132fd20be7493142c5fd4d5",
+      "scan_id": "013",
+      "smallest_component_fraction_of_label_voxels": 0.4969631004557779,
+      "source_label_voxel_count": 102901,
+      "total_source_mask_occupancy_ml": 230.02620163174467,
+      "two_largest_component_balance_ratio": 0.9879257384618356,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -2336.397705078125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "c6935f9e585f9771de1ad4cb19e3c2b5b29e6a9d9d1265c582e86081bc1ce9be",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -54.66006251393168,
+            -31.902565445644598,
+            -819.238842728998
+          ],
+          "centroid_voxel_center_ijk": [
+            311.47190401426604,
+            222.83177298365993,
+            456.0120369831947
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.510963869740908,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 115.32717629938816,
+          "voxel_count": 51591
+        },
+        {
+          "centroid_ras_mm": [
+            31.357996021047256,
+            -37.19454757845253,
+            -821.5117471484548
+          ],
+          "centroid_voxel_center_ijk": [
+            223.38941207444762,
+            217.4127832796646,
+            455.0423679040849
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.489036130259092,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 110.37797259473336,
+          "voxel_count": 49377
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-015.nii.gz",
+      "nifti_uncompressed_sha256": "a880e7023240dac7bff2d895f912126ffdd59a1ccdd371f9a62327d1b69af0b8",
+      "scan_id": "015",
+      "smallest_component_fraction_of_label_voxels": 0.489036130259092,
+      "source_label_voxel_count": 100968,
+      "total_source_mask_occupancy_ml": 225.70514889412152,
+      "two_largest_component_balance_ratio": 0.9570855381752631,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1888.131103515625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "970ae91e7e1b87d93e45a69bf9b31bed4bb6d0cf7782227f58e87d7052c36abe",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -47.88664198058393,
+            -31.952471005663483,
+            -857.8120961547982
+          ],
+          "centroid_voxel_center_ijk": [
+            304.53592138811797,
+            222.7806696902006,
+            475.4390216385749
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.49407200548485813,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 198.14251037632857,
+          "voxel_count": 88638
+        },
+        {
+          "centroid_ras_mm": [
+            44.27923092085331,
+            -35.3733983794001,
+            -856.2562420130578
+          ],
+          "centroid_voxel_center_ijk": [
+            210.1580675370462,
+            219.2776400594943,
+            476.10278190932627
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5059279945151419,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 202.89723317659988,
+          "voxel_count": 90765
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-017.nii.gz",
+      "nifti_uncompressed_sha256": "89aa1e155a3c929674aa6296a2ac16fb3cc971a21cd5978f38a1cb49ebaf2beb",
+      "scan_id": "017",
+      "smallest_component_fraction_of_label_voxels": 0.49407200548485813,
+      "source_label_voxel_count": 179403,
+      "total_source_mask_occupancy_ml": 401.0397435529285,
+      "two_largest_component_balance_ratio": 0.9765658568831598,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1972.2412109375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -43.353883844470886,
+            -8.336767957708673,
+            -854.1977597668638
+          ],
+          "centroid_voxel_center_ijk": [
+            299.89437705673816,
+            246.9631496113063,
+            469.2489865348235
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5048435380701289,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 140.61416469462532,
+          "voxel_count": 62903
+        },
+        {
+          "centroid_ras_mm": [
+            38.81118901043018,
+            -10.568943261110945,
+            -856.6520707729926
+          ],
+          "centroid_voxel_center_ijk": [
+            215.7573424533195,
+            244.6774021006224,
+            468.2019255705394
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.495156461929871,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 137.91602157289162,
+          "voxel_count": 61696
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-018.nii.gz",
+      "nifti_uncompressed_sha256": "bbff7dfc47ab256a99fbddf4b86a93d3e626334b9bbadb459d19ea6b58d6d6b2",
+      "scan_id": "018",
+      "smallest_component_fraction_of_label_voxels": 0.495156461929871,
+      "source_label_voxel_count": 124599,
+      "total_source_mask_occupancy_ml": 278.5301862675169,
+      "two_largest_component_balance_ratio": 0.9808117259908112,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.117431640625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "0c15cb3178beae8dd5614cc3723a933872d52fb103da792b4d9b6903205398d7",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -50.32058567827971,
+            -20.214461566275332,
+            -816.2364285386582
+          ],
+          "centroid_voxel_center_ijk": [
+            307.02827973455845,
+            234.80039135613407,
+            474.54723498383527
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.49946458620162154,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 131.3752040300642,
+          "voxel_count": 58770
+        },
+        {
+          "centroid_ras_mm": [
+            42.59686831448656,
+            -26.553692101331166,
+            -814.3322051233554
+          ],
+          "centroid_voxel_center_ijk": [
+            211.88080684596576,
+            228.3090192882369,
+            475.35961695191526
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5005354137983785,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 131.6568660295161,
+          "voxel_count": 58896
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-020.nii.gz",
+      "nifti_uncompressed_sha256": "5448c9c3b5d00769ce9c902be42843c8539b0c972f793e6620f1eba5d1a51807",
+      "scan_id": "020",
+      "smallest_component_fraction_of_label_voxels": 0.49946458620162154,
+      "source_label_voxel_count": 117666,
+      "total_source_mask_occupancy_ml": 263.03207005958024,
+      "two_largest_component_balance_ratio": 0.9978606356968215,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1928.5751953125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "2442d701fd3804153b606e958b7bc0333f37f12ed08de18d1870686343041da5",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -56.225632932808026,
+            -44.57011511970643,
+            -822.6071468945989
+          ],
+          "centroid_voxel_center_ijk": [
+            313.0750481231954,
+            209.8602021174206,
+            427.0384023099134
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.49083522297808013,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 92.90375156524533,
+          "voxel_count": 41560
+        },
+        {
+          "centroid_ras_mm": [
+            33.516285525201795,
+            -57.64457347287299,
+            -823.7132831294996
+          ],
+          "centroid_voxel_center_ijk": [
+            221.17932362219335,
+            196.47195676377805,
+            426.5665012061607
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5091647770219199,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 96.37311206643062,
+          "voxel_count": 43112
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-021.nii.gz",
+      "nifti_uncompressed_sha256": "4a8870e2bd455c983cc247241f4152d405b97f530ef85bdf9b210d7093b7e4ef",
+      "scan_id": "021",
+      "smallest_component_fraction_of_label_voxels": 0.49083522297808013,
+      "source_label_voxel_count": 84672,
+      "total_source_mask_occupancy_ml": 189.27686363167595,
+      "two_largest_component_balance_ratio": 0.964000742252737,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1823.585205078125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "77b93cdb3d40fb65718cc2153c853804fd2f6f0673ee7307c72eb19a3eb384d9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -42.7272018649719,
+            -50.01982520539474,
+            -892.175490405242
+          ],
+          "centroid_voxel_center_ijk": [
+            299.25265470973125,
+            204.27969898967578,
+            463.1539301980137
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5074062538931108,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 182.09448264565256,
+          "voxel_count": 81459
+        },
+        {
+          "centroid_ras_mm": [
+            51.42696723731049,
+            -51.53995957270078,
+            -879.5819534646369
+          ],
+          "centroid_voxel_center_ijk": [
+            202.83878554899405,
+            202.7230813975544,
+            468.52659930956867
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4925937461068893,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 176.77867125917143,
+          "voxel_count": 79081
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-022.nii.gz",
+      "nifti_uncompressed_sha256": "a194e89d5c2b2e6a5f3e9a87c70c6658a3b92223ef00972795bf79847c001d6a",
+      "scan_id": "022",
+      "smallest_component_fraction_of_label_voxels": 0.4925937461068893,
+      "source_label_voxel_count": 160540,
+      "total_source_mask_occupancy_ml": 358.873153904824,
+      "two_largest_component_balance_ratio": 0.9708074000417388,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1977.808349609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "f7adae4b54058ed8206f0e22cb785b3867b30874c366095cae0f6763e52db607",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -46.28174187299385,
+            -39.39663013449578,
+            -764.1209516281492
+          ],
+          "centroid_voxel_center_ijk": [
+            302.8925036779457,
+            215.1578507422763,
+            438.0265480807811
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.49557991366954157,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 133.71344570805377,
+          "voxel_count": 59816
+        },
+        {
+          "centroid_ras_mm": [
+            37.057541783523334,
+            -40.335361151203955,
+            -762.0863122161952
+          ],
+          "centroid_voxel_center_ijk": [
+            217.5530772136721,
+            214.19659018116715,
+            438.8945682702889
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5044200863304584,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 136.09863105261869,
+          "voxel_count": 60883
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-023.nii.gz",
+      "nifti_uncompressed_sha256": "be1c375a0fb6a77673d675257a5c44c2b558e1f83aa9ec04cdb2b486dc019c31",
+      "scan_id": "023",
+      "smallest_component_fraction_of_label_voxels": 0.49557991366954157,
+      "source_label_voxel_count": 120699,
+      "total_source_mask_occupancy_ml": 269.8120767606724,
+      "two_largest_component_balance_ratio": 0.9824745823957427,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1790.855224609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "a80bd7cc1d655e61b19a24fc4c5fb6d7e917385d80eaa52ea470a822d70d82e9",
+      "affine_source": "qform",
+      "component_count": 3,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -30.08286692458057,
+            -43.09895226903498,
+            -736.7382963204068
+          ],
+          "centroid_voxel_center_ijk": [
+            286.3048557307705,
+            211.36667287650818,
+            515.8443229263695
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.496174821790738,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 203.98811457130248,
+          "voxel_count": 91253
+        },
+        {
+          "centroid_ras_mm": [
+            -24.84955658783781,
+            -56.44267314189187,
+            -597.1271129685479
+          ],
+          "centroid_voxel_center_ijk": [
+            280.94594594594594,
+            197.7027027027027,
+            575.4054054054054
+          ],
+          "component_id": 3,
+          "fraction_of_label_voxels": 0.00020118208065770228,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 0.08271026968031947,
+          "voxel_count": 37
+        },
+        {
+          "centroid_ras_mm": [
+            68.86453625348184,
+            -49.06029621591017,
+            -729.7812226943815
+          ],
+          "centroid_voxel_center_ijk": [
+            184.98271487643458,
+            205.26225667490797,
+            518.812357621757
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5036239961286043,
+          "ras_x_order": 3,
+          "source_mask_occupancy_ml": 207.05062996216841,
+          "voxel_count": 92623
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-024.nii.gz",
+      "nifti_uncompressed_sha256": "3f78bdabef52cd421c2f2264c77591849df1abc5db9735f77b288964c46569a8",
+      "scan_id": "024",
+      "smallest_component_fraction_of_label_voxels": 0.00020118208065770228,
+      "source_label_voxel_count": 183913,
+      "total_source_mask_occupancy_ml": 411.1214548031512,
+      "two_largest_component_balance_ratio": 0.9852088574112261,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1945.87744140625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "00df97d592eb9a48c3c8cc743de6cb552b2e06ee85c53548cbab43413b898606",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -50.80908986132761,
+            -27.353318436862565,
+            -838.1667307140667
+          ],
+          "centroid_voxel_center_ijk": [
+            307.52850801799946,
+            227.49020192065274,
+            450.57369760033004
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5099939218253227,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 292.59987376394747,
+          "voxel_count": 130893
+        },
+        {
+          "centroid_ras_mm": [
+            50.66056867008777,
+            -30.360495939038117,
+            -840.6255410503929
+          ],
+          "centroid_voxel_center_ijk": [
+            203.6235776818301,
+            224.41085215842497,
+            449.52471712665886
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4900060781746774,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 281.1322066434059,
+          "voxel_count": 125763
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-025.nii.gz",
+      "nifti_uncompressed_sha256": "cb81d07db9e32f6552577d44ce83d3d6b27e8f100626636de1037d5be9add3cc",
+      "scan_id": "025",
+      "smallest_component_fraction_of_label_voxels": 0.4900060781746774,
+      "source_label_voxel_count": 256656,
+      "total_source_mask_occupancy_ml": 573.7320804073534,
+      "two_largest_component_balance_ratio": 0.9608076826109876,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1894.3115234375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -57.01350370294665,
+            -63.231885550352644,
+            -812.8991901303295
+          ],
+          "centroid_voxel_center_ijk": [
+            313.8818277918174,
+            190.7505491964389,
+            486.86782947657036
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5186473347182661,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 270.67718147327474,
+          "voxel_count": 121086
+        },
+        {
+          "centroid_ras_mm": [
+            46.71716096451516,
+            -63.359748491989166,
+            -821.5401509644985
+          ],
+          "centroid_voxel_center_ijk": [
+            207.66162717233647,
+            190.6196175442031,
+            483.18141289742744
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.48135266528173387,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 251.2134431460709,
+          "voxel_count": 112379
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-026.nii.gz",
+      "nifti_uncompressed_sha256": "0f74ab732081116860be54bcd25413a8bb39aa53ab708d6adc717eb54c8847d7",
+      "scan_id": "026",
+      "smallest_component_fraction_of_label_voxels": 0.48135266528173387,
+      "source_label_voxel_count": 233465,
+      "total_source_mask_occupancy_ml": 521.8906246193455,
+      "two_largest_component_balance_ratio": 0.9280924301735957,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.117431640625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "50bcf4796c1f87c09557c9988026cf917ab46d2e0d50867f64b3f31f9302d628",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -48.74749139908255,
+            -69.88677520144921,
+            -812.7673644415838
+          ],
+          "centroid_voxel_center_ijk": [
+            305.41743119266056,
+            183.93594219371602,
+            468.0409799464155
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.48152781578638726,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 110.13431261108053,
+          "voxel_count": 49268
+        },
+        {
+          "centroid_ras_mm": [
+            31.509107170628482,
+            -66.06564603048182,
+            -811.1559264185139
+          ],
+          "centroid_voxel_center_ijk": [
+            223.23467425727642,
+            187.84877846478662,
+            468.7284534760971
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5184721842136127,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 118.5841725946375,
+          "voxel_count": 53048
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-027.nii.gz",
+      "nifti_uncompressed_sha256": "e4812434606821a8847802a72a99ccdbaf7fc5eb1fd552006d9ec43ec59f7a32",
+      "scan_id": "027",
+      "smallest_component_fraction_of_label_voxels": 0.48152781578638726,
+      "source_label_voxel_count": 102316,
+      "total_source_mask_occupancy_ml": 228.71848520571803,
+      "two_largest_component_balance_ratio": 0.9287437792188207,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1909.85546875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -44.47173902076605,
+            -41.789737810023496,
+            -883.7639306865146
+          ],
+          "centroid_voxel_center_ijk": [
+            301.03906075726445,
+            212.70730848253595,
+            456.6354329321984
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.4947949948298498,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 190.4012762167895,
+          "voxel_count": 85175
+        },
+        {
+          "centroid_ras_mm": [
+            43.51922932153863,
+            -43.83961844902376,
+            -879.1896629048601
+          ],
+          "centroid_voxel_center_ijk": [
+            210.93630917474445,
+            210.60823070819967,
+            458.5869122770706
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5052050051701502,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 194.40713576454985,
+          "voxel_count": 86967
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-028.nii.gz",
+      "nifti_uncompressed_sha256": "0d3e7e7e4088d76012ef3ae837a44a55403196acc0b5c59e5e690e01ac78cd18",
+      "scan_id": "028",
+      "smallest_component_fraction_of_label_voxels": 0.4947949948298498,
+      "source_label_voxel_count": 172142,
+      "total_source_mask_occupancy_ml": 384.80841198133936,
+      "two_largest_component_balance_ratio": 0.9793944829648027,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.117431640625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "620e581f587f1508001f8e6bd1d7aaf9ad549414ea1945c9f63e52df7cfb9def",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -40.351111037020985,
+            -49.21543159064262,
+            -871.2309082228862
+          ],
+          "centroid_voxel_center_ijk": [
+            296.8195377019095,
+            205.10339805118195,
+            472.4767904219526
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5024369182132193,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 153.47672933626197,
+          "voxel_count": 68657
+        },
+        {
+          "centroid_ras_mm": [
+            49.326589697993114,
+            -46.39948755855556,
+            -869.1769288806552
+          ],
+          "centroid_voxel_center_ijk": [
+            204.98957214925505,
+            207.98692474003911,
+            473.3530614346016
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.49756308178678066,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 151.98794448201627,
+          "voxel_count": 67991
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-030.nii.gz",
+      "nifti_uncompressed_sha256": "0fc781c49db52acb53b99e31220ed0a68b477da886a5efd87a245683f73c3109",
+      "scan_id": "030",
+      "smallest_component_fraction_of_label_voxels": 0.49756308178678066,
+      "source_label_voxel_count": 136648,
+      "total_source_mask_occupancy_ml": 305.46467381827824,
+      "two_largest_component_balance_ratio": 0.990299605284239,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1978.716552734375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "ebc3d7c2150c1e4d7fb571453bd3849e68752bab2b0beaceb887005614be38d7",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -41.575592747178746,
+            -27.41873005557443,
+            -159.18154688864252
+          ],
+          "centroid_voxel_center_ijk": [
+            298.07340697311105,
+            227.42322042309178,
+            477.8812328842655
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.4601028295025961,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 121.62656927125681,
+          "voxel_count": 54409
+        },
+        {
+          "centroid_ras_mm": [
+            42.11208389214113,
+            -33.00577050620643,
+            -162.20043374190868
+          ],
+          "centroid_voxel_center_ijk": [
+            212.37722609444748,
+            221.70209100164462,
+            476.593311927324
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5398971704974039,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 142.7199234524323,
+          "voxel_count": 63845
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-031.nii.gz",
+      "nifti_uncompressed_sha256": "97bbd582fa83e36692853a24c5a6251e04da9292af1cc579c757f3fd268d372c",
+      "scan_id": "031",
+      "smallest_component_fraction_of_label_voxels": 0.4601028295025961,
+      "source_label_voxel_count": 118254,
+      "total_source_mask_occupancy_ml": 264.3464927236892,
+      "two_largest_component_balance_ratio": 0.8522045579136972,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1279.335205078125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "ea3900b90e5f54010e894df48f15c7b18e49da3b67376d13aeb267addb3d1185",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -36.98893983218346,
+            -26.55131954454754,
+            -94.00635216485011
+          ],
+          "centroid_voxel_center_ijk": [
+            293.3766743881559,
+            228.31144878638332,
+            455.4005690401853
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.517031067948526,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 177.56330111478746,
+          "voxel_count": 79432
+        },
+        {
+          "centroid_ras_mm": [
+            49.93879555528039,
+            -23.20000917086145,
+            -94.12806560648778
+          ],
+          "centroid_voxel_center_ijk": [
+            204.36267335139289,
+            231.74319060903787,
+            455.3486435127158
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.482968932051474,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 165.86538648675744,
+          "voxel_count": 74199
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-032.nii.gz",
+      "nifti_uncompressed_sha256": "3b7597f742fa3d4f1db19588c46d1c9ac784557ba27ac110276bbc9b465a6a7c",
+      "scan_id": "032",
+      "smallest_component_fraction_of_label_voxels": 0.482968932051474,
+      "source_label_voxel_count": 153631,
+      "total_source_mask_occupancy_ml": 343.4286876015449,
+      "two_largest_component_balance_ratio": 0.9341197502266089,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1161.46533203125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "dbdf6fe26fa421a5bbd464715e056060e8f9dde5001c4e53b10a962504683ce8",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -48.665439484583544,
+            -30.576656486088723,
+            -120.59057957906816
+          ],
+          "centroid_voxel_center_ijk": [
+            305.3334100322135,
+            224.18950375824514,
+            472.241793219819
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.5018234303584316,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 116.58124282075732,
+          "voxel_count": 52152
+        },
+        {
+          "centroid_ras_mm": [
+            33.755274301397435,
+            -34.254957865948455,
+            -115.88733816375725
+          ],
+          "centroid_voxel_center_ijk": [
+            220.93459911536902,
+            220.42292314526878,
+            474.24829544357095
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.4981765696415684,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 115.73402140970757,
+          "voxel_count": 51773
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-033.nii.gz",
+      "nifti_uncompressed_sha256": "22b57e58271b2824faa233c43404faf600209ec94324b65cd483ea49536c9666",
+      "scan_id": "033",
+      "smallest_component_fraction_of_label_voxels": 0.4981765696415684,
+      "source_label_voxel_count": 103925,
+      "total_source_mask_occupancy_ml": 232.31526423046486,
+      "two_largest_component_balance_ratio": 0.992732781101396,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1227.525390625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "6d87766c33aa9501baa118159f553b170ef1fba0b4bf3987f5fcc89c41c51ec9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "components_ordered_by_ras_x": [
+        {
+          "centroid_ras_mm": [
+            -40.04765811339689,
+            -31.593694167623397,
+            -122.92621256369785
+          ],
+          "centroid_voxel_center_ijk": [
+            296.5088019081184,
+            223.14805717235365,
+            468.1949591498905
+          ],
+          "component_id": 2,
+          "fraction_of_label_voxels": 0.4995731739849544,
+          "ras_x_order": 1,
+          "source_mask_occupancy_ml": 125.5877205651359,
+          "voxel_count": 56181
+        },
+        {
+          "centroid_ras_mm": [
+            47.45676068542653,
+            -34.26720625488656,
+            -123.75010155009295
+          ],
+          "centroid_voxel_center_ijk": [
+            206.90427705812323,
+            220.41038079499617,
+            467.84347068962455
+          ],
+          "component_id": 1,
+          "fraction_of_label_voxels": 0.5004268260150456,
+          "ras_x_order": 2,
+          "source_mask_occupancy_ml": 125.80232018376591,
+          "voxel_count": 56277
+        }
+      ],
+      "connectivity": "full26",
+      "label_id": 36,
+      "label_name": "Psoas",
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-034.nii.gz",
+      "nifti_uncompressed_sha256": "7c4beb1b54c7bc30855891c317babf6a7d7be73d4592b72d5db6699dd269473a",
+      "scan_id": "034",
+      "smallest_component_fraction_of_label_voxels": 0.4995731739849544,
+      "source_label_voxel_count": 112458,
+      "total_source_mask_occupancy_ml": 251.3900407489018,
+      "two_largest_component_balance_ratio": 0.998294152140306,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1220.375244140625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "schema": "numi.healthy-total-body-ct-psoas-component-audit.v1",
+  "source": {
+    "archive_path": "healthy-total-body-ct-segmentations-v3.zip",
+    "archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+    "coordinate_convention": "NIfTI RAS+ in millimetres; source scans retain independent voxel-to-world affines",
+    "intake_path": "intake-v4.json",
+    "intake_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+    "scan_frames_kept_separate": true,
+    "source_id": "healthy_total_body_cts_v3",
+    "source_release": "Version 3, updated 2026-09-23"
+  },
+  "status": "measured_external_source_psoas_component_geometry",
+  "trial_plan_sha256": "6ef056c43c899e204f38a1ae1b920d636a7399347dfeec5263401ea33d916ded"
+}

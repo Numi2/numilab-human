@@ -1,0 +1,37 @@
+{
+  "analysis": [
+    "Retain all 30 scan rows and each scan-specific affine; do not pool participant coordinate frames.",
+    "Order component centroids by RAS+ X for reporting, without claiming independent clinical laterality labels.",
+    "Report total source-mask voxel occupancy, right-minus-left RAS+ X centroid separation, and smaller-to-larger occupancy ratio.",
+    "Do not impose an anatomy or segmentation-accuracy threshold on occupancy ratios."
+  ],
+  "connectivity": "full26",
+  "evidence_boundary": "Automatic external CT source-mask component geometry only; no clinical segmentation review, physical organ volume, Numi subject binding, mechanics, or physiology.",
+  "experimental_unit": "one source scan and the two components of its aggregate Kidney label",
+  "input_intake_path": "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+  "input_intake_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "label_id": 6,
+  "label_name": "Kidneys",
+  "predicate_source_sha256": {
+    "healthy_total_body_ct_paired_kidney_audit.py": "075f642e34319cb6ce3654275bf65e2161f005ca71ae8c98ced2ba8b7ffa01f8",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9"
+  },
+  "predictions": [
+    "Each of the 30 aggregate Kidney masks has exactly two components under full 26-connectivity, consistent with the retained component census.",
+    "The two component centroids have distinct RAS+ X coordinates when transformed through their own scan affine."
+  ],
+  "preregistration_id": "healthy_total_body_ct_paired_kidney_geometry_20261003_v1",
+  "question": "Across the 30 external CT source masks, do the aggregate Kidney labels form two 26-connected components, and what scan-local RAS+ lateral centroid separation and occupancy balance do those components show?",
+  "scan_count": 30,
+  "schema": "numi.healthy-total-body-ct-paired-kidney-plan.v1",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_id": "healthy_total_body_cts_v3",
+  "source_release": "Version 3, updated 2026-09-23",
+  "stop_rule": "Stop at the first archive, member hash, shape, affine, voxel-count, component-count, or source-code identity failure; retain all scan rows and do not filter participants.",
+  "validity_checks": [
+    "The whole archive hash matches the current source intake.",
+    "Each scan NIfTI header geometry and uncompressed member hash match its intake row.",
+    "Each kidney label voxel count and affine-derived voxel volume match intake.",
+    "All component voxel counts sum to the complete aggregate Kidney label count."
+  ]
+}

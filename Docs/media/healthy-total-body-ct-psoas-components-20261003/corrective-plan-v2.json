@@ -1,0 +1,44 @@
+{
+  "analysis": [
+    "Retain every scan and each scan-specific affine; do not pool participant coordinate frames.",
+    "Report each component centroid in source IJK and RAS+ millimetres, component occupancy, and fraction of label voxels.",
+    "Order components by RAS+ X for description only; do not claim named muscle or clinical laterality from that ordering.",
+    "Measure the smallest component on exception scans without filtering or imposing a pass threshold."
+  ],
+  "connectivity": "full26",
+  "corrective_revision": {
+    "component_predicate_changed": false,
+    "reason": "Correct cohort extrema calculation: component rows were correct, but the first summary used unsorted scan order for maximum. This revision sorts each measured distribution before computing minimum, median, and maximum.",
+    "source_scan_set_changed": false,
+    "supersedes_plan_sha256": "57dbc553f617f01f940f07cc5aad7b604858054aca181b0e45705b8639644b1c",
+    "supersedes_receipt_sha256": "1aacd9543f4b2916ee888a761ccbca114c44f58ab50f8834b0b4fb3f73017d19"
+  },
+  "evidence_boundary": "Automatic external CT Psoas source-mask component geometry only; no named muscle identity, clinical segmentation validation, physical volume, Numi subject binding, or mechanics.",
+  "experimental_unit": "one source scan and all 26-connected components of its aggregate Psoas label",
+  "input_intake_path": "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+  "input_intake_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "label_id": 36,
+  "label_name": "Psoas",
+  "predicate_source_sha256": {
+    "healthy_total_body_ct_paired_kidney_audit.py": "075f642e34319cb6ce3654275bf65e2161f005ca71ae8c98ced2ba8b7ffa01f8",
+    "healthy_total_body_ct_psoas_component_audit.py": "f4389464ddb997026cbee1a7ec6f6934d5bf1b20c568b919ffbce6574bce291b",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9"
+  },
+  "predictions": [
+    "The full-cohort component count distribution reproduces the retained census: 29 scans have two components and scan 024 has three.",
+    "All measured component counts sum to the source Psoas label voxel count."
+  ],
+  "preregistration_id": "healthy_total_body_ct_psoas_component_geometry_20261003_v1",
+  "question": "Across the 30 external CT Psoas masks, how are 26-connected components distributed spatially, and what fraction of labelled voxels does any extra component occupy?",
+  "scan_count": 30,
+  "schema": "numi.healthy-total-body-ct-psoas-component-plan.v1",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_id": "healthy_total_body_cts_v3",
+  "source_release": "Version 3, updated 2026-09-23",
+  "stop_rule": "Stop at the first archive, member hash, shape, affine, voxel-count, or source-code identity failure; retain all scan rows and do not filter participants.",
+  "validity_checks": [
+    "The whole archive hash matches the source intake.",
+    "Each scan member hash, NIfTI shape, affine, label count, and affine-derived voxel volume match intake.",
+    "All component voxel counts sum to the exact source label count."
+  ]
+}

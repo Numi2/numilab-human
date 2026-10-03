@@ -1,0 +1,2253 @@
+{
+  "boundary": "Automatic external CT kidney source-mask topology and scan-local RAS+ centroids only. The two components are described by lateral centroid order; this does not independently verify segmentation accuracy, clinical left/right labels, physical organ volume, Numi subject binding, mechanics, or physiology.",
+  "counts": {
+    "measured_scan_count": 30,
+    "ordered_pair_scan_count": 30,
+    "scan_count": 30,
+    "two_component_scan_count": 30
+  },
+  "distributions": {
+    "right_minus_left_ras_x_mm": {
+      "maximum": 168.16715154825167,
+      "median": 126.42334815663502,
+      "minimum": 105.26220354051387
+    },
+    "smaller_to_larger_source_mask_occupancy_ratio": {
+      "maximum": 0.997061671132326,
+      "median": 0.946625205966233,
+      "minimum": 0.7998488355614343
+    },
+    "total_kidney_source_mask_occupancy_ml": {
+      "maximum": 486.67393303708195,
+      "median": 306.5533198002868,
+      "minimum": 180.35086074428366
+    }
+  },
+  "method": {
+    "component_centroid": "arithmetic mean of occupied voxel centres transformed through each scan's NIfTI affine",
+    "connectivity": "full26",
+    "label_id": 6,
+    "label_name": "Kidneys",
+    "no_cross_participant_coordinate_pooling": true,
+    "occupancy": "source label voxel count multiplied by affine determinant, expressed in mL",
+    "side_assignment": "lower/higher RAS+ X centroids are reported as left/right ordering only"
+  },
+  "predicate_source_sha256": {
+    "healthy_total_body_ct_paired_kidney_audit.py": "075f642e34319cb6ce3654275bf65e2161f005ca71ae8c98ced2ba8b7ffa01f8",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9"
+  },
+  "qualification": {
+    "clinical_anatomy": false,
+    "numi_subject_binding": false,
+    "organ_mechanics": false,
+    "physical_kidney_volume": false,
+    "physiology": false,
+    "segmentation_accuracy": false,
+    "source_label_pair_geometry_measured": true
+  },
+  "rows": [
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -72.26704661007875,
+          -92.29459382951461,
+          1873.6992148541024
+        ],
+        "centroid_voxel_center_ijk": [
+          329.50145572872066,
+          160.99033591857705,
+          538.8287500305826
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 182.73604608884852,
+        "voxel_count": 81746
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-001.nii.gz",
+      "nifti_uncompressed_sha256": "ae91e4f6dd3a10fa1aea69dcafc82ff2324992fd5305d4e169eb077c80bf859d",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          64.72405790807514,
+          -77.89222501179123,
+          1844.6474357737507
+        ],
+        "centroid_voxel_center_ijk": [
+          189.22256470213105,
+          175.7383615879258,
+          526.4346468618802
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 168.25504265671043,
+        "voxel_count": 75268
+      },
+      "right_minus_left_ras_x_mm": 136.9911045181539,
+      "right_to_left_occupancy_ratio": 0.9207545323318572,
+      "scan_id": "001",
+      "smaller_to_larger_occupancy_ratio": 0.9207545323318572,
+      "source_label_voxel_count": 157014,
+      "source_mask_occupancy_ml": 350.991088745559,
+      "total_voxel_count": 157014,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          610.6845703125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -74.1594218847033,
+          -104.86282695795464,
+          1929.5489509306697
+        ],
+        "centroid_voxel_center_ijk": [
+          331.4392480099362,
+          148.12046519505446,
+          562.6554282165641
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 197.97932524966197,
+        "voxel_count": 88565
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-002.nii.gz",
+      "nifti_uncompressed_sha256": "e92bab5d759e6babdc1b05b2be6aab62d2e070dafb860dd4663ec2efc4fd1458",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          68.27838141774367,
+          -99.4993130002758,
+          1918.3242376316855
+        ],
+        "centroid_voxel_center_ijk": [
+          185.58293742823048,
+          153.61270348771757,
+          557.8667282102087
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 198.56276796281236,
+        "voxel_count": 88826
+      },
+      "right_minus_left_ras_x_mm": 142.43780330244698,
+      "right_to_left_occupancy_ratio": 1.0029469880878452,
+      "scan_id": "002",
+      "smaller_to_larger_occupancy_ratio": 0.997061671132326,
+      "source_label_voxel_count": 177391,
+      "source_mask_occupancy_ml": 396.54209321247436,
+      "total_voxel_count": 177391,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          610.6845703125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "cf220736c292ad33418577dca303d9bb51363efda2b84107d8261c2b42b0871a",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -54.50842799142657,
+          -29.845285458982346,
+          1763.5974672916504
+        ],
+        "centroid_voxel_center_ijk": [
+          311.3166302632208,
+          224.93842769000207,
+          529.9293082282417
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 140.21179040969403,
+        "voxel_count": 62723
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-003.nii.gz",
+      "nifti_uncompressed_sha256": "6e415f90d297355d514a6c2569defe7a72bc4f1b99b82ec99ad05a160113415c",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          50.753775549087294,
+          -20.288178296130667,
+          1738.8332336271235
+        ],
+        "centroid_voxel_center_ijk": [
+          203.5281338377346,
+          234.7249054247622,
+          519.3643625812613
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 121.72716284248963,
+        "voxel_count": 54454
+      },
+      "right_minus_left_ras_x_mm": 105.26220354051387,
+      "right_to_left_occupancy_ratio": 0.868166382347783,
+      "scan_id": "003",
+      "smaller_to_larger_occupancy_ratio": 0.868166382347783,
+      "source_label_voxel_count": 117177,
+      "source_mask_occupancy_ml": 261.93895325218364,
+      "total_voxel_count": 117177,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          521.443115234375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "ccc6db43633f506816cc0e4404980c03ac6b02874041f9c36dda9e08e1b40d32",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -85.95154589971145,
+          -40.44795904548167,
+          1738.59540143762
+        ],
+        "centroid_voxel_center_ijk": [
+          343.5143830013045,
+          214.08128993742676,
+          494.63406814513456
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 202.20201982874642,
+        "voxel_count": 90454
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-004.nii.gz",
+      "nifti_uncompressed_sha256": "6414c64691f052ffbbd4065426dac07bd7c46a28c6e7a3431dc559b1b5bd0b73",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          70.98118361978447,
+          -49.1091702673325,
+          1741.9596090756575
+        ],
+        "centroid_voxel_center_ijk": [
+          182.8152679733407,
+          205.21220964625152,
+          496.06931024963524
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 226.73343873339036,
+        "voxel_count": 101428
+      },
+      "right_minus_left_ras_x_mm": 156.93272951949592,
+      "right_to_left_occupancy_ratio": 1.1213213346010127,
+      "scan_id": "004",
+      "smaller_to_larger_occupancy_ratio": 0.8918050242536578,
+      "source_label_voxel_count": 191882,
+      "source_mask_occupancy_ml": 428.9354585621367,
+      "total_voxel_count": 191882,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          579.173095703125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "bdcb66b2cf934bc73c7ece8b6ebd48d0743d5401f02a6c23b37dca8ce654521f",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -56.70756057079757,
+          -88.27749800920384,
+          1764.0461953702215
+        ],
+        "centroid_voxel_center_ijk": [
+          314.2738279600169,
+          164.00591299450937,
+          512.8247782627059
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 154.99347544781716,
+        "voxel_count": 71030
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-005.nii.gz",
+      "nifti_uncompressed_sha256": "1960cad1e2ce55bf22381ec2451bb55fd8bc7712ddaad2087d8fec438a22008c",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          68.65977909505395,
+          -86.21950729667307,
+          1753.2452861759461
+        ],
+        "centroid_voxel_center_ijk": [
+          184.3384475775959,
+          166.13889122288134,
+          508.21688204749023
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 129.849313578393,
+        "voxel_count": 59507
+      },
+      "right_minus_left_ras_x_mm": 125.36733966585152,
+      "right_to_left_occupancy_ratio": 0.8377727720681402,
+      "scan_id": "005",
+      "smaller_to_larger_occupancy_ratio": 0.8377727720681402,
+      "source_label_voxel_count": 130537,
+      "source_mask_occupancy_ml": 284.84278902621014,
+      "total_voxel_count": 130537,
+      "voxel_to_world_affine": [
+        [
+          -0.96484375,
+          -0.0,
+          -0.0,
+          246.517578125
+        ],
+        [
+          0.0,
+          0.96484375,
+          -0.0,
+          -246.517578125
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          561.98486328125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "a122cbd1b888539eeb4028673163b967821f6bb7290d29d4cb1409745fbb70ef",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -57.3371207145135,
+          -95.49283747960848,
+          1744.895635035135
+        ],
+        "centroid_voxel_center_ijk": [
+          314.21321161166185,
+          157.7153344208809,
+          496.09971974735436
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 213.76804510782677,
+        "voxel_count": 95628
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-006.nii.gz",
+      "nifti_uncompressed_sha256": "6558c286caef9ca5c46ebda45f0b632368b0f7b0ac3572d5814210882af278c9",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          73.7627893678231,
+          -96.83600070382425,
+          1747.3280249353402
+        ],
+        "centroid_voxel_center_ijk": [
+          179.96690368734915,
+          156.33993527928396,
+          497.1374287043952
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 206.5454266933102,
+        "voxel_count": 92397
+      },
+      "right_minus_left_ras_x_mm": 131.0999100823366,
+      "right_to_left_occupancy_ratio": 0.9662128246956957,
+      "scan_id": "006",
+      "smaller_to_larger_occupancy_ratio": 0.9662128246956957,
+      "source_label_voxel_count": 188025,
+      "source_mask_occupancy_ml": 420.313471801137,
+      "total_voxel_count": 188025,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          582.037841796875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "845adaf77859da3d806e06b42b10bf0bb2b505eea6bbbc9d32bd030911eda7a1",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -56.16375450394719,
+          -81.39994139336181,
+          1770.958283913206
+        ],
+        "centroid_voxel_center_ijk": [
+          313.0116846120419,
+          172.1464600131975,
+          505.9965396810069
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 138.892896920197,
+        "voxel_count": 62133
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-007.nii.gz",
+      "nifti_uncompressed_sha256": "9ad9ca997a358b529c0967c46f09379a30f040016350f79cb559016ec0803ac8",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          58.988040382037525,
+          -76.13103217158175,
+          1740.1555583178078
+        ],
+        "centroid_voxel_center_ijk": [
+          195.09624664879357,
+          177.54182305630027,
+          492.85544571045574
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 133.40942958166124,
+        "voxel_count": 59680
+      },
+      "right_minus_left_ras_x_mm": 115.15179488598471,
+      "right_to_left_occupancy_ratio": 0.9605201744644555,
+      "scan_id": "007",
+      "smaller_to_larger_occupancy_ratio": 0.9605201744644555,
+      "source_label_voxel_count": 121813,
+      "source_mask_occupancy_ml": 272.30232650185826,
+      "total_voxel_count": 121813,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          584.90234375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "931f771fc34332ea160e9f4686381620f9f9de747ea24d9a8ceb6ed5b892a9d9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -76.16198390462347,
+          -67.76984739871517,
+          -654.3054960953282
+        ],
+        "centroid_voxel_center_ijk": [
+          333.48987151833444,
+          186.10367626371567,
+          554.5261066304042
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 190.68964445432357,
+        "voxel_count": 85304
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-008.nii.gz",
+      "nifti_uncompressed_sha256": "97eeaee3cd59ace89206c01f3324ab1d7224bfddf507626b1da37897ca03f027",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          56.994738242227356,
+          -69.79268816097368,
+          -658.4224707665694
+        ],
+        "centroid_voxel_center_ijk": [
+          197.13738803995918,
+          184.03228732316296,
+          552.7697181945301
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 177.44929506739024,
+        "voxel_count": 79381
+      },
+      "right_minus_left_ras_x_mm": 133.15672214685083,
+      "right_to_left_occupancy_ratio": 0.9305659758041825,
+      "scan_id": "008",
+      "smaller_to_larger_occupancy_ratio": 0.9305659758041825,
+      "source_label_voxel_count": 164685,
+      "source_mask_occupancy_ml": 368.13893952171384,
+      "total_voxel_count": 164685,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.11474609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "db74b944486d7220434bbd9d99a125f158471449409634e12ec3ecacc903db63",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -68.1281889845061,
+          -22.85587387597002,
+          1738.5597187422354
+        ],
+        "centroid_voxel_center_ijk": [
+          325.26326552013427,
+          232.0955851510067,
+          511.7286860318792
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 170.53516360465437,
+        "voxel_count": 76288
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-009.nii.gz",
+      "nifti_uncompressed_sha256": "f75f7a90bc478b55af626aa43e07ed92550a9caf1c8c3b275b5621f969fffa79",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          80.10493583450278,
+          -17.07306521024904,
+          1738.0780360260082
+        ],
+        "centroid_voxel_center_ijk": [
+          173.47254570546914,
+          238.01718122470498,
+          511.52319000139556
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 144.15952922740868,
+        "voxel_count": 64489
+      },
+      "right_minus_left_ras_x_mm": 148.23312481900888,
+      "right_to_left_occupancy_ratio": 0.8453360947986576,
+      "scan_id": "009",
+      "smaller_to_larger_occupancy_ratio": 0.8453360947986576,
+      "source_label_voxel_count": 140777,
+      "source_mask_occupancy_ml": 314.6946928320631,
+      "total_voxel_count": 140777,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          539.067626953125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "77f9da57b2756beed4596bf35596e115575f19969c26a5c6c47ed0499ec9b873",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -65.69726682544564,
+          -67.50585817455439,
+          1743.0977559273456
+        ],
+        "centroid_voxel_center_ijk": [
+          322.7740012292563,
+          186.3740012292563,
+          508.77616779348494
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 145.48065812959976,
+        "voxel_count": 65080
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-010.nii.gz",
+      "nifti_uncompressed_sha256": "ced1a296a767ab914920988a0ed807c2b76c4294b9cf45beeea3f029095a8a3d",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          56.1157214656686,
+          -62.261597977421246,
+          1733.1599586830441
+        ],
+        "centroid_voxel_center_ijk": [
+          198.03750121915536,
+          191.74412367112063,
+          504.5364933840502
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 137.51811811334846,
+        "voxel_count": 61518
+      },
+      "right_minus_left_ras_x_mm": 121.81298829111424,
+      "right_to_left_occupancy_ratio": 0.9452673632452366,
+      "scan_id": "010",
+      "smaller_to_larger_occupancy_ratio": 0.9452673632452366,
+      "source_label_voxel_count": 126598,
+      "source_mask_occupancy_ml": 282.9987762429483,
+      "total_voxel_count": 126598,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          550.5263671875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "4ebd2e5631d71747fb7337aa46664d4e282673aee06e3f0cb557f2b3f3a5c2c4",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -86.16257486056656,
+          -32.792698656005626,
+          1874.197383680725
+        ],
+        "centroid_voxel_center_ijk": [
+          343.73047665722015,
+          221.92027657625025,
+          564.7024994140334
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 209.82030629011206,
+        "voxel_count": 93862
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-011.nii.gz",
+      "nifti_uncompressed_sha256": "006ccc1a251389c112a2af939ac0f8ace2efbecbcfe3ff5ede63fa7020692921",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          58.34032811419999,
+          -38.74140417181576,
+          1867.3437778973357
+        ],
+        "centroid_voxel_center_ijk": [
+          195.75950401105922,
+          215.82880212806066,
+          561.7786062878328
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 213.45061650526986,
+        "voxel_count": 95486
+      },
+      "right_minus_left_ras_x_mm": 144.50290297476656,
+      "right_to_left_occupancy_ratio": 1.0173019965481238,
+      "scan_id": "011",
+      "smaller_to_larger_occupancy_ratio": 0.9829922711182791,
+      "source_label_voxel_count": 189348,
+      "source_mask_occupancy_ml": 423.2709227953819,
+      "total_voxel_count": 189348,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          550.53466796875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "bd0e188f133b22f72c5b09d5236fc2b763190882c169a21f3c628f57637d988d",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -68.53804035537479,
+          -85.0338633751768,
+          1771.6423387091177
+        ],
+        "centroid_voxel_center_ijk": [
+          325.6829533239038,
+          168.42532390381896,
+          501.3982687411598
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 197.55459683779011,
+        "voxel_count": 88375
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-012.nii.gz",
+      "nifti_uncompressed_sha256": "557dca3a3ebec473ece7934d85f2ad4f5b3494e92b2a74803b39048b8bc10a5e",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          71.34771412112244,
+          -81.43674478185227,
+          1766.5924719314544
+        ],
+        "centroid_voxel_center_ijk": [
+          182.43994073997064,
+          172.1087733433833,
+          499.24388880947123
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 172.01277139542978,
+        "voxel_count": 76949
+      },
+      "right_minus_left_ras_x_mm": 139.88575447649723,
+      "right_to_left_occupancy_ratio": 0.8707100424328145,
+      "scan_id": "012",
+      "smaller_to_larger_occupancy_ratio": 0.8707100424328145,
+      "source_label_voxel_count": 165324,
+      "source_mask_occupancy_ml": 369.5673682332199,
+      "total_voxel_count": 165324,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          596.36474609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "346c3ccdb42aaad10ee01633c24681852af47f22e88815c6a32816d195f0df13",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -68.37275010364209,
+          -47.644671571964295,
+          -1039.4443962272064
+        ],
+        "centroid_voxel_center_ijk": [
+          325.5136961061295,
+          206.71185631030858,
+          553.307701756541
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 163.7864526812791,
+        "voxel_count": 73269
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-013.nii.gz",
+      "nifti_uncompressed_sha256": "e216cc5e8ecb90250a8d9129426baf56527c3be40132fd20be7493142c5fd4d5",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          46.84948361026261,
+          -46.567616992749805,
+          -1070.2641181655736
+        ],
+        "centroid_voxel_center_ijk": [
+          207.52612878309108,
+          207.8147601994242,
+          540.1593567867425
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 159.1725608807337,
+        "voxel_count": 71205
+      },
+      "right_minus_left_ras_x_mm": 115.2222337139047,
+      "right_to_left_occupancy_ratio": 0.9718298325349056,
+      "scan_id": "013",
+      "smaller_to_larger_occupancy_ratio": 0.9718298325349056,
+      "source_label_voxel_count": 144474,
+      "source_mask_occupancy_ml": 322.9590135620128,
+      "total_voxel_count": 144474,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -2336.397705078125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "c6935f9e585f9771de1ad4cb19e3c2b5b29e6a9d9d1265c582e86081bc1ce9be",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -69.78479519929999,
+          -62.005214527830645,
+          -705.1256108760299
+        ],
+        "centroid_voxel_center_ijk": [
+          326.9596302840832,
+          192.00666032350142,
+          504.6951542748403
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 131.5674495217536,
+        "voxel_count": 58856
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-015.nii.gz",
+      "nifti_uncompressed_sha256": "a880e7023240dac7bff2d895f912126ffdd59a1ccdd371f9a62327d1b69af0b8",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          50.298270288830395,
+          -63.085327981763214,
+          -728.5061269068344
+        ],
+        "centroid_voxel_center_ijk": [
+          203.9945712242377,
+          190.90062414667446,
+          494.7205318249789
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 137.53153058951284,
+        "voxel_count": 61524
+      },
+      "right_minus_left_ras_x_mm": 120.08306548813039,
+      "right_to_left_occupancy_ratio": 1.0453309773005302,
+      "scan_id": "015",
+      "smaller_to_larger_occupancy_ratio": 0.9566348091801573,
+      "source_label_voxel_count": 120380,
+      "source_mask_occupancy_ml": 269.0989801112664,
+      "total_voxel_count": 120380,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1888.131103515625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "970ae91e7e1b87d93e45a69bf9b31bed4bb6d0cf7782227f58e87d7052c36abe",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -79.68530464605959,
+          -54.83096884669425,
+          -760.6058963696994
+        ],
+        "centroid_voxel_center_ijk": [
+          337.09775195756504,
+          199.3530879009851,
+          516.9092416014145
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 141.59998169270693,
+        "voxel_count": 63344
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-017.nii.gz",
+      "nifti_uncompressed_sha256": "89aa1e155a3c929674aa6296a2ac16fb3cc971a21cd5978f38a1cb49ebaf2beb",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          73.8742756672641,
+          -43.405721194213015,
+          -776.5200247059172
+        ],
+        "centroid_voxel_center_ijk": [
+          179.85274171672157,
+          211.05254149712587,
+          510.1199379965123
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 138.44357896869042,
+        "voxel_count": 61932
+      },
+      "right_minus_left_ras_x_mm": 153.5595803133237,
+      "right_to_left_occupancy_ratio": 0.9777090174286436,
+      "scan_id": "017",
+      "smaller_to_larger_occupancy_ratio": 0.9777090174286436,
+      "source_label_voxel_count": 125276,
+      "source_mask_occupancy_ml": 280.04356066139735,
+      "total_voxel_count": 125276,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1972.2412109375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -65.27434664343059,
+          -31.085178594417414,
+          -736.8865572167733
+        ],
+        "centroid_voxel_center_ijk": [
+          322.3409309628729,
+          223.66877711931656,
+          519.2964257373922
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 132.40125845663894,
+        "voxel_count": 59229
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-018.nii.gz",
+      "nifti_uncompressed_sha256": "bbff7dfc47ab256a99fbddf4b86a93d3e626334b9bbadb459d19ea6b58d6d6b2",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          46.48054150358615,
+          -40.02450801705356,
+          -724.8518036445155
+        ],
+        "centroid_voxel_center_ijk": [
+          207.90392550032777,
+          214.51490379053715,
+          524.4307060502063
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 115.9419147902554,
+        "voxel_count": 51866
+      },
+      "right_minus_left_ras_x_mm": 111.75488814701674,
+      "right_to_left_occupancy_ratio": 0.8756858971112126,
+      "scan_id": "018",
+      "smaller_to_larger_occupancy_ratio": 0.8756858971112126,
+      "source_label_voxel_count": 111095,
+      "source_mask_occupancy_ml": 248.3431732468944,
+      "total_voxel_count": 111095,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.117431640625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "0c15cb3178beae8dd5614cc3723a933872d52fb103da792b4d9b6903205398d7",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -66.42893525232017,
+          -51.862483686194906,
+          -717.5739851460867
+        ],
+        "centroid_voxel_center_ijk": [
+          323.52322969837587,
+          202.39281670533643,
+          516.6387192575406
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 120.43285889262734,
+        "voxel_count": 53875
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-020.nii.gz",
+      "nifti_uncompressed_sha256": "5448c9c3b5d00769ce9c902be42843c8539b0c972f793e6620f1eba5d1a51807",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          55.45362954122163,
+          -51.2284737259896,
+          -720.9601871596321
+        ],
+        "centroid_voxel_center_ijk": [
+          198.71548334978905,
+          203.04204290458665,
+          515.1940938874428
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 124.52366412276206,
+        "voxel_count": 55705
+      },
+      "right_minus_left_ras_x_mm": 121.8825647935418,
+      "right_to_left_occupancy_ratio": 1.033967517401392,
+      "scan_id": "020",
+      "smaller_to_larger_occupancy_ratio": 0.9671483708823265,
+      "source_label_voxel_count": 109580,
+      "source_mask_occupancy_ml": 244.9565230153894,
+      "total_voxel_count": 109580,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1928.5751953125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "2442d701fd3804153b606e958b7bc0333f37f12ed08de18d1870686343041da5",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -77.36368266745188,
+          -62.746360000334676,
+          -722.9622333833368
+        ],
+        "centroid_voxel_center_ijk": [
+          334.7204110514707,
+          191.2477273596573,
+          469.549029107646
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 175.3301238334188,
+        "voxel_count": 78433
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-021.nii.gz",
+      "nifti_uncompressed_sha256": "4a8870e2bd455c983cc247241f4152d405b97f530ef85bdf9b210d7093b7e4ef",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          51.74155756304742,
+          -73.54759424865702,
+          -730.5644481033232
+        ],
+        "centroid_voxel_center_ijk": [
+          202.51664505543943,
+          180.1872634893752,
+          466.30576358199477
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 168.94802059186986,
+        "voxel_count": 75578
+      },
+      "right_minus_left_ras_x_mm": 129.1052402304993,
+      "right_to_left_occupancy_ratio": 0.963599505310265,
+      "scan_id": "021",
+      "smaller_to_larger_occupancy_ratio": 0.963599505310265,
+      "source_label_voxel_count": 154011,
+      "source_mask_occupancy_ml": 344.2781444252887,
+      "total_voxel_count": 154011,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1823.585205078125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "77b93cdb3d40fb65718cc2153c853804fd2f6f0673ee7307c72eb19a3eb384d9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -77.12617566917135,
+          -73.0811044068623,
+          -783.1886600996947
+        ],
+        "centroid_voxel_center_ijk": [
+          334.47720388523146,
+          180.664949087373,
+          509.65001620709313
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 199.99566749970657,
+        "voxel_count": 89467
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-022.nii.gz",
+      "nifti_uncompressed_sha256": "a194e89d5c2b2e6a5f3e9a87c70c6658a3b92223ef00972795bf79847c001d6a",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          77.22055757184395,
+          -77.76387698537664,
+          -774.0131602255549
+        ],
+        "centroid_voxel_center_ijk": [
+          176.4261490464318,
+          175.8697899669743,
+          513.5644784419178
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 171.2482602540604,
+        "voxel_count": 76607
+      },
+      "right_minus_left_ras_x_mm": 154.3467332410153,
+      "right_to_left_occupancy_ratio": 0.8562598500005589,
+      "scan_id": "022",
+      "smaller_to_larger_occupancy_ratio": 0.8562598500005589,
+      "source_label_voxel_count": 166074,
+      "source_mask_occupancy_ml": 371.24392775376685,
+      "total_voxel_count": 166074,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1977.808349609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "f7adae4b54058ed8206f0e22cb785b3867b30874c366095cae0f6763e52db607",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -68.65074528601616,
+          -54.63477834865685,
+          -669.7746722729203
+        ],
+        "centroid_voxel_center_ijk": [
+          325.79836317288056,
+          199.5539869709754,
+          478.2766655237698
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 149.95371893041917,
+        "voxel_count": 67081
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-023.nii.gz",
+      "nifti_uncompressed_sha256": "be1c375a0fb6a77673d675257a5c44c2b558e1f83aa9ec04cdb2b486dc019c31",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          58.82861136140235,
+          -49.1621389864772,
+          -683.6703059636777
+        ],
+        "centroid_voxel_center_ijk": [
+          195.259501965924,
+          205.15796967784735,
+          472.3484944096565
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 138.15521073115636,
+        "voxel_count": 61803
+      },
+      "right_minus_left_ras_x_mm": 127.47935664741851,
+      "right_to_left_occupancy_ratio": 0.9213190024000838,
+      "scan_id": "023",
+      "smaller_to_larger_occupancy_ratio": 0.9213190024000838,
+      "source_label_voxel_count": 128884,
+      "source_mask_occupancy_ml": 288.10892966157553,
+      "total_voxel_count": 128884,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1790.855224609375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "a80bd7cc1d655e61b19a24fc4c5fb6d7e917385d80eaa52ea470a822d70d82e9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -51.218644470788604,
+          -68.30954304924154,
+          -630.3670085447291
+        ],
+        "centroid_voxel_center_ijk": [
+          307.94789193808754,
+          185.55102791757668,
+          561.2245631943784
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 188.32904864939337,
+        "voxel_count": 84248
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-024.nii.gz",
+      "nifti_uncompressed_sha256": "3f78bdabef52cd421c2f2264c77591849df1abc5db9735f77b288964c46569a8",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          72.91905230066246,
+          -71.77334620114223,
+          -617.5745723184912
+        ],
+        "centroid_voxel_center_ijk": [
+          180.83089044412165,
+          182.00409349003036,
+          566.6820869463152
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 152.35902298923062,
+        "voxel_count": 68157
+      },
+      "right_minus_left_ras_x_mm": 124.13769677145106,
+      "right_to_left_occupancy_ratio": 0.8090043680562148,
+      "scan_id": "024",
+      "smaller_to_larger_occupancy_ratio": 0.8090043680562148,
+      "source_label_voxel_count": 152405,
+      "source_mask_occupancy_ml": 340.688071638624,
+      "total_voxel_count": 152405,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1945.87744140625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "00df97d592eb9a48c3c8cc743de6cb552b2e06ee85c53548cbab43413b898606",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -94.82933047650647,
+          -46.2424355432064,
+          -726.0419301395491
+        ],
+        "centroid_voxel_center_ijk": [
+          352.60523440794265,
+          208.14774600375665,
+          498.40850806915324
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 233.2608438000534,
+        "voxel_count": 104348
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-025.nii.gz",
+      "nifti_uncompressed_sha256": "cb81d07db9e32f6552577d44ce83d3d6b27e8f100626636de1037d5be9add3cc",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          73.3378210717452,
+          -53.986811689826055,
+          -723.5409031478769
+        ],
+        "centroid_voxel_center_ijk": [
+          180.40207122253292,
+          200.21750482961812,
+          499.47549906054
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 253.41308923702857,
+        "voxel_count": 113363
+      },
+      "right_minus_left_ras_x_mm": 168.16715154825167,
+      "right_to_left_occupancy_ratio": 1.0863936060106567,
+      "scan_id": "025",
+      "smaller_to_larger_occupancy_ratio": 0.9204766987465045,
+      "source_label_voxel_count": 217711,
+      "source_mask_occupancy_ml": 486.67393303708195,
+      "total_voxel_count": 217711,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1894.3115234375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -85.73751435619306,
+          -76.04213874799234,
+          -737.6072230801224
+        ],
+        "centroid_voxel_center_ijk": [
+          343.29521470074167,
+          177.63284992205584,
+          518.9889744437621
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 236.60725660306522,
+        "voxel_count": 105845
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-026.nii.gz",
+      "nifti_uncompressed_sha256": "0f74ab732081116860be54bcd25413a8bb39aa53ab708d6adc717eb54c8847d7",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          70.70596263731397,
+          -80.31637118326245,
+          -749.7527090646149
+        ],
+        "centroid_voxel_center_ijk": [
+          183.0970942593905,
+          173.25603590833924,
+          513.8074533427829
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 189.2500386793472,
+        "voxel_count": 84660
+      },
+      "right_minus_left_ras_x_mm": 156.44347699350703,
+      "right_to_left_occupancy_ratio": 0.7998488355614343,
+      "scan_id": "026",
+      "smaller_to_larger_occupancy_ratio": 0.7998488355614343,
+      "source_label_voxel_count": 190505,
+      "source_mask_occupancy_ml": 425.85729528241245,
+      "total_voxel_count": 190505,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.117431640625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "50bcf4796c1f87c09557c9988026cf917ab46d2e0d50867f64b3f31f9302d628",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -60.148052741318224,
+          -91.29274713353362,
+          -701.4596171628168
+        ],
+        "centroid_voxel_center_ijk": [
+          317.0916060071099,
+          162.01622693526156,
+          515.527218205122
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 92.43655031218623,
+        "voxel_count": 41351
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-027.nii.gz",
+      "nifti_uncompressed_sha256": "e4812434606821a8847802a72a99ccdbaf7fc5eb1fd552006d9ec43ec59f7a32",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          47.22382907851912,
+          -85.11379853412328,
+          -724.9017302991717
+        ],
+        "centroid_voxel_center_ijk": [
+          207.1427990235964,
+          168.34347030105778,
+          505.52631712774615
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 87.91431043209741,
+        "voxel_count": 39328
+      },
+      "right_minus_left_ras_x_mm": 107.37188181983734,
+      "right_to_left_occupancy_ratio": 0.9510773620952335,
+      "scan_id": "027",
+      "smaller_to_larger_occupancy_ratio": 0.9510773620952335,
+      "source_label_voxel_count": 80679,
+      "source_mask_occupancy_ml": 180.35086074428366,
+      "total_voxel_count": 80679,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1909.85546875
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -62.80134163293815,
+          -71.29327912006198,
+          -757.541618331544
+        ],
+        "centroid_voxel_center_ijk": [
+          319.8085738321287,
+          182.49568218105654,
+          510.4845399763078
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 130.2060831910694,
+        "voxel_count": 58247
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-028.nii.gz",
+      "nifti_uncompressed_sha256": "0d3e7e7e4088d76012ef3ae837a44a55403196acc0b5c59e5e690e01ac78cd18",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          58.66913767625695,
+          -74.26553695498328,
+          -770.0761697804032
+        ],
+        "centroid_voxel_center_ijk": [
+          195.42280301951288,
+          179.45209015809712,
+          505.1370353226036
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 125.55866020011308,
+        "voxel_count": 56168
+      },
+      "right_minus_left_ras_x_mm": 121.4704793091951,
+      "right_to_left_occupancy_ratio": 0.9643071746184353,
+      "scan_id": "028",
+      "smaller_to_larger_occupancy_ratio": 0.9643071746184353,
+      "source_label_voxel_count": 114415,
+      "source_mask_occupancy_ml": 255.76474339118252,
+      "total_voxel_count": 114415,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1954.117431640625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "620e581f587f1508001f8e6bd1d7aaf9ad549414ea1945c9f63e52df7cfb9def",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -61.033288741078024,
+          -78.52143137457074,
+          -755.2211038338585
+        ],
+        "centroid_voxel_center_ijk": [
+          317.9980876708639,
+          175.09405427243956,
+          521.9690256548381
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 165.99056959762495,
+        "voxel_count": 74255
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-030.nii.gz",
+      "nifti_uncompressed_sha256": "0fc781c49db52acb53b99e31220ed0a68b477da886a5efd87a245683f73c3109",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          67.6994633152174,
+          -61.53927309782608,
+          -792.4238576219343
+        ],
+        "centroid_voxel_center_ijk": [
+          186.1757495652174,
+          192.4837843478261,
+          506.0975443478261
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 160.67028738575576,
+        "voxel_count": 71875
+      },
+      "right_minus_left_ras_x_mm": 128.73275205629542,
+      "right_to_left_occupancy_ratio": 0.9679482863106862,
+      "scan_id": "030",
+      "smaller_to_larger_occupancy_ratio": 0.9679482863106862,
+      "source_label_voxel_count": 146130,
+      "source_mask_occupancy_ml": 326.6608569833806,
+      "total_voxel_count": 146130,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1978.716552734375
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "ebc3d7c2150c1e4d7fb571453bd3849e68752bab2b0beaceb887005614be38d7",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -62.16356293674062,
+          -47.907849096232184,
+          -49.326329277237846
+        ],
+        "centroid_voxel_center_ijk": [
+          319.1554884472224,
+          206.44236252545824,
+          524.7477912774774
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 159.15020675379313,
+        "voxel_count": 71195
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-031.nii.gz",
+      "nifti_uncompressed_sha256": "97bbd582fa83e36692853a24c5a6251e04da9292af1cc579c757f3fd268d372c",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          52.43904549503998,
+          -53.53587168729334,
+          -52.54350312868905
+        ],
+        "centroid_voxel_center_ijk": [
+          201.80241741307907,
+          200.6792673922116,
+          523.3752768949244
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 139.26174001471736,
+        "voxel_count": 62298
+      },
+      "right_minus_left_ras_x_mm": 114.6026084317806,
+      "right_to_left_occupancy_ratio": 0.8750333590842052,
+      "scan_id": "031",
+      "smaller_to_larger_occupancy_ratio": 0.8750333590842052,
+      "source_label_voxel_count": 133493,
+      "source_mask_occupancy_ml": 298.41194676851046,
+      "total_voxel_count": 133493,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1279.335205078125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "ea3900b90e5f54010e894df48f15c7b18e49da3b67376d13aeb267addb3d1185",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -51.34914998196251,
+          -59.91533246711299,
+          21.65867013253046
+        ],
+        "centroid_voxel_center_ijk": [
+          308.0815295815296,
+          194.14669955367629,
+          504.7457129433874
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 133.2261257407481,
+        "voxel_count": 59598
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-032.nii.gz",
+      "nifti_uncompressed_sha256": "3b7597f742fa3d4f1db19588c46d1c9ac784557ba27ac110276bbc9b465a6a7c",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          66.13476365413723,
+          -53.14225173008347,
+          7.684987832515162
+        ],
+        "centroid_voxel_center_ijk": [
+          187.77800201816348,
+          201.08233422839453,
+          498.7842446424601
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 130.70234480915133,
+        "voxel_count": 58469
+      },
+      "right_minus_left_ras_x_mm": 117.48391363609974,
+      "right_to_left_occupancy_ratio": 0.9810564112889695,
+      "scan_id": "032",
+      "smaller_to_larger_occupancy_ratio": 0.9810564112889695,
+      "source_label_voxel_count": 118067,
+      "source_mask_occupancy_ml": 263.92847054989943,
+      "total_voxel_count": 118067,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1161.46533203125
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "dbdf6fe26fa421a5bbd464715e056060e8f9dde5001c4e53b10a962504683ce8",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -65.00819797209567,
+          -58.10741353575867,
+          9.878304978478809
+        ],
+        "centroid_voxel_center_ijk": [
+          322.06839472342597,
+          195.99800853938314,
+          527.9025777466225
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 140.31238398092682,
+        "voxel_count": 62768
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-033.nii.gz",
+      "nifti_uncompressed_sha256": "22b57e58271b2824faa233c43404faf600209ec94324b65cd483ea49536c9666",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          51.08361625411746,
+          -48.60555382974388,
+          -30.861005453551115
+        ],
+        "centroid_voxel_center_ijk": [
+          203.19037695578373,
+          205.72791287834227,
+          510.52232660538124
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 133.01376153481218,
+        "voxel_count": 59503
+      },
+      "right_minus_left_ras_x_mm": 116.09181422621313,
+      "right_to_left_occupancy_ratio": 0.9479830486872294,
+      "scan_id": "033",
+      "smaller_to_larger_occupancy_ratio": 0.9479830486872294,
+      "source_label_voxel_count": 122271,
+      "source_mask_occupancy_ml": 273.326145515739,
+      "total_voxel_count": 122271,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1227.525390625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "affine_sha256": "6d87766c33aa9501baa118159f553b170ef1fba0b4bf3987f5fcc89c41c51ec9",
+      "affine_source": "qform",
+      "component_count": 2,
+      "connectivity": "full26",
+      "label_id": 6,
+      "label_name": "Kidneys",
+      "left_by_ras_x": {
+        "centroid_ras_mm": [
+          -58.920968601332675,
+          -55.80365711032093,
+          -21.782087650708036
+        ],
+        "centroid_voxel_center_ijk": [
+          315.83507184776465,
+          198.35705511903137,
+          511.3451812279436
+        ],
+        "component_id": 2,
+        "source_mask_occupancy_ml": 114.65208166578122,
+        "voxel_count": 51289
+      },
+      "nifti_member": "Healthy-Total-Body-Cts/HealthyTotalBodyCTCollectionNIfTIfilesJanuary2023/Healthy-Total-Body-CTs-034.nii.gz",
+      "nifti_uncompressed_sha256": "7c4beb1b54c7bc30855891c317babf6a7d7be73d4592b72d5db6699dd269473a",
+      "right_by_ras_x": {
+        "centroid_ras_mm": [
+          57.540128688883556,
+          -56.39551433043491,
+          -26.366752647513067
+        ],
+        "centroid_voxel_center_ijk": [
+          196.57890822258324,
+          197.75099332563465,
+          509.38926621127007
+        ],
+        "component_id": 1,
+        "source_mask_occupancy_ml": 114.20946995235681,
+        "voxel_count": 51091
+      },
+      "right_minus_left_ras_x_mm": 116.46109729021623,
+      "right_to_left_occupancy_ratio": 0.9961395230946207,
+      "scan_id": "034",
+      "smaller_to_larger_occupancy_ratio": 0.9961395230946207,
+      "source_label_voxel_count": 102380,
+      "source_mask_occupancy_ml": 228.86155161813804,
+      "total_voxel_count": 102380,
+      "voxel_to_world_affine": [
+        [
+          -0.9765625,
+          -0.0,
+          -0.0,
+          249.51171875
+        ],
+        [
+          0.0,
+          0.9765625,
+          -0.0,
+          -249.51171875
+        ],
+        [
+          -0.0,
+          0.0,
+          2.3440001010894775,
+          -1220.375244140625
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "schema": "numi.healthy-total-body-ct-paired-kidney-audit.v1",
+  "source": {
+    "archive_path": "healthy-total-body-ct-segmentations-v3.zip",
+    "archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+    "coordinate_convention": "NIfTI RAS+ in millimetres; source scans retain independent voxel-to-world affines",
+    "intake_path": "intake-v4.json",
+    "intake_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+    "scan_frames_kept_separate": true,
+    "source_id": "healthy_total_body_cts_v3",
+    "source_release": "Version 3, updated 2026-09-23"
+  },
+  "status": "measured_external_source_kidney_pair_geometry",
+  "trial_plan_sha256": "29a4fba1af44198514d0ddbcba35484dcbe56acd800924fea3fea6971a9e7f3b"
+}

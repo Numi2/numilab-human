@@ -11,6 +11,7 @@
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
         {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"},
         {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
+        {"id": "external_ct_paired_kidneys", "path": "Docs/media/healthy-total-body-ct-paired-kidney-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-paired-kidney-audit.v1"},
         {"id": "patella_rebase", "path": "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/receipt.json", "schema": "numi.human.lower-limb-patella-rebase-geometry-evidence.v1"}
       ],
       "facts": [
@@ -30,6 +31,10 @@
         {"id": "external_ct_component_pairs_measured", "evidence": "external_ct_component_census", "path": "counts.measured_scan_label_pairs"},
         {"id": "external_ct_component_pairs_missing", "evidence": "external_ct_component_census", "path": "counts.missing_scan_label_pairs"},
         {"id": "external_ct_lung_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Lung.full26.maximum"},
+        {"id": "external_ct_kidney_pair_scans", "evidence": "external_ct_paired_kidneys", "path": "counts.two_component_scan_count"},
+        {"id": "external_ct_kidney_ordered_pairs", "evidence": "external_ct_paired_kidneys", "path": "counts.ordered_pair_scan_count"},
+        {"id": "external_ct_kidney_lateral_separation_median_mm", "evidence": "external_ct_paired_kidneys", "path": "distributions.right_minus_left_ras_x_mm.median"},
+        {"id": "external_ct_kidney_balance_ratio_median", "evidence": "external_ct_paired_kidneys", "path": "distributions.smaller_to_larger_source_mask_occupancy_ratio.median"},
         {"id": "lower_limb_pose_count", "evidence": "patella_rebase", "path": "pose_audit.pose_count"},
         {"id": "lower_limb_source_geometry_checks", "evidence": "patella_rebase", "path": "pose_audit.source_geometry_check_count"},
         {"id": "lower_limb_pose_audit_status", "evidence": "patella_rebase", "path": "pose_audit.status"},
@@ -58,7 +63,8 @@
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
         {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"},
-        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"}
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
+        {"id": "external_ct_paired_kidneys", "path": "Docs/media/healthy-total-body-ct-paired-kidney-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-paired-kidney-audit.v1"}
       ],
       "facts": [
         {"id": "surface_count", "evidence": "visceral", "path": "coverage.total_surfaces"},
@@ -76,6 +82,10 @@
         {"id": "external_ct_brain_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Brain.full26.single_component_scan_count"},
         {"id": "external_ct_liver_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Liver.full26.single_component_scan_count"},
         {"id": "external_ct_kidneys_26_component_median", "evidence": "external_ct_component_census", "path": "distributions.Kidneys.full26.median"},
+        {"id": "external_ct_kidney_pair_scans", "evidence": "external_ct_paired_kidneys", "path": "counts.two_component_scan_count"},
+        {"id": "external_ct_kidney_pair_lateral_separation_median_mm", "evidence": "external_ct_paired_kidneys", "path": "distributions.right_minus_left_ras_x_mm.median"},
+        {"id": "external_ct_kidney_balance_ratio_median", "evidence": "external_ct_paired_kidneys", "path": "distributions.smaller_to_larger_source_mask_occupancy_ratio.median"},
+        {"id": "external_ct_kidney_occupancy_median_ml", "evidence": "external_ct_paired_kidneys", "path": "distributions.total_kidney_source_mask_occupancy_ml.median"},
         {"id": "external_ct_lung_26_single_component_scans", "evidence": "external_ct_component_census", "path": "distributions.Lung.full26.single_component_scan_count"},
         {"id": "external_ct_lung_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Lung.full26.maximum"}
       ],
@@ -129,7 +139,8 @@
       "evidence": [
         {"id": "surface_audit", "path": "Docs/media/muscle-surface-embeddedness-20260929/receipt-v3.json", "schema": "numi.human.compiled-muscle-surface-embeddedness.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
-        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"}
+        {"id": "external_ct_component_census", "path": "Docs/media/healthy-total-body-ct-component-census-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-component-census.v1"},
+        {"id": "external_ct_psoas_components", "path": "Docs/media/healthy-total-body-ct-psoas-components-20261003/corrected-receipt-v2.json", "schema": "numi.healthy-total-body-ct-psoas-component-audit.v1"}
       ],
       "facts": [
         {"id": "muscle_surface_count", "evidence": "surface_audit", "path": "coverage.muscle_surface_count"},
@@ -143,6 +154,10 @@
         {"id": "external_ct_psoas_voxels", "evidence": "external_ct_scan001", "path": "labels.35.source_voxel_count"},
         {"id": "external_ct_psoas_closed", "evidence": "external_ct_scan001", "path": "labels.35.closed_two_manifold"},
         {"id": "external_ct_psoas_26_component_median", "evidence": "external_ct_component_census", "path": "distributions.Psoas.full26.median"},
+        {"id": "external_ct_psoas_two_component_scans", "evidence": "external_ct_psoas_components", "path": "counts.two_component_scan_count"},
+        {"id": "external_ct_psoas_three_component_scans", "evidence": "external_ct_psoas_components", "path": "counts.three_component_scan_count"},
+        {"id": "external_ct_psoas_extra_component_fraction", "evidence": "external_ct_psoas_components", "path": "distributions.extra_component_smallest_fraction_among_exception_scans.maximum"},
+        {"id": "external_ct_psoas_two_largest_balance_ratio_median", "evidence": "external_ct_psoas_components", "path": "distributions.two_largest_component_balance_ratio.median"},
         {"id": "external_ct_skeletal_muscle_26_component_median", "evidence": "external_ct_component_census", "path": "distributions.Skeletal-muscle.full26.median"},
         {"id": "external_ct_skeletal_muscle_26_component_max", "evidence": "external_ct_component_census", "path": "distributions.Skeletal-muscle.full26.maximum"},
         {"id": "external_ct_skeletal_muscle_largest26_fraction_min", "evidence": "external_ct_component_census", "path": "distributions.Skeletal-muscle.full26.largest_component_fraction_minimum"}

@@ -103,7 +103,7 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert report["counts"]["required_subsystems"] == len(SYSTEM_IDS)
     assert report["counts"]["qualified_subsystems"] < len(SYSTEM_IDS)
     assert not report["qualification"]["whole_human_capability"]
-    assert report["counts"]["verified_evidence_sources"] == 33
+    assert report["counts"]["verified_evidence_sources"] == 36
     assert report["counts"]["missing_evidence_sources"] == 0
     assert report["counts"]["schema_mismatch_sources"] == 0
     assert systems["whole_body_anatomy"]["facts"][0]["value"] == 46
@@ -204,6 +204,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_facts["external_ct_component_pairs_measured"]["value"] == 450
     assert anatomy_facts["external_ct_component_pairs_missing"]["value"] == 0
     assert anatomy_facts["external_ct_lung_26_component_max"]["value"] == 6
+    assert anatomy_facts["external_ct_kidney_pair_scans"]["value"] == 30
+    assert anatomy_facts["external_ct_kidney_ordered_pairs"]["value"] == 30
+    assert anatomy_facts["external_ct_kidney_lateral_separation_median_mm"]["value"] == pytest.approx(126.4233481566)
+    assert anatomy_facts["external_ct_kidney_balance_ratio_median"]["value"] == pytest.approx(0.9466252060)
     assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
     assert next(item for item in anatomy["evidence"]
                 if item["id"] == "patella_rebase")["status"] == "verified"
@@ -232,6 +236,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert organ_facts["external_ct_brain_26_single_component_scans"]["value"] == 28
     assert organ_facts["external_ct_liver_26_single_component_scans"]["value"] == 29
     assert organ_facts["external_ct_kidneys_26_component_median"]["value"] == 2
+    assert organ_facts["external_ct_kidney_pair_scans"]["value"] == 30
+    assert organ_facts["external_ct_kidney_pair_lateral_separation_median_mm"]["value"] == pytest.approx(126.4233481566)
+    assert organ_facts["external_ct_kidney_balance_ratio_median"]["value"] == pytest.approx(0.9466252060)
+    assert organ_facts["external_ct_kidney_occupancy_median_ml"]["value"] == pytest.approx(306.5533198003)
     assert organ_facts["external_ct_lung_26_single_component_scans"]["value"] == 25
     assert organ_facts["external_ct_lung_26_component_max"]["value"] == 6
     assert not organ_gates["external_vessel_lumen_connectivity"]["satisfied"]
@@ -246,6 +254,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert muscle_facts["external_ct_psoas_voxels"]["value"] == 118946
     assert muscle_facts["external_ct_psoas_closed"]["value"] is True
     assert muscle_facts["external_ct_psoas_26_component_median"]["value"] == 2
+    assert muscle_facts["external_ct_psoas_two_component_scans"]["value"] == 29
+    assert muscle_facts["external_ct_psoas_three_component_scans"]["value"] == 1
+    assert muscle_facts["external_ct_psoas_extra_component_fraction"]["value"] == pytest.approx(0.00020118208066)
+    assert muscle_facts["external_ct_psoas_two_largest_balance_ratio_median"]["value"] == pytest.approx(0.9624042124)
     assert muscle_facts["external_ct_skeletal_muscle_26_component_median"]["value"] == 109
     assert muscle_facts["external_ct_skeletal_muscle_26_component_max"]["value"] == 306
     assert muscle_facts["external_ct_skeletal_muscle_largest26_fraction_min"]["value"] > 0.99
