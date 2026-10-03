@@ -193,6 +193,10 @@ def test_current_repository_registry_refuses_unqualified_subsystems() -> None:
     assert anatomy_facts["external_ct_closed_meshes"]["value"] == 14
     assert anatomy_facts["external_ct_max_volume_error"]["value"] < 1e-9
     assert anatomy_facts["external_ct_subject_binding"]["value"] is False
+    assert anatomy_facts["external_ct_cohort_scan_count"]["value"] == 30
+    assert anatomy_facts["external_ct_organ_ordering_relations_passed"]["value"] == 120
+    assert anatomy_facts["external_ct_organ_ordering_relations_total"]["value"] == 120
+    assert anatomy_facts["external_ct_cohort_numi_subject_binding"]["value"] is False
     assert not anatomy_gates["external_scan_subject_binding"]["satisfied"]
     assert next(item for item in anatomy["evidence"]
                 if item["id"] == "patella_rebase")["status"] == "verified"

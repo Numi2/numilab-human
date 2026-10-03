@@ -1,0 +1,3302 @@
+{
+  "boundary": "External automatic-segmentation centroid ordering only. This checks four gross superior/inferior relationships independently in each scan's own RAS+ frame. It does not establish segmentation accuracy, cross-subject registration, Numi subject binding, organ surface quality, physical volume, mechanics, physiology, or clinical anatomy.",
+  "counts": {
+    "failed_relation_rows": 0,
+    "missing_relation_rows": 0,
+    "passed_relation_rows": 120,
+    "relation_count": 4,
+    "scan_count": 30,
+    "total_relation_rows": 120
+  },
+  "method": {
+    "coordinate": "NIfTI RAS+ millimetres; Z increases superiorly",
+    "no_cross_participant_coordinate_pooling": true,
+    "predicate": "centroid(superior_label).RasZ > centroid(inferior_label).RasZ",
+    "relations": [
+      {
+        "id": "brain_superior_to_heart",
+        "inferior": "Heart",
+        "superior": "Brain"
+      },
+      {
+        "id": "heart_superior_to_liver",
+        "inferior": "Liver",
+        "superior": "Heart"
+      },
+      {
+        "id": "lung_superior_to_liver",
+        "inferior": "Liver",
+        "superior": "Lung"
+      },
+      {
+        "id": "kidneys_superior_to_bladder",
+        "inferior": "Bladder",
+        "superior": "Kidneys"
+      }
+    ]
+  },
+  "predicate_source_sha256": {
+    "healthy_total_body_ct_anatomy_relations.py": "670de64fbe9e668c759b34b288a0c388e5e1e214559f0103ac91323b3e412324",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9"
+  },
+  "qualification": {
+    "clinical_anatomy": false,
+    "current_numi_subject_binding": false,
+    "external_source_centroid_ordering_consistency": true,
+    "organ_mechanics": false,
+    "physiology": false
+  },
+  "rows": [
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.87531666945108,
+        -16.861770634102214,
+        1993.904663302912
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "358422c2f6cc6ea0bf780513ad129d6dfa5c8f69a25b13376f39abff939b3f66",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 260376,
+      "ras_superior_delta_mm": 364.00174793517,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "001",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        0.3710326548104774,
+        -29.21053586424972,
+        2357.906411238082
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "9e9b7c343896c77abc96d51f678eca0c189fe94022aebbeccc1be2db17a17184",
+      "superior_label_id": 4,
+      "superior_voxel_count": 659831
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        77.25559890175725,
+        -49.700116686652905,
+        1931.5041570046005
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "6ff21627db4ecd18c7b40da86d28c54b76149fb811f899129739bc64db309f35",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 524736,
+      "ras_superior_delta_mm": 62.400506298311484,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "001",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.87531666945108,
+        -16.861770634102214,
+        1993.904663302912
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "358422c2f6cc6ea0bf780513ad129d6dfa5c8f69a25b13376f39abff939b3f66",
+      "superior_label_id": 5,
+      "superior_voxel_count": 260376
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        77.25559890175725,
+        -49.700116686652905,
+        1931.5041570046005
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "6ff21627db4ecd18c7b40da86d28c54b76149fb811f899129739bc64db309f35",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 524736,
+      "ras_superior_delta_mm": 111.87937921286039,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "001",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        0.17502413438279518,
+        -60.81100450621335,
+        2043.383536217461
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "b7b897a85d9580957e5b8eb6455e0faf8d402fdf0308b2567d173b2cbd2bf7c4",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1476822
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        7.759561344068885,
+        -43.29117276417779,
+        1631.0052145250893
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "b57cc59fb7cfc50fd49ad17fc54822cc65f3c3c413f735e3e803703ef06517f0",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 61152,
+      "ras_superior_delta_mm": 228.76741220426038,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "001",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -6.5974473713330894,
+        -85.39051205226923,
+        1859.7726267293497
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "34f4f9f7b6e4f21a9dbbdeaee9bc1340ce664186dea0f5d33f8d42e83fbd15c3",
+      "superior_label_id": 6,
+      "superior_voxel_count": 157014
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -37.66780899245367,
+        -33.10048858638038,
+        2048.9367098580947
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "edd2ee3c33dd88f134bcea0c694616b0562e9c5369cae565b4bb090419832c4a",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 322608,
+      "ras_superior_delta_mm": 387.7383082386982,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "002",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        1.10294171602672,
+        -61.12004014462025,
+        2436.675018096793
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "1a0de6340b954bd6447b97efacc2e90158dbbf2828ccb6e252516a2fa992b3d7",
+      "superior_label_id": 4,
+      "superior_voxel_count": 681388
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        68.57098945161053,
+        -48.02195005191351,
+        1977.4617217471668
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "fd3d1b927f084be390e4db308d555957b89ae1e6d295692f3dd98a12a690d4a1",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 778940,
+      "ras_superior_delta_mm": 71.47498811092782,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "002",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -37.66780899245367,
+        -33.10048858638038,
+        2048.9367098580947
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "edd2ee3c33dd88f134bcea0c694616b0562e9c5369cae565b4bb090419832c4a",
+      "superior_label_id": 5,
+      "superior_voxel_count": 322608
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        68.57098945161053,
+        -48.02195005191351,
+        1977.4617217471668
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "fd3d1b927f084be390e4db308d555957b89ae1e6d295692f3dd98a12a690d4a1",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 778940,
+      "ras_superior_delta_mm": 123.27288609601464,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "002",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        0.24175505182796542,
+        -77.08598198557124,
+        2100.7346078431815
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "1960d0db47472edd3a2ba01f5714bf719a0a0a7e363169c12b881a9005c5b62d",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1716761
+    },
+    {
+      "affine_sha256": "d99522c4e465d808fbab45e9b18b4d8f3b56fc83d64424c30e6e87244dd69c0a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        1.897155841074948,
+        -42.19495026711195,
+        1609.8700846956465
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "5c865fc07c01421c6875be86a568fd6a1126b720af2e914de7d4469bf50aa405",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 23843,
+      "ras_superior_delta_mm": 314.05825197896957,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "002",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -2.8357340079612072,
+        -102.17712424020243,
+        1923.928336674616
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "b1c4a7ef8eed908fcb1fe6b554ecb49d0b99e7a37fc836e5067f7a6b01b22f42",
+      "superior_label_id": 6,
+      "superior_voxel_count": 177391
+    },
+    {
+      "affine_sha256": "cf220736c292ad33418577dca303d9bb51363efda2b84107d8261c2b42b0871a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -21.413455133767627,
+        40.78586349126448,
+        1868.4776584111019
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "9bd292de0ad7b56038eb8c9ccdc7a5cb9fc5645029c3b87c428ce92759098dba",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 163642,
+      "ras_superior_delta_mm": 362.46925976078774,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "003",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        6.682812814533349,
+        52.19472969993569,
+        2230.9469181718896
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "2011931cdbfe1582bf8e691747c1b015621a1caea3d08d10f4b3850042f8c49f",
+      "superior_label_id": 4,
+      "superior_voxel_count": 568799
+    },
+    {
+      "affine_sha256": "cf220736c292ad33418577dca303d9bb51363efda2b84107d8261c2b42b0871a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        37.96469813111588,
+        28.46577630910332,
+        1786.9356720325475
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "7404c4c6fb0696a176c469ff3321fa1e33bb4674183180298bf9483d6a4bd6ab",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 566762,
+      "ras_superior_delta_mm": 81.54198637855438,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "003",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -21.413455133767627,
+        40.78586349126448,
+        1868.4776584111019
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "9bd292de0ad7b56038eb8c9ccdc7a5cb9fc5645029c3b87c428ce92759098dba",
+      "superior_label_id": 5,
+      "superior_voxel_count": 163642
+    },
+    {
+      "affine_sha256": "cf220736c292ad33418577dca303d9bb51363efda2b84107d8261c2b42b0871a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        37.96469813111588,
+        28.46577630910332,
+        1786.9356720325475
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "7404c4c6fb0696a176c469ff3321fa1e33bb4674183180298bf9483d6a4bd6ab",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 566762,
+      "ras_superior_delta_mm": 125.6815803238378,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "003",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -1.4575128214671622,
+        -4.946864331998967,
+        1912.6172523563853
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "dc70160ec1ffe8f3e05321152701627efb1d63e8a7d4953c1c1d5f1500cce56d",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1455067
+    },
+    {
+      "affine_sha256": "cf220736c292ad33418577dca303d9bb51363efda2b84107d8261c2b42b0871a",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -4.474143820521846,
+        10.14674607722145,
+        1493.6755092088865
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "f55812c883fc8f9604eb20f6924edca06ff0dc42e8c2495038d28304f18ddc20",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 17725,
+      "ras_superior_delta_mm": 258.4136281206711,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "003",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -5.591421824728826,
+        -25.40394702698694,
+        1752.0891373295576
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "9b44bf95913ab61de2ee951ee1ff6a2da5f8d31e1c625c072649137396617d6e",
+      "superior_label_id": 6,
+      "superior_voxel_count": 117177
+    },
+    {
+      "affine_sha256": "ccc6db43633f506816cc0e4404980c03ac6b02874041f9c36dda9e08e1b40d32",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -31.97136875314675,
+        21.885695776504633,
+        1896.8806568922696
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "dc6e7ad79e0f2a7a7247773a21dadc6c455bba72491ea53fa1c7bf7bb27434d6",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 278065,
+      "ras_superior_delta_mm": 349.7533875005679,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "004",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -9.38432750381179,
+        11.84829617947804,
+        2246.6340443928375
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "eaf7e676dac7f435ab0f35a4e3889c5f494be0183d35e2c55fa0e8c798dbea45",
+      "superior_label_id": 4,
+      "superior_voxel_count": 742428
+    },
+    {
+      "affine_sha256": "ccc6db43633f506816cc0e4404980c03ac6b02874041f9c36dda9e08e1b40d32",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        72.09731799643035,
+        -10.288680137572754,
+        1829.4550226055405
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "839e10e738dd4cb7301636aad4d534f3f58f1c623593c637a961989cfad0b94d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 760016,
+      "ras_superior_delta_mm": 67.42563428672906,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "004",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -31.97136875314675,
+        21.885695776504633,
+        1896.8806568922696
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "dc6e7ad79e0f2a7a7247773a21dadc6c455bba72491ea53fa1c7bf7bb27434d6",
+      "superior_label_id": 5,
+      "superior_voxel_count": 278065
+    },
+    {
+      "affine_sha256": "ccc6db43633f506816cc0e4404980c03ac6b02874041f9c36dda9e08e1b40d32",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        72.09731799643035,
+        -10.288680137572754,
+        1829.4550226055405
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "839e10e738dd4cb7301636aad4d534f3f58f1c623593c637a961989cfad0b94d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 760016,
+      "ras_superior_delta_mm": 98.19121412654795,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "004",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.180349310701558,
+        -33.15850758665627,
+        1927.6462367320885
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "539cdf166e148732884f458e485a8d0771283ae367686fa7097046e065a6d733",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1506296
+    },
+    {
+      "affine_sha256": "ccc6db43633f506816cc0e4404980c03ac6b02874041f9c36dda9e08e1b40d32",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -9.719675481488935,
+        -5.886933015397176,
+        1500.659618033289
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "8271fd7de7616e7b9d4556a0156b809be1132e0a47509716842e60b379bbda78",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 33399,
+      "ras_superior_delta_mm": 239.71408909382149,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "004",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -2.9975799742810807,
+        -45.02623804929593,
+        1740.3737071271105
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "19590674b08326e5201f12e9580d020c94ed6a8130a4fa5603ba12f58af6c451",
+      "superior_label_id": 6,
+      "superior_voxel_count": 191882
+    },
+    {
+      "affine_sha256": "bdcb66b2cf934bc73c7ece8b6ebd48d0743d5401f02a6c23b37dca8ce654521f",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -23.613349429231505,
+        -23.217208502337996,
+        1901.5559374212903
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "ac01deed62275dfa4fb9d7b6a033a3e3538c740abdd19f2cdfe7935bf2219ad9",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 194398,
+      "ras_superior_delta_mm": 325.742167647169,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "005",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        1.5251254280810826,
+        -16.59346589556037,
+        2227.2981050684593
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "e66630ec81c585d3c992f1cda5b1c5c541dbf5f903afa5c13a982f29c2c8c431",
+      "superior_label_id": 4,
+      "superior_voxel_count": 580023
+    },
+    {
+      "affine_sha256": "bdcb66b2cf934bc73c7ece8b6ebd48d0743d5401f02a6c23b37dca8ce654521f",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        80.65279065275013,
+        -51.60107722551288,
+        1844.4387024860207
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "ef27c7a28854093bc44b8c65c236952b588ffbffb63f8ffdde0d23d42afee502",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 653150,
+      "ras_superior_delta_mm": 57.11723493526961,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "005",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -23.613349429231505,
+        -23.217208502337996,
+        1901.5559374212903
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "ac01deed62275dfa4fb9d7b6a033a3e3538c740abdd19f2cdfe7935bf2219ad9",
+      "superior_label_id": 5,
+      "superior_voxel_count": 194398
+    },
+    {
+      "affine_sha256": "bdcb66b2cf934bc73c7ece8b6ebd48d0743d5401f02a6c23b37dca8ce654521f",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        80.65279065275013,
+        -51.60107722551288,
+        1844.4387024860207
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "ef27c7a28854093bc44b8c65c236952b588ffbffb63f8ffdde0d23d42afee502",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 653150,
+      "ras_superior_delta_mm": 91.04366039657225,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "005",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        12.240043859139377,
+        -69.26559504541288,
+        1935.482362882593
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "62f897710d92566b8078df65896136752a7573fd16574d4d05a5a9ea0229f7fd",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1250265
+    },
+    {
+      "affine_sha256": "bdcb66b2cf934bc73c7ece8b6ebd48d0743d5401f02a6c23b37dca8ce654521f",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        5.502267186820944,
+        -40.938317409550194,
+        1479.5629129494994
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "4de7507bd1b51bd918499728ee76f02361a3e31efeca1d92dea465e14e73bdb2",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 29913,
+      "ras_superior_delta_mm": 279.55954659544864,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "005",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        0.44278210212908675,
+        -87.33933600662553,
+        1759.122459544948
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "cc566477a8c2543c010f7d17fad9df531845513773bf7b1adfc02b9cc7d8a1c7",
+      "superior_label_id": 6,
+      "superior_voxel_count": 130537
+    },
+    {
+      "affine_sha256": "a122cbd1b888539eeb4028673163b967821f6bb7290d29d4cb1409745fbb70ef",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -34.242031561437386,
+        -12.85044110553443,
+        1876.9481938476613
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "f73cd219a540e43f49c38092958d5ed90622f123147b5baea12e116898a037dd",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 302027,
+      "ras_superior_delta_mm": 368.37155160698535,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "006",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        2.5747899910819854,
+        -11.852222509558942,
+        2245.3197454546466
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "d157195214460fdf2fa4fea904bcc7ff55baa971199bd57b438dd5e518530d51",
+      "superior_label_id": 4,
+      "superior_voxel_count": 858096
+    },
+    {
+      "affine_sha256": "a122cbd1b888539eeb4028673163b967821f6bb7290d29d4cb1409745fbb70ef",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        66.56951675930537,
+        -30.69859103189401,
+        1814.1486185148744
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "7cd09252a92c8c0025006771e1a374d34fd8506017a5c64e7971683a37ea9cd6",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 798465,
+      "ras_superior_delta_mm": 62.799575332786844,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "006",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -34.242031561437386,
+        -12.85044110553443,
+        1876.9481938476613
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "f73cd219a540e43f49c38092958d5ed90622f123147b5baea12e116898a037dd",
+      "superior_label_id": 5,
+      "superior_voxel_count": 302027
+    },
+    {
+      "affine_sha256": "a122cbd1b888539eeb4028673163b967821f6bb7290d29d4cb1409745fbb70ef",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        66.56951675930537,
+        -30.69859103189401,
+        1814.1486185148744
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "7cd09252a92c8c0025006771e1a374d34fd8506017a5c64e7971683a37ea9cd6",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 798465,
+      "ras_superior_delta_mm": 107.77287379691029,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "006",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        2.931735129603055,
+        -64.70127626998834,
+        1921.9214923117847
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "6ea30f146510f47f6252bd5da392439e075b725fbe013743db428736bdb193cc",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1416701
+    },
+    {
+      "affine_sha256": "a122cbd1b888539eeb4028673163b967821f6bb7290d29d4cb1409745fbb70ef",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        12.118040225491029,
+        -32.50884694284116,
+        1465.3424153838341
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "93951e2ff5344fdc839ee6a0dd8558d8819ba1061934e7f54f78484c6ea97c68",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 58040,
+      "ras_superior_delta_mm": 280.7485156470955,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "006",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        7.0864314294974236,
+        -96.1528787104441,
+        1746.0909310309296
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "4e92c096b5931b8e15e8c4a12b898900dd5ca906412dba412b8567dbfe31e770",
+      "superior_label_id": 6,
+      "superior_voxel_count": 188025
+    },
+    {
+      "affine_sha256": "845adaf77859da3d806e06b42b10bf0bb2b505eea6bbbc9d32bd030911eda7a1",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -20.892627246387008,
+        -7.893078320019242,
+        1866.4354144558715
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "bce4fd9ab441a8dd90deed63475982304d2f5a8ed354262016d4abea7b0300fa",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 170496,
+      "ras_superior_delta_mm": 345.01910084719793,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "007",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -5.900965558440504,
+        20.286517223305964,
+        2211.4545153030695
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "7c46ac047841db9276467f65b63ece7f2fe3fb9d0e5ab856ecfb28e5cda5ac53",
+      "superior_label_id": 4,
+      "superior_voxel_count": 587585
+    },
+    {
+      "affine_sha256": "845adaf77859da3d806e06b42b10bf0bb2b505eea6bbbc9d32bd030911eda7a1",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        50.3552443328291,
+        -23.57857561889901,
+        1794.878238016486
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "f627558def463e18df5a7fd580957139b3e195b5ffa9fcd23f30dcb23a20741d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 536285,
+      "ras_superior_delta_mm": 71.55717643938556,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "007",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -20.892627246387008,
+        -7.893078320019242,
+        1866.4354144558715
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "bce4fd9ab441a8dd90deed63475982304d2f5a8ed354262016d4abea7b0300fa",
+      "superior_label_id": 5,
+      "superior_voxel_count": 170496
+    },
+    {
+      "affine_sha256": "845adaf77859da3d806e06b42b10bf0bb2b505eea6bbbc9d32bd030911eda7a1",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        50.3552443328291,
+        -23.57857561889901,
+        1794.878238016486
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "f627558def463e18df5a7fd580957139b3e195b5ffa9fcd23f30dcb23a20741d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 536285,
+      "ras_superior_delta_mm": 112.50548533364122,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "007",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -0.6372605322553113,
+        -44.558131130685894,
+        1907.3837233501272
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "62d51138e0bedab101c4daaa8eda1707e3b7a60434abbef198c929b19fa155e6",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1279501
+    },
+    {
+      "affine_sha256": "845adaf77859da3d806e06b42b10bf0bb2b505eea6bbbc9d32bd030911eda7a1",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -3.4126913304470747,
+        -12.419327445652158,
+        1511.3355162678602
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "a11f9597e7c52bc1df130cca91caf107b80022f6647738e7e9a03873d74b5aa7",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 12213,
+      "ras_superior_delta_mm": 244.5315486167251,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "007",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        0.252712694098733,
+        -78.81853791133747,
+        1755.8670648845853
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "48f28fcf70a5745e2533554d0f82008a0f3569f770e5ee0b76a6be2e3511ce03",
+      "superior_label_id": 6,
+      "superior_voxel_count": 121813
+    },
+    {
+      "affine_sha256": "931f771fc34332ea160e9f4686381620f9f9de747ea24d9a8ceb6ed5b892a9d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -34.96208979126254,
+        14.796526914186927,
+        -500.1728034345779
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "b74552f4543f60571d5b73d9e329e58b65f4f4139191f1008df6d3da3a2e3826",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 280945,
+      "ras_superior_delta_mm": 345.17917160071374,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "008",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -15.44377898336353,
+        -12.788489868585458,
+        -154.99363183386413
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "8d06b70495215f4362cb15ed5bcc17024ef3c3f24d0369801da10a9d61690835",
+      "superior_label_id": 4,
+      "superior_voxel_count": 572958
+    },
+    {
+      "affine_sha256": "931f771fc34332ea160e9f4686381620f9f9de747ea24d9a8ceb6ed5b892a9d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        63.60937914453223,
+        -18.00657475226791,
+        -568.2671268886115
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "b996a5c1a8aa5eb9b530db88edf15bd4babcd6c69fad96176fe8e39ad603ed9b",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 894439,
+      "ras_superior_delta_mm": 68.09432345403366,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "008",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -34.96208979126254,
+        14.796526914186927,
+        -500.1728034345779
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "b74552f4543f60571d5b73d9e329e58b65f4f4139191f1008df6d3da3a2e3826",
+      "superior_label_id": 5,
+      "superior_voxel_count": 280945
+    },
+    {
+      "affine_sha256": "931f771fc34332ea160e9f4686381620f9f9de747ea24d9a8ceb6ed5b892a9d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        63.60937914453223,
+        -18.00657475226791,
+        -568.2671268886115
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "b996a5c1a8aa5eb9b530db88edf15bd4babcd6c69fad96176fe8e39ad603ed9b",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 894439,
+      "ras_superior_delta_mm": 97.8397115213545,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "008",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.4135567051330895,
+        -39.01803719601497,
+        -470.427415367257
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "89b0857d725974989611446e4e8d508312d0e16ff3904741ea9831f385add3db",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1309974
+    },
+    {
+      "affine_sha256": "931f771fc34332ea160e9f4686381620f9f9de747ea24d9a8ceb6ed5b892a9d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        1.2415131440825462,
+        -12.910793584293089,
+        -928.4364869952824
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "a4fa3fe6741afb0eb4337cd01885411f8fe6f3fb2ba54378cc398aedf06ec7ef",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 33342,
+      "ras_superior_delta_mm": 272.14653836099933,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "008",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -11.978155621906978,
+        -68.74489140726993,
+        -656.2899486342831
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "75a6982947ca2909264d76e34c2bd6804d50847435ab57a6b7e5ddaf149cd90c",
+      "superior_label_id": 6,
+      "superior_voxel_count": 164685
+    },
+    {
+      "affine_sha256": "db74b944486d7220434bbd9d99a125f158471449409634e12ec3ecacc903db63",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.53815136931013,
+        22.89569924612408,
+        1885.7317507971554
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "e8ba3fada7bb7c1d7daa93ac8f0e57d7177d9c87166cca0eb9545461f03ce902",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 221754,
+      "ras_superior_delta_mm": 353.7630700524153,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "009",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -13.16499469515827,
+        11.998991900678732,
+        2239.4948208495707
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "f4247d210d1cb16457e4aea380c7034407b4f111f54e3fc4bed6b7209d34a0e9",
+      "superior_label_id": 4,
+      "superior_voxel_count": 600984
+    },
+    {
+      "affine_sha256": "db74b944486d7220434bbd9d99a125f158471449409634e12ec3ecacc903db63",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        84.56500508875033,
+        4.227540542468091,
+        1821.846836226176
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "e9f5d11e804100a9f22c3f21c1d6841cc690b2cd82f5404f516d41261b8a4fb0",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 667772,
+      "ras_superior_delta_mm": 63.88491457097939,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "009",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.53815136931013,
+        22.89569924612408,
+        1885.7317507971554
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "e8ba3fada7bb7c1d7daa93ac8f0e57d7177d9c87166cca0eb9545461f03ce902",
+      "superior_label_id": 5,
+      "superior_voxel_count": 221754
+    },
+    {
+      "affine_sha256": "db74b944486d7220434bbd9d99a125f158471449409634e12ec3ecacc903db63",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        84.56500508875033,
+        4.227540542468091,
+        1821.846836226176
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "e9f5d11e804100a9f22c3f21c1d6841cc690b2cd82f5404f516d41261b8a4fb0",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 667772,
+      "ras_superior_delta_mm": 102.70303586219325,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "009",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        12.923538055471482,
+        -25.19867251083795,
+        1924.5498720883693
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "5c919e1e46fe2fe8b8f7b67b9792bd4a6087b1154b61bf15e81532fae0237d0f",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1749291
+    },
+    {
+      "affine_sha256": "db74b944486d7220434bbd9d99a125f158471449409634e12ec3ecacc903db63",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        14.52781004555905,
+        9.604371484700494,
+        1508.4924077053438
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "6493d6fecfab5bdb325812a3b4e7356610139cca9e3bf098951ec7bd42472be4",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 64806,
+      "ras_superior_delta_mm": 229.84665541355275,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "009",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -0.22358818712396555,
+        -20.206807991317817,
+        1738.3390631188965
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "1a376456eb21828c6da01517a9a5b7b05c98df54085b40796a2d7d1ba41acf6a",
+      "superior_label_id": 6,
+      "superior_voxel_count": 140777
+    },
+    {
+      "affine_sha256": "77f9da57b2756beed4596bf35596e115575f19969c26a5c6c47ed0499ec9b873",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -44.71291737740313,
+        -0.5015177523399075,
+        1865.0268892260474
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "17bf99ac966710ec5b1428a4a7eedf4be79bbd76b08d56fec8156dbf6e94e804",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 195733,
+      "ras_superior_delta_mm": 350.5472256699122,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "010",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -22.480669655859685,
+        1.8075229797330792,
+        2215.5741148959596
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "e333cadcae1dad18e48b3a3b1dda4c817cd1a80e79ccfe043fad0d2a97baabb7",
+      "superior_label_id": 4,
+      "superior_voxel_count": 633459
+    },
+    {
+      "affine_sha256": "77f9da57b2756beed4596bf35596e115575f19969c26a5c6c47ed0499ec9b873",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        62.1768054703646,
+        0.6556496714752029,
+        1780.3956448594354
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "a93151f7ec3af0d7f65c696e5ab81d057c1bf2159f1c63286a4c8eb9db8504b5",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 700632,
+      "ras_superior_delta_mm": 84.63124436661201,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "010",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -44.71291737740313,
+        -0.5015177523399075,
+        1865.0268892260474
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "17bf99ac966710ec5b1428a4a7eedf4be79bbd76b08d56fec8156dbf6e94e804",
+      "superior_label_id": 5,
+      "superior_voxel_count": 195733
+    },
+    {
+      "affine_sha256": "77f9da57b2756beed4596bf35596e115575f19969c26a5c6c47ed0499ec9b873",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        62.1768054703646,
+        0.6556496714752029,
+        1780.3956448594354
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "a93151f7ec3af0d7f65c696e5ab81d057c1bf2159f1c63286a4c8eb9db8504b5",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 700632,
+      "ras_superior_delta_mm": 117.38821073080362,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "010",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -5.225544607033072,
+        -37.06621464643439,
+        1897.783855590239
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "c57b7df7f4570ed50357d1ad40b7430f5d68b463a57a93813f3d1df321920093",
+      "superior_label_id": 12,
+      "superior_voxel_count": 2002344
+    },
+    {
+      "affine_sha256": "77f9da57b2756beed4596bf35596e115575f19969c26a5c6c47ed0499ec9b873",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        2.726984797297291,
+        -21.092377533783804,
+        1497.8234726901442
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "f9eee56f138a5a44d6b663ca18e2afbbd1f731eae593761a9df6593a3d3eed23",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 18500,
+      "ras_superior_delta_mm": 240.4451910645373,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "010",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -6.5044564043270725,
+        -64.95750512942541,
+        1738.2686637546815
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "f60475afbc3954a5cf00a6af5905548aac913ee094c138ade520499cee15a01f",
+      "superior_label_id": 6,
+      "superior_voxel_count": 126598
+    },
+    {
+      "affine_sha256": "4ebd2e5631d71747fb7337aa46664d4e282673aee06e3f0cb557f2b3f3a5c2c4",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -43.456596363493986,
+        57.80607734757206,
+        2033.6303958251397
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "59da5a29a1ce6007bf52be378d2a2fe72083af0951ab6e1dd2ac826b50960430",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 314378,
+      "ras_superior_delta_mm": 351.54570277220364,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "011",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -10.023406151663153,
+        22.308641451228254,
+        2385.1760985973433
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "330729ab4d342f2a98ac9d32e5822681966991668aa5ad1a1410a2a40611b5de",
+      "superior_label_id": 4,
+      "superior_voxel_count": 676247
+    },
+    {
+      "affine_sha256": "4ebd2e5631d71747fb7337aa46664d4e282673aee06e3f0cb557f2b3f3a5c2c4",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        64.5583980357338,
+        16.71445537092643,
+        1960.5072168772747
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "59496dbde2421c93c284b4e2bbccda211f58c5249dd3bc46b948414c73590a4d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 1024772,
+      "ras_superior_delta_mm": 73.12317894786497,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "011",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -43.456596363493986,
+        57.80607734757206,
+        2033.6303958251397
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "59da5a29a1ce6007bf52be378d2a2fe72083af0951ab6e1dd2ac826b50960430",
+      "superior_label_id": 5,
+      "superior_voxel_count": 314378
+    },
+    {
+      "affine_sha256": "4ebd2e5631d71747fb7337aa46664d4e282673aee06e3f0cb557f2b3f3a5c2c4",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        64.5583980357338,
+        16.71445537092643,
+        1960.5072168772747
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "59496dbde2421c93c284b4e2bbccda211f58c5249dd3bc46b948414c73590a4d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 1024772,
+      "ras_superior_delta_mm": 99.38962065043893,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "011",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -17.17436284091474,
+        -1.5984718125946529,
+        2059.8968375277136
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "d29bbf8e54c04f6e6fc3a602a7e34d84fb7cc658c291ac88cb9153dd36991b38",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1208330
+    },
+    {
+      "affine_sha256": "4ebd2e5631d71747fb7337aa46664d4e282673aee06e3f0cb557f2b3f3a5c2c4",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -7.267306106867807,
+        21.586566527562923,
+        1599.3729689482084
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "0f3db0e06ccd54150b74765597177bb86f7ac04a1e8875a8e03036ed8a53b6b3",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 59473,
+      "ras_superior_delta_mm": 271.3682208364485,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "011",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -13.291437095982019,
+        -35.792561843800826,
+        1870.7411897846569
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "598661b4b4a17897700b85d2cd882e87d895b7541a5ffe003aed57599ba0d2a0",
+      "superior_label_id": 6,
+      "superior_voxel_count": 189348
+    },
+    {
+      "affine_sha256": "bd0e188f133b22f72c5b09d5236fc2b763190882c169a21f3c628f57637d988d",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -20.304953656262626,
+        -19.40594132173095,
+        1906.7456456830744
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "8c2bd591ade7288b5c36318a518c8a390c67d1e4326e18b1ab4c8127355e42ac",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 223230,
+      "ras_superior_delta_mm": 336.2972085033414,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "012",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -0.142893660764571,
+        -13.577022340360031,
+        2243.0428541864158
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "5a295dbe79124deed036f92748ccd4dcc3e0eb2c8b37ac328d22ef0b655542bf",
+      "superior_label_id": 4,
+      "superior_voxel_count": 651787
+    },
+    {
+      "affine_sha256": "bd0e188f133b22f72c5b09d5236fc2b763190882c169a21f3c628f57637d988d",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        75.42036086099333,
+        -29.404229734507027,
+        1833.4285866907958
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "6e787c876bc916ba025bc22d5200b4ef6837059bd2e2d1693a7fe181cc7f6996",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 787615,
+      "ras_superior_delta_mm": 73.31705899227859,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "012",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -20.304953656262626,
+        -19.40594132173095,
+        1906.7456456830744
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "8c2bd591ade7288b5c36318a518c8a390c67d1e4326e18b1ab4c8127355e42ac",
+      "superior_label_id": 5,
+      "superior_voxel_count": 223230
+    },
+    {
+      "affine_sha256": "bd0e188f133b22f72c5b09d5236fc2b763190882c169a21f3c628f57637d988d",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        75.42036086099333,
+        -29.404229734507027,
+        1833.4285866907958
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "6e787c876bc916ba025bc22d5200b4ef6837059bd2e2d1693a7fe181cc7f6996",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 787615,
+      "ras_superior_delta_mm": 108.46301402767108,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "012",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        9.539599542521671,
+        -63.98211398317238,
+        1941.8916007184669
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "1000dabc00a44e82b7b16bdb0e64dd1e9b171c437a551e769fba095abc7ad891",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1172255
+    },
+    {
+      "affine_sha256": "bd0e188f133b22f72c5b09d5236fc2b763190882c169a21f3c628f57637d988d",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -0.9480960724855265,
+        -28.418611504302163,
+        1525.1567201488078
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "dc578789e52cdf9f648983c4cf3a94beaab479cc7b09f5047128d916961aa4ee",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 43757,
+      "ras_superior_delta_mm": 244.13519031834608,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "012",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -3.4291092793544635,
+        -83.35960749800392,
+        1769.291910467154
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "96b5eab117da088160c2c608ce9e16343c2809e851d5e45ea1d626738fa82723",
+      "superior_label_id": 6,
+      "superior_voxel_count": 165324
+    },
+    {
+      "affine_sha256": "346c3ccdb42aaad10ee01633c24681852af47f22e88815c6a32816d195f0df13",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -33.21894107324863,
+        19.60730922000863,
+        -937.4753030171748
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "45f4d1918a48cebc99aa502cdf9dedb9cb67acf0c636176a662859a537055b77",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 222714,
+      "ras_superior_delta_mm": 320.6182742968185,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "013",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.843791325619691,
+        59.69540134022725,
+        -616.8570287203563
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "8cf7bfdb299186fd53e9a43a1f0e3101be82be7b69a92dbea9b9fcb697c6008e",
+      "superior_label_id": 4,
+      "superior_voxel_count": 594554
+    },
+    {
+      "affine_sha256": "346c3ccdb42aaad10ee01633c24681852af47f22e88815c6a32816d195f0df13",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        53.535653059682005,
+        1.9355554906622103,
+        -1009.3484015686431
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "e3a67aa6888fd9e36a3d071c643206a0455edd3cda1dcee68362ab2c1d62515b",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 727690,
+      "ras_superior_delta_mm": 71.87309855146827,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "013",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -33.21894107324863,
+        19.60730922000863,
+        -937.4753030171748
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "45f4d1918a48cebc99aa502cdf9dedb9cb67acf0c636176a662859a537055b77",
+      "superior_label_id": 5,
+      "superior_voxel_count": 222714
+    },
+    {
+      "affine_sha256": "346c3ccdb42aaad10ee01633c24681852af47f22e88815c6a32816d195f0df13",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        53.535653059682005,
+        1.9355554906622103,
+        -1009.3484015686431
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "e3a67aa6888fd9e36a3d071c643206a0455edd3cda1dcee68362ab2c1d62515b",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 727690,
+      "ras_superior_delta_mm": 114.95409555871447,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "013",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.002358509430081,
+        -16.483465785326985,
+        -894.3943060099286
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "4eb4c5e7eaf9afa2cf43efdd177464566767f9de269d7f05d397038db8e9db89",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1207279
+    },
+    {
+      "affine_sha256": "346c3ccdb42aaad10ee01633c24681852af47f22e88815c6a32816d195f0df13",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        4.237574803562325,
+        21.32538894434117,
+        -1332.4867171314868
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "f4b64bb9ddf1165ed250e03109223d5bcc9250fd6008ed5923483e3364f5dff1",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 13713,
+      "ras_superior_delta_mm": 277.85260994852774,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "013",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -11.58468338161191,
+        -47.113837848851716,
+        -1054.634107182959
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "c2bb10d80287b94cd8c99307043a2145454ce6126ddd420d0b13ad266abfd589",
+      "superior_label_id": 6,
+      "superior_voxel_count": 144474
+    },
+    {
+      "affine_sha256": "c6935f9e585f9771de1ad4cb19e3c2b5b29e6a9d9d1265c582e86081bc1ce9be",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.842825486452398,
+        -11.63990061228668,
+        -578.4719649354004
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "33de83287440bfd11f715caa2f1ff95bdf8a7562f7d4a24ba57c11b9c9e6fede",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 163608,
+      "ras_superior_delta_mm": 330.497673247447,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "015",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -1.831141617176911,
+        10.205686815748152,
+        -247.97429168795338
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "b71721401e111ca73c150046f7318cd7607ac133b141a04a1e3253aa13ad4412",
+      "superior_label_id": 4,
+      "superior_voxel_count": 533612
+    },
+    {
+      "affine_sha256": "c6935f9e585f9771de1ad4cb19e3c2b5b29e6a9d9d1265c582e86081bc1ce9be",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        52.90622762240335,
+        -26.79303455825928,
+        -650.7145882158504
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "55db6d8a01561cefa005558b5fda01642330eae4cd12a1cbdec53fdc16fd848e",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 560340,
+      "ras_superior_delta_mm": 72.24262328045006,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "015",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.842825486452398,
+        -11.63990061228668,
+        -578.4719649354004
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "33de83287440bfd11f715caa2f1ff95bdf8a7562f7d4a24ba57c11b9c9e6fede",
+      "superior_label_id": 5,
+      "superior_voxel_count": 163608
+    },
+    {
+      "affine_sha256": "c6935f9e585f9771de1ad4cb19e3c2b5b29e6a9d9d1265c582e86081bc1ce9be",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        52.90622762240335,
+        -26.79303455825928,
+        -650.7145882158504
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "55db6d8a01561cefa005558b5fda01642330eae4cd12a1cbdec53fdc16fd848e",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 560340,
+      "ras_superior_delta_mm": 107.98096964527554,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "015",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -9.533298976273443,
+        -47.149828486194735,
+        -542.7336185705749
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "6b2300e796f98ffec599abb8af9c861753a3af739659dc97e2a71c6899db3030",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1018668
+    },
+    {
+      "affine_sha256": "c6935f9e585f9771de1ad4cb19e3c2b5b29e6a9d9d1265c582e86081bc1ce9be",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -10.849985080133933,
+        -10.342434915953504,
+        -963.7025623601903
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "dc6e8c0615900b3e9e568efc0bdace251c83f21829910e542ffa26428331d6d6",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 50478,
+      "ras_superior_delta_mm": 246.62760052653266,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "015",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -8.412552957301841,
+        -62.55724061305864,
+        -717.0749618336577
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "dcf852894e8411afeaffb9991087176d24d7304484b669239c33072f458bc733",
+      "superior_label_id": 6,
+      "superior_voxel_count": 120380
+    },
+    {
+      "affine_sha256": "970ae91e7e1b87d93e45a69bf9b31bed4bb6d0cf7782227f58e87d7052c36abe",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.642291278848518,
+        1.4491997876213816,
+        -622.1503816080933
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "11ccb704e79e321a82dd4cf60964c978c6be13ea0d72fbc725e9dde89a78ade7",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 243080,
+      "ras_superior_delta_mm": 366.23020106518356,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "017",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.702526055865917,
+        -8.599751044472612,
+        -255.92018054290975
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "7606c8dfdb2294b1ff6b46a0c3210264f1a6bb148f743b22eed3b9191fe434d9",
+      "superior_label_id": 4,
+      "superior_voxel_count": 614395
+    },
+    {
+      "affine_sha256": "970ae91e7e1b87d93e45a69bf9b31bed4bb6d0cf7782227f58e87d7052c36abe",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        81.09998940329677,
+        -40.3541398119599,
+        -681.3206504663217
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "cd37e070e1b482f95ad2dd7684734e1defd963cabf45bddb3f24fa0ccd54cc8d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 744409,
+      "ras_superior_delta_mm": 59.17026885822838,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "017",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.642291278848518,
+        1.4491997876213816,
+        -622.1503816080933
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "11ccb704e79e321a82dd4cf60964c978c6be13ea0d72fbc725e9dde89a78ade7",
+      "superior_label_id": 5,
+      "superior_voxel_count": 243080
+    },
+    {
+      "affine_sha256": "970ae91e7e1b87d93e45a69bf9b31bed4bb6d0cf7782227f58e87d7052c36abe",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        81.09998940329677,
+        -40.3541398119599,
+        -681.3206504663217
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "cd37e070e1b482f95ad2dd7684734e1defd963cabf45bddb3f24fa0ccd54cc8d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 744409,
+      "ras_superior_delta_mm": 102.47459182122043,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "017",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -2.7914010358383052,
+        -34.979415748375175,
+        -578.8460586451013
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "b15dff70819839504aa68e2f9b8118d6aa0e9206eb2d37aabf13aded44ac459b",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1544172
+    },
+    {
+      "affine_sha256": "970ae91e7e1b87d93e45a69bf9b31bed4bb6d0cf7782227f58e87d7052c36abe",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        2.333890250874248,
+        -8.090928195399783,
+        -990.5477657129386
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "7793dee2ee8f9775465c4be2042e07771afd0270ce99952c512985805184b343",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 69203,
+      "ras_superior_delta_mm": 222.07449014755412,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "017",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -3.770908209673024,
+        -49.18273265130591,
+        -768.4732755653845
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "82eaf090d3ab5873cdf61539adcd17a6785a8f7baaa5c278a8e9a2fca31780fb",
+      "superior_label_id": 6,
+      "superior_voxel_count": 125276
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -42.764872484482794,
+        21.17023405368559,
+        -624.3968914087002
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "7891fe4cf2e35289f987db3ff50d2338ee739fd1162dd0a16a1a1e430cf455d2",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 212506,
+      "ras_superior_delta_mm": 321.5371181747644,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "018",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -13.586992354542701,
+        42.8404232666432,
+        -302.8597732339358
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "2bd06558eff58967fb893c6e4e921516e158cac4f0ff9fb182db9f38d287c802",
+      "superior_label_id": 4,
+      "superior_voxel_count": 556323
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        31.68707610762405,
+        8.942662044120937,
+        -694.3118969656757
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "e2a89472b96f18909978a8992fe9315c2f70af09c52ec66ae65a6a4c9ed41cc9",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 584105,
+      "ras_superior_delta_mm": 69.91500555697553,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "018",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -42.764872484482794,
+        21.17023405368559,
+        -624.3968914087002
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "7891fe4cf2e35289f987db3ff50d2338ee739fd1162dd0a16a1a1e430cf455d2",
+      "superior_label_id": 5,
+      "superior_voxel_count": 212506
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        31.68707610762405,
+        8.942662044120937,
+        -694.3118969656757
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "e2a89472b96f18909978a8992fe9315c2f70af09c52ec66ae65a6a4c9ed41cc9",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 584105,
+      "ras_superior_delta_mm": 110.64810495850656,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "018",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -9.827038643790729,
+        -15.50501176241221,
+        -583.6637920071691
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "5407b06d6f0b7cfb374dcea9afcc14c59986ced93068f024601207c2e5908ace",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1008363
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -6.119606260170883,
+        21.005099208367255,
+        -1004.6344274883082
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "d0627e668ee207da293a575c4d3b232a3cdc8d3d3f3ce83b8b7371075641b9fd",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 11061,
+      "ras_superior_delta_mm": 273.366435722534,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "018",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -13.100270144639694,
+        -35.258609080347895,
+        -731.2679917657742
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "8adb7b6a2c31811bf123b6810b1e8d174d99256875a82e3fcd00c0826a34fa69",
+      "superior_label_id": 6,
+      "superior_voxel_count": 111095
+    },
+    {
+      "affine_sha256": "0c15cb3178beae8dd5614cc3723a933872d52fb103da792b4d9b6903205398d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -20.97030908972289,
+        12.293882111169125,
+        -603.7001610633295
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "8b31b3592d08532d309f404754c908f9dad14fa17da788b8d3bb7d62b961991e",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 131725,
+      "ras_superior_delta_mm": 383.12255872171295,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "020",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.390151310863018,
+        28.33129649941469,
+        -220.5776023416165
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "38aee8a331c67dabefc9cbdbf992e65b2d006e68cbb72f2885194924076135e7",
+      "superior_label_id": 4,
+      "superior_voxel_count": 571899
+    },
+    {
+      "affine_sha256": "0c15cb3178beae8dd5614cc3723a933872d52fb103da792b4d9b6903205398d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        63.28757879042709,
+        -5.153821042689401,
+        -680.858940250848
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "1aa3d8e15afaef83428aa0cbcd3fc06e93c7dfe972ccda2c577fe15fdb668584",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 526565,
+      "ras_superior_delta_mm": 77.15877918751858,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "020",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -20.97030908972289,
+        12.293882111169125,
+        -603.7001610633295
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "8b31b3592d08532d309f404754c908f9dad14fa17da788b8d3bb7d62b961991e",
+      "superior_label_id": 5,
+      "superior_voxel_count": 131725
+    },
+    {
+      "affine_sha256": "0c15cb3178beae8dd5614cc3723a933872d52fb103da792b4d9b6903205398d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        63.28757879042709,
+        -5.153821042689401,
+        -680.858940250848
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "1aa3d8e15afaef83428aa0cbcd3fc06e93c7dfe972ccda2c577fe15fdb668584",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 526565,
+      "ras_superior_delta_mm": 120.58687013880012,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "020",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -3.6595190861231686,
+        -28.325840912308536,
+        -560.2720701120479
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "0a858892a9538d17ff1643412cdf0434964e18ba844026e47c583b3079049e9c",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1810869
+    },
+    {
+      "affine_sha256": "0c15cb3178beae8dd5614cc3723a933872d52fb103da792b4d9b6903205398d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -3.428846156271419,
+        1.6966980293292693,
+        -986.102029843107
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "312682a65d24ae17f3325f753e5bbd82d40f85ac1940d622be894e23df5f789a",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 24779,
+      "ras_superior_delta_mm": 266.80666868712274,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "020",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.469925653632032,
+        -51.54018468242381,
+        -719.2953611559842
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "d17f765684eae10e1dad4ab8ed02bf906752bf377d934a2196ef428d41bf276d",
+      "superior_label_id": 6,
+      "superior_voxel_count": 109580
+    },
+    {
+      "affine_sha256": "2442d701fd3804153b606e958b7bc0333f37f12ed08de18d1870686343041da5",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -45.823592053801235,
+        -9.489786069795429,
+        -592.9307585396609
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "33af0773e2fde7a703b85899616df815d146a9e346f619c4d3a8c2ee72fed06c",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 231584,
+      "ras_superior_delta_mm": 324.34171582516615,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "021",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -10.174154046546732,
+        -6.953183691728697,
+        -268.5890427144948
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "ec495523b2c162f514d2e7b4c3b38f43cab8b6c7be5d86db45ad9774eace1ae0",
+      "superior_label_id": 4,
+      "superior_voxel_count": 572709
+    },
+    {
+      "affine_sha256": "2442d701fd3804153b606e958b7bc0333f37f12ed08de18d1870686343041da5",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        57.987165472442996,
+        -31.079297442699925,
+        -651.424431863609
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "b296e7931ebee5c1982dfc2f9ad6f5a75aba1fe0393b5fc23226220eaeb87853",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 782351,
+      "ras_superior_delta_mm": 58.49367332394809,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "021",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -45.823592053801235,
+        -9.489786069795429,
+        -592.9307585396609
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "33af0773e2fde7a703b85899616df815d146a9e346f619c4d3a8c2ee72fed06c",
+      "superior_label_id": 5,
+      "superior_voxel_count": 231584
+    },
+    {
+      "affine_sha256": "2442d701fd3804153b606e958b7bc0333f37f12ed08de18d1870686343041da5",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        57.987165472442996,
+        -31.079297442699925,
+        -651.424431863609
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "b296e7931ebee5c1982dfc2f9ad6f5a75aba1fe0393b5fc23226220eaeb87853",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 782351,
+      "ras_superior_delta_mm": 100.6951521410499,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "021",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -5.931268631562233,
+        -48.091259185173584,
+        -550.7292797225591
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "1a41eae85985d2d9a22a23e49244b7e748274e7de3ce172345d9e81150887b05",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1025855
+    },
+    {
+      "affine_sha256": "2442d701fd3804153b606e958b7bc0333f37f12ed08de18d1870686343041da5",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -14.602964051552135,
+        -14.58172410227715,
+        -959.7777139516761
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "d0f6cfea2e440506841f547e56909c9644e16edf0ce41493d9615048adc07651",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 20552,
+      "ras_superior_delta_mm": 233.08483675648745,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "021",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -14.007715586264965,
+        -68.04686244509321,
+        -726.6928771951887
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "e0109cccf8d700f46400c23378f55414a0f8069a2089738bdf88fdfa20cecdcb",
+      "superior_label_id": 6,
+      "superior_voxel_count": 154011
+    },
+    {
+      "affine_sha256": "77b93cdb3d40fb65718cc2153c853804fd2f6f0673ee7307c72eb19a3eb384d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -40.935089183319235,
+        -6.149864976760057,
+        -647.8293145282103
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "29b4a64fbe3c33d3a277dea5e1ff267f3001d24f9df7812f353cf589f386182e",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 321322,
+      "ras_superior_delta_mm": 378.6275692653819,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "022",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.430301505120951,
+        5.29378924595531,
+        -269.20174526282835
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "0962d6e83cdcdf56ddbfc527d9223bcf3693b09cd5c725a403bc9c7586e50872",
+      "superior_label_id": 4,
+      "superior_voxel_count": 603008
+    },
+    {
+      "affine_sha256": "77b93cdb3d40fb65718cc2153c853804fd2f6f0673ee7307c72eb19a3eb384d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        52.135457301965715,
+        4.934175766982008,
+        -712.8144735942187
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "088a7818f458021ae6e564d83321cd53aa8a1250b4e7c892ac91bfbbf11fdb0f",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 706071,
+      "ras_superior_delta_mm": 64.98515906600846,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "022",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -40.935089183319235,
+        -6.149864976760057,
+        -647.8293145282103
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "29b4a64fbe3c33d3a277dea5e1ff267f3001d24f9df7812f353cf589f386182e",
+      "superior_label_id": 5,
+      "superior_voxel_count": 321322
+    },
+    {
+      "affine_sha256": "77b93cdb3d40fb65718cc2153c853804fd2f6f0673ee7307c72eb19a3eb384d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        52.135457301965715,
+        4.934175766982008,
+        -712.8144735942187
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "088a7818f458021ae6e564d83321cd53aa8a1250b4e7c892ac91bfbbf11fdb0f",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 706071,
+      "ras_superior_delta_mm": 115.75860187090711,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "022",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        9.39214745843205,
+        -50.99928898139194,
+        -597.0558717233116
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "dff4c0459d6f8c7d7cb4d7ea5cd6e052e6c138605a6c8e6b0d50b53947c456f8",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1631215
+    },
+    {
+      "affine_sha256": "77b93cdb3d40fb65718cc2153c853804fd2f6f0673ee7307c72eb19a3eb384d9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        3.7825243794326298,
+        -35.411984707446805,
+        -1029.5755922327583
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "ff7f019a571e55bec57e3e463775d7fdaa4f920846cfb1f1290bf548df2ab86f",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 35250,
+      "ras_superior_delta_mm": 250.6194280015211,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "022",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -5.928756486189911,
+        -75.24118460558248,
+        -778.9561642312372
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "33dd9626b734a6d0c76d69011757bc94377033c556e0c348019c8adadb6ef379",
+      "superior_label_id": 6,
+      "superior_voxel_count": 166074
+    },
+    {
+      "affine_sha256": "f7adae4b54058ed8206f0e22cb785b3867b30874c366095cae0f6763e52db607",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.419266303750646,
+        -0.41705887620298654,
+        -534.8358783584752
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "96c8df6239ad937fbaa7b249a129162a825cfc5b78e0d8d4e162092ab35e4da4",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 238881,
+      "ras_superior_delta_mm": 314.82016306214746,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "023",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -1.4791763025511102,
+        -25.134412901752825,
+        -220.0157152963277
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "8a32b9cadca88e46ca9f1eadd2e1a478726aa022f555f5828dff2d65ba2063a3",
+      "superior_label_id": 4,
+      "superior_voxel_count": 571729
+    },
+    {
+      "affine_sha256": "f7adae4b54058ed8206f0e22cb785b3867b30874c366095cae0f6763e52db607",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        67.961059751204,
+        -13.23632755873092,
+        -602.9905967294571
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "bcc59aa648c1153f656c78c1f657773e194556a2ec1c777d632ec4ca80606dc1",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 620840,
+      "ras_superior_delta_mm": 68.15471837098198,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "023",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.419266303750646,
+        -0.41705887620298654,
+        -534.8358783584752
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "96c8df6239ad937fbaa7b249a129162a825cfc5b78e0d8d4e162092ab35e4da4",
+      "superior_label_id": 5,
+      "superior_voxel_count": 238881
+    },
+    {
+      "affine_sha256": "f7adae4b54058ed8206f0e22cb785b3867b30874c366095cae0f6763e52db607",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        67.961059751204,
+        -13.23632755873092,
+        -602.9905967294571
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "bcc59aa648c1153f656c78c1f657773e194556a2ec1c777d632ec4ca80606dc1",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 620840,
+      "ras_superior_delta_mm": 96.22195893446906,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "023",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        7.047258146561603,
+        -49.9136423931694,
+        -506.7686377949881
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "0d72d6e498582a0ab4b14cdcbcdb547385560ee2d2998692607f6f7858219ce0",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1266140
+    },
+    {
+      "affine_sha256": "f7adae4b54058ed8206f0e22cb785b3867b30874c366095cae0f6763e52db607",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -3.176808775783968,
+        -18.5428623037524,
+        -913.5745627724189
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "2691546307bc6fa4a5eceb607b6e9fc2a64040422cf97eeb210cfc20b3c99541",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 50128,
+      "ras_superior_delta_mm": 237.13659754622358,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "023",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.521305798722096,
+        -52.01051520892818,
+        -676.4379652261953
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "63ab7716f76d0a2dd093c9b877c09be51455a38151a5d27531b2c809c08d7cc4",
+      "superior_label_id": 6,
+      "superior_voxel_count": 128884
+    },
+    {
+      "affine_sha256": "a80bd7cc1d655e61b19a24fc4c5fb6d7e917385d80eaa52ea470a822d70d82e9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.042950233107092,
+        8.516422326549332,
+        -518.6229824925438
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "9948e18f9178ba771b7aa414ea6bb2c4da1e52071330efc6d6ea796732b6a95c",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 273399,
+      "ras_superior_delta_mm": 399.52396204541674,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "024",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.940740958780623,
+        6.36081762032336,
+        -119.09902044712703
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "bf4a3100c519ae43437ad53977bfa5d0ff1a86402bf7e675d8a86bfbac218f8d",
+      "superior_label_id": 4,
+      "superior_voxel_count": 681445
+    },
+    {
+      "affine_sha256": "a80bd7cc1d655e61b19a24fc4c5fb6d7e917385d80eaa52ea470a822d70d82e9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        88.26087715711034,
+        -17.28347413116302,
+        -585.2425505403564
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "df731dd698ee7577866b7be034ea108ccfaf09b5b9ecc15bad4d69e34991b279",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 695621,
+      "ras_superior_delta_mm": 66.61956804781266,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "024",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.042950233107092,
+        8.516422326549332,
+        -518.6229824925438
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "9948e18f9178ba771b7aa414ea6bb2c4da1e52071330efc6d6ea796732b6a95c",
+      "superior_label_id": 5,
+      "superior_voxel_count": 273399
+    },
+    {
+      "affine_sha256": "a80bd7cc1d655e61b19a24fc4c5fb6d7e917385d80eaa52ea470a822d70d82e9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        88.26087715711034,
+        -17.28347413116302,
+        -585.2425505403564
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "df731dd698ee7577866b7be034ea108ccfaf09b5b9ecc15bad4d69e34991b279",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 695621,
+      "ras_superior_delta_mm": 118.73336911440333,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "024",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -8.664772827329386,
+        -28.3615468774654,
+        -466.5091814259531
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "ae48690d6e08cb2e82e4c29f852e84de91f7d4b3ef027cb2ad373c36e21366b2",
+      "superior_label_id": 12,
+      "superior_voxel_count": 2129476
+    },
+    {
+      "affine_sha256": "a80bd7cc1d655e61b19a24fc4c5fb6d7e917385d80eaa52ea470a822d70d82e9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        6.554128284838669,
+        -8.556308453395815,
+        -873.7680049106898
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "4a74ebe1848c1246169b57c548c7ee9c2ee6d1fceb76fb4ba83b1a5d0556dab8",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 42582,
+      "ras_superior_delta_mm": 249.12189840901533,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "024",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        4.2969422806420425,
+        -69.8585895465618,
+        -624.6461065016745
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "d2362c8d33fa30b5cc07c17d96b6f45a0378fed1e18f72378c8a2a53fea8afda",
+      "superior_label_id": 6,
+      "superior_voxel_count": 152405
+    },
+    {
+      "affine_sha256": "00df97d592eb9a48c3c8cc743de6cb552b2e06ee85c53548cbab43413b898606",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -35.83620795342449,
+        23.02896722899237,
+        -567.7270478624514
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "3c018fd278212785fa6c5ed932883fc24638fc6116b5a99a1875b606127d2802",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 288419,
+      "ras_superior_delta_mm": 359.52316281170965,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "025",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        4.10764195116181,
+        5.779717815906963,
+        -208.20388505074175
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "ab9c56ab586ca56e76eb610464394060c12dc6dc91cc52bf3b7fd073ae66a2ec",
+      "superior_label_id": 4,
+      "superior_voxel_count": 656653
+    },
+    {
+      "affine_sha256": "00df97d592eb9a48c3c8cc743de6cb552b2e06ee85c53548cbab43413b898606",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        82.24597772466541,
+        -16.567513112164647,
+        -637.5213852588099
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "ecb4e36ebfc43b6be95c3b2d31096d751ffb0596ffe73fbc65d0585a10a444db",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 960189,
+      "ras_superior_delta_mm": 69.79433739635851,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "025",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -35.83620795342449,
+        23.02896722899237,
+        -567.7270478624514
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "3c018fd278212785fa6c5ed932883fc24638fc6116b5a99a1875b606127d2802",
+      "superior_label_id": 5,
+      "superior_voxel_count": 288419
+    },
+    {
+      "affine_sha256": "00df97d592eb9a48c3c8cc743de6cb552b2e06ee85c53548cbab43413b898606",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        82.24597772466541,
+        -16.567513112164647,
+        -637.5213852588099
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "ecb4e36ebfc43b6be95c3b2d31096d751ffb0596ffe73fbc65d0585a10a444db",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 960189,
+      "ras_superior_delta_mm": 106.26629721072732,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "025",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.888329388195473,
+        -28.832058931370682,
+        -531.2550880480826
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "da99a835326cd0c5a9d4065376d86e7e5acd022cd05e5afab4c34872be0bd8ae",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1739945
+    },
+    {
+      "affine_sha256": "00df97d592eb9a48c3c8cc743de6cb552b2e06ee85c53548cbab43413b898606",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        4.032495271815634,
+        -32.258015005571195,
+        -1000.9086688627582
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "0d850e670001300d0d97f391fec8f4295041a982eb2229729fdc378644022788",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 21315,
+      "ras_superior_delta_mm": 276.16903361348534,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "025",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.264013147733692,
+        -50.27496358776659,
+        -724.7396352492729
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "598cc393e52959ecfc4df3597976b014b58c01c2b37cf324b08b5e592d3091ce",
+      "superior_label_id": 6,
+      "superior_voxel_count": 217711
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -31.351356044454917,
+        7.9130901748347355,
+        -622.9056462398962
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "91597fdfd64056be6b71e984c2755fd56d075935991d167453025e91037962c0",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 272872,
+      "ras_superior_delta_mm": 376.48673375453177,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "026",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -17.206551112151033,
+        -15.9427235928203,
+        -246.41891248536444
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "27a01a3fe82ad99523266dcfb2f8915128b3608e80a2aec4b210a9a158ec5d25",
+      "superior_label_id": 4,
+      "superior_voxel_count": 641336
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        81.40770378236246,
+        -26.46482897116772,
+        -682.6944019297307
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "c64e2b0d1b4bd1c8cb24c4bedb3959ff3bf2d7c09d640803159328693b0d1a73",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 859020,
+      "ras_superior_delta_mm": 59.78875568983449,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "026",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -31.351356044454917,
+        7.9130901748347355,
+        -622.9056462398962
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "91597fdfd64056be6b71e984c2755fd56d075935991d167453025e91037962c0",
+      "superior_label_id": 5,
+      "superior_voxel_count": 272872
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        81.40770378236246,
+        -26.46482897116772,
+        -682.6944019297307
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "c64e2b0d1b4bd1c8cb24c4bedb3959ff3bf2d7c09d640803159328693b0d1a73",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 859020,
+      "ras_superior_delta_mm": 112.8403945333921,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "026",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -8.557291125637335,
+        -30.84624806198343,
+        -569.8540073963386
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "8f95f967ae658519ff1530b4d7b6f560bbde3251f88565ecebe204745e22dbea",
+      "superior_label_id": 12,
+      "superior_voxel_count": 2048083
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -5.466885674624052,
+        -49.197243273839035,
+        -954.0047816425817
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "31081a0a294807018e2e4891899514d1af4cd1e474ab67067c7d6ed72871f903",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 112987,
+      "ras_superior_delta_mm": 211.00013149520578,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "026",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -16.214379728386405,
+        -77.9415981740965,
+        -743.004650147376
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "a8042857225101d846dd2c96d2b0983909fff3aadef523c0dbb521b40abf44ff",
+      "superior_label_id": 6,
+      "superior_voxel_count": 190505
+    },
+    {
+      "affine_sha256": "50bcf4796c1f87c09557c9988026cf917ab46d2e0d50867f64b3f31f9302d628",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.336168954143602,
+        -26.426744763547703,
+        -607.4220630322266
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "d879b9614fb2c59a9883f3ce62d5e723d965e88f49a0a9d0a42d8de2cee8f18e",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 148180,
+      "ras_superior_delta_mm": 360.87076830420915,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "027",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        6.136354660717842,
+        -11.96329092238858,
+        -246.5512947280174
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "a8ee9b5b520dd7b67fb82a6d549c25718851eefa202fb78897000952c557befb",
+      "superior_label_id": 4,
+      "superior_voxel_count": 616607
+    },
+    {
+      "affine_sha256": "50bcf4796c1f87c09557c9988026cf917ab46d2e0d50867f64b3f31f9302d628",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        40.93033013962932,
+        -40.5590915213709,
+        -676.2973296917405
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "689d539ed60f39d58fb7e9d390f27e69ad678d4515739ab84b5ec8828be18fe4",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 445313,
+      "ras_superior_delta_mm": 68.87526665951395,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "027",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.336168954143602,
+        -26.426744763547703,
+        -607.4220630322266
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "d879b9614fb2c59a9883f3ce62d5e723d965e88f49a0a9d0a42d8de2cee8f18e",
+      "superior_label_id": 5,
+      "superior_voxel_count": 148180
+    },
+    {
+      "affine_sha256": "50bcf4796c1f87c09557c9988026cf917ab46d2e0d50867f64b3f31f9302d628",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        40.93033013962932,
+        -40.5590915213709,
+        -676.2973296917405
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "689d539ed60f39d58fb7e9d390f27e69ad678d4515739ab84b5ec8828be18fe4",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 445313,
+      "ras_superior_delta_mm": 118.92916880907683,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "027",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -6.290055539220077,
+        -63.77340568095022,
+        -557.3681608826637
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "3fe9b66c793be4abbced9ad0c7e41dc6dc3b41dc6234db317a694d42af684a5c",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1461757
+    },
+    {
+      "affine_sha256": "50bcf4796c1f87c09557c9988026cf917ab46d2e0d50867f64b3f31f9302d628",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        8.65789770605079,
+        -36.15216866907369,
+        -967.8257584020555
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "82a02436a81e7bd97b74addee1783b6879099a61880f3726c6e3beff4ac01a76",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 20080,
+      "ras_superior_delta_mm": 254.9389863981205,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "027",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.808269548534895,
+        -88.28074040913683,
+        -712.886772003935
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "440d796bc1f91fe1198718656a0e1877152057c182a9c44c9e77cb983121fa5e",
+      "superior_label_id": 6,
+      "superior_voxel_count": 80679
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -28.904185073035364,
+        -15.613226094465034,
+        -635.7302937177101
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "04585e20db740b6360fe1614ae19e026fa1638918d97de49fba2bfcc293a02d7",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 258077,
+      "ras_superior_delta_mm": 393.79904569601104,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "028",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.831890224887104,
+        -8.466418769255398,
+        -241.93124802169905
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "f12653716268d836c7e1bf00784862acf88461235be1de558dd38c688ba4d1e4",
+      "superior_label_id": 4,
+      "superior_voxel_count": 670592
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        65.82401766528142,
+        -33.81655726691628,
+        -707.0822914488501
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "eb8838e984b8c071b8afc80eaa1d3e787d66fd97f65b5f90d3caf3285240133a",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 739466,
+      "ras_superior_delta_mm": 71.35199773114005,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "028",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -28.904185073035364,
+        -15.613226094465034,
+        -635.7302937177101
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "04585e20db740b6360fe1614ae19e026fa1638918d97de49fba2bfcc293a02d7",
+      "superior_label_id": 5,
+      "superior_voxel_count": 258077
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        65.82401766528142,
+        -33.81655726691628,
+        -707.0822914488501
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "eb8838e984b8c071b8afc80eaa1d3e787d66fd97f65b5f90d3caf3285240133a",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 739466,
+      "ras_superior_delta_mm": 120.4383582097305,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "028",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -9.474374929233079,
+        -51.339011145393755,
+        -586.6439332391196
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "e439d14463d0f3ba3504e100fc475e720df4768d8d36a7589b309479b7a8a131",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1543359
+    },
+    {
+      "affine_sha256": "e1cb2fa7a7aafd7bb3a95bba818cef0900e042523a4fd4708f81cef2d00c9f28",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        2.298728780083934,
+        -25.61533608997371,
+        -1040.7714990766049
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "ac9d42d779f8ffc6968449382c563a7e280297eeda6e31cfee09c4fca67775fa",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 49445,
+      "ras_superior_delta_mm": 277.0764857725528,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "028",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -3.169703457533984,
+        -72.75240404312152,
+        -763.695013304052
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "78e57a7227f31a114735f975ed20ddd2529e668a60650ceb7c860d4a854a515d",
+      "superior_label_id": 6,
+      "superior_voxel_count": 114415
+    },
+    {
+      "affine_sha256": "620e581f587f1508001f8e6bd1d7aaf9ad549414ea1945c9f63e52df7cfb9def",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -34.639521073484104,
+        -24.93265972620793,
+        -631.9290824231803
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "833849e10c3c8d4d0580dd081176a3ae306c755e2e3b9f208583007bc06d71d7",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 216921,
+      "ras_superior_delta_mm": 330.36242937058614,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "030",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        4.2317753949786265,
+        -2.732864365542156,
+        -301.5666530525941
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "28045e696c8dc4bab01ab140a96c77e3fa34cbe2b3fabe4936a1483be7cfe40f",
+      "superior_label_id": 4,
+      "superior_voxel_count": 535203
+    },
+    {
+      "affine_sha256": "620e581f587f1508001f8e6bd1d7aaf9ad549414ea1945c9f63e52df7cfb9def",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        54.94628166362705,
+        -30.70357963712928,
+        -714.2530838949485
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "5ffd34aa458357a1ff40d37d26c234fa5546778131d21e3fbf6d23e50b90c35d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 682378,
+      "ras_superior_delta_mm": 82.32400147176827,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "030",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -34.639521073484104,
+        -24.93265972620793,
+        -631.9290824231803
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "833849e10c3c8d4d0580dd081176a3ae306c755e2e3b9f208583007bc06d71d7",
+      "superior_label_id": 5,
+      "superior_voxel_count": 216921
+    },
+    {
+      "affine_sha256": "620e581f587f1508001f8e6bd1d7aaf9ad549414ea1945c9f63e52df7cfb9def",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        54.94628166362705,
+        -30.70357963712928,
+        -714.2530838949485
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "5ffd34aa458357a1ff40d37d26c234fa5546778131d21e3fbf6d23e50b90c35d",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 682378,
+      "ras_superior_delta_mm": 120.16889888205901,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "030",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        2.769249196511822,
+        -65.41466546305341,
+        -594.0841850128895
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "5f4a8ce973de0e90713790fc3e5d1310bc58de6da368393ed7c7de04a8bd91c0",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1125950
+    },
+    {
+      "affine_sha256": "620e581f587f1508001f8e6bd1d7aaf9ad549414ea1945c9f63e52df7cfb9def",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        4.130803571428572,
+        -37.9765625,
+        -1033.8285471842767
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "c8c69e1a01d0e6f80205955c2c4a5e8da79ead33b8d94f0b6cffd1dc689f2192",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 17500,
+      "ras_superior_delta_mm": 260.3090246238189,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "030",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        2.2847606262403417,
+        -70.16864532009171,
+        -773.5195225604577
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "d4de7c2d693200e4dd29f2e825484ec738d7d562f31fb08af440b666b9ccc601",
+      "superior_label_id": 6,
+      "superior_voxel_count": 146130
+    },
+    {
+      "affine_sha256": "ebc3d7c2150c1e4d7fb571453bd3849e68752bab2b0beaceb887005614be38d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -26.616527229788176,
+        18.036793082711768,
+        88.32947154141766
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "0de7a6b0dd5e3290fc776a05ba214b091c1ce73ae2d8efb312537234b55bcf78",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 242680,
+      "ras_superior_delta_mm": 330.0697739555103,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "031",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -2.978127355079863,
+        -29.901328519635,
+        418.39924549692796
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "7337b013c6be918bcec9c8e9dad8d5ab06d32f76cf83fb40b63e66696a594ec2",
+      "superior_label_id": 4,
+      "superior_voxel_count": 613700
+    },
+    {
+      "affine_sha256": "ebc3d7c2150c1e4d7fb571453bd3849e68752bab2b0beaceb887005614be38d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        63.40726573289311,
+        -15.93747282101586,
+        19.196574027316046
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "f410687d4bb9df8938b64101a9276b3d865d795fcf9f9c592882b5e978b05176",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 759577,
+      "ras_superior_delta_mm": 69.13289751410161,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "031",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -26.616527229788176,
+        18.036793082711768,
+        88.32947154141766
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "0de7a6b0dd5e3290fc776a05ba214b091c1ce73ae2d8efb312537234b55bcf78",
+      "superior_label_id": 5,
+      "superior_voxel_count": 242680
+    },
+    {
+      "affine_sha256": "ebc3d7c2150c1e4d7fb571453bd3849e68752bab2b0beaceb887005614be38d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        63.40726573289311,
+        -15.93747282101586,
+        19.196574027316046
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "f410687d4bb9df8938b64101a9276b3d865d795fcf9f9c592882b5e978b05176",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 759577,
+      "ras_superior_delta_mm": 99.75080645831031,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "031",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -4.440592147764107,
+        -39.632084904941536,
+        118.94738048562635
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "b6ee41b8e54d8c0b3e7f6fd881f5d8c25f5f32ffe22239031763c3928b95245b",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1235266
+    },
+    {
+      "affine_sha256": "ebc3d7c2150c1e4d7fb571453bd3849e68752bab2b0beaceb887005614be38d7",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        20.69657389027182,
+        9.871060249200525,
+        -315.0437344629428
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "355ad8885966af14bdb3d29d0345d06cba7e7e5362f3fc115e286c32868f9a97",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 27518,
+      "ras_superior_delta_mm": 264.2160268617648,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "031",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -8.681258245984793,
+        -50.5343130409928,
+        -50.82770760117796
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "60ee0f43f5b36813dc1227b5d6b10d58cf9c03ae104976b5b65b2b24b06e71aa",
+      "superior_label_id": 6,
+      "superior_voxel_count": 133493
+    },
+    {
+      "affine_sha256": "ea3900b90e5f54010e894df48f15c7b18e49da3b67376d13aeb267addb3d1185",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -37.76817152335656,
+        -18.67155979327066,
+        146.48394794777573
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "42b1388dff7f275837b9c3cae2f51ddb2ca34275216ad094a3252724cd46302a",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 202620,
+      "ras_superior_delta_mm": 317.884147707304,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "032",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        6.985749575846967,
+        -6.302338254167296,
+        464.36809565507974
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "f3ceae0cd26602cd3a63afa3f73f55aeda371e8a4dd0e86c4ad6c55c451deb04",
+      "superior_label_id": 4,
+      "superior_voxel_count": 543878
+    },
+    {
+      "affine_sha256": "ea3900b90e5f54010e894df48f15c7b18e49da3b67376d13aeb267addb3d1185",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        64.198736822211,
+        -19.996235467578146,
+        81.45106570720213
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "d7a8c531b5e23fef4714febadea34d5519f9d95783ebb328367a9ebadfb2f037",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 674537,
+      "ras_superior_delta_mm": 65.0328822405736,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "032",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -37.76817152335656,
+        -18.67155979327066,
+        146.48394794777573
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "42b1388dff7f275837b9c3cae2f51ddb2ca34275216ad094a3252724cd46302a",
+      "superior_label_id": 5,
+      "superior_voxel_count": 202620
+    },
+    {
+      "affine_sha256": "ea3900b90e5f54010e894df48f15c7b18e49da3b67376d13aeb267addb3d1185",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        64.198736822211,
+        -19.996235467578146,
+        81.45106570720213
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "d7a8c531b5e23fef4714febadea34d5519f9d95783ebb328367a9ebadfb2f037",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 674537,
+      "ras_superior_delta_mm": 95.1323720481023,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "032",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        9.480093037307881,
+        -60.32456089386051,
+        176.58343775530443
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "eaa5ec78c6a8bdf2e45f6a74299e7aabddcba04dae2975a763f6e8b0410b3ef7",
+      "superior_label_id": 12,
+      "superior_voxel_count": 756375
+    },
+    {
+      "affine_sha256": "ea3900b90e5f54010e894df48f15c7b18e49da3b67376d13aeb267addb3d1185",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        10.623798135129448,
+        -13.806785277571521,
+        -245.59546054449493
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "0cb02a632096c89e5c1037692db39feb1a9ab613baa3e6ab345c140d1c706540",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 15487,
+      "ras_superior_delta_mm": 260.33410026717684,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "032",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        6.831094679027586,
+        -56.56117544090429,
+        14.73863972268191
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "db606b202be849d3e138705dfcfbc16c394b42d99ed26b262e5fcfe8964491c9",
+      "superior_label_id": 6,
+      "superior_voxel_count": 118067
+    },
+    {
+      "affine_sha256": "dbdf6fe26fa421a5bbd464715e056060e8f9dde5001c4e53b10a962504683ce8",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -29.362880989089206,
+        -7.276774242963313,
+        123.60892980843369
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "bc8e406bbd6f29602313c0d860f412af3bb9f757578f16276885151d0fcba1cc",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 158100,
+      "ras_superior_delta_mm": 349.85945310336547,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "033",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -3.1124531112626244,
+        20.964041467570894,
+        473.46838291179915
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "d9b7be2e5a9d9bb881533b3b9d0d19139a1a276e84a5a94a7d28d3eee1cc5e1a",
+      "superior_label_id": 4,
+      "superior_voxel_count": 593726
+    },
+    {
+      "affine_sha256": "dbdf6fe26fa421a5bbd464715e056060e8f9dde5001c4e53b10a962504683ce8",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        55.25841518341858,
+        -25.13033517850249,
+        51.26449198541263
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "a8bc614b55eefcb6a705acb15783472c595201db686f117cc679fad07cd5f810",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 497346,
+      "ras_superior_delta_mm": 72.34443782302105,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "033",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -29.362880989089206,
+        -7.276774242963313,
+        123.60892980843369
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "bc8e406bbd6f29602313c0d860f412af3bb9f757578f16276885151d0fcba1cc",
+      "superior_label_id": 5,
+      "superior_voxel_count": 158100
+    },
+    {
+      "affine_sha256": "dbdf6fe26fa421a5bbd464715e056060e8f9dde5001c4e53b10a962504683ce8",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        55.25841518341858,
+        -25.13033517850249,
+        51.26449198541263
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "a8bc614b55eefcb6a705acb15783472c595201db686f117cc679fad07cd5f810",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 497346,
+      "ras_superior_delta_mm": 122.26311346157854,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "033",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -7.251761005431888,
+        -43.766831961961174,
+        173.52760544699117
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "e10c86e2b9314b705fab515bc14f1856b8935e7f2c2dc6ed3114e03d6599ef7d",
+      "superior_label_id": 12,
+      "superior_voxel_count": 1228666
+    },
+    {
+      "affine_sha256": "dbdf6fe26fa421a5bbd464715e056060e8f9dde5001c4e53b10a962504683ce8",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        2.0211770612007456,
+        -4.419766872200512,
+        -263.1543627018235
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "14ec8c33bf2a3e20da99d8705aa8c91d925e955255db722c4f4ed75dd21465f3",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 34828,
+      "ras_superior_delta_mm": 253.20694294886914,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "033",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -8.512289523629875,
+        -53.48334766497166,
+        -9.947419752954374
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "c136a0da3212ed6be07c7c5abe6636b494e58a71f55399abf80fb7cc769bbed8",
+      "superior_label_id": 6,
+      "superior_voxel_count": 122271
+    },
+    {
+      "affine_sha256": "6d87766c33aa9501baa118159f553b170ef1fba0b4bf3987f5fcc89c41c51ec9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        -21.631561020166544,
+        -2.3785239596940926,
+        109.7932049084236
+      ],
+      "inferior_label": "Heart",
+      "inferior_label_geometry_sha256": "5200a6ab156e695b5ddc1ddde83d12903d2c89c39f8be72c8de69266e5e3216a",
+      "inferior_label_id": 5,
+      "inferior_voxel_count": 183720,
+      "ras_superior_delta_mm": 302.3387779457719,
+      "relation": "brain_superior_to_heart",
+      "satisfied": true,
+      "scan_id": "034",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -9.31112740311164,
+        -23.711130026028513,
+        412.1319828541955
+      ],
+      "superior_label": "Brain",
+      "superior_label_geometry_sha256": "35287b917b7463287bb28bb0845ce58cec8f9ea2e4f2b8de37d5b5ccc2af8930",
+      "superior_label_id": 4,
+      "superior_voxel_count": 517077
+    },
+    {
+      "affine_sha256": "6d87766c33aa9501baa118159f553b170ef1fba0b4bf3987f5fcc89c41c51ec9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        61.90324680735,
+        -9.028047153430066,
+        24.19302777659186
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "3519e23314b789e2fe7579b15788480557bce946d2a9d6218190a0b7cf8549eb",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 706809,
+      "ras_superior_delta_mm": 85.60017713183174,
+      "relation": "heart_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "034",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -21.631561020166544,
+        -2.3785239596940926,
+        109.7932049084236
+      ],
+      "superior_label": "Heart",
+      "superior_label_geometry_sha256": "5200a6ab156e695b5ddc1ddde83d12903d2c89c39f8be72c8de69266e5e3216a",
+      "superior_label_id": 5,
+      "superior_voxel_count": 183720
+    },
+    {
+      "affine_sha256": "6d87766c33aa9501baa118159f553b170ef1fba0b4bf3987f5fcc89c41c51ec9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        61.90324680735,
+        -9.028047153430066,
+        24.19302777659186
+      ],
+      "inferior_label": "Liver",
+      "inferior_label_geometry_sha256": "3519e23314b789e2fe7579b15788480557bce946d2a9d6218190a0b7cf8549eb",
+      "inferior_label_id": 7,
+      "inferior_voxel_count": 706809,
+      "ras_superior_delta_mm": 107.60114123088806,
+      "relation": "lung_superior_to_liver",
+      "satisfied": true,
+      "scan_id": "034",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -0.8156958880566947,
+        -48.70090077685384,
+        131.79416900747992
+      ],
+      "superior_label": "Lung",
+      "superior_label_geometry_sha256": "833e1fdd6be5446ab0b4bf96b5672cc59adbcd40daff31666238626a652b8dee",
+      "superior_label_id": 12,
+      "superior_voxel_count": 928191
+    },
+    {
+      "affine_sha256": "6d87766c33aa9501baa118159f553b170ef1fba0b4bf3987f5fcc89c41c51ec9",
+      "affine_source": "qform",
+      "inferior_centroid_ras_mm": [
+        7.600607171433666,
+        -0.40121219962912846,
+        -266.4207896688948
+      ],
+      "inferior_label": "Bladder",
+      "inferior_label_geometry_sha256": "d1f6462571cbb46d09a64753de9fc8767f03849e9a7c7e2ed31e441539aaabac",
+      "inferior_label_id": 3,
+      "inferior_voxel_count": 19684,
+      "ras_superior_delta_mm": 242.35080282545607,
+      "relation": "kidneys_superior_to_bladder",
+      "satisfied": true,
+      "scan_id": "034",
+      "status": "passed",
+      "superior_centroid_ras_mm": [
+        -0.8030361764992904,
+        -56.0990134028863,
+        -24.069986843438755
+      ],
+      "superior_label": "Kidneys",
+      "superior_label_geometry_sha256": "92836153dca0df815f3aedd64817fef944ed01a4a05575b8a745ad14eb42fb2a",
+      "superior_label_id": 6,
+      "superior_voxel_count": 102380
+    }
+  ],
+  "schema": "numi.healthy-total-body-ct-anatomy-relations.v1",
+  "source": {
+    "archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+    "coordinate_convention": "NIfTI RAS+ in millimetres; source scans retain independent voxel-to-world affines",
+    "intake_path": "intake-v4.json",
+    "intake_schema": "HumanPack.external-segmentation-source-ingest.v2",
+    "intake_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+    "scan_count": 30,
+    "source_scan_frames_kept_separate": true
+  },
+  "status": "passed_external_source_centroid_ordering"
+}

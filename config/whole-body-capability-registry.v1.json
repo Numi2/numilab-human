@@ -9,6 +9,7 @@
       "evidence": [
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
         {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
+        {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"},
         {"id": "patella_rebase", "path": "Docs/media/numi-human-patella-neutral-rebase-geometry-20261003/receipt.json", "schema": "numi.human.lower-limb-patella-rebase-geometry-evidence.v1"}
       ],
       "facts": [
@@ -20,6 +21,10 @@
         {"id": "external_ct_closed_meshes", "evidence": "external_ct_scan001", "path": "topology.closed_two_manifold_label_count"},
         {"id": "external_ct_max_volume_error", "evidence": "external_ct_scan001", "path": "integrity.maximum_relative_signed_volume_error"},
         {"id": "external_ct_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
+        {"id": "external_ct_cohort_scan_count", "evidence": "external_ct_cohort_relations", "path": "counts.scan_count"},
+        {"id": "external_ct_organ_ordering_relations_passed", "evidence": "external_ct_cohort_relations", "path": "counts.passed_relation_rows"},
+        {"id": "external_ct_organ_ordering_relations_total", "evidence": "external_ct_cohort_relations", "path": "counts.total_relation_rows"},
+        {"id": "external_ct_cohort_numi_subject_binding", "evidence": "external_ct_cohort_relations", "path": "qualification.current_numi_subject_binding"},
         {"id": "lower_limb_pose_count", "evidence": "patella_rebase", "path": "pose_audit.pose_count"},
         {"id": "lower_limb_source_geometry_checks", "evidence": "patella_rebase", "path": "pose_audit.source_geometry_check_count"},
         {"id": "lower_limb_pose_audit_status", "evidence": "patella_rebase", "path": "pose_audit.status"},
@@ -46,7 +51,8 @@
       "scope": "Source organ geometry with connected lumens, disjoint tissues, physical volumes, and mechanical owners.",
       "evidence": [
         {"id": "visceral", "path": "Docs/media/whole-visceral-coverage-20260929/receipt.json", "schema": "numi.human.whole-visceral-source-evidence.v1"},
-        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"}
+        {"id": "external_ct_scan001", "path": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-all-source-labels-audit.json", "schema": "numi.healthy-total-body-ct-scan-source-surface-coverage-audit.v1"},
+        {"id": "external_ct_cohort_relations", "path": "Docs/media/healthy-total-body-ct-anatomy-relations-20261003/receipt.json", "schema": "numi.healthy-total-body-ct-anatomy-relations.v1"}
       ],
       "facts": [
         {"id": "surface_count", "evidence": "visceral", "path": "coverage.total_surfaces"},
@@ -56,7 +62,10 @@
         {"id": "external_aorta_label", "evidence": "external_ct_scan001", "path": "labels.1.label"},
         {"id": "external_vci_label", "evidence": "external_ct_scan001", "path": "labels.10.label"},
         {"id": "external_vascular_lumen_connectivity", "evidence": "external_ct_scan001", "path": "qualification.vascular_lumen_or_branch_connectivity"},
-        {"id": "external_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"}
+        {"id": "external_subject_binding", "evidence": "external_ct_scan001", "path": "qualification.current_numi_subject_binding"},
+        {"id": "external_ct_cohort_scan_count", "evidence": "external_ct_cohort_relations", "path": "counts.scan_count"},
+        {"id": "external_ct_organ_ordering_relations_passed", "evidence": "external_ct_cohort_relations", "path": "counts.passed_relation_rows"},
+        {"id": "external_ct_organ_ordering_relations_total", "evidence": "external_ct_cohort_relations", "path": "counts.total_relation_rows"}
       ],
       "requirements": [
         {"id": "disjoint_tissue", "evidence": "visceral", "path": "qualification.disjoint_tissue", "operator": "equals", "value": true, "reason": "Cross-domain organ/tissue separation is not yet admitted."},

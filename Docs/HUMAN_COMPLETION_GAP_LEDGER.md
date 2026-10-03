@@ -140,6 +140,13 @@ vascular lumens and individual muscle identity unsatisfied. This makes the
 external geometry visible to subsystem reviews without admitting it as owned
 or qualified Human anatomy.
 
+The [scan-local anatomy-relations audit](HEALTHY_TOTAL_BODY_CT_ANATOMY_RELATIONS_20261003.md)
+adds four gross internal-organ centroid-order checks across all 30 cohort scans.
+All 120 checks reproduce from each scan's own RAS+ affine and pass, while
+participant coordinate frames remain separate. This improves external source
+consistency evidence only; Numi subject binding, organ volumes and mechanics
+remain open.
+
 ## HCM1 source activation map import — 2026-10-03
 
 The [Rodero-2026 HCM1 importer](CARDIAC_RODERO26_HCM_SOURCE_ACTIVATION_20261003.md)
