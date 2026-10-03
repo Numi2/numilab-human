@@ -22,7 +22,6 @@ from . import model as human_model
 from .myosim_bone_proximity import _compiled_meshes_by_body
 from .myosim_export import export_fullbody
 from .upper_limb_registration import (
-    INTERFACE_PATCH_GATE_MULTIPLIER,
     _body_frame_to_core,
     _core_to_world,
     _endpoint_surface_distances,
@@ -221,6 +220,49 @@ def _fit_passes(name: str, fit: dict[str, Any], np: Any) -> bool:
         and fit.get("femoral_head_articular_gate", {"passed": True})["passed"]
         and all(check["passed"] for check in fit.get("source_frame_checks", []))
     )
+
+
+def _source_relative_transition_metrics(
+    *, name: str, first_member: str, second_member: str, rest_gate: float,
+    first_vertices: Any, second_vertices: Any, reference_allowance: float,
+    np: Any, source_first_vertices: Any = None, source_second_vertices: Any = None,
+) -> dict[str, Any]:
+    """Measure a candidate interface using the pose audit's source-relative gates."""
+    gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
+    patch = _interface_patch_metrics(first_vertices, second_vertices, np)
+    source_reference = None
+    if (source_first_vertices is None) != (source_second_vertices is None):
+        raise RuntimeError("lower-limb interface source reference is incomplete")
+    if source_first_vertices is not None:
+        source_gap, _, _ = _minimum_gap(source_first_vertices, source_second_vertices, np)
+        source_patch = _interface_patch_metrics(
+            source_first_vertices, source_second_vertices, np,
+        )
+        source_reference = {
+            "minimum_vertex_gap_m": source_gap,
+            "interface_patch": source_patch,
+        }
+    from .lower_limb_pose_audit import _posed_continuity_gates
+
+    base_gap, base_patch, allowed_gap, allowed_patch = _posed_continuity_gates(
+        rest_gate, source_reference, reference_allowance,
+    )
+    return {
+        "name": name,
+        "source_member_ids": [first_member, second_member],
+        "minimum_vertex_gap_m": gap,
+        "base_maximum_allowed_gap_m": base_gap,
+        "maximum_allowed_gap_m": allowed_gap,
+        "interface_patch": patch,
+        "base_maximum_allowed_interface_patch_p90_m": base_patch,
+        "maximum_allowed_interface_patch_p90_m": allowed_patch,
+        "mechanics_reference_interface": source_reference,
+        "mechanics_reference_interface_allowance_m": reference_allowance,
+        "passed": (
+            gap <= allowed_gap + 1.0e-12
+            and patch["bidirectional_p90_m"] <= allowed_patch + 1.0e-12
+        ),
+    }
 
 
 def _femoral_head_articular_metrics(
@@ -731,6 +773,22 @@ def propose_lower_limb_source_registration(
         points = _transform_points(record["member_vertices"][member_id], chosen[name], np)
         return _core_to_world(points, record["target"], np)
 
+    source_default_data = mujoco.MjData(model)
+    source_default_data.qpos[:] = model.qpos0
+    mujoco.mj_forward(model, source_default_data)
+    source_default_frames = {
+        name: (
+            source_default_data.ximat[record["source_body"]["id"]].reshape(3, 3).copy(),
+            source_default_data.xipos[record["source_body"]["id"]].copy(),
+        )
+        for name, record in body_records.items()
+    }
+
+    def source_world_vertices(member_id: str, frames: Any) -> Any:
+        name = anchors_by_member[member_id]["target"]["name"]
+        rotation, position = frames[name]
+        return body_records[name]["source_vertices"] @ rotation.T + position
+
     transitions = [
         (
             name,
@@ -762,21 +820,25 @@ def propose_lower_limb_source_registration(
                 first_vertices = first_vertices + world_delta
             if anchors_by_member[second_member]["target"]["name"] in moved_names:
                 second_vertices = second_vertices + world_delta
-        gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
-        patch = _interface_patch_metrics(first_vertices, second_vertices, np)
-        patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * gate
-        return {
-            "name": name,
-            "source_member_ids": [first_member, second_member],
-            "minimum_vertex_gap_m": gap,
-            "maximum_allowed_gap_m": gate,
-            "interface_patch": patch,
-            "maximum_allowed_interface_patch_p90_m": patch_gate,
-            "passed": (
-                gap <= gate + 1.0e-12
-                and patch["bidirectional_p90_m"] <= patch_gate + 1.0e-12
-            ),
-        }
+        first_owner = anchors_by_member[first_member]["target"]["name"]
+        second_owner = anchors_by_member[second_member]["target"]["name"]
+        allowance = (
+            RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M if "metatarsal_to" in name
+            else MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M
+        )
+        source_vertices = (None, None)
+        if first_owner != second_owner:
+            source_vertices = (
+                source_world_vertices(first_member, source_default_frames),
+                source_world_vertices(second_member, source_default_frames),
+            )
+        return _source_relative_transition_metrics(
+            name=name, first_member=first_member, second_member=second_member,
+            rest_gate=gate, first_vertices=first_vertices,
+            second_vertices=second_vertices, reference_allowance=allowance, np=np,
+            source_first_vertices=source_vertices[0],
+            source_second_vertices=source_vertices[1],
+        )
 
     # Carry the exact same registered Core-local surfaces through the audit's
     # source poses. A neutral fit can leave the patella detached in flexion.
@@ -923,7 +985,7 @@ def propose_lower_limb_source_registration(
     ))
     group_index = {name: index for index, names in enumerate(groups) for name in names}
     cases = {}
-    for pose_name, frames in [("source_default", None), *pose_frames.items()]:
+    for pose_name, frames in [("source_default", source_default_frames), *pose_frames.items()]:
         for transition in transitions:
             name, first, second, rest_gate = transition
             owners = [anchors_by_member[member]["target"]["name"] for member in (first, second)]
@@ -935,7 +997,7 @@ def propose_lower_limb_source_registration(
             for member, owner in zip((first, second), owners, strict=True):
                 record = body_records[owner]
                 rest_rotation = _rotation_xyzw(record["target"]["default_inertial_quaternion_world_xyzw"], np)
-                if frames is None:
+                if pose_name == "source_default":
                     points.append(world_vertices(member))
                     rotations.append(np.eye(3))
                 else:
@@ -944,16 +1006,19 @@ def propose_lower_limb_source_registration(
                     points.append(core_points @ rotation.T + position)
                     rotations.append(rotation @ rest_rotation.T)
                     source_points.append(record["source_vertices"] @ rotation.T + position)
-            gap_gate, patch_gate = rest_gate, INTERFACE_PATCH_GATE_MULTIPLIER * rest_gate
-            if frames is not None:
-                reference = None
-                if owners[0] != owners[1]:
-                    gap, _, _ = _minimum_gap(*source_points, np)
-                    reference = {"minimum_vertex_gap_m": gap,
-                                 "interface_patch": _interface_patch_metrics(*source_points, np)}
-                allowance = (RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M if "metatarsal_to" in name
-                             else MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M)
-                _, _, gap_gate, patch_gate = _posed_continuity_gates(rest_gate, reference, allowance)
+            if pose_name == "source_default" and owners[0] != owners[1]:
+                source_points = [
+                    source_world_vertices(member, source_default_frames)
+                    for member in (first, second)
+                ]
+            reference = None
+            if owners[0] != owners[1]:
+                gap, _, _ = _minimum_gap(*source_points, np)
+                reference = {"minimum_vertex_gap_m": gap,
+                             "interface_patch": _interface_patch_metrics(*source_points, np)}
+            allowance = (RIGID_TOE_COMPOUND_REFERENCE_ALLOWANCE_M if "metatarsal_to" in name
+                         else MECHANICS_REFERENCE_INTERFACE_ALLOWANCE_M)
+            _, _, gap_gate, patch_gate = _posed_continuity_gates(rest_gate, reference, allowance)
             cases[f"{pose_name}:{name}"] = (pose_name, name, points, rotations,
                 [group_index.get(owner, -1) for owner in owners], gap_gate, patch_gate)
 
@@ -1135,24 +1200,7 @@ def propose_lower_limb_source_registration(
 
     continuity = []
     for transition in transitions:
-        name, first_member, second_member, gate = transition
-        first_vertices = world_vertices(first_member)
-        second_vertices = world_vertices(second_member)
-        gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
-        patch = _interface_patch_metrics(first_vertices, second_vertices, np)
-        patch_gate = INTERFACE_PATCH_GATE_MULTIPLIER * gate
-        continuity.append({
-            "name": name,
-            "source_member_ids": [first_member, second_member],
-            "minimum_vertex_gap_m": gap,
-            "maximum_allowed_gap_m": gate,
-            "interface_patch": patch,
-            "maximum_allowed_interface_patch_p90_m": patch_gate,
-            "passed": (
-                gap <= gate + 1.0e-12
-                and patch["bidirectional_p90_m"] <= patch_gate + 1.0e-12
-            ),
-        })
+        continuity.append(transition_metrics(transition))
     failed = [record for record in continuity if not record["passed"]]
     if failed:
         raise RuntimeError(

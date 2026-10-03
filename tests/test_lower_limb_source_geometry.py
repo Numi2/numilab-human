@@ -10,7 +10,10 @@ import numpy as np
 import pytest
 
 from numilab_human import model as human
-from numilab_human.lower_limb_source_registration import _source_frame_check
+from numilab_human.lower_limb_source_registration import (
+    _source_frame_check,
+    _source_relative_transition_metrics,
+)
 from numilab_human.upper_limb_pose_audit import PoseAuditError
 
 
@@ -44,6 +47,33 @@ def test_valid_long_bone_variation_and_different_inertial_axes_are_preserved(sca
 ])
 def test_total_orientation_and_scale_cannot_be_reset_by_a_fresh_identity_fit(name, angle, scale):
     assert not _frame_fixture(name, angle, scale)["passed"]
+
+
+@pytest.mark.parametrize(("candidate_patch_m", "passed"), [(.0096, True), (.015, False)])
+def test_interface_patch_uses_the_same_mechanics_reference_allowance_as_pose_audit(
+    candidate_patch_m, passed,
+):
+    source_patch_m = .011666
+    first = np.asarray([[i * .02, 0., 0.] for i in range(32)])
+    source_distances = np.asarray([.0046] + [source_patch_m] * 11 + [.06] * 20)
+    candidate_distances = np.asarray([.002] + [candidate_patch_m] * 11 + [.06] * 20)
+
+    def opposing(distances):
+        return np.asarray([[i * .02, distance, 0.] for i, distance in enumerate(distances)])
+
+    source_second = opposing(source_distances)
+    candidate_second = opposing(candidate_distances)
+    result = _source_relative_transition_metrics(
+        name="left_femur_to_patella", first_member="FJ3259", second_member="FJ3275",
+        rest_gate=.004, first_vertices=first, second_vertices=candidate_second,
+        reference_allowance=.003, np=np,
+        source_first_vertices=first, source_second_vertices=source_second,
+    )
+
+    assert result["mechanics_reference_interface"]["interface_patch"]["bidirectional_p90_m"] == pytest.approx(source_patch_m)
+    assert result["base_maximum_allowed_interface_patch_p90_m"] == pytest.approx(.00625)
+    assert result["maximum_allowed_interface_patch_p90_m"] == pytest.approx(source_patch_m + .003)
+    assert result["passed"] is passed
 
 
 def test_common_frame_comes_from_pinned_vertices_and_runtime_not_editable_frame_metadata(tmp_path):
