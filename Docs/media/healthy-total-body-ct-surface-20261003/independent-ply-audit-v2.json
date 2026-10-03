@@ -1,0 +1,73 @@
+{
+  "all_ply_and_geometry_checks_pass": true,
+  "boundary": "Artifact integrity, PLY encoding, source envelope, exact source receipt label counts and occupancy-volume arithmetic only. This does not qualify automatic segmentation accuracy, expert anatomy, subject binding, mechanics, physiology, or clinical use.",
+  "checksum_manifest_valid": true,
+  "compiler_receipt_sha256": "f5af2520c798ad52accb24cb91a6aa57aa5a90d73a69249a5fc8ccf67d874dbe",
+  "compiler_sources_sha256": {
+    "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+    "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+  },
+  "preregistered_plan_sha256": "42c68d3a457129d673c5ebadd96c19ff88a927c67ed5028d6031987546d660f4",
+  "runtime": {
+    "numpy_version": "2.4.6",
+    "python_version": "3.11.12"
+  },
+  "schema": "numi.healthy-total-body-ct-surface-independent-ply-audit.v2",
+  "selected_meshes": [
+    {
+      "all_indices_in_range": true,
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 99966
+      },
+      "gzip_and_ply_payload_valid": true,
+      "identical_to_v1": true,
+      "label": "Aorta",
+      "label_id": 2,
+      "mesh_sha256": "1554a531ed7b79a6284abd8bd3f6e0ca323e8dcd9806210b0e71ee3c0c05dc2b",
+      "occupancy_volume_mm3": 277942.2727289784,
+      "relative_signed_volume_difference": 4.1884712492241663e-16,
+      "triangle_count": 66644,
+      "vertex_count": 33324,
+      "vertices_inside_source_envelope": true
+    },
+    {
+      "all_indices_in_range": true,
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 126438
+      },
+      "gzip_and_ply_payload_valid": true,
+      "identical_to_v1": true,
+      "label": "Heart",
+      "label_id": 5,
+      "mesh_sha256": "fa2bc9483dd2f51a2512eb234763310d042270fe88299e29b2fde8e0c3cc60b6",
+      "occupancy_volume_mm3": 582047.8156292666,
+      "relative_signed_volume_difference": 0.0,
+      "triangle_count": 84292,
+      "vertex_count": 42148,
+      "vertices_inside_source_envelope": true
+    },
+    {
+      "all_indices_in_range": true,
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 103956,
+        "4": 3
+      },
+      "gzip_and_ply_payload_valid": true,
+      "identical_to_v1": true,
+      "label": "Kidneys",
+      "label_id": 6,
+      "mesh_sha256": "abfe6afc37a5e2f6de62267c7e161a6abfe0a130ba922875dcb62a87ec7bed64",
+      "occupancy_volume_mm3": 350991.088745559,
+      "relative_signed_volume_difference": 1.658380021028494e-16,
+      "triangle_count": 69308,
+      "vertex_count": 34655,
+      "vertices_inside_source_envelope": true
+    }
+  ],
+  "v2_mesh_bytes_identical_to_v1": true
+}

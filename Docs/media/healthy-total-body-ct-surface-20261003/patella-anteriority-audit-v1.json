@@ -1,0 +1,39 @@
+{
+  "boundary": "Same-scan automatic label surface-position diagnostic only; not expert review, Numi subject registration, clinical accuracy, or proof that the Numi knee model is correctly positioned.",
+  "comparisons": {
+    "Femur": {
+      "minimum_inverse_affine_half_lattice_residual": 0.0,
+      "passes_preregistered_prediction": true,
+      "patella_minus_reference_anterior_y_mm": {
+        "maximum": 56.640625,
+        "median": 23.4375,
+        "minimum": 9.765625,
+        "positive_fraction": 1.0,
+        "q05": 15.625,
+        "q95": 31.25
+      },
+      "shared_projection_column_count": 1730
+    },
+    "Tibia": {
+      "minimum_inverse_affine_half_lattice_residual": 0.0,
+      "passes_preregistered_prediction": false,
+      "patella_minus_reference_anterior_y_mm": {
+        "maximum": 72.265625,
+        "median": 62.5,
+        "minimum": 50.78125,
+        "positive_fraction": 1.0,
+        "q05": 50.78125,
+        "q95": 72.265625
+      },
+      "shared_projection_column_count": 18
+    }
+  },
+  "coordinate_frame": "scan 001 NIfTI qform RAS+ millimetres; positive RAS Y is the anterior coordinate direction.",
+  "femur_prediction_passed": true,
+  "maximum_inverse_affine_half_lattice_residual": 0.0,
+  "plan_sha256": "0822a1c405d33d943bdc8574ed79e908f7b32d56997e67165b5b3fe6f45482d8",
+  "projection_method": "half-voxel (I,K) column; max RAS Y per label; Patella minus reference-label anterior envelope",
+  "scan_id": "001",
+  "skeletal_surface_receipt_sha256": "2ceab1a5d9be07f35e3a29628065f3f443acaba79820089ff47970fb7a6b759c",
+  "source_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21"
+}

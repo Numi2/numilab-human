@@ -1,0 +1,53 @@
+{
+  "compiler_sources_sha256": {
+    "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+    "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+  },
+  "input_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "label_ids": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "method": "CPU-only exact voxel-union boundaries for the 20 source labels with IDs 13 through 32 in scan 001 NIfTI RAS+ millimetres; no smoothing, interpolation, decimation, threshold changes, or cross-label joining.",
+  "output_directory": "Docs/media/healthy-total-body-ct-surface-20261003/skeletal-scan-001-run-v1",
+  "predictions_before_source_run": {
+    "all_selected_voxel_counts_match_intake": true,
+    "archive_and_nifti_hashes_match_intake": true,
+    "relative_signed_volume_error_at_most": 1e-09,
+    "topology": "Measure and retain each source-mask mesh topology result. No topology repair."
+  },
+  "purpose": "Build source-frame surface candidates for all 20 registered skeletal labels observed in scan 001, including the patella and its neighbouring long bones.",
+  "runtime": {
+    "numpy_version": "2.4.6",
+    "python_version": "3.11.12"
+  },
+  "scan_id": "001",
+  "schema": "numi.healthy-total-body-ct-surface-trial-plan.v2",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "stopping_and_exclusion_rules": [
+    "One frozen compiler, runtime, scan, and label-set run.",
+    "Any source identity, compiler identity, exact voxel-count, or volume-closure failure remains documented.",
+    "These automatic masks do not establish expert anatomy, subject binding, knee registration, physical bone geometry, material, mechanics, physiology or clinical validity."
+  ],
+  "trial_id": "scan-001-skeletal-labels-v1"
+}

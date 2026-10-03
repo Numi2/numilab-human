@@ -1,0 +1,207 @@
+{
+  "all_mesh_files_and_source_identity_checks_pass": true,
+  "boundary": "Automatic source-mask voxel boundaries with verified source counts and occupancy-volume arithmetic; topology results describe only triangulated voxel-union boundaries, not expert anatomical correctness, subject binding or mechanics.",
+  "closed_two_manifold_label_count": 8,
+  "compiler_receipt_sha256": "9bd2839f1efd08ff2c14cad7ee938b64d68e2656c5841745738ea3b30ec51b0d",
+  "compiler_sources_sha256": {
+    "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+    "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+  },
+  "label_count": 12,
+  "plan_sha256": "9bfa6e7f459e430dcc504a9e7b81ecb5162cbd5647321afd10d14bfdbb8ae013",
+  "runtime": {
+    "numpy_version": "2.4.6",
+    "python_version": "3.11.12"
+  },
+  "schema": "numi.healthy-total-body-ct-surface-independent-ply-audit.v2",
+  "selected_meshes": [
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 5906,
+        "4": 2
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Adrenal-glands",
+      "label_id": 1,
+      "mesh_sha256": "44ee5d2eda2eab308bba4c360331303528dbe6615454250436ee56f0da1ec4c5",
+      "nonmanifold_vertex_count": 4,
+      "relative_signed_volume_error": 1.0251171986964199e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 3940,
+      "vertices": 1972
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 99966
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Aorta",
+      "label_id": 2,
+      "mesh_sha256": "1554a531ed7b79a6284abd8bd3f6e0ca323e8dcd9806210b0e71ee3c0c05dc2b",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 4.1884712492241663e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 66644,
+      "vertices": 33324
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 50694
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Bladder",
+      "label_id": 3,
+      "mesh_sha256": "783ae9592302648364c50179b9606de9384b4c4f2e8fa571b0e974cf0ef50f66",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 33796,
+      "vertices": 16900
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 209268
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Brain",
+      "label_id": 4,
+      "mesh_sha256": "799c7867924dc34c6b682cdc7659bbffabd473abd8f81869c89dd9613ed99625",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 3.1570372488927376e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 139512,
+      "vertices": 69760
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 126438
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Heart",
+      "label_id": 5,
+      "mesh_sha256": "fa2bc9483dd2f51a2512eb234763310d042270fe88299e29b2fde8e0c3cc60b6",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 84292,
+      "vertices": 42148
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 103956,
+        "4": 3
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Kidneys",
+      "label_id": 6,
+      "mesh_sha256": "abfe6afc37a5e2f6de62267c7e161a6abfe0a130ba922875dcb62a87ec7bed64",
+      "nonmanifold_vertex_count": 6,
+      "relative_signed_volume_error": 1.658380021028494e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 69308,
+      "vertices": 34655
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 208686,
+        "4": 3
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Liver",
+      "label_id": 7,
+      "mesh_sha256": "576519e6339f87d69c035ba2137cdc659ffb8e5dec877229991c649991a631f7",
+      "nonmanifold_vertex_count": 6,
+      "relative_signed_volume_error": 3.969826817626661e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 139128,
+      "vertices": 69564
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 35184
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Pancreas",
+      "label_id": 8,
+      "mesh_sha256": "fa1e1e4e0e60c9b176951d7fb97e5a6cef62379f07b0b3ce184630f8b78daa5a",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 3.9344761960336443e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 23456,
+      "vertices": 11730
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 33834
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Spleen",
+      "label_id": 9,
+      "mesh_sha256": "b3f1f8e6c685624e4a243c79daba48f4b38e6b930e9159e888b920fe7fa88b92",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.5744502528767473e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 22556,
+      "vertices": 11280
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 10800
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Thyroid",
+      "label_id": 10,
+      "mesh_sha256": "84d6c2790d9b142fa6cd4cdc66fdc06f57fda17d25c712af29ccd45b781d118f",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 7200,
+      "vertices": 3604
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 33162
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "VCI",
+      "label_id": 11,
+      "mesh_sha256": "c27d1393e97dbd1f0552ca0a8aeebfcfc567c1eb808806c3c20631ae028ca764",
+      "nonmanifold_vertex_count": 0,
+      "relative_signed_volume_error": 1.1854394171876386e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 22108,
+      "vertices": 11056
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 560526,
+        "4": 12
+      },
+      "gzip_ply_index_and_source_envelope_checks_pass": true,
+      "label": "Lung",
+      "label_id": 12,
+      "mesh_sha256": "fa8a372599e07a8b893a9884666ad2f973f1af1b1dbad9f5be8722b47f1416bb",
+      "nonmanifold_vertex_count": 23,
+      "relative_signed_volume_error": 2.8210726072257096e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 373700,
+      "vertices": 186840
+    }
+  ],
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21"
+}

@@ -1,0 +1,32 @@
+{
+  "coordinate_frame": "scan 001 NIfTI qform RAS+ millimetres; positive RAS Y is the anterior coordinate direction.",
+  "labels": {
+    "femur": 15,
+    "patella": 20,
+    "tibia": 30
+  },
+  "mesh_sha256_by_label_id": {
+    "15": "55f75bc2fd5f828fab0ac9382402c134f9ac02d454f80ca4f40a2762611ee795",
+    "20": "41335ed8d0f553258d5a0c5000a9c70d5b6c3721d18affe16140ab1dbab3a5b1",
+    "30": "c1ff64677134650c92009499b89238112e085f10c7c4d4d386443b488287004d"
+  },
+  "method": "For each surface vertex, inverse-transform RAS to IJK and map to a half-voxel integer lattice. Group vertices by identical (I,K) lattice columns, take maximum RAS Y within each label column as its anterior-facing envelope, intersect exact Patella/Femur column keys, then report distribution of Patella minus Femur anterior-facing Y. Run the same descriptive comparison for Tibia without a pass gate.",
+  "output": "Docs/media/healthy-total-body-ct-surface-20261003/patella-anteriority-audit-v1.json",
+  "predictions_before_analysis": {
+    "median_patella_minus_femur_anterior_y_mm_greater_than": 0.0,
+    "minimum_shared_patella_femur_projection_columns": 100,
+    "tibia": "Descriptive only; no threshold or pass criterion."
+  },
+  "purpose": "Quantify whether the source-labelled Patella surface lies anterior to same-scan distal Femur surface where their projected voxel columns overlap.",
+  "scan_id": "001",
+  "schema": "numi.healthy-total-body-ct-patella-anteriority-plan.v1",
+  "skeletal_surface_receipt_sha256": "2ceab1a5d9be07f35e3a29628065f3f443acaba79820089ff47970fb7a6b759c",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "stopping_and_exclusion_rules": [
+    "Do not alter or re-register meshes or voxel labels.",
+    "If the femur overlap count is below 100 or median anterior offset is not positive, report the prediction as failed.",
+    "This is only relative source-label geometry in one automatic-segmentation participant, not Numi-subject registration, expert anatomy approval, mechanics or clinical evidence."
+  ],
+  "trial_id": "scan-001-patella-local-anteriority-v1"
+}

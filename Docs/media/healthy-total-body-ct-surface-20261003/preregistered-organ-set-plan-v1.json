@@ -1,0 +1,46 @@
+{
+  "compiler_sources_sha256": {
+    "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+    "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+  },
+  "input_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "label_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "method": "CPU-only exact source voxel-union boundaries from scan 001; source affine RAS millimetres; labels selected by registered IDs 1-12; no threshold, smoothing, interpolation, decimation or topology repair.",
+  "output_directory": "Docs/media/healthy-total-body-ct-surface-20261003/organ-scan-001-run-v1",
+  "predictions_before_source_run": {
+    "absolute_relative_signed_volume_error_at_most": 1e-09,
+    "all_12_cropped_label_voxel_counts_match_intake": true,
+    "archive_member_and_uncompressed_hash_match_intake": true,
+    "header_shape_affine_and_spatial_units_match_intake": true,
+    "topology": "Measure all edge incidences and vertex links for all 12 exact source voxel unions; do not predict or repair ambiguous discrete contacts."
+  },
+  "purpose": "Generate lossless voxel-boundary candidates for every registered whole-organ and major-vessel label observed in CT scan 001.",
+  "runtime": {
+    "numpy_version": "2.4.6",
+    "python_version": "3.11.12"
+  },
+  "scan_id": "001",
+  "schema": "numi.healthy-total-body-ct-surface-trial-plan.v2",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "stopping_and_exclusion_rules": [
+    "This is one frozen source/compiler/runtime/scan/label-set run.",
+    "Any source hash, compiler hash, count or volume closure failure remains documented.",
+    "Topology is reported exactly as observed; none of these meshes qualifies mask accuracy, cross-scan registration, subject binding, tissue ownership, mechanics, physiology or clinical use."
+  ],
+  "trial_id": "scan-001-whole-organs-and-major-vessels-v1"
+}

@@ -1,0 +1,338 @@
+{
+  "all_mesh_files_and_source_identity_checks_pass": true,
+  "boundary": "Automatic source-mask voxel boundaries with verified source counts and occupancy-volume arithmetic; topology describes the voxel unions and does not qualify expert anatomy, subject binding or mechanics.",
+  "closed_two_manifold_label_count": 5,
+  "compiler_receipt_sha256": "2ceab1a5d9be07f35e3a29628065f3f443acaba79820089ff47970fb7a6b759c",
+  "compiler_sources_sha256": {
+    "cli.py": "87588ef439078a8561d6ebfb8879b29a3ef204fe79eef74986f71649b5b8265d",
+    "healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "healthy_total_body_ct_surface.py": "01aeb53930454fc8a3d68a86c345f4fa7c2062e8a2aa18c2c33fd9a5aea54d5e",
+    "physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef"
+  },
+  "label_count": 20,
+  "plan_sha256": "b5a3f4a558c47c974d43eae04b5e50620166dd0f9bb7507e581c2faefead9ec4",
+  "runtime": {
+    "numpy_version": "2.4.6",
+    "python_version": "3.11.12"
+  },
+  "schema": "numi.healthy-total-body-ct-surface-independent-ply-audit.v2",
+  "selected_meshes": [
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 28856,
+        "4": 2
+      },
+      "label": "Carpal",
+      "label_id": 13,
+      "mesh_sha256": "eaeb036a3081a10f61284e45fd618f76cc4284a364ca7cdbbdfee7410e04fbc3",
+      "nonmanifold_vertex_count": 4,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.499866829994977e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 19240,
+      "vertices": 9622
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 68994
+      },
+      "label": "Clavicle",
+      "label_id": 14,
+      "mesh_sha256": "7ffe5795a786ff5117da6b63ed60b930c9354eb6b5977c6c30bc0167c48c4de0",
+      "nonmanifold_vertex_count": 0,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 4.1464958271333384e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 45996,
+      "vertices": 23002
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 343702,
+        "4": 1
+      },
+      "label": "Femur",
+      "label_id": 15,
+      "mesh_sha256": "55f75bc2fd5f828fab0ac9382402c134f9ac02d454f80ca4f40a2762611ee795",
+      "nonmanifold_vertex_count": 2,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.7448683209566893e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 229136,
+      "vertices": 114571
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 86862
+      },
+      "label": "Fibula",
+      "label_id": 16,
+      "mesh_sha256": "c10136462d25ff34356493f449d1dc1a4bd96f4cb7d9674ef7e333fdc2fb7147",
+      "nonmanifold_vertex_count": 0,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.1019419408453997e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 57908,
+      "vertices": 28958
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 187122
+      },
+      "label": "Humerus",
+      "label_id": 17,
+      "mesh_sha256": "6a7a1c7a7d253e9b923be37f99f4e96b8a517a5cebc2113dacaa4f88c1ad6c3a",
+      "nonmanifold_vertex_count": 0,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.3033688814881654e-14,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 124748,
+      "vertices": 62378
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 65618,
+        "4": 5
+      },
+      "label": "Metacarpal",
+      "label_id": 18,
+      "mesh_sha256": "52d4672d82b5d8bdfa7be1e2277637d5aacce7175d264391545e068e5d5859b4",
+      "nonmanifold_vertex_count": 13,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 2.6551953502156938e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 43752,
+      "vertices": 21871
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 78920,
+        "4": 17
+      },
+      "label": "Metatarsal",
+      "label_id": 19,
+      "mesh_sha256": "02649c40205dbdb6bb68d2fc2578b0c09fb1036ff95d5b60e98b05b3a6022f58",
+      "nonmanifold_vertex_count": 37,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 52636,
+      "vertices": 26294
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 26790
+      },
+      "label": "Patella",
+      "label_id": 20,
+      "mesh_sha256": "41335ed8d0f553258d5a0c5000a9c70d5b6c3721d18affe16140ab1dbab3a5b1",
+      "nonmanifold_vertex_count": 0,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 8.834099900897482e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 17860,
+      "vertices": 8934
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 358250,
+        "4": 2
+      },
+      "label": "Pelvis",
+      "label_id": 21,
+      "mesh_sha256": "73c5bbf2bb86b89b2cb45c6bf5d72b276ea55b28cc6adb51651fb2e3b35a87f9",
+      "nonmanifold_vertex_count": 4,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 0.0,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 238836,
+      "vertices": 119414
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 59104,
+        "4": 4
+      },
+      "label": "Fingers",
+      "label_id": 22,
+      "mesh_sha256": "0ae7179bcb9aaa08826f952b8cd3a237db2002aafc39e85c0925f1cb961c119a",
+      "nonmanifold_vertex_count": 6,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.7384093126870536e-14,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 39408,
+      "vertices": 19717
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 89464,
+        "4": 4
+      },
+      "label": "Radius",
+      "label_id": 23,
+      "mesh_sha256": "09378cef6c117576c5b216e278863dc270b66f52eed027c3e16b230dd1e85808",
+      "nonmanifold_vertex_count": 8,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 3.361475815727593e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 59648,
+      "vertices": 29824
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 636360,
+        "4": 45
+      },
+      "label": "Ribcage",
+      "label_id": 24,
+      "mesh_sha256": "0ef53815c2c1298c740eeda4e85ebad501982e70e2448484d297694fb07c43c4",
+      "nonmanifold_vertex_count": 92,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 7.78963149855151e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 424300,
+      "vertices": 212145
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 229018,
+        "4": 37
+      },
+      "label": "Scapula",
+      "label_id": 25,
+      "mesh_sha256": "a7bfe20c41370babe16d395762581193c9881919c4c0716abdd88a10f81d6742",
+      "nonmanifold_vertex_count": 96,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 5.708672881557129e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 152728,
+      "vertices": 76301
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 549230,
+        "4": 38
+      },
+      "label": "Skull",
+      "label_id": 26,
+      "mesh_sha256": "99b875573533d33f63985e4655b19a985de4714b2f63fc050a7a26a04ef2cc84",
+      "nonmanifold_vertex_count": 78,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.287836157997972e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 366204,
+      "vertices": 183046
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 531446,
+        "4": 71
+      },
+      "label": "Spine",
+      "label_id": 27,
+      "mesh_sha256": "741c1808585c0b43fc0d84167c5871dcfc8c5022d9b6d8dbe9117b8f0158d172",
+      "nonmanifold_vertex_count": 137,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 3.2569271209144295e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 354392,
+      "vertices": 177110
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 49618,
+        "4": 1
+      },
+      "label": "Sternum",
+      "label_id": 28,
+      "mesh_sha256": "26794ffde6c774d55d36a51da6bede4c3aad78f961b3b2c77b5606815d577f57",
+      "nonmanifold_vertex_count": 2,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 7.514917361867611e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 33080,
+      "vertices": 16541
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 126824,
+        "4": 5
+      },
+      "label": "Tarsal",
+      "label_id": 29,
+      "mesh_sha256": "8eb65e946c12e08b1cd1992ddcc154885b86448e2b29c25a75c7f86b7ecba2e1",
+      "nonmanifold_vertex_count": 10,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 3.0449853897814157e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 84556,
+      "vertices": 42277
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 226626,
+        "4": 3
+      },
+      "label": "Tibia",
+      "label_id": 30,
+      "mesh_sha256": "c1ff64677134650c92009499b89238112e085f10c7c4d4d386443b488287004d",
+      "nonmanifold_vertex_count": 6,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 1.0641489243640702e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 151088,
+      "vertices": 75545
+    },
+    {
+      "closed_two_manifold": false,
+      "edge_incidence_histogram": {
+        "2": 35800,
+        "4": 1
+      },
+      "label": "Toes",
+      "label_id": 31,
+      "mesh_sha256": "8c7c455d31f61e97a3c4000862a176d91cccb57dbdf7ba5c31887c32b625b5ac",
+      "nonmanifold_vertex_count": 2,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 8.848165846370756e-16,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 23868,
+      "vertices": 11953
+    },
+    {
+      "closed_two_manifold": true,
+      "edge_incidence_histogram": {
+        "2": 95502
+      },
+      "label": "Ulna",
+      "label_id": 32,
+      "mesh_sha256": "b2eb96e3ac195f9a3a8ee932247e98a3c7cfdef0a899283fe2bcf38068e64b59",
+      "nonmanifold_vertex_count": 0,
+      "ply_gzip_index_envelope_and_edge_checks_pass": true,
+      "relative_signed_volume_error": 5.038322047568795e-15,
+      "source_voxel_count_matches_intake": true,
+      "triangles": 63668,
+      "vertices": 31838
+    }
+  ],
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21"
+}

@@ -1,0 +1,27 @@
+{
+  "input_intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "label_ids": [
+    2,
+    5,
+    6
+  ],
+  "method": "CPU-only; load the pinned NIfTI member from its exact archive, independently verify compressed member CRC plus uncompressed SHA-256, process each label inside its intake-v4 voxel bounding box plus one-voxel margin, emit binary-little-endian PLY in this scan affine RAS millimetres, gzip deterministically.",
+  "output_directory": "Docs/media/healthy-total-body-ct-surface-20261003/scan-001-run-v1",
+  "predictions_before_source_run": {
+    "absolute_relative_signed_volume_error_at_most": 1e-09,
+    "archive_member_and_uncompressed_hash_match_intake": true,
+    "cropped_label_voxel_counts_match_intake": true,
+    "header_shape_affine_and_spatial_units_match_intake": true,
+    "topology": "Report edge incidence, vertex-link manifold count, and closed-two-manifold result as observed; no topology repair, smoothing, or decimation."
+  },
+  "purpose": "Test whether exact voxel-union boundary candidates can be built from the pinned registered source labels with independent occupancy and affine-volume closure.",
+  "scan_id": "001",
+  "schema": "numi.healthy-total-body-ct-surface-trial-plan.v1",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "stopping_and_exclusion_rules": [
+    "One frozen run only. Do not change source, scan, labels, affine, threshold, or mesh method after inspecting output.",
+    "Any identity, count, or occupancy-volume gate failure is a failed source-bound run and must remain documented.",
+    "Topology metrics are descriptive; do not promote source segmentation or mesh to expert anatomical accuracy, cross-scan registration, Numi subject binding, material admission, mechanics, physiology, or clinical evidence."
+  ],
+  "trial_id": "scan-001-heart-kidneys-aorta-v1"
+}

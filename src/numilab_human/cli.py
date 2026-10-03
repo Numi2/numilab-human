@@ -2182,6 +2182,12 @@ def parser() -> argparse.ArgumentParser:
         help="summarize named label coverage and raster geometry across a validated CT cohort receipt",
     )
     add_healthy_total_body_ct_cohort_arguments(healthy_total_body_ct_cohort)
+    from .healthy_total_body_ct_surface import add_arguments as add_healthy_total_body_ct_surface_arguments
+    healthy_total_body_ct_surface = commands.add_parser(
+        "healthy-total-body-ct-surface",
+        help="extract exact voxel-boundary mesh candidates from registered CT labels without admitting mechanics",
+    )
+    add_healthy_total_body_ct_surface_arguments(healthy_total_body_ct_surface)
     from .whole_body_organ_overlap import add_arguments as add_whole_body_organ_overlap_arguments
     organ_overlap = commands.add_parser(
         "whole-body-organ-overlap",

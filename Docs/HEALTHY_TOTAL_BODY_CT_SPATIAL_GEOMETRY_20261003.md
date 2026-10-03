@@ -47,3 +47,9 @@ The follow-up [source-named cohort summary](HEALTHY_TOTAL_BODY_CT_COHORT_SUMMARY
 joins observed mask values to the exact workbook label names and reports
 per-label coverage and affine-scaled voxel-occupancy distributions without
 pooling participant coordinate frames.
+
+The follow-up [voxel-boundary surface candidates](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md)
+cover scan-001 whole-organ, major-vessel and skeletal masks. The Patella
+source label is anterior to the distal Femur in 1,730 shared source-coordinate
+projections, but these data do not register to Numi Human. Many automatic bone
+and organ labels contain nonmanifold contacts in their exact voxel unions.

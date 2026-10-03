@@ -45,6 +45,11 @@ adds per-label voxel-centre centroids and voxel-envelope bounds in each scan's
 own preserved RAS+ frame. It keeps the v3 intake unchanged and does not bind
 participants to the Numi mechanical subject.
 
+The [source-surface follow-up](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md)
+now includes organ, major-vessel and skeletal mesh candidates from scan 001,
+with per-mask topology defects retained. Its Patella-to-Femur anteriority
+measurement is limited to that external participant's RAS+ frame.
+
 The full voxel audit requires the optional NumPy dependency; install the
 `volume-ingest` extra in the Python 3.11+ environment used by the Human owner
 CLI (`pip install -e '.[volume-ingest]'`).

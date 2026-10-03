@@ -114,6 +114,17 @@ not treated as one shared body frame. NIfTI-to-DICOM alignment, expert mask
 accuracy, subject binding, physical volume/mass, skin layers, vascular lumens,
 tissue mechanics, physiology and clinical use remain unqualified.
 
+The compiler-bound [source-surface runs](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md)
+now cover 12 whole-organ/major-vessel labels and all 20 skeletal labels in
+scan 001. Exact intake counts and mesh occupancy volumes close; 8/12
+organ/vessel surfaces and 5/20 bone surfaces are closed two-manifolds. The
+remaining source contacts are retained with their exact incidence defects.
+The Patella mask itself is closed and its anterior surface leads the distal
+Femur by a median 23.44 mm across 1,730 shared scan-local projections. This is
+external reference geometry, not Numi-subject registration or expert anatomy
+approval. Subject registration, mask accuracy, separate tissue ownership and
+Numi integration remain open.
+
 ## HCM1 source activation map import — 2026-10-03
 
 The [Rodero-2026 HCM1 importer](CARDIAC_RODERO26_HCM_SOURCE_ACTIVATION_20261003.md)
