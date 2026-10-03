@@ -36,9 +36,14 @@ numi human healthy-total-body-ct-source \
   --output Docs/media/healthy-total-body-ct-source-20261003/intake-v3.json
 ```
 
-The receipt also records per-label raster-occupancy volume candidates as
+The initial v3 receipt also records per-label raster-occupancy volume candidates as
 `voxel_count × abs(det(affine))`; these are source segmentation geometry
 measures and do not create physical tissue-volume or mass owners.
+
+The [follow-up spatial geometry receipt](HEALTHY_TOTAL_BODY_CT_SPATIAL_GEOMETRY_20261003.md)
+adds per-label voxel-centre centroids and voxel-envelope bounds in each scan's
+own preserved RAS+ frame. It keeps the v3 intake unchanged and does not bind
+participants to the Numi mechanical subject.
 
 The full voxel audit requires the optional NumPy dependency; install the
 `volume-ingest` extra in the Python 3.11+ environment used by the Human owner

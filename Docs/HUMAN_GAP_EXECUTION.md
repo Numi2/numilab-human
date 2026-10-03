@@ -27,7 +27,10 @@ The [3 October Healthy Total Body CT source intake](HEALTHY_TOTAL_BODY_CT_SOURCE
 adds a hash-bound second-cohort segmentation inventory for whole-body organs,
 bones, skeletal muscle and fat. All 30 masks and source frames were scanned;
 36 of the workbook's 119 labels occur, and the source's 37-tissue description
-remains discrepant with the observed mask values. This does not bind the masks
+remains discrepant with the observed mask values. The follow-up
+[spatial receipt](HEALTHY_TOTAL_BODY_CT_SPATIAL_GEOMETRY_20261003.md) adds 1,055
+per-label/scan centroid and voxel-envelope candidates, preserving each scan's
+own RAS frame and reproducing all v3 intake fields. This does not bind the masks
 to Numi's current mechanical subject or close organ, skin, tendon, vessel,
 physiology, material, calibration, or behavior gates.
 

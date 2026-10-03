@@ -24,7 +24,7 @@ from .physiology import canonical, read_json
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = "HumanPack.external-segmentation-source-ingest.v1"
+SCHEMA = "HumanPack.external-segmentation-source-ingest.v2"
 SOURCE_CONFIG = ROOT / "config/healthy-total-body-cts-source.v1.json"
 DEFAULT_ARCHIVE = ROOT / "Build/healthy-total-body-ct-20260923/healthy-total-body-ct-segmentations-v3.zip"
 NIFTI_HEADER_BYTES = 352
@@ -219,10 +219,12 @@ def _scan_mask(
     np: Any,
 ) -> tuple[dict[str, Any], list[int]]:
     digest = hashlib.sha256()
+    spatial_accumulators: dict[int, dict[str, Any]] = {}
     with gzip.GzipFile(fileobj=stream, mode="rb") as image:
         header = image.read(NIFTI_HEADER_BYTES)
         digest.update(header)
         info = parse_nifti_header(header)
+        size_i, size_j, _ = info["shape_ijk"]
         data_bytes_expected = info["voxel_count"] * (info["bitpix"] // 8)
         counts = [0] * (max(allowed_labels) + 1)
         data_bytes = 0
@@ -231,6 +233,7 @@ def _scan_mask(
             if not block:
                 break
             require(len(block) % 4 == 0, f"{member_name} ends within a float32 voxel")
+            first_voxel = data_bytes // 4
             data_bytes += len(block)
             require(data_bytes <= data_bytes_expected, f"{member_name} has excess voxel data")
             digest.update(block)
@@ -245,17 +248,87 @@ def _scan_mask(
                 high = float(rounded.max())
                 require(low >= 0 and high <= max(allowed_labels),
                         f"{member_name} contains a label outside the source dictionary")
-                chunk_counts = np.bincount(rounded.astype(np.uint8, copy=False), minlength=len(counts))
-                for label_id, count in enumerate(chunk_counts):
-                    counts[label_id] += int(count)
+            chunk_counts = np.bincount(rounded.astype(np.uint8, copy=False), minlength=len(counts))
+            for label_id, count in enumerate(chunk_counts):
+                counts[label_id] += int(count)
+            # NIfTI stores I as the fastest-moving axis. Accumulate compact
+            # per-label coordinate moments and bounds while streaming; retain no
+            # voxel arrays after this chunk.
+            for raw_label_id in np.unique(rounded):
+                label_id = int(raw_label_id)
+                if label_id == 0:
+                    continue
+                local_indices = np.flatnonzero(rounded == raw_label_id)
+                linear_indices = local_indices.astype(np.int64, copy=False) + first_voxel
+                i = linear_indices % size_i
+                j = (linear_indices // size_i) % size_j
+                k = linear_indices // (size_i * size_j)
+                lower = [int(i.min()), int(j.min()), int(k.min())]
+                upper = [int(i.max()), int(j.max()), int(k.max())]
+                accumulator = spatial_accumulators.setdefault(label_id, {
+                    "voxel_count": 0,
+                    "sum_ijk": [0, 0, 0],
+                    "minimum_ijk": lower.copy(),
+                    "maximum_ijk": upper.copy(),
+                })
+                accumulator["voxel_count"] += int(linear_indices.size)
+                accumulator["sum_ijk"][0] += int(i.sum(dtype=np.int64))
+                accumulator["sum_ijk"][1] += int(j.sum(dtype=np.int64))
+                accumulator["sum_ijk"][2] += int(k.sum(dtype=np.int64))
+                accumulator["minimum_ijk"] = [
+                    min(previous, current)
+                    for previous, current in zip(accumulator["minimum_ijk"], lower, strict=True)
+                ]
+                accumulator["maximum_ijk"] = [
+                    max(previous, current)
+                    for previous, current in zip(accumulator["maximum_ijk"], upper, strict=True)
+                ]
         require(data_bytes == data_bytes_expected,
                 f"{member_name} voxel payload length disagrees with NIfTI dimensions")
     observed = {label_id for label_id, count in enumerate(counts) if count > 0}
     require(observed <= allowed_labels | {0}, f"{member_name} contains an unmapped tissue label")
+    require(set(spatial_accumulators) == observed - {0},
+            f"{member_name} label spatial accumulation disagrees with voxel counts")
+    voxel_to_world = info["voxel_to_world_affine"]
+    label_spatial_geometry: dict[str, Any] = {}
+    for label_id, accumulator in sorted(spatial_accumulators.items()):
+        count = accumulator["voxel_count"]
+        minimum = accumulator["minimum_ijk"]
+        maximum = accumulator["maximum_ijk"]
+        centroid_ijk = [value / count for value in accumulator["sum_ijk"]]
+
+        def transform(point: tuple[float, float, float]) -> list[float]:
+            return [
+                sum(voxel_to_world[row][axis] * point[axis] for axis in range(3))
+                + voxel_to_world[row][3]
+                for row in range(3)
+            ]
+
+        centroid_ras = transform(tuple(centroid_ijk))
+        voxel_envelope_corners = [
+            transform((i, j, k))
+            for i in (minimum[0] - 0.5, maximum[0] + 0.5)
+            for j in (minimum[1] - 0.5, maximum[1] + 0.5)
+            for k in (minimum[2] - 0.5, maximum[2] + 0.5)
+        ]
+        label_spatial_geometry[str(label_id)] = {
+            "voxel_count": count,
+            "centroid_voxel_center_ijk": centroid_ijk,
+            "voxel_center_bounds_ijk": {
+                "minimum_inclusive": minimum,
+                "maximum_inclusive": maximum,
+            },
+            "centroid_ras_mm": centroid_ras,
+            "voxel_envelope_aabb_ras_mm": {
+                "minimum": [min(corner[axis] for corner in voxel_envelope_corners) for axis in range(3)],
+                "maximum": [max(corner[axis] for corner in voxel_envelope_corners) for axis in range(3)],
+            },
+        }
     info.update({
         "source_member": member_name,
         "nifti_uncompressed_sha256": digest.hexdigest(),
         "label_voxel_counts": {str(label_id): count for label_id, count in enumerate(counts) if count},
+        "label_spatial_geometry_candidates": label_spatial_geometry,
         "observed_nonbackground_label_ids": sorted(observed - {0}),
         "nonbackground_voxel_count": sum(counts) - counts[0],
     })
@@ -353,6 +426,7 @@ def compile_source(archive: Path, *, source_config: Path = SOURCE_CONFIG) -> dic
                 "voxel_to_world_affine": scan["voxel_to_world_affine"],
                 "affine_source": scan["affine_source"],
                 "label_voxel_counts": scan["label_voxel_counts"],
+                "label_spatial_geometry_candidates": scan["label_spatial_geometry_candidates"],
                 "label_raster_volume_candidate_ml": {
                     label_id: count * scan["voxel_volume_in_source_units_cubed"] / 1000.0
                     for label_id, count in scan["label_voxel_counts"].items()
@@ -371,7 +445,7 @@ def compile_source(archive: Path, *, source_config: Path = SOURCE_CONFIG) -> dic
             "source archive changed during the scan")
     return {
         "schema": SCHEMA,
-        "compiler": "numilab-human.healthy-total-body-ct-source.3",
+        "compiler": "numilab-human.healthy-total-body-ct-source.4",
         "status": "partial_source_inventory",
         "source": {
             "source_id": config["source_id"],

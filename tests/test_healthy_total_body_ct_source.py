@@ -10,6 +10,7 @@ import zipfile
 
 import pytest
 
+from numilab_human import healthy_total_body_ct_source as source_module
 from numilab_human.healthy_total_body_ct_source import (
     compile_source,
     parse_nifti_header,
@@ -115,11 +116,16 @@ def test_nifti_qform_keeps_source_frame_and_physical_voxel_scale() -> None:
     ]
 
 
-def test_source_compiles_label_inventory_without_promoting_physical_ownership(tmp_path: Path) -> None:
+def test_source_compiles_label_inventory_without_promoting_physical_ownership(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
     pytest.importorskip("numpy")
+    monkeypatch.setattr(source_module, "NIFTI_CHUNK_BYTES", 8)
     archive, config = make_source(tmp_path)
     result = compile_source(archive, source_config=config)
     assert result["status"] == "partial_source_inventory"
+    assert result["schema"] == "HumanPack.external-segmentation-source-ingest.v2"
+    assert result["compiler"] == "numilab-human.healthy-total-body-ct-source.4"
     assert result["counts"] == {
         "scan_count": 2,
         "data_dictionary_label_count": 2,
@@ -133,6 +139,34 @@ def test_source_compiles_label_inventory_without_promoting_physical_ownership(tm
     assert result["scans"][0]["label_voxel_counts"] == {"0": 1, "1": 2, "2": 1}
     assert result["scans"][0]["label_raster_volume_candidate_ml"] == {
         "1": pytest.approx(0.004), "2": pytest.approx(0.002),
+    }
+    assert result["scans"][0]["label_spatial_geometry_candidates"] == {
+        "1": {
+            "voxel_count": 2,
+            "centroid_voxel_center_ijk": [1.0, 0.5, 0.0],
+            "voxel_center_bounds_ijk": {
+                "minimum_inclusive": [1, 0, 0],
+                "maximum_inclusive": [1, 1, 0],
+            },
+            "centroid_ras_mm": [11.0, 20.5, 30.0],
+            "voxel_envelope_aabb_ras_mm": {
+                "minimum": [10.5, 19.5, 29.0],
+                "maximum": [11.5, 21.5, 31.0],
+            },
+        },
+        "2": {
+            "voxel_count": 1,
+            "centroid_voxel_center_ijk": [0.0, 1.0, 0.0],
+            "voxel_center_bounds_ijk": {
+                "minimum_inclusive": [0, 1, 0],
+                "maximum_inclusive": [0, 1, 0],
+            },
+            "centroid_ras_mm": [10.0, 21.0, 30.0],
+            "voxel_envelope_aabb_ras_mm": {
+                "minimum": [9.5, 20.5, 29.0],
+                "maximum": [10.5, 21.5, 31.0],
+            },
+        },
     }
     assert result["source"]["observed_voxel_volumes_mm3"] == [2.0]
     assert result["scans"][0]["label_scaling_slope"] == 1.0
