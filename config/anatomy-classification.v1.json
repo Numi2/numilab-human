@@ -4,6 +4,8 @@
   "classification_priority": [
     "bone",
     "muscle_surface",
+    "valve_surface",
+    "cardiac_wall_surface",
     "vessel_surface",
     "nerve_surface",
     "skin_surface",
@@ -14,7 +16,9 @@
   ],
   "classes": {
     "bone": ["FMA5018", "FMA23881"],
-    "muscle_surface": ["FMA5022"],
+    "muscle_surface": ["FMA5022", "FMA268955"],
+    "valve_surface": ["FMA67598", "FMA7232"],
+    "cardiac_wall_surface": ["FMA13256"],
     "organ_surface": ["FMA67498", "FMA7088", "FMA7197", "FMA7200", "FMA7201", "FMA7309", "FMA7310", "FMA7394", "FMA7333", "FMA7337", "FMA7370", "FMA7371", "FMA7383", "FMA9607", "FMA13362", "FMA13363", "FMA13365", "FMA14544", "FMA14545", "FMA14546", "FMA14547", "FMA50801", "FMA52781", "FMA54449", "FMA54450", "FMA54640", "FMA71193", "FMA71194", "FMA71195"],
     "vessel_surface": ["FMA3710", "FMA3711", "FMA3714", "FMA3734", "FMA3736", "FMA3768", "FMA3784", "FMA3789", "FMA3862", "FMA14775", "FMA14823", "FMA20796", "FMA20797", "FMA22672", "FMA22673", "FMA30313", "FMA30314", "FMA50039", "FMA50040", "FMA50082", "FMA50366", "FMA50561", "FMA50562", "FMA50584", "FMA50585", "FMA50639", "FMA50640", "FMA50658", "FMA50659", "FMA50720", "FMA50723", "FMA61991", "FMA68201", "FMA68843", "FMA68846", "FMA69566", "FMA69567", "FMA70347", "FMA70348", "FMA70351", "FMA70352", "FMA86187", "FMA86188"],
     "nerve_surface": ["FMA5865", "FMA5913"],
@@ -26,6 +30,8 @@
   "physical_roles": {
     "bone": "rigid_geometry_candidate",
     "muscle_surface": "anatomical_geometry_only",
+    "valve_surface": "anatomical_surface_only_directional_ports_and_valve_law_required",
+    "cardiac_wall_surface": "anatomical_surface_only_myocardial_material_pressure_load_and_mass_required",
     "organ_surface": "surface_to_volume_conversion_required",
     "vessel_surface": "solid_surface_to_tube_conversion_required",
     "nerve_surface": "anatomical_geometry_only",
