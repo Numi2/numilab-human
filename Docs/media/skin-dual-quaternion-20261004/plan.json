@@ -1,0 +1,47 @@
+{
+  "boundary": "Exploratory CPU geometry screen for a source-weighted visual skin candidate at three fixed kinematic snapshots. It does not qualify continuous motion, contact, tissue mechanics, shell closure, clinical anatomy, or the native renderer implementation.",
+  "candidate": {
+    "method": "normalized_dual_quaternion_blending_of_all_86_source_rigid_body_transforms",
+    "transform": "current_body_world_transform_times_inverse_of_registered_rest_body_world_transform",
+    "blend": "full_ABI5_vertex_weight_field; hemisphere-align each influence to the maximum-weight influence; normalize real and dual parts; orthogonalize dual part",
+    "geometry": "source positions and source face indices unchanged; no weight or pose tuning; normals excluded from this geometric screen"
+  },
+  "conditions": [
+    {"id": "bilateral_knee_q_0p4", "joint_overrides": [[106, 0.4], [120, 0.4]], "baseline_pack_sha256": "51d400c9e740f576a75feeb959414af3943e0754b5896b2608fed5c630f63af9", "baseline_pairs": 0},
+    {"id": "bilateral_knee_q_0p8", "joint_overrides": [[106, 0.8], [120, 0.8]], "baseline_pack_sha256": "bf14ba629b2caf3d669c8d5687c619ded381ac44c544207c159eeac0c6302c9f", "baseline_pairs": 0},
+    {"id": "bilateral_knee_q_1p2", "joint_overrides": [[106, 1.2], [120, 1.2]], "baseline_pack_sha256": "bc76c69403f300a2345e882876bec3b75f9fbb128772a386e7d4d8bebb35bf96", "baseline_pairs": 75}
+  ],
+  "control": "The exact retained ABI5 source-weight native LBS pack at the same pose. Before candidate scoring, CPU LBS reconstructed from the pinned source model and pose must match each source skin pack within 2e-6 m maximum vertex error.",
+  "experimental_unit": "One deterministic pose snapshot; the three poses are repeated kinematic conditions on one source model, not independent biological samples.",
+  "fixed_settings": {
+    "binding_count": 86,
+    "skin_vertex_count": 54949,
+    "triangle_count": 109183,
+    "precision": "float64 transforms and predicates; emitted candidate coordinates rounded to float32 for parity with native pack",
+    "gpu": "none; CPU-only",
+    "retries": 0
+  },
+  "model": {
+    "base_payload_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+    "base_manifest_sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e",
+    "source_skin_member_sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0",
+    "source_registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "source_myo_sim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "source_core_rigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "source_core_manifest_sha256": "e706f402e0d2c6dd249a6fd1676dc9d21a6c19a5cbf19aef5d681c233b1fa1a1",
+    "source_preflight_receipt_sha256": "1b0885817481334daa49a6362ebc56f371de949c0c28b9ca792b8ffbf503d350",
+    "baseline_audit_sha256": {
+      "bilateral_knee_q_0p4": "27f0a063fefbc35616cdd134db08b7de3e0da26981509bf1fc5d60dcabd2d611",
+      "bilateral_knee_q_0p8": "fb940fbe7c05a2c62783df3660f16bcbbf3d60ae3fbecf2d8ee3c0b93ae1164d",
+      "bilateral_knee_q_1p2": "1d8b69d17af429fd88ffcb3d44456381ed88e3ef3ce8eeb39417fc95b98a095d"
+    }
+  },
+  "prediction": "At each preregistered pose, dual-quaternion skinning introduces no exact triangle-pair intersections absent from the source-weight LBS control and does not increase the exact pair count.",
+  "primary_observable": "Exact triangle self-intersection pair identities on the complete ABI5 outer skin after quotienting only bit-identical float32 coordinates.",
+  "purpose": "test whether the source-weight LBS deformation formulation contributes to the known sampled skin-shell crossings, without tuning weights or anatomy",
+  "question": "Does normalized dual-quaternion blending of the same source skin weights and rigid body transforms avoid worsening exact shell self-intersections relative to native LBS at the retained bilateral knee snapshots?",
+  "refutation": "Any new exact triangle pair or higher candidate pair count at any pose refutes the preregistered non-regression prediction. Missing source identity, failed rest reconstruction, or LBS-to-native parity error above 2e-6 m makes that pose inconclusive.",
+  "schema": "numi.human.skin-dual-quaternion-screen-preregistration.v1",
+  "status": "preregistered_before_candidate_observation",
+  "stopping_rule": "Reconstruct and parity-check LBS for the three fixed poses, then run one exact CPU predicate on each DQ candidate; stop after these three cases. Do not adopt or implement a runtime renderer path based on this screen alone."
+}

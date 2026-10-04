@@ -142,6 +142,16 @@ runtime or tissue-mechanics qualification. High-flex embeddedness for this
 candidate, cartilage/contact, skin collision/mechanics and clinical anatomy
 remain open.
 
+The preregistered [dual-quaternion screen](SKIN_DUAL_QUATERNION_SCREEN_20261004.md)
+then tested whether LBS itself explains the flexion crossings, using three
+retained native pose packs and source-identical ABI 5 weights. The CPU LBS
+reconstruction matched the native packs within 0.00143 mm, but DQ introduced
+14 exact pairs at 0.8 rad and 116 at 1.2 rad (versus LBS 0 and 75). This
+source-faithful formulation is rejected for the current shell; no skinning
+runtime changed. The sampled candidate surfaces remain open-shell visual
+geometry and do not qualify skin contact, mechanics, or clinical anatomy. See
+the [screen receipt](media/skin-dual-quaternion-20261004/results/summary.json).
+
 This refresh closes the stale-reference-manifest builder blocker. Clinical
 anatomy, patellofemoral cartilage/contact, loaded force transfer, subject
 calibration, tissue integration and physiology remain open. The earlier
