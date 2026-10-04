@@ -1,0 +1,352 @@
+{
+  "candidate_count": 7,
+  "candidate_payload_schema": "numi.human.organ-surface-topology-candidates.v1",
+  "evidence_boundary": "Exact embeddedness and component containment of topology-repaired source-surface candidates. No anatomical validation, subject binding, physical volume, tissue calibration, or mechanics.",
+  "exact_predicates": "rational source-coordinate triangle intersections and ray parity; no tolerance",
+  "inputs": {
+    "audit_implementation_sha256": "f773cfc6f5cec6fd0ea6b98fafd1b985dfd48307f8f6672ba96b3b69db7f7d27",
+    "candidate_gzip_sha256": "e0a29edcef34711a562184a641b926e37443772509a396dc68b385d50586a9fd",
+    "candidate_payload_sha256": "0aaa2728b985d84e7fec3c80b32595ee49cbf16d822ecbf2a89bd0554df1f038",
+    "exact_intersection_kernel_sha256": "8b138882161c78312cb9b5aa46f49795092eb9b67ed9f705dc354787cb0a635b",
+    "topology_receipt_sha256": "d3048466714b7208b51bb5ea492c9ce8c9f2d4e7a4502db765de39c7e08c8c29"
+  },
+  "results": [
+    {
+      "component_count": 1,
+      "component_self_intersection_count": 0,
+      "component_self_intersection_pairs": [],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2404",
+      "nested_component_pairs": [],
+      "physical_volume": false,
+      "regions": [
+        "liver"
+      ],
+      "status": "embedded_disjoint_component_union_candidate",
+      "unresolved_component_pairs": []
+    },
+    {
+      "component_count": 2,
+      "component_self_intersection_count": 10,
+      "component_self_intersection_pairs": [
+        {
+          "aabb_candidate_pairs": 32176,
+          "component_index": 1,
+          "count": 10,
+          "pairs_sample": [
+            [
+              2037,
+              2043
+            ],
+            [
+              2037,
+              2045
+            ],
+            [
+              2038,
+              2043
+            ],
+            [
+              2038,
+              2045
+            ],
+            [
+              2038,
+              2051
+            ],
+            [
+              2039,
+              2045
+            ],
+            [
+              2039,
+              2046
+            ],
+            [
+              2039,
+              2051
+            ],
+            [
+              2042,
+              2046
+            ],
+            [
+              2046,
+              2052
+            ]
+          ],
+          "pairs_sha256": "b833ac225361d808e424a4e55226a241a77848b331a82edb7dcb64d373f35892"
+        }
+      ],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2405",
+      "nested_component_pairs": [],
+      "physical_volume": false,
+      "regions": [
+        "liver"
+      ],
+      "status": "self_intersecting_source_candidate",
+      "unresolved_component_pairs": []
+    },
+    {
+      "component_count": 1,
+      "component_self_intersection_count": 0,
+      "component_self_intersection_pairs": [],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2409",
+      "nested_component_pairs": [],
+      "physical_volume": false,
+      "regions": [
+        "liver"
+      ],
+      "status": "embedded_disjoint_component_union_candidate",
+      "unresolved_component_pairs": []
+    },
+    {
+      "component_count": 1,
+      "component_self_intersection_count": 0,
+      "component_self_intersection_pairs": [],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2434",
+      "nested_component_pairs": [],
+      "physical_volume": false,
+      "regions": [
+        "right_ventricle"
+      ],
+      "status": "embedded_disjoint_component_union_candidate",
+      "unresolved_component_pairs": []
+    },
+    {
+      "component_count": 17,
+      "component_self_intersection_count": 33,
+      "component_self_intersection_pairs": [
+        {
+          "aabb_candidate_pairs": 11603,
+          "component_index": 8,
+          "count": 24,
+          "pairs_sample": [
+            [
+              9264,
+              9287
+            ],
+            [
+              9264,
+              9295
+            ],
+            [
+              9265,
+              9287
+            ],
+            [
+              9265,
+              9295
+            ],
+            [
+              9266,
+              9287
+            ],
+            [
+              9266,
+              9295
+            ],
+            [
+              9275,
+              9287
+            ],
+            [
+              9275,
+              9295
+            ],
+            [
+              9276,
+              9287
+            ],
+            [
+              9276,
+              9295
+            ],
+            [
+              9286,
+              9287
+            ],
+            [
+              9286,
+              9295
+            ],
+            [
+              9287,
+              9293
+            ],
+            [
+              9293,
+              9295
+            ],
+            [
+              11013,
+              11014
+            ],
+            [
+              11013,
+              11016
+            ]
+          ],
+          "pairs_sha256": "8619543c1c838b4dc86cea5359158f3d66e11daf7549df5c7c9d1ba6f8cb39dd"
+        },
+        {
+          "aabb_candidate_pairs": 208,
+          "component_index": 13,
+          "count": 9,
+          "pairs_sample": [
+            [
+              9462,
+              9465
+            ],
+            [
+              9462,
+              9469
+            ],
+            [
+              9464,
+              9467
+            ],
+            [
+              9464,
+              9469
+            ],
+            [
+              9465,
+              9466
+            ],
+            [
+              9466,
+              9469
+            ],
+            [
+              9467,
+              9468
+            ],
+            [
+              9468,
+              9469
+            ],
+            [
+              9469,
+              9470
+            ]
+          ],
+          "pairs_sha256": "0679c8dfc099b0efa203465c48a02cb7de8a20d9d3a7be602402052147f2a950"
+        }
+      ],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2820",
+      "nested_component_pairs": [
+        {
+          "component": 1,
+          "container": 0
+        },
+        {
+          "component": 2,
+          "container": 0
+        },
+        {
+          "component": 3,
+          "container": 0
+        },
+        {
+          "component": 4,
+          "container": 0
+        },
+        {
+          "component": 5,
+          "container": 0
+        },
+        {
+          "component": 6,
+          "container": 0
+        },
+        {
+          "component": 7,
+          "container": 0
+        },
+        {
+          "component": 8,
+          "container": 0
+        },
+        {
+          "component": 9,
+          "container": 0
+        },
+        {
+          "component": 10,
+          "container": 0
+        },
+        {
+          "component": 11,
+          "container": 0
+        },
+        {
+          "component": 12,
+          "container": 0
+        },
+        {
+          "component": 13,
+          "container": 0
+        },
+        {
+          "component": 14,
+          "container": 0
+        },
+        {
+          "component": 15,
+          "container": 0
+        },
+        {
+          "component": 16,
+          "container": 0
+        }
+      ],
+      "physical_volume": false,
+      "regions": [
+        "liver"
+      ],
+      "status": "self_intersecting_source_candidate",
+      "unresolved_component_pairs": []
+    },
+    {
+      "component_count": 1,
+      "component_self_intersection_count": 0,
+      "component_self_intersection_pairs": [],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2821",
+      "nested_component_pairs": [],
+      "physical_volume": false,
+      "regions": [
+        "liver"
+      ],
+      "status": "embedded_disjoint_component_union_candidate",
+      "unresolved_component_pairs": []
+    },
+    {
+      "component_count": 1,
+      "component_self_intersection_count": 0,
+      "component_self_intersection_pairs": [],
+      "intersecting_component_pairs": [],
+      "mechanics": false,
+      "member_id": "FJ2928",
+      "nested_component_pairs": [],
+      "physical_volume": false,
+      "regions": [
+        "left_lung"
+      ],
+      "status": "embedded_disjoint_component_union_candidate",
+      "unresolved_component_pairs": []
+    }
+  ],
+  "schema": "numi.human.organ-surface-embeddedness-audit.v1"
+}
