@@ -1,0 +1,150 @@
+{
+  "build_command": "PYTHONPATH=src python3 -m numilab_human.cli build --sources sources --upper-public-mobl-41 --accept-upper-noncommercial-terms",
+  "candidate": {
+    "anatomy_components": 4273,
+    "classes": {
+      "bone": 519,
+      "cardiac_cavity_reference": 11,
+      "cardiac_wall_surface": 7,
+      "cartilage_surface": 86,
+      "ligament_surface": 29,
+      "muscle_surface": 591,
+      "nerve_surface": 12,
+      "organ_surface": 207,
+      "skin_surface": 3,
+      "tendon_surface": 6,
+      "unclassified_surface": 1361,
+      "valve_surface": 28,
+      "vessel_surface": 1413
+    },
+    "compressed_bytes": 809829,
+    "file": "candidate-human.v1.json.gz",
+    "hierarchy_edges": 4271,
+    "physical_status": "source-faithful import only; not a compiled Numi RobotPack or validated physics run",
+    "sha256": "979527107d864a47f426a11315cf09c41e0333cb63c315ba763db0ed7f4a71dd",
+    "sha256_gzip": "fa57efd5777f6fb674c04ca89753df554251f651b6c7fd21835cacd714d62d13",
+    "uncompressed_bytes": 20407919
+  },
+  "classification_delta": {
+    "changed_component_rows": 11,
+    "changed_source_rows": [
+      {
+        "concept_id": "FMA9291",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of right ventricle",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA9464",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of cardiac chamber",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA9465",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of left atrium",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA9466",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of left ventricle",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA11359",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of right atrium",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA13237",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of atrium",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA13238",
+        "from": "unclassified_surface",
+        "hierarchy": "is_a",
+        "name": "cavity of ventricle",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA9291",
+        "from": "unclassified_surface",
+        "hierarchy": "part_of",
+        "name": "cavity of right ventricle",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA9465",
+        "from": "unclassified_surface",
+        "hierarchy": "part_of",
+        "name": "cavity of left atrium",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA9466",
+        "from": "unclassified_surface",
+        "hierarchy": "part_of",
+        "name": "cavity of left ventricle",
+        "to": "cardiac_cavity_reference"
+      },
+      {
+        "concept_id": "FMA11359",
+        "from": "unclassified_surface",
+        "hierarchy": "part_of",
+        "name": "cavity of right atrium",
+        "to": "cardiac_cavity_reference"
+      }
+    ],
+    "deltas": {
+      "unclassified_surface -> cardiac_cavity_reference": 11
+    }
+  },
+  "date": "2026-10-04",
+  "evidence_boundary": "Pinned BodyParts3D chamber-cavity boundary classification and source-import output only. This does not qualify cavity volume, pressure, blood flow, valve action, myocardial mechanics, subject binding, calibration, or heartbeat.",
+  "lineage": {
+    "classification_config": "config/anatomy-classification.v1.json",
+    "classification_config_sha256": "d1f832062adebfab361f86692e5ee49b57278d5ac58690f778eca08c64dff084",
+    "classifier_implementation": "src/numilab_human/model.py",
+    "classifier_implementation_sha256": "60001be4d254810a1de358e4e2764c47bea58f8f84fb4eba32f4d6b88985b5de",
+    "previous_candidate_sha256": "2c134f64a887dbdc5973dbe6b3a0f5104141f5f68c9b3e0e05777cc2d197217d",
+    "previous_receipt_sha256": "85c67155f5d554244f613a98e9473b2b4d329e3086c6dc93c5018717cbf2250c",
+    "source_hashes": {
+      "bodyparts_archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "mobl_arms": "58bacbc1c61d1d42cff9a48b0a9dced9c648893f44adc7d9817cca56441a9fcf",
+      "rajagopal": "8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec"
+    }
+  },
+  "schema": "numi.human.anatomy-type-classification-audit.v3",
+  "source_import_report": {
+    "file": "source-import-report.json",
+    "sha256": "4a092b433599c02d3737d5ee5cf1e53ec6ee50a22199675835175791af6ce376"
+  },
+  "verification": {
+    "candidate_nonclassification_fields": "identical to previous cardiac classification candidate after removing taxonomy-derived fields and summaries",
+    "cavity_semantics": "reference-only; no tissue mass is assigned",
+    "focused_importer_test": "passed",
+    "source_build": "passed"
+  }
+}

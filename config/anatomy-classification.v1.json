@@ -4,6 +4,7 @@
   "classification_priority": [
     "bone",
     "muscle_surface",
+    "cardiac_cavity_reference",
     "valve_surface",
     "cardiac_wall_surface",
     "vessel_surface",
@@ -17,6 +18,7 @@
   "classes": {
     "bone": ["FMA5018", "FMA23881"],
     "muscle_surface": ["FMA5022", "FMA268955"],
+    "cardiac_cavity_reference": ["FMA9464"],
     "valve_surface": ["FMA67598", "FMA7232"],
     "cardiac_wall_surface": ["FMA13256"],
     "organ_surface": ["FMA67498", "FMA7088", "FMA7197", "FMA7200", "FMA7201", "FMA7309", "FMA7310", "FMA7394", "FMA7333", "FMA7337", "FMA7370", "FMA7371", "FMA7383", "FMA9607", "FMA13362", "FMA13363", "FMA13365", "FMA14544", "FMA14545", "FMA14546", "FMA14547", "FMA50801", "FMA52781", "FMA54449", "FMA54450", "FMA54640", "FMA71193", "FMA71194", "FMA71195"],
@@ -30,6 +32,7 @@
   "physical_roles": {
     "bone": "rigid_geometry_candidate",
     "muscle_surface": "anatomical_geometry_only",
+    "cardiac_cavity_reference": "non_tissue_cavity_boundary_reference_pressure_volume_and_port_owner_required",
     "valve_surface": "anatomical_surface_only_directional_ports_and_valve_law_required",
     "cardiac_wall_surface": "anatomical_surface_only_myocardial_material_pressure_load_and_mass_required",
     "organ_surface": "surface_to_volume_conversion_required",

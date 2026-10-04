@@ -3043,6 +3043,8 @@ class ImporterTests(unittest.TestCase):
             (source / "isa_parts_list_e.txt").write_text(
                 "concept id\trepresentation id\ten\n"
                 "FMA5018\tBP1\tbone organ\nFMA9611\tBP2\tfemur\n"
+                "FMA9464\tBP15\tcavity of cardiac chamber\n"
+                "FMA9291\tBP16\tcavity of right ventricle\n"
                 "FMA67598\tBP9\tleaf of cardiac valve\n"
                 "FMA7238\tBP10\tanterior leaflet of tricuspid valve\n"
                 "FMA13256\tBP11\twall of cardiac chamber\n"
@@ -3059,6 +3061,7 @@ class ImporterTests(unittest.TestCase):
                 "parent id\tparent name\tchild id\tchild name\n"
                 "FMA5018\tbone organ\tFMA9611\tfemur\n"
                 "FMA50723\tvein\tFMA9999\ttributary vein\n"
+                "FMA9464\tcavity of cardiac chamber\tFMA9291\tcavity of right ventricle\n"
                 "FMA67598\tleaf of cardiac valve\tFMA7238\tanterior leaflet of tricuspid valve\n"
                 "FMA13256\twall of cardiac chamber\tFMA9457\twall of right atrium\n"
                 "FMA268955\tregion of papillary muscle\tFMA7260\tanterior papillary muscle of right ventricle\n",
@@ -3097,7 +3100,7 @@ class ImporterTests(unittest.TestCase):
             result = parse_bodyparts3d(source, ROOT / "config/anatomy-classification.v1.json")
             geometry = bodyparts_geometry_preflight(source, result)
         lookup = {item["concept_id"]: item for item in result["components"]}
-        self.assertEqual(len(result["hierarchy_edges"]), 7)
+        self.assertEqual(len(result["hierarchy_edges"]), 8)
         self.assertEqual(lookup["FMA9611"]["anatomy_class"], "bone")
         self.assertEqual(lookup["FMA5865"]["anatomy_class"], "nerve_surface")
         self.assertEqual(lookup["FMA7157"]["anatomy_class"], "unclassified_surface")
@@ -3106,6 +3109,7 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(lookup["FMA10446"]["anatomy_class"], "cartilage_surface")
         self.assertEqual(lookup["FMA7088"]["anatomy_class"], "organ_surface")
         self.assertEqual(lookup["FMA7238"]["anatomy_class"], "valve_surface")
+        self.assertEqual(lookup["FMA9291"]["anatomy_class"], "cardiac_cavity_reference")
         self.assertEqual(lookup["FMA9457"]["anatomy_class"], "cardiac_wall_surface")
         self.assertEqual(lookup["FMA7260"]["anatomy_class"], "muscle_surface")
         self.assertTrue(lookup["FMA9611"]["mesh_present"])
