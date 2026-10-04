@@ -152,6 +152,16 @@ runtime changed. The sampled candidate surfaces remain open-shell visual
 geometry and do not qualify skin contact, mechanics, or clinical anatomy. See
 the [screen receipt](media/skin-dual-quaternion-20261004/results/summary.json).
 
+The follow-up [complete source-solid screen](SKIN_FULL_SOLID_MOTION_SCREEN_20261004.md)
+extended the fixed outer ABI 5 weights to all 101,691 vertices and found
+2,760/2,403/2,098 exact pairs at bilateral knee angles 0.4/0.8/1.2 rad; it
+rejected global harmonic extension. A preregistered registered-bone-seeded
+extension improved the 0.4-rad count to 1,145 but increased the 0.8- and
+1.2-rad totals to 2,770 and 2,985, including 2,910 hidden-to-outer pairs at
+1.2 rad. That fixed candidate is rejected as well. Retained pair lists and
+source identities were revalidated without rerunning the exact predicates;
+neither candidate changed the runtime. See the [source-seeded result](SKIN_FULL_SOLID_SOURCE_SEEDED_SCREEN_20261004.md).
+
 This refresh closes the stale-reference-manifest builder blocker. Clinical
 anatomy, patellofemoral cartilage/contact, loaded force transfer, subject
 calibration, tissue integration and physiology remain open. The earlier

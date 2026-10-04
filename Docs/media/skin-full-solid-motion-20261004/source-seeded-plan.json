@@ -1,0 +1,52 @@
+{
+  "schema": "numi.human.skin-full-solid-source-seeded-preregistration.v1",
+  "status": "preregistered_before_source_projection_and_pose_screen",
+  "purpose": "Test whether source bone-to-skin projections improve hidden-sheet motion while retaining the exact current outer visual field.",
+  "question": "Can the closed FJ2810 source skin solid be carried through the current ABI 5 LBS motion with no inner-to-outer crossings when hidden-sheet weights are seeded by the registered source bone surfaces and current outer weights are fixed?",
+  "prediction": "The full candidate has zero exact inner-to-outer triangle intersections at bilateral knee angles 0.4 and 0.8 rad, and exactly the retained 75 outer-sheet pairs at 1.2 rad; the outer candidate field matches each retained native pack within 2e-6 m.",
+  "refutation": "Any full candidate intersection beyond the corresponding retained outer baseline, source identity drift, source-rest error above 2e-5 m, outer-pack parity error above 2e-6 m, nonpositive or nonfinite weights, or unseeded binding makes the prediction fail or the condition inconclusive.",
+  "candidate": {
+    "geometry": "Exact full 101691-vertex, 203382-triangle source skin solid; source coordinates and faces unchanged.",
+    "outer_constraints": "Keep ABI 5 Float32 full weights byte-identical on every exact-coordinate-matched outer source vertex; repeated outer seam copies share the same row.",
+    "source_seeds": "For every registered source bone anchor, project its world-space centroid and 64 deterministic stratified bone-surface vertices to the full source skin; use the existing positive source-surface screened-Laplacian seed policy: within bone diameter plus twice centroid projection gap, inverse projection-gap confidence, average repeated samples per owner, then average distinct-owner confidence.",
+    "fixed_seed_policy": "Bone samples projected to a fixed outer vertex are recorded but do not override its Dirichlet ABI 5 weights; only admitted unknown inner or connector vertices supply screened source constraints.",
+    "extension": "Solve (L_UU + diag(confidence_U)) W_U = -L_UF W_F + source_target_U on the inverse-edge-length full-surface graph in Float64; retain all fixed outer rows exactly; normalize only unknown rows and reject material negative weights.",
+    "deformation": "Current ABI 5 full-body LBS bindings, source model inertial-frame transforms, and Float32 candidate geometry emission.",
+    "boundary": "This is a visual full-solid geometry screen only. It does not qualify skin mass, thickness, material, contact, clinical anatomy, or native runtime integration."
+  },
+  "conditions": [
+    {"id": "bilateral_knee_q_0p4", "joint_overrides": [[106, 0.4], [120, 0.4]], "baseline_pack_sha256": "51d400c9e740f576a75feeb959414af3943e0754b5896b2608fed5c630f63af9", "outer_baseline_pairs": 0},
+    {"id": "bilateral_knee_q_0p8", "joint_overrides": [[106, 0.8], [120, 0.8]], "baseline_pack_sha256": "bf14ba629b2caf3d669c8d5687c619ded381ac44c544207c159eeac0c6302c9f", "outer_baseline_pairs": 0},
+    {"id": "bilateral_knee_q_1p2", "joint_overrides": [[106, 1.2], [120, 1.2]], "baseline_pack_sha256": "bc76c69403f300a2345e882876bec3b75f9fbb128772a386e7d4d8bebb35bf96", "outer_baseline_pairs": 75}
+  ],
+  "fixed_settings": {
+    "full_vertex_count": 101691,
+    "full_triangle_count": 203382,
+    "outer_vertex_count": 54949,
+    "outer_triangle_count": 109183,
+    "binding_count": 86,
+    "bone_samples_per_anchor": 64,
+    "pose_conditions": 3,
+    "retries": 0,
+    "gpu": "none; CPU-only",
+    "precision": "Float64 seed solve and transforms; Float32 geometry to exact predicate"
+  },
+  "model": {
+    "full_solid_sha256": "5612a45c25a59aaa611873cb084ac36183b1bcf0b5ed4b8554630055f389a64f",
+    "full_solid_manifest_sha256": "8dd82f9ee4ee621b510f1c3af8a4bbeb7ecfc5e90bcbba8854b4f889813bae8a",
+    "full_solid_audit_sha256": "5a4a7ce6b91b07919643a807b7a30704b68812f5a4962a3fd640de33dee43b4e",
+    "base_skin_payload_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+    "base_skin_manifest_sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e",
+    "registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "source_preflight_receipt_sha256": "1b0885817481334daa49a6362ebc56f371de949c0c28b9ca792b8ffbf503d350",
+    "core_manifest_sha256": "e706f402e0d2c6dd249a6fd1676dc9d21a6c19a5cbf19aef5d681c233b1fa1a1",
+    "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "baseline_audit_sha256": {
+      "bilateral_knee_q_0p4": "27f0a063fefbc35616cdd134db08b7de3e0da26981509bf1fc5d60dcabd2d611",
+      "bilateral_knee_q_0p8": "fb940fbe7c05a2c62783df3660f16bcbbf3d60ae3fbecf2d8ee3c0b93ae1164d",
+      "bilateral_knee_q_1p2": "1d8b69d17af429fd88ffcb3d44456381ed88e3ef3ce8eeb39417fc95b98a095d"
+    }
+  },
+  "experimental_unit": "One deterministic pose snapshot per condition; the three poses are not independent biological replicates.",
+  "stopping_rule": "Verify pinned input identities, build one source-seeded field, require source rest and fixed outer constraints, then perform one exact CPU surface predicate at each of the three listed poses. Do not tune the field or adopt from this screen."
+}

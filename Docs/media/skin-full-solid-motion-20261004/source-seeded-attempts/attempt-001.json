@@ -1,0 +1,17 @@
+{
+  "schema": "numi.human.skin-full-solid-source-seeded-attempt.v1",
+  "status": "invalid_projection_frame_measurement_corrected_before_pose_screen",
+  "plan_sha256": "f8376127a412c938c3918ad18ef434ebf2dfd3adc53fc122be97b53ee58fb35c",
+  "registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+  "base_skin_payload_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+  "invalid_observation": {
+    "admitted_projection_count": 11926,
+    "admitted_fixed_outer_projection_count": 11926,
+    "unknown_seed_vertex_count": 0,
+    "pose_predicates_run": false,
+    "candidate_weights_written": false
+  },
+  "failure": "Bone sample points were in the registered source world frame while the nearest-vertex tree used local source coordinates. The reported seed counts are invalid.",
+  "resolution": "Transform full source vertices into the registered world frame before nearest-surface projection; preserve the original source seed rule and all preregistered pose conditions.",
+  "prediction_or_conditions_changed": false
+}

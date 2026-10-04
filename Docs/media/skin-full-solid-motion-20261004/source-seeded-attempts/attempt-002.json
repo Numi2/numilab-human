@@ -1,0 +1,15 @@
+{
+  "schema": "numi.human.skin-full-solid-source-seeded-attempt.v1",
+  "status": "exact_pose_rows_retained_summary_not_written",
+  "plan_sha256": "f8376127a412c938c3918ad18ef434ebf2dfd3adc53fc122be97b53ee58fb35c",
+  "predicate_source_sha256": "cd3e4535ee8213378c87a0c1105be644b8c2a2bab1330e3f7881bbb7ee92c34b",
+  "completed_pose_rows": {
+    "bilateral_knee_q_0p4": {"full_pairs": 1145, "hidden_to_outer_pairs": 1145, "outer_pairs": 0},
+    "bilateral_knee_q_0p8": {"full_pairs": 2770, "hidden_to_outer_pairs": 2770, "outer_pairs": 0},
+    "bilateral_knee_q_1p2": {"full_pairs": 2985, "hidden_to_outer_pairs": 2910, "outer_pairs": 75}
+  },
+  "failure": "The runner used the wrong JSON field name when evaluating its post-predicate screen result, so it exited before writing summary.json. All exact pair lists, Float32 vertices, and per-pose rows were retained.",
+  "resolution": "Correct the summary field lookup and validate the retained pair lists, rows, candidate weights, source identities, rest gate, and outer-pack parity without rerunning the exact predicates.",
+  "candidate_adopted": false,
+  "prediction_or_conditions_changed": false
+}

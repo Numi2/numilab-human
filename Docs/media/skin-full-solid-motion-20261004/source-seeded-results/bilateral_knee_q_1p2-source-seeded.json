@@ -1,0 +1,50 @@
+{
+  "baseline_outer_intersection_pair_count": 75,
+  "candidate_adopted": false,
+  "candidate_topology": {
+    "boundary_branch_vertex_ids": 0,
+    "boundary_edge_count": 0,
+    "boundary_loop_count": 0,
+    "closed_oriented_manifold_candidate": true,
+    "degenerate_face_ids": 0,
+    "duplicate_face_ids": 0,
+    "edge_count": 305073,
+    "euler_characteristic": 0,
+    "face_component_count": 1,
+    "face_count": 203382,
+    "interdomain_overlap_status": "not_checked",
+    "nonmanifold_edges": 0,
+    "orientation_defect_edges": 0,
+    "repeated_vertex_face_ids": 0,
+    "self_intersection_status": "not_checked",
+    "unused_vertex_ids": 0,
+    "vertex_count": 101691,
+    "vertex_manifold_defect_ids": 0
+  },
+  "case": "bilateral_knee_q_1p2",
+  "clinical_anatomy": false,
+  "full_solid_exact_intersection_pair_count": 2985,
+  "full_solid_intersection_pair_classes": {
+    "inner_or_connector_to_outer": 2910,
+    "outer_to_outer": 75
+  },
+  "full_solid_intersection_pairs_file": "bilateral_knee_q_1p2-source-seeded-intersections.json.gz",
+  "full_solid_intersection_pairs_sha256": "16b856e340f2a13f6326207f2dc1ffb178015863587f14ce0e7f309b01bef28f",
+  "full_solid_vertex_positions_sha256": "b9a8c05745fb410a85272eb8fbd2a25e154ceb9f9e329a4d1d4b6caa19b1eab9",
+  "gpu_used": false,
+  "joint_overrides": [
+    [
+      106,
+      1.2
+    ],
+    [
+      120,
+      1.2
+    ]
+  ],
+  "maximum_outer_to_native_position_error_m": 1.319788915365717e-06,
+  "maximum_source_joint_equality_residual": 1.1102230246251565e-16,
+  "physical_skin_mechanics": false,
+  "registered_signed_volume_m3": 0.003431693883612752,
+  "schema": "numi.human.skin-full-solid-source-seeded-row.v1"
+}
