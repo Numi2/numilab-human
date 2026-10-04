@@ -1,0 +1,94 @@
+{
+  "boundary": "The native run ended at the first rejected candidate before its declared horizon. The measured pulmonary outflow is brief and small; no aortic ejection or complete pacing cycle occurred. The status diagnostics are preserved without assigning meaning to their individual slots. No automatic retry or physiological claim is made.",
+  "cycle_metrics_sha256": "216ded789b42f9acb4208faa357a6dc891f9e3f249919ce7fe40d9a6d5fdeccb",
+  "measured_outcome": {
+    "accepted_steps": 122,
+    "aortic_ejected_ml": 0.0,
+    "complete_pacing_cycles": 0,
+    "final_lv_volume_ml": 101.170573063,
+    "final_rv_volume_ml": 121.376976285,
+    "first_positive_aortic_sample": null,
+    "first_positive_pulmonary_sample": {
+      "accepted_step": 121,
+      "flow_ml_s": 5.245043204844183,
+      "time_ms": 61.951999843586236
+    },
+    "heartbeat_qualified": false,
+    "last_activation_nodes_over_0_01": 172956.0,
+    "last_aortic_flow_ml_s": 0.0,
+    "last_lv_pressure_pa": 7025.828957557678,
+    "last_pulmonary_flow_ml_s": 10.371836012847666,
+    "last_rv_pressure_pa": 1673.443764448166,
+    "max_blood_error_ml": 0.00038697033687640214,
+    "maximum_displacement_m": 0.0180563051528,
+    "moved_nodes": 227734,
+    "prediction_reached_target_horizon": false,
+    "prescribed_tension_frames": 0,
+    "pulmonary_ejected_ml": 0.007995842139270666,
+    "time_ms": 62.46399984229356
+  },
+  "native_run": {
+    "abi": 36,
+    "accepted_additional_steps": 69,
+    "device": "Apple M4 Pro",
+    "elapsed_seconds": 18518.604017019272,
+    "failure": {
+      "failing_index": 4294967295,
+      "fgmres_iteration_budget": 64,
+      "fgmres_iterations": 64,
+      "line_search_steps": 32,
+      "newton_iteration_budget": 10,
+      "status_code": 10,
+      "status_diagnostics_uninterpreted": [
+        0,
+        0,
+        0.000131082226,
+        2.49402251e-06
+      ],
+      "status_name": "NM_STATUS_NONLINEAR_SOLVER_FAILURE"
+    },
+    "finished_unix": 1791113274.276798,
+    "host": "macmini",
+    "last_accepted_step": 122,
+    "last_accepted_time_ms": 62.46399984229356,
+    "native_pid": 46480,
+    "native_process_live": false,
+    "native_terminal_record_file": "native-terminal-record.json",
+    "observer_pids_stopped": [
+      50357,
+      50711
+    ],
+    "requested_additional_steps": 187,
+    "retained_remote_files": {
+      "accepted_checkpoint": {
+        "bytes": 138795524,
+        "path": "/Users/n/heartbeat-evidence-20261004-recovery/accepted.nmsnap",
+        "sha256": "0525c13689a5c7033331eddf3d96d97b24fc71cb88de0154d896dad6ba80ec51"
+      },
+      "accepted_driver": {
+        "bytes": 130,
+        "path": "/Users/n/heartbeat-evidence-20261004-recovery/accepted.nmsnap.driver",
+        "sha256": "78ae6805434fcf6584f832290b8b23d3c095ab2c965a652873784ec292120203"
+      },
+      "native_log": {
+        "bytes": 29077786,
+        "path": "/Users/n/heartbeat-evidence-20261004-recovery/native.log",
+        "sha256": "4f87eeeb54c7a98fffc1e46d4a13e2ada3ce034a2fc44e5f8c930b22e9a2d068"
+      },
+      "wrapper_log": {
+        "bytes": 62928,
+        "path": "/Users/n/heartbeat-evidence-20261004-recovery/wrapper.log",
+        "sha256": "d80ffa1481b4a53ec22c490ad6d53d5792a1a0d384b41bde4e4e3b51d74df274"
+      }
+    },
+    "start_accepted_step": 53,
+    "target_accepted_step": 240,
+    "target_time_ms": 122.87999968975782,
+    "wrapper_exit_code": 2
+  },
+  "native_terminal_record_sha256": "9e9892837f9351e170fada1f976aee53e7f14bf8ddfd505f09404244caf24efc",
+  "plan_sha256": "2325dc3877869cd4fc404575df4d0e5961faebf37f76fe57b0b5eeee70caf992",
+  "schema": "numi.human.cardiac-recovery-run-completion.v1",
+  "status": "native_solver_failure_after_accepted_step_122",
+  "trajectory_sha256": "4d4075a7f11507fe6626cdde07cb7d878ac077ea78bad0815859d1ab15bae5c4"
+}

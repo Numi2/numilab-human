@@ -1,0 +1,72 @@
+{
+  "accepted_steps": 122,
+  "time_ms": 62.46399984229356,
+  "validity_limits_satisfied": true,
+  "max_blood_error_ml": 0.00038697033687640214,
+  "observed_interval": {
+    "start_ms": 0,
+    "end_ms": 62.46399984229356,
+    "aortic_ejected_ml": 0.0,
+    "pulmonary_ejected_ml": 0.007995842139270666,
+    "mitral_filled_ml": 8.280050536295885,
+    "tricuspid_filled_ml": 2.2166938264970297,
+    "lv_pv_work_j": -0.00297928359851184,
+    "rv_pv_work_j": -0.00021899766302448567,
+    "extrema": {
+      "lv_blood_ml": {
+        "min": 92.8905582803707,
+        "max": 101.17057306296019
+      },
+      "rv_blood_ml": {
+        "min": 119.16842159587563,
+        "max": 121.38492754421547
+      },
+      "lv_pressure_pa": {
+        "min": 162.27185726165771,
+        "max": 7025.828957557678
+      },
+      "rv_pressure_pa": {
+        "min": 70.96659857779741,
+        "max": 1673.443764448166
+      }
+    }
+  },
+  "complete_pacing_cycles": 0,
+  "cycles": [],
+  "first_positive_outlet_samples": {
+    "aortic_ml_s": null,
+    "pulmonary_ml_s": {
+      "accepted_step": 121,
+      "time_ms": 61.951999843586236,
+      "flow_ml_s": 5.245043204844183
+    }
+  },
+  "latest": {
+    "accepted_step": 122.0,
+    "time_ms": 62.46399984229356,
+    "lv_geometry_ml": 101.17057713001847,
+    "lv_blood_ml": 101.17057306296019,
+    "lv_pressure_pa": 7025.828957557678,
+    "rv_geometry_ml": 121.37697749194437,
+    "rv_blood_ml": 121.37697628480329,
+    "rv_pressure_pa": 1673.443764448166,
+    "mitral_ml_s": 0.0,
+    "aortic_ml_s": 0.0,
+    "tricuspid_ml_s": 0.0,
+    "pulmonary_ml_s": 10.371836012847666,
+    "total_blood_ml": 5149.999981658763,
+    "max_activation": 0.7104928493499756,
+    "min_electric_potential": -5.5838070693425834e-05,
+    "max_electric_potential": 0.9444788098335266,
+    "min_recovery_gate": 0.661656379699707,
+    "max_recovery_gate": 1.0,
+    "voltage_nodes_over_0_5": 171133.0,
+    "unpaced_voltage_nodes_over_0_5": 167206.0,
+    "activation_nodes_over_0_01": 172956.0,
+    "max_unpaced_voltage": 0.9444788098335266
+  },
+  "physics_lineage": "Same physical state with disclosed shader revisions at steps49 and53; recovery from53 on Mini. Not exact same-program replay of the prefix.",
+  "qualification": "Measurements only. Repeated electrical contraction, relaxation, both outlet ejections, PV closure and rollback must be assessed together. Partial prefix is not a heartbeat result.",
+  "pv_work_convention": "Minus trapezoidal integral of cavity pressure against blood volume; not whole-system energy closure.",
+  "flow_convention": "Native implicit endpoint flow times accepted timestep; split by overlap for off-grid cycle boundaries."
+}

@@ -2,22 +2,40 @@
 
 ## Result
 
-The unchanged native continuation has advancing source-myocardial electrical
-activation, but it has not produced aortic or pulmonary ejection in the retained
-accepted checkpoints. At step 109 (55.808 ms), the reconstructed LV-to-aorta
-pressure difference is `-5,795.531 Pa` and the RV-to-pulmonary-artery
-difference is `-471.617 Pa`; both native outlet flows are exactly zero. The
-gradients have moved toward zero since the step-103 baseline, but remain
-negative. These sampled states do not demonstrate a valve-law failure. With a
-nonpositive source-model driving gradient, zero one-way outlet flow is the
-expected directional result.
+The earlier accepted step-109 state had advancing electrical activation but no
+aortic or pulmonary ejection. Its reconstructed LV-to-aorta pressure
+difference was `-5,795.531 Pa` and the RV-to-pulmonary-artery difference was
+`-471.617 Pa`; both flows were zero. The gradients had moved toward zero since
+the step-103 baseline, but remained negative. Those sampled states did not
+demonstrate a valve-law failure: with a nonpositive source-model driving
+gradient, zero one-way outlet flow is the expected directional result.
 
-At step 109, 152,596/218,077 myocardial nodes exceed the voltage threshold and
-154,482/218,077 exceed the activation threshold. Between accepted steps 108
-and 109, 1,459 nodes crossed the voltage threshold and 1,453 crossed the
-activation threshold. Chamber pressures are 5,074.149 Pa LV and 1,210.173 Pa
-RV. The voltage/activation counts establish electrical state changes in this
-model; zero outlet ejection means they do not establish a heartbeat.
+The continuation then reached accepted step 122 (62.464 ms). Pulmonary
+pressure difference became positive at step 121 (`+4.195 Pa`), with flow
+`5.245 ml/s`; at step 122 it was `+8.297 Pa` with flow `10.372 ml/s`. The
+accepted-trajectory flow integral is `0.007996 ml` of pulmonary outflow over
+the full observed interval. Aortic pressure difference remained negative at
+step 122 (`-3,794.969 Pa`) and aortic flow remained zero. The exact-trajectory
+analysis reports zero complete pacing cycles and maximum blood-volume error
+`0.000387 ml`.
+
+The native solver rejected the next candidate after step 122 with
+`NM_STATUS_NONLINEAR_SOLVER_FAILURE` (status 10), after using the full 64-step
+FGMRES budget. The run had accepted 69 additional steps from its step-53
+checkpoint and stopped at 62.464 ms, well before its declared step-240 / 122.88
+ms horizon. This is a recorded numerical failure, not evidence that the
+predicted aortic ejection would or would not have occurred later. No automatic
+retry was started. The native status diagnostics
+`[0, 0, 0.000131082226, 0.00000249402251]` are retained without assigning
+meanings to their individual slots.
+
+At step 109, 152,596/218,077 myocardial nodes exceeded the voltage threshold
+and 154,482/218,077 exceeded the activation threshold. At step 122, the
+observer counted 171,133 voltage-threshold and 172,956 activation-threshold
+nodes. Chamber pressures were 7,025.829 Pa LV and 1,673.444 Pa RV. These
+voltage and activation counts show electrical-state changes in this model;
+brief pulmonary outflow without aortic ejection or a complete cycle does not
+establish a heartbeat.
 
 ## Method and evidence
 
@@ -50,8 +68,7 @@ pulmonary-artery pressure was `1,681.790 Pa`. The two gradients remain
 negative. A separate kinematic screen measured 6.120 mm mean myocardial-node
 displacement from step 53 to 108 while chamber volume changed by less than
 0.001 ml. That motion is not proof of active contraction or pressure-volume
-closure. The next decision still depends on the declared continuation reaching
-a positive outlet gradient or its stopping horizon.
+closure. This remains insufficient as a causal active-contraction result.
 
 ## Active-tension source review
 
@@ -68,7 +85,7 @@ files are modified in the working tree. The pinned build receipt identifies the
 vascular source formula and binary outputs, but it does not provide a complete
 transitive source fingerprint for this active-tension implementation. This is
 a source-design inspection only; it does not prove that the pinned binary
-applied a particular active stress at step 109. The observed motion and
+applied a particular active stress at step 122. The observed motion and
 activation are not treated as a causal mechanics result.
 
 The arterial pressures are source-model reconstructions from accepted vascular
@@ -77,17 +94,19 @@ No material parameters, outlet laws, or controller forces were changed. The
 continuation remains unqualified for ejection, repeated cycles, or a true
 heartbeat.
 
-## Live continuation
+## Stopped continuation and next gate
 
-At this receipt, native PID `46480` is still running the preregistered
-step-53-to-240 continuation. Read-only observers `50357` (activation) and
-`50711` (outlet gradients) are running on the same host. Their local step-109
-snapshots, exact plans, monitor sources, and the corrected attempt history are
-retained in
-[`media/cardiac-electroactivation-response-20261004/`](media/cardiac-electroactivation-response-20261004/).
+Native PID `46480` and read-only observer PIDs `50357` and `50711` have stopped.
+The process wrapper recorded exit code 2; the last accepted checkpoint and
+full native log remain on `macmini` and are bound by hashes in
+[`attempt-003/run-completion.json`](media/cardiac-electroactivation-response-20261004/attempt-003/run-completion.json).
+The exact forward trajectory, copied plan, observer records and independently
+rerun trajectory analysis are retained beside it. The progress snapshot still
+reports `native_live=true`; the later wrapper completion record and process
+table establish that this flag is stale.
 
-Next gate: continue sampling until the native process ends. At the first
-positive LV-to-aorta or RV-to-pulmonary-artery gradient, compare that accepted
-state with the contemporaneous myocardial activation and outlet flow. Audit
-the valve equation only if a positive driving gradient still produces zero
-flow. Preserve a non-ejection result if the continuation reaches its limit.
+Next gate: analyze the first rejected candidate and the source-to-wall-pressure
+transfer at the stopped state before preregistering any further native run.
+The aortic driving gradient was still negative, so these data do not justify a
+valve-law change. Keep the brief pulmonary ejection, zero aortic output,
+zero-cycle result and nonlinear failure distinct.
