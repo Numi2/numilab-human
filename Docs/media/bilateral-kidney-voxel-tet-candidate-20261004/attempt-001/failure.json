@@ -1,0 +1,17 @@
+{
+  "attempt": "001",
+  "expected_source_voxel_count": 81746,
+  "expected_source_voxel_occupancy_volume_m3": 0.00018273604608884852,
+  "failure": "Naive floating-point summation of 490476 positive tetrahedron volumes produced a 1.20e-11 relative total-volume error against the exact voxel occupancy, exceeding the preregistered 1e-12 threshold.",
+  "mesh_not_admitted": true,
+  "partial_mesh_observed_volume_m3": 0.00018273604608665944,
+  "partial_mesh_path": "attempt-001/scan-001-kidney-left.vtk.gz",
+  "partial_mesh_positive_tetrahedra": 490476,
+  "partial_mesh_sha256": "8866bce23b581ae8ab5980b544d0494288c86ade7433ed37bfddd3ba2f5504d4",
+  "partial_mesh_tetrahedra": 490476,
+  "plan_path": "attempt-001/plan.json",
+  "plan_sha256": "54f75d81d246f843ead0e2f5cce2f4b627052e5e40f4bdde202ed041fa439b53",
+  "recovery": "The next attempt uses compensated Kahan accumulation; it does not change mesh geometry or acceptance tolerance.",
+  "schema": "numi.human.scan-specific-kidney-voxel-tet-attempt.v1",
+  "status": "failed_closed"
+}

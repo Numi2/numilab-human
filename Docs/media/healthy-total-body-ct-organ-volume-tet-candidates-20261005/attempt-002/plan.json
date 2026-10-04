@@ -1,0 +1,137 @@
+{
+  "attempt": 2,
+  "created_date": "2026-10-05",
+  "expected_label_count": 12,
+  "instrument_sources": {
+    "config/healthy-total-body-cts-source.v1.json": "8347d21368fa6ab24205cde618b4398ec1dab76ce5d6b50b89d49af95678b258",
+    "src/numilab_human/cli.py": "d92335c9061e0c13c614508a5404303230909ee75e9636e259c8559f1f26dbb7",
+    "src/numilab_human/healthy_total_body_ct_organ_voxel_tets.py": "495e789dd6132851315b6baf12a6aa829edba51f02d48dd45c4afb424ae5c8e9",
+    "src/numilab_human/healthy_total_body_ct_source.py": "01967bdd50bcf3370073078e87f0e6004c9f0955fa7e27a4cc6288709588d5f9",
+    "src/numilab_human/healthy_total_body_ct_voxel_tets.py": "d874d93af450175f2eeb0067c3611ad897337e668c1e3da66a9b63c2d17314de",
+    "src/numilab_human/model.py": "50e4089ea517736386330031c0985d6c6e23b42fa71d19897540a9d8a91951a3"
+  },
+  "intake_receipt_path": "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+  "intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "labels": [
+    {
+      "label_id": 1,
+      "mesh_file": "scan-001-label-001-adrenal-glands-boundary.ply.gz",
+      "mesh_sha256": "1f69029df33fcfd37321a9fe54bfdd5a6b8af687e27e4c99e40b07bb638e20eb",
+      "name": "Adrenal-glands",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:1",
+      "source_voxel_count": 1786
+    },
+    {
+      "label_id": 2,
+      "mesh_file": "scan-001-label-002-aorta-boundary.ply.gz",
+      "mesh_sha256": "d84d219d9b6e430a40fb1b5e67e3d40527a1ddb69f66a490ca672c72838309d9",
+      "name": "Aorta",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:2",
+      "source_voxel_count": 124336
+    },
+    {
+      "label_id": 3,
+      "mesh_file": "scan-001-label-003-bladder-boundary.ply.gz",
+      "mesh_sha256": "7604b8e037b491b63662ef157cd15a98a0420947c06f8e52ffed2081fd6ed63e",
+      "name": "Bladder",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:3",
+      "source_voxel_count": 61152
+    },
+    {
+      "label_id": 4,
+      "mesh_file": "scan-001-label-004-brain-boundary.ply.gz",
+      "mesh_sha256": "824f28d5a2e86c0a80f2a60cc8e2e455b99c9fcd522f8f81703227fa213cd1de",
+      "name": "Brain",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:4",
+      "source_voxel_count": 659831
+    },
+    {
+      "label_id": 5,
+      "mesh_file": "scan-001-label-005-heart-boundary.ply.gz",
+      "mesh_sha256": "8ab61ec1780bafeb3bb5cc24deea238a352e10e4a47de53cfe031f9a60f9c76f",
+      "name": "Heart",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:5",
+      "source_voxel_count": 260376
+    },
+    {
+      "label_id": 6,
+      "mesh_file": "scan-001-label-006-kidneys-boundary.ply.gz",
+      "mesh_sha256": "2d80bb9f862d53bca05b1223a7440c10a5a3ebae1baac27bda1b10cc7a6df52b",
+      "name": "Kidneys",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:6",
+      "source_voxel_count": 157014
+    },
+    {
+      "label_id": 7,
+      "mesh_file": "scan-001-label-007-liver-boundary.ply.gz",
+      "mesh_sha256": "a9a67727fb2742c3b277344f1804983a6b104e80d5050a1a985caf0845d6ba86",
+      "name": "Liver",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:7",
+      "source_voxel_count": 524736
+    },
+    {
+      "label_id": 8,
+      "mesh_file": "scan-001-label-008-pancreas-boundary.ply.gz",
+      "mesh_sha256": "77a1b52a17ed010bd7c73a4e1bf2cf1f1a392eedd6fdeb3a911751027687e00f",
+      "name": "Pancreas",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:8",
+      "source_voxel_count": 24818
+    },
+    {
+      "label_id": 9,
+      "mesh_file": "scan-001-label-009-spleen-boundary.ply.gz",
+      "mesh_sha256": "33a81ca49f8644d515586e65c57b54fdca966fb6dd8d113ce11b6bfa14fe4cd9",
+      "name": "Spleen",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:9",
+      "source_voxel_count": 41346
+    },
+    {
+      "label_id": 10,
+      "mesh_file": "scan-001-label-010-thyroid-boundary.ply.gz",
+      "mesh_sha256": "b8c83065e638c23392ba63ba367fa57bbb7768480c798e6ccda727f4d19a3e11",
+      "name": "Thyroid",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:10",
+      "source_voxel_count": 5904
+    },
+    {
+      "label_id": 11,
+      "mesh_file": "scan-001-label-011-vci-boundary.ply.gz",
+      "mesh_sha256": "1c91b5857b9463495c9c5bad09ce9cf3e10084034c070b148b799c108c015e16",
+      "name": "VCI",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:11",
+      "source_voxel_count": 27457
+    },
+    {
+      "label_id": 12,
+      "mesh_file": "scan-001-label-012-lung-boundary.ply.gz",
+      "mesh_sha256": "f40ab96281b481bbab7722426545ce9a84229241b2cdd7e00318789e7e3ca5dd",
+      "name": "Lung",
+      "source_semantic_id": "healthy_total_body_cts_v3:segmentation-label:12",
+      "source_voxel_count": 1476822
+    }
+  ],
+  "maximum_source_voxels_per_label": 1500000,
+  "maximum_tetrahedral_volume_relative_error": 1e-12,
+  "maximum_total_source_voxels": 3400000,
+  "method": "source_nifti_label_voxels_freudenthal_6tet",
+  "predictions": {
+    "every_direct_mask_boundary_matches_registered_surface_triangle_multiset": true,
+    "expert_segmentation_or_physiological_qualification": false,
+    "one_positive_six-tet-per-source-voxel_mesh_per_label": true,
+    "serialized_tet_boundary_matches_direct_source_mask": true,
+    "source_nifti_hash_and_all_selected_voxel_counts_match_intake": true,
+    "tetrahedral_volume_closes_to_source_voxel_occupancy": true
+  },
+  "question": "Can the exact registered scan-001 organ and vessel label masks be decomposed directly from their source NIfTI voxels into boundary-preserving tetrahedral volume candidates?",
+  "scan_id": "001",
+  "schema": "numi.healthy-total-body-ct-organ-voxel-tets-plan.v2",
+  "scope_limit": "One automatic-segmentation scan is a source geometry unit, not a Numi Human subject. No independent-participant replication, clinical accuracy, physical volume ownership, material, mass, mechanics, vessel lumen/perfusion, or physiology is inferred.",
+  "source_archive_path": "Build/healthy-total-body-ct-20260923/healthy-total-body-ct-segmentations-v3.zip",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_config_path": "config/healthy-total-body-cts-source.v1.json",
+  "source_config_sha256": "8347d21368fa6ab24205cde618b4398ec1dab76ce5d6b50b89d49af95678b258",
+  "status": "preregistered",
+  "stop_rule": "Any archive, NIfTI hash, scan identity, label semantic identity/count, source surface, direct-mask boundary, positive-tetrahedron, volume, or bounded source-size gate failure stops the attempt and retains partial output without repairing the source.",
+  "surface_receipt_path": "Docs/media/healthy-total-body-ct-surface-20261003/contact-split-scan-001-manifold-v4/receipt.json",
+  "surface_receipt_sha256": "8bc62fbf87a018bee0f5722e428bf7d9a0f89b5ad1981a448493f09df87b0dcd"
+}

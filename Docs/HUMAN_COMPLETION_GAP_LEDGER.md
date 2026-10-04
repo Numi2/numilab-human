@@ -36,6 +36,45 @@ qualified. These scan-local automatic masks still do not establish expert
 accuracy, Numi-subject anatomy, a vascular lumen, or tissue mechanics. See the
 [two-scan comparison and refreshed evidence record](HEALTHY_TOTAL_BODY_CT_SURFACE_CANDIDATES_20261003.md#two-scan-organ-and-vessel-topology-refresh).
 
+## Scan-specific bilateral kidney geometry — 2026-10-04
+
+The corrected face-edge audit partitions the automatic `Kidneys` label into
+exactly two closed components in each retained scan, with volume centroids on
+opposite sides of that scan's RAS midline. Four left/right PLY candidates now
+preserve every parent triangle coordinate and winding; a separate
+standard-library verifier checks the exact face-row mapping, closure, and
+volume sums against source occupancy. The earlier audit attempt used a
+misordered edge-to-face index array; those preliminary outputs remain
+preserved and explicitly superseded. The scan-002 `Adrenal-glands` label has
+three components and `Lung` has six, so the initial component-count method
+emitted no laterality surfaces for them. A follow-up now partitions every
+occupied source voxel by the scan's RAS-X midplane and independently verifies
+side counts, source voxel-grid placement, topology and volume; see the
+[scan-specific adrenal and lung results](HEALTHY_TOTAL_BODY_CT_RAS_X_PARTITION_20261004.md).
+The [registered export and independent verification receipt](media/bilateral-kidney-components-export-20261004/receipt.json)
+binds all four files. These remain automatic, scan-specific segmentation
+candidates: expert/clinical accuracy, unique-participant replication, Numi
+Human subject binding and runtime integration, tissue ownership, kidney
+mechanics, perfusion, and physiology remain open.
+
+### Kidney volume geometry candidate — 2026-10-05
+
+The four verified source surfaces are now reconstructed as voxel-domain
+tetrahedral candidates: 81,746 and 75,268 occupied voxels for scan 001 left and
+right, and 88,565 and 88,826 for scan 002. Each source voxel contributes six
+positive tetrahedra. An independent parser verifies all 2,006,430 serialized
+tetrahedra, valid face incidence, source-boundary triangle equality, and
+voxel-volume closure within `9.59e-16` relative error. Attempt 001's summation
+error and partial output remain preserved; attempt 002 passes using compensated
+summation without changing the preregistered tolerance. One upstream export
+receipt embeds a verification digest that differs from its current separately
+checksummed verification file; the new plan and receipt retain that mismatch
+and bind the current verification independently. This adds source-voxel volume
+geometry only. Expert review, participant independence, Numi subject and
+runtime binding, physical tissue ownership, mechanics/materials, perfusion,
+and physiological validation remain open; see
+[the paired-kidney volume-mesh record](HEALTHY_TOTAL_BODY_CT_PAIRED_KIDNEY_VOLUME_MESH_20261005.md).
+
 ## Current toe-enthesis standing prefix — 2026-10-02
 
 The physical M4 Pro accepted a 512-step, 1 ms source-path-feedback prefix using
@@ -1500,3 +1539,19 @@ defects and the known right-heart cavity overlap remains. This closes declared
 source membership and renderer parity only; whole-body coverage, clinical
 registration, disjoint tissue, connected lumens, motion and mechanics remain
 open.
+
+## Healthy total-body CT organ volume geometry — 2026-10-05
+
+The [two-scan source-mask tetrahedral candidates](HEALTHY_TOTAL_BODY_CT_ORGAN_VOLUME_MESH_20261005.md)
+cover 12 automatic organ and vessel labels in each scan: 7,350,007 source
+voxels and 44,100,042 positive tetrahedra. Direct ingestion of the hash-bound
+NIfTI masks preserves enclosed zero-valued cavities. Independent
+serialized-mesh audits reproduce every source-mask boundary triangle, find
+valid tetrahedral face incidence, and close voxel occupancy volume within
+`3.38e-15` relative error. The initial flood-fill mismatch, first verifier's
+face-ordering failure, and runner environment/summary issues remain preserved
+under [the candidate evidence directory](media/healthy-total-body-ct-organ-volume-tet-candidates-20261005/).
+This advances scan-specific volume geometry only; expert segmentation review,
+participant identity and replication, Numi Human subject binding, vertex-link
+manifoldness, physical organ/mass ownership, materials, lumen/perfusion,
+mechanics, and physiology remain open.

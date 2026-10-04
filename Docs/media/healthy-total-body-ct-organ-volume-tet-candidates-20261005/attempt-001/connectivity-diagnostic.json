@@ -1,0 +1,23 @@
+{
+  "schema": "numi.human.organ-voxel-tet-connectivity-diagnostic.v1",
+  "status": "six_connected_fill_rejected",
+  "label_id": 12,
+  "label_name": "Lung",
+  "source_voxel_count": 1476822,
+  "source_surface_triangle_count": 373700,
+  "six_connected_fill": {
+    "reconstructed_voxel_count": 1476826,
+    "generated_boundary_triangle_count": 373660,
+    "source_only_boundary_triangles": 40,
+    "fill_only_boundary_triangles": 0,
+    "source_surface_volume_mm3": 3301306.645671047,
+    "reconstructed_volume_mm3": 3301315.587321824
+  },
+  "twenty_six_connected_exterior_fill": {
+    "reconstructed_voxel_count": 108109,
+    "source_boundary_voxel_count": 108109,
+    "interior_recovered": false,
+    "interpretation": "exterior propagation leaked through diagonal gaps in the voxel boundary"
+  },
+  "decision": "Do not infer the interior from a surface flood fill; read the hash-bound original segmentation mask directly."
+}

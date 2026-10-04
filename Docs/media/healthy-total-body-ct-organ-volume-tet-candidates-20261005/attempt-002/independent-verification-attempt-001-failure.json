@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "candidate_meshes_changed": false,
+  "compiler_receipt_sha256": "88250314db82432e69ed702dc026ba9f152b36618518ad16823c0d6c5fa7dc0a",
+  "diagnosis": "verifier copied an incorrect x/y voxel-face corner order; its boundary triangulation did not match the source kernel convention",
+  "failure": "serialized mesh boundary differs from exact source NIfTI mask",
+  "first_label_id": 12,
+  "first_label_name": "Lung",
+  "next": "correct verifier FACE_CORNERS from the hash-bound voxel kernel and repeat the independent audit",
+  "schema": "numi.human.organ-voxel-tet-independent-verification-attempt.v1",
+  "status": "failed_verifier_boundary_convention",
+  "verification_source_sha256": "0aecd2d8d1d29dd42f59bc5b8f6ec8d34f79b7a6df8bcc13df1edab23fd0891c"
+}

@@ -1,0 +1,69 @@
+{
+  "attempt": "002",
+  "component_receipt_path": "Docs/media/bilateral-kidney-components-export-20261004/receipt.json",
+  "component_receipt_sha256": "ae91e99e4269aef163855afd56d42961d58c330727b01e544cab6bc250a5079d",
+  "instrument_sources": {
+    "src/numilab_human/cli.py": "188bd37885ededec8138cdb8813cd2e9dbbc0a07e355f9bbd69f225b25155f8f",
+    "src/numilab_human/healthy_total_body_ct_voxel_tets.py": "d874d93af450175f2eeb0067c3611ad897337e668c1e3da66a9b63c2d17314de"
+  },
+  "intake_receipt_path": "Docs/media/healthy-total-body-ct-source-20261003/intake-v4.json",
+  "intake_receipt_sha256": "b23e5d88b9bbd0f1e017045ddae0f9f2d69a3c302b3435a24c66ee0f6ed1ea21",
+  "maximum_source_surface_volume_relative_error": 1e-12,
+  "maximum_tetrahedral_volume_relative_error": 1e-12,
+  "method": "Reconstruct boundary-adjacent occupied voxels from oriented source triangles; classify the remaining voxel envelope by a six-connected exterior flood fill; split each occupied voxel with the six Freudenthal tetrahedra.",
+  "predictions": {
+    "all_tetrahedra_positive": true,
+    "candidate_count": 4,
+    "mechanics_material_mass_perfusion_or_subject_owner_assigned": false,
+    "source_boundary_triangle_multiset_exact": true,
+    "tetrahedral_volume_equals_source_voxel_occupancy_volume": true,
+    "tetrahedron_count_equals_six_times_source_voxel_count": true
+  },
+  "question": "Can each verified left/right kidney surface be reconstructed as an exact source-voxel solid and decomposed into a conforming tetrahedral volume mesh?",
+  "schema": "numi.healthy-total-body-ct-voxel-tet-volume-plan.v1",
+  "scope_limit": "The TCIA MOOSE segmentation is automatic. These scan-specific meshes are geometric candidates only; no expert review, independent-participant claim, Numi subject binding, physical volume owner, material calibration, organ mass, mechanics, perfusion, physiology, or clinical validation is implied.",
+  "source_archive_sha256": "f3daa9c5e9740c8d68688bd800f5d3107236099d3e319bbef04076aa4719b13f",
+  "source_scans": [
+    {
+      "candidates": {
+        "left": {
+          "centroid_ras_x_mm": -72.26704661007884,
+          "path": "Docs/media/bilateral-kidney-components-export-20261004/candidates/scan-001-label-006-left-kidney.ply.gz"
+        },
+        "right": {
+          "centroid_ras_x_mm": 64.72405790807508,
+          "path": "Docs/media/bilateral-kidney-components-export-20261004/candidates/scan-001-label-006-right-kidney.ply.gz"
+        }
+      },
+      "scan_id": "001",
+      "source_nifti_uncompressed_sha256": "ae91e4f6dd3a10fa1aea69dcafc82ff2324992fd5305d4e169eb077c80bf859d"
+    },
+    {
+      "candidates": {
+        "left": {
+          "centroid_ras_x_mm": -74.15942188470329,
+          "path": "Docs/media/bilateral-kidney-components-export-20261004/candidates/scan-002-label-006-left-kidney.ply.gz"
+        },
+        "right": {
+          "centroid_ras_x_mm": 68.27838141774359,
+          "path": "Docs/media/bilateral-kidney-components-export-20261004/candidates/scan-002-label-006-right-kidney.ply.gz"
+        }
+      },
+      "scan_id": "002",
+      "source_nifti_uncompressed_sha256": "e92bab5d759e6babdc1b05b2be6aab62d2e070dafb860dd4663ec2efc4fd1458"
+    }
+  ],
+  "status": "preregistered",
+  "stop_rule": "Any receipt/hash mismatch, off-grid point, open/ambiguous surface, boundary mismatch, volume mismatch, degenerate tetrahedron, or nonpositive tetrahedron stops admission; preserve the failure without repairing the source candidate.",
+  "summation_method": "Kahan_compensated_positive_tetrahedron_volume_accumulation",
+  "supersedes_plan_path": "Docs/media/bilateral-kidney-voxel-tet-candidate-20261004/attempt-001/plan.json",
+  "supersedes_plan_sha256": "54f75d81d246f843ead0e2f5cce2f4b627052e5e40f4bdde202ed041fa439b53",
+  "surface_export_result_path": "Docs/media/bilateral-kidney-components-export-20261004/export-result.json",
+  "surface_export_result_sha256": "1cda996036ebd85e43e67d074d0381f326eca4ced4dea3fbf8dfbaf3763bca2f",
+  "surface_verification_checksum_path": "Docs/media/bilateral-kidney-components-export-20261004/verification.json.sha256",
+  "surface_verification_path": "Docs/media/bilateral-kidney-components-export-20261004/verification.json",
+  "surface_verification_recorded_sha256": "9adab8ffeb8552e1fdf14335d0c3939ea682b7e940980d19928f437a16450c21",
+  "surface_verification_sha256": "b63e008b1849a880da156959ec8cbd98b1bea0a3e226142722836f18fa2e72e6",
+  "tetrahedra_per_source_voxel": 6,
+  "voxel_fill": "closed_surface_boundary_voxels_plus_6-connected_exterior_flood_fill"
+}
