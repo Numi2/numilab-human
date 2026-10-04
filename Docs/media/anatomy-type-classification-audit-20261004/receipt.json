@@ -1,0 +1,170 @@
+{
+  "build_command": "uv run --locked numilab-human build --sources Sources --upper-public-mobl-41 --accept-upper-noncommercial-terms",
+  "candidate": {
+    "anatomy_components": 4273,
+    "classes": {
+      "bone": 519,
+      "cartilage_surface": 86,
+      "ligament_surface": 29,
+      "muscle_surface": 582,
+      "nerve_surface": 12,
+      "organ_surface": 207,
+      "skin_surface": 3,
+      "tendon_surface": 6,
+      "unclassified_surface": 1416,
+      "vessel_surface": 1413
+    },
+    "compressed_bytes": 808628,
+    "file": "candidate-human.v1.json.gz",
+    "hierarchy_edges": 4271,
+    "physical_status": "source-faithful import only; not a compiled Numi RobotPack or validated physics run",
+    "sha256": "66226acbff10337260884ee54773402a384d8239bc78e8a1a7ad911f2e806c27",
+    "sha256_gzip": "d84ba7105b7fe7f7b174669796630079ab0ccb12570593cb6ffc36bec83774a0",
+    "source_import_report": "source-import-report.json",
+    "source_import_report_sha256": "45116cfc4d9452b0d2d7349eb7affcc34118fa50d9995f8ca7cdb2e8d980b1fa"
+  },
+  "checkout_commit": "1057ec0022c10338940d7b9effe0b5e4aa97bfd2",
+  "comparison": {
+    "note": "The per-label hierarchy control substantially overexpands organ surfaces and misses vessel surfaces relative to the is_a type-based result; this is why the hierarchy-selection correction is retained.",
+    "previous_import_classes": {
+      "bone": 418,
+      "cartilage_surface": 23,
+      "ligament_surface": 29,
+      "muscle_surface": 535,
+      "nerve_surface": 101,
+      "organ_surface": 168,
+      "skin_surface": 3,
+      "tendon_surface": 6,
+      "unclassified_surface": 1779,
+      "vessel_surface": 1211
+    },
+    "same_config_with_previous_hierarchy_selection_classes": {
+      "bone": 418,
+      "cartilage_surface": 49,
+      "ligament_surface": 29,
+      "muscle_surface": 535,
+      "nerve_surface": 12,
+      "organ_surface": 561,
+      "skin_surface": 3,
+      "tendon_surface": 6,
+      "unclassified_surface": 1509,
+      "vessel_surface": 1151
+    }
+  },
+  "date": "2026-10-04",
+  "evidence_boundary": "Anatomy source classification and geometry inventory only. This is not clinical anatomy validation, Numi-subject binding, organ volume qualification, calibrated tissue mechanics, perfusion, or physiology.",
+  "implementation": {
+    "classification_config": "config/anatomy-classification.v1.json",
+    "classification_config_sha256": "55aa1775c34af2507adff47a9fa73c66463aeaa586d0857d9bc26460f92495cd",
+    "path": "src/numilab_human/model.py",
+    "sha256": "60001be4d254810a1de358e4e2764c47bea58f8f84fb4eba32f4d6b88985b5de"
+  },
+  "method": "Classify each BodyParts3D concept ID through transitive is_a type edges; retain is_a and part_of source edges unchanged; do not use part_of containment alone to infer tissue class.",
+  "representative_classifications": {
+    "FMA10446": {
+      "class": "cartilage_surface",
+      "name": "intervertebral disk"
+    },
+    "FMA3862": {
+      "class": "vessel_surface",
+      "name": "anterior interventricular branch of left coronary artery"
+    },
+    "FMA50801": {
+      "class": "organ_surface",
+      "name": "brain"
+    },
+    "FMA54449": {
+      "class": "organ_surface",
+      "name": "right eye"
+    },
+    "FMA54640": {
+      "class": "organ_surface",
+      "name": "tongue"
+    },
+    "FMA7088": {
+      "class": "organ_surface",
+      "name": "heart"
+    },
+    "FMA7096": {
+      "class": "unclassified_surface",
+      "name": "right atrium"
+    },
+    "FMA7157": {
+      "class": "unclassified_surface",
+      "name": "nervous system"
+    },
+    "FMA7161": {
+      "class": "unclassified_surface",
+      "name": "cardiovascular system"
+    },
+    "FMA7197": {
+      "class": "organ_surface",
+      "name": "liver"
+    },
+    "FMA7200": {
+      "class": "organ_surface",
+      "name": "small intestine"
+    },
+    "FMA7201": {
+      "class": "organ_surface",
+      "name": "large intestine"
+    },
+    "FMA7234": {
+      "class": "unclassified_surface",
+      "name": "tricuspid valve"
+    },
+    "FMA7309": {
+      "class": "organ_surface",
+      "name": "right lung"
+    },
+    "FMA7310": {
+      "class": "organ_surface",
+      "name": "left lung"
+    },
+    "FMA7394": {
+      "class": "organ_surface",
+      "name": "trachea"
+    },
+    "FMA7647": {
+      "class": "unclassified_surface",
+      "name": "spinal cord"
+    }
+  },
+  "schema": "numi.human.anatomy-type-classification-audit.v1",
+  "source_hashes": {
+    "bodyparts_archives": [
+      {
+        "file": "isa_BP3D_4.0_obj_99.zip",
+        "hierarchy": "is_a",
+        "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+      },
+      {
+        "file": "partof_BP3D_4.0_obj_99.zip",
+        "hierarchy": "part_of",
+        "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+      }
+    ],
+    "mobl_arms": "58bacbc1c61d1d42cff9a48b0a9dced9c648893f44adc7d9817cca56441a9fcf",
+    "rajagopal": "8f30d0b64750b87eb7f705907862590535212b4afd7e919faa3fd7d1683d22ec"
+  },
+  "verification": {
+    "full_repository_suite": "interrupted at 70%; 1097 passed, 192 skipped, 54 failed. Failures include stale source-bound receipts and unrelated existing environment/artifact failures; do not treat this as a passing full-suite result.",
+    "geometry_preflight": {
+      "boundary_edge_count": 1103048,
+      "closed_2_manifold_candidates": 45,
+      "face_count": 4146600,
+      "invalid_face_count": 0,
+      "invalid_face_reference_count": 0,
+      "invalid_vertex_row_count": 0,
+      "mesh_count": 1278,
+      "nonmanifold_edge_count": 0,
+      "open_or_invalid_meshes": 1233,
+      "triangulated_face_count": 4146600,
+      "valid_vertex_count": 2673811,
+      "vertex_count": 2673811
+    },
+    "git_diff_check": "passed",
+    "source_gate_audit": "public unimanual upper-source variant ready for source import; authenticated bimanual source remains blocked",
+    "tests/test_importer.py": "111 passed"
+  }
+}

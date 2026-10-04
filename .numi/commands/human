@@ -472,11 +472,11 @@ fi
 # Rendering is optional; mechanics-only runs cannot qualify visual coverage.
 if [ "${1:-}" = "stand" ]; then
     if [ "${2:-}" = "--help" ] || [ "${2:-}" = "-h" ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..1000000; extended native horizons>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--endpoint-energy; accepted-state accounting, requires --execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]"
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..16384; native horizon limit>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--endpoint-energy; accepted-state accounting, requires --execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]"
         exit 0
     fi
     if [ "$#" -lt 6 ]; then
-        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..1000000; extended native horizons>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--endpoint-energy; accepted-state accounting, requires --execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]" >&2
+        printf '%s\n' "usage: numi human stand <artifact-directory> <bodyparts3d-myosim-major-bones.nhbones> <NHTENDON2-or-NHTENDON3-attachments.nhtendon> <myosim-fullbody-support-contact.nhcnt> <output-directory> [--steps <1..16384; native horizon limit>] [--timestep <1e-6..1e-3; default 12.5 us>] [--dimension <512..2048>] [--soft-tissue-payload <NHTISS2-or-NHTISS3-or-NHTISS4>] [--mechanics-overlay] [--mechanics-only] [--assisted-diagnostic] [--no-step-trace] [--execute] [--endpoint-energy; accepted-state accounting, requires --execute] [--muscle-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute] [--muscle-path-feedback <length-gain> <velocity-gain-seconds>; experimental, requires --execute]" >&2
         exit 2
     fi
     artifact_directory=$2
@@ -567,6 +567,12 @@ if [ "${1:-}" = "stand" ]; then
                 ;;
         esac
     done
+    if ! awk -v value="$steps" 'BEGIN {
+        exit !(value ~ /^[0-9]+$/ && value >= 1 && value <= 16384)
+    }'; then
+        printf '%s\n' "--steps must be an integer from 1 through 16384 (native horizon limit)" >&2
+        exit 2
+    fi
     if [ -n "$muscle_feedback_length" ] && [ "$execute_only" = false ]; then
         printf '%s\n' "--muscle-feedback requires --execute" >&2
         exit 2
@@ -593,6 +599,19 @@ if [ "${1:-}" = "stand" ]; then
     if [ ! -x "$probe" ]; then
         printf '%s\n' "native Numi Human stand probe is unavailable: $probe" >&2
         printf '%s\n' "build target metalrobo_numilab_human_myosim_visual_probe in $runtime_root" >&2
+        exit 2
+    fi
+    native_supports_option() {
+        /usr/bin/strings "$probe" | /usr/bin/grep -Fq -- "$1"
+    }
+    if [ -n "$muscle_feedback_length" ] && \
+       ! native_supports_option "$muscle_feedback_option"; then
+        printf '%s\n' "native runtime does not support $muscle_feedback_option; no muscle-path controller was run" >&2
+        exit 2
+    fi
+    if [ "$endpoint_energy" = true ] && \
+       ! native_supports_option --stand-endpoint-energy; then
+        printf '%s\n' "native runtime does not support --stand-endpoint-energy; no endpoint-energy claim is available" >&2
         exit 2
     fi
     # Standing uses the native source-compliant recruitment candidate.  Leave
@@ -658,9 +677,13 @@ if [ "${1:-}" = "stand" ]; then
         --muscle-step-seconds "$timestep" \
         --muscle-step-count "$steps" \
         --persistent-metal-stand \
-        --persistent-source-passive-joint-tissue \
         --stand-contact-iterations 64 \
         --dimension "$dimension"
+    if native_supports_option --persistent-source-passive-joint-tissue; then
+        set -- "$@" --persistent-source-passive-joint-tissue
+    else
+        printf '%s\n' "native runtime lacks the experimental 40-coupling source-passive preload; using the current-state passive-joint path" >&2
+    fi
     if [ -n "$muscle_feedback_length" ]; then
         set -- "$@" "$muscle_feedback_option" "$muscle_feedback_length" "$muscle_feedback_velocity"
     fi
@@ -673,13 +696,14 @@ if [ "${1:-}" = "stand" ]; then
         export NUMI_HUMAN_EXECUTION_STAGES=1
     fi
     if [ "$step_trace" = true ] && [ "$execute_only" = false ]; then
-        set -- "$@" --persistent-stand-trace
+        if native_supports_option --persistent-stand-trace; then
+            set -- "$@" --persistent-stand-trace
+        else
+            printf '%s\n' "native runtime does not support --persistent-stand-trace; per-step trace output is unavailable" >&2
+        fi
     fi
     if [ "$assisted_diagnostic" = true ]; then
         set -- "$@" --stand-root-assistance --stand-remove-assistance
-    fi
-    if [ "$mechanics_only" = true ]; then
-        set -- "$@" --mechanics-only
     fi
     if [ "$mechanics_overlay" = true ]; then
         set -- "$@" --source-route-centrelines

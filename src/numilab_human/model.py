@@ -16693,8 +16693,11 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
     partof_members, partof_hash = _zip_members(files["partof_archive"])
 
     classes = classification["classes"]
+    # `is_a` carries anatomical type. `part_of` is location/containment and
+    # cannot establish that a brain is a nerve or a heart valve is a vessel.
+    # Classify each concept ID from the type hierarchy while retaining both
+    # original hierarchies unchanged in the manifest.
     isa_by_class = {key: _descendants(isa_edges, set(values)) for key, values in classes.items()}
-    partof_by_class = {key: _descendants(partof_edges, set(values)) for key, values in classes.items()}
     physical_roles = classification["physical_roles"]
     component_priority = classification.get("classification_priority", list(classes))
     if set(component_priority) != set(classes):
@@ -16712,9 +16715,8 @@ def parse_bodyparts3d(sources: Path, classification_path: Path) -> dict[str, Any
             }
             for element in element_lookup.get(label.concept_id, [])
         ]
-        classes_for_tree = isa_by_class if label.hierarchy == "is_a" else partof_by_class
         anatomy_class = next(
-            (name for name in component_priority if label.concept_id in classes_for_tree[name]),
+            (name for name in component_priority if label.concept_id in isa_by_class[name]),
             "unclassified_surface",
         )
         components.append(

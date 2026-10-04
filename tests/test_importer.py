@@ -2801,8 +2801,10 @@ class ImporterTests(unittest.TestCase):
                 self.assertIn("--persistent-metal-stand", argv)
                 self.assertNotIn("--stand-root-assistance", argv)
                 self.assertNotIn("--stand-remove-assistance", argv)
-                self.assertIn("--persistent-source-passive-joint-tissue", argv)
-                self.assertIn("--persistent-stand-trace", argv)
+                self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
+                self.assertNotIn("--persistent-stand-trace", argv)
+                self.assertIn("using the current-state passive-joint path", result.stderr)
+                self.assertIn("per-step trace output is unavailable", result.stderr)
                 actual_contacts = [
                     argv[index + 1]
                     for index, value in enumerate(argv)
@@ -3043,15 +3045,15 @@ class ImporterTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (source / "partof_parts_list_e.txt").write_text(
-                "concept id\trepresentation id\ten\nFMA7157\tBP3\tnervous system\nFMA5865\tBP4\tcranial nerve\n",
+                "concept id\trepresentation id\ten\nFMA7157\tBP3\tnervous system\nFMA5865\tBP4\tcranial nerve\nFMA9999\tBP5\ttributary vein\nFMA3862\tBP6\tanterior interventricular artery\nFMA10446\tBP7\tintervertebral disk\nFMA7088\tBP8\theart\n",
                 encoding="utf-8",
             )
             (source / "isa_inclusion_relation_list.txt").write_text(
-                "parent id\tparent name\tchild id\tchild name\nFMA5018\tbone organ\tFMA9611\tfemur\n",
+                "parent id\tparent name\tchild id\tchild name\nFMA5018\tbone organ\tFMA9611\tfemur\nFMA50723\tvein\tFMA9999\ttributary vein\n",
                 encoding="utf-8",
             )
             (source / "partof_inclusion_relation_list.txt").write_text(
-                "parent id\tparent name\tchild id\tchild name\nFMA7157\tnervous system\tFMA5865\tcranial nerve\n",
+                "parent id\tparent name\tchild id\tchild name\nFMA7157\tnervous system\tFMA5865\tcranial nerve\nFMA8000\tthorax\tFMA9999\ttributary vein\n",
                 encoding="utf-8",
             )
             (source / "isa_element_parts.txt").write_text(
@@ -3083,9 +3085,14 @@ class ImporterTests(unittest.TestCase):
             result = parse_bodyparts3d(source, ROOT / "config/anatomy-classification.v1.json")
             geometry = bodyparts_geometry_preflight(source, result)
         lookup = {item["concept_id"]: item for item in result["components"]}
-        self.assertEqual(len(result["hierarchy_edges"]), 2)
+        self.assertEqual(len(result["hierarchy_edges"]), 4)
         self.assertEqual(lookup["FMA9611"]["anatomy_class"], "bone")
         self.assertEqual(lookup["FMA5865"]["anatomy_class"], "nerve_surface")
+        self.assertEqual(lookup["FMA7157"]["anatomy_class"], "unclassified_surface")
+        self.assertEqual(lookup["FMA9999"]["anatomy_class"], "vessel_surface")
+        self.assertEqual(lookup["FMA3862"]["anatomy_class"], "vessel_surface")
+        self.assertEqual(lookup["FMA10446"]["anatomy_class"], "cartilage_surface")
+        self.assertEqual(lookup["FMA7088"]["anatomy_class"], "organ_surface")
         self.assertTrue(lookup["FMA9611"]["mesh_present"])
         self.assertEqual(lookup["FMA9611"]["element_meshes"][0]["element_id"], "FJ100")
         self.assertTrue(lookup["FMA5865"]["element_meshes"][0]["mesh_present"])
