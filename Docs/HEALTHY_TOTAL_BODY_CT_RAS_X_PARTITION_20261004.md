@@ -1,49 +1,50 @@
-# Scan-specific adrenal and lung side partition — 2026-10-04
+# Scan-specific adrenal and lung laterality — 2026-10-04
 
-The scan-002 automatic `Adrenal-glands` and `Lung` labels previously crossed the
-RAS-X midline and had three and six connected components respectively. Counting
-components could not distinguish left from right, so this follow-up assigns
-each occupied source voxel by the sign of its RAS-X center. RAS-X zero falls on
-the voxel face at IJK x `255.5`; no occupied voxel center lies on the plane.
+In the Healthy Total Body CT v3 automatic labels, scan 002's `Adrenal-glands`
+and `Lung` masks crossed the RAS-X midline and had three and six connected
+components. Connected-component count alone could not identify left and right.
+The follow-up partitions occupied source voxels by the sign of their RAS-X
+center. For both scans, RAS-X zero lies on the voxel face at IJK x `255.5`.
 
-The preregistered plan predicted that both labels occupy each side and that the
-partition conserves every source voxel. The independent source-stream audit
-confirmed the prediction:
+The preregistered plans predicted that labels 1 (`Adrenal-glands`) and 12
+(`Lung`) occupy both sides and that the partition conserves all source voxels.
+An independent source-NIfTI stream confirmed both predictions:
 
-| Label | Source voxels | Left (positive RAS-X) | Right (negative RAS-X) | On plane |
-| --- | ---: | ---: | ---: | ---: |
-| Adrenal-glands | 2,490 | 1,119 | 1,371 | 0 |
-| Lung | 1,716,761 | 964,043 | 752,718 | 0 |
+| Scan | Label | Source voxels | Left (positive RAS-X) | Right (negative RAS-X) | On plane |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 001 | Adrenal-glands | 1,786 | 1,150 | 636 | 0 |
+| 001 | Lung | 1,476,822 | 826,286 | 650,536 | 0 |
+| 002 | Adrenal-glands | 2,490 | 1,119 | 1,371 | 0 |
+| 002 | Lung | 1,716,761 | 964,043 | 752,718 | 0 |
 
-The compiler emitted four exact voxel-boundary surfaces. The independent audit
-re-read the compressed source NIfTI, reproduced the source hash and side counts,
-reparsed each PLY, and recomputed edge topology, signed volume, RAS-X
-half-space, source-label voxel envelope, and voxel-grid alignment. All four are
-closed two-manifolds with zero nonmanifold vertices. Relative signed-volume
-error versus side-specific voxel occupancy ranges from `0` to `5.54e-16`.
+The two runs emitted eight exact voxel-boundary surfaces. Their independent
+audits re-read the compressed NIfTI, reproduced source identity and side
+counts, reparsed each PLY, and recomputed edge topology, signed volume, RAS-X
+half-space, source-label voxel envelope, and voxel-grid alignment. All eight
+surfaces are closed two-manifolds with zero nonmanifold vertices. Relative
+signed-volume error versus side-specific voxel occupancy ranges from `0` to
+`5.54e-16`.
 
-The retained plan, source-bound compiler receipt and independent audit are
+The source-bound scan-001 plan, compiler receipt and independent audit are
+[`plan-v3-scan-001.json`](media/healthy-total-body-ct-ras-x-partition-20261004/plan-v3-scan-001.json),
+[`receipt.json`](media/healthy-total-body-ct-ras-x-partition-20261004/scan-001-run-v1/receipt.json),
+and
+[`independent-audit-scan-001-v1.json`](media/healthy-total-body-ct-ras-x-partition-20261004/independent-audit-scan-001-v1.json).
+The corresponding scan-002 evidence is
 [`plan-v2.json`](media/healthy-total-body-ct-ras-x-partition-20261004/plan-v2.json),
 [`receipt.json`](media/healthy-total-body-ct-ras-x-partition-20261004/scan-002-run-v2/receipt.json),
 and
 [`independent-audit-v2.json`](media/healthy-total-body-ct-ras-x-partition-20261004/independent-audit-v2.json).
-The four PLY candidates are stored beside the compiler receipt and bound by
-its [`SHA256SUMS`](media/healthy-total-body-ct-ras-x-partition-20261004/scan-002-run-v2/SHA256SUMS)
-manifest.
+Each compiler receipt's `SHA256SUMS` binds its four PLY candidates.
 
-The inputs are the Healthy Total Body CTs v3 automatic segmentation release
-(DOI `10.7937/NC7Z-4F76`, CC BY 4.0). The generated meshes remain attributed to
-source labels 1 and 12 and are not presented as expert-corrected anatomy.
+Inputs come from Healthy Total Body CTs v3 (DOI `10.7937/NC7Z-4F76`, CC BY
+4.0). The output keeps the source label identities and does not present the
+automatic masks as expert-corrected anatomy. These are two scan identifiers;
+this result does not establish separate participant identities or biological
+replication.
 
-| Artifact | SHA-256 |
-| --- | --- |
-| Plan v2 | `2bcc8347c1ff38a9da0c79a11f0347816764b3eead1623a31c9eb38c846b56e9` |
-| Compiler receipt v2 | `87cb2c4b1dd8697d4ec590728166625ec6ad65f9248f2f7d3d8a496e8dfc6bd6` |
-| Independent audit v2 | `f8c57c3d4e88aa860bacf4c3dc41fb9b3d5d9c8b0676645deb532944493b0ecf` |
-
-This resolves the scan-local geometric laterality gap for these two automatic
-labels. It does not establish that the automatic masks are anatomically
-accurate, that their boundaries are clinically correct, that scans are
-registered to one another or to a Numi Human subject, or that organs have
-mechanical ownership, contact, perfusion, or physiological behavior. No Numi
-Human runtime anatomy or clinical-anatomy qualification is claimed.
+This closes the scan-local geometric laterality gap for these labels. It does
+not establish automatic-segmentation accuracy, clinically correct organ
+boundaries, cross-scan registration, Numi Human subject binding, physical
+tissue ownership, mechanics, perfusion, or physiology. No Numi Human runtime
+anatomy or clinical-anatomy qualification is claimed.

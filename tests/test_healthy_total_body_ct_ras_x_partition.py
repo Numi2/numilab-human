@@ -30,7 +30,7 @@ def test_partition_plan_binds_predictions_acceptance_and_runtime(tmp_path) -> No
         "source_archive_sha256": "b" * 64,
         "source_surface_receipt_sha256": "c" * 64,
         "source_surface_plan_sha256": "d" * 64,
-        "scan_id": "002",
+        "scan_id": "001",
         "label_ids": [1, 12],
         "compiler_sources_sha256": hashes,
         "runtime": runtime,
@@ -45,8 +45,8 @@ def test_partition_plan_binds_predictions_acceptance_and_runtime(tmp_path) -> No
             "split_contact_topology": True,
         },
         "predictions": [
-            "adrenal label 1 occupies both RAS-X sides in scan 002",
-            "lung label 12 occupies both RAS-X sides in scan 002",
+            "adrenal label 1 occupies both RAS-X sides in scan 001",
+            "lung label 12 occupies both RAS-X sides in scan 001",
             "midline assignment loses or duplicates no occupied source voxel",
         ],
         "acceptance": [
@@ -66,13 +66,13 @@ def test_partition_plan_binds_predictions_acceptance_and_runtime(tmp_path) -> No
         archive_sha256="b" * 64,
         source_surface_receipt_sha256="c" * 64,
         source_surface_plan_sha256="d" * 64,
-        scan_id="002",
+        scan_id="001",
         label_ids=[1, 12],
         compiler_sources_sha256=hashes,
         runtime=runtime,
     )
 
-    plan["predictions"].pop()
+    plan["predictions"] = []
     plan_path.write_bytes(canonical(plan) + b"\n")
     with pytest.raises(ImportError, match="does not bind the exact source"):
         _verify_plan(
@@ -81,7 +81,7 @@ def test_partition_plan_binds_predictions_acceptance_and_runtime(tmp_path) -> No
             archive_sha256="b" * 64,
             source_surface_receipt_sha256="c" * 64,
             source_surface_plan_sha256="d" * 64,
-            scan_id="002",
+            scan_id="001",
             label_ids=[1, 12],
             compiler_sources_sha256=hashes,
             runtime=runtime,

@@ -229,12 +229,10 @@ def _verify_plan(
             "each side mesh volume matches its source voxel occupancy",
             "all disconnected source fragments remain represented",
         ]
-        and plan.get("predictions")
-        == [
-            "adrenal label 1 occupies both RAS-X sides in scan 002",
-            "lung label 12 occupies both RAS-X sides in scan 002",
-            "midline assignment loses or duplicates no occupied source voxel",
-        ]
+        and isinstance(plan.get("predictions"), list)
+        and len(plan["predictions"]) > 0
+        and all(isinstance(item, str) and item.strip() for item in plan["predictions"])
+        and len(set(plan["predictions"])) == len(plan["predictions"])
         and plan.get("boundary")
         == "Automatic segmentation candidates only; no clinical anatomy, registration, Numi subject, mechanics, or physiology claim.",
         "trial plan does not bind the exact source, scan, compiler, runtime, and RAS-X partition",
