@@ -4,18 +4,18 @@
 
 The unchanged native continuation has advancing source-myocardial electrical
 activation, but it has not produced aortic or pulmonary ejection in the retained
-accepted checkpoints. At step 105 (53.76 ms), the reconstructed LV-to-aorta
-pressure difference is `-6,359.504 Pa` and the RV-to-pulmonary-artery
-difference is `-545.590 Pa`; both native outlet flows are exactly zero. These
+accepted checkpoints. At step 106 (54.272 ms), the reconstructed LV-to-aorta
+pressure difference is `-6,227.874 Pa` and the RV-to-pulmonary-artery
+difference is `-530.299 Pa`; both native outlet flows are exactly zero. These
 sampled states do not demonstrate a valve-law failure. With a nonpositive
 source-model driving gradient, zero one-way outlet flow is the expected
 directional result.
 
-The step-105 electrical observer counts 146,818/218,077 myocardial nodes above
-the voltage threshold and 148,713/218,077 above the activation threshold.
-Between its accepted step 104 and 105 observations, 1,468 nodes crossed the
-voltage threshold and 1,442 crossed the activation threshold. Step-105 chamber
-pressures are 4,525.359 Pa LV and 1,141.551 Pa RV. The voltage/activation
+The step-106 electrical observer counts 148,244/218,077 myocardial nodes above
+the voltage threshold and 150,126/218,077 above the activation threshold.
+Between its accepted step 105 and 106 observations, 1,426 nodes crossed the
+voltage threshold and 1,413 crossed the activation threshold. Step-106 chamber
+pressures are 4,653.187 Pa LV and 1,155.498 Pa RV. The voltage/activation
 counts establish electrical state changes in this model; zero outlet ejection
 means they do not establish a heartbeat.
 
@@ -36,14 +36,14 @@ compliance law to the ascending aorta and pulmonary arteries, and reads LV/RV
 cavity pressures and outlet flows from their accepted native rows. The
 reconstructed LV/RV pressures and aortic/pulmonary flows match the corresponding
 trajectory values within the preregistered `0.001 Pa` and `0.001 ml/s` checks.
-The full step-105 checkpoint SHA-256 is
-`6ec7d44a90ff4e8141bada35cbb103c684cf72a0ca2edd8c39a54a074b0b7eaa`; both
+The full step-106 checkpoint SHA-256 is
+`6b299d8b437d142e31a9d4572dade8ccd7193db0b656b421d625b410a002ea27`; both
 monitors bind the same package and native program fingerprints.
 
 The preregistered outlet baseline is step 103 (52.736 ms): LV `4,280.354 Pa`,
 ascending aorta `10,892.484 Pa`, RV `1,123.896 Pa`, and pulmonary artery
 `1,689.842 Pa`. Both gradients were negative and both outlet flows were zero.
-By step 105 the LV pressure had risen and the aortic pressure had fallen
+By step 106 the LV pressure had risen and the aortic pressure had fallen
 slightly, but the two gradients remained negative. The current evidence
 therefore narrows the next decision to the activation-to-wall-load response
 while systemic pressure remains above LV pressure. It does not yet isolate
@@ -60,7 +60,7 @@ heartbeat.
 
 At this receipt, native PID `46480` is still running the preregistered
 step-53-to-240 continuation. Read-only observers `50357` (activation) and
-`50711` (outlet gradients) are running on the same host. Their local step-105
+`50711` (outlet gradients) are running on the same host. Their local step-106
 snapshots, exact plans, monitor sources, and the corrected attempt history are
 retained in
 [`media/cardiac-electroactivation-response-20261004/`](media/cardiac-electroactivation-response-20261004/).
