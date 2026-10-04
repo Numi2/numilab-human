@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/healthy-total-body-ct-ras-x-partition.v2.schema.json",
+  "title": "Numi Human CT RAS-X side-surface candidate receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "status",
+    "compiler",
+    "compiler_sources_sha256",
+    "runtime",
+    "source",
+    "scan",
+    "trial_plan_sha256",
+    "partition",
+    "meshes",
+    "qualification",
+    "boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "numi.healthy-total-body-ct-ras-x-partition.v2"
+    },
+    "status": {
+      "const": "scan_specific_ras_x_side_surface_candidates"
+    },
+    "compiler": {
+      "const": "numilab-human.healthy-total-body-ct-ras-x-partition.2"
+    },
+    "compiler_sources_sha256": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/sha256"
+      }
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "release",
+        "license",
+        "archive_sha256",
+        "intake_receipt_sha256",
+        "nifti_member",
+        "nifti_uncompressed_sha256",
+        "reference_surface_receipt_sha256",
+        "reference_surface_plan_sha256"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "release": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "archive_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intake_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "nifti_member": {
+          "type": "string"
+        },
+        "nifti_uncompressed_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "reference_surface_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "reference_surface_plan_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scan": {
+      "type": "object",
+      "required": [
+        "scan_id",
+        "coordinate_convention",
+        "voxel_to_world_affine_ras_mm",
+        "voxel_spacing_mm",
+        "voxel_volume_mm3"
+      ],
+      "properties": {
+        "scan_id": {
+          "type": "string",
+          "pattern": "^[0-9]{3}$"
+        },
+        "coordinate_convention": {
+          "type": "string"
+        },
+        "voxel_to_world_affine_ras_mm": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "voxel_spacing_mm": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "voxel_volume_mm3": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "trial_plan_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "partition": {
+      "type": "object",
+      "required": [
+        "axis",
+        "coordinate_mm",
+        "plane_index_coordinate",
+        "positive_side",
+        "negative_side",
+        "method",
+        "source_voxel_centers_on_plane",
+        "all_selected_source_voxels_partitioned_exactly_once"
+      ],
+      "properties": {
+        "axis": {
+          "const": "RAS-X"
+        },
+        "coordinate_mm": {
+          "const": 0
+        },
+        "plane_index_coordinate": {
+          "type": "number"
+        },
+        "positive_side": {
+          "const": "right"
+        },
+        "negative_side": {
+          "const": "left"
+        },
+        "method": {
+          "type": "string"
+        },
+        "source_voxel_centers_on_plane": {
+          "const": 0
+        },
+        "all_selected_source_voxels_partitioned_exactly_once": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "meshes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "label_id",
+          "source_semantic_id",
+          "source_label_name",
+          "ras_x_side",
+          "ras_x_sign",
+          "source_voxel_count",
+          "source_voxel_occupancy_volume_candidate_mm3",
+          "mesh_file",
+          "mesh_file_sha256",
+          "mesh_file_bytes",
+          "mesh_metrics",
+          "voxel_partition"
+        ],
+        "properties": {
+          "label_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_semantic_id": {
+            "type": "string"
+          },
+          "source_label_name": {
+            "type": "string"
+          },
+          "ras_x_side": {
+            "enum": [
+              "left",
+              "right"
+            ]
+          },
+          "ras_x_sign": {
+            "enum": [
+              "positive",
+              "negative"
+            ]
+          },
+          "source_voxel_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_voxel_occupancy_volume_candidate_mm3": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "mesh_file": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "mesh_file_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "mesh_file_bytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "mesh_metrics": {
+            "type": "object"
+          },
+          "voxel_partition": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "required": [
+        "source_archive_and_nifti_hashes_match_intake",
+        "ras_x_plane_aligned_to_voxel_face",
+        "left_and_right_source_voxel_sets_disjoint",
+        "left_and_right_voxel_counts_sum_to_source",
+        "mesh_volume_matches_each_side_voxel_occupancy",
+        "all_meshes_closed_two_manifolds",
+        "expert_segmentation_accuracy",
+        "cross_scan_registration",
+        "numi_human_subject_binding",
+        "physical_tissue_owner",
+        "mechanics_or_physiology",
+        "clinical_anatomy"
+      ],
+      "properties": {
+        "source_archive_and_nifti_hashes_match_intake": {
+          "const": true
+        },
+        "ras_x_plane_aligned_to_voxel_face": {
+          "const": true
+        },
+        "left_and_right_source_voxel_sets_disjoint": {
+          "const": true
+        },
+        "left_and_right_voxel_counts_sum_to_source": {
+          "const": true
+        },
+        "mesh_volume_matches_each_side_voxel_occupancy": {
+          "const": true
+        },
+        "all_meshes_closed_two_manifolds": {
+          "type": "boolean"
+        },
+        "expert_segmentation_accuracy": {
+          "const": false
+        },
+        "cross_scan_registration": {
+          "const": false
+        },
+        "numi_human_subject_binding": {
+          "const": false
+        },
+        "physical_tissue_owner": {
+          "const": false
+        },
+        "mechanics_or_physiology": {
+          "const": false
+        },
+        "clinical_anatomy": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "python_version",
+        "numpy_version",
+        "scipy_version"
+      ],
+      "properties": {
+        "python_version": {
+          "type": "string"
+        },
+        "numpy_version": {
+          "type": "string"
+        },
+        "scipy_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

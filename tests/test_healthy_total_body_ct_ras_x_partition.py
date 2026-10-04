@@ -25,7 +25,7 @@ def test_partition_plan_binds_predictions_acceptance_and_runtime(tmp_path) -> No
     hashes = {"compiler.py": "a" * 64}
     runtime = {"python_version": "3.11", "numpy_version": "2.4", "scipy_version": "1.17"}
     plan = {
-        "schema": "numi.healthy-total-body-ct-ras-x-partition-plan.v1",
+        "schema": "numi.healthy-total-body-ct-ras-x-partition-plan.v2",
         "input_intake_receipt_sha256": "a" * 64,
         "source_archive_sha256": "b" * 64,
         "source_surface_receipt_sha256": "c" * 64,
@@ -38,8 +38,8 @@ def test_partition_plan_binds_predictions_acceptance_and_runtime(tmp_path) -> No
             "coordinate_system": "NIfTI RAS+",
             "axis": "x",
             "coordinate_mm": 0.0,
-            "positive_side": "left",
-            "negative_side": "right",
+            "positive_side": "right",
+            "negative_side": "left",
             "voxel_center_rule": "assign each occupied voxel by the sign of its RAS-X center",
             "voxel_face_aligned": True,
             "split_contact_topology": True,
@@ -109,22 +109,25 @@ def _tiny_nifti_zip(path, values: np.ndarray, affine: list[list[float]]) -> str:
 
 def test_ras_x_partition_is_disjoint_complete_and_meshes_both_sides() -> None:
     affine = [
-        [-1.0, 0.0, 0.0, 1.5],
+        [-1.0, 0.0, 0.0, 2.5],
         [0.0, 1.0, 0.0, -0.5],
         [0.0, 0.0, 2.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ]
-    mask = np.ones((4, 2, 1), dtype=np.bool_)
+    mask = np.ones((5, 2, 1), dtype=np.bool_)
 
     left, right, audit = _partition_mask_by_ras_x(mask, affine, (0, 0, 0), np)
 
     assert audit["axis_ijk"] == 0
-    assert audit["plane_index_coordinate"] == pytest.approx(1.5)
-    assert audit["left_voxel_count"] == audit["right_voxel_count"] == 4
+    assert audit["plane_index_coordinate"] == pytest.approx(2.5)
+    assert audit["positive_ras_x_side"] == "right"
+    assert audit["negative_ras_x_side"] == "left"
+    assert audit["left_voxel_count"] == 4
+    assert audit["right_voxel_count"] == 6
     assert np.array_equal(left | right, mask)
     assert not np.any(left & right)
-    assert np.all(left[:2]) and not np.any(left[2:])
-    assert np.all(right[2:]) and not np.any(right[:2])
+    assert np.all(left[3:]) and not np.any(left[:3])
+    assert np.all(right[:3]) and not np.any(right[3:])
 
     left_vertices, _, left_metrics = build_voxel_boundary_mesh(
         left, affine, split_contact_topology=True, np=np
@@ -135,9 +138,9 @@ def test_ras_x_partition_is_disjoint_complete_and_meshes_both_sides() -> None:
     assert left_metrics["closed_two_manifold"]
     assert right_metrics["closed_two_manifold"]
     assert left_metrics["signed_volume_mm3"] == pytest.approx(8.0)
-    assert right_metrics["signed_volume_mm3"] == pytest.approx(8.0)
-    assert left_vertices[:, 0].min() >= 0.0
-    assert right_vertices[:, 0].max() <= 0.0
+    assert right_metrics["signed_volume_mm3"] == pytest.approx(12.0)
+    assert left_vertices[:, 0].max() <= 0.0
+    assert right_vertices[:, 0].min() >= 0.0
 
 
 def test_ras_x_partition_rejects_a_plane_through_voxel_centers() -> None:
@@ -150,7 +153,7 @@ def test_ras_x_partition_rejects_a_plane_through_voxel_centers() -> None:
 
 def test_mesh_geometry_audit_checks_source_voxel_grid_and_envelope() -> None:
     affine = np.array([
-        [-1.0, 0.0, 0.0, 1.5],
+        [-1.0, 0.0, 0.0, 2.5],
         [0.0, 1.0, 0.0, -0.5],
         [0.0, 0.0, 2.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
@@ -190,12 +193,12 @@ def test_ras_x_partition_rejects_oblique_x_rows() -> None:
 
 def test_independent_source_reader_recounts_both_sides(tmp_path) -> None:
     affine = [
-        [-1.0, 0.0, 0.0, 1.5],
+        [-1.0, 0.0, 0.0, 2.5],
         [0.0, 1.0, 0.0, -0.5],
         [0.0, 0.0, 2.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ]
-    values = np.full((4, 2, 1), 12, dtype=np.float32)
+    values = np.full((5, 2, 1), 12, dtype=np.float32)
     archive_path = tmp_path / "tiny.zip"
     expected_hash = _tiny_nifti_zip(archive_path, values, affine)
     scan = {"voxel_to_world_affine": affine}
@@ -210,7 +213,7 @@ def test_independent_source_reader_recounts_both_sides(tmp_path) -> None:
     )
 
     assert nifti_hash == expected_hash
-    assert counts[12] == {"left": 4, "right": 4, "on_plane": 0}
+    assert counts[12] == {"left": 4, "right": 6, "on_plane": 0}
     assert info["voxel_volume_in_source_units_cubed"] == pytest.approx(2.0)
 
 

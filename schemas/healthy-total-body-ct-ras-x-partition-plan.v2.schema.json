@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/healthy-total-body-ct-ras-x-partition-plan.v2.schema.json",
+  "title": "Numi Human CT RAS-X partition trial plan",
+  "type": "object",
+  "required": [
+    "schema",
+    "input_intake_receipt_sha256",
+    "source_archive_sha256",
+    "source_surface_receipt_sha256",
+    "source_surface_plan_sha256",
+    "scan_id",
+    "label_ids",
+    "compiler_sources_sha256",
+    "runtime",
+    "partition",
+    "predictions",
+    "acceptance",
+    "boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "numi.healthy-total-body-ct-ras-x-partition-plan.v2"
+    },
+    "input_intake_receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_archive_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_surface_receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_surface_plan_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "scan_id": {
+      "type": "string",
+      "pattern": "^[0-9]{3}$"
+    },
+    "label_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "compiler_sources_sha256": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/sha256"
+      }
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "partition": {
+      "type": "object",
+      "required": [
+        "coordinate_system",
+        "axis",
+        "coordinate_mm",
+        "positive_side",
+        "negative_side",
+        "voxel_center_rule",
+        "voxel_face_aligned",
+        "split_contact_topology"
+      ],
+      "properties": {
+        "coordinate_system": {
+          "const": "NIfTI RAS+"
+        },
+        "axis": {
+          "const": "x"
+        },
+        "coordinate_mm": {
+          "const": 0
+        },
+        "positive_side": {
+          "const": "right"
+        },
+        "negative_side": {
+          "const": "left"
+        },
+        "voxel_center_rule": {
+          "const": "assign each occupied voxel by the sign of its RAS-X center"
+        },
+        "voxel_face_aligned": {
+          "const": true
+        },
+        "split_contact_topology": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "predictions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "python_version",
+        "numpy_version",
+        "scipy_version"
+      ],
+      "properties": {
+        "python_version": {
+          "type": "string"
+        },
+        "numpy_version": {
+          "type": "string"
+        },
+        "scipy_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

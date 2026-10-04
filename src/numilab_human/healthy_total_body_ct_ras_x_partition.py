@@ -42,9 +42,9 @@ from .model import ImportError as HumanImportError
 from .physiology import canonical
 
 
-PLAN_SCHEMA = "numi.healthy-total-body-ct-ras-x-partition-plan.v1"
-RECEIPT_SCHEMA = "numi.healthy-total-body-ct-ras-x-partition.v1"
-AUDIT_SCHEMA = "numi.healthy-total-body-ct-ras-x-partition-audit.v1"
+PLAN_SCHEMA = "numi.healthy-total-body-ct-ras-x-partition-plan.v2"
+RECEIPT_SCHEMA = "numi.healthy-total-body-ct-ras-x-partition.v2"
+AUDIT_SCHEMA = "numi.healthy-total-body-ct-ras-x-partition-audit.v2"
 INTAKE_SCHEMA = "HumanPack.external-segmentation-source-ingest.v2"
 SURFACE_SCHEMA = "HumanPack.external-segmentation-voxel-surface-candidates.v2"
 COPY_CHUNK_BYTES = 16 * 1024 * 1024
@@ -117,8 +117,10 @@ def _partition_mask_by_ras_x(
     side_shape[axis] = len(ras_x)
     positive = (ras_x > 0.0).reshape(side_shape)
     negative = (ras_x < 0.0).reshape(side_shape)
-    left = np.asarray(binary & positive, dtype=np.bool_)
-    right = np.asarray(binary & negative, dtype=np.bool_)
+    # NIfTI RAS+ is subject-based: positive X points to the subject's right.
+    # This can oppose the direction of the voxel i axis in the affine.
+    right = np.asarray(binary & positive, dtype=np.bool_)
+    left = np.asarray(binary & negative, dtype=np.bool_)
     source_count = int(binary.sum(dtype=np.int64))
     left_count = int(left.sum(dtype=np.int64))
     right_count = int(right.sum(dtype=np.int64))
@@ -132,8 +134,8 @@ def _partition_mask_by_ras_x(
         "ras_x_translation_mm": float(affine[0][3]),
         "plane_index_coordinate": plane_index,
         "split_coordinate_ras_x_mm": 0.0,
-        "positive_ras_x_side": "left",
-        "negative_ras_x_side": "right",
+        "positive_ras_x_side": "right",
+        "negative_ras_x_side": "left",
         "source_voxel_count": source_count,
         "left_voxel_count": left_count,
         "right_voxel_count": right_count,
@@ -216,8 +218,8 @@ def _verify_plan(
             "coordinate_system": "NIfTI RAS+",
             "axis": "x",
             "coordinate_mm": 0.0,
-            "positive_side": "left",
-            "negative_side": "right",
+            "positive_side": "right",
+            "negative_side": "left",
             "voxel_center_rule": "assign each occupied voxel by the sign of its RAS-X center",
             "voxel_face_aligned": True,
             "split_contact_topology": True,
@@ -381,8 +383,8 @@ def compile_ras_x_candidates(
                         f"label {label_id} partition differs from intake voxel count")
                 del binary
                 for side, side_sign, side_mask, side_count in (
-                    ("left", "positive", left_mask, split["left_voxel_count"]),
-                    ("right", "negative", right_mask, split["right_voxel_count"]),
+                    ("right", "positive", right_mask, split["right_voxel_count"]),
+                    ("left", "negative", left_mask, split["left_voxel_count"]),
                 ):
                     vertices, triangles, metrics = build_voxel_boundary_mesh(
                         side_mask,
@@ -424,7 +426,7 @@ def compile_ras_x_candidates(
         receipt = {
             "schema": RECEIPT_SCHEMA,
             "status": "scan_specific_ras_x_side_surface_candidates",
-            "compiler": "numilab-human.healthy-total-body-ct-ras-x-partition.1",
+            "compiler": "numilab-human.healthy-total-body-ct-ras-x-partition.2",
             "compiler_sources_sha256": compiler_sources,
             "runtime": runtime,
             "source": {
@@ -450,8 +452,8 @@ def compile_ras_x_candidates(
                 "axis": "RAS-X",
                 "coordinate_mm": 0.0,
                 "plane_index_coordinate": _ras_x_plane(affine, np)[2],
-                "positive_side": "left",
-                "negative_side": "right",
+                "positive_side": "right",
+                "negative_side": "left",
                 "method": "occupied-voxel-center-sign; exact voxel partition; no surface smoothing",
                 "source_voxel_centers_on_plane": 0,
                 "all_selected_source_voxels_partitioned_exactly_once": True,
@@ -546,7 +548,7 @@ def _audit_source_counts(
                     linear = np.arange(first, first + len(values), dtype=np.int64)
                     axis_index = (linear // strides[axis]) % shape[axis]
                     ras_x = coefficient * axis_index.astype(np.float64) + float(info["voxel_to_world_affine"][0][3])
-                    left_voxels, right_voxels, on_plane = ras_x > 0.0, ras_x < 0.0, np.abs(ras_x) <= PLANE_TOLERANCE_MM
+                    right_voxels, left_voxels, on_plane = ras_x > 0.0, ras_x < 0.0, np.abs(ras_x) <= PLANE_TOLERANCE_MM
                     for label_id in label_ids:
                         selected = rounded == label_id
                         counts[label_id]["left"] += int(np.count_nonzero(selected & left_voxels))
@@ -685,7 +687,7 @@ def _audit_mesh(
     tolerance = max(1e-9, float(np.max(np.abs(vertices[:, 0]))) * 1e-12)
     halfspace = bool(
         np.all(vertices[:, 0] >= -tolerance)
-        if side == "left"
+        if side == "right"
         else np.all(vertices[:, 0] <= tolerance)
     )
     voxel_geometry = _mesh_source_voxel_geometry(

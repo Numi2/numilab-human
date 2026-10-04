@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://numi.example/schemas/healthy-total-body-ct-ras-x-partition-audit.v2.schema.json",
+  "title": "Independent Numi Human CT RAS-X partition audit",
+  "type": "object",
+  "required": [
+    "schema",
+    "status",
+    "intake_receipt_sha256",
+    "source_archive_sha256",
+    "nifti_uncompressed_sha256",
+    "trial_plan_sha256",
+    "compiler_receipt_sha256",
+    "checksum_manifest_sha256",
+    "scan_id",
+    "source_ras_x_plane_index_coordinate",
+    "independently_streamed_partition_counts",
+    "independently_reparsed_meshes",
+    "qualification",
+    "boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "numi.healthy-total-body-ct-ras-x-partition-audit.v2"
+    },
+    "status": {
+      "const": "independent_ras_x_source_partition_and_mesh_audit_passed"
+    },
+    "intake_receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_archive_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "nifti_uncompressed_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "trial_plan_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "compiler_receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "checksum_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "scan_id": {
+      "type": "string",
+      "pattern": "^[0-9]{3}$"
+    },
+    "source_ras_x_plane_index_coordinate": {
+      "type": "number"
+    },
+    "independently_streamed_partition_counts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "label_id",
+          "label_name",
+          "source_voxel_count",
+          "left_voxel_count",
+          "right_voxel_count",
+          "voxel_centers_on_plane",
+          "exact_partition"
+        ],
+        "properties": {
+          "label_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "label_name": {
+            "type": "string"
+          },
+          "source_voxel_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "left_voxel_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "right_voxel_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "voxel_centers_on_plane": {
+            "const": 0
+          },
+          "exact_partition": {
+            "const": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "independently_reparsed_meshes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "mesh_file",
+          "mesh_sha256",
+          "ras_x_side",
+          "source_voxel_count",
+          "vertices_in_declared_ras_x_halfspace",
+          "independent_edge_incidence_histogram",
+          "independent_nonmanifold_vertex_count",
+          "closed_two_manifold",
+          "signed_volume_mm3",
+          "source_side_voxel_occupancy_volume_mm3",
+          "relative_signed_volume_error"
+        ],
+        "properties": {
+          "mesh_file": {
+            "type": "string"
+          },
+          "mesh_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "ras_x_side": {
+            "enum": [
+              "left",
+              "right"
+            ]
+          },
+          "source_voxel_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "vertices_in_declared_ras_x_halfspace": {
+            "const": true
+          },
+          "vertices_within_source_voxel_envelope": {
+            "const": true
+          },
+          "vertices_on_source_voxel_grid": {
+            "const": true
+          },
+          "independent_edge_incidence_histogram": {
+            "type": "object"
+          },
+          "independent_nonmanifold_vertex_count": {
+            "const": 0
+          },
+          "closed_two_manifold": {
+            "const": true
+          },
+          "signed_volume_mm3": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "source_side_voxel_occupancy_volume_mm3": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "relative_signed_volume_error": {
+            "type": "number",
+            "maximum": 1e-09
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "required": [
+        "source_archive_and_nifti_identity_reverified",
+        "source_voxel_values_streamed_and_recounted",
+        "left_and_right_voxel_counts_reproduce_source",
+        "candidate_surfaces_reparsed_without_surface_compiler",
+        "mesh_topology_recomputed",
+        "ras_x_halfspace_verified",
+        "automatic_segmentation_accuracy",
+        "numi_human_subject_binding",
+        "mechanics_or_physiology",
+        "clinical_anatomy"
+      ],
+      "properties": {
+        "source_archive_and_nifti_identity_reverified": {
+          "const": true
+        },
+        "source_voxel_values_streamed_and_recounted": {
+          "const": true
+        },
+        "left_and_right_voxel_counts_reproduce_source": {
+          "const": true
+        },
+        "candidate_surfaces_reparsed_without_surface_compiler": {
+          "const": true
+        },
+        "mesh_topology_recomputed": {
+          "const": true
+        },
+        "ras_x_halfspace_verified": {
+          "const": true
+        },
+        "source_voxel_grid_and_envelope_verified": {
+          "const": true
+        },
+        "automatic_segmentation_accuracy": {
+          "const": false
+        },
+        "numi_human_subject_binding": {
+          "const": false
+        },
+        "mechanics_or_physiology": {
+          "const": false
+        },
+        "clinical_anatomy": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
