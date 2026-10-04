@@ -1,0 +1,50 @@
+{
+  "schema": "numi.human.cardiac-electroactivation-observer-attempt.v1",
+  "attempt": 2,
+  "status": "active_corrected_arrival_intervals_with_outlet_pressure_monitor",
+  "activation_observer": {
+    "native_run_pid": 46480,
+    "observer_pid": 50357,
+    "observer_source_sha256": "4e976f0ef68f31f3367b6fbfa50328ee96527f6a3be3880712148378ef559a24",
+    "observer_plan_sha256": "116909de3796d7aa8997e95dee7765cc79410dad35f385a4f50e68cf61c506f5",
+    "resume_step": 99,
+    "latest_sample_step": 105,
+    "latest_checkpoint_sha256": "6ec7d44a90ff4e8141bada35cbb103c684cf72a0ca2edd8c39a54a074b0b7eaa",
+    "newly_observed_steps": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "step_105_new_voltage_arrivals": 1468,
+    "step_105_new_activation_arrivals": 1442,
+    "step_105_voltage_nodes_over_threshold": 146818,
+    "step_105_activation_nodes_over_threshold": 148713,
+    "source_myocardial_node_count": 218077,
+    "lv_pressure_pa": 4525.3586769104,
+    "rv_pressure_pa": 1141.551360487938,
+    "aortic_flow_ml_s": 0.0,
+    "pulmonary_flow_ml_s": 0.0,
+    "solver_modified": false,
+    "gpu_submissions": 0
+  },
+  "outlet_gradient_observer": {
+    "observer_pid": 50711,
+    "observer_source_sha256": "98c172fa1da4f019c8d8272005ccad4a224a9e80add40343d763900ff87d489b",
+    "observer_plan_sha256": "952f50ea427c8c9ced690c7e2c645614adab5fd95699cb4e07f9f413f1e6e1d2",
+    "baseline_step": 103,
+    "latest_sample_step": 105,
+    "latest_checkpoint_sha256": "6ec7d44a90ff4e8141bada35cbb103c684cf72a0ca2edd8c39a54a074b0b7eaa",
+    "aortic_pressure_pa": 10884.8623046875,
+    "pulmonary_pressure_pa": 1687.1416015625,
+    "lv_to_aorta_gradient_pa": -6359.5036277771,
+    "rv_to_pulmonary_artery_gradient_pa": -545.5902410745621,
+    "aortic_flow_ml_s": 0.0,
+    "pulmonary_flow_ml_s": 0.0,
+    "solver_modified": false,
+    "gpu_submissions": 0
+  },
+  "interpretation": "Electrical activation continues, but no first positive outlet gradient or ejection has been observed. The current zero flows are consistent with nonpositive source-model valve-driving gradients; this does not establish a valve-law defect or a completed heartbeat.",
+  "heartbeat_qualified": false
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "numi.human.cardiac-electroactivation-chamber-response-plan.v1",
+  "status": "preregistered_after_step_99_before_further_observations",
+  "purpose": "Continue source-myocardium voltage and activation first-arrival bounds at accepted native checkpoints, paired with chamber pressures and valve flows, using the validated step-99 interval state.",
+  "scope_boundary": "Read-only observation of accepted checkpoints. The observer does not step, restore, modify, or submit work to the native solver. It does not infer wall stress, downstream outlet pressure, valve opening, pressure-volume closure, or heartbeat qualification.",
+  "native_run": {
+    "host": "macmini",
+    "pid": 46480,
+    "executable": "/Users/n/heartbeat-evidence-20261003-step53/pending-valve-solve-fix/numi-matter-ventricular-source-step",
+    "executable_sha256": "25bacc3929a48593315fdd3c1e22d1f7fd3656c96b4021a55ed6d7bba2035305",
+    "metallib": "/Users/n/heartbeat-evidence-20261003-step53/pending-valve-solve-fix/NumiMatter.metallib",
+    "metallib_sha256": "7bce1acbba1890d9dbddf216ade9dd0740128d54af0256167ece78ea1ce9501d",
+    "package": "/Users/n/heartbeat-evidence-20261003-step53/ventricles.nmpkg",
+    "package_sha256": "5c8bf0318fc3b743f8ab6540d52bd6be8b4c3695c58c253ab69131409a08d896",
+    "accepted_checkpoint": "/Users/n/heartbeat-evidence-20261004-recovery/accepted.nmsnap",
+    "accepted_driver": "/Users/n/heartbeat-evidence-20261004-recovery/accepted.nmsnap.driver",
+    "trajectory_csv": "/Users/n/heartbeat-evidence-20261004-recovery/trajectory-forward.csv",
+    "expected_program_fingerprints": [7625073938591333950, 3966989379984703648]
+  },
+  "baseline": {
+    "accepted_step": 99,
+    "time_ms": 50.6879998720251,
+    "checkpoint_sha256": "28677c158bcf2ae9b9abe1c1e9a349d62574d21eafc12580ba824ac3e93dac2a",
+    "driver_sha256": "11a99e7a46ed69ec33bf1bd932ea6d026472ca8814d9071534529ac861905242",
+    "field_payload_sha256": "76a36b3a52b4efb5e22d08bea4f9c3ce27f09bff3fd63795fafe09fd9b6d5455",
+    "trajectory_row_sha256": "d374ce4fe0f81519e4e82e5e729b5160f3f032d81e2f3b6550058737d29ecceb",
+    "source_myocardial_node_count": 218077,
+    "all_node_count": 227737,
+    "myocardial_voltage_nodes_over_0_5": 138127,
+    "myocardial_activation_nodes_over_0_01": 140031,
+    "lv_pressure_pa": 3819.589614868164,
+    "rv_pressure_pa": 1106.4688116312027,
+    "aortic_flow_ml_s": 0.0,
+    "pulmonary_flow_ml_s": 0.0,
+    "heartbeat_achieved": false
+  },
+  "resume_state": {
+    "path": "/Users/n/heartbeat-evidence-20261004-recovery/activation-load-observer-20261004/arrival-bounds.bin.gz",
+    "sha256": "778b85ce899e5e7380042816d04faf03c17dd00fde62149354f673b95c63f673",
+    "accepted_step": 99,
+    "time_ms": 50.6879998720251,
+    "source_attempt": "attempt-001.json",
+    "source_attempt_observer_sha256": "681e14f03911ec5764fd9c49b202cddb1927ca0f3139c257520d77b7346b7140",
+    "source_attempt_status_sha256": "ac19c19b5cc25a4f18d3e23a209eef5d6b6a948322e353b7c6a52900973d47d4"
+  },
+  "instrument": {
+    "cooked_myocardial_material_id": 0,
+    "electrical_threshold": 0.5,
+    "activation_threshold": 0.01,
+    "poll_interval_s": 30,
+    "interval_semantics": "For every post-step-99 first arrival, lower and upper bounds are the previous and current observed accepted checkpoint times. Skipped checkpoints are recorded as gaps; no substep timing is fabricated. Nodes already above threshold at step 99 retain their left-censored bounds.",
+    "state_directory": "/Users/n/heartbeat-evidence-20261004-recovery/activation-load-observer-v2-20261004"
+  },
+  "decision_rule": "Report activation timing and concurrent chamber pressure/valve-flow evidence only. If outlet ejection remains absent, retain that failure and direct the next audit to source-validated myocardial wall-pressure/load transfer at the first positive pressure-gradient state; do not force a valve or flow result.",
+  "candidate_adopted": false,
+  "heartbeat_qualified": false
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "numi.human.cardiac-electroactivation-observer-attempt.v1",
+  "attempt": 1,
+  "status": "valid_step_99_state_retained_initial_arrival_counter_mislabeled",
+  "observer_pid": 49664,
+  "observer_source_sha256": "681e14f03911ec5764fd9c49b202cddb1927ca0f3139c257520d77b7346b7140",
+  "observer_plan_sha256": "d9e4e6ea44164242b07dd5fe072aaeba90aa637463aff078cb7820fd58349c64",
+  "native_run_pid": 46480,
+  "native_solver_modified": false,
+  "gpu_submissions": 0,
+  "retained_first_observation": {
+    "accepted_step": 99,
+    "time_ms": 50.6879998720251,
+    "checkpoint_sha256": "28677c158bcf2ae9b9abe1c1e9a349d62574d21eafc12580ba824ac3e93dac2a",
+    "field_payload_sha256": "76a36b3a52b4efb5e22d08bea4f9c3ce27f09bff3fd63795fafe09fd9b6d5455",
+    "trajectory_row_sha256": "d374ce4fe0f81519e4e82e5e729b5160f3f032d81e2f3b6550058737d29ecceb",
+    "source_myocardial_node_count": 218077,
+    "myocardial_voltage_nodes_over_0_5": 138127,
+    "myocardial_activation_nodes_over_0_01": 140031,
+    "lv_pressure_pa": 3819.589614868164,
+    "rv_pressure_pa": 1106.4688116312027,
+    "aortic_flow_ml_s": 0.0,
+    "pulmonary_flow_ml_s": 0.0,
+    "accepted_fields_match_trajectory": true
+  },
+  "classification_issue": {
+    "description": "The first-observation counts were emitted as new_voltage_arrivals and new_activation_arrivals even though the same node sets were correctly marked status 2, already above threshold at observer start.",
+    "voltage_left_censored_count": 138127,
+    "activation_left_censored_count": 140031,
+    "arrival_bounds_sha256": "778b85ce899e5e7380042816d04faf03c17dd00fde62149354f673b95c63f673",
+    "arrival_bounds_status_verification": {
+      "voltage_status_0_unseen": 89610,
+      "voltage_status_1_interval_censored": 0,
+      "voltage_status_2_left_censored": 138127,
+      "activation_status_0_unseen": 87706,
+      "activation_status_1_interval_censored": 0,
+      "activation_status_2_left_censored": 140031
+    }
+  },
+  "resolution": "Preserve step 99 as a left-censored initial observation, resume the corrected monitor from its exact arrival-bounds state, and count only post-step-99 threshold crossings as new arrivals.",
+  "prediction_or_native_conditions_changed": false
+}
