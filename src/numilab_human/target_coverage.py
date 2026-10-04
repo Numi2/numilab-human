@@ -24,8 +24,32 @@ from .model import ImportError as HumanImportError
 
 
 SCHEMA = "HumanPack.target-coverage.v1"
-COMPILER_VERSION = "numilab-human.target-coverage.2"
-LEGACY_COMPILER_VERSION = "numilab-human.target-coverage.1"
+COMPILER_VERSION = "numilab-human.target-coverage.3"
+LEGACY_COMPILER_VERSIONS = {
+    "numilab-human.target-coverage.1",
+    "numilab-human.target-coverage.2",
+}
+REGISTER_FIELDS_V2 = {
+    "source_record_sha256", "path", "expected_sha256", "actual_sha256",
+    "status", "declaration_count",
+}
+REGISTER_FIELDS_V3 = REGISTER_FIELDS_V2 | {"source_transform"}
+MATERIALIZED_STATUSES = {
+    "materialized", "materialized_with_source_pinned_xml_separator_repair",
+}
+LEGACY_ELBOW_XML_PATH = (
+    "myo_sim/models/legacy/elbow/"
+    "myoelbow_1dof6muscles_1dofSoftexo_sim2.xml"
+)
+LEGACY_ELBOW_XML_REPAIR = {
+    "rule_id": "myosim-33c89c2b-legacy-elbow-xml-separator-repair-v1",
+    "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "original_member_sha256": "9df2192a504b92b2785528cf786b049776bbbb91051805ea2013712ce8d90637",
+    "transformed_member_sha256": "81e676b1e17a994d58a96d330aa6e1650f9edda3b8bcfe1aad9f943a45384d00",
+    "inserted_byte_hex": "20",
+    "inserted_byte_offsets": [3484, 6612],
+    "match_count": 2,
+}
 ROOT = Path(__file__).resolve().parents[2]
 
 # These are the mandatory rows of DEVELOPMENT_ROADMAP.md, expanded rather than
@@ -160,13 +184,15 @@ class Inventory:
         self.leaves[key] = {"leaf_sha256": key, **record}
 
     def register(self, source_key: str, path: str, expected: str | None,
-                 actual: str | None, status: str, *, count: int = 0) -> None:
+                 actual: str | None, status: str, *, count: int = 0,
+                 source_transform: dict[str, Any] | None = None) -> None:
         self.registers.append({
             "source_record_sha256": source_key, "path": path,
             "expected_sha256": expected, "actual_sha256": actual,
             "status": status, "declaration_count": count,
+            "source_transform": source_transform,
         })
-        if status != "materialized":
+        if status not in MATERIALIZED_STATUSES:
             self.leaf(source_key, f"unresolved-register/{path}", path,
                       "unresolved_source_register", declaration={"reason": status})
 
@@ -259,6 +285,26 @@ def _xml_register(stream: Any, inventory: Inventory, source_key: str, path: str)
         return len(inventory.leaves) - before, "invalid_source_xml"
 
 
+def _repair_legacy_elbow_xml(data: bytes, path: str, member_sha256: str) -> tuple[bytes, dict[str, Any]]:
+    """Apply the pinned, byte-insertion-only repair to one malformed MyoSim member."""
+    if path != LEGACY_ELBOW_XML_PATH or member_sha256 != LEGACY_ELBOW_XML_REPAIR["original_member_sha256"]:
+        raise HumanImportError("legacy XML separator repair source identity differs from its pin")
+    import re
+
+    # The archive member has two adjacent quoted attribute values. XML requires
+    # whitespace between attributes; inserting one byte preserves each value.
+    pattern = re.compile(rb'(?<=")(?=[A-Za-z_:][A-Za-z0-9_.:-]*=)')
+    offsets = [match.start() for match in pattern.finditer(data)]
+    if offsets != LEGACY_ELBOW_XML_REPAIR["inserted_byte_offsets"]:
+        raise HumanImportError("legacy XML separator repair matches differ from the pinned source")
+    normalized = pattern.sub(b" ", data)
+    if (len(normalized) != len(data) + len(offsets)
+            or hashlib.sha256(normalized).hexdigest()
+            != LEGACY_ELBOW_XML_REPAIR["transformed_member_sha256"]):
+        raise HumanImportError("legacy XML separator repair output differs from its pin")
+    return normalized, dict(LEGACY_ELBOW_XML_REPAIR)
+
+
 def _source_files(inventory: Inventory, source_key: str, sources: Path,
                   metadata: dict[str, Any]) -> None:
     for filename, properties in sorted(metadata["files"].items()):
@@ -315,9 +361,18 @@ def _archive(inventory: Inventory, source_key: str, sources: Path,
             assert stream is not None
             data = stream.read()
             member_hash = hashlib.sha256(data).hexdigest()
-            member_count, status = _xml_register(io.BytesIO(data), inventory, source_key, local)
+            source_transform = None
+            if local == LEGACY_ELBOW_XML_PATH:
+                normalized, source_transform = _repair_legacy_elbow_xml(data, local, member_hash)
+                member_count = _xml_declarations(
+                    io.BytesIO(normalized), inventory, source_key, local
+                )
+                status = "materialized_with_source_pinned_xml_separator_repair"
+            else:
+                member_count, status = _xml_register(io.BytesIO(data), inventory, source_key, local)
             inventory.register(source_key, f"{relative}#/{local}", member_hash,
-                               member_hash, status, count=member_count)
+                               member_hash, status, count=member_count,
+                               source_transform=source_transform)
             count += member_count
     inventory.register(source_key, relative, expected, actual, "materialized", count=count)
 
@@ -496,11 +551,13 @@ def validate_manifest(value: dict[str, Any], *, allow_legacy: bool = False) -> N
         raise HumanImportError("target coverage manifest fields differ from the v1 schema")
     if value.get("schema") != SCHEMA:
         raise HumanImportError("unsupported target coverage schema")
-    legacy = allow_legacy and value.get("compiler") == LEGACY_COMPILER_VERSION
-    if value.get("compiler") != COMPILER_VERSION and not legacy:
+    compiler = value.get("compiler")
+    legacy = allow_legacy and compiler in LEGACY_COMPILER_VERSIONS
+    if compiler != COMPILER_VERSION and not legacy:
         raise HumanImportError("unsupported or historical target coverage compiler; rematerialize current scope")
     mandatory_catalog = {domain: names for domain, names in MANDATORY.items()
-                         if not legacy or domain != "systemic_physiology"}
+                         if compiler != "numilab-human.target-coverage.1"
+                         or domain != "systemic_physiology"}
     payload = {key: item for key, item in value.items() if key != "manifest_sha256"}
     if value.get("manifest_sha256") != digest(payload):
         raise HumanImportError("target coverage manifest digest mismatch")
@@ -549,24 +606,46 @@ def validate_manifest(value: dict[str, Any], *, allow_legacy: bool = False) -> N
         raise HumanImportError("mandatory Human target leaves were removed")
     if value.get("integrated_qualification") != "unknown":
         raise HumanImportError("source coverage cannot promote integrated qualification")
-    for register in [*value.get("registers", []), *value.get("register_history", [])]:
-        if (not isinstance(register, dict) or set(register) != {"source_record_sha256", "path", "expected_sha256", "actual_sha256", "status", "declaration_count"}
+    for table_name in ("registers", "register_history"):
+        for register in value.get(table_name, []):
+            fields = set(register) if isinstance(register, dict) else set()
+            current_register_requires_v3 = compiler == COMPILER_VERSION and table_name == "registers"
+            if (not isinstance(register, dict)
+                or (current_register_requires_v3 and fields != REGISTER_FIELDS_V3)
+                or (not current_register_requires_v3 and frozenset(fields) not in {frozenset(REGISTER_FIELDS_V2), frozenset(REGISTER_FIELDS_V3)})
                 or not isinstance(register["path"], str) or not register["path"]
                 or type(register["declaration_count"]) is not int or register["declaration_count"] < 0
-                or register["status"] not in {"materialized", "missing", "unpinned", "not_supplied", "unavailable_source_inventory", "incomplete_composed_inventory", "invalid_source_xml", "retained_source_not_in_current_lock"}):
-            raise HumanImportError("target coverage register fields differ from the v1 schema")
-        if register.get("source_record_sha256") not in keys:
-            raise HumanImportError("source register reference is invalid")
-        for field in ("actual_sha256", "expected_sha256"):
-            fingerprint = register[field]
-            if fingerprint is not None and (not isinstance(fingerprint, str) or len(fingerprint) != 64
-                                             or any(character not in "0123456789abcdef" for character in fingerprint)):
-                raise HumanImportError("source register has an invalid SHA-256")
-        if register["status"] == "materialized" and (register["actual_sha256"] is None
-                                                      or register["actual_sha256"] != register["expected_sha256"]):
-            raise HumanImportError("materialized source register must match an explicit content pin")
+                or register["status"] not in {"materialized", "materialized_with_source_pinned_xml_separator_repair", "missing", "unpinned", "not_supplied", "unavailable_source_inventory", "incomplete_composed_inventory", "invalid_source_xml", "retained_source_not_in_current_lock"}):
+                raise HumanImportError("target coverage register fields differ from the v1 schema")
+            if register.get("source_record_sha256") not in keys:
+                raise HumanImportError("source register reference is invalid")
+            for field in ("actual_sha256", "expected_sha256"):
+                fingerprint = register[field]
+                if fingerprint is not None and (not isinstance(fingerprint, str) or len(fingerprint) != 64
+                                                 or any(character not in "0123456789abcdef" for character in fingerprint)):
+                    raise HumanImportError("source register has an invalid SHA-256")
+            if register["status"] in MATERIALIZED_STATUSES and (register["actual_sha256"] is None
+                                                                 or register["actual_sha256"] != register["expected_sha256"]):
+                raise HumanImportError("materialized source register must match an explicit content pin")
+            transform = register.get("source_transform")
+            if register["status"] == "materialized_with_source_pinned_xml_separator_repair":
+                expected_path = (
+                    "myosim/myo_sim-33c89c2b.tar.gz#/" + LEGACY_ELBOW_XML_PATH
+                )
+                source_record = source_by_key[register["source_record_sha256"]]
+                expected_transform = LEGACY_ELBOW_XML_REPAIR
+                if (transform != expected_transform or register["path"] != expected_path
+                        or register["expected_sha256"] != LEGACY_ELBOW_XML_REPAIR["original_member_sha256"]
+                        or register["actual_sha256"] != LEGACY_ELBOW_XML_REPAIR["original_member_sha256"]
+                        or register["declaration_count"] != 179
+                        or source_record["source_id"] != "myosim_fullbody"
+                        or source_record["metadata"].get("archive_sha256")
+                        != LEGACY_ELBOW_XML_REPAIR["source_archive_sha256"]):
+                    raise HumanImportError("source-pinned XML repair provenance differs from its exact rule")
+            elif transform is not None:
+                raise HumanImportError("source transform is only valid for its registered repair status")
     registers = value.get("registers", [])
-    unresolved = sum(item["status"] != "materialized" for item in registers)
+    unresolved = sum(item["status"] not in MATERIALIZED_STATUSES for item in registers)
     counts = {"leaves": len(leaves), "mandatory_leaves": sum(map(len, mandatory_catalog.values())),
               "by_kind": dict(sorted(Counter(item["kind"] for item in leaves).items())),
               "unresolved_current_registers": unresolved}
@@ -655,8 +734,8 @@ def materialize(*, sources: Path, source_lock: Path, repository_root: Path = ROO
         "leaves": sorted(inventory.leaves.values(), key=lambda item: item["leaf_sha256"]),
         "counts": {"leaves": len(inventory.leaves), "mandatory_leaves": sum(map(len, MANDATORY.values())),
                    "by_kind": dict(sorted(Counter(item["kind"] for item in inventory.leaves.values()).items())),
-                   "unresolved_current_registers": sum(item["status"] != "materialized" for item in registers)},
-        "scope_status": "blocked" if any(item["status"] != "materialized" for item in registers) else "source_union_materialized",
+        "unresolved_current_registers": sum(item["status"] not in MATERIALIZED_STATUSES for item in registers)},
+        "scope_status": "blocked" if any(item["status"] not in MATERIALIZED_STATUSES for item in registers) else "source_union_materialized",
         "integrated_qualification": "unknown",
         "evidence_boundary": "Source declarations and mandatory targets only. Physical roles, fidelity, equations, interfaces, validation and source composition remain unresolved unless separately evidenced. No runtime admission or physical qualification is implied.",
     }

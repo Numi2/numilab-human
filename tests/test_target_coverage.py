@@ -13,6 +13,10 @@ from unittest.mock import patch
 
 from numilab_human.model import ImportError as HumanImportError
 from numilab_human.target_coverage import (
+    LEGACY_ELBOW_XML_PATH, LEGACY_ELBOW_XML_REPAIR, ROOT,
+    _repair_legacy_elbow_xml,
+)
+from numilab_human.target_coverage import (
     Inventory, MANDATORY, _myosim_ir, _xml_declarations, canonical_bytes, command,
     digest, materialize, validate_manifest, validate_transition,
 )
@@ -82,7 +86,7 @@ class TargetCoverageTests(unittest.TestCase):
             validate_manifest(before)
         after = _build(self.directory, {}, previous=before)
         validate_transition(before, after)
-        assert after["compiler"] == "numilab-human.target-coverage.2"
+        assert after["compiler"] == "numilab-human.target-coverage.3"
         assert after["counts"]["mandatory_leaves"] == 95
         old = {leaf["leaf_sha256"]: leaf for leaf in before["leaves"]}
         current = {leaf["leaf_sha256"]: leaf for leaf in after["leaves"]}
@@ -219,6 +223,73 @@ class TargetCoverageTests(unittest.TestCase):
         assert value["registers"][0]["status"] == "invalid_source_xml"
         assert any(leaf["name"] == "retained" for leaf in value["leaves"])
         assert any(leaf["kind"] == "unresolved_source_register" for leaf in value["leaves"])
+
+
+    def test_exact_legacy_elbow_source_gets_only_the_pinned_separator_repair(self) -> None:
+        archive_path = ROOT / "Sources/myosim/myo_sim-33c89c2b.tar.gz"
+        if not archive_path.is_file():
+            self.skipTest("pinned MyoSim source archive is not materialized")
+        suffix = "/" + LEGACY_ELBOW_XML_PATH
+        with tarfile.open(archive_path, "r:gz") as archive:
+            matches = [member for member in archive.getmembers() if member.name.endswith(suffix)]
+            self.assertEqual(len(matches), 1)
+            raw = archive.extractfile(matches[0]).read()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), LEGACY_ELBOW_XML_REPAIR["original_member_sha256"])
+        raw_inventory = Inventory()
+        raw_key = raw_inventory.source("myosim_fullbody", {"archive_sha256": LEGACY_ELBOW_XML_REPAIR["source_archive_sha256"]})
+        with self.assertRaisesRegex(HumanImportError, "invalid pinned XML register"):
+            _xml_declarations(io.BytesIO(raw), raw_inventory, raw_key, LEGACY_ELBOW_XML_PATH)
+        normalized, provenance = _repair_legacy_elbow_xml(
+            raw, LEGACY_ELBOW_XML_PATH, hashlib.sha256(raw).hexdigest()
+        )
+        self.assertEqual(provenance, LEGACY_ELBOW_XML_REPAIR)
+        self.assertEqual(hashlib.sha256(normalized).hexdigest(), LEGACY_ELBOW_XML_REPAIR["transformed_member_sha256"])
+        self.assertEqual(len(normalized) - len(raw), 2)
+        self.assertEqual(normalized.count(b'name="exoUpperarm" type="box"'), 1)
+        self.assertEqual(normalized.count(b'name="exoForearm" type="box"'), 1)
+        repaired_inventory = Inventory()
+        repaired_key = repaired_inventory.source(
+            "myosim_fullbody", {"archive_sha256": LEGACY_ELBOW_XML_REPAIR["source_archive_sha256"]}
+        )
+        declaration_count = _xml_declarations(
+            io.BytesIO(normalized), repaired_inventory, repaired_key, LEGACY_ELBOW_XML_PATH
+        )
+        self.assertEqual(declaration_count, 179)
+        with self.assertRaisesRegex(HumanImportError, "identity differs"):
+            _repair_legacy_elbow_xml(raw, "another.xml", hashlib.sha256(raw).hexdigest())
+        with self.assertRaisesRegex(HumanImportError, "identity differs"):
+            _repair_legacy_elbow_xml(raw + b" ", LEGACY_ELBOW_XML_PATH, hashlib.sha256(raw + b" ").hexdigest())
+
+
+    def test_source_transform_status_is_materialized_but_provenance_is_mandatory(self) -> None:
+        value = _build(self.directory, {})
+        metadata = {
+            "repository": "https://github.com/MyoHub/myo_sim",
+            "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+            "archive_sha256": LEGACY_ELBOW_XML_REPAIR["source_archive_sha256"],
+            "license": "Apache-2.0",
+        }
+        inventory = Inventory()
+        source_key = inventory.source("myosim_fullbody", metadata)
+        value["source_records"].append(inventory.sources[source_key])
+        value["registers"].append({
+            "source_record_sha256": source_key,
+            "path": "myosim/myo_sim-33c89c2b.tar.gz#/" + LEGACY_ELBOW_XML_PATH,
+            "expected_sha256": LEGACY_ELBOW_XML_REPAIR["original_member_sha256"],
+            "actual_sha256": LEGACY_ELBOW_XML_REPAIR["original_member_sha256"],
+            "status": "materialized_with_source_pinned_xml_separator_repair",
+            "declaration_count": 179,
+            "source_transform": copy.deepcopy(LEGACY_ELBOW_XML_REPAIR),
+        })
+        value["counts"]["unresolved_current_registers"] = 0
+        _seal(value)
+        validate_manifest(value)
+
+        forged = copy.deepcopy(value)
+        forged["registers"][-1]["source_transform"]["inserted_byte_offsets"] = [1, 2]
+        _seal(forged)
+        with self.assertRaisesRegex(HumanImportError, "repair provenance"):
+            validate_manifest(forged)
 
 
     def test_nonmuscle_inventory_retains_routes_dependencies_and_source_only_status(self) -> None:
