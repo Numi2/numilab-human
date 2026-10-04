@@ -72,6 +72,7 @@ from numilab_human.model import (
     _fit_myosim_compliant_architecture,
     _myosim_passive_force_length,
     _numi_static_compliant_force,
+    _numi_static_compliant_force_grid,
     _numi_human_semantic_enthesis_kind,
     _myosim_pack_dof_record,
     _myosim_extensor_hood_artifact,
@@ -1106,6 +1107,30 @@ class ImporterTests(unittest.TestCase):
             _myosim_muscle_payload_architecture(b"NHMYO2\0\0", 2, 416, 416, 32),
             (416, 32),
         )
+
+    def test_nhmyo2_vectorized_architecture_grid_matches_scalar_force_roots(self) -> None:
+        import numpy as np
+
+        gain = [0.75, 1.05, 47.9, 200.0, 0.5, 1.6, 1.5, 1.3, 1.2, 0.0]
+        bias = [0.75, 1.05, 47.9, 200.0, 0.5, 1.6, 1.5, 1.3, 1.2, 0.0]
+        candidates = [
+            (0.004, 0.0001), (0.018, 0.01), (0.09, 0.07), (0.14, 0.16),
+        ]
+        for path_length in (0.09102260321378708, 0.09768450260162354, 0.2):
+            for activation in (0.0, 0.1, 0.5, 1.0):
+                actual = _numi_static_compliant_force_grid(
+                    path_length, activation,
+                    [item[0] for item in candidates],
+                    [item[1] for item in candidates], gain, bias,
+                )
+                expected = np.asarray([
+                    _numi_static_compliant_force(
+                        path_length, activation, fiber_length, tendon_length,
+                        gain, bias,
+                    )
+                    for fiber_length, tendon_length in candidates
+                ])
+                np.testing.assert_allclose(actual, expected, rtol=0.0, atol=2e-15)
 
     def test_nhmyo2_refines_short_intrinsic_hand_muscle_fit(self) -> None:
         # Exact float32 parameters exported for MyoSim LU_RB5.  The former

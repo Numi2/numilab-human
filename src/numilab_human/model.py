@@ -2398,6 +2398,106 @@ def _numi_static_compliant_force(
     return max(0.0, midpoint_force)
 
 
+def _numi_static_compliant_force_grid(
+    path_length: float, activation: float, optimal_fiber_lengths,
+    tendon_slack_lengths, gain: list[float], bias: list[float],
+):
+    """Evaluate the same static force root for many architecture candidates.
+
+    The scalar root remains the reference. This path vectorizes only the
+    independent parameter candidates; it keeps the same 48 bisection updates,
+    sample order, branch rules, and force equations used by the scalar path.
+    """
+    import numpy as np
+
+    optimal_fiber_lengths = np.asarray(optimal_fiber_lengths, dtype=float)
+    tendon_slack_lengths = np.asarray(tendon_slack_lengths, dtype=float)
+    if optimal_fiber_lengths.shape != tendon_slack_lengths.shape:
+        raise ValueError("compliant architecture candidate arrays must have matching shapes")
+    lower = np.minimum(0.05 * optimal_fiber_lengths, 0.5 * path_length)
+    upper = np.full_like(lower, path_length)
+
+    def active_force_length(normalized_length):
+        lower_mid = 0.5 * (gain[4] + 1.0)
+        upper_mid = 0.5 * (1.0 + gain[5])
+        result = np.zeros_like(normalized_length)
+        remaining = (normalized_length >= gain[4]) & (normalized_length <= gain[5])
+
+        mask = remaining & (normalized_length <= lower_mid)
+        x = (normalized_length - gain[4]) / max(1.0e-12, lower_mid - gain[4])
+        result[mask] = 0.5 * x[mask] * x[mask]
+        remaining &= ~mask
+
+        mask = remaining & (normalized_length <= 1.0)
+        x = (1.0 - normalized_length) / max(1.0e-12, 1.0 - lower_mid)
+        result[mask] = 1.0 - 0.5 * x[mask] * x[mask]
+        remaining &= ~mask
+
+        mask = remaining & (normalized_length <= upper_mid)
+        x = (normalized_length - 1.0) / max(1.0e-12, upper_mid - 1.0)
+        result[mask] = 1.0 - 0.5 * x[mask] * x[mask]
+        remaining &= ~mask
+
+        if bool(remaining.any()):
+            x = (gain[5] - normalized_length) / max(1.0e-12, gain[5] - upper_mid)
+            result[remaining] = 0.5 * x[remaining] * x[remaining]
+        return result
+
+    def passive_force_length(normalized_length):
+        result = np.zeros_like(normalized_length)
+        upper_mid = 0.5 * (1.0 + bias[5])
+        mask = normalized_length > 1.0
+        lower_piece = mask & (normalized_length <= upper_mid)
+        x = (normalized_length - 1.0) / max(1.0e-12, upper_mid - 1.0)
+        result[lower_piece] = bias[7] * 0.5 * x[lower_piece] * x[lower_piece]
+        upper_piece = mask & ~lower_piece
+        x = (normalized_length - upper_mid) / max(1.0e-12, upper_mid - 1.0)
+        result[upper_piece] = bias[7] * (0.5 + x[upper_piece])
+        return result
+
+    def tendon_force(normalized_length):
+        strain_at_one = 0.049
+        stiffness_at_one = 1.375 / strain_at_one
+        force_at_toe = 2.0 / 3.0
+        strain_at_toe = strain_at_one - (1.0 - force_at_toe) / stiffness_at_one
+        strain = normalized_length - 1.0
+        result = np.zeros_like(normalized_length)
+        linear = strain >= strain_at_toe
+        result[linear] = force_at_toe + stiffness_at_one * (
+            strain[linear] - strain_at_toe
+        )
+        toe = (strain > 0.0) & ~linear
+        t = strain[toe] / strain_at_toe
+        result[toe] = (
+            (-2.0 * t**3 + 3.0 * t**2) * force_at_toe
+            + (t**3 - t**2) * (strain_at_toe * stiffness_at_one)
+        )
+        return result
+
+    def residual(fiber_length):
+        fiber_normalized = fiber_length / optimal_fiber_lengths
+        tendon_normalized = (path_length - fiber_length) / tendon_slack_lengths
+        normalized_tendon_force = tendon_force(tendon_normalized)
+        normalized_fiber_force = activation * active_force_length(fiber_normalized)
+        normalized_fiber_force += passive_force_length(fiber_normalized)
+        return normalized_tendon_force - normalized_fiber_force, normalized_tendon_force
+
+    left_residual, left_force = residual(lower)
+    right_residual, right_force = residual(upper)
+    bracketed = left_residual * right_residual <= 0.0
+    midpoint_force = np.zeros_like(lower)
+    for _ in range(48):
+        midpoint = 0.5 * (lower + upper)
+        midpoint_residual, midpoint_force = residual(midpoint)
+        move_lower = midpoint_residual > 0.0
+        lower = np.where(move_lower, midpoint, lower)
+        upper = np.where(move_lower, upper, midpoint)
+    unbracketed_force = np.where(
+        np.abs(left_residual) < np.abs(right_residual), left_force, right_force,
+    )
+    return np.maximum(0.0, np.where(bracketed, midpoint_force, unbracketed_force))
+
+
 def _fit_myosim_compliant_architecture(
     length_range: list[float], acceleration_scale: float,
     gain: list[float], bias: list[float], oracle_length: float | None = None,
@@ -2454,24 +2554,43 @@ def _fit_myosim_compliant_architecture(
         value for value in length_range if math.isfinite(value) and value > 1.0e-6
     )
 
-    def score(optimal_fiber: float, tendon_slack: float) -> float:
+    squared_target = 0.0
+    total_weight = 0.0
+    for _, activation, target in samples:
+        # A passive-only mismatch is mechanically present at rest and cannot
+        # be diluted by the much larger active-force samples.
+        weight = _MYOSIM_PASSIVE_FIT_WEIGHT if activation == 0.0 else 1.0
+        squared_target += weight * target * target
+        total_weight += weight
+    score_denominator = max(
+        1.0e-6, math.sqrt(squared_target / total_weight)
+    )
+
+    def score_scalar(optimal_fiber: float, tendon_slack: float) -> float:
         squared_error = 0.0
-        squared_target = 0.0
-        total_weight = 0.0
         for path_length, activation, target in samples:
             predicted = _numi_static_compliant_force(
                 path_length, activation, optimal_fiber, tendon_slack, gain, bias
             )
-            # A passive-only mismatch is mechanically present at rest and
-            # cannot be diluted by the much larger active-force samples.
-            # Weight that channel explicitly while retaining every active
-            # operating-length target in the same objective.
             weight = _MYOSIM_PASSIVE_FIT_WEIGHT if activation == 0.0 else 1.0
             squared_error += weight * (predicted - target) ** 2
-            squared_target += weight * target * target
-            total_weight += weight
-        return math.sqrt(squared_error / total_weight) / max(
-            1.0e-6, math.sqrt(squared_target / total_weight)
+        return math.sqrt(squared_error / total_weight) / score_denominator
+
+    def score_grid(optimal_fibers, tendon_slacks):
+        import numpy as np
+
+        squared_error = np.zeros_like(optimal_fibers)
+        for path_length, activation, target in samples:
+            predicted = _numi_static_compliant_force_grid(
+                path_length, activation, optimal_fibers, tendon_slacks, gain, bias,
+            )
+            weight = _MYOSIM_PASSIVE_FIT_WEIGHT if activation == 0.0 else 1.0
+            squared_error += weight * (predicted - target) ** 2
+        return np.fromiter(
+            (math.sqrt(float(error) / total_weight) / score_denominator
+             for error in squared_error),
+            dtype=float,
+            count=len(squared_error),
         )
 
     # The former 17x17 search stopped at 0.75 times the shortest path.  That
@@ -2489,22 +2608,46 @@ def _fit_myosim_compliant_architecture(
     ) -> tuple[tuple[float, float, float, float, float], float, float]:
         fiber_step = (fiber_window[1] - fiber_window[0]) / grid_intervals
         tendon_step = (tendon_window[1] - tendon_window[0]) / grid_intervals
-        stage_best: tuple[float, float, float, float, float] | None = None
-        for fiber_index in range(grid_intervals + 1):
-            fiber_ratio = fiber_window[0] + fiber_step * fiber_index
-            optimal_fiber = source_optimal_length * fiber_ratio
-            for tendon_index in range(grid_intervals + 1):
-                tendon_ratio = tendon_window[0] + tendon_step * tendon_index
-                tendon_slack = minimum_operating_path * tendon_ratio
-                normalized_rmse = score(optimal_fiber, tendon_slack)
-                candidate = (
-                    normalized_rmse, fiber_ratio, tendon_ratio,
-                    optimal_fiber, tendon_slack,
-                )
-                if stage_best is None or candidate[:3] < stage_best[:3]:
-                    stage_best = candidate
-        if stage_best is None:
-            raise ImportError("MyoSim muscle compliant architecture fit failed")
+        fiber_ratios = [
+            fiber_window[0] + fiber_step * index
+            for index in range(grid_intervals + 1)
+        ]
+        tendon_ratios = [
+            tendon_window[0] + tendon_step * index
+            for index in range(grid_intervals + 1)
+        ]
+        try:
+            import numpy as np
+        except ModuleNotFoundError:
+            stage_best: tuple[float, float, float, float, float] | None = None
+            for fiber_ratio in fiber_ratios:
+                optimal_fiber = source_optimal_length * fiber_ratio
+                for tendon_ratio in tendon_ratios:
+                    tendon_slack = minimum_operating_path * tendon_ratio
+                    candidate = (
+                        score_scalar(optimal_fiber, tendon_slack),
+                        fiber_ratio, tendon_ratio, optimal_fiber, tendon_slack,
+                    )
+                    if stage_best is None or candidate[:3] < stage_best[:3]:
+                        stage_best = candidate
+            if stage_best is None:
+                raise ImportError("MyoSim muscle compliant architecture fit failed")
+            return stage_best, fiber_step, tendon_step
+
+        fiber_candidates = np.repeat(np.asarray(fiber_ratios), len(tendon_ratios))
+        tendon_candidates = np.tile(np.asarray(tendon_ratios), len(fiber_ratios))
+        optimal_fibers = source_optimal_length * fiber_candidates
+        tendon_slacks = minimum_operating_path * tendon_candidates
+        candidate_scores = score_grid(optimal_fibers, tendon_slacks)
+        best_index = int(np.argmin(candidate_scores))
+        fiber_index, tendon_index = divmod(best_index, len(tendon_ratios))
+        stage_best = (
+            float(candidate_scores[best_index]),
+            fiber_ratios[fiber_index],
+            tendon_ratios[tendon_index],
+            float(optimal_fibers[best_index]),
+            float(tendon_slacks[best_index]),
+        )
         return stage_best, fiber_step, tendon_step
 
     # Start every muscle with a cheap 21x21 global classification.  Smooth,
