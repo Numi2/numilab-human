@@ -1,0 +1,12 @@
+{
+  "candidate_geometry_written": false,
+  "candidate_weight_field_written": false,
+  "failure": "A 1e-10 unity tolerance was applied to all rows, including fixed ABI5 Float32 outer weights whose registered partition tolerance is 1e-6.",
+  "native_or_exact_pose_predicate_run": false,
+  "plan_sha256": "7b269cf38b3a8dfa370c0b4bf85d6d0ec1b7dcd2f57044aec73f895f6d555c4e",
+  "prediction_or_pose_conditions_changed": false,
+  "resolution": "Keep fixed outer weights byte-identical and admit their source ABI 5 partition error up to 1e-6; retain the 1e-10 solve tolerance only for the newly extended Float64 rows.",
+  "schema": "numi.human.skin-full-solid-motion-attempt.v1",
+  "stage": "post-solve partition verification before pose deformation",
+  "status": "stopped_before_candidate_observation"
+}

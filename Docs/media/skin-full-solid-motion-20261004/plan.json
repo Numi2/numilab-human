@@ -1,0 +1,50 @@
+{
+  "boundary": "Exploratory articulated geometry test of the complete BodyParts3D skin solid. The full solid's inherited inner-sheet weights are a harmonic extrapolation from the existing outer sheet, not new anatomical measurements. This study does not qualify material, mass, contact, clinical anatomy, or native runtime integration.",
+  "candidate": {
+    "geometry": "complete 101691-vertex, 203382-triangle FJ2810 source solid; source positions and faces unchanged",
+    "outer_constraints": "retain current ABI5 full-body source weights on every exact-coordinate-matched outer-sheet vertex; repeated seam copies must have identical weights",
+    "inner_extension": "one positive graph-Laplacian harmonic extension over the full closed source surface using inverse source-edge length conductance and all outer-sheet vertices as fixed Dirichlet values",
+    "numerics": "float64 sparse solve; fail on nonfinite or materially negative weights; clamp only negative roundoff in [-1e-12,0) to zero and renormalize unknown rows; fixed outer rows remain byte-identical",
+    "deformation": "source full-body LBS with the current ABI5 body bindings and source model's equality-projected inertial-frame transforms"
+  },
+  "conditions": [
+    {"id": "bilateral_knee_q_0p4", "joint_overrides": [[106, 0.4], [120, 0.4]], "baseline_pack_sha256": "51d400c9e740f576a75feeb959414af3943e0754b5896b2608fed5c630f63af9", "outer_baseline_pairs": 0},
+    {"id": "bilateral_knee_q_0p8", "joint_overrides": [[106, 0.8], [120, 0.8]], "baseline_pack_sha256": "bf14ba629b2caf3d669c8d5687c619ded381ac44c544207c159eeac0c6302c9f", "outer_baseline_pairs": 0},
+    {"id": "bilateral_knee_q_1p2", "joint_overrides": [[106, 1.2], [120, 1.2]], "baseline_pack_sha256": "bc76c69403f300a2345e882876bec3b75f9fbb128772a386e7d4d8bebb35bf96", "outer_baseline_pairs": 75}
+  ],
+  "control": "For each pose, compare candidate outer-sheet vertices to the exact retained ABI5 native LBS pack. The candidate outer field must match within 2e-6 m. The full source solid is the zero-intersection, closed-manifold rest control.",
+  "experimental_unit": "One deterministic pose snapshot; the three kinematic conditions are not independent biological replicates.",
+  "fixed_settings": {
+    "binding_count": 86,
+    "outer_vertex_count": 54949,
+    "outer_triangle_count": 109183,
+    "full_unique_vertex_count": 101691,
+    "full_triangle_count": 203382,
+    "precision": "float64 solve/transforms and exact predicate after Float32 geometry emission",
+    "gpu": "none; CPU-only",
+    "retries": 0
+  },
+  "model": {
+    "full_solid_sha256": "5612a45c25a59aaa611873cb084ac36183b1bcf0b5ed4b8554630055f389a64f",
+    "full_solid_manifest_sha256": "8dd82f9ee4ee621b510f1c3af8a4bbeb7ecfc5e90bcbba8854b4f889813bae8a",
+    "full_solid_audit_sha256": "5a4a7ce6b91b07919643a807b7a30704b68812f5a4962a3fd640de33dee43b4e",
+    "base_skin_payload_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+    "base_skin_manifest_sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e",
+    "source_preflight_receipt_sha256": "1b0885817481334daa49a6362ebc56f371de949c0c28b9ca792b8ffbf503d350",
+    "core_manifest_sha256": "e706f402e0d2c6dd249a6fd1676dc9d21a6c19a5cbf19aef5d681c233b1fa1a1",
+    "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "baseline_audit_sha256": {
+      "bilateral_knee_q_0p4": "27f0a063fefbc35616cdd134db08b7de3e0da26981509bf1fc5d60dcabd2d611",
+      "bilateral_knee_q_0p8": "fb940fbe7c05a2c62783df3660f16bcbbf3d60ae3fbecf2d8ee3c0b93ae1164d",
+      "bilateral_knee_q_1p2": "1d8b69d17af429fd88ffcb3d44456381ed88e3ef3ce8eeb39417fc95b98a095d"
+    }
+  },
+  "prediction": "The full source solid remains closed, exactly embedded, and zero-self-intersecting at all three poses, while its retained outer sheet reproduces each native LBS pack within 2e-6 m.",
+  "primary_observable": "Exact self-intersection pair count and closed oriented manifold status of the complete Float32-deformed source solid; outer-surface native-pack position parity is a required control.",
+  "purpose": "advance from an open outer-only skin image to articulated testing of the complete source skin surface while preserving the already-retained outer deformation",
+  "question": "Can the closed BodyParts3D FJ2810 full-surface geometry be carried through the current source LBS field at knee flexion without losing embeddedness, while leaving the existing outer native skin output unchanged?",
+  "refutation": "Any exact candidate surface intersection, material-position parity error above 2e-6 m, non-closed topology, missing source identity, or failure to extend every binding across one connected graph refutes the preregistered prediction or makes that pose inconclusive.",
+  "schema": "numi.human.skin-full-solid-motion-preregistration.v1",
+  "status": "preregistered_before_harmonic_extension_and_pose_observations",
+  "stopping_rule": "Build one deterministic full-surface harmonic weight field, verify its rest reconstruction and exact fixed outer constraints, then run one exact CPU surface predicate at each of the three listed poses; do not tune weights or adopt the candidate from this screen."
+}

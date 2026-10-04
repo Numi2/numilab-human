@@ -1,0 +1,9 @@
+{
+  "failure": "The run stopped at the preregistered 0.020 mm source-rest gate with a measured maximum error of 0.479727 mm, but the diagnostic receipt could not be retained because the output directory was initialized only after that gate.",
+  "plan_sha256": "7b269cf38b3a8dfa370c0b4bf85d6d0ec1b7dcd2f57044aec73f895f6d555c4e",
+  "prediction_or_pose_conditions_changed": false,
+  "resolution": "Initialize the output directory before any source checks so the next run can retain separated fixed-outer and extended-inner residuals; retain the 0.020 mm gate unchanged.",
+  "schema": "numi.human.skin-full-solid-motion-attempt.v1",
+  "stage": "retaining preregistered source-rest gate diagnostics",
+  "status": "rest_gate_failed_diagnostic_not_retained"
+}
