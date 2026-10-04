@@ -1,0 +1,10 @@
+{
+  "schema": "numi.human.research-runner-attempt.v1",
+  "attempt": 2,
+  "status": "implementation_failure_before_treatment_result",
+  "command": "PYTHONPATH=Sources/myosim/checkout numi human myosim-patellofemoral-reference-transfer-audit --sources Sources --observations Docs/media/open-knee-reference-20261001/archived-observations.json.gz --archive-audit Docs/media/open-knee-reference-20261001/recovered-source-audit.json --intersection-receipt Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json --open-knee-manifest Docs/media/numi-human-patellofemoral-anatomical-frame-path-20261003/open-knee-oks003-left.manifest.json --plan Docs/media/numi-human-patellofemoral-reference-transfer-20261004/plan.json --output Docs/media/numi-human-patellofemoral-reference-transfer-20261004/receipt.json --python .venv-mujoco312/bin/python",
+  "result": "The audit reproduced the first fixed control state, then raised KeyError for step while forming the interpolated Open Knee state list. No transferred-geometry result was written.",
+  "control_evaluation_started": true,
+  "treatment_observation_collected": false,
+  "preregistered_plan_changed": false
+}

@@ -607,6 +607,46 @@ def myosim_patellofemoral_anatomical_frame_audit(arguments: argparse.Namespace) 
     return 0
 
 
+def myosim_patellofemoral_reference_transfer_audit(arguments: argparse.Namespace) -> int:
+    auditor = arguments.python.expanduser().absolute()
+    if not auditor.is_file() or not os.access(auditor, os.X_OK):
+        raise ImportError(
+            f"MyoSim patellofemoral transfer-audit Python is unavailable: {auditor}"
+        )
+    output = arguments.output.resolve()
+    environment = dict(os.environ)
+    source_path = str(REPOSITORY_ROOT / "src")
+    environment["PYTHONPATH"] = source_path + (
+        os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else ""
+    )
+    command = [
+        str(auditor), "-m", "numilab_human.patellofemoral_reference_transfer_audit",
+        "--sources", str(arguments.sources.resolve()),
+        "--observations", str(arguments.observations.resolve()),
+        "--archive-audit", str(arguments.archive_audit.resolve()),
+        "--intersection-receipt", str(arguments.intersection_receipt.resolve()),
+        "--open-knee-manifest", str(arguments.open_knee_manifest.resolve()),
+        "--plan", str(arguments.plan.resolve()),
+        "--output", str(output),
+    ]
+    completed = subprocess.run(
+        command, capture_output=True, text=True, check=False, env=environment
+    )
+    if not output.is_file():
+        detail = completed.stderr.strip() or completed.stdout.strip() or "no transfer receipt"
+        raise ImportError(f"MyoSim patellofemoral reference transfer failed: {detail}")
+    receipt = read_json(output)
+    if receipt.get("schema") != (
+        "numi.human.patellofemoral-reference-transfer-audit.v1"
+    ):
+        raise ImportError("MyoSim patellofemoral reference transfer wrote an unsupported schema")
+    if completed.returncode not in (0, 2):
+        detail = completed.stderr.strip() or completed.stdout.strip() or "transfer process failed"
+        raise ImportError(f"MyoSim patellofemoral reference transfer failed: {detail}")
+    print(f"wrote {output}; status={receipt['status']}")
+    return completed.returncode
+
+
 def myosim_sternal_girdle_registration(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     try:
@@ -1671,6 +1711,28 @@ def parser() -> argparse.ArgumentParser:
     )
     patellofemoral_anatomical_frame_parser.set_defaults(
         handler=myosim_patellofemoral_anatomical_frame_audit
+    )
+    patellofemoral_reference_transfer_parser = commands.add_parser(
+        "myosim-patellofemoral-reference-transfer-audit",
+        help="test an independent passive path against pinned source bone intersections",
+    )
+    patellofemoral_reference_transfer_parser.add_argument("--sources", type=Path, required=True)
+    patellofemoral_reference_transfer_parser.add_argument("--observations", type=Path, required=True)
+    patellofemoral_reference_transfer_parser.add_argument("--archive-audit", type=Path, required=True)
+    patellofemoral_reference_transfer_parser.add_argument(
+        "--intersection-receipt", type=Path, required=True,
+    )
+    patellofemoral_reference_transfer_parser.add_argument(
+        "--open-knee-manifest", type=Path, required=True,
+    )
+    patellofemoral_reference_transfer_parser.add_argument("--plan", type=Path, required=True)
+    patellofemoral_reference_transfer_parser.add_argument("--output", type=Path, required=True)
+    patellofemoral_reference_transfer_parser.add_argument(
+        "--python", type=Path, default=Path(sys.executable),
+        help="Python environment with pinned MyoSim, NumPy, and MuJoCo installed",
+    )
+    patellofemoral_reference_transfer_parser.set_defaults(
+        handler=myosim_patellofemoral_reference_transfer_audit
     )
     sternal_girdle_registration_parser = commands.add_parser(
         "myosim-sternal-girdle-registration",

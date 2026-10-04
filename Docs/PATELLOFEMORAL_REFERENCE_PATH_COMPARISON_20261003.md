@@ -62,4 +62,10 @@ surface-intersection failures. No path correction is selected; future tracking
 work still needs a continuous source-range-valid, collision-free path and loaded
 quadriceps/patellar-tendon evidence.
 
+The 4 October preregistered [rigid reference-path transfer audit](PATELLOFEMORAL_REFERENCE_TRANSFER_AUDIT_20261004.md)
+tests that passive Open Knee path directly against the pinned MyoSim source
+meshes. It reduces the number of affected left-knee samples from 21 to 13 but
+leaves the exact triangle-pair total essentially unchanged (529 to 530); no
+source-path change is selected.
+
 The focused analysis tests pass (5 passed); Ruff and `git diff --check` pass.

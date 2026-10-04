@@ -1,0 +1,56 @@
+{
+  "schema": "numi.human.patellofemoral-reference-transfer-plan.v1",
+  "status": "registered_before_transfer_observation",
+  "registered_at_local_date": "2026-10-04",
+  "question": "Does direct source-registered transfer of the archived passive Open Knee patellar path remove exact intersections in the pinned MyoSim left source femur/patella meshes over their common sampled, source-range-valid flexion states?",
+  "hypothesis": "The source-registered Open Knee path will reduce the number of intersecting MyoSim source-mesh pose states and exact triangle pairs relative to the current MyoSim equality path over the fixed common sample set.",
+  "inputs": {
+    "myosim_revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+    "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "source_intersection_receipt": "Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json",
+    "source_intersection_receipt_sha256": "8a1e5c8456fd8c88bbc797f8db1524794bedf5cc69e1b907fd6db528009e5c7f",
+    "open_knee_observations": "Docs/media/open-knee-reference-20261001/archived-observations.json.gz",
+    "open_knee_observations_sha256": "9a99bbdcc94b4ba1aca22c9cc3d72919db9b1e08fec703732f8fcf635705d149",
+    "open_knee_archive_audit": "Docs/media/open-knee-reference-20261001/recovered-source-audit.json",
+    "open_knee_archive_audit_sha256": "3990ca21feda4d8541d2695f00b68eb5656c4a223e61793fa1dad76ad675911d",
+    "open_knee_registration_manifest": "Docs/media/numi-human-patellofemoral-anatomical-frame-path-20261003/open-knee-oks003-left.manifest.json",
+    "open_knee_registration_manifest_sha256": "0c2153f78d69c3e21978e67d33f527d2e03076a91c7341903e70ed7477c74153"
+  },
+  "method": {
+    "owner": "numi human myosim-patellofemoral-reference-transfer-audit",
+    "control": "At each selected flexion, use the pinned MyoSim source equality projection and audit its pinned left femur/patella source meshes with the exact-binary64-integer triangle-intersection predicate.",
+    "treatment": "Transfer only Open Knee patella-minus-femur COM and relative-orientation changes from its first accepted observation into the registered MyoSim femoral frame. Add those changes to MyoSim source-equality-projected qpos0 relative COM/orientation and rigidly place the MyoSim source patella mesh for the same flexion; audit against the unchanged pinned MyoSim source femur mesh.",
+    "registration": "Use the exact proper femoral rotation and uniform scale in the pinned oks003 left-registration manifest; do not refit axes, scale, baseline, or poses from intersection results.",
+    "sample_selection": "Use the existing exact-intersection receipt's uniform 0.05-rad sweep samples that pass all projected source/native range checks and whose flexion is within the archived Open Knee accepted range [0.1294684279282639, 89.94454550419701] degrees. Do not add, remove, or refine samples after seeing treatment results.",
+    "primary_outcomes": [
+      "control and treatment exact intersecting triangle-pair counts per sampled state and in total",
+      "control and treatment count of states with one or more exact source-mesh intersections",
+      "treatment-to-control patella COM displacement and orientation change per state"
+    ],
+    "decision_rule": "A geometry-only candidate is recorded as clearing the fixed sampled gate only if treatment has zero exact triangle-pair intersections at every selected state. Otherwise record the failed result without tuning or a rerun. Either outcome is exploratory and cannot change the MyoSim source path.",
+    "preservation": "Retain the plan, command, complete per-state results, exact-predicate counts, input hashes, and any failure status in this directory. No source, artifact, or runtime state is modified."
+  },
+  "fixed_boundaries": {
+    "cross_specimen": true,
+    "open_knee_active_quadriceps_load_present": false,
+    "open_knee_is_local_solver_reproduction": false,
+    "candidate_path_represented_by_myosim_three_patellar_qpos": false,
+    "tendon_ligament_attachment_motion_tested": false,
+    "loaded_contact_or_pressure_tested": false,
+    "continuous_motion_tested": false,
+    "clinical_anatomy_qualified": false,
+    "source_path_change_selected": false,
+    "whole_human_qualified": false
+  },
+  "command": [
+    "numi", "human", "myosim-patellofemoral-reference-transfer-audit",
+    "--sources", "Sources",
+    "--observations", "Docs/media/open-knee-reference-20261001/archived-observations.json.gz",
+    "--archive-audit", "Docs/media/open-knee-reference-20261001/recovered-source-audit.json",
+    "--intersection-receipt", "Docs/media/numi-human-patellofemoral-pose-intersections-20261003/receipt.json",
+    "--open-knee-manifest", "Docs/media/numi-human-patellofemoral-anatomical-frame-path-20261003/open-knee-oks003-left.manifest.json",
+    "--plan", "Docs/media/numi-human-patellofemoral-reference-transfer-20261004/plan.json",
+    "--output", "Docs/media/numi-human-patellofemoral-reference-transfer-20261004/receipt.json",
+    "--python", ".venv-mujoco312/bin/python"
+  ]
+}
