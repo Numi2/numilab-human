@@ -1,0 +1,32 @@
+{
+  "purpose": "Read-only coupling audit of exact compiled material and accepted archive; no new simulation.",
+  "accepted_step": 48,
+  "time_ms": 24.575999937951565,
+  "archive_native_hash": 15680414994529835202,
+  "archive_sha256": "fc592c655c4415fc62a5051499ffbe0f98c359573bb9792958ebd9a9e76b01b2",
+  "package_sha256": "5c8bf0318fc3b743f8ab6540d52bd6be8b4c3695c58c253ab69131409a08d896",
+  "field_driven_tension_enabled": true,
+  "mixed_mechanical_tension_path_disabled": true,
+  "maximum_myocardial_tension_pa": 120000.0,
+  "valve_plane_active_tension_pa": 0.0,
+  "myocardial_volume_weighted_mean_activation": 0.08246663992381037,
+  "myocardial_volume_weighted_mean_active_tension_pa": 9895.996790857245,
+  "maximum_element_active_tension_pa": 45914.702117443085,
+  "outlets": {
+    "lv": {
+      "cavity_pressure_pa": 856.9155633449554,
+      "downstream_pressure_pa": 11115.457073766398,
+      "driving_pressure_pa": -10258.541510421443,
+      "resistance_pa_s_per_m3": 933256.8125,
+      "native_outlet_ml_s": 0.0
+    },
+    "rv": {
+      "cavity_pressure_pa": 227.85693407058716,
+      "downstream_pressure_pa": 1769.9736641414474,
+      "driving_pressure_pa": -1542.1167300708603,
+      "resistance_pa_s_per_m3": 799934.375,
+      "native_outlet_ml_s": 0.0
+    }
+  },
+  "limits": "Active fibre tension is not chamber pressure. These measurements do not predict when ejection occurs or qualify a heartbeat. Pressure is reconstructed in Float64 from native Float32 accepted storage and coefficients."
+}

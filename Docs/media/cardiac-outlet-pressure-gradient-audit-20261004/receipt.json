@@ -1,0 +1,86 @@
+{
+  "accepted_state": {
+    "accepted_checkpoint_sha256": "fc592c655c4415fc62a5051499ffbe0f98c359573bb9792958ebd9a9e76b01b2",
+    "driver_sha256": "71af7f0f7b068ac406d7890290c38a1ac226bdcee569a1750bf46ac73fbb79aa",
+    "driver_text": "NUMI_VENTRICULAR_DRIVER_V2 15680414994529835202 48 0.51199999870732427 0 1.0239999974146485 857.14285714285711 0 27670116040704 0",
+    "native_archive_hash": 15680414994529835202,
+    "native_archive_sha256": "fc592c655c4415fc62a5051499ffbe0f98c359573bb9792958ebd9a9e76b01b2",
+    "step": 48,
+    "time_ms": 24.575999937951565,
+    "trajectory_steps": {
+      "first": 0,
+      "last": 48,
+      "max_aortic_flow_ml_s": 0.0,
+      "max_pulmonary_flow_ml_s": 0.0,
+      "max_total_blood_error_ml": 0.00038697033687640214,
+      "overlapping_rows_identical": true,
+      "trajectory_files": {
+        "trajectory-continue.csv": "a5ac74ed074a083896962e14f089f4eaa0eebb47598c09daca37a0b2d5a7aa9a",
+        "trajectory-resume.csv": "23e263b82aa66072445aef313be3f60edd4b916a0edf801091497afe475cc8d6",
+        "trajectory-start.csv": "a0c6b39524dc42add4e06caa2416b88ee1498ff86d8db7d8eaf55fb628e74387"
+      },
+      "unique_accepted_steps": 49
+    }
+  },
+  "coupling_audit_artifact": {
+    "file": "outlet-coupling-step-48.json",
+    "sha256": "e0815fcc2008708a38185643819cd0372f7b2778fb41fbf1088e3196f62c844f"
+  },
+  "date": "2026-10-04",
+  "evidence_boundary": "Exact read-only reconstruction from the retained compiled package and accepted native checkpoint. Runtime executable and metallib byte snapshots match the launch plan. The source file at its recorded path has changed since launch; current source is not substituted for the historical run. No new solver step was run and no physiological or heartbeat qualification is claimed.",
+  "execution": {
+    "continuation_exit_code": 2,
+    "simulated_time_at_audit_ms": 24.575999937951565,
+    "target_reached": false,
+    "target_steps": 240,
+    "target_time_ms": 122.87999968975782
+  },
+  "input_identity": {
+    "audit_implementation_sha256": "93f0115f155dcc8340ee7bf98a1b9ddd1388633b42a069f4424fc02b4a0ec492",
+    "continuation_plan_sha256": "3ec7ec6e0fc62d24b6ceca22b3ac691c393fc66caf0c9cd715ce139b4abb1005",
+    "cvsim21_fixture_sha256": "eeb6ebc5dad5cb413587038532ac5badc3d3e8aa419cca111604239e7f692818",
+    "left_ventricular_cavity_source_cook_sha256": "346d095ce0d24e3c2941acc13dcd5d46ddb924356376b2d2f5ba307d8e5399d9",
+    "model_revision_sha256": "e2b0c8b906cf95f9e7c397fde6f3c91ab7761ae350474ce2876d2d3c7bcf5be7",
+    "package_sha256": "5c8bf0318fc3b743f8ab6540d52bd6be8b4c3695c58c253ab69131409a08d896",
+    "plan_sha256_manifest": {
+      "/Users/home/MetalRobo-human-coupled-current/Build/human-skin-patch-current/matter/numi-matter-ventricular-source-step": "1b23c299026c39c93960a6c59f9d78b48ef4a77f49d54889c58be983a5466088",
+      "/Users/home/MetalRobo-human-coupled-current/Build/human-skin-patch-current/matter/shaders/NumiMatter.metallib": "230727d6c074c60d7e2964387568fa9a4cd9eb96f4ad59c8352ed59de5698b88",
+      "/Users/home/MetalRobo-human-coupled-current/matter/tools/left_ventricular_cavity_source_cook.mm": "346d095ce0d24e3c2941acc13dcd5d46ddb924356376b2d2f5ba307d8e5399d9",
+      "/Users/home/MetalRobo-human-coupled-current/matter/tools/ventricular_source_step.mm": "81a3fbebbd6a72d152a9c693e3e352a24c2fbd508c7fc0597861f69f8a3e159e",
+      "/Users/home/heartbeat-evidence-20261003-spatial-pacing/model-revision.json": "e2b0c8b906cf95f9e7c397fde6f3c91ab7761ae350474ce2876d2d3c7bcf5be7",
+      "/Users/home/heartbeat-evidence-20261003-spatial-pacing/ventricles.nmpkg": "5c8bf0318fc3b743f8ab6540d52bd6be8b4c3695c58c253ab69131409a08d896"
+    },
+    "preserved_metallib_sha256": "230727d6c074c60d7e2964387568fa9a4cd9eb96f4ad59c8352ed59de5698b88",
+    "preserved_native_executable_sha256": "1b23c299026c39c93960a6c59f9d78b48ef4a77f49d54889c58be983a5466088",
+    "runtime_capture_receipt_sha256": "af49f529f467cd02d3d1875f119761d7834d719e8b99522717f8164f5aeb95e1",
+    "ventricular_source_step_at_launch_sha256": "81a3fbebbd6a72d152a9c693e3e352a24c2fbd508c7fc0597861f69f8a3e159e",
+    "ventricular_source_step_current_matches_launch": false,
+    "ventricular_source_step_current_sha256": "8d47ba3460d2eb7a6380ca019c78a85dd55e9674323199c7411b0a4495797263"
+  },
+  "interpretation": {
+    "finding": "At accepted step 48, both ventricular cavity pressures are below their compiled downstream outlet pressures. The pressure differences are negative and native outlet flows are zero.",
+    "inference": "This state has no forward pressure gradient to drive aortic or pulmonary ejection. The retained measurement does not identify a valve-law defect, show valve opening state, or establish a heartbeat.",
+    "next_diagnostic": "Trace the source-validated activation and myocardial wall-pressure/load transfer against the first positive pressure-gradient event; do not force outlet flow from this state."
+  },
+  "measurements": {
+    "LV": {
+      "cavity_pressure_pa": 856.9155633449554,
+      "downstream_pressure_pa": 11115.457073766398,
+      "driving_pressure_pa": -10258.541510421443,
+      "native_outlet_ml_s": 0.0,
+      "resistance_pa_s_per_m3": 933256.8125
+    },
+    "RV": {
+      "cavity_pressure_pa": 227.85693407058716,
+      "downstream_pressure_pa": 1769.9736641414474,
+      "driving_pressure_pa": -1542.1167300708603,
+      "native_outlet_ml_s": 0.0,
+      "resistance_pa_s_per_m3": 799934.375
+    },
+    "maximum_element_active_tension_pa": 45914.702117443085,
+    "maximum_myocardial_tension_pa": 120000.0,
+    "myocardial_volume_weighted_mean_activation": 0.08246663992381037,
+    "myocardial_volume_weighted_mean_active_tension_pa": 9895.996790857245
+  },
+  "schema": "numi.human.cardiac-outlet-pressure-gradient-audit.v1"
+}
