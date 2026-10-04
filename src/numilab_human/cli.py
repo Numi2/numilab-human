@@ -2423,6 +2423,24 @@ def parser() -> argparse.ArgumentParser:
         help="independently verify registered CT source-surface payloads, topology, and voxel occupancy",
     )
     add_healthy_total_body_ct_surface_audit_arguments(healthy_total_body_ct_surface_audit)
+    from .healthy_total_body_ct_ras_x_partition import (
+        add_audit_arguments as add_healthy_total_body_ct_ras_x_audit_arguments,
+        add_compile_arguments as add_healthy_total_body_ct_ras_x_compile_arguments,
+    )
+    healthy_total_body_ct_ras_x_partition = commands.add_parser(
+        "healthy-total-body-ct-ras-x-partition",
+        help="partition bilateral CT label voxels at the exact RAS-X midplane without admitting mechanics",
+    )
+    add_healthy_total_body_ct_ras_x_compile_arguments(
+        healthy_total_body_ct_ras_x_partition
+    )
+    healthy_total_body_ct_ras_x_partition_audit = commands.add_parser(
+        "healthy-total-body-ct-ras-x-partition-audit",
+        help="independently recount source voxels and audit RAS-X candidate meshes",
+    )
+    add_healthy_total_body_ct_ras_x_audit_arguments(
+        healthy_total_body_ct_ras_x_partition_audit
+    )
     from .whole_body_organ_overlap import add_arguments as add_whole_body_organ_overlap_arguments
     organ_overlap = commands.add_parser(
         "whole-body-organ-overlap",
