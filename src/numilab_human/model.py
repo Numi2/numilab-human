@@ -3679,12 +3679,12 @@ def _myosim_fp32_direction_matches(
         return False, {**metrics, "reason": "norm_admission"}
     sign = -1.0 if antipodal and sum(a*b for a, b in zip(actual, expected)) < 0.0 else 1.0
     lower, upper = 0.0, math.inf
+    source_zero_component_changed = False
     for candidate, reference in zip(actual, expected):
         candidate *= sign
         if reference == 0.0:
             if candidate != 0.0:
-                return False, {**metrics, "reason": "source_zero_component_changed",
-                               "measured": abs(candidate), "allowed": 0.0}
+                source_zero_component_changed = True
             continue
         bits = struct.unpack("<I", struct.pack("<f", abs(candidate)))[0]
         previous = struct.unpack("<f", struct.pack("<I", max(0, bits-1)))[0]
@@ -3695,9 +3695,73 @@ def _myosim_fp32_direction_matches(
         interval = sorted((lo/reference, hi/reference))
         lower, upper = max(lower, interval[0]), min(upper, interval[1])
     gap = max(0.0, lower - upper)
-    return upper > 0.0 and gap == 0.0, {
+    if upper > 0.0 and gap == 0.0 and not source_zero_component_changed:
+        return True, {
+            **metrics, "reason": "common_positive_scale_FP32_rounding_bins",
+            "measured": gap, "allowed": 0.0, "scale_interval": [lower, upper],
+        }
+
+    # Near-zero quaternion components can differ by a few double-precision
+    # roundoff bits across Apple hosts. Relative scale intervals become
+    # singular there even when the change cannot move any point measurably.
+    # Keep axis directions and all non-quaternion fields on the exact path;
+    # for a quaternion only, admit this case when a conservative whole-body
+    # lever arm converts its normalized angular difference to at most 1 um.
+    if antipodal and norm_error <= 1.0e-5:
+        actual_norm = math.sqrt(sum(value * value for value in actual))
+        expected_norm = math.sqrt(sum(value * value for value in expected))
+        if actual_norm > 0.0 and expected_norm > 0.0:
+            aq = [value / actual_norm for value in actual]
+            eq = [value / expected_norm for value in expected]
+            if sum(a * b for a, b in zip(aq, eq)) < 0.0:
+                eq = [-value for value in eq]
+            ax, ay, az, aw = aq
+            ex, ey, ez, ew = eq
+            relative_vector = (
+                -aw * ex + ax * ew - ay * ez + az * ey,
+                -aw * ey + ay * ew - az * ex + ax * ez,
+                -aw * ez + az * ew - ax * ey + ay * ex,
+            )
+            relative_scalar = aw * ew + ax * ex + ay * ey + az * ez
+            angular_error = 2.0 * math.atan2(
+                math.sqrt(sum(value * value for value in relative_vector)),
+                abs(relative_scalar),
+            )
+            lever_arm_m = 3.0
+            geometric_displacement_m = (
+                2.0 * lever_arm_m * math.sin(0.5 * angular_error)
+            )
+            changed_components_are_roundoff = all(
+                candidate == reference or (
+                    abs(candidate) <= 1.0e-12
+                    and abs(reference) <= 1.0e-12
+                    and abs(candidate - reference) <= 1.0e-12
+                )
+                for candidate, reference in zip(aq, eq)
+            )
+            if changed_components_are_roundoff and geometric_displacement_m <= 1.0e-6:
+                return True, {
+                    **metrics,
+                    "reason": "quaternion_roundoff_within_1um_geometric_bound",
+                    "angular_error_rad": angular_error,
+                    "conservative_lever_arm_m": lever_arm_m,
+                    "maximum_point_displacement_m": geometric_displacement_m,
+                    "allowed_point_displacement_m": 1.0e-6,
+                    "changed_components_are_roundoff": changed_components_are_roundoff,
+                    "max_absolute_component_delta": max(
+                        abs(a - b) for a, b in zip(aq, eq)
+                    ),
+                }
+    if source_zero_component_changed:
+        return False, {
+            **metrics, "reason": "source_zero_component_changed",
+            "measured": max((abs(a) for a, b in zip(actual, expected) if b == 0.0), default=0.0),
+            "allowed": 0.0,
+        }
+    return False, {
         **metrics, "reason": "common_positive_scale_FP32_rounding_bins",
         "measured": gap, "allowed": 0.0, "scale_interval": [lower, upper],
+        "source_zero_component_changed": source_zero_component_changed,
     }
 
 
@@ -3717,6 +3781,7 @@ def _myosim_rigid_program_checks(artifact: Path, exported: dict[str, Any]) -> di
     actual = path.read_bytes() if path is not None and path.is_file() else b""
     actual_sha = hashlib.sha256(actual).hexdigest()
     failures: list[dict[str, Any]] = []
+    portability_admissions: list[dict[str, Any]] = []
     count = 0
     if len(actual) != len(expected):
         failures.append({"field": "payload_bytes", "actual": len(actual), "expected": len(expected),
@@ -3734,6 +3799,11 @@ def _myosim_rigid_program_checks(artifact: Path, exported: dict[str, Any]) -> di
                 candidate, reference, antipodal=direction != "axis",
                 geometry_quaternion=direction == "source_quaternion",
             )
+            if passed and metrics.get("reason") == "quaternion_roundoff_within_1um_geometric_bound":
+                portability_admissions.append({
+                    **structure, "field": field, "byte_offset": offset,
+                    "actual": list(candidate), "expected": list(reference), **metrics,
+                })
         else:
             passed = candidate == reference
             if not passed:
@@ -3852,7 +3922,12 @@ def _myosim_rigid_program_checks(artifact: Path, exported: dict[str, Any]) -> di
         "checked_field_count": count, "engine_body_count": tree["engine_body_count"],
         "joint_count": tree["joint_count"], "source_body_count": len(records),
         "failures": failures,
-        "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins",
+        "roundoff_portability_admissions": portability_admissions,
+        "tolerance_basis": (
+            "exact_source_FP32_scalar_or_integer_fields; direction fields use their existing "
+            "norm/common-scale-bin admission; only nonzero quaternion components below 1e-12 "
+            "with component delta below 1e-12 may use a sign-invariant 1um geometric bound"
+        ),
         "passed": identity_matches and metadata_matches and len(actual) == len(expected) and not failures,
         "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
     }

@@ -1,6 +1,7 @@
 """Execute axial geometry checks on the selected native runtime and source pack."""
 import hashlib
 import json
+import math
 import os
 import struct
 import subprocess
@@ -15,6 +16,32 @@ from numilab_human.upper_limb_pose_audit import (
     _pose_qpos, _pose_joint_range_context, _projected_joint_range_checks, _joint_equality_program_checks,
 )
 from numilab_human.upper_limb_registration import _interface_patch_metrics, _minimum_gap, _rotation_xyzw
+
+
+def test_quaternion_host_roundoff_requires_tiny_components_and_submicron_pose_error():
+    expected = (0.0, 0.0, 0.0, 1.0)
+    host_roundoff = (1.0e-20, 0.0, 0.0, 1.0)
+    passed, metrics = human._myosim_fp32_direction_matches(
+        host_roundoff, expected, antipodal=True,
+    )
+    assert passed
+    assert metrics["reason"] == "quaternion_roundoff_within_1um_geometric_bound"
+    assert metrics["changed_components_are_roundoff"]
+    assert metrics["maximum_point_displacement_m"] <= 1.0e-6
+
+    changed_rotation = (5.0e-6, 0.0, 0.0, math.sqrt(1.0 - 25.0e-12))
+    passed, metrics = human._myosim_fp32_direction_matches(
+        changed_rotation, expected, antipodal=True,
+    )
+    assert not passed
+    assert metrics["reason"] == "source_zero_component_changed"
+
+    # Axis changes still use the exact zero-component / FP32-bin contract.
+    passed, metrics = human._myosim_fp32_direction_matches(
+        host_roundoff, expected, antipodal=False,
+    )
+    assert not passed
+    assert metrics["reason"] == "source_zero_component_changed"
 
 
 @pytest.fixture(scope="module")
