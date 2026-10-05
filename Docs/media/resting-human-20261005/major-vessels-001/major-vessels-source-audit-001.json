@@ -1,0 +1,620 @@
+{
+  "scope": "Independent source face parsing and global-registration round trip; no dynamic containment or vessel-wall mechanics qualification",
+  "payload_sha256": "9ec1c6cc617b0fba86f45eb005472e8ca8a7f984d2797b8710a55d5ecbe593e6",
+  "base_payload_sha256": "8d552ba04cd8a01788470cfc6e7b23a8c89d260d706fad78a221c4b5a82f815a",
+  "all_prior_records_vertices_indices_byte_preserved": true,
+  "added_surfaces": [
+    {
+      "stable_id": 464,
+      "name": "right common carotid artery",
+      "source_member": "FJ3564",
+      "source_sha256": "423585ec439b07b0f64878f904afca52d4866e1e0dc54c2ace31953d9b6156cf",
+      "body": "neck",
+      "vertex_count": 448,
+      "max_source_world_coordinate_error_m": 4.190849778318295e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 465,
+      "name": "left common carotid artery",
+      "source_member": "FJ3483",
+      "source_sha256": "19f38e57365867279705090994fff228177163c1920ad0f8f9b15f830a42bc1d",
+      "body": "neck",
+      "vertex_count": 126,
+      "max_source_world_coordinate_error_m": 3.986534047317747e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 466,
+      "name": "right internal carotid artery",
+      "source_member": "FJ1682",
+      "source_sha256": "7bb929f419a3b37c8cffe1a1bf59c0374b26e2c1027d061956e5d73b31eb295b",
+      "body": "head",
+      "vertex_count": 650,
+      "max_source_world_coordinate_error_m": 3.2053160126110924e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 467,
+      "name": "left internal carotid artery",
+      "source_member": "FJ1682M",
+      "source_sha256": "117074e676e00306d95277cf2c4155a73c3684674bab401be4aec3acdfa11cce",
+      "body": "head",
+      "vertex_count": 650,
+      "max_source_world_coordinate_error_m": 2.960702571996876e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 468,
+      "name": "right internal jugular vein",
+      "source_member": "FJ3585",
+      "source_sha256": "528ab41e57d31335c0deb9bb804c4e83b9bc22cf912d8de247a88ad9893325f1",
+      "body": "neck",
+      "vertex_count": 153,
+      "max_source_world_coordinate_error_m": 4.162008404584583e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 469,
+      "name": "left internal jugular vein",
+      "source_member": "FJ3485",
+      "source_sha256": "ec17bca2370898fd34c6e518d9ad62998819544058d41a34838580f7e554f0bd",
+      "body": "neck",
+      "vertex_count": 158,
+      "max_source_world_coordinate_error_m": 4.068737374796072e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 470,
+      "name": "right subclavian artery",
+      "source_member": "FJ3579",
+      "source_sha256": "1fb9231343dce90a8d62061c63e0102eb72d117f131eda7876abfeb0060b6ad3",
+      "body": "torso",
+      "vertex_count": 247,
+      "max_source_world_coordinate_error_m": 7.25130311352018e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 471,
+      "name": "left subclavian artery",
+      "source_member": "FJ3479",
+      "source_sha256": "f6af4efb94e1ce94519c94684b1d0a0736272e5a0ed2677a63627e0ebfc228b1",
+      "body": "torso",
+      "vertex_count": 362,
+      "max_source_world_coordinate_error_m": 7.408137436826223e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 472,
+      "name": "right subclavian vein",
+      "source_member": "FJ3587",
+      "source_sha256": "3ed476e466dbc681e284005f910b546a97ac24999236cae1ec7487149da7bb53",
+      "body": "torso",
+      "vertex_count": 209,
+      "max_source_world_coordinate_error_m": 7.377080279979964e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 473,
+      "name": "left subclavian vein",
+      "source_member": "FJ3486",
+      "source_sha256": "22b351bd5e1e76488e150f433bfc59a44c3a27a567f5eb5c9a6be5b2b21be5c6",
+      "body": "torso",
+      "vertex_count": 271,
+      "max_source_world_coordinate_error_m": 7.263705192883663e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 474,
+      "name": "right axillary artery",
+      "source_member": "FJ2268",
+      "source_sha256": "192c0b2607e669dc89a6eadd2c11f2fff904f010e4dca81822209865df7e5752",
+      "body": "humerus_r",
+      "vertex_count": 915,
+      "max_source_world_coordinate_error_m": 7.560507997439458e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 475,
+      "name": "left axillary artery",
+      "source_member": "FJ2216",
+      "source_sha256": "fe9295ce260df56c46f29e56e410937c9fa2f3e104411fb7e91b5f9681509ccb",
+      "body": "humerus_l",
+      "vertex_count": 902,
+      "max_source_world_coordinate_error_m": 7.582864114397125e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 476,
+      "name": "right axillary vein",
+      "source_member": "FJ2269",
+      "source_sha256": "24438422321aa6665de6394aa39e79fdeabdf2bc56427a3419da4dc630546464",
+      "body": "humerus_r",
+      "vertex_count": 1112,
+      "max_source_world_coordinate_error_m": 7.534088464211663e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 477,
+      "name": "left axillary vein",
+      "source_member": "FJ2217",
+      "source_sha256": "7b448d1f2a071e88d1a2ebe54e7e5d417719663a5b01d1226f492b71ebdc19cd",
+      "body": "humerus_l",
+      "vertex_count": 1089,
+      "max_source_world_coordinate_error_m": 7.711621785588818e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 478,
+      "name": "right brachial artery",
+      "source_member": "FJ2271",
+      "source_sha256": "ce5b122fcc19c637684c1de1661697b03d487f3b013e8b4313fb095f81118813",
+      "body": "humerus_r",
+      "vertex_count": 1558,
+      "max_source_world_coordinate_error_m": 7.378199384788786e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 479,
+      "name": "left brachial artery",
+      "source_member": "FJ2219",
+      "source_sha256": "e3c8e2be45d0f25f4e2efa9a046bc13b66c4e43e724a2c2b0424d230719cc6db",
+      "body": "humerus_l",
+      "vertex_count": 1737,
+      "max_source_world_coordinate_error_m": 7.40272709798262e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 480,
+      "name": "right medial brachial vein",
+      "source_member": "FJ2341",
+      "source_sha256": "0468a157795c7346d964d1884627464d5cfe9c4c8bcc84661aefdb2bc2d18259",
+      "body": "humerus_r",
+      "vertex_count": 1337,
+      "max_source_world_coordinate_error_m": 7.4255757098740105e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 481,
+      "name": "left medial brachial vein",
+      "source_member": "FJ2313",
+      "source_sha256": "3707bf67b5959e140fea0eca643bc31db00e97620e63afbe48ed10357af44ec8",
+      "body": "humerus_l",
+      "vertex_count": 1454,
+      "max_source_world_coordinate_error_m": 7.368657239936738e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 482,
+      "name": "right radial artery",
+      "source_member": "FJ2294",
+      "source_sha256": "cca326b54b9f4e6ed4c4a8ccf258959a3a3c54aff996b894eacca20af05217d2",
+      "body": "radius_r",
+      "vertex_count": 3738,
+      "max_source_world_coordinate_error_m": 7.720112327191941e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 483,
+      "name": "left radial artery",
+      "source_member": "FJ2242",
+      "source_sha256": "d97e01814668d5a32f18a5cc07a3e6e77bf1a734008f21d8f7dc62fedd0175a6",
+      "body": "radius_l",
+      "vertex_count": 3884,
+      "max_source_world_coordinate_error_m": 7.667429136049009e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 484,
+      "name": "right radial vein",
+      "source_member": "FJ2296",
+      "source_sha256": "056273377aef9446e304ea3fd8d5587017b48ddc356b9a981af52da8cd199530",
+      "body": "radius_r",
+      "vertex_count": 2713,
+      "max_source_world_coordinate_error_m": 7.544913138701759e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 485,
+      "name": "left radial vein",
+      "source_member": "FJ2244",
+      "source_sha256": "f4800a750dbf674e06941ab7339723d874e9051da89561c9d0b33c82bed1a179",
+      "body": "radius_l",
+      "vertex_count": 2515,
+      "max_source_world_coordinate_error_m": 7.516009592478667e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 486,
+      "name": "right ulnar artery",
+      "source_member": "FJ2310",
+      "source_sha256": "6bef22a74e2e6ae2d3033c4982fdb75abbadc9b255e76770211d61b3dd4796c1",
+      "body": "ulna_r",
+      "vertex_count": 3440,
+      "max_source_world_coordinate_error_m": 7.358118558897786e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 487,
+      "name": "left ulnar artery",
+      "source_member": "FJ2258",
+      "source_sha256": "4ddf684432c015ef59cd0bc8cb72b8890632ebde5f2d92e3c1002209ac482b8a",
+      "body": "ulna_l",
+      "vertex_count": 3562,
+      "max_source_world_coordinate_error_m": 7.380431488179795e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 488,
+      "name": "right ulnar vein",
+      "source_member": "FJ2312",
+      "source_sha256": "025b487bc69d73be64f065f36d60a86fac60ed1717fcc158e9eaab8c8cd8787b",
+      "body": "ulna_r",
+      "vertex_count": 3043,
+      "max_source_world_coordinate_error_m": 7.431639637012211e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 489,
+      "name": "left ulnar vein",
+      "source_member": "FJ2260",
+      "source_sha256": "e58b787a03ebd643c3a9651c697f027fa16c415e9e01d190b572c477df7c926f",
+      "body": "ulna_l",
+      "vertex_count": 2962,
+      "max_source_world_coordinate_error_m": 7.380552391467177e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 490,
+      "name": "right common iliac artery",
+      "source_member": "FJ3565",
+      "source_sha256": "11eb1378295c92af09a47d9e25e2c4ee9e1430a6689ddfc7deebf2e44d145cc7",
+      "body": "pelvis",
+      "vertex_count": 117,
+      "max_source_world_coordinate_error_m": 7.450565941979903e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 491,
+      "name": "left common iliac artery",
+      "source_member": "FJ3464",
+      "source_sha256": "5472501bf8876913b860739b298afa69f5f63e74a6f4dc05540b50dde54b323e",
+      "body": "pelvis",
+      "vertex_count": 128,
+      "max_source_world_coordinate_error_m": 7.303386118096e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 492,
+      "name": "right common iliac vein",
+      "source_member": "FJ3566",
+      "source_sha256": "b34098865ad19c8fe0bc28e46ac76e2af6d52f0065d684637fd1886813c62a76",
+      "body": "pelvis",
+      "vertex_count": 199,
+      "max_source_world_coordinate_error_m": 7.216258701703282e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 493,
+      "name": "left common iliac vein",
+      "source_member": "FJ3465",
+      "source_sha256": "4c2e57a9170cfa997bbe48f3b2a5a49e334e03a1067b4e8decc152fb1bb8d913",
+      "body": "pelvis",
+      "vertex_count": 244,
+      "max_source_world_coordinate_error_m": 7.413837543879254e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 494,
+      "name": "right external iliac artery",
+      "source_member": "FJ3567",
+      "source_sha256": "6be9a8fa7f67d5ce6638daf7deacd7d4953c258e920b2ba21575be47edde8fe6",
+      "body": "pelvis",
+      "vertex_count": 214,
+      "max_source_world_coordinate_error_m": 3.6719318696754044e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 495,
+      "name": "left external iliac artery",
+      "source_member": "FJ3466",
+      "source_sha256": "bba53b19cab2fb7e5c8f9461a21a2250d59e152585e58a9275207d5f51dc491b",
+      "body": "pelvis",
+      "vertex_count": 236,
+      "max_source_world_coordinate_error_m": 3.690249938959056e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 496,
+      "name": "right external iliac vein",
+      "source_member": "FJ3568",
+      "source_sha256": "503cc199a945ab1c061deacdc32165ac413f7c2d362375f17d576a3b2f235023",
+      "body": "pelvis",
+      "vertex_count": 396,
+      "max_source_world_coordinate_error_m": 3.7068743213852784e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 497,
+      "name": "left external iliac vein",
+      "source_member": "FJ3484",
+      "source_sha256": "bf0ca81768bb8f1d42837f43ccd41bc0f006da1a9703517b298edeb9af525c00",
+      "body": "pelvis",
+      "vertex_count": 376,
+      "max_source_world_coordinate_error_m": 3.690011851631425e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 498,
+      "name": "left external iliac vein",
+      "source_member": "FJ3522",
+      "source_sha256": "2d1d33f168089521c707408b80f229d6b8f8302fde1f31ddad22e63238c4da7a",
+      "body": "pelvis",
+      "vertex_count": 100,
+      "max_source_world_coordinate_error_m": 3.5811931198281854e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 499,
+      "name": "left external iliac vein",
+      "source_member": "FJ3523",
+      "source_sha256": "a26bb4b9261de25955ac8a6669391cb588a1546267db5c8c9865d10c426bc402",
+      "body": "pelvis",
+      "vertex_count": 100,
+      "max_source_world_coordinate_error_m": 1.8245220889667735e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 500,
+      "name": "left external iliac vein",
+      "source_member": "FJ3524",
+      "source_sha256": "006c8cb0cc53fb2b5f388979adccff45430ba16dfd9d06ffa67a36f5bd946f27",
+      "body": "pelvis",
+      "vertex_count": 88,
+      "max_source_world_coordinate_error_m": 1.8401635770715075e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 501,
+      "name": "right femoral artery",
+      "source_member": "FJ2143",
+      "source_sha256": "d9decbcc37ddafa41a0c01e316cff52a9259ed5292ddf2e199cf09414e872bae",
+      "body": "femur_r",
+      "vertex_count": 380,
+      "max_source_world_coordinate_error_m": 7.443009542029699e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 502,
+      "name": "left femoral artery",
+      "source_member": "FJ2074",
+      "source_sha256": "df045596a410cfcc3c15f9aff1d02c5c7bcba234c9ebe6346ec1053d605de4d0",
+      "body": "femur_l",
+      "vertex_count": 373,
+      "max_source_world_coordinate_error_m": 7.359484133218075e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 503,
+      "name": "right femoral vein",
+      "source_member": "FJ2144",
+      "source_sha256": "16f9661f23ad65a5856cf50be867e5ef282ea73fae50b853d44d9ab22676b1ab",
+      "body": "femur_r",
+      "vertex_count": 336,
+      "max_source_world_coordinate_error_m": 7.418393122016198e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 504,
+      "name": "left femoral vein",
+      "source_member": "FJ2102",
+      "source_sha256": "07776c248a8f8ddd3007f652c7bcafc60af3ab23edd678cc2da37615359c4abc",
+      "body": "femur_l",
+      "vertex_count": 332,
+      "max_source_world_coordinate_error_m": 7.358101572485509e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 505,
+      "name": "right popliteal artery",
+      "source_member": "FJ2170",
+      "source_sha256": "4bc14302e06ca2162a6df730a7d9f8549b5e6e9b919ce34e35bbdbeec1b088b0",
+      "body": "tibia_r",
+      "vertex_count": 8391,
+      "max_source_world_coordinate_error_m": 1.489029632928407e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 506,
+      "name": "left popliteal artery",
+      "source_member": "FJ2086",
+      "source_sha256": "20dac622c09e02e45fa95b6f3c2eba7e932fdc3eef507ac19d0d78ed71ef241c",
+      "body": "tibia_l",
+      "vertex_count": 8368,
+      "max_source_world_coordinate_error_m": 1.490153145322637e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 507,
+      "name": "right popliteal vein",
+      "source_member": "FJ2171",
+      "source_sha256": "b54fb1bed98c0159e1c8501d3211d43080a085fb498d5c992015afc49e1e3dbc",
+      "body": "tibia_r",
+      "vertex_count": 8505,
+      "max_source_world_coordinate_error_m": 1.4893517974456927e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 508,
+      "name": "left popliteal vein",
+      "source_member": "FJ2117",
+      "source_sha256": "92082063ece4916d1b8c3a17b6d135c36edf3ab75dd5b7e9604e71a6d58fa2ee",
+      "body": "tibia_l",
+      "vertex_count": 8433,
+      "max_source_world_coordinate_error_m": 1.4893068556176559e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 509,
+      "name": "right anterior tibial artery",
+      "source_member": "FJ2130",
+      "source_sha256": "56de59319a67eb9a3fbc9815d9dc66f371b3f116b211c2b03abfbb84ae21568c",
+      "body": "tibia_r",
+      "vertex_count": 8669,
+      "max_source_world_coordinate_error_m": 7.452594430468196e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 510,
+      "name": "left anterior tibial artery",
+      "source_member": "FJ2065",
+      "source_sha256": "c6388ae15cdf1b00cbbbb6007784022a7c03d1e349b780193488f1f804150c1e",
+      "body": "tibia_l",
+      "vertex_count": 8708,
+      "max_source_world_coordinate_error_m": 7.4499553748275105e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 511,
+      "name": "right posterior tibial artery",
+      "source_member": "FJ2172",
+      "source_sha256": "4e82371d5860733555c3b4c096134586128646ad31fb58cdcb6ee97df0849f08",
+      "body": "tibia_r",
+      "vertex_count": 6601,
+      "max_source_world_coordinate_error_m": 1.4852990906644159e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 512,
+      "name": "left posterior tibial artery",
+      "source_member": "FJ2087",
+      "source_sha256": "88e45ecb2bbe5b278d052c240649bf1f576ea3808272e60a4990fc5d8066bbb5",
+      "body": "tibia_l",
+      "vertex_count": 6658,
+      "max_source_world_coordinate_error_m": 1.4873680342919471e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 513,
+      "name": "right anterior tibial vein",
+      "source_member": "FJ2132",
+      "source_sha256": "882bc85f20f37456f27048340d2b431b26e9f1fa4e877b935adf984958384cae",
+      "body": "tibia_r",
+      "vertex_count": 1427,
+      "max_source_world_coordinate_error_m": 7.457228723417586e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 514,
+      "name": "right anterior tibial vein",
+      "source_member": "FJ2193",
+      "source_sha256": "f21e0ec17c0a9366b40494fa34c893386301fba3099df0eb9f3a9476fbaeb770",
+      "body": "tibia_r",
+      "vertex_count": 6383,
+      "max_source_world_coordinate_error_m": 7.446910782471505e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 515,
+      "name": "left anterior tibial vein",
+      "source_member": "FJ2097",
+      "source_sha256": "baad24d3cc1c5bbc493e95793efa217b3c6d6a6ac87006b15f0bb21a26a0cc1e",
+      "body": "tibia_l",
+      "vertex_count": 1435,
+      "max_source_world_coordinate_error_m": 7.445353000790078e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 516,
+      "name": "left anterior tibial vein",
+      "source_member": "FJ2183",
+      "source_sha256": "64fae2f22228c4da162d61c70e2fe4d59fdcf13e35218df093b58d8eff6dff08",
+      "body": "tibia_l",
+      "vertex_count": 6399,
+      "max_source_world_coordinate_error_m": 7.438542198867637e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 517,
+      "name": "right posterior tibial vein",
+      "source_member": "FJ2173",
+      "source_sha256": "e2b3c5e3b353033d69a81457f4d55e9da6261399713600b5e200ae2e236c8b34",
+      "body": "tibia_r",
+      "vertex_count": 6983,
+      "max_source_world_coordinate_error_m": 1.4890771143916126e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 518,
+      "name": "left posterior tibial vein",
+      "source_member": "FJ2118",
+      "source_sha256": "06d0d03da663cc3c83f8efd7dd1cc99ea0cfb912f6ee01c3ed89d51212605db8",
+      "body": "tibia_l",
+      "vertex_count": 6982,
+      "max_source_world_coordinate_error_m": 1.4867467201806761e-08,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 519,
+      "name": "right renal artery",
+      "source_member": "FJ2038",
+      "source_sha256": "2bf3da140369524e15335694773718b4e83b254234bc3e8376a4708565276045",
+      "body": "Abdomen",
+      "vertex_count": 124,
+      "max_source_world_coordinate_error_m": 1.8606355484118708e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 520,
+      "name": "left renal artery",
+      "source_member": "FJ2046",
+      "source_sha256": "b1a9ce8a37cd9c89fbf4c90a68a554184bf2919dbad391c552c0f4c8dd788845",
+      "body": "Abdomen",
+      "vertex_count": 166,
+      "max_source_world_coordinate_error_m": 1.8451882140280151e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 521,
+      "name": "right renal vein",
+      "source_member": "FJ3577",
+      "source_sha256": "36125db169fc547f88860a3f8ea873742437d8be55b6f5f1a7f877219b759449",
+      "body": "Abdomen",
+      "vertex_count": 172,
+      "max_source_world_coordinate_error_m": 1.8572745563716353e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 522,
+      "name": "right renal vein",
+      "source_member": "FJ3578",
+      "source_sha256": "ccb15ddc46ef6b11ef62fa8dd6923b6fdeedb9b3371ab80513ff11a0fc120734",
+      "body": "Abdomen",
+      "vertex_count": 3865,
+      "max_source_world_coordinate_error_m": 3.713209711930787e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 523,
+      "name": "left renal vein",
+      "source_member": "FJ3477",
+      "source_sha256": "3299a1375f6f86c5d523d7f3abd1bce371f13d0b4b586e53bf95600b6ed17adf",
+      "body": "Abdomen",
+      "vertex_count": 334,
+      "max_source_world_coordinate_error_m": 1.8456154382562318e-09,
+      "exact_source_faces_preserved": true
+    },
+    {
+      "stable_id": 524,
+      "name": "left renal vein",
+      "source_member": "FJ3478",
+      "source_sha256": "06a4b0b274aac5458aeb7ff33881f05afcd2a15e776ddfb9af59e61a06b4b2a1",
+      "body": "Abdomen",
+      "vertex_count": 3657,
+      "max_source_world_coordinate_error_m": 3.7243502865047518e-09,
+      "exact_source_faces_preserved": true
+    }
+  ],
+  "maximum_source_world_coordinate_error_m": 1.490153145322637e-08,
+  "extra_physical_mass_kg": 0
+}
