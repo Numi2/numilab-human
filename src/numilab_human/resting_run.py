@@ -100,6 +100,15 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         argv.append("--mechanics-only")
     else:
         argv.extend(["--resting-movie", str(args.output.resolve() / "native-viewer.mov")])
+    activation_cap = getattr(args, "postural_activation_cap", None)
+    if activation_cap is not None:
+        _require(math.isfinite(activation_cap) and 0 < activation_cap <= 1,
+                 "postural recruitment activation cap must be finite and within (0, 1]")
+        argv.extend(["--muscle-activation", str(activation_cap)])
+    if getattr(args, "release_initialization", False):
+        argv.append("--resting-release-initialization")
+    if getattr(args, "upper_passive_joints", False):
+        argv.append("--persistent-source-passive-joint-tissue")
     if args.drive_intervention:
         start, end, scale = args.drive_intervention
         _require(all(math.isfinite(x) for x in (start, end, scale)) and
@@ -177,6 +186,12 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--inspection-period-seconds", type=float, default=5.0,
                         help="simulated seconds per anatomical layer during the presentation-only inspection tour")
     parser.add_argument("--drive-intervention", type=float, nargs=3, metavar=("START", "END", "SCALE"))
+    parser.add_argument("--postural-activation-cap", type=float,
+                        help="cap initial source muscle recruitment retained as postural drive; default uses the native owner setting")
+    parser.add_argument("--release-initialization", action="store_true",
+                        help="explicitly initialize outside static equilibrium and let native bed contact settle the body")
+    parser.add_argument("--upper-passive-joints", action="store_true",
+                        help="enable the existing source-bound wrist and non-thumb finger passive stiffness model")
     parser.set_defaults(handler=run)
 
 

@@ -115,6 +115,26 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaises(HumanImportError):
             command(self.args)
 
+    def test_postural_initialization_options_remain_explicit(self):
+        baseline, _ = command(self.args)
+        for flag in ("--muscle-activation", "--resting-release-initialization",
+                     "--persistent-source-passive-joint-tissue"):
+            self.assertNotIn(flag, baseline)
+        self.args.postural_activation_cap = .01
+        self.args.release_initialization = True
+        self.args.upper_passive_joints = True
+        argv, _ = command(self.args)
+        self.assertEqual(argv[argv.index("--muscle-activation") + 1], "0.01")
+        self.assertIn("--resting-release-initialization", argv)
+        self.assertIn("--persistent-source-passive-joint-tissue", argv)
+
+    def test_invalid_postural_cap_is_rejected_before_native_launch(self):
+        for cap in (0., -.01, 1.01, float("nan"), float("inf")):
+            with self.subTest(cap=cap):
+                self.args.postural_activation_cap = cap
+                with self.assertRaisesRegex(HumanImportError, "postural recruitment activation cap"):
+                    command(self.args)
+
     def test_duration_must_respect_physical_cadence(self):
         self.args.seconds = .0015
         with self.assertRaisesRegex(HumanImportError, "integer number of native steps"):
