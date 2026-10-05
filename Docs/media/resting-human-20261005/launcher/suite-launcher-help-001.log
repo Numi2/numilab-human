@@ -1,0 +1,26 @@
+usage: resting_run.py [-h] --body-scene BODY_SCENE
+                      --anatomy-receipt ANATOMY_RECEIPT --tendon TENDON
+                      --lab LAB --build BUILD --output OUTPUT
+                      [--seconds SECONDS] [--dimension {512,768,1024}]
+                      [--mechanics-only] [--inspection-tour]
+                      [--drive-intervention START END SCALE]
+
+Launch the existing coupled Apple Metal Human scene from owner receipts. This
+module loads and checks assets, records the invocation, and starts the native
+process. It has no physical or physiological stepping implementation.
+
+options:
+  -h, --help            show this help message and exit
+  --body-scene BODY_SCENE
+  --anatomy-receipt ANATOMY_RECEIPT
+  --tendon TENDON
+  --lab LAB
+  --build BUILD
+  --output OUTPUT
+  --seconds SECONDS     physical duration; default permits 10 s initialization
+                        plus 300 s observation
+  --dimension {512,768,1024}
+  --mechanics-only      diagnostic without the native viewer or movie
+  --inspection-tour     cycle the native anatomical layers every five
+                        simulated seconds without changing physics
+  --drive-intervention START END SCALE

@@ -1560,6 +1560,9 @@ def visual_layers(arguments: argparse.Namespace) -> int:
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description="Build provenance-locked NumiLab Human v1 import artifacts")
     commands = result.add_subparsers(dest="command", required=True)
+    from .resting_run import add_arguments as add_resting_run_arguments
+    add_resting_run_arguments(commands.add_parser(
+        "resting-run", help="launch the coupled native Apple Metal resting Human viewer from source receipts"))
     myosim_fetch_parser = commands.add_parser(
         "myosim-fetch",
         help="fetch and safely extract the selected MyoSim full-body and Mortensen neck sources",
