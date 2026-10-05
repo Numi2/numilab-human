@@ -788,8 +788,24 @@ def compile_anatomy(output: Path) -> dict:
 def main() -> None:
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--patch-diaphragm-lung-interfaces',action='store_true',
+        help='refine the pinned NHANAT5 resting anatomy payload with exact reciprocal diaphragm/lobe material interfaces')
+    parser.add_argument('--base-payload',type=Path,
+        help='existing NHANAT5 input for --patch-diaphragm-lung-interfaces')
+    parser.add_argument('--base-receipt',type=Path,
+        help='source receipt paired with --base-payload')
     args=parser.parse_args()
-    print(json.dumps(compile_anatomy(args.output),indent=2,sort_keys=True))
+    if args.patch_diaphragm_lung_interfaces:
+        from .resting_anatomy_interface_patch import BASE, build_candidate
+
+        payload=args.base_payload or (BASE/'resting-thorax.nhanatomy')
+        receipt=args.base_receipt or (BASE/'resting-anatomy-receipt.json')
+        result=build_candidate(payload,receipt,args.output)
+    else:
+        if args.base_payload is not None or args.base_receipt is not None:
+            parser.error('--base-payload and --base-receipt require --patch-diaphragm-lung-interfaces')
+        result=compile_anatomy(args.output)
+    print(json.dumps(result,indent=2,sort_keys=True))
 
 
 if __name__=='__main__':main()
