@@ -60,8 +60,10 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     muscles = checked(rigid.with_name("myosim-fullbody-muscle-reference.nhmyo"))
     equalities = checked(rigid.with_name("myosim-fullbody-joint-equalities.nheq"))
     muscle_surfaces = anatomy["provenance"].get("native_muscle_surfaces", {})
-    surfaces = checked(args.anatomy_receipt.parent / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
-                       muscle_surfaces.get("sha256"))
+    surface_path = Path(muscle_surfaces.get("payload_path", "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"))
+    if not surface_path.is_absolute():
+        surface_path = args.anatomy_receipt.parent / surface_path
+    surfaces = checked(surface_path, muscle_surfaces.get("sha256"))
     if "manifest_path" in muscle_surfaces:
         checked(muscle_surfaces["manifest_path"], muscle_surfaces["manifest_sha256"])
     tendon = checked(args.tendon)

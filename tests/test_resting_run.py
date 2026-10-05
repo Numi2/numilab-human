@@ -80,6 +80,21 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
             command(self.args)
 
+    def test_composed_anatomy_uses_the_recorded_muscle_owner_without_a_sibling_copy(self):
+        source = self.root / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+        owner = self.root / "retained-owner" / source.name
+        owner.parent.mkdir()
+        source.rename(owner)
+        for declared in (str(owner), str(owner.relative_to(self.root))):
+            self.anatomy["provenance"]["native_muscle_surfaces"]["payload_path"] = declared
+            self.write_receipts()
+            argv, hashes = command(self.args)
+            self.assertEqual(argv[argv.index("--soft-tissue-payload") + 1], str(owner.resolve()))
+            self.assertIn(str(owner.resolve()), hashes)
+        owner.write_bytes(b"changed owner payload")
+        with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
+            command(self.args)
+
     def test_explicit_respiration_is_hashed_and_delivered_to_the_existing_owner(self):
         self.args.respiration = self.root / 'source-bound-respiration.json'
         self.args.respiration.write_bytes(b'explicit source-derived respiratory parameters')
