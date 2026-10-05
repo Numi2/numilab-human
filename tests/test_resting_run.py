@@ -47,7 +47,8 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.args = argparse.Namespace(body_scene=self.root / "scene.json", anatomy_receipt=self.root / "anatomy.json",
                                        tendon=Path(tendon["path"]), build=self.root, lab=self.root,
                                        output=self.root / "run", seconds=310., dimension=512,
-                                       mechanics_only=False, inspection_tour=False, drive_intervention=None)
+                                       mechanics_only=False, inspection_tour=False, drive_intervention=None,
+                                       circulation=None)
         self.write_receipts()
 
     def write_receipts(self):
@@ -65,6 +66,14 @@ class RestingRunAdmissionTests(unittest.TestCase):
         Path(self.scene["source"]["skin"]["path"]).write_bytes(b"changed")
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
             command(self.args)
+
+    def test_explicit_circulation_is_hashed_and_passed_to_native_owner(self):
+        self.args.circulation = self.root / 'reference-circulation.json'
+        self.args.circulation.write_bytes(b'explicit reference native payload')
+        argv, hashes = command(self.args)
+        owner = str(self.args.circulation.resolve())
+        self.assertEqual(argv[argv.index('--resting-scene') + 1], owner)
+        self.assertEqual(hashes[owner], hashlib.sha256(self.args.circulation.read_bytes()).hexdigest())
 
     def test_changed_muscle_surface_is_rejected_before_launch(self):
         (self.root / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue").write_bytes(b"changed")

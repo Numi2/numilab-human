@@ -42,7 +42,14 @@ THORACIC = {0, 1, 4, 5, 14, 15, 16, 17, 18, 19, 20}
 NONLINEAR = {10: 71, 12: 72, 13: 73}
 CARDIAC = {15: (44, 119, None), 16: (46, 120, 118), 19: (50, 119, None), 20: (52, 120, 118)}
 UNILATERAL = {0, 16, 19, 20, 23}
-VARIANTS = {"upstream_equation", "heldt_table_aligned"}
+# Explicit reference-adult parameter choices, not measurements or upstream CVSim21
+# defaults. The neighbouring values are a sensitivity check on the adopted 15 mL.
+RESTING_LV_UNSTRESSED_ML = {
+    "resting_reference_lv10": 10.0,
+    "resting_reference_lv15": 15.0,
+    "resting_reference_lv20": 20.0,
+}
+VARIANTS = {"upstream_equation", "heldt_table_aligned", *RESTING_LV_UNSTRESSED_ML}
 
 
 def require(condition: Any, message: str) -> None:
@@ -140,6 +147,11 @@ def _compile_source(directory: Path, initial_path: Path, config: dict) -> tuple[
     if config["volume_coordinates"] == "heldt_table_aligned":
         translations[2] = theta[138] - theta[139]
         translations[5] = -translations[2]
+    elif config["volume_coordinates"] in RESTING_LV_UNSTRESSED_ML:
+        translations[20] = RESTING_LV_UNSTRESSED_ML[config["volume_coordinates"]] - theta[ZPFV[20]]
+        # Preserve the total absolute blood budget and both pressure laws. This
+        # allocates the displaced unstressed blood to the systemic venous pool.
+        translations[3] = -translations[20]
     compartments, provenance = [], []
     for i, label in enumerate(LABELS):
         baseline = theta[ZPFV[i]] + translations[i]
@@ -207,9 +219,25 @@ def _compile_source(directory: Path, initial_path: Path, config: dict) -> tuple[
                 "explicit_variants": ["continuous fixed-rate rational clock replaces original discrete SA-node scheduling",
                                       "signed atan leg storage remains continuous for nonpositive transmural pressure",
                                       "stateless Starling max law defines unassigned equality and reverse-flow source branches"] +
-                                     (["paired arterial filling-volume coordinates aligned to source tables and Heldt thesis"] if any(translations) else []),
+                                     (["paired arterial filling-volume coordinates aligned to source tables and Heldt thesis"]
+                                      if config["volume_coordinates"] == "heldt_table_aligned" else []),
                 "scientific_status": "source_variant_target_not_qualified_by_compilation",
                 "boundary": "aggregate hydraulics only; no individual organ calibration, anatomy registration, mechanical mass partition, reflexes, tilt, species, tissue exchange or biological qualification"}
+    if config["volume_coordinates"] in RESTING_LV_UNSTRESSED_ML:
+        manifest["explicit_variants"].append(
+            "reference adult LV unstressed volume with equal and opposite upper-body venous volume translation; not the original CVSim21 parameter set")
+        manifest["reference_parameter_choice"] = {
+            "left_ventricle_unstressed_volume_mL": RESTING_LV_UNSTRESSED_ML[config["volume_coordinates"]],
+            "upstream_left_ventricle_unstressed_volume_mL": theta[ZPFV[20]],
+            "reference_value_mL": 15.0,
+            "sensitivity_values_mL": [10.0, 15.0, 20.0],
+            "reference": "De Florio et al. 2025, Quantification of total uncertainty in the physics-informed reconstruction of CVSim-6 physiology, Appendix A, Table 7",
+            "doi": "10.1098/rsta.2024.0221",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12145504/",
+            "interpretation": "literature-supported reference parameter transferred from CVSim-6; not a CVSim21 source measurement or individual calibration",
+            "venous_allocation": "inferred allocation to upper-body veins; initial and reference volumes translated together",
+            "prediction": "unchanged stressed volumes, pressure laws, total blood volume and exact-arithmetic hydraulic flows; absolute chamber volume and gas residence time change",
+        }
     return native, manifest
 
 

@@ -64,6 +64,34 @@ class CVSim21AuthoringTests(unittest.TestCase):
         self.assertTrue(all(r['anatomy_registration'] is None and r['mechanical_mass_owner'] is None for r in manifest['compartment_bindings']))
         self.assertEqual(len(manifest['parameters']['source_inconsistencies']), 6)
 
+    def test_reference_lv_sensitivity_preserves_stressed_volume_and_blood_budget(self):
+        original, original_manifest = source.compile_source(config=self.config)
+        for variant, lv_reference in source.RESTING_LV_UNSTRESSED_ML.items():
+            with self.subTest(variant=variant):
+                config = deepcopy(self.config)
+                config['volume_coordinates'] = variant
+                native, manifest = source.compile_source(config=config)
+                self.assertEqual(native['connections'], original['connections'])
+                self.assertNotEqual(native['authored_graph_sha256'], original['authored_graph_sha256'])
+                self.assertEqual(native['qualification'], 'source_model_variant')
+                self.assertAlmostEqual(native['compartments'][20]['reference_volume_m3'], lv_reference * 1e-6)
+                for a, b in zip(original['compartments'], native['compartments']):
+                    self.assertAlmostEqual(a['initial_volume_m3'] - a['reference_volume_m3'],
+                                           b['initial_volume_m3'] - b['reference_volume_m3'], places=17)
+                    for key in a.keys() - {'initial_volume_m3', 'reference_volume_m3'}:
+                        self.assertEqual(a[key], b[key])
+                for field in ('initial_volume_m3', 'reference_volume_m3'):
+                    self.assertAlmostEqual(math.fsum(x[field] for x in original['compartments']),
+                                           math.fsum(x[field] for x in native['compartments']), places=16)
+                self.assertEqual(manifest['total_blood_volume_m3'], original_manifest['total_blood_volume_m3'])
+                self.assertEqual(manifest['reference_parameter_choice']['doi'], '10.1098/rsta.2024.0221')
+                self.assertIn('not the original CVSim21', manifest['explicit_variants'][-1])
+
+    def test_reference_choices_do_not_allow_arbitrary_lv_override(self):
+        self.config['volume_coordinates'] = 'resting_reference_lv16'
+        with self.assertRaisesRegex(HumanImportError, 'unsupported volume coordinates'):
+            source.compile_source(config=self.config)
+
     def test_incidence_is_closed_connected_and_matches_regional_beds(self):
         native, _ = source.compile_source()
         adjacency = {i: set() for i in range(1, 22)}

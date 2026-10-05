@@ -1,0 +1,26 @@
+{
+  "scope": "Numerical regression of declared reference volume translations; not a physiological qualification or whole-body run",
+  "prediction": "Pressure and flow laws unchanged under equal translations of initial/reference volume; LV volume shifts by chosenV0 minus55mL. Total initial blood volume remains5150mL. Gas residence times change, so gas outputs may differ.",
+  "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12145504/ Table7",
+  "arms": [
+    "upstream_equation",
+    "resting_reference_lv10",
+    "resting_reference_lv15",
+    "resting_reference_lv20"
+  ],
+  "steps": 5000,
+  "dt_s": 0.002,
+  "acceptance": {
+    "pressure_difference_mmHg": 0.05,
+    "ejected_volume_difference_mL": 0.1,
+    "LV_translation_error_mL": 0.05,
+    "blood_volume_error_mL": 0.1
+  },
+  "identity": {
+    "/Users/n/numi-human-resting-build-20261005/matter/numi-human-resting": "f1121f70f0f3bb1aa4ca93559922e42488e8bb6df49d1c987a70d0e9d620ee81",
+    "/Users/n/numi-human-resting-lab-20261005/matter/examples/resting-reference-respiration.json": "27100bf8941fcd623bba1ea87474f6fe6a4b1ab4f89b3e6ec0df5e4f8d9551f3",
+    "/Users/n/numi-human-resting-build-20261005/matter/shaders/HumanRespiration.metallib": "0266b7eba3233ab97f7081add504ec58b9c2775dfa6a55a7e2bc0e372b1f9d15",
+    "/Users/n/numi-human-resting-build-20261005/matter/shaders/NumiMatter.metallib": "c807dbe0803057c63417d82fdb8a30aeea719d1194134dbbecbd13ba17147bc4",
+    "/Users/n/numi-human-resting-build-20261005/lib/libmetalrobo.dylib": "8e946244c6f4a748d03914b973ec2ad2d353aeac99ce55c4c82473fe1e02f0c3"
+  }
+}

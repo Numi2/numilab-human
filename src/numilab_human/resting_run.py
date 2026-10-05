@@ -71,7 +71,7 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
                      "matter/shaders/HumanRespiration.metallib", "matter/shaders/NumiMatter.metallib",
                      "matter/shaders/NumiMatterPhysicalStateDigest.metallib"):
         checked(args.build / relative)
-    network = checked(args.lab / "matter/tools/fixtures/cvsim21.native.v3.json")
+    network = checked(args.circulation or args.lab / "matter/tools/fixtures/cvsim21.native.v3.json")
     respiration = checked(args.lab / "matter/examples/resting-reference-respiration.json")
     checked(args.body_scene); checked(args.anatomy_receipt)
     _require(math.isfinite(args.seconds) and args.seconds > 0, "duration must be positive")
@@ -125,6 +125,7 @@ def run(args: argparse.Namespace) -> int:
                    "NUMI_HUMAN_TRAINING_PROFILE", "NUMI_HUMAN_RESTING_TRANSACTION_PROBE",
                    "NUMI_HUMAN_RESTING_INSPECTION_TOUR",
                    "NUMI_HUMAN_GPU_TIMING", "NUMI_HUMAN_GPU_TIMING_STAGE",
+                   "NUMI_HUMAN_SUPPORT_DIAGNOSTICS", "NUMI_HUMAN_SUPPORT_GPU_TIMING",
                    "NUMI_HUMAN_PARALLEL_MASS_ASSEMBLY", "NUMI_HUMAN_KINEMATICS_CACHE",
                    "NUMI_HUMAN_OVERLAP_GEOMETRY", "NUMI_HUMAN_STAND_CACHE_LIMIT_EQUALITY",
                    "NUMI_HUMAN_STAND_FREE_SPLIT", "NUMI_HUMAN_STAND_SPARSE_OPERATOR",
@@ -150,6 +151,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--lab", type=Path, required=True)
     parser.add_argument("--build", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--circulation", type=Path,
+                        help="explicit native circulation owner payload; default is the retained upstream CVSim21 variant")
     parser.add_argument("--seconds", type=float, default=310,
                         help="physical duration; default permits 10 s initialization plus 300 s observation")
     parser.add_argument("--dimension", type=int, choices=(512, 768, 1024), default=512)

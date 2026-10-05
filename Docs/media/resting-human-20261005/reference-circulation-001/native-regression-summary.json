@@ -1,0 +1,397 @@
+{
+  "scope": "Native reduced-order numerical regression and declared reference-volume sensitivity; ten seconds per arm, not whole-body or clinical validation",
+  "arms": {
+    "upstream_equation": {
+      "samples": 313,
+      "final": {
+        "time_s": 10.000000475,
+        "lung_volume_ml": 2500.0013411,
+        "airflow_ml_s": -2.69287890597e-05,
+        "alveolar_pa": 3.59021055374e-06,
+        "pleural_pa": -490.3331604,
+        "diaphragm_mm": 3.76358875656e-05,
+        "rib_mm": 7.55793371354e-06,
+        "PaO2_mmhg": 102.024116516,
+        "PaCO2_mmhg": 38.9202079773,
+        "SaO2": 0.973644793034,
+        "oxygen_balance_error_stpd_ml": 0.000116415321827,
+        "co2_balance_error_stpd_ml": 0.000465661287308,
+        "breaths": 1.0,
+        "tidal_ml": 552.722718567,
+        "lv_mmhg": 4.13650947557,
+        "rv_mmhg": -0.956348251882,
+        "aorta_mmhg": 94.325517033,
+        "pulmonary_artery_mmhg": 15.7308751568,
+        "lv_ml": 133.842768264,
+        "rv_ml": 104.712045868,
+        "blood_ml": 5150.00429004,
+        "blood_error_ml": 0.00558793544769,
+        "aortic_ejected_ml": 848.337716889,
+        "pulmonary_ejected_ml": 840.123801026,
+        "complete_filling_ejection_cycles": 12.0,
+        "last_lv_stroke_ml": 70.1429016772
+      },
+      "max_pressure_delta_mmHg": {
+        "lv_mmhg": 0.0,
+        "rv_mmhg": 0.0,
+        "aorta_mmhg": 0.0,
+        "pulmonary_artery_mmhg": 0.0
+      },
+      "max_ejected_delta_mL": 0.0,
+      "max_LV_translation_error_mL": 0.0,
+      "max_blood_volume_error_mL": 0.00558793544769,
+      "cycles": [
+        {
+          "cycle": 1,
+          "EDV_mL": 175.111796125,
+          "ESV_mL": 101.104677015,
+          "EF": 0.4226278340333597
+        },
+        {
+          "cycle": 2,
+          "EDV_mL": 173.343898496,
+          "ESV_mL": 100.938821561,
+          "EF": 0.4176961379270629
+        },
+        {
+          "cycle": 3,
+          "EDV_mL": 172.067098902,
+          "ESV_mL": 100.605357147,
+          "EF": 0.4153132249629006
+        },
+        {
+          "cycle": 4,
+          "EDV_mL": 171.254854649,
+          "ESV_mL": 100.296616438,
+          "EF": 0.4143429297606446
+        },
+        {
+          "cycle": 5,
+          "EDV_mL": 170.734565472,
+          "ESV_mL": 100.055454823,
+          "EF": 0.4139707179598099
+        },
+        {
+          "cycle": 6,
+          "EDV_mL": 170.376515598,
+          "ESV_mL": 99.8754330794,
+          "EF": 0.4137957762027832
+        },
+        {
+          "cycle": 7,
+          "EDV_mL": 170.125975274,
+          "ESV_mL": 99.7484457912,
+          "EF": 0.41367891863339495
+        },
+        {
+          "cycle": 8,
+          "EDV_mL": 169.947481481,
+          "ESV_mL": 99.6520248009,
+          "EF": 0.4136304702341764
+        },
+        {
+          "cycle": 9,
+          "EDV_mL": 169.812425156,
+          "ESV_mL": 99.5860973489,
+          "EF": 0.4135523519117393
+        }
+      ],
+      "regression_pass": true,
+      "sha256": "9a470e4c19e868abeb3c7ebbcb85876ce5585b9bf52eb98d486eb027b63a89b4"
+    },
+    "resting_reference_lv10": {
+      "samples": 313,
+      "final": {
+        "time_s": 10.000000475,
+        "lung_volume_ml": 2500.0013411,
+        "airflow_ml_s": -2.8752472625e-05,
+        "alveolar_pa": 3.83334827347e-06,
+        "pleural_pa": -490.3331604,
+        "diaphragm_mm": 3.76432399207e-05,
+        "rib_mm": 7.55940300223e-06,
+        "PaO2_mmhg": 102.161430359,
+        "PaCO2_mmhg": 38.8659553528,
+        "SaO2": 0.973737776279,
+        "oxygen_balance_error_stpd_ml": 0.000116415321827,
+        "co2_balance_error_stpd_ml": 0.000465661287308,
+        "breaths": 1.0,
+        "tidal_ml": 552.722485736,
+        "lv_mmhg": 4.13650627096,
+        "rv_mmhg": -0.956349053035,
+        "aorta_mmhg": 94.3253925111,
+        "pulmonary_artery_mmhg": 15.7308751568,
+        "lv_ml": 88.8427457539,
+        "rv_ml": 104.712031316,
+        "blood_ml": 5150.00335872,
+        "blood_error_ml": 0.00512227416039,
+        "aortic_ejected_ml": 848.337542266,
+        "pulmonary_ejected_ml": 840.123801026,
+        "complete_filling_ejection_cycles": 12.0,
+        "last_lv_stroke_ml": 70.1428434695
+      },
+      "max_pressure_delta_mmHg": {
+        "lv_mmhg": 0.0001757960000077219,
+        "rv_mmhg": 1.6480900001170085e-05,
+        "aorta_mmhg": 0.00023439400000313526,
+        "pulmonary_artery_mmhg": 1.8312099999917564e-05
+      },
+      "max_ejected_delta_mL": 0.0002910380000002988,
+      "max_LV_translation_error_mL": 0.00010254500000428379,
+      "max_blood_volume_error_mL": 0.00512227416039,
+      "cycles": [
+        {
+          "cycle": 1,
+          "EDV_mL": 130.111802719,
+          "ESV_mL": 56.1046654184,
+          "EF": 0.568796494661071
+        },
+        {
+          "cycle": 2,
+          "EDV_mL": 128.343919641,
+          "ESV_mL": 55.9388026886,
+          "EF": 0.5641491794463623
+        },
+        {
+          "cycle": 3,
+          "EDV_mL": 127.067105495,
+          "ESV_mL": 55.6053564651,
+          "EF": 0.5623937741519733
+        },
+        {
+          "cycle": 4,
+          "EDV_mL": 126.254817587,
+          "ESV_mL": 55.2966121177,
+          "EF": 0.5620237455129499
+        },
+        {
+          "cycle": 5,
+          "EDV_mL": 125.734557514,
+          "ESV_mL": 55.0554323127,
+          "EF": 0.5621296690325583
+        },
+        {
+          "cycle": 6,
+          "EDV_mL": 125.376522192,
+          "ESV_mL": 54.875479691,
+          "EF": 0.562314548756071
+        },
+        {
+          "cycle": 7,
+          "EDV_mL": 125.126025523,
+          "ESV_mL": 54.7484851268,
+          "EF": 0.5624532554441568
+        },
+        {
+          "cycle": 8,
+          "EDV_mL": 124.947531731,
+          "ESV_mL": 54.6520386706,
+          "EF": 0.5626000937076485
+        },
+        {
+          "cycle": 9,
+          "EDV_mL": 124.812388094,
+          "ESV_mL": 54.5860857528,
+          "EF": 0.5626549048024819
+        }
+      ],
+      "regression_pass": true,
+      "sha256": "3e80eacc1bd3499e51a92aad0fd9c93e715798211178c72ccbb6ac7ee1f6f0d5"
+    },
+    "resting_reference_lv15": {
+      "samples": 313,
+      "final": {
+        "time_s": 10.000000475,
+        "lung_volume_ml": 2500.0013411,
+        "airflow_ml_s": -2.84903454995e-05,
+        "alveolar_pa": 3.79840093956e-06,
+        "pleural_pa": -490.3331604,
+        "diaphragm_mm": 3.76421776309e-05,
+        "rib_mm": 7.5591933637e-06,
+        "PaO2_mmhg": 102.145484924,
+        "PaCO2_mmhg": 38.8717803955,
+        "SaO2": 0.973727047443,
+        "oxygen_balance_error_stpd_ml": 0.000232830643654,
+        "co2_balance_error_stpd_ml": 0.000465661287308,
+        "breaths": 1.0,
+        "tidal_ml": 552.722485736,
+        "lv_mmhg": 4.13650855997,
+        "rv_mmhg": -0.956348251882,
+        "aorta_mmhg": 94.3254511097,
+        "pulmonary_artery_mmhg": 15.7308751568,
+        "lv_ml": 93.8427619985,
+        "rv_ml": 104.712045868,
+        "blood_ml": 5150.00382438,
+        "blood_error_ml": 0.00558793544769,
+        "aortic_ejected_ml": 848.337833304,
+        "pulmonary_ejected_ml": 840.123801026,
+        "complete_filling_ejection_cycles": 12.0,
+        "last_lv_stroke_ml": 70.142930781
+      },
+      "max_pressure_delta_mmHg": {
+        "lv_mmhg": 0.0001171969999944622,
+        "rv_mmhg": 6.409200000945248e-06,
+        "aorta_mmhg": 0.00022706939999750375,
+        "pulmonary_artery_mmhg": 9.156100000851097e-06
+      },
+      "max_ejected_delta_mL": 0.00023283100006210589,
+      "max_LV_translation_error_mL": 6.447299999479128e-05,
+      "max_blood_volume_error_mL": 0.00558793544769,
+      "cycles": [
+        {
+          "cycle": 1,
+          "EDV_mL": 135.111811687,
+          "ESV_mL": 61.1046561971,
+          "EF": 0.5477474882902538
+        },
+        {
+          "cycle": 2,
+          "EDV_mL": 133.343914058,
+          "ESV_mL": 60.9388080193,
+          "EF": 0.5429952056695012
+        },
+        {
+          "cycle": 3,
+          "EDV_mL": 132.067099912,
+          "ESV_mL": 60.6053508818,
+          "EF": 0.5411018268578394
+        },
+        {
+          "cycle": 4,
+          "EDV_mL": 131.254812004,
+          "ESV_mL": 60.2966065344,
+          "EF": 0.5406141259601023
+        },
+        {
+          "cycle": 5,
+          "EDV_mL": 130.734566483,
+          "ESV_mL": 60.0554049015,
+          "EF": 0.5406310165926219
+        },
+        {
+          "cycle": 6,
+          "EDV_mL": 130.376516609,
+          "ESV_mL": 59.8753867962,
+          "EF": 0.5407502182638714
+        },
+        {
+          "cycle": 7,
+          "EDV_mL": 130.12601994,
+          "ESV_mL": 59.7484759055,
+          "EF": 0.5408414402204147
+        },
+        {
+          "cycle": 8,
+          "EDV_mL": 129.947482492,
+          "ESV_mL": 59.6520221734,
+          "EF": 0.540952844722695
+        },
+        {
+          "cycle": 9,
+          "EDV_mL": 129.812382511,
+          "ESV_mL": 59.5861019974,
+          "EF": 0.5409829105297347
+        }
+      ],
+      "regression_pass": true,
+      "sha256": "d4bf66ea6714b44cd221c1eac49997a433b48d370743d24225faf99f56497913"
+    },
+    "resting_reference_lv20": {
+      "samples": 313,
+      "final": {
+        "time_s": 10.000000475,
+        "lung_volume_ml": 2500.0013411,
+        "airflow_ml_s": -2.83320242267e-05,
+        "alveolar_pa": 3.77729315915e-06,
+        "pleural_pa": -490.3331604,
+        "diaphragm_mm": 3.76415409846e-05,
+        "rib_mm": 7.5590655797e-06,
+        "PaO2_mmhg": 102.130210876,
+        "PaCO2_mmhg": 38.8777122498,
+        "SaO2": 0.973716676235,
+        "oxygen_balance_error_stpd_ml": 0.000116415321827,
+        "co2_balance_error_stpd_ml": 0.000465661287308,
+        "breaths": 1.0,
+        "tidal_ml": 552.722252905,
+        "lv_mmhg": 4.13650855997,
+        "rv_mmhg": -0.956349053035,
+        "aorta_mmhg": 94.3254511097,
+        "pulmonary_artery_mmhg": 15.7308751568,
+        "lv_ml": 98.8427636912,
+        "rv_ml": 104.712031316,
+        "blood_ml": 5150.00335872,
+        "blood_error_ml": 0.00512227416039,
+        "aortic_ejected_ml": 848.337716889,
+        "pulmonary_ejected_ml": 840.123917442,
+        "complete_filling_ejection_cycles": 12.0,
+        "last_lv_stroke_ml": 70.1429962646
+      },
+      "max_pressure_delta_mmHg": {
+        "lv_mmhg": 0.00011719799999809766,
+        "rv_mmhg": 2.197440000273332e-05,
+        "aorta_mmhg": 0.00016847090000737808,
+        "pulmonary_artery_mmhg": 2.5636900002012908e-05
+      },
+      "max_ejected_delta_mL": 0.00017462300002080156,
+      "max_LV_translation_error_mL": 8.273899999267087e-05,
+      "max_blood_volume_error_mL": 0.00512227416039,
+      "cycles": [
+        {
+          "cycle": 1,
+          "EDV_mL": 140.111806104,
+          "ESV_mL": 66.1046578898,
+          "EF": 0.5282006582604977
+        },
+        {
+          "cycle": 2,
+          "EDV_mL": 138.343908475,
+          "ESV_mL": 65.938809712,
+          "EF": 0.5233703425119312
+        },
+        {
+          "cycle": 3,
+          "EDV_mL": 137.067152536,
+          "ESV_mL": 65.6053525745,
+          "EF": 0.5213634239810367
+        },
+        {
+          "cycle": 4,
+          "EDV_mL": 136.254864628,
+          "ESV_mL": 65.2965973131,
+          "EF": 0.5207760288678771
+        },
+        {
+          "cycle": 5,
+          "EDV_mL": 135.734560899,
+          "ESV_mL": 65.0554284221,
+          "EF": 0.5207158148136811
+        },
+        {
+          "cycle": 6,
+          "EDV_mL": 135.376481921,
+          "ESV_mL": 64.8754285066,
+          "EF": 0.5207777038816936
+        },
+        {
+          "cycle": 7,
+          "EDV_mL": 135.125985253,
+          "ESV_mL": 64.7484630463,
+          "EF": 0.5208289292021093
+        },
+        {
+          "cycle": 8,
+          "EDV_mL": 134.94749146,
+          "ESV_mL": 64.6519911243,
+          "EF": 0.5209100189649425
+        },
+        {
+          "cycle": 9,
+          "EDV_mL": 134.812376928,
+          "ESV_mL": 64.5860927762,
+          "EF": 0.5209186704667786
+        }
+      ],
+      "regression_pass": true,
+      "sha256": "a8cc1a5660b4b4d15c4ed87259c9e29eba988fdaaf641b78529ec1bce827e272"
+    }
+  }
+}
