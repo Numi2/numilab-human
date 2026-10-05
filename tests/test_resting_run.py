@@ -118,7 +118,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
     def test_postural_initialization_options_remain_explicit(self):
         baseline, _ = command(self.args)
         for flag in ("--muscle-activation", "--resting-release-initialization",
-                     "--persistent-source-passive-joint-tissue"):
+                     "--persistent-source-passive-joint-tissue", "--resting-rigid-hands"):
             self.assertNotIn(flag, baseline)
         self.args.postural_activation_cap = .01
         self.args.release_initialization = True
@@ -127,6 +127,12 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertEqual(argv[argv.index("--muscle-activation") + 1], "0.01")
         self.assertIn("--resting-release-initialization", argv)
         self.assertIn("--persistent-source-passive-joint-tissue", argv)
+
+    def test_rigid_hand_reduction_is_explicit(self):
+        self.args.rigid_hands = True
+        argv, _ = command(self.args)
+        self.assertIn("--resting-rigid-hands", argv)
+        self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
 
     def test_invalid_postural_cap_is_rejected_before_native_launch(self):
         for cap in (0., -.01, 1.01, float("nan"), float("inf")):

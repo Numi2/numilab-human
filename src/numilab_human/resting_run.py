@@ -109,6 +109,8 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         argv.append("--resting-release-initialization")
     if getattr(args, "upper_passive_joints", False):
         argv.append("--persistent-source-passive-joint-tissue")
+    if getattr(args, "rigid_hands", False):
+        argv.append("--resting-rigid-hands")
     if args.drive_intervention:
         start, end, scale = args.drive_intervention
         _require(all(math.isfinite(x) for x in (start, end, scale)) and
@@ -192,6 +194,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="explicitly initialize outside static equilibrium and let native bed contact settle the body")
     parser.add_argument("--upper-passive-joints", action="store_true",
                         help="enable the existing source-bound wrist and non-thumb finger passive stiffness model")
+    parser.add_argument("--rigid-hands", action="store_true",
+                        help="use reference-pose rigid digits with internal GPU constraints; wrists remain free, and hand physiology is not simulated")
     parser.set_defaults(handler=run)
 
 
