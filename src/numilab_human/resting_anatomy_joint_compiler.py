@@ -1,8 +1,9 @@
-"""Compile a pinned joint diaphragm/lung/aggregate-liver NHANAT candidate.
+"""Compile a pinned joint diaphragm/lung/passive-viscera NHANAT candidate.
 
 Outputs use the existing NHANAT1 ABI5 payload and anatomy/respiration receipts.
 This owner admits only the retained registered reference inputs below; it does
-not define internal liver planes or segment volumes.
+not define internal liver planes or segment volumes. An optional source-bound
+costal fit is applied as one passive coordinate field before joint conforming.
 """
 from __future__ import annotations
 import argparse
@@ -14,6 +15,7 @@ from . import resting_anatomy_interface_patch as base
 from . import resting_anatomy_conforming_refinement as refine
 from . import resting_respiratory_conforming_field as conform
 from . import resting_respiratory_mesh_quality as quality
+from . import resting_pleura_proxy as pleura
 from .resting_liver_surface_identity import liver_surface_identity_metadata, validate_liver_patch_coverage
 
 HEADER = base.HEADER
@@ -29,6 +31,23 @@ PINNED_INPUT_SHA256 = {
     "guide_npz": "5d5513e8e353d7fc1d86a3101412b6914886908b6305f97790beea0f84dbd0b5",
     "guide_receipt": "b98cdfe8ae751938262777ada741b82e70f19a261d36a50feb4393dd4a172446",
     "diaphragm_candidate_manifest": "750a0585ab1b59942ef00a5ba12fd25e318585f0e5e335011c73377468057255",
+}
+PINNED_IMPRESSION_SHA256 = {
+    "liver_impression_npz": "14d70c30802a87e9c80084bd11c8bf260571c1d97e4fed583fcc8769f83df379",
+    "liver_impression_report": "8284e97e910527246669ddcfe5e6268d74d3daaa1d3c91b3c9b955a27a6c72b8",
+    "impression_guide_npz": "34add6ea6dc343b8ffce6dce5ee35f8997f158c959416f5d94114548c00039a6",
+    "impression_guide_receipt": "102ea0cbbdd41a0f30b787e9180f3810a1d881f37d39c5a91eb41921a4fa60a3",
+}
+COSTAL_NEIGHBOR_IDS = (2, 4, 398, 454, 458, 460, 461)
+COSTAL_COMMON_FIELD_IDS = tuple(range(305, 312))
+PINNED_COSTAL_FIELD_SHA256 = {
+    "controls": "6a1c196d98b7301f3424805644df293e70916bfdd84fb531705fdeef114d08d9",
+    "receipt": "4722b03997f6da94a963d8f2aa91cfb008633eeb7643e8c46a3d1a2334427bf0",
+    "field": "2ef6b18811dee0a35cba347c4623090b6e577e0c2ca22af1c921fdd293fddacc",
+    "source_driver": "02947965a6aecca39e181d0613e169a3852b13463d5c91e06ac302256a342794",
+    "control_values": "f4d31e0e59c0cfd4767b3c56049c5bdb570767229d36e38fe872239220bb52af",
+    "source_payload": "93a3a10f2ce3282b3a0b3903be584aa8a7b3ea3e3438db2ede69264b4dd7fedd",
+    "candidate_payload": "b9dbd123d45c7b87330cad28049d44390b426346959a26502da1b63d002629d9",
 }
 
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -95,12 +114,124 @@ def record_reciprocal_child_pair(records, key, *, stable_id, diaphragm_face,
     row['liver_parent_faces'].add(int(liver_parent_face))
 
 
+def validate_impression_report(report, candidate_sha256):
+    """Fail closed unless the exact retained CSG derivative preserved all D contacts."""
+    if report.get('candidate_sha256') != candidate_sha256:
+        raise ValueError('visceral-impression report does not bind the exact liver candidate')
+    if report.get('liver_source_sha256') != PINNED_INPUT_SHA256['liver_npz']:
+        raise ValueError('visceral-impression report source liver identity differs from the pinned main mesh')
+    if report.get('preserved_diaphragm_interface_faces') != 849:
+        raise ValueError('visceral-impression candidate did not preserve all 849 diaphragm contacts')
+    if report.get('lost_diaphragm_interface_faces') != 0:
+        raise ValueError('visceral-impression candidate lost a diaphragm contact')
+
+
+def load_costal_source_field(controls_path, receipt_path):
+    """Load the exact receipt-bound source-space field from the costal fit owner."""
+    controls_path=Path(controls_path); receipt_path=Path(receipt_path)
+    if sha(controls_path)!=PINNED_COSTAL_FIELD_SHA256['controls']:
+        raise ValueError('costal field controls SHA mismatch')
+    if sha(receipt_path)!=PINNED_COSTAL_FIELD_SHA256['receipt']:
+        raise ValueError('costal field controls receipt SHA mismatch')
+    controls=json.loads(controls_path.read_text()); receipt=json.loads(receipt_path.read_text())
+    expected={
+        'schema':'numi.human.costal_source_field_controls.v1',
+        'field_sha256':PINNED_COSTAL_FIELD_SHA256['field'],
+        'controls_sha256':PINNED_COSTAL_FIELD_SHA256['control_values'],
+        'input_payload_sha256':PINNED_COSTAL_FIELD_SHA256['source_payload'],
+        'candidate_payload_sha256':PINNED_COSTAL_FIELD_SHA256['candidate_payload'],
+        'control_count':1083,'anchor_point_count':9739,'surface_ids':list(COSTAL_COMMON_FIELD_IDS),
+    }
+    for key,value in expected.items():
+        if controls.get(key)!=value: raise ValueError(f'costal field metadata mismatch for {key}')
+    if receipt.get('schema')!='numi.human.costal_source_field_controls_receipt.v1' or receipt.get('sha256')!=sha(controls_path):
+        raise ValueError('costal field receipt does not bind the exact controls file')
+    if receipt.get('field_sha256')!=PINNED_COSTAL_FIELD_SHA256['field'] or receipt.get('driver_sha256')!=PINNED_COSTAL_FIELD_SHA256['source_driver']:
+        raise ValueError('costal field receipt does not bind the retained field owner')
+    algorithm=controls.get('algorithm',{})
+    if (algorithm.get('support_radius_m')!=0.018 or algorithm.get('neighbor_count')!=24
+            or algorithm.get('control_voxel_m')!=0.004
+            or algorithm.get('anchor_fade')!={'clearance_m':0.002,'formula':'smoothstep(clamp((nearest_anchor_distance-0.002)/0.008,0,1))','transition_m':0.008}):
+        raise ValueError('costal field algorithm differs from the source fit contract')
+    points=np.asarray(controls.get('controls_source_local_m'),dtype=np.float64)
+    targets=np.asarray(controls.get('target_displacements_m'),dtype=np.float64)
+    anchors=np.asarray(controls.get('fixed_anchor_points_source_local_m'),dtype=np.float64)
+    if points.shape!=(1083,3) or targets.shape!=points.shape or anchors.shape!=(9739,3):
+        raise ValueError('costal field point arrays have invalid dimensions')
+    if not np.isfinite(points).all() or not np.isfinite(targets).all() or not np.isfinite(anchors).all():
+        raise ValueError('costal field contains nonfinite values')
+    if float(np.linalg.norm(targets,axis=1).max(initial=0.0))>0.001000001:
+        raise ValueError('costal source targets exceed the retained 1 mm bound')
+    return {'controls':points,'targets':targets,'anchors':anchors,'radius_m':0.018,
+        'controls_sha256':sha(controls_path),'receipt_sha256':sha(receipt_path),
+        'field_sha256':controls['field_sha256'],'source_driver_sha256':receipt['driver_sha256'],
+        'source_payload_sha256':controls['input_payload_sha256'],'candidate_payload_sha256':controls['candidate_payload_sha256']}
+
+
+def evaluate_costal_source_field(points, field):
+    """Evaluate SmoothCostalField with its exact compact radial/anchor weights."""
+    from scipy.spatial import cKDTree
+    p=np.asarray(points,dtype=np.float64)
+    if p.ndim!=2 or p.shape[1]!=3 or not np.isfinite(p).all(): raise ValueError('costal field points must be finite Nx3')
+    controls=field['controls']; targets=field['targets']; radius=float(field['radius_m'])
+    tree=cKDTree(controls); anchor_tree=cKDTree(field['anchors']); k=min(24,len(controls))
+    out=np.zeros_like(p)
+    for start in range(0,len(p),32768):
+        batch=p[start:start+32768]
+        d,ids=tree.query(batch,k=k,distance_upper_bound=radius,workers=1)
+        if k==1: d,ids=d[:,None],ids[:,None]
+        valid=np.isfinite(d)&(ids<len(controls)); t=np.zeros_like(d)
+        t[valid]=np.clip(d[valid]/radius,0.0,1.0)
+        w=np.zeros_like(d); w[valid]=(1.0-t[valid])**4*(4.0*t[valid]+1.0)
+        vec=np.zeros((len(batch),3),dtype=np.float64); den=w.sum(axis=1)
+        for j in range(k):
+            ok=valid[:,j]
+            vec[ok]+=w[ok,j,None]*targets[ids[ok,j]]
+        vec=np.divide(vec,den[:,None],out=np.zeros_like(vec),where=den[:,None]>1e-12)
+        nearest=np.min(np.where(valid,d,np.inf),axis=1)
+        activation=np.where(np.isfinite(nearest),(1.0-np.clip(nearest/radius,0.0,1.0))**2,0.0)
+        anchor_d,_=anchor_tree.query(batch,k=1,workers=1)
+        u=np.clip((anchor_d-0.002)/0.008,0.0,1.0)
+        activation*=u*u*(3.0-2.0*u)
+        out[start:start+len(batch)]=vec*activation[:,None]
+    return out
+
+
+def apply_costal_source_positions(points, field):
+    old=np.asarray(points,dtype=np.float32)
+    moved=old.astype(np.float64)+evaluate_costal_source_field(old,field)
+    new=moved.astype(np.float32)
+    delta=moved-old.astype(np.float64)
+    report={'vertex_count':len(old),'changed_position_count':int(np.count_nonzero(np.any(new!=old,axis=1))),
+        'maximum_displacement_m':float(np.linalg.norm(delta,axis=1).max(initial=0.0)),
+        'rms_displacement_m':float(np.sqrt(np.mean(np.sum(delta*delta,axis=1)))) if len(delta) else 0.0}
+    return new,report
+
+
+def apply_costal_source_field(row, field):
+    old=np.asarray(row['vertices6'],dtype=np.float32)
+    faces=np.asarray(row['faces'],dtype=np.int64)
+    positions,report=apply_costal_source_positions(old[:,:3],field)
+    new=normal_rows(positions,faces)
+    output=dict(row); output['vertices6']=new; output['faces']=faces
+    return output,report
+
+
+def apply_costal_source_field_if_changed(row, field):
+    """Keep exact source bytes when the registered Float32 surface is unmoved."""
+    updated, report = apply_costal_source_field(row, field)
+    return (updated if report['changed_position_count'] else row), report
+
+
 def build_candidate(*, composition_payload: Path, composition_receipt: Path,
                     immutable_base_payload: Path, respiration_payload: Path,
                     respiration_receipt: Path, diaphragm_candidate_manifest: Path,
                     diaphragm_npz: Path, liver_npz: Path, segment_guide_npz: Path,
                     segment_guide_receipt: Path, respiration_config: Path,
-                    output_dir: Path) -> dict:
+                    output_dir: Path, liver_impression_npz: Path | None = None,
+                    liver_impression_report: Path | None = None,
+                    costal_field_controls: Path | None = None,
+                    costal_field_receipt: Path | None = None) -> dict:
     """Build one source-locked reference geometry candidate without overwriting."""
     input_payload = Path(composition_payload)
     input_receipt = Path(composition_receipt)
@@ -115,7 +246,27 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     CONFIG = Path(respiration_config)
     OUT = Path(output_dir)
     CAND = diaphragm_npz.parent
-    EXPECTED = PINNED_INPUT_SHA256
+    if (liver_impression_npz is None) != (liver_impression_report is None):
+        raise ValueError('liver impression candidate and report must be supplied together')
+    impression_mode = liver_impression_npz is not None
+    IMPRESSION = Path(liver_impression_npz) if liver_impression_npz is not None else None
+    IMPRESSION_REPORT = Path(liver_impression_report) if liver_impression_report is not None else None
+    SURFACE_LIVER = IMPRESSION if impression_mode else liver_npz
+    EXPECTED = dict(PINNED_INPUT_SHA256)
+    if impression_mode:
+        EXPECTED.update(PINNED_IMPRESSION_SHA256)
+        EXPECTED['guide_npz']=PINNED_IMPRESSION_SHA256['impression_guide_npz']
+        EXPECTED['guide_receipt']=PINNED_IMPRESSION_SHA256['impression_guide_receipt']
+    if (costal_field_controls is None) != (costal_field_receipt is None):
+        raise ValueError('costal field controls and receipt must be supplied together')
+    costal_mode=costal_field_controls is not None
+    if costal_mode and not impression_mode:
+        raise ValueError('the shared costal field branch requires the exact visceral-impression aggregate')
+    COSTAL_PATH=Path(costal_field_controls) if costal_field_controls is not None else None
+    COSTAL_REC=Path(costal_field_receipt) if costal_field_receipt is not None else None
+    costal_field=load_costal_source_field(COSTAL_PATH,COSTAL_REC) if costal_mode else None
+    costal_displacements={}
+    costal_conformed_surface_ids=set()
     if OUT.exists():
         raise FileExistsError(f"refusing to overwrite {OUT}")
     required = (
@@ -125,6 +276,11 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
         ("liver_npz", liver_npz), ("guide_npz", GUIDE), ("guide_receipt", GUIDE_REC),
         ("respiration_config", CONFIG),
     )
+    required = list(required)
+    if impression_mode:
+        required.extend((("liver_impression_npz", IMPRESSION), ("liver_impression_report", IMPRESSION_REPORT)))
+    if costal_mode:
+        required.extend((("costal_field_controls", COSTAL_PATH), ("costal_field_receipt", COSTAL_REC)))
     for name, path in required:
         if not path.is_file():
             raise FileNotFoundError(f"missing {name}: {path}")
@@ -136,14 +292,29 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     guide_meta = json.loads(GUIDE_REC.read_text())
     if guide_meta.get("output", {}).get("sha256") != sha(GUIDE):
         raise ValueError("segment guide receipt does not bind the exact guide array")
-    if guide_meta.get("aggregate_surface", {}).get("sha256") != sha(liver_npz):
+    if guide_meta.get("aggregate_surface", {}).get("sha256") != sha(SURFACE_LIVER):
         raise ValueError("segment guide is not bound to the exact aggregate liver array")
+    if impression_mode:
+        report_meta = json.loads(IMPRESSION_REPORT.read_text())
+        validate_impression_report(report_meta, sha(IMPRESSION))
+        if sha(IMPRESSION_REPORT) != EXPECTED['liver_impression_report']:
+            raise ValueError('visceral-impression report SHA mismatch')
+        guide_source = guide_meta.get('source_inputs', {})
+        if guide_source.get('visceral_impression_candidate_report_sha256') != sha(IMPRESSION_REPORT):
+            raise ValueError('segment guide is not bound to the exact visceral-impression report')
+        if guide_source.get('original_aggregate_liver_source_sha256') != EXPECTED['liver_npz']:
+            raise ValueError('segment guide source liver differs from the pinned original aggregate')
     for key, path in (("composition_payload", input_payload), ("composition_receipt", input_receipt),
         ("base93_payload", BASE93), ("resp_payload", resp_payload), ("resp_receipt", resp_receipt),
         ("diaphragm_candidate_manifest", diaphragm_candidate_manifest), ("diaphragm_npz", diaphragm_npz),
         ("liver_npz", liver_npz), ("guide_npz", GUIDE), ("guide_receipt", GUIDE_REC)):
         if sha(path) != EXPECTED[key]:
             raise ValueError(f"input SHA mismatch for {key}: {sha(path)}")
+    if impression_mode:
+        for key, path in (("liver_impression_npz", IMPRESSION), ("liver_impression_report", IMPRESSION_REPORT),
+                          ("impression_guide_npz", GUIDE), ("impression_guide_receipt", GUIDE_REC)):
+            if sha(path) != EXPECTED[key]:
+                raise ValueError(f"input SHA mismatch for {key}: {sha(path)}")
     base_header, rows=base.parse_payload(input_payload); receipt=json.loads(input_receipt.read_text())
     resp_header, resp_rows=base.parse_payload(resp_payload); resp_meta=json.loads(resp_receipt.read_text())
     if base_header[5:]!=resp_header[5:]: raise ValueError('registration/source fingerprints differ')
@@ -157,6 +328,23 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
         old=rows93[sid]
         if not (np.array_equal(row['vertices6'],old['vertices6']) and np.array_equal(row['faces'],old['faces'])):
             raise ValueError(f'composition input differs from 93a outside liver: {sid}')
+    if costal_mode:
+        costal_displacements['respiratory_surfaces']={}
+        for sid in (305,306,307,308,309):
+            updated,report=apply_costal_source_field_if_changed(resp_rows[sid],costal_field)
+            costal_displacements['respiratory_surfaces'][str(sid)]=report
+            if report['changed_position_count']:
+                resp_rows[sid]=updated
+                costal_conformed_surface_ids.add(sid)
+        costal_displacements['visceral_neighbors']={}
+        for sid in COSTAL_NEIGHBOR_IDS:
+            if rows[sid].get('body_index')!=20:
+                raise ValueError(f'costal source field expected torso20 coordinates for neighbor {sid}')
+            updated,report=apply_costal_source_field_if_changed(rows[sid],costal_field)
+            costal_displacements['visceral_neighbors'][str(sid)]=report
+            if report['changed_position_count']:
+                rows[sid]=updated
+                costal_conformed_surface_ids.add(sid)
     # Source lung lobes and diaphragm come from the exact source payload used by the reciprocal-interface owner.
     for sid in (305,306,307,308,309): rows[sid]=resp_rows[sid]
     old_interface=resp_meta['provenance']['diaphragm_lung_interface']
@@ -166,6 +354,7 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
         old_lung_patch[sid]=refine._patch_face_ids(entry,'registered_lung_face_index_ranges')
     # Candidate D includes the prior exact lung patches and the 923-face liver-side clip result.
     z=np.load(diaphragm_npz); dv=np.asarray(z['vertices'],dtype=np.float32); df=np.asarray(z['triangles'],dtype=np.int64)
+    if costal_mode: dv,costal_displacements['diaphragm']=apply_costal_source_positions(dv,costal_field)
     if len(df)!=40924: raise ValueError('candidate D face count differs from retained receipt')
     d_by_key={}
     for fi,tri in enumerate(df): d_by_key.setdefault(ck(dv,tri),[]).append(int(fi))
@@ -182,7 +371,11 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     # Candidate receipt identifies a contiguous 923-face diaphragm patch; 849 faces contact the retained liver shell and 74 restore D.
     d_liver_old_ids=list(range(len(df)-923,len(df)))
     if len(df)-len(d_liver_old_ids)!=40001: raise ValueError('candidate D source-face boundary changed')
-    l=np.load(liver_npz); lv=np.asarray(l['vertices'],dtype=np.float32); lf=np.asarray(l['triangles'],dtype=np.int64)
+    l=np.load(SURFACE_LIVER); lv=np.asarray(l['vertices'],dtype=np.float32)
+    lface_key='faces' if 'faces' in l.files else 'triangles' if 'triangles' in l.files else None
+    if lface_key is None: raise ValueError('aggregate liver candidate has no face array')
+    lf=np.asarray(l[lface_key],dtype=np.int64)
+    if costal_mode: lv,costal_displacements['aggregate_liver']=apply_costal_source_positions(lv,costal_field)
     main_by_key={}
     for fi,tri in enumerate(lf):
         key=ck(lv,tri)
@@ -199,7 +392,22 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     if len(d_liver_pairs)!=849 or len(d_liver_old_ids)-len(d_liver_pairs)!=74: raise ValueError('D/liver contact or restored-fragment count differs from exact input receipt')
     # Verify the face guide is bound to this exact connected closed aggregate shell.
     g=np.load(GUIDE); gv=np.asarray(g['vertices'],dtype=np.float32); gf=np.asarray(g['triangles'],dtype=np.int64); gid=np.asarray(g['stable_id_per_triangle'],dtype=np.int64)
+    if costal_mode: gv,_=apply_costal_source_positions(gv,costal_field)
     if not (np.array_equal(gv,lv) and np.array_equal(gf,lf) and set(np.unique(gid))==set(range(14,22))): raise ValueError('segment guide does not bind the exact CSG liver shell')
+    if impression_mode:
+        # Rebuild passive display patches over the inferred aggregate shell while
+        # preserving each existing NHA stable identity and source metadata.
+        for sid in range(14,22):
+            selected=np.flatnonzero(gid==sid)
+            if not len(selected): raise ValueError(f'impression guide has no faces for stable ID {sid}')
+            source_faces=gf[selected]
+            used=np.unique(source_faces)
+            inverse=np.full(len(gv),-1,dtype=np.int64); inverse[used]=np.arange(len(used))
+            row=dict(rows[sid]); row['vertices6']=normal_rows(gv[used],inverse[source_faces]); row['faces']=inverse[source_faces]
+            rows[sid]=row
+            repair=receipt['provenance']['source_id_map'][str(sid)]['repair']
+            repair['prior_patch_face_count_before_visceral_impression']=repair.get('patch_face_count')
+            repair['patch_face_count']=int(len(selected))
     coverage=validate_liver_patch_coverage(vertices=lv,faces=lf,stable_id_per_face=gid,
         patch_rows={sid:rows[sid] for sid in range(14,22)},source_id_map=receipt['provenance']['source_id_map'])
     # Existing 8 NHA rows are source-segment display patches of this one aggregate shell.
@@ -233,16 +441,19 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     for sid,ids in d_lung_new.items():
         if verify_subset(rows[sid],old_lung_patch[sid],rows[311],ids)!=len(ids): raise ValueError('D/lung source reciprocal-face check failed')
     # Jointly conform the 8 liver patches and 6 respiratory mechanical surfaces.
-    modified=sorted(list(range(14,22))+[305,306,307,308,309,311])
+    conformed_ids=set(list(range(14,22))+[305,306,307,308,309,311])
+    if costal_mode: conformed_ids.update(costal_conformed_surface_ids)
+    conformed_ids=sorted(conformed_ids)
+    modified=sorted(set(conformed_ids)|{310})
     prepared={}
-    for sid in modified:
+    for sid in conformed_ids:
         row=rows[sid]
         prepared[sid]=conform.conform_surface(row['vertices6'],row['faces'],
             progress=lambda fi,total,out,sid=sid: print('conform',sid,fi,total,out,flush=True),coordinate_resolution_m=0)
     short_report=conform.resolve_short_edges(prepared,1.25e-7,311)
     quality_report=quality.improve_sliver_faces(prepared)
     quality_report['implementation_sha256']=sha(Path(quality.__file__))
-    mappings={sid:prepared[sid][2] for sid in modified}
+    mappings={sid:prepared[sid][2] for sid in conformed_ids}
     # Remap and update the exact native lung-patch ranges. Since D parent groups were reordered first,
     # remapped D child faces remain contiguous in the serialized D record.
     interface_rows=[]
@@ -339,8 +550,15 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
         area_rows.append({'lung_stable_id':sid,'effective_area_m2':area})
     area=sum(x['effective_area_m2'] for x in area_rows)
     if area<=0: raise ValueError('respiratory effective area nonpositive')
-    for sid in modified:
+    for sid in conformed_ids:
         rows[sid]['vertices6']=prepared[sid][0]; rows[sid]['faces']=prepared[sid][1]
+    # Stable ID 310 remains source-bound as generic Pleura, but its rendered
+    # passive geometry is rederived from the final five lobe shells so its
+    # coordinates and triangulation follow exactly the same accepted source map.
+    pleura_vertices6,pleura_faces,pleura_derivation=pleura.derive_lung_union_exterior(
+        {sid:(prepared[sid][0],prepared[sid][1]) for sid in (305,306,307,308,309)},
+        coordinate_quantization_m=resp_meta.get('provenance',{}).get('conforming_respiratory_cells',{}).get('coordinate_resolution_m'))
+    rows[310]=dict(rows[310]); rows[310]['vertices6']=pleura_vertices6; rows[310]['faces']=pleura_faces
     # Verify non-target geometry remains byte-identical to the 93a source base.
     for sid,oldrow in rows93.items():
         if sid in modified or sid in range(14,23): continue
@@ -362,13 +580,15 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     r['provenance']['diaphragm_lung_interface']['diaphragm_topology_after_joint_repair']=dtop_summary
     r['provenance']['diaphragm_lung_interface']['reciprocal_triangle_count_after_joint_repair']=sum(x['shared_reciprocal_child_face_count'] for x in interface_rows)
     r['provenance']['diaphragm_lung_interface']['qualification']='exact child-interface coordinate and winding checks pass after common-grid clipping, numerical-seam weld and shared sliver conditioning; native cycle audit pending'
-    r['provenance']['source_id_map']={k:v for k,v in r['provenance']['source_id_map'].items() if int(k) not in {305,306,307,308,309,311}}
-    for sid in (305,306,307,308,309,311): r['provenance']['source_id_map'][str(sid)]=resp_meta['provenance']['source_id_map'][str(sid)]
+    resp_bound_ids={305,306,307,308,309,311}
+    r['provenance']['source_id_map']={k:v for k,v in r['provenance']['source_id_map'].items() if int(k) not in resp_bound_ids}
+    for sid in sorted(resp_bound_ids): r['provenance']['source_id_map'][str(sid)]=resp_meta['provenance']['source_id_map'][str(sid)]
     r['provenance']['respiratory_liver_joint_geometry']={
         'immutable_93a_base_payload_sha256':EXPECTED['base93_payload'],'input_composed_liver_payload_sha256':EXPECTED['composition_payload'],
         'respiratory_refinement005_payload_sha256':EXPECTED['resp_payload'],'candidate_diaphragm_npz_sha256':EXPECTED['diaphragm_npz'],
-        'candidate_closed_liver_npz_sha256':EXPECTED['liver_npz'],'segment_attribution_guide_sha256':EXPECTED['guide_npz'],
-        'method':'Recover exact diaphragm/lung reciprocal face sets by canonical Float32 coordinate triangles; reorder D patch parents into contiguous runs; append the 923 diaphragm-side clipping faces; clip all five closed lung shells, diaphragm and eight aggregate liver exterior patches on the same exact rational Kuhn field; contract the qualified seam/short edges with the shared coordinate quotient; improve eligible sliver diagonals jointly across reciprocal owners.',
+        'candidate_closed_liver_npz_sha256':sha(SURFACE_LIVER),'source_csg_liver_npz_sha256':EXPECTED['liver_npz'],
+        'segment_attribution_guide_sha256':sha(GUIDE),
+        'method':'Recover exact diaphragm/lung reciprocal face sets by canonical Float32 coordinate triangles; reorder D patch parents into contiguous runs; append the 923 diaphragm-side clipping faces; clip all five closed lung shells, diaphragm and eight aggregate liver exterior patches on the same exact rational Kuhn field; contract the qualified seam/short edges with the shared coordinate quotient; improve eligible sliver diagonals jointly across reciprocal owners; derive stable ID 310 as the exact external union boundary of the final five lobe surfaces.',
         'modified_stable_ids':modified,'diaphragm_lung_parent_reciprocal_faces':{str(sid):len(ids) for sid,ids in d_lung_ids.items()},
         'diaphragm_lung_recovered_by_exact_canonical_coordinates':True,'diaphragm_parent_liver_patch_face_count':len(d_liver_old_ids),
         'diaphragm_liver_parent_reciprocal_face_count':len(d_liver_pairs),'diaphragm_liver_restored_source_fragment_face_count':len(d_liver_old_ids)-len(d_liver_pairs),
@@ -392,41 +612,96 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
     r['provenance']['liver_diaphragm_geometry_candidate']={
         'candidate_source_path':str(CAND),'candidate_manifest_sha256':sha(diaphragm_candidate_manifest),
         'source_diaph_registration_payload_sha256':EXPECTED['resp_payload'],'main_liver_payload_sha256':EXPECTED['liver_npz'],
+        'aggregate_liver_surface_candidate_sha256':sha(SURFACE_LIVER),
         'interface_ownership':'D and aggregate liver own exact reciprocal copies on the 849-face clipped material boundary; 74 source D fragments restore the surface intersected only by the excluded cranial remnant.',
         'status':'static reciprocal interface preserved through joint common-field conforming; native full-cycle/neighbor qualification pending'}
+    if impression_mode:
+        owner_values, owner_counts = np.unique(np.asarray(np.load(IMPRESSION)['source_owner'], dtype=np.int64), return_counts=True)
+        r['provenance']['liver_diaphragm_geometry_candidate']['visceral_impression']={
+            'candidate_npz_sha256':sha(IMPRESSION),'candidate_report_sha256':sha(IMPRESSION_REPORT),
+            'driver_sha256':report_meta.get('driver_sha256'),'source_owner_face_counts':{
+                str(int(owner)):int(count) for owner,count in zip(owner_values,owner_counts)},
+            'scope':report_meta.get('scope'),
+            'interpretation':'inferred passive aggregate exterior with source-face organ lineage; nearest-source labels are display patches, not internal segment boundaries or segment volumes'}
+    if costal_mode:
+        control_doc=json.loads(COSTAL_PATH.read_text())
+        r['provenance']['thorax_costal_source_registration']={
+            'model':'smooth_compact_costal_relief_field_v1',
+            'parameter_status':'inferred_reference_registration_not_measured_subject_geometry',
+            'functional_role':'passive geometry registration only; no additional forces, mass or physiology',
+            'source_payload_sha256':costal_field['source_payload_sha256'],
+            'controls_file_sha256':costal_field['controls_sha256'],
+            'controls_receipt_sha256':costal_field['receipt_sha256'],
+            'field_sha256':costal_field['field_sha256'],
+            'source_driver_sha256':costal_field['source_driver_sha256'],
+            'candidate013_payload_sha256':costal_field['candidate_payload_sha256'],
+            'source_lung_ids':list(range(305,310)),
+            'common_field_source_ids':list(COSTAL_COMMON_FIELD_IDS),
+            'jointly_transformed_surface_ids':modified,
+            'directly_conformed_surface_ids':conformed_ids,
+            'derived_after_lobe_conforming_surface_ids':[310],
+            'fixed_airway_hilum_anchor_ids':control_doc['anchor_surface_ids'],
+            'fixed_anchor_point_count':control_doc['anchor_point_count'],
+            'accepted_source_fit_steps':control_doc['accepted_steps'],
+            'source_coordinate_frame':'registered torso20 body-local metres',
+            'field_parameters':control_doc['algorithm'],
+            'per_surface_displacements_before_conforming':costal_displacements,
+            'shared_coordinate_rule':'one field evaluation for equal source-local coordinates; transformed points are rounded at the existing Float32 NHANAT boundary, then reciprocal patches are jointly conformed; stable ID 310 is rebuilt from the final exact external lobe-union boundary',
+            'qualification':'offline shared-source registration recomposed before common conforming; accepted native frame and complete-cycle interfaces require fresh validation'}
     r['thorax_source_volume_m3']['five_lung_envelopes']=[volumes[str(s)] for s in (305,306,307,308,309)]
     r['thorax_source_volume_m3']['sum']=sum(r['thorax_source_volume_m3']['five_lung_envelopes'])
     r['qualification']['diaphragm_lung_interface']='static exact reciprocal interface survives common conforming mesh, numerical seam closure and shared quality conditioning; native complete-cycle qualification pending'
     r['qualification']['liver_diaphragm_interface']='static exact reciprocal 849-face source interface extended through common conforming mesh; native cycle and neighboring-organ qualification pending'
     r['qualification']['liver_surface_identity']='registered Z-Anatomy aggregate exterior with inferred passive segment display patches; internal Couinaud planes and independent segment volumes are not represented'
     r['qualification']['self_intersection']='unrelated whole-body and dynamic interface checks remain separate; no whole-body intersection-free claim'
+    if costal_mode:
+        r['qualification']['costal_source_registration']='inferred passive common-coordinate reference fit; new dynamic and full-cycle native geometry validation pending'
     # Save all interface parent-child face mappings for deterministic reconstruction.
     face_maps={}
-    for sid in modified:
+    for sid in conformed_ids:
         mp=mappings[sid]
         if sid==311: selected=set().union(*[set(x) for x in d_lung_new.values()],set(d_liver_new))
         elif sid in old_lung_patch: selected=set(old_lung_patch[sid])
         elif sid in range(14,22): selected=set(range(len(segment_source_parent[sid]))) # source local face IDs before replacement
+        elif costal_mode and sid in COSTAL_NEIGHBOR_IDS: selected=set(mappings[sid])
         else: selected=set()
         face_maps[str(sid)]={str(int(fi)):mp[int(fi)] for fi in sorted(selected)}
     OUT.mkdir(parents=True)
     raw,nv,ni=refine._pack(base_header,rows)
-    payload=OUT/'resting-thorax.nhanatomy'; payload.write_bytes(raw); payload_sha=sha(payload)
-    r['payload'].update({'path':str(payload),'sha256':payload_sha,'surface_count':len(rows),'vertex_count':nv,'index_count':ni})
-    r['functional_bindings']['anatomy_payload_sha256']=payload_sha
-    r['provenance']['cardiac_geometry_binding']['output_anatomy_payload_sha256']=payload_sha
+    pre_pleura_payload=OUT/'pre-pleura-resting-thorax.nhanatomy'; pre_pleura_payload.write_bytes(raw)
+    pre_pleura_sha=sha(pre_pleura_payload)
+    r['payload'].update({'path':str(pre_pleura_payload),'sha256':pre_pleura_sha,'surface_count':len(rows),'vertex_count':nv,'index_count':ni})
+    r['functional_bindings']['anatomy_payload_sha256']=pre_pleura_sha
+    r['provenance']['cardiac_geometry_binding']['output_anatomy_payload_sha256']=pre_pleura_sha
     if 'ventricular_wall_binding' in r['provenance']['cardiac_geometry_binding']:
-        r['provenance']['cardiac_geometry_binding']['ventricular_wall_binding']['output_anatomy_payload_sha256']=payload_sha
+        r['provenance']['cardiac_geometry_binding']['ventricular_wall_binding']['output_anatomy_payload_sha256']=pre_pleura_sha
     r['provenance']['cardiac_geometry_binding']['downstream_respiratory_liver_joint_interface']={
-        'input_payload_sha256':EXPECTED['composition_payload'],'output_payload_sha256':payload_sha,'modified_stable_ids':modified,'preserved_cardiac_subset_byte_identity':True}
-    recpath=OUT/'resting-anatomy-receipt.json'; recpath.write_text(json.dumps(r,indent=2,sort_keys=True)+'\n')
+        'input_payload_sha256':EXPECTED['composition_payload'],'output_payload_sha256':pre_pleura_sha,'modified_stable_ids':modified,'preserved_cardiac_subset_byte_identity':True}
+    pre_pleura_receipt=OUT/'pre-pleura-resting-anatomy-receipt.json'
+    pre_pleura_receipt.write_text(json.dumps(r,indent=2,sort_keys=True)+'\n')
+    pleura_result=pleura.build_candidate(pre_pleura_payload,pre_pleura_receipt,OUT)
+    payload=Path(pleura_result['output_payload_path']); payload_sha=pleura_result['output_payload_sha256']
+    recpath=Path(pleura_result['output_receipt_path']); r=json.loads(recpath.read_text())
+    r['provenance']['cardiac_geometry_binding']['downstream_respiratory_liver_joint_interface']={
+        'input_payload_sha256':EXPECTED['composition_payload'],'output_payload_sha256':payload_sha,
+        'modified_stable_ids':modified,'preserved_cardiac_subset_byte_identity':True}
+    recpath.write_text(json.dumps(r,indent=2,sort_keys=True)+'\n')
+    final_header=base.HEADER.unpack_from(payload.read_bytes())
+    nv,ni=int(final_header[3]),int(final_header[4])
     config=json.loads(CONFIG.read_text()); config['diaphragm_area_m2']=area
     config.setdefault('parameter_scope',{})['joint_respiratory_liver_conforming_mesh']='Inferred reference registered geometry with a common exact piecewise-affine respiratory field; area recomputed from the final closed lobe geometry. Not measured-subject data.'
     configpath=OUT/'resting-reference-respiration.json'; configpath.write_text(json.dumps(config,indent=2,sort_keys=True)+'\n')
     (OUT/'interface-parent-child-face-map.json').write_text(json.dumps(face_maps,separators=(',',':'))+'\n')
     source_hashes={'conforming_field_sha256':sha(Path(conform.__file__)),'refinement_sha256':sha(Path(refine.__file__)),
         'interface_owner_sha256':sha(Path(base.__file__)),'mesh_quality_sha256':sha(Path(quality.__file__)),
+        'pleura_proxy_owner_sha256':sha(Path(pleura.__file__)),
         'builder_script_sha256':sha(Path(__file__)),'config_sha256':sha(CONFIG),'guide_receipt_sha256':sha(GUIDE_REC)}
+    if impression_mode:
+        source_hashes['impression_candidate_sha256']=sha(IMPRESSION)
+        source_hashes['impression_candidate_report_sha256']=sha(IMPRESSION_REPORT)
+    if costal_mode:
+        source_hashes['costal_field_controls_sha256']=costal_field['controls_sha256']
+        source_hashes['costal_field_controls_receipt_sha256']=costal_field['receipt_sha256']
     result={'payload_path':str(payload),'payload_sha256':payload_sha,'receipt_path':str(recpath),'receipt_sha256':sha(recpath),
         'config_path':str(configpath),'config_sha256':sha(configpath),'base_payload_sha256':EXPECTED['composition_payload'],
         'immutable_93a_base_payload_sha256':EXPECTED['base93_payload'],'surface_count':len(rows),'vertex_count':nv,'index_count':ni,
@@ -438,7 +713,9 @@ def build_candidate(*, composition_payload: Path, composition_receipt: Path,
         'diaphragm_liver_lineage_occurrence_count':liver_child_pair_lineage_occurrences,
         'diaphragm_liver_duplicate_lineage_excess_count':lineage_excess,
         'diaphragm_liver_duplicate_lineage_excess':duplicate_lineage,
-        'diaphragm_topology':dtop_summary,'shared_short_edge_report':short_report,'quality_report':quality_report,'source_implementation_hashes':source_hashes}
+        'diaphragm_topology':dtop_summary,'shared_short_edge_report':short_report,'quality_report':quality_report,
+        'pleura_derivation':pleura_derivation,'source_implementation_hashes':source_hashes}
+    if costal_mode: result['costal_source_displacements_before_conforming']=costal_displacements
     (OUT/'result.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
     return result
 
@@ -452,13 +729,22 @@ def main(argv=None):
         "respiration-config", "output-dir",
     ):
         parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--liver-impression-npz", type=Path)
+    parser.add_argument("--liver-impression-report", type=Path)
+    parser.add_argument("--costal-field-controls", type=Path)
+    parser.add_argument("--costal-field-receipt", type=Path)
     args = parser.parse_args(argv)
-    result = build_candidate(**{name.replace("-", "_"): getattr(args, name.replace("-", "_")) for name in (
+    kwargs = {name.replace("-", "_"): getattr(args, name.replace("-", "_")) for name in (
         "composition-payload", "composition-receipt", "immutable-base-payload",
         "respiration-payload", "respiration-receipt", "diaphragm-candidate-manifest",
         "diaphragm-npz", "liver-npz", "segment-guide-npz", "segment-guide-receipt",
         "respiration-config", "output-dir",
-    )})
+    )}
+    kwargs.update(liver_impression_npz=args.liver_impression_npz,
+                  liver_impression_report=args.liver_impression_report,
+                  costal_field_controls=args.costal_field_controls,
+                  costal_field_receipt=args.costal_field_receipt)
+    result = build_candidate(**kwargs)
     print(json.dumps(result, indent=2, sort_keys=True))
 
 
