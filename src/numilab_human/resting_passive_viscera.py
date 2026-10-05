@@ -24,6 +24,40 @@ FAMILIES = (("FMA7200", "small intestine", "Abdomen", 56),
             ("FMA15900", "urinary bladder", "pelvis", 1),
             ("FMA9600", "prostate", "pelvis", 1))
 
+# These source components all belong to FMA7201, but are not seven distinct
+# bowel segments. Keep family ownership for the reduced circulation while
+# preserving the narrower source identities used for anatomical interfaces.
+COLON_COMPONENTS = {
+    "FJ2566": ("FMA14545", "ascending colon"),
+    "FJ2567": ("FMA14547", "descending colon"),
+    "FJ2568": ("FMA15044", "taenia libera"),
+    "FJ2569": ("FMA15042", "taenia mesocolica"),
+    "FJ2570": ("FMA15043", "taenia omentalis"),
+    "FJ2571": ("FMA14544", "rectum"),
+    "FJ2572": ("FMA14546", "transverse colon"),
+}
+
+
+def anatomical_component_identity(atlas: dict, member_id: str) -> dict | None:
+    """Resolve the supported colon components against the loaded source table.
+
+    This records source anatomy, not an automatic exemption from collision or
+    tissue-volume checks. A taenia is a muscular component of the colon wall;
+    its actual interface still needs a geometry audit.
+    """
+    component = COLON_COMPONENTS.get(member_id)
+    if component is None:
+        return None
+    concept, label = component
+    members = atlas["tables"]["part_of"].get((concept, label), set())
+    if member_id not in members:
+        raise ValueError("source anatomical component membership changed: " + member_id)
+    return {"concept_id": concept, "name": label, "hierarchy": "part_of",
+            "source_member": member_id, "family_concept_id": "FMA7201",
+            "geometry_role": "colon wall muscle component" if concept in
+                {"FMA15042", "FMA15043", "FMA15044"} else "large intestine segment",
+            "separate_physiological_compartment": False}
+
 
 def vascular_bindings(source_map: dict) -> list[dict]:
     """Name the anatomical regions represented by the existing CVSim states.
@@ -131,6 +165,9 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                     "source_body_id": source_body, "myosim_body": target,
                     "vertex_count": len(local), "triangle_count": len(faces),
                     "local_bounds_m": [local.min(axis=0).tolist(), local.max(axis=0).tolist()]}
+            component = anatomical_component_identity(atlas, member_id)
+            if component is not None:
+                item["anatomical_component"] = component
             additions.append(item)
             source_map[str(next_id)] = {"name": "ileocecal junction" if member_id == "FJ2599" else label,
                 "provider": "BodyParts3D v4.0 existing organ-family compiler",
@@ -140,6 +177,8 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                                           "member_id": member_id, "member_sha256": digest,
                                           "myosim_body": target, "core_body_index": owner,
                                           "layer": "vessel" if layer == 2 else "organ"}}
+            if component is not None:
+                source_map[str(next_id)]["source_owner_metadata"]["anatomical_component"] = component
             if compartment_by_name is not None:
                 source_map[str(next_id)]["vascular_compartment_id"] = compartment_by_name[label]
             added_members[member_id] = next_id; family_ids.append(next_id)
@@ -158,6 +197,7 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
         "base_receipt": str(base_receipt), "base_receipt_sha256": human.sha256(base_receipt),
         "base_payload_sha256": hashlib.sha256(raw).hexdigest(), "added_surfaces": additions,
         "complete_source_families": family_rows,
+        "source_component_table_sha256": human.sha256(anatomy.SOURCES / "partof_element_parts.txt"),
         "preserved_base_record_bytes_sha256": hashlib.sha256(raw[anatomy.HEADER.size:vo]).hexdigest(),
         "preserved_base_vertex_bytes_sha256": hashlib.sha256(raw[vo:io]).hexdigest(),
         "preserved_base_index_bytes_sha256": hashlib.sha256(raw[io:]).hexdigest(),
