@@ -226,7 +226,9 @@ def propagate_interface_edges(rows, receipt, seeds):
 
 
 def remap_ids(ids, old_to_new):
-    return sorted(new for old in sorted(ids) for new in old_to_new[int(old)])
+    # A connectivity repair may give a child more than one source parent.
+    # Anatomical patches contain each resulting triangle exactly once.
+    return sorted({new for old in sorted(ids) for new in old_to_new[int(old)]})
 
 
 def face_set_boundary_edges(faces, selected_face_ids):

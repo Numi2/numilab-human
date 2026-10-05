@@ -1,0 +1,25 @@
+surface 305 0 12624 3
+surface 305 10000 12624 39141
+surface 306 0 11970 7
+surface 306 10000 11970 40257
+surface 307 0 10220 3
+surface 307 10000 10220 34389
+surface 308 0 11478 1
+surface 308 10000 11478 38157
+surface 309 0 9040 3
+surface 311 0 40054 3
+surface 311 10000 40054 37615
+surface 311 20000 40054 75081
+surface 311 30000 40054 112665
+surface 311 40000 40054 151631
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/n/numi-human-resting-anatomy-source-004/src/numilab_human/resting_respiratory_conforming_field.py", line 493, in <module>
+    print(json.dumps(build_candidate(args.input, args.receipt, args.config, args.output,
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.coordinate_resolution_m, args.short_edge_resolution_m, args.improve_triangle_quality), sort_keys=True))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-resting-anatomy-source-004/src/numilab_human/resting_respiratory_conforming_field.py", line 397, in build_candidate
+    raise ValueError('conforming diaphragm patch is not contiguous')
+ValueError: conforming diaphragm patch is not contiguous

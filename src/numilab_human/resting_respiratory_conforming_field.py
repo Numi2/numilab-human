@@ -302,7 +302,8 @@ def resolve_short_edges(prepared, resolution_m, seam_surface_id=None):
     return report
 
 
-def build_candidate(payload, receipt_path, config_path, output, coordinate_resolution_m=0, short_edge_resolution_m=0):
+def build_candidate(payload, receipt_path, config_path, output, coordinate_resolution_m=0, short_edge_resolution_m=0,
+                    improve_triangle_quality=False):
     from . import resting_anatomy_interface_patch as base
     from . import resting_anatomy_conforming_refinement as refine
     sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -336,6 +337,11 @@ def build_candidate(payload, receipt_path, config_path, output, coordinate_resol
     prepared = {sid: conform_surface(rows[sid]['vertices6'], rows[sid]['faces'],
         progress=lambda *x, sid=sid: print('surface', sid, *x, flush=True), coordinate_resolution_m=coordinate_resolution_m) for sid in modified}
     short_edge_report = resolve_short_edges(prepared, short_edge_resolution_m, 311) if short_edge_resolution_m else None
+    quality_report = None
+    if improve_triangle_quality:
+        from . import resting_respiratory_mesh_quality as quality
+        quality_report = quality.improve_sliver_faces(prepared)
+        quality_report['implementation_sha256'] = sha(Path(quality.__file__))
     details, mappings = {}, {}
     for sid in modified:
         row = rows[sid]
@@ -450,6 +456,7 @@ def build_candidate(payload, receipt_path, config_path, output, coordinate_resol
         'implementation_sha256': sha(Path(__file__)), 'grid_spacing_m': GRID_SPACING_M,
         'coordinate_resolution_m': coordinate_resolution_m,
         'short_edge_resolution': short_edge_report,
+        'triangle_quality_conditioning': quality_report,
         'source_geometry_status': ('inferred reference geometry with bounded short-edge contraction' if short_edge_resolution_m else
                                   'inferred reference geometry with declared source-space numerical quantization' if coordinate_resolution_m else
                                   'source coordinates retained within Float32 serialization precision'),
@@ -477,9 +484,11 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--coordinate-resolution-m', type=float, default=0)
     parser.add_argument('--short-edge-resolution-m', type=float, default=0)
+    parser.add_argument('--improve-triangle-quality', action='store_true')
     args = parser.parse_args()
     if args.coordinate_resolution_m not in (0, 1e-6):
         parser.error('the validated candidate numerical resolutions are zero or one micrometre')
     if args.short_edge_resolution_m not in (0, 1.25e-7):
         parser.error('the short-edge resolutions are zero or 0.125 micrometres')
-    print(json.dumps(build_candidate(args.input, args.receipt, args.config, args.output, args.coordinate_resolution_m, args.short_edge_resolution_m), sort_keys=True))
+    print(json.dumps(build_candidate(args.input, args.receipt, args.config, args.output,
+        args.coordinate_resolution_m, args.short_edge_resolution_m, args.improve_triangle_quality), sort_keys=True))
