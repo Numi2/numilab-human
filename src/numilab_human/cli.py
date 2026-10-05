@@ -2435,6 +2435,12 @@ def parser() -> argparse.ArgumentParser:
         help="build voxel-exact volume geometry for a pinned whole-body organ-label set without admitting mechanics",
     )
     add_healthy_total_body_ct_organ_voxel_tets_arguments(healthy_total_body_ct_organ_voxel_tets)
+    from .healthy_total_body_ct_vessel_profiles import add_arguments as add_healthy_total_body_ct_vessel_profile_arguments
+    healthy_total_body_ct_vessel_profiles = commands.add_parser(
+        "healthy-total-body-ct-vessel-profiles",
+        help="measure hash-bound aorta and VCI mask areas/centroids across source CT planes without admitting lumen or flow",
+    )
+    add_healthy_total_body_ct_vessel_profile_arguments(healthy_total_body_ct_vessel_profiles)
     from .healthy_total_body_ct_ras_x_partition import (
         add_audit_arguments as add_healthy_total_body_ct_ras_x_audit_arguments,
         add_compile_arguments as add_healthy_total_body_ct_ras_x_compile_arguments,
