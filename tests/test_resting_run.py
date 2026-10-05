@@ -80,6 +80,15 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
             command(self.args)
 
+    def test_explicit_respiration_is_hashed_and_delivered_to_the_existing_owner(self):
+        self.args.respiration = self.root / 'source-bound-respiration.json'
+        self.args.respiration.write_bytes(b'explicit source-derived respiratory parameters')
+        argv, hashes = command(self.args)
+        owner = str(self.args.respiration.resolve())
+        self.assertEqual(argv[argv.index('--resting-scene') + 2], owner)
+        self.assertEqual(hashes[owner], hashlib.sha256(self.args.respiration.read_bytes()).hexdigest())
+        self.assertNotIn(str((self.root / 'matter/examples/resting-reference-respiration.json').resolve()), hashes)
+
     def test_intervention_requires_recovery(self):
         self.args.drive_intervention = (100., 310., .5)
         with self.assertRaisesRegex(HumanImportError, "recovery interval"):

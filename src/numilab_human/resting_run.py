@@ -72,7 +72,8 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
                      "matter/shaders/NumiMatterPhysicalStateDigest.metallib"):
         checked(args.build / relative)
     network = checked(args.circulation or args.lab / "matter/tools/fixtures/cvsim21.native.v3.json")
-    respiration = checked(args.lab / "matter/examples/resting-reference-respiration.json")
+    respiration = checked(getattr(args, "respiration", None) or
+                          args.lab / "matter/examples/resting-reference-respiration.json")
     checked(args.body_scene); checked(args.anatomy_receipt)
     _require(math.isfinite(args.seconds) and args.seconds > 0, "duration must be positive")
     dt = getattr(args, "dt", .001)
@@ -130,6 +131,7 @@ def run(args: argparse.Namespace) -> int:
                    "NUMI_HUMAN_TRAINING_PROFILE", "NUMI_HUMAN_RESTING_TRANSACTION_PROBE",
                    "NUMI_HUMAN_RESTING_INSPECTION_TOUR",
                    "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS",
+                   "NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS",
                    "NUMI_HUMAN_GPU_TIMING", "NUMI_HUMAN_GPU_TIMING_STAGE",
                    "NUMI_MATTER_GPU_TIMING", "NUMI_MATTER_GPU_TIMING_STAGE",
                    "NUMI_HUMAN_SUPPORT_DIAGNOSTICS", "NUMI_HUMAN_SUPPORT_GPU_TIMING",
@@ -160,6 +162,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--circulation", type=Path,
                         help="explicit native circulation owner payload; default is the retained upstream CVSim21 variant")
+    parser.add_argument("--respiration", type=Path,
+                        help="explicit native respiratory reference parameters, including the source-derived diaphragm area")
     parser.add_argument("--seconds", type=float, default=310,
                         help="physical duration; default permits 10 s initialization plus 300 s observation")
     parser.add_argument("--dt", type=float, default=.001,
