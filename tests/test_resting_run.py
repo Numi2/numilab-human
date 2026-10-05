@@ -87,11 +87,24 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.args.drive_intervention = (100., 160., .5)
         argv, _ = command(self.args)
         self.assertEqual(argv[-4:], ["--resting-drive-intervention", "100.0", "160.0", "0.5"])
+        self.args.drive_intervention = (100., 160., 2.1)
+        with self.assertRaises(HumanImportError):
+            command(self.args)
 
     def test_duration_must_respect_physical_cadence(self):
         self.args.seconds = .0015
-        with self.assertRaisesRegex(HumanImportError, "integer number of 1 ms"):
+        with self.assertRaisesRegex(HumanImportError, "integer number of native steps"):
             command(self.args)
+
+    def test_explicit_timestep_preserves_requested_physical_time(self):
+        self.args.dt = .002
+        argv, _ = command(self.args)
+        self.assertEqual(argv[argv.index("--muscle-step-count") + 1], "155000")
+        self.assertEqual(argv[argv.index("--muscle-step-seconds") + 1], "0.002")
+        for dt in (0., -.001, .0021, float('nan')):
+            self.args.dt = dt
+            with self.assertRaisesRegex(HumanImportError, "timestep"):
+                command(self.args)
 
     def test_cpu_solver_experiment_cannot_enter_native_run(self):
         with patch.dict("os.environ", {"NUMI_HUMAN_STAND_CPU_FACTOR": "1"}):

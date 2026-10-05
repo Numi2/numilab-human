@@ -75,10 +75,12 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     respiration = checked(args.lab / "matter/examples/resting-reference-respiration.json")
     checked(args.body_scene); checked(args.anatomy_receipt)
     _require(math.isfinite(args.seconds) and args.seconds > 0, "duration must be positive")
-    dt = .001
+    dt = getattr(args, "dt", .001)
+    _require(math.isfinite(dt) and 0 < dt <= .002,
+             "the resting native timestep must be positive and at most 2 ms")
     steps = round(args.seconds / dt)
     _require(0 < steps <= 4_000_000 and abs(steps * dt - args.seconds) < 1e-8,
-             "duration must be an integer number of 1 ms native steps (at most 4000 seconds)")
+             "duration must be an integer number of native steps (at most 4000000 steps)")
     pose = scene["pose"]["root_translation_xyz_m"] + scene["pose"]["root_delta_quaternion_xyzw"]
     _require(len(pose) == 7 and all(math.isfinite(x) for x in pose), "invalid root seed")
     mass = anatomy["mass_geometry_accounting"]["reference_total_mass_kg"]
@@ -98,7 +100,7 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     if args.drive_intervention:
         start, end, scale = args.drive_intervention
         _require(all(math.isfinite(x) for x in (start, end, scale)) and
-                 0 <= start < end < args.seconds and 0 <= scale <= 3,
+                 0 <= start < end < args.seconds and 0 <= scale <= 2,
                  "intervention must be bounded within the run, with a recovery interval")
         argv.extend(["--resting-drive-intervention", *map(str, (start, end, scale))])
     return argv, assets
@@ -118,12 +120,16 @@ def run(args: argparse.Namespace) -> int:
                NUMI_HUMAN_TRAINING_PROFILE="1")
     if args.inspection_tour:
         _require(not args.mechanics_only, "an inspection tour requires the native viewer")
+        _require(math.isfinite(args.inspection_period_seconds) and args.inspection_period_seconds > 0,
+                 "inspection period must be positive finite seconds")
         env["NUMI_HUMAN_RESTING_INSPECTION_TOUR"] = "1"
+        env["NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS"] = str(args.inspection_period_seconds)
     receipt = {"argv": argv, "asset_sha256": assets,
                "environment": {k: env[k] for k in (
                    "NUMI_HUMAN_SPLIT_STAND", "NUMI_HUMAN_EXECUTION_STAGES",
                    "NUMI_HUMAN_TRAINING_PROFILE", "NUMI_HUMAN_RESTING_TRANSACTION_PROBE",
                    "NUMI_HUMAN_RESTING_INSPECTION_TOUR",
+                   "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS",
                    "NUMI_HUMAN_GPU_TIMING", "NUMI_HUMAN_GPU_TIMING_STAGE",
                    "NUMI_HUMAN_SUPPORT_DIAGNOSTICS", "NUMI_HUMAN_SUPPORT_GPU_TIMING",
                    "NUMI_HUMAN_PARALLEL_MASS_ASSEMBLY", "NUMI_HUMAN_KINEMATICS_CACHE",
@@ -155,10 +161,14 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="explicit native circulation owner payload; default is the retained upstream CVSim21 variant")
     parser.add_argument("--seconds", type=float, default=310,
                         help="physical duration; default permits 10 s initialization plus 300 s observation")
+    parser.add_argument("--dt", type=float, default=.001,
+                        help="physical timestep in seconds, at most .002; default .001")
     parser.add_argument("--dimension", type=int, choices=(512, 768, 1024), default=512)
     parser.add_argument("--mechanics-only", action="store_true", help="diagnostic without the native viewer or movie")
     parser.add_argument("--inspection-tour", action="store_true",
                         help="cycle the native anatomical layers every five simulated seconds without changing physics")
+    parser.add_argument("--inspection-period-seconds", type=float, default=5.0,
+                        help="simulated seconds per anatomical layer during the presentation-only inspection tour")
     parser.add_argument("--drive-intervention", type=float, nargs=3, metavar=("START", "END", "SCALE"))
     parser.set_defaults(handler=run)
 
