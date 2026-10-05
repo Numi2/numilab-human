@@ -22,9 +22,9 @@ match. The result is closed and oriented with Euler characteristic 2, and the
 same exact Float32 predicate reports zero remaining self-intersection pairs
 for this surface. Surface area changes by `-8.03e-6` relative and the signed
 envelope volume by `+1.93e-7` relative. This closes only the named surface's
-self-intersection check. The whole-payload receipt still leaves other
-self-intersections, lobe interfaces, pleura interfaces and organ interfaces
-unassessed.
+self-intersection check. The common-scale lobe audit below separately finds
+2,299 cross-lobe triangle intersections; lobe and pleura interfaces remain
+open anatomy gaps.
 
 The two pairwise lobe audits use the same compiled payload hash but disagree.
 The older `lobe-pair-audit.json` integerized each lobe on its own scale before
@@ -73,3 +73,46 @@ The native invocation, run log, coupled trace and surface audit CSVs are
 retained in `native-002/`; the earlier failure traces are in `native-001/`.
 The full NHA payload, MRVPack and movie remain on the Mac mini under
 `/Users/n/numi-human-resting-evidence-20261005/`; no board visual was created.
+
+## Patched-anatomy native integration and timestep comparison
+
+The later `cardiac-geometry-binding-002/candidate-final` composition consumes
+the exact patched anatomy payload above (`e6894609…c0c84a8d`) and emits the
+native runtime payload `3f7659c6…de7bb2e9`. Its retained receipt
+(`68a65c61…4419dda62`) records that the non-cardiac source records, including
+the right-inferior-lung patch, are copied in source order; it also records
+`mechanical_mass_or_volume_changed=false` and
+`physical_solver_changed=false`. The two native runs below bind this composed
+payload by hash, establishing software integration of the lung patch.
+
+Both runs accepted 6.000000285 simulated seconds, seven complete hydraulic
+filling/ejection cycles, one breath, and zero root assistance. The 1 ms run in
+`native-004/` recorded 497.327652 mL aortic and 490.468403 mL pulmonary
+ejection, a 552.824 mL maximum tidal volume, 581.67 m/s² maximum generalized
+acceleration, and 2.40 µm maximum penetration. It took 121.52 seconds of wall
+time. The 2 ms run in `native-dt2-002/` recorded 497.111992 mL aortic and
+490.232778 mL pulmonary ejection, a 552.722 mL maximum tidal volume, 3,011.9
+m/s² maximum generalized acceleration, 3.70 µm maximum penetration, and
+706.03 N support force. It took 62.99 seconds of wall time, about 1.93 times
+faster. The larger acceleration peak at 2 ms remains a meaningful cadence
+limit despite close circulation and breathing totals.
+
+The 1 ms binary SHA-256 is
+`5f308c35c2c43ad40c54a33456d65677c6a40321dad0b4acbc174179648f9f62`; the 2 ms
+binary is `f69d9d8215db84996e3f11e517893ddd84c32a06570b579b449a0fa0a4edf2a8`.
+Both invocations bind runtime source revision
+`f425e09a6d3a2971f107e31b75740c251c930103`. Their exact manifests, logs,
+coupled traces and surface-audit CSVs are retained locally. The full composed
+anatomy payload and rendered movies remain on the Mac mini.
+
+An additional attempt to pass the intermediate `e689…` payload directly to
+the native runtime stopped at admission with “lacks the source-bound cardiac
+cavity ownership receipt.” Its metadata confirms no physical step ran. This
+is a composition-contract failure, not a failed simulation; the source-bound
+composition above supplies that receipt.
+
+These are six-second, bed-supported supine software diagnostics, not the
+requested ten-second standing result. The 2 ms acceleration peak and pending
+presentation qualification remain open, as do the 2,299 lobe intersections,
+pleura interfaces, cardiac electrical-conduction and myocardial-force
+qualification, biological validation, and measured-subject qualification.

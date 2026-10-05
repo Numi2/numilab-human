@@ -1563,9 +1563,12 @@ repairs eight exact native-Float32 self-intersection pairs on the registered
 right inferior lung without moving retained coordinates. Its independent
 common-scale pair audit still reports 2,299 cross-lobe triangle intersections;
 the earlier per-lobe-scaled audit is retained as an invalid cross-surface
-measurement. Lobe and pleura interfaces remain open. A separate six-second
-supine native run accepted 6,000 steps, seven hydraulic filling/ejection cycles
-and one breath with finite skin and chamber presentation, but remains
-presentation-pending, has a high acceleration peak, and used a different NHA
-payload from the lung-patch build. It does not qualify cardiac electrical
-conduction, biological physiology, or ten-second standing.
+measurement. Lobe and pleura interfaces remain open. A later source-bound
+cardiac-geometry composition binds this exact lung-patch payload into the
+native torso payload; two six-second supine runs then consumed the composed
+hash and accepted seven hydraulic filling/ejection cycles and one breath with
+zero root assistance. The 2 ms run took 62.99 seconds, about 1.93 times faster
+than the 1 ms run, while its peak generalized acceleration increased to
+3,011.9 m/s². Both remain presentation-pending, bed-supported diagnostics.
+Neither qualifies cardiac electrical conduction, biological physiology, or
+ten-second standing; the lobe and pleura interfaces also remain unresolved.
