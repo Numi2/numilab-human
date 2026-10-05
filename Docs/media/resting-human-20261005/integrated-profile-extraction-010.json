@@ -1,0 +1,137 @@
+{
+  "device": {
+    "execution": "Native Metal viewer and Matter path",
+    "model": "Apple M4 Pro Mac mini"
+  },
+  "failed_preflight_retained": {
+    "evidence_directory": "/Users/n/numi-human-resting-evidence-20261005/integrated-profile-cycle-010",
+    "failure": "Native window drawable unavailable and no framebuffer recording was requested; no physical steps were advanced.",
+    "return_code": 1,
+    "role": "Retained negative run, not a simulation result."
+  },
+  "kinematics_cache_comparison": {
+    "baseline": {
+      "evidence_directory": "/Users/n/numi-human-resting-evidence-20261005/integrated-profile-cycle-010-movie",
+      "execution_sha256": "6f8ae7cef2e8a308c627ed13c5a2252a06cd4467b02ffdcf53d9c1d3275c1ab8",
+      "invocation_sha256": "973ccb83750d20c63642a55f709a26fdd9fe1414f67fd7ed9ef77224195747d8",
+      "native_wall_s": 7.250489667,
+      "reported_real_time_factor": 0.03530796179525781,
+      "simulated_s": 0.25600001215934753,
+      "source_profile_driver_sha256": "a52198d5c7b6516a1237bac68da9201744ad82728f30d2b49922c804c93f375e",
+      "steps": 128
+    },
+    "candidate": {
+      "environment_change": "NUMI_HUMAN_KINEMATICS_CACHE=1",
+      "evidence_directory": "/Users/n/numi-human-resting-evidence-20261005/integrated-profile-cycle-010-kinematics-cache-001",
+      "execution_sha256": "81f0116c9f8026e5a8af19328ed6c854826aa475a214a48912cd8b94e7b21dfb",
+      "invocation_sha256": "9f7bdc1be6aacbcc59b2af4676ca7fc10f960eacd36060e99e143638c3615ea6",
+      "native_wall_s": 6.361964041,
+      "reported_real_time_factor": 0.04023914792814647,
+      "simulated_s": 0.25600001215934753,
+      "source_profile_driver_sha256": "cef27ee2fc91bb199a33e984c05c13bc3016813aacd7a44a86a661e80db0c76f",
+      "steps": 128
+    },
+    "physical_output_parity": {
+      "all_identical": true,
+      "coupled_csv_sha256": "a8280d25ddf399c1c16ebdccec92cfc5a83a1558551e57d55e0b7df00c9f4a3a",
+      "mrvpack_sha256": "d6a6e4f9b65152f334d815987c5439df0e5a8dd9593008650c486eb90df93ef4",
+      "surface_audit_csv_sha256": "6adcba95e21d7d10b14d080c9197bcb887ac429a18af21ec00ed2fdf9e9d02dd",
+      "terminal_q_v_sha256": "d0a002ff12316a1a445cfe80b9dc60d27236b74ac61bf5f6ea00649eb58d0cd2"
+    },
+    "timing_comparison": {
+      "baseline_128_step_gpu_ms": 568.058458,
+      "baseline_kinematics_median_ms": 1.568,
+      "candidate_128_step_gpu_ms": 568.158458,
+      "candidate_kinematics_consume_median_ms": 0.145,
+      "candidate_kinematics_prepare_median_ms": 1.467,
+      "candidate_total_prepare_plus_consume_median_ms": 1.612,
+      "interpretation": "The cache preserved state exactly but did not reduce measured time; it remains disabled. Short-run timing differences are not treated as speedup because of CPU contention and measurement variation."
+    }
+  },
+  "profile_1500_steps": {
+    "accepted_state": {
+      "integrated_rejection_retry_probe": "passed",
+      "physiology_body_clock_matched": true,
+      "root_assistance": false,
+      "same_command_buffer_rejection": {
+        "accepted_prefix_steps": 2,
+        "inert_suffix_steps": 1,
+        "rejected_step": 2,
+        "result": "passed"
+      },
+      "terminal_functional_geometry_status": 0,
+      "terminal_nonfinite_skin_vertices": 0,
+      "terminal_skin_gap_m": -3.65823507309e-06,
+      "terminal_skin_vertices_below_1mm": 0,
+      "terminal_volume_max_relative_error": 5.84538611292e-07
+    },
+    "cpu_contention": "A CPU exact-geometry audit was active on the Mini. Treat elapsed times as contention-affected profiling data, not a machine performance claim.",
+    "evidence_directory": "/Users/n/numi-human-resting-evidence-20261005/integrated-profile-cycle-010-matter-support-retry-001",
+    "execution_sha256": "d1ce86c4582f5df2e3d38cd76f0a7338db05798f461e0dfa7d1347932b587da5",
+    "invocation_sha256": "330a002860a7e304693bf6ab9bf50b37c88509867a5aa61109aadf62b61b21fa",
+    "measurement_limit": "The named stage timings are sampled instrumented work, not an exhaustive decomposition of all per-step GPU work. They do not include a complete borrowed-callback attribution.",
+    "native_log_bytes": 48883,
+    "native_log_sha256": "74d2466a75465100ddfa8ca7f91ebde0e31ebec1734a90faf6d6331da2ba1f6d",
+    "native_wall_s": 32.8747745,
+    "reported_real_time_factor": 0.09125538313555136,
+    "requested_and_accepted_steps": 1500,
+    "sampled_32_step_commands": {
+      "final_full_collection_host_copy_ms": 0.117417,
+      "full_state_readback": "0 on intermediate accepted batches; 1 on final collection batch",
+      "gpu_ms_max": 575.216458179,
+      "gpu_ms_min": 494.413625449,
+      "host_copy_ms_before_final_collection_max": 0.019541
+    },
+    "selected_instrumented_stages_ms": {
+      "cycle_profile_128_step_baseline_medians": {
+        "kinematics": 1.568,
+        "muscles": 0.482,
+        "stand_equality_factor": 0.326,
+        "stand_equality_responses": 0.505,
+        "stand_factor": 0.945,
+        "stand_finish": 3.719,
+        "stand_mass": 0.053,
+        "stand_prework": 0.442,
+        "stand_projected_responses": 0.9
+      },
+      "single_sample_at_physics_step_100": {
+        "brain_advance": 0.010292,
+        "matter_after_frame_begin": 5.619625,
+        "respiratory_gas_exchange": 0.046958,
+        "respiratory_mechanics": 0.06075,
+        "support_normalize_poses": 0.023708,
+        "support_positions": 1.874375,
+        "support_publish": 0.753208,
+        "support_select": 0.012125
+      },
+      "single_sample_at_physics_step_1000": {
+        "support_normalize_poses": 0.024042,
+        "support_positions": 1.871208,
+        "support_publish": 0.756042,
+        "support_select": 0.01175
+      }
+    },
+    "simulated_s": 3.000000142492354,
+    "timestep_s": 0.002,
+    "wrapper_wall_s": 36.13191095832735
+  },
+  "profile_source": {
+    "base_revision": "7c96324795baa1778015f2be0a48c45bd5c200be",
+    "binary_sha256": "ffd5688954f12a3e73087de076130938680d74902cb3fe77ad246f0413ae65f5",
+    "instrumentation_patch_sha256": "1cfd07dff7ff2a858294bcf673d4e98fb73be7d42098d1302ea21955865e7648",
+    "libmetalrobo_sha256": "68b60c7b1369c96b3f60e403974c4ba7653282e43573aaa367153cd76c4450be",
+    "metallib_sha256": {
+      "HumanRespiration.metallib": "197b93f32ef0894c88dd6e302265ebfc01c48392bb7119931af8c6b2d694b027",
+      "MetalRobo.metallib": "e3f913bfe406008a6fc691289b738653c5a180eb80d1f5c82bd7750e0079e23e",
+      "MetalRoboHyperPolicy.metallib": "f227836841015b40467a20c47a9fa38cf44eb8e1132cad1de4e65fa79c55d309",
+      "NumiMatter.metallib": "84abd9838ba425b4b35875a936aa2a9f221d2fead18e8f482f9a2102d63b3a8c",
+      "NumiMatterPhysicalStateDigest.metallib": "3d5db8b11fe561def3f0f4aa73c1a4d8d1828e746f0a7f737d8a31725deb2d68",
+      "NumiNeuron.metallib": "4ccbb796a6bfd5bdb18f7d37c8e18e0d767c9489d16047c523c97f679da33f1d"
+    },
+    "profile_source_diff_sha256": "6f463a58c456e7f06c3ea905d4e84945050711e1f0b6d4b5b65907eb997a642a"
+  },
+  "qualification": "Bounded profiling only. It does not establish five-minute operation, real-time performance, physiological validation, or final anatomy clearance.",
+  "schema": "numi.human.integrated-gpu-profile-extraction.v1",
+  "scope": "Measured stage-timing extraction from bounded native profiling runs. This is diagnostic evidence, not a performance, physiological, or endurance qualification.",
+  "source_and_asset_note": "The exact invocations retain full input asset hashes and environment flags. In the 3 s run, binary and libraries were unchanged across profiling; terminal source and application input included cardiac-wall-binding-005 anatomy and the named reference respiration/circulation files."
+}
