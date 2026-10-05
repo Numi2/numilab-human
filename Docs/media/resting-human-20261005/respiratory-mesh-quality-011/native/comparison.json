@@ -1,0 +1,176 @@
+{
+  "driver_sha256": "5e3381d3820a724c16b0f3070f0ad23cb371b49662a4231828f2b07dc7d1e1b5",
+  "input_sha256": {
+    "/Users/n/numi-human-resting-evidence-20261005/integrated-stability-failure-replay-011/resting-coupled.csv": "a562f4c7f290b53024e8d392094be8cf68d9d582e4a1bdb8281de39f70448c6a",
+    "/Users/n/numi-human-resting-evidence-20261005/respiratory-quality-native-002/resting-coupled.csv": "5a50e182b704ddec0979d37b5d0d85c9cdd565f6f6a6fa3174f107aff814fbff",
+    "/Users/n/numi-human-resting-evidence-20261005/respiratory-quality-native-002/resting-surface-audit.csv": "1cde92a841ba7bf159a5941993f6c72d9558dc5933f4669a4f2064c046267f0f",
+    "/Users/n/numi-human-resting-evidence-20261005/respiratory-quality-native-002/native-viewer.mov": "4233b5ac3bfd2bf55b2f8955413fe0a01cb71b036e18a402cab9d67d734a28a9"
+  },
+  "failed_trace_rows_compared": 948,
+  "coupled_trace_prefix_byte_equal_by_field": true,
+  "first_differences": [],
+  "native_completion": "resting_integrated_body=completed simulated_s=62.000002944841981 wall_s=601.32274437499996 real_time_factor=0.10310603336529912 physiology_body_clock=matched root_assistance=false presentation_qualification=pending",
+  "execution": {
+    "returncode": 0,
+    "wrapper_wall_seconds": 604.4473831243813,
+    "changed_inputs": [],
+    "finished_utc": "2026-10-05T16:25:42.702256+00:00",
+    "last_surface_frame": {
+      "time_s": "61.9980029447",
+      "step": "30999",
+      "min_skin_bed_gap_m": "-4.1276216507e-06",
+      "vertices_below_1mm": "0",
+      "nonfinite_skin_vertices": "0",
+      "max_functional_volume_relative_error": "4.90034267386e-07",
+      "q_ra": "-0.308837890625",
+      "q_rv": "-0.0779981762171",
+      "q_la": "-0.0228202305734",
+      "q_lv": "-0.0760340690613",
+      "ra_target_ml": "32.659889257",
+      "rv_target_ml": "95.8966556937",
+      "la_target_ml": "49.5766907989",
+      "lv_target_ml": "79.0317280916",
+      "diaphragm_swept_ml": "172.914893483",
+      "rib_swept_ml": "24.840424885",
+      "lung_target_ml": "2697.7553498",
+      "body_com_x_m": "-0.0279661156237",
+      "body_com_y_m": "-0.754848361015",
+      "body_com_z_m": "0.0996770486236",
+      "represented_body_mass_kg": "72",
+      "ventricular_wall_bound": "1",
+      "ventricular_material_ml": "164.012904861",
+      "ventricular_material_target_ml": "164.012890309",
+      "ventricular_closure_mm": "2.14890926145",
+      "ventricular_material_status": "0",
+      "functional_geometry_status": "0"
+    }
+  },
+  "accepted_geometry_receipts": {
+    "failed": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/integrated-stability-failure-replay-011/accepted-geometry/step-30335.receipt.json",
+      "sha256": "cc9934cd1f8b377f8faa95686ff245708f85abab8f7d05d1652b15e90b4facdf",
+      "accepted_step": 30335,
+      "accepted_time_s": 60.67000288167037,
+      "accepted_root_fingerprint": 3928559792594809485,
+      "accepted_root_fingerprint_hex": "0x36850c51247ef28d",
+      "accepted_transaction_fingerprint": 3928559792594809485,
+      "accepted_body_state_sha256": "98c676671493795a551e2d1cccc7e30014364dc125753865831b19ff87e2cbe0",
+      "accepted_respiration_state_sha256": "9ab11250a60fc78ffdbf8f45f7e9431b6a9ce0bab842f5696fd8b94bc6824450",
+      "base_pack_content_hash": "sha256:d1ee94fa21c4c030a07ca910961ecc6b1c1117e03e32b5d105eba230c52cc840",
+      "base_pack_file_sha256": "7fd5a854f50301711d8e159344ab66450f7e3c38c391b7217b838847da102e9c",
+      "anatomy_layer_index": 2,
+      "captured_vertex_buffer_sha256": "a6b730ea02acdfd0ae63f2489be5f60aec4b4f0c95f7ab31979192071170dba1"
+    },
+    "repaired": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/respiratory-quality-native-002/accepted-geometry/step-30335.receipt.json",
+      "sha256": "97510908bfd0501899603f80b4e518cd9f53f2577b07aea494238e6a342cb9ad",
+      "accepted_step": 30335,
+      "accepted_time_s": 60.67000288167037,
+      "accepted_root_fingerprint": 14867898613516631699,
+      "accepted_root_fingerprint_hex": "0xce556303f72e7e93",
+      "accepted_transaction_fingerprint": 14867898613516631699,
+      "accepted_body_state_sha256": "98c676671493795a551e2d1cccc7e30014364dc125753865831b19ff87e2cbe0",
+      "accepted_respiration_state_sha256": "9ab11250a60fc78ffdbf8f45f7e9431b6a9ce0bab842f5696fd8b94bc6824450",
+      "base_pack_content_hash": "sha256:c79b99cd703443efc8558a7241754df10a5296206106e44c24ebad37e2042df8",
+      "base_pack_file_sha256": "4922cd06aae24ce26bd3f884d6e83c5fdfb6aaac1e2b27401ee3594ab747109b",
+      "anatomy_layer_index": 2,
+      "captured_vertex_buffer_sha256": "4a6998c4759569b15874ee7a2a18985d13dad2e4294461296648a5ce40938aa1"
+    }
+  },
+  "former_failure_frame": {
+    "305": {
+      "failed_zero_cross_faces": [
+        403
+      ],
+      "repaired_zero_cross_faces": [],
+      "source_order_world_positions_byte_identical": true
+    },
+    "306": {
+      "failed_zero_cross_faces": [],
+      "repaired_zero_cross_faces": [],
+      "source_order_world_positions_byte_identical": true
+    },
+    "307": {
+      "failed_zero_cross_faces": [],
+      "repaired_zero_cross_faces": [],
+      "source_order_world_positions_byte_identical": true
+    },
+    "308": {
+      "failed_zero_cross_faces": [],
+      "repaired_zero_cross_faces": [],
+      "source_order_world_positions_byte_identical": true
+    },
+    "309": {
+      "failed_zero_cross_faces": [],
+      "repaired_zero_cross_faces": [],
+      "source_order_world_positions_byte_identical": true
+    },
+    "311": {
+      "failed_zero_cross_faces": [
+        125460
+      ],
+      "repaired_zero_cross_faces": [],
+      "source_order_world_positions_byte_identical": true
+    }
+  },
+  "sample_count": 969,
+  "surface_sample_count": 970,
+  "max_functional_volume_relative_error": 1.70248370068e-06,
+  "geometry_guard_status_values": [
+    "0"
+  ],
+  "max_blood_error_ml": 0.0186264514923,
+  "root_assistance_n_values": [
+    "0"
+  ],
+  "last_coupled_sample": {
+    "time_s": "62.0000029448",
+    "lung_volume_ml": "2696.1537078",
+    "airflow_ml_s": "-800.778914709",
+    "alveolar_pa": "106.761756897",
+    "pleural_pa": "-479.751312256",
+    "diaphragm_mm": "8.84455871582",
+    "rib_mm": "0.413134425879",
+    "PaO2_mmhg": "102.024208069",
+    "PaCO2_mmhg": "39.5027198792",
+    "SaO2": "0.973644852638",
+    "oxygen_balance_error_stpd_ml": "0.000232830643654",
+    "co2_balance_error_stpd_ml": "0.000465661287308",
+    "breaths": "11",
+    "tidal_ml": "526.355812326",
+    "lv_mmhg": "108.146287871",
+    "rv_mmhg": "23.1830793482",
+    "aorta_mmhg": "105.412665019",
+    "pulmonary_artery_mmhg": "21.3224413707",
+    "lv_ml": "78.2506904216",
+    "rv_ml": "95.2764457907",
+    "blood_ml": "5150.01825988",
+    "blood_error_ml": "0.0186264514923",
+    "aortic_ejected_ml": "5101.83302686",
+    "pulmonary_ejected_ml": "5095.37011385",
+    "complete_filling_ejection_cycles": "72",
+    "last_lv_stroke_ml": "70.0354503351",
+    "right_atrium_ml": "32.8191454173",
+    "left_atrium_ml": "49.6600769111",
+    "blood_continuity_residual_accum_ml": "0.0176371189181",
+    "blood_physical_delta_accum_ml": "0.0177114998223",
+    "blood_residual_minus_physical_ml": "-7.43809042136e-05",
+    "blood_endpoint_minus_physical_ml": "0.000449290382676",
+    "inspired_volume_accum_ml": "6348.58124975",
+    "last_inspiration_step": "29863",
+    "last_inspiration_time_s": "59.7260028368",
+    "last_inspiration_volume_accum_ml": "5821.98998955",
+    "last_complete_breath_inspired_ml": "526.355986949",
+    "step": "31000",
+    "min_contact_gap_m": "-6.52147855362e-06",
+    "peak_penetration_m": "6.52147855362e-06",
+    "normal_impulse_ns": "1.41326010227",
+    "root_assistance_n": "0",
+    "root_assistance_nm": "0",
+    "diaphragm_excitation": "0",
+    "intercostal_excitation": "0",
+    "diaphragm_activation": "0.00687123741955",
+    "intercostal_activation": "0.00446040276438"
+  },
+  "qualification": "62-second native engineering regression only; unchanged known cardiac/costal/liver anatomical defects remain outside this connectivity repair; not five-minute acceptance."
+}

@@ -30,8 +30,26 @@ cadence; the corrected request uses 3007. Both failures are retained.
 
 The source conditioning leaves some faces below the 0.25 µm altitude target.
 This increment does not qualify every respiratory pose, anatomical clearance,
-five-minute endurance, clinical plausibility, or real-time performance. Native
-validation is recorded separately below when complete.
+five-minute endurance, clinical plausibility, or real-time performance.
+
+The corrected native run completed 31,000 accepted 2 ms steps (62.000002945 s)
+with 11 complete breaths and 72 complete filling/ejection cycles. All 948
+coupled samples from the failed replay match exactly. At the former failure
+frame, all six respiratory surfaces have byte-identical world positions to the
+failed run; the repaired connectivity has no zero cross products. The reciprocal
+diaphragm copy of the old collapsed lung triangle is repaired too.
+
+All 970 surface samples have functional-geometry status zero; maximum relative
+functional-volume error is 1.703e-6. Maximum reported blood-volume error is
+0.018627 mL, and root assistance remains zero. These are numerical checks, not
+complete anatomical intersection checks. The known costal, cardiac-wall, and
+liver defects remain outside this increment.
+
+Native simulation wall time was 601.322744375 s, giving a real-time factor of
+0.103106033. Wrapper wall time was 604.447383124 s. No input changed during the
+run. The continuous native movie contains 970 image frames, is 603.03 wall
+seconds long, and has a maximum interframe interval of 4.035 wall seconds; it
+was not retimed. Its hash and the exact launch are retained in `native/`.
 
 All builds, tests, source calculations, audits, and native execution ran through
 `ssh macmini` on the available M4 Pro. The Air was used only for source editing,
