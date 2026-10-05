@@ -17,6 +17,7 @@ import numpy as np
 
 from . import model as human
 from . import lung_envelope as lung
+from . import surface_topology_audit
 from .cardiac_cavity_geometry import CAVITIES, analyze_topology, exact_coordinate_quotient, parse_obj
 
 
@@ -67,6 +68,14 @@ RIB_MEMBERS = (
     'FJ3228','FJ3229','FJ3230','FJ3231','FJ3232','FJ3233','FJ3234','FJ3235','FJ3236','FJ3225','FJ3226','FJ3227',
 )
 STERNUM_MEMBERS = ('FJ3178', 'FJ3290')
+LUNG_306_SELF_PATCH_OUTPUT_FACE_IDS = (
+    4494, 4496, 7108, 7109, 7116, 7640, 7641, 7643, 7644,
+    7645, 7646, 7647, 7696, 7697, 7698, 7699, 7700, 7748,
+)
+LUNG_306_EXPECTED_SELF_PAIRS = (
+    (7109, 7647), (7109, 7696), (7640, 7647), (7640, 7696),
+    (7641, 7645), (7641, 7696), (7641, 7698), (7641, 7699),
+)
 
 
 def _mass_and_skin_volume_audit() -> dict:
@@ -319,6 +328,118 @@ def _close_lung(stable_id: int, name: str, vertices: list, faces: list) -> tuple
     return vertices_array,faces_array,edits
 
 
+def _repair_registered_lung_306_self_intersection(
+    vertices: np.ndarray, faces: np.ndarray, prior_edits: dict,
+) -> tuple[np.ndarray, np.ndarray, dict]:
+    """Replace one registered source patch that self-crosses in native Float32.
+
+    The atlas surface is retained away from the explicitly mapped 18-face patch.
+    A single source-bound boundary loop is ear-clipped using existing boundary
+    vertices; no coordinate is moved, and unreferenced source vertices are
+    removed during ordinary payload compaction.
+    """
+    packed_before = np.asarray(vertices, dtype='<f4')
+    before = surface_topology_audit.exact_embedding(
+        packed_before.astype(np.float64).tolist(), np.asarray(faces, dtype=np.int64).tolist())
+    pairs = tuple(tuple(map(int, pair)) for pair in before['triangle_pairs'])
+    if pairs != LUNG_306_EXPECTED_SELF_PAIRS:
+        raise ValueError(
+            'registered right inferior lung changed its pinned eight-pair self-intersection signature')
+    if max(LUNG_306_SELF_PATCH_OUTPUT_FACE_IDS) >= len(faces):
+        raise ValueError('registered lung self-repair patch exceeds the pinned surface')
+
+    removed_output_faces = set(LUNG_306_SELF_PATCH_OUTPUT_FACE_IDS)
+    retained_faces = [i for i in range(len(faces)) if i not in removed_output_faces]
+    candidate_faces = np.asarray(faces[retained_faces], dtype=np.int64)
+    boundary = analyze_topology(vertices.tolist(), candidate_faces.tolist())
+    if (boundary['boundary_edge_count'] != 16 or len(boundary['boundary_loops']) != 1
+            or boundary['boundary_branch_vertex_ids'] or boundary['nonmanifold_edges']
+            or boundary['orientation_defect_edges'] or boundary['vertex_manifold_defect_ids']):
+        raise ValueError('pinned right inferior lung repair no longer creates one simple 16-edge patch boundary')
+    boundary_loop = boundary['boundary_loops'][0]
+    cap_faces, cap_detail = _cap_loop(vertices, boundary_loop)
+    joined = np.concatenate([candidate_faces, np.asarray(cap_faces, dtype=np.int64)], axis=0)
+
+    used_vertex_ids = sorted(set(map(int, joined.ravel())))
+    removed_vertex_ids = sorted(set(range(len(vertices))) - set(used_vertex_ids))
+    remap = {old: new for new, old in enumerate(used_vertex_ids)}
+    compact_vertices = np.asarray(vertices, dtype=np.float64)[np.asarray(used_vertex_ids, dtype=np.int64)]
+    compact_faces = np.asarray([[remap[int(v)] for v in face] for face in joined], dtype=np.int64)
+    topology = analyze_topology(compact_vertices.tolist(), compact_faces.tolist())
+    if not topology['closed_oriented_manifold_candidate']:
+        raise ValueError('right inferior lung replacement patch failed closed oriented manifold audit')
+    for component in topology['face_components']:
+        face_ids = np.asarray(component, dtype=np.int64)
+        if _signed_volume(compact_vertices, compact_faces[face_ids]) < 0.0:
+            compact_faces[face_ids] = compact_faces[face_ids][:, [0, 2, 1]]
+    topology = analyze_topology(compact_vertices.tolist(), compact_faces.tolist())
+    if not topology['closed_oriented_manifold_candidate']:
+        raise ValueError('right inferior lung replacement patch winding is inconsistent')
+
+    packed_after = np.asarray(compact_vertices, dtype='<f4')
+    retained_packed_before = packed_before[np.asarray(used_vertex_ids, dtype=np.int64)]
+    coordinate_bytes_before = retained_packed_before.tobytes()
+    coordinate_bytes_after = packed_after.tobytes()
+    if coordinate_bytes_before != coordinate_bytes_after:
+        raise ValueError('right inferior lung repair changed one or more retained Float32 source coordinates')
+    after = surface_topology_audit.exact_embedding(
+        packed_after.astype(np.float64).tolist(), compact_faces.tolist())
+    if after['count'] != 0:
+        raise ValueError('right inferior lung replacement still self-intersects in native Float32 geometry')
+
+    source_face_count = int(prior_edits['source_topology_before']['face_count'])
+    previous_source_removals = set(map(int, prior_edits.get('removed_source_face_ids', [])))
+    surviving_source_faces = [i for i in range(source_face_count) if i not in previous_source_removals]
+    if any(i >= len(surviving_source_faces) for i in removed_output_faces):
+        raise ValueError('self-intersection repair would remove a derived cap instead of an atlas source face')
+    source_face_ids = [surviving_source_faces[i] for i in sorted(removed_output_faces)]
+    prior_vertex_remap = {int(k): int(v) for k, v in prior_edits.get(
+        'compaction_vertex_map_old_to_new', {}).items()}
+    source_vertex_for_output = {new: old for old, new in prior_vertex_remap.items()}
+    for output_id in range(len(vertices)):
+        source_vertex_for_output.setdefault(output_id, output_id)
+    replacement_source_triangles = [
+        [source_vertex_for_output[int(v)] for v in face]
+        for face in cap_faces
+    ]
+    removed_source_vertices = [source_vertex_for_output[v] for v in removed_vertex_ids]
+    area_before = float(np.linalg.norm(np.cross(
+        vertices[faces[:, 1]] - vertices[faces[:, 0]],
+        vertices[faces[:, 2]] - vertices[faces[:, 0]],), axis=1).sum() * 0.5)
+    area_after = float(np.linalg.norm(np.cross(
+        compact_vertices[compact_faces[:, 1]] - compact_vertices[compact_faces[:, 0]],
+        compact_vertices[compact_faces[:, 2]] - compact_vertices[compact_faces[:, 0]],), axis=1).sum() * 0.5)
+    repair = {
+        'method': 'registered_local_source_patch_replacement_with_boundary_loop_ear_clipping',
+        'source_member': 'Inferior lobe of right lung',
+        'source_face_ids_removed': source_face_ids,
+        'prepatch_output_face_ids_removed': sorted(removed_output_faces),
+        'native_float32_self_intersection_pairs_before': [list(pair) for pair in pairs],
+        'native_float32_self_intersection_pair_count_after': int(after['count']),
+        'boundary_loop_output_vertex_ids': list(map(int, boundary_loop)),
+        'replacement_triangles_source_vertex_ids': replacement_source_triangles,
+        'replacement_triangle_count': len(cap_faces),
+        'removed_unreferenced_source_vertex_ids': removed_source_vertices,
+        'source_coordinate_sha256_retained_before': hashlib.sha256(coordinate_bytes_before).hexdigest(),
+        'source_coordinate_sha256_retained_after': hashlib.sha256(coordinate_bytes_after).hexdigest(),
+        'retained_source_coordinates_bitwise_unchanged': True,
+        'coordinate_displacement_m': 0.0,
+        'source_surface_area_before_m2': area_before,
+        'source_surface_area_after_m2': area_after,
+        'surface_area_relative_change': (area_after - area_before) / area_before,
+        'source_envelope_volume_before_m3': abs(_signed_volume(vertices, faces)),
+        'source_envelope_volume_after_m3': abs(_signed_volume(compact_vertices, compact_faces)),
+        'boundary_cap': cap_detail,
+        'closed_topology_after': {
+            'vertex_count': topology['vertex_count'], 'face_count': topology['face_count'],
+            'edge_count': topology['edge_count'], 'euler_characteristic': topology['euler_characteristic'],
+            'closed_oriented_manifold_candidate': topology['closed_oriented_manifold_candidate'],
+        },
+        'qualification': 'exact registered native Float32 self-embedding passed after local derived patch repair',
+    }
+    return compact_vertices, compact_faces, repair
+
+
 def _body_local(world: np.ndarray) -> np.ndarray:
     rotation=_qrotation(TORSO_QUATERNION_XYZW)
     relative=world-TORSO_POSITION_WORLD_M
@@ -355,6 +476,11 @@ def _source_surfaces() -> tuple[list[dict],dict]:
         v,f,repair=_close_lung(stable_id,name,[tuple(x) for x in mesh['vertices_world_m']],
                                [list(map(int,x)) for x in mesh['triangles']])
         world=_apply(lung_matrix,v);local=_body_local(world)
+        if stable_id == 306:
+            local,f,self_repair=_repair_registered_lung_306_self_intersection(
+                local,np.asarray(f,dtype=np.int64),repair)
+            repair['self_intersection_repair']=self_repair
+            repair['self_intersections']='exact_native_float32_checked_zero'
         surfaces.append({'id':stable_id,'layer':7,'name':name,'source':'Z-Anatomy thorax atlas','vertices':local,
             'faces':f,'source_hash':config['export']['sha256'],'source_member':name,
             'source_license':'CC-BY-SA-4.0','repair':repair})

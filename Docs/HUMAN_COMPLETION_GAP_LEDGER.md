@@ -1555,3 +1555,17 @@ This advances scan-specific volume geometry only; expert segmentation review,
 participant identity and replication, Numi Human subject binding, vertex-link
 manifoldness, physical organ/mass ownership, materials, lumen/perfusion,
 mechanics, and physiology remain open.
+
+## Registered lung topology and native resting integration — 2026-10-05
+
+The [source-bound ABI 5 thorax build](media/resting-whole-body-20261005/README.md)
+repairs eight exact native-Float32 self-intersection pairs on the registered
+right inferior lung without moving retained coordinates. Its independent
+common-scale pair audit still reports 2,299 cross-lobe triangle intersections;
+the earlier per-lobe-scaled audit is retained as an invalid cross-surface
+measurement. Lobe and pleura interfaces remain open. A separate six-second
+supine native run accepted 6,000 steps, seven hydraulic filling/ejection cycles
+and one breath with finite skin and chamber presentation, but remains
+presentation-pending, has a high acceleration peak, and used a different NHA
+payload from the lung-patch build. It does not qualify cardiac electrical
+conduction, biological physiology, or ten-second standing.
