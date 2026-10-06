@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -173,6 +174,47 @@ class RestingRunAdmissionTests(unittest.TestCase):
             with self.assertRaisesRegex(HumanImportError, "CPU solver experiment"):
                 run(self.args)
         self.assertFalse((self.args.output / "native.log").exists())
+
+    def test_launcher_overrides_inherited_library_path_and_records_actual_image(self):
+        runtime = (self.root / "lib/libmetalrobo.dylib").resolve()
+
+        def native(argv, **kwargs):
+            self.assertEqual(kwargs["env"]["DYLD_LIBRARY_PATH"],
+                             f"{(self.root / 'lib').resolve()}:{(self.root / 'matter').resolve()}")
+            self.assertEqual(kwargs["env"]["DYLD_PRINT_LIBRARIES"], "1")
+            kwargs["stdout"].write(f"dyld[123]: <BE23DF33-01EE-306E-A947-B7342DB0A863> {runtime}\n")
+            return subprocess.CompletedProcess(argv, 0)
+
+        with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
+             patch.dict("os.environ", {"DYLD_LIBRARY_PATH": "/unrelated/build/lib"}), \
+             patch("numilab_human.resting_run.subprocess.run", side_effect=native):
+            self.assertEqual(run(self.args), 0)
+        receipt = json.loads((self.args.output / "run-metadata.json").read_text())
+        self.assertTrue(receipt["loaded_metal_runtime"]["verified"])
+        self.assertEqual(receipt["loaded_metal_runtime"]["observed_images"][0]["path"], str(runtime))
+        self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
+
+    def test_successful_child_with_another_runtime_is_rejected_and_evidence_retained(self):
+        def native(argv, **kwargs):
+            kwargs["stdout"].write("dyld[123]: <BE23DF33-01EE-306E-A947-B7342DB0A863> /another/libmetalrobo.dylib\n")
+            return subprocess.CompletedProcess(argv, 0)
+
+        with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
+             patch("numilab_human.resting_run.subprocess.run", side_effect=native):
+            self.assertEqual(run(self.args), 1)
+        receipt = json.loads((self.args.output / "run-metadata.json").read_text())
+        self.assertEqual(receipt["exit_code"], 0)
+        self.assertFalse(receipt["loaded_metal_runtime"]["verified"])
+        self.assertIn("/another/libmetalrobo.dylib", (self.args.output / "native.log").read_text())
+
+    def test_missing_dyld_evidence_is_not_treated_as_a_verified_launch(self):
+        with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
+             patch("numilab_human.resting_run.subprocess.run",
+                   return_value=subprocess.CompletedProcess([], 0)):
+            self.assertEqual(run(self.args), 1)
+        receipt = json.loads((self.args.output / "run-metadata.json").read_text())
+        self.assertEqual(receipt["loaded_metal_runtime"]["observed_images"], [])
+        self.assertFalse(receipt["loaded_metal_runtime"]["verified"])
 
     def test_existing_evidence_is_never_replaced(self):
         self.args.output.mkdir()

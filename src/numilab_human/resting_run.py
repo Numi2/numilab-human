@@ -12,6 +12,7 @@ import math
 import os
 from pathlib import Path
 import platform
+import re
 import subprocess
 import time
 
@@ -125,6 +126,25 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     return argv, assets
 
 
+def loaded_metal_runtime(log: Path, expected: Path, digest: str) -> dict:
+    """Bind the actual dyld image to the already hashed native build."""
+    pattern = re.compile(r"^dyld\[\d+\]: <([0-9A-Fa-f-]{36})> (/.*)$")
+    images = set()
+    with log.open(errors="replace") as stream:
+        for line in stream:
+            match = pattern.fullmatch(line.rstrip("\n"))
+            if match and Path(match[2]).name == "libmetalrobo.dylib":
+                images.add((str(Path(match[2]).resolve()), match[1].lower()))
+    expected = expected.resolve()
+    paths_match = len(images) == 1 and next(iter(images))[0] == str(expected)
+    verified = paths_match and expected.is_file() and _hash(expected) == digest
+    return {"expected_path": str(expected), "expected_sha256": digest,
+            "observed_images": [{"path": path, "dyld_uuid": uuid}
+                                for path, uuid in sorted(images)],
+            "verified": verified,
+            "scope": "Loaded MetalRobo image path and unchanged file hash; source and shader identities remain separate bindings"}
+
+
 def run(args: argparse.Namespace) -> int:
     _require(platform.system() == "Darwin" and platform.machine() == "arm64",
              "the native scene requires an Apple silicon Mac")
@@ -136,7 +156,10 @@ def run(args: argparse.Namespace) -> int:
                      for key, value in env.items()),
              "the resting scene requires the resident GPU solver; a CPU solver experiment is enabled")
     env.update(NUMI_HUMAN_SPLIT_STAND="1", NUMI_HUMAN_EXECUTION_STAGES="1",
-               NUMI_HUMAN_TRAINING_PROFILE="1")
+               NUMI_HUMAN_TRAINING_PROFILE="1",
+               DYLD_LIBRARY_PATH=os.pathsep.join(str((args.build / part).resolve())
+                                                for part in ("lib", "matter")),
+               DYLD_PRINT_LIBRARIES="1")
     if args.inspection_tour:
         _require(not args.mechanics_only, "an inspection tour requires the native viewer")
         _require(math.isfinite(args.inspection_period_seconds) and args.inspection_period_seconds > 0,
@@ -145,6 +168,7 @@ def run(args: argparse.Namespace) -> int:
         env["NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS"] = str(args.inspection_period_seconds)
     receipt = {"argv": argv, "asset_sha256": assets,
                "environment": {k: env[k] for k in (
+                   "DYLD_LIBRARY_PATH", "DYLD_PRINT_LIBRARIES",
                    "NUMI_HUMAN_SPLIT_STAND", "NUMI_HUMAN_EXECUTION_STAGES",
                    "NUMI_HUMAN_TRAINING_PROFILE", "NUMI_HUMAN_RESTING_TRANSACTION_PROBE",
                    "NUMI_HUMAN_RESTING_INSPECTION_TOUR",
@@ -164,11 +188,15 @@ def run(args: argparse.Namespace) -> int:
     with (args.output / "native.log").open("w") as log:
         result = subprocess.run(argv, env=env, stdout=log, stderr=subprocess.STDOUT, check=False)
     changed = [path for path, digest in assets.items() if not Path(path).is_file() or _hash(Path(path)) != digest]
+    runtime_path = (args.build / "lib/libmetalrobo.dylib").resolve()
+    runtime = loaded_metal_runtime(args.output / "native.log", runtime_path,
+                                   assets[str(runtime_path)])
     receipt.update(exit_code=result.returncode, wall_seconds=time.monotonic() - start,
-                   source_files_changed_during_run=changed)
+                   source_files_changed_during_run=changed, loaded_metal_runtime=runtime)
     (args.output / "run-metadata.json").write_text(json.dumps(receipt, indent=2) + "\n")
-    print(json.dumps({"exit_code": result.returncode, "output": str(args.output), "changed_sources": changed}))
-    return result.returncode if result.returncode else (1 if changed else 0)
+    print(json.dumps({"exit_code": result.returncode, "output": str(args.output),
+                      "changed_sources": changed, "loaded_runtime_verified": runtime["verified"]}))
+    return result.returncode if result.returncode else (1 if changed or not runtime["verified"] else 0)
 
 
 def add_arguments(parser: argparse.ArgumentParser) -> None:
