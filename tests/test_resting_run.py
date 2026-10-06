@@ -96,6 +96,61 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
             command(self.args)
 
+    def add_common_field(self, absolute=False):
+        binding = {"schema": "numi.human.cardiac_common_field.v1"}
+        for name in ("map", "polynomials", "domain_boxes"):
+            path = self.root / "cardiac" / (name + ".bin")
+            path.parent.mkdir(exist_ok=True)
+            path.write_bytes(("retained-" + name).encode())
+            binding[name] = {
+                "path": str(path if absolute else path.relative_to(self.root)),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        self.anatomy["provenance"]["cardiac_geometry_binding"] = {"common_field": binding}
+        self.write_receipts()
+        return binding
+
+    def test_common_field_files_are_resolved_from_receipt_and_hashed(self):
+        for absolute in (False, True):
+            with self.subTest(absolute=absolute):
+                binding = self.add_common_field(absolute)
+                _, hashes = command(self.args)
+                for name in ("map", "polynomials", "domain_boxes"):
+                    path = self.root / "cardiac" / (name + ".bin")
+                    self.assertEqual(hashes[str(path.resolve())], binding[name]["sha256"])
+
+    def test_changed_or_unbound_common_field_is_rejected_before_launch(self):
+        for name in ("map", "polynomials", "domain_boxes"):
+            with self.subTest(owner=name):
+                binding = self.add_common_field()
+                path = self.root / "cardiac" / (name + ".bin")
+                path.write_bytes(b"changed owner")
+                with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
+                    command(self.args)
+                binding = self.add_common_field()
+                del binding[name]["sha256"]
+                self.write_receipts()
+                with self.assertRaisesRegex(HumanImportError, "common cardiac .* identity"):
+                    command(self.args)
+
+    def test_common_field_mutation_during_run_fails_and_is_retained(self):
+        self.add_common_field()
+        changed = self.root / "cardiac" / "polynomials.bin"
+        runtime = (self.root / "lib/libmetalrobo.dylib").resolve()
+
+        def native(argv, **kwargs):
+            kwargs["stdout"].write(
+                f"dyld[123]: <BE23DF33-01EE-306E-A947-B7342DB0A863> {runtime}\n")
+            changed.write_bytes(b"changed during native execution")
+            return subprocess.CompletedProcess(argv, 0)
+
+        with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
+             patch("numilab_human.resting_run.subprocess.run", side_effect=native):
+            self.assertEqual(run(self.args), 1)
+        receipt = json.loads((self.args.output / "run-metadata.json").read_text())
+        self.assertEqual(receipt["source_files_changed_during_run"], [str(changed.resolve())])
+        self.assertTrue(receipt["loaded_metal_runtime"]["verified"])
+
     def test_explicit_respiration_is_hashed_and_delivered_to_the_existing_owner(self):
         self.args.respiration = self.root / 'source-bound-respiration.json'
         self.args.respiration.write_bytes(b'explicit source-derived respiratory parameters')

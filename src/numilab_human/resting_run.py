@@ -58,6 +58,22 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     bones = checked(anatomy["provenance"]["bones_payload"],
                     anatomy["functional_bindings"]["bones_payload_sha256"])
     organs = checked(anatomy["payload"]["path"], anatomy["payload"]["sha256"])
+    common = anatomy["provenance"].get("cardiac_geometry_binding", {}).get("common_field")
+    if common is not None:
+        _require(isinstance(common, dict) and
+                 common.get("schema") == "numi.human.cardiac_common_field.v1",
+                 "unsupported common cardiac field receipt")
+        for owner in ("map", "polynomials", "domain_boxes"):
+            record = common.get(owner)
+            _require(isinstance(record, dict) and
+                     isinstance(record.get("path"), str) and bool(record["path"]) and
+                     isinstance(record.get("sha256"), str) and
+                     re.fullmatch(r"[0-9a-f]{64}", record["sha256"]) is not None,
+                     f"missing common cardiac {owner} identity")
+            owner_path = Path(record["path"])
+            if not owner_path.is_absolute():
+                owner_path = args.anatomy_receipt.parent / owner_path
+            checked(owner_path, record["sha256"])
     muscles = checked(rigid.with_name("myosim-fullbody-muscle-reference.nhmyo"))
     equalities = checked(rigid.with_name("myosim-fullbody-joint-equalities.nheq"))
     muscle_surfaces = anatomy["provenance"].get("native_muscle_surfaces", {})
