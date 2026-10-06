@@ -37,25 +37,53 @@ COLON_COMPONENTS = {
     "FJ2572": ("FMA14546", "transverse colon"),
 }
 
+# BodyParts3D's 56 small-intestine source members include one duodenum,
+# one ileocecal junction and 54 named jejunal/ileal zones. Resolve their
+# narrower identity from the locked source table, without inventing 56 organs.
+SMALL_INTESTINE_MEMBERS = frozenset(f"FJ{i}" for i in range(2573, 2629))
+SMALL_INTESTINE_COMPONENTS = (
+    ("FMA7206", "duodenum"),
+    ("FMA11338", "ileocecal junction"),
+    ("FMA14964", "proximal part of ileum"),
+    ("FMA14965", "middle part of ileum"),
+    ("FMA14966", "distal part of ileum"),
+    ("FMA16981", "proximal part of jejunum"),
+    ("FMA16982", "middle part of jejunum"),
+    ("FMA16983", "distal part of jejunum"),
+)
+
 
 def anatomical_component_identity(atlas: dict, member_id: str) -> dict | None:
-    """Resolve the supported colon components against the loaded source table.
+    """Resolve supported bowel components against the loaded source table.
 
     This records source anatomy, not an automatic exemption from collision or
     tissue-volume checks. A taenia is a muscular component of the colon wall;
     its actual interface still needs a geometry audit.
     """
     component = COLON_COMPONENTS.get(member_id)
+    hierarchy, family = "part_of", "FMA7201"
     if component is None:
-        return None
+        if member_id not in SMALL_INTESTINE_MEMBERS:
+            return None
+        hierarchy, family = "is_a", "FMA7200"
+        table = atlas.get("tables", {}).get(hierarchy, {})
+        matches = [row for row in SMALL_INTESTINE_COMPONENTS
+                   if member_id in table.get(row, set())]
+        if len(matches) != 1:
+            raise ValueError("source anatomical component membership changed or ambiguous: " + member_id)
+        component = matches[0]
     concept, label = component
-    members = atlas["tables"]["part_of"].get((concept, label), set())
+    members = atlas["tables"][hierarchy].get((concept, label), set())
     if member_id not in members:
         raise ValueError("source anatomical component membership changed: " + member_id)
-    return {"concept_id": concept, "name": label, "hierarchy": "part_of",
-            "source_member": member_id, "family_concept_id": "FMA7201",
-            "geometry_role": "colon wall muscle component" if concept in
-                {"FMA15042", "FMA15043", "FMA15044"} else "large intestine segment",
+    role = ("colon wall muscle component" if concept in {"FMA15042", "FMA15043", "FMA15044"}
+            else "large intestine segment")
+    if family == "FMA7200":
+        role = ("intestinal junction" if concept == "FMA11338" else
+                "small intestine segment" if concept == "FMA7206" else "small intestine zone")
+    return {"concept_id": concept, "name": label, "hierarchy": hierarchy,
+            "source_member": member_id, "family_concept_id": family,
+            "geometry_role": role,
             "separate_physiological_compartment": False}
 
 
