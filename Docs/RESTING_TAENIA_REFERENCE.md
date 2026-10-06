@@ -56,5 +56,33 @@ The existing receipt retains source, compiler, audit, shape and interface hashes
 The preparation chain and failed candidates remain in that evidence root,
 under numbered steps 076–091. Source licenses and attribution are preserved.
 
-Accepted native breathing-cycle checks on the corrected taenia remain required.
-This source admission is not complete anatomical or integrated-human acceptance.
+The first native check (run094/audit095) found three self-crossing triangle
+pairs after motion, despite the zero-crossing static audit. They share one
+local vertex. Its source clearance was 9.297 micrometres, while the native
+field moved it 0.655 micrometres through the adjacent face. That failed
+candidate and its exact witnesses remain retained.
+
+A further 30.706 micrometre local adjustment establishes a declared 40
+micrometre source margin. This is a numerical reference choice, not measured
+tissue spacing. Candidate103 remains closed and oriented, retains the 1.766
+micrometre minimum altitude, and has geometric volume 6.908534600 mL. Its
+sampled shape bounds remain within the original 0.5 mm limit. The existing
+compiler admitted it as `taenia-motion-native-input-111/`.
+
+After composition with the bladder correction, native run114 completed six
+simulated seconds on the Mac mini. Exact audit115 checks accepted steps 0,
+639, 2783 and 2999: every taenia self-count is zero, every non-colon neighbor
+is clear, and every retained contact remains within its declared anatomical
+interface. Actual native witnesses are mapped barycentrically to source
+material coordinates for the caudal-convergence and rectal-entry bounds;
+changed triangle pairs are retained rather than silently waived. The bladder
+also has zero self-crossings and only its unchanged localized source neck
+contact at all four captures. Physiological and surface-observer CSVs are
+byte-identical to run094.
+
+The current combined payload is `bladder-cardiac-input-113/resting-thorax.nhanatomy`,
+SHA-256 `00128e08b2a83fd6e4b1c3873e50276d1d5574aa32e9fbf891d0221eb15bce60`.
+The exact native invocation, unretimed recording, geometry captures, and full
+audit remain in `bladder-taenia-native-114/` and `bladder-taenia-native-audit-115/`.
+These four captured phases do not qualify unrecorded geometry, remaining
+anatomical interfaces, or the required five-minute integrated demonstration.

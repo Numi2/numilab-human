@@ -58,7 +58,13 @@ source binding and invocation `bladder-reference-binding-112/`, and output
 The output NHANAT1 SHA-256 is
 `00128e08b2a83fd6e4b1c3873e50276d1d5574aa32e9fbf891d0221eb15bce60`.
 The compiler preserves prior pancreas, spleen, and taenia repairs. Native
-breathing-cycle checks for this bladder candidate remain required.
+run114 subsequently completed six simulated seconds on the Mini. Exact
+audit115 found zero bladder self-crossings and zero non-neck neighbor
+crossings at accepted steps 0, 639, 2783 and 2999. Each capture retains the
+same 13 source neck triangle pairs, with actual native witnesses mapped to
+the declared source neck region. The motion-conditioned taenia also passes
+at those four phases. These checks do not establish clearance at unrecorded
+states or qualify the remaining whole-human anatomical interfaces.
 
 Eight focused admission tests pass on the Mini, including three bladder
 regressions covering exact source-neck preservation, stale neighbor evidence,
