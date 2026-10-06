@@ -101,39 +101,17 @@ def exact_embedding(vertices, faces):
     points = [tuple(x.numerator*(denominator//x.denominator) for x in p) for p in rational]
     records = intersection._records(points, faces)
     require(bool(records), 'empty embedding surface')
-    def tree(ids):
-        lo = tuple(min(records[i][1][k] for i in ids) for k in range(3))
-        hi = tuple(max(records[i][2][k] for i in ids) for k in range(3))
-        if len(ids) <= 8:
-            return lo,hi,tuple(ids),None,None
-        axis = max(range(3), key=lambda k:hi[k]-lo[k])
-        ids.sort(key=lambda i:records[i][1][axis]+records[i][2][axis])
-        mid = len(ids)//2
-        return lo,hi,None,tree(ids[:mid]),tree(ids[mid:])
-    root = tree(list(range(len(records))))
-    def overlaps(lo,hi,lower,upper):
-        return all(hi[k] >= lower[k] and upper[k] >= lo[k] for k in range(3))
-    def query(node,lo,hi):
-        lower,upper,ids,left,right = node
-        if not overlaps(lo,hi,lower,upper): return
-        if ids is not None:
-            for j in ids:
-                if overlaps(lo,hi,records[j][1],records[j][2]): yield j
-        else:
-            yield from query(left,lo,hi);yield from query(right,lo,hi)
     candidates = allowed = 0; defects = []
-    for tri,lo,hi,i,ids in records:
-        for j in query(root,lo,hi):
-            if j <= i: continue
-            other,_,_,_,other_ids = records[j]
-            candidates += 1
-            hits = intersection.triangle_intersection_points(tri,other)
-            if not hits: continue
-            shared = set(ids)&set(other_ids)
-            common = {tri[ids.index(k)] for k in shared}
-            if len(shared) in (1,2) and all(intersection._allowed_shared_point(p,common) for p in hits):
-                allowed += 1
-            else: defects.append([i,j])
+    for (tri,lo,hi,i,ids), (other,_,_,j,other_ids) in intersection._aabb_candidate_pairs(
+            records,records,same_surface=True):
+        candidates += 1
+        hits = intersection.triangle_intersection_points(tri,other)
+        if not hits: continue
+        shared = set(ids)&set(other_ids)
+        common = {tri[ids.index(k)] for k in shared}
+        if len(shared) in (1,2) and all(intersection._allowed_shared_point(p,common) for p in hits):
+            allowed += 1
+        else: defects.append([i,j])
     topology = analyze_topology(vertices,faces)
     return {'triangle_pairs':sorted(defects),'count':len(defects),'aabb_candidate_pairs':candidates,
             'allowed_shared_vertex_or_edge_pairs':allowed,

@@ -10,7 +10,6 @@ by exact ray parity after the complete surface intersection test.
 """
 from __future__ import annotations
 
-from bisect import bisect_right
 from fractions import Fraction
 import hashlib
 import itertools
@@ -190,28 +189,62 @@ def _allowed_shared_point(point, common):
     return False
 
 
-def _audit_pair(first, second, *, same_surface):
-    ordered = sorted(second, key=lambda row: row[1][0])
-    starts = [row[1][0] for row in ordered]
-    candidates, allowed, pairs = 0, 0, []
-    for tri, lo, hi, i, ids in first:
-        for other, lower, upper, j, other_ids in ordered[:bisect_right(starts, hi[0])]:
-            if same_surface and j <= i:
-                continue
+def _aabb_candidate_pairs(first, second, *, same_surface):
+    """Enumerate every closed-box overlap using the existing exact AABB tree.
+
+    This is the broad phase previously local to surface_topology_audit. Bounds
+    and split keys stay in the caller's exact coordinate system; there is no
+    physical cell size or floating-point conversion. Tree leaves contain list
+    positions, not anatomical face IDs, which may be sparse or reordered.
+    """
+    if not first or not second:
+        return
+
+    def tree(positions):
+        lo = tuple(min(second[i][1][k] for i in positions) for k in range(3))
+        hi = tuple(max(second[i][2][k] for i in positions) for k in range(3))
+        if len(positions) <= 8:
+            return lo, hi, tuple(positions), None, None
+        axis = max(range(3), key=lambda k: hi[k]-lo[k])
+        positions.sort(key=lambda i: second[i][1][axis]+second[i][2][axis])
+        middle = len(positions)//2
+        return lo, hi, None, tree(positions[:middle]), tree(positions[middle:])
+
+    root = tree(list(range(len(second))))
+    for row in first:
+        lo, hi, i = row[1:4]
+        stack = [root]
+        while stack:
+            lower, upper, positions, left, right = stack.pop()
             if any(hi[k] < lower[k] or upper[k] < lo[k] for k in range(3)):
                 continue
-            candidates += 1
-            points = triangle_intersection_points(tri, other)
-            if not points:
+            if positions is None:
+                stack.extend((right, left))
                 continue
-            # Use shared *indices*, not coincident but topologically unrelated
-            # coordinates. Duplicate triangles are defects even when coincident.
-            shared_ids = set(ids) & set(other_ids) if same_surface else set()
-            common = {tri[ids.index(index)] for index in shared_ids}
-            if same_surface and len(shared_ids) in (1, 2) and all(_allowed_shared_point(p, common) for p in points):
-                allowed += 1
-            else:
-                pairs.append([i, j])
+            for position in positions:
+                other = second[position]
+                if same_surface and other[3] <= i:
+                    continue
+                if all(hi[k] >= other[1][k] and other[2][k] >= lo[k] for k in range(3)):
+                    yield row, other
+
+
+def _audit_pair(first, second, *, same_surface):
+    candidates, allowed, pairs = 0, 0, []
+    for (tri, lo, hi, i, ids), (other, lower, upper, j, other_ids) in _aabb_candidate_pairs(
+            first, second, same_surface=same_surface):
+        candidates += 1
+        points = triangle_intersection_points(tri, other)
+        if not points:
+            continue
+        # Use shared *indices*, not coincident but topologically unrelated
+        # coordinates. Duplicate triangles are defects even when coincident.
+        shared_ids = set(ids) & set(other_ids) if same_surface else set()
+        common = {tri[ids.index(index)] for index in shared_ids}
+        if same_surface and len(shared_ids) in (1, 2) and all(_allowed_shared_point(p, common) for p in points):
+            allowed += 1
+        else:
+            pairs.append([i, j])
     return {"triangle_pairs": sorted(pairs), "count": len(pairs), "aabb_candidate_pairs": candidates,
             "allowed_shared_vertex_or_edge_pairs": allowed}
 
