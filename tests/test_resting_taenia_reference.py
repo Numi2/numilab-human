@@ -92,6 +92,8 @@ class TaeniaAdmissionTests(unittest.TestCase):
 
 class TaeniaWallRegionTests(unittest.TestCase):
     """Region admission invariants; tetrahedra are engineering fixtures only."""
+    stable_id = 456
+
     def setUp(self):
         from numilab_human.resting_taenia_reference import (
             WALL_REGION_PARENTS, face_coordinate_sha256)
@@ -99,7 +101,7 @@ class TaeniaWallRegionTests(unittest.TestCase):
         self.root = Path(temp.name)
         v = np.array([[0,0,0],[.01,0,0],[0,.01,0],[0,0,.01]], dtype="<f4")
         f = np.array([[0,2,1],[0,1,3],[0,3,2],[1,2,3]], dtype="<i4")
-        self.ids = [456, *WALL_REGION_PARENTS, 23]
+        self.ids = [self.stable_id, *WALL_REGION_PARENTS, 23]
         chunks, vv, ff, nv, ni = [], [], [], 0, 0
         selected_v, selected_f, owners, parent_faces = [], [], [], []
         for i, sid in enumerate(self.ids):
@@ -123,16 +125,16 @@ class TaeniaWallRegionTests(unittest.TestCase):
                            colon_face=np.asarray(parent_faces, dtype="<i4"))
         self.candidate = self.root/"candidate.npz"; np.savez(self.candidate, **self.arrays)
         self.derivation = {
-            "representation": "passive_colon_wall_surface_region_v1", "stable_id": 456,
+            "representation": "passive_colon_wall_surface_region_v1", "stable_id": self.stable_id,
             "candidate_sha256": hashlib.sha256(self.candidate.read_bytes()).hexdigest(),
-            "source_record_sha256": hashlib.sha256(_record_content_bytes(self.rows[456])).hexdigest(),
+            "source_record_sha256": hashlib.sha256(_record_content_bytes(self.rows[self.stable_id])).hexdigest(),
             "parent_face_coordinate_sha256": {str(s): face_coordinate_sha256(self.rows[s]) for s in WALL_REGION_PARENTS},
             "rectal_scope": "excluded_no_taenia_band",
             "sampled_shape": {
                 "distance_is_sampled_not_hausdorff_bound": True,
-                "source_to_region": {"sample_count": 1, "maximum_m": .0058},
-                "region_to_source": {"sample_count": 1, "maximum_m": .0049},
-                "face_selection_sampled_distance_limit_m": .005},
+                "source_to_region": {"sample_count": 1, "maximum_m": .0058 if self.stable_id == 456 else .0038},
+                "region_to_source": {"sample_count": 1, "maximum_m": .0049 if self.stable_id == 456 else .0149},
+                "face_selection_sampled_distance_limit_m": .005 if self.stable_id == 456 else .002},
             "sensitivity": [{"fixture": "4mm"}, {"fixture": "5mm"}],
             "references": ["Synthetic admission fixture, not anatomical evidence."]}
         self.receipt = {
@@ -147,13 +149,13 @@ class TaeniaWallRegionTests(unittest.TestCase):
     def prepare(self):
         from numilab_human.resting_taenia_reference import prepare_wall_region
         path = self.root/"derivation.json"; path.write_text(json.dumps(self.derivation))
-        return prepare_wall_region(self.rows, self.source_map, self.candidate, path)
+        return prepare_wall_region(self.rows, self.source_map, self.candidate, path, stable_id=self.stable_id)
 
     def compile(self):
         from numilab_human.resting_taenia_reference import build_wall_region_candidate
         dp = self.root/"derivation.json"; dp.write_text(json.dumps(self.derivation))
         rp = self.root/"receipt.json"; rp.write_text(json.dumps(self.receipt))
-        return build_wall_region_candidate(self.payload, rp, self.candidate, dp, self.root/"output")
+        return build_wall_region_candidate(self.payload, rp, self.candidate, dp, self.root/"output", stable_id=self.stable_id)
 
     def save_modified_candidate(self):
         np.savez(self.candidate, **self.arrays)
@@ -163,15 +165,16 @@ class TaeniaWallRegionTests(unittest.TestCase):
         result = self.compile()
         _, _, after = _parse_payload(Path(result["payload"]["path"]).read_bytes())
         for sid in self.ids:
-            self.assertEqual(_record_content_bytes(self.rows[sid]) == _record_content_bytes(after[sid]), sid != 456)
+            self.assertEqual(_record_content_bytes(self.rows[sid]) == _record_content_bytes(after[sid]), sid != self.stable_id)
         r = json.loads((self.root/"output/resting-anatomy-receipt.json").read_text())
-        detail = r["provenance"]["passive_taenia_wall_region"]
+        detail = (r["provenance"]["passive_taenia_wall_region"] if self.stable_id == 456 else
+                  r["provenance"]["passive_taenia_wall_regions"][str(self.stable_id)])
         self.assertGreater(detail["topology"]["boundary_edge_count"], 0)
         self.assertEqual(detail["exact_self"]["count"], 0)
         self.assertIsNone(detail["independent_volume_m3"])
         self.assertEqual(detail["additional_physical_mass_kg"], 0)
         self.assertEqual(r["mass_geometry_accounting"], self.receipt["mass_geometry_accounting"])
-        self.assertEqual(r["provenance"]["source_id_map"]["456"]["source_member"], "FJ2568")
+        self.assertEqual(r["provenance"]["source_id_map"][str(self.stable_id)]["source_member"], MEMBERS[self.stable_id])
 
     def test_stale_parent_and_source_frame_are_rejected(self):
         self.rows[454]["vertices6"][0, 0] += .0001
@@ -203,9 +206,10 @@ class TaeniaWallRegionTests(unittest.TestCase):
         shape["distance_is_sampled_not_hausdorff_bound"] = True
         shape["source_to_region"]["maximum_m"] = float("nan")
         with self.assertRaisesRegex(ValueError, "sampling"): self.prepare()
-        shape["source_to_region"]["maximum_m"] = .0061
+        excessive = .0061 if self.stable_id == 456 else .0041
+        shape["source_to_region"]["maximum_m"] = excessive
         with self.assertRaisesRegex(ValueError, "extent"): self.prepare()
-        shape["source_to_region"]["maximum_m"] = .0058
+        shape["source_to_region"]["maximum_m"] = .0058 if self.stable_id == 456 else .0038
         self.receipt["provenance"]["cardiac_geometry_binding"]["ventricular_wall_binding"]["wall_map"]["local_coefficient_refinement"] = {}
         with self.assertRaisesRegex(ValueError, "cardiac correction"): self.compile()
         self.assertFalse((self.root/"output").exists())
@@ -220,3 +224,114 @@ class TaeniaWallRegionTests(unittest.TestCase):
 
 
 if __name__ == '__main__': unittest.main()
+
+
+class TaeniaMesocolicaWallRegionTests(TaeniaWallRegionTests):
+    stable_id = 457
+
+    def test_mesocolica_uses_specific_coarse_projection_bounds_and_keeps_libera_record(self):
+        self.receipt["provenance"]["passive_taenia_wall_region"] = {"stable_id": 456, "sentinel": "preserved"}
+        result = self.compile()
+        receipt = json.loads(Path(result["receipt"]["path"]).read_text())
+        self.assertEqual(receipt["provenance"]["passive_taenia_wall_region"], {"stable_id": 456, "sentinel": "preserved"})
+        detail = receipt["provenance"]["passive_taenia_wall_regions"]["457"]
+        self.assertEqual(detail["source_member"], "FJ2569")
+        self.assertEqual(detail["stable_id"], 457)
+        self.assertEqual(detail["independent_volume_m3"], None)
+        self.assertEqual(receipt["provenance"]["source_id_map"]["457"]["source_shell_status"],
+                         "retained_in_provenance_not_rendered_as_independent_solid")
+
+    def test_mesocolica_sampled_reverse_extent_fails_closed_above_bound(self):
+        self.derivation["sampled_shape"]["region_to_source"]["maximum_m"] = .01501
+        with self.assertRaisesRegex(ValueError, "extent"):
+            self.prepare()
+class PassiveRowTransferTests(unittest.TestCase):
+    def setUp(self):
+        from numilab_human.resting_anatomy_interface_patch import HEADER, RECORD, normals
+        from numilab_human.resting_taenia_reference import PASSIVE_REFERENCE_TRANSFER_IDS
+        temp = tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        self.ids = sorted(set(PASSIVE_REFERENCE_TRANSFER_IDS) | {454, 460, 999})
+        self.transfer_ids = set(PASSIVE_REFERENCE_TRANSFER_IDS)
+        self.v = np.array([[0,0,0],[.01,0,0],[0,.01,0],[0,0,.01]], dtype="<f4")
+        self.f = np.array([[0,2,1],[0,1,3],[0,3,2],[1,2,3]], dtype="<i4")
+        self.header = HEADER; self.record = RECORD
+        def payload(offset):
+            chunks=[]; vv=[]; ff=[]; nv=ni=0
+            for sid in self.ids:
+                row_offset = offset if sid in self.transfer_ids else 0.0
+                xyz = self.v + np.array([sid*1e-5 + row_offset, 0, 0], dtype="<f4")
+                packed = np.column_stack((xyz, normals(xyz.astype(float), self.f))).astype("<f4")
+                chunks.append(RECORD.pack(20,nv,4,ni,12,sid,1,0))
+                vv.append(packed.tobytes()); ff.append((self.f.reshape(-1)+nv).astype("<u4").tobytes())
+                nv += 4; ni += 12
+            return HEADER.pack(b"NHANAT1\0",5,len(self.ids),nv,ni,123,b"x"*32)+b"".join(chunks+vv+ff)
+        self.base = self.root/"base.nhanatomy"; self.base.write_bytes(payload(0))
+        self.passive = self.root/"passive.nhanatomy"; self.passive.write_bytes(payload(.002))
+        def receipt(path):
+            sha=hashlib.sha256(path.read_bytes()).hexdigest()
+            source_map={str(s):{"source_member":f"FJ{s}","source_sha256":f"source-{s}",
+                "source_owner_metadata":{"member_id":f"FJ{s}"},"name":f"source {s}"} for s in self.ids}
+            return {"schema":"numi.human.resting-anatomy-receipt.v1",
+                "payload":{"sha256":sha},
+                "functional_bindings":{"anatomy_payload_sha256":sha,"passive_viscera_geometry_binding":{"stable_ids":self.ids}},
+                "provenance":{"source_id_map":source_map,"cardiac_geometry_binding":{
+                    "output_anatomy_payload_sha256":sha,"ventricular_wall_binding":{"output_anatomy_payload_sha256":sha}},
+                    "passive_bowel_reference_composition":{"fixture":True}},
+                "qualification":{},"mass_geometry_accounting":{"reference_total_mass_kg":72}}
+        self.base_receipt=self.root/"base.json";self.base_receipt.write_text(json.dumps(receipt(self.base)))
+        self.passive_receipt=self.root/"passive.json";self.passive_receipt.write_text(json.dumps(receipt(self.passive)))
+
+    def compose(self, out=None):
+        from numilab_human.resting_taenia_reference import compose_passive_rows_onto_respiratory_base
+        return compose_passive_rows_onto_respiratory_base(
+            base_payload=self.base,base_receipt=self.base_receipt,
+            passive_payload=self.passive,passive_receipt=self.passive_receipt,
+            output=out or self.root/"out")
+
+    def test_only_declared_rows_transfer_and_cardio_stays_pending(self):
+        result=self.compose()
+        _,_,base_rows=_parse_payload(self.base.read_bytes())
+        _,_,passive_rows=_parse_payload(self.passive.read_bytes())
+        _,_,out_rows=_parse_payload(Path(result["payload"]["path"]).read_bytes())
+        from numilab_human.resting_taenia_reference import PASSIVE_REFERENCE_TRANSFER_IDS
+        moved=set(PASSIVE_REFERENCE_TRANSFER_IDS)
+        for sid in self.ids:
+            expected=passive_rows[sid] if sid in moved else base_rows[sid]
+            self.assertEqual(_record_content_bytes(expected),_record_content_bytes(out_rows[sid]),sid)
+        receipt=json.loads(Path(result["receipt"]["path"]).read_text())
+        self.assertEqual(receipt["mass_geometry_accounting"],json.loads(self.base_receipt.read_text())["mass_geometry_accounting"])
+        self.assertEqual(receipt["provenance"]["passive_reference_row_transfer"]["transferred_stable_ids"],sorted(moved))
+        self.assertIn("not_ready",receipt["provenance"]["passive_reference_row_transfer"]["native_readiness"])
+
+    def test_stale_identity_parent_or_payload_fails_closed(self):
+        source=json.loads(self.passive_receipt.read_text())
+        source["provenance"]["source_id_map"]["455"]["source_member"]="wrong"
+        self.passive_receipt.write_text(json.dumps(source))
+        with self.assertRaisesRegex(ValueError,"source identity"):
+            self.compose()
+        target=json.loads(self.base_receipt.read_text())
+        target["provenance"]["source_id_map"]["2"]["source_sha256"]="wrong"
+        self.base_receipt.write_text(json.dumps(target))
+        with self.assertRaisesRegex(ValueError,"source identity"):
+            self.compose()
+
+    def test_changed_colon_parent_is_rejected(self):
+        from numilab_human.resting_anatomy_interface_patch import HEADER, RECORD, normals
+        raw=self.passive.read_bytes(); _,_,rows=_parse_payload(raw)
+        chunks=[]; vv=[]; ff=[]; nv=ni=0
+        for sid in self.ids:
+            xyz=np.asarray(rows[sid]["vertices6"][:,:3],dtype="<f4").copy()
+            faces=np.asarray(rows[sid]["faces"],dtype="<i4")
+            if sid==454: xyz[0,0]+=1e-5
+            packed=np.column_stack((xyz,normals(xyz.astype(float),faces))).astype("<f4")
+            chunks.append(RECORD.pack(20,nv,len(xyz),ni,faces.size,sid,1,0))
+            vv.append(packed.tobytes());ff.append((faces.reshape(-1)+nv).astype("<u4").tobytes())
+            nv+=len(xyz);ni+=faces.size
+        changed=HEADER.pack(b"NHANAT1\0",5,len(self.ids),nv,ni,123,b"x"*32)+b"".join(chunks+vv+ff)
+        self.passive.write_bytes(changed)
+        r=json.loads(self.passive_receipt.read_text());sha=hashlib.sha256(changed).hexdigest()
+        r["payload"]["sha256"]=sha;r["functional_bindings"]["anatomy_payload_sha256"]=sha
+        self.passive_receipt.write_text(json.dumps(r))
+        with self.assertRaisesRegex(ValueError,"colon parent 454"):
+            self.compose()

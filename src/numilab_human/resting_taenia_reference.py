@@ -169,7 +169,7 @@ def face_coordinate_sha256(row):
 
 
 def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
-                        derivation_path: Path):
+                        derivation_path: Path, *, stable_id: int = 456):
     """Check an inferred taenia-libera annotation on existing colon triangles.
 
     This is an open, nonadditive material-region representation. It does not
@@ -179,18 +179,19 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
     from .resting_anatomy_interface_patch import normals, topology_report
     from . import cardiac_cavity_intersections as exact
 
+    _require(stable_id in (456, 457), "only the two source-registered taenia members are supported")
     detail = json.loads(derivation_path.read_text())
     digest = _sha(candidate_path)
     _require(detail.get("representation") == "passive_colon_wall_surface_region_v1",
              "unsupported wall-region representation")
-    _require(detail.get("stable_id") == 456 and detail.get("candidate_sha256") == digest,
+    _require(detail.get("stable_id") == stable_id and detail.get("candidate_sha256") == digest,
              "wall region has a different candidate or anatomical identity")
-    required = (456, *WALL_REGION_PARENTS)
+    required = (stable_id, *WALL_REGION_PARENTS)
     _require(all(s in rows and source_map.get(str(s), {}).get("source_member") == MEMBERS[s]
                  for s in required), "wall-region source component identities changed")
     _require(all(rows[s]["body_index"] == 20 and rows[s]["layer"] == 1 for s in required),
              "wall region and colon do not share the passive torso frame")
-    source_record = hashlib.sha256(_record_content_bytes(rows[456])).hexdigest()
+    source_record = hashlib.sha256(_record_content_bytes(rows[stable_id])).hexdigest()
     _require(detail.get("source_record_sha256") == source_record,
              "wall-region derivation refers to another source muscle")
     parent_hashes = {str(s): face_coordinate_sha256(rows[s]) for s in WALL_REGION_PARENTS}
@@ -208,9 +209,16 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
                  and np.isfinite(sample["maximum_m"]) and sample["maximum_m"] >= 0,
                  "wall-region shape sampling is absent or invalid")
     # These are explicit reference-asset limits, not physiological tolerances.
-    _require(shape["source_to_region"]["maximum_m"] <= .006
-             and shape["region_to_source"]["maximum_m"] <= .005
-             and shape.get("face_selection_sampled_distance_limit_m") == .005,
+    if stable_id == 456:
+        source_to_limit, region_to_limit, selection_limit = .006, .005, .005
+    else:
+        # FJ2569's registered shell is substantially larger than its host patch.
+        # The coarse derived region is anchored to copied colon triangles and
+        # uses explicit sampled (not Hausdorff) limits from this source pairing.
+        source_to_limit, region_to_limit, selection_limit = .004, .015, .002
+    _require(shape["source_to_region"]["maximum_m"] <= source_to_limit
+             and shape["region_to_source"]["maximum_m"] <= region_to_limit
+             and shape.get("face_selection_sampled_distance_limit_m") == selection_limit,
              "wall region exceeds the declared coarse reference extent")
     _require(isinstance(detail.get("sensitivity"), list) and len(detail["sensitivity"]) >= 2
              and isinstance(detail.get("references"), list) and detail["references"],
@@ -272,8 +280,9 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
     provenance.update({
         "compiler_source_sha256": _sha(Path(__file__)),
         "derivation_sha256": _sha(derivation_path),
-        "source_member": MEMBERS[456],
-        "parameter_status": "inferred_reference_region_not_measured_subject_geometry",
+        "stable_id": stable_id,
+        "source_member": MEMBERS[stable_id],
+        "parameter_status": detail.get("parameter_status", "inferred_reference_region_not_measured_subject_geometry"),
         "exact_self": self_audit,
         "predicate_sha256": _sha(Path(exact.__file__)),
         "parent_triangles_preserved_bitwise": True,
@@ -291,8 +300,8 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
 
 def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
                                 candidate_path: Path, derivation_path: Path,
-                                output: Path) -> dict:
-    """Replace only ID456 in the existing NHANAT1/receipt path."""
+                                output: Path, *, stable_id: int = 456) -> dict:
+    """Replace one approved taenia row with its nonadditive host region."""
     _require(not output.exists(), "retain existing output; choose a new directory")
     raw = base_payload.read_bytes()
     source_sha = hashlib.sha256(raw).hexdigest()
@@ -303,7 +312,7 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
              and receipt.get("functional_bindings", {}).get("anatomy_payload_sha256") == source_sha,
              "receipt does not identify the current payload")
     binding = receipt["functional_bindings"].get("passive_viscera_geometry_binding", {})
-    _require(set((456, *WALL_REGION_PARENTS)).issubset(binding.get("stable_ids", [])),
+    _require(set((stable_id, *WALL_REGION_PARENTS)).issubset(binding.get("stable_ids", [])),
              "wall region lacks the existing passive motion owner")
     cardiac = receipt["provenance"]["cardiac_geometry_binding"]
     wall = cardiac["ventricular_wall_binding"]
@@ -314,9 +323,9 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
              "attach source-bound cardiac correction after passive asset preparation")
     source_map = receipt["provenance"]["source_id_map"]
     vertices, faces, detail = prepare_wall_region(
-        rows, source_map, candidate_path, derivation_path)
+        rows, source_map, candidate_path, derivation_path, stable_id=stable_id)
     updated = copy.deepcopy(rows)
-    updated[456]["vertices6"], updated[456]["faces"] = vertices, faces
+    updated[stable_id]["vertices6"], updated[stable_id]["faces"] = vertices, faces
     chunks, vv, ff, nv, ni = [], [], [], 0, 0
     for record in records:
         sid = record[5]; row = updated[sid]; v, f = row["vertices6"], row["faces"]
@@ -328,19 +337,24 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
     result = HEADER.pack(header[0], header[1], len(records), nv, ni, header[5], header[6]) + b"".join(chunks+vv+ff)
     _, _, verified = _parse_payload(result)
     _require(all(_record_content_bytes(rows[s]) == _record_content_bytes(verified[s])
-                 for s in rows if s != 456), "another anatomical surface changed")
+                 for s in rows if s != stable_id), "another anatomical surface changed")
     output_sha = hashlib.sha256(result).hexdigest()
     detail.update(base_payload_sha256=source_sha, base_receipt_sha256=_sha(base_receipt),
                   all_other_record_geometry_bytes_preserved=True)
-    receipt["provenance"]["passive_taenia_wall_region"] = detail
-    source_map["456"]["reference_geometry_status"] = detail["parameter_status"]
-    source_map["456"]["passive_representation"] = detail["representation"]
+    if stable_id == 456:
+        receipt["provenance"]["passive_taenia_wall_region"] = detail
+    regions = receipt["provenance"].setdefault("passive_taenia_wall_regions", {})
+    regions[str(stable_id)] = detail
+    source_map[str(stable_id)]["reference_geometry_status"] = detail["parameter_status"]
+    source_map[str(stable_id)]["passive_representation"] = detail["representation"]
+    if stable_id == 457:
+        source_map["457"]["source_shell_status"] = "retained_in_provenance_not_rendered_as_independent_solid"
     receipt["payload"].update(path=str(output/"resting-thorax.nhanatomy"), sha256=output_sha,
                               surface_count=len(records), vertex_count=nv, index_count=ni)
     receipt["functional_bindings"]["anatomy_payload_sha256"] = output_sha
     cardiac["output_anatomy_payload_sha256"] = output_sha
     wall["output_anatomy_payload_sha256"] = output_sha
-    receipt["qualification"]["passive_taenia_wall_region"] = detail["qualification"]
+    receipt["qualification"][f"passive_taenia_wall_region_{stable_id}"] = detail["qualification"]
     output.mkdir(parents=True)
     (output/"resting-thorax.nhanatomy").write_bytes(result)
     receipt_path = output/"resting-anatomy-receipt.json"
@@ -351,4 +365,153 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
                 "qualification": receipt["qualification"], "source_surfaces": source_map,
                 "mass_geometry_accounting": receipt["mass_geometry_accounting"]}
     (output/"resting-anatomy-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True)+"\n")
+    return manifest
+
+# Rows explicitly prepared by the passive reference composition; respiratory,
+# cardiac, and every unlisted anatomy record remain owned by the target base.
+PASSIVE_REFERENCE_TRANSFER_IDS = tuple(sorted({
+    2, 3, 13, *range(398, 454), 455, 456, 457, 462,
+}))
+
+
+def compose_passive_rows_onto_respiratory_base(*, base_payload: Path, base_receipt: Path,
+                                               passive_payload: Path, passive_receipt: Path,
+                                               output: Path) -> dict:
+    """Transfer only the reviewed passive rows onto an accepted respiratory source.
+
+    This produces a pre-native assembly asset: the complete-payload cardiac
+    binding is deliberately left unchanged and therefore requires re-emission
+    by its owner after final scene composition.
+    """
+    _require(not output.exists(), "retain previous anatomy evidence; choose a new output directory")
+    for path in (base_payload, base_receipt, passive_payload, passive_receipt):
+        _require(path.is_file(), f"row-transfer input is missing: {path}")
+
+    base_raw = base_payload.read_bytes()
+    passive_raw = passive_payload.read_bytes()
+    base_sha = hashlib.sha256(base_raw).hexdigest()
+    passive_sha = hashlib.sha256(passive_raw).hexdigest()
+    base_r = json.loads(base_receipt.read_text())
+    passive_r = json.loads(passive_receipt.read_text())
+    for receipt, digest, role in ((base_r, base_sha, "respiratory base"),
+                                  (passive_r, passive_sha, "passive reference")):
+        _require(receipt.get("schema") == "numi.human.resting-anatomy-receipt.v1"
+                 and receipt.get("payload", {}).get("sha256") == digest
+                 and receipt.get("functional_bindings", {}).get("anatomy_payload_sha256") == digest,
+                 f"{role} receipt does not bind its exact NHANAT payload")
+
+    base_header, base_records, base_rows = _parse_payload(base_raw)
+    pass_header, _pass_records, pass_rows = _parse_payload(passive_raw)
+    _require(set(base_rows) == set(pass_rows)
+             and base_header[5:] == pass_header[5:],
+             "source and target anatomy inventories or body registration differ")
+    transfer = set(PASSIVE_REFERENCE_TRANSFER_IDS)
+    _require(transfer.issubset(base_rows),
+             "respiratory base lacks an explicitly reviewed passive row")
+    _require(transfer.issubset(pass_rows),
+             "passive reference source lacks an explicitly reviewed row")
+
+    base_map = base_r.get("provenance", {}).get("source_id_map", {})
+    pass_map = passive_r.get("provenance", {}).get("source_id_map", {})
+    for sid in sorted(transfer):
+        target_meta = base_map.get(str(sid), {})
+        source_meta = pass_map.get(str(sid), {})
+        _require(target_meta.get("source_member") == source_meta.get("source_member")
+                 and target_meta.get("source_sha256") == source_meta.get("source_sha256")
+                 and target_meta.get("source_owner_metadata", {}).get("member_id")
+                 == source_meta.get("source_owner_metadata", {}).get("member_id"),
+                 f"passive row {sid} changed source identity")
+        _require((base_rows[sid]["body_index"], base_rows[sid]["layer"], base_rows[sid]["flags"])
+                 == (pass_rows[sid]["body_index"], pass_rows[sid]["layer"], pass_rows[sid]["flags"]),
+                 f"passive row {sid} changed body/layer ownership")
+
+    # These two colon owners are the untouched shared frame for the accepted
+    # respiratory candidate and the copied taenia host regions.
+    for sid in (454, 460):
+        _require(sid in base_rows and sid in pass_rows
+                 and _record_content_bytes(base_rows[sid]) == _record_content_bytes(pass_rows[sid]),
+                 f"required unchanged colon parent {sid} differs")
+
+    updated = copy.deepcopy(base_rows)
+    row_hashes = {}
+    for sid in sorted(transfer):
+        row_hashes[str(sid)] = {
+            "base_record_sha256": hashlib.sha256(_record_content_bytes(base_rows[sid])).hexdigest(),
+            "passive_record_sha256": hashlib.sha256(_record_content_bytes(pass_rows[sid])).hexdigest(),
+            "source_member": pass_map[str(sid)]["source_member"],
+            "source_name": pass_map[str(sid)].get("name"),
+        }
+        updated[sid] = copy.deepcopy(pass_rows[sid])
+
+    chunks, vv, ff, nv, ni = [], [], [], 0, 0
+    for record in base_records:
+        body_index, _vs, _vc, _is, _ic, sid, layer, flags = map(int, record)
+        row = updated[sid]
+        vertices = np.asarray(row["vertices6"], dtype="<f4")
+        faces = np.asarray(row["faces"], dtype=np.int64).reshape(-1, 3)
+        _require(vertices.ndim == 2 and vertices.shape[1] == 6 and np.isfinite(vertices).all()
+                 and (len(faces) == 0 or (int(faces.min()) >= 0 and int(faces.max()) < len(vertices))),
+                 f"transferred row {sid} is malformed")
+        chunks.append(RECORD.pack(body_index, nv, len(vertices), ni, faces.size, sid, layer, flags))
+        vv.append(vertices.tobytes())
+        ff.append((faces.reshape(-1) + nv).astype("<u4").tobytes())
+        nv += len(vertices); ni += faces.size
+    result = HEADER.pack(base_header[0], base_header[1], len(base_records), nv, ni,
+                         base_header[5], base_header[6]) + b"".join(chunks + vv + ff)
+    _, _, verified = _parse_payload(result)
+    for sid in base_rows:
+        expected = pass_rows[sid] if sid in transfer else base_rows[sid]
+        _require(_record_content_bytes(expected) == _record_content_bytes(verified[sid]),
+                 f"row transfer changed unexpected or failed to replace stable ID {sid}")
+
+    output.mkdir(parents=True)
+    payload_path = output / "resting-thorax.nhanatomy"
+    payload_path.write_bytes(result)
+    output_sha = hashlib.sha256(result).hexdigest()
+    receipt = copy.deepcopy(base_r)
+    receipt["payload"].update(path=str(payload_path), sha256=output_sha,
+                              surface_count=len(base_records), vertex_count=nv, index_count=ni)
+    receipt["functional_bindings"]["anatomy_payload_sha256"] = output_sha
+    for sid in sorted(transfer):
+        receipt["provenance"]["source_id_map"][str(sid)] = copy.deepcopy(pass_map[str(sid)])
+    source_evidence = {
+        key: hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
+                                       ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+        for key, value in passive_r.get("provenance", {}).items()
+        if key in {"passive_bowel_reference_composition", "pylorus_stomach_arrangement",
+                   "passive_taenia_wall_region", "passive_taenia_wall_regions",
+                   "passive_component_identity_refresh"}
+    }
+    transfer_detail = {
+        "schema": "numi.human.passive_reference_row_transfer.v1",
+        "owner": "numilab_human.resting_taenia_reference.compose_passive_rows_onto_respiratory_base",
+        "target_payload_sha256": base_sha,
+        "target_receipt_sha256": _sha(base_receipt),
+        "passive_source_payload_sha256": passive_sha,
+        "passive_source_receipt_sha256": _sha(passive_receipt),
+        "transferred_stable_ids": sorted(transfer),
+        "transferred_source_rows": row_hashes,
+        "unchanged_parent_ids_checked": [454, 460],
+        "source_passive_provenance_entry_sha256": source_evidence,
+        "all_unlisted_geometry_bytes_preserved": True,
+        "passive_mass_or_physiology_added": False,
+        "native_readiness": "not_ready_pending_final_cardiac_binding_reemit_and_integrated_cycle_audit",
+        "cardiac_binding_note": "The target cardiac binding is preserved unchanged and remains bound to the pre-transfer complete anatomy payload; its existing owner must re-emit the binding after final assembly.",
+    }
+    receipt.setdefault("provenance", {})["passive_reference_row_transfer"] = transfer_detail
+    receipt.setdefault("qualification", {})["passive_reference_row_transfer"] = (
+        "Preparatory row assembly only; target respiratory rows and unlisted records are preserved. "
+        "The complete-payload cardiac binding is intentionally stale until its existing owner re-emits it, "
+        "and integrated native cycle qualification remains pending.")
+    receipt_path = output / "resting-anatomy-receipt.json"
+    receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+    manifest = {"schema": "numi.human.resting-anatomy-manifest.v1",
+                "payload": receipt["payload"],
+                "receipt": {"path": str(receipt_path), "sha256": _sha(receipt_path)},
+                "functional_bindings": receipt["functional_bindings"],
+                "qualification": receipt["qualification"],
+                "source_surfaces": receipt["provenance"]["source_id_map"],
+                "passive_reference_row_transfer": transfer_detail,
+                "mass_geometry_accounting": receipt["mass_geometry_accounting"]}
+    (output / "resting-anatomy-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     return manifest
