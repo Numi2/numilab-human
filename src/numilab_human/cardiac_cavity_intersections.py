@@ -15,6 +15,7 @@ from fractions import Fraction
 import hashlib
 import itertools
 import math
+import struct
 
 from .cardiac_cavity_geometry import analyze_topology
 from .model import ImportError as HumanImportError
@@ -58,6 +59,63 @@ def _signs(numerator, denominator, triangle, normal):
 
 def _inside(signs):
     return min(signs) >= 0 or max(signs) <= 0
+
+
+_FLOAT32_LATTICE_DENOMINATOR = 1 << 149
+
+
+def float32_point_lattice_key(point):
+    """Return the exact integer-lattice key for a packed Float32 xyz point.
+
+    This is for interfaces exported from Float32 mesh payloads. Converting each
+    packed coordinate through ``float`` preserves its value exactly, and the
+    common 2**149 denominator is divisible by every finite Float32 denominator.
+    Reject binary64-only coordinates so callers cannot accidentally compare a
+    different representation from the one the native loader consumes.
+    """
+    require(len(point) == 3, "Float32 point must have three coordinates")
+    result = []
+    for value in point:
+        coordinate = float(value)
+        require(math.isfinite(coordinate), "Float32 point must be finite")
+        try:
+            packed = struct.pack("<f", coordinate)
+        except (OverflowError, struct.error):
+            require(False, "point coordinate is outside Float32 range")
+        require(struct.unpack("<f", packed)[0] == coordinate,
+                "point coordinate is not an exact Float32 value")
+        numerator, denominator = coordinate.as_integer_ratio()
+        require(_FLOAT32_LATTICE_DENOMINATOR % denominator == 0,
+                "Float32 coordinate is not on the common integer lattice")
+        result.append(numerator * (_FLOAT32_LATTICE_DENOMINATOR // denominator))
+    return tuple(result)
+
+
+def float32_triangle_lattice_key(vertices, face):
+    """Return a winding-independent exact key for a packed Float32 triangle."""
+    require(len(face) == 3, "Float32 face must have three vertex indices")
+    points = tuple(float32_point_lattice_key(vertices[int(index)]) for index in face)
+    require(len(set(points)) == 3, "Float32 face has repeated coordinates")
+    return tuple(sorted(points))
+
+
+def float32_lattice_point_on_triangle(point_numerator, denominator, triangle):
+    """Test a rational point against an exact triangle on the Float32 lattice.
+
+    ``point_numerator / denominator`` and ``triangle`` use the integer lattice
+    above. The scalar denominator is shared by all three coordinates, matching
+    the exact predicate owner used by intersection and source audits.
+    """
+    require(len(point_numerator) == 3 and len(triangle) == 3,
+            "point and triangle must be xyz triples")
+    require(isinstance(denominator, int) and denominator > 0,
+            "point denominator must be a positive integer scalar")
+    normal = _cross(_sub(triangle[1], triangle[0]), _sub(triangle[2], triangle[0]))
+    require(any(normal), "Float32 triangle is exactly degenerate")
+    if sum(normal[k] * (triangle[0][k] * denominator - point_numerator[k])
+           for k in range(3)) != 0:
+        return False
+    return _inside(_signs(point_numerator, denominator, triangle, normal))
 
 
 def _coplanar_points(first, second, normal):

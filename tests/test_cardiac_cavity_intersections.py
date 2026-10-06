@@ -4,6 +4,7 @@ import copy
 from fractions import Fraction
 import math
 from pathlib import Path
+import struct
 import sys
 import unittest
 
@@ -60,6 +61,28 @@ class PredicateTests(unittest.TestCase):
         a, b = tetra('a'), tetra('b', (math.nextafter(1., math.inf),0.,0.))
         self.assertTrue(run(a,b)['all_domains_disjoint'])
         self.assertFalse(run(a,tetra('b',(1.,0.,0.)))['all_domains_disjoint'])
+
+    def test_float32_shared_face_keys_use_one_exact_integer_lattice(self):
+        f32 = lambda value: struct.unpack('<f', struct.pack('<f', value))[0]
+        vertices = [(f32(.1),f32(.2),f32(.3)), (f32(.8),f32(.2),f32(.3)),
+                    (f32(.1),f32(.9),f32(.3)), (f32(.5),f32(.5),f32(.3))]
+        forward = audit.float32_triangle_lattice_key(vertices, (0,1,2))
+        reverse = audit.float32_triangle_lattice_key(vertices, (2,1,0))
+        self.assertEqual(forward, reverse)
+        self.assertNotEqual(forward, audit.float32_triangle_lattice_key(vertices, (0,1,3)))
+        with self.assertRaisesRegex(HumanImportError, 'exact Float32'):
+            audit.float32_point_lattice_key((.1,.2,.3))
+
+    def test_float32_patch_membership_uses_one_scalar_denominator(self):
+        f32 = lambda value: struct.unpack('<f', struct.pack('<f', value))[0]
+        vertices = [(f32(0),f32(0),f32(0)), (f32(1),f32(0),f32(0)),
+                    (f32(0),f32(1),f32(0))]
+        triangle = tuple(audit.float32_point_lattice_key(vertices[index]) for index in (0,1,2))
+        lattice = 1 << 149
+        self.assertTrue(audit.float32_lattice_point_on_triangle((lattice,lattice,0),4,triangle))
+        self.assertFalse(audit.float32_lattice_point_on_triangle((3*lattice,3*lattice,0),4,triangle))
+        with self.assertRaisesRegex(HumanImportError, 'scalar'):
+            audit.float32_lattice_point_on_triangle((lattice,lattice,0),(4,4,4),triangle)
 
     def test_exact_ray_retries_vertex_hit_and_reports_boundary(self):
         t = tetra('test')['exact_coordinate_quotient']
