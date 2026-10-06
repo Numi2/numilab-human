@@ -147,9 +147,26 @@ class ArrangementTests(unittest.TestCase):
         self.verify(SOURCE, result)
         self.assertTrue(set(map(point, boundary)) <= {p for t in result for p in t})
 
-    def test_interior_loop_or_orphan_or_dangling_cut_rejected(self):
+    def test_interior_loops_with_boundary_cuts_preserve_all_constraints(self):
+        first = [(F(1, 2), F(1, 2), 0), (1, F(1, 2), 0), (F(1, 2), 1, 0)]
+        second = [(2, F(1, 2), 0), (F(5, 2), F(1, 2), 0), (2, 1, 0)]
+        loop = lambda points: list(zip(points, points[1:] + points[:1]))
+        cut = [((F(7, 2), 0, 0), (0, F(7, 2), 0))]
+        for constraints in (loop(first), loop(first) + cut,
+                            loop(first) + loop(second) + cut):
+            with self.subTest(constraints=constraints):
+                result = subdivide_triangle(SOURCE, constraints)
+                self.verify(SOURCE, result, constraints)
+                self.assertEqual({p for t in result for p in t},
+                                 set(map(point, SOURCE)) | {point(p) for pair in constraints for p in pair})
+                reordered = [tuple(reversed(pair)) for pair in reversed(constraints)]
+                self.assertEqual(result, subdivide_triangle(SOURCE, reordered))
+                reverse = tuple(reversed(SOURCE))
+                self.verify(reverse, subdivide_triangle(reverse, constraints), constraints)
+
+    def test_orphan_or_dangling_cut_rejected(self):
         loop = [((1, 1, 0), (2, 1, 0)), ((2, 1, 0), (1, 2, 0)), ((1, 2, 0), (1, 1, 0))]
-        cases = [loop, [((1, 1, 0), (2, 1, 0))], [((1, 0, 0), (1, 1, 0))],
+        cases = [[((1, 1, 0), (2, 1, 0))], [((1, 0, 0), (1, 1, 0))],
                  loop + [((1, 0, 0), (1, 1, 0))]]
         for cuts in cases:
             with self.subTest(cuts=cuts), self.assertRaisesRegex(HumanImportError, 'loop|orphan|dangling|nonsimple'):
@@ -170,6 +187,22 @@ class ArrangementTests(unittest.TestCase):
 
 class PinnedArrangementTests(unittest.TestCase):
     verify = ArrangementTests.verify
+    def test_actual_atrial_material_interior_loops_preserve_source_constraints(self):
+        fixture = json.loads((ROOT / 'tests/fixtures/cardiac_av_material_interior_loops.json').read_text())
+        def decode(value):
+            if isinstance(value, list):
+                if len(value) == 2 and all(isinstance(x, str) for x in value):
+                    return F(int(value[0], 16), int(value[1], 16))
+                return tuple(decode(x) for x in value)
+            return value
+        self.assertEqual(len(fixture['cases']), 20)
+        for case in fixture['cases']:
+            with self.subTest(stable_id=case['sid'], source_face=case['faceid']):
+                triangle, segments, boundary = (decode(case[key]) for key in ('triangle', 'segments', 'boundary'))
+                result = subdivide_triangle(triangle, list(segments), boundary)
+                self.verify(triangle, result, segments)
+                self.assertTrue(set(boundary) <= {point for tri in result for point in tri})
+
     def test_actual_42_intersections_subdivide_every_affected_source_face(self):
         from numilab_human.cardiac_cavity_geometry import extract_cavity_surfaces
         from numilab_human.cardiac_cavity_intersections import triangle_intersection_points

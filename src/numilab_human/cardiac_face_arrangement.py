@@ -2,8 +2,9 @@
 
 This offline geometry owner never steps physics, moves source vertices, applies
 welding tolerances, or resolves physiological ownership. It inserts rational
-intersection points and triangulates simple arrangement cells. Disconnected
-interior loops and dangling cuts are unsupported and rejected explicitly.
+intersection points and triangulates simple arrangement cells. Closed interior
+loops use noncrossing diagonals between existing vertices. Dangling cuts and
+nonsimple arrangement cells remain explicitly rejected.
 """
 from __future__ import annotations
 
@@ -182,8 +183,39 @@ def subdivide_triangle(triangle, segments, boundary_points=()) -> list[tuple[Poi
         point = pending.pop()
         if point not in reached:
             reached.add(point); pending.extend(adjacency[point] - reached)
-    require(reached == set(adjacency), "disconnected interior loop or orphan cut is unsupported")
     require(all(len(neighbors) >= 2 for neighbors in adjacency.values()), "dangling cut is unsupported")
+    # Closed interior cut components can coexist with boundary-connected cuts.
+    # Join each with two noncrossing visible diagonals between existing vertices.
+    # Two distinct endpoints on each component avoid a dangling bridge/weak
+    # polygon. These are triangulation edges only: no coordinate, source area,
+    # or original constraint is changed. All ordinary incidence/area/T-junction
+    # checks below still apply to the resulting planar graph.
+    while reached != set(adjacency):
+        component = set(); pending = [min(set(adjacency) - reached)]
+        while pending:
+            point = pending.pop()
+            if point not in component:
+                component.add(point); pending.extend(adjacency[point] - component)
+        visible = []
+        for a in sorted(component):
+            for b in sorted(reached):
+                if all(_segment_intersections(a, b, c, d) <= {a, b} for c, d in edges):
+                    distance2 = sum((a[k] - b[k])**2 for k in range(2))
+                    visible.append((distance2, a, b))
+        visible.sort()
+        bridges = None
+        for i, (_, a, b) in enumerate(visible):
+            for _, c, d in visible[i+1:]:
+                if a != c and b != d and not _segment_intersections(a, b, c, d):
+                    bridges = ((a, b), (c, d))
+                    break
+            if bridges is not None:
+                break
+        require(bridges is not None, "interior loop has no pair of visible noncrossing bridges")
+        for a, b in bridges:
+            edges.add(tuple(sorted((a, b))))
+            adjacency[a].add(b); adjacency[b].add(a)
+        reached.update(component)
     ordered_neighbors = {}
     for point, neighbors in adjacency.items():
         def compare(a, b):
