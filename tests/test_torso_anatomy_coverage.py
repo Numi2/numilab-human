@@ -32,6 +32,20 @@ def test_real_named_ventricular_wall_is_a_component_not_a_whole_organ(source_dat
     assert not any(m == "FJ2428" for _, _, m in relations["part_of"])
 
 
+@pytest.mark.parametrize(("member", "concept", "label"), [
+    ("FJ2439", "FMA9457", "wall of right atrium"),
+    ("FJ2438", "FMA9531", "wall of left atrium"),
+])
+def test_atrial_wall_entries_preserve_source_laterality(source_data, member, concept, label):
+    mapping, relations = source_data
+    wall = next(s for s in mapping["entries"] if s["member_id"] == member)
+    assert (wall["concept_id"], wall["source_name"], wall["hierarchy"]) == (concept, label, "is_a")
+    result = source_organ_coverage(wall, types_for(relations, member))
+    assert result["source_named_structure_type_matches"]
+    assert result["source_structure_kind"] == "organ_component"
+    assert result["organ_coverage"] == "source_named_organ_component_representation"
+
+
 @pytest.mark.parametrize("member", ["FJ2422", "FJ2423", "FJ2424", "FJ2425"])
 def test_real_cardiac_cavities_cannot_be_organ_tissue(source_data, member):
     _, relations = source_data

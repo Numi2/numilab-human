@@ -2927,7 +2927,8 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(liver, {"FJ2816", "FJ2818", "FJ2819", "FJ2820", "FJ2821", "FJ2822", "FJ2409", "FJ2823", "FJ2824"})
         self.assertTrue(any(entry["member_id"] == "FJ2561" and entry["source_name"] == "spleen" for entry in entries))
         self.assertTrue(any(entry["member_id"] == "FJ2428" and entry["hierarchy"] == "is_a" for entry in entries))
-        self.assertTrue(any(entry["member_id"] == "FJ2438" and entry["source_name"] == "heart" for entry in entries))
+        self.assertTrue(any(entry["member_id"] == "FJ2439" and entry["source_name"] == "wall of right atrium" for entry in entries))
+        self.assertTrue(any(entry["member_id"] == "FJ2438" and entry["source_name"] == "wall of left atrium" for entry in entries))
 
     def test_numi_workspace_supported_muscle_surface_command_rejects_missing_paths_before_python(self) -> None:
         command = ROOT / ".numi/commands/human"
