@@ -30,3 +30,36 @@ Five asset-admission regressions cover preserved unrelated anatomy, stale or
 incomplete evidence, malformed geometry, explicit unresolved neighbors, and
 cardiac descriptor rebinding. They use synthetic fixtures and are not anatomy
 or physiological validation.
+
+The same compiler accepts `--organ-set bladder --interface-path PROOF.json`
+for the localized bladder/bowel correction. It requires an exact record hash
+ledger for every passive neighbor, zero self-crossings, and zero crossings
+with every non-neck neighbor. The bladder remains attached to its existing
+pelvic owner. The only allowed contact is the explicitly mapped source
+bladder/prostate neck: each participating bladder triangle must retain its
+exact oriented source coordinates, and the prostate record must be unchanged.
+Witnesses must remain within 5 mm of the inferior bladder and superior
+prostate source extents. A receipt flag alone cannot admit a changed neck.
+
+The retained Mac mini source candidate removes 0.904 mL from the 78.236 mL
+bladder representation at bowel interfaces 415, 416, 455, and 459. Preparation
+uses a 50 µm numerical separation and retains a closed oriented 77.332 mL
+surface, with minimum triangle altitude 2.971 µm. All 78 exact neighbor checks
+pass except the 13 explicitly preserved source neck triangle pairs. The
+neck's anatomical interpretation follows the [Kasturba Medical College
+anatomy specimen](https://mapkmc.manipal.edu/specimen/anat301/), which describes
+the male bladder neck's continuity with the prostate. This is passive
+reference geometry; no urine, urethral wall, or urinary function is simulated.
+
+The input `taenia-motion-native-input-111/`, exact audit
+`bladder-interface-audit-109/`, neck correspondence `bladder-neck-interface-110/`,
+source binding and invocation `bladder-reference-binding-112/`, and output
+`bladder-native-input-112/` are retained under the same Mini evidence root.
+The output NHANAT1 SHA-256 is
+`00128e08b2a83fd6e4b1c3873e50276d1d5574aa32e9fbf891d0221eb15bce60`.
+The compiler preserves prior pancreas, spleen, and taenia repairs. Native
+breathing-cycle checks for this bladder candidate remain required.
+
+Eight focused admission tests pass on the Mini, including three bladder
+regressions covering exact source-neck preservation, stale neighbor evidence,
+unexpected crossings, attachment ownership, and retention of prior repairs.
