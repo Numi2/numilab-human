@@ -69,6 +69,8 @@ class PredicateTests(unittest.TestCase):
         forward = audit.float32_triangle_lattice_key(vertices, (0,1,2))
         reverse = audit.float32_triangle_lattice_key(vertices, (2,1,0))
         self.assertEqual(forward, reverse)
+        second_mesh = [vertices[index] for index in (2,0,1)]
+        self.assertEqual(forward, audit.float32_triangle_lattice_key(second_mesh, (0,1,2)))
         self.assertNotEqual(forward, audit.float32_triangle_lattice_key(vertices, (0,1,3)))
         with self.assertRaisesRegex(HumanImportError, 'exact Float32'):
             audit.float32_point_lattice_key((.1,.2,.3))
