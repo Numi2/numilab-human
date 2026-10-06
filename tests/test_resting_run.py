@@ -134,6 +134,18 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertIn("--resting-rigid-hands", argv)
         self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
 
+    def test_contact_iterations_reach_existing_native_owner(self):
+        baseline, _ = command(self.args)
+        self.assertNotIn("--stand-contact-iterations", baseline)
+        self.args.contact_iterations = 64
+        argv, _ = command(self.args)
+        self.assertEqual(argv[argv.index("--stand-contact-iterations") + 1], "64")
+        for invalid in (0, 65, 1.5, True):
+            with self.subTest(invalid=invalid):
+                self.args.contact_iterations = invalid
+                with self.assertRaisesRegex(HumanImportError, "contact iterations"):
+                    command(self.args)
+
     def test_invalid_postural_cap_is_rejected_before_native_launch(self):
         for cap in (0., -.01, 1.01, float("nan"), float("inf")):
             with self.subTest(cap=cap):

@@ -111,6 +111,11 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         argv.append("--persistent-source-passive-joint-tissue")
     if getattr(args, "rigid_hands", False):
         argv.append("--resting-rigid-hands")
+    contact_iterations = getattr(args, "contact_iterations", None)
+    if contact_iterations is not None:
+        _require(type(contact_iterations) is int and 1 <= contact_iterations <= 64,
+                 "contact iterations must be an integer within [1, 64]")
+        argv.extend(["--stand-contact-iterations", str(contact_iterations)])
     if args.drive_intervention:
         start, end, scale = args.drive_intervention
         _require(all(math.isfinite(x) for x in (start, end, scale)) and
@@ -196,6 +201,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="enable the existing source-bound wrist and non-thumb finger passive stiffness model")
     parser.add_argument("--rigid-hands", action="store_true",
                         help="use reference-pose rigid digits with internal GPU constraints; wrists remain free, and hand physiology is not simulated")
+    parser.add_argument("--contact-iterations", type=int,
+                        help="existing GPU contact/equality/limit sweeps per physical step, 1 to 64; default uses the native owner setting")
     parser.set_defaults(handler=run)
 
 
