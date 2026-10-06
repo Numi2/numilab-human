@@ -157,3 +157,198 @@ def build_candidate(base_payload: Path, base_receipt: Path, candidate_path: Path
                 "source_surfaces": source_map, "mass_geometry_accounting": receipt["mass_geometry_accounting"]}
     (output/"resting-anatomy-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True)+"\n")
     return manifest
+
+
+WALL_REGION_PARENTS = (454, 455, 460)
+
+
+def face_coordinate_sha256(row):
+    """Bind ordered Float32 face corners, independent of render-normal seams."""
+    corners = row["vertices6"][row["faces"], :3]
+    return hashlib.sha256(np.asarray(corners, dtype="<f4").tobytes()).hexdigest()
+
+
+def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
+                        derivation_path: Path):
+    """Check an inferred taenia-libera annotation on existing colon triangles.
+
+    This is an open, nonadditive material-region representation. It does not
+    assert a closed muscle solid, preserve the old invalid shell's volume, or
+    exempt any parent organ from its own intersection/volume checks.
+    """
+    from .resting_anatomy_interface_patch import normals, topology_report
+    from . import cardiac_cavity_intersections as exact
+
+    detail = json.loads(derivation_path.read_text())
+    digest = _sha(candidate_path)
+    _require(detail.get("representation") == "passive_colon_wall_surface_region_v1",
+             "unsupported wall-region representation")
+    _require(detail.get("stable_id") == 456 and detail.get("candidate_sha256") == digest,
+             "wall region has a different candidate or anatomical identity")
+    required = (456, *WALL_REGION_PARENTS)
+    _require(all(s in rows and source_map.get(str(s), {}).get("source_member") == MEMBERS[s]
+                 for s in required), "wall-region source component identities changed")
+    _require(all(rows[s]["body_index"] == 20 and rows[s]["layer"] == 1 for s in required),
+             "wall region and colon do not share the passive torso frame")
+    source_record = hashlib.sha256(_record_content_bytes(rows[456])).hexdigest()
+    _require(detail.get("source_record_sha256") == source_record,
+             "wall-region derivation refers to another source muscle")
+    parent_hashes = {str(s): face_coordinate_sha256(rows[s]) for s in WALL_REGION_PARENTS}
+    _require(detail.get("parent_face_coordinate_sha256") == parent_hashes,
+             "wall-region parent colon geometry changed")
+    _require(detail.get("rectal_scope") == "excluded_no_taenia_band",
+             "wall-region derivation must distinguish rectal longitudinal muscle")
+    shape = detail.get("sampled_shape", {})
+    _require(shape.get("distance_is_sampled_not_hausdorff_bound") is True,
+             "wall-region shape evidence overstates its sampled scope")
+    for name in ("source_to_region", "region_to_source"):
+        sample = shape.get(name, {})
+        _require(type(sample.get("sample_count")) is int and sample["sample_count"] > 0
+                 and isinstance(sample.get("maximum_m"), (int, float))
+                 and np.isfinite(sample["maximum_m"]) and sample["maximum_m"] >= 0,
+                 "wall-region shape sampling is absent or invalid")
+    # These are explicit reference-asset limits, not physiological tolerances.
+    _require(shape["source_to_region"]["maximum_m"] <= .006
+             and shape["region_to_source"]["maximum_m"] <= .005
+             and shape.get("face_selection_sampled_distance_limit_m") == .005,
+             "wall region exceeds the declared coarse reference extent")
+    _require(isinstance(detail.get("sensitivity"), list) and len(detail["sensitivity"]) >= 2
+             and isinstance(detail.get("references"), list) and detail["references"],
+             "wall region lacks sensitivity or anatomical attribution")
+
+    with np.load(candidate_path, allow_pickle=False) as candidate:
+        v = candidate["vertices"]
+        f = candidate["faces"]
+        owners = candidate["colon_owner"]
+        parent_faces = candidate["colon_face"]
+    _require(v.dtype.kind == "f" and v.dtype.itemsize == 4
+             and v.ndim == 2 and v.shape[1] == 3 and np.isfinite(v).all(),
+             "wall region must use finite Float32 positions")
+    _require(f.ndim == 2 and f.shape[1] == 3 and len(f) > 0
+             and f.dtype.kind in "iu" and f.min() >= 0 and f.max() < len(v),
+             "invalid wall-region topology")
+    _require(owners.shape == parent_faces.shape == (len(f),)
+             and owners.dtype.kind in "iu" and parent_faces.dtype.kind in "iu"
+             and set(map(int, owners)) == set(WALL_REGION_PARENTS),
+             "wall-region parent-face inventory is incomplete or invalid")
+    _require(len(set(zip(map(int, owners), map(int, parent_faces)))) == len(f),
+             "wall region repeats a parent face")
+    for sid in WALL_REGION_PARENTS:
+        mask = owners == sid
+        ids = parent_faces[mask]
+        parent = rows[sid]
+        _require(ids.min() >= 0 and ids.max() < len(parent["faces"]),
+                 "wall-region parent face is out of range")
+        actual = np.asarray(v[f[mask]], dtype="<f4").tobytes()
+        expected = np.asarray(parent["vertices6"][parent["faces"][ids], :3],
+                              dtype="<f4").tobytes()
+        _require(actual == expected,
+                 "wall-region face is not an identically oriented parent triangle")
+
+    # Weld coordinate-identical normal seams before the exact embeddedness test.
+    # Float32 -> common 2^149 lattice is lossless, including subnormal values.
+    welded, inverse = np.unique(v[f].reshape(-1, 3), axis=0, return_inverse=True)
+    faces = inverse.reshape(-1, 3).astype(np.int64)
+    lattice = []
+    for point in welded:
+        row = []
+        for x in point:
+            n, denominator = float(x).as_integer_ratio()
+            row.append(n * ((1 << 149) // denominator))
+        lattice.append(tuple(row))
+    records = exact._records(lattice, faces.tolist())
+    self_audit = exact._audit_pair(records, records, same_surface=True)
+    _require(self_audit["count"] == 0, "wall region has an exact self intersection")
+    topology = topology_report(faces)
+    topology.pop("boundary_edges")
+    _require(topology["nonmanifold_edge_count"] == 0
+             and topology["orientation_error_edge_count"] == 0,
+             "wall region has invalid shared edges")
+    p = welded[faces].astype(np.float64)
+    area = np.linalg.norm(np.cross(p[:, 1]-p[:, 0], p[:, 2]-p[:, 0]), axis=1) / 2
+    n = normals(welded.astype(np.float64), faces)
+    vertices6 = np.column_stack((welded, n)).astype("<f4")
+    provenance = copy.deepcopy(detail)
+    provenance.update({
+        "compiler_source_sha256": _sha(Path(__file__)),
+        "derivation_sha256": _sha(derivation_path),
+        "source_member": MEMBERS[456],
+        "parameter_status": "inferred_reference_region_not_measured_subject_geometry",
+        "exact_self": self_audit,
+        "predicate_sha256": _sha(Path(exact.__file__)),
+        "parent_triangles_preserved_bitwise": True,
+        "area_m2": float(area.sum()), "topology": topology,
+        "independent_volume_m3": None, "additional_physical_mass_kg": 0,
+        "additional_physiological_state": False,
+        "boundary_interpretation": "Region extent on intact parent colon, not holes in an organ. Disconnected face sets and point-contacting boundaries are annotations, not a manifold muscle solid.",
+        "qualification": (
+            "Static region embeddedness and exact parent-face ownership checked. "
+            "Parent-organ neighbor and native breathing-cycle checks remain required. "
+            "Sampled source distances are not a continuous shape certificate."),
+    })
+    return vertices6, faces, provenance
+
+
+def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
+                                candidate_path: Path, derivation_path: Path,
+                                output: Path) -> dict:
+    """Replace only ID456 in the existing NHANAT1/receipt path."""
+    _require(not output.exists(), "retain existing output; choose a new directory")
+    raw = base_payload.read_bytes()
+    source_sha = hashlib.sha256(raw).hexdigest()
+    header, records, rows = _parse_payload(raw)
+    receipt = json.loads(base_receipt.read_text())
+    _require(receipt.get("schema") == "numi.human.resting-anatomy-receipt.v1"
+             and receipt.get("payload", {}).get("sha256") == source_sha
+             and receipt.get("functional_bindings", {}).get("anatomy_payload_sha256") == source_sha,
+             "receipt does not identify the current payload")
+    binding = receipt["functional_bindings"].get("passive_viscera_geometry_binding", {})
+    _require(set((456, *WALL_REGION_PARENTS)).issubset(binding.get("stable_ids", [])),
+             "wall region lacks the existing passive motion owner")
+    cardiac = receipt["provenance"]["cardiac_geometry_binding"]
+    wall = cardiac["ventricular_wall_binding"]
+    _require(cardiac.get("output_anatomy_payload_sha256") == source_sha
+             and wall.get("output_anatomy_payload_sha256") == source_sha,
+             "existing cardiac bindings are stale")
+    _require("local_coefficient_refinement" not in wall.get("wall_map", {}),
+             "attach source-bound cardiac correction after passive asset preparation")
+    source_map = receipt["provenance"]["source_id_map"]
+    vertices, faces, detail = prepare_wall_region(
+        rows, source_map, candidate_path, derivation_path)
+    updated = copy.deepcopy(rows)
+    updated[456]["vertices6"], updated[456]["faces"] = vertices, faces
+    chunks, vv, ff, nv, ni = [], [], [], 0, 0
+    for record in records:
+        sid = record[5]; row = updated[sid]; v, f = row["vertices6"], row["faces"]
+        chunks.append(RECORD.pack(row["body_index"], nv, len(v), ni, f.size,
+                                  sid, row["layer"], row["flags"]))
+        vv.append(np.asarray(v, dtype="<f4").tobytes())
+        ff.append((f.reshape(-1)+nv).astype("<u4").tobytes())
+        nv += len(v); ni += f.size
+    result = HEADER.pack(header[0], header[1], len(records), nv, ni, header[5], header[6]) + b"".join(chunks+vv+ff)
+    _, _, verified = _parse_payload(result)
+    _require(all(_record_content_bytes(rows[s]) == _record_content_bytes(verified[s])
+                 for s in rows if s != 456), "another anatomical surface changed")
+    output_sha = hashlib.sha256(result).hexdigest()
+    detail.update(base_payload_sha256=source_sha, base_receipt_sha256=_sha(base_receipt),
+                  all_other_record_geometry_bytes_preserved=True)
+    receipt["provenance"]["passive_taenia_wall_region"] = detail
+    source_map["456"]["reference_geometry_status"] = detail["parameter_status"]
+    source_map["456"]["passive_representation"] = detail["representation"]
+    receipt["payload"].update(path=str(output/"resting-thorax.nhanatomy"), sha256=output_sha,
+                              surface_count=len(records), vertex_count=nv, index_count=ni)
+    receipt["functional_bindings"]["anatomy_payload_sha256"] = output_sha
+    cardiac["output_anatomy_payload_sha256"] = output_sha
+    wall["output_anatomy_payload_sha256"] = output_sha
+    receipt["qualification"]["passive_taenia_wall_region"] = detail["qualification"]
+    output.mkdir(parents=True)
+    (output/"resting-thorax.nhanatomy").write_bytes(result)
+    receipt_path = output/"resting-anatomy-receipt.json"
+    receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True)+"\n")
+    manifest = {"schema": "numi.human.resting-anatomy-manifest.v1", "payload": receipt["payload"],
+                "receipt": {"path": str(receipt_path), "sha256": _sha(receipt_path)},
+                "functional_bindings": receipt["functional_bindings"],
+                "qualification": receipt["qualification"], "source_surfaces": source_map,
+                "mass_geometry_accounting": receipt["mass_geometry_accounting"]}
+    (output/"resting-anatomy-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True)+"\n")
+    return manifest
