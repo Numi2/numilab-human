@@ -48,6 +48,139 @@ the source basal field is nonincreasing in Y, so the interpolant is also.
     return value, gradient
 
 
+def _float32_coordinate_key(point):
+    """Return a bit-exact key for one serialized NHANAT Float32 position."""
+    value = np.ascontiguousarray(np.asarray(point, dtype=np.float32).reshape(1, 3))
+    return tuple(int(x) for x in value.view(np.uint32)[0])
+
+
+def propagate_exact_source_coordinate_updates(source_before, source_after, target_rows,
+                                              target_stable_ids,
+                                              maximum_target_displacement_m=None):
+    """Propagate a positions-only source edit to exact shared-coordinate owners.
+
+    Rows are the parsed NHANAT row dictionaries used by the existing anatomy
+    owners. Source rows must retain vertex indexing and faces. Every old shared
+    Float32 coordinate class must map to exactly one new coordinate, and the
+    update may not merge previously distinct source coordinate classes. The
+    returned target rows preserve faces and metadata, update every exact shared
+    copy, and recompute normals with the existing anatomy normal owner.
+
+    This helper does not clip or split faces; callers must run the existing
+    common respiratory mesh compiler after coordinate propagation.
+    """
+    before_ids = set(source_before)
+    after_ids = set(source_after)
+    if before_ids != after_ids:
+        raise ValueError('source coordinate update changed stable-id coverage')
+    source_map = {}
+    reverse_source_map = {}
+    source_vertex_count = 0
+    for sid in sorted(before_ids):
+        old_row, new_row = source_before[sid], source_after[sid]
+        old_vertices = np.asarray(old_row['vertices6'], dtype=np.float32)
+        new_vertices = np.asarray(new_row['vertices6'], dtype=np.float32)
+        old_faces = np.asarray(old_row['faces'])
+        new_faces = np.asarray(new_row['faces'])
+        if old_vertices.shape != new_vertices.shape or old_vertices.ndim != 2 or old_vertices.shape[1] != 6:
+            raise ValueError(f'source position update changed vertex layout for {sid}')
+        if old_faces.shape != new_faces.shape or not np.array_equal(old_faces, new_faces):
+            raise ValueError(f'source position update changed faces for {sid}')
+        if not np.isfinite(old_vertices).all() or not np.isfinite(new_vertices).all():
+            raise ValueError(f'source position update has nonfinite vertices for {sid}')
+        source_vertex_count += len(old_vertices)
+        for old_point, new_point in zip(old_vertices[:, :3], new_vertices[:, :3]):
+            old_key = _float32_coordinate_key(old_point)
+            new_key = _float32_coordinate_key(new_point)
+            previous = source_map.setdefault(old_key, new_key)
+            if previous != new_key:
+                raise ValueError('one exact shared source coordinate class was split')
+            previous_old = reverse_source_map.setdefault(new_key, old_key)
+            if previous_old != old_key:
+                raise ValueError('source coordinate update merged distinct coordinate classes')
+
+    target_ids = tuple(sorted(set(int(sid) for sid in target_stable_ids)))
+    if not target_ids or any(sid not in target_rows for sid in target_ids):
+        raise ValueError('target stable-id coverage is incomplete')
+    from .resting_anatomy_interface_patch import normals
+    updated = {}
+    changed_occurrences = 0
+    maximum_displacement = 0.0
+    for sid in target_ids:
+        row = target_rows[sid]
+        vertices = np.asarray(row['vertices6'], dtype=np.float32).copy()
+        faces = np.asarray(row['faces']).copy()
+        if vertices.ndim != 2 or vertices.shape[1] != 6 or not np.isfinite(vertices).all():
+            raise ValueError(f'invalid target row {sid}')
+        original_keys = [_float32_coordinate_key(point) for point in vertices[:, :3]]
+        output_keys = []
+        for i, key in enumerate(original_keys):
+            replacement = source_map.get(key)
+            if replacement is not None:
+                old = vertices[i, :3].copy()
+                vertices[i, :3] = np.asarray(replacement, dtype=np.uint32).view(np.float32)
+                displacement = float(np.linalg.norm(vertices[i, :3].astype(np.float64) - old.astype(np.float64)))
+                maximum_displacement = max(maximum_displacement, displacement)
+                changed_occurrences += int(displacement != 0.0)
+            output_keys.append(_float32_coordinate_key(vertices[i, :3]))
+        target_reverse = {}
+        for old_key, new_key in zip(original_keys, output_keys):
+            previous = target_reverse.setdefault(new_key, old_key)
+            if previous != old_key:
+                raise ValueError(f'target coordinate update merged distinct classes in {sid}')
+        vertices[:, 3:6] = normals(vertices[:, :3].astype(np.float64), faces).astype(np.float32)
+        result_row = dict(row)
+        result_row['vertices6'] = vertices
+        result_row['faces'] = faces
+        updated[sid] = result_row
+    if maximum_target_displacement_m is not None and maximum_displacement > float(maximum_target_displacement_m):
+        raise ValueError('target coordinate propagation exceeds its declared displacement bound')
+    report = {
+        'algorithm': 'exact_float32_source_coordinate_class_propagation_v1',
+        'source_stable_ids': sorted(before_ids),
+        'target_stable_ids': list(target_ids),
+        'source_vertex_occurrences': source_vertex_count,
+        'source_coordinate_classes': len(source_map),
+        'changed_target_vertex_occurrences': changed_occurrences,
+        'maximum_target_displacement_m': maximum_displacement,
+        'maximum_target_displacement_bound_m': maximum_target_displacement_m,
+        'target_faces_preserved': True,
+        'target_normals_recomputed': True,
+        'requires_existing_mesh_compiler': True,
+    }
+    return updated, report
+
+
+def derive_basal_effective_area(rows, stable_ids=(305, 306, 307, 308, 309), displacement_m=0.01):
+    """Derive the shared basal field's area from closed source lobe volumes."""
+    from .resting_anatomy_interface_patch import signed_volume
+    displacement_m = float(displacement_m)
+    if not math.isfinite(displacement_m) or displacement_m <= 0:
+        raise ValueError('basal area displacement must be positive and finite')
+    details = []
+    volumes = []
+    for sid in stable_ids:
+        if sid not in rows:
+            raise ValueError(f'missing lobe stable id {sid}')
+        row = rows[sid]
+        vertices = np.asarray(row['vertices6'], dtype=np.float32)[:, :3].astype(np.float64)
+        faces = np.asarray(row['faces'], dtype=np.int64)
+        weight, _ = kuhn_basis(vertices)
+        volume = signed_volume(vertices, faces)
+        moved = vertices.copy()
+        moved[:, 1] -= displacement_m * weight
+        shifted_volume = signed_volume(moved, faces)
+        area = (shifted_volume - volume) / displacement_m
+        if not math.isfinite(area) or area <= 0:
+            raise ValueError(f'conforming diaphragm field does not expand lobe {sid}')
+        details.append({'lung_stable_id': int(sid), 'effective_area_m2': area,
+                        'source_volume_m3': volume, 'shifted_volume_m3': shifted_volume})
+        volumes.append(volume)
+    return {'effective_area_m2': sum(x['effective_area_m2'] for x in details),
+            'displacement_m': displacement_m, 'per_lobe': details,
+            'volumes_m3': volumes}
+
+
 def _dot(a, b):
     return sum(x * y for x, y in zip(a, b))
 
@@ -416,19 +549,11 @@ def build_candidate(payload, receipt_path, config_path, output, coordinate_resol
         interface['source_opening_identity'] = 'previous unassigned boundary measured as a 1.86 nm double-path numerical seam; closed at the explicitly declared source resolution'
     interface['added_reversed_interface_face_count'] = len(mates)
     interface['added_reversed_interface_surface_area_m2'] = sum(x['patch_area_m2'] for x in interface['interface_rows'])
-    area_rows, volumes = [], []
-    for sid in modified[:5]:
-        v = rows[sid]['vertices6'][:, :3].astype(float)
-        f = rows[sid]['faces']
-        value, _ = kuhn_basis(v)
-        volume = base.signed_volume(v, f)
-        moved = v.copy(); moved[:, 1] -= .01 * value
-        area = (base.signed_volume(moved, f)-volume)/.01
-        if area <= 0:
-            raise ValueError('conforming diaphragm field does not expand a lobe')
-        area_rows.append({'lung_stable_id': sid, 'effective_area_m2': area})
-        volumes.append(volume)
-    area = sum(x['effective_area_m2'] for x in area_rows)
+    area_report = derive_basal_effective_area(rows, modified[:5], displacement_m=.01)
+    area_rows = [{'lung_stable_id': x['lung_stable_id'],
+                  'effective_area_m2': x['effective_area_m2']} for x in area_report['per_lobe']]
+    volumes = area_report['volumes_m3']
+    area = area_report['effective_area_m2']
     previous_area = respiratory['diaphragm_effective_area_m2']
     respiratory.update({'basal_weight_interpolation': 'conforming_kuhn_grid_v1',
                         'conforming_grid_spacing_m': GRID_SPACING_M,

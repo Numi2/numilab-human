@@ -1,7 +1,10 @@
 import unittest
 import numpy as np
 
-from numilab_human.resting_respiratory_conforming_field import conform_surface, kuhn_basis, resolve_short_edges
+from numilab_human.resting_respiratory_conforming_field import (
+    conform_surface, derive_basal_effective_area, kuhn_basis,
+    propagate_exact_source_coordinate_updates, resolve_short_edges,
+)
 
 
 class ConformingFieldTests(unittest.TestCase):
@@ -22,6 +25,72 @@ class ConformingFieldTests(unittest.TestCase):
             values, _ = kuhn_basis(p)
             center, _ = kuhn_basis(p.mean(axis=0, keepdims=True))
             self.assertLess(abs(float(center[0] - values.mean())), 2e-7)
+
+    def test_exact_source_coordinate_updates_propagate_to_all_shared_copies(self):
+        points = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]], np.float32)
+        normals = np.tile([0, 0, 1], (3, 1)).astype(np.float32)
+        source_before = {
+            1: {'vertices6': np.column_stack((points, normals)), 'faces': np.array([[0, 1, 2]])},
+            2: {'vertices6': np.column_stack((points[[0]], normals[[0]])), 'faces': np.empty((0, 3), np.int32)},
+        }
+        source_after = {sid: {'vertices6': row['vertices6'].copy(), 'faces': row['faces'].copy()}
+                        for sid, row in source_before.items()}
+        source_after[1]['vertices6'][0, 1] = np.float32(2e-7)
+        source_after[2]['vertices6'][0, 1] = np.float32(2e-7)
+        target = {9: {'vertices6': np.column_stack((points, normals)),
+                      'faces': np.array([[0, 1, 2]], np.int32)}}
+        updated, report = propagate_exact_source_coordinate_updates(
+            source_before, source_after, target, (9,), maximum_target_displacement_m=3e-7)
+        self.assertEqual(updated[9]['faces'].tolist(), target[9]['faces'].tolist())
+        np.testing.assert_array_equal(updated[9]['vertices6'][0, :3], source_after[1]['vertices6'][0, :3])
+        np.testing.assert_array_equal(updated[9]['vertices6'][0, 3:6], np.array([0, 0, 1], np.float32))
+        self.assertEqual(report['changed_target_vertex_occurrences'], 1)
+        self.assertTrue(report['target_faces_preserved'])
+        self.assertTrue(report['requires_existing_mesh_compiler'])
+
+    def test_exact_source_coordinate_updates_reject_shared_class_split(self):
+        points = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]], np.float32)
+        normals = np.tile([0, 0, 1], (3, 1)).astype(np.float32)
+        row = {'vertices6': np.column_stack((points, normals)), 'faces': np.array([[0, 1, 2]])}
+        source_before = {1: row, 2: {'vertices6': row['vertices6'][:1].copy(), 'faces': np.empty((0, 3), np.int32)}}
+        source_after = {sid: {'vertices6': value['vertices6'].copy(), 'faces': value['faces'].copy()}
+                        for sid, value in source_before.items()}
+        source_after[2]['vertices6'][0, 2] = np.float32(1e-7)
+        with self.assertRaisesRegex(ValueError, 'shared source coordinate class was split'):
+            propagate_exact_source_coordinate_updates(source_before, source_after, {}, ())
+
+    def test_exact_source_coordinate_updates_reject_class_merge_and_motion_over_bound(self):
+        points = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]], np.float32)
+        normals = np.tile([0, 0, 1], (3, 1)).astype(np.float32)
+        source_before = {1: {'vertices6': np.column_stack((points, normals)),
+                             'faces': np.array([[0, 1, 2]])}}
+        source_after = {1: {'vertices6': source_before[1]['vertices6'].copy(),
+                            'faces': source_before[1]['faces'].copy()}}
+        source_after[1]['vertices6'][1, :3] = source_after[1]['vertices6'][0, :3]
+        with self.assertRaisesRegex(ValueError, 'merged distinct coordinate classes'):
+            propagate_exact_source_coordinate_updates(source_before, source_after, {}, ())
+        source_after[1]['vertices6'] = source_before[1]['vertices6'].copy()
+        source_after[1]['vertices6'][0, 1] = np.float32(2e-6)
+        with self.assertRaisesRegex(ValueError, 'exceeds its declared displacement bound'):
+            propagate_exact_source_coordinate_updates(
+                source_before, source_after, {9: source_before[1]}, (9,), maximum_target_displacement_m=1e-6)
+
+    def test_basal_effective_area_helper_matches_closed_tetrahedron_derivative(self):
+        from numilab_human.resting_anatomy_interface_patch import signed_volume
+        p = np.array([[.055, -.085, .001], [.075, -.045, .001],
+                      [.035, -.045, .021], [.055, -.045, -.019]], np.float32)
+        f = np.array([[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]])[:, ::-1]
+        row = {'vertices6': np.column_stack((p, np.tile([0, 0, 1], (4, 1)))),
+               'faces': f}
+        report = derive_basal_effective_area({305: row}, (305,), displacement_m=.01)
+        points = p.astype(np.float64)
+        weight, _ = kuhn_basis(points)
+        moved = points.copy()
+        moved[:, 1] -= .01 * weight
+        expected = (signed_volume(moved, f) - signed_volume(points, f)) / .01
+        self.assertAlmostEqual(report['effective_area_m2'], expected, places=14)
+        self.assertGreater(report['effective_area_m2'], 0)
+        self.assertEqual(len(report['per_lobe']), 1)
 
     def test_common_map_stays_monotonic_along_superior_axis(self):
         p = np.array([[x, y, z] for x in (-.02, .03, .08, .12)
