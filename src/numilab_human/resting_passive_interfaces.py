@@ -30,6 +30,20 @@ def _require(value: bool, message: str) -> None:
         raise ValueError("passive interface candidate: " + message)
 
 
+def _source_identity_matches(row: dict, expected_name: str, expected_member: str) -> bool:
+    """Accept display-name refreshes only when the preserved family and member agree."""
+    if not isinstance(row, dict) or row.get("source_member") != expected_member:
+        return False
+    owner = row.get("source_owner_metadata")
+    if isinstance(owner, dict) and "anatomical_component" in owner:
+        component = owner.get("anatomical_component")
+        if not isinstance(component, dict) or component.get("source_member") != expected_member:
+            return False
+    return row.get("name") == expected_name or (
+        isinstance(owner, dict) and owner.get("label") == expected_name
+    )
+
+
 def _surface(vertices, faces):
     v = np.asarray(vertices, dtype="<f4")
     f = np.asarray(faces)
@@ -91,8 +105,7 @@ def build_candidate(base_payload: Path, base_receipt: Path, reference_payload: P
                  for sid in dependencies), "registered repair source or neighboring organs changed")
     source_map = receipt.get("provenance", {}).get("source_id_map", {})
     for sid, (name, member) in repaired.items():
-        _require(source_map.get(str(sid), {}).get("name") == name and
-                 source_map[str(sid)].get("source_member") == member and
+        _require(_source_identity_matches(source_map.get(str(sid), {}), name, member) and
                  rows[sid]["body_index"] == 20 and rows[sid]["layer"] == 1,
                  "candidate would replace a different anatomical identity or body owner")
     cardiac = receipt["provenance"].get("cardiac_geometry_binding", {})

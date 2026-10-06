@@ -6,6 +6,7 @@ new payload ABI, inferred organ shape, or additional physical mass is introduced
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -52,6 +53,8 @@ SMALL_INTESTINE_COMPONENTS = (
     ("FMA16983", "distal part of jejunum"),
 )
 
+PASSIVE_COMPONENT_IDENTITY_REFRESH = "passive_component_identity_refresh"
+
 
 def anatomical_component_identity(atlas: dict, member_id: str) -> dict | None:
     """Resolve supported bowel components against the loaded source table.
@@ -87,6 +90,123 @@ def anatomical_component_identity(atlas: dict, member_id: str) -> dict | None:
             "separate_physiological_compartment": False}
 
 
+def refresh_passive_component_identities(receipt: dict, atlas: dict) -> dict:
+    """Enrich an existing receipt's source map from pinned BP3D membership.
+
+    This is metadata-only: it neither imports meshes nor changes stable IDs,
+    surface records, payload hashes, mass, or the broad family names used by
+    the existing reduced physiology bindings. The exact source component is
+    added under each row's existing ``source_owner_metadata``. Completeness
+    and parent-family checks prevent a partial or mismatched receipt from
+    acquiring apparently authoritative names.
+    """
+    source = atlas.get("source") if isinstance(atlas, dict) else None
+    if (not isinstance(source, dict) or source.get("id") != "bodyparts3d_4"
+            or source.get("version") != "4.0"):
+        raise ValueError("component identity refresh requires pinned BodyParts3D 4.0 tables")
+    source_tables = source.get("tables")
+    if not isinstance(source_tables, list):
+        raise ValueError("component identity refresh lacks source table provenance")
+    table_hashes = {}
+    for table in source_tables:
+        if not isinstance(table, dict):
+            raise ValueError("malformed source table provenance")
+        filename, digest = table.get("file"), table.get("sha256")
+        if (not isinstance(filename, str) or not isinstance(digest, str) or len(digest) != 64
+                or any(c not in "0123456789abcdef" for c in digest)):
+            raise ValueError("malformed or duplicate source table provenance")
+        if filename in table_hashes:
+            raise ValueError("malformed or duplicate source table provenance")
+        table_hashes[filename] = digest
+    required_tables = {"isa_element_parts.txt", "partof_element_parts.txt"}
+    if set(table_hashes) != required_tables or any(
+            any(c not in "0123456789abcdef" for c in digest) for digest in table_hashes.values()):
+        raise ValueError("component identity refresh requires both pinned source membership tables")
+
+    expected_members = SMALL_INTESTINE_MEMBERS | frozenset(COLON_COMPONENTS)
+    updated = deepcopy(receipt)
+    provenance = updated.get("provenance")
+    if not isinstance(provenance, dict) or not isinstance(provenance.get("source_id_map"), dict):
+        raise ValueError("component identity refresh requires an existing source_id_map")
+    source_map = provenance["source_id_map"]
+    locations: dict[str, tuple[str, dict]] = {}
+    for stable_id, row in source_map.items():
+        if not isinstance(stable_id, str) or not stable_id.isdecimal() or str(int(stable_id)) != stable_id:
+            raise ValueError("source_id_map contains a noncanonical stable ID")
+        if not isinstance(row, dict):
+            raise ValueError("source_id_map contains a malformed row")
+        member_id = row.get("source_member")
+        if not isinstance(member_id, str) or member_id not in expected_members:
+            continue
+        if member_id in locations:
+            raise ValueError("source member has duplicate rendered identities: " + member_id)
+        owner = row.get("source_owner_metadata")
+        if not isinstance(owner, dict):
+            raise ValueError("bowel source row lacks source_owner_metadata: " + member_id)
+        small = member_id in SMALL_INTESTINE_MEMBERS
+        family_id = "FMA7200" if small else "FMA7201"
+        family_label = "small intestine" if small else "large intestine"
+        if (owner.get("concept_id") != family_id or owner.get("hierarchy") != "part_of"
+                or owner.get("label") != family_label or owner.get("member_id") != member_id
+                or not isinstance(row.get("source_sha256"), str)
+                or owner.get("member_sha256") != row.get("source_sha256")):
+            raise ValueError("bowel source identity differs from its registered family owner: " + member_id)
+        locations[member_id] = (stable_id, row)
+
+    if set(locations) != expected_members:
+        missing = sorted(expected_members - set(locations))
+        extra = sorted(set(locations) - expected_members)
+        raise ValueError(f"source_id_map bowel membership is incomplete or changed: missing={missing}, extra={extra}")
+
+    identities = []
+    for member_id in sorted(expected_members):
+        stable_id, row = locations[member_id]
+        identity = anatomical_component_identity(atlas, member_id)
+        if not isinstance(identity, dict):
+            raise ValueError("source membership does not resolve to a supported bowel component: " + member_id)
+        owner = row["source_owner_metadata"]
+        prior = owner.get("anatomical_component")
+        if prior is not None and prior != identity:
+            raise ValueError("existing component identity conflicts with pinned source tables: " + member_id)
+        owner["anatomical_component"] = identity
+        row["name"] = identity["name"]
+        identities.append({"stable_id": int(stable_id), **identity})
+
+    try:
+        payload_sha = updated["payload"]["sha256"]
+        if (not isinstance(payload_sha, str) or len(payload_sha) != 64
+                or any(c not in "0123456789abcdef" for c in payload_sha)):
+            raise ValueError
+        bindings = updated["functional_bindings"]
+        if not isinstance(bindings, dict) or bindings.get("anatomy_payload_sha256") != payload_sha:
+            raise ValueError
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError("receipt payload identity is missing or inconsistent") from error
+
+    identity_bytes = json.dumps(identities, sort_keys=True, separators=(",", ":"),
+                                ensure_ascii=False, allow_nan=False).encode("utf-8")
+    refresh = {
+        "schema": "numi.human.passive_component_identity_refresh.v1",
+        "owner": "numilab_human.resting_passive_viscera.anatomical_component_identity",
+        "source": {key: source.get(key) for key in ("id", "version", "license", "attribution", "url")},
+        "source_tables": [{"file": name, "sha256": table_hashes[name]} for name in sorted(table_hashes)],
+        "stable_ids": sorted(int(locations[m][0]) for m in expected_members),
+        "source_member_count": len(expected_members),
+        "identity_rows_sha256": hashlib.sha256(identity_bytes).hexdigest(),
+        "payload_sha256_unchanged": payload_sha,
+        "geometry_changed": False,
+        "physical_mass_changed_kg": 0,
+        "source_map_component_display_names_changed": True,
+        "source_owner_family_labels_changed": False,
+        "vascular_region_memberships_changed": False,
+    }
+    previous = provenance.get(PASSIVE_COMPONENT_IDENTITY_REFRESH)
+    if previous is not None and previous != refresh:
+        raise ValueError("existing component identity refresh provenance conflicts with this source")
+    provenance[PASSIVE_COMPONENT_IDENTITY_REFRESH] = refresh
+    return updated
+
+
 def vascular_bindings(source_map: dict) -> list[dict]:
     """Name the anatomical regions represented by the existing CVSim states.
 
@@ -101,7 +221,9 @@ def vascular_bindings(source_map: dict) -> list[dict]:
     direct = {1: [6], 5: [10], 6: [8], 7: [9], 15: [11], 16: [318], 17: [319], 20: [320], 21: [321]}
     direct[18] = sorted(int(k) for k, v in source_map.items() if v["layer"] == 5)
     direct[19] = sorted(int(k) for k, v in source_map.items() if v["layer"] == 6)
-    organs = lambda labels: sorted(int(k) for k, v in source_map.items() if v["name"] in labels)
+    def organs(labels):
+        return sorted(int(k) for k, row in source_map.items()
+                      if (row.get("source_owner_metadata") or {}).get("label", row.get("name")) in labels)
     splanchnic = organs({"stomach", "pancreas", "spleen", "liver", "small intestine", "large intestine", "gallbladder"})
     representatives = {2: [7], 3: organs({"brain"}), 4: organs({"brain"}),
                        8: [4, 5], 9: [4, 5], 10: splanchnic, 11: splanchnic,
@@ -187,17 +309,18 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                 raise ValueError("invalid registered passive surface")
             records.append(anatomy.RECORD.pack(owner, nv, len(local), ni, faces.size, next_id, layer, 0))
             vertices.append(packed.tobytes()); indices.append((faces.ravel() + nv).astype("<u4").tobytes())
-            item = {"stable_id": next_id, "name": label, "concept_id": concept,
+            component = anatomical_component_identity(atlas, member_id)
+            item = {"stable_id": next_id, "name": component["name"] if component else label,
+                    "family_label": label, "concept_id": concept,
                     "source_member": member_id, "source_member_path": member,
                     "source_sha256": digest, "hierarchy": hierarchy, "body_index": owner,
                     "source_body_id": source_body, "myosim_body": target,
                     "vertex_count": len(local), "triangle_count": len(faces),
                     "local_bounds_m": [local.min(axis=0).tolist(), local.max(axis=0).tolist()]}
-            component = anatomical_component_identity(atlas, member_id)
             if component is not None:
                 item["anatomical_component"] = component
             additions.append(item)
-            source_map[str(next_id)] = {"name": "ileocecal junction" if member_id == "FJ2599" else label,
+            source_map[str(next_id)] = {"name": component["name"] if component else label,
                 "provider": "BodyParts3D v4.0 existing organ-family compiler",
                 "source_member": member_id, "source_sha256": digest, "layer": layer, "body_index": owner,
                 "repair": None, "head_family": None,

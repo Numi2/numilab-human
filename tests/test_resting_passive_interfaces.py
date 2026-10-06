@@ -8,7 +8,11 @@ import unittest
 
 import numpy as np
 
-from numilab_human.resting_passive_interfaces import build_candidate, CARDIAC_IDS
+from numilab_human.resting_passive_interfaces import (
+    build_candidate,
+    CARDIAC_IDS,
+    _source_identity_matches,
+)
 from numilab_human.resting_anatomy_interface_patch import HEADER, RECORD, normals
 from numilab_human.resting_pleura_proxy import _parse_payload, _record_content_bytes
 
@@ -53,6 +57,15 @@ class PassiveInterfaceAdmissionTests(unittest.TestCase):
             np.savez(path, vertices=self.v*.995, faces=self.f)
             self.audit['candidate_sha256'][str(sid)] = hashlib.sha256(path.read_bytes()).hexdigest()
         self.derivation = {'input_payload_sha256':self.sha,'separation_margin_m':.00005}
+
+    def test_canonical_component_display_keeps_family_identity_for_owner_checks(self):
+        row = {"name": "duodenum", "source_member": "FJ2573",
+               "source_owner_metadata": {"label": "small intestine"}}
+        self.assertTrue(_source_identity_matches(row, "small intestine", "FJ2573"))
+        self.assertFalse(_source_identity_matches(row, "large intestine", "FJ2573"))
+        self.assertFalse(_source_identity_matches(row, "small intestine", "FJ2574"))
+        row["source_owner_metadata"]["anatomical_component"] = {"source_member": "FJ2574"}
+        self.assertFalse(_source_identity_matches(row, "small intestine", "FJ2573"))
 
     def run_candidate(self):
         paths=[]
