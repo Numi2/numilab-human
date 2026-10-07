@@ -8,6 +8,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import shutil
+import errno
 from pathlib import Path
 import struct
 
@@ -177,8 +180,9 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
                  manifest_path=str(manifest_path), manifest_sha256=sha(manifest_path),
                  surface_count=record["surface_count"], body_binding_count=record["binding_count"],
                  vertex_count=record["vertex_count"], index_count=record["index_count"])
-    # The receipt may move; keep its existing shared cardiac inputs bound to
-    # the original absolute files instead of silently rebasing relative paths.
+    # Native cardiac descriptors must stay inside their receipt directory.
+    # Reuse immutable bytes locally while retaining each exact content identity.
+    shared_inputs = []
     common = receipt["provenance"].get("cardiac_geometry_binding", {}).get("common_field")
     if common:
         for key in ("map", "polynomials", "domain_boxes"):
@@ -186,7 +190,10 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
             if not asset.is_absolute():
                 asset = source_receipt.parent / asset
             require(sha(asset) == common[key]["sha256"], "cardiac input identity changed")
-            common[key]["path"] = str(asset.resolve())
+            destination = output_receipt.parent / asset.name
+            require(not destination.exists(), "cardiac destination already exists")
+            shared_inputs.append((asset.resolve(), destination))
+            common[key]["path"] = asset.name
     anatomical_payload = Path(receipt["payload"]["path"])
     if not anatomical_payload.is_absolute():
         anatomical_payload = source_receipt.parent / anatomical_payload
@@ -198,6 +205,15 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         "changed_stable_ids": composition["changed_stable_ids"],
         "scope": "Passive attachment source binding only; physical owners and anatomical acceptance are unchanged."
     }
+    require(not output_receipt.exists(), "output anatomy receipt already exists")
+    for source, destination in shared_inputs:
+        try:
+            os.link(source, destination)
+        except OSError as error:
+            if error.errno != errno.EXDEV:
+                raise
+            shutil.copyfile(source, destination)
+        require(sha(source) == sha(destination), "relocated cardiac input changed")
     with output_receipt.open("x") as stream:
         json.dump(receipt, stream, indent=2, sort_keys=True)
         stream.write("\n")

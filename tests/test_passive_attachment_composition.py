@@ -153,7 +153,8 @@ def test_composition_binds_new_launch_receipt_without_rebasing_physical_assets(i
     assert owner["vertex_count"] == 451 and owner["body_binding_count"] == 300
     assert Path(result["payload"]["path"]) == tmp_path/"organs.nhanatomy"
     for key, entry in result["provenance"]["cardiac_geometry_binding"]["common_field"].items():
-        assert Path(entry["path"]) == tmp_path/(key+".bin")
+        assert Path(entry["path"]) == Path(key+".bin")
+        assert digest(out/entry["path"]) == digest(tmp_path/(key+".bin"))
     assert result["provenance"]["passive_attachment_composition_binding"]["changed_stable_ids"] == [7]
 
 
