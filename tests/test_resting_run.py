@@ -277,6 +277,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
              patch.dict("os.environ", {"DYLD_LIBRARY_PATH": "/unrelated/build/lib",
                                        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
+                                       "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "1",
                                        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json"}), \
              patch("numilab_human.resting_run.subprocess.run", side_effect=native):
             self.assertEqual(run(self.args), 0)
@@ -285,6 +286,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertEqual(receipt["loaded_metal_runtime"]["observed_images"][0]["path"], str(runtime))
         self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT"], "1")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"],
                          "/run/failure.json")
 
