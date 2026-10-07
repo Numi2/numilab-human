@@ -9,10 +9,38 @@ import unittest
 from unittest.mock import patch
 
 from numilab_human.model import ImportError as HumanImportError
-from numilab_human.resting_run import command, run
+from numilab_human.resting_run import command, invocation_environment, run
 
 
 class RestingRunAdmissionTests(unittest.TestCase):
+    def test_invocation_environment_records_supported_gpu_path_and_omits_unrelated_host_state(self):
+        selected = {
+            "NUMI_HUMAN_EXECUTION_STAGES": "1",
+            "NUMI_HUMAN_STAND_SPARSE_OPERATOR": "1",
+            "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES": "1",
+            "NUMI_HUMAN_STAND_REDUCED_CHOLESKY": "1",
+            "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION": "1",
+            "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA": "1",
+            "NUMI_HUMAN_STAND_REDUCED_RESPONSE_DIAGNOSTIC_ROOTS": "0,31",
+            "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM": "1",
+            "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
+            "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
+            "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
+            "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "8",
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
+            "NUMI_HUMAN_STAND_CONTACT_WARMSTART": "0",
+            "NUMI_HUMAN_BRAIN_MOTOR_V2": "1",
+            "NUMI_HUMAN_STATIC_EQUILIBRIUM_CACHE_KEY": "state-key",
+            "NUMI_MATTER_GPU_TIMING_DENSE45": "0",
+            "NUMI_HUMAN_STAND_SOURCE_ASSEMBLY_DUMP": "0",
+            "NUMI_HUMAN_FUTURE_UNRELATED_SETTING": "secret",
+        }
+        retained = invocation_environment(selected)
+        expected = {key: value for key, value in selected.items()
+                    if key != "NUMI_HUMAN_FUTURE_UNRELATED_SETTING"}
+        self.assertEqual(retained, expected)
+        self.assertNotIn("NUMI_HUMAN_FUTURE_UNRELATED_SETTING", retained)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
@@ -264,6 +292,12 @@ class RestingRunAdmissionTests(unittest.TestCase):
                 run(self.args)
         self.assertFalse((self.args.output / "native.log").exists())
 
+    def test_accelerated_cpu_factor_presence_cannot_enter_native_run(self):
+        with patch.dict("os.environ", {"NUMI_HUMAN_STAND_CPU_ACCELERATE_FACTOR": ""}):
+            with self.assertRaisesRegex(HumanImportError, "CPU solver experiment"):
+                run(self.args)
+        self.assertFalse((self.args.output / "native.log").exists())
+
     def test_launcher_overrides_inherited_library_path_and_records_actual_image(self):
         runtime = (self.root / "lib/libmetalrobo.dylib").resolve()
 
@@ -277,8 +311,18 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
              patch.dict("os.environ", {"DYLD_LIBRARY_PATH": "/unrelated/build/lib",
                                        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
-                                       "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "1",
-                                       "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "1",
+                                       "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "8",
+                                       "NUMI_HUMAN_STAND_SPARSE_OPERATOR": "1",
+                                       "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES": "1",
+                                       "NUMI_HUMAN_STAND_REDUCED_CHOLESKY": "1",
+                                       "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION": "1",
+                                       "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA": "1",
+            "NUMI_HUMAN_STAND_REDUCED_RESPONSE_DIAGNOSTIC_ROOTS": "0,31",
+                                       "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM": "1",
+                                       "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
+                                       "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
+                                       "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
+                                       "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
                                        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json"}), \
              patch("numilab_human.resting_run.subprocess.run", side_effect=native):
             self.assertEqual(run(self.args), 0)
@@ -287,8 +331,14 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertEqual(receipt["loaded_metal_runtime"]["observed_images"][0]["path"], str(runtime))
         self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT"], "1")
-        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS"], "1")
-        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT"], "1")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS"], "8")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT"], "0")
+        for key in ("NUMI_HUMAN_STAND_SPARSE_OPERATOR", "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES",
+                    "NUMI_HUMAN_STAND_REDUCED_CHOLESKY", "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION",
+                    "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA", "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM",
+                    "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES", "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING",
+                    "NUMI_HUMAN_RESPIRATORY_SUBCYCLING"):
+            self.assertEqual(receipt["environment"][key], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"],
                          "/run/failure.json")
 
