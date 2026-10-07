@@ -7,7 +7,7 @@ import struct
 import numpy as np
 import pytest
 
-from numilab_human.passive_attachment_composition import compose
+from numilab_human.passive_attachment_composition import compose, bind_anatomy_receipt
 
 
 def digest(path):
@@ -115,3 +115,68 @@ def test_manifest_mismatch_and_unsupported_row(inputs, tmp_path):
     with pytest.raises(ValueError,match="source payload identity"):
         compose(source,tmp_path/"badmanifest",[(7,candidate,receipt)])
     assert not (tmp_path/"badmanifest").exists()
+
+
+def anatomy_fixture(source, tmp_path):
+    common = {}
+    for key in ("map", "polynomials", "domain_boxes"):
+        path = tmp_path / (key + ".bin")
+        path.write_bytes(key.encode())
+        common[key] = {"path": path.name, "sha256": digest(path)}
+    organs = tmp_path / "organs.nhanatomy"
+    organs.write_bytes(b"unchanged anatomy fixture")
+    receipt = tmp_path / "anatomy.json"
+    receipt.write_text(json.dumps({
+        "schema": "numi.human.resting-anatomy-receipt.v1",
+        "payload": {"path": organs.name, "sha256": digest(organs)},
+        "mass_geometry_accounting": {"reference_total_mass_kg": 72},
+        "provenance": {
+            "native_muscle_surfaces": {
+                "payload_path": source.name, "sha256": digest(source),
+                "registration_fingerprint32": "0000002a"},
+            "cardiac_geometry_binding": {"common_field": common}}
+    }))
+    return receipt
+
+
+def test_composition_binds_new_launch_receipt_without_rebasing_physical_assets(inputs, tmp_path):
+    source, candidate, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    before = receipt.read_bytes()
+    out = tmp_path / "out"
+    compose(source, out, [(7, candidate, report)])
+    result = bind_anatomy_receipt(receipt, out/source.name, out/"resting-anatomy-receipt.json")
+    assert receipt.read_bytes() == before
+    assert result["mass_geometry_accounting"] == {"reference_total_mass_kg": 72}
+    owner = result["provenance"]["native_muscle_surfaces"]
+    assert owner["sha256"] == digest(out/source.name)
+    assert owner["vertex_count"] == 451 and owner["body_binding_count"] == 300
+    assert Path(result["payload"]["path"]) == tmp_path/"organs.nhanatomy"
+    for key, entry in result["provenance"]["cardiac_geometry_binding"]["common_field"].items():
+        assert Path(entry["path"]) == tmp_path/(key+".bin")
+    assert result["provenance"]["passive_attachment_composition_binding"]["changed_stable_ids"] == [7]
+
+
+@pytest.mark.parametrize("defect", ["wrong_source", "binding", "cardiac"])
+def test_composed_launch_receipt_rejects_ownership_drift(inputs, tmp_path, defect):
+    source, candidate, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    out = tmp_path / "out"
+    compose(source, out, [(7, candidate, report)])
+    manifest_path = out/source.with_suffix(".manifest.json").name
+    manifest = json.loads(manifest_path.read_text())
+    if defect == "wrong_source":
+        manifest["source"]["reference_attachment_composition"]["source_payload_sha256"] = "0"*64
+    elif defect == "binding":
+        payload = out/source.name
+        raw = bytearray(payload.read_bytes())
+        raw[64+150*32] ^= 1
+        payload.write_bytes(raw)
+        manifest["payload"]["sha256"] = digest(payload)
+    else:
+        (tmp_path/"map.bin").write_bytes(b"changed")
+    manifest_path.write_text(json.dumps(manifest))
+    output = out/"resting-anatomy-receipt.json"
+    with pytest.raises(ValueError):
+        bind_anatomy_receipt(receipt, out/source.name, output)
+    assert not output.exists()

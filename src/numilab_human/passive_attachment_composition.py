@@ -137,14 +137,86 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     (output / 'report.json').write_text(json.dumps(proof, indent=2) + '\n')
     return proof
 
+def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Path) -> dict:
+    """Bind this composition to the existing anatomy receipt for native launch."""
+    source_receipt, payload = Path(source_receipt).resolve(), Path(payload).resolve()
+    output_receipt = Path(output_receipt).resolve()
+    sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    receipt = json.loads(source_receipt.read_text())
+    require(receipt.get("schema") == "numi.human.resting-anatomy-receipt.v1", "anatomy receipt schema")
+    owner = receipt["provenance"]["native_muscle_surfaces"]
+    old = Path(owner["payload_path"])
+    if not old.is_absolute():
+        old = source_receipt.parent / old
+    require(sha(old) == owner["sha256"], "prior anatomical muscle owner changed")
+    manifest_path = payload.with_suffix(".manifest.json")
+    manifest = json.loads(manifest_path.read_text())
+    record = manifest["payload"]
+    composition = manifest["source"]["reference_attachment_composition"]
+    require(composition["source_payload_sha256"] == owner["sha256"],
+            "composition source differs from prior anatomical muscle owner")
+    require(record["sha256"] == sha(payload) and record["file"] == payload.name
+            and record["bytes"] == payload.stat().st_size, "composed payload identity")
+    require(composition["binding_table_byte_exact"] is True and
+            composition["physical_route_mass_and_force_state_unchanged"] is True,
+            "composition changed physical ownership")
+    require(set(composition["changed_stable_ids"]).issubset({7, 8, 23}),
+            "unsupported anatomical attachment replacements")
+    old_raw, new_raw = old.read_bytes(), payload.read_bytes()
+    old_header = struct.unpack_from("<8s6I32s", old_raw)
+    new_header = struct.unpack_from("<8s6I32s", new_raw)
+    require(old_header[:4] == new_header[:4] and old_header[6:] == new_header[6:],
+            "anatomical binding or source identity changed")
+    nr, nb = old_header[2:4]
+    binding_start, binding_end = 64 + nr * 32, 64 + nr * 32 + nb * 36
+    require(old_raw[binding_start:binding_end] == new_raw[binding_start:binding_end],
+            "anatomical binding table changed")
+    require(record["registration_fingerprint32"] == owner["registration_fingerprint32"],
+            "anatomical registration changed")
+    owner.update(payload_path=str(payload), sha256=record["sha256"],
+                 manifest_path=str(manifest_path), manifest_sha256=sha(manifest_path),
+                 surface_count=record["surface_count"], body_binding_count=record["binding_count"],
+                 vertex_count=record["vertex_count"], index_count=record["index_count"])
+    # The receipt may move; keep its existing shared cardiac inputs bound to
+    # the original absolute files instead of silently rebasing relative paths.
+    common = receipt["provenance"].get("cardiac_geometry_binding", {}).get("common_field")
+    if common:
+        for key in ("map", "polynomials", "domain_boxes"):
+            asset = Path(common[key]["path"])
+            if not asset.is_absolute():
+                asset = source_receipt.parent / asset
+            require(sha(asset) == common[key]["sha256"], "cardiac input identity changed")
+            common[key]["path"] = str(asset.resolve())
+    anatomical_payload = Path(receipt["payload"]["path"])
+    if not anatomical_payload.is_absolute():
+        anatomical_payload = source_receipt.parent / anatomical_payload
+    require(sha(anatomical_payload) == receipt["payload"]["sha256"], "anatomical payload changed")
+    receipt["payload"]["path"] = str(anatomical_payload.resolve())
+    receipt["provenance"]["passive_attachment_composition_binding"] = {
+        "prior_receipt_path": str(source_receipt), "prior_receipt_sha256": sha(source_receipt),
+        "composition_manifest_sha256": sha(manifest_path),
+        "changed_stable_ids": composition["changed_stable_ids"],
+        "scope": "Passive attachment source binding only; physical owners and anatomical acceptance are unchanged."
+    }
+    with output_receipt.open("x") as stream:
+        json.dump(receipt, stream, indent=2, sort_keys=True)
+        stream.write("\n")
+    return receipt
+
+
 def main(argv: list[str] | None=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--row', nargs=3, action='append', metavar=('STABLE_ID', 'NPZ', 'REPORT'), required=True)
+    parser.add_argument("--anatomy-receipt", type=Path,
+                        help="bind the composed passive rows in a new native anatomy launch receipt")
     args = parser.parse_args(argv)
     try:
         report = compose(args.source, args.output, args.row)
+        if args.anatomy_receipt is not None:
+            bind_anatomy_receipt(args.anatomy_receipt, args.output / args.source.name,
+                                 args.output / "resting-anatomy-receipt.json")
     except (OSError, ValueError, KeyError, struct.error) as error:
         parser.exit(2, f'{error}\n')
     print(json.dumps({key: report[key] for key in ('payload_sha256', 'manifest_sha256', 'vertex_count', 'index_count', 'binding_table_byte_exact')}))
