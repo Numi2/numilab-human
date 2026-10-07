@@ -68,6 +68,40 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
             command(self.args)
 
+    def test_individually_valid_scene_cannot_change_the_anatomical_skin_or_rigid_owner(self):
+        for owner, record, key in (
+            ("skin", self.anatomy["mass_geometry_accounting"], "skin_payload_sha256"),
+            ("rigid", self.anatomy["provenance"], "rigid_payload_sha256"),
+        ):
+            with self.subTest(owner=owner):
+                declared = self.scene["source"][owner]
+                record[key] = declared["sha256"]
+                self.write_receipts()
+                command(self.args)
+                path = Path(declared["path"])
+                original = path.read_bytes()
+                path.write_bytes(b"another independently valid owner payload")
+                declared["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+                self.write_receipts()
+                with self.assertRaisesRegex(HumanImportError, f"body scene {owner} differs"):
+                    command(self.args)
+                path.write_bytes(original)
+                declared["sha256"] = record[key]
+                self.write_receipts()
+
+    def test_declared_anatomical_owner_identity_cannot_be_empty_or_malformed(self):
+        for owner, record, key in (
+            ("skin", self.anatomy["mass_geometry_accounting"], "skin_payload_sha256"),
+            ("rigid", self.anatomy["provenance"], "rigid_payload_sha256"),
+        ):
+            for invalid in (None, "", "not-a-sha256"):
+                with self.subTest(owner=owner, invalid=invalid):
+                    record[key] = invalid
+                    self.write_receipts()
+                    with self.assertRaisesRegex(HumanImportError, f"invalid anatomy {owner} identity"):
+                        command(self.args)
+            del record[key]
+
     def test_explicit_circulation_is_hashed_and_passed_to_native_owner(self):
         self.args.circulation = self.root / 'reference-circulation.json'
         self.args.circulation.write_bytes(b'explicit reference native payload')
@@ -241,13 +275,18 @@ class RestingRunAdmissionTests(unittest.TestCase):
             return subprocess.CompletedProcess(argv, 0)
 
         with patch("numilab_human.resting_run.platform.platform", return_value="Darwin-test"), \
-             patch.dict("os.environ", {"DYLD_LIBRARY_PATH": "/unrelated/build/lib"}), \
+             patch.dict("os.environ", {"DYLD_LIBRARY_PATH": "/unrelated/build/lib",
+                                       "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
+                                       "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json"}), \
              patch("numilab_human.resting_run.subprocess.run", side_effect=native):
             self.assertEqual(run(self.args), 0)
         receipt = json.loads((self.args.output / "run-metadata.json").read_text())
         self.assertTrue(receipt["loaded_metal_runtime"]["verified"])
         self.assertEqual(receipt["loaded_metal_runtime"]["observed_images"][0]["path"], str(runtime))
         self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT"], "1")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"],
+                         "/run/failure.json")
 
     def test_successful_child_with_another_runtime_is_rejected_and_evidence_retained(self):
         def native(argv, **kwargs):

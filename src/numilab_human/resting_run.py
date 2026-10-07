@@ -55,6 +55,20 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     skin = checked(scene["source"]["skin"]["path"], scene["source"]["skin"]["sha256"])
     contact = checked(scene["outputs"]["support_contact"]["path"],
                       scene["outputs"]["support_contact"]["sha256"])
+    # Individually valid receipts can still describe different adults/skin repairs.
+    # Compare the loaded bytes with the anatomical accounting owner when declared;
+    # equivalent copies at another path remain valid.
+    for owner, path, record, key in (
+        ("rigid", rigid, anatomy["provenance"], "rigid_payload_sha256"),
+        ("skin", skin, anatomy["mass_geometry_accounting"], "skin_payload_sha256"),
+    ):
+        if key in record:
+            expected = record[key]
+            _require(isinstance(expected, str) and
+                     re.fullmatch(r"[0-9a-f]{64}", expected) is not None,
+                     f"invalid anatomy {owner} identity")
+            _require(assets[str(path)] == expected,
+                     f"body scene {owner} differs from anatomy receipt")
     bones = checked(anatomy["provenance"]["bones_payload"],
                     anatomy["functional_bindings"]["bones_payload_sha256"])
     organs = checked(anatomy["payload"]["path"], anatomy["payload"]["sha256"])
@@ -190,6 +204,8 @@ def run(args: argparse.Namespace) -> int:
                    "NUMI_HUMAN_RESTING_INSPECTION_TOUR",
                    "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS",
                    "NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS",
+                   "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT",
+                   "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT",
                    "NUMI_HUMAN_GPU_TIMING", "NUMI_HUMAN_GPU_TIMING_STAGE",
                    "NUMI_MATTER_GPU_TIMING", "NUMI_MATTER_GPU_TIMING_STAGE",
                    "NUMI_HUMAN_SUPPORT_DIAGNOSTICS", "NUMI_HUMAN_SUPPORT_GPU_TIMING",
