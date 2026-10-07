@@ -103,7 +103,7 @@ def _on_edge(point, a, b):
             and all(min(a[k], b[k]) <= point[k] <= max(a[k], b[k]) for k in range(3)))
 
 
-def construct_arrangement(source_surfaces):
+def construct_arrangement(source_surfaces, *, source_names=NAMES):
     """Return source-parented exact subtriangles and intersection provenance.
 
     This bounded authoring path supports transverse intersections with segment
@@ -111,23 +111,26 @@ def construct_arrangement(source_surfaces):
     are rejected, not repaired by a tolerance or a guessed anatomical plane.
     Input surfaces must subsequently pass the independent certificate.
     """
-    require(set(source_surfaces) == set(NAMES), "expected the two right source cavities")
+    source_names = tuple(source_names)
+    require(len(source_names) == 2 and all(isinstance(name, str) and name for name in source_names)
+            and len(set(source_names)) == 2 and isinstance(source_surfaces, dict)
+            and set(source_surfaces) == set(source_names), "expected two distinct named source surfaces")
     denominator = math.lcm(*(Fraction(x).denominator for surface in source_surfaces.values()
                             for point in surface["vertices"] for x in point))
     vertices = {name: [tuple(Fraction(x).numerator*(denominator//Fraction(x).denominator) for x in point)
-                       for point in source_surfaces[name]["vertices"]] for name in NAMES}
-    records = {name: predicates._records(vertices[name], source_surfaces[name]["triangles"]) for name in NAMES}
-    pair_audit = predicates._audit_pair(records[NAMES[0]], records[NAMES[1]], same_surface=False)
-    segments = {name: defaultdict(list) for name in NAMES}
-    boundary_points = {name: defaultdict(set) for name in NAMES}
-    edge_faces = {name: defaultdict(list) for name in NAMES}
-    for name in NAMES:
+                       for point in source_surfaces[name]["vertices"]] for name in source_names}
+    records = {name: predicates._records(vertices[name], source_surfaces[name]["triangles"]) for name in source_names}
+    pair_audit = predicates._audit_pair(records[source_names[0]], records[source_names[1]], same_surface=False)
+    segments = {name: defaultdict(list) for name in source_names}
+    boundary_points = {name: defaultdict(set) for name in source_names}
+    edge_faces = {name: defaultdict(list) for name in source_names}
+    for name in source_names:
         for face_id, face in enumerate(source_surfaces[name]["triangles"]):
             for i in range(3):
                 edge_faces[name][tuple(sorted((face[i], face[(i+1) % 3])))].append(face_id)
     intersection_segments = []
     for pair in pair_audit["triangle_pairs"]:
-        first, second = (records[name][face_id][0] for name, face_id in zip(NAMES, pair))
+        first, second = (records[name][face_id][0] for name, face_id in zip(source_names, pair))
         normals = [predicates._cross(predicates._sub(tri[1], tri[0]), predicates._sub(tri[2], tri[0]))
                    for tri in (first, second)]
         require(any(predicates._cross(*normals)), "coplanar or tangent face intersection is unsupported")
@@ -136,7 +139,7 @@ def construct_arrangement(source_surfaces):
         a, b = points[0], points[-1]
         require(a != b and all(_on_edge(p, a, b) for p in points), "intersection is not one exact segment")
         intersection_segments.append({"source_faces": list(pair), "endpoints": (a, b)})
-        for name, face_id in zip(NAMES, pair):
+        for name, face_id in zip(source_names, pair):
             segments[name][face_id].append((a, b))
             face = source_surfaces[name]["triangles"][face_id]
             for i in range(3):
@@ -145,9 +148,9 @@ def construct_arrangement(source_surfaces):
                     if _on_edge(point, vertices[name][edge[0]], vertices[name][edge[1]]):
                         for neighbor in edge_faces[name][edge]:
                             boundary_points[name][neighbor].add(point)
-    classifiers = {name: IntegerRayClassifier(records[name]) for name in NAMES}
+    classifiers = {name: IntegerRayClassifier(records[name]) for name in source_names}
     result = []
-    for name, other in (NAMES, tuple(reversed(NAMES))):
+    for name, other in (source_names, tuple(reversed(source_names))):
         for face_id, row in enumerate(records[name]):
             children = subdivide_triangle(row[0], segments[name][face_id], boundary_points[name][face_id])
             for triangle in children:
@@ -162,7 +165,7 @@ def construct_arrangement(source_surfaces):
                     "intersection_segments_m": [{"source_faces": row["source_faces"],
                         "endpoints": tuple(tuple(x/denominator for x in point) for point in row["endpoints"])}
                         for row in intersection_segments],
-                    "source_face_count": sum(len(source_surfaces[n]["triangles"]) for n in NAMES),
+                    "source_face_count": sum(len(source_surfaces[n]["triangles"]) for n in source_names),
                     "subtriangle_count": len(result)}
 
 

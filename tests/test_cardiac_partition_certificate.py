@@ -51,6 +51,15 @@ def emitted(rows,priority=A):
 
 
 class ExactCoverageTests(unittest.TestCase):
+    def test_custom_source_names_must_be_two_distinct_nonempty_strings(self):
+        for names in (("same","same"), ("", "other"), (1, "other")):
+            with self.assertRaisesRegex(HumanImportError, "distinct named sources"):
+                cert.build_triangle_sets([], source_names=names)
+        sources, rows = fixture()
+        expected={A:cert.source_geometry_sha256(sources[A]), B:cert.source_geometry_sha256(sources[B])}
+        with self.assertRaisesRegex(HumanImportError, "source coverage differs"):
+            cert.certify_partition(sources, rows, expected_geometry_sha256=expected,
+                                   source_names=("same","same"))
     def test_hand_authored_arrangement_has_exact_known_volume_and_raw_moments(self):
         sources,rows=fixture();proof=check(sources,rows)
         self.assertTrue(proof['source_face_coverage_exact'])

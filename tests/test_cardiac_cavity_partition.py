@@ -15,6 +15,14 @@ from numilab_human.model import ImportError as HumanImportError
 
 
 class AuthoringTests(unittest.TestCase):
+    def test_custom_source_names_must_be_two_distinct_nonempty_strings(self):
+        surface = {"vertices": [(0,0,0),(1,0,0),(0,1,0)],
+                   "triangles": [(0,1,2)], "source_sha256": "0"*64}
+        for names, surfaces in ((("same","same"), {"same": surface}),
+                                (("", "other"), {"": surface, "other": surface}),
+                                ((1, "other"), {1: surface, "other": surface})):
+            with self.assertRaisesRegex(HumanImportError, "distinct named source surfaces"):
+                partition.construct_arrangement(surfaces, source_names=names)
     def test_command_preserves_existing_output_and_rejects_redirection(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "artifact.json"

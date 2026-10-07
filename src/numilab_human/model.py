@@ -11896,11 +11896,12 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
 ) -> dict[str, Any]:
     """Package selected exact organs, vessels, and spinal cord for native posing.
 
-    The BodyParts3D surfaces remain their supplied triangle topology.  Each
-    selected component is converted into the named MyoSim torso or abdomen
+    Source triangles remain unchanged except for the exact source-face-owned
+    exterior partition of the overlapping FJ2445/FJ2446 sibling airway proxies.
+    Each selected component is converted into the named MyoSim torso or abdomen
     inertial frame at the registered default pose, so the Metal visual runtime
-    moves it with that articulated link.  This is intentionally a compact
-    anatomical inspection layer, never a material or continuum lowerer.
+    moves it with that articulated link. This is an anatomical inspection layer,
+    never a material or continuum lowerer.
     """
     registration_file = registration_path.resolve()
     registration = read_json(registration_file)
@@ -11960,6 +11961,20 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
         raise ImportError("BodyParts3D torso anatomy source family coverage is incomplete: "
                           + json.dumps(family_coverage["requirements"], sort_keys=True))
     family_members = {member for requirement in family_coverage["requirements"] for member in requirement["expected_members"]}
+    from .airway_sibling_partition import SOURCE_IDENTITY as airway_source_identity
+    from .airway_sibling_partition import SOURCE_MEMBERS as airway_source_members
+    from .airway_sibling_partition import partition_airway_sibling_overlap
+    airway_source_inputs = {}
+    for airway_member_id in airway_source_members:
+        _, airway_member_name, airway_obj = _bodyparts_obj_member(sources, "is_a", airway_member_id)
+        airway_vertices_mm, airway_triangles = _bodyparts_obj_triangles(airway_obj, airway_member_name)
+        airway_source_inputs[airway_member_id] = {
+            "vertices_mm": airway_vertices_mm,
+            "triangles": airway_triangles,
+            "source_sha256": hashlib.sha256(airway_obj).hexdigest(),
+        }
+    airway_partition = partition_airway_sibling_overlap(airway_source_inputs)
+    airway_partition_meshes = airway_partition["meshes"]
     source_types_by_member: dict[str, list[dict[str, str]]] = {}
     for typed_concept, typed_label, typed_member in sorted(organ_type_relations):
         source_types_by_member.setdefault(typed_member, []).append({
@@ -12013,7 +12028,30 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             }
         except ValueError as error:
             raise ImportError(f"BodyParts3D torso anatomy {member_id}: {error}") from error
-        vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+        if member_id in airway_partition_meshes:
+            expected_airway_identity = airway_source_identity[member_id]
+            if (concept_id, label) != (expected_airway_identity["concept_id"], expected_airway_identity["label"]):
+                raise ImportError(f"BodyParts3D airway partition source identity drifted: {member_id}")
+            partition_mesh = airway_partition_meshes[member_id]
+            vertices_mm = partition_mesh["vertices_mm"]
+            triangles = partition_mesh["triangles"]
+            source_face_indices = partition_mesh["source_face_indices"]
+            lineage = airway_partition["proof"]["face_lineage"][member_id]
+            airway_partition_surface = {
+                "method": "exact_source_face_outside_other_sibling_proxy",
+                "source_member_sha256": lineage["source_member_sha256"],
+                "source_face_count": lineage["source_face_count"],
+                "emitted_face_count": lineage["emitted_face_count"],
+                "emitted_source_face_indices": source_face_indices,
+                "emitted_source_face_indices_sha256": lineage["emitted_source_face_indices_sha256"],
+                "emitted_faces_preserve_source_winding": True,
+                "per_member_closed_solid": False,
+                "paired_union_closed_solid_proxy": True,
+                "biological_lumen_claimed": False,
+            }
+        else:
+            vertices_mm, triangles = _bodyparts_obj_triangles(obj, member)
+            airway_partition_surface = None
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
         world_vertices = _bodyparts_source_mm_to_body_world(
             vertices_mm, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0],
@@ -12054,6 +12092,7 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             **organ_coverage,
             "source_is_a_types": source_types_by_member.get(member_id, []),
             "source_family_topology": source_family_topology(obj, member) if member_id in family_members else None,
+            "airway_overlap_partition": airway_partition_surface,
         })
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D torso anatomy payload exceeds the uint32 native renderer capacity")
@@ -12098,6 +12137,9 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             ],
             "surfaces": provenance,
         },
+        "geometry_repairs": {
+            "airway_sibling_overlap_partition": airway_partition["proof"],
+        },
         "coverage": {
             "configured_surface_count": len(provenance),
             "organ_surface_count": sum(entry["layer"] == "organ" for entry in provenance),
@@ -12123,7 +12165,7 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
         },
         "runtime_binding": "each exact BodyParts3D source component is converted into the declared MyoSim torso or abdomen inertial frame at the registered default pose and then follows that one articulated visual link in the native renderer",
         "status": "native_single_link_kinematic_anatomy_surface_binding_input_not_collision_or_physics",
-        "evidence_boundary": "This compact source-surface layer does not create organ FEM or MPM bodies, vessel tube mechanics, neural mechanics, tissue material parameters, collision/contact, force transmission, or medical registration.",
+        "evidence_boundary": "This compact source-surface layer does not create organ FEM or MPM bodies, vessel tube mechanics, neural mechanics, tissue material parameters, collision/contact, force transmission, or medical registration. The exact sibling-airway solid-proxy partition does not establish a shared lumen, physiological port, or measured airway junction.",
     }
     write_json(output / "bodyparts3d-myosim-torso-anatomy.manifest.json", manifest)
     return manifest

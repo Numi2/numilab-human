@@ -59,10 +59,44 @@ def test_native_organs_preserve_every_source_vertex_and_topology(native_organs):
     assert {layer: sum(row["layer"] == layer for row in report["rows"])
             for layer in ["airway", "pulmonary_artery", "pulmonary_vein"]} == {
                 "airway": 98, "pulmonary_artery": 97, "pulmonary_vein": 85}
-    assert all(row["topology_exact"] for row in report["rows"])
+    by_member = {row["member_id"]: row for row in report["rows"]}
+    assert all(row["owner_geometry_exact"] for row in report["rows"])
+    assert all(row["topology_exact"] for member, row in by_member.items()
+               if member not in {"FJ2445", "FJ2446"})
+    assert all(not by_member[member]["topology_exact"] and by_member[member]["source_face_partitioned"]
+               for member in {"FJ2445", "FJ2446"})
     assert {row["member_id"] for row in report["rows"] if row["label"] == "liver"} == {
         "FJ2816", "FJ2818", "FJ2819", "FJ2820", "FJ2821", "FJ2822", "FJ2409", "FJ2823", "FJ2824"}
     native_organs[4].with_name("source-geometry-audit.json").write_text(json.dumps(report, indent=2) + "\n")
+
+
+
+
+def test_left_basal_airway_overlap_is_source_face_partitioned(organ_inputs):
+    _, _, _, _, _, payload, _ = organ_inputs
+    manifest = json.loads(payload.with_name("bodyparts3d-myosim-torso-anatomy.manifest.json").read_text())
+    proof = manifest["geometry_repairs"]["airway_sibling_overlap_partition"]
+    assert proof["source_identity"]["FJ2445"]["concept_id"] == "FMA68232"
+    assert proof["source_identity"]["FJ2446"]["concept_id"] == "FMA68233"
+    assert proof["arrangement"]["source_intersecting_triangle_pair_count"] == 94
+    certificate = proof["certificate"]
+    assert certificate["source_face_coverage_exact"]
+    assert certificate["independent_classification_exact"]
+    assert certificate["source_union_preserved"]
+    assert certificate["source_exclusive_regions_preserved"]
+    assert certificate["union"]["topology"]["closed"]
+    assert certificate["union"]["topology"]["face_components"] == 1
+    assert certificate["classification_counts"] == {
+        "FJ2445": {"inside": 242, "outside": 572},
+        "FJ2446": {"inside": 150, "outside": 760},
+    }
+    for member, face_count in (("FJ2445", 572), ("FJ2446", 760)):
+        lineage = proof["face_lineage"][member]
+        assert lineage["emitted_face_count"] == face_count
+        assert len(lineage["emitted_source_face_indices"]) == face_count
+        assert lineage["emitted_faces_preserve_source_winding"]
+    assert proof["physiological_lumen_assigned"] is False
+    assert "not establish" in proof["geometry_interpretation"]
 
 
 def _mutate_pack(path, output, kind, mutate):

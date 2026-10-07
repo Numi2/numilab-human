@@ -255,27 +255,33 @@ def _moments_json(vector):
             'second_volume_moment_m5':[[encode_rational(q[k]) for k in row] for row in ((0,1,2),(1,3,4),(2,4,5))]}
 
 
-def build_triangle_sets(subtriangles):
+def build_triangle_sets(subtriangles, *, source_names=SOURCES):
     """Return exact triangle lists; caller may apply one common Float64 map."""
-    groups={(s,loc):[] for s in SOURCES for loc in ('inside','outside')}
+    source_names = tuple(source_names)
+    require(len(source_names) == 2 and all(isinstance(name, str) and name for name in source_names)
+            and len(set(source_names)) == 2, 'expected two distinct named sources')
+    groups={(s,loc):[] for s in source_names for loc in ('inside','outside')}
     for row in subtriangles:
-        require(isinstance(row,dict) and row.get('source') in SOURCES and row.get('other_location') in ('inside','outside'),
+        require(isinstance(row,dict) and row.get('source') in source_names and row.get('other_location') in ('inside','outside'),
                 'invalid arrangement source or location')
         tri=tuple(_point(p) for p in row['vertices']);require(len(tri)==3,'invalid subtriangle')
         groups[(row['source'],row['other_location'])].append(tri)
-    a,b=SOURCES;ai,ao,bi,bo=[groups[key] for key in ((a,'inside'),(a,'outside'),(b,'inside'),(b,'outside'))]
+    a,b=source_names;ai,ao,bi,bo=[groups[key] for key in ((a,'inside'),(a,'outside'),(b,'inside'),(b,'outside'))]
     reverse=lambda triangles:[(t[0],t[2],t[1]) for t in triangles]
     return {'sources':{a:ao+ai,b:bo+bi},'union':ao+bo,'intersection':ai+bi,
             'partitions':{a+'_priority':{'regions':{a:ao+ai,b:bo+reverse(ai)},'shared_interface':ai},
                           b+'_priority':{'regions':{a:ao+reverse(bi),b:bo+bi},'shared_interface':bi}}}
 
 
-def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256):
-    require(isinstance(source_surfaces,dict) and set(source_surfaces)==set(SOURCES) and
-            isinstance(expected_geometry_sha256,dict) and set(expected_geometry_sha256)==set(SOURCES),'source coverage differs')
+def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,source_names=SOURCES):
+    source_names = tuple(source_names)
+    require(len(source_names) == 2 and all(isinstance(name, str) and name for name in source_names)
+            and len(set(source_names)) == 2 and isinstance(source_surfaces,dict)
+            and set(source_surfaces)==set(source_names) and isinstance(expected_geometry_sha256,dict)
+            and set(expected_geometry_sha256)==set(source_names),'source coverage differs')
     require(isinstance(subtriangles,list) and 1<=len(subtriangles)<=40000,'invalid arrangement size')
     originals,source_ids,scale={}, {}, 1
-    for name in SOURCES:
+    for name in source_names:
         surface=source_surfaces[name]
         require(isinstance(surface,dict) and set(surface)=={'vertices','triangles','source_sha256'},'source fields differ')
         digest=source_geometry_sha256(surface)
@@ -304,12 +310,12 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256):
     for row in subtriangles:
         require(isinstance(row,dict) and set(row)=={'vertices','source','source_face','other_location'},'subtriangle fields differ')
         source,parent,location=row['source'],row['source_face'],row['other_location']
-        require(source in SOURCES and type(parent) is int and 0<=parent<len(originals[source]),'forged source parent')
+        require(source in source_names and type(parent) is int and 0<=parent<len(originals[source]),'forged source parent')
         require(location in ('inside','outside'),'unsupported classification')
         require(isinstance(row['vertices'],(list,tuple)) and len(row['vertices'])==3,'invalid child triangle')
         tri=tuple(_point(p) for p in row['vertices']);coverage[(source,parent)].append(tri)
         scaled_tri=tuple(scaled(p) for p in tri)
-        other=prepared[SOURCES[1] if source==SOURCES[0] else SOURCES[0]]
+        other=prepared[source_names[1] if source==source_names[0] else source_names[0]]
         other.certify_uncut(scaled_tri)
         centroid=tuple(Fraction(sum(p[k] for p in scaled_tri),3) for k in range(3))
         observed=other.location(centroid)
@@ -318,17 +324,17 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256):
         canonical_rows.append({'source':source,'source_face':parent,'other_location':location,'vertices':encode_triangles([tri])[0]})
     for name,parents in originals.items():
         for i,parent in enumerate(parents):_face_coverage(parent,coverage[(name,i)])
-    sets=build_triangle_sets(subtriangles)
+    sets=build_triangle_sets(subtriangles, source_names=source_names)
     # Compute the four disjoint boundary classes once, then combine their exact
     # integrals. Coverage/classification established the set semantics above.
     group_moments={}
-    for name in SOURCES:
+    for name in source_names:
         for location in ('inside','outside'):
             group_moments[(name,location)]=_moment_vector([tuple(_point(p) for p in r['vertices']) for r in subtriangles
                                                         if r['source']==name and r['other_location']==location])
-    a,b=SOURCES;ai,ao,bi,bo=[group_moments[key] for key in ((a,'inside'),(a,'outside'),(b,'inside'),(b,'outside'))]
+    a,b=source_names;ai,ao,bi,bo=[group_moments[key] for key in ((a,'inside'),(a,'outside'),(b,'inside'),(b,'outside'))]
     source_moments={a:_add(ao,ai),b:_add(bo,bi)}
-    for name in SOURCES:
+    for name in source_names:
         require(source_moments[name]==_moment_vector(originals[name]),'source-face moment coverage differs')
         require(source_moments[name][0]>0,'source winding must be outward')
     union,intersection=_add(ao,bo),_add(ai,bi)
@@ -338,20 +344,20 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256):
     for priority,moments in ((a,{a:source_moments[a],b:_add(bo,_neg(ai))}),
                               (b,{a:_add(ao,_neg(bi)),b:source_moments[b]})):
         name=priority+'_priority';regions=sets['partitions'][name]['regions'];interface=sets['partitions'][name]['shared_interface']
-        require(all(moments[s][0]>0 for s in SOURCES),'priority partition removes an entire chamber')
+        require(all(moments[s][0]>0 for s in source_names),'priority partition removes an entire chamber')
         require(_add(*moments.values())==union,'partition moment conservation failed')
-        region_topology={s:_topology(regions[s]) for s in SOURCES}
+        region_topology={s:_topology(regions[s]) for s in source_names}
         # Opposite copies are constructed from one interface; prove that exact
         # oriented cancellation holds in the actual emitted triangle chains.
         _verify_interface(regions,interface)
         partitions[name]={'regions':{s:{'moments':_moments_json(moments[s]),'topology':region_topology[s],
-                                       'triangle_sha256':hashlib.sha256(canonical(encode_triangles(regions[s]))).hexdigest()} for s in SOURCES},
+                                       'triangle_sha256':hashlib.sha256(canonical(encode_triangles(regions[s]))).hexdigest()} for s in source_names},
                           'interface_face_count':len(interface),'shared_interface_opposite_chain':True,
                           'interiors_disjoint_by_source_membership':True,'union_moments_exact':True}
     return {'schema':SCHEMA,'coordinate_semantics':'exact_rational_value_of_published_binary64_metres',
             'source_identity':source_ids,'arrangement_sha256':hashlib.sha256(canonical(canonical_rows)).hexdigest(),
             'source_face_coverage_exact':True,'child_interiors_uncut':True,'independent_classification_exact':True,
-            'classification_counts':{s:{loc:classification[(s,loc)] for loc in ('inside','outside')} for s in SOURCES},
+            'classification_counts':{s:{loc:classification[(s,loc)] for loc in ('inside','outside')} for s in source_names},
             'source_moments':{s:_moments_json(v) for s,v in source_moments.items()},
             'intersection':{'moments':_moments_json(intersection),'topology':topology['intersection']},
             'union':{'moments':_moments_json(union),'topology':topology['union']},'partitions':partitions,

@@ -168,6 +168,21 @@ def audit_torso_anatomy(
     _require(matrix.shape == (4, 4) and bool(np.isfinite(matrix).all()), "source global transform")
     source_relations = {h: human._bodyparts_source_element_relation_names(sources, h)
                         for h in {s["hierarchy"] for s in specs} | {"is_a"}}
+    from .airway_sibling_partition import SOURCE_MEMBERS as airway_source_members
+    from .airway_sibling_partition import partition_airway_sibling_overlap
+    airway_source_inputs = {}
+    for airway_member_id in airway_source_members:
+        _, airway_member_name, airway_obj = human._bodyparts_obj_member(sources, "is_a", airway_member_id)
+        airway_vertices_mm, airway_triangles = human._bodyparts_obj_triangles(airway_obj, airway_member_name)
+        airway_source_inputs[airway_member_id] = {
+            "vertices_mm": airway_vertices_mm,
+            "triangles": airway_triangles,
+            "source_sha256": hashlib.sha256(airway_obj).hexdigest(),
+        }
+    airway_partition = partition_airway_sibling_overlap(airway_source_inputs)
+    _require(manifest.get("geometry_repairs", {}).get("airway_sibling_overlap_partition")
+             == airway_partition["proof"], "torso exact airway partition certificate")
+    airway_partition_meshes = airway_partition["meshes"]
     family_members = {member for requirement in mapping["coverage_requirements"]
                       for concept, label, member in source_relations[requirement["hierarchy"]]
                       if concept == requirement["concept_id"] and label == requirement["source_name"]}
@@ -196,25 +211,48 @@ def audit_torso_anatomy(
             _require(all(declared_source.get(key) == value for key, value in typed.items()), "torso source organ typing")
         topology = source_family_topology(obj, member) if spec["member_id"] in family_members else None
         _require(declared_source.get("source_family_topology") == topology, "torso source topology diagnostic")
-        source_v, triangles = human._bodyparts_obj_triangles(obj, member)
+        source_v, source_triangles = human._bodyparts_obj_triangles(obj, member)
         source_v = np.asarray(source_v)
-        _require(count_v == len(source_v) and count_i == 3 * len(triangles), "source surface topology size")
+        partition_mesh = airway_partition_meshes.get(spec["member_id"])
+        if partition_mesh is None:
+            emitted_v, triangles = source_v, source_triangles
+            lineage_provenance = None
+        else:
+            emitted_v = np.asarray(partition_mesh["vertices_mm"])
+            triangles = partition_mesh["triangles"]
+            lineage = airway_partition["proof"]["face_lineage"][spec["member_id"]]
+            lineage_provenance = {
+                "method": "exact_source_face_outside_other_sibling_proxy",
+                "source_member_sha256": lineage["source_member_sha256"],
+                "source_face_count": lineage["source_face_count"],
+                "emitted_face_count": lineage["emitted_face_count"],
+                "emitted_source_face_indices": partition_mesh["source_face_indices"],
+                "emitted_source_face_indices_sha256": lineage["emitted_source_face_indices_sha256"],
+                "emitted_faces_preserve_source_winding": True,
+                "per_member_closed_solid": False,
+                "paired_union_closed_solid_proxy": True,
+                "biological_lumen_claimed": False,
+            }
+        _require(declared_source.get("airway_overlap_partition") == lineage_provenance,
+                 "torso airway source-face lineage")
+        _require(count_v == len(emitted_v) and count_i == 3 * len(triangles), "source surface topology size")
         expected_indices = np.asarray(triangles).ravel()
-        _require(np.array_equal(indices[first_i:first_i + count_i] - first_v, expected_indices), "source surface topology")
-        world_rest = source_v @ matrix[:3, :3].T + matrix[:3, 3]
+        _require(np.array_equal(indices[first_i:first_i + count_i] - first_v, expected_indices),
+                 "source-owner emitted topology")
+        world_rest = emitted_v @ matrix[:3, :3].T + matrix[:3, 3]
         # Independent MuJoCo inertial frames, rather than the compiler's
         # declared/default COM or world-to-body helper.
         local = (world_rest - rest.xipos[sid]) @ rest.ximat[sid].reshape(3, 3)
         expected_world = local @ data.ximat[sid].reshape(3, 3).T + data.xipos[sid]
         faces = np.asarray(triangles)
-        face_normals = np.cross(source_v[faces[:, 1]] - source_v[faces[:, 0]],
-                                source_v[faces[:, 2]] - source_v[faces[:, 0]])
-        source_normals = np.zeros_like(source_v)
+        face_normals = np.cross(emitted_v[faces[:, 1]] - emitted_v[faces[:, 0]],
+                                emitted_v[faces[:, 2]] - emitted_v[faces[:, 0]])
+        source_normals = np.zeros_like(emitted_v)
         for corner in range(3):
             np.add.at(source_normals, faces[:, corner], face_normals)
         lengths = np.linalg.norm(source_normals, axis=1)
         degenerate = lengths <= 1e-12
-        source_normals[degenerate] = source_v[degenerate] - source_v.mean(axis=0)
+        source_normals[degenerate] = emitted_v[degenerate] - emitted_v.mean(axis=0)
         lengths = np.linalg.norm(source_normals, axis=1)
         _require(bool((lengths > 1e-12).all()), "source surface degenerate normal")
         source_normals /= lengths[:, None]
@@ -264,7 +302,10 @@ def audit_torso_anatomy(
             "stable_id": stable, "member_id": spec["member_id"], "label": spec["source_name"], "layer": spec["layer"],
             "source_member_sha256": hashlib.sha256(obj).hexdigest(), "source_body_id": int(sid), "core_body_index": body,
             "source_family_topology": topology,
-            "vertex_count": count_v, "triangle_count": len(triangles), "topology_exact": True,
+            "vertex_count": count_v, "triangle_count": len(triangles),
+            "topology_exact": partition_mesh is None,
+            "owner_geometry_exact": True,
+            "source_face_partitioned": partition_mesh is not None,
             "payload_local_error_m": local_error, "native_pack_local_error_m": pack_error,
             "native_pose_world_error_m": world_error, "normal_unit_error": normals_error,
             "native_COM_position_error_m": pose_position_error,
