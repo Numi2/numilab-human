@@ -1,0 +1,2408 @@
+{
+  "all_eight_steps_complete": true,
+  "all_target_and_skin_self_pair_coverage_complete": true,
+  "intersection_free": false,
+  "qualification": "exact geometry evidence only; any degenerate input makes the cycle audit fail closed; coverage completeness is distinct from intersection-free geometry",
+  "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+  "schema": "numi.human.native-combined-skin-cycle-audit.summary.v1",
+  "skin_payload_sha256": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+  "status": "complete_pair_coverage",
+  "steps": [
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "b063191a425cdfc7939d83f7ba3fcf9ada59823b2cb24c826b3322549d12979c",
+        "accepted_respiration_state_sha256": "c58986f0ab93aa412ca6b39a9217a178b1787d137568d6e2519098caa5846cb7",
+        "accepted_root_fingerprint": 2980365752838324547,
+        "accepted_root_fingerprint_hex": "0x295c62dc8eab0143",
+        "accepted_step": 0,
+        "accepted_time_s": 0,
+        "accepted_transaction_fingerprint": 2980365752838324547,
+        "anatomy_layer_index": 0,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "248cd963bc76b8d68fd04903c88bd8d76f99e4d2c4032f22951c7c98f7952870",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-0.receipt.json",
+        "sha256": "777d52c8152371a5cfece3b8be61221b814749ab0911f3fb7c7beb7e0318672b"
+      },
+      "all_skin_crossing_pair_count": 0,
+      "crossing_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 111.74522566702217,
+      "hit_surfaces": [],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-0.mrvpack": "8c3553065c0edb58ad9f352df822d55b0537a6212695169ae79be561e4db79d6",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-0.receipt.json": "777d52c8152371a5cfece3b8be61221b814749ab0911f3fb7c7beb7e0318672b",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 0,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 693157888,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 0,
+      "surface_target_count": 859,
+      "target_rows_sha256": "e678fe99815d0b74c5e12be39488d87b30312cbfb4bd500b2313b889123b6800",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "c8d8836a5d3cb3adeef845b3b6629d99d39b4e9d535a0c11fd9e54f612b0cd09",
+        "accepted_respiration_state_sha256": "435cff34c6b7369149b5bdc197fc1ef1f054f791676e5d4f504d603d03101724",
+        "accepted_root_fingerprint": 12885438055133092905,
+        "accepted_root_fingerprint_hex": "0xb2d245a423821c29",
+        "accepted_step": 4991,
+        "accepted_time_s": 9.982000474119559,
+        "accepted_transaction_fingerprint": 12885438055133092905,
+        "anatomy_layer_index": 3,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "ef7361edf2b142f476df184fba7038b7855ea868f5b86fefdc847d1dec28b184",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-4991.receipt.json",
+        "sha256": "561aa953c91c94a5107a5f74c1968aaabdf41d658d0a030fa434203ca1e767c4"
+      },
+      "all_skin_crossing_pair_count": 6144,
+      "crossing_witnesses_sha256": "a3e5feb9d5165e7862b54bd6e1e21afe8cf09aecf4dac4a647d90995fc7df0fe",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 118.40508554223925,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 54,
+          "surface": [
+            51004,
+            26
+          ]
+        },
+        {
+          "pairs": 42,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 53,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 53,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 110,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 146,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 67,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 98,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 238,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 258,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 167,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 147,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 95,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 43,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 28,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 48,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 152,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 353,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 386,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 117,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 66,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 246,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 280,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 938,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 1016,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 50,
+          "surface": [
+            51005,
+            73
+          ]
+        },
+        {
+          "pairs": 42,
+          "surface": [
+            51005,
+            74
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 69,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-4991.mrvpack": "c7d913cdaedca514a525e9b4296fede3a25476002bea0c9e03aa90d69c10ba6d",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-4991.receipt.json": "561aa953c91c94a5107a5f74c1968aaabdf41d658d0a030fa434203ca1e767c4",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 6144,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 706347008,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 4991,
+      "surface_target_count": 859,
+      "target_rows_sha256": "cd0dfc52d75f683b241541865d19b9138dce21d2725cf9888025b9a122ae139e",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "86bd8af1d4d6f5167a00eaabae3db07ced37fe87c01f24b1a2a3b4afe9520294",
+        "accepted_respiration_state_sha256": "dd103520390e63345cea3b8074f2937e8c94445a08167667c9a72e21c546ca65",
+        "accepted_root_fingerprint": 14382491060968897961,
+        "accepted_root_fingerprint_hex": "0xc798df6b12483da9",
+        "accepted_step": 5375,
+        "accepted_time_s": 10.750000510597602,
+        "accepted_transaction_fingerprint": 14382491060968897961,
+        "anatomy_layer_index": 4,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "467a6ef191f222fa52cb0c640be7612b0dd1ddd695b6b1a09ef2ca8a045fd568",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-5375.receipt.json",
+        "sha256": "edeff83cf4eed77a83c762bd12e410845ac66a2e1d09ce6f97b32ae375bbdea1"
+      },
+      "all_skin_crossing_pair_count": 4972,
+      "crossing_witnesses_sha256": "8c001f21ebacc7d7fddc12377286a51b891c95548aff8c9e314f291f958964f9",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 116.2413518326357,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 39,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 49,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 57,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 105,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 146,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 99,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 236,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 257,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 167,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 149,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 77,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 95,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 44,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 28,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 48,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 147,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 349,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 390,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 119,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 62,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 235,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 274,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 429,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 540,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 73,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 69,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-5375.mrvpack": "9763928cee0522dbf22d08b41ff2c627e9e4c8e8e85cc5f3669994ee0bddc0d6",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-5375.receipt.json": "edeff83cf4eed77a83c762bd12e410845ac66a2e1d09ce6f97b32ae375bbdea1",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 4972,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 699924480,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 5375,
+      "surface_target_count": 859,
+      "target_rows_sha256": "c51187ed57cb7b2f25c46469aa79ff015399f4834d0adc10ec4ebd118ec85a90",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "0609a78af388edf4701acfc3c8ab32e0b40630115aceec28e2fa42b90f57b150",
+        "accepted_respiration_state_sha256": "39b8dc30025ac46d8608403da3dd7baa6bd8ab8f158794fb24908af5f9901a8d",
+        "accepted_root_fingerprint": 7541050157550689577,
+        "accepted_root_fingerprint_hex": "0x68a7312a02365d29",
+        "accepted_step": 5759,
+        "accepted_time_s": 11.518000547075644,
+        "accepted_transaction_fingerprint": 7541050157550689577,
+        "anatomy_layer_index": 4,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "d2d869f1be3c153d9480a299361e67a1cc3b4526aab018fd2161c4643d7a0d57",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-5759.receipt.json",
+        "sha256": "587707e46ca30d1bc318c6fb87cd2e389468c1c41de37568edbf4de55e99102f"
+      },
+      "all_skin_crossing_pair_count": 4377,
+      "crossing_witnesses_sha256": "be7370f05fe34c9630e0b43feb4f3e8b8827e8940990d0c776f7fc39713acb9d",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 119.85246937535703,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 35,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 40,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 54,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 104,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 146,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 100,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 235,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 255,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 163,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 149,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 79,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 99,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 46,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 28,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 48,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 145,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 350,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 413,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 120,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 63,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 239,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 277,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 139,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 238,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 54,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 69,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-5759.mrvpack": "42fbf674a79daf48719a60b392f847b42da269a05771cbb4eb8066126d20c28f",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-5759.receipt.json": "587707e46ca30d1bc318c6fb87cd2e389468c1c41de37568edbf4de55e99102f",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 4377,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 700465152,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 5759,
+      "surface_target_count": 859,
+      "target_rows_sha256": "30b76cb0c641e92915bc5d7bc4272308153b596798bbb04b9723589e33905a6f",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "88e376d5c297b03f2dc895b6a9de4c6e3ff78c5f282d7d138cb85e734366ce12",
+        "accepted_respiration_state_sha256": "8e3da102523f66738a95b4579d14e07c036d925d9d30a9f53163b87a2781baf0",
+        "accepted_root_fingerprint": 16653979202498656265,
+        "accepted_root_fingerprint_hex": "0xe71ed1d91dacf809",
+        "accepted_step": 6111,
+        "accepted_time_s": 12.22200058051385,
+        "accepted_transaction_fingerprint": 16653979202498656265,
+        "anatomy_layer_index": 4,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "3d97a6561fbd82083851a9722dfe89dde9fc94a8f717ff4fc8daa8dd7209bc05",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-6111.receipt.json",
+        "sha256": "e104aa0fe57bd754f4823dab9648a279c4e1fa69aac3dc9a9b81deab3a0b81b4"
+      },
+      "all_skin_crossing_pair_count": 5353,
+      "crossing_witnesses_sha256": "ca7f5a84ec0b64571e852ec0f1f8e4c75b6ab8c7221410caa7801da0e1b54108",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 120.86843754164875,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 12,
+          "surface": [
+            51004,
+            26
+          ]
+        },
+        {
+          "pairs": 39,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 49,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 56,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 102,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 146,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 100,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 236,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 256,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 163,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 149,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 76,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 99,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 45,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 28,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 48,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 138,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 350,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 400,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 120,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 67,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 240,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 270,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 609,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 697,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 12,
+          "surface": [
+            51005,
+            73
+          ]
+        },
+        {
+          "pairs": 9,
+          "surface": [
+            51005,
+            74
+          ]
+        },
+        {
+          "pairs": 79,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 69,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-6111.mrvpack": "71144d240262d6bdc9ca3ee7867172e642ebdc8eff37ecd744ef12ea72445e6c",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-6111.receipt.json": "e104aa0fe57bd754f4823dab9648a279c4e1fa69aac3dc9a9b81deab3a0b81b4",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 5353,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 690356224,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 6111,
+      "surface_target_count": 859,
+      "target_rows_sha256": "365d2282e2a241a482d2f7eba493cd4bf3a59af0ad16cf2d073cd4364b3c6d7f",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "1c5bda48c5d8251a298495409bb9d741a2741760724de75eeab654610dc0dc3a",
+        "accepted_respiration_state_sha256": "593504acd903c13a82cb371253050080fc9aeebf564cb5708874c8004e26b778",
+        "accepted_root_fingerprint": 586923258484955529,
+        "accepted_root_fingerprint_hex": "0x08252b980c691989",
+        "accepted_step": 6495,
+        "accepted_time_s": 12.990000616991892,
+        "accepted_transaction_fingerprint": 586923258484955529,
+        "anatomy_layer_index": 5,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "60707f918df05796e5c46be9777de94471c460aa9871767558712eeb1cfa1607",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-6495.receipt.json",
+        "sha256": "897415f72129ace247678a3a9e63ec7083852fd32c0128f87a1c51b4f3a95cde"
+      },
+      "all_skin_crossing_pair_count": 6092,
+      "crossing_witnesses_sha256": "21b16f208ec921cdaa9e68afc2d0d37649daccef22bdef630bc4cec0f0af18bc",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 122.74068487528712,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 54,
+          "surface": [
+            51004,
+            26
+          ]
+        },
+        {
+          "pairs": 39,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 53,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 50,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 59,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 91,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 144,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 73,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 98,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 236,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 257,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 162,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 150,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 76,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 99,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 61,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 26,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 48,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 138,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 356,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 400,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 64,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 120,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 67,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 237,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 282,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 921,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 1000,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 46,
+          "surface": [
+            51005,
+            73
+          ]
+        },
+        {
+          "pairs": 41,
+          "surface": [
+            51005,
+            74
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 69,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-6495.mrvpack": "bdf82638139791a8d8e8eb16818cc162ec6da5fba36a5a1b5cfc6b5dfc82941d",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-6495.receipt.json": "897415f72129ace247678a3a9e63ec7083852fd32c0128f87a1c51b4f3a95cde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 6092,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 710901760,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 6495,
+      "surface_target_count": 859,
+      "target_rows_sha256": "1ad2e37a8ab16e920187312d157144446984373a56fae77d1873675a932f4eb7",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "81809c1d1aa93819e42ab97fd4767b2b392596e87791130125be78c44c9094b0",
+        "accepted_respiration_state_sha256": "e841256675d7d94c0a17f82ec00b7d93afb472bfa0b53a6affd7120e4a6807bd",
+        "accepted_root_fingerprint": 5095492358287785577,
+        "accepted_root_fingerprint_hex": "0x46b6d34d8375fe69",
+        "accepted_step": 7743,
+        "accepted_time_s": 15.486000735545531,
+        "accepted_transaction_fingerprint": 5095492358287785577,
+        "anatomy_layer_index": 6,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "250939db618f08e401bec238de9d12ba513cf220ab83e0203ff440c86bb0ad26",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-7743.receipt.json",
+        "sha256": "4e397965709fec8362036cb7ea67fb60f017e369811060bfd771e4ae3616ac4f"
+      },
+      "all_skin_crossing_pair_count": 6138,
+      "crossing_witnesses_sha256": "0adfcdbcdfbdb7298bd5c126adae2933d36bb82a083f48811f11da5ac518160c",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 121.83254320826381,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 54,
+          "surface": [
+            51004,
+            26
+          ]
+        },
+        {
+          "pairs": 36,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 50,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 58,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 71,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 144,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 67,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 68,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 96,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 233,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 258,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 166,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 148,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 91,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 56,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 45,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 58,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 138,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 377,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 390,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 71,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 119,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 67,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 250,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 265,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 943,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 1025,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 47,
+          "surface": [
+            51005,
+            73
+          ]
+        },
+        {
+          "pairs": 42,
+          "surface": [
+            51005,
+            74
+          ]
+        },
+        {
+          "pairs": 74,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 52,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 69,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-7743.mrvpack": "64aeebaa4ad740274ea5435b0c21bd30f05a0cfa839b78fc7411f9112e41d11e",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-7743.receipt.json": "4e397965709fec8362036cb7ea67fb60f017e369811060bfd771e4ae3616ac4f",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 6138,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 704987136,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 7743,
+      "surface_target_count": 859,
+      "target_rows_sha256": "a58312bc2037e4d5a9d227241a91e96e2384bd0d5120fe347f8a0f295165d2bb",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    },
+    {
+      "accepted_receipt": {
+        "accepted_body_state_sha256": "1dc7c66cf8db1c09ff717edf35fec808e7423413799e8748dd72a410656693af",
+        "accepted_respiration_state_sha256": "9da1f97d8985018cc66ef1275780ca829ca070d6d088223320837d65775de294",
+        "accepted_root_fingerprint": 10490861133746895225,
+        "accepted_root_fingerprint_hex": "0x9197069e40ef7979",
+        "accepted_step": 9999,
+        "accepted_time_s": 19.99800094985403,
+        "accepted_transaction_fingerprint": 10490861133746895225,
+        "anatomy_layer_index": 0,
+        "base_pack_content_hash": "sha256:b3d0073785b3a0b77a38ae7fde45a01bd21d562b01633e75fcafdfadc7e90125",
+        "base_pack_file_sha256": "bfe0a562b44f7ed85b01eff15421952df49fa5ab0f47f578cdb601de11865bdd",
+        "captured_vertex_buffer_sha256": "ebb997f2bba0c5121a0149bd710c2a65606f5d9b64e8cd5b1b817ff857675d55",
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-9999.receipt.json",
+        "sha256": "d907ae6c0e1a53303ce7faa2c6124ea20b4c40ed89813ecf3d365a06a080ea3f"
+      },
+      "all_skin_crossing_pair_count": 6081,
+      "crossing_witnesses_sha256": "a320b535c307672a0f1a8799f78b8c7a4f7d4799fbb7521f90120d3d19468495",
+      "current_nha_payload_path": "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy",
+      "current_nha_payload_sha256": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+      "elapsed_s": 121.77857391629368,
+      "hit_surfaces": [
+        {
+          "pairs": 77,
+          "surface": [
+            51004,
+            14
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51004,
+            15
+          ]
+        },
+        {
+          "pairs": 54,
+          "surface": [
+            51004,
+            26
+          ]
+        },
+        {
+          "pairs": 36,
+          "surface": [
+            51011,
+            474
+          ]
+        },
+        {
+          "pairs": 53,
+          "surface": [
+            51011,
+            475
+          ]
+        },
+        {
+          "pairs": 49,
+          "surface": [
+            51011,
+            476
+          ]
+        },
+        {
+          "pairs": 62,
+          "surface": [
+            51011,
+            477
+          ]
+        },
+        {
+          "pairs": 95,
+          "surface": [
+            51011,
+            486
+          ]
+        },
+        {
+          "pairs": 147,
+          "surface": [
+            51011,
+            487
+          ]
+        },
+        {
+          "pairs": 65,
+          "surface": [
+            51011,
+            488
+          ]
+        },
+        {
+          "pairs": 73,
+          "surface": [
+            51011,
+            489
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51011,
+            503
+          ]
+        },
+        {
+          "pairs": 90,
+          "surface": [
+            51011,
+            504
+          ]
+        },
+        {
+          "pairs": 243,
+          "surface": [
+            51011,
+            517
+          ]
+        },
+        {
+          "pairs": 258,
+          "surface": [
+            51011,
+            518
+          ]
+        },
+        {
+          "pairs": 164,
+          "surface": [
+            51005,
+            3
+          ]
+        },
+        {
+          "pairs": 146,
+          "surface": [
+            51005,
+            4
+          ]
+        },
+        {
+          "pairs": 73,
+          "surface": [
+            51005,
+            13
+          ]
+        },
+        {
+          "pairs": 61,
+          "surface": [
+            51005,
+            14
+          ]
+        },
+        {
+          "pairs": 56,
+          "surface": [
+            51005,
+            19
+          ]
+        },
+        {
+          "pairs": 55,
+          "surface": [
+            51005,
+            20
+          ]
+        },
+        {
+          "pairs": 97,
+          "surface": [
+            51005,
+            21
+          ]
+        },
+        {
+          "pairs": 134,
+          "surface": [
+            51005,
+            22
+          ]
+        },
+        {
+          "pairs": 75,
+          "surface": [
+            51005,
+            27
+          ]
+        },
+        {
+          "pairs": 72,
+          "surface": [
+            51005,
+            28
+          ]
+        },
+        {
+          "pairs": 349,
+          "surface": [
+            51005,
+            35
+          ]
+        },
+        {
+          "pairs": 391,
+          "surface": [
+            51005,
+            36
+          ]
+        },
+        {
+          "pairs": 4,
+          "surface": [
+            51005,
+            42
+          ]
+        },
+        {
+          "pairs": 68,
+          "surface": [
+            51005,
+            52
+          ]
+        },
+        {
+          "pairs": 17,
+          "surface": [
+            51005,
+            56
+          ]
+        },
+        {
+          "pairs": 116,
+          "surface": [
+            51005,
+            57
+          ]
+        },
+        {
+          "pairs": 61,
+          "surface": [
+            51005,
+            58
+          ]
+        },
+        {
+          "pairs": 242,
+          "surface": [
+            51005,
+            63
+          ]
+        },
+        {
+          "pairs": 278,
+          "surface": [
+            51005,
+            64
+          ]
+        },
+        {
+          "pairs": 921,
+          "surface": [
+            51005,
+            67
+          ]
+        },
+        {
+          "pairs": 989,
+          "surface": [
+            51005,
+            68
+          ]
+        },
+        {
+          "pairs": 49,
+          "surface": [
+            51005,
+            73
+          ]
+        },
+        {
+          "pairs": 42,
+          "surface": [
+            51005,
+            74
+          ]
+        },
+        {
+          "pairs": 57,
+          "surface": [
+            51005,
+            110
+          ]
+        },
+        {
+          "pairs": 57,
+          "surface": [
+            51006,
+            7
+          ]
+        },
+        {
+          "pairs": 70,
+          "surface": [
+            51006,
+            8
+          ]
+        }
+      ],
+      "input_sha256": {
+        "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py": "61857a0edfc098a941f2923113ebbc2ecafbb3c3aafee3a7ff4a83ba28ffd1c0",
+        "/Users/n/numi-human-resting-evidence-20261005/cardiac-wall-native-self-audit-001/accepted_mrvpack_surface_audit.py": "eb9e5c762cdbab1e9b3f98c63a1580a21acba54637b105c28e2bc0a39187ba17",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c",
+        "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+        "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-combined-cycle-audit-908/audit_cycle.py": "2eba147ca37ea80a3ed12c8dd725986d77bcd60c194077fae6ddfc5961d9dcde",
+        "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-9999.mrvpack": "eccb16d053d9ae938a0b88f5818fdbcceb24e2c6c58f7c069b75feff92648894",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/accepted-geometry/step-9999.receipt.json": "d907ae6c0e1a53303ce7faa2c6124ea20b4c40ed89813ecf3d365a06a080ea3f",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+        "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+        "/Users/n/numi-human-resting-evidence-20261005/right-choroid-laterality-current-897-v3/resting-thorax.nhanatomy": "91f27d73d3ffa2df59ba13efd512471de4123ec1472f20cd4a731a6205547b09",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+        "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/common_atlas_skin_clearance.py": "1321c31c22e1b1dbf0062947c6767c2cfcae9aae35d29e9ea775862feed5ddd1"
+      },
+      "invalid_target_surface_count": 0,
+      "invalid_target_triangle_count": 0,
+      "invalid_triangles_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonocular_crossing_pair_count": 6081,
+      "ocular_crossing_pair_count": 0,
+      "ocular_target_count": 17,
+      "pair_coverage_complete": true,
+      "rss_peak_bytes": 695648256,
+      "run_path": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+      "self_witnesses_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "skin_degenerate_face_rows": [],
+      "skin_pair_coverage_complete": true,
+      "skin_self_crossing_pair_count": 0,
+      "source_files_unchanged": true,
+      "status": "complete_pair_coverage",
+      "step": 9999,
+      "surface_target_count": 859,
+      "target_rows_sha256": "28ba2b255934a7ee855df0d2e7e2fd43bfd971af1374722df4b0e8b1590d8051",
+      "witness_identity": "source face row + captured pack vertex ids + exact float32 triangle coordinates + exact-predicate intersection points in metres"
+    }
+  ]
+}

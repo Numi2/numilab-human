@@ -1,0 +1,603 @@
+{
+  "run": "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909",
+  "scope": "20-second integrated pilot, initialization included; numerical trace and native recording checks; full anatomy audit and 300-second acceptance remain separate.",
+  "accepted_steps": 10000,
+  "complete_breaths": 3,
+  "complete_filling_ejection_cycles": 23,
+  "native_elapsed_physical_s": 20.0000009499,
+  "owner_wall_s": 201.27524654200002,
+  "inclusive_real_time_factor": 0.09936641660417297,
+  "physiology_fields_exactly_equal_to_904": {
+    "time_s": true,
+    "lung_volume_ml": true,
+    "airflow_ml_s": true,
+    "alveolar_pa": true,
+    "pleural_pa": true,
+    "diaphragm_mm": true,
+    "rib_mm": true,
+    "PaO2_mmhg": true,
+    "PaCO2_mmhg": true,
+    "SaO2": true,
+    "oxygen_balance_error_stpd_ml": true,
+    "co2_balance_error_stpd_ml": true,
+    "breaths": true,
+    "tidal_ml": true,
+    "lv_mmhg": true,
+    "rv_mmhg": true,
+    "aorta_mmhg": true,
+    "pulmonary_artery_mmhg": true,
+    "lv_ml": true,
+    "rv_ml": true,
+    "blood_ml": true,
+    "blood_error_ml": true,
+    "aortic_ejected_ml": true,
+    "pulmonary_ejected_ml": true,
+    "complete_filling_ejection_cycles": true,
+    "last_lv_stroke_ml": true,
+    "right_atrium_ml": true,
+    "left_atrium_ml": true,
+    "blood_continuity_residual_accum_ml": true,
+    "blood_physical_delta_accum_ml": true,
+    "blood_residual_minus_physical_ml": true,
+    "blood_endpoint_minus_physical_ml": true,
+    "inspired_volume_accum_ml": true,
+    "last_inspiration_step": true,
+    "last_inspiration_time_s": true,
+    "last_inspiration_volume_accum_ml": true,
+    "last_complete_breath_inspired_ml": true,
+    "respiratory_net_volume_ml": true,
+    "respiratory_volume_balance_ml": true,
+    "gas_max_donor_fraction": true,
+    "respiratory_gas_substeps": true
+  },
+  "physiology_field_count": 41,
+  "finite_fields": true,
+  "monotone_physical_time": true,
+  "both_inspiration_and_expiration": true,
+  "positive_aortic_and_pulmonary_accumulated_ejection": true,
+  "ranges": {
+    "time_s": {
+      "minimum": 0.00200000009499,
+      "maximum": 20.0000009499,
+      "mean": 10.001000475022064,
+      "final": 20.0000009499
+    },
+    "lung_volume_ml": {
+      "minimum": 2500.00157394,
+      "maximum": 3036.15932353,
+      "mean": 2665.0669111409316,
+      "final": 2500.00250526
+    },
+    "airflow_ml_s": {
+      "minimum": -879.375322256,
+      "maximum": 721.910852008,
+      "mean": 0.000159165559551045,
+      "final": -0.00514184250733
+    },
+    "alveolar_pa": {
+      "minimum": -96.2468795776,
+      "maximum": 117.24041748,
+      "mean": -2.122264798329913e-05,
+      "final": 0.000685522740241
+    },
+    "pleural_pa": {
+      "minimum": -770.048522949,
+      "maximum": -470.302032471,
+      "mean": -571.2702041595444,
+      "final": -490.333068848
+    },
+    "diaphragm_mm": {
+      "minimum": 7.2766248195e-05,
+      "maximum": 20.5969314575,
+      "mean": 6.822038272219649,
+      "final": 0.000100700475741
+    },
+    "rib_mm": {
+      "minimum": -0.0171865615994,
+      "maximum": 2.52428221703,
+      "mean": 0.6263869105453008,
+      "final": 9.80029381026e-06
+    },
+    "PaO2_mmhg": {
+      "minimum": 99.9998245239,
+      "maximum": 103.122550964,
+      "mean": 101.67548092193336,
+      "final": 103.122550964
+    },
+    "PaCO2_mmhg": {
+      "minimum": 38.8828353882,
+      "maximum": 40.0000534058,
+      "mean": 39.23681205597045,
+      "final": 38.9049720764
+    },
+    "SaO2": {
+      "minimum": 0.972220122814,
+      "maximum": 0.974376678467,
+      "mean": 0.973395451456306,
+      "final": 0.974376678467
+    },
+    "oxygen_balance_error_stpd_ml": {
+      "minimum": 0.0,
+      "maximum": 0.000232830643654,
+      "mean": 0.00021716114133610954,
+      "final": 0.000232830643654
+    },
+    "co2_balance_error_stpd_ml": {
+      "minimum": 0.0,
+      "maximum": 0.000465661287308,
+      "mean": 0.0004609813913705874,
+      "final": 0.000465661287308
+    },
+    "breaths": {
+      "minimum": 0.0,
+      "maximum": 3.0,
+      "mean": 1.4656,
+      "final": 3.0
+    },
+    "tidal_ml": {
+      "minimum": 0.0,
+      "maximum": 536.159379408,
+      "mean": 399.3144271430229,
+      "final": 528.915086761
+    },
+    "lv_mmhg": {
+      "minimum": 2.04259314625,
+      "maximum": 114.542005795,
+      "mean": 38.256373554609944,
+      "final": 108.15548052
+    },
+    "rv_mmhg": {
+      "minimum": -1.49151809041,
+      "maximum": 25.2530460337,
+      "mean": 7.14314652918374,
+      "final": 23.1835371494
+    },
+    "aorta_mmhg": {
+      "minimum": 68.4839253686,
+      "maximum": 113.223303787,
+      "mean": 89.84360081187512,
+      "final": 105.421550025
+    },
+    "pulmonary_artery_mmhg": {
+      "minimum": 9.23942366596,
+      "maximum": 23.8556736269,
+      "mean": 14.871564115019885,
+      "final": 21.3228259238
+    },
+    "lv_ml": {
+      "minimum": 59.3917466176,
+      "maximum": 135.111811687,
+      "mean": 101.74050381138818,
+      "final": 78.2567512942
+    },
+    "rv_ml": {
+      "minimum": 78.5850570537,
+      "maximum": 153.912580572,
+      "mean": 113.68734052448826,
+      "final": 95.277930086
+    },
+    "blood_ml": {
+      "minimum": 5149.99870211,
+      "maximum": 5150.00894666,
+      "mean": 5150.003392249333,
+      "final": 5150.00429004
+    },
+    "blood_error_ml": {
+      "minimum": 0.000465661287308,
+      "maximum": 0.00884756445885,
+      "mean": 0.005128234624862927,
+      "final": 0.00884756445885
+    },
+    "aortic_ejected_ml": {
+      "minimum": 0.0,
+      "maximum": 1670.20526715,
+      "mean": 837.1192404249283,
+      "final": 1670.20526715
+    },
+    "pulmonary_ejected_ml": {
+      "minimum": 0.0,
+      "maximum": 1663.76039851,
+      "mean": 831.592222929509,
+      "final": 1663.76039851
+    },
+    "complete_filling_ejection_cycles": {
+      "minimum": 0.0,
+      "maximum": 23.0,
+      "mean": 11.7031,
+      "final": 23.0
+    },
+    "last_lv_stroke_ml": {
+      "minimum": 0.0,
+      "maximum": 74.0071191103,
+      "mean": 69.00798795903816,
+      "final": 70.0404343661
+    },
+    "right_atrium_ml": {
+      "minimum": 23.6140440393,
+      "maximum": 39.8460470024,
+      "mean": 30.272853374663157,
+      "final": 32.8187634295
+    },
+    "left_atrium_ml": {
+      "minimum": 44.2662640125,
+      "maximum": 56.8777359149,
+      "mean": 48.51996370889566,
+      "final": 49.6613829455
+    },
+    "blood_continuity_residual_accum_ml": {
+      "minimum": -0.000514127407314,
+      "maximum": 0.00772794894743,
+      "mean": 0.0033725354015155845,
+      "final": 0.00440459219098
+    },
+    "blood_physical_delta_accum_ml": {
+      "minimum": -0.000545696821064,
+      "maximum": 0.00776162778493,
+      "mean": 0.003381885562703255,
+      "final": 0.00435647962149
+    },
+    "blood_residual_minus_physical_ml": {
+      "minimum": -0.000146578457705,
+      "maximum": 0.000128023883161,
+      "mean": -9.350161187665793e-06,
+      "final": 4.8112569484e-05
+    },
+    "blood_endpoint_minus_physical_ml": {
+      "minimum": -0.00150976120494,
+      "maximum": 0.00139698386192,
+      "mean": -8.872893886291315e-05,
+      "final": -0.000165528035723
+    },
+    "inspired_volume_accum_ml": {
+      "minimum": 0.00461596050272,
+      "maximum": 2124.24100822,
+      "mean": 1260.31794593004,
+      "final": 2124.24100822
+    },
+    "last_inspiration_step": {
+      "minimum": 0.0,
+      "maximum": 7750.0,
+      "mean": 3746.0217,
+      "final": 7750.0
+    },
+    "last_inspiration_time_s": {
+      "minimum": 0.0,
+      "maximum": 15.5000007362,
+      "mean": 7.492043755841347,
+      "final": 15.5000007362
+    },
+    "last_inspiration_volume_accum_ml": {
+      "minimum": 0.0,
+      "maximum": 1598.43368156,
+      "mean": 782.7886428236818,
+      "final": 1598.43368156
+    },
+    "last_complete_breath_inspired_ml": {
+      "minimum": 0.0,
+      "maximum": 536.159262992,
+      "mean": 399.3144888372487,
+      "final": 528.915494215
+    },
+    "respiratory_net_volume_ml": {
+      "minimum": -1.75875072728,
+      "maximum": 1.44382181588,
+      "mean": 3.185419016783122e-07,
+      "final": -1.02836853616e-05
+    },
+    "respiratory_volume_balance_ml": {
+      "minimum": -0.00042665615485,
+      "maximum": 0.000411261857902,
+      "mean": -6.242821239517299e-08,
+      "final": 1.02836853616e-05
+    },
+    "gas_max_donor_fraction": {
+      "minimum": 0.00275228195824,
+      "maximum": 0.0328382886946,
+      "mean": 0.010913964127748933,
+      "final": 0.0237089842558
+    },
+    "respiratory_gas_substeps": {
+      "minimum": 1.0,
+      "maximum": 1.0,
+      "mean": 1.0,
+      "final": 1.0
+    },
+    "step": {
+      "minimum": 1.0,
+      "maximum": 10000.0,
+      "mean": 5000.5,
+      "final": 10000.0
+    },
+    "min_contact_gap_m": {
+      "minimum": -0.000116382354463,
+      "maximum": 1.96681730813e-06,
+      "mean": -2.74658752701956e-06,
+      "final": -2.01507350539e-06
+    },
+    "peak_penetration_m": {
+      "minimum": 0.0,
+      "maximum": 0.000116382354463,
+      "mean": 2.7496994310354554e-06,
+      "final": 2.01507350539e-06
+    },
+    "normal_impulse_ns": {
+      "minimum": 0.0836533382535,
+      "maximum": 6.55574417114,
+      "mean": 1.413048182224481,
+      "final": 1.41101670265
+    },
+    "root_assistance_n": {
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "root_assistance_nm": {
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "mean": 0.0,
+      "final": 0.0
+    },
+    "diaphragm_excitation": {
+      "minimum": 0.0,
+      "maximum": 0.160000011325,
+      "mean": 0.04155438998385291,
+      "final": 0.0
+    },
+    "intercostal_excitation": {
+      "minimum": 0.0,
+      "maximum": 0.100000016391,
+      "mean": 0.025971494828496883,
+      "final": 0.0
+    },
+    "diaphragm_activation": {
+      "minimum": 5.88797047409e-20,
+      "maximum": 0.159989237785,
+      "mean": 0.04341536255432972,
+      "final": 3.15012209534e-15
+    },
+    "intercostal_activation": {
+      "minimum": 3.85797005383e-20,
+      "maximum": 0.0999948233366,
+      "mean": 0.027232915447830953,
+      "final": 2.06161254856e-15
+    },
+    "pre_projection_contact_residual_m_s": {
+      "minimum": 0.0,
+      "maximum": 3.14038115903e-05,
+      "mean": 2.113325770359194e-05,
+      "final": 1.9865379727e-05
+    },
+    "pre_projection_limit_residual_generalized_s": {
+      "minimum": 0.0,
+      "maximum": 1.05139852167e-05,
+      "mean": 3.1390409848461536e-07,
+      "final": 2.80040630685e-08
+    },
+    "pre_projection_equality_residual_generalized_s": {
+      "minimum": 2.38703434796e-09,
+      "maximum": 3.5298783132e-06,
+      "mean": 9.037196538992244e-07,
+      "final": 1.48804974742e-06
+    },
+    "post_projection_contact_residual_m_s": {
+      "minimum": 0.0,
+      "maximum": 3.14038406941e-05,
+      "mean": 2.1133541499276468e-05,
+      "final": 1.98653178813e-05
+    },
+    "post_projection_limit_residual_generalized_s": {
+      "minimum": 0.0,
+      "maximum": 1.05139852167e-05,
+      "mean": 3.1390629667086883e-07,
+      "final": 2.91180146661e-08
+    },
+    "post_projection_equality_residual_generalized_s": {
+      "minimum": 4.06882860737e-13,
+      "maximum": 2.90644379675e-08,
+      "mean": 2.3289803062180046e-10,
+      "final": 3.60800278543e-12
+    },
+    "equality_position_projection_max_generalized": {
+      "minimum": 3.97903932026e-12,
+      "maximum": 1.49011611938e-08,
+      "mean": 8.953244891365054e-09,
+      "final": 1.49011611938e-08
+    },
+    "equality_velocity_projection_max_generalized_s": {
+      "minimum": 1.07287112527e-09,
+      "maximum": 3.51667404175e-06,
+      "mean": 2.1155959244202568e-08,
+      "final": 8.76519834492e-09
+    },
+    "contact_sweeps": {
+      "minimum": 64.0,
+      "maximum": 64.0,
+      "mean": 64.0,
+      "final": 64.0
+    }
+  },
+  "surface_ranges": {
+    "time_s": {
+      "minimum": 0.0,
+      "maximum": 19.9980009499
+    },
+    "step": {
+      "minimum": 0.0,
+      "maximum": 9999.0
+    },
+    "min_skin_bed_gap_m": {
+      "minimum": -0.000106431543827,
+      "maximum": -1.6838312149e-06
+    },
+    "vertices_below_1mm": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "nonfinite_skin_vertices": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "max_functional_volume_relative_error": {
+      "minimum": 5.89367118664e-07,
+      "maximum": 2.61518780462e-05
+    },
+    "q_ra": {
+      "minimum": NaN,
+      "maximum": NaN
+    },
+    "q_rv": {
+      "minimum": NaN,
+      "maximum": NaN
+    },
+    "q_la": {
+      "minimum": NaN,
+      "maximum": NaN
+    },
+    "q_lv": {
+      "minimum": NaN,
+      "maximum": NaN
+    },
+    "ra_target_ml": {
+      "minimum": 23.6635933106,
+      "maximum": 39.8460470024
+    },
+    "rv_target_ml": {
+      "minimum": 78.5850570537,
+      "maximum": 153.819695697
+    },
+    "la_target_ml": {
+      "minimum": 44.2683340225,
+      "maximum": 56.2201712455
+    },
+    "lv_target_ml": {
+      "minimum": 59.3917466176,
+      "maximum": 135.111811687
+    },
+    "diaphragm_swept_ml": {
+      "minimum": 0.0,
+      "maximum": 384.863174986
+    },
+    "rib_swept_ml": {
+      "minimum": -0.810886717773,
+      "maximum": 151.454223669
+    },
+    "lung_target_ml": {
+      "minimum": 2499.99994412,
+      "maximum": 3035.97538732
+    },
+    "body_com_x_m": {
+      "minimum": -0.025273680687,
+      "maximum": -0.0245801880956
+    },
+    "body_com_y_m": {
+      "minimum": -0.756986141205,
+      "maximum": -0.741568863392
+    },
+    "body_com_z_m": {
+      "minimum": 0.103128999472,
+      "maximum": 0.113670229912
+    },
+    "represented_body_mass_kg": {
+      "minimum": 72.0,
+      "maximum": 72.0
+    },
+    "ventricular_wall_bound": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "ventricular_material_ml": {
+      "minimum": 164.01175526,
+      "maximum": 164.013385074
+    },
+    "ventricular_material_target_ml": {
+      "minimum": 164.012890309,
+      "maximum": 164.012890309
+    },
+    "ventricular_closure_mm": {
+      "minimum": NaN,
+      "maximum": NaN
+    },
+    "ventricular_material_status": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "functional_geometry_status": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "common_coordinate_RA": {
+      "minimum": -0.124575033784,
+      "maximum": 0.0823487266898
+    },
+    "common_coordinate_RV": {
+      "minimum": -0.335864007473,
+      "maximum": 0.0583130866289
+    },
+    "common_coordinate_LA": {
+      "minimum": -0.0348238833249,
+      "maximum": 0.0854078456759
+    },
+    "common_coordinate_LV": {
+      "minimum": -0.385752528906,
+      "maximum": 0.0708356425166
+    },
+    "common_coordinate_RA_material": {
+      "minimum": -0.0706370100379,
+      "maximum": 0.0670278519392
+    },
+    "common_coordinate_ventricular_material": {
+      "minimum": -0.0255895387381,
+      "maximum": 0.170620128512
+    },
+    "common_coordinate_LA_material": {
+      "minimum": -0.101830728352,
+      "maximum": 0.0266709644347
+    },
+    "common_coordinate_solver_status": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "common_coordinate_solver_iterations": {
+      "minimum": 1.0,
+      "maximum": 3.0
+    },
+    "common_coordinate_domain_box": {
+      "minimum": 0.0,
+      "maximum": 14.0
+    },
+    "common_coordinate_normalized_residual": {
+      "minimum": 1.19209289551e-07,
+      "maximum": 1.70469284058e-05
+    },
+    "ventricular_closure_mm_applicable": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "mesh_zero_area_triangles": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "mesh_nonfinite_area_triangles": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "mesh_triangles_checked": {
+      "minimum": 4910265.0,
+      "maximum": 4910265.0
+    },
+    "geometry_mode": {
+      "distinct_values": [
+        "common_seven_coordinate_v1"
+      ]
+    }
+  },
+  "displayed_accepted_frames": 314,
+  "pins": {
+    "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/run-metadata.json": "97a5b2043ee95bb73dbee828dab31cae9ddf7c1e10393da1c0658843b8b60b65",
+    "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/invocation.json": "0e14ddaf7c8f0d8a976fd5a13e31b2b6c50f72a1704d14fbf23ef482abdfdb19",
+    "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/resting-coupled.csv": "aa3b6f12f482f09becbdf20185240d9bb27a945df21dd0771096aac0243faffd",
+    "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/resting-surface-audit.csv": "3229920fa2e3d8318aae701e1cd5aa35b92c8a89b099baddc874cc973b8749aa",
+    "/Users/n/numi-human-resting-evidence-20261005/native-composed-resting-cycle-909/native-viewer.mov": "92354f06f496f507d505d62ad272aca790867c8badcc099aef99ac5539373930"
+  }
+}
