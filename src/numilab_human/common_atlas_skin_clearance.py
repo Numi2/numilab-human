@@ -33,6 +33,7 @@ _EXPECTED_CLEARANCE_WITNESS_COUNT = 4448
 _EXPECTED_OCULAR_WITNESS_COUNT = 4415
 _EXPECTED_ORIENTATION_FACE_COUNT = 980
 _OCULAR_MONITOR_KEYS = {(51010, stable_id) for stable_id in range(381, 398)}
+_DIRECTION_SMOOTHING_ITERATIONS = 8
 
 
 def _sha(path: Path) -> str:
@@ -212,7 +213,7 @@ def _triangle_pair_set(audit_row: dict[str, Any]) -> set[tuple[int, int]]:
 
 
 def _smooth_vertex_directions(vertex_normals: np.ndarray, faces: np.ndarray) -> np.ndarray:
-    """Use the existing Human one-pass skin-normal smoother for extension directions.
+    """Use the existing Human skin-normal smoother for extension directions.
 
     The source-winding normals remain the orientation authority. This limited
     visual-normal operation only chooses a smoother displacement direction;
@@ -225,16 +226,17 @@ def _smooth_vertex_directions(vertex_normals: np.ndarray, faces: np.ndarray) -> 
     if not np.isfinite(normals).all() or not np.isfinite(triangles).all():
         raise human.ImportError("direction smoothing received non-finite input")
     smoothed = np.asarray(human._bodyparts_skin_smooth_visual_normals(
-        normals.tolist(), [tuple(int(value) for value in row) for row in triangles], iterations=1,
+        normals.tolist(), [tuple(int(value) for value in row) for row in triangles],
+        iterations=_DIRECTION_SMOOTHING_ITERATIONS,
     ), dtype=np.float64)
     if smoothed.shape != normals.shape or not np.isfinite(smoothed).all():
-        raise human.ImportError("one-pass Human skin normal smoothing returned malformed directions")
+        raise human.ImportError("Human skin normal smoothing returned malformed extension directions")
     lengths = np.linalg.norm(smoothed, axis=1)
     if np.any(lengths <= 1.0e-12):
-        raise human.ImportError("one-pass Human skin normal smoothing became singular")
+        raise human.ImportError("Human skin normal smoothing became singular")
     smoothed /= lengths[:, None]
     if np.any(np.einsum("ij,ij->i", smoothed, normals) <= 0.0):
-        raise human.ImportError("one-pass Human skin normal smoothing reversed a local source normal")
+        raise human.ImportError("Human skin normal smoothing reversed a local source normal")
     return smoothed
 
 
@@ -809,7 +811,8 @@ def derive_step0_inferred_clearance(
             "maximum_common_atlas_source_displacement_mm": float(np.linalg.norm(source_delta, axis=1).max() * 1000.0),
             "maximum_packed_inverse_roundtrip_error_um": float(source_roundtrip.max() * 1.0e6),
             "maximum_jacobian_condition_number": float(condition.max()),
-            "extension_direction_smoothing": "existing Human skin visual-normal smoother, one triangle-neighbor iteration",
+            "extension_direction_smoothing": "existing Human skin visual-normal smoother, eight triangle-neighbor iterations",
+            "extension_direction_smoothing_iterations": _DIRECTION_SMOOTHING_ITERATIONS,
         }
     main_source = source_positions.copy()
     main_source[referenced] = output_source_by_margin[0.25]
@@ -818,7 +821,7 @@ def derive_step0_inferred_clearance(
         "status": "inferred_engineering_clearance_candidate_pending_native_replay",
         "method": {
             "direction": "captured skin source winding, independently classified locally toward lower full-shell winding at every witness face; bone witness normals also point away from the fitted registered owning-body origin",
-            "extension_direction_smoothing": "one iteration of the existing Human skin visual-normal smoother over the original triangle one-ring; it only selects the inferred extension direction, while original face winding remains the anatomical outward classifier and every seed face retains at least 0.8 extension-direction dot",
+            "extension_direction_smoothing": "eight iterations of the existing Human skin visual-normal smoother over original triangle adjacency; it only selects the inferred extension direction, while original face winding remains the anatomical outward classifier and every seed face retains at least 0.8 extension-direction dot. The eight-ring orientation influence is broader than a single edge and is an explicit candidate limitation.",
             "finite_pair_demand": "minimum outward translation along the captured skin face normal that makes the finite skin and target triangles separate in at least one separating-axis interval; this avoids treating all three opponent vertices as if they overlapped the skin-face footprint",
             "field": "same compact geodesic smootherstep field for all margins: each witnessed finite triangle pair receives its first outward normal translation that separates the pair under the triangle separating-axis intervals, plus the selected engineering translation parameter; max seed envelope over geodesic distance on the original skin mesh; the manifest records the selected multiple of the median local edge length as the support radius",
             "inverse_map": "per referenced vertex solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, all unchanged source weights, and 86 accepted body rotations recovered independently from all 185 exact-topology registered bone surfaces",
