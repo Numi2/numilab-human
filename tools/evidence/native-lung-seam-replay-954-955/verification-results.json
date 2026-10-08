@@ -1,0 +1,224 @@
+{
+  "case_sha256": "1fb60081d5626dae50bdd66ddeacbbf54d80e25f38bb6c10c186d6575dc2aed6",
+  "classification_input_labels_are_path_hash_bound": {
+    "case_sha256": "0dcc703d89b04beafac9a2688d5a98eecb7e98ccf365daa04ef4792097f08eaf",
+    "classification_sha256": "f6201033d9d8919b6c28c029c60a1598f6caff331b376ea4c034412987108aa7",
+    "report_sha256": "4d837b37db785ac67976afac3df3acf6d50a8eeaf5c59949a82e181041aee9e4",
+    "witness_count": 25
+  },
+  "direct_lobe_pair_witness": {
+    "case_sha256": "db4eb725370fa9cd31c03e859a36484a86bd64132543c5ff9e86f84208591bf1",
+    "direct_lobe_pair": {
+      "binary64_map_relation": {
+        "classification": "disjoint",
+        "hit": false,
+        "points": 0,
+        "span_m_diagnostic": 0.0
+      },
+      "capture_to_replay_per_face_l1_upper_m": [
+        2.003233914166236e-08,
+        2.5533022231238878e-08
+      ],
+      "captured_exact_hit_is_not_waived": true,
+      "captured_native_relation": {
+        "classification": "multi_point_intersection",
+        "hit": true,
+        "points": 2,
+        "span_m_diagnostic": 2.5401030573445444e-08
+      },
+      "face_ids": [
+        40167,
+        46144
+      ],
+      "faces": [
+        {
+          "face_id": 40167,
+          "native_global_vertex_ids_in_face_order": [
+            1289679,
+            1289678,
+            1289677
+          ],
+          "nha_face_order_sha256": "b5facb295f2a1e6f8a8f1b2b1b0f2b85da4506c02dd6e8d6edd8ae986306453a",
+          "nha_vertex_ids_in_face_order": [
+            21522,
+            21521,
+            21520
+          ],
+          "owner": 305,
+          "source_body_index": 20
+        },
+        {
+          "face_id": 46144,
+          "native_global_vertex_ids_in_face_order": [
+            1401379,
+            1401378,
+            1401377
+          ],
+          "nha_face_order_sha256": "54fe56221a39385180d1a6b32732ade6e2ca23fa0a1385700169fd3ee9840e1b",
+          "nha_vertex_ids_in_face_order": [
+            24333,
+            24332,
+            24331
+          ],
+          "owner": 308,
+          "source_body_index": 20
+        }
+      ],
+      "ideal_gap_within_l1_envelope_diagnostic": true,
+      "ideal_pair_distance_diagnostic_m": 5.149505666901496e-09,
+      "kind": "lobe_pair",
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_capture_to_replay_l1_upper_m": 4.5565361372901236e-08,
+      "pleura_face_ids": null,
+      "pleura_parent_coordinate_matches": null,
+      "source_relation": {
+        "classification": "disjoint",
+        "hit": false,
+        "points": 0,
+        "span_m_diagnostic": 0.0
+      },
+      "vertices": [
+        {
+          "binary64_replay_world_m": [
+            0.03588981533562615,
+            -0.39526201534709376,
+            0.09761871027354681
+          ],
+          "capture_to_replay_euclidean_diagnostic_m": 1.352586504606262e-08,
+          "capture_to_replay_l1_upper_m": 2.003233914166236e-08,
+          "captured_world_f32_m": [
+            0.035889819264411926,
+            -0.3952620029449463,
+            0.0976187139749527
+          ],
+          "face_corner": 0,
+          "owner": 305
+        },
+        {
+          "binary64_replay_world_m": [
+            0.035902398455438876,
+            -0.3952263060489888,
+            0.09758644485312111
+          ],
+          "capture_to_replay_euclidean_diagnostic_m": 1.0586382599398541e-08,
+          "capture_to_replay_l1_upper_m": 1.7005089204824575e-08,
+          "captured_world_f32_m": [
+            0.035902395844459534,
+            -0.39522629976272583,
+            0.09758645296096802
+          ],
+          "face_corner": 1,
+          "owner": 305
+        },
+        {
+          "binary64_replay_world_m": [
+            0.035902063201755006,
+            -0.39522624243038784,
+            0.09758654181421823
+          ],
+          "capture_to_replay_euclidean_diagnostic_m": 3.5220581744052865e-09,
+          "capture_to_replay_l1_upper_m": 5.459446068833973e-09,
+          "captured_world_f32_m": [
+            0.03590206056833267,
+            -0.39522624015808105,
+            0.09758654236793518
+          ],
+          "face_corner": 2,
+          "owner": 305
+        },
+        {
+          "binary64_replay_world_m": [
+            0.03588882074513056,
+            -0.39526180593876653,
+            0.09761900342789868
+          ],
+          "capture_to_replay_euclidean_diagnostic_m": 1.524838926916581e-08,
+          "capture_to_replay_l1_upper_m": 2.5533022231238878e-08,
+          "captured_world_f32_m": [
+            0.035888828337192535,
+            -0.3952617943286896,
+            0.09761899709701538
+          ],
+          "face_corner": 0,
+          "owner": 308
+        },
+        {
+          "binary64_replay_world_m": [
+            0.035877723880983405,
+            -0.3952213490865886,
+            0.09759399834332602
+          ],
+          "capture_to_replay_euclidean_diagnostic_m": 7.764865388339846e-09,
+          "capture_to_replay_l1_upper_m": 1.3244875647633325e-08,
+          "captured_world_f32_m": [
+            0.03587771952152252,
+            -0.3952213525772095,
+            0.0975939929485321
+          ],
+          "face_corner": 1,
+          "owner": 308
+        },
+        {
+          "binary64_replay_world_m": [
+            0.03619865702114496,
+            -0.3953268648923649,
+            0.09752966773151053
+          ],
+          "capture_to_replay_euclidean_diagnostic_m": 1.3032170094773454e-08,
+          "capture_to_replay_l1_upper_m": 1.893016520621016e-08,
+          "captured_world_f32_m": [
+            0.036198653280735016,
+            -0.3953268527984619,
+            0.09752966463565826
+          ],
+          "face_corner": 2,
+          "owner": 308
+        }
+      ]
+    },
+    "report_sha256": "50e16ebe481388f2ee67653861440cf3dba6d7f9a34849a31c1c2c84ef421e73",
+    "witness_count": 26
+  },
+  "external_retained_inputs": {
+    "checked_external_input_count": 13,
+    "retained_index_sha256": "1dc94623eed5043210fedc1f5d7a83e38467100a6cfddc3ab08394772d9e13d2"
+  },
+  "limits": [
+    "Tests use the known 952 terminal capture and witnesses only.",
+    "This offline replay does not qualify other captures or change exact-intersection acceptance."
+  ],
+  "runner_sha256": "c3805be8829cf826bc7ba2a6827d826004faad46e0e0af4c6d1d082c3a4d4466",
+  "schema": "numi.human.parameterized-lobe-seam-replay-verification.v1",
+  "status": "passed",
+  "successful_replay_comparison": {
+    "all_l1_bounds_dominate_euclidean_diagnostics": true,
+    "all_pleura_parent_lineage_coordinates_exact": true,
+    "binary64_relations": {
+      "disjoint": 17,
+      "single_point_contact": 8
+    },
+    "captured_exact_hits": 25,
+    "max_euclidean_diagnostic_delta_vs_952_m": 0.0,
+    "source_relations": {
+      "disjoint": 17,
+      "single_point_contact": 8
+    },
+    "witnesses": 25
+  },
+  "successful_replay_sha256": "cd906c2a4d8f5d3e24f16bd5d7786435ba2851d9311cde0ab69f5439413f0196",
+  "wrong_identity_rejections": {
+    "capture": {
+      "expected_rejection": "full scan pack/receipt identity differs",
+      "output": "replay rejected: ValueError: full scan pack/receipt identity differs from case",
+      "returncode": 2
+    },
+    "source": {
+      "expected_rejection": "source_nha SHA-256 mismatch",
+      "output": "replay rejected: ValueError: source_nha SHA-256 mismatch: expected 0000000000000000000000000000000000000000000000000000000000000000, got 3c444be7736c066a992988cc32b687917e1c4c5c3968a16b4d5f0106d5b5024e",
+      "returncode": 2
+    }
+  }
+}
