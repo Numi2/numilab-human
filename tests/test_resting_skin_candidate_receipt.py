@@ -25,8 +25,8 @@ def _fixture(tmp_path):
     base_receipt_path.write_text("{}")
     candidate_manifest_path = tmp_path / "candidate-manifest.json"
     candidate_manifest = {
-        "schema": "numi.human.skin-lower-limb-anchor-rebind-candidate.v1",
-        "status": "source_identity_preserved_visual_skin_candidate_pending_native_geometry_audit",
+        "schema": "numi.human.common-atlas-skin-geometry-registration.v1",
+        "status": "inferred_common_atlas_geometry_candidate_pending_native_clearance_and_pose_checks",
         "inputs": {
             "source_payload": {"path": str(base_skin), "sha256": skin_sha},
             "registration_sha256": "reg-sha",
@@ -34,7 +34,7 @@ def _fixture(tmp_path):
         },
         "output_payload": {"path": str(candidate_skin), "sha256": candidate_sha},
         "nhtiss4_owner_alignment": {"present_lower_limb_owner_records_byte_exact": True},
-        "preservation": {"triangle_indices_and_order_byte_identical": True},
+        "preservation": {"triangle_indices_and_order_byte_identical": True, "all_86_canonical_binding_records_byte_identical": True, "full_weight_matrix_byte_identical": True},
         "changed_skin_regions": {"combined_geometry": {"dominant_anatomical_region_breakdown": {"torso": {"maximum": 0.01}}}},
     }
     candidate_manifest_path.write_text(json.dumps(candidate_manifest))
@@ -98,6 +98,44 @@ def test_skin_replacement_does_not_present_old_native_anchor_as_current(tmp_path
         assert "selected_skin_vertex_count" not in current
         assert skin_provenance["historical_thorax_candidate_runtime_anchor"] == anchor
         assert skin_provenance["inherited_native_geometry_audits_cover_candidate_skin"] is False
+
+def test_common_atlas_composition_requires_runtime_rest_binding_certificate(tmp_path):
+    base, base_path, candidate, candidate_path, candidate_skin, _, _ = _fixture(tmp_path)
+    base_path.write_text(json.dumps(base))
+    (tmp_path / "resting-anatomy-manifest.json").write_text(json.dumps({
+        "receipt": {"path": str(base_path.resolve()), "sha256": hashlib.sha256(base_path.read_bytes()).hexdigest()},
+    }))
+    with pytest.raises(ValueError, match="global-atlas/runtime-rest binding validation"):
+        resting_anatomy.compose_skin_binding_candidate(
+            base_path, candidate_skin, candidate_path, tmp_path / "uncertified-output",
+        )
+    assert not (tmp_path / "uncertified-output").exists()
+
+
+def test_per_owner_rebind_receipt_is_not_admitted_as_skin_repair(tmp_path):
+    base, base_path, candidate, candidate_path, candidate_skin, mass, _ = _fixture(tmp_path)
+    base = {
+        "schema": "numi.human.resting-anatomy-receipt.v1",
+        "payload": {"path": str(tmp_path / "anatomy.nhanatomy"), "sha256": "anatomy-sha"},
+        "functional_bindings": {"anatomy_payload_sha256": "anatomy-sha"},
+        "mass_geometry_accounting": {"skin_payload_path": str(tmp_path / "base.nhskin"), "skin_payload_sha256": hashlib.sha256((tmp_path / "base.nhskin").read_bytes()).hexdigest()},
+        "provenance": {"rigid_payload_sha256": "rigid-sha", "bodyparts_registration_sha256": "reg-sha"},
+    }
+    base_path.write_text(json.dumps(base))
+    base_manifest_path = base_path.with_name("resting-anatomy-manifest.json")
+    base_manifest_path.write_text(json.dumps({
+        "receipt": {"path": str(base_path.resolve()), "sha256": hashlib.sha256(base_path.read_bytes()).hexdigest()},
+    }))
+    candidate["schema"] = "numi.human.skin-lower-limb-anchor-rebind-candidate.v1"
+    candidate["status"] = "source_identity_preserved_visual_skin_candidate_pending_native_geometry_audit"
+    candidate_path.write_text(json.dumps(candidate))
+    output = tmp_path / "legacy-output"
+    with pytest.raises(ValueError, match="not production-qualified"):
+        resting_anatomy.compose_skin_binding_candidate(
+            base_path, candidate_skin, candidate_path, output,
+        )
+    assert not output.exists()
+
 
 
 def test_skin_candidate_receipt_rejects_source_or_rigid_identity_mismatch(tmp_path):
@@ -165,15 +203,25 @@ def test_skin_candidate_composes_receipt_only_lineage_without_mutating_anatomy(t
     base["provenance"]["cardiac_geometry_binding"] = {"common_field": common_field}
     base_receipt_path.write_text(json.dumps(base))
     candidate_manifest = {
-        "schema": "numi.human.skin-lower-limb-anchor-rebind-candidate.v1",
-        "status": "pending_native_geometry_audit",
+        "schema": "numi.human.common-atlas-skin-geometry-registration.v1",
+        "status": "inferred_common_atlas_geometry_candidate_pending_native_clearance_and_pose_checks",
         "inputs": {
             "source_payload": {"path": str(source_skin), "sha256": source_skin_sha},
             "registration_sha256": "registration-sha",
             "runtime_reference": {"rigid": {"sha256": "rigid-sha"}},
+            "canonical_binding_reference": {"sha256": "canonical-sha"},
+        },
+        "common_atlas_binding_runtime_rest_validation": {
+            "schema": "numi.human.common-atlas-binding-runtime-rest-validation.v1",
+            "canonical_binding_reference_sha256": "canonical-sha",
+            "binding_count": 86,
+            "all_86_bindings_match_global_atlas_through_runtime_rest": True,
+            "maximum_translation_error_m": 0.0,
+            "maximum_linear_transform_max_abs_error": 0.0,
+            "checks": [{"passed": True} for _ in range(86)],
         },
         "output_payload": {"path": str(candidate_skin), "sha256": candidate_skin_sha},
-        "preservation": {"indices_unchanged": True},
+        "preservation": {"indices_unchanged": True, "all_86_canonical_binding_records_byte_identical": True, "full_weight_matrix_byte_identical": True},
         "changed_skin_regions": {"combined_geometry": {"dominant_anatomical_region_breakdown": {"legs": {"maximum": 0.1}}}},
     }
     candidate_manifest_path = tmp_path / "candidate-manifest.json"

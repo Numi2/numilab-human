@@ -358,49 +358,15 @@ def _verify_nhtiss_owner_alignment(*, tissue_payload_path, tissue_manifest_path,
 
 
 def rebind_registered_lower_limb_skin_payload(*, source_payload, registration_path, myosim_artifact, output_directory, input_provenance_path=None, tissue_payload_path, tissue_manifest_path, owner_comparison_report_path):
-    source_payload = Path(source_payload).resolve()
-    registration_path = Path(registration_path).resolve()
-    myosim_artifact = Path(myosim_artifact).resolve()
-    output_directory = Path(output_directory).resolve()
-    tissue_payload_path = Path(tissue_payload_path).resolve()
-    tissue_manifest_path = Path(tissue_manifest_path).resolve()
-    owner_comparison_report_path = Path(owner_comparison_report_path).resolve()
-    if not source_payload.is_file() or not registration_path.is_file():
-        raise human.ImportError("skin anchor rebind requires existing source payload and registration files")
-    if output_directory == source_payload.parent or source_payload in output_directory.parents:
-        raise human.ImportError("skin anchor rebind output must be a separate new asset path")
-    output_directory.mkdir(parents=True, exist_ok=True)
-    output_payload = output_directory / source_payload.name
-    output_manifest = output_directory / "skin-lower-limb-anchor-rebind.manifest.json"
-    if output_payload.exists() or output_manifest.exists():
-        raise human.ImportError("skin anchor rebind refuses to overwrite an existing candidate asset")
-    registration = human.read_json(registration_path)
-    if registration.get("schema") != REGISTRATION_SCHEMA:
-        raise human.ImportError("skin anchor rebind requires a BodyParts3D/Myosim v2 registration")
-    raw = source_payload.read_bytes()
-    registration_sha = human.sha256(registration_path)
-    decoded = decode_payload(raw)
-    if decoded["registration_fingerprint32"] != int(registration_sha[:8], 16):
-        raise human.ImportError("skin anchor rebind input registration fingerprint differs from full registration SHA")
-    owner_comparison = _verify_owner_mismatch_report(report_path=owner_comparison_report_path, source_payload_path=source_payload, registration_path=registration_path, source_payload_sha256=_sha_bytes(raw), registration_sha256=registration_sha, registration=registration)
-    runtime_reference, runtime_bodies = human._bodyparts_runtime_bindings(registration, myosim_artifact)
-    candidate, manifest = _derive_candidate_bytes(raw, registration, registration_sha, runtime_reference, runtime_bodies)
-    tissue_alignment = _verify_nhtiss_owner_alignment(tissue_payload_path=tissue_payload_path, tissue_manifest_path=tissue_manifest_path, registration_sha256=registration_sha, source_archive_sha256=decoded["source_archive_sha256"], registration_fingerprint32=decoded["registration_fingerprint32"], candidate_skin=candidate, registration=registration)
-    manifest["inputs"]["nhtiss4_reference"] = {"payload_path": tissue_alignment["nhtiss_payload_path"], "payload_sha256": tissue_alignment["nhtiss_payload_sha256"], "manifest_path": tissue_alignment["nhtiss_manifest_path"], "manifest_sha256": tissue_alignment["nhtiss_manifest_sha256"]}
-    manifest["nhtiss4_owner_alignment"] = tissue_alignment
-    manifest["inputs"]["skin_bone_owner_comparison"] = owner_comparison
-    if input_provenance_path is not None:
-        input_provenance_path = Path(input_provenance_path).resolve()
-        provenance = human.read_json(input_provenance_path)
-        derived = provenance.get("derived_skin", {})
-        if derived.get("sha256") != _sha_bytes(raw):
-            raise human.ImportError("skin anchor rebind input does not match its declared derived-skin provenance")
-        manifest["inputs"]["upstream_skin_provenance"] = {"path": str(input_provenance_path), "sha256": human.sha256(input_provenance_path), "recorded_source_skin": provenance.get("source_skin"), "recorded_derived_skin": derived}
-    output_payload.write_bytes(candidate)
-    manifest["inputs"]["source_payload"] = {"path": str(source_payload), "sha256": _sha_bytes(raw), "bytes": len(raw)}
-    manifest["output_payload"] = {"path": str(output_payload), "sha256": _sha_bytes(candidate), "bytes": len(candidate)}
-    manifest["output_manifest"] = str(output_manifest)
-    human.write_json(output_manifest, manifest)
-    if output_payload.stat().st_size != source_payload.stat().st_size:
-        raise human.ImportError("skin anchor rebind changed payload byte count")
-    return manifest
+    """Deprecated: individual lower-limb owner replacement violates NHSKIN's common atlas.
+
+    Keep the private byte derivation and historical evidence readers available
+    for reproducibility. New production candidates must preserve all canonical
+    binding records and derive source-registered geometry in the shared atlas.
+    """
+    raise human.ImportError(
+        "individual lower-limb NHSKIN binding replacement is deprecated and "
+        "cannot be production-qualified: NHSKIN is authored in one shared "
+        "atlas frame. Use common-atlas source-geometry registration while "
+        "preserving all 86 canonical binding records."
+    )

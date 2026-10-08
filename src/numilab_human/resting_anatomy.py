@@ -102,45 +102,88 @@ def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_mani
         source_sha = hashlib.sha256(SKIN_SOURCE_PATH.read_bytes()).hexdigest()
     else:
         skin_rebind_manifest_path = Path(skin_rebind_manifest_path).resolve()
-        rebind_manifest = json.loads(skin_rebind_manifest_path.read_text())
-        if rebind_manifest.get('schema') != 'numi.human.skin-lower-limb-anchor-rebind-candidate.v1':
-            raise ValueError('unsupported NHSKIN binding-rebind manifest')
-        emitted = rebind_manifest.get('output_payload', {})
+        registration_manifest = json.loads(skin_rebind_manifest_path.read_text())
+        if (registration_manifest.get('schema') != 'numi.human.common-atlas-skin-geometry-registration.v1'
+                or registration_manifest.get('status') != 'inferred_common_atlas_geometry_candidate_pending_native_clearance_and_pose_checks'):
+            raise ValueError(
+                'individual per-owner NHSKIN binding replacement is not production-qualified; '
+                'only source-registered geometry candidates preserving canonical common-atlas bindings are admissible'
+            )
+        preservation = registration_manifest.get('preservation', {})
+        atlas_validation = registration_manifest.get('common_atlas_binding_runtime_rest_validation', {})
+        if (preservation.get('all_86_canonical_binding_records_byte_identical') is not True
+                or preservation.get('full_weight_matrix_byte_identical') is not True
+                or preservation.get('triangle_indices_and_order_byte_identical') is not True
+                or preservation.get('per_vertex_influence_records_byte_identical') is not True
+                or atlas_validation.get('binding_count') != 86
+                or atlas_validation.get('all_86_bindings_match_global_atlas_through_runtime_rest') is not True):
+            raise ValueError('common-atlas NHSKIN candidate lacks exact canonical binding/runtime-rest preservation')
+        emitted = registration_manifest.get('output_payload', {})
         if (Path(emitted.get('path', '')).resolve() != skin_path
                 or emitted.get('sha256') != skin['sha256']
                 or emitted.get('bytes') != len(skin['raw'])):
-            raise ValueError('NHSKIN binding-rebind manifest does not bind the candidate payload')
-        inputs = rebind_manifest.get('inputs', {})
-        source = inputs.get('source_payload', {})
+            raise ValueError('common-atlas geometry manifest does not bind the candidate payload')
+        inputs = registration_manifest.get('inputs', {})
+        immediate = inputs.get('source_payload', {})
+        canonical = inputs.get('canonical_binding_reference', {})
         upstream = inputs.get('upstream_skin_provenance', {})
-        if not isinstance(source.get('path'), str) or not isinstance(source.get('sha256'), str):
-            raise ValueError('NHSKIN binding-rebind manifest lacks its source payload identity')
-        repair_path = Path(upstream.get('path', '')).resolve()
-        if (not repair_path.is_file()
-                or hashlib.sha256(repair_path.read_bytes()).hexdigest() != upstream.get('sha256')):
-            raise ValueError('NHSKIN binding-rebind upstream repair receipt identity differs')
+        if (not isinstance(immediate.get('path'), str) or not isinstance(immediate.get('sha256'), str)
+                or not isinstance(canonical.get('path'), str) or not isinstance(canonical.get('sha256'), str)
+                or not isinstance(canonical.get('provenance_path'), str)
+                or not isinstance(canonical.get('provenance_sha256'), str)):
+            raise ValueError('common-atlas geometry manifest lacks immediate or canonical NHSKIN provenance')
+        immediate_path = Path(immediate['path']).resolve()
+        canonical_path = Path(canonical['path']).resolve()
+        repair_path = Path(canonical['provenance_path']).resolve()
+        for path, expected, label in (
+            (immediate_path, immediate['sha256'], 'immediate NHSKIN template'),
+            (canonical_path, canonical['sha256'], 'canonical NHSKIN reference'),
+            (repair_path, canonical['provenance_sha256'], 'canonical NHSKIN boundary-repair receipt'),
+        ):
+            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                raise ValueError(f'common-atlas {label} identity is stale')
         repair = json.loads(repair_path.read_text())
         derived = repair.get('derived_skin', {})
-        if (derived.get('path') != source['path'] or derived.get('sha256') != source['sha256']
-                or not Path(source['path']).is_file()
-                or hashlib.sha256(Path(source['path']).read_bytes()).hexdigest() != source['sha256']):
-            raise ValueError('NHSKIN binding-rebind source differs from its upstream repair receipt')
-        source_record = repair.get('source_skin', {})
-        source_path = Path(source_record.get('path', '')).resolve()
-        source_sha = source_record.get('sha256')
-        if (not source_path.is_file() or not isinstance(source_sha, str)
-                or hashlib.sha256(source_path.read_bytes()).hexdigest() != source_sha):
-            raise ValueError('NHSKIN binding-rebind original source identity differs')
+        if (Path(derived.get('path', '')).resolve() != canonical_path
+                or derived.get('sha256') != canonical['sha256']):
+            raise ValueError('common-atlas canonical NHSKIN reference differs from its exact boundary-repair receipt')
+        source_path = canonical_path
+        source_sha = canonical['sha256']
         runtime = inputs.get('runtime_reference', {})
         rigid_record = runtime.get('rigid', {})
         if (rigid_record.get('sha256') != rigid['sha256']
                 or Path(rigid_record.get('file', '')).resolve() != RIGID_PATH.resolve()):
-            raise ValueError('NHSKIN binding-rebind rigid runtime identity differs')
-        registration_sha = inputs.get('registration_sha256')
-        if registration_sha != hashlib.sha256(REGISTRATION_PATH.read_bytes()).hexdigest():
-            raise ValueError('NHSKIN binding-rebind registration identity differs')
-        if rebind_manifest.get('payload_identity', {}).get('source_archive_sha256') != rigid['source_sha256']:
-            raise ValueError('NHSKIN binding-rebind source archive differs from NHRIGID2')
+            raise ValueError('common-atlas geometry runtime rigid identity differs')
+        if inputs.get('registration_sha256') != hashlib.sha256(REGISTRATION_PATH.read_bytes()).hexdigest():
+            raise ValueError('common-atlas geometry registration identity differs')
+        if registration_manifest.get('payload_identity', {}).get('source_archive_sha256') != rigid['source_sha256']:
+            raise ValueError('common-atlas geometry source archive differs from NHRIGID2')
+        source_route = immediate.get('route')
+        if source_route == 'retained_004_invalid_binding_candidate_geometry_template_only':
+            immediate_manifest_path = Path(upstream.get('immediate_source_path', '')).resolve()
+            immediate_manifest_sha = upstream.get('immediate_source_sha256')
+            immediate_record = upstream.get('immediate_source_record', {})
+            if (not immediate_manifest_path.is_file() or not isinstance(immediate_manifest_sha, str)
+                    or hashlib.sha256(immediate_manifest_path.read_bytes()).hexdigest() != immediate_manifest_sha
+                    or Path(immediate_record.get('path', '')).resolve() != immediate_path
+                    or immediate_record.get('sha256') != immediate['sha256']):
+                raise ValueError('retained 004 template lacks its hash-current immediate manifest')
+            immediate_doc = json.loads(immediate_manifest_path.read_text())
+            if (immediate_doc.get('schema') != 'numi.human.skin-lower-limb-anchor-rebind-candidate.v1'
+                    or immediate_doc.get('output_payload', {}).get('path') != str(immediate_path)
+                    or immediate_doc.get('output_payload', {}).get('sha256') != immediate['sha256']):
+                raise ValueError('retained 004 geometry template is not bound by its explicit invalid-candidate manifest')
+            from .skin_source_payload_preflight import decode_payload
+            immediate_decoded = decode_payload(immediate_path.read_bytes())
+            canonical_decoded = decode_payload(canonical_path.read_bytes())
+            for name, left, right in (
+                ('positions', immediate_decoded['vertices_u'][:, :3], canonical_decoded['vertices_u'][:, :3]),
+                ('full weights', immediate_decoded['full_weights'], canonical_decoded['full_weights']),
+                ('triangle indices', immediate_decoded['indices'], canonical_decoded['indices']),
+                ('per-vertex influences', immediate_decoded['vertices_u'][:, 6:14], canonical_decoded['vertices_u'][:, 6:14]),
+            ):
+                if not np.array_equal(left, right):
+                    raise ValueError(f'retained 004 geometry template differs from canonical NHSKIN in {name}')
     world_vertices, _, _ = source_shell_world(rigid, skin)
     raw = skin['raw']
     _, _, binding_count, vertex_count, index_count, _, _ = struct.unpack_from(
@@ -854,6 +897,123 @@ def _copy_checked_sidecar(source: Path, destination: Path, expected_sha256: str)
         raise ValueError(f"relocated cardiac sidecar identity differs: {destination}")
 
 
+
+def _verify_common_atlas_skin_binding_records(candidate_skin: bytes, canonical_reference_path: Path, canonical_reference_sha256: str, registration: dict) -> dict:
+    """Verify exact canonical NHSKIN records and owner IDs without equating owner frames."""
+    from .skin_source_payload_preflight import decode_payload
+
+    canonical_reference_path = Path(canonical_reference_path).resolve()
+    if not canonical_reference_path.is_file():
+        raise human.ImportError("common-atlas canonical NHSKIN reference is missing")
+    canonical_raw = canonical_reference_path.read_bytes()
+    if hashlib.sha256(canonical_raw).hexdigest() != canonical_reference_sha256:
+        raise human.ImportError("common-atlas canonical NHSKIN reference hash differs")
+    candidate = decode_payload(candidate_skin)
+    canonical = decode_payload(canonical_raw)
+    if candidate["binding_count"] != 86 or canonical["binding_count"] != 86:
+        raise human.ImportError("common-atlas skin must retain all 86 canonical body bindings")
+    binding_bytes = 36 * int(candidate["binding_count"])
+    if candidate_skin[60:60 + binding_bytes] != canonical_raw[60:60 + binding_bytes]:
+        raise human.ImportError("candidate NHSKIN binding transforms differ from canonical shared-atlas records")
+    if not np.array_equal(candidate["bindings_u"][:, 0], canonical["bindings_u"][:, 0]):
+        raise human.ImportError("candidate NHSKIN owner identity differs from canonical shared-atlas records")
+    if not np.array_equal(candidate["full_weights"], canonical["full_weights"]):
+        raise human.ImportError("candidate NHSKIN weights differ from canonical shared-atlas records")
+    registered_ids = {int(anchor["target"]["core_body_index"]) for anchor in registration.get("anchors", []) if isinstance(anchor, dict) and isinstance(anchor.get("target"), dict)}
+    skin_ids = {int(value) for value in candidate["bindings_u"][:, 0]}
+    if len(registered_ids) != 86 or skin_ids != registered_ids:
+        raise human.ImportError("candidate NHSKIN Core body identities do not match the exact registered owner set")
+    return {
+        "schema": "numi.human.common-atlas-skin-binding-identity.v1",
+        "canonical_reference_path": str(canonical_reference_path),
+        "canonical_reference_sha256": canonical_reference_sha256,
+        "binding_count": int(candidate["binding_count"]),
+        "body_indices": sorted(skin_ids),
+        "binding_record_bytes_exact": True,
+        "full_weight_matrix_exact": True,
+        "registered_owner_id_set_exact": True,
+        "owner_transform_equality_to_NHTISS4": "not required or asserted; NHSKIN records remain in their canonical shared-atlas coordinate convention",
+    }
+
+
+def _verify_nhtiss_common_atlas_source_identity(*, tissue_payload_path: Path, tissue_manifest_path: Path,
+                                                registration_sha256: str, source_archive_sha256: str,
+                                                registration_fingerprint32: int, rigid_payload_sha256: str,
+                                                candidate_skin: bytes, canonical_reference_path: Path,
+                                                canonical_reference_sha256: str, registration: dict) -> dict:
+    """Check NHTISS source/body identity while keeping its owner maps distinct from NHSKIN atlas binds."""
+    tissue_payload_path = Path(tissue_payload_path).resolve()
+    tissue_manifest_path = Path(tissue_manifest_path).resolve()
+    if not tissue_payload_path.is_file() or not tissue_manifest_path.is_file():
+        raise human.ImportError("common-atlas composition requires the registered NHTISS4 payload and manifest")
+    tissue_raw = tissue_payload_path.read_bytes()
+    tissue_doc = human.read_json(tissue_manifest_path)
+    tissue_identity = tissue_doc.get("payload", {})
+    source_identity = tissue_doc.get("source", {})
+    if tissue_doc.get("schema") != "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1":
+        raise human.ImportError("common-atlas composition NHTISS4 manifest schema differs")
+    if (tissue_identity.get("file") != tissue_payload_path.name
+            or tissue_identity.get("sha256") != hashlib.sha256(tissue_raw).hexdigest()
+            or source_identity.get("registration", {}).get("sha256") != registration_sha256
+            or source_identity.get("myosim_source_archive_sha256") != source_archive_sha256
+            or tissue_identity.get("registration_fingerprint32") != f"{registration_fingerprint32:08x}"):
+        raise human.ImportError("NHTISS4 source, registration, or payload identity differs from common-atlas NHSKIN")
+    if len(tissue_raw) < 64:
+        raise human.ImportError("NHTISS4 payload header is truncated")
+    magic, abi, surface_count, binding_count, vertex_count, index_count, fingerprint, source_digest = struct.unpack_from("<8s6I32s", tissue_raw)
+    expected_bytes = 64 + surface_count * 32 + binding_count * 36 + vertex_count * 56 + index_count * 4
+    if (magic != b"NHTISS4\0" or abi != 5 or len(tissue_raw) != expected_bytes
+            or fingerprint != registration_fingerprint32 or source_digest.hex() != source_archive_sha256):
+        raise human.ImportError("NHTISS4 payload ABI or source identity differs")
+    if (tissue_identity.get("surface_count") != surface_count or tissue_identity.get("binding_count") != binding_count
+            or tissue_identity.get("vertex_count") != vertex_count or tissue_identity.get("index_count") != index_count):
+        raise human.ImportError("NHTISS4 payload dimensions differ from its manifest")
+
+    from .resting_scene import load_rigid
+    rigid = load_rigid(RIGID_PATH)
+    if rigid["sha256"] != rigid_payload_sha256 or rigid["source_sha256"] != source_archive_sha256:
+        raise human.ImportError("common-atlas rigid body identity differs from the anatomy receipt")
+    binding_identity = _verify_common_atlas_skin_binding_records(
+        candidate_skin, canonical_reference_path, canonical_reference_sha256, registration,
+    )
+    nhtiss_offset = 64 + surface_count * 32
+    nhtiss_body_ids = []
+    exact_record_counts = {}
+    canonical_raw = Path(canonical_reference_path).read_bytes()
+    from .skin_source_payload_preflight import decode_payload
+    canonical_decoded = decode_payload(canonical_raw)
+    skin_records = {int(body_id): canonical_raw[60 + index * 36:60 + (index + 1) * 36]
+                    for index, body_id in enumerate(canonical_decoded["bindings_u"][:, 0])}
+    for row in range(binding_count):
+        offset = nhtiss_offset + row * 36
+        body_id = struct.unpack_from("<I", tissue_raw, offset)[0]
+        nhtiss_body_ids.append(body_id)
+        exact_record_counts.setdefault(body_id, [0, 0])
+        if body_id in skin_records and tissue_raw[offset:offset + 36] == skin_records[body_id]:
+            exact_record_counts[body_id][0] += 1
+        else:
+            exact_record_counts[body_id][1] += 1
+    if any(body_id >= rigid["body_count"] for body_id in nhtiss_body_ids):
+        raise human.ImportError("NHTISS4 references a body ID outside the bound NHRIGID2")
+    return {
+        "schema": "numi.human.common-atlas-nhtiss-source-identity.v1",
+        "nhtiss_payload_path": str(tissue_payload_path),
+        "nhtiss_payload_sha256": hashlib.sha256(tissue_raw).hexdigest(),
+        "nhtiss_manifest_path": str(tissue_manifest_path),
+        "nhtiss_manifest_sha256": hashlib.sha256(tissue_manifest_path.read_bytes()).hexdigest(),
+        "registration_sha256": registration_sha256,
+        "source_archive_sha256": source_archive_sha256,
+        "registration_fingerprint32": f"{registration_fingerprint32:08x}",
+        "rigid_payload_sha256": rigid_payload_sha256,
+        "rigid_body_count": rigid["body_count"],
+        "skin_body_identities": binding_identity,
+        "nhtiss_distinct_body_id_count": len(set(nhtiss_body_ids)),
+        "nhtiss_body_ids_within_rigid": True,
+        "nhtiss_binding_records_exactly_equal_to_skin_reference_by_body": {str(key): {"exact_records": value[0], "different_owner_frame_records": value[1]} for key, value in sorted(exact_record_counts.items())},
+        "qualification_boundary": "NHTISS4 source, registration, ABI, and body-index identity are verified. Per-owner transform equality is intentionally not required or claimed; geometry/contact clearance remains a separate pending audit.",
+    }
+
+
 def _compose_skin_candidate_receipt_document(
     base_receipt: dict,
     base_receipt_path: Path,
@@ -862,6 +1022,7 @@ def _compose_skin_candidate_receipt_document(
     candidate_payload_path: Path,
     mass_geometry_accounting: dict,
     output_receipt_path: Path,
+    nhtiss_source_identity: dict | None = None,
 ) -> dict:
     """Replace only skin accounting/provenance in a pinned anatomy receipt."""
     inputs = candidate_manifest.get("inputs", {})
@@ -913,6 +1074,7 @@ def _compose_skin_candidate_receipt_document(
         "preservation": candidate_manifest.get("preservation"),
         "changed_skin_regions": candidate_manifest.get("changed_skin_regions", {}).get("combined_geometry", {}).get("dominant_anatomical_region_breakdown"),
         "qualification_boundary": candidate_manifest.get("evidence_boundary"),
+        "nhtiss4_common_atlas_source_identity": nhtiss_source_identity,
         "native_accepted_pose_geometry_audit": "pending",
     }
     registration = result["provenance"].get("thorax_costal_source_registration")
@@ -978,34 +1140,60 @@ def compose_skin_binding_candidate(
             "source_manifest_sha256": base_manifest_sha,
         }
     else:
-        # Some existing anatomy owners emit a receipt-only composition. Accept
-        # it only when its embedded composition record binds the exact
-        # predecessor receipt and payload; then reconstruct the same v1
-        # manifest fields from the selected receipt itself.
-        lineage = base_receipt.get("provenance", {}).get("airway_sibling_overlap_partition")
-        if not isinstance(lineage, dict):
-            raise ValueError("base anatomy manifest is missing and receipt has no verifiable composition lineage")
-        predecessor_path = Path(lineage.get("base_receipt_path", "")).resolve()
-        predecessor_sha = lineage.get("base_receipt_sha256")
-        if (not predecessor_path.is_file() or not isinstance(predecessor_sha, str)
-                or hashlib.sha256(predecessor_path.read_bytes()).hexdigest() != predecessor_sha):
-            raise ValueError("base receipt composition lineage does not bind its predecessor receipt")
-        predecessor = json.loads(predecessor_path.read_text())
+        # Some owners emit a receipt-only composition. Reconstruct its manifest
+        # only when an embedded immediate-output record binds the selected
+        # payload and a pinned predecessor receipt/payload. Prefer the newest
+        # layer whose output matches the current payload; older provenance may
+        # remain in the receipt after later anatomy refinements.
         current_payload = base_receipt.get("payload", {})
-        predecessor_payload = predecessor.get("payload", {})
-        lineage_payload_path = Path(lineage.get("base_payload_path", "")).resolve()
-        lineage_payload_sha = lineage.get("base_payload_sha256")
-        output_payload_path = Path(lineage.get("output_payload_path", "")).resolve()
-        output_payload_sha = lineage.get("output_payload_sha256")
-        if (predecessor_payload.get("path") != str(lineage_payload_path)
-                or predecessor_payload.get("sha256") != lineage_payload_sha
-                or current_payload.get("path") != str(output_payload_path)
-                or current_payload.get("sha256") != output_payload_sha
-                or not lineage_payload_path.is_file()
-                or hashlib.sha256(lineage_payload_path.read_bytes()).hexdigest() != lineage_payload_sha
-                or not output_payload_path.is_file()
-                or hashlib.sha256(output_payload_path.read_bytes()).hexdigest() != output_payload_sha):
-            raise ValueError("base receipt composition lineage does not bind its anatomy payload")
+        selected_payload_path = Path(current_payload.get("path", "")).resolve()
+        selected_payload_sha = current_payload.get("sha256")
+        if (not selected_payload_path.is_file()
+                or hashlib.sha256(selected_payload_path.read_bytes()).hexdigest() != selected_payload_sha):
+            raise ValueError("base anatomy receipt does not bind its current payload")
+        provenance = base_receipt.get("provenance", {})
+        lineage = provenance.get("derived_visceral_pleura_proxy")
+        predecessor_path = None
+        predecessor_sha = None
+        if (isinstance(lineage, dict)
+                and Path(lineage.get("output_payload_path", "")).resolve() == selected_payload_path
+                and lineage.get("output_payload_sha256") == selected_payload_sha):
+            predecessor_path = Path(lineage.get("source_receipt_path", "")).resolve()
+            predecessor_sha = lineage.get("source_receipt_sha256")
+            source_payload_path = Path(lineage.get("source_payload_path", "")).resolve()
+            source_payload_sha = lineage.get("source_payload_sha256")
+            if (not predecessor_path.is_file() or not isinstance(predecessor_sha, str)
+                    or hashlib.sha256(predecessor_path.read_bytes()).hexdigest() != predecessor_sha
+                    or not source_payload_path.is_file()
+                    or hashlib.sha256(source_payload_path.read_bytes()).hexdigest() != source_payload_sha):
+                raise ValueError("base receipt pleura composition does not bind its immediate predecessor")
+            predecessor = json.loads(predecessor_path.read_text())
+            predecessor_payload = predecessor.get("payload", {})
+            if (predecessor_payload.get("path") != str(source_payload_path)
+                    or predecessor_payload.get("sha256") != source_payload_sha):
+                raise ValueError("base receipt pleura composition predecessor receipt/payload differ")
+            lineage_kind = "derived_visceral_pleura_proxy"
+        else:
+            lineage = provenance.get("airway_sibling_overlap_partition")
+            if (not isinstance(lineage, dict)
+                    or Path(lineage.get("output_payload_path", "")).resolve() != selected_payload_path
+                    or lineage.get("output_payload_sha256") != selected_payload_sha):
+                raise ValueError("base anatomy manifest is missing and receipt has no verifiable current composition lineage")
+            predecessor_path = Path(lineage.get("base_receipt_path", "")).resolve()
+            predecessor_sha = lineage.get("base_receipt_sha256")
+            lineage_payload_path = Path(lineage.get("base_payload_path", "")).resolve()
+            lineage_payload_sha = lineage.get("base_payload_sha256")
+            if (not predecessor_path.is_file() or not isinstance(predecessor_sha, str)
+                    or hashlib.sha256(predecessor_path.read_bytes()).hexdigest() != predecessor_sha
+                    or not lineage_payload_path.is_file()
+                    or hashlib.sha256(lineage_payload_path.read_bytes()).hexdigest() != lineage_payload_sha):
+                raise ValueError("base receipt airway composition does not bind its predecessor")
+            predecessor = json.loads(predecessor_path.read_text())
+            predecessor_payload = predecessor.get("payload", {})
+            if (predecessor_payload.get("path") != str(lineage_payload_path)
+                    or predecessor_payload.get("sha256") != lineage_payload_sha):
+                raise ValueError("base receipt airway composition predecessor receipt/payload differ")
+            lineage_kind = "airway_sibling_overlap_partition"
         base_manifest = {
             "schema": "numi.human.resting-anatomy-manifest.v1",
             "payload": current_payload,
@@ -1023,14 +1211,41 @@ def compose_skin_binding_candidate(
             "source_receipt_sha256": base_receipt_sha,
             "predecessor_receipt_path": str(predecessor_path),
             "predecessor_receipt_sha256": predecessor_sha,
+            "verified_current_composition_layer": lineage_kind,
+            "current_payload_path": str(selected_payload_path),
+            "current_payload_sha256": selected_payload_sha,
         }
     candidate_manifest = json.loads(skin_rebind_manifest_path.read_text())
+    if (candidate_manifest.get('schema') != 'numi.human.common-atlas-skin-geometry-registration.v1'
+            or candidate_manifest.get('status') != 'inferred_common_atlas_geometry_candidate_pending_native_clearance_and_pose_checks'):
+        raise ValueError(
+            'individual per-owner NHSKIN binding replacement is not production-qualified; '
+            'use source-registered geometry that preserves the common atlas binding records'
+        )
+    atlas_validation = candidate_manifest.get('common_atlas_binding_runtime_rest_validation', {})
+    canonical_input = candidate_manifest.get('inputs', {}).get('canonical_binding_reference', {})
+    if (atlas_validation.get('schema') != 'numi.human.common-atlas-binding-runtime-rest-validation.v1'
+            or atlas_validation.get('binding_count') != 86
+            or atlas_validation.get('all_86_bindings_match_global_atlas_through_runtime_rest') is not True
+            or atlas_validation.get('canonical_binding_reference_sha256') != canonical_input.get('sha256')
+            or candidate_manifest.get('inputs', {}).get('registration_sha256') is None
+            or len(atlas_validation.get('checks', [])) != 86
+            or not all(row.get('passed') is True for row in atlas_validation.get('checks', []))
+            or not np.isfinite(float(atlas_validation.get('maximum_translation_error_m', np.inf)))
+            or float(atlas_validation.get('maximum_translation_error_m', np.inf)) > 1.0e-6
+            or not np.isfinite(float(atlas_validation.get('maximum_linear_transform_max_abs_error', np.inf)))
+            or float(atlas_validation.get('maximum_linear_transform_max_abs_error', np.inf)) > 1.0e-6):
+        raise ValueError('common-atlas candidate lacks a passing registration/global-atlas/runtime-rest binding validation')
+    if (candidate_manifest.get('preservation', {}).get('all_86_canonical_binding_records_byte_identical') is not True
+            or candidate_manifest.get('preservation', {}).get('full_weight_matrix_byte_identical') is not True):
+        raise ValueError('common-atlas NHSKIN candidate does not preserve canonical bindings and full weights')
     mass_geometry = _mass_and_skin_volume_audit(
         skin_path=skin_candidate_payload,
         skin_rebind_manifest_path=skin_rebind_manifest_path,
     )
     # Ensure a declared NHTISS4 owner is present and hash-current before
     # verifying its lower-limb rows against the candidate skin.
+    nhtiss_source_identity = None
     muscle = base_receipt.get("provenance", {}).get("native_muscle_surfaces")
     if muscle is not None:
         if not isinstance(muscle, dict):
@@ -1049,19 +1264,41 @@ def compose_skin_binding_candidate(
         if (hashlib.sha256(tissue_path.read_bytes()).hexdigest() != muscle["sha256"]
                 or hashlib.sha256(tissue_manifest.read_bytes()).hexdigest() != muscle["manifest_sha256"]):
             raise ValueError("declared native muscle surface payload or manifest hash is stale")
-        from .skin_lower_limb_anchor_rebind import _verify_nhtiss_owner_alignment
         registration = json.loads(REGISTRATION_PATH.read_text())
-        candidate_manifest["nhtiss4_composed_base_alignment"] = _verify_nhtiss_owner_alignment(
+        registration_sha = hashlib.sha256(REGISTRATION_PATH.read_bytes()).hexdigest()
+        if candidate_manifest.get("inputs", {}).get("registration_sha256") != registration_sha:
+            raise ValueError("common-atlas skin registration identity differs from the active source registration")
+        canonical_reference = candidate_manifest.get("inputs", {}).get("canonical_binding_reference")
+        if not isinstance(canonical_reference, dict):
+            raise ValueError("common-atlas skin manifest lacks a hash-bound canonical binding reference")
+        canonical_path = Path(canonical_reference.get("path", "")).resolve()
+        canonical_sha = canonical_reference.get("sha256")
+        canonical_provenance_path = Path(canonical_reference.get("provenance_path", "")).resolve()
+        canonical_provenance_sha = canonical_reference.get("provenance_sha256")
+        if (not canonical_path.is_file() or hashlib.sha256(canonical_path.read_bytes()).hexdigest() != canonical_sha
+                or not canonical_provenance_path.is_file()
+                or hashlib.sha256(canonical_provenance_path.read_bytes()).hexdigest() != canonical_provenance_sha):
+            raise ValueError("common-atlas canonical binding reference or its provenance hash is stale")
+        canonical_provenance = human.read_json(canonical_provenance_path)
+        canonical_derived = canonical_provenance.get("derived_skin", {})
+        if (Path(canonical_derived.get("path", "")).resolve() != canonical_path
+                or canonical_derived.get("sha256") != canonical_sha):
+            raise ValueError("common-atlas canonical binding reference differs from its boundary-repair provenance")
+        nhtiss_source_identity = _verify_nhtiss_common_atlas_source_identity(
             tissue_payload_path=tissue_path,
             tissue_manifest_path=tissue_manifest,
-            registration_sha256=hashlib.sha256(REGISTRATION_PATH.read_bytes()).hexdigest(),
+            registration_sha256=registration_sha,
             source_archive_sha256=candidate_manifest["payload_identity"]["source_archive_sha256"],
             registration_fingerprint32=int(candidate_manifest["payload_identity"]["registration_fingerprint32"], 16),
+            rigid_payload_sha256=base_receipt.get("provenance", {}).get("rigid_payload_sha256", ""),
             candidate_skin=skin_candidate_payload.read_bytes(),
+            canonical_reference_path=canonical_path,
+            canonical_reference_sha256=canonical_sha,
             registration=registration,
         )
-        mass_geometry["nhtiss4_base_owner_alignment_sha256"] = hashlib.sha256(
-            json.dumps(candidate_manifest["nhtiss4_composed_base_alignment"], sort_keys=True, separators=(",", ":")).encode()
+        candidate_manifest["nhtiss4_common_atlas_source_identity"] = nhtiss_source_identity
+        mass_geometry["nhtiss4_common_atlas_source_identity_sha256"] = hashlib.sha256(
+            json.dumps(nhtiss_source_identity, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()
     output_receipt = copy.deepcopy(base_receipt)
     common_sidecars = []
@@ -1086,11 +1323,11 @@ def compose_skin_binding_candidate(
                 raise ValueError(f"common cardiac {owner} destination already exists")
             common_sidecars.append((source_path, destination, digest))
             record["path"] = source_path.name
-    mass_geometry["skin_binding_rebind_receipt"] = str(skin_rebind_manifest_path)
-    mass_geometry["skin_binding_rebind_receipt_sha256"] = hashlib.sha256(skin_rebind_manifest_path.read_bytes()).hexdigest()
+    mass_geometry["skin_geometry_registration_manifest"] = str(skin_rebind_manifest_path)
+    mass_geometry["skin_geometry_registration_manifest_sha256"] = hashlib.sha256(skin_rebind_manifest_path.read_bytes()).hexdigest()
     result = _compose_skin_candidate_receipt_document(
         output_receipt, base_receipt_path, candidate_manifest, skin_rebind_manifest_path,
-        skin_candidate_payload, mass_geometry, receipt_path,
+        skin_candidate_payload, mass_geometry, receipt_path, nhtiss_source_identity,
     )
     output.mkdir(parents=True, exist_ok=True)
     for source_path, destination, digest in common_sidecars:

@@ -344,3 +344,56 @@ def test_owner_comparison_report_pins_exact_12_vs_74_partition(tmp_path):
             registration_sha256=registration_sha,
             registration=registration,
         )
+
+
+def test_public_per_owner_rebind_is_deprecated_before_writing(tmp_path):
+    from numilab_human.skin_lower_limb_anchor_rebind import rebind_registered_lower_limb_skin_payload
+
+    output = tmp_path / "candidate"
+    with pytest.raises(model.ImportError, match="shared atlas"):
+        rebind_registered_lower_limb_skin_payload(
+            source_payload=tmp_path / "source.nhskin",
+            registration_path=tmp_path / "registration.json",
+            myosim_artifact=tmp_path / "myosim",
+            output_directory=output,
+            tissue_payload_path=tmp_path / "tissue.nhtissue",
+            tissue_manifest_path=tmp_path / "tissue.json",
+            owner_comparison_report_path=tmp_path / "owners.json",
+        )
+    assert not output.exists()
+
+
+def test_canonical_binding_constructor_preserves_one_shared_source_atlas():
+    global_matrix = _matrix([0.2, -0.1, 0.4])
+    point_m = np.array([0.31, -0.22, 0.08])
+    global_translation, global_quaternion, global_scale = model._bodyparts_visual_local_pose(
+        global_matrix, "fixture common atlas",
+    )
+    global_rotation = np.asarray(model._myosim_matrix_from_quaternion_xyzw(global_quaternion))
+    expected_world = np.asarray(global_translation) + global_scale * (global_rotation @ point_m)
+    poses = [
+        ([0.1, 0.2, 0.3], [0.0, 0.0, 0.0, 1.0]),
+        ([-0.4, 0.7, 0.2], [0.0, 0.0, np.sin(0.31), np.cos(0.31)]),
+    ]
+    for position, quaternion in poses:
+        local = model._bodyparts_local_registration_matrix(
+            global_matrix, position, quaternion,
+        )
+        local_translation, local_quaternion, local_scale = model._bodyparts_visual_local_pose(
+            local, "fixture canonical owner binding",
+        )
+        body_rotation = np.asarray(model._myosim_matrix_from_quaternion_xyzw(quaternion))
+        local_rotation = np.asarray(model._myosim_matrix_from_quaternion_xyzw(local_quaternion))
+        rendered = np.asarray(position) + body_rotation @ (
+            np.asarray(local_translation) + local_scale * (local_rotation @ point_m)
+        )
+        np.testing.assert_allclose(rendered, expected_world, rtol=0.0, atol=2e-12)
+
+    per_bone = _matrix([0.235, -0.1, 0.4])
+    per_bone_translation, per_bone_quaternion, per_bone_scale = model._bodyparts_visual_local_pose(
+        per_bone, "fixture individual bone transform",
+    )
+    altered = np.asarray(per_bone_translation) + per_bone_scale * (
+        np.asarray(model._myosim_matrix_from_quaternion_xyzw(per_bone_quaternion)) @ point_m
+    )
+    assert np.linalg.norm(altered - expected_world) > 0.03
