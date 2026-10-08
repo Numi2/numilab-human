@@ -603,7 +603,36 @@ def derive_step0_inferred_clearance(
                 raise human.ImportError(f"clearance margin {margin_mm} mm created an exact zero-area or non-finite skin triangle")
             normal_alignment = np.einsum("ij,ij->i", base_area_vectors, candidate_area_vectors) / (base_double_areas * candidate_double_areas)
             if float(normal_alignment.min()) <= 0.0:
-                raise human.ImportError(f"clearance margin {margin_mm} mm reversed at least one skin triangle")
+                bad_face = int(np.argmin(normal_alignment))
+                bad_ids = compact_faces[bad_face]
+                bad_source_ids = faces[bad_face]
+                bad_base = captured[bad_ids]
+                bad_candidate = candidate_world[bad_ids]
+                edge_pairs = ((0, 1), (1, 2), (2, 0))
+                edge_gradients = [
+                    float((field[bad_ids[i]] - field[bad_ids[j]]) / max(np.linalg.norm(bad_base[i] - bad_base[j]), 1.0e-15))
+                    for i, j in edge_pairs
+                ]
+                bad_base_area_mm2 = float(base_double_areas[bad_face] * 0.5e6)
+                bad_candidate_area_mm2 = float(candidate_double_areas[bad_face] * 0.5e6)
+                face_constraint = face_constraints.get(bad_face)
+                raise human.ImportError(
+                    f"clearance margin {margin_mm} mm reversed skin triangle: face={bad_face}, "
+                    f"iteration={iteration + 1}, prior_active_vertex_count={int(np.count_nonzero(active_vertex_required))}, "
+                    f"normal_dot={float(normal_alignment[bad_face]):.12g}, "
+                    f"base_area_mm2={bad_base_area_mm2:.12g}, candidate_area_mm2={bad_candidate_area_mm2:.12g}, "
+                    f"area_ratio={float(candidate_double_areas[bad_face] / base_double_areas[bad_face]):.12g}, "
+                    f"source_vertex_ids={bad_source_ids.tolist()}, compact_vertex_ids={bad_ids.tolist()}, "
+                    f"base_world_m={bad_base.tolist()}, candidate_world_m={bad_candidate.tolist()}, "
+                    f"vertex_field_mm={(field[bad_ids] * 1000.0).tolist()}, "
+                    f"vertex_world_displacement_mm={(np.linalg.norm(bad_candidate - bad_base, axis=1) * 1000.0).tolist()}, "
+                    f"edge_field_difference_mm={[float((field[bad_ids[i]] - field[bad_ids[j]]) * 1000.0) for i, j in edge_pairs]}, "
+                    f"edge_field_gradient={[round(value, 12) for value in edge_gradients]}, "
+                    f"common_atlas_source_delta_mm={(source_delta[bad_ids] * 1000.0).tolist()}, "
+                    f"initial_witness_targets={sorted(face_constraint['target_surfaces']) if face_constraint else []}, "
+                    f"initial_witness_pair_count={face_constraint['target_pair_count'] if face_constraint else 0}, "
+                    f"support_radius_mm={radius * 1000.0:.12g}, median_edge_mm={median_edge * 1000.0:.12g}"
+                )
             skin_self_audit = _audit_pair(candidate_records, candidate_records, same_surface=True)
             if int(skin_self_audit["count"]) != 0:
                 raise human.ImportError(f"clearance margin {margin_mm} mm created {skin_self_audit['count']} exact non-adjacent skin self-intersections")
