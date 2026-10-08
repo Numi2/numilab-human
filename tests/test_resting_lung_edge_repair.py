@@ -41,6 +41,83 @@ class RestingLungEdgeRepairTests(unittest.TestCase):
         self.assertLessEqual(abs(report["signed_volume_delta_m3"]), 1e-12)
         self.assertEqual(topology_report(f2)["boundary_edge_count"], 0)
 
+    @staticmethod
+    def _torus():
+        import math
+
+        n = m = 8
+        major, minor = 30e-6, 10e-6
+        points = []
+        for i in range(n):
+            u = 2.0 * math.pi * i / n
+            for j in range(m):
+                v = 2.0 * math.pi * j / m
+                points.append([
+                    (major + minor * math.cos(v)) * math.cos(u),
+                    (major + minor * math.cos(v)) * math.sin(u),
+                    minor * math.sin(v),
+                ])
+        xyz = np.asarray(points, dtype=np.float32)
+        faces = []
+        for i in range(n):
+            for j in range(m):
+                a = i * m + j
+                b = ((i + 1) % n) * m + j
+                c = ((i + 1) % n) * m + (j + 1) % m
+                d = i * m + (j + 1) % m
+                faces.extend(((a, b, c), (a, c, d)))
+        faces = np.asarray(faces, dtype=np.int64)
+        if signed_volume(xyz.astype(np.float64), faces) < 0:
+            faces = faces[:, [0, 2, 1]]
+        unit_normals = xyz / np.linalg.norm(xyz, axis=1, keepdims=True)
+        return np.column_stack((xyz, unit_normals)).astype(np.float32), faces
+
+    def test_midpoint_edge_collapse_preserves_nonzero_genus_and_full_face_lineage(self):
+        vertices6, faces = self._torus()
+        edge_rows = np.concatenate((faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]), axis=0)
+        edge_count = len(np.unique(np.sort(edge_rows, axis=1), axis=0))
+        euler_before = len(vertices6) - edge_count + len(faces)
+        self.assertEqual(euler_before, 0)
+
+        v2, f2, origins2, report = collapse_midpoint_edge(
+            vertices6, faces, np.arange(len(faces), dtype=np.int64),
+            remove_vertex=0, keep_vertex=1, max_endpoint_displacement_m=5e-6,
+        )
+
+        self.assertEqual(report["source_topology"]["genus"], 1)
+        self.assertEqual(report["candidate_topology"]["genus"], 1)
+        self.assertEqual(report["candidate_topology"]["euler_characteristic"], euler_before)
+        self.assertEqual(report["source_face_indices_in_changed_one_ring"],
+                         sorted(report["source_face_indices_in_changed_one_ring"]))
+        self.assertTrue(report["surviving_changed_face_lineage"])
+        self.assertEqual(len(origins2), len(f2))
+        self.assertEqual(topology_report(f2)["boundary_edge_count"], 0)
+        self.assertAlmostEqual(signed_volume(v2[:, :3].astype(np.float64), f2),
+                               signed_volume(vertices6[:, :3].astype(np.float64), faces),
+                               delta=1e-12)
+
+    def test_midpoint_edge_collapse_enforces_explicit_displacement_bound(self):
+        vertices6, faces = self._octahedron()
+        with self.assertRaisesRegex(ValueError, "endpoint-displacement bound"):
+            collapse_midpoint_edge(
+                vertices6, faces, np.arange(len(faces)), remove_vertex=0, keep_vertex=2,
+                max_endpoint_displacement_m=1e-9,
+            )
+
+    def test_keep_endpoint_collapse_preserves_shared_coordinate_exactly(self):
+        vertices6, faces = self._octahedron()
+        keep_before = vertices6[2, :3].copy()
+        _, _, _, report = collapse_midpoint_edge(
+            vertices6, faces, np.arange(len(faces), dtype=np.int64),
+            remove_vertex=0, keep_vertex=2, position_policy="keep",
+            max_endpoint_displacement_m=2e-5,
+        )
+        self.assertEqual(report["collapse_position_policy"], "keep")
+        self.assertEqual(report["collapse_position_f32_m"], keep_before.tolist())
+        self.assertEqual(report["endpoint_displacements_m"][1], 0.0)
+        self.assertAlmostEqual(report["maximum_endpoint_displacement_m"],
+                               report["edge_length_m"], delta=1e-12)
+
     def test_nonedge_is_rejected_without_mutating_inputs(self):
         vertices6, faces = self._octahedron()
         before_v, before_f = vertices6.copy(), faces.copy()

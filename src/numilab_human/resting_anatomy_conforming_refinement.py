@@ -69,6 +69,18 @@ def _split_triangle(vertices6: np.ndarray, triangle, split_edges, midpoint_ids):
     # reciprocal face gets the same geometric diagonal.
     old = vertices6[np.asarray((a, b, c)), :3].astype(np.float64)
     reference_normal = np.cross(old[1] - old[0], old[2] - old[0])
+    midpoint_edges = {int(midpoint): edge for edge, midpoint in midpoint_ids.items()}
+
+    def split_edge_degenerate(triangle):
+        # Float32 midpoint rounding can move an exact edge midpoint a few ULPs
+        # off its source segment. Detect the endpoint-midpoint-endpoint case
+        # topologically, rather than treating that rounding as a new sliver.
+        if len(set(map(int, triangle))) != 3:
+            return True
+        tri_ids = set(map(int, triangle))
+        return any(tri_ids == {midpoint, edge[0], edge[1]}
+                   for midpoint, edge in midpoint_edges.items())
+
     polygon = list(boundary)
     result = []
     while len(polygon) > 3:
@@ -76,6 +88,8 @@ def _split_triangle(vertices6: np.ndarray, triangle, split_edges, midpoint_ids):
         for i, curr in enumerate(polygon):
             prev = polygon[(i - 1) % len(polygon)]
             nxt = polygon[(i + 1) % len(polygon)]
+            if split_edge_degenerate((prev, curr, nxt)):
+                continue
             tri = vertices6[np.asarray((prev, curr, nxt)), :3].astype(np.float64)
             normal = np.cross(tri[1] - tri[0], tri[2] - tri[0])
             if float(np.dot(reference_normal, normal)) > 1e-30:
@@ -83,6 +97,8 @@ def _split_triangle(vertices6: np.ndarray, triangle, split_edges, midpoint_ids):
                 # one split edge as the final polygon.
                 if len(polygon) == 4:
                     remaining = [polygon[j] for j in range(4) if j != i]
+                    if split_edge_degenerate(remaining):
+                        continue
                     last = vertices6[np.asarray(remaining), :3].astype(np.float64)
                     last_normal = np.cross(last[1] - last[0], last[2] - last[0])
                     if float(np.dot(reference_normal, last_normal)) <= 1e-30:
