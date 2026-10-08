@@ -617,7 +617,7 @@ def derive_step0_inferred_clearance(
             field = np.max(total_required[seed, None] * envelope, axis=0)
             for face_id, row in face_constraints.items():
                 compact_ids = compact_faces[face_id]
-                achieved = field[compact_ids] * (vertex_normals[compact_ids] @ row["normal"])
+                achieved = field[compact_ids] * (vertex_directions[compact_ids] @ row["normal"])
                 needed = row["minimum_separating_translation_m"] + margin_mm / 1000.0
                 if float(achieved.min()) + 1.0e-12 < needed:
                     raise human.ImportError(f"clearance compact field misses an original witness face constraint at face {face_id}")
