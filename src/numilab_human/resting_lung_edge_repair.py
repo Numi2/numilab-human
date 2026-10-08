@@ -323,6 +323,37 @@ def _derive_basal_effective_area(rows, kuhn_basis):
     return total, details
 
 
+def _source_precision_screen(rows):
+    """Measure the final serialized-F32 lobe altitude risk after every edit."""
+    result = {}
+    for sid in range(305, 310):
+        xyz = np.asarray(rows[sid]["vertices6"], dtype="<f4")[:, :3].astype(np.float64)
+        faces = np.asarray(rows[sid]["faces"], dtype=np.int64)
+        tri = xyz[faces]
+        edge_lengths = np.stack((
+            np.linalg.norm(tri[:, 1]-tri[:, 2], axis=1),
+            np.linalg.norm(tri[:, 2]-tri[:, 0], axis=1),
+            np.linalg.norm(tri[:, 0]-tri[:, 1], axis=1),
+        ), axis=1)
+        twice_area = np.linalg.norm(np.cross(tri[:, 1]-tri[:, 0], tri[:, 2]-tri[:, 0]), axis=1)
+        if (not np.isfinite(edge_lengths).all() or not np.isfinite(twice_area).all()
+                or bool((edge_lengths <= 0.0).any())):
+            raise ValueError(f"final source lobe {sid} has invalid triangle geometry")
+        altitude = twice_area[:, None] / edge_lengths
+        face_minimum = altitude.min(axis=1)
+        result[str(sid)] = {
+            "vertex_count": int(len(xyz)),
+            "face_count": int(len(faces)),
+            "minimum_triangle_altitude_m": float(face_minimum.min()),
+            "zero_area_face_count": int(np.count_nonzero(twice_area == 0.0)),
+            "face_count_below_128nm": int(np.count_nonzero(face_minimum < 128e-9)),
+            "face_count_below_512nm": int(np.count_nonzero(face_minimum < 512e-9)),
+            "face_count_below_1um": int(np.count_nonzero(face_minimum < 1e-6)),
+            "basis": "minimum of the three double-precision altitudes computed from final serialized Float32 source positions",
+        }
+    return result
+
+
 def _source_volume_rows(rows):
     details = []
     total = 0.0
@@ -1828,6 +1859,7 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
     module_paths = {
         "resting_lung_edge_repair.py": Path(__file__).resolve(),
         "resting_lobe_fan_refinement.py": Path(__file__).with_name("resting_lobe_fan_refinement.py").resolve(),
+        "resting_anatomy_conforming_refinement.py": Path(__file__).with_name("resting_anatomy_conforming_refinement.py").resolve(),
     }
     module_hashes_at_launch = {name: {"path": str(path), "sha256": sha256(path)}
                                for name, path in module_paths.items()}
@@ -1910,6 +1942,7 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
     for sid, (vertices6, faces) in refined_lobes.items():
         rows3[sid]["vertices6"], rows3[sid]["faces"] = vertices6, faces
     interface_refresh_after_fan = _refresh_diaphragm_interface_registration(receipt, rows3)
+    final_source_precision_screen = _source_precision_screen(rows3)
 
     source_face_ancestry = _compose_source_face_ancestry(
         original_rows, (flip_report1, flip_report2), collapse_ancestry,
@@ -2060,6 +2093,7 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         "diaphragm_interface_refresh_before_fan": interface_refresh_before_fan,
         "diaphragm_interface_refresh_after_fan": interface_refresh_after_fan,
         "source_face_ancestry_summary": ancestry_summary,
+        "post_fan_final_source_precision_screen": final_source_precision_screen,
     }
     receipt["qualification"]["source_geometry_candidate"] = (
         "Bounded source preparation: position-preserving interior flips, topology-checked short-edge collapses, "
@@ -2081,8 +2115,12 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         "source_point_relocations_are_explicitly_recorded": True,
         "preexisting_source_face_deletions_are_recorded_in_ancestry_sidecar": True,
         "unresolved_source_faces_below_512nm": {
+            sid: final_source_precision_screen[str(sid)]["face_count_below_512nm"]
+            for sid in range(305, 310)},
+        "pre_fan_relocation_stage_faces_below_512nm": {
             sid: len(relocation_report["remaining_subfloor_faces"][str(sid)])
             for sid in range(305, 310)},
+        "post_fan_final_source_precision_screen": final_source_precision_screen,
         "old_source_volume_derivation": old_volume,
         "old_source_geometry_qualification": old_source_qualification,
         "lobe_operations": operations,
@@ -2172,8 +2210,12 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         "per_lobe_signed_volume_delta_m3": {str(sid): volume_deltas[sid] for sid in range(305,310)},
         "aggregate_lobe_volume_delta_m3": total_volume-before_total_volume,
         "remaining_lobe_faces_below_512nm": {
+            str(sid): final_source_precision_screen[str(sid)]["face_count_below_512nm"]
+            for sid in range(305,310)},
+        "pre_fan_relocation_stage_faces_below_512nm": {
             str(sid): len(relocation_report["remaining_subfloor_faces"][str(sid)])
             for sid in range(305,310)},
+        "post_fan_final_source_precision_screen": final_source_precision_screen,
         "row311_face_connectivity_unchanged_after_registration_reindex": True,
         "row311_face_order_changed_by_registration_reindex": True,
         "row311_source_face_order_sidecar_path": str(diaphragm_order_path),

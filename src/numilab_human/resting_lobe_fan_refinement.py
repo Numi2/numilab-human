@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections import defaultdict, deque
+import math
 import numpy as np
 
 from .resting_anatomy_conforming_refinement import edge_incidence, edge_key, refine_surface_edges
@@ -168,6 +169,21 @@ def refine_shared_vertex_fans(lobes, *, seed_faces, expected_shared_vertex_m):
         after_v[:, 3:6] = normals(after_v[:, :3].astype(np.float64), after_f).astype(np.float32)
         if not np.array_equal(after_v[:len(before_v), :3], before_v[:, :3]):
             raise ValueError(f"refinement moved an existing source vertex on lobe {sid}")
+        child_minimum_altitude = float("inf")
+        for child_ids in old_to_new.values():
+            for child_id in child_ids:
+                child_tri = after_v[after_f[int(child_id)], :3].astype(np.float64)
+                child_edges = (float(np.linalg.norm(child_tri[1]-child_tri[2])),
+                               float(np.linalg.norm(child_tri[2]-child_tri[0])),
+                               float(np.linalg.norm(child_tri[0]-child_tri[1])))
+                child_cross = float(np.linalg.norm(np.cross(child_tri[1]-child_tri[0],
+                                                            child_tri[2]-child_tri[0])))
+                if not math.isfinite(child_cross) or child_cross <= 0.0 or min(child_edges) <= 0.0:
+                    raise ValueError(f"refinement produced an invalid child triangle on lobe {sid}")
+                child_minimum_altitude = min(child_minimum_altitude,
+                                             min(child_cross/edge for edge in child_edges))
+        if child_minimum_altitude < 128e-9:
+            raise ValueError(f"refinement produced a child below the 128nm source floor on lobe {sid}: {child_minimum_altitude:.9g}m")
         for (a, b), actual in zip(sorted(edges), after_v[len(before_v):, :3], strict=True):
             midpoint = (before_v[a, :3].astype(np.float64)+before_v[b, :3].astype(np.float64))*0.5
             max_midpoint_error = max(max_midpoint_error,
@@ -188,6 +204,8 @@ def refine_shared_vertex_fans(lobes, *, seed_faces, expected_shared_vertex_m):
             "added_face_count": int(detail["added_face_count"]),
             "before": before, "after": after,
             "signed_volume_delta_m3": volume_delta,
+            "fan_child_minimum_altitude_m": child_minimum_altitude,
+            "fan_children_meet_128nm_source_floor": True,
             "original_source_position_bits_preserved": True,
             "child_winding_checked": True,
         }
