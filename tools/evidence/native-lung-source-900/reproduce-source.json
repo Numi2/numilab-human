@@ -1,0 +1,25 @@
+{
+  "cwd": "/Users/n/numi-human-lung-source-publication-902",
+  "environment": {
+    "PYTHONPATH": "src",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "argv": [
+    "/Users/n/numi-human-prep-venv-20261005/bin/python",
+    "-m",
+    "numilab_human.resting_lung_edge_repair",
+    "--precision-flips",
+    "--base-payload",
+    "/Users/n/numi-human-resting-evidence-20261005/airway-sibling-overlap-partition-001/resting-thorax.nhanatomy",
+    "--base-receipt",
+    "/Users/n/numi-human-resting-evidence-20261005/skin-lowerlimb-anchor-rebind-004/resting-anatomy-receipt-recook-004/resting-anatomy-receipt.json",
+    "--respiratory-owner",
+    "/Users/n/numi-human-resting-resp-source-20261006/src/numilab_human/resting_respiratory_conforming_field.py",
+    "--output-dir",
+    "/Users/n/numi-human-resting-evidence-20261005/lung-source-reproduction-new"
+  ],
+  "note": "Choose a fresh output directory. This command reproduces the source asset only; native execution uses the separate pinned invocation."
+}

@@ -1,0 +1,244 @@
+{
+  "aggregate_lobe_volume_delta_m3": -6.120841680723466e-14,
+  "candidate_respiratory_area_m2": 0.018687046993398335,
+  "diaphragm_interface_reconstruction": {
+    "historical_registration_validation": {
+      "declared_patches": [
+        {
+          "lung_stable_id": 305,
+          "old_diaphragm_face_count": 10043,
+          "old_diaphragm_faces_with_exact_lobe_counterparts": 0,
+          "old_diaphragm_range": [
+            124312,
+            134355
+          ]
+        },
+        {
+          "lung_stable_id": 306,
+          "old_diaphragm_face_count": 11075,
+          "old_diaphragm_faces_with_exact_lobe_counterparts": 0,
+          "old_diaphragm_range": [
+            134355,
+            145430
+          ]
+        },
+        {
+          "lung_stable_id": 307,
+          "old_diaphragm_face_count": 4803,
+          "old_diaphragm_faces_with_exact_lobe_counterparts": 0,
+          "old_diaphragm_range": [
+            145430,
+            150233
+          ]
+        },
+        {
+          "lung_stable_id": 308,
+          "old_diaphragm_face_count": 486,
+          "old_diaphragm_faces_with_exact_lobe_counterparts": 0,
+          "old_diaphragm_range": [
+            150233,
+            150719
+          ]
+        }
+      ],
+      "status": "failed_stale_face_ranges"
+    },
+    "old_registration_status": "failed_exact_source_geometry_validation",
+    "reconstructed_patch_faces_by_lobe": {
+      "305": 19668,
+      "306": 21549,
+      "307": 5512,
+      "308": 486
+    },
+    "reconstructed_patch_topology": {
+      "305": {
+        "area_m2": 0.016660932417209114,
+        "boundary_edge_count": 742,
+        "boundary_vertex_count": 742,
+        "connected_components": 1,
+        "edge_count": 29873,
+        "euler_characteristic": 1,
+        "face_count": 19668,
+        "nonmanifold_edge_count": 0,
+        "vertex_count": 10206
+      },
+      "306": {
+        "area_m2": 0.01802465380510151,
+        "boundary_edge_count": 769,
+        "boundary_vertex_count": 769,
+        "connected_components": 1,
+        "edge_count": 32708,
+        "euler_characteristic": 1,
+        "face_count": 21549,
+        "nonmanifold_edge_count": 0,
+        "vertex_count": 11160
+      },
+      "307": {
+        "area_m2": 0.00568406115572397,
+        "boundary_edge_count": 410,
+        "boundary_vertex_count": 410,
+        "connected_components": 1,
+        "edge_count": 8473,
+        "euler_characteristic": 1,
+        "face_count": 5512,
+        "nonmanifold_edge_count": 0,
+        "vertex_count": 2962
+      },
+      "308": {
+        "area_m2": 0.000499073173206193,
+        "boundary_edge_count": 110,
+        "boundary_vertex_count": 110,
+        "connected_components": 1,
+        "edge_count": 784,
+        "euler_characteristic": 1,
+        "face_count": 486,
+        "nonmanifold_edge_count": 0,
+        "vertex_count": 299
+      }
+    },
+    "row311_face_count": 220482,
+    "row311_face_order_reindexed": true,
+    "row311_face_triangles_and_coordinates_unchanged": true,
+    "row311_topology_before_and_after_face_reindex": {
+      "boundary_branch_vertex_count": 0,
+      "boundary_edge_count": 0,
+      "boundary_loop_count": 0,
+      "edge_count": 330723,
+      "nonmanifold_edge_count": 0,
+      "orientation_error_edge_count": 0
+    }
+  },
+  "final_payload_path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/final/resting-thorax.nhanatomy",
+  "final_payload_sha256": "f38cdd8de7038bef2f4b30122aa2942f69c935afa472e948950948d2f2782633",
+  "final_receipt_path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/final/resting-anatomy-receipt.json",
+  "final_receipt_sha256": "862bcc2c9f4b7e64d05aa8cd0578af63cb5d3c1e272205de3cabc70ed6f35072",
+  "full_build_report": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/build-report.json",
+    "sha256": "212519f1829533152715c17323b8167a21e717f579dea27120383b921a4b9a14"
+  },
+  "implementation_module_hashes": {
+    "implementation_unchanged_during_build": true,
+    "modules_at_completion": {
+      "resting_anatomy_conforming_refinement.py": {
+        "path": "/Users/n/numi-human-pleura-fan-candidate-001/src/numilab_human/resting_anatomy_conforming_refinement.py",
+        "sha256": "5c6b4b9fb2a468dbf4cf60b9f785ea038a60937f0942fb164f631b16efdc3df1"
+      },
+      "resting_lobe_fan_refinement.py": {
+        "path": "/Users/n/numi-human-pleura-fan-candidate-001/src/numilab_human/resting_lobe_fan_refinement.py",
+        "sha256": "7be3eb1454b4eb9acb15ef174f989df443b42c86c743601e62b8232fdac8f45d"
+      },
+      "resting_lung_edge_repair.py": {
+        "path": "/Users/n/numi-human-pleura-fan-candidate-001/src/numilab_human/resting_lung_edge_repair.py",
+        "sha256": "c15b8ed06925581ed8d33b82231a43a03cd81fa7094b7642b99ab78050469f94"
+      }
+    },
+    "modules_at_launch": {
+      "resting_anatomy_conforming_refinement.py": {
+        "path": "/Users/n/numi-human-pleura-fan-candidate-001/src/numilab_human/resting_anatomy_conforming_refinement.py",
+        "sha256": "5c6b4b9fb2a468dbf4cf60b9f785ea038a60937f0942fb164f631b16efdc3df1"
+      },
+      "resting_lobe_fan_refinement.py": {
+        "path": "/Users/n/numi-human-pleura-fan-candidate-001/src/numilab_human/resting_lobe_fan_refinement.py",
+        "sha256": "7be3eb1454b4eb9acb15ef174f989df443b42c86c743601e62b8232fdac8f45d"
+      },
+      "resting_lung_edge_repair.py": {
+        "path": "/Users/n/numi-human-pleura-fan-candidate-001/src/numilab_human/resting_lung_edge_repair.py",
+        "sha256": "c15b8ed06925581ed8d33b82231a43a03cd81fa7094b7642b99ab78050469f94"
+      }
+    },
+    "status": "completed"
+  },
+  "implementation_module_pins_path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/implementation-module-pins.json",
+  "implementation_module_pins_sha256": "bf17f0c1c25729180dae7ce560dbd66de2c2dd5a3bf11555c2a3de825439b9e2",
+  "input_respiratory_area_m2": 0.018687046994397227,
+  "input_runtime_area_bit_identity": true,
+  "native_transformed_pose_qualification": "not performed",
+  "per_lobe_signed_volume_delta_m3": {
+    "305": -8.571203642671055e-14,
+    "306": 1.2425704996182896e-13,
+    "307": -1.412435706588111e-13,
+    "308": 2.4768436000105476e-13,
+    "309": -2.0619421968459672e-13
+  },
+  "post_fan_final_source_precision_screen": {
+    "305": {
+      "basis": "minimum of the three double-precision altitudes computed from final serialized Float32 source positions",
+      "face_count": 84672,
+      "face_count_below_128nm": 0,
+      "face_count_below_1um": 1317,
+      "face_count_below_512nm": 554,
+      "minimum_triangle_altitude_m": 1.3411692530513838e-07,
+      "vertex_count": 42338,
+      "zero_area_face_count": 0
+    },
+    "306": {
+      "basis": "minimum of the three double-precision altitudes computed from final serialized Float32 source positions",
+      "face_count": 81860,
+      "face_count_below_128nm": 0,
+      "face_count_below_1um": 975,
+      "face_count_below_512nm": 471,
+      "minimum_triangle_altitude_m": 1.408615828593403e-07,
+      "vertex_count": 40932,
+      "zero_area_face_count": 0
+    },
+    "307": {
+      "basis": "minimum of the three double-precision altitudes computed from final serialized Float32 source positions",
+      "face_count": 51238,
+      "face_count_below_128nm": 0,
+      "face_count_below_1um": 1051,
+      "face_count_below_512nm": 509,
+      "minimum_triangle_altitude_m": 1.2997651301660347e-07,
+      "vertex_count": 25621,
+      "zero_area_face_count": 0
+    },
+    "308": {
+      "basis": "minimum of the three double-precision altitudes computed from final serialized Float32 source positions",
+      "face_count": 76544,
+      "face_count_below_128nm": 0,
+      "face_count_below_1um": 1634,
+      "face_count_below_512nm": 799,
+      "minimum_triangle_altitude_m": 1.3095509294986985e-07,
+      "vertex_count": 38274,
+      "zero_area_face_count": 0
+    },
+    "309": {
+      "basis": "minimum of the three double-precision altitudes computed from final serialized Float32 source positions",
+      "face_count": 67632,
+      "face_count_below_128nm": 0,
+      "face_count_below_1um": 1165,
+      "face_count_below_512nm": 537,
+      "minimum_triangle_altitude_m": 1.3642375747138834e-07,
+      "vertex_count": 33818,
+      "zero_area_face_count": 0
+    }
+  },
+  "pre_fan_relocation_stage_faces_below_512nm": {
+    "305": 554,
+    "306": 471,
+    "307": 509,
+    "308": 799,
+    "309": 537
+  },
+  "pre_pleura_payload_path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/pre-pleura/resting-thorax.nhanatomy",
+  "pre_pleura_payload_sha256": "7555b57a227ebacc24e8650af297cfc7c204bccc69132cd313a1b880d2e9f59d",
+  "remaining_lobe_faces_below_512nm": {
+    "305": 554,
+    "306": 471,
+    "307": 509,
+    "308": 799,
+    "309": 537
+  },
+  "respiratory_area_delta_m2": -9.98891941383917e-13,
+  "row311_face_connectivity_unchanged_after_registration_reindex": true,
+  "row311_face_order_changed_by_registration_reindex": true,
+  "row311_source_face_order_sidecar_path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/row-311-source-face-order.npy",
+  "row311_source_face_order_sidecar_sha256": "d528639f1d1f0c5c6593d759de8f327373036ae57d7fc2be0344726d3b829338",
+  "row_310_face_count": 303478,
+  "schema": "numi.human.lung-source-edge-repair-reproduction.v2",
+  "source_face_ancestry_sidecar_path": "/Users/n/numi-human-resting-evidence-20261005/lung-current-precision-candidate-897/lobe-source-face-ancestry.npz",
+  "source_face_ancestry_sidecar_sha256": "ecf452c69c7fe3af6f5e3a5fd185f20e24c7b29fee116b237329810ed497255e",
+  "source_payload_sha256": "c6adae6522a2f7e5a8bd661035d464d686c843e96ab04ffc3ccd9aa1371569c1",
+  "source_receipt_sha256": "64c3b182d4ebc13bed468b72871b269887f8aecc2e7dc43622eb90d20bb0545e",
+  "status": "bounded_source_candidate_built_native_pose_gate_separate",
+  "unrelated_surface_geometry_byte_identity": true
+}
