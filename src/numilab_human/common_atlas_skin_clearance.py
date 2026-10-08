@@ -714,9 +714,15 @@ def derive_step0_inferred_clearance(
             margin_audit = {f"{key[0]}:{key[1]}": all_margin_audit[f"{key[0]}:{key[1]}"] for key in target_keys}
             margin_ocular_audit = {f"{key[0]}:{key[1]}": all_margin_audit[f"{key[0]}:{key[1]}"] for key in _OCULAR_MONITOR_KEYS}
             for key_text, baseline_row in baseline_ocular_audit.items():
-                if _triangle_pair_set(margin_ocular_audit[key_text]) != _triangle_pair_set(baseline_row):
+                baseline_pairs = _triangle_pair_set(baseline_row)
+                candidate_pairs = _triangle_pair_set(margin_ocular_audit[key_text])
+                if candidate_pairs != baseline_pairs:
+                    added = sorted(candidate_pairs - baseline_pairs)
+                    removed = sorted(baseline_pairs - candidate_pairs)
                     raise human.ImportError(
-                        f"clearance margin {margin_mm} mm changes the exact pair identities at monitored ocular interface {key_text}"
+                        f"clearance margin {margin_mm} mm changes exact pair identities at monitored ocular interface {key_text}: "
+                        f"baseline_pair_count={len(baseline_pairs)}, candidate_pair_count={len(candidate_pairs)}, "
+                        f"introduced_pairs_first32={added[:32]}, resolved_pairs_first32={removed[:32]}"
                     )
             ocular_monitor_by_margin[str(margin_mm)] = {
                 "exact_pair_sets_unchanged": True,
