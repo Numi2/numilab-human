@@ -1,0 +1,79 @@
+{
+  "schema": "numi.human.lung-final-composition-source-pins.v1",
+  "source_checkout": {
+    "path": "/Users/n/numi-human-final-lung-composition-001",
+    "commit": "32c907cebf131d462fe87f2cbdd86e40e6cc9b6b",
+    "working_tree_clean_at_run": true
+  },
+  "composer": {
+    "path": "tools/evidence/native-lung-final-selected-composition-1113/compose_candidate_v8.py",
+    "sha256": "93a5b14ba9a97ce930e7fc76d1a333154c62e20dc44c52dfd4a062ad62e1e6c6"
+  },
+  "direct_owner_imports": [
+    {
+      "module": "numilab_human.resting_anatomy_interface_patch",
+      "path": "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_anatomy_interface_patch.py",
+      "sha256": "e7692e4239c6a5ca4c12667b9bce94c06efa9bc3bec86cbb74e4625eeb416187"
+    },
+    {
+      "module": "numilab_human.resting_lung_edge_repair",
+      "path": "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_lung_edge_repair.py",
+      "sha256": "a6e6153547a0c16d540153a1aa5ff8c705b0ba031825c7ec8e319732633d43e1"
+    },
+    {
+      "module": "numilab_human.resting_pleura_proxy",
+      "path": "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_pleura_proxy.py",
+      "sha256": "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683"
+    },
+    {
+      "module": "numilab_human.cardiac_cavity_geometry",
+      "path": "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/cardiac_cavity_geometry.py",
+      "sha256": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72"
+    },
+    {
+      "module": "numilab_human.resting_respiratory_mesh_quality",
+      "path": "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_respiratory_mesh_quality.py",
+      "sha256": "774b49fc5cc97518f035ad4434e1cf64b3dceb037b91dfd0a37aff89a81c8951"
+    },
+    {
+      "module": "numilab_human.resting_respiratory_conforming_field",
+      "path": "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_respiratory_conforming_field.py",
+      "sha256": "980b368d8de0cc6cd7e25a93e61e5b6f304275dbd18511207da8cc9919410bb5"
+    }
+  ],
+  "published_candidate": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8",
+    "composition_report_sha256": "f2fd49d0486e20bdca5ea8638215466f4a59ff59d94f1dffa53c8caa5018b460",
+    "nha_sha256": "1b62f569f218cf8ba45f26c393bfaa4c8ed2ff499ab500c002dbbb006747b8bc",
+    "receipt_sha256": "118788f2db039f805cff15c0bff7efa8c62ec68595c997564358d14044ee53e8",
+    "manifest_sha256": "0b59c2eb417e339c67ed548b766bbd30b81bec5dedd9de5bea30a7a3c96ddadc",
+    "ll_face_map_sha256": "8f66e5bf2b929bd343dea5f3868fa6348b24f44706daa4d62388276ddb1d7d56",
+    "ll_edge_map_sha256": "45060d64f69361d285118dc0ee0ed39ed1502bc6f8d8a2b7bab56eb1659c1089",
+    "row310_lineage_sha256": "2e2c82e96faaafd9f0c6ef3245bc865adeabfcccf3ce5b3a0366c1369fc9d3ba"
+  },
+  "historical_lineage_note": {
+    "field_path": "provenance.lung_final_shared_interface_rebuild.operation_308_first_cluster.parent_coverage.310.synthetic_stage_parent_count",
+    "retained_value": 104975,
+    "meaning": "pre-pleura intermediate-only synthetic stage parents from the 1105 collapse checkpoint",
+    "superseded_by": "provenance.lung_final_shared_interface_rebuild.row310_face_lineage_path",
+    "final_lineage_authority": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/row310-face-lineage.npy",
+      "sha256": "2e2c82e96faaafd9f0c6ef3245bc865adeabfcccf3ce5b3a0366c1369fc9d3ba",
+      "shape": [
+        303656,
+        2
+      ],
+      "columns": [
+        "source_lobe_stable_id",
+        "source_lobe_face_id"
+      ],
+      "synthetic_stage_parent_ids_survive": false
+    }
+  },
+  "execution_environment": {
+    "host": "macmini",
+    "python": "3.13.13",
+    "numpy": "2.5.3",
+    "note": "Mac-mini CPU composition and regression run; no GPU/native simulation in this package test."
+  }
+}

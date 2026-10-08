@@ -1,0 +1,800 @@
+{
+  "1083_replay": {
+    "307": {
+      "modified_rows": [
+        40752,
+        40858
+      ],
+      "other_faces_exact": true,
+      "xyz_exact": true
+    },
+    "309": {
+      "modified_rows": [
+        1806,
+        1912
+      ],
+      "other_faces_exact": true,
+      "xyz_exact": true
+    }
+  },
+  "306_replay": {
+    "drop_old": 15651,
+    "exact_faces": true,
+    "exact_xyz": true,
+    "keep_old": 15653,
+    "removed_faces": [
+      29087,
+      29089
+    ]
+  },
+  "308_first_cluster": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-305-308-sequential-collapse-trial-1105/candidate-rows.npz",
+    "sha256": "c94ee31676bbb76d3ac697bab3af93b4225cbf10f900c6f586346a4441f8781e"
+  },
+  "308_first_cluster_replay": [
+    {
+      "checkpoint": {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-305-308-sequential-collapse-trial-1105/stage-1.npz",
+        "sha256": "ad52e9f01507757a229cef546ec2f1edb563024c2c5315577dcfa4ff6295af6c"
+      },
+      "exact_xyz_faces_recomputed_normals": true,
+      "ordinal": 1,
+      "rows": {
+        "308": {
+          "drop_index": 14267,
+          "keep_index": 14266,
+          "removed_face_rows": [
+            26583,
+            26592
+          ]
+        },
+        "310": {
+          "drop_index": 104412,
+          "keep_index": 104411,
+          "removed_face_rows": [
+            205213,
+            205222
+          ]
+        }
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-305-308-sequential-collapse-trial-1105/stage-2.npz",
+        "sha256": "c94ee31676bbb76d3ac697bab3af93b4225cbf10f900c6f586346a4441f8781e"
+      },
+      "exact_xyz_faces_recomputed_normals": true,
+      "ordinal": 2,
+      "rows": {
+        "308": {
+          "drop_index": 14266,
+          "keep_index": 14261,
+          "removed_face_rows": [
+            26590,
+            26591
+          ]
+        },
+        "310": {
+          "drop_index": 104411,
+          "keep_index": 13100,
+          "removed_face_rows": [
+            205220,
+            205221
+          ]
+        }
+      }
+    }
+  ],
+  "308_parent_coverage": {
+    "308": {
+      "covered_face_count": 76540,
+      "output_face_count": 76540,
+      "synthetic_stage_parent_count": 0
+    },
+    "310": {
+      "covered_face_count": 303656,
+      "output_face_count": 303656,
+      "synthetic_stage_parent_count": 104975
+    }
+  },
+  "308_second_cluster_owner_replay": {
+    "allow_local_minimum_regression": false,
+    "combined_local_minimum_altitude_after_m": 8.979199253108599e-07,
+    "combined_local_minimum_altitude_before_m": 8.836326114405977e-07,
+    "combined_local_sliver_objective_after": 0.16819529215232487,
+    "combined_local_sliver_objective_before": 0.18731540242233458,
+    "cumulative_source_displacement_m": 4.999111949567871e-07,
+    "cumulative_volume_group_change_m3": {
+      "305+306+307+308+309": -2.724921757275484e-14
+    },
+    "displacement_m": 4.999111949567871e-07,
+    "method": "bounded_shared_coordinate_vertex_star_opening",
+    "minimum_result_altitude_m": 1.25e-07,
+    "new_point": [
+      -0.0016815493581816554,
+      0.0444229319691658,
+      -0.06169683113694191
+    ],
+    "old_point": [
+      -0.0016818622825667262,
+      0.04442258179187775,
+      -0.06169665977358818
+    ],
+    "owner_surface_ids": [
+      308,
+      310
+    ],
+    "per_surface_signed_volume_delta_m3": {
+      "308": -2.724921757275484e-14,
+      "310": -2.724921757275484e-14
+    },
+    "qualification": "bounded source-space star opening; final topology, embedding, native transformed geometry and accepted-cycle checks remain separate",
+    "reciprocal_seam_checks": [
+      {
+        "opposite_winding_triangle_count": 0,
+        "preserved": true,
+        "same_winding_triangle_count": 6,
+        "shared_local_triangle_count": 6,
+        "surface_a": 308,
+        "surface_b": 310
+      }
+    ],
+    "source_ancestry_count": 1
+  },
+  "308_second_cluster_trial_point_checks": {
+    "308": {
+      "other_xyz_unchanged": true,
+      "replay_target_occurrences": 1,
+      "trial_target_occurrences": 1
+    },
+    "310": {
+      "other_xyz_unchanged": true,
+      "replay_target_occurrences": 1,
+      "trial_target_occurrences": 1
+    }
+  },
+  "D_map_count": 47343,
+  "D_registration_refresh": {
+    "exact_coordinate_and_opposite_winding_checked": true,
+    "registered_reciprocal_area_m2": 0.0408744648028095,
+    "registered_reciprocal_face_count": 47343,
+    "row311_face_indices_unchanged": true
+  },
+  "L_L_counts": {
+    "305-306": 0,
+    "305-307": 0,
+    "305-308": 8884,
+    "305-309": 0,
+    "306-307": 8727,
+    "306-308": 0,
+    "306-309": 2010,
+    "307-308": 0,
+    "307-309": 9605,
+    "308-309": 0
+  },
+  "area32": 0.018687047064304352,
+  "area64": 0.018687046993403737,
+  "area_volume_f32_checks": {
+    "305": {
+      "after_area_m2": 0.07011229466592057,
+      "after_volume_m3": 0.0007246252066735994,
+      "area_f32_equal": true,
+      "before_area_m2": 0.07011229466592057,
+      "before_volume_m3": 0.0007246252066735994,
+      "volume_f32_equal": true
+    },
+    "306": {
+      "after_area_m2": 0.0672933281522834,
+      "after_volume_m3": 0.0006576200616175667,
+      "area_f32_equal": true,
+      "before_area_m2": 0.0672933281522834,
+      "before_volume_m3": 0.0006576200616175668,
+      "volume_f32_equal": true
+    },
+    "307": {
+      "after_area_m2": 0.03844644202044399,
+      "after_volume_m3": 0.00030666151056445504,
+      "area_f32_equal": true,
+      "before_area_m2": 0.03844644202170237,
+      "before_volume_m3": 0.00030666151056460433,
+      "volume_f32_equal": true
+    },
+    "308": {
+      "after_area_m2": 0.05873497476771341,
+      "after_volume_m3": 0.0006186301990928417,
+      "area_f32_equal": true,
+      "before_area_m2": 0.058734974647496135,
+      "before_volume_m3": 0.0006186301991197995,
+      "volume_f32_equal": true
+    },
+    "309": {
+      "after_area_m2": 0.04771418283444455,
+      "after_volume_m3": 0.0006947384130886712,
+      "area_f32_equal": true,
+      "before_area_m2": 0.04771418283570293,
+      "before_volume_m3": 0.000694738413088522,
+      "volume_f32_equal": true
+    }
+  },
+  "edge_summary": {
+    "305-306": {
+      "boundary_edge_count_a": 0,
+      "boundary_edge_count_b": 0,
+      "boundary_sets_equal": true,
+      "edge_count": 0,
+      "explicit_zero_no_map": true,
+      "face_pair_count": 0
+    },
+    "305-307": {
+      "boundary_edge_count_a": 0,
+      "boundary_edge_count_b": 0,
+      "boundary_sets_equal": true,
+      "edge_count": 0,
+      "explicit_zero_no_map": true,
+      "face_pair_count": 0
+    },
+    "305-308": {
+      "boundary_edge_count_a": 1342,
+      "boundary_edge_count_b": 1342,
+      "boundary_sets_equal": true,
+      "edge_count": 13997,
+      "explicit_zero_no_map": false,
+      "face_pair_count": 8884
+    },
+    "305-309": {
+      "boundary_edge_count_a": 0,
+      "boundary_edge_count_b": 0,
+      "boundary_sets_equal": true,
+      "edge_count": 0,
+      "explicit_zero_no_map": true,
+      "face_pair_count": 0
+    },
+    "306-307": {
+      "boundary_edge_count_a": 923,
+      "boundary_edge_count_b": 923,
+      "boundary_sets_equal": true,
+      "edge_count": 13552,
+      "explicit_zero_no_map": false,
+      "face_pair_count": 8727
+    },
+    "306-308": {
+      "boundary_edge_count_a": 0,
+      "boundary_edge_count_b": 0,
+      "boundary_sets_equal": true,
+      "edge_count": 0,
+      "explicit_zero_no_map": true,
+      "face_pair_count": 0
+    },
+    "306-309": {
+      "boundary_edge_count_a": 250,
+      "boundary_edge_count_b": 250,
+      "boundary_sets_equal": true,
+      "edge_count": 3140,
+      "explicit_zero_no_map": false,
+      "face_pair_count": 2010
+    },
+    "307-308": {
+      "boundary_edge_count_a": 0,
+      "boundary_edge_count_b": 0,
+      "boundary_sets_equal": true,
+      "edge_count": 0,
+      "explicit_zero_no_map": true,
+      "face_pair_count": 0
+    },
+    "307-309": {
+      "boundary_edge_count_a": 601,
+      "boundary_edge_count_b": 601,
+      "boundary_sets_equal": true,
+      "edge_count": 14708,
+      "explicit_zero_no_map": false,
+      "face_pair_count": 9605
+    },
+    "308-309": {
+      "boundary_edge_count_a": 0,
+      "boundary_edge_count_b": 0,
+      "boundary_sets_equal": true,
+      "edge_count": 0,
+      "explicit_zero_no_map": true,
+      "face_pair_count": 0
+    }
+  },
+  "final_normal_checks": {
+    "305": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 42391
+    },
+    "306": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 40969
+    },
+    "307": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 25621
+    },
+    "308": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 38272
+    },
+    "309": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 33817
+    },
+    "310": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 151796
+    },
+    "311": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 110334
+    }
+  },
+  "final_topology": {
+    "305": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 127167,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 84778,
+      "vertex_count": 42391
+    },
+    "306": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 122901,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 81934,
+      "vertex_count": 40969
+    },
+    "307": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 76857,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 51238,
+      "vertex_count": 25621
+    },
+    "308": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 114810,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 76540,
+      "vertex_count": 38272
+    },
+    "309": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 101445,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 67630,
+      "vertex_count": 33817
+    },
+    "310": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 455484,
+      "euler_characteristic": -32,
+      "face_component_count": 2,
+      "face_count": 303656,
+      "vertex_count": 151796
+    },
+    "311": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 331008,
+      "euler_characteristic": -2,
+      "face_component_count": 1,
+      "face_count": 220672,
+      "vertex_count": 110334
+    }
+  },
+  "inputs": {
+    "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_respiratory_conforming_field.py": "980b368d8de0cc6cd7e25a93e61e5b6f304275dbd18511207da8cc9919410bb5",
+    "/Users/n/numi-human-final-lung-composition-001/src/numilab_human/resting_respiratory_mesh_quality.py": "774b49fc5cc97518f035ad4434e1cf64b3dceb037b91dfd0a37aff89a81c8951",
+    "/Users/n/numi-human-resting-evidence-20261005/lung-choroid-composition-924/choroid-v2/resting-thorax.nhanatomy": "3c444be7736c066a992988cc32b687917e1c4c5c3968a16b4d5f0106d5b5024e",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-305-308-sequential-collapse-trial-1105/candidate-rows.npz": "c94ee31676bbb76d3ac697bab3af93b4225cbf10f900c6f586346a4441f8781e",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-305-308-sequential-collapse-trial-1105/report.json": "a658e3abe1cf93bba9928f31a5e465d1a2c0cb42deb2370c32c7f177fa077057",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-305-308-shared-edge-collapse-1099/candidate-308-310-rows.npz": "829409fc8206b65a3d91a1683a9e5736284be0da11a653826b02eb91a0b93da5",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-306-interior-seam-collapse-1099/candidate-rows.npz": "25812e48e0f4bdeccfa13ffd6b2392b6de5008fc2f593c7c1b2a094ce3e7b325",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-306-interior-seam-collapse-1099/parent-ledger.json": "de646ea2ffc7f015aa43a3ce4d9291c01b15276e5e56d0fb526e58a2189c4fb4",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-307-sliver-reciprocal-flip-1083/candidate-307-309-parent-ledger.json": "df98cf7961a3f791d16d4f7eb7d5b6d63f1ac0b01df72aa22c360b70a34e34e0",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-307-sliver-reciprocal-flip-1083/candidate-307-309-rows.npz": "83898f5257a9c2cbb61ab567ed4af2106d761a2db20f7bd160f75fc80a8cec89",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-conditioned-final-compose-1078/final-exact-D311-to-lobes-map.jsonl": "05ab5b8f6ab02a0f3236495b385bc0002d750be58820117e7f149e64df1e398a",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-conditioned-final-compose-1078/final/resting-anatomy-manifest.json": "01d3a744a5765cfe336ce540fc8a537823d6491c6ff260485bfbfab00ffd3500",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-conditioned-final-compose-1078/final/resting-anatomy-receipt.json": "bea11d334575aceff2dd3151f1c38d3eafe8b825c0dbf9bef42633777fe4f9db",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-conditioned-final-compose-1078/final/resting-reference-respiration.json": "3598d6402697f2bf4de9575afb5b7f30d4c4b05d7712a8c85a078c3ddd592222",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-conditioned-final-compose-1078/final/resting-thorax.nhanatomy": "7f6a8175e3cadb93a6dfc43535467b6896cf1b8bacfd0334df7b5bb03c414e92",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-left-second-cluster-star-trials-1105/report.json": "4f7769e02fe0665feeb0941c945673dcb96f24d041675e58533790938642f1be",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-left-second-cluster-star-trials-1105/trial-02.npz": "74d8f052f3847725769b571ca99b8dd9b5cf74984a5d8f1ea573a83e5511cba9",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-lobe-source-lineage-1055-verified/reciprocal-coincident-face-map.jsonl": "13b99a1de0fb0afbffe2e12f28f1194bdb193b7e610c1ea9bb26d2c22fcbe040",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-lobe-source-lineage-1055-verified/source-proven-reciprocal-interface-report.json": "0b1f8dee81944f3338cc63d461706b825c963c9f1fb6be227fb875cb0877eb50"
+  },
+  "outputs": {
+    "d_map": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final-exact-D311-to-lobes-map.jsonl",
+      "sha256": "726eaf407129577b18eacc7a794a7f8fd20bcb5bfa333820a0ee19a2001747d1"
+    },
+    "final_manifest": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final/resting-anatomy-manifest.json",
+      "sha256": "0b59c2eb417e339c67ed548b766bbd30b81bec5dedd9de5bea30a7a3c96ddadc"
+    },
+    "final_nha": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final/resting-thorax.nhanatomy",
+      "sha256": "1b62f569f218cf8ba45f26c393bfaa4c8ed2ff499ab500c002dbbb006747b8bc"
+    },
+    "final_receipt": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final/resting-anatomy-receipt.json",
+      "sha256": "118788f2db039f805cff15c0bff7efa8c62ec68595c997564358d14044ee53e8"
+    },
+    "ll_edges": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/current-reciprocal-edge-map-v2.jsonl",
+      "sha256": "45060d64f69361d285118dc0ee0ed39ed1502bc6f8d8a2b7bab56eb1659c1089"
+    },
+    "ll_map": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/current-reciprocal-face-map-v2.jsonl",
+      "sha256": "8f66e5bf2b929bd343dea5f3868fa6348b24f44706daa4d62388276ddb1d7d56"
+    },
+    "pre_manifest": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/pre-pleura/resting-anatomy-manifest.json",
+      "sha256": "2dac133fffb262f9a22f5cd0948905750cb76e1cac53d8ab4ba4ec5cf76ce9c9"
+    },
+    "pre_nha": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/pre-pleura/resting-thorax.nhanatomy",
+      "sha256": "4e9a8dd15d7c73f70fd1d1190f8ab2be6f28a0f4a1647562d4027ec27a80790c"
+    },
+    "pre_receipt": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/pre-pleura/resting-anatomy-receipt.json",
+      "sha256": "3b7910c9d5353c791e402438a0e96cce748bc7475a39cd56f36117ae1a324b8d"
+    },
+    "row310_lineage": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/row310-face-lineage.npy",
+      "sha256": "2e2c82e96faaafd9f0c6ef3245bc865adeabfcccf3ce5b3a0366c1369fc9d3ba"
+    }
+  },
+  "owner_normal_checks": {
+    "306": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 40969
+    },
+    "307": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 25621
+    },
+    "308": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 38272
+    },
+    "309": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 33817
+    },
+    "310": {
+      "normal_bit_mismatches": 0,
+      "used_vertex_count": 151796
+    }
+  },
+  "pleura": {
+    "cancelled_opposite_face_count": 58452,
+    "components": [
+      {
+        "bounds_max_m": [
+          0.14773395657539368,
+          0.12983092665672302,
+          -0.008955423720180988
+        ],
+        "bounds_min_m": [
+          -0.029420120641589165,
+          -0.12434780597686768,
+          -0.1240733191370964
+        ],
+        "face_count": 143538,
+        "signed_volume_m3": 0.0013432554063875397,
+        "source_triangle_count_by_stable_id": {
+          "305": 75888,
+          "308": 67650
+        },
+        "surface_area_m2": 0.11974585531173386,
+        "topology": {
+          "boundary_edge_count": 0,
+          "nonmanifold_edge_count": 0,
+          "orientation_error_edge_count": 0
+        },
+        "vertex_count": 71743
+      },
+      {
+        "bounds_max_m": [
+          0.14878930151462555,
+          0.12809014320373535,
+          0.12507303059101105
+        ],
+        "bounds_min_m": [
+          -0.03002791292965412,
+          -0.1207931712269783,
+          0.0031053863931447268
+        ],
+        "face_count": 160118,
+        "signed_volume_m3": 0.0016590199852706932,
+        "source_triangle_count_by_stable_id": {
+          "306": 71197,
+          "307": 32906,
+          "309": 56015
+        },
+        "surface_area_m2": 0.12403933939160487,
+        "topology": {
+          "boundary_edge_count": 0,
+          "nonmanifold_edge_count": 0,
+          "orientation_error_edge_count": 0
+        },
+        "vertex_count": 80053
+      }
+    ],
+    "exact_reciprocal_face_group_count": 29226,
+    "excluded_source_microfragments": [
+      {
+        "bounds_max_m": [
+          0.009118776768445969,
+          0.03760587051510811,
+          -0.05599856749176979
+        ],
+        "bounds_min_m": [
+          0.00812491588294506,
+          0.036569900810718536,
+          -0.05697183683514595
+        ],
+        "face_count": 12,
+        "signed_volume_m3": -6.210985065088773e-13,
+        "source_faces": [
+          [
+            305,
+            28682
+          ],
+          [
+            305,
+            28683
+          ],
+          [
+            305,
+            28684
+          ],
+          [
+            305,
+            28686
+          ],
+          [
+            305,
+            28687
+          ],
+          [
+            305,
+            28688
+          ],
+          [
+            308,
+            44173
+          ],
+          [
+            308,
+            44174
+          ],
+          [
+            308,
+            44175
+          ],
+          [
+            308,
+            44192
+          ],
+          [
+            308,
+            44193
+          ],
+          [
+            308,
+            44194
+          ]
+        ],
+        "surface_area_m2": 1.5102024167032915e-06,
+        "vertex_count": 8
+      }
+    ],
+    "interlobar_fissure_lining_included": false,
+    "normal_field": "recomputed area-weighted exterior normals from retained oriented source triangles",
+    "parietal_pleura_included": false,
+    "pleural_fluid_or_mechanics": false,
+    "position_coordinates_are_exact_source_float32": true,
+    "retained_external_signed_volume_m3": 0.003002275391658233,
+    "retained_external_surface_area_m2": 0.24378519470333873,
+    "retained_external_triangle_count": 303656,
+    "retained_external_vertex_count": 151796,
+    "source_coordinate_quantization_m": null,
+    "source_microfragment_anchor_rule": "exact registered float32 source anchors",
+    "stable_source_lobe_ids": [
+      305,
+      306,
+      307,
+      308,
+      309
+    ]
+  },
+  "runtime_area_f32_unchanged": true,
+  "schema": "numi.human.final-lung-selected-composition-dryrun-v1",
+  "status": "provisional 1105 test case; native and full scans pending",
+  "topology": {
+    "305": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 127167,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 84778,
+      "vertex_count": 42391
+    },
+    "306": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 122901,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 81934,
+      "vertex_count": 40969
+    },
+    "307": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 76857,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 51238,
+      "vertex_count": 25621
+    },
+    "308": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 114810,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 76540,
+      "vertex_count": 38272
+    },
+    "309": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 101445,
+      "euler_characteristic": 2,
+      "face_component_count": 1,
+      "face_count": 67630,
+      "vertex_count": 33817
+    },
+    "311": {
+      "boundary_edge_count": 0,
+      "closed_oriented_manifold_candidate": true,
+      "defects": {
+        "degenerate_faces": 0,
+        "duplicate_faces": 0,
+        "nonmanifold_edges": 0,
+        "orientation_defect_edges": 0,
+        "repeated_vertex_faces": 0,
+        "unused_vertices": 0,
+        "vertex_manifold_defects": 0
+      },
+      "edge_count": 331008,
+      "euler_characteristic": -2,
+      "face_component_count": 1,
+      "face_count": 220672,
+      "vertex_count": 110334
+    }
+  }
+}

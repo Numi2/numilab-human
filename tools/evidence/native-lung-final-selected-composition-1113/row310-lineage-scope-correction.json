@@ -1,0 +1,45 @@
+{
+  "schema": "numi.human.resting-anatomy-row310-lineage-scope-correction.v1",
+  "candidate": {
+    "nha_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final/resting-thorax.nhanatomy",
+    "nha_sha256": "1b62f569f218cf8ba45f26c393bfaa4c8ed2ff499ab500c002dbbb006747b8bc",
+    "receipt_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final/resting-anatomy-receipt.json",
+    "receipt_sha256": "118788f2db039f805cff15c0bff7efa8c62ec68595c997564358d14044ee53e8",
+    "composition_report_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/composition-report.json",
+    "composition_report_sha256": "f2fd49d0486e20bdca5ea8638215466f4a59ff59d94f1dffa53c8caa5018b460"
+  },
+  "retained_historical_field": {
+    "path": "provenance.lung_final_shared_interface_rebuild.operation_308_first_cluster.parent_coverage.310.synthetic_stage_parent_count",
+    "value": 104975,
+    "interpretation": "pre-pleura 1105 checkpoint synthetic stage-parent bookkeeping before the final row310 recook",
+    "disposition": "Retained as historical provenance; it is not final row310 ancestry and is not rewritten in the frozen receipt."
+  },
+  "authoritative_final_lineage": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/row310-face-lineage.npy",
+    "sha256": "2e2c82e96faaafd9f0c6ef3245bc865adeabfcccf3ce5b3a0366c1369fc9d3ba",
+    "shape": [
+      303656,
+      2
+    ],
+    "dtype": "int32",
+    "columns": [
+      "source_lobe_stable_id",
+      "source_lobe_face_id"
+    ],
+    "source_lobe_stable_ids": [
+      305,
+      306,
+      307,
+      308,
+      309
+    ],
+    "synthetic_stage_parent_ids_survive": false,
+    "purpose": "Sole face-ancestry artifact for the final recooked stable-ID 310 surface."
+  },
+  "verification": {
+    "composition_report_path": "composition-report.json",
+    "composition_report_sha256": "f2fd49d0486e20bdca5ea8638215466f4a59ff59d94f1dffa53c8caa5018b460",
+    "test_path": "tests/test_native_lung_final_composition_1113.py",
+    "qualification_effect": "None. The frozen receipt and manifest remain provisional and unchanged."
+  }
+}

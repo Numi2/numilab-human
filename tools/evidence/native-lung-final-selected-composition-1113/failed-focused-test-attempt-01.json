@@ -1,0 +1,12 @@
+{
+  "correction": "Compare the supplement receipt SHA to the frozen v8 composition report, not the temporary rerun output.",
+  "expected": "Temporary output receipt SHA differs because absolute output paths are embedded. The provenance supplement must bind to the frozen v8 report receipt SHA.",
+  "failed_run": "/Users/n/numi-human-final-compose-publication-001/tests/test_native_lung_final_composition_1113.py",
+  "impact": "Test assertion error only; source composition and output checks were passing.",
+  "observed": "The first regression version compared the frozen v8 receipt SHA to a fresh temporary-output receipt SHA.",
+  "rerun_pending": false,
+  "rerun_result": "corrected assertion now compares frozen receipt identity to frozen report; focused suite passes 7 tests",
+  "schema": "numi.human.lung-composition-test-failure.v1",
+  "status": "failed_then_fixed",
+  "test": "test_historical_stage_lineage_is_distinguished_from_final_row310_map"
+}

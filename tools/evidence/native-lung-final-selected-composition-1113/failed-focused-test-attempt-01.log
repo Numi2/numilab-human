@@ -1,0 +1,7 @@
+Initial focused regression run failed one assertion in test_historical_stage_lineage_is_distinguished_from_final_row310_map.
+Assertion:
+  expected frozen v8 receipt SHA: 118788f2db039f805cff15c0bff7efa8c62ec68595c997564358d14044ee53e8
+  observed temporary replay receipt SHA: 776396cc67e3477667a7e114e0457f2bb04cf9956e8331f779d5a9f943d9e15c
+Cause: receipt stores absolute output paths, so a disposable rerun has a different receipt hash even when geometry replay is identical.
+Fix: compare the supplement's receipt pin with the frozen v8 report's receipt SHA, while separately validating temporary manifest-to-receipt consistency.
+After fix: 7 passed, 0 failed in 39.21s.
