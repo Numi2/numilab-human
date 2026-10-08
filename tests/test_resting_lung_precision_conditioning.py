@@ -302,6 +302,63 @@ class RestingLungPrecisionConditioningTests(unittest.TestCase):
             np.testing.assert_array_equal(source[sid]["faces"], faces)
 
 
+    def test_diaphragm_reindex_receipt_reports_actual_nonidentity(self):
+        def fixture(face_owner_order):
+            rows = {}
+            diaphragm_vertices = []
+            diaphragm_faces = []
+            for stable_id in (305, 306, 307, 308, 309):
+                offset = float(stable_id) * 0.01
+                xyz = np.asarray([
+                    [offset, 0.0, 0.0],
+                    [offset + 0.001, 0.0, 0.0],
+                    [offset, 0.001, 0.0],
+                ], dtype=np.float32)
+                rows[stable_id] = _row(stable_id, xyz, [[0, 1, 2]])
+            for stable_id in face_owner_order:
+                offset = float(stable_id) * 0.01
+                base = len(diaphragm_vertices)
+                diaphragm_vertices.extend([
+                    [offset, 0.0, 0.0],
+                    [offset + 0.001, 0.0, 0.0],
+                    [offset, 0.001, 0.0],
+                ])
+                diaphragm_faces.append([base, base + 2, base + 1])
+            rows[311] = _row(311, diaphragm_vertices, diaphragm_faces)
+            old_rows = [
+                {"lung_stable_id": sid, "diaphragm_patch_face_start": i,
+                 "diaphragm_patch_face_count": 1}
+                for i, sid in enumerate(face_owner_order)
+            ]
+            receipt = {"provenance": {"diaphragm_lung_interface": {
+                "interface_rows": old_rows,
+                "added_reversed_interface_face_count": len(old_rows),
+                "added_reversed_interface_surface_area_m2": 0.0,
+                "reciprocal_triangle_count_after_joint_repair": len(old_rows),
+            }}}
+            return rows, receipt
+
+        identity_rows, identity_receipt = fixture([305, 306, 307, 308])
+        identity_order, identity_report = _reconstruct_diaphragm_interface_registration(
+            identity_receipt, identity_rows)
+        self.assertTrue(np.array_equal(identity_order, np.arange(4)))
+        self.assertFalse(identity_report["row311_face_order_reindexed"])
+        self.assertTrue(identity_report["row311_face_permutation_is_identity"])
+        self.assertTrue(identity_report["row311_interface_registration_reconstructed"])
+        identity_provenance = identity_receipt["provenance"]["diaphragm_lung_interface"][
+            "source_geometry_registration_reconstruction"]
+        self.assertFalse(identity_provenance[
+            "row311_face_order_reindexed_for_existing_contiguous_range_fields"])
+        self.assertTrue(identity_provenance["row311_interface_registration_reconstructed"])
+
+        shuffled_rows, shuffled_receipt = fixture([307, 305, 308, 306])
+        shuffled_order, shuffled_report = _reconstruct_diaphragm_interface_registration(
+            shuffled_receipt, shuffled_rows)
+        np.testing.assert_array_equal(shuffled_order, [1, 3, 0, 2])
+        self.assertTrue(shuffled_report["row311_face_order_reindexed"])
+        self.assertFalse(shuffled_report["row311_face_permutation_is_identity"])
+        self.assertTrue(shuffled_report["row311_interface_registration_reconstructed"])
+
     def test_pinned_source_reconstructs_stale_diaphragm_ranges_without_geometry_change(self):
         from pathlib import Path
         import hashlib

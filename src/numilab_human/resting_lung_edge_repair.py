@@ -1895,6 +1895,8 @@ def _reconstruct_diaphragm_interface_registration(receipt, rows):
         + remaining_faces, dtype="<i8")
     if len(new_to_old) != old_face_count or set(map(int, new_to_old)) != set(range(old_face_count)):
         raise ValueError("diaphragm face reindexing is not a full permutation")
+    face_order_reindexed = not np.array_equal(
+        new_to_old, np.arange(old_face_count, dtype=new_to_old.dtype))
 
     before_topology = topology_report(rows[311]["faces"])
     rows[311]["faces"] = rows[311]["faces"][new_to_old].copy()
@@ -1949,12 +1951,13 @@ def _reconstruct_diaphragm_interface_registration(receipt, rows):
         "method": "unique exact coordinate-key face pairs with one diaphragm face, one lobe face, and opposed winding",
         "source_geometry_changed_by_registration_reconstruction": False,
         "row311_face_triangles_and_coordinates_changed": False,
-        "row311_face_order_reindexed_for_existing_contiguous_range_fields": True,
+        "row311_face_order_reindexed_for_existing_contiguous_range_fields": face_order_reindexed,
+        "row311_interface_registration_reconstructed": True,
         "patches": patch_metrics,
         "row311_topology_before_and_after_face_reindex": {
             key: before_topology.get(key) for key in topology_keys
         },
-        "row311_source_face_order_mapping_required": True,
+        "row311_source_face_order_mapping_required": face_order_reindexed,
     }
     return new_to_old, {
         "old_registration_status": "failed_exact_source_geometry_validation",
@@ -1962,7 +1965,9 @@ def _reconstruct_diaphragm_interface_registration(receipt, rows):
             str(sid): int(len(groups[sid])) for sid in sorted(groups)},
         "reconstructed_patch_topology": patch_metrics,
         "row311_face_count": old_face_count,
-        "row311_face_order_reindexed": True,
+        "row311_face_order_reindexed": face_order_reindexed,
+        "row311_interface_registration_reconstructed": True,
+        "row311_face_permutation_is_identity": not face_order_reindexed,
         "row311_face_triangles_and_coordinates_unchanged": True,
         "row311_topology_before_and_after_face_reindex": {
             key: before_topology.get(key) for key in topology_keys
@@ -2426,7 +2431,9 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         "runtime_area_and_triangle_validators_were_not_relaxed": True,
         "input_runtime_area_bit_identity": bool(area_bit_identity),
         "row311_face_connectivity_unchanged_after_registration_reindex": True,
-        "row311_face_order_reindexed_by_source_geometry_registration": True,
+        "row311_face_order_reindexed_by_source_geometry_registration":
+            interface_reconstruction["row311_face_order_reindexed"],
+        "row311_interface_registration_reconstructed": True,
         "source_point_relocations_are_explicitly_recorded": True,
         "preexisting_source_face_deletions_are_recorded_in_ancestry_sidecar": True,
         "unresolved_source_faces_below_512nm": {
