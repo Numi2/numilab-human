@@ -4,12 +4,24 @@ import numpy as np
 
 from numilab_human.common_atlas_skin_clearance import (
     _EXPECTED_SURFACE_COUNTS,
+    _apply_captured_world_delta,
     _load_target_inventory,
     _smooth_vertex_directions,
     _triangle_normal_translation_to_separate,
 )
 from numilab_human.model import ImportError
 
+
+
+def test_zero_world_delta_preserves_accepted_float32_vertex_bits():
+    captured = np.array([[0.12345679, -0.25, 1.0000001], [0.5, 0.75, -0.875]], dtype="<f4").astype(np.float64)
+    delta = np.array([[0.0, 0.0, 0.0], [1.0e-4, 0.0, 0.0]], dtype=np.float64)
+
+    candidate = _apply_captured_world_delta(captured, delta)
+
+    assert candidate[0].astype("<f4").tobytes() == captured[0].astype("<f4").tobytes()
+    assert np.array_equal(candidate[0], captured[0])
+    assert candidate[1, 0] > captured[1, 0]
 
 def test_finite_triangle_footprint_uses_first_separating_translation():
     skin = np.array([[0.0, 0.0, 0.0], [2.0, 0.0, 0.0], [0.0, 2.0, 0.0]])

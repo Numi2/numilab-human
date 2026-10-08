@@ -240,6 +240,25 @@ def _smooth_vertex_directions(vertex_normals: np.ndarray, faces: np.ndarray) -> 
     return smoothed
 
 
+def _apply_captured_world_delta(captured: np.ndarray, world_delta: np.ndarray) -> np.ndarray:
+    """Apply inferred motion to the exact accepted float32 skin baseline.
+
+    The recovered rigid poses are used to form a per-vertex Jacobian, but their
+    sub-micrometer Kabsch residual must not perturb untouched accepted vertices.
+    """
+    base = np.asarray(captured, dtype=np.float64)
+    delta = np.asarray(world_delta, dtype=np.float64)
+    if base.ndim != 2 or base.shape[1] != 3 or delta.shape != base.shape:
+        raise human.ImportError("captured-world displacement arrays have incompatible shape")
+    if not np.isfinite(base).all() or not np.isfinite(delta).all():
+        raise human.ImportError("captured-world displacement contains non-finite values")
+    candidate = (base + delta).astype("<f4").astype(np.float64)
+    unchanged = np.all(delta == 0.0, axis=1)
+    if not np.array_equal(candidate[unchanged], base[unchanged]):
+        raise human.ImportError("zero-displacement vertices changed from the accepted float32 skin baseline")
+    return candidate
+
+
 def _triangle_normal_translation_to_separate(
     skin_triangle: np.ndarray, target_triangle: np.ndarray, direction: np.ndarray,
 ) -> float:
@@ -630,7 +649,7 @@ def derive_step0_inferred_clearance(
             packed_source_delta = source_corrected - source_candidate
             world_delta_from_packed_source = np.einsum("nij,nj->ni", jacobian, packed_source_delta)
             source_roundtrip = np.linalg.norm(world_delta_from_packed_source - world_delta, axis=1)
-            candidate_world = (predicted_base + world_delta_from_packed_source).astype("<f4").astype(np.float64)
+            candidate_world = _apply_captured_world_delta(captured, world_delta_from_packed_source)
             candidate_records = _exact_surface_records(candidate_world, compact_faces)
             candidate_triangles = candidate_world[compact_faces]
             candidate_area_vectors = np.cross(candidate_triangles[:, 1] - candidate_triangles[:, 0], candidate_triangles[:, 2] - candidate_triangles[:, 0])
@@ -817,6 +836,8 @@ def derive_step0_inferred_clearance(
             "maximum_common_atlas_source_displacement_mm": float(np.linalg.norm(source_delta, axis=1).max() * 1000.0),
             "maximum_packed_inverse_roundtrip_error_um": float(source_roundtrip.max() * 1.0e6),
             "maximum_jacobian_condition_number": float(condition.max()),
+            "maximum_accepted_pose_fit_residual_um": float(base_residual.max() * 1.0e6),
+            "maximum_accepted_pose_fit_residual_on_packed_displaced_vertices_um": float(base_residual[np.any(packed_source_delta != 0.0, axis=1)].max() * 1.0e6) if np.any(packed_source_delta != 0.0) else 0.0,
             "extension_direction_smoothing": "existing Human skin visual-normal smoother, eight triangle-neighbor iterations",
             "extension_direction_smoothing_iterations": _DIRECTION_SMOOTHING_ITERATIONS,
         }
@@ -830,7 +851,8 @@ def derive_step0_inferred_clearance(
             "extension_direction_smoothing": "eight iterations of the existing Human skin visual-normal smoother over original triangle adjacency; it only selects the inferred extension direction, while original face winding remains the anatomical outward classifier and every seed face retains at least 0.8 extension-direction dot. The eight-ring orientation influence is broader than a single edge and is an explicit candidate limitation.",
             "finite_pair_demand": "minimum outward translation along the captured skin face normal that makes the finite skin and target triangles separate in at least one separating-axis interval; this avoids treating all three opponent vertices as if they overlapped the skin-face footprint",
             "field": "same compact geodesic smootherstep field for all margins: each witnessed finite triangle pair receives its first outward normal translation that separates the pair under the triangle separating-axis intervals, plus the selected engineering translation parameter; max seed envelope over geodesic distance on the original skin mesh; the manifest records the selected multiple of the median local edge length as the support radius",
-            "inverse_map": "per referenced vertex solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, all unchanged source weights, and 86 accepted body rotations recovered independently from all 185 exact-topology registered bone surfaces",
+            "inverse_map": "per referenced vertex solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, all unchanged source weights, and 86 accepted body rotations recovered independently from all 185 exact-topology registered bone surfaces; apply the resulting packed source delta to the exact captured accepted-world baseline so zero-delta vertices retain their exact float32 coordinates",
+            "pose_fit_uncertainty": "candidate displacement is linearized through the recovered 86-owner Jacobian; the full captured-vs-rigid-fit residual and the maximum residual on packed-displaced vertices are reported per margin and remain a sub-micrometer uncertainty requiring native confirmation",
             "interpretation": "inferred finite-triangle separation translation plus a normal-translation engineering offset; not measured skin thickness, penetration depth, or measured physiologic bone-to-skin spacing",
             "topology_or_bindings_changed": False,
         },
