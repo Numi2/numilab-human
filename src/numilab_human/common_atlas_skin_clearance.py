@@ -393,6 +393,320 @@ def _bounded_direction_projection(direction_vectors: np.ndarray, current_normal:
     return projections
 
 
+
+def _shared_source_directions_from_pose_normals(
+    jacobians: np.ndarray,
+    outward_world_directions: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict[str, float]]:
+    """Find one common source-space direction per vertex for several accepted poses.
+
+    The accepted NHSKIN ABI 5 source coordinates are metres (also confirmed by its
+    canonical binding rest-validation record). Each per-vertex Jacobian therefore
+    maps source metres to first-order world metres. Pull
+    each pose's unit outward direction back through that pose's Jacobian, normalize
+    before averaging so no pose wins because of scale, then push the common unit
+    source direction forward through every pose map. Admission against active
+    face normals is performed by the caller, not inferred from this vertex metric.
+    """
+    maps = np.asarray(jacobians, dtype=np.float64)
+    normals = np.asarray(outward_world_directions, dtype=np.float64)
+    if (maps.ndim != 4 or maps.shape[0] < 1 or maps.shape[1] < 1
+            or maps.shape[2:] != (3, 3)
+            or normals.shape != maps.shape[:2] + (3,)
+            or not np.isfinite(maps).all() or not np.isfinite(normals).all()):
+        raise human.ImportError("multi-pose source direction received malformed or non-finite pose maps/normals")
+    normal_lengths = np.linalg.norm(normals, axis=2)
+    if np.any(normal_lengths <= 1.0e-12):
+        raise human.ImportError("multi-pose source direction received a zero outward normal")
+    normals = normals / normal_lengths[:, :, None]
+
+    singular = np.linalg.svd(maps, compute_uv=False)
+    smallest = singular[..., -1]
+    condition = singular[..., 0] / smallest
+    if (not np.isfinite(condition).all() or float(smallest.min()) < 1.0e-8
+            or float(condition.max()) > 2.0):
+        raise human.ImportError(
+            "multi-pose skin affine Jacobian is singular or ill-conditioned: "
+            f"minimum_singular={float(smallest.min()):.12g}, maximum_condition={float(condition.max()):.12g}"
+        )
+
+    pulled = np.linalg.solve(maps, normals[..., None])[..., 0]
+    pulled_lengths = np.linalg.norm(pulled, axis=2)
+    if np.any(pulled_lengths <= 1.0e-12) or not np.isfinite(pulled_lengths).all():
+        raise human.ImportError("multi-pose normal pullback is singular or non-finite")
+    pulled_unit = pulled / pulled_lengths[:, :, None]
+    resultant = pulled_unit.sum(axis=0)
+    resultant_lengths = np.linalg.norm(resultant, axis=1)
+    coherence = resultant_lengths / float(maps.shape[0])
+    if np.any(coherence <= 1.0e-8) or not np.isfinite(coherence).all():
+        vertex = int(np.flatnonzero(coherence <= 1.0e-8)[0])
+        raise human.ImportError(
+            f"accepted-pose outward directions cancel in common source space at vertex {vertex}: "
+            f"normalized_resultant={float(coherence[vertex]):.12g}"
+        )
+    source_directions = resultant / resultant_lengths[:, None]
+    mapped = np.einsum("pnij,nj->pni", maps, source_directions)
+    mapped_lengths = np.linalg.norm(mapped, axis=2)
+    if np.any(mapped_lengths <= 1.0e-12) or not np.isfinite(mapped_lengths).all():
+        raise human.ImportError("common source direction maps to a zero or non-finite accepted-pose displacement")
+    mapped_unit = mapped / mapped_lengths[:, :, None]
+    alignment = np.einsum("pni,pni->pn", mapped_unit, normals)
+    if not np.isfinite(alignment).all():
+        raise human.ImportError("common source direction has non-finite accepted-pose outward alignment")
+    return source_directions, mapped_unit, alignment, {
+        "minimum_pullback_resultant_coherence": float(coherence.min()),
+        "minimum_pose_outward_alignment": float(alignment.min()),
+        "maximum_pose_outward_alignment": float(alignment.max()),
+        "maximum_jacobian_condition_number": float(condition.max()),
+        "minimum_jacobian_singular_value_m_per_source_m": float(smallest.min()),
+    }
+
+
+def _source_scalar_for_normal_demand(
+    jacobian: np.ndarray,
+    source_direction: np.ndarray,
+    outward_normal: np.ndarray,
+    required_normal_distance_m: float,
+    *,
+    minimum_projection: float = _MIN_CANDIDATE_DIRECTION_PROJECTION,
+) -> tuple[float, dict[str, float]]:
+    """Convert an outward world-normal gap into one NHSKIN source displacement in metres."""
+    mapping = np.asarray(jacobian, dtype=np.float64)
+    source = np.asarray(source_direction, dtype=np.float64)
+    normal = np.asarray(outward_normal, dtype=np.float64)
+    if (mapping.shape != (3, 3) or source.shape != (3,) or normal.shape != (3,)
+            or not np.isfinite(mapping).all() or not np.isfinite(source).all()
+            or not np.isfinite(normal).all() or not np.isfinite(required_normal_distance_m)
+            or required_normal_distance_m < 0.0 or not np.isfinite(minimum_projection)
+            or minimum_projection <= 0.0 or minimum_projection > 1.0):
+        raise human.ImportError("source scalar demand received malformed or non-finite input")
+    source_length = float(np.linalg.norm(source))
+    normal_length = float(np.linalg.norm(normal))
+    if source_length <= 1.0e-12 or normal_length <= 1.0e-12:
+        raise human.ImportError("source scalar demand received a zero direction")
+    source = source / source_length
+    normal = normal / normal_length
+    mapped = mapping @ source
+    mapped_length = float(np.linalg.norm(mapped))
+    if not np.isfinite(mapped_length) or mapped_length <= 1.0e-12:
+        raise human.ImportError("source scalar demand maps to zero or non-finite world motion")
+    projection = float(np.dot(mapped / mapped_length, normal))
+    if not np.isfinite(projection) or projection < minimum_projection:
+        raise human.ImportError(
+            "shared source direction is not positively and boundedly conditioned against an active face: "
+            f"projection={projection:.12g}, required_ge={minimum_projection:.12g}"
+        )
+    world_normal_motion_per_source_m = float(np.dot(mapped, normal))
+    if not np.isfinite(world_normal_motion_per_source_m) or world_normal_motion_per_source_m <= 0.0:
+        raise human.ImportError("shared source direction has no positive active-face normal motion")
+    source_distance_m = required_normal_distance_m / world_normal_motion_per_source_m
+    if not np.isfinite(source_distance_m) or source_distance_m < 0.0:
+        raise human.ImportError("source scalar demand is non-finite or negative")
+    return source_distance_m, {
+        "world_direction_normal_projection": projection,
+        "world_normal_motion_per_source_m": world_normal_motion_per_source_m,
+        "source_distance_m": float(source_distance_m),
+    }
+
+
+def _shared_source_seed_demands(
+    jacobians: np.ndarray,
+    source_directions: np.ndarray,
+    face_vertex_ids: np.ndarray,
+    outward_face_normals: np.ndarray,
+    required_normal_distances_m: np.ndarray,
+    *,
+    minimum_projection: float = _MIN_CANDIDATE_DIRECTION_PROJECTION,
+) -> tuple[np.ndarray, dict[str, float]]:
+    """Take the maximum source scalar needed by every active face in every pose.
+
+    Arrays are indexed [pose, vertex] or [pose, active face]. The per-face normal
+    demand is projected through the actual per-vertex Jacobian, including scale;
+    the returned seed field is therefore in common-atlas source metres.
+    """
+    maps = np.asarray(jacobians, dtype=np.float64)
+    source = np.asarray(source_directions, dtype=np.float64)
+    faces = np.asarray(face_vertex_ids, dtype=np.int64)
+    normals = np.asarray(outward_face_normals, dtype=np.float64)
+    demands = np.asarray(required_normal_distances_m, dtype=np.float64)
+    if (maps.ndim != 4 or maps.shape[0] < 1 or maps.shape[2:] != (3, 3)
+            or source.shape != maps.shape[1:2] + (3,)
+            or faces.ndim != 2 or faces.shape[1] != 3
+            or normals.shape != (maps.shape[0], len(faces), 3)
+            or demands.shape != (maps.shape[0], len(faces))
+            or not np.isfinite(maps).all() or not np.isfinite(source).all()
+            or not np.isfinite(normals).all() or not np.isfinite(demands).all()
+            or np.any(demands < 0.0)
+            or (faces.size and (int(faces.min()) < 0 or int(faces.max()) >= maps.shape[1]))):
+        raise human.ImportError("multi-pose active source demand received malformed or non-finite input")
+    source_lengths = np.linalg.norm(source, axis=1)
+    if np.any(source_lengths <= 1.0e-12):
+        raise human.ImportError("multi-pose active source demand received a zero shared direction")
+    source = source / source_lengths[:, None]
+    seed_required = np.zeros(maps.shape[1], dtype=np.float64)
+    if len(faces) == 0:
+        return seed_required, {
+            "active_face_count": 0,
+            "minimum_active_projection": None,
+            "maximum_source_seed_demand_m": 0.0,
+        }
+
+    face_maps = maps[:, faces]
+    face_source = source[faces]
+    mapped = np.einsum("pfcij,fcj->pfci", face_maps, face_source)
+    mapped_lengths = np.linalg.norm(mapped, axis=3)
+    if np.any(mapped_lengths <= 1.0e-12) or not np.isfinite(mapped_lengths).all():
+        raise human.ImportError("multi-pose active source direction maps to zero or non-finite world motion")
+    normal_lengths = np.linalg.norm(normals, axis=2)
+    if np.any(normal_lengths <= 1.0e-12) or not np.isfinite(normal_lengths).all():
+        raise human.ImportError("multi-pose active face has a zero or non-finite normal")
+    normals = normals / normal_lengths[:, :, None]
+    normal_projection = np.sum(mapped / mapped_lengths[:, :, :, None] * normals[:, :, None, :], axis=3)
+    if not np.isfinite(normal_projection).all() or float(normal_projection.min()) < minimum_projection:
+        pose, face, corner = np.unravel_index(int(np.argmin(normal_projection)), normal_projection.shape)
+        raise human.ImportError(
+            "shared source direction is not positively and boundedly conditioned at an active face: "
+            f"pose={pose}, face={face}, corner={corner}, projection={float(normal_projection[pose, face, corner]):.12g}, "
+            f"required_ge={minimum_projection:.12g}"
+        )
+    normal_motion = np.sum(mapped * normals[:, :, None, :], axis=3)
+    if not np.isfinite(normal_motion).all() or np.any(normal_motion <= 0.0):
+        raise human.ImportError("shared source direction has no positive active-face normal motion")
+    scalar_demands = demands[:, :, None] / normal_motion
+    if not np.isfinite(scalar_demands).all() or np.any(scalar_demands < 0.0):
+        raise human.ImportError("multi-pose source scalar demand is non-finite or negative")
+    worst_pose_per_face_corner = scalar_demands.max(axis=0)
+    for corner in range(3):
+        np.maximum.at(seed_required, faces[:, corner], worst_pose_per_face_corner[:, corner])
+    return seed_required, {
+        "active_face_count": int(len(faces)),
+        "minimum_active_projection": float(normal_projection.min()),
+        "maximum_source_seed_demand_m": float(seed_required.max(initial=0.0)),
+    }
+
+
+def _maximum_pose_edge_lengths(world_positions_by_pose: np.ndarray, edges: np.ndarray) -> np.ndarray:
+    """Use the maximum accepted-pose world length for each shared source edge."""
+    positions = np.asarray(world_positions_by_pose, dtype=np.float64)
+    edge_rows = np.asarray(edges, dtype=np.int64)
+    if (positions.ndim != 3 or positions.shape[0] < 1 or positions.shape[2] != 3
+            or edge_rows.ndim != 2 or edge_rows.shape[1] != 2
+            or not np.isfinite(positions).all()
+            or (edge_rows.size and (int(edge_rows.min()) < 0 or int(edge_rows.max()) >= positions.shape[1]))):
+        raise human.ImportError("multi-pose geodesic metric received malformed or non-finite positions/edges")
+    if len(edge_rows) == 0:
+        return np.empty(0, dtype=np.float64)
+    delta = positions[:, edge_rows[:, 0]] - positions[:, edge_rows[:, 1]]
+    lengths = np.linalg.norm(delta, axis=2)
+    if not np.isfinite(lengths).all() or np.any(lengths <= 0.0):
+        raise human.ImportError("multi-pose geodesic metric has zero or non-finite source-edge length")
+    return lengths.max(axis=0)
+
+def _smooth_collateral_displacement_near_faces(
+    displacement: np.ndarray,
+    graph,
+    compact_faces: np.ndarray,
+    folded_face_rows: np.ndarray,
+    required_seed_vertices: np.ndarray,
+    fixed_vertices: np.ndarray,
+    *,
+    graph_hops: int = 3,
+    jacobi_sweeps: int = 24,
+) -> tuple[np.ndarray, dict[str, Any]]:
+    """Harmonically taper a correction field around non-seed collateral folds.
+
+    The graph is the same shared-source surface graph used by the geodesic
+    support field. Fold vertices are interior unknowns, the outer graph ring is
+    held to the original proposal, and required correction seeds/fixed vertices
+    are exact Dirichlet values. A fold incident to a required seed is rejected:
+    this helper may smooth collateral support motion, never reduce a demanded
+    active-source displacement.
+    """
+    values = np.asarray(displacement, dtype=np.float64)
+    graph_faces = np.asarray(compact_faces, dtype=np.int64)
+    folded = np.asarray(folded_face_rows, dtype=np.int64)
+    seeds = np.asarray(required_seed_vertices, dtype=np.int64)
+    fixed = np.asarray(fixed_vertices, dtype=np.int64)
+    if (values.ndim != 2 or values.shape[1] != 3 or not np.isfinite(values).all()
+            or graph_faces.ndim != 2 or graph_faces.shape[1] != 3
+            or folded.ndim != 1 or not len(folded)
+            or seeds.ndim != 1 or fixed.ndim != 1
+            or graph.shape != (len(values), len(values))
+            or not np.isfinite(graph.data).all() or np.any(graph.data <= 0.0)
+            or graph_hops < 2 or jacobi_sweeps < 1
+            or int(folded.min()) < 0 or int(folded.max()) >= len(graph_faces)):
+        raise human.ImportError("collateral-fold smoothing received malformed geometry or graph")
+    if ((seeds.size and (int(seeds.min()) < 0 or int(seeds.max()) >= len(values)))
+            or (fixed.size and (int(fixed.min()) < 0 or int(fixed.max()) >= len(values)))):
+        raise human.ImportError("collateral-fold smoothing received an out-of-range protected vertex")
+    folded = np.unique(folded)
+    fold_vertices = np.unique(graph_faces[folded].reshape(-1))
+    if np.intersect1d(fold_vertices, seeds).size:
+        raise human.ImportError("collateral fold touches a required active correction seed")
+
+    # Distances are measured on the existing source-surface graph, not in an
+    # unrelated Euclidean neighborhood. Keep the update local to three rings.
+    from collections import deque
+
+    distance = np.full(len(values), -1, dtype=np.int32)
+    queue = deque()
+    for vertex in fold_vertices:
+        distance[int(vertex)] = 0
+        queue.append(int(vertex))
+    indptr = np.asarray(graph.indptr, dtype=np.int64)
+    indices = np.asarray(graph.indices, dtype=np.int64)
+    while queue:
+        vertex = queue.popleft()
+        if distance[vertex] >= graph_hops:
+            continue
+        for neighbor in indices[indptr[vertex]:indptr[vertex + 1]]:
+            neighbor = int(neighbor)
+            if distance[neighbor] < 0:
+                distance[neighbor] = distance[vertex] + 1
+                queue.append(neighbor)
+    patch = np.flatnonzero((distance >= 0) & (distance <= graph_hops))
+    protected = np.zeros(len(values), dtype=bool)
+    if len(seeds):
+        protected[seeds] = True
+    if len(fixed):
+        protected[fixed] = True
+    interior = patch[(distance[patch] < graph_hops) & ~protected[patch]]
+    if len(interior) == 0:
+        raise human.ImportError("collateral-fold neighborhood has no movable non-seed vertices")
+
+    smoothed = values.copy()
+    for _ in range(jacobi_sweeps):
+        updated = smoothed.copy()
+        for vertex_value in interior:
+            vertex = int(vertex_value)
+            start, end = int(indptr[vertex]), int(indptr[vertex + 1])
+            neighbors = indices[start:end]
+            lengths = np.asarray(graph.data[start:end], dtype=np.float64)
+            if len(neighbors) == 0 or np.any(lengths <= 0.0):
+                raise human.ImportError("collateral-fold smoothing encountered an isolated or invalid source vertex")
+            weights = 1.0 / lengths
+            updated[vertex] = np.einsum("i,ij->j", weights, smoothed[neighbors]) / float(weights.sum())
+        smoothed = updated
+    smoothed[protected] = values[protected]
+    if not np.isfinite(smoothed).all() or not np.array_equal(smoothed[protected], values[protected]):
+        raise human.ImportError("collateral-fold smoothing changed a protected seed or produced non-finite motion")
+    return smoothed, {
+        "method": "three-ring source-graph Dirichlet vector-field taper",
+        "folded_face_rows": [int(value) for value in folded],
+        "fold_vertex_count": int(len(fold_vertices)),
+        "patch_vertex_count": int(len(patch)),
+        "interior_vertex_count": int(len(interior)),
+        "protected_seed_count": int(len(seeds)),
+        "fixed_vertex_count": int(len(fixed)),
+        "graph_hops": int(graph_hops),
+        "jacobi_sweeps": int(jacobi_sweeps),
+        "maximum_increment_change_m": float(np.linalg.norm(smoothed - values, axis=1).max(initial=0.0)),
+        "maximum_increment_before_m": float(np.linalg.norm(values, axis=1).max(initial=0.0)),
+        "maximum_increment_after_m": float(np.linalg.norm(smoothed, axis=1).max(initial=0.0)),
+        "required_seed_values_bitwise_preserved": True,
+        "fixed_values_bitwise_preserved": True,
+    }
+
 def _area_weighted_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
     # Recompute area-weighted normals from the current candidate geometry.
     points = np.asarray(vertices, dtype=np.float64)
@@ -1122,3 +1436,812 @@ def derive_step0_inferred_clearance(
         },
     }
     return main_source, report
+
+def _propagate_source_face_orientation(
+    faces: np.ndarray,
+    outward_basis_face_ids: np.ndarray,
+) -> np.ndarray:
+    """Propagate a known outward face ordering across a connected triangle surface."""
+    triangles = np.asarray(faces, dtype=np.int64)
+    seeds = np.asarray(outward_basis_face_ids, dtype=np.int64)
+    if (triangles.ndim != 2 or triangles.shape[1] != 3 or len(triangles) == 0
+            or seeds.ndim != 1 or len(seeds) == 0
+            or np.any(triangles < 0) or np.any(seeds < 0) or np.any(seeds >= len(triangles))):
+        raise human.ImportError("source winding propagation requires valid faces and at least one outward basis face")
+    edge_owners: dict[tuple[int, int], list[tuple[int, int]]] = {}
+    for face_id, face in enumerate(triangles):
+        if len(set(map(int, face))) != 3:
+            raise human.ImportError(f"source winding face {face_id} repeats a vertex")
+        for corner in range(3):
+            start, end = int(face[corner]), int(face[(corner + 1) % 3])
+            edge = (min(start, end), max(start, end))
+            direction = 1 if start < end else -1
+            edge_owners.setdefault(edge, []).append((face_id, direction))
+    adjacency: list[list[tuple[int, int]]] = [[] for _ in range(len(triangles))]
+    for edge, owners in edge_owners.items():
+        if len(owners) > 2:
+            raise human.ImportError(f"source winding edge {edge} has {len(owners)} incident faces")
+        if len(owners) == 2:
+            (first, first_direction), (second, second_direction) = owners
+            relation = -first_direction * second_direction
+            adjacency[first].append((second, relation))
+            adjacency[second].append((first, relation))
+    signs = np.zeros(len(triangles), dtype=np.int8)
+    stack = []
+    for face_id in seeds:
+        face_id = int(face_id)
+        if signs[face_id] not in (0, 1):
+            raise human.ImportError("outward source winding basis contradicts itself")
+        signs[face_id] = 1
+        stack.append(face_id)
+    while stack:
+        face_id = stack.pop()
+        for neighbor, relation in adjacency[face_id]:
+            expected = int(signs[face_id]) * relation
+            if signs[neighbor] == 0:
+                signs[neighbor] = expected
+                stack.append(neighbor)
+            elif int(signs[neighbor]) != expected:
+                raise human.ImportError("source face adjacency is not consistently orientable from its outward basis")
+    if np.any(signs == 0):
+        missing = int(np.flatnonzero(signs == 0)[0])
+        raise human.ImportError(f"source skin has a disconnected face component without an outward basis at face {missing}")
+    return signs
+
+
+def _verify_source_winding_in_accepted_poses(
+    source_positions: np.ndarray,
+    compact_faces: np.ndarray,
+    source_outward_face_signs: np.ndarray,
+    jacobians_by_pose: np.ndarray,
+    accepted_area_vectors_by_pose: np.ndarray,
+) -> dict[str, float]:
+    """Check accepted face winding against topology-propagated source outward normals.
+
+    The per-face average affine Jacobian transports the source oriented area. This
+    is a sign check only; native accepted geometry remains the position authority.
+    """
+    source = np.asarray(source_positions, dtype=np.float64)
+    faces = np.asarray(compact_faces, dtype=np.int64)
+    signs = np.asarray(source_outward_face_signs, dtype=np.int8)
+    maps = np.asarray(jacobians_by_pose, dtype=np.float64)
+    actual = np.asarray(accepted_area_vectors_by_pose, dtype=np.float64)
+    if (source.ndim != 2 or source.shape[1] != 3 or faces.ndim != 2 or faces.shape[1] != 3
+            or signs.shape != (len(faces),) or not np.isin(signs, (-1, 1)).all()
+            or maps.ndim != 4 or maps.shape[2:] != (3, 3)
+            or actual.shape != (maps.shape[0], len(faces), 3)
+            or not np.isfinite(source).all() or not np.isfinite(maps).all() or not np.isfinite(actual).all()):
+        raise human.ImportError("source-to-pose winding verification received malformed data")
+    source_triangles = source[faces]
+    source_areas = np.cross(source_triangles[:, 1] - source_triangles[:, 0],
+                            source_triangles[:, 2] - source_triangles[:, 0])
+    source_areas *= signs[:, None]
+    face_maps = maps[:, faces].mean(axis=2)
+    determinants = np.linalg.det(face_maps)
+    if not np.isfinite(determinants).all() or np.any(determinants <= 0.0):
+        raise human.ImportError("accepted skin face map is reflected, singular, or non-finite")
+    rhs = np.broadcast_to(source_areas, (maps.shape[0], *source_areas.shape))
+    transported = determinants[:, :, None] * np.linalg.solve(
+        np.swapaxes(face_maps, -1, -2), rhs[..., None],
+    )[..., 0]
+    transported_lengths = np.linalg.norm(transported, axis=2)
+    actual_lengths = np.linalg.norm(actual, axis=2)
+    if (np.any(transported_lengths <= 1.0e-15) or np.any(actual_lengths <= 1.0e-15)
+            or not np.isfinite(transported_lengths).all() or not np.isfinite(actual_lengths).all()):
+        raise human.ImportError("accepted skin source/pose winding has a degenerate face")
+    alignment = np.einsum("pfi,pfi->pf", transported, actual) / (transported_lengths * actual_lengths)
+    if not np.isfinite(alignment).all() or float(alignment.min()) <= 0.0:
+        pose, face = np.unravel_index(int(np.argmin(alignment)), alignment.shape)
+        raise human.ImportError(
+            f"accepted pose face winding disagrees with topology-propagated outward source basis: "
+            f"pose={pose}, face={face}, dot={float(alignment[pose, face]):.12g}"
+        )
+    return {
+        "minimum_source_to_accepted_pose_normal_alignment": float(alignment.min()),
+        "maximum_source_to_accepted_pose_normal_alignment": float(alignment.max()),
+        "minimum_face_map_determinant": float(determinants.min()),
+        "maximum_face_map_determinant": float(determinants.max()),
+    }
+
+
+def derive_shared_multipose_inferred_clearance(
+    *,
+    source_positions: np.ndarray,
+    faces: np.ndarray,
+    jacobians_by_pose: np.ndarray | None,
+    accepted_skin_world_by_pose: np.ndarray,
+    baseline_target_audits_by_pose: list[dict[str, dict[str, Any]]],
+    baseline_skin_self_pairs_by_pose: list[int],
+    source_outward_face_signs: np.ndarray,
+    scan_candidate_targets,
+    target_triangle_by_row,
+    all_target_keys: set[str],
+    ocular_monitor_keys: set[str],
+    fixed_source_vertex_ids: np.ndarray,
+    bed_plane_origins_by_pose: np.ndarray,
+    bed_plane_normals_by_pose: np.ndarray,
+    selected_margin_mm: float = 0.25,
+    support_radius_edge_multiple: float = 4.0,
+    max_iterations: int = 6,
+    backtrack_count: int = 7,
+    progress_callback=None,
+    candidate_forward=None,
+    baseline_replay_tolerance_m: float = 1.0e-6,
+    preserved_source_anchor_vertex_ids: np.ndarray | None = None,
+    scan_progress_callback=None,
+    resume_source_positions: np.ndarray | None = None,
+    resume_target_audits_by_pose: list[dict[str, dict[str, Any]]] | None = None,
+    resume_provenance: dict[str, Any] | None = None,
+) -> tuple[np.ndarray, dict[str, Any]]:
+    """Infer one source-space correction constrained by all supplied accepted poses.
+
+    The caller must hash-validate packs/receipts and exact baseline audits. The scan
+    callback must cover every all_target_key and return _target_intersection_audit
+    rows. The triangle callback returns exact captured Float32 world coordinates.
+    An optional candidate_forward(full_source_f32) callback returns a mapping with
+    world_positions_by_pose[pose, sorted_referenced_vertex, xyz] and
+    jacobians_by_pose[pose, sorted_referenced_vertex, world_xyz, source_xyz].
+    It is reevaluated for each candidate so source-dependent maps, including
+    respiratory basis/weight changes, are not treated as fixed affine transforms.
+    Optional resume source/audits must be hash-validated by the caller and are
+    checked against immutable baseline orientation, bed, anchor, and ocular gates.
+    NHSKIN source and mapped world positions are metres; no runtime state changes.
+    """
+    source = np.asarray(source_positions, dtype=np.float64)
+    source_faces = np.asarray(faces, dtype=np.int64)
+    maps = None if jacobians_by_pose is None else np.asarray(jacobians_by_pose, dtype=np.float64)
+    captured = np.asarray(accepted_skin_world_by_pose, dtype=np.float64).astype("<f4").astype(np.float64)
+    if (source.ndim != 2 or source.shape[1] != 3 or not np.isfinite(source).all()
+            or source_faces.ndim != 2 or source_faces.shape[1] != 3 or source_faces.size == 0
+            or source_faces.min() < 0 or source_faces.max() >= len(source)
+            or captured.ndim != 3 or captured.shape[0] < 2 or captured.shape[2] != 3
+            or not np.isfinite(captured).all()
+            or (maps is None and candidate_forward is None)
+            or (candidate_forward is not None and not callable(candidate_forward))
+            or (scan_progress_callback is not None and not callable(scan_progress_callback))
+            or ((resume_source_positions is None) != (resume_target_audits_by_pose is None))
+            or (resume_source_positions is not None and not isinstance(resume_provenance, dict))
+            or (maps is not None and (maps.ndim != 4 or maps.shape[0] < 2 or maps.shape[2:] != (3, 3)
+                                      or maps.shape[:2] != captured.shape[:2] or not np.isfinite(maps).all()))
+            or not np.isfinite(baseline_replay_tolerance_m) or baseline_replay_tolerance_m <= 0.0):
+        raise human.ImportError("multi-pose clearance inputs have malformed/non-finite source or pose geometry")
+    pose_count, referenced_count = captured.shape[:2]
+    if (len(baseline_target_audits_by_pose) != pose_count
+            or len(baseline_skin_self_pairs_by_pose) != pose_count
+            or any(int(value) != 0 for value in baseline_skin_self_pairs_by_pose)):
+        raise human.ImportError("multi-pose baseline audits or zero-self-intersection proof are incomplete")
+    if (selected_margin_mm != 0.25 or not np.isfinite(selected_margin_mm)
+            or not np.isfinite(support_radius_edge_multiple) or support_radius_edge_multiple <= 0.0
+            or max_iterations < 1 or backtrack_count < 1):
+        raise human.ImportError("multi-pose clearance requires the reviewed 0.25 mm margin and bounded iteration settings")
+    targets, ocular = set(all_target_keys), set(ocular_monitor_keys)
+    if not targets or not ocular or not ocular.issubset(targets) or targets == ocular:
+        raise human.ImportError("multi-pose clearance target inventory has an invalid ocular partition")
+    fixed_ids = np.asarray(fixed_source_vertex_ids, dtype=np.int64)
+    anchor_ids = np.asarray(
+        np.empty(0, dtype=np.int64) if preserved_source_anchor_vertex_ids is None
+        else preserved_source_anchor_vertex_ids,
+        dtype=np.int64,
+    )
+    for label, rows in (("fixed bed/support witness", fixed_ids), ("preserved source anchor", anchor_ids)):
+        if (rows.ndim != 1 or len(set(map(int, rows))) != len(rows)
+                or (len(rows) and (rows.min() < 0 or rows.max() >= len(source)))):
+            raise human.ImportError(f"{label} source vertices are malformed")
+    if np.intersect1d(fixed_ids, anchor_ids).size:
+        raise human.ImportError("fixed support witnesses and preserved source anchors must have distinct roles")
+    all_fixed_ids = np.unique(np.concatenate((fixed_ids, anchor_ids)))
+    origins = np.asarray(bed_plane_origins_by_pose, dtype=np.float64)
+    bed_normals = np.asarray(bed_plane_normals_by_pose, dtype=np.float64)
+    if (origins.shape != (pose_count, 3) or bed_normals.shape != (pose_count, 3)
+            or not np.isfinite(origins).all() or not np.isfinite(bed_normals).all()):
+        raise human.ImportError("multi-pose bed-plane data is malformed")
+    bed_lengths = np.linalg.norm(bed_normals, axis=1)
+    if np.any(bed_lengths <= 1.0e-12):
+        raise human.ImportError("multi-pose bed-plane normal is zero")
+    bed_normals /= bed_lengths[:, None]
+
+    referenced = np.unique(source_faces)
+    if len(referenced) != referenced_count:
+        raise human.ImportError("pose Jacobian rows do not exactly cover the sorted referenced skin vertices")
+    lookup = np.full(len(source), -1, dtype=np.int64)
+    lookup[referenced] = np.arange(referenced_count, dtype=np.int64)
+    compact_faces = lookup[source_faces]
+    fixed = lookup[all_fixed_ids] if len(all_fixed_ids) else np.empty(0, dtype=np.int64)
+    if np.any(compact_faces < 0) or (len(fixed) and np.any(fixed < 0)):
+        raise human.ImportError("skin topology or fixed support witness is absent from the pose map")
+    source_base = source[referenced].astype("<f4").astype(np.float64)
+    current_source = source_base.copy()
+
+    def evaluate_forward(source_rows):
+        if candidate_forward is None:
+            world = (captured + np.einsum("pnij,nj->pni", maps, source_rows - source_base)).astype("<f4").astype(np.float64)
+            return world, maps, {}
+        full_source = source.copy()
+        full_source[referenced] = np.asarray(source_rows, dtype="<f4").astype(np.float64)
+        result = candidate_forward(full_source.astype("<f4"))
+        if not isinstance(result, dict):
+            raise human.ImportError("candidate forward callback must return a mapping")
+        if not {"world_positions_by_pose", "jacobians_by_pose"}.issubset(result):
+            raise human.ImportError("candidate forward callback omitted world positions or source Jacobians")
+        world = np.asarray(result["world_positions_by_pose"], dtype="<f4").astype(np.float64)
+        forward_maps = np.asarray(result["jacobians_by_pose"], dtype=np.float64)
+        diagnostics = result.get("diagnostics", {})
+        if (world.shape != captured.shape or forward_maps.shape != (pose_count, referenced_count, 3, 3)
+                or not np.isfinite(world).all() or not np.isfinite(forward_maps).all()
+                or not isinstance(diagnostics, dict)):
+            raise human.ImportError("candidate forward callback returned malformed/non-finite geometry or Jacobians")
+        return world, forward_maps, diagnostics
+
+    base_world, current_maps, initial_forward_diagnostics = evaluate_forward(source_base)
+    baseline_replay_error = np.linalg.norm(base_world - captured, axis=2)
+    baseline_replay_max = float(baseline_replay_error.max(initial=0.0))
+    if candidate_forward is not None and initial_forward_diagnostics.get("admissible", True) is not True:
+        raise human.ImportError(
+            "candidate forward baseline violates a declared source-map invariant: "
+            + str(initial_forward_diagnostics.get("rejection_reason", "unspecified invariant"))
+        )
+    if baseline_replay_max > baseline_replay_tolerance_m:
+        raise human.ImportError(
+            "candidate forward model does not reproduce accepted captured skin within its explicit replay bound: "
+            f"max_vertex_error_m={baseline_replay_max:.12g}, bound_m={baseline_replay_tolerance_m:.12g}"
+        )
+    current_forward_diagnostics = initial_forward_diagnostics
+    base_triangles = base_world[:, compact_faces]
+    base_area = np.cross(
+        base_triangles[:, :, 1] - base_triangles[:, :, 0],
+        base_triangles[:, :, 2] - base_triangles[:, :, 0],
+    )
+    base_area_norm = np.linalg.norm(base_area, axis=2)
+    if np.any(base_area_norm == 0.0) or not np.isfinite(base_area_norm).all():
+        raise human.ImportError("accepted skin has a zero-area/non-finite triangle")
+    source_winding_report = _verify_source_winding_in_accepted_poses(
+        source[referenced], compact_faces, source_outward_face_signs, current_maps, base_area,
+    )
+    base_bed_gap = np.einsum("pni,pi->pn", captured - origins[:, None, :], bed_normals)
+    bed_floor = np.minimum(base_bed_gap, 0.0)
+
+    def pair_set(row):
+        return _triangle_pair_set(row)
+
+    if candidate_forward is not None and not np.array_equal(base_world, captured):
+        for pose in range(pose_count):
+            records = _exact_surface_records(base_world[pose], compact_faces)
+            self_audit = _audit_pair(records, records, same_surface=True)
+            if int(self_audit["count"]) != 0:
+                raise human.ImportError(f"candidate forward baseline has {self_audit['count']} exact self-pairs at pose={pose}")
+            replay_audit = scan_candidate_targets(pose, base_world[pose])
+            if not isinstance(replay_audit, dict) or set(replay_audit) != targets:
+                raise human.ImportError(f"candidate forward baseline scan omitted target coverage at pose={pose}")
+            for key in targets:
+                if (pair_set(replay_audit[key]) != pair_set(baseline_target_audits_by_pose[pose][key])
+                        or int(replay_audit[key].get("count", -1)) != int(baseline_target_audits_by_pose[pose][key].get("count", -2))):
+                    raise human.ImportError(
+                        f"candidate forward baseline changes the exact captured target-pair set at pose={pose}, surface={key}"
+                    )
+
+    def audit_count(audit, keys):
+        return sum(int(audit[key]["count"]) for key in keys)
+
+    current_audits = []
+    baseline_ocular_sets = []
+    for pose, audit in enumerate(baseline_target_audits_by_pose):
+        if set(audit) != targets:
+            raise human.ImportError(f"baseline pose {pose} does not cover the exact complete target inventory")
+        ocular_sets = {}
+        for key, row in audit.items():
+            if (int(row.get("count", -1)) != len(pair_set(row))
+                    or row.get("degenerate_face_rows")):
+                raise human.ImportError(f"baseline pose {pose} has inconsistent pairs or degenerate faces for {key}")
+            if key in ocular:
+                ocular_sets[key] = pair_set(row)
+        current_audits.append(audit)
+        baseline_ocular_sets.append(ocular_sets)
+    current_world = base_world.copy()
+    current_counts = [audit_count(row, targets - ocular) for row in current_audits]
+    initial_counts = current_counts.copy()
+    initial_ocular_counts = [sum(len(pairs) for pairs in row.values()) for row in baseline_ocular_sets]
+    resume_start_report = None
+    if resume_source_positions is not None:
+        resume_full = np.asarray(resume_source_positions, dtype=np.float64)
+        if resume_full.shape != source.shape or not np.isfinite(resume_full).all():
+            raise human.ImportError("resume source positions are malformed or non-finite")
+        unreferenced = np.setdiff1d(np.arange(len(source), dtype=np.int64), referenced, assume_unique=True)
+        if len(unreferenced) and not np.array_equal(
+                resume_full[unreferenced].astype("<f4"), source[unreferenced].astype("<f4")):
+            raise human.ImportError("resume source changed unreferenced NHSKIN positions")
+        resume_rows = resume_full[referenced].astype("<f4").astype(np.float64)
+        expected_source_sha = resume_provenance.get("source_positions_f32_sha256")
+        if (not isinstance(expected_source_sha, str) or len(expected_source_sha) != 64
+                or hashlib.sha256(np.asarray(resume_rows, dtype="<f4").tobytes()).hexdigest() != expected_source_sha):
+            raise human.ImportError("resume source positions do not match caller hash provenance")
+        for key in ("source_positions_path", "target_audits_path", "target_audits_sha256"):
+            if not isinstance(resume_provenance.get(key), str) or not resume_provenance[key]:
+                raise human.ImportError(f"resume source provenance omits {key}")
+        if len(fixed) and not np.array_equal(resume_rows[fixed], source_base[fixed]):
+            raise human.ImportError("resume candidate moved an exact bed/support witness or preserved anchor")
+        resume_world, resume_maps, resume_diagnostics = evaluate_forward(resume_rows)
+        if resume_diagnostics.get("admissible", True) is not True:
+            raise human.ImportError(
+                "resume candidate violates a declared source-map invariant: "
+                + str(resume_diagnostics.get("rejection_reason", "unspecified invariant"))
+            )
+        resume_triangles = resume_world[:, compact_faces]
+        resume_area = np.cross(resume_triangles[:, :, 1] - resume_triangles[:, :, 0],
+                               resume_triangles[:, :, 2] - resume_triangles[:, :, 0])
+        resume_area_norm = np.linalg.norm(resume_area, axis=2)
+        resume_orientation = np.einsum("pfi,pfi->pf", base_area, resume_area) / (
+            base_area_norm * np.maximum(resume_area_norm, np.finfo(np.float64).tiny)
+        )
+        if (not np.isfinite(resume_area_norm).all() or np.any(resume_area_norm == 0.0)
+                or not np.isfinite(resume_orientation).all() or float(resume_orientation.min()) <= 0.0):
+            raise human.ImportError("resume candidate violates immutable baseline nonzero-area/source-winding gates")
+        resume_bed_gap = np.einsum("pni,pi->pn", resume_world - origins[:, None, :], bed_normals)
+        if not np.isfinite(resume_bed_gap).all() or np.any(resume_bed_gap < bed_floor):
+            raise human.ImportError("resume candidate worsens an immutable baseline bed-plane gap")
+        if len(resume_target_audits_by_pose) != pose_count:
+            raise human.ImportError("resume exact target audits do not cover every accepted pose")
+        resume_audits = []
+        for pose, audit in enumerate(resume_target_audits_by_pose):
+            if not isinstance(audit, dict) or set(audit) != targets:
+                raise human.ImportError(f"resume exact target inventory is incomplete at pose={pose}")
+            ocular_sets = {}
+            for key, row in audit.items():
+                if (int(row.get("count", -1)) != len(pair_set(row))
+                        or row.get("degenerate_face_rows")):
+                    raise human.ImportError(f"resume exact target audit is malformed at pose={pose}, surface={key}")
+                if key in ocular:
+                    ocular_sets[key] = pair_set(row)
+            if any(ocular_sets[key] != baseline_ocular_sets[pose][key] for key in ocular):
+                raise human.ImportError(f"resume candidate changed an exact ocular pair set at pose={pose}")
+            resume_audits.append(audit)
+        current_source = resume_rows
+        current_world = resume_world
+        current_maps = resume_maps
+        current_forward_diagnostics = resume_diagnostics
+        current_audits = resume_audits
+        current_counts = [audit_count(row, targets - ocular) for row in current_audits]
+        resume_start_report = {
+            **resume_provenance,
+            "source_positions_f32_sha256": expected_source_sha,
+            "nonocular_pair_count_by_pose": [int(value) for value in current_counts],
+            "baseline_orientation_minimum_dot": float(resume_orientation.min()),
+            "baseline_minimum_triangle_area_ratio": float((resume_area_norm / base_area_norm).min()),
+            "baseline_minimum_bed_gap_m_by_pose": [float(row.min()) for row in resume_bed_gap],
+            "status": "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates",
+        }
+    edge_rows = np.concatenate((compact_faces[:, [0, 1]], compact_faces[:, [1, 2]], compact_faces[:, [2, 0]]))
+    edge_rows.sort(axis=1)
+    edges = np.unique(edge_rows, axis=0)
+    graph_rows, graph_cols = np.concatenate((edges[:, 0], edges[:, 1])), np.concatenate((edges[:, 1], edges[:, 0]))
+    from scipy.sparse import csr_matrix
+    from scipy.sparse.csgraph import dijkstra
+
+    iteration_rows = []
+    winding_receipt = {}
+    nonocular = targets - ocular
+    attempt_index = 0
+
+    def emit_trial(iteration, backtrack, scale, status, reason, trial_source, counts=None, audits=None,
+                   diagnostics=None):
+        nonlocal attempt_index
+        if progress_callback is None:
+            return
+        attempt_index += 1
+        packed_source = np.asarray(trial_source, dtype="<f4").copy()
+        audit_rows = None
+        if audits is not None:
+            audit_rows = [
+                {
+                    key: {
+                        "triangle_pairs": [[int(face), int(target)] for face, target in row.get("triangle_pairs", [])],
+                        "count": int(row.get("count", -1)),
+                        "aabb_candidate_pairs": int(row.get("aabb_candidate_pairs", 0)),
+                        "degenerate_face_rows": [int(face) for face in row.get("degenerate_face_rows", [])],
+                    }
+                    for key, row in audit.items()
+                }
+                for audit in audits
+            ]
+        progress_callback({
+            "attempt": attempt_index,
+            "iteration": iteration + 1,
+            "backtrack": backtrack,
+            "scale": float(scale),
+            "status": status,
+            "reason": reason,
+            "nonocular_pair_counts_before_by_pose": [int(value) for value in current_counts],
+            "nonocular_pair_counts_candidate_by_pose": None if counts is None else [int(value) for value in counts],
+            "nonocular_pair_counts_by_pose": None if counts is None else [int(value) for value in counts],
+            "target_audits_by_pose": audit_rows,
+            "candidate_diagnostics": diagnostics,
+            "source_positions_f32_sha256": hashlib.sha256(packed_source.tobytes()).hexdigest(),
+            "source_positions_f32": packed_source,
+        })
+
+    for iteration in range(max_iterations):
+        before_by_pose = current_counts.copy()
+        before_total = sum(before_by_pose)
+        if before_total == 0:
+            break
+        pose_normals = np.stack([_area_weighted_vertex_normals(current_world[p], compact_faces)
+                                 for p in range(pose_count)])
+        smooth_normals = np.stack([_smooth_vertex_directions(pose_normals[p], compact_faces)
+                                   for p in range(pose_count)])
+        source_directions, _, _, direction_report = _shared_source_directions_from_pose_normals(
+            current_maps, smooth_normals,
+        )
+        active_faces = sorted({
+            int(face) for audit in current_audits for key in nonocular
+            for face, _ in audit[key]["triangle_pairs"]
+        })
+        if not active_faces:
+            raise human.ImportError("exact nonocular pairs have no active skin faces")
+        active = np.asarray(active_faces, dtype=np.int64)
+        active_compact = compact_faces[active]
+        active_triangles = current_world[:, active_compact]
+        active_areas = np.cross(active_triangles[:, :, 1] - active_triangles[:, :, 0],
+                                active_triangles[:, :, 2] - active_triangles[:, :, 0])
+        active_area_lengths = np.linalg.norm(active_areas, axis=2)
+        if np.any(active_area_lengths <= 0.0) or not np.isfinite(active_area_lengths).all():
+            raise human.ImportError(f"active source triangle degenerated during iteration {iteration + 1}")
+        active_normals = active_areas / active_area_lengths[:, :, None]
+        face_column = {face: column for column, face in enumerate(active_faces)}
+        required = np.zeros((pose_count, len(active)), dtype=np.float64)
+        for pose in range(pose_count):
+            for key in nonocular:
+                for face_value, target_face_value in current_audits[pose][key]["triangle_pairs"]:
+                    face, target_face = int(face_value), int(target_face_value)
+                    target_triangle = np.asarray(target_triangle_by_row(pose, key, target_face), dtype=np.float64)
+                    if target_triangle.shape != (3, 3) or not np.isfinite(target_triangle).all():
+                        raise human.ImportError(f"target face lookup is invalid at pose={pose}, surface={key}, face={target_face}")
+                    skin_triangle = current_world[pose, compact_faces[face]]
+                    column = face_column[face]
+                    distance = _triangle_normal_translation_to_separate(
+                        skin_triangle, target_triangle, active_normals[pose, column],
+                    ) + selected_margin_mm / 1000.0
+                    required[pose, column] = max(required[pose, column], distance)
+        seed_required, demand_report = _shared_source_seed_demands(
+            current_maps, source_directions, active_compact, active_normals, required,
+        )
+        seeds = np.flatnonzero(seed_required > 0.0)
+        if not len(seeds):
+            raise human.ImportError(f"iteration {iteration + 1} produced no source-space correction seeds")
+        edge_lengths = _maximum_pose_edge_lengths(current_world, edges)
+        touching = np.isin(edges[:, 0], seeds) | np.isin(edges[:, 1], seeds)
+        if not np.any(touching) or np.any(edge_lengths <= 0.0):
+            raise human.ImportError(f"iteration {iteration + 1} has no valid multi-pose support edges")
+        radius = support_radius_edge_multiple * float(np.median(edge_lengths[touching]))
+        graph = csr_matrix(
+            (np.concatenate((edge_lengths, edge_lengths)), (graph_rows, graph_cols)),
+            shape=(referenced_count, referenced_count),
+        )
+        field = np.zeros(referenced_count, dtype=np.float64)
+        for start in range(0, len(seeds), _GEODESIC_SEED_BATCH_SIZE):
+            batch = seeds[start:start + _GEODESIC_SEED_BATCH_SIZE]
+            distance = dijkstra(graph, directed=False, indices=batch, limit=radius)
+            unit = np.clip(distance / radius, 0.0, 1.0)
+            envelope = 1.0 - 3.0 * unit * unit + 2.0 * unit * unit * unit
+            envelope[distance >= radius] = 0.0
+            np.maximum(field, np.max(seed_required[batch, None] * envelope, axis=0), out=field)
+        if len(fixed):
+            field[fixed] = 0.0
+        if not np.isfinite(field).all() or not np.any(field > 0.0):
+            raise human.ImportError(f"iteration {iteration + 1} has no movable correction field after support pins")
+
+        accepted = False
+        rejection = "no candidate trial"
+        for backtrack in range(backtrack_count):
+            scale = 0.5 ** backtrack
+            trial_regularization = None
+            raw_trial_source = (current_source + scale * field[:, None] * source_directions).astype("<f4").astype(np.float64)
+            trial_source = raw_trial_source
+            if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
+                rejection = "trial changed an exact bed/support witness source vertex"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source)
+                continue
+            if candidate_forward is None:
+                trial_delta = trial_source - source_base
+                trial_world = (captured + np.einsum("pnij,nj->pni", current_maps, trial_delta)).astype("<f4").astype(np.float64)
+                trial_maps, trial_forward_diagnostics = current_maps, {}
+            else:
+                trial_world, trial_maps, trial_forward_diagnostics = evaluate_forward(trial_source)
+                if trial_forward_diagnostics.get("admissible", True) is not True:
+                    rejection = ("candidate forward model violates a declared source-map invariant: "
+                                 + str(trial_forward_diagnostics.get("rejection_reason", "unspecified invariant")))
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source)
+                    continue
+            if np.array_equal(trial_world, current_world):
+                rejection = "Float32 source packing produced no new accepted-pose coordinates"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source)
+                continue
+            tri = trial_world[:, compact_faces]
+            area = np.cross(tri[:, :, 1] - tri[:, :, 0], tri[:, :, 2] - tri[:, :, 0])
+            area_norm = np.linalg.norm(area, axis=2)
+            if not np.isfinite(area_norm).all():
+                rejection = "trial contains non-finite skin triangle areas"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source)
+                continue
+            orientation_numerator = np.einsum("pfi,pfi->pf", base_area, area)
+            orientation_denominator = base_area_norm * area_norm
+            orientation = np.zeros_like(area_norm)
+            np.divide(orientation_numerator, orientation_denominator, out=orientation,
+                      where=orientation_denominator > 0.0)
+            folded_faces = np.flatnonzero(np.any((area_norm == 0.0) | (orientation <= 0.0), axis=0))
+            if len(folded_faces):
+                fold_vertices = np.unique(compact_faces[folded_faces].reshape(-1))
+                seed_touch = np.intersect1d(fold_vertices, seeds)
+                active_face_touch = np.intersect1d(folded_faces, active)
+                if len(seed_touch) or len(active_face_touch):
+                    rejection = (
+                        "collateral fold touches required active geometry: "
+                        f"faces={folded_faces[:16].tolist()}, seed_vertices={seed_touch[:16].tolist()}, "
+                        f"active_faces={active_face_touch[:16].tolist()}"
+                    )
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                               diagnostics={"folded_face_count": int(len(folded_faces)),
+                                            "required_seed_vertices_touched": seed_touch.tolist(),
+                                            "active_faces_touched": active_face_touch.tolist()})
+                    continue
+                try:
+                    regularized_increment, trial_regularization = _smooth_collateral_displacement_near_faces(
+                        trial_source - current_source,
+                        graph,
+                        compact_faces,
+                        folded_faces,
+                        seeds,
+                        fixed,
+                    )
+                    if len(seeds) and not np.array_equal(
+                            regularized_increment[seeds], (raw_trial_source - current_source)[seeds]):
+                        raise human.ImportError("local smoothing changed a required source-seed increment")
+                    trial_source = (current_source + regularized_increment).astype("<f4").astype(np.float64)
+                    if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
+                        raise human.ImportError("local smoothing moved a fixed bed/support or preserved anchor")
+                    if np.array_equal(trial_source, current_source):
+                        raise human.ImportError("local smoothing produced no source-space correction")
+                    if candidate_forward is None:
+                        trial_delta = trial_source - source_base
+                        trial_world = (captured + np.einsum("pnij,nj->pni", current_maps, trial_delta)).astype("<f4").astype(np.float64)
+                        trial_maps, trial_forward_diagnostics = current_maps, {}
+                    else:
+                        trial_world, trial_maps, trial_forward_diagnostics = evaluate_forward(trial_source)
+                        if trial_forward_diagnostics.get("admissible", True) is not True:
+                            raise human.ImportError(
+                                "regularized candidate violates a source-map invariant: "
+                                + str(trial_forward_diagnostics.get("rejection_reason", "unspecified invariant"))
+                            )
+                    tri = trial_world[:, compact_faces]
+                    area = np.cross(tri[:, :, 1] - tri[:, :, 0], tri[:, :, 2] - tri[:, :, 0])
+                    area_norm = np.linalg.norm(area, axis=2)
+                    if not np.isfinite(area_norm).all():
+                        raise human.ImportError("regularized candidate contains non-finite skin triangle areas")
+                    orientation_numerator = np.einsum("pfi,pfi->pf", base_area, area)
+                    orientation_denominator = base_area_norm * area_norm
+                    orientation = np.zeros_like(area_norm)
+                    np.divide(orientation_numerator, orientation_denominator, out=orientation,
+                              where=orientation_denominator > 0.0)
+                    remaining_folded = np.flatnonzero(np.any((area_norm == 0.0) | (orientation <= 0.0), axis=0))
+                    if len(remaining_folded):
+                        trial_regularization["remaining_folded_face_rows"] = [int(value) for value in remaining_folded]
+                        raise human.ImportError(
+                            f"local taper did not restore strict all-pose area/orientation for faces {remaining_folded[:16].tolist()}"
+                        )
+                    trial_regularization["remaining_folded_face_rows"] = []
+                    trial_regularization["regularized_candidate_orientation_minimum_dot"] = float(orientation.min())
+                    trial_regularization["regularized_candidate_minimum_area_ratio"] = float((area_norm / base_area_norm).min())
+                except human.ImportError as error:
+                    rejection = f"collateral-fold local taper rejected: {error}"
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                               diagnostics=trial_regularization)
+                    continue
+            if np.any(area_norm == 0.0):
+                rejection = "trial contains exact zero-area skin triangles after local regularity check"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                           diagnostics=trial_regularization)
+                continue
+            if not np.isfinite(orientation).all() or float(orientation.min()) <= 0.0:
+                rejection = "trial reversed an accepted-pose source-winding face after local regularity check"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                           diagnostics=trial_regularization)
+                continue
+            trial_bed_gap = np.einsum("pni,pi->pn", trial_world - origins[:, None, :], bed_normals)
+            if np.any(trial_bed_gap < bed_floor):
+                pose, vertex = np.unravel_index(int(np.argmin(trial_bed_gap - bed_floor)), trial_bed_gap.shape)
+                rejection = (f"trial introduced/worsened bed penetration at pose={pose}, "
+                             f"source_vertex={int(referenced[vertex])}")
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
+                continue
+            trial_audits = []
+            valid = True
+            trial_key = f"iteration-{iteration + 1:02d}-backtrack-{backtrack:02d}"
+            if scan_progress_callback is not None:
+                scan_progress_callback({
+                    "event": "trial_started",
+                    "trial_key": trial_key,
+                    "iteration": iteration + 1,
+                    "backtrack": backtrack,
+                    "scale": float(scale),
+                    "source_positions_f32_sha256": hashlib.sha256(np.asarray(trial_source, dtype="<f4").tobytes()).hexdigest(),
+                    "source_positions_f32": np.asarray(trial_source, dtype="<f4").copy(),
+                })
+            for pose in range(pose_count):
+                records = _exact_surface_records(trial_world[pose], compact_faces)
+                self_audit = _audit_pair(records, records, same_surface=True)
+                if int(self_audit["count"]) != 0:
+                    rejection = f"trial has {self_audit['count']} exact self-pairs at pose={pose}"
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
+                    valid = False
+                    break
+                audit = scan_candidate_targets(pose, trial_world[pose])
+                if not isinstance(audit, dict) or set(audit) != targets:
+                    raise human.ImportError(f"candidate exact scan omitted target coverage at pose={pose}")
+                if scan_progress_callback is not None:
+                    scan_progress_callback({
+                        "event": "pose_audit_complete",
+                        "trial_key": trial_key,
+                        "iteration": iteration + 1,
+                        "backtrack": backtrack,
+                        "pose_index": pose,
+                        "target_audit": audit,
+                    })
+                for key, row in audit.items():
+                    if (int(row.get("count", -1)) != len(pair_set(row))
+                            or row.get("degenerate_face_rows")):
+                        rejection = f"candidate exact scan found malformed/degenerate target={key} at pose={pose}"
+                        emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
+                        valid = False
+                        break
+                if not valid:
+                    break
+                if any(pair_set(audit[key]) != baseline_ocular_sets[pose][key] for key in ocular):
+                    rejection = f"trial changed an exact ocular pair set at pose={pose}"
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
+                    valid = False
+                    break
+                trial_audits.append(audit)
+            if not valid:
+                continue
+            trial_counts = [audit_count(audit, nonocular) for audit in trial_audits]
+            if sum(trial_counts) >= before_total:
+                rejection = f"trial did not reduce aggregate nonocular exact pairs ({before_total}->{sum(trial_counts)})"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
+                continue
+            faces_to_check = sorted({
+                int(face) for audit in trial_audits for key in nonocular
+                for face, _ in audit[key]["triangle_pairs"]
+            } | set(active_faces))
+            winding_checks = {}
+            winding_failure = None
+            for pose in range(pose_count):
+                for face in faces_to_check:
+                    dot = float(orientation[pose, face])
+                    if dot < _ROTATED_ACTIVE_FACE_BASE_DOT:
+                        try:
+                            result = _candidate_outward_winding(
+                                trial_world[pose, compact_faces[face]].mean(axis=0),
+                                area[pose, face] / area_norm[pose, face],
+                                tri[pose],
+                            )
+                        except human.ImportError as error:
+                            winding_failure = f"outward winding rejected pose={pose}, face={face}: {error}"
+                            break
+                        winding_checks[f"{pose}:{face}"] = {"pose": pose, "face": face, "normal_dot": dot, **result}
+                if winding_failure:
+                    break
+            if winding_failure:
+                rejection = winding_failure
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
+                continue
+            emit_trial(iteration, backtrack, scale, "accepted", "all pose gates and exact scans passed", trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
+            applied_source_increment = float(np.linalg.norm(trial_source - current_source, axis=1).max())
+            current_source, current_world, current_audits, current_counts = trial_source, trial_world, trial_audits, trial_counts
+            current_maps = trial_maps
+            current_forward_diagnostics = trial_forward_diagnostics
+            winding_receipt.update(winding_checks)
+            iteration_rows.append({
+                "iteration": iteration + 1, "backtrack_scale": scale,
+                "nonocular_pairs_before_by_pose": before_by_pose,
+                "nonocular_pairs_after_by_pose": trial_counts,
+                "active_skin_faces": len(active_faces), "seed_vertices": int(len(seeds)),
+                "fixed_seed_vertices": int(np.intersect1d(seeds, fixed).size),
+                "maximum_source_increment_m": float(field.max() * scale),
+                "maximum_applied_source_increment_m": applied_source_increment,
+                "local_collateral_fold_regularization": trial_regularization,
+                "maximum_source_displacement_m": float(np.linalg.norm(current_source - source_base, axis=1).max()),
+                "maximum_world_displacement_m_by_pose": [
+                    float(np.linalg.norm(current_world[p] - captured[p], axis=1).max()) for p in range(pose_count)
+                ],
+                "minimum_active_projection": demand_report["minimum_active_projection"],
+                "minimum_face_normal_alignment": float(orientation.min()),
+                "minimum_triangle_area_ratio": float((area_norm / base_area_norm).min()),
+                "maximum_triangle_area_ratio": float((area_norm / base_area_norm).max()),
+                "minimum_bed_gap_m_by_pose": [float(row.min()) for row in trial_bed_gap],
+                "direction_metrics": direction_report, "outward_winding_checks": winding_checks,
+                "forward_model_diagnostics": trial_forward_diagnostics,
+            })
+            accepted = True
+            break
+        if not accepted:
+            raise human.ImportError(
+                f"multi-pose clearance could not admit iteration={iteration + 1} after {backtrack_count} backtracks: {rejection}"
+            )
+
+    final_counts = [audit_count(audit, nonocular) for audit in current_audits]
+    if any(final_counts):
+        raise human.ImportError(f"multi-pose clearance left nonocular exact pairs: {final_counts}")
+    final_triangles = current_world[:, compact_faces]
+    final_area = np.cross(final_triangles[:, :, 1] - final_triangles[:, :, 0],
+                          final_triangles[:, :, 2] - final_triangles[:, :, 0])
+    final_area_norm = np.linalg.norm(final_area, axis=2)
+    final_area_ratio = final_area_norm / base_area_norm
+    base_edge_lengths = _maximum_pose_edge_lengths(captured, edges)
+    final_edge_lengths = _maximum_pose_edge_lengths(current_world, edges)
+    edge_stretch = final_edge_lengths / base_edge_lengths
+    output = source.copy()
+    output[referenced] = current_source
+    final_bed_gap = np.einsum("pni,pi->pn", current_world - origins[:, None, :], bed_normals)
+    report = {
+        "schema": "numi.human.accepted-multipose-common-atlas-skin-clearance.v1",
+        "status": "inferred_engineering_clearance_candidate_pending_native_replay",
+        "coordinate_units": {"NHSKIN_source": "metres", "world": "metres",
+                             "jacobian": "world metres per source metre"},
+        "selected_margin_mm": selected_margin_mm,
+        "support_radius_edge_multiple": support_radius_edge_multiple,
+        "fixed_support_source_vertices": [int(value) for value in fixed_ids],
+        "preserved_source_anchor_vertices": [int(value) for value in anchor_ids],
+        "fixed_source_vertex_ids": [int(value) for value in all_fixed_ids],
+        "source_orientation": {
+            "basis": "outward face basis from the retained full-shell local-winding report, propagated by exact shared-edge adjacency over the complete NHSKIN source topology",
+            "all_source_faces_connected_and_oriented": True,
+            "accepted_pose_affine_transport": source_winding_report,
+        },
+        "accepted_pose_count": pose_count,
+        "candidate_forward_model": {
+            "mode": "recomputed_candidate_callback" if candidate_forward is not None else "fixed_affine_jacobian",
+            "baseline_replay_max_vertex_error_m": baseline_replay_max,
+            "baseline_replay_tolerance_m": float(baseline_replay_tolerance_m),
+            "baseline_diagnostics": initial_forward_diagnostics,
+            "final_diagnostics": current_forward_diagnostics,
+        },
+        "initial_nonocular_pair_count_by_pose": initial_counts,
+        "initial_ocular_pair_count_by_pose": initial_ocular_counts,
+        "resume_start": resume_start_report,
+        "starting_nonocular_pair_count_by_pose": (
+            initial_counts if resume_start_report is None else resume_start_report["nonocular_pair_count_by_pose"]
+        ),
+        "final_nonocular_pair_count_by_pose": final_counts,
+        "final_ocular_pair_count_by_pose": [audit_count(audit, ocular) for audit in current_audits],
+        "iterations": iteration_rows,
+        "outward_winding_checks": winding_receipt,
+        "maximum_source_displacement_m": float(np.linalg.norm(current_source - source_base, axis=1).max()),
+        "maximum_world_displacement_m_by_pose": [
+            float(np.linalg.norm(current_world[p] - captured[p], axis=1).max()) for p in range(pose_count)
+        ],
+        "baseline_minimum_bed_gap_m_by_pose": [float(row.min()) for row in base_bed_gap],
+        "candidate_minimum_bed_gap_m_by_pose": [float(row.min()) for row in final_bed_gap],
+        "baseline_negative_bed_vertex_count_by_pose": [int(np.count_nonzero(row < 0.0)) for row in base_bed_gap],
+        "candidate_negative_bed_vertex_count_by_pose": [int(np.count_nonzero(row < 0.0)) for row in final_bed_gap],
+        "fixed_support_vertex_count": int(len(fixed_ids)),
+        "preserved_source_anchor_vertex_count": int(len(anchor_ids)),
+        "fixed_source_vertex_count": int(len(all_fixed_ids)),
+        "active_source_vertex_count": int(np.count_nonzero(np.linalg.norm(current_source - source_base, axis=1) > 0.0)),
+        "surface_shape_diagnostics": {
+            "minimum_face_area_ratio_across_poses": float(final_area_ratio.min()),
+            "maximum_face_area_ratio_across_poses": float(final_area_ratio.max()),
+            "minimum_face_normal_dot_to_accepted_across_poses": float(
+                (np.einsum("pfi,pfi->pf", base_area, final_area) /
+                 (base_area_norm * final_area_norm)).min()
+            ),
+            "minimum_edge_stretch_ratio_using_maximum_pose_edge_metric": float(edge_stretch.min()),
+            "maximum_edge_stretch_ratio_using_maximum_pose_edge_metric": float(edge_stretch.max()),
+            "interpretation": "diagnostics only; positive orientation and exact nonzero area are enforced, but no tissue-thickness or shape-tolerance claim is inferred",
+        },
+        "qualification": {
+            "all_supplied_accepted_pose_nonocular_exact_pairs_zero": "passed",
+            "all_supplied_accepted_pose_ocular_pair_sets_unchanged": "passed",
+            "native_replay": "pending",
+            "physical_or_collision_use": "not_admitted",
+        },
+        "interpretation": "bounded engineering clearance candidate; not measured tissue thickness, physical penetration, or clinical clearance",
+    }
+    return output, report

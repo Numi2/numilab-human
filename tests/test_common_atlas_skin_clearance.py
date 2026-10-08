@@ -224,3 +224,427 @@ def test_direction_projection_accepts_exact_twofold_conversion_bound():
     direction = np.array([[np.sqrt(0.75), 0.0, 0.5]])
     projection = _bounded_direction_projection(direction, np.array([0.0, 0.0, 1.0]))
     assert projection[0] == 0.5
+
+
+def test_shared_source_direction_pulls_back_and_averages_pose_normals():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_directions_from_pose_normals
+
+    source = np.array([0.3, -0.4, 0.866025403784], dtype=np.float64)
+    source /= np.linalg.norm(source)
+    angle1, angle2 = np.deg2rad([73.0, -41.0])
+    rotations = [
+        np.eye(3),
+        np.array([[np.cos(angle1), -np.sin(angle1), 0.0], [np.sin(angle1), np.cos(angle1), 0.0], [0.0, 0.0, 1.0]]),
+        np.array([[np.cos(angle2), -np.sin(angle2), 0.0], [np.sin(angle2), np.cos(angle2), 0.0], [0.0, 0.0, 1.0]]),
+    ]
+    scales = [np.diag([1.0, 0.8, 1.2]), np.diag([1.1, 0.9, 1.0]), np.diag([0.9, 1.2, 1.1])]
+    maps = np.asarray([rotation @ scale for rotation, scale in zip(rotations, scales)])[:, None, :, :]
+    normals = np.einsum("pij,j->pi", maps[:, 0], source)[:, None, :]
+    normals /= np.linalg.norm(normals, axis=2)[:, :, None]
+
+    shared, mapped, alignment, metrics = _shared_source_directions_from_pose_normals(maps, normals)
+
+    assert np.allclose(shared[0], source, atol=1.0e-12)
+    assert np.allclose(alignment, 1.0, atol=1.0e-12)
+    assert np.allclose(mapped[:, 0], normals[:, 0], atol=1.0e-12)
+    assert metrics["minimum_pullback_resultant_coherence"] > 1.0 - 1.0e-12
+
+
+def test_shared_source_direction_rejects_pose_cancellation_and_bad_jacobian():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_directions_from_pose_normals
+
+    cancelling_maps = np.repeat(np.eye(3)[None, None, :, :], 2, axis=0)
+    cancelling_normals = np.array([[[1.0, 0.0, 0.0]], [[-1.0, 0.0, 0.0]]])
+    with np.testing.assert_raises_regex(ImportError, "cancel"):
+        _shared_source_directions_from_pose_normals(cancelling_maps, cancelling_normals)
+
+    ill_conditioned = np.diag([2.1, 1.0, 1.0])[None, None, :, :]
+    normal = np.array([[[1.0, 0.0, 0.0]]])
+    with np.testing.assert_raises_regex(ImportError, "ill-conditioned"):
+        _shared_source_directions_from_pose_normals(ill_conditioned, normal)
+
+
+def test_source_scalar_demand_uses_actual_world_motion_per_source_metre():
+    from numilab_human.common_atlas_skin_clearance import _source_scalar_for_normal_demand
+
+    jacobian = np.diag([2.0, 1.0, 0.5])
+    source_direction = np.array([1.0, 0.0, 0.0])
+    normal = np.array([1.0, 0.0, 0.0])
+    source_distance, metrics = _source_scalar_for_normal_demand(
+        jacobian, source_direction, normal, 0.25e-3,
+    )
+
+    assert source_distance == 0.125e-3
+    assert metrics["world_normal_motion_per_source_m"] == 2.0
+    assert metrics["world_direction_normal_projection"] == 1.0
+
+    oblique = np.array([0.49, np.sqrt(1.0 - 0.49**2), 0.0])
+    with np.testing.assert_raises_regex(ImportError, "boundedly conditioned"):
+        _source_scalar_for_normal_demand(np.eye(3), oblique, normal, 1.0e-3)
+
+
+def test_shared_source_seed_demand_takes_worst_pose_and_preserves_source_units():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_seed_demands
+
+    maps = np.asarray([
+        np.repeat(np.eye(3)[None, :, :], 3, axis=0),
+        np.repeat((0.5 * np.eye(3))[None, :, :], 3, axis=0),
+    ])
+    source = np.repeat(np.array([[1.0, 0.0, 0.0]]), 3, axis=0)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    normals = np.repeat(np.array([[[1.0, 0.0, 0.0]]]), 2, axis=0)
+    demands = np.array([[0.001], [0.003]])
+
+    seed, metrics = _shared_source_seed_demands(maps, source, faces, normals, demands)
+
+    assert np.array_equal(seed, np.array([0.006, 0.006, 0.006]))
+    assert metrics["active_face_count"] == 1
+    assert metrics["minimum_active_projection"] == 1.0
+    assert metrics["maximum_source_seed_demand_m"] == 0.006
+
+
+def test_shared_source_seed_demand_rejects_inward_or_unbounded_active_face():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_seed_demands
+
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    source = np.repeat(np.array([[1.0, 0.0, 0.0]]), 3, axis=0)
+    map_batch = np.repeat(np.eye(3)[None, :, :], 3, axis=0)[None, ...]
+    inward = np.array([[[-1.0, 0.0, 0.0]]])
+    demand = np.array([[0.001]])
+    with np.testing.assert_raises_regex(ImportError, "boundedly conditioned"):
+        _shared_source_seed_demands(map_batch, source, faces, inward, demand)
+
+
+
+def test_multi_pose_geodesic_metric_uses_maximum_world_edge_length():
+    from numilab_human.common_atlas_skin_clearance import _maximum_pose_edge_lengths
+
+    positions = np.array([
+        [[0.0, 0.0, 0.0], [0.01, 0.0, 0.0], [0.0, 0.02, 0.0]],
+        [[0.0, 0.0, 0.0], [0.03, 0.0, 0.0], [0.0, 0.01, 0.0]],
+    ])
+    edges = np.array([[0, 1], [0, 2], [1, 2]], dtype=np.int64)
+
+    lengths = _maximum_pose_edge_lengths(positions, edges)
+
+    assert np.allclose(lengths, [0.03, 0.02, np.sqrt(0.03**2 + 0.01**2)])
+
+def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_rescans():
+    from numilab_human.common_atlas_skin_clearance import (
+        _audit_pair,
+        _exact_surface_records,
+        derive_shared_multipose_inferred_clearance,
+    )
+
+    source = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    maps = np.repeat(np.eye(3)[None, None, :, :], 6, axis=0).reshape(2, 3, 3, 3)
+    maps[1, :, 2, 2] = 2.0
+    captured = np.stack([source.astype(np.float64), source.astype(np.float64)])
+    targets = {
+        (0, "1:1"): np.array([[0.3, -0.1, -0.2], [0.3, 0.8, 0.2], [0.3, 0.1, -0.2]]),
+        (0, "2:1"): np.array([[5.0, 5.0, 5.0], [5.1, 5.0, 5.0], [5.0, 5.1, 5.0]]),
+        (1, "1:1"): np.array([[0.3, -0.1, -0.4], [0.3, 0.8, 0.4], [0.3, 0.1, -0.4]]),
+        (1, "2:1"): np.array([[5.0, 5.0, 5.0], [5.1, 5.0, 5.0], [5.0, 5.1, 5.0]]),
+    }
+    targets = {key: value.astype("<f4").astype(np.float64) for key, value in targets.items()}
+
+    scan_calls = []
+    def scan(pose, skin_world):
+        scan_calls.append(pose)
+        skin_records = _exact_surface_records(skin_world, faces)
+        rows = {}
+        for key in ("1:1", "2:1"):
+            target_records = _exact_surface_records(targets[(pose, key)], np.array([[0, 1, 2]]))
+            pair_result = _audit_pair(skin_records, target_records, same_surface=False)
+            rows[key] = {
+                "triangle_pairs": pair_result["triangle_pairs"],
+                "count": pair_result["count"],
+            }
+        return rows
+
+    baseline = [scan(pose, captured[pose]) for pose in range(2)]
+    def target_triangle(pose, key, row):
+        assert row == 0
+        return targets[(pose, key)]
+
+    trial_events = []
+    scan_progress_events = []
+    result, report = derive_shared_multipose_inferred_clearance(
+        source_positions=source,
+        faces=faces,
+        jacobians_by_pose=maps,
+        accepted_skin_world_by_pose=captured,
+        baseline_target_audits_by_pose=baseline,
+        baseline_skin_self_pairs_by_pose=[0, 0],
+        source_outward_face_signs=np.array([1], dtype=np.int8),
+        scan_candidate_targets=scan,
+        target_triangle_by_row=target_triangle,
+        all_target_keys={"1:1", "2:1"},
+        ocular_monitor_keys={"2:1"},
+        fixed_source_vertex_ids=np.empty(0, dtype=np.int64),
+        bed_plane_origins_by_pose=np.array([[0.0, 0.0, -1.0], [0.0, 0.0, -1.0]]),
+        bed_plane_normals_by_pose=np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]]),
+        max_iterations=3,
+        progress_callback=trial_events.append,
+        scan_progress_callback=scan_progress_events.append,
+    )
+
+    assert report["final_nonocular_pair_count_by_pose"] == [0, 0]
+    assert report["final_ocular_pair_count_by_pose"] == [0, 0]
+    assert result[0, 2] > 0.15
+    source_delta = result.astype(np.float64) - source.astype(np.float64)
+    mapped_delta = np.einsum("pnij,nj->pni", maps, source_delta)
+    assert np.allclose(mapped_delta[1, :, 2], 2.0 * mapped_delta[0, :, 2], atol=1.0e-7)
+    assert scan_calls == [0, 1, 0, 1]
+    assert trial_events[-1]["status"] == "accepted"
+    assert trial_events[-1]["source_positions_f32"].shape == (3, 3)
+    assert len(trial_events[-1]["source_positions_f32_sha256"]) == 64
+    assert trial_events[-1]["nonocular_pair_counts_before_by_pose"] == [1, 1]
+    assert trial_events[-1]["nonocular_pair_counts_candidate_by_pose"] == [0, 0]
+    assert len(trial_events[-1]["target_audits_by_pose"]) == 2
+    assert trial_events[-1]["target_audits_by_pose"][0]["1:1"]["triangle_pairs"] == []
+    assert trial_events[-1]["target_audits_by_pose"][1]["1:1"]["count"] == 0
+    assert [event["event"] for event in scan_progress_events] == [
+        "trial_started", "pose_audit_complete", "pose_audit_complete",
+    ]
+    assert scan_progress_events[0]["source_positions_f32"].shape == source.shape
+    assert scan_progress_events[1]["pose_index"] == 0
+    assert scan_progress_events[2]["pose_index"] == 1
+    assert scan_progress_events[2]["target_audit"]["1:1"]["count"] == 0
+    assert report["qualification"]["native_replay"] == "pending"
+
+    import hashlib
+
+    resume_sha = hashlib.sha256(np.asarray(result, dtype="<f4").tobytes()).hexdigest()
+    resumed, resume_report = derive_shared_multipose_inferred_clearance(
+        source_positions=source,
+        faces=faces,
+        jacobians_by_pose=maps,
+        accepted_skin_world_by_pose=captured,
+        baseline_target_audits_by_pose=baseline,
+        baseline_skin_self_pairs_by_pose=[0, 0],
+        source_outward_face_signs=np.array([1], dtype=np.int8),
+        scan_candidate_targets=scan,
+        target_triangle_by_row=target_triangle,
+        all_target_keys={"1:1", "2:1"},
+        ocular_monitor_keys={"2:1"},
+        fixed_source_vertex_ids=np.empty(0, dtype=np.int64),
+        bed_plane_origins_by_pose=np.array([[0.0, 0.0, -1.0], [0.0, 0.0, -1.0]]),
+        bed_plane_normals_by_pose=np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]]),
+        max_iterations=1,
+        resume_source_positions=result,
+        resume_target_audits_by_pose=trial_events[-1]["target_audits_by_pose"],
+        resume_provenance={
+            "source_positions_path": "resume-fixture-source.npy",
+            "source_positions_f32_sha256": resume_sha,
+            "target_audits_path": "resume-fixture-audits.json",
+            "target_audits_sha256": "a" * 64,
+        },
+    )
+    assert np.array_equal(resumed.astype("<f4"), result.astype("<f4"))
+    assert resume_report["initial_nonocular_pair_count_by_pose"] == [1, 1]
+    assert resume_report["starting_nonocular_pair_count_by_pose"] == [0, 0]
+    assert resume_report["iterations"] == []
+    assert resume_report["resume_start"]["status"] == (
+        "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates"
+    )
+
+
+def test_shared_multipose_clearance_refuses_to_move_fixed_support_seeds():
+    from numilab_human.common_atlas_skin_clearance import (
+        _audit_pair,
+        _exact_surface_records,
+        derive_shared_multipose_inferred_clearance,
+    )
+
+    source = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    maps = np.repeat(np.eye(3)[None, None, :, :], 6, axis=0).reshape(2, 3, 3, 3)
+    captured = np.stack([source.astype(np.float64), source.astype(np.float64)])
+    target = np.array([[0.3, -0.1, -0.2], [0.3, 0.8, 0.2], [0.3, 0.1, -0.2]]).astype("<f4").astype(np.float64)
+    far = np.array([[5.0, 5.0, 5.0], [5.1, 5.0, 5.0], [5.0, 5.1, 5.0]]).astype("<f4").astype(np.float64)
+
+    def scan(pose, skin_world):
+        skin = _exact_surface_records(skin_world, faces)
+        rows = {}
+        for key, other in (("1:1", target), ("2:1", far)):
+            pair = _audit_pair(skin, _exact_surface_records(other, faces), same_surface=False)
+            rows[key] = {"triangle_pairs": pair["triangle_pairs"], "count": pair["count"]}
+        return rows
+
+    baseline = [scan(pose, captured[pose]) for pose in range(2)]
+    with np.testing.assert_raises_regex(ImportError, "no movable correction field"):
+        derive_shared_multipose_inferred_clearance(
+            source_positions=source, faces=faces, jacobians_by_pose=maps,
+            accepted_skin_world_by_pose=captured, baseline_target_audits_by_pose=baseline,
+            baseline_skin_self_pairs_by_pose=[0, 0], source_outward_face_signs=np.array([1], dtype=np.int8),
+            scan_candidate_targets=scan,
+            target_triangle_by_row=lambda pose, key, row: target if key == "1:1" else far,
+            all_target_keys={"1:1", "2:1"}, ocular_monitor_keys={"2:1"},
+            fixed_source_vertex_ids=np.empty(0, dtype=np.int64),
+            preserved_source_anchor_vertex_ids=np.array([0, 1, 2], dtype=np.int64),
+            bed_plane_origins_by_pose=np.array([[0.0, 0.0, -1.0], [0.0, 0.0, -1.0]]),
+            bed_plane_normals_by_pose=np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]]),
+            max_iterations=1,
+        )
+
+
+
+def test_source_face_outward_basis_propagates_by_shared_edge_topology():
+    from numilab_human.common_atlas_skin_clearance import _propagate_source_face_orientation
+
+    consistent = np.array([[0, 1, 2], [0, 2, 3]], dtype=np.int64)
+    assert np.array_equal(_propagate_source_face_orientation(consistent, np.array([0])), [1, 1])
+
+    one_reversed = np.array([[0, 1, 2], [0, 3, 2]], dtype=np.int64)
+    assert np.array_equal(_propagate_source_face_orientation(one_reversed, np.array([0])), [1, -1])
+
+
+def test_source_face_outward_basis_rejects_unseeded_components_and_nonmanifold_edges():
+    from numilab_human.common_atlas_skin_clearance import _propagate_source_face_orientation
+
+    disconnected = np.array([[0, 1, 2], [3, 4, 5]], dtype=np.int64)
+    with np.testing.assert_raises_regex(ImportError, "disconnected face component"):
+        _propagate_source_face_orientation(disconnected, np.array([0]))
+
+    nonmanifold = np.array([[0, 1, 2], [1, 0, 3], [0, 1, 4]], dtype=np.int64)
+    with np.testing.assert_raises_regex(ImportError, "incident faces"):
+        _propagate_source_face_orientation(nonmanifold, np.array([0]))
+
+
+def test_shared_multipose_clearance_recomputes_candidate_forward_map_each_trial():
+    from numilab_human.common_atlas_skin_clearance import (
+        _audit_pair,
+        _exact_surface_records,
+        derive_shared_multipose_inferred_clearance,
+    )
+
+    source = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float32)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    captured = np.stack([source.astype(np.float64), source.astype(np.float64)])
+    targets = {
+        (0, "1:1"): np.array([[0.3, -0.1, -0.2], [0.3, 0.8, 0.2], [0.3, 0.1, -0.2]]),
+        (0, "2:1"): np.array([[5.0, 5.0, 5.0], [5.1, 5.0, 5.0], [5.0, 5.1, 5.0]]),
+        (1, "1:1"): np.array([[0.3, -0.1, -0.4], [0.3, 0.8, 0.4], [0.3, 0.1, -0.4]]),
+        (1, "2:1"): np.array([[5.0, 5.0, 5.0], [5.1, 5.0, 5.0], [5.0, 5.1, 5.0]]),
+    }
+    targets = {key: value.astype("<f4").astype(np.float64) for key, value in targets.items()}
+    forward_calls = []
+
+    def forward(full_source):
+        points = np.asarray(full_source, dtype="<f4").astype(np.float64)
+        forward_calls.append(points.copy())
+        world = np.repeat(points[None, :, :], 2, axis=0)
+        maps = np.repeat(np.eye(3)[None, None, :, :], 2 * len(points), axis=0).reshape(2, len(points), 3, 3)
+        for pose, curvature in enumerate((0.2, 0.4)):
+            world[pose, :, 2] = points[:, 2] + curvature * points[:, 2] ** 2
+            maps[pose, :, 2, 2] = 1.0 + 2.0 * curvature * points[:, 2]
+        return {
+            "world_positions_by_pose": world.astype("<f4"),
+            "jacobians_by_pose": maps,
+            "diagnostics": {"maximum_candidate_source_z_m": float(points[:, 2].max(initial=0.0))},
+        }
+
+    scan_calls = []
+
+    def scan(pose, skin_world):
+        scan_calls.append(pose)
+        skin_records = _exact_surface_records(skin_world, faces)
+        rows = {}
+        for key in ("1:1", "2:1"):
+            target_records = _exact_surface_records(targets[(pose, key)], faces)
+            pair_result = _audit_pair(skin_records, target_records, same_surface=False)
+            rows[key] = {"triangle_pairs": pair_result["triangle_pairs"], "count": pair_result["count"]}
+        return rows
+
+    baseline = [scan(pose, captured[pose]) for pose in range(2)]
+
+    def target_triangle(pose, key, row):
+        assert row == 0
+        return targets[(pose, key)]
+
+    result, report = derive_shared_multipose_inferred_clearance(
+        source_positions=source,
+        faces=faces,
+        jacobians_by_pose=None,
+        accepted_skin_world_by_pose=captured,
+        baseline_target_audits_by_pose=baseline,
+        baseline_skin_self_pairs_by_pose=[0, 0],
+        source_outward_face_signs=np.array([1], dtype=np.int8),
+        scan_candidate_targets=scan,
+        target_triangle_by_row=target_triangle,
+        all_target_keys={"1:1", "2:1"},
+        ocular_monitor_keys={"2:1"},
+        fixed_source_vertex_ids=np.empty(0, dtype=np.int64),
+        bed_plane_origins_by_pose=np.array([[0.0, 0.0, -1.0], [0.0, 0.0, -1.0]]),
+        bed_plane_normals_by_pose=np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]]),
+        max_iterations=3,
+        candidate_forward=forward,
+    )
+
+    assert report["final_nonocular_pair_count_by_pose"] == [0, 0]
+    assert report["candidate_forward_model"]["mode"] == "recomputed_candidate_callback"
+    assert report["candidate_forward_model"]["baseline_replay_max_vertex_error_m"] == 0.0
+    assert result[0, 2] > 0.15
+    assert len(forward_calls) >= 2
+    assert any(float(points[:, 2].max()) > 0.0 for points in forward_calls[1:])
+    assert report["candidate_forward_model"]["final_diagnostics"]["maximum_candidate_source_z_m"] > 0.0
+    assert scan_calls[:2] == [0, 1]
+
+
+def test_collateral_fold_taper_smooths_nonseed_motion_and_preserves_required_seed():
+    from scipy.sparse import csr_matrix
+    from numilab_human.common_atlas_skin_clearance import _smooth_collateral_displacement_near_faces
+
+    points = np.array([
+        [0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [1.0, 1.0, 0.0],
+    ])
+    faces = np.array([[0, 1, 2], [1, 3, 2]], dtype=np.int64)
+    edge_rows = np.concatenate((faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]))
+    edge_rows = np.unique(np.sort(edge_rows, axis=1), axis=0)
+    rows = np.concatenate((edge_rows[:, 0], edge_rows[:, 1]))
+    cols = np.concatenate((edge_rows[:, 1], edge_rows[:, 0]))
+    graph = csr_matrix((np.ones(len(rows)), (rows, cols)), shape=(4, 4))
+
+    displacement = np.array([
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.0, -2.0, 0.0],
+        [0.0, 0.1, 0.0],
+    ])
+    raw_triangle = (points + displacement)[faces[0]]
+    raw_normal = np.cross(raw_triangle[1] - raw_triangle[0], raw_triangle[2] - raw_triangle[0])
+    assert raw_normal[2] < 0.0
+
+    regularized, report = _smooth_collateral_displacement_near_faces(
+        displacement,
+        graph,
+        faces,
+        np.array([0], dtype=np.int64),
+        np.array([3], dtype=np.int64),
+        np.empty(0, dtype=np.int64),
+    )
+    candidate_triangle = (points + regularized)[faces[0]]
+    candidate_normal = np.cross(
+        candidate_triangle[1] - candidate_triangle[0],
+        candidate_triangle[2] - candidate_triangle[0],
+    )
+    assert candidate_normal[2] > 0.0
+    assert np.array_equal(regularized[3], displacement[3])
+    assert report["required_seed_values_bitwise_preserved"] is True
+    assert report["folded_face_rows"] == [0]
+    assert report["maximum_increment_change_m"] > 0.0
+
+    with np.testing.assert_raises_regex(ImportError, "touches a required active correction seed"):
+        _smooth_collateral_displacement_near_faces(
+            displacement,
+            graph,
+            faces,
+            np.array([0], dtype=np.int64),
+            np.array([1], dtype=np.int64),
+            np.empty(0, dtype=np.int64),
+        )
