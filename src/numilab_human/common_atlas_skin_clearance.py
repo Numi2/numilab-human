@@ -34,6 +34,7 @@ _EXPECTED_OCULAR_WITNESS_COUNT = 4415
 _EXPECTED_ORIENTATION_FACE_COUNT = 980
 _OCULAR_MONITOR_KEYS = {(51010, stable_id) for stable_id in range(381, 398)}
 _DIRECTION_SMOOTHING_ITERATIONS = 8
+_GEODESIC_SEED_BATCH_SIZE = 16
 _MIN_CANDIDATE_DIRECTION_PROJECTION = 0.5
 _ROTATED_ACTIVE_FACE_BASE_DOT = 0.75
 _CANDIDATE_WINDING_OFFSET_M = 0.0005
@@ -782,11 +783,18 @@ def derive_step0_inferred_clearance(
                 (current_graph_weights, (graph_rows, graph_cols)),
                 shape=(len(referenced), len(referenced)),
             )
-            distance = dijkstra(current_graph, directed=False, indices=seed, limit=radius)
-            unit = np.clip(distance / radius, 0.0, 1.0)
-            envelope = 1.0 - 3.0 * unit * unit + 2.0 * unit * unit * unit
-            envelope[distance >= radius] = 0.0
-            increment_field = np.max(seed_required[seed, None] * envelope, axis=0)
+            seed_count = int(len(seed))
+            increment_field = np.zeros(len(referenced), dtype=np.float64)
+            for batch_start in range(0, seed_count, _GEODESIC_SEED_BATCH_SIZE):
+                batch_seed = seed[batch_start:batch_start + _GEODESIC_SEED_BATCH_SIZE]
+                distance_batch = dijkstra(current_graph, directed=False, indices=batch_seed, limit=radius)
+                unit_batch = np.clip(distance_batch / radius, 0.0, 1.0)
+                envelope_batch = 1.0 - 3.0 * unit_batch * unit_batch + 2.0 * unit_batch * unit_batch * unit_batch
+                envelope_batch[distance_batch >= radius] = 0.0
+                batch_field = np.max(seed_required[batch_seed, None] * envelope_batch, axis=0)
+                np.maximum(increment_field, batch_field, out=increment_field)
+                del distance_batch, unit_batch, envelope_batch, batch_field, batch_seed
+            del current_graph, current_graph_weights, current_edge_lengths, seed_required, seed, current_normals
             if not np.isfinite(increment_field).all() or not np.any(increment_field > 0.0):
                 raise human.ImportError(f"clearance incremental compact field is invalid at iteration {iteration + 1}")
 
@@ -924,7 +932,7 @@ def derive_step0_inferred_clearance(
                 active_faces_seen = trial_active_faces
                 candidate_winding_checks.update(trial_winding_checks)
                 correction_scale_accepted = correction_scale
-                final_seed_count = int(len(seed))
+                final_seed_count = seed_count
                 final_field = increment_field * correction_scale
                 final_quality = {
                     "exact_nonadjacent_skin_self_intersection_pairs": int(trial_self_audit["count"]),
@@ -949,7 +957,7 @@ def derive_step0_inferred_clearance(
                 iteration_receipts.append({
                     "iteration": int(iteration + 1),
                     "accepted_backtrack_factor": float(correction_scale),
-                    "seed_vertex_count": int(len(seed)),
+                    "seed_vertex_count": seed_count,
                     "maximum_increment_mm": float(final_field.max() * 1000.0),
                     "maximum_total_world_displacement_mm": float(np.linalg.norm(world_delta_total, axis=1).max() * 1000.0),
                     "nonocular_pairs_before": int(remaining_before),
@@ -1012,6 +1020,7 @@ def derive_step0_inferred_clearance(
             "extension_direction_smoothing": "recompute current candidate area-weighted vertex normals and apply existing Human skin visual-normal smoother for eight iterations before each incremental correction",
             "extension_direction_smoothing_iterations": _DIRECTION_SMOOTHING_ITERATIONS,
             "iterations": iteration_receipts,
+            "geodesic_seed_batch_size": _GEODESIC_SEED_BATCH_SIZE,
         }
     main_source = source_positions.copy()
     main_source[referenced] = output_source_by_margin[0.25]
