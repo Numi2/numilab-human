@@ -1,0 +1,280 @@
+{
+  "base_manifest_924": {
+    "bytes": 509867,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/lung-choroid-composition-924/final-v2/resting-anatomy-manifest.json",
+    "sha256": "721378aaf13e7da75e9fb61ac72c412dc792f16463d7427d45d02dac36c65dd3"
+  },
+  "base_receipt_924": {
+    "bytes": 29218593,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/lung-choroid-composition-924/final-v2/resting-anatomy-receipt.json",
+    "sha256": "40652ad554565f27713d6023af3327994f9c226e5471eddbd3b77d1baaaace3e"
+  },
+  "candidate_payload": {
+    "bytes": 23293288,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+    "sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1"
+  },
+  "candidate_positions_array_sha256": "a7d6869f6967b2e01a2ad0b7361741ee35a7b573f7b8ae63927962227ec41d37",
+  "candidate_positions_f32_sha256": "2e4e1928cdaa3dc7bb39ae58352796240656ec8617561b6b1ac642c5a97941c3",
+  "candidate_receipt_composition": {
+    "anatomy_payload_unchanged": true,
+    "base_receipt_path": "/Users/n/numi-human-resting-evidence-20261005/lung-choroid-composition-924/final-v2/resting-anatomy-receipt.json",
+    "base_receipt_sha256": "40652ad554565f27713d6023af3327994f9c226e5471eddbd3b77d1baaaace3e",
+    "candidate_manifest_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/common-atlas-skin-geometry-registration.manifest.json",
+    "candidate_manifest_sha256": "120b78369a8b74a4719eccc9ef416a44086574dc5ddcddbc55b721e2d06ccf99",
+    "candidate_skin_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+    "candidate_skin_sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1",
+    "functional_bindings_unchanged": true,
+    "manifest_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/registered-composed-001/resting-anatomy-manifest.json",
+    "manifest_sha256": "b91a7bcb0ed79a8cb59b16a158a082339f5f6af63d7bbd51488acbc14b25c968",
+    "mass_geometry_accounting": {
+      "apparent_density_kg_m3": null,
+      "basis": "72 kg is an explicitly declared generic adult reference mass, not a measured participant. The source rigid mass/inertia distribution is uniformly rebased. The current visual shell has open boundaries, so its signed surface integral is not admitted as a geometric volume or density.",
+      "closed_skin_volume_m3": null,
+      "nhtiss4_common_atlas_source_identity_sha256": "cf5b7bb103aa4b0536b1b872ecc9ac4bcc0afe5926dbab38cdeb7543053272a1",
+      "open_surface_signed_integral_m3_diagnostic_only": 0.07131871564457325,
+      "reference_total_mass_kg": 72.0,
+      "skin_boundary_branch_vertex_count": 0,
+      "skin_boundary_edge_count": 115,
+      "skin_boundary_loop_count": 2,
+      "skin_boundary_repair": {
+        "added_triangle_count": 28,
+        "boundary_edges_after_exact_weld": 171,
+        "boundary_edges_after_small_caps": 115,
+        "coordinates_normals_weights_vertex_ids_unchanged": true,
+        "exact_coordinate_weight_identical_seam_vertices": 286,
+        "qualification": "topology repair only; ocular openings retained; not a closed body-volume or self-intersection certificate",
+        "retained_anatomical_interfaces": [
+          {
+            "bounds_world_m": [
+              [
+                -0.070671413168695,
+                0.08369642792926407,
+                1.648014981319725
+              ],
+              [
+                -0.043790965560770057,
+                0.0921603717450362,
+                1.658635257443761
+              ]
+            ],
+            "interface": "ocular surface opening; passive eyeball interface",
+            "source_vertex_ids": [
+              20578,
+              20582,
+              20584,
+              20583,
+              54728,
+              20585,
+              20586,
+              54731,
+              54732,
+              54733,
+              21350,
+              54734,
+              21352,
+              54736,
+              54743,
+              22109,
+              22111,
+              22113,
+              22892,
+              22899,
+              23651,
+              23652,
+              54762,
+              23653,
+              23654,
+              54763,
+              54769,
+              24683,
+              54770,
+              24682,
+              24681,
+              54766,
+              24680,
+              24679,
+              54761,
+              54760,
+              23645,
+              54758,
+              54756,
+              54750,
+              54749,
+              22886,
+              22885,
+              22883,
+              54748,
+              22882,
+              54747,
+              22880,
+              54746,
+              54738,
+              54741,
+              54740,
+              54739,
+              22151,
+              54730,
+              54729,
+              21348,
+              21347,
+              20580,
+              20579
+            ]
+          },
+          {
+            "bounds_world_m": [
+              [
+                -0.007142334682133583,
+                0.08369642884036155,
+                1.648055357510074
+              ],
+              [
+                0.0196546833489656,
+                0.09221579012352119,
+                1.6586352639235085
+              ]
+            ],
+            "interface": "ocular surface opening; passive eyeball interface",
+            "source_vertex_ids": [
+              30035,
+              30036,
+              54779,
+              54781,
+              54786,
+              30730,
+              30732,
+              30731,
+              54787,
+              30734,
+              54788,
+              30735,
+              30737,
+              54799,
+              54801,
+              31511,
+              31517,
+              32246,
+              32248,
+              32250,
+              32981,
+              32982,
+              54814,
+              32984,
+              32986,
+              33743,
+              33744,
+              33745,
+              33741,
+              33742,
+              33740,
+              54830,
+              54828,
+              33737,
+              32980,
+              54811,
+              32978,
+              54807,
+              54806,
+              54805,
+              54797,
+              31508,
+              31507,
+              54796,
+              54795,
+              31504,
+              54794,
+              54785,
+              30723,
+              54784,
+              54783,
+              54782,
+              54780,
+              30037,
+              54778
+            ]
+          }
+        ],
+        "source_triangle_count": 109183
+      },
+      "skin_boundary_repair_receipt": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.boundary-repair.json",
+      "skin_boundary_repair_receipt_sha256": "1690346dad91395507378c2543bd197148be0f781ace302d89e425d199db1bbd",
+      "skin_geometry_registration_manifest": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/common-atlas-skin-geometry-registration.manifest.json",
+      "skin_geometry_registration_manifest_sha256": "120b78369a8b74a4719eccc9ef416a44086574dc5ddcddbc55b721e2d06ccf99",
+      "skin_geometry_status": "open_surface_volume_rejected",
+      "skin_nonmanifold_edge_count": 0,
+      "skin_orientation_error_count": 0,
+      "skin_payload_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+      "skin_payload_sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1",
+      "skin_self_intersection": "not assessed by this closure/volume check",
+      "skin_source_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.nhskin",
+      "skin_source_sha256": "1de6422eed1a681fb5f37df1e5355c0474016634c342516753a1058c4d0f4334",
+      "source_dynamic_body_count": 96,
+      "source_rigid_body_count": 157,
+      "source_rigid_mass_kg": 97.13195069110952,
+      "uniform_mass_and_inertia_scale": 0.7412596935169979
+    },
+    "receipt_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/registered-composed-001/resting-anatomy-receipt.json",
+    "receipt_sha256": "e840c487aacc86a5052291e80a9a871a331be2d8637540ba0eb4769e56a33e5a",
+    "status": "skin_receipt_composed_with_recomputed_open_surface_accounting"
+  },
+  "candidate_registration_manifest": {
+    "bytes": 537565,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/common-atlas-skin-geometry-registration.manifest.json",
+    "sha256": "120b78369a8b74a4719eccc9ef416a44086574dc5ddcddbc55b721e2d06ccf99"
+  },
+  "candidate_report_927": {
+    "bytes": 15883,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/candidate-run-1/candidate-report.json",
+    "sha256": "3c8c38b3921cec9202decb86cfdfd7d48ef6f1a79e86d34f7ba3a30616c5cd24"
+  },
+  "candidate_run_927_preflight": {
+    "bytes": 50889,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/candidate-run-1/preflight.json",
+    "sha256": "42e2da85d5dd7ac80f627659140f2fc47908cf83682fc9717997d1bbc2e657c1"
+  },
+  "candidate_run_927_result": {
+    "bytes": 776,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/candidate-run-1/solve-result.json",
+    "sha256": "afe9a43c853aaba9d7b1f33324c12883bde5cd501b6b14ca055544c48e09e6fb"
+  },
+  "changed_referenced_vertices": 9513,
+  "changed_unreferenced_vertices": 0,
+  "failed_incomplete_history_preserved": [
+    925,
+    926
+  ],
+  "final_exact_nonocular_pairs_by_pose": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "final_exact_ocular_pairs_by_pose": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "maximum_source_displacement_m": 0.01839465652198771,
+  "selected_margin_mm_is_target_not_certified_minimum": 0.25,
+  "source_manifest_907": {
+    "bytes": 297726,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json",
+    "sha256": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c"
+  },
+  "source_payload_907": {
+    "bytes": 23293288,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin",
+    "sha256": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2"
+  },
+  "status": "candidate_payload_manifest_and_receipt_prepared_pending_native_replay"
+}
