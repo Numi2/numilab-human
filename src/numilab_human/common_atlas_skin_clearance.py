@@ -479,6 +479,13 @@ def derive_step0_inferred_clearance(
     if len(face_constraints) != _EXPECTED_ORIENTATION_FACE_COUNT:
         raise human.ImportError(f"clearance expected 980 unique oriented nonocular witness faces, got {len(face_constraints)}")
 
+    witness_target_faces_by_skin_face: dict[int, set[str]] = {}
+    for item in witnesses:
+        skin_face = int(item["skin_source_face_row"])
+        target_semantic, target_stable_id = map(int, item["other_primitive"])
+        witness_target_faces_by_skin_face.setdefault(skin_face, set()).add(
+            f"{target_semantic}:{target_stable_id}/face/{int(item['other_primitive_face_row'])}"
+        )
     vertex_normals = np.zeros_like(captured)
     area_vectors = np.cross(captured[compact_faces[:, 1]] - captured[compact_faces[:, 0]],
                             captured[compact_faces[:, 2]] - captured[compact_faces[:, 0]])
@@ -616,6 +623,31 @@ def derive_step0_inferred_clearance(
                 bad_base_area_mm2 = float(base_double_areas[bad_face] * 0.5e6)
                 bad_candidate_area_mm2 = float(candidate_double_areas[bad_face] * 0.5e6)
                 face_constraint = face_constraints.get(bad_face)
+                dominant_seed_sources = []
+                for compact_vertex in bad_ids:
+                    scores = total_required[seed] * envelope[:, int(compact_vertex)]
+                    winner = int(np.argmax(scores))
+                    seed_vertex = int(seed[winner])
+                    seed_faces = [
+                        int(source_face) for source_face, source_row in face_constraints.items()
+                        if seed_vertex in compact_faces[source_face]
+                    ]
+                    dominant_seed_sources.append({
+                        "corrected_skin_source_vertex": int(referenced[int(compact_vertex)]),
+                        "dominant_seed_skin_source_vertex": int(referenced[seed_vertex]),
+                        "seed_distance_mm": float(distance[winner, int(compact_vertex)] * 1000.0),
+                        "seed_demand_mm": float(total_required[seed_vertex] * 1000.0),
+                        "seed_envelope_value": float(envelope[winner, int(compact_vertex)]),
+                        "contributes_to_field_mm": float(scores[winner] * 1000.0),
+                        "prior_active_set_seed": bool(active_vertex_required[seed_vertex] > 0.0),
+                        "initial_witness_sources": [
+                            {
+                                "skin_face": source_face,
+                                "targets": sorted(witness_target_faces_by_skin_face.get(source_face, set())),
+                            }
+                            for source_face in seed_faces
+                        ],
+                    })
                 raise human.ImportError(
                     f"clearance margin {margin_mm} mm reversed skin triangle: face={bad_face}, "
                     f"iteration={iteration + 1}, prior_active_vertex_count={int(np.count_nonzero(active_vertex_required))}, "
@@ -631,6 +663,7 @@ def derive_step0_inferred_clearance(
                     f"common_atlas_source_delta_mm={(source_delta[bad_ids] * 1000.0).tolist()}, "
                     f"initial_witness_targets={sorted(face_constraint['target_surfaces']) if face_constraint else []}, "
                     f"initial_witness_pair_count={face_constraint['target_pair_count'] if face_constraint else 0}, "
+                    f"dominant_seed_sources={dominant_seed_sources}, "
                     f"support_radius_mm={radius * 1000.0:.12g}, median_edge_mm={median_edge * 1000.0:.12g}"
                 )
             skin_self_audit = _audit_pair(candidate_records, candidate_records, same_surface=True)
