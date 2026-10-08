@@ -37,6 +37,11 @@ COLLAPSE_REMOVE_VERTEX = 37249
 COLLAPSE_KEEP_VERTEX = 37247
 EXPECTED_REMOVED_FACE_ORIGINS = (74286, 74326)
 
+SHARED_SLIVER_307_309_ENDPOINTS_M = (
+    (0.030193209648132324, 0.015959935262799263, 0.10831820964813232),
+    (0.03019365668296814, 0.015960097312927246, 0.10831865668296814),
+)
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -1129,6 +1134,221 @@ def _collapse_short_precision_slivers(original_rows, *, altitude_limit_m=128e-9,
     }, face_ancestry
 
 
+
+def _collapse_reciprocal_shared_edge(original_rows, *, owner_pair,
+                                     endpoint_coordinates_m,
+                                     max_endpoint_displacement_m=1e-6,
+                                     max_abs_volume_delta_m3=1e-12):
+    """Transactionally collapse one exact reciprocal edge in two registered owners.
+
+    This narrow operation reuses the existing closed-surface edge-collapse owner.
+    Both source owners must contain one identical edge and both incident faces
+    must be exact, oppositely wound reciprocal faces. The edge endpoints may not
+    be shared with any third lung/diaphragm owner. Only the two declared owner
+    rows can change; all other exact owner maps must remain byte-identical.
+    """
+    pair = tuple(sorted(map(int, owner_pair)))
+    if pair != (307, 309):
+        raise ValueError("registered shared-sliver correction is pinned to owners 307 and 309")
+    if len(endpoint_coordinates_m) != 2:
+        raise ValueError("registered shared edge needs exactly two endpoint coordinates")
+    endpoints = [np.asarray(x, dtype="<f4").reshape(-1) for x in endpoint_coordinates_m]
+    if any(x.shape != (3,) or not np.isfinite(x).all() for x in endpoints):
+        raise ValueError("registered shared-edge endpoints must be finite xyz Float32 coordinates")
+    endpoint_keys = [np.ascontiguousarray(x).tobytes() for x in endpoints]
+    if endpoint_keys[0] == endpoint_keys[1]:
+        raise ValueError("registered shared-edge endpoints are identical")
+    if (not np.isfinite(max_endpoint_displacement_m) or max_endpoint_displacement_m <= 0
+            or not np.isfinite(max_abs_volume_delta_m3) or max_abs_volume_delta_m3 < 0):
+        raise ValueError("registered shared-edge movement and volume bounds are invalid")
+
+    checked_owners = tuple(sid for sid in (*range(305, 310), 311) if sid in original_rows)
+    if any(sid not in original_rows for sid in pair):
+        raise ValueError("registered shared-edge owner is missing")
+    rows = {sid: dict(row) for sid, row in original_rows.items()}
+
+    def pkey(point):
+        return np.ascontiguousarray(point, dtype="<f4").tobytes()
+
+    def oriented_face_key(row, face_index):
+        xyz = row["vertices6"][:, :3]
+        return tuple(pkey(xyz[int(index)]) for index in row["faces"][face_index])
+
+    def shared_face_maps(state):
+        grouped = collections.defaultdict(list)
+        for sid in checked_owners:
+            xyz, faces = state[sid]["vertices6"][:, :3], state[sid]["faces"]
+            for fi, face in enumerate(faces):
+                oriented = tuple(pkey(xyz[int(index)]) for index in face)
+                grouped[tuple(sorted(oriented))].append((sid, int(fi), oriented))
+        result = collections.defaultdict(dict)
+        for key, entries in grouped.items():
+            if len(entries) > 2 or len({entry[0] for entry in entries}) != len(entries):
+                raise ValueError("registered shared-edge map is multiply owned or self-duplicated")
+            if len(entries) == 2:
+                a, b = entries
+                if not any(tuple(a[2][(shift-i) % 3] for i in range(3)) == b[2]
+                           for shift in range(3)):
+                    raise ValueError("registered shared-edge face owners are not oppositely wound")
+                owner_key = tuple(sorted((a[0], b[0])))
+                result[owner_key][key] = (a, b)
+        return result
+
+    def patch_topology(face_map):
+        faces = list(face_map)
+        points = sorted({point for face in faces for point in face})
+        point_index = {point: index for index, point in enumerate(points)}
+        edge_counts = collections.Counter()
+        parent = list(range(len(points)))
+        def find(index):
+            while parent[index] != index:
+                parent[index] = parent[parent[index]]
+                index = parent[index]
+            return index
+        for face in faces:
+            triangle = tuple(point_index[point] for point in face)
+            for i in range(3):
+                edge_counts[tuple(sorted((triangle[i], triangle[(i+1) % 3])))] += 1
+            root = find(triangle[0])
+            parent[find(triangle[1])] = root
+            parent[find(triangle[2])] = root
+        components = len({find(index) for index in range(len(points))}) if points else 0
+        return {
+            "face_count": len(faces), "vertex_count": len(points),
+            "edge_count": len(edge_counts), "components": components,
+            "boundary_edge_count": sum(count == 1 for count in edge_counts.values()),
+            "nonmanifold_edge_count": sum(count > 2 for count in edge_counts.values()),
+            "euler_characteristic": len(points) - len(edge_counts) + len(faces),
+        }
+
+    point_hits = {}
+    for key in endpoint_keys:
+        hits = {}
+        for sid in checked_owners:
+            xyz = np.ascontiguousarray(rows[sid]["vertices6"][:, :3], dtype="<f4")
+            packed_key = np.frombuffer(key, dtype="<f4").view("<u4")
+            ids = np.flatnonzero(np.all(xyz.view("<u4").reshape(-1, 3) == packed_key, axis=1))
+            if len(ids):
+                hits[sid] = list(map(int, ids))
+        if set(hits) != set(pair) or any(len(ids) != 1 for ids in hits.values()):
+            raise ValueError("registered edge endpoint has missing, duplicate, or third-owner bindings")
+        point_hits[key] = hits
+
+    source_pair_maps = shared_face_maps(rows)
+    if pair not in source_pair_maps:
+        raise ValueError("registered shared edge has no exact reciprocal face patch")
+    source_patch = source_pair_maps[pair]
+    source_incident_face_keys = {}
+    owner_indices = {}
+    for sid in pair:
+        u = point_hits[endpoint_keys[0]][sid][0]
+        w = point_hits[endpoint_keys[1]][sid][0]
+        owner_indices[sid] = (u, w)
+        faces = rows[sid]["faces"]
+        incident = np.flatnonzero(np.sum(np.isin(faces, (u, w)), axis=1) == 2)
+        if len(incident) != 2:
+            raise ValueError(f"registered shared edge in owner {sid} is not two-manifold")
+        keys = [tuple(sorted(oriented_face_key(rows[sid], int(fi)))) for fi in incident]
+        if len(set(keys)) != 2 or any(key not in source_patch for key in keys):
+            raise ValueError(f"both edge-star faces in owner {sid} must be exact reciprocal patch faces")
+        source_incident_face_keys[sid] = sorted(keys)
+    if source_incident_face_keys[pair[0]] != source_incident_face_keys[pair[1]]:
+        raise ValueError("registered shared edge incident faces do not match in both owners")
+
+    before_patch_topology = patch_topology(source_patch)
+    before_volumes = {
+        sid: float(signed_volume(rows[sid]["vertices6"][:, :3].astype(np.float64), rows[sid]["faces"]))
+        for sid in checked_owners
+    }
+    staged = {sid: dict(row) for sid, row in rows.items()}
+    ancestry = {sid: [[fi] for fi in range(len(rows[sid]["faces"]))] for sid in checked_owners}
+    owner_reports = {}
+    for sid in pair:
+        u, w = owner_indices[sid]
+        vertices, faces, origins, detail = collapse_midpoint_edge(
+            rows[sid]["vertices6"], rows[sid]["faces"],
+            np.arange(len(rows[sid]["faces"]), dtype=np.int64),
+            remove_vertex=u, keep_vertex=w, position_policy="midpoint",
+            max_endpoint_displacement_m=max_endpoint_displacement_m,
+            max_abs_volume_delta_m3=max_abs_volume_delta_m3,
+        )
+        staged[sid]["vertices6"], staged[sid]["faces"] = vertices, faces
+        ancestry[sid] = [[int(origin)] for origin in origins]
+        owner_reports[str(sid)] = detail
+
+    after_pair_maps = shared_face_maps(staged)
+    if set(after_pair_maps) != set(source_pair_maps):
+        raise ValueError("registered shared-edge collapse changed the set of reciprocal owner pairs")
+    def pair_geometry(face_map):
+        return {
+            key: tuple((entry[0], entry[2]) for entry in entries)
+            for key, entries in face_map.items()
+        }
+    for other_pair in source_pair_maps:
+        before_keys = source_pair_maps[other_pair]
+        after_keys = after_pair_maps[other_pair]
+        if other_pair != pair and pair_geometry(before_keys) != pair_geometry(after_keys):
+            raise ValueError(f"registered shared-edge collapse changed untouched owner patch {other_pair}")
+        if other_pair == pair:
+            if any(key in after_keys for key in source_incident_face_keys[pair[0]]):
+                raise ValueError("registered shared-edge collapse retained a deleted incident face")
+            before_topology = patch_topology(before_keys)
+            after_topology = patch_topology(after_keys)
+            for field in ("components", "boundary_edge_count", "nonmanifold_edge_count",
+                          "euler_characteristic"):
+                if before_topology[field] != after_topology[field]:
+                    raise ValueError(f"registered shared patch topology changed: {field}")
+            if after_topology["face_count"] != before_topology["face_count"] - 2:
+                raise ValueError("registered shared-edge collapse must remove exactly its two reciprocal faces")
+
+    after_volumes = {}
+    for sid in checked_owners:
+        before_topology = topology_report(rows[sid]["faces"])
+        after_topology = topology_report(staged[sid]["faces"])
+        for field in ("boundary_edge_count", "nonmanifold_edge_count", "orientation_error_edge_count"):
+            if before_topology[field] != after_topology[field]:
+                raise ValueError(f"registered shared-edge collapse changed owner {sid} topology: {field}")
+        before_euler = (len(rows[sid]["vertices6"]) - _edge_count(rows[sid]["faces"])
+                        + len(rows[sid]["faces"]))
+        after_euler = (len(staged[sid]["vertices6"]) - _edge_count(staged[sid]["faces"])
+                       + len(staged[sid]["faces"]))
+        if before_euler != after_euler:
+            raise ValueError(f"registered shared-edge collapse changed owner {sid} Euler characteristic")
+        after_volumes[sid] = float(signed_volume(
+            staged[sid]["vertices6"][:, :3].astype(np.float64), staged[sid]["faces"]))
+        if abs(after_volumes[sid] - before_volumes[sid]) > max_abs_volume_delta_m3:
+            raise ValueError(f"registered shared-edge collapse exceeds owner {sid} volume bound")
+    lung_delta = sum(after_volumes[sid] - before_volumes[sid] for sid in range(305, 310)
+                     if sid in before_volumes)
+    if abs(lung_delta) > max_abs_volume_delta_m3:
+        raise ValueError("registered shared-edge collapse exceeds aggregate lung volume bound")
+
+    return staged, {
+        "operation": "exact reciprocal 307/309 shared-edge midpoint collapse",
+        "owner_pair": list(pair),
+        "endpoint_coordinates_f32_m": [np.frombuffer(key, dtype="<f4").astype(float).tolist()
+                                       for key in endpoint_keys],
+        "source_reciprocal_incident_face_keys": [
+            [list(np.frombuffer(point, dtype="<f4").astype(float)) for point in face_key]
+            for face_key in source_incident_face_keys[pair[0]]
+        ],
+        "max_endpoint_displacement_m": max(
+            owner_reports[str(sid)]["maximum_endpoint_displacement_m"] for sid in pair),
+        "owner_operations": owner_reports,
+        "source_shared_patch_topology": before_patch_topology,
+        "candidate_shared_patch_topology": patch_topology(after_pair_maps[pair]),
+        "source_shared_face_counts": {str(a): len(source_pair_maps[a]) for a in sorted(source_pair_maps)},
+        "candidate_shared_face_counts": {str(a): len(after_pair_maps[a]) for a in sorted(after_pair_maps)},
+        "per_owner_signed_volume_delta_m3": {
+            str(sid): after_volumes[sid]-before_volumes[sid] for sid in checked_owners},
+        "aggregate_lung_signed_volume_delta_m3": lung_delta,
+        "all_other_reciprocal_owner_maps_unchanged": True,
+        "exact_reciprocal_patch_winding_and_topology_preserved": True,
+        "native_transformed_pose_qualification": "not performed",
+    }, ancestry
+
+
+
 def _relocate_subthreshold_vertices(original_rows, *, selection_altitude_m=128e-9,
                                     altitude_floor_m=512e-9, requested_altitude_m=540e-9,
                                     max_vertex_displacement_m=1e-6,
@@ -1892,18 +2112,34 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
     interface = receipt["provenance"]["diaphragm_lung_interface"]
 
     # Run the retained position-preserving flip owner at the measured risk
-    # screens, then only short, topology-checked collapses. Row311 remains the
-    # reciprocal diaphragm owner; source-point relocation propagates into it
-    # without changing its face inventory or registered face segment.
+    # screens, then collapse the exact 307/309 reciprocal source sliver before
+    # the generic short-edge pass. Row311 remains the reciprocal diaphragm
+    # owner; unrelated source-point relocation still propagates into it without
+    # changing its face inventory or registered face segment.
     rows1, flip_report1 = _condition_precision_lobes(
         conditioning_rows, minimum_altitude_m=1e-6, selection_altitude_m=1e-6)
     rows2, flip_report2 = _condition_precision_lobes(
         rows1, minimum_altitude_m=512e-9, selection_altitude_m=1e-6)
-    collapse_rows, collapse_report, collapse_ancestry = _collapse_short_precision_slivers(
-        rows2, altitude_limit_m=128e-9, max_edge_length_m=2e-6,
+    sliver_edge_rows, shared_sliver_report, shared_sliver_ancestry = (
+        _collapse_reciprocal_shared_edge(
+            rows2, owner_pair=(307, 309),
+            endpoint_coordinates_m=SHARED_SLIVER_307_309_ENDPOINTS_M,
+            max_endpoint_displacement_m=1e-6,
+            max_abs_volume_delta_m3=1e-12))
+    collapse_rows, collapse_report, collapse_stage_ancestry = _collapse_short_precision_slivers(
+        sliver_edge_rows, altitude_limit_m=128e-9, max_edge_length_m=2e-6,
         max_endpoint_displacement_m=1e-6, max_abs_volume_delta_m3=1e-12,
         max_operations=256, protected_owner_ids=(311,),
         protected_vertex_coordinates=(FAN_REFINEMENT_SHARED_VERTEX_M,))
+    collapse_ancestry = {
+        sid: [
+            sorted({source_face
+                    for intermediate_face in intermediate_faces
+                    for source_face in shared_sliver_ancestry[sid][int(intermediate_face)]})
+            for intermediate_faces in candidate_faces
+        ]
+        for sid, candidate_faces in collapse_stage_ancestry.items()
+    }
     rows3, relocation_report = _relocate_subthreshold_vertices(
         collapse_rows, selection_altitude_m=128e-9, altitude_floor_m=512e-9,
         requested_altitude_m=540e-9, max_vertex_displacement_m=1e-6,
@@ -2086,6 +2322,7 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
     operations = {
         "position_preserving_flip_pass_1": flip_report1,
         "position_preserving_flip_pass_2": flip_report2,
+        "registered_307_309_shared_sliver_collapse": shared_sliver_report,
         "synchronized_short_edge_collapse": collapse_report,
         "bounded_tangent_vertex_relocation": relocation_report,
         "shared_vertex_fan_refinement": fan_report,

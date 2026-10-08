@@ -3,7 +3,9 @@ import unittest
 import numpy as np
 
 from numilab_human.resting_anatomy_interface_patch import signed_volume, topology_report
-from numilab_human.resting_lung_edge_repair import collapse_midpoint_edge
+from numilab_human.resting_lung_edge_repair import (
+    _collapse_reciprocal_shared_edge, collapse_midpoint_edge,
+)
 
 
 class RestingLungEdgeRepairTests(unittest.TestCase):
@@ -127,6 +129,68 @@ class RestingLungEdgeRepairTests(unittest.TestCase):
             )
         np.testing.assert_array_equal(vertices6, before_v)
         np.testing.assert_array_equal(faces, before_f)
+
+
+    def test_reciprocal_shared_edge_collapse_is_transactional_and_preserves_patch(self):
+        vertices6, faces = self._octahedron()
+        reverse_faces = faces[:, [0, 2, 1]].copy()
+        reverse_vertices6 = vertices6.copy()
+        reverse_vertices6[:, 3:6] *= -1.0
+        rows = {
+            307: {"body_index": 20, "vertices6": vertices6.copy(), "faces": faces.copy()},
+            309: {"body_index": 20, "vertices6": reverse_vertices6, "faces": reverse_faces},
+        }
+        before = {
+            sid: (row["vertices6"].copy(), row["faces"].copy())
+            for sid, row in rows.items()
+        }
+
+        candidate, report, ancestry = _collapse_reciprocal_shared_edge(
+            rows, owner_pair=(307, 309),
+            endpoint_coordinates_m=(vertices6[0, :3], vertices6[2, :3]),
+            max_endpoint_displacement_m=20e-6,
+        )
+
+        self.assertEqual(report["source_shared_face_counts"], {"(307, 309)": 8})
+        self.assertEqual(report["candidate_shared_face_counts"], {"(307, 309)": 6})
+        self.assertEqual(report["source_shared_patch_topology"]["face_count"], 8)
+        self.assertEqual(report["candidate_shared_patch_topology"]["face_count"], 6)
+        self.assertEqual(report["candidate_shared_patch_topology"]["boundary_edge_count"], 0)
+        self.assertEqual(report["candidate_shared_patch_topology"]["euler_characteristic"], 2)
+        self.assertTrue(report["all_other_reciprocal_owner_maps_unchanged"])
+        self.assertEqual(candidate[307]["faces"].shape, (6, 3))
+        self.assertEqual(candidate[309]["faces"].shape, (6, 3))
+        self.assertEqual(len(ancestry[307]), 6)
+        self.assertEqual(len(ancestry[309]), 6)
+        for sid in rows:
+            np.testing.assert_array_equal(rows[sid]["vertices6"], before[sid][0])
+            np.testing.assert_array_equal(rows[sid]["faces"], before[sid][1])
+            self.assertEqual(topology_report(candidate[sid]["faces"])["boundary_edge_count"], 0)
+
+    def test_reciprocal_shared_edge_collapse_rejects_unpropagated_third_owner(self):
+        vertices6, faces = self._octahedron()
+        reverse_faces = faces[:, [0, 2, 1]].copy()
+        reverse_vertices6 = vertices6.copy()
+        reverse_vertices6[:, 3:6] *= -1.0
+        rows = {
+            307: {"body_index": 20, "vertices6": vertices6.copy(), "faces": faces.copy()},
+            308: {"body_index": 20, "vertices6": vertices6.copy(), "faces": faces.copy()},
+            309: {"body_index": 20, "vertices6": reverse_vertices6, "faces": reverse_faces},
+        }
+        before = {
+            sid: (row["vertices6"].copy(), row["faces"].copy())
+            for sid, row in rows.items()
+        }
+        with self.assertRaisesRegex(ValueError, "third-owner"):
+            _collapse_reciprocal_shared_edge(
+                rows, owner_pair=(307, 309),
+                endpoint_coordinates_m=(vertices6[0, :3], vertices6[2, :3]),
+                max_endpoint_displacement_m=20e-6,
+            )
+        for sid in rows:
+            np.testing.assert_array_equal(rows[sid]["vertices6"], before[sid][0])
+            np.testing.assert_array_equal(rows[sid]["faces"], before[sid][1])
+
 
 
 if __name__ == "__main__":
