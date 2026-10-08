@@ -76,3 +76,37 @@ def test_current_897_raw_face_ancestry_maps_after_exact_cleanup():
                         for parent_id, source_id in enumerate(source_order)}
     assert [parent_positions[source_id] for source_id in range(28862, 28870)] == list(range(28852, 28860))
     assert len(source_order) == 28860
+
+
+def test_lung_composition_retains_unrelated_rows_and_rejects_eye_change():
+    import copy
+    import pytest
+    from numilab_human.right_choroid_laterality_repair import _verify_disjoint_lung_rows
+    from numilab_human import model as human
+    row = {"body_index": 20, "layer": 1, "flags": 0,
+           "vertices6": np.column_stack((_tetra_points(), np.zeros((4, 3)))).astype("<f4"),
+           "faces": _outward_tetra_faces()}
+    reference = {305: copy.deepcopy(row), 382: copy.deepcopy(row)}
+    parent = copy.deepcopy(reference)
+    parent[305]["vertices6"][0, 0] += np.float32(1e-6)
+    assert _verify_disjoint_lung_rows(reference, parent) == [305]
+    assert reference[305]["vertices6"][0, 0] == 0
+    parent[382]["faces"] = parent[382]["faces"][:-1]
+    with pytest.raises(human.ImportError, match="non-lung row"):
+        _verify_disjoint_lung_rows(reference, parent)
+
+
+def test_lung_composition_rejects_changed_identity_and_owner():
+    import copy
+    import pytest
+    from numilab_human.right_choroid_laterality_repair import _verify_disjoint_lung_rows
+    from numilab_human import model as human
+    row = {"body_index": 20, "layer": 1, "flags": 0,
+           "vertices6": np.column_stack((_tetra_points(), np.zeros((4, 3)))).astype("<f4"),
+           "faces": _outward_tetra_faces()}
+    with pytest.raises(human.ImportError, match="identity set"):
+        _verify_disjoint_lung_rows({305: row}, {306: row})
+    parent = copy.deepcopy(row)
+    parent["body_index"] = 23
+    with pytest.raises(human.ImportError, match="owner fields"):
+        _verify_disjoint_lung_rows({305: row}, {305: parent})

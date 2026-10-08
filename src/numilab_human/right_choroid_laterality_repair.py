@@ -486,13 +486,13 @@ def _current_897_copy_cardiac_sidecars(parent_receipt_path, receipt, output):
     return copied
 
 
-def _current_897_geometry_audit(parent_payload, parent_receipt_path, sources, candidate_payload):
+def _current_897_geometry_audit(parent_payload, parent_receipt_path, sources, candidate_payload, *, derived=None):
     import numpy as np
     from . import resting_anatomy_interface_patch as interface
     from . import resting_lung_edge_repair as lung_repair
     from .cardiac_cavity_geometry import analyze_topology
 
-    d = _current_897_derive(parent_payload, parent_receipt_path, sources)
+    d = derived if derived is not None else _current_897_derive(parent_payload, parent_receipt_path, sources)
     header, rows = interface.parse_payload(candidate_payload)
     require(header[:2] == (b"NHANAT1\0", 5) and header[2] == d["header"][2]
             and header[5:] == d["header"][5:],
@@ -573,7 +573,7 @@ def _current_897_geometry_audit(parent_payload, parent_receipt_path, sources, ca
     return {
         "schema": SCHEMA + ".current-897-geometry-audit",
         "passed": True,
-        "parent_payload_sha256": CURRENT_897_PARENT_SHA256,
+        "parent_payload_sha256": human.sha256(d["parent_payload"]),
         "candidate_payload_sha256": human.sha256(candidate_payload),
         "parent_stable_id": CURRENT_897_OWNER_STABLE_ID,
         "corrected_stable_id": CURRENT_897_CANDIDATE_STABLE_ID,
@@ -626,20 +626,114 @@ def _current_897_geometry_audit(parent_payload, parent_receipt_path, sources, ca
 
 
 def compose_current_897(parent_payload, parent_receipt_path, sources, output):
+    d = _current_897_derive(parent_payload, parent_receipt_path, sources)
+    return _compose_current_897_derived(d, sources, output)
+
+
+def _verify_disjoint_lung_rows(reference_rows, parent_rows):
+    """Require a lung-only change before retaining the source-proved eye repair."""
+    import numpy as np
+    require(set(reference_rows) == set(parent_rows), "lung composition changed anatomical identity set")
+    changed = []
+    for sid, before in reference_rows.items():
+        after = parent_rows[sid]
+        require(all(before[key] == after[key] for key in ("body_index", "layer", "flags")),
+                "lung composition changed owner fields: " + str(sid))
+        same = (before["vertices6"].dtype == after["vertices6"].dtype
+                and before["vertices6"].shape == after["vertices6"].shape
+                and before["vertices6"].tobytes() == after["vertices6"].tobytes()
+                and np.array_equal(before["faces"], after["faces"]))
+        if not same:
+            require(sid in range(305, 312), "lung composition changed a non-lung row: " + str(sid))
+            changed.append(int(sid))
+    return sorted(changed)
+
+
+def compose_after_lung_correction(parent_payload, parent_receipt_path, sources, output, *,
+                                  reference_payload, reference_receipt,
+                                  expected_parent_sha256, expected_parent_receipt_sha256):
+    """Apply the retained 897 choroid correction after disjoint lung preparation.
+
+    The original source/face/laterality proof remains mandatory. Only rows
+    305--311 may differ from its pinned parent; the current lung receipt and
+    all of its functional geometry metadata remain the composition authority.
+    This checks composition, not the lung candidate's physical admission.
+    """
+    import copy
+    from . import resting_anatomy_interface_patch as interface
+    parent_payload = Path(parent_payload).resolve()
+    parent_receipt_path = Path(parent_receipt_path).resolve()
+    require(human.sha256(parent_payload) == expected_parent_sha256,
+            "lung composition parent payload hash")
+    require(human.sha256(parent_receipt_path) == expected_parent_receipt_sha256,
+            "lung composition parent receipt hash")
+    d = _current_897_derive(reference_payload, reference_receipt, sources)
+    header, rows = interface.parse_payload(parent_payload)
+    require(header[:3] == d["header"][:3] and header[5:] == d["header"][5:],
+            "lung composition changed NHA ABI, registration, or source identity")
+    order = _current_897_record_order(parent_payload, header[2])
+    require(order == d["record_order"], "lung composition changed source record order")
+    changed = _verify_disjoint_lung_rows(d["rows"], rows)
+    receipt = human.read_json(parent_receipt_path)
+    meta = receipt["payload"]
+    require(receipt.get("schema") == "numi.human.resting-anatomy-receipt.v1"
+            and meta.get("path") == str(parent_payload)
+            and meta.get("sha256") == expected_parent_sha256
+            and meta.get("abi") == 5 and meta.get("surface_count") == header[2]
+            and meta.get("vertex_count") == header[3] and meta.get("index_count") == header[4]
+            and int(meta.get("registration_fingerprint32", "-1"), 16) == header[5]
+            and meta.get("source_sha256") == header[6].hex()
+            and receipt["functional_bindings"].get("anatomy_payload_sha256") == expected_parent_sha256,
+            "lung composition receipt does not bind its actual parent payload")
+    ref_prov = d["parent_receipt"]["provenance"]
+    prov = receipt["provenance"]
+    require(prov["head_eye_source_exact_cleanup_candidate"] == ref_prov["head_eye_source_exact_cleanup_candidate"],
+            "lung composition changed the source eye cleanup proof")
+    require(set(prov["source_id_map"]) == set(ref_prov["source_id_map"]),
+            "lung composition changed source map identities")
+    for sid, row in ref_prov["source_id_map"].items():
+        if int(sid) not in range(305, 312):
+            require(prov["source_id_map"][sid] == row,
+                    "lung composition changed non-lung source provenance: " + sid)
+    cardiac = copy.deepcopy(prov["cardiac_geometry_binding"])
+    reference_cardiac = copy.deepcopy(ref_prov["cardiac_geometry_binding"])
+    require(cardiac["common_field"]["anatomy_payload_sha256"] == expected_parent_sha256,
+            "lung composition cardiac binding does not bind its parent")
+    cardiac["common_field"]["anatomy_payload_sha256"] = CURRENT_897_PARENT_SHA256
+    require(cardiac == reference_cardiac, "lung composition changed unrelated cardiac binding")
+    d.update(parent_payload=parent_payload, parent_receipt_path=parent_receipt_path,
+             parent_receipt=receipt, header=header, rows=rows, record_order=order)
+    d["disjoint_lung_composition"] = {
+        "reference_payload": {"path": str(Path(reference_payload).resolve()), "sha256": CURRENT_897_PARENT_SHA256},
+        "reference_receipt": {"path": str(Path(reference_receipt).resolve()), "sha256": CURRENT_897_RECEIPT_SHA256},
+        "changed_parent_rows": changed,
+        "all_nonlung_rows_and_source_provenance_match_source_proved_reference": True,
+        "retained_lung_receipt_is_functional_geometry_authority": True,
+        "lung_candidate_admission": "not implied by source-disjoint composition",
+    }
+    result = _compose_current_897_derived(d, sources, output)
+    require(human.sha256(parent_payload) == expected_parent_sha256
+            and human.sha256(parent_receipt_path) == expected_parent_receipt_sha256,
+            "lung composition inputs changed during preparation")
+    return result
+
+
+def _compose_current_897_derived(d, sources, output):
     import copy
     import hashlib
     from . import resting_lung_edge_repair as lung_repair
 
     output = Path(output).resolve()
     require(not output.exists(), "output directory already exists")
-    d = _current_897_derive(parent_payload, parent_receipt_path, sources)
+    parent_payload_sha = human.sha256(d["parent_payload"])
+    parent_receipt_sha = human.sha256(d["parent_receipt_path"])
     base_manifest_path = d["parent_receipt_path"].with_name(CURRENT_897_BASE_MANIFEST_NAME)
     require(base_manifest_path.is_file(), "current 897 valid anatomy manifest")
     base_manifest_raw = base_manifest_path.read_bytes()
     base_manifest = human.read_json(base_manifest_path)
     require(base_manifest.get("schema") == "numi.human.resting-anatomy-manifest.v1"
             and base_manifest.get("receipt", {}).get("path") == str(d["parent_receipt_path"])
-            and base_manifest.get("receipt", {}).get("sha256") == CURRENT_897_RECEIPT_SHA256
+            and base_manifest.get("receipt", {}).get("sha256") == parent_receipt_sha
             and base_manifest.get("payload") == d["parent_receipt"].get("payload")
             and base_manifest.get("functional_bindings") == d["parent_receipt"].get("functional_bindings"),
             "current 897 anatomy manifest does not bind receipt/payload/function identities")
@@ -662,13 +756,13 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
     sidecars = _current_897_copy_cardiac_sidecars(
         d["parent_receipt_path"], d["parent_receipt"], output)
     geometry_audit = _current_897_geometry_audit(
-        d["parent_payload"], d["parent_receipt_path"], sources, payload_path)
+        d["parent_payload"], d["parent_receipt_path"], sources, payload_path, derived=d)
     manifest = {
         "schema": SCHEMA + ".current-897-manifest",
         "parent_payload": {"path": str(d["parent_payload"]),
-                           "sha256": CURRENT_897_PARENT_SHA256},
+                           "sha256": parent_payload_sha},
         "parent_receipt": {"path": str(d["parent_receipt_path"]),
-                           "sha256": CURRENT_897_RECEIPT_SHA256},
+                           "sha256": parent_receipt_sha},
         "exact_cleanup": {
             "schema": d["parent_receipt"]["provenance"]["head_eye_source_exact_cleanup_candidate"]["schema"],
             "retained_static_audit_sha256": CURRENT_897_CLEANUP_SHA256,
@@ -708,6 +802,8 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
             "clinical_anatomy": False, "physical_volume": False, "mechanics": False,
         },
     }
+    if "disjoint_lung_composition" in d:
+        manifest["disjoint_lung_composition"] = d["disjoint_lung_composition"]
     manifest_path = output / CURRENT_897_MANIFEST_NAME
     human.write_json(manifest_path, manifest)
     manifest_sha = human.sha256(manifest_path)
@@ -718,17 +814,17 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
                   manifest["output_payload"]["index_count"], d["header"][5], d["header"][6])
     output_sha = human.sha256(payload_path)
     updated["payload"].update({
-        "path": str(payload_path), "input_payload_sha256": CURRENT_897_PARENT_SHA256,
+        "path": str(payload_path), "input_payload_sha256": parent_payload_sha,
         "sha256": output_sha, "surface_count": out_header[2],
         "vertex_count": out_header[3], "index_count": out_header[4],
     })
     require(updated["functional_bindings"].get("anatomy_payload_sha256")
-            == CURRENT_897_PARENT_SHA256,
+            == parent_payload_sha,
             "parent functional anatomy payload binding")
     updated["functional_bindings"]["anatomy_payload_sha256"] = output_sha
     common_field = updated.get("provenance", {}).get("cardiac_geometry_binding", {}).get("common_field")
     require(isinstance(common_field, dict)
-            and common_field.get("anatomy_payload_sha256") == CURRENT_897_PARENT_SHA256,
+            and common_field.get("anatomy_payload_sha256") == parent_payload_sha,
             "common cardiac field does not bind selected parent NHA")
     common_field["anatomy_payload_sha256"] = output_sha
     source_map_row = updated["provenance"]["source_id_map"][str(CURRENT_897_OWNER_STABLE_ID)]
@@ -744,7 +840,7 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
         "parent_face_ids_excluded": CURRENT_897_PARENT_FACE_IDS,
         "source_archive_sha256": CURRENT_897_PARTOF_ARCHIVE_SHA256,
         "source_member_sha256": CURRENT_897_SOURCE_MEMBER_SHA256,
-        "parent_payload_sha256": CURRENT_897_PARENT_SHA256,
+        "parent_payload_sha256": parent_payload_sha,
         "derived_payload_sha256": output_sha,
         "status": "eight_source_proved_contralateral_faces_removed_from_same_selected_stable_id",
     }
@@ -752,9 +848,9 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
         "schema": SCHEMA,
         "status": "derived_in_place_source_corrected_row_exact_closed_single_component",
         "parent_payload_path": str(d["parent_payload"]),
-        "parent_payload_sha256": CURRENT_897_PARENT_SHA256,
+        "parent_payload_sha256": parent_payload_sha,
         "parent_receipt_path": str(d["parent_receipt_path"]),
-        "parent_receipt_sha256": CURRENT_897_RECEIPT_SHA256,
+        "parent_receipt_sha256": parent_receipt_sha,
         "candidate_manifest_path": str(manifest_path),
         "candidate_manifest_sha256": manifest_sha,
         "source_stable_id_preserved": CURRENT_897_OWNER_STABLE_ID,
@@ -786,7 +882,7 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
     standard_manifest["source_receipt_lineage"] = {
         "composition": "right_choroid_laterality_candidate_897",
         "source_receipt_path": str(d["parent_receipt_path"]),
-        "source_receipt_sha256": CURRENT_897_RECEIPT_SHA256,
+        "source_receipt_sha256": parent_receipt_sha,
         "source_manifest_path": str(base_manifest_path),
         "source_manifest_sha256": hashlib.sha256(base_manifest_raw).hexdigest(),
         "candidate_manifest_path": str(manifest_path),
@@ -837,7 +933,7 @@ def compose_current_897(parent_payload, parent_receipt_path, sources, output):
         "receipt": {
             "passed": True,
             "sha256": human.sha256(receipt_path),
-            "parent_sha256": CURRENT_897_RECEIPT_SHA256,
+            "parent_sha256": parent_receipt_sha,
             "functional_anatomy_sha_updated": True,
             "surface_count_unchanged": True,
             "corrected_stable_id": CURRENT_897_OWNER_STABLE_ID,
