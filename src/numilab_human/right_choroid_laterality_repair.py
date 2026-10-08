@@ -865,7 +865,7 @@ def _compose_current_897_derived(d, sources, output):
         "corrected_stable_382_remains_the_selected_source_identity": True,
         "new_anatomical_member": False, "clinical_anatomy": False,
         "physical_volume": False, "mechanics": False,
-        "boundary": "Stable 382 remains the selected FJ1337 identity. This derived payload replaces only that row's face list by removing the eight source-proved contralateral FJ1337 faces; its full Float32 vertex/normal table and all other rows remain unchanged. The unmodified 897 payload is retained as source input."
+        "boundary": "Stable 382 remains the selected FJ1337 identity. This derived payload replaces only that row's face list by removing the eight source-proved contralateral FJ1337 faces; its full Float32 vertex/normal table and all other rows remain unchanged. The pinned 897 payload remains the source-proof reference; parent_payload identifies this correction's direct composition input."
     }
     receipt_path = output / CURRENT_897_RECEIPT_NAME
     human.write_json(receipt_path, updated)
