@@ -64,6 +64,42 @@ def test_skin_candidate_receipt_changes_only_skin_audit_and_provenance(tmp_path)
     assert result["payload"]["sha256"] == anatomy_sha
 
 
+@pytest.mark.parametrize("anchor_matches_candidate", [False, True])
+def test_skin_replacement_does_not_present_old_native_anchor_as_current(tmp_path, anchor_matches_candidate):
+    base, base_path, candidate, candidate_path, candidate_skin, mass, _ = _fixture(tmp_path)
+    anchor = {
+        "skin_payload_sha256": (mass["skin_payload_sha256"] if anchor_matches_candidate
+                                else base["mass_geometry_accounting"]["skin_payload_sha256"]),
+        "posterior_skin_coordinate_m": -0.09247,
+        "selected_skin_vertex_count": 5279,
+        "initial_pack_sha256": "old-native-pack",
+    }
+    base["provenance"]["thorax_costal_source_registration"] = {
+        "candidate_runtime_anchor": copy.deepcopy(anchor),
+        "source_runtime_anchor": {"historical": "preserved"},
+    }
+    original = copy.deepcopy(base)
+    result = _compose_skin_candidate_receipt_document(
+        base, base_path, candidate, candidate_path, candidate_skin, mass, tmp_path / "out.json",
+    )
+    current = result["provenance"]["thorax_costal_source_registration"]["candidate_runtime_anchor"]
+    skin_provenance = result["provenance"]["skin_visual_binding_candidate"]
+    assert base == original
+    assert result["functional_bindings"] == base["functional_bindings"]
+    assert result["payload"] == base["payload"]
+    assert result["provenance"]["thorax_costal_source_registration"]["source_runtime_anchor"] == {"historical": "preserved"}
+    if anchor_matches_candidate:
+        assert current == anchor
+        assert "historical_thorax_candidate_runtime_anchor" not in skin_provenance
+    else:
+        assert current["status"] == "derived_by_native_runtime_from_loaded_skin"
+        assert current["skin_payload_sha256"] == mass["skin_payload_sha256"]
+        assert "posterior_skin_coordinate_m" not in current
+        assert "selected_skin_vertex_count" not in current
+        assert skin_provenance["historical_thorax_candidate_runtime_anchor"] == anchor
+        assert skin_provenance["inherited_native_geometry_audits_cover_candidate_skin"] is False
+
+
 def test_skin_candidate_receipt_rejects_source_or_rigid_identity_mismatch(tmp_path):
     base, base_path, candidate, candidate_path, candidate_skin, mass, _ = _fixture(tmp_path)
     base["mass_geometry_accounting"]["skin_payload_sha256"] = "wrong-source"

@@ -915,6 +915,23 @@ def _compose_skin_candidate_receipt_document(
         "qualification_boundary": candidate_manifest.get("evidence_boundary"),
         "native_accepted_pose_geometry_audit": "pending",
     }
+    registration = result["provenance"].get("thorax_costal_source_registration")
+    if isinstance(registration, dict):
+        anchor = registration.get("candidate_runtime_anchor")
+        if isinstance(anchor, dict) and anchor.get("skin_payload_sha256") != output["sha256"]:
+            # The native visual owner derives this anchor from the loaded skin.
+            # A replacement skin invalidates the inherited numerical audit even
+            # when its anatomy payload and functional bindings are unchanged.
+            skin_provenance = result["provenance"]["skin_visual_binding_candidate"]
+            skin_provenance["historical_thorax_candidate_runtime_anchor"] = anchor
+            skin_provenance["inherited_native_geometry_audits_cover_candidate_skin"] = False
+            registration["candidate_runtime_anchor"] = {
+                "status": "derived_by_native_runtime_from_loaded_skin",
+                "skin_payload_path": str(candidate_payload_path.resolve()),
+                "skin_payload_sha256": output["sha256"],
+                "owner": "NumiHumanRestingVisual.hpp",
+                "numerical_anchor_record": "not_computed_by_receipt_composer",
+            }
     result["provenance"]["skin_visual_binding_candidate"]["receipt_path"] = str(output_receipt_path.resolve())
     return result
 
