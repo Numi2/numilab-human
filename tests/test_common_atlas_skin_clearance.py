@@ -5,6 +5,8 @@ import numpy as np
 from numilab_human.common_atlas_skin_clearance import (
     _EXPECTED_SURFACE_COUNTS,
     _apply_captured_world_delta,
+    _bounded_direction_projection,
+    _candidate_outward_winding,
     _load_target_inventory,
     _smooth_vertex_directions,
     _triangle_normal_translation_to_separate,
@@ -117,3 +119,69 @@ def test_inventory_keeps_eye_hits_as_monitors_outside_nonocular_clearance(tmp_pa
     assert sum(counts[key] for key in clearance_keys) == 4448
     assert sum(counts[key] for key in all_keys - clearance_keys) == 4415
     assert populations == _EXPECTED_SURFACE_COUNTS
+
+
+def _closed_cube():
+    vertices = np.array([
+        [-1.0, -1.0, -1.0], [1.0, -1.0, -1.0],
+        [1.0, 1.0, -1.0], [-1.0, 1.0, -1.0],
+        [-1.0, -1.0, 1.0], [1.0, -1.0, 1.0],
+        [1.0, 1.0, 1.0], [-1.0, 1.0, 1.0],
+    ], dtype=np.float64)
+    faces = np.array([
+        [0, 2, 1], [0, 3, 2],
+        [4, 5, 6], [4, 6, 7],
+        [0, 1, 5], [0, 5, 4],
+        [1, 2, 6], [1, 6, 5],
+        [2, 3, 7], [2, 7, 6],
+        [3, 0, 4], [3, 4, 7],
+    ], dtype=np.int64)
+    return vertices, faces
+
+
+def test_rotated_candidate_normal_uses_current_full_shell_winding():
+    vertices, faces = _closed_cube()
+    angle = np.deg2rad(63.6)
+    rotation = np.array([
+        [np.cos(angle), 0.0, np.sin(angle)],
+        [0.0, 1.0, 0.0],
+        [-np.sin(angle), 0.0, np.cos(angle)],
+    ])
+    candidate = (vertices @ rotation.T).astype("<f4").astype(np.float64)
+    base_triangles = vertices[faces]
+    candidate_triangles = candidate[faces]
+    base_normals = np.cross(
+        base_triangles[:, 1] - base_triangles[:, 0],
+        base_triangles[:, 2] - base_triangles[:, 0],
+    )
+    candidate_normals = np.cross(
+        candidate_triangles[:, 1] - candidate_triangles[:, 0],
+        candidate_triangles[:, 2] - candidate_triangles[:, 0],
+    )
+    dots = np.einsum("ij,ij->i", base_normals, candidate_normals) / (
+        np.linalg.norm(base_normals, axis=1) * np.linalg.norm(candidate_normals, axis=1)
+    )
+    face = int(np.argmin(np.abs(dots - np.cos(angle))))
+    assert 0.0 < dots[face] < 0.75
+
+    normal = candidate_normals[face] / np.linalg.norm(candidate_normals[face])
+    result = _candidate_outward_winding(candidate_triangles[face].mean(axis=0), normal, candidate_triangles)
+    projections = _bounded_direction_projection(normal[None, :], normal)
+
+    assert result["sample_offset_mm"] == 0.5
+    assert result["absolute_inside_minus_outside_contrast"] > 0.5
+    assert projections.min() == 1.0
+
+
+def test_candidate_winding_rejects_ambiguous_open_shell_face():
+    triangle = np.array([[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]])
+    with np.testing.assert_raises_regex(ImportError, "ambiguous or inward"):
+        _candidate_outward_winding(triangle[0].mean(axis=0), np.array([0.0, 0.0, 1.0]), triangle)
+
+
+def test_outward_but_ill_conditioned_displacement_direction_is_rejected():
+    angle = np.deg2rad(63.6)
+    current_normal = np.array([np.sin(angle), 0.0, np.cos(angle)])
+    assert 0.0 < current_normal[2] < 0.5
+    with np.testing.assert_raises_regex(ImportError, "maximum_normal_conversion=2"):
+        _bounded_direction_projection(np.array([[0.0, 0.0, 1.0]]), current_normal)
