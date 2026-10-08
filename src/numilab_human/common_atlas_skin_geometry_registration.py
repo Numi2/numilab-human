@@ -12,6 +12,7 @@ import numpy as np
 
 from . import model as human
 from .skin_source_payload_preflight import decode_payload
+from . import common_atlas_skin_clearance as clearance_module
 from .common_atlas_skin_clearance import derive_step0_inferred_clearance
 
 
@@ -385,7 +386,13 @@ def derive_common_atlas_skin_geometry(
         "evidence_boundary": ("Inferred registered geometry with a bounded step-0 engineering separation field, not raw measured FJ2810 or measured cutaneous thickness. Native pose, skin self, other anatomy, and route qualification remain pending."
                              if clearance_report is not None else
                              "Inferred registered geometry, not raw measured FJ2810. This candidate does not resolve known hip/sternum crossings by itself and is not anatomically qualified."),
-        "code": {"module": str(Path(__file__).resolve()), "module_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), "argv": sys.argv},
+        "code": {
+            "module": str(Path(__file__).resolve()),
+            "module_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "clearance_module": str(Path(clearance_module.__file__).resolve()),
+            "clearance_module_sha256": hashlib.sha256(Path(clearance_module.__file__).read_bytes()).hexdigest(),
+            "argv": sys.argv,
+        },
         "output_payload": {"path": str(output_payload), "sha256": _sha_bytes(candidate), "bytes": len(candidate)},
         "output_manifest": str(output_manifest),
     }
