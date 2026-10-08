@@ -1,0 +1,410 @@
+{
+  "after": {
+    "affected_star_aabb_candidates": 1604,
+    "allowed_declared_contacts": 336,
+    "classes": {
+      "reciprocal_face": 8,
+      "shared_patch_edge": 32,
+      "shared_patch_vertex": 132,
+      "topological_adjacent_contact": 164
+    },
+    "intersecting_face_pairs": 336,
+    "nonallowed_pairs": 0
+  },
+  "after_nonallowed_pair_keys": [],
+  "before": {
+    "affected_star_aabb_candidates": 2026,
+    "allowed_declared_contacts": 386,
+    "classes": {
+      "reciprocal_face": 10,
+      "shared_patch_edge": 38,
+      "shared_patch_vertex": 150,
+      "topological_adjacent_contact": 188
+    },
+    "intersecting_face_pairs": 386,
+    "nonallowed_pairs": 0
+  },
+  "before_nonallowed_pair_keys": [],
+  "changed_after_face_count_by_owner": {
+    "307": 8,
+    "309": 8
+  },
+  "changed_before_face_count_by_owner": {
+    "307": 10,
+    "309": 10
+  },
+  "gate": "pass",
+  "input": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/airway-sibling-overlap-partition-001/resting-thorax.nhanatomy",
+    "sha256": "c6adae6522a2f7e5a8bd661035d464d686c843e96ab04ffc3ccd9aa1371569c1"
+  },
+  "limitations": [
+    "Source-stage local test only; not native transformed-pose clearance.",
+    "Conforming reciprocal patch face/edge/vertex contacts are counted and classified, not globally exempted.",
+    "Whole owner-pair counts need not be zero where exact declared shared patches are present."
+  ],
+  "new_nonallowed_pair_keys": [],
+  "new_nonallowed_witnesses": [],
+  "operation": {
+    "aggregate_lung_signed_volume_delta_m3": -5.421010862427522e-20,
+    "all_other_reciprocal_owner_maps_unchanged": true,
+    "candidate_shared_face_counts": {
+      "(305, 308)": 8886,
+      "(305, 311)": 19668,
+      "(306, 307)": 8733,
+      "(306, 309)": 2010,
+      "(306, 311)": 21549,
+      "(307, 309)": 9609,
+      "(307, 311)": 5512,
+      "(308, 311)": 486
+    },
+    "candidate_shared_patch_topology": {
+      "boundary_edge_count": 601,
+      "components": 1,
+      "edge_count": 14714,
+      "euler_characteristic": 1,
+      "face_count": 9609,
+      "nonmanifold_edge_count": 0,
+      "vertex_count": 5106
+    },
+    "endpoint_coordinates_f32_m": [
+      [
+        0.030193209648132324,
+        0.015959935262799263,
+        0.10831820964813232
+      ],
+      [
+        0.03019365668296814,
+        0.015960097312927246,
+        0.10831865668296814
+      ]
+    ],
+    "exact_reciprocal_patch_winding_and_topology_preserved": true,
+    "max_endpoint_displacement_m": 3.2655309141890894e-07,
+    "native_transformed_pose_qualification": "not performed",
+    "operation": "exact reciprocal 307/309 shared-edge midpoint collapse",
+    "owner_operations": {
+      "307": {
+        "candidate_topology": {
+          "boundary_edges": 0,
+          "connected_components": 1,
+          "duplicate_faces": 0,
+          "edge_count": 76884,
+          "euler_characteristic": 2,
+          "face_count": 51256,
+          "genus": 0,
+          "minimum_triangle_area_m2": 7.140711844741379e-15,
+          "nonmanifold_edges": 0,
+          "orientation_error_edges": 0,
+          "vertex_count": 25630,
+          "zero_area_faces": 0
+        },
+        "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+        "changed_star_diameter_m": 0.0005174957972950879,
+        "collapse_position_f32_m": [
+          0.030193433165550232,
+          0.01596001535654068,
+          0.10831843316555023
+        ],
+        "collapse_position_policy": "midpoint",
+        "common_neighbors": [
+          20895,
+          20898
+        ],
+        "deleted_face_indices": [
+          40872,
+          40873
+        ],
+        "deleted_face_origins": [
+          40872,
+          40873
+        ],
+        "edge_length_m": 6.52641197630362e-07,
+        "endpoint_displacements_m": [
+          3.260906003404979e-07,
+          3.2655309141890894e-07
+        ],
+        "face_origins_preserved_for_surviving_faces": true,
+        "maximum_endpoint_displacement_m": 3.2655309141890894e-07,
+        "minimum_surviving_changed_face_normal_dot": 2.885714675722397e-23,
+        "operation": "one topology-preserving midpoint edge collapse",
+        "opposite_vertices": [
+          20895,
+          20898
+        ],
+        "removed_vertex_before_compaction": 20896,
+        "retained_vertex_after_compaction": 20952,
+        "retained_vertex_before_compaction": 20953,
+        "signed_volume_after_m3": 0.00030666151062385126,
+        "signed_volume_before_m3": 0.00030666151062381283,
+        "signed_volume_delta_m3": 3.843496701461113e-17,
+        "source_face_indices_in_changed_one_ring": [
+          40764,
+          40765,
+          40766,
+          40872,
+          40873,
+          40874,
+          40945,
+          40947,
+          40948,
+          40949
+        ],
+        "source_topology": {
+          "boundary_edges": 0,
+          "connected_components": 1,
+          "duplicate_faces": 0,
+          "edge_count": 76887,
+          "euler_characteristic": 2,
+          "face_count": 51258,
+          "genus": 0,
+          "nonmanifold_edges": 0,
+          "orientation_error_edges": 0,
+          "vertex_count": 25631
+        },
+        "surviving_changed_face_count": 8,
+        "surviving_changed_face_lineage": [
+          {
+            "output_face_index": 40764,
+            "previous_face_index": 40764,
+            "previous_face_origin": 40764
+          },
+          {
+            "output_face_index": 40765,
+            "previous_face_index": 40765,
+            "previous_face_origin": 40765
+          },
+          {
+            "output_face_index": 40766,
+            "previous_face_index": 40766,
+            "previous_face_origin": 40766
+          },
+          {
+            "output_face_index": 40872,
+            "previous_face_index": 40874,
+            "previous_face_origin": 40874
+          },
+          {
+            "output_face_index": 40943,
+            "previous_face_index": 40945,
+            "previous_face_origin": 40945
+          },
+          {
+            "output_face_index": 40945,
+            "previous_face_index": 40947,
+            "previous_face_origin": 40947
+          },
+          {
+            "output_face_index": 40946,
+            "previous_face_index": 40948,
+            "previous_face_origin": 40948
+          },
+          {
+            "output_face_index": 40947,
+            "previous_face_index": 40949,
+            "previous_face_origin": 40949
+          }
+        ]
+      },
+      "309": {
+        "candidate_topology": {
+          "boundary_edges": 0,
+          "connected_components": 1,
+          "duplicate_faces": 0,
+          "edge_count": 101463,
+          "euler_characteristic": 2,
+          "face_count": 67642,
+          "genus": 0,
+          "minimum_triangle_area_m2": 1.7008304014241534e-14,
+          "nonmanifold_edges": 0,
+          "orientation_error_edges": 0,
+          "vertex_count": 33823,
+          "zero_area_faces": 0
+        },
+        "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+        "changed_star_diameter_m": 0.0005174957972950879,
+        "collapse_position_f32_m": [
+          0.030193433165550232,
+          0.01596001535654068,
+          0.10831843316555023
+        ],
+        "collapse_position_policy": "midpoint",
+        "common_neighbors": [
+          995,
+          997
+        ],
+        "deleted_face_indices": [
+          1912,
+          1913
+        ],
+        "deleted_face_origins": [
+          1912,
+          1913
+        ],
+        "edge_length_m": 6.52641197630362e-07,
+        "endpoint_displacements_m": [
+          3.260906003404979e-07,
+          3.2655309141890894e-07
+        ],
+        "face_origins_preserved_for_surviving_faces": true,
+        "maximum_endpoint_displacement_m": 3.2655309141890894e-07,
+        "minimum_surviving_changed_face_normal_dot": 2.885714675722397e-23,
+        "operation": "one topology-preserving midpoint edge collapse",
+        "opposite_vertices": [
+          995,
+          997
+        ],
+        "removed_vertex_before_compaction": 994,
+        "retained_vertex_after_compaction": 1060,
+        "retained_vertex_before_compaction": 1061,
+        "signed_volume_after_m3": 0.0006947384130337889,
+        "signed_volume_before_m3": 0.0006947384130338274,
+        "signed_volume_delta_m3": -3.848917712323541e-17,
+        "source_face_indices_in_changed_one_ring": [
+          1804,
+          1805,
+          1806,
+          1912,
+          1913,
+          1914,
+          1985,
+          1987,
+          1988,
+          1989
+        ],
+        "source_topology": {
+          "boundary_edges": 0,
+          "connected_components": 1,
+          "duplicate_faces": 0,
+          "edge_count": 101466,
+          "euler_characteristic": 2,
+          "face_count": 67644,
+          "genus": 0,
+          "nonmanifold_edges": 0,
+          "orientation_error_edges": 0,
+          "vertex_count": 33824
+        },
+        "surviving_changed_face_count": 8,
+        "surviving_changed_face_lineage": [
+          {
+            "output_face_index": 1804,
+            "previous_face_index": 1804,
+            "previous_face_origin": 1804
+          },
+          {
+            "output_face_index": 1805,
+            "previous_face_index": 1805,
+            "previous_face_origin": 1805
+          },
+          {
+            "output_face_index": 1806,
+            "previous_face_index": 1806,
+            "previous_face_origin": 1806
+          },
+          {
+            "output_face_index": 1912,
+            "previous_face_index": 1914,
+            "previous_face_origin": 1914
+          },
+          {
+            "output_face_index": 1983,
+            "previous_face_index": 1985,
+            "previous_face_origin": 1985
+          },
+          {
+            "output_face_index": 1985,
+            "previous_face_index": 1987,
+            "previous_face_origin": 1987
+          },
+          {
+            "output_face_index": 1986,
+            "previous_face_index": 1988,
+            "previous_face_origin": 1988
+          },
+          {
+            "output_face_index": 1987,
+            "previous_face_index": 1989,
+            "previous_face_origin": 1989
+          }
+        ]
+      }
+    },
+    "owner_pair": [
+      307,
+      309
+    ],
+    "per_owner_signed_volume_delta_m3": {
+      "305": 0.0,
+      "306": 0.0,
+      "307": 3.843496701461113e-17,
+      "308": 0.0,
+      "309": -3.848917712323541e-17,
+      "311": 0.0
+    },
+    "source_reciprocal_incident_face_keys": [
+      [
+        [
+          0.03003084845840931,
+          0.015997987240552902,
+          0.10829029232263565
+        ],
+        [
+          0.03019365668296814,
+          0.015960097312927246,
+          0.10831865668296814
+        ],
+        [
+          0.030193209648132324,
+          0.015959935262799263,
+          0.10831820964813232
+        ]
+      ],
+      [
+        [
+          0.03044198825955391,
+          0.015901630744338036,
+          0.10836098343133926
+        ],
+        [
+          0.03019365668296814,
+          0.015960097312927246,
+          0.10831865668296814
+        ],
+        [
+          0.030193209648132324,
+          0.015959935262799263,
+          0.10831820964813232
+        ]
+      ]
+    ],
+    "source_shared_face_counts": {
+      "(305, 308)": 8886,
+      "(305, 311)": 19668,
+      "(306, 307)": 8733,
+      "(306, 309)": 2010,
+      "(306, 311)": 21549,
+      "(307, 309)": 9611,
+      "(307, 311)": 5512,
+      "(308, 311)": 486
+    },
+    "source_shared_patch_topology": {
+      "boundary_edge_count": 601,
+      "components": 1,
+      "edge_count": 14717,
+      "euler_characteristic": 1,
+      "face_count": 9611,
+      "nonmanifold_edge_count": 0,
+      "vertex_count": 5107
+    }
+  },
+  "predicate": "Existing exact AABB tree and exact triangle-intersection predicate over Fraction.from_float values promoted from packed Float32 metre coordinates; no tolerance.",
+  "removed_nonallowed_pair_keys": [],
+  "schema": "numi.human.resting-lung-307-309-changed-star-audit.v1",
+  "scope": "Exact one-ring of the reciprocal 307/309 edge collapse, rescanned against all faces of source owners 305-309 and 311 immediately before and after the operation. Unchanged pairs outside the changed star retain identical geometry at this stage.",
+  "source_pins": {
+    "exact_predicate_path": "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/cardiac_cavity_intersections.py",
+    "exact_predicate_sha256": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+    "repair_module_path": "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/resting_lung_edge_repair.py",
+    "repair_module_sha256": "d0c61a0874e8bf6977e123f24ac19c31d6aea4266638ff080da07e220c285f9f"
+  }
+}
