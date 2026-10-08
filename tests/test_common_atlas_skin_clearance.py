@@ -5,6 +5,7 @@ import numpy as np
 from numilab_human.common_atlas_skin_clearance import (
     _EXPECTED_SURFACE_COUNTS,
     _apply_captured_world_delta,
+    _area_weighted_vertex_normals,
     _bounded_direction_projection,
     _candidate_outward_winding,
     _load_target_inventory,
@@ -185,3 +186,41 @@ def test_outward_but_ill_conditioned_displacement_direction_is_rejected():
     assert 0.0 < current_normal[2] < 0.5
     with np.testing.assert_raises_regex(ImportError, "maximum_normal_conversion=2"):
         _bounded_direction_projection(np.array([[0.0, 0.0, 1.0]]), current_normal)
+
+
+def test_current_candidate_area_weighted_normals_follow_local_surface_geometry():
+    vertices = np.array([
+        [0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, 0.0, 2.0],
+    ])
+    faces = np.array([[0, 1, 2], [0, 2, 3]], dtype=np.int64)
+
+    normals = _area_weighted_vertex_normals(vertices, faces)
+
+    expected_shared = np.array([2.0, 0.0, 1.0]) / np.sqrt(5.0)
+    assert np.allclose(normals[0], expected_shared)
+    assert np.allclose(normals[1], [0.0, 0.0, 1.0])
+    assert np.allclose(normals[3], [1.0, 0.0, 0.0])
+
+    curved = vertices.copy()
+    curved[3] = [0.5, 0.0, 1.5]
+    current_normals = _area_weighted_vertex_normals(curved, faces)
+    assert np.isfinite(current_normals).all()
+    assert not np.allclose(current_normals[0], normals[0])
+
+
+def test_current_candidate_area_weighted_normals_reject_degenerate_mesh():
+    vertices = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0]])
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+
+    with np.testing.assert_raises_regex(ImportError, "area-weighted vertex normals are degenerate"):
+        _area_weighted_vertex_normals(vertices, faces)
+
+
+
+def test_direction_projection_accepts_exact_twofold_conversion_bound():
+    direction = np.array([[np.sqrt(0.75), 0.0, 0.5]])
+    projection = _bounded_direction_projection(direction, np.array([0.0, 0.0, 1.0]))
+    assert projection[0] == 0.5

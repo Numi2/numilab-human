@@ -217,11 +217,10 @@ def _triangle_pair_set(audit_row: dict[str, Any]) -> set[tuple[int, int]]:
 
 
 def _smooth_vertex_directions(vertex_normals: np.ndarray, faces: np.ndarray) -> np.ndarray:
-    """Use the existing Human skin-normal smoother for extension directions.
+    """Use the existing Human skin smoother on current candidate normals.
 
-    The source-winding normals remain the orientation authority. This limited
-    visual-normal operation only chooses a smoother displacement direction;
-    callers retain independent captured-face winding and dot-product checks.
+    The smoother chooses the direction of the next bounded correction. Source
+    winding and accepted-to-candidate face orientation remain separate checks.
     """
     normals = np.asarray(vertex_normals, dtype=np.float64)
     triangles = np.asarray(faces, dtype=np.int64)
@@ -391,6 +390,25 @@ def _bounded_direction_projection(direction_vectors: np.ndarray, current_normal:
             f"maximum_normal_conversion={1.0 / _MIN_CANDIDATE_DIRECTION_PROJECTION:.12g}"
         )
     return projections
+
+
+def _area_weighted_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
+    # Recompute area-weighted normals from the current candidate geometry.
+    points = np.asarray(vertices, dtype=np.float64)
+    triangles = np.asarray(faces, dtype=np.int64)
+    if (points.ndim != 2 or points.shape[1] != 3 or triangles.ndim != 2 or triangles.shape[1] != 3
+            or not np.isfinite(points).all() or not np.isfinite(triangles).all()
+            or (triangles.size and (triangles.min() < 0 or triangles.max() >= len(points)))):
+        raise human.ImportError("current skin normal reconstruction received malformed geometry")
+    tri = points[triangles]
+    area_vectors = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
+    normals = np.zeros_like(points)
+    for corner in range(3):
+        np.add.at(normals, triangles[:, corner], area_vectors)
+    lengths = np.linalg.norm(normals, axis=1)
+    if np.any(lengths <= 1.0e-12) or not np.isfinite(normals).all():
+        raise human.ImportError("current skin area-weighted vertex normals are degenerate")
+    return normals / lengths[:, None]
 
 
 def derive_step0_inferred_clearance(
@@ -591,32 +609,10 @@ def derive_step0_inferred_clearance(
         witness_target_faces_by_skin_face.setdefault(skin_face, set()).add(
             f"{target_semantic}:{target_stable_id}/face/{int(item['other_primitive_face_row'])}"
         )
-    vertex_normals = np.zeros_like(captured)
-    area_vectors = np.cross(captured[compact_faces[:, 1]] - captured[compact_faces[:, 0]],
-                            captured[compact_faces[:, 2]] - captured[compact_faces[:, 0]])
-    for corner in range(3):
-        np.add.at(vertex_normals, compact_faces[:, corner], area_vectors)
-    normal_lengths = np.linalg.norm(vertex_normals, axis=1)
-    if np.any(normal_lengths <= 1.0e-12) or not np.isfinite(vertex_normals).all():
-        raise human.ImportError("clearance captured skin has invalid referenced vertex normals")
-    vertex_normals /= normal_lengths[:, None]
-
     source_edges = np.concatenate((compact_faces[:, [0, 1]], compact_faces[:, [1, 2]], compact_faces[:, [2, 0]]), axis=0)
     source_edges.sort(axis=1)
     edges = np.unique(source_edges, axis=0)
     edge_lengths = np.linalg.norm(captured[edges[:, 0]] - captured[edges[:, 1]], axis=1)
-    vertex_directions = _smooth_vertex_directions(vertex_normals, compact_faces)
-    seed_demand_by_margin: dict[float, np.ndarray] = {}
-    for margin_mm in (0.125, 0.25, 0.5):
-        required = np.zeros(len(referenced), dtype=np.float64)
-        for face_id, row in face_constraints.items():
-            compact_ids = compact_faces[face_id]
-            projections = vertex_directions[compact_ids] @ row["normal"]
-            if float(projections.min()) < 0.8:
-                raise human.ImportError(f"smoothed clearance directions are not aligned with outward source-winding face {face_id}")
-            scalar = (row["minimum_separating_translation_m"] + margin_mm / 1000.0) / projections
-            np.maximum.at(required, compact_ids, scalar)
-        seed_demand_by_margin[margin_mm] = required
     seed_mask = np.zeros(len(referenced), dtype=bool)
     for face_id in face_constraints:
         seed_mask[compact_faces[face_id]] = True
@@ -627,8 +623,6 @@ def derive_step0_inferred_clearance(
     from scipy.sparse.csgraph import dijkstra
     graph_rows = np.concatenate((edges[:, 0], edges[:, 1]))
     graph_cols = np.concatenate((edges[:, 1], edges[:, 0]))
-    graph_weights = np.concatenate((edge_lengths, edge_lengths))
-    graph = csr_matrix((graph_weights, (graph_rows, graph_cols)), shape=(len(referenced), len(referenced)))
 
     aabb_audit_by_margin = {}
     ocular_monitor_by_margin = {}
@@ -674,305 +668,350 @@ def derive_step0_inferred_clearance(
     base_surface_integral = _signed_surface_integral(full_skin_world, faces)
     geometry_quality_by_margin = {}
     for margin_mm in (0.125, 0.25, 0.5):
-        active_vertex_required = np.zeros(len(referenced), dtype=np.float64)
-        seed_required = seed_demand_by_margin[margin_mm]
-        candidate_winding_checks: dict[str, dict[str, float]] = {}
-        minimum_active_direction_projection = float("inf")
-        minimum_active_source_normal_projection = float("inf")
+        source_base = source_positions[referenced].astype("<f4").astype(np.float64)
+        world_delta_total = np.zeros_like(captured)
+        candidate_world = captured.copy()
+        source_corrected = source_base.copy()
+        source_delta = np.zeros_like(source_base)
+        maximum_roundtrip_error_um = 0.0
+        candidate_records = captured_skin_records
+        margin_audit = baseline_audit
+        margin_ocular_audit = baseline_ocular_audit
+        candidate_winding_checks: dict[str, dict[str, Any]] = {}
         active_faces_seen: set[int] = set()
-        margin_audit = None
-        field = None
-        source_corrected = None
-        source_delta = None
-        world_delta_from_packed_source = None
-        source_roundtrip = None
+        minimum_active_direction_projection = float("inf")
         final_iteration = None
+        final_seed_count = 0
+        final_field = np.zeros(len(referenced), dtype=np.float64)
+        final_quality: dict[str, Any] | None = None
+        iteration_receipts: list[dict[str, Any]] = []
+
         for iteration in range(6):
-            total_required = np.maximum(seed_required, active_vertex_required)
-            seed = np.flatnonzero(total_required > 0.0)
+            remaining_before = _sum_target_pairs(margin_audit)
+            if remaining_before == 0:
+                final_iteration = iteration
+                break
+
+            current_normals = _area_weighted_vertex_normals(candidate_world, compact_faces)
+            current_directions = _smooth_vertex_directions(current_normals, compact_faces)
+            seed_required = np.zeros(len(referenced), dtype=np.float64)
+
+            for surface_key, row in margin_audit.items():
+                target_key = tuple(int(part) for part in surface_key.split(":"))
+                target_triangles = target_faces[target_key]
+                for skin_face, target_face in row["triangle_pairs"]:
+                    skin_face = int(skin_face)
+                    target_face = int(target_face)
+                    active_faces_seen.add(skin_face)
+                    if skin_face not in face_constraints and skin_face not in orientation_checks_added:
+                        base_triangle = captured[compact_faces[skin_face]]
+                        base_normal = np.cross(base_triangle[1] - base_triangle[0], base_triangle[2] - base_triangle[0])
+                        base_length = float(np.linalg.norm(base_normal))
+                        if base_length <= 1.0e-15:
+                            raise human.ImportError(f"clearance new active source face {skin_face} is degenerate")
+                        base_normal /= base_length
+                        centroid = base_triangle.mean(axis=0)
+                        offset = _CANDIDATE_WINDING_OFFSET_M * base_normal
+                        winding_minus = _generalized_winding_number(centroid - offset, full_skin_triangles)
+                        winding_plus = _generalized_winding_number(centroid + offset, full_skin_triangles)
+                        contrast = abs(winding_minus) - abs(winding_plus)
+                        if not np.isfinite([winding_minus, winding_plus, contrast]).all() or contrast <= _MIN_CANDIDATE_WINDING_CONTRAST:
+                            raise human.ImportError(
+                                f"clearance cannot establish accepted-pose outward direction for new active face {skin_face}: "
+                                f"winding_minus={winding_minus:.12g}, winding_plus={winding_plus:.12g}, contrast={contrast:.12g}"
+                            )
+                        orientation_checks_added[skin_face] = {
+                            "source_vertex_ids": [int(value) for value in faces[skin_face]],
+                            "winding_minus": float(winding_minus),
+                            "winding_plus": float(winding_plus),
+                            "absolute_winding_difference": float(contrast),
+                            "basis": "accepted step-0 full-shell generalized winding at 0.5 mm on either side of the original source-winding face normal",
+                        }
+
+                    ids = compact_faces[skin_face]
+                    current_triangle = candidate_world[ids]
+                    current_normal = np.cross(
+                        current_triangle[1] - current_triangle[0],
+                        current_triangle[2] - current_triangle[0],
+                    )
+                    current_normal_length = float(np.linalg.norm(current_normal))
+                    if current_normal_length <= 1.0e-15:
+                        raise human.ImportError(
+                            f"clearance incremental demand has collapsed face {skin_face}, target={surface_key}/{target_face}, iteration={iteration + 1}"
+                        )
+                    current_normal /= current_normal_length
+                    base_normal = base_area_vectors[skin_face] / base_double_areas[skin_face]
+                    base_current_dot = float(np.dot(base_normal, current_normal))
+                    if base_current_dot <= 0.0:
+                        raise human.ImportError(
+                            f"clearance incremental demand lost positive face orientation at face {skin_face}, "
+                            f"target={surface_key}/{target_face}, iteration={iteration + 1}, dot={base_current_dot:.12g}"
+                        )
+                    try:
+                        direction_dots = _bounded_direction_projection(current_directions[ids], current_normal)
+                    except human.ImportError as error:
+                        raise human.ImportError(
+                            f"clearance incremental direction projection failed: margin_mm={margin_mm}, "
+                            f"iteration={iteration + 1}, skin_face={skin_face}, target={surface_key}, "
+                            f"target_face={target_face}, base_current_normal_dot={base_current_dot:.9g}, "
+                            f"current_normal={current_normal.tolist()}, current_triangle_m={current_triangle.tolist()}, "
+                            f"smoothed_current_directions={current_directions[ids].tolist()}, {error}"
+                        ) from error
+                    minimum_active_direction_projection = min(
+                        minimum_active_direction_projection, float(direction_dots.min()),
+                    )
+                    target_triangle = pack_positions[target_triangles[target_face]].astype(np.float64)
+                    first_exit = _triangle_normal_translation_to_separate(current_triangle, target_triangle, current_normal)
+                    demand = first_exit + margin_mm / 1000.0
+                    np.maximum.at(seed_required, ids, demand / direction_dots)
+
+            seed = np.flatnonzero(seed_required > 0.0)
             if len(seed) == 0:
-                raise human.ImportError("clearance compact field has no constrained vertices")
-            distance = dijkstra(graph, directed=False, indices=seed, limit=radius)
+                raise human.ImportError(
+                    f"clearance margin {margin_mm} mm has exact intersections but no incremental correction seed at iteration {iteration + 1}"
+                )
+            current_edge_lengths = np.linalg.norm(
+                candidate_world[edges[:, 0]] - candidate_world[edges[:, 1]], axis=1,
+            )
+            if np.any(current_edge_lengths <= 0.0) or not np.isfinite(current_edge_lengths).all():
+                raise human.ImportError(
+                    f"clearance current geodesic graph has zero or non-finite edges at iteration {iteration + 1}"
+                )
+            current_graph_weights = np.concatenate((current_edge_lengths, current_edge_lengths))
+            current_graph = csr_matrix(
+                (current_graph_weights, (graph_rows, graph_cols)),
+                shape=(len(referenced), len(referenced)),
+            )
+            distance = dijkstra(current_graph, directed=False, indices=seed, limit=radius)
             unit = np.clip(distance / radius, 0.0, 1.0)
             envelope = 1.0 - 3.0 * unit * unit + 2.0 * unit * unit * unit
             envelope[distance >= radius] = 0.0
-            field = np.max(total_required[seed, None] * envelope, axis=0)
-            for face_id, row in face_constraints.items():
-                compact_ids = compact_faces[face_id]
-                achieved = field[compact_ids] * (vertex_directions[compact_ids] @ row["normal"])
-                needed = row["minimum_separating_translation_m"] + margin_mm / 1000.0
-                if float(achieved.min()) + 1.0e-12 < needed:
-                    raise human.ImportError(f"clearance compact field misses an original witness face constraint at face {face_id}")
-            world_delta = field[:, None] * vertex_directions
-            source_delta = np.linalg.solve(jacobian, world_delta[:, :, None])[:, :, 0]
-            source_candidate = source_positions[referenced].astype("<f4").astype(np.float64)
-            source_corrected = (source_candidate + source_delta).astype("<f4").astype(np.float64)
-            packed_source_delta = source_corrected - source_candidate
-            world_delta_from_packed_source = np.einsum("nij,nj->ni", jacobian, packed_source_delta)
-            source_roundtrip = np.linalg.norm(world_delta_from_packed_source - world_delta, axis=1)
-            candidate_world = _apply_captured_world_delta(captured, world_delta_from_packed_source)
-            candidate_records = _exact_surface_records(candidate_world, compact_faces)
-            candidate_triangles = candidate_world[compact_faces]
-            candidate_area_vectors = np.cross(candidate_triangles[:, 1] - candidate_triangles[:, 0], candidate_triangles[:, 2] - candidate_triangles[:, 0])
-            candidate_double_areas = np.linalg.norm(candidate_area_vectors, axis=1)
-            if np.any(candidate_double_areas == 0.0) or not np.isfinite(candidate_double_areas).all():
-                raise human.ImportError(f"clearance margin {margin_mm} mm created an exact zero-area or non-finite skin triangle")
-            normal_alignment = np.einsum("ij,ij->i", base_area_vectors, candidate_area_vectors) / (base_double_areas * candidate_double_areas)
-            if float(normal_alignment.min()) <= 0.0:
-                bad_face = int(np.argmin(normal_alignment))
-                bad_ids = compact_faces[bad_face]
-                bad_source_ids = faces[bad_face]
-                bad_base = captured[bad_ids]
-                bad_candidate = candidate_world[bad_ids]
-                edge_pairs = ((0, 1), (1, 2), (2, 0))
-                edge_gradients = [
-                    float((field[bad_ids[i]] - field[bad_ids[j]]) / max(np.linalg.norm(bad_base[i] - bad_base[j]), 1.0e-15))
-                    for i, j in edge_pairs
-                ]
-                bad_base_area_mm2 = float(base_double_areas[bad_face] * 0.5e6)
-                bad_candidate_area_mm2 = float(candidate_double_areas[bad_face] * 0.5e6)
-                face_constraint = face_constraints.get(bad_face)
-                dominant_seed_sources = []
-                for compact_vertex in bad_ids:
-                    scores = total_required[seed] * envelope[:, int(compact_vertex)]
-                    winner = int(np.argmax(scores))
-                    seed_vertex = int(seed[winner])
-                    seed_faces = [
-                        int(source_face) for source_face, source_row in face_constraints.items()
-                        if seed_vertex in compact_faces[source_face]
-                    ]
-                    dominant_seed_sources.append({
-                        "corrected_skin_source_vertex": int(referenced[int(compact_vertex)]),
-                        "dominant_seed_skin_source_vertex": int(referenced[seed_vertex]),
-                        "seed_distance_mm": float(distance[winner, int(compact_vertex)] * 1000.0),
-                        "seed_demand_mm": float(total_required[seed_vertex] * 1000.0),
-                        "seed_envelope_value": float(envelope[winner, int(compact_vertex)]),
-                        "contributes_to_field_mm": float(scores[winner] * 1000.0),
-                        "prior_active_set_seed": bool(active_vertex_required[seed_vertex] > 0.0),
-                        "initial_witness_sources": [
-                            {
-                                "skin_face": source_face,
-                                "targets": sorted(witness_target_faces_by_skin_face.get(source_face, set())),
-                            }
-                            for source_face in seed_faces
-                        ],
-                    })
-                raise human.ImportError(
-                    f"clearance margin {margin_mm} mm reversed skin triangle: face={bad_face}, "
-                    f"iteration={iteration + 1}, prior_active_vertex_count={int(np.count_nonzero(active_vertex_required))}, "
-                    f"normal_dot={float(normal_alignment[bad_face]):.12g}, "
-                    f"base_area_mm2={bad_base_area_mm2:.12g}, candidate_area_mm2={bad_candidate_area_mm2:.12g}, "
-                    f"area_ratio={float(candidate_double_areas[bad_face] / base_double_areas[bad_face]):.12g}, "
-                    f"source_vertex_ids={bad_source_ids.tolist()}, compact_vertex_ids={bad_ids.tolist()}, "
-                    f"base_world_m={bad_base.tolist()}, candidate_world_m={bad_candidate.tolist()}, "
-                    f"vertex_field_mm={(field[bad_ids] * 1000.0).tolist()}, "
-                    f"vertex_world_displacement_mm={(np.linalg.norm(bad_candidate - bad_base, axis=1) * 1000.0).tolist()}, "
-                    f"edge_field_difference_mm={[float((field[bad_ids[i]] - field[bad_ids[j]]) * 1000.0) for i, j in edge_pairs]}, "
-                    f"edge_field_gradient={[round(value, 12) for value in edge_gradients]}, "
-                    f"common_atlas_source_delta_mm={(source_delta[bad_ids] * 1000.0).tolist()}, "
-                    f"initial_witness_targets={sorted(face_constraint['target_surfaces']) if face_constraint else []}, "
-                    f"initial_witness_pair_count={face_constraint['target_pair_count'] if face_constraint else 0}, "
-                    f"dominant_seed_sources={dominant_seed_sources}, "
-                    f"support_radius_mm={radius * 1000.0:.12g}, median_edge_mm={median_edge * 1000.0:.12g}"
+            increment_field = np.max(seed_required[seed, None] * envelope, axis=0)
+            if not np.isfinite(increment_field).all() or not np.any(increment_field > 0.0):
+                raise human.ImportError(f"clearance incremental compact field is invalid at iteration {iteration + 1}")
+
+            accepted = False
+            last_rejection = "no candidate attempted"
+            correction_scale_accepted = None
+            for backtrack in range(7):
+                correction_scale = 0.5 ** backtrack
+                proposed_world_delta = world_delta_total + correction_scale * increment_field[:, None] * current_directions
+                proposed_source_delta = np.linalg.solve(jacobian, proposed_world_delta[:, :, None])[:, :, 0]
+                trial_source = (source_base + proposed_source_delta).astype("<f4").astype(np.float64)
+                packed_source_delta = trial_source - source_base
+                mapped_world_delta = np.einsum("nij,nj->ni", jacobian, packed_source_delta)
+                roundtrip_error = np.linalg.norm(mapped_world_delta - proposed_world_delta, axis=1)
+                trial_world = _apply_captured_world_delta(captured, mapped_world_delta)
+                if np.array_equal(trial_world, candidate_world):
+                    last_rejection = "packed Float32 update produced no new candidate coordinates"
+                    continue
+
+                trial_triangles = trial_world[compact_faces]
+                trial_area_vectors = np.cross(
+                    trial_triangles[:, 1] - trial_triangles[:, 0],
+                    trial_triangles[:, 2] - trial_triangles[:, 0],
                 )
-            skin_self_audit = _audit_pair(candidate_records, candidate_records, same_surface=True)
-            if int(skin_self_audit["count"]) != 0:
-                raise human.ImportError(f"clearance margin {margin_mm} mm created {skin_self_audit['count']} exact non-adjacent skin self-intersections")
-            candidate_full_world = full_skin_world.copy()
-            candidate_full_world[referenced] = candidate_world
-            candidate_full_triangles = candidate_full_world[faces]
-            base_triangle_edges = np.stack((
-                np.linalg.norm(captured[compact_faces[:, 1]] - captured[compact_faces[:, 0]], axis=1),
-                np.linalg.norm(captured[compact_faces[:, 2]] - captured[compact_faces[:, 1]], axis=1),
-                np.linalg.norm(captured[compact_faces[:, 0]] - captured[compact_faces[:, 2]], axis=1),
-            ), axis=1)
-            candidate_triangle_edges = np.stack((
-                np.linalg.norm(candidate_triangles[:, 1] - candidate_triangles[:, 0], axis=1),
-                np.linalg.norm(candidate_triangles[:, 2] - candidate_triangles[:, 1], axis=1),
-                np.linalg.norm(candidate_triangles[:, 0] - candidate_triangles[:, 2], axis=1),
-            ), axis=1)
-            if np.any(base_triangle_edges <= 0.0) or not np.isfinite(candidate_triangle_edges).all():
-                raise human.ImportError("clearance candidate has zero or non-finite source/candidate skin edges")
-            edge_stretch = candidate_triangle_edges / base_triangle_edges
-            candidate_surface_integral = _signed_surface_integral(candidate_full_world, faces)
-            geometry_quality_by_margin[str(margin_mm)] = {
-                "exact_nonadjacent_skin_self_intersection_pairs": int(skin_self_audit["count"]),
-                "exact_zero_area_triangles": int(np.count_nonzero(candidate_double_areas == 0.0)),
-                "minimum_triangle_area_ratio": float((candidate_double_areas / base_double_areas).min()),
-                "maximum_triangle_area_ratio": float((candidate_double_areas / base_double_areas).max()),
-                "minimum_triangle_normal_dot": float(normal_alignment.min()),
-                "maximum_edge_length_stretch_ratio": float(edge_stretch.max()),
-                "minimum_edge_length_stretch_ratio": float(edge_stretch.min()),
-                "candidate_direction_projection_minimum_required": _MIN_CANDIDATE_DIRECTION_PROJECTION,
-                "candidate_direction_maximum_normal_conversion_factor": 1.0 / _MIN_CANDIDATE_DIRECTION_PROJECTION,
-                "rotated_active_face_winding_trigger_base_dot": _ROTATED_ACTIVE_FACE_BASE_DOT,
-                "candidate_winding_required_contrast_gt": _MIN_CANDIDATE_WINDING_CONTRAST,
-                "signed_surface_integral_m3_proxy": candidate_surface_integral,
-                "signed_surface_integral_delta_m3_proxy": candidate_surface_integral - base_surface_integral,
-                "surface_integral_limitation": "The NHSKIN has 115 boundary edges at ocular openings, so this oriented surface integral is a sensitivity proxy, not a closed-shell volume.",
-            }
-            all_margin_audit = _target_intersection_audit(candidate_records, all_target_faces, pack_positions)
-            margin_audit = {f"{key[0]}:{key[1]}": all_margin_audit[f"{key[0]}:{key[1]}"] for key in target_keys}
-            margin_ocular_audit = {f"{key[0]}:{key[1]}": all_margin_audit[f"{key[0]}:{key[1]}"] for key in _OCULAR_MONITOR_KEYS}
-            for key_text, baseline_row in baseline_ocular_audit.items():
-                baseline_pairs = _triangle_pair_set(baseline_row)
-                candidate_pairs = _triangle_pair_set(margin_ocular_audit[key_text])
-                if candidate_pairs != baseline_pairs:
-                    added = sorted(candidate_pairs - baseline_pairs)
-                    removed = sorted(baseline_pairs - candidate_pairs)
-                    raise human.ImportError(
-                        f"clearance margin {margin_mm} mm changes exact pair identities at monitored ocular interface {key_text}: "
-                        f"baseline_pair_count={len(baseline_pairs)}, candidate_pair_count={len(candidate_pairs)}, "
-                        f"introduced_pairs_first32={added[:32]}, resolved_pairs_first32={removed[:32]}"
+                trial_double_areas = np.linalg.norm(trial_area_vectors, axis=1)
+                if np.any(trial_double_areas == 0.0) or not np.isfinite(trial_double_areas).all():
+                    bad_face = int(np.argmin(trial_double_areas))
+                    last_rejection = f"exact zero-area or non-finite trial triangle face={bad_face}"
+                    continue
+                trial_normal_alignment = np.einsum("ij,ij->i", base_area_vectors, trial_area_vectors) / (
+                    base_double_areas * trial_double_areas
+                )
+                if not np.isfinite(trial_normal_alignment).all() or float(trial_normal_alignment.min()) <= 0.0:
+                    bad_face = int(np.argmin(trial_normal_alignment))
+                    last_rejection = (
+                        f"nonpositive accepted-to-trial face normal dot at face={bad_face}, "
+                        f"dot={float(trial_normal_alignment[bad_face]):.12g}"
                     )
-            ocular_monitor_by_margin[str(margin_mm)] = {
-                "exact_pair_sets_unchanged": True,
-                "pair_count": _sum_target_pairs(margin_ocular_audit),
-                "per_surface_pair_counts": {key: int(row["count"]) for key, row in margin_ocular_audit.items()},
-            }
-            remaining = _sum_target_pairs(margin_audit)
-            old_required = active_vertex_required.copy()
-            for surface_key, row in margin_audit.items():
-                target = tuple(int(part) for part in surface_key.split(":"))
-                target_triangles = target_faces[target]
-                for skin_face, target_face in row["triangle_pairs"]:
-                    skin_face = int(skin_face)
-                    if skin_face not in face_constraints and skin_face not in orientation_checks_added:
-                        base_tri = captured[compact_faces[skin_face]]
-                        base_normal = np.cross(base_tri[1] - base_tri[0], base_tri[2] - base_tri[0])
-                        base_normal /= np.linalg.norm(base_normal)
-                        centroid = base_tri.mean(axis=0)
-                        offset = 0.0005 * base_normal
-                        winding_minus = _generalized_winding_number(centroid - offset, full_skin_triangles)
-                        winding_plus = _generalized_winding_number(centroid + offset, full_skin_triangles)
-                        if abs(winding_minus) - abs(winding_plus) <= 0.5:
-                            raise human.ImportError(f"clearance cannot establish local outward direction for newly intersecting skin face {skin_face}")
-                        orientation_checks_added[skin_face] = {
-                            "source_vertex_ids": [int(value) for value in faces[skin_face]],
-                            "winding_minus": winding_minus, "winding_plus": winding_plus,
-                            "absolute_winding_difference": abs(winding_minus) - abs(winding_plus),
-                            "basis": "captured full-shell generalized winding at 0.5 mm on either side of the source-winding face normal",
-                        }
-                    ids = compact_faces[skin_face]
-                    current_triangle = candidate_world[ids]
-                    target_ids = target_triangles[int(target_face)]
-                    target_tri = pack_positions[target_ids].astype(np.float64)
-                    current_normal = np.cross(current_triangle[1] - current_triangle[0], current_triangle[2] - current_triangle[0])
-                    current_normal_length = float(np.linalg.norm(current_normal))
-                    if current_normal_length <= 1.0e-15:
-                        raise human.ImportError(f"clearance active-set face {skin_face} collapsed")
-                    current_normal /= current_normal_length
-                    base_normal = face_constraints.get(skin_face, {}).get("normal")
-                    if base_normal is None:
-                        base_tri = captured[ids]
-                        base_normal = np.cross(base_tri[1] - base_tri[0], base_tri[2] - base_tri[0])
-                        base_normal /= np.linalg.norm(base_normal)
-                    dots = _bounded_direction_projection(vertex_directions[ids], current_normal)
-                    minimum_active_direction_projection = min(minimum_active_direction_projection, float(dots.min()))
-                    active_faces_seen.add(skin_face)
-                    exact_pair_separation = _triangle_normal_translation_to_separate(current_triangle, target_tri, current_normal)
-                    extra = exact_pair_separation + margin_mm / 1000.0
-                    required_total = field[ids] + extra / dots
-                    np.maximum.at(active_vertex_required, ids, required_total)
-            for skin_face in sorted(active_faces_seen):
-                ids = compact_faces[skin_face]
-                current_triangle = candidate_world[ids]
-                current_normal = np.cross(current_triangle[1] - current_triangle[0], current_triangle[2] - current_triangle[0])
-                normal_length = float(np.linalg.norm(current_normal))
-                if normal_length <= 1.0e-15:
-                    raise human.ImportError(f"clearance active-set face {skin_face} collapsed during current-shell orientation check")
-                current_normal /= normal_length
-                base_triangle = captured[ids]
-                base_normal = np.cross(base_triangle[1] - base_triangle[0], base_triangle[2] - base_triangle[0])
-                base_normal_length = float(np.linalg.norm(base_normal))
-                if base_normal_length <= 1.0e-15:
-                    raise human.ImportError(f"clearance active-set face {skin_face} has a degenerate accepted-pose normal")
-                base_normal /= base_normal_length
-                alignment = float(np.dot(current_normal, base_normal))
-                if alignment <= 0.0:
-                    raise human.ImportError(
-                        f"clearance active-set face {skin_face} lost positive accepted-to-candidate normal orientation: dot={alignment:.12g}"
-                    )
-                direction_dots = _bounded_direction_projection(vertex_directions[ids], current_normal)
-                source_normal_dots = vertex_normals[ids] @ current_normal
-                if not np.isfinite(source_normal_dots).all() or float(source_normal_dots.min()) <= 0.0:
-                    raise human.ImportError(
-                        f"clearance active-set current normal is not positively aligned with source vertex normals: "
-                        f"face={skin_face}, minimum_dot={float(source_normal_dots.min()):.12g}"
-                    )
-                minimum_active_direction_projection = min(minimum_active_direction_projection, float(direction_dots.min()))
-                minimum_active_source_normal_projection = min(minimum_active_source_normal_projection, float(source_normal_dots.min()))
-                if alignment < _ROTATED_ACTIVE_FACE_BASE_DOT:
-                    try:
-                        winding = _candidate_outward_winding(
-                            current_triangle.mean(axis=0), current_normal, candidate_full_triangles,
+                    continue
+
+                trial_records = _exact_surface_records(trial_world, compact_faces)
+                trial_self_audit = _audit_pair(trial_records, trial_records, same_surface=True)
+                if int(trial_self_audit["count"]) != 0:
+                    last_rejection = f"trial has {trial_self_audit['count']} exact nonadjacent skin self-intersections"
+                    continue
+
+                trial_full_world = full_skin_world.copy()
+                trial_full_world[referenced] = trial_world
+                trial_full_triangles = trial_full_world[faces]
+                trial_all_audit = _target_intersection_audit(trial_records, all_target_faces, pack_positions)
+                trial_margin_audit = {
+                    f"{key[0]}:{key[1]}": trial_all_audit[f"{key[0]}:{key[1]}"]
+                    for key in target_keys
+                }
+                trial_ocular_audit = {
+                    f"{key[0]}:{key[1]}": trial_all_audit[f"{key[0]}:{key[1]}"]
+                    for key in _OCULAR_MONITOR_KEYS
+                }
+                ocular_changed = []
+                for key_text, baseline_row in baseline_ocular_audit.items():
+                    before = _triangle_pair_set(baseline_row)
+                    after = _triangle_pair_set(trial_ocular_audit[key_text])
+                    if before != after:
+                        ocular_changed.append({
+                            "surface": key_text,
+                            "added": sorted(after - before)[:16],
+                            "removed": sorted(before - after)[:16],
+                        })
+                if ocular_changed:
+                    last_rejection = f"trial changed monitored ocular pair identities: {ocular_changed[:4]}"
+                    continue
+
+                trial_active_faces = set(active_faces_seen)
+                for row in trial_margin_audit.values():
+                    trial_active_faces.update(int(pair[0]) for pair in row["triangle_pairs"])
+                trial_winding_checks = {}
+                orientation_failure = None
+                for skin_face in sorted(trial_active_faces):
+                    face_normal = trial_area_vectors[skin_face] / trial_double_areas[skin_face]
+                    base_normal = base_area_vectors[skin_face] / base_double_areas[skin_face]
+                    base_current_dot = float(np.dot(base_normal, face_normal))
+                    if base_current_dot <= 0.0:
+                        orientation_failure = (
+                            f"trial face {skin_face} lost positive accepted-to-candidate normal dot {base_current_dot:.12g}"
                         )
-                    except human.ImportError as error:
-                        face_world_delta = candidate_world[ids] - captured[ids]
-                        tangential_mm = np.linalg.norm(
-                            face_world_delta - (face_world_delta @ base_normal)[:, None] * base_normal, axis=1,
-                        ) * 1000.0
-                        raise human.ImportError(
-                            f"rotated active face {skin_face} failed current-candidate outward winding: "
-                            f"margin_mm={margin_mm}, iteration={iteration + 1}, base_current_normal_dot={alignment:.9g}, "
-                            f"minimum_direction_dot={float(direction_dots.min()):.9g}, "
-                            f"vertex_field_mm={(field[ids] * 1000.0).tolist()}, "
-                            f"face_vertex_displacement_mm={(np.linalg.norm(face_world_delta, axis=1) * 1000.0).tolist()}, "
-                            f"normal_displacement_mm={(face_world_delta @ base_normal * 1000.0).tolist()}, "
-                            f"tangential_displacement_mm={tangential_mm.tolist()}, "
-                            f"base_area_mm2={base_double_areas[skin_face] * 0.5e6:.9g}, "
-                            f"candidate_area_mm2={candidate_double_areas[skin_face] * 0.5e6:.9g}, "
-                            f"base_skin_triangle_world_m={base_triangle.tolist()}, "
-                            f"candidate_skin_triangle_world_m={current_triangle.tolist()}, {error}"
-                        ) from error
-                    check_key = f"iteration-{iteration + 1}:face-{skin_face}"
-                    candidate_winding_checks[check_key] = {
-                        "skin_face": int(skin_face),
-                        "iteration": int(iteration + 1),
-                        "base_current_normal_dot": alignment,
-                        "minimum_displacement_direction_current_normal_dot": float(direction_dots.min()),
-                        "minimum_source_vertex_normal_current_normal_dot": float(source_normal_dots.min()),
-                        **winding,
-                    }
-            if remaining == 0:
+                        break
+                    if base_current_dot < _ROTATED_ACTIVE_FACE_BASE_DOT:
+                        face_ids = compact_faces[skin_face]
+                        center = trial_world[face_ids].mean(axis=0)
+                        try:
+                            winding = _candidate_outward_winding(center, face_normal, trial_full_triangles)
+                        except human.ImportError as error:
+                            orientation_failure = f"trial rotated face {skin_face} current-shell winding rejected: {error}"
+                            break
+                        check_key = f"iteration-{iteration + 1}:backtrack-{backtrack}:face-{skin_face}"
+                        trial_winding_checks[check_key] = {
+                            "skin_face": int(skin_face),
+                            "iteration": int(iteration + 1),
+                            "backtrack": int(backtrack),
+                            "base_current_normal_dot": base_current_dot,
+                            **winding,
+                        }
+                if orientation_failure is not None:
+                    last_rejection = orientation_failure
+                    continue
+
+                trial_margin_count = _sum_target_pairs(trial_margin_audit)
+                trial_area_ratio = trial_double_areas / base_double_areas
+                base_edge_lengths = np.stack((
+                    np.linalg.norm(captured[compact_faces[:, 1]] - captured[compact_faces[:, 0]], axis=1),
+                    np.linalg.norm(captured[compact_faces[:, 2]] - captured[compact_faces[:, 1]], axis=1),
+                    np.linalg.norm(captured[compact_faces[:, 0]] - captured[compact_faces[:, 2]], axis=1),
+                ), axis=1)
+                trial_edge_lengths = np.stack((
+                    np.linalg.norm(trial_triangles[:, 1] - trial_triangles[:, 0], axis=1),
+                    np.linalg.norm(trial_triangles[:, 2] - trial_triangles[:, 1], axis=1),
+                    np.linalg.norm(trial_triangles[:, 0] - trial_triangles[:, 2], axis=1),
+                ), axis=1)
+                if np.any(base_edge_lengths <= 0.0) or not np.isfinite(trial_edge_lengths).all():
+                    last_rejection = "trial has zero or non-finite source/candidate skin edges"
+                    continue
+                trial_edge_stretch = trial_edge_lengths / base_edge_lengths
+                trial_surface_integral = _signed_surface_integral(trial_full_world, faces)
+
+                candidate_world = trial_world
+                candidate_records = trial_records
+                world_delta_total = trial_world - captured
+                source_corrected = trial_source
+                source_delta = source_corrected - source_base
+                maximum_roundtrip_error_um = max(
+                    maximum_roundtrip_error_um, float(roundtrip_error.max() * 1.0e6),
+                )
+                margin_audit = trial_margin_audit
+                margin_ocular_audit = trial_ocular_audit
+                active_faces_seen = trial_active_faces
+                candidate_winding_checks.update(trial_winding_checks)
+                correction_scale_accepted = correction_scale
+                final_seed_count = int(len(seed))
+                final_field = increment_field * correction_scale
+                final_quality = {
+                    "exact_nonadjacent_skin_self_intersection_pairs": int(trial_self_audit["count"]),
+                    "exact_zero_area_triangles": int(np.count_nonzero(trial_double_areas == 0.0)),
+                    "minimum_triangle_area_ratio": float(trial_area_ratio.min()),
+                    "maximum_triangle_area_ratio": float(trial_area_ratio.max()),
+                    "minimum_triangle_normal_dot": float(trial_normal_alignment.min()),
+                    "maximum_edge_length_stretch_ratio": float(trial_edge_stretch.max()),
+                    "minimum_edge_length_stretch_ratio": float(trial_edge_stretch.min()),
+                    "minimum_applied_demand_direction_current_normal_dot": (
+                        minimum_active_direction_projection if np.isfinite(minimum_active_direction_projection) else None
+                    ),
+                    "minimum_candidate_winding_contrast": (
+                        min((row["absolute_inside_minus_outside_contrast"] for row in candidate_winding_checks.values()), default=None)
+                    ),
+                    "rotated_active_face_candidate_winding_checks": candidate_winding_checks,
+                    "rotated_active_face_candidate_winding_check_count": len(candidate_winding_checks),
+                    "signed_surface_integral_m3_proxy": trial_surface_integral,
+                    "signed_surface_integral_delta_m3_proxy": trial_surface_integral - base_surface_integral,
+                    "surface_integral_limitation": "The NHSKIN has 115 boundary edges at ocular openings, so this oriented surface integral is a sensitivity proxy, not a closed-shell volume.",
+                }
+                iteration_receipts.append({
+                    "iteration": int(iteration + 1),
+                    "accepted_backtrack_factor": float(correction_scale),
+                    "seed_vertex_count": int(len(seed)),
+                    "maximum_increment_mm": float(final_field.max() * 1000.0),
+                    "maximum_total_world_displacement_mm": float(np.linalg.norm(world_delta_total, axis=1).max() * 1000.0),
+                    "nonocular_pairs_before": int(remaining_before),
+                    "nonocular_pairs_after": int(trial_margin_count),
+                    "rotated_active_face_winding_check_count": len(trial_winding_checks),
+                    "minimum_direction_projection_for_applied_demand": (
+                        float(minimum_active_direction_projection)
+                        if np.isfinite(minimum_active_direction_projection) else None
+                    ),
+                    "packed_inverse_roundtrip_error_um": float(roundtrip_error.max() * 1.0e6),
+                })
+                accepted = True
+                break
+
+            if not accepted:
+                raise human.ImportError(
+                    f"clearance could not accept a geometry-valid incremental correction: margin_mm={margin_mm}, "
+                    f"iteration={iteration + 1}, backtrack_attempts=7, last_rejection={last_rejection}"
+                )
+            if _sum_target_pairs(margin_audit) == 0:
                 final_iteration = iteration + 1
                 break
-            if not np.any(active_vertex_required > old_required + 1.0e-12):
-                raise human.ImportError(f"clearance active set did not strengthen any vertex despite {remaining} exact intersections")
-        if final_iteration is None or margin_audit is None or source_corrected is None or source_delta is None:
-            raise human.ImportError(f"clearance did not remove all nearby target intersections at margin {margin_mm} mm")
+
+        if final_iteration is None or margin_audit is None or final_quality is None:
+            raise human.ImportError(
+                f"incremental clearance did not resolve all exact nearby target intersections at margin {margin_mm} mm within 6 iterations"
+            )
         pair_count = _sum_target_pairs(margin_audit)
-        geometry_quality_by_margin[str(margin_mm)].update({
-            "minimum_active_displacement_direction_current_normal_dot": (
-                minimum_active_direction_projection if np.isfinite(minimum_active_direction_projection) else None
-            ),
-            "minimum_active_source_vertex_normal_current_normal_dot": (
-                minimum_active_source_normal_projection if np.isfinite(minimum_active_source_normal_projection) else None
-            ),
-            "rotated_active_face_candidate_winding_checks": candidate_winding_checks,
-            "rotated_active_face_candidate_winding_check_count": len(candidate_winding_checks),
-        })
+        geometry_quality_by_margin[str(margin_mm)] = final_quality
         aabb_audit_by_margin[str(margin_mm)] = {
             "remaining_exact_skin_target_triangle_pairs": pair_count,
             "active_set_iterations": final_iteration,
             "by_target_surface": margin_audit,
         }
+        ocular_monitor_by_margin[str(margin_mm)] = {
+            "exact_pair_sets_unchanged": True,
+            "pair_count": _sum_target_pairs(margin_ocular_audit),
+            "per_surface_pair_counts": {key: int(row["count"]) for key, row in margin_ocular_audit.items()},
+        }
         output_source_by_margin[margin_mm] = source_corrected
         support_by_margin[str(margin_mm)] = {
-            "margin_mm": margin_mm, "initial_witness_faces": len(face_constraints),
+            "margin_mm": margin_mm,
+            "initial_witness_faces": len(face_constraints),
             "additional_active_faces": len(orientation_checks_added),
-            "witness_triangle_pairs": len(witnesses), "seed_vertices": int(len(seed)),
-            "nonzero_displaced_vertices": int(np.count_nonzero(field)),
-            "support_radius_mm": radius * 1000.0, "support_radius_edge_multiple": float(support_radius_edge_multiple),
+            "witness_triangle_pairs": len(witnesses),
+            "seed_vertices_last_increment": final_seed_count,
+            "nonzero_displaced_vertices": int(np.count_nonzero(np.linalg.norm(world_delta_total, axis=1) > 0.0)),
+            "support_radius_mm": radius * 1000.0,
+            "support_radius_edge_multiple": float(support_radius_edge_multiple),
             "median_local_edge_mm": median_edge * 1000.0,
-            "maximum_world_displacement_mm": float(field.max() * 1000.0),
+            "maximum_world_displacement_mm": float(np.linalg.norm(world_delta_total, axis=1).max() * 1000.0),
+            "maximum_increment_mm_last_iteration": float(final_field.max() * 1000.0),
             "maximum_common_atlas_source_displacement_mm": float(np.linalg.norm(source_delta, axis=1).max() * 1000.0),
-            "maximum_packed_inverse_roundtrip_error_um": float(source_roundtrip.max() * 1.0e6),
+            "maximum_packed_inverse_roundtrip_error_um": maximum_roundtrip_error_um,
             "maximum_jacobian_condition_number": float(condition.max()),
             "maximum_accepted_pose_fit_residual_um": float(base_residual.max() * 1.0e6),
-            "maximum_accepted_pose_fit_residual_on_packed_displaced_vertices_um": float(base_residual[np.any(packed_source_delta != 0.0, axis=1)].max() * 1.0e6) if np.any(packed_source_delta != 0.0) else 0.0,
-            "extension_direction_smoothing": "existing Human skin visual-normal smoother, eight triangle-neighbor iterations",
+            "maximum_accepted_pose_fit_residual_on_packed_displaced_vertices_um": float(
+                base_residual[np.any(source_delta != 0.0, axis=1)].max() * 1.0e6
+            ) if np.any(source_delta != 0.0) else 0.0,
+            "extension_direction_smoothing": "recompute current candidate area-weighted vertex normals and apply existing Human skin visual-normal smoother for eight iterations before each incremental correction",
             "extension_direction_smoothing_iterations": _DIRECTION_SMOOTHING_ITERATIONS,
+            "iterations": iteration_receipts,
         }
     main_source = source_positions.copy()
     main_source[referenced] = output_source_by_margin[0.25]
@@ -980,12 +1019,12 @@ def derive_step0_inferred_clearance(
         "schema": "numi.human.step0-witnessed-common-atlas-skin-clearance.v1",
         "status": "inferred_engineering_clearance_candidate_pending_native_replay",
         "method": {
-            "direction": "captured skin source winding, independently classified locally toward lower full-shell winding at every witness face; rotated active faces are reclassified on the current complete candidate Float32 shell at plus/minus 0.5 mm; bone witness normals also point away from the fitted registered owning-body origin",
-            "extension_direction_smoothing": "eight iterations of the existing Human skin visual-normal smoother over original triangle adjacency; it only selects the inferred extension direction, while original face winding remains the anatomical outward classifier and every seed face retains at least 0.8 extension-direction dot. The eight-ring orientation influence is broader than a single edge and is an explicit candidate limitation.",
-            "finite_pair_demand": "minimum outward translation along the captured skin face normal that makes the finite skin and target triangles separate in at least one separating-axis interval; this avoids treating all three opponent vertices as if they overlapped the skin-face footprint",
-            "field": "same compact geodesic smootherstep field for all margins: each witnessed finite triangle pair receives its first outward normal translation that separates the pair under the triangle separating-axis intervals, plus the selected engineering translation parameter; max seed envelope over geodesic distance on the original skin mesh; the manifest records the selected multiple of the median local edge length as the support radius",
-            "inverse_map": "per referenced vertex solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, all unchanged source weights, and 86 accepted body rotations recovered independently from all 185 exact-topology registered bone surfaces; apply the resulting packed source delta to the exact captured accepted-world baseline so zero-delta vertices retain their exact float32 coordinates",
-            "active_face_orientation_admission": "all candidate face areas must remain finite and nonzero and all original-to-candidate face-normal dots remain strictly positive; when an active face rotates below the 0.75 audit-trigger dot, classify the current normal using generalized winding on the full candidate Float32 shell at +/-0.5 mm and require the minus-normal side to be more enclosed by >0.5 absolute winding units; each active vertex displacement direction must project >=0.5 onto the current normal, bounding normal-demand conversion amplification to at most 2x; the 0.75 dot is only a trigger for the stronger winding check, not an angle-based pass/fail ceiling",
+            "direction": "each iteration recomputes current candidate area-weighted vertex normals and applies the existing eight-pass Human visual-normal smoother; only unresolved exact pairs generate a new correction demand. Source winding remains the independent orientation/provenance reference, and rotated active faces are checked against current-candidate full-shell winding.",
+            "extension_direction_smoothing": "for each bounded increment, recompute area-weighted normals from the current candidate triangles and smooth them with the existing Human skin visual-normal owner for eight iterations; require each demanded vertex direction to project at least 0.5 onto its current active face normal, bounding normal-demand conversion to at most 2x. Previously resolved faces are not rechecked against this demand-conditioning bound.",
+            "finite_pair_demand": "for each remaining exact pair, compute the minimum translation along its current skin-face normal that separates the current finite skin and fixed target triangles under their separating-axis intervals, then add the selected engineering offset; convert that current-normal demand through the current smoothed vertex directions.",
+            "field": "at most six incremental corrections per margin. Each iteration builds a compact geodesic smootherstep field around currently unresolved pair vertices using current candidate edge lengths and the original median-edge support radius; try scales 1, 1/2, through 1/64 and accept only a candidate that passes geometry/orientation checks after an exact all-target rescan and preserves ocular pair identities; any remaining nonocular pairs become demands for the next increment.",
+            "inverse_map": "accumulate each bounded world-space increment, solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, unchanged source weights, and recovered accepted body rotations, pack the resulting common-atlas source delta to Float32, then apply the mapped delta to the exact captured accepted-world baseline; zero-delta vertices retain their captured Float32 coordinates",
+            "active_face_orientation_admission": "every trial keeps finite nonzero face areas and strictly positive accepted-to-candidate face-normal dot; when an active face rotates below the 0.75 audit-trigger dot, classify its current normal using generalized winding on the full candidate Float32 shell at +/-0.5 mm and require the minus-normal side to be more enclosed by >0.5 absolute winding units. The 0.75 dot triggers this stronger winding check and is not an angle pass/fail ceiling.",
             "local_shape_diagnostics": "per margin report full-mesh minimum/maximum face-area ratio and edge-length stretch ratio; no unvalidated shape-change envelope is inferred from these geometric diagnostics",
             "pose_fit_uncertainty": "candidate displacement is linearized through the recovered 86-owner Jacobian; the full captured-vs-rigid-fit residual and the maximum residual on packed-displaced vertices are reported per margin and remain a sub-micrometer uncertainty requiring native confirmation",
             "interpretation": "inferred finite-triangle separation translation plus a normal-translation engineering offset; not measured skin thickness, penetration depth, or measured physiologic bone-to-skin spacing",
