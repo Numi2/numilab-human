@@ -612,6 +612,13 @@ FAN_REFINEMENT_TARGET_FACES = ((305, 40225), (308, 46153))
 FAN_REFINEMENT_SHARED_VERTEX_M = (
     -0.0013838123995810747, 0.04402492940425873, -0.0619685985147953,
 )
+ROW305_308_SLIVER_EDGE_M = (
+    (0.007958401925861835, 0.03510472923517227, -0.0625),
+    (0.007958557456731796, 0.03510458022356033, -0.0625),
+)
+ROW305_308_CROSSING_VERTEX_M = (
+    0.008010145276784897, 0.03475991636514664, -0.06321005523204803,
+)
 
 
 
@@ -813,7 +820,8 @@ def _collapse_short_precision_slivers(original_rows, *, altitude_limit_m=128e-9,
                                       max_edge_length_m=1e-6,
                                       max_endpoint_displacement_m=1e-6,
                                       max_abs_volume_delta_m3=1e-12,
-                                      max_operations=256, protected_owner_ids=(), protected_vertex_coordinates=()):
+                                      max_operations=256, protected_owner_ids=(), protected_vertex_coordinates=(),
+                                      target_edge_coordinates=None):
     """Collapse only diagnosed short sliver edges, propagating exact shared owners.
 
     Row 310 is a derived pleura and is rebuilt after this operation. Rows 305-309
@@ -847,6 +855,22 @@ def _collapse_short_precision_slivers(original_rows, *, altitude_limit_m=128e-9,
         return np.ascontiguousarray(point, dtype="<f4").tobytes()
 
     protected_point_keys = {point_key(point) for point in protected_vertex_coordinates}
+    target_edge_key = None
+    target_edge_points = None
+    if target_edge_coordinates is not None:
+        if len(target_edge_coordinates) != 2:
+            raise ValueError("target edge must contain one owner and two endpoint coordinates")
+        target_sid = int(target_edge_coordinates[0])
+        target_edge_points = tuple(np.asarray(point, dtype="<f4").reshape(-1)
+                                  for point in target_edge_coordinates[1])
+        if (target_sid not in lobe_ids or len(target_edge_points) != 2
+                or any(point.shape != (3,) or not np.isfinite(point).all()
+                       for point in target_edge_points)):
+            raise ValueError("target edge owner or Float32 endpoint coordinates are invalid")
+        target_point_keys = tuple(point_key(point) for point in target_edge_points)
+        if target_point_keys[0] == target_point_keys[1]:
+            raise ValueError("target edge endpoints are identical")
+        target_edge_key = (target_sid, tuple(sorted(target_point_keys)))
 
     def oriented_key(xyz, face):
         return tuple(point_key(xyz[int(vi)]) for vi in face)
@@ -958,9 +982,19 @@ def _collapse_short_precision_slivers(original_rows, *, altitude_limit_m=128e-9,
                 for i in range(3):
                     edge = tuple(sorted((int(tri[i]), int(tri[(i+1) % 3]))))
                     length = float(np.linalg.norm(xyz[edge[0]].astype(np.float64)-xyz[edge[1]].astype(np.float64)))
+                    if target_edge_key is not None:
+                        coordinate_edge = tuple(sorted(point_key(xyz[index]) for index in edge))
+                        if (sid, coordinate_edge) != target_edge_key:
+                            continue
                     if length <= max_edge_length_m:
                         seeds.append((float(altitudes[fi]), length, sid, int(fi), edge))
         if not seeds:
+            if target_edge_key is not None and not operations:
+                blocked.append({"target_edge_owner": target_edge_key[0],
+                                "target_edge_coordinate_bits": [
+                                    list(np.frombuffer(point, dtype="<f4").astype(float))
+                                    for point in target_edge_key[1]],
+                                "reason": "pinned target edge is absent or outside the altitude/length screen"})
             break
         seeds.sort()
         committed = False
@@ -1126,6 +1160,11 @@ def _collapse_short_precision_slivers(original_rows, *, altitude_limit_m=128e-9,
         "protected_reciprocal_owner_ids": sorted(map(int, protected_owner_ids)),
         "protected_source_vertex_coordinates_f32_m": [np.asarray(x, dtype="<f4").astype(float).tolist()
                                                       for x in protected_vertex_coordinates],
+        "target_edge_coordinates_f32_m": (None if target_edge_points is None else {
+            "stable_id": int(target_edge_key[0]),
+            "endpoints": [point.astype(float).tolist() for point in target_edge_points],
+            "selection_is_exact_coordinate_edge": True,
+        }),
         "derived_pleura_row310_rebuilt_by_existing_owner": True,
         "operations": operations, "blocked_attempts": blocked,
         "remaining_subthreshold_faces": remaining, "per_owner": per_owner,
@@ -2146,6 +2185,34 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         max_abs_volume_delta_m3=1e-12,
         protected_vertex_coordinates=(FAN_REFINEMENT_SHARED_VERTEX_M,), max_operations=128)
 
+    # Remove one measured 305 sliver edge by collapsing its unshared endpoint
+    # into the exact endpoint already present on lobe 308. This keeps the shared
+    # source point fixed, has a sub-micrometre bounded displacement, and lets the
+    # existing owner propagate or reject every exact reciprocal owner atomically.
+    seam_collapse_rows, seam_collapse_report, seam_collapse_stage_ancestry = (
+        _collapse_short_precision_slivers(
+            rows3, altitude_limit_m=512e-9, max_edge_length_m=2e-6,
+            max_endpoint_displacement_m=1e-6, max_abs_volume_delta_m3=1e-12,
+            max_operations=1, protected_owner_ids=(311,),
+            target_edge_coordinates=(305, ROW305_308_SLIVER_EDGE_M)))
+    if len(seam_collapse_report["operations"]) != 1:
+        raise ValueError("pinned row-305/308 seam edge did not pass the existing collapse owner")
+    seam_operation = seam_collapse_report["operations"][0]
+    if (seam_operation["seed_lobe_stable_id"] != 305
+            or seam_operation["affected_owner_ids"] != [305]
+            or seam_operation["endpoint_position_policy"] != "keep"):
+        raise ValueError("pinned row-305/308 seam collapse did not preserve its shared endpoint")
+    seam_collapse_to_source = {}
+    for sid, output_to_rows3 in seam_collapse_stage_ancestry.items():
+        seam_collapse_to_source[sid] = [
+            sorted({source_face
+                    for rows3_face in rows3_faces
+                    for source_face in collapse_ancestry[sid][int(rows3_face)]})
+            for rows3_faces in output_to_rows3
+        ]
+    collapse_ancestry = seam_collapse_to_source
+    rows3 = seam_collapse_rows
+
     interface_refresh_before_fan = _refresh_diaphragm_interface_registration(receipt, rows3)
     fan_lobes = {sid: (rows3[sid]["vertices6"], rows3[sid]["faces"])
                  for sid in range(305, 310)}
@@ -2325,6 +2392,7 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         "registered_307_309_shared_sliver_collapse": shared_sliver_report,
         "synchronized_short_edge_collapse": collapse_report,
         "bounded_tangent_vertex_relocation": relocation_report,
+        "registered_305_308_shared_endpoint_collapse": seam_collapse_report,
         "shared_vertex_fan_refinement": fan_report,
         "diaphragm_interface_reconstruction": interface_reconstruction,
         "diaphragm_interface_refresh_before_fan": interface_refresh_before_fan,
@@ -2334,8 +2402,9 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
     }
     receipt["qualification"]["source_geometry_candidate"] = (
         "Bounded source preparation: position-preserving interior flips, topology-checked short-edge collapses, "
-        "exact-owner-propagated Float32 tangent relocations, a source-anchored fan refinement, and the existing "
-        "pleura union owner. Runtime transformed-pose area and intersection gates remain strict and separate.")
+        "exact-owner-propagated Float32 tangent relocations, the registered 305/308 shared-endpoint collapse, "
+        "a source-anchored fan refinement, and the existing pleura union owner. Runtime transformed-pose area and "
+        "intersection gates remain strict and separate.")
     receipt["provenance"]["lung_source_precision_retriangulation"] = {
         "input_payload_path": str(base_payload), "input_payload_sha256": PRECISION_PAYLOAD_SHA256,
         "input_receipt_path": str(base_receipt_path), "input_receipt_sha256": PRECISION_RECEIPT_SHA256,
@@ -2344,6 +2413,15 @@ def build_precision_candidate(base_payload: Path, base_receipt_path: Path,
         "relocation_source_floor_m": 512e-9,
         "maximum_declared_collapse_endpoint_displacement_m": 1e-6,
         "maximum_declared_relocation_displacement_m": 1e-6,
+        "registered_305_308_shared_endpoint_collapse": {
+            "source_edge_endpoint_coordinates_f32_m": [list(point) for point in ROW305_308_SLIVER_EDGE_M],
+            "owner_stable_id": 305,
+            "kept_endpoint_is_exactly_shared_with_stable_id": 308,
+            "selection_altitude_m": 512e-9,
+            "maximum_edge_length_m": 2e-6,
+            "operation_count": 1,
+            "native_transformed_pose_qualification": "not performed",
+        },
         "maximum_abs_per_owner_and_aggregate_volume_delta_m3": 1e-12,
         "runtime_area_and_triangle_validators_were_not_relaxed": True,
         "input_runtime_area_bit_identity": bool(area_bit_identity),

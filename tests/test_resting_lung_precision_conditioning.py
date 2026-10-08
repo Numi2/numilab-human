@@ -348,6 +348,51 @@ class RestingLungPrecisionConditioningTests(unittest.TestCase):
             self.assertGreater(count, 0)
             self.assertLessEqual(start + count, len(rows[311]["faces"]))
 
+    def test_pinned_short_edge_collapse_keeps_the_shared_endpoint_and_other_owners(self):
+        from pathlib import Path
+        import hashlib
+        from numilab_human.resting_anatomy_interface_patch import parse_payload
+
+        payload = Path(
+            "/Users/n/numi-human-resting-evidence-20261005/airway-sibling-overlap-partition-001/"
+            "resting-thorax.nhanatomy")
+        if not payload.is_file():
+            self.skipTest("pinned Mini source geometry is not installed")
+        self.assertEqual(
+            hashlib.sha256(payload.read_bytes()).hexdigest(),
+            "c6adae6522a2f7e5a8bd661035d464d686c843e96ab04ffc3ccd9aa1371569c1")
+        _, source = parse_payload(payload)
+        untouched = {sid: (source[sid]["vertices6"].copy(), source[sid]["faces"].copy())
+                     for sid in (306, 307, 308, 309, 311)}
+        edge = (
+            (0.007958401925861835, 0.03510472923517227, -0.0625),
+            (0.007958557456731796, 0.03510458022356033, -0.0625),
+        )
+        candidate, report, _ = _collapse_short_precision_slivers(
+            source, altitude_limit_m=512e-9, max_edge_length_m=2e-6,
+            max_endpoint_displacement_m=1e-6, max_abs_volume_delta_m3=1e-12,
+            max_operations=1, protected_owner_ids=(311,),
+            target_edge_coordinates=(305, edge),
+        )
+        self.assertEqual(len(report["operations"]), 1)
+        operation = report["operations"][0]
+        self.assertEqual(operation["seed_lobe_stable_id"], 305)
+        self.assertEqual(operation["endpoint_position_policy"], "keep")
+        self.assertEqual(operation["affected_owner_ids"], [305])
+        owner_operation = operation["owner_operations"][0]
+        self.assertLess(owner_operation["maximum_endpoint_displacement_m"], 1e-6)
+        self.assertEqual(len(owner_operation["deleted_face_indices"]), 2)
+        for sid, (vertices, faces) in untouched.items():
+            np.testing.assert_array_equal(candidate[sid]["vertices6"], vertices)
+            np.testing.assert_array_equal(candidate[sid]["faces"], faces)
+        self.assertEqual(len(candidate[305]["faces"]), len(source[305]["faces"])-2)
+        self.assertTrue(validate_closed_oriented_surface(
+            candidate[305]["vertices6"][:, :3], candidate[305]["faces"])["closed_oriented"])
+        kept = np.asarray(edge[1], dtype=np.float32)
+        self.assertTrue(np.any(np.all(candidate[305]["vertices6"][:, :3] == kept, axis=1)))
+        self.assertTrue(np.any(np.all(candidate[308]["vertices6"][:, :3] == kept, axis=1)))
+        self.assertLessEqual(abs(owner_operation["signed_volume_delta_m3"]), 1e-12)
+
     def test_sliver_collapse_protects_registered_diaphragm_owner(self):
         source = _diaphragm_shared_skinny_rows()
         diaphragm_vertices = source[311]["vertices6"].copy()
