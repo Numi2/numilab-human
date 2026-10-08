@@ -389,6 +389,7 @@ def collapse_registered_interior_vertex(prepared, keep_point, drop_point, *,
                              'shared_triangles_after': len(after_shared),
                              'unchanged_owner_patch_preserved': other not in drop_owners})
 
+    ready = {}
     for sid, proposal in proposed.items():
         new_vertices, new_faces, new_parents, detail, delta, *_ = proposal
         if new_vertices.shape[1] == 6:
@@ -398,15 +399,19 @@ def collapse_registered_interior_vertex(prepared, keep_point, drop_point, *,
             for axis in range(3):
                 np.add.at(summed, new_faces[:, axis], face_normals)
             lengths = np.linalg.norm(summed, axis=1)
-            if np.any(lengths == 0):
-                raise ValueError(f'surface {sid} has a zero vertex normal after collapse')
-            new_vertices[:, 3:6] = (summed / lengths[:, None]).astype(new_vertices.dtype)
+            used = np.unique(new_faces)
+            if np.any(lengths[used] == 0) or not np.all(np.isfinite(lengths[used])):
+                raise ValueError(f'surface {sid} has a zero or nonfinite vertex normal after collapse')
+            new_vertices[used, 3:6] = (summed[used] / lengths[used, None]).astype(new_vertices.dtype)
         records = list(detail.get('registered_owner_collapses', []))
         records.append({'keep_point': keep_key, 'drop_point': drop_key,
                         'removed_edge_face_count': proposal[10]})
-        detail['registered_owner_collapses'] = records
-        prepared[sid] = (new_vertices, new_faces, new_parents, detail)
-        cumulative[sid] = cumulative.get(sid, 0.0) + delta
+        new_detail = dict(detail)
+        new_detail['registered_owner_collapses'] = records
+        ready[sid] = (new_vertices, new_faces, new_parents, new_detail)
+    for sid, row in ready.items():
+        prepared[sid] = row
+        cumulative[sid] = cumulative.get(sid, 0.0) + row_deltas[sid]
     for group_key, delta in group_deltas.items():
         cumulative_groups[group_key] = cumulative_groups.get(group_key, 0.0) + delta
 
@@ -1189,6 +1194,7 @@ def _improve_sliver_faces(prepared, *, minimum_altitude_m, maximum_nonplanarity_
                         'maximum_patch_nonplanarity_m': nonplanarity,
                         'modified_faces': {str(s): [i, j] for s, i, j, _ in updates}})
     remaining = {}
+    ready = {}
     for sid in sorted(prepared):
         vertices, old_faces, parents, detail = prepared[sid]
         f = np.asarray([[global_to_local[sid][int(i)] for i in tri] for tri in faces[sid]], dtype=np.int64)
@@ -1205,16 +1211,19 @@ def _improve_sliver_faces(prepared, *, minimum_altitude_m, maximum_nonplanarity_
         for k in range(3):
             np.add.at(summed, f[:, k], normals)
         lengths = np.linalg.norm(summed, axis=1)
-        if np.any(lengths == 0):
-            raise ValueError('quality improvement left a zero vertex normal')
-        out[:, 3:6] = summed / lengths[:, None]
+        used = np.unique(f)
+        if np.any(lengths[used] == 0) or not np.all(np.isfinite(lengths[used])):
+            raise ValueError('quality improvement left a zero or nonfinite vertex normal')
+        out[used, 3:6] = summed[used] / lengths[used, None]
         if not np.array_equal(out[:, :3], vertices[:, :3]):
             raise AssertionError('diagonal flips moved source vertices')
         _, _, alt = geometry(faces[sid])
         remaining[str(sid)] = {'minimum_altitude_m': float(alt.min()),
                                'below_bound_face_count': int(np.count_nonzero(alt < minimum_altitude_m))}
-        detail['diagonal_flip_count'] = sum(sid in x['shared_surface_owners'] for x in changes)
-        prepared[sid] = out, f, remapped, detail
+        new_detail = dict(detail)
+        new_detail['diagonal_flip_count'] = sum(sid in x['shared_surface_owners'] for x in changes)
+        ready[sid] = out, f, remapped, new_detail
+    prepared.update(ready)
     return {'method': method,
             'minimum_altitude_target_m': minimum_altitude_m,
             'minimum_result_altitude_m': minimum_result_altitude_m,

@@ -89,6 +89,8 @@ class RespiratoryMeshQualityTests(unittest.TestCase):
             return vertices.astype(np.float32), outward(vertices, faces)
 
         octa_vertices, octa_faces = with_normals(points, octa_faces)
+        unused_vertex = np.asarray([[.1, .2, .3, .2, .3, .4]], dtype=np.float32)
+        octa_vertices = np.vstack((octa_vertices, unused_vertex))
         # The third owner is a declared coincident exterior representation,
         # so it preserves the same winding as the lung shell.
         reverse_vertices = octa_vertices.copy()
@@ -133,6 +135,8 @@ class RespiratoryMeshQualityTests(unittest.TestCase):
             same_winding_surface_pairs={(308, 310)},
         )
 
+        for sid in (308, 310):
+            np.testing.assert_array_equal(prepared[sid][0][-1], unused_vertex[0])
         self.assertEqual(report['changed_surface_ids'], [308, 310])
         self.assertEqual(report['unchanged_seam_owners'], [305])
         self.assertEqual(report['drop_point_owners'], [308, 310])
@@ -178,6 +182,28 @@ class RespiratoryMeshQualityTests(unittest.TestCase):
         for sid in equal_owner:
             np.testing.assert_array_equal(equal_owner[sid][0], before[sid][0])
             np.testing.assert_array_equal(equal_owner[sid][1], before[sid][1])
+        import copy
+        invalid = copy.deepcopy(equal_owner)
+        vertices, faces, parents, detail = invalid[310]
+        offset = len(vertices)
+        extra = np.asarray([[.6, .6, .6, 0, 0, 1],
+                            [.61, .6, .6, 0, 0, 1],
+                            [.6, .61, .6, 0, 0, 1]], dtype=np.float32)
+        bad_faces = np.vstack((faces, np.asarray(
+            [[0, 1, 2], [0, 2, 1]], dtype=np.int64) + offset))
+        invalid[310] = (np.vstack((vertices, extra)), bad_faces,
+                        {i: [i] for i in range(len(bad_faces))}, detail)
+        before_invalid = copy.deepcopy(invalid)
+        with self.assertRaisesRegex(ValueError, 'surface 310 has a zero or nonfinite'):
+            collapse_registered_interior_vertex(
+                invalid, keep_point=points[0], drop_point=points[1],
+                maximum_source_displacement_m=100e-6, minimum_altitude_m=1e-3,
+                same_winding_surface_pairs={(308, 310)}, allow_equal_owner_sets=True)
+        for sid, row in invalid.items():
+            np.testing.assert_array_equal(row[0], before_invalid[sid][0])
+            np.testing.assert_array_equal(row[1], before_invalid[sid][1])
+            self.assertEqual(row[2:], before_invalid[sid][2:])
+
         equal_report = collapse_registered_interior_vertex(
             equal_owner, keep_point=points[0], drop_point=points[1],
             maximum_source_displacement_m=100e-6, minimum_altitude_m=1e-3,
@@ -365,6 +391,40 @@ class RespiratoryMeshQualityTests(unittest.TestCase):
                         operation['combined_local_sliver_objective_before'])
         self.assertGreaterEqual(operation['combined_local_minimum_altitude_after_m'], 1.25e-7)
 
+
+    def test_reciprocal_flip_preserves_unused_vertex_attributes(self):
+        vertices, faces, parents, _ = prepared_quad()
+        vertices = np.vstack((vertices, np.asarray(
+            [[.1, .2, .3, .2, .3, .4]], dtype=np.float32)))
+        prepared = {sid: (vertices.copy(), faces.copy(), dict(parents), {})
+                    for sid in (305, 311)}
+        report = improve_sliver_faces(prepared)
+        self.assertEqual(report['flip_count'], 1)
+        for row in prepared.values():
+            np.testing.assert_array_equal(row[0][-1], vertices[-1])
+            np.testing.assert_array_equal(row[0][:, :3], vertices[:, :3])
+            self.assertTrue(np.isfinite(row[0]).all())
+
+    def test_reciprocal_flip_late_normal_rejection_is_atomic(self):
+        import copy
+
+        vertices, faces, parents, _ = prepared_quad()
+        extra = np.asarray([[.1, .1, .1, 0, 0, 1],
+                            [.11, .1, .1, 0, 0, 1],
+                            [.1, .11, .1, 0, 0, 1]], dtype=np.float32)
+        second_faces = np.vstack((faces, [[4, 5, 6], [4, 6, 5]]))
+        prepared = {
+            305: (vertices.copy(), faces.copy(), dict(parents), {'retained': [1]}),
+            311: (np.vstack((vertices, extra)), second_faces,
+                  {i: [i] for i in range(4)}, {'retained': [2]}),
+        }
+        before = copy.deepcopy(prepared)
+        with self.assertRaisesRegex(ValueError, 'zero or nonfinite vertex normal'):
+            improve_sliver_faces(prepared)
+        for sid, row in prepared.items():
+            np.testing.assert_array_equal(row[0], before[sid][0])
+            np.testing.assert_array_equal(row[1], before[sid][1])
+            self.assertEqual(row[2:], before[sid][2:])
 
     def test_reciprocal_flip_preserves_vertices_boundary_and_lineage(self):
         from numilab_human.resting_anatomy_interface_patch import topology_report
