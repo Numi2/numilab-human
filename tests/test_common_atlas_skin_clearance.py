@@ -593,6 +593,71 @@ def test_shared_multipose_clearance_recomputes_candidate_forward_map_each_trial(
     assert scan_calls[:2] == [0, 1]
 
 
+def test_resume_candidate_is_reaudited_for_exact_skin_self_intersections():
+    import hashlib
+    from numilab_human.common_atlas_skin_clearance import (
+        _audit_pair,
+        _exact_surface_records,
+        derive_shared_multipose_inferred_clearance,
+    )
+
+    source = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [0.2, 0.2, 1.0], [0.8, 0.2, 1.0], [0.2, 0.8, 1.0],
+    ], dtype=np.float32)
+    faces = np.array([[0, 1, 2], [3, 4, 5]], dtype=np.int64)
+    maps = np.repeat(np.eye(3)[None, None, :, :], 12, axis=0).reshape(2, 6, 3, 3)
+    captured = np.stack([source.astype(np.float64), source.astype(np.float64)])
+    target = np.array([[10.0, 10.0, 10.0], [11.0, 10.0, 10.0], [10.0, 11.0, 10.0]])
+
+    def scan(pose, skin_world):
+        skin_records = _exact_surface_records(skin_world, faces)
+        target_records = _exact_surface_records(target, np.array([[0, 1, 2]], dtype=np.int64))
+        audit = _audit_pair(skin_records, target_records, same_surface=False)
+        row = {
+            "triangle_pairs": audit["triangle_pairs"],
+            "count": int(audit["count"]),
+            "aabb_candidate_pairs": int(audit["aabb_candidate_pairs"]),
+            "degenerate_face_rows": [],
+        }
+        return {"1:1": row, "2:1": dict(row)}
+
+    baseline = [scan(pose, captured[pose]) for pose in range(2)]
+    assert all(row["1:1"]["count"] == 0 for row in baseline)
+    resume = source.copy()
+    resume[3:, 2] = 0.0
+    resumed_records = _exact_surface_records(resume.astype(np.float64), faces)
+    assert _audit_pair(resumed_records, resumed_records, same_surface=True)["count"] == 1
+    resume_sha = hashlib.sha256(np.asarray(resume, dtype="<f4").tobytes()).hexdigest()
+
+    with np.testing.assert_raises_regex(ImportError, "resume candidate has 1 exact skin self-intersections"):
+        derive_shared_multipose_inferred_clearance(
+            source_positions=source,
+            faces=faces,
+            jacobians_by_pose=maps,
+            accepted_skin_world_by_pose=captured,
+            baseline_target_audits_by_pose=baseline,
+            baseline_skin_self_pairs_by_pose=[0, 0],
+            source_outward_face_signs=np.array([1, 1], dtype=np.int8),
+            scan_candidate_targets=scan,
+            target_triangle_by_row=lambda pose, key, row: target,
+            all_target_keys={"1:1", "2:1"},
+            ocular_monitor_keys={"2:1"},
+            fixed_source_vertex_ids=np.empty(0, dtype=np.int64),
+            bed_plane_origins_by_pose=np.array([[0.0, 0.0, -1.0], [0.0, 0.0, -1.0]]),
+            bed_plane_normals_by_pose=np.array([[0.0, 0.0, 1.0], [0.0, 0.0, 1.0]]),
+            max_iterations=1,
+            resume_source_positions=resume,
+            resume_target_audits_by_pose=baseline,
+            resume_provenance={
+                "source_positions_path": "overlapping-resume-source.npy",
+                "source_positions_f32_sha256": resume_sha,
+                "target_audits_path": "overlapping-resume-audits.json",
+                "target_audits_sha256": "b" * 64,
+            },
+        )
+
+
 def test_collateral_fold_taper_smooths_nonseed_motion_and_preserves_required_seed():
     from scipy.sparse import csr_matrix
     from numilab_human.common_atlas_skin_clearance import _smooth_collateral_displacement_near_faces
@@ -635,6 +700,9 @@ def test_collateral_fold_taper_smooths_nonseed_motion_and_preserves_required_see
     )
     assert candidate_normal[2] > 0.0
     assert np.array_equal(regularized[3], displacement[3])
+    assert np.array_equal(regularized[[0, 1, 2]], np.zeros((3, 3)))
+    assert report["zero_increment_fold_core_vertex_count"] == 3
+    assert report["fold_core_increment_exactly_zero"] is True
     assert report["required_seed_values_bitwise_preserved"] is True
     assert report["folded_face_rows"] == [0]
     assert report["maximum_increment_change_m"] > 0.0

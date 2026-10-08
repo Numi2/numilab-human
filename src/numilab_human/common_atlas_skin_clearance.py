@@ -613,14 +613,15 @@ def _smooth_collateral_displacement_near_faces(
     graph_hops: int = 3,
     jacobi_sweeps: int = 24,
 ) -> tuple[np.ndarray, dict[str, Any]]:
-    """Harmonically taper a correction field around non-seed collateral folds.
+    """Taper a candidate increment to zero on collateral folded faces.
 
-    The graph is the same shared-source surface graph used by the geodesic
-    support field. Fold vertices are interior unknowns, the outer graph ring is
-    held to the original proposal, and required correction seeds/fixed vertices
-    are exact Dirichlet values. A fold incident to a required seed is rejected:
-    this helper may smooth collateral support motion, never reduce a demanded
-    active-source displacement.
+    The exact fold-face vertices are Dirichlet zero increments. The outer
+    graph ring retains the proposed displacement, and harmonic interpolation
+    transitions across the intervening source-surface rings. Required
+    correction seeds and fixed anchors retain their proposed values exactly.
+    A fold incident to a required seed or fixed anchor is rejected: this
+    helper may regularize collateral support motion, never alter a demanded
+    active-source displacement or an exact support/contact pin.
     """
     values = np.asarray(displacement, dtype=np.float64)
     graph_faces = np.asarray(compact_faces, dtype=np.int64)
@@ -635,17 +636,19 @@ def _smooth_collateral_displacement_near_faces(
             or not np.isfinite(graph.data).all() or np.any(graph.data <= 0.0)
             or graph_hops < 2 or jacobi_sweeps < 1
             or int(folded.min()) < 0 or int(folded.max()) >= len(graph_faces)):
-        raise human.ImportError("collateral-fold smoothing received malformed geometry or graph")
+        raise human.ImportError("collateral-fold taper received malformed geometry or graph")
     if ((seeds.size and (int(seeds.min()) < 0 or int(seeds.max()) >= len(values)))
             or (fixed.size and (int(fixed.min()) < 0 or int(fixed.max()) >= len(values)))):
-        raise human.ImportError("collateral-fold smoothing received an out-of-range protected vertex")
+        raise human.ImportError("collateral-fold taper received an out-of-range protected vertex")
     folded = np.unique(folded)
     fold_vertices = np.unique(graph_faces[folded].reshape(-1))
     if np.intersect1d(fold_vertices, seeds).size:
         raise human.ImportError("collateral fold touches a required active correction seed")
+    if np.intersect1d(fold_vertices, fixed).size:
+        raise human.ImportError("collateral fold touches an exact fixed support/contact anchor")
 
-    # Distances are measured on the existing source-surface graph, not in an
-    # unrelated Euclidean neighborhood. Keep the update local to three rings.
+    # Distances use the existing shared-source surface graph. The three-ring
+    # domain keeps the edit local while allowing a smooth transition.
     from collections import deque
 
     distance = np.full(len(values), -1, dtype=np.int32)
@@ -659,22 +662,24 @@ def _smooth_collateral_displacement_near_faces(
         vertex = queue.popleft()
         if distance[vertex] >= graph_hops:
             continue
-        for neighbor in indices[indptr[vertex]:indptr[vertex + 1]]:
-            neighbor = int(neighbor)
+        for neighbor_value in indices[indptr[vertex]:indptr[vertex + 1]]:
+            neighbor = int(neighbor_value)
             if distance[neighbor] < 0:
                 distance[neighbor] = distance[vertex] + 1
                 queue.append(neighbor)
     patch = np.flatnonzero((distance >= 0) & (distance <= graph_hops))
+    core = np.zeros(len(values), dtype=bool)
+    core[fold_vertices] = True
     protected = np.zeros(len(values), dtype=bool)
     if len(seeds):
         protected[seeds] = True
     if len(fixed):
         protected[fixed] = True
-    interior = patch[(distance[patch] < graph_hops) & ~protected[patch]]
-    if len(interior) == 0:
-        raise human.ImportError("collateral-fold neighborhood has no movable non-seed vertices")
-
+    interior = patch[(distance[patch] > 0) & (distance[patch] < graph_hops)
+                     & ~protected[patch] & ~core[patch]]
     smoothed = values.copy()
+    smoothed[fold_vertices] = 0.0
+    outer_ring = patch[distance[patch] == graph_hops]
     for _ in range(jacobi_sweeps):
         updated = smoothed.copy()
         for vertex_value in interior:
@@ -683,19 +688,24 @@ def _smooth_collateral_displacement_near_faces(
             neighbors = indices[start:end]
             lengths = np.asarray(graph.data[start:end], dtype=np.float64)
             if len(neighbors) == 0 or np.any(lengths <= 0.0):
-                raise human.ImportError("collateral-fold smoothing encountered an isolated or invalid source vertex")
+                raise human.ImportError("collateral-fold taper encountered an isolated or invalid source vertex")
             weights = 1.0 / lengths
             updated[vertex] = np.einsum("i,ij->j", weights, smoothed[neighbors]) / float(weights.sum())
         smoothed = updated
-    smoothed[protected] = values[protected]
+        smoothed[fold_vertices] = 0.0
+        smoothed[protected] = values[protected]
     if not np.isfinite(smoothed).all() or not np.array_equal(smoothed[protected], values[protected]):
-        raise human.ImportError("collateral-fold smoothing changed a protected seed or produced non-finite motion")
+        raise human.ImportError("collateral-fold taper changed a protected seed/anchor or produced non-finite motion")
+    if not np.array_equal(smoothed[fold_vertices], np.zeros_like(smoothed[fold_vertices])):
+        raise human.ImportError("collateral-fold taper did not zero its non-seed fold-core increments")
     return smoothed, {
-        "method": "three-ring source-graph Dirichlet vector-field taper",
+        "method": "three-ring source-graph harmonic transition from zero fold core to original proposal",
         "folded_face_rows": [int(value) for value in folded],
         "fold_vertex_count": int(len(fold_vertices)),
         "patch_vertex_count": int(len(patch)),
         "interior_vertex_count": int(len(interior)),
+        "outer_ring_vertex_count": int(len(outer_ring)),
+        "zero_increment_fold_core_vertex_count": int(len(fold_vertices)),
         "protected_seed_count": int(len(seeds)),
         "fixed_vertex_count": int(len(fixed)),
         "graph_hops": int(graph_hops),
@@ -705,6 +715,7 @@ def _smooth_collateral_displacement_near_faces(
         "maximum_increment_after_m": float(np.linalg.norm(smoothed, axis=1).max(initial=0.0)),
         "required_seed_values_bitwise_preserved": True,
         "fixed_values_bitwise_preserved": True,
+        "fold_core_increment_exactly_zero": True,
     }
 
 def _area_weighted_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
@@ -1765,6 +1776,19 @@ def derive_shared_multipose_inferred_clearance(
                 "resume candidate violates a declared source-map invariant: "
                 + str(resume_diagnostics.get("rejection_reason", "unspecified invariant"))
             )
+        resume_self_pair_counts = []
+        for pose in range(pose_count):
+            resume_records = _exact_surface_records(resume_world[pose], compact_faces)
+            self_audit = _audit_pair(resume_records, resume_records, same_surface=True)
+            count = int(self_audit["count"])
+            resume_self_pair_counts.append(count)
+            if count:
+                raise human.ImportError(
+                    f"resume candidate has {count} exact skin self-intersections at pose={pose}"
+                )
+        resume_world_f32_sha256 = hashlib.sha256(
+            np.asarray(resume_world, dtype="<f4").tobytes()
+        ).hexdigest()
         resume_triangles = resume_world[:, compact_faces]
         resume_area = np.cross(resume_triangles[:, :, 1] - resume_triangles[:, :, 0],
                                resume_triangles[:, :, 2] - resume_triangles[:, :, 0])
@@ -1807,6 +1831,9 @@ def derive_shared_multipose_inferred_clearance(
             "baseline_orientation_minimum_dot": float(resume_orientation.min()),
             "baseline_minimum_triangle_area_ratio": float((resume_area_norm / base_area_norm).min()),
             "baseline_minimum_bed_gap_m_by_pose": [float(row.min()) for row in resume_bed_gap],
+            "exact_skin_self_pair_count_by_pose": resume_self_pair_counts,
+            "resume_world_positions_f32_sha256": resume_world_f32_sha256,
+            "resume_self_audit_predicate": "_audit_pair(same_surface=True) over each complete resumed accepted-pose skin",
             "status": "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates",
         }
     edge_rows = np.concatenate((compact_faces[:, [0, 1]], compact_faces[:, [1, 2]], compact_faces[:, [2, 0]]))
