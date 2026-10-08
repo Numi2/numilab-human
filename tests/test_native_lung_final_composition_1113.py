@@ -1,4 +1,5 @@
 """Mac-mini integration regressions for the pinned 1113 lung composition."""
+import copy
 import hashlib
 import importlib.util
 import json
@@ -93,6 +94,45 @@ class NativeLungFinalComposition1113Tests(unittest.TestCase):
                 self.assertEqual(receipt["qualification"][key],value,key)
         self.assertEqual(manifest["qualification"],receipt["qualification"])
         self.assertEqual(manifest["receipt"]["sha256"],sha(self.output/"final/resting-anatomy-receipt.json"))
+
+    def test_respiration_derivation_is_bound_to_emitted_final_geometry(self):
+        cfg_path=self.output/"final/resting-reference-respiration.json"
+        cfg=json.loads(cfg_path.read_text())
+        final_nha=self.output/"final/resting-thorax.nhanatomy"
+        candidate=cfg["source_geometry_candidate"]
+        self.assertEqual(candidate["payload_sha256"],sha(final_nha))
+        refresh=self.report["respiration_geometry_refresh"]["final"]
+        self.assertEqual(candidate["per_lobe_geometry_sha256"],refresh["geometry_sha256"])
+        self.assertTrue(self.report["respiration_geometry_refresh"]["final_payload_hash_matches_config"])
+        self.assertTrue(self.report["respiration_geometry_refresh"]["final_per_lobe_hashes_match_config"])
+        self.assertTrue(self.report["respiration_geometry_refresh"]["all_numeric_and_other_physical_fields_unchanged"])
+        receipt=json.loads((self.output/"final/resting-anatomy-receipt.json").read_text())
+        manifest=json.loads((self.output/"final/resting-anatomy-manifest.json").read_text())
+        self.assertEqual(receipt["provenance"]["respiratory_configuration"]["sha256"],sha(cfg_path))
+        self.assertEqual(receipt["provenance"]["respiratory_configuration"]["geometry_payload_sha256"],sha(final_nha))
+        self.assertEqual(manifest["source_receipt_lineage"]["current_respiratory_configuration"]["sha256"],sha(cfg_path))
+        self.assertEqual(np.float32(cfg["diaphragm_area_m2"]).tobytes(),np.float32(json.loads((BASE/"resting-reference-respiration.json").read_text())["diaphragm_area_m2"]).tobytes())
+
+    def test_stale_geometry_derivation_is_rejected_even_when_area_scalar_matches(self):
+        cfg=json.loads((BASE/"resting-reference-respiration.json").read_text())
+        final_cfg=json.loads((self.output/"final/resting-reference-respiration.json").read_text())
+        self.assertEqual(np.float32(cfg["diaphragm_area_m2"]).tobytes(),np.float32(final_cfg["diaphragm_area_m2"]).tobytes())
+        geometry=final_cfg["source_geometry_candidate"]["per_lobe_geometry_sha256"]
+        with self.assertRaisesRegex(ValueError,"stale anatomy payload"):
+            self.composer.validate_current_respiration_geometry_binding(
+                cfg,sha(self.output/"final/resting-thorax.nhanatomy"),geometry,final_cfg["diaphragm_area_m2"])
+        stale=copy.deepcopy(final_cfg)
+        stale["source_geometry_candidate"]["payload_sha256"]=sha(BASE/"resting-thorax.nhanatomy")
+        with self.assertRaisesRegex(ValueError,"stale anatomy payload"):
+            self.composer.validate_current_respiration_geometry_binding(
+                stale,sha(self.output/"final/resting-thorax.nhanatomy"),geometry,final_cfg["diaphragm_area_m2"])
+        stale_derivation=copy.deepcopy(final_cfg)
+        parent_derivation=BASE/"effective-area-derivation.json"
+        stale_derivation["source_geometry_candidate"]["derivation_path"]=str(parent_derivation)
+        stale_derivation["source_geometry_candidate"]["derivation_sha256"]=sha(parent_derivation)
+        with self.assertRaisesRegex(ValueError,"derivation for stale anatomy payload"):
+            self.composer.validate_current_respiration_geometry_binding(
+                stale_derivation,sha(self.output/"final/resting-thorax.nhanatomy"),geometry,final_cfg["diaphragm_area_m2"])
 
     def test_final_row310_topology_and_lineage_have_no_stage_sentinels(self):
         lineage=np.load(self.output/"row310-face-lineage.npy",allow_pickle=False)

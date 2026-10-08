@@ -4,7 +4,7 @@ E=pathlib.Path("/Users/n/numi-human-resting-evidence-20261005")
 BASE=E/"native-lung-conditioned-final-compose-1078/final";OUT=E/"native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8"
 SRC=pathlib.Path("/Users/n/numi-human-final-lung-composition-001/src");sys.path.insert(0,str(SRC))
 from numilab_human.resting_anatomy_interface_patch import HEADER,RECORD,parse_payload,normals
-from numilab_human.resting_lung_edge_repair import _serialize_payload,_refresh_diaphragm_interface_registration,_derive_basal_effective_area,_load_pinned_respiratory_owner,_source_volume_rows,_pleura_face_lineage
+from numilab_human.resting_lung_edge_repair import _serialize_payload,_refresh_diaphragm_interface_registration,_derive_basal_effective_area,_load_pinned_respiratory_owner,_source_volume_rows,_pleura_face_lineage,_geometry_bytes
 from numilab_human.resting_pleura_proxy import build_candidate as build_pleura
 from numilab_human.cardiac_cavity_geometry import analyze_topology
 from numilab_human.resting_respiratory_mesh_quality import open_registered_shared_vertex_star
@@ -50,6 +50,86 @@ def verify_normals(row,sid):
  mismatch=np.flatnonzero(np.any(row["vertices6"][used,3:6].view(np.uint32)!=expected[used].view(np.uint32),axis=1))
  if len(mismatch):raise ValueError(f"serialized vertex normals differ from owner recomputation on row{sid}: {len(mismatch)} used vertices")
  return {"used_vertex_count":len(used),"normal_bit_mismatches":0}
+def _physical_config_without_geometry_metadata(config):
+ result=copy.deepcopy(config);result.pop("source_geometry_candidate",None)
+ scope=result.get("parameter_scope")
+ if isinstance(scope,dict):
+  for key in ("conforming_basal_field","diaphragm_area_refinement_note","source_retriangulated_reference_geometry"):scope.pop(key,None)
+ return result
+
+def validate_current_respiration_geometry_binding(config,payload_sha256,row_geometry_sha256,runtime_area_m2):
+ candidate=config.get("source_geometry_candidate")
+ if not isinstance(candidate,dict):raise ValueError("respiration config lacks current source_geometry_candidate")
+ if candidate.get("payload_sha256")!=payload_sha256:raise ValueError("respiration config is bound to stale anatomy payload")
+ if candidate.get("per_lobe_geometry_sha256")!=row_geometry_sha256:raise ValueError("respiration config is bound to stale per-lobe geometry")
+ derivation_path=pathlib.Path(candidate.get("derivation_path",""))
+ if not derivation_path.is_file() or sha(derivation_path)!=candidate.get("derivation_sha256"):raise ValueError("respiration config derivation is missing or has a stale hash")
+ derivation=read(derivation_path)
+ if derivation.get("payload",{}).get("sha256")!=payload_sha256:raise ValueError("respiration config references a derivation for stale anatomy payload")
+ if derivation.get("per_lobe_geometry_sha256")!=row_geometry_sha256:raise ValueError("respiration config references a derivation for stale per-lobe geometry")
+ if np.float32(derivation.get("candidate_runtime_area_m2_float32")).tobytes()!=np.float32(runtime_area_m2).tobytes():raise ValueError("respiration derivation area differs from emitted geometry")
+ if np.float32(config["diaphragm_area_m2"]).tobytes()!=np.float32(runtime_area_m2).tobytes():raise ValueError("respiration numeric diaphragm area differs from emitted geometry")
+ return {"payload_sha256_matches":True,"per_lobe_geometry_sha256_matches":True,"derivation_hash_matches":True,"derivation_payload_matches":True,"derivation_lobe_hashes_match":True,"diaphragm_area_f32_matches":True}
+
+def refresh_respiration_geometry_config(template_config,payload_path,rows,directory,stage):
+ payload_path=pathlib.Path(payload_path);directory=pathlib.Path(directory)
+ area64,area_rows=_derive_basal_effective_area(rows,_load_pinned_respiratory_owner(RESP).kuhn_basis)
+ area32=float(np.float32(area64));vol_total,volume_rows=_source_volume_rows(rows)
+ geometry={str(s):hashlib.sha256(_geometry_bytes(rows[s])).hexdigest() for s in range(305,310)}
+ if np.float32(template_config["diaphragm_area_m2"]).tobytes()!=np.float32(area32).tobytes():raise ValueError("current geometry changes runtime diaphragm area; do not alter numeric config")
+ area_by={str(x["lung_stable_id"]):x for x in area_rows};volume_by={str(x["lung_stable_id"]):x for x in volume_rows}
+ deriv={"schema":"numi.human.respiratory-effective-area-derivation.v1",
+  "basis":"analytic signed-volume derivative on final serialized Float32 lobe geometry under the existing Kuhn basal field",
+  "inferred_reference_not_subject_measurement":True,"owner":meta(RESP),"input_config":meta(CFG),
+  "payload":meta(payload_path),"input_runtime_area_m2":float(template_config["diaphragm_area_m2"]),
+  "candidate_area_m2_float64":area64,"candidate_runtime_area_m2_float32":area32,
+  "per_lobe":[{"lung_stable_id":int(s),"effective_area_m2_float64":float(area_by[s]["effective_area_m2_float64"]),
+    "effective_area_m2_runtime_float32":float(area_by[s]["effective_area_m2_runtime_float32"]),
+    "signed_volume_m3":float(volume_by[s]["signed_volume_m3"]),"enclosed_volume_m3":float(volume_by[s]["enclosed_volume_m3"]),
+    "geometry_sha256":geometry[s],"vertex_count":int(len(rows[int(s)]["vertices6"])),"face_count":int(len(rows[int(s)]["faces"]))} for s in sorted(geometry,key=int)],
+  "per_lobe_geometry_sha256":geometry,"aggregate_enclosed_volume_m3":vol_total,
+  "method_scope":f"Recomputed from the emitted {stage} payload; no physiology simulation or geometry edit."}
+ deriv_path=directory/"effective-area-derivation.json";write(deriv_path,deriv)
+ cfg=copy.deepcopy(template_config)
+ cfg["source_geometry_candidate"]={"derivation_path":str(deriv_path),"derivation_sha256":sha(deriv_path),
+  "input_config_path":str(CFG),"input_config_sha256":sha(CFG),"payload_sha256":sha(payload_path),
+  "per_lobe_geometry_sha256":geometry,
+  "per_lobe_effective_area_m2_float64":{s:float(area_by[s]["effective_area_m2_float64"]) for s in sorted(geometry,key=int)},
+  "per_lobe_signed_volume_m3":{s:float(volume_by[s]["signed_volume_m3"]) for s in sorted(geometry,key=int)},
+  "recomputed_area_m2":area32,"recomputed_area_m2_float64":area64,"updated_parameter":"diaphragm_area_m2"}
+ scope=cfg.setdefault("parameter_scope",{})
+ scope["conforming_basal_field"]=("Exact analytic derivative of oriented signed lobe volumes under the existing per-vertex Kuhn-basis basal map "
+  f"on the emitted {stage} serialized Float32 rows 305-309; inferred reference parameter, not measured subject-specific area.")
+ scope["diaphragm_area_refinement_note"]=("Runtime-matching analytic signed-volume derivative recomputed from the exact emitted Float32 anatomy; "
+  "Float32 runtime area equals the existing parameter bit-for-bit. No finite displacement estimate and not measured subject data.")
+ scope["source_retriangulated_reference_geometry"]=(f"Inferred source reference geometry from the selected-patch {stage} composition. Effective diaphragm area is "
+  "the exact analytic derivative on serialized Float32 rows 305-309 under the unchanged Kuhn basal map; this metadata refresh changes no physical parameter.")
+ if _physical_config_without_geometry_metadata(cfg)!=_physical_config_without_geometry_metadata(template_config):raise ValueError("geometry metadata refresh changed physical respiration parameters")
+ config_path=directory/"resting-reference-respiration.json";write(config_path,cfg)
+ checked=validate_current_respiration_geometry_binding(read(config_path),sha(payload_path),geometry,area32)
+ return {"config_path":config_path,"config_sha256":sha(config_path),"derivation_path":deriv_path,"derivation_sha256":sha(deriv_path),
+  "payload_sha256":sha(payload_path),"area64":area64,"area32":area32,"areas":area_rows,"volumes":volume_rows,
+  "total_volume":vol_total,"geometry_sha256":geometry,"binding_check":checked}
+
+def bind_receipt_respiration(receipt,refresh):
+ config_path=refresh["config_path"]
+ binding=receipt["functional_bindings"]["respiratory_geometry_binding"]
+ binding["diaphragm_effective_area_m2"]=refresh["area32"]
+ binding["per_lobe_effective_area_m2"]=[{"lung_stable_id":int(x["lung_stable_id"]),"effective_area_m2":float(x["effective_area_m2_runtime_float32"])} for x in refresh["areas"]]
+ update=binding.setdefault("source_refinement_area_update",{})
+ update.update({"candidate_area_m2_float64":refresh["area64"],"candidate_area_m2_float32":refresh["area32"],
+  "candidate_payload_sha256":refresh["payload_sha256"],"candidate_payload_path":str(receipt["payload"]["path"]),
+  "respiration_config_path":str(config_path),"respiration_config_sha256":refresh["config_sha256"],
+  "derivation_path":str(refresh["derivation_path"]),"derivation_sha256":refresh["derivation_sha256"],
+  "per_lobe_geometry_sha256":refresh["geometry_sha256"],
+  "per_lobe_derivatives_m2":{str(x["lung_stable_id"]):float(x["effective_area_m2_float64"]) for x in refresh["areas"]}})
+ receipt["provenance"]["respiratory_configuration"]={"path":str(config_path),"sha256":refresh["config_sha256"],
+  "all_other_physical_parameters_unchanged":True,"effective_area_f32_equal_to_parent":True,
+  "geometry_payload_path":str(receipt["payload"]["path"]),"geometry_payload_sha256":refresh["payload_sha256"],
+  "parent_configuration_path":str(CFG),"parent_configuration_sha256":sha(CFG),
+  "derivation_path":str(refresh["derivation_path"]),"derivation_sha256":refresh["derivation_sha256"]}
+ return receipt["provenance"]["respiratory_configuration"]
+
 def ixpoint(v,p,label):
  target=np.asarray(p,dtype="<f4");ids=np.flatnonzero(np.all(np.asarray(v[:,:3],dtype="<f4")==target,axis=1))
  if len(ids)!=1:raise ValueError(f"{label}: exact coordinate multiplicity {len(ids)}")
@@ -313,7 +393,8 @@ def main():
  rec.setdefault("qualification",{})["source_geometry_candidate"]="Provisional 1078-based selected-patch dry-run. Not a final asset."
  rec["payload"].update(path=str(prenha),sha256=preh,vertex_count=int(HEADER.unpack_from(prenharaw)[3]),index_count=int(HEADER.unpack_from(prenharaw)[4]))
  rec["functional_bindings"]["anatomy_payload_sha256"]=preh;rec["provenance"]["cardiac_geometry_binding"]["common_field"]["anatomy_payload_sha256"]=preh
- rec["functional_bindings"]["respiratory_geometry_binding"]["source_refinement_area_update"]["candidate_payload_sha256"]=preh
+ pre_refresh=refresh_respiration_geometry_config(read(CFG),prenha,rows,pre,"pre-pleura")
+ bind_receipt_respiration(rec,pre_refresh)
  total,vols=_source_volume_rows(rows);ov=read(REC)["thorax_source_volume_m3"]
  rec["thorax_source_volume_m3"]={"interpretation":"sum of five registered lung-envelope absolute signed tetrahedral volumes","five_lung_envelopes":[x["enclosed_volume_m3"] for x in vols],"sum":total,
  "candidate_geometry_derivation":{"basis":"signed tetrahedral volume on serialized Float32 lobe positions","payload_sha256":preh,"geometry_byte_order":"little-endian float32 vertices6 followed by little-endian int64 local faces","row_geometry_byte_sha256":{str(s):geom(rows[s]) for s in range(305,310)},"per_lobe":vols,"input_lobe_volumes_m3":ov["five_lung_envelopes"],"aggregate_signed_volume_delta_m3":total-ov["sum"]}}
@@ -323,9 +404,9 @@ def main():
   os.link(src,pre/pathlib.Path(q["path"]).name);q["path"]=pathlib.Path(q["path"]).name
  pr=pre/"resting-anatomy-receipt.json";write(pr,rec)
  pm=read(MAN);pm["payload"].update(rec["payload"]);pm["receipt"].update(path=str(pr),sha256=sha(pr));pm["functional_bindings"]=copy.deepcopy(rec["functional_bindings"]);pm["qualification"]=copy.deepcopy(rec.get("qualification",{}));pm["thorax_source_volume_m3"]=copy.deepcopy(rec["thorax_source_volume_m3"])
+ pm.setdefault("source_receipt_lineage",{})["current_respiratory_configuration"]={"path":str(pre_refresh["config_path"]),"sha256":pre_refresh["config_sha256"],"derivation_path":str(pre_refresh["derivation_path"]),"derivation_sha256":pre_refresh["derivation_sha256"],"bound_geometry_path":str(prenha),"bound_geometry_sha256":preh}
  write(pre/"resting-anatomy-manifest.json",pm)
- area64,arows=_derive_basal_effective_area(rows,_load_pinned_respiratory_owner(RESP).kuhn_basis);area32=float(np.float32(area64));cfg=read(CFG)
- if np.float32(area32).tobytes()!=np.float32(cfg["diaphragm_area_m2"]).tobytes():raise ValueError("runtime effective area changed; do not adjust config")
+ cfg=read(CFG)
  pleura=build_pleura(prenha,pr,final);fnha=final/"resting-thorax.nhanatomy";frp=final/"resting-anatomy-receipt.json";fr=read(frp);_,frs=parse_payload(fnha)
  final_topology={str(sid):topology_check(frs[sid],sid,(-32 if sid==310 else -2 if sid==311 else 2),(2 if sid==310 else 1)) for sid in (305,306,307,308,309,310,311)}
  final_normal_checks={str(sid):verify_normals(frs[sid],sid) for sid in (305,306,307,308,309,310,311)}
@@ -341,8 +422,12 @@ def main():
  fr["functional_bindings"]["anatomy_payload_sha256"]=fsha;fr["provenance"]["cardiac_geometry_binding"]["common_field"]["anatomy_payload_sha256"]=fsha
  fr["functional_bindings"]["respiratory_geometry_binding"]["source_refinement_area_update"]["candidate_payload_sha256"]=fsha
  fr["provenance"]["lung_final_shared_interface_rebuild"].update(output_payload_sha256=fsha,pre_pleura_payload_sha256=preh,row310_face_lineage_path=str(lp),row310_face_lineage_sha256=sha(lp),pleura_owner_derivation=pleura["derivation"])
- fr["provenance"]["respiratory_configuration"]={"path":str(CFG),"sha256":sha(CFG),"all_other_physical_parameters_unchanged":True,"effective_area_f32_equal_to_parent":True}
- write(frp,fr);fm=copy.deepcopy(pm);fm["payload"].update(fr["payload"]);fm["receipt"].update(path=str(frp),sha256=sha(frp));fm["functional_bindings"]=copy.deepcopy(fr["functional_bindings"]);fm["qualification"]=copy.deepcopy(fr.get("qualification",{}));fm["thorax_source_volume_m3"]=copy.deepcopy(fr["thorax_source_volume_m3"]);write(final/"resting-anatomy-manifest.json",fm)
+ final_refresh=refresh_respiration_geometry_config(cfg,fnha,frs,final,"final")
+ bind_receipt_respiration(fr,final_refresh)
+ write(frp,fr);fm=copy.deepcopy(pm);fm["payload"].update(fr["payload"]);fm["receipt"].update(path=str(frp),sha256=sha(frp));fm["functional_bindings"]=copy.deepcopy(fr["functional_bindings"]);fm["qualification"]=copy.deepcopy(fr.get("qualification",{}));fm["thorax_source_volume_m3"]=copy.deepcopy(fr["thorax_source_volume_m3"])
+ fm.setdefault("source_receipt_lineage",{})["current_respiratory_configuration"]={"path":str(final_refresh["config_path"]),"sha256":final_refresh["config_sha256"],"derivation_path":str(final_refresh["derivation_path"]),"derivation_sha256":final_refresh["derivation_sha256"],"bound_geometry_path":str(fnha),"bound_geometry_sha256":fsha}
+ write(final/"resting-anatomy-manifest.json",fm)
+ area64=final_refresh["area64"];area32=final_refresh["area32"]
  bridge_report={"schema":"numi.human.lobe-lobe-source-proven-reciprocal-interface-map.v2","status":"provisional source dry-run only","final_nha":meta(fnha),"parent_1078":meta(NHA),
   "source_1055":{"nha":meta(LLNHA),"report":meta(LLREPORT),"map":meta(LLMAP)},"operation_1083":{"npz":meta(FLIP),"ledger":meta(FLIPLED)},
   "operation_306":{"npz":meta(C306),"ledger":meta(L306)},"operation_308_first":{"npz":meta(C308),"report":meta(R308)},"operation_308_second":{"npz":meta(STAR),"report":meta(STAR_REPORT),"owner":meta(OWNER)},
@@ -350,10 +435,15 @@ def main():
   "limits":["Provisional composition only; no native geometry qualification."]}
  write(OUT/"current-reciprocal-map-report-v2.json",bridge_report)
  report={"schema":"numi.human.final-lung-selected-composition-dryrun-v1","status":"provisional 1105 test case; native and full scans pending",
-  "inputs":{str(p):h for p,h in PINS.items()},"outputs":{k:meta(p) for k,p in [("pre_nha",prenha),("pre_receipt",pr),("pre_manifest",pre/"resting-anatomy-manifest.json"),("final_nha",fnha),("final_receipt",frp),("final_manifest",final/"resting-anatomy-manifest.json"),("d_map",dpath),("ll_map",lpath),("ll_edges",epath),("row310_lineage",lp)]},
+  "inputs":{str(p):h for p,h in PINS.items()},"outputs":{k:meta(p) for k,p in [("pre_nha",prenha),("pre_receipt",pr),("pre_manifest",pre/"resting-anatomy-manifest.json"),("pre_respiration_config",pre_refresh["config_path"]),("pre_area_derivation",pre_refresh["derivation_path"]),("final_nha",fnha),("final_receipt",frp),("final_manifest",final/"resting-anatomy-manifest.json"),("final_respiration_config",final_refresh["config_path"]),("final_area_derivation",final_refresh["derivation_path"]),("d_map",dpath),("ll_map",lpath),("ll_edges",epath),("row310_lineage",lp)]},
   "306_replay":ck306,"1083_replay":flipchecks,"308_first_cluster":meta(C308),"308_first_cluster_replay":collapse_checks,"308_parent_coverage":parent_coverage,"owner_normal_checks":normal_checks,"308_second_cluster_owner_replay":star_result,"308_second_cluster_trial_point_checks":star_trial_point_checks,
   "D_registration_refresh":drefresh,"D_map_count":len(dmap),"L_L_counts":{f"{a}-{b}":int(counts.get((a,b),0)) for a in range(305,310) for b in range(a+1,310)},
-  "edge_summary":esummary,"area_volume_f32_checks":avcheck,"owner_normal_checks":normal_checks,"topology":topo,"final_topology":final_topology,"final_normal_checks":final_normal_checks,"runtime_area_f32_unchanged":True,"area64":area64,"area32":area32,"pleura":pleura["derivation"]}
+  "edge_summary":esummary,"area_volume_f32_checks":avcheck,"owner_normal_checks":normal_checks,"topology":topo,"final_topology":final_topology,"final_normal_checks":final_normal_checks,"runtime_area_f32_unchanged":True,"area64":area64,"area32":area32,"pleura":pleura["derivation"],
+  "respiration_geometry_refresh":{"pre_pleura":{k:pre_refresh[k] for k in ("payload_sha256","config_sha256","derivation_sha256","geometry_sha256","binding_check")},
+   "final":{k:final_refresh[k] for k in ("payload_sha256","config_sha256","derivation_sha256","geometry_sha256","binding_check")},
+   "final_payload_hash_matches_config":final_refresh["payload_sha256"]==sha(fnha),"final_per_lobe_hashes_match_config":final_refresh["geometry_sha256"]==read(final_refresh["config_path"])["source_geometry_candidate"]["per_lobe_geometry_sha256"],
+   "runtime_area_f32_unchanged":np.float32(final_refresh["area32"]).tobytes()==np.float32(read(CFG)["diaphragm_area_m2"]).tobytes(),
+   "all_numeric_and_other_physical_fields_unchanged":_physical_config_without_geometry_metadata(read(final_refresh["config_path"]))==_physical_config_without_geometry_metadata(read(CFG))}}
  write(OUT/"composition-report.json",report)
  sums=OUT/"SHA256SUMS";sums.write_text("".join(f"{sha(p)}  {p.relative_to(OUT)}\n" for p in sorted(OUT.rglob("*")) if p.is_file() and p!=sums))
  print(json.dumps({"outputs":report["outputs"],"L_L_counts":report["L_L_counts"],"star":star_result,"star_trial_point_checks":star_trial_point_checks,"report_sha256":sha(OUT/"composition-report.json")},indent=2))
