@@ -9,3 +9,5 @@ Native run 925 completed 10,000 accepted 2 ms steps on the SSH Mac mini using bu
 This is a source repair and state regression, not an anatomy or endurance pass. Exact transformed lung intersection checks are separate. The current 907 skin still intersects underlying tissues in moving poses. Runtime wall time was 198.084 seconds for 20 simulated seconds (0.101 times real time including initialization); performance tuning remains stopped at the user's direction.
 
 Validation on the Mac mini: seven lung precision-conditioning unit tests and five choroid composition tests passed. The large source meshes, complete build report, native movie and traces remain in the hash-pinned external evidence directories.
+
+Follow-up: the bounded exact native seam audit927 failed. The scanned neighborhoods contain 19/16/18/7/9/10/8/6 unallowed pairs across the eight poses, despite passing source topology/embedding. See ../native-lung-seam-failure-927. Further source regularization is required.
