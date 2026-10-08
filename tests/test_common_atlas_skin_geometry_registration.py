@@ -7,6 +7,7 @@ import zipfile
 import numpy as np
 
 from numilab_human import model
+from numilab_human import common_atlas_skin_geometry_registration as geometry_module
 from numilab_human.common_atlas_skin_geometry_registration import derive_common_atlas_skin_geometry
 from numilab_human.skin_source_payload_preflight import decode_payload
 
@@ -295,3 +296,65 @@ def test_disjoint_position_composition_rejects_shared_face_and_identity_changes(
     with np.testing.assert_raises_regex(model.ImportError, "unreferenced"):
         compose_disjoint_skin_position_corrections(
             raw, [bytes(unused)], global_source_matrix=_matrix([0.0, 0.0, 0.0]))
+
+
+def test_step0_clearance_inputs_are_all_or_none(tmp_path, monkeypatch):
+    source_payload, registration_path, sources, provenance_path, runtime, registration, _, _ = _fixture(tmp_path, monkeypatch)
+    with np.testing.assert_raises_regex(model.ImportError, "requires the complete"):
+        derive_common_atlas_skin_geometry(
+            source_payload=source_payload,
+            registration_path=registration_path,
+            sources=sources,
+            myosim_artifact=tmp_path / "unused-myosim",
+            input_provenance_path=provenance_path,
+            output_directory=tmp_path / "partial-clearance",
+            clearance_accepted_pack=tmp_path / "step-0.mrvpack",
+        )
+    assert not (tmp_path / "partial-clearance").exists()
+
+
+def test_step0_clearance_owner_hook_changes_only_referenced_positions_and_recomputes_normals(tmp_path, monkeypatch):
+    source_payload, registration_path, sources, provenance_path, runtime, registration, _, raw = _fixture(tmp_path, monkeypatch)
+    captured = {}
+
+    def fake_clearance(**kwargs):
+        captured["kwargs"] = kwargs
+        positions = kwargs["source_positions"].copy()
+        positions[0, 2] += 0.05
+        return positions, {
+            "schema": "numi.human.step0-witnessed-common-atlas-skin-clearance.v1",
+            "qualification": {"accepted_pose0_all_4448_nonocular_pairs_and_all_842_clearance_targets": "passed"},
+            "selected_margin_mm": 0.25,
+        }
+
+    monkeypatch.setattr(geometry_module, "derive_step0_inferred_clearance", fake_clearance)
+    evidence = [tmp_path / f"evidence-{index}" for index in range(7)]
+    manifest = derive_common_atlas_skin_geometry(
+        source_payload=source_payload,
+        registration_path=registration_path,
+        sources=sources,
+        myosim_artifact=tmp_path / "unused-myosim",
+        input_provenance_path=provenance_path,
+        output_directory=tmp_path / "clearance-candidate",
+        clearance_accepted_pack=evidence[0],
+        clearance_accepted_receipt=evidence[1],
+        clearance_bone_artifact=evidence[2],
+        clearance_bone_manifest=evidence[3],
+        clearance_witnesses=evidence[4],
+        clearance_orientation_report=evidence[5],
+        clearance_surface_inventory=evidence[6],
+        clearance_margin_mm=0.25,
+    )
+    candidate = Path(manifest["output_payload"]["path"]).read_bytes()
+    before, after = decode_payload(raw), decode_payload(candidate)
+    source_hash = captured["kwargs"]["source_payload_sha256"]
+    assert len(source_hash) == 64 and all(character in "0123456789abcdef" for character in source_hash)
+    assert captured["kwargs"]["selected_margin_mm"] == 0.25
+    assert np.array_equal(before["indices"], after["indices"])
+    assert np.array_equal(before["full_weights"], after["full_weights"])
+    assert np.array_equal(before["bindings_u"], after["bindings_u"])
+    assert np.array_equal(before["vertices_u"][3], after["vertices_u"][3])
+    assert not np.array_equal(before["vertices_f"][0, :3], after["vertices_f"][0, :3])
+    assert not np.array_equal(before["vertices_f"][0, 3:6], after["vertices_f"][0, 3:6])
+    assert manifest["step0_inferred_clearance"]["selected_margin_mm"] == 0.25
+    assert manifest["qualification"]["step0_witnessed_all_surface_clearance"] == "passed_842_nonocular_surfaces_eyes_monitored_unchanged"

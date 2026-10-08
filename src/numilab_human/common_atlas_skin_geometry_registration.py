@@ -12,6 +12,8 @@ import numpy as np
 
 from . import model as human
 from .skin_source_payload_preflight import decode_payload
+from . import common_atlas_skin_clearance as clearance_module
+from .common_atlas_skin_clearance import derive_step0_inferred_clearance
 
 
 SCHEMA = "numi.human.common-atlas-skin-geometry-registration.v1"
@@ -112,7 +114,26 @@ def _validate_canonical_bindings_against_global_rest(*, canonical_decoded: dict[
     }
 
 
-def derive_common_atlas_skin_geometry(*, source_payload: Path, registration_path: Path, sources: Path, myosim_artifact: Path, input_provenance_path: Path, output_directory: Path, canonical_binding_reference: Path | None = None, canonical_binding_provenance_path: Path | None = None) -> dict[str, Any]:
+def derive_common_atlas_skin_geometry(
+    *,
+    source_payload: Path,
+    registration_path: Path,
+    sources: Path,
+    myosim_artifact: Path,
+    input_provenance_path: Path,
+    output_directory: Path,
+    canonical_binding_reference: Path | None = None,
+    canonical_binding_provenance_path: Path | None = None,
+    clearance_accepted_pack: Path | None = None,
+    clearance_accepted_receipt: Path | None = None,
+    clearance_bone_artifact: Path | None = None,
+    clearance_bone_manifest: Path | None = None,
+    clearance_witnesses: Path | None = None,
+    clearance_orientation_report: Path | None = None,
+    clearance_surface_inventory: Path | None = None,
+    clearance_margin_mm: float = 0.25,
+    clearance_support_radius_edge_multiple: float = 4.0,
+) -> dict[str, Any]:
     """Bake registered rest targets into FJ2810 shared atlas and restore canonical shared-atlas bindings."""
     source_payload = Path(source_payload).resolve()
     registration_path = Path(registration_path).resolve()
@@ -122,6 +143,12 @@ def derive_common_atlas_skin_geometry(*, source_payload: Path, registration_path
     output_directory = Path(output_directory).resolve()
     canonical_binding_reference = Path(canonical_binding_reference or source_payload).resolve()
     canonical_binding_provenance_path = Path(canonical_binding_provenance_path or input_provenance_path).resolve()
+    clearance_paths = (
+        clearance_accepted_pack, clearance_accepted_receipt, clearance_bone_artifact,
+        clearance_bone_manifest, clearance_witnesses, clearance_orientation_report, clearance_surface_inventory,
+    )
+    if any(value is not None for value in clearance_paths) and not all(value is not None for value in clearance_paths):
+        raise human.ImportError("step-0 clearance requires the complete pack, receipt, NHBONES, witness, orientation, and 859-surface inventory input set")
     for path, label in ((source_payload, "source NHSKIN"), (registration_path, "registration"), (input_provenance_path, "immediate-source NHSKIN provenance"), (canonical_binding_reference, "canonical NHSKIN binding reference"), (canonical_binding_provenance_path, "canonical NHSKIN binding provenance")):
         if not path.is_file():
             raise human.ImportError(f"common-atlas geometry registration requires existing {label}")
@@ -251,6 +278,46 @@ def derive_common_atlas_skin_geometry(*, source_payload: Path, registration_path
     for compact_index, vertex_index in enumerate(referenced):
         struct.pack_into("<3f", output, vertex_offset + int(vertex_index) * 56 + 12, *(float(value) for value in normal_array[compact_index]))
     candidate = bytes(output)
+    clearance_report = None
+    if all(value is not None for value in clearance_paths):
+        base_decoded = decode_payload(candidate)
+        clearance_source, clearance_report = derive_step0_inferred_clearance(
+            source_positions=base_decoded["vertices_f"][:, :3].astype(np.float64),
+            full_weights=base_decoded["full_weights"].astype(np.float64),
+            bindings=base_decoded["bindings_f"].astype(np.float64),
+            binding_owner_ids=base_decoded["bindings_u"][:, 0].astype(np.int64),
+            faces=base_decoded["indices"].reshape(-1, 3).astype(np.int64),
+            source_payload_sha256=_sha_bytes(candidate),
+            accepted_pack_path=clearance_accepted_pack,
+            accepted_receipt_path=clearance_accepted_receipt,
+            bone_artifact_path=clearance_bone_artifact,
+            bone_manifest_path=clearance_bone_manifest,
+            witness_path=clearance_witnesses,
+            orientation_report_path=clearance_orientation_report,
+            surface_inventory_path=clearance_surface_inventory,
+            selected_margin_mm=clearance_margin_mm,
+            support_radius_edge_multiple=clearance_support_radius_edge_multiple,
+        )
+        output = bytearray(candidate)
+        for vertex_index in referenced:
+            struct.pack_into("<3f", output, vertex_offset + int(vertex_index) * 56, *(float(value) for value in clearance_source[int(vertex_index)]))
+        cleared = decode_payload(bytes(output))
+        packed_source = cleared["vertices_f"][referenced, :3].astype(np.float64)
+        rendered_world = global_t + global_s * (packed_source @ global_r.T)
+        normals = human._bodyparts_vertex_normals(
+            [tuple(float(value) for value in point) for point in rendered_world],
+            compact_triangles,
+            "inferred common-atlas NHSKIN geometry with witnessed clearance",
+        )
+        normals = human._bodyparts_skin_smooth_visual_normals(normals, compact_triangles)
+        normal_array = np.asarray(normals, dtype=np.float64)
+        normal_lengths = np.linalg.norm(normal_array, axis=1)
+        if not np.isfinite(normal_array).all() or np.any(normal_lengths <= 1.0e-12):
+            raise human.ImportError("inferred clearance generated non-finite or degenerate rest-world normals")
+        normal_array /= normal_lengths[:, None]
+        for compact_index, vertex_index in enumerate(referenced):
+            struct.pack_into("<3f", output, vertex_offset + int(vertex_index) * 56 + 12, *(float(value) for value in normal_array[compact_index]))
+        candidate = bytes(output)
     after = decode_payload(candidate)
     if not np.array_equal(canonical_decoded["bindings_u"], after["bindings_u"]):
         raise human.ImportError("common-atlas geometry did not restore exact canonical shared-atlas binding records")
@@ -271,7 +338,8 @@ def derive_common_atlas_skin_geometry(*, source_payload: Path, registration_path
     manifest = {
         "schema": SCHEMA,
         "status": STATUS,
-        "method": "inferred geometry bake: transform each shared-atlas source vertex by each exact registered Core-owner rest transform, blend resulting world targets with unchanged full 86-owner skin weights, then inverse-map into the unchanged global common atlas frame",
+        "method": ("inferred geometry bake through exact registered Core-owner transforms and unchanged full 86-owner weights into the unchanged global common atlas frame"
+                   + ("; then a step-0 witnessed compact 0.25 mm engineering-clearance field is inverse-mapped through all 86 unchanged skin influences" if clearance_report is not None else "")),
         "inputs": {
             "source_payload": {"path": str(source_payload), "sha256": input_sha, "bytes": len(raw), "route": source_route},
             "canonical_binding_reference": {"path": str(canonical_binding_reference), "sha256": canonical_sha, "provenance_path": str(canonical_binding_provenance_path), "provenance_sha256": _sha_bytes(canonical_binding_provenance_path.read_bytes()), "meaning": "authoritative canonical shared-atlas NHSKIN bindings and vertex weights; per-owner binding substitutions from intermediate inputs are rejected and restored from these exact records"},
@@ -293,20 +361,38 @@ def derive_common_atlas_skin_geometry(*, source_payload: Path, registration_path
             "registered_geometry_displacement_mm": _percentiles(displacement * 1000.0),
             "inverse_map_float32_roundtrip_residual_mm": _percentiles(world_residual * 1000.0),
             "maximum_displacement_vertex_index": int(referenced[int(np.argmax(displacement))]),
+            "includes_step0_engineering_clearance": clearance_report is not None,
             "source_rights_and_provenance": {"carried_from_registration": bodyparts_source, "raw_member_sha256": _sha_bytes(skin_obj), "no_new_rights_or_measurements_claimed": True},
         },
         "preservation": {
             "all_86_canonical_binding_records_byte_identical": True, "binding_records_match_canonical_reference_sha256": canonical_sha,
             "canonical_binding_records_validated_against_registration_global_atlas_and_runtime_rest": canonical_binding_validation["all_86_bindings_match_global_atlas_through_runtime_rest"],
-            "source_binding_rows_restored_to_canonical": not np.array_equal(decoded["bindings_u"], after["bindings_u"]), "full_weight_matrix_byte_identical": True,
+            "source_binding_rows_restored_to_canonical": not np.array_equal(decoded["bindings_u"], after["bindings_u"]),
+            "input_binding_rows_differed_from_canonical_reference": not np.array_equal(decoded["bindings_u"], canonical_decoded["bindings_u"]),
+            "final_binding_rows_byte_identical_to_canonical_reference": np.array_equal(after["bindings_u"], canonical_decoded["bindings_u"]),
+            "full_weight_matrix_byte_identical": True,
             "triangle_indices_and_order_byte_identical": True, "per_vertex_influence_records_byte_identical": True,
             "unreferenced_vertex_bytes_byte_identical": True, "source_archive_sha256_preserved": True,
             "registration_fingerprint32_preserved": True, "nhtiss_tendon_muscle_and_physics_payloads_touched": False,
             "skin_topology_changed": False, "skin_contact_or_physics_owner_changed": False, "indexed_rest_world_normals_recomputed": True,
         },
-        "qualification": {"native_pose_clearance": "pending", "skin_self_intersection": "pending", "registered_skeleton_and_organ_clearance": "pending", "EHL_route_clearance": "pending", "physical_or_collision_use": "not admitted"},
-        "evidence_boundary": "Inferred registered geometry, not raw measured FJ2810. This candidate does not resolve known hip/sternum crossings by itself and is not anatomically qualified.",
-        "code": {"module": str(Path(__file__).resolve()), "module_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), "argv": sys.argv},
+        "step0_inferred_clearance": clearance_report,
+        "qualification": {
+            "step0_witnessed_all_surface_clearance": ("passed_842_nonocular_surfaces_eyes_monitored_unchanged" if clearance_report is not None and clearance_report["qualification"]["accepted_pose0_all_4448_nonocular_pairs_and_all_842_clearance_targets"] == "passed" else "pending"),
+            "native_pose_clearance": "pending", "skin_self_intersection": "pending",
+            "registered_skeleton_and_organ_clearance": "pending", "EHL_route_clearance": "pending",
+            "physical_or_collision_use": "not admitted",
+        },
+        "evidence_boundary": ("Inferred registered geometry with a bounded step-0 engineering separation field, not raw measured FJ2810 or measured cutaneous thickness. Native pose, skin self, other anatomy, and route qualification remain pending."
+                             if clearance_report is not None else
+                             "Inferred registered geometry, not raw measured FJ2810. This candidate does not resolve known hip/sternum crossings by itself and is not anatomically qualified."),
+        "code": {
+            "module": str(Path(__file__).resolve()),
+            "module_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "clearance_module": str(Path(clearance_module.__file__).resolve()),
+            "clearance_module_sha256": hashlib.sha256(Path(clearance_module.__file__).read_bytes()).hexdigest(),
+            "argv": sys.argv,
+        },
         "output_payload": {"path": str(output_payload), "sha256": _sha_bytes(candidate), "bytes": len(candidate)},
         "output_manifest": str(output_manifest),
     }
@@ -405,9 +491,32 @@ def main() -> int:
     parser.add_argument("--input-provenance", type=Path, required=True)
     parser.add_argument("--canonical-binding-reference", type=Path, help="optional exact canonical NHSKIN source to restore when a retained geometry template has invalid per-owner bindings")
     parser.add_argument("--canonical-binding-provenance", type=Path, help="boundary-repair receipt that hash-binds --canonical-binding-reference")
+    parser.add_argument("--clearance-accepted-pack", type=Path, help="accepted step-0 MRVPACK used to derive the bounded clearance field")
+    parser.add_argument("--clearance-accepted-receipt", type=Path, help="hash-bound receipt for --clearance-accepted-pack")
+    parser.add_argument("--clearance-bone-artifact", type=Path, help="registered ABI-3 NHBONES source used to recover all 86 accepted body poses")
+    parser.add_argument("--clearance-bone-manifest", type=Path, help="source manifest for --clearance-bone-artifact")
+    parser.add_argument("--clearance-witnesses", type=Path, help="exact accepted-pose skin/bone/Achilles intersections")
+    parser.add_argument("--clearance-orientation-report", type=Path, help="local full-shell winding classification for every witness face")
+    parser.add_argument("--clearance-surface-inventory", type=Path, help="hash-pinned exact inventory for all 859 bone, tissue, organ, vessel, and visceral surfaces")
+    parser.add_argument("--clearance-margin-mm", type=float, default=0.25)
+    parser.add_argument("--clearance-support-radius-edge-multiple", type=float, default=4.0, help="compact-field geodesic support radius in median local edge lengths")
     parser.add_argument("--output-directory", type=Path, required=True)
     args = parser.parse_args()
-    result = derive_common_atlas_skin_geometry(source_payload=args.source_payload, registration_path=args.registration, sources=args.sources, myosim_artifact=args.myosim_artifact, input_provenance_path=args.input_provenance, output_directory=args.output_directory, canonical_binding_reference=args.canonical_binding_reference, canonical_binding_provenance_path=args.canonical_binding_provenance)
+    result = derive_common_atlas_skin_geometry(
+        source_payload=args.source_payload, registration_path=args.registration, sources=args.sources,
+        myosim_artifact=args.myosim_artifact, input_provenance_path=args.input_provenance,
+        output_directory=args.output_directory, canonical_binding_reference=args.canonical_binding_reference,
+        canonical_binding_provenance_path=args.canonical_binding_provenance,
+        clearance_accepted_pack=args.clearance_accepted_pack,
+        clearance_accepted_receipt=args.clearance_accepted_receipt,
+        clearance_bone_artifact=args.clearance_bone_artifact,
+        clearance_bone_manifest=args.clearance_bone_manifest,
+        clearance_witnesses=args.clearance_witnesses,
+        clearance_orientation_report=args.clearance_orientation_report,
+        clearance_surface_inventory=args.clearance_surface_inventory,
+        clearance_margin_mm=args.clearance_margin_mm,
+        clearance_support_radius_edge_multiple=args.clearance_support_radius_edge_multiple,
+    )
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
