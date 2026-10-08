@@ -1,0 +1,1165 @@
+{
+  "input_capture_pack_sha256": "40edd587f96eb27b26d882a74d60243086905fa55a4e65633f1467500f13d764",
+  "input_report_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-pleura-self-seam-diagnosis-952/report.json",
+  "input_report_sha256": "4a94ef22554beed9a7453db3a2613e6401713322e9e1273229fe7f547a3ecbb5",
+  "method": {
+    "correspondence": "For each native triangle, source face vertex order maps its three captured vertices to the same three vertices in the frozen higher-precision kind-1 replay.",
+    "distance_method": "For the 17 disjoint binary64 ideal pairs, minimum triangle-set distance is the minimum over vertex-to-triangle and edge-to-edge closest features in binary64. Hit pairs are exactly classified by the exact rational predicate and assigned zero separation.",
+    "limitations": [
+      "This is an observed geometric envelope for the 150 vertices in one accepted captured state, not a formal upper bound over all shader inputs or arithmetic paths.",
+      "It does not bound times between captures or prove continuous-time separation.",
+      "Exact native intersections remain recorded; no gate, tolerance, or source geometry is changed.",
+      "Tangential intersection span is reported separately from signed normal-side intrusion; a long span is not a penetration depth."
+    ],
+    "pair_bound": "The distance between two triangle sets can change by at most the sum of their Hausdorff bounds. Thus an observed captured intersection implies the ideal triangle pair had separation no larger than epsilon_A+epsilon_B. Exact point intersections in the ideal map have zero separation by definition.",
+    "per_triangle_bound": "For corresponding vertex errors e_i, any equal-barycentric point has error norm <= sum(lambda_i*e_i) <= max_i(e_i); therefore the actual-vs-ideal triangle Hausdorff distance is bounded by the largest vertex error."
+  },
+  "pairs": [
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.352586504606262e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 5.149505666901496e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.5401030573445444e-08
+      },
+      "native_intersection_span_m": 2.5401030573445444e-08,
+      "native_opposite_source_side_intrusion_m": 1.6551950088317113e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8774254315228428e-08,
+      "row310_face_ids": [
+        40161,
+        220203
+      ],
+      "source_face_ids": [
+        40167,
+        46144
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.352586504606262e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 5.149505666901496e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 4.145748221121307e-07
+      },
+      "native_intersection_span_m": 4.1457482211213076e-07,
+      "native_opposite_source_side_intrusion_m": 1.6546304326681138e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8774254315228428e-08,
+      "row310_face_ids": [
+        40162,
+        220203
+      ],
+      "source_face_ids": [
+        40168,
+        46144
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.352586504606262e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 6.107246206400577e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.5038319114363516e-09
+      },
+      "native_intersection_span_m": 2.5038319114363516e-09,
+      "native_opposite_source_side_intrusion_m": 1.6557393234251094e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8774254315228428e-08,
+      "row310_face_ids": [
+        40162,
+        220207
+      ],
+      "source_face_ids": [
+        40168,
+        46148
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.5042557111902842e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.0698488755611517e-06
+      },
+      "native_intersection_span_m": 2.0698488755611517e-06,
+      "native_opposite_source_side_intrusion_m": 1.655738490757841e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 3.0290946381068654e-08,
+      "row310_face_ids": [
+        40163,
+        220207
+      ],
+      "source_face_ids": [
+        40169,
+        46148
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.352586504606262e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 5.149505666901496e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 4.1262138780848273e-07
+      },
+      "native_intersection_span_m": 4.1262138780848273e-07,
+      "native_opposite_source_side_intrusion_m": 1.6551230941352912e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8774254315228428e-08,
+      "row310_face_ids": [
+        40176,
+        220203
+      ],
+      "source_face_ids": [
+        40182,
+        46144
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.352586504606262e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 6.135741689324162e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.2394264116566988e-09
+      },
+      "native_intersection_span_m": 2.2394264116566988e-09,
+      "native_opposite_source_side_intrusion_m": 1.6557519522120145e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8774254315228428e-08,
+      "row310_face_ids": [
+        40176,
+        220207
+      ],
+      "source_face_ids": [
+        40182,
+        46148
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 1.5042557111902842e-08,
+        "308": 1.524838926916581e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.524838926916581e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.111323367234603e-06
+      },
+      "native_intersection_span_m": 2.1113233672346033e-06,
+      "native_opposite_source_side_intrusion_m": 1.6557533122352197e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 3.0290946381068654e-08,
+      "row310_face_ids": [
+        40177,
+        220207
+      ],
+      "source_face_ids": [
+        40183,
+        46148
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 9.250698374717105e-09,
+        "308": 1.1662741921912043e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 2.263979232167064e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.1662741921912043e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 1.2630572833991757e-06
+      },
+      "native_intersection_span_m": 1.2630572833991757e-06,
+      "native_opposite_source_side_intrusion_m": 1.0160024682681623e-08,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.091344029662915e-08,
+      "row310_face_ids": [
+        40213,
+        220197
+      ],
+      "source_face_ids": [
+        40219,
+        46138
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 9.250698374717105e-09,
+        "308": 1.0014029335878166e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.0014029335878166e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 1.0005942375561609e-05
+      },
+      "native_intersection_span_m": 1.0005942375561609e-05,
+      "native_opposite_source_side_intrusion_m": 1.0160024682681623e-08,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 1.9264727710595272e-08,
+      "row310_face_ids": [
+        40213,
+        220196
+      ],
+      "source_face_ids": [
+        40219,
+        46137
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 9.250698374717105e-09,
+        "308": 1.3649403650813733e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 3.820798016540003e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3649403650813733e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 1.3188373351776856e-07
+      },
+      "native_intersection_span_m": 1.3188373351776856e-07,
+      "native_opposite_source_side_intrusion_m": 1.3892947903215713e-10,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.2900102025530836e-08,
+      "row310_face_ids": [
+        40213,
+        220194
+      ],
+      "source_face_ids": [
+        40219,
+        46135
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 9.250698374717105e-09,
+        "308": 1.3032170094773454e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 2.622497785942846e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3032170094773454e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 8.35763540889354e-06
+      },
+      "native_intersection_span_m": 8.35763540889354e-06,
+      "native_opposite_source_side_intrusion_m": 8.866677725372085e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.228286846949056e-08,
+      "row310_face_ids": [
+        40213,
+        220195
+      ],
+      "source_face_ids": [
+        40219,
+        46136
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 6.383648689200495e-09,
+        "308": 1.1662741921912043e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 2.263979232167064e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.1662741921912043e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 7.999416267953216e-07
+      },
+      "native_intersection_span_m": 7.999416267953216e-07,
+      "native_opposite_source_side_intrusion_m": 1.0160045388341032e-08,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 1.804639061111254e-08,
+      "row310_face_ids": [
+        40238,
+        220197
+      ],
+      "source_face_ids": [
+        40244,
+        46138
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 6.383648689200495e-09,
+        "308": 1.0014029335878166e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.0014029335878166e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 4.523368043357298e-06
+      },
+      "native_intersection_span_m": 4.523368043357298e-06,
+      "native_opposite_source_side_intrusion_m": 1.0160045388341032e-08,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 1.6397678025078663e-08,
+      "row310_face_ids": [
+        40238,
+        220196
+      ],
+      "source_face_ids": [
+        40244,
+        46137
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 6.383648689200495e-09,
+        "308": 1.3649403650813733e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 3.820798016540003e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3649403650813733e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 6.659147333738634e-08
+      },
+      "native_intersection_span_m": 6.659147333738634e-08,
+      "native_opposite_source_side_intrusion_m": 1.389297843434889e-10,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.0033052340014227e-08,
+      "row310_face_ids": [
+        40238,
+        220194
+      ],
+      "source_face_ids": [
+        40244,
+        46135
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "305": 6.383648689200495e-09,
+        "308": 1.3032170094773454e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 2.622497785942846e-09,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3032170094773454e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 4.027346067357667e-06
+      },
+      "native_intersection_span_m": 4.027346067357667e-06,
+      "native_opposite_source_side_intrusion_m": 8.866695822007387e-09,
+      "owners": [
+        305,
+        308
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 1.941581878397395e-08,
+      "row310_face_ids": [
+        40238,
+        220195
+      ],
+      "source_face_ids": [
+        40244,
+        46136
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "306": 1.4997266804195196e-08,
+        "307": 1.1677317738699678e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 1.090694129319036e-08,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.4997266804195196e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.3755747108814637e-06
+      },
+      "native_intersection_span_m": 2.3755747108814637e-06,
+      "native_opposite_source_side_intrusion_m": 6.483995840245171e-09,
+      "owners": [
+        306,
+        307
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.6674584542894874e-08,
+      "row310_face_ids": [
+        104856,
+        172930
+      ],
+      "source_face_ids": [
+        29076,
+        33485
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "306": 1.4997266804195196e-08,
+        "307": 1.3915341356912837e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 1.0885289602500158e-08,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.4997266804195196e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 2.5717880661115585e-08
+      },
+      "native_intersection_span_m": 2.5717880661115585e-08,
+      "native_opposite_source_side_intrusion_m": 6.5365085843982484e-09,
+      "owners": [
+        306,
+        307
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8912608161108032e-08,
+      "row310_face_ids": [
+        104856,
+        172933
+      ],
+      "source_face_ids": [
+        29076,
+        33488
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "306": 1.4997266804195196e-08,
+        "307": 1.1677317738699678e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 1.2444836837206102e-08,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.4997266804195196e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 1.6036663682668952e-05
+      },
+      "native_intersection_span_m": 1.6036663682668952e-05,
+      "native_opposite_source_side_intrusion_m": 3.6239009848504367e-09,
+      "owners": [
+        306,
+        307
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.6674584542894874e-08,
+      "row310_face_ids": [
+        104857,
+        172931
+      ],
+      "source_face_ids": [
+        29077,
+        33486
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "306": 1.4997266804195196e-08,
+        "307": 1.1677317738699678e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 1.0886065509907233e-08,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.4997266804195196e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 1.6443419797090334e-05
+      },
+      "native_intersection_span_m": 1.6443419797090334e-05,
+      "native_opposite_source_side_intrusion_m": 6.538275948431149e-09,
+      "owners": [
+        306,
+        307
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.6674584542894874e-08,
+      "row310_face_ids": [
+        104857,
+        172930
+      ],
+      "source_face_ids": [
+        29077,
+        33485
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "306": 1.4997266804195196e-08,
+        "307": 1.3915341356912837e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.4997266804195196e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 0.00010186655033355586
+      },
+      "native_intersection_span_m": 0.00010186655033355584,
+      "native_opposite_source_side_intrusion_m": 6.536508667664975e-09,
+      "owners": [
+        306,
+        307
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.8912608161108032e-08,
+      "row310_face_ids": [
+        104859,
+        172933
+      ],
+      "source_face_ids": [
+        29079,
+        33488
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "306": 1.4997266804195196e-08,
+        "307": 1.1677317738699678e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.4997266804195196e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 3.441001865337121e-05
+      },
+      "native_intersection_span_m": 3.441001865337121e-05,
+      "native_opposite_source_side_intrusion_m": 3.623899791360685e-09,
+      "owners": [
+        306,
+        307
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.6674584542894874e-08,
+      "row310_face_ids": [
+        104861,
+        172931
+      ],
+      "source_face_ids": [
+        29081,
+        33486
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "307": 9.916495888085322e-09,
+        "309": 1.3612668366141222e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 1.4996218125649517e-08,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3612668366141222e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 4.553354927498448e-06
+      },
+      "native_intersection_span_m": 4.553354927498448e-06,
+      "native_opposite_source_side_intrusion_m": 6.853468348388958e-10,
+      "owners": [
+        307,
+        309
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.3529164254226544e-08,
+      "row310_face_ids": [
+        169030,
+        254596
+      ],
+      "source_face_ids": [
+        28798,
+        13465
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "307": 9.916495888085322e-09,
+        "309": 1.3612668366141222e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3612668366141222e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 0.0001276792305552445
+      },
+      "native_intersection_span_m": 0.0001276792305552445,
+      "native_opposite_source_side_intrusion_m": 6.853616008051233e-10,
+      "owners": [
+        307,
+        309
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.3529164254226544e-08,
+      "row310_face_ids": [
+        169031,
+        254600
+      ],
+      "source_face_ids": [
+        28799,
+        13469
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "307": 9.916495888085322e-09,
+        "309": 1.3612668366141222e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 1.499892314555239e-08,
+      "ideal_map_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3612668366141222e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 1.619321692739702e-10
+      },
+      "native_intersection_span_m": 1.619321692739702e-10,
+      "native_opposite_source_side_intrusion_m": 6.853616563162745e-10,
+      "owners": [
+        307,
+        309
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.3529164254226544e-08,
+      "row310_face_ids": [
+        169031,
+        254596
+      ],
+      "source_face_ids": [
+        28799,
+        13465
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": false,
+        "shared_coordinate_count": 0,
+        "source_intersection": false
+      },
+      "source_relation": {
+        "hit": false,
+        "points": 0,
+        "span_m": 0.0
+      }
+    },
+    {
+      "captured_vertex_to_ideal_vertex_max_distance_m_by_owner": {
+        "307": 9.367928805792735e-09,
+        "309": 1.3612668366141222e-08
+      },
+      "ideal_gap_within_measured_displacement_bound": true,
+      "ideal_map_minimum_triangle_distance_m": 0.0,
+      "ideal_map_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      },
+      "maximum_capture_minus_ideal_vertex_distance_m": 1.3612668366141222e-08,
+      "native_captured_relation": {
+        "hit": true,
+        "points": 2,
+        "span_m": 4.503888190248298e-06
+      },
+      "native_intersection_span_m": 4.503888190248298e-06,
+      "native_opposite_source_side_intrusion_m": 6.852199363471811e-10,
+      "owners": [
+        307,
+        309
+      ],
+      "pairwise_hausdorff_displacement_bound_m": 2.2980597171933957e-08,
+      "row310_face_ids": [
+        169032,
+        254596
+      ],
+      "source_face_ids": [
+        28800,
+        13465
+      ],
+      "source_feature": {
+        "beyond_shared_feature": false,
+        "confined_to_shared_feature": true,
+        "shared_coordinate_count": 1,
+        "source_intersection": true
+      },
+      "source_relation": {
+        "hit": true,
+        "points": 1,
+        "span_m": 0.0
+      }
+    }
+  ],
+  "schema": "numi.human.native-captured-triangle-pair-displacement-envelope.v1",
+  "scope": "25 row-310 terminal self-intersection pairs at accepted step 10000 only; selected witnesses from a full native scan, not a new all-pairs scan.",
+  "status": "complete_selected_pair_captured_state_envelope",
+  "summary": {
+    "ideal_map_relation_counts": {
+      "disjoint": 17,
+      "single_point_contact": 8
+    },
+    "maximum_ideal_disjoint_gap_m": 1.499892314555239e-08,
+    "maximum_native_intrusion_m": 1.0160045388341032e-08,
+    "maximum_native_span_m": 0.0001276792305552445,
+    "maximum_pairwise_hausdorff_displacement_bound_m": 3.0290946381068654e-08,
+    "minimum_pairwise_hausdorff_displacement_bound_m": 1.6397678025078663e-08,
+    "native_exact_intersection_count": 25,
+    "pair_bound_covers_ideal_gap_count": 25,
+    "pair_count": 25,
+    "source_relation_counts": {
+      "disjoint": 17,
+      "single_point_contact": 8
+    }
+  }
+}
