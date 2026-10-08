@@ -1,5 +1,7 @@
 # Native 925 lung seam structural audit
 
+This repository bundle contains the compact summary and external evidence pins. The complete reports, audit source and pose captures are retained at /Users/n/numi-human-resting-evidence-20261005/native-lung-seam-structural-audit-927/ on the Mac mini. Filenames discussed below refer to that directory; external-SHA256SUMS.txt is its checksum inventory.
+
 This is a bounded exact audit of the current lung/pleura/diaphragm composition. It is not a full 305-311 all-pairs native collision scan.
 
 The audit pins composed NHA 924 (SHA 3c444be7736c066a992988cc32b687917e1c4c5c3968a16b4d5f0106d5b5024e) which has byte-identical 305-311 rows to candidate 922, and all eight accepted native 925 MRVPACK/receipt pairs. It checks exact source self-intersections and topology for rows 305-311, then validates all eight declared reciprocal source patches (all matched faces are opposite-wound with no duplicate keys). Candidate 922 includes the registered 307/309 shared-sliver collapse as well as later synchronized edge collapses.
