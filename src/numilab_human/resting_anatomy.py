@@ -8,9 +8,12 @@ from __future__ import annotations
 
 import argparse
 import copy
+import errno
 import hashlib
 import json
+import os
 from pathlib import Path
+import shutil
 import struct
 import tempfile
 
@@ -833,6 +836,24 @@ def compile_anatomy(output: Path) -> dict:
 
 
 
+def _copy_checked_sidecar(source: Path, destination: Path, expected_sha256: str) -> None:
+    """Reuse an immutable owner sidecar beside a newly composed receipt."""
+    source, destination = Path(source).resolve(), Path(destination)
+    actual = hashlib.sha256(source.read_bytes()).hexdigest()
+    if actual != expected_sha256:
+        raise ValueError(f"cardiac sidecar identity differs: {source}")
+    if destination.exists():
+        raise ValueError(f"cardiac sidecar destination already exists: {destination}")
+    try:
+        os.link(source, destination)
+    except OSError as error:
+        if error.errno != errno.EXDEV:
+            raise
+        shutil.copyfile(source, destination)
+    if hashlib.sha256(destination.read_bytes()).hexdigest() != expected_sha256:
+        raise ValueError(f"relocated cardiac sidecar identity differs: {destination}")
+
+
 def _compose_skin_candidate_receipt_document(
     base_receipt: dict,
     base_receipt_path: Path,
@@ -883,6 +904,10 @@ def _compose_skin_candidate_receipt_document(
         "payload_path": str(candidate_payload_path.resolve()),
         "payload_sha256": output["sha256"],
         "registration_sha256": inputs.get("registration_sha256"),
+        "base_anatomy_receipt": {
+            "path": str(Path(base_receipt_path).resolve()),
+            "sha256": hashlib.sha256(Path(base_receipt_path).read_bytes()).hexdigest(),
+        },
         "nhtiss4_owner_alignment": candidate_manifest.get("nhtiss4_owner_alignment"),
         "nhtiss4_composed_base_alignment": candidate_manifest.get("nhtiss4_composed_base_alignment"),
         "preservation": candidate_manifest.get("preservation"),
@@ -914,6 +939,8 @@ def compose_skin_binding_candidate(
         raise ValueError("skin receipt composition requires existing base receipt and candidate files")
     if output == base_receipt_path.parent or base_receipt_path in output.parents:
         raise ValueError("skin receipt composition output must be a separate evidence directory")
+    if output.exists():
+        raise ValueError("skin receipt composition output directory already exists")
     receipt_path = output / "resting-anatomy-receipt.json"
     manifest_path = output / "resting-anatomy-manifest.json"
     if receipt_path.exists() or manifest_path.exists():
@@ -923,10 +950,16 @@ def compose_skin_binding_candidate(
     base_receipt_sha = hashlib.sha256(base_receipt_path.read_bytes()).hexdigest()
     if base_manifest_path.is_file():
         base_manifest = json.loads(base_manifest_path.read_text())
+        base_manifest_sha = hashlib.sha256(base_manifest_path.read_bytes()).hexdigest()
         if (base_manifest.get("receipt", {}).get("path") != str(base_receipt_path)
                 or base_manifest.get("receipt", {}).get("sha256") != base_receipt_sha):
             raise ValueError("base anatomy manifest does not bind the selected receipt")
-        manifest_lineage = None
+        manifest_lineage = {
+            "source_receipt_path": str(base_receipt_path),
+            "source_receipt_sha256": base_receipt_sha,
+            "source_manifest_path": str(base_manifest_path),
+            "source_manifest_sha256": base_manifest_sha,
+        }
     else:
         # Some existing anatomy owners emit a receipt-only composition. Accept
         # it only when its embedded composition record binds the exact
@@ -979,16 +1012,26 @@ def compose_skin_binding_candidate(
         skin_path=skin_candidate_payload,
         skin_rebind_manifest_path=skin_rebind_manifest_path,
     )
-    # Ensure the candidate's ten extant lower-limb soft-tissue owner rows still
-    # use the same registered transforms; absent talus routes remain explicit.
-    muscle = base_receipt.get("provenance", {}).get("native_muscle_surfaces", {})
-    tissue_path = Path(muscle.get("payload_path", ""))
-    tissue_manifest = Path(muscle.get("manifest_path", ""))
-    if not tissue_path.is_absolute():
-        tissue_path = base_receipt_path.parent / tissue_path
-    if not tissue_manifest.is_absolute():
-        tissue_manifest = base_receipt_path.parent / tissue_manifest
-    if tissue_path.is_file() and tissue_manifest.is_file():
+    # Ensure a declared NHTISS4 owner is present and hash-current before
+    # verifying its lower-limb rows against the candidate skin.
+    muscle = base_receipt.get("provenance", {}).get("native_muscle_surfaces")
+    if muscle is not None:
+        if not isinstance(muscle, dict):
+            raise ValueError("declared native muscle surface owner is malformed")
+        required_muscle_fields = ("payload_path", "sha256", "manifest_path", "manifest_sha256")
+        if any(not isinstance(muscle.get(key), str) or not muscle[key] for key in required_muscle_fields):
+            raise ValueError("declared native muscle surface owner lacks payload/manifest identities")
+        tissue_path = Path(muscle["payload_path"])
+        tissue_manifest = Path(muscle["manifest_path"])
+        if not tissue_path.is_absolute():
+            tissue_path = base_receipt_path.parent / tissue_path
+        if not tissue_manifest.is_absolute():
+            tissue_manifest = base_receipt_path.parent / tissue_manifest
+        if not tissue_path.is_file() or not tissue_manifest.is_file():
+            raise ValueError("declared native muscle surface payload or manifest is missing")
+        if (hashlib.sha256(tissue_path.read_bytes()).hexdigest() != muscle["sha256"]
+                or hashlib.sha256(tissue_manifest.read_bytes()).hexdigest() != muscle["manifest_sha256"]):
+            raise ValueError("declared native muscle surface payload or manifest hash is stale")
         from .skin_lower_limb_anchor_rebind import _verify_nhtiss_owner_alignment
         registration = json.loads(REGISTRATION_PATH.read_text())
         candidate_manifest["nhtiss4_composed_base_alignment"] = _verify_nhtiss_owner_alignment(
@@ -1003,17 +1046,41 @@ def compose_skin_binding_candidate(
         mass_geometry["nhtiss4_base_owner_alignment_sha256"] = hashlib.sha256(
             json.dumps(candidate_manifest["nhtiss4_composed_base_alignment"], sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()
+    output_receipt = copy.deepcopy(base_receipt)
+    common_sidecars = []
+    common = output_receipt.get("provenance", {}).get("cardiac_geometry_binding", {}).get("common_field")
+    if common is not None:
+        if not isinstance(common, dict) or common.get("schema") != "numi.human.cardiac_common_field.v1":
+            raise ValueError("unsupported common cardiac field receipt")
+        for owner in ("map", "polynomials", "domain_boxes"):
+            record = common.get(owner)
+            if (not isinstance(record, dict) or not isinstance(record.get("path"), str)
+                    or not isinstance(record.get("sha256"), str)):
+                raise ValueError(f"missing common cardiac {owner} identity")
+            source_path = Path(record["path"])
+            if not source_path.is_absolute():
+                source_path = base_receipt_path.parent / source_path
+            source_path = source_path.resolve()
+            digest = record["sha256"]
+            if not source_path.is_file() or hashlib.sha256(source_path.read_bytes()).hexdigest() != digest:
+                raise ValueError(f"common cardiac {owner} source identity differs")
+            destination = output / source_path.name
+            if destination.exists():
+                raise ValueError(f"common cardiac {owner} destination already exists")
+            common_sidecars.append((source_path, destination, digest))
+            record["path"] = source_path.name
     mass_geometry["skin_binding_rebind_receipt"] = str(skin_rebind_manifest_path)
     mass_geometry["skin_binding_rebind_receipt_sha256"] = hashlib.sha256(skin_rebind_manifest_path.read_bytes()).hexdigest()
     result = _compose_skin_candidate_receipt_document(
-        base_receipt, base_receipt_path, candidate_manifest, skin_rebind_manifest_path,
+        output_receipt, base_receipt_path, candidate_manifest, skin_rebind_manifest_path,
         skin_candidate_payload, mass_geometry, receipt_path,
     )
     output.mkdir(parents=True, exist_ok=True)
+    for source_path, destination, digest in common_sidecars:
+        _copy_checked_sidecar(source_path, destination, digest)
     receipt_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     composed_manifest = copy.deepcopy(base_manifest)
-    if manifest_lineage is not None:
-        composed_manifest["source_receipt_lineage"] = manifest_lineage
+    composed_manifest["source_receipt_lineage"] = manifest_lineage
     composed_manifest["receipt"] = {
         "path": str(receipt_path),
         "sha256": hashlib.sha256(receipt_path.read_bytes()).hexdigest(),

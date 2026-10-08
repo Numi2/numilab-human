@@ -115,6 +115,18 @@ def test_skin_candidate_composes_receipt_only_lineage_without_mutating_anatomy(t
         "qualification": {"source_geometry": True},
         "thorax_source_volume_m3": 0.01,
     }
+    common_field = {"schema": "numi.human.cardiac_common_field.v1"}
+    common_assets = {}
+    for owner, filename, contents in (
+        ("map", "common-cardiac-map-f32.bin", b"map bytes"),
+        ("polynomials", "common-cardiac-volumes-f32.bin", b"polynomial bytes"),
+        ("domain_boxes", "common-cardiac-domains-f32.bin", b"domain bytes"),
+    ):
+        sidecar = tmp_path / filename
+        digest = _write(sidecar, contents)
+        common_field[owner] = {"path": filename, "sha256": digest}
+        common_assets[owner] = (filename, digest)
+    base["provenance"]["cardiac_geometry_binding"] = {"common_field": common_field}
     base_receipt_path.write_text(json.dumps(base))
     candidate_manifest = {
         "schema": "numi.human.skin-lower-limb-anchor-rebind-candidate.v1",
@@ -145,3 +157,60 @@ def test_skin_candidate_composes_receipt_only_lineage_without_mutating_anatomy(t
     assert manifest["schema"] == "numi.human.resting-anatomy-manifest.v1"
     assert manifest["payload"] == base["payload"]
     assert manifest["source_receipt_lineage"]["predecessor_receipt_sha256"] == predecessor_receipt_sha
+    candidate_provenance = composed["provenance"]["skin_visual_binding_candidate"]["base_anatomy_receipt"]
+    assert candidate_provenance == {"path": str(base_receipt_path.resolve()), "sha256": result["base_receipt_sha256"]}
+    published_common = composed["provenance"]["cardiac_geometry_binding"]["common_field"]
+    for owner, (filename, digest) in common_assets.items():
+        relative_path = published_common[owner]["path"]
+        assert relative_path == filename
+        relocated = Path(result["receipt_path"]).parent / relative_path
+        assert hashlib.sha256(relocated.read_bytes()).hexdigest() == digest
+        assert relocated.read_bytes() == (tmp_path / filename).read_bytes()
+
+    bad_missing = copy.deepcopy(base)
+    bad_missing["provenance"]["native_muscle_surfaces"] = {
+        "payload_path": str(tmp_path / "missing.nhtissue"), "sha256": "0" * 64,
+        "manifest_path": str(tmp_path / "missing.manifest.json"), "manifest_sha256": "0" * 64,
+    }
+    base_receipt_path.write_text(json.dumps(bad_missing))
+    with pytest.raises(ValueError, match="payload or manifest is missing"):
+        resting_anatomy.compose_skin_binding_candidate(
+            base_receipt_path, candidate_skin, candidate_manifest_path, tmp_path / "missing-muscle",
+        )
+
+    tissue_path = tmp_path / "muscle.nhtissue"
+    tissue_sha = _write(tissue_path, b"muscle payload")
+    tissue_manifest_path = tmp_path / "muscle.manifest.json"
+    tissue_manifest_sha = _write(tissue_manifest_path, b"muscle manifest")
+    bad_stale = copy.deepcopy(base)
+    bad_stale["provenance"]["native_muscle_surfaces"] = {
+        "payload_path": str(tissue_path), "sha256": "0" * 64,
+        "manifest_path": str(tissue_manifest_path), "manifest_sha256": tissue_manifest_sha,
+    }
+    base_receipt_path.write_text(json.dumps(bad_stale))
+    with pytest.raises(ValueError, match="hash is stale"):
+        resting_anatomy.compose_skin_binding_candidate(
+            base_receipt_path, candidate_skin, candidate_manifest_path, tmp_path / "stale-muscle",
+        )
+
+    missing_manifest_owner = copy.deepcopy(base)
+    missing_manifest_owner["provenance"]["native_muscle_surfaces"] = {
+        "payload_path": str(tissue_path), "sha256": tissue_sha,
+        "manifest_path": str(tmp_path / "missing-manifest.json"), "manifest_sha256": "0" * 64,
+    }
+    base_receipt_path.write_text(json.dumps(missing_manifest_owner))
+    with pytest.raises(ValueError, match="payload or manifest is missing"):
+        resting_anatomy.compose_skin_binding_candidate(
+            base_receipt_path, candidate_skin, candidate_manifest_path, tmp_path / "missing-muscle-manifest",
+        )
+
+    stale_manifest_owner = copy.deepcopy(base)
+    stale_manifest_owner["provenance"]["native_muscle_surfaces"] = {
+        "payload_path": str(tissue_path), "sha256": tissue_sha,
+        "manifest_path": str(tissue_manifest_path), "manifest_sha256": "0" * 64,
+    }
+    base_receipt_path.write_text(json.dumps(stale_manifest_owner))
+    with pytest.raises(ValueError, match="hash is stale"):
+        resting_anatomy.compose_skin_binding_candidate(
+            base_receipt_path, candidate_skin, candidate_manifest_path, tmp_path / "stale-muscle-manifest",
+        )
