@@ -1,0 +1,72 @@
+{
+  "adapter": {
+    "path": "/Users/n/numi-human-d-lobe-adapter-publication-001/tools/evidence/native-lung-d-lobe-boundary-parity-1086/native_feature_index_1085.py",
+    "sha256": "a982d97188fc8c207380afc2d3f8fe0e5934228cb816c2bea827115c84050928",
+    "source_helper_revision": "46b3c0b18e5cb9c23a054706aafa72068c439dd2"
+  },
+  "event_replay_file": {
+    "lines": 13050,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-d-lobe-boundary-parity-1086/repository-adapter-replay-001/replay-events.jsonl",
+    "sha256": "ecaac2fc53373582d7168624920b95b8fcee86f86de483c3bbbbd024b7a6a99c"
+  },
+  "event_total": 13050,
+  "events_per_lobe": {
+    "305": 4754,
+    "306": 4978,
+    "307": 2662,
+    "308": 656
+  },
+  "inputs": {
+    "/Users/n/numi-human-d-lobe-adapter-publication-001/tools/evidence/native-lung-d-lobe-boundary-parity-1086/native_feature_index_1085.py": {
+      "sha256_after": "a982d97188fc8c207380afc2d3f8fe0e5934228cb816c2bea827115c84050928",
+      "sha256_before": "a982d97188fc8c207380afc2d3f8fe0e5934228cb816c2bea827115c84050928"
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1078-viewer-018-v015-attempt1/native-run/accepted-geometry/step-0.mrvpack": {
+      "sha256_after": "413e294551db6a66534fa1d84de980f4572d4915a053f5c5c6bfdd92c3565ac5",
+      "sha256_before": "413e294551db6a66534fa1d84de980f4572d4915a053f5c5c6bfdd92c3565ac5"
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1078-viewer-018-v015-attempt1/native-run/accepted-geometry/step-0.receipt.json": {
+      "sha256_after": "d65bbc8d4ecc0a89568ca3ec9f839181ef476bec44142a774c5927828361f45b",
+      "sha256_before": "d65bbc8d4ecc0a89568ca3ec9f839181ef476bec44142a774c5927828361f45b"
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-conditioned-final-compose-1078/final/resting-thorax.nhanatomy": {
+      "sha256_after": "7f6a8175e3cadb93a6dfc43535467b6896cf1b8bacfd0334df7b5bb03c414e92",
+      "sha256_before": "7f6a8175e3cadb93a6dfc43535467b6896cf1b8bacfd0334df7b5bb03c414e92"
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-1079/audit_lung_interfaces_1042_pinned.py": {
+      "sha256_after": "791e2acdfdf917cd8554d83887f78682121a181216a07ff96c7ca2b985214345",
+      "sha256_before": "791e2acdfdf917cd8554d83887f78682121a181216a07ff96c7ca2b985214345"
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-1079/audit_lung_interfaces_1079.py": {
+      "sha256_after": "5578bc17bfefcbc589e33e6612242de745495702bbd12b82716e715d5ef7f88e",
+      "sha256_before": "5578bc17bfefcbc589e33e6612242de745495702bbd12b82716e715d5ef7f88e"
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-1079/native-1078-step0-corrected-cross-003/unclassified-cross-intersections.jsonl": {
+      "sha256_after": "02b3acec00424aa2796c5414df655bd3861852ad3c128ad992b49682cd3fdbae",
+      "sha256_before": "02b3acec00424aa2796c5414df655bd3861852ad3c128ad992b49682cd3fdbae"
+    }
+  },
+  "native_maps_valid_and_boundaries_equal": true,
+  "new_labels_per_lobe": {
+    "305": {
+      "exact_fullunion_boundary_contact": 4754
+    },
+    "306": {
+      "exact_fullunion_boundary_contact": 4978
+    },
+    "307": {
+      "exact_fullunion_boundary_contact": 2662
+    },
+    "308": {
+      "exact_fullunion_boundary_contact": 656
+    },
+    "309": {}
+  },
+  "old_event_labels": {
+    "unclassified_cross_intersection": 13050
+  },
+  "qualification": "Replay of existing exact witnesses through the composed adapter. The original scan and its labels/gates remain unchanged; this does not waive non-boundary intersections or qualify other poses.",
+  "schema": "numi.human.native-lung-diaphragm-lobe-adapter-replay.v1",
+  "scope": "Existing corrected native step-0 event ledger only; no new geometry scan or changed legacy audit labels.",
+  "status": "complete_retained_event_replay_source_rule_aligned"
+}
