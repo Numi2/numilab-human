@@ -780,18 +780,28 @@ def open_registered_shared_vertex_star(prepared, point, direction, displacement_
             pair_checks.append({'surface_a':a,'surface_b':b,'shared_local_triangle_count':len(common),
                                 'same_winding_triangle_count':same_count,
                                 'opposite_winding_triangle_count':opposite_count,'preserved':True})
+    # Validate every owner's rebuilt normals before publishing any owner. A
+    # later rejection must leave geometry, detail and ancestry unchanged.
+    ready = {}
     for sid,(new_vertices,faces,parent_map,detail,incident,*_) in proposals.items():
         points=new_vertices[faces,:3].astype(np.float64)
         normals=np.cross(points[:,1]-points[:,0],points[:,2]-points[:,0])
         sums=np.zeros((len(new_vertices),3),dtype=np.float64)
         for axis in range(3): np.add.at(sums,faces[:,axis],normals)
         lengths=np.linalg.norm(sums,axis=1)
-        if np.any(lengths==0): raise ValueError(f'surface {sid} develops a zero vertex normal')
-        new_vertices[:,3:6]=(sums/lengths[:,None]).astype(new_vertices.dtype)
+        used = np.unique(faces)
+        if np.any(lengths[used] == 0) or not np.all(np.isfinite(lengths[used])):
+            raise ValueError(f'surface {sid} develops a zero or nonfinite vertex normal')
+        # Source crops may retain unused vertices. They carry no surface
+        # normal contribution; preserve their stored attributes verbatim.
+        new_vertices[used,3:6]=(sums[used]/lengths[used,None]).astype(new_vertices.dtype)
+        new_detail = dict(detail)
         records=list(detail.get('registered_shared_star_openings',[]))
         records.append({'old_point':old_key,'new_point':new_key,'displacement_m':float(np.linalg.norm(np.asarray(new_key)-np.asarray(old_key)))})
-        detail['registered_shared_star_openings']=records
-        prepared[sid]=(new_vertices,faces,parent_map,detail)
+        new_detail['registered_shared_star_openings']=records
+        ready[sid]=(new_vertices,faces,parent_map,new_detail)
+    for sid, row in ready.items():
+        prepared[sid]=row
         cumulative[sid]=cumulative.get(sid,0.0)+deltas[sid]
     for name,delta in group_deltas.items(): cumulative_groups[name]=cumulative_groups.get(name,0.0)+delta
     if ancestry is not None:

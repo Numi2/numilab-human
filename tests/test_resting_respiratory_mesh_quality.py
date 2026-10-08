@@ -285,6 +285,56 @@ class RespiratoryMeshQualityTests(unittest.TestCase):
         self.assertLess(batch_report['operations'][0]['combined_local_sliver_objective_after'],
                         batch_report['operations'][0]['combined_local_sliver_objective_before'])
 
+    def test_shared_star_preserves_unused_vertex_attributes(self):
+        vertices, faces, parents, detail = prepared_quad()
+        vertices = np.vstack((vertices, np.asarray(
+            [[.1, .2, .3, .2, .3, .4]], dtype=np.float32)))
+        prepared = {sid: (vertices.copy(), faces.copy(), dict(parents), {})
+                    for sid in (305, 311)}
+        original_unused = vertices[-1].copy()
+        report = open_registered_shared_vertex_star(
+            prepared, vertices[2, :3], [0, 1, 0], 2e-6,
+            maximum_source_displacement_m=3e-6)
+        self.assertEqual(report['owner_surface_ids'], [305, 311])
+        for row in prepared.values():
+            np.testing.assert_array_equal(row[0][-1], original_unused)
+            np.testing.assert_array_equal(row[1], faces)
+            self.assertTrue(np.isfinite(row[0]).all())
+            np.testing.assert_allclose(np.linalg.norm(row[0][faces, 3:6], axis=2), 1)
+
+    def test_shared_star_late_normal_rejection_is_atomic(self):
+        import copy
+
+        vertices, faces, parents, detail = prepared_quad()
+        # The second owner has a separate, oppositely duplicated triangle
+        # whose used vertex normals cancel. This late failure must not
+        # publish the first owner's otherwise valid move.
+        second_vertices = np.vstack((vertices, np.asarray([
+            [.1, .1, .1, 0, 0, 1], [.11, .1, .1, 0, 0, 1],
+            [.1, .11, .1, 0, 0, 1]], dtype=np.float32)))
+        second_faces = np.vstack((faces, [[4, 5, 6], [4, 6, 5]]))
+        prepared = {
+            305: (vertices.copy(), faces.copy(), dict(parents), {'retained': [1]}),
+            311: (second_vertices, second_faces, dict(parents), {'retained': [2]}),
+        }
+        ancestry = {tuple(map(float, p)): {tuple(map(float, p))}
+                    for p in vertices[:, :3]}
+        cumulative = {305: 0.0, 311: 0.0}
+        groups = {'305+311': 0.0}
+        before = copy.deepcopy((prepared, ancestry, cumulative, groups))
+        with self.assertRaisesRegex(ValueError, 'surface 311 develops a zero'):
+            open_registered_shared_vertex_star(
+                prepared, vertices[2, :3], [0, 1, 0], 2e-6,
+                maximum_source_displacement_m=3e-6,
+                source_ancestry_by_point=ancestry,
+                cumulative_volume_change_m3=cumulative,
+                cumulative_volume_group_change_m3=groups)
+        for sid, row in prepared.items():
+            np.testing.assert_array_equal(row[0], before[0][sid][0])
+            np.testing.assert_array_equal(row[1], before[0][sid][1])
+            self.assertEqual(row[2:], before[0][sid][2:])
+        self.assertEqual((ancestry, cumulative, groups), before[1:])
+
     def test_shared_star_search_can_trade_one_incident_altitude_for_a_lower_star_score(self):
         xyz = np.asarray([[0, 0, 0], [50e-6, 0, 0], [25e-6, .5e-6, 0],
                           [0, 50e-6, 0], [-50e-6, 0, 0], [0, 0, -50e-6]], dtype=np.float32)
