@@ -236,3 +236,62 @@ def test_common_atlas_accepts_canonical_bindings_and_rejects_004_substitution(tm
     struct.pack_into("<f", substituted, 60 + 1 * 36 + 4, 0.012)
     with np.testing.assert_raises_regex(model.ImportError, "differ from canonical shared-atlas records"):
         _verify_common_atlas_skin_binding_records(bytes(substituted), source, canonical_sha, registration)
+
+
+def _two_region_composition_fixture():
+    count = 86
+    header = struct.pack("<8s5I32s", b"NHSKIN1" + bytes([0]), 5, count, 7, 6, 1234, bytes.fromhex("ab" * 32))
+    bindings = b"".join(struct.pack("<I8f", i, 0, 0, 0, 0, 0, 0, 1, 1) for i in range(count))
+    vertices = np.zeros((7, 14), dtype="<f4")
+    vertices[:, :3] = [[0, 0, 0], [1, 0, 0], [0, 1, 0],
+                       [3, 0, 0], [4, 0, 0], [3, 1, 0], [9, 9, 9]]
+    vertices[:, 3:6] = [0, 0, 1]
+    vertices[:, 10] = 1
+    indices = np.array([0, 1, 2, 3, 4, 5], dtype="<u4")
+    weights = np.zeros((7, count), dtype="<f4")
+    weights[:, 0] = 1
+    raw = header + bindings + vertices.tobytes() + indices.tobytes() + weights.tobytes()
+    return raw, 60 + count * 36
+
+
+def test_disjoint_position_composition_preserves_existing_abi():
+    from numilab_human.common_atlas_skin_geometry_registration import compose_disjoint_skin_position_corrections
+    raw, offset = _two_region_composition_fixture()
+    first, second = bytearray(raw), bytearray(raw)
+    struct.pack_into("<3f", first, offset, 0, 0, 0.1)
+    struct.pack_into("<3f", second, offset + 3 * 56, 3, 0, 0.2)
+    output, report = compose_disjoint_skin_position_corrections(
+        raw, [bytes(first), bytes(second)], global_source_matrix=_matrix([0.0, 0.0, 0.0]))
+    before, after = decode_payload(raw), decode_payload(output)
+    expected = before["vertices_f"][:, :3].copy()
+    expected[0, 2] = np.float32(0.1)
+    expected[3, 2] = np.float32(0.2)
+    assert np.array_equal(after["vertices_f"][:, :3], expected)
+    assert output[:offset] == raw[:offset]
+    assert output[offset + 7 * 56:] == raw[offset + 7 * 56:]
+    assert np.array_equal(after["vertices_u"][:, 6:], before["vertices_u"][:, 6:])
+    assert np.array_equal(after["vertices_u"][6], before["vertices_u"][6])
+    assert np.allclose(np.linalg.norm(after["vertices_f"][:6, 3:6], axis=1), 1.0)
+    assert report["correction_vertex_and_incident_face_supports_disjoint"]
+    assert [r["changed_vertex_ids"] for r in report["corrections"]] == [[0], [3]]
+
+
+def test_disjoint_position_composition_rejects_shared_face_and_identity_changes():
+    from numilab_human.common_atlas_skin_geometry_registration import compose_disjoint_skin_position_corrections
+    raw, offset = _two_region_composition_fixture()
+    first, adjacent = bytearray(raw), bytearray(raw)
+    struct.pack_into("<3f", first, offset, 0, 0, 0.1)
+    struct.pack_into("<3f", adjacent, offset + 56, 1, 0, 0.2)
+    with np.testing.assert_raises_regex(model.ImportError, "overlap"):
+        compose_disjoint_skin_position_corrections(
+            raw, [bytes(first), bytes(adjacent)], global_source_matrix=_matrix([0.0, 0.0, 0.0]))
+    wrong_weight = bytearray(first)
+    struct.pack_into("<f", wrong_weight, offset + 7 * 56 + 6 * 4, 0.5)
+    with np.testing.assert_raises_regex(model.ImportError, "topology, bindings, weights"):
+        compose_disjoint_skin_position_corrections(
+            raw, [bytes(wrong_weight)], global_source_matrix=_matrix([0.0, 0.0, 0.0]))
+    unused = bytearray(first)
+    struct.pack_into("<f", unused, offset + 6 * 56, 8)
+    with np.testing.assert_raises_regex(model.ImportError, "unreferenced"):
+        compose_disjoint_skin_position_corrections(
+            raw, [bytes(unused)], global_source_matrix=_matrix([0.0, 0.0, 0.0]))

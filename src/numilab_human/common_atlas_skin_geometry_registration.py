@@ -314,6 +314,88 @@ def derive_common_atlas_skin_geometry(*, source_payload: Path, registration_path
     return manifest
 
 
+
+def compose_disjoint_skin_position_corrections(
+    base_payload: bytes,
+    correction_payloads: list[bytes],
+    *,
+    global_source_matrix: Any,
+) -> tuple[bytes, dict[str, Any]]:
+    """Compose isolated geometry corrections within the existing NHSKIN ABI.
+
+    Each correction must retain all non-geometric source bytes. Neither this
+    composition nor normal reconstruction admits the result for native use;
+    the combined candidate still needs accepted-pose geometry checks.
+    """
+    base = decode_payload(base_payload)
+    if not correction_payloads:
+        raise human.ImportError("skin composition requires at least one correction")
+    vertex_count = int(base["vertex_count"])
+    vertex_offset = 60 + 36 * int(base["binding_count"])
+    vertex_end = vertex_offset + 56 * vertex_count
+    faces = base["indices"].reshape(-1, 3).astype(np.int64)
+    referenced = np.unique(faces)
+    referenced_mask = np.zeros(vertex_count, dtype=bool)
+    referenced_mask[referenced] = True
+    base_positions = base["vertices_f"][:, :3]
+    positions = base_positions.copy()
+    assigned = np.zeros(vertex_count, dtype=bool)
+    assigned_faces = np.zeros(len(faces), dtype=bool)
+    records = []
+    for index, raw in enumerate(correction_payloads):
+        if len(raw) != len(base_payload):
+            raise human.ImportError("skin correction changed payload size")
+        candidate = decode_payload(raw)
+        if (raw[:vertex_offset] != base_payload[:vertex_offset]
+                or raw[vertex_end:] != base_payload[vertex_end:]
+                or not np.array_equal(candidate["vertices_u"][:, 6:], base["vertices_u"][:, 6:])):
+            raise human.ImportError("skin correction changed topology, bindings, weights, or source identity")
+        changed = np.any(candidate["vertices_u"][:, :3] != base["vertices_u"][:, :3], axis=1)
+        if np.any(changed & ~referenced_mask):
+            raise human.ImportError("skin correction changed an unreferenced vertex")
+        if not np.isfinite(candidate["vertices_f"][:, :6]).all():
+            raise human.ImportError("skin correction contains nonfinite geometry")
+        touched_faces = np.any(changed[faces], axis=1)
+        if np.any(changed & assigned) or np.any(touched_faces & assigned_faces):
+            raise human.ImportError("skin corrections overlap in vertices or incident faces")
+        positions[changed] = candidate["vertices_f"][changed, :3]
+        assigned |= changed
+        assigned_faces |= touched_faces
+        records.append({"correction_index": index, "payload_sha256": _sha_bytes(raw),
+                        "changed_vertex_count": int(changed.sum()),
+                        "changed_vertex_ids": np.flatnonzero(changed).tolist(),
+                        "incident_face_count": int(touched_faces.sum())})
+
+    translation, rotation, scale = _transform(global_source_matrix, "composed shared-atlas source transform")
+    if scale <= 0:
+        raise human.ImportError("skin composition has nonpositive shared-atlas scale")
+    world = translation + scale * (positions[referenced].astype(np.float64) @ rotation.T)
+    local_faces = np.searchsorted(referenced, faces)
+    triangles = [tuple(int(value) for value in row) for row in local_faces]
+    normals = human._bodyparts_vertex_normals(
+        [tuple(float(value) for value in row) for row in world],
+        triangles, "composed common-atlas NHSKIN geometry")
+    normals = np.asarray(human._bodyparts_skin_smooth_visual_normals(normals, triangles), dtype=np.float64)
+    lengths = np.linalg.norm(normals, axis=1)
+    if not np.isfinite(normals).all() or np.any(lengths <= 1.0e-12):
+        raise human.ImportError("composed skin has invalid rest-world normals")
+    normals /= lengths[:, None]
+    output = bytearray(base_payload)
+    for vertex in np.flatnonzero(assigned):
+        struct.pack_into("<3f", output, vertex_offset + int(vertex) * 56,
+                         *(float(value) for value in positions[vertex]))
+    for ordinal, vertex in enumerate(referenced):
+        struct.pack_into("<3f", output, vertex_offset + int(vertex) * 56 + 12,
+                         *(float(value) for value in normals[ordinal]))
+    raw = bytes(output)
+    return raw, {"base_payload_sha256": _sha_bytes(base_payload),
+                 "output_payload_sha256": _sha_bytes(raw),
+                 "corrections": records,
+                 "non_geometric_source_bytes_preserved": True,
+                 "correction_vertex_and_incident_face_supports_disjoint": True,
+                 "rest_world_normals_recomputed_by_existing_skin_owner": True,
+                 "qualification": "composed candidate; combined native pose and exact intersection audits pending"}
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-payload", type=Path, required=True)
