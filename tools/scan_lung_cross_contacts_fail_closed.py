@@ -15,7 +15,7 @@ EXPECTED={
  str(DMAP):"05ab5b8f6ab02a0f3236495b385bc0002d750be58820117e7f149e64df1e398a",
  str(BASE_REPORT):"cde8d985f4cf43eb8f249015e01d0a43745ca25f2fa3d4660a72ab92f8eb6c6b",
  str(PRED):"11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
- str(CONTACT):"a4567b717fddbb3ab0caf11de8de6d955b0d0e8bae6efc899a41700ae9a0b6ae",
+ str(CONTACT):"fd95fa6cca92706faa9c7dcf88fbe2243d1a7d865b391d2f632cc0230cf42710",
 }
 ROOT=Path("/Users/n/numi-human-final-lung-composition-001")
 sys.path.insert(0,str(ROOT/"src"))

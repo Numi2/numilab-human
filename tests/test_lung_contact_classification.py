@@ -28,6 +28,15 @@ class ExactContactClassificationTests(unittest.TestCase):
         self.assertEqual(classify_diaphragm_lobe(
             mapped, unrelated, [(1, 1, 0)], boundary), UNCLASSIFIED)
 
+    def test_points_on_different_boundary_edges_do_not_authorize_a_segment(self):
+        mapped = ((0, 0, 0), (4, 0, 0), (0, 4, 0))
+        unrelated = ((1, 1, 0), (5, 1, 0), (1, 5, 0))
+        boundary = (((0, 0, 0), (4, 0, 0)), ((0, 0, 0), (0, 4, 0)))
+        # Each endpoint lies on some boundary edge, but their connecting segment
+        # is not contained in either edge and cannot be authorized as boundary contact.
+        self.assertEqual(classify_diaphragm_lobe(
+            mapped, unrelated, [(1, 0, 0), (0, 1, 0)], boundary), UNCLASSIFIED)
+
     def test_empty_boundary_cannot_authorize_contact(self):
         mapped = ((0, 0, 0), (4, 0, 0), (0, 4, 0))
         unrelated = ((1, 1, 0), (5, 1, 0), (1, 5, 0))

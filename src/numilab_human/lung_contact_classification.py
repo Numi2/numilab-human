@@ -42,10 +42,11 @@ def point_on_segment(point: Point, a: Point, b: Point) -> bool:
 
 
 def _points_on_boundary(points: Sequence[Point], boundary_edges: Iterable[Edge]) -> bool:
+    """Require the whole point or segment witness on one concrete boundary edge."""
     edges = tuple(boundary_edges)
-    return bool(points) and all(
-        any(point_on_segment(p, a, b) for a, b in edges)
-        for p in points
+    return bool(points) and any(
+        all(point_on_segment(p, a, b) for p in points)
+        for a, b in edges
     )
 
 
