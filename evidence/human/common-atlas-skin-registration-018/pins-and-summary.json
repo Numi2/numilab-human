@@ -1,0 +1,468 @@
+{
+  "bundle_base_commit": "3ab6eeaba4a84f7a4595430269f44ef885ed8bbf",
+  "executed_source": {
+    "commit": "b4e4ef991eabba2820fa8b570fe57f5b158a7bb2",
+    "repository": "Numi2/numilab-human",
+    "reviewed_algorithm_base": "369ac42c431d3fc2d4aca2d1a2db7f732b238c83",
+    "runtime": {
+      "numpy": "2.5.3",
+      "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:29:07) [Clang 19.1.7 ]",
+      "scipy": "1.17.1"
+    },
+    "source_file_hashes": {
+      "__main__": "2150000bdc178cdeb266f5b5c84e41823241659fa48d4df9d950f01f21013b5b",
+      "numilab_human": "e06e46ca88bde0b4c4a6235c6135dafdb2e75d27633776dba0098698a082cf42",
+      "numilab_human.cardiac_cavity_geometry": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+      "numilab_human.cardiac_cavity_intersections": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+      "numilab_human.common_atlas_skin_clearance": "1fe1473f7a790d400b310da5ff02611d07d4967c03b700e1fc71398ddc71d917",
+      "numilab_human.model": "caae0f9a64db518712b491780b697c32800b13dba4b5b60ad128b67f5794c0df",
+      "numilab_human.physiology": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef",
+      "numilab_human.skin_source_payload_preflight": "a5fb3b4fa3134a12231f68b4c29d012d1fb845fcc13ac413e65b83281caaea04",
+      "numilab_human.skin_surface_audit": "4f9bd13fd164c61c28cc79d063ca2b2bd5408c75ee226b4293a6716e728cab78"
+    },
+    "worktree": "/Users/n/numi-human-coherent-skin-registration-001"
+  },
+  "execution": {
+    "argv": [
+      "/Users/n/numi-human-prep-venv-20261005/bin/python",
+      "-u",
+      "-m",
+      "numilab_human.common_atlas_skin_geometry_registration",
+      "--source-payload",
+      "/Users/n/numi-human-resting-evidence-20261005/skin-lowerlimb-anchor-rebind-004/bodyparts3d-myosim-skinned-shell.nhskin",
+      "--registration",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+      "--sources",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/anatomy-complete-20261005/inputs/Sources",
+      "--myosim-artifact",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004",
+      "--input-provenance",
+      "/Users/n/numi-human-resting-evidence-20261005/skin-lowerlimb-anchor-rebind-004/skin-lower-limb-anchor-rebind.manifest.json",
+      "--canonical-binding-reference",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.nhskin",
+      "--canonical-binding-provenance",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.boundary-repair.json",
+      "--clearance-accepted-pack",
+      "/Users/n/numi-human-resting-evidence-20261005/native-common-atlas-skin-cycle-884/accepted-geometry/step-0.mrvpack",
+      "--clearance-accepted-receipt",
+      "/Users/n/numi-human-resting-evidence-20261005/native-common-atlas-skin-cycle-884/accepted-geometry/step-0.receipt.json",
+      "--clearance-bone-artifact",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.nhbones",
+      "--clearance-bone-manifest",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.manifest.json",
+      "--clearance-witnesses",
+      "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/hit-witnesses-complete-v4.json",
+      "--clearance-orientation-report",
+      "/Users/n/numi-human-resting-evidence-20261005/local-skin-orientation-892/local-orientation-report.json",
+      "--clearance-surface-inventory",
+      "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv",
+      "--clearance-margin-mm",
+      "0.25",
+      "--clearance-support-radius-edge-multiple",
+      "8.0",
+      "--output-directory",
+      "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/candidate"
+    ],
+    "cwd": "/Users/n/numi-human-coherent-skin-registration-001",
+    "environment": {
+      "NUMI_CLEARANCE_OWNER_PINS_PATH": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/imported-owner-pins.json",
+      "NUMI_CLEARANCE_PROGRESS_PATH": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/progress.jsonl",
+      "NUMI_CLEARANCE_REPO_ROOT": "/Users/n/numi-human-coherent-skin-registration-001",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONPATH": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018:/Users/n/numi-human-coherent-skin-registration-001/src"
+    },
+    "exit_code": 0,
+    "resource_policy": {
+      "native_or_gpu_work": false,
+      "rss_target_max_bytes": 1500000000
+    }
+  },
+  "inputs": {
+    "accepted_pack": {
+      "bytes": 285417472,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-atlas-skin-cycle-884/accepted-geometry/step-0.mrvpack",
+      "sha256": "4fa15a2a60d174742d635c7eaa9d794a712382cbb1acda5aa39a1b47aff7ade2"
+    },
+    "accepted_receipt": {
+      "bytes": 11817,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-atlas-skin-cycle-884/accepted-geometry/step-0.receipt.json",
+      "sha256": "b1920e45361277468794f97d8fd26a95a20a24359f1ac8a75e2e88b8add8a811"
+    },
+    "bone_artifact": {
+      "bytes": 11577432,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49"
+    },
+    "bone_manifest": {
+      "bytes": 126045,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.manifest.json",
+      "sha256": "1760696a4d4370c24456f743c73f45bcd56f17762004d67fd8ee02f892ce7362"
+    },
+    "canonical_binding_provenance": {
+      "bytes": 10329,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.boundary-repair.json",
+      "sha256": "1690346dad91395507378c2543bd197148be0f781ace302d89e425d199db1bbd"
+    },
+    "canonical_binding_reference": {
+      "bytes": 23293288,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "1de6422eed1a681fb5f37df1e5355c0474016634c342516753a1058c4d0f4334"
+    },
+    "external:/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": {
+      "bytes": 60324,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    "external:/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json": {
+      "bytes": 600128,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json",
+      "sha256": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+    },
+    "external:/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/anatomy-complete-20261005/inputs/Sources/isa_BP3D_4.0_obj_99.zip": {
+      "bytes": 142903898,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/anatomy-complete-20261005/inputs/Sources/isa_BP3D_4.0_obj_99.zip",
+      "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+    },
+    "input_provenance": {
+      "bytes": 53129,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/skin-lowerlimb-anchor-rebind-004/skin-lower-limb-anchor-rebind.manifest.json",
+      "sha256": "5df45727e1392195338dd14a96fafaa096023558abaa49a51f8ce5c225149633"
+    },
+    "orientation_report": {
+      "bytes": 2479543,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/local-skin-orientation-892/local-orientation-report.json",
+      "sha256": "4380f2e36a759f4f8f79da1d6f06f5f0011980c2ff51ffb4f199ffb45a034be9"
+    },
+    "registration": {
+      "bytes": 1380457,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    "source_payload": {
+      "bytes": 23293288,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/skin-lowerlimb-anchor-rebind-004/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "431a1106cc9d5ab13a0b1cb21384ddb604ed8d936ef1acef9d9170b828519058"
+    },
+    "surface_inventory": {
+      "bytes": 44515,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv",
+      "sha256": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3"
+    },
+    "witnesses": {
+      "bytes": 26662419,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/hit-witnesses-complete-v4.json",
+      "sha256": "94fe1313fe0898c9c03cdd72d5d79fa8ef242aa6e735d8d9ce99e0ce36cfa789"
+    }
+  },
+  "limitations": [
+    "This is an inferred common-atlas registration and a step-0 engineering separation field, not raw measured skin coordinates, measured skin thickness, penetration depth, or physiologic bone-to-skin spacing.",
+    "The selected 0.25 mm engineering margin is not an anatomy-derived thickness; the maximum world displacement is 14.3395 mm and the geometry metrics are reported without an established accepted shape-change envelope.",
+    "Exact target intersections were removed for the captured step-0 prediction only. Native pose, full-cycle clearance, self-intersection under actual native rendering, and route/physical use remain pending.",
+    "The 17 ocular subsurfaces retain their exact baseline pair identities and were monitored separately; they are not corrected or cleared by this candidate.",
+    "The changed xyz ID list is a packed-coordinate diff against the immediate 004 input and includes both common-atlas geometry registration and clearance; the clearance-only vertex count is separately reported in the selected margin result.",
+    "The NHSKIN has 115 boundary edges at ocular openings, so the surface-integral volume delta is only a sensitivity proxy."
+  ],
+  "outputs": {
+    "candidate_manifest": {
+      "bytes": 1020654,
+      "external_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/candidate/common-atlas-skin-geometry-registration.manifest.json",
+      "sha256": "110c920f1ddbfea5a0532a07e7244ecefdbeab2ed5bcff87647c12e1e748edb4"
+    },
+    "candidate_payload": {
+      "bytes": 23293288,
+      "external_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/candidate/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "14bf55650ba0fe7fa898a96693c4234eca623e026f1d47543d2f786290c4b8d0"
+    },
+    "changed_xyz_ids": {
+      "bytes": 261163,
+      "external_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/position-changed-source-vertex-ids.txt",
+      "sha256": "e82bf4244af31d4a5367a7373a4f7a1816b8a2e92781fff7396e62aa60b6c588"
+    },
+    "progress_log": {
+      "bytes": 9103,
+      "external_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/progress.jsonl",
+      "sha256": "19a5c824ac90c246d3783885cbf0339c7248d2d040c7f54a77b12fa860a10eb6"
+    },
+    "run_pin": {
+      "bytes": 23482,
+      "external_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/run.json",
+      "sha256": "42f437fda7bf50a5330b6035f7f072f2f4e465406193ff29bacc11c074103608"
+    },
+    "stdout_manifest": {
+      "bytes": 1020654,
+      "external_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-registration-018/stdout.log",
+      "sha256": "110c920f1ddbfea5a0532a07e7244ecefdbeab2ed5bcff87647c12e1e748edb4"
+    }
+  },
+  "result": {
+    "all_inventory_surfaces_scanned": 859,
+    "binding_and_topology_preserved": {
+      "all_86_canonical_binding_records_byte_identical": true,
+      "binding_records_match_canonical_reference_sha256": "1de6422eed1a681fb5f37df1e5355c0474016634c342516753a1058c4d0f4334",
+      "canonical_binding_records_validated_against_registration_global_atlas_and_runtime_rest": true,
+      "final_binding_rows_byte_identical_to_canonical_reference": true,
+      "full_weight_matrix_byte_identical": true,
+      "indexed_rest_world_normals_recomputed": true,
+      "input_binding_rows_differed_from_canonical_reference": true,
+      "nhtiss_tendon_muscle_and_physics_payloads_touched": false,
+      "per_vertex_influence_records_byte_identical": true,
+      "registration_fingerprint32_preserved": true,
+      "skin_contact_or_physics_owner_changed": false,
+      "skin_topology_changed": false,
+      "source_archive_sha256_preserved": true,
+      "source_binding_rows_restored_to_canonical": true,
+      "triangle_indices_and_order_byte_identical": true,
+      "unreferenced_vertex_bytes_byte_identical": true
+    },
+    "candidate_qualification": {
+      "EHL_route_clearance": "pending",
+      "native_pose_clearance": "pending",
+      "physical_or_collision_use": "not admitted",
+      "registered_skeleton_and_organ_clearance": "pending",
+      "skin_self_intersection": "pending",
+      "step0_witnessed_all_surface_clearance": "passed_842_nonocular_surfaces_eyes_monitored_unchanged"
+    },
+    "clearance_method": {
+      "active_face_orientation_admission": "every trial keeps finite nonzero face areas and strictly positive accepted-to-candidate face-normal dot; when an active face rotates below the 0.75 audit-trigger dot, classify its current normal using generalized winding on the full candidate Float32 shell at +/-0.5 mm and require the minus-normal side to be more enclosed by >0.5 absolute winding units. The 0.75 dot triggers this stronger winding check and is not an angle pass/fail ceiling.",
+      "direction": "each iteration recomputes current candidate area-weighted vertex normals and applies the existing eight-pass Human visual-normal smoother; only unresolved exact pairs generate a new correction demand. Source winding remains the independent orientation/provenance reference, and rotated active faces are checked against current-candidate full-shell winding.",
+      "extension_direction_smoothing": "for each bounded increment, recompute area-weighted normals from the current candidate triangles and smooth them with the existing Human skin visual-normal owner for eight iterations; require each demanded vertex direction to project at least 0.5 onto its current active face normal, bounding normal-demand conversion to at most 2x. Previously resolved faces are not rechecked against this demand-conditioning bound.",
+      "field": "at most six incremental corrections per margin. Each iteration builds a compact geodesic smootherstep field around currently unresolved pair vertices using current candidate edge lengths and the original median-edge support radius; try scales 1, 1/2, through 1/64 and accept only a candidate that passes geometry/orientation checks after an exact all-target rescan and preserves ocular pair identities; any remaining nonocular pairs become demands for the next increment.",
+      "finite_pair_demand": "for each remaining exact pair, compute the minimum translation along its current skin-face normal that separates the current finite skin and fixed target triangles under their separating-axis intervals, then add the selected engineering offset; convert that current-normal demand through the current smoothed vertex directions.",
+      "interpretation": "inferred finite-triangle separation translation plus a normal-translation engineering offset; not measured skin thickness, penetration depth, or measured physiologic bone-to-skin spacing",
+      "inverse_map": "accumulate each bounded world-space increment, solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, unchanged source weights, and recovered accepted body rotations, pack the resulting common-atlas source delta to Float32, then apply the mapped delta to the exact captured accepted-world baseline; zero-delta vertices retain their captured Float32 coordinates",
+      "local_shape_diagnostics": "per margin report full-mesh minimum/maximum face-area ratio and edge-length stretch ratio; no unvalidated shape-change envelope is inferred from these geometric diagnostics",
+      "pose_fit_uncertainty": "candidate displacement is linearized through the recovered 86-owner Jacobian; the full captured-vs-rigid-fit residual and the maximum residual on packed-displaced vertices are reported per margin and remain a sub-micrometer uncertainty requiring native confirmation",
+      "topology_or_bindings_changed": false
+    },
+    "initial_nonocular_exact_witness_pairs": 4448,
+    "initial_ocular_pair_identities_monitored_unchanged": 4415,
+    "nonocular_clearance_target_surfaces": 842,
+    "ocular_monitors": 17,
+    "per_margin": {
+      "0.125": {
+        "geometry_quality": {
+          "exact_nonadjacent_skin_self_intersection_pairs": 0,
+          "exact_zero_area_triangles": 0,
+          "maximum_edge_length_stretch_ratio": 1.485350656712499,
+          "maximum_triangle_area_ratio": 2.1747277821472575,
+          "minimum_applied_demand_direction_current_normal_dot": 0.6323356624199088,
+          "minimum_candidate_winding_contrast": 0.9999975831170805,
+          "minimum_edge_length_stretch_ratio": 0.30915730831759003,
+          "minimum_triangle_area_ratio": 0.22186338190259292,
+          "minimum_triangle_normal_dot": 0.4070179724102965,
+          "rotated_active_face_candidate_winding_check_count": 4,
+          "signed_surface_integral_delta_m3_proxy": 0.0007588176469584679,
+          "signed_surface_integral_m3_proxy": 0.07050369562473034,
+          "surface_integral_limitation": "The NHSKIN has 115 boundary edges at ocular openings, so this oriented surface integral is a sensitivity proxy, not a closed-shell volume."
+        },
+        "iteration_pairs": [
+          {
+            "after": 2138,
+            "before": 4448,
+            "inverse_roundtrip_um": 0.06038600603369566,
+            "iteration": 1,
+            "max_increment_mm": 6.846308087582413,
+            "max_total_world_displacement_mm": 6.8463009320624915,
+            "minimum_demand_projection": 0.8125579028912578,
+            "seed_count": 912
+          },
+          {
+            "after": 1063,
+            "before": 2138,
+            "inverse_roundtrip_um": 0.06047701345677527,
+            "iteration": 2,
+            "max_increment_mm": 6.627986216254836,
+            "max_total_world_displacement_mm": 9.72561684584737,
+            "minimum_demand_projection": 0.8125579028912578,
+            "seed_count": 497
+          },
+          {
+            "after": 409,
+            "before": 1063,
+            "inverse_roundtrip_um": 0.030704644162572795,
+            "iteration": 3,
+            "max_increment_mm": 4.491742362641169,
+            "max_total_world_displacement_mm": 12.940671325937588,
+            "minimum_demand_projection": 0.6323356624199088,
+            "seed_count": 222
+          },
+          {
+            "after": 113,
+            "before": 409,
+            "inverse_roundtrip_um": 0.030566162308038,
+            "iteration": 4,
+            "max_increment_mm": 1.8348783126259023,
+            "max_total_world_displacement_mm": 13.798672303264947,
+            "minimum_demand_projection": 0.6323356624199088,
+            "seed_count": 83
+          },
+          {
+            "after": 0,
+            "before": 113,
+            "inverse_roundtrip_um": 0.031304733554992206,
+            "iteration": 5,
+            "max_increment_mm": 0.5860673467649267,
+            "max_total_world_displacement_mm": 14.142880489568668,
+            "minimum_demand_projection": 0.6323356624199088,
+            "seed_count": 14
+          }
+        ],
+        "margin_mm": 0.125,
+        "maximum_common_atlas_source_displacement_mm": 14.036058318028338,
+        "maximum_world_displacement_mm": 14.142880489568668,
+        "nonzero_clearance_displaced_vertices": 13441,
+        "remaining_exact_nonocular_pairs": 0
+      },
+      "0.25": {
+        "geometry_quality": {
+          "exact_nonadjacent_skin_self_intersection_pairs": 0,
+          "exact_zero_area_triangles": 0,
+          "maximum_edge_length_stretch_ratio": 1.4900153633729325,
+          "maximum_triangle_area_ratio": 2.154863196167879,
+          "minimum_applied_demand_direction_current_normal_dot": 0.6747055065670756,
+          "minimum_candidate_winding_contrast": 0.9999975845714522,
+          "minimum_edge_length_stretch_ratio": 0.2735207380844466,
+          "minimum_triangle_area_ratio": 0.1895844077567315,
+          "minimum_triangle_normal_dot": 0.41210145145897126,
+          "rotated_active_face_candidate_winding_check_count": 4,
+          "signed_surface_integral_delta_m3_proxy": 0.0007889811267342284,
+          "signed_surface_integral_m3_proxy": 0.0705338591045061,
+          "surface_integral_limitation": "The NHSKIN has 115 boundary edges at ocular openings, so this oriented surface integral is a sensitivity proxy, not a closed-shell volume."
+        },
+        "iteration_pairs": [
+          {
+            "after": 1975,
+            "before": 4448,
+            "inverse_roundtrip_um": 0.06043053539655665,
+            "iteration": 1,
+            "max_increment_mm": 6.972636374223033,
+            "max_total_world_displacement_mm": 6.972640349308724,
+            "minimum_demand_projection": 0.8125579028912578,
+            "seed_count": 912
+          },
+          {
+            "after": 895,
+            "before": 1975,
+            "inverse_roundtrip_um": 0.06038311761088693,
+            "iteration": 2,
+            "max_increment_mm": 6.651705323323561,
+            "max_total_world_displacement_mm": 9.859973549291722,
+            "minimum_demand_projection": 0.8125579028912578,
+            "seed_count": 449
+          },
+          {
+            "after": 273,
+            "before": 895,
+            "inverse_roundtrip_um": 0.031158124280668793,
+            "iteration": 3,
+            "max_increment_mm": 4.4302561156332185,
+            "max_total_world_displacement_mm": 13.097598335749055,
+            "minimum_demand_projection": 0.6747055065670756,
+            "seed_count": 182
+          },
+          {
+            "after": 39,
+            "before": 273,
+            "inverse_roundtrip_um": 0.030693355297775126,
+            "iteration": 4,
+            "max_increment_mm": 1.9172605523085724,
+            "max_total_world_displacement_mm": 14.008023144746504,
+            "minimum_demand_projection": 0.6747055065670756,
+            "seed_count": 63
+          },
+          {
+            "after": 0,
+            "before": 39,
+            "inverse_roundtrip_um": 0.030693355297775126,
+            "iteration": 5,
+            "max_increment_mm": 0.5651630513329151,
+            "max_total_world_displacement_mm": 14.339521217495651,
+            "minimum_demand_projection": 0.6747055065670756,
+            "seed_count": 10
+          }
+        ],
+        "margin_mm": 0.25,
+        "maximum_common_atlas_source_displacement_mm": 14.231216002341013,
+        "maximum_world_displacement_mm": 14.339521217495651,
+        "nonzero_clearance_displaced_vertices": 13447,
+        "remaining_exact_nonocular_pairs": 0
+      },
+      "0.5": {
+        "geometry_quality": {
+          "exact_nonadjacent_skin_self_intersection_pairs": 0,
+          "exact_zero_area_triangles": 0,
+          "maximum_edge_length_stretch_ratio": 1.5696288283870896,
+          "maximum_triangle_area_ratio": 2.5668228974527474,
+          "minimum_applied_demand_direction_current_normal_dot": 0.7026868241451785,
+          "minimum_candidate_winding_contrast": 0.9999975892707672,
+          "minimum_edge_length_stretch_ratio": 0.20607551328783333,
+          "minimum_triangle_area_ratio": 0.1350636685945238,
+          "minimum_triangle_normal_dot": 0.2792618092131979,
+          "rotated_active_face_candidate_winding_check_count": 3,
+          "signed_surface_integral_delta_m3_proxy": 0.0008471495213075442,
+          "signed_surface_integral_m3_proxy": 0.07059202749907942,
+          "surface_integral_limitation": "The NHSKIN has 115 boundary edges at ocular openings, so this oriented surface integral is a sensitivity proxy, not a closed-shell volume."
+        },
+        "iteration_pairs": [
+          {
+            "after": 1856,
+            "before": 4448,
+            "inverse_roundtrip_um": 0.060431006933926536,
+            "iteration": 1,
+            "max_increment_mm": 7.225292947504271,
+            "max_total_world_displacement_mm": 7.225286203355322,
+            "minimum_demand_projection": 0.8125579028912578,
+            "seed_count": 912
+          },
+          {
+            "after": 657,
+            "before": 1856,
+            "inverse_roundtrip_um": 0.03147418497052176,
+            "iteration": 2,
+            "max_increment_mm": 6.698311319132404,
+            "max_total_world_displacement_mm": 10.127960422465126,
+            "minimum_demand_projection": 0.8125579028912578,
+            "seed_count": 397
+          },
+          {
+            "after": 90,
+            "before": 657,
+            "inverse_roundtrip_um": 0.030715836754386036,
+            "iteration": 3,
+            "max_increment_mm": 3.5050944467593594,
+            "max_total_world_displacement_mm": 12.839339015814335,
+            "minimum_demand_projection": 0.7026868241451785,
+            "seed_count": 131
+          },
+          {
+            "after": 0,
+            "before": 90,
+            "inverse_roundtrip_um": 0.030715836754386036,
+            "iteration": 4,
+            "max_increment_mm": 1.856636367732842,
+            "max_total_world_displacement_mm": 13.669163470498653,
+            "minimum_demand_projection": 0.7026868241451785,
+            "seed_count": 26
+          }
+        ],
+        "margin_mm": 0.5,
+        "maximum_common_atlas_source_displacement_mm": 13.565923794562352,
+        "maximum_world_displacement_mm": 13.669163470498653,
+        "nonzero_clearance_displaced_vertices": 13452,
+        "remaining_exact_nonocular_pairs": 0
+      }
+    },
+    "selected_margin_mm": 0.25,
+    "status": "inferred_common_atlas_geometry_candidate_pending_native_clearance_and_pose_checks"
+  },
+  "run_id": "common-atlas-skin-registration-018",
+  "schema": "numi.human.skin-registration-evidence-bundle.v1",
+  "tests": [
+    {
+      "command": "PYTHONPATH=src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 /Users/n/numi-human-prep-venv-20261005/bin/python -m pytest -q tests/test_common_atlas_skin_clearance.py",
+      "result": "14 passed",
+      "source_commit": "b4e4ef991eabba2820fa8b570fe57f5b158a7bb2"
+    }
+  ]
+}
