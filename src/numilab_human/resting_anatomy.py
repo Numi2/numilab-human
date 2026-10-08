@@ -7,6 +7,7 @@ the generated receipt records every such repair and its source lineage.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -78,19 +79,65 @@ LUNG_306_EXPECTED_SELF_PAIRS = (
 )
 
 
-def _mass_and_skin_volume_audit() -> dict:
-    """Bind the generic reference mass choice to the source rigid/skin assets."""
+def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_manifest_path: Path | None = None) -> dict:
+    """Bind reference mass and skin closure diagnostics to exact NHSKIN inputs."""
     from .resting_scene import load_rigid, load_skin, source_shell_world
 
+    skin_path = Path(skin_path).resolve()
     rigid = load_rigid(RIGID_PATH)
-    skin = load_skin(SKIN_PATH, rigid)
-    repair_path=SKIN_PATH.with_suffix('.boundary-repair.json')
-    repair=json.loads(repair_path.read_text())
-    if (repair.get('source_skin',{}).get('path')!=str(SKIN_SOURCE_PATH)
-            or repair.get('source_skin',{}).get('sha256')!=hashlib.sha256(SKIN_SOURCE_PATH.read_bytes()).hexdigest()
-            or repair.get('derived_skin',{}).get('path')!=str(SKIN_PATH)
-            or repair.get('derived_skin',{}).get('sha256')!=skin['sha256']):
-        raise ValueError('derived NHSKIN repair receipt does not bind its exact source and payload')
+    skin = load_skin(skin_path, rigid)
+    rebind_manifest = None
+    if skin_rebind_manifest_path is None:
+        repair_path = SKIN_PATH.with_suffix('.boundary-repair.json')
+        repair = json.loads(repair_path.read_text())
+        if (repair.get('source_skin', {}).get('path') != str(SKIN_SOURCE_PATH)
+                or repair.get('source_skin', {}).get('sha256') != hashlib.sha256(SKIN_SOURCE_PATH.read_bytes()).hexdigest()
+                or repair.get('derived_skin', {}).get('path') != str(SKIN_PATH.resolve())
+                or repair.get('derived_skin', {}).get('sha256') != skin['sha256']):
+            raise ValueError('derived NHSKIN repair receipt does not bind its exact source and payload')
+        source_path = SKIN_SOURCE_PATH
+        source_sha = hashlib.sha256(SKIN_SOURCE_PATH.read_bytes()).hexdigest()
+    else:
+        skin_rebind_manifest_path = Path(skin_rebind_manifest_path).resolve()
+        rebind_manifest = json.loads(skin_rebind_manifest_path.read_text())
+        if rebind_manifest.get('schema') != 'numi.human.skin-lower-limb-anchor-rebind-candidate.v1':
+            raise ValueError('unsupported NHSKIN binding-rebind manifest')
+        emitted = rebind_manifest.get('output_payload', {})
+        if (Path(emitted.get('path', '')).resolve() != skin_path
+                or emitted.get('sha256') != skin['sha256']
+                or emitted.get('bytes') != len(skin['raw'])):
+            raise ValueError('NHSKIN binding-rebind manifest does not bind the candidate payload')
+        inputs = rebind_manifest.get('inputs', {})
+        source = inputs.get('source_payload', {})
+        upstream = inputs.get('upstream_skin_provenance', {})
+        if not isinstance(source.get('path'), str) or not isinstance(source.get('sha256'), str):
+            raise ValueError('NHSKIN binding-rebind manifest lacks its source payload identity')
+        repair_path = Path(upstream.get('path', '')).resolve()
+        if (not repair_path.is_file()
+                or hashlib.sha256(repair_path.read_bytes()).hexdigest() != upstream.get('sha256')):
+            raise ValueError('NHSKIN binding-rebind upstream repair receipt identity differs')
+        repair = json.loads(repair_path.read_text())
+        derived = repair.get('derived_skin', {})
+        if (derived.get('path') != source['path'] or derived.get('sha256') != source['sha256']
+                or not Path(source['path']).is_file()
+                or hashlib.sha256(Path(source['path']).read_bytes()).hexdigest() != source['sha256']):
+            raise ValueError('NHSKIN binding-rebind source differs from its upstream repair receipt')
+        source_record = repair.get('source_skin', {})
+        source_path = Path(source_record.get('path', '')).resolve()
+        source_sha = source_record.get('sha256')
+        if (not source_path.is_file() or not isinstance(source_sha, str)
+                or hashlib.sha256(source_path.read_bytes()).hexdigest() != source_sha):
+            raise ValueError('NHSKIN binding-rebind original source identity differs')
+        runtime = inputs.get('runtime_reference', {})
+        rigid_record = runtime.get('rigid', {})
+        if (rigid_record.get('sha256') != rigid['sha256']
+                or Path(rigid_record.get('file', '')).resolve() != RIGID_PATH.resolve()):
+            raise ValueError('NHSKIN binding-rebind rigid runtime identity differs')
+        registration_sha = inputs.get('registration_sha256')
+        if registration_sha != hashlib.sha256(REGISTRATION_PATH.read_bytes()).hexdigest():
+            raise ValueError('NHSKIN binding-rebind registration identity differs')
+        if rebind_manifest.get('payload_identity', {}).get('source_archive_sha256') != rigid['source_sha256']:
+            raise ValueError('NHSKIN binding-rebind source archive differs from NHRIGID2')
     world_vertices, _, _ = source_shell_world(rigid, skin)
     raw = skin['raw']
     _, _, binding_count, vertex_count, index_count, _, _ = struct.unpack_from(
@@ -155,10 +202,10 @@ def _mass_and_skin_volume_audit() -> dict:
         'skin_nonmanifold_edge_count': nonmanifold_edges,
         'skin_orientation_error_count': orientation_errors,
         'skin_self_intersection': 'not assessed by this closure/volume check',
-        'skin_payload_path': str(SKIN_PATH),
+        'skin_payload_path': str(skin_path),
         'skin_payload_sha256': skin['sha256'],
-        'skin_source_path':str(SKIN_SOURCE_PATH),
-        'skin_source_sha256':hashlib.sha256(SKIN_SOURCE_PATH.read_bytes()).hexdigest(),
+        'skin_source_path': str(source_path),
+        'skin_source_sha256': source_sha,
         'skin_boundary_repair_receipt':str(repair_path),
         'skin_boundary_repair_receipt_sha256':hashlib.sha256(repair_path.read_bytes()).hexdigest(),
         'skin_boundary_repair':{'source_triangle_count':repair['source_triangle_count'],
@@ -785,6 +832,211 @@ def compile_anatomy(output: Path) -> dict:
     return manifest
 
 
+
+def _compose_skin_candidate_receipt_document(
+    base_receipt: dict,
+    base_receipt_path: Path,
+    candidate_manifest: dict,
+    candidate_manifest_path: Path,
+    candidate_payload_path: Path,
+    mass_geometry_accounting: dict,
+    output_receipt_path: Path,
+) -> dict:
+    """Replace only skin accounting/provenance in a pinned anatomy receipt."""
+    inputs = candidate_manifest.get("inputs", {})
+    source = inputs.get("source_payload", {})
+    output = candidate_manifest.get("output_payload", {})
+    runtime = inputs.get("runtime_reference", {})
+    rigid = runtime.get("rigid", {})
+    mass = base_receipt.get("mass_geometry_accounting", {})
+    provenance = base_receipt.get("provenance", {})
+    if base_receipt.get("schema") != "numi.human.resting-anatomy-receipt.v1":
+        raise ValueError("base receipt is not a resting anatomy receipt")
+    if (Path(source.get("path", "")).resolve() != Path(mass.get("skin_payload_path", "")).resolve()
+            or source.get("sha256") != mass.get("skin_payload_sha256")):
+        raise ValueError("skin candidate source differs from base receipt skin accounting")
+    if (Path(output.get("path", "")).resolve() != candidate_payload_path.resolve()
+            or output.get("sha256") != hashlib.sha256(candidate_payload_path.read_bytes()).hexdigest()):
+        raise ValueError("skin candidate output identity differs from its manifest")
+    if (rigid.get("sha256") != provenance.get("rigid_payload_sha256")
+            or inputs.get("registration_sha256") != provenance.get("bodyparts_registration_sha256")):
+        raise ValueError("skin candidate rigid/registration identity differs from base anatomy receipt")
+    payload = base_receipt.get("payload", {})
+    payload_path = Path(payload.get("path", ""))
+    if not payload_path.is_file() or hashlib.sha256(payload_path.read_bytes()).hexdigest() != payload.get("sha256"):
+        raise ValueError("base anatomy payload identity differs")
+    if base_receipt.get("functional_bindings", {}).get("anatomy_payload_sha256") != payload.get("sha256"):
+        raise ValueError("base anatomy functional binding does not match its payload")
+    if (mass_geometry_accounting.get("skin_payload_sha256") != output.get("sha256")
+            or Path(mass_geometry_accounting.get("skin_payload_path", "")).resolve() != candidate_payload_path.resolve()):
+        raise ValueError("recomputed skin accounting does not bind the candidate output")
+
+    result = copy.deepcopy(base_receipt)
+    result["mass_geometry_accounting"] = mass_geometry_accounting
+    result["provenance"]["skin_visual_binding_candidate"] = {
+        "schema": candidate_manifest.get("schema"),
+        "status": candidate_manifest.get("status"),
+        "manifest_path": str(candidate_manifest_path.resolve()),
+        "manifest_sha256": hashlib.sha256(candidate_manifest_path.read_bytes()).hexdigest(),
+        "source_payload_path": str(Path(source["path"]).resolve()),
+        "source_payload_sha256": source["sha256"],
+        "payload_path": str(candidate_payload_path.resolve()),
+        "payload_sha256": output["sha256"],
+        "registration_sha256": inputs.get("registration_sha256"),
+        "nhtiss4_owner_alignment": candidate_manifest.get("nhtiss4_owner_alignment"),
+        "nhtiss4_composed_base_alignment": candidate_manifest.get("nhtiss4_composed_base_alignment"),
+        "preservation": candidate_manifest.get("preservation"),
+        "changed_skin_regions": candidate_manifest.get("changed_skin_regions", {}).get("combined_geometry", {}).get("dominant_anatomical_region_breakdown"),
+        "qualification_boundary": candidate_manifest.get("evidence_boundary"),
+        "native_accepted_pose_geometry_audit": "pending",
+    }
+    result["provenance"]["skin_visual_binding_candidate"]["receipt_path"] = str(output_receipt_path.resolve())
+    return result
+
+
+def compose_skin_binding_candidate(
+    base_receipt_path: Path,
+    skin_candidate_payload: Path,
+    skin_rebind_manifest_path: Path,
+    output: Path,
+) -> dict:
+    """Compose a candidate NHSKIN into the existing anatomy receipt contract.
+
+    NHA geometry and functional bindings remain byte/hash-identical. The
+    skin's volume/closure audit is recalculated through this owner's existing
+    accounting routine, and the candidate binding provenance is appended.
+    """
+    base_receipt_path = Path(base_receipt_path).resolve()
+    skin_candidate_payload = Path(skin_candidate_payload).resolve()
+    skin_rebind_manifest_path = Path(skin_rebind_manifest_path).resolve()
+    output = Path(output).resolve()
+    if not base_receipt_path.is_file() or not skin_candidate_payload.is_file() or not skin_rebind_manifest_path.is_file():
+        raise ValueError("skin receipt composition requires existing base receipt and candidate files")
+    if output == base_receipt_path.parent or base_receipt_path in output.parents:
+        raise ValueError("skin receipt composition output must be a separate evidence directory")
+    receipt_path = output / "resting-anatomy-receipt.json"
+    manifest_path = output / "resting-anatomy-manifest.json"
+    if receipt_path.exists() or manifest_path.exists():
+        raise ValueError("skin receipt composition refuses to overwrite an existing receipt")
+    base_receipt = json.loads(base_receipt_path.read_text())
+    base_manifest_path = base_receipt_path.with_name("resting-anatomy-manifest.json")
+    base_receipt_sha = hashlib.sha256(base_receipt_path.read_bytes()).hexdigest()
+    if base_manifest_path.is_file():
+        base_manifest = json.loads(base_manifest_path.read_text())
+        if (base_manifest.get("receipt", {}).get("path") != str(base_receipt_path)
+                or base_manifest.get("receipt", {}).get("sha256") != base_receipt_sha):
+            raise ValueError("base anatomy manifest does not bind the selected receipt")
+        manifest_lineage = None
+    else:
+        # Some existing anatomy owners emit a receipt-only composition. Accept
+        # it only when its embedded composition record binds the exact
+        # predecessor receipt and payload; then reconstruct the same v1
+        # manifest fields from the selected receipt itself.
+        lineage = base_receipt.get("provenance", {}).get("airway_sibling_overlap_partition")
+        if not isinstance(lineage, dict):
+            raise ValueError("base anatomy manifest is missing and receipt has no verifiable composition lineage")
+        predecessor_path = Path(lineage.get("base_receipt_path", "")).resolve()
+        predecessor_sha = lineage.get("base_receipt_sha256")
+        if (not predecessor_path.is_file() or not isinstance(predecessor_sha, str)
+                or hashlib.sha256(predecessor_path.read_bytes()).hexdigest() != predecessor_sha):
+            raise ValueError("base receipt composition lineage does not bind its predecessor receipt")
+        predecessor = json.loads(predecessor_path.read_text())
+        current_payload = base_receipt.get("payload", {})
+        predecessor_payload = predecessor.get("payload", {})
+        lineage_payload_path = Path(lineage.get("base_payload_path", "")).resolve()
+        lineage_payload_sha = lineage.get("base_payload_sha256")
+        output_payload_path = Path(lineage.get("output_payload_path", "")).resolve()
+        output_payload_sha = lineage.get("output_payload_sha256")
+        if (predecessor_payload.get("path") != str(lineage_payload_path)
+                or predecessor_payload.get("sha256") != lineage_payload_sha
+                or current_payload.get("path") != str(output_payload_path)
+                or current_payload.get("sha256") != output_payload_sha
+                or not lineage_payload_path.is_file()
+                or hashlib.sha256(lineage_payload_path.read_bytes()).hexdigest() != lineage_payload_sha
+                or not output_payload_path.is_file()
+                or hashlib.sha256(output_payload_path.read_bytes()).hexdigest() != output_payload_sha):
+            raise ValueError("base receipt composition lineage does not bind its anatomy payload")
+        base_manifest = {
+            "schema": "numi.human.resting-anatomy-manifest.v1",
+            "payload": current_payload,
+            "receipt": {"path": str(base_receipt_path), "sha256": base_receipt_sha},
+            "functional_bindings": base_receipt.get("functional_bindings"),
+            "qualification": base_receipt.get("qualification"),
+            "native_muscle_surfaces": base_receipt.get("provenance", {}).get("native_muscle_surfaces"),
+            "thorax_source_volume_m3": base_receipt.get("thorax_source_volume_m3"),
+            "source_surfaces": base_receipt.get("provenance", {}).get("source_id_map"),
+            "mass_geometry_accounting": base_receipt.get("mass_geometry_accounting"),
+        }
+        manifest_lineage = {
+            "source_manifest_absent": str(base_manifest_path),
+            "source_receipt_path": str(base_receipt_path),
+            "source_receipt_sha256": base_receipt_sha,
+            "predecessor_receipt_path": str(predecessor_path),
+            "predecessor_receipt_sha256": predecessor_sha,
+        }
+    candidate_manifest = json.loads(skin_rebind_manifest_path.read_text())
+    mass_geometry = _mass_and_skin_volume_audit(
+        skin_path=skin_candidate_payload,
+        skin_rebind_manifest_path=skin_rebind_manifest_path,
+    )
+    # Ensure the candidate's ten extant lower-limb soft-tissue owner rows still
+    # use the same registered transforms; absent talus routes remain explicit.
+    muscle = base_receipt.get("provenance", {}).get("native_muscle_surfaces", {})
+    tissue_path = Path(muscle.get("payload_path", ""))
+    tissue_manifest = Path(muscle.get("manifest_path", ""))
+    if not tissue_path.is_absolute():
+        tissue_path = base_receipt_path.parent / tissue_path
+    if not tissue_manifest.is_absolute():
+        tissue_manifest = base_receipt_path.parent / tissue_manifest
+    if tissue_path.is_file() and tissue_manifest.is_file():
+        from .skin_lower_limb_anchor_rebind import _verify_nhtiss_owner_alignment
+        registration = json.loads(REGISTRATION_PATH.read_text())
+        candidate_manifest["nhtiss4_composed_base_alignment"] = _verify_nhtiss_owner_alignment(
+            tissue_payload_path=tissue_path,
+            tissue_manifest_path=tissue_manifest,
+            registration_sha256=hashlib.sha256(REGISTRATION_PATH.read_bytes()).hexdigest(),
+            source_archive_sha256=candidate_manifest["payload_identity"]["source_archive_sha256"],
+            registration_fingerprint32=int(candidate_manifest["payload_identity"]["registration_fingerprint32"], 16),
+            candidate_skin=skin_candidate_payload.read_bytes(),
+            registration=registration,
+        )
+        mass_geometry["nhtiss4_base_owner_alignment_sha256"] = hashlib.sha256(
+            json.dumps(candidate_manifest["nhtiss4_composed_base_alignment"], sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+    mass_geometry["skin_binding_rebind_receipt"] = str(skin_rebind_manifest_path)
+    mass_geometry["skin_binding_rebind_receipt_sha256"] = hashlib.sha256(skin_rebind_manifest_path.read_bytes()).hexdigest()
+    result = _compose_skin_candidate_receipt_document(
+        base_receipt, base_receipt_path, candidate_manifest, skin_rebind_manifest_path,
+        skin_candidate_payload, mass_geometry, receipt_path,
+    )
+    output.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    composed_manifest = copy.deepcopy(base_manifest)
+    if manifest_lineage is not None:
+        composed_manifest["source_receipt_lineage"] = manifest_lineage
+    composed_manifest["receipt"] = {
+        "path": str(receipt_path),
+        "sha256": hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
+    }
+    composed_manifest["mass_geometry_accounting"] = mass_geometry
+    manifest_path.write_text(json.dumps(composed_manifest, indent=2, sort_keys=True) + "\n")
+    return {
+        "status": "skin_receipt_composed_with_recomputed_open_surface_accounting",
+        "base_receipt_path": str(base_receipt_path),
+        "base_receipt_sha256": hashlib.sha256(base_receipt_path.read_bytes()).hexdigest(),
+        "candidate_skin_path": str(skin_candidate_payload),
+        "candidate_skin_sha256": hashlib.sha256(skin_candidate_payload.read_bytes()).hexdigest(),
+        "candidate_manifest_path": str(skin_rebind_manifest_path),
+        "candidate_manifest_sha256": hashlib.sha256(skin_rebind_manifest_path.read_bytes()).hexdigest(),
+        "receipt_path": str(receipt_path),
+        "receipt_sha256": hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        "anatomy_payload_unchanged": result["payload"] == base_receipt["payload"],
+        "functional_bindings_unchanged": result["functional_bindings"] == base_receipt["functional_bindings"],
+        "mass_geometry_accounting": mass_geometry,
+    }
+
 def main() -> None:
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
@@ -793,17 +1045,29 @@ def main() -> None:
     parser.add_argument('--base-payload',type=Path,
         help='existing NHANAT5 input for --patch-diaphragm-lung-interfaces')
     parser.add_argument('--base-receipt',type=Path,
-        help='source receipt paired with --base-payload')
+        help='source receipt paired with --base-payload, or base receipt for skin composition')
+    parser.add_argument('--compose-skin-binding-candidate', action='store_true',
+        help='compose a registered NHSKIN candidate into an existing receipt and recalculate its skin audit')
+    parser.add_argument('--skin-candidate-payload', type=Path,
+        help='NHSKIN ABI 5 output from the lower-limb binding-rebind owner')
+    parser.add_argument('--skin-rebind-manifest', type=Path,
+        help='provenance manifest paired with --skin-candidate-payload')
     args=parser.parse_args()
-    if args.patch_diaphragm_lung_interfaces:
+    if args.compose_skin_binding_candidate:
+        if args.base_receipt is None or args.skin_candidate_payload is None or args.skin_rebind_manifest is None:
+            parser.error('--compose-skin-binding-candidate requires --base-receipt, --skin-candidate-payload, and --skin-rebind-manifest')
+        if args.patch_diaphragm_lung_interfaces or args.base_payload is not None:
+            parser.error('skin composition cannot be combined with diaphragm interface patch options')
+        result=compose_skin_binding_candidate(args.base_receipt, args.skin_candidate_payload, args.skin_rebind_manifest, args.output)
+    elif args.patch_diaphragm_lung_interfaces:
         from .resting_anatomy_interface_patch import BASE, build_candidate
 
         payload=args.base_payload or (BASE/'resting-thorax.nhanatomy')
         receipt=args.base_receipt or (BASE/'resting-anatomy-receipt.json')
         result=build_candidate(payload,receipt,args.output)
     else:
-        if args.base_payload is not None or args.base_receipt is not None:
-            parser.error('--base-payload and --base-receipt require --patch-diaphragm-lung-interfaces')
+        if args.base_payload is not None or args.base_receipt is not None or args.skin_candidate_payload is not None or args.skin_rebind_manifest is not None:
+            parser.error('base/candidate inputs require a corresponding anatomy composition option')
         result=compile_anatomy(args.output)
     print(json.dumps(result,indent=2,sort_keys=True))
 
