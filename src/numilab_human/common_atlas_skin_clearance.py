@@ -211,6 +211,33 @@ def _triangle_pair_set(audit_row: dict[str, Any]) -> set[tuple[int, int]]:
     return {tuple(map(int, pair)) for pair in audit_row["triangle_pairs"]}
 
 
+def _smooth_vertex_directions(vertex_normals: np.ndarray, faces: np.ndarray) -> np.ndarray:
+    """Use the existing Human one-pass skin-normal smoother for extension directions.
+
+    The source-winding normals remain the orientation authority. This limited
+    visual-normal operation only chooses a smoother displacement direction;
+    callers retain independent captured-face winding and dot-product checks.
+    """
+    normals = np.asarray(vertex_normals, dtype=np.float64)
+    triangles = np.asarray(faces, dtype=np.int64)
+    if normals.ndim != 2 or normals.shape[1] != 3 or triangles.ndim != 2 or triangles.shape[1] != 3:
+        raise human.ImportError("direction smoothing requires Nx3 normals and Fx3 mesh faces")
+    if not np.isfinite(normals).all() or not np.isfinite(triangles).all():
+        raise human.ImportError("direction smoothing received non-finite input")
+    smoothed = np.asarray(human._bodyparts_skin_smooth_visual_normals(
+        normals.tolist(), [tuple(int(value) for value in row) for row in triangles], iterations=1,
+    ), dtype=np.float64)
+    if smoothed.shape != normals.shape or not np.isfinite(smoothed).all():
+        raise human.ImportError("one-pass Human skin normal smoothing returned malformed directions")
+    lengths = np.linalg.norm(smoothed, axis=1)
+    if np.any(lengths <= 1.0e-12):
+        raise human.ImportError("one-pass Human skin normal smoothing became singular")
+    smoothed /= lengths[:, None]
+    if np.any(np.einsum("ij,ij->i", smoothed, normals) <= 0.0):
+        raise human.ImportError("one-pass Human skin normal smoothing reversed a local source normal")
+    return smoothed
+
+
 def _triangle_normal_translation_to_separate(
     skin_triangle: np.ndarray, target_triangle: np.ndarray, direction: np.ndarray,
 ) -> float:
@@ -496,22 +523,22 @@ def derive_step0_inferred_clearance(
         raise human.ImportError("clearance captured skin has invalid referenced vertex normals")
     vertex_normals /= normal_lengths[:, None]
 
+    source_edges = np.concatenate((compact_faces[:, [0, 1]], compact_faces[:, [1, 2]], compact_faces[:, [2, 0]]), axis=0)
+    source_edges.sort(axis=1)
+    edges = np.unique(source_edges, axis=0)
+    edge_lengths = np.linalg.norm(captured[edges[:, 0]] - captured[edges[:, 1]], axis=1)
+    vertex_directions = _smooth_vertex_directions(vertex_normals, compact_faces)
     seed_demand_by_margin: dict[float, np.ndarray] = {}
     for margin_mm in (0.125, 0.25, 0.5):
         required = np.zeros(len(referenced), dtype=np.float64)
         for face_id, row in face_constraints.items():
             compact_ids = compact_faces[face_id]
-            projections = vertex_normals[compact_ids] @ row["normal"]
+            projections = vertex_directions[compact_ids] @ row["normal"]
             if float(projections.min()) < 0.8:
-                raise human.ImportError(f"clearance vertex normals are not aligned with outward face {face_id}")
+                raise human.ImportError(f"smoothed clearance directions are not aligned with outward source-winding face {face_id}")
             scalar = (row["minimum_separating_translation_m"] + margin_mm / 1000.0) / projections
             np.maximum.at(required, compact_ids, scalar)
         seed_demand_by_margin[margin_mm] = required
-
-    source_edges = np.concatenate((compact_faces[:, [0, 1]], compact_faces[:, [1, 2]], compact_faces[:, [2, 0]]), axis=0)
-    source_edges.sort(axis=1)
-    edges = np.unique(source_edges, axis=0)
-    edge_lengths = np.linalg.norm(captured[edges[:, 0]] - captured[edges[:, 1]], axis=1)
     seed_mask = np.zeros(len(referenced), dtype=bool)
     for face_id in face_constraints:
         seed_mask[compact_faces[face_id]] = True
@@ -594,7 +621,7 @@ def derive_step0_inferred_clearance(
                 needed = row["minimum_separating_translation_m"] + margin_mm / 1000.0
                 if float(achieved.min()) + 1.0e-12 < needed:
                     raise human.ImportError(f"clearance compact field misses an original witness face constraint at face {face_id}")
-            world_delta = field[:, None] * vertex_normals
+            world_delta = field[:, None] * vertex_directions
             source_delta = np.linalg.solve(jacobian, world_delta[:, :, None])[:, :, 0]
             source_candidate = source_positions[referenced].astype("<f4").astype(np.float64)
             source_corrected = (source_candidate + source_delta).astype("<f4").astype(np.float64)
@@ -752,9 +779,10 @@ def derive_step0_inferred_clearance(
                             f"base_skin_triangle_world_m={captured[ids].tolist()}, "
                             f"candidate_skin_triangle_world_m={current_triangle.tolist()}, target_triangle_world_m={target_tri.tolist()}"
                         )
-                    dots = vertex_normals[ids] @ current_normal
-                    if float(dots.min()) < 0.75:
-                        raise human.ImportError(f"clearance active-set vertex normals disagree with face {skin_face}")
+                    dots = vertex_directions[ids] @ current_normal
+                    source_normal_dots = vertex_normals[ids] @ current_normal
+                    if float(dots.min()) < 0.75 or float(source_normal_dots.min()) < 0.75:
+                        raise human.ImportError(f"clearance active-set extension or source normals disagree with outward face {skin_face}")
                     exact_pair_separation = _triangle_normal_translation_to_separate(current_triangle, target_tri, current_normal)
                     extra = exact_pair_separation + margin_mm / 1000.0
                     required_total = field[ids] + extra / dots
@@ -781,6 +809,7 @@ def derive_step0_inferred_clearance(
             "maximum_common_atlas_source_displacement_mm": float(np.linalg.norm(source_delta, axis=1).max() * 1000.0),
             "maximum_packed_inverse_roundtrip_error_um": float(source_roundtrip.max() * 1.0e6),
             "maximum_jacobian_condition_number": float(condition.max()),
+            "extension_direction_smoothing": "existing Human skin visual-normal smoother, one triangle-neighbor iteration",
         }
     main_source = source_positions.copy()
     main_source[referenced] = output_source_by_margin[0.25]
@@ -789,6 +818,7 @@ def derive_step0_inferred_clearance(
         "status": "inferred_engineering_clearance_candidate_pending_native_replay",
         "method": {
             "direction": "captured skin source winding, independently classified locally toward lower full-shell winding at every witness face; bone witness normals also point away from the fitted registered owning-body origin",
+            "extension_direction_smoothing": "one iteration of the existing Human skin visual-normal smoother over the original triangle one-ring; it only selects the inferred extension direction, while original face winding remains the anatomical outward classifier and every seed face retains at least 0.8 extension-direction dot",
             "finite_pair_demand": "minimum outward translation along the captured skin face normal that makes the finite skin and target triangles separate in at least one separating-axis interval; this avoids treating all three opponent vertices as if they overlapped the skin-face footprint",
             "field": "same compact geodesic smootherstep field for all margins: each witnessed finite triangle pair receives its first outward normal translation that separates the pair under the triangle separating-axis intervals, plus the selected engineering translation parameter; max seed envelope over geodesic distance on the original skin mesh; the manifest records the selected multiple of the median local edge length as the support radius",
             "inverse_map": "per referenced vertex solve the full 3x3 affine Jacobian built from all 86 canonical skin bindings, all unchanged source weights, and 86 accepted body rotations recovered independently from all 185 exact-topology registered bone surfaces",
