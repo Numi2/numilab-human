@@ -1,0 +1,19 @@
+# Direct matched resting-respiration pair preparation
+
+This directory contains two bounded, no-launch tools. They reuse the already completed native 310 s baseline as a historical control; they do not claim prospective paired allocation or import that old run into Science Notebook.
+
+The declaration builder is intended to run only after the direct baseline has closed with run-metadata.json exit code 0 AND the exact baseline geometry/assets have passed the required final anatomy audit. As of 2026-10-09, the in-progress baseline has 18 skin crossings at 95 s (12 to NHA surface 51011:503 and 6 to muscle 51005:36); it is not eligible for treatment preparation or launch. This package remains a reusable no-launch adapter until a corrected, fully audited baseline and matching treatment assets are supplied. It pins the baseline invocation, metadata, native log, physiology trace, immutable assets, loaded runtime, and every cadence-captured pack/receipt. It uses the pinned 1162 native_scene_command helper to derive a treatment command that preserves baseline physical/configuration arguments and changes only output paths, the cadence capture list, and --resting-drive-intervention 60.0 100.0 0.5. It writes a new declaration with exclusive creation and never launches native code.
+
+The four requested treatment accepted captures are steps 0, 49999, 55007, and 155000. Steps 49999 and 55007 satisfy (step + 1) modulo 16 equals 0; step 0 is initial and 155000 is the exact terminal. At dt = 0.002 s, the schedule samples the initial state, 99.998 s near the end of the [60,100) reduction, 110.014 s in recovery, and 310 s terminal state. Full accepted physiology and the existing 64 ms surface trace remain enabled, so the sampled packs do not substitute for the continuous trace.
+
+The analyzer checks the actual closed control and treatment against their invocation/asset/runtime pins, exact accepted-capture receipts, full 155000-root / 310 s completion, terminal accepted-state evidence, body/surface/respiration identities, repeated-cycle coverage, and the existing sampled support/COM summary. It reports measured paired differences and timings; it does not infer static equilibrium, population response, clinical validity, or anatomical qualification. The direct treatment invocation need not contain a fabricated reference-run field: the report binds the actual historical baseline invocation SHA and the exact treatment command from the declaration.
+
+After the baseline closes, its final anatomy audit passes on the exact assets, and storage is checked, declaration preparation is:
+
+    python3 prepare_treatment_declaration.py --declaration /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/direct-pair-preparation-001/treatment-declaration.json
+
+After an authorized treatment run completes, analysis is:
+
+    python3 analyze_direct_pair.py --declaration /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/direct-pair-preparation-001/treatment-declaration.json --native-run-declaration /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-treatment-310s-drive60-100-scale050/run-declaration.json --treatment /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-treatment-310s-drive60-100-scale050/native-run --output /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/direct-pair-preparation-001/direct-pair-analysis.json
+
+The prepare_owner_cli_treatment.py --command-only check exercises the current owner CLI mapping without writing files or launching native code. Do not run its declaration-writing mode, or the direct declaration builder, until the final anatomy audit passes against the exact baseline and treatment assets. No treatment declaration or native treatment run has been produced.
