@@ -1,0 +1,22 @@
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 100, "rss_peak_bytes": 515194880}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 200, "rss_peak_bytes": 525402112}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 300, "rss_peak_bytes": 808992768}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 400, "rss_peak_bytes": 808992768}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 500, "rss_peak_bytes": 808992768}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 600, "rss_peak_bytes": 808992768}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 700, "rss_peak_bytes": 808992768}
+{"variant": "compact-2.5x-half", "step": 47519, "targets": 800, "rss_peak_bytes": 808992768}
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-004.py", line 239, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-004.py", line 234, in main
+    results.extend(run_one(name,path,step,np,ci,core,clearance,source,candidate,keys,h) for step in POSES)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-004.py", line 234, in <genexpr>
+    results.extend(run_one(name,path,step,np,ci,core,clearance,source,candidate,keys,h) for step in POSES)
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-004.py", line 176, in run_one
+    'source_skin':{'path':str(SOURCE_SKIN),'sha256':SOURCE_SKIN_SHA},'step':step,'time_s':float(rdoc.get('accepted_time_s',-1)),
+                                                    ^^^^^^^^^^^^^^^
+NameError: name 'SOURCE_SKIN_SHA' is not defined. Did you mean: 'SOURCE_SKIN'?

@@ -1,0 +1,89 @@
+{
+  "candidate_changed_xyz_archive": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-005/compact-2.5x-full/step-47519-changed-xyz.npz",
+    "sha256": "d6a390581d0deed499e12b5b0e72277c5fd2e49cc49fb2b159a3da001b468ece"
+  },
+  "candidate_skin": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-weight-candidate-1185/candidate-build-008/compact-2.5x-full.nhskin",
+    "sha256": "7a6d47f92ac4ee153e5444c14ac9b4bfba03b278e1cb8aa7623d046a6c985117"
+  },
+  "coverage": {
+    "nonocular_surface_count": 842,
+    "ocular_surface_count": 17,
+    "skin_degenerate_face_count": 0,
+    "target_degenerate_face_count": 0,
+    "target_surface_count": 859
+  },
+  "elapsed_seconds": 106.16270183306187,
+  "exact_predicate": "unchanged Human Float32-lattice triangle intersection predicate, strict shared-index rules; no tolerance/exemption",
+  "nha": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-thorax.nhanatomy",
+    "sha256": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713"
+  },
+  "pack": {
+    "accepted_root_fingerprint": 16351682112623333545,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-47519.mrvpack",
+    "receipt_path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-47519.receipt.json",
+    "receipt_sha256": "b75ddbda6524b5113c590e9789cae25fa91937ee9ad82e4950ce91b70273d8a7",
+    "sha256": "0012efd9d5fe6425a4f74f5ecbaf5b829a0925f276ebea258d9b9b186d725e3a"
+  },
+  "peak_rss_bytes": 814170112,
+  "pose_model": "candidate positions = actual captured source-skin Float32 positions + double-precision CPU LBS displacement delta from exact candidate-minus-source full Float32 weights, rounded to Float32; this is a saved-pose prediction, not native Metal execution",
+  "results": {
+    "baseline_crossing_pair_count": 3120,
+    "crossing_pair_count": 2907,
+    "new_pair_witnesses_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-005/compact-2.5x-full/step-47519-new-pairs.jsonl",
+    "new_pair_witnesses_sha256": "8f51751ca7fb8ce089b1e8b298b6c529de63846f78cec0c3e4542f8ce85244a6",
+    "new_vs_baseline_pair_count": 1575,
+    "nonocular_pair_count": 2907,
+    "ocular_pair_count": 0,
+    "removed_vs_baseline_pair_count": 1788,
+    "self_pair_witnesses_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-005/compact-2.5x-full/step-47519-self-pairs.jsonl",
+    "self_pair_witnesses_sha256": "11e08fc90b27f5c683cc49e0d46ba71f6823c86e1c367161c2c3ac1cc32697d3",
+    "skin_self_crossing_pair_count": 35,
+    "target_summary_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-005/compact-2.5x-full/step-47519-target-summary.jsonl",
+    "target_summary_sha256": "9c0ed3d150289d924a2225e47e4549b8e4b6b837021cb2c0612bb10c9f830dd9"
+  },
+  "schema": "numi.human.skin-weight-candidate-saved-pose-screen.v1",
+  "source_skin": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+    "sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1"
+  },
+  "status": "complete_exact_predicate_diagnostic_not_native_candidate_replay",
+  "step": 47519,
+  "target_inventory": {
+    "count": 859,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv",
+    "sha256": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3"
+  },
+  "time_s": 95.03800451406278,
+  "variant": "compact-2.5x-full",
+  "weight_change": {
+    "changed_binding_body_ids": {
+      "128": 5353,
+      "131": 2701,
+      "145": 2689
+    },
+    "changed_fullweight_columns": [
+      73,
+      74,
+      80
+    ],
+    "changed_serialized_float32_rows": 5353,
+    "delta_norm_quantiles_m": [
+      2.139091462938012e-09,
+      0.004737455504190404,
+      0.013973097670546825,
+      0.016482886855322596,
+      0.018754328387653008
+    ],
+    "delta_point_count": 5353,
+    "max_source_lbs_prediction_residual_to_captured_m": 3.794618085959895e-07,
+    "source_lbs_residual_quantiles_m": [
+      6.164342859586647e-08,
+      1.442227890952922e-07,
+      2.4523788698303e-07,
+      3.794618085959895e-07
+    ]
+  }
+}

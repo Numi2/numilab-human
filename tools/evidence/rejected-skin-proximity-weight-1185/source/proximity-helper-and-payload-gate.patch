@@ -1,0 +1,264 @@
+diff --git a/src/numilab_human/skin_surface_audit.py b/src/numilab_human/skin_surface_audit.py
+index 87f63a6..a4abcbd 100644
+--- a/src/numilab_human/skin_surface_audit.py
++++ b/src/numilab_human/skin_surface_audit.py
+@@ -506,3 +506,97 @@ def main(argv=None):
+ 
+ if __name__ == '__main__':
+     raise SystemExit(main())
++
++
++def verify_bone_proximity_weight_edit_payload(
++    source_raw: bytes, candidate_raw: bytes, distances: dict, *,
++    pelvis_body_id: int, femur_body_ids: tuple[int, int], parameters: dict,
++    protected_vertex_ids=(),
++) -> dict:
++    """Replay a declared inferred edit; leave the harmonic-source gate unchanged.
++
++    This checks only the NHSKIN transformation. The caller must separately bind
++    and verify the canonical source lineage and registered distance evidence.
++    It does not qualify a posed surface or physical support.
++    """
++    import numpy as np
++    from .skin_source_payload_preflight import decode_payload
++    from .skin_surface_binding import reweight_registered_bone_proximity
++
++    source, candidate = decode_payload(source_raw), decode_payload(candidate_raw)
++    fields = ('binding_count', 'vertex_count', 'index_count',
++              'registration_fingerprint32', 'source_archive_sha256')
++    _require(all(source[key] == candidate[key] for key in fields),
++             'inferred weight edit payload identity')
++    nv, nb = source['vertex_count'], source['binding_count']
++    _require(nv > 0 and nb >= 4, 'inferred weight edit nonempty full binding field')
++    binding_end = 60 + 36 * nb
++    _require(source_raw[:binding_end] == candidate_raw[:binding_end],
++             'inferred weight edit preserves header and canonical binding records')
++    _require(np.array_equal(source['vertices_u'][:, :6], candidate['vertices_u'][:, :6])
++             and np.array_equal(source['indices'], candidate['indices']),
++             'inferred weight edit preserves source geometry normals and topology')
++    _require(np.isfinite(source['vertices_f'][:, :6]).all(),
++             'inferred weight edit finite source geometry')
++    required_parameters = {
++        'minimum_femur_distance_m', 'maximum_femur_distance_m',
++        'pelvis_to_femur_ratio_start', 'pelvis_to_femur_ratio_full',
++        'femur_weight_start', 'femur_weight_full',
++        'pelvis_weight_start', 'pelvis_weight_full', 'transfer_fraction',
++    }
++    _require(set(parameters) == required_parameters
++             and all(np.isfinite(value) for value in parameters.values()),
++             'inferred weight edit explicit finite parameters')
++    required_ids = {int(pelvis_body_id), *(int(body) for body in femur_body_ids)}
++    _require(set(distances) == required_ids, 'inferred weight edit distance body set')
++    for body, values in distances.items():
++        _require(isinstance(values, np.ndarray) and values.dtype == np.dtype('<f8')
++                 and values.shape == (nv,) and np.isfinite(values).all()
++                 and (values >= 0).all(), 'inferred weight edit distance layout')
++    # Exact source-coordinate duplicates share one physical seam, even though
++    # their source indices and normals can differ.
++    _, first, inverse, counts = np.unique(source['vertices_f'][:, :3], axis=0,
++                                          return_index=True, return_inverse=True,
++                                          return_counts=True)
++    _require(np.array_equal(source['full_weights'], source['full_weights'][first][inverse]),
++             'inferred weight edit canonical seam weights')
++    for values in distances.values():
++        _require(np.array_equal(values, values[first][inverse]),
++                 'inferred weight edit seam distances')
++    expected, edit = reweight_registered_bone_proximity(
++        source['full_weights'].astype(np.float64), source['bindings_u'][:, 0],
++        distances, pelvis_body_id=pelvis_body_id, femur_body_ids=femur_body_ids,
++        protected_vertex_ids=protected_vertex_ids, **parameters,
++    )
++    expected = np.asarray(expected, dtype='<f4')
++    actual = candidate['full_weights']
++    _require(np.array_equal(actual.view('<u4'), expected.view('<u4')),
++             'inferred weight edit full field replay')
++    _require(np.isfinite(actual).all() and (actual >= 0).all()
++             and np.max(np.abs(actual.astype(np.float64).sum(axis=1) - 1)) <= 4e-6,
++             'inferred weight edit packed positivity partition')
++    _require(np.array_equal(actual, actual[first][inverse]),
++             'inferred weight edit packed seam weights')
++    quartet = np.argsort(-expected, axis=1, kind='stable')[:, :4]
++    cache = np.take_along_axis(expected, quartet, axis=1).astype(np.float64)
++    cache /= cache.sum(axis=1, keepdims=True)
++    cache = np.asarray(cache, dtype='<f4')
++    _require(np.array_equal(candidate['vertices_u'][:, 6:10], quartet),
++             'inferred weight edit compact owner cache')
++    _require(np.array_equal(candidate['vertices_u'][:, 10:14], cache.view('<u4')),
++             'inferred weight edit compact weight cache')
++    changed = np.flatnonzero(np.any(source['full_weights'] != actual, axis=1))
++    return {
++        'passed': True,
++        'method': 'registered_bone_proximity_pelvis_to_femurs',
++        'source_payload_sha256': hashlib.sha256(source_raw).hexdigest(),
++        'candidate_payload_sha256': hashlib.sha256(candidate_raw).hexdigest(),
++        'geometry_bindings_topology_exact': True,
++        'full_float32_field_replayed_exactly': True,
++        'compact_influence_cache_exact': True,
++        'exact_coincident_vertex_group_count': int((counts > 1).sum()),
++        'changed_vertex_count': int(len(changed)),
++        'changed_vertex_ids_sha256': hashlib.sha256(np.asarray(changed, dtype='<u4').tobytes()).hexdigest(),
++        'maximum_partition_error': float(np.max(np.abs(actual.astype(np.float64).sum(axis=1) - 1))),
++        'boundary': 'Explicit inferred weight transformation only; not measured anatomy, posed clearance, or native support qualification.',
++    }
+diff --git a/src/numilab_human/skin_surface_binding.py b/src/numilab_human/skin_surface_binding.py
+index 09f8877..fa7246a 100644
+--- a/src/numilab_human/skin_surface_binding.py
++++ b/src/numilab_human/skin_surface_binding.py
+@@ -148,3 +148,157 @@ def write_binding_solution(output: Path, full, targets, projection_gaps):
+             'seed_target_columns': ['source_anchor_index', 'source_vertex_id_or_centroid_sentinel',
+                                     'source_skin_vertex_id', 'binding_index', 'admitted'],
+             'runtime_input': False}
++
++
++def reweight_registered_bone_proximity(
++    full_weights,
++    binding_body_ids,
++    bone_surface_distances_m,
++    *,
++    pelvis_body_id: int,
++    femur_body_ids: tuple[int, int],
++    minimum_femur_distance_m: float = 0.020,
++    maximum_femur_distance_m: float = 0.085,
++    pelvis_to_femur_ratio_start: float = 1.5,
++    pelvis_to_femur_ratio_full: float = 2.5,
++    femur_weight_start: float = 0.02,
++    femur_weight_full: float = 0.12,
++    pelvis_weight_start: float = 0.02,
++    pelvis_weight_full: float = 0.10,
++    transfer_fraction: float = 1.0,
++    protected_vertex_ids=(),
++):
++    """Transfer pelvis influence to a clearly nearer registered femur smoothly.
++
++    This is an inferred local binding edit, not a measured anatomical weight
++    field. It uses rest-frame point-to-registered-bone-surface distances as a
++    compact-support gate, plus the existing field's pelvis/femur weights as a
++    second gate. The per-vertex torso weight and every other body weight are
++    preserved exactly; transferred pelvis mass is divided between right/left
++    femur in proportion to the two smooth support scores. The skin geometry,
++    binding records, topology, and source row order are not handled here.
++
++    `bone_surface_distances_m` maps body IDs to one finite nonnegative distance
++    per source skin vertex, in the same registered common-atlas rest frame as
++    `full_weights`. The caller is responsible for producing and pinning those
++    distances from the registered NHBONES surface meshes.
++    """
++    import numpy as np
++
++    weights = np.asarray(full_weights, dtype=np.float64)
++    body_ids = np.asarray(binding_body_ids, dtype=np.int64)
++    if weights.ndim != 2 or body_ids.shape != (weights.shape[1],):
++        raise ValueError("full weights and binding body IDs have incompatible shapes")
++    if len(set(map(int, body_ids))) != len(body_ids):
++        raise ValueError("binding body IDs must be unique")
++    if (not np.isfinite(weights).all() or np.any(weights < 0.0)
++            or float(np.max(np.abs(weights.sum(axis=1) - 1.0), initial=0.0)) > 4.0e-6):
++        raise ValueError("full weights must be finite, nonnegative, and row-normalized")
++    if (len(femur_body_ids) != 2 or femur_body_ids[0] == femur_body_ids[1]
++            or int(pelvis_body_id) in {int(x) for x in femur_body_ids}):
++        raise ValueError("two distinct femur IDs separate from pelvis are required")
++    body_to_column = {int(body): column for column, body in enumerate(body_ids)}
++    if int(pelvis_body_id) not in body_to_column or any(int(body) not in body_to_column for body in femur_body_ids):
++        raise ValueError("pelvis/femur IDs are not present in the registered NHSKIN owner set")
++    if not (0.0 < minimum_femur_distance_m < maximum_femur_distance_m):
++        raise ValueError("femur distance support bounds must be positive and increasing")
++    if not (1.0 < pelvis_to_femur_ratio_start < pelvis_to_femur_ratio_full):
++        raise ValueError("pelvis/femur distance-ratio bounds must be increasing above one")
++    if not (0.0 <= transfer_fraction <= 1.0):
++        raise ValueError("transfer fraction must lie in [0, 1]")
++    for start, full, label in (
++        (femur_weight_start, femur_weight_full, "femur weight"),
++        (pelvis_weight_start, pelvis_weight_full, "pelvis weight"),
++    ):
++        if not (0.0 <= start < full <= 1.0):
++            raise ValueError(f"{label} ramp bounds must be increasing within [0, 1]")
++    required = {int(pelvis_body_id), *(int(x) for x in femur_body_ids)}
++    if not required.issubset({int(x) for x in bone_surface_distances_m}):
++        raise ValueError("registered bone surface distances omit a requested body")
++    distances = {}
++    for body in required:
++        value = np.asarray(bone_surface_distances_m[body], dtype=np.float64)
++        if value.shape != (weights.shape[0],) or not np.isfinite(value).all() or np.any(value < 0):
++            raise ValueError(f"invalid rest-frame registered surface distances for body {body}")
++        distances[body] = value
++    protected = np.zeros(weights.shape[0], dtype=bool)
++    protected_ids = np.asarray(tuple(protected_vertex_ids), dtype=np.int64)
++    if protected_ids.size:
++        if (protected_ids.min() < 0 or protected_ids.max() >= len(weights)
++                or len(np.unique(protected_ids)) != len(protected_ids)):
++            raise ValueError("protected skin vertex IDs are invalid or duplicated")
++        protected[protected_ids] = True
++
++    def ramp(values, low, high):
++        u = np.clip((values - low) / (high - low), 0.0, 1.0)
++        return u * u * (3.0 - 2.0 * u)
++
++    pelvis_col = body_to_column[int(pelvis_body_id)]
++    pelvis_weight = weights[:, pelvis_col]
++    supports = []
++    per_side = []
++    for femur_body in map(int, femur_body_ids):
++        femur_col = body_to_column[femur_body]
++        femur_distance = distances[femur_body]
++        pelvis_distance = distances[int(pelvis_body_id)]
++        ratio = pelvis_distance / np.maximum(femur_distance, 1.0e-12)
++        support = (
++            ramp(maximum_femur_distance_m - femur_distance,
++                 0.0, maximum_femur_distance_m - minimum_femur_distance_m)
++            * ramp(ratio, pelvis_to_femur_ratio_start, pelvis_to_femur_ratio_full)
++            * ramp(weights[:, femur_col], femur_weight_start, femur_weight_full)
++            * ramp(pelvis_weight, pelvis_weight_start, pelvis_weight_full)
++        )
++        supports.append(support)
++        per_side.append({"body_id": femur_body, "column": femur_col,
++                         "candidate_vertex_count": int(np.count_nonzero(support > 0.0)),
++                         "full_support_vertex_count": int(np.count_nonzero(support >= 1.0 - 1.0e-12)),
++                         "maximum_support": float(support.max(initial=0.0))})
++    support_stack = np.stack(supports, axis=1)
++    denominator = support_stack.sum(axis=1)
++    if np.any(protected & (denominator > 0.0)):
++        raise ValueError("protected support vertices overlap active thigh support; preserve smoothness by changing the support rule")
++    # A bounded smooth union avoids the derivative kink introduced by
++    # clipping the sum when bilateral supports overlap.
++    combined = 1.0 - np.prod(1.0 - support_stack, axis=1)
++    amount = pelvis_weight * combined * float(transfer_fraction)
++    candidate = weights.copy()
++    candidate[:, pelvis_col] -= amount
++    for side_index, femur_body in enumerate(map(int, femur_body_ids)):
++        femur_col = body_to_column[femur_body]
++        share = np.divide(support_stack[:, side_index], denominator,
++                          out=np.zeros_like(denominator), where=denominator > 0.0)
++        candidate[:, femur_col] += amount * share
++    if (not np.isfinite(candidate).all() or np.any(candidate < -1.0e-14)
++            or float(np.max(np.abs(candidate.sum(axis=1) - weights.sum(axis=1)), initial=0.0)) > 2.0e-12):
++        raise ValueError("registered proximity reweighting violated positivity or partition of unity")
++    candidate[candidate < 0.0] = 0.0
++    changed = np.flatnonzero(np.any(candidate != weights, axis=1))
++    report = {
++        "schema": "numi.human.registered-bone-proximity-weight-edit.v1",
++        "method": "smooth compact-support transfer of existing pelvis influence to the nearer registered femur; no new influence is introduced",
++        "bilateral_support_combination": "smooth bounded union 1-product(1-side_support); no clipped-sum derivative kink",
++        "pelvis_body_id": int(pelvis_body_id),
++        "femur_body_ids": [int(x) for x in femur_body_ids],
++        "parameters": {
++            "minimum_femur_distance_m": float(minimum_femur_distance_m),
++            "maximum_femur_distance_m": float(maximum_femur_distance_m),
++            "pelvis_to_femur_ratio_start": float(pelvis_to_femur_ratio_start),
++            "pelvis_to_femur_ratio_full": float(pelvis_to_femur_ratio_full),
++            "femur_weight_start": float(femur_weight_start),
++            "femur_weight_full": float(femur_weight_full),
++            "pelvis_weight_start": float(pelvis_weight_start),
++            "pelvis_weight_full": float(pelvis_weight_full),
++            "transfer_fraction": float(transfer_fraction),
++        },
++        "per_femur_support": per_side,
++        "protected_vertex_count": int(protected.sum()),
++        "changed_vertex_count": int(len(changed)),
++        "changed_vertex_ids": changed.astype(int).tolist(),
++        "total_transferred_weight": float(amount.sum()),
++        "maximum_per_vertex_weight_change": float(np.max(np.abs(candidate - weights), initial=0.0)),
++        "row_partition_max_abs_error": float(np.max(np.abs(candidate.sum(axis=1) - weights.sum(axis=1)), initial=0.0)),
++        "torso_weight_preserved_by_contract": True,
++    }
++    return candidate, report
++

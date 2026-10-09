@@ -1,0 +1,11 @@
+{"phase": "bone_distance", "body_id": 128, "elapsed_seconds": 0.5389831066131592, "distance_min_m": 0.09539241512094739, "distance_max_m": 1.043612540869315}
+{"phase": "bone_distance", "body_id": 131, "elapsed_seconds": 0.42918920516967773, "distance_min_m": 0.11337468959673176, "distance_max_m": 0.7524732070738818}
+{"phase": "bone_distance", "body_id": 145, "elapsed_seconds": 0.4337198734283447, "distance_min_m": 0.0992366184148441, "distance_max_m": 0.7475070271609884}
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-weight-candidate-1185-003.py", line 173, in <module>
+    "max_abs_delta_m":max(abs(mapped[name]-expected[name]) for name in mapped)})
+                      ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-weight-candidate-1185-003.py", line 173, in <genexpr>
+    "max_abs_delta_m":max(abs(mapped[name]-expected[name]) for name in mapped)})
+                                           ~~~~~~~~^^^^^^
+KeyError: 'femur_l'

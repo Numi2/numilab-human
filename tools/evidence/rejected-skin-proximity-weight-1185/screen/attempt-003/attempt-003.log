@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-003.py", line 239, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-003.py", line 234, in main
+    results.extend(run_one(name,path,step,np,ci,core,clearance,source,candidate,keys,h) for step in POSES)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-003.py", line 234, in <genexpr>
+    results.extend(run_one(name,path,step,np,ci,core,clearance,source,candidate,keys,h) for step in POSES)
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-003.py", line 149, in run_one
+    total+=len(pairs); added+=len(add); removed+=len(rem)
+                       ^^^^^^^^^^^^^^^
+TypeError: 'int' object is not iterable

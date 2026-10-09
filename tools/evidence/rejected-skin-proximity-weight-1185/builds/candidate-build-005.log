@@ -1,0 +1,8 @@
+{"phase": "bone_distance", "body_id": 128, "elapsed_seconds": 27.758131980895996, "distance_min_m": 0.09539241512094739, "distance_max_m": 1.043612540869315}
+{"phase": "bone_distance", "body_id": 131, "elapsed_seconds": 26.556342124938965, "distance_min_m": 0.11337468959673176, "distance_max_m": 0.7524732070738818}
+{"phase": "bone_distance", "body_id": 145, "elapsed_seconds": 26.43329405784607, "distance_min_m": 0.0992366184148441, "distance_max_m": 0.7475070271609884}
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-weight-candidate-1185-005.py", line 176, in <module>
+    if max(row["max_abs_delta_m"] for row in witness_checks)>2e-8: raise ValueError("centroid-tree exact distances disagree with retained brute-force witness")
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: centroid-tree exact distances disagree with retained brute-force witness

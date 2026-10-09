@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-001.py", line 238, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-001.py", line 204, in main
+    ci=load_mod(PRED,'screen_cardiac_predicate_1179')
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-saved-pose-screen-1185/attempt-001.py", line 49, in load_mod
+    sys.modules[name]=mod; spec.loader.exec_module(mod); return mod
+                           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/Users/n/numi-human-free-apex-publication-1159/src/numilab_human/cardiac_cavity_intersections.py", line 20, in <module>
+    from .cardiac_cavity_geometry import analyze_topology
+ImportError: attempted relative import with no known parent package

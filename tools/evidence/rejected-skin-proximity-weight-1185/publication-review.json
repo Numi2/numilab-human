@@ -1,0 +1,15 @@
+{
+  "qualification": "Rejected experiment retained as evidence only; no implementation or candidate asset is enabled.",
+  "bundle_checksum_entries_verified": 48,
+  "external_file_pins_verified": 32,
+  "derived_field_digests_are_not_file_pins": 6,
+  "active_source_patch_removed_after_exact_archive_verification": true,
+  "restoration_receipt_sha256": "e27819109caa43117b9fb598300dd0dd0a8ca01f7532477c7e9189a3d2fe32df",
+  "focused_tests_retained": "15 passed before the experimental patch was removed",
+  "publication_base": "4b2606f292532516d3fe29be698dc40c714b8784",
+  "diff_check": {
+    "exit_code": 2,
+    "output": "tools/evidence/rejected-skin-proximity-weight-1185/builds/builder-007.py:305: new blank line at EOF.\ntools/evidence/rejected-skin-proximity-weight-1185/builds/builder-008.py:305: new blank line at EOF.\ntools/evidence/rejected-skin-proximity-weight-1185/source/proximity-helper-and-payload-gate.patch:6: trailing whitespace.\n+ \n",
+    "disposition": "Preserve exact original evidence bytes. The only warnings are historical builder EOF blank lines and a context line inside the archived patch. No active source file is changed."
+  }
+}

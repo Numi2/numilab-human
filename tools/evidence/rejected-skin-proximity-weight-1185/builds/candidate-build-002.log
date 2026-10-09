@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-weight-candidate-1185.py", line 145, in <module>
+    bone_raw,bone_abi,surfaces,members=parse_bone_triangles()
+                                       ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-bone-proximity-weight-candidate-1185.py", line 82, in parse_bone_triangles
+    if magic!=b"NHBONES1\0" or abi!=3: raise ValueError("wrong NHBONES ABI")
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: wrong NHBONES ABI
