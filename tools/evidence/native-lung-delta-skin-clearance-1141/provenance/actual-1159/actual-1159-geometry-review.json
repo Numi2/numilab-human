@@ -1,0 +1,160 @@
+{
+  "candidate_native_receipt": {
+    "anatomy_receipt_path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/resting-anatomy-receipt.json",
+    "anatomy_receipt_sha256": "46a51815b0c9e30ef9ea6e8d2583ffb7a812a09400469816b0e86133e93b34fb",
+    "invocation_path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run/invocation.json",
+    "invocation_sha256": "faedfc0ef646258e19b4697da441e56c308edc1c92a451d857018e4d262918e9",
+    "loaded_runtime_verified": true,
+    "metadata_path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run/run-metadata.json",
+    "metadata_sha256": "4eb7c9df933036f51932880592508539ec71b600f67561beae74f35d904b0b66",
+    "native_exit_code": 0,
+    "skin_asset_sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1"
+  },
+  "classification": "discrete_native_captured_pose_geometry_only",
+  "delta_audit": {
+    "accepted_steps": [
+      0,
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743,
+      10000
+    ],
+    "all_six_self_and_fifteen_cross_per_pose": true,
+    "area_config_binding": "PASS_exact_geometry_and_config_binding",
+    "baseline_nha": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final/resting-thorax.nhanatomy",
+      "sha256": "1b62f569f218cf8ba45f26c393bfaa4c8ed2ff499ab500c002dbbb006747b8bc"
+    },
+    "baseline_run": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1113-viewer-018-v015-attempt1/native-run",
+    "candidate_nha": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-thorax.nhanatomy",
+      "sha256": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713"
+    },
+    "candidate_run": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run",
+    "classified_contact_counts_across_poses": {
+      "cross": {
+        "exact_fullunion_boundary_contact": 121240,
+        "exact_reciprocal_face": 612552,
+        "mapped_diaphragm_face_adjacency": 126928,
+        "mapped_lobe_face_adjacency": 5002640,
+        "source_mapped_shared_edge": 751280,
+        "source_mapped_shared_vertex": 2774664
+      },
+      "self": {
+        "allowed_indexed_adjacency": 30774760
+      }
+    },
+    "complete_pair_coverage": true,
+    "configured_diaphragm_area_m2": {
+      "baseline": 0.018687047064304352,
+      "candidate": 0.018687047064304352,
+      "configured_values_equal": true,
+      "float32_bits_baseline": "9415993c",
+      "float32_bits_candidate": "9415993c"
+    },
+    "degenerate_faces": 0,
+    "dt_seconds_float32": 0.0020000000949949026,
+    "elapsed_wall_seconds": 1290.387940833345,
+    "inputs_unchanged": true,
+    "physiology_endurance_status": "NOT_ASSESSED_BY_GEOMETRY_DELTA_AUDIT",
+    "report_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/attempt-013-native-1159-fixed-record-init/result/report.json",
+    "report_sha256": "91650acf90f6a7faebb7ec352a5a989032235ba9a013b93257662d41f33acb1f",
+    "requested_roots": 10000,
+    "runtime_verified": true,
+    "status": "complete_delta_scan_no_unclassified_hits",
+    "terminal_step_included": true,
+    "topology_verified_each_pose": true,
+    "unallowed_self_pairs": 0,
+    "unclassified_cross_pairs": 0
+  },
+  "limitations": [
+    "Eight accepted snapshots over a 20-second native preflight, not continuous time or the 310-second endurance trial.",
+    "Zero unclassified lung hits means exact hits were accepted by pinned source maps and adjacency rules; it does not mean zero surface contact.",
+    "Skin result covers changed lung/diaphragm triangles against captured skin at those snapshots; it does not qualify all anatomy or physiology.",
+    "No clinical, biological, whole-body, or endurance acceptance follows."
+  ],
+  "preserved_failures": [
+    {
+      "attempt": "attempt-002-native-1159-failed",
+      "failure_json_sha256": "e180455aebf9833ddc08576c48a5ae3ddabd61796eafe6a20f2f5cf408e91888",
+      "failure_log_sha256": "76a424a15522d300c7e0ac0d36f08fad0447b36536c3c7fc277d6373c7a2eaf1"
+    },
+    {
+      "attempt": "attempt-003-native-1159-runner-core-fix-failed",
+      "failure_json_sha256": "81b4369a279b0225da5184d600c9a5538c6b64e9a30373f3931d9b983259d130",
+      "failure_log_sha256": "9b36eca08a60e00c6fcf383b358a1a6f4d2e003e8e65cead21e95777d8920800"
+    },
+    {
+      "attempt": "attempt-004-native-1159-runner-core-supportfix-failed",
+      "failure_json_sha256": "4131284380b0c0b6c14f0cbe8d43883f97410978d534391cce50c1304caf4e9d",
+      "failure_log_sha256": "e7770694e2f3a2856fa6388b4ad7e32a55fd99557dafa0155af215043e89c9f1"
+    },
+    {
+      "attempt": "attempt-008-native-1159-identity-precheck-passed",
+      "failure_json_sha256": "2250a8eb400bc08fedf6a2b9d29530566c9e3566c9d2800f012282fd904d8b3e"
+    },
+    {
+      "attempt": "attempt-012-traceback-source",
+      "debug_source_sha256": "b0df089e6339dfc1a55f57c5ae00c555b588fd4c91daca9b17a56d9d5fa8d216",
+      "failure_json_sha256": "2250a8eb400bc08fedf6a2b9d29530566c9e3566c9d2800f012282fd904d8b3e"
+    },
+    {
+      "attempt": "attempt-014-skin-transfer-1159",
+      "executed_skin_reader_sha256": "156572ec69b7786e92d4b19efb896eebef675389b28b61e72138a3611f796d14"
+    }
+  ],
+  "reader_source_files": {
+    "audit_delta_1120.py": {
+      "bytes": 37203,
+      "sha256": "e51d0adbef7d915e97611cc38fa76a4df5d848cb79ad22d277366846cd630658"
+    },
+    "skin_clearance_delta_1141.py": {
+      "bytes": 39684,
+      "sha256": "ccbcf468b2935f03d4d8714294d33a49a3a35c095540a878d2a5232dd4d689a5"
+    },
+    "successor_dmap_adapter_1120.py": {
+      "bytes": 9838,
+      "sha256": "f838af4533f423d36dd8ca38e87529e5da1a82a1204b20e74bb01a2fe8efff67"
+    },
+    "test_audit_delta_1120.py": {
+      "bytes": 28875,
+      "sha256": "01b32718f1cd08cbc325b907cb82801ba6837e7bdf3558c3d0b9048ab6c4eb17"
+    },
+    "test_skin_clearance_delta_1141.py": {
+      "bytes": 7772,
+      "sha256": "acd8a6c93eafc85174f64f9593016c514c2426e1bc3e6537025ecfbaba8c7088"
+    },
+    "v8_dmap_adapter_1096.py": {
+      "bytes": 10802,
+      "sha256": "9a55338d874ecc4695e1545829c21266b9b5734d8ca8d64acab817906091c7bd"
+    }
+  },
+  "record_type": "actual_completed_1159_geometry_review",
+  "skin_transfer": {
+    "accepted_steps": [
+      0,
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743,
+      10000
+    ],
+    "changed_face_skin_clearance_pass": true,
+    "changed_target_triangles_per_pose": 41,
+    "complete_eight_pose_coverage": true,
+    "elapsed_wall_seconds": 44.35963591653854,
+    "report_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/attempt-015-skin-transfer-1159-package-loader/result/skin-clearance-delta-transfer.json",
+    "report_sha256": "467f57dafc2e20d38947b62363152925aeea08aae10482892bced70f5675c72c",
+    "row310_exact_same_winding_copy_faces_per_pose": 303656,
+    "skin_triangle_count": 109211,
+    "skin_used_vertex_count": 54663,
+    "skin_xyz_and_indices_exact": true,
+    "status": "complete_changed_face_skin_scan_clear",
+    "total_changed_face_skin_intersection_pairs": 0
+  }
+}
