@@ -465,6 +465,116 @@ def _shared_source_directions_from_pose_normals(
     }
 
 
+
+def _condition_shared_source_directions(
+    jacobians: np.ndarray,
+    source_directions: np.ndarray,
+    face_vertex_ids: np.ndarray,
+    outward_face_normals: np.ndarray,
+) -> tuple[np.ndarray, dict[str, Any]]:
+    """Keep smoothed directions when admissible; project others into all face cones.
+
+    A smoothed vertex normal need not satisfy an incident face's angle bound.
+    For each offending vertex, project its preferred source direction onto the
+    intersection n dot Jd >= c * norm(Jd), over every active face and pose.
+    These are convex cones; scale is removed only after the projection. The
+    original admission bound is independently rechecked by the seed-demand
+    owner. This is offline registration, never a runtime force or state update.
+    """
+    from scipy.optimize import minimize
+
+    maps = np.asarray(jacobians, dtype=np.float64)
+    source = np.asarray(source_directions, dtype=np.float64)
+    faces = np.asarray(face_vertex_ids, dtype=np.int64)
+    normals = np.asarray(outward_face_normals, dtype=np.float64)
+    if (maps.ndim != 4 or maps.shape[0] < 1 or maps.shape[1] < 1
+            or maps.shape[2:] != (3, 3) or source.shape != maps.shape[1:2] + (3,)
+            or faces.ndim != 2 or faces.shape[1] != 3
+            or normals.shape != (maps.shape[0], len(faces), 3)
+            or not np.isfinite(maps).all() or not np.isfinite(source).all()
+            or not np.isfinite(normals).all()
+            or (faces.size and (faces.min() < 0 or faces.max() >= len(source)))):
+        raise human.ImportError("active-face direction conditioning received malformed or non-finite input")
+    source_lengths = np.linalg.norm(source, axis=1)
+    normal_lengths = np.linalg.norm(normals, axis=2)
+    if np.any(source_lengths <= 1.0e-12) or np.any(normal_lengths <= 1.0e-12):
+        raise human.ImportError("active-face direction conditioning received a zero direction or normal")
+    unit_source = source / source_lengths[:, None]
+    unit_normals = normals / normal_lengths[:, :, None]
+    output = source.copy()
+    minimum = _MIN_CANDIDATE_DIRECTION_PROJECTION
+    # An inward numerical margin avoids admitting an optimizer's roundoff at
+    # the boundary. It tightens selection, not the independent admission gate.
+    selection_bound = minimum + 1.0e-6
+    before_minimum = None
+    corrected = []
+    maximum_angle = 0.0
+    if len(faces):
+        mapped = np.einsum("pfcij,fcj->pfci", maps[:, faces], unit_source[faces])
+        lengths = np.linalg.norm(mapped, axis=3)
+        if np.any(lengths <= 1.0e-12) or not np.isfinite(lengths).all():
+            raise human.ImportError("active-face direction maps to zero or non-finite world motion")
+        projections = np.einsum("pfci,pfi->pfc", mapped / lengths[..., None], unit_normals)
+        before_minimum = float(projections.min())
+        offending = np.unique(faces[np.any(projections < minimum, axis=0)])
+        for vertex in offending:
+            incident = np.flatnonzero(np.any(faces == vertex, axis=1))
+            vertex_maps = np.repeat(maps[:, vertex, None, :, :], len(incident), axis=1).reshape(-1, 3, 3)
+            vertex_normals = unit_normals[:, incident].reshape(-1, 3)
+            preferred = unit_source[vertex]
+
+            def constraints(direction):
+                world = np.einsum("kij,j->ki", vertex_maps, direction)
+                return np.einsum("ki,ki->k", vertex_normals, world) - selection_bound * np.linalg.norm(world, axis=1)
+
+            def constraint_jacobian(direction):
+                world = np.einsum("kij,j->ki", vertex_maps, direction)
+                world_length = np.maximum(np.linalg.norm(world, axis=1), 1.0e-15)
+                gradient_world = vertex_normals - selection_bound * world / world_length[:, None]
+                return np.einsum("ki,kij->kj", gradient_world, vertex_maps)
+
+            result = minimize(
+                lambda direction: 0.5 * float(np.dot(direction - preferred, direction - preferred)),
+                preferred,
+                jac=lambda direction: direction - preferred,
+                constraints={"type": "ineq", "fun": constraints, "jac": constraint_jacobian},
+                method="SLSQP",
+                options={"maxiter": 64, "ftol": 1.0e-12},
+            )
+            length = float(np.linalg.norm(result.x))
+            if not result.success or not np.isfinite(result.x).all() or length <= 1.0e-8:
+                raise human.ImportError(
+                    f"active-face direction conditioning found no nonzero converged direction at vertex={int(vertex)}: "
+                    f"{result.message}"
+                )
+            direction = result.x / length
+            world = np.einsum("kij,j->ki", vertex_maps, direction)
+            world_lengths = np.linalg.norm(world, axis=1)
+            if np.any(world_lengths <= 1.0e-12):
+                raise human.ImportError(f"conditioned direction maps to zero world motion at vertex={int(vertex)}")
+            alignment = np.einsum("ki,ki->k", world / world_lengths[:, None], vertex_normals)
+            if not np.isfinite(alignment).all() or float(alignment.min()) < minimum:
+                raise human.ImportError(
+                    f"conditioned direction still fails unchanged active-face bound at vertex={int(vertex)}: "
+                    f"projection={float(alignment.min()):.12g}, required_ge={minimum:.12g}"
+                )
+            output[vertex] = direction
+            corrected.append(int(vertex))
+            maximum_angle = max(maximum_angle, float(np.arccos(np.clip(np.dot(direction, preferred), -1.0, 1.0))))
+
+    _, verified = _shared_source_seed_demands(
+        maps, output, faces, normals, np.zeros((maps.shape[0], len(faces))),
+    )
+    return output, {
+        "conditioned_vertex_count": len(corrected),
+        "conditioned_compact_vertex_ids": corrected,
+        "minimum_active_projection_before": before_minimum,
+        "minimum_active_projection_after": verified["minimum_active_projection"],
+        "unchanged_admission_projection": minimum,
+        "selection_projection_with_numerical_margin": selection_bound,
+        "maximum_source_direction_change_radians": maximum_angle,
+    }
+
 def _source_scalar_for_normal_demand(
     jacobian: np.ndarray,
     source_direction: np.ndarray,
@@ -1884,6 +1994,7 @@ def derive_shared_multipose_inferred_clearance(
             "nonocular_pair_counts_by_pose": None if counts is None else [int(value) for value in counts],
             "target_audits_by_pose": audit_rows,
             "candidate_diagnostics": diagnostics,
+            "direction_metrics": direction_report,
             "source_positions_f32_sha256": hashlib.sha256(packed_source.tobytes()).hexdigest(),
             "source_positions_f32": packed_source,
         })
@@ -1930,6 +2041,10 @@ def derive_shared_multipose_inferred_clearance(
                         skin_triangle, target_triangle, active_normals[pose, column],
                     ) + selected_margin_mm / 1000.0
                     required[pose, column] = max(required[pose, column], distance)
+        source_directions, conditioning_report = _condition_shared_source_directions(
+            current_maps, source_directions, active_compact, active_normals,
+        )
+        direction_report["active_face_conditioning"] = conditioning_report
         seed_required, demand_report = _shared_source_seed_demands(
             current_maps, source_directions, active_compact, active_normals, required,
         )

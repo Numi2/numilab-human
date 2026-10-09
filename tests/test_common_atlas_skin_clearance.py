@@ -716,3 +716,73 @@ def test_collateral_fold_taper_smooths_nonseed_motion_and_preserves_required_see
             np.array([1], dtype=np.int64),
             np.empty(0, dtype=np.int64),
         )
+
+def test_active_face_conditioning_preserves_all_admissible_directions_exactly():
+    from numilab_human.common_atlas_skin_clearance import _condition_shared_source_directions
+
+    maps = np.tile(np.eye(3), (2, 4, 1, 1))
+    source = np.array([[0.0, 0.0, 1.0], [0.1, 0.0, 1.0], [0.0, 0.2, 1.0], [1.0, 0.0, 0.0]])
+    faces = np.array([[0, 1, 2]])
+    normals = np.tile([0.0, 0.0, 1.0], (2, 1, 1))
+    original = source.copy()
+    result, report = _condition_shared_source_directions(maps, source, faces, normals)
+    assert np.array_equal(result, original)
+    assert np.array_equal(source, original)
+    assert report["conditioned_vertex_count"] == 0
+    assert report["unchanged_admission_projection"] == 0.5
+
+
+def test_active_face_conditioning_resolves_all_incident_faces_and_pose_scales():
+    from numilab_human.common_atlas_skin_clearance import (
+        _condition_shared_source_directions, _shared_source_seed_demands,
+    )
+
+    rotation = np.array([[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+    second_map = rotation @ np.diag([0.9, 1.1, 1.2])
+    maps = np.stack([np.tile(np.eye(3), (5, 1, 1)), np.tile(second_map, (5, 1, 1))])
+    # Vertex 0 is shared by both active faces. Other vertices already satisfy
+    # their own face constraints and must not change.
+    source = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0],
+                       [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]])
+    faces = np.array([[0, 1, 2], [0, 3, 4]])
+    normals = np.array([[[0.0, 0.0, 1.0], [0.0, 0.6, 0.8]],
+                        [[0.0, 0.0, 1.0], [-0.6, 0.0, 0.8]]])
+    demands = np.array([[0.001, 0.002], [0.003, 0.004]])
+    result, report = _condition_shared_source_directions(maps, source, faces, normals)
+    seed, verified = _shared_source_seed_demands(maps, result, faces, normals, demands)
+
+    assert np.array_equal(result[1:], source[1:])
+    assert report["conditioned_compact_vertex_ids"] == [0]
+    assert np.isclose(np.linalg.norm(result[0]), 1.0, atol=1.0e-12)
+    assert verified["minimum_active_projection"] >= 0.5
+    # Check actual metre displacement, independently of the seed owner.
+    for pose in range(2):
+        for face_index, face in enumerate(faces):
+            for vertex in face:
+                moved = maps[pose, vertex] @ (result[vertex] * seed[vertex])
+                assert np.dot(moved, normals[pose, face_index]) >= demands[pose, face_index] - 1.0e-12
+
+
+def test_active_face_conditioning_rejects_opposite_pose_cones():
+    from numilab_human.common_atlas_skin_clearance import _condition_shared_source_directions
+
+    maps = np.tile(np.eye(3), (2, 3, 1, 1))
+    source = np.tile([0.0, 0.0, 1.0], (3, 1))
+    faces = np.array([[0, 1, 2]])
+    normals = np.array([[[0.0, 0.0, 1.0]], [[0.0, 0.0, -1.0]]])
+    with np.testing.assert_raises_regex(ImportError, "no nonzero converged direction|unchanged active-face bound"):
+        _condition_shared_source_directions(maps, source, faces, normals)
+
+
+def test_active_face_conditioning_handles_empty_faces_and_rejects_zero_normals():
+    from numilab_human.common_atlas_skin_clearance import _condition_shared_source_directions
+
+    maps = np.tile(np.eye(3), (2, 3, 1, 1))
+    source = np.tile([0.0, 0.0, 1.0], (3, 1))
+    result, report = _condition_shared_source_directions(
+        maps, source, np.empty((0, 3), dtype=int), np.empty((2, 0, 3)),
+    )
+    assert np.array_equal(result, source)
+    assert report["minimum_active_projection_after"] is None
+    with np.testing.assert_raises_regex(ImportError, "zero direction or normal"):
+        _condition_shared_source_directions(maps, source, np.array([[0, 1, 2]]), np.zeros((2, 1, 3)))
