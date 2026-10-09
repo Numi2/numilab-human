@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import csv
+from fractions import Fraction
 import hashlib
 import json
+import math
 import mmap
 import struct
 from pathlib import Path
@@ -11,6 +13,8 @@ from typing import Any
 import numpy as np
 
 from . import model as human
+from . import cardiac_cavity_intersections as ci
+from .cardiac_cavity_geometry import analyze_topology
 from .cardiac_cavity_intersections import (
     _audit_pair,
     _audit_pair_prepared_first,
@@ -194,6 +198,234 @@ def _fit_registered_bone_poses(pack_positions: np.ndarray, surfaces: dict, bone_
 def _exact_surface_records(vertices: np.ndarray, faces: np.ndarray):
     lattice = [float32_point_lattice_key(point) for point in vertices]
     return _records(lattice, faces)
+
+
+def _prepare_closed_clearance_target(vertices: np.ndarray, faces: np.ndarray) -> dict[str, Any]:
+    """Build an immutable exact-Float32 quotient of one captured target surface.
+
+    Only bit-identical little-endian Float32 xyz triples are identified. The
+    quotient adds no faces and changes no coordinates; it only reconnects
+    duplicated render vertices before the existing topology and exact
+    intersection predicates are applied.
+    """
+    raw_vertices = np.asarray(vertices)
+    raw_faces = np.asarray(faces)
+    if raw_vertices.ndim != 2 or raw_vertices.shape[1] != 3 or raw_vertices.dtype.kind not in "fiu":
+        raise human.ImportError("clearance target vertices must be a numeric Nx3 array")
+    if raw_faces.ndim != 2 or raw_faces.shape[1] != 3 or raw_faces.dtype.kind not in "iu":
+        raise human.ImportError("clearance target faces must be an integer Fx3 array")
+    if not len(raw_vertices) or not len(raw_faces):
+        raise human.ImportError("clearance target must contain vertices and faces")
+    if len(raw_faces) > 200_000 or len(raw_vertices) > 100_000:
+        raise human.ImportError("clearance target exceeds the bounded mesh size")
+    try:
+        packed_vertices = np.ascontiguousarray(raw_vertices, dtype="<f4")
+    except (OverflowError, ValueError, TypeError) as error:
+        raise human.ImportError("clearance target coordinates are not representable as Float32") from error
+    original_numeric = np.asarray(raw_vertices, dtype=np.float64)
+    if not np.isfinite(original_numeric).all() or not np.isfinite(packed_vertices).all():
+        raise human.ImportError("clearance target coordinates must be finite")
+    if not np.array_equal(original_numeric, packed_vertices.astype(np.float64)):
+        raise human.ImportError("clearance target coordinates must already be exact Float32 values")
+    if np.any(raw_faces < 0) or np.any(raw_faces >= len(packed_vertices)):
+        raise human.ImportError("clearance target face index is outside its vertex table")
+    source_faces = np.ascontiguousarray(raw_faces, dtype="<u8")
+
+    source_to_quotient = np.empty(len(packed_vertices), dtype=np.int64)
+    unique_vertices = []
+    coordinate_ids: dict[bytes, int] = {}
+    for source_id, point in enumerate(packed_vertices):
+        key = point.tobytes()
+        quotient_id = coordinate_ids.get(key)
+        if quotient_id is None:
+            quotient_id = len(unique_vertices)
+            coordinate_ids[key] = quotient_id
+            unique_vertices.append(point.copy())
+        source_to_quotient[source_id] = quotient_id
+    quotient_vertices = np.ascontiguousarray(unique_vertices, dtype="<f4")
+    quotient_faces = np.ascontiguousarray(source_to_quotient[source_faces.astype(np.int64)], dtype=np.int64)
+    input_hashes = {
+        "vertices_f32_sha256": hashlib.sha256(packed_vertices.tobytes()).hexdigest(),
+        "faces_u64_sha256": hashlib.sha256(source_faces.tobytes()).hexdigest(),
+    }
+    quotient_hashes = {
+        "vertices_f32_sha256": hashlib.sha256(quotient_vertices.tobytes()).hexdigest(),
+        "faces_i64_sha256": hashlib.sha256(quotient_faces.astype("<i8", copy=False).tobytes()).hexdigest(),
+    }
+    topology = analyze_topology(quotient_vertices.astype(np.float64).tolist(), quotient_faces.tolist())
+    records = tuple(_records(
+        [float32_point_lattice_key(point) for point in quotient_vertices],
+        quotient_faces.tolist(),
+    ))
+    self_audit = _audit_pair(records, records, same_surface=True)
+    closed_connected = (
+        topology["closed_oriented_manifold_candidate"]
+        and topology["face_component_count"] == 1
+        and not topology["unused_vertex_ids"]
+    )
+    embedded = closed_connected and self_audit["count"] == 0
+    report = {
+        "quotient_method": "exact_bitwise_float32_xyz_identification_no_tolerance_or_geometry_change",
+        "source_coordinates_modified": False,
+        "faces_added": 0,
+        "input_vertex_count": int(len(packed_vertices)),
+        "quotient_vertex_count": int(len(quotient_vertices)),
+        "identified_duplicate_coordinate_records": int(len(packed_vertices) - len(quotient_vertices)),
+        "face_count": int(len(quotient_faces)),
+        "input_hashes": input_hashes,
+        "quotient_hashes": quotient_hashes,
+        "topology": topology,
+        "self_intersection_audit": self_audit,
+        "closed_connected_oriented": bool(closed_connected),
+        "embedded_closed_target": bool(embedded),
+    }
+    if not embedded:
+        error = human.ImportError(
+            "clearance target must be exact-quotient closed, oriented, connected, unused-vertex-free, and self-intersection-free"
+        )
+        error.target_report = report
+        raise error
+
+    quotient_vertices.setflags(write=False)
+    quotient_faces.setflags(write=False)
+    aabb_min = quotient_vertices.min(axis=0).copy()
+    aabb_max = quotient_vertices.max(axis=0).copy()
+    aabb_min.setflags(write=False)
+    aabb_max.setflags(write=False)
+    return {
+        "vertices": quotient_vertices,
+        "faces": quotient_faces,
+        "records": records,
+        "report": report,
+        "_inside_aabb_min": aabb_min,
+        "_inside_aabb_max": aabb_max,
+    }
+
+
+def _require_prepared_closed_target(target: dict[str, Any]) -> None:
+    if (not isinstance(target, dict)
+            or not isinstance(target.get("report"), dict)
+            or target["report"].get("embedded_closed_target") is not True
+            or not isinstance(target.get("records"), tuple)
+            or not target["records"]):
+        raise human.ImportError("clearance operation requires an admissible prepared closed target")
+
+
+def _closed_target_inside_vertices(positions: np.ndarray, target: dict[str, Any]) -> np.ndarray:
+    """Return captured Float32 point IDs strictly inside an admissible target."""
+    _require_prepared_closed_target(target)
+    points = np.asarray(positions)
+    if points.ndim != 2 or points.shape[1] != 3 or points.dtype.kind not in "fiu":
+        raise human.ImportError("clearance skin positions must be a numeric Nx3 array")
+    try:
+        packed = np.ascontiguousarray(points, dtype="<f4")
+    except (OverflowError, ValueError, TypeError) as error:
+        raise human.ImportError("clearance skin positions are not representable as Float32") from error
+    numeric = np.asarray(points, dtype=np.float64)
+    if not np.isfinite(numeric).all() or not np.isfinite(packed).all():
+        raise human.ImportError("clearance skin positions must be finite")
+    if not np.array_equal(numeric, packed.astype(np.float64)):
+        raise human.ImportError("clearance skin positions must already be exact Float32 values")
+    lower = np.asarray(target["_inside_aabb_min"], dtype=np.float64)
+    upper = np.asarray(target["_inside_aabb_max"], dtype=np.float64)
+    inside = []
+    for point_id, point in enumerate(packed):
+        numeric_point = point.astype(np.float64)
+        if np.any(numeric_point < lower) or np.any(numeric_point > upper):
+            continue
+        result = ci.point_location(float32_point_lattice_key(point), target["records"])
+        location = result.get("location")
+        if location == "inside":
+            inside.append(point_id)
+        elif location not in ("outside", "boundary"):
+            raise human.ImportError(
+                f"clearance target point location is indeterminate for captured skin vertex {point_id}"
+            )
+    return np.asarray(inside, dtype=np.int64)
+
+
+def _closed_target_exit_source_scalar(
+    point: np.ndarray,
+    mapped_direction: np.ndarray,
+    target: dict[str, Any],
+    margin_m: float = 0.00025,
+) -> float:
+    """Find an inside-to-outside ray exit plus a world-distance margin.
+
+    mapped_direction is the actual world displacement per unit source scalar
+    (for example, a captured LBS Jacobian applied to a source direction). Ray
+    intersections use its exact binary64 rational value on the target's 2**149
+    Float32 lattice. The margin is converted once by its norm; direction is
+    never normalized before finding the source scalar.
+    """
+    _require_prepared_closed_target(target)
+    try:
+        original_point = np.asarray(point, dtype=np.float64).reshape(3)
+        packed_point = np.ascontiguousarray(original_point, dtype="<f4")
+        direction = np.asarray(mapped_direction, dtype=np.float64).reshape(3)
+    except (ValueError, TypeError, OverflowError) as error:
+        raise human.ImportError("clearance ray requires xyz point and direction") from error
+    if (not np.isfinite(original_point).all() or not np.isfinite(packed_point).all()
+            or not np.array_equal(original_point, packed_point.astype(np.float64))):
+        raise human.ImportError("clearance ray start must be an exact Float32 point")
+    if not np.isfinite(direction).all():
+        raise human.ImportError("clearance mapped direction must be finite")
+    margin = float(margin_m)
+    if not math.isfinite(margin) or margin <= 0.0:
+        raise human.ImportError("clearance ray margin must be finite and positive")
+    speed = math.hypot(*(float(component) for component in direction))
+    if not math.isfinite(speed) or speed <= 0.0:
+        raise human.ImportError("clearance mapped direction must be nonzero")
+    point_lattice = float32_point_lattice_key(packed_point)
+    if ci.point_location(point_lattice, target["records"]).get("location") != "inside":
+        raise human.ImportError("clearance ray start must be strictly inside the target")
+
+    direction_fraction = tuple(Fraction.from_float(float(value)) for value in direction)
+    # Binary64 denominators are powers of two. Keep each triangle test on the
+    # existing integer lattice; only accepted hit scalars need Fraction objects.
+    direction_denominator = max(component.denominator for component in direction_fraction)
+    direction_integer = tuple(
+        component.numerator * (direction_denominator // component.denominator)
+        for component in direction_fraction)
+    lattice_denominator = ci._FLOAT32_LATTICE_DENOMINATOR
+    hits = set()
+    for record in target["records"]:
+        triangle = record[0]
+        normal = ci._cross(ci._sub(triangle[1], triangle[0]), ci._sub(triangle[2], triangle[0]))
+        numerator = ci._dot(normal, ci._sub(triangle[0], point_lattice))
+        denominator = ci._dot(normal, direction_integer)
+        if denominator == 0:
+            if numerator == 0:
+                raise human.ImportError("clearance ray is coplanar with a target face")
+            continue
+        if numerator * denominator <= 0:
+            continue
+        if denominator < 0:
+            numerator, denominator = -numerator, -denominator
+        hit_numerator = tuple(
+            point_lattice[axis] * denominator + numerator * direction_integer[axis]
+            for axis in range(3))
+        if ci._inside(ci._signs(hit_numerator, denominator, triangle, normal)):
+            hits.add(Fraction(numerator * direction_denominator,
+                              denominator * lattice_denominator))
+    if not hits:
+        raise human.ImportError("clearance ray found no positive target boundary crossing")
+
+    margin_source_scalar = margin / speed
+    for hit_scalar in sorted(hits):
+        candidate_scalar = float(hit_scalar) + margin_source_scalar
+        if not math.isfinite(candidate_scalar) or candidate_scalar <= 0.0:
+            raise human.ImportError("clearance ray exit scalar is not finite and positive")
+        endpoint = (packed_point.astype(np.float64) + candidate_scalar * direction).astype("<f4")
+        endpoint_location = ci.point_location(
+            float32_point_lattice_key(endpoint), target["records"]
+        ).get("location")
+        if endpoint_location == "outside":
+            return candidate_scalar
+        if endpoint_location not in ("inside", "boundary"):
+            raise human.ImportError("clearance ray margin endpoint has indeterminate target location")
+    raise human.ImportError("clearance ray margin did not reach a proven outside Float32 endpoint")
+
 
 
 def _target_intersection_audit(skin_records, target_faces: dict[tuple[int, int], np.ndarray], pack_positions: np.ndarray):
@@ -1696,6 +1928,8 @@ def derive_shared_multipose_inferred_clearance(
     resume_source_positions: np.ndarray | None = None,
     resume_target_audits_by_pose: list[dict[str, dict[str, Any]]] | None = None,
     resume_provenance: dict[str, Any] | None = None,
+    closed_target_surfaces_by_pose: list[dict[str, tuple[np.ndarray, np.ndarray]]] | None = None,
+    closed_target_face_counts: dict[str, int] | None = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     """Infer one source-space correction constrained by all supplied accepted poses.
 
@@ -1709,6 +1943,12 @@ def derive_shared_multipose_inferred_clearance(
     respiratory basis/weight changes, are not treated as fixed affine transforms.
     Optional resume source/audits must be hash-validated by the caller and are
     checked against immutable baseline orientation, bed, anchor, and ocular gates.
+    Optional closed_target_surfaces_by_pose supplies complete captured meshes for
+    an explicitly selected nonocular subset. Exact coordinate quotient, manifold,
+    and self-intersection gates must pass before inside vertices can add demands.
+    closed_target_face_counts must bind the complete captured face inventory.
+    Every triangle must match the existing target lookup exactly. These direct vertex
+    demands supplement the boundary-triangle demands and preserve all audits.
     NHSKIN source and mapped world positions are metres; no runtime state changes.
     """
     source = np.asarray(source_positions, dtype=np.float64)
@@ -1949,6 +2189,58 @@ def derive_shared_multipose_inferred_clearance(
             "resume_self_audit_predicate": "_audit_pair(same_surface=True) over each complete resumed accepted-pose skin",
             "status": "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates",
         }
+    closed_targets = [dict() for _ in range(pose_count)]
+    if closed_target_surfaces_by_pose is None and closed_target_face_counts is not None:
+        raise human.ImportError("closed-target face counts require captured meshes")
+    if closed_target_surfaces_by_pose is not None:
+        if (not isinstance(closed_target_surfaces_by_pose, list)
+                or len(closed_target_surfaces_by_pose) != pose_count
+                or any(not isinstance(row, dict) for row in closed_target_surfaces_by_pose)):
+            raise human.ImportError("closed-target meshes must cover every supplied pose")
+        closed_keys = set(closed_target_surfaces_by_pose[0])
+        if (not closed_keys or not closed_keys.issubset(targets - ocular)
+                or any(set(row) != closed_keys for row in closed_target_surfaces_by_pose)):
+            raise human.ImportError("closed-target meshes must name the same nonocular subset in every pose")
+        if (not isinstance(closed_target_face_counts, dict)
+                or set(closed_target_face_counts) != closed_keys
+                or any(type(count) is not int or count <= 0
+                       for count in closed_target_face_counts.values())):
+            raise human.ImportError("closed-target meshes require complete captured face counts")
+        for pose, row in enumerate(closed_target_surfaces_by_pose):
+            for key, mesh in sorted(row.items()):
+                if not isinstance(mesh, (tuple, list)) or len(mesh) != 2:
+                    raise human.ImportError(f"closed-target mesh is malformed at pose={pose}, surface={key}")
+                vertices, target_faces = mesh
+                if len(target_faces) != closed_target_face_counts[key]:
+                    raise human.ImportError(
+                        f"closed-target mesh has incomplete captured face coverage at pose={pose}, surface={key}")
+                prepared = _prepare_closed_clearance_target(vertices, target_faces)
+                triangles = prepared["vertices"][prepared["faces"]]
+                for face_id, triangle in enumerate(triangles):
+                    authoritative = np.asarray(target_triangle_by_row(pose, key, face_id), dtype=np.float64)
+                    if (authoritative.shape != (3, 3) or not np.isfinite(authoritative).all()
+                            or not np.array_equal(authoritative, authoritative.astype("<f4").astype(np.float64))
+                            or not np.array_equal(triangle, authoritative)):
+                        raise human.ImportError(
+                            f"closed-target mesh differs from captured target at pose={pose}, "
+                            f"surface={key}, face={face_id}")
+                closed_targets[pose][key] = prepared
+
+    def classify_closed_targets(world):
+        return [
+            {key: _closed_target_inside_vertices(world[pose], target)
+             for key, target in sorted(closed_targets[pose].items())}
+            for pose in range(pose_count)
+        ]
+
+    def interior_counts(rows):
+        return [sum(len(ids) for ids in row.values()) for row in rows]
+
+    initial_interiors = classify_closed_targets(captured)
+    current_interiors = (initial_interiors if np.array_equal(current_world, captured)
+                         else classify_closed_targets(current_world))
+    initial_interior_counts = interior_counts(initial_interiors)
+    current_interior_counts = interior_counts(current_interiors)
     edge_rows = np.concatenate((compact_faces[:, [0, 1]], compact_faces[:, [1, 2]], compact_faces[:, [2, 0]]))
     edge_rows.sort(axis=1)
     edges = np.unique(edge_rows, axis=0)
@@ -1995,6 +2287,8 @@ def derive_shared_multipose_inferred_clearance(
             "target_audits_by_pose": audit_rows,
             "candidate_diagnostics": diagnostics,
             "direction_metrics": direction_report,
+            "closed_target_interior_counts_before_by_pose": current_interior_counts,
+            "closed_target_interior_counts_candidate_by_pose": trial_interior_counts,
             "source_positions_f32_sha256": hashlib.sha256(packed_source.tobytes()).hexdigest(),
             "source_positions_f32": packed_source,
         })
@@ -2002,7 +2296,8 @@ def derive_shared_multipose_inferred_clearance(
     for iteration in range(max_iterations):
         before_by_pose = current_counts.copy()
         before_total = sum(before_by_pose)
-        if before_total == 0:
+        before_inside = sum(current_interior_counts)
+        if before_total == 0 and before_inside == 0:
             break
         pose_normals = np.stack([_area_weighted_vertex_normals(current_world[p], compact_faces)
                                  for p in range(pose_count)])
@@ -2011,12 +2306,19 @@ def derive_shared_multipose_inferred_clearance(
         source_directions, _, _, direction_report = _shared_source_directions_from_pose_normals(
             current_maps, smooth_normals,
         )
-        active_faces = sorted({
+        active_face_set = {
             int(face) for audit in current_audits for key in nonocular
             for face, _ in audit[key]["triangle_pairs"]
-        })
+        }
+        interior_lists = [ids for row in current_interiors for ids in row.values() if len(ids)]
+        interior_vertices = (np.unique(np.concatenate(interior_lists))
+                             if interior_lists else np.empty(0, dtype=np.int64))
+        if len(interior_vertices):
+            active_face_set.update(map(int, np.flatnonzero(
+                np.any(np.isin(compact_faces, interior_vertices), axis=1))))
+        active_faces = sorted(active_face_set)
         if not active_faces:
-            raise human.ImportError("exact nonocular pairs have no active skin faces")
+            raise human.ImportError("nonocular boundary/interior defects have no active skin faces")
         active = np.asarray(active_faces, dtype=np.int64)
         active_compact = compact_faces[active]
         active_triangles = current_world[:, active_compact]
@@ -2048,6 +2350,23 @@ def derive_shared_multipose_inferred_clearance(
         seed_required, demand_report = _shared_source_seed_demands(
             current_maps, source_directions, active_compact, active_normals, required,
         )
+        interior_demand_rows = []
+        for pose, row in enumerate(current_interiors):
+            for key, ids in sorted(row.items()):
+                demands = []
+                for vertex in ids:
+                    direction = current_maps[pose, vertex] @ source_directions[vertex]
+                    demand = _closed_target_exit_source_scalar(
+                        current_world[pose, vertex], direction, closed_targets[pose][key],
+                        margin_m=selected_margin_mm / 1000.0)
+                    seed_required[vertex] = max(seed_required[vertex], demand)
+                    demands.append(demand)
+                interior_demand_rows.append({
+                    "pose": pose, "target": key, "inside_vertex_count": len(ids),
+                    "maximum_source_scalar_m": max(demands, default=0.0),
+                })
+        direction_report["closed_target_interior_demands"] = interior_demand_rows
+        direction_report["interior_seed_source_vertex_ids"] = referenced[interior_vertices].tolist()
         seeds = np.flatnonzero(seed_required > 0.0)
         if not len(seeds):
             raise human.ImportError(f"iteration {iteration + 1} produced no source-space correction seeds")
@@ -2078,6 +2397,7 @@ def derive_shared_multipose_inferred_clearance(
         for backtrack in range(backtrack_count):
             scale = 0.5 ** backtrack
             trial_regularization = None
+            trial_interior_counts = None
             raw_trial_source = (current_source + scale * field[:, None] * source_directions).astype("<f4").astype(np.float64)
             trial_source = raw_trial_source
             if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
@@ -2247,8 +2567,16 @@ def derive_shared_multipose_inferred_clearance(
             if not valid:
                 continue
             trial_counts = [audit_count(audit, nonocular) for audit in trial_audits]
-            if sum(trial_counts) >= before_total:
-                rejection = f"trial did not reduce aggregate nonocular exact pairs ({before_total}->{sum(trial_counts)})"
+            trial_interiors = classify_closed_targets(trial_world)
+            trial_interior_counts = interior_counts(trial_interiors)
+            progress_before = (before_total, before_inside)
+            progress_after = (sum(trial_counts), sum(trial_interior_counts))
+            if (any(after > before for after, before in zip(progress_after, progress_before))
+                    or progress_after == progress_before):
+                rejection = (
+                    "trial must reduce a defect count without increasing boundary pairs or interior vertices "
+                    f"({before_total}, {before_inside})->"
+                    f"({sum(trial_counts)}, {sum(trial_interior_counts)})")
                 emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
                 continue
             faces_to_check = sorted({
@@ -2280,6 +2608,7 @@ def derive_shared_multipose_inferred_clearance(
             emit_trial(iteration, backtrack, scale, "accepted", "all pose gates and exact scans passed", trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
             applied_source_increment = float(np.linalg.norm(trial_source - current_source, axis=1).max())
             current_source, current_world, current_audits, current_counts = trial_source, trial_world, trial_audits, trial_counts
+            current_interiors, current_interior_counts = trial_interiors, trial_interior_counts
             current_maps = trial_maps
             current_forward_diagnostics = trial_forward_diagnostics
             winding_receipt.update(winding_checks)
@@ -2287,6 +2616,7 @@ def derive_shared_multipose_inferred_clearance(
                 "iteration": iteration + 1, "backtrack_scale": scale,
                 "nonocular_pairs_before_by_pose": before_by_pose,
                 "nonocular_pairs_after_by_pose": trial_counts,
+                "closed_target_interior_vertices_after_by_pose": trial_interior_counts,
                 "active_skin_faces": len(active_faces), "seed_vertices": int(len(seeds)),
                 "fixed_seed_vertices": int(np.intersect1d(seeds, fixed).size),
                 "maximum_source_increment_m": float(field.max() * scale),
@@ -2314,6 +2644,9 @@ def derive_shared_multipose_inferred_clearance(
     final_counts = [audit_count(audit, nonocular) for audit in current_audits]
     if any(final_counts):
         raise human.ImportError(f"multi-pose clearance left nonocular exact pairs: {final_counts}")
+    if any(current_interior_counts):
+        raise human.ImportError(
+            f"multi-pose clearance left skin vertices inside closed targets: {current_interior_counts}")
     final_triangles = current_world[:, compact_faces]
     final_area = np.cross(final_triangles[:, :, 1] - final_triangles[:, :, 0],
                           final_triangles[:, :, 2] - final_triangles[:, :, 0])
@@ -2350,6 +2683,15 @@ def derive_shared_multipose_inferred_clearance(
         },
         "initial_nonocular_pair_count_by_pose": initial_counts,
         "initial_ocular_pair_count_by_pose": initial_ocular_counts,
+        "selected_closed_target_interior": {
+            "target_keys": sorted(closed_targets[0]),
+            "initial_inside_vertex_counts_by_pose": initial_interior_counts,
+            "final_inside_vertex_counts_by_pose": current_interior_counts,
+            "target_validation_by_pose": [
+                {key: target["report"] for key, target in sorted(row.items())}
+                for row in closed_targets],
+            "interpretation": "additional exact inside checks for the explicitly selected closed targets; not whole-body solid-containment qualification",
+        },
         "resume_start": resume_start_report,
         "starting_nonocular_pair_count_by_pose": (
             initial_counts if resume_start_report is None else resume_start_report["nonocular_pair_count_by_pose"]

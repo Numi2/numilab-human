@@ -786,3 +786,286 @@ def test_active_face_conditioning_handles_empty_faces_and_rejects_zero_normals()
     assert report["minimum_active_projection_after"] is None
     with np.testing.assert_raises_regex(ImportError, "zero direction or normal"):
         _condition_shared_source_directions(maps, source, np.array([[0, 1, 2]]), np.zeros((2, 1, 3)))
+
+
+def _tetrahedron(scale=1.0):
+    vertices = np.array([
+        [0.0, 0.0, 0.0],
+        [scale, 0.0, 0.0],
+        [0.0, scale, 0.0],
+        [0.0, 0.0, scale],
+    ], dtype="<f4")
+    # Every edge has opposite traversal across its incident faces.
+    faces = np.array([[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype=np.int64)
+    return vertices, faces
+
+
+def _u_prism():
+    # Cross-section cells form a U with a 0.2 mm gap.  The ray starts in the
+    # left arm; the prescribed 0.25 mm margin after its first exit lands back
+    # inside the right arm, so the helper must continue to the next exit.
+    xs = [0.0, 0.0004, 0.0006, 0.0010]
+    ys = [0.0, 0.0010, 0.0020, 0.0030]
+    zs = [0.0, 0.0010]
+    occupied = {(ix, 0) for ix in range(3)} | {(0, iy) for iy in (1, 2)} | {(2, iy) for iy in (1, 2)}
+    vertices = []
+    vertex_ids = {}
+    faces = []
+
+    def vid(key):
+        if key not in vertex_ids:
+            vertex_ids[key] = len(vertices)
+            ix, iy, iz = key
+            vertices.append([xs[ix], ys[iy], zs[iz]])
+        return vertex_ids[key]
+
+    quads = (
+        (-1, 0, 0, lambda x, y, z: [(x, y, z), (x, y, z + 1), (x, y + 1, z + 1), (x, y + 1, z)]),
+        (1, 0, 0, lambda x, y, z: [(x + 1, y, z), (x + 1, y + 1, z), (x + 1, y + 1, z + 1), (x + 1, y, z + 1)]),
+        (0, -1, 0, lambda x, y, z: [(x, y, z), (x + 1, y, z), (x + 1, y, z + 1), (x, y, z + 1)]),
+        (0, 1, 0, lambda x, y, z: [(x, y + 1, z), (x, y + 1, z + 1), (x + 1, y + 1, z + 1), (x + 1, y + 1, z)]),
+        (0, 0, -1, lambda x, y, z: [(x, y, z), (x, y + 1, z), (x + 1, y + 1, z), (x + 1, y, z)]),
+        (0, 0, 1, lambda x, y, z: [(x, y, z + 1), (x + 1, y, z + 1), (x + 1, y + 1, z + 1), (x, y + 1, z + 1)]),
+    )
+    for ix, iy in sorted(occupied):
+        for dx, dy, dz, quad in quads:
+            neighbor = (ix + dx, iy + dy)
+            if (dx or dy) and neighbor in occupied:
+                continue
+            keys = quad(ix, iy, 0)
+            ids = [vid(key) for key in keys]
+            faces.extend(([ids[0], ids[1], ids[2]], [ids[0], ids[2], ids[3]]))
+    return np.asarray(vertices, dtype="<f4"), np.asarray(faces, dtype=np.int64)
+
+
+def test_closed_target_exact_coordinate_quotient_rejoins_duplicate_seam_records():
+    from numilab_human.common_atlas_skin_clearance import _prepare_closed_clearance_target
+
+    vertices, faces = _tetrahedron()
+    # Give one face a render-seam copy of vertex zero. No coordinate is moved.
+    seam_vertices = np.concatenate([vertices, vertices[[0]]], axis=0)
+    seam_faces = faces.copy()
+    seam_faces[0, 0] = len(vertices)
+    target = _prepare_closed_clearance_target(seam_vertices, seam_faces)
+
+    assert target["report"]["input_vertex_count"] == 5
+    assert target["report"]["quotient_vertex_count"] == 4
+    assert target["report"]["identified_duplicate_coordinate_records"] == 1
+    assert target["report"]["embedded_closed_target"] is True
+    assert target["report"]["source_coordinates_modified"] is False
+    assert target["vertices"].flags.writeable is False
+    assert target["faces"].flags.writeable is False
+
+
+def test_closed_target_rejects_open_surface_and_keeps_failure_report():
+    from numilab_human.common_atlas_skin_clearance import _prepare_closed_clearance_target
+
+    vertices, faces = _tetrahedron()
+    with np.testing.assert_raises_regex(ImportError, "closed.*oriented") as raised:
+        _prepare_closed_clearance_target(vertices, faces[:-1])
+
+    assert raised.exception.target_report["closed_connected_oriented"] is False
+
+
+def test_closed_target_rejects_exact_self_intersection():
+    from numilab_human.common_atlas_skin_clearance import _prepare_closed_clearance_target
+
+    vertices = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [0.2, 0.2, 1.0], [0.8, 0.8, 0.4],
+    ], dtype="<f4")
+    faces = np.array([
+        [3, 0, 1], [3, 1, 2], [3, 2, 0],
+        [4, 1, 0], [4, 2, 1], [4, 0, 2],
+    ], dtype=np.int64)
+    with np.testing.assert_raises_regex(ImportError, "self-intersection-free") as raised:
+        _prepare_closed_clearance_target(vertices, faces)
+
+    report = raised.exception.target_report
+    assert report["closed_connected_oriented"] is True
+    assert report["self_intersection_audit"]["count"] > 0
+    assert report["embedded_closed_target"] is False
+
+
+def test_closed_target_rejects_disconnected_shells():
+    from numilab_human.common_atlas_skin_clearance import _prepare_closed_clearance_target
+
+    vertices, faces = _tetrahedron()
+    second_vertices = vertices + np.array([2.0, 0.0, 0.0], dtype="<f4")
+    combined_vertices = np.concatenate([vertices, second_vertices], axis=0)
+    combined_faces = np.concatenate([faces, faces + len(vertices)], axis=0)
+    with np.testing.assert_raises_regex(ImportError, "closed.*oriented") as raised:
+        _prepare_closed_clearance_target(combined_vertices, combined_faces)
+
+    assert raised.exception.target_report["topology"]["face_component_count"] == 2
+
+
+def test_closed_target_inside_classification_excludes_boundary_and_outside_points(monkeypatch):
+    from numilab_human import cardiac_cavity_intersections as ci
+    from numilab_human.common_atlas_skin_clearance import (
+        _closed_target_inside_vertices,
+        _prepare_closed_clearance_target,
+    )
+
+    vertices, faces = _tetrahedron()
+    target = _prepare_closed_clearance_target(vertices, faces)
+    positions = np.array([
+        [0.1, 0.1, 0.1],  # interior
+        [0.1, 0.1, 0.8],  # exact slanted boundary
+        [0.5, 0.5, 0.5],  # outside the tetrahedron, inside its AABB
+        [2.0, 2.0, 2.0],  # outside the AABB
+    ], dtype="<f4")
+    assert _closed_target_inside_vertices(positions, target).tolist() == [0]
+
+    original = ci.point_location
+    def indeterminate(point, records):
+        if point == ci.float32_point_lattice_key(positions[0]):
+            return {"location": "indeterminate"}
+        return original(point, records)
+    monkeypatch.setattr(ci, "point_location", indeterminate)
+    with np.testing.assert_raises_regex(ImportError, "indeterminate"):
+        _closed_target_inside_vertices(positions, target)
+
+
+def test_exit_source_scalar_respects_anisotropic_mapped_direction_and_margin():
+    from numilab_human.common_atlas_skin_clearance import (
+        _closed_target_exit_source_scalar,
+        _prepare_closed_clearance_target,
+    )
+
+    vertices, faces = _tetrahedron()
+    target = _prepare_closed_clearance_target(vertices, faces)
+    scalar = _closed_target_exit_source_scalar(
+        np.array([0.1, 0.1, 0.1], dtype="<f4"),
+        np.array([2.0, 0.0, 0.0], dtype=np.float64),
+        target,
+        margin_m=0.1,
+    )
+    assert np.isclose(scalar, 0.4, rtol=0.0, atol=1e-7)
+    endpoint = np.array([0.1, 0.1, 0.1], dtype=np.float64) + scalar * np.array([2.0, 0.0, 0.0])
+    assert endpoint[0] > 0.8
+    assert endpoint[0] - 0.8 >= 0.099999
+
+
+def test_exit_source_scalar_skips_margin_endpoint_that_reenters_concave_target():
+    from numilab_human.common_atlas_skin_clearance import (
+        _closed_target_exit_source_scalar,
+        _prepare_closed_clearance_target,
+    )
+
+    vertices, faces = _u_prism()
+    target = _prepare_closed_clearance_target(vertices, faces)
+    scalar = _closed_target_exit_source_scalar(
+        np.array([0.0002, 0.0025, 0.0005], dtype="<f4"),
+        np.array([1.0, 0.0, 0.0], dtype=np.float64),
+        target,
+        margin_m=0.00025,
+    )
+    # The first exit is x=.4 mm; adding .25 mm lands inside the right arm.
+    # The helper must use the later exit at x=1 mm and add the margin there.
+    assert np.isclose(scalar, 0.00105, rtol=0.0, atol=2e-7)
+
+
+def test_exit_source_scalar_rejects_start_outside_closed_target():
+    from numilab_human.common_atlas_skin_clearance import (
+        _closed_target_exit_source_scalar,
+        _prepare_closed_clearance_target,
+    )
+
+    vertices, faces = _tetrahedron()
+    target = _prepare_closed_clearance_target(vertices, faces)
+    with np.testing.assert_raises_regex(ImportError, "strictly inside"):
+        _closed_target_exit_source_scalar(
+            np.array([1.5, 0.0, 0.0], dtype="<f4"),
+            np.array([1.0, 0.0, 0.0]),
+            target,
+        )
+
+
+def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary():
+    """A whole skin patch inside a solid needs direct, not boundary-only, demands."""
+    from numilab_human import common_atlas_skin_clearance as c
+
+    n = 17
+    axis = np.linspace(-0.04, 0.04, n)
+    top = np.array([[x, y, 0.0] for y in axis for x in axis], dtype="<f4")
+    bottom = top.copy()
+    bottom[:, 2] = -0.04
+    source = np.vstack((top, bottom))
+    count = len(top)
+    top_faces = []
+    for y in range(n - 1):
+        for x in range(n - 1):
+            a = y * n + x
+            top_faces.extend([[a, a + 1, a + n + 1], [a, a + n + 1, a + n]])
+    top_faces = np.array(top_faces, dtype=np.int64)
+    edge_counts = {}
+    for face in top_faces:
+        for a, b in zip(face, np.roll(face, -1)):
+            edge = tuple(sorted((int(a), int(b))))
+            edge_counts.setdefault(edge, []).append((int(a), int(b)))
+    boundary = [rows[0] for rows in edge_counts.values() if len(rows) == 1]
+    side_faces = []
+    for a, b in boundary:
+        side_faces.extend([[b, a, a + count], [b, a + count, b + count]])
+    faces = np.vstack((top_faces, top_faces[:, ::-1] + count,
+                       np.array(side_faces, dtype=np.int64)))
+    fixed = np.unique(np.concatenate((np.arange(count, 2 * count),
+                                      np.array(boundary).ravel())))
+    target_vertices, target_faces = _closed_cube()
+    target_vertices = (target_vertices * np.array([0.013, 0.013, 0.006])
+                       + np.array([0., 0., 0.001])).astype("<f4")
+    target_records = c._exact_surface_records(target_vertices, target_faces)
+    captured = np.repeat(source[None, :, :], 2, axis=0)
+    maps = np.broadcast_to(np.eye(3), (2, len(source), 3, 3)).copy()
+
+    def scan(pose, world):
+        result = c._audit_pair(c._exact_surface_records(world, faces), target_records,
+                               same_surface=False)
+        return {"target": result, "ocular": {"count": 0, "triangle_pairs": []}}
+
+    def triangle(pose, key, row):
+        assert key == "target"
+        return target_vertices[target_faces[row]]
+
+    baseline = [scan(pose, world) for pose, world in enumerate(captured)]
+    prepared = c._prepare_closed_clearance_target(target_vertices, target_faces)
+    inside = c._closed_target_inside_vertices(source, prepared)
+    crossing_vertices = np.unique(faces[[pair[0] for pair in baseline[0]["target"]["triangle_pairs"]]])
+    buried = np.setdiff1d(inside, crossing_vertices)
+    assert len(buried) >= 9
+    assert c._audit_pair(c._exact_surface_records(source, faces),
+                         c._exact_surface_records(source, faces), same_surface=True)["count"] == 0
+    events = []
+    arguments = dict(
+        source_positions=source, faces=faces, jacobians_by_pose=maps,
+        accepted_skin_world_by_pose=captured,
+        baseline_target_audits_by_pose=baseline, baseline_skin_self_pairs_by_pose=[0, 0],
+        source_outward_face_signs=np.ones(len(faces), dtype=np.int8),
+        scan_candidate_targets=scan, target_triangle_by_row=triangle,
+        all_target_keys={"target", "ocular"}, ocular_monitor_keys={"ocular"},
+        fixed_source_vertex_ids=fixed,
+        bed_plane_origins_by_pose=np.array([[0., 0., -0.04], [0., 0., -0.04]]),
+        bed_plane_normals_by_pose=np.array([[0., 0., 1.], [0., 0., 1.]]),
+        closed_target_surfaces_by_pose=[
+            {"target": (target_vertices, target_faces)} for _ in range(2)],
+        closed_target_face_counts={"target": len(target_faces)},
+        max_iterations=2, progress_callback=events.append,
+    )
+    with np.testing.assert_raises_regex(ImportError, "incomplete captured face coverage"):
+        c.derive_shared_multipose_inferred_clearance(
+            **{**arguments, "closed_target_face_counts": {"target": len(target_faces) + 12}})
+    with np.testing.assert_raises_regex(ImportError, "differs from captured target"):
+        c.derive_shared_multipose_inferred_clearance(
+            **{**arguments, "target_triangle_by_row":
+               lambda pose, key, row: triangle(pose, key, row).astype(float) + 1.0e-12})
+    result, report = c.derive_shared_multipose_inferred_clearance(**arguments)
+    assert report["final_nonocular_pair_count_by_pose"] == [0, 0]
+    assert report["selected_closed_target_interior"]["initial_inside_vertex_counts_by_pose"] == [25, 25]
+    assert report["selected_closed_target_interior"]["final_inside_vertex_counts_by_pose"] == [0, 0]
+    assert np.array_equal(result[fixed], source[fixed])
+    assert np.all(result[buried, 2] >= float(target_vertices[:, 2].max()) + 0.000249)
+    assert len(c._closed_target_inside_vertices(result, prepared)) == 0
+    assert c._audit_pair(c._exact_surface_records(result, faces),
+                         c._exact_surface_records(result, faces), same_surface=True)["count"] == 0
+    assert events[-1]["closed_target_interior_counts_candidate_by_pose"] == [0, 0]
