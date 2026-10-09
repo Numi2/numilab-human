@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/cardiac-boundary-components-1182/attempt-002/diagnose.py", line 18, in <module>
+    raw,header,records,vertices,indices=cb.read_payload(P)
+                                        ~~~~~~~~~~~~~~~^^^
+  File "/Users/n/numi-human-performance-source-014/matter/tools/cardiac_geometry_binding.py", line 43, in read_payload
+    raw = path.read_bytes()
+  File "/Users/n/miniforge3/lib/python3.13/pathlib/_abc.py", line 625, in read_bytes
+    with self.open(mode='rb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "/Users/n/miniforge3/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/resting-thorax.nhanatomy'

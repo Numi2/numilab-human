@@ -1,0 +1,46 @@
+{
+  "changed_files": [
+    "src/numilab_human/cardiac_partition_certificate.py",
+    "tests/test_cardiac_partition_certificate.py"
+  ],
+  "checkout": "/Users/n/numi-human-free-apex-publication-1159",
+  "head": "7f898282ca075fafe5f25d62dced6aba7f55c070",
+  "reasoning": [
+    "Existing emitted-surface topology checks require closed, consistently oriented manifold edge chains and manifold vertex links before patch construction.",
+    "The exact cross-surface triangle predicate still enumerates all candidate pairs. Non-identical intersections must be confined to a declared interface vertex or edge and to an edge of each participant triangle; otherwise the audit fails.",
+    "Patch mode blocks all interface edges and all participant edges touched by each admitted point or segment contact. Remaining face components connect only across unblocked edges, so their open interiors have no intersection path across which inside/outside status can change.",
+    "One exact parity query at a representative triangle centroid is used per component. A boundary/indeterminate witness fails closed. Self-intersection, oriented shared-interface chain, moments, winding, strict interior witnesses, and no-biological-valve/no-mechanical-mass declarations remain unchanged.",
+    "The legacy per-face mode remains the default; patch mode adds its explicit classification and witness counts."
+  ],
+  "reviewed_at_utc": "2026-10-09T07:49:41.344332+00:00",
+  "reviewed_diff": {
+    "path": "reviewed-diff.patch",
+    "sha256": "64a7323c9f3d29dddb065881db364610c4254a93b4a7132584232e0bd922834e"
+  },
+  "schema": "numi.human.cardiac-partition-patch-review.v1",
+  "scope_limits": [
+    "This review concerns the exact geometry certificate utility only.",
+    "It does not claim a biological valve interface, valve dynamics, or assigned mechanical mass.",
+    "It does not replace or weaken source ownership and geometry provenance requirements."
+  ],
+  "source_sha256": "22c6f349119fc06fcfbd2457e21d266578cb259fb0668c9c510b46c8c451be3a",
+  "status": "review_passed_with_interpreter_note",
+  "test_runs": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src /Users/n/numi-human-prep-venv-20261005/bin/python3.13 -m unittest tests.test_cardiac_partition_certificate -v",
+      "exit_code": 0,
+      "log": "tests-python313.log",
+      "python": "/Users/n/numi-human-prep-venv-20261005/bin/python3.13 (Python 3.13.13)",
+      "summary": "18 tests passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest tests.test_cardiac_partition_certificate -v",
+      "exit_code": 1,
+      "log": "tests-python39.log",
+      "python": "python3 (Python 3.9.6)",
+      "summary": "17 tests passed; one pre-existing test errored because sys.get_int_max_str_digits is unavailable in Python 3.9.6"
+    }
+  ],
+  "test_sha256": "2a0ab1698b63c73b43bb1474e17a814e201edf8b08e60ba0bc56780c441aadd5",
+  "verdict": "No blocking correctness issue found in the connected-boundary-patch classification path."
+}

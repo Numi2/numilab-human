@@ -1,0 +1,31 @@
+test_both_priorities_admit_shared_interface_with_disjoint_interiors (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_connected_patch_mode_matches_full_proof_after_exact_refinement (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_connected_patch_mode_rejects_overlap_and_forged_interface (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_distinct_vertices_can_become_collinear_after_float64_conversion (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_finite_float_requirement_and_duplicate_faces_rejected (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_missing_or_reversed_interface_copy_is_rejected (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_partial_overlap_cannot_be_hidden_by_declaring_an_interface (tests.test_cardiac_partition_certificate.EmittedInterfaceTests) ... ok
+test_arbitrary_rationals_are_not_claimed_as_published_binary64_source (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_centroid_label_cannot_hide_an_uncut_transverse_intersection (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_custom_source_names_must_be_two_distinct_nonempty_strings (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_false_classification_and_forged_parent_rejected (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_gap_duplicate_overlap_and_reversed_child_are_rejected (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_hand_authored_arrangement_has_exact_known_volume_and_raw_moments (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_hex_encoding_roundtrips_large_exact_moments_without_global_changes (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ERROR
+test_raw_moments_follow_exact_translation_identity (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_refined_positive_parent_coverage_preserves_exact_moments (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_source_geometry_digest_cannot_be_reused_after_coordinate_drift (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+test_wrong_parent_plane_and_outside_parent_bounds_are_rejected (tests.test_cardiac_partition_certificate.ExactCoverageTests) ... ok
+
+======================================================================
+ERROR: test_hex_encoding_roundtrips_large_exact_moments_without_global_changes (tests.test_cardiac_partition_certificate.ExactCoverageTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/n/numi-human-free-apex-publication-1159/tests/test_cardiac_partition_certificate.py", line 141, in test_hex_encoding_roundtrips_large_exact_moments_without_global_changes
+    limit=sys.get_int_max_str_digits();value=F((1<<20000)+1,(1<<20001)+3)
+AttributeError: module 'sys' has no attribute 'get_int_max_str_digits'
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.565s
+
+FAILED (errors=1)

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/cardiac-boundary-components-1182/diagnose.py", line 15, in <module>
+    t=time.monotonic(); z=np.load(P)
+                          ~~~~~~~^^^
+  File "/Users/n/numi-human-prep-venv-20261005/lib/python3.13/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-resting-evidence-20261005/cardiac-local-registered-reference-459/candidate-meshes.npz'

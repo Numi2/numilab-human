@@ -153,6 +153,53 @@ class EmittedInterfaceTests(unittest.TestCase):
             self.assertEqual(decode(proof['union_moments']['volume_m3']),F(127,48))
             self.assertTrue(all(v['outside_noninterface_face_count']>0 for v in proof['per_region'].values()))
 
+    def test_connected_patch_mode_matches_full_proof_after_exact_refinement(self):
+        _, rows = fixture()
+        def refine(tris):
+            result = []
+            for a, b, c in tris:
+                ab, bc, ca = (tuple((x+y)/2 for x,y in zip(u,v))
+                              for u,v in ((a,b),(b,c),(c,a)))
+                result.extend(((a,ab,ca),(ab,b,bc),(ca,bc,c),(ab,bc,ca)))
+            return result
+        for priority in (A, B):
+            regions, interface = emitted(rows, priority)
+            for level in range(2):
+                full = cert.audit_shared_interface_partition(regions, interface)
+                fast = cert.audit_shared_interface_partition(
+                    regions, interface, classify_connected_patches=True)
+                self.assertEqual(fast.pop('outside_classification'),
+                                 'exact_uncut_connected_boundary_patches')
+                for row in fast['per_region'].values():
+                    count = row.pop('outside_patch_count')
+                    witnesses = row.pop('outside_patch_witnesses')
+                    self.assertEqual(count, len(witnesses))
+                    self.assertEqual(sum(x['face_count'] for x in witnesses),
+                                     row['outside_noninterface_face_count'])
+                    self.assertLess(count, row['outside_noninterface_face_count'])
+                self.assertEqual(fast, full)
+                regions = {k:refine(v) for k,v in regions.items()}
+                interface = refine(interface)
+
+    def test_connected_patch_mode_rejects_overlap_and_forged_interface(self):
+        _, rows = fixture()
+        regions, interface = emitted(rows)
+        old, new = (2.5,.5,.5), (.75,.75,.25)
+        regions[B] = [tuple(new if p==old else p for p in t) for t in regions[B]]
+        with self.assertRaises(HumanImportError):
+            cert.audit_shared_interface_partition(
+                regions, interface, classify_connected_patches=True)
+        regions, interface = emitted(rows)
+        target = tuple(sorted(interface[0]))
+        i = next(i for i,t in enumerate(regions[B]) if tuple(sorted(t))==target)
+        regions[B][i] = tuple(reversed(regions[B][i]))
+        with self.assertRaisesRegex(HumanImportError, 'opposite winding'):
+            cert.audit_shared_interface_partition(
+                regions, interface, classify_connected_patches=True)
+        with self.assertRaisesRegex(HumanImportError, 'Boolean'):
+            cert.audit_shared_interface_partition(regions, interface,
+                                                  classify_connected_patches=1)
+
     def test_missing_or_reversed_interface_copy_is_rejected(self):
         _,rows=fixture();regions,interface=emitted(rows)
         bad=deepcopy(regions);target=tuple(sorted(interface[0]));index=next(i for i,t in enumerate(bad[B]) if tuple(sorted(t))==target)

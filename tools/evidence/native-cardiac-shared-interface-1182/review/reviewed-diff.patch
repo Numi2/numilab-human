@@ -1,0 +1,195 @@
+diff --git a/src/numilab_human/cardiac_partition_certificate.py b/src/numilab_human/cardiac_partition_certificate.py
+index 5ace75d..da677dd 100644
+--- a/src/numilab_human/cardiac_partition_certificate.py
++++ b/src/numilab_human/cardiac_partition_certificate.py
+@@ -383,13 +383,55 @@ def _verify_interface(regions,interface):
+         for p in tri:require(len(p)==3,'invalid interface point')
+ 
+ 
+-def audit_shared_interface_partition(regions,shared_interface):
++def _outside_connected_boundary_patches(mesh, other, shared_keys, blocked_edges):
++    """Classify open boundary patches after all face crossings are checked.
++
++    Every non-interface face interior is certified uncut by the caller, and
++    every edge touched by the opposite surface is blocked, even at one point.
++    An open path through remaining face interiors and edges cannot cross that
++    surface, so one exact parity witness classifies each connected patch.
++    """
++    remaining = {i for i, tri in enumerate(mesh.triangles)
++                 if tuple(sorted(tri)) not in shared_keys}
++    face_count = len(remaining)
++    edges = defaultdict(list)
++    for i in remaining:
++        tri = mesh.triangles[i]
++        for a, b in zip(tri, tri[1:]+tri[:1]):
++            edge = _edge_key(a, b)
++            if edge not in blocked_edges:
++                edges[edge].append(i)
++    adjacency = defaultdict(list)
++    for rows in edges.values():
++        require(len(rows) <= 2, 'nonmanifold open boundary patch')
++        if len(rows) == 2:
++            a, b = rows
++            adjacency[a].append(b); adjacency[b].append(a)
++    witnesses = []
++    while remaining:
++        seed = min(remaining); remaining.remove(seed)
++        stack = [seed]; count = 0
++        while stack:
++            i = stack.pop(); count += 1
++            for j in adjacency[i]:
++                if j in remaining:
++                    remaining.remove(j); stack.append(j)
++        tri = mesh.triangles[seed]
++        center = tuple(Fraction(sum(p[k] for p in tri), 3) for k in range(3))
++        require(other.location(center) == 'outside',
++                'non-interface emitted boundary patch is inside the other region')
++        witnesses.append({'representative_face': seed, 'face_count': count})
++    return face_count, witnesses
++
++
++def audit_shared_interface_partition(regions,shared_interface, *, classify_connected_patches=False):
+     """Audit final binary64 geometry independently of the rational construction.
+ 
+     `regions` maps two IDs to triangle lists of float metre points. Interface
+     triangles use the same globally converted coordinates. Contacts away from
+     that declared interface complex are rejected, including nesting.
+     """
++    require(type(classify_connected_patches) is bool, 'classification mode must be Boolean')
+     require(isinstance(regions,dict) and len(regions)==2,'two emitted regions required')
+     def exact(triangles):
+         require(isinstance(triangles,list) and triangles,'empty emitted triangles')
+@@ -422,28 +464,42 @@ def audit_shared_interface_partition(regions,shared_interface):
+     interface_vertices={p for t in shared for p in t}
+     interface_edges={_edge_key(a,b) for t in shared for a,b in zip(t,t[1:]+t[:1])}
+     a,b=list(prepared);contacts=0
+-    for row in prepared[a].records:
+-        for other in prepared[b].candidates(row[0]):
+-            points=predicates.triangle_intersection_points(row[0],other[0])
+-            if not points:continue
+-            contacts+=1
+-            if tuple(sorted(row[0]))==tuple(sorted(other[0])) and tuple(sorted(row[0])) in shared_keys:
+-                continue
+-            allowed=(all(p in interface_vertices for p in points) and len(set(points))==1) or any(
+-                all(_on_segment(p,x,y) for p in points) for x,y in interface_edges)
+-            uncut=all(any(all(_on_segment(p,t[i],t[(i+1)%3]) for p in points) for i in range(3))
+-                      for t in (row[0],other[0]))
+-            require(allowed and uncut,'emitted regions intersect outside their declared interface or through a face interior')
+-    # Opposite interface normals do not justify arbitrary crossings at shared
+-    # edges. Every other open boundary patch must independently be outside the
+-    # opposite solid after its uncut interior has been established above.
++    blocked = {name: set(interface_edges) for name in prepared}
++    for row, other in predicates._aabb_candidate_pairs(
++            prepared[a].records, prepared[b].records, same_surface=False):
++        points=predicates.triangle_intersection_points(row[0],other[0])
++        if not points:continue
++        contacts+=1
++        if tuple(sorted(row[0]))==tuple(sorted(other[0])) and tuple(sorted(row[0])) in shared_keys:
++            continue
++        allowed=(all(p in interface_vertices for p in points) and len(set(points))==1) or any(
++            all(_on_segment(p,x,y) for p in points) for x,y in interface_edges)
++        containing_edges = []
++        for tri in (row[0], other[0]):
++            containing_edges.append({_edge_key(tri[i], tri[(i+1)%3])
++                for i in range(3)
++                if all(_on_segment(p,tri[i],tri[(i+1)%3]) for p in points)})
++        require(allowed and all(containing_edges),
++                'emitted regions intersect outside their declared interface or through a face interior')
++        if classify_connected_patches:
++            # Vertex contact blocks both incident edges conservatively.
++            blocked[a].update(containing_edges[0])
++            blocked[b].update(containing_edges[1])
++    # Opposite normals alone do not justify crossings or nesting. Patch mode
++    # uses only the uncut topology established above and reports its witnesses.
+     for name,mesh in prepared.items():
+         other=prepared[b if name==a else a];checked=0
+-        for tri in mesh.triangles:
+-            if tuple(sorted(tri)) in shared_keys:continue
+-            center=tuple(Fraction(sum(p[k] for p in tri),3) for k in range(3))
+-            require(other.location(center)=='outside','non-interface emitted boundary patch is inside the other region')
+-            checked+=1
++        if classify_connected_patches:
++            checked, patch_witnesses = _outside_connected_boundary_patches(
++                mesh, other, shared_keys, blocked[name])
++            reports[name]['outside_patch_witnesses'] = patch_witnesses
++            reports[name]['outside_patch_count'] = len(patch_witnesses)
++        else:
++            for tri in mesh.triangles:
++                if tuple(sorted(tri)) in shared_keys:continue
++                center=tuple(Fraction(sum(p[k] for p in tri),3) for k in range(3))
++                require(other.location(center)=='outside','non-interface emitted boundary patch is inside the other region')
++                checked+=1
+         reports[name]['outside_noninterface_face_count']=checked
+     # A strict interior witness prevents accepting nested regions with no
+     # transverse boundary crossing. Inward steps use exact rational points.
+@@ -463,8 +519,11 @@ def audit_shared_interface_partition(regions,shared_interface):
+             if found is not None:break
+         require(found is not None,'could not establish strict emitted interior witness')
+         witnesses[name]=[encode_rational(Fraction(x,scale)) for x in found]
+-    return {'schema':'HumanPack.cardiac-shared-interface-audit.v1','coordinate_semantics':'exact_binary64_metres',
++    result = {'schema':'HumanPack.cardiac-shared-interface-audit.v1','coordinate_semantics':'exact_binary64_metres',
+             'per_region':reports,'cross_domain_contact_pairs':contacts,'shared_interface_face_count':len(interface),
+             'shared_interface_opposite_chain':True,'interiors_disjoint':True,'strict_interior_witnesses_m':witnesses,
+             'union_moments':_moments_json(_add(*moments.values())),
+             'biological_valve_interface':False,'mechanical_mass_assigned':False}
++    if classify_connected_patches:
++        result['outside_classification'] = 'exact_uncut_connected_boundary_patches'
++    return result
+diff --git a/tests/test_cardiac_partition_certificate.py b/tests/test_cardiac_partition_certificate.py
+index 8df479b..df2b077 100644
+--- a/tests/test_cardiac_partition_certificate.py
++++ b/tests/test_cardiac_partition_certificate.py
+@@ -153,6 +153,53 @@ class EmittedInterfaceTests(unittest.TestCase):
+             self.assertEqual(decode(proof['union_moments']['volume_m3']),F(127,48))
+             self.assertTrue(all(v['outside_noninterface_face_count']>0 for v in proof['per_region'].values()))
+ 
++    def test_connected_patch_mode_matches_full_proof_after_exact_refinement(self):
++        _, rows = fixture()
++        def refine(tris):
++            result = []
++            for a, b, c in tris:
++                ab, bc, ca = (tuple((x+y)/2 for x,y in zip(u,v))
++                              for u,v in ((a,b),(b,c),(c,a)))
++                result.extend(((a,ab,ca),(ab,b,bc),(ca,bc,c),(ab,bc,ca)))
++            return result
++        for priority in (A, B):
++            regions, interface = emitted(rows, priority)
++            for level in range(2):
++                full = cert.audit_shared_interface_partition(regions, interface)
++                fast = cert.audit_shared_interface_partition(
++                    regions, interface, classify_connected_patches=True)
++                self.assertEqual(fast.pop('outside_classification'),
++                                 'exact_uncut_connected_boundary_patches')
++                for row in fast['per_region'].values():
++                    count = row.pop('outside_patch_count')
++                    witnesses = row.pop('outside_patch_witnesses')
++                    self.assertEqual(count, len(witnesses))
++                    self.assertEqual(sum(x['face_count'] for x in witnesses),
++                                     row['outside_noninterface_face_count'])
++                    self.assertLess(count, row['outside_noninterface_face_count'])
++                self.assertEqual(fast, full)
++                regions = {k:refine(v) for k,v in regions.items()}
++                interface = refine(interface)
++
++    def test_connected_patch_mode_rejects_overlap_and_forged_interface(self):
++        _, rows = fixture()
++        regions, interface = emitted(rows)
++        old, new = (2.5,.5,.5), (.75,.75,.25)
++        regions[B] = [tuple(new if p==old else p for p in t) for t in regions[B]]
++        with self.assertRaises(HumanImportError):
++            cert.audit_shared_interface_partition(
++                regions, interface, classify_connected_patches=True)
++        regions, interface = emitted(rows)
++        target = tuple(sorted(interface[0]))
++        i = next(i for i,t in enumerate(regions[B]) if tuple(sorted(t))==target)
++        regions[B][i] = tuple(reversed(regions[B][i]))
++        with self.assertRaisesRegex(HumanImportError, 'opposite winding'):
++            cert.audit_shared_interface_partition(
++                regions, interface, classify_connected_patches=True)
++        with self.assertRaisesRegex(HumanImportError, 'Boolean'):
++            cert.audit_shared_interface_partition(regions, interface,
++                                                  classify_connected_patches=1)
++
+     def test_missing_or_reversed_interface_copy_is_rejected(self):
+         _,rows=fixture();regions,interface=emitted(rows)
+         bad=deepcopy(regions);target=tuple(sorted(interface[0]));index=next(i for i,t in enumerate(bad[B]) if tuple(sorted(t))==target)

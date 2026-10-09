@@ -19,7 +19,7 @@ The skin is an inferred enclosing reference surface. The retained 927 constructi
 
 Row 310 is an external lung-union/visceral proxy. It is not an explicit parietal pleura, pleural-fluid layer, or complete fissure lining. The liver exterior retains source identity while its retired overlapping alias is hidden; this does not provide internal hepatic segmentation.
 
-The retained cardiac interface review localizes right-atrial/right-ventricular source contacts near the tricuspid projection. It is a bounded intended-interface interpretation, not clearance of every cardiac tissue interface or reconstruction of valve-plane/orifice ownership.
+The [right-heart shared-boundary certificate](../native-cardiac-shared-interface-1182/README.md) verifies disjoint right-atrial/right-ventricular interiors in current source-neutral anatomy and the registered baseline's terminal accepted state. Its 11,568 exact triangle contacts are confined to 690 opposite-winding shared triangles and their boundary features. This is an inferred geometric compartment interface; it does not establish biological valve-plane/orifice ownership, all cardiac tissue interfaces, or continuous-time clearance. Historical raw-source overlap counts do not describe this later registered geometry.
 
 ## Evidence boundaries
 
