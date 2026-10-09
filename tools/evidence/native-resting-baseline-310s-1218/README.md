@@ -1,0 +1,27 @@
+# Closed 310-second resting baseline (candidate 1218)
+
+This bundle preserves a complete 310-second native Human resting run and its post-run numerical, presentation, and sampled anatomy checks. The native run exited successfully with 155,000 accepted steps (310.0000147242099 s) and no assistance. Its integrated native wall time was 2,740.614427 s (RTF 0.11311333); wrapper wall time was 2,762.843561 s. Geometry-audit CPU work overlapped the run, so these times are not isolated performance measurements.
+
+## Result boundary
+
+The numerical run and its consistency checks completed, but **anatomy did not pass**. Exact accepted-pose scans cover 859 target surfaces at eight captures (steps 0, 9983, 19999, 47519, 152191, 153183, 154143, 155000). The first three have no skin-target pairs; at step 47519 (actual 95.03800451406278 s) there are 18 pairs: 12 with surfaces 51011/503 and 6 with 51005/36. Late counts are 845, 890, 907, and 853 at 304.382, 306.366, 308.286, and 310.000 seconds. Skin self pairs and degenerate/invalid skin triangles are zero in these scans. Eight snapshots are not a continuous-time or full-horizon clearance proof.
+
+The muscle audit's raw indexed self streams contain duplicate-source seam contacts. The exact-coordinate source-seam supplement classifies the 40 s and 95 s muscle hits as exact duplicate-source seams; it does not convert the raw counts into physical intersections and it does not cover every muscle at every capture. The per-pose reports retain both raw records and the bounded supplement.
+
+The accepted physiology trace has 19,375 rows total, with 56 complete breaths and 350 complete filling/ejection cycles counted after 10 s. Reported blood volume is 5,150.096 mL at terminal, with maximum absolute inventory error 0.098 mL. O2/CO2 balance residual maxima are 0.000233/0.000466 STPD mL. Maximum respiratory identity residuals were 6.50e-6 Pa (airway pressure), 7.53e-5 Pa (pleural compliance), and 0.000310 mL (volume decomposition), within the declared 32-Float32-epsilon allowance. Contextual reference comparisons are exceptions as well as matches: complete breath rate is 10.87–11.56/min versus 12–18/min, and mean pulmonary artery pressure is about 14.77 mmHg versus 15–20 mmHg across the reported windows; mean PaO2 is slightly above 80–100 mmHg in three windows. Reference ranges are descriptive only, not a clinical or calibrated physiology gate.
+
+Over 250–310 s the logged COM endpoint displacement is 0.520 mm while root endpoint displacement is 7.250 mm in 3D; late reported contact penetration peaks at 13.324 µm and mean support force is about 706.32 N for the declared 72 kg reference mass. This is bounded observed motion/contact, not a static-equilibrium finding. The gravity/motion supplement explicitly does not claim momentum closure. Replay and rollback were not tested. Respiratory-pressure-to-cardiovascular feedback, Haldane exchange, and regional V/Q validation are not established.
+
+## Recording
+
+The corrected movie review counted 4,846 nonempty compressed image samples matching 4,846 surface-audit rows, plus five zero-sample timing markers; a decoded leading PTS 0.0 preroll is not counted as a presentation frame. The 18 checked representative PNGs were nonempty. The first image is at 1.77 s; the longest between-image gap is 7.265 s and is preserved. The declared layer period was 8.0 s. Root visually reviewed the skin, heart, and final samples: whole body on the flat support, visible heart detail, and synchronized terminal HUD were present; footer ownership text is clipped in heart/final samples. This is presentation review, not anatomical qualification.
+
+The failed movie-review v1 is retained separately with its partial logs, PTS tables, and extracted frames. Its parser rejected NaN PTS values on zero-sample timing markers, and its inspection helper hard-coded a 2.5 s layer interval despite the declared 8.0 s interval. Review v2 admits nonfinite PTS only for zero-sample markers, keeps finite image PTS strict, and derives/checks the interval from the invocation. The unexecuted v3 wrapper is intentionally omitted.
+
+## Reproduction and files
+
+The exact owner declaration, invocation, run metadata, accepted receipts, and analysis scripts are under `native/` and `analysis/`. Geometry scripts, per-pose result records, and lossless-gzip witness streams are under `geometry/`; decompressing each `.gz` stream reproduces the source bytes and SHA-256 recorded in `COPY-MANIFEST.json`. Large accepted MRV packs, full terminal MRV pack, movie, the 29.3 MB anatomy receipt, runtime/anatomy payloads, and audit dependencies remain at their original paths in `external-artifacts.json`.
+
+For an audit-only rerun, use the exact root003 script under `geometry/scripts/audit_native_candidate_1218_root003.py` only with the original receipt-bound capture inputs and a fresh output directory. The included root001 setup failure is preserved as a tooling failure before a geometry scan. No simulation or geometry scan was rerun while building this bundle.
+
+`analysis/closed-baseline-analysis.json` is the numerical summary; `geometry/aggregate/summary.json` is the authoritative eight-pose anatomy aggregate. The bundle is evidence of a closed numerical native run with a failed anatomy gate, not overall resting-scene acceptance, clinical validation, or proof of a stable human rest state.

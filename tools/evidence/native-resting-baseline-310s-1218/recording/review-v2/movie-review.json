@@ -1,0 +1,226 @@
+{
+  "avassetimagegenerator": {
+    "selected_frames": [
+      {
+        "frame": "initial",
+        "height": "900",
+        "index": "0",
+        "simulated_s": "0.0",
+        "wall_s": "1.77",
+        "width": "1280"
+      },
+      {
+        "frame": "middle",
+        "height": "900",
+        "index": "2423",
+        "simulated_s": "155.070007365",
+        "wall_s": "1396.5283333333334",
+        "width": "1280"
+      },
+      {
+        "frame": "final",
+        "height": "900",
+        "index": "4845",
+        "simulated_s": "310.000014724",
+        "wall_s": "2742.3716666666664",
+        "width": "1280"
+      },
+      {
+        "frame": "skin",
+        "height": "900",
+        "index": "63",
+        "simulated_s": "4.03000019141",
+        "wall_s": "43.32666666666667",
+        "width": "1280"
+      },
+      {
+        "frame": "muscles",
+        "height": "900",
+        "index": "188",
+        "simulated_s": "12.0300005714",
+        "wall_s": "113.97",
+        "width": "1280"
+      },
+      {
+        "frame": "skeleton",
+        "height": "900",
+        "index": "313",
+        "simulated_s": "20.0300009514",
+        "wall_s": "185.53166666666667",
+        "width": "1280"
+      },
+      {
+        "frame": "organs",
+        "height": "900",
+        "index": "438",
+        "simulated_s": "28.0300013314",
+        "wall_s": "255.655",
+        "width": "1280"
+      },
+      {
+        "frame": "lungs",
+        "height": "900",
+        "index": "563",
+        "simulated_s": "36.0300017113",
+        "wall_s": "320.8933333333333",
+        "width": "1280"
+      },
+      {
+        "frame": "heart",
+        "height": "900",
+        "index": "688",
+        "simulated_s": "44.0300020913",
+        "wall_s": "390.44",
+        "width": "1280"
+      },
+      {
+        "frame": "vessels",
+        "height": "900",
+        "index": "813",
+        "simulated_s": "52.0300024713",
+        "wall_s": "464.55",
+        "width": "1280"
+      }
+    ],
+    "summary": {
+      "duration_wall_s": "2743.943333333333",
+      "first_wall_s": "1.77",
+      "frames": "4846",
+      "last_wall_s": "2742.3716666666664",
+      "max_gap_wall_s": "7.265000000000001",
+      "timing_markers": "5"
+    }
+  },
+  "counts": {
+    "compressed_nonempty_image_samples": 4846,
+    "compressed_track_sample_buffers": 4851,
+    "compressed_zero_sample_timing_markers": 5,
+    "decoded_only_leading_zero_preroll": true,
+    "sequential_bgra_decoded_samples": 4847,
+    "surface_csv_data_rows": 4846,
+    "zero_pts_blackout_interpretation": "prohibited: when present, PTS 0.0 is an extra decoded preroll sample with no compressed nonempty image/surface-row counterpart; it is excluded from the presentation-frame count.",
+    "zero_sample_marker_records": [
+      {
+        "compressed_index": 0,
+        "is_image_frame": false,
+        "raw_pts": "0.0"
+      },
+      {
+        "compressed_index": 1,
+        "is_image_frame": false,
+        "raw_pts": "1.77"
+      },
+      {
+        "compressed_index": 4848,
+        "is_image_frame": false,
+        "raw_pts": "nan"
+      },
+      {
+        "compressed_index": 4849,
+        "is_image_frame": false,
+        "raw_pts": "nan"
+      },
+      {
+        "compressed_index": 4850,
+        "is_image_frame": false,
+        "raw_pts": "2743.943333333333"
+      }
+    ]
+  },
+  "helpers": {
+    "/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift": "2d6704dd5f06bffd0b8aa0072171af805fdb3dd00dcc11c02e0b692513b21649",
+    "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/recording-review-terminal-sequential-1217/count_pts.swift": "7436e6e4af15e2f34ce67bbd2c110991d3e3209f44e2ea4fc84571c5e20eced5",
+    "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/recording-review-terminal-sequential-1217/decode_sequential.swift": "446eefd138fd8fb472be21a92ff1ff150ea11377ce6df52ff66d92f220da9d18",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/baseline-analysis-002/png_pixel_metrics.swift": "0ecfe9ae949b3e83eca2529fee36927ec63c275ec0ac8135d6870a03a38a9b44"
+  },
+  "inspection_tour": {
+    "declaration_period_seconds": 8.0,
+    "layers": [
+      {
+        "absolute_selection_error_s": "0.03000019141",
+        "frame": "skin",
+        "selected_simulated_s": "4.03000019141",
+        "target_simulated_s": "4.00"
+      },
+      {
+        "absolute_selection_error_s": "0.0300005714",
+        "frame": "muscles",
+        "selected_simulated_s": "12.0300005714",
+        "target_simulated_s": "12.00"
+      },
+      {
+        "absolute_selection_error_s": "0.0300009514",
+        "frame": "skeleton",
+        "selected_simulated_s": "20.0300009514",
+        "target_simulated_s": "20.00"
+      },
+      {
+        "absolute_selection_error_s": "0.0300013314",
+        "frame": "organs",
+        "selected_simulated_s": "28.0300013314",
+        "target_simulated_s": "28.00"
+      },
+      {
+        "absolute_selection_error_s": "0.0300017113",
+        "frame": "lungs",
+        "selected_simulated_s": "36.0300017113",
+        "target_simulated_s": "36.00"
+      },
+      {
+        "absolute_selection_error_s": "0.0300020913",
+        "frame": "heart",
+        "selected_simulated_s": "44.0300020913",
+        "target_simulated_s": "44.00"
+      },
+      {
+        "absolute_selection_error_s": "0.0300024713",
+        "frame": "vessels",
+        "selected_simulated_s": "52.0300024713",
+        "target_simulated_s": "52.00"
+      }
+    ],
+    "period_seconds": "8.0",
+    "period_source": "invocation.environment.NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS"
+  },
+  "notes": [
+    "Movie wall-clock PTS are compared in presentation order and are not equated with simulation seconds.",
+    "Zero-sample timing markers are preserved by compressed-stream index and raw PTS text; nonfinite marker PTS are never treated as image frames.",
+    "The initial gap from wall time zero to the first image and the longest inter-image gap are reported explicitly; the initial 7.265 s gap is not discarded.",
+    "Surface CSV rows are associated to sorted image samples by sequence index.",
+    "All native inputs were hash-identical before and after review."
+  ],
+  "pts": {
+    "compressed_nonempty_first_s": "1.77",
+    "compressed_nonempty_last_s": "2742.3716666666664",
+    "compressed_nonempty_pts_match_decoded_after_optional_preroll": true,
+    "decoded_first_s": "0.0",
+    "decoded_last_s": "2742.3716666666664",
+    "decoded_pts_strictly_increasing": true,
+    "initial_gap_from_zero_to_first_image_s": 1.77,
+    "longest_between_image_gap_s": 7.265000000000001
+  },
+  "run_dir": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run",
+  "schema": "numi.human.closed-baseline-movie-review.v2",
+  "scope": "Post-close AVAssetReader PTS/count, AVAssetImageGenerator representative frames, sequential BGRA decode, and nonempty decoded PNG pixel check; no anatomy or physiology qualification.",
+  "sequential_pixel_check": {
+    "frames_checked": 18,
+    "per_frame_metrics_log": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/baseline-analysis-002/movie-review-002/png-pixel-metrics.log"
+  },
+  "source_hashes_after": {
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/execution.json": "a128afbaf5975b73c34cffb07aa65d39be2626a59cb91085bfc4c63e3c223242",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/invocation.json": "34f757ccda069de88df8c025ee024e681c9d6da5a2ac8599dfce0a14eced577e",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/native-viewer.mov": "405fe3184e340a4045481f4d367231b13ed05dda54cbe06bebd74e3207103c14",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/resting-surface-audit.csv": "c9dd07f6d20a22831bbbebbf30b4cfe92384472b2eb51f3da209b862ef870a6d",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/run-metadata.json": "401ff87d7b4c52a3bb6c0b5a1d119939eccef7d37a15d6ef4a101a4ffcde29b3",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/run-declaration.json": "5319d47c6c2fd9fa0a581edbb02b07e6e6f18301407b060e6b52d13a5169f90f"
+  },
+  "source_hashes_before": {
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/execution.json": "a128afbaf5975b73c34cffb07aa65d39be2626a59cb91085bfc4c63e3c223242",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/invocation.json": "34f757ccda069de88df8c025ee024e681c9d6da5a2ac8599dfce0a14eced577e",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/native-viewer.mov": "405fe3184e340a4045481f4d367231b13ed05dda54cbe06bebd74e3207103c14",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/resting-surface-audit.csv": "c9dd07f6d20a22831bbbebbf30b4cfe92384472b2eb51f3da209b862ef870a6d",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/native-run/run-metadata.json": "401ff87d7b4c52a3bb6c0b5a1d119939eccef7d37a15d6ef4a101a4ffcde29b3",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/run-declaration.json": "5319d47c6c2fd9fa0a581edbb02b07e6e6f18301407b060e6b52d13a5169f90f"
+  },
+  "status": "pass"
+}

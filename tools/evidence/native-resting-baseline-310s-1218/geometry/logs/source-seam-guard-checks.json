@@ -1,0 +1,28 @@
+{
+  "audit_script_sha256": "246b9c28eeb4c80ded2271dfa3cd340e63ee059568052416748d5c7791761568",
+  "cases": [
+    {
+      "case": "identical_source_xyz_and_route_with_distinct_normals",
+      "result": "accepted_as_source_seam"
+    },
+    {
+      "case": "different_source_position",
+      "result": "rejected_unrelated_posed_coincidence"
+    },
+    {
+      "case": "different_sparse_route_index",
+      "result": "rejected_unrelated_posed_coincidence"
+    },
+    {
+      "case": "different_sparse_route_weight",
+      "result": "rejected_unrelated_posed_coincidence"
+    },
+    {
+      "case": "distinct_captured_coordinates",
+      "result": "no_identification"
+    }
+  ],
+  "qualification": "Synthetic guard regressions only, not native anatomical evidence.",
+  "status": "passed",
+  "test_script_sha256": "4ac99d9ccf0c3856eae92c08202f3bb4d7781e17fd75de8645df93d51cd9d746"
+}

@@ -1,0 +1,18 @@
+/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/recording-review-terminal-sequential-1217/decode_sequential.swift:19:25: warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+17 | let outDir = URL(fileURLWithPath: CommandLine.arguments[2], isDirectory: true)
+18 | let asset = AVURLAsset(url: movie)
+19 | guard let track = asset.tracks(withMediaType: .video).first else { fatalError("missing video track") }
+   |                         `- warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+20 | let reader = try AVAssetReader(asset: asset)
+21 | let settings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+index=4839 pts=2737.685 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4839.png
+index=4840 pts=2738.2266666666665 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4840.png
+index=4841 pts=2738.766666666667 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4841.png
+index=4842 pts=2739.31 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4842.png
+index=4843 pts=2739.85 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4843.png
+index=4844 pts=2740.3866666666668 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4844.png
+index=4845 pts=2740.8 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4845.png
+index=4846 pts=2742.3716666666664 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-4846.png
+samples=4847 nonmonotonic_or_duplicate_pts=0 last_pts=2742.3716666666664 status=completed

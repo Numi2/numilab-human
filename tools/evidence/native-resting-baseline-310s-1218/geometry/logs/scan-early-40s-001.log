@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-accepted-geometry-audit-001/audit_native_candidate_1218_root001.py", line 266, in getarg
+    i = argv.index(name)
+ValueError: '--body-scene' is not in list
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-accepted-geometry-audit-001/audit_native_candidate_1218_root001.py", line 553, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-accepted-geometry-audit-001/audit_native_candidate_1218_root001.py", line 440, in main
+    invocation, metadata, assets, invocation_path, metadata_path = validate_invocation(run, require_closed)
+                                                                   ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-accepted-geometry-audit-001/audit_native_candidate_1218_root001.py", line 282, in validate_invocation
+    actual = Path(getarg(argv, opt)).resolve()
+                  ~~~~~~^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-accepted-geometry-audit-001/audit_native_candidate_1218_root001.py", line 270, in getarg
+    raise ValueError("native invocation lacks " + name)
+ValueError: native invocation lacks --body-scene

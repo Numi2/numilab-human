@@ -1,0 +1,59 @@
+{
+  "builder": {
+    "bytes": 30496,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/prepare_native_baseline_310s.py",
+    "sha256": "87e44bd1aac2e35c31b9ed3b48638e6c45861589381c1f769eb9bbffcafe1d9b"
+  },
+  "created_utc": "2026-10-09T20:10:25.759213+00:00",
+  "declaration_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/run-declaration.json",
+  "declaration_written": false,
+  "errors": [
+    "ValueError: composition preservation gate failed: normals_recomputed_by_existing_skin_owner"
+  ],
+  "gate_checks": {
+    "composition_review": {
+      "missing": [],
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/package-preparation-002/composed-candidate/composition-review.json"
+    },
+    "output_paths": {
+      "native_run_directory_absent": true,
+      "run_declaration_absent": true
+    },
+    "parent": {
+      "declaration": {
+        "bytes": 30161,
+        "path": "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/native-refinement-1217-attempt2/run-declaration.json",
+        "sha256": "a89a7fdfef2751b00db90d1b8f0332176ef4aea4981bcaa936b10ad71531c12b"
+      },
+      "errors": [],
+      "execution": {
+        "bytes": 176,
+        "path": "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/native-refinement-1217-attempt2/execution.json",
+        "sha256": "4c5665166e3084546863b6aa6c48902f483c34d40a9f5e3982d3b0c25961ea69"
+      },
+      "native_metadata": {
+        "bytes": 11335,
+        "path": "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/native-refinement-1217-attempt2/native-run/run-metadata.json",
+        "sha256": "4b394d7dc0461e98ea5aad93435c5097eff2c1b0aa3a9dc293c16fcbeaf1c844"
+      },
+      "passed": true
+    },
+    "plan": {
+      "passed": true,
+      "pin": {
+        "bytes": 4208,
+        "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-baseline-310s-preparation/preparation-plan.json",
+        "sha256": "b4d6d89d2f845fee0143bae0a3cc858024869fd7bd800f8e65cd1d91247017e8"
+      }
+    },
+    "root003_audit_files": {
+      "declaration": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/scan-001/declaration.json",
+      "missing": [],
+      "source": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/audit_local_reduction_1218_root003.py",
+      "summary": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/scan-001/summary.json"
+    }
+  },
+  "native_run_performed": false,
+  "schema": "numi.human.resting.baseline-310s-declaration-builder-report.v1",
+  "status": "preparation_refused"
+}
