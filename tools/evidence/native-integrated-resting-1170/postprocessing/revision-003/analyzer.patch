@@ -1,0 +1,37 @@
+--- /Users/n/numi-human-retained-delivery-20261009/native-final-pair-postprocessing-1170/revision-002/analyze_final_pair.py
++++ /Users/n/numi-human-retained-delivery-20261009/native-final-pair-postprocessing-1170/revision-003/analyze_final_pair.py
+@@ -24,7 +24,8 @@
+ SCIENCE_CLI = LAB / "tools/numi"
+ ANALYZER_PATH = EVIDENCE / "native-paired-physiology-audit-855/analyze_completed_trial.py"
+ PREPARE_PATH = Path(__file__).resolve().with_name("prepare_final_plan.py")
+-EXPECTED_REVISION = "d550d8ad88a76fdee5bb6e028286fd24e962571f"
++LAB_RUNTIME_REVISION = "d550d8ad88a76fdee5bb6e028286fd24e962571f"
++EXPECTED_REVISION = "b354949c258106d00f2bd3dd6ac91216d5a3d409"
+ CARDIAC_911 = EVIDENCE / "native-cardiac-interface-localization-911/final-localization-report.json"
+ CARDIAC_911_SHA256 = "9c468f7a1da58563387acc9712f845a794f07fa3121c7fa4a3a7ae905ecf03e4"
+ 
+@@ -494,6 +495,15 @@
+     safe_write(path, json.dumps(obj, indent=2, sort_keys=True, allow_nan=False) + "\n")
+ 
+ 
++def valid_u64_identity(value):
++    # The Human owner serializes fingerprint identities as decimal strings.
++    # Accept exact canonical unsigned integers; never pass through Float64.
++    if type(value) is int:
++        return 0 <= value <= (1 << 64) - 1
++    return (isinstance(value, str) and bool(re.fullmatch(r"0|[1-9][0-9]*", value))
++            and int(value) <= (1 << 64) - 1)
++
++
+ def validate_registration_source(source):
+     # Registration names the prepared Human owner; invocation names the Lab
+     # runtime. Keep their distinct pinned identities instead of conflating them.
+@@ -542,7 +552,7 @@
+     require(current_preflight.get("preflight_accepted_steps") == 10000 and
+             current_preflight.get("preflight_dt_s") == 0.002 and
+             current_preflight.get("preflight_device") == "Apple M4 Pro" and
+-            isinstance(current_preflight.get("preflight_world_fingerprint"), int) and
++            valid_u64_identity(current_preflight.get("preflight_world_fingerprint")) and
+             current_preflight.get("treatment_program_fingerprint", {}).get("matched") is True,
+             "registered plan lacks the matched 20 s corrected-asset native program-identity preflight")
+     native_provenance = current_preflight.get("compiled_native_provenance", {})

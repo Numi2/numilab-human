@@ -1,0 +1,27 @@
+--- /Users/n/numi-human-resting-evidence-20261005/native-postrun-descriptive-supplement-1174/revision-003/postrun_descriptive_supplement.py
++++ /Users/n/numi-human-resting-evidence-20261005/native-postrun-descriptive-supplement-1174/revision-004/postrun_descriptive_supplement.py
+@@ -295,10 +295,14 @@
+     require(post, "no post-initialization samples including terminal accepted state")
+     blood_all = stats(rows, "blood_ml")
+     blood_post = stats(post, "blood_ml")
++    owner_rows = owner.read_trace(rows_path)
++    require(len(owner_rows) == len(rows) and all(
++        number(a, "time_s") == number(b, "time_s") and number(a, "step") == number(b, "step")
++        for a, b in zip(rows, owner_rows)), "owner numeric parser changed accepted sample identities")
+     response = window_response(rows, windows)
+     reference = {}
+     for name, (lo, hi) in windows.items():
+-        ref = owner.resting_reference_comparison(rows, lo, hi)
++        ref = owner.resting_reference_comparison(owner_rows, lo, hi)
+         comparisons = ref.get("general_adult_resting_reference_comparisons", {})
+         selected = {}
+         for key in ("mean_PaO2_mmhg", "mean_PaCO2_mmhg", "mean_SaO2_percent", "aortic_output_L_min", "mean_last_complete_LV_stroke_ml"):
+@@ -312,7 +316,7 @@
+     require(invocation.get("asset_sha256", {}).get(str(config_path)) == config_sha,
+             "selected respiration config is not bound by the exact native invocation")
+     mechanics = owner.native_respiration_trace_consistency(rows_path, config_path, windows)
+-    post_reference = owner.resting_reference_comparison(rows, 10.0, duration)
++    post_reference = owner.resting_reference_comparison(owner_rows, 10.0, duration)
+     post_general = post_reference.get("general_adult_resting_reference_comparisons", {})
+     require(post_general, "owner post-initialization generic reference bounds are missing")
+     pao2_bounds = post_general["mean_PaO2_mmhg"]["reference_bounds"]

@@ -1,0 +1,31 @@
+--- /Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/analyze_final_pair.py
++++ /Users/n/numi-human-retained-delivery-20261009/native-final-pair-postprocessing-1170/revision-002/analyze_final_pair.py
+@@ -494,6 +494,18 @@
+     safe_write(path, json.dumps(obj, indent=2, sort_keys=True, allow_nan=False) + "\n")
+ 
+ 
++def validate_registration_source(source):
++    # Registration names the prepared Human owner; invocation names the Lab
++    # runtime. Keep their distinct pinned identities instead of conflating them.
++    require(source.get("repository") == str(prepare.HUMAN),
++            "registered Human repository differs from frozen preparation owner")
++    require(source.get("revision") == prepare.FROZEN_HUMAN_REV,
++            "registered Human revision differs from frozen preparation owner")
++    require(source.get("status") == "" and
++            source.get("diff_sha256") == hashlib.sha256(b"").hexdigest(),
++            "registered Human owner is not the frozen clean source")
++
++
+ def main():
+     ap = argparse.ArgumentParser(description=__doc__)
+     ap.add_argument("--study", type=Path, default=STUDY_DEFAULT)
+@@ -517,8 +529,7 @@
+     plan = reg.get("plan", {})
+     require(reg.get("schema") == "numi.science.registration.v2" and plan.get("schema") == "numi.science.plan.v2",
+             "unexpected registered study schema")
+-    require(reg.get("source", {}).get("revision") == EXPECTED_REVISION,
+-            "registered Lab revision differs from expected frozen revision")
++    validate_registration_source(reg.get("source", {}))
+     require(CARDIAC_911.is_file() and audit.sha256(CARDIAC_911) == CARDIAC_911_SHA256,
+             "pinned cardiac localization 911 report is missing or changed")
+     current_preflight = plan.get("design", {}).get("current_source_preflight", {})

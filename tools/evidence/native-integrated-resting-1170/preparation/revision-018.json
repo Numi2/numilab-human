@@ -1,0 +1,60 @@
+{
+  "checks": {
+    "1173_owner_compatible_verification": "passed; 10,000 q rows; accepted terminal step10000 at20.000000949949026s; original931 raw metadata/invocation not recovered",
+    "1174_measured_comparison": "passed as 20-second regression only; 75,000 cadence values and eight 86-body states equal; no 310-second qualification",
+    "936_missing_input_bridge": "exactly two old 931 source entries are unavailable: trace is byte-identical to separately pinned 1173 trace; run metadata has no replacement; no historical-run recovery claimed",
+    "actual_selected_s1159_scene_preflight": "passed with exact scene invocation, native log, metadata, assembly, assets and viewer018 binary pins",
+    "full_readiness_suite": "46 passed, 3 skipped; exit 0 (skips are bound to removed 867 data and unavailable completed1078 scene)",
+    "historical917": "attempt history and cleanup incident retained; raw trial output/receipt unavailable and not reconstructed",
+    "study_registration_or_run": "not performed"
+  },
+  "files": {
+    "README-v018.md": "66e6b8f65ce48727369a96f23a4ee1bac3d951789e265b9096bd79dde1eedfe4",
+    "analyze_final_pair.py": "defe06f8ded56d66fe5ba903445bb8dd81ef96ad57fa59e3be4c615c5892cb5c",
+    "preparation-owner-tests-v018.log": "f17af021c0dd05f665f562f6e63fc6c8715c5c27a94e07ac8a02cce7d4923955",
+    "prepare_final_plan-v018.py": "f5d57e46afce90ea756e8eb8e23bfd1f4a6a6e9fcb971659f946ce29768531be",
+    "prepare_final_plan.py": "f5d57e46afce90ea756e8eb8e23bfd1f4a6a6e9fcb971659f946ce29768531be",
+    "record_treatment_program_probe.py": "dcf962cd622bdf012ea81aa6c1c9f2a2e21dffc93e41d6fca5a87c743e24c32e",
+    "test-suite-v018-1173-source-inventory-pass.log": "2006ea8c24c6ba1a2c8a8ad26178b2b448c5807b6f2e201e125fc2fd14b733fe",
+    "test_current_git_revision_identity_v013.py": "39b1a852ea50e98b6411b8b106a97fc9fc15d6f8139bd7496c24706581cbb78a",
+    "test_final_instrument_calibration_bindings_v015.py": "cc4d54defcd22c3ee42b39d1738735798e254c3127c15065971bdf2201882766",
+    "test_final_pair_diagnostic_validation_v007.py": "92662b8d3ab7010d5e9f6c67f5ecd52da61a8e080a0531a19f8198f5571f41bc",
+    "test_final_pair_viewer_binding_v016.py": "1ff61ac9c9dddd6b4b95b7acefe20f600fc05f5caeeb5f0ca2d869a6bb4d8955",
+    "test_owner_invocation_lineage.py": "7f3fb92631f5ea4f428a40b245f2343f5537596e4d03fc901ec40c1ed6a26b35",
+    "test_owner_summary_identity_normalization.py": "9ad2c59cf910db5f830ddd588286926466d65d6dce5b74b3dc856a0e3a48e2a7",
+    "test_p18_owner_and_history_pins.py": "6284d02d99d91a485c596a101fbedd48d5f8c788a9383ae11731826a8904eac6",
+    "test_probe_recorder_entrypoint_v018.py": "7653ad21a1191e31991d4d72fa30ac9eed7f4f158b74815920dff7f49a741234",
+    "test_record_treatment_program_probe_v015.py": "53a32b712345c7aedf91bc9627e81b3d63d90a842496bbc2e28a289a163ec557",
+    "test_terminal_capture_plan.py": "f5e909d659134a4b09f4d1d5a06123b31b8eeaccd9fd74455b79a74843617de1",
+    "test_v015_dynamic_scene_readiness.py": "6ba206aa1e8345d1471882845f9f5f1197ca1661305837974068b9da9c5621ef"
+  },
+  "owners": {
+    "frozen_physical_and_science_owner": "Lab014 d550d8ad88a76fdee5bb6e028286fd24e962571f",
+    "preparation_owner_revision": "d81e236663e0d3427956a6253ac44900409c145a",
+    "terminal_capture_owner_revision": "f4f1d1d4c35ea31bce7669c329a6071176c30afd",
+    "terminal_capture_owner_source_sha256": "ef87b09a17b96c985d6f584932e806ba9e7c6a53785da32a37a56ac846a3ac5f"
+  },
+  "parent_revision_sha256": "2317a6596e5957e5161f077966582d29b2199fe07955403cbb04e5b905bef872",
+  "references": {
+    "comparison_1174": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-20s-vs-1173-comparison-1174-attempt6/result/comparison.json",
+      "sha256": "9f79feaea46862ef575b789eec55630c42a8b737bf404c529879fcc612defaec"
+    },
+    "full_q_owner_verification": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-terminal-cycle-1173-review/verification.json",
+      "sha256": "13755a72927eb6fe38cd98d1b5512daf6ecbe1faa859b11ad147d71e8367bd16"
+    },
+    "full_q_run_metadata": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-terminal-cycle-1173/run-metadata.json",
+      "sha256": "24312b80992534d2d52c68818a3472994e5a005b20a7b6262e6448fe6fc057b7"
+    },
+    "selected_s1159_invocation": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run/invocation.json",
+      "sha256": "faedfc0ef646258e19b4697da441e56c308edc1c92a451d857018e4d262918e9"
+    }
+  },
+  "schema": "numi.human.final-integrated-study-readiness-revision.v1",
+  "scope": "Rebind active 20-second scene preflight to selected S1159 and measured comparison to regenerated full-q terminal run1173; explicitly exclude only two unavailable historical 931 inputs from the frozen 936 inventory; preserve historical evidence boundaries and use fixed terminal-capture owner.",
+  "status": "draft preparation and source/pin tests passed; no registration or 310-second run",
+  "version": "v018"
+}

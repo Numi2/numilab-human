@@ -1,0 +1,7 @@
+# Retained evidence snapshots must preserve source SHA-256 bytes.
+* -text
+# Unified patch context includes literal blank-line prefix spaces.
+*.patch -whitespace
+*.csv whitespace=cr-at-eol
+# Original pinned owner script contains a retained extra final blank line.
+lung-audit/audit_lung_cycle_1159.py whitespace=-blank-at-eof

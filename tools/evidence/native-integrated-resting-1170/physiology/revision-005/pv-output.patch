@@ -1,0 +1,34 @@
+--- /Users/n/numi-human-resting-evidence-20261005/native-postrun-descriptive-supplement-1174/revision-004/postrun_descriptive_supplement.py
++++ /Users/n/numi-human-resting-evidence-20261005/native-postrun-descriptive-supplement-1174/revision-005/postrun_descriptive_supplement.py
+@@ -262,19 +262,27 @@
+ 
+ 
+ def source_bound_pv_trace(path, rows, windows, arm, output_path):
++    source = Path(path).resolve()
++    output = Path(output_path).resolve()
++    require(source != output, "P-V output must not overwrite the source trace")
++    require(not output.exists() and not Path(output_path).is_symlink(),
++            "P-V output must be a fresh file")
++    source_sha = sha(source)
+     lo = min(x[0] for x in windows.values())
+     hi = max(x[1] for x in windows.values())
+     selected = [r for r in rows if lo <= number(r, "time_s") < hi]
+     columns = ["arm", "step", "time_s", "lung_volume_ml", "alveolar_pa", "pleural_pa", "airflow_ml_s",
+                "blood_ml", "PaO2_mmhg", "PaCO2_mmhg", "SaO2", "lv_ml", "rv_ml", "last_lv_stroke_ml"]
+-    with Path(path).open("w", newline="", encoding="utf-8") as stream:
++    with output.open("x", newline="", encoding="utf-8") as stream:
+         writer = csv.DictWriter(stream, fieldnames=columns, extrasaction="ignore")
+         writer.writeheader()
+         for row in selected:
+             writer.writerow({"arm": arm, **row})
+-    return {"path": str(path), "sha256": sha(path), "rows": len(selected),
+-            "source_trace_path": str(Path(path).resolve()),
+-            "scope": "Raw accepted CSV values within the registered pre/dose/recovery spans; no interpolation or derived flow integration."}
++    require(sha(source) == source_sha, "source trace changed during P-V extraction")
++    return {"path": str(output), "sha256": sha(output), "rows": len(selected),
++            "source_trace_path": str(source), "source_trace_sha256": source_sha,
++            "scope": "Raw accepted CSV values from the beginning of pre to the end of recovery, including intervals between the registered windows; no interpolation or derived flow integration."}
++
+ 
+ 
+ def summarize_registered_arm(context, arm, analyzer, prepare, owner, out):

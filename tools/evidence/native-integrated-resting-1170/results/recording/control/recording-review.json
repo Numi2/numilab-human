@@ -1,0 +1,355 @@
+{
+  "arm": "control",
+  "copied_inputs": {
+    "scene/native-viewer.mov": {
+      "bytes": 37511160,
+      "review_path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/native-viewer.mov",
+      "same_device": true,
+      "same_inode": false,
+      "sha256": "d9d5f1f24fac0e1df65ac438e43d9fb929ed9258dd634ebed24f52bf7cf4de72",
+      "source_flags_after": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native-viewer.mov",
+        "required_uf_immutable": 2,
+        "st_flags": 2
+      },
+      "source_flags_before": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native-viewer.mov",
+        "required_uf_immutable": 2,
+        "st_flags": 2
+      },
+      "source_path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native-viewer.mov"
+    },
+    "scene/resting-surface-audit.csv": {
+      "bytes": 2162314,
+      "review_path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/resting-surface-audit.csv",
+      "same_device": true,
+      "same_inode": false,
+      "sha256": "eb673cad8db536ef1d0b9c7f02968a5d6061e7bede617da013db82c409c24483",
+      "source_flags_after": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-surface-audit.csv",
+        "required_uf_immutable": 2,
+        "st_flags": 2
+      },
+      "source_flags_before": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-surface-audit.csv",
+        "required_uf_immutable": 2,
+        "st_flags": 2
+      },
+      "source_path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-surface-audit.csv"
+    }
+  },
+  "inspector": {
+    "argv": [
+      "/usr/bin/swift",
+      "/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift",
+      "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control",
+      "2.5",
+      "7"
+    ],
+    "path": "/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift",
+    "returncode": 0,
+    "sha256": "2d6704dd5f06bffd0b8aa0072171af805fdb3dd00dcc11c02e0b692513b21649",
+    "stderr": "/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift:19:29: warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]\n17 |     }\n18 |     let reader = try AVAssetReader(asset: asset)\n19 |     guard let track = asset.tracks(withMediaType: .video).first else {\n   |                             `- warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]\n20 |         throw NSError(domain: \"missing-video-track\", code: 2)\n21 |     }\n\n/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift:52:198: warning: 'duration' was deprecated in macOS 13.0: Use load(.duration) instead [#DeprecatedDeclaration]\n50 |         maxGap = max(maxGap, gap)\n51 |     }\n52 |     print(\"frames=\\(timestamps.count) timing_markers=\\(timingMarkers) first_wall_s=\\(timestamps[0].seconds) last_wall_s=\\(timestamps.last!.seconds) max_gap_wall_s=\\(maxGap) duration_wall_s=\\(asset.duration.seconds)\")\n   |                                                                                                                                                                                                      `- warning: 'duration' was deprecated in macOS 13.0: Use load(.duration) instead [#DeprecatedDeclaration]\n53 |     var selected = [(\"initial\", 0), (\"middle\", timestamps.count/2), (\"final\", timestamps.count-1)]\n54 |     if CommandLine.arguments.count > 2 {\n\n/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift:72:35: warning: 'copyCGImage(at:actualTime:)' was deprecated in macOS 15.0: Use generateCGImageAsynchronouslyForTime:completionHandler: instead [#DeprecatedDeclaration]\n70 |     for (name, index) in selected {\n71 |         var actual = CMTime.zero\n72 |         let frame = try generator.copyCGImage(at: timestamps[index], actualTime: &actual)\n   |                                   `- warning: 'copyCGImage(at:actualTime:)' was deprecated in macOS 15.0: Use generateCGImageAsynchronouslyForTime:completionHandler: instead [#DeprecatedDeclaration]\n73 |         guard CMTimeCompare(actual, timestamps[index]) == 0 else {\n74 |             throw NSError(domain: \"inexact-frame-extraction\", code: 8)\n\n[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>\n",
+    "stdout": "frames=4846 timing_markers=5 first_wall_s=0.23 last_wall_s=2707.2833333333333 max_gap_wall_s=2.2066666666666666 duration_wall_s=2707.815\nframe=initial index=0 simulated_s=0.0 wall_s=0.23 width=1280 height=900\nframe=middle index=2423 simulated_s=155.070007365 wall_s=1378.575 width=1280 height=900\nframe=final index=4845 simulated_s=310.000014724 wall_s=2707.2833333333333 width=1280 height=900\nframe=skin index=20 simulated_s=1.2780000607 wall_s=12.313333333333333 width=1280 height=900\nframe=muscles index=59 simulated_s=3.77400017926 wall_s=34.54666666666667 width=1280 height=900\nframe=skeleton index=98 simulated_s=6.27000029781 wall_s=56.29333333333334 width=1280 height=900\nframe=organs index=137 simulated_s=8.76600041636 wall_s=78.16333333333333 width=1280 height=900\nframe=lungs index=176 simulated_s=11.2620005349 wall_s=100.12 width=1280 height=900\nframe=heart index=215 simulated_s=13.7580006535 wall_s=121.92166666666667 width=1280 height=900\nframe=vessels index=254 simulated_s=16.254000772 wall_s=143.75666666666666 width=1280 height=900\n"
+  },
+  "invocation_inspection_tour": {
+    "enabled": true,
+    "period_seconds": 2.5,
+    "required_snapshot_layers": [
+      "skin",
+      "muscles",
+      "skeleton",
+      "organs",
+      "lungs",
+      "heart",
+      "vessels"
+    ]
+  },
+  "movie": {
+    "asset_duration_s": 2707.815,
+    "avassetreader_status": "completed (inspector exited successfully after full read)",
+    "decode_order_limit": "Presentation timestamps were sorted for validation by the pinned inspector; this report makes no claim about original compressed-sample decode order.",
+    "first_presentation_time_s": 0.23,
+    "frame_count": 4846,
+    "last_presentation_time_s": 2707.2833333333333,
+    "maximum_presentation_gap_s": 2.2066666666666666,
+    "original_compressed_sample_decode_order_verified": false,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/native-viewer.mov",
+    "pts_validation_order": "strictly increasing presentation timestamps after sorting",
+    "sha256": "d9d5f1f24fac0e1df65ac438e43d9fb929ed9258dd634ebed24f52bf7cf4de72",
+    "timing_markers": 5
+  },
+  "registered_output_hashes": {
+    "/Users/n/numi-human-lung-triangulation-candidate-003/src/numilab_human/resting_run.py": "f6bc12635fcf41227a79b4d67e058b36f392a4147d083ce24366f8c3ef41c412",
+    "/Users/n/numi-human-performance-build-014/lib/libmetalrobo.dylib": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092",
+    "/Users/n/numi-human-performance-build-014/matter/shaders/NumiMatter.metallib": "38d4b64ed55cef2e0e0f243616d0db5bd21441f232ca38bca439108c1d6130f9",
+    "/Users/n/numi-human-performance-build-014/matter/shaders/NumiMatterPhysicalStateDigest.metallib": "3d5db8b11fe561def3f0f4aa73c1a4d8d1828e746f0a7f737d8a31725deb2d68",
+    "/Users/n/numi-human-performance-build-014/shaders/MetalRobo.metallib": "3077d063dc23475d75cda795620cda8750402d1a2159267a241a5e2b65986043",
+    "/Users/n/numi-human-performance-build-014/shaders/MetalRoboHyperPolicy.metallib": "f227836841015b40467a20c47a9fa38cf44eb8e1132cad1de4e65fa79c55d309",
+    "/Users/n/numi-human-performance-build-014/shaders/NumiNeuron.metallib": "4ccbb796a6bfd5bdb18f7d37c8e18e0d767c9489d16047c523c97f679da33f1d",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.nhbones": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+    "/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/analyze_final_pair.py": "defe06f8ded56d66fe5ba903445bb8dd81ef96ad57fa59e3be4c615c5892cb5c",
+    "/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/prepare_final_plan.py": "f5d57e46afce90ea756e8eb8e23bfd1f4a6a6e9fcb971659f946ce29768531be",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/common-cardiac-domains-f32.bin": "7652785c9ea164b16ee96f64a3dcf940398af36cfd535a5f9b7a7d6bd2c7a611",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/common-cardiac-map-f32.bin": "c0b0811fe2e2fb45dc37201205e36af39cf092739cfb52c56fdbad9a67dbb858",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/common-cardiac-volumes-f32.bin": "7be4f62996c996c6cfdd49480d27766c8253387bb24aeb504fef73cd553ae699",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/resting-anatomy-receipt.json": "46a51815b0c9e30ef9ea6e8d2583ffb7a812a09400469816b0e86133e93b34fb",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run/invocation.json": "faedfc0ef646258e19b4697da441e56c308edc1c92a451d857018e4d262918e9",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run/native.log": "b5e43acf7728413516085b9eba44df05d63891d55a18f1a8f8522862e9115d0d",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run/run-metadata.json": "4eb7c9df933036f51932880592508539ec71b600f67561beae74f35d904b0b66",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/resting-scene/myosim-fullbody-resting-bed-support.nhcnt": "bcfece8e5da553b98694b724644234407fa4c38383b1e18d3c24d7caefa28927",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/resting-scene/resting-supine-scene.manifest.json": "b45096bb974e286d730bb079703025b9d9150a0e6e030a1f0fa2451ced0c20d1",
+    "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-reference-respiration.json": "4f0a64f97245a035278b70b45e4d92519549f26e05ac75b066ac17e9690c2290",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-thorax.nhanatomy": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713",
+    "/Users/n/numi-human-resting-evidence-20261005/native-paired-physiology-audit-855/analyze_completed_trial.py": "5db3f43eaa044a9c0c240293a2e0d67c389553341fe92bd07d38d1ea53548021",
+    "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "82cdd937e0f2daf0a8704fb21246353c38148527f8602d674ac865f935264dde",
+    "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "b3d0381f73e05b04ed7ea1ba23eb6559073ad20aa0d9e2ad0f97a18fab3359bd",
+    "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+    "/Users/n/numi-human-resting-evidence-20261005/tendon-semantic-foot-migration-834/numi-human-tendon-attachments.nhtendon": "49daaf61421254cb18f3aa32f1d332b1810537afd4c4ef813abd2f0d118dcecc",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-draft-v018/attempt3/draft/native-launch-template-control.json": "bf3a820dfc692959d4e69905f752391942d3b6d2838d4de26e9075534c00d4b4",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/registration.json": "f08960aa3b4cfaae0767cbf321d340d7407b2bca952180923af6059d7c8cdcc1",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-152191.mrvpack": "5f6fe3166d035c943f4a13b05cdedd08db25bc8b55fcd5307f25e3f160f90faa",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-152191.receipt.json": "e31194a58022875209c3f53732a07c9c3793982132497659676b0686eff668bf",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-154143.mrvpack": "561f916d2b3dfad74fd323ca601f0c1b581df4baff6b84444286fd1304b1be9b",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-154143.receipt.json": "a39e80acd03592690fc2f6a13cf870ecec002e7bfd7ab35101af5d2ecc20a2b7",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-155000.mrvpack": "650b2d781f884aeeec3e8242c115c1ad913b76660b34fdb46444120771e13ac8",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-155000.receipt.json": "ecefea5bc22417a07608e267e6f1f29bae20c1141f570d8be2d15304858127ce",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-47519.mrvpack": "0012efd9d5fe6425a4f74f5ecbaf5b829a0925f276ebea258d9b9b186d725e3a",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-47519.receipt.json": "b75ddbda6524b5113c590e9789cae25fa91937ee9ad82e4950ce91b70273d8a7",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-49151.mrvpack": "bfe0fed00696f45ce417f97a9d35e93d2497b2b42d91c7c952ddab8f9d093fde",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-49151.receipt.json": "70c6c62cb6a39f4c373ad1d4a1a371ae9774fd6f1b494daf992ff88c394b40c2",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-51903.mrvpack": "cea763ef81f5ce58fe09c9e3173a8841d4b8798a8e303a7411381e3421cf3845",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-51903.receipt.json": "37a73b956107ed0423b54e50cb439538cbfe01224f37cec999841b5d20edc910",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-54047.mrvpack": "78bf85d91f18509a737b83c6e5f8f30f3e7132146a8fbe1cf2aa78a1199b639c",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-54047.receipt.json": "bbf4f529feb3cdfa94cb1f3a1a14fe710bf6e7799739d594773d9d7d38048210",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-55647.mrvpack": "efe158ea5f98d0f62140dae591f3840addfc1cbeb571ae7d0caa774f6b1668f8",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-55647.receipt.json": "da27e789533bb8ca3fe98ab368127fae27a07eadedd801672d943e1ed98aa512",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/common-field-domain-boxes-f32.bin": "7652785c9ea164b16ee96f64a3dcf940398af36cfd535a5f9b7a7d6bd2c7a611",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/common-field-map-f32.bin": "c0b0811fe2e2fb45dc37201205e36af39cf092739cfb52c56fdbad9a67dbb858",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/common-field-map-identity.json": "87c3ffd3dcf021f6400831a8e06f2cdcb5dd378f9f7771cbfde3ac072c1f1b21",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/common-field-parameters-f32.bin": "7ce8d1833bd1605cee56759f03370801602db21d6233333c2a1c03f11e518896",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/common-field-polynomials-f32.bin": "7be4f62996c996c6cfdd49480d27766c8253387bb24aeb504fef73cd553ae699",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/intervention-observation.json": "842dd6525a8083d8f21a85b822fd302da319ad8a80164b8133c313869007c92f",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/invocation.json": "ca08da2625f0067e008c5f28eb24f4505efa605da0d3cb579044de9b2b4709ec",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native-viewer.mov": "d9d5f1f24fac0e1df65ac438e43d9fb929ed9258dd634ebed24f52bf7cf4de72",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native.log": "c4e68c3478ee65f6c632af2782ea33b126fd67406a4b5757f80c7fc0207c1293",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-airway-anchor-map.json": "b89672e003a307d9d728f5cebd5c3736f5bbf02fa4bdd377a49523752c57c2a7",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-com-momentum-diagnostic.csv": "9e1a66c52047114bdb800cb2165b59fc84be2dea81d0e60dee5a311dd5bbe7a4",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-com-support-impulses.csv": "7aa6cd8a00c7b9f408343373c7591586a07cb560b4d7163ff76aac1b173e1482",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-coupled.csv": "e06988dbcf8a187bab35b854d80d1a0e5111a4b7f90a286af9d9614fa5d952d5",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-human.mrvpack": "73836cb3c1500b86712e1cf075a4fc2f5c04ec875421297a3c77ceed074e54f9",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-surface-audit.csv": "eb673cad8db536ef1d0b9c7f02968a5d6061e7bede617da013db82c409c24483",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/skin-source-anatomy-parameters.bin": "ef7a80c590057a8073df76a4ef107f11c2fc5ab440eb93880d8c315a65753fb7",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/skin-source-vertex-map.bin": "6190465659539a232cd41bde6b64e28dde79ec9c004e934fcec45ead05768b57",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/stdout.json": "fbadaf44a6d6ea973aeef6422be36e99999a477207ebc0a9b3af0838649319ae",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/process.json": "1377e3ac824abdc722d07b9cb38a4a1621f7ec8d51b721ef9ed923a1a7168ddb",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/receipt.json": "6843b2010cd49e2640267d03dd90dadddd17ea654401c3c770463d942f43a38b",
+    "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/started.json": "b0431616e5019e2315de10906f5be1b2c9a29d4265c2ac25460d581101d4e6bc",
+    "/Users/n/numi-human-retired-alias-visibility-build-018-attempt2/bin/numi-human-native": "486442abe2070168a902fb06669469e8b6cc612a9a6ef65ddb3d54957308d906",
+    "/Users/n/numi-human-retired-alias-visibility-build-018-attempt2/matter/shaders/HumanRespiration.metallib": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426"
+  },
+  "registered_receipt_chain": {
+    "arm": "control",
+    "asset_files_verified": 25,
+    "capture_count": 8,
+    "exit_receipt": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/receipt.json",
+    "loaded_metal_runtime_verified": true,
+    "p18_analyzer": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/analyze_final_pair.py",
+      "sha256": "defe06f8ded56d66fe5ba903445bb8dd81ef96ad57fa59e3be4c615c5892cb5c"
+    },
+    "p18_helper_modules": [
+      {
+        "path": "/Users/n/numi-human-lung-triangulation-candidate-003/src/numilab_human/resting_run.py",
+        "sha256": "f6bc12635fcf41227a79b4d67e058b36f392a4147d083ce24366f8c3ef41c412"
+      },
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/analyze_final_pair.py",
+        "sha256": "defe06f8ded56d66fe5ba903445bb8dd81ef96ad57fa59e3be4c615c5892cb5c"
+      },
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/prepare_final_plan.py",
+        "sha256": "f5d57e46afce90ea756e8eb8e23bfd1f4a6a6e9fcb971659f946ce29768531be"
+      },
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-paired-physiology-audit-855/analyze_completed_trial.py",
+        "sha256": "5db3f43eaa044a9c0c240293a2e0d67c389553341fe92bd07d38d1ea53548021"
+      }
+    ],
+    "p18_prepare": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-1170/package-v018/prepare_final_plan.py",
+      "sha256": "f5d57e46afce90ea756e8eb8e23bfd1f4a6a6e9fcb971659f946ce29768531be"
+    },
+    "process_receipt": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/process.json",
+    "receipt_files_verified": 35,
+    "scene_run_metadata_required": false,
+    "schema": "numi.science.registration.v2",
+    "started_receipt": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/started.json",
+    "study_registration": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/registration.json",
+    "terminal_step": 155000,
+    "trial_id": "resting-baseline"
+  },
+  "retention_marker": {
+    "closed_after_science_return": true,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-final-pair-execution-1170/resting-baseline-retention.json",
+    "reversible_macOS_user_immutable": true,
+    "sha256": "068a6e8354be921f48b04ad258211c5ed95e403736c94dfcdf437c4b84597be6",
+    "trial": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline"
+  },
+  "schema": "numi.human.registered-recording-review.v1",
+  "scope": "Closed registered-arm recording integrity and representative image extraction; no geometry or physiological qualification.",
+  "snapshot_paths": {
+    "final": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-final.png",
+    "heart": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-heart.png",
+    "initial": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-initial.png",
+    "lungs": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-lungs.png",
+    "middle": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-middle.png",
+    "muscles": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-muscles.png",
+    "organs": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-organs.png",
+    "skeleton": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-skeleton.png",
+    "skin": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-skin.png",
+    "vessels": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/results/control/frame-vessels.png"
+  },
+  "snapshots": {
+    "final": {
+      "height": 900,
+      "index": 4845,
+      "presentation_time_s": 2707.2833333333333,
+      "simulated_time_s": 310.000014724,
+      "width": 1280
+    },
+    "heart": {
+      "height": 900,
+      "index": 215,
+      "presentation_time_s": 121.92166666666667,
+      "simulated_time_s": 13.7580006535,
+      "width": 1280
+    },
+    "initial": {
+      "height": 900,
+      "index": 0,
+      "presentation_time_s": 0.23,
+      "simulated_time_s": 0.0,
+      "width": 1280
+    },
+    "lungs": {
+      "height": 900,
+      "index": 176,
+      "presentation_time_s": 100.12,
+      "simulated_time_s": 11.2620005349,
+      "width": 1280
+    },
+    "middle": {
+      "height": 900,
+      "index": 2423,
+      "presentation_time_s": 1378.575,
+      "simulated_time_s": 155.070007365,
+      "width": 1280
+    },
+    "muscles": {
+      "height": 900,
+      "index": 59,
+      "presentation_time_s": 34.54666666666667,
+      "simulated_time_s": 3.77400017926,
+      "width": 1280
+    },
+    "organs": {
+      "height": 900,
+      "index": 137,
+      "presentation_time_s": 78.16333333333333,
+      "simulated_time_s": 8.76600041636,
+      "width": 1280
+    },
+    "skeleton": {
+      "height": 900,
+      "index": 98,
+      "presentation_time_s": 56.29333333333334,
+      "simulated_time_s": 6.27000029781,
+      "width": 1280
+    },
+    "skin": {
+      "height": 900,
+      "index": 20,
+      "presentation_time_s": 12.313333333333333,
+      "simulated_time_s": 1.2780000607,
+      "width": 1280
+    },
+    "vessels": {
+      "height": 900,
+      "index": 254,
+      "presentation_time_s": 143.75666666666666,
+      "simulated_time_s": 16.254000772,
+      "width": 1280
+    }
+  },
+  "source_file_immutable_flags": {
+    "scene/native-viewer.mov": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native-viewer.mov",
+      "required_uf_immutable": 2,
+      "st_flags": 2
+    },
+    "scene/resting-surface-audit.csv": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/resting-surface-audit.csv",
+      "required_uf_immutable": 2,
+      "st_flags": 2
+    }
+  },
+  "status": "pass",
+  "surface_audit_timeline": {
+    "data_rows": 4846,
+    "first_simulated_time_s": 0.0,
+    "header": [
+      "time_s",
+      "step",
+      "min_skin_bed_gap_m",
+      "vertices_below_1mm",
+      "nonfinite_skin_vertices",
+      "max_functional_volume_relative_error",
+      "q_ra",
+      "q_rv",
+      "q_la",
+      "q_lv",
+      "ra_target_ml",
+      "rv_target_ml",
+      "la_target_ml",
+      "lv_target_ml",
+      "diaphragm_swept_ml",
+      "rib_swept_ml",
+      "lung_target_ml",
+      "body_com_x_m",
+      "body_com_y_m",
+      "body_com_z_m",
+      "represented_body_mass_kg",
+      "ventricular_wall_bound",
+      "ventricular_material_ml",
+      "ventricular_material_target_ml",
+      "ventricular_closure_mm",
+      "ventricular_material_status",
+      "functional_geometry_status",
+      "geometry_mode",
+      "common_coordinate_RA",
+      "common_coordinate_RV",
+      "common_coordinate_LA",
+      "common_coordinate_LV",
+      "common_coordinate_RA_material",
+      "common_coordinate_ventricular_material",
+      "common_coordinate_LA_material",
+      "common_coordinate_solver_status",
+      "common_coordinate_solver_iterations",
+      "common_coordinate_domain_box",
+      "common_coordinate_normalized_residual",
+      "ventricular_closure_mm_applicable",
+      "mesh_zero_area_triangles",
+      "mesh_nonfinite_area_triangles",
+      "mesh_triangles_checked"
+    ],
+    "last_simulated_time_s": 310.000014724
+  },
+  "trial_name": "resting-baseline",
+  "trial_path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline"
+}

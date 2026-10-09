@@ -1,0 +1,5 @@
+Revision 003 derives from revision 002 runner SHA `176ccfb8ca8e6f0ae3d790e66e96470c110bc750466e93ec41f6a50593cdf2a1` and test SHA `81bc095bdd8599fc9b1c9f4ccf1cc9a0520270322fdfaefb358a50e421a63843`.
+
+The first full attempt using revision 002 stopped before triangle auditing at the first pose. The pinned `_pack_surfaces` reader returned the 859 target inventory plus 185 `51004` NHBONES member surfaces required for pose reconstruction and the NHSKIN shell; revision 002 incorrectly demanded equality with target keys alone. Exact source, declaration, and failure log are retained in sibling `../closed-baseline-1170/full-attempt-001/`.
+
+Revision 003 requires the exact union of 859 pinned target keys, all 185 required bone-support keys, and the NHSKIN key. It still tests only the pinned target set for collisions. Regression cases reject a missing support, unexpected surface, and missing target. No predicate, geometry, runtime, or acceptance threshold changed. Revision 003 is not yet run against the registered arm.

@@ -1,0 +1,49 @@
+{
+  "payload": {
+    "evidence_level": "simulation",
+    "issues": [],
+    "limitations": "This is one deterministic paired simulation, not a population estimate or clinical validation. The primary predictor is the fixed-production alveolar-ventilation relation and a broad sensitivity envelope; closed-loop finite-time response may differ. Recovery limits are prespecified analysis tolerances, not claimed physiological standards. Body and organ source anatomy remain explicitly unqualified wherever the owner receipt says so. The 310 s pair is planned at 155000 physical 2 ms roots after a 10 s initialization exclusion; the 64 ms movie cadence and eight-root COM diagnostic segments do not alter physics/controller timestep. The long pair disables the full q integration audit; its separately pinned modern reference retains 10000 roots at 2 ms but is not 310 s endurance or physiological/anatomical qualification. The 752 reference only supports segment-8 observer scheduling at its 8 ms condition. Neither reference demonstrates 310 s endurance or physiological/anatomical qualification. The duration/cycle gate requires 300 observed seconds after initialization, repeated complete breaths, repeated filling/ejection cycles with positive stroke volume, and positive forward ejection into both circulations. These numerical coverage checks do not establish physiological plausibility or anatomy. The terminal-capture-017 executable is pinned separately from the frozen Lab science/owner CLI: its build/source pins identify exact accepted-state presentation code and the compiled artifacts, while it links the frozen014 physical MetalRobo library and guard015 respiratory source. This capture build identity does not independently qualify runtime physics. The 20 s owner preflight checks the caller-selected assets/configuration and program identities only; it is not 310 s endurance, physiological validation, or whole-body anatomy acceptance. Cardiac interface localization 911 reports 11,568 current source-neutral RA/RV intersections near the common-map tricuspid leaflet projection with a localized source-to-current RV residual up to 0.75 mm. This supports a junction-localized segmentation-overlap interpretation but establishes neither a 3D leaflet surface nor valve-plane/orifice ownership. Reduced-order CVSim chambers and valves remain the sole functional and blood owner; this localization is a stated anatomy limitation, not a geometry-clearance pass. A prior 917 control registration attempted 155,000 accepted steps but its terminal wrapper returned exit 2; the terminal-capture owner defect was fixed and passed a separate 20 s smoke. The original 917 trial output and receipt were subsequently removed by the documented cleanup event, so they are unavailable and are not reconstructed or treated as a successful registered study. The registration/attempt ledgers, historical diagnosis, and cleanup incident records are pinned as provenance. This 1170 plan requires a fresh registered two-arm execution under the fixed owner and makes no inherited terminal-completion claim from 917. The frozen 936 source inventory also listed the removed historical 931 coupled trace and run-metadata. Those two missing 931 paths are explicitly excluded from active source hashes: the retained 1173 coupled trace is separately pinned and byte-identical to the old trace, while 1173 run metadata is a regenerated reference and does not replace 931 metadata. No historical 931 raw run is claimed recovered.",
+    "mean_difference": 1.835244624837813,
+    "observed_spread": {
+      "maximum": 1.835244624837813,
+      "minimum": 1.835244624837813,
+      "sample_sd": null
+    },
+    "paired_differences": [
+      {
+        "pair": "resting-reference-v1",
+        "treatment_minus_control": 1.835244624837813
+      }
+    ],
+    "registration_sha256": "6e41e09d3c18ba27e0f3e130b3e9eee1098c27da7b5bd7334fa04b7d807783b2",
+    "schema": "numi.science.analysis.v1",
+    "trials": [
+      {
+        "arm": "control",
+        "experimental_unit": {
+          "unit_id": "human-resting-reference-v1-bc33006ec0984b36b738"
+        },
+        "id": "resting-baseline",
+        "pair": "resting-reference-v1",
+        "receipt_sha256": "8aafc0eca952bbc1db00bce8d12abcd064a4938da84a8f42362e233aaf6e094e",
+        "status": "valid",
+        "value": 0.32500627238010793
+      },
+      {
+        "arm": "treatment",
+        "experimental_unit": {
+          "unit_id": "human-resting-reference-v1-bc33006ec0984b36b738"
+        },
+        "id": "resting-drive-half",
+        "pair": "resting-reference-v1",
+        "receipt_sha256": "70155c1a050b257830c0ef26bdb4a79c979a3085bc5e4424bca32790655e1d2c",
+        "status": "valid",
+        "value": 2.160250897217921
+      }
+    ],
+    "uncertainty": "Descriptive variation across declared pairs, not a confidence interval or population inference.",
+    "unit": "mmHg",
+    "verdict": "supported"
+  },
+  "sha256": "6f75d32da0729448a64d2e5b61284a417eccff8b62c631db3fba715514e3afeb"
+}

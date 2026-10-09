@@ -1,0 +1,171 @@
+{
+  "scope": "Measured native instrumentation from completed registered arms; not an exclusive whole-host benchmark.",
+  "arms": {
+    "resting-baseline": {
+      "native_log": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/native.log",
+      "native_log_sha256": "c4e68c3478ee65f6c632af2782ea33b126fd67406a4b5757f80c7fc0207c1293",
+      "registered_receipt": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/receipt.json",
+      "registered_receipt_sha256": "6843b2010cd49e2640267d03dd90dadddd17ea654401c3c770463d942f43a38b",
+      "metrics_ms": {
+        "resting_native_profile": {
+          "command_ms": {
+            "n": 19375,
+            "mean": 133.11704006993548,
+            "median": 133.74,
+            "p95_observed": 139.928042,
+            "max": 150.650458
+          },
+          "gpu_ms": {
+            "n": 19375,
+            "mean": 132.6027525566254,
+            "median": 133.224542253,
+            "p95_observed": 139.405374415,
+            "max": 150.139666162
+          },
+          "host_copy_ms": {
+            "n": 19375,
+            "mean": 0.042138364335483874,
+            "median": 0.040875,
+            "p95_observed": 0.044167,
+            "max": 5.775958
+          }
+        },
+        "resting_render_profile": {
+          "encode_wall_ms": {
+            "n": 4846,
+            "mean": 0.037561961977411865,
+            "median": 0.0369166955352,
+            "p95_observed": 0.046250410378,
+            "max": 0.074124895
+          },
+          "command_wall_ms": {
+            "n": 4846,
+            "mean": 13.39480716902665,
+            "median": 13.54162488135,
+            "p95_observed": 13.7434583157,
+            "max": 22.1020421
+          },
+          "gpu_ms": {
+            "n": 4846,
+            "mean": 13.189866401066805,
+            "median": 13.3499377407,
+            "p95_observed": 13.5432500392,
+            "max": 17.0563748
+          },
+          "audit_export_wall_ms": {
+            "n": 4846,
+            "mean": 1.9371965304289607,
+            "median": 0.0244164839387,
+            "p95_observed": 0.0326670706272,
+            "max": 1177.06249934
+          },
+          "total_render_wall_ms": {
+            "n": 4846,
+            "mean": 15.370274654290126,
+            "median": 13.60454177485,
+            "p95_observed": 13.808041811,
+            "max": 1194.14695818
+          }
+        },
+        "resting_present_profile": {
+          "total_present_wall_ms": {
+            "n": 4846,
+            "mean": 18.463601623595558,
+            "median": 16.494020819699998,
+            "p95_observed": 17.1816674992,
+            "max": 1198.0631249
+          }
+        }
+      },
+      "authoritative_final_instruments": {
+        "resting_integrated_throughput": "resting_integrated_throughput accepted_start_step=8 accepted_end_step=155000 simulated_s=309.984014723 wall_s=2704.00448954 real_time_factor=0.114638868361 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization",
+        "resting_integrated_observer_profile": "resting_integrated_observer_profile accepted_callbacks=19375 total_ms=90610.7843 mean_ms=4.67668564 respiration_trace_csv_ms=289.539627 q_integration_csv_ms=0 com_cpu_kinematics_ms=568.972213 com_momentum_csv_ms=255.65345 support_impulse_csv_ms=1039.66407 csv_flush_ms=213.226905 presentation_ms=88171.2086 observer_other_ms=72.519443",
+        "resting_integrated_body=completed": "resting_integrated_body=completed simulated_s=310.0000147242099 wall_s=2707.0663356660002 real_time_factor=0.11451511573244946 physiology_body_clock=matched root_assistance=false presentation_qualification=pending"
+      },
+      "sampling_note": "Native profile rows are existing observer samples, not an attribution of every component or an independent replacement for the final throughput instrument."
+    },
+    "resting-drive-half": {
+      "native_log": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/native.log",
+      "native_log_sha256": "15d3ffe9bec28af2a000585284fc98904805653b63573efaa6d38ad7679f3aea",
+      "registered_receipt": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/receipt.json",
+      "registered_receipt_sha256": "478febbd4b690a5b361fa6bd5253a755d17fcdb9c7a7eb30c988d95319b66d3b",
+      "metrics_ms": {
+        "resting_native_profile": {
+          "command_ms": {
+            "n": 19375,
+            "mean": 135.3198180571871,
+            "median": 134.369417,
+            "p95_observed": 149.2745,
+            "max": 158.265125
+          },
+          "gpu_ms": {
+            "n": 19375,
+            "mean": 133.0438633816361,
+            "median": 133.368499577,
+            "p95_observed": 140.694167465,
+            "max": 151.533750817
+          },
+          "host_copy_ms": {
+            "n": 19375,
+            "mean": 0.05945403772903226,
+            "median": 0.050125,
+            "p95_observed": 0.082542,
+            "max": 4.753666
+          }
+        },
+        "resting_render_profile": {
+          "encode_wall_ms": {
+            "n": 4846,
+            "mean": 0.035124285291874995,
+            "median": 0.0362498685718,
+            "p95_observed": 0.0460837036371,
+            "max": 0.0653751194
+          },
+          "command_wall_ms": {
+            "n": 4846,
+            "mean": 13.696057103522584,
+            "median": 13.686812948450001,
+            "p95_observed": 14.3746249378,
+            "max": 25.4128752276
+          },
+          "gpu_ms": {
+            "n": 4846,
+            "mean": 13.382856589580204,
+            "median": 13.434979598950001,
+            "p95_observed": 13.9044169337,
+            "max": 17.6388752
+          },
+          "audit_export_wall_ms": {
+            "n": 4846,
+            "mean": 2.0611027478203368,
+            "median": 0.0404166057706,
+            "p95_observed": 0.0600414350629,
+            "max": 1307.07833357
+          },
+          "total_render_wall_ms": {
+            "n": 4846,
+            "mean": 15.79306817551755,
+            "median": 13.76258349045,
+            "p95_observed": 14.4607499242,
+            "max": 1323.92833289
+          }
+        },
+        "resting_present_profile": {
+          "total_present_wall_ms": {
+            "n": 4846,
+            "mean": 19.023072561115185,
+            "median": 16.95531234145,
+            "p95_observed": 18.0263333023,
+            "max": 1329.21104226
+          }
+        }
+      },
+      "authoritative_final_instruments": {
+        "resting_integrated_throughput": "resting_integrated_throughput accepted_start_step=8 accepted_end_step=155000 simulated_s=309.984014723 wall_s=2749.77000421 real_time_factor=0.112730888128 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization",
+        "resting_integrated_observer_profile": "resting_integrated_observer_profile accepted_callbacks=19375 total_ms=93238.0862 mean_ms=4.81228832 respiration_trace_csv_ms=294.427768 q_integration_csv_ms=0 com_cpu_kinematics_ms=546.125632 com_momentum_csv_ms=258.187234 support_impulse_csv_ms=1050.71021 csv_flush_ms=202.833464 presentation_ms=90822.0053 observer_other_ms=63.79664",
+        "resting_integrated_body=completed": "resting_integrated_body=completed simulated_s=310.0000147242099 wall_s=2752.8957021249998 real_time_factor=0.11260870307760532 physiology_body_clock=matched root_assistance=false presentation_qualification=pending"
+      },
+      "sampling_note": "Native profile rows are existing observer samples, not an attribution of every component or an independent replacement for the final throughput instrument."
+    }
+  }
+}

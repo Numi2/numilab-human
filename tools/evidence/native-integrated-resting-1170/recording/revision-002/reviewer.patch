@@ -1,0 +1,107 @@
+--- /Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/review_registered_arm_1174.py
++++ /Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-review/revision-002/review_registered_arm_1174.py
+@@ -12,6 +12,7 @@
+ from pathlib import Path
+ import re
+ import stat
++import shutil
+ import subprocess
+ import sys
+ 
+@@ -44,7 +45,7 @@
+ 
+ def sha(path: Path) -> str:
+     h = hashlib.sha256()
+-    with path.open("rb") as stream:
++    with Path(path).open("rb") as stream:
+         for block in iter(lambda: stream.read(8 * 1024 * 1024), b""):
+             h.update(block)
+     return h.hexdigest()
+@@ -216,6 +217,31 @@
+     }
+ 
+ 
++def copy_registered_input(source: Path, destination: Path, expected_sha256: str):
++    source = Path(source)
++    before = require_user_immutable(source)
++    if sha(source) != expected_sha256:
++        raise ValueError("registered source differs from receipt before copying")
++    if destination.exists() or destination.is_symlink():
++        raise FileExistsError("refusing to overwrite review input")
++    # UF_IMMUTABLE forbids adding hard links on APFS. Copy exact bytes to an
++    # independent review inode without changing retained source protection.
++    with source.open("rb") as src, destination.open("xb") as dst:
++        shutil.copyfileobj(src, dst, 8 * 1024 * 1024)
++    if os.path.samefile(source, destination):
++        raise ValueError("review copy unexpectedly aliases source inode")
++    if sha(destination) != expected_sha256 or sha(source) != expected_sha256:
++        raise ValueError("copied review input differs from registered receipt")
++    after = require_user_immutable(source)
++    if before != after:
++        raise ValueError("registered source protection changed during copy")
++    return {"source_path": str(source), "review_path": str(destination),
++            "sha256": expected_sha256, "bytes": destination.stat().st_size,
++            "same_device": source.stat().st_dev == destination.stat().st_dev,
++            "same_inode": False, "source_flags_before": before,
++            "source_flags_after": after}
++
++
+ def run_review(arm: str, output_root: Path = REVIEW_ROOT):
+     prepared = prepare_review(arm, output_root)
+     out = output_root / arm
+@@ -228,19 +254,7 @@
+     try:
+         for relative, item in prepared["sources"].items():
+             destination = out / item["basename"]
+-            os.link(item["source"], destination)
+-            if not os.path.samefile(item["source"], destination):
+-                raise ValueError("review input is not a hard link to the registered source")
+-            if sha(destination) != item["sha256"]:
+-                raise ValueError("hard-linked review input differs from registered receipt")
+-            linked[relative] = {
+-                "source_path": str(item["source"]), "review_path": str(destination),
+-                "sha256": item["sha256"], "bytes": destination.stat().st_size,
+-                "same_device": item["source"].stat().st_dev == destination.stat().st_dev,
+-                "same_inode": item["source"].stat().st_ino == destination.stat().st_ino,
+-            }
+-        if any(not x["same_device"] or not x["same_inode"] for x in linked.values()):
+-            raise ValueError("recording inputs were not hard-linked on the same device/inode")
++            linked[relative] = copy_registered_input(item["source"], destination, item["sha256"])
+         if not SWIFT.is_file() or SWIFT.is_symlink() or sha(SWIFT) != SWIFT_SHA256:
+             raise ValueError("pinned inspect_resting_movie.swift missing or changed")
+         command = ["/usr/bin/swift", str(SWIFT), str(out),
+@@ -252,6 +266,7 @@
+             raise RuntimeError("AVFoundation movie review failed with status " + str(completed.returncode))
+         movie_summary, snapshots = parse_inspector_output(completed.stdout, prepared["surface"]["data_rows"])
+         for item in prepared["sources"].values():
++            require_user_immutable(item["source"])
+             if sha(item["source"]) != item["sha256"]:
+                 raise ValueError("registered movie or surface CSV changed during read-only review")
+ 
+@@ -278,7 +293,7 @@
+                 "avassetreader_status": "completed (inspector exited successfully after full read)",
+                 "decode_order_limit": "Presentation timestamps were sorted for validation by the pinned inspector; this report makes no claim about original compressed-sample decode order.",
+             },
+-            "hardlinked_inputs": linked,
++            "copied_inputs": linked,
+             "inspector": {"path": str(SWIFT), "sha256": SWIFT_SHA256, "argv": command,
+                           "stdout": completed.stdout, "stderr": completed.stderr,
+                           "returncode": completed.returncode},
+@@ -295,7 +310,7 @@
+             "schema": "numi.human.registered-recording-review-attempt.v1",
+             "status": "failed", "arm": arm, "trial_path": str(prepared["trial_path"]),
+             "registered_receipt_chain": prepared["context"]["receipt_chain"],
+-            "hardlinked_inputs": linked, "error": f"{type(exc).__name__}: {exc}",
++            "copied_inputs": linked, "error": f"{type(exc).__name__}: {exc}",
+         }
+         failure_path = out / "recording-review-failure.json"
+         failure_path.write_text(json.dumps(failure, indent=2, sort_keys=True) + "\n")
+@@ -306,7 +321,7 @@
+     parser = argparse.ArgumentParser()
+     parser.add_argument("--arm", required=True, choices=("control", "treatment"))
+     parser.add_argument("--prepare-only", action="store_true",
+-                        help="validate a closed receipt and source hashes without hard-linking or decoding media")
++                        help="validate a closed receipt and source hashes without copying or decoding media")
+     parser.add_argument("--review-root", type=Path, default=REVIEW_ROOT)
+     args = parser.parse_args()
+     root = args.review_root.resolve()

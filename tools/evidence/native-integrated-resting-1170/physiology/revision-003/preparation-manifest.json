@@ -1,0 +1,32 @@
+{
+  "changes": [
+    "Convert fraction SaO2 to percent before generic percent-bound sample comparisons and label units.",
+    "Make counter-multiplicity narration conditional on the observed interval histogram.",
+    "Keep the frozen science-v2/P18 gates unchanged."
+  ],
+  "files": {
+    "README.md": {
+      "sha256": "212cc1c11430ed1496cb5619f4b523a06f50b98d249fcb6bd7072f7e78ed2c0e"
+    },
+    "postrun_descriptive_supplement.py": {
+      "sha256": "c9dcc6cf75f05baafd20ed774c2a5bf6651d13effd5888043127e87f84def261"
+    },
+    "test_postrun_descriptive_supplement.py": {
+      "sha256": "8ef4cad72b84c9205dbc5df49b17abdb73e2c1c58d56c4e7598ef2439d3a49a8"
+    }
+  },
+  "parent_revision": {
+    "files": {
+      "postrun_descriptive_supplement.py": "35ac64aeb1720bcd1d4f66c3d719ec8c3d45d97866bf7decdb7b40fd70eec9ed",
+      "test_postrun_descriptive_supplement.py": "24a114fc909ca709e192649f5fea5087ebf43d217bc89d602d83adce59fd1f83"
+    },
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-postrun-descriptive-supplement-1174/revision-002"
+  },
+  "revision": "003",
+  "schema": "numi.human.postrun-descriptive-supplement-revision.v1",
+  "status": "source_only_not_run_against_registered_pair",
+  "tests": {
+    "command": "Xcode Python 3.9 unittest discover -s revision-003 -p test_*.py -v",
+    "result": "9 passed"
+  }
+}

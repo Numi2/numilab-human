@@ -1,0 +1,58 @@
+{
+  "captured_unix": 1791517563.421064,
+  "host": "SSH macmini",
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/sw_vers"
+      ],
+      "returncode": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6\nBuildVersion:\t\t25G72",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/xcodebuild",
+        "-version"
+      ],
+      "returncode": 0,
+      "stdout": "Xcode 26.6\nBuild version 17F113",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/sbin/sysctl",
+        "machdep.cpu.brand_string",
+        "hw.memsize",
+        "hw.physicalcpu",
+        "hw.logicalcpu"
+      ],
+      "returncode": 0,
+      "stdout": "machdep.cpu.brand_string: Apple M4 Pro\nhw.memsize: 25769803776\nhw.physicalcpu: 12\nhw.logicalcpu: 12",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/bin/df",
+        "-k",
+        "/Users/n"
+      ],
+      "returncode": 0,
+      "stdout": "Filesystem   1024-blocks      Used Available Capacity iused     ifree %iused  Mounted on\n/dev/disk3s5   482797652 401785212  46293484    90% 3268459 462934840    1%   /System/Volumes/Data",
+      "stderr": ""
+    }
+  ],
+  "background_cpu_process": {
+    "argv": [
+      "/bin/ps",
+      "-p",
+      "63907",
+      "-o",
+      "pid,ppid,pcpu,pmem,etime,comm"
+    ],
+    "returncode": 0,
+    "stdout": "PID  PPID  %CPU %MEM  ELAPSED COMM\n63907 63906 100.0  3.7 02:14:11 /Applications/Xcode-26.6.0.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+    "stderr": ""
+  },
+  "timing_scope": "Actual available Mac mini with native GPU job serialized; unrelated CPU process observed, not an exclusive whole-host benchmark."
+}
