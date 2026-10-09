@@ -205,6 +205,17 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         argv.extend(["--muscle-activation", str(activation_cap)])
     if getattr(args, "release_initialization", False):
         argv.append("--resting-release-initialization")
+    if getattr(args, "contoured_bed", False):
+        _require(getattr(args, "release_initialization", False),
+                 "contoured bed requires explicit release initialization")
+        heightfield = scene.get("bed", {}).get("heightfield")
+        _require(isinstance(heightfield, dict) and heightfield.get("frame") == "fixed_world",
+                 "contoured bed requires a fixed-world heightfield in the body scene")
+        _require(isinstance(heightfield.get("source_capture_path"), str) and
+                 re.fullmatch(r"[0-9a-f]{64}", str(heightfield.get("source_capture_sha256", ""))) is not None,
+                 "contoured bed requires its source capture path and hash")
+        checked(heightfield["source_capture_path"], heightfield["source_capture_sha256"])
+        argv.extend(["--resting-bed-surface", str(args.body_scene.resolve())])
     if getattr(args, "upper_passive_joints", False):
         argv.append("--persistent-source-passive-joint-tissue")
     hip_capsule = getattr(args, "hip_capsule_reference", False)
@@ -322,6 +333,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="cap initial source muscle recruitment retained as postural drive; default uses the native owner setting")
     parser.add_argument("--release-initialization", action="store_true",
                         help="explicitly initialize outside static equilibrium and let native bed contact settle the body")
+    parser.add_argument("--contoured-bed", action="store_true",
+                        help="use the fixed finite bed heightfield declared in the existing body scene manifest")
     parser.add_argument("--upper-passive-joints", action="store_true",
                         help="enable the existing source-bound wrist and non-thumb finger passive stiffness model")
     parser.add_argument("--hip-capsule-reference", action="store_true",

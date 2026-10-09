@@ -252,6 +252,35 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertIn("--resting-rigid-hands", argv)
         self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
 
+    def test_contoured_bed_uses_the_pinned_body_scene_and_explicit_release(self):
+        baseline, _ = command(self.args)
+        self.assertNotIn("--resting-bed-surface", baseline)
+        self.args.contoured_bed = True
+        with self.assertRaisesRegex(HumanImportError, "release initialization"):
+            command(self.args)
+        self.args.release_initialization = True
+        with self.assertRaisesRegex(HumanImportError, "fixed-world heightfield"):
+            command(self.args)
+        source = self.root / "initial-capture.mrvpack"
+        source.write_bytes(b"bounded source identity fixture")
+        self.scene["bed"] = {"heightfield": {
+            "frame": "fixed_world", "source_capture_path": str(source),
+            "source_capture_sha256": hashlib.sha256(source.read_bytes()).hexdigest()}}
+        self.write_receipts()
+        argv, hashes = command(self.args)
+        self.assertEqual(argv[argv.index("--resting-bed-surface") + 1],
+                         str(self.args.body_scene.resolve()))
+        self.assertEqual(hashes[str(self.args.body_scene.resolve())],
+                         hashlib.sha256(self.args.body_scene.read_bytes()).hexdigest())
+        self.assertNotIn("--resting-hip-capsule-reference", argv)
+
+        source.write_bytes(source.read_bytes() + b" changed")
+        with self.assertRaisesRegex(HumanImportError, "owner receipt hash differs"):
+            command(self.args)
+        source.unlink()
+        with self.assertRaisesRegex(HumanImportError, "missing owner file"):
+            command(self.args)
+
     def test_hip_capsule_reference_is_explicit_and_has_one_native_owner(self):
         baseline, _ = command(self.args)
         self.assertNotIn("--resting-hip-capsule-reference", baseline)
