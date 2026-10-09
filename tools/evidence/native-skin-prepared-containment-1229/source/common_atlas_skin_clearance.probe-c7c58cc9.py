@@ -433,7 +433,6 @@ def _prepare_closed_clearance_target(
         "faces": quotient_faces,
         "records": records,
         "_interior_records": interior_records,
-        "_interior_point_locator": ci.prepare_point_location(interior_records),
         "_interior_face_rows": tuple(outer_face_rows),
         "report": report,
         "_inside_aabb_min": interior_aabb_min,
@@ -450,10 +449,6 @@ def _require_prepared_closed_target(target: dict[str, Any]) -> None:
             or not isinstance(target.get("_interior_records"), tuple)
             or not target["_interior_records"]):
         raise human.ImportError("clearance operation requires an admissible prepared closed target")
-    locator = target.get("_interior_point_locator")
-    if (not isinstance(locator, ci.PreparedPointLocation)
-            or locator.records != target["_interior_records"]):
-        raise human.ImportError("clearance target point-location snapshot does not match its interior records")
 
 
 def _closed_target_inside_vertices(positions: np.ndarray, target: dict[str, Any]) -> np.ndarray:
@@ -478,7 +473,7 @@ def _closed_target_inside_vertices(positions: np.ndarray, target: dict[str, Any]
         numeric_point = point.astype(np.float64)
         if np.any(numeric_point < lower) or np.any(numeric_point > upper):
             continue
-        result = ci.point_location_prepared(float32_point_lattice_key(point), target["_interior_point_locator"])
+        result = ci.point_location(float32_point_lattice_key(point), target["_interior_records"])
         location = result.get("location")
         if location == "inside":
             inside.append(point_id)
@@ -523,7 +518,7 @@ def _closed_target_exit_source_scalar(
         raise human.ImportError("clearance mapped direction must be nonzero")
     point_lattice = float32_point_lattice_key(packed_point)
     target_records = target["_interior_records"]
-    if ci.point_location_prepared(point_lattice, target["_interior_point_locator"]).get("location") != "inside":
+    if ci.point_location(point_lattice, target_records).get("location") != "inside":
         raise human.ImportError("clearance ray start must be strictly inside the target")
 
     direction_fraction = tuple(Fraction.from_float(float(value)) for value in direction)
@@ -563,8 +558,8 @@ def _closed_target_exit_source_scalar(
         if not math.isfinite(candidate_scalar) or candidate_scalar <= 0.0:
             raise human.ImportError("clearance ray exit scalar is not finite and positive")
         endpoint = (packed_point.astype(np.float64) + candidate_scalar * direction).astype("<f4")
-        endpoint_location = ci.point_location_prepared(
-            float32_point_lattice_key(endpoint), target["_interior_point_locator"]
+        endpoint_location = ci.point_location(
+            float32_point_lattice_key(endpoint), target_records
         ).get("location")
         if endpoint_location == "outside":
             return candidate_scalar
