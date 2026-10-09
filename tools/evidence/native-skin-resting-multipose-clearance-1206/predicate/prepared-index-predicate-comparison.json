@@ -1,0 +1,37 @@
+{
+  "audit_loop_body_identical_after_only_iterator_adapter_normalization": true,
+  "identical_existing_function_names": [
+    "_allowed_shared_point",
+    "_axes",
+    "_coplanar_points",
+    "_cross",
+    "_dot",
+    "_inside",
+    "_orient2",
+    "_records",
+    "_segment_triangle",
+    "_signs",
+    "_sub",
+    "audit_cavity_intersections",
+    "float32_lattice_point_on_triangle",
+    "float32_point_lattice_key",
+    "float32_triangle_lattice_key",
+    "point_location",
+    "require",
+    "triangle_intersection_points"
+  ],
+  "interpretation": "Existing exact integer/Fraction triangle predicates are unchanged; prepared indexing changes candidate enumeration, checked separately against all859 saved target pair sets.",
+  "legacy_owner": {
+    "path": "/Users/n/numi-human-resting-final-integration-001/src/numilab_human/cardiac_cavity_intersections.py",
+    "sha256": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb"
+  },
+  "prepared_index_tests": {
+    "command": "PYTHONPATH=src:tests /Users/n/numi-human-prep-venv-20261005/bin/python3.13 -m pytest -q tests/test_cardiac_aabb_broadphase.py",
+    "result": "6 passed in 0.24s"
+  },
+  "prepared_owner": {
+    "path": "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/cardiac_cavity_intersections.py",
+    "sha256": "934c64fa6a64a06044aee6db44cdcd71dc497fcec97a20a80029575faaaff4b4"
+  },
+  "status": "unchanged_exact_narrow_predicate_bodies"
+}

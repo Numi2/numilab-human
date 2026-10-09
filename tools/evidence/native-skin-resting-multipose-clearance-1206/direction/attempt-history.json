@@ -1,0 +1,32 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "exception": "ImportError: cannot import name '_audit_pair_prepared_first' from numilab_human.cardiac_cavity_intersections (historical package loaded for current helper)",
+      "result": "failed before data processing",
+      "script_sha256": "99a2432c1530e529789dbe1a10af4efcc701ca2f0cdf2338bada2b4621ae36d7"
+    },
+    {
+      "attempt": 2,
+      "exception": "KeyError: 'bind_u' (diagnostic skin object omitted packed UInt32 bindings)",
+      "result": "failed during forward-model setup",
+      "script_sha256": "4863c2ce3502372a24fb31cab53968bdb29ca7ad90394219fce38f7737d8fc67"
+    },
+    {
+      "attempt": 3,
+      "exception": "IndexError: index 54690 is out of bounds for axis 1 with size 54663 (referenced capture was indexed a second time)",
+      "result": "failed after forward replay",
+      "script_sha256": "126ced81cd8635bda05df5ad882c27818ed43777c1aebd27a9db10b13d54dc11"
+    },
+    {
+      "attempt": 4,
+      "report_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/direction-diagnosis-001/direction-diagnosis.json",
+      "report_sha256": "5000ae6567da7d9b3631a5b03e6451f49c85a2221f28204a160262d5df317928",
+      "result": "completed",
+      "script_sha256": "8c9e66a4213565ddbfe1c2e6f669306a5cdbde6fd4bb005285cbb747982d3307"
+    }
+  ],
+  "note": "Historical fit source remains immutable; these are diagnostic code setup corrections, not failed physiological or geometry scans.",
+  "schema": "numi.human.readonly-diagnostic-attempt-history.v1",
+  "scope": "direction diagnostic setup attempts only; no scan or geometry run was started in failed attempts"
+}

@@ -1,0 +1,356 @@
+{
+  "attempt_001": {
+    "elapsed_wall_s": 4.860675083473325,
+    "error": "shared source direction is not positively and boundedly conditioned at an active face: pose=1, face=446, corner=2, projection=0.44627114421, required_ge=0.5",
+    "error_type": "ImportError",
+    "fit_baseline_nonocular_pair_counts": [
+      0,
+      0,
+      3112
+    ],
+    "preflight_status": "ready_for_existing_solver_three_pose_fit",
+    "status": "failed_or_incomplete_candidate_solve"
+  },
+  "attempt_002": {
+    "accepted_iteration_events": 8,
+    "elapsed_wall_s": 2970.7115438329056,
+    "error": "multi-pose clearance left nonocular exact pairs: [0, 0, 309]",
+    "error_type": "ImportError",
+    "event_count": 9,
+    "events": [
+      {
+        "attempt": 1,
+        "backtrack": 0,
+        "iteration": 1,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          3112
+        ],
+        "nonocular_candidate_by_pose": null,
+        "reason": "trial has 14 exact self-pairs at pose=0",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "aac45d4b6417976e9c6f967ff66ff73e6607f77534a4ecbee47c2edb985160ca",
+        "status": "rejected"
+      },
+      {
+        "attempt": 2,
+        "backtrack": 1,
+        "iteration": 1,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          3112
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          2483
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 0.5,
+        "source_positions_f32_sha256": "8a7abcf2efbe558ff2590811b56d82d13e3c792b93ef684126ed179d63da1c2f",
+        "status": "accepted"
+      },
+      {
+        "attempt": 3,
+        "backtrack": 0,
+        "iteration": 2,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          2483
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          1639
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "461a2eb04bdfbfbb03a866a1403d6f8e77e533ba366495e58859f00ae7d54224",
+        "status": "accepted"
+      },
+      {
+        "attempt": 4,
+        "backtrack": 0,
+        "iteration": 3,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          1639
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          1090
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "b0e97e55c9d1abd7fdc69d123c33c38f27604d6c8286f22a69c28d7b1dd67db5",
+        "status": "accepted"
+      },
+      {
+        "attempt": 5,
+        "backtrack": 0,
+        "iteration": 4,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          1090
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          758
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "263c5d46c1dca763a6b82293dfd3b68b01c1bc5d19275520b4d1f4290092b99d",
+        "status": "accepted"
+      },
+      {
+        "attempt": 6,
+        "backtrack": 0,
+        "iteration": 5,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          758
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          551
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "fb011f293834c8fa2999b5346167cfd36a8b484f1127a45ecd14553ca5987526",
+        "status": "accepted"
+      },
+      {
+        "attempt": 7,
+        "backtrack": 0,
+        "iteration": 6,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          551
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          419
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "3c02e92514e500f9ec8c977caffd263918fa840cf779e44ac653700f32ee8336",
+        "status": "accepted"
+      },
+      {
+        "attempt": 8,
+        "backtrack": 0,
+        "iteration": 7,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          419
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          388
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "ad823fd995fbc55efc50fd012cbd36a1b763cb2faf018506993a432bd4435e4a",
+        "status": "accepted"
+      },
+      {
+        "attempt": 9,
+        "backtrack": 0,
+        "iteration": 8,
+        "nonocular_before_by_pose": [
+          0,
+          0,
+          388
+        ],
+        "nonocular_candidate_by_pose": [
+          0,
+          0,
+          309
+        ],
+        "reason": "all pose gates and exact scans passed",
+        "scale": 1.0,
+        "source_positions_f32_sha256": "e5451aaf84f3e25f04f7946862d75e5788fae0bc67c63c8e74066f6aff6c2ceb",
+        "status": "accepted"
+      }
+    ],
+    "final_partial_nonocular_pair_counts": [
+      0,
+      0,
+      309
+    ],
+    "final_partial_output_not_admitted": true,
+    "iteration_8_shape_diagnostics": {
+      "iteration": 8,
+      "mass_qualification": "No closed volume or density admitted: existing ocular boundary loops remain. Rigid mass unchanged72kg.",
+      "maximum_source_displacement_mm": 27.39359964800852,
+      "maximum_source_edge_stretch": 1.683143253852411,
+      "maximum_source_triangle_area_ratio": 2.053146755696908,
+      "minimum_source_edge_stretch": 0.8972570365869763,
+      "minimum_source_triangle_area_ratio": 0.7732653852380119,
+      "minimum_source_triangle_normal_alignment": 0.5496463937067833,
+      "source_displacement_quantiles_all_vertices_mm": {
+        "0.95": 0.375513745563841,
+        "0.99": 6.536953388684259,
+        "0.999": 19.96223128305323
+      },
+      "source_integral_baseline_l_diagnostic_only": 69.66372928757308,
+      "source_integral_candidate_l_diagnostic_only": 70.78452415730621,
+      "source_positions": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/fit-attempt-002/attempts/attempt-0009-source.npy",
+      "status": "shape_diagnostics_only_not_anatomical_admission"
+    },
+    "iteration_count": 8,
+    "preflight_status": "ready_for_existing_solver_three_pose_fit_with_conditioned_directions",
+    "rejected_trial_events": 1,
+    "status": "failed_or_incomplete_candidate_solve"
+  },
+  "base_source": {
+    "counts": {
+      "bindings": 86,
+      "faces": 109211,
+      "vertices": 54949
+    },
+    "fit_steps": [
+      0,
+      10000,
+      20000
+    ],
+    "held_out_steps": [
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743
+    ],
+    "maximum_replay_error_m": 0.0,
+    "skin_sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b",
+    "zero_delta_all_nine_positions_bit_exact": true
+  },
+  "direction_diagnosis": {
+    "conditioned_source_direction": [
+      -0.9874614829197668,
+      -0.11732721469194238,
+      -0.10561318309058854
+    ],
+    "current_owner": {
+      "path": "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/common_atlas_skin_clearance.py",
+      "sha256": "87e5a7254b9e63859260ffdc700997133daf725878737a9faae3ed04e7f60330"
+    },
+    "direction_change_radians": 0.06192801966355137,
+    "failed_face": {
+      "accepted_world_xyz_m_by_pose": [
+        [
+          -0.02549564652144909,
+          -1.142587661743164,
+          0.13873577117919922
+        ],
+        [
+          -0.023541642352938652,
+          -1.1124718189239502,
+          0.16805332899093628
+        ],
+        [
+          -0.0035880394279956818,
+          -1.1226911544799805,
+          0.17653366923332214
+        ]
+      ],
+      "active_face_index": 446,
+      "compact_vertex_index": 30182,
+      "fit_pose_index": 1,
+      "fit_step": 10000,
+      "offending_corner": 2,
+      "offending_source_vertex_id": 30182,
+      "source_skin_face_row": 60435,
+      "source_skin_vertex_rows": [
+        30206,
+        30204,
+        30182
+      ],
+      "source_vertex_xyz_m": [
+        -0.0006285692215897143,
+        -0.10221213847398758,
+        0.5303304195404053
+      ]
+    },
+    "feasible_direction_search": {
+      "maximum_projection": 0.9292325460058678,
+      "message": "Optimization terminated successfully",
+      "minimum_projection": 0.8476227450140614,
+      "minimum_soc_margin": 0.35026820965578037,
+      "projections": [
+        0.8992130630077635,
+        0.9053694584113099,
+        0.9290464250343039,
+        0.8476227450140614,
+        0.8503413547624912,
+        0.9214797831930355,
+        0.9292325460058678,
+        0.8617394899667523,
+        0.9081468225383871,
+        0.8803724074870096,
+        0.9075445795363488,
+        0.8946489282774667
+      ],
+      "start_index": 12,
+      "success": true,
+      "unit_direction": [
+        -0.9319443036770406,
+        0.3625570127058158,
+        0.005676916570704279
+      ]
+    },
+    "incident_active_face_rows": [
+      60435,
+      60436,
+      60437,
+      60438
+    ],
+    "incident_projection_min_by_step": {
+      "0": 0.535643190387165,
+      "10000": 0.44627114420981673,
+      "20000": 0.5662760831130352
+    },
+    "initial_source_direction": [
+      -0.9773170887208474,
+      -0.1776331009634521,
+      -0.115316041972985
+    ],
+    "minimum_projection_after": 0.5000009999999757,
+    "minimum_projection_before": 0.44627114420981695
+  },
+  "final_candidate_status": "none; shared solver raised after iteration 8 with 309 step-20000 nonocular pairs; no full candidate NPY/report or composition was produced",
+  "observed_baseline": {
+    "fit_pose_nonocular_pair_counts": [
+      0,
+      0,
+      3112
+    ],
+    "fit_pose_ocular_pair_counts": [
+      0,
+      0,
+      0
+    ],
+    "fit_pose_skin_self_pair_counts": [
+      0,
+      0,
+      0
+    ],
+    "interpretation": "The 3,112 nonocular pairs are at the retained 40-second step-20000 baseline state; steps 0 and 10000 were zero. This is a baseline skin-to-target finding, not a candidate fit result."
+  },
+  "qualification": "Source-only fit attempts; not an admitted NHSKIN, not a native run, and not anatomical or physiological qualification.",
+  "schema": "numi.human.skin-resting-multipose-clearance-trial-summary.v1"
+}
