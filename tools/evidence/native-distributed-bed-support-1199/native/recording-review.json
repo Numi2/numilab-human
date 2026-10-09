@@ -1,0 +1,53 @@
+{
+  "scope": "Continuous native movie timing and four selected frames visually inspected; remaining extracted layers retained but not visually qualified in this review",
+  "inspection_returncode": 0,
+  "inspector": {
+    "path": "/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift",
+    "sha256": "2d6704dd5f06bffd0b8aa0072171af805fdb3dd00dcc11c02e0b692513b21649"
+  },
+  "timing_and_frame_records": [
+    "frames=315 timing_markers=5 first_wall_s=1.8766666666666667 last_wall_s=251.08833333333334 max_gap_wall_s=2.795 duration_wall_s=252.695",
+    "frame=initial index=0 simulated_s=0.0 wall_s=1.8766666666666667 width=1280 height=900",
+    "frame=middle index=157 simulated_s=10.0460004772 wall_s=128.32833333333335 width=1280 height=900",
+    "frame=final index=314 simulated_s=20.0000009499 wall_s=251.08833333333334 width=1280 height=900",
+    "frame=skin index=20 simulated_s=1.2780000607 wall_s=19.455 width=1280 height=900",
+    "frame=muscles index=59 simulated_s=3.77400017926 wall_s=50.86833333333333 width=1280 height=900",
+    "frame=skeleton index=98 simulated_s=6.27000029781 wall_s=82.02333333333333 width=1280 height=900",
+    "frame=organs index=137 simulated_s=8.76600041636 wall_s=112.66333333333333 width=1280 height=900",
+    "frame=lungs index=176 simulated_s=11.2620005349 wall_s=143.145 width=1280 height=900",
+    "frame=heart index=215 simulated_s=13.7580006535 wall_s=173.55833333333334 width=1280 height=900",
+    "frame=vessels index=254 simulated_s=16.254000772 wall_s=203.96333333333334 width=1280 height=900"
+  ],
+  "visually_inspected_frames": [
+    "initial",
+    "final",
+    "muscles",
+    "skeleton"
+  ],
+  "observations": [
+    "Whole reference body, fixed bed, seven layer selectors, camera controls and synchronized accepted-state HUD visible.",
+    "Selected skeleton and muscle layers render over the same supported resting body.",
+    "Final HUD reports20.00s,3breaths,23beats,PaO2103.12mmHg,PaCO238.90mmHg,SaO297.44%,tidal528.92mL,stroke70.04mL,blood5.15L andmeanCO5.01L/min.",
+    "This is presentation evidence only; anatomical crossings and physical consistency require the independent numerical audits.",
+    "Some lower footer text is clipped in the muscle-layer frame."
+  ],
+  "source_movie": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-distributed-bed-smoke-1199/native-run/native-viewer.mov",
+    "sha256": "413f866034af6494106d5b6d2baf88a6c4ab1def7410749c9720dbe361d4941a"
+  },
+  "files": {
+    "frame-final.png": "f3393da0ba6b10ab979f6c5dfa07c07bfd19e865c56a40b68026f009cd5bdf65",
+    "frame-heart.png": "c76120984e9f38d431fbf1a70a5f71a3855d834b922e404e8450cd3b4d867343",
+    "frame-initial.png": "a8a1d129251c04e43f8322cfc904b5ee7c0782a0db326d33571d3aaf8e5b4b5a",
+    "frame-lungs.png": "aaede36c1ebc1e813048418f424de6ba7044e27f3c67f19c6ddda0921900fcb0",
+    "frame-middle.png": "d02bb6e231c664ef0b0c99eec7f16a8e9b009f7a7a01d6430019fbeed4dd27c9",
+    "frame-muscles.png": "e2ddcf15ff856d7735210f8ab33053533727562e689528a1d31ec5556471d095",
+    "frame-organs.png": "b40c3a2f13bd25185049067635f9d919c7e7d838d50ee7911747e75c40fed6a1",
+    "frame-skeleton.png": "ce6ec62ade095c40395698ec758533d93080ef9965e3ce712c7499cde5d62697",
+    "frame-skin.png": "df639d863b27000035003effb4ffd744dd0a975ce0092ad2a34124c2793f5bae",
+    "frame-vessels.png": "cda367011607fe407e72a41d09400a3d50d7ec2c122c24f45518dba632706a0e",
+    "inspection.log": "fa4ca86a63dc0fc0be78f6b7ceee65d7589053b4d64cb3441ed2f81020d3e1e5",
+    "native-viewer.mov": "413f866034af6494106d5b6d2baf88a6c4ab1def7410749c9720dbe361d4941a",
+    "resting-surface-audit.csv": "80851227584fc18de84dd6a4c4581be08e3ae388c432c5c69262da04199a46f6"
+  }
+}

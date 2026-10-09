@@ -1,0 +1,49 @@
+{
+  "attempts": [
+    {
+      "attempt": "audit-environment-probe",
+      "command": "system python3 audit_distributed_bed_terminal_1199.py --help",
+      "outcome": "failed before wrapper help or geometry; system Python lacked NumPy; no scan started",
+      "script_sha256": "7b2ff48a17e6e1af109cf323502d352129c9265eea368e92b08c991cd8067016"
+    },
+    {
+      "attempt": "terminal-scan-v1-preflight",
+      "outcome": "failed in preflight; local adapter expected an analysis_script report field absent from exact v1 partition report; no geometry scan started",
+      "script": "anatomy/audit-terminal-v1.py",
+      "script_sha256": "7b2ff48a17e6e1af109cf323502d352129c9265eea368e92b08c991cd8067016"
+    },
+    {
+      "attempt": "terminal-scan-v2-preflight",
+      "outcome": "passed; exact launch-time report inputs reconciled by their inputs map",
+      "script": "anatomy/audit-terminal-v2.py",
+      "script_sha256": "b036a0bb43ced66b8b9e4a00ef1b45d79f2d5266b759904d50687daf38576b34"
+    },
+    {
+      "attempt": "terminal-scan-v2-flag-error",
+      "command": "python3.13 audit_distributed_bed_terminal_1199_v2.py --capture-steps 0,10000 --scan-only-step 10000",
+      "outcome": "failed before scan because pinned core requires --scan with --scan-only-step",
+      "script_sha256": "b036a0bb43ced66b8b9e4a00ef1b45d79f2d5266b759904d50687daf38576b34"
+    },
+    {
+      "attempt": "terminal-scan-attempt003",
+      "command": "python3.13 audit_distributed_bed_terminal_1199_v2.py --run <1199 native-run> --out <fresh output> --nha-sha256 1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241 --capture-steps 0,10000 --scan --scan-only-step 10000",
+      "outcome": "completed terminal scan; 2601 target pairs, 394 bed pairs, zero self/ocular/invalid",
+      "script_sha256": "b036a0bb43ced66b8b9e4a00ef1b45d79f2d5266b759904d50687daf38576b34"
+    },
+    {
+      "attempt": "contact-trace-v1",
+      "outcome": "failed before report because it expected a copied runtime-source/apps tree not emitted by the clean-source run",
+      "script": "contact/audit-trace-v1.py",
+      "script_sha256": "4ed286bb550bf140d27b60108a0f85adc815831fa045257aa868f04163894c3c"
+    },
+    {
+      "attempt": "contact-trace-v2",
+      "outcome": "passed; source revision d13b2348... was checked against the run's clean source pin",
+      "report_sha256": "4f45951e702117f58eb90467e708ad1b19ee47cbd1e6baaebf9bba14242a8712",
+      "script": "contact/audit-trace-v2.py",
+      "script_sha256": "47093ce622df1accde33370b8b40cb8ca66e5740bab1451d062c96e92c7ec4d2"
+    }
+  ],
+  "schema": "numi.human.distributed-bed-support-1199-attempt-history.v1",
+  "transcript_limit": "Failed command outcomes were observed during audit execution; no separate stderr artifact was retained for these preflight-only attempts. The preserved runner versions and final outputs are hash-bound."
+}

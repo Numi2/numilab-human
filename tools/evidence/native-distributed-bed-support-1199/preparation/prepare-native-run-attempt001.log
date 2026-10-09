@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/distributed-resting-support-1199/prepare_native_comparison_1199.py", line 85, in <module>
+    shutil.copy2(source,copy)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/n/miniforge3/lib/python3.13/shutil.py", line 468, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/miniforge3/lib/python3.13/shutil.py", line 262, in copyfile
+    with open(dst, 'wb') as fdst:
+         ~~~~^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-retained-delivery-20261009/native-distributed-bed-smoke-1199/runtime-source/CMakeCache.txt'

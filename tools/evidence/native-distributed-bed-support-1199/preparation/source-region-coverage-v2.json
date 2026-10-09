@@ -1,0 +1,870 @@
+{
+  "analysis_script": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/distributed-resting-support-1199/validate_source_regions.py",
+    "sha256": "e07949985b1e9aca6ae20498e6f1ba799b7167d6b09b3a2fb3d457e431bc8aed"
+  },
+  "heightfield": {
+    "1196_exact_skin_heightfield_triangle_intersection_count": 0,
+    "exact_mesh_result_scope": "Transferred from 1196 only after exact same skin hash and exact runtime-grid arrays were verified; no new skin-triangle mesh scan was performed.",
+    "nx_nodes": 261,
+    "ny_nodes": 461,
+    "parent_grid_manifest": "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/resting-supine-scene-contoured-5mm.manifest.json",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/distributed-resting-support-1199/resting-supine-scene-distributed-support.manifest.json",
+    "runtime_float32_nodes_equal_retained_1196_arrays": true,
+    "same_heightfield_object_as_1196": true,
+    "sha256": "55a1e0149d5ce1482fc382eb2bc6ba31ce90888f2594435f191d5615b8c0b8f4",
+    "skin_capture_vertices_mapped_to_rest_voronoi_by_index": true,
+    "source_pose_min_signed_point_to_facet_gap_m": 1.000146585283801e-05,
+    "source_pose_min_vertical_gap_m": 1.000146585283801e-05,
+    "source_vertices_outside_bed_bounds": 0,
+    "spacing_xy_f32_m": [
+      0.004999999888241291,
+      0.004999999888241291
+    ]
+  },
+  "inputs": {
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7",
+    "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/audit_fixed_bed_full_body_captures_1198.py": "fc04a1bf331aa8adc5b1f8309843129bcbfd5d446f1f4488f38e11432782a785",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/build_runtime_manifest.py": "06ff4fd687bff498cb9cac5293ce4b100a8c3225158be49111faca64fb071ef5",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/heightfield-runtime-audit-5mm.json": "dd31cc93cd01e8f69163f8abc670d1afc003dbe7ba7c664ec3fad073a040d04a",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/heightfields-runtime-f32-5mm.npz": "18d624cd90855b55d3351f851ccc0bb203ad4df60851ca4242dfcbe20d57165a",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/resting-supine-scene-contoured-5mm.manifest.json": "189ffb56c3b3b6de3426627068b17e049134dca8efa3551fb4c37c0c92fb5c2c",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/source-voronoi-region-gaps-5mm.json": "a9bf4a344c96038211f4566d8c0d975cf6fd440e1f146d466de1465863264002",
+    "/Users/n/numi-human-retained-delivery-20261009/distributed-resting-support-1199/myosim-fullbody-distributed-rigid-digit-support.nhcnt": "b029bf6e86958ba4c7f9e1d5ca7f7e94a6e123952f926b02b254ad02b426971f",
+    "/Users/n/numi-human-retained-delivery-20261009/distributed-resting-support-1199/resting-supine-scene-distributed-support.manifest.json": "55a1e0149d5ce1482fc382eb2bc6ba31ce90888f2594435f191d5615b8c0b8f4",
+    "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.mrvpack": "68dd2aecebd5febb561738e586cb9093813aee61309ccf1c0ceae5a535751bef",
+    "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.receipt.json": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681"
+  },
+  "interpretation": [
+    "The 32-region owner partition covers each of the 54,949 full-weight NHSKIN source vertices once, with no empty regions; first eight seeds are preserved from 1196.",
+    "The fixed bed and skin payloads are byte-identical to the 1196 source-pose geometry inputs; its exact mesh-intersection-free audit transfers by exact identity. Per-region gaps here use new 1199 seed assignments, not the old 1196 Voronoi labels.",
+    "This check does not establish dynamic support distribution, contact transitions, reduced drift, or equilibrium."
+  ],
+  "native_support_counts": {
+    "1196_counts_not_reused": true,
+    "status": "not_available_for_1199_before_native_run"
+  },
+  "partition": {
+    "algorithm": "1196 source_labels Float32 weighted source-rest skin coordinates; nearest ordered NHCNT seed by sequential Float32 squared distance; strict less-than update means first seed wins exact ties",
+    "assigned_skin_vertex_count": 54949,
+    "cardinality_sum": 54949,
+    "distributed_groups": {
+      "foot_l": {
+        "bodies": [
+          "talus_l",
+          "calcn_l",
+          "toes_l"
+        ],
+        "body_indices": [
+          151,
+          152,
+          153
+        ],
+        "seed_skin_vertices": [
+          36848,
+          42607
+        ],
+        "source_skin_vertices_claimed": 3757
+      },
+      "foot_r": {
+        "bodies": [
+          "talus_r",
+          "calcn_r",
+          "toes_r"
+        ],
+        "body_indices": [
+          137,
+          138,
+          139
+        ],
+        "seed_skin_vertices": [
+          18925,
+          11783
+        ],
+        "source_skin_vertices_claimed": 3751
+      },
+      "forearm_l": {
+        "bodies": [
+          "ulna_l",
+          "radius_l"
+        ],
+        "body_indices": [
+          92,
+          93
+        ],
+        "seed_skin_vertices": [
+          50422,
+          47732
+        ],
+        "source_skin_vertices_claimed": 1295
+      },
+      "forearm_r": {
+        "bodies": [
+          "ulna_r",
+          "radius_r"
+        ],
+        "body_indices": [
+          42,
+          43
+        ],
+        "seed_skin_vertices": [
+          4582,
+          6875
+        ],
+        "source_skin_vertices_claimed": 1279
+      },
+      "rigid_hand_l": {
+        "bodies": [
+          "lunate_l",
+          "scaphoid_l",
+          "pisiform_l",
+          "triquetrum_l",
+          "capitate_l",
+          "trapezium_l",
+          "firstmc_l",
+          "proximal_thumb_l",
+          "distal_thumb_l",
+          "trapezoid_l",
+          "hamate_l",
+          "secondmc_l",
+          "2proxph_l",
+          "midph2_l",
+          "distph2_l",
+          "thirdmc_l",
+          "3proxph_l",
+          "midph3_l",
+          "distph3_l",
+          "fourthmc_l",
+          "4proxph_l",
+          "midph4_l",
+          "distph4_l",
+          "fifthmc_l",
+          "5proxph_l",
+          "midph5_l",
+          "distph5_l"
+        ],
+        "body_indices": [
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          109,
+          110,
+          111,
+          112,
+          114,
+          115,
+          116,
+          117,
+          119,
+          120,
+          121,
+          122,
+          124,
+          125,
+          126
+        ],
+        "seed_skin_vertices": [
+          51480,
+          52623
+        ],
+        "source_skin_vertices_claimed": 5311
+      },
+      "rigid_hand_r": {
+        "bodies": [
+          "lunate_r",
+          "scaphoid_r",
+          "pisiform_r",
+          "triquetrum_r",
+          "capitate_r",
+          "trapezium_r",
+          "firstmc_r",
+          "proximal_thumb_r",
+          "distal_thumb_r",
+          "trapezoid_r",
+          "hamate_r",
+          "secondmc_r",
+          "2proxph_r",
+          "midph2_r",
+          "distph2_r",
+          "thirdmc_r",
+          "3proxph_r",
+          "midph3_r",
+          "distph3_r",
+          "fourthmc_r",
+          "4proxph_r",
+          "midph4_r",
+          "distph4_r",
+          "fifthmc_r",
+          "5proxph_r",
+          "midph5_r",
+          "distph5_r"
+        ],
+        "body_indices": [
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          59,
+          60,
+          61,
+          62,
+          64,
+          65,
+          66,
+          67,
+          69,
+          70,
+          71,
+          72,
+          74,
+          75,
+          76
+        ],
+        "seed_skin_vertices": [
+          3094,
+          2209
+        ],
+        "source_skin_vertices_claimed": 5408
+      },
+      "shin_l": {
+        "bodies": [
+          "tibia_l"
+        ],
+        "body_indices": [
+          150
+        ],
+        "seed_skin_vertices": [
+          36125,
+          38062
+        ],
+        "source_skin_vertices_claimed": 2583
+      },
+      "shin_r": {
+        "bodies": [
+          "tibia_r"
+        ],
+        "body_indices": [
+          136
+        ],
+        "seed_skin_vertices": [
+          18186,
+          16556
+        ],
+        "source_skin_vertices_claimed": 2577
+      },
+      "thigh_l": {
+        "bodies": [
+          "femur_l",
+          "patella_l"
+        ],
+        "body_indices": [
+          145,
+          156
+        ],
+        "seed_skin_vertices": [
+          31825,
+          43573
+        ],
+        "source_skin_vertices_claimed": 1662
+      },
+      "thigh_r": {
+        "bodies": [
+          "femur_r",
+          "patella_r"
+        ],
+        "body_indices": [
+          131,
+          142
+        ],
+        "seed_skin_vertices": [
+          23162,
+          12688
+        ],
+        "source_skin_vertices_claimed": 1692
+      },
+      "upper_arm_l": {
+        "bodies": [
+          "humerus_l"
+        ],
+        "body_indices": [
+          91
+        ],
+        "seed_skin_vertices": [
+          50066,
+          47558
+        ],
+        "source_skin_vertices_claimed": 976
+      },
+      "upper_arm_r": {
+        "bodies": [
+          "humerus_r"
+        ],
+        "body_indices": [
+          41
+        ],
+        "seed_skin_vertices": [
+          4612,
+          7399
+        ],
+        "source_skin_vertices_claimed": 679
+      }
+    },
+    "maximum_region_vertex_count": 6800,
+    "minimum_region_vertex_count": 542,
+    "multiply_assigned_count": 0,
+    "nonempty_region_count": 32,
+    "region_count": 32,
+    "regions": [
+      {
+        "body": "head",
+        "body_index": 23,
+        "minimum_signed_gap_vertex_index": 25847,
+        "minimum_signed_point_to_facet_gap_m": 1.000240445137024e-05,
+        "minimum_vertical_gap_m": 1.000240445137024e-05,
+        "minimum_vertical_gap_vertex_index": 25847,
+        "region": "head",
+        "region_index": 0,
+        "seed_skin_vertex_index": 25847,
+        "source_skin_vertex_count": 6800
+      },
+      {
+        "body": "torso",
+        "body_index": 20,
+        "minimum_signed_gap_vertex_index": 17764,
+        "minimum_signed_point_to_facet_gap_m": 1.0001705959439278e-05,
+        "minimum_vertical_gap_m": 1.0001705959439278e-05,
+        "minimum_vertical_gap_vertex_index": 17764,
+        "region": "thorax",
+        "region_index": 1,
+        "seed_skin_vertex_index": 17764,
+        "source_skin_vertex_count": 542
+      },
+      {
+        "body": "torso",
+        "body_index": 20,
+        "minimum_signed_gap_vertex_index": 37607,
+        "minimum_signed_point_to_facet_gap_m": 1.0001705959439278e-05,
+        "minimum_vertical_gap_m": 1.0001705959439278e-05,
+        "minimum_vertical_gap_vertex_index": 37607,
+        "region": "thorax",
+        "region_index": 2,
+        "seed_skin_vertex_index": 37607,
+        "source_skin_vertex_count": 961
+      },
+      {
+        "body": "torso",
+        "body_index": 20,
+        "minimum_signed_gap_vertex_index": 16236,
+        "minimum_signed_point_to_facet_gap_m": 0.000888532493263483,
+        "minimum_vertical_gap_m": 0.0009318637810368903,
+        "minimum_vertical_gap_vertex_index": 16238,
+        "region": "thorax",
+        "region_index": 3,
+        "seed_skin_vertex_index": 15823,
+        "source_skin_vertex_count": 679
+      },
+      {
+        "body": "pelvis",
+        "body_index": 128,
+        "minimum_signed_gap_vertex_index": 34318,
+        "minimum_signed_point_to_facet_gap_m": 1.000146585283801e-05,
+        "minimum_vertical_gap_m": 1.000146585283801e-05,
+        "minimum_vertical_gap_vertex_index": 34318,
+        "region": "pelvis",
+        "region_index": 4,
+        "seed_skin_vertex_index": 34318,
+        "source_skin_vertex_count": 1582
+      },
+      {
+        "body": "pelvis",
+        "body_index": 128,
+        "minimum_signed_gap_vertex_index": 21161,
+        "minimum_signed_point_to_facet_gap_m": 1.0001473128795624e-05,
+        "minimum_vertical_gap_m": 1.0001473128795624e-05,
+        "minimum_vertical_gap_vertex_index": 21161,
+        "region": "pelvis",
+        "region_index": 5,
+        "seed_skin_vertex_index": 21161,
+        "source_skin_vertex_count": 1094
+      },
+      {
+        "body": "sacrum",
+        "body_index": 1,
+        "minimum_signed_gap_vertex_index": 34324,
+        "minimum_signed_point_to_facet_gap_m": 0.0009507039794698358,
+        "minimum_vertical_gap_m": 0.0009508587994327848,
+        "minimum_vertical_gap_vertex_index": 34324,
+        "region": "pelvis",
+        "region_index": 6,
+        "seed_skin_vertex_index": 33528,
+        "source_skin_vertex_count": 637
+      },
+      {
+        "body": "pelvis",
+        "body_index": 128,
+        "minimum_signed_gap_vertex_index": 24974,
+        "minimum_signed_point_to_facet_gap_m": 0.0008431341266259551,
+        "minimum_vertical_gap_m": 0.0008599698872885503,
+        "minimum_vertical_gap_vertex_index": 24974,
+        "region": "pelvis",
+        "region_index": 7,
+        "seed_skin_vertex_index": 20346,
+        "source_skin_vertex_count": 722
+      },
+      {
+        "body": "humerus_r",
+        "body_index": 41,
+        "minimum_signed_gap_vertex_index": 7592,
+        "minimum_signed_point_to_facet_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_vertex_index": 7592,
+        "region": "upper_arm_r_axial_half_0",
+        "region_index": 8,
+        "seed_skin_vertex_index": 4612,
+        "source_skin_vertex_count": 1786
+      },
+      {
+        "body": "humerus_r",
+        "body_index": 41,
+        "minimum_signed_gap_vertex_index": 9956,
+        "minimum_signed_point_to_facet_gap_m": 0.0031589639838784933,
+        "minimum_vertical_gap_m": 0.003605528789580481,
+        "minimum_vertical_gap_vertex_index": 9956,
+        "region": "upper_arm_r_axial_half_1",
+        "region_index": 9,
+        "seed_skin_vertex_index": 7399,
+        "source_skin_vertex_count": 1669
+      },
+      {
+        "body": "radius_r",
+        "body_index": 43,
+        "minimum_signed_gap_vertex_index": 4605,
+        "minimum_signed_point_to_facet_gap_m": 0.0031605903059244156,
+        "minimum_vertical_gap_m": 0.003345973789691925,
+        "minimum_vertical_gap_vertex_index": 5438,
+        "region": "forearm_r_axial_half_0",
+        "region_index": 10,
+        "seed_skin_vertex_index": 4582,
+        "source_skin_vertex_count": 1201
+      },
+      {
+        "body": "ulna_r",
+        "body_index": 42,
+        "minimum_signed_gap_vertex_index": 7057,
+        "minimum_signed_point_to_facet_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_vertex_index": 7057,
+        "region": "forearm_r_axial_half_1",
+        "region_index": 11,
+        "seed_skin_vertex_index": 6875,
+        "source_skin_vertex_count": 1232
+      },
+      {
+        "body": "midph3_r",
+        "body_index": 65,
+        "minimum_signed_gap_vertex_index": 1134,
+        "minimum_signed_point_to_facet_gap_m": 0.009193725883960724,
+        "minimum_vertical_gap_m": 0.011615414663473128,
+        "minimum_vertical_gap_vertex_index": 1134,
+        "region": "rigid_hand_r_axial_half_0",
+        "region_index": 12,
+        "seed_skin_vertex_index": 3094,
+        "source_skin_vertex_count": 3332
+      },
+      {
+        "body": "secondmc_r",
+        "body_index": 57,
+        "minimum_signed_gap_vertex_index": 1700,
+        "minimum_signed_point_to_facet_gap_m": 0.0029065199196338654,
+        "minimum_vertical_gap_m": 0.003607141020312621,
+        "minimum_vertical_gap_vertex_index": 1695,
+        "region": "rigid_hand_r_axial_half_1",
+        "region_index": 13,
+        "seed_skin_vertex_index": 2209,
+        "source_skin_vertex_count": 2448
+      },
+      {
+        "body": "femur_r",
+        "body_index": 131,
+        "minimum_signed_gap_vertex_index": 17027,
+        "minimum_signed_point_to_facet_gap_m": 0.0010312588419765234,
+        "minimum_vertical_gap_m": 0.0010320383981568398,
+        "minimum_vertical_gap_vertex_index": 17027,
+        "region": "thigh_r_axial_half_0",
+        "region_index": 14,
+        "seed_skin_vertex_index": 23162,
+        "source_skin_vertex_count": 1228
+      },
+      {
+        "body": "femur_r",
+        "body_index": 131,
+        "minimum_signed_gap_vertex_index": 17079,
+        "minimum_signed_point_to_facet_gap_m": 0.0006929863011464477,
+        "minimum_vertical_gap_m": 0.000696239212399842,
+        "minimum_vertical_gap_vertex_index": 17079,
+        "region": "thigh_r_axial_half_1",
+        "region_index": 15,
+        "seed_skin_vertex_index": 12688,
+        "source_skin_vertex_count": 1952
+      },
+      {
+        "body": "tibia_r",
+        "body_index": 136,
+        "minimum_signed_gap_vertex_index": 20122,
+        "minimum_signed_point_to_facet_gap_m": 0.0005004964768886566,
+        "minimum_vertical_gap_m": 0.0005004964768886566,
+        "minimum_vertical_gap_vertex_index": 20122,
+        "region": "shin_r_axial_half_0",
+        "region_index": 16,
+        "seed_skin_vertex_index": 18186,
+        "source_skin_vertex_count": 706
+      },
+      {
+        "body": "tibia_r",
+        "body_index": 136,
+        "minimum_signed_gap_vertex_index": 18299,
+        "minimum_signed_point_to_facet_gap_m": 1.000240445137024e-05,
+        "minimum_vertical_gap_m": 1.00024044513633e-05,
+        "minimum_vertical_gap_vertex_index": 18299,
+        "region": "shin_r_axial_half_1",
+        "region_index": 17,
+        "seed_skin_vertex_index": 16556,
+        "source_skin_vertex_count": 1160
+      },
+      {
+        "body": "calcn_r",
+        "body_index": 138,
+        "minimum_signed_gap_vertex_index": 20233,
+        "minimum_signed_point_to_facet_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_m": 1.000612974167564e-05,
+        "minimum_vertical_gap_vertex_index": 20233,
+        "region": "foot_r_axial_half_0",
+        "region_index": 18,
+        "seed_skin_vertex_index": 18925,
+        "source_skin_vertex_count": 1371
+      },
+      {
+        "body": "toes_r",
+        "body_index": 139,
+        "minimum_signed_gap_vertex_index": 11485,
+        "minimum_signed_point_to_facet_gap_m": 0.05779451131820679,
+        "minimum_vertical_gap_m": 0.0707806047089715,
+        "minimum_vertical_gap_vertex_index": 11485,
+        "region": "foot_r_axial_half_1",
+        "region_index": 19,
+        "seed_skin_vertex_index": 11783,
+        "source_skin_vertex_count": 2724
+      },
+      {
+        "body": "humerus_l",
+        "body_index": 91,
+        "minimum_signed_gap_vertex_index": 47107,
+        "minimum_signed_point_to_facet_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_vertex_index": 47107,
+        "region": "upper_arm_l_axial_half_0",
+        "region_index": 20,
+        "seed_skin_vertex_index": 50066,
+        "source_skin_vertex_count": 1833
+      },
+      {
+        "body": "humerus_l",
+        "body_index": 91,
+        "minimum_signed_gap_vertex_index": 45336,
+        "minimum_signed_point_to_facet_gap_m": 0.002738026902079582,
+        "minimum_vertical_gap_m": 0.0034742660410934934,
+        "minimum_vertical_gap_vertex_index": 45336,
+        "region": "upper_arm_l_axial_half_1",
+        "region_index": 21,
+        "seed_skin_vertex_index": 47558,
+        "source_skin_vertex_count": 1590
+      },
+      {
+        "body": "radius_l",
+        "body_index": 93,
+        "minimum_signed_gap_vertex_index": 50008,
+        "minimum_signed_point_to_facet_gap_m": 0.0029911804012954235,
+        "minimum_vertical_gap_m": 0.003254168860189241,
+        "minimum_vertical_gap_vertex_index": 50008,
+        "region": "forearm_l_axial_half_0",
+        "region_index": 22,
+        "seed_skin_vertex_index": 50422,
+        "source_skin_vertex_count": 1232
+      },
+      {
+        "body": "ulna_l",
+        "body_index": 92,
+        "minimum_signed_gap_vertex_index": 47747,
+        "minimum_signed_point_to_facet_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_vertex_index": 47747,
+        "region": "forearm_l_axial_half_1",
+        "region_index": 23,
+        "seed_skin_vertex_index": 47732,
+        "source_skin_vertex_count": 1462
+      },
+      {
+        "body": "midph3_l",
+        "body_index": 115,
+        "minimum_signed_gap_vertex_index": 53574,
+        "minimum_signed_point_to_facet_gap_m": 0.011113728396594524,
+        "minimum_vertical_gap_m": 0.014904578882264152,
+        "minimum_vertical_gap_vertex_index": 53574,
+        "region": "rigid_hand_l_axial_half_0",
+        "region_index": 24,
+        "seed_skin_vertex_index": 51480,
+        "source_skin_vertex_count": 3288
+      },
+      {
+        "body": "secondmc_l",
+        "body_index": 107,
+        "minimum_signed_gap_vertex_index": 52791,
+        "minimum_signed_point_to_facet_gap_m": 0.0026806099340319633,
+        "minimum_vertical_gap_m": 0.002840146084789219,
+        "minimum_vertical_gap_vertex_index": 52791,
+        "region": "rigid_hand_l_axial_half_1",
+        "region_index": 25,
+        "seed_skin_vertex_index": 52623,
+        "source_skin_vertex_count": 2246
+      },
+      {
+        "body": "femur_l",
+        "body_index": 145,
+        "minimum_signed_gap_vertex_index": 35481,
+        "minimum_signed_point_to_facet_gap_m": 0.000848134106490761,
+        "minimum_vertical_gap_m": 0.0008491533381084979,
+        "minimum_vertical_gap_vertex_index": 35481,
+        "region": "thigh_l_axial_half_0",
+        "region_index": 26,
+        "seed_skin_vertex_index": 31825,
+        "source_skin_vertex_count": 1317
+      },
+      {
+        "body": "femur_l",
+        "body_index": 145,
+        "minimum_signed_gap_vertex_index": 38054,
+        "minimum_signed_point_to_facet_gap_m": 0.0005712669808417559,
+        "minimum_vertical_gap_m": 0.000572987430681543,
+        "minimum_vertical_gap_vertex_index": 38054,
+        "region": "thigh_l_axial_half_1",
+        "region_index": 27,
+        "seed_skin_vertex_index": 43573,
+        "source_skin_vertex_count": 2191
+      },
+      {
+        "body": "tibia_l",
+        "body_index": 150,
+        "minimum_signed_gap_vertex_index": 36077,
+        "minimum_signed_point_to_facet_gap_m": 0.0009150244295597076,
+        "minimum_vertical_gap_m": 0.0009150244295597076,
+        "minimum_vertical_gap_vertex_index": 36077,
+        "region": "shin_l_axial_half_0",
+        "region_index": 28,
+        "seed_skin_vertex_index": 36125,
+        "source_skin_vertex_count": 747
+      },
+      {
+        "body": "tibia_l",
+        "body_index": 150,
+        "minimum_signed_gap_vertex_index": 36233,
+        "minimum_signed_point_to_facet_gap_m": 1.000240445137024e-05,
+        "minimum_vertical_gap_m": 1.0002404451373709e-05,
+        "minimum_vertical_gap_vertex_index": 36233,
+        "region": "shin_l_axial_half_1",
+        "region_index": 29,
+        "seed_skin_vertex_index": 38062,
+        "source_skin_vertex_count": 1137
+      },
+      {
+        "body": "calcn_l",
+        "body_index": 152,
+        "minimum_signed_gap_vertex_index": 34830,
+        "minimum_signed_point_to_facet_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_m": 1.0006129741668701e-05,
+        "minimum_vertical_gap_vertex_index": 34830,
+        "region": "foot_l_axial_half_0",
+        "region_index": 30,
+        "seed_skin_vertex_index": 36848,
+        "source_skin_vertex_count": 1400
+      },
+      {
+        "body": "toes_l",
+        "body_index": 153,
+        "minimum_signed_gap_vertex_index": 42837,
+        "minimum_signed_point_to_facet_gap_m": 0.05596520006656647,
+        "minimum_vertical_gap_m": 0.07029714817637407,
+        "minimum_vertical_gap_vertex_index": 43497,
+        "region": "foot_l_axial_half_1",
+        "region_index": 31,
+        "seed_skin_vertex_index": 42607,
+        "source_skin_vertex_count": 2680
+      }
+    ],
+    "unassigned_count": 0
+  },
+  "schema": "numi.human.resting.distributed-source-region-coverage.v1",
+  "scope": "CPU-only source-rest ownership partition and per-region source-pose gap calculation for manifest 1199. No native run, contact-force response, or dynamic clearance claim.",
+  "source_skin": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin",
+    "sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b",
+    "triangle_count": 109211,
+    "vertex_count": 54949
+  },
+  "status": "source_rest_partition_complete_and_bed_grid_identity_verified",
+  "support_contact": {
+    "first_eight": [
+      {
+        "body_index": 23,
+        "index": 0,
+        "region": "head",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 25847
+      },
+      {
+        "body_index": 20,
+        "index": 1,
+        "region": "thorax",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 17764
+      },
+      {
+        "body_index": 20,
+        "index": 2,
+        "region": "thorax",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 37607
+      },
+      {
+        "body_index": 20,
+        "index": 3,
+        "region": "thorax",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 15823
+      },
+      {
+        "body_index": 128,
+        "index": 4,
+        "region": "pelvis",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 34318
+      },
+      {
+        "body_index": 128,
+        "index": 5,
+        "region": "pelvis",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 21161
+      },
+      {
+        "body_index": 1,
+        "index": 6,
+        "region": "pelvis",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 33528
+      },
+      {
+        "body_index": 128,
+        "index": 7,
+        "region": "pelvis",
+        "unchanged_fields": [
+          "vertex_index",
+          "core_body_index",
+          "region",
+          "local_point_m",
+          "world_witness_m",
+          "dominant_binding_error_m",
+          "rest_frame_witness_fit_error_m"
+        ],
+        "unchanged_from_1196": true,
+        "vertex_index": 20346
+      }
+    ],
+    "first_eight_unchanged_from_1196": true,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/distributed-resting-support-1199/myosim-fullbody-distributed-rigid-digit-support.nhcnt",
+    "row_count": 32,
+    "sha256": "b029bf6e86958ba4c7f9e1d5ca7f7e94a6e123952f926b02b254ad02b426971f",
+    "unique_seed_count": 32
+  }
+}

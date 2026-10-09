@@ -1,0 +1,1421 @@
+{
+  "analysis_script": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/terminal-anatomy-diagnosis-1198-vs-1191-001/diagnose_terminal_pose.py",
+    "sha256": "324efef3f4e6f861fa342d054bc15ad29062c279c92c8782e06a39cda39e96d8"
+  },
+  "baseline_clearance_reference": {
+    "1187_differential_summary": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-final-003/summary.json",
+    "1187_summary_sha256": "266c2e742660a166d423b2d75072f110347446cc75983c1cf68699f6ea6ad38d",
+    "937_full_scan_summary": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/lung-geometry-937-full/summary.json",
+    "937_summary_sha256": "c5776d8d0d144c024a670ea65885aa4191e123a26d2920fa76ec89950afae61f",
+    "scope": "1191 target/self clearances are supported by the complete 937 baseline scan and 1187 changed-skin differential; the 1198 report only scanned step 10000 and does not establish full-cycle status."
+  },
+  "initial_pose_identity": {
+    "same_86_registered_body_poses": true,
+    "same_accepted_body_state": true,
+    "same_accepted_respiration_state": true
+  },
+  "interpretation_limits": [
+    "The exact step-10000 result is 3,727 skin-to-target triangle-pair intersections across pelvis, bilateral lower-limb muscle surfaces, bilateral posterior tibial veins, right calcaneal tendon, and left forearm/hand muscle surfaces; all declared target pairs were covered and 17 ocular targets had zero hits.",
+    "The starting accepted body and respiratory state and all 86 registered body poses are identical between 1191 and 1198. The terminal registered body states differ. Relative 3D segment rotations/translations are reported from accepted body transforms; they are not scalar generalized hip-flexion coordinates.",
+    "No q diagnostic was emitted by 1198, so the terminal body-relative hip angle cannot be compared to the separate 1190 scalar hip-fit interval [-12,0]. Do not infer a q limit violation from segment relative rotation.",
+    "The evidence shows that terminal pose/contact configuration diverged under the 1198 configuration, but does not isolate the fixed bed as the only cause. It does not support an eight-capture or full-horizon anatomical qualification."
+  ],
+  "relative_segment_pose_comparison": [
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 89.85309576000972,
+        "relative_translation_parent_frame_mm": [
+          13.724009352143733,
+          -243.48995107731642,
+          76.76001112329628
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 93.43972080449792,
+        "relative_translation_parent_frame_mm": [
+          -60.41543587091729,
+          -228.81925177351044,
+          74.10458075610828
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 89.85309576000972,
+        "relative_translation_parent_frame_mm": [
+          13.724009352143733,
+          -243.48995107731642,
+          76.76001112329628
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 95.37361154912476,
+        "relative_translation_parent_frame_mm": [
+          6.087147095836312,
+          -243.2262480402043,
+          83.94763605203971
+        ]
+      },
+      "child_body": "femur_r",
+      "child_body_index": 131,
+      "pair": "pelvis->femur_r",
+      "parent_body": "pelvis",
+      "parent_body_index": 128,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 24.32833967584835,
+        "1198": 26.602988805575468
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 26.56372256933384,
+        "relative_translation_parent_frame_delta_mm": [
+          66.5025829667536,
+          -14.406996266693838,
+          9.843055295931435
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 90.14690149603851,
+        "relative_translation_parent_frame_mm": [
+          13.723984218988152,
+          -243.4899619484394,
+          -76.76001446001784
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 91.17450972712177,
+        "relative_translation_parent_frame_mm": [
+          -60.02997771330379,
+          -228.99365887459027,
+          -75.25240501683815
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 90.14690149603851,
+        "relative_translation_parent_frame_mm": [
+          13.723984218988152,
+          -243.4899619484394,
+          -76.76001446001784
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 90.53768879294404,
+        "relative_translation_parent_frame_mm": [
+          6.834704122733333,
+          -243.22924008042767,
+          -84.63768255433784
+        ]
+      },
+      "child_body": "femur_l",
+      "child_body_index": 145,
+      "pair": "pelvis->femur_l",
+      "parent_body": "pelvis",
+      "parent_body_index": 128,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 24.647305285367466,
+        "1198": 26.796029646876857
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 26.087231113588594,
+        "relative_translation_parent_frame_delta_mm": [
+          66.86468183603712,
+          -14.2355812058374,
+          -9.385277537499695
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 2.513815095737419,
+        "relative_translation_parent_frame_mm": [
+          -5.000490626291141,
+          -2.7203691457751775,
+          -384.4191952988244
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 2.515194549893675,
+        "relative_translation_parent_frame_mm": [
+          -5.005330232889756,
+          -2.720237029834043,
+          -384.41895347081015
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 2.513815095737419,
+        "relative_translation_parent_frame_mm": [
+          -5.000490626291141,
+          -2.7203691457751775,
+          -384.4191952988244
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 2.5138208781717215,
+        "relative_translation_parent_frame_mm": [
+          -5.000499639998023,
+          -2.720392340819768,
+          -384.4191790135233
+        ]
+      },
+      "child_body": "tibia_r",
+      "child_body_index": 136,
+      "pair": "femur_r->tibia_r",
+      "parent_body": "femur_r",
+      "parent_body_index": 131,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 0.0017168235329962464,
+        "1198": 8.099607985145754e-06
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 0.0017117290779293845,
+        "relative_translation_parent_frame_delta_mm": [
+          0.004830592891733043,
+          -0.0001553109857249657,
+          -0.0002255427131170329
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 2.501266138904178,
+        "relative_translation_parent_frame_mm": [
+          -5.000443828300397,
+          2.7203843784204835,
+          -384.41924179756865
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 2.501269246750854,
+        "relative_translation_parent_frame_mm": [
+          -5.000454254139488,
+          2.7203925634430504,
+          -384.41918167883864
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 2.501266138904178,
+        "relative_translation_parent_frame_mm": [
+          -5.000443828300397,
+          2.7203843784204835,
+          -384.41924179756865
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 2.501265738284312,
+        "relative_translation_parent_frame_mm": [
+          -5.00044478887604,
+          2.7203724558048816,
+          -384.41918468468447
+        ]
+      },
+      "child_body": "tibia_l",
+      "child_body_index": 150,
+      "pair": "femur_l->tibia_l",
+      "parent_body": "femur_l",
+      "parent_body_index": 145,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 9.035490975690211e-06,
+        "1198": 3.4150945850063763e-06
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 7.636383641665695e-06,
+        "relative_translation_parent_frame_delta_mm": [
+          9.46526344802745e-06,
+          -2.0107638168658654e-05,
+          -3.0058457944903694e-06
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 179.73955964698047,
+        "relative_translation_parent_frame_mm": [
+          7.561106794883849,
+          7.1768777099449235,
+          -224.4554065903487
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 176.96899640477898,
+        "relative_translation_parent_frame_mm": [
+          7.452339869090789,
+          7.455562702541087,
+          -225.8032921704084
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 179.73955964698047,
+        "relative_translation_parent_frame_mm": [
+          7.561106794883849,
+          7.1768777099449235,
+          -224.4554065903487
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 175.5965890640486,
+        "relative_translation_parent_frame_mm": [
+          7.309137922764747,
+          7.582013611168876,
+          -226.35198817289051
+        ]
+      },
+      "child_body": "talus_r",
+      "child_body_index": 137,
+      "pair": "tibia_r->talus_r",
+      "parent_body": "tibia_r",
+      "parent_body_index": 136,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 13.853669690355956,
+        "1198": 19.67160160962128
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 5.817931919266412,
+        "relative_translation_parent_frame_delta_mm": [
+          -0.14320194632604175,
+          0.12645090862778952,
+          -0.548696002482113
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 177.78693400038387,
+        "relative_translation_parent_frame_mm": [
+          7.139013293114145,
+          -7.596593450385728,
+          -224.45542301055545
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 174.69539322974555,
+        "relative_translation_parent_frame_mm": [
+          7.007765073712831,
+          -7.875090197586077,
+          -225.8338667234684
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 177.78693400038387,
+        "relative_translation_parent_frame_mm": [
+          7.139013293114145,
+          -7.596593450385728,
+          -224.45542301055545
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 173.63648052101883,
+        "relative_translation_parent_frame_mm": [
+          6.8815588471011395,
+          -7.975060568123045,
+          -226.2988743670345
+        ]
+      },
+      "child_body": "talus_l",
+      "child_body_index": 151,
+      "pair": "tibia_l->talus_l",
+      "parent_body": "tibia_l",
+      "parent_body_index": 150,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 14.173165049389869,
+        "1198": 19.100383042156484
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 4.9272179927699575,
+        "relative_translation_parent_frame_delta_mm": [
+          -0.1262062266116923,
+          -0.099970370536967,
+          -0.4650076435661066
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 12.116364453064628,
+        "relative_translation_parent_frame_mm": [
+          -34.64890602928573,
+          8.734760066862588,
+          23.28645671149862
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 16.15607696089882,
+        "relative_translation_parent_frame_mm": [
+          -35.41122074685364,
+          3.186532544588818,
+          23.28653537919536
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 12.116364453064628,
+        "relative_translation_parent_frame_mm": [
+          -34.64890602928573,
+          8.734760066862588,
+          23.28645671149862
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 19.812181965021345,
+        "relative_translation_parent_frame_mm": [
+          -35.565709197731614,
+          -0.34028002870483487,
+          23.088379882971108
+        ]
+      },
+      "child_body": "calcn_r",
+      "child_body_index": 138,
+      "pair": "talus_r->calcn_r",
+      "parent_body": "talus_r",
+      "parent_body_index": 137,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 7.611255609353938,
+        "1198": 12.414490828099453
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 4.803235218746386,
+        "relative_translation_parent_frame_delta_mm": [
+          -0.15448845087798202,
+          -3.526812573293653,
+          -0.19815549622425113
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 12.11636201249403,
+        "relative_translation_parent_frame_mm": [
+          -34.64901754273753,
+          -8.734759739130821,
+          23.28645948091877
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 16.716913405259024,
+        "relative_translation_parent_frame_mm": [
+          -35.45398098158379,
+          -2.607838587891638,
+          23.2644821505206
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 12.11636201249403,
+        "relative_translation_parent_frame_mm": [
+          -34.64901754273753,
+          -8.734759739130821,
+          23.28645948091877
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 16.677198006034086,
+        "relative_translation_parent_frame_mm": [
+          -35.45128175288365,
+          -2.6482261380591043,
+          23.2661660609991
+        ]
+      },
+      "child_body": "calcn_l",
+      "child_body_index": 152,
+      "pair": "talus_l->calcn_l",
+      "parent_body": "talus_l",
+      "parent_body_index": 151,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 8.399904338994121,
+        "1198": 8.344888431160113
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 0.055015907961810724,
+        "relative_translation_parent_frame_delta_mm": [
+          0.0026992287001370574,
+          -0.04038755016746608,
+          0.0016839104785004722
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 131.86015719809146,
+        "relative_translation_parent_frame_mm": [
+          17.918973002127522,
+          -23.140867797257183,
+          157.21902137085013
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 140.86536047217115,
+        "relative_translation_parent_frame_mm": [
+          19.03311150951406,
+          -23.35924857103484,
+          162.23431824936497
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 131.86015719809146,
+        "relative_translation_parent_frame_mm": [
+          17.918973002127522,
+          -23.140867797257183,
+          157.21902137085013
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 132.3505851246771,
+        "relative_translation_parent_frame_mm": [
+          18.015327034257986,
+          -23.152993030764293,
+          157.49068182537377
+        ]
+      },
+      "child_body": "humerus_r",
+      "child_body_index": 41,
+      "pair": "torso->humerus_r",
+      "parent_body": "torso",
+      "parent_body_index": 20,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 14.823214879458002,
+        "1198": 0.8292850892314005
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 13.993929790264627,
+        "relative_translation_parent_frame_delta_mm": [
+          -1.0177844752560747,
+          0.206255540270546,
+          -4.743636423991199
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 131.86015926085716,
+        "relative_translation_parent_frame_mm": [
+          17.918959228407054,
+          -23.14093738487048,
+          -157.2189938516973
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 141.51224556819597,
+        "relative_translation_parent_frame_mm": [
+          19.062017666963094,
+          -23.374583277979934,
+          -162.59347657195056
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 131.86015926085716,
+        "relative_translation_parent_frame_mm": [
+          17.918959228407054,
+          -23.14093738487048,
+          -157.2189938516973
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 133.77244614645844,
+        "relative_translation_parent_frame_mm": [
+          18.27070737166059,
+          -23.18772739657401,
+          -158.2803740938779
+        ]
+      },
+      "child_body": "humerus_l",
+      "child_body_index": 91,
+      "pair": "torso->humerus_l",
+      "parent_body": "torso",
+      "parent_body_index": 20,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 15.859785964005026,
+        "1198": 3.2175028263142464
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 12.642283137746512,
+        "relative_translation_parent_frame_delta_mm": [
+          -0.7913102953025046,
+          0.1868558814059236,
+          4.313102478072651
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 4.218689737662851,
+        "relative_translation_parent_frame_mm": [
+          16.788057657883456,
+          -14.846167111742506,
+          98.21924241888844
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 16.435511996062242,
+        "relative_translation_parent_frame_mm": [
+          17.61631624309678,
+          -7.013063987820493,
+          99.36519406440537
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 4.218689737662851,
+        "relative_translation_parent_frame_mm": [
+          16.788057657883456,
+          -14.846167111742506,
+          98.21924241888844
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 4.058177315688531,
+        "relative_translation_parent_frame_mm": [
+          16.55765463547989,
+          -15.74799313958587,
+          98.07925641167228
+        ]
+      },
+      "child_body": "radius_r",
+      "child_body_index": 43,
+      "pair": "ulna_r->radius_r",
+      "parent_body": "ulna_r",
+      "parent_body_index": 42,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 14.687476299610143,
+        "1198": 1.732169989344543
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 16.419646288950684,
+        "relative_translation_parent_frame_delta_mm": [
+          -1.0586616076168898,
+          -8.734929151765376,
+          -1.2859376527331046
+        ]
+      }
+    },
+    {
+      "1191_step0": {
+        "relative_rotation_deg_from_identity": 4.218685240376103,
+        "relative_translation_parent_frame_mm": [
+          16.78804695765189,
+          -14.846138226953673,
+          -98.2191860035367
+        ]
+      },
+      "1191_step10000": {
+        "relative_rotation_deg_from_identity": 14.412337934080284,
+        "relative_translation_parent_frame_mm": [
+          17.622526895066546,
+          -8.141469938092637,
+          -99.2076397598966
+        ]
+      },
+      "1198_step0": {
+        "relative_rotation_deg_from_identity": 4.218685240376103,
+        "relative_translation_parent_frame_mm": [
+          16.78804695765189,
+          -14.846138226953673,
+          -98.2191860035367
+        ]
+      },
+      "1198_step10000": {
+        "relative_rotation_deg_from_identity": 14.834277634388606,
+        "relative_translation_parent_frame_mm": [
+          13.765769851147772,
+          -22.595159602611574,
+          -96.95432655331949
+        ]
+      },
+      "child_body": "radius_l",
+      "child_body_index": 93,
+      "pair": "ulna_l->radius_l",
+      "parent_body": "ulna_l",
+      "parent_body_index": 92,
+      "relative_rotation_change_step0_to_terminal_deg": {
+        "1191": 12.590724778686761,
+        "1198": 15.529225485408164
+      },
+      "terminal_1198_minus_1191": {
+        "relative_rotation_deg": 28.11995026409359,
+        "relative_translation_parent_frame_delta_mm": [
+          -3.8567570439187735,
+          -14.453689664518938,
+          2.2533132065770953
+        ]
+      }
+    }
+  ],
+  "runs": {
+    "1191": {
+      "accepted_steps": [
+        0,
+        10000
+      ],
+      "initial_body_state_sha256": "b063191a425cdfc7939d83f7ba3fcf9ada59823b2cb24c826b3322549d12979c",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run",
+      "terminal_accepted_time_s": 20.000000949949026,
+      "terminal_body_state_sha256": "1d13e67a0fb3785e418bb1240258c88d5755345ff60bf78354197e9c8bc41680",
+      "terminal_respiration_state_sha256": "efce4e8d4720f73ccc14996aa1590f80747b45570a8ddbfbf165d97f277b03e4"
+    },
+    "1198": {
+      "accepted_steps": [
+        0,
+        10000
+      ],
+      "initial_body_state_sha256": "b063191a425cdfc7939d83f7ba3fcf9ada59823b2cb24c826b3322549d12979c",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-contoured-bed-smoke-1198-attempt002/native-run",
+      "terminal_accepted_time_s": 20.000000949949026,
+      "terminal_body_state_sha256": "d53d123cdb285da176b857e268307bcb4845fe1fabd40f3ee591453bbf48e08a",
+      "terminal_pose_receipt_sha256": "fb8df637f31fc7da5b34663c388de65cbf2c429dd00dd220fdbe9b6ee2668006",
+      "terminal_respiration_state_sha256": "efce4e8d4720f73ccc14996aa1590f80747b45570a8ddbfbf165d97f277b03e4"
+    }
+  },
+  "schema": "numi.human.contoured-bed-terminal-anatomy-diagnosis.v1",
+  "scope": "Read-only comparison of accepted registered poses and one exact terminal skin-to-target scan. This is a terminal failure diagnosis, not an eight-pose qualification or causal attribution.",
+  "skin_target_terminal_scan": {
+    "accepted_time_s": 20.000000949949026,
+    "all_859_target_and_skin_self_pair_coverage_complete": true,
+    "all_declared_captures_complete": false,
+    "all_skin_crossing_pair_count": 3727,
+    "counts_by_semantic_id": {
+      "51004": 30,
+      "51005": 3184,
+      "51006": 42,
+      "51011": 471
+    },
+    "ocular_crossing_pair_count": 0,
+    "result_path": "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/skin-bed-audit-1198-attempt002-terminal-scan/step-10000.result.json",
+    "result_sha256": "db01268fa65167d8e21366ffb9f0d9ed19ff86dc3ab260a50e01ab9dcd54846a",
+    "skin_self_crossing_pair_count": 0,
+    "step": 10000,
+    "summary_path": "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/skin-bed-audit-1198-attempt002-terminal-scan/summary.json",
+    "summary_sha256": "ad3307b61da3c576cfaf94dd182f85f57cfd2f8ec3b56e2efc597fa272f4b1ca",
+    "targets": [
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          }
+        ],
+        "category": "bone",
+        "intersecting_triangle_pairs": 7,
+        "label": "pelvis / FJ3152",
+        "laterality": null,
+        "pair_coverage_complete": true,
+        "semantic_id": 51004,
+        "source_binding_member_id": "FJ3152",
+        "stable_id": 18
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          }
+        ],
+        "category": "bone",
+        "intersecting_triangle_pairs": 23,
+        "label": "pelvis / FJ3288",
+        "laterality": null,
+        "pair_coverage_complete": true,
+        "semantic_id": 51004,
+        "source_binding_member_id": "FJ3288",
+        "stable_id": 19
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          },
+          {
+            "core_body_index": 138,
+            "myosim_body": "calcn_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 106,
+        "label": "right soleus",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1437",
+        "stable_id": 5
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          },
+          {
+            "core_body_index": 152,
+            "myosim_body": "calcn_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 76,
+        "label": "left soleus",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1437M",
+        "stable_id": 6
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 67,
+        "label": "long head of right biceps femoris",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1395",
+        "stable_id": 17
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 33,
+        "label": "long head of left biceps femoris",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1395M",
+        "stable_id": 18
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          },
+          {
+            "core_body_index": 138,
+            "myosim_body": "calcn_r"
+          },
+          {
+            "core_body_index": 139,
+            "myosim_body": "toes_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 137,
+        "label": "right extensor digitorum longus",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1406",
+        "stable_id": 21
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          },
+          {
+            "core_body_index": 152,
+            "myosim_body": "calcn_l"
+          },
+          {
+            "core_body_index": 153,
+            "myosim_body": "toes_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 123,
+        "label": "left extensor digitorum longus",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1406M",
+        "stable_id": 22
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 105,
+        "label": "right gracilis",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1421",
+        "stable_id": 35
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 82,
+        "label": "left gracilis",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1421M",
+        "stable_id": 36
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          },
+          {
+            "core_body_index": 138,
+            "myosim_body": "calcn_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 141,
+        "label": "right fibularis longus",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1410",
+        "stable_id": 41
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          },
+          {
+            "core_body_index": 152,
+            "myosim_body": "calcn_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 154,
+        "label": "left fibularis longus",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1410M",
+        "stable_id": 42
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 76,
+        "label": "right semimembranosus",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1435",
+        "stable_id": 51
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 175,
+        "label": "right semitendinosus",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1436",
+        "stable_id": 53
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 128,
+            "myosim_body": "pelvis"
+          },
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 131,
+        "label": "left semitendinosus",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1436M",
+        "stable_id": 54
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          },
+          {
+            "core_body_index": 138,
+            "myosim_body": "calcn_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 179,
+        "label": "right tibialis anterior",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1439",
+        "stable_id": 57
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          },
+          {
+            "core_body_index": 152,
+            "myosim_body": "calcn_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 158,
+        "label": "left tibialis anterior",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1439M",
+        "stable_id": 58
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 131,
+            "myosim_body": "femur_r"
+          },
+          {
+            "core_body_index": 142,
+            "myosim_body": "patella_r"
+          },
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 370,
+        "label": "right vastus lateralis",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1442",
+        "stable_id": 63
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 145,
+            "myosim_body": "femur_l"
+          },
+          {
+            "core_body_index": 156,
+            "myosim_body": "patella_l"
+          },
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 377,
+        "label": "left vastus lateralis",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1442M",
+        "stable_id": 64
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 91,
+            "myosim_body": "humerus_l"
+          },
+          {
+            "core_body_index": 93,
+            "myosim_body": "radius_l"
+          },
+          {
+            "core_body_index": 95,
+            "myosim_body": "lunate_l"
+          },
+          {
+            "core_body_index": 107,
+            "myosim_body": "secondmc_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 198,
+        "label": "left flexor carpi radialis",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1496M",
+        "stable_id": 118
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 91,
+            "myosim_body": "humerus_l"
+          },
+          {
+            "core_body_index": 93,
+            "myosim_body": "radius_l"
+          },
+          {
+            "core_body_index": 97,
+            "myosim_body": "pisiform_l"
+          },
+          {
+            "core_body_index": 122,
+            "myosim_body": "fifthmc_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 179,
+        "label": "humeral head of left flexor carpi ulnaris",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1473M",
+        "stable_id": 120
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 91,
+            "myosim_body": "humerus_l"
+          },
+          {
+            "core_body_index": 93,
+            "myosim_body": "radius_l"
+          },
+          {
+            "core_body_index": 99,
+            "myosim_body": "capitate_l"
+          },
+          {
+            "core_body_index": 112,
+            "myosim_body": "thirdmc_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 147,
+        "label": "left palmaris longus",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1502M",
+        "stable_id": 124
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 92,
+            "myosim_body": "ulna_l"
+          },
+          {
+            "core_body_index": 93,
+            "myosim_body": "radius_l"
+          },
+          {
+            "core_body_index": 95,
+            "myosim_body": "lunate_l"
+          },
+          {
+            "core_body_index": 99,
+            "myosim_body": "capitate_l"
+          },
+          {
+            "core_body_index": 107,
+            "myosim_body": "secondmc_l"
+          },
+          {
+            "core_body_index": 109,
+            "myosim_body": "2proxph_l"
+          },
+          {
+            "core_body_index": 110,
+            "myosim_body": "midph2_l"
+          },
+          {
+            "core_body_index": 112,
+            "myosim_body": "thirdmc_l"
+          },
+          {
+            "core_body_index": 114,
+            "myosim_body": "3proxph_l"
+          },
+          {
+            "core_body_index": 115,
+            "myosim_body": "midph3_l"
+          },
+          {
+            "core_body_index": 91,
+            "myosim_body": "humerus_l"
+          },
+          {
+            "core_body_index": 117,
+            "myosim_body": "fourthmc_l"
+          },
+          {
+            "core_body_index": 119,
+            "myosim_body": "4proxph_l"
+          },
+          {
+            "core_body_index": 120,
+            "myosim_body": "midph4_l"
+          },
+          {
+            "core_body_index": 122,
+            "myosim_body": "fifthmc_l"
+          },
+          {
+            "core_body_index": 124,
+            "myosim_body": "5proxph_l"
+          },
+          {
+            "core_body_index": 125,
+            "myosim_body": "midph5_l"
+          }
+        ],
+        "category": "muscle",
+        "intersecting_triangle_pairs": 170,
+        "label": "left flexor digitorum superficialis",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51005,
+        "source_binding_member_id": "FJ1475M",
+        "stable_id": 132
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 131,
+            "myosim_body": "femur_r"
+          },
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          },
+          {
+            "core_body_index": 138,
+            "myosim_body": "calcn_r"
+          }
+        ],
+        "category": "tendon",
+        "intersecting_triangle_pairs": 42,
+        "label": "right calcaneal tendon",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51006,
+        "source_binding_member_id": "FJ1405",
+        "stable_id": 7
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 136,
+            "myosim_body": "tibia_r"
+          }
+        ],
+        "category": "organ_or_vessel_surface",
+        "intersecting_triangle_pairs": 311,
+        "label": "right posterior tibial vein",
+        "laterality": "right",
+        "pair_coverage_complete": true,
+        "semantic_id": 51011,
+        "source_binding_member_id": "FJ2173",
+        "stable_id": 517
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 150,
+            "myosim_body": "tibia_l"
+          }
+        ],
+        "category": "organ_or_vessel_surface",
+        "intersecting_triangle_pairs": 160,
+        "label": "left posterior tibial vein",
+        "laterality": "left",
+        "pair_coverage_complete": true,
+        "semantic_id": 51011,
+        "source_binding_member_id": "FJ2118",
+        "stable_id": 518
+      }
+    ]
+  },
+  "source_hashes": {
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7",
+    "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/lung-geometry-937-full/summary.json": "c5776d8d0d144c024a670ea65885aa4191e123a26d2920fa76ec89950afae61f",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-anatomy-manifest.json": "de298b7cc413e0cf079b39cb5d4792ebb537642f23a52cb4747f2dc37fac917f",
+    "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-final-003/summary.json": "266c2e742660a166d423b2d75072f110347446cc75983c1cf68699f6ea6ad38d",
+    "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "82cdd937e0f2daf0a8704fb21246353c38148527f8602d674ac865f935264dde",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/skin-bed-audit-1198-attempt002-terminal-scan/step-10000.crossing-witnesses.jsonl": "96847fce80ee36b88b4ce349afa4a77421eba117c5e20783cb174b0de4c99270",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/skin-bed-audit-1198-attempt002-terminal-scan/step-10000.result.json": "db01268fa65167d8e21366ffb9f0d9ed19ff86dc3ab260a50e01ab9dcd54846a",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/skin-bed-audit-1198-attempt002-terminal-scan/step-10000.targets.jsonl": "9218972bffd1662c1f2ded90f484eb10656b91b14e6ec3b2ba32fbb626d79e2a",
+    "/Users/n/numi-human-retained-delivery-20261009/contoured-bed-reference-1196/skin-bed-audit-1198-attempt002-terminal-scan/summary.json": "ad3307b61da3c576cfaf94dd182f85f57cfd2f8ec3b56e2efc597fa272f4b1ca",
+    "/Users/n/numi-human-retained-delivery-20261009/native-contoured-bed-smoke-1198-attempt002/native-run/accepted-geometry/step-0.receipt.json": "e4bf0088ac20b289e49faefc2565f2a83962af606acd8335702eb3ae027eceb6",
+    "/Users/n/numi-human-retained-delivery-20261009/native-contoured-bed-smoke-1198-attempt002/native-run/accepted-geometry/step-10000.receipt.json": "fb8df637f31fc7da5b34663c388de65cbf2c429dd00dd220fdbe9b6ee2668006",
+    "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.receipt.json": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681",
+    "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-10000.receipt.json": "61c5471889a3b2935796cc830089b33fc3edf1e6604f897fd1094f6f21055fef"
+  },
+  "terminal_body_pose_difference_top10_by_translation": [
+    {
+      "body": "distph2_r",
+      "body_index": 61,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        26.343002915382385,
+        -11.438965797424316,
+        118.57732012867928
+      ],
+      "terminal_translation_delta_norm_mm": 122.00567441727362
+    },
+    {
+      "body": "midph2_r",
+      "body_index": 60,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        24.28346872329712,
+        -11.338770389556885,
+        115.95534905791283
+      ],
+      "terminal_translation_delta_norm_mm": 119.01217392487563
+    },
+    {
+      "body": "distph3_r",
+      "body_index": 66,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        13.517230749130249,
+        -12.67850399017334,
+        115.70740025490522
+      ],
+      "terminal_translation_delta_norm_mm": 117.18217639343841
+    },
+    {
+      "body": "midph3_r",
+      "body_index": 65,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        12.47335970401764,
+        -12.397348880767822,
+        112.71487642079592
+      ],
+      "terminal_translation_delta_norm_mm": 114.0785796200697
+    },
+    {
+      "body": "2proxph_r",
+      "body_index": 59,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        20.52958309650421,
+        -10.807514190673828,
+        108.6595170199871
+      ],
+      "terminal_translation_delta_norm_mm": 111.1087610592196
+    },
+    {
+      "body": "3proxph_r",
+      "body_index": 64,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        11.518523097038269,
+        -11.668145656585693,
+        106.569095980376
+      ],
+      "terminal_translation_delta_norm_mm": 107.82297628740777
+    },
+    {
+      "body": "secondmc_r",
+      "body_index": 57,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        18.62145960330963,
+        -10.48743724822998,
+        104.5900546014309
+      ],
+      "terminal_translation_delta_norm_mm": 106.75122771810894
+    },
+    {
+      "body": "distph4_r",
+      "body_index": 71,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        2.8613656759262085,
+        -12.676119804382324,
+        105.86961545050144
+      ],
+      "terminal_translation_delta_norm_mm": 106.66417815960276
+    },
+    {
+      "body": "thirdmc_r",
+      "body_index": 62,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        11.084377765655518,
+        -11.366128921508789,
+        103.98824792355299
+      ],
+      "terminal_translation_delta_norm_mm": 105.19319380702555
+    },
+    {
+      "body": "midph4_r",
+      "body_index": 70,
+      "terminal_orientation_delta_deg": 30.85352552023059,
+      "terminal_translation_delta_mm": [
+        3.6115795373916626,
+        -12.368381023406982,
+        104.33804243803024
+      ],
+      "terminal_translation_delta_norm_mm": 105.13062092318907
+    }
+  ]
+}
