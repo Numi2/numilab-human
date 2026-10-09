@@ -207,6 +207,17 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         argv.append("--resting-release-initialization")
     if getattr(args, "upper_passive_joints", False):
         argv.append("--persistent-source-passive-joint-tissue")
+    hip_capsule = getattr(args, "hip_capsule_reference", False)
+    hip_scale = getattr(args, "hip_capsule_scale", None)
+    _require(hip_scale is None or hip_capsule,
+             "hip capsule scale requires the explicit hip capsule reference")
+    if hip_capsule:
+        hip_scale = 1.0 if hip_scale is None else hip_scale
+        _require(type(hip_scale) in (float, int) and
+                 math.isfinite(hip_scale) and hip_scale > 0,
+                 "hip capsule reference scale must be finite and positive")
+        argv.extend(["--resting-hip-capsule-reference",
+                     "--resting-hip-capsule-scale", str(float(hip_scale))])
     if getattr(args, "rigid_hands", False):
         argv.append("--resting-rigid-hands")
     contact_iterations = getattr(args, "contact_iterations", None)
@@ -313,6 +324,10 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="explicitly initialize outside static equilibrium and let native bed contact settle the body")
     parser.add_argument("--upper-passive-joints", action="store_true",
                         help="enable the existing source-bound wrist and non-thumb finger passive stiffness model")
+    parser.add_argument("--hip-capsule-reference", action="store_true",
+                        help="enable the reduced literature reference for passive hip periarticular restraint")
+    parser.add_argument("--hip-capsule-scale", type=float,
+                        help="positive potential/force/stiffness scale for declared sensitivity; requires --hip-capsule-reference")
     parser.add_argument("--rigid-hands", action="store_true",
                         help="use reference-pose rigid digits with internal GPU constraints; wrists remain free, and hand physiology is not simulated")
     parser.add_argument("--contact-iterations", type=int,

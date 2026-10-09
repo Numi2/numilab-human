@@ -252,6 +252,32 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertIn("--resting-rigid-hands", argv)
         self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
 
+    def test_hip_capsule_reference_is_explicit_and_has_one_native_owner(self):
+        baseline, _ = command(self.args)
+        self.assertNotIn("--resting-hip-capsule-reference", baseline)
+        self.assertNotIn("--resting-hip-capsule-scale", baseline)
+        self.args.hip_capsule_reference = True
+        argv, _ = command(self.args)
+        start = argv.index("--resting-hip-capsule-reference")
+        self.assertEqual(argv[start:start + 3],
+                         ["--resting-hip-capsule-reference",
+                          "--resting-hip-capsule-scale", "1.0"])
+        self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
+        self.args.hip_capsule_scale = .5
+        argv, _ = command(self.args)
+        self.assertEqual(argv[argv.index("--resting-hip-capsule-scale") + 1], "0.5")
+
+    def test_hip_capsule_scale_requires_reference_and_rejects_invalid_values(self):
+        self.args.hip_capsule_scale = .5
+        with self.assertRaisesRegex(HumanImportError, "requires the explicit"):
+            command(self.args)
+        self.args.hip_capsule_reference = True
+        for invalid in (0., -1., float("nan"), float("inf"), True):
+            with self.subTest(invalid=invalid):
+                self.args.hip_capsule_scale = invalid
+                with self.assertRaisesRegex(HumanImportError, "finite and positive"):
+                    command(self.args)
+
     def test_contact_iterations_reach_existing_native_owner(self):
         baseline, _ = command(self.args)
         self.assertNotIn("--stand-contact-iterations", baseline)
