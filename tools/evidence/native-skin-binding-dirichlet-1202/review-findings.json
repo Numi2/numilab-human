@@ -1,0 +1,18 @@
+{
+  "adoption": "None. No native candidate run was made.",
+  "focused_tests": {
+    "command": "PYTHONPATH=src:tests /Users/n/numi-human-prep-venv-20261005/bin/python3.13 -m pytest -q tests/test_skin_binding_constraints.py tests/test_skin_surface_audit.py -k dirichlet or source_oracle",
+    "note": "Focused oracle tests pass but do not cover single-column right-hand sides.",
+    "result": "8 passed, 98 deselected"
+  },
+  "schema": "numi.human.skin-source-binding-1202-review.v1",
+  "single_column_rhs_reproduction": {
+    "dirichlet_error": "ValueError assigning shape (3,) solve result into (3,1) free rows",
+    "input": "five-node connected chain, one binding column, two fixed endpoints",
+    "reproduction": "Reviewer-only CPU reproduction in the pinned Python 3.13 environment; no source or test files were changed.",
+    "scope": "The 86-column production reconstruction is unaffected; this is an unhandled helper edge case in the unadopted v4 source snapshot.",
+    "screened_error": "numpy.exceptions.AxisError at full.sum(axis=1): spsolve collapsed (n,1) to a 1-D result"
+  },
+  "source_snapshot": "rejected-source-snapshot/snapshot.json",
+  "status": "rejected_not_adopted"
+}

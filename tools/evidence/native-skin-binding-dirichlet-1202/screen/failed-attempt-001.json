@@ -1,0 +1,10 @@
+{
+  "attempt": 1,
+  "candidate_mutated": false,
+  "diagnosis": "Runner incorrectly required every source vertex to be referenced by a triangle. The receipt provides pack_first_vertex; source slots map contiguously from that offset, with some unused slots. Corrected by verifying every captured face index against pack_first_vertex + source NHSKIN face index and retaining all source slots for LBS delta.",
+  "error": "RuntimeError: captured NHSKIN vertex map is not a contiguous one-to-one source ordering",
+  "native_pack_mutated": false,
+  "schema": "numi.human.skin-dirichlet-terminal-counterfactual.failed-attempt.v1",
+  "screen_runner_sha256": "ea82c1c23c9bcbd57e3cb0a4451e12d41933ed1f0538d9a0539fd33c71631eb3",
+  "status": "preflight_failed_before_scan"
+}

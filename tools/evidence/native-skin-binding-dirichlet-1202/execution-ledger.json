@@ -1,0 +1,47 @@
+{
+  "base_revision": "45ddc6578b85b5baa018f9cca4e8c21209c92609",
+  "qualification": "CPU authoring and one-pose counterfactual only; no candidate native run or adoption.",
+  "schema": "numi.human.skin-source-binding-1202-execution-ledger.v1",
+  "steps": [
+    {
+      "command": "reconstruction/command.json",
+      "log": "reconstruction/run.log",
+      "name": "default_source_reconstruction",
+      "process_exit_code": 2,
+      "report": "reconstruction/report.json",
+      "result": "all 86-column F32 weights reproduce exactly (SHA e43f72b304dc4a6e572d8df98b47bc63883cb0f1ffb7fdbec810f6ad6aca52b4); source/current topology differs (109183 vs 109211 triangles), so the command returns 2. The old compressed NPZ container (SHA 99c913815b2cc615673ca3c1ac3ee36b640c5166c8a3e770ed6d54a3a5a281fc) is unavailable; regenerated NPZ container differs."
+    },
+    {
+      "command": "dirichlet/command.json",
+      "log": "dirichlet/run.log",
+      "name": "dirichlet_source_solution",
+      "process_exit_code": 0,
+      "report": "dirichlet/report.json",
+      "result": "86-column inferred source solution independently verified; does not match existing raw/current source weights."
+    },
+    {
+      "command": "preflight/attempt-001-command.json",
+      "log": "preflight/attempt-001.log",
+      "name": "raw_source_preflight_attempt_1",
+      "process_exit_code": 1,
+      "report": "preflight/attempt-001-failure.json",
+      "result": "stale v5 manifest rejected before source payload audit."
+    },
+    {
+      "command": "preflight/attempt-002-command.json",
+      "log": "preflight/attempt-002.log",
+      "name": "raw_source_preflight_attempt_2",
+      "process_exit_code": 0,
+      "report": "preflight/attempt-002-authoring-and-oracle-report.json",
+      "result": "reconstructed v5 manifest and source-only independent preflight passed."
+    },
+    {
+      "command": "screen/declaration.json and scripts/screen_dirichlet_terminal.py",
+      "log": "screen/summary.json",
+      "name": "terminal_counterfactual_exact_scan",
+      "process_exit_code": 0,
+      "report": "screen/step-20000.result.json",
+      "result": "complete 859-target exact terminal screen; candidate is worse than the flat baseline. This is counterfactual, not a native capture."
+    }
+  ]
+}

@@ -1,0 +1,388 @@
+diff --git a/src/numilab_human/skin_source_payload_preflight.py b/src/numilab_human/skin_source_payload_preflight.py
+index 3efb16f..61c452d 100644
+--- a/src/numilab_human/skin_source_payload_preflight.py
++++ b/src/numilab_human/skin_source_payload_preflight.py
+@@ -197,6 +197,14 @@ def audit(sources: Path, artifact: Path, registration_path: Path,
+     require(bool(np.isfinite(normals).all()), 'source normal finiteness')
+ 
+     declared_binding = coverage['source_surface_binding']
++    from .skin_surface_binding import DIRICHLET_METHOD
++    if method == DIRICHLET_METHOD:
++        require(declared_binding.get('seed_condition') == 'dirichlet',
++                'Dirichlet seed-condition declaration')
++        declared_seed_error = declared_binding.get('maximum_fixed_seed_weight_error')
++        require(isinstance(declared_seed_error, (int, float))
++                and abs(float(declared_seed_error) - certificate['maximum_fixed_seed_weight_error']) <= 1e-12,
++                'Dirichlet fixed-seed declaration')
+     for field in ('source_bone_count', 'source_graph_edge_count', 'source_graph_vertex_count',
+                   'seed_candidate_count', 'seed_vertex_count', 'rejected_seed_count',
+                   'exact_coincident_vertex_group_count',
+diff --git a/src/numilab_human/skin_surface_audit.py b/src/numilab_human/skin_surface_audit.py
+index 87f63a6..6d0f746 100644
+--- a/src/numilab_human/skin_surface_audit.py
++++ b/src/numilab_human/skin_surface_audit.py
+@@ -164,8 +164,10 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
+                       float(2 * np.linalg.norm(placed - centroid, axis=1).max())))
+     core_ids = sorted(source_ids)
+     binding_by_core = {core: i for i, core in enumerate(core_ids)}
+-    from .skin_surface_binding import METHOD
+-    graph_world, graph_map = np.unique(world, axis=0, return_inverse=True) if method == METHOD else (world, np.arange(len(world)))
++    from .skin_surface_binding import METHOD, DIRICHLET_METHOD
++    seam_quotient_methods = {METHOD, DIRICHLET_METHOD}
++    graph_world, graph_map = (np.unique(world, axis=0, return_inverse=True)
++                              if method in seam_quotient_methods else (world, np.arange(len(world))))
+     graph_faces = graph_map[faces]
+     neighbours = [[] for _ in graph_world]
+     edges = np.unique(np.sort(np.concatenate([graph_faces[:, [0, 1]], graph_faces[:, [1, 2]],
+@@ -204,14 +206,16 @@ def _source_oracle(sources, artifact, registration_bytes, rigid_sha, artifact_ma
+ 
+ @lru_cache(maxsize=2)
+ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_bytes, binding_count, method):
+-    """Verify every source graph equation directly, without the authoring solver."""
++    """Verify source seed constraints and graph equations independently."""
+     import numpy as np
+     world = np.frombuffer(world_bytes, '<f8').reshape(-1, 3)
+     faces = np.frombuffer(face_bytes, '<u4').reshape(-1, 3)
+     targets = np.frombuffer(target_bytes, '<u4').reshape(-1, 5)
+-    from .skin_surface_binding import LEGACY_METHOD, FULL_METHOD, METHOD
+-    _require(method in {LEGACY_METHOD, FULL_METHOD, METHOD}, 'source binding method')
++    from .skin_surface_binding import LEGACY_METHOD, FULL_METHOD, METHOD, DIRICHLET_METHOD
++    _require(method in {LEGACY_METHOD, FULL_METHOD, METHOD, DIRICHLET_METHOD}, 'source binding method')
+     geometric = method != LEGACY_METHOD
++    dirichlet = method == DIRICHLET_METHOD
++    seam_quotient = method in {METHOD, DIRICHLET_METHOD}
+     gaps = np.frombuffer(gap_bytes, '<f8')
+     with np.load(io.BytesIO(proof_bytes), allow_pickle=False) as archive:
+         fields = {'full_weights', 'seed_targets'} | ({'seed_projection_gaps_m'} if geometric else set())
+@@ -231,7 +235,7 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
+     _require(float(full.min()) >= (0 if geometric else -1e-12)
+              and float(np.max(np.abs(full.sum(axis=1) - 1))) <= 1e-10,
+              'binding solution positivity/partition')
+-    if method == METHOD:
++    if seam_quotient:
+         graph_world, first, graph_map, multiplicity = np.unique(
+             world, axis=0, return_index=True, return_inverse=True, return_counts=True)
+         _require(np.array_equal(full, full[first][graph_map]), 'source exact seam weights')
+@@ -253,27 +257,46 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
+     _require({b for row in owners.values() for b in row} == set(range(binding_count)), 'source seed body coverage')
+     flux = np.zeros_like(graph_full)
+     denominator = degree[:, None] * np.abs(graph_full)
+-    for first in range(0, len(edges), 2048):
+-        edge = edges[first:first + 2048]
+-        weight = conductance[first:first + 2048, None]
++    for first_edge in range(0, len(edges), 2048):
++        edge = edges[first_edge:first_edge + 2048]
++        weight = conductance[first_edge:first_edge + 2048, None]
+         delta = weight * (graph_full[edge[:, 0]] - graph_full[edge[:, 1]])
+         np.add.at(flux, edge[:, 0], delta)
+         np.add.at(flux, edge[:, 1], -delta)
+         np.add.at(denominator, edge[:, 0], weight * np.abs(graph_full[edge[:, 1]]))
+         np.add.at(denominator, edge[:, 1], weight * np.abs(graph_full[edge[:, 0]]))
+-    for point, body_values in owners.items():
+-        target = np.zeros(binding_count)
+-        if geometric:
+-            values = {body: float(np.mean(weights)) for body, weights in body_values.items()}
+-            confidence = float(np.mean(list(values.values())))
++    fixed_seed_error = None
++    if dirichlet:
++        for point, body_values in owners.items():
++            values = {body: float(np.mean(samples)) for body, samples in body_values.items()}
++            total = sum(values.values())
++            _require(total > 0 and np.isfinite(total), 'source Dirichlet seed shares')
++            target = np.zeros(binding_count)
+             for body, value in values.items():
+-                target[body] = value / sum(values.values())
+-        else:
+-            confidence = degree[point]
+-            target[list(body_values)] = 1 / len(body_values)
+-        flux[point] += confidence * (graph_full[point] - target)
+-        denominator[point] += confidence * (np.abs(graph_full[point]) + target)
+-    residual = float(np.max(np.abs(flux) / np.maximum(denominator, np.finfo(float).tiny)))
++                target[body] = value / total
++            error = float(np.max(np.abs(graph_full[point] - target)))
++            fixed_seed_error = max(fixed_seed_error or 0., error)
++        fixed = np.zeros(len(graph_world), dtype=bool)
++        fixed[list(owners)] = True
++        free = np.flatnonzero(~fixed)
++        residual_values = np.abs(flux) / np.maximum(denominator, np.finfo(float).tiny)
++        residual = float(np.max(residual_values[free])) if len(free) else 0.
++        _require(fixed_seed_error is not None and fixed_seed_error <= 1e-10,
++                 'source Dirichlet fixed-seed owner shares')
++    else:
++        for point, body_values in owners.items():
++            target = np.zeros(binding_count)
++            if geometric:
++                values = {body: float(np.mean(samples)) for body, samples in body_values.items()}
++                confidence = float(np.mean(list(values.values())))
++                for body, value in values.items():
++                    target[body] = value / sum(values.values())
++            else:
++                confidence = degree[point]
++                target[list(body_values)] = 1 / len(body_values)
++            flux[point] += confidence * (graph_full[point] - target)
++            denominator[point] += confidence * (np.abs(graph_full[point]) + target)
++        residual = float(np.max(np.abs(flux) / np.maximum(denominator, np.finfo(float).tiny)))
+     _require(residual <= 1e-10, 'source skin harmonic equations')
+     positive = np.maximum(full, 0)
+     quartet = np.argsort(-positive, axis=1, kind='stable')[:, :4]
+@@ -284,12 +307,14 @@ def _verified_weights(proof_bytes, world_bytes, face_bytes, target_bytes, gap_by
+     weights.setflags(write=False)
+     full.setflags(write=False)
+     return quartet, weights, full, {'passed': True, 'method': method,
++                              'seed_condition': 'dirichlet' if dirichlet else ('screened' if geometric else 'legacy'),
+                               'maximum_relative_equation_residual': residual,
++                              'maximum_fixed_seed_weight_error': fixed_seed_error,
+                               'source_bone_count': len(set(map(int, targets[:, 0]))),
+                               'source_graph_edge_count': len(edges),
+                               'source_graph_vertex_count': len(graph_world),
+-                              'exact_coincident_vertex_group_count': int((multiplicity > 1).sum()) if method == METHOD else None,
+-                              'exact_coincident_redundant_vertex_count': len(world) - len(graph_world) if method == METHOD else None,
++                              'exact_coincident_vertex_group_count': int((multiplicity > 1).sum()) if seam_quotient else None,
++                              'exact_coincident_redundant_vertex_count': len(world) - len(graph_world) if seam_quotient else None,
+                               'seed_candidate_count': len(targets), 'seed_vertex_count': len(owners),
+                               'rejected_seed_count': int((targets[:, 4] == 0).sum()),
+                               'minimum_retained_four_weight_mass': float(retained.min()),
+@@ -343,8 +368,8 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
+     _require(bool(np.isfinite(bindings_f[:, 1:]).all()) and bool(np.isfinite(vertices_f[:, :6]).all())
+              and bool(np.isfinite(vertices_f[:, 10:]).all()), "nonfinite payload")
+     binding = manifest['coverage']['source_surface_binding']
+-    from .skin_surface_binding import LEGACY_METHOD, FULL_METHOD, METHOD
+-    _require(binding['method'] in ({FULL_METHOD, METHOD} if abi == 5 else {LEGACY_METHOD}), 'source binding method')
++    from .skin_surface_binding import LEGACY_METHOD, FULL_METHOD, METHOD, DIRICHLET_METHOD
++    _require(binding['method'] in ({FULL_METHOD, METHOD, DIRICHLET_METHOD} if abi == 5 else {LEGACY_METHOD}), 'source binding method')
+     reference = _source_oracle(str(sources.resolve()), str(artifact.resolve()), registration_bytes,
+                                human.sha256(artifact / 'myosim-fullbody-core-reference.nhrigid'),
+                                human.sha256(artifact / 'myosim-fullbody-reference.manifest.json'), obj, binding['method'])
+@@ -362,10 +387,16 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
+     for field in ['source_bone_count', 'source_graph_edge_count', 'seed_candidate_count',
+                   'seed_vertex_count', 'rejected_seed_count']:
+         _require(binding[field] == certificate[field], 'source binding declared counts')
+-    if binding['method'] == METHOD:
++    if binding['method'] in {METHOD, DIRICHLET_METHOD}:
+         for field in ['source_graph_vertex_count', 'exact_coincident_vertex_group_count',
+                       'exact_coincident_redundant_vertex_count']:
+             _require(binding[field] == certificate[field], 'source exact seam declared counts')
++    if binding['method'] == DIRICHLET_METHOD:
++        _require(binding.get('seed_condition') == 'dirichlet', 'source Dirichlet seed-condition declaration')
++        declared_seed_error = binding.get('maximum_fixed_seed_weight_error')
++        _require(isinstance(declared_seed_error, (int, float))
++                 and abs(float(declared_seed_error) - certificate['maximum_fixed_seed_weight_error']) <= 1e-12,
++                 'source Dirichlet fixed-seed declaration')
+     for field in ['minimum_retained_four_weight_mass', 'maximum_discarded_weight_mass']:
+         _require(abs(binding[field] - certificate[field]) <= 1e-12, 'source binding declared truncation')
+     if abi == 5:
+@@ -464,7 +495,7 @@ def audit_skin_surface(sources: Path, artifact: Path, registration_path: Path,
+         'schema': 'numi.human.native-skin-source-audit.v1',
+         'passed': all(b['passed'] for b in body_checks) and world_error <= 2e-5
+                   and max(source_normal_error, normal_error) <= 2e-5
+-                  and (certificate['method'] != METHOD or seams['maximum_native_seam_gap_m'] <= 2e-5),
++                  and (certificate['method'] not in {METHOD, DIRICHLET_METHOD} or seams['maximum_native_seam_gap_m'] <= 2e-5),
+         'vertex_count': nv, 'triangle_count': ni // 3, 'binding_count': nb,
+         'payload_abi': abi, 'runtime_influences_per_vertex': nb if abi == 5 else 4,
+         'runtime_discarded_weight_mass': 0. if abi == 5 else certificate['maximum_discarded_weight_mass'],
+diff --git a/src/numilab_human/skin_surface_binding.py b/src/numilab_human/skin_surface_binding.py
+index 09f8877..a93fd41 100644
+--- a/src/numilab_human/skin_surface_binding.py
++++ b/src/numilab_human/skin_surface_binding.py
+@@ -16,13 +16,77 @@ LEGACY_METHOD = 'positive_source_surface_screened_harmonic_four_influence.v1'
+ FULL_METHOD = 'positive_source_surface_projection_gap_screened_harmonic_full_weight.v2'
+ METHOD = 'positive_source_surface_exact_seam_projection_gap_full_weight.v3'
+ 
++DIRICHLET_METHOD = 'positive_source_surface_dirichlet_harmonic_full_weight.v4'
+ 
+-def source_surface_binding(vertices, faces, bones, binding_count):
++
++def solve_source_weight_field(adjacency, confidence, rhs, *, seed_condition='screened'):
++    """Solve inferred binding weights; this is an offline construction step.
++
++    The optional Dirichlet condition preserves each admitted source projection's
++    normalized owner shares exactly. It introduces no stiffness or runtime
++    forces, and does not assert that the resulting geometry is collision-free.
++    """
++    import numpy as np
++    from scipy.sparse import diags
++    from scipy.sparse.linalg import spsolve
++
++    if seed_condition not in ('screened', 'dirichlet'):
++        raise ValueError('unknown source skin seed condition')
++    confidence, rhs = np.asarray(confidence), np.asarray(rhs)
++    n = adjacency.shape[0]
++    if (adjacency.shape != (n, n) or confidence.shape != (n,)
++            or rhs.ndim != 2 or rhs.shape[0] != n
++            or not np.isfinite(confidence).all() or not np.isfinite(rhs).all()
++            or (confidence < 0).any() or (rhs < 0).any()
++            or not np.allclose(rhs.sum(axis=1), confidence, rtol=1e-12, atol=1e-14)):
++        raise ValueError('invalid source skin projection constraints')
++    degree = np.asarray(adjacency.sum(axis=1)).ravel()
++    if seed_condition == 'screened':
++        # Keep the original operator and solve arithmetic for the default path.
++        operator = (diags(degree + confidence) - adjacency).tocsc()
++        full = spsolve(operator, rhs, permc_spec='COLAMD')
++        residual = float(np.max(np.abs(operator @ full - rhs))
++                         / max(1., float(np.max(np.abs(rhs)))))
++        boundary_error = None
++    else:
++        from scipy.sparse.csgraph import connected_components
++        if connected_components(adjacency, directed=False, return_labels=False) != 1:
++            raise ValueError('Dirichlet source skin graph must be connected')
++        fixed = np.flatnonzero(confidence > 0)
++        if not len(fixed):
++            raise ValueError('Dirichlet source skin needs source projection anchors')
++        free = np.flatnonzero(confidence == 0)
++        full = np.zeros_like(rhs, dtype=np.float64)
++        full[fixed] = rhs[fixed] / confidence[fixed, None]
++        laplacian = (diags(degree) - adjacency).tocsr()
++        residual = 0.
++        if len(free):
++            operator = laplacian[free][:, free].tocsc()
++            boundary_rhs = -laplacian[free][:, fixed] @ full[fixed]
++            full[free] = spsolve(operator, boundary_rhs, permc_spec='COLAMD')
++            residual = float(np.max(np.abs(operator @ full[free] - boundary_rhs))
++                             / max(1., float(np.max(np.abs(boundary_rhs)))))
++        boundary_error = float(np.max(np.abs(
++            full[fixed] - rhs[fixed] / confidence[fixed, None])))
++    minimum = float(full.min())
++    unity_error = float(np.max(np.abs(full.sum(axis=1) - 1)))
++    if (not np.isfinite(full).all() or minimum < 0
++            or unity_error > 1e-10 or residual > 1e-10):
++        raise ValueError('source skin harmonic solution failed positivity, partition or residual checks')
++    return full, {
++        'relative_solve_residual': residual,
++        'maximum_partition_unity_error': unity_error,
++        'minimum_full_solution_weight': minimum,
++        'seed_condition': seed_condition,
++        'maximum_fixed_seed_weight_error': boundary_error,
++    }
++
++
++def source_surface_binding(vertices, faces, bones, binding_count, *, seed_condition='screened'):
+     import numpy as np
+     import scipy
+-    from scipy.sparse import coo_matrix, diags
++    from scipy.sparse import coo_matrix
+     from scipy.sparse.csgraph import connected_components
+-    from scipy.sparse.linalg import spsolve
+     from scipy.spatial import cKDTree
+ 
+     vertices, faces = np.asarray(vertices), np.asarray(faces)
+@@ -103,13 +167,11 @@ def source_surface_binding(vertices, faces, bones, binding_count):
+             rhs[point, owner] = confidence[point] * value / total
+     # Projection confidence and source graph conductance both have units 1/m.
+     # A tiny skin edge strengthens continuity, not the source seed penalty.
+-    operator = (diags(degree + confidence) - adjacency).tocsc()
+-    full = spsolve(operator, rhs, permc_spec='COLAMD')
+-    minimum = float(full.min())
+-    unity_error = float(np.max(np.abs(full.sum(axis=1) - 1)))
+-    residual = float(np.max(np.abs(operator @ full - rhs)) / max(1., float(np.max(np.abs(rhs)))))
+-    if not bool(np.isfinite(full).all()) or minimum < 0 or unity_error > 1e-10 or residual > 1e-10:
+-        raise ValueError('source skin harmonic solution failed positivity, partition or residual checks')
++    full, solve = solve_source_weight_field(
++        adjacency, confidence, rhs, seed_condition=seed_condition)
++    minimum = solve['minimum_full_solution_weight']
++    unity_error = solve['maximum_partition_unity_error']
++    residual = solve['relative_solve_residual']
+     # Expand by exact source identity. Every duplicate receives identical
+     # weights, including the same float32 quantization at the native boundary.
+     full = full[inverse]
+@@ -119,11 +181,18 @@ def source_surface_binding(vertices, faces, bones, binding_count):
+     retained = weights.sum(axis=1)
+     weights /= retained[:, None]
+     return quartet, weights, full, np.asarray(targets, dtype='<u4'), np.asarray(projection_gaps, dtype='<f8'), {
+-        'method': METHOD, 'scipy_version': scipy.__version__,
++        'method': METHOD if seed_condition == 'screened' else DIRICHLET_METHOD,
++        'scipy_version': scipy.__version__,
+         'source_bone_count': len(bones), 'seed_candidate_count': len(targets),
++        **({'seed_condition': seed_condition,
++            'maximum_fixed_seed_weight_error': solve['maximum_fixed_seed_weight_error']}
++           if seed_condition == 'dirichlet' else {}),
+         'seed_vertex_count': len(seed_ids), 'rejected_seed_count': sum(row[4] == 0 for row in targets),
+         'seed_rule': 'centroid_and_64_stratified_source_bone_vertices_projected_to_source_skin; sample must lie within source skin geodesic bone diameter bound plus twice centroid projection gap',
+-        'screening': 'inverse exact source bone-to-skin projection gap; mean confidence per distinct body then mean across bodies; target shares confidence proportionally; no mesh-edge-dependent seed penalty',
++        'screening': (
++            'inverse exact source bone-to-skin projection gap; mean confidence per distinct body then mean across bodies; target shares confidence proportionally; no mesh-edge-dependent seed penalty'
++            if seed_condition == 'screened' else
++            'Dirichlet owner shares from the same admitted inverse-gap source projections; harmonic interpolation of unanchored graph rows; no soft seed penalty'),
+         'minimum_source_projection_gap_m': min(projection_gaps),
+         'maximum_source_projection_gap_m': max(projection_gaps),
+         'source_graph_edge_count': len(edges), 'relative_solve_residual': residual,
+diff --git a/tests/test_skin_surface_audit.py b/tests/test_skin_surface_audit.py
+index 3fa741a..a3fcca0 100644
+--- a/tests/test_skin_surface_audit.py
++++ b/tests/test_skin_surface_audit.py
+@@ -190,3 +190,76 @@ def test_skin_oracle_rejects_rehashed_geometry_and_rest_invisible_influence_corr
+         args[3] = payload
+     with pytest.raises(ValueError, match=message):
+         audit_skin_surface(*args)
++
++
++
++def _minimal_dirichlet_oracle_case():
++    """Tiny closed source graph with one exact duplicated seam vertex."""
++    import io
++    from numilab_human.skin_surface_binding import DIRICHLET_METHOD
++    from numilab_human.skin_surface_audit import _verified_weights
++
++    world = np.asarray([[0., 0., 0.], [1., 0., 0.], [1., 1., 0.],
++                        [0., 1., 0.], [0., 0., 0.]], dtype='<f8')
++    faces = np.asarray([[0, 1, 2], [4, 2, 3]], dtype='<u4')
++    # Vertex 4 is exactly the same material point as vertex 0 and must receive
++    # the same fixed Dirichlet value. The two free vertices interpolate the
++    # endpoint owner values harmonically on this symmetric graph.
++    full = np.asarray([[1., 0.], [.5, .5], [0., 1.], [.5, .5], [1., 0.]], dtype='<f8')
++    targets = np.asarray([[0, 0xffffffff, 0, 0, 1],
++                          [1, 0xffffffff, 2, 1, 1]], dtype='<u4')
++    gaps = np.asarray([1., 1.], dtype='<f8')
++    proof = io.BytesIO()
++    np.savez_compressed(proof, full_weights=full, seed_targets=targets,
++                        seed_projection_gaps_m=gaps)
++    result = _verified_weights(proof.getvalue(), world.tobytes(), faces.tobytes(),
++                               targets.tobytes(), gaps.tobytes(), 2, DIRICHLET_METHOD)
++    return result, full
++
++
++def test_dirichlet_source_oracle_checks_exact_seams_fixed_shares_and_free_harmonic_rows():
++    (_, _, full, certificate), expected = _minimal_dirichlet_oracle_case()
++    np.testing.assert_array_equal(full, expected)
++    assert certificate['passed'] is True
++    assert certificate['seed_condition'] == 'dirichlet'
++    assert certificate['maximum_fixed_seed_weight_error'] == 0
++    assert certificate['maximum_relative_equation_residual'] < 1e-14
++    assert certificate['source_graph_vertex_count'] == 4
++    assert certificate['exact_coincident_redundant_vertex_count'] == 1
++    assert certificate['minimum_source_projection_gap_m'] == 1
++
++
++@pytest.mark.parametrize(('corruption', 'message'), [
++    ('fixed_seed', 'source exact seam weights|source Dirichlet fixed-seed owner shares'),
++    ('free_harmonic', 'source skin harmonic equations'),
++    ('negative', 'binding solution positivity/partition'),
++    ('seam', 'source exact seam weights'),
++])
++def test_dirichlet_source_oracle_rejects_seed_harmonic_positivity_and_seam_tampering(
++        corruption, message):
++    import io
++    from numilab_human.skin_surface_binding import DIRICHLET_METHOD
++    from numilab_human.skin_surface_audit import _verified_weights
++
++    _, expected = _minimal_dirichlet_oracle_case()
++    world = np.asarray([[0., 0., 0.], [1., 0., 0.], [1., 1., 0.],
++                        [0., 1., 0.], [0., 0., 0.]], dtype='<f8')
++    faces = np.asarray([[0, 1, 2], [4, 2, 3]], dtype='<u4')
++    full = expected.copy()
++    targets = np.asarray([[0, 0xffffffff, 0, 0, 1],
++                          [1, 0xffffffff, 2, 1, 1]], dtype='<u4')
++    gaps = np.asarray([1., 1.], dtype='<f8')
++    if corruption == 'fixed_seed':
++        full[[0, 4]] = [.9, .1]
++    elif corruption == 'free_harmonic':
++        full[1] = [.75, .25]
++    elif corruption == 'negative':
++        full[1] = [1.1, -.1]
++    elif corruption == 'seam':
++        full[4] = [.9, .1]
++    proof = io.BytesIO()
++    np.savez_compressed(proof, full_weights=full, seed_targets=targets,
++                        seed_projection_gaps_m=gaps)
++    with pytest.raises(ValueError, match=message):
++        _verified_weights(proof.getvalue(), world.tobytes(), faces.tobytes(),
++                          targets.tobytes(), gaps.tobytes(), 2, DIRICHLET_METHOD)

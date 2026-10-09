@@ -1,0 +1,356 @@
+{
+  "binding_solution": {
+    "full_weight_shape": [
+      54949,
+      86
+    ],
+    "method": "positive_source_surface_dirichlet_harmonic_full_weight.v4",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/raw-source-dirichlet-preflight-attempt002/bodyparts3d-skin-binding-solution.npz",
+    "projection_gaps_recomputed_by_owner_but_saved_gaps_match": true,
+    "sha256": "8ee440a0e346ba253c32cf693661b889c622908cd7355c13ef50ae1d9187aae8",
+    "target_rows_recomputed_by_owner_but_saved_targets_match": true
+  },
+  "completed_utc": "2026-10-09T14:43:08.217320+00:00",
+  "elapsed_wall_s": 23.21769137494266,
+  "independent_preflight": {
+    "audit_code_sha256": {
+      "model.py": "caae0f9a64db518712b491780b697c32800b13dba4b5b60ad128b67f5794c0df",
+      "skin_source_payload_preflight.py": "f1b53b1bab9283d8fd9a88920efb8100b446153da180847a2521a32a7c80a829",
+      "skin_surface_audit.py": "dbd72470bd2cfdaa398ba5d253393b755d84b5cdfd25b9dd1952bde1120d5f46",
+      "skin_surface_binding.py": "33039db6031150e20a1fc1f3bba7e3d594f608dc0adcfc4a6de368a79c4102e7"
+    },
+    "binding": {
+      "exact_coincident_redundant_vertex_count": 286,
+      "exact_coincident_vertex_group_count": 257,
+      "maximum_discarded_weight_mass": 0.3688334403949376,
+      "maximum_relative_equation_residual": 1.2324915011917808e-15,
+      "maximum_source_projection_gap_m": 0.10720182024294735,
+      "method": "positive_source_surface_dirichlet_harmonic_full_weight.v4",
+      "minimum_retained_four_weight_mass": 0.6311665596050624,
+      "minimum_source_projection_gap_m": 0.0012839524840258909,
+      "passed": true,
+      "rejected_seed_count": 696,
+      "seed_candidate_count": 12025,
+      "seed_vertex_count": 5039,
+      "source_bone_count": 185,
+      "source_graph_edge_count": 163860,
+      "source_graph_vertex_count": 54663
+    },
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/raw-source-dirichlet-preflight-attempt002/skin-source-payload-preflight.json",
+    "runtime": {
+      "body_binding_count": 86,
+      "body_checks_passed": 86,
+      "exact_seam_weight_mismatch": 0,
+      "full_weight_shape": [
+        54949,
+        86
+      ],
+      "maximum_float32_partition_error": 2.384185791015625e-07,
+      "maximum_float64_solution_partition_error": 3.086420008457935e-14,
+      "maximum_rest_reconstruction_error_m": 2.624425256428505e-14,
+      "minimum_full_weight": 0.0,
+      "payload_abi": 5,
+      "runtime_discarded_weight_mass": 0
+    },
+    "sha256": "e248e059097e8e7f88456391d9853cf2acda442fa2ab63f4e7ce650c342dc27f",
+    "source_program_checks": {
+      "actual_bytes": 60324,
+      "actual_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+      "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
+      "checked_field_count": 2250,
+      "declared_identity_matches": true,
+      "engine_body_count": 157,
+      "expected_bytes": 60324,
+      "expected_source_sha256": "f157d2fee0a56c2ea7144c70363cd0bfbd466acb01afc5e4ee53f4e016e4fe62",
+      "failures": [],
+      "file": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "joint_count": 156,
+      "passed": true,
+      "roundoff_portability_admissions": [
+        {
+          "actual": [
+            0.7061997056007385,
+            -2.0074732135124896e-17,
+            -2.2026379756276795e-16,
+            0.7080127000808716
+          ],
+          "allowed_norm_error": 1e-05,
+          "allowed_point_displacement_m": 1e-06,
+          "angular_error_rad": 3.5591927260510666e-20,
+          "byte_offset": 44192,
+          "changed_components_are_roundoff": true,
+          "child_body_name": "femur_r",
+          "conservative_lever_arm_m": 3.0,
+          "core_joint_index": 130,
+          "core_q_index": 103,
+          "expected": [
+            0.7061997056007385,
+            -2.005693617142643e-17,
+            -2.2026379756276795e-16,
+            0.7080127000808716
+          ],
+          "field": "child_orientation",
+          "max_absolute_component_delta": 1.779596363025094e-20,
+          "maximum_point_displacement_m": 1.06775781781532e-19,
+          "norm_basis": "existing_Core_squared_norm_admission",
+          "norm_error": 7.66637597848785e-09,
+          "reason": "quaternion_roundoff_within_1um_geometric_bound",
+          "source_body_id": 92,
+          "source_body_name": "femur_r",
+          "source_joint_id": 97,
+          "source_joint_name": "hip_rotation_r"
+        },
+        {
+          "actual": [
+            0.7061997056007385,
+            -2.0074732135124896e-17,
+            -2.2026379756276795e-16,
+            0.7080127000808716
+          ],
+          "allowed_norm_error": 1e-05,
+          "allowed_point_displacement_m": 1e-06,
+          "angular_error_rad": 3.5591927260510666e-20,
+          "byte_offset": 44320,
+          "changed_components_are_roundoff": true,
+          "child_body_name": "__myosim_serial_tibia_r_0",
+          "conservative_lever_arm_m": 3.0,
+          "core_joint_index": 131,
+          "core_q_index": 104,
+          "expected": [
+            0.7061997056007385,
+            -2.005693617142643e-17,
+            -2.2026379756276795e-16,
+            0.7080127000808716
+          ],
+          "field": "parent_orientation",
+          "max_absolute_component_delta": 1.779596363025094e-20,
+          "maximum_point_displacement_m": 1.06775781781532e-19,
+          "norm_basis": "existing_Core_squared_norm_admission",
+          "norm_error": 7.66637597848785e-09,
+          "reason": "quaternion_roundoff_within_1um_geometric_bound",
+          "source_body_id": 93,
+          "source_body_name": "tibia_r",
+          "source_joint_id": 98,
+          "source_joint_name": "knee_angle_translation2_r"
+        },
+        {
+          "actual": [
+            0.7061997056007385,
+            -2.0074732135124896e-17,
+            -2.2026379756276795e-16,
+            0.7080127000808716
+          ],
+          "allowed_norm_error": 1e-05,
+          "allowed_point_displacement_m": 1e-06,
+          "angular_error_rad": 3.5591927260510666e-20,
+          "byte_offset": 45472,
+          "changed_components_are_roundoff": true,
+          "child_body_name": "__myosim_serial_patella_r_0",
+          "conservative_lever_arm_m": 3.0,
+          "core_joint_index": 139,
+          "core_q_index": 112,
+          "expected": [
+            0.7061997056007385,
+            -2.005693617142643e-17,
+            -2.2026379756276795e-16,
+            0.7080127000808716
+          ],
+          "field": "parent_orientation",
+          "max_absolute_component_delta": 1.779596363025094e-20,
+          "maximum_point_displacement_m": 1.06775781781532e-19,
+          "norm_basis": "existing_Core_squared_norm_admission",
+          "norm_error": 7.66637597848785e-09,
+          "reason": "quaternion_roundoff_within_1um_geometric_bound",
+          "source_body_id": 97,
+          "source_body_name": "patella_r",
+          "source_joint_id": 106,
+          "source_joint_name": "knee_angle_beta_translation2_r"
+        },
+        {
+          "actual": [
+            0.7080127000808716,
+            -9.796409844050854e-17,
+            -2.802682203511934e-16,
+            0.7061997056007385
+          ],
+          "allowed_norm_error": 1e-05,
+          "allowed_point_displacement_m": 1e-06,
+          "angular_error_rad": 3.004319973264214e-21,
+          "byte_offset": 46208,
+          "changed_components_are_roundoff": true,
+          "child_body_name": "femur_l",
+          "conservative_lever_arm_m": 3.0,
+          "core_joint_index": 144,
+          "core_q_index": 117,
+          "expected": [
+            0.7080127000808716,
+            -9.796259628051614e-17,
+            -2.802682203511934e-16,
+            0.7061997056007385
+          ],
+          "field": "child_orientation",
+          "max_absolute_component_delta": 1.5021599866400788e-21,
+          "maximum_point_displacement_m": 9.012959919792641e-21,
+          "norm_basis": "existing_Core_squared_norm_admission",
+          "norm_error": 7.66637597848785e-09,
+          "reason": "quaternion_roundoff_within_1um_geometric_bound",
+          "source_body_id": 98,
+          "source_body_name": "femur_l",
+          "source_joint_id": 111,
+          "source_joint_name": "hip_rotation_l"
+        },
+        {
+          "actual": [
+            0.7080127000808716,
+            -9.796409844050854e-17,
+            -2.802682203511934e-16,
+            0.7061997056007385
+          ],
+          "allowed_norm_error": 1e-05,
+          "allowed_point_displacement_m": 1e-06,
+          "angular_error_rad": 3.004319973264214e-21,
+          "byte_offset": 46336,
+          "changed_components_are_roundoff": true,
+          "child_body_name": "__myosim_serial_tibia_l_0",
+          "conservative_lever_arm_m": 3.0,
+          "core_joint_index": 145,
+          "core_q_index": 118,
+          "expected": [
+            0.7080127000808716,
+            -9.796259628051614e-17,
+            -2.802682203511934e-16,
+            0.7061997056007385
+          ],
+          "field": "parent_orientation",
+          "max_absolute_component_delta": 1.5021599866400788e-21,
+          "maximum_point_displacement_m": 9.012959919792641e-21,
+          "norm_basis": "existing_Core_squared_norm_admission",
+          "norm_error": 7.66637597848785e-09,
+          "reason": "quaternion_roundoff_within_1um_geometric_bound",
+          "source_body_id": 99,
+          "source_body_name": "tibia_l",
+          "source_joint_id": 112,
+          "source_joint_name": "knee_angle_translation2_l"
+        },
+        {
+          "actual": [
+            0.7080127000808716,
+            -9.796409844050854e-17,
+            -2.802682203511934e-16,
+            0.7061997056007385
+          ],
+          "allowed_norm_error": 1e-05,
+          "allowed_point_displacement_m": 1e-06,
+          "angular_error_rad": 3.004319973264214e-21,
+          "byte_offset": 47488,
+          "changed_components_are_roundoff": true,
+          "child_body_name": "__myosim_serial_patella_l_0",
+          "conservative_lever_arm_m": 3.0,
+          "core_joint_index": 153,
+          "core_q_index": 126,
+          "expected": [
+            0.7080127000808716,
+            -9.796259628051614e-17,
+            -2.802682203511934e-16,
+            0.7061997056007385
+          ],
+          "field": "parent_orientation",
+          "max_absolute_component_delta": 1.5021599866400788e-21,
+          "maximum_point_displacement_m": 9.012959919792641e-21,
+          "norm_basis": "existing_Core_squared_norm_admission",
+          "norm_error": 7.66637597848785e-09,
+          "reason": "quaternion_roundoff_within_1um_geometric_bound",
+          "source_body_id": 103,
+          "source_body_name": "patella_l",
+          "source_joint_id": 120,
+          "source_joint_name": "knee_angle_beta_translation2_l"
+        }
+      ],
+      "source_body_count": 103,
+      "source_metadata_matches": true,
+      "tolerance_basis": "exact_source_FP32_scalar_or_integer_fields; direction fields use their existing norm/common-scale-bin admission; only nonzero quaternion components below 1e-12 with component delta below 1e-12 may use a sign-invariant 1um geometric bound"
+    },
+    "source_surface": {
+      "edge_components_in_source_archive": 100,
+      "outer_vertices": 54949,
+      "raw_archive_triangles": 203382,
+      "raw_archive_vertices": 102467,
+      "triangles": 109183
+    },
+    "status": "passed_source_provenance_weights_seams_and_rest_reconstruction"
+  },
+  "manifest": {
+    "original_v5_manifest_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-weight-heldout-20261004/inputs/base/bodyparts3d-myosim-skinned-shell.manifest.json",
+    "original_v5_manifest_sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/raw-source-dirichlet-preflight-attempt002/bodyparts3d-myosim-skinned-shell.manifest.json",
+    "sha256": "05d6165ab4ab852a117e4c6f4fe467fc916877047ceaa1a0b34905217e29297f",
+    "source_manifest_sha256": "dff5d767871d714da8c57120565bd57cede19942cfefff834dc3fa52c321aa77"
+  },
+  "payload": {
+    "bytes": 23292952,
+    "patched_fields": [
+      "per-vertex top-four diagnostic influence indices",
+      "per-vertex top-four diagnostic influence weights",
+      "complete ABI5 float32 weight matrix"
+    ],
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/raw-source-dirichlet-preflight-attempt002/bodyparts3d-myosim-skinned-shell-dirichlet.nhskin",
+    "raw_geometry_binding_topology_preserved": true,
+    "sha256": "48a05e02a9013a9cfa88e5e7d264f83fc7f1d753058244a95d18de303118eafb"
+  },
+  "pinned_audit_code": {
+    "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/model.py": {
+      "actual_sha256": "caae0f9a64db518712b491780b697c32800b13dba4b5b60ad128b67f5794c0df",
+      "sha256": "caae0f9a64db518712b491780b697c32800b13dba4b5b60ad128b67f5794c0df"
+    },
+    "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/skin_source_payload_preflight.py": {
+      "actual_sha256": "f1b53b1bab9283d8fd9a88920efb8100b446153da180847a2521a32a7c80a829",
+      "sha256": "f1b53b1bab9283d8fd9a88920efb8100b446153da180847a2521a32a7c80a829"
+    },
+    "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/skin_surface_audit.py": {
+      "actual_sha256": "dbd72470bd2cfdaa398ba5d253393b755d84b5cdfd25b9dd1952bde1120d5f46",
+      "sha256": "dbd72470bd2cfdaa398ba5d253393b755d84b5cdfd25b9dd1952bde1120d5f46"
+    },
+    "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/skin_surface_binding.py": {
+      "actual_sha256": "33039db6031150e20a1fc1f3bba7e3d594f608dc0adcfc4a6de368a79c4102e7",
+      "sha256": "33039db6031150e20a1fc1f3bba7e3d594f608dc0adcfc4a6de368a79c4102e7"
+    }
+  },
+  "pinned_inputs": {
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json": {
+      "actual_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-weight-heldout-20261004/inputs/base/bodyparts3d-myosim-skinned-shell.manifest.json": {
+      "actual_sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e",
+      "sha256": "bd8711819f789d3ef192106801833337509fa22b9bb3533eb012145b0ecdc49e"
+    },
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-weight-heldout-20261004/inputs/base/bodyparts3d-myosim-skinned-shell.nhskin": {
+      "actual_sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1",
+      "sha256": "7d296e45ba497f56ac4380a64605b30a794432b945ac28bf7bebf91657cfc4a1"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/dirichlet/bodyparts3d-skin-binding-solution.npz": {
+      "actual_sha256": "8ee440a0e346ba253c32cf693661b889c622908cd7355c13ef50ae1d9187aae8",
+      "sha256": "8ee440a0e346ba253c32cf693661b889c622908cd7355c13ef50ae1d9187aae8"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/dirichlet/dirichlet-reconstruction-report.json": {
+      "actual_sha256": "a979ed813e20544f4f0b9e9e03784d652abb5440dd60939107c360e5ca978803",
+      "sha256": "a979ed813e20544f4f0b9e9e03784d652abb5440dd60939107c360e5ca978803"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/reconstruction/bodyparts3d-myosim-skinned-shell.manifest.json": {
+      "actual_sha256": "dff5d767871d714da8c57120565bd57cede19942cfefff834dc3fa52c321aa77",
+      "sha256": "dff5d767871d714da8c57120565bd57cede19942cfefff834dc3fa52c321aa77"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-surface-binding-bones.json": {
+      "actual_sha256": "4a7c19baa4f3e36d6422288e0c91d9e326d393b1a3493a2b2097f5ac6e4df42c",
+      "sha256": "4a7c19baa4f3e36d6422288e0c91d9e326d393b1a3493a2b2097f5ac6e4df42c"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-surface-binding-inputs.npz": {
+      "actual_sha256": "85ceca04ba63fc463a4515579719fe82ad03137c98891647b75e472461c96625",
+      "sha256": "85ceca04ba63fc463a4515579719fe82ad03137c98891647b75e472461c96625"
+    }
+  },
+  "qualification": "raw source visual-shell Dirichlet counterfactual with reconstructed current-artifact v5 manifest; no current candidate geometry or posed/native clearance claim",
+  "schema": "numi.human.raw-source-dirichlet-payload-authoring.v1",
+  "started_utc": "2026-10-09T14:42:44.999591+00:00",
+  "status": "passed_independent_source_oracle_preflight"
+}

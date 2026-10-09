@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/preflight_dirichlet_raw_source.py", line 124, in <module>
+    result=audit(SOURCES,ARTIFACT,REGISTRATION,PAYLOAD,MANIFEST)
+  File "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/skin_source_payload_preflight.py", line 108, in audit
+    require(rigid_check['passed']
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+            and manifest['runtime_reference']['rigid']['sha256'] == _sha(rigid_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+            registration['source']['myosim']['source']['archive_sha256'],
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            'matched MyoSim runtime reference')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/skin_source_payload_preflight.py", line 28, in require
+    raise human.ImportError('skin source payload preflight: ' + message)
+numilab_human.model.ImportError: skin source payload preflight: matched MyoSim runtime reference

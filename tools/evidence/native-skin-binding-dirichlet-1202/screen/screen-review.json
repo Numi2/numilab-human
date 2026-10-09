@@ -1,0 +1,316 @@
+{
+  "artifacts": {
+    "candidate_build_script": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/build_dirichlet_candidate.py",
+      "sha256": "d7b9c60bc7cb2abed0ef852a7036ac5ff3d2482b87128594eeb7666d30be835e"
+    },
+    "screen_declaration": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/counterfactual-screen-terminal-1201/declaration.json",
+      "sha256": "0f0ecdc225c223ef46a1133474bb5dcf597590f29da5983dffceecae009aaef9"
+    },
+    "screen_result": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/counterfactual-screen-terminal-1201/step-20000.result.json",
+      "sha256": "9c273faff5281f04b6c3bb5fbe0aee3cd23d1e6929c42d9988189dfe0ab51307"
+    },
+    "screen_runner": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/screen_dirichlet_terminal.py",
+      "sha256": "2235b89f4c374d2b9c0d3e507e4e2297b4d8cde8dc2ae2390a6bd48eacaffe8d"
+    },
+    "screen_summary": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/counterfactual-screen-terminal-1201/summary.json",
+      "sha256": "57caa25ea136892b5c1f544757ceba31530773fa42b3bc138a962c49e4263b15"
+    }
+  },
+  "candidate": {
+    "build_report_sha256": "6802d44c67981dc9491c105b287f42390c4660aab6a863ec2986cd04da13735c",
+    "byte_identical": [
+      "NHSKIN header",
+      "86 binding records",
+      "all position and normal slots",
+      "triangle index bytes"
+    ],
+    "candidate_payload_changes_only": [
+      "ABI5 full F32 weight matrix",
+      "per-vertex top-four diagnostic influence indices and weights"
+    ],
+    "changed_weight_rows": 54949,
+    "independent_source_verifier_passed": true,
+    "max_abs_weight_delta": 0.9336184486746788,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/counterfactual-screen-input/candidate-dirichlet.nhskin",
+    "sha256": "f7c8fdb1990bed9ab1fe8355bfc432043d268bec1b858e379d7f893ff51567df",
+    "weight_solution_npz_sha256": "8ee440a0e346ba253c32cf693661b889c622908cd7355c13ef50ae1d9187aae8",
+    "weight_solution_report_sha256": "a979ed813e20544f4f0b9e9e03784d652abb5440dd60939107c360e5ca978803"
+  },
+  "counterfactual_method": {
+    "baseline_reconstruction_residual": {
+      "max_abs_component_m": 0.00048282066035754134,
+      "p99_vertex_norm_m": 0.0004908370084058676,
+      "rms_component_m": 6.229559406184549e-05
+    },
+    "candidate_LBS_delta": {
+      "changed_vertex_count": 54949,
+      "max_vertex_shift_m": 0.05314858137248252,
+      "p99_vertex_shift_m": 0.02121611243590494,
+      "rms_vertex_shift_m": 0.003730256707877135
+    },
+    "limitation": "Not the native runtime skinning result under changed weights. The new torso weighting can also change the shared thorax anchor/respiratory field; this screen holds that field and every target fixed.",
+    "matrix_accumulation": "1182 Python transform owner uses double arithmetic; candidate result materialized once as F32",
+    "rule": "capture_skin_F32 + (candidate full-weight LBS - baseline full-weight LBS) at accepted body transforms; add that delta to captured coordinates, preserving captured common-field/respiratory residual",
+    "transform_owner": "/Users/n/numi-human-resting-evidence-20261005/native-vastus-lateralis-weight-row-erratum-1182/reproduce.py",
+    "transform_owner_sha256": "9fad92a4acaf51b87e1e0a3cabd578f18e80646ce92c481e13a9fdca7dc8b03f"
+  },
+  "exact_terminal_audit": {
+    "baseline": {
+      "degenerate_skin_faces": 0,
+      "invalid_target_triangles": 0,
+      "nonocular_pairs": 3112,
+      "ocular_pairs": 0,
+      "skin_self_pairs": 0,
+      "skin_target_pairs": 3112
+    },
+    "contact_exemptions": [],
+    "counterfactual": {
+      "degenerate_skin_faces": 0,
+      "invalid_target_triangles": 0,
+      "nonocular_pairs": 8857,
+      "ocular_pairs": 0,
+      "skin_self_pairs": 197,
+      "skin_target_pairs": 8857
+    },
+    "coverage_complete": true,
+    "difference": {
+      "added_self_pairs": 197,
+      "added_skin_target_pairs": 5745
+    },
+    "elapsed_s": 117.01422787457705,
+    "hit_surfaces": [
+      {
+        "pairs": 49,
+        "surface": [
+          51011,
+          474
+        ]
+      },
+      {
+        "pairs": 34,
+        "surface": [
+          51011,
+          475
+        ]
+      },
+      {
+        "pairs": 69,
+        "surface": [
+          51011,
+          476
+        ]
+      },
+      {
+        "pairs": 45,
+        "surface": [
+          51011,
+          477
+        ]
+      },
+      {
+        "pairs": 33,
+        "surface": [
+          51011,
+          487
+        ]
+      },
+      {
+        "pairs": 48,
+        "surface": [
+          51011,
+          489
+        ]
+      },
+      {
+        "pairs": 96,
+        "surface": [
+          51011,
+          517
+        ]
+      },
+      {
+        "pairs": 112,
+        "surface": [
+          51011,
+          518
+        ]
+      },
+      {
+        "pairs": 172,
+        "surface": [
+          51005,
+          5
+        ]
+      },
+      {
+        "pairs": 146,
+        "surface": [
+          51005,
+          6
+        ]
+      },
+      {
+        "pairs": 88,
+        "surface": [
+          51005,
+          21
+        ]
+      },
+      {
+        "pairs": 61,
+        "surface": [
+          51005,
+          22
+        ]
+      },
+      {
+        "pairs": 55,
+        "surface": [
+          51005,
+          27
+        ]
+      },
+      {
+        "pairs": 71,
+        "surface": [
+          51005,
+          28
+        ]
+      },
+      {
+        "pairs": 18,
+        "surface": [
+          51005,
+          29
+        ]
+      },
+      {
+        "pairs": 78,
+        "surface": [
+          51005,
+          30
+        ]
+      },
+      {
+        "pairs": 264,
+        "surface": [
+          51005,
+          35
+        ]
+      },
+      {
+        "pairs": 220,
+        "surface": [
+          51005,
+          36
+        ]
+      },
+      {
+        "pairs": 155,
+        "surface": [
+          51005,
+          51
+        ]
+      },
+      {
+        "pairs": 238,
+        "surface": [
+          51005,
+          52
+        ]
+      },
+      {
+        "pairs": 113,
+        "surface": [
+          51005,
+          53
+        ]
+      },
+      {
+        "pairs": 126,
+        "surface": [
+          51005,
+          54
+        ]
+      },
+      {
+        "pairs": 176,
+        "surface": [
+          51005,
+          57
+        ]
+      },
+      {
+        "pairs": 166,
+        "surface": [
+          51005,
+          58
+        ]
+      },
+      {
+        "pairs": 330,
+        "surface": [
+          51005,
+          63
+        ]
+      },
+      {
+        "pairs": 344,
+        "surface": [
+          51005,
+          64
+        ]
+      },
+      {
+        "pairs": 2711,
+        "surface": [
+          51005,
+          67
+        ]
+      },
+      {
+        "pairs": 2577,
+        "surface": [
+          51005,
+          68
+        ]
+      },
+      {
+        "pairs": 119,
+        "surface": [
+          51005,
+          109
+        ]
+      },
+      {
+        "pairs": 143,
+        "surface": [
+          51005,
+          110
+        ]
+      }
+    ],
+    "peak_rss_bytes": 1011204096,
+    "predicate": "exact_float32_lattice_triangle_intersection",
+    "target_surfaces": 859
+  },
+  "input_hashes_unchanged": true,
+  "native_reference": {
+    "accepted_pack_sha256": "242ac018b430315befef68f3d598c6fe21f4ac2dedf9addef64906b93e67af68",
+    "accepted_receipt_sha256": "a4c9abac603868ac52a47b2ac1ff924199d6841e63c61a8afc0d081a5d396e87",
+    "accepted_step": 20000,
+    "accepted_time_s": 40.00000189989805,
+    "baseline_audit_result_sha256": "9703c87b6e0fcb2e8a7fc0b8f25eaf8124659d3db0712f4b9a5f83a9cad1ede6",
+    "baseline_skin_sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b",
+    "native_NHA_sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241",
+    "run": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run"
+  },
+  "qualification": "One terminal-pose offline counterfactual screen only; not an actual native candidate capture, not admission, not full-cycle clearance or physiology qualification.",
+  "schema": "numi.human.skin-dirichlet-terminal-counterfactual-review.v1",
+  "status": "complete_counterfactual_screen_worse_than_flat_control"
+}

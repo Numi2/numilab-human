@@ -1,0 +1,77 @@
+{
+  "byte_identity": {
+    "binding_records": true,
+    "changed_regions": [
+      "four-weight diagnostic fields",
+      "full F32 matrix"
+    ],
+    "header": true,
+    "position_normal_slots": true,
+    "triangle_indices": true
+  },
+  "dimensions": {
+    "binding_count": 86,
+    "full_weights_f32_sha256": "a318e9ffd2632c8967d4e4338067c8e3f6aa14ca68f6acd8ad3553253fecd6f2",
+    "triangle_count": 109211,
+    "vertex_count": 54949
+  },
+  "inputs": {
+    "audit_module": {
+      "path": "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/skin_surface_audit.py",
+      "sha256": "dbd72470bd2cfdaa398ba5d253393b755d84b5cdfd25b9dd1952bde1120d5f46"
+    },
+    "base_1187": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin",
+      "sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b"
+    },
+    "dirichlet_npz": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/dirichlet/bodyparts3d-skin-binding-solution.npz",
+      "sha256": "8ee440a0e346ba253c32cf693661b889c622908cd7355c13ef50ae1d9187aae8"
+    },
+    "dirichlet_report": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/dirichlet/dirichlet-reconstruction-report.json",
+      "sha256": "a979ed813e20544f4f0b9e9e03784d652abb5440dd60939107c360e5ca978803"
+    },
+    "source_bones": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-surface-binding-bones.json",
+      "sha256": "4a7c19baa4f3e36d6422288e0c91d9e326d393b1a3493a2b2097f5ac6e4df42c"
+    },
+    "source_graph": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-surface-binding-inputs.npz",
+      "sha256": "85ceca04ba63fc463a4515579719fe82ad03137c98891647b75e472461c96625"
+    }
+  },
+  "output": {
+    "bytes": 23293288,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/counterfactual-screen-input/candidate-dirichlet.nhskin",
+    "sha256": "f7c8fdb1990bed9ab1fe8355bfc432043d268bec1b858e379d7f893ff51567df"
+  },
+  "qualification": "Only ABI5 full weights and four-weight diagnostic fields changed. Position/normal, binding, indices, topology and header are byte-identical. Source-derived inferred field, not measured skin mechanics or native result.",
+  "schema": "numi.human.skin-dirichlet-counterfactual-candidate.v1",
+  "status": "source_verified_offline_candidate_not_native_admitted",
+  "verifier": {
+    "certificate": {
+      "boundary": "Independent source seed and full graph-equation certificate; not measured anatomical skin weights or deformation qualification.",
+      "exact_coincident_redundant_vertex_count": 286,
+      "exact_coincident_vertex_group_count": 257,
+      "maximum_discarded_weight_mass": 0.3688334403949376,
+      "maximum_fixed_seed_weight_error": 2.220446049250313e-16,
+      "maximum_relative_equation_residual": 1.2324915011917808e-15,
+      "maximum_source_projection_gap_m": 0.10720182024294735,
+      "method": "positive_source_surface_dirichlet_harmonic_full_weight.v4",
+      "minimum_retained_four_weight_mass": 0.6311665596050624,
+      "minimum_source_projection_gap_m": 0.0012839524840258909,
+      "passed": true,
+      "rejected_seed_count": 696,
+      "seed_candidate_count": 12025,
+      "seed_condition": "dirichlet",
+      "seed_vertex_count": 5039,
+      "source_bone_count": 185,
+      "source_graph_edge_count": 163860,
+      "source_graph_vertex_count": 54663
+    },
+    "full_solution_equal": true,
+    "method": "positive_source_surface_dirichlet_harmonic_full_weight.v4",
+    "quartets_equal": true
+  }
+}

@@ -1,0 +1,1760 @@
+{
+  "coverage": {
+    "binding_solution": {
+      "bytes": 33440872,
+      "file": "bodyparts3d-skin-binding-solution.npz",
+      "full_weight_shape": [
+        54949,
+        86
+      ],
+      "runtime_input": false,
+      "seed_target_columns": [
+        "source_anchor_index",
+        "source_vertex_id_or_centroid_sentinel",
+        "source_skin_vertex_id",
+        "binding_index",
+        "admitted"
+      ],
+      "sha256": "8ee440a0e346ba253c32cf693661b889c622908cd7355c13ef50ae1d9187aae8"
+    },
+    "diagnostic_influences_per_vertex": 4,
+    "diagnostic_registered_bone_surface_sample_count": 7040,
+    "distinct_influence_quartets": 1394,
+    "influences_per_vertex": 86,
+    "maximum_float32_partition_error": 2.384185791015625e-07,
+    "maximum_float32_weight_quantization_error": 2.9801399126228034e-08,
+    "maximum_runtime_discarded_weight_mass": 0.0,
+    "normal_binding": "registered_world_rest_normal blended through each articulated body's current-from-rest rotation",
+    "normal_presentation": {
+      "changes": "visual normals only; exact source vertices and triangle connectivity are retained",
+      "method": "three_pass_triangle_neighbour_source_normal_smoothing"
+    },
+    "outer_source_surface": {
+      "boundary": "exact source outer skin-sheet subset; inner sheet and disconnected source details are not part of the presented exterior shell",
+      "component_count": 100,
+      "method": "exact_outer_connected_component_of_bodyparts3d_compound_skin_solid",
+      "nested_major_component_count": 2,
+      "outer_bounds_mm": [
+        [
+          -334.119,
+          -246.783,
+          -78.1112
+        ],
+        [
+          332.825,
+          45.2476,
+          1641.36
+        ]
+      ],
+      "retained_triangle_count": 109183,
+      "retained_vertex_count": 54949,
+      "source_triangle_count": 203382,
+      "source_vertex_count": 102467
+    },
+    "rest_binding": "inverse_bound_runtime_body_rest_frame_times_source_atlas_frame",
+    "rest_pose_reconstruction_max_error_m": 1.0065941305919308e-15,
+    "runtime_weight_policy": "complete_vertex_major_body_weight_matrix; diagnostic quartets are not used by ABI 5 rendering",
+    "source_common_frame": {
+      "anchor_count": 17,
+      "bodyparts_archive_sha256": {
+        "isa_BP3D_4.0_obj_99.zip": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+      },
+      "evidence_boundary": "Atlas axis/scale basis only; mesh centroids are not homologous inertial COM landmarks.",
+      "global_source_mm_to_myosim_world_m": [
+        [
+          0.001007611186973259,
+          0.0,
+          0.0,
+          -0.024862083488424225
+        ],
+        [
+          0.0,
+          0.001007611186973259,
+          0.0,
+          0.24627952500546435
+        ],
+        [
+          0.0,
+          0.0,
+          0.001007611186973259,
+          0.12388234159326461
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "method": "source_mesh_centroid_to_bound_runtime_rest_COM_proper_signed_axis_similarity",
+      "rms_vertex_centroid_to_com_residual_m": 0.05348842811434757
+    },
+    "source_common_frame_maximum_matrix_error": 8.326672684688674e-17,
+    "source_surface_binding": {
+      "boundary": "Inferred visual source-surface association; four-weight fields are diagnostics and the native ABI 5 retains the full field. Not measured skin weights, material stiffness, thickness, mass, contact, mechanical deformation or clinical registration.",
+      "exact_coincident_redundant_vertex_count": 286,
+      "exact_coincident_vertex_group_count": 257,
+      "maximum_discarded_weight_mass": 0.3688334403949376,
+      "maximum_fixed_seed_weight_error": 0.0,
+      "maximum_partition_unity_error": 3.086420008457935e-14,
+      "maximum_source_projection_gap_m": 0.10720182024294735,
+      "method": "positive_source_surface_dirichlet_harmonic_full_weight.v4",
+      "minimum_full_solution_weight": 0.0,
+      "minimum_retained_four_weight_mass": 0.6311665596050624,
+      "minimum_source_projection_gap_m": 0.0012839524840258909,
+      "rejected_seed_count": 696,
+      "relative_solve_residual": 2.362257853940731e-15,
+      "scipy_version": "1.17.1",
+      "screening": "Dirichlet owner shares from the same admitted inverse-gap source projections; harmonic interpolation of unanchored graph rows; no soft seed penalty",
+      "seam_policy": "exact source world-coordinate equality only; solve quotient graph and expand to unchanged source vertex order; no proximity tolerance or hole capping",
+      "seed_candidate_count": 12025,
+      "seed_condition": "dirichlet",
+      "seed_rule": "centroid_and_64_stratified_source_bone_vertices_projected_to_source_skin; sample must lie within source skin geodesic bone diameter bound plus twice centroid projection gap",
+      "seed_vertex_count": 5039,
+      "source_bone_count": 185,
+      "source_graph_edge_count": 163860,
+      "source_graph_vertex_count": 54663
+    }
+  },
+  "evidence_boundary": "This is an inferred source-surface articulated visual shell with full certified weights and float32 runtime quantization, not FEM/MPM skin, a tissue material law, collision/contact geometry, measured anatomical skin weights, clinical registration or a force-coupled soft-tissue model.",
+  "payload": {
+    "binding_count": 86,
+    "bytes": 23292952,
+    "file": "bodyparts3d-myosim-skinned-shell-dirichlet.nhskin",
+    "index_count": 327549,
+    "magic": "NHSKIN1",
+    "payload_abi": 5,
+    "registration_fingerprint32": "b1b410ad",
+    "sha256": "48a05e02a9013a9cfa88e5e7d264f83fc7f1d753058244a95d18de303118eafb",
+    "triangle_count": 109183,
+    "vertex_count": 54949
+  },
+  "rigid_source_program_checks": {
+    "actual_bytes": 60324,
+    "actual_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
+    "checked_field_count": 2250,
+    "declared_identity_matches": true,
+    "engine_body_count": 157,
+    "expected_bytes": 60324,
+    "expected_source_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "failures": [],
+    "file": "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+    "joint_count": 156,
+    "passed": true,
+    "source_body_count": 103,
+    "source_metadata_matches": true,
+    "tolerance_basis": "existing_source_lowerer_FP32_fields_and_native_norm_admission_with_common_scale_rounding_bins"
+  },
+  "runtime_binding": "Exact BodyParts3D source skin triangles use the complete certified source-surface harmonic field. Exact coincident source positions share one graph point and receive identical weights; all original vertices and triangles remain in source order. Source bone-to-skin projection distances determine seed confidence independently of skin edge resolution. ABI 5 appends all body weights in vertex-major order; its four-weight vertex fields are diagnostic only. Each influence carries the common source-atlas frame transformed into its bound runtime body's rest frame, preserving exact skin geometry at rest. Source normals follow each articulated influence through its current-from-rest body rotation.",
+  "runtime_reference": {
+    "bound_anchor_count": 185,
+    "manifest": {
+      "file": "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-reference.manifest.json",
+      "sha256": "e706f402e0d2c6dd249a6fd1676dc9d21a6c19a5cbf19aef5d681c233b1fa1a1"
+    },
+    "rigid": {
+      "bytes": 60324,
+      "file": "/Users/home/numilab-human/Build/myosim-fullbody-patella-rebase-core-audit-20261003/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"
+  },
+  "schema": "numi.human.bodyparts3d-myosim-skinned-shell-visual-payload.v5",
+  "source": {
+    "bodyparts": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registered_bone_envelopes": [
+      {
+        "core_body_index": 1,
+        "maximum_world_m": [
+          0.03378380966586166,
+          0.25358848465297157,
+          1.0581394341548698
+        ],
+        "minimum_world_m": [
+          -0.08490684325358511,
+          0.1642636017861141,
+          0.9126776603698493
+        ],
+        "source_members": [
+          "FJ3393"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 4,
+        "maximum_world_m": [
+          0.025088830450113314,
+          0.22789565889913715,
+          1.085982754084502
+        ],
+        "minimum_world_m": [
+          -0.07625095935189133,
+          0.14644893523930821,
+          1.0353623832733394
+        ],
+        "source_members": [
+          "FJ3168"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 10,
+        "maximum_world_m": [
+          0.016868536864548072,
+          0.2199242452767543,
+          1.114769198085141
+        ],
+        "minimum_world_m": [
+          -0.06795368427164131,
+          0.13503421190768164,
+          1.0696906888023312
+        ],
+        "source_members": [
+          "FJ3165"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 13,
+        "maximum_world_m": [
+          0.014274542624804123,
+          0.21654088843313551,
+          1.141297585415773
+        ],
+        "minimum_world_m": [
+          -0.06537097527719146,
+          0.13004855175453794,
+          1.098940633948978
+        ],
+        "source_members": [
+          "FJ3162"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 16,
+        "maximum_world_m": [
+          0.014496015563700837,
+          0.2116692898663572,
+          1.1715561493605797
+        ],
+        "minimum_world_m": [
+          -0.0655201017328635,
+          0.13068636963589203,
+          1.1237510442058205
+        ],
+        "source_members": [
+          "FJ3159"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 19,
+        "maximum_world_m": [
+          0.009861608670336038,
+          0.2168347078552569,
+          1.2040213818048584
+        ],
+        "minimum_world_m": [
+          -0.06091421023609003,
+          0.13596625225563191,
+          1.1468092186085168
+        ],
+        "source_members": [
+          "FJ3157"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 20,
+        "maximum_world_m": [
+          0.11194934825643085,
+          0.2462982160922215,
+          1.5112621849367442
+        ],
+        "minimum_world_m": [
+          -0.1629904630546534,
+          0.030820009672598486,
+          1.1396148747335277
+        ],
+        "source_members": [
+          "FJ3178",
+          "FJ3290",
+          "FJ3334",
+          "FJ3336",
+          "FJ3338",
+          "FJ3340",
+          "FJ3342",
+          "FJ3344",
+          "FJ3346",
+          "FJ3347",
+          "FJ3348",
+          "FJ3330",
+          "FJ3331",
+          "FJ3332",
+          "FJ3228",
+          "FJ3229",
+          "FJ3230",
+          "FJ3231",
+          "FJ3232",
+          "FJ3233",
+          "FJ3234",
+          "FJ3235",
+          "FJ3236",
+          "FJ3225",
+          "FJ3226",
+          "FJ3227",
+          "FJ3158",
+          "FJ3160",
+          "FJ3163",
+          "FJ3166",
+          "FJ3169",
+          "FJ3171",
+          "FJ3173",
+          "FJ3174",
+          "FJ3175",
+          "FJ3154",
+          "FJ3155",
+          "FJ3156"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 23,
+        "maximum_world_m": [
+          0.05056416332923959,
+          0.2644175339821695,
+          1.7726062985019988
+        ],
+        "minimum_world_m": [
+          -0.10163046840713645,
+          0.0675444146042124,
+          1.5563326333300582
+        ],
+        "source_members": [
+          "FJ3380",
+          "FJ3274",
+          "FJ3386",
+          "FJ3281",
+          "FJ3200",
+          "FJ3309",
+          "FJ3394",
+          "FJ3289"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 26,
+        "maximum_world_m": [
+          0.015674819891341587,
+          0.22485126245881681,
+          1.6165877823110597
+        ],
+        "minimum_world_m": [
+          -0.06654151719309764,
+          0.15391079988443926,
+          1.4989794045675409
+        ],
+        "source_members": [
+          "FJ3176",
+          "FJ3177",
+          "FJ3161",
+          "FJ3164",
+          "FJ3167",
+          "FJ3170",
+          "FJ3172"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 29,
+        "maximum_world_m": [
+          -0.034597270113044296,
+          0.19145288129428176,
+          1.489638848864298
+        ],
+        "minimum_world_m": [
+          -0.17124481389833823,
+          0.09821307630211779,
+          1.4424624930902101
+        ],
+        "source_members": [
+          "FJ3362"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 34,
+        "maximum_world_m": [
+          -0.08235013062775919,
+          0.25140096076605256,
+          1.4840163784409872
+        ],
+        "minimum_world_m": [
+          -0.19259307211674087,
+          0.14264066875814266,
+          1.3168536825221238
+        ],
+        "source_members": [
+          "FJ3384"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 41,
+        "maximum_world_m": [
+          -0.16601833467150806,
+          0.19485195687241746,
+          1.4705949974305037
+        ],
+        "minimum_world_m": [
+          -0.26753616937025093,
+          0.14529773945819124,
+          1.1609157752261425
+        ],
+        "source_members": [
+          "FJ3368"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 42,
+        "maximum_world_m": [
+          -0.2232415815909064,
+          0.20113934991801177,
+          1.184342735323271
+        ],
+        "minimum_world_m": [
+          -0.2739224090732874,
+          0.12184558908138853,
+          0.9351836638420842
+        ],
+        "source_members": [
+          "FJ3391"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 43,
+        "maximum_world_m": [
+          -0.24636827355431662,
+          0.18471186169231207,
+          1.1668103006699357
+        ],
+        "minimum_world_m": [
+          -0.3065246766389942,
+          0.11840560448906204,
+          0.9358507024478604
+        ],
+        "source_members": [
+          "FJ3349"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 45,
+        "maximum_world_m": [
+          -0.26286186107388204,
+          0.13480246133467771,
+          0.939866033027949
+        ],
+        "minimum_world_m": [
+          -0.2795096131050542,
+          0.11838948271007024,
+          0.9274129663681465
+        ],
+        "source_members": [
+          "FJ3374"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 46,
+        "maximum_world_m": [
+          -0.2760917959588405,
+          0.1338563144301101,
+          0.9418510270662867
+        ],
+        "minimum_world_m": [
+          -0.300000394203342,
+          0.11865246922987058,
+          0.9262975407841674
+        ],
+        "source_members": [
+          "FJ3383"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 47,
+        "maximum_world_m": [
+          -0.2585835439739931,
+          0.11806200907430425,
+          0.9313063759946116
+        ],
+        "minimum_world_m": [
+          -0.26691044282314014,
+          0.1075737842290996,
+          0.919567705666373
+        ],
+        "source_members": [
+          "FJ3382"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 48,
+        "maximum_world_m": [
+          -0.25878607382257474,
+          0.1307760470315328,
+          0.9325810041461328
+        ],
+        "minimum_world_m": [
+          -0.269475820905174,
+          0.11555608005230178,
+          0.9186548099309753
+        ],
+        "source_members": [
+          "FJ3390"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 49,
+        "maximum_world_m": [
+          -0.27515370994376864,
+          0.13490423006456204,
+          0.9346032797983879
+        ],
+        "minimum_world_m": [
+          -0.29135710544148563,
+          0.11781715955586945,
+          0.912026743543065
+        ],
+        "source_members": [
+          "FJ3361"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 50,
+        "maximum_world_m": [
+          -0.29181657614274514,
+          0.12765345996310268,
+          0.9357479261067896
+        ],
+        "minimum_world_m": [
+          -0.3087283223049043,
+          0.11067924190735115,
+          0.9156682503727864
+        ],
+        "source_members": [
+          "FJ3388"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 52,
+        "maximum_world_m": [
+          -0.29917012258527625,
+          0.12171157679352115,
+          0.9271882690734516
+        ],
+        "minimum_world_m": [
+          -0.3367953319180448,
+          0.0912474601665716,
+          0.8899499824364807
+        ],
+        "source_members": [
+          "FJ3350"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 53,
+        "maximum_world_m": [
+          -0.3257841568668009,
+          0.10254076635016787,
+          0.8969196290167745
+        ],
+        "minimum_world_m": [
+          -0.3460975983961818,
+          0.08014156966375235,
+          0.8650881840091023
+        ],
+        "source_members": [
+          "FJ3327"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 54,
+        "maximum_world_m": [
+          -0.33748655319230847,
+          0.08794854114042126,
+          0.8716971057844605
+        ],
+        "minimum_world_m": [
+          -0.3512414535056804,
+          0.07160206485415416,
+          0.8484948429820272
+        ],
+        "source_members": [
+          "FJ3198"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 55,
+        "maximum_world_m": [
+          -0.288997280041594,
+          0.1318884497819513,
+          0.9252466023161543
+        ],
+        "minimum_world_m": [
+          -0.3002029240519236,
+          0.11691433993234168,
+          0.9127058734830852
+        ],
+        "source_members": [
+          "FJ3389"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 56,
+        "maximum_world_m": [
+          -0.2632628903262969,
+          0.13402559310952156,
+          0.9306292612769655
+        ],
+        "minimum_world_m": [
+          -0.27870755460022306,
+          0.11132915112294887,
+          0.9111219086971633
+        ],
+        "source_members": [
+          "FJ3367"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 57,
+        "maximum_world_m": [
+          -0.2886748444617625,
+          0.12833158229193567,
+          0.9167403486757261
+        ],
+        "minimum_world_m": [
+          -0.3197767789700662,
+          0.1024057464511137,
+          0.8482248031839185
+        ],
+        "source_members": [
+          "FJ3352"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 59,
+        "maximum_world_m": [
+          -0.30795246169093493,
+          0.11116591811065923,
+          0.8525837291787648
+        ],
+        "minimum_world_m": [
+          -0.3299314845123827,
+          0.08832841055791024,
+          0.8149212382320782
+        ],
+        "source_members": [
+          "FJ3322"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 60,
+        "maximum_world_m": [
+          -0.32150281693335125,
+          0.09381888391572757,
+          0.8206212947167859
+        ],
+        "minimum_world_m": [
+          -0.3362139402631609,
+          0.07288676911754503,
+          0.7999954937194433
+        ],
+        "source_members": [
+          "FJ3303"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 61,
+        "maximum_world_m": [
+          -0.3285812855218385,
+          0.0753413099690119,
+          0.8047141369080392
+        ],
+        "minimum_world_m": [
+          -0.3385999635539136,
+          0.05812828806194767,
+          0.7907657752467683
+        ],
+        "source_members": [
+          "FJ3193"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 62,
+        "maximum_world_m": [
+          -0.27926980164255405,
+          0.13309859081750616,
+          0.9151211174982601
+        ],
+        "minimum_world_m": [
+          -0.299280959815843,
+          0.10246015745521027,
+          0.8502087896110687
+        ],
+        "source_members": [
+          "FJ3354"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 64,
+        "maximum_world_m": [
+          -0.28604296404138846,
+          0.11013916231113342,
+          0.8542603941938882
+        ],
+        "minimum_world_m": [
+          -0.3043875333114236,
+          0.08082876049326827,
+          0.8133715322265134
+        ],
+        "source_members": [
+          "FJ3325"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 65,
+        "maximum_world_m": [
+          -0.29347913460125113,
+          0.08727948731227105,
+          0.8169243692717812
+        ],
+        "minimum_world_m": [
+          -0.30719675330070495,
+          0.0639684025016447,
+          0.791381425682009
+        ],
+        "source_members": [
+          "FJ3306"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 66,
+        "maximum_world_m": [
+          -0.2982924932414223,
+          0.06671817343089471,
+          0.7954864336577381
+        ],
+        "minimum_world_m": [
+          -0.30791215724345605,
+          0.04936408595765429,
+          0.7819199566363302
+        ],
+        "source_members": [
+          "FJ3196"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 67,
+        "maximum_world_m": [
+          -0.2681256219146299,
+          0.12948025904508517,
+          0.915016325934815
+        ],
+        "minimum_world_m": [
+          -0.28053435368220553,
+          0.10322795717968386,
+          0.854681575670043
+        ],
+        "source_members": [
+          "FJ3356"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 69,
+        "maximum_world_m": [
+          -0.26728426657350723,
+          0.1095890066030461,
+          0.8583623793360564
+        ],
+        "minimum_world_m": [
+          -0.28061798541072436,
+          0.08306968777309681,
+          0.8191018170468304
+        ],
+        "source_members": [
+          "FJ3326"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 70,
+        "maximum_world_m": [
+          -0.2694727980716132,
+          0.08855210024141832,
+          0.8227654913226652
+        ],
+        "minimum_world_m": [
+          -0.28109055505741487,
+          0.06433819580726388,
+          0.7986835839540041
+        ],
+        "source_members": [
+          "FJ3292"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 71,
+        "maximum_world_m": [
+          -0.2720099630404118,
+          0.0662022765031644,
+          0.8030203425027372
+        ],
+        "minimum_world_m": [
+          -0.28040638706146,
+          0.050420062481602274,
+          0.7938117838649885
+        ],
+        "source_members": [
+          "FJ3197"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 72,
+        "maximum_world_m": [
+          -0.25177813801717575,
+          0.1252896041184634,
+          0.9167907292350748
+        ],
+        "minimum_world_m": [
+          -0.2720432142095819,
+          0.10065955626408905,
+          0.8614698522366819
+        ],
+        "source_members": [
+          "FJ3358"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 74,
+        "maximum_world_m": [
+          -0.24870492389690735,
+          0.10650269353734697,
+          0.8654398403133566
+        ],
+        "minimum_world_m": [
+          -0.2629898276946272,
+          0.08554236562592923,
+          0.8325917156180284
+        ],
+        "source_members": [
+          "FJ3323"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 75,
+        "maximum_world_m": [
+          -0.2454634387084144,
+          0.09027813820470353,
+          0.8364196305173397
+        ],
+        "minimum_world_m": [
+          -0.2571618045891739,
+          0.07353567072195583,
+          0.8166855654204684
+        ],
+        "source_members": [
+          "FJ3304"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 76,
+        "maximum_world_m": [
+          -0.24542313426093543,
+          0.07682854408098444,
+          0.8184055577166318
+        ],
+        "minimum_world_m": [
+          -0.25379436800230926,
+          0.06302225559707686,
+          0.8057822047662309
+        ],
+        "source_members": [
+          "FJ3194"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 79,
+        "maximum_world_m": [
+          0.12017548598688058,
+          0.19147807157395624,
+          1.489376869955685
+        ],
+        "minimum_world_m": [
+          -0.016419581407795925,
+          0.09808208684781126,
+          1.4423718080833825
+        ],
+        "source_members": [
+          "FJ3237"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 84,
+        "maximum_world_m": [
+          0.14286890513989237,
+          0.25139456243501535,
+          1.4840163784409872
+        ],
+        "minimum_world_m": [
+          0.032633621495931776,
+          0.14265175248119943,
+          1.316843606410254
+        ],
+        "source_members": [
+          "FJ3279"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 91,
+        "maximum_world_m": [
+          0.2177303858872574,
+          0.1948350290044763,
+          1.470574845206764
+        ],
+        "minimum_world_m": [
+          0.11627703830448105,
+          0.14528766334632154,
+          1.160925851338012
+        ],
+        "source_members": [
+          "FJ3262"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 92,
+        "maximum_world_m": [
+          0.22413879303640744,
+          0.20138812912007567,
+          1.18436288754701
+        ],
+        "minimum_world_m": [
+          0.17352849833711467,
+          0.12206222548658804,
+          0.9350254688857291
+        ],
+        "source_members": [
+          "FJ3286"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 93,
+        "maximum_world_m": [
+          0.256405526076852,
+          0.18434237067004894,
+          1.1667699962224567
+        ],
+        "minimum_world_m": [
+          0.19664712941102902,
+          0.11805898624074318,
+          0.9361811989171874
+        ],
+        "source_members": [
+          "FJ3277"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 95,
+        "maximum_world_m": [
+          0.22994565630693442,
+          0.1348095146129866,
+          0.9399345505886634
+        ],
+        "minimum_world_m": [
+          0.21327573682964882,
+          0.11818090719436694,
+          0.9271721472944601
+        ],
+        "source_members": [
+          "FJ3268"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 96,
+        "maximum_world_m": [
+          0.2501925954979755,
+          0.13390367215589816,
+          0.9417422050580933
+        ],
+        "minimum_world_m": [
+          0.2264885423244296,
+          0.11887313607981806,
+          0.9261625208851129
+        ],
+        "source_members": [
+          "FJ3278"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 97,
+        "maximum_world_m": [
+          0.21699482972076756,
+          0.11828166831306469,
+          0.9312580106576367
+        ],
+        "minimum_world_m": [
+          0.20874047887708258,
+          0.10764330940100106,
+          0.9196180862257216
+        ],
+        "source_members": [
+          "FJ3276"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 98,
+        "maximum_world_m": [
+          0.21971638753678235,
+          0.1309836149360496,
+          0.9325104713630444
+        ],
+        "minimum_world_m": [
+          0.20872334948690408,
+          0.11548453965802694,
+          0.9188361799446304
+        ],
+        "source_members": [
+          "FJ3285"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 99,
+        "maximum_world_m": [
+          0.24143746189436455,
+          0.13486493322827012,
+          0.9345942112977041
+        ],
+        "minimum_world_m": [
+          0.22564013370499772,
+          0.11795923273323286,
+          0.9119995380410159
+        ],
+        "source_members": [
+          "FJ3257"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 100,
+        "maximum_world_m": [
+          0.2590777109447058,
+          0.1276736121868425,
+          0.9358083827780078
+        ],
+        "minimum_world_m": [
+          0.24193421420954275,
+          0.11070140935346492,
+          0.915609808923942
+        ],
+        "source_members": [
+          "FJ3283"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 102,
+        "maximum_world_m": [
+          0.28711953027817094,
+          0.12193425886584239,
+          0.9273585553640498
+        ],
+        "minimum_world_m": [
+          0.24956384611730367,
+          0.0913270614503426,
+          0.889964088993098
+        ],
+        "source_members": [
+          "FJ3240"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 103,
+        "maximum_world_m": [
+          0.29618198529380857,
+          0.10256494901865548,
+          0.8968894006811653
+        ],
+        "minimum_world_m": [
+          0.2761053323933663,
+          0.08027255911805914,
+          0.8650095903365183
+        ],
+        "source_members": [
+          "FJ3318"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 104,
+        "maximum_world_m": [
+          0.30153844636375826,
+          0.08784173435460221,
+          0.8717626005116133
+        ],
+        "minimum_world_m": [
+          0.2883417626479695,
+          0.07168771180504693,
+          0.848599634545472
+        ],
+        "source_members": [
+          "FJ3188"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 105,
+        "maximum_world_m": [
+          0.25050697018831114,
+          0.1317695516618888,
+          0.9252052902574882
+        ],
+        "minimum_world_m": [
+          0.23938697312887433,
+          0.1168518680387497,
+          0.9125617850833477
+        ],
+        "source_members": [
+          "FJ3284"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 106,
+        "maximum_world_m": [
+          0.22862266281843902,
+          0.13411023244922762,
+          0.9306070938308518
+        ],
+        "minimum_world_m": [
+          0.21353570051588838,
+          0.11127776295241361,
+          0.911084627083245
+        ],
+        "source_members": [
+          "FJ3261"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 107,
+        "maximum_world_m": [
+          0.26997804876538245,
+          0.1282711256207176,
+          0.916740348675726
+        ],
+        "minimum_world_m": [
+          0.23897183731984137,
+          0.10276244081130256,
+          0.8483971046968907
+        ],
+        "source_members": [
+          "FJ3243"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 109,
+        "maximum_world_m": [
+          0.2802526600389487,
+          0.11116994855540747,
+          0.8527439393574933
+        ],
+        "minimum_world_m": [
+          0.25808924437028496,
+          0.08802713481300561,
+          0.8148224923357547
+        ],
+        "source_members": [
+          "FJ3313"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 110,
+        "maximum_world_m": [
+          0.28649078089750013,
+          0.09387228730863753,
+          0.8205981196594855
+        ],
+        "minimum_world_m": [
+          0.2717675662334469,
+          0.07291296700840676,
+          0.799964257772647
+        ],
+        "source_members": [
+          "FJ3296"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 111,
+        "maximum_world_m": [
+          0.2887609289017509,
+          0.07537456113818237,
+          0.8045912083432283
+        ],
+        "minimum_world_m": [
+          0.27869187031032727,
+          0.05814743267450058,
+          0.790770813302703
+        ],
+        "source_members": [
+          "FJ3183"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 112,
+        "maximum_world_m": [
+          0.2494620773874199,
+          0.13301395147780073,
+          0.9148823136469472
+        ],
+        "minimum_world_m": [
+          0.2294186756561479,
+          0.10237954856025275,
+          0.8500163358743568
+        ],
+        "source_members": [
+          "FJ3246"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 114,
+        "maximum_world_m": [
+          0.25462910755421875,
+          0.1100585534161759,
+          0.8543661933685203
+        ],
+        "minimum_world_m": [
+          0.23631174378623182,
+          0.0809345596679008,
+          0.8133896692278787
+        ],
+        "source_members": [
+          "FJ3316"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 115,
+        "maximum_world_m": [
+          0.2574756091574182,
+          0.08722003825224,
+          0.816884064824302
+        ],
+        "minimum_world_m": [
+          0.2436834272301282,
+          0.06402684395048949,
+          0.7913330603450341
+        ],
+        "source_members": [
+          "FJ3299"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 116,
+        "maximum_world_m": [
+          0.25812954881776373,
+          0.0668400943845188,
+          0.7953252158678222
+        ],
+        "minimum_world_m": [
+          0.2485642958198267,
+          0.04970566615003853,
+          0.7822222399924218
+        ],
+        "source_members": [
+          "FJ3186"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 117,
+        "maximum_world_m": [
+          0.23084343787452805,
+          0.12949940365763798,
+          0.915076782606033
+        ],
+        "minimum_world_m": [
+          0.21833092215469405,
+          0.10328841385090258,
+          0.8546553777791817
+        ],
+        "source_members": [
+          "FJ3249"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 119,
+        "maximum_world_m": [
+          0.23095629032746906,
+          0.10953761843251074,
+          0.8583885772269176
+        ],
+        "minimum_world_m": [
+          0.21746034608914916,
+          0.08311704549888486,
+          0.819186456386536
+        ],
+        "source_members": [
+          "FJ3317"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 120,
+        "maximum_world_m": [
+          0.2316072071542538,
+          0.0882921365551795,
+          0.8228461002176227
+        ],
+        "minimum_world_m": [
+          0.21976777570731792,
+          0.06435834803100367,
+          0.79880147446288
+        ],
+        "source_members": [
+          "FJ3291"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 121,
+        "maximum_world_m": [
+          0.23071446364259537,
+          0.06616297966687278,
+          0.8029105128833568
+        ],
+        "minimum_world_m": [
+          0.22230494067611659,
+          0.05044021470534199,
+          0.7937543500273309
+        ],
+        "source_members": [
+          "FJ3187"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 122,
+        "maximum_world_m": [
+          0.22239965612769214,
+          0.12514047766279163,
+          0.9166295114451589
+        ],
+        "minimum_world_m": [
+          0.20212248860104223,
+          0.10076031738278667,
+          0.8614849664044864
+        ],
+        "source_members": [
+          "FJ3252"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 124,
+        "maximum_world_m": [
+          0.21323039432623542,
+          0.1065560969302568,
+          0.8652725768563188
+        ],
+        "minimum_world_m": [
+          0.19905632775908258,
+          0.08560483751952179,
+          0.8326209363424504
+        ],
+        "source_members": [
+          "FJ3314"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 125,
+        "maximum_world_m": [
+          0.20718976526033073,
+          0.09018846080906315,
+          0.8363249150657641
+        ],
+        "minimum_world_m": [
+          0.195725165174949,
+          0.07349536627447717,
+          0.8165807738570231
+        ],
+        "source_members": [
+          "FJ3297"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 126,
+        "maximum_world_m": [
+          0.2040218356884868,
+          0.0765776488954284,
+          0.8184378012746146
+        ],
+        "minimum_world_m": [
+          0.1956979596729007,
+          0.06260812739923108,
+          0.8056602838126069
+        ],
+        "source_members": [
+          "FJ3184"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 128,
+        "maximum_world_m": [
+          0.12099366627070342,
+          0.24515222976170264,
+          1.0892645437204742
+        ],
+        "minimum_world_m": [
+          -0.1708367313676138,
+          0.10612584695341916,
+          0.8815565812489937
+        ],
+        "source_members": [
+          "FJ3152",
+          "FJ3288"
+        ],
+        "surface_sample_count": 128
+      },
+      {
+        "core_body_index": 131,
+        "maximum_world_m": [
+          -0.05993501694242947,
+          0.18959621016705264,
+          0.943304186729635
+        ],
+        "minimum_world_m": [
+          -0.1632163346212892,
+          0.1215408685453209,
+          0.4910880083900465
+        ],
+        "source_members": [
+          "FJ3365"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 136,
+        "maximum_world_m": [
+          -0.06448283560601081,
+          0.18965283877639671,
+          0.49873326717661337
+        ],
+        "minimum_world_m": [
+          -0.1475130704770751,
+          0.1289434850191968,
+          0.10823493672518472
+        ],
+        "source_members": [
+          "FJ3387",
+          "FJ3366"
+        ],
+        "surface_sample_count": 128
+      },
+      {
+        "core_body_index": 137,
+        "maximum_world_m": [
+          -0.07725721236752103,
+          0.18442064317704737,
+          0.13406855382500082
+        ],
+        "minimum_world_m": [
+          -0.12287102560994,
+          0.12863182611441726,
+          0.10042921812470468
+        ],
+        "source_members": [
+          "FJ3385"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 138,
+        "maximum_world_m": [
+          -0.07398820204894131,
+          0.2168354128773513,
+          0.1247610895378482
+        ],
+        "minimum_world_m": [
+          -0.15980302597932336,
+          0.04411086577716304,
+          0.06037804749411779
+        ],
+        "source_members": [
+          "FJ3360",
+          "FJ3308",
+          "FJ3377",
+          "FJ3370",
+          "FJ3373",
+          "FJ3364",
+          "FJ3351",
+          "FJ3353",
+          "FJ3355",
+          "FJ3357",
+          "FJ3359"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 139,
+        "maximum_world_m": [
+          -0.08009581393319858,
+          0.06660540384736809,
+          0.08256166761963085
+        ],
+        "minimum_world_m": [
+          -0.16312159142063345,
+          -0.012186343940102363,
+          0.061938485933914066
+        ],
+        "source_members": [
+          "FJ3310",
+          "FJ3192",
+          "FJ3319",
+          "FJ3300",
+          "FJ3189",
+          "FJ3320",
+          "FJ3301",
+          "FJ3190",
+          "FJ3321",
+          "FJ3302",
+          "FJ3191",
+          "FJ3324",
+          "FJ3305",
+          "FJ3195"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 142,
+        "maximum_world_m": [
+          -0.07997231502476441,
+          0.12047334004132974,
+          0.546535636816939
+        ],
+        "minimum_world_m": [
+          -0.11994998209029291,
+          0.09560185483741489,
+          0.5066942657017465
+        ],
+        "source_members": [
+          "FJ3381"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 145,
+        "maximum_world_m": [
+          0.1125454073967546,
+          0.19016882885460762,
+          0.9431271466059954
+        ],
+        "minimum_world_m": [
+          0.008946393812109037,
+          0.12093690934712875,
+          0.49081566255338493
+        ],
+        "source_members": [
+          "FJ3259"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 150,
+        "maximum_world_m": [
+          0.09540846382891416,
+          0.18856622621402272,
+          0.4985985734658793
+        ],
+        "minimum_world_m": [
+          0.012417494479133435,
+          0.12846735938089535,
+          0.10952022477501791
+        ],
+        "source_members": [
+          "FJ3282",
+          "FJ3260"
+        ],
+        "surface_sample_count": 128
+      },
+      {
+        "core_body_index": 151,
+        "maximum_world_m": [
+          0.07091643664984212,
+          0.184860017014569,
+          0.1337743336809472
+        ],
+        "minimum_world_m": [
+          0.029845529890152173,
+          0.12886107963380553,
+          0.10045934010639375
+        ],
+        "source_members": [
+          "FJ3280"
+        ],
+        "surface_sample_count": 64
+      },
+      {
+        "core_body_index": 152,
+        "maximum_world_m": [
+          0.11087491121967159,
+          0.21808049432554252,
+          0.12521335828278074
+        ],
+        "minimum_world_m": [
+          0.024936318381226737,
+          0.04537903596373945,
+          0.06012362530843575
+        ],
+        "source_members": [
+          "FJ3256",
+          "FJ3307",
+          "FJ3271",
+          "FJ3264",
+          "FJ3267",
+          "FJ3258",
+          "FJ3241",
+          "FJ3244",
+          "FJ3247",
+          "FJ3250",
+          "FJ3253"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 153,
+        "maximum_world_m": [
+          0.11437915934753676,
+          0.06820224567736946,
+          0.0833514880780781
+        ],
+        "minimum_world_m": [
+          0.03126957179764191,
+          -0.010953932178624792,
+          0.06441326693125685
+        ],
+        "source_members": [
+          "FJ3329",
+          "FJ3182",
+          "FJ3328",
+          "FJ3293",
+          "FJ3179",
+          "FJ3311",
+          "FJ3294",
+          "FJ3180",
+          "FJ3312",
+          "FJ3295",
+          "FJ3181",
+          "FJ3315",
+          "FJ3298",
+          "FJ3185"
+        ],
+        "surface_sample_count": 256
+      },
+      {
+        "core_body_index": 156,
+        "maximum_world_m": [
+          0.07045677304990948,
+          0.1208191204139478,
+          0.5471798323938294
+        ],
+        "minimum_world_m": [
+          0.03012391786276631,
+          0.09802869009173447,
+          0.5075577522232293
+        ],
+        "source_members": [
+          "FJ3275"
+        ],
+        "surface_sample_count": 64
+      }
+    ],
+    "registration": {
+      "file": "numi-human-lower-limb-patella-rebase-registration-20261003.json",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    "skin": {
+      "archive": "isa_BP3D_4.0_obj_99.zip",
+      "archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+      "member": "isa_BP3D_4.0_obj_99/FJ2810.obj",
+      "member_id": "FJ2810",
+      "member_sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0",
+      "source_triangle_count": 203382,
+      "source_vertex_count": 102467
+    }
+  },
+  "status": "native_full_body_source_surface_linear_blend_skin_shell_visual_input_not_collision_or_physics"
+}
