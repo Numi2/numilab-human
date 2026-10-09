@@ -1,0 +1,82 @@
+{
+  "accepted_steps": {
+    "actual_terminal_time_s": 310.0000147242099,
+    "count": 19375,
+    "first": 8,
+    "last": 155000,
+    "stride": 8
+  },
+  "body_manifest": {
+    "body_count": 157,
+    "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json",
+    "runtime_rigid_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+    "runtime_rigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "sha256": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+  },
+  "counts": {
+    "body_motion_partition": {
+      "accepted_steps": 19375,
+      "body_count": 157,
+      "body_indices": [
+        0,
+        156
+      ],
+      "data_rows": 3041875,
+      "mass_sum_min_max_kg": [
+        71.9999993989477,
+        71.9999993989477
+      ],
+      "runtime_body_labels_unique": 1
+    },
+    "selected_skin_witness": {
+      "accepted_steps": 19375,
+      "data_rows": 620000,
+      "last_step": 155000,
+      "regions": [
+        0,
+        31
+      ],
+      "regions_per_step": 32,
+      "static_region_mappings": 32
+    },
+    "support_point_motion": {
+      "accepted_steps": 19375,
+      "data_rows": 620000,
+      "last_step": 155000,
+      "regions": [
+        0,
+        31
+      ],
+      "regions_per_step": 32,
+      "static_region_mappings": 32
+    }
+  },
+  "invocation_sha256": "166f502253cfa072c621667adbe8dc3f23136ac63dd7dc5656609a5ff436b711",
+  "profile": {
+    "accepted_callbacks": 19375,
+    "accounting_residual_ms": 0.0003119999935208284,
+    "mean_ms": 6.0978374,
+    "observer_other_ms": 62.905532,
+    "subbucket_sum_ms": 118082.69415600001,
+    "total_ms": 118145.6
+  },
+  "run": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run",
+  "run_metadata_sha256": "d1d7795f07afec958e372a922207237eb8a159488fb37405d934c35e76424e14",
+  "schema": "numi.human.accepted-support-motion-observer-integrity.v1",
+  "scope": "Full 310 s opt-in observer output integrity only; this verifies complete finite accepted-state streams, matching region maps, profile arithmetic, and source-bound 157-body inventory. It does not establish drift cause or a physical/anatomical threshold.",
+  "status": "passed",
+  "streams": {
+    "resting-body-motion-partition.csv": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-body-motion-partition.csv",
+      "sha256": "ba0b591447f0ebe97cefe2bed54eb0425a2a5c279379cb22d20a282a2c64d98e"
+    },
+    "resting-support-point-motion.csv": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-support-point-motion.csv",
+      "sha256": "728db3b4cb3e6199f7dc36105f2e578a605deed5d3bc8721fec7d7b7efc6c75a"
+    },
+    "resting-support-selected-skin-witness.csv": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-support-selected-skin-witness.csv",
+      "sha256": "3982215499deb89371be1e2470eb6b47d0f7d808a66734505fee3b64f85cbeb1"
+    }
+  }
+}

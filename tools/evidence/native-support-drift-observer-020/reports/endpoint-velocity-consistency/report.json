@@ -1,0 +1,223 @@
+{
+  "inputs": {
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/invocation.json": "166f502253cfa072c621667adbe8dc3f23136ac63dd7dc5656609a5ff436b711",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-body-motion-partition.csv": "ba0b591447f0ebe97cefe2bed54eb0425a2a5c279379cb22d20a282a2c64d98e",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-com-momentum-diagnostic.csv": "9e1a66c52047114bdb800cb2165b59fc84be2dea81d0e60dee5a311dd5bbe7a4",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/run-metadata.json": "d1d7795f07afec958e372a922207237eb8a159488fb37405d934c35e76424e14"
+  },
+  "run": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run",
+  "schema": "numi.human.support-drift-endpoint-velocity-consistency.v1",
+  "scope": "Sampled root and mass-COM endpoint velocities and trapezoid integrals compared with finite accepted-position displacement. Trapezoid covers only cadence-8 samples and is not a continuous exact integral or a drift-cause test.",
+  "windows": [
+    {
+      "accepted_steps": [
+        5000,
+        155000
+      ],
+      "accepted_time_s": [
+        10.000000474974513,
+        310.0000147242099
+      ],
+      "cadence_steps": 8,
+      "elapsed_s": 300.0000142492354,
+      "mass_com": {
+        "cadence8_trapezoid_velocity_integral_m": [
+          -0.0028375801664425886,
+          -0.00206914808066586,
+          -0.006954562809230737
+        ],
+        "endpoint_velocity_minus_finite_mean_m_s": {
+          "end": [
+            -1.356891261475404e-06,
+            2.6718542575351967e-06,
+            2.3018822471164697e-05
+          ],
+          "start": [
+            -5.242050921239351e-06,
+            3.4257379133089365e-07,
+            2.97409524777783e-05
+          ]
+        },
+        "finite_displacement_mean_velocity_m_s": [
+          -9.4755502471627e-06,
+          -4.625427557984619e-06,
+          -1.597760944963805e-05
+        ],
+        "position_delta_m": [
+          -0.002842665209168156,
+          -0.0013876283333041917,
+          -0.004793283062560133
+        ],
+        "position_minus_trapezoid_residual_m": [
+          -5.0850427255676005e-06,
+          0.0006815197473616684,
+          0.002161279746670604
+        ],
+        "sampled_endpoint_velocity_m_s": {
+          "end": [
+            -1.0832441508638105e-05,
+            -1.953573300449422e-06,
+            7.041213021526647e-06
+          ],
+          "start": [
+            -1.4717601168402051e-05,
+            -4.282853766653725e-06,
+            1.376334302814025e-05
+          ]
+        }
+      },
+      "root_carrier": {
+        "cadence8_trapezoid_velocity_integral_m": [
+          0.037571164315638665,
+          0.01841371519453165,
+          0.05246121654636687
+        ],
+        "endpoint_velocity_minus_finite_mean_m_s": {
+          "end": [
+            -5.503531034897692e-05,
+            -7.539424932389277e-05,
+            -0.00021484999087717746
+          ],
+          "start": [
+            -9.193595512166299e-05,
+            -0.00010570311842371932,
+            -0.0003505984088378901
+          ]
+        },
+        "finite_displacement_mean_velocity_m_s": [
+          0.00012385886263196967,
+          6.16522373084653e-05,
+          0.00017580719140553277
+        ],
+        "position_delta_m": [
+          0.037157660554484995,
+          0.018495672071036834,
+          0.05274215992677789
+        ],
+        "position_minus_trapezoid_residual_m": [
+          -0.00041350376115367043,
+          8.195687650518549e-05,
+          0.00028094338041101397
+        ],
+        "sampled_endpoint_velocity_m_s": {
+          "end": [
+            6.882355228299275e-05,
+            -1.3742012015427463e-05,
+            -3.9042799471644685e-05
+          ],
+          "start": [
+            3.1922907510306686e-05,
+            -4.4050881115254015e-05,
+            -0.00017479121743235737
+          ]
+        }
+      },
+      "sample_count": 18751
+    },
+    {
+      "accepted_steps": [
+        125000,
+        155000
+      ],
+      "accepted_time_s": [
+        250.00001187436283,
+        310.0000147242099
+      ],
+      "cadence_steps": 8,
+      "elapsed_s": 60.00000284984708,
+      "mass_com": {
+        "cadence8_trapezoid_velocity_integral_m": [
+          -0.0005108358402769795,
+          -5.470263325269291e-05,
+          -0.00040903627855907163
+        ],
+        "endpoint_velocity_minus_finite_mean_m_s": {
+          "end": [
+            -2.2608338710126404e-06,
+            -3.2028775772219833e-06,
+            7.0777032038067615e-06
+          ],
+          "start": [
+            -3.1471189055671218e-06,
+            -2.433367967248509e-06,
+            7.643602324802115e-06
+          ]
+        },
+        "finite_displacement_mean_velocity_m_s": [
+          -8.571607637625464e-06,
+          1.2493042767725615e-06,
+          -3.649018228011407e-08
+        ],
+        "position_delta_m": [
+          -0.0005142964826852989,
+          7.495826016667984e-05,
+          -2.1894110407982836e-06
+        ],
+        "position_minus_trapezoid_residual_m": [
+          -3.4606424083194086e-06,
+          0.00012966089341937275,
+          0.00040684686751827335
+        ],
+        "sampled_endpoint_velocity_m_s": {
+          "end": [
+            -1.0832441508638105e-05,
+            -1.953573300449422e-06,
+            7.041213021526647e-06
+          ],
+          "start": [
+            -1.1718726543192586e-05,
+            -1.1840636904759474e-06,
+            7.607112142522001e-06
+          ]
+        }
+      },
+      "root_carrier": {
+        "cadence8_trapezoid_velocity_integral_m": [
+          0.007214602094324948,
+          -4.963161602605527e-05,
+          -0.0003922915651085389
+        ],
+        "endpoint_velocity_minus_finite_mean_m_s": {
+          "end": [
+            -5.2000180578932914e-05,
+            -1.468186973587963e-05,
+            -3.9602235012040574e-05
+          ],
+          "start": [
+            -2.5719741818637404e-05,
+            -1.783342531061153e-05,
+            -5.584180133305966e-05
+          ]
+        },
+        "finite_displacement_mean_velocity_m_s": [
+          0.00012082373286192566,
+          9.39857720452168e-07,
+          5.594355403958927e-07
+        ],
+        "position_delta_m": [
+          0.007249424316044702,
+          5.639146590558086e-05,
+          3.35661340180593e-05
+        ],
+        "position_minus_trapezoid_residual_m": [
+          3.482222171975399e-05,
+          0.00010602308193163613,
+          0.0004258576991265982
+        ],
+        "sampled_endpoint_velocity_m_s": {
+          "end": [
+            6.882355228299275e-05,
+            -1.3742012015427463e-05,
+            -3.9042799471644685e-05
+          ],
+          "start": [
+            9.510399104328826e-05,
+            -1.6893567590159364e-05,
+            -5.528236579266377e-05
+          ]
+        }
+      },
+      "sample_count": 3751
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "numi.human.support-drift-observer-closure.v1",
+  "status": "observer_integrity_passed_drift_unresolved",
+  "scope": "Separate observer-on baseline diagnostic; not a registered arm, physiological acceptance result, exclusive-host benchmark, or anatomical clearance result.",
+  "human_publication_base": "7f898282ca075fafe5f25d62dced6aba7f55c070",
+  "run": {
+    "path_on_mac_mini": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run",
+    "invocation_sha256": "166f502253cfa072c621667adbe8dc3f23136ac63dd7dc5656609a5ff436b711",
+    "run_metadata_sha256": "d1d7795f07afec958e372a922207237eb8a159488fb37405d934c35e76424e14",
+    "exit_code": 0,
+    "source_files_changed_during_run": [],
+    "accepted_roots": 155000,
+    "dt_argument_s": 0.002,
+    "actual_terminal_time_s": 310.0000147242099,
+    "wall_seconds": 2761.931271458,
+    "observer_on_real_time_factor": 0.1124388,
+    "loaded_physical_runtime_sha256": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092",
+    "loaded_respiration_metallib_sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426",
+    "observer_build_pins_sha256": "a4d21115742c807c34bd4d9c5ea0bc02dd9b9a43ef82a63aed1b48db84e7f392",
+    "retained_run_file_manifest_sha256": "8a55c7ee8846172ccd689cf9728c6a55128a48ae312385a93dc51419a15bd141"
+  },
+  "observer_integrity": {
+    "report": "reports/observer-integrity/report.json",
+    "report_sha256": "45cbc4fb35f15c093c50ab86952741759c33ed43d5406f8c0dc3a2e732e5c7a0",
+    "status": "passed",
+    "accepted_samples": 19375,
+    "body_records_per_sample": 157,
+    "support_regions_per_sample": 32,
+    "profile_mean_ms_per_sample": 6.0978374
+  },
+  "legacy_parity": {
+    "report": "reports/comparisons/parsed-csv-parity.json",
+    "report_sha256": "acc85aa6f499ec57483499b64a38a4009abbbd00e231c19a76f52db5b2e2e528",
+    "comparison": "Parsed field values and keyed rows; not raw CSV bytes.",
+    "through_accepted_step": 155000,
+    "channels": {
+      "resting-coupled.csv": 19375,
+      "resting-com-momentum-diagnostic.csv": 19375,
+      "resting-com-support-impulses.csv": 620000,
+      "resting-surface-audit.csv": 4846
+    },
+    "mismatches": 0
+  },
+  "geometry_parity": {
+    "report": "reports/comparisons/geometry-sections-2-through-5.json",
+    "report_sha256": "7bb6089a861203d12c3e171fcda0b06b03f7ace50e9661f85c07e48fe9e91325",
+    "accepted_steps": [47519, 49151, 51903, 54047, 55647, 152191, 154143, 155000],
+    "mrvpack_sections_byte_identical": [2, 3, 4, 5],
+    "whole_pack_byte_identity_claimed": false
+  },
+  "motion_analysis": {
+    "analyzer": "reproduction/motion/analyze_motion.py",
+    "analyzer_sha256": "3fe71acfcc73789730cc3a661feb41ca70f5760583a88c4ea317cfa5e05ee652",
+    "validation": "reports/motion-analysis-validation.json",
+    "validation_sha256": "2e763a86b55a0334e079c7509cfb8fd589c18b15dce1951a06e2f5c193d67e24",
+    "window_reports": {
+      "10s_to_310s": {"path": "reports/motion-10s-to-310s/report.json", "sha256": "8e3c3c9e979bf3c6d3bb70452887f245473ee914aa28edd733bcdb6fbf0c956b"},
+      "250s_to_310s": {"path": "reports/motion-250s-to-310s/report.json", "sha256": "107cf63d4765af8f9b298ae4fa9f5ee6b38bbed12fe1669c77aee0f360518460"},
+      "10s_to_20s": {"path": "reports/motion-short-10s-to-20s/report.json", "sha256": "5f0d03c8f1ceb7733bfc9bf51ac565ac8c7837506c6ce6bfdcead10859fd70fe"}
+    },
+    "body_manifest_sha256": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+  },
+  "drift_decomposition": {
+    "report": "reports/root-frame-decomposition/report.json",
+    "report_sha256": "e51648cbade6fc813fa1e412aa76dcdf5ccee0a725bccee6bbcea64b2eab2eeb",
+    "script_sha256": "862e00204f1ebfc93c5c3c0b4c85d3e9cc4c9164d05a32ef5b1f5e020bb81831",
+    "late_world_com_delta_mm": [-0.5142964826852989, 0.07495826016667984, -0.0021894110407982836],
+    "late_root_translation_mm": [7.249424316044702, 0.05639146590558086, 0.0335661340180593],
+    "late_root_rotation_orbit_mm": [-6.889067003161625, 0.04496070500118653, -0.028183853667558884],
+    "late_root_frame_com_change_mm": [-0.874653795568367, -0.026393906003413043, -0.007571691391579916],
+    "drift_cause": "unresolved"
+  },
+  "endpoint_velocity_consistency": {
+    "report": "reports/endpoint-velocity-consistency/report.json",
+    "report_sha256": "0804a865880734358c5485035c8a44cafcb9245da3c1f092c138fd15f123bc7e",
+    "script_sha256": "b12fb4ba6f05a503b57055f0351e10660c777139a10afab1c19774fa35ed7c17",
+    "sampling": "Cadence-8 trapezoid; not a continuous integral."
+  },
+  "limitations": [
+    "Late root-frame COM motion remains measured and unexplained.",
+    "Winner changes are sampled at cadence 8, not continuous transitions.",
+    "Support point Jv is pre-step weighted kinematics, not post-solve tangential slip.",
+    "Existing skin and lung intersections remain separate anatomy acceptance failures.",
+    "The run's RTF is descriptive because CPU analysis overlapped; it is not an exclusive-host performance qualification."
+  ]
+}

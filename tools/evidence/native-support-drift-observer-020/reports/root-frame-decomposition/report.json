@@ -1,0 +1,219 @@
+{
+  "com_records_m": {
+    "125000": [
+      -0.026921175947198523,
+      -0.7430788376315074,
+      0.09846983128972493
+    ],
+    "155000": [
+      -0.027435472429883822,
+      -0.7430038793713407,
+      0.09846764187868413
+    ],
+    "5000": [
+      -0.024592807220715666,
+      -0.7416162510380365,
+      0.10326092494124427
+    ]
+  },
+  "decompositions": {
+    "10s_to_terminal": {
+      "decomposition_residual_m": [
+        8.673617379884035e-19,
+        -9.593020822151743e-16,
+        4.623038063478191e-16
+      ],
+      "decomposition_sum_m": [
+        -0.002842665209168157,
+        -0.0013876283333032324,
+        -0.004793283062560595
+      ],
+      "magnitudes_mm": {
+        "articulated_relative": 3.717812363174546,
+        "rotation_orbit": 70.98811209084771,
+        "translation": 67.11569903519948,
+        "world_com": 5.742980097530327
+      },
+      "root_frame_articulated_com_term_m": [
+        -0.0036963920337100007,
+        0.0003985045153236023,
+        -2.975258887696021e-06
+      ],
+      "root_frame_com_endpoints_m": [
+        [
+          0.025279216644891748,
+          -0.04159013333712064,
+          -0.9614906509796596
+        ],
+        [
+          0.021570854611404924,
+          -0.04165335138843662,
+          -0.9612333898781406
+        ]
+      ],
+      "root_quaternion_xyzw": [
+        [
+          -0.81102939990971,
+          -0.0002991645108206796,
+          0.0018159706945075867,
+          0.5850025001939121
+        ],
+        [
+          -0.7919741002768382,
+          0.014412236992996057,
+          -0.010857340395183188,
+          0.6102879894566936
+        ]
+      ],
+      "root_rotation_angle_rad": 0.07428747332907006,
+      "root_rotation_orbit_term_m": [
+        -0.03630393372994315,
+        -0.02028180491966367,
+        -0.05753246773045079
+      ],
+      "root_translation_delta_m": [
+        0.037157660554484995,
+        0.018495672071036834,
+        0.05274215992677789
+      ],
+      "steps": [
+        5000,
+        155000
+      ],
+      "world_com_delta_m": [
+        -0.002842665209168156,
+        -0.0013876283333041917,
+        -0.004793283062560133
+      ]
+    },
+    "250s_to_terminal": {
+      "decomposition_residual_m": [
+        -8.456776945386935e-18,
+        -4.963748596181761e-16,
+        2.812149384884277e-16
+      ],
+      "decomposition_sum_m": [
+        -0.0005142964826852904,
+        7.495826016717621e-05,
+        -2.1894110410794986e-06
+      ],
+      "magnitudes_mm": {
+        "articulated_relative": 0.8750846992644753,
+        "rotation_orbit": 6.889271367004364,
+        "translation": 7.249721346151181,
+        "world_com": 0.5197349385892689
+      },
+      "root_frame_articulated_com_term_m": [
+        -0.000874653795568367,
+        -2.6393906003413043e-05,
+        -7.571691391579916e-06
+      ],
+      "root_frame_com_endpoints_m": [
+        [
+          0.02244398355682643,
+          -0.041675770798248274,
+          -0.9611793857522091
+        ],
+        [
+          0.021570854611404924,
+          -0.04165335138843662,
+          -0.9612333898781406
+        ]
+      ],
+      "root_quaternion_xyzw": [
+        [
+          -0.7920319449419835,
+          0.011455269546960186,
+          -0.008562088025061391,
+          0.6103121051066219
+        ],
+        [
+          -0.7919741002768382,
+          0.014412236992996057,
+          -0.010857340395183188,
+          0.6102879894566936
+        ]
+      ],
+      "root_rotation_angle_rad": 0.007487531999175746,
+      "root_rotation_orbit_term_m": [
+        -0.006889067003161625,
+        4.496070026500839e-05,
+        -2.8183853667558884e-05
+      ],
+      "root_translation_delta_m": [
+        0.007249424316044702,
+        5.639146590558086e-05,
+        3.35661340180593e-05
+      ],
+      "steps": [
+        125000,
+        155000
+      ],
+      "world_com_delta_m": [
+        -0.0005142964826852989,
+        7.495826016667984e-05,
+        -2.1894110407982836e-06
+      ]
+    }
+  },
+  "inputs": [
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-body-motion-partition.csv",
+      "sha256": "ba0b591447f0ebe97cefe2bed54eb0425a2a5c279379cb22d20a282a2c64d98e"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-com-momentum-diagnostic.csv",
+      "sha256": "9e1a66c52047114bdb800cb2165b59fc84be2dea81d0e60dee5a311dd5bbe7a4"
+    }
+  ],
+  "root_records": {
+    "125000": {
+      "mass": 0.0,
+      "name": "unnamed",
+      "q": [
+        -0.7920319449419835,
+        0.011455269546960186,
+        -0.008562088025061391,
+        0.6103121051066219
+      ],
+      "r": [
+        -0.023200523035808336,
+        0.17599909791636006,
+        -0.18681654937977665
+      ]
+    },
+    "155000": {
+      "mass": 0.0,
+      "name": "unnamed",
+      "q": [
+        -0.7919741002768382,
+        0.014412236992996057,
+        -0.010857340395183188,
+        0.6102879894566936
+      ],
+      "r": [
+        -0.015951098719763634,
+        0.17605548938226565,
+        -0.1867829832457586
+      ]
+    },
+    "5000": {
+      "mass": 0.0,
+      "name": "unnamed",
+      "q": [
+        -0.81102939990971,
+        -0.0002991645108206796,
+        0.0018159706945075867,
+        0.5850025001939121
+      ],
+      "r": [
+        -0.05310875927424863,
+        0.1575598173112288,
+        -0.23952514317253648
+      ]
+    }
+  },
+  "schema": "numi.human.root-frame-com-drift-decomposition.v1",
+  "scope": "Exact endpoint coordinate decomposition from accepted observer fields. q is the root body-to-world quaternion (xyzw); the rotation matrix maps root-frame coordinates to world. This partitions measured COM displacement into carrier translation, orbit from root rotation acting on initial root-frame COM, and change in root-frame COM transformed at the endpoint. It is not a force attribution or cause proof.",
+  "status": "measured_descriptive_identity"
+}
