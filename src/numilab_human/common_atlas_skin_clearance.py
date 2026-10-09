@@ -13,6 +13,8 @@ import numpy as np
 from . import model as human
 from .cardiac_cavity_intersections import (
     _audit_pair,
+    _audit_pair_prepared_first,
+    _prepare_surface_aabb,
     _records,
     float32_point_lattice_key,
 )
@@ -196,12 +198,13 @@ def _exact_surface_records(vertices: np.ndarray, faces: np.ndarray):
 
 def _target_intersection_audit(skin_records, target_faces: dict[tuple[int, int], np.ndarray], pack_positions: np.ndarray):
     per_surface = {}
+    skin_index = _prepare_surface_aabb(skin_records)
     for key in sorted(target_faces):
         faces = target_faces[key]
         unique = np.unique(faces)
         compact_faces = np.searchsorted(unique, faces)
         target_records = _exact_surface_records(pack_positions[unique], compact_faces)
-        audit = _audit_pair(skin_records, target_records, same_surface=False)
+        audit = _audit_pair_prepared_first(skin_index, target_records)
         per_surface[f"{key[0]}:{key[1]}"] = {
             "triangle_pairs": audit["triangle_pairs"], "count": audit["count"],
             "aabb_candidate_pairs": audit["aabb_candidate_pairs"],

@@ -23,6 +23,12 @@ class ExactBroadphaseTests(unittest.TestCase):
             first, second, same_surface=same)]
         self.assertEqual(len(pairs), len(set(pairs)), "duplicated box pair")
         self.assertEqual(set(pairs), brute(first, second, same))
+        # Reusing the first surface must preserve both closed overlaps and IDs.
+        index = audit._prepare_surface_aabb(first)
+        reverse = [(a[3], b[3]) for b, a in audit._query_surface_aabb(second, index)
+                   if not same or b[3] > a[3]]
+        self.assertEqual(len(reverse), len(set(reverse)))
+        self.assertEqual(set(reverse), set(pairs))
 
     def test_exhaustive_closed_boxes_touching_and_sparse_reordered_ids(self):
         # Includes planar, line and point boxes and all face/edge/point contacts.
@@ -64,6 +70,43 @@ class ExactBroadphaseTests(unittest.TestCase):
         rows += [box((-10000,-10000,-1),(10000,10000,1),99999)]
         self.check(list(reversed(rows)),rows,True)
         self.check(rows[1::3],rows)
+
+
+class PreparedAuditTests(unittest.TestCase):
+    def test_reused_index_matches_exact_cross_and_self_audits(self):
+        rng = random.Random(7312)
+        vertices, faces = [], []
+        for _ in range(32):
+            while True:
+                tri = [tuple(rng.randrange(-5, 6) for _ in range(3)) for _ in range(3)]
+                if any(audit._cross(audit._sub(tri[1], tri[0]),
+                                    audit._sub(tri[2], tri[0]))):
+                    break
+            faces.append(tuple(range(len(vertices), len(vertices) + 3)))
+            vertices.extend(tri)
+        # Include identical geometry with different topology, coplanar overlap,
+        # and shared edges/vertices. None may become a blanket exemption.
+        vertices.extend([(0,0,0), (4,0,0), (0,4,0), (4,4,0), (2,0,0), (0,2,0)])
+        faces.extend([(96,97,98), (97,99,98), (96,100,101), (96,97,98)])
+        records = audit._records(vertices, faces)
+        records = [(*r[:3], 3*r[3]+11, r[4]) for r in records]
+        first = list(reversed(records))
+        index = audit._prepare_surface_aabb(first)
+        for target in [records, records[::3], records[1::5], []]:
+            for same in [False, True]:
+                self.assertEqual(
+                    audit._audit_pair(first, target, same_surface=same),
+                    audit._audit_pair_prepared_first(index, target, same_surface=same))
+
+    def test_index_retains_immutable_record_snapshot(self):
+        rows = audit._records([(0,0,0),(2,0,0),(0,2,0)], [(0,1,2)])
+        index = audit._prepare_surface_aabb(rows)
+        target = list(rows)
+        expected = audit._audit_pair(rows, target, same_surface=False)
+        rows.clear()
+        self.assertEqual(audit._audit_pair_prepared_first(index, target), expected)
+        self.assertEqual(audit._audit_pair_prepared_first(
+            audit._prepare_surface_aabb([]), target)['count'], 0)
 
 
 if __name__ == '__main__':

@@ -10,6 +10,7 @@ by exact ray parity after the complete surface intersection test.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
 from fractions import Fraction
 import hashlib
 import itertools
@@ -189,31 +190,36 @@ def _allowed_shared_point(point, common):
     return False
 
 
-def _aabb_candidate_pairs(first, second, *, same_surface):
-    """Enumerate every closed-box overlap using the existing exact AABB tree.
+@dataclass(frozen=True)
+class _PreparedSurfaceAABB:
+    records: tuple
+    root: tuple | None
 
-    This is the broad phase previously local to surface_topology_audit. Bounds
-    and split keys stay in the caller's exact coordinate system; there is no
-    physical cell size or floating-point conversion. Tree leaves contain list
-    positions, not anatomical face IDs, which may be sparse or reordered.
-    """
-    if not first or not second:
-        return
+
+def _prepare_surface_aabb(records):
+    """Snapshot exact immutable records and build the existing closed-box tree."""
+    records = tuple(records)
 
     def tree(positions):
-        lo = tuple(min(second[i][1][k] for i in positions) for k in range(3))
-        hi = tuple(max(second[i][2][k] for i in positions) for k in range(3))
+        lo = tuple(min(records[i][1][k] for i in positions) for k in range(3))
+        hi = tuple(max(records[i][2][k] for i in positions) for k in range(3))
         if len(positions) <= 8:
             return lo, hi, tuple(positions), None, None
         axis = max(range(3), key=lambda k: hi[k]-lo[k])
-        positions.sort(key=lambda i: second[i][1][axis]+second[i][2][axis])
+        positions.sort(key=lambda i: records[i][1][axis]+records[i][2][axis])
         middle = len(positions)//2
         return lo, hi, None, tree(positions[:middle]), tree(positions[middle:])
 
-    root = tree(list(range(len(second))))
-    for row in first:
-        lo, hi, i = row[1:4]
-        stack = [root]
+    return _PreparedSurfaceAABB(
+        records, tree(list(range(len(records)))) if records else None)
+
+
+def _query_surface_aabb(queries, index):
+    if index.root is None:
+        return
+    for row in queries:
+        lo, hi = row[1:3]
+        stack = [index.root]
         while stack:
             lower, upper, positions, left, right = stack.pop()
             if any(hi[k] < lower[k] or upper[k] < lo[k] for k in range(3)):
@@ -222,17 +228,45 @@ def _aabb_candidate_pairs(first, second, *, same_surface):
                 stack.extend((right, left))
                 continue
             for position in positions:
-                other = second[position]
-                if same_surface and other[3] <= i:
-                    continue
+                other = index.records[position]
                 if all(hi[k] >= other[1][k] and other[2][k] >= lo[k] for k in range(3)):
                     yield row, other
 
 
+def _aabb_candidate_pairs(first, second, *, same_surface):
+    """Enumerate closed-box overlaps with exact bounds and source face IDs."""
+    if not first or not second:
+        return
+    for row, other in _query_surface_aabb(first, _prepare_surface_aabb(second)):
+        if not same_surface or other[3] > row[3]:
+            yield row, other
+
+
+def _audit_pair_prepared_first(first_index, second, *, same_surface=False):
+    """Reuse a first-surface index across targets without changing predicates.
+
+    Querying the smaller target avoids repeatedly walking every skin face.
+    Restore the original first/second argument order before the exact narrow
+    phase, including face IDs and shared-index classification. The index owns
+    a tuple snapshot, so replacing entries in a caller's list cannot stale it.
+    """
+    candidates = (
+        (first, other)
+        for other, first in _query_surface_aabb(second, first_index)
+        if not same_surface or other[3] > first[3]
+    )
+    return _audit_record_pairs(candidates, same_surface=same_surface)
+
+
 def _audit_pair(first, second, *, same_surface):
+    return _audit_record_pairs(
+        _aabb_candidate_pairs(first, second, same_surface=same_surface),
+        same_surface=same_surface)
+
+
+def _audit_record_pairs(candidate_pairs, *, same_surface):
     candidates, allowed, pairs = 0, 0, []
-    for (tri, lo, hi, i, ids), (other, lower, upper, j, other_ids) in _aabb_candidate_pairs(
-            first, second, same_surface=same_surface):
+    for (tri, lo, hi, i, ids), (other, lower, upper, j, other_ids) in candidate_pairs:
         candidates += 1
         points = triangle_intersection_points(tri, other)
         if not points:
