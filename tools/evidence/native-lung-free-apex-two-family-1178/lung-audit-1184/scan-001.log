@@ -1,0 +1,33 @@
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/Users/n/miniforge3/lib/python3.13/multiprocessing/queues.py", line 262, in _feed
+    obj = _ForkingPickler.dumps(obj)
+  File "/Users/n/miniforge3/lib/python3.13/multiprocessing/reduction.py", line 51, in dumps
+    cls(buf, protocol).dump(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+_pickle.PicklingError: Can't pickle <function worker_pose at 0x103355ee0>: import of module 'native_lung_audit_1171' failed
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/run_standalone_short_audit.py", line 230, in <module>
+    if __name__=="__main__": raise SystemExit(main())
+                                              ~~~~^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/run_standalone_short_audit.py", line 201, in main
+    core.prepare_final(cfg)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-pose-audit-runner-1171/audit_lung_cycle_1159.py", line 691, in prepare_final
+    value = future.result()
+  File "/Users/n/miniforge3/lib/python3.13/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/Users/n/miniforge3/lib/python3.13/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/n/miniforge3/lib/python3.13/multiprocessing/queues.py", line 262, in _feed
+    obj = _ForkingPickler.dumps(obj)
+  File "/Users/n/miniforge3/lib/python3.13/multiprocessing/reduction.py", line 51, in dumps
+    cls(buf, protocol).dump(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+_pickle.PicklingError: Can't pickle <function worker_pose at 0x103355ee0>: import of module 'native_lung_audit_1171' failed

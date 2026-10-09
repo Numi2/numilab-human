@@ -1,0 +1,81 @@
+{
+  "failed_checks": [
+    {
+      "attempt": 1,
+      "failure": "wrong lineage report pin",
+      "observed": "Pinned the prior 1113 map-identity report SHA instead of the 1178 current reciprocal-map report SHA; fail-closed before geometry scan."
+    },
+    {
+      "attempt": 2,
+      "failure": "invocation output argv index",
+      "observed": "Checked argv[3] for output directory; argv[3] is the bones payload and argv[4] is the run output path."
+    },
+    {
+      "attempt": 3,
+      "failure": "lexical capture ordering",
+      "observed": "Sorted step receipt filenames lexically, placing step-10000 before step-4991; changed to numeric sorting."
+    },
+    {
+      "attempt": 4,
+      "failure": "missing core base configuration",
+      "observed": "Validation-only called the worker-context API without its required base-owner path."
+    },
+    {
+      "attempt": 5,
+      "failure": "wrong core base path",
+      "observed": "Provided the 1171 wrapper path where the API requires its pinned 1042 exact-predicate base owner."
+    },
+    {
+      "attempt": 6,
+      "failure": "duplicated fixture validator",
+      "observed": "Root review found self-tests exercised a second copy rather than production validation; consolidated tests onto validate_documents."
+    },
+    {
+      "attempt": 7,
+      "failure": "spawn-worker could not import dynamic audit module",
+      "observed": "Attempt-001 built its owner context and wrote declaration.json, then ProcessPoolExecutor raised PicklingError for worker_pose.__module__=native_lung_audit_1171; no pose worker ran and no geometry result exists.",
+      "output": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-001",
+      "wrapper_sha256": "4e59db0775872135883dcadc967d190a303efe12a8cf2743544d936f60e5bf05"
+    },
+    {
+      "attempt": 8,
+      "completed_steps": [
+        0
+      ],
+      "failure": "single-worker scan interrupted after step0 for approved three-worker restart",
+      "launch_record_sha256": "31c3083d2e6871a1eb44bf85608dd650deed1c47729805586c6d29c237e062f4",
+      "observed": "Step0 completed and both exact self/cross witness files closed. Step4991 self stream had started but was incomplete when parent and worker were terminated. This is an interrupted partial attempt, not a geometry failure or full audit.",
+      "output": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-002",
+      "partial_steps": [
+        4991
+      ]
+    }
+  ],
+  "final_check": {
+    "accepted_steps": [
+      0,
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743,
+      10000
+    ],
+    "all_pose_cross_unclassified": 0,
+    "all_pose_self_unallowed": 0,
+    "area_binding": "PASS_area_binding",
+    "attempt3_admission_sha256": "0ed17c49e55d70da25a1ce9667a61a6831daba087d9227abbae87c2e12e06918",
+    "attempt3_elapsed_seconds": 1315.974,
+    "attempt3_report_sha256": "562922a5bd8cb71276e409acc00e1c077205f4593b76370b047d63ed1aa47b53",
+    "attempt3_workers": 3,
+    "degenerate_faces": false,
+    "full_pair_coverage": true,
+    "input_hashes_unchanged": true,
+    "registered_trial": false,
+    "status": "PASS_exact_discrete_predicates",
+    "topology_verified_all_poses": true
+  },
+  "schema": "numi.human.standalone-short-preflight-development-history.v1",
+  "scope": "Adapter implementation only; no exact lung intersection scan ran in these failed checks."
+}

@@ -1,0 +1,46 @@
+{
+  "command": "/Users/n/numi-human-prep-venv-20261005/bin/python /Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/run_standalone_short_audit.py --out /Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-001",
+  "ended_at_utc": "2026-10-09T09:11:42.275080+00:00",
+  "exit_code": 1,
+  "failure": "_pickle.PicklingError: dynamic module native_lung_audit_1171 not importable in spawn worker",
+  "geometry_scan_started": false,
+  "incomplete_output_preserved": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-001",
+  "maps": {
+    "composition_report_sha256": "ddbfae12a5acd5c35521cb913121f08e49fb8c336c89b7dd60df3272ec0a7fbc",
+    "current_lobe_lineage_report_v2_sha256": "fceac1a821d6ad7c368433dd9d73c0071423275ab645b6a49e2d50e18ee5e4ac"
+  },
+  "native_run": {
+    "NHA_sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241",
+    "accepted_steps": [
+      0,
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743,
+      10000
+    ],
+    "invocation_sha256": "4e99e30555a4fa64cfcdc3611413964ecc899924e815642d4e23dc0fc3faa76c",
+    "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run",
+    "respiration_config_sha256": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+    "run_metadata_sha256": "488a9b2906aae625acb7026b141046e6c4cce3ec72711cca80b506b7ce02024f"
+  },
+  "pid": 6388,
+  "registered_trial": false,
+  "scan_scope": "Six owners 305-309 and 311; six self-pairs and all fifteen cross-pairs at the eight standalone attempt3 accepted captures.",
+  "schema": "numi.human.standalone-short-preflight-launch.v1",
+  "script": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/run_standalone_short_audit.py",
+    "sha256": "4e59db0775872135883dcadc967d190a303efe12a8cf2743544d936f60e5bf05"
+  },
+  "skin_audit_937": {
+    "scope": "Separate full 8-pose skin/self/target audit; not lobe-lobe audit.",
+    "status": "complete_pair_coverage",
+    "summary_sha256": "c5776d8d0d144c024a670ea65885aa4191e123a26d2920fa76ec89950afae61f"
+  },
+  "started_at_utc": "2026-10-09T09:07:41Z",
+  "status": "FAILED_before_pose_scan",
+  "stdout_stderr": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/scan-001.log",
+  "wrapper_sha256_before_failure": "4e59db0775872135883dcadc967d190a303efe12a8cf2743544d936f60e5bf05"
+}

@@ -1,0 +1,100 @@
+{
+  "actual_elapsed_seconds": 1315.974,
+  "attempt": 3,
+  "audit_core": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-pose-audit-runner-1171/audit_lung_cycle_1159.py",
+    "sha256": "37bd87c0ac870e59141422db5f6cd8be9b16452155472e61bd84840bc8f8583a"
+  },
+  "base_predicate": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-1079/audit_lung_interfaces_1042_pinned.py",
+    "sha256": "791e2acdfdf917cd8554d83887f78682121a181216a07ff96c7ca2b985214345"
+  },
+  "command": "/Users/n/numi-human-prep-venv-20261005/bin/python /Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/run_standalone_short_audit-workers3.py --workers 3 --out /Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-003",
+  "completed_steps": [
+    0,
+    4991,
+    5375,
+    5759,
+    6111,
+    6495,
+    7743,
+    10000
+  ],
+  "ended_at_utc": "2026-10-09T09:44:21.526226+00:00",
+  "exit_code": 0,
+  "geometry_status": "PASS_exact_discrete_predicates",
+  "input_hashes_unchanged": true,
+  "limitations": "Eight discrete accepted captures over standalone 20 s only; not a registered study arm, not continuous-time proof, and not 310 s qualification.",
+  "memory_plan": {
+    "budget_gib": 12.0,
+    "candidate_triangle_count": 582792,
+    "geometry_scale": 1.0,
+    "per_worker_estimate_bytes_with_75pct_reserve": 3523559424,
+    "probe_manifest": "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-runner-1090/attempt-002-step0-1078/manifest.json",
+    "probe_manifest_sha256": "29f992287b908e60f727029ada20eaf25638a93c0d1e66b6f715ac44c0abff5a",
+    "probe_report": "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-runner-1090/attempt-002-step0-1078/report.json",
+    "probe_report_sha256": "e59aecf383d85c27bb2dfa63a9e2aa8234c8e690551a0a9fcbe1997e5f0e7f1e",
+    "probe_rss_bytes": 2013462528,
+    "reference_nha_sha256": "7f6a8175e3cadb93a6dfc43535467b6896cf1b8bacfd0334df7b5bb03c414e92",
+    "reference_run_path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1078-viewer-018-v015-attempt1/native-run",
+    "reference_triangle_count": 582798,
+    "total_estimated_bytes": 10570678272,
+    "workers": 3
+  },
+  "memory_probe": {
+    "manifest_sha256": "29f992287b908e60f727029ada20eaf25638a93c0d1e66b6f715ac44c0abff5a",
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-runner-1090/attempt-002-step0-1078/report.json",
+    "sha256": "e59aecf383d85c27bb2dfa63a9e2aa8234c8e690551a0a9fcbe1997e5f0e7f1e"
+  },
+  "output": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-003",
+  "output_bytes": 1450063066,
+  "pid": 8008,
+  "preflight": {
+    "budget_gib": 12.0,
+    "estimated_bytes": 10570678272,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/workers3-preflight.json",
+    "sha256": "5b3131725cb0992ee2493b9818b18cf1e385000ab5b59815aac736efce8fe9c6",
+    "workers": 3
+  },
+  "registered_trial": false,
+  "report": {
+    "complete_pair_coverage": true,
+    "cross_unclassified": 0,
+    "degenerate_faces": false,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-003/report.json",
+    "self_unallowed": 0,
+    "sha256": "562922a5bd8cb71276e409acc00e1c077205f4593b76370b047d63ed1aa47b53",
+    "status": "complete_scan_no_unclassified_hits",
+    "topology_all_poses": true
+  },
+  "retained_prior_attempts": [
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/launch-record-attempt-001.json",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/launch-record-attempt-002.json"
+  ],
+  "scan_scope": "Six owners 305-309 and 311; six self-pairs and all fifteen cross-pairs at the eight standalone attempt3 accepted captures.",
+  "schema": "numi.human.standalone-short-preflight-launch.v1",
+  "script_sha256_at_launch": "2a06addc85d310948e3d197aa07db92a40dac1be1478e0040e4c85ffc1a94d72",
+  "source_pins_before_launch": {
+    "NHA_sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241",
+    "core_sha256": "37bd87c0ac870e59141422db5f6cd8be9b16452155472e61bd84840bc8f8583a",
+    "resp_config_sha256": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+    "wrapper_sha256": "2a06addc85d310948e3d197aa07db92a40dac1be1478e0040e4c85ffc1a94d72"
+  },
+  "standalone_admission": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/attempt-1178-exact-six-owner-003/standalone-admission.json",
+    "registered_trial": false,
+    "sha256": "0ed17c49e55d70da25a1ce9667a61a6831daba087d9227abbae87c2e12e06918",
+    "status": "COMPLETE_standalone_short_scan"
+  },
+  "started_at_utc": "2026-10-09T09:22:25.551754+00:00",
+  "status": "COMPLETE_standalone_short_scan",
+  "stdout_stderr": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/scan-003.log",
+    "sha256": "df1e49d44c6482189f45b8f196006b07468025031a1412e55d00882048631732"
+  },
+  "worker_count": 3,
+  "wrapper": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-standalone-short-preflight-1184/run_standalone_short_audit-workers3.py",
+    "sha256": "2a06addc85d310948e3d197aa07db92a40dac1be1478e0040e4c85ffc1a94d72"
+  }
+}
