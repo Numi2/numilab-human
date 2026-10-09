@@ -1,0 +1,6 @@
+{
+  "attempt": "admission-004",
+  "note": "The run used the older a2eeb source checkout whose sidecar copier did not fall back from EPERM on the protected cardiac-map file. The only retained output is the candidate registration manifest; raw stderr was not retained. This failure motivated use of the current f13b575 source snapshot with the existing EPERM-safe sidecar copier.",
+  "qualification": "CPU preparation failure before complete owner composition; no native launch",
+  "status": "owner-sidecar-copy-failed"
+}

@@ -1,0 +1,46 @@
+{
+  "audit_script_path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/epl143_native_diff_v2.py",
+  "audit_script_sha256": "602651baa6862b98b76146a68dc64e69cf286522eda56d0ad0bc7065c8348243",
+  "command": "python3.13 epl143_native_diff_v2.py --out native-1191-differential-full-001 --workers 2",
+  "completed_steps": [
+    0,
+    4991,
+    5375,
+    5759
+  ],
+  "partial_output_hashes": {
+    "declaration.json": "177de337081580183316d90d73808aeffdf2a47bd2cdcab1f77c40e41c086321",
+    "step-0/changed-skin-target-intersections.jsonl.gz": "7a2298b5d7a7ad9246f2a2b218a1c0052a2ad4591e925e9cc9b67720fd85f24a",
+    "step-0/result.json": "72d411d686e79cf2b2260efd4d4050d3ee2ee8d5e93ae794e036d2cb692ee6b3",
+    "step-0/skin-self-unallowed.jsonl.gz": "3a943a40bf964e1fb7dc3806e13cbcc2422c809ae4a19e32f70d6115bf1f5587",
+    "step-0/target-results.json": "9289fdaf4fd39f24bfbc8a450d3832b0847e90a696118fe24c13e00cd4e2ac45",
+    "step-4991/changed-skin-target-intersections.jsonl.gz": "7a2298b5d7a7ad9246f2a2b218a1c0052a2ad4591e925e9cc9b67720fd85f24a",
+    "step-4991/result.json": "b81e22f4d1cc11768071bb091a91e53120d75081b450f75da621b3345f91297d",
+    "step-4991/skin-self-unallowed.jsonl.gz": "3a943a40bf964e1fb7dc3806e13cbcc2422c809ae4a19e32f70d6115bf1f5587",
+    "step-4991/target-results.json": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0",
+    "step-5375/changed-skin-target-intersections.jsonl.gz": "c59e657aecd2b6a3284000343d39f47aaeb3c7bcf697d093bb5d8ede033b46a4",
+    "step-5375/result.json": "1b8c021e107705127da36bf89709afa4b5ffbad4f4d93b2e09171dd05b277daf",
+    "step-5375/skin-self-unallowed.jsonl.gz": "f3cb565f9ad2096cd7990a9cc92f6b25ddb8c944a278571e4239260809424143",
+    "step-5375/target-results.json": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0",
+    "step-5759/changed-skin-target-intersections.jsonl.gz": "4e9b3e33d650325cd1c98164b70ed4c3ea0294306b1706b68a32c6b13b64f9cb",
+    "step-5759/result.json": "5a342530e91d64c85cae6402c8e37c94bc5872b16b150a2f153fc2e58bfe18c4",
+    "step-5759/skin-self-unallowed.jsonl.gz": "c1cc294f365f1acd93ea3b07a80354680cd329b043a49ab7186b4b9709b3d737",
+    "step-5759/target-results.json": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0"
+  },
+  "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-full-001",
+  "reason": "Stopped after four completed poses when wall time showed that two Python threads serialized under the GIL. All completed results were retained and used; remaining poses were completed in separate processes with unchanged exact predicates.",
+  "remaining_steps": [
+    6111,
+    6495,
+    7743,
+    10000
+  ],
+  "retained_result_sha256": {
+    "0": "72d411d686e79cf2b2260efd4d4050d3ee2ee8d5e93ae794e036d2cb692ee6b3",
+    "4991": "b81e22f4d1cc11768071bb091a91e53120d75081b450f75da621b3345f91297d",
+    "5375": "1b8c021e107705127da36bf89709afa4b5ffbad4f4d93b2e09171dd05b277daf",
+    "5759": "5a342530e91d64c85cae6402c8e37c94bc5872b16b150a2f153fc2e58bfe18c4"
+  },
+  "schema": "numi.human.native-skin-epl143-differential-partial-attempt.v1",
+  "status": "partial_interrupted_after_four_complete_poses"
+}

@@ -1,0 +1,1152 @@
+{
+  "code": {
+    "clearance_driver": {
+      "bytes": 35455,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927.py",
+      "sha256": "073033770005db7b1402aca270e2970bf8b656047671e88e1358891759ed9f1b"
+    },
+    "clearance_solver": {
+      "path": "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/common_atlas_skin_clearance.py",
+      "revision": "a2eeb789e1b2f147b045e5383df1780e6ef7f3ac",
+      "sha256": "fbfb5dfbb9b3f7e5fa297a61c793c66cb13fe884d5cebc3a7d1a6b9908961ac1"
+    },
+    "composition_report_path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/composition-report.json",
+    "composition_report_sha256": "cd135cca7e14fd6fee5e210967350978bb797eed71e85aa90d93478bf432a294",
+    "entrypoint": "compose_disjoint_skin_position_corrections",
+    "module": "/Users/n/numi-human-lung-source-publication-902/src/numilab_human/common_atlas_skin_geometry_registration.py",
+    "module_sha256": "a0bd2271cdad2e13472b1770fab33469589bba1193a579e321de20f89752eb52"
+  },
+  "common_atlas_binding_runtime_rest_validation": {
+    "all_86_bindings_match_global_atlas_through_runtime_rest": true,
+    "basis": "For each canonical owner record, compare the record's rest-body translation and rotation-scale map with the registration global source transform expressed in the NHSKIN metre coordinates; source positions and the canonical records are not equated to NHTISS owner-local transforms.",
+    "binding_count": 86,
+    "canonical_binding_reference_sha256": "1de6422eed1a681fb5f37df1e5355c0474016634c342516753a1058c4d0f4334",
+    "checked_runtime_rigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "checks": [
+      {
+        "binding_index": 0,
+        "body_name": "sacrum",
+        "core_body_index": 1,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 1.2290647114573045e-08
+      },
+      {
+        "binding_index": 1,
+        "body_name": "lumbar5",
+        "core_body_index": 4,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 9.020427995699023e-09
+      },
+      {
+        "binding_index": 2,
+        "body_name": "lumbar4",
+        "core_body_index": 10,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 3.2678815593819865e-09
+      },
+      {
+        "binding_index": 3,
+        "body_name": "lumbar3",
+        "core_body_index": 13,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 2.234900724848781e-08
+      },
+      {
+        "binding_index": 4,
+        "body_name": "lumbar2",
+        "core_body_index": 16,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 6.21286731302107e-09
+      },
+      {
+        "binding_index": 5,
+        "body_name": "lumbar1",
+        "core_body_index": 19,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 3.051712114603892e-08
+      },
+      {
+        "binding_index": 6,
+        "body_name": "torso",
+        "core_body_index": 20,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 4.4820886566352247e-08
+      },
+      {
+        "binding_index": 7,
+        "body_name": "head",
+        "core_body_index": 23,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 5.300857072567128e-08
+      },
+      {
+        "binding_index": 8,
+        "body_name": "cervical_spine",
+        "core_body_index": 26,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.000850681538683e-08
+      },
+      {
+        "binding_index": 9,
+        "body_name": "clavicle_r",
+        "core_body_index": 29,
+        "linear_transform_max_abs_error": 3.8395653429913584e-08,
+        "passed": true,
+        "translation_error_m": 2.7131267108970586e-08
+      },
+      {
+        "binding_index": 10,
+        "body_name": "scapula_r",
+        "core_body_index": 34,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 2.4758210749290424e-08
+      },
+      {
+        "binding_index": 11,
+        "body_name": "humerus_r",
+        "core_body_index": 41,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 5.690944031490328e-08
+      },
+      {
+        "binding_index": 12,
+        "body_name": "ulna_r",
+        "core_body_index": 42,
+        "linear_transform_max_abs_error": 6.093997076550201e-08,
+        "passed": true,
+        "translation_error_m": 2.9329121600425856e-08
+      },
+      {
+        "binding_index": 13,
+        "body_name": "radius_r",
+        "core_body_index": 43,
+        "linear_transform_max_abs_error": 3.9841826761361776e-08,
+        "passed": true,
+        "translation_error_m": 1.9222198482391714e-08
+      },
+      {
+        "binding_index": 14,
+        "body_name": "lunate_r",
+        "core_body_index": 45,
+        "linear_transform_max_abs_error": 3.4890298386467536e-08,
+        "passed": true,
+        "translation_error_m": 2.091858935931322e-08
+      },
+      {
+        "binding_index": 15,
+        "body_name": "scaphoid_r",
+        "core_body_index": 46,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.51809309799605e-08
+      },
+      {
+        "binding_index": 16,
+        "body_name": "pisiform_r",
+        "core_body_index": 47,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.9003577577638393e-08
+      },
+      {
+        "binding_index": 17,
+        "body_name": "triquetrum_r",
+        "core_body_index": 48,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 6.125128048671733e-09
+      },
+      {
+        "binding_index": 18,
+        "body_name": "capitate_r",
+        "core_body_index": 49,
+        "linear_transform_max_abs_error": 7.42702993071053e-08,
+        "passed": true,
+        "translation_error_m": 2.750704118349238e-08
+      },
+      {
+        "binding_index": 19,
+        "body_name": "trapezium_r",
+        "core_body_index": 50,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 8.477107535463147e-09
+      },
+      {
+        "binding_index": 20,
+        "body_name": "firstmc_r",
+        "core_body_index": 52,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 1.0399657245284456e-08
+      },
+      {
+        "binding_index": 21,
+        "body_name": "proximal_thumb_r",
+        "core_body_index": 53,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 1.3379901971637959e-08
+      },
+      {
+        "binding_index": 22,
+        "body_name": "distal_thumb_r",
+        "core_body_index": 54,
+        "linear_transform_max_abs_error": 3.4917615262594575e-08,
+        "passed": true,
+        "translation_error_m": 2.4897437859025893e-08
+      },
+      {
+        "binding_index": 23,
+        "body_name": "trapezoid_r",
+        "core_body_index": 55,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 6.495546289423609e-09
+      },
+      {
+        "binding_index": 24,
+        "body_name": "hamate_r",
+        "core_body_index": 56,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 7.297070113457785e-09
+      },
+      {
+        "binding_index": 25,
+        "body_name": "secondmc_r",
+        "core_body_index": 57,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.247694289641454e-08
+      },
+      {
+        "binding_index": 26,
+        "body_name": "2proxph_r",
+        "core_body_index": 59,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.6533980199085414e-08
+      },
+      {
+        "binding_index": 27,
+        "body_name": "midph2_r",
+        "core_body_index": 60,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.30906969261697e-08
+      },
+      {
+        "binding_index": 28,
+        "body_name": "distph2_r",
+        "core_body_index": 61,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 8.37330286837885e-09
+      },
+      {
+        "binding_index": 29,
+        "body_name": "thirdmc_r",
+        "core_body_index": 62,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 9.519125602217075e-09
+      },
+      {
+        "binding_index": 30,
+        "body_name": "3proxph_r",
+        "core_body_index": 64,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.0809579633638294e-08
+      },
+      {
+        "binding_index": 31,
+        "body_name": "midph3_r",
+        "core_body_index": 65,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.1993774681769817e-08
+      },
+      {
+        "binding_index": 32,
+        "body_name": "distph3_r",
+        "core_body_index": 66,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.6860141185653895e-08
+      },
+      {
+        "binding_index": 33,
+        "body_name": "fourthmc_r",
+        "core_body_index": 67,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 4.035236158769164e-09
+      },
+      {
+        "binding_index": 34,
+        "body_name": "4proxph_r",
+        "core_body_index": 69,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.7334163107941102e-08
+      },
+      {
+        "binding_index": 35,
+        "body_name": "midph4_r",
+        "core_body_index": 70,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.7491022565149565e-08
+      },
+      {
+        "binding_index": 36,
+        "body_name": "distph4_r",
+        "core_body_index": 71,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.843268568937935e-08
+      },
+      {
+        "binding_index": 37,
+        "body_name": "fifthmc_r",
+        "core_body_index": 72,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.1522629418466004e-08
+      },
+      {
+        "binding_index": 38,
+        "body_name": "5proxph_r",
+        "core_body_index": 74,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.068737038751984e-08
+      },
+      {
+        "binding_index": 39,
+        "body_name": "midph5_r",
+        "core_body_index": 75,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.2400306225590027e-08
+      },
+      {
+        "binding_index": 40,
+        "body_name": "distph5_r",
+        "core_body_index": 76,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.76429753736545e-08
+      },
+      {
+        "binding_index": 41,
+        "body_name": "clavicle_l",
+        "core_body_index": 79,
+        "linear_transform_max_abs_error": 3.839565370308337e-08,
+        "passed": true,
+        "translation_error_m": 1.4236408319313799e-08
+      },
+      {
+        "binding_index": 42,
+        "body_name": "scapula_l",
+        "core_body_index": 84,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 2.8639283069842747e-08
+      },
+      {
+        "binding_index": 43,
+        "body_name": "humerus_l",
+        "core_body_index": 91,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 1.329799495657071e-08
+      },
+      {
+        "binding_index": 44,
+        "body_name": "ulna_l",
+        "core_body_index": 92,
+        "linear_transform_max_abs_error": 6.09301024990753e-08,
+        "passed": true,
+        "translation_error_m": 2.9397668023537e-08
+      },
+      {
+        "binding_index": 45,
+        "body_name": "radius_l",
+        "core_body_index": 93,
+        "linear_transform_max_abs_error": 3.9831958450161796e-08,
+        "passed": true,
+        "translation_error_m": 1.4678246950793945e-08
+      },
+      {
+        "binding_index": 46,
+        "body_name": "lunate_l",
+        "core_body_index": 95,
+        "linear_transform_max_abs_error": 3.490016656222038e-08,
+        "passed": true,
+        "translation_error_m": 2.0304043351249216e-08
+      },
+      {
+        "binding_index": 47,
+        "body_name": "scaphoid_l",
+        "core_body_index": 96,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.496200937966673e-08
+      },
+      {
+        "binding_index": 48,
+        "body_name": "pisiform_l",
+        "core_body_index": 97,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.942176232993099e-08
+      },
+      {
+        "binding_index": 49,
+        "body_name": "triquetrum_l",
+        "core_body_index": 98,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 6.663183401367561e-09
+      },
+      {
+        "binding_index": 50,
+        "body_name": "capitate_l",
+        "core_body_index": 99,
+        "linear_transform_max_abs_error": 7.426043169559732e-08,
+        "passed": true,
+        "translation_error_m": 2.2990959436594895e-08
+      },
+      {
+        "binding_index": 51,
+        "body_name": "trapezium_l",
+        "core_body_index": 100,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 6.5114587148836206e-09
+      },
+      {
+        "binding_index": 52,
+        "body_name": "firstmc_l",
+        "core_body_index": 102,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 2.060816018480891e-08
+      },
+      {
+        "binding_index": 53,
+        "body_name": "proximal_thumb_l",
+        "core_body_index": 103,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 2.5382622307975652e-08
+      },
+      {
+        "binding_index": 54,
+        "body_name": "distal_thumb_l",
+        "core_body_index": 104,
+        "linear_transform_max_abs_error": 3.490774750347662e-08,
+        "passed": true,
+        "translation_error_m": 2.5446462383630377e-08
+      },
+      {
+        "binding_index": 55,
+        "body_name": "trapezoid_l",
+        "core_body_index": 105,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 6.255882950077467e-09
+      },
+      {
+        "binding_index": 56,
+        "body_name": "hamate_l",
+        "core_body_index": 106,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 7.7735519130889e-09
+      },
+      {
+        "binding_index": 57,
+        "body_name": "secondmc_l",
+        "core_body_index": 107,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.1661936281505337e-08
+      },
+      {
+        "binding_index": 58,
+        "body_name": "2proxph_l",
+        "core_body_index": 109,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.574259000015859e-08
+      },
+      {
+        "binding_index": 59,
+        "body_name": "midph2_l",
+        "core_body_index": 110,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.3565264755397072e-08
+      },
+      {
+        "binding_index": 60,
+        "body_name": "distph2_l",
+        "core_body_index": 111,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 8.339980767799597e-09
+      },
+      {
+        "binding_index": 61,
+        "body_name": "thirdmc_l",
+        "core_body_index": 112,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 8.897410421065296e-09
+      },
+      {
+        "binding_index": 62,
+        "body_name": "3proxph_l",
+        "core_body_index": 114,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.204951836588305e-08
+      },
+      {
+        "binding_index": 63,
+        "body_name": "midph3_l",
+        "core_body_index": 115,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.137417225778225e-08
+      },
+      {
+        "binding_index": 64,
+        "body_name": "distph3_l",
+        "core_body_index": 116,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.7308612706338242e-08
+      },
+      {
+        "binding_index": 65,
+        "body_name": "fourthmc_l",
+        "core_body_index": 117,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 5.4461547865985244e-09
+      },
+      {
+        "binding_index": 66,
+        "body_name": "4proxph_l",
+        "core_body_index": 119,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.779142702521301e-08
+      },
+      {
+        "binding_index": 67,
+        "body_name": "midph4_l",
+        "core_body_index": 120,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.7032021802633237e-08
+      },
+      {
+        "binding_index": 68,
+        "body_name": "distph4_l",
+        "core_body_index": 121,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.856202770457647e-08
+      },
+      {
+        "binding_index": 69,
+        "body_name": "fifthmc_l",
+        "core_body_index": 122,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.0493485045380714e-08
+      },
+      {
+        "binding_index": 70,
+        "body_name": "5proxph_l",
+        "core_body_index": 124,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 2.016606461056694e-08
+      },
+      {
+        "binding_index": 71,
+        "body_name": "midph5_l",
+        "core_body_index": 125,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.317990546067115e-08
+      },
+      {
+        "binding_index": 72,
+        "body_name": "distph5_l",
+        "core_body_index": 126,
+        "linear_transform_max_abs_error": 3.1463309291268615e-08,
+        "passed": true,
+        "translation_error_m": 1.7840734214955643e-08
+      },
+      {
+        "binding_index": 73,
+        "body_name": "pelvis",
+        "core_body_index": 128,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 1.5558068054430603e-08
+      },
+      {
+        "binding_index": 74,
+        "body_name": "femur_r",
+        "core_body_index": 131,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 5.0620012142204015e-09
+      },
+      {
+        "binding_index": 75,
+        "body_name": "tibia_r",
+        "core_body_index": 136,
+        "linear_transform_max_abs_error": 5.591479185197592e-08,
+        "passed": true,
+        "translation_error_m": 2.829613495357123e-09
+      },
+      {
+        "binding_index": 76,
+        "body_name": "talus_r",
+        "core_body_index": 137,
+        "linear_transform_max_abs_error": 3.8245478409359704e-08,
+        "passed": true,
+        "translation_error_m": 3.773703536550306e-09
+      },
+      {
+        "binding_index": 77,
+        "body_name": "calcn_r",
+        "core_body_index": 138,
+        "linear_transform_max_abs_error": 3.935362682870385e-08,
+        "passed": true,
+        "translation_error_m": 1.8618735232251829e-09
+      },
+      {
+        "binding_index": 78,
+        "body_name": "toes_r",
+        "core_body_index": 139,
+        "linear_transform_max_abs_error": 3.506295662301081e-08,
+        "passed": true,
+        "translation_error_m": 2.3584005503778774e-09
+      },
+      {
+        "binding_index": 79,
+        "body_name": "patella_r",
+        "core_body_index": 142,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 1.3083205996429442e-08
+      },
+      {
+        "binding_index": 80,
+        "body_name": "femur_l",
+        "core_body_index": 145,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 8.995505158123675e-09
+      },
+      {
+        "binding_index": 81,
+        "body_name": "tibia_l",
+        "core_body_index": 150,
+        "linear_transform_max_abs_error": 3.1463309735357825e-08,
+        "passed": true,
+        "translation_error_m": 4.624696085436381e-09
+      },
+      {
+        "binding_index": 82,
+        "body_name": "talus_l",
+        "core_body_index": 151,
+        "linear_transform_max_abs_error": 3.7828737130539185e-08,
+        "passed": true,
+        "translation_error_m": 3.805548846212419e-09
+      },
+      {
+        "binding_index": 83,
+        "body_name": "calcn_l",
+        "core_body_index": 152,
+        "linear_transform_max_abs_error": 3.1463310179447035e-08,
+        "passed": true,
+        "translation_error_m": 3.490436593823277e-09
+      },
+      {
+        "binding_index": 84,
+        "body_name": "toes_l",
+        "core_body_index": 153,
+        "linear_transform_max_abs_error": 3.4855075944732074e-08,
+        "passed": true,
+        "translation_error_m": 3.9491463591632204e-09
+      },
+      {
+        "binding_index": 85,
+        "body_name": "patella_l",
+        "core_body_index": 156,
+        "linear_transform_max_abs_error": 3.146330995740243e-08,
+        "passed": true,
+        "translation_error_m": 4.432658470272891e-09
+      }
+    ],
+    "global_source_mm_to_world_m": [
+      [
+        0.0010076111869732585,
+        0.0,
+        0.0,
+        -0.024862083488424228
+      ],
+      [
+        0.0,
+        0.0010076111869732585,
+        0.0,
+        0.24627952500546427
+      ],
+      [
+        0.0,
+        0.0,
+        0.0010076111869732585,
+        0.12388234159326461
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "linear_transform_max_abs_tolerance": 1e-06,
+    "maximum_linear_transform_max_abs_error": 7.42702993071053e-08,
+    "maximum_translation_error_m": 5.690944031490328e-08,
+    "schema": "numi.human.common-atlas-binding-runtime-rest-validation.v1",
+    "translation_tolerance_m": 1e-06
+  },
+  "evidence_boundary": "The 0.5 mm amplitude is an engineering reference-geometry choice, not measured anatomy or certified clearance. Sixteen discrete geometry screens passed; dynamic support selector/Jacobian and native contact response remain untested.",
+  "geometry_registration": {
+    "changed_normal_vertex_ids": [
+      152,
+      153,
+      165,
+      167,
+      168,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      179,
+      253,
+      254,
+      257,
+      258,
+      259,
+      261,
+      262,
+      263,
+      265,
+      266,
+      267,
+      269,
+      270,
+      271,
+      273,
+      274,
+      275,
+      276,
+      277,
+      278,
+      279,
+      280,
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291,
+      293,
+      298,
+      299,
+      300,
+      301,
+      302,
+      303,
+      304,
+      305,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      329,
+      335,
+      472,
+      475,
+      476,
+      478,
+      479,
+      482,
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      492,
+      493,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      509,
+      510,
+      515,
+      516,
+      517,
+      518,
+      519,
+      520,
+      521,
+      522,
+      523,
+      524,
+      525,
+      526,
+      527,
+      528,
+      529,
+      530,
+      541,
+      542,
+      732,
+      733,
+      735,
+      737,
+      738,
+      757,
+      758,
+      759,
+      760,
+      761,
+      762,
+      763,
+      764,
+      776,
+      777,
+      778,
+      779,
+      796,
+      797,
+      803,
+      804,
+      805,
+      806,
+      807,
+      808,
+      809,
+      810,
+      811,
+      812,
+      813,
+      814,
+      815,
+      831,
+      832,
+      833,
+      845,
+      1020,
+      1031,
+      1032,
+      1033,
+      1059,
+      1060,
+      1061,
+      1062,
+      1063,
+      1064,
+      1065,
+      1066,
+      1067,
+      1068,
+      1069,
+      1070,
+      1072,
+      1073,
+      1094,
+      1095,
+      1096,
+      1097,
+      1116,
+      1117,
+      1118,
+      1119,
+      1142,
+      1143,
+      1144,
+      1145,
+      1157,
+      1158,
+      1159,
+      1160,
+      1167,
+      1169,
+      1355,
+      1356,
+      1358,
+      1361,
+      1362,
+      1367,
+      1391,
+      1392,
+      1393,
+      1394,
+      1395,
+      1396,
+      1415,
+      1416,
+      1417,
+      1429,
+      1430,
+      1431,
+      1432,
+      1434,
+      1438,
+      1439,
+      1616,
+      1617,
+      1619,
+      1637,
+      1638,
+      1640,
+      1647
+    ],
+    "changed_position_vertex_ids": [
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      509,
+      510,
+      515,
+      516,
+      517,
+      521,
+      523,
+      526,
+      527,
+      760,
+      776,
+      777,
+      778,
+      779,
+      796,
+      797,
+      803,
+      804,
+      805,
+      806,
+      808,
+      812,
+      813,
+      1094,
+      1116,
+      1117,
+      1142
+    ],
+    "correction_payload": {
+      "bytes": 23293288,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/epl143-position-correction.nhskin",
+      "sha256": "d919c72c24e8016bd166a41b1e9e67fdec51479ee12b4e7abcd17a191e954930"
+    },
+    "method": "fixed 0.5 mm compact geodesic-taper source-position field applied to exact 927 common-atlas NHSKIN",
+    "operation_report": {
+      "bytes": 60263,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/report.json",
+      "sha256": "9df248cf4cdcad92dc28a7ad5b0336c365e93ecf712e5811b8d392a11b708e69"
+    },
+    "output_payload_sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b",
+    "preservation": {
+      "binding_records_byte_identical": true,
+      "full_86_weight_matrix_byte_identical": true,
+      "per_vertex_influence_records_byte_identical": true,
+      "source_archive_identity_identical": true,
+      "triangle_indices_and_order_byte_identical": true
+    },
+    "qualification": "inferred mixed-source reference geometry; 16 saved-pose geometry screens only; native contact/support response not qualified",
+    "schema": "numi.human.epl143-inferred-skin-clearance-candidate.v1",
+    "source_payload_sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1"
+  },
+  "inputs": {
+    "bodyparts_source": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "canonical_binding_reference": {
+      "meaning": "authoritative canonical shared-atlas NHSKIN bindings and vertex weights; per-owner binding substitutions from intermediate inputs are rejected and restored from these exact records",
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.nhskin",
+      "provenance_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/skin-boundaries-001/bodyparts3d-myosim-skinned-shell.boundary-repair.json",
+      "provenance_sha256": "1690346dad91395507378c2543bd197148be0f781ace302d89e425d199db1bbd",
+      "sha256": "1de6422eed1a681fb5f37df1e5355c0474016634c342516753a1058c4d0f4334"
+    },
+    "immediate_predecessor_registration_manifest": {
+      "bytes": 297726,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/common-atlas-skin-geometry-registration.manifest.json",
+      "sha256": "f3aab90ecbd0751e984143b9e7a270312d880e09bde803f12e2a0d4bd9073d9c"
+    },
+    "myosim_artifact": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004",
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "raw_FJ2810": {
+      "archive_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/anatomy-complete-20261005/inputs/Sources/isa_BP3D_4.0_obj_99.zip",
+      "archive_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+      "hierarchy": "is_a",
+      "interpretation": "raw source mesh; candidate positions are inferred registered geometry, not measured source coordinates",
+      "member_id": "FJ2810",
+      "member_name": "isa_BP3D_4.0_obj_99/FJ2810.obj",
+      "member_sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0"
+    },
+    "registration_fingerprint32": "b1b410ad",
+    "registration_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+    "registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "runtime_reference": {
+      "bound_anchor_count": 185,
+      "manifest": {
+        "file": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json",
+        "sha256": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+      },
+      "rigid": {
+        "bytes": 60324,
+        "file": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+        "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+      },
+      "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"
+    },
+    "source_payload": {
+      "bytes": 23293288,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+      "route": "exact 927 registered common-atlas NHSKIN input to fixed inferred EPL143 source-position correction",
+      "sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1"
+    },
+    "upstream_skin_provenance": {
+      "immediate_source_path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/common-atlas-skin-geometry-registration.manifest.json",
+      "immediate_source_record": {
+        "bytes": 23293288,
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+        "sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1"
+      },
+      "immediate_source_sha256": "120b78369a8b74a4719eccc9ef416a44086574dc5ddcddbc55b721e2d06ccf99",
+      "prior_lineage_retained": "927 manifest preserves 907/003 registration ancestry"
+    }
+  },
+  "method": "Applied the frozen 927 inferred source-position field to the exact 907 common-atlas NHSKIN payload; preserved the complete ABI 5 bindings, weights, indices, and unreferenced source rows; recomputed indexed rest-world normals with the existing skin geometry owner. This is pending native replay.",
+  "output_manifest": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/candidate-skin-geometry-registration.manifest.json",
+  "output_payload": {
+    "bytes": 23293288,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin",
+    "sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b"
+  },
+  "payload_identity": {
+    "binding_count": 86,
+    "index_count": 327633,
+    "payload_bytes": 23293288,
+    "registration_fingerprint32": "b1b410ad",
+    "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "vertex_count": 54949
+  },
+  "preservation": {
+    "all_86_binding_records_match_canonical_reference": true,
+    "all_86_canonical_binding_records_byte_identical": true,
+    "full_86_column_weight_matrix_byte_identical": true,
+    "full_weight_matrix_byte_identical": true,
+    "indexed_rest_world_normals_recomputed": true,
+    "nhtiss_tendon_muscle_and_physics_payloads_touched": false,
+    "per_vertex_influence_records_byte_identical": true,
+    "registration_fingerprint32_preserved": true,
+    "skin_contact_or_physics_owner_changed": false,
+    "skin_topology_changed": false,
+    "source_archive_sha256_preserved": true,
+    "triangle_indices_and_order_byte_identical": true
+  },
+  "qualification": {
+    "EPL143_route_clearance": "passed changed-face exact screen on 16 discrete saved poses",
+    "dynamic_support_selector_and_force_jacobian": "not tested; candidate overlaps active distal-thumb support taper",
+    "native_pose_clearance": "not run for this payload",
+    "physical_or_collision_use": "not admitted",
+    "skin_self_intersection": "changed-star self gate passed on 16 offline saved poses; no native full-cycle qualification"
+  },
+  "schema": "numi.human.common-atlas-skin-geometry-registration.v1",
+  "source_rights_and_provenance": {
+    "carried_from_registration": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "epl143_inferred_correction": {
+      "bytes": 60263,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/report.json",
+      "sha256": "9df248cf4cdcad92dc28a7ad5b0336c365e93ecf712e5811b8d392a11b708e69"
+    },
+    "no_new_rights_or_measurements_claimed": true,
+    "raw_member_sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0"
+  },
+  "status": "inferred_common_atlas_geometry_candidate_pending_native_clearance_and_pose_checks"
+}

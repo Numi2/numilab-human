@@ -1,0 +1,1912 @@
+{
+  "actual_native_1191": {
+    "accepted_horizon_seconds": 20.000000949949026,
+    "accepted_pose_steps": [
+      0,
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743,
+      10000
+    ],
+    "accepted_steps": 10000,
+    "exit_code": 0,
+    "invocation_sha256": "d085fd4604033f9de4fea9819218a8773350cde55c4e6254f120719952ddb995",
+    "loaded_metal_runtime_verified": true,
+    "nominal_horizon_seconds": 20.0,
+    "owner_wall_seconds": 191.564317042,
+    "run_metadata_sha256": "eb84c9d25714d2e6f163be664c26d1e30708e97a03f2d7dfaf0c22e4d4347069",
+    "run_path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run",
+    "source_files_changed_during_run": []
+  },
+  "admission_010": {
+    "candidate_anatomy_receipt_sha256": "1d3c364a8f5b66f6c88412a193b801d57a75de1ff797f9d61247da684810e2cd",
+    "candidate_scene_parent": "skin-927-lung-1178-viewer-018-v015-attempt3",
+    "candidate_skin_manifest_sha256": "00b526dc484617ba2d1d4fb845e6aa59148e87561b281e3ec5cdae582914eb47",
+    "native_launch_executed_in_admission": false,
+    "scene_manifest_sha256": "9c248cc090ada144e02770fbb6e53ebd9e480306dc439262388eb8014602a68a",
+    "status": "owner_composition_and_native_command_preparation_passed"
+  },
+  "candidate": {
+    "NHCNT_support_payload_edited": false,
+    "active_support_caveat": "Correction lies within active right distal-thumb NHCNT seed region 15. The 1191 native run exercised the ordinary runtime support selection/Jacobian path with this candidate loaded, and all four 20-second native CSVs are byte-identical to the 1178 parent. There is no separate selected-point/Jacobian telemetry or long-run candidate contact qualification.",
+    "base_927_payload_sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1",
+    "changed_incident_faces": 90,
+    "changed_source_vertices": 33,
+    "payload_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin",
+    "payload_sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b",
+    "recomputed_normal_vertices": 207,
+    "selected_displacement_mm": 0.5,
+    "triangle_indices_order_unchanged": true,
+    "weights_and_86_bindings_unchanged": true
+  },
+  "differential_geometry": {
+    "changed_skin_faces_scanned_against_all_targets_all_8": true,
+    "continuous_time_qualified": false,
+    "four_native_csvs_byte_identical_to_1178_parent": true,
+    "full_skin_face_count": 109211,
+    "normal_runtime_support_path_exercised_in_1191": true,
+    "qualification": "Eight discrete actual native accepted poses only. All candidate skin self pairs were freshly audited at each pose. Every candidate-modified skin face was freshly tested against all 859 target surfaces. For unchanged skin-target faces, zero intersections transfer from the pinned complete 937 baseline audit only after exact source-index/weight, captured target-geometry, unchanged-skin-vertex, accepted body/respiration/time identity checks. This is not continuous-time, treatment-pose or full-body all-pair qualification. It has no separate selected-point/Jacobian telemetry or long-run support-selector/Jacobian qualification.",
+    "runtime_support_selection_and_jacobian_path_used_candidate_skin_in_1191": true,
+    "runtime_support_selector_or_jacobian_qualified": false,
+    "self_pairs_freshly_scanned_all_8": true,
+    "steps": [
+      {
+        "accepted_body_state_sha256": "b063191a425cdfc7939d83f7ba3fcf9ada59823b2cb24c826b3322549d12979c",
+        "accepted_respiration_state_sha256": "c58986f0ab93aa412ca6b39a9217a178b1787d137568d6e2519098caa5846cb7",
+        "accepted_time_s": 0,
+        "baseline_pack_sha256": "ee52f91eea9ba2b8ca41f75903a79ab751a2034a5883fd90159dba672c0d6346",
+        "baseline_receipt_sha256": "f57d2544132b69aba96b7cd71befa543de8febac4bd7df9fb5408bc9bd6be90d",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "68dd2aecebd5febb561738e586cb9093813aee61309ccf1c0ceae5a535751bef",
+        "candidate_receipt_sha256": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "7a2298b5d7a7ad9246f2a2b218a1c0052a2ad4591e925e9cc9b67720fd85f24a",
+        "elapsed_wall_seconds": 174.5417084172368,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 2186428416,
+        "self_witnesses_sha256": "3a943a40bf964e1fb7dc3806e13cbcc2422c809ae4a19e32f70d6115bf1f5587",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 0,
+        "target_results_sha256": "9289fdaf4fd39f24bfbc8a450d3832b0847e90a696118fe24c13e00cd4e2ac45"
+      },
+      {
+        "accepted_body_state_sha256": "c8d8836a5d3cb3adeef845b3b6629d99d39b4e9d535a0c11fd9e54f612b0cd09",
+        "accepted_respiration_state_sha256": "435cff34c6b7369149b5bdc197fc1ef1f054f791676e5d4f504d603d03101724",
+        "accepted_time_s": 9.982000474119559,
+        "baseline_pack_sha256": "8fd64f66521801bd028d643cbff3e55f9c135f417aedd29537761feaa267673a",
+        "baseline_receipt_sha256": "351810df5c03014212640ab4e04fe874a79252c8658b51d8c75e7103b76cc817",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "1e92f5668a5fa1e3a44fb6e829c279e9647c84034e753827508a4dab33d71312",
+        "candidate_receipt_sha256": "4f70c9f9526ab1f2886db018e0d2bacb11009fd2c8932434ab69a4c61d9484ca",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "7a2298b5d7a7ad9246f2a2b218a1c0052a2ad4591e925e9cc9b67720fd85f24a",
+        "elapsed_wall_seconds": 174.51254962477833,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 2186428416,
+        "self_witnesses_sha256": "3a943a40bf964e1fb7dc3806e13cbcc2422c809ae4a19e32f70d6115bf1f5587",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 4991,
+        "target_results_sha256": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0"
+      },
+      {
+        "accepted_body_state_sha256": "86bd8af1d4d6f5167a00eaabae3db07ced37fe87c01f24b1a2a3b4afe9520294",
+        "accepted_respiration_state_sha256": "dd103520390e63345cea3b8074f2937e8c94445a08167667c9a72e21c546ca65",
+        "accepted_time_s": 10.750000510597602,
+        "baseline_pack_sha256": "b243d6bc2018f99b517cd16602cb75f1ee1b82b51be90ba7099bd7b514e629e4",
+        "baseline_receipt_sha256": "cd8045589c7355f8925c3164c8a3d1359b1161dc8b8a5db80df4cb8c3836873e",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "6892440f598634ca8e445bc92f1400954f16f695a1845dbcde14272b25e77d83",
+        "candidate_receipt_sha256": "34c940242f1bad9e77fadd1710515a7aba57fdc1e93d92252e2442828f80fab0",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "c59e657aecd2b6a3284000343d39f47aaeb3c7bcf697d093bb5d8ede033b46a4",
+        "elapsed_wall_seconds": 174.35948179196566,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 2421981184,
+        "self_witnesses_sha256": "f3cb565f9ad2096cd7990a9cc92f6b25ddb8c944a278571e4239260809424143",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 5375,
+        "target_results_sha256": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0"
+      },
+      {
+        "accepted_body_state_sha256": "0609a78af388edf4701acfc3c8ab32e0b40630115aceec28e2fa42b90f57b150",
+        "accepted_respiration_state_sha256": "39b8dc30025ac46d8608403da3dd7baa6bd8ab8f158794fb24908af5f9901a8d",
+        "accepted_time_s": 11.518000547075644,
+        "baseline_pack_sha256": "d2f1682377acf64407048b808d750e7e47bde34592836522d8b075514afb56e9",
+        "baseline_receipt_sha256": "4ee43a8af9d88e4583b06b602c535afdc6858686f1f7e0ffe89674bd6fe5ad0c",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "b71a22652ea2a4892786783120b2c9be118ee9255f839a05a4668d1b03ffbf74",
+        "candidate_receipt_sha256": "f60825570f32a9f42095ad04f8a99c1ebaece7e5e53b7dfb4e7cc32fdd071f9e",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "4e9b3e33d650325cd1c98164b70ed4c3ea0294306b1706b68a32c6b13b64f9cb",
+        "elapsed_wall_seconds": 174.38133599981666,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 2421981184,
+        "self_witnesses_sha256": "c1cc294f365f1acd93ea3b07a80354680cd329b043a49ab7186b4b9709b3d737",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 5759,
+        "target_results_sha256": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0"
+      },
+      {
+        "accepted_body_state_sha256": "88e376d5c297b03f2dc895b6a9de4c6e3ff78c5f282d7d138cb85e734366ce12",
+        "accepted_respiration_state_sha256": "8e3da102523f66738a95b4579d14e07c036d925d9d30a9f53163b87a2781baf0",
+        "accepted_time_s": 12.22200058051385,
+        "baseline_pack_sha256": "3cab14aaca7074b1f35d3cf95ad9831938d725b9f54c4e5cfa6f1be4a5101881",
+        "baseline_receipt_sha256": "484ff2bac9a4e1b967e6eaebf6d0d59b306931b1a6c8b35d12f73c03f8b9ccdc",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "6cf14b9b1be347747a404284a76fa87eaa1f19641f9c09a35edffe37368a09fd",
+        "candidate_receipt_sha256": "213ceebbea0f9e9ac5eb0e1004050328b7beaefba9ce8a55868c919a9336af46",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "07e35d6237494416d4563b9af5107945ef1224ed88a541e0d9bd38ee2c3c6ed4",
+        "elapsed_wall_seconds": 89.26314062438905,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 1242234880,
+        "self_witnesses_sha256": "c6c352fd80a2d639f690a3cd0b971717a241bab2329401eaf86740e06a90992d",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 6111,
+        "target_results_sha256": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0"
+      },
+      {
+        "accepted_body_state_sha256": "1c5bda48c5d8251a298495409bb9d741a2741760724de75eeab654610dc0dc3a",
+        "accepted_respiration_state_sha256": "593504acd903c13a82cb371253050080fc9aeebf564cb5708874c8004e26b778",
+        "accepted_time_s": 12.990000616991892,
+        "baseline_pack_sha256": "806335ce42451ddc0d7eed7871eabf71136ce8a68574ffe730c8139256206be3",
+        "baseline_receipt_sha256": "25a344f33ca7a474fb1ebffcd98bf2a7ee4025fa1795417cd55e941556ea75bd",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "473fdf5b76c4f04dc648fff82ae5ea3a47454f125724189ccdd4a1c222fdb5eb",
+        "candidate_receipt_sha256": "ab08b87ad68c729b69df11d137e9440c2075e4afaee4f47f9f4000849ebb0c1a",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "f365cc50872020cb38b0c813d6c63e3e05c205442c7b214721631eddd59b800c",
+        "elapsed_wall_seconds": 90.63066783268005,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 1242103808,
+        "self_witnesses_sha256": "29128c56c7c2cfcbfeefe060495ae45d0719876ccfd3d4c3844a85b9379c16e3",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 6495,
+        "target_results_sha256": "f2fb31136855920bcd5ffb0b5f1c0e63b2d5fc1120c5918b4d74b1768dfb09b0"
+      },
+      {
+        "accepted_body_state_sha256": "81809c1d1aa93819e42ab97fd4767b2b392596e87791130125be78c44c9094b0",
+        "accepted_respiration_state_sha256": "e841256675d7d94c0a17f82ec00b7d93afb472bfa0b53a6affd7120e4a6807bd",
+        "accepted_time_s": 15.486000735545531,
+        "baseline_pack_sha256": "66c6dbbd7c93090ab354fda75706798d583375b68fafbce3faf38fa725c96cf0",
+        "baseline_receipt_sha256": "b1a6db5e065a0edec9ad89cc821a7ae07af422b488862fc5da0adefa69c96f41",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "28869caeda537c4669f8aeda74a28e89c2096fdd82ac9050cd1c6f596f0da49d",
+        "candidate_receipt_sha256": "50e5a7427dcc29ef29c244f219f6551ee911ef57e98a2f598a97f33ec251508a",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "40525a3cc11b68ab63119907d6a81644cf40a49d5662faea74fa9eed7d1121b2",
+        "elapsed_wall_seconds": 90.43773095868528,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 1244938240,
+        "self_witnesses_sha256": "54273ae810a38bae9cf968b48b98e47759e0314cc414c0b98d4acb329967b9ef",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 7743,
+        "target_results_sha256": "3542da8618ed1df3dad5af831e2309c0f201e932271803e940d83d31e220607f"
+      },
+      {
+        "accepted_body_state_sha256": "1d13e67a0fb3785e418bb1240258c88d5755345ff60bf78354197e9c8bc41680",
+        "accepted_respiration_state_sha256": "efce4e8d4720f73ccc14996aa1590f80747b45570a8ddbfbf165d97f277b03e4",
+        "accepted_time_s": 20.000000949949026,
+        "baseline_pack_sha256": "8a5142b321eec4bec42014bbe92b6d28f962fd8d1870a6cd9a272b24c6bf2928",
+        "baseline_receipt_sha256": "7400f46182a55bad428d2fd2886ff37218a793b376130fb06c941f03a017efc1",
+        "candidate_changed_face_count": 90,
+        "candidate_pack_sha256": "28a7bfc7a8160f24ec2371eb2b2e4f2dcdb650d2150a00d83dd379613c23b704",
+        "candidate_receipt_sha256": "61c5471889a3b2935796cc830089b33fc3edf1e6604f897fd1094f6f21055fef",
+        "changed_star_target_surface_count": 859,
+        "changed_star_target_unallowed_intersection_count": 0,
+        "cross_witnesses_sha256": "40525a3cc11b68ab63119907d6a81644cf40a49d5662faea74fa9eed7d1121b2",
+        "elapsed_wall_seconds": 90.39097775053233,
+        "full_candidate_skin_face_count": 109211,
+        "rss_peak_bytes": 1239678976,
+        "self_witnesses_sha256": "54273ae810a38bae9cf968b48b98e47759e0314cc414c0b98d4acb329967b9ef",
+        "skin_self_allowed_shared_vertex_or_edge_pair_count": 682005,
+        "skin_self_unallowed_intersection_count": 0,
+        "step": 10000,
+        "target_results_sha256": "ab7ddf2de98688615f99990b4c1b864ae929b7dc65472d81d756668ecf3a1ba8"
+      }
+    ],
+    "summary_status": "complete_differential_coverage_intersection_free",
+    "support_path_evidence_note": "Native invocation passed the candidate skin payload to viewer 018 with the unchanged support-contact payload and physical runtime 014. The 20-second support/contact CSV and the other three native CSVs are byte-identical to the 1178 parent. No separate selected-point/Jacobian telemetry was recorded.",
+    "target_surface_count": 859,
+    "treatment_native_geometry_qualified": false,
+    "unchanged_skin_target_pairs": "Transferred only after exact unchanged-skin/target geometry and accepted body/respiration/time identity checks against pinned complete 937 baseline audit."
+  },
+  "external_artifacts": [
+    {
+      "bytes": 60324,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    {
+      "bytes": 23293288,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin",
+      "roles": [
+        "native1191_input_asset",
+        "admission_or_source_artifact"
+      ],
+      "sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b"
+    },
+    {
+      "bytes": 1620,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/resting-scene/myosim-fullbody-resting-bed-support.nhcnt",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "bcfece8e5da553b98694b724644234407fa4c38383b1e18d3c24d7caefa28927"
+    },
+    {
+      "bytes": 11577432,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.nhbones",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49"
+    },
+    {
+      "bytes": 94725712,
+      "hash_basis": "hash_pinned_by_actual_run_metadata; large asset not recopied or rehashed",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-thorax.nhanatomy",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241"
+    },
+    {
+      "bytes": 69520416,
+      "hash_basis": "hash_pinned_by_actual_run_metadata; large asset not recopied or rehashed",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/composed-anatomy/common-cardiac-map-f32.bin",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "c0b0811fe2e2fb45dc37201205e36af39cf092739cfb52c56fdbad9a67dbb858"
+    },
+    {
+      "bytes": 3360,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/composed-anatomy/common-cardiac-volumes-f32.bin",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "7be4f62996c996c6cfdd49480d27766c8253387bb24aeb504fef73cd553ae699"
+    },
+    {
+      "bytes": 8000,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/composed-anatomy/common-cardiac-domains-f32.bin",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "7652785c9ea164b16ee96f64a3dcf940398af36cfd535a5f9b7a7d6bd2c7a611"
+    },
+    {
+      "bytes": 149372,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b"
+    },
+    {
+      "bytes": 4976,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88"
+    },
+    {
+      "bytes": 31817964,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "b3d0381f73e05b04ed7ea1ba23eb6559073ad20aa0d9e2ad0f97a18fab3359bd"
+    },
+    {
+      "bytes": 377934,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "82cdd937e0f2daf0a8704fb21246353c38148527f8602d674ac865f935264dde"
+    },
+    {
+      "bytes": 101200,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/tendon-semantic-foot-migration-834/numi-human-tendon-attachments.nhtendon",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "49daaf61421254cb18f3aa32f1d332b1810537afd4c4ef813abd2f0d118dcecc"
+    },
+    {
+      "bytes": 2259056,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retired-alias-visibility-build-018-attempt2/bin/numi-human-native",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "486442abe2070168a902fb06669469e8b6cc612a9a6ef65ddb3d54957308d906"
+    },
+    {
+      "bytes": 7832192,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-performance-build-014/lib/libmetalrobo.dylib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092"
+    },
+    {
+      "bytes": 5261407,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-performance-build-014/shaders/MetalRobo.metallib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "3077d063dc23475d75cda795620cda8750402d1a2159267a241a5e2b65986043"
+    },
+    {
+      "bytes": 48434,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-performance-build-014/shaders/MetalRoboHyperPolicy.metallib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "f227836841015b40467a20c47a9fa38cf44eb8e1132cad1de4e65fa79c55d309"
+    },
+    {
+      "bytes": 66974,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-performance-build-014/shaders/NumiNeuron.metallib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "4ccbb796a6bfd5bdb18f7d37c8e18e0d767c9489d16047c523c97f679da33f1d"
+    },
+    {
+      "bytes": 417091,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retired-alias-visibility-build-018-attempt2/matter/shaders/HumanRespiration.metallib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426"
+    },
+    {
+      "bytes": 3129683,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-performance-build-014/matter/shaders/NumiMatter.metallib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "38d4b64ed55cef2e0e0f243616d0db5bd21441f232ca38bca439108c1d6130f9"
+    },
+    {
+      "bytes": 80076,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-performance-build-014/matter/shaders/NumiMatterPhysicalStateDigest.metallib",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "3d5db8b11fe561def3f0f4aa73c1a4d8d1828e746f0a7f737d8a31725deb2d68"
+    },
+    {
+      "bytes": 25901,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc"
+    },
+    {
+      "bytes": 5765,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json",
+      "roles": [
+        "native1191_input_asset"
+      ],
+      "sha256": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a"
+    },
+    {
+      "bytes": 23896,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/resting-supine-scene.manifest.json",
+      "roles": [
+        "native1191_input_asset",
+        "admission_or_source_artifact"
+      ],
+      "sha256": "9c248cc090ada144e02770fbb6e53ebd9e480306dc439262388eb8014602a68a"
+    },
+    {
+      "bytes": 29345881,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/composed-anatomy/resting-anatomy-receipt.json",
+      "roles": [
+        "native1191_input_asset",
+        "admission_or_source_artifact"
+      ],
+      "sha256": "1d3c364a8f5b66f6c88412a193b801d57a75de1ff797f9d61247da684810e2cd"
+    },
+    {
+      "bytes": 23293288,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/epl143-position-correction.nhskin",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "d919c72c24e8016bd166a41b1e9e67fdec51479ee12b4e7abcd17a191e954930"
+    },
+    {
+      "bytes": 60263,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/report.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "9df248cf4cdcad92dc28a7ad5b0336c365e93ecf712e5811b8d392a11b708e69"
+    },
+    {
+      "bytes": 42976,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-007-treatment/report.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "8fe877107f54ba38e35311edc4ac3d5d45d8908347d6f85183405cbee82b95df"
+    },
+    {
+      "bytes": 16677,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/admission-preview.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "65fe92af6f652935812a3416175ea2dfacbd0fc989cec1ca82a1815795aba335"
+    },
+    {
+      "bytes": 8371,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/native-owner-command.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "633253e8ab9603d3c2def172c824daa7bc1c197d6f280f508373ec136df467d1"
+    },
+    {
+      "bytes": 36793,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/candidate-skin-geometry-registration.manifest.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "00b526dc484617ba2d1d4fb845e6aa59148e87561b281e3ec5cdae582914eb47"
+    },
+    {
+      "bytes": 509038,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-010/admission-output/composed-anatomy/resting-anatomy-manifest.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "88c699bc004a07b67fc1aacf0d3aa843c85c2d1b57441d63669d909a912d5b52"
+    },
+    {
+      "bytes": 45167,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/package-manifest-v2.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "a1aacbe42c2db77e201669dfd09dfb224defd40f4f723a0008e9e124e6e10ebc"
+    },
+    {
+      "bytes": 600,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/verification-v2.json",
+      "roles": [
+        "admission_or_source_artifact"
+      ],
+      "sha256": "116bd7fe858310d54af66b5995a7612ea96cc3c667e02be7f91d4e9ef183c102"
+    },
+    {
+      "bytes": 2747990,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-152191.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_152191_crossing_witnesses"
+      ],
+      "sha256": "358575ed436e97bcac2d31d735b60a8504a35738c88d0f1b76ddb98296110986"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-152191.mrvpack",
+      "roles": [
+        "prior_baseline_pose_152191_pack"
+      ],
+      "sha256": "5f6fe3166d035c943f4a13b05cdedd08db25bc8b55fcd5307f25e3f160f90faa"
+    },
+    {
+      "bytes": 68184,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-152191.receipt.json",
+      "roles": [
+        "prior_baseline_pose_152191_receipt"
+      ],
+      "sha256": "e31194a58022875209c3f53732a07c9c3793982132497659676b0686eff668bf"
+    },
+    {
+      "bytes": 4690,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-152191.result.json",
+      "roles": [
+        "prior_baseline_pose_152191_result"
+      ],
+      "sha256": "8f3ab27d8dddb1e4c678f68af481ce2ff5d917edbfec873605a49c85f640fdab"
+    },
+    {
+      "bytes": 2837494,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-154143.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_154143_crossing_witnesses"
+      ],
+      "sha256": "89e03d077341a02894d105f282698f3e89811309c8764378a3ab5d6bd6d85f3c"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-154143.mrvpack",
+      "roles": [
+        "prior_baseline_pose_154143_pack"
+      ],
+      "sha256": "561f916d2b3dfad74fd323ca601f0c1b581df4baff6b84444286fd1304b1be9b"
+    },
+    {
+      "bytes": 68177,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-154143.receipt.json",
+      "roles": [
+        "prior_baseline_pose_154143_receipt"
+      ],
+      "sha256": "a39e80acd03592690fc2f6a13cf870ecec002e7bfd7ab35101af5d2ecc20a2b7"
+    },
+    {
+      "bytes": 4774,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-154143.result.json",
+      "roles": [
+        "prior_baseline_pose_154143_result"
+      ],
+      "sha256": "41af2110380297ae5139c208c24092949e257a3b1ff3f801052da2cf35606dbc"
+    },
+    {
+      "bytes": 2791414,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-155000.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_155000_crossing_witnesses"
+      ],
+      "sha256": "200845390aebd3fb2bd4e80af636b1c3b3ac0322a4b53a64732cb06e982ce9ea"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-155000.mrvpack",
+      "roles": [
+        "prior_baseline_pose_155000_pack"
+      ],
+      "sha256": "650b2d781f884aeeec3e8242c115c1ad913b76660b34fdb46444120771e13ac8"
+    },
+    {
+      "bytes": 68136,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-155000.receipt.json",
+      "roles": [
+        "prior_baseline_pose_155000_receipt"
+      ],
+      "sha256": "ecefea5bc22417a07608e267e6f1f29bae20c1141f570d8be2d15304858127ce"
+    },
+    {
+      "bytes": 4691,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-155000.result.json",
+      "roles": [
+        "prior_baseline_pose_155000_result"
+      ],
+      "sha256": "8e6a4b91c5d875b9902eae05c0e953659b16a9efb429c4841b18790353de6991"
+    },
+    {
+      "bytes": 2648202,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-47519.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_47519_crossing_witnesses"
+      ],
+      "sha256": "1fbe7c549ea2d4df43ce9a9850d72500b0a36462653bb995acefad583ad1ad60"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-47519.mrvpack",
+      "roles": [
+        "prior_baseline_pose_47519_pack"
+      ],
+      "sha256": "0012efd9d5fe6425a4f74f5ecbaf5b829a0925f276ebea258d9b9b186d725e3a"
+    },
+    {
+      "bytes": 68174,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-47519.receipt.json",
+      "roles": [
+        "prior_baseline_pose_47519_receipt"
+      ],
+      "sha256": "b75ddbda6524b5113c590e9789cae25fa91937ee9ad82e4950ce91b70273d8a7"
+    },
+    {
+      "bytes": 4516,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-47519.result.json",
+      "roles": [
+        "prior_baseline_pose_47519_result"
+      ],
+      "sha256": "80b300c129bba7cf112547f0811040e4c6b853ca9fe9e091cb3b28ee85fd5192"
+    },
+    {
+      "bytes": 2639849,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-49151.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_49151_crossing_witnesses"
+      ],
+      "sha256": "6eb645dd7bd71832ee627fa2305df770c0a85e1719a106ccdb356f0a6d07d450"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-49151.mrvpack",
+      "roles": [
+        "prior_baseline_pose_49151_pack"
+      ],
+      "sha256": "bfe0fed00696f45ce417f97a9d35e93d2497b2b42d91c7c952ddab8f9d093fde"
+    },
+    {
+      "bytes": 68162,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-49151.receipt.json",
+      "roles": [
+        "prior_baseline_pose_49151_receipt"
+      ],
+      "sha256": "70c6c62cb6a39f4c373ad1d4a1a371ae9774fd6f1b494daf992ff88c394b40c2"
+    },
+    {
+      "bytes": 4513,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-49151.result.json",
+      "roles": [
+        "prior_baseline_pose_49151_result"
+      ],
+      "sha256": "1764f40e55151749f5f4c709363a6f0405938a27b0ef34a812ad3fbb355e34c5"
+    },
+    {
+      "bytes": 2635408,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-51903.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_51903_crossing_witnesses"
+      ],
+      "sha256": "d2c2f93fc5d9a18a7537e52f5848e540ce251e584fc2cde82557139c38b1fdd0"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-51903.mrvpack",
+      "roles": [
+        "prior_baseline_pose_51903_pack"
+      ],
+      "sha256": "cea763ef81f5ce58fe09c9e3173a8841d4b8798a8e303a7411381e3421cf3845"
+    },
+    {
+      "bytes": 68154,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-51903.receipt.json",
+      "roles": [
+        "prior_baseline_pose_51903_receipt"
+      ],
+      "sha256": "37a73b956107ed0423b54e50cb439538cbfe01224f37cec999841b5d20edc910"
+    },
+    {
+      "bytes": 4514,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-51903.result.json",
+      "roles": [
+        "prior_baseline_pose_51903_result"
+      ],
+      "sha256": "7feb8d98ff0c67b2422199c6ab985ae454b947656b5017700d5557a99acb8650"
+    },
+    {
+      "bytes": 2650396,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-54047.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_54047_crossing_witnesses"
+      ],
+      "sha256": "9ff5cb480aaa5b5edfcd59004111a745859fb69c6b3fc0173d2a243190497964"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-54047.mrvpack",
+      "roles": [
+        "prior_baseline_pose_54047_pack"
+      ],
+      "sha256": "78bf85d91f18509a737b83c6e5f8f30f3e7132146a8fbe1cf2aa78a1199b639c"
+    },
+    {
+      "bytes": 68185,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-54047.receipt.json",
+      "roles": [
+        "prior_baseline_pose_54047_receipt"
+      ],
+      "sha256": "bbf4f529feb3cdfa94cb1f3a1a14fe710bf6e7799739d594773d9d7d38048210"
+    },
+    {
+      "bytes": 4681,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-54047.result.json",
+      "roles": [
+        "prior_baseline_pose_54047_result"
+      ],
+      "sha256": "c959755a540693b371e1b54033d5399912794c009f05f85a2476bfed91d1156d"
+    },
+    {
+      "bytes": 2631771,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-55647.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_baseline_pose_55647_crossing_witnesses"
+      ],
+      "sha256": "f1510e67e835315fee042fadfe83c65491914bb90314f7579b06e2bcd311bc7a"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-55647.mrvpack",
+      "roles": [
+        "prior_baseline_pose_55647_pack"
+      ],
+      "sha256": "efe158ea5f98d0f62140dae591f3840addfc1cbeb571ae7d0caa774f6b1668f8"
+    },
+    {
+      "bytes": 68190,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-baseline/output/scene/accepted-geometry/step-55647.receipt.json",
+      "roles": [
+        "prior_baseline_pose_55647_receipt"
+      ],
+      "sha256": "da27e789533bb8ca3fe98ab368127fae27a07eadedd801672d943e1ed98aa512"
+    },
+    {
+      "bytes": 4511,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-baseline-1170/full-attempt-002/step-55647.result.json",
+      "roles": [
+        "prior_baseline_pose_55647_result"
+      ],
+      "sha256": "d3d6aac8bec408c19b2f8ceb086206cd4af4837c18d51eafb01fb13dbd2102c6"
+    },
+    {
+      "bytes": 2754625,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-152447.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_152447_crossing_witnesses"
+      ],
+      "sha256": "cf4b9e5bcdd95a0e04f1cbb61ba7d0e0b5c8a120b0ba8627ff992de2f15a7418"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-152447.mrvpack",
+      "roles": [
+        "prior_treatment_pose_152447_pack"
+      ],
+      "sha256": "f6d84a806b39edd173bd81d4521ab6e8141391476f4a6798294b382092e28eb1"
+    },
+    {
+      "bytes": 68178,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-152447.receipt.json",
+      "roles": [
+        "prior_treatment_pose_152447_receipt"
+      ],
+      "sha256": "11b556161ed62c060ac60d80eea8551ec4f7f366437add80b09821c4317542ea"
+    },
+    {
+      "bytes": 4694,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-152447.result.json",
+      "roles": [
+        "prior_treatment_pose_152447_result"
+      ],
+      "sha256": "32228f85fa8c367b7cd2623f268e2133109aa6979496d706cbb34c7782944d04"
+    },
+    {
+      "bytes": 2837227,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-154367.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_154367_crossing_witnesses"
+      ],
+      "sha256": "dd38622ef6d37ad5e6a2e5090a22e7b38807a1413bda20b31c732815cb1fd4a6"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-154367.mrvpack",
+      "roles": [
+        "prior_treatment_pose_154367_pack"
+      ],
+      "sha256": "8738e4454266eaf44300712dd0145948304246ef788e53c2725a49bfeebd3343"
+    },
+    {
+      "bytes": 68172,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-154367.receipt.json",
+      "roles": [
+        "prior_treatment_pose_154367_receipt"
+      ],
+      "sha256": "62887e41075d3bcc7afd7c3c5bf75df9634de9f2665b225daa2b53ad4ad0b4a0"
+    },
+    {
+      "bytes": 4780,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-154367.result.json",
+      "roles": [
+        "prior_treatment_pose_154367_result"
+      ],
+      "sha256": "e44b6570494c1b6263effc238472827b26c7ec7686c2adacc2883cccd582c8d8"
+    },
+    {
+      "bytes": 2777746,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-155000.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_155000_crossing_witnesses"
+      ],
+      "sha256": "5147b7c732269fbc9978980506b5d7c50cc9a2cb74a1116fa0c9470c8d660dad"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-155000.mrvpack",
+      "roles": [
+        "prior_treatment_pose_155000_pack"
+      ],
+      "sha256": "1871a0e089ac6fb55b81cf882b1a2aca3634272f490cf15b145587cd24fdc258"
+    },
+    {
+      "bytes": 68140,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-155000.receipt.json",
+      "roles": [
+        "prior_treatment_pose_155000_receipt"
+      ],
+      "sha256": "582f88ca495920ec43948c9814b500fe650e02b12b50df3f21ab9692b95fea92"
+    },
+    {
+      "bytes": 4693,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-155000.result.json",
+      "roles": [
+        "prior_treatment_pose_155000_result"
+      ],
+      "sha256": "0e5ef70dea234b38cab11c9575914f92624bd3deb15ac8bf5bbc761f8d3122e6"
+    },
+    {
+      "bytes": 2641288,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-47519.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_47519_crossing_witnesses"
+      ],
+      "sha256": "b2467b86128bab6327c70b998a6a805aed3891b13ff0ab3af04fd9c03856346a"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-47519.mrvpack",
+      "roles": [
+        "prior_treatment_pose_47519_pack"
+      ],
+      "sha256": "a80f54512fa834ad06208a1b5c3f9a6979df165b2878cb9158491be547a05e0d"
+    },
+    {
+      "bytes": 68181,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-47519.receipt.json",
+      "roles": [
+        "prior_treatment_pose_47519_receipt"
+      ],
+      "sha256": "49f823dc73a6a9aec537b7e92a7c636c7bae6e80bca0958f26820e805513ebbe"
+    },
+    {
+      "bytes": 4518,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-47519.result.json",
+      "roles": [
+        "prior_treatment_pose_47519_result"
+      ],
+      "sha256": "101199dac8b3dd0036037ad39fa7a90f5ce1ea83454a9843c8dbb7fca769bba5"
+    },
+    {
+      "bytes": 2657103,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-49151.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_49151_crossing_witnesses"
+      ],
+      "sha256": "37a0dce9f4b819c718b3bf64399f091be932334affed1d520b3917d166f8cd74"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-49151.mrvpack",
+      "roles": [
+        "prior_treatment_pose_49151_pack"
+      ],
+      "sha256": "0f8658a1515389cb555348181e6cdb8d8978d854a3bbe9b4e34893cc29691b16"
+    },
+    {
+      "bytes": 68175,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-49151.receipt.json",
+      "roles": [
+        "prior_treatment_pose_49151_receipt"
+      ],
+      "sha256": "96a24d8eac23f62266cc1f54be72f61754444a06425b97be1f6573cb60b01805"
+    },
+    {
+      "bytes": 4687,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-49151.result.json",
+      "roles": [
+        "prior_treatment_pose_49151_result"
+      ],
+      "sha256": "292d7f081cf01149e6a7e96f686d33efb5a3c05f1a286e42cde83554f689332e"
+    },
+    {
+      "bytes": 2623403,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-51903.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_51903_crossing_witnesses"
+      ],
+      "sha256": "49d43d83c4e91f390f5af6630d34d59b0585e9f8550194a99f6878418d957219"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-51903.mrvpack",
+      "roles": [
+        "prior_treatment_pose_51903_pack"
+      ],
+      "sha256": "c27f429c708b5e142985bc48ee28279876950e3730b56195c81ec70e87a7a900"
+    },
+    {
+      "bytes": 68165,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-51903.receipt.json",
+      "roles": [
+        "prior_treatment_pose_51903_receipt"
+      ],
+      "sha256": "427f04a2dbd9e0b7f809c4a4344cf7a601faa1726f8f8d8fe4b8482270ec74f7"
+    },
+    {
+      "bytes": 4520,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-51903.result.json",
+      "roles": [
+        "prior_treatment_pose_51903_result"
+      ],
+      "sha256": "a2757bf87a9b4d2273a16d6e4c631944035a1608ec1b7da3eb55ab94cbb40365"
+    },
+    {
+      "bytes": 2612798,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-54047.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_54047_crossing_witnesses"
+      ],
+      "sha256": "979089301a402781047cc78f3cb6a5ac1535d1d1fe252ab54dc68f77c7e1f93a"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-54047.mrvpack",
+      "roles": [
+        "prior_treatment_pose_54047_pack"
+      ],
+      "sha256": "e86dd95ed4d38554e45accaa95346dfa228e9d4ab64bf15102533439a79b3fb9"
+    },
+    {
+      "bytes": 68194,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-54047.receipt.json",
+      "roles": [
+        "prior_treatment_pose_54047_receipt"
+      ],
+      "sha256": "de63f59aa3eb02fb307679bce78668b0f30cb4a2f872aae5819cfd71efc742b6"
+    },
+    {
+      "bytes": 4517,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-54047.result.json",
+      "roles": [
+        "prior_treatment_pose_54047_result"
+      ],
+      "sha256": "f4899fd7bb636c2fb1013d00c6ce79891a55613122db819661603e08ebbf1fdc"
+    },
+    {
+      "bytes": 2648012,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-55647.crossing-witnesses.jsonl",
+      "roles": [
+        "prior_treatment_pose_55647_crossing_witnesses"
+      ],
+      "sha256": "5f63761df170125706797db5f7c72529587a2efe1eaac55843630f0a994487f6"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-55647.mrvpack",
+      "roles": [
+        "prior_treatment_pose_55647_pack"
+      ],
+      "sha256": "33c7b57d6ed14e11418c40ee0abfb21e8e93dec625c6019d738cb721b5e75371"
+    },
+    {
+      "bytes": 68201,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170/trials/resting-drive-half/output/scene/accepted-geometry/step-55647.receipt.json",
+      "roles": [
+        "prior_treatment_pose_55647_receipt"
+      ],
+      "sha256": "faf53e43bb25ce3ae013c5c5ca36309b05037595acb2b14faba092df6c6cda1a"
+    },
+    {
+      "bytes": 4690,
+      "hash_basis": "hash_pinned_by_package_manifest_v2",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-late-skin-audit-runner-1172/closed-treatment-1170/full-attempt-001/step-55647.result.json",
+      "roles": [
+        "prior_treatment_pose_55647_result"
+      ],
+      "sha256": "d823b7229248cace142d4c5f3eb2b76b27c586226cd742e4fa5092b50f0e63e6"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.mrvpack",
+      "roles": [
+        "native1191_pose_0_pack"
+      ],
+      "sha256": "68dd2aecebd5febb561738e586cb9093813aee61309ccf1c0ceae5a535751bef"
+    },
+    {
+      "bytes": 67961,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.receipt.json",
+      "roles": [
+        "native1191_pose_0_receipt"
+      ],
+      "sha256": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-0.mrvpack",
+      "roles": [
+        "parent1178_pose_0_pack"
+      ],
+      "sha256": "ee52f91eea9ba2b8ca41f75903a79ab751a2034a5883fd90159dba672c0d6346"
+    },
+    {
+      "bytes": 68123,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-0.receipt.json",
+      "roles": [
+        "parent1178_pose_0_receipt"
+      ],
+      "sha256": "f57d2544132b69aba96b7cd71befa543de8febac4bd7df9fb5408bc9bd6be90d"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-4991.mrvpack",
+      "roles": [
+        "native1191_pose_4991_pack"
+      ],
+      "sha256": "1e92f5668a5fa1e3a44fb6e829c279e9647c84034e753827508a4dab33d71312"
+    },
+    {
+      "bytes": 68050,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-4991.receipt.json",
+      "roles": [
+        "native1191_pose_4991_receipt"
+      ],
+      "sha256": "4f70c9f9526ab1f2886db018e0d2bacb11009fd2c8932434ab69a4c61d9484ca"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-4991.mrvpack",
+      "roles": [
+        "parent1178_pose_4991_pack"
+      ],
+      "sha256": "8fd64f66521801bd028d643cbff3e55f9c135f417aedd29537761feaa267673a"
+    },
+    {
+      "bytes": 68208,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-4991.receipt.json",
+      "roles": [
+        "parent1178_pose_4991_receipt"
+      ],
+      "sha256": "351810df5c03014212640ab4e04fe874a79252c8658b51d8c75e7103b76cc817"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-5375.mrvpack",
+      "roles": [
+        "native1191_pose_5375_pack"
+      ],
+      "sha256": "6892440f598634ca8e445bc92f1400954f16f695a1845dbcde14272b25e77d83"
+    },
+    {
+      "bytes": 68068,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-5375.receipt.json",
+      "roles": [
+        "native1191_pose_5375_receipt"
+      ],
+      "sha256": "34c940242f1bad9e77fadd1710515a7aba57fdc1e93d92252e2442828f80fab0"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-5375.mrvpack",
+      "roles": [
+        "parent1178_pose_5375_pack"
+      ],
+      "sha256": "b243d6bc2018f99b517cd16602cb75f1ee1b82b51be90ba7099bd7b514e629e4"
+    },
+    {
+      "bytes": 68226,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-5375.receipt.json",
+      "roles": [
+        "parent1178_pose_5375_receipt"
+      ],
+      "sha256": "cd8045589c7355f8925c3164c8a3d1359b1161dc8b8a5db80df4cb8c3836873e"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-5759.mrvpack",
+      "roles": [
+        "native1191_pose_5759_pack"
+      ],
+      "sha256": "b71a22652ea2a4892786783120b2c9be118ee9255f839a05a4668d1b03ffbf74"
+    },
+    {
+      "bytes": 68076,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-5759.receipt.json",
+      "roles": [
+        "native1191_pose_5759_receipt"
+      ],
+      "sha256": "f60825570f32a9f42095ad04f8a99c1ebaece7e5e53b7dfb4e7cc32fdd071f9e"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-5759.mrvpack",
+      "roles": [
+        "parent1178_pose_5759_pack"
+      ],
+      "sha256": "d2f1682377acf64407048b808d750e7e47bde34592836522d8b075514afb56e9"
+    },
+    {
+      "bytes": 68240,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-5759.receipt.json",
+      "roles": [
+        "parent1178_pose_5759_receipt"
+      ],
+      "sha256": "4ee43a8af9d88e4583b06b602c535afdc6858686f1f7e0ffe89674bd6fe5ad0c"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-6111.mrvpack",
+      "roles": [
+        "native1191_pose_6111_pack"
+      ],
+      "sha256": "6cf14b9b1be347747a404284a76fa87eaa1f19641f9c09a35edffe37368a09fd"
+    },
+    {
+      "bytes": 68006,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-6111.receipt.json",
+      "roles": [
+        "native1191_pose_6111_receipt"
+      ],
+      "sha256": "213ceebbea0f9e9ac5eb0e1004050328b7beaefba9ce8a55868c919a9336af46"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-6111.mrvpack",
+      "roles": [
+        "parent1178_pose_6111_pack"
+      ],
+      "sha256": "3cab14aaca7074b1f35d3cf95ad9831938d725b9f54c4e5cfa6f1be4a5101881"
+    },
+    {
+      "bytes": 68164,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-6111.receipt.json",
+      "roles": [
+        "parent1178_pose_6111_receipt"
+      ],
+      "sha256": "484ff2bac9a4e1b967e6eaebf6d0d59b306931b1a6c8b35d12f73c03f8b9ccdc"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-6495.mrvpack",
+      "roles": [
+        "native1191_pose_6495_pack"
+      ],
+      "sha256": "473fdf5b76c4f04dc648fff82ae5ea3a47454f125724189ccdd4a1c222fdb5eb"
+    },
+    {
+      "bytes": 68036,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-6495.receipt.json",
+      "roles": [
+        "native1191_pose_6495_receipt"
+      ],
+      "sha256": "ab08b87ad68c729b69df11d137e9440c2075e4afaee4f47f9f4000849ebb0c1a"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-6495.mrvpack",
+      "roles": [
+        "parent1178_pose_6495_pack"
+      ],
+      "sha256": "806335ce42451ddc0d7eed7871eabf71136ce8a68574ffe730c8139256206be3"
+    },
+    {
+      "bytes": 68198,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-6495.receipt.json",
+      "roles": [
+        "parent1178_pose_6495_receipt"
+      ],
+      "sha256": "25a344f33ca7a474fb1ebffcd98bf2a7ee4025fa1795417cd55e941556ea75bd"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-7743.mrvpack",
+      "roles": [
+        "native1191_pose_7743_pack"
+      ],
+      "sha256": "28869caeda537c4669f8aeda74a28e89c2096fdd82ac9050cd1c6f596f0da49d"
+    },
+    {
+      "bytes": 68061,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-7743.receipt.json",
+      "roles": [
+        "native1191_pose_7743_receipt"
+      ],
+      "sha256": "50e5a7427dcc29ef29c244f219f6551ee911ef57e98a2f598a97f33ec251508a"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-7743.mrvpack",
+      "roles": [
+        "parent1178_pose_7743_pack"
+      ],
+      "sha256": "66c6dbbd7c93090ab354fda75706798d583375b68fafbce3faf38fa725c96cf0"
+    },
+    {
+      "bytes": 68223,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-7743.receipt.json",
+      "roles": [
+        "parent1178_pose_7743_receipt"
+      ],
+      "sha256": "b1a6db5e065a0edec9ad89cc821a7ae07af422b488862fc5da0adefa69c96f41"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-10000.mrvpack",
+      "roles": [
+        "native1191_pose_10000_pack"
+      ],
+      "sha256": "28a7bfc7a8160f24ec2371eb2b2e4f2dcdb650d2150a00d83dd379613c23b704"
+    },
+    {
+      "bytes": 68066,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-10000.receipt.json",
+      "roles": [
+        "native1191_pose_10000_receipt"
+      ],
+      "sha256": "61c5471889a3b2935796cc830089b33fc3edf1e6604f897fd1094f6f21055fef"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-10000.mrvpack",
+      "roles": [
+        "parent1178_pose_10000_pack"
+      ],
+      "sha256": "8a5142b321eec4bec42014bbe92b6d28f962fd8d1870a6cd9a272b24c6bf2928"
+    },
+    {
+      "bytes": 68228,
+      "hash_basis": "hash_pinned_by_completed_differential_scan",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1178-viewer-018-v015-attempt3/native-run/accepted-geometry/step-10000.receipt.json",
+      "roles": [
+        "parent1178_pose_10000_receipt"
+      ],
+      "sha256": "7400f46182a55bad428d2fd2886ff37218a793b376130fb06c941f03a017efc1"
+    },
+    {
+      "bytes": 1017464,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-coupled.csv",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "5c4f129103fbf23010cfe47b99367c30d8497f70e525b4c97ca61b53c3ca90e6"
+    },
+    {
+      "bytes": 140668,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-surface-audit.csv",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "8076b081e33b85a17dd07a5322e8b1625ecaab57f3dd5adf113253b254c1cb5e"
+    },
+    {
+      "bytes": 1045449,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-com-momentum-diagnostic.csv",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "be8708957990c08b357e54b28ca070ef93f0495183db57c7adf6041a7f80de32"
+    },
+    {
+      "bytes": 3587319,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-com-support-impulses.csv",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "82eeb9dfb1336a7e576df87cd6305679e673dd1759d315c12de8d0d16148480c"
+    },
+    {
+      "bytes": 2623379,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/native-viewer.mov",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "396ebba6e03370fecbcd6045ebbc105a7ae0a4b645f583c098c2cc11958b7b89"
+    },
+    {
+      "bytes": 1993178,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/native.log",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "40a2aa81b8635a20b49d94d70b174efcdb8182936b70202ee110345517ddefba"
+    },
+    {
+      "bytes": 285442048,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-human.mrvpack",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "13616c976e971cd95e2b934110ece00d815d9eef7ac17370a34c378863d17b82"
+    },
+    {
+      "bytes": 69520416,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/common-field-map-f32.bin",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "c0b0811fe2e2fb45dc37201205e36af39cf092739cfb52c56fdbad9a67dbb858"
+    },
+    {
+      "bytes": 23756,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/common-field-map-identity.json",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "8b49d05134b1f8043f7863714afeb0e57489ade4d48462d0bebfc2cae5dcfcba"
+    },
+    {
+      "bytes": 2637552,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/skin-source-vertex-map.bin",
+      "roles": [
+        "native1191_output"
+      ],
+      "sha256": "6190465659539a232cd41bde6b64e28dde79ec9c004e934fcec45ead05768b57"
+    },
+    {
+      "bytes": 5743,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-recording-1191/recording-review.json",
+      "roles": [
+        "recording_review"
+      ],
+      "sha256": "3364a2ea68a1200cc2f7385d1057bc5e421c87f62268c343e268364cf364587f"
+    },
+    {
+      "bytes": 5045,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-recording-1191/visual-review.json",
+      "roles": [
+        "visual_review"
+      ],
+      "sha256": "7ab949b95133ad440e9a0f872b35a07b35b6089bffcc763a3d47495ef82264f9"
+    },
+    {
+      "bytes": 20357,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/geometry-identity-v2/non_skin_identity-v2.json",
+      "roles": [
+        "corrected_non_skin_identity"
+      ],
+      "sha256": "6478a22fe17f7ecb67e5e3042dcf0d46a6403ada7d18f236f7ff9c58a22ce4e9"
+    },
+    {
+      "bytes": 20358,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/geometry-identity-v2/non_skin_identity.json",
+      "roles": [
+        "superseded_malformed_identity"
+      ],
+      "sha256": "c6e3d348e4fb6fa498676dbfe7425b67f05d2303debc851bde50bab09355c2d3"
+    },
+    {
+      "bytes": 32511,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-final-003/summary.json",
+      "roles": [
+        "candidate_skin_differential_summary"
+      ],
+      "sha256": "266c2e742660a166d423b2d75072f110347446cc75983c1cf68699f6ea6ad38d"
+    },
+    {
+      "bytes": 1138,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-final-003/manifest.json",
+      "roles": [
+        "candidate_skin_differential_manifest"
+      ],
+      "sha256": "16bab82f349226dc6693451d8aa1c5312fe1bf9c4e8117bc1dac0cc6848ec440"
+    },
+    {
+      "bytes": 3226,
+      "hash_basis": "rehash_verified_at_publication",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-final-003/partial-attempt-001.json",
+      "roles": [
+        "partial_failed_scan_attempt"
+      ],
+      "sha256": "af2128b59fdd12e6829c5d573b4f1e3e6cf2250d4626cc09b9a44384a9d3e1e0"
+    }
+  ],
+  "failure_history": [
+    {
+      "bytes": 343,
+      "local_copy": "failures/candidate-attempt-003.json",
+      "sha256": "ef464413eda5cb388bc0a7b821e8f2042afe525ad1e9ccf07e0c633881ecc48c",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-003/failure.json"
+    },
+    {
+      "bytes": 295,
+      "local_copy": "failures/candidate-attempt-004.json",
+      "sha256": "a764bd8e0060f0e173f6362c1fb708608a8b90f84ea45d7b300ef54823a419f4",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-004/failure.json"
+    },
+    {
+      "bytes": 744,
+      "local_copy": "failures/candidate-attempt-005.json",
+      "sha256": "d7f0c89477dfce2bf6beaef6cbf8bc9f3072fa14d9cae1fbd6be7cefdb933baf",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-005/failure.json"
+    },
+    {
+      "bytes": 3226,
+      "local_copy": "failures/differential-partial-attempt-001.json",
+      "sha256": "af2128b59fdd12e6829c5d573b4f1e3e6cf2250d4626cc09b9a44384a9d3e1e0",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/native-1191-differential-final-003/partial-attempt-001.json"
+    },
+    {
+      "bytes": 20358,
+      "local_copy": "failures/identity-original-malformed.json",
+      "sha256": "c6e3d348e4fb6fa498676dbfe7425b67f05d2303debc851bde50bab09355c2d3",
+      "source_path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/geometry-identity-v2/non_skin_identity.json"
+    },
+    {
+      "bytes": 544,
+      "local_copy": "failures/package-admission-attempt-001.json",
+      "sha256": "82fc936b908676fc057b56fd616f4165938978c7448082de5bf19b2b9f08d8ba",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-001/failure.json"
+    },
+    {
+      "bytes": 397,
+      "local_copy": "failures/package-admission-attempt-003.json",
+      "sha256": "7b2d70e45051d299b280ac97a49d61316a140885c298a884dae2f9e0ac27c440",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-003/failure.json"
+    },
+    {
+      "bytes": 520,
+      "local_copy": "failures/package-admission-attempt-004.json",
+      "sha256": "401e837cc99624711e2cc3af0b0ef6c56cdc0eaabfef359c93b5e44a5eb615de",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-004/failure.json"
+    },
+    {
+      "bytes": 518,
+      "local_copy": "failures/package-admission-attempt-005.json",
+      "sha256": "e717c0dcfb608f3b0d73cb80f7b9ecab71a7ea835fb12879edaf6cbf98138d16",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-005/failure.json"
+    },
+    {
+      "bytes": 641,
+      "local_copy": "failures/package-admission-attempt-006.json",
+      "sha256": "4c7b3bf821aa23cae51e0c73f980c3ea80fa2ff0377960287065c860b06261c1",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-006/failure.json"
+    },
+    {
+      "bytes": 677,
+      "local_copy": "failures/package-admission-attempt-007.json",
+      "sha256": "0b951e9da02c8e83e53f2f180c28ef566c135a76329d8c8af67d5d1572bfb846",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-007/failure.json"
+    },
+    {
+      "bytes": 416,
+      "local_copy": "failures/package-admission-attempt-009.json",
+      "sha256": "4c965aaf6f1d4bb076b22be5d6fe2d36f78abc51a90187a101c293322d790468",
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/package-003/attempt-009/failure.json"
+    }
+  ],
+  "local_files": [
+    {
+      "bytes": 5080,
+      "path": "README.md",
+      "sha256": "bda506b50c6ef6154243657567b76141029b60014f82bf9e8f919105a8956709"
+    },
+    {
+      "bytes": 343,
+      "path": "failures/candidate-attempt-003.json",
+      "sha256": "ef464413eda5cb388bc0a7b821e8f2042afe525ad1e9ccf07e0c633881ecc48c"
+    },
+    {
+      "bytes": 295,
+      "path": "failures/candidate-attempt-004.json",
+      "sha256": "a764bd8e0060f0e173f6362c1fb708608a8b90f84ea45d7b300ef54823a419f4"
+    },
+    {
+      "bytes": 744,
+      "path": "failures/candidate-attempt-005.json",
+      "sha256": "d7f0c89477dfce2bf6beaef6cbf8bc9f3072fa14d9cae1fbd6be7cefdb933baf"
+    },
+    {
+      "bytes": 3226,
+      "path": "failures/differential-partial-attempt-001.json",
+      "sha256": "af2128b59fdd12e6829c5d573b4f1e3e6cf2250d4626cc09b9a44384a9d3e1e0"
+    },
+    {
+      "bytes": 20358,
+      "path": "failures/identity-original-malformed.json",
+      "sha256": "c6e3d348e4fb6fa498676dbfe7425b67f05d2303debc851bde50bab09355c2d3"
+    },
+    {
+      "bytes": 544,
+      "path": "failures/package-admission-attempt-001.json",
+      "sha256": "82fc936b908676fc057b56fd616f4165938978c7448082de5bf19b2b9f08d8ba"
+    },
+    {
+      "bytes": 397,
+      "path": "failures/package-admission-attempt-003.json",
+      "sha256": "7b2d70e45051d299b280ac97a49d61316a140885c298a884dae2f9e0ac27c440"
+    },
+    {
+      "bytes": 520,
+      "path": "failures/package-admission-attempt-004.json",
+      "sha256": "401e837cc99624711e2cc3af0b0ef6c56cdc0eaabfef359c93b5e44a5eb615de"
+    },
+    {
+      "bytes": 518,
+      "path": "failures/package-admission-attempt-005.json",
+      "sha256": "e717c0dcfb608f3b0d73cb80f7b9ecab71a7ea835fb12879edaf6cbf98138d16"
+    },
+    {
+      "bytes": 641,
+      "path": "failures/package-admission-attempt-006.json",
+      "sha256": "4c7b3bf821aa23cae51e0c73f980c3ea80fa2ff0377960287065c860b06261c1"
+    },
+    {
+      "bytes": 677,
+      "path": "failures/package-admission-attempt-007.json",
+      "sha256": "0b951e9da02c8e83e53f2f180c28ef566c135a76329d8c8af67d5d1572bfb846"
+    },
+    {
+      "bytes": 416,
+      "path": "failures/package-admission-attempt-009.json",
+      "sha256": "4c965aaf6f1d4bb076b22be5d6fe2d36f78abc51a90187a101c293322d790468"
+    },
+    {
+      "bytes": 67961,
+      "path": "native-1191/accepted-geometry/step-0.receipt.json",
+      "sha256": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681"
+    },
+    {
+      "bytes": 68066,
+      "path": "native-1191/accepted-geometry/step-10000.receipt.json",
+      "sha256": "61c5471889a3b2935796cc830089b33fc3edf1e6604f897fd1094f6f21055fef"
+    },
+    {
+      "bytes": 68050,
+      "path": "native-1191/accepted-geometry/step-4991.receipt.json",
+      "sha256": "4f70c9f9526ab1f2886db018e0d2bacb11009fd2c8932434ab69a4c61d9484ca"
+    },
+    {
+      "bytes": 68068,
+      "path": "native-1191/accepted-geometry/step-5375.receipt.json",
+      "sha256": "34c940242f1bad9e77fadd1710515a7aba57fdc1e93d92252e2442828f80fab0"
+    },
+    {
+      "bytes": 68076,
+      "path": "native-1191/accepted-geometry/step-5759.receipt.json",
+      "sha256": "f60825570f32a9f42095ad04f8a99c1ebaece7e5e53b7dfb4e7cc32fdd071f9e"
+    },
+    {
+      "bytes": 68006,
+      "path": "native-1191/accepted-geometry/step-6111.receipt.json",
+      "sha256": "213ceebbea0f9e9ac5eb0e1004050328b7beaefba9ce8a55868c919a9336af46"
+    },
+    {
+      "bytes": 68036,
+      "path": "native-1191/accepted-geometry/step-6495.receipt.json",
+      "sha256": "ab08b87ad68c729b69df11d137e9440c2075e4afaee4f47f9f4000849ebb0c1a"
+    },
+    {
+      "bytes": 68061,
+      "path": "native-1191/accepted-geometry/step-7743.receipt.json",
+      "sha256": "50e5a7427dcc29ef29c244f219f6551ee911ef57e98a2f598a97f33ec251508a"
+    },
+    {
+      "bytes": 11689,
+      "path": "native-1191/differential-aggregate.py",
+      "sha256": "e91a0a3c160d09ad46aea52dc7c928641efbbfe487c40acb4120b17a4f1e503a"
+    },
+    {
+      "bytes": 1138,
+      "path": "native-1191/differential-manifest.json",
+      "sha256": "16bab82f349226dc6693451d8aa1c5312fe1bf9c4e8117bc1dac0cc6848ec440"
+    },
+    {
+      "bytes": 26058,
+      "path": "native-1191/differential-runner.py",
+      "sha256": "602651baa6862b98b76146a68dc64e69cf286522eda56d0ad0bc7065c8348243"
+    },
+    {
+      "bytes": 32511,
+      "path": "native-1191/differential-summary.json",
+      "sha256": "266c2e742660a166d423b2d75072f110347446cc75983c1cf68699f6ea6ad38d"
+    },
+    {
+      "bytes": 171,
+      "path": "native-1191/execution.json",
+      "sha256": "fdf547cf025ef087fe1c7b503b5bc3f79777401ec2ce31250022b4a4a2b76451"
+    },
+    {
+      "bytes": 10751,
+      "path": "native-1191/invocation.json",
+      "sha256": "d085fd4604033f9de4fea9819218a8773350cde55c4e6254f120719952ddb995"
+    },
+    {
+      "bytes": 3212,
+      "path": "native-1191/launch-command.sh",
+      "sha256": "03c5d50d210a743a3f2b61e30dab6cbe8628a498d8b91608bbf2572f550e1970"
+    },
+    {
+      "bytes": 20357,
+      "path": "native-1191/non-skin-identity-v2.json",
+      "sha256": "6478a22fe17f7ecb67e5e3042dcf0d46a6403ada7d18f236f7ff9c58a22ce4e9"
+    },
+    {
+      "bytes": 5743,
+      "path": "native-1191/recording-review.json",
+      "sha256": "3364a2ea68a1200cc2f7385d1057bc5e421c87f62268c343e268364cf364587f"
+    },
+    {
+      "bytes": 9931,
+      "path": "native-1191/run-declaration.json",
+      "sha256": "e9f7ada8ea4eb52760a790edb3fb3a3c05953c5ad06fac3f605b943b6405f05a"
+    },
+    {
+      "bytes": 11392,
+      "path": "native-1191/run-metadata.json",
+      "sha256": "eb84c9d25714d2e6f163be664c26d1e30708e97a03f2d7dfaf0c22e4d4347069"
+    },
+    {
+      "bytes": 5045,
+      "path": "native-1191/visual-review.json",
+      "sha256": "7ab949b95133ad440e9a0f872b35a07b35b6089bffcc763a3d47495ef82264f9"
+    },
+    {
+      "bytes": 36793,
+      "path": "source/admission-010-candidate-skin-registration.json",
+      "sha256": "00b526dc484617ba2d1d4fb845e6aa59148e87561b281e3ec5cdae582914eb47"
+    },
+    {
+      "bytes": 8371,
+      "path": "source/admission-010-native-owner-command.json",
+      "sha256": "633253e8ab9603d3c2def172c824daa7bc1c197d6f280f508373ec136df467d1"
+    },
+    {
+      "bytes": 16677,
+      "path": "source/admission-010-preview.json",
+      "sha256": "65fe92af6f652935812a3416175ea2dfacbd0fc989cec1ca82a1815795aba335"
+    },
+    {
+      "bytes": 23896,
+      "path": "source/admission-010-scene-manifest.json",
+      "sha256": "9c248cc090ada144e02770fbb6e53ebd9e480306dc439262388eb8014602a68a"
+    },
+    {
+      "bytes": 13274,
+      "path": "source/admission-prepare.py",
+      "sha256": "4465c96f13c932d14104c721ef7f3253f88991eb5df4c0f9f53315c4387e707c"
+    },
+    {
+      "bytes": 60263,
+      "path": "source/attempt-006-report.json",
+      "sha256": "9df248cf4cdcad92dc28a7ad5b0336c365e93ecf712e5811b8d392a11b708e69"
+    },
+    {
+      "bytes": 42976,
+      "path": "source/attempt-007-treatment-report.json",
+      "sha256": "8fe877107f54ba38e35311edc4ac3d5d45d8908347d6f85183405cbee82b95df"
+    },
+    {
+      "bytes": 40583,
+      "path": "source/candidate-recipe-prepare-epl143.py",
+      "sha256": "93f3b3465323871149ba12524d789e56794b263ef54923eb1db4e52310269f4f"
+    },
+    {
+      "bytes": 27915,
+      "path": "source/owner-source-f13-snapshot-pins.json",
+      "sha256": "4febf9f88d7f69f118fcf4ae589841a18ab4f874f6e8e3908ec49d56f308fab3"
+    },
+    {
+      "bytes": 2777,
+      "path": "source/package-003-attempt-history.json",
+      "sha256": "e0f52d748309b7103e4110de7bf87a7b468b415d6a1463d7c665358bae45852e"
+    },
+    {
+      "bytes": 9538,
+      "path": "source/package-003-index.json",
+      "sha256": "6c8a947b9aae98fb333d320464c0048b00b7fcc856b92b770062737009258ca2"
+    },
+    {
+      "bytes": 45167,
+      "path": "source/package-003-manifest-v2.json",
+      "sha256": "a1aacbe42c2db77e201669dfd09dfb224defd40f4f723a0008e9e124e6e10ebc"
+    },
+    {
+      "bytes": 600,
+      "path": "source/package-003-verification-v2.json",
+      "sha256": "116bd7fe858310d54af66b5995a7612ea96cc3c667e02be7f91d4e9ef183c102"
+    },
+    {
+      "bytes": 20188,
+      "path": "source/package-verify-v2.py",
+      "sha256": "d415dc4f2b55bb1270668cdd95d2e75281906a0fb5d9329b6a2d0accca8b5430"
+    }
+  ],
+  "publication_base_revision": "f13b57547f25d601431e65a4e090b61f2b6672c7",
+  "publication_checkout": "/Users/n/numi-human-free-apex-two-family-1178/tools/evidence/native-lung-free-apex-two-family-1178/thumb-epl143-clearance-1187-native-1191",
+  "recording_review": {
+    "recording_review_sha256": "3364a2ea68a1200cc2f7385d1057bc5e421c87f62268c343e268364cf364587f",
+    "surface_sample_count": 315,
+    "visual_frames_reviewed": 10,
+    "visual_limitations": null,
+    "visual_review_sha256": "7ab949b95133ad440e9a0f872b35a07b35b6089bffcc763a3d47495ef82264f9"
+  },
+  "schema": "numi.human.thumb-epl143-candidate-native-review.v1",
+  "scope": "Inferred reference-skin correction composition on the 1178 lung scene, one actual 20 s native viewer run, and eight discrete accepted-pose differential audits. No 310 s candidate run.",
+  "source_pose_evidence": {
+    "baseline_steps": [
+      47519,
+      49151,
+      51903,
+      54047,
+      55647,
+      152191,
+      154143,
+      155000
+    ],
+    "pose_count_each": 8,
+    "qualification": "Saved-pose CPU geometry screening from retained 1170 baseline/treatment states; not actual 1191 treatment capture geometry or continuous-time proof.",
+    "source_NHA_sha256": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713",
+    "treatment_steps": [
+      47519,
+      49151,
+      51903,
+      54047,
+      55647,
+      152447,
+      154367,
+      155000
+    ]
+  },
+  "status": "compact_source_and_native_evidence_staged_no_commit",
+  "superseded_identity_artifact": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/geometry-identity-v2/non_skin_identity.json",
+    "reason": "Earlier serialization ended with a literal backslash-n; parseable corrected successor is copied and used by the final differential summary.",
+    "sha256": "c6e3d348e4fb6fa498676dbfe7425b67f05d2303debc851bde50bab09355c2d3"
+  }
+}
