@@ -1,0 +1,811 @@
+{
+  "all_seven_owners_all_eight_steps_XYZ_bit_equal": true,
+  "inputs": {
+    "1159_run": {
+      "NHA_in_run_asset_sha256": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713",
+      "NHA_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-thorax.nhanatomy",
+      "NHA_sha256": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713",
+      "composition_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/composition-report.json",
+      "composition_sha256": "ce5948d2dfe6388fc64f656fa34abfd7f409e471ee272a4a8231eba38281e108",
+      "exit_code": 0,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/native-run",
+      "receipt_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-anatomy-receipt.json",
+      "receipt_sha256": "8a7d564938279ddb0fdfb0eea572904c826bbdb6fc5f29432f0269ab541d69d7",
+      "run_metadata_sha256": "4eb7c9df933036f51932880592508539ec71b600f67561beae74f35d904b0b66"
+    },
+    "1160_prediction": {
+      "input_metadata_sha256": "b65ea43ae621a994ba63de3ec5684b02d1c93ff070ad30853cd4255ef08b232d",
+      "metallib_sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426",
+      "parameters_sha256": "ef7a80c590057a8073df76a4ef107f11c2fc5ab440eb93880d8c315a65753fb7",
+      "physics_steps": 0,
+      "probe_sha256": "725a7a20011382c8e20867cc81dc5562fe797685d0027503207b67c15271de93",
+      "run_metadata_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1160/prediction-run.json",
+      "run_metadata_sha256": "ce5944c75c86d3cd3a950e9d52e26c7ac77f7447782941f1c0d2c177455b27a5",
+      "source_points_sha256": "cf63cac365d56f490db7b5419bd6ecacf5dd86361f9cb74ac6ecf71b1fc2db74"
+    },
+    "pack_reader": {
+      "NHA_reader_path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-v8-integrity-review-1115/review_v8.py",
+      "NHA_reader_sha256": "d0e74eb333eba379b65394dc4c7b448d6c55116e459d61600e5eb11b789b5431",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-v8-integrity-review-1115/compare_native.py",
+      "sha256": "32f1818241866b6d08d1b559d9f32ed250408ecf09232f86c5c0332abc67247c"
+    },
+    "source_ranges": {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-respiratory-kernel-saved-points-1119/source-ranges.json",
+      "rows": [
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 0,
+          "source_xyz_sha256": "4a369cfac624099d08bf1c0e5a9a0c2c2f92aa72987389b24dc44c6e4a7708c5",
+          "stable_id": 305,
+          "vertex_count": 42391
+        },
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 42391,
+          "source_xyz_sha256": "4682ea48e033371ba5b13579e899b79a30a8d8245ae41de87c3de68108888bde",
+          "stable_id": 306,
+          "vertex_count": 40969
+        },
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 83360,
+          "source_xyz_sha256": "c3b40a0474196ea1438e9b5ec96742f400ca14cb7f484c1b37659ff51e73d9f5",
+          "stable_id": 307,
+          "vertex_count": 25621
+        },
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 108981,
+          "source_xyz_sha256": "16cfd05422a11ed7b57c66eb312c0b93f4540e8d49ac336f96764d9810eee469",
+          "stable_id": 308,
+          "vertex_count": 38272
+        },
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 147253,
+          "source_xyz_sha256": "48b56150fb1bf617e807b19a32711c1eb81d80c28b002dde0860f97b58c0e336",
+          "stable_id": 309,
+          "vertex_count": 33817
+        },
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 181070,
+          "source_xyz_sha256": "a939fa2012a2a9a45be9ba62d4f0bbdbb70dda5f90d313cfbcb68f89b8535164",
+          "stable_id": 310,
+          "vertex_count": 151796
+        },
+        {
+          "NHA_source_xyz_bit_equal": true,
+          "range_start": 332866,
+          "source_xyz_sha256": "cc8706961f11bb807efc0c94d64e3a3a4f3eb6f52af7fd28c8eba6e0ccd725db",
+          "stable_id": 311,
+          "vertex_count": 110334
+        }
+      ],
+      "sha256": "78c76843d063c70169fb58369fc231be7caf0da6ce4acb73d8576ae2b60309dd"
+    }
+  },
+  "limits": "Confirms only selected source-point production-kernel replay and captured Float32 XYZ at the eight listed poses, and source index correspondence. It does not replace exact 1120 intersection auditing, qualify unsampled or continuous-time states, or establish a new native simulation.",
+  "passed": true,
+  "poses": [
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 0,
+      "actual_pack_sha256": "40cf01fcb704476dda10dc54d49c1ba57e2e2b6fc50e188803e902e8d88d7ac9",
+      "actual_receipt_sha256": "929cc5480a8c887a5cdba13583a24332ed2d2250200c48ed3ce434a94e17d680",
+      "actual_root_fingerprint": "0xb9877f0df9ebeea3",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "e9be40dcbc52e1e468d8b5a0cb0c0e122d0f5a307aa9a0eb00687f1f4f93a6ce",
+          "predicted_xyz_sha256": "e9be40dcbc52e1e468d8b5a0cb0c0e122d0f5a307aa9a0eb00687f1f4f93a6ce",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "bfb9ed52c0e53dc681dac7863c04a35dff99fb0696d5e55d03bbbaa6874ae435",
+          "predicted_xyz_sha256": "bfb9ed52c0e53dc681dac7863c04a35dff99fb0696d5e55d03bbbaa6874ae435",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "f78c14642f583a065f03d97cb48db3e116c7b25c1a62a38714bae262fd12c52a",
+          "predicted_xyz_sha256": "f78c14642f583a065f03d97cb48db3e116c7b25c1a62a38714bae262fd12c52a",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "5c998c7843eeae6bace82c652dcfb75fb9325b27d78c2c97d2415a752ed135c9",
+          "predicted_xyz_sha256": "5c998c7843eeae6bace82c652dcfb75fb9325b27d78c2c97d2415a752ed135c9",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a984ed2995f6b0f866611396fe0db46c96fc8a913b06c13c1da42bca84802d74",
+          "predicted_xyz_sha256": "a984ed2995f6b0f866611396fe0db46c96fc8a913b06c13c1da42bca84802d74",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "5bf0873dc9cc1fb8002c4b99f70c767ae7df345a5efb279f12a20cacecd0bd0d",
+          "predicted_xyz_sha256": "5bf0873dc9cc1fb8002c4b99f70c767ae7df345a5efb279f12a20cacecd0bd0d",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "89ede0d822f0dc6ee78f1882fcdd5a8639af9710e4aa5e0bd1299c56665721d6",
+          "predicted_xyz_sha256": "89ede0d822f0dc6ee78f1882fcdd5a8639af9710e4aa5e0bd1299c56665721d6",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "d0f79169675d0b96fd762f05132993492d533e6656c11dc4516b2005438c5135",
+      "prediction_input_root_fingerprint": "0x49d255e290f431bf",
+      "prediction_state_receipt_sha256": "a615817c774d0e0bceab43e016dd63858d2bb33ef3f86b3de3ead99302befc65",
+      "root_fingerprint_equal": false,
+      "step": 0
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 9.982000474119559,
+      "actual_pack_sha256": "3d5ea635c8186f5fa84c28bd7aabdc76ad98ea5bc48ae78b388be8e31c43383e",
+      "actual_receipt_sha256": "c8bf83d7dc9bc18689a424c709d215554294e3c1fdea9909c6ed5ddad0dc53d8",
+      "actual_root_fingerprint": "0x2209587554c2f3c9",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "e417d48e20c58648c8ed3ca380a5e1644911acd080e9b319bff49d89d05d7502",
+          "predicted_xyz_sha256": "e417d48e20c58648c8ed3ca380a5e1644911acd080e9b319bff49d89d05d7502",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "898123687b6b8020805cb3a7a61234e3cfff2604f251212e27615d90a81b857a",
+          "predicted_xyz_sha256": "898123687b6b8020805cb3a7a61234e3cfff2604f251212e27615d90a81b857a",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "f10953e5c74162d5d6751cb3cca8e68d0f194be2ccc43f40a659e0f4282b26ad",
+          "predicted_xyz_sha256": "f10953e5c74162d5d6751cb3cca8e68d0f194be2ccc43f40a659e0f4282b26ad",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "656ac2e3e0d16785242cc079e5ab43877c19ccdb88a696ccf5c0900a52dfb711",
+          "predicted_xyz_sha256": "656ac2e3e0d16785242cc079e5ab43877c19ccdb88a696ccf5c0900a52dfb711",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "4da5d404e114a44a6a034b6c206334bed1fbc05293d1a94501d3d9e7786874ba",
+          "predicted_xyz_sha256": "4da5d404e114a44a6a034b6c206334bed1fbc05293d1a94501d3d9e7786874ba",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "6823921bd962ab2c93c6922387b9788ac874660514f390ec9e5b5319339ecf93",
+          "predicted_xyz_sha256": "6823921bd962ab2c93c6922387b9788ac874660514f390ec9e5b5319339ecf93",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "2cfa578dd448806b574ef59d7c13cbb5cabb033bda69fb63b08b9d7c128cc75a",
+          "predicted_xyz_sha256": "2cfa578dd448806b574ef59d7c13cbb5cabb033bda69fb63b08b9d7c128cc75a",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "9bed03c3d8a458d93b0c8754036efd2dc7125065dae9c5eb5bf3970e0b8af979",
+      "prediction_input_root_fingerprint": "0xd25c729a3ddd2cd5",
+      "prediction_state_receipt_sha256": "8f02964ea9c9d5a02de72b21640912e42d2b541f4b1365dda11267539c28c2aa",
+      "root_fingerprint_equal": false,
+      "step": 4991
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 10.750000510597602,
+      "actual_pack_sha256": "86078036d24a73a1f6e2e1060af709edfa4989ff9536fcab684b5049fc110772",
+      "actual_receipt_sha256": "8b4c86f57d75cec0b7bc981f38f2df046498c16c9426f6dd4a02d47a270cc6cb",
+      "actual_root_fingerprint": "0x5743c2ba6508d249",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "3459a9837d553a4eef6248e95c7834aa17159b28f88f8265f81e50431782b906",
+          "predicted_xyz_sha256": "3459a9837d553a4eef6248e95c7834aa17159b28f88f8265f81e50431782b906",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "6fb376b5c2aa2cd5bab1df97c93befdf25cfde5e0f70a4dfce5400a4988afbce",
+          "predicted_xyz_sha256": "6fb376b5c2aa2cd5bab1df97c93befdf25cfde5e0f70a4dfce5400a4988afbce",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "1559ad33aa62bd82f0b58781b33e3d2ba1cb2011b3135b29f9254dbf67eccbb2",
+          "predicted_xyz_sha256": "1559ad33aa62bd82f0b58781b33e3d2ba1cb2011b3135b29f9254dbf67eccbb2",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "79a0ee6d00b9dccc9a15e547cf25f344c7428f23f142e008e09c446506b35a25",
+          "predicted_xyz_sha256": "79a0ee6d00b9dccc9a15e547cf25f344c7428f23f142e008e09c446506b35a25",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "b71ec3911e9eecb32441fc0b3f9eb5bf01090b3c26ae7fd525614893543cf632",
+          "predicted_xyz_sha256": "b71ec3911e9eecb32441fc0b3f9eb5bf01090b3c26ae7fd525614893543cf632",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "ee97de3968274ebaab01334ad88156eea6cce5f77eb61cd6edb83f518db401fe",
+          "predicted_xyz_sha256": "ee97de3968274ebaab01334ad88156eea6cce5f77eb61cd6edb83f518db401fe",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "fc755b60ba1c53de4741ebc24997b6e6cf374c02a8cda9eeee5e044eebd6f4ff",
+          "predicted_xyz_sha256": "fc755b60ba1c53de4741ebc24997b6e6cf374c02a8cda9eeee5e044eebd6f4ff",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "4ea5a2650b8b3ac48642539f8fa5265f0759404256a2468ca7150c064938f057",
+      "prediction_input_root_fingerprint": "0xa716e8550c170d55",
+      "prediction_state_receipt_sha256": "1c9ef3c04dfb4949136ff4b9bc99320fa2a796715ff1151ca22d79675d8120d7",
+      "root_fingerprint_equal": false,
+      "step": 5375
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 11.518000547075644,
+      "actual_pack_sha256": "fa702f69566d58f16ed649d4570160ee8c6e10c30af4f618e86d7c82f7c4fd37",
+      "actual_receipt_sha256": "655772300b8011933f2d294fd4af2aac895877426dd07d0767261ee97cc872a1",
+      "actual_root_fingerprint": "0xf87c2cfb7576b2c9",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "4a077ea8b345a6e8f1e335b046f9ee32402c900d10d6241977bc924d5d20b570",
+          "predicted_xyz_sha256": "4a077ea8b345a6e8f1e335b046f9ee32402c900d10d6241977bc924d5d20b570",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "7a500844bdff3817523465498dd17f6ae861bd4f6cb8f6d7c645c6880551e663",
+          "predicted_xyz_sha256": "7a500844bdff3817523465498dd17f6ae861bd4f6cb8f6d7c645c6880551e663",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "c166066c6265238845f346b70c4c6000cc002b7f6ee8c1b42c400a84688c50f0",
+          "predicted_xyz_sha256": "c166066c6265238845f346b70c4c6000cc002b7f6ee8c1b42c400a84688c50f0",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "428ad04fe2ab8a89ca755f3a980d667c5d35079edaee5ed01e6c53051ad7d8b8",
+          "predicted_xyz_sha256": "428ad04fe2ab8a89ca755f3a980d667c5d35079edaee5ed01e6c53051ad7d8b8",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "729eefd6ab4080efee050c5efea9e5d6cd9f2ca56e7f27b135c6c2127ff2ce92",
+          "predicted_xyz_sha256": "729eefd6ab4080efee050c5efea9e5d6cd9f2ca56e7f27b135c6c2127ff2ce92",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "e79125c46e927aca7471ea357b203ec26dd11aec65de837f0f0d887991d96fd9",
+          "predicted_xyz_sha256": "e79125c46e927aca7471ea357b203ec26dd11aec65de837f0f0d887991d96fd9",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "889e3a4a5bb2f972faa6fe7a31f61f8f968a7bd6ab4057e73b3689ea525902ed",
+          "predicted_xyz_sha256": "889e3a4a5bb2f972faa6fe7a31f61f8f968a7bd6ab4057e73b3689ea525902ed",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "6c8b0d83322bc40960e9052ebfa8518a284f4fe81ee17c466f241a397eaffc57",
+      "prediction_input_root_fingerprint": "0x082906141c696dd5",
+      "prediction_state_receipt_sha256": "4afd51f42cbd0e7318a9e237d5abe3480b7dd134691082746f42fd042bb95520",
+      "root_fingerprint_equal": false,
+      "step": 5759
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 12.22200058051385,
+      "actual_pack_sha256": "528c38c91a8deb345bca19b7ae43260785dd76282956985cab763e5ebe5c2819",
+      "actual_receipt_sha256": "10c89ea35aeab06a8c16f6dfa400e3cd7c2e44ee0fb2b9bc4bff8e6fa8de7035",
+      "actual_root_fingerprint": "0x77c5cc086aec17e9",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "9314af9be89f38fbe4fb57bc8d92218c8c0de9612bf89030b7589ea56331e87c",
+          "predicted_xyz_sha256": "9314af9be89f38fbe4fb57bc8d92218c8c0de9612bf89030b7589ea56331e87c",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a11dadd145770d92a2af5023ea59da03790aa68da0fed479ca604ee2c38c636b",
+          "predicted_xyz_sha256": "a11dadd145770d92a2af5023ea59da03790aa68da0fed479ca604ee2c38c636b",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a794291ad6ae7d713844813d675665fc8d1776df6c2f6e8469f8cd9913f82bd5",
+          "predicted_xyz_sha256": "a794291ad6ae7d713844813d675665fc8d1776df6c2f6e8469f8cd9913f82bd5",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "51d06e567a1f409074d39609345b710af457c7e014611399e0821c0054e6823f",
+          "predicted_xyz_sha256": "51d06e567a1f409074d39609345b710af457c7e014611399e0821c0054e6823f",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "f730f030a33c7451176736132e98afd17bdec1378be91384275fb0f44a5b4445",
+          "predicted_xyz_sha256": "f730f030a33c7451176736132e98afd17bdec1378be91384275fb0f44a5b4445",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "77dacd53270192e96b85db7df26b6decd380837f8c6dc31e084bf94f7a1a55e4",
+          "predicted_xyz_sha256": "77dacd53270192e96b85db7df26b6decd380837f8c6dc31e084bf94f7a1a55e4",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "4b29f76e1f21029e144a9ad88fecd86bd2d2c73f3e6c711b3420ff5013bda3bc",
+          "predicted_xyz_sha256": "4b29f76e1f21029e144a9ad88fecd86bd2d2c73f3e6c711b3420ff5013bda3bc",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "d30f13bcee69e470551c6a0be08735ffe0f48b1b7a3f83c70bee6692983b8dfd",
+      "prediction_input_root_fingerprint": "0x8790e6e703f3c8f5",
+      "prediction_state_receipt_sha256": "3daf0d48652de5ce824d0fadb31844c473ff650ae85d70ea13b26244e9bf3426",
+      "root_fingerprint_equal": false,
+      "step": 6111
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 12.990000616991892,
+      "actual_pack_sha256": "cb220fa236aded7d247000243d0d56e11fe4b758c3b37ed96bb6a1ac0b3dadd6",
+      "actual_receipt_sha256": "e7863da3667ef06267d470f31564658c2a5014871f19b3a4af743295a83b6027",
+      "actual_root_fingerprint": "0x98fe36497b29f669",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "2457346ce863e6d19f4ff3d28967cc74cb18e10a54650829aa8b97e6e16edbac",
+          "predicted_xyz_sha256": "2457346ce863e6d19f4ff3d28967cc74cb18e10a54650829aa8b97e6e16edbac",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "fc2888738d89c3070ec6e88233a817d244253cbe97bbc6f9cbc3eef91564d1e8",
+          "predicted_xyz_sha256": "fc2888738d89c3070ec6e88233a817d244253cbe97bbc6f9cbc3eef91564d1e8",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "b6ea24600396b547cf0c7f9c0206cef1b92da3fb1ec376aa708c61efc74ec2ca",
+          "predicted_xyz_sha256": "b6ea24600396b547cf0c7f9c0206cef1b92da3fb1ec376aa708c61efc74ec2ca",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a719a609c791fb458b46f8e4f9b35fc422c969a93786beeade23391b360501af",
+          "predicted_xyz_sha256": "a719a609c791fb458b46f8e4f9b35fc422c969a93786beeade23391b360501af",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "4fd9e877f2f8be310f22937900be7210eb05a8f9f9e52620cfb873b031900a62",
+          "predicted_xyz_sha256": "4fd9e877f2f8be310f22937900be7210eb05a8f9f9e52620cfb873b031900a62",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "49d9a06f0d39f7e8d9bfa49cab1b7bb844669451a06a8f938be38ae906f027da",
+          "predicted_xyz_sha256": "49d9a06f0d39f7e8d9bfa49cab1b7bb844669451a06a8f938be38ae906f027da",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "9de9747f019c9997b09c0db4a3f1dc89a2c47e28b2e81b5b1b52a447f602cc2b",
+          "predicted_xyz_sha256": "9de9747f019c9997b09c0db4a3f1dc89a2c47e28b2e81b5b1b52a447f602cc2b",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "ecab776a49a83201915253656ac6708ed676c6ea3d7bf8e80b4c6d65b8ff88bf",
+      "prediction_input_root_fingerprint": "0x68ab1ca612362975",
+      "prediction_state_receipt_sha256": "0ab68915380a0af8979530748e3c7e49dd8f711271768abe6989a2ed51fc63d6",
+      "root_fingerprint_equal": false,
+      "step": 6495
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 15.486000735545531,
+      "actual_pack_sha256": "a1380a1ff2999affddacbe8dd0971fead4a03f58be95b68a84a9f13d6a5416dd",
+      "actual_receipt_sha256": "6ebf10eb8759109610acc4960ebcca8ffe72718498082d0fbf6f159ae7e7bad0",
+      "actual_root_fingerprint": "0xd66dce9cf4351189",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "7678bbb6abfd9568c9d1d5cc923fa3d9ee89e1aa4e6dbbda8b0cc030a90b54be",
+          "predicted_xyz_sha256": "7678bbb6abfd9568c9d1d5cc923fa3d9ee89e1aa4e6dbbda8b0cc030a90b54be",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a7858770724fb46e877b2687138b8c3b930b5fa04cab61c10b94c5f927161f40",
+          "predicted_xyz_sha256": "a7858770724fb46e877b2687138b8c3b930b5fa04cab61c10b94c5f927161f40",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "080d42ad99a07aa790a18fa0aa4755f4e2e14ea65b433e96051caf2cfaf38ac2",
+          "predicted_xyz_sha256": "080d42ad99a07aa790a18fa0aa4755f4e2e14ea65b433e96051caf2cfaf38ac2",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "c52184880ca137c9f1b388da864ce0d5c907cb5c4e063eac184a62e1488657b9",
+          "predicted_xyz_sha256": "c52184880ca137c9f1b388da864ce0d5c907cb5c4e063eac184a62e1488657b9",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a61fe651e7803ff754704e93ef7227a71b55e819c13c9cf33f59f34c503de415",
+          "predicted_xyz_sha256": "a61fe651e7803ff754704e93ef7227a71b55e819c13c9cf33f59f34c503de415",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "85172ee9ffa10c7f01640bad8743875bd04075cfd2c7a1f25a711a0fb36146c0",
+          "predicted_xyz_sha256": "85172ee9ffa10c7f01640bad8743875bd04075cfd2c7a1f25a711a0fb36146c0",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "7c5b36308e8c7e306e66a5cb70437763d14957e65711bd452531f7b77eef6ce3",
+          "predicted_xyz_sha256": "7c5b36308e8c7e306e66a5cb70437763d14957e65711bd452531f7b77eef6ce3",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "6720a60e48676ec3117aa809ed9dc91c6b859acca98d0f8bc7963d0a2eb254fb",
+      "prediction_input_root_fingerprint": "0x2638e4739d2ace95",
+      "prediction_state_receipt_sha256": "6bb2689cdd337b0e3d60483324633d57c455a3750d45da51d075294ccdcb5d21",
+      "root_fingerprint_equal": false,
+      "step": 7743
+    },
+    {
+      "accepted_state_identity_fields_exact": {
+        "accepted_body_state_sha256": true,
+        "accepted_registered_body_poses": true,
+        "accepted_respiration_state_sha256": true,
+        "accepted_respiratory_motion": true,
+        "accepted_time_s": true
+      },
+      "accepted_time_s": 20.000000949949026,
+      "actual_pack_sha256": "f9ba5e50be5cfda047a8f26e112dbcfc91b4d2d3df48a89f5f375ba7ea875fb0",
+      "actual_receipt_sha256": "1811657b025109210cfbd9f79c17476806cf4e7879012d6457c26161bad6c2e6",
+      "actual_root_fingerprint": "0xee85a2f1b4651af3",
+      "owner_xyz": [
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "cd6bbf6b44715dad1c2f66a83a5e16c14769da412d5b9a7f767ce8f6a47a6002",
+          "predicted_xyz_sha256": "cd6bbf6b44715dad1c2f66a83a5e16c14769da412d5b9a7f767ce8f6a47a6002",
+          "stable_id": 305,
+          "vertices": 42391
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "7780ea517316ca224a3381ab87512ed44d51ec0e55c06f25fa197b7a7aacb86d",
+          "predicted_xyz_sha256": "7780ea517316ca224a3381ab87512ed44d51ec0e55c06f25fa197b7a7aacb86d",
+          "stable_id": 306,
+          "vertices": 40969
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "a24f0fbfc6824548adc079e311e91fb19fef6e5cf73a6654502b6a3bb1ca36de",
+          "predicted_xyz_sha256": "a24f0fbfc6824548adc079e311e91fb19fef6e5cf73a6654502b6a3bb1ca36de",
+          "stable_id": 307,
+          "vertices": 25621
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "759fc575204c6755019a90cfab87a6f02d332d8835a46316df1682052eba87c1",
+          "predicted_xyz_sha256": "759fc575204c6755019a90cfab87a6f02d332d8835a46316df1682052eba87c1",
+          "stable_id": 308,
+          "vertices": 38272
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "1e81bf2b3da6980d8abc819683cf618f37e999ff34e42a67155769840665a05b",
+          "predicted_xyz_sha256": "1e81bf2b3da6980d8abc819683cf618f37e999ff34e42a67155769840665a05b",
+          "stable_id": 309,
+          "vertices": 33817
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "18bb9edba9364735018d3a364f55b3267956885fa99297cd641b3f46f4affa7d",
+          "predicted_xyz_sha256": "18bb9edba9364735018d3a364f55b3267956885fa99297cd641b3f46f4affa7d",
+          "stable_id": 310,
+          "vertices": 151796
+        },
+        {
+          "differing_vertices": 0,
+          "differing_xyz_lanes": 0,
+          "max_abs_delta_m": 0.0,
+          "native_xyz_sha256": "33baa8344fb3e7961bf14d9877f7afd76f31b696b8a5123a41550c34d2c5a74f",
+          "predicted_xyz_sha256": "33baa8344fb3e7961bf14d9877f7afd76f31b696b8a5123a41550c34d2c5a74f",
+          "stable_id": 311,
+          "vertices": 110334
+        }
+      ],
+      "predicted_xyz_file_sha256": "5bd803b1e6dff45051f2c7dadda08023c3a8fe08f56b537af9b89def65848990",
+      "prediction_input_root_fingerprint": "0x1ed0881edd7ac5ef",
+      "prediction_state_receipt_sha256": "9d18620a93c7639f0c1b7b14df07b5b39df29027620de01bf32b98a17e3fce89",
+      "root_fingerprint_equal": false,
+      "step": 10000
+    }
+  ],
+  "schema": "numi.human.native-1159-vs-production-1160-point-prediction-bit-parity.v1",
+  "scope": "Byte-exact comparison of all seven source owners 305-311 in all eight accepted 1159 MRVPACK captures against 1160 production-Metal point predictions; source actual NHA local triangle streams checked against all 524 actual MRVPACK rows. No new native run, physics step, or intersection scan.",
+  "source_index_mapping": {
+    "NHA_rows_checked": 524,
+    "actual_MRVPACK_local_triangle_stream_matches_source_NHA_for_all_rows": true,
+    "focus_stable_ids": [
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311
+    ],
+    "index_buffer_identical_across_all_eight_steps": true,
+    "index_buffers_across_steps": [
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 0
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 4991
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 5375
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 5759
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 6111
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 6495
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 7743
+      },
+      {
+        "index_buffer_sha256": "8f659157edc36c307f1a1f99e2cd51363e35e0cd609ac4c6dfc15edee9bdcdcb",
+        "step": 10000
+      }
+    ],
+    "semantic_stable_id_and_owner_matches": true
+  },
+  "state_identity": {
+    "all_eight_steps_exact_equal_time_body_state_hash_respiration_state_hash_registered_body_poses_and_respiratory_motion": true,
+    "root_transaction_fingerprint_is_run_scoped_and_not_used_to_assert_state_equivalence": true
+  }
+}

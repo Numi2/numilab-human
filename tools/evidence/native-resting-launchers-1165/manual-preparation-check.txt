@@ -1,0 +1,16 @@
+Manual owner-launch preparation checks
+
+Pinned source files verified by launch_manual_1165.py:
+  S1159 launch-command.sh SHA-256 a50e757fcb56846e82e6c4b54922dc914a6c22756542c83b9043a52b6001be19
+  tools/numi SHA-256 2e971e7c3680ec809c7e9ac71355b89502f710f835bc3c69725a91dbbdb01074
+  numi/commands/human-resting SHA-256 77693c89dfb3bdc368b15d192d7e86f44ede696c516fa5a80e796f8ec8c3ce81
+  resting_run.py SHA-256 f6bc12635fcf41227a79b4d67e058b36f392a4147d083ce24366f8c3ef41c412
+
+Checks performed:
+  * Python syntax compilation and --help succeeded.
+  * 20-second and 310-second dry runs printed commands with no --inspection-tour and no inspection-tour environment variable.
+  * Token comparison against the pinned S1159 command found only: duration changed from 20 to the selected preset; native output path changed; automatic tour flag and its period removed; per-run common-failure receipt path redirected to the fresh output.
+  * The normal resting_run.command resolver succeeded for the same 310-second assets and resolved 155,000 steps at dt=0.002. It checked the source receipts and returned the executable argv plus asset SHA-256 set; no native process was started.
+  * Explicit preview output directories remained absent after both dry runs.
+
+No GPU or native run was launched during preparation. At execution, the ordinary owner CLI performs its own source admission and writes invocation.json and run-metadata.json.
