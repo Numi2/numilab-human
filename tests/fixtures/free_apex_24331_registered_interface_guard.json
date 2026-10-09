@@ -1,0 +1,121 @@
+[
+  {
+    "label": "AB24331-precondition-305-21508",
+    "arguments": {
+      "maximum_source_displacement_m": 5.1e-06,
+      "minimum_altitude_m": 1.2e-06,
+      "minimum_result_altitude_m": 1.25e-07,
+      "allow_local_minimum_regression": true,
+      "maximum_volume_change_m3": 1e-10,
+      "volume_bounded_surface_ids": [
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311
+      ],
+      "volume_bounded_surface_groups": [
+        [
+          305,
+          306,
+          307,
+          308,
+          309
+        ]
+      ],
+      "minimum_owner_count": 2,
+      "point": [
+        -0.0019058624748140574,
+        0.044901881366968155,
+        -0.06111551448702812
+      ],
+      "direction": [
+        -0.6287669759191479,
+        -0.701350709617765,
+        0.3357964742401968
+      ],
+      "displacement_m": 1e-06
+    },
+    "expected_owner_ids": [
+      305,
+      310
+    ],
+    "expected_new_point": [
+      -0.0019064912339672446,
+      0.044901181012392044,
+      -0.06111517921090126
+    ],
+    "pins": [
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-left-star-opening-trials-1131/report.json",
+        "sha256": "ed77d30f17a6ef222745065d4826905aef3b6382b0557d775891aa143666f4c9"
+      },
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-left-star-opening-trials-1131/trial-c1-1um.npz",
+        "sha256": "97911ed6ef13e04fba79022de3f640847eb0bf8de346d3799e980197f62751c6"
+      }
+    ]
+  },
+  {
+    "label": "AB24331-mapped-305-308-interface-negative",
+    "arguments": {
+      "maximum_source_displacement_m": 5.1e-06,
+      "minimum_altitude_m": 1.2e-06,
+      "minimum_result_altitude_m": 1.25e-07,
+      "allow_local_minimum_regression": true,
+      "maximum_volume_change_m3": 1e-10,
+      "volume_bounded_surface_ids": [
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311
+      ],
+      "volume_bounded_surface_groups": [
+        [
+          305,
+          306,
+          307,
+          308,
+          309
+        ]
+      ],
+      "minimum_owner_count": 2,
+      "point": [
+        -0.0019057018216699362,
+        0.04490205645561218,
+        -0.06111486628651619
+      ],
+      "direction": [
+        0.625653112623789,
+        0.7053679909663566,
+        -0.33318790491890665
+      ],
+      "displacement_m": 1e-06
+    },
+    "expected_owner_ids": [
+      305,
+      308,
+      310
+    ],
+    "expected_new_point": [
+      -0.0019050762057304382,
+      0.04490276053547859,
+      -0.06111519783735275
+    ],
+    "pins": [
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-left-cluster1-freeapex-trials-1143/report.json",
+        "sha256": "83ed67747faab6a51e7c79606febe48182e1682dd9420284b1fd288b07b2fc58"
+      },
+      {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-left-cluster1-freeapex-trials-1143/candidate-second-1um.npz",
+        "sha256": "c6ef0796d92efcc9c58dc48da07ec6885a9917f29fccb61b1e440dd2e86d21ac"
+      }
+    ]
+  }
+]
