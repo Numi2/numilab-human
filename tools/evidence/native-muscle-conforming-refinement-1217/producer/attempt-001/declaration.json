@@ -1,0 +1,43 @@
+{
+  "source_revision": "38e8a4ac6f3ceda441f2c38683c687d2c298a1a4",
+  "source_snapshot": "/Users/n/numi-human-conforming-refinement-source-1216",
+  "argv": [
+    "/Users/n/numi-human-prep-venv-20261005/bin/python3.13",
+    "-m",
+    "numilab_human.cli",
+    "myosim-bodyparts-fullbody-muscle-surface-payload",
+    "--sources",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources",
+    "--registration",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+    "--artifact",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004",
+    "--stable-id",
+    "64",
+    "--conforming-edge-refinement",
+    "64:2597:3054",
+    "--output",
+    "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/producer-subset-001"
+  ],
+  "PYTHONPATH": "/Users/n/numi-human-conforming-refinement-source-1216/src",
+  "immutable_inputs": {
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "/Users/n/numi-human-conforming-refinement-source-1216/source-revision.json": "e6fb3ffae5237dee5c9381ea9de99e32b7e6e2ed99f45231cd760aaa768ab1b5",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_element_parts.txt": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_element_parts.txt": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_inclusion_relation_list.txt": "1b40738270931e3c1d955ce34e0fce0d8d10d8c5ad543463e40b4b4c0243007c",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_BP3D_4.0_obj_99.zip": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_inclusion_relation_list.txt": "26e7d818e03a8c909fe09c561f38d0d513423c87681f9450a803bc38f5b07564",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_BP3D_4.0_obj_99.zip": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_parts_list_e.txt": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_parts_list_e.txt": "ab7796deedd49205e77f3609a1cb8c53e2bbee14ecb5c9a6ca05227469780513",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/model.py": "a12a26af00fcab009d525094f3fb3d87ea575eff30cd15b91b1a0e12f0a316c3",
+    "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/cli.py": "930f4854dabdd611628b0947ad953c9fa98943bfe2735ad78d6a4652affa5c5c"
+  },
+  "scope": "existing owner export of source-derived64context only; finalcandidate must preserve039throughcomposer",
+  "expected_change": "one appended vertex, two extra faces; originalvertexrecords unchanged"
+}

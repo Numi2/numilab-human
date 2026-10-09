@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/cli.py", line 2690, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/cli.py", line 2680, in main
+    return arguments.handler(arguments)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/cli.py", line 1520, in myosim_bodyparts_fullbody_soft_tissue_visual_payload
+    manifest = bodyparts_myosim_fullbody_soft_tissue_visual_payload(
+        sources, anatomy, arguments.registration.resolve(), arguments.artifact.resolve(),
+    ...<2 lines>...
+        arguments.conforming_edge_refinement or None,
+    )
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/model.py", line 11212, in bodyparts_myosim_fullbody_soft_tissue_visual_payload
+    rigid_program = _require_myosim_rigid_program(sources, myosim_artifact)
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/model.py", line 3938, in _require_myosim_rigid_program
+    checks = _myosim_rigid_program_checks(artifact, export_fullbody(sources))
+                                                    ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/myosim_export.py", line 161, in export_fullbody
+    source_overlays = apply_myo_sim_source_overlays(sources)
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/myosim_source_overlays.py", line 157, in apply_myo_sim_source_overlays
+    overlay, overlay_path, overlay_sha = _read_overlay(source_package)
+                                         ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-conforming-refinement-source-1216/src/numilab_human/myosim_source_overlays.py", line 39, in _read_overlay
+    raise RuntimeError(f"canonical MyoSim source overlay is missing: {canonical}")
+RuntimeError: canonical MyoSim source overlay is missing: /Users/n/numi-human-conforming-refinement-source-1216/Sources/myosim/source-overlays/myosim-left-knee-translation2-range.v1.json

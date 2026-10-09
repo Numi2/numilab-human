@@ -1,0 +1,36 @@
+frames=627 timing_markers=5 first_wall_s=1.585 last_wall_s=350.7583333333333 max_gap_wall_s=2.0683333333333334 duration_wall_s=351.32
+frame=initial index=0 simulated_s=0.0 wall_s=1.585 width=1280 height=900
+frame=middle index=313 simulated_s=20.0300009514 wall_s=181.35833333333332 width=1280 height=900
+frame=final index=626 simulated_s=40.0000018999 wall_s=350.7583333333333 width=1280 height=900
+frame=skin index=20 simulated_s=1.2780000607 wall_s=13.683333333333334 width=1280 height=900
+frame=muscles index=59 simulated_s=3.77400017926 wall_s=36.20666666666666 width=1280 height=900
+frame=skeleton index=98 simulated_s=6.27000029781 wall_s=58.235 width=1280 height=900
+frame=organs index=137 simulated_s=8.76600041636 wall_s=80.39333333333333 width=1280 height=900
+frame=lungs index=176 simulated_s=11.2620005349 wall_s=102.62666666666667 width=1280 height=900
+frame=heart index=215 simulated_s=13.7580006535 wall_s=124.69 width=1280 height=900
+frame=vessels index=254 simulated_s=16.254000772 wall_s=146.81 width=1280 height=900
+/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift:19:29: warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+17 |     }
+18 |     let reader = try AVAssetReader(asset: asset)
+19 |     guard let track = asset.tracks(withMediaType: .video).first else {
+   |                             `- warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+20 |         throw NSError(domain: "missing-video-track", code: 2)
+21 |     }
+
+/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift:52:198: warning: 'duration' was deprecated in macOS 13.0: Use load(.duration) instead [#DeprecatedDeclaration]
+50 |         maxGap = max(maxGap, gap)
+51 |     }
+52 |     print("frames=\(timestamps.count) timing_markers=\(timingMarkers) first_wall_s=\(timestamps[0].seconds) last_wall_s=\(timestamps.last!.seconds) max_gap_wall_s=\(maxGap) duration_wall_s=\(asset.duration.seconds)")
+   |                                                                                                                                                                                                      `- warning: 'duration' was deprecated in macOS 13.0: Use load(.duration) instead [#DeprecatedDeclaration]
+53 |     var selected = [("initial", 0), ("middle", timestamps.count/2), ("final", timestamps.count-1)]
+54 |     if CommandLine.arguments.count > 2 {
+
+/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift:72:35: warning: 'copyCGImage(at:actualTime:)' was deprecated in macOS 15.0: Use generateCGImageAsynchronouslyForTime:completionHandler: instead [#DeprecatedDeclaration]
+70 |     for (name, index) in selected {
+71 |         var actual = CMTime.zero
+72 |         let frame = try generator.copyCGImage(at: timestamps[index], actualTime: &actual)
+   |                                   `- warning: 'copyCGImage(at:actualTime:)' was deprecated in macOS 15.0: Use generateCGImageAsynchronouslyForTime:completionHandler: instead [#DeprecatedDeclaration]
+73 |         guard CMTimeCompare(actual, timestamps[index]) == 0 else {
+74 |             throw NSError(domain: "inexact-frame-extraction", code: 8)
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
