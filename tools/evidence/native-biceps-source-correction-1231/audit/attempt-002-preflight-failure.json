@@ -1,0 +1,8 @@
+{
+  "failure": "The validation used set(surfaces)==requested_keys, but the existing pack loader intentionally also returns the 185 bone primitives and skin. Inspection confirmed requested 51005/103 and 51005/104 exist in both packs; no quotient/self predicate ran.",
+  "recovery": "Preserved in review-002; correction will require requested keys as a subset and separately verify the exact 51005 muscle key set for IDs 103 and 104.",
+  "runner_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/audit_biceps_103_104_v2.py",
+  "runner_sha256": "d6ae78f3aaead36e04c34aca82a63148d7a5a757143b75dc7a8a59e230f51df5",
+  "scope": "Harness membership guard only; no finding about geometry.",
+  "status": "failed_before_geometry_audit"
+}

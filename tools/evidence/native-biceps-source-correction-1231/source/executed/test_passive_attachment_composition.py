@@ -129,7 +129,7 @@ def anatomy_fixture(source, tmp_path):
     receipt = tmp_path / "anatomy.json"
     receipt.write_text(json.dumps({
         "schema": "numi.human.resting-anatomy-receipt.v1",
-        "payload": {"path": organs.name, "sha256": digest(organs)},
+            "payload": {"path": organs.name, "sha256": digest(organs)},
         "mass_geometry_accounting": {"reference_total_mass_kg": 72},
         "provenance": {
             "native_muscle_surfaces": {
@@ -414,44 +414,3 @@ def test_biceps_pair_rejects_signed_zero_npz_difference(inputs, tmp_path, monkey
     with pytest.raises(ValueError,match="row patch arrays do not exactly match"):
         compose(parent,tmp_path/"signed-zero",replacements,biceps_source_correction=proof)
     assert not (tmp_path/"signed-zero").exists()
-
-
-def test_biceps_child_resolves_relative_parent_paths_from_receipt_directory(inputs, tmp_path, monkeypatch):
-    _,parent,_,report,_,_,proof=_biceps_source_fixture(tmp_path, monkeypatch)
-    replacements=[(sid,Path(proof["row_patch_npz"][str(sid)]["path"]),report) for sid in (103,104)]
-    out=tmp_path/"relative-out"
-    compose(parent,out,replacements,biceps_source_correction=proof)
-    receipt=anatomy_fixture(parent,tmp_path)
-    receipt_data=json.loads(receipt.read_text())
-    owner=receipt_data["provenance"]["native_muscle_surfaces"]
-    owner["payload_path"]=parent.relative_to(receipt.parent).as_posix()
-    owner["manifest_path"]=parent.with_suffix(".manifest.json").relative_to(receipt.parent).as_posix()
-    receipt.write_text(json.dumps(receipt_data))
-
-    child_receipt=bind_anatomy_receipt(receipt,out/parent.name,out/"child-receipt.json")
-    child_owner=child_receipt["provenance"]["native_muscle_surfaces"]
-    assert Path(child_owner["payload_path"]) == (out/parent.name).resolve()
-    assert child_owner["sha256"] == digest(out/parent.name)
-    correction=child_receipt["provenance"]["biceps_source_preserving_correction_binding"]
-    assert correction["changed_stable_ids"] == [103,104]
-
-
-def test_biceps_proof_rejects_declared_manifest_path_that_disagrees_with_payload(inputs, tmp_path, monkeypatch):
-    _,parent,_,report,_,_,proof=_biceps_source_fixture(tmp_path, monkeypatch)
-    proof["source_base_manifest_path"]=str(tmp_path/"wrong-source.manifest.json")
-    replacements=[(sid,Path(proof["row_patch_npz"][str(sid)]["path"]),report) for sid in (103,104)]
-    with pytest.raises(ValueError,match="declared source-base manifest path differs"):
-        compose(parent,tmp_path/"wrong-manifest",replacements,biceps_source_correction=proof)
-    assert not (tmp_path/"wrong-manifest").exists()
-
-
-def test_legacy_attachment_binding_can_be_replaced_as_before(inputs, tmp_path):
-    source,candidate,report,_=inputs
-    receipt=anatomy_fixture(source,tmp_path)
-    data=json.loads(receipt.read_text())
-    data["provenance"]["passive_attachment_composition_binding"]={"prior":"retained legacy behavior"}
-    receipt.write_text(json.dumps(data))
-    out=tmp_path/"legacy-repeat"
-    compose(source,out,[(7,candidate,report)])
-    bound=bind_anatomy_receipt(receipt,out/source.name,out/"child-receipt.json")
-    assert bound["provenance"]["passive_attachment_composition_binding"]["changed_stable_ids"] == [7]

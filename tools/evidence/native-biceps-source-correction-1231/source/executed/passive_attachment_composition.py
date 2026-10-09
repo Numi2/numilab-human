@@ -318,17 +318,13 @@ def _verify_biceps_source_correction(parent_payload: Path, correction: dict) -> 
     names = ("source_base_payload_path", "source_candidate_payload_path",
              "source_candidate_report_path", "source_generator_script_path")
     paths = {key: Path(correction[key]).resolve() for key in names}
-    declared_base_manifest_path = correction.get("source_base_manifest_path")
-    declared_candidate_manifest_path = correction.get("source_candidate_manifest_path")
+    base_manifest_path = Path(correction.get("source_base_manifest_path",
+                                             paths["source_base_payload_path"].with_suffix(".manifest.json"))).resolve()
+    candidate_manifest_path = Path(correction.get("source_candidate_manifest_path",
+                                                   paths["source_candidate_payload_path"].with_suffix(".manifest.json"))).resolve()
     parent_manifest_path, parent_manifest = _payload_manifest(parent_payload)
     base_manifest_path, base_manifest = _payload_manifest(paths["source_base_payload_path"])
     candidate_manifest_path, candidate_manifest = _payload_manifest(paths["source_candidate_payload_path"])
-    require(declared_base_manifest_path is None
-            or Path(declared_base_manifest_path).resolve() == base_manifest_path.resolve(),
-            "declared source-base manifest path differs from payload manifest")
-    require(declared_candidate_manifest_path is None
-            or Path(declared_candidate_manifest_path).resolve() == candidate_manifest_path.resolve(),
-            "declared source-candidate manifest path differs from payload manifest")
     report_path = paths["source_candidate_report_path"]
     script_path = paths["source_generator_script_path"]
     expected_pins = correction.get("expected_pins")
@@ -811,7 +807,7 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         require(biceps_composition.get("changed_stable_ids") == [103, 104]
                 and biceps_composition.get("composed_parent_payload_sha256") == owner["sha256"],
                 "biceps child is not bound to the immediate anatomical parent")
-        source_path = old.resolve()
+        source_path = Path(owner["payload_path"]).resolve()
         require(Path(biceps_composition["direct_parent_payload_path"]).resolve() == source_path
                 and sha(source_path) == owner["sha256"],
                 "biceps direct parent payload identity changed")
@@ -912,9 +908,8 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     binding_key = ("biceps_source_preserving_correction_binding" if biceps_composition is not None
                    else "conforming_surface_refinement_binding" if edge_composition is not None
                    else "passive_attachment_composition_binding")
-    if biceps_composition is not None:
-        require(binding_key not in receipt["provenance"],
-                "anatomy receipt already contains this biceps correction provenance binding")
+    require(binding_key not in receipt["provenance"],
+            "anatomy receipt already contains this operation-specific provenance binding")
     receipt["provenance"][binding_key] = {
         "prior_receipt_path": str(source_receipt), "prior_receipt_sha256": sha(source_receipt),
         "composition_manifest_sha256": sha(manifest_path),

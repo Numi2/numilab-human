@@ -1,0 +1,338 @@
+{
+  "anatomy_inputs": {
+    "composition_report": {
+      "accepted_pose_forward_status": "not_run",
+      "changed_stable_ids": [
+        103,
+        104
+      ],
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/report.json",
+      "sha256": "a19a9564cf859110a65f424acd66c367ea40a3b005cf1695ae2c704fbf184604"
+    },
+    "manifest": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "sha256": "945d53ddf24c652af4b55e91f21e27e65754e89c5d6c027008e4196c9f2a3f08"
+    },
+    "nhtiss_payload": {
+      "abi": 5,
+      "index_count": 1884573,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "7b23d0daf2eb73221944389716d01c8d9f2a9ebfb86dd815f605c8a45e54bbc9",
+      "surface_count": 150,
+      "vertex_count": 433151
+    },
+    "receipt": {
+      "parent_1218_receipt_sha256": "ebfb61b926f33dd6497176734324e7208e1eeab2f2b518e6d4f884e0a8da99ec",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/resting-anatomy-receipt.json",
+      "sha256": "73f8942c1dddc4226f502cc72246b83e31a8eba6c80b5480efc684ba80284f14"
+    }
+  },
+  "capture_inputs": [
+    {
+      "accepted_time_s": 0.0,
+      "face_rows_match_source": true,
+      "pack_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/native-run/accepted-geometry/step-0.mrvpack",
+      "pack_sha256": "caca4dbdeffa420bb713e478e0e71f6483f5f7ef5c18cb815a77dca8bd9d46fa",
+      "receipt_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/native-run/accepted-geometry/step-0.receipt.json",
+      "receipt_sha256": "e49fc462fe50416e2420e5f23ed2d93556574bd9547a2853a14314238028b1dc",
+      "step": 0
+    },
+    {
+      "accepted_time_s": 10.000000474974513,
+      "face_rows_match_source": true,
+      "pack_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/native-run/accepted-geometry/step-5000.mrvpack",
+      "pack_sha256": "4e9a540439d0f5797a6233b6402bdbb584b733bd508d31a5eaa6bd161c75f9db",
+      "receipt_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/native-run/accepted-geometry/step-5000.receipt.json",
+      "receipt_sha256": "5b116747c50044dda1fe277c813fae826d9e37a8f1489aa7a9cc8f94ab150de6",
+      "step": 5000
+    }
+  ],
+  "native_run": {
+    "declaration_sha256": "e7e716506ab85d81c5e74fc26e99447861d3f3712605f9c4bdde0ac0a2b0d4e5",
+    "directory": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/native-run",
+    "execution_sha256": "e627247d25a515602e6411ebe326d3c8eda8cb076b85cd3410b28e51f5367cfa",
+    "exit_code": 0,
+    "invocation_sha256": "e8c81fbbca08e643e34fd4276f778d6bc32a75b9c3ec183b82b5e586bfcd7267",
+    "loaded_runtime_verified": true,
+    "run_metadata_sha256": "d9f198e931aedc188a95d4a75f25da3082ac9c9a670d0129e92202dba2c0887c",
+    "source_files_changed_during_run": []
+  },
+  "pair_ledger": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/native-biceps-10s-attempt001/review-003/unallowed-self-pairs.jsonl",
+    "rows": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "predicate": {
+    "audit_contract_source": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/audit_muscle_self_1213.py",
+      "sha256": "d56dff6df2286953ab6ffdcbb50ad51e794d12f2e371c1aa15efcf990ca26f46"
+    },
+    "method": "exact per-surface Float32 coordinate quotient, then historical cardiac_cavity_intersections._audit_pair(records, records, same_surface=True); no tolerance weld, movement, face edits, or predicate change",
+    "pack_loader_source": {
+      "path": "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/common_atlas_skin_clearance.py",
+      "sha256": "fbfb5dfbb9b3f7e5fa297a61c793c66cb13fe884d5cebc3a7d1a6b9908961ac1"
+    },
+    "predicate_source": {
+      "path": "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb"
+    }
+  },
+  "qualification": "Exact Float32 coordinate quotient and same-surface intersection predicate for NHTISS surfaces 103 and 104 only, at authored source plus actual accepted steps 0 and 5000. Not a whole-muscle cross-surface, skin-target, full-body anatomy, or clinical qualification.",
+  "schema": "numi.human.biceps-103-104-exact-self-audit.v1",
+  "status": "completed",
+  "surfaces": [
+    {
+      "body_bindings": [
+        {
+          "core_body_index": 34,
+          "myosim_body": "scapula_r"
+        },
+        {
+          "core_body_index": 41,
+          "myosim_body": "humerus_r"
+        },
+        {
+          "core_body_index": 43,
+          "myosim_body": "radius_r"
+        }
+      ],
+      "coordinate_spaces": [
+        {
+          "coordinate_space": "authored_candidate_nhtiss4_owner_local_source",
+          "exact_duplicate_coordinate_vertex_count": 333,
+          "exact_f32_quotient_vertex_count": 714,
+          "face_count": 1424,
+          "face_referenced_input_vertex_count": 1047,
+          "input_vertex_count": 1053,
+          "self_intersection": {
+            "aabb_candidate_pairs": 12554,
+            "allowed_shared_vertex_or_edge_pairs": 9980,
+            "audited_nondegenerate_face_count": 1424,
+            "omitted_degenerate_face_count": 0,
+            "unallowed_pair_count": 0
+          },
+          "topology": {
+            "boundary_edge_count": 0,
+            "closed_oriented_manifold_candidate": true,
+            "degenerate_face_rows": [],
+            "duplicate_face_row_count": 0,
+            "edge_count": 2136,
+            "face_component_count": 2,
+            "nonmanifold_edge_count": 0,
+            "orientation_mismatch_edge_count": 0,
+            "referenced_vertex_count": 714,
+            "unused_quotient_vertex_count": 0
+          },
+          "unallowed_pair_witnesses": [],
+          "unallowed_pairs": [],
+          "unreferenced_input_vertex_count": 6
+        },
+        {
+          "accepted_step": 0,
+          "accepted_time_s": 0.0,
+          "captured_face_rows_exactly_map_to_nhtiss": true,
+          "coordinate_space": "accepted_mrvpack2_step_0_world",
+          "exact_duplicate_coordinate_vertex_count": 333,
+          "exact_f32_quotient_vertex_count": 714,
+          "face_count": 1424,
+          "face_referenced_input_vertex_count": 1047,
+          "input_vertex_count": 1053,
+          "pack_sha256": "caca4dbdeffa420bb713e478e0e71f6483f5f7ef5c18cb815a77dca8bd9d46fa",
+          "pack_vertex_offset": 592297,
+          "receipt_sha256": "e49fc462fe50416e2420e5f23ed2d93556574bd9547a2853a14314238028b1dc",
+          "self_intersection": {
+            "aabb_candidate_pairs": 12695,
+            "allowed_shared_vertex_or_edge_pairs": 9980,
+            "audited_nondegenerate_face_count": 1424,
+            "omitted_degenerate_face_count": 0,
+            "unallowed_pair_count": 0
+          },
+          "topology": {
+            "boundary_edge_count": 0,
+            "closed_oriented_manifold_candidate": true,
+            "degenerate_face_rows": [],
+            "duplicate_face_row_count": 0,
+            "edge_count": 2136,
+            "face_component_count": 2,
+            "nonmanifold_edge_count": 0,
+            "orientation_mismatch_edge_count": 0,
+            "referenced_vertex_count": 714,
+            "unused_quotient_vertex_count": 0
+          },
+          "unallowed_pair_witnesses": [],
+          "unallowed_pairs": [],
+          "unreferenced_input_vertex_count": 6
+        },
+        {
+          "accepted_step": 5000,
+          "accepted_time_s": 10.000000474974513,
+          "captured_face_rows_exactly_map_to_nhtiss": true,
+          "coordinate_space": "accepted_mrvpack2_step_5000_world",
+          "exact_duplicate_coordinate_vertex_count": 333,
+          "exact_f32_quotient_vertex_count": 714,
+          "face_count": 1424,
+          "face_referenced_input_vertex_count": 1047,
+          "input_vertex_count": 1053,
+          "pack_sha256": "4e9a540439d0f5797a6233b6402bdbb584b733bd508d31a5eaa6bd161c75f9db",
+          "pack_vertex_offset": 592297,
+          "receipt_sha256": "5b116747c50044dda1fe277c813fae826d9e37a8f1489aa7a9cc8f94ab150de6",
+          "self_intersection": {
+            "aabb_candidate_pairs": 15342,
+            "allowed_shared_vertex_or_edge_pairs": 9980,
+            "audited_nondegenerate_face_count": 1424,
+            "omitted_degenerate_face_count": 0,
+            "unallowed_pair_count": 0
+          },
+          "topology": {
+            "boundary_edge_count": 0,
+            "closed_oriented_manifold_candidate": true,
+            "degenerate_face_rows": [],
+            "duplicate_face_row_count": 0,
+            "edge_count": 2136,
+            "face_component_count": 2,
+            "nonmanifold_edge_count": 0,
+            "orientation_mismatch_edge_count": 0,
+            "referenced_vertex_count": 714,
+            "unused_quotient_vertex_count": 0
+          },
+          "unallowed_pair_witnesses": [],
+          "unallowed_pairs": [],
+          "unreferenced_input_vertex_count": 6
+        }
+      ],
+      "face_count": 1424,
+      "label": "long head of right biceps brachii",
+      "member_id": "FJ1478",
+      "nhtiss_vertex_count": 1053,
+      "source_nhtiss_face_rows_preserved": true,
+      "stable_id": 103
+    },
+    {
+      "body_bindings": [
+        {
+          "core_body_index": 84,
+          "myosim_body": "scapula_l"
+        },
+        {
+          "core_body_index": 91,
+          "myosim_body": "humerus_l"
+        },
+        {
+          "core_body_index": 93,
+          "myosim_body": "radius_l"
+        }
+      ],
+      "coordinate_spaces": [
+        {
+          "coordinate_space": "authored_candidate_nhtiss4_owner_local_source",
+          "exact_duplicate_coordinate_vertex_count": 319,
+          "exact_f32_quotient_vertex_count": 714,
+          "face_count": 1424,
+          "face_referenced_input_vertex_count": 1033,
+          "input_vertex_count": 1039,
+          "self_intersection": {
+            "aabb_candidate_pairs": 12555,
+            "allowed_shared_vertex_or_edge_pairs": 9980,
+            "audited_nondegenerate_face_count": 1424,
+            "omitted_degenerate_face_count": 0,
+            "unallowed_pair_count": 0
+          },
+          "topology": {
+            "boundary_edge_count": 0,
+            "closed_oriented_manifold_candidate": true,
+            "degenerate_face_rows": [],
+            "duplicate_face_row_count": 0,
+            "edge_count": 2136,
+            "face_component_count": 2,
+            "nonmanifold_edge_count": 0,
+            "orientation_mismatch_edge_count": 0,
+            "referenced_vertex_count": 714,
+            "unused_quotient_vertex_count": 0
+          },
+          "unallowed_pair_witnesses": [],
+          "unallowed_pairs": [],
+          "unreferenced_input_vertex_count": 6
+        },
+        {
+          "accepted_step": 0,
+          "accepted_time_s": 0.0,
+          "captured_face_rows_exactly_map_to_nhtiss": true,
+          "coordinate_space": "accepted_mrvpack2_step_0_world",
+          "exact_duplicate_coordinate_vertex_count": 319,
+          "exact_f32_quotient_vertex_count": 714,
+          "face_count": 1424,
+          "face_referenced_input_vertex_count": 1033,
+          "input_vertex_count": 1039,
+          "pack_sha256": "caca4dbdeffa420bb713e478e0e71f6483f5f7ef5c18cb815a77dca8bd9d46fa",
+          "pack_vertex_offset": 593350,
+          "receipt_sha256": "e49fc462fe50416e2420e5f23ed2d93556574bd9547a2853a14314238028b1dc",
+          "self_intersection": {
+            "aabb_candidate_pairs": 12696,
+            "allowed_shared_vertex_or_edge_pairs": 9980,
+            "audited_nondegenerate_face_count": 1424,
+            "omitted_degenerate_face_count": 0,
+            "unallowed_pair_count": 0
+          },
+          "topology": {
+            "boundary_edge_count": 0,
+            "closed_oriented_manifold_candidate": true,
+            "degenerate_face_rows": [],
+            "duplicate_face_row_count": 0,
+            "edge_count": 2136,
+            "face_component_count": 2,
+            "nonmanifold_edge_count": 0,
+            "orientation_mismatch_edge_count": 0,
+            "referenced_vertex_count": 714,
+            "unused_quotient_vertex_count": 0
+          },
+          "unallowed_pair_witnesses": [],
+          "unallowed_pairs": [],
+          "unreferenced_input_vertex_count": 6
+        },
+        {
+          "accepted_step": 5000,
+          "accepted_time_s": 10.000000474974513,
+          "captured_face_rows_exactly_map_to_nhtiss": true,
+          "coordinate_space": "accepted_mrvpack2_step_5000_world",
+          "exact_duplicate_coordinate_vertex_count": 319,
+          "exact_f32_quotient_vertex_count": 714,
+          "face_count": 1424,
+          "face_referenced_input_vertex_count": 1033,
+          "input_vertex_count": 1039,
+          "pack_sha256": "4e9a540439d0f5797a6233b6402bdbb584b733bd508d31a5eaa6bd161c75f9db",
+          "pack_vertex_offset": 593350,
+          "receipt_sha256": "5b116747c50044dda1fe277c813fae826d9e37a8f1489aa7a9cc8f94ab150de6",
+          "self_intersection": {
+            "aabb_candidate_pairs": 15328,
+            "allowed_shared_vertex_or_edge_pairs": 9980,
+            "audited_nondegenerate_face_count": 1424,
+            "omitted_degenerate_face_count": 0,
+            "unallowed_pair_count": 0
+          },
+          "topology": {
+            "boundary_edge_count": 0,
+            "closed_oriented_manifold_candidate": true,
+            "degenerate_face_rows": [],
+            "duplicate_face_row_count": 0,
+            "edge_count": 2136,
+            "face_component_count": 2,
+            "nonmanifold_edge_count": 0,
+            "orientation_mismatch_edge_count": 0,
+            "referenced_vertex_count": 714,
+            "unused_quotient_vertex_count": 0
+          },
+          "unallowed_pair_witnesses": [],
+          "unallowed_pairs": [],
+          "unreferenced_input_vertex_count": 6
+        }
+      ],
+      "face_count": 1424,
+      "label": "long head of left biceps brachii",
+      "member_id": "FJ1478M",
+      "nhtiss_vertex_count": 1039,
+      "source_nhtiss_face_rows_preserved": true,
+      "stable_id": 104
+    }
+  ],
+  "wall_seconds": 3.9387325840070844
+}
