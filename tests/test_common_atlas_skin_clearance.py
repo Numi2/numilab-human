@@ -1,6 +1,7 @@
 import csv
 
 import numpy as np
+import pytest
 
 from numilab_human.common_atlas_skin_clearance import (
     _EXPECTED_SURFACE_COUNTS,
@@ -900,6 +901,103 @@ def test_closed_target_rejects_disconnected_shells():
     assert raised.exception.target_report["topology"]["face_component_count"] == 2
 
 
+def _nested_tetrahedra():
+    outer_vertices, outer_faces = _tetrahedron(scale=2.0)
+    inner_vertices, inner_faces = _tetrahedron(scale=0.2)
+    inner_vertices = inner_vertices + np.array([0.1, 0.1, 0.1], dtype="<f4")
+    vertices = np.concatenate([outer_vertices, inner_vertices], axis=0)
+    faces = np.concatenate([outer_faces, inner_faces + len(outer_vertices)], axis=0)
+    return vertices, faces
+
+
+def test_nested_closed_target_requires_explicit_outer_enclosure_mode():
+    from numilab_human.common_atlas_skin_clearance import _prepare_closed_clearance_target
+
+    vertices, faces = _nested_tetrahedra()
+    with np.testing.assert_raises_regex(ImportError, "connected unless explicit nested enclosure") as raised:
+        _prepare_closed_clearance_target(vertices, faces)
+
+    report = raised.exception.target_report
+    assert report["topology"]["face_component_count"] == 2
+    assert report["face_count"] == 8
+    assert [row["face_rows"] for row in report["component_face_rows"]] == [[0, 1, 2, 3], [4, 5, 6, 7]]
+    assert report["all_components_closed_oriented_unused_free"] is True
+    assert report["self_intersection_audit"]["count"] == 0
+    assert report["embedded_closed_target"] is False
+
+
+def test_explicit_nested_enclosure_preserves_full_target_and_classifies_inner_points():
+    import hashlib
+    from numilab_human.common_atlas_skin_clearance import (
+        _closed_target_inside_vertices,
+        _prepare_closed_clearance_target,
+    )
+
+    vertices, faces = _nested_tetrahedra()
+    target = _prepare_closed_clearance_target(vertices, faces, allow_nested_enclosure=True)
+
+    report = target["report"]
+    assert report["inside_semantics"] == "external_skin_enclosure_only"
+    assert report["external_skin_enclosure_only"] is True
+    assert report["outer_component_id"] == 0
+    assert report["outer_component_face_rows"] == [0, 1, 2, 3]
+    assert report["face_count"] == 8
+    assert report["interior_face_count"] == 4
+    assert len(target["records"]) == 8
+    assert len(target["_interior_records"]) == 4
+    assert np.array_equal(target["faces"], faces)
+    assert report["quotient_hashes"]["faces_i64_sha256"] == hashlib.sha256(
+        target["faces"].astype("<i8", copy=False).tobytes()).hexdigest()
+    assert report["input_hashes"]["faces_u64_sha256"] == hashlib.sha256(
+        faces.astype("<u8", copy=False).tobytes()).hexdigest()
+    assert report["component_pair_proofs"] == [{
+        "first_component_id": 0,
+        "second_component_id": 1,
+        "cross_component_intersection_count": 0,
+        "first_representative_in_second": "outside",
+        "second_representative_in_first": "inside",
+        "relation": "first_contains_second",
+    }]
+    points = np.array([
+        [0.12, 0.12, 0.12],  # inside both nested tetrahedra; outside the inner shell under full parity
+        [0.6, 0.2, 0.2],    # inside only the outer envelope
+        [2.0, 0.0, 0.0],    # outer boundary
+        [2.1, 0.0, 0.0],    # outside
+    ], dtype="<f4")
+    assert _closed_target_inside_vertices(points, target).tolist() == [0, 1]
+
+
+def test_explicit_nested_enclosure_ray_exits_outer_component_not_inner_shell():
+    from numilab_human.common_atlas_skin_clearance import (
+        _closed_target_exit_source_scalar,
+        _prepare_closed_clearance_target,
+    )
+
+    vertices, faces = _nested_tetrahedra()
+    target = _prepare_closed_clearance_target(vertices, faces, allow_nested_enclosure=True)
+    scalar = _closed_target_exit_source_scalar(
+        np.array([0.12, 0.12, 0.12], dtype="<f4"),
+        np.array([1.0, 0.0, 0.0], dtype=np.float64),
+        target,
+        margin_m=0.1,
+    )
+    # Inner-shell exit would be about 0.14 m. The external envelope exit is
+    # about 1.64 m, followed by the requested 0.1 m margin.
+    assert np.isclose(scalar, 1.74, rtol=0.0, atol=1e-6)
+    assert scalar > 1.7
+
+
+def test_explicit_nested_enclosure_rejects_disjoint_components():
+    from numilab_human.common_atlas_skin_clearance import _prepare_closed_clearance_target
+
+    vertices, faces = _tetrahedron()
+    other_vertices = vertices + np.array([3.0, 0.0, 0.0], dtype="<f4")
+    combined_vertices = np.concatenate([vertices, other_vertices], axis=0)
+    combined_faces = np.concatenate([faces, faces + len(vertices)], axis=0)
+    with np.testing.assert_raises_regex(ImportError, "exactly one component enclosing every other"):
+        _prepare_closed_clearance_target(combined_vertices, combined_faces, allow_nested_enclosure=True)
+
+
 def test_closed_target_inside_classification_excludes_boundary_and_outside_points(monkeypatch):
     from numilab_human import cardiac_cavity_intersections as ci
     from numilab_human.common_atlas_skin_clearance import (
@@ -982,7 +1080,8 @@ def test_exit_source_scalar_rejects_start_outside_closed_target():
         )
 
 
-def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary():
+@pytest.mark.parametrize("nested_enclosure", [False, True])
+def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary(nested_enclosure):
     """A whole skin patch inside a solid needs direct, not boundary-only, demands."""
     from numilab_human import common_atlas_skin_clearance as c
 
@@ -1015,6 +1114,10 @@ def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary():
     target_vertices, target_faces = _closed_cube()
     target_vertices = (target_vertices * np.array([0.013, 0.013, 0.006])
                        + np.array([0., 0., 0.001])).astype("<f4")
+    if nested_enclosure:
+        inner_vertices = (target_vertices * 0.1 + np.array([0., 0., 0.002])).astype("<f4")
+        target_faces = np.vstack((target_faces, target_faces + len(target_vertices)))
+        target_vertices = np.vstack((target_vertices, inner_vertices))
     target_records = c._exact_surface_records(target_vertices, target_faces)
     captured = np.repeat(source[None, :, :], 2, axis=0)
     maps = np.broadcast_to(np.eye(3), (2, len(source), 3, 3)).copy()
@@ -1029,7 +1132,8 @@ def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary():
         return target_vertices[target_faces[row]]
 
     baseline = [scan(pose, world) for pose, world in enumerate(captured)]
-    prepared = c._prepare_closed_clearance_target(target_vertices, target_faces)
+    prepared = c._prepare_closed_clearance_target(
+        target_vertices, target_faces, allow_nested_enclosure=nested_enclosure)
     inside = c._closed_target_inside_vertices(source, prepared)
     crossing_vertices = np.unique(faces[[pair[0] for pair in baseline[0]["target"]["triangle_pairs"]]])
     buried = np.setdiff1d(inside, crossing_vertices)
@@ -1050,6 +1154,7 @@ def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary():
         closed_target_surfaces_by_pose=[
             {"target": (target_vertices, target_faces)} for _ in range(2)],
         closed_target_face_counts={"target": len(target_faces)},
+        closed_target_outer_envelope_keys={"target"} if nested_enclosure else None,
         max_iterations=2, progress_callback=events.append,
     )
     with np.testing.assert_raises_regex(ImportError, "incomplete captured face coverage"):
@@ -1059,7 +1164,22 @@ def test_shared_clearance_seeds_buried_vertices_beyond_crossing_boundary():
         c.derive_shared_multipose_inferred_clearance(
             **{**arguments, "target_triangle_by_row":
                lambda pose, key, row: triangle(pose, key, row).astype(float) + 1.0e-12})
+    with np.testing.assert_raises_regex(ImportError, "must be selected captured targets"):
+        c.derive_shared_multipose_inferred_clearance(
+            **{**arguments, "closed_target_outer_envelope_keys": {"unselected"}})
+    with np.testing.assert_raises_regex(ImportError, "explicit set"):
+        c.derive_shared_multipose_inferred_clearance(
+            **{**arguments, "closed_target_outer_envelope_keys": "target"})
+    if nested_enclosure:
+        with np.testing.assert_raises_regex(ImportError, "connected unless explicit nested enclosure"):
+            c.derive_shared_multipose_inferred_clearance(
+                **{**arguments, "closed_target_outer_envelope_keys": None})
     result, report = c.derive_shared_multipose_inferred_clearance(**arguments)
+    assert report["selected_closed_target_interior"]["explicit_outer_envelope_keys"] == (
+        ["target"] if nested_enclosure else [])
+    for validation in report["selected_closed_target_interior"]["target_validation_by_pose"]:
+        assert validation["target"]["face_count"] == len(target_faces)
+        assert validation["target"]["external_skin_enclosure_only"] == nested_enclosure
     assert report["final_nonocular_pair_count_by_pose"] == [0, 0]
     assert report["selected_closed_target_interior"]["initial_inside_vertex_counts_by_pose"] == [25, 25]
     assert report["selected_closed_target_interior"]["final_inside_vertex_counts_by_pose"] == [0, 0]

@@ -200,14 +200,23 @@ def _exact_surface_records(vertices: np.ndarray, faces: np.ndarray):
     return _records(lattice, faces)
 
 
-def _prepare_closed_clearance_target(vertices: np.ndarray, faces: np.ndarray) -> dict[str, Any]:
-    """Build an immutable exact-Float32 quotient of one captured target surface.
+def _prepare_closed_clearance_target(
+    vertices: np.ndarray,
+    faces: np.ndarray,
+    *,
+    allow_nested_enclosure: bool = False,
+) -> dict[str, Any]:
+    """Prepare a captured target, optionally using its proven outer envelope.
 
-    Only bit-identical little-endian Float32 xyz triples are identified. The
-    quotient adds no faces and changes no coordinates; it only reconnects
-    duplicated render vertices before the existing topology and exact
-    intersection predicates are applied.
+    The exact-coordinate quotient only rejoins bit-identical Float32 xyz rows.
+    In explicit nested-enclosure mode every component remains in the returned
+    full target and its exact self/cross audits. Only the private inside/ray
+    surface is restricted to the uniquely proven outer component; this means
+    "external-skin-enclosure-only", not that inner components are cavities or
+    disposable markers.
     """
+    if type(allow_nested_enclosure) is not bool:
+        raise human.ImportError("clearance nested-enclosure option must be a boolean")
     raw_vertices = np.asarray(vertices)
     raw_faces = np.asarray(faces)
     if raw_vertices.ndim != 2 or raw_vertices.shape[1] != 3 or raw_vertices.dtype.kind not in "fiu":
@@ -258,13 +267,14 @@ def _prepare_closed_clearance_target(vertices: np.ndarray, faces: np.ndarray) ->
         quotient_faces.tolist(),
     ))
     self_audit = _audit_pair(records, records, same_surface=True)
-    closed_connected = (
+    components = topology["face_components"]
+    all_faces_closed_oriented = (
         topology["closed_oriented_manifold_candidate"]
-        and topology["face_component_count"] == 1
         and not topology["unused_vertex_ids"]
+        and bool(components)
+        and all(components)
     )
-    embedded = closed_connected and self_audit["count"] == 0
-    report = {
+    report: dict[str, Any] = {
         "quotient_method": "exact_bitwise_float32_xyz_identification_no_tolerance_or_geometry_change",
         "source_coordinates_modified": False,
         "faces_added": 0,
@@ -276,29 +286,157 @@ def _prepare_closed_clearance_target(vertices: np.ndarray, faces: np.ndarray) ->
         "quotient_hashes": quotient_hashes,
         "topology": topology,
         "self_intersection_audit": self_audit,
-        "closed_connected_oriented": bool(closed_connected),
-        "embedded_closed_target": bool(embedded),
+        "closed_connected_oriented": bool(all_faces_closed_oriented and len(components) == 1),
+        "all_components_closed_oriented_unused_free": bool(all_faces_closed_oriented),
+        "embedded_closed_target": False,
+        "inside_semantics": "unqualified",
+        "external_skin_enclosure_only": False,
+        "component_face_rows": [
+            {"component_id": component_id, "face_rows": [int(row) for row in face_rows],
+             "face_count": int(len(face_rows))}
+            for component_id, face_rows in enumerate(components)
+        ],
+        "component_pair_proofs": [],
     }
-    if not embedded:
-        error = human.ImportError(
-            "clearance target must be exact-quotient closed, oriented, connected, unused-vertex-free, and self-intersection-free"
-        )
+
+    def reject(message: str):
+        error = human.ImportError(message)
         error.target_report = report
         raise error
 
+    if not all_faces_closed_oriented:
+        reject("clearance target components must all be closed, oriented, and unused-vertex-free")
+    if self_audit["count"] != 0:
+        reject("clearance target must be exact-quotient and self-intersection-free")
+    if len(components) > 1 and not allow_nested_enclosure:
+        reject("clearance target must be closed, oriented, and connected unless explicit nested enclosure is enabled")
+
+    lattice_vertices = [float32_point_lattice_key(point) for point in quotient_vertices]
+    component_records = []
+    component_representatives = []
+    component_vertex_ids = []
+    for component_id, face_rows in enumerate(components):
+        face_rows = [int(row) for row in face_rows]
+        component_faces = quotient_faces[np.asarray(face_rows, dtype=np.int64)]
+        vertex_ids = np.unique(component_faces)
+        local_faces = np.searchsorted(vertex_ids, component_faces)
+        local_vertices = quotient_vertices[vertex_ids]
+        component_topology = analyze_topology(
+            local_vertices.astype(np.float64).tolist(), local_faces.astype(np.int64).tolist())
+        if (not component_topology["closed_oriented_manifold_candidate"]
+                or component_topology["face_component_count"] != 1
+                or component_topology["unused_vertex_ids"]):
+            reject(f"clearance target component {component_id} is not independently closed and oriented")
+        component_records.append(tuple(records[row] for row in face_rows))
+        component_representatives.append(lattice_vertices[int(component_faces[0, 0])])
+        component_vertex_ids.append(vertex_ids)
+
+    relation_by_pair: dict[tuple[int, int], str] = {}
+    for first_id in range(len(components)):
+        for second_id in range(first_id + 1, len(components)):
+            first_records = component_records[first_id]
+            second_records = component_records[second_id]
+            cross_audit = _audit_pair(first_records, second_records, same_surface=False)
+            if cross_audit["count"] != 0:
+                report["component_pair_proofs"].append({
+                    "first_component_id": first_id,
+                    "second_component_id": second_id,
+                    "cross_component_intersection_count": int(cross_audit["count"]),
+                    "cross_component_triangle_pairs": cross_audit["triangle_pairs"],
+                    "relation": "intersecting_or_touching",
+                })
+                reject("clearance target components must be pairwise nonintersecting")
+            first_in_second = ci.point_location(
+                component_representatives[first_id], second_records).get("location")
+            second_in_first = ci.point_location(
+                component_representatives[second_id], first_records).get("location")
+            if first_in_second not in ("inside", "outside") or second_in_first not in ("inside", "outside"):
+                report["component_pair_proofs"].append({
+                    "first_component_id": first_id,
+                    "second_component_id": second_id,
+                    "cross_component_intersection_count": 0,
+                    "first_representative_in_second": first_in_second,
+                    "second_representative_in_first": second_in_first,
+                    "relation": "ambiguous",
+                })
+                reject("clearance target component containment is boundary or indeterminate")
+            if first_in_second == "inside" and second_in_first == "outside":
+                relation = "second_contains_first"
+            elif second_in_first == "inside" and first_in_second == "outside":
+                relation = "first_contains_second"
+            elif first_in_second == "outside" and second_in_first == "outside":
+                relation = "disjoint"
+            else:
+                relation = "ambiguous"
+                report["component_pair_proofs"].append({
+                    "first_component_id": first_id,
+                    "second_component_id": second_id,
+                    "cross_component_intersection_count": 0,
+                    "first_representative_in_second": first_in_second,
+                    "second_representative_in_first": second_in_first,
+                    "relation": relation,
+                })
+                reject("clearance target component containment is ambiguous")
+            relation_by_pair[(first_id, second_id)] = relation
+            report["component_pair_proofs"].append({
+                "first_component_id": first_id,
+                "second_component_id": second_id,
+                "cross_component_intersection_count": 0,
+                "first_representative_in_second": first_in_second,
+                "second_representative_in_first": second_in_first,
+                "relation": relation,
+            })
+
+    if len(components) == 1:
+        outer_component_id = 0
+        report["inside_semantics"] = "full_closed_target"
+    else:
+        outer_candidates = []
+        for candidate_id in range(len(components)):
+            contains_all = True
+            for other_id in range(len(components)):
+                if candidate_id == other_id:
+                    continue
+                pair = tuple(sorted((candidate_id, other_id)))
+                relation = relation_by_pair[pair]
+                candidate_contains = (
+                    relation == "first_contains_second" if candidate_id < other_id
+                    else relation == "second_contains_first")
+                if not candidate_contains:
+                    contains_all = False
+                    break
+            if contains_all:
+                outer_candidates.append(candidate_id)
+        if len(outer_candidates) != 1:
+            reject("clearance target needs exactly one component enclosing every other component")
+        outer_component_id = outer_candidates[0]
+        report["inside_semantics"] = "external_skin_enclosure_only"
+        report["external_skin_enclosure_only"] = True
+
+    outer_face_rows = [int(row) for row in components[outer_component_id]]
+    outer_vertex_ids = component_vertex_ids[outer_component_id]
+    interior_records = component_records[outer_component_id]
+    report["outer_component_id"] = int(outer_component_id)
+    report["outer_component_face_rows"] = outer_face_rows
+    report["outer_component_face_count"] = int(len(outer_face_rows))
+    report["interior_face_count"] = int(len(interior_records))
+    report["embedded_closed_target"] = True
+
     quotient_vertices.setflags(write=False)
     quotient_faces.setflags(write=False)
-    aabb_min = quotient_vertices.min(axis=0).copy()
-    aabb_max = quotient_vertices.max(axis=0).copy()
-    aabb_min.setflags(write=False)
-    aabb_max.setflags(write=False)
+    interior_aabb_min = quotient_vertices[outer_vertex_ids].min(axis=0).copy()
+    interior_aabb_max = quotient_vertices[outer_vertex_ids].max(axis=0).copy()
+    interior_aabb_min.setflags(write=False)
+    interior_aabb_max.setflags(write=False)
     return {
         "vertices": quotient_vertices,
         "faces": quotient_faces,
         "records": records,
+        "_interior_records": interior_records,
+        "_interior_face_rows": tuple(outer_face_rows),
         "report": report,
-        "_inside_aabb_min": aabb_min,
-        "_inside_aabb_max": aabb_max,
+        "_inside_aabb_min": interior_aabb_min,
+        "_inside_aabb_max": interior_aabb_max,
     }
 
 
@@ -307,12 +445,14 @@ def _require_prepared_closed_target(target: dict[str, Any]) -> None:
             or not isinstance(target.get("report"), dict)
             or target["report"].get("embedded_closed_target") is not True
             or not isinstance(target.get("records"), tuple)
-            or not target["records"]):
+            or not target["records"]
+            or not isinstance(target.get("_interior_records"), tuple)
+            or not target["_interior_records"]):
         raise human.ImportError("clearance operation requires an admissible prepared closed target")
 
 
 def _closed_target_inside_vertices(positions: np.ndarray, target: dict[str, Any]) -> np.ndarray:
-    """Return captured Float32 point IDs strictly inside an admissible target."""
+    """Return captured Float32 point IDs strictly inside the selected enclosure."""
     _require_prepared_closed_target(target)
     points = np.asarray(positions)
     if points.ndim != 2 or points.shape[1] != 3 or points.dtype.kind not in "fiu":
@@ -333,7 +473,7 @@ def _closed_target_inside_vertices(positions: np.ndarray, target: dict[str, Any]
         numeric_point = point.astype(np.float64)
         if np.any(numeric_point < lower) or np.any(numeric_point > upper):
             continue
-        result = ci.point_location(float32_point_lattice_key(point), target["records"])
+        result = ci.point_location(float32_point_lattice_key(point), target["_interior_records"])
         location = result.get("location")
         if location == "inside":
             inside.append(point_id)
@@ -377,7 +517,8 @@ def _closed_target_exit_source_scalar(
     if not math.isfinite(speed) or speed <= 0.0:
         raise human.ImportError("clearance mapped direction must be nonzero")
     point_lattice = float32_point_lattice_key(packed_point)
-    if ci.point_location(point_lattice, target["records"]).get("location") != "inside":
+    target_records = target["_interior_records"]
+    if ci.point_location(point_lattice, target_records).get("location") != "inside":
         raise human.ImportError("clearance ray start must be strictly inside the target")
 
     direction_fraction = tuple(Fraction.from_float(float(value)) for value in direction)
@@ -389,7 +530,7 @@ def _closed_target_exit_source_scalar(
         for component in direction_fraction)
     lattice_denominator = ci._FLOAT32_LATTICE_DENOMINATOR
     hits = set()
-    for record in target["records"]:
+    for record in target_records:
         triangle = record[0]
         normal = ci._cross(ci._sub(triangle[1], triangle[0]), ci._sub(triangle[2], triangle[0]))
         numerator = ci._dot(normal, ci._sub(triangle[0], point_lattice))
@@ -418,14 +559,13 @@ def _closed_target_exit_source_scalar(
             raise human.ImportError("clearance ray exit scalar is not finite and positive")
         endpoint = (packed_point.astype(np.float64) + candidate_scalar * direction).astype("<f4")
         endpoint_location = ci.point_location(
-            float32_point_lattice_key(endpoint), target["records"]
+            float32_point_lattice_key(endpoint), target_records
         ).get("location")
         if endpoint_location == "outside":
             return candidate_scalar
         if endpoint_location not in ("inside", "boundary"):
             raise human.ImportError("clearance ray margin endpoint has indeterminate target location")
     raise human.ImportError("clearance ray margin did not reach a proven outside Float32 endpoint")
-
 
 
 def _target_intersection_audit(skin_records, target_faces: dict[tuple[int, int], np.ndarray], pack_positions: np.ndarray):
@@ -1930,6 +2070,7 @@ def derive_shared_multipose_inferred_clearance(
     resume_provenance: dict[str, Any] | None = None,
     closed_target_surfaces_by_pose: list[dict[str, tuple[np.ndarray, np.ndarray]]] | None = None,
     closed_target_face_counts: dict[str, int] | None = None,
+    closed_target_outer_envelope_keys: set[str] | None = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     """Infer one source-space correction constrained by all supplied accepted poses.
 
@@ -1947,6 +2088,8 @@ def derive_shared_multipose_inferred_clearance(
     an explicitly selected nonocular subset. Exact coordinate quotient, manifold,
     and self-intersection gates must pass before inside vertices can add demands.
     closed_target_face_counts must bind the complete captured face inventory.
+    Explicit closed_target_outer_envelope_keys may use a uniquely proven outer
+    component for external-skin enclosure; every component remains in all scans.
     Every triangle must match the existing target lookup exactly. These direct vertex
     demands supplement the boundary-triangle demands and preserve all audits.
     NHSKIN source and mapped world positions are metres; no runtime state changes.
@@ -2190,6 +2333,13 @@ def derive_shared_multipose_inferred_clearance(
             "status": "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates",
         }
     closed_targets = [dict() for _ in range(pose_count)]
+    if (closed_target_outer_envelope_keys is not None
+            and (not isinstance(closed_target_outer_envelope_keys, (set, frozenset))
+                 or any(not isinstance(key, str) for key in closed_target_outer_envelope_keys))):
+        raise human.ImportError("closed-target outer-envelope keys must be an explicit set of surface keys")
+    outer_envelope_keys = set(closed_target_outer_envelope_keys or ())
+    if outer_envelope_keys and closed_target_surfaces_by_pose is None:
+        raise human.ImportError("closed-target outer-envelope keys require captured meshes")
     if closed_target_surfaces_by_pose is None and closed_target_face_counts is not None:
         raise human.ImportError("closed-target face counts require captured meshes")
     if closed_target_surfaces_by_pose is not None:
@@ -2198,6 +2348,8 @@ def derive_shared_multipose_inferred_clearance(
                 or any(not isinstance(row, dict) for row in closed_target_surfaces_by_pose)):
             raise human.ImportError("closed-target meshes must cover every supplied pose")
         closed_keys = set(closed_target_surfaces_by_pose[0])
+        if not outer_envelope_keys.issubset(closed_keys):
+            raise human.ImportError("closed-target outer-envelope keys must be selected captured targets")
         if (not closed_keys or not closed_keys.issubset(targets - ocular)
                 or any(set(row) != closed_keys for row in closed_target_surfaces_by_pose)):
             raise human.ImportError("closed-target meshes must name the same nonocular subset in every pose")
@@ -2214,7 +2366,8 @@ def derive_shared_multipose_inferred_clearance(
                 if len(target_faces) != closed_target_face_counts[key]:
                     raise human.ImportError(
                         f"closed-target mesh has incomplete captured face coverage at pose={pose}, surface={key}")
-                prepared = _prepare_closed_clearance_target(vertices, target_faces)
+                prepared = _prepare_closed_clearance_target(
+                    vertices, target_faces, allow_nested_enclosure=key in outer_envelope_keys)
                 triangles = prepared["vertices"][prepared["faces"]]
                 for face_id, triangle in enumerate(triangles):
                     authoritative = np.asarray(target_triangle_by_row(pose, key, face_id), dtype=np.float64)
@@ -2685,6 +2838,7 @@ def derive_shared_multipose_inferred_clearance(
         "initial_ocular_pair_count_by_pose": initial_ocular_counts,
         "selected_closed_target_interior": {
             "target_keys": sorted(closed_targets[0]),
+            "explicit_outer_envelope_keys": sorted(outer_envelope_keys),
             "initial_inside_vertex_counts_by_pose": initial_interior_counts,
             "final_inside_vertex_counts_by_pose": current_interior_counts,
             "target_validation_by_pose": [
