@@ -10858,9 +10858,319 @@ def numi_human_achilles_surface_receipt(
     return receipt
 
 
+def _bodyparts_myosim_route_weights_for_world_point(
+    world_point_m: list[float], binding_names: list[str],
+    route_points: list[dict[str, Any]], context: str,
+) -> tuple[list[float], float, int]:
+    """Apply the producer's nearest-route-node inverse-square weight owner."""
+    if len(world_point_m) != 3 or any(not math.isfinite(value) for value in world_point_m):
+        raise ImportError(f"{context} has an invalid route-query point")
+    binding_index = {name: index for index, name in enumerate(binding_names)}
+    squared_by_binding = [math.inf] * len(binding_names)
+    for point in route_points:
+        index = binding_index.get(point.get("body"))
+        if index is None:
+            raise ImportError(f"{context} route point escapes its binding table")
+        route_world = point.get("world_m")
+        if not isinstance(route_world, (list, tuple)) or len(route_world) != 3:
+            raise ImportError(f"{context} has a malformed MyoSim route point")
+        squared = sum(
+            (world_point_m[axis] - route_world[axis]) ** 2 for axis in range(3)
+        )
+        squared_by_binding[index] = min(squared_by_binding[index], squared)
+    nearest = sorted(
+        (squared, index) for index, squared in enumerate(squared_by_binding)
+        if math.isfinite(squared)
+    )[:_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES]
+    if not nearest:
+        raise ImportError(f"{context} has no route-body influence")
+    nearest_distance = math.sqrt(nearest[0][0])
+    weights = [0.0] * len(binding_names)
+    if nearest[0][0] <= 1.0e-12:
+        weights[nearest[0][1]] = 1.0
+        active_influences = 1
+    else:
+        # Keep the existing 3 mm softening radius and normalization.
+        raw = [1.0 / (squared + 9.0e-6) for squared, _ in nearest]
+        total = sum(raw)
+        if not math.isfinite(total) or total <= 0.0:
+            raise ImportError(f"{context} route weights are non-finite")
+        for value, (_, index) in zip(raw, nearest, strict=True):
+            weights[index] = value / total
+        active_influences = len(nearest)
+    return weights, nearest_distance, active_influences
+
+
+def _bodyparts_refine_conforming_route_edge(
+    stable_id: int,
+    edge_vertex_ids: tuple[int, int],
+    vertices_m: list[list[float]],
+    normals: list[list[float]],
+    global_vertices: list[list[float]],
+    vertex_weights: list[list[float]],
+    faces: list[tuple[int, int, int]] | list[list[int]],
+    global_matrix: list[list[float]],
+    binding_names: list[str],
+    route_points: list[dict[str, Any]],
+) -> tuple[
+    list[list[float]], list[list[float]], list[list[float]], list[list[float]],
+    list[list[int]], dict[str, Any],
+]:
+    """Bisect one explicit, two-face source edge without welding old records."""
+    if not isinstance(stable_id, int) or isinstance(stable_id, bool) or stable_id < 1:
+        raise ImportError("conforming surface refinement has an invalid stable surface ID")
+    if (
+        not isinstance(binding_names, (list, tuple)) or not binding_names
+        or any(not isinstance(name, str) or not name for name in binding_names)
+        or len(set(binding_names)) != len(binding_names)
+    ):
+        raise ImportError("conforming surface refinement requires unique named route bindings")
+    if not isinstance(route_points, (list, tuple)) or not route_points:
+        raise ImportError("conforming surface refinement has no authored route points")
+    for point in route_points:
+        if not isinstance(point, dict) or point.get("body") not in binding_names:
+            raise ImportError("conforming surface refinement route point escapes its binding table")
+        route_world = point.get("world_m")
+        if (
+            not isinstance(route_world, (list, tuple)) or len(route_world) != 3
+            or any(
+                isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                for value in route_world
+            )
+        ):
+            raise ImportError("conforming surface refinement has a non-finite route point")
+    if (
+        not isinstance(global_matrix, (list, tuple)) or len(global_matrix) != 4
+        or any(not isinstance(row, (list, tuple)) or len(row) != 4 for row in global_matrix)
+        or any(
+            isinstance(value, bool) or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            for row in global_matrix for value in row
+        )
+        or tuple(global_matrix[3]) != (0, 0, 0, 1)
+    ):
+        raise ImportError("conforming surface refinement requires a finite affine 4x4 source transform")
+    if (
+        not isinstance(edge_vertex_ids, (tuple, list)) or len(edge_vertex_ids) != 2
+        or any(not isinstance(index, int) or isinstance(index, bool) for index in edge_vertex_ids)
+        or edge_vertex_ids[0] == edge_vertex_ids[1]
+    ):
+        raise ImportError("conforming surface refinement requires two distinct integer vertex IDs")
+    endpoint_a, endpoint_b = edge_vertex_ids
+    if not 0 <= endpoint_a < len(vertices_m) or not 0 <= endpoint_b < len(vertices_m):
+        raise ImportError("conforming surface refinement edge vertex is outside the source surface")
+    if not (len(vertices_m) == len(normals) == len(global_vertices) == len(vertex_weights)):
+        raise ImportError("conforming surface refinement source vertex fields are misaligned")
+    if not vertices_m or len(vertex_weights[0]) != len(binding_names):
+        raise ImportError("conforming surface refinement source route-weight columns are invalid")
+    for weights in vertex_weights:
+        if (
+            len(weights) != len(binding_names)
+            or any(
+                isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(float(value)) or value < 0.0
+                for value in weights
+            )
+            or abs(sum(weights) - 1.0) > 1.0e-6
+        ):
+            raise ImportError("conforming surface refinement source route weights are invalid")
+
+    def f32_vector(point: list[float] | tuple[float, ...]) -> tuple[float, float, float]:
+        if len(point) != 3 or any(not math.isfinite(float(value)) for value in point):
+            raise ImportError("conforming surface refinement has a non-finite 3D field")
+        try:
+            packed = struct.pack("<3f", *(float(value) for value in point))
+        except (OverflowError, struct.error) as error:
+            raise ImportError("conforming surface refinement field exceeds Float32 range") from error
+        result = struct.unpack("<3f", packed)
+        if any(not math.isfinite(value) for value in result):
+            raise ImportError("conforming surface refinement field exceeds Float32 range")
+        return result
+
+    position_f32 = [f32_vector(point) for point in vertices_m]
+    normal_f32 = [f32_vector(point) for point in normals]
+    endpoint_keys = (
+        struct.pack("<3f", *position_f32[endpoint_a]),
+        struct.pack("<3f", *position_f32[endpoint_b]),
+    )
+    if endpoint_keys[0] == endpoint_keys[1]:
+        raise ImportError("conforming surface refinement edge collapses on the Float32 source lattice")
+    indexed_incidence: list[tuple[int, int, int]] = []
+    coordinate_incidence: list[tuple[int, int, int]] = []
+    edge_ids = {endpoint_a, endpoint_b}
+    coordinate_key = tuple(sorted(endpoint_keys))
+    for face_row, face in enumerate(faces):
+        if (
+            not isinstance(face, (list, tuple)) or len(face) != 3
+            or any(not isinstance(value, int) or isinstance(value, bool) for value in face)
+        ):
+            raise ImportError("conforming surface refinement requires triangular integer source faces")
+        a, b, c = face
+        if len({a, b, c}) != 3 or min(a, b, c) < 0 or max(a, b, c) >= len(vertices_m):
+            raise ImportError("conforming surface refinement source face has invalid indices")
+        for left, right in ((a, b), (b, c), (c, a)):
+            if {left, right} == edge_ids:
+                indexed_incidence.append((face_row, left, right))
+            left_key = struct.pack("<3f", *position_f32[left])
+            right_key = struct.pack("<3f", *position_f32[right])
+            if tuple(sorted((left_key, right_key))) == coordinate_key:
+                coordinate_incidence.append((face_row, left, right))
+    if len(indexed_incidence) != 2:
+        raise ImportError(
+            "conforming surface refinement edge must have exactly two indexed incident faces"
+        )
+    if len(coordinate_incidence) != 2 or {
+        (row, left, right) for row, left, right in coordinate_incidence
+    } != {(row, left, right) for row, left, right in indexed_incidence}:
+        raise ImportError(
+            "conforming surface refinement rejects missing, duplicated, or coordinate-welded edge copies"
+        )
+    first_direction = indexed_incidence[0][1:]
+    second_direction = indexed_incidence[1][1:]
+    if first_direction != (second_direction[1], second_direction[0]):
+        raise ImportError("conforming surface refinement incident faces do not oppose edge winding")
+
+    midpoint_exact = tuple(
+        0.5 * (position_f32[endpoint_a][axis] + position_f32[endpoint_b][axis])
+        for axis in range(3)
+    )
+    midpoint = f32_vector(midpoint_exact)
+    if midpoint in (position_f32[endpoint_a], position_f32[endpoint_b]):
+        raise ImportError("conforming surface refinement midpoint rounds onto an endpoint")
+    midpoint_world_m = [
+        sum(global_matrix[row][column] * midpoint[column] * 1000.0 for column in range(3))
+        + global_matrix[row][3]
+        for row in range(3)
+    ]
+    midpoint_weights, nearest_route_distance, active_influences = (
+        _bodyparts_myosim_route_weights_for_world_point(
+            midpoint_world_m, binding_names, route_points,
+            f"BodyParts3D stable surface {stable_id} refined midpoint",
+        )
+    )
+    if len(midpoint_weights) != len(vertex_weights[0]) or any(
+        not math.isfinite(value) or value < 0.0 for value in midpoint_weights
+    ) or abs(sum(midpoint_weights) - 1.0) > 1.0e-6:
+        raise ImportError("conforming surface refinement route owner returned invalid midpoint weights")
+
+    normal_sum = [
+        normal_f32[endpoint_a][axis] + normal_f32[endpoint_b][axis]
+        for axis in range(3)
+    ]
+    normal_length = math.sqrt(sum(value * value for value in normal_sum))
+    if not math.isfinite(normal_length) or normal_length <= 1.0e-12:
+        raise ImportError("conforming surface refinement endpoint normals cancel")
+    midpoint_normal = f32_vector([value / normal_length for value in normal_sum])
+
+    updated_faces = [list(face) for face in faces]
+    appended_children: list[list[int]] = []
+    parent_records: list[dict[str, Any]] = []
+
+    def rotate_to(face: tuple[int, int, int], vertex_id: int) -> tuple[int, int, int]:
+        try:
+            start = face.index(vertex_id)
+        except ValueError as error:
+            raise ImportError("conforming surface refinement child lost its expected corner") from error
+        return (face[start], face[(start + 1) % 3], face[(start + 2) % 3])
+
+    def cross(face: tuple[int, int, int]) -> tuple[float, float, float]:
+        points = [
+            midpoint if index == len(vertices_m) else position_f32[index]
+            for index in face
+        ]
+        p0, p1, p2 = points
+        u = tuple(p1[axis] - p0[axis] for axis in range(3))
+        v = tuple(p2[axis] - p0[axis] for axis in range(3))
+        return (
+            u[1] * v[2] - u[2] * v[1],
+            u[2] * v[0] - u[0] * v[2],
+            u[0] * v[1] - u[1] * v[0],
+        )
+
+    for face_row, edge_start, edge_end in indexed_incidence:
+        original = tuple(faces[face_row])
+        edge_position = next(
+            index for index in range(3)
+            if original[index] == edge_start and original[(index + 1) % 3] == edge_end
+        )
+        third = original[(edge_position + 2) % 3]
+        child_a = (edge_start, len(vertices_m), third)
+        child_b = (len(vertices_m), edge_end, third)
+        original_first = original[0]
+        if original_first in child_a and original_first not in child_b:
+            retained, appended = child_a, child_b
+        elif original_first in child_b and original_first not in child_a:
+            retained, appended = child_b, child_a
+        else:
+            retained, appended = child_a, child_b
+        retained = rotate_to(retained, original_first)
+        appended = rotate_to(appended, len(vertices_m))
+        old_normal = cross(original)
+        for child in (retained, appended):
+            child_normal = cross(child)
+            if sum(old_normal[axis] * child_normal[axis] for axis in range(3)) <= 0.0:
+                raise ImportError("conforming surface refinement creates a zero-area or reversed child")
+        appended_row = len(faces) + len(appended_children)
+        updated_faces[face_row] = list(retained)
+        appended_children.append(list(appended))
+        parent_records.append({
+            "source_parent_face_row": face_row,
+            "retained_output_face_row": face_row,
+            "retained_child": list(retained),
+            "appended_output_face_row": appended_row,
+            "appended_child": list(appended),
+        })
+
+    maximum_rounding_error = math.sqrt(sum(
+        (midpoint[axis] - midpoint_exact[axis]) ** 2 for axis in range(3)
+    ))
+    operation = {
+        "status": "explicit_inferred_source_surface_refinement",
+        "stable_surface_id": stable_id,
+        "method": "bisect_one_indexed_coordinate_unique_two_face_edge_and_sample_existing_route_weight_owner",
+        "edge_local_vertex_ids": [endpoint_a, endpoint_b],
+        "edge_endpoint_source_f32_m": [list(position_f32[endpoint_a]), list(position_f32[endpoint_b])],
+        "incident_source_face_rows": [row for row, _, _ in indexed_incidence],
+        "incident_edge_directions": [[left, right] for _, left, right in indexed_incidence],
+        "parent_face_children": parent_records,
+        "new_vertex_local_id": len(vertices_m),
+        "new_vertex_source_f32_m": list(midpoint),
+        "new_vertex_float32_rounding_error_m": maximum_rounding_error,
+        "new_vertex_route_owner": "nearest_exact_myosim_route_nodes_inverse_squared_four_influence",
+        "route_body_binding_order": list(binding_names),
+        "global_source_mm_to_myosim_world_m": global_matrix,
+        "authored_route_points": [
+            {
+                key: point[key]
+                for key in ("body", "core_body_index", "kind", "world_m")
+                if key in point
+            }
+            for point in route_points
+        ],
+        "new_vertex_route_weights_double": midpoint_weights,
+        "new_vertex_max_nearest_route_distance_m": nearest_route_distance,
+        "new_vertex_active_route_influence_count": active_influences,
+        "old_vertex_count": len(vertices_m),
+        "new_vertex_count": len(vertices_m) + 1,
+        "old_face_count": len(faces),
+        "new_face_count": len(faces) + 2,
+        "all_existing_vertex_records_preserved": True,
+    }
+    return (
+        [list(vertex) for vertex in vertices_m] + [list(midpoint)],
+        [list(normal) for normal in normals] + [list(midpoint_normal)],
+        [list(vertex) for vertex in global_vertices] + [midpoint_world_m],
+        [list(weights) for weights in vertex_weights] + [midpoint_weights],
+        updated_faces + appended_children,
+        operation,
+    )
+
+
 def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, myosim_artifact: Path, output: Path,
     stable_id_subset: set[int] | None = None,
+    conforming_edge_refinements: list[tuple[int, int, int]] | None = None,
 ) -> dict[str, Any]:
     """Package source-authored limb, shoulder, arm, hand and abdominal surfaces.
 
@@ -10920,6 +11230,24 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "BodyParts3D calcaneal-tendon subset requires stable IDs 1, 3, and 5 "
                 "for its named gastrocnemius/soleus body-weight inheritance"
             )
+    requested_edge_refinements: dict[int, tuple[int, int]] = {}
+    for request in conforming_edge_refinements or []:
+        if (
+            not isinstance(request, (tuple, list)) or len(request) != 3
+            or any(not isinstance(value, int) or isinstance(value, bool) for value in request)
+        ):
+            raise ImportError("conforming edge requests must be (stable ID, vertex A, vertex B) integer triples")
+        requested_stable_id, endpoint_a, endpoint_b = request
+        if (
+            not 1 <= requested_stable_id <= len(specifications)
+            or endpoint_a < 0 or endpoint_b < 0 or endpoint_a == endpoint_b
+            or requested_stable_id in requested_edge_refinements
+        ):
+            raise ImportError("conforming edge request has an invalid or duplicate source identity")
+        if stable_id_subset is not None and requested_stable_id not in stable_id_subset:
+            raise ImportError("conforming edge request targets a surface omitted by the selected subset")
+        requested_edge_refinements[requested_stable_id] = (endpoint_a, endpoint_b)
+    applied_edge_refinements: set[int] = set()
     registration_anchors = registration.get("anchors")
     if not isinstance(registration_anchors, list):
         raise ImportError("BodyParts3D full-body tissue payload has no visual-skeleton anchors")
@@ -10998,6 +11326,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         )
         normals = _bodyparts_vertex_normals(vertices_mm, triangles, member)
         global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
+        refinement_route_points: list[dict[str, Any]] | None = None
         explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
         if explicit_primary is None and explicit_secondary is None:
             route_pairs = {
@@ -11370,53 +11699,20 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     raise ImportError(
                         f"BodyParts3D full-body tissue surface {member_id} has no route points"
                     )
+                refinement_route_points = route_points
                 vertex_weights = []
                 maximum_influences = 0
                 maximum_nearest_route_distance = 0.0
                 for vertex in global_vertices:
-                    squared_by_binding = [math.inf] * len(binding_names)
-                    for point in route_points:
-                        index = binding_index.get(point["body"])
-                        if index is None:
-                            raise ImportError(
-                                f"BodyParts3D tissue {member_id} route point escapes its binding table"
-                            )
-                        squared = sum(
-                            (vertex[axis] - point["world_m"][axis]) ** 2
-                            for axis in range(3)
+                    weights, nearest_distance, active_influences = (
+                        _bodyparts_myosim_route_weights_for_world_point(
+                            vertex, binding_names, route_points,
+                            f"BodyParts3D tissue {member_id}",
                         )
-                        squared_by_binding[index] = min(squared_by_binding[index], squared)
-                    nearest = sorted(
-                        (squared, index)
-                        for index, squared in enumerate(squared_by_binding)
-                        if math.isfinite(squared)
-                    )[:_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES]
-                    if not nearest:
-                        raise ImportError(
-                            f"BodyParts3D tissue {member_id} vertex has no route-body influence"
-                        )
-                    maximum_nearest_route_distance = max(
-                        maximum_nearest_route_distance, math.sqrt(nearest[0][0])
                     )
-                    weights = [0.0] * len(binding_names)
-                    if nearest[0][0] <= 1.0e-12:
-                        weights[nearest[0][1]] = 1.0
-                        active_influences = 1
-                    else:
-                        # A 3 mm softening radius avoids singular weights at a
-                        # route point while retaining local digital-slip
-                        # ownership. Four influences provide smooth joint
-                        # transitions without letting a distant finger drag a
-                        # neighboring tendon sheet.
-                        raw = [1.0 / (squared + 9.0e-6) for squared, _ in nearest]
-                        total = sum(raw)
-                        if not math.isfinite(total) or total <= 0.0:
-                            raise ImportError(
-                                f"BodyParts3D tissue {member_id} route weights are non-finite"
-                            )
-                        for value, (_, index) in zip(raw, nearest, strict=True):
-                            weights[index] = value / total
-                        active_influences = len(nearest)
+                    maximum_nearest_route_distance = max(
+                        maximum_nearest_route_distance, nearest_distance
+                    )
                     maximum_influences = max(maximum_influences, active_influences)
                     vertex_weights.append(weights)
                 route_binding_diagnostics = {
@@ -11720,6 +12016,46 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             face_cancellation["emitted_vertex_count"] = len(stored_vertices_m)
             face_cancellation["emitted_triangle_count"] = len(triangles)
             face_cancellation["emitted_vertices_compacted"] = False
+        source_binding_global_vertices = global_vertices
+        source_binding_vertex_weights = vertex_weights
+        edge_refinement_record: dict[str, Any] | None = None
+        refinement_source_faces: list[list[int]] | None = None
+        if stable_id in requested_edge_refinements:
+            if (
+                layer != _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE
+                or route_binding_diagnostics.get("method")
+                    != "nearest_exact_myosim_route_nodes_inverse_squared_four_influence"
+                or refinement_route_points is None
+                or source_component_selection is not None
+                or attachment_weight_lock is not None
+                or primary_attachment_weight_lock is not None
+                or toe_enthesis_weight_lock is not None
+                or source_visual_untangle is not None
+                or face_cancellation["cancelled_opposite_face_pairs"]
+            ):
+                raise ImportError(
+                    f"BodyParts3D surface {stable_id} is outside the supported route-bound refinement owner"
+                )
+            refinement_source_faces = [list(map(int, face)) for face in triangles]
+            (
+                stored_vertices_m, stored_normals, global_vertices, vertex_weights, triangles,
+                edge_refinement_record,
+            ) = _bodyparts_refine_conforming_route_edge(
+                stable_id, requested_edge_refinements[stable_id],
+                stored_vertices_m, stored_normals, global_vertices, vertex_weights, triangles,
+                global_matrix, binding_names, refinement_route_points,
+            )
+            applied_edge_refinements.add(stable_id)
+            route_binding_diagnostics["maximum_vertex_influences"] = max(
+                route_binding_diagnostics["maximum_vertex_influences"],
+                edge_refinement_record["new_vertex_active_route_influence_count"],
+            )
+            route_binding_diagnostics["maximum_nearest_route_distance_m"] = max(
+                route_binding_diagnostics["maximum_nearest_route_distance_m"],
+                edge_refinement_record["new_vertex_max_nearest_route_distance_m"],
+            )
+            route_binding_diagnostics["conforming_refinement_midpoint_count"] = 1
+
         first_binding = len(bindings_payload)
         for target, transform in zip(
             binding_targets,
@@ -11760,6 +12096,27 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             vertices_payload.append(struct.pack(
                 "<6f4I4f", *vertex, *normal, *influence_indices, *influence_weights
             ))
+        if edge_refinement_record is not None:
+            original_vertex_count = edge_refinement_record["old_vertex_count"]
+            original_vertex_bytes = b"".join(
+                vertices_payload[first_vertex:first_vertex + original_vertex_count]
+            )
+            if refinement_source_faces is None:
+                raise ImportError("conforming surface refinement lost its source face rows")
+            original_face_indices = [
+                index for face in refinement_source_faces for index in face
+            ]
+            original_face_bytes = struct.pack(
+                f"<{len(original_face_indices)}I", *original_face_indices
+            )
+            edge_refinement_record["source_row_vertex_bytes_sha256"] = hashlib.sha256(
+                original_vertex_bytes
+            ).hexdigest()
+            edge_refinement_record["source_row_local_faces_sha256"] = hashlib.sha256(
+                original_face_bytes
+            ).hexdigest()
+            edge_refinement_record["source_row_vertex_byte_count"] = len(original_vertex_bytes)
+            edge_refinement_record["source_row_local_face_index_byte_count"] = len(original_face_bytes)
         indices_payload.extend(first_vertex + index for triangle in triangles for index in triangle)
         records_payload.append(struct.pack(
             "<8I", first_binding, len(binding_names), first_vertex,
@@ -11789,6 +12146,11 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         })
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
             provenance[-1]["route_binding"] = route_binding_diagnostics
+        if edge_refinement_record is not None:
+            edge_refinement_record["member_id"] = member_id
+            edge_refinement_record["member"] = member
+            edge_refinement_record["source_obj_sha256"] = hashlib.sha256(obj).hexdigest()
+            provenance[-1]["conforming_edge_refinement"] = edge_refinement_record
         if attachment_weight_lock is not None:
             provenance[-1]["secondary_attachment_weight_lock"] = attachment_weight_lock
         if primary_attachment_weight_lock is not None:
@@ -11808,9 +12170,12 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "member_id": member_id,
                 "myosim_muscles": list(source_muscles),
                 "binding_names": binding_names,
-                "global_vertices": global_vertices,
-                "vertex_weights": vertex_weights,
+                "global_vertices": source_binding_global_vertices,
+                "vertex_weights": source_binding_vertex_weights,
             }
+    if applied_edge_refinements != set(requested_edge_refinements):
+        missing = sorted(set(requested_edge_refinements) - applied_edge_refinements)
+        raise ImportError(f"conforming edge requests were not applied to source surfaces: {missing}")
     if len(vertices_payload) > 0xFFFFFFFF or len(indices_payload) > 0xFFFFFFFF:
         raise ImportError("BodyParts3D full-body tissue payload exceeds the uint32 native renderer capacity")
     registration_fingerprint = _bodyparts_visual_registration_fingerprint(registration_file)

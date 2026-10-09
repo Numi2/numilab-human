@@ -1501,6 +1501,19 @@ def myosim_bodyparts_right_posterior_chain_visual_payload(arguments: argparse.Na
     return 0
 
 
+def _parse_conforming_edge_refinement(value: str) -> tuple[int, int, int]:
+    parts = value.split(":")
+    if len(parts) != 3:
+        raise argparse.ArgumentTypeError("expected STABLE_ID:VERTEX_A:VERTEX_B")
+    try:
+        stable_id, vertex_a, vertex_b = (int(part, 10) for part in parts)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("conforming edge IDs must be decimal integers") from error
+    if stable_id <= 0 or vertex_a < 0 or vertex_b < 0 or vertex_a == vertex_b:
+        raise argparse.ArgumentTypeError("conforming edge IDs are outside the supported range")
+    return stable_id, vertex_a, vertex_b
+
+
 def myosim_bodyparts_fullbody_soft_tissue_visual_payload(arguments: argparse.Namespace) -> int:
     sources = arguments.sources.resolve()
     anatomy = parse_bodyparts3d(sources, REPOSITORY_ROOT / "config/anatomy-classification.v1.json")
@@ -1508,6 +1521,7 @@ def myosim_bodyparts_fullbody_soft_tissue_visual_payload(arguments: argparse.Nam
         sources, anatomy, arguments.registration.resolve(), arguments.artifact.resolve(),
         arguments.output.resolve(),
         set(arguments.stable_id) if arguments.stable_id else None,
+        arguments.conforming_edge_refinement or None,
     )
     print(f"wrote {arguments.output.resolve() / manifest['payload']['file']}")
     print(f"wrote {arguments.output.resolve() / 'bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json'}")
@@ -2116,6 +2130,13 @@ def parser() -> argparse.ArgumentParser:
     myosim_fullbody_tissue_payload_parser.add_argument(
         "--stable-id", type=int, action="append",
         help="emit only this existing BodyParts3D/MyoSim surface stable ID; repeat as needed",
+    )
+    myosim_fullbody_tissue_payload_parser.add_argument(
+        "--conforming-edge-refinement", type=_parse_conforming_edge_refinement, action="append",
+        help=(
+            "opt in to one inferred route-bound source-edge bisection as "
+            "STABLE_ID:VERTEX_A:VERTEX_B; repeat for distinct surfaces"
+        ),
     )
     myosim_fullbody_tissue_payload_parser.add_argument("--output", type=Path, required=True)
     myosim_fullbody_tissue_payload_parser.set_defaults(
