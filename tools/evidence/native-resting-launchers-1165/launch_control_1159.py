@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Safely replay the pinned P17 control scene through its existing owner CLI."""
+"""Safely replay the pinned P18 control scene through its existing owner CLI."""
 import argparse
 import hashlib
 import json
@@ -11,13 +11,13 @@ import sys
 import tempfile
 import uuid
 
-EVIDENCE = Path("/Users/n/numi-human-resting-evidence-20261005/native-resting-launcher-1159")
-PLAN = Path("/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-917/final-lung1159-plan-attempt2/draft/plan.json")
-PLAN_SHA256 = "93881c3f869e3141e64f70676f1d255bb96e270f6758ec11548a57530e035467"
-SOURCE_HASHES = Path("/Users/n/numi-human-resting-evidence-20261005/final-integrated-study-readiness-917/final-lung1159-plan-attempt2/source-hashes-final.json")
-SOURCE_HASHES_SHA256 = "0da08ff5e1a729c96037f1eda55df7f1ee0cfd04d4c0b5db622943e88e2924a6"
-OWNER = Path("/Users/n/numi-human-area-audit-fma-fix-001/matter/tools/resting_intervention_study.py")
-OWNER_SHA256 = "81b910a3ef745aa04bd47d1d9c291a1865cccb56f7234021fe10c6335252fe11"
+EVIDENCE = Path("/Users/n/numi-human-retained-delivery-20261009/launchers")
+PLAN = Path("/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-draft-v018/attempt3/draft/plan.json")
+PLAN_SHA256 = "5fe92085c55f0530fdf41c0bba2f9aa790b2ff9c5e112512b745e24ca9802bad"
+SOURCE_HASHES = Path("/Users/n/numi-human-retained-delivery-20261009/native-integrated-resting-study-1170-draft-v018/attempt3/source-hashes-final.json")
+SOURCE_HASHES_SHA256 = "6bb105cdc8106b6837547fb14de8624703f17f00c00537eaac99aecc805b8027"
+OWNER = Path("/Users/n/numi-human-terminal-trace-capture-fix-1162/matter/tools/resting_intervention_study.py")
+OWNER_SHA256 = "ef87b09a17b96c985d6f584932e806ba9e7c6a53785da32a37a56ac846a3ac5f"
 TRIAL_ID = "resting-baseline"
 
 
@@ -42,16 +42,16 @@ def arg_value(argv, flag):
 
 def load_pinned_trial():
     if sha256(PLAN) != PLAN_SHA256:
-        fail("P17 plan hash changed")
+        fail("P18 plan hash changed")
     if sha256(SOURCE_HASHES) != SOURCE_HASHES_SHA256:
-        fail("P17 source-hash manifest changed")
+        fail("P18 source-hash manifest changed")
     source_hashes = json.loads(SOURCE_HASHES.read_text(encoding="utf-8"))
     if source_hashes.get(str(OWNER)) != OWNER_SHA256 or sha256(OWNER) != OWNER_SHA256:
-        fail("owner CLI differs from the P17 source pin")
+        fail("owner CLI differs from the P18 source pin")
     plan = json.loads(PLAN.read_text(encoding="utf-8"))
     trials = [trial for trial in plan.get("trials", []) if trial.get("id") == TRIAL_ID]
     if len(trials) != 1:
-        fail("pinned P17 control trial is missing or duplicated")
+        fail("pinned P18 control trial is missing or duplicated")
     trial = trials[0]
     if trial.get("arm") != "control":
         fail("pinned trial is not the control arm")
@@ -61,7 +61,7 @@ def load_pinned_trial():
     if arg_value(argv, "--arm") != "control":
         fail("pinned trial arm changed")
     expected = {
-        "--unit-id": "human-resting-reference-v1-15796c9c2b102cd97c32",
+        "--unit-id": "human-resting-reference-v1-bc33006ec0984b36b738",
         "--world-fingerprint": "14697719457569737910",
         "--device": "Apple M4 Pro",
         "--steps": "155000",
@@ -83,7 +83,7 @@ def load_pinned_trial():
     if not invocation_path.is_file() or not identity_path.is_file():
         fail("pinned invocation or native-build identity is missing")
     if sha256(identity_path) != identity_sha256:
-        fail("native-build identity differs from the P17 trial pin")
+        fail("native-build identity differs from the P18 trial pin")
     identity = json.loads(identity_path.read_text(encoding="utf-8"))
     invocation = identity.get("native_invocation", {})
     if invocation.get("path") != str(invocation_path) or invocation.get("sha256") != sha256(invocation_path):
@@ -96,7 +96,7 @@ def resolve_run_dir(output_dir, dry_run):
         if dry_run:
             # Preview only; never create this path during a dry run.
             return EVIDENCE / ("preview-control-" + uuid.uuid4().hex)
-        return Path(tempfile.mkdtemp(prefix="native-resting-control-1159-", dir=str(EVIDENCE)))
+        return Path(tempfile.mkdtemp(prefix="native-resting-control-1170-", dir=str(EVIDENCE)))
     requested = Path(output_dir).expanduser()
     if not requested.is_absolute():
         fail("--output-dir must be an absolute path")
@@ -116,7 +116,7 @@ def resolve_run_dir(output_dir, dry_run):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run the exact P17 control scene through the existing Human run-native CLI.")
+        description="Run the exact P18 control scene through the existing Human run-native CLI.")
     parser.add_argument("--dry-run", action="store_true",
                         help="verify pins and print argv/cwd without creating directories or launching")
     parser.add_argument("--output-dir", help="optional fresh absolute run directory under this evidence directory")
@@ -124,7 +124,7 @@ def main():
     argv = load_pinned_trial()
     run_dir = resolve_run_dir(args.output_dir, args.dry_run)
     argv[argv.index("--output") + 1] = str(run_dir / "scene")
-    print("P17 plan: %s sha256=%s" % (PLAN, PLAN_SHA256))
+    print("P18 plan: %s sha256=%s" % (PLAN, PLAN_SHA256))
     print("Owner CLI: %s sha256=%s" % (OWNER, OWNER_SHA256))
     print("Run directory: %s" % run_dir)
     print("Scene output: %s" % (run_dir / "scene"))
