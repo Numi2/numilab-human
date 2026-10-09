@@ -1,0 +1,35 @@
+--- /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/run-heldout-1218.py
++++ /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-002/run-heldout-1218.py
+@@ -8,9 +8,10 @@
+ for n in ("OPENBLAS_NUM_THREADS","OMP_NUM_THREADS","VECLIB_MAXIMUM_THREADS","MKL_NUM_THREADS","NUMEXPR_NUM_THREADS"): os.environ[n]="1"
+ R=Path("/Users/n/numi-human-retained-delivery-20261009"); E=Path("/Users/n/numi-human-resting-evidence-20261005")
+ ROOT=Path("/Users/n/numi-human-conforming-composition-source-1216")
+-HERE=R/"skin-resting-multipose-clearance-1218/heldout-001"
++SOURCE=R/"skin-resting-multipose-clearance-1218/heldout-001"
++HERE=R/"skin-resting-multipose-clearance-1218/heldout-002"
+ OUT=HERE/"scan-output"
+-BASE_AUDIT=HERE/"audit_six_holdouts_1218.py"
++BASE_AUDIT=SOURCE/"audit_six_holdouts_1218.py"
+ FIT=R/"skin-resting-multipose-clearance-1218/fit-attempt-001"
+ HELDOUT=(4991,5375,5759,6111,6495,7743); KEY=(51005,64)
+ TISS=R/"muscle-conforming-refinement-1216/compose-final-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+@@ -18,8 +19,8 @@
+ BASE_TISS=E/"passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+ CTX=R/"muscle-conforming-refinement-1216/producer-attempt-002/producer-subset-001"
+ CTISS=CTX/"bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"; CMAN=CTX/"bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json"
+-TARGET_VALIDATION=HERE/"refined-target-1217-validation.json"
+-VALIDATOR=HERE/"validate-refined-target-1217.py"
++TARGET_VALIDATION=SOURCE/"refined-target-1217-validation.json"
++VALIDATOR=SOURCE/"validate-refined-target-1217.py"
+ HELPER=Path("/Users/n/numi-human-conforming-composition-source-1216/src/numilab_human/model.py")
+ RUN=R/"native-lung1178-thumb1187-smoke-1191/native-run"
+ NATIVE_DECL=R/"muscle-conforming-refinement-1216/native-refinement-1217-attempt2/run-declaration.json"
+@@ -175,7 +176,7 @@
+      receipt_path=p.with_suffix(".receipt.json"); receipt=json.loads(receipt_path.read_text())
+      need(int(receipt.get("accepted_step",-1))==step,"heldout NHTISS target prediction lacks accepted pose receipt")
+      packed_faces=np.asarray(surfaces[KEY]["faces"],dtype=np.int64)
+-     old_map=target_module.face_map(old_faces,packed_faces,len(base["v"]))
++     old_map=target_module.vertex_map(old_faces,packed_faces,len(base["v"]))
+      original_positions=np.asarray(positions)
+      midpoint_world=target_module.mapped_vertices(candidate["v"][-1:],candidate["binds"],receipt)[0]
+      new_global_id=len(original_positions)

@@ -1,0 +1,53 @@
+{
+  "all54949_first_offsets_differ_by3": true,
+  "anatomy_parameters_sha256": [
+    "ef7a80c590057a8073df76a4ef107f11c2fc5ab440eb93880d8c315a65753fb7",
+    "ef7a80c590057a8073df76a4ef107f11c2fc5ab440eb93880d8c315a65753fb7"
+  ],
+  "cohort_receipts": [
+    {
+      "bytes": 68081,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/native-refinement-1217-attempt2/native-run/accepted-geometry/step-0.receipt.json",
+      "sha256": "9bd94a969fdf73131ef9ed40486925bd35bea0c26161c0d6a22db1f50cca6d19"
+    },
+    {
+      "bytes": 67961,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.receipt.json",
+      "sha256": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681"
+    }
+  ],
+  "command": "/Users/n/numi-human-prep-venv-20261005/bin/python3.13 -u audit_local_reduction_1218_root001.py --scan",
+  "log": {
+    "bytes": 1180,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/scan-root001.log",
+    "sha256": "d627ddb7cf5cbed05a19b7f6dda8ac64dfc6e3085ba3cc2c6e046c1cae61a454"
+  },
+  "other_fields_byte_identical": {
+    "basis": true,
+    "chamber": true,
+    "count": true,
+    "kind": true,
+    "weight": true
+  },
+  "qualification": "Diagnostic comparison only. Failed root001 did not create any pose geometry result or advance native physics. Root003 is a separate new audit; its results must be read independently.",
+  "reason": "Cross-cohort full map hash equality was overly strict because the refined NHTISS changes global influence-buffer offsets; root003 evaluates each cohort using its own receipt-bound map.",
+  "returncode": 1,
+  "script": {
+    "bytes": 26279,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/audit_local_reduction_1218_root001.py",
+    "sha256": "84a4f1b05a61c25499e79df73afdf25d5663b75a71c4c143956aadceae76ae0a"
+  },
+  "status": "setup_failed_before_geometry_scan",
+  "vertex_map_pins": [
+    {
+      "bytes": 2637552,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/native-refinement-1217-attempt2/native-run/skin-source-vertex-map.bin",
+      "sha256": "292a013e86ed36de46e264bb0ad2ec9f2ea9dd1bf9f64ba132d84ce9aa2d3e02"
+    },
+    {
+      "bytes": 2637552,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/skin-source-vertex-map.bin",
+      "sha256": "6190465659539a232cd41bde6b64e28dde79ec9c004e934fcec45ead05768b57"
+    }
+  ]
+}

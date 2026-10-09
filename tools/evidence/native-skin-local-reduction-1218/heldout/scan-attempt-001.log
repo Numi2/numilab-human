@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/run-heldout-1218.py", line 214, in <module>
+    if __name__=="__main__": raise SystemExit(main())
+                                              ~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/run-heldout-1218.py", line 202, in main
+    rc=audit.main()
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/audit_six_holdouts_1218.py", line 331, in main
+    positions,surfaces,pack_counts=clearance_pred._pack_surfaces(pack,set(keys))
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/run-heldout-1218.py", line 178, in read_with_refined_64
+    old_map=target_module.face_map(old_faces,packed_faces,len(base["v"]))
+            ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module '_refined_stable64_1217_validation' has no attribute 'face_map'

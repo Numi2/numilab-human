@@ -1,0 +1,14 @@
+{"phase": "capture_loaded", "step": 0, "cohort": "1217_native_refinement"}
+{"phase": "capture_loaded", "step": 9983, "cohort": "1217_native_refinement"}
+{"phase": "capture_loaded", "step": 20000, "cohort": "1217_native_refinement"}
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/audit_local_reduction_1218_root001.py", line 294, in <module>
+    if __name__=="__main__":raise SystemExit(main())
+                                             ~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/audit_local_reduction_1218_root001.py", line 178, in main
+    else:req(maps==ident,"skin/resp map mismatch across cohorts")
+         ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/audit_local_reduction_1218_root001.py", line 70, in req
+    if not ok:raise RuntimeError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: skin/resp map mismatch across cohorts

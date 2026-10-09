@@ -1,0 +1,42 @@
+{
+  "corrected_runner": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/run-heldout-1218.py",
+    "sha256": "87a4483e6d0e3add30c824af8f01ff2aaf857794e9576888614f46e45b1cc3d2"
+  },
+  "correction": "Replaced tautological producer-payload self-comparison with producer declaration/execution/manifest output binding; checks exact producer operation equals final-manifest operation, source039/context/helper pins, all target-report and fit-preflight input hashes, fit solve-start preflight link, 1172 static source closure, predicate modules and six existing accepted pack receipts.",
+  "failed_revision": {
+    "failures": [
+      {
+        "error": "ModuleNotFoundError: No module named 'numpy'",
+        "exit": 1,
+        "interpreter": "/usr/bin/python3"
+      },
+      {
+        "error": "TypeError: target validation report inputs are path-to-SHA strings, not nested sha256 objects",
+        "exit": 1,
+        "interpreter": "/Users/n/numi-human-prep-venv-20261005/bin/python3.13"
+      }
+    ],
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/run-heldout-1218.py.precheck-failed-v1",
+    "sha256": "321e411286f498df825d9c74dbd87b3a3e6b97cd14897b8ecf052d48d7aba57c"
+  },
+  "prepare_check": {
+    "all_existing_1172_receipts_verified": true,
+    "fit_preflight_inputs_verified": 49,
+    "geometry_scan_started": false,
+    "heldout_steps": [
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743
+    ],
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/heldout-001/prepare-check-002.json",
+    "sha256": "38beb5245b30d517bbd7ff39a5cb4b24af060d73fe600f8e2868b8b46a4fca13",
+    "status": "heldout_runner_prepared_not_scanned",
+    "target_validation_inputs_verified": 18
+  },
+  "schema": "numi.human.heldout-1218-preparation-history.v1",
+  "status": "prepared_only_no_geometry_scan"
+}

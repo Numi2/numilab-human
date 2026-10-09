@@ -1,0 +1,164 @@
+{
+  "attempts": [
+    {
+      "attempt": "001",
+      "files": {
+        "execution.log": {
+          "bytes": 927,
+          "sha256": "c1445cca70d5d8cb81d83b6c2d260b4fd0b0df6aa2ed5d3e5ab6e285cba2a3e9"
+        },
+        "feasibility.json": {
+          "bytes": 15649,
+          "sha256": "27ce76522abec1f7d5aef1161707a71841efbfbeab25575d1856a1a96f369414"
+        },
+        "feasibility.py": {
+          "bytes": 9250,
+          "sha256": "f9ba22937b06e4569bc268437c90118dbf12b34b641c41409c48adeae106ee60"
+        }
+      },
+      "interpretation": "Two uniform patch reduction scalars cannot satisfy chosen self and settled-target separating planes.",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-001",
+      "status": "infeasible"
+    },
+    {
+      "attempt": "002",
+      "files": {
+        "constraint-labels.json": {
+          "bytes": 4755657,
+          "sha256": "f25d03c630e958c64490d8fa15ccb2780ad79f012cfaad1a736c11879917bc0e"
+        },
+        "constraint-matrix.npz": {
+          "bytes": 72792,
+          "sha256": "7ab50d714411cc96eec8f1a8e0f0047d8e9a135230744d7b39e401cb834bbb83"
+        },
+        "constraint-rhs.npy": {
+          "bytes": 198344,
+          "sha256": "6764c2fb61dcae5b7c2cb38aaef92b5700d282079552de365287f5cafd95b09f"
+        },
+        "execution.log": {
+          "bytes": 4504,
+          "sha256": "38f4a0461f656bbb22e70e18310ac0272f5000d59d348327d710917a12e058aa"
+        },
+        "feasibility.json": {
+          "bytes": 21268,
+          "sha256": "91914db6464f3cd7fd1a9e034c13df797a5ed1f98155bbfcb4046caabeca628d"
+        },
+        "feasibility.py": {
+          "bytes": 11716,
+          "sha256": "0862825a4098ab68c0a46d53e0043b80056dda540a5a424978724f06ff840f99"
+        },
+        "unadmitted-source-proposal.npy": {
+          "bytes": 659516,
+          "sha256": "c508b53eda9906e56bdcae94f109ffc0497f43dfe7dd454f3b264a3b1549a82f"
+        }
+      },
+      "interpretation": "LP fallback was written, but QP failed; not selected for geometry audit or admission.",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-002",
+      "status": "linear_feasible_quadratic_failed_unadmitted"
+    },
+    {
+      "attempt": "003",
+      "files": {
+        "execution.log": {
+          "bytes": 692,
+          "sha256": "05649680f3d6ddef0ccdf38c0c5be1fe2a5ed08809f5ab6a8bad0d57770b241f"
+        },
+        "feasibility.json": {
+          "bytes": 13472,
+          "sha256": "34d9e2b86506edabc247875120a89bddb57c39ebec6330cb023eec94083b558d"
+        },
+        "feasibility.py": {
+          "bytes": 13065,
+          "sha256": "0c9501caf2017c81954bcae67eb2f52817c5262327b0999f593365231182c9f7"
+        }
+      },
+      "interpretation": "Singleton/constant constraints reduced; QP hit 200 iterations; no proposal emitted.",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-003",
+      "status": "quadratic_iteration_limit_no_proposal"
+    },
+    {
+      "attempt": "004",
+      "files": {
+        "constraint-labels.json": {
+          "bytes": 4755657,
+          "sha256": "f25d03c630e958c64490d8fa15ccb2780ad79f012cfaad1a736c11879917bc0e"
+        },
+        "constraint-matrix.npz": {
+          "bytes": 72792,
+          "sha256": "7ab50d714411cc96eec8f1a8e0f0047d8e9a135230744d7b39e401cb834bbb83"
+        },
+        "constraint-rhs.npy": {
+          "bytes": 198344,
+          "sha256": "6764c2fb61dcae5b7c2cb38aaef92b5700d282079552de365287f5cafd95b09f"
+        },
+        "execution.log": {
+          "bytes": 8578,
+          "sha256": "4bef163113e53304e02f5f20dba0708b911eb9443fd105c49e47aba994f975f8"
+        },
+        "feasibility.json": {
+          "bytes": 26042,
+          "sha256": "dd053cb43d5e992a36385baa0552573ffed84e70cb42fb3025ed21790a57afc6"
+        },
+        "feasibility.py": {
+          "bytes": 13677,
+          "sha256": "dda535152cc285b4e47ef1738400d6276e6061a6de89788a7574e76b37aad0ef"
+        },
+        "unadmitted-source-proposal.npy": {
+          "bytes": 659516,
+          "sha256": "2a7b416c166b034030c84ac5098dcb5aa6735573726e250e92bdd7a21d2ab258"
+        }
+      },
+      "interpretation": "Same per-vertex model solved in millimetres to condition the Hessian; selected only for independent exact audit.",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-004",
+      "status": "quadratic_success_pending_exact_geometry"
+    },
+    {
+      "attempt": "005",
+      "files": {
+        "constraint-labels.json": {
+          "bytes": 4755657,
+          "sha256": "f25d03c630e958c64490d8fa15ccb2780ad79f012cfaad1a736c11879917bc0e"
+        },
+        "constraint-matrix.npz": {
+          "bytes": 72792,
+          "sha256": "7ab50d714411cc96eec8f1a8e0f0047d8e9a135230744d7b39e401cb834bbb83"
+        },
+        "constraint-rhs.npy": {
+          "bytes": 198344,
+          "sha256": "6764c2fb61dcae5b7c2cb38aaef92b5700d282079552de365287f5cafd95b09f"
+        },
+        "execution.log": {
+          "bytes": 9025,
+          "sha256": "75dc2559e82a6b90663cdafb9b660ff85d2757a479a09c4d2a24e6abde170ea9"
+        },
+        "feasibility.json": {
+          "bytes": 209401,
+          "sha256": "3d679bd05d9a215347cf50c369eaebc31a614808bb9916bc179f0f2e89dbf03c"
+        },
+        "feasibility.py": {
+          "bytes": 15631,
+          "sha256": "eda511bd8fd49fe5c7e997180c4afbea15fd0bf5a03b4f43948633c958550b8c"
+        },
+        "unadmitted-source-proposal.npy": {
+          "bytes": 659516,
+          "sha256": "2a7b416c166b034030c84ac5098dcb5aa6735573726e250e92bdd7a21d2ab258"
+        }
+      },
+      "interpretation": "Revalidated49inherited fit pins and recorded542total tracked file paths including previously omitted imports. Bit-identical replay of004 proposal; no geometry algorithm change.",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-005",
+      "status": "dependency_complete_bit_exact_replay_pending_geometry"
+    }
+  ],
+  "clarification": "The005 report field loaded_module_files_pinned counts542total tracked paths, including assets; it is not542Python modules. The004 input-stability claim covers only its recorded list.005 is a new complete replay, not a retroactive change to004.",
+  "no_asset_admission": true,
+  "no_native_execution": true,
+  "previous_index": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-attempt-index.json",
+    "sha256": "8ab8c506a058ba78f4fbfff108e857e1e5a8a85dfae46672adde2975f63e36ae"
+  },
+  "qualification": "Inferred geometric source-correction proposals only. The failed attempts remain retained. Selected004 must pass exact9pose full geometry checks and native replay before use.",
+  "schema": "numi.human.source-clearance-attempt-index.v1",
+  "selected_candidate_array_file_sha256": "2a7b416c166b034030c84ac5098dcb5aa6735573726e250e92bdd7a21d2ab258",
+  "selected_candidate_qualification": "Proposal only; final exact posed geometry and native admission remain required.",
+  "wall_timing": "No external execution timing was collected for these bounded CPU authoring attempts; no timing claim is made."
+}
