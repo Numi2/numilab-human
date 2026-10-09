@@ -890,9 +890,14 @@ def _copy_checked_sidecar(source: Path, destination: Path, expected_sha256: str)
     try:
         os.link(source, destination)
     except OSError as error:
-        if error.errno != errno.EXDEV:
+        if error.errno not in (errno.EXDEV, errno.EPERM):
             raise
-        shutil.copyfile(source, destination)
+        # Cross-device filesystems and immutable source flags can forbid
+        # hard links even when the source remains readable. Create the copy
+        # exclusively so a destination appearing after the preflight check is
+        # never truncated or overwritten.
+        with source.open("rb") as source_file, destination.open("xb") as destination_file:
+            shutil.copyfileobj(source_file, destination_file)
     if hashlib.sha256(destination.read_bytes()).hexdigest() != expected_sha256:
         raise ValueError(f"relocated cardiac sidecar identity differs: {destination}")
 
