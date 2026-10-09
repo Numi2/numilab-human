@@ -1,0 +1,55 @@
+{
+  "candidate_nha": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1138-threeops-attempt1/final/resting-thorax.nhanatomy",
+    "sha256": "c1fdc74087f7f28b7c75f57d3ed30eaf0586bbfcb0115007e324f1c176a6a424"
+  },
+  "current_d_map": {
+    "counts_by_lobe": {
+      "305": 19743,
+      "306": 21600,
+      "307": 5514,
+      "308": 486,
+      "309": 0
+    },
+    "explicit_zero_lobes": [
+      309
+    ],
+    "mapped_face_count": 47343,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-selected-composition-dryrun-1113/provisional-1105-1106-v8/final-exact-D311-to-lobes-map.jsonl",
+    "sha256": "726eaf407129577b18eacc7a794a7f8fd20bcb5bfa333820a0ee19a2001747d1"
+  },
+  "effective_area_derivation": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1138-threeops-attempt1/final/effective-area-derivation.json",
+    "sha256": "e79babede8613a2518ad4ea2d1e59cbd4b46ff4735c5624cd5c7a0725a0e3c71"
+  },
+  "elapsed_seconds": 6.106228249147534,
+  "parser": {
+    "path": "/Users/n/numi-human-lung-seam-correction-001/src/numilab_human/resting_anatomy_interface_patch.py",
+    "sha256": "e7692e4239c6a5ca4c12667b9bce94c06efa9bc3bec86cbb74e4625eeb416187"
+  },
+  "registered_area_m2": 0.0408744648028095,
+  "registered_face_checks": {
+    "checked_d_rows": 47343,
+    "checked_lobe_rows": 47343,
+    "exact_face_index_triple_match": true,
+    "exact_xyz_triangle_match": true
+  },
+  "schema": "numi.human.lung-source-map-bridge-review.v1",
+  "scope_limit": "This is source and map lineage validation only. It does not establish transformed-pose collision clearance, native geometry acceptance, respiratory physiology, or endurance.",
+  "source_composition": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1138-threeops-attempt1/composition-report.json",
+    "sha256": "c1e90688d6eeb7a51207e70d59878b834009d8f54bf0d44df21512941e72d0c6"
+  },
+  "source_inputs": {
+    "/Users/n/numi-human-delta-skin-transfer-publication-1141/tools/evidence/native-lung-delta-skin-clearance-1141/source/audit_delta_1120.py": "74ef7863aece7dc2ab121458102ce04db435cc9f3bd7c6aa6d3531726e0465bb",
+    "/Users/n/numi-human-delta-skin-transfer-publication-1141/tools/evidence/native-lung-delta-skin-clearance-1141/source/successor_dmap_adapter_1120.py": "f838af4533f423d36dd8ca38e87529e5da1a82a1204b20e74bb01a2fe8efff67",
+    "/Users/n/numi-human-lung-contact-classifier-001/src/numilab_human/lung_contact_classification.py": "fd95fa6cca92706faa9c7dcf88fbe2243d1a7d865b391d2f632cc0230cf42710",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-d-lobe-boundary-parity-1086/native_feature_index_1085.py": "a982d97188fc8c207380afc2d3f8fe0e5934228cb816c2bea827115c84050928",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-exact-classifier-index-1084/native_feature_index.py": "2d9eab88a802a0223cad34f8b9d42066e55214d53dab5b7e0fc0f9b6aac9cd5e",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1138-threeops-attempt1/composition-report.json": "c1e90688d6eeb7a51207e70d59878b834009d8f54bf0d44df21512941e72d0c6",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1138-threeops-attempt1/final/resting-thorax.nhanatomy": "c1fdc74087f7f28b7c75f57d3ed30eaf0586bbfcb0115007e324f1c176a6a424",
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-transformed-pose-audit-1079/audit_lung_interfaces_1042_pinned.py": "791e2acdfdf917cd8554d83887f78682121a181216a07ff96c7ca2b985214345"
+  },
+  "status": "PASS_source_map_bridge_only_not_native_geometry_acceptance",
+  "validated_ancestry": "Exact V8 D face rows and source/owner semantics are rebound to the child; all mapped child D/lobe triangles equal V8 Float32 triangles and V8 already proves their 1078 ancestry."
+}

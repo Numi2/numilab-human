@@ -1,0 +1,49 @@
+{
+  "1080": {
+    "intersection_free": true,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-conditioned-skin-geometry-audit-1080/summary.json",
+    "sha256": "4fb87b0aac2e1d8da3936f79947c1d654cb7ff6c2550946ceb4015423772b82e"
+  },
+  "1113_to_1116": {
+    "all_861_primitives_exact": true,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-v8-integrity-review-1115/native-1113-vs-1116-geometry.json",
+    "sha256": "6b8f6d759af09a74527ee66c86bccc963e6a47ee3d031b07320c519f0465f2d7",
+    "state_exact": true
+  },
+  "1115_changed_face_skin_scan": {
+    "changed_triangles_per_pose": 16,
+    "exact_hits": 0,
+    "passed": true,
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-v8-integrity-review-1115/skin-transfer-rerun.json",
+    "sha256": "04662cf09c83f3be0a4ee2d1f1b74fdb1be77cc24996212030815d911268fb6c"
+  },
+  "accepted_steps": [
+    0,
+    4991,
+    5375,
+    5759,
+    6111,
+    6495,
+    7743,
+    10000
+  ],
+  "baseline_1116": {
+    "invocation_sha256": "f656d47332c79af4c9ead541d9dff50e747858695d1f0d1d258eac2f7c982b27",
+    "nha": "/Users/n/numi-human-resting-evidence-20261005/native-lung-final-metadata-refresh-1116/final/resting-thorax.nhanatomy",
+    "nha_sha256": "1b62f569f218cf8ba45f26c393bfaa4c8ed2ff499ab500c002dbbb006747b8bc",
+    "receipt_sha256": "f3753de9c40037011d5233a9a02b55cd434f18f29c62b49a4487b490a92b4293",
+    "run": "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1116-viewer-018-v015-attempt1/native-run",
+    "run_metadata_sha256": "7252b46ab1dcc31aa6f7b4bd9a64e1a2100776fa25d318af50a00435c344961b",
+    "runtime_verified": true,
+    "scene_manifest_sha256": "e31d42700ffcc0054b95b929419c397d57a8331bbb755e01030b8aa964ca8ed4"
+  },
+  "qualification_limit": "This validates only the retained baseline transfer chain; it is not a result for a future candidate or a new native scan.",
+  "schema": "numi.human.native-lung-skin-clearance-delta-transfer.baseline-check.v1",
+  "skin": {
+    "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin",
+    "sha256": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1",
+    "triangle_count": 109211
+  },
+  "status": "baseline_transfer_chain_validated",
+  "validated_utc": "2026-10-09T00:47:48Z"
+}

@@ -1,0 +1,58 @@
+{
+  "files": {
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/attempt-001-1138-source-map-bridge/README.md": {
+      "sha256": "e86a75e4588a861a3aeda652f4cb1192e12ccd6869e1238989e259ccf46ed95e",
+      "size_bytes": 2082
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/attempt-001-1138-source-map-bridge/source-map-bridge-report.json": {
+      "sha256": "2067ef35c0bff4ef57e022c693517f110feae24f85959626d31cf63f5e3e3bf0",
+      "size_bytes": 3818
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/audit_delta_1120.py": {
+      "sha256": "f0ffe436fdf0698c970c0df4f94139c74bf808b729276d734a2f9ce6f4dd02ec",
+      "size_bytes": 29920
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/successor_dmap_adapter_1120.py": {
+      "sha256": "8b20fd5b39fc8736d318d2be8cf379de2d92184a7a097ff3e8a427fd878bd085",
+      "size_bytes": 9850
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/test-suite-post-map-index-18.log": {
+      "sha256": "61d4603ee11978c820d91fce5b9c3dbfca7ce2b1719c073feca4420c7642aa3f",
+      "size_bytes": 4311
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/test_audit_delta_1120.py": {
+      "sha256": "11a9e598c48efb21049c73a7d7e2dec2f112d444a6facee5af470e395f7872c9",
+      "size_bytes": 15700
+    },
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/verify_1138_source_bridge.py": {
+      "sha256": "25f2c376dca30fc9ea7fb2ba5ad515089e07084ac749c34c39fc517074ae5054",
+      "size_bytes": 6423
+    }
+  },
+  "schema": "numi.human.native-lung-audit-exact-delta-1120.source-bridge-bundle.v1",
+  "source_bridge": {
+    "candidate_nha_sha256": "c1fdc74087f7f28b7c75f57d3ed30eaf0586bbfcb0115007e324f1c176a6a424",
+    "checks": [
+      "exact registered face index triples",
+      "exact Float32 registered triangle coordinates",
+      "verified V8-to-1078 source ancestry",
+      "current 524-row receipt and manifest bind candidate NHA"
+    ],
+    "composition_report_sha256": "c1e90688d6eeb7a51207e70d59878b834009d8f54bf0d44df21512941e72d0c6",
+    "map_sha256": "726eaf407129577b18eacc7a794a7f8fd20bcb5bfa333820a0ee19a2001747d1",
+    "mapped_faces": 47343,
+    "per_lobe": {
+      "305": 19743,
+      "306": 21600,
+      "307": 5514,
+      "308": 486,
+      "309": 0
+    }
+  },
+  "status": "source_map_bridge_passed_no_native_geometry_claim",
+  "tests": {
+    "command": "/Users/n/numi-human-prep-venv-20261005/bin/python -m unittest -v /Users/n/numi-human-resting-evidence-20261005/native-lung-audit-exact-delta-1120/test_audit_delta_1120.py",
+    "failed": 0,
+    "passed": 18
+  }
+}
