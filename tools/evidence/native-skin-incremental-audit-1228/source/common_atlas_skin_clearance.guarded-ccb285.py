@@ -819,7 +819,6 @@ def audit_incremental_skin_target_intersections(
             "reused_baseline_exact_pair_count": len(reused),
             "fresh_changed_face_exact_pair_count": len(remapped),
             "fresh_changed_face_aabb_candidate_pairs": aabb_count,
-            "aabb_work_scope": "changed_skin_faces_only",
         }
         change_sets[key_string] = {
             "added": [[int(a), int(b)] for a, b in sorted(added)],

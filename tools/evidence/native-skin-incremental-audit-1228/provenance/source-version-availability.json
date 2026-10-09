@@ -1,0 +1,27 @@
+{
+  "executed_source_versions": [
+    {
+      "availability": "not_recovered_byte_exactly",
+      "note": "No exact copy was found in the retained comparison directories. Reverse-applying the known later guard to the guarded snapshot produced 1739a8473e8539474c7b7ab1fc325302e82344ec451c9b217e5e34b14c780a3d, not the executed SHA, so that reconstruction was discarded and is not bundled.",
+      "role": "source imported by comparison-001 full exact scan",
+      "sha256": "ded2138913d93be4e78af8ec8675e13f09f2191c3bbb3a5645add40354901ea3"
+    },
+    {
+      "availability": "reconstructed_byte_exact_from_final_snapshot",
+      "bundle_path": "source/common_atlas_skin_clearance.guarded-ccb285.py",
+      "note": "Removed only the later per-target aabb_work_scope metadata line from the final source and verified the resulting SHA equals the executed replay owner pin.",
+      "role": "source imported by pinned-baseline-replay-002",
+      "sha256": "ccb28517db897705af52cf026873aeeb210f4a7a0c7ec564807e4829c49192cf"
+    },
+    {
+      "availability": "copied_exactly_from_current_worktree",
+      "bundle_path": "source/common_atlas_skin_clearance.final-c7c58.py",
+      "note": "Includes the pair-table identity guard and per-target changed_skin_faces_only AABB work label.",
+      "role": "final helper source and focused tests",
+      "sha256": "c7c58cc902aaca199e86c32335936098c2ae4113155ec34e9d0f87aa337306be"
+    }
+  ],
+  "final_test_file_sha256": "520ba90a64a9590325cefb573676c827710a86ad168e14a1a37fe6db2ba2a4d1",
+  "focused_test_result": "52 passed",
+  "schema": "numi.human.incremental-audit-source-version-availability.v1"
+}
