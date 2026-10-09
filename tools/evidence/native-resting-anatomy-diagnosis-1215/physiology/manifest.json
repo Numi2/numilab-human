@@ -1,0 +1,22 @@
+{
+  "schema": "numi.human.evidence-bundle-manifest.v1",
+  "status": "descriptive-reference-review-complete",
+  "qualification": "40-second simulated trace reference check; not clinical or integrated anatomical qualification",
+  "files": {
+    "README.md": "cf3d7f3d657fd8a0817204df8ee265243cc73056af9eb46961612d35dda85f1b",
+    "report.json": "fa1a87387ed6614f6647c710c7c911a36e5e489ad22d7f5428112fab983e0019",
+    "verify_1201_reference.py": "ec8c6f50649efcf9b189983172731991f3ec990e1661642d72c20ef8980969ef"
+  },
+  "key_input_sha256": {
+    "trace": "ab391d28e2caa9315d8cd0515c823debd44b8168c4f03c5ef118b49e33db343a",
+    "respiration_config": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+    "circulation_config": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+    "owner_source": "b06bb5a1cd14d86be362a5d0603f68546ba590bf038f9586c4cf89946fc39c1e",
+    "skin_terminal_summary": "867bb8565476f67291e5b7f76190bfe79b4f87892fa669e08b3d404765f11030"
+  },
+  "reproduction": {
+    "interpreter": "/Applications/Xcode-26.6.0.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9",
+    "command": "/Applications/Xcode-26.6.0.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3.9 /Users/n/numi-human-retained-delivery-20261009/physiology-reference-review-1212/verify_1201_reference.py",
+    "result": "passed; report SHA-256 matched"
+  }
+}

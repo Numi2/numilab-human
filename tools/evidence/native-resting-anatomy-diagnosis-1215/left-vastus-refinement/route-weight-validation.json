@@ -1,0 +1,86 @@
+{
+  "existing_weight_formula_error": {
+    "max_abs_any_body": 3.125118182012443e-07,
+    "max_abs_by_body": [
+      2.594467271022083e-07,
+      2.6019737814353405e-07,
+      3.125118182012443e-07
+    ],
+    "mean_abs_by_body": [
+      4.333799130170074e-08,
+      3.29699868157154e-08,
+      1.4173860977847448e-08
+    ],
+    "vertex_count": 3974
+  },
+  "inputs": [
+    {
+      "bytes": 31909928,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/current-anatomy-20261005/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "9340447e7874366033f544ee8e56e9c09bdf4efecf52b0fa3b16d7b4d5489c33"
+    },
+    {
+      "bytes": 369667,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/current-anatomy-20261005/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "sha256": "a254c4cd76927d5ed82348cba2a85a952df67f40cbf042ac86f5a49dcc925bbe"
+    },
+    {
+      "bytes": 1380457,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    {
+      "bytes": 909069,
+      "path": "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/model.py",
+      "sha256": "caae0f9a64db518712b491780b697c32800b13dba4b5b60ad128b67f5794c0df"
+    },
+    {
+      "bytes": 438194,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/conforming-refinement-001/left-vastus-lateralis-one-edge-refinement.npz",
+      "sha256": "106801ec7392cdb72e6a20407930f54a07ec81a84d19bb6c9661090a34afa9ff"
+    }
+  ],
+  "method": "Re-evaluate the existing nearest-per-body route-node inverse-square formula on the midpoint; independently compare that same formula against the entire existing NHTISS64 weight field after decoding lane indices.",
+  "midpoint": {
+    "body_order": [
+      "femur_l",
+      "patella_l",
+      "tibia_l"
+    ],
+    "candidate_lanes_index": [
+      0,
+      1,
+      2,
+      4294967295
+    ],
+    "candidate_lanes_weight": [
+      0.39222100377082825,
+      0.35346123576164246,
+      0.2543177604675293,
+      0.0
+    ],
+    "candidate_stored_float32_by_body": [
+      0.39222100377082825,
+      0.35346123576164246,
+      0.2543177604675293
+    ],
+    "max_abs_error_after_float32": 6.564103427475487e-09,
+    "recomputed_float64": [
+      0.3922210103349317,
+      0.3534612329216171,
+      0.25431775674345125
+    ],
+    "source_position_f32_m": [
+      0.10317850112915039,
+      -0.10583050549030304,
+      0.3655970096588135
+    ]
+  },
+  "schema": "numi.human.vastus-lateralis-route-weight-refinement-check.v1",
+  "script": {
+    "bytes": 4139,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/conforming-refinement-001/verify_route_weights.py",
+    "sha256": "f49f4e6c5da54947ae5daa726ab8e9508b133f68ee58266fc66fd595da1eec13"
+  },
+  "status": "complete"
+}

@@ -1,0 +1,54 @@
+{
+  "command": "python3 /Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-intersection-topology-1215/attempt-002/analyze_largest_retained_pairs.py",
+  "executed_script": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-intersection-topology-1215/attempt-002/analyze_largest_retained_pairs.py",
+    "sha256": "169139800fbdf1641ddabaeebd012acb5aa29baed0e49b45634ba2e820f68013"
+  },
+  "exit_code": 0,
+  "inputs": {
+    "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/cardiac_cavity_intersections.py": {
+      "sha256": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/coordinate-frame-clarification.json": {
+      "sha256": "e5de244f4fe2b986f76917f16dbfaceebbce3cf406a3d9ca41b651fe01e37aaa"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/report.json": {
+      "sha256": "58da57b10bf89bc9436bfd993425cb725ec9759d587cbad6589db54c73ff392a"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/unallowed-self-pairs.jsonl": {
+      "sha256": "4f865f756c9fe08d9930490bc07db9942aa45cbe2d062228b1ca3d2c77493a26"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-witness-classification-1214/classified-pairs.jsonl": {
+      "sha256": "35bb0c50a96b8ba374f0b7392d79c1869707781a54014ccb83d5c7f268ea4a34"
+    },
+    "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-witness-classification-1214/report.json": {
+      "sha256": "4afb5b0f5dd8369d34b9d20e154132c7d55d3dfe0efab5c854d6e2a4c91e01cf"
+    }
+  },
+  "outputs": [
+    {
+      "bytes": 188365,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-intersection-topology-1215/report.json",
+      "sha256": "e143cfd3fbfc341debe360f759b70b9c267b2595e6e60d95faf40595eca184ae"
+    },
+    {
+      "bytes": 13,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-intersection-topology-1215/attempt-002/run.stdout.log",
+      "sha256": "9e27acb067a1cdc73abaf3a20619e05d3cb000ff8a1cb8f708f3979166d66905"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-intersection-topology-1215/attempt-002/run.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 76575,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-intersection-topology-1215/top20-summary-with-labels.json",
+      "sha256": "c15b9658f17a0cf6953253628bc7784a6652750c9ace276fe72992e909b5c8a3"
+    }
+  ],
+  "platform": "macOS-26.6-arm64-arm-64bit",
+  "python_version": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "schema": "numi.human.passive-muscle-self-intersection-topology-execution.v1",
+  "selection": "Top20 unique (stable_id,face_rows) exact segment pairs ranked by maximum source/accepted-step0 intersection diameter; selected-pair exact replay matched 1214 rational point witnesses."
+}

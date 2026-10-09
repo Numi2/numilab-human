@@ -1,0 +1,101 @@
+{
+  "executed_script": {
+    "argv": [
+      "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/audit_muscle_self_1213.py"
+    ],
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/audit_muscle_self_1213.py",
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:29:07) [Clang 19.1.7 ]",
+    "sha256": "d56dff6df2286953ab6ffdcbb50ad51e794d12f2e371c1aa15efcf990ca26f46"
+  },
+  "inputs": {
+    "accepted_capture": {
+      "accepted_step": 0,
+      "accepted_time_s": 0,
+      "body_state_sha256": "b063191a425cdfc7939d83f7ba3fcf9ada59823b2cb24c826b3322549d12979c",
+      "pack_counts": {
+        "indices": 14732421,
+        "primitives": 861,
+        "vertices": 2829532
+      },
+      "pack_path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.mrvpack",
+      "pack_sha256": "68dd2aecebd5febb561738e586cb9093813aee61309ccf1c0ceae5a535751bef",
+      "receipt_path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.receipt.json",
+      "receipt_sha256": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681",
+      "run_metadata_path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/run-metadata.json",
+      "run_metadata_sha256": "eb84c9d25714d2e6f163be664c26d1e30708e97a03f2d7dfaf0c22e4d4347069"
+    },
+    "nhtiss_manifest": {
+      "muscle_count": 148,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "sha256": "82cdd937e0f2daf0a8704fb21246353c38148527f8602d674ac865f935264dde",
+      "surface_count": 150,
+      "tendon_count": 2
+    },
+    "nhtiss_payload": {
+      "abi": 5,
+      "binding_count": 512,
+      "index_count": 1884567,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "b3d0381f73e05b04ed7ea1ba23eb6559073ad20aa0d9e2ad0f97a18fab3359bd",
+      "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "stable_surface_records": 150,
+      "vertex_count": 433150
+    },
+    "predicate_and_loader_sources": {
+      "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/__init__.py": "e06e46ca88bde0b4c4a6235c6135dafdb2e75d27633776dba0098698a082cf42",
+      "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+      "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/cardiac_cavity_intersections.py": "11f042cc4809a27735c02b66a8fb07ebc92ee66597d7e1814a75231e2cf2d2bb",
+      "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/common_atlas_skin_clearance.py": "fbfb5dfbb9b3f7e5fa297a61c793c66cb13fe884d5cebc3a7d1a6b9908961ac1",
+      "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/model.py": "caae0f9a64db518712b491780b697c32800b13dba4b5b60ad128b67f5794c0df",
+      "/Users/n/numi-human-common-skin-multipose-001/src/numilab_human/physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef",
+      "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "82cdd937e0f2daf0a8704fb21246353c38148527f8602d674ac865f935264dde",
+      "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "b3d0381f73e05b04ed7ea1ba23eb6559073ad20aa0d9e2ad0f97a18fab3359bd"
+    }
+  },
+  "method": {
+    "face_identity": "NHTISS stable ID and face row preserved; all148 captured pack face-row sequences validated exactly equal to corresponding NHTISS face-row sequence before audit",
+    "predicate": "historical common_atlas_skin_clearance._pack_surfaces for MRVPACK2 surfaces plus cardiac_cavity_intersections._audit_pair(...,same_surface=True); exact integer-lattice triangle predicates",
+    "quotient": "numpy.unique over packed Float32 xyz rows independently for each surface; exact coordinate equality only; faces remapped through returned inverse map with face order unchanged",
+    "source_vs_pose": "authored NHTISS Float32 vertex rows are owner-local source geometry; captured MRVPACK Float32 rows are actual accepted step0 world geometry. Their outcomes are kept separate."
+  },
+  "qualification": "geometry-only exact self-intersection census; does not qualify muscle-target clearance, skin, interactions between different muscles, mechanics, or whole-body anatomy",
+  "schema": "numi.human.passive-muscle-self-audit.v1",
+  "scope": "All148 NHTISS4 muscle surfaces, source geometry and actual accepted MRVPACK2 step0 separately; exact Float32 per-surface coordinate quotient only; ci._audit_pair(same_surface=True). No movement, tolerance weld, cap, cross-surface scan, native step, or GPU work.",
+  "summary": {
+    "accepted_step0": {
+      "qualification": "posed/source self-intersection census only; no pairwise surface or whole-body qualification",
+      "surface_count": 148,
+      "surfaces_with_degenerate_faces": 0,
+      "surfaces_with_open_or_nonmanifold_quotient": 4,
+      "surfaces_with_unallowed_self_pairs": 64,
+      "total_aabb_candidates": 6175118,
+      "total_allowed_shared_vertex_or_edge_pairs": 4238034,
+      "unallowed_self_pair_count": 1490
+    },
+    "authored_source": {
+      "qualification": "posed/source self-intersection census only; no pairwise surface or whole-body qualification",
+      "surface_count": 148,
+      "surfaces_with_degenerate_faces": 0,
+      "surfaces_with_open_or_nonmanifold_quotient": 4,
+      "surfaces_with_unallowed_self_pairs": 62,
+      "total_aabb_candidates": 6227784,
+      "total_allowed_shared_vertex_or_edge_pairs": 4238034,
+      "unallowed_self_pair_count": 1474
+    }
+  },
+  "timing": {
+    "wall_seconds": 173.19206870812923,
+    "workers": 3
+  },
+  "unallowed_pair_ledger": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/unallowed-self-pairs.jsonl",
+    "row_count": 2964,
+    "sha256": "4f865f756c9fe08d9930490bc07db9942aa45cbe2d062228b1ca3d2c77493a26"
+  },
+  "complete_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/report.json",
+    "sha256": "58da57b10bf89bc9436bfd993425cb725ec9759d587cbad6589db54c73ff392a",
+    "bytes": 5424496
+  },
+  "retained_summary_interpretation": "Excludes verbose topology rows only; full report and ledger remain on Mac mini by hash. Source frame clarification is in adjacent file."
+}

@@ -1,0 +1,323 @@
+{
+  "exact_coordinate_quotient": {
+    "equivalence": "bit-exact Float32 xyz byte triples; no tolerance welding/capping",
+    "left_51005_64": {
+      "exact_self_audit": {
+        "aabb_candidate_pairs": 68996,
+        "algorithm": "exact_binary64_integer_triangle_predicates_and_rational_ray_parity_v1",
+        "elapsed_seconds": 2.446037665940821,
+        "first_30_pairs": [
+          [
+            5195,
+            5197
+          ],
+          [
+            5196,
+            5197
+          ],
+          [
+            5197,
+            5579
+          ],
+          [
+            5197,
+            5911
+          ],
+          [
+            5197,
+            5912
+          ]
+        ],
+        "unallowed_pair_count": 5
+      },
+      "indexed_boundary_edges": 1350,
+      "merged_records": 624,
+      "quotient_vertices": 3350,
+      "referenced_vertex_records": 3974,
+      "topology": {
+        "boundary_edge_count": 0,
+        "closed_oriented_2_manifold": true,
+        "connected_face_components": 3,
+        "edge_count": 10032,
+        "edge_incidence_histogram": {
+          "2": 10032
+        },
+        "face_count": 6688,
+        "non_two_incident_edge_count": 0,
+        "nonmanifold_vertex_link_count": 0,
+        "repeated_index_faces": 0,
+        "same_direction_paired_edge_count": 0,
+        "sample_bad_vertex_ids": [],
+        "unique_vertex_count": 3350
+      }
+    },
+    "right_51005_63": {
+      "exact_self_audit": {
+        "aabb_candidate_pairs": 68775,
+        "algorithm": "exact_binary64_integer_triangle_predicates_and_rational_ray_parity_v1",
+        "elapsed_seconds": 2.463040042668581,
+        "first_30_pairs": [],
+        "unallowed_pair_count": 0
+      },
+      "indexed_boundary_edges": 1354,
+      "merged_records": 625,
+      "quotient_vertices": 3350,
+      "referenced_vertex_records": 3975,
+      "topology": {
+        "boundary_edge_count": 0,
+        "closed_oriented_2_manifold": true,
+        "connected_face_components": 3,
+        "edge_count": 10032,
+        "edge_incidence_histogram": {
+          "2": 10032
+        },
+        "face_count": 6688,
+        "non_two_incident_edge_count": 0,
+        "nonmanifold_vertex_link_count": 0,
+        "repeated_index_faces": 0,
+        "same_direction_paired_edge_count": 0,
+        "sample_bad_vertex_ids": [],
+        "unique_vertex_count": 3350
+      }
+    }
+  },
+  "left_side_quarantine": {
+    "exact_unallowed_pair_count": 5,
+    "face_row_pairs": [
+      [
+        5195,
+        5197
+      ],
+      [
+        5196,
+        5197
+      ],
+      [
+        5197,
+        5579
+      ],
+      [
+        5197,
+        5911
+      ],
+      [
+        5197,
+        5912
+      ]
+    ],
+    "interpretation": "winding counts are retained in the full diagnostic only; do not interpret as solid interior or use to authorize a fit because the exact coordinate quotient has five unallowed self-intersection pairs"
+  },
+  "method_limits": [
+    "Winding evaluated only on skin vertices inside each target triangle-soup AABB; inside threshold |w|>0.5, outside |w|<0.45, remainder ambiguous.",
+    "Crossing-face exclusion removes every skin vertex incident to an exact crossing skin face row from the corresponding retained audit.",
+    "Right target is closed/oriented and exact-self-clear after bit-exact coordinate quotient; left target is closed/oriented but self-intersecting.",
+    "Iteration 8 is an offline forward counterfactual replay, not a native accepted candidate. Vertex containment is not itself a triangle intersection or volume-overlap qualification."
+  ],
+  "right_shell_results": {
+    "baseline_native_1201_step20000": {
+      "all_inside_patch": {
+        "bbox_world_m": {
+          "max": [
+            -0.13585853576660156,
+            -0.952017068862915,
+            0.12653425335884094
+          ],
+          "min": [
+            -0.1874217689037323,
+            -1.231458067893982,
+            0.07206844538450241
+          ]
+        },
+        "extent_mm_xyz": [
+          51.563232421875,
+          279.4410095214844,
+          54.4658088684082
+        ],
+        "largest_adjacency_components": [
+          {
+            "bbox_world_m": {
+              "max": [
+                -0.13585853576660156,
+                -0.952017068862915,
+                0.12653425335884094
+              ],
+              "min": [
+                -0.1874217689037323,
+                -1.231458067893982,
+                0.07206844538450241
+              ]
+            },
+            "extent_mm_xyz": [
+              51.563232421875,
+              279.4410095214844,
+              54.4658088684082
+            ],
+            "vertex_count": 167
+          }
+        ],
+        "vertex_count": 167
+      },
+      "exact_crossing_skin_face_rows": 129,
+      "inside_vertices_not_incident_to_exact_crossing_faces": {
+        "bbox_world_m": {
+          "max": [
+            -0.14678537845611572,
+            -0.9578970670700073,
+            0.11974490433931351
+          ],
+          "min": [
+            -0.18640953302383423,
+            -1.2106621265411377,
+            0.07530144602060318
+          ]
+        },
+        "extent_mm_xyz": [
+          39.62415313720703,
+          252.7650604248047,
+          44.443458557128906
+        ],
+        "largest_adjacency_components": [
+          {
+            "bbox_world_m": {
+              "max": [
+                -0.14678537845611572,
+                -0.9578970670700073,
+                0.11974490433931351
+              ],
+              "min": [
+                -0.18640953302383423,
+                -1.2106621265411377,
+                0.07530144602060318
+              ]
+            },
+            "extent_mm_xyz": [
+              39.62415313720703,
+              252.7650604248047,
+              44.443458557128906
+            ],
+            "vertex_count": 103
+          }
+        ],
+        "vertex_count": 103
+      },
+      "skin_vertices_in_target_aabb": 549,
+      "winding_abs_gt_0_5": 167,
+      "winding_ambiguous": 0
+    },
+    "fit_iteration8_forward_counterfactual_at_same_step20000": {
+      "all_inside_patch": {
+        "bbox_world_m": {
+          "max": [
+            -0.18251802027225494,
+            -1.0955191850662231,
+            0.09146378189325333
+          ],
+          "min": [
+            -0.18953916430473328,
+            -1.1146366596221924,
+            0.08181388676166534
+          ]
+        },
+        "extent_mm_xyz": [
+          7.021143913269043,
+          19.117473602294922,
+          9.649894714355469
+        ],
+        "largest_adjacency_components": [
+          {
+            "bbox_world_m": {
+              "max": [
+                -0.18251802027225494,
+                -1.0955191850662231,
+                0.09146378189325333
+              ],
+              "min": [
+                -0.18953916430473328,
+                -1.1146366596221924,
+                0.08181388676166534
+              ]
+            },
+            "extent_mm_xyz": [
+              7.021143913269043,
+              19.117473602294922,
+              9.649894714355469
+            ],
+            "vertex_count": 9
+          }
+        ],
+        "vertex_count": 9
+      },
+      "exact_crossing_skin_face_rows": 22,
+      "inside_vertices_not_incident_to_exact_crossing_faces": {
+        "bbox_world_m": {
+          "max": [
+            -0.1841050684452057,
+            -1.1075949668884277,
+            0.08684266358613968
+          ],
+          "min": [
+            -0.1841050684452057,
+            -1.1075949668884277,
+            0.08684266358613968
+          ]
+        },
+        "extent_mm_xyz": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "largest_adjacency_components": [
+          {
+            "bbox_world_m": {
+              "max": [
+                -0.1841050684452057,
+                -1.1075949668884277,
+                0.08684266358613968
+              ],
+              "min": [
+                -0.1841050684452057,
+                -1.1075949668884277,
+                0.08684266358613968
+              ]
+            },
+            "extent_mm_xyz": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "vertex_count": 1
+          }
+        ],
+        "vertex_count": 1
+      },
+      "skin_vertices_in_target_aabb": 410,
+      "winding_abs_gt_0_5": 9,
+      "winding_ambiguous": 0
+    },
+    "target": "51005:63 right vastus lateralis"
+  },
+  "schema": "numi.human.right-vastus-closed-shell-inside-vertex-diagnostic.v1",
+  "source_reports": [
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/inside-vertex-diagnosis-001/report-topology-stop.json",
+      "sha256": "635518745e9dd8804ccf0a79bb80efd300ee66890cb991b3e32b6dfd6bc202bc"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/inside-vertex-diagnosis-001/report-coordinate-quotient-stop.json",
+      "sha256": "e9b737fe5aa09485bedb532b74537821508474244cb2d69b4bd145731be700e9"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/inside-vertex-diagnosis-001/report-coordinate-quotient-winding.json",
+      "sha256": "ec0b773166270a03dcb65c917d885eded61259d3971c039793d106467a726655"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/inside-vertex-diagnosis-001/diagnose_exact_coordinate_quotient.py",
+      "sha256": "7377d12163f8f1bf5892097fe75157932b3a724f00d07b624802f6a0ff9b714c"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/inside-vertex-diagnosis-001/classify_quotient_winding.py",
+      "sha256": "55bd1968d6e1ed77c745aed54ba2e3bb74b72bb837cce0af40506310bcaa7393"
+    }
+  ],
+  "status": "bounded_diagnostic_not_admission"
+}

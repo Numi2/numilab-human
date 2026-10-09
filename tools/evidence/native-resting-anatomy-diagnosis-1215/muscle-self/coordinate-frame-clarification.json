@@ -1,0 +1,14 @@
+{
+  "schema": "numi.human.passive-muscle-self-audit-coordinate-frame-clarification.v1",
+  "bound_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/report.json",
+    "sha256": "58da57b10bf89bc9436bfd993425cb725ec9759d587cbad6589db54c73ff392a"
+  },
+  "bound_pair_ledger": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/unallowed-self-pairs.jsonl",
+    "sha256": "4f865f756c9fe08d9930490bc07db9942aa45cbe2d062228b1ca3d2c77493a26"
+  },
+  "correction": "The report's legacy label authored_nhtiss4_float32_owner_local and its phrase owner-local are not established by the manifest or this audit. Interpret that coordinate space as the NHTISS4 Float32 xyz rows exactly as stored in the payload, before applying any accepted-pose transform; this audit does not assert whether that payload frame is owner-local or global. The accepted_step0 coordinate space remains the actual MRVPACK2 Float32 coordinates captured at accepted step 0.",
+  "computation_effect": "Metadata interpretation only. No input bytes, face rows, coordinate values, quotient, predicate, counts, or witness records changed.",
+  "source_frame_check": "The manifest binds source registration and body bindings but does not state an explicit coordinate-frame tag for the NHTISS4 position array. No transform was applied to the NHTISS4 xyz during its self audit."
+}

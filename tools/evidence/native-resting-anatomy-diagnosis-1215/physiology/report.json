@@ -1,0 +1,351 @@
+{
+  "execution": {
+    "accepted_terminal_step": 20000,
+    "binary_sha256": "486442abe2070168a902fb06669469e8b6cc612a9a6ef65ddb3d54957308d906",
+    "body_mass_reference_kg": 72.0,
+    "contact_iterations": 64,
+    "declared_dt_s": 0.002,
+    "declared_duration_s": 40,
+    "declared_step_count": 20000.0,
+    "inputs_changed": {},
+    "native_exit_code": 0,
+    "native_wall_s": 353.68010841700004,
+    "owner_wrapper_wall_s": 354.05443675000004,
+    "respiration_metallib_sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426",
+    "root_assistance_n_range": [
+      0.0,
+      0.0
+    ],
+    "runtime_sha256": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092",
+    "study": "native-flat-reference-40s-1201",
+    "support_activation_cap": 0.01,
+    "trace_first_time_s": 0.01600000076,
+    "trace_rows": 2500,
+    "trace_terminal_time_s": 40.0000018999
+  },
+  "local_model": {
+    "circulation_config": {
+      "cardiac_chamber_period_rational_seconds": "6/7",
+      "compartments": 21,
+      "connections": 24,
+      "exchange_count": 0,
+      "external_pressure_pa_counts": {
+        "-533.2896": 11,
+        "0.0": 10
+      },
+      "fixed_rate_bpm": 70.0,
+      "law": "closed_rational_elastance_regional_volume_v3",
+      "model_id": "cvsim21_supine_continuous_fixed_rate_resting_reference_lv15",
+      "path": "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json",
+      "qualification": "source_model_variant",
+      "schema": "HumanPack.physiology-native.v3",
+      "sha256": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+      "source_graph_sha256": "b118d58230a3f2766108d05501a3ac9b910124ef823567a7e5fe23f6df0b4f67",
+      "species_count": 0
+    },
+    "respiration_config": {
+      "carbon_dioxide_production_stpd_ml_min": 199.99999998,
+      "dead_space_ml": 150.0,
+      "dry_atmospheric_pressure_pa": 95060.862227,
+      "frc_ml": 2500.0,
+      "gas_scope": "Perfusion-limited pulmonary equilibration, Hill O2 binding, local linear CO2 content law at fixed pH; no acid-base or Haldane effect claim",
+      "lung_scope": "Reference adult lumped compliance and resistance; independently varied in sensitivity experiments",
+      "oxygen_consumption_stpd_ml_min": 250.00000002,
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json",
+      "pulmonary_equilibration_fraction": 1,
+      "reference_scope": "Declared mixed-source adult at rest; no individual or clinical calibration",
+      "resting_frequency_bpm": 12,
+      "resting_minute_ventilation_l_min": 6,
+      "resting_tidal_volume_ml": 500.0,
+      "sha256": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a"
+    }
+  },
+  "mechanical_and_numerical_consistency": {
+    "blood_endpoint_minus_physical_ml_max_abs": 0.00143973011291,
+    "blood_residual_minus_physical_ml_max_abs": 0.000144068465491,
+    "co2_balance_error_stpd_ml_max_abs": 0.000465661287308,
+    "interpretation": "Owner-checked identities and small residuals establish internal arithmetic/closure for these exported states only; they do not establish anatomical validity, independent physiological accuracy, or clinical validity.",
+    "owner_check": {
+      "accepted_samples": 2500,
+      "maximum_absolute_identity_residuals": {
+        "airway_pressure_pa": 6.477409598915074e-06,
+        "pleural_compliance_pa": 7.363967567641794e-05,
+        "volume_decomposition_ml": 0.00030002876945900425
+      },
+      "maximum_fraction_of_rounding_allowance": 0.0337643946747163,
+      "parameter_sha256": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+      "qualification": "Observed volume, pressure-flow and pressure-compliance identities; not independent proof of causal response, anatomy, or physiological plausibility.",
+      "rounding_allowance_float32_epsilons": 32,
+      "trace_sha256": "ab391d28e2caa9315d8cd0515c823debd44b8168c4f03c5ef118b49e33db343a",
+      "windows": {
+        "all_0_40": {
+          "accepted_samples": 2500,
+          "means": {
+            "diaphragm_activation": 0.044023535558409745,
+            "diaphragm_excitation": 0.042184879298693065,
+            "intercostal_activation": 0.027610596855238714,
+            "intercostal_excitation": 0.026365550713959515
+          },
+          "ranges": {
+            "airflow_ml_s": [
+              -879.27619461,
+              721.895834431
+            ],
+            "alveolar_pa": [
+              -96.2448806763,
+              117.227203369
+            ],
+            "diaphragm_mm": [
+              7.27228834876e-05,
+              20.5969314575
+            ],
+            "lung_volume_ml": [
+              2500.00157394,
+              3036.15373559
+            ],
+            "pleural_pa": [
+              -770.045959473,
+              -470.339996338
+            ],
+            "rib_mm": [
+              -0.0180934667587,
+              2.52427482605
+            ]
+          },
+          "window_s": [
+            0.0,
+            40.001
+          ]
+        },
+        "late_10_40": {
+          "accepted_samples": 1876,
+          "means": {
+            "diaphragm_activation": 0.04439323394062103,
+            "diaphragm_excitation": 0.04257026981518663,
+            "intercostal_activation": 0.027840020102102413,
+            "intercostal_excitation": 0.02660641979438566
+          },
+          "ranges": {
+            "airflow_ml_s": [
+              -838.555337396,
+              688.933127094
+            ],
+            "alveolar_pa": [
+              -91.8502120972,
+              111.798202515
+            ],
+            "diaphragm_mm": [
+              7.27228834876e-05,
+              20.4826049805
+            ],
+            "lung_volume_ml": [
+              2500.00157394,
+              3028.90338935
+            ],
+            "pleural_pa": [
+              -764.515380859,
+              -471.165405273
+            ],
+            "rib_mm": [
+              -0.0180934667587,
+              2.43847680092
+            ]
+          },
+          "window_s": [
+            10.0,
+            40.001
+          ]
+        }
+      }
+    },
+    "oxygen_balance_error_stpd_ml_max_abs": 0.000232830643654,
+    "respiratory_volume_balance_ml_max_abs": 0.000414473788624
+  },
+  "observed_output": {
+    "arterial_pressure_and_saturation": {
+      "PaCO2_mmhg": {
+        "max": 40.0000534058,
+        "mean": 39.163294636535916,
+        "min": 38.8828544617
+      },
+      "PaO2_mmhg": {
+        "max": 103.565208435,
+        "mean": 102.50921847840037,
+        "min": 99.9998245239
+      },
+      "SaO2_fraction": {
+        "max": 0.974663794041,
+        "mean": 0.9739577435731841,
+        "min": 0.972220122814
+      },
+      "SaO2_percent": {
+        "max": 97.4663794041,
+        "mean": 97.39577435731842,
+        "min": 97.22201228140001
+      }
+    },
+    "breathing": {
+      "airflow_ml_s": {
+        "max": 721.895834431,
+        "mean": 1.4827915073217202,
+        "min": -879.27619461
+      },
+      "alveolar_pressure_cmH2O": {
+        "max": 1.195384798774301,
+        "min": -0.9814246524174921
+      },
+      "alveolar_pressure_pa": {
+        "max": 117.227203369,
+        "mean": -0.19768931089388214,
+        "min": -96.2448806763
+      },
+      "breath_event_times_s": [
+        5.02400023863,
+        10.1760004833,
+        15.5040007364,
+        20.9440009948,
+        26.4320012555,
+        31.9520015176,
+        37.4880017806
+      ],
+      "completed_breath_events": 7,
+      "estimated_minute_ventilation_from_event_means_l_min": 5.852764453448081,
+      "inter_breath_periods_s": [
+        5.152000244669999,
+        5.328000253100001,
+        5.4400002584,
+        5.488000260700002,
+        5.520000262099998,
+        5.536000263000002
+      ],
+      "inter_breath_rate_bpm_mean_of_observed_intervals": 11.089205978954444,
+      "lung_volume_ml": {
+        "max": 3036.15373559,
+        "mean": 2668.22588006102,
+        "min": 2500.00157394
+      },
+      "pleural_pressure_cmH2O": {
+        "max": -4.79613319877838,
+        "mean": -5.843145384341197,
+        "min": -7.852283496127628
+      },
+      "pleural_pressure_pa": {
+        "max": -470.339996338,
+        "mean": -573.016816833496,
+        "min": -770.045959473
+      },
+      "tidal_volume_at_breath_counter_increments_ml": [
+        536.159379408,
+        533.358892426,
+        528.915086761,
+        525.80726333,
+        524.115283042,
+        523.25008437,
+        522.919232026
+      ],
+      "tidal_volume_event_mean_ml": 527.7893173375714
+    },
+    "circulation": {
+      "blood_ml": {
+        "max": 5150.01034364,
+        "mean": 5150.00520814184,
+        "min": 5149.99916777
+      },
+      "completed_filling_ejection_counter_terminal": 47,
+      "configured_rate_bpm": 70.0,
+      "full_horizon_aortic_ejected_ml": 3299.83816482,
+      "full_horizon_aortic_mean_flow_l_min": 4.9497570121289165,
+      "full_horizon_pulmonary_ejected_ml": 3291.19851813,
+      "full_horizon_pulmonary_mean_flow_l_min": 4.936797542709459,
+      "last_lv_stroke_ml": {
+        "max": 74.0071191103,
+        "mean": 69.53729552914628,
+        "min": 0.0
+      },
+      "late_10_40_aortic_mean_flow_l_min": 4.903000430155823,
+      "late_10_40_pulmonary_mean_flow_l_min": 4.902149201372254,
+      "observed_cycle_interval_count": 46,
+      "observed_mean_cycle_period_s": 0.8573913450717608,
+      "observed_rate_bpm": 69.97971270048008
+    }
+  },
+  "pinned_inputs": {
+    "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+    "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/execution.json": "f5d27e8d0f832b11a159f370c60e54d0bff35b725203d15836c6cf37536cecea",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/invocation.json": "ee2ca63cfe72122bc22f2ece2b3b62c738f33d252ce9d3007ef31d36cead0139",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/resting-coupled.csv": "ab391d28e2caa9315d8cd0515c823debd44b8168c4f03c5ef118b49e33db343a",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/run-metadata.json": "cefc252388be94acd09092c1f7d41385c2d038d053eea43ff9f162d0febf7258",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/run-declaration.json": "c907c5ea7d1ed6027da60f27a0b07f498fd6499989b9051349688241b5656085",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/skin-audit-1201-terminal/step-20000.result.json": "9703c87b6e0fcb2e8a7fc0b8f25eaf8124659d3db0712f4b9a5f83a9cad1ede6",
+    "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/skin-audit-1201-terminal/summary.json": "867bb8565476f67291e5b7f76190bfe79b4f87892fa669e08b3d404765f11030",
+    "/Users/n/numi-human-retained-delivery-20261009/native-initial-force-report-source-1187/matter/tools/resting_intervention_study.py": "b06bb5a1cd14d86be362a5d0603f68546ba590bf038f9586c4cf89946fc39c1e"
+  },
+  "qualification_boundaries": [
+    "No clinical interpretation or patient-specific normality claim: age, sex-specific predicted values, pH/bicarbonate, hemoglobin, temperature, calibrated ambient/site context and reference-subject provenance are not established.",
+    "No 5-minute endurance claim: this is a 40-second run.",
+    "No complete cardio-respiratory feedback claim: perfusion drives respiratory gas transport, but pleural pressure is not coupled back to dynamic cardiovascular external pressure/preload; heart rate is configured fixed-rate.",
+    "No regional ventilation/perfusion distribution, Haldane effect, or acid-base compensation model.",
+    "No integrated resting-body qualification: terminal 3112 skin-target crossings remain a separate failed anatomy gate."
+  ],
+  "schema": "numi.human.1201-physiology-reference-review.v1",
+  "separate_anatomy_gate": {
+    "crossing_pair_count": 3112,
+    "interpretation": "The 40-second output has a retained terminal skin-to-target geometry rejection count of 3,112. This is a separate failed anatomical gate; the numerical physiology summary must not be presented as an integrated resting-body qualification.",
+    "ocular_crossing_pair_count": 0,
+    "self_scan_complete": true,
+    "target_coverage_complete": true,
+    "terminal_skin_audit_result_path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/skin-audit-1201-terminal/step-20000.result.json",
+    "terminal_skin_audit_result_sha256": "9703c87b6e0fcb2e8a7fc0b8f25eaf8124659d3db0712f4b9a5f83a9cad1ede6",
+    "terminal_skin_audit_summary_path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/skin-audit-1201-terminal/summary.json",
+    "terminal_skin_audit_summary_sha256": "867bb8565476f67291e5b7f76190bfe79b4f87892fa669e08b3d404765f11030"
+  },
+  "source_backed_interpretation": {
+    "claims": [
+      "At-rest adult ventilation references are descriptive anchors (about 500 mL tidal volume and 12 breaths/min in the cited review), not universal individual limits; 1201 event-derived values are about 0.53 L and 11.1/min over six post-first-breath intervals.",
+      "Common ABG reference intervals are pH 7.35-7.45, PaO2 75-100 mmHg, PaCO2 35-45 mmHg, HCO3 22-26 mEq/L, SaO2 95-100%; the comparison is contextual only. This model has no pH/HCO3 output and its configured dry atmospheric pressure is 95.06 kPa; age, altitude/site and clinical sampling context are not calibrated. PaO2 is mostly at or slightly above the common upper bound, so it should be reported as a model output, not called clinically normal.",
+      "AHA\u2019s broad adult resting heart-rate range is 60-100/min. The model\u2019s observed ~70/min is consistent with its configured fixed 6/7-second cycle; this is not autonomic or ECG validation.",
+      "A textbook NCBI reference gives roughly 5 L/min cardiac output for a 70-kg adult at rest. The trace\u2019s cumulative whole-run mean is ~4.95 L/min, but it is a 40-second model average with startup/phase effects, not a patient measurement.",
+      "Quiet spontaneous inspiration changes intrathoracic pressure and can affect venous return and LV ejection; the respiration trace\u2019s pleural-pressure swings are not dynamically propagated into the circulation compartments\u2019 fixed external-pressure constants in this source variant.",
+      "The config explicitly uses a single perfusion-limited pulmonary equilibration, Hill O2 relation and fixed-pH linear CO2 content law, while disclaiming Haldane/acid-base modeling; it does not represent regional V/Q heterogeneity or diffusion limitation."
+    ],
+    "references": [
+      {
+        "supports": "common ABG intervals and need for pH/PaCO2/HCO3 context",
+        "title": "Arterial Blood Gas Analysis: Fundamentals, Interpretation, and Clinical Utility",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK536919/"
+      },
+      {
+        "supports": "nominal rest tidal volume/rate/dead space with individual variation",
+        "title": "The physics of human breathing: flow, timing, volume, and pressure parameters for normal, on-demand, and ventilator respiration",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8672270/"
+      },
+      {
+        "supports": "broad adult resting heart-rate range",
+        "title": "All About Heart Rate",
+        "url": "https://www.heart.org/en/health-topics/high-blood-pressure/the-facts-about-high-blood-pressure/all-about-heart-rate-pulse"
+      },
+      {
+        "supports": "approximately 5 L/min at rest in a 70-kg adult",
+        "title": "Introduction: Control of Cardiac Output",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK54473/"
+      },
+      {
+        "supports": "intrathoracic-pressure effects on venous return and LV ejection",
+        "title": "Cardiopulmonary Interactions: Physiologic Basis and Clinical Applications",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5822394/"
+      },
+      {
+        "supports": "bicarbonate, carbamino and Haldane mechanisms in CO2 carriage",
+        "title": "A mechanistic physicochemical model of carbon dioxide transport in blood",
+        "url": "https://journals.physiology.org/doi/10.1152/japplphysiol.00318.2016"
+      },
+      {
+        "supports": "regional V/Q matching as a major determinant of gas-exchange efficiency",
+        "title": "Ventilation/Perfusion Relationships and Gas Exchange: Measurement Approaches",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8274320/"
+      }
+    ]
+  },
+  "status": "measured_model_trace_with_reference_context; not_clinical_or_anatomical_qualification"
+}

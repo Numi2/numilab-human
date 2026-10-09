@@ -1,0 +1,683 @@
+{
+  "elapsed_seconds": 2.6645841244608164,
+  "forward_replay": {
+    "baseline_zero_delta_world_f32_bit_exact": true,
+    "fit_is_offline_counterfactual_not_native": true,
+    "fit_iteration8_diagnostics": {
+      "admissible": true,
+      "baseline_forward_max_error_um": 0.599760168716255,
+      "changed_vertex_count": 5096,
+      "map_mode": "captured upload rows retained for unchanged sources; changed source rows recomputed",
+      "selector_source_vertex_ids": [
+        17764,
+        19744
+      ],
+      "selector_values_unchanged": true
+    },
+    "source915_map_report": {
+      "all_map_rows_kind3": true,
+      "anterior_selector_source_vertex_ids": [
+        19744
+      ],
+      "anterior_value_m": 0.18067890405654907,
+      "loaded_posterior_projection_m": -0.092471182346344,
+      "map_record_count": 54949,
+      "posterior_selector_source_vertex_ids": [
+        17764
+      ],
+      "posterior_value_m": -0.09247118979692459,
+      "recomputed_uploaded_basal_max_abs": 6.690621376037598e-06,
+      "recomputed_uploaded_basal_p99_abs": 1.6689300537109375e-06,
+      "recomputed_uploaded_basis_gradient_max_abs": 0.0,
+      "recomputed_uploaded_basis_gradient_p99_abs": 0.0,
+      "recomputed_uploaded_weight_max_abs": 4.4405460357666016e-06,
+      "recomputed_uploaded_weight_p99_abs": 7.599592208862305e-07,
+      "selector_anchor_residual_m": 7.450580596923828e-09,
+      "span_m": 0.27315009385347366,
+      "unanchored_forward_baseline_max_error_m": 5.997601687162551e-07,
+      "unanchored_forward_baseline_max_error_um": 0.599760168716255,
+      "unanchored_forward_baseline_p99_error_um": 0.3029190205075759
+    }
+  },
+  "inputs": [
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/inside-vertex-diagnosis-001/report-coordinate-quotient-stop.json",
+      "sha256": "e9b737fe5aa09485bedb532b74537821508474244cb2d69b4bd145731be700e9"
+    },
+    {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/bodyparts3d-myosim-skinned-shell-epl143-candidate.nhskin",
+      "sha256": "b2d235e32c1c7d7f753eb83d1e8e9d045a1fd62be9c5c6da65dfde8844e2622b"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/fit-attempt-002/attempts/attempt-0009-source.npy",
+      "sha256": "9b4eec31d2d990296694dcf7ad96282ff0faf1c4bf76d20ffe061835d1f8d68f"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/fit-attempt-002/attempts/attempt-0009-target-audits.json",
+      "sha256": "92a76b433566d17ed61f2c4e49f82c12c1634519c09c06538b1cfa2eb9620751"
+    },
+    {
+      "path": "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-forward-model-915.py",
+      "sha256": "81a5532f634278a45aa9aaf1457d0fdb3be71906256f3490941a4885b74d4cdc"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/skin-audit-1201-terminal/step-20000.targets.jsonl",
+      "sha256": "0b8d0e08d979b2a0725e25abcdd363899750119e6b511bbc6425e29589e9fd6a"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/skin-audit-1201-terminal/step-20000.crossing-witnesses.jsonl",
+      "sha256": "18e41f6c0521dad3aa78bb2fb0c9237a78397d23396d0af4e9554d7f3b57f866"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.mrvpack",
+      "sha256": "68dd2aecebd5febb561738e586cb9093813aee61309ccf1c0ceae5a535751bef"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-0.receipt.json",
+      "sha256": "c70a1babf6d8f4461b539c2f92bd1572a3457618ca2e2aece3789b801bf48681"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-10000.mrvpack",
+      "sha256": "28a7bfc7a8160f24ec2371eb2b2e4f2dcdb650d2150a00d83dd379613c23b704"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/accepted-geometry/step-10000.receipt.json",
+      "sha256": "61c5471889a3b2935796cc830089b33fc3edf1e6604f897fd1094f6f21055fef"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/accepted-geometry/step-20000.mrvpack",
+      "sha256": "242ac018b430315befef68f3d598c6fe21f4ac2dedf9addef64906b93e67af68"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/accepted-geometry/step-20000.receipt.json",
+      "sha256": "a4c9abac603868ac52a47b2ac1ff924199d6841e63c61a8afc0d081a5d396e87"
+    },
+    {
+      "path": "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/common_atlas_skin_clearance.py",
+      "sha256": "87e5a7254b9e63859260ffdc700997133daf725878737a9faae3ed04e7f60330"
+    }
+  ],
+  "interpretation_limits": [
+    "51005:64 quotient is closed/oriented but has 5 exact unallowed self-intersection pairs; its winding occupancy is reported diagnostically and is not an unambiguous solid interior.",
+    "A vertex classified within a closed muscle surface does not alone prove triangle-surface intersection or muscle volume occupancy by the skin shell.",
+    "Iteration-8 positions are offline forward replay at the unchanged native baseline step-20000 state; no candidate native run was made."
+  ],
+  "method": {
+    "boundary_exclusion": "inside skin vertices not incident to any exact crossing skin face row for corresponding cohort/target",
+    "coordinate_weld": "target quotient uses bit-exact Float32 xyz only, no tolerance weld/cap; inside winding uses original Float32 triangle soup, geometrically identical to quotient",
+    "extent": "bounds and face-adjacency connected components among selected NHSKIN vertex rows",
+    "generalized_winding": "absolute solid-angle winding; >0.5 labeled inside-occupancy, <0.45 outside, [0.45,0.55] ambiguous"
+  },
+  "results": {
+    "baseline_native_1201": {
+      "51005:63": {
+        "all_inside_vertices_patch": {
+          "bbox_world_m": {
+            "max": [
+              -0.13585853576660156,
+              -0.952017068862915,
+              0.12653425335884094
+            ],
+            "min": [
+              -0.1874217689037323,
+              -1.231458067893982,
+              0.07206844538450241
+            ]
+          },
+          "extent_mm_xyz": [
+            51.563232421875,
+            279.4410095214844,
+            54.4658088684082
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  -0.13585853576660156,
+                  -0.952017068862915,
+                  0.12653425335884094
+                ],
+                "min": [
+                  -0.1874217689037323,
+                  -1.231458067893982,
+                  0.07206844538450241
+                ]
+              },
+              "extent_mm_xyz": [
+                51.563232421875,
+                279.4410095214844,
+                54.4658088684082
+              ],
+              "vertex_count": 167
+            }
+          ],
+          "vertex_count": 167
+        },
+        "ambiguous_abs_winding_0_45_to_0_55": 0,
+        "exact_crossing_skin_face_rows": 129,
+        "inside_abs_winding_gt_0_5": 167,
+        "inside_vertex_ids_sample": [
+          9154,
+          9186,
+          9187,
+          9216,
+          9218,
+          9231,
+          9232,
+          9245,
+          9246,
+          9247,
+          9248,
+          9249,
+          9267,
+          9268,
+          9269,
+          9270,
+          9271,
+          9272,
+          9273,
+          9274,
+          9275,
+          9293,
+          9294,
+          9729,
+          9731,
+          9747,
+          9748,
+          9749,
+          9750,
+          9762,
+          9763,
+          9764
+        ],
+        "inside_vertices_not_incident_to_exact_crossing_faces": {
+          "bbox_world_m": {
+            "max": [
+              -0.14678537845611572,
+              -0.9578970670700073,
+              0.11974490433931351
+            ],
+            "min": [
+              -0.18640953302383423,
+              -1.2106621265411377,
+              0.07530144602060318
+            ]
+          },
+          "extent_mm_xyz": [
+            39.62415313720703,
+            252.7650604248047,
+            44.443458557128906
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  -0.14678537845611572,
+                  -0.9578970670700073,
+                  0.11974490433931351
+                ],
+                "min": [
+                  -0.18640953302383423,
+                  -1.2106621265411377,
+                  0.07530144602060318
+                ]
+              },
+              "extent_mm_xyz": [
+                39.62415313720703,
+                252.7650604248047,
+                44.443458557128906
+              ],
+              "vertex_count": 103
+            }
+          ],
+          "vertex_count": 103
+        },
+        "outside_abs_winding_lt_0_45": 382,
+        "skin_vertices_in_target_aabb": 549,
+        "target_world_aabb_m": {
+          "max": [
+            -0.11391311883926392,
+            -0.8706090450286865,
+            0.13604146242141724
+          ],
+          "min": [
+            -0.1935516595840454,
+            -1.3303747177124023,
+            0.0689123347401619
+          ]
+        },
+        "vertices_incident_to_exact_crossing_faces": 129,
+        "winding_abs_quantiles": {
+          "max": 1.0000000000000058,
+          "median": 1.766974823035287e-17,
+          "min": 0.0,
+          "p10": 5.521796321985272e-19,
+          "p90": 1.0
+        }
+      },
+      "51005:64": {
+        "all_inside_vertices_patch": {
+          "bbox_world_m": {
+            "max": [
+              0.13550645112991333,
+              -0.952014684677124,
+              0.12267827242612839
+            ],
+            "min": [
+              0.08459238708019257,
+              -1.234206199645996,
+              0.07236810028553009
+            ]
+          },
+          "extent_mm_xyz": [
+            50.9140625,
+            282.1915283203125,
+            50.31017303466797
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  0.13550645112991333,
+                  -0.952014684677124,
+                  0.12267827242612839
+                ],
+                "min": [
+                  0.08459238708019257,
+                  -1.234206199645996,
+                  0.07236810028553009
+                ]
+              },
+              "extent_mm_xyz": [
+                50.9140625,
+                282.1915283203125,
+                50.31017303466797
+              ],
+              "vertex_count": 208
+            }
+          ],
+          "vertex_count": 208
+        },
+        "ambiguous_abs_winding_0_45_to_0_55": 0,
+        "exact_crossing_skin_face_rows": 134,
+        "inside_abs_winding_gt_0_5": 208,
+        "inside_vertex_ids_sample": [
+          41711,
+          41712,
+          41713,
+          41740,
+          41743,
+          41744,
+          41745,
+          41760,
+          41761,
+          42250,
+          42257,
+          42265,
+          42273,
+          42274,
+          42796,
+          42797,
+          42804,
+          42805,
+          42806,
+          42807,
+          42808,
+          42809,
+          42810,
+          42811,
+          42812,
+          42813,
+          42814,
+          42815,
+          42818,
+          42820,
+          42821,
+          42822
+        ],
+        "inside_vertices_not_incident_to_exact_crossing_faces": {
+          "bbox_world_m": {
+            "max": [
+              0.13437429070472717,
+              -0.962175726890564,
+              0.1146245226264
+            ],
+            "min": [
+              0.09242857992649078,
+              -1.2211116552352905,
+              0.07354312390089035
+            ]
+          },
+          "extent_mm_xyz": [
+            41.945709228515625,
+            258.9359130859375,
+            41.081398010253906
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  0.13437429070472717,
+                  -0.962175726890564,
+                  0.1146245226264
+                ],
+                "min": [
+                  0.09242857992649078,
+                  -1.2211116552352905,
+                  0.07354312390089035
+                ]
+              },
+              "extent_mm_xyz": [
+                41.945709228515625,
+                258.9359130859375,
+                41.081398010253906
+              ],
+              "vertex_count": 142
+            }
+          ],
+          "vertex_count": 142
+        },
+        "outside_abs_winding_lt_0_45": 367,
+        "skin_vertices_in_target_aabb": 575,
+        "target_world_aabb_m": {
+          "max": [
+            0.14118443429470062,
+            -0.8727613091468811,
+            0.1327200084924698
+          ],
+          "min": [
+            0.06048182025551796,
+            -1.33150053024292,
+            0.06961355358362198
+          ]
+        },
+        "vertices_incident_to_exact_crossing_faces": 134,
+        "winding_abs_quantiles": {
+          "max": 1.0000000000000007,
+          "median": 1.766974823035287e-17,
+          "min": 0.0,
+          "p10": 9.387053747374978e-19,
+          "p90": 1.0
+        }
+      }
+    },
+    "fit_iteration8_counterfactual": {
+      "51005:63": {
+        "all_inside_vertices_patch": {
+          "bbox_world_m": {
+            "max": [
+              -0.18251802027225494,
+              -1.0955191850662231,
+              0.09146378189325333
+            ],
+            "min": [
+              -0.18953916430473328,
+              -1.1146366596221924,
+              0.08181388676166534
+            ]
+          },
+          "extent_mm_xyz": [
+            7.021143913269043,
+            19.117473602294922,
+            9.649894714355469
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  -0.18251802027225494,
+                  -1.0955191850662231,
+                  0.09146378189325333
+                ],
+                "min": [
+                  -0.18953916430473328,
+                  -1.1146366596221924,
+                  0.08181388676166534
+                ]
+              },
+              "extent_mm_xyz": [
+                7.021143913269043,
+                19.117473602294922,
+                9.649894714355469
+              ],
+              "vertex_count": 9
+            }
+          ],
+          "vertex_count": 9
+        },
+        "ambiguous_abs_winding_0_45_to_0_55": 0,
+        "exact_crossing_skin_face_rows": 22,
+        "inside_abs_winding_gt_0_5": 9,
+        "inside_vertex_ids_sample": [
+          9783,
+          10323,
+          10329,
+          10330,
+          10331,
+          10338,
+          10339,
+          10340,
+          10341
+        ],
+        "inside_vertices_not_incident_to_exact_crossing_faces": {
+          "bbox_world_m": {
+            "max": [
+              -0.1841050684452057,
+              -1.1075949668884277,
+              0.08684266358613968
+            ],
+            "min": [
+              -0.1841050684452057,
+              -1.1075949668884277,
+              0.08684266358613968
+            ]
+          },
+          "extent_mm_xyz": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  -0.1841050684452057,
+                  -1.1075949668884277,
+                  0.08684266358613968
+                ],
+                "min": [
+                  -0.1841050684452057,
+                  -1.1075949668884277,
+                  0.08684266358613968
+                ]
+              },
+              "extent_mm_xyz": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "vertex_count": 1
+            }
+          ],
+          "vertex_count": 1
+        },
+        "outside_abs_winding_lt_0_45": 401,
+        "skin_vertices_in_target_aabb": 410,
+        "target_world_aabb_m": {
+          "max": [
+            -0.11391311883926392,
+            -0.8706090450286865,
+            0.13604146242141724
+          ],
+          "min": [
+            -0.1935516595840454,
+            -1.3303747177124023,
+            0.0689123347401619
+          ]
+        },
+        "vertices_incident_to_exact_crossing_faces": 22,
+        "winding_abs_quantiles": {
+          "max": 1.0000000000000009,
+          "median": 6.6261555863823264e-18,
+          "min": 0.0,
+          "p10": 0.0,
+          "p90": 3.533949646070574e-17
+        }
+      },
+      "51005:64": {
+        "all_inside_vertices_patch": {
+          "bbox_world_m": {
+            "max": [
+              0.13813011348247528,
+              -1.0897538661956787,
+              0.09128960967063904
+            ],
+            "min": [
+              0.12244912981987,
+              -1.136444091796875,
+              0.0766507089138031
+            ]
+          },
+          "extent_mm_xyz": [
+            15.680983543395996,
+            46.690223693847656,
+            14.638900756835938
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  0.13813011348247528,
+                  -1.0897538661956787,
+                  0.09128960967063904
+                ],
+                "min": [
+                  0.12244912981987,
+                  -1.136444091796875,
+                  0.0766507089138031
+                ]
+              },
+              "extent_mm_xyz": [
+                15.680983543395996,
+                46.690223693847656,
+                14.638900756835938
+              ],
+              "vertex_count": 29
+            }
+          ],
+          "vertex_count": 29
+        },
+        "ambiguous_abs_winding_0_45_to_0_55": 0,
+        "exact_crossing_skin_face_rows": 37,
+        "inside_abs_winding_gt_0_5": 29,
+        "inside_vertex_ids_sample": [
+          44083,
+          44084,
+          44579,
+          44580,
+          44581,
+          44582,
+          44588,
+          44589,
+          44590,
+          44591,
+          44592,
+          44593,
+          44594,
+          44595,
+          44596,
+          44600,
+          44601,
+          44602,
+          44603,
+          44604,
+          44605,
+          44606,
+          44607,
+          44613,
+          44614,
+          44616,
+          44617,
+          45165,
+          45177
+        ],
+        "inside_vertices_not_incident_to_exact_crossing_faces": {
+          "bbox_world_m": {
+            "max": [
+              0.13124428689479828,
+              -1.0989700555801392,
+              0.08816630393266678
+            ],
+            "min": [
+              0.12414044886827469,
+              -1.123501181602478,
+              0.08111988008022308
+            ]
+          },
+          "extent_mm_xyz": [
+            7.103837966918945,
+            24.531126022338867,
+            7.04642391204834
+          ],
+          "largest_adjacency_components": [
+            {
+              "bbox_world_m": {
+                "max": [
+                  0.13124428689479828,
+                  -1.0989700555801392,
+                  0.08816630393266678
+                ],
+                "min": [
+                  0.12414044886827469,
+                  -1.123501181602478,
+                  0.08111988008022308
+                ]
+              },
+              "extent_mm_xyz": [
+                7.103837966918945,
+                24.531126022338867,
+                7.04642391204834
+              ],
+              "vertex_count": 13
+            }
+          ],
+          "vertex_count": 13
+        },
+        "outside_abs_winding_lt_0_45": 385,
+        "skin_vertices_in_target_aabb": 414,
+        "target_world_aabb_m": {
+          "max": [
+            0.14118443429470062,
+            -0.8727613091468811,
+            0.1327200084924698
+          ],
+          "min": [
+            0.06048182025551796,
+            -1.33150053024292,
+            0.06961355358362198
+          ]
+        },
+        "vertices_incident_to_exact_crossing_faces": 36,
+        "winding_abs_quantiles": {
+          "max": 1.0000000000000002,
+          "median": 8.834874115176436e-18,
+          "min": 0.0,
+          "p10": 0.0,
+          "p90": 7.067899292141149e-17
+        }
+      }
+    }
+  },
+  "schema": "numi.human.skin-muscle-inside-vertex-diagnostic.v1",
+  "status": "bounded_winding_occupancy_diagnostic_not_admission",
+  "target_shell_gates": {
+    "51005:63": {
+      "bit_exact_float32_coordinate_quotient_closed_oriented": true,
+      "exact_self_unallowed_pairs": 0
+    },
+    "51005:64": {
+      "bit_exact_float32_coordinate_quotient_closed_oriented": true,
+      "exact_self_unallowed_pairs": 5
+    }
+  }
+}

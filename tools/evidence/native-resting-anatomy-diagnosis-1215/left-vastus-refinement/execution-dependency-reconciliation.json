@@ -1,0 +1,24 @@
+{
+  "schema": "numi.human.conforming-refinement-execution-dependency-reconciliation.v1",
+  "status": "committed-helper-bytes-pinned-at-run; shared-working-path-modified-after-run",
+  "refinement_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/conforming-refinement-001/report.json",
+    "sha256": "7c844e6fae4e494907e2348e8bd91c9e26a56ea82f185a7589965bd3d9500d83",
+    "mtime_local": "2026-10-09 18:55:22"
+  },
+  "baseline_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1206/conforming-refinement-001/unrefined-baseline-report.json",
+    "sha256": "4e50d1f5d5cf208f18d381b39557cb46cc73f87a225ce275af0d408e0fdf2",
+    "mtime_local": "2026-10-09 18:56:06"
+  },
+  "helper_dependency": {
+    "path": "/Users/n/numi-human-free-apex-two-family-1178/src/numilab_human/common_atlas_skin_clearance.py",
+    "hash_recorded_by_refinement_report": "566e812880a7b6e0f6c8dd240756ac02d11decca3c648f57f8ddd8a31877aaf0",
+    "hash_of_committed_head_blob": "566e812880a7b6e0f6c8dd240756ac02d11decca3c648f57f8ddd8a31877aaf0",
+    "repository_head_at_verification": "e0aa3fae6061eae431a158a2ea107a2fb211f6d",
+    "current_shared_worktree_hash": "2beef59a365753e611dc0d5d65e4e059949e52672296d3c3a6eb178bec0d2d2f",
+    "current_worktree_modified_at_local": "2026-10-09 18:57:48",
+    "relation": "The pinned committed blob matched the report input and was the current file when both refinement and baseline scans completed. A later shared-worktree edit changed the path after those runs. The diagnostic did not execute against that later dirty version."
+  },
+  "reconciliation_method": "Compared report-pinned SHA-256 to `git show HEAD:src/numilab_human/common_atlas_skin_clearance.py`, then compared the current worktree file hash and modification time. The exact intersection and topology helper pins in the reports were also verified against current files."
+}
