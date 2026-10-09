@@ -1,0 +1,47 @@
+{
+  "scope": "Continuous native movie timing and selected exact decoded-frame inspection; not anatomical intersection qualification",
+  "inspector": {
+    "path": "/Users/n/numi-human-resting-final-source-028/matter/tools/inspect_resting_movie.swift",
+    "sha256": "2d6704dd5f06bffd0b8aa0072171af805fdb3dd00dcc11c02e0b692513b21649"
+  },
+  "native_movie": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/native-viewer.mov",
+    "sha256": "04a6e06209523b99958b076a33a06ed346f1201cb72172b636dec33bb0b4a9e2"
+  },
+  "surface_trace": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/resting-surface-audit.csv",
+    "sha256": "a0a29a60672d03eeb849dba0ea529e3fd2297ecc7897743225a37a60ddaa4db3"
+  },
+  "inspection_log_sha256": "5a3a8e9f203002b75624989357244027a0f8207bde4770cc3257e42353a7935c",
+  "frame_count": 627,
+  "timing_markers": 5,
+  "first_wall_s": 1.72,
+  "last_wall_s": 349.31333333333333,
+  "max_gap_wall_s": 2.09,
+  "duration_wall_s": 349.875,
+  "exact_decoded_frames": {
+    "frame-initial.png": "755268fbf9b6fcdae670eded6bec25bbeac07cbc7cfba5dd6f8eff819173f8c9",
+    "frame-vessels.png": "15595aaba913b09e4cc52156c4850eace212c0cd3d97c422ca304e9c7a1646bc",
+    "frame-lungs.png": "da991853159ff7f58e4afc2943c1614d32e4ab9da5e720ad41b96480c27f2fe1",
+    "frame-skin.png": "820b1718bba9ce5e5755b9887533c33cec0b95005eacd56043e2e9995122a080",
+    "frame-middle.png": "70100f4da5425cb218d7afefe9747a1cecd4595873fd9c894482968d92f29488",
+    "frame-organs.png": "579908d5b91bb16e4ba396684e6f80755ed84516a32fafeb10b360428d91b8f5",
+    "frame-muscles.png": "a86faee5470b0396d536051d57e5488fc66f574d22138bd5ca4a60aced50a88f",
+    "frame-heart.png": "8221314f6977a9a3cdbf16e93c92b33e29a3378941771ba503c0c0cfd615464f",
+    "frame-skeleton.png": "e4b57b3b25b142011bab79465c23e95018c7d290215ef8907cff65be64c3eea7",
+    "frame-final.png": "e01e00cf2b3fd92b6e5529cec141a22cde848c94963454ee2cc9551687ea745c"
+  },
+  "visually_reviewed_frames": [
+    "frame-final.png",
+    "frame-heart.png",
+    "frame-skin.png"
+  ],
+  "visual_observations": [
+    "Whole head-to-toe human and flat support are visible in skin and muscle layers.",
+    "Native layer and camera controls and synchronized physiology HUD are present.",
+    "The heart-detail layer is rendered from the native anatomy; a still image alone does not prove mechanical pumping.",
+    "Final HUD shows40seconds,7breaths47beats,tidal522.92mL,PaO2 103.15mmHg,PaCO2 39.31mmHg,SaO2 97.44%,blood5.15L,COmean4.95L/min.",
+    "Heart-detail footer text is clipped at the bottom; most numerical HUD and layer controls remain readable."
+  ],
+  "remaining_scope": "Other7decodedimages were not manually reviewed; no 300-second qualification."
+}

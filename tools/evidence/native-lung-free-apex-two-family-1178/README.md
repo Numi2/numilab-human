@@ -44,3 +44,7 @@ ssh macmini '/Users/n/numivivo-foundation-mace-20260922/venv/bin/python /Users/n
 ```
 
 Verify the local publication copies with `shasum -a 256 -c SHA256SUMS`. External binary artifacts are not duplicated; see [`retained-source-manifest.json`](retained-source-manifest.json) and [`external-artifacts.json`](external-artifacts.json) for their retained paths, hashes, and sizes.
+
+## 1201 flat-reference 40-second control (anatomy failed)
+
+The separate 1201 control completed 20,000 native steps over 40.0000019 simulated seconds and reproduced the common 20-second physiology/observer prefixes from 1191. Its completed exact terminal skin audit found 3,112 nonocular skin-target crossing pairs on 26 surfaces (zero skin-self or ocular crossings); it is therefore a retained anatomy failure, not a successful scene qualification. Runtime/replay results and the exact failure witnesses are in [`flat-reference-40s-1201/`](flat-reference-40s-1201/). That run used the original flat support; the separate 1200 posture experiment was unrun and unadopted.

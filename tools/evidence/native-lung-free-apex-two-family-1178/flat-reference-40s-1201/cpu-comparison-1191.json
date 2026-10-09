@@ -1,0 +1,748 @@
+{
+  "accepted_terminal": {
+    "q_count": 129,
+    "root_assistance": false,
+    "schema": "numi.human.legacy-stand-terminal.v1",
+    "step_count": 20000,
+    "timestep_seconds": 0.002
+  },
+  "analysis_script": {
+    "bytes": 13047,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/compare_1201_to_1191.py",
+    "sha256": "cf0be80de59d372e15ca720384a038307e797248c6582da850d71ce356759886"
+  },
+  "candidate_run": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run",
+  "candidate_wrapper_exit_code": 0,
+  "first_20_second_prefix_comparison": {
+    "all_four_common_sample_prefixes_exact": true,
+    "baseline_capture_steps": [
+      0,
+      4991,
+      5375,
+      5759,
+      6111,
+      6495,
+      7743,
+      10000
+    ],
+    "baseline_run": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run",
+    "candidate_capture_steps": [
+      0,
+      20000
+    ],
+    "csvs": {
+      "resting-com-momentum-diagnostic.csv": {
+        "baseline_common_prefix_sha256": "be8708957990c08b357e54b28ca070ef93f0495183db57c7adf6041a7f80de32",
+        "baseline_full_sha256": "be8708957990c08b357e54b28ca070ef93f0495183db57c7adf6041a7f80de32",
+        "baseline_rows_through_10000": 1250,
+        "baseline_terminal_only_rows_after_common_last_step": [],
+        "candidate_final_step": 20000,
+        "candidate_full_sha256": "a7f0e4cf7a5d833e577868c05afe717d73ccc83962857e852e2ae1e4cdc4855e",
+        "candidate_only_steps": [],
+        "candidate_prefix_sha256": "be8708957990c08b357e54b28ca070ef93f0495183db57c7adf6041a7f80de32",
+        "candidate_rows_through_10000": 1250,
+        "candidate_total_rows": 2500,
+        "common_sample_last_step": 10000,
+        "common_sample_rows": 1250,
+        "fieldwise_common_prefix_exact": true,
+        "header": [
+          "sample_start_step",
+          "accepted_step",
+          "time_s",
+          "segment_steps",
+          "total_body_mass_kg",
+          "com_x_m",
+          "com_y_m",
+          "com_z_m",
+          "com_vx_m_s",
+          "com_vy_m_s",
+          "com_vz_m_s",
+          "com_px_kg_m_s",
+          "com_py_kg_m_s",
+          "com_pz_kg_m_s",
+          "delta_com_px_kg_m_s",
+          "delta_com_py_kg_m_s",
+          "delta_com_pz_kg_m_s",
+          "delta_com_valid",
+          "gravity_impulse_x_ns",
+          "gravity_impulse_y_ns",
+          "gravity_impulse_z_ns",
+          "root_vx_m_s",
+          "root_vy_m_s",
+          "root_vz_m_s",
+          "support_normal_x",
+          "support_normal_y",
+          "support_normal_z",
+          "normal_impulse_last_physical_step_ns",
+          "normal_force_last_physical_step_n",
+          "max_normal_contact_impulse_segment_ns",
+          "max_tangent_contact_impulse_segment_ns",
+          "active_contact_count",
+          "contact_impulse_vector_elements",
+          "contact_impulse_vector_available",
+          "world_contact_impulse_x_ns",
+          "world_contact_impulse_y_ns",
+          "world_contact_impulse_z_ns",
+          "unaccounted_delta_p_x_ns",
+          "unaccounted_delta_p_y_ns",
+          "unaccounted_delta_p_z_ns",
+          "stand_q_fingerprint_fnv64",
+          "stand_v_fingerprint_fnv64",
+          "root_translation_fingerprint_fnv64",
+          "momentum_residual_status",
+          "contact_normal_solver_iterate_work_segment_j",
+          "contact_tangent_solver_iterate_work_segment_j",
+          "equality_solver_iterate_work_segment_j",
+          "source_limit_solver_iterate_work_segment_j",
+          "contact_normal_absolute_solver_iterate_work_segment_j",
+          "contact_tangent_absolute_solver_iterate_work_segment_j",
+          "equality_absolute_solver_iterate_work_segment_j",
+          "source_limit_absolute_solver_iterate_work_segment_j"
+        ],
+        "serialized_common_prefix_bytes_exact": true,
+        "step_key": "accepted_step"
+      },
+      "resting-com-support-impulses.csv": {
+        "baseline_common_prefix_sha256": "82eeb9dfb1336a7e576df87cd6305679e673dd1759d315c12de8d0d16148480c",
+        "baseline_full_sha256": "82eeb9dfb1336a7e576df87cd6305679e673dd1759d315c12de8d0d16148480c",
+        "baseline_rows_through_10000": 40000,
+        "baseline_terminal_only_rows_after_common_last_step": [],
+        "candidate_final_step": 20000,
+        "candidate_full_sha256": "b012d16ee20a4e17f5b60d84dbcd1722cab436ff8789a3287793d38adb867b17",
+        "candidate_only_steps": [],
+        "candidate_prefix_sha256": "82eeb9dfb1336a7e576df87cd6305679e673dd1759d315c12de8d0d16148480c",
+        "candidate_rows_through_10000": 40000,
+        "candidate_total_rows": 80000,
+        "common_sample_last_step": 10000,
+        "common_sample_rows": 40000,
+        "fieldwise_common_prefix_exact": true,
+        "header": [
+          "sample_start_step",
+          "accepted_step",
+          "segment_steps",
+          "contact_index",
+          "body_index",
+          "source_geometry_index",
+          "normal_impulse_ns",
+          "tangent0_impulse_ns",
+          "tangent1_impulse_ns",
+          "impulse_world_x_ns",
+          "impulse_world_y_ns",
+          "impulse_world_z_ns",
+          "normal_x",
+          "normal_y",
+          "normal_z",
+          "tangent0_x",
+          "tangent0_y",
+          "tangent0_z",
+          "tangent1_x",
+          "tangent1_y",
+          "tangent1_z"
+        ],
+        "serialized_common_prefix_bytes_exact": true,
+        "step_key": "accepted_step"
+      },
+      "resting-coupled.csv": {
+        "baseline_common_prefix_sha256": "5c4f129103fbf23010cfe47b99367c30d8497f70e525b4c97ca61b53c3ca90e6",
+        "baseline_full_sha256": "5c4f129103fbf23010cfe47b99367c30d8497f70e525b4c97ca61b53c3ca90e6",
+        "baseline_rows_through_10000": 1250,
+        "baseline_terminal_only_rows_after_common_last_step": [],
+        "candidate_final_step": 20000,
+        "candidate_full_sha256": "ab391d28e2caa9315d8cd0515c823debd44b8168c4f03c5ef118b49e33db343a",
+        "candidate_only_steps": [],
+        "candidate_prefix_sha256": "5c4f129103fbf23010cfe47b99367c30d8497f70e525b4c97ca61b53c3ca90e6",
+        "candidate_rows_through_10000": 1250,
+        "candidate_total_rows": 2500,
+        "common_sample_last_step": 10000,
+        "common_sample_rows": 1250,
+        "fieldwise_common_prefix_exact": true,
+        "header": [
+          "time_s",
+          "lung_volume_ml",
+          "airflow_ml_s",
+          "alveolar_pa",
+          "pleural_pa",
+          "diaphragm_mm",
+          "rib_mm",
+          "PaO2_mmhg",
+          "PaCO2_mmhg",
+          "SaO2",
+          "oxygen_balance_error_stpd_ml",
+          "co2_balance_error_stpd_ml",
+          "breaths",
+          "tidal_ml",
+          "lv_mmhg",
+          "rv_mmhg",
+          "aorta_mmhg",
+          "pulmonary_artery_mmhg",
+          "lv_ml",
+          "rv_ml",
+          "blood_ml",
+          "blood_error_ml",
+          "aortic_ejected_ml",
+          "pulmonary_ejected_ml",
+          "complete_filling_ejection_cycles",
+          "last_lv_stroke_ml",
+          "right_atrium_ml",
+          "left_atrium_ml",
+          "blood_continuity_residual_accum_ml",
+          "blood_physical_delta_accum_ml",
+          "blood_residual_minus_physical_ml",
+          "blood_endpoint_minus_physical_ml",
+          "inspired_volume_accum_ml",
+          "last_inspiration_step",
+          "last_inspiration_time_s",
+          "last_inspiration_volume_accum_ml",
+          "last_complete_breath_inspired_ml",
+          "respiratory_net_volume_ml",
+          "respiratory_volume_balance_ml",
+          "gas_max_donor_fraction",
+          "respiratory_gas_substeps",
+          "step",
+          "min_contact_gap_m",
+          "peak_penetration_m",
+          "normal_impulse_ns",
+          "root_assistance_n",
+          "root_assistance_nm",
+          "diaphragm_excitation",
+          "intercostal_excitation",
+          "diaphragm_activation",
+          "intercostal_activation",
+          "pre_projection_contact_residual_m_s",
+          "pre_projection_limit_residual_generalized_s",
+          "pre_projection_equality_residual_generalized_s",
+          "post_projection_contact_residual_m_s",
+          "post_projection_limit_residual_generalized_s",
+          "post_projection_equality_residual_generalized_s",
+          "equality_position_projection_max_generalized",
+          "equality_velocity_projection_max_generalized_s",
+          "contact_sweeps"
+        ],
+        "serialized_common_prefix_bytes_exact": true,
+        "step_key": "step"
+      },
+      "resting-surface-audit.csv": {
+        "baseline_common_prefix_sha256": "a763587e5659c586e8b86618e5b61b697c2dc9c617344056d29637f8045ecc2c",
+        "baseline_full_sha256": "8076b081e33b85a17dd07a5322e8b1625ecaab57f3dd5adf113253b254c1cb5e",
+        "baseline_rows_through_10000": 315,
+        "baseline_terminal_only_rows_after_common_last_step": [
+          9999,
+          10000
+        ],
+        "candidate_final_step": 20000,
+        "candidate_full_sha256": "a0a29a60672d03eeb849dba0ea529e3fd2297ecc7897743225a37a60ddaa4db3",
+        "candidate_only_steps": [],
+        "candidate_prefix_sha256": "a763587e5659c586e8b86618e5b61b697c2dc9c617344056d29637f8045ecc2c",
+        "candidate_rows_through_10000": 313,
+        "candidate_total_rows": 627,
+        "common_sample_last_step": 9983,
+        "common_sample_rows": 313,
+        "fieldwise_common_prefix_exact": true,
+        "header": [
+          "time_s",
+          "step",
+          "min_skin_bed_gap_m",
+          "vertices_below_1mm",
+          "nonfinite_skin_vertices",
+          "max_functional_volume_relative_error",
+          "q_ra",
+          "q_rv",
+          "q_la",
+          "q_lv",
+          "ra_target_ml",
+          "rv_target_ml",
+          "la_target_ml",
+          "lv_target_ml",
+          "diaphragm_swept_ml",
+          "rib_swept_ml",
+          "lung_target_ml",
+          "body_com_x_m",
+          "body_com_y_m",
+          "body_com_z_m",
+          "represented_body_mass_kg",
+          "ventricular_wall_bound",
+          "ventricular_material_ml",
+          "ventricular_material_target_ml",
+          "ventricular_closure_mm",
+          "ventricular_material_status",
+          "functional_geometry_status",
+          "geometry_mode",
+          "common_coordinate_RA",
+          "common_coordinate_RV",
+          "common_coordinate_LA",
+          "common_coordinate_LV",
+          "common_coordinate_RA_material",
+          "common_coordinate_ventricular_material",
+          "common_coordinate_LA_material",
+          "common_coordinate_solver_status",
+          "common_coordinate_solver_iterations",
+          "common_coordinate_domain_box",
+          "common_coordinate_normalized_residual",
+          "ventricular_closure_mm_applicable",
+          "mesh_zero_area_triangles",
+          "mesh_nonfinite_area_triangles",
+          "mesh_triangles_checked"
+        ],
+        "serialized_common_prefix_bytes_exact": true,
+        "step_key": "step"
+      }
+    },
+    "cutoff_step": 10000,
+    "nominal_cutoff_time_s": 20.0
+  },
+  "input_pins": [
+    {
+      "bytes": 9931,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/run-declaration.json",
+      "sha256": "e9f7ada8ea4eb52760a790edb3fb3a3c05953c5ad06fac3f605b943b6405f05a"
+    },
+    {
+      "bytes": 11392,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/run-metadata.json",
+      "sha256": "eb84c9d25714d2e6f163be664c26d1e30708e97a03f2d7dfaf0c22e4d4347069"
+    },
+    {
+      "bytes": 1993178,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/native.log",
+      "sha256": "40a2aa81b8635a20b49d94d70b174efcdb8182936b70202ee110345517ddefba"
+    },
+    {
+      "bytes": 10751,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/invocation.json",
+      "sha256": "d085fd4604033f9de4fea9819218a8773350cde55c4e6254f120719952ddb995"
+    },
+    {
+      "bytes": 10449,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/run-declaration.json",
+      "sha256": "c907c5ea7d1ed6027da60f27a0b07f498fd6499989b9051349688241b5656085"
+    },
+    {
+      "bytes": 11392,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/run-metadata.json",
+      "sha256": "eb84c9d25714d2e6f163be664c26d1e30708e97a03f2d7dfaf0c22e4d4347069"
+    },
+    {
+      "bytes": 11340,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/run-metadata.json",
+      "sha256": "cefc252388be94acd09092c1f7d41385c2d038d053eea43ff9f162d0febf7258"
+    },
+    {
+      "bytes": 1993178,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/native.log",
+      "sha256": "40a2aa81b8635a20b49d94d70b174efcdb8182936b70202ee110345517ddefba"
+    },
+    {
+      "bytes": 3734500,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/native.log",
+      "sha256": "7bdbb7658a2ab5f35c663b81346cf2acd0bf6a5fba904026874573f35ececb98"
+    },
+    {
+      "bytes": 10751,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/invocation.json",
+      "sha256": "d085fd4604033f9de4fea9819218a8773350cde55c4e6254f120719952ddb995"
+    },
+    {
+      "bytes": 10694,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/invocation.json",
+      "sha256": "ee2ca63cfe72122bc22f2ece2b3b62c738f33d252ce9d3007ef31d36cead0139"
+    },
+    {
+      "bytes": 1045449,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-com-momentum-diagnostic.csv",
+      "sha256": "be8708957990c08b357e54b28ca070ef93f0495183db57c7adf6041a7f80de32"
+    },
+    {
+      "bytes": 2092050,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/resting-com-momentum-diagnostic.csv",
+      "sha256": "a7f0e4cf7a5d833e577868c05afe717d73ccc83962857e852e2ae1e4cdc4855e"
+    },
+    {
+      "bytes": 3587319,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-com-support-impulses.csv",
+      "sha256": "82eeb9dfb1336a7e576df87cd6305679e673dd1759d315c12de8d0d16148480c"
+    },
+    {
+      "bytes": 7332133,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/resting-com-support-impulses.csv",
+      "sha256": "b012d16ee20a4e17f5b60d84dbcd1722cab436ff8789a3287793d38adb867b17"
+    },
+    {
+      "bytes": 1017464,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-coupled.csv",
+      "sha256": "5c4f129103fbf23010cfe47b99367c30d8497f70e525b4c97ca61b53c3ca90e6"
+    },
+    {
+      "bytes": 2046296,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/resting-coupled.csv",
+      "sha256": "ab391d28e2caa9315d8cd0515c823debd44b8168c4f03c5ef118b49e33db343a"
+    },
+    {
+      "bytes": 140668,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/native-run/resting-surface-audit.csv",
+      "sha256": "8076b081e33b85a17dd07a5322e8b1625ecaab57f3dd5adf113253b254c1cb5e"
+    },
+    {
+      "bytes": 279547,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/native-flat-reference-40s-1201/native-run/resting-surface-audit.csv",
+      "sha256": "a0a29a60672d03eeb849dba0ea529e3fd2297ecc7897743225a37a60ddaa4db3"
+    }
+  ],
+  "internal_integrated_body": {
+    "internal_wall_s": 347.612596709,
+    "physiology_body_clock": "matched",
+    "presentation_qualification": "pending",
+    "real_time_factor": 0.11507063402936346,
+    "root_assistance": "false",
+    "simulated_s": 40.00000189989805
+  },
+  "limits": [
+    "Exact CSV comparison covers steps through 10000 only and does not determine the entire 40-second anatomy result.",
+    "MRVPACK capture schedules differ ([0,4991,5375,5759,6111,6495,7743,10000] vs [0,20000]); exact shared observer rows test whether that schedule perturbed physics at sampled states through 20 seconds.",
+    "Wrapper wall includes setup and concurrent CPU build/test activity; do not interpret it as a performance benchmark.",
+    "This 40-second flat-reference control is not a 310-second/full-cycle qualification."
+  ],
+  "physical_input_asset_pins": {
+    "additional_candidate_declaration_pins": [
+      "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/run-declaration.json",
+      "/Users/n/numi-human-retained-delivery-20261009/native-lung1178-thumb1187-smoke-1191/run.py"
+    ],
+    "all_25_baseline_assets_confirmed_by_candidate_declaration_and_metadata": true,
+    "baseline_asset_count": 25
+  },
+  "physiology_40s": {
+    "complete_breaths_max_observed": 7,
+    "complete_breaths_terminal": 7,
+    "complete_filling_ejection_cycles_max_observed": 47,
+    "complete_filling_ejection_cycles_terminal": 47,
+    "coupled_columns": [
+      "time_s",
+      "lung_volume_ml",
+      "airflow_ml_s",
+      "alveolar_pa",
+      "pleural_pa",
+      "diaphragm_mm",
+      "rib_mm",
+      "PaO2_mmhg",
+      "PaCO2_mmhg",
+      "SaO2",
+      "oxygen_balance_error_stpd_ml",
+      "co2_balance_error_stpd_ml",
+      "breaths",
+      "tidal_ml",
+      "lv_mmhg",
+      "rv_mmhg",
+      "aorta_mmhg",
+      "pulmonary_artery_mmhg",
+      "lv_ml",
+      "rv_ml",
+      "blood_ml",
+      "blood_error_ml",
+      "aortic_ejected_ml",
+      "pulmonary_ejected_ml",
+      "complete_filling_ejection_cycles",
+      "last_lv_stroke_ml",
+      "right_atrium_ml",
+      "left_atrium_ml",
+      "blood_continuity_residual_accum_ml",
+      "blood_physical_delta_accum_ml",
+      "blood_residual_minus_physical_ml",
+      "blood_endpoint_minus_physical_ml",
+      "inspired_volume_accum_ml",
+      "last_inspiration_step",
+      "last_inspiration_time_s",
+      "last_inspiration_volume_accum_ml",
+      "last_complete_breath_inspired_ml",
+      "respiratory_net_volume_ml",
+      "respiratory_volume_balance_ml",
+      "gas_max_donor_fraction",
+      "respiratory_gas_substeps",
+      "step",
+      "min_contact_gap_m",
+      "peak_penetration_m",
+      "normal_impulse_ns",
+      "root_assistance_n",
+      "root_assistance_nm",
+      "diaphragm_excitation",
+      "intercostal_excitation",
+      "diaphragm_activation",
+      "intercostal_activation",
+      "pre_projection_contact_residual_m_s",
+      "pre_projection_limit_residual_generalized_s",
+      "pre_projection_equality_residual_generalized_s",
+      "post_projection_contact_residual_m_s",
+      "post_projection_limit_residual_generalized_s",
+      "post_projection_equality_residual_generalized_s",
+      "equality_position_projection_max_generalized",
+      "equality_velocity_projection_max_generalized_s",
+      "contact_sweeps"
+    ],
+    "coupled_trace_rows": 2500,
+    "first_step": 8,
+    "gas_and_blood_volume_residuals": {
+      "blood_continuity_residual_accum_ml": {
+        "max": 0.0096059592225,
+        "max_abs": 0.0096059592225,
+        "min": -0.000511150233251,
+        "terminal": 0.00889980808494
+      },
+      "blood_endpoint_minus_physical_ml": {
+        "max": 0.00143973011291,
+        "max_abs": 0.00143973011291,
+        "min": -0.0013842509361,
+        "terminal": -0.000542058842257
+      },
+      "blood_error_ml": {
+        "max": 0.0102445483208,
+        "max_abs": 0.0102445483208,
+        "min": 0.000931322574615,
+        "terminal": 0.0102445483208
+      },
+      "blood_physical_delta_accum_ml": {
+        "max": 0.0096424628282,
+        "max_abs": 0.0096424628282,
+        "min": -0.000536601874046,
+        "terminal": 0.0089239620138
+      },
+      "blood_residual_minus_physical_ml": {
+        "max": 0.000119976903412,
+        "max_abs": 0.000144068465491,
+        "min": -0.000144068465491,
+        "terminal": -2.4153928857e-05
+      },
+      "co2_balance_error_stpd_ml": {
+        "max": 0.000465661287308,
+        "max_abs": 0.000465661287308,
+        "min": 0.000232830643654,
+        "terminal": 0.000465661287308
+      },
+      "oxygen_balance_error_stpd_ml": {
+        "max": 0.000232830643654,
+        "max_abs": 0.000232830643654,
+        "min": 0.000116415321827,
+        "terminal": 0.000232830643654
+      },
+      "respiratory_net_volume_ml": {
+        "max": 1.44379168887,
+        "max_abs": 1.75855245743,
+        "min": -1.75855245743,
+        "terminal": -0.650059689633
+      },
+      "respiratory_volume_balance_ml": {
+        "max": 0.000414473788624,
+        "max_abs": 0.000414473788624,
+        "min": -0.000389530852019,
+        "terminal": -3.46744855051e-06
+      }
+    },
+    "root_assistance_csv": {
+      "root_assistance_n": {
+        "max": 0.0,
+        "max_abs": 0.0,
+        "min": 0.0,
+        "terminal": 0.0
+      },
+      "root_assistance_nm": {
+        "max": 0.0,
+        "max_abs": 0.0,
+        "min": 0.0,
+        "terminal": 0.0
+      }
+    },
+    "root_assistance_zero_on_every_coupled_row": true,
+    "selected_physiology_ranges": {
+      "PaCO2_mmhg": {
+        "max": 40.0000534058,
+        "max_abs": 40.0000534058,
+        "min": 38.8828544617,
+        "terminal": 39.313079834
+      },
+      "PaO2_mmhg": {
+        "max": 103.565208435,
+        "max_abs": 103.565208435,
+        "min": 99.9998245239,
+        "terminal": 103.145881653
+      },
+      "SaO2": {
+        "max": 0.974663794041,
+        "max_abs": 0.974663794041,
+        "min": 0.972220122814,
+        "terminal": 0.974391877651
+      },
+      "airflow_ml_s": {
+        "max": 721.895834431,
+        "max_abs": 879.27619461,
+        "min": -879.27619461,
+        "terminal": -325.029832311
+      },
+      "alveolar_pa": {
+        "max": 117.227203369,
+        "max_abs": 117.227203369,
+        "min": -96.2448806763,
+        "terminal": 43.3337554932
+      },
+      "aorta_mmhg": {
+        "max": 113.217934694,
+        "max_abs": 113.217934694,
+        "min": 68.5076797601,
+        "terminal": 94.0844645291
+      },
+      "aortic_ejected_ml": {
+        "max": 3299.83816482,
+        "max_abs": 3299.83816482,
+        "min": 0.0,
+        "terminal": 3299.83816482
+      },
+      "blood_ml": {
+        "max": 5150.01034364,
+        "max_abs": 5150.01034364,
+        "min": 5149.99916777,
+        "terminal": 5150.008481
+      },
+      "diaphragm_mm": {
+        "max": 20.5969314575,
+        "max_abs": 20.5969314575,
+        "min": 7.27228834876e-05,
+        "terminal": 2.67535924911
+      },
+      "lung_volume_ml": {
+        "max": 3036.15373559,
+        "max_abs": 3036.15373559,
+        "min": 2500.00157394,
+        "terminal": 2561.62462756
+      },
+      "lv_ml": {
+        "max": 135.111811687,
+        "max_abs": 135.111811687,
+        "min": 59.3864788243,
+        "terminal": 93.7069271458
+      },
+      "lv_mmhg": {
+        "max": 114.542005795,
+        "max_abs": 114.542005795,
+        "min": 2.04202226808,
+        "terminal": 4.12249068555
+      },
+      "pleural_pa": {
+        "max": -470.339996338,
+        "max_abs": 770.045959473,
+        "min": -770.045959473,
+        "terminal": -477.215301514
+      },
+      "pulmonary_artery_mmhg": {
+        "max": 23.8458382247,
+        "max_abs": 23.8458382247,
+        "min": 9.24139221136,
+        "terminal": 15.7096972707
+      },
+      "pulmonary_ejected_ml": {
+        "max": 3291.19851813,
+        "max_abs": 3291.19851813,
+        "min": 0.0,
+        "terminal": 3291.19851813
+      },
+      "rib_mm": {
+        "max": 2.52427482605,
+        "max_abs": 2.52427482605,
+        "min": -0.0180934667587,
+        "terminal": 0.193835377693
+      },
+      "rv_ml": {
+        "max": 153.912580572,
+        "max_abs": 153.912580572,
+        "min": 78.5833253758,
+        "terminal": 104.697093775
+      },
+      "rv_mmhg": {
+        "max": 25.2495191329,
+        "max_abs": 25.2495191329,
+        "min": -1.49145743174,
+        "terminal": -0.957123366632
+      },
+      "tidal_ml": {
+        "max": 536.159379408,
+        "max_abs": 536.159379408,
+        "min": 0.0,
+        "terminal": 522.919232026
+      }
+    },
+    "terminal_coupled_state": {
+      "PaCO2_mmhg": "39.313079834",
+      "PaO2_mmhg": "103.145881653",
+      "SaO2": "0.974391877651",
+      "airflow_ml_s": "-325.029832311",
+      "alveolar_pa": "43.3337554932",
+      "aorta_mmhg": "94.0844645291",
+      "aortic_ejected_ml": "3299.83816482",
+      "blood_continuity_residual_accum_ml": "0.00889980808494",
+      "blood_endpoint_minus_physical_ml": "-0.000542058842257",
+      "blood_error_ml": "0.0102445483208",
+      "blood_ml": "5150.008481",
+      "blood_physical_delta_accum_ml": "0.0089239620138",
+      "blood_residual_minus_physical_ml": "-2.4153928857e-05",
+      "breaths": "7",
+      "co2_balance_error_stpd_ml": "0.000465661287308",
+      "complete_filling_ejection_cycles": "47",
+      "contact_sweeps": "64",
+      "diaphragm_activation": "0.00032195323729",
+      "diaphragm_excitation": "0",
+      "diaphragm_mm": "2.67535924911",
+      "equality_position_projection_max_generalized": "1.49011611938e-08",
+      "equality_velocity_projection_max_generalized_s": "2.23759748508e-08",
+      "gas_max_donor_fraction": "0.014504221268",
+      "inspired_volume_accum_ml": "4217.45454961",
+      "intercostal_activation": "0.000210417347262",
+      "intercostal_excitation": "0",
+      "last_complete_breath_inspired_ml": "522.919057403",
+      "last_inspiration_step": "18740",
+      "last_inspiration_time_s": "37.4800017802",
+      "last_inspiration_volume_accum_ml": "3694.52481506",
+      "last_lv_stroke_ml": "70.0307355146",
+      "left_atrium_ml": "47.0757695439",
+      "lung_volume_ml": "2561.62462756",
+      "lv_ml": "93.7069271458",
+      "lv_mmhg": "4.12249068555",
+      "min_contact_gap_m": "1.57640852194e-06",
+      "normal_impulse_ns": "1.41333937645",
+      "oxygen_balance_error_stpd_ml": "0.000232830643654",
+      "peak_penetration_m": "0",
+      "pleural_pa": "-477.215301514",
+      "post_projection_contact_residual_m_s": "5.14862767886e-06",
+      "post_projection_equality_residual_generalized_s": "2.00400460115e-12",
+      "post_projection_limit_residual_generalized_s": "3.20763865602e-06",
+      "pre_projection_contact_residual_m_s": "5.14853309141e-06",
+      "pre_projection_equality_residual_generalized_s": "1.49440165842e-06",
+      "pre_projection_limit_residual_generalized_s": "3.20763865602e-06",
+      "pulmonary_artery_mmhg": "15.7096972707",
+      "pulmonary_ejected_ml": "3291.19851813",
+      "respiratory_gas_substeps": "1",
+      "respiratory_net_volume_ml": "-0.650059689633",
+      "respiratory_volume_balance_ml": "-3.46744855051e-06",
+      "rib_mm": "0.193835377693",
+      "right_atrium_ml": "27.3495279544",
+      "root_assistance_n": "0",
+      "root_assistance_nm": "0",
+      "rv_ml": "104.697093775",
+      "rv_mmhg": "-0.957123366632",
+      "step": "20000",
+      "tidal_ml": "522.919232026",
+      "time_s": "40.0000018999"
+    },
+    "terminal_step": 20000
+  },
+  "rejected_step_and_replay_probe": {
+    "all_owners_match_uninterrupted_prefix": "true",
+    "body_q_v_root_myo_unchanged": "true",
+    "circulation_and_clock_unchanged": "true",
+    "raw_line": "resting_integrated_rejection=pass rejected_after_accepted_predecessor=true body_q_v_root_myo_unchanged=true circulation_and_clock_unchanged=true respiration_brain_history_unchanged=true retry_matches_uninterrupted_replay=true same_command_buffer_reject=pass accepted_prefix=2 rejected_step=2 inert_suffix=1 multistep_reject=pass accepted_prefix=4 rejected_global_step=4 inert_suffix_global_step=5 raw_failed_submission_snapshot=pass all_owners_match_uninterrupted_prefix=true accepted_contact_history=disabled retry=fresh_context_reseed_and_replay_matches_six_root_baseline same_context_retry=unsupported",
+    "rejected_after_accepted_predecessor": "true",
+    "rejected_global_step": "4",
+    "rejected_step": "2",
+    "respiration_brain_history_unchanged": "true",
+    "retry": "fresh_context_reseed_and_replay_matches_six_root_baseline",
+    "retry_matches_uninterrupted_replay": "true",
+    "status": "pass"
+  },
+  "scope": "Closed 40-second flat-reference native run; exact first-20-second observer CSV comparison with retained 1191; bounded CPU post-run summary.",
+  "status": "pass",
+  "wrapper_wall_s": 353.68010841700004
+}
