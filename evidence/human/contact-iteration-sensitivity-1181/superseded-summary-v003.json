@@ -1,0 +1,1289 @@
+{
+  "build_source_binding": {
+    "binary_sha256": "96840312562e761e4847d6d6f10c2d0aca565d0fc9d4d9bdf2f9f09f3ac79369",
+    "build_pins_path": "/Users/n/numi-human-support-drift-observer-build-020/evidence/build-pins.json",
+    "build_pins_sha256": "a4d21115742c807c34bd4d9c5ea0bc02dd9b9a43ef82a63aed1b48db84e7f392",
+    "force_formula_source_lines": [
+      22762,
+      22798,
+      23440,
+      23537
+    ],
+    "physical_dylib_sha256": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092",
+    "principal_compiled_source_path": "/Users/n/numi-human-support-drift-observer-020/apps/numilab_human_myosim_visual_probe.mm",
+    "principal_compiled_source_sha256": "58f85961a908bce622d77f2e6e42768c01c4b16a1f62be0ff8d70c0447bf6f8a",
+    "respiration_metallib_sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426",
+    "source_checkout_base_revision": "41b254605e66035a4e3966e5a1ae790197431605"
+  },
+  "correction_and_supersession": {
+    "previous_revalidation_path": "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/sensitivity-summary-002/corrected-summary-v2.json",
+    "previous_revalidation_sha256": "05fd27610008f03b45f55333bf4e785de5b1e6c5399e30578cd480249ed7f838",
+    "prior_performance_wording_error": "An earlier status message incorrectly said 32 iterations was slower. The recorded process wall times show 32 completed faster, although its contact residuals and late drift were worse. This correction does not claim the timing difference is an isolated benchmark.",
+    "prior_report_path": "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/sensitivity-summary-001/summary.json",
+    "prior_report_retained_unchanged": true,
+    "prior_report_sha256": "1e825ce35bb0ec9417eee0a5487f00a02124a6236a42bba2f695cd6e980ea7f0",
+    "prior_support_force_error": {
+      "cause": "The prior calculation divided endpoint-sampled final-physical-step impulses by the full 310 s horizon. The support impulse CSV has one impulse from the last physical step at each 8-step callback, not an impulse integrated across the 8-step segment.",
+      "corrected_fields": "support_force_sampling.windows.*.sampled_mean_normal_force_n",
+      "denominator": "number_of_endpoint_samples * Float32(0.002 s), not total simulation time",
+      "prior_field": "time_mean_normal_force_n",
+      "prior_values_n": {
+        "32": 88.30346860515755,
+        "64": 88.30107541422399
+      },
+      "scale_error": 8.0,
+      "source_confirmation": "The frozen source labels the output as final physical step per segment and writes normal_force_last_physical_step_n = normalImpulse / h, with h = Float32(muscleStepSeconds)."
+    }
+  },
+  "input_sha256": {
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/comparison-32-vs-020/comparison.json": "c5cf1cd52b3780a0618ecc822b44622a03bfd784702905e09c917e043e6c72f6",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/invocation.json": "c3d583843338264bac4fa9e8893090426d2f8ef3ef4a2e39cac80c3ce62b0097",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/native.log": "f76f98188e27ef1f8814f2a976842c205351da2e0436ec34f5fd72e46686243f",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/resting-com-momentum-diagnostic.csv": "dd92293687829f0aa87fc299c8db9471eaa4223d67a75c3e570a3f9ccc3229f2",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/resting-com-support-impulses.csv": "e1f6b0d04cd8ae45661de2a9fa5a2d76a20c2ea069268317c42466429841b570",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/resting-coupled.csv": "ae8bc13afbe641df026b1438cd6caf7e71c118e7102396c604bae9dfe65bb565",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/resting-support-point-motion.csv": "f208924089a272a2f3a6218fcd7e685447fb505bb6202f2cb54ac3a23454f380",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/resting-surface-audit.csv": "3e483cb5f8910ba2334c49441d649cdb7e8e321f3dcdd9f067ebd7ce2dad7891",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/run-metadata.json": "70ee82fc033132cc340a297b2bdfeaa49e5df6dbc7dfd8f1f35de66e73cdaf53",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/motion-32-10-310/report.json": "8dc217d5d1c94ddba7ac29928582e59ce6c843f7da820829e9a4e456257c1634",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/motion-32-250-310/report.json": "7a0d832210f730b197b0f2249a747fc93a675a9327f83e18b1f07960cd085d9a",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/observer-integrity-32-002/report.json": "249c0c6339e6bd0fdf5f520142e93b74e7e4a71c47e18510eca5bf14b4ff21cb",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/root-frame-32-001/report.json": "290c3a9ec10a9ee64fb4f7efa5ea7e5ad5f047faf4dccd29932fc104a7cb41ff",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/sensitivity-summary-001/summary.json": "1e825ce35bb0ec9417eee0a5487f00a02124a6236a42bba2f695cd6e980ea7f0",
+    "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/sensitivity-summary-002/corrected-summary-v2.json": "05fd27610008f03b45f55333bf4e785de5b1e6c5399e30578cd480249ed7f838",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/invocation.json": "166f502253cfa072c621667adbe8dc3f23136ac63dd7dc5656609a5ff436b711",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/native.log": "7225d458dd2398b684cb93a706f35902a47000554b4fdd0567ac27256fe42504",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-com-momentum-diagnostic.csv": "9e1a66c52047114bdb800cb2165b59fc84be2dea81d0e60dee5a311dd5bbe7a4",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-com-support-impulses.csv": "7aa6cd8a00c7b9f408343373c7591586a07cb560b4d7163ff76aac1b173e1482",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-coupled.csv": "e06988dbcf8a187bab35b854d80d1a0e5111a4b7f90a286af9d9614fa5d952d5",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-support-point-motion.csv": "728db3b4cb3e6199f7dc36105f2e578a605deed5d3bc8721fec7d7b7efc6c75a",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/resting-surface-audit.csv": "eb673cad8db536ef1d0b9c7f02968a5d6061e7bede617da013db82c409c24483",
+    "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/run-metadata.json": "d1d7795f07afec958e372a922207237eb8a159488fb37405d934c35e76424e14",
+    "/Users/n/numi-human-support-drift-observer-020/apps/numilab_human_myosim_visual_probe.mm": "58f85961a908bce622d77f2e6e42768c01c4b16a1f62be0ff8d70c0447bf6f8a",
+    "/Users/n/numi-human-support-drift-observer-build-020/evidence/build-pins.json": "a4d21115742c807c34bd4d9c5ea0bc02dd9b9a43ef82a63aed1b48db84e7f392"
+  },
+  "interpretation": {
+    "all_run_vs_post_init": "Residual summaries include all observer rows and a separate post-initialization window beginning at accepted step 5000 (Float32-dt time 10.000000475 s); late 250\u2013310 s is also separate. Early penetration and late velocity residuals are not conflated.",
+    "contact_force_limit": "Mean support force is a cadence-sampled final-step force, not an interval-integrated force. It agrees between the per-contact normal-impulse sum / Float32(dt) and the owner normal_force_last_physical_step_n field.",
+    "decision": "Do not adopt the 32-sweep setting from this sensitivity run. It did run faster (RTF 0.142764 vs 0.112240), but contact and constraint residual maxima were materially worse and the COM/root trajectory diverged from step 8; its 250\u2013310 s COM displacement magnitude was larger. The residual drift is not explained or fixed by reducing contact iterations.",
+    "jv_limit": "Tangential Jv is pre-step point-J times previous stand velocity at cadence-8 endpoints with positive normal impulse; it is not a post-solve sliding-speed measurement.",
+    "physiology_limit": "Gas and blood diagnostics are included as finite descriptive ranges only. Since full traces diverge from the first sampled root, similar ranges do not demonstrate equivalent physiology or qualify either setting."
+  },
+  "measured_run_metrics": {
+    "32": {
+      "accepted_sample_rows": 19375,
+      "accepted_step_first_last": [
+        8,
+        155000
+      ],
+      "contact_residual_and_geometry": {
+        "all_run": {
+          "equality_position_projection_max_generalized": {
+            "count": 19375,
+            "extremum": 3.25962901115e-08,
+            "extremum_step": 13128,
+            "extremum_time_s": 26.25600124709308,
+            "max": 3.25962901115e-08,
+            "min": 4.65661287308e-10
+          },
+          "equality_velocity_projection_max_generalized_s": {
+            "count": 19375,
+            "extremum": 3.18033853546e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.18033853546e-05,
+            "min": 5.72250069553e-09
+          },
+          "min_contact_gap_m": {
+            "count": 19375,
+            "extremum": -0.000116382354463,
+            "extremum_step": 8,
+            "extremum_time_s": 0.01600000075995922,
+            "max": 1.77490881015e-06,
+            "min": -0.000116382354463
+          },
+          "peak_penetration_m": {
+            "count": 19375,
+            "extremum": 0.000116382354463,
+            "extremum_step": 8,
+            "extremum_time_s": 0.01600000075995922,
+            "max": 0.000116382354463,
+            "min": 0.0
+          },
+          "post_projection_contact_residual_m_s": {
+            "count": 19375,
+            "extremum": 0.00136151490733,
+            "extremum_step": 91488,
+            "extremum_time_s": 182.97600869089365,
+            "max": 0.00136151490733,
+            "min": 0.0
+          },
+          "post_projection_equality_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 2.96586506465e-08,
+            "extremum_step": 64,
+            "extremum_time_s": 0.12800000607967377,
+            "max": 2.96586506465e-08,
+            "min": 1.69079680812e-12
+          },
+          "post_projection_limit_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 0.0390282273293,
+            "extremum_step": 149192,
+            "extremum_time_s": 298.3840141724795,
+            "max": 0.0390282273293,
+            "min": 1.86638899891e-08
+          },
+          "pre_projection_contact_residual_m_s": {
+            "count": 19375,
+            "extremum": 0.00136151490733,
+            "extremum_step": 91488,
+            "extremum_time_s": 182.97600869089365,
+            "max": 0.00136151490733,
+            "min": 0.0
+          },
+          "pre_projection_equality_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 3.50629998138e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.50629998138e-05,
+            "min": 2.91918667017e-07
+          },
+          "pre_projection_limit_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 0.0390282273293,
+            "extremum_step": 149192,
+            "extremum_time_s": 298.3840141724795,
+            "max": 0.0390282273293,
+            "min": 1.86638899891e-08
+          },
+          "rows": 19375,
+          "time_bounds_s": [
+            0.01600000075995922,
+            310.0000147242099
+          ]
+        },
+        "late_ge_250s": {
+          "equality_position_projection_max_generalized": {
+            "count": 3751,
+            "extremum": 3.25962901115e-08,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.25962901115e-08,
+            "min": 3.72529029846e-09
+          },
+          "equality_velocity_projection_max_generalized_s": {
+            "count": 3751,
+            "extremum": 3.18033853546e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.18033853546e-05,
+            "min": 6.87224366303e-09
+          },
+          "min_contact_gap_m": {
+            "count": 3751,
+            "extremum": -1.08047324829e-05,
+            "extremum_step": 144592,
+            "extremum_time_s": 289.18401373550296,
+            "max": -3.92024003304e-06,
+            "min": -1.08047324829e-05
+          },
+          "peak_penetration_m": {
+            "count": 3751,
+            "extremum": 1.08047324829e-05,
+            "extremum_step": 144592,
+            "extremum_time_s": 289.18401373550296,
+            "max": 1.08047324829e-05,
+            "min": 3.92024003304e-06
+          },
+          "post_projection_contact_residual_m_s": {
+            "count": 3751,
+            "extremum": 0.000955984229222,
+            "extremum_step": 150016,
+            "extremum_time_s": 300.0320142507553,
+            "max": 0.000955984229222,
+            "min": 0.000193152853171
+          },
+          "post_projection_equality_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 6.13917361392e-10,
+            "extremum_step": 136256,
+            "extremum_time_s": 272.51201294362545,
+            "max": 6.13917361392e-10,
+            "min": 4.20750934094e-12
+          },
+          "post_projection_limit_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 0.0390282273293,
+            "extremum_step": 149192,
+            "extremum_time_s": 298.3840141724795,
+            "max": 0.0390282273293,
+            "min": 3.71703777091e-06
+          },
+          "pre_projection_contact_residual_m_s": {
+            "count": 3751,
+            "extremum": 0.000955984112807,
+            "extremum_step": 150016,
+            "extremum_time_s": 300.0320142507553,
+            "max": 0.000955984112807,
+            "min": 0.000193153435248
+          },
+          "pre_projection_equality_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 3.50629998138e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.50629998138e-05,
+            "min": 3.75666985519e-07
+          },
+          "pre_projection_limit_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 0.0390282273293,
+            "extremum_step": 149192,
+            "extremum_time_s": 298.3840141724795,
+            "max": 0.0390282273293,
+            "min": 3.71703777091e-06
+          },
+          "rows": 3751,
+          "time_bounds_s": [
+            250.00001187436283,
+            310.0000147242099
+          ]
+        },
+        "post_initialization_ge_10s": {
+          "equality_position_projection_max_generalized": {
+            "count": 18751,
+            "extremum": 3.25962901115e-08,
+            "extremum_step": 13128,
+            "extremum_time_s": 26.25600124709308,
+            "max": 3.25962901115e-08,
+            "min": 3.72529029846e-09
+          },
+          "equality_velocity_projection_max_generalized_s": {
+            "count": 18751,
+            "extremum": 3.18033853546e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.18033853546e-05,
+            "min": 6.87224366303e-09
+          },
+          "min_contact_gap_m": {
+            "count": 18751,
+            "extremum": -1.08047324829e-05,
+            "extremum_step": 144592,
+            "extremum_time_s": 289.18401373550296,
+            "max": -2.63438067805e-07,
+            "min": -1.08047324829e-05
+          },
+          "peak_penetration_m": {
+            "count": 18751,
+            "extremum": 1.08047324829e-05,
+            "extremum_step": 144592,
+            "extremum_time_s": 289.18401373550296,
+            "max": 1.08047324829e-05,
+            "min": 2.63438067805e-07
+          },
+          "post_projection_contact_residual_m_s": {
+            "count": 18751,
+            "extremum": 0.00136151490733,
+            "extremum_step": 91488,
+            "extremum_time_s": 182.97600869089365,
+            "max": 0.00136151490733,
+            "min": 7.34013974579e-06
+          },
+          "post_projection_equality_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 1.8506862709e-09,
+            "extremum_step": 84256,
+            "extremum_time_s": 168.51200800389051,
+            "max": 1.8506862709e-09,
+            "min": 3.42994382896e-12
+          },
+          "post_projection_limit_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 0.0390282273293,
+            "extremum_step": 149192,
+            "extremum_time_s": 298.3840141724795,
+            "max": 0.0390282273293,
+            "min": 1.63777417583e-06
+          },
+          "pre_projection_contact_residual_m_s": {
+            "count": 18751,
+            "extremum": 0.00136151490733,
+            "extremum_step": 91488,
+            "extremum_time_s": 182.97600869089365,
+            "max": 0.00136151490733,
+            "min": 7.3407218224e-06
+          },
+          "pre_projection_equality_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 3.50629998138e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 3.50629998138e-05,
+            "min": 3.70501709313e-07
+          },
+          "pre_projection_limit_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 0.0390282273293,
+            "extremum_step": 149192,
+            "extremum_time_s": 298.3840141724795,
+            "max": 0.0390282273293,
+            "min": 1.63777417583e-06
+          },
+          "rows": 18751,
+          "time_bounds_s": [
+            10.000000474974513,
+            310.0000147242099
+          ]
+        }
+      },
+      "physiology_descriptive_only": {
+        "all_run": {
+          "PaCO2_mmhg": {
+            "count": 19375,
+            "max": 40.0000534058,
+            "max_abs": 40.0000534058,
+            "mean": 39.67610173300461,
+            "min": 38.8828544617
+          },
+          "PaO2_mmhg": {
+            "count": 19375,
+            "max": 103.565208435,
+            "max_abs": 103.565208435,
+            "mean": 100.01902495629176,
+            "min": 98.6524734497
+          },
+          "SaO2": {
+            "count": 19375,
+            "max": 0.974663794041,
+            "max_abs": 0.974663794041,
+            "mean": 0.9722060031952423,
+            "min": 0.971213638783
+          },
+          "blood_ml": {
+            "count": 19375,
+            "max": 5150.0974223,
+            "max_abs": 5150.0974223,
+            "mean": 5150.055563305734,
+            "min": 5149.99916777
+          },
+          "co2_balance_error_stpd_ml": {
+            "count": 19375,
+            "max": 0.000465661287308,
+            "max_abs": 0.000465661287308,
+            "mean": 0.00046536086067102707,
+            "min": 0.000232830643654
+          },
+          "oxygen_balance_error_stpd_ml": {
+            "count": 19375,
+            "max": 0.000232830643654,
+            "max_abs": 0.000232830643654,
+            "mean": 0.00023182121015377107,
+            "min": 0.000116415321827
+          },
+          "root_assistance_n": {
+            "count": 19375,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "root_assistance_nm": {
+            "count": 19375,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          }
+        },
+        "late_ge_250s": {
+          "PaCO2_mmhg": {
+            "count": 3751,
+            "max": 39.9739189148,
+            "max_abs": 39.9739189148,
+            "mean": 39.86640891733892,
+            "min": 39.7808227539
+          },
+          "PaO2_mmhg": {
+            "count": 3751,
+            "max": 99.5866470337,
+            "max_abs": 99.5866470337,
+            "mean": 99.31306901126777,
+            "min": 99.036567688
+          },
+          "SaO2": {
+            "count": 3751,
+            "max": 0.971916615963,
+            "max_abs": 0.971916615963,
+            "mean": 0.9717129093905928,
+            "min": 0.971505522728
+          },
+          "blood_ml": {
+            "count": 3751,
+            "max": 5150.0974223,
+            "max_abs": 5150.0974223,
+            "mean": 5150.091861305689,
+            "min": 5150.08531511
+          },
+          "co2_balance_error_stpd_ml": {
+            "count": 3751,
+            "max": 0.000465661287308,
+            "max_abs": 0.000465661287308,
+            "mean": 0.000465661287308,
+            "min": 0.000465661287308
+          },
+          "oxygen_balance_error_stpd_ml": {
+            "count": 3751,
+            "max": 0.000232830643654,
+            "max_abs": 0.000232830643654,
+            "mean": 0.000232830643654,
+            "min": 0.000232830643654
+          },
+          "root_assistance_n": {
+            "count": 3751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "root_assistance_nm": {
+            "count": 3751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          }
+        },
+        "post_initialization_ge_10s": {
+          "PaCO2_mmhg": {
+            "count": 18751,
+            "max": 39.9739189148,
+            "max_abs": 39.9739189148,
+            "mean": 39.68265767952166,
+            "min": 38.8828544617
+          },
+          "PaO2_mmhg": {
+            "count": 18751,
+            "max": 103.565208435,
+            "max_abs": 103.565208435,
+            "mean": 99.99112271914287,
+            "min": 98.6524734497
+          },
+          "SaO2": {
+            "count": 18751,
+            "max": 0.974663794041,
+            "max_abs": 0.974663794041,
+            "mean": 0.9721851968477929,
+            "min": 0.971213638783
+          },
+          "blood_ml": {
+            "count": 18751,
+            "max": 5150.0974223,
+            "max_abs": 5150.0974223,
+            "mean": 5150.057352012726,
+            "min": 5150.00196174
+          },
+          "co2_balance_error_stpd_ml": {
+            "count": 18751,
+            "max": 0.000465661287308,
+            "max_abs": 0.000465661287308,
+            "mean": 0.00046566128730799995,
+            "min": 0.000465661287308
+          },
+          "oxygen_balance_error_stpd_ml": {
+            "count": 18751,
+            "max": 0.000232830643654,
+            "max_abs": 0.000232830643654,
+            "mean": 0.00023283064365399998,
+            "min": 0.000232830643654
+          },
+          "root_assistance_n": {
+            "count": 18751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "root_assistance_nm": {
+            "count": 18751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          }
+        }
+      },
+      "positive_impulse_prestep_tangent_speed": {
+        "matched_rows": 193434,
+        "raw_support_point_rows": 620000,
+        "windows": {
+          "all_run": {
+            "count": 193434,
+            "max": 0.3975873168300569,
+            "max_abs": 0.3975873168300569,
+            "mean": 0.00011161361993976264,
+            "min": 1.499206203779558e-08,
+            "velocity_basis": "pre_step_point_J_times_stand_previous_velocity; not post-solve slip"
+          },
+          "late_ge_250s": {
+            "count": 37275,
+            "max": 0.0023469797242190913,
+            "max_abs": 0.0023469797242190913,
+            "mean": 3.778334724103682e-05,
+            "min": 1.499206203779558e-08,
+            "velocity_basis": "pre_step_point_J_times_stand_previous_velocity; not post-solve slip"
+          },
+          "post_initialization_ge_10s": {
+            "count": 187382,
+            "max": 0.019164362378446115,
+            "max_abs": 0.019164362378446115,
+            "mean": 7.178509935934801e-05,
+            "min": 1.499206203779558e-08,
+            "velocity_basis": "pre_step_point_J_times_stand_previous_velocity; not post-solve slip"
+          }
+        }
+      },
+      "support_force_sampling": {
+        "contacts_per_sample": 32,
+        "max_abs_force_crosscheck_error_n": 0.00020291189628096618,
+        "method": "per-sample mean of owner normal_force_last_physical_step_n; cross-checked against sum of 32 support contact normal impulses divided by Float32(dt)",
+        "raw_support_contact_rows": 620000,
+        "windows": {
+          "all_run": {
+            "cadence_steps": 8,
+            "count": 19375,
+            "max": 2914.82339365781,
+            "max_abs": 2914.82339365781,
+            "mean": 706.4277489851117,
+            "min": 405.52703600201863,
+            "normal_impulse_scope": "final physical step only at each 8-step callback, not a sum over the full interval",
+            "sample_period_s": 0.01600000075995922,
+            "sampled_mean_from_contact_impulse_over_float32_dt_n": 706.4277488412604,
+            "sampled_mean_normal_force_n": 706.4277489851117,
+            "sampled_steps": 19375
+          },
+          "late_ge_250s": {
+            "cadence_steps": 8,
+            "count": 3751,
+            "max": 711.7821832179172,
+            "max_abs": 711.7821832179172,
+            "mean": 706.3283488822502,
+            "min": 680.685845469145,
+            "normal_impulse_scope": "final physical step only at each 8-step callback, not a sum over the full interval",
+            "sample_period_s": 0.01600000075995922,
+            "sampled_mean_from_contact_impulse_over_float32_dt_n": 706.3283497106037,
+            "sampled_mean_normal_force_n": 706.3283488822502,
+            "sampled_steps": 3751
+          },
+          "post_initialization_ge_10s": {
+            "cadence_steps": 8,
+            "count": 18751,
+            "max": 816.3584082999464,
+            "max_abs": 816.3584082999464,
+            "mean": 706.341521150053,
+            "min": 680.685845469145,
+            "normal_impulse_scope": "final physical step only at each 8-step callback, not a sum over the full interval",
+            "sample_period_s": 0.01600000075995922,
+            "sampled_mean_from_contact_impulse_over_float32_dt_n": 706.341521012652,
+            "sampled_mean_normal_force_n": 706.341521150053,
+            "sampled_steps": 18751
+          }
+        }
+      },
+      "trace_hashes": {
+        "resting-com-momentum-diagnostic.csv": "dd92293687829f0aa87fc299c8db9471eaa4223d67a75c3e570a3f9ccc3229f2",
+        "resting-com-support-impulses.csv": "e1f6b0d04cd8ae45661de2a9fa5a2d76a20c2ea069268317c42466429841b570",
+        "resting-coupled.csv": "ae8bc13afbe641df026b1438cd6caf7e71c118e7102396c604bae9dfe65bb565",
+        "resting-support-point-motion.csv": "f208924089a272a2f3a6218fcd7e685447fb505bb6202f2cb54ac3a23454f380"
+      },
+      "windows": {
+        "all_run": {
+          "first_actual_time_s": 0.01600000075995922,
+          "first_step": 8,
+          "last_actual_time_s": 310.0000147242099,
+          "last_step": 155000,
+          "rows": 19375
+        },
+        "late_ge_250s": {
+          "first_actual_time_s": 250.00001187436283,
+          "first_step": 125000,
+          "last_actual_time_s": 310.0000147242099,
+          "last_step": 155000,
+          "rows": 3751
+        },
+        "post_initialization_ge_10s": {
+          "first_actual_time_s": 10.000000474974513,
+          "first_step": 5000,
+          "last_actual_time_s": 310.0000147242099,
+          "last_step": 155000,
+          "rows": 18751
+        }
+      }
+    },
+    "64": {
+      "accepted_sample_rows": 19375,
+      "accepted_step_first_last": [
+        8,
+        155000
+      ],
+      "contact_residual_and_geometry": {
+        "all_run": {
+          "equality_position_projection_max_generalized": {
+            "count": 19375,
+            "extremum": 2.98023223877e-08,
+            "extremum_step": 11200,
+            "extremum_time_s": 22.40000106394291,
+            "max": 2.98023223877e-08,
+            "min": 4.65661287308e-10
+          },
+          "equality_velocity_projection_max_generalized_s": {
+            "count": 19375,
+            "extremum": 3.51667404175e-06,
+            "extremum_step": 120,
+            "extremum_time_s": 0.2400000113993883,
+            "max": 3.51667404175e-06,
+            "min": 7.15954229236e-09
+          },
+          "min_contact_gap_m": {
+            "count": 19375,
+            "extremum": -0.000116382354463,
+            "extremum_step": 8,
+            "extremum_time_s": 0.01600000075995922,
+            "max": 1.79978064807e-06,
+            "min": -0.000116382354463
+          },
+          "peak_penetration_m": {
+            "count": 19375,
+            "extremum": 0.000116382354463,
+            "extremum_step": 8,
+            "extremum_time_s": 0.01600000075995922,
+            "max": 0.000116382354463,
+            "min": 0.0
+          },
+          "post_projection_contact_residual_m_s": {
+            "count": 19375,
+            "extremum": 8.4685991169e-05,
+            "extremum_step": 74480,
+            "extremum_time_s": 148.96000707522035,
+            "max": 8.4685991169e-05,
+            "min": 0.0
+          },
+          "post_projection_equality_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 2.90644379675e-08,
+            "extremum_step": 64,
+            "extremum_time_s": 0.12800000607967377,
+            "max": 2.90644379675e-08,
+            "min": 7.72878939667e-13
+          },
+          "post_projection_limit_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 3.69671688532e-05,
+            "extremum_step": 76664,
+            "extremum_time_s": 153.3280072826892,
+            "max": 3.69671688532e-05,
+            "min": 9.05275321372e-09
+          },
+          "pre_projection_contact_residual_m_s": {
+            "count": 19375,
+            "extremum": 8.46865732456e-05,
+            "extremum_step": 74480,
+            "extremum_time_s": 148.96000707522035,
+            "max": 8.46865732456e-05,
+            "min": 0.0
+          },
+          "pre_projection_equality_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 3.5298783132e-06,
+            "extremum_step": 120,
+            "extremum_time_s": 0.2400000113993883,
+            "max": 3.5298783132e-06,
+            "min": 2.68013764071e-07
+          },
+          "pre_projection_limit_residual_generalized_s": {
+            "count": 19375,
+            "extremum": 3.69671688532e-05,
+            "extremum_step": 76664,
+            "extremum_time_s": 153.3280072826892,
+            "max": 3.69671688532e-05,
+            "min": 9.05275321372e-09
+          },
+          "rows": 19375,
+          "time_bounds_s": [
+            0.01600000075995922,
+            310.0000147242099
+          ]
+        },
+        "late_ge_250s": {
+          "equality_position_projection_max_generalized": {
+            "count": 3751,
+            "extremum": 1.49011611938e-08,
+            "extremum_step": 125000,
+            "extremum_time_s": 250.00001187436283,
+            "max": 1.49011611938e-08,
+            "min": 3.72529029846e-09
+          },
+          "equality_velocity_projection_max_generalized_s": {
+            "count": 3751,
+            "extremum": 3.97666397589e-08,
+            "extremum_step": 125200,
+            "extremum_time_s": 250.4000118933618,
+            "max": 3.97666397589e-08,
+            "min": 7.8467454756e-09
+          },
+          "min_contact_gap_m": {
+            "count": 3751,
+            "extremum": -1.33237062983e-05,
+            "extremum_step": 129872,
+            "extremum_time_s": 259.744012337178,
+            "max": -3.9535320866e-06,
+            "min": -1.33237062983e-05
+          },
+          "peak_penetration_m": {
+            "count": 3751,
+            "extremum": 1.33237062983e-05,
+            "extremum_step": 129872,
+            "extremum_time_s": 259.744012337178,
+            "max": 1.33237062983e-05,
+            "min": 3.9535320866e-06
+          },
+          "post_projection_contact_residual_m_s": {
+            "count": 3751,
+            "extremum": 7.02111501596e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 7.02111501596e-05,
+            "min": 1.25547812786e-05
+          },
+          "post_projection_equality_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 5.17067499928e-11,
+            "extremum_step": 127344,
+            "extremum_time_s": 254.68801209703088,
+            "max": 5.17067499928e-11,
+            "min": 8.74206523144e-13
+          },
+          "post_projection_limit_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 3.59361838491e-05,
+            "extremum_step": 127344,
+            "extremum_time_s": 254.68801209703088,
+            "max": 3.59361838491e-05,
+            "min": 1.32813488563e-06
+          },
+          "pre_projection_contact_residual_m_s": {
+            "count": 3751,
+            "extremum": 7.02119650668e-05,
+            "extremum_step": 126808,
+            "extremum_time_s": 253.6160120461136,
+            "max": 7.02119650668e-05,
+            "min": 1.25552760437e-05
+          },
+          "pre_projection_equality_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 1.51191500208e-06,
+            "extremum_step": 127048,
+            "extremum_time_s": 254.0960120689124,
+            "max": 1.51191500208e-06,
+            "min": 3.73078222538e-07
+          },
+          "pre_projection_limit_residual_generalized_s": {
+            "count": 3751,
+            "extremum": 3.59361838491e-05,
+            "extremum_step": 127344,
+            "extremum_time_s": 254.68801209703088,
+            "max": 3.59361838491e-05,
+            "min": 1.32813488563e-06
+          },
+          "rows": 3751,
+          "time_bounds_s": [
+            250.00001187436283,
+            310.0000147242099
+          ]
+        },
+        "post_initialization_ge_10s": {
+          "equality_position_projection_max_generalized": {
+            "count": 18751,
+            "extremum": 2.98023223877e-08,
+            "extremum_step": 11200,
+            "extremum_time_s": 22.40000106394291,
+            "max": 2.98023223877e-08,
+            "min": 3.72529029846e-09
+          },
+          "equality_velocity_projection_max_generalized_s": {
+            "count": 18751,
+            "extremum": 1.75088644028e-07,
+            "extremum_step": 12128,
+            "extremum_time_s": 24.25600115209818,
+            "max": 1.75088644028e-07,
+            "min": 7.15954229236e-09
+          },
+          "min_contact_gap_m": {
+            "count": 18751,
+            "extremum": -1.36704347824e-05,
+            "extremum_step": 97688,
+            "extremum_time_s": 195.37600927986205,
+            "max": 1.79978064807e-06,
+            "min": -1.36704347824e-05
+          },
+          "peak_penetration_m": {
+            "count": 18751,
+            "extremum": 1.36704347824e-05,
+            "extremum_step": 97688,
+            "extremum_time_s": 195.37600927986205,
+            "max": 1.36704347824e-05,
+            "min": 0.0
+          },
+          "post_projection_contact_residual_m_s": {
+            "count": 18751,
+            "extremum": 8.4685991169e-05,
+            "extremum_step": 74480,
+            "extremum_time_s": 148.96000707522035,
+            "max": 8.4685991169e-05,
+            "min": 4.47183992947e-07
+          },
+          "post_projection_equality_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 1.82835968587e-09,
+            "extremum_step": 12168,
+            "extremum_time_s": 24.336001155897975,
+            "max": 1.82835968587e-09,
+            "min": 7.78379530969e-13
+          },
+          "post_projection_limit_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 3.69671688532e-05,
+            "extremum_step": 76664,
+            "extremum_time_s": 153.3280072826892,
+            "max": 3.69671688532e-05,
+            "min": 2.7338856512e-08
+          },
+          "pre_projection_contact_residual_m_s": {
+            "count": 18751,
+            "extremum": 8.46865732456e-05,
+            "extremum_step": 74480,
+            "extremum_time_s": 148.96000707522035,
+            "max": 8.46865732456e-05,
+            "min": 4.47180354968e-07
+          },
+          "pre_projection_equality_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 2.97041469821e-06,
+            "extremum_step": 11888,
+            "extremum_time_s": 23.776001129299402,
+            "max": 2.97041469821e-06,
+            "min": 3.69466647498e-07
+          },
+          "pre_projection_limit_residual_generalized_s": {
+            "count": 18751,
+            "extremum": 3.69671688532e-05,
+            "extremum_step": 76664,
+            "extremum_time_s": 153.3280072826892,
+            "max": 3.69671688532e-05,
+            "min": 2.72376965427e-08
+          },
+          "rows": 18751,
+          "time_bounds_s": [
+            10.000000474974513,
+            310.0000147242099
+          ]
+        }
+      },
+      "physiology_descriptive_only": {
+        "all_run": {
+          "PaCO2_mmhg": {
+            "count": 19375,
+            "max": 40.0000534058,
+            "max_abs": 40.0000534058,
+            "mean": 39.67610173300461,
+            "min": 38.8828544617
+          },
+          "PaO2_mmhg": {
+            "count": 19375,
+            "max": 103.565208435,
+            "max_abs": 103.565208435,
+            "mean": 100.01902495629176,
+            "min": 98.6524734497
+          },
+          "SaO2": {
+            "count": 19375,
+            "max": 0.974663794041,
+            "max_abs": 0.974663794041,
+            "mean": 0.9722060031952423,
+            "min": 0.971213638783
+          },
+          "blood_ml": {
+            "count": 19375,
+            "max": 5150.0974223,
+            "max_abs": 5150.0974223,
+            "mean": 5150.055563305734,
+            "min": 5149.99916777
+          },
+          "co2_balance_error_stpd_ml": {
+            "count": 19375,
+            "max": 0.000465661287308,
+            "max_abs": 0.000465661287308,
+            "mean": 0.00046536086067102707,
+            "min": 0.000232830643654
+          },
+          "oxygen_balance_error_stpd_ml": {
+            "count": 19375,
+            "max": 0.000232830643654,
+            "max_abs": 0.000232830643654,
+            "mean": 0.00023182121015377107,
+            "min": 0.000116415321827
+          },
+          "root_assistance_n": {
+            "count": 19375,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "root_assistance_nm": {
+            "count": 19375,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          }
+        },
+        "late_ge_250s": {
+          "PaCO2_mmhg": {
+            "count": 3751,
+            "max": 39.9739189148,
+            "max_abs": 39.9739189148,
+            "mean": 39.86640891733892,
+            "min": 39.7808227539
+          },
+          "PaO2_mmhg": {
+            "count": 3751,
+            "max": 99.5866470337,
+            "max_abs": 99.5866470337,
+            "mean": 99.31306901126777,
+            "min": 99.036567688
+          },
+          "SaO2": {
+            "count": 3751,
+            "max": 0.971916615963,
+            "max_abs": 0.971916615963,
+            "mean": 0.9717129093905928,
+            "min": 0.971505522728
+          },
+          "blood_ml": {
+            "count": 3751,
+            "max": 5150.0974223,
+            "max_abs": 5150.0974223,
+            "mean": 5150.091861305689,
+            "min": 5150.08531511
+          },
+          "co2_balance_error_stpd_ml": {
+            "count": 3751,
+            "max": 0.000465661287308,
+            "max_abs": 0.000465661287308,
+            "mean": 0.000465661287308,
+            "min": 0.000465661287308
+          },
+          "oxygen_balance_error_stpd_ml": {
+            "count": 3751,
+            "max": 0.000232830643654,
+            "max_abs": 0.000232830643654,
+            "mean": 0.000232830643654,
+            "min": 0.000232830643654
+          },
+          "root_assistance_n": {
+            "count": 3751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "root_assistance_nm": {
+            "count": 3751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          }
+        },
+        "post_initialization_ge_10s": {
+          "PaCO2_mmhg": {
+            "count": 18751,
+            "max": 39.9739189148,
+            "max_abs": 39.9739189148,
+            "mean": 39.68265767952166,
+            "min": 38.8828544617
+          },
+          "PaO2_mmhg": {
+            "count": 18751,
+            "max": 103.565208435,
+            "max_abs": 103.565208435,
+            "mean": 99.99112271914287,
+            "min": 98.6524734497
+          },
+          "SaO2": {
+            "count": 18751,
+            "max": 0.974663794041,
+            "max_abs": 0.974663794041,
+            "mean": 0.9721851968477929,
+            "min": 0.971213638783
+          },
+          "blood_ml": {
+            "count": 18751,
+            "max": 5150.0974223,
+            "max_abs": 5150.0974223,
+            "mean": 5150.057352012726,
+            "min": 5150.00196174
+          },
+          "co2_balance_error_stpd_ml": {
+            "count": 18751,
+            "max": 0.000465661287308,
+            "max_abs": 0.000465661287308,
+            "mean": 0.00046566128730799995,
+            "min": 0.000465661287308
+          },
+          "oxygen_balance_error_stpd_ml": {
+            "count": 18751,
+            "max": 0.000232830643654,
+            "max_abs": 0.000232830643654,
+            "mean": 0.00023283064365399998,
+            "min": 0.000232830643654
+          },
+          "root_assistance_n": {
+            "count": 18751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          },
+          "root_assistance_nm": {
+            "count": 18751,
+            "max": 0.0,
+            "max_abs": 0.0,
+            "mean": 0.0,
+            "min": 0.0
+          }
+        }
+      },
+      "positive_impulse_prestep_tangent_speed": {
+        "matched_rows": 214512,
+        "raw_support_point_rows": 620000,
+        "windows": {
+          "all_run": {
+            "count": 214512,
+            "max": 0.39760026428655143,
+            "max_abs": 0.39760026428655143,
+            "mean": 6.13223344447182e-05,
+            "min": 6.187378377589671e-09,
+            "velocity_basis": "pre_step_point_J_times_stand_previous_velocity; not post-solve slip"
+          },
+          "late_ge_250s": {
+            "count": 39591,
+            "max": 0.0030561732998857323,
+            "max_abs": 0.0030561732998857323,
+            "mean": 2.846098733884943e-05,
+            "min": 1.3274263708206553e-08,
+            "velocity_basis": "pre_step_point_J_times_stand_previous_velocity; not post-solve slip"
+          },
+          "post_initialization_ge_10s": {
+            "count": 208467,
+            "max": 0.013137367991310272,
+            "max_abs": 0.013137367991310272,
+            "mean": 2.7258210270758086e-05,
+            "min": 6.187378377589671e-09,
+            "velocity_basis": "pre_step_point_J_times_stand_previous_velocity; not post-solve slip"
+          }
+        }
+      },
+      "support_force_sampling": {
+        "contacts_per_sample": 32,
+        "max_abs_force_crosscheck_error_n": 0.00018687568649511377,
+        "method": "per-sample mean of owner normal_force_last_physical_step_n; cross-checked against sum of 32 support contact normal impulses divided by Float32(dt)",
+        "raw_support_contact_rows": 620000,
+        "windows": {
+          "all_run": {
+            "cadence_steps": 8,
+            "count": 19375,
+            "max": 2915.199141320627,
+            "max_abs": 2915.199141320627,
+            "mean": 706.4086035988022,
+            "min": 405.31985026662016,
+            "normal_impulse_scope": "final physical step only at each 8-step callback, not a sum over the full interval",
+            "sample_period_s": 0.01600000075995922,
+            "sampled_mean_from_contact_impulse_over_float32_dt_n": 706.408603313792,
+            "sampled_mean_normal_force_n": 706.4086035988022,
+            "sampled_steps": 19375
+          },
+          "late_ge_250s": {
+            "cadence_steps": 8,
+            "count": 3751,
+            "max": 712.7920646663799,
+            "max_abs": 712.7920646663799,
+            "mean": 706.3190602829911,
+            "min": 700.6219888741882,
+            "normal_impulse_scope": "final physical step only at each 8-step callback, not a sum over the full interval",
+            "sample_period_s": 0.01600000075995922,
+            "sampled_mean_from_contact_impulse_over_float32_dt_n": 706.3190599139456,
+            "sampled_mean_normal_force_n": 706.3190602829911,
+            "sampled_steps": 3751
+          },
+          "post_initialization_ge_10s": {
+            "cadence_steps": 8,
+            "count": 18751,
+            "max": 872.3704400557164,
+            "max_abs": 872.3704400557164,
+            "mean": 706.3249456716203,
+            "min": 694.2432789072327,
+            "normal_impulse_scope": "final physical step only at each 8-step callback, not a sum over the full interval",
+            "sample_period_s": 0.01600000075995922,
+            "sampled_mean_from_contact_impulse_over_float32_dt_n": 706.324945459034,
+            "sampled_mean_normal_force_n": 706.3249456716203,
+            "sampled_steps": 18751
+          }
+        }
+      },
+      "trace_hashes": {
+        "resting-com-momentum-diagnostic.csv": "9e1a66c52047114bdb800cb2165b59fc84be2dea81d0e60dee5a311dd5bbe7a4",
+        "resting-com-support-impulses.csv": "7aa6cd8a00c7b9f408343373c7591586a07cb560b4d7163ff76aac1b173e1482",
+        "resting-coupled.csv": "e06988dbcf8a187bab35b854d80d1a0e5111a4b7f90a286af9d9614fa5d952d5",
+        "resting-support-point-motion.csv": "728db3b4cb3e6199f7dc36105f2e578a605deed5d3bc8721fec7d7b7efc6c75a"
+      },
+      "windows": {
+        "all_run": {
+          "first_actual_time_s": 0.01600000075995922,
+          "first_step": 8,
+          "last_actual_time_s": 310.0000147242099,
+          "last_step": 155000,
+          "rows": 19375
+        },
+        "late_ge_250s": {
+          "first_actual_time_s": 250.00001187436283,
+          "first_step": 125000,
+          "last_actual_time_s": 310.0000147242099,
+          "last_step": 155000,
+          "rows": 3751
+        },
+        "post_initialization_ge_10s": {
+          "first_actual_time_s": 10.000000474974513,
+          "first_step": 5000,
+          "last_actual_time_s": 310.0000147242099,
+          "last_step": 155000,
+          "rows": 18751
+        }
+      }
+    }
+  },
+  "observer_profile_timing": {},
+  "revision": 3,
+  "root_frame_decomposition": {},
+  "run_identity": {
+    "argv_differences": [
+      {
+        "index": 4,
+        "iteration_32": "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene",
+        "iteration_64": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run"
+      },
+      {
+        "index": 41,
+        "iteration_32": "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/native-viewer.mov",
+        "iteration_64": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/native-viewer.mov"
+      },
+      {
+        "index": 47,
+        "iteration_32": "32",
+        "iteration_64": "64"
+      }
+    ],
+    "asset_sha256_count": 25,
+    "asset_sha256_maps_equal": true,
+    "common_physical_inputs": {
+      "/Users/n/numi-human-performance-build-014/lib/libmetalrobo.dylib": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092",
+      "/Users/n/numi-human-performance-build-014/matter/shaders/NumiMatter.metallib": "38d4b64ed55cef2e0e0f243616d0db5bd21441f232ca38bca439108c1d6130f9",
+      "/Users/n/numi-human-performance-build-014/matter/shaders/NumiMatterPhysicalStateDigest.metallib": "3d5db8b11fe561def3f0f4aa73c1a4d8d1828e746f0a7f737d8a31725deb2d68",
+      "/Users/n/numi-human-performance-build-014/shaders/MetalRobo.metallib": "3077d063dc23475d75cda795620cda8750402d1a2159267a241a5e2b65986043",
+      "/Users/n/numi-human-performance-build-014/shaders/MetalRoboHyperPolicy.metallib": "f227836841015b40467a20c47a9fa38cf44eb8e1132cad1de4e65fa79c55d309",
+      "/Users/n/numi-human-performance-build-014/shaders/NumiNeuron.metallib": "4ccbb796a6bfd5bdb18f7d37c8e18e0d767c9489d16047c523c97f679da33f1d",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.nhbones": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+      "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/common-cardiac-domains-f32.bin": "7652785c9ea164b16ee96f64a3dcf940398af36cfd535a5f9b7a7d6bd2c7a611",
+      "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/common-cardiac-map-f32.bin": "c0b0811fe2e2fb45dc37201205e36af39cf092739cfb52c56fdbad9a67dbb858",
+      "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/common-cardiac-volumes-f32.bin": "7be4f62996c996c6cfdd49480d27766c8253387bb24aeb504fef73cd553ae699",
+      "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/anatomy/resting-anatomy-receipt.json": "46a51815b0c9e30ef9ea6e8d2583ffb7a812a09400469816b0e86133e93b34fb",
+      "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/resting-scene/myosim-fullbody-resting-bed-support.nhcnt": "bcfece8e5da553b98694b724644234407fa4c38383b1e18d3c24d7caefa28927",
+      "/Users/n/numi-human-resting-evidence-20261005/final-native-scene-preflight-936/skin-927-lung-1159-viewer-018-v015-attempt1/resting-scene/resting-supine-scene.manifest.json": "b45096bb974e286d730bb079703025b9d9150a0e6e030a1f0fa2451ced0c20d1",
+      "/Users/n/numi-human-resting-evidence-20261005/native-common-skin-multipose-clearance-candidate-927/asset-candidate-001/bodyparts3d-myosim-skinned-shell.nhskin": "bd4bfbbf0e071e24a1bb9eea7b9cd9f34ef862ef20417b5891cd24cec1b009d1",
+      "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-reference-respiration.json": "4f0a64f97245a035278b70b45e4d92519549f26e05ac75b066ac17e9690c2290",
+      "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-composition-1159-eightops-attempt1/final/resting-thorax.nhanatomy": "c10dce4609be99fdc569801c2705e23c46120b610c8aa86c631165d38baf4713",
+      "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "82cdd937e0f2daf0a8704fb21246353c38148527f8602d674ac865f935264dde",
+      "/Users/n/numi-human-resting-evidence-20261005/passive-tissue-achilles-clearance-039-composed-001/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "b3d0381f73e05b04ed7ea1ba23eb6559073ad20aa0d9e2ad0f97a18fab3359bd",
+      "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+      "/Users/n/numi-human-resting-evidence-20261005/tendon-semantic-foot-migration-834/numi-human-tendon-attachments.nhtendon": "49daaf61421254cb18f3aa32f1d332b1810537afd4c4ef813abd2f0d118dcecc",
+      "/Users/n/numi-human-support-drift-observer-build-020/bin/numi-human-native": "96840312562e761e4847d6d6f10c2d0aca565d0fc9d4d9bdf2f9f09f3ac79369",
+      "/Users/n/numi-human-support-drift-observer-build-020/matter/shaders/HumanRespiration.metallib": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426"
+    },
+    "environment_differences": [
+      {
+        "iteration_32": "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene/common-field-failure.json",
+        "iteration_64": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run/common-field-failure.json",
+        "key": "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"
+      }
+    ],
+    "exit_codes": {
+      "32": 0,
+      "64": 0
+    },
+    "iterations": {
+      "32": 32,
+      "64": 64
+    },
+    "loaded_runtime_sha256": {
+      "32": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092",
+      "64": "6bccfc4044d825423e66bc2f60ba3cf59eaa9a4936773ab08182f58a09927092"
+    },
+    "loaded_runtime_verified": {
+      "32": true,
+      "64": true
+    },
+    "paths": {
+      "32": "/Users/n/numi-human-resting-evidence-20261005/native-contact-iteration-sensitivity-1181/iteration-32/output/scene",
+      "64": "/Users/n/numi-human-retained-delivery-20261009/support-drift-baseline-020/native-run"
+    },
+    "source_files_changed_during_run": {
+      "32": [],
+      "64": []
+    }
+  },
+  "schema": "numi.human.support-drift-contact-iteration-sensitivity.v2",
+  "scope": "Read-only revalidation of the already-completed 310 s, 155000-step observer-on runs. Contact iterations are the sole physical argument difference; this is sensitivity evidence, not model qualification or causal proof for drift.",
+  "status": "corrected_measured_iteration_sensitivity_not_adoption",
+  "time_and_performance": {
+    "accepted_step_count": 155000,
+    "actual_accepted_time_s": 310.0000147242099,
+    "iteration_32_vs_64": {
+      "interpretation": "32 has higher measured RTF and lower process wall for this run pair. Timing is instrumented and was not isolated from all machine load; it is not a performance qualification.",
+      "rtf_ratio_32_over_64": 1.2719501015556411,
+      "wall_fraction_reduction": 0.2138056368901865,
+      "wall_seconds_saved": 590.5164745410002
+    },
+    "native_float32_step_seconds": 0.0020000000949949026,
+    "normalization": "real-time factor = actual accepted simulation seconds / run-metadata process wall seconds; process-wall/simulation-time is also provided.",
+    "process_wall_seconds": {
+      "32": 2171.414796917,
+      "64": 2761.931271458
+    },
+    "real_time_factor_sim_s_per_wall_s": {
+      "32": 0.14276407030308144,
+      "64": 0.11224030732689577
+    },
+    "requested_step_seconds": 0.002,
+    "wall_seconds_per_simulation_second": {
+      "32": 7.004563528323665,
+      "64": 8.909455291204226
+    }
+  },
+  "trace_comparison_against_64": {}
+}

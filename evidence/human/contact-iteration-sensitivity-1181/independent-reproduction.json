@@ -1,0 +1,353 @@
+{
+  "files": {
+    "published": {
+      "path": "/Users/n/numi-human-support-drift-publication-020/evidence/human/contact-iteration-sensitivity-1181/corrected-summary.json",
+      "sha256": "649defb6e03744363087ac480dbe8084154ccb58e547aa91cf9440e07118da82"
+    },
+    "python313": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/contact-iteration-review-1181/corrected-summary.json",
+      "sha256": "af7b48c63c30bdbdb42657b48a262716d342590d5da2bfa86f8868e2602e54f8"
+    },
+    "python39": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/contact-iteration-review-1181-python39/corrected-summary.json",
+      "sha256": "649defb6e03744363087ac480dbe8084154ccb58e547aa91cf9440e07118da82"
+    },
+    "script": {
+      "path": "/Users/n/numi-human-support-drift-publication-020/evidence/human/contact-iteration-sensitivity-1181/revalidate.py",
+      "sha256": "5147b570c410e3ad1734d94af3daf6dfcc486432398804b12181afdb8f4537fa"
+    }
+  },
+  "interpreter_versions": {
+    "/Users/n/numi-human-prep-venv-20261005/bin/python3.13": "Python 3.13.13",
+    "/usr/bin/python3": "Python 3.9.6"
+  },
+  "python313_input_and_nonmean_fields_exact": true,
+  "python313_mean_rounding_differences": [
+    {
+      "absolute_difference": 6.394884621840902e-14,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/all_run/PaCO2_mmhg/mean",
+      "python313": 39.67610173300461,
+      "python39": 39.67610173300454
+    },
+    {
+      "absolute_difference": 8.526512829121202e-14,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/all_run/PaO2_mmhg/mean",
+      "python313": 100.01902495629176,
+      "python39": 100.01902495629184
+    },
+    {
+      "absolute_difference": 1.3322676295501878e-15,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/all_run/SaO2/mean",
+      "python313": 0.9722060031952423,
+      "python39": 0.9722060031952436
+    },
+    {
+      "absolute_difference": 1.0095391189679503e-10,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/all_run/blood_ml/mean",
+      "python313": 5150.055563305734,
+      "python39": 5150.055563305633
+    },
+    {
+      "absolute_difference": 1.1037178115902435e-16,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/all_run/co2_balance_error_stpd_ml/mean",
+      "python313": 0.00046536086067102707,
+      "python39": 0.0004653608606709167
+    },
+    {
+      "absolute_difference": 5.4752209710517974e-17,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/all_run/oxygen_balance_error_stpd_ml/mean",
+      "python313": 0.00023182121015377107,
+      "python39": 0.00023182121015371632
+    },
+    {
+      "absolute_difference": 2.1316282072803006e-14,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/late_ge_250s/PaCO2_mmhg/mean",
+      "python313": 39.86640891733892,
+      "python39": 39.866408917338944
+    },
+    {
+      "absolute_difference": 1.4210854715202004e-14,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/late_ge_250s/PaO2_mmhg/mean",
+      "python313": 99.31306901126777,
+      "python39": 99.31306901126779
+    },
+    {
+      "absolute_difference": 1.8098944565281272e-10,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/late_ge_250s/blood_ml/mean",
+      "python313": 5150.091861305689,
+      "python39": 5150.09186130587
+    },
+    {
+      "absolute_difference": 2.585822181377928e-17,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/late_ge_250s/co2_balance_error_stpd_ml/mean",
+      "python313": 0.000465661287308,
+      "python39": 0.00046566128730797415
+    },
+    {
+      "absolute_difference": 1.292911090688964e-17,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/late_ge_250s/oxygen_balance_error_stpd_ml/mean",
+      "python313": 0.000232830643654,
+      "python39": 0.00023283064365398708
+    },
+    {
+      "absolute_difference": 9.947598300641403e-14,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/post_initialization_ge_10s/PaCO2_mmhg/mean",
+      "python313": 39.68265767952166,
+      "python39": 39.68265767952156
+    },
+    {
+      "absolute_difference": 4.263256414560601e-14,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/post_initialization_ge_10s/PaO2_mmhg/mean",
+      "python313": 99.99112271914287,
+      "python39": 99.99112271914282
+    },
+    {
+      "absolute_difference": 7.771561172376096e-16,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/post_initialization_ge_10s/SaO2/mean",
+      "python313": 0.9721851968477929,
+      "python39": 0.9721851968477937
+    },
+    {
+      "absolute_difference": 1.2187229003757238e-10,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/post_initialization_ge_10s/blood_ml/mean",
+      "python313": 5150.057352012726,
+      "python39": 5150.0573520126045
+    },
+    {
+      "absolute_difference": 1.0554708149146386e-16,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/post_initialization_ge_10s/co2_balance_error_stpd_ml/mean",
+      "python313": 0.00046566128730799995,
+      "python39": 0.0004656612873078944
+    },
+    {
+      "absolute_difference": 5.277354074573193e-17,
+      "field": "/measured_run_metrics/32/physiology_descriptive_only/post_initialization_ge_10s/oxygen_balance_error_stpd_ml/mean",
+      "python313": 0.00023283064365399998,
+      "python39": 0.0002328306436539472
+    },
+    {
+      "absolute_difference": 7.995991022080595e-19,
+      "field": "/measured_run_metrics/32/positive_impulse_prestep_tangent_speed/windows/all_run/mean",
+      "python313": 0.00011161361993976264,
+      "python39": 0.00011161361993976344
+    },
+    {
+      "absolute_difference": 1.4907779871675686e-19,
+      "field": "/measured_run_metrics/32/positive_impulse_prestep_tangent_speed/windows/late_ge_250s/mean",
+      "python313": 3.778334724103682e-05,
+      "python39": 3.778334724103667e-05
+    },
+    {
+      "absolute_difference": 2.710505431213761e-20,
+      "field": "/measured_run_metrics/32/positive_impulse_prestep_tangent_speed/windows/post_initialization_ge_10s/mean",
+      "python313": 7.178509935934801e-05,
+      "python39": 7.178509935934804e-05
+    },
+    {
+      "absolute_difference": 2.6147972675971687e-12,
+      "field": "/measured_run_metrics/32/support_force_sampling/windows/all_run/mean",
+      "python313": 706.4277489851117,
+      "python39": 706.4277489851091
+    },
+    {
+      "absolute_difference": 2.6147972675971687e-12,
+      "field": "/measured_run_metrics/32/support_force_sampling/windows/all_run/sampled_mean_normal_force_n",
+      "python313": 706.4277489851117,
+      "python39": 706.4277489851091
+    },
+    {
+      "absolute_difference": 9.094947017729282e-13,
+      "field": "/measured_run_metrics/32/support_force_sampling/windows/late_ge_250s/mean",
+      "python313": 706.3283488822502,
+      "python39": 706.3283488822493
+    },
+    {
+      "absolute_difference": 9.094947017729282e-13,
+      "field": "/measured_run_metrics/32/support_force_sampling/windows/late_ge_250s/sampled_mean_normal_force_n",
+      "python313": 706.3283488822502,
+      "python39": 706.3283488822493
+    },
+    {
+      "absolute_difference": 2.6147972675971687e-12,
+      "field": "/measured_run_metrics/32/support_force_sampling/windows/post_initialization_ge_10s/mean",
+      "python313": 706.341521150053,
+      "python39": 706.3415211500504
+    },
+    {
+      "absolute_difference": 2.6147972675971687e-12,
+      "field": "/measured_run_metrics/32/support_force_sampling/windows/post_initialization_ge_10s/sampled_mean_normal_force_n",
+      "python313": 706.341521150053,
+      "python39": 706.3415211500504
+    },
+    {
+      "absolute_difference": 6.394884621840902e-14,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/all_run/PaCO2_mmhg/mean",
+      "python313": 39.67610173300461,
+      "python39": 39.67610173300454
+    },
+    {
+      "absolute_difference": 8.526512829121202e-14,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/all_run/PaO2_mmhg/mean",
+      "python313": 100.01902495629176,
+      "python39": 100.01902495629184
+    },
+    {
+      "absolute_difference": 1.3322676295501878e-15,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/all_run/SaO2/mean",
+      "python313": 0.9722060031952423,
+      "python39": 0.9722060031952436
+    },
+    {
+      "absolute_difference": 1.0095391189679503e-10,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/all_run/blood_ml/mean",
+      "python313": 5150.055563305734,
+      "python39": 5150.055563305633
+    },
+    {
+      "absolute_difference": 1.1037178115902435e-16,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/all_run/co2_balance_error_stpd_ml/mean",
+      "python313": 0.00046536086067102707,
+      "python39": 0.0004653608606709167
+    },
+    {
+      "absolute_difference": 5.4752209710517974e-17,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/all_run/oxygen_balance_error_stpd_ml/mean",
+      "python313": 0.00023182121015377107,
+      "python39": 0.00023182121015371632
+    },
+    {
+      "absolute_difference": 2.1316282072803006e-14,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/late_ge_250s/PaCO2_mmhg/mean",
+      "python313": 39.86640891733892,
+      "python39": 39.866408917338944
+    },
+    {
+      "absolute_difference": 1.4210854715202004e-14,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/late_ge_250s/PaO2_mmhg/mean",
+      "python313": 99.31306901126777,
+      "python39": 99.31306901126779
+    },
+    {
+      "absolute_difference": 1.8098944565281272e-10,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/late_ge_250s/blood_ml/mean",
+      "python313": 5150.091861305689,
+      "python39": 5150.09186130587
+    },
+    {
+      "absolute_difference": 2.585822181377928e-17,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/late_ge_250s/co2_balance_error_stpd_ml/mean",
+      "python313": 0.000465661287308,
+      "python39": 0.00046566128730797415
+    },
+    {
+      "absolute_difference": 1.292911090688964e-17,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/late_ge_250s/oxygen_balance_error_stpd_ml/mean",
+      "python313": 0.000232830643654,
+      "python39": 0.00023283064365398708
+    },
+    {
+      "absolute_difference": 9.947598300641403e-14,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/post_initialization_ge_10s/PaCO2_mmhg/mean",
+      "python313": 39.68265767952166,
+      "python39": 39.68265767952156
+    },
+    {
+      "absolute_difference": 4.263256414560601e-14,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/post_initialization_ge_10s/PaO2_mmhg/mean",
+      "python313": 99.99112271914287,
+      "python39": 99.99112271914282
+    },
+    {
+      "absolute_difference": 7.771561172376096e-16,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/post_initialization_ge_10s/SaO2/mean",
+      "python313": 0.9721851968477929,
+      "python39": 0.9721851968477937
+    },
+    {
+      "absolute_difference": 1.2187229003757238e-10,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/post_initialization_ge_10s/blood_ml/mean",
+      "python313": 5150.057352012726,
+      "python39": 5150.0573520126045
+    },
+    {
+      "absolute_difference": 1.0554708149146386e-16,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/post_initialization_ge_10s/co2_balance_error_stpd_ml/mean",
+      "python313": 0.00046566128730799995,
+      "python39": 0.0004656612873078944
+    },
+    {
+      "absolute_difference": 5.277354074573193e-17,
+      "field": "/measured_run_metrics/64/physiology_descriptive_only/post_initialization_ge_10s/oxygen_balance_error_stpd_ml/mean",
+      "python313": 0.00023283064365399998,
+      "python39": 0.0002328306436539472
+    },
+    {
+      "absolute_difference": 4.472333961502706e-19,
+      "field": "/measured_run_metrics/64/positive_impulse_prestep_tangent_speed/windows/all_run/mean",
+      "python313": 6.13223344447182e-05,
+      "python39": 6.132233444471864e-05
+    },
+    {
+      "absolute_difference": 1.5246593050577406e-19,
+      "field": "/measured_run_metrics/64/positive_impulse_prestep_tangent_speed/windows/late_ge_250s/mean",
+      "python313": 2.846098733884943e-05,
+      "python39": 2.8460987338849583e-05
+    },
+    {
+      "absolute_difference": 7.115076756936123e-20,
+      "field": "/measured_run_metrics/64/positive_impulse_prestep_tangent_speed/windows/post_initialization_ge_10s/mean",
+      "python313": 2.7258210270758086e-05,
+      "python39": 2.7258210270758015e-05
+    },
+    {
+      "absolute_difference": 3.183231456205249e-12,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/all_run/mean",
+      "python313": 706.4086035988022,
+      "python39": 706.408603598799
+    },
+    {
+      "absolute_difference": 1.1368683772161603e-13,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/all_run/sampled_mean_from_contact_impulse_over_float32_dt_n",
+      "python313": 706.408603313792,
+      "python39": 706.4086033137919
+    },
+    {
+      "absolute_difference": 3.183231456205249e-12,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/all_run/sampled_mean_normal_force_n",
+      "python313": 706.4086035988022,
+      "python39": 706.408603598799
+    },
+    {
+      "absolute_difference": 2.2737367544323206e-13,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/late_ge_250s/mean",
+      "python313": 706.3190602829911,
+      "python39": 706.3190602829909
+    },
+    {
+      "absolute_difference": 2.2737367544323206e-13,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/late_ge_250s/sampled_mean_normal_force_n",
+      "python313": 706.3190602829911,
+      "python39": 706.3190602829909
+    },
+    {
+      "absolute_difference": 4.320099833421409e-12,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/post_initialization_ge_10s/mean",
+      "python313": 706.3249456716203,
+      "python39": 706.324945671616
+    },
+    {
+      "absolute_difference": 1.1368683772161603e-13,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/post_initialization_ge_10s/sampled_mean_from_contact_impulse_over_float32_dt_n",
+      "python313": 706.324945459034,
+      "python39": 706.3249454590339
+    },
+    {
+      "absolute_difference": 4.320099833421409e-12,
+      "field": "/measured_run_metrics/64/support_force_sampling/windows/post_initialization_ge_10s/sampled_mean_normal_force_n",
+      "python313": 706.3249456716203,
+      "python39": 706.324945671616
+    }
+  ],
+  "python39_exact_report_reproduction": true,
+  "scope": "Independent read-only report reproduction; no native simulation or source changes."
+}
