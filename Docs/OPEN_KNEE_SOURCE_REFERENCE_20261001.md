@@ -17,6 +17,27 @@ The program includes nested materials and prestrain, per-element meniscus
 fibres, rigid-body definitions and ties, discrete springs, contact enforcement,
 load curves, solver controls, and requested outputs.
 
+The NHKNEE1 manifest now also emits a typed `source_mechanical_program`
+inventory. Its checked record binds the 8,666,471-byte deck, archived FEBio
+2.9.1 log, and DOI `Geometry_custom.feb` identity, all in the original source
+coordinates. It lists the 21 material records, nine rigid bodies, 18 rigid ties,
+six cylindrical joints, two other constraints, two prescribed-body boundaries,
+18 sliding contacts, nine load curves, discrete interactions, and complete step
+control values. Source material XML and every top-level FEBio section are hashed
+and retained in the inventory. The current runtime admission remains explicitly
+`rejected_unsupported_source_mechanics`; preserving this description does not
+execute it. The cross-file contact-pair and rigid-tie references are explicitly
+left unchecked against the archived geometry rather than resolved using the
+different registered `Geometry.feb`.
+
+The source inventory [receipt](media/open-knee-source-program-20261002/receipt.json)
+and full [machine-readable record](media/open-knee-source-program-20261002/source-mechanics.json)
+are retained.
+The direct inventory compiler and its focused tests passed. Rebuilding the
+registered NHKNEE1 payload manifest was not possible in this worktree because
+the pinned `myo_sim` Python module is unavailable; no new registered payload is
+claimed.
+
 This is a source-program compiler and dependency audit. Matter lowering is
 explicitly unsupported, all physical qualification flags are false, and the
 original FEBio 2.9.1 solver has **not been reproduced**. Public comparison builds have now executed and their failures are retained separately. The recovered original run remains archived evidence. The command cannot promote its output to a
@@ -160,10 +181,25 @@ conditions; their archived processed tibiofemoral rotations are -0.00874,
 qualification cases.
 
 `open-knee-reference-contact --plot PATH --output NEW_JSON` reads the original
-uncompressed XPLT version 5 contact gap and pressure fields, preserving surface
-IDs, face counts, array hashes, and source units. It rejects unsupported
-compression/layouts and incomplete fields. Partial downloads expose only complete
-states and return status 2; they do not establish full-archive completion.
+uncompressed XPLT version 5 nodal displacement/reaction, element stress and
+prestrain/fibre stretch, rigid-region pose/wrench, and surface gap/pressure/
+traction fields. It preserves source dictionary IDs, mesh-domain and surface
+IDs, array hashes, and source units. Repeated `--checkpoint-state INDEX` options
+can export exact raw float32 arrays to a new `--checkpoint-output-dir`, with the
+reference XPLT and source-mesh identities plus field mapping embedded in each
+NPZ. It rejects unsupported compression/layouts and malformed or incomplete
+fields. Partial downloads expose only complete states and return status 2; they
+do not establish full-archive completion.
+
+`open-knee-compare-source-checkpoints --reference REF.npz --matter MATTER.npz
+--output NEW_JSON` verifies matching source identities, continuation time,
+field/domain/surface mapping, and array shapes before reporting per-array max,
+RMS, relative-RMS, and mean errors. The Matter checkpoint must use the source
+mesh's global node, domain-element, and surface-face order. The command reports
+differences without inventing a pass threshold. The archive reader and comparator
+are implemented; no source-equivalent Matter checkpoint has yet been emitted, so
+there is not yet a Matter-versus-FEBio comparison or accepted preload/flexion
+state.
 
 At the first accepted preload increment (continuation 0.05), the original
 patellofemoral output has positive pressure on **7 of 22,478 femoral faces**
