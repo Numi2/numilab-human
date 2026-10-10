@@ -1173,6 +1173,132 @@ def audit_incremental_skin_self_intersections(
 
 
 
+
+_ACCEPTED_SELF_AUDIT_ROW_SCHEMA = "numi.human.accepted-skin-self-audit-row.v1"
+
+
+def _module_source_sha256(module: Any, label: str) -> str:
+    source_path = getattr(module, "__file__", None)
+    if not isinstance(source_path, str) or not source_path:
+        raise human.ImportError(f"{label} source path is unavailable for self-audit identity")
+    path = Path(source_path).resolve()
+    if not path.is_file():
+        raise human.ImportError(f"{label} source file is unavailable for self-audit identity")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _accepted_skin_self_audits_sha256(rows: Any) -> str:
+    try:
+        packed = json.dumps(rows, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    except (TypeError, ValueError) as error:
+        raise human.ImportError("accepted self-audit rows are not canonical JSON data") from error
+    return hashlib.sha256(packed).hexdigest()
+
+
+def _serialize_accepted_skin_self_audits(
+    audits: Any, world_positions_by_pose: np.ndarray, source_positions_f32_sha256: str,
+    faces: np.ndarray,
+) -> list[dict[str, Any]]:
+    """Bind already-computed complete zero-self rows for an accepted trial event."""
+    worlds = np.asarray(world_positions_by_pose)
+    face_rows = np.asarray(faces)
+    if worlds.ndim != 3 or worlds.shape[2] != 3 or not isinstance(audits, (list, tuple)):
+        raise human.ImportError("accepted self-audit event needs one world and audit row per pose")
+    if len(audits) != len(worlds) or not len(worlds):
+        raise human.ImportError("accepted self-audit event has incomplete pose coverage")
+    if (not isinstance(source_positions_f32_sha256, str) or len(source_positions_f32_sha256) != 64
+            or any(ch not in "0123456789abcdef" for ch in source_positions_f32_sha256)):
+        raise human.ImportError("accepted self-audit event has an invalid source-position identity")
+    face_sha = _face_index_sha256(face_rows)
+    owner_sha = hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+    predicate_sha = _module_source_sha256(ci, "exact self-intersection predicate")
+    result = []
+    for pose, audit in enumerate(audits):
+        if not isinstance(audit, dict):
+            raise human.ImportError(f"accepted self-audit row is malformed at pose={pose}")
+        pairs = audit.get("triangle_pairs")
+        if not isinstance(pairs, (list, tuple)):
+            raise human.ImportError(f"accepted self-audit pair table is absent at pose={pose}")
+        normalized_pairs = []
+        for pair in pairs:
+            if (not isinstance(pair, (list, tuple)) or len(pair) != 2
+                    or any(type(value) is not int for value in pair)):
+                raise human.ImportError(f"accepted self-audit pair row is malformed at pose={pose}")
+            normalized_pairs.append([pair[0], pair[1]])
+        count = audit.get("count")
+        if type(count) is not int or count != len(normalized_pairs) or count != 0:
+            raise human.ImportError(f"accepted trial self audit is not exact-zero at pose={pose}")
+        raw_degenerates = audit.get("degenerate_face_rows", [])
+        if not isinstance(raw_degenerates, (list, tuple)) or raw_degenerates:
+            raise human.ImportError(f"accepted trial self audit has degenerate faces at pose={pose}")
+        normalized = {"triangle_pairs": normalized_pairs, "count": count, "degenerate_face_rows": []}
+        pair_sha = _baseline_self_pair_table_sha256(normalized, len(face_rows))
+        result.append({
+            "schema": _ACCEPTED_SELF_AUDIT_ROW_SCHEMA,
+            "pose_index": int(pose),
+            "source_positions_f32_sha256": source_positions_f32_sha256,
+            "candidate_world_f32_sha256": _float32_xyz_sha256(worlds[pose]),
+            "face_index_sha256": face_sha,
+            "skin_face_count": int(len(face_rows)),
+            "triangle_pairs": normalized_pairs,
+            "count": count,
+            "degenerate_face_rows": [],
+            "self_pair_table_sha256": pair_sha,
+            "clearance_owner_source_sha256": owner_sha,
+            "exact_predicate_source_sha256": predicate_sha,
+            "complete_exact_pair_table": True,
+            "same_surface": True,
+        })
+    return result
+
+
+def _validate_resumed_skin_self_audits(
+    rows: Any, *, pose_count: int, resume_world: np.ndarray, source_sha256: str,
+    faces: np.ndarray,
+) -> tuple[list[dict[str, Any]], str]:
+    if not isinstance(rows, (list, tuple)) or len(rows) != pose_count:
+        raise human.ImportError("resume self-audit proof does not cover every accepted pose")
+    proof_sha = _accepted_skin_self_audits_sha256(rows)
+    face_sha = _face_index_sha256(faces)
+    owner_sha = hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+    predicate_sha = _module_source_sha256(ci, "exact self-intersection predicate")
+    required = {
+        "schema", "pose_index", "source_positions_f32_sha256", "candidate_world_f32_sha256",
+        "face_index_sha256", "skin_face_count", "triangle_pairs", "count", "degenerate_face_rows",
+        "self_pair_table_sha256", "clearance_owner_source_sha256", "exact_predicate_source_sha256",
+        "complete_exact_pair_table", "same_surface",
+    }
+    validated = []
+    for pose, row in enumerate(rows):
+        if not isinstance(row, dict) or set(row) != required:
+            raise human.ImportError(f"resume self-audit proof row is malformed at pose={pose}")
+        if (row["schema"] != _ACCEPTED_SELF_AUDIT_ROW_SCHEMA
+                or type(row["pose_index"]) is not int or row["pose_index"] != pose
+                or row["source_positions_f32_sha256"] != source_sha256
+                or row["candidate_world_f32_sha256"] != _float32_xyz_sha256(resume_world[pose])
+                or row["face_index_sha256"] != face_sha
+                or type(row["skin_face_count"]) is not int or row["skin_face_count"] != len(faces)
+                or row["clearance_owner_source_sha256"] != owner_sha
+                or row["exact_predicate_source_sha256"] != predicate_sha
+                or row["complete_exact_pair_table"] is not True
+                or row["same_surface"] is not True):
+            raise human.ImportError(f"resume self-audit proof identity mismatch at pose={pose}")
+        if type(row["count"]) is not int or row["count"] != 0:
+            raise human.ImportError(f"resume self-audit proof is not zero-pair at pose={pose}")
+        if row["degenerate_face_rows"] != []:
+            raise human.ImportError(f"resume self-audit proof has degenerate faces at pose={pose}")
+        normalized = {
+            "triangle_pairs": row["triangle_pairs"],
+            "count": row["count"],
+            "degenerate_face_rows": row["degenerate_face_rows"],
+        }
+        actual_table_sha = _baseline_self_pair_table_sha256(normalized, len(faces))
+        if row["self_pair_table_sha256"] != actual_table_sha:
+            raise human.ImportError(f"resume self-audit pair-table hash mismatch at pose={pose}")
+        _checked_baseline_self_pair_rows(normalized, len(faces))
+        validated.append(normalized)
+    return validated, proof_sha
+
 def _sum_target_pairs(audit: dict[str, Any]) -> int:
     return sum(int(row["count"]) for row in audit.values())
 
@@ -3238,6 +3364,7 @@ def derive_shared_multipose_inferred_clearance(
     scan_progress_callback=None,
     resume_source_positions: np.ndarray | None = None,
     resume_target_audits_by_pose: list[dict[str, dict[str, Any]]] | None = None,
+    resume_self_audits_by_pose: list[dict[str, Any]] | None = None,
     resume_provenance: dict[str, Any] | None = None,
     closed_target_surfaces_by_pose: list[dict[str, tuple[np.ndarray, np.ndarray]]] | None = None,
     closed_target_face_counts: dict[str, int] | None = None,
@@ -3255,6 +3382,10 @@ def derive_shared_multipose_inferred_clearance(
     respiratory basis/weight changes, are not treated as fixed affine transforms.
     Optional resume source/audits must be hash-validated by the caller and are
     checked against immutable baseline orientation, bed, anchor, and ocular gates.
+    An optional accepted self-audit proof can skip only the redundant full initial
+    same-surface scans when its per-pose world, source, face, pair-table, owner,
+    and predicate identities match; absent proof keeps the original scans, and
+    changed candidate geometry still receives the exact incremental self audit.
     Optional closed_target_surfaces_by_pose supplies complete captured meshes for
     an explicitly selected nonocular subset. Exact coordinate quotient, manifold,
     and self-intersection gates must pass before inside vertices can add demands.
@@ -3278,6 +3409,7 @@ def derive_shared_multipose_inferred_clearance(
             or (candidate_forward is not None and not callable(candidate_forward))
             or (scan_progress_callback is not None and not callable(scan_progress_callback))
             or ((resume_source_positions is None) != (resume_target_audits_by_pose is None))
+            or (resume_self_audits_by_pose is not None and resume_source_positions is None)
             or (resume_source_positions is not None and not isinstance(resume_provenance, dict))
             or (maps is not None and (maps.ndim != 4 or maps.shape[0] < 2 or maps.shape[2:] != (3, 3)
                                       or maps.shape[:2] != captured.shape[:2] or not np.isfinite(maps).all()))
@@ -3449,16 +3581,36 @@ def derive_shared_multipose_inferred_clearance(
                 + str(resume_diagnostics.get("rejection_reason", "unspecified invariant"))
             )
         resume_self_pair_counts = []
-        for pose in range(pose_count):
-            resume_records = _exact_surface_records(resume_world[pose], compact_faces)
-            self_audit = _audit_pair(resume_records, resume_records, same_surface=True)
-            current_self_audits[pose] = self_audit
-            count = int(self_audit["count"])
-            resume_self_pair_counts.append(count)
-            if count:
-                raise human.ImportError(
-                    f"resume candidate has {count} exact skin self-intersections at pose={pose}"
-                )
+        self_cache_used = resume_self_audits_by_pose is not None
+        self_cache_sha256 = None
+        if self_cache_used:
+            if (not isinstance(resume_provenance.get("self_audits_path"), str)
+                    or not resume_provenance["self_audits_path"]
+                    or not isinstance(resume_provenance.get("self_audits_sha256"), str)
+                    or len(resume_provenance["self_audits_sha256"]) != 64):
+                raise human.ImportError("resume provenance omits the accepted self-audit artifact identity")
+            if any(ch not in "0123456789abcdef" for ch in resume_provenance["self_audits_sha256"]):
+                raise human.ImportError("resume self-audit artifact SHA-256 is malformed")
+            validated_self_audits, self_cache_sha256 = _validate_resumed_skin_self_audits(
+                resume_self_audits_by_pose, pose_count=pose_count, resume_world=resume_world,
+                source_sha256=expected_source_sha, faces=compact_faces,
+            )
+            if self_cache_sha256 != resume_provenance["self_audits_sha256"]:
+                raise human.ImportError("resume self-audit artifact SHA-256 does not match its proof rows")
+            for pose, self_audit in enumerate(validated_self_audits):
+                current_self_audits[pose] = self_audit
+                resume_self_pair_counts.append(0)
+        else:
+            for pose in range(pose_count):
+                resume_records = _exact_surface_records(resume_world[pose], compact_faces)
+                self_audit = _audit_pair(resume_records, resume_records, same_surface=True)
+                current_self_audits[pose] = self_audit
+                count = int(self_audit["count"])
+                resume_self_pair_counts.append(count)
+                if count:
+                    raise human.ImportError(
+                        f"resume candidate has {count} exact skin self-intersections at pose={pose}"
+                    )
         resume_world_f32_sha256 = hashlib.sha256(
             np.asarray(resume_world, dtype="<f4").tobytes()
         ).hexdigest()
@@ -3507,6 +3659,13 @@ def derive_shared_multipose_inferred_clearance(
             "exact_skin_self_pair_count_by_pose": resume_self_pair_counts,
             "resume_world_positions_f32_sha256": resume_world_f32_sha256,
             "resume_self_audit_predicate": "_audit_pair(same_surface=True) over each complete resumed accepted-pose skin",
+            "resume_self_audit_cache": {
+                "used": bool(self_cache_used),
+                "proof_sha256": self_cache_sha256,
+                "full_initial_pose_scans_skipped": int(pose_count if self_cache_used else 0),
+                "clearance_owner_source_sha256": hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest(),
+                "exact_predicate_source_sha256": _module_source_sha256(ci, "exact self-intersection predicate"),
+            },
             "status": "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates",
         }
     closed_targets = [dict() for _ in range(pose_count)]
@@ -3584,7 +3743,7 @@ def derive_shared_multipose_inferred_clearance(
     attempt_index = 0
 
     def emit_trial(iteration, backtrack, scale, status, reason, trial_source, counts=None, audits=None,
-                   diagnostics=None):
+                   diagnostics=None, self_audits=None, self_audit_world_by_pose=None):
         nonlocal attempt_index
         if progress_callback is None:
             return
@@ -3604,6 +3763,16 @@ def derive_shared_multipose_inferred_clearance(
                 }
                 for audit in audits
             ]
+        accepted_self_rows = None
+        accepted_self_rows_sha256 = None
+        if status == "accepted":
+            if self_audits is None or self_audit_world_by_pose is None:
+                raise human.ImportError("accepted trial event omitted its exact self-audit rows or pose worlds")
+            accepted_self_rows = _serialize_accepted_skin_self_audits(
+                self_audits, self_audit_world_by_pose,
+                hashlib.sha256(packed_source.tobytes(order="C")).hexdigest(), compact_faces,
+            )
+            accepted_self_rows_sha256 = _accepted_skin_self_audits_sha256(accepted_self_rows)
         progress_callback({
             "attempt": attempt_index,
             "iteration": iteration + 1,
@@ -3615,6 +3784,8 @@ def derive_shared_multipose_inferred_clearance(
             "nonocular_pair_counts_candidate_by_pose": None if counts is None else [int(value) for value in counts],
             "nonocular_pair_counts_by_pose": None if counts is None else [int(value) for value in counts],
             "target_audits_by_pose": audit_rows,
+            "self_audits_by_pose": accepted_self_rows,
+            "self_audits_sha256": accepted_self_rows_sha256,
             "candidate_diagnostics": diagnostics,
             "direction_metrics": direction_report,
             "closed_target_interior_counts_before_by_pose": current_interior_counts,
@@ -4300,7 +4471,9 @@ def derive_shared_multipose_inferred_clearance(
                 rejection = winding_failure
                 emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
                 continue
-            emit_trial(iteration, backtrack, scale, "accepted", "all pose gates and exact scans passed", trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
+            emit_trial(iteration, backtrack, scale, "accepted", "all pose gates and exact scans passed",
+                       trial_source, trial_counts, trial_audits, diagnostics=trial_regularization,
+                       self_audits=trial_self_audits, self_audit_world_by_pose=trial_world)
             applied_source_increment = float(np.linalg.norm(trial_source - current_source, axis=1).max())
             current_source, current_world, current_audits, current_counts = trial_source, trial_world, trial_audits, trial_counts
             current_self_audits = trial_self_audits

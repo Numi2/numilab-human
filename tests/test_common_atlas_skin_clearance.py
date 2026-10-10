@@ -330,7 +330,9 @@ def test_multi_pose_geodesic_metric_uses_maximum_world_edge_length():
 
     assert np.allclose(lengths, [0.03, 0.02, np.sqrt(0.03**2 + 0.01**2)])
 
-def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_rescans():
+def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_rescans(monkeypatch):
+    import copy
+    import numilab_human.common_atlas_skin_clearance as clearance
     from numilab_human.common_atlas_skin_clearance import (
         _audit_pair,
         _exact_surface_records,
@@ -371,6 +373,15 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
 
     trial_events = []
     scan_progress_events = []
+    candidate_self_audit_calls = []
+    original_incremental_self_audit = clearance.audit_incremental_skin_self_intersections
+
+    def counted_incremental_self_audit(**kwargs):
+        candidate_self_audit_calls.append(kwargs)
+        return original_incremental_self_audit(**kwargs)
+
+    monkeypatch.setattr(clearance, "audit_incremental_skin_self_intersections",
+                        counted_incremental_self_audit)
     result, report = derive_shared_multipose_inferred_clearance(
         source_positions=source,
         faces=faces,
@@ -406,6 +417,12 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
     assert len(trial_events[-1]["target_audits_by_pose"]) == 2
     assert trial_events[-1]["target_audits_by_pose"][0]["1:1"]["triangle_pairs"] == []
     assert trial_events[-1]["target_audits_by_pose"][1]["1:1"]["count"] == 0
+    assert len(candidate_self_audit_calls) >= 1
+    assert len(trial_events[-1]["self_audits_by_pose"]) == 2
+    assert [row["pose_index"] for row in trial_events[-1]["self_audits_by_pose"]] == [0, 1]
+    assert all(row["count"] == 0 and row["degenerate_face_rows"] == []
+               for row in trial_events[-1]["self_audits_by_pose"])
+    assert len(trial_events[-1]["self_audits_sha256"]) == 64
     assert [event["event"] for event in scan_progress_events] == [
         "trial_started", "pose_audit_complete", "pose_audit_complete",
     ]
@@ -416,9 +433,12 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
     assert report["qualification"]["native_replay"] == "pending"
 
     import hashlib
+    from numilab_human import model as human
+    from numilab_human.common_atlas_skin_clearance import _accepted_skin_self_audits_sha256
 
     resume_sha = hashlib.sha256(np.asarray(result, dtype="<f4").tobytes()).hexdigest()
-    resumed, resume_report = derive_shared_multipose_inferred_clearance(
+    good_self_rows = trial_events[-1]["self_audits_by_pose"]
+    common_resume_kwargs = dict(
         source_positions=source,
         faces=faces,
         jacobians_by_pose=maps,
@@ -436,12 +456,30 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
         max_iterations=1,
         resume_source_positions=result,
         resume_target_audits_by_pose=trial_events[-1]["target_audits_by_pose"],
-        resume_provenance={
-            "source_positions_path": "resume-fixture-source.npy",
-            "source_positions_f32_sha256": resume_sha,
-            "target_audits_path": "resume-fixture-audits.json",
-            "target_audits_sha256": "a" * 64,
-        },
+    )
+    cache_provenance = {
+        "source_positions_path": "resume-fixture-source.npy",
+        "source_positions_f32_sha256": resume_sha,
+        "target_audits_path": "resume-fixture-audits.json",
+        "target_audits_sha256": "a" * 64,
+        "self_audits_path": "resume-fixture-self-audits.json",
+        "self_audits_sha256": trial_events[-1]["self_audits_sha256"],
+    }
+
+    original_pair_audit = clearance._audit_pair
+    resume_full_self_scans = []
+
+    def fail_if_cached_resume_scans_self(first, second, **kwargs):
+        if kwargs.get("same_surface") is True:
+            resume_full_self_scans.append(True)
+            raise AssertionError("valid resume cache should skip only the initial full self scan")
+        return original_pair_audit(first, second, **kwargs)
+
+    monkeypatch.setattr(clearance, "_audit_pair", fail_if_cached_resume_scans_self)
+    resumed, resume_report = derive_shared_multipose_inferred_clearance(
+        **common_resume_kwargs,
+        resume_self_audits_by_pose=good_self_rows,
+        resume_provenance=cache_provenance,
     )
     assert np.array_equal(resumed.astype("<f4"), result.astype("<f4"))
     assert resume_report["initial_nonocular_pair_count_by_pose"] == [1, 1]
@@ -450,6 +488,100 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
     assert resume_report["resume_start"]["status"] == (
         "caller-hash-bound-accepted-candidate-revalidated-against-immutable-baseline-gates"
     )
+    cache_status = resume_report["resume_start"]["resume_self_audit_cache"]
+    assert cache_status["used"] is True
+    assert cache_status["full_initial_pose_scans_skipped"] == 2
+    assert len(cache_status["proof_sha256"]) == 64
+    assert resume_full_self_scans == []
+
+    # A supplied proof is fail-closed: tampering with any identity or coverage is rejected.
+    bad_cases = [
+        ("source", "identity mismatch", lambda rows: rows[0].__setitem__("source_positions_f32_sha256", "0" * 64)),
+        ("world", "identity mismatch", lambda rows: rows[0].__setitem__("candidate_world_f32_sha256", "0" * 64)),
+        ("topology", "identity mismatch", lambda rows: rows[0].__setitem__("face_index_sha256", "0" * 64)),
+        ("owner", "identity mismatch", lambda rows: rows[0].__setitem__("clearance_owner_source_sha256", "0" * 64)),
+        ("predicate", "identity mismatch", lambda rows: rows[0].__setitem__("exact_predicate_source_sha256", "0" * 64)),
+        ("pair-table", "pair-table hash mismatch", lambda rows: rows[0].__setitem__("self_pair_table_sha256", "0" * 64)),
+        ("nonzero", "not zero-pair", lambda rows: rows[0].__setitem__("count", 1)),
+        ("degenerate", "degenerate faces", lambda rows: rows[0].__setitem__("degenerate_face_rows", [0])),
+        ("pose-order", "identity mismatch", lambda rows: rows[0].__setitem__("pose_index", 1)),
+        ("coverage", "does not cover every accepted pose", lambda rows: rows.pop()),
+    ]
+    for label, message, corrupt in bad_cases:
+        rows = copy.deepcopy(good_self_rows)
+        corrupt(rows)
+        provenance = dict(cache_provenance)
+        provenance["self_audits_sha256"] = _accepted_skin_self_audits_sha256(rows)
+        with np.testing.assert_raises_regex(human.ImportError, message):
+            derive_shared_multipose_inferred_clearance(
+                **common_resume_kwargs,
+                resume_self_audits_by_pose=rows,
+                resume_provenance=provenance,
+            )
+
+    # Omitting optional proof keeps the original full exact resume scans.
+    monkeypatch.setattr(clearance, "_audit_pair", original_pair_audit)
+    full_scan_calls = []
+
+    def count_fallback_full_scans(first, second, **kwargs):
+        if kwargs.get("same_surface") is True:
+            full_scan_calls.append(True)
+        return original_pair_audit(first, second, **kwargs)
+
+    monkeypatch.setattr(clearance, "_audit_pair", count_fallback_full_scans)
+    fallback_provenance = {key: value for key, value in cache_provenance.items()
+                           if not key.startswith("self_audits_")}
+    fallback, fallback_report = derive_shared_multipose_inferred_clearance(
+        **common_resume_kwargs,
+        resume_provenance=fallback_provenance,
+    )
+    assert np.array_equal(fallback.astype("<f4"), result.astype("<f4"))
+    assert fallback_report["resume_start"]["resume_self_audit_cache"]["used"] is False
+    assert fallback_report["resume_start"]["resume_self_audit_cache"]["full_initial_pose_scans_skipped"] == 0
+    assert len(full_scan_calls) == 2
+
+    # A valid zero-self cache must still allow a changed resumed candidate to
+    # pass through the exact incremental self audit while its target pairs clear.
+    initial_self_audits = []
+    for pose in range(2):
+        records = _exact_surface_records(captured[pose], faces)
+        initial_self_audits.append(_audit_pair(records, records, same_surface=True))
+    initial_source_sha = hashlib.sha256(np.asarray(source, dtype="<f4").tobytes()).hexdigest()
+    initial_self_rows = clearance._serialize_accepted_skin_self_audits(
+        initial_self_audits, captured, initial_source_sha, faces,
+    )
+    initial_provenance = {
+        "source_positions_path": "initial-fixture-source.npy",
+        "source_positions_f32_sha256": initial_source_sha,
+        "target_audits_path": "initial-fixture-audits.json",
+        "target_audits_sha256": "c" * 64,
+        "self_audits_path": "initial-fixture-self-audits.json",
+        "self_audits_sha256": _accepted_skin_self_audits_sha256(initial_self_rows),
+    }
+    candidate_calls_before = len(candidate_self_audit_calls)
+    resume_full_self_scans.clear()
+
+    def fail_if_changed_resume_repeats_initial_scan(first, second, **kwargs):
+        if kwargs.get("same_surface") is True:
+            resume_full_self_scans.append(True)
+            raise AssertionError("valid initial proof should replace only the redundant full self scan")
+        return original_pair_audit(first, second, **kwargs)
+
+    monkeypatch.setattr(clearance, "_audit_pair", fail_if_changed_resume_repeats_initial_scan)
+    changed_resume, changed_resume_report = derive_shared_multipose_inferred_clearance(
+        **{
+            **common_resume_kwargs,
+            "resume_source_positions": source,
+            "resume_target_audits_by_pose": baseline,
+            "max_iterations": 3,
+        },
+        resume_self_audits_by_pose=initial_self_rows,
+        resume_provenance=initial_provenance,
+    )
+    assert changed_resume_report["starting_nonocular_pair_count_by_pose"] == [1, 1]
+    assert changed_resume_report["final_nonocular_pair_count_by_pose"] == [0, 0]
+    assert len(candidate_self_audit_calls) > candidate_calls_before
+    assert resume_full_self_scans == []
 
 
 def test_shared_multipose_clearance_refuses_to_move_fixed_support_seeds():
