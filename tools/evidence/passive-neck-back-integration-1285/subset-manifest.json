@@ -1,0 +1,1868 @@
+{
+  "coverage": {
+    "authored_myosim_muscle_count": 416,
+    "cancelled_opposite_face_pair_count": 58,
+    "configured_surface_count": 158,
+    "emitted_surface_count": 8,
+    "muscle_surface_count": 8,
+    "opposite_face_pair_cancellation_surface_count": 7,
+    "passive_registered_support_surface_count": 8,
+    "route_bound_muscle_surface_count": 0,
+    "selected_stable_ids": [
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158
+    ],
+    "tendon_surface_count": 0
+  },
+  "evidence_boundary": "Source-authored routed rows retain their existing kinematic visual role. Passive SCM/trapezius rows use inferred registered-support proximity, not supplied source attachment masks or force-transmitting MyoSim routes. This package does not add a continuum/tendon law, collision/contact, clinical registration, or anatomical qualification.",
+  "payload": {
+    "binding_count": 28,
+    "bytes": 3296208,
+    "file": "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+    "index_count": 193944,
+    "magic": "NHTISS4",
+    "payload_abi": 5,
+    "registration_fingerprint32": "b1b410ad",
+    "sha256": "08c534229c322391ce5c7fb972810ace13bc07cf9d95ff18825561ac2f792ada",
+    "surface_count": 8,
+    "vertex_count": 44984
+  },
+  "rigid_source_program_checks": {
+    "actual_bytes": 60324,
+    "actual_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "boundary": "source_program_agreement_not_native_execution_loaded_or_clinical_anatomy",
+    "checked_field_count": 2250,
+    "declared_identity_matches": true,
+    "engine_body_count": 157,
+    "expected_bytes": 60324,
+    "expected_source_sha256": "f157d2fee0a56c2ea7144c70363cd0bfbd466acb01afc5e4ee53f4e016e4fe62",
+    "failures": [],
+    "file": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+    "joint_count": 156,
+    "passed": true,
+    "roundoff_portability_admissions": [
+      {
+        "actual": [
+          0.7061997056007385,
+          -2.0074732135124896e-17,
+          -2.2026379756276795e-16,
+          0.7080127000808716
+        ],
+        "allowed_norm_error": 1e-05,
+        "allowed_point_displacement_m": 1e-06,
+        "angular_error_rad": 3.5591927260510666e-20,
+        "byte_offset": 44192,
+        "changed_components_are_roundoff": true,
+        "child_body_name": "femur_r",
+        "conservative_lever_arm_m": 3.0,
+        "core_joint_index": 130,
+        "core_q_index": 103,
+        "expected": [
+          0.7061997056007385,
+          -2.005693617142643e-17,
+          -2.2026379756276795e-16,
+          0.7080127000808716
+        ],
+        "field": "child_orientation",
+        "max_absolute_component_delta": 1.779596363025094e-20,
+        "maximum_point_displacement_m": 1.06775781781532e-19,
+        "norm_basis": "existing_Core_squared_norm_admission",
+        "norm_error": 7.66637597848785e-09,
+        "reason": "quaternion_roundoff_within_1um_geometric_bound",
+        "source_body_id": 92,
+        "source_body_name": "femur_r",
+        "source_joint_id": 97,
+        "source_joint_name": "hip_rotation_r"
+      },
+      {
+        "actual": [
+          0.7061997056007385,
+          -2.0074732135124896e-17,
+          -2.2026379756276795e-16,
+          0.7080127000808716
+        ],
+        "allowed_norm_error": 1e-05,
+        "allowed_point_displacement_m": 1e-06,
+        "angular_error_rad": 3.5591927260510666e-20,
+        "byte_offset": 44320,
+        "changed_components_are_roundoff": true,
+        "child_body_name": "__myosim_serial_tibia_r_0",
+        "conservative_lever_arm_m": 3.0,
+        "core_joint_index": 131,
+        "core_q_index": 104,
+        "expected": [
+          0.7061997056007385,
+          -2.005693617142643e-17,
+          -2.2026379756276795e-16,
+          0.7080127000808716
+        ],
+        "field": "parent_orientation",
+        "max_absolute_component_delta": 1.779596363025094e-20,
+        "maximum_point_displacement_m": 1.06775781781532e-19,
+        "norm_basis": "existing_Core_squared_norm_admission",
+        "norm_error": 7.66637597848785e-09,
+        "reason": "quaternion_roundoff_within_1um_geometric_bound",
+        "source_body_id": 93,
+        "source_body_name": "tibia_r",
+        "source_joint_id": 98,
+        "source_joint_name": "knee_angle_translation2_r"
+      },
+      {
+        "actual": [
+          0.7061997056007385,
+          -2.0074732135124896e-17,
+          -2.2026379756276795e-16,
+          0.7080127000808716
+        ],
+        "allowed_norm_error": 1e-05,
+        "allowed_point_displacement_m": 1e-06,
+        "angular_error_rad": 3.5591927260510666e-20,
+        "byte_offset": 45472,
+        "changed_components_are_roundoff": true,
+        "child_body_name": "__myosim_serial_patella_r_0",
+        "conservative_lever_arm_m": 3.0,
+        "core_joint_index": 139,
+        "core_q_index": 112,
+        "expected": [
+          0.7061997056007385,
+          -2.005693617142643e-17,
+          -2.2026379756276795e-16,
+          0.7080127000808716
+        ],
+        "field": "parent_orientation",
+        "max_absolute_component_delta": 1.779596363025094e-20,
+        "maximum_point_displacement_m": 1.06775781781532e-19,
+        "norm_basis": "existing_Core_squared_norm_admission",
+        "norm_error": 7.66637597848785e-09,
+        "reason": "quaternion_roundoff_within_1um_geometric_bound",
+        "source_body_id": 97,
+        "source_body_name": "patella_r",
+        "source_joint_id": 106,
+        "source_joint_name": "knee_angle_beta_translation2_r"
+      },
+      {
+        "actual": [
+          0.7080127000808716,
+          -9.796409844050854e-17,
+          -2.802682203511934e-16,
+          0.7061997056007385
+        ],
+        "allowed_norm_error": 1e-05,
+        "allowed_point_displacement_m": 1e-06,
+        "angular_error_rad": 3.004319973264214e-21,
+        "byte_offset": 46208,
+        "changed_components_are_roundoff": true,
+        "child_body_name": "femur_l",
+        "conservative_lever_arm_m": 3.0,
+        "core_joint_index": 144,
+        "core_q_index": 117,
+        "expected": [
+          0.7080127000808716,
+          -9.796259628051614e-17,
+          -2.802682203511934e-16,
+          0.7061997056007385
+        ],
+        "field": "child_orientation",
+        "max_absolute_component_delta": 1.5021599866400788e-21,
+        "maximum_point_displacement_m": 9.012959919792641e-21,
+        "norm_basis": "existing_Core_squared_norm_admission",
+        "norm_error": 7.66637597848785e-09,
+        "reason": "quaternion_roundoff_within_1um_geometric_bound",
+        "source_body_id": 98,
+        "source_body_name": "femur_l",
+        "source_joint_id": 111,
+        "source_joint_name": "hip_rotation_l"
+      },
+      {
+        "actual": [
+          0.7080127000808716,
+          -9.796409844050854e-17,
+          -2.802682203511934e-16,
+          0.7061997056007385
+        ],
+        "allowed_norm_error": 1e-05,
+        "allowed_point_displacement_m": 1e-06,
+        "angular_error_rad": 3.004319973264214e-21,
+        "byte_offset": 46336,
+        "changed_components_are_roundoff": true,
+        "child_body_name": "__myosim_serial_tibia_l_0",
+        "conservative_lever_arm_m": 3.0,
+        "core_joint_index": 145,
+        "core_q_index": 118,
+        "expected": [
+          0.7080127000808716,
+          -9.796259628051614e-17,
+          -2.802682203511934e-16,
+          0.7061997056007385
+        ],
+        "field": "parent_orientation",
+        "max_absolute_component_delta": 1.5021599866400788e-21,
+        "maximum_point_displacement_m": 9.012959919792641e-21,
+        "norm_basis": "existing_Core_squared_norm_admission",
+        "norm_error": 7.66637597848785e-09,
+        "reason": "quaternion_roundoff_within_1um_geometric_bound",
+        "source_body_id": 99,
+        "source_body_name": "tibia_l",
+        "source_joint_id": 112,
+        "source_joint_name": "knee_angle_translation2_l"
+      },
+      {
+        "actual": [
+          0.7080127000808716,
+          -9.796409844050854e-17,
+          -2.802682203511934e-16,
+          0.7061997056007385
+        ],
+        "allowed_norm_error": 1e-05,
+        "allowed_point_displacement_m": 1e-06,
+        "angular_error_rad": 3.004319973264214e-21,
+        "byte_offset": 47488,
+        "changed_components_are_roundoff": true,
+        "child_body_name": "__myosim_serial_patella_l_0",
+        "conservative_lever_arm_m": 3.0,
+        "core_joint_index": 153,
+        "core_q_index": 126,
+        "expected": [
+          0.7080127000808716,
+          -9.796259628051614e-17,
+          -2.802682203511934e-16,
+          0.7061997056007385
+        ],
+        "field": "parent_orientation",
+        "max_absolute_component_delta": 1.5021599866400788e-21,
+        "maximum_point_displacement_m": 9.012959919792641e-21,
+        "norm_basis": "existing_Core_squared_norm_admission",
+        "norm_error": 7.66637597848785e-09,
+        "reason": "quaternion_roundoff_within_1um_geometric_bound",
+        "source_body_id": 103,
+        "source_body_name": "patella_l",
+        "source_joint_id": 120,
+        "source_joint_name": "knee_angle_beta_translation2_l"
+      }
+    ],
+    "source_body_count": 103,
+    "source_metadata_matches": true,
+    "tolerance_basis": "exact_source_FP32_scalar_or_integer_fields; direction fields use their existing norm/common-scale-bin admission; only nonzero quaternion components below 1e-12 with component delta below 1e-12 may use a sign-invariant 1um geometric bound"
+  },
+  "runtime_binding": "Non-passive muscle rows retain the existing authored MyoSim route-body table and four sparse influences per vertex; shared digital rows include every authored digit route, and the two calcaneal tendons inherit their existing named route weights. Rows with passive_visual_binding use nearest Euclidean registered support-vertex proximity across the explicitly listed support bodies, serialize at most four of those dense inferred weights per vertex, and add no MyoSim muscle/force route.",
+  "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
+  "source": {
+    "bodyparts": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "myosim_manifest": {
+      "file": "myosim-fullbody-reference.manifest.json",
+      "sha256": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+    },
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registration": {
+      "file": "registration.json",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    "surface_map": {
+      "file": "bodyparts3d-myosim-surface-map.v1.json",
+      "sha256": "1d4bbbf216e1a67ac7e27f87d61cbda513f5661b703c5c450c05a51c3c31caa2"
+    },
+    "surfaces": [
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 29,
+            "myosim_body": "clavicle_r"
+          },
+          {
+            "core_body_index": 23,
+            "myosim_body": "head"
+          }
+        ],
+        "body_weight_count": 3,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "right sternocleidomastoid",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1595.obj",
+        "member_id": "FJ1595",
+        "member_sha256": "287ce88ff3321e41d83b34bb0c30f66ab273aceac9fd0a6c693af4532d0e0681",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "clavicle_r": 721,
+            "head": 1532,
+            "torso": 222
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.0759242279887819,
+            "minimum": 0.00013056619384490978,
+            "p50": 0.0060020945072081855,
+            "p95": 0.06334217581922867
+          },
+          "nearest_support_vertex_count_by_body": {
+            "clavicle_r": 2631,
+            "head": 3005,
+            "torso": 1006
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 3,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "clavicle_r": 0.0,
+              "head": 8.663958263102213e-10,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 8.663958263102213e-10,
+              "mean": 1.3044200938124379e-13,
+              "p50": 0,
+              "p95": 0.0
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 1
+          },
+          "support_body_count": 3,
+          "support_body_names": [
+            "torso",
+            "clavicle_r",
+            "head"
+          ],
+          "support_vertex_count_by_body": {
+            "clavicle_r": 583,
+            "head": 10097,
+            "torso": 5137
+          },
+          "supports": [
+            {
+              "body": "torso",
+              "role": "sternal_origin",
+              "source_member_id": "FJ3178",
+              "source_member_sha256": "ec90f03f2ce1edebc8793a9e9973229b198d6367eb5eab1dff6e238110e94d9d",
+              "source_triangle_count": 4646,
+              "source_vertex_count": 3691
+            },
+            {
+              "body": "torso",
+              "role": "sternal_origin",
+              "source_member_id": "FJ3290",
+              "source_member_sha256": "e94f731d044131260947146ab79fa7c4712865e1aac36a1410003358b96e0692",
+              "source_triangle_count": 2546,
+              "source_vertex_count": 1446
+            },
+            {
+              "body": "clavicle_r",
+              "role": "clavicular_origin",
+              "source_member_id": "FJ3362",
+              "source_member_sha256": "9a111cac8351e79dd1315aea90108fe56f78e4bf0159473e6ad727ba91b60e6d",
+              "source_triangle_count": 1146,
+              "source_vertex_count": 583
+            },
+            {
+              "body": "head",
+              "role": "mastoid_nuchal_insertion",
+              "source_member_id": "FJ3386",
+              "source_member_sha256": "b008c86a55b1e7743a56060b4d9cb8f8abcac71d83810f66fc50847181b7fa75",
+              "source_triangle_count": 4928,
+              "source_vertex_count": 3102
+            },
+            {
+              "body": "head",
+              "role": "mastoid_nuchal_insertion",
+              "source_member_id": "FJ3309",
+              "source_member_sha256": "c0262a08591e48504c8a53302525377e0c4ad1c165456475f3bb80aab6202d44",
+              "source_triangle_count": 12450,
+              "source_vertex_count": 6995
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 3,
+          "maximum_vertex_influences": 3,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 3
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              4390,
+              4391
+            ],
+            [
+              6239,
+              6240
+            ]
+          ],
+          "emitted_triangle_count": 10340,
+          "emitted_vertex_count": 6642,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 2,
+          "removed_visual_support_area_mm2": 0.0008993180446164033,
+          "retained_triangle_count": 10340,
+          "retained_vertex_count": 6630,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 10344,
+          "source_vertex_count": 6642,
+          "vertices_moved": false
+        },
+        "stable_id": 151,
+        "triangle_count": 10340,
+        "vertex_count": 6642
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 79,
+            "myosim_body": "clavicle_l"
+          },
+          {
+            "core_body_index": 23,
+            "myosim_body": "head"
+          }
+        ],
+        "body_weight_count": 3,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "left sternocleidomastoid",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1573.obj",
+        "member_id": "FJ1573",
+        "member_sha256": "2035124d82e26f8e2ba9985925a746d0fd1fd94535d6ca7eed4b622f60bf5363",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "clavicle_l": 705,
+            "head": 1243,
+            "torso": 164
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.07608634542145874,
+            "minimum": 0.00017319265320679369,
+            "p50": 0.006766740287551913,
+            "p95": 0.0636926722840227
+          },
+          "nearest_support_vertex_count_by_body": {
+            "clavicle_l": 2558,
+            "head": 2695,
+            "torso": 957
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 3,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "clavicle_l": 0.0,
+              "head": 0.0,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0.0,
+              "mean": 0.0,
+              "p50": 0,
+              "p95": 0
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 0
+          },
+          "support_body_count": 3,
+          "support_body_names": [
+            "torso",
+            "clavicle_l",
+            "head"
+          ],
+          "support_vertex_count_by_body": {
+            "clavicle_l": 602,
+            "head": 10008,
+            "torso": 5137
+          },
+          "supports": [
+            {
+              "body": "torso",
+              "role": "sternal_origin",
+              "source_member_id": "FJ3178",
+              "source_member_sha256": "ec90f03f2ce1edebc8793a9e9973229b198d6367eb5eab1dff6e238110e94d9d",
+              "source_triangle_count": 4646,
+              "source_vertex_count": 3691
+            },
+            {
+              "body": "torso",
+              "role": "sternal_origin",
+              "source_member_id": "FJ3290",
+              "source_member_sha256": "e94f731d044131260947146ab79fa7c4712865e1aac36a1410003358b96e0692",
+              "source_triangle_count": 2546,
+              "source_vertex_count": 1446
+            },
+            {
+              "body": "clavicle_l",
+              "role": "clavicular_origin",
+              "source_member_id": "FJ3237",
+              "source_member_sha256": "2491009d53eaed99ccb2a802b29402eec715eb8d207fb819fad67b0720195cf2",
+              "source_triangle_count": 1176,
+              "source_vertex_count": 602
+            },
+            {
+              "body": "head",
+              "role": "mastoid_nuchal_insertion",
+              "source_member_id": "FJ3281",
+              "source_member_sha256": "0dd858a59e8f4f004871f55411f4048bd6a69e4ec55cf6daa08ae34a5dbd974a",
+              "source_triangle_count": 4936,
+              "source_vertex_count": 3013
+            },
+            {
+              "body": "head",
+              "role": "mastoid_nuchal_insertion",
+              "source_member_id": "FJ3309",
+              "source_member_sha256": "c0262a08591e48504c8a53302525377e0c4ad1c165456475f3bb80aab6202d44",
+              "source_triangle_count": 12450,
+              "source_vertex_count": 6995
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 3,
+          "maximum_vertex_influences": 3,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 3
+        },
+        "stable_id": 152,
+        "triangle_count": 10224,
+        "vertex_count": 6210
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 34,
+            "myosim_body": "scapula_r"
+          }
+        ],
+        "body_weight_count": 2,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "ascending part of right trapezius",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1520.obj",
+        "member_id": "FJ1520",
+        "member_sha256": "6bb3d13198991bda4d0aae27561976b9ba53b0d21d817f180098307c7b99deb1",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "scapula_r": 1092,
+            "torso": 919
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.0582491248708678,
+            "minimum": 0.00012574429454268417,
+            "p50": 0.010422485520147072,
+            "p95": 0.04599240616566809
+          },
+          "nearest_support_vertex_count_by_body": {
+            "scapula_r": 3063,
+            "torso": 4470
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 2,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "scapula_r": 0.0,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0,
+              "mean": 0.0,
+              "p50": 0,
+              "p95": 0.0
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 0
+          },
+          "support_body_count": 2,
+          "support_body_names": [
+            "torso",
+            "scapula_r"
+          ],
+          "support_vertex_count_by_body": {
+            "scapula_r": 13118,
+            "torso": 11757
+          },
+          "supports": [
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3169",
+              "source_member_sha256": "20c3b1dfed3a2ac5e631838ae924379672dac2047186711cfaa819b9a1db6e5b",
+              "source_triangle_count": 2280,
+              "source_vertex_count": 1321
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3171",
+              "source_member_sha256": "ebee2a07751de0aa0b33974eea0a9228fed9980f740c619776003d5a38c370c5",
+              "source_triangle_count": 2248,
+              "source_vertex_count": 1353
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3173",
+              "source_member_sha256": "3b66eb6444bc7b6ced9e32eacf2518861531b1296eff0e24db41a85bfdbaff66",
+              "source_triangle_count": 2574,
+              "source_vertex_count": 1478
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3174",
+              "source_member_sha256": "531253894a89d60c78a5235bfba826e0c30c21003267258fe1fca244d9090c1a",
+              "source_triangle_count": 2424,
+              "source_vertex_count": 1392
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3175",
+              "source_member_sha256": "34bd592e9f0282eea561a680697beeac655584ca9e4db9232b013535c57e7e61",
+              "source_triangle_count": 2586,
+              "source_vertex_count": 1443
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3154",
+              "source_member_sha256": "abf073c0206696c3baa5cb389831b28a6ce2c6770091065e834b8e4ef50676b1",
+              "source_triangle_count": 2790,
+              "source_vertex_count": 1584
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3155",
+              "source_member_sha256": "1f9c9f6dfcd5585e09abc2cf9a8f54ba1c33df399c6d4dad1a92301d85cd88b3",
+              "source_triangle_count": 2674,
+              "source_vertex_count": 1593
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3156",
+              "source_member_sha256": "ffeebd0dead6ed95395e35c0843888b079acf67543e2820437e99978c69642a0",
+              "source_triangle_count": 2772,
+              "source_vertex_count": 1593
+            },
+            {
+              "body": "scapula_r",
+              "role": "scapular_spine_insertion",
+              "source_member_id": "FJ3384",
+              "source_member_sha256": "1641b04e55f9d75bdd6f1f4f07ea596e5dea0a8cb6b348bff47281b8a0bc6e5d",
+              "source_triangle_count": 26172,
+              "source_vertex_count": 13118
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 2,
+          "maximum_vertex_influences": 2,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 2
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              78,
+              80
+            ],
+            [
+              183,
+              184
+            ],
+            [
+              185,
+              193
+            ],
+            [
+              431,
+              433
+            ],
+            [
+              442,
+              443
+            ],
+            [
+              523,
+              524
+            ],
+            [
+              612,
+              613
+            ],
+            [
+              4354,
+              4370
+            ]
+          ],
+          "emitted_triangle_count": 10514,
+          "emitted_vertex_count": 7533,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 8,
+          "removed_visual_support_area_mm2": 0.02785658040570564,
+          "retained_triangle_count": 10514,
+          "retained_vertex_count": 7485,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 10530,
+          "source_vertex_count": 7533,
+          "vertices_moved": false
+        },
+        "stable_id": 153,
+        "triangle_count": 10514,
+        "vertex_count": 7533
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 84,
+            "myosim_body": "scapula_l"
+          }
+        ],
+        "body_weight_count": 2,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "ascending part of left trapezius",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1520M.obj",
+        "member_id": "FJ1520M",
+        "member_sha256": "5ca485d5bfe97fd5a9e17d76d2a77077577e13f19584f5634a8eb1bbc6d7da3d",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "scapula_l": 1075,
+            "torso": 893
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.058019297039995324,
+            "minimum": 0.0001713611318209474,
+            "p50": 0.010695796589357012,
+            "p95": 0.0462178407954911
+          },
+          "nearest_support_vertex_count_by_body": {
+            "scapula_l": 3047,
+            "torso": 4460
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 2,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "scapula_l": 0.0,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0,
+              "mean": 0.0,
+              "p50": 0,
+              "p95": 0
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 0
+          },
+          "support_body_count": 2,
+          "support_body_names": [
+            "torso",
+            "scapula_l"
+          ],
+          "support_vertex_count_by_body": {
+            "scapula_l": 14068,
+            "torso": 11757
+          },
+          "supports": [
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3169",
+              "source_member_sha256": "20c3b1dfed3a2ac5e631838ae924379672dac2047186711cfaa819b9a1db6e5b",
+              "source_triangle_count": 2280,
+              "source_vertex_count": 1321
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3171",
+              "source_member_sha256": "ebee2a07751de0aa0b33974eea0a9228fed9980f740c619776003d5a38c370c5",
+              "source_triangle_count": 2248,
+              "source_vertex_count": 1353
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3173",
+              "source_member_sha256": "3b66eb6444bc7b6ced9e32eacf2518861531b1296eff0e24db41a85bfdbaff66",
+              "source_triangle_count": 2574,
+              "source_vertex_count": 1478
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3174",
+              "source_member_sha256": "531253894a89d60c78a5235bfba826e0c30c21003267258fe1fca244d9090c1a",
+              "source_triangle_count": 2424,
+              "source_vertex_count": 1392
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3175",
+              "source_member_sha256": "34bd592e9f0282eea561a680697beeac655584ca9e4db9232b013535c57e7e61",
+              "source_triangle_count": 2586,
+              "source_vertex_count": 1443
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3154",
+              "source_member_sha256": "abf073c0206696c3baa5cb389831b28a6ce2c6770091065e834b8e4ef50676b1",
+              "source_triangle_count": 2790,
+              "source_vertex_count": 1584
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3155",
+              "source_member_sha256": "1f9c9f6dfcd5585e09abc2cf9a8f54ba1c33df399c6d4dad1a92301d85cd88b3",
+              "source_triangle_count": 2674,
+              "source_vertex_count": 1593
+            },
+            {
+              "body": "torso",
+              "role": "lower_thoracic_origin",
+              "source_member_id": "FJ3156",
+              "source_member_sha256": "ffeebd0dead6ed95395e35c0843888b079acf67543e2820437e99978c69642a0",
+              "source_triangle_count": 2772,
+              "source_vertex_count": 1593
+            },
+            {
+              "body": "scapula_l",
+              "role": "scapular_spine_insertion",
+              "source_member_id": "FJ3279",
+              "source_member_sha256": "e63a5675c6cdbe942322305920241b4a63762d7a65879572400f444fa3d42739",
+              "source_triangle_count": 28106,
+              "source_vertex_count": 14068
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 2,
+          "maximum_vertex_influences": 2,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 2
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              78,
+              80
+            ],
+            [
+              183,
+              184
+            ],
+            [
+              185,
+              193
+            ],
+            [
+              431,
+              433
+            ],
+            [
+              442,
+              443
+            ],
+            [
+              523,
+              524
+            ],
+            [
+              612,
+              613
+            ],
+            [
+              4354,
+              4370
+            ]
+          ],
+          "emitted_triangle_count": 10514,
+          "emitted_vertex_count": 7507,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 8,
+          "removed_visual_support_area_mm2": 0.02785658040570564,
+          "retained_triangle_count": 10514,
+          "retained_vertex_count": 7459,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 10530,
+          "source_vertex_count": 7507,
+          "vertices_moved": false
+        },
+        "stable_id": 154,
+        "triangle_count": 10514,
+        "vertex_count": 7507
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 26,
+            "myosim_body": "cervical_spine"
+          },
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 29,
+            "myosim_body": "clavicle_r"
+          },
+          {
+            "core_body_index": 34,
+            "myosim_body": "scapula_r"
+          }
+        ],
+        "body_weight_count": 4,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "transverse part of right trapezius",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1554.obj",
+        "member_id": "FJ1554",
+        "member_sha256": "f7683d77a5bfe9ac6d07fdc913c46cf41db20298c087e71df73fab18192e90a4",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "cervical_spine": 54,
+            "clavicle_r": 27,
+            "scapula_r": 630,
+            "torso": 56
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.04008950361411098,
+            "minimum": 0.00026706602880371234,
+            "p50": 0.008859494248249195,
+            "p95": 0.029427459027519306
+          },
+          "nearest_support_vertex_count_by_body": {
+            "cervical_spine": 510,
+            "clavicle_r": 110,
+            "scapula_r": 1138,
+            "torso": 1777
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 4,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "cervical_spine": 0.0,
+              "clavicle_r": 0.0,
+              "scapula_r": 0.0,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0.0,
+              "mean": 0.0,
+              "p50": 0,
+              "p95": 0
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 0
+          },
+          "support_body_count": 4,
+          "support_body_names": [
+            "cervical_spine",
+            "torso",
+            "clavicle_r",
+            "scapula_r"
+          ],
+          "support_vertex_count_by_body": {
+            "cervical_spine": 1324,
+            "clavicle_r": 583,
+            "scapula_r": 13118,
+            "torso": 4624
+          },
+          "supports": [
+            {
+              "body": "cervical_spine",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3172",
+              "source_member_sha256": "43bc0a1f9b3adffd5f45256b61f75affa15b56c85b387fa733b59de310216104",
+              "source_triangle_count": 1820,
+              "source_vertex_count": 1324
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3158",
+              "source_member_sha256": "aa69c48def3434d6a3e1c56fc78af45f01545931fde5422af17d5f98ce9ed8a3",
+              "source_triangle_count": 1700,
+              "source_vertex_count": 1078
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3160",
+              "source_member_sha256": "20c1322be138314f42bbd1be3e69f3f6b590bbca7a8a3cd3414476f207721300",
+              "source_triangle_count": 1938,
+              "source_vertex_count": 1161
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3163",
+              "source_member_sha256": "3080ed603c54120fa5201816d77695354c81ea57275c599e68543bfb6ecb89c1",
+              "source_triangle_count": 2038,
+              "source_vertex_count": 1175
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3166",
+              "source_member_sha256": "cbd60a450a8b2f3ee90ccc655f79a63b090d8a3abf5e6849cf288a7b2d4207f2",
+              "source_triangle_count": 2066,
+              "source_vertex_count": 1210
+            },
+            {
+              "body": "clavicle_r",
+              "role": "lateral_clavicular_insertion",
+              "source_member_id": "FJ3362",
+              "source_member_sha256": "9a111cac8351e79dd1315aea90108fe56f78e4bf0159473e6ad727ba91b60e6d",
+              "source_triangle_count": 1146,
+              "source_vertex_count": 583
+            },
+            {
+              "body": "scapula_r",
+              "role": "acromion_scapular_spine_insertion",
+              "source_member_id": "FJ3384",
+              "source_member_sha256": "1641b04e55f9d75bdd6f1f4f07ea596e5dea0a8cb6b348bff47281b8a0bc6e5d",
+              "source_triangle_count": 26172,
+              "source_vertex_count": 13118
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 4,
+          "maximum_vertex_influences": 4,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 4
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              3223,
+              3224
+            ],
+            [
+              3229,
+              3230
+            ],
+            [
+              3306,
+              4076
+            ],
+            [
+              3333,
+              3335
+            ],
+            [
+              3348,
+              3370
+            ],
+            [
+              3360,
+              3365
+            ],
+            [
+              3361,
+              3362
+            ],
+            [
+              3364,
+              3367
+            ],
+            [
+              3368,
+              3369
+            ],
+            [
+              3423,
+              3426
+            ],
+            [
+              3425,
+              3427
+            ],
+            [
+              3664,
+              3671
+            ],
+            [
+              3668,
+              3672
+            ]
+          ],
+          "emitted_triangle_count": 4434,
+          "emitted_vertex_count": 3535,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 13,
+          "removed_visual_support_area_mm2": 0.13387728509128027,
+          "retained_triangle_count": 4434,
+          "retained_vertex_count": 3457,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 4460,
+          "source_vertex_count": 3535,
+          "vertices_moved": false
+        },
+        "stable_id": 155,
+        "triangle_count": 4434,
+        "vertex_count": 3535
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 26,
+            "myosim_body": "cervical_spine"
+          },
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 79,
+            "myosim_body": "clavicle_l"
+          },
+          {
+            "core_body_index": 84,
+            "myosim_body": "scapula_l"
+          }
+        ],
+        "body_weight_count": 4,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "transverse part of left trapezius",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1554M.obj",
+        "member_id": "FJ1554M",
+        "member_sha256": "a08a23c17d20a120eebe96a9c8db1bb86672529fb8f34868d5f7cd28f5df98d5",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "cervical_spine": 49,
+            "clavicle_l": 24,
+            "scapula_l": 626,
+            "torso": 56
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.040197291289701675,
+            "minimum": 0.000250502375056866,
+            "p50": 0.009181549618916793,
+            "p95": 0.03017833628011988
+          },
+          "nearest_support_vertex_count_by_body": {
+            "cervical_spine": 502,
+            "clavicle_l": 110,
+            "scapula_l": 1141,
+            "torso": 1782
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 4,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "cervical_spine": 0.0,
+              "clavicle_l": 0.0,
+              "scapula_l": 0.0,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0.0,
+              "mean": 0.0,
+              "p50": 0,
+              "p95": 0
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 0
+          },
+          "support_body_count": 4,
+          "support_body_names": [
+            "cervical_spine",
+            "torso",
+            "clavicle_l",
+            "scapula_l"
+          ],
+          "support_vertex_count_by_body": {
+            "cervical_spine": 1324,
+            "clavicle_l": 602,
+            "scapula_l": 14068,
+            "torso": 4624
+          },
+          "supports": [
+            {
+              "body": "cervical_spine",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3172",
+              "source_member_sha256": "43bc0a1f9b3adffd5f45256b61f75affa15b56c85b387fa733b59de310216104",
+              "source_triangle_count": 1820,
+              "source_vertex_count": 1324
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3158",
+              "source_member_sha256": "aa69c48def3434d6a3e1c56fc78af45f01545931fde5422af17d5f98ce9ed8a3",
+              "source_triangle_count": 1700,
+              "source_vertex_count": 1078
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3160",
+              "source_member_sha256": "20c1322be138314f42bbd1be3e69f3f6b590bbca7a8a3cd3414476f207721300",
+              "source_triangle_count": 1938,
+              "source_vertex_count": 1161
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3163",
+              "source_member_sha256": "3080ed603c54120fa5201816d77695354c81ea57275c599e68543bfb6ecb89c1",
+              "source_triangle_count": 2038,
+              "source_vertex_count": 1175
+            },
+            {
+              "body": "torso",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3166",
+              "source_member_sha256": "cbd60a450a8b2f3ee90ccc655f79a63b090d8a3abf5e6849cf288a7b2d4207f2",
+              "source_triangle_count": 2066,
+              "source_vertex_count": 1210
+            },
+            {
+              "body": "clavicle_l",
+              "role": "lateral_clavicular_insertion",
+              "source_member_id": "FJ3237",
+              "source_member_sha256": "2491009d53eaed99ccb2a802b29402eec715eb8d207fb819fad67b0720195cf2",
+              "source_triangle_count": 1176,
+              "source_vertex_count": 602
+            },
+            {
+              "body": "scapula_l",
+              "role": "acromion_scapular_spine_insertion",
+              "source_member_id": "FJ3279",
+              "source_member_sha256": "e63a5675c6cdbe942322305920241b4a63762d7a65879572400f444fa3d42739",
+              "source_triangle_count": 28106,
+              "source_vertex_count": 14068
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 4,
+          "maximum_vertex_influences": 4,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 4
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              3223,
+              3224
+            ],
+            [
+              3229,
+              3230
+            ],
+            [
+              3306,
+              4076
+            ],
+            [
+              3333,
+              3335
+            ],
+            [
+              3348,
+              3370
+            ],
+            [
+              3360,
+              3365
+            ],
+            [
+              3361,
+              3362
+            ],
+            [
+              3364,
+              3367
+            ],
+            [
+              3368,
+              3369
+            ],
+            [
+              3423,
+              3426
+            ],
+            [
+              3425,
+              3427
+            ],
+            [
+              3664,
+              3671
+            ],
+            [
+              3668,
+              3672
+            ]
+          ],
+          "emitted_triangle_count": 4434,
+          "emitted_vertex_count": 3535,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 13,
+          "removed_visual_support_area_mm2": 0.13387728509128027,
+          "retained_triangle_count": 4434,
+          "retained_vertex_count": 3457,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 4460,
+          "source_vertex_count": 3535,
+          "vertices_moved": false
+        },
+        "stable_id": 156,
+        "triangle_count": 4434,
+        "vertex_count": 3535
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 23,
+            "myosim_body": "head"
+          },
+          {
+            "core_body_index": 26,
+            "myosim_body": "cervical_spine"
+          },
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 29,
+            "myosim_body": "clavicle_r"
+          },
+          {
+            "core_body_index": 34,
+            "myosim_body": "scapula_r"
+          }
+        ],
+        "body_weight_count": 5,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "descending part of right trapezius",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1521.obj",
+        "member_id": "FJ1521",
+        "member_sha256": "19bd9d1cbbb84e10826eb770068f6e271cd79dde960bca62ac71da24120fc354",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "cervical_spine": 0,
+            "clavicle_r": 447,
+            "head": 1005,
+            "scapula_r": 0,
+            "torso": 0
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.05112493220373276,
+            "minimum": 0.00025038696528961437,
+            "p50": 0.010905308845077436,
+            "p95": 0.04319813813122017
+          },
+          "nearest_support_vertex_count_by_body": {
+            "cervical_spine": 1818,
+            "clavicle_r": 1233,
+            "head": 1683,
+            "scapula_r": 68,
+            "torso": 221
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 5,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "cervical_spine": 0.0,
+              "clavicle_r": 53.4414933000654,
+              "head": 13.889196332402467,
+              "scapula_r": 6.072845386380035,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0.06951100764415587,
+              "mean": 0.014613484972894279,
+              "p50": 0.001689672646234275,
+              "p95": 0.05434178572313
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 3571
+          },
+          "support_body_count": 5,
+          "support_body_names": [
+            "head",
+            "cervical_spine",
+            "torso",
+            "clavicle_r",
+            "scapula_r"
+          ],
+          "support_vertex_count_by_body": {
+            "cervical_spine": 1324,
+            "clavicle_r": 583,
+            "head": 6995,
+            "scapula_r": 13118,
+            "torso": 4624
+          },
+          "supports": [
+            {
+              "body": "head",
+              "role": "occipital_origin",
+              "source_member_id": "FJ3309",
+              "source_member_sha256": "c0262a08591e48504c8a53302525377e0c4ad1c165456475f3bb80aab6202d44",
+              "source_triangle_count": 12450,
+              "source_vertex_count": 6995
+            },
+            {
+              "body": "cervical_spine",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3172",
+              "source_member_sha256": "43bc0a1f9b3adffd5f45256b61f75affa15b56c85b387fa733b59de310216104",
+              "source_triangle_count": 1820,
+              "source_vertex_count": 1324
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3158",
+              "source_member_sha256": "aa69c48def3434d6a3e1c56fc78af45f01545931fde5422af17d5f98ce9ed8a3",
+              "source_triangle_count": 1700,
+              "source_vertex_count": 1078
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3160",
+              "source_member_sha256": "20c1322be138314f42bbd1be3e69f3f6b590bbca7a8a3cd3414476f207721300",
+              "source_triangle_count": 1938,
+              "source_vertex_count": 1161
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3163",
+              "source_member_sha256": "3080ed603c54120fa5201816d77695354c81ea57275c599e68543bfb6ecb89c1",
+              "source_triangle_count": 2038,
+              "source_vertex_count": 1175
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3166",
+              "source_member_sha256": "cbd60a450a8b2f3ee90ccc655f79a63b090d8a3abf5e6849cf288a7b2d4207f2",
+              "source_triangle_count": 2066,
+              "source_vertex_count": 1210
+            },
+            {
+              "body": "clavicle_r",
+              "role": "lateral_clavicular_insertion",
+              "source_member_id": "FJ3362",
+              "source_member_sha256": "9a111cac8351e79dd1315aea90108fe56f78e4bf0159473e6ad727ba91b60e6d",
+              "source_triangle_count": 1146,
+              "source_vertex_count": 583
+            },
+            {
+              "body": "scapula_r",
+              "role": "acromion_scapular_spine_insertion",
+              "source_member_id": "FJ3384",
+              "source_member_sha256": "1641b04e55f9d75bdd6f1f4f07ea596e5dea0a8cb6b348bff47281b8a0bc6e5d",
+              "source_triangle_count": 26172,
+              "source_vertex_count": 13118
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 5,
+          "maximum_vertex_influences": 4,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 5
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              3029,
+              3030
+            ],
+            [
+              3031,
+              3032
+            ],
+            [
+              3047,
+              3048
+            ],
+            [
+              3053,
+              3054
+            ],
+            [
+              3181,
+              3184
+            ],
+            [
+              3317,
+              3319
+            ],
+            [
+              4533,
+              4538
+            ]
+          ],
+          "emitted_triangle_count": 7094,
+          "emitted_vertex_count": 5023,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 7,
+          "removed_visual_support_area_mm2": 0.03389476825111019,
+          "retained_triangle_count": 7094,
+          "retained_vertex_count": 4981,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 7108,
+          "source_vertex_count": 5023,
+          "vertices_moved": false
+        },
+        "stable_id": 157,
+        "triangle_count": 7094,
+        "vertex_count": 5023
+      },
+      {
+        "body_bindings": [
+          {
+            "core_body_index": 23,
+            "myosim_body": "head"
+          },
+          {
+            "core_body_index": 26,
+            "myosim_body": "cervical_spine"
+          },
+          {
+            "core_body_index": 20,
+            "myosim_body": "torso"
+          },
+          {
+            "core_body_index": 79,
+            "myosim_body": "clavicle_l"
+          },
+          {
+            "core_body_index": 84,
+            "myosim_body": "scapula_l"
+          }
+        ],
+        "body_weight_count": 5,
+        "endpoint_source": "registered_passive_anatomical_attachment_support_frames_no_myosim_route",
+        "label": "descending part of left trapezius",
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member": "isa_BP3D_4.0_obj_99/FJ1521M.obj",
+        "member_id": "FJ1521M",
+        "member_sha256": "fe756252f820a47e9c757f67de4ca37adf44837dbe0d10c6d2e5df3a5a6a0751",
+        "passive_visual_binding": {
+          "feather_radius_m": 0.03,
+          "locally_locked_vertex_count_by_body": {
+            "cervical_spine": 0,
+            "clavicle_l": 360,
+            "head": 983,
+            "scapula_l": 0,
+            "torso": 0
+          },
+          "lock_radius_m": 0.004,
+          "mechanics_changed": false,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "nearest_support_distance_m": {
+            "maximum": 0.050979417508099166,
+            "minimum": 0.00022245467127041162,
+            "p50": 0.010975778298013765,
+            "p95": 0.0431386113802098
+          },
+          "nearest_support_vertex_count_by_body": {
+            "cervical_spine": 1796,
+            "clavicle_l": 1246,
+            "head": 1667,
+            "scapula_l": 68,
+            "torso": 222
+          },
+          "softening_radius_m": 0.003,
+          "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+          "sparse_influence_truncation": {
+            "dense_support_frame_count": 5,
+            "limit_per_vertex": 4,
+            "omitted_weight_sum_by_support_body": {
+              "cervical_spine": 0.0,
+              "clavicle_l": 53.01575401604766,
+              "head": 14.831838609229138,
+              "scapula_l": 7.538601043061839,
+              "torso": 0.0
+            },
+            "pre_renormalization_omitted_weight": {
+              "maximum": 0.07046663664160631,
+              "mean": 0.01508025478462464,
+              "p50": 0.0018364272707625967,
+              "p95": 0.05544046931967291
+            },
+            "retained_influences_renormalized_to_unit_sum": true,
+            "vertices_with_nonzero_omitted_dense_weight": 3656
+          },
+          "support_body_count": 5,
+          "support_body_names": [
+            "head",
+            "cervical_spine",
+            "torso",
+            "clavicle_l",
+            "scapula_l"
+          ],
+          "support_vertex_count_by_body": {
+            "cervical_spine": 1324,
+            "clavicle_l": 602,
+            "head": 6995,
+            "scapula_l": 14068,
+            "torso": 4624
+          },
+          "supports": [
+            {
+              "body": "head",
+              "role": "occipital_origin",
+              "source_member_id": "FJ3309",
+              "source_member_sha256": "c0262a08591e48504c8a53302525377e0c4ad1c165456475f3bb80aab6202d44",
+              "source_triangle_count": 12450,
+              "source_vertex_count": 6995
+            },
+            {
+              "body": "cervical_spine",
+              "role": "cervicothoracic_origin",
+              "source_member_id": "FJ3172",
+              "source_member_sha256": "43bc0a1f9b3adffd5f45256b61f75affa15b56c85b387fa733b59de310216104",
+              "source_triangle_count": 1820,
+              "source_vertex_count": 1324
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3158",
+              "source_member_sha256": "aa69c48def3434d6a3e1c56fc78af45f01545931fde5422af17d5f98ce9ed8a3",
+              "source_triangle_count": 1700,
+              "source_vertex_count": 1078
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3160",
+              "source_member_sha256": "20c1322be138314f42bbd1be3e69f3f6b590bbca7a8a3cd3414476f207721300",
+              "source_triangle_count": 1938,
+              "source_vertex_count": 1161
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3163",
+              "source_member_sha256": "3080ed603c54120fa5201816d77695354c81ea57275c599e68543bfb6ecb89c1",
+              "source_triangle_count": 2038,
+              "source_vertex_count": 1175
+            },
+            {
+              "body": "torso",
+              "role": "upper_thoracic_origin",
+              "source_member_id": "FJ3166",
+              "source_member_sha256": "cbd60a450a8b2f3ee90ccc655f79a63b090d8a3abf5e6849cf288a7b2d4207f2",
+              "source_triangle_count": 2066,
+              "source_vertex_count": 1210
+            },
+            {
+              "body": "clavicle_l",
+              "role": "lateral_clavicular_insertion",
+              "source_member_id": "FJ3237",
+              "source_member_sha256": "2491009d53eaed99ccb2a802b29402eec715eb8d207fb819fad67b0720195cf2",
+              "source_triangle_count": 1176,
+              "source_vertex_count": 602
+            },
+            {
+              "body": "scapula_l",
+              "role": "acromion_scapular_spine_insertion",
+              "source_member_id": "FJ3279",
+              "source_member_sha256": "e63a5675c6cdbe942322305920241b4a63762d7a65879572400f444fa3d42739",
+              "source_triangle_count": 28106,
+              "source_vertex_count": 14068
+            }
+          ]
+        },
+        "route_binding": {
+          "binding_body_count": 5,
+          "maximum_vertex_influences": 4,
+          "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+          "myosim_route_added": false,
+          "passive_visual_only": true,
+          "sparse_influence_limit": 4,
+          "support_frame_count": 5
+        },
+        "source_topology_cancellation": {
+          "cancelled_opposite_face_pairs": [
+            [
+              3029,
+              3030
+            ],
+            [
+              3031,
+              3032
+            ],
+            [
+              3047,
+              3048
+            ],
+            [
+              3053,
+              3054
+            ],
+            [
+              3181,
+              3184
+            ],
+            [
+              3317,
+              3319
+            ],
+            [
+              4533,
+              4538
+            ]
+          ],
+          "emitted_triangle_count": 7094,
+          "emitted_vertex_count": 4999,
+          "emitted_vertices_compacted": false,
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 7,
+          "removed_visual_support_area_mm2": 0.03389476825111019,
+          "retained_triangle_count": 7094,
+          "retained_vertex_count": 4971,
+          "source_coordinate_support_preserved": false,
+          "source_triangle_count": 7108,
+          "source_vertex_count": 4999,
+          "vertices_moved": false
+        },
+        "stable_id": 158,
+        "triangle_count": 7094,
+        "vertex_count": 4999
+      }
+    ]
+  },
+  "status": "passive_registered_support_visual_input_not_collision_or_physics"
+}
