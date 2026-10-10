@@ -27,7 +27,9 @@ class RestingRunAdmissionTests(unittest.TestCase):
             "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
             "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
             "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "8",
-            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "1",
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP": "173",
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP": "221",
             "NUMI_HUMAN_STAND_CONTACT_WARMSTART": "0",
             "NUMI_HUMAN_BRAIN_MOTOR_V2": "1",
             "NUMI_HUMAN_STATIC_EQUILIBRIUM_CACHE_KEY": "state-key",
@@ -377,7 +379,9 @@ class RestingRunAdmissionTests(unittest.TestCase):
                                        "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
                                        "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
                                        "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
-                                       "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
+                                       "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "1",
+                                       "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP": "173",
+                                       "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP": "221",
                                        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json"}), \
              patch("numilab_human.resting_run.subprocess.run", side_effect=native):
             self.assertEqual(run(self.args), 0)
@@ -387,7 +391,9 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS"], "8")
-        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT"], "0")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT"], "1")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP"], "173")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP"], "221")
         for key in ("NUMI_HUMAN_STAND_SPARSE_OPERATOR", "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES",
                     "NUMI_HUMAN_STAND_REDUCED_CHOLESKY", "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION",
                     "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA", "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM",
