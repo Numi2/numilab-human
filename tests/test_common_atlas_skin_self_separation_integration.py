@@ -423,3 +423,40 @@ def test_helper_sample_receipts_are_remapped_to_actual_accepted_pose(monkeypatch
         "sample_index": 0,
         "face_pair": [1, 2],
     }]
+
+
+def test_callsite_retains_rejection_diagnostics_and_maps_sample_to_accepted_pose(monkeypatch):
+    args = _clearance_case()
+    calls = 0
+    attempts, scans = [], []
+
+    def self_audit(**_kwargs):
+        nonlocal calls
+        calls += 1
+        return _fake_self_audit([(1, 2)] if calls == 2 else [])
+
+    def reject(**_kwargs):
+        error = ImportError("Float32-rounded diagnostic fixture")
+        error.local_self_separation_diagnostics = {
+            "rejection_stage": "rounded",
+            "requested": {"sat_pass": True, "minimum_sat_constraint": {
+                "sample_index": 0, "face_pair": [1, 2], "row_index": 4}},
+            "rounded": {"sat_pass": False, "minimum_sat_constraint": {
+                "sample_index": 0, "face_pair": [1, 2], "row_index": 7}},
+        }
+        raise error
+
+    monkeypatch.setattr(clearance, "audit_incremental_skin_self_intersections", self_audit)
+    monkeypatch.setattr(clearance, "_propose_local_self_separation_increment", reject)
+    args["progress_callback"] = attempts.append
+    args["scan_progress_callback"] = scans.append
+    with pytest.raises(ImportError, match="could not admit.*Float32-rounded diagnostic"):
+        clearance.derive_shared_multipose_inferred_clearance(**args)
+    assert len(attempts) == 1 and attempts[0]["status"] == "rejected"
+    assert scans == []
+    failure = attempts[0]["candidate_diagnostics"]["local_self_separation_failure"]
+    assert failure["requested"]["sat_pass"] is True
+    assert failure["rounded"]["sat_pass"] is False
+    for stage in ("requested", "rounded"):
+        assert failure[stage]["minimum_sat_constraint"]["sample_index"] == 0
+        assert failure[stage]["minimum_sat_constraint"]["pose_index"] == 1

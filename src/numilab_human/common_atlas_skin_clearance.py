@@ -1448,6 +1448,7 @@ def _propose_local_self_separation_increment(
     nvar = 3 * len(movable)
     constraints: list[np.ndarray] = []
     rhs_rows: list[float] = []
+    constraint_receipts: list[dict[str, Any]] = []
     pair_receipts: list[dict[str, Any]] = []
     rows_by_pose: list[int] = []
     for pose_index, sample in enumerate(checked):
@@ -1517,6 +1518,13 @@ def _propose_local_self_separation_increment(
                         continue
                     constraints.append(row)
                     rhs_rows.append(required_mm)
+                    constraint_receipts.append({
+                        "sample_index": pose_index, "face_pair": [face_a, face_b],
+                        "source_vertex_pair": [int(source_a), int(source_b)],
+                        "axis_unit_world": axis.tolist(),
+                        "accepted_sat_gap_mm": gap_mm,
+                        "required_projection_change_mm": required_mm,
+                    })
             pair_receipts.append({"pose_index": pose_index, "face_pair": [face_a, face_b],
                                   "accepted_sat_gap_mm": gap_mm, "maximum_required_projection_change_mm": max_rhs})
         rows_by_pose.append(len(constraints) - start)
@@ -1610,13 +1618,92 @@ def _propose_local_self_separation_increment(
     requested = np.asarray(result.x, dtype=np.float64).reshape(len(movable), 3)
     requested_slack = matrix @ result.x - rhs
     requested_l2 = np.linalg.norm(requested, axis=1)
+
+    def reject_with_gate_diagnostics(
+        message: str, *, stage: str, rounded: np.ndarray | None = None,
+        rounding_allowance: np.ndarray | None = None,
+    ) -> None:
+        # Observation only: preserve the optimizer, Float32 conversion, and every
+        # admission threshold. Failure records must identify the failing gate
+        # before any numerical or geometric correction is considered.
+        def scalar(value: float) -> float | None:
+            value = float(value)
+            return value if math.isfinite(value) else None
+
+        def describe(delta: np.ndarray, component_allowance: np.ndarray | float,
+                     l2_allowance: float) -> dict[str, Any]:
+            slack = matrix @ delta.reshape(-1) - rhs
+            l2 = np.linalg.norm(delta, axis=1)
+            component_margin = cap + component_allowance + 1.0e-10 - np.abs(delta)
+            finite_slack = np.isfinite(slack)
+            minimum_row = int(np.argmin(slack)) if finite_slack.all() else None
+            max_vertex = int(np.argmax(l2)) if np.isfinite(l2).all() else None
+            component_index = (np.unravel_index(int(np.argmin(component_margin)),
+                                               component_margin.shape)
+                               if np.isfinite(component_margin).all() else None)
+            details = {
+                "finite_increment": bool(np.isfinite(delta).all()),
+                "finite_sat_slack": bool(finite_slack.all()),
+                "sat_pass": bool(finite_slack.all() and
+                                 float(slack.min()) >= -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM),
+                "component_pass": bool(np.isfinite(component_margin).all() and
+                                       np.all(component_margin >= 0.0)),
+                "l2_pass": bool(np.isfinite(l2).all() and np.all(
+                    l2 <= _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM + l2_allowance)),
+                "minimum_sat_slack_mm": scalar(slack.min()),
+                "sat_tolerance_mm": _LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM,
+                "minimum_sat_constraint": ({"row_index": minimum_row,
+                                            **constraint_receipts[minimum_row]}
+                                           if minimum_row is not None else None),
+                "max_abs_component_mm": scalar(np.abs(delta).max()),
+                "component_base_cap_mm": cap,
+                "component_rounding_allowance_max_mm": scalar(np.max(component_allowance)),
+                "component_numerical_allowance_mm": 1.0e-10,
+                "minimum_component_margin_mm": scalar(component_margin.min()),
+                "minimum_component_margin_source_vertex_id": (
+                    int(movable[component_index[0]]) if component_index is not None else None),
+                "minimum_component_margin_axis": (
+                    int(component_index[1]) if component_index is not None else None),
+                "max_vertex_l2_mm": scalar(l2.max()),
+                "max_l2_source_vertex_id": int(movable[max_vertex]) if max_vertex is not None else None,
+                "l2_cap_mm": _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM,
+                "l2_numerical_allowance_mm": l2_allowance,
+            }
+            return details
+
+        details: dict[str, Any] = {
+            "rejection_stage": stage,
+            "constraint_count": len(rhs),
+            "variable_count": nvar,
+            "optimizer": {
+                "success": bool(result.success),
+                "status": int(getattr(result, "status", -1)),
+                "message": str(getattr(result, "message", "")),
+                "iterations": int(getattr(result, "nit", -1)),
+                "objective": scalar(0.5 * float(result.x @ (q_matrix @ result.x))),
+            },
+            "requested": describe(requested, 0.0, 1.0e-10),
+        }
+        if rounded is not None:
+            assert rounding_allowance is not None
+            details["rounded"] = describe(rounded, rounding_allowance, 1.0e-9)
+            quantization = rounded - requested
+            details["float32_quantization_error_max_abs_component_mm"] = scalar(np.abs(quantization).max())
+            details["float32_quantization_error_max_vertex_l2_mm"] = scalar(
+                np.linalg.norm(quantization, axis=1).max())
+            details["finite_component_rounding_allowance"] = bool(np.isfinite(rounding_allowance).all())
+        error = human.ImportError(message)
+        error.local_self_separation_diagnostics = details
+        raise error
+
     if (not np.isfinite(requested).all()
             or np.any(np.abs(requested) > cap + 1.0e-10)
             or not np.isfinite(requested_slack).all()
             or float(requested_slack.min()) < -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM
             or np.any(requested_l2 > _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM + 1.0e-10)):
-        raise human.ImportError(
-            "local self-separation optimizer failed the linear constraint, component bound, or 1 mm L2 bound"
+        reject_with_gate_diagnostics(
+            "local self-separation optimizer failed the linear constraint, component bound, or 1 mm L2 bound",
+            stage="requested",
         )
 
     proposed = source.copy()
@@ -1637,8 +1724,10 @@ def _propose_local_self_separation_increment(
             or np.any(actual_component > cap + component_rounding_tolerance_mm + 1.0e-10)
             or not np.isfinite(rounded_slack).all()
             or float(rounded_slack.min()) < -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM):
-        raise human.ImportError(
-            "Float32-rounded local proposal fails its SAT constraints, component bound, or 1 mm L2 bound"
+        reject_with_gate_diagnostics(
+            "Float32-rounded local proposal fails its SAT constraints, component bound, or 1 mm L2 bound",
+            stage="rounded", rounded=actual_mm,
+            rounding_allowance=component_rounding_tolerance_mm,
         )
     if proposed[protected].tobytes() != source[protected].tobytes():
         raise human.ImportError("local self-separation changed a protected target, support, or anchor row")
@@ -4038,11 +4127,19 @@ def derive_shared_multipose_inferred_clearance(
                     trial_regularization["local_self_separation"] = local_self_separation
                 except human.ImportError as error:
                     rejection = f"local self-separation proposal rejected: {error}"
+                    failure_diagnostics = dict(trial_regularization or {"self_pair_failures": [
+                        {"pose_index": pose, "triangle_pairs": pairs.tolist()}
+                        for pose, pairs in failed_pairs
+                    ]})
+                    proposal_failure = getattr(error, "local_self_separation_diagnostics", None)
+                    if proposal_failure is not None:
+                        for stage in ("requested", "rounded"):
+                            row = proposal_failure.get(stage, {}).get("minimum_sat_constraint")
+                            if row is not None:
+                                row["pose_index"] = int(failed_pairs[row["sample_index"]][0])
+                        failure_diagnostics["local_self_separation_failure"] = proposal_failure
                     emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
-                               diagnostics=trial_regularization or {"self_pair_failures": [
-                                   {"pose_index": pose, "triangle_pairs": pairs.tolist()}
-                                   for pose, pairs in failed_pairs
-                               ]})
+                               diagnostics=failure_diagnostics)
                     continue
             if any(int(row["count"]) != 0 for row in trial_self_audits):
                 rejection = "trial retains an exact skin self-intersection before target scans"

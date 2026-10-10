@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 import numpy as np
 import pytest
 
@@ -126,8 +128,18 @@ def test_local_self_separation_rechecks_optimizer_component_bound(monkeypatch):
         return result
 
     monkeypatch.setattr(scipy.optimize, "minimize", component_bound_violation)
-    with pytest.raises(ImportError, match="component bound"):
+    with pytest.raises(ImportError, match="component bound") as caught:
         _propose_local_self_separation_increment(**args)
+    diagnostics = caught.value.local_self_separation_diagnostics
+    assert diagnostics["rejection_stage"] == "requested"
+    assert diagnostics["requested"]["component_pass"] is False
+    assert diagnostics["requested"]["sat_pass"] is True
+    assert diagnostics["requested"]["l2_pass"] is True
+    assert diagnostics["requested"]["minimum_component_margin_mm"] == pytest.approx(-0.01, abs=1e-9)
+    assert diagnostics["requested"]["minimum_component_margin_source_vertex_id"] == 3
+    assert diagnostics["requested"]["minimum_component_margin_axis"] == 2
+    assert "rounded" not in diagnostics
+    json.dumps(diagnostics, allow_nan=False)
 
 
 @pytest.mark.parametrize(
@@ -160,8 +172,22 @@ def test_local_self_separation_rejects_a_float32_rounding_that_breaks_sat_constr
         world_origin_z=0.1,
         source_world_offset_z=0.2,
     )
-    with pytest.raises(ImportError, match="Float32-rounded"):
+    with pytest.raises(ImportError, match="Float32-rounded") as caught:
         _propose_local_self_separation_increment(**args)
+    diagnostics = caught.value.local_self_separation_diagnostics
+    assert diagnostics["rejection_stage"] == "rounded"
+    assert all(diagnostics["requested"][key] for key in ("sat_pass", "component_pass", "l2_pass"))
+    assert diagnostics["rounded"]["sat_pass"] is False
+    assert diagnostics["rounded"]["component_pass"] is True
+    assert diagnostics["rounded"]["l2_pass"] is True
+    row = diagnostics["rounded"]["minimum_sat_constraint"]
+    assert row["sample_index"] == 0 and row["face_pair"] == [0, 1]
+    assert row["source_vertex_pair"][0] in [0, 1, 2]
+    assert row["source_vertex_pair"][1] in [3, 4, 5]
+    assert row["axis_unit_world"] == [0.0, 0.0, 1.0]
+    assert diagnostics["float32_quantization_error_max_abs_component_mm"] > 0.0
+    assert diagnostics["optimizer"]["success"] is True
+    json.dumps(diagnostics, allow_nan=False)
 
 
 def test_local_self_separation_rejects_infeasible_fixed_one_millimeter_bound():
