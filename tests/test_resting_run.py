@@ -35,6 +35,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
             "NUMI_HUMAN_STATIC_EQUILIBRIUM_CACHE_KEY": "state-key",
             "NUMI_MATTER_GPU_TIMING_DENSE45": "0",
             "NUMI_HUMAN_STAND_SOURCE_ASSEMBLY_DUMP": "0",
+            "NUMI_HUMAN_ACCEPTED_FORCE_AUDIT": "1",
             "NUMI_HUMAN_FUTURE_UNRELATED_SETTING": "secret",
         }
         retained = invocation_environment(selected)
@@ -42,6 +43,14 @@ class RestingRunAdmissionTests(unittest.TestCase):
                     if key != "NUMI_HUMAN_FUTURE_UNRELATED_SETTING"}
         self.assertEqual(retained, expected)
         self.assertNotIn("NUMI_HUMAN_FUTURE_UNRELATED_SETTING", retained)
+
+    def test_force_audit_environment_retains_supported_flag_and_rejects_unlisted_bound(self):
+        selected = {
+            "NUMI_HUMAN_ACCEPTED_FORCE_AUDIT": "1",
+            "NUMI_HUMAN_ACCEPTED_FORCE_AUDIT_FIRST_STEP": "152501",
+        }
+        self.assertEqual(invocation_environment(selected),
+                         {"NUMI_HUMAN_ACCEPTED_FORCE_AUDIT": "1"})
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -379,10 +388,12 @@ class RestingRunAdmissionTests(unittest.TestCase):
                                        "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
                                        "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
                                        "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
+                                       "NUMI_HUMAN_ACCEPTED_FORCE_AUDIT": "1",
                                        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "1",
                                        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP": "173",
                                        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP": "221",
-                                       "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json"}), \
+                                       "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json",
+                                       "NUMI_HUMAN_ACCEPTED_FORCE_AUDIT_UNLISTED": "secret"}), \
              patch("numilab_human.resting_run.subprocess.run", side_effect=native):
             self.assertEqual(run(self.args), 0)
         receipt = json.loads((self.args.output / "run-metadata.json").read_text())
@@ -391,6 +402,8 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS"], "8")
+        self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_FORCE_AUDIT"], "1")
+        self.assertNotIn("NUMI_HUMAN_ACCEPTED_FORCE_AUDIT_UNLISTED", receipt["environment"])
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT"], "1")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP"], "173")
         self.assertEqual(receipt["environment"]["NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP"], "221")
