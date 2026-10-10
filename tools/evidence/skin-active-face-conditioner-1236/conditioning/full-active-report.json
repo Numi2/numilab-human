@@ -1,0 +1,162 @@
+{
+  "active_faces_per_pose_count": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    155,
+    163,
+    167,
+    164
+  ],
+  "active_union_face_count": 168,
+  "candidate": {
+    "dtype": "float32",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/bilateral-source-qp-001/qp-dual-localcheck-018-root/result-001/unadmitted-compact-source.npy",
+    "sha256": "d319d85ac3fd74f7bcadfbc54361cda5a956cdf1fc90f9539f8c0c6de59884d1",
+    "shape": [
+      54663,
+      3
+    ]
+  },
+  "conditioned_directions_npy": {
+    "dtype": "<f8",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/resume-prepare-d319-004/conditioning-full-active-1236/run-001/conditioned-source-directions.npy",
+    "sha256": "8dd730eea1b8e68fe20bee32e25f3b631168a6df9e4bce13dac46797e8dc190c",
+    "shape": [
+      54663,
+      3
+    ]
+  },
+  "conditioner_report": {
+    "conditioned_compact_vertex_ids": [
+      30182,
+      30204
+    ],
+    "conditioned_vertex_count": 2,
+    "maximum_source_direction_change_radians": 0.10036359865362376,
+    "minimum_active_projection_after": 0.5000009999541253,
+    "minimum_active_projection_before": 0.412000136408118,
+    "nonconverged_feasible_projections": [
+      {
+        "compact_vertex_id": 30204,
+        "minimum_all_constraint_alignment": 0.5000009999541253,
+        "optimizer_iterations": 41,
+        "optimizer_message": "Positive directional derivative for linesearch",
+        "optimizer_status": 8,
+        "optimizer_success": false,
+        "result_norm_before_normalization": 0.9999739717501864
+      }
+    ],
+    "selection_projection_with_numerical_margin": 0.500001,
+    "unchanged_admission_projection": 0.5
+  },
+  "elapsed_conditioning_wall_seconds": 2.1421497920528054,
+  "elapsed_total_after_preflight_wall_seconds": 22.961381417699158,
+  "error": null,
+  "first_20_offending_compact_ids": [
+    30182,
+    30204
+  ],
+  "fit_adapter": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/fit-attempt-002-adapter-revision-003/fit_17_pose_source_clearance.py",
+    "sha256": "3b7d33b5a697822a0dc93140906e2b6933c013161bbff8dc2f8c2ad6177650e1"
+  },
+  "frozen_owner": {
+    "path": "/Users/n/numi-human-conforming-composition-source-1216/src/numilab_human/common_atlas_skin_clearance.py",
+    "sha256": "ec198693fce562db27c4b761e3dbbc4b1bff4f0b9458ae67ab7ba596a97a000f"
+  },
+  "full17_gate": {
+    "coverage_per_pose": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/candidate-full-gates-001/d319d85ac3fd/candidate-verification.json",
+    "pose_count": 17,
+    "sha256": "d7a92b15995a84609e8a56e50c89e6977a75320790065733ac4bca21cb5601b1",
+    "target_tables": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/local-self-reduction-audit-001/candidate-full-gates-001/d319d85ac3fd/candidate-target-pair-tables.json",
+      "sha256": "25901e7caebcee0429ba1bc3076fc5e132d13a2fff316fd027961bae580cb2f5"
+    }
+  },
+  "input_pin_count": 758,
+  "inputs_unchanged": true,
+  "offending_vertex_count": 2,
+  "optimizer_call_count": 2,
+  "optimizer_calls": [
+    {
+      "call_index": 0,
+      "compact_vertex_id": 30182,
+      "constraint_count": 85,
+      "message": "Optimization terminated successfully",
+      "minimum_normalized_all_constraint_alignment": 0.5000009999999999,
+      "nit": 4,
+      "objective": 0.005019538271451862,
+      "result_norm": 0.9949678002287257,
+      "result_x": [
+        -0.9766905522208382,
+        -0.17160643996745628,
+        -0.08116476117280966
+      ],
+      "status": 0,
+      "success": true
+    },
+    {
+      "call_index": 1,
+      "compact_vertex_id": 30204,
+      "constraint_count": 68,
+      "message": "Positive directional derivative for linesearch",
+      "minimum_normalized_all_constraint_alignment": 0.5000009999541253,
+      "nit": 41,
+      "objective": 2.6027832935956434e-05,
+      "result_norm": 0.9999739717501864,
+      "result_x": [
+        -0.982606008911873,
+        -0.15893453230057608,
+        -0.09577677103828383
+      ],
+      "status": 8,
+      "success": false
+    }
+  ],
+  "patched_worktree_owner": {
+    "path": "/Users/n/numi-human-feasible-direction-1236/src/numilab_human/common_atlas_skin_clearance.py",
+    "sha256": "a1c24cc7530ee13f0011be63dbb735c35ed37041b501260121835d00791dccfc"
+  },
+  "pose_count": 17,
+  "preferred_direction_summary": {
+    "maximum_jacobian_condition_number": 1.7748569397916774,
+    "maximum_pose_outward_alignment": 1.0,
+    "minimum_jacobian_singular_value_m_per_source_m": 0.7573299854435099,
+    "minimum_pose_outward_alignment": 0.9289302605613055,
+    "minimum_pullback_resultant_coherence": 0.9855652944632842
+  },
+  "qualification": "17-pose active-face direction conditioning only; reused pinned d319 forwards/tables, no target/self intersection scans, no fit, no asset/native changes.",
+  "schema": "numi.human.active-face-direction-conditioning-1236.v1",
+  "status": "conditioned_all_active_faces",
+  "worktree_head": "a438655af5efd47dee47bc1971fda8e64ca5a82e"
+}

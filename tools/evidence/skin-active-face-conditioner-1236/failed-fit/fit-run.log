@@ -1,0 +1,31 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/resume-prepare-d319-004/resume_candidate_1218.py", line 350, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/resume-prepare-d319-004/resume_candidate_1218.py", line 329, in main
+    rc = int(fit.main())
+             ~~~~~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/fit-attempt-002-adapter-revision-003/fit_17_pose_source_clearance.py", line 812, in main
+    candidate, fit_report = c.derive_shared_multipose_inferred_clearance(
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        source_positions=CURRENT_SKIN["pos"].astype("<f4").astype(float), faces=skin_faces,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+        closed_target_face_counts=face_counts,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        closed_target_outer_envelope_keys={"51005:63", "51005:64"})
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/resume-prepare-d319-004/resume_candidate_1218.py", line 322, in resume_once
+    return original(**kwargs)
+  File "/Users/n/numi-human-conforming-composition-source-1216/src/numilab_human/common_atlas_skin_clearance.py", line 2499, in derive_shared_multipose_inferred_clearance
+    source_directions, conditioning_report = _condition_shared_source_directions(
+                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        current_maps, source_directions, active_compact, active_normals,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/n/numi-human-conforming-composition-source-1216/src/numilab_human/common_atlas_skin_clearance.py", line 918, in _condition_shared_source_directions
+    raise human.ImportError(
+    ...<2 lines>...
+    )
+numilab_human.model.ImportError: active-face direction conditioning found no nonzero converged direction at vertex=30204: Positive directional derivative for linesearch

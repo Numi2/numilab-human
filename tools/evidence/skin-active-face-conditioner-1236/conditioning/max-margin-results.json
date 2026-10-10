@@ -1,0 +1,87 @@
+{
+  "scope": "Independent numerical constraint probe only. No fit, source candidate, assets or native state changed.",
+  "input_pins": {
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/resume-prepare-d319-004/conditioning-vertex-30204-004/vertex-constraints.npz": "eef0cb18ea36a4da0d9b16bc94f397bcd47b178b90e476f4917b2be9ba84741d",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/direction-conditioning-diagnostic-1236/max_margin_probe.py": "b61155f1cac0dde4463f6df114b6c6fa04c0cac6f6cc1dcecae7abdbda5711af"
+  },
+  "old_projection_independent_check": {
+    "normalized_direction": [
+      -0.9826315850922445,
+      -0.15893866919596294,
+      -0.09577926400489431
+    ],
+    "minimum_normalized_alignment": 0.5000009999541253,
+    "minimum_required": 0.5,
+    "independent_alignment_gate_pass": true
+  },
+  "max_margin_attempts": [
+    {
+      "seed": "origin",
+      "success": true,
+      "message": "Optimization terminated successfully",
+      "iterations": 7,
+      "optimizer_x": [
+        -0.8973330690300915,
+        0.3956230933794626,
+        -0.19564184422025396,
+        0.3572745243170772
+      ],
+      "norm": 1.0,
+      "minimum_constraint_residual": 0.0,
+      "normalized_direction": [
+        -0.8973330690300915,
+        0.3956230933794626,
+        -0.19564184422025396
+      ],
+      "minimum_normalized_alignment": 0.8561281806434634,
+      "meets_unchanged_half_alignment": true,
+      "interpretation": "A independently rechecked direction is a numerical feasibility witness; failed searches do not prove infeasibility."
+    },
+    {
+      "seed": "preferred",
+      "success": true,
+      "message": "Optimization terminated successfully",
+      "iterations": 6,
+      "optimizer_x": [
+        -0.8973330690301045,
+        0.39562309337946894,
+        -0.19564184422025657,
+        0.35727452431708456
+      ],
+      "norm": 1.0000000000000147,
+      "minimum_constraint_residual": -2.930988785010413e-14,
+      "normalized_direction": [
+        -0.8973330690300914,
+        0.39562309337946316,
+        -0.1956418442202537
+      ],
+      "minimum_normalized_alignment": 0.8561281806434639,
+      "meets_unchanged_half_alignment": true,
+      "interpretation": "A independently rechecked direction is a numerical feasibility witness; failed searches do not prove infeasibility."
+    },
+    {
+      "seed": "pulled-normal-centre",
+      "success": true,
+      "message": "Optimization terminated successfully",
+      "iterations": 5,
+      "optimizer_x": [
+        -0.8973330690300932,
+        0.39562309337946466,
+        -0.19564184422025493,
+        0.35727452431707807
+      ],
+      "norm": 1.0000000000000024,
+      "minimum_constraint_residual": -5.10702591327572e-15,
+      "normalized_direction": [
+        -0.897333069030091,
+        0.3956230933794637,
+        -0.19564184422025446
+      ],
+      "minimum_normalized_alignment": 0.8561281806434636,
+      "meets_unchanged_half_alignment": true,
+      "interpretation": "A independently rechecked direction is a numerical feasibility witness; failed searches do not prove infeasibility."
+    }
+  ],
+  "elapsed_seconds": 0.0020250407978892326,
+  "pins_unchanged": true
+}
