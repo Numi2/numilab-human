@@ -169,6 +169,279 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
                     "subtriangle_count": len(result)}
 
 
+def _exact_triangle_normal(triangle):
+    return predicates._cross(predicates._sub(triangle[1], triangle[0]),
+                             predicates._sub(triangle[2], triangle[0]))
+
+
+def _bounded_normal_probe(point, normal, records):
+    """Choose a rational normal offset before the next nonzero source-plane crossing."""
+    nearest = None
+    for triangle, _lower, _upper, _face_id, _ids in records:
+        other_normal = _exact_triangle_normal(triangle)
+        denominator = predicates._dot(other_normal, normal)
+        numerator = predicates._dot(other_normal, predicates._sub(triangle[0], point))
+        if denominator == 0:
+            require(numerator != 0,
+                    "normal probe line lies in another source face plane")
+            continue
+        crossing = Fraction(numerator, denominator)
+        if crossing == 0:
+            continue
+        distance = abs(crossing)
+        nearest = distance if nearest is None else min(nearest, distance)
+    require(nearest is not None and nearest > 0,
+            "no bounded nonzero source-plane crossing for normal probes")
+    return nearest / 2
+
+
+def _point_on_segment(point, segment):
+    return _on_edge(point, segment[0], segment[1])
+
+
+def _oriented_surface_topology(records):
+    """Collect exact child half-edges before distinguishing arrangement cuts."""
+    edge_uses = defaultdict(list)
+    for child_id, (triangle, _lower, _upper, _face_id, ids) in enumerate(records):
+        for a, b in zip(ids, ids[1:] + ids[:1]):
+            edge_uses[tuple(sorted((a, b)))].append((child_id, a, b))
+    return edge_uses
+
+
+def construct_nonzero_winding_self_union(source_surface):
+    """Extract the exact boundary of the nonzero signed-winding set of one shell.
+
+    Only transverse, segment-valued self-intersections are supported. The
+    arrangement splits every incident source face, classifies each connected
+    ordinary-face patch using exact probes before the next source-plane
+    crossing, and retains patches separating zero from nonzero winding.
+    Coplanar, point-only, unresolved, or nonmanifold arrangements fail closed.
+    This is a rational source-space result; Float32 conversion requires a
+    separate audit and is not implied here.
+    """
+    require(isinstance(source_surface, dict), "expected one named source surface")
+    vertices = source_surface.get("vertices")
+    faces = source_surface.get("triangles")
+    source_sha = source_surface.get("source_sha256")
+    require(isinstance(vertices, (list, tuple)) and vertices and
+            isinstance(faces, list) and faces and
+            isinstance(source_sha, str) and len(source_sha) == 64 and
+            all(c in "0123456789abcdef" for c in source_sha),
+            "invalid source surface identity or geometry")
+    exact_vertices = []
+    for point in vertices:
+        require(isinstance(point, (list, tuple)) and len(point) == 3 and
+                all(type(value) is int or isinstance(value, Fraction) for value in point),
+                "source coordinates must be exact integer or Fraction triples")
+        exact_vertices.append(tuple(Fraction(value) for value in point))
+    require(all(isinstance(face, (list, tuple)) and len(face) == 3 and
+                all(type(index) is int and 0 <= index < len(exact_vertices) for index in face)
+                for face in faces), "invalid source triangle indices")
+
+    records = predicates._records(exact_vertices, faces)
+    prepared = predicates.prepare_signed_winding(records)
+    intersection_audit = predicates._audit_pair(records, records, same_surface=True)
+    segments_by_face = defaultdict(set)
+    boundary_points_by_face = defaultdict(set)
+    edge_faces = defaultdict(list)
+    for face_id, face in enumerate(faces):
+        for a, b in zip(face, face[1:] + face[:1]):
+            edge_faces[tuple(sorted((a, b)))].append(face_id)
+
+    segments = []
+    for first_id, second_id in intersection_audit["triangle_pairs"]:
+        first, second = records[first_id][0], records[second_id][0]
+        first_normal, second_normal = (_exact_triangle_normal(first),
+                                       _exact_triangle_normal(second))
+        points = sorted(set(predicates.triangle_intersection_points(first, second)))
+        require(len(points) >= 2,
+                "point-only self-contact is unsupported")
+        require(any(predicates._cross(first_normal, second_normal)),
+                "coplanar self-intersection is unsupported")
+        start, end = points[0], points[-1]
+        require(start != end and all(_point_on_segment(point, (start, end)) for point in points),
+                "self-intersection is not one exact transverse segment")
+        segments.append({"face_pair": [first_id, second_id], "endpoints": (start, end)})
+        segments_by_face[first_id].add((start, end))
+        segments_by_face[second_id].add((start, end))
+        for face_id in (first_id, second_id):
+            face = faces[face_id]
+            for a, b in zip(face, face[1:] + face[:1]):
+                if any(_point_on_segment(point, (exact_vertices[a], exact_vertices[b]))
+                       for point in (start, end)):
+                    for neighbor in edge_faces[tuple(sorted((a, b)))]:
+                        for point in (start, end):
+                            if _point_on_segment(point, (exact_vertices[a], exact_vertices[b])):
+                                boundary_points_by_face[neighbor].add(point)
+
+    child_triangles = []
+    child_parent = []
+    for face_id, face in enumerate(faces):
+        triangle = tuple(exact_vertices[index] for index in face)
+        children = subdivide_triangle(
+            triangle,
+            sorted(segments_by_face[face_id]),
+            sorted(boundary_points_by_face[face_id]),
+        )
+        child_triangles.extend(children)
+        child_parent.extend([face_id] * len(children))
+
+    child_vertices = sorted({point for triangle in child_triangles for point in triangle})
+    child_vertex_id = {point: index for index, point in enumerate(child_vertices)}
+    child_faces = [tuple(child_vertex_id[point] for point in triangle)
+                   for triangle in child_triangles]
+    child_records = predicates._records(child_vertices, child_faces)
+    edge_uses = _oriented_surface_topology(child_records)
+
+    cut_edges = set()
+    for child_id, triangle in enumerate(child_triangles):
+        parent_id = child_parent[child_id]
+        parent_segments = segments_by_face[parent_id]
+        for a, b in zip(triangle, triangle[1:] + triangle[:1]):
+            if any(_point_on_segment(a, segment) and _point_on_segment(b, segment)
+                   for segment in parent_segments):
+                cut_edges.add(tuple(sorted((child_vertex_id[a], child_vertex_id[b]))))
+
+    for edge, uses in edge_uses.items():
+        if edge in cut_edges:
+            forward = sum(first < second for _child, first, second in uses)
+            reverse = len(uses) - forward
+            require(len(uses) >= 4 and len(uses) % 2 == 0 and forward == reverse,
+                    "intersection arrangement edge has unbalanced oriented incidence")
+        else:
+            require(len(uses) == 2, "subdivision did not produce a closed two-face ordinary edge")
+            first, second = uses
+            require(first[1] == second[2] and first[2] == second[1],
+                    "subdivision produced inconsistent ordinary edge orientation")
+
+    adjacency = [set() for _ in child_triangles]
+    for edge, uses in edge_uses.items():
+        if edge in cut_edges:
+            continue
+        first, second = uses
+        adjacency[first[0]].add(second[0])
+        adjacency[second[0]].add(first[0])
+
+    patches = []
+    unseen = set(range(len(child_triangles)))
+    while unseen:
+        seed = min(unseen)
+        component = []
+        pending = [seed]
+        while pending:
+            child_id = pending.pop()
+            if child_id not in unseen:
+                continue
+            unseen.remove(child_id)
+            component.append(child_id)
+            pending.extend(adjacency[child_id] & unseen)
+        representative_id = min(component)
+        triangle = child_triangles[representative_id]
+        point = tuple(sum(vertex[axis] for vertex in triangle) / 3 for axis in range(3))
+        require(not any(_point_on_segment(point, segment["endpoints"]) for segment in segments),
+                "arrangement patch representative lies on an intersection segment")
+        normal = _exact_triangle_normal(triangle)
+        step = _bounded_normal_probe(point, normal, records)
+        minus_point = tuple(point[axis] - step * normal[axis] for axis in range(3))
+        plus_point = tuple(point[axis] + step * normal[axis] for axis in range(3))
+        minus = predicates.signed_winding_number(minus_point, prepared)
+        plus = predicates.signed_winding_number(plus_point, prepared)
+        require(minus["status"] == plus["status"] == "resolved",
+                "self-union side winding is boundary or indeterminate")
+        winding_minus, winding_plus = minus["winding_number"], plus["winding_number"]
+        require(winding_minus == winding_plus + 1,
+                "oriented patch does not separate adjacent winding levels by +1")
+        if winding_minus != 0 and winding_plus == 0:
+            keep, reverse = True, False
+        elif winding_minus == 0 and winding_plus != 0:
+            keep, reverse = True, True
+        else:
+            keep, reverse = False, False
+        patches.append({
+            "patch_id": len(patches),
+            "child_face_ids": sorted(component),
+            "source_face_ids": sorted({child_parent[index] for index in component}),
+            "representative_child_face": representative_id,
+            "probe_step": step,
+            "winding_minus": winding_minus,
+            "winding_plus": winding_plus,
+            "kept": keep,
+            "reversed": reverse,
+        })
+
+    output_triangles = []
+    output_ancestry = []
+    retained_patch_probes = []
+    for patch in patches:
+        if not patch["kept"]:
+            continue
+        for child_id in patch["child_face_ids"]:
+            triangle = child_triangles[child_id]
+            output_triangles.append((triangle[0], triangle[2], triangle[1])
+                                    if patch["reversed"] else triangle)
+            output_ancestry.append({
+                "source_face": child_parent[child_id],
+                "patch_id": patch["patch_id"],
+                "reversed_from_source": patch["reversed"],
+            })
+        triangle = child_triangles[patch["representative_child_face"]]
+        point = tuple(sum(vertex[axis] for vertex in triangle) / 3 for axis in range(3))
+        normal = _exact_triangle_normal(triangle)
+        if patch["reversed"]:
+            normal = tuple(-value for value in normal)
+        step = patch["probe_step"]
+        retained_patch_probes.append((
+            tuple(point[axis] - step * normal[axis] for axis in range(3)),
+            tuple(point[axis] + step * normal[axis] for axis in range(3)),
+        ))
+
+    require(output_triangles, "nonzero-winding self-union has no boundary")
+    output_mesh = indexed_mesh(output_triangles, convert=lambda value: value)
+    output_records = predicates._records(output_mesh["vertices_m"], output_mesh["triangles"])
+    output_winding = predicates.prepare_signed_winding(output_records)
+    output_self_audit = predicates._audit_pair(output_records, output_records, same_surface=True)
+    require(output_self_audit["count"] == 0,
+            "nonzero-winding boundary still has exact self-intersections")
+    output_topology = _validate_output_topology(output_records)
+    for inside_point, outside_point in retained_patch_probes:
+        inside = predicates.signed_winding_number(inside_point, output_winding)
+        outside = predicates.signed_winding_number(outside_point, output_winding)
+        require(inside["status"] == outside["status"] == "resolved" and
+                inside["winding_number"] == 1 and outside["winding_number"] == 0,
+                "emitted patch does not bound exactly the nonzero-winding material")
+
+    return {
+        "source_sha256": source_sha,
+        "input_face_count": len(faces),
+        "input_component_count": prepared.face_component_count,
+        "input_self_intersection_pairs": intersection_audit["triangle_pairs"],
+        "input_self_intersection_count": intersection_audit["count"],
+        "exact_intersection_segments": segments,
+        "subdivided_face_count": len(child_triangles),
+        "arrangement_patch_count": len(patches),
+        "retained_patch_count": sum(patch["kept"] for patch in patches),
+        "reversed_patch_count": sum(patch["reversed"] for patch in patches),
+        "patches": patches,
+        "output_mesh": output_mesh,
+        "output_face_ancestry": output_ancestry,
+        "output_topology": output_topology,
+        "output_self_intersection_audit": output_self_audit,
+        "float32_conversion_audited": False,
+    }
+
+
+def _validate_output_topology(records):
+    """Validate output topology and report exact component/edge counts."""
+    component_count = predicates._validate_closed_oriented_record_topology(records)
+    vertices = {vertex_id for _triangle, _lo, _hi, _face_id, ids in records for vertex_id in ids}
+    edges = {tuple(sorted((a, b))) for _triangle, _lo, _hi, _face_id, ids in records
+             for a, b in zip(ids, ids[1:] + ids[:1])}
+    return {"closed_oriented_2_manifold": True,
+            "component_count": component_count,
+            "vertex_count": len(vertices), "edge_count": len(edges), "face_count": len(records)}
+
+
+
 def indexed_mesh(triangle_points, *, convert=float):
     """Canonical common-coordinate conversion, without coordinate welding."""
     points = sorted({tuple(p) for triangle in triangle_points for p in triangle})

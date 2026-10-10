@@ -62,6 +62,111 @@ class AuthoringTests(unittest.TestCase):
                 partition.construct_arrangement(dict(zip(partition.NAMES, (a,b))))
 
 
+class NonzeroWindingSelfUnionTests(unittest.TestCase):
+    faces = ((0, 2, 1), (0, 1, 3), (0, 3, 2), (1, 2, 3))
+
+    @classmethod
+    def tetra(cls, offset=(0, 0, 0), scale=4, reverse=False):
+        vertices = [
+            tuple(F(offset[k]) + F(point[k]) for k in range(3))
+            for point in ((0, 0, 0), (scale, 0, 0), (0, scale, 0), (0, 0, scale))
+        ]
+        faces = cls.faces
+        if reverse:
+            faces = tuple((a, c, b) for a, b, c in faces)
+        return vertices, list(faces)
+
+    @staticmethod
+    def combine(parts):
+        vertices, faces = [], []
+        for part_vertices, part_faces in parts:
+            offset = len(vertices)
+            vertices.extend(part_vertices)
+            faces.extend(tuple(index + offset for index in face) for face in part_faces)
+        return vertices, faces
+
+    @staticmethod
+    def surface(vertices, faces):
+        return {"vertices": vertices, "triangles": faces, "source_sha256": "a" * 64}
+
+    @staticmethod
+    def signed_volume(mesh):
+        vertices = mesh["vertices_m"]
+        return sum((predicates._dot(vertices[face[0]],
+                                    predicates._cross(vertices[face[1]], vertices[face[2]]))
+                    for face in mesh["triangles"]), F(0)) / 6
+
+    @staticmethod
+    def oriented_triangle_key(triangle):
+        return min(tuple(triangle[index:] + triangle[:index]) for index in range(3))
+
+    def test_unchanged_closed_tetra_is_retained_exactly(self):
+        vertices, faces = self.tetra()
+        result = partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
+        output = result["output_mesh"]
+        emitted = [tuple(output["vertices_m"][index] for index in face)
+                   for face in output["triangles"]]
+        authored = [tuple(vertices[index] for index in face) for face in faces]
+        self.assertEqual({self.oriented_triangle_key(tri) for tri in emitted},
+                         {self.oriented_triangle_key(tri) for tri in authored})
+        self.assertEqual(self.signed_volume(output), F(32, 3))
+        self.assertEqual(result["input_self_intersection_count"], 0)
+        self.assertFalse(result["float32_conversion_audited"])
+
+    def test_overlapping_tetra_self_union_has_exact_union_volume(self):
+        first = self.tetra(scale=4)
+        second = self.tetra(offset=(1, 1, 1), scale=4)
+        vertices, faces = self.combine((first, second))
+        result = partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
+        output = result["output_mesh"]
+        records = predicates._records(output["vertices_m"], output["triangles"])
+        winding = predicates.prepare_signed_winding(records)
+        self.assertGreater(result["input_self_intersection_count"], 0)
+        self.assertEqual(result["output_self_intersection_audit"]["count"], 0)
+        self.assertEqual(result["output_topology"]["closed_oriented_2_manifold"], True)
+        self.assertEqual(self.signed_volume(output), F(127, 6))
+        self.assertEqual(predicates.signed_winding_number((F(5, 4),) * 3, winding)["winding_number"], 1)
+        self.assertEqual(result["output_topology"]["component_count"], 1)
+
+    def test_nested_opposite_cavity_is_preserved(self):
+        outer = self.tetra(scale=10)
+        inner = self.tetra(offset=(1, 1, 1), scale=2, reverse=True)
+        vertices, faces = self.combine((outer, inner))
+        result = partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
+        output = result["output_mesh"]
+        winding = predicates.prepare_signed_winding(
+            predicates._records(output["vertices_m"], output["triangles"]))
+        self.assertEqual(result["output_topology"]["component_count"], 2)
+        self.assertEqual(self.signed_volume(output), F(496, 3))
+        self.assertEqual(predicates.signed_winding_number((F(5, 4),) * 3, winding)["winding_number"], 0)
+        self.assertEqual(predicates.signed_winding_number((1, 1, 6), winding)["winding_number"], 1)
+
+    def test_reversed_shell_is_reoriented_outward(self):
+        vertices, faces = self.tetra(reverse=True)
+        result = partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
+        output = result["output_mesh"]
+        winding = predicates.prepare_signed_winding(
+            predicates._records(output["vertices_m"], output["triangles"]))
+        self.assertEqual(self.signed_volume(output), F(32, 3))
+        self.assertEqual(predicates.signed_winding_number((1, 1, 1), winding)["winding_number"], 1)
+        self.assertEqual(result["reversed_patch_count"], 1)
+
+    def test_coplanar_overlapping_shells_reject_closed_but_unsupported_arrangement(self):
+        first = self.tetra(scale=4)
+        second = self.tetra(scale=4)
+        vertices, faces = self.combine((first, second))
+        with self.assertRaisesRegex(HumanImportError, "coplanar self-intersection"):
+            partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
+
+
+    def test_point_only_contact_is_rejected(self):
+        first = self.tetra(scale=4)
+        second_vertices, second_faces = self.tetra(scale=4, reverse=True)
+        second_vertices = [tuple(-value for value in point) for point in second_vertices]
+        vertices, faces = self.combine((first, (second_vertices, second_faces)))
+        with self.assertRaisesRegex(HumanImportError, "point-only self-contact"):
+            partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
+
 class PinnedArrangementTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
