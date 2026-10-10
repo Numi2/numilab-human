@@ -815,6 +815,7 @@ class ImporterTests(unittest.TestCase):
         surfaces = {
             entry["source_name"]: entry["myosim_muscles"]
             for entry in _bodyparts_myosim_surface_specifications()
+            if entry.get("myosim_muscles")
         }
         self.assertEqual(
             surfaces["right flexor digitorum superficialis"],
@@ -1728,10 +1729,17 @@ class ImporterTests(unittest.TestCase):
 
     def test_fullbody_surface_map_is_mirrored_and_explicit(self) -> None:
         surfaces = _bodyparts_myosim_surface_specifications()
-        self.assertEqual(len(surfaces), 150)
-        self.assertEqual(len({surface["member_id"] for surface in surfaces}), 150)
-        self.assertEqual(sum(surface.get("layer", "muscle") == "muscle" for surface in surfaces), 148)
+        self.assertEqual(len(surfaces), 158)
+        self.assertEqual(len({surface["member_id"] for surface in surfaces}), 158)
+        self.assertEqual(sum(surface.get("layer", "muscle") == "muscle" for surface in surfaces), 156)
         self.assertEqual(sum(surface.get("layer") == "tendon" for surface in surfaces), 2)
+        self.assertEqual(sum(
+            surface.get("layer", "muscle") == "muscle" and bool(surface.get("myosim_muscles"))
+            for surface in surfaces
+        ), 148)
+        self.assertEqual(sum(isinstance(surface.get("passive_visual_binding"), dict) for surface in surfaces), 8)
+        self.assertTrue(all(surface.get("myosim_muscles") for surface in surfaces[:150]))
+        self.assertTrue(all(not surface.get("myosim_muscles") for surface in surfaces[150:]))
         left_gastrocnemius = next(surface for surface in surfaces if surface["member_id"] == "FJ1394M")
         self.assertEqual(left_gastrocnemius["source_name"], "lateral head of left gastrocnemius")
         self.assertEqual(left_gastrocnemius["myosim_muscles"], ["gaslat_l"])

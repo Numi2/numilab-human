@@ -7301,9 +7301,36 @@ def _bodyparts_mirror_surface_specification(specification: dict[str, Any]) -> di
         return value[:-2] + "_l" if value.endswith("_r") else value + "_l"
 
     muscles = mirrored.get("myosim_muscles")
-    if not isinstance(muscles, list):
-        raise ImportError("BodyParts3D surface-map mirror has no MyoSim muscle list")
-    mirrored["myosim_muscles"] = [mirror_name(value, "MyoSim muscle") for value in muscles]
+    if muscles is not None:
+        if not isinstance(muscles, list):
+            raise ImportError("BodyParts3D surface-map mirror has an invalid MyoSim muscle list")
+        mirrored["myosim_muscles"] = [mirror_name(value, "MyoSim muscle") for value in muscles]
+    passive = mirrored.get("passive_visual_binding")
+    if passive is not None:
+        if not isinstance(passive, dict) or not isinstance(passive.get("supports"), list):
+            raise ImportError("BodyParts3D surface-map mirror has invalid passive attachment supports")
+        for support in passive["supports"]:
+            if not isinstance(support, dict) or not isinstance(support.get("body"), str):
+                raise ImportError("BodyParts3D surface-map mirror has a malformed passive support")
+            support_body = support["body"]
+            support["body"] = (
+                support_body[:-2] + "_l" if support_body.endswith("_r") else support_body
+            )
+            source_members = support.get("source_member_ids")
+            mirrored_members = support.get("mirror_source_member_ids")
+            if not isinstance(source_members, list) or not source_members:
+                raise ImportError("BodyParts3D surface-map mirror has no registered source support members")
+            if not isinstance(mirrored_members, list) or len(mirrored_members) != len(source_members):
+                raise ImportError(
+                    "BodyParts3D passive support mirror requires explicit registered source-member counterparts"
+                )
+            if any(
+                not isinstance(source_member, str) or not re.fullmatch(r"FJ[0-9]+M?", source_member)
+                for source_member in mirrored_members
+            ):
+                raise ImportError("BodyParts3D passive support mirror has an invalid counterpart member")
+            support["source_member_ids"] = mirrored_members
+            support.pop("mirror_source_member_ids", None)
     for key in ("primary_body", "secondary_body"):
         if key in mirrored:
             mirrored[key] = mirror_name(mirrored[key], key)
@@ -7333,6 +7360,37 @@ def _bodyparts_myosim_surface_specifications() -> list[dict[str, Any]]:
         raise ImportError("BodyParts3D/MyoSim surface map has an invalid member identity")
     if len(set(members)) != len(members):
         raise ImportError("BodyParts3D/MyoSim surface map duplicates a source surface")
+    for entry in result:
+        passive = entry.get("passive_visual_binding")
+        if passive is None:
+            continue
+        if not isinstance(passive, dict):
+            raise ImportError("passive BodyParts3D surface binding must be an object")
+        if entry.get("myosim_muscles") not in (None, []):
+            raise ImportError("passive BodyParts3D surfaces cannot claim MyoSim route identities")
+        if passive.get("method") != "registered_attachment_support_vertex_proximity":
+            raise ImportError("passive BodyParts3D surface has an unsupported attachment method")
+        supports = passive.get("supports")
+        if not isinstance(supports, list) or not 2 <= len(supports) <= _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_BINDINGS:
+            raise ImportError("passive BodyParts3D surface has an invalid support-frame count")
+        support_bodies = [support.get("body") for support in supports if isinstance(support, dict)]
+        if len(support_bodies) != len(supports) or len(set(support_bodies)) != len(support_bodies):
+            raise ImportError("passive BodyParts3D surface has duplicate or malformed support frames")
+        for key in ("lock_radius_m", "feather_radius_m", "softening_radius_m"):
+            value = passive.get(key)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value <= 0:
+                raise ImportError("passive BodyParts3D surface has invalid attachment radii")
+        if passive["feather_radius_m"] <= passive["lock_radius_m"]:
+            raise ImportError("passive BodyParts3D surface attachment feather does not exceed lock radius")
+        for support in supports:
+            if not isinstance(support.get("role"), str) or not support["role"]:
+                raise ImportError("passive BodyParts3D surface has no anatomical support role")
+            source_members = support.get("source_member_ids")
+            if not isinstance(source_members, list) or not source_members or any(
+                not isinstance(source_member, str) or not re.fullmatch(r"FJ[0-9]+M?", source_member)
+                for source_member in source_members
+            ):
+                raise ImportError("passive BodyParts3D surface has invalid registered source-bone members")
     return result
 
 
@@ -10856,6 +10914,111 @@ def numi_human_achilles_surface_receipt(
     return receipt
 
 
+def _bodyparts_registered_attachment_support_weights(
+    tissue_vertices_world_m: list[list[float]],
+    binding_names: list[str],
+    support_vertices_world_m: dict[str, list[list[float]]],
+    lock_radius_m: float,
+    feather_radius_m: float,
+    softening_radius_m: float,
+    context: str,
+) -> tuple[list[list[float]], dict[str, Any]]:
+    """Infer passive visual weights from explicitly named registered supports.
+
+    Source vertex attachment masks are absent. Nearby vertices are locally
+    locked/feathered to the nearest named registered support cloud, then blended
+    by inverse-square distance. The finite-width support cloud and this weight
+    field are an inferred visual proxy, not a measured attachment map or a
+    MyoSim route. Distances use exact (eps=0) Euclidean cKDTree queries rather
+    than a bounded voxel-shell search.
+    """
+    if not tissue_vertices_world_m:
+        raise ImportError(f"{context} has no passive tissue vertices")
+    if (
+        not 2 <= len(binding_names) <= _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_BINDINGS
+        or len(set(binding_names)) != len(binding_names)
+        or set(support_vertices_world_m) != set(binding_names)
+    ):
+        raise ImportError(f"{context} has an invalid passive attachment support table")
+    if (
+        not all(math.isfinite(value) for value in (lock_radius_m, feather_radius_m, softening_radius_m))
+        or lock_radius_m <= 0.0 or feather_radius_m <= lock_radius_m
+        or softening_radius_m <= 0.0
+    ):
+        raise ImportError(f"{context} has invalid passive attachment support radii")
+    try:
+        import numpy as np
+        from scipy.spatial import cKDTree
+    except ImportError as exc:
+        raise ImportError(
+            f"{context} requires the anatomy-registration SciPy extra for exact nearest-support queries"
+        ) from exc
+    tissue_array = np.asarray(tissue_vertices_world_m, dtype=np.float64)
+    if tissue_array.ndim != 2 or tissue_array.shape[1] != 3 or not np.isfinite(tissue_array).all():
+        raise ImportError(f"{context} has invalid passive tissue vertices")
+    squared_by_body: dict[str, Any] = {}
+    for body in binding_names:
+        points = support_vertices_world_m[body]
+        if not points:
+            raise ImportError(f"{context} has no registered support vertices for {body}")
+        point_array = np.asarray(points, dtype=np.float64)
+        if point_array.ndim != 2 or point_array.shape[1] != 3 or not np.isfinite(point_array).all():
+            raise ImportError(f"{context} has invalid registered support vertices for {body}")
+        tree = cKDTree(point_array, compact_nodes=True, balanced_tree=True)
+        distances, _ = tree.query(tissue_array, k=1, eps=0.0, p=2.0, workers=1)
+        squared_by_body[body] = np.square(distances)
+
+    weights_by_vertex: list[list[float]] = []
+    nearest_counts = [0] * len(binding_names)
+    locked_counts = [0] * len(binding_names)
+    nearest_distances: list[float] = []
+    for vertex_index, point in enumerate(tissue_vertices_world_m):
+        squared = [float(squared_by_body[body][vertex_index]) for body in binding_names]
+        nearest_index = min(range(len(squared)), key=lambda index: (squared[index], index))
+        distance = math.sqrt(squared[nearest_index])
+        nearest_counts[nearest_index] += 1
+        nearest_distances.append(distance)
+        raw = [1.0 / (value + softening_radius_m * softening_radius_m) for value in squared]
+        total = sum(raw)
+        if not math.isfinite(total) or total <= 0.0:
+            raise ImportError(f"{context} has non-finite passive support weights")
+        base = [value / total for value in raw]
+        weights = list(base)
+        if distance <= lock_radius_m:
+            weights = [1.0 if index == nearest_index else 0.0 for index in range(len(base))]
+            locked_counts[nearest_index] += 1
+        elif distance < feather_radius_m:
+            blend = (feather_radius_m - distance) / (feather_radius_m - lock_radius_m)
+            weights = [
+                (1.0 - blend) * value + (blend if index == nearest_index else 0.0)
+                for index, value in enumerate(base)
+            ]
+        if abs(sum(weights) - 1.0) > 1.0e-6:
+            raise ImportError(f"{context} has non-unit passive support weights")
+        weights_by_vertex.append(weights)
+    ordered = sorted(nearest_distances)
+    percentile = lambda fraction: ordered[min(len(ordered) - 1, int(fraction * (len(ordered) - 1)))]
+    return weights_by_vertex, {
+        "method": "exact_euclidean_nearest_registered_attachment_support_vertex_proximity",
+        "support_body_count": len(binding_names),
+        "support_body_names": list(binding_names),
+        "support_vertex_count_by_body": {
+            body: len(support_vertices_world_m[body]) for body in binding_names
+        },
+        "nearest_support_vertex_count_by_body": dict(zip(binding_names, nearest_counts, strict=True)),
+        "locally_locked_vertex_count_by_body": dict(zip(binding_names, locked_counts, strict=True)),
+        "lock_radius_m": lock_radius_m,
+        "feather_radius_m": feather_radius_m,
+        "softening_radius_m": softening_radius_m,
+        "nearest_support_distance_m": {
+            "minimum": ordered[0], "p50": percentile(0.50), "p95": percentile(0.95),
+            "maximum": ordered[-1],
+        },
+        "source_vertex_attachment_masks": "not supplied; nearest named registered support proximity is an inferred visual proxy",
+        "mechanics_changed": False,
+        "myosim_route_added": False,
+    }
+
 def _bodyparts_myosim_route_weights_for_world_point(
     world_point_m: list[float], binding_names: list[str],
     route_points: list[dict[str, Any]], context: str,
@@ -11251,7 +11414,9 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         raise ImportError("BodyParts3D full-body tissue payload has no visual-skeleton anchors")
     secondary_bone_sources: dict[str, dict[str, Any]] = {}
     body_bone_sources: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    body_bone_anchor_records: dict[tuple[str, str], dict[str, Any]] = {}
     body_local_registrations: dict[str, tuple[list[float], list[float], float]] = {}
+    passive_support_geometry_cache: dict[tuple[str, str], dict[str, Any]] = {}
     for anchor in registration_anchors:
         if not isinstance(anchor, dict):
             raise ImportError("BodyParts3D full-body tissue payload has an invalid visual-skeleton anchor")
@@ -11269,6 +11434,12 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         if not isinstance(registration_record, dict):
             raise ImportError("BodyParts3D full-body tissue payload has no source-bone local registration")
         local_matrix = registration_record.get("source_obj_mm_to_core_inertial_body_m")
+        anchor_key = (target_name, member_id)
+        if anchor_key in body_bone_anchor_records:
+            raise ImportError("BodyParts3D full-body tissue has duplicate registered source-bone anchors")
+        body_bone_anchor_records[anchor_key] = {
+            "source": source_record, "target": target_record, "registration": registration_record,
+        }
         body_local_registrations.setdefault(
             target_name,
             tuple(_bodyparts_visual_local_pose(
@@ -11290,10 +11461,15 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         if stable_id_subset is not None and stable_id not in stable_id_subset:
             continue
         member_id, label = specification.get("member_id"), specification.get("source_name")
-        source_muscles = specification.get("myosim_muscles")
+        source_muscles = specification.get("myosim_muscles", [])
+        passive_binding_spec = specification.get("passive_visual_binding")
         if not isinstance(member_id, str) or not isinstance(label, str) or (member_id, label) not in element_names:
             raise ImportError("BodyParts3D full-body tissue surface-map source identity drifted")
-        if not isinstance(source_muscles, list) or not source_muscles or any(not isinstance(value, str) for value in source_muscles):
+        if passive_binding_spec is not None:
+            if source_muscles not in (None, []) or not isinstance(passive_binding_spec, dict):
+                raise ImportError("passive BodyParts3D tissue must not claim MyoSim route muscles")
+            source_muscles = []
+        elif not isinstance(source_muscles, list) or not source_muscles or any(not isinstance(value, str) for value in source_muscles):
             raise ImportError("BodyParts3D full-body tissue surface-map has no named MyoSim muscles")
         matched_routes = []
         for muscle_name in source_muscles:
@@ -11323,7 +11499,15 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         global_vertices = [[sum(global_matrix[row][column] * vertex[column] for column in range(3)) + global_matrix[row][3] for row in range(3)] for vertex in vertices_mm]
         refinement_route_points: list[dict[str, Any]] | None = None
         explicit_primary, explicit_secondary = specification.get("primary_body"), specification.get("secondary_body")
-        if explicit_primary is None and explicit_secondary is None:
+        if passive_binding_spec is not None:
+            support_rows = passive_binding_spec["supports"]
+            binding_names = [support["body"] for support in support_rows]
+            if len(binding_names) != len(set(binding_names)) or not 2 <= len(binding_names) <= _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_BINDINGS:
+                raise ImportError(f"BodyParts3D passive surface {member_id} has invalid support bodies")
+            primary_name, secondary_name = binding_names[0], binding_names[-1]
+            route_pairs = set()
+            endpoint_source = "registered_passive_anatomical_attachment_support_frames_no_myosim_route"
+        elif explicit_primary is None and explicit_secondary is None:
             route_pairs = {
                 (route["primary_body"], route["secondary_body"])
                 for route in matched_routes
@@ -11404,27 +11588,115 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         primary_target, secondary_target = bodies.get(primary_name), bodies.get(secondary_name)
         if not isinstance(primary_target, dict) or not isinstance(secondary_target, dict) or primary_name == secondary_name:
             raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has unresolved primary/secondary anatomy")
-        primary_position = _myosim_vector(primary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} primary position")
-        secondary_position = _myosim_vector(secondary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} secondary position")
-        body_axis = _myosim_subtract(secondary_position, primary_position)
-        squared_axis = sum(value * value for value in body_axis)
-        if squared_axis <= 1.0e-10:
-            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has coincident endpoint centres")
-        projections = [sum((vertex[axis] - primary_position[axis]) * body_axis[axis] for axis in range(3)) for vertex in global_vertices]
-        minimum, maximum = min(projections), max(projections)
-        if maximum - minimum <= 1.0e-6:
-            raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has no two-body blend extent")
-        base_primary_weights = [
-            max(0.0, min(1.0, (maximum - projection) / (maximum - minimum)))
-            for projection in projections
-        ]
+        base_primary_weights: list[float] = []
+        if passive_binding_spec is None:
+            primary_position = _myosim_vector(primary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} primary position")
+            secondary_position = _myosim_vector(secondary_target.get("default_com_position_world_m"), f"BodyParts3D {member_id} secondary position")
+            body_axis = _myosim_subtract(secondary_position, primary_position)
+            squared_axis = sum(value * value for value in body_axis)
+            if squared_axis <= 1.0e-10:
+                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has coincident endpoint centres")
+            projections = [sum((vertex[axis] - primary_position[axis]) * body_axis[axis] for axis in range(3)) for vertex in global_vertices]
+            minimum, maximum = min(projections), max(projections)
+            if maximum - minimum <= 1.0e-6:
+                raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has no two-body blend extent")
+            base_primary_weights = [
+                max(0.0, min(1.0, (maximum - projection) / (maximum - minimum)))
+                for projection in projections
+            ]
 
         attachment_weight_lock: dict[str, Any] | None = None
         primary_attachment_weight_lock: dict[str, Any] | None = None
         toe_enthesis_weight_lock: dict[str, Any] | None = None
         stored_vertices_m = [[coordinate * 0.001 for coordinate in vertex] for vertex in vertices_mm]
         stored_normals = normals
-        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
+        passive_binding_diagnostics: dict[str, Any] | None = None
+        if passive_binding_spec is not None:
+            support_points_by_body: dict[str, list[list[float]]] = {}
+            passive_support_provenance: list[dict[str, Any]] = []
+            for support in passive_binding_spec["supports"]:
+                body_name = support["body"]
+                body_points: list[list[float]] = []
+                for support_member_id in support["source_member_ids"]:
+                    cache_key = (body_name, support_member_id)
+                    cached = passive_support_geometry_cache.get(cache_key)
+                    if cached is None:
+                        anchor_record = body_bone_anchor_records.get(cache_key)
+                        if anchor_record is None:
+                            raise ImportError(
+                                f"BodyParts3D passive surface {member_id} support {support_member_id} "
+                                f"is not registered to {body_name}"
+                            )
+                        support_source = anchor_record["source"]
+                        support_hierarchy = support_source.get("hierarchy")
+                        if not isinstance(support_hierarchy, str):
+                            raise ImportError(f"BodyParts3D passive support {support_member_id} has no source hierarchy")
+                        _, support_member, support_obj = _bodyparts_obj_member(
+                            sources, support_hierarchy, support_member_id,
+                        )
+                        support_vertices_mm, support_triangles = _bodyparts_obj_triangles(
+                            support_obj, support_member,
+                        )
+                        support_target = bodies.get(body_name)
+                        if not isinstance(support_target, dict):
+                            raise ImportError(f"BodyParts3D passive support body {body_name} is missing")
+                        support_registration = anchor_record["registration"].get(
+                            "source_obj_mm_to_core_inertial_body_m"
+                        )
+                        translation, rotation, scale = _bodyparts_visual_local_pose(
+                            support_registration,
+                            f"BodyParts3D passive support {support_member_id} local registration",
+                        )
+                        support_world = _bodyparts_source_mm_to_body_world(
+                            support_vertices_mm,
+                            _myosim_vector(
+                                support_target.get("default_com_position_world_m"),
+                                f"BodyParts3D passive support {body_name} position",
+                            ),
+                            list(support_target.get("default_inertial_quaternion_world_xyzw", [])),
+                            translation, rotation, scale,
+                        )
+                        cached = {
+                            "world_vertices": support_world,
+                            "source_member_sha256": hashlib.sha256(support_obj).hexdigest(),
+                            "source_vertex_count": len(support_vertices_mm),
+                            "source_triangle_count": len(support_triangles),
+                        }
+                        passive_support_geometry_cache[cache_key] = cached
+                    body_points.extend(cached["world_vertices"])
+                    passive_support_provenance.append({
+                        "body": body_name,
+                        "role": support["role"],
+                        "source_member_id": support_member_id,
+                        "source_member_sha256": cached["source_member_sha256"],
+                        "source_vertex_count": cached["source_vertex_count"],
+                        "source_triangle_count": cached["source_triangle_count"],
+                    })
+                support_points_by_body[body_name] = body_points
+            vertex_weights, passive_binding_diagnostics = (
+                _bodyparts_registered_attachment_support_weights(
+                    global_vertices,
+                    binding_names,
+                    support_points_by_body,
+                    float(passive_binding_spec["lock_radius_m"]),
+                    float(passive_binding_spec["feather_radius_m"]),
+                    float(passive_binding_spec["softening_radius_m"]),
+                    f"BodyParts3D passive surface {member_id}",
+                )
+            )
+            passive_binding_diagnostics["supports"] = passive_support_provenance
+            route_binding_diagnostics = {
+                "method": passive_binding_diagnostics["method"],
+                "binding_body_count": len(binding_names),
+                "maximum_vertex_influences": min(
+                    _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES, len(binding_names)
+                ),
+                "support_frame_count": len(binding_names),
+                "sparse_influence_limit": _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES,
+                "passive_visual_only": True,
+                "myosim_route_added": False,
+            }
+        elif layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON:
             secondary_binding_index = binding_names.index(secondary_name)
             secondary_local_pose = binding_local_poses[secondary_binding_index]
             # The bone payload uses its per-anchor local registration, which
@@ -12061,11 +12333,23 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                 "<I8f", target["core_body_index"], *transform
             ))
         first_vertex, first_index = len(vertices_payload), len(indices_payload)
+        passive_sparse_dropped_weights: list[float] = []
+        passive_sparse_dropped_by_binding = [0.0] * len(binding_names)
         for vertex, normal, weights in zip(stored_vertices_m, stored_normals, vertex_weights, strict=True):
             active = sorted(
                 ((weight, index) for index, weight in enumerate(weights) if weight > 1.0e-8),
                 reverse=True,
             )[:_BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES]
+            active_indices = {index for _, index in active}
+            if passive_binding_spec is not None:
+                dropped = [
+                    (index, weight) for index, weight in enumerate(weights)
+                    if index not in active_indices
+                ]
+                dropped_total = sum(weight for _, weight in dropped)
+                passive_sparse_dropped_weights.append(dropped_total)
+                for index, weight in dropped:
+                    passive_sparse_dropped_by_binding[index] += weight
             active_total = sum(weight for weight, _ in active)
             if not active or not math.isfinite(active_total) or active_total <= 0.0:
                 raise ImportError(f"BodyParts3D full-body tissue surface {member_id} has invalid body weights")
@@ -12091,6 +12375,32 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             vertices_payload.append(struct.pack(
                 "<6f4I4f", *vertex, *normal, *influence_indices, *influence_weights
             ))
+        if passive_binding_diagnostics is not None:
+            ordered_dropped = sorted(passive_sparse_dropped_weights)
+            def dropped_percentile(fraction: float) -> float:
+                if not ordered_dropped:
+                    return 0.0
+                return ordered_dropped[min(
+                    len(ordered_dropped) - 1,
+                    int(fraction * (len(ordered_dropped) - 1)),
+                )]
+            passive_binding_diagnostics["sparse_influence_truncation"] = {
+                "limit_per_vertex": _BODYPARTS_MYOSIM_ROUTE_SOFT_TISSUE_MAX_INFLUENCES,
+                "dense_support_frame_count": len(binding_names),
+                "vertices_with_nonzero_omitted_dense_weight": sum(
+                    value > 0.0 for value in passive_sparse_dropped_weights
+                ),
+                "pre_renormalization_omitted_weight": {
+                    "mean": sum(passive_sparse_dropped_weights) / len(passive_sparse_dropped_weights),
+                    "p50": dropped_percentile(0.50),
+                    "p95": dropped_percentile(0.95),
+                    "maximum": max(passive_sparse_dropped_weights),
+                },
+                "omitted_weight_sum_by_support_body": dict(zip(
+                    binding_names, passive_sparse_dropped_by_binding, strict=True
+                )),
+                "retained_influences_renormalized_to_unit_sum": True,
+            }
         if edge_refinement_record is not None:
             original_vertex_count = edge_refinement_record["old_vertex_count"]
             original_vertex_bytes = b"".join(
@@ -12141,6 +12451,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
         })
         if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
             provenance[-1]["route_binding"] = route_binding_diagnostics
+        if passive_binding_diagnostics is not None:
+            provenance[-1]["passive_visual_binding"] = passive_binding_diagnostics
         if edge_refinement_record is not None:
             edge_refinement_record["member_id"] = member_id
             edge_refinement_record["member"] = member
@@ -12160,7 +12472,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             provenance[-1]["source_topology_cancellation"] = face_cancellation
         if source_visual_untangle is not None:
             provenance[-1]["source_visual_untangle"] = source_visual_untangle
-        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE:
+        if layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_MUSCLE and passive_binding_spec is None:
             source_surface_bindings[member_id] = {
                 "member_id": member_id,
                 "myosim_muscles": list(source_muscles),
@@ -12187,6 +12499,13 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     output.mkdir(parents=True, exist_ok=True)
     payload_path = output / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
     payload_path.write_bytes(payload)
+    route_bound_muscle_surface_count = sum(
+        entry["layer"] == "muscle" and "passive_visual_binding" not in entry
+        for entry in provenance
+    )
+    passive_registered_support_surface_count = sum(
+        "passive_visual_binding" in entry for entry in provenance
+    )
     manifest = {
         "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
         "rigid_source_program_checks": rigid_program,
@@ -12206,6 +12525,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                      "selected_stable_ids": sorted(stable_id_subset) if stable_id_subset is not None else None,
                      "muscle_surface_count": sum(1 for entry in provenance if entry["layer"] == "muscle"),
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
+                     "route_bound_muscle_surface_count": route_bound_muscle_surface_count,
+                     "passive_registered_support_surface_count": passive_registered_support_surface_count,
                      "opposite_face_pair_cancellation_surface_count": sum(
                          "source_topology_cancellation" in entry for entry in provenance
                      ),
@@ -12215,9 +12536,26 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                          )) for entry in provenance
                      ),
                      "authored_myosim_muscle_count": len(myosim_manifest["muscles"])},
-        "runtime_binding": "BodyParts3D source-topology surfaces use a variable exact MyoSim route-body table with four sparse influences per vertex; shared digital surfaces include every authored digit route instead of a middle-finger proxy, while each calcaneal-tendon surface inherits femur/tibia/calcaneus weights from its nearest named source muscle surface and fits only its opened distal source boundary to exact named calcaneal triangles with a local harmonic field and no generated enthesis strip",
-        "status": "native_route_body_sparse_kinematic_surface_binding_input_not_collision_or_physics",
-        "evidence_boundary": "This source-authored surface package visually follows exact named articulated endpoint bodies. It does not make the source surface a force-transmitting continuum, add a tendon constitutive law, create collision/contact, or establish a medical registration.",
+        "runtime_binding": (
+            "Non-passive muscle rows retain the existing authored MyoSim route-body table and four sparse influences per vertex; "
+            "shared digital rows include every authored digit route, and the two calcaneal tendons inherit their existing named route weights. "
+            "Rows with passive_visual_binding use nearest Euclidean registered support-vertex proximity across the explicitly listed support bodies, "
+            "serialize at most four of those dense inferred weights per vertex, and add no MyoSim muscle/force route."
+        ),
+        "status": (
+            "mixed_route_bound_and_inferred_passive_registered_support_visual_input_not_collision_or_physics"
+            if route_bound_muscle_surface_count and passive_registered_support_surface_count
+            else (
+                "passive_registered_support_visual_input_not_collision_or_physics"
+                if passive_registered_support_surface_count
+                else "native_route_body_sparse_kinematic_surface_binding_input_not_collision_or_physics"
+            )
+        ),
+        "evidence_boundary": (
+            "Source-authored routed rows retain their existing kinematic visual role. Passive SCM/trapezius rows use inferred registered-support proximity, "
+            "not supplied source attachment masks or force-transmitting MyoSim routes. This package does not add a continuum/tendon law, collision/contact, "
+            "clinical registration, or anatomical qualification."
+        ),
     }
     write_json(output / "bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", manifest)
     return manifest
