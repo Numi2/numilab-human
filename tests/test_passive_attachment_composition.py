@@ -873,3 +873,80 @@ def test_fhl_pair_fails_closed_on_source_ids_other_rows_and_self_proof(tmp_path,
     with pytest.raises(ValueError,match="FHL child changed a non-target row"):
         bind_anatomy_receipt(receipt,payload,out/"receipt.json")
     assert not (out/"receipt.json").exists()
+
+
+def test_explicit_reference_surfaces_preserve_legacy_lineage_and_bind_scene(inputs, tmp_path):
+    source, candidate, report, _ = inputs
+    path = source.with_suffix(".manifest.json")
+    manifest = json.loads(path.read_text())
+    legacy = {"changed_stable_ids": [27, 28], "historical": "preserve as ancestry"}
+    manifest["source"]["fhl_source_seam_correction"] = legacy
+    manifest["source"]["reference_attachment_composition"] = {"changed_stable_ids": [7, 8]}
+    path.write_text(json.dumps(manifest))
+    receipt = anatomy_fixture(source, tmp_path)
+    out = tmp_path / "surfaces"
+    result = compose(source, out, [(29, candidate, report), (85, candidate, report)],
+                     reference_surface_rows=(29, 85))
+    new_manifest = json.loads((out / path.name).read_text())
+    assert new_manifest["source"]["fhl_source_seam_correction"] == legacy
+    assert new_manifest["source"]["reference_attachment_composition"] == {"changed_stable_ids": [7, 8]}
+    assert result["unchanged_row_vertex_bytes_and_local_faces"] == [i for i in range(150) if i not in (29, 85)]
+    bound = bind_anatomy_receipt(receipt, out / source.name, out / "resting-anatomy-receipt.json")
+    assert bound["mass_geometry_accounting"] == {"reference_total_mass_kg": 72}
+    assert bound["provenance"]["reference_surface_composition_binding"]["changed_stable_ids"] == [29, 85]
+    assert "admission" in new_manifest["evidence_boundary"]
+
+
+@pytest.mark.parametrize("requested", [(29,), (29, 29), (29, 86), (29, True)])
+def test_explicit_reference_selection_must_match_all_rows(inputs, tmp_path, requested):
+    source, candidate, report, _ = inputs
+    with pytest.raises(ValueError, match="explicit reference-surface rows"):
+        compose(source, tmp_path / "out", [(29, candidate, report), (85, candidate, report)],
+                reference_surface_rows=requested)
+    assert not (tmp_path / "out").exists()
+
+
+@pytest.mark.parametrize("defect", ["patch", "report", "unselected_row", "selected_row", "source_identity", "history"])
+def test_reference_surface_scene_binding_rejects_drift(inputs, tmp_path, defect):
+    source, candidate, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    out = tmp_path / "out"
+    compose(source, out, [(85, candidate, report)], reference_surface_rows=(85,))
+    child = out / source.name
+    manifest_path = child.with_suffix(".manifest.json")
+    manifest = json.loads(manifest_path.read_text())
+    if defect == "patch":
+        candidate.write_bytes(candidate.read_bytes() + b"changed")
+    elif defect == "report":
+        report.write_text("{}")
+    elif defect in ("unselected_row", "selected_row"):
+        _rewrite_payload_row_vertex(child, 29 if defect == "unselected_row" else 85,
+                                    0, position=(.1, .2, .3))
+        manifest["payload"]["sha256"] = digest(child)
+    elif defect == "history":
+        manifest["source"]["reference_surface_compositions"].insert(0, {"fabricated": True})
+    else:
+        manifest["source"]["surfaces"][85]["member_id"] = "wrong-side-source"
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError):
+        bind_anatomy_receipt(receipt, child, out / "resting-anatomy-receipt.json")
+    assert not (out / "resting-anatomy-receipt.json").exists()
+
+
+def test_sequential_reference_surface_composition_keeps_parent_chain(inputs, tmp_path):
+    source, candidate, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    first = tmp_path / "first"
+    compose(source, first, [(29, candidate, report)], reference_surface_rows=(29,))
+    first_receipt = first / "resting-anatomy-receipt.json"
+    bind_anatomy_receipt(receipt, first / source.name, first_receipt)
+    second = tmp_path / "second"
+    compose(first / source.name, second, [(85, candidate, report)],
+            reference_surface_rows=(85,))
+    result = bind_anatomy_receipt(first_receipt, second / source.name,
+                                 second / "resting-anatomy-receipt.json")
+    manifest = json.loads((second / source.with_suffix(".manifest.json").name).read_text())
+    operations = manifest["source"]["reference_surface_compositions"]
+    assert [o["changed_stable_ids"] for o in operations] == [[29], [85]]
+    assert result["provenance"]["reference_surface_composition_binding_history"][0]["changed_stable_ids"] == [29]
+    assert result["provenance"]["reference_surface_composition_binding"]["changed_stable_ids"] == [85]

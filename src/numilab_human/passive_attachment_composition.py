@@ -3,7 +3,9 @@
 The generic replacement path is limited to stable IDs 7, 8 and 23. Separate
 proof-bound branches admit only the reviewed 103/104 biceps and 27/28 FHL row
 pairs. This is asset preparation; the native simulation retains mechanics,
-mass and tendon state. Composition does not establish anatomical admission.
+mass and tendon state. Explicit reference-surface row selection also supports
+source-derived muscle repairs in the same ABI and preserves prior operations.
+Composition does not establish anatomical admission.
 """
 from __future__ import annotations
 import argparse
@@ -158,7 +160,8 @@ def _reconcile_serialized_triangle_counts(manifest: dict, records) -> list[dict]
 
 def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path]], *,
             biceps_source_correction: dict | None = None,
-            fhl_source_seam_correction: dict | None = None) -> dict:
+            fhl_source_seam_correction: dict | None = None,
+            reference_surface_rows: tuple[int, ...] = ()) -> dict:
     import numpy as np
     (source, output) = (Path(source).resolve(), Path(output).resolve())
     sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -168,9 +171,19 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     repairs = {}
     require(bool(replacements), 'at least one passive attachment repair is required')
     replacement_ids = [int(item[0]) for item in replacements]
+    reference_rows = tuple(reference_surface_rows)
+    if reference_rows:
+        require(all(type(sid) is int and sid > 0 for sid in reference_rows)
+                and len(set(reference_rows)) == len(reference_rows)
+                and sorted(reference_rows) == sorted(replacement_ids),
+                'explicit reference-surface rows must exactly match distinct replacement IDs')
+        require(biceps_source_correction is None and fhl_source_seam_correction is None,
+                'reference-surface composition cannot mix legacy correction modes')
     biceps_correction = None
     fhl_correction = None
-    if any(sid not in (7, 8, 23) for sid in replacement_ids):
+    if reference_rows:
+        pass  # Explicit asset preparation; source/pose admission remains separate.
+    elif any(sid not in (7, 8, 23) for sid in replacement_ids):
         if set(replacement_ids) == {103, 104} and len(replacement_ids) == 2:
             require(biceps_source_correction is not None and fhl_source_seam_correction is None,
                     'proof-bound paired biceps correction is required without an FHL correction')
@@ -190,9 +203,9 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
         sid = int(sid)
         allowed_pair = ((biceps_correction is not None and sid in (103, 104))
                         or (fhl_correction is not None and sid in (27, 28)))
-        if (sid not in (7, 8, 23) and not allowed_pair) or sid in repairs:
+        if (sid not in (7, 8, 23) and not allowed_pair and sid not in reference_rows) or sid in repairs:
             raise ValueError('Only distinct passive attachment rows 7, 8, 23 or exact proof-bound biceps 103/104 and FHL 27/28 pairs are allowed')
-        (z, report) = (Path(z), Path(report))
+        (z, report) = (Path(z).resolve(), Path(report).resolve())
         if biceps_correction is not None:
             expected_patch = biceps_correction["row_patch_npz"].get(str(sid))
             require(isinstance(expected_patch, dict)
@@ -297,12 +310,18 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     P = output / T.name
     P.write_bytes(out)
     manifest = json.loads(M.read_text())
-    if biceps_correction is None and fhl_correction is None:
+    if biceps_correction is None and fhl_correction is None and not reference_rows:
         manifest['source']['upstream_runtime_binding_description'] = manifest['runtime_binding']
         manifest['runtime_binding'] = 'Unchanged passive rows retain their existing BodyParts3D route-body surface binding. Stable IDs ' + ','.join(map(str, sorted(repairs))) + ' use explicitly inferred source-derived reference attachment surfaces described per row. They retain the existing named MyoSim body-binding table and do not replace the authored physical force routes or compliant tendon state.'
         manifest['evidence_boundary'] = 'This mixed-source passive inspection package follows named articulated bodies. The reconstructed attachment rows are reference inferences, not measured-person source topology. This package does not create a force-transmitting continuum, new constitutive law, collision response, or clinical registration.'
         manifest['coverage']['upstream_preparation_counts_not_recomputed_after_reference_reconstruction'] = ['cancelled_opposite_face_pair_count', 'opposite_face_pair_cancellation_surface_count']
     manifest['payload'].update(file=P.name, sha256=sha(P), bytes=len(out), vertex_count=vcur, index_count=icur)
+    if reference_rows:
+        manifest['evidence_boundary'] = (
+            'Mixed-source passive reference surfaces with explicitly inferred repairs. '
+            'Existing anatomical identities, binding table, physical muscle routes, mass '
+            'and compliant tendon state retain their owners. Composition is preparation, '
+            'not anatomical or native-cycle admission and not a measured individual.')
     for row in manifest['source']['surfaces']:
         sid = row['stable_id']
         if sid not in repairs:
@@ -310,16 +329,31 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
         proof = next((p for p in proofs if p['stable_id'] == sid))
         row['vertex_count'] = proof['vertex_count_after']
         row['triangle_count'] = proof['triangle_count_after']
-        if biceps_correction is None and fhl_correction is None:
+        if biceps_correction is None and fhl_correction is None and not reference_rows:
             row['reference_attachment_reconstruction'] = {**proof, 'scope': 'Passive source-derived reference inspection surface. Original anatomical identity/laterality, named attachment relationships, MyoSim force route and compliant tendon state remain their original owners. Not a measured-person reconstruction.', 'prior_registration_metadata': 'Retained above as upstream provenance; this reconstruction supersedes the listed source surface geometry.'}
+        elif reference_rows:
+            row['reference_surface_reconstruction'] = {
+                **proof,
+                'scope': 'Source-derived passive reference surface repair; source identity and laterality retained. Physical routes and attachment bindings unchanged. Not measured-person geometry; anatomical and native-pose admission separate.'}
         elif fhl_correction is not None:
             row['fhl_source_seam_correction'] = {
                 'row_patch_preparation_report_sha256': fhl_correction['row_patch_preparation_report_sha256'],
                 'source_subset_payload_sha256': fhl_correction['source_subset_payload_sha256'],
                 'stable_id': sid,
                 'scope': 'Exact source-face seam restoration for the named FHL row; no vertex positions, normals, bindings, weights, or physical force routes changed.'}
-    if biceps_correction is None and fhl_correction is None:
+    if biceps_correction is None and fhl_correction is None and not reference_rows:
         manifest['source']['reference_attachment_composition'] = {'source_payload_sha256': inputs[str(T)], 'changed_stable_ids': sorted(repairs), 'unchanged_row_vertex_bytes_and_local_faces': unchanged, 'binding_table_byte_exact': True, 'physical_route_mass_and_force_state_unchanged': True}
+    elif reference_rows:
+        operations = manifest['source'].setdefault('reference_surface_compositions', [])
+        require(isinstance(operations, list), 'reference-surface operation history is invalid')
+        operations.append({
+            'source_payload_path': str(T), 'source_payload_sha256': inputs[str(T)],
+            'source_manifest_path': str(M), 'source_manifest_sha256': inputs[str(M)],
+            'changed_stable_ids': sorted(repairs), 'row_patches': proofs,
+            'unchanged_row_vertex_bytes_and_local_faces': unchanged,
+            'binding_table_byte_exact': True,
+            'physical_route_mass_and_force_state_unchanged': True,
+            'scope': 'Explicit source-derived passive geometry preparation; no anatomical admission implied.'})
     elif fhl_correction is not None:
         fhl_correction['composed_parent_payload_sha256'] = inputs[str(T)]
         fhl_correction['composed_parent_manifest_path'] = str(M)
@@ -354,6 +388,8 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
         proof['biceps_source_preserving_correction'] = biceps_correction
     if fhl_correction is not None:
         proof['fhl_source_seam_correction'] = fhl_correction
+    if reference_rows:
+        proof['reference_surface_composition'] = manifest['source']['reference_surface_compositions'][-1]
     proof['composer_source_sha256'] = sha(Path(__file__))
     (output / 'report.json').write_text(json.dumps(proof, indent=2) + '\n')
     return proof
@@ -1358,6 +1394,81 @@ def compose_conforming_edge(source: Path, output: Path, context_manifest: Path,
     (output/"report.json").write_text(json.dumps(proof,indent=2,sort_keys=True)+"\n")
     return proof
 
+def _verify_reference_surface_child(parent: Path, child: Path, manifest: dict,
+                                    operation: dict) -> None:
+    """Verify exact row composition, not the scientific validity of a repair."""
+    import numpy as np
+    require(isinstance(operation, dict), "reference-surface operation is invalid")
+    source = _read_nhtiss4(parent)
+    result = _read_nhtiss4(child)
+    parent_manifest_path, parent_manifest = _payload_manifest(parent)
+    require(Path(operation["source_payload_path"]).resolve() == parent.resolve()
+            and operation["source_payload_sha256"] == source["sha256"]
+            and Path(operation["source_manifest_path"]).resolve() == parent_manifest_path
+            and operation["source_manifest_sha256"] == _surface_sha256(parent_manifest_path),
+            "reference-surface immediate parent identity changed")
+    history = manifest["source"].get("reference_surface_compositions")
+    require(isinstance(history, list) and history and history[-1] == operation
+            and history[:-1] == parent_manifest["source"].get("reference_surface_compositions", []),
+            "reference-surface operation ancestry changed")
+    for key, value in parent_manifest["source"].items():
+        if key not in {"surfaces", "reference_surface_compositions",
+                       "serialized_triangle_count_reconciliation"}:
+            require(manifest["source"].get(key) == value,
+                    "reference-surface source provenance changed")
+    ids = operation["changed_stable_ids"]
+    require(isinstance(ids, list) and ids
+            and all(type(sid) is int and sid > 0 for sid in ids)
+            and ids == sorted(set(ids)),
+            "reference-surface changed IDs are invalid")
+    patches = operation["row_patches"]
+    require(isinstance(patches, list)
+            and sorted(p["stable_id"] for p in patches) == ids,
+            "reference-surface patch inventory differs")
+    by_id = {p["stable_id"]: p for p in patches}
+    source_rows = {int(r[6]): r for r in source["records"]}
+    result_rows = {int(r[6]): r for r in result["records"]}
+    require(list(source_rows) == list(result_rows)
+            and set(ids).issubset(source_rows), "reference-surface row identity changed")
+    require(operation["unchanged_row_vertex_bytes_and_local_faces"] ==
+            [sid for sid in source_rows if sid not in by_id],
+            "reference-surface unchanged row inventory differs")
+    for sid, old_record in source_rows.items():
+        a = _row_slices(source, old_record)
+        b = _row_slices(result, result_rows[sid])
+        before = _manifest_row(parent_manifest, sid)
+        after = _manifest_row(manifest, sid)
+        for key, value in before.items():
+            replaceable = {"vertex_count", "triangle_count"}
+            if sid in by_id:
+                replaceable.add("reference_surface_reconstruction")
+            if key not in replaceable:
+                require(after.get(key) == value, "reference-surface anatomical provenance changed")
+        if sid not in by_id:
+            require(_row_local_equal(a, b), "unselected reference-surface row changed")
+            continue
+        require(a["binding_bytes"] == b["binding_bytes"] and a["layer"] == b["layer"],
+                "reference-surface attachment binding or layer changed")
+        patch = by_id[sid]
+        npz, report = Path(patch["candidate"]), Path(patch["report"])
+        require(_surface_sha256(npz) == patch["candidate_sha256"]
+                and _surface_sha256(report) == patch["report_sha256"],
+                "reference-surface patch or report changed")
+        actual = _biceps_row_arrays(b)
+        with np.load(npz, allow_pickle=False) as expected:
+            for field, dtype in (("vertices6", "<f4"), ("binding_indices", "<u4"),
+                                 ("weights", "<f4"), ("faces", "<u4")):
+                require(actual[field].tobytes() ==
+                        np.asarray(expected[field], dtype=dtype).tobytes()
+                        and actual[field].shape == expected[field].shape,
+                        "reference-surface child differs from exact row patch")
+        require(after.get("reference_surface_reconstruction", {}).get("candidate_sha256")
+                == patch["candidate_sha256"], "reference-surface row provenance differs")
+    require(operation["binding_table_byte_exact"] is True
+            and operation["physical_route_mass_and_force_state_unchanged"] is True,
+            "reference-surface physical ownership changed")
+
+
 def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Path) -> dict:
     """Bind this composition to the existing anatomy receipt for native launch."""
     source_receipt, payload = Path(source_receipt).resolve(), Path(payload).resolve()
@@ -1376,7 +1487,25 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     edge_composition = manifest["source"].get("conforming_edge_refinement_composition")
     biceps_composition = manifest["source"].get("biceps_source_preserving_correction")
     fhl_composition = manifest["source"].get("fhl_source_seam_correction")
-    if fhl_composition is not None:
+    reference_operations = manifest["source"].get("reference_surface_compositions", [])
+    require(isinstance(reference_operations, list), "reference-surface operation history is invalid")
+    reference_composition = reference_operations[-1] if reference_operations else None
+    if reference_composition is not None:
+        _verify_reference_surface_child(old, payload, manifest, reference_composition)
+        require(reference_composition["source_payload_sha256"] == owner["sha256"],
+                "reference-surface child is not bound to the immediate anatomical parent")
+        parent_manifest = Path(owner.get("manifest_path", old.with_suffix(".manifest.json")))
+        if not parent_manifest.is_absolute():
+            parent_manifest = source_receipt.parent / parent_manifest
+        require(parent_manifest.resolve() == Path(reference_composition["source_manifest_path"]).resolve()
+                and sha(parent_manifest) == owner.get("manifest_sha256")
+                == reference_composition["source_manifest_sha256"],
+                "reference-surface anatomical parent manifest identity changed")
+        composition = reference_composition
+        changed_stable_ids = composition["changed_stable_ids"]
+        # These are preserved historical operations, not this child's producer.
+        edge_composition = biceps_composition = fhl_composition = None
+    elif fhl_composition is not None:
         require(fhl_composition.get("changed_stable_ids") == [27, 28]
                 and fhl_composition.get("composed_parent_payload_sha256") == owner["sha256"],
                 "FHL child is not bound to the immediate anatomical parent")
@@ -1505,7 +1634,8 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         anatomical_payload = source_receipt.parent / anatomical_payload
     require(sha(anatomical_payload) == receipt["payload"]["sha256"], "anatomical payload changed")
     receipt["payload"]["path"] = str(anatomical_payload.resolve())
-    binding_key = ("fhl_source_seam_correction_binding" if fhl_composition is not None
+    binding_key = ("reference_surface_composition_binding" if reference_composition is not None
+                   else "fhl_source_seam_correction_binding" if fhl_composition is not None
                    else "biceps_source_preserving_correction_binding" if biceps_composition is not None
                    else "conforming_surface_refinement_binding" if edge_composition is not None
                    else "passive_attachment_composition_binding")
@@ -1515,11 +1645,16 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     elif biceps_composition is not None:
         require(binding_key not in receipt["provenance"],
                 "anatomy receipt already contains this biceps correction provenance binding")
+    if reference_composition is not None and binding_key in receipt["provenance"]:
+        receipt["provenance"].setdefault("reference_surface_composition_binding_history", []).append(
+            receipt["provenance"][binding_key])
     receipt["provenance"][binding_key] = {
         "prior_receipt_path": str(source_receipt), "prior_receipt_sha256": sha(source_receipt),
         "composition_manifest_sha256": sha(manifest_path),
         "changed_stable_ids": changed_stable_ids,
-        "scope": ("Proof-bound FHL source-seam correction composed as a direct child of this receipt; anatomy acceptance remains separate."
+        "scope": ("Source-derived reference surface composition, verified against its immediate parent and exact row patches; anatomical and native-cycle acceptance remain separate."
+                  if reference_composition is not None else
+                  "Proof-bound FHL source-seam correction composed as a direct child of this receipt; anatomy acceptance remains separate."
                   if fhl_composition is not None else
                   "Explicit source-derived conforming surface refinement only; existing physical owners, "
                   "mass, forces, and tendon state are unchanged."
@@ -1575,13 +1710,15 @@ def main(argv: list[str] | None=None) -> int:
                         help="single explicit source edge to replay from the producer context")
     parser.add_argument("--fhl-source-seam-correction", type=Path,
                         help="proof JSON for the exact pinned FHL 27/28 source-seam correction")
+    parser.add_argument("--reference-surface-row", type=int, action="append", default=[],
+                        help="explicit stable ID for source-derived passive surface reconstruction; repeat for every --row; no anatomical admission implied")
     parser.add_argument("--anatomy-receipt", type=Path,
                         help="bind the composed surface rows in a new native anatomy launch receipt")
     args = parser.parse_args(argv)
     edge_mode = args.conforming_edge_context is not None or args.conforming_edge is not None
     if edge_mode:
-        if args.fhl_source_seam_correction is not None:
-            parser.error("FHL correction mode cannot be combined with conforming edge mode")
+        if args.fhl_source_seam_correction is not None or args.reference_surface_row:
+            parser.error("row correction modes cannot be combined with conforming edge mode")
         if args.row or args.conforming_edge_context is None or args.conforming_edge is None:
             parser.error("conforming edge mode requires only --conforming-edge-context and --conforming-edge")
         if args.conforming_edge[0] <= 0 or min(args.conforming_edge[1:]) < 0 or args.conforming_edge[1] == args.conforming_edge[2]:
@@ -1596,7 +1733,8 @@ def main(argv: list[str] | None=None) -> int:
             fhl_proof = (json.loads(args.fhl_source_seam_correction.read_text())
                          if args.fhl_source_seam_correction is not None else None)
             report = compose(args.source, args.output, args.row,
-                             fhl_source_seam_correction=fhl_proof)
+                             fhl_source_seam_correction=fhl_proof,
+                             reference_surface_rows=tuple(args.reference_surface_row))
         if args.anatomy_receipt is not None:
             bind_anatomy_receipt(args.anatomy_receipt, args.output / args.source.name,
                                  args.output / "resting-anatomy-receipt.json")
