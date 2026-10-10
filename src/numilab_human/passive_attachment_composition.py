@@ -95,6 +95,67 @@ def require(condition: bool, message: str) -> None:
     if not condition:
         raise ValueError('passive attachment composition: ' + message)
 
+
+def _reconcile_serialized_triangle_counts(manifest: dict, records) -> list[dict]:
+    # Historical source-selection and precision-repair counts remain provenance;
+    # this reconciles only the current row count to serialized index_count / 3.
+    source = manifest.get("source")
+    surfaces = source.get("surfaces") if isinstance(source, dict) else None
+    require(isinstance(surfaces, list) and len(surfaces) == len(records),
+            "manifest and serialized surface row counts differ")
+    changes = []
+    for row_index, (surface, record) in enumerate(zip(surfaces, records)):
+        require(isinstance(surface, dict)
+                and isinstance(surface.get("stable_id"), int)
+                and not isinstance(surface.get("stable_id"), bool)
+                and surface["stable_id"] == int(record[6]),
+                "manifest and serialized stable-row order differ")
+        previous_count = surface.get("triangle_count")
+        require(isinstance(previous_count, int) and not isinstance(previous_count, bool)
+                and previous_count > 0,
+                "manifest surface triangle_count is missing or invalid")
+        serialized_index_count = int(record[5])
+        require(serialized_index_count > 0 and serialized_index_count % 3 == 0,
+                "serialized row index count is not a positive triangle multiple")
+        serialized_triangle_count = serialized_index_count // 3
+        if previous_count != serialized_triangle_count:
+            change = {
+                "stable_id": int(record[6]),
+                "manifest_triangle_count_before": previous_count,
+                "serialized_triangle_count": serialized_triangle_count,
+                "serialized_index_count": serialized_index_count,
+                "record_index": row_index,
+                "reason": "inherited manifest count reconciled to the current NHTISS4 ABI5 row record",
+            }
+            selection = surface.get("source_component_selection")
+            precision = surface.get("source_precision_repair")
+            if isinstance(selection, dict) and "retained_triangle_count" in selection:
+                change["preserved_source_component_selection_retained_triangle_count"] = selection["retained_triangle_count"]
+            if isinstance(precision, dict) and "removed_triangle_count" in precision:
+                change["preserved_source_precision_repair_removed_triangle_count"] = precision["removed_triangle_count"]
+            changes.append(change)
+            surface["triangle_count"] = serialized_triangle_count
+        else:
+            surface["triangle_count"] = serialized_triangle_count
+    if changes:
+        key = "serialized_triangle_count_reconciliation"
+        prior = source.get(key)
+        operation = {
+            "method": "nhtiss4_abi5_surface_record_index_count_div_3",
+            "scope": "Manifest triangle-count metadata only; serialized vertex/index bytes and historical source-selection/precision-repair lineage are unchanged.",
+            "rows": changes,
+        }
+        if prior is None:
+            source[key] = {"schema": "numi.human.serialized-triangle-count-reconciliation.v1",
+                           "operations": [operation]}
+        else:
+            require(isinstance(prior, dict)
+                    and prior.get("schema") == "numi.human.serialized-triangle-count-reconciliation.v1"
+                    and isinstance(prior.get("operations"), list),
+                    "unrecognized prior serialized-count reconciliation lineage")
+            prior["operations"].append(operation)
+    return changes
+
 def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path]], *,
             biceps_source_correction: dict | None = None,
             fhl_source_seam_correction: dict | None = None) -> dict:
@@ -283,10 +344,12 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
                     'source_candidate_payload_sha256': biceps_correction['source_candidate_payload_sha256'],
                     'direct_parent_row_identity_verified': True,
                     'scope': 'Bounded inferred source-geometry correction only; unchanged bindings, weights, faces, and force routes.'}
+    serialized_triangle_count_reconciliation = _reconcile_serialized_triangle_counts(
+        manifest, newrec)
     PM = output / M.name
     PM.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
     require(inputs == {p: sha(p) for p in inputs}, 'candidate composition invariant')
-    proof = {'scope': 'Existing NHTISS4 ABI5 passive geometry composition; final native and anatomical admission separate.', 'input_sha256': inputs, 'inputs_unchanged': True, 'changed_rows': proofs, 'unchanged_row_vertex_bytes_and_local_faces': unchanged, 'binding_table_byte_exact': True, 'payload_sha256': sha(P), 'manifest_sha256': sha(PM), 'vertex_count': vcur, 'index_count': icur}
+    proof = {'scope': 'Existing NHTISS4 ABI5 passive geometry composition; final native and anatomical admission separate.', 'input_sha256': inputs, 'inputs_unchanged': True, 'changed_rows': proofs, 'unchanged_row_vertex_bytes_and_local_faces': unchanged, 'binding_table_byte_exact': True, 'payload_sha256': sha(P), 'manifest_sha256': sha(PM), 'vertex_count': vcur, 'index_count': icur, 'serialized_triangle_count_reconciliation': serialized_triangle_count_reconciliation}
     if biceps_correction is not None:
         proof['biceps_source_preserving_correction'] = biceps_correction
     if fhl_correction is not None:
@@ -1058,6 +1121,7 @@ def _verify_fhl_composed_child(parent_payload: Path, child_payload: Path, correc
             "scope": ("Exact source-face seam restoration for the named FHL row; no vertex positions, "
                       "normals, bindings, weights, or physical force routes changed."),
         }
+    _reconcile_serialized_triangle_counts(expected_manifest, child["records"])
     expected_manifest["source"]["fhl_source_seam_correction"] = correction
     require(expected_manifest == child_manifest,
             "FHL manifest changed source row metadata/order or fields outside the exact row-count/proof additions")

@@ -466,7 +466,7 @@ def test_legacy_attachment_binding_can_be_replaced_as_before(inputs, tmp_path):
     assert bound["provenance"]["passive_attachment_composition_binding"]["changed_stable_ids"] == [7]
 
 
-def _fhl_source_seam_fixture(tmp_path, monkeypatch):
+def _fhl_source_seam_fixture(tmp_path, monkeypatch, *, stale_inherited_count=False):
     """Small synthetic proof bundle for the pinned 27/28 owner branch."""
     import hashlib
     import struct
@@ -597,6 +597,12 @@ def _fhl_source_seam_fixture(tmp_path, monkeypatch):
     inherited_biceps={"schema":"fixture.biceps-source-preserving-correction.v1",
                       "changed_stable_ids":[103,104],"prior":"retained parent lineage"}
     parent_manifest["source"]["biceps_source_preserving_correction"] = inherited_biceps
+    if stale_inherited_count:
+        inherited_row = next(row for row in parent_manifest["source"]["surfaces"]
+                             if int(row["stable_id"]) == 23)
+        inherited_row["triangle_count"] = 1480
+        inherited_row["source_component_selection"] = {"retained_triangle_count": 1480}
+        inherited_row["source_precision_repair"] = {"removed_triangle_count": 2}
     parent_manifest_path.write_text(json.dumps(parent_manifest,indent=2,sort_keys=True)+"\n")
     files={
         "registration":registration,
@@ -745,6 +751,52 @@ def test_fhl_pair_composes_only_as_closed_proof_bound_direct_child(tmp_path, mon
     assert "FHL source-seam correction" in fhl_binding["scope"]
     assert "source_preserving_correction" not in fhl_binding
     assert bound["provenance"]["native_muscle_surfaces"]["sha256"]==digest(out/parent.name)
+
+
+def test_fhl_composition_reconciles_inherited_serialized_triangle_count(tmp_path, monkeypatch):
+    parent, subset, patch_report, proof = _fhl_source_seam_fixture(
+        tmp_path, monkeypatch, stale_inherited_count=True)
+    receipt = anatomy_fixture(parent, tmp_path)
+    receipt_data = json.loads(receipt.read_text())
+    receipt_data["provenance"]["native_muscle_surfaces"]["registration_fingerprint32"] = "b1b410ad"
+    receipt.write_text(json.dumps(receipt_data))
+    parent_manifest = json.loads(parent.with_suffix(".manifest.json").read_text())
+    before = next(row for row in parent_manifest["source"]["surfaces"]
+                  if int(row["stable_id"]) == 23)
+    assert before["triangle_count"] == 1480
+    assert before["source_component_selection"]["retained_triangle_count"] == 1480
+    assert before["source_precision_repair"]["removed_triangle_count"] == 2
+
+    out = tmp_path / "count-reconciled"
+    result = compose(
+        parent, out,
+        [(27, Path(proof["row_patch_npz"]["27"]["path"]), patch_report),
+         (28, Path(proof["row_patch_npz"]["28"]["path"]), patch_report)],
+        fhl_source_seam_correction=proof)
+    child_manifest = json.loads((out / parent.with_suffix(".manifest.json").name).read_text())
+    child_row = next(row for row in child_manifest["source"]["surfaces"]
+                     if int(row["stable_id"]) == 23)
+    reconciliation = result["serialized_triangle_count_reconciliation"]
+    assert reconciliation == [{
+        "stable_id": 23,
+        "manifest_triangle_count_before": 1480,
+        "serialized_triangle_count": 1,
+        "serialized_index_count": 3,
+        "record_index": 23,
+        "reason": "inherited manifest count reconciled to the current NHTISS4 ABI5 row record",
+        "preserved_source_component_selection_retained_triangle_count": 1480,
+        "preserved_source_precision_repair_removed_triangle_count": 2,
+    }]
+    assert child_row["triangle_count"] == 1
+    assert child_row["source_component_selection"] == before["source_component_selection"]
+    assert child_row["source_precision_repair"] == before["source_precision_repair"]
+    source_record = next(row for row in pac._read_nhtiss4(parent)["records"] if int(row[6]) == 23)
+    child_record = next(row for row in pac._read_nhtiss4(out / parent.name)["records"] if int(row[6]) == 23)
+    assert int(source_record[5]) == int(child_record[5]) == 3
+    bound = bind_anatomy_receipt(receipt, out / parent.name, out / "resting-anatomy-receipt.json")
+    assert bound["provenance"]["native_muscle_surfaces"]["sha256"] == digest(out / parent.name)
+    report_on_disk = json.loads((out / "report.json").read_text())
+    assert report_on_disk["serialized_triangle_count_reconciliation"] == reconciliation
 
 
 @pytest.mark.parametrize("defect",["nhtiss_layer","manifest_surface_order"])
