@@ -1,0 +1,883 @@
+{
+  "complete": true,
+  "inputs_unchanged": true,
+  "pins": {
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/common_atlas_skin_clearance.py": "151ba8925910ae164bdf9a41417ca2cc5c63b07c3b05eb09496d20c4771c5e9b",
+    "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/report.json": "63bef1968e1a87b61fd709b004ea2eb94c4d89f649231dd16b2b76febcf3201c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/stable-147-reference-resolution-row-patch.npz": "55cd6bc5a92ede5dc674aecf950b92c435af455d7a18ac37b87ae647482145f3",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/stable-148-reference-resolution-row-patch.npz": "8f78ef33f0ade691f686da7a398a305c5a9a28b6e431d056a843ae89291c7d5c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/completed-tfl-row-excerpt-001/report.json": "c095311fdb603cfc5a955c22cd4b97a9c2f5316f5cfdeb3521f9cacf0227bbde",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/component-source-resolution-001/report.json": "4b230a5496821976196ce80bf2b757e162e5cae815b50a31195dfab8a384509e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/component-source-resolution-001/stable-57-reference-resolution-row-patch.npz": "899d38931c791ce09833962a088f11bcc8444af918030e4050ba64663147f3c5",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/component-source-resolution-001/stable-58-reference-resolution-row-patch.npz": "395909a9702688df4acbfca9d08b25979911d5473527d43e827ad54809445bad",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ecu-source-resolution-001/report.json": "83a7c7d05be25787a54848be3d7e1baab01424ca10d746ca16adc161a41e6e1f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ecu-source-resolution-001/stable-115-reference-resolution-row-patch.npz": "4b0e521e22f80ca9a7fd040c8ca9141add59f6580a0f6de4680d5d8de48ca859",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ecu-source-resolution-001/stable-116-reference-resolution-row-patch.npz": "f5b1d88f6d9e31a851f78b79939ef9fd2c718c669479a76f37b4a44e0663281e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/gracilis-source-union-lift-001/report.json": "b799e0d5e3746dbb17ddbfe19298cc35e8c60ffecaa7658bae06ac5457609e13",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/gracilis-source-union-lift-001/stable-35-reference-union-row-patch.npz": "6de9f7830339a7c751f4ba2ac026cf16912fb8a4b9e22e466e3cc0b665078b4c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/gracilis-source-union-lift-001/stable-36-reference-union-row-patch.npz": "ec17cd9bf844db92b08b30e35215d61322f214c93dc66b579935e0d9c617a2a0",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.mrvpack": "3853280c418f7a5a3ae158f6435c7d9c17bb79ec1785832b1f3503069f0ae01b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json": "7015fc4211ac280d0ba7673789f2fc8bae12813d1a6615512b7e5441a7112b2e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.mrvpack": "43e8c7b184c73e126376c6d695837d89e6cea1fdf3dd73ba83dc46bdbacd9233",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json": "15a895f9ea98abad5e35c7f5c9b21c99eedc67df3e04d3979bc50e36969905b2",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.mrvpack": "8ab1990bc3521ea778ef3a90386b9ceb5f44f7944a452eed3d8b27473633aef4",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json": "e1c517b7af4ec356b15be28e7804ec5a33796a099bd634370a978d42a6fb9b7d",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.mrvpack": "3ff216919b53a07baf5242ba8d5291ca3e10b78e1b117b5ffb3bde33d486fc8e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json": "7c59c8f0c606bc7d9dd4697db283412ee583f8c0c03587b9c01ff821ccc8622e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.mrvpack": "9a4558a5d1cdf8356dc55f9df7b9e8621e73ac8528ed9dc24c226eadebbba526",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json": "a35116ea5a755366712fbfb9fc9e26e074fd0b69c4dd27d4e910b80bd5e56cf8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.mrvpack": "bf5375fee678ce5068958bda73dceb82fcfc9037b9c1099926c5164d5330193b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json": "c68ca9be3fddb328781f00507f6df1cd23dac2761c30d8cbd30dc0e3e568bbcc",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.mrvpack": "23e101fada481aa47b5956db45707955eb9a9774c72afb67841b2318ca6271e5",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json": "b7ee75d433b91052428ad0fe605eae468573dbc36b79170bc7cdb55befaecd61",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.mrvpack": "952a1a15941b39c45914b281ebde675267eb4ca4c969205db5a650559ca9c1ea",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/ten-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json": "f9112bd8703833a024c7e332cfa3216ec97aa79674180f5cc5d6f80bfa50f436",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/tfl-source-plane-untangle-001/stable-55-reference-plane-row-patch.npz": "3d01982ce219a0804a0080f0eda6da47f7e0decfa78486b0b901a6e52e7d1b2e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/tfl-source-plane-untangle-001/stable-56-reference-plane-row-patch.npz": "f1e9861494eb66246603f1733cf5642d9caff52e16f4cc71f43ff06fe4ec0d65",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/verify_ten_surface_native_interfaces_001.py": "49f24f2f2955897ceae9190770cb726eab1b097293a8eada0fa6a38b0af7f5ea",
+    "/Users/n/numi-human-retained-delivery-20261009/fullbody-source-surface-repair-1276/gluteus-maximus-pilot-001/attempt-010/run_gluteus_union_010.py": "3343c53df203e43d30d778b2f6178295ce250c1519326db55e97c5118e44fcd4",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-count-reconciliation-1258/attempt-002/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "80d775bef6b8a4108e159fb7882a84b2fb8dce5b492059cd8c7cf3644a137467",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-count-reconciliation-1258/attempt-002/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "6579d06d358bfcf51f964feb57425fe568c467fd361930bce46d376ec8aedaa4"
+  },
+  "poses": [
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.837138534477048e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2377834115800373e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.7314279645418166e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.7516760397880357e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2818463544611077e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.388837865275353e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.97686242482388e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.2500259981366246e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.3868036984862905e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.390307925069699e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 0,
+      "wall_seconds": 16.431261165998876
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.0271193773169504e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2561466768449073e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.5596295872780507e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.5211161845458495e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.299587156065733e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2310379476739693e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.1542358837725164e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.9824705564454303e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.38999946897409e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.3974095513241277e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 4767,
+      "wall_seconds": 16.926640042103827
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.831464253855028e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.7943374184954607e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 3.055660709776425e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.580486298139281e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.388837865275353e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2310379476739693e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.075491588888186e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.5331974029541016e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.388837865275353e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.4031912392474686e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 5023,
+      "wall_seconds": 20.44784616678953
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.8763780980502112e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.3580714265673e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 3.097148193542142e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.5949662019083735e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.38999946897409e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.392393495359381e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.1696418193818683e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.1542358837725164e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.391450680152183e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.4016026626195866e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 5599,
+      "wall_seconds": 16.31106066517532
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.8940454451570154e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.8143349382111313e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 3.0385817357301346e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.6120236275762865e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.38999946897409e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.385349660155493e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.4620758953479386e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.3276357876976293e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.38999946897409e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.3888560196770133e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 6207,
+      "wall_seconds": 15.86402937490493
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.8671101460071903e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.7943374184954607e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.657845168340841e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.597638808005182e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.388837865275353e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.221986075256521e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.457562461863554e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.457562461863554e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.407644485243637e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.4042016051339205e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 6815,
+      "wall_seconds": 15.707771750167012
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.837138534477048e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2300511435493124e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.6026425472957743e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.573418027038953e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.3934808975769594e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.384476811558792e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.1542358837725164e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.240135726090209e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.38999946897409e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.4152529453148114e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 7423,
+      "wall_seconds": 15.69295054115355
+    },
+    {
+      "arm": "baseline",
+      "rows": [
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.8734173418104884e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 115
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.2737006692050962e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 116
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 3.0852652063564545e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 147
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.602375924076584e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 148
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.3934808975769594e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 57
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.385349660155493e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 58
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.8966081829902314e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 55
+        },
+        {
+          "changed_star_interfaces": [],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 1.959941750461743e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 56
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 49
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.4237300961633206e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 35
+        },
+        {
+          "changed_star_interfaces": [
+            {
+              "added_lineage_pairs": [],
+              "after_pairs": 1,
+              "before_pairs": 1,
+              "body": 4294967295,
+              "removed_lineage_pairs": [],
+              "semantic": 51005,
+              "stable_id": 50
+            }
+          ],
+          "external_targets_scanned": 859,
+          "max_referenced_forward_error_m": 2.392651798134135e-07,
+          "new_triangle_pair_count": 0,
+          "self_count": 0,
+          "stable_id": 36
+        }
+      ],
+      "step": 8000,
+      "wall_seconds": 15.456010499969125
+    }
+  ],
+  "scope": "Eight actual native candidate captures: full repaired-surface self check and changed-star external pairs against all native targets, compared with original source forwarded through the same accepted body poses. Exact unchanged whole-body anatomy is not implied."
+}
