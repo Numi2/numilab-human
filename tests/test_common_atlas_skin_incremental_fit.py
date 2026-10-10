@@ -86,8 +86,15 @@ def test_backtracking_self_audit_reuses_only_accepted_geometry(monkeypatch):
     accepted = [event for event in events if event["status"] == "accepted"]
     assert len(accepted) == 1
     assert accepted[0]["nonocular_pair_counts_candidate_by_pose"] == [1, 1]
-    assert any(event["status"] == "rejected" and "exact self-pairs" in event["reason"]
-               for event in events)
+    # Rejection wording may distinguish repair eligibility from exact scans.
+    # The recorded intersecting pair, not that wording, proves this trial failed
+    # the self-intersection gate without replacing the accepted baseline.
+    assert any(
+        event["status"] == "rejected"
+        and any(row["triangle_pairs"] == [[0, 1]]
+                for row in (event.get("candidate_diagnostics") or {}).get("self_pair_failures", []))
+        for event in events
+    )
     assert 1 in checked_candidates and 0 in checked_candidates
     expected_hashes = {
         hashlib.sha256(source.tobytes()).hexdigest(),

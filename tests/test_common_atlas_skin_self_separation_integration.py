@@ -106,6 +106,29 @@ def _fake_proposal_record(kwargs, proposed):
     }
 
 
+def test_self_pair_seed_eligibility_keeps_only_free_vertices():
+    face_vertices = np.array([24882, 24883, 24843], dtype=np.int64)
+    protected = np.array([24883, 30182, 30207, 30206], dtype=np.int64)
+
+    assert clearance._free_self_pair_seed_vertex_ids(face_vertices, protected).tolist() == [24843, 24882]
+    assert clearance._free_self_pair_seed_vertex_ids(
+        np.array([30182, 30207, 30206], dtype=np.int64), protected,
+    ).size == 0
+
+
+def test_exact_coordinate_ties_are_blocked_as_a_whole_group():
+    source = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [1.0, 0.0, 0.0], [2.0, 0.0, 0.0],
+    ], dtype="<f4")
+    tied = clearance._exact_coordinate_tied_source_vertex_ids(source)
+
+    assert tied.tolist() == [1, 3]
+    assert clearance._free_self_pair_seed_vertex_ids(
+        np.array([2, 3, 4], dtype=np.int64), np.union1d([1], tied),
+    ).tolist() == [2, 4]
+
+
 def test_callsite_refuses_self_patch_touching_active_target_seed(monkeypatch):
     args = _clearance_case()
     args["fixed_source_vertex_ids"] = np.array([3, 4, 5], dtype=np.int64)
@@ -123,7 +146,7 @@ def test_callsite_refuses_self_patch_touching_active_target_seed(monkeypatch):
     monkeypatch.setattr(clearance, "_propose_local_self_separation_increment", fake_proposal)
     args["scan_progress_callback"] = scan_progress.append
 
-    with pytest.raises(ImportError, match="could not admit iteration=1.*neither face.*eligible"):
+    with pytest.raises(ImportError, match="could not admit iteration=1.*neither face.*free vertex"):
         clearance.derive_shared_multipose_inferred_clearance(**args)
 
     assert helper_calls == []
@@ -226,8 +249,12 @@ def test_callsite_reports_only_the_locally_repaired_source_to_target_scan(monkey
     assert np.array_equal(result.astype("<f4"), observed)
 
 
-def test_callsite_moves_only_eligible_side_when_other_pair_face_is_protected(monkeypatch):
+def test_callsite_seeds_only_free_vertices_on_partially_protected_face(monkeypatch):
     args = _clearance_case()
+    # Face 0 is the active target core. Vertex 3 on candidate face 1 is a
+    # preserved source anchor; vertices 4 and 5 remain eligible local seeds.
+    args["preserved_source_anchor_vertex_ids"] = np.array([3], dtype=np.int64)
+    args["fixed_source_vertex_ids"] = np.array([8], dtype=np.int64)
     scan_progress = []
     helper_calls = []
     audit_call = 0
@@ -262,18 +289,22 @@ def test_callsite_moves_only_eligible_side_when_other_pair_face_is_protected(mon
 
     assert len(helper_calls) == 1
     call = helper_calls[0]
-    assert call["self_patch_seed_vertex_ids"].tolist() == [3, 4, 5]
-    assert not set(call["movable_vertex_ids"].tolist()) & {0, 1, 2}
+    assert call["self_patch_seed_vertex_ids"].tolist() == [4, 5]
+    assert set(call["movable_vertex_ids"].tolist()).isdisjoint({0, 1, 2, 3, 8})
     assert set(call["required_target_seed_vertex_ids"].tolist()) & {0, 1, 2}
     assert report["final_nonocular_pair_count_by_pose"] == [0, 0]
     details = report["iterations"][0]["local_self_separation"]
     selection = details["pair_seed_face_selection"][0]
     assert selection["triangle_pair"] == [0, 1]
     assert selection["eligible_seed_faces"] == [1]
+    assert selection["eligible_seed_vertex_ids_by_face"] == [
+        {"face_row": 1, "vertex_ids": [4, 5]},
+    ]
     assert selection["selected_seed_face"] == 1
+    assert selection["selected_seed_vertex_ids"] == [4, 5]
     assert details["protected_pair_side_face_rows"] == [0]
     assert scan_progress[0]["event"] == "trial_started"
-    assert np.array_equal(result[0:3], call["source_positions_m"][0:3])
+    assert np.array_equal(result[[0, 1, 2, 3, 8]], call["source_positions_m"][[0, 1, 2, 3, 8]])
 
 
 def test_pair_side_selection_maps_compact_rows_to_sparse_global_source_ids(monkeypatch):
@@ -313,7 +344,7 @@ def test_pair_side_selection_maps_compact_rows_to_sparse_global_source_ids(monke
     assert selection["selected_seed_face"] == 1
 
 
-def test_callsite_refuses_seed_shared_with_another_protected_pair_side(monkeypatch):
+def test_partially_free_pair_side_never_seeds_fixed_vertices(monkeypatch):
     args = _clearance_case()
     original_source = args["source_positions"]
     extra = np.array([
@@ -325,7 +356,6 @@ def test_callsite_refuses_seed_shared_with_another_protected_pair_side(monkeypat
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
         [3, 9, 10], [11, 12, 13],
     ], dtype=np.int64)
-    # Rebuild compact pose data and scan closure for the extended source mesh.
     referenced = np.unique(args["faces"])
     compact_faces = np.searchsorted(referenced, args["faces"])
     args["jacobians_by_pose"] = np.broadcast_to(
@@ -373,18 +403,40 @@ def test_callsite_refuses_seed_shared_with_another_protected_pair_side(monkeypat
 
     def fake_proposal(**kwargs):
         helper_calls.append(kwargs)
-        raise AssertionError("a seed overlapping a protected pair-side must reject before solve")
+        proposed = np.asarray(kwargs["source_positions_m"], dtype="<f4").copy()
+        proposed[int(kwargs["self_patch_seed_vertex_ids"][0]), 2] += np.float32(1.0e-5)
+        return {
+            **_fake_proposal_record(kwargs, proposed),
+            "constraint_rows_by_pose": [9],
+            "requested_max_vertex_l2_increment_mm": 0.01,
+            "float32_max_vertex_l2_increment_mm": 0.01,
+            "post_rounding_linearized_minimum_sat_slack_mm": 0.0,
+            "post_rounding_predicted_supplied_pair_exact_count": 0,
+        }
 
     monkeypatch.setattr(clearance, "audit_incremental_skin_self_intersections", fake_incremental)
     monkeypatch.setattr(clearance, "_propose_local_self_separation_increment", fake_proposal)
 
-    with pytest.raises(
-        ImportError,
-        match="could not admit iteration=1.*overlap vertices of a protected pair-side face",
-    ):
-        clearance.derive_shared_multipose_inferred_clearance(**args)
+    _, report = clearance.derive_shared_multipose_inferred_clearance(**args)
 
-    assert helper_calls == []
+    assert len(helper_calls) == 1
+    call = helper_calls[0]
+    assert set(call["self_patch_seed_vertex_ids"].tolist()).isdisjoint({9})
+    assert set(call["movable_vertex_ids"].tolist()).isdisjoint({9})
+    assert 9 in call["fixed_support_vertex_ids"].tolist()
+    details = report["iterations"][0]["local_self_separation"]
+    selections = details["pair_seed_face_selection"]
+    assert [row["triangle_pair"] for row in selections] == [[0, 1], [3, 4]]
+    # Pair (3, 4) has two eligible sides: face 3 has free vertices despite
+    # fixed vertex 9, and face 4 is wholly free. The nonselected eligible side
+    # is not artificially blocked from the patch.
+    assert selections[1]["eligible_seed_faces"] == [3, 4]
+    assert 3 not in details["protected_pair_side_face_rows"]
+    assert 4 not in details["protected_pair_side_face_rows"]
+    assert details["protected_pair_side_face_rows"] == [0]
+    attempted = call["source_positions_m"].astype("<f4")
+    coordinate_tied = clearance._exact_coordinate_tied_source_vertex_ids(attempted)
+    assert set(call["self_patch_seed_vertex_ids"].tolist()).isdisjoint(coordinate_tied.tolist())
 
 
 def test_helper_sample_receipts_are_remapped_to_actual_accepted_pose(monkeypatch):

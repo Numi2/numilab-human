@@ -1424,6 +1424,38 @@ _LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM = 1.0e-7
 _LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS = 120.0
 
 
+def _exact_coordinate_tied_source_vertex_ids(source_positions: np.ndarray) -> np.ndarray:
+    """Return every source row in a repeated Float32 coordinate group.
+
+    These rows are conservatively kept outside inferred local patches so a
+    normal/material seam record is never moved independently of an exact
+    coordinate copy.
+    """
+    raw = np.asarray(source_positions)
+    if (raw.ndim != 2 or raw.shape[1] != 3 or raw.dtype.kind != "f"
+            or raw.dtype.itemsize != 4 or not np.isfinite(raw).all()):
+        raise human.ImportError("coordinate-tie protection requires finite Float32 Nx3 source positions")
+    source = np.ascontiguousarray(raw, dtype="<f4")
+    if len(source) < 2:
+        return np.empty(0, dtype=np.int64)
+    _, inverse, counts = np.unique(source, axis=0, return_inverse=True, return_counts=True)
+    return np.flatnonzero(counts[inverse] > 1).astype(np.int64)
+
+
+def _free_self_pair_seed_vertex_ids(
+    face_vertex_ids: np.ndarray,
+    protected_vertex_ids: np.ndarray,
+) -> np.ndarray:
+    """Return only face vertices that can seed an inferred local movement."""
+    face_ids = np.asarray(face_vertex_ids)
+    protected = np.asarray(protected_vertex_ids)
+    if (face_ids.ndim != 1 or face_ids.dtype.kind not in "iu"
+            or protected.ndim != 1 or protected.dtype.kind not in "iu"):
+        raise human.ImportError("self-pair seed eligibility requires integer vertex ID rows")
+    return np.setdiff1d(np.unique(face_ids.astype(np.int64)),
+                        np.unique(protected.astype(np.int64)), assume_unique=True)
+
+
 def _local_self_separation_rounding_reserve_mm(
     source_positions_m: np.ndarray, component_cap_mm: float,
 ) -> np.ndarray:
@@ -4076,7 +4108,11 @@ def derive_shared_multipose_inferred_clearance(
                 protected_self_ids = np.unique(np.concatenate((
                     required_target_seed_ids, active_target_ids, all_fixed_ids,
                 )))
-                selected_seed_faces = set()
+                full_trial_source = source.astype("<f4").copy()
+                full_trial_source[referenced] = trial_source.astype("<f4")
+                coordinate_tied_ids = _exact_coordinate_tied_source_vertex_ids(full_trial_source)
+                seed_blocked_ids = np.union1d(protected_self_ids, coordinate_tied_ids)
+                selected_seed_vertices_by_face = {}
                 protected_pair_side_faces = set()
                 pair_selection_receipts = []
                 ineligible_pair = None
@@ -4085,38 +4121,55 @@ def derive_shared_multipose_inferred_clearance(
                     for face_a_value, face_b_value in pairs:
                         face_a, face_b = int(face_a_value), int(face_b_value)
                         sides = (face_a, face_b)
-                        eligible = [
-                            face for face in sides
-                            if not np.intersect1d(source_faces[face], protected_self_ids).size
-                        ]
+                        free_seed_vertices_by_face = {
+                            face: _free_self_pair_seed_vertex_ids(
+                                source_faces[face], seed_blocked_ids,
+                            )
+                            for face in sides
+                        }
+                        eligible = [face for face in sides if len(free_seed_vertices_by_face[face])]
                         if not eligible:
                             ineligible_pair = {
                                 "pose_index": pose,
                                 "triangle_pair": [face_a, face_b],
                                 "protected_side_faces": [face_a, face_b],
+                                "coordinate_tied_source_vertex_ids": coordinate_tied_ids.tolist(),
                             }
                             break
-                        # Prefer the eligible face already closest to its accepted source
-                        # position; break exact ties by stable face-row order.
+                        # Compare only vertices that can actually move. Protected
+                        # target-core, support, anchor, and coordinate-tied rows stay fixed.
                         movement_cost = {}
                         for face in eligible:
-                            compact_face_vertices = lookup[source_faces[face]]
-                            if np.any(compact_face_vertices < 0):
+                            compact_seed_vertices = lookup[free_seed_vertices_by_face[face]]
+                            if np.any(compact_seed_vertices < 0):
                                 raise human.ImportError(
-                                    "self-pair face is absent from the sorted compact source map"
+                                    "self-pair seed vertex is absent from the sorted compact source map"
                                 )
                             movement_cost[face] = float(np.sum(
-                                source_displacement[compact_face_vertices] ** 2
+                                source_displacement[compact_seed_vertices] ** 2
                             ))
                         selected_face = min(eligible, key=lambda face: (movement_cost[face], face))
-                        selected_seed_faces.add(selected_face)
+                        selected_seed_vertices_by_face.setdefault(selected_face, set()).update(
+                            map(int, free_seed_vertices_by_face[selected_face])
+                        )
+                        # Preserve the prior boundary: only a fully ineligible side
+                        # is blocked. An eligible but unselected side may still enter
+                        # the local patch if it is adjacent to a selected seed.
                         protected_sides = [face for face in sides if face not in eligible]
                         protected_pair_side_faces.update(protected_sides)
                         pair_selection_receipts.append({
                             "pose_index": int(pose),
                             "triangle_pair": [face_a, face_b],
                             "eligible_seed_faces": eligible,
+                            "eligible_seed_vertex_ids_by_face": [
+                                {"face_row": int(face),
+                                 "vertex_ids": free_seed_vertices_by_face[face].tolist()}
+                                for face in eligible
+                            ],
                             "selected_seed_face": int(selected_face),
+                            "selected_seed_vertex_ids": sorted(
+                                map(int, free_seed_vertices_by_face[selected_face])
+                            ),
                             "selected_face_source_displacement_squared_m2": movement_cost[selected_face],
                             "protected_pair_side_faces": protected_sides,
                         })
@@ -4125,7 +4178,7 @@ def derive_shared_multipose_inferred_clearance(
                 if ineligible_pair is not None:
                     rejection = (
                         "local self-separation rejected: neither face in an exact self-pair "
-                        "is eligible for a movable seed"
+                        "has a free vertex for a movable seed"
                     )
                     emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
                                diagnostics={
@@ -4136,9 +4189,9 @@ def derive_shared_multipose_inferred_clearance(
                                    "ineligible_pair": ineligible_pair,
                                })
                     continue
-                self_seed_ids = np.unique(np.concatenate([
-                    source_faces[face] for face in sorted(selected_seed_faces)
-                ]))
+                self_seed_ids = np.asarray(sorted({
+                    vertex for rows in selected_seed_vertices_by_face.values() for vertex in rows
+                }), dtype=np.int64)
                 protected_pair_side_ids = np.unique(np.concatenate([
                     source_faces[face] for face in sorted(protected_pair_side_faces)
                 ])) if protected_pair_side_faces else np.empty(0, dtype=np.int64)
@@ -4155,7 +4208,7 @@ def derive_shared_multipose_inferred_clearance(
                                    "protected_pair_side_face_rows": sorted(protected_pair_side_faces),
                                })
                     continue
-                patch_blocked_ids = np.union1d(protected_self_ids, protected_pair_side_ids)
+                patch_blocked_ids = np.union1d(seed_blocked_ids, protected_pair_side_ids)
                 try:
                     source_edge_rows = referenced[edges]
                     adjacency = {}
@@ -4192,8 +4245,6 @@ def derive_shared_multipose_inferred_clearance(
                             "jacobians": trial_maps[pose],
                             "self_pair_rows": pair_rows,
                         })
-                    full_trial_source = source.astype("<f4").copy()
-                    full_trial_source[referenced] = trial_source.astype("<f4")
                     preproposal_world = trial_world.copy()
                     preproposal_self_audits = trial_self_audits
                     proposal = _propose_local_self_separation_increment(
@@ -4337,6 +4388,7 @@ def derive_shared_multipose_inferred_clearance(
                             for pose, pairs in failed_pairs
                         ],
                         "self_pair_seed_source_vertex_ids": self_seed_ids.tolist(),
+                        "coordinate_tied_source_vertex_ids_blocked": coordinate_tied_ids.tolist(),
                         "movable_source_vertex_ids": movable_ids.tolist(),
                         "movable_patch_expansion_rings": 2,
                         "pair_pose_receipts": remapped_pair_receipts,
