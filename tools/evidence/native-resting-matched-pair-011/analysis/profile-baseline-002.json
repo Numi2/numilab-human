@@ -1,0 +1,128 @@
+{
+  "created_utc": "2026-10-10T14:41:29.114650+00:00",
+  "arm": "baseline",
+  "inputs": {
+    "script": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/summarize_complete_profile_011_revision_002.py",
+      "bytes": 4590,
+      "sha256": "5da3d78b9fd39b505497fa47cdb5f8c6d71e70da187427ba7c7236e45ade1fb6"
+    },
+    "declaration": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/run-declaration.json",
+      "bytes": 1823677,
+      "sha256": "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d"
+    },
+    "execution": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/execution.json",
+      "bytes": 6484,
+      "sha256": "c244daacd8c8b7eab245d9806b14128a32ed6037a9d81542c0763670e50c8323"
+    },
+    "metadata": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/run-metadata.json",
+      "bytes": 12076,
+      "sha256": "6f6b4b1ec102c09385b8e6b819e69456d5dba39ae7dfd506d2eae54cb021b928"
+    },
+    "log": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/native.log",
+      "bytes": 30339236,
+      "sha256": "edc959a6613fdf6c268bd2c86b5cfb0512bed4b3bb5cdbe3be7d4d0f38491338"
+    }
+  },
+  "completed_steps": 155000,
+  "physical_submission_count": 21563,
+  "recorded_frame_count": 4846,
+  "all_profile_submissions_observer_readbacks": true,
+  "timing_boundaries": {
+    "launcher_wrapper_wall_s": 2734.2318461669997,
+    "owner_process_wall_s": 2727.727312708,
+    "body_completion_wall_s": 2722.36003175,
+    "accepted_after_first_observer_window": {
+      "accepted_start_step": "8",
+      "accepted_end_step": "155000",
+      "simulated_s": "309.984014723",
+      "wall_s": "2719.38721479",
+      "real_time_factor": "0.11399039204",
+      "includes": "physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export",
+      "excludes": "terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization"
+    }
+  },
+  "owner_process_real_time_factor": 0.11364772911132816,
+  "physical_submission_timers": {
+    "command_ms": {
+      "sum_seconds": 2599.313874925,
+      "mean_ms": 120.5450946030237,
+      "max_ms": 149.576083
+    },
+    "gpu_ms": {
+      "sum_seconds": 2588.577726223523,
+      "mean_ms": 120.04719780288099,
+      "max_ms": 149.133415893
+    },
+    "host_copy_ms": {
+      "sum_seconds": 1.3596280790000002,
+      "mean_ms": 0.06305375314195613,
+      "max_ms": 6.919416
+    }
+  },
+  "native_render_timers": {
+    "encode_wall_ms": {
+      "sum_seconds": 0.11473898589611162,
+      "mean_ms": 0.02367705032936682,
+      "max_ms": 0.0977497547864914
+    },
+    "command_wall_ms": {
+      "sum_seconds": 64.70967043377352,
+      "mean_ms": 13.353213048653224,
+      "max_ms": 33.34533330053091
+    },
+    "gpu_ms": {
+      "sum_seconds": 63.66260089538934,
+      "mean_ms": 13.13714422108736,
+      "max_ms": 21.501291543245316
+    },
+    "audit_export_wall_ms": {
+      "sum_seconds": 9.503376274374078,
+      "mean_ms": 1.9610764082488814,
+      "max_ms": 1225.37445836
+    },
+    "total_render_wall_ms": {
+      "sum_seconds": 74.3298708861664,
+      "mean_ms": 15.33839679863112,
+      "max_ms": 1243.03624965
+    }
+  },
+  "native_presentation_timer_includes_render": {
+    "total_present_wall_ms": {
+      "sum_seconds": 87.05722837616582,
+      "mean_ms": 17.96476029223397,
+      "max_ms": 1255.6649167090654
+    }
+  },
+  "accepted_observer_timers_includes_presentation": {
+    "accepted_callbacks": "21563",
+    "total_ms": "88071.4856",
+    "mean_ms": "4.08437999",
+    "respiration_trace_csv_ms": "220.90698",
+    "q_integration_csv_ms": "561.689172",
+    "com_cpu_kinematics_ms": "443.607492",
+    "body_motion_csv_ms": "0",
+    "com_momentum_csv_ms": "236.580556",
+    "support_impulse_csv_ms": "1088.26236",
+    "csv_flush_ms": "132.570231",
+    "presentation_ms": "84610.8091",
+    "observer_other_ms": "777.059741"
+  },
+  "diagnostic_shares_of_owner_process_wall": {
+    "physical_submission_gpu_time": 0.9489869878722099,
+    "physical_submission_host_copy_time": 0.0004984472137906648,
+    "render_gpu_time": 0.023339063475588822,
+    "all_recorded_presentation_wall_time": 0.031915663992724476
+  },
+  "limits": [
+    "Aggregate command-buffer GPU timestamps are not per-kernel profiling; no specific physics kernel is blamed by this report.",
+    "Nested timers overlap: render is inside presentation; presentation is inside observer. Do not add these categories.",
+    "Host readbacks serve retained audits and presentation; this report does not establish CPU physics execution.",
+    "The two arms ran sequentially on the Mini; CPU geometry audits and bounded offline preparation were concurrent during parts of the runs. Throughput is not an isolated benchmark.",
+    "The on-screen drawable was unavailable while the Mini console was locked. Framebuffer/movie presentation is measured independently."
+  ]
+}

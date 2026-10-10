@@ -1,0 +1,60 @@
+import importlib.util
+import unittest
+from pathlib import Path
+p = Path(__file__).with_name("analyze_native_pair_011_gas_guard.py")
+s = importlib.util.spec_from_file_location("gas_guard_postflight", p)
+m = importlib.util.module_from_spec(s)
+s.loader.exec_module(m)
+gas = m.load_owner()
+
+class GateTests(unittest.TestCase):
+    def facts(self):
+        assets = dict(gas.GAS_RUNTIME_FILES)
+        loaded = {"verified": True, "expected_path": gas.GAS_RUNTIME_DYLIB,
+                  "expected_sha256": gas.GAS_RUNTIME_DYLIB_SHA256,
+                  "observed_images": [{"path": gas.GAS_RUNTIME_DYLIB}]}
+        return {"build": {"runtime_source": str(gas.GAS_RUNTIME_SOURCE_ROOT),
+                          "runtime_source_head": gas.GAS_RUNTIME_SOURCE_HEAD,
+                          "runtime_files": dict(assets)},
+                "declaration_assets": dict(assets), "invocation_assets": dict(assets),
+                "metadata": {"asset_sha256": dict(assets), "loaded_metal_runtime": loaded},
+                "source_hashes": dict(gas.GAS_RUNTIME_SOURCE_PINS),
+                "build_rule_sha256": gas.GAS_BUILD_RULE_SHA256,
+                "build_rule_matches_source": True}
+    def test_exact_abi18_identity(self):
+        r = gas.classify_gas_guard_identity(**self.facts())
+        self.assertTrue(r["identity_verified"])
+        self.assertEqual(r["source_head"], m.EXPECTED["source_head"])
+    def test_identity_mismatches_fail(self):
+        f = self.facts(); f["build"]["runtime_source_head"] = "old"
+        self.assertFalse(gas.classify_gas_guard_identity(**f)["identity_verified"])
+        f = self.facts(); f["source_hashes"][str(gas.GAS_METAL_SOURCE)] = "0" * 64
+        self.assertFalse(gas.classify_gas_guard_identity(**f)["identity_verified"])
+        f = self.facts(); f["invocation_assets"][gas.GAS_RESPIRATION_METALLIB] = "0" * 64
+        self.assertFalse(gas.classify_gas_guard_identity(**f)["identity_verified"])
+        f = self.facts(); f["metadata"]["loaded_metal_runtime"]["expected_sha256"] = "0" * 64
+        self.assertFalse(gas.classify_gas_guard_identity(**f)["identity_verified"])
+        f = self.facts(); f["build_rule_matches_source"] = False
+        self.assertFalse(gas.classify_gas_guard_identity(**f)["identity_verified"])
+    def test_invocation_matches_owner_preview_exactly(self):
+        declaration = {"owner_cli_preview": {
+            "native_argv": ["/build/bin/native", "--steps", "10000"],
+            "recorded_invocation_environment": {"NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1"},
+        }}
+        invocation = {"argv": ["/build/bin/native", "--steps", "10000"],
+                      "environment": {"NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1"}}
+        self.assertTrue(m.invocation_matches_preview(declaration, invocation))
+        invocation["environment"]["NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING"] = "0"
+        self.assertFalse(m.invocation_matches_preview(declaration, invocation))
+
+    def test_horizon_and_clean_execution_required(self):
+        gate = m.final_guard_passed
+        self.assertTrue(gate(True,10000,10000,0,{}))
+        self.assertFalse(gate(False,10000,10000,0,{}))
+        self.assertFalse(gate(True,9999,10000,0,{}))
+        self.assertFalse(gate(True,10000,10000,1,{}))
+        self.assertFalse(gate(True,10000,10000,0,{"asset":"changed"}))
+        self.assertFalse(gate(1,10000,10000,0,{}))
+
+if __name__ == "__main__":
+    unittest.main()

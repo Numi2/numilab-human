@@ -1,0 +1,402 @@
+#!/usr/bin/env python3
+"""Read-only linkage of the prior 60 s sensitivity baseline to paired-011 baseline."""
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import math
+import os
+import struct
+import sys
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+REPORT = OUT / "linkage-report.json"
+if REPORT.exists():
+    raise SystemExit(f"refusing to overwrite {REPORT}")
+
+P = Path("/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011")
+R = Path("/Users/n/numi-human-retained-delivery-20261009/late-force-diagnostic-1264")
+SBASE = R / "sensitivity-preparation-001/arms/baseline-60s/native-run"
+PBASE = P / "baseline/native-run"
+LIMIT_STEP = 30000
+DT_F32 = struct.unpack("<f", struct.pack("<f", 0.002))[0]
+CLOCK_END = LIMIT_STEP * DT_F32
+pin_map: dict[str, str] = {}
+
+def sha(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(4 * 1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
+
+def pin(path: Path) -> str:
+    if not path.is_file():
+        raise RuntimeError(f"missing required input: {path}")
+    value = sha(path)
+    pin_map[str(path)] = value
+    return value
+
+def read_json(path: Path):
+    pin(path)
+    return json.loads(path.read_text())
+
+def require(condition: bool, message: str):
+    if not condition:
+        raise RuntimeError(message)
+
+def native_configs(meta: dict) -> tuple[Path, Path]:
+    argv = meta["argv"]
+    i = argv.index("--resting-scene")
+    require(i + 2 < len(argv), "native argv lacks paired circulation/respiration paths")
+    return Path(argv[i + 1]), Path(argv[i + 2])
+
+def numeric_leaves(obj, prefix=""):
+    result = {}
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            result.update(numeric_leaves(v, f"{prefix}/{k}"))
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            result.update(numeric_leaves(v, f"{prefix}/{i}"))
+    elif isinstance(obj, (int, float)) and not isinstance(obj, bool):
+        result[prefix or "/"] = obj
+    return result
+
+def csv_prefix(path: Path, step_column: str, extra_key=()):
+    pin(path)
+    with path.open(newline="") as f:
+        reader = csv.DictReader(f)
+        header = list(reader.fieldnames or [])
+        require(step_column in header, f"{path}: missing {step_column}")
+        for k in extra_key:
+            require(k in header, f"{path}: missing key column {k}")
+        keys = {}
+        rows = 0
+        for row in reader:
+            step = int(row[step_column])
+            if step > LIMIT_STEP:
+                continue
+            key = (step,) + tuple(int(row[k]) for k in extra_key)
+            require(key not in keys, f"{path}: duplicate row key {key}")
+            keys[key] = row
+            rows += 1
+    ordered = sorted(keys)
+    require(ordered == list(keys.keys()) or len(keys) < 2, f"{path}: prefix rows are not ordered by step/key")
+    return header, keys, rows
+
+def compare_csv(name: str, step_column: str, extra_key=()):
+    left_path = SBASE / name
+    right_path = PBASE / name
+    h0, left, n0 = csv_prefix(left_path, step_column, extra_key)
+    h1, right, n1 = csv_prefix(right_path, step_column, extra_key)
+    require(h0 == h1, f"{name}: header differs between runs")
+    left_keys, right_keys = set(left), set(right)
+    shared = left_keys & right_keys
+    missing_left = sorted(right_keys - left_keys)
+    missing_right = sorted(left_keys - right_keys)
+    changed = []
+    for key in sorted(shared):
+        for col in h0:
+            if left[key][col] != right[key][col]:
+                changed.append({
+                    "key": list(key), "column": col,
+                    "sensitivity_token": left[key][col],
+                    "paired011_token": right[key][col],
+                })
+                if len(changed) >= 20:
+                    break
+        if len(changed) >= 20:
+            break
+    return {
+        "sensitivity_path": str(left_path), "paired011_path": str(right_path),
+        "sensitivity_sha256": pin_map[str(left_path)],
+        "paired011_sha256": pin_map[str(right_path)],
+        "header_equal": h0 == h1, "column_count": len(h0),
+        "prefix_row_count_sensitivity": n0, "prefix_row_count_paired011": n1,
+        "key_count_sensitivity": len(left), "key_count_paired011": len(right),
+        "shared_key_count": len(shared),
+        "only_in_sensitivity_count": len(missing_right),
+        "only_in_paired011_count": len(missing_left),
+        "first_only_in_sensitivity_keys": [list(x) for x in missing_right[:8]],
+        "first_only_in_paired011_keys": [list(x) for x in missing_left[:8]],
+        "all_shared_cells_exact": not changed and not missing_left and not missing_right,
+        "changed_cell_count_lower_bound": len(changed),
+        "first_changed_cells": changed,
+    }
+
+def selected_respiration(resp):
+    keys = [
+        "oxygen_consumption_stpd_m3_per_s",
+        "carbon_dioxide_production_stpd_m3_per_s",
+        "frc_m3",
+        "lung_compliance_m3_per_pa",
+        "airway_resistance_pa_s_per_m3",
+    ]
+    out = {k: resp.get(k) for k in keys}
+    brain = resp.get("brain_parameters", {})
+    out["brain_parameters"] = {
+        k: brain.get(k) for k in (
+            "CO2ResponseSlopeLitresPerMinutePerMmHg",
+            "centralCO2Fraction",
+            "centralTimeConstantSeconds",
+            "peripheralTimeConstantSeconds",
+            "restingFrequencyBreathsPerMinute",
+            "restingMinuteVentilationLitresPerMinute",
+            "restingTidalVolumeLitres",
+        )
+    }
+    return out
+
+def runtime_assets(meta):
+    assets = meta.get("asset_sha256", {})
+    names = (
+        "numi-human-native", "libmetalrobo.dylib",
+        "HumanRespiration.metallib", "NumiMatter.metallib",
+        "NumiMatterPhysicalStateDigest.metallib", "MetalRobo.metallib",
+        "MetalRoboHyperPolicy.metallib", "NumiNeuron.metallib",
+    )
+    return {
+        name: [{"path": path, "sha256": value} for path, value in sorted(assets.items())
+               if Path(path).name == name]
+        for name in names
+    }
+
+def main():
+    # Immutable execution and analysis evidence for the prior five-arm set.
+    sens_decl_base = R / "sensitivity-preparation-001/arms/baseline-60s/run-declaration.json"
+    sens_fail = R / "sensitivity-one-arm-launch-001/baseline-60s/execution.json"
+    sens_reval = R / "sensitivity-one-arm-launch-002/baseline-60s/revalidation.json"
+    sens_summary = R / "sensitivity-summary-001/closed-four-arm-sensitivity-summary.json"
+    sens_summary_readme = R / "sensitivity-summary-001/README.md"
+    sens_summarizer = R / "sensitivity-summary-001/summarize_existing_reports.py"
+    sens_analyzer = R / "sensitivity-analysis-003/analyze_one_arm_sensitivity.py"
+    sens_test = R / "sensitivity-analysis-003/test_analyze_one_arm_sensitivity.py"
+    sens_meta_path = SBASE / "run-metadata.json"
+    sens_inv_path = SBASE / "invocation.json"
+    pair_decl_path = P / "baseline/run-declaration.json"
+    pair_exec_path = P / "baseline/execution.json"
+    pair_meta_path = PBASE / "run-metadata.json"
+    pair_inv_path = PBASE / "invocation.json"
+
+    sens_decl = read_json(sens_decl_base)
+    fail = read_json(sens_fail)
+    reval = read_json(sens_reval)
+    summary = read_json(sens_summary)
+    sens_meta = read_json(sens_meta_path)
+    sens_inv = read_json(sens_inv_path)
+    pair_decl = read_json(pair_decl_path)
+    pair_exec = read_json(pair_exec_path)
+    pair_meta = read_json(pair_meta_path)
+    pair_inv = read_json(pair_inv_path)
+    for p in (sens_summary_readme, sens_summarizer, sens_analyzer, sens_test):
+        pin(p)
+
+    # Bind all four declared sensitivity arms to their executed receipts and analyses.
+    arm_evidence = []
+    analysis_root = R / "sensitivity-analysis-003"
+    for arm in ("metabolism-joint-0p8", "metabolism-joint-1p2",
+                "co2-response-slope-0p8", "co2-response-slope-1p2"):
+        dec_path = R / "sensitivity-preparation-001/arms" / arm / "run-declaration.json"
+        exe_path = R / "sensitivity-one-arm-launch-002" / arm / "execution.json"
+        rep_path = analysis_root / f"{arm}-analysis-001.json"
+        dec, exe, rep = read_json(dec_path), read_json(exe_path), read_json(rep_path)
+        report_arm = next((a for a in summary["arms"] if a["arm_id"] == arm), None)
+        require(report_arm is not None, f"{arm}: absent from retained sensitivity synthesis")
+        require(report_arm["run_identity"]["declaration_sha256"] == pin_map[str(dec_path)],
+                f"{arm}: summary declaration hash mismatch")
+        require(report_arm["run_identity"]["execution_receipt_sha256"] == pin_map[str(exe_path)],
+                f"{arm}: summary execution hash mismatch")
+        require(report_arm["report_sha256"] == pin_map[str(rep_path)],
+                f"{arm}: summary analysis hash mismatch")
+        require(exe.get("returncode") == 0 and exe.get("postflight", {}).get("changed_inputs") == {},
+                f"{arm}: native execution receipt is not rc0/unchanged")
+        require(exe.get("postflight", {}).get("status") == "pass_bounded_mechanics_only",
+                f"{arm}: postflight not bounded pass")
+        require(exe.get("postflight", {}).get("checks", {}).get("argv_matches_source_owner") is True,
+                f"{arm}: source-owner argv mismatch")
+        grid = rep.get("accepted_grid", {}).get("arm", {})
+        require(rep.get("status") == "closed_descriptive_sensitivity_comparison"
+                and grid.get("last_step") == 30000
+                and abs(grid.get("last_time_s", 0) - CLOCK_END) < 1e-10
+                and rep.get("accepted_grid", {}).get("same_step_and_actual_time_tokens") is True,
+                f"{arm}: report is not the expected 60 s grid")
+        arm_evidence.append({
+            "arm_id": arm,
+            "declaration_path": str(dec_path), "declaration_sha256": pin_map[str(dec_path)],
+            "execution_path": str(exe_path), "execution_sha256": pin_map[str(exe_path)],
+            "analysis_path": str(rep_path), "analysis_sha256": pin_map[str(rep_path)],
+            "returncode": exe.get("returncode"),
+            "postflight_status": exe["postflight"]["status"],
+            "argv_matches_source_owner": True,
+            "accepted_steps": grid["last_step"],
+            "accepted_duration_s": grid["last_time_s"],
+            "parameter_change": report_arm["parameter_change"],
+        })
+
+    require(fail.get("postflight", {}).get("native_returncode") in (None, 0)
+            and fail.get("postflight", {}).get("checks", {}).get("exit_zero") is True,
+            "baseline original execution does not record native rc0")
+    require(fail.get("postflight", {}).get("checks", {}).get("argv_matches_preview") is False,
+            "baseline expected historical argv-preview failure not present")
+    require(reval.get("checks", {}).get("original_execution_rc0_and_not_timed_out") is True,
+            "corrected baseline revalidation does not bind original native completion")
+    require(reval.get("checks", {}).get("all_declared_inputs_rehashed_unchanged") is True,
+            "baseline revalidation did not rehash unchanged inputs")
+    require(reval.get("checks", {}).get("owner_source_reconstructed_native_argv_matches_invocation") is True,
+            "baseline corrected source-order argv not verified")
+    require(pair_exec.get("returncode") == 0 and pair_exec.get("changed_inputs") == {},
+            "paired-011 baseline execution is not rc0/unchanged")
+    require(pair_exec.get("native_argv_matches_prepared_cli_preview") is True
+            and pair_exec.get("native_environment_matches_prepared_cli_preview") is True,
+            "paired-011 baseline launch receipt mismatch")
+    require(pair_meta.get("exit_code") == 0 and sens_meta.get("exit_code") == 0,
+            "run metadata does not indicate successful native exit")
+    require(sens_meta.get("argv") == sens_inv.get("argv")
+            and pair_meta.get("argv") == pair_inv.get("argv"),
+            "run metadata and invocation argv differ")
+
+    sens_circ, sens_resp = native_configs(sens_meta)
+    pair_circ, pair_resp = native_configs(pair_meta)
+    require(sens_circ == pair_circ and sens_resp == pair_resp,
+            "native resting circulation/respiration config paths differ")
+    circ_hash, resp_hash = pin(sens_circ), pin(sens_resp)
+    require(pin(pair_circ) == circ_hash and pin(pair_resp) == resp_hash,
+            "numeric physiology input config bytes differ")
+    require(sens_meta.get("asset_sha256", {}).get(str(sens_circ)) == circ_hash
+            and pair_meta.get("asset_sha256", {}).get(str(pair_circ)) == circ_hash,
+            "circulation config path is not SHA-pinned by both run metadata files")
+    require(sens_meta.get("asset_sha256", {}).get(str(sens_resp)) == resp_hash
+            and pair_meta.get("asset_sha256", {}).get(str(pair_resp)) == resp_hash,
+            "respiration config path is not SHA-pinned by both run metadata files")
+    circ_obj = json.loads(sens_circ.read_text())
+    resp_obj = json.loads(sens_resp.read_text())
+    circ_numbers = numeric_leaves(circ_obj)
+    resp_numbers = numeric_leaves(resp_obj)
+
+    csv_results = [
+        compare_csv("resting-coupled.csv", "step"),
+        compare_csv("resting-com-momentum-diagnostic.csv", "accepted_step"),
+        compare_csv("resting-com-support-impulses.csv", "accepted_step", ("contact_index",)),
+    ]
+
+    # The baseline's original wrapper failure is retained, with a separate read-only correction.
+    original_post = fail.get("postflight", {})
+    reval_inputs = reval.get("source_derived_postflight", {}).get("outputs", {}).get("files", [])
+    require(reval["checks"]["all_originally_hashed_output_files_reverified"] is True,
+            "baseline revalidation did not reverify original output hashes")
+
+    # Ensure every pinned input stayed unchanged while read.
+    input_after = {path: sha(Path(path)) for path in pin_map}
+    require(input_after == pin_map, "one or more read-only linkage inputs changed during audit")
+
+    runtime_sens = runtime_assets(sens_meta)
+    runtime_pair = runtime_assets(pair_meta)
+    runtime_diff = {}
+    runtime_same = {}
+    for name in runtime_sens:
+        a = runtime_sens[name]
+        b = runtime_pair[name]
+        if a and b and [x["sha256"] for x in a] == [x["sha256"] for x in b]:
+            runtime_same[name] = {"sensitivity": a, "paired011": b}
+        elif a or b:
+            runtime_diff[name] = {"sensitivity": a, "paired011": b}
+
+    report = {
+        "schema": "numi.human.native-sensitivity-011-baseline-linkage.v1",
+        "status": "complete_read_only_linkage",
+        "scope": "Links the prior 60 s baseline plus four exploratory ±20% sensitivity arms to the paired-011 baseline. Compares nominal respiration/circulation config bytes and exact shared baseline CSV cells for accepted steps 0..30000 (nominal 0..60 s; Float32 clock endpoint shown below). This does not qualify sensitivity on paired-011.",
+        "runner": {"path": str(Path(__file__).resolve()), "sha256": sha(Path(__file__))},
+        "time_window": {
+            "nominal_seconds": 60.0, "dt_float32_seconds": DT_F32,
+            "last_included_accepted_step": LIMIT_STEP,
+            "actual_float32_clock_endpoint_seconds": CLOCK_END,
+        },
+        "sensitivity_evidence": {
+            "synthesis_path": str(sens_summary), "synthesis_sha256": pin_map[str(sens_summary)],
+            "synthesis_readme_path": str(sens_summary_readme), "synthesis_readme_sha256": pin_map[str(sens_summary_readme)],
+            "synthesis_script_path": str(sens_summarizer), "synthesis_script_sha256": pin_map[str(sens_summarizer)],
+            "arm_analyzer_path": str(sens_analyzer), "arm_analyzer_sha256": pin_map[str(sens_analyzer)],
+            "arm_analyzer_test_path": str(sens_test), "arm_analyzer_test_sha256": pin_map[str(sens_test)],
+            "baseline_original_execution": {
+                "path": str(sens_fail), "sha256": pin_map[str(sens_fail)],
+                "native_returncode": 0, "historical_postflight_status": original_post.get("status"),
+                "only_failure": "argv preview placed --mechanics-only at a different position than source-generated argv",
+            },
+            "baseline_source_order_revalidation": {
+                "path": str(sens_reval), "sha256": pin_map[str(sens_reval)],
+                "status": reval.get("schema"), "checks": reval.get("checks"),
+                "limitations": reval.get("limitations"),
+            },
+            "baseline_declaration_path": str(sens_decl_base),
+            "baseline_declaration_sha256": pin_map[str(sens_decl_base)],
+            "baseline_native_metadata_path": str(sens_meta_path),
+            "baseline_native_metadata_sha256": pin_map[str(sens_meta_path)],
+            "baseline_invocation_path": str(sens_inv_path),
+            "baseline_invocation_sha256": pin_map[str(sens_inv_path)],
+            "four_arms": arm_evidence,
+            "gas_guard_identity_verified": all(
+                a.get("numerical_accounting", {}).get("gas_guard_identity_verified") is True
+                for a in summary["arms"]
+            ),
+            "gas_guard_identity_limitation": "Retained four-arm analyses explicitly report gas_guard_identity_verified=false; the source-defined accepted-runtime guard is not promoted by this linkage.",
+            "transient_scope": "60 s only; central CO2 controller time constant in the shared respiration config is 120 s, so these are transients rather than equilibrium/sensitivity bounds.",
+        },
+        "paired011_baseline": {
+            "declaration_path": str(pair_decl_path), "declaration_sha256": pin_map[str(pair_decl_path)],
+            "execution_path": str(pair_exec_path), "execution_sha256": pin_map[str(pair_exec_path)],
+            "run_metadata_path": str(pair_meta_path), "run_metadata_sha256": pin_map[str(pair_meta_path)],
+            "invocation_path": str(pair_inv_path), "invocation_sha256": pin_map[str(pair_inv_path)],
+            "returncode": pair_exec["returncode"], "changed_inputs": pair_exec["changed_inputs"],
+            "argv_and_environment_match_prepared_cli": True,
+        },
+        "nominal_physiology_configs": {
+            "circulation": {
+                "path": str(sens_circ), "sha256": circ_hash,
+                "exact_bytes_equal_between_runs": True,
+                "numeric_scalar_leaf_count": len(circ_numbers),
+                "numeric_leaf_map_sha256": hashlib.sha256(json.dumps(circ_numbers, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
+                "model_id": circ_obj.get("model_id"), "residual_tolerance": circ_obj.get("residual_tolerance"),
+                "compartment_count": len(circ_obj.get("compartments", [])),
+                "connection_count": len(circ_obj.get("connections", [])),
+                "exchange_count": len(circ_obj.get("exchanges", [])),
+            },
+            "respiration": {
+                "path": str(sens_resp), "sha256": resp_hash,
+                "exact_bytes_equal_between_runs": True,
+                "numeric_scalar_leaf_count": len(resp_numbers),
+                "numeric_leaf_map_sha256": hashlib.sha256(json.dumps(resp_numbers, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
+                "selected_numeric_parameters": selected_respiration(resp_obj),
+            },
+        },
+        "shared_baseline_csv_prefix": csv_results,
+        "runtime_asset_hash_comparison_from_run_metadata": {
+            "different": runtime_diff, "same_hash_by_artifact_basename": runtime_same,
+            "interpretation_limit": "The native executable and libmetalrobo hashes differ between 1260/1196 and 1271 builds. Identical hashes for specifically listed metallib files are only artifact-level identity; no broader Brain/runtime identity is inferred.",
+        },
+        "limitations": [
+            "The 1264 sensitivity baseline is a 60 s run with --mechanics-only; its original wrapper receipt remains failed only for argv-preview ordering. A separate source-derived revalidation verifies the actual invocation and original output hashes; neither receipt rewrites the other.",
+            "The paired-011 run has a different native executable and libmetalrobo runtime hash, and uses different skin/anatomy payloads. Exact shared CSV baseline cells are only a shared-prefix comparison, not evidence that the 1264 parameter sensitivity was reproduced or qualified on paired-011.",
+            "The respiration/circulation JSON assets are byte-identical; this does not establish full runtime or Brain implementation identity.",
+            "The retained sensitivity summary reports gas_guard_identity_verified=false. Blood/gas exported balance values remain descriptive in the prior analyses.",
+            "All sensitivity arms cover 60 s only; the shared respiration config declares a 120 s central CO2 time constant. No equilibrium, population uncertainty, clinical validation, or anatomy qualification is claimed.",
+        ],
+        "input_pins_before": dict(sorted(pin_map.items())),
+        "input_pins_after": dict(sorted(input_after.items())),
+        "all_pinned_inputs_unchanged": True,
+    }
+    REPORT.write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    print(json.dumps({
+        "report": str(REPORT), "report_sha256": sha(REPORT),
+        "runner_sha256": report["runner"]["sha256"],
+        "shared_csv_exact": {Path(x["sensitivity_path"]).name: x["all_shared_cells_exact"] for x in csv_results},
+        "config_bytes_equal": {"circulation": True, "respiration": True},
+        "runtime_different_artifacts": sorted(runtime_diff),
+        "pins": len(pin_map),
+    }, indent=2, sort_keys=True))
+
+if __name__ == "__main__":
+    main()
+

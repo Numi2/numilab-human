@@ -1,0 +1,64 @@
+{
+  "baseline_execution": {
+    "changed_inputs": {},
+    "execution_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/execution.json",
+    "execution_sha256": "c244daacd8c8b7eab245d9806b14128a32ed6037a9d81542c0763670e50c8323",
+    "returncode": 0,
+    "utc_finished": "2026-10-10T14:12:59.629331+00:00",
+    "utc_start_derived_from_recorded_finish_minus_wrapper_wall": "2026-10-10T13:27:25.397485+00:00",
+    "wrapper_wall_seconds": 2734.2318461669997
+  },
+  "correction": "The original provenance sidecar describes the criteria as pinned before the pair. That wording is too broad: the preflighted response analyzer was timestamped after the baseline had started, but the static preflight and unchanged paired_response criteria preceded the intervention start. The response function source hash is identical in preflight and the final analyzer. Therefore the criteria were unchanged before intervention, but were not preregistered before the baseline arm began.",
+  "criteria_identity": {
+    "accepted_steps": 155000,
+    "all_common_top_level_function_ASTs_except_main_and_arm_identity_path_normalization_equal": true,
+    "all_other_common_top_level_function_ASTs_equal": true,
+    "changed_common_top_level_function_ast_names": [
+      "main",
+      "normalize_arm_local_paths",
+      "verify_declared_arm"
+    ],
+    "dose_start_step": 30000,
+    "dt_s": 0.002,
+    "exact_function_source_match": true,
+    "paired_response_function_source_sha256_executed": "90d14fcd14f8116b419f9e23b5e89702f324effac15f4f40f8c02789a3bdc972",
+    "paired_response_function_source_sha256_preflighted": "90d14fcd14f8116b419f9e23b5e89702f324effac15f4f40f8c02789a3bdc972",
+    "response_window_and_horizon_constants_equal": true,
+    "windows_s": {
+      "dose": [
+        70.0,
+        100.0
+      ],
+      "pre": [
+        30.0,
+        60.0
+      ],
+      "recovery": [
+        280.0,
+        310.0
+      ]
+    }
+  },
+  "effect_on_numerical_results": "No native inputs, pair metrics, gate result, or analysis output was changed; this sidecar only corrects chronology wording.",
+  "intervention_execution": {
+    "changed_inputs": {},
+    "execution_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/execution.json",
+    "execution_sha256": "6174ae74fdc91eeabb3d86b5b0e762b752edc7ec06758d7990914a32034689fc",
+    "returncode": 0,
+    "utc_finished": "2026-10-10T15:03:59.036747+00:00",
+    "utc_start_derived_from_recorded_finish_minus_wrapper_wall": "2026-10-10T14:18:40.970473+00:00",
+    "wrapper_wall_seconds": 2718.0662744580004
+  },
+  "original_criteria_provenance_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-criteria-provenance-001.json",
+  "original_criteria_provenance_sha256": "8da7d562bddc10b719752bb0b71c21b698e79ebcfaf417817c31fe523c565e5c",
+  "original_pair_report_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-001.json",
+  "original_pair_report_sha256": "feec1b941e060489d672e11a3ecfb251fccb9b4eb9c5861e4803f42b05c2c8b9",
+  "preflight_mtime_utc": "2026-10-10T13:50:23.314111+00:00",
+  "preflight_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/static-preflight.json",
+  "preflight_sha256": "85c2d91a40c09d6430bf4a7d8d5a20358aaab49b5379eefa8f154a7afc5668a4",
+  "preflighted_analyzer_mtime_utc": "2026-10-10T13:48:00.241246+00:00",
+  "preflighted_analyzer_path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_matched_native_pair_011.py",
+  "preflighted_analyzer_sha256": "9511d759d2be4f25677fbcc40821c10d92a5f0c327dcb553e4b2aed730194224",
+  "schema": "numi.human.native-pair-011.criteria-chronology-correction.v1",
+  "status": "chronology_clarified"
+}

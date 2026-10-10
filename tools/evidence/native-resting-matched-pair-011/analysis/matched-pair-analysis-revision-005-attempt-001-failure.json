@@ -1,0 +1,9 @@
+{
+  "analyzer": "analyze_matched_native_pair_011_revision_005.py",
+  "analyzer_sha256": "9fb4cd3cc2479374a68caf8e5d38844aaff2a69dda454c7098a5eb41a71c8315",
+  "cause": "The vascular reference SHA was scoped inside verify_declared_arm but main referenced it while constructing the final pair report; the real pair checks ran to report construction before this failure.",
+  "error": "NameError: vascular_reference_sha is not defined",
+  "pair_report_written": false,
+  "scan002_running_independently": true,
+  "status": "failed_during_report_construction"
+}

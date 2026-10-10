@@ -1,0 +1,1463 @@
+#!/usr/bin/env python3
+"""Read-only analysis for the completed 011 matched native Human pair.
+
+This consumes the two existing Human native-run declarations and their outputs.
+It never launches a simulator and never reads a prior paired outcome as current
+control evidence. A valid report means the declared pair was measured and its
+numerical/instrument checks ran; it does not qualify anatomy or clinical use.
+"""
+from __future__ import annotations
+import argparse
+import csv
+from decimal import Decimal, InvalidOperation
+from fractions import Fraction
+import hashlib
+import importlib.util
+import json
+import math
+import statistics
+import struct
+import sys
+from pathlib import Path
+from typing import Any
+
+OWNER = Path("/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/resting_intervention_study.py")
+OWNER_SHA256 = "ef87b09a17b96c985d6f584932e806ba9e7c6a53785da32a37a56ac846a3ac5f"
+STEPS = 155000
+DT = 0.002
+FLOAT32_DT = struct.unpack("<f", struct.pack("<f", DT))[0]
+CAPTURES = [0, 47519, 151999, 152607, 153215, 153823, 154431, 155000]
+Q_FIRST, Q_LAST = 152501, 155000
+DOSE_FIRST_STEP = 30000
+WINDOWS = {"pre": [30.0, 60.0], "dose": [70.0, 100.0], "recovery": [280.0, 310.0]}
+MUSCLE_COUNT = 416
+TENDON_BINDING_COUNT = 832
+RUNTIME_IDENTITY_APP_SOURCE = Path("/Users/n/numi-lab-resting-window-vector-trace-1271/apps/numilab_human_myosim_visual_probe.mm")
+RUNTIME_IDENTITY_APP_SOURCE_SHA256 = "6b7f094693bfbd748e7f74b48ca220700dbdf0c9ce1e9833b2382ad424e67186"
+RUNTIME_IDENTITY_HELPER_SOURCE = Path("/Users/n/numi-lab-resting-window-vector-trace-1271/src/core/NumiHumanRuntimeIdentity.cpp")
+RUNTIME_IDENTITY_HELPER_SOURCE_SHA256 = "290b557b0d67ee5023afb96a46b17f3b6c8c93e9954172e6f560411a8eed47e0"
+FNV64_OFFSET = 14695981039346656037
+FNV64_PRIME = 1099511628211
+
+# The gas-budget guard uses the exact committed 1271 source/build lineage for this pair.
+# The 014/018 historical run remains a separate runtime and comparison context only.
+GAS_RUNTIME_SOURCE_ROOT = Path("/Users/n/numi-lab-resting-window-vector-trace-1271")
+GAS_RUNTIME_SOURCE_HEAD = "f47429c30289fef2de2cade0962a2e2d8d91fe44"
+GAS_METAL_SOURCE = GAS_RUNTIME_SOURCE_ROOT / "matter/src/human_respiration.metal"
+GAS_RUNTIME_SOURCE_PINS = {
+    str(GAS_METAL_SOURCE): "bf984a88ff542f528753d368d9b4f884a74319a9d2e24ac8d6dc5ccb5040bc54",
+    str(GAS_RUNTIME_SOURCE_ROOT / "matter/include/numi/matter/human_respiration.h"): "e963800429edba5dd5fab210823bd2a88ccfce2844a5ba0f029ca9d41a2f1126",
+    str(GAS_RUNTIME_SOURCE_ROOT / "matter/tools/human_respiration_parameters.hpp"): "6a5df71f0868f928269e5ca9c75384f1762a190c29fef5610595ea2ea73e097d",
+    str(GAS_RUNTIME_SOURCE_ROOT / "matter/tools/human_resting_runtime.hpp"): "97fd4a5a646a989f2c91f077b37d019447a5ef847d174bf3087ae3b9eca7cacb",
+}
+GAS_RUNTIME_DYLIB = "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/lib/libmetalrobo.dylib"
+GAS_RUNTIME_DYLIB_SHA256 = "9c307105bdb3627efd2b5ec7c73dc35bf2b1811d59baf4d73d93f89e3bec0193"
+GAS_RESPIRATION_METALLIB = "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/shaders/HumanRespiration.metallib"
+GAS_RESPIRATION_METALLIB_SHA256 = "8444ba02aa176fb54a4331806aac39a372311852708d9bdb2698ba37dd71fa8b"
+GAS_RUNTIME_FILES = {GAS_RUNTIME_DYLIB: GAS_RUNTIME_DYLIB_SHA256,
+                     GAS_RESPIRATION_METALLIB: GAS_RESPIRATION_METALLIB_SHA256}
+GAS_BUILD_RULE = Path("/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/CMakeFiles/numi_human_respiration_shaders.dir/build.make")
+GAS_BUILD_RULE_SHA256 = "0854c524a8483dc1989fc1703275fbe83cb70e137bc80f0d7575f61855eeb765"
+GAS_ADD_GAS_BLOCK_SHA256 = "ad637f530f98de8b9244decc747f0fa057103fe5004bb09d30e633c1f58ba084"
+GAS_EXCHANGE_BLOCK_SHA256 = "90d82827d4c7bf69ad7e27a4668a18ac0cbbc555e61edba7f2a607b4506d7e0d"
+GAS_RESOLVE_BLOCK_SHA256 = "1f91d46295196ec01b9843e876085d2a79ca5365a6c71603643486eff5db6909"
+GAS_INITIALIZER_SOURCE = str(GAS_RUNTIME_SOURCE_ROOT / "matter/tools/human_respiration_parameters.hpp")
+GAS_INITIALIZER_SOURCE_SHA256 = GAS_RUNTIME_SOURCE_PINS[GAS_INITIALIZER_SOURCE]
+GAS_CSV_WRITER_SOURCE = str(GAS_RUNTIME_SOURCE_ROOT / "matter/tools/human_resting_runtime.hpp")
+GAS_CSV_WRITER_SOURCE_SHA256 = GAS_RUNTIME_SOURCE_PINS[GAS_CSV_WRITER_SOURCE]
+GAS_SOURCE_FIXTURE = GAS_RUNTIME_SOURCE_ROOT / "matter/tools/human_resting_gas_transport_fixture.mm"
+GAS_SOURCE_FIXTURE_SHA256 = "cbeaadef98da6b28d2d369f52ae980f1b8a87be7ff3a93b349695391b1583c0e"
+GAS_HISTORICAL_014_SOURCE = Path("/Users/n/numi-human-performance-source-014/matter/src/human_respiration.metal")
+GAS_HISTORICAL_014_SOURCE_SHA256 = "503a3c99f374f56bb440359ba5561a993c0e5ebad5eee34fea31b39828bc4e9e"
+GAS_HISTORICAL_014_RESP_METALLIB = {
+    "path": "/Users/n/numi-human-retired-alias-visibility-build-018-attempt2/matter/shaders/HumanRespiration.metallib",
+    "sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426",
+}
+VASCULAR_REFERENCE_SOURCE = GAS_RUNTIME_SOURCE_ROOT / "matter/tools/vascular_check.mm"
+VASCULAR_REFERENCE_SOURCE_SHA256 = "b1263fd82be67528f605ba3bb017906bbe63ae77203463fddf8ece82a9320139"
+
+REQUIRED_PROBE = (
+    "resting_integrated_rejection=pass",
+    "rejected_after_accepted_predecessor=true",
+    "body_q_v_root_myo_unchanged=true",
+    "circulation_and_clock_unchanged=true",
+    "respiration_brain_history_unchanged=true",
+    "retry_matches_uninterrupted_replay=true",
+    "same_command_buffer_reject=pass",
+    "all_owners_match_uninterrupted_prefix=true",
+    "same_context_retry=unsupported",
+)
+
+PINNED_READS: dict[str, str] = {}
+
+
+def sha(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def pin_file(path: Path, expected: str | None = None) -> str:
+    if path.is_symlink():
+        raise ValueError(f"expected a regular, non-symlink input: {path}")
+    path = path.resolve(strict=True)
+    if not path.is_file():
+        raise ValueError(f"expected a regular input: {path}")
+    digest = sha(path)
+    if expected is not None and digest != expected:
+        raise ValueError(f"input hash changed: {path}: {digest} != {expected}")
+    old = PINNED_READS.setdefault(str(path), digest)
+    if old != digest:
+        raise ValueError(f"input changed during analysis: {path}")
+    return digest
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    pin_file(path)
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"expected JSON object: {path}")
+    return value
+
+
+def read_csv(path: Path, required: set[str] | None = None) -> tuple[list[str], list[dict[str, str]]]:
+    pin_file(path)
+    with path.open("r", encoding="utf-8", newline="") as stream:
+        reader = csv.DictReader(stream)
+        header = reader.fieldnames
+        if not header or len(header) != len(set(header)):
+            raise ValueError(f"missing or duplicate CSV header fields: {path}")
+        missing = sorted((required or set()) - set(header))
+        if missing:
+            raise ValueError(f"{path} missing required columns: {missing}")
+        rows = list(reader)
+    if not rows or any(None in row or any(value is None for value in row.values()) for row in rows):
+        raise ValueError(f"empty or malformed CSV rows: {path}")
+    return header, rows
+
+
+def finite(value: Any, label: str) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"invalid {label}: {value!r}") from exc
+    if not math.isfinite(result):
+        raise ValueError(f"nonfinite {label}")
+    return result
+
+
+def float32_value(value: Any, label: str = "Float32 observation") -> float:
+    number = finite(value, label)
+    try:
+        result = struct.unpack("<f", struct.pack("<f", number))[0]
+    except (OverflowError, struct.error) as exc:
+        raise ValueError(f"{label} is outside finite Float32 range") from exc
+    if not math.isfinite(result):
+        raise ValueError(f"{label} is outside finite Float32 range")
+    return result
+
+
+def float32_csv_value(token: str, label: str) -> float:
+    result = float32_value(token, label)
+    try:
+        token_decimal = Decimal(token)
+        roundtrip_decimal = Decimal(format(result, ".12g"))
+    except InvalidOperation as exc:
+        raise ValueError(f"{label} is not a valid decimal CSV token") from exc
+    if not token_decimal.is_finite() or token_decimal != roundtrip_decimal:
+        raise ValueError(f"{label} does not round-trip through the native 12-digit Float32 CSV format")
+    return result
+
+
+def float32_next(value: Any, direction: int) -> float:
+    if direction not in (-1, 1):
+        raise ValueError("Float32 neighbor direction must be -1 or +1")
+    current = float32_value(value)
+    bits = struct.unpack("<I", struct.pack("<f", current))[0]
+    if current == 0.0:
+        bits = 0x00000001 if direction > 0 else 0x80000001
+    elif current > 0.0:
+        bits += direction
+    else:
+        bits -= direction
+    return struct.unpack("<f", struct.pack("<I", bits))[0]
+
+
+def fraction_text(value: Fraction) -> str:
+    return f"{value.numerator}/{value.denominator}"
+
+
+def outward_float(value: Fraction, *, lower: bool) -> float:
+    result = float(value)
+    represented = Fraction.from_float(result)
+    if lower and represented > value:
+        result = math.nextafter(result, -math.inf)
+    elif not lower and represented < value:
+        result = math.nextafter(result, math.inf)
+    return result
+
+
+def float32_rounding_cell(token: str, label: str = "Float32 observation") -> tuple[Fraction, Fraction, Fraction]:
+    """Return center and conservative midpoint hull, including ties at both ends."""
+    center_value = float32_csv_value(token, label)
+    previous = float32_next(center_value, -1)
+    following = float32_next(center_value, 1)
+    center = Fraction.from_float(center_value)
+    if math.isfinite(previous):
+        lower = (Fraction.from_float(previous) + center) / 2
+    else:
+        lower = center - (Fraction.from_float(following) - center) / 2
+    if math.isfinite(following):
+        upper = (center + Fraction.from_float(following)) / 2
+    else:
+        upper = center + (center - Fraction.from_float(previous)) / 2
+    return center, lower, upper
+
+
+def float32_mean_interval(tokens: list[str], label: str) -> dict[str, Any]:
+    if not tokens:
+        raise ValueError(f"no samples for Float32 interval mean: {label}")
+    cells = [float32_rounding_cell(token, label) for token in tokens]
+    count = len(cells)
+    midpoint = sum((x[0] for x in cells), Fraction(0)) / count
+    lower = sum((x[1] for x in cells), Fraction(0)) / count
+    upper = sum((x[2] for x in cells), Fraction(0)) / count
+    return {
+        "sample_count": count,
+        "midpoint_mmhg": float(midpoint),
+        "interval_mmhg": {"lower": outward_float(lower, lower=True),
+                           "upper": outward_float(upper, lower=False)},
+        "exact_fraction": {"midpoint": fraction_text(midpoint),
+                            "lower": fraction_text(lower),
+                            "upper": fraction_text(upper)},
+    }
+
+
+def float32_gas_window_summaries(trace_path: Path, trace_rows: list[dict[str, float]],
+                                 owner: Any) -> dict[str, Any]:
+    _, raw_rows = read_csv(trace_path, {"time_s", "PaCO2_mmhg", "PaO2_mmhg"})
+    if len(raw_rows) != len(trace_rows):
+        raise ValueError("raw respiration CSV and owner trace reader returned different row counts")
+    for index, (raw, parsed) in enumerate(zip(raw_rows, trace_rows)):
+        if finite(raw["time_s"], "respiration time_s") != parsed["time_s"]:
+            raise ValueError(f"raw respiration time differs from owner row {index}")
+    summaries: dict[str, Any] = {}
+    for name in ("pre", "dose"):
+        start_s, end_s = WINDOWS[name]
+        selected = [row for row in raw_rows
+                    if start_s <= finite(row["time_s"], "respiration time_s") < end_s]
+        owner_selected = owner.window_rows(trace_rows, start_s, end_s)
+        if len(selected) != len(owner_selected):
+            raise ValueError(f"{name} raw Float32 window does not match owner sample selection")
+        summaries[name] = {
+            "window_s": [start_s, end_s],
+            "PaCO2_mmhg": float32_mean_interval(
+                [row["PaCO2_mmhg"] for row in selected], f"{name} PaCO2"),
+            "PaO2_mmhg": float32_mean_interval(
+                [row["PaO2_mmhg"] for row in selected], f"{name} PaO2"),
+        }
+    return summaries
+
+
+def gas_did_rounding_interval(control: dict[str, Any], intervention: dict[str, Any],
+                              gas: str) -> dict[str, Any]:
+    cpre = control["gas_direction_float32_windows"]["pre"][gas]["exact_fraction"]
+    cdose = control["gas_direction_float32_windows"]["dose"][gas]["exact_fraction"]
+    tpre = intervention["gas_direction_float32_windows"]["pre"][gas]["exact_fraction"]
+    tdose = intervention["gas_direction_float32_windows"]["dose"][gas]["exact_fraction"]
+    cp, cd = Fraction(cpre["midpoint"]), Fraction(cdose["midpoint"])
+    tp, td = Fraction(tpre["midpoint"]), Fraction(tdose["midpoint"])
+    cpl, cph = Fraction(cpre["lower"]), Fraction(cpre["upper"])
+    cdl, cdh = Fraction(cdose["lower"]), Fraction(cdose["upper"])
+    tpl, tph = Fraction(tpre["lower"]), Fraction(tpre["upper"])
+    tdl, tdh = Fraction(tdose["lower"]), Fraction(tdose["upper"])
+    midpoint = (td - tp) - (cd - cp)
+    lower = (tdl - tph) - (cdh - cpl)
+    upper = (tdh - tpl) - (cdl - cph)
+    return {
+        "midpoint_mmhg": float(midpoint),
+        "interval_mmhg": {"lower": outward_float(lower, lower=True),
+                           "upper": outward_float(upper, lower=False)},
+        "exact_fraction": {"midpoint": fraction_text(midpoint),
+                            "lower": fraction_text(lower),
+                            "upper": fraction_text(upper)},
+        "sample_counts": {
+            "control_pre": control["gas_direction_float32_windows"]["pre"][gas]["sample_count"],
+            "control_dose": control["gas_direction_float32_windows"]["dose"][gas]["sample_count"],
+            "intervention_pre": intervention["gas_direction_float32_windows"]["pre"][gas]["sample_count"],
+            "intervention_dose": intervention["gas_direction_float32_windows"]["dose"][gas]["sample_count"],
+        },
+        "representation_scope": "Float32 input rounding-cell hull only; excludes integration, physiology, and model uncertainty.",
+    }
+
+
+def integer(value: Any, label: str) -> int:
+    number = finite(value, label)
+    if not number.is_integer():
+        raise ValueError(f"noninteger {label}: {value!r}")
+    return int(number)
+
+
+def canonical_sha(value: Any) -> str:
+    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    return hashlib.sha256(raw).hexdigest()
+
+
+def source_block_sha256(path: Path, token: str) -> str:
+    text = path.read_text(encoding="utf-8")
+    start = text.index(token)
+    brace = text.index("{", start)
+    depth = 0
+    for index in range(brace, len(text)):
+        if text[index] == "{":
+            depth += 1
+        elif text[index] == "}":
+            depth -= 1
+            if depth == 0:
+                return hashlib.sha256(text[start:index + 1].encode("utf-8")).hexdigest()
+    raise ValueError(f"unterminated source block: {token}")
+
+
+def classify_gas_guard_identity(*, build: dict[str, Any], declaration_assets: dict[str, str],
+                                invocation_assets: dict[str, str], metadata: dict[str, Any],
+                                source_hashes: dict[str, str], build_rule_sha256: str,
+                                build_rule_matches_source: bool) -> dict[str, Any]:
+    """Pure identity gate for the 1271 source-defined accepted-state gas guard."""
+    reasons: list[str] = []
+    if not isinstance(declaration_assets, dict):
+        declaration_assets = {}
+        reasons.append("run declaration immutable_assets is not an object")
+    if not isinstance(invocation_assets, dict):
+        invocation_assets = {}
+        reasons.append("native invocation asset_sha256 is not an object")
+    if not isinstance(metadata, dict):
+        metadata = {}
+        reasons.append("native run metadata is not an object")
+    if not isinstance(build, dict):
+        build = {}
+        reasons.append("build provenance is not an object")
+    if build.get("runtime_source") != str(GAS_RUNTIME_SOURCE_ROOT):
+        reasons.append("build provenance does not name the 1271 runtime source root")
+    if build.get("runtime_source_head") != GAS_RUNTIME_SOURCE_HEAD:
+        reasons.append("build provenance runtime source revision differs from 1271")
+    runtime_files = build.get("runtime_files") if isinstance(build.get("runtime_files"), dict) else {}
+    metadata_assets = metadata.get("asset_sha256", {})
+    if not isinstance(metadata_assets, dict):
+        metadata_assets = {}
+        reasons.append("native run metadata asset_sha256 is not an object")
+    loaded = metadata.get("loaded_metal_runtime", {})
+    if not isinstance(loaded, dict):
+        loaded = {}
+    for path, expected in GAS_RUNTIME_FILES.items():
+        if runtime_files.get(path) != expected:
+            reasons.append(f"build provenance does not bind expected runtime artifact: {path}")
+        if declaration_assets.get(path) != expected:
+            reasons.append(f"run declaration does not bind expected runtime artifact: {path}")
+        if invocation_assets.get(path) != expected:
+            reasons.append(f"native invocation does not bind expected runtime artifact: {path}")
+        if metadata_assets.get(path) != expected:
+            reasons.append(f"native run metadata does not bind expected runtime artifact: {path}")
+    observed_rows = loaded.get("observed_images", [])
+    if not isinstance(observed_rows, list):
+        observed_rows = []
+    observed = {row.get("path") for row in observed_rows if isinstance(row, dict)}
+    if (loaded.get("verified") is not True or loaded.get("expected_path") != GAS_RUNTIME_DYLIB or
+            loaded.get("expected_sha256") != GAS_RUNTIME_DYLIB_SHA256 or GAS_RUNTIME_DYLIB not in observed):
+        reasons.append("loaded MetalRobo dylib identity is not verified against build 1271")
+    for path, expected in GAS_RUNTIME_SOURCE_PINS.items():
+        if source_hashes.get(path) != expected:
+            reasons.append(f"1271 source file identity mismatch: {path}")
+    if build_rule_sha256 != GAS_BUILD_RULE_SHA256 or not build_rule_matches_source:
+        reasons.append("1271 shader build rule is not bound to the pinned respiration source and metallib")
+    return {
+        "identity_verified": not reasons,
+        "qualification_basis": "Exact 1271 runtime source/revision, source-file hashes, generated shader build rule, runtime artifact hashes, invocation asset hashes, and loaded dylib metadata.",
+        "source_root": str(GAS_RUNTIME_SOURCE_ROOT),
+        "source_head": GAS_RUNTIME_SOURCE_HEAD,
+        "source_file_sha256": dict(sorted(source_hashes.items())),
+        "gas_guard_source": {"path": str(GAS_METAL_SOURCE),
+                              "sha256": GAS_RUNTIME_SOURCE_PINS[str(GAS_METAL_SOURCE)],
+                              "addGas_block_sha256": GAS_ADD_GAS_BLOCK_SHA256,
+                              "exchange_block_sha256": GAS_EXCHANGE_BLOCK_SHA256,
+                              "resolve_block_sha256": GAS_RESOLVE_BLOCK_SHA256},
+        "shader_build_rule": {"path": str(GAS_BUILD_RULE), "sha256": build_rule_sha256,
+                              "source_and_metallib_paths_verified": build_rule_matches_source},
+        "runtime_artifacts": dict(GAS_RUNTIME_FILES),
+        "loaded_dylib_metadata": {key: loaded.get(key) for key in ("verified", "expected_path", "expected_sha256", "observed_images")},
+        "reasons_unverified": reasons,
+        "guard_definition": {"per_accepted_candidate": "The shader updates gasBudget.zw to the running maximum absolute oxygen/CO2 balance defect, then sets status.w=7 when either absolute defect exceeds 5e-5 times the corresponding initial gasBudget.xy amount. The resolver copies candidate state only when status is success and candidate.status.w is zero.",
+                              "threshold_fraction": 5.0e-5,
+                              "initial_budget_source": {"path": GAS_INITIALIZER_SOURCE, "sha256": GAS_INITIALIZER_SOURCE_SHA256},
+                              "csv_writer_source": {"path": GAS_CSV_WRITER_SOURCE, "sha256": GAS_CSV_WRITER_SOURCE_SHA256},
+                              "direct_normalized_residual_available": False,
+                              "direct_normalized_residual_limit": "The trace exports the absolute running maxima in STPD mL; it does not export initial gasBudget.xy, so this analyzer cannot independently divide by the source-defined initial budget."},
+    }
+
+
+def accepted_runtime_guard_passed(identity_verified: bool, accepted_steps: int,
+                                   expected_steps: int = STEPS) -> bool:
+    # A complete horizon plus exact source/runtime identity means each committed
+    # candidate passed the source status guard. This does not cover rejected
+    # trial candidates or provide an independently normalized residual.
+    return identity_verified is True and accepted_steps == expected_steps
+
+
+def gas_guard_provenance(declaration: dict[str, Any], invocation: dict[str, Any],
+                         metadata: dict[str, Any]) -> dict[str, Any]:
+    source_hashes: dict[str, str] = {}
+    for path in GAS_RUNTIME_SOURCE_PINS:
+        try:
+            source_hashes[path] = pin_file(Path(path))
+        except (OSError, ValueError) as exc:
+            source_hashes[path] = f"unavailable:{type(exc).__name__}"
+    try:
+        fixture_sha = pin_file(GAS_SOURCE_FIXTURE)
+    except (OSError, ValueError) as exc:
+        fixture_sha = f"unavailable:{type(exc).__name__}"
+    try:
+        historical_source_sha = pin_file(GAS_HISTORICAL_014_SOURCE)
+    except (OSError, ValueError) as exc:
+        historical_source_sha = f"unavailable:{type(exc).__name__}"
+    try:
+        build_rule_sha = pin_file(GAS_BUILD_RULE)
+        build_rule_text = GAS_BUILD_RULE.read_text(encoding="utf-8")
+        build_rule_matches = (str(GAS_METAL_SOURCE) in build_rule_text and
+                              "matter/shaders/HumanRespiration.metallib" in build_rule_text)
+    except (OSError, ValueError):
+        build_rule_sha, build_rule_matches = "unavailable", False
+    ref = declaration.get("runtime_launcher_chain", {}).get("build_provenance", {})
+    build: dict[str, Any] = {}
+    if isinstance(ref, dict) and isinstance(ref.get("path"), str) and isinstance(ref.get("sha256"), str):
+        try:
+            path = Path(ref["path"])
+            pin_file(path, ref["sha256"])
+            build = read_json(path)
+        except (OSError, ValueError, json.JSONDecodeError):
+            build = {}
+    else:
+        ref = {}
+    result = classify_gas_guard_identity(
+        build=build, declaration_assets=declaration.get("immutable_assets", {}),
+        invocation_assets=invocation.get("asset_sha256", {}), metadata=metadata,
+        source_hashes=source_hashes, build_rule_sha256=build_rule_sha,
+        build_rule_matches_source=build_rule_matches)
+    result["build_provenance_reference"] = ref
+    block_tokens = {
+        "addGas": "inline void addGas(thread float4& amount, float2 delta)",
+        "exchange": "kernel void nm_human_respiration_exchange(",
+        "resolve": "kernel void nm_human_respiration_resolve(",
+    }
+    current_blocks: dict[str, str] = {}
+    historical_blocks: dict[str, str] = {}
+    try:
+        current_blocks = {name: source_block_sha256(GAS_METAL_SOURCE, token)
+                          for name, token in block_tokens.items()}
+        historical_blocks = {name: source_block_sha256(GAS_HISTORICAL_014_SOURCE, token)
+                             for name, token in block_tokens.items()}
+    except (OSError, ValueError):
+        pass
+    result["source_context"] = {
+        "runtime_fixture": {"path": str(GAS_SOURCE_FIXTURE), "sha256": fixture_sha,
+                            "scope": "Source test fixture only; not evidence that the fixture was executed."},
+        "historical_014": {"source_path": str(GAS_HISTORICAL_014_SOURCE),
+                            "source_sha256": historical_source_sha,
+                            "full_source_differs_from_1271": historical_source_sha != GAS_RUNTIME_SOURCE_PINS[str(GAS_METAL_SOURCE)],
+                            "current_guard_block_sha256": current_blocks,
+                            "historical_guard_block_sha256": historical_blocks,
+                            "relevant_guard_blocks_match_1271": bool(current_blocks) and current_blocks == historical_blocks,
+                            "respiration_metallib": GAS_HISTORICAL_014_RESP_METALLIB,
+                            "scope": "Historical 014/018 source/artifact identity is kept separate. The relevant parsed source blocks are compared directly; even if equal, the full source file and built metallib differ, so this does not qualify the historical run as 1271."}
+    }
+    return result
+
+
+def verify_accepted_grid(rows: list[dict[str, float]], *, steps: int = STEPS,
+                         dt: float = DT, stride: int = 8) -> dict[str, Any]:
+    if steps <= 0 or stride <= 0 or steps % stride or not math.isfinite(dt) or dt <= 0:
+        raise ValueError("invalid declared accepted grid")
+    expected = tuple(range(stride, steps + 1, stride))
+    actual: list[tuple[int, float]] = []
+    previous = 0
+    for idx, row in enumerate(rows):
+        step_value = finite(row.get("step"), f"step row {idx}")
+        if not step_value.is_integer():
+            raise ValueError(f"noninteger accepted step at row {idx}")
+        step = int(step_value)
+        if step <= previous:
+            raise ValueError(f"duplicate or out-of-order accepted step at row {idx}")
+        if step > steps or step % stride:
+            raise ValueError(f"accepted step outside declared cadence at row {idx}")
+        time_s = finite(row.get("time_s"), f"time_s row {idx}")
+        expected_time = float(format(step * struct.unpack("<f", struct.pack("<f", dt))[0], ".12g"))
+        if time_s != expected_time:
+            raise ValueError(f"accepted time shifted from step*Float32(dt) at step {step}")
+        actual.append((step, time_s))
+        previous = step
+    got = tuple(step for step, _ in actual)
+    if got != expected:
+        raise ValueError("accepted grid is incomplete or shifted")
+    return {"passed": True, "row_count": len(actual), "step_stride": stride,
+            "first_step": actual[0][0], "last_step": actual[-1][0],
+            "first_time_s": actual[0][1], "last_time_s": actual[-1][1],
+            "sequence_sha256": canonical_sha(actual)}
+
+
+def _row_step(row: dict[str, str], label: str) -> int:
+    for key in ("step", "accepted_step"):
+        if key in row:
+            return integer(row[key], f"{label}.{key}")
+    raise ValueError(f"{label} lacks step identity")
+
+
+def exact_pre_dose_rows(control: list[dict[str, str]], treatment: list[dict[str, str]],
+                        *, step_key: str = "step") -> dict[str, Any]:
+    """Require raw-cell equality before the declared 60 s intervention start."""
+    left = [r for r in control if integer(r.get(step_key), step_key) < DOSE_FIRST_STEP]
+    right = [r for r in treatment if integer(r.get(step_key), step_key) < DOSE_FIRST_STEP]
+    if not left or len(left) != len(right):
+        raise ValueError("pre-dose samples are missing or differ in count")
+    if left != right:
+        mismatch = next((i for i, (a, b) in enumerate(zip(left, right)) if a != b), None)
+        raise ValueError(f"pre-dose measured rows differ at filtered row {mismatch}")
+    steps = [_row_step(row, "pre-dose row") for row in left]
+    return {"passed": True, "exact_raw_rows": len(left), "first_step": steps[0],
+            "last_step": steps[-1], "rows_sha256": canonical_sha(left),
+            "comparison": "All raw CSV cells match in file order for accepted observations before step 30000 (60 s)."}
+
+
+FAILURE_RECEIPT_ENV = "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"
+
+
+def normalize_arm_local_paths(argv: list[str], run_dir: Path, *, native: bool = False) -> list[str]:
+    """Normalize only the declared run output and failure-receipt paths."""
+    result = list(argv)
+    expected_run = str(run_dir.resolve())
+    if native:
+        if len(result) < 5 or str(Path(result[4]).resolve()) != expected_run:
+            raise ValueError("native argv positional run output differs from its arm directory")
+        result[4] = "<ARM_NATIVE_RUN>"
+        movie_indices = [i for i, token in enumerate(result) if token == "--resting-movie"]
+        if len(movie_indices) != 1 or movie_indices[0] + 1 >= len(result):
+            raise ValueError("native argv must contain exactly one complete --resting-movie path")
+        movie_index = movie_indices[0] + 1
+        expected_movie = expected_run + "/native-viewer.mov"
+        if result[movie_index] != expected_movie:
+            raise ValueError("native argv movie output differs from its arm directory")
+        result[movie_index] = "<ARM_NATIVE_RUN>/native-viewer.mov"
+        return result
+
+    output_indices = [i for i, token in enumerate(result) if token == "--output"]
+    if len(output_indices) != 1 or output_indices[0] + 1 >= len(result):
+        raise ValueError("owner argv must contain exactly one complete --output path")
+    output_index = output_indices[0] + 1
+    if result[output_index] != expected_run:
+        raise ValueError("owner argv --output path differs from its arm directory")
+    result[output_index] = "<ARM_NATIVE_RUN>"
+
+    receipt_indices = [i for i, token in enumerate(result) if token.startswith(FAILURE_RECEIPT_ENV + "=")]
+    expected_receipt = expected_run + "/common-field-failure.json"
+    if len(receipt_indices) != 1:
+        raise ValueError("owner argv must contain exactly one common failure-receipt path")
+    receipt_index = receipt_indices[0]
+    key, value = result[receipt_index].split("=", 1)
+    if key != FAILURE_RECEIPT_ENV or value != expected_receipt:
+        raise ValueError("owner argv common failure-receipt path differs from its arm directory")
+    result[receipt_index] = key + "=<ARM_NATIVE_RUN>/common-field-failure.json"
+    return result
+
+
+def normalize_arm_local_environment(environment: dict[str, str], run_dir: Path) -> dict[str, str]:
+    result = dict(environment)
+    expected = str(run_dir.resolve()) + "/common-field-failure.json"
+    if result.get(FAILURE_RECEIPT_ENV) != expected:
+        raise ValueError("native environment common failure-receipt path differs from its arm directory")
+    result[FAILURE_RECEIPT_ENV] = "<ARM_NATIVE_RUN>/common-field-failure.json"
+    return result
+
+
+def normalize_pair_environments(control: dict[str, str], treatment: dict[str, str],
+                                control_run: Path, treatment_run: Path) -> dict[str, Any]:
+    left = normalize_arm_local_environment(control, control_run)
+    right = normalize_arm_local_environment(treatment, treatment_run)
+    if left != right:
+        raise ValueError("native environments differ beyond the declared common failure-receipt path")
+    return {"passed": True, "normalized_baseline_environment_sha256": canonical_sha(left),
+            "normalized_intervention_environment_sha256": canonical_sha(right)}
+
+
+def _remove_intervention(argv: list[str], flag: str, present: bool) -> list[str]:
+    result = list(argv)
+    indices = [i for i, token in enumerate(result) if token == flag]
+    if present:
+        if len(indices) != 1 or indices[0] + 3 >= len(result):
+            raise ValueError(f"expected exactly one {flag} with three values")
+        i = indices[0]
+        values = result[i + 1:i + 4]
+        if values != ["60.0", "100.0", "0.5"]:
+            raise ValueError(f"{flag} is not the declared 60–100 s, 0.5 scaling")
+        del result[i:i + 4]
+    elif indices:
+        raise ValueError(f"control unexpectedly contains {flag}")
+    return result
+
+
+def normalize_pair_commands(control: list[str], treatment: list[str],
+                             control_run: Path, treatment_run: Path,
+                             *, native: bool = False) -> dict[str, Any]:
+    flag = "--resting-drive-intervention" if native else "--drive-intervention"
+    c = normalize_arm_local_paths(control, control_run, native=native)
+    t = normalize_arm_local_paths(treatment, treatment_run, native=native)
+    c = _remove_intervention(c, flag, False)
+    t = _remove_intervention(t, flag, True)
+    if c != t:
+        raise ValueError(f"matched {('native ' if native else '')}commands differ beyond the declared arm-local paths and intervention")
+    return {"passed": True, "intervention_flag": flag,
+            "normalized_baseline_argv_sha256": canonical_sha(c),
+            "normalized_intervention_argv_sha256": canonical_sha(t)}
+
+
+def env_map_from_owner_argv(argv: list[str]) -> dict[str, str]:
+    result: dict[str, str] = {}
+    for token in argv:
+        if token.startswith("NUMI_") and "=" in token:
+            key, value = token.split("=", 1)
+            if key in result:
+                raise ValueError(f"duplicate invocation environment key {key}")
+            result[key] = value
+    return result
+
+
+
+def declared_environment_from_owner_argv(argv: list[str]) -> dict[str, str]:
+    """Reconstruct declaration-time observer env exported from explicit CLI flags."""
+    result = env_map_from_owner_argv(argv)
+    tour_flags = [i for i, token in enumerate(argv) if token == "--inspection-tour"]
+    period_flags = [i for i, token in enumerate(argv) if token == "--inspection-period-seconds"]
+    if len(tour_flags) != 1 or len(period_flags) != 1:
+        raise ValueError("owner declaration must specify one inspection-tour flag and period")
+    period_index = period_flags[0]
+    if period_index + 1 >= len(argv) or argv[period_index + 1] != "2.0":
+        raise ValueError("owner declaration inspection period must be exactly 2.0 seconds")
+    mapped = {
+        "NUMI_HUMAN_RESTING_INSPECTION_TOUR": "1",
+        "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS": "2.0",
+    }
+    for key, value in mapped.items():
+        if key in result and result[key] != value:
+            raise ValueError(f"owner CLI/environment conflict for {key}")
+        result[key] = value
+    return result
+
+def _require_env(env: dict[str, str], key: str, value: str) -> None:
+    if env.get(key) != value:
+        raise ValueError(f"unexpected observer/config setting {key}={env.get(key)!r}")
+
+
+def option_values(argv: list[str], flag: str, count: int) -> list[str]:
+    indexes = [i for i, token in enumerate(argv) if token == flag]
+    if len(indexes) != 1 or indexes[0] + count >= len(argv):
+        raise ValueError(f"native invocation lacks one complete {flag} option")
+    return argv[indexes[0] + 1:indexes[0] + count + 1]
+
+
+def verify_native_configuration(argv: list[str], environment: dict[str, str], arm: str) -> dict[str, Any]:
+    if option_values(argv, "--muscle-step-count", 1) != [str(STEPS)]:
+        raise ValueError(f"{arm} native accepted-step horizon differs")
+    if option_values(argv, "--muscle-step-seconds", 1) != ["0.002"]:
+        raise ValueError(f"{arm} native timestep differs")
+    if option_values(argv, "--stand-contact-iterations", 1) != ["64"]:
+        raise ValueError(f"{arm} native contact iteration count differs")
+    if option_values(argv, "--muscle-activation", 1) != ["0.01"]:
+        raise ValueError(f"{arm} native activation cap differs")
+    for flag in ("--persistent-metal-stand", "--vascular-dense45",
+                 "--resting-release-initialization", "--resting-rigid-hands"):
+        if argv.count(flag) != 1:
+            raise ValueError(f"{arm} native invocation missing or duplicates {flag}")
+    forbidden = ("--resting-hip-capsule-reference", "--resting-bed-surface", "--resting-initial-posture")
+    if any(flag in argv for flag in forbidden):
+        raise ValueError(f"{arm} native invocation contains an unsupported posture/support override")
+    for key, value in environment.items():
+        if key.startswith("NUMI_HUMAN_STAND_CPU_") and (value == "1" or key == "NUMI_HUMAN_STAND_CPU_ACCELERATE_FACTOR"):
+            raise ValueError(f"{arm} environment enables CPU stepping override {key}")
+    scene = option_values(argv, "--resting-scene", 2)
+    root_pose = option_values(argv, "--root-pose", 7)
+    return {"passed": True, "accepted_steps": STEPS, "dt_s": DT,
+            "contact_iterations": 64, "muscle_activation_cap": 0.01,
+            "resting_scene_inputs": scene, "root_pose_arguments": root_pose,
+            "release_initialization": True, "rigid_hands": True,
+            "cpu_step_override_enabled": False}
+
+
+def _fnv64_payload(payload: bytes) -> int:
+    value = FNV64_OFFSET
+    for byte in payload:
+        value = ((value ^ byte) * FNV64_PRIME) & 0xFFFFFFFFFFFFFFFF
+    return value or FNV64_OFFSET
+
+
+def _append_payload_owner_fingerprint(source_fingerprint: int, domain: str,
+                                      payload_fingerprint: int) -> int:
+    source_fingerprint = int(source_fingerprint)
+    source_fingerprint ^= _fnv64_payload(domain.encode("utf-8"))
+    source_fingerprint = (source_fingerprint * FNV64_PRIME) & 0xFFFFFFFFFFFFFFFF
+    source_fingerprint ^= int(payload_fingerprint)
+    source_fingerprint = (source_fingerprint * FNV64_PRIME) & 0xFFFFFFFFFFFFFFFF
+    return source_fingerprint or FNV64_OFFSET
+
+
+def verify_intervention_body_source_fingerprint(baseline_fingerprint: Any,
+                                                intervention_fingerprint: Any,
+                                                intervention_values: tuple[float, ...]) -> dict[str, Any]:
+    """Verify the declared intervention's exact source-owner append to baseline identity."""
+    if sys.byteorder != "little":
+        raise ValueError("runtime source identity tuple encoding is pinned to little-endian Apple bytes")
+    try:
+        values = tuple(float(value) for value in intervention_values)
+        baseline_value = int(baseline_fingerprint)
+        observed_value = int(intervention_fingerprint)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError("invalid paired body-source fingerprint inputs") from exc
+    if values != (60.0, 100.0, 0.5):
+        raise ValueError("intervention tuple differs from the declared 60-100 s, 0.5 source append")
+    payload = struct.pack("<3d", *values)
+    payload_hash = _fnv64_payload(payload)
+    expected = _append_payload_owner_fingerprint(
+        baseline_value, "resting_drive_intervention", payload_hash)
+    if observed_value == baseline_value:
+        raise ValueError("intervention incorrectly reuses the baseline body-source fingerprint")
+    if observed_value != expected:
+        raise ValueError("intervention body-source fingerprint does not match the declared source-owner append")
+    return {
+        "relation": "intervention_is_exact_declared_source_owner_append_to_baseline",
+        "baseline_fingerprint_fnv64": str(baseline_value),
+        "intervention_fingerprint_fnv64": str(observed_value),
+        "expected_intervention_fingerprint_fnv64": str(expected),
+        "matched": True,
+        "owner_domain": "resting_drive_intervention",
+        "intervention_values": list(values),
+        "payload_bytes_hex_little_endian_f64": payload.hex(),
+        "payload_fingerprint_fnv64": str(payload_hash),
+        "source": {
+            "application_source_path": str(RUNTIME_IDENTITY_APP_SOURCE),
+            "application_source_sha256": RUNTIME_IDENTITY_APP_SOURCE_SHA256,
+            "runtime_identity_helper_path": str(RUNTIME_IDENTITY_HELPER_SOURCE),
+            "runtime_identity_helper_sha256": RUNTIME_IDENTITY_HELPER_SOURCE_SHA256,
+            "rule": "The app appends the FNV64 fingerprint of the exact 3-double intervention payload under the resting_drive_intervention domain to baseline source identity.",
+        },
+    }
+
+
+def verify_observer_env(env: dict[str, str]) -> dict[str, Any]:
+    _require_env(env, "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT", "1")
+    _require_env(env, "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP", str(Q_FIRST))
+    _require_env(env, "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP", str(Q_LAST))
+    _require_env(env, "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT", "1")
+    _require_env(env, "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS", "8")
+    _require_env(env, "NUMI_HUMAN_RESTING_TRANSACTION_PROBE", "1")
+    _require_env(env, "NUMI_HUMAN_RESTING_INSPECTION_TOUR", "1")
+    _require_env(env, "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS", "2.0")
+    if env.get("NUMI_HUMAN_ACCEPTED_FORCE_AUDIT") == "1":
+        raise ValueError("separate force-contributions observer must remain disabled for 1271")
+    if env.get("NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS") != ",".join(map(str, CAPTURES)):
+        raise ValueError("accepted geometry capture schedule differs from the eight declared captures")
+    return {"q_root_momentum_window_steps": [Q_FIRST, Q_LAST],
+            "expected_q_root_momentum_rows": Q_LAST - Q_FIRST + 1,
+            "accepted_geometry_capture_steps": CAPTURES,
+            "com_support_stride_steps": 8}
+
+def transaction_probe(log: str) -> dict[str, Any]:
+    lines = [line for line in log.splitlines() if line.startswith("resting_integrated_rejection=")]
+    if len(lines) != 1:
+        raise ValueError("expected one bounded integrated-rejection startup probe")
+    line = lines[0]
+    missing = [token for token in REQUIRED_PROBE if token not in line]
+    if missing:
+        raise ValueError(f"integrated-rejection probe is incomplete: {missing}")
+    return {"passed": True, "log_line": line,
+            "scope": "Built-in startup in-memory rejected-submission and replay probe. It reports same-context retry unsupported; this does not establish general archive/checkpoint rollback identity."}
+
+
+def verify_vector(raw: str, length: int, label: str) -> list[float]:
+    parts = raw.split(";")
+    if len(parts) != length:
+        raise ValueError(f"{label} vector length {len(parts)} != {length}")
+    return [finite(part, label) for part in parts]
+
+
+def validate_q_root_momentum_rows(q_rows: list[dict[str, str]], map_rows: list[dict[str, str]],
+                                  *, q_first: int = Q_FIRST, q_last: int = Q_LAST) -> dict[str, Any]:
+    if q_first <= 0 or q_last < q_first:
+        raise ValueError("invalid Q root-momentum window")
+    expected_steps = list(range(q_first, q_last + 1))
+    q_steps = [integer(row.get("accepted_step"), "q.accepted_step") for row in q_rows]
+    if q_steps != expected_steps:
+        raise ValueError("Q root-momentum rows do not cover every accepted window step exactly once")
+    kind_counts = {}
+    for row in map_rows:
+        kind = row.get("record_kind", "")
+        kind_counts[kind] = kind_counts.get(kind, 0) + 1
+    if kind_counts != {"scalar_dof": 125, "configuration_without_direct_velocity": 4, "velocity_only": 3}:
+        raise ValueError(f"Q index map record-kind counts differ: {kind_counts}")
+    q_rows_map = [row for row in map_rows if row.get("local_q_index", "") != ""]
+    v_rows_map = [row for row in map_rows if row.get("local_v_index", "") != ""]
+    q_indices = [integer(row["local_q_index"], "local_q_index") for row in q_rows_map]
+    global_q_indices = [integer(row["global_q_index"], "global_q_index") for row in q_rows_map]
+    v_indices = [integer(row["local_v_index"], "local_v_index") for row in v_rows_map]
+    global_v_indices = [integer(row["global_v_index"], "global_v_index") for row in v_rows_map]
+    if (len(q_rows_map) != 129 or sorted(q_indices) != list(range(129)) or len(set(q_indices)) != 129 or
+            sorted(global_q_indices) != list(range(129)) or len(set(global_q_indices)) != 129):
+        raise ValueError("Q index map does not classify exactly 129 unique local/global configuration indices")
+    if (len(v_rows_map) != 128 or sorted(v_indices) != list(range(128)) or len(set(v_indices)) != 128 or
+            sorted(global_v_indices) != list(range(128)) or len(set(global_v_indices)) != 128):
+        raise ValueError("Q index map does not classify exactly 128 unique local/global velocity DOFs")
+    for row in map_rows:
+        kind = row["record_kind"]
+        q_present = row.get("local_q_index", "") != ""
+        v_present = row.get("local_v_index", "") != ""
+        q_valid = integer(row.get("q_index_valid"), "q_index_valid")
+        if kind == "scalar_dof" and (not q_present or not v_present or q_valid != 1):
+            raise ValueError("scalar Q index-map row is malformed")
+        if kind == "configuration_without_direct_velocity" and (not q_present or v_present or q_valid != 0):
+            raise ValueError("configuration-only Q index-map row is malformed")
+        if kind == "velocity_only" and (q_present or not v_present or q_valid != 0):
+            raise ValueError("velocity-only Q index-map row is malformed")
+    vector_specs = (("q_before_f32_semicolon", 129), ("q_preprojection_f32_semicolon", 129),
+                    ("q_accepted_f32_semicolon", 129), ("v_before_f32_semicolon", 128),
+                    ("v_preprojection_f32_semicolon", 128), ("v_accepted_f32_semicolon", 128),
+                    ("gpu_body_kinetic_root_mass_row_x_f32_by_local_v_index_semicolon", 128),
+                    ("gpu_body_kinetic_root_mass_row_y_f32_by_local_v_index_semicolon", 128),
+                    ("gpu_body_kinetic_root_mass_row_z_f32_by_local_v_index_semicolon", 128),
+                    ("gpu_stand_free_velocity_f32_by_local_v_index_semicolon", 128),
+                    ("gpu_stand_joint_equality_impulses_f32_by_executed_joint_equality_record_index_semicolon", 91),
+                    ("gpu_stand_source_limit_impulses_f32_by_local_v_index_semicolon", 128))
+    count_specs = (("configuration_count", 129), ("velocity_count", 128),
+                   ("gpu_stand_free_velocity_count", 128),
+                   ("gpu_stand_joint_equality_impulse_count", 91),
+                   ("gpu_stand_source_limit_impulse_count", 128))
+    momentum_scalars = tuple(f"{prefix}_{axis}_kg_m_s" for prefix in (
+        "source_body_linear_momentum_before", "source_body_linear_momentum_free_same_q",
+        "source_body_linear_momentum_preprojection_velocity_same_q", "source_body_linear_momentum_preprojection_qv",
+        "source_body_linear_momentum_accepted_qv", "gpu_body_kinetic_root_momentum_free_same_q",
+        "gpu_body_kinetic_root_momentum_post_coupled_sweep_same_q") for axis in "xyz")
+    for row, step in zip(q_rows, expected_steps):
+        for field, expected in count_specs:
+            if integer(row.get(field), field) != expected:
+                raise ValueError(f"{field} differs from expected width {expected} at step {step}")
+        if integer(row.get("gpu_stand_constraint_vectors_captured"), "gpu_stand_constraint_vectors_captured") != 1:
+            raise ValueError(f"GPU stand constraint vectors were not captured at step {step}")
+        dt = finite(row.get("dt_s"), "q.dt_s")
+        t = finite(row.get("time_s"), "q.time_s")
+        if dt != FLOAT32_DT or t != float(format(step * FLOAT32_DT, ".17g")):
+            raise ValueError(f"Q accepted time/dt differs from Float32 clock at step {step}")
+        for field, length in vector_specs:
+            verify_vector(row.get(field, ""), length, f"q.{field}")
+        for field in momentum_scalars:
+            finite(row.get(field), f"q.{field}")
+        for field in ("q_before_fingerprint_fnv64", "v_before_fingerprint_fnv64",
+                      "q_preprojection_fingerprint_fnv64", "v_preprojection_fingerprint_fnv64",
+                      "q_accepted_fingerprint_fnv64", "v_accepted_fingerprint_fnv64"):
+            value = row.get(field, "")
+            if not value or any(ch not in "0123456789abcdefABCDEF" for ch in value):
+                raise ValueError(f"invalid Q state fingerprint {field} at step {step}")
+    return {"passed": True, "first_step": q_first, "last_step": q_last, "rows": len(q_rows),
+            "velocity_dof_count": 128, "configuration_count": 129,
+            "gpu_vector_widths": {"free_velocity": 128, "executed_joint_equality_impulse_records": 91,
+                                  "source_limit_impulses": 128},
+            "index_map_rows": len(map_rows), "mapped_configuration_indices": 129, "mapped_velocity_indices": 128, "record_kind_counts": kind_counts, "all_vectors_finite_and_correct_length": True,
+            "accepted_time_matches_float32_clock": True,
+            "interpretation": "The 91 equality entries are indexed by executed equality-record order after fixed/linear reduction; they are not the 51 source equality rows. The GPU root mass rows and free/post-sweep root momentum are observer diagnostics. This Q-window instrument does not independently qualify anatomy or imply complete momentum closure."}
+
+
+def verify_q_root_momentum_observer(run_dir: Path) -> dict[str, Any]:
+    q_path = run_dir / "resting-com-q-integration.csv"
+    map_path = run_dir / "resting-com-q-index-map.csv"
+    required = {"accepted_step", "time_s", "dt_s", "configuration_count", "velocity_count",
+        "q_before_f32_semicolon", "v_before_f32_semicolon", "q_preprojection_f32_semicolon", "v_preprojection_f32_semicolon",
+        "q_accepted_f32_semicolon", "v_accepted_f32_semicolon", "q_before_fingerprint_fnv64", "v_before_fingerprint_fnv64",
+        "q_preprojection_fingerprint_fnv64", "v_preprojection_fingerprint_fnv64", "q_accepted_fingerprint_fnv64", "v_accepted_fingerprint_fnv64",
+        "gpu_body_kinetic_root_mass_row_x_f32_by_local_v_index_semicolon",
+        "gpu_body_kinetic_root_mass_row_y_f32_by_local_v_index_semicolon",
+        "gpu_body_kinetic_root_mass_row_z_f32_by_local_v_index_semicolon",
+        "gpu_stand_constraint_vectors_captured", "gpu_stand_free_velocity_count", "gpu_stand_free_velocity_f32_by_local_v_index_semicolon",
+        "gpu_stand_joint_equality_impulse_count", "gpu_stand_joint_equality_impulses_f32_by_executed_joint_equality_record_index_semicolon",
+        "gpu_stand_source_limit_impulse_count", "gpu_stand_source_limit_impulses_f32_by_local_v_index_semicolon"}
+    _, q_rows = read_csv(q_path, required)
+    _, map_rows = read_csv(map_path, {"record_kind", "local_q_index", "local_v_index", "global_q_index", "global_v_index", "joint_index", "joint_name", "dof_name", "q_index_valid"})
+    report = validate_q_root_momentum_rows(q_rows, map_rows)
+    report.update({"csv_path": str(q_path), "csv_sha256": PINNED_READS[str(q_path)],
+                   "index_map_path": str(map_path), "index_map_sha256": PINNED_READS[str(map_path)],
+                   "expected_rows": Q_LAST - Q_FIRST + 1, "metadata_columns_present": True})
+    return report
+
+def expected_support_steps(steps: int, q_first: int, q_last: int, stride: int = 8) -> list[int]:
+    if steps <= 0 or stride <= 0 or q_first <= 1 or q_last < q_first or q_last > steps:
+        raise ValueError("invalid support/Q observer grid")
+    samples = set(range(stride, steps + 1, stride))
+    samples.update(range(q_first - 1, q_last + 1))
+    return sorted(samples)
+
+
+def validate_support_sample_rows(rows: list[dict[str, str]], *, steps: int = STEPS,
+                                 q_first: int = Q_FIRST, q_last: int = Q_LAST,
+                                 stride: int = 8) -> dict[str, Any]:
+    expected = expected_support_steps(steps, q_first, q_last, stride)
+    actual = [integer(row.get("accepted_step"), "support.accepted_step") for row in rows]
+    if actual != expected:
+        raise ValueError("COM/support diagnostic does not cover the declared union of stride-8 and Q-window samples")
+    previous = 0
+    statuses: dict[str, int] = {}
+    for row, step in zip(rows, expected):
+        sample_start = integer(row.get("sample_start_step"), "support.sample_start_step")
+        segment = integer(row.get("segment_steps"), "support.segment_steps")
+        if sample_start != previous or segment != step - previous:
+            raise ValueError(f"COM/support segment does not start at prior emitted sample for step {step}")
+        time_s = finite(row.get("time_s"), f"support.time_s at step {step}")
+        if abs(time_s - step * FLOAT32_DT) > 1e-9:
+            raise ValueError(f"COM/support time differs from the Float32 accepted clock at step {step}")
+        status = row.get("momentum_residual_status", "").strip()
+        if not status:
+            raise ValueError(f"COM/support residual status is missing at step {step}")
+        statuses[status] = statuses.get(status, 0) + 1
+        previous = step
+    return {"passed": True, "sample_count": len(rows), "first_step": actual[0],
+            "last_step": actual[-1], "normal_stride_steps": stride,
+            "q_window_steps": [q_first, q_last],
+            "extra_predecessor_step": q_first - 1,
+            "momentum_residual_status_counts": statuses,
+            "momentum_residual_status_is_descriptive": True}
+
+
+def validate_support_impulse_rows(rows: list[dict[str, str]], sample_rows: list[dict[str, str]], *,
+                                  contact_count: int = 32, steps: int = STEPS,
+                                  q_first: int = Q_FIRST, q_last: int = Q_LAST,
+                                  stride: int = 8) -> dict[str, Any]:
+    expected = expected_support_steps(steps, q_first, q_last, stride)
+    if not sample_rows or [integer(r.get("accepted_step"), "support.accepted_step") for r in sample_rows] != expected:
+        raise ValueError("support impulse join lacks the complete expected COM sample grid")
+    expected_steps = [step for step in expected for _ in range(contact_count)]
+    actual_steps = [integer(row.get("accepted_step"), "impulse.accepted_step") for row in rows]
+    if actual_steps != expected_steps:
+        raise ValueError("support impulses have missing, duplicate, or out-of-order contact rows")
+    com_by_step = {integer(row["accepted_step"], "support.accepted_step"): row for row in sample_rows}
+    for i, step in enumerate(expected):
+        group = rows[i * contact_count:(i + 1) * contact_count]
+        contact_indices = [integer(row.get("contact_index"), "impulse.contact_index") for row in group]
+        if contact_indices != list(range(contact_count)):
+            raise ValueError(f"support contact indices are not a unique ordered 0..{contact_count - 1} set at step {step}")
+        identities = []
+        for row in group:
+            identity = (integer(row.get("contact_index"), "impulse.contact_index"),
+                        integer(row.get("body_index"), "impulse.body_index"),
+                        integer(row.get("source_geometry_index"), "impulse.source_geometry_index"))
+            identities.append(identity)
+            com = com_by_step[step]
+            if (integer(row.get("sample_start_step"), "impulse.sample_start_step") != integer(com["sample_start_step"], "COM.sample_start_step") or
+                    integer(row.get("segment_steps"), "impulse.segment_steps") != integer(com["segment_steps"], "COM.segment_steps")):
+                raise ValueError(f"support impulse segment does not join the COM sample at step {step}")
+            for key, value in row.items():
+                if key in ("contact_index", "body_index", "source_geometry_index",
+                           "accepted_step", "sample_start_step", "segment_steps"):
+                    integer(value, f"support.{key}")
+                else:
+                    finite(value, f"support.{key}")
+        if len(set(identities)) != contact_count:
+            raise ValueError(f"support contact identity is duplicated at step {step}")
+    return {"passed": True, "row_count": len(rows), "contact_rows_per_sample": contact_count,
+            "sample_count": len(expected), "contact_index_ordered_complete": True,
+            "joined_to_com_segments": True,
+            "scope": "Per-contact impulses at each emitted COM observation. Normal cadence is stride 8; the bounded Q window adds its predecessor and every accepted Q step. These rows are not per-step outside that window."}
+
+
+def support_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
+    grid = validate_support_sample_rows(rows)
+    post = [r for r in rows if 10.0 <= finite(r["time_s"], "support.time_s") < STEPS * FLOAT32_DT]
+    if len(post) < 100:
+        raise ValueError("COM/support diagnostic lacks post-initialization samples")
+    xyz = [[finite(row[f"com_{axis}_m"], f"com_{axis}_m") for row in post] for axis in "xyz"]
+    force = [finite(row["normal_force_last_physical_step_n"], "support_force") for row in post]
+    contacts = [integer(row["active_contact_count"], "active_contact_count") for row in post]
+    return {"sampled_rows_present": True, "sample_count": len(post), "full_observer_rows": len(rows),
+            "sample_grid": grid,
+            "com_endpoint_delta_mm_xyz": [1000.0 * (axis[-1] - axis[0]) for axis in xyz],
+            "sampled_normal_force_last_physical_step_n": {"min": min(force), "mean": statistics.fmean(force), "max": max(force)},
+            "sampled_active_contact_count": {"min": min(contacts), "mean": statistics.fmean(contacts), "max": max(contacts)},
+            "momentum_residual_status_is_descriptive": True,
+            "interpretation": "COM/support rows include the normal stride-8 grid and the Q-window predecessor plus every Q-window accepted step. Momentum residual status is a string category, not an integer pass bit. Sampled last-physical-step support force does not prove static equilibrium or momentum closure."}
+
+
+def verify_support_impulses(path: Path, sample_rows: list[dict[str, str]]) -> dict[str, Any]:
+    _, rows = read_csv(path, {"sample_start_step", "accepted_step", "segment_steps",
+                               "contact_index", "body_index", "source_geometry_index",
+                               "normal_impulse_ns", "tangent0_impulse_ns", "tangent1_impulse_ns"})
+    return validate_support_impulse_rows(rows, sample_rows)
+
+
+def load_owner() -> Any:
+    if pin_file(OWNER) != OWNER_SHA256:
+        raise ValueError("pinned physiology owner changed")
+    spec = importlib.util.spec_from_file_location("resting_intervention_study_1271_for_011", OWNER)
+    if spec is None or spec.loader is None:
+        raise ValueError("cannot load pinned physiology owner")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def cli_output(argv: list[str]) -> Path:
+    if argv.count("--output") != 1:
+        raise ValueError("run declaration must contain exactly one --output")
+    i = argv.index("--output")
+    if i + 1 >= len(argv):
+        raise ValueError("run declaration --output lacks a value")
+    output = Path(argv[i + 1])
+    if output.is_symlink():
+        raise ValueError("run declaration output path is a symlink")
+    return output.resolve(strict=True)
+
+
+def verify_declared_arm(decl_path: Path, arm: str, owner: Any) -> dict[str, Any]:
+    if decl_path.is_symlink():
+        raise ValueError(f"{arm} declaration is a symlink")
+    decl_path = decl_path.resolve(strict=True)
+    declaration = read_json(decl_path)
+    if declaration.get("schema") != "numi.human.resting.native-run.declaration.v1":
+        raise ValueError(f"{arm} declaration has an unexpected schema")
+    if (declaration.get("seconds") != 310 or declaration.get("accepted_steps") != STEPS or
+            declaration.get("dt") != DT or declaration.get("capture_steps") != CAPTURES or
+            declaration.get("contact_iterations") != 64 or declaration.get("postural_activation_cap") != 0.01 or
+            declaration.get("release_initialization") is not True or declaration.get("rigid_hands_enabled") is not True):
+        raise ValueError(f"{arm} declaration does not match the prepared 310 s physical configuration")
+    if declaration.get("physical_scope", {}).get("arm") not in (None, arm):
+        raise ValueError(f"{arm} declaration arm label mismatch")
+    if not declaration.get("body_scene") or not declaration.get("anatomy_receipt"):
+        raise ValueError(f"{arm} declaration lacks current body scene or anatomy receipt")
+    observer_windows = declaration.get("observer_windows", {})
+    observer = observer_windows.get("q_integration_and_gpu_root_momentum", {})
+    if observer_windows.get("force_contributions_enabled") is not False:
+        raise ValueError(f"{arm} declaration does not keep the separate force-contributions observer disabled")
+    if (observer.get("first_accepted_step") != Q_FIRST or observer.get("last_accepted_step") != Q_LAST or
+            observer.get("expected_rows") != Q_LAST - Q_FIRST + 1):
+        raise ValueError(f"{arm} declaration lacks the exact bounded Q/root-momentum window")
+    run_dir = cli_output(declaration["argv"])
+    execution_path = decl_path.parent / "execution.json"
+    execution = read_json(execution_path)
+    if (execution.get("returncode") != 0 or execution.get("changed_inputs") != {} or
+            execution.get("declaration_sha256") != pin_file(decl_path)):
+        raise ValueError(f"{arm} owner-run execution receipt did not close cleanly")
+    for path, expected in declaration.get("immutable_assets", {}).items():
+        pin_file(Path(path), expected)
+    invocation_path = run_dir / "invocation.json"
+    metadata_path = run_dir / "run-metadata.json"
+    log_path = run_dir / "native.log"
+    for path in (invocation_path, metadata_path, log_path):
+        pin_file(path)
+    invocation, metadata = read_json(invocation_path), read_json(metadata_path)
+    if (metadata.get("exit_code") != 0 or metadata.get("source_files_changed_during_run") != [] or
+            metadata.get("argv") != invocation.get("argv") or
+            metadata.get("environment") != invocation.get("environment") or
+            metadata.get("asset_sha256") != invocation.get("asset_sha256") or
+            metadata.get("loaded_metal_runtime", {}).get("verified") is not True):
+        raise ValueError(f"{arm} native run metadata is incomplete or changed")
+    gas_guard = gas_guard_provenance(declaration, invocation, metadata)
+    for path, expected in invocation.get("asset_sha256", {}).items():
+        pin_file(Path(path), expected)
+        if declaration.get("immutable_assets", {}).get(path) != expected:
+            raise ValueError(f"{arm} invocation asset is not covered by run declaration: {path}")
+    capture_env = verify_observer_env(invocation.get("environment", {}))
+    declared_capture_env = verify_observer_env(declared_environment_from_owner_argv(declaration.get("argv", [])))
+    if capture_env != declared_capture_env:
+        raise ValueError(f"{arm} actual observer environment differs from the Human owner declaration")
+    if (invocation.get("asset_sha256") != metadata.get("asset_sha256") or
+            not isinstance(invocation.get("argv"), list)):
+        raise ValueError(f"{arm} invocation receipt malformed")
+    if arm == "baseline":
+        if "--resting-drive-intervention" in invocation["argv"] or "--drive-intervention" in declaration["argv"]:
+            raise ValueError("baseline arm unexpectedly declares a respiratory-drive intervention")
+    else:
+        if "--drive-intervention" not in declaration["argv"]:
+            raise ValueError("intervention owner declaration lacks --drive-intervention")
+        i = declaration["argv"].index("--drive-intervention")
+        if declaration["argv"][i + 1:i + 4] != ["60.0", "100.0", "0.5"]:
+            raise ValueError("intervention owner declaration does not use [60,100) at 0.5")
+        if "--resting-drive-intervention" not in invocation["argv"]:
+            raise ValueError("intervention native invocation lacks the mapped drive intervention")
+        i = invocation["argv"].index("--resting-drive-intervention")
+        if invocation["argv"][i + 1:i + 4] != ["60.0", "100.0", "0.5"]:
+            raise ValueError("intervention native invocation has changed dose settings")
+    log = log_path.read_text(encoding="utf-8", errors="replace")
+    native = owner.native_scene_summary(log)
+    native_config = verify_native_configuration(invocation["argv"], invocation["environment"], arm)
+    if len(invocation["argv"]) < 5 or Path(invocation["argv"][4]).resolve() != run_dir:
+        raise ValueError(f"{arm} native argv output path differs from its Human run declaration")
+    if (native["accepted_steps"] != STEPS or
+            abs(native["simulated_s"] - STEPS * FLOAT32_DT) > max(1e-4, STEPS * FLOAT32_DT * 1e-7)):
+        raise ValueError(f"{arm} native accepted duration is not 155000 steps/310 s")
+    gas_guard["runtime_guard_passed"] = accepted_runtime_guard_passed(
+        gas_guard["identity_verified"], native["accepted_steps"])
+    gas_guard["accepted_state_guard_status"] = (
+        "passed_for_committed_accepted_states" if gas_guard["runtime_guard_passed"]
+        else "not_verified_runtime_identity_or_incomplete_horizon")
+    gas_guard["accepted_step_scope"] = {"accepted_steps": native["accepted_steps"],
+                                         "claim_limit": "This status applies to committed accepted candidates only; it does not assert that every rejected trial candidate passed."}
+    try:
+        vascular_reference_sha = pin_file(VASCULAR_REFERENCE_SOURCE, VASCULAR_REFERENCE_SOURCE_SHA256)
+    except (OSError, ValueError):
+        vascular_reference_sha = "unavailable_or_changed"
+    transaction = transaction_probe(log)
+    if not run_dir.is_dir() or run_dir.is_symlink():
+        raise ValueError(f"{arm} native output path is invalid")
+    trace_path = run_dir / "resting-coupled.csv"
+    surface_path = run_dir / "resting-surface-audit.csv"
+    com_path = run_dir / "resting-com-momentum-diagnostic.csv"
+    support_path = run_dir / "resting-com-support-impulses.csv"
+    movie_path = run_dir / "native-viewer.mov"
+    for path in (trace_path, surface_path, com_path, support_path, movie_path):
+        pin_file(path)
+    if movie_path.stat().st_size <= 0:
+        raise ValueError(f"{arm} native recording is empty")
+    trace_rows = owner.read_trace(trace_path)
+    gas_direction_windows = float32_gas_window_summaries(trace_path, trace_rows, owner)
+    grid = verify_accepted_grid(trace_rows)
+    owner_args = argparse.Namespace(steps=STEPS, dt=DT, arm="control" if arm == "baseline" else "treatment",
+                                    start_s=60.0, end_s=100.0, scale=0.5,
+                                    window_s=30.0, unit_id="paired-current-scene")
+    observation = owner.observation(owner_args, trace_path, native, log)
+    body_check = owner.native_body_trace_consistency(trace_path, STEPS, DT)
+    terminal = owner.native_terminal_accepted_capture_evidence(invocation, run_dir, native, log, STEPS, DT)
+    if terminal.get("verified") is not True:
+        raise ValueError(f"{arm} exact terminal accepted capture was not verified")
+    if body_check.get("root_assistance_observed") is not False:
+        raise ValueError(f"{arm} body trace consistency result does not confirm zero assistance")
+    surface_check = owner.native_surface_trace_consistency(
+        surface_path, STEPS, DT, require_whole_mesh=True, terminal_accepted_capture=True)
+    if (surface_check.get("displayed_accepted_frames", 0) <= 0 or
+            surface_check.get("terminal_accepted_capture_included") is not True or
+            surface_check.get("whole_body_interfaces_qualified") is not False):
+        raise ValueError(f"{arm} surface owner returned incomplete endpoint/cadence evidence")
+    respiration_arg = invocation["argv"].index("--resting-scene")
+    respiration_path = Path(invocation["argv"][respiration_arg + 2])
+    pin_file(respiration_path)
+    windows = {name: observation[name + "_window_s"] for name in WINDOWS}
+    respiration_check = owner.native_respiration_trace_consistency(trace_path, respiration_path, windows)
+    resp_metrics = respiration_check.get("respiratory_mechanics", {})
+    if (resp_metrics.get("accepted_samples") != len(trace_rows) or
+            resp_metrics.get("maximum_fraction_of_rounding_allowance", math.inf) > 1.0):
+        raise ValueError(f"{arm} respiratory owner returned incomplete identity checks")
+    cycles = owner.native_cycle_coverage(trace_rows, DT)
+    if cycles.get("post_initialization_cycle_coverage", {}).get("passed") is not True:
+        raise ValueError(f"{arm} post-initialization breath/heart-cycle check did not pass")
+    if observation.get("duration_valid") is not True or observation.get("accepted_steps") != STEPS:
+        raise ValueError(f"{arm} owner observation did not verify the exact accepted duration")
+    q_root_momentum = verify_q_root_momentum_observer(run_dir)
+    _, com_rows = read_csv(com_path, {"sample_start_step", "accepted_step", "time_s", "segment_steps",
+                                      "com_x_m", "com_y_m", "com_z_m",
+                                      "normal_force_last_physical_step_n", "active_contact_count",
+                                      "momentum_residual_status"})
+    support = support_summary(com_rows)
+    support_impulses = verify_support_impulses(support_path, com_rows)
+    captures = verify_captures(run_dir, invocation, log, declaration)
+    return {"arm": arm, "declaration": {"path": str(decl_path), "sha256": PINNED_READS[str(decl_path)]},
+            "execution_receipt": {"path": str(execution_path), "sha256": PINNED_READS[str(execution_path)],
+                                  "returncode": execution["returncode"], "changed_inputs": execution["changed_inputs"]},
+            "run_directory": str(run_dir), "invocation_sha256": PINNED_READS[str(invocation_path)],
+            "run_metadata_sha256": PINNED_READS[str(metadata_path)], "native_log_sha256": PINNED_READS[str(log_path)],
+            "native": native, "native_configuration": native_config, "native_argv": invocation["argv"], "loaded_metal_runtime": metadata["loaded_metal_runtime"],
+            "gas_guard_provenance": gas_guard,
+            "coupled_program_fingerprint": native["coupled_program_fingerprint"],
+            "asset_sha256": invocation["asset_sha256"], "environment": invocation["environment"],
+            "capture_schedule": capture_env, "accepted_grid": grid, "transaction_probe": transaction,
+            "owner_observation": observation,
+            "gas_direction_float32_windows": gas_direction_windows,
+            "body_trace_check": body_check,
+            "surface_trace_check": surface_check, "respiration_identity_check": respiration_check,
+            "post_initialization_cycle_check": cycles, "q_root_momentum_observer": q_root_momentum,
+            "support_com_diagnostic": support, "support_impulse_diagnostic": support_impulses,
+            "captures": captures, "recording": {"path": str(movie_path), "sha256": PINNED_READS[str(movie_path)],
+                                                   "bytes": movie_path.stat().st_size,
+                                                   "decode_review_performed": False}}
+
+
+def verify_captures(run_dir: Path, invocation: dict[str, Any], log: str, declaration: dict[str, Any]) -> list[dict[str, Any]]:
+    entries = []
+    export_lines = [line for line in log.splitlines() if line.startswith("accepted_geometry_export=")]
+    for step in CAPTURES:
+        pack = run_dir / "accepted-geometry" / f"step-{step}.mrvpack"
+        receipt_path = run_dir / "accepted-geometry" / f"step-{step}.receipt.json"
+        pack_sha = pin_file(pack)
+        receipt_sha = pin_file(receipt_path)
+        matches = [line for line in export_lines if line.startswith(f"accepted_geometry_export={pack} ")]
+        if len(matches) != 1:
+            raise ValueError(f"native log does not uniquely bind accepted geometry step {step}")
+        fields = dict(token.split("=", 1) for token in matches[0].split()[1:] if "=" in token)
+        receipt = read_json(receipt_path)
+        if (receipt.get("schema") != "numi.human.accepted-render-geometry.v1" or
+                receipt.get("accepted_step") != step or receipt.get("physical_endpoint") != "accepted" or
+                receipt.get("surface_audit_endpoint") != "passed" or
+                receipt.get("accepted_pack_path") != str(pack) or receipt.get("pack_file_sha256") != pack_sha or
+                fields.get("pack_sha256") != pack_sha or fields.get("receipt_sha256") != receipt_sha):
+            raise ValueError(f"accepted geometry receipt/export mismatch at step {step}")
+        accepted_time = finite(receipt.get("accepted_time_s"), "capture accepted_time_s")
+        expected_time = step * FLOAT32_DT
+        if abs(accepted_time - expected_time) > 1e-8:
+            raise ValueError(f"capture accepted time differs from Float32 step clock at {step}")
+        entries.append({"accepted_step": step, "nominal_time_s": step * DT, "accepted_time_s": accepted_time,
+                        "pack_path": str(pack), "pack_sha256": pack_sha,
+                        "receipt_path": str(receipt_path), "receipt_sha256": receipt_sha})
+    if [entry["accepted_step"] for entry in entries] != declaration["capture_steps"]:
+        raise ValueError("run captures differ from the exact declared step sequence")
+    return entries
+
+
+def trace_descriptives(trace_path: Path, owner: Any) -> dict[str, Any]:
+    rows = owner.read_trace(trace_path)
+    def stats(key: str) -> dict[str, float]:
+        values = [finite(row[key], key) for row in rows]
+        return {"min": min(values), "mean": statistics.fmean(values), "max": max(values)}
+    return {"accepted_samples": len(rows), "first_last_time_s": [rows[0]["time_s"], rows[-1]["time_s"]],
+            "blood_volume_ml": stats("blood_ml"), "PaCO2_mmhg": stats("PaCO2_mmhg"),
+            "PaO2_mmhg": stats("PaO2_mmhg"), "SaO2_fraction": stats("SaO2"),
+            "lung_volume_ml": stats("lung_volume_ml"), "airflow_ml_s": stats("airflow_ml_s"),
+            "blood_error_abs_max_ml": max(abs(row["blood_error_ml"]) for row in rows),
+            "oxygen_balance_error_abs_max_STPD_ml": max(abs(row["oxygen_balance_error_stpd_ml"]) for row in rows),
+            "co2_balance_error_abs_max_STPD_ml": max(abs(row["co2_balance_error_stpd_ml"]) for row in rows),
+            "cumulative_aortic_ejected_ml": rows[-1]["aortic_ejected_ml"] - rows[0]["aortic_ejected_ml"],
+            "cumulative_pulmonary_ejected_ml": rows[-1]["pulmonary_ejected_ml"] - rows[0]["pulmonary_ejected_ml"],
+            "complete_filling_ejection_cycles": rows[-1]["complete_filling_ejection_cycles"],
+            "last_lv_stroke_volume_ml": rows[-1]["last_lv_stroke_ml"]}
+
+
+def paired_response(control: dict[str, Any], intervention: dict[str, Any]) -> dict[str, Any]:
+    c, t = control["owner_observation"], intervention["owner_observation"]
+    dose_ve_delta = t["inspiratory_minute_ventilation_dose_L_min"] - c["inspiratory_minute_ventilation_dose_L_min"]
+    did = t["primary_delta_PaCO2_mmhg"] - c["primary_delta_PaCO2_mmhg"]
+    pco2_did = gas_did_rounding_interval(control, intervention, "PaCO2_mmhg")
+    pao2_did = gas_did_rounding_interval(control, intervention, "PaO2_mmhg")
+    recovery_pco2 = t["PaCO2_recovery_mean_mmhg"] - c["PaCO2_recovery_mean_mmhg"]
+    recovery_pao2 = t["PaO2_recovery_mean_mmhg"] - c["PaO2_recovery_mean_mmhg"]
+    c_ve = c["inspiratory_minute_ventilation_recovery_L_min"]
+    t_ve = t["inspiratory_minute_ventilation_recovery_L_min"]
+    if c_ve <= 0:
+        raise ValueError("control recovery ventilation is nonpositive; relative recovery comparison undefined")
+    relative_recovery_ve = abs(t_ve - c_ve) / c_ve
+    pco2_lower, pco2_upper = (Fraction(pco2_did["exact_fraction"][key]) for key in ("lower", "upper"))
+    pao2_lower, pao2_upper = (Fraction(pao2_did["exact_fraction"][key]) for key in ("lower", "upper"))
+    if pco2_lower > 0:
+        pco2_status = "expected_positive_direction_resolved"
+    elif pco2_upper < 0:
+        pco2_status = "opposite_direction_resolved"
+    else:
+        pco2_status = "direction_unresolved_at_Float32_representation_precision"
+    if pao2_upper < 0:
+        pao2_status = "expected_negative_direction_resolved"
+    elif pao2_lower > 0:
+        pao2_status = "opposite_direction_resolved"
+    else:
+        pao2_status = "direction_unresolved_at_Float32_representation_precision"
+    checks = [
+        {"criterion": "dose treatment-minus-control inspiratory ventilation < 0", "observed": dose_ve_delta, "unit": "L/min", "passed": dose_ve_delta < 0},
+        {"criterion": "Float32-rounding interval PaCO2 treatment-minus-control DID strictly > 0", "observed_midpoint": pco2_did["midpoint_mmhg"], "interval_mmhg": pco2_did["interval_mmhg"], "sample_counts": pco2_did["sample_counts"], "direction_status": pco2_status, "unit": "mmHg", "passed": pco2_lower > 0},
+        {"criterion": "Float32-rounding interval PaO2 treatment-minus-control DID strictly < 0", "observed_midpoint": pao2_did["midpoint_mmhg"], "interval_mmhg": pao2_did["interval_mmhg"], "sample_counts": pao2_did["sample_counts"], "direction_status": pao2_status, "unit": "mmHg", "passed": pao2_upper < 0},
+        {"criterion": "recovery absolute PaCO2 difference <= 1", "observed": abs(recovery_pco2), "limit": 1.0, "unit": "mmHg", "passed": abs(recovery_pco2) <= 1.0},
+        {"criterion": "recovery relative ventilation difference <= 0.10", "observed": relative_recovery_ve, "limit": 0.10, "unit": "fraction of control", "passed": relative_recovery_ve <= 0.10},
+        {"criterion": "recovery absolute PaO2 difference <= 5", "observed": abs(recovery_pao2), "limit": 5.0, "unit": "mmHg", "passed": abs(recovery_pao2) <= 5.0},
+    ]
+    return {"windows_s": WINDOWS,
+            "values": {"dose_ventilation_treatment_minus_control_L_min": dose_ve_delta,
+                       "primary_PaCO2_difference_in_differences_mmhg": did,
+                       "float32_midpoint_PaCO2_difference_in_differences_mmhg": pco2_did["midpoint_mmhg"],
+                       "float32_midpoint_PaO2_difference_in_differences_mmhg": pao2_did["midpoint_mmhg"],
+                       "float32_representation_interval_PaCO2_DID_mmhg": pco2_did["interval_mmhg"],
+                       "float32_representation_interval_PaO2_DID_mmhg": pao2_did["interval_mmhg"],
+                       "PaCO2_DID_window_sample_counts": pco2_did["sample_counts"],
+                       "PaO2_DID_window_sample_counts": pao2_did["sample_counts"],
+                       "dose_PaCO2_treatment_minus_control_mmhg": t["PaCO2_dose_mean_mmhg"] - c["PaCO2_dose_mean_mmhg"],
+                       "dose_PaO2_treatment_minus_control_mmhg": t["PaO2_dose_mean_mmhg"] - c["PaO2_dose_mean_mmhg"],
+                       "dose_SaO2_treatment_minus_control_fraction": t["SaO2_dose_mean"] - c["SaO2_dose_mean"],
+                       "recovery_PaCO2_treatment_minus_control_mmhg": recovery_pco2,
+                       "recovery_PaO2_treatment_minus_control_mmhg": recovery_pao2,
+                       "recovery_ventilation_treatment_minus_control_L_min": t_ve - c_ve,
+                       "recovery_ventilation_relative_abs_difference": relative_recovery_ve},
+            "float32_representation_interval_method": {
+                "definition": "Enclose each accepted Float32 observation by exact midpoints to adjacent representable Float32 values; sum window bounds and the four-window DID with exact rational arithmetic. Closed tie endpoints are conservative.",
+                "scope": "Input representation rounding only. This does not bound numerical integration, solver, physiology, or clinical uncertainty; no minimum clinical effect size is imposed.",
+                "roundtrip": "Native respiration CSV uses 12 significant digits; each gas token must reformat to the same decimal Float32 value.",
+            },
+            "predeclared_direction_and_recovery_checks": checks,
+            "all_declared_response_checks_met": all(check["passed"] for check in checks),
+            "criteria_source": {"path": str(Path(__file__).resolve()),
+                                "scope": "Revision004 pre-pair response contract: reduced drive requires resolved positive PaCO2 DID and resolved negative PaO2 DID; recovery margins are retained from revision003. These are model-response directions, not clinical limits."},
+            "interpretation": "PaCO2 and PaO2 dose differences are direction-gated using accepted trace values and Float32 representation-only intervals. Zero or an interval touching zero is unresolved and fails that direction check. No scripted target curve or old paired outcome is used."}
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--baseline-declaration", type=Path, required=True)
+    parser.add_argument("--intervention-declaration", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True, help="new report path; existing files are refused")
+    args = parser.parse_args(argv)
+    out = args.output.expanduser().resolve()
+    if out.exists() or out.is_symlink():
+        raise ValueError("refusing to overwrite an existing analysis report")
+    if not out.parent.is_dir():
+        raise ValueError("output directory must already exist")
+    script_path = Path(__file__).resolve(strict=True)
+    pin_file(script_path)
+    runtime_identity_source_pins = {
+        str(RUNTIME_IDENTITY_APP_SOURCE): RUNTIME_IDENTITY_APP_SOURCE_SHA256,
+        str(RUNTIME_IDENTITY_HELPER_SOURCE): RUNTIME_IDENTITY_HELPER_SOURCE_SHA256,
+    }
+    for source_path, expected_sha in runtime_identity_source_pins.items():
+        pin_file(Path(source_path), expected_sha)
+    owner = load_owner()
+    if args.baseline_declaration.is_symlink() or args.intervention_declaration.is_symlink():
+        raise ValueError("paired run declarations must not be symlinks")
+    baseline_decl = read_json(args.baseline_declaration.resolve(strict=True))
+    intervention_decl = read_json(args.intervention_declaration.resolve(strict=True))
+    baseline = verify_declared_arm(args.baseline_declaration, "baseline", owner)
+    intervention = verify_declared_arm(args.intervention_declaration, "intervention", owner)
+    if baseline["asset_sha256"] != intervention["asset_sha256"]:
+        raise ValueError("paired native arms do not use byte-identical simulator assets")
+    if baseline["loaded_metal_runtime"] != intervention["loaded_metal_runtime"]:
+        raise ValueError("paired native arms loaded different runtime libraries")
+    if baseline["native"]["world_fingerprint"] != intervention["native"]["world_fingerprint"]:
+        raise ValueError("paired native arms have different world fingerprints")
+    if baseline["native"]["device"] != intervention["native"]["device"]:
+        raise ValueError("paired native arms ran on different devices")
+    intervention_values = tuple(float(value) for value in option_values(
+        intervention["native_argv"], "--resting-drive-intervention", 3))
+    body_source_relation = verify_intervention_body_source_fingerprint(
+        baseline["native"]["body_source_fingerprint"],
+        intervention["native"]["body_source_fingerprint"],
+        intervention_values)
+    if baseline_decl.get("body_scene") != intervention_decl.get("body_scene") or baseline_decl.get("anatomy_receipt") != intervention_decl.get("anatomy_receipt"):
+        raise ValueError("paired native arms differ in scene or anatomy receipt")
+    if baseline_decl.get("capture_steps") != intervention_decl.get("capture_steps"):
+        raise ValueError("paired native arms declare different capture schedules")
+    if baseline["accepted_grid"]["sequence_sha256"] != intervention["accepted_grid"]["sequence_sha256"]:
+        raise ValueError("paired arms have different accepted step/time sequences")
+    owner_argv = normalize_pair_commands(baseline_decl["argv"], intervention_decl["argv"],
+                                         cli_output(baseline_decl["argv"]), cli_output(intervention_decl["argv"]))
+    native_argv = normalize_pair_commands(baseline["native_argv"], intervention["native_argv"],
+                                          Path(baseline["run_directory"]), Path(intervention["run_directory"]), native=True)
+    native_env = normalize_pair_environments(
+        baseline["environment"], intervention["environment"],
+        Path(baseline["run_directory"]), Path(intervention["run_directory"]))
+    owner_env = normalize_pair_environments(
+        baseline_declared_env(baseline_decl["argv"]), baseline_declared_env(intervention_decl["argv"]),
+        cli_output(baseline_decl["argv"]), cli_output(intervention_decl["argv"]))
+    # The actual native invocation must reflect the owner-declared observer controls.
+    verify_observer_env(baseline["environment"])
+    verify_observer_env(intervention["environment"])
+    for filename, step_key in (("resting-coupled.csv", "step"),
+                               ("resting-com-momentum-diagnostic.csv", "accepted_step"),
+                               ("resting-surface-audit.csv", "step"),
+                               ("resting-com-support-impulses.csv", "accepted_step")):
+        crows = read_csv(Path(baseline["run_directory"]) / filename)[1]
+        trows = read_csv(Path(intervention["run_directory"]) / filename)[1]
+        if filename == "resting-coupled.csv":
+            # The owner has already checked all physiological fields and the exact complete grid.
+            if len(crows) != len(trows):
+                raise ValueError("paired coupled trace sample count differs")
+        pre = exact_pre_dose_rows(crows, trows, step_key=step_key)
+        baseline["pre_dose_exact_state"] = baseline.get("pre_dose_exact_state", {})
+        baseline["pre_dose_exact_state"][filename] = pre
+    baseline_trace = Path(baseline["run_directory"]) / "resting-coupled.csv"
+    intervention_trace = Path(intervention["run_directory"]) / "resting-coupled.csv"
+    baseline["all_trajectory_descriptives"] = trace_descriptives(baseline_trace, owner)
+    intervention["all_trajectory_descriptives"] = trace_descriptives(intervention_trace, owner)
+    response = paired_response(baseline, intervention)
+    # Capture the final hashes after all owner helpers read their inputs. Fail if any changed mid-analysis.
+    for path, expected in list(PINNED_READS.items()):
+        if sha(Path(path)) != expected:
+            raise ValueError(f"input changed during analysis: {path}")
+    report = {
+        "schema": "numi.human.resting.native-matched-pair-analysis.v1",
+        "status": "measured_pair_analysis_complete",
+        "execution_performed_by_analyzer": False,
+        "pair_scope": "One matched deterministic native baseline/intervention pair, both using the current declaration-pinned scene and assets.",
+        "arms": {"baseline": baseline, "intervention": intervention},
+        "body_source_fingerprint_relation": body_source_relation,
+        "pair_command_checks": {"owner_cli_commands_equal_except_intervention_and_declared_arm_paths": owner_argv,
+                                "native_commands_equal_except_intervention_and_declared_run_path": native_argv,
+                                "owner_declared_environment": owner_env,
+                                "native_environment": native_env},
+        "pre_dose_exact_state_comparison": {name: baseline["pre_dose_exact_state"][name] for name in baseline["pre_dose_exact_state"]},
+        "paired_response": response,
+        "coupled_program_fingerprint_relation": "equal" if baseline["coupled_program_fingerprint"] == intervention["coupled_program_fingerprint"] else "different as expected for the delivered intervention",
+        "balance_reporting_policy": "Gas accounting is qualified only by the exact 1271 source/build/artifact identity and its source-defined accepted-candidate status guard; the trace does not expose initial gasBudget.xy, so a normalized residual is unavailable. Blood error remains descriptive; the separate 5e-5 vascular checker is cited as reference context only and is not an analyzer pass gate. Respiratory pressure-flow/compliance keeps its separate source-owned Float32-rounding check.",
+        "gas_accounting": {
+            "runtime_guard_passed": all(
+                arm["gas_guard_provenance"]["runtime_guard_passed"]
+                for arm in (baseline, intervention)),
+            "accepted_state_runtime_guard_status": (
+                "passed_for_both_committed_accepted_trajectories"
+                if all(arm["gas_guard_provenance"]["runtime_guard_passed"]
+                       for arm in (baseline, intervention))
+                else "not_verified_runtime_identity_or_incomplete_horizon"),
+            "guard_rule": "5e-5 times each source-defined initial O2/CO2 gasBudget amount; absolute running balance defects are checked on each candidate and only status-zero candidates are committed.",
+            "guard_source_identity_scope": "Expected 1271 source/build/artifact pins. Per-arm identity_verified and runtime_guard_passed record whether each actual declaration, invocation, metadata, loaded dylib, and source/build inputs matched these pins.",
+            "guard_source_identity": {"runtime_source_root": str(GAS_RUNTIME_SOURCE_ROOT),
+                                      "runtime_source_head": GAS_RUNTIME_SOURCE_HEAD,
+                                      "metal_source_sha256": GAS_RUNTIME_SOURCE_PINS[str(GAS_METAL_SOURCE)],
+                                      "addGas_block_sha256": GAS_ADD_GAS_BLOCK_SHA256,
+                                      "exchange_block_sha256": GAS_EXCHANGE_BLOCK_SHA256,
+                                      "resolve_block_sha256": GAS_RESOLVE_BLOCK_SHA256,
+                                      "runtime_files": dict(GAS_RUNTIME_FILES)},
+            "direct_normalized_residual_available": False,
+            "direct_normalized_residual_reason": "Initial gasBudget.xy is not exported in the accepted trace. Absolute high-water residuals are preserved in the owner CSV; no denominator is inferred.",
+            "trace_field_semantics": {
+                "blood_ml": "Instantaneous simple Float32 reduction of the 21 physical vascular volumes at the emitted state.",
+                "blood_error_ml": "Running high-water absolute deviation of that total from the source reference 0.00515 m3; descriptive, not the standalone normalized vascular gate.",
+                "oxygen_balance_error_stpd_ml": "Running high-water absolute global oxygen budget defect in STPD mL (gasBudget.z multiplied by 1e6), not a per-step residual.",
+                "co2_balance_error_stpd_ml": "Running high-water absolute global CO2 budget defect in STPD mL (gasBudget.w multiplied by 1e6), not a per-step residual.",
+                "blood_continuity_residual_accum_ml": "Compensated cumulative sum of per-step normalized vascular volume-change terms.",
+                "blood_physical_delta_accum_ml": "Compensated cumulative sum of per-step Float32 physical-volume deltas.",
+                "blood_residual_minus_physical_ml": "Difference between the two cumulative compensated sums.",
+                "blood_endpoint_minus_physical_ml": "Current endpoint total relative to the 0.00515 m3 source reference, minus cumulative physical deltas; diagnostic, not a closure proof.",
+                "respiratory_volume_balance_ml": "Most-recent-step net swept-volume versus lung-volume balance at each emitted sample; stride-8 samples do not make it cumulative."
+            },
+            "blood_reference_only": {"source_path": str(VASCULAR_REFERENCE_SOURCE),
+                                     "source_sha256": vascular_reference_sha,
+                                     "reference_relative_tolerance": 5.0e-5,
+                                     "scope": "Standalone vascular check compares volume, blood mass, and oxygen amount against its own initial totals. It is not the matched-run contract and is not applied as a pass gate here."},
+            "per_arm": {"baseline": baseline["gas_guard_provenance"],
+                        "intervention": intervention["gas_guard_provenance"]}
+        },
+        "physiological_reference_policy": "Per-window owner reference comparisons are retained as contextual model-output comparisons, not as clinical qualification. SaO2 remains explicitly a fraction in raw owner output; conversion to percent is only presented where the owner helper labels it percent.",
+        "replay_and_rejection_scope": "Each native log must contain the pinned startup integrated-rejection probe. It covers the recorded in-memory predecessor, state/history, clock, retry, and fresh-context replay assertions; same-context retry is reported unsupported. This is not general checkpoint/archive rollback identity.",
+        "limits": ["No target curve or old-run response values are read; values come from these two accepted-state traces.",
+                  "Respiratory pressure-flow/compliance identities and cycle counters are numerical checks, not independent physiological calibration.",
+                  "Support/COM are stride-8 diagnostics; sampled force is not a proof of static equilibrium or momentum closure.",
+                  "The Q-window root-momentum observer covers accepted steps 152501–155000 only; its per-step vectors do not qualify anatomy or by themselves prove momentum closure.",
+                  "No whole-body anatomy/interface or clinical qualification is implied.",
+                  "The accepted CSVs do not expose every latent controller/Brain state; equal pre-dose outputs are not full hidden-state equivalence proof.",
+                  "This analyzer does not decode or visually review recordings; it records the native movie hashes only."],
+        "numerical_integrity_checks": {
+            "accepted_grid": "pass for both arms: all stride-8 rows present, no duplicate/order gaps, exact serialized step*Float32(dt) times",
+            "pre_dose_physiology_mechanics": "pass: exact raw-row equality through accepted steps before 30000",
+            "body_surface_respiration_cycles": "pass: pinned owner helpers completed, their returned gates are explicitly checked",
+            "q_root_momentum_window": "pass: all 2500 accepted steps 152501..155000 contain finite 128/91/128 captured GPU vectors and width-128 root mass rows; equality entries are executed equality records",
+            "support_observer": "normal stride-8 output plus the bounded Q-window predecessor and every Q-window step is structurally validated; residual status and support force remain descriptive",
+            "blood_gas_conservation": "gas source guard is reported only when the exact 1271 source/build/artifact identity is verified; absolute running maxima remain reported and no normalized residual is inferred. Blood volume maximum is descriptive; the separate 5e-5 vascular reference is not a pass gate."
+        },
+        "analysis_source": {"path": str(script_path), "sha256": PINNED_READS[str(script_path)]},
+        "physiology_owner": {"path": str(OWNER), "sha256": OWNER_SHA256},
+        "read_input_sha256": dict(sorted(PINNED_READS.items())),
+    }
+    with out.open("x", encoding="utf-8") as stream:
+        json.dump(report, stream, sort_keys=True, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(out)
+    return 0
+
+
+def baseline_declared_env(argv: list[str]) -> dict[str, str]:
+    return env_map_from_owner_argv(argv)
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except (OSError, ValueError, KeyError, IndexError, TypeError) as exc:
+        raise SystemExit(f"matched-pair analysis refused: {exc}")

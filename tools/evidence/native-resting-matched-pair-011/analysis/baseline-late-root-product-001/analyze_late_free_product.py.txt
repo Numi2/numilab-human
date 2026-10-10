@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import argparse,csv,ctypes,datetime,hashlib,json,math,struct,subprocess,time
+ap=argparse.ArgumentParser();ap.add_argument("arm");args=ap.parse_args()
+O=Path(__file__).resolve().parent
+REF=Path("/Users/n/numi-human-retained-delivery-20261009/resting-window-vector-trace-1271/window-reference-002")
+A=Path(args.arm).resolve();N=A/"native-run"
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def pin(p): return {"path":str(p),"bytes":p.stat().st_size,"sha256":sha(p)}
+def read(p):
+ with p.open(newline="") as f:return list(csv.DictReader(f))
+def f32(x):return struct.unpack("<f",struct.pack("<f",float(x)))[0]
+def arr(x):return [f32(y) for y in x.split(";")] if x else []
+def diff(a,b):return [x-y for x,y in zip(a,b)]
+def stats(xs):
+ return {"max_abs_xyz":[max(abs(x[i]) for x in xs) for i in range(3)],
+         "signed_sum_xyz":[math.fsum(x[i] for x in xs) for i in range(3)]}
+def vector(r,p):return [float(r[p+a+"_kg_m_s"]) for a in "xyz"]
+model=Path("/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid")
+eq=model.with_name("myosim-fullbody-joint-equalities.nheq")
+decl=json.loads((A/"run-declaration.json").read_text())
+execution=json.loads((A/"execution.json").read_text())
+assert execution["returncode"]==0 and not execution["changed_inputs"]
+for p in [model,eq]:assert decl["immutable_assets"][str(p)]==sha(p)
+inputs={k:pin(p) for k,p in {"script":Path(__file__),"declaration":A/"run-declaration.json","execution":A/"execution.json","metadata":N/"run-metadata.json","invocation":N/"invocation.json","q_csv":N/"resting-com-q-integration.csv","com_csv":N/"resting-com-momentum-diagnostic.csv","support_csv":N/"resting-com-support-impulses.csv","reference_source":REF/"root_mass_row_reference.cpp","reference_binary":REF/"root_mass_row_reference","reference_build":REF/"build.json","model":model,"equality":eq}.items()}
+ref=O/"cpu-free-root-row-reference.json";reportpath=O/"free-product-comparison.json"
+assert not ref.exists() and not reportpath.exists()
+argv=[str(REF/"root_mass_row_reference"),str(model),str(eq),str(N/"resting-com-q-integration.csv"),str(ref),"152501,152858,153215,153572,153929,154286,154643,155000"]
+t=time.monotonic();proc=subprocess.run(argv,capture_output=True,text=True,timeout=60)
+(O/"reference.stdout").write_text(proc.stdout);(O/"reference.stderr").write_text(proc.stderr)
+assert proc.returncode==0,proc.stderr
+reference=json.loads(ref.read_text())
+rows=read(N/"resting-com-q-integration.csv")
+assert [int(r["accepted_step"]) for r in rows]==list(range(152501,155001))
+com={int(r["accepted_step"]):r for r in read(N/"resting-com-momentum-diagnostic.csv")}
+support={}
+for r in read(N/"resting-com-support-impulses.csv"):support.setdefault(int(r["accepted_step"]),[]).append(r)
+libc=ctypes.CDLL(None);fma=libc.fmaf;fma.argtypes=[ctypes.c_float]*3;fma.restype=ctypes.c_float
+def fma_dot(m,v):
+ z=0.0
+ for a,b in zip(m,v):z=fma(a,b,z)
+ return z
+col="gpu_stand_joint_equality_impulses_f32_by_executed_joint_equality_record_index_semicolon"
+equality_count=reference["source_constraints"]["rigid_hand_compiled_equality_count"]
+stage_diffs={x:[] for x in ["free_dot_f64_minus_gpu","post_dot_f64_minus_gpu","free_sequential_fma_minus_gpu","post_sequential_fma_minus_gpu","free_gpu_minus_cpu","post_gpu_minus_cpu","gpu_contact_residual","f64_dot_gpu_rows_contact_residual","cpu_contact_residual"]}
+root_source=[];maxeq=0.;maxlimit=0.;bound_ratio=0.;fma_mismatch={"free":0,"post":0}
+for r in rows:
+ step=int(r["accepted_step"])
+ assert int(r["gpu_stand_constraint_vectors_captured"])==1
+ free=arr(r["gpu_stand_free_velocity_f32_by_local_v_index_semicolon"])
+ post=arr(r["v_preprojection_f32_semicolon"])
+ eqv=arr(r[col]);lim=arr(r["gpu_stand_source_limit_impulses_f32_by_local_v_index_semicolon"])
+ assert len(free)==len(post)==len(lim)==int(r["gpu_stand_free_velocity_count"])==int(r["gpu_stand_source_limit_impulse_count"])==128
+ assert len(eqv)==int(r["gpu_stand_joint_equality_impulse_count"])==equality_count
+ assert all(math.isfinite(x) for v in [free,post,eqv,lim] for x in v)
+ root_source.append(lim[:6]);maxeq=max(maxeq,max(map(abs,eqv),default=0.));maxlimit=max(maxlimit,max(map(abs,lim)))
+ gm=[arr(r["gpu_body_kinetic_root_mass_row_"+a+"_f32_by_local_v_index_semicolon"]) for a in "xyz"]
+ assert all(len(m)==128 and all(map(math.isfinite,m)) for m in gm)
+ gpu_free=[f32(x) for x in vector(r,"gpu_body_kinetic_root_momentum_free_same_q_")]
+ gpu_post=[f32(x) for x in vector(r,"gpu_body_kinetic_root_momentum_post_coupled_sweep_same_q_")]
+ cpu_free=vector(r,"source_body_linear_momentum_free_same_q_")
+ cpu_post=vector(r,"source_body_linear_momentum_preprojection_velocity_same_q_")
+ dots={}
+ for name,v,g in [("free",free,gpu_free),("post",post,gpu_post)]:
+  d=[math.fsum(a*b for a,b in zip(m,v)) for m in gm];dots[name]=d
+  fd=[fma_dot(m,v) for m in gm]
+  stage_diffs[name+"_dot_f64_minus_gpu"].append(diff(d,g))
+  stage_diffs[name+"_sequential_fma_minus_gpu"].append(diff(fd,g))
+  fma_mismatch[name]+=sum(a!=b for a,b in zip(fd,g))
+  gamma=128*2**-24/(1-128*2**-24)
+  for m,a,b in zip(gm,d,g):
+   bound=gamma*math.fsum(abs(x*y) for x,y in zip(m,v))
+   bound_ratio=max(bound_ratio,abs(a-b)/bound if bound else (0. if a==b else math.inf))
+ stage_diffs["free_gpu_minus_cpu"].append(diff(gpu_free,cpu_free))
+ stage_diffs["post_gpu_minus_cpu"].append(diff(gpu_post,cpu_post))
+ c=com[step];s=support[step]
+ assert int(c["segment_steps"])==1 and int(c["sample_start_step"])==step-1
+ assert len(s)==32 and {int(x["contact_index"]) for x in s}==set(range(32))
+ assert all(int(x["segment_steps"])==1 and int(x["sample_start_step"])==step-1 for x in s)
+ supportp=[math.fsum(float(x["impulse_world_"+a+"_ns"]) for x in s) for a in "xyz"]
+ assert max(abs(supportp[i]-float(c["world_contact_impulse_"+a+"_ns"])) for i,a in enumerate("xyz"))<1e-12
+ for key,p,f in [("gpu_contact_residual",gpu_post,gpu_free),("f64_dot_gpu_rows_contact_residual",dots["post"],dots["free"]),("cpu_contact_residual",cpu_post,cpu_free)]:
+  stage_diffs[key].append(diff(diff(p,f),supportp))
+selected=[]
+by_step={int(r["accepted_step"]):r for r in rows}
+for rec in reference["selected_stages"]:
+ r=by_step[rec["accepted_step"]];st={s["name"]:s for s in rec["stages"]}
+ gm=[arr(r["gpu_body_kinetic_root_mass_row_"+a+"_f32_by_local_v_index_semicolon"]) for a in "xyz"]
+ item={"accepted_step":rec["accepted_step"],"stages":{}}
+ for name,key,prefix in [("free_velocity_at_before_q","gpu_stand_free_velocity_f32_by_local_v_index_semicolon","gpu_body_kinetic_root_momentum_free_same_q_"),("preprojection_velocity_at_before_q","v_preprojection_f32_semicolon","gpu_body_kinetic_root_momentum_post_coupled_sweep_same_q_")]:
+  v=arr(r[key]);d=[math.fsum(a*b for a,b in zip(m,v)) for m in gm];g=vector(r,prefix);c=st[name]["root_Mv"]
+  item["stages"][name]={"gpu_mass_row_error_contribution_kg_m_s":diff(d,c),"gpu_product_accumulation_contribution_kg_m_s":diff(g,d),"total_gpu_minus_cpu_raw_mass_product_kg_m_s":diff(g,c),"cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s":st[name]["max_abs_root_Mv_vs_cpu_invariant_kg_m_s"],"cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s":st[name]["max_abs_root_Mv_vs_run_csv_kg_m_s"]}
+ selected.append(item)
+assert all(pin(Path(p["path"]))==p for p in inputs.values())
+report={"status":"closed_descriptive_free_product_decomposition","created_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),"rows":len(rows),"accepted_step_window":[152501,155000],"executed_equality_count":equality_count,"root_source_limit_max_abs_impulse":max(abs(x) for row in root_source for x in row),"max_abs_equality_multiplier":maxeq,"max_abs_source_limit_multiplier":maxlimit,"sequential_cpu_fmaf_vs_gpu_product_mismatched_components":fma_mismatch,"max_dot_error_over_standard_128_FMA_forward_error_bound":bound_ratio,"series":{k:stats(v) for k,v in stage_diffs.items()},"selected_existing_FP64_owner_decomposition":selected,"inputs":inputs,"reference_output":pin(ref),"reference_process":{"argv":argv,"returncode":proc.returncode,"wall_s":time.monotonic()-t},"limitations":["Offline diagnostic evaluation at accepted recorded Q/V only; no CPU physical update.","2500 accepted steps span the final five seconds only; this does not establish arbitrary-horizon momentum closure.","Signed sums of per-state dot or mass discrepancies are descriptive bias, not physical accumulated impulses.","Contact residual is only post-coupled-sweep minus free momentum minus retained support impulses at the same q.","Equality multipliers include projected-contact compensation and source-limit-induced equality reactions. They are in executed reduced-row order, not original NHEQ row order.","The FMA error bound applies to the dot product only; it does not bound mass assembly, inverse responses, or repeated constraint velocity updates."]}
+reportpath.write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
+print(json.dumps({"report":pin(reportpath),"rows":len(rows),"mismatches":fma_mismatch,"bound_ratio":bound_ratio,"series":report["series"],"selected":selected},indent=2))

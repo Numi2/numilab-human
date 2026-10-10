@@ -1,0 +1,566 @@
+{
+  "accepted_step_window": [
+    152501,
+    155000
+  ],
+  "created_utc": "2026-10-10T14:22:09.604149+00:00",
+  "executed_equality_count": 91,
+  "inputs": {
+    "com_csv": {
+      "bytes": 18387047,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/resting-com-momentum-diagnostic.csv",
+      "sha256": "a928365a314ccf1a62d23e3ef1d42c71a02eeb8bcf80f791f5a9f6d201963a16"
+    },
+    "declaration": {
+      "bytes": 1823677,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/run-declaration.json",
+      "sha256": "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d"
+    },
+    "equality": {
+      "bytes": 4976,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq",
+      "sha256": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88"
+    },
+    "execution": {
+      "bytes": 6484,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/execution.json",
+      "sha256": "c244daacd8c8b7eab245d9806b14128a32ed6037a9d81542c0763670e50c8323"
+    },
+    "invocation": {
+      "bytes": 11396,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/invocation.json",
+      "sha256": "d303da3078ad6186bb6b8c6c0f5f73d679ffc97f99622c18588a29955f2684a6"
+    },
+    "metadata": {
+      "bytes": 12076,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/run-metadata.json",
+      "sha256": "6f6b4b1ec102c09385b8e6b819e69456d5dba39ae7dfd506d2eae54cb021b928"
+    },
+    "model": {
+      "bytes": 60324,
+      "path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    "q_csv": {
+      "bytes": 43414775,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/resting-com-q-integration.csv",
+      "sha256": "b84073929f6278a3524e9e9865e6ae98dd94318bbc84e814a727207a5c5170b0"
+    },
+    "reference_binary": {
+      "bytes": 130760,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/resting-window-vector-trace-1271/window-reference-002/root_mass_row_reference",
+      "sha256": "d2975477990111d6495a1a6ef5d2e562f4a6817a75bb3bf9a8df15996d54c5da"
+    },
+    "reference_build": {
+      "bytes": 2191,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/resting-window-vector-trace-1271/window-reference-002/build.json",
+      "sha256": "ce6d84c30381f8834a8bff95920500d9313661ba45985688032beb65fa6243c2"
+    },
+    "reference_source": {
+      "bytes": 22098,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/resting-window-vector-trace-1271/window-reference-002/root_mass_row_reference.cpp",
+      "sha256": "e32c429dbd832bb695bfafb8a394152d3d3190ed79d2abde90e4342950f2d9c1"
+    },
+    "script": {
+      "bytes": 9120,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/baseline-late-root-product-001/analyze_late_free_product.py",
+      "sha256": "407af9354e353150c41bc822736ee3f68c78a3f02cf2fcc458624da2abcba0cc"
+    },
+    "support_csv": {
+      "bytes": 67268905,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/resting-com-support-impulses.csv",
+      "sha256": "ee7a3e981f34ea1cb30fa06158f2eb5351848122bed55af4b242a74cab4c862c"
+    }
+  },
+  "limitations": [
+    "Offline diagnostic evaluation at accepted recorded Q/V only; no CPU physical update.",
+    "2500 accepted steps span the final five seconds only; this does not establish arbitrary-horizon momentum closure.",
+    "Signed sums of per-state dot or mass discrepancies are descriptive bias, not physical accumulated impulses.",
+    "Contact residual is only post-coupled-sweep minus free momentum minus retained support impulses at the same q.",
+    "Equality multipliers include projected-contact compensation and source-limit-induced equality reactions. They are in executed reduced-row order, not original NHEQ row order.",
+    "The FMA error bound applies to the dot product only; it does not bound mass assembly, inverse responses, or repeated constraint velocity updates."
+  ],
+  "max_abs_equality_multiplier": 0.5481679439544678,
+  "max_abs_source_limit_multiplier": 0.334667444229126,
+  "max_dot_error_over_standard_128_FMA_forward_error_bound": 0.053512240121237474,
+  "reference_output": {
+    "bytes": 342783,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/baseline-late-root-product-001/cpu-free-root-row-reference.json",
+    "sha256": "82a379ac6df1de3bad8013f894ad4698a59482f853ce4ecab214cbfc541eaaa2"
+  },
+  "reference_process": {
+    "argv": [
+      "/Users/n/numi-human-retained-delivery-20261009/resting-window-vector-trace-1271/window-reference-002/root_mass_row_reference",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq",
+      "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/resting-com-q-integration.csv",
+      "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/baseline-late-root-product-001/cpu-free-root-row-reference.json",
+      "152501,152858,153215,153572,153929,154286,154643,155000"
+    ],
+    "returncode": 0,
+    "wall_s": 3.423465125
+  },
+  "root_source_limit_max_abs_impulse": 0.0,
+  "rows": 2500,
+  "selected_existing_FP64_owner_decomposition": [
+    {
+      "accepted_step": 152501,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.404204443694601e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.3838756529604979e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            1.081673002748364e-07,
+            -4.778505066418471e-06,
+            -2.25481302251751e-06
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -1.134965506135511e-07,
+            -1.4797004161911688e-07,
+            -7.222467486300843e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -5.329250338714699e-09,
+            -4.926475108037588e-06,
+            -2.9770597711475943e-06
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 8.673617379884035e-19,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.734723475976807e-18,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -1.2191447825229962e-09,
+            1.795921925943863e-09,
+            1.4455547826461301e-09
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -6.446092596333608e-11,
+            7.38592403789996e-11,
+            -8.242129036564738e-10
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -1.2836057084863323e-09,
+            1.8697811663228626e-09,
+            6.213418789896563e-10
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 152858,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.6820312503940116e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.6746586756211101e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            2.496754654764295e-07,
+            -2.3467097412070974e-06,
+            -7.516353579539725e-07
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -5.77654415722436e-08,
+            3.1726891956668614e-07,
+            9.593375627225953e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            1.9191002390418592e-07,
+            -2.0294408216404113e-06,
+            2.0770220476862278e-07
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 2.1277467635028025e-18,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 2.1277467635028025e-18,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -2.783523120283599e-10,
+            1.0841319760868974e-09,
+            7.113722706329675e-10
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            4.25069963223227e-12,
+            7.193777816277488e-11,
+            1.8986650631298537e-10
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -2.7410161239612763e-10,
+            1.1560697542496723e-09,
+            9.012387769459528e-10
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 153215,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.3883208818676884e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.5984392628953792e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            5.117709188309652e-07,
+            -5.818678656752531e-07,
+            -1.2066053611814453e-06
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -5.531379687075642e-09,
+            2.508541682484807e-07,
+            1.1988862391731914e-06
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            5.062395391438896e-07,
+            -3.310136974267724e-07,
+            -7.719122008253976e-09
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 9.75781955236954e-19,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.0842021724855044e-18,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -4.3339854914527937e-10,
+            1.4872582047745046e-11,
+            -1.952955570698467e-11
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            7.283535493479709e-11,
+            2.744755898259621e-11,
+            -1.3356334918265822e-11
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -3.6056319421048227e-10,
+            4.2320141030341256e-11,
+            -3.288589062525049e-11
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 153572,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.1127166896218732e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 2.6645352591003757e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -1.5200326705037525e-07,
+            -1.6334793210651686e-06,
+            -9.190675402948045e-07
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            7.83829977573508e-09,
+            -2.795822483526696e-07,
+            9.546178298958097e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -1.4416496727464017e-07,
+            -1.913061569417838e-06,
+            3.555028960100515e-08
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 2.168404344971009e-19,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.3010426069826053e-18,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -5.306286237228425e-10,
+            2.3994838220845437e-10,
+            1.8842674545226784e-10
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -1.8578875287181273e-10,
+            8.101047183604621e-11,
+            2.5211256097102536e-10
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -7.164173765946552e-10,
+            3.209588540445006e-10,
+            4.405393064232932e-10
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 153929,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.5774328458034725e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.6997037458055253e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            5.384683549952089e-07,
+            -3.7432606347299793e-06,
+            -3.83354734645458e-06
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -1.0265995097730966e-07,
+            4.091887076130554e-08,
+            4.1181506804655044e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            4.358084040178992e-07,
+            -3.7023417639686737e-06,
+            -3.4217322784080295e-06
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 9.75781955236954e-18,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 9.75781955236954e-18,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -5.40469879712225e-09,
+            -9.450708639388745e-09,
+            -1.0936351686231804e-08
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            1.2127638297906515e-09,
+            -3.035433683920563e-10,
+            3.6443657867955143e-09
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -4.191934967331598e-09,
+            -9.754252007780802e-09,
+            -7.29198589943629e-09
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 154286,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.930530388327689e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 2.0647546172813946e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -3.677756569059245e-07,
+            -2.1768914121244546e-06,
+            -2.167543418751805e-06
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -5.798396722446128e-08,
+            3.025842571343024e-07,
+            1.8541546542572007e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -4.257596241303858e-07,
+            -1.8743071549901522e-06,
+            -1.982127953326085e-06
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 7.487771253728015e-19,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 7.284483346386983e-19,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -2.203654148264303e-11,
+            7.427872228867049e-10,
+            1.1625359748208136e-09
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -3.3931667588540937e-10,
+            3.48922222935717e-11,
+            -2.2544580612071652e-10
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -3.613532173680524e-10,
+            7.776794451802766e-10,
+            9.37090168700097e-10
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 154643,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.1102230246251565e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 6.661338147750939e-16,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -1.0620754398114863e-06,
+            -5.834657574144793e-07,
+            -1.5951110601264418e-06
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -3.683634183148038e-08,
+            1.8670640239259594e-07,
+            6.419323306250391e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -1.0989117816429667e-06,
+            -3.967593550218833e-07,
+            -9.531787295014027e-07
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 1.3010426069826053e-18,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 1.5720931501039814e-18,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -1.6317500271443262e-09,
+            -2.1968545884341883e-10,
+            1.8649121895190912e-10
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            2.17279031572426e-10,
+            5.590243881952589e-11,
+            -7.326488461051328e-11
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -1.4144709955719002e-09,
+            -1.6378302002389294e-10,
+            1.1322633434139584e-10
+          ]
+        }
+      }
+    },
+    {
+      "accepted_step": 155000,
+      "stages": {
+        "free_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 9.103828801926284e-15,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 7.105427357601002e-15,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            4.5586759034332586e-07,
+            3.63109354359196e-07,
+            2.1528075588861384e-07
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -2.085345963047467e-07,
+            5.5811134151923306e-08,
+            2.1819658102550932e-07
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            2.4733299403857916e-07,
+            4.189204885111193e-07,
+            4.3347733691412316e-07
+          ]
+        },
+        "preprojection_velocity_at_before_q": {
+          "cpu_Mv_minus_cpu_invariant_max_abs_kg_m_s": 2.0599841277224584e-18,
+          "cpu_Mv_minus_csv_body_momentum_max_abs_kg_m_s": 8.673617379884035e-19,
+          "gpu_mass_row_error_contribution_kg_m_s": [
+            -3.118380586305397e-11,
+            -1.439045876005466e-10,
+            -1.2526235127277574e-10
+          ],
+          "gpu_product_accumulation_contribution_kg_m_s": [
+            -4.21031316364881e-11,
+            -1.2954705152579474e-11,
+            8.304168355559305e-11
+          ],
+          "total_gpu_minus_cpu_raw_mass_product_kg_m_s": [
+            -7.328693749954207e-11,
+            -1.5685929275312607e-10,
+            -4.222066771718269e-11
+          ]
+        }
+      }
+    }
+  ],
+  "sequential_cpu_fmaf_vs_gpu_product_mismatched_components": {
+    "free": 0,
+    "post": 0
+  },
+  "series": {
+    "cpu_contact_residual": {
+      "max_abs_xyz": [
+        2.6946311855738847e-06,
+        6.5059562098974694e-06,
+        1.1666951637234746e-05
+      ],
+      "signed_sum_xyz": [
+        0.0011119055831839031,
+        -0.004456060160677568,
+        -0.009215247793590509
+      ]
+    },
+    "f64_dot_gpu_rows_contact_residual": {
+      "max_abs_xyz": [
+        2.0689464904912695e-06,
+        3.23187373586248e-06,
+        9.912660090538594e-06
+      ],
+      "signed_sum_xyz": [
+        0.0007548593333819672,
+        -0.0015362411529491317,
+        -0.006830506485285159
+      ]
+    },
+    "free_dot_f64_minus_gpu": {
+      "max_abs_xyz": [
+        3.234016921611861e-07,
+        1.229606208187487e-06,
+        2.974397958377395e-06
+      ],
+      "signed_sum_xyz": [
+        -2.9062552409726405e-05,
+        1.4734008609225698e-05,
+        -0.0002501036249984434
+      ]
+    },
+    "free_gpu_minus_cpu": {
+      "max_abs_xyz": [
+        1.8185515267341018e-06,
+        5.753245510699397e-06,
+        5.543966255405763e-06
+      ],
+      "signed_sum_xyz": [
+        0.00038426139122466345,
+        -0.0029347812339854647,
+        -0.002135204513899369
+      ]
+    },
+    "free_sequential_fma_minus_gpu": {
+      "max_abs_xyz": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "signed_sum_xyz": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "gpu_contact_residual": {
+      "max_abs_xyz": [
+        2.058477548416704e-06,
+        3.0490191420540214e-06,
+        9.734532795846462e-06
+      ],
+      "signed_sum_xyz": [
+        0.0007257751248630484,
+        -0.0015215183954211398,
+        -0.00708052423897243
+      ]
+    },
+    "post_dot_f64_minus_gpu": {
+      "max_abs_xyz": [
+        2.7553611977758005e-09,
+        9.274051152681137e-10,
+        8.3748563708963e-09
+      ],
+      "signed_sum_xyz": [
+        2.1656109194504034e-08,
+        1.1251081232329334e-08,
+        -8.587131044094566e-08
+      ]
+    },
+    "post_gpu_minus_cpu": {
+      "max_abs_xyz": [
+        1.4460434522760648e-08,
+        2.8334406402641225e-08,
+        2.7364702278459552e-08
+      ],
+      "signed_sum_xyz": [
+        -1.8690670961926628e-06,
+        -2.3946872903453407e-07,
+        -4.809592814086825e-07
+      ]
+    },
+    "post_sequential_fma_minus_gpu": {
+      "max_abs_xyz": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "signed_sum_xyz": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "status": "closed_descriptive_free_product_decomposition"
+}

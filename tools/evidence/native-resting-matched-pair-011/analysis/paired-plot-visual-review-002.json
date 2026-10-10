@@ -1,0 +1,43 @@
+{
+  "reviewed_utc": "2026-10-10T15:10:58.945007+00:00",
+  "method": "Root viewed revision002 coupled-response PNG through SSH base64. The late-mechanics PNG is byte-identical to the already viewed revision001 image. No local image processing.",
+  "inputs": {
+    "coupled-response.png": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/coupled-response.png",
+      "sha256": "5ec10820fe8d217c214a8a01f9ef1435eeaebc1662394d00b8b81f40dfdb1c12"
+    },
+    "late-mechanics.png": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/late-mechanics.png",
+      "sha256": "973d9b54b205f5cc65cfb592b73e6046e420391269dc86c5202dc7a7ddefb889"
+    },
+    "plot-receipt.json": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/plot-receipt.json",
+      "sha256": "96e475b42e64f48b57797facbf324ddde842ed6792e4fb0b1310b9a150af64de"
+    }
+  },
+  "visual_checks": [
+    "Labels, axes, units, arm colors and intervention interval are readable.",
+    "The response plot shows the observed drop in breath inspiration volume and arterial oxygen, rise in arterial carbon dioxide, and subsequent recovery toward baseline.",
+    "Late plots show inspiratory and expiratory flow, diaphragm and rib displacement, a pressure-volume path, a sampled complete left-ventricular cycle, and pulsatile arterial pressures."
+  ],
+  "interpretation_limits": [
+    "Trailing 30-second ventilation varies with how breath phases overlap the window; it is not a per-breath steady-state rate.",
+    "The linear transpulmonary pressure-volume path reflects the declared constant lung compliance; no hysteresis or regional tissue validation is implied.",
+    "Cardiovascular curves overlap because the cardiovascular operating point lacks dynamic respiratory-pressure or autonomic feedback.",
+    "The approximately 0.098 mL running maximum absolute blood-volume deviation is visible. Its monotonicity follows from the high-water definition and does not establish monotonic physical drift.",
+    "Viewing trace plots is not an anatomical or native onscreen UI qualification."
+  ],
+  "supersedes_for_blood_field_interpretation": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plot-visual-review-001.json",
+    "sha256": "7821712d03a79c0b9b403c24c30de20a53b1802475855b005c1cf7fe60d437db"
+  },
+  "blood_field_source": {
+    "path": "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/src/human_respiration.metal",
+    "sha256": "bf984a88ff542f528753d368d9b4f884a74319a9d2e24ac8d6dc5ccb5040bc54"
+  },
+  "blood_field_source_lines": [
+    1253,
+    1258
+  ],
+  "correction": "The original review used the word accumulated for the blood field; that was imprecise. Source lines1253\u20131258 update circulation.w as max(previous, abs(current total minus0.00515f)). Revision002 labels the same unchanged data as a running maximum. It is not instantaneous drift or the sum of errors."
+}

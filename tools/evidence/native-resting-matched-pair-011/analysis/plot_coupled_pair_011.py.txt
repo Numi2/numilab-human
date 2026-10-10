@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Plot completed native pair 011 accepted traces; no simulated state is created."""
+from pathlib import Path
+import csv,json,hashlib,argparse,datetime
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+PAIR=Path(__file__).resolve().parent.parent
+ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);args=ap.parse_args()
+O=args.output.resolve();O.mkdir(parents=True,exist_ok=False)
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def pin(p):return {"path":str(p),"sha256":sha(p),"bytes":p.stat().st_size}
+inputs={"script":pin(Path(__file__))};data={}
+for arm in ("baseline","intervention"):
+ a=PAIR/arm
+ for name in ("run-declaration.json","execution.json"):
+  inputs[arm+":"+name]=pin(a/name)
+ ex=json.loads((a/"execution.json").read_text())
+ assert ex["returncode"]==0 and not ex["changed_inputs"],arm
+ p=a/"native-run/resting-coupled.csv";inputs[arm+":trace"]=pin(p)
+ rows=list(csv.DictReader(p.open(newline="")))
+ assert len(rows)==19375 and all(None not in r and None not in r.values() for r in rows)
+ x={k:np.array([float(r[k]) for r in rows]) for k in rows[0]}
+ assert all(np.isfinite(v).all() for v in x.values())
+ assert np.array_equal(x["step"],np.arange(8,155001,8))
+ assert np.all(np.diff(x["time_s"])>0)
+ x["breath_event"]=np.r_[False,np.diff(x["breaths"])>0] & (x["breaths"]>1)
+ x["beat_event"]=np.r_[False,np.diff(x["complete_filling_ejection_cycles"])>0]
+ x["vent_time"]=x["time_s"][x["time_s"]>=x["time_s"][0]+30]
+ x["ventilation30_L_min"]=(np.interp(x["vent_time"],x["time_s"],x["inspired_volume_accum_ml"])-np.interp(x["vent_time"]-30,x["time_s"],x["inspired_volume_accum_ml"]))*2/1000
+ data[arm]=x
+assert np.array_equal(data["baseline"]["time_s"],data["intervention"]["time_s"])
+for k in rows[0]:
+ mask=data["baseline"]["step"]<30000
+ assert np.array_equal(data["baseline"][k][mask],data["intervention"][k][mask]),k
+plt.rcParams.update({"font.size":10,"axes.spines.top":False,"axes.spines.right":False,"savefig.dpi":160})
+colors={"baseline":"#087e8b","intervention":"#bd4b24"}
+fig,axs=plt.subplots(3,2,figsize=(13,10),layout="constrained")
+for arm,x in data.items():
+ c=colors[arm];t=x["time_s"];ev=x["breath_event"]
+ axs[0,0].plot(t[ev],x["last_complete_breath_inspired_ml"][ev],".-",color=c,label=arm,ms=3)
+ axs[0,1].plot(x["vent_time"],x["ventilation30_L_min"],color=c,label=arm)
+ axs[1,0].plot(t,x["PaO2_mmhg"],color=c,label=arm)
+ axs[1,1].plot(t,x["PaCO2_mmhg"],color=c,label=arm)
+ ev=x["beat_event"];axs[2,0].plot(t[ev],x["last_lv_stroke_ml"][ev],color=c,label=arm)
+ axs[2,1].plot(t,x["blood_error_ml"],color=c,label=arm)
+labels=[("Inspired volume per completed breath","mL"),("Inspired ventilation, trailing 30 s","L/min"),("Arterial oxygen partial pressure","mmHg"),("Arterial carbon dioxide partial pressure","mmHg"),("Left-ventricular stroke volume","mL"),("Blood-volume balance error, native field","mL")]
+for ax,(title,unit) in zip(axs.flat,labels):
+ ax.axvspan(0,10,color="#777777",alpha=.08)
+ ax.axvspan(60,100,color=colors["intervention"],alpha=.10)
+ ax.set(title=title,xlabel="Simulated time (s)",ylabel=unit,xlim=(0,310));ax.grid(alpha=.18)
+axs[0,0].legend(frameon=False,ncol=2)
+fig.suptitle("Coupled native Human: unchanged baseline and temporary half-drive intervention\n10 s initialization; drive scaled by 0.5 during 60–100 s; existing regulation resumes after 100 s",fontsize=13)
+fig.savefig(O/"coupled-response.png");fig.savefig(O/"coupled-response.pdf");plt.close(fig)
+fig,axs=plt.subplots(2,3,figsize=(15,8),layout="constrained")
+for arm,x in data.items():
+ c=colors[arm];t=x["time_s"];m=(t>=304)&(t<=310)
+ axs[0,0].plot(t[m],x["lung_volume_ml"][m],color=c,label=arm)
+ axs[0,1].plot(t[m],x["airflow_ml_s"][m],color=c)
+ axs[0,2].plot(x["lung_volume_ml"][m],(x["alveolar_pa"][m]-x["pleural_pa"][m])/98.0665,color=c)
+ axs[1,0].plot(t[m],x["diaphragm_mm"][m],color=c,label=arm+" diaphragm")
+ axs[1,0].plot(t[m],x["rib_mm"][m],color=c,ls="--",label=arm+" ribs")
+ cycles=x["complete_filling_ejection_cycles"];last=cycles[-1]-1;h=(cycles==last)
+ axs[1,1].plot(x["lv_ml"][h],x["lv_mmhg"][h],color=c,label=arm)
+ axs[1,2].plot(t[m],x["aorta_mmhg"][m],color=c,label=arm+" aorta")
+ axs[1,2].plot(t[m],x["pulmonary_artery_mmhg"][m],color=c,ls="--",label=arm+" pulmonary artery")
+ axs[0,0].legend(frameon=False)
+axis_labels=[("Lung volume","Simulated time (s)","mL"),("Airflow","Simulated time (s)","mL/s"),("Transpulmonary pressure–volume path","Lung volume (mL)","cmH₂O"),("Mechanical displacement","Simulated time (s)","mm"),("Last complete observed LV cycle","Chamber volume (mL)","mmHg"),("Circulating arterial pressures","Simulated time (s)","mmHg")]
+for ax,(title,xlabel,ylabel) in zip(axs.flat,axis_labels):
+ ax.set(title=title,xlabel=xlabel,ylabel=ylabel);ax.grid(alpha=.18)
+axs[1,0].legend(frameon=False,fontsize=8);axs[1,2].legend(frameon=False,fontsize=8)
+fig.suptitle("Accepted coupled state: late respiration and anatomical chamber function\nNative observations at 16 ms cadence; these plots do not certify anatomical intersections or clinical validity",fontsize=13)
+fig.savefig(O/"late-mechanics.png");fig.savefig(O/"late-mechanics.pdf");plt.close(fig)
+assert all(pin(Path(x["path"]))==x for x in inputs.values())
+report={"created_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),"inputs":inputs,"outputs":[pin(p) for p in sorted(O.iterdir()) if p.suffix in (".png",".pdf")],"conventions":{"initialized_after_s":10,"drive_scale_window_s":[60,100],"drive_scale":0.5,"ventilation":"Native accumulated inspired-volume difference over trailing30 seconds, multiplied by60/30 and divided by1000. No gas state is integrated in this script.","pressure_conversion":"1 cmH2O =98.0665Pa","cardiac_loop":"Sampled interval whose completed-filling/ejection counter equals final counter minus1; 16ms trace cadence."},"limits":["Presentation of accepted native traces, not an additional simulation or source of displayed physiology.","Temporal sampling limits mechanical loops; target chamber geometry is bound and checked by native runtime separately.","Half drive may change phase; instantaneous differences do not equal window-mean treatment effects.","Clinical validity, full anatomical coherence, and visible onscreen presentation remain separate gates."]}
+(O/"plot-receipt.json").write_text(json.dumps(report,indent=2)+"\n")
+print(json.dumps({"receipt":pin(O/"plot-receipt.json"),"outputs":report["outputs"]}))

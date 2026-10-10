@@ -1,0 +1,80 @@
+{
+  "created_utc": "2026-10-10T15:10:11.664475+00:00",
+  "inputs": {
+    "script": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/plot_coupled_pair_011_revision_002.py",
+      "sha256": "c304bca683aa6ead918c4df3aed8fc64d2c09920d4321ccbc0b055a009be3f5e",
+      "bytes": 6629
+    },
+    "baseline:run-declaration.json": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/run-declaration.json",
+      "sha256": "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d",
+      "bytes": 1823677
+    },
+    "baseline:execution.json": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/execution.json",
+      "sha256": "c244daacd8c8b7eab245d9806b14128a32ed6037a9d81542c0763670e50c8323",
+      "bytes": 6484
+    },
+    "baseline:trace": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/resting-coupled.csv",
+      "sha256": "9659897e26a977b12a38d57b80046bf038258282d2760854c9a24c1d15917243",
+      "bytes": 15955919
+    },
+    "intervention:run-declaration.json": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/run-declaration.json",
+      "sha256": "c7332e1b3c089ef68953bf2fb89275c6bb39bc1ff35501a1dd385754a4469a57",
+      "bytes": 1823883
+    },
+    "intervention:execution.json": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/execution.json",
+      "sha256": "6174ae74fdc91eeabb3d86b5b0e762b752edc7ec06758d7990914a32034689fc",
+      "bytes": 6568
+    },
+    "intervention:trace": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/resting-coupled.csv",
+      "sha256": "a3820322c9bcbc9d16a2fe682f6b6eea08a865056760ae1e6d1b42a0696c0515",
+      "bytes": 15957055
+    }
+  },
+  "outputs": [
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/coupled-response.pdf",
+      "sha256": "97f1e03eae3a6509bb371e775229e3f0fcb3ab18cbe17cbf1d729582ea6dc380",
+      "bytes": 84905
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/coupled-response.png",
+      "sha256": "5ec10820fe8d217c214a8a01f9ef1435eeaebc1662394d00b8b81f40dfdb1c12",
+      "bytes": 363881
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/late-mechanics.pdf",
+      "sha256": "a9db5360b7891aaeaa90060a2732169aed306eeaca6e717858ace314794e21fb",
+      "bytes": 35432
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/late-mechanics.png",
+      "sha256": "973d9b54b205f5cc65cfb592b73e6046e420391269dc86c5202dc7a7ddefb889",
+      "bytes": 354536
+    }
+  ],
+  "conventions": {
+    "initialized_after_s": 10,
+    "drive_scale_window_s": [
+      60,
+      100
+    ],
+    "drive_scale": 0.5,
+    "ventilation": "Native accumulated inspired-volume difference over trailing30 seconds, multiplied by60/30 and divided by1000. No gas state is integrated in this script.",
+    "blood_error_ml": "Running high-water absolute deviation of native Float32 blood-volume sum from 0.00515f m3; not an instantaneous or accumulated-error curve.",
+    "pressure_conversion": "1 cmH2O =98.0665Pa",
+    "cardiac_loop": "Sampled interval whose completed-filling/ejection counter equals final counter minus1; 16ms trace cadence."
+  },
+  "limits": [
+    "Presentation of accepted native traces, not an additional simulation or source of displayed physiology.",
+    "Temporal sampling limits mechanical loops; target chamber geometry is bound and checked by native runtime separately.",
+    "Half drive may change phase; instantaneous differences do not equal window-mean treatment effects.",
+    "Clinical validity, full anatomical coherence, and visible onscreen presentation remain separate gates."
+  ]
+}

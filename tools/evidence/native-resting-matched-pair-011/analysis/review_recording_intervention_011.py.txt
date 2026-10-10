@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+"""Inspect the closed intervention recording with the retained native AVFoundation owner."""
+from pathlib import Path
+import csv,hashlib,json,subprocess,struct
+BASE=Path(__file__).resolve().parent.parent
+ARM=BASE/'intervention'
+RUN=ARM/'native-run'
+OUT=BASE/'analysis-preparation-001/recording-review-intervention-001'
+INSPECTOR=Path('/Users/n/numi-human-retained-delivery-20261009/native-initial-force-report-source-1187/matter/tools/inspect_resting_movie.swift')
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+assert sha(INSPECTOR)=='2d6704dd5f06bffd0b8aa0072171af805fdb3dd00dcc11c02e0b692513b21649'
+e=json.loads((ARM/'execution.json').read_text())
+assert e['returncode']==0 and not e['timed_out'] and not e['changed_inputs']
+d=json.loads((ARM/'run-declaration.json').read_text())
+assert d['inspection_period_seconds']==2.0
+inv=json.loads((RUN/'invocation.json').read_text())
+assert inv['environment']['NUMI_HUMAN_RESTING_INSPECTION_TOUR']=='1'
+assert inv['environment']['NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS']=='2.0'
+inputs=[Path(__file__),INSPECTOR,ARM/'run-declaration.json',ARM/'execution.json',
+        RUN/'invocation.json',RUN/'run-metadata.json',RUN/'native-viewer.mov',
+        RUN/'native.log',RUN/'resting-surface-audit.csv']
+before={str(p):sha(p) for p in inputs}
+OUT.mkdir(exist_ok=False)
+for name in ['native-viewer.mov','resting-surface-audit.csv']:(OUT/name).symlink_to(RUN/name)
+cmd=['/usr/bin/swift',str(INSPECTOR),str(OUT),'2.0','7']
+r=subprocess.run(cmd,text=True,capture_output=True,timeout=1200)
+with (OUT/'inspect.log').open('x') as f:f.write(r.stdout+r.stderr)
+if r.returncode:raise SystemExit('Native movie inspector failed: '+str(r.returncode))
+lines=r.stdout.splitlines();summary=next(x for x in lines if x.startswith('frames='))
+fields=dict(x.split('=',1) for x in summary.split())
+rows=list(csv.DictReader((RUN/'resting-surface-audit.csv').open()))
+assert int(fields['frames'])==len(rows)==4846
+pngs=sorted(OUT.glob('frame-*.png'));assert len(pngs)==10
+png_meta={}
+for p in pngs:
+ b=p.read_bytes()
+ assert b[:8]==b'\x89PNG\r\n\x1a\n'
+ width,height=struct.unpack('>II',b[16:24])
+ assert (width,height)==(1280,900)
+ png_meta[p.name]={'width':width,'height':height,'bytes':len(b)}
+after={str(p):sha(p) for p in inputs};assert before==after
+markers=[{'line':i,'text':line} for i,line in enumerate((RUN/'native.log').read_text().splitlines(),1)
+         if 'Human native framebuffer output:' in line]
+report={'schema':'numi.human.native-pair-011.recording-review.v1','arm':'intervention',
+        'status':'sample_pts_integrity_pass','input_sha256_before':before,
+        'input_sha256_after':after,'inputs_unchanged':True,'inspector_argv':cmd,
+        'inspector_returncode':r.returncode,'inspector_stdout':r.stdout,'movie_summary':summary,
+        'surface_rows':len(rows),'frame_png_sha256':{p.name:sha(p) for p in pngs},
+        'frame_dimensions_and_sizes':png_meta,'framebuffer_drawable_markers_in_native_log':markers,
+        'display_limit':'Reported markers are literal native-log evidence. Live onscreen interactivity is not verified.',
+        'scope':'AVAssetReader checks all encoded image-sample PTS/order and row-count alignment; AVAssetImageGenerator extracts ten exact representative frames. This is sampled recording evidence, not continuous anatomical or live interactive-display qualification.'}
+with (OUT/'recording-review.json').open('x') as f:json.dump(report,f,indent=2,sort_keys=True);f.write('\n')
+print(json.dumps({'report':str(OUT/'recording-review.json'),'sha256':sha(OUT/'recording-review.json'),
+                  'summary':summary,'drawable_markers':markers}))

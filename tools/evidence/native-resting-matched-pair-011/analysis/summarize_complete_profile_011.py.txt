@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Aggregate the existing native timers on a closed 011 arm, without a rerun."""
+from pathlib import Path
+import argparse,json,re,math,hashlib,statistics,datetime
+ap=argparse.ArgumentParser();ap.add_argument("arm",choices=("baseline","intervention"));ap.add_argument("--output",type=Path,required=True);a=ap.parse_args()
+P=Path(__file__).resolve().parent.parent/a.arm;N=P/"native-run";O=a.output.resolve();assert not O.exists()
+def pin(p):return {"path":str(p),"bytes":p.stat().st_size,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()}
+inputs={k:pin(p) for k,p in {"script":Path(__file__),"declaration":P/"run-declaration.json","execution":P/"execution.json","metadata":N/"run-metadata.json","log":N/"native.log"}.items()}
+ex=json.loads((P/"execution.json").read_text());meta=json.loads((N/"run-metadata.json").read_text());assert ex["returncode"]==0 and not ex["changed_inputs"] and meta["exit_code"]==0
+lines=(N/"native.log").read_text().splitlines()
+def records(prefix):
+ return [{k:v for k,v in re.findall(r"(\w+)=([^ ]+)",line)} for line in lines if line.startswith(prefix+" ")]
+def one(prefix):
+ r=records(prefix);assert len(r)==1,(prefix,len(r));return r[0]
+physical=records("resting_native_profile");render=records("resting_render_profile");present=records("resting_present_profile")
+assert len(render)==len(present)==4846
+steps=[int(r["step"]) for r in physical];assert steps[-1]==155000 and all(y>x for x,y in zip([0]+steps[:-1],steps))
+assert set(y-x for x,y in zip([0]+steps[:-1],steps))<={1,8}
+assert sum(y-x for x,y in zip([0]+steps[:-1],steps))==155000
+assert [int(r["step"]) for r in render]==[int(r["step"]) for r in present]
+obs=one("resting_integrated_observer_profile");body=one("resting_integrated_body=completed");integrated=one("resting_integrated_throughput")
+assert int(obs["accepted_callbacks"])==len(physical)
+def summary(rs,keys):
+ o={}
+ for k in keys:
+  xs=[float(r[k]) for r in rs];assert all(math.isfinite(x) and x>=0 for x in xs)
+  o[k]={"sum_seconds":math.fsum(xs)/1000,"mean_ms":statistics.fmean(xs),"max_ms":max(xs)}
+ return o
+physical_stats=summary(physical,["command_ms","gpu_ms","host_copy_ms"])
+render_stats=summary(render,["encode_wall_ms","command_wall_ms","gpu_ms","audit_export_wall_ms","total_render_wall_ms"])
+present_stats=summary(present,["total_present_wall_ms"])
+wall=float(meta["wall_seconds"]);sim=float(body["simulated_s"])
+result={"created_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),"arm":a.arm,"inputs":inputs,"completed_steps":steps[-1],"physical_submission_count":len(physical),"recorded_frame_count":len(render),"all_profile_submissions_observer_readbacks":all(r["full_state_readback"]=="1" for r in physical),"timing_boundaries":{"launcher_wrapper_wall_s":ex["wall_seconds"],"owner_process_wall_s":wall,"body_completion_wall_s":float(body["wall_s"]),"accepted_after_first_observer_window":integrated},"owner_process_real_time_factor":sim/wall,"physical_submission_timers":physical_stats,"native_render_timers":render_stats,"native_presentation_timer_includes_render":present_stats,"accepted_observer_timers_includes_presentation":obs,"diagnostic_shares_of_owner_process_wall":{"physical_submission_gpu_time":physical_stats["gpu_ms"]["sum_seconds"]/wall,"physical_submission_host_copy_time":physical_stats["host_copy_ms"]["sum_seconds"]/wall,"render_gpu_time":render_stats["gpu_ms"]["sum_seconds"]/wall,"all_recorded_presentation_wall_time":present_stats["total_present_wall_ms"]["sum_seconds"]/wall},"limits":["Aggregate command-buffer GPU timestamps are not per-kernel profiling; no specific physics kernel is blamed by this report.","Nested timers overlap: render is inside presentation; presentation is inside observer. Do not add these categories.","Host readbacks serve retained audits and presentation; this report does not establish CPU physics execution.","The two arms ran sequentially on the Mini; CPU geometry audits and bounded offline preparation were concurrent during parts of the runs. Throughput is not an isolated benchmark.","The on-screen drawable was unavailable while the Mini console was locked. Framebuffer/movie presentation is measured independently."]}
+assert all(pin(Path(x["path"]))==x for x in inputs.values())
+O.parent.mkdir(parents=True,exist_ok=True);O.write_text(json.dumps(result,indent=2)+"\n")
+print(json.dumps({"report":pin(O),"real_time_factor":result["owner_process_real_time_factor"],"shares":result["diagnostic_shares_of_owner_process_wall"],"physical":physical_stats,"render":render_stats,"presentation":present_stats},indent=2))

@@ -1,0 +1,44 @@
+{
+  "reviewed_utc": "2026-10-10T15:24:09.217469+00:00",
+  "method": "Root viewed exact native-recording PNGs through SSH base64; no local image processing.",
+  "inputs": [
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-review-intervention-001/recording-review.json",
+      "sha256": "545bbe2e75fbda1c6910f8a2f07556874b6eba8dfd5ab6b40a5adc1cdd0752b5"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-review-intervention-001/frame-final.png",
+      "sha256": "d5a957cfaaf0ace37d6e322c69193a134e60b01d081d773362a8e40fe336a707"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-review-intervention-001/frame-heart.png",
+      "sha256": "8b35b5bd76f2f0218a8cbc71744e4940b76cfe8dc6cb27faf93acafb393036e0"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-review-intervention-001/frame-lungs.png",
+      "sha256": "f4da7056af25e800e3b49b8da382d32009e55e2012b33adf268f37f5d6f21bcb"
+    },
+    {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/resting-coupled.csv",
+      "sha256": "a3820322c9bcbc9d16a2fe682f6b6eea08a865056760ae1e6d1b42a0696c0515"
+    }
+  ],
+  "observations": [
+    "Terminal frame shows whole adult on the original flat support, seven anatomical-layer controls, five camera controls, accepted-time310.00s, synchronized physiology HUD, and explicit passive/mixed-source scope.",
+    "Heart and lung views show the anatomical chamber surface and thoracic respiratory structures with the same accepted-state HUD.",
+    "Terminal displayed PaO2100.03mmHg and PaCO239.83mmHg agree with rounding the final retained trace values."
+  ],
+  "terminal_trace": {
+    "step": "155000",
+    "time_s": "310.000014724",
+    "PaO2_mmhg": "100.026542664",
+    "PaCO2_mmhg": "39.8330459595",
+    "blood_ml": "5150.09602532",
+    "last_lv_stroke_ml": "70.035130193"
+  },
+  "limitations": [
+    "Leftmost characters of the lower ownership/footer text are clipped in heart/lungs samples. This is a remaining presentation defect.",
+    "Representative stills do not independently prove motion, anatomical clearance, volume equality, or interactivity. All encoded image PTS and frame-count checks are in recording-review.json.",
+    "The native log reports window drawable unavailable throughout; live onscreen interaction remains unverified while the Mini console is locked."
+  ]
+}

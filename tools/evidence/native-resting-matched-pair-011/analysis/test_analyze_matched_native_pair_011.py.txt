@@ -1,0 +1,438 @@
+import importlib.util
+from fractions import Fraction
+import struct
+import unittest
+from pathlib import Path
+
+SCRIPT = Path(__file__).with_name("analyze_matched_native_pair_011.py")
+spec = importlib.util.spec_from_file_location("matched_native_pair_011", SCRIPT)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+
+def grid(steps, overrides=None):
+    overrides = overrides or {}
+    dt = struct.unpack("<f", struct.pack("<f", module.DT))[0]
+    return [{"step": float(step), "time_s": overrides.get(step, float(format(step * dt, ".12g")))} for step in steps]
+
+
+def make_q_index_map():
+    q_indices = [i for i in range(129) if i not in range(3, 7)]
+    rows = []
+    for v, q in enumerate(q_indices):
+        rows.append({"record_kind":"scalar_dof","local_q_index":str(q),"global_q_index":str(q),
+                     "local_v_index":str(v),"global_v_index":str(v),"joint_index":"0",
+                     "joint_name":"test","dof_name":str(v),"q_index_valid":"1"})
+    for q in range(3, 7):
+        rows.append({"record_kind":"configuration_without_direct_velocity","local_q_index":str(q),
+                     "global_q_index":str(q),"local_v_index":"","global_v_index":"",
+                     "joint_index":"","joint_name":"","dof_name":"","q_index_valid":"0"})
+    for v in range(125,128):
+        rows.append({"record_kind":"velocity_only","local_q_index":"","global_q_index":"",
+                     "local_v_index":str(v),"global_v_index":str(v),"joint_index":"0",
+                     "joint_name":"test","dof_name":str(v),"q_index_valid":"0"})
+    return rows
+
+
+class AcceptedGridTests(unittest.TestCase):
+    def test_complete_exact_grid_passes(self):
+        result = module.verify_accepted_grid(grid([8, 16, 24]), steps=24)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["last_step"], 24)
+
+    def test_duplicate_or_missing_grid_fails(self):
+        with self.assertRaisesRegex(ValueError, "duplicate or out-of-order"):
+            module.verify_accepted_grid(grid([8, 16, 16, 24]), steps=24)
+        with self.assertRaisesRegex(ValueError, "incomplete or shifted"):
+            module.verify_accepted_grid(grid([8, 24]), steps=24)
+
+    def test_shifted_time_fails(self):
+        with self.assertRaisesRegex(ValueError, "shifted"):
+            module.verify_accepted_grid(grid([8, 16, 24], {16: 0.1}), steps=24)
+
+
+def constant_window(value, label):
+    f32 = module.float32_value(value, label)
+    token = format(f32, ".12g")
+    return module.float32_mean_interval([token] * 100, label)
+
+
+class PairedStateTests(unittest.TestCase):
+    def test_pre_dose_raw_rows_match_and_count_duplicates_in_order(self):
+        rows = [{"accepted_step": "8", "time_s": "0.016", "value": "1"},
+                {"accepted_step": "8", "time_s": "0.016", "value": "2"},
+                {"accepted_step": "29992", "time_s": "59.984", "value": "3"},
+                {"accepted_step": "30000", "time_s": "60.0", "value": "4"}]
+        result = module.exact_pre_dose_rows(rows, list(rows), step_key="accepted_step")
+        self.assertEqual(result["exact_raw_rows"], 3)
+        changed = list(rows)
+        changed[1] = dict(changed[1], value="changed")
+        with self.assertRaisesRegex(ValueError, "measured rows differ"):
+            module.exact_pre_dose_rows(rows, changed, step_key="accepted_step")
+
+    def test_arm_commands_only_differ_by_dose_and_run_output(self):
+        croot = Path("/tmp/pair/baseline/native-run").resolve()
+        troot = Path("/tmp/pair/intervention/native-run").resolve()
+        c = ["human", "--output", str(croot),
+             f"{module.FAILURE_RECEIPT_ENV}={croot}/common-field-failure.json", "--seconds", "310"]
+        t = ["human", "--output", str(troot),
+             f"{module.FAILURE_RECEIPT_ENV}={troot}/common-field-failure.json", "--seconds", "310",
+             "--drive-intervention", "60.0", "100.0", "0.5"]
+        self.assertTrue(module.normalize_pair_commands(c, t, croot, troot)["passed"])
+        t[-1] = "0.4"
+        with self.assertRaisesRegex(ValueError, "not the declared"):
+            module.normalize_pair_commands(c, t, croot, troot)
+
+    def test_only_declared_owner_paths_are_normalized(self):
+        croot = Path("/tmp/pair/baseline/native-run").resolve()
+        troot = Path("/tmp/pair/intervention/native-run").resolve()
+        c = ["human", "--output", str(croot),
+             f"{module.FAILURE_RECEIPT_ENV}={croot}/common-field-failure.json"]
+        t = ["human", "--output", str(troot),
+             f"{module.FAILURE_RECEIPT_ENV}={troot}/common-field-failure.json",
+             "--drive-intervention", "60.0", "100.0", "0.5"]
+        self.assertTrue(module.normalize_pair_commands(c, t, croot, troot)["passed"])
+        bad = list(t)
+        bad[2] = str(troot / "unexpected")
+        with self.assertRaisesRegex(ValueError, "output path"):
+            module.normalize_pair_commands(c, bad, croot, troot)
+        bad = list(t)
+        bad[3] = f"{module.FAILURE_RECEIPT_ENV}={troot}/elsewhere.json"
+        with self.assertRaisesRegex(ValueError, "failure-receipt path"):
+            module.normalize_pair_commands(c, bad, croot, troot)
+
+    def test_native_argv_normalizes_only_positional_run_path(self):
+        croot = Path("/tmp/pair/baseline/native-run").resolve()
+        troot = Path("/tmp/pair/intervention/native-run").resolve()
+        c = ["native", "--a", "x", "--b", str(croot), "finish"]
+        t = ["native", "--a", "x", "--b", str(troot), "finish",
+             "--resting-drive-intervention", "60.0", "100.0", "0.5"]
+        self.assertTrue(module.normalize_pair_commands(c, t, croot, troot, native=True)["passed"])
+        t[2] = str(troot / "hidden-other-path")
+        with self.assertRaisesRegex(ValueError, "differ beyond"):
+            module.normalize_pair_commands(c, t, croot, troot, native=True)
+
+    def test_environment_normalizes_only_failure_receipt_path(self):
+        croot = Path("/tmp/pair/baseline/native-run").resolve()
+        troot = Path("/tmp/pair/intervention/native-run").resolve()
+        c = {module.FAILURE_RECEIPT_ENV: str(croot / "common-field-failure.json"), "OTHER": "same"}
+        t = {module.FAILURE_RECEIPT_ENV: str(troot / "common-field-failure.json"), "OTHER": "same"}
+        self.assertTrue(module.normalize_pair_environments(c, t, croot, troot)["passed"])
+        t["OTHER"] = str(troot / "must-not-be-normalized")
+        with self.assertRaisesRegex(ValueError, "differ beyond"):
+            module.normalize_pair_environments(c, t, croot, troot)
+
+    def test_q_window_union_support_grid_and_impulses(self):
+        expected = module.expected_support_steps(24, 13, 16, stride=8)
+        self.assertEqual(expected, [8, 12, 13, 14, 15, 16, 24])
+        dt = module.FLOAT32_DT
+        samples = []
+        previous = 0
+        for step in expected:
+            samples.append({
+                "accepted_step": str(step), "sample_start_step": str(previous),
+                "segment_steps": str(step - previous),
+                "time_s": str(step * dt), "momentum_residual_status": "not_per_step_or_initial_sample",
+                "com_x_m": "0", "com_y_m": "0", "com_z_m": "0",
+                "normal_force_last_physical_step_n": "10", "active_contact_count": "3"})
+            previous = step
+        result = module.validate_support_sample_rows(samples, steps=24, q_first=13, q_last=16, stride=8)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["momentum_residual_status_counts"], {"not_per_step_or_initial_sample": 7})
+
+        impulses = []
+        previous = 0
+        for step in expected:
+            segment = step - previous
+            for contact in range(32):
+                impulses.append({
+                    "accepted_step": str(step), "sample_start_step": str(previous),
+                    "segment_steps": str(segment), "contact_index": str(contact),
+                    "body_index": str(100 + contact), "source_geometry_index": str(200 + contact),
+                    "normal_impulse_ns": "0", "tangent0_impulse_ns": "0", "tangent1_impulse_ns": "0"})
+            previous = step
+        checked = module.validate_support_impulse_rows(impulses, samples, contact_count=32,
+                                                        steps=24, q_first=13, q_last=16, stride=8)
+        self.assertTrue(checked["passed"])
+        self.assertEqual(checked["row_count"], 32 * len(expected))
+
+        with self.assertRaisesRegex(ValueError, "missing, duplicate, or out-of-order"):
+            module.validate_support_impulse_rows(impulses[:-1], samples, contact_count=32,
+                                                  steps=24, q_first=13, q_last=16, stride=8)
+        broken = [dict(row) for row in impulses]
+        broken[0]["contact_index"] = "1"
+        with self.assertRaisesRegex(ValueError, "contact indices"):
+            module.validate_support_impulse_rows(broken, samples, contact_count=32,
+                                                  steps=24, q_first=13, q_last=16, stride=8)
+        broken_samples = [dict(row) for row in samples]
+        broken_samples[2]["segment_steps"] = "2"
+        with self.assertRaisesRegex(ValueError, "segment does not start"):
+            module.validate_support_sample_rows(broken_samples, steps=24, q_first=13, q_last=16, stride=8)
+
+    def test_q_root_momentum_window_accepts_exact_vectors_and_index_map(self):
+        first, last = 152501, 152502
+        vectors = {
+            "q_before_f32_semicolon": 129, "q_preprojection_f32_semicolon": 129,
+            "q_accepted_f32_semicolon": 129, "v_before_f32_semicolon": 128,
+            "v_preprojection_f32_semicolon": 128, "v_accepted_f32_semicolon": 128,
+            "gpu_body_kinetic_root_mass_row_x_f32_by_local_v_index_semicolon": 128,
+            "gpu_body_kinetic_root_mass_row_y_f32_by_local_v_index_semicolon": 128,
+            "gpu_body_kinetic_root_mass_row_z_f32_by_local_v_index_semicolon": 128,
+            "gpu_stand_free_velocity_f32_by_local_v_index_semicolon": 128,
+            "gpu_stand_joint_equality_impulses_f32_by_executed_joint_equality_record_index_semicolon": 91,
+            "gpu_stand_source_limit_impulses_f32_by_local_v_index_semicolon": 128,
+        }
+        counts = {"configuration_count": 129, "velocity_count": 128,
+                  "gpu_stand_free_velocity_count": 128,
+                  "gpu_stand_joint_equality_impulse_count": 91,
+                  "gpu_stand_source_limit_impulse_count": 128}
+        scalar_prefixes = ("source_body_linear_momentum_before", "source_body_linear_momentum_free_same_q",
+            "source_body_linear_momentum_preprojection_velocity_same_q", "source_body_linear_momentum_preprojection_qv",
+            "source_body_linear_momentum_accepted_qv", "gpu_body_kinetic_root_momentum_free_same_q",
+            "gpu_body_kinetic_root_momentum_post_coupled_sweep_same_q")
+        rows = []
+        for step in range(first, last + 1):
+            row = {"accepted_step": str(step), "time_s": str(float(format(step * module.FLOAT32_DT, ".17g"))),
+                   "dt_s": str(module.FLOAT32_DT), "gpu_stand_constraint_vectors_captured": "1",
+                   "q_before_fingerprint_fnv64": "12345678", "v_before_fingerprint_fnv64": "12345678",
+                   "q_preprojection_fingerprint_fnv64": "12345678", "v_preprojection_fingerprint_fnv64": "12345678",
+                   "q_accepted_fingerprint_fnv64": "12345678", "v_accepted_fingerprint_fnv64": "12345678"}
+            row.update({k: str(v) for k,v in counts.items()})
+            row.update({k: ";".join(["0"]*n) for k,n in vectors.items()})
+            row.update({f"{prefix}_{axis}_kg_m_s": "0" for prefix in scalar_prefixes for axis in "xyz"})
+            rows.append(row)
+        map_rows = make_q_index_map()
+        report = module.validate_q_root_momentum_rows(rows, map_rows, q_first=first, q_last=last)
+        self.assertTrue(report["passed"])
+        self.assertEqual(report["gpu_vector_widths"]["executed_joint_equality_impulse_records"], 91)
+
+    def test_q_root_momentum_rejects_bad_count_width_or_window_order(self):
+        first = 152501
+        row = {"accepted_step": str(first), "time_s": str(float(format(first*module.FLOAT32_DT, ".17g"))),
+               "dt_s": str(module.FLOAT32_DT), "gpu_stand_constraint_vectors_captured": "1",
+               "configuration_count": "129", "velocity_count": "128",
+               "gpu_stand_free_velocity_count": "128", "gpu_stand_joint_equality_impulse_count": "90",
+               "gpu_stand_source_limit_impulse_count": "128"}
+        fields = ("q_before_f32_semicolon","q_preprojection_f32_semicolon","q_accepted_f32_semicolon",
+                  "v_before_f32_semicolon","v_preprojection_f32_semicolon","v_accepted_f32_semicolon",
+                  "gpu_body_kinetic_root_mass_row_x_f32_by_local_v_index_semicolon",
+                  "gpu_body_kinetic_root_mass_row_y_f32_by_local_v_index_semicolon",
+                  "gpu_body_kinetic_root_mass_row_z_f32_by_local_v_index_semicolon",
+                  "gpu_stand_free_velocity_f32_by_local_v_index_semicolon",
+                  "gpu_stand_joint_equality_impulses_f32_by_executed_joint_equality_record_index_semicolon",
+                  "gpu_stand_source_limit_impulses_f32_by_local_v_index_semicolon")
+        lengths = (129,129,129,128,128,128,128,128,128,128,91,128)
+        row.update({k:";".join(["0"]*n) for k,n in zip(fields,lengths)})
+        row.update({f"{prefix}_{axis}_kg_m_s":"0" for prefix in
+            ("source_body_linear_momentum_before","source_body_linear_momentum_free_same_q",
+             "source_body_linear_momentum_preprojection_velocity_same_q","source_body_linear_momentum_preprojection_qv",
+             "source_body_linear_momentum_accepted_qv","gpu_body_kinetic_root_momentum_free_same_q",
+             "gpu_body_kinetic_root_momentum_post_coupled_sweep_same_q") for axis in "xyz"})
+        row.update({k:"12345678" for k in ("q_before_fingerprint_fnv64","v_before_fingerprint_fnv64",
+            "q_preprojection_fingerprint_fnv64","v_preprojection_fingerprint_fnv64",
+            "q_accepted_fingerprint_fnv64","v_accepted_fingerprint_fnv64")})
+        maps=make_q_index_map()
+        with self.assertRaisesRegex(ValueError,"window step exactly once"):
+            module.validate_q_root_momentum_rows([row, dict(row)],maps,q_first=first,q_last=first)
+        with self.assertRaisesRegex(ValueError,"91"):
+            module.validate_q_root_momentum_rows([row],maps,q_first=first,q_last=first)
+        row["gpu_stand_joint_equality_impulse_count"]="91"
+        row["gpu_stand_joint_equality_impulses_f32_by_executed_joint_equality_record_index_semicolon"]=";".join(["0"]*90)
+        with self.assertRaisesRegex(ValueError,"length"):
+            module.validate_q_root_momentum_rows([row],maps,q_first=first,q_last=first)
+        malformed = make_q_index_map()
+        malformed[1]["global_v_index"] = malformed[0]["global_v_index"]
+        with self.assertRaisesRegex(ValueError,"local/global velocity DOFs"):
+            module.validate_q_root_momentum_rows([row],malformed,q_first=first,q_last=first)
+
+    def test_response_checks_require_resolved_expected_gas_directions(self):
+        def arm(primary, ve_dose, pco2_rec, pao2_rec, ve_rec, pao2_dose_delta=0.0):
+            return {
+                "owner_observation": {
+                    "primary_delta_PaCO2_mmhg": primary,
+                    "inspiratory_minute_ventilation_dose_L_min": ve_dose,
+                    "PaCO2_recovery_mean_mmhg": pco2_rec,
+                    "PaO2_recovery_mean_mmhg": pao2_rec,
+                    "inspiratory_minute_ventilation_recovery_L_min": ve_rec,
+                    "PaCO2_dose_mean_mmhg": 40.0 + primary,
+                    "PaO2_dose_mean_mmhg": 95.0 + pao2_dose_delta,
+                    "SaO2_dose_mean": 0.97,
+                },
+                "gas_direction_float32_windows": {
+                    "pre": {"PaCO2_mmhg": constant_window(40.0, "PaCO2"),
+                            "PaO2_mmhg": constant_window(95.0, "PaO2")},
+                    "dose": {"PaCO2_mmhg": constant_window(40.0 + primary, "PaCO2"),
+                             "PaO2_mmhg": constant_window(95.0 + pao2_dose_delta, "PaO2")},
+                },
+            }
+        control = arm(0.0, 8.0, 40.0, 95.0, 8.0, 0.0)
+        treatment = arm(1.0, 7.0, 40.5, 94.0, 8.4, -1.0)
+        result = module.paired_response(control, treatment)
+        self.assertTrue(result["all_declared_response_checks_met"])
+        self.assertEqual(len(result["predeclared_direction_and_recovery_checks"]), 6)
+        self.assertGreater(result["values"]["float32_midpoint_PaCO2_difference_in_differences_mmhg"], 0.0)
+        self.assertLess(result["values"]["float32_midpoint_PaO2_difference_in_differences_mmhg"], 0.0)
+
+        zero = module.paired_response(control, arm(0.0, 7.0, 40.0, 95.0, 8.0, 0.0))
+        self.assertFalse(zero["predeclared_direction_and_recovery_checks"][1]["passed"])
+        self.assertFalse(zero["predeclared_direction_and_recovery_checks"][2]["passed"])
+        self.assertIn("unresolved", zero["predeclared_direction_and_recovery_checks"][1]["direction_status"])
+
+        opposite = module.paired_response(control, arm(-1.0, 7.0, 40.0, 95.0, 8.0, 1.0))
+        self.assertFalse(opposite["predeclared_direction_and_recovery_checks"][1]["passed"])
+        self.assertFalse(opposite["predeclared_direction_and_recovery_checks"][2]["passed"])
+        self.assertIn("opposite", opposite["predeclared_direction_and_recovery_checks"][1]["direction_status"])
+
+    def test_float32_midpoint_cells_cover_binades_zero_and_subnormals(self):
+        center, lower, upper = module.float32_rounding_cell("1.0")
+        self.assertEqual(center, Fraction(1, 1))
+        self.assertEqual(lower, Fraction(1, 1) - Fraction(1, 2**25))
+        self.assertEqual(upper, Fraction(1, 1) + Fraction(1, 2**24))
+
+        center, lower, upper = module.float32_rounding_cell("0.0")
+        self.assertEqual(center, Fraction(0, 1))
+        self.assertEqual(lower, -Fraction(1, 2**150))
+        self.assertEqual(upper, Fraction(1, 2**150))
+
+        min_subnormal = format(2.0**-149, ".12g")
+        center, lower, upper = module.float32_rounding_cell(min_subnormal)
+        self.assertEqual(center, Fraction(1, 2**149))
+        self.assertEqual(lower, Fraction(1, 2**150))
+        self.assertEqual(upper, Fraction(3, 2**150))
+
+    def test_csv_float32_roundtrip_and_sub_ulp_did_are_unresolved(self):
+        value = module.float32_value("0.1")
+        token = format(value, ".12g")
+        self.assertEqual(module.float32_csv_value(token, "test"), value)
+        with self.assertRaisesRegex(ValueError, "does not round-trip"):
+            module.float32_csv_value("0.10000000001", "test")
+
+        baseline_pre = constant_window(40.0, "PaCO2")
+        baseline_dose = constant_window(40.0, "PaCO2")
+        one_ulp_up = module.float32_next(40.0, 1)
+        treatment_dose = constant_window(one_ulp_up, "PaCO2")
+        def gas_arm(pre, dose):
+            return {"gas_direction_float32_windows": {
+                "pre": {"PaCO2_mmhg": pre},
+                "dose": {"PaCO2_mmhg": dose},
+            }}
+        interval = module.gas_did_rounding_interval(
+            gas_arm(baseline_pre, baseline_dose),
+            gas_arm(baseline_pre, treatment_dose), "PaCO2_mmhg")
+        self.assertGreater(interval["midpoint_mmhg"], 0.0)
+        self.assertLessEqual(interval["interval_mmhg"]["lower"], 0.0)
+        self.assertGreaterEqual(interval["interval_mmhg"]["upper"], 0.0)
+
+    def test_observer_environment_requires_exact_declared_values(self):
+        env = {
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "1",
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP": str(module.Q_FIRST),
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP": str(module.Q_LAST),
+            "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
+            "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "8",
+            "NUMI_HUMAN_RESTING_TRANSACTION_PROBE": "1",
+            "NUMI_HUMAN_RESTING_INSPECTION_TOUR": "1",
+            "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS": "2.0",
+            "NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS": ",".join(map(str, module.CAPTURES)),
+        }
+        self.assertEqual(module.verify_observer_env(env)["expected_q_root_momentum_rows"], 2500)
+        self.assertEqual(module.verify_observer_env(env)["expected_q_root_momentum_rows"], 2500)
+        env["NUMI_HUMAN_ACCEPTED_FORCE_AUDIT"] = "1"
+        with self.assertRaisesRegex(ValueError, "must remain disabled"):
+            module.verify_observer_env(env)
+
+    def test_integrated_rejection_probe_requires_scoped_tokens(self):
+        line = " ".join(module.REQUIRED_PROBE)
+        self.assertTrue(module.transaction_probe(line)["passed"])
+        with self.assertRaisesRegex(ValueError, "incomplete"):
+            module.transaction_probe(line.replace("circulation_and_clock_unchanged=true ", ""))
+
+    def test_semicolon_vectors_are_finite_and_exact_length(self):
+        self.assertEqual(module.verify_vector("1;2;3", 3, "test"), [1.0, 2.0, 3.0])
+        with self.assertRaisesRegex(ValueError, "length"):
+            module.verify_vector("1;2", 3, "test")
+        with self.assertRaisesRegex(ValueError, "nonfinite"):
+            module.verify_vector("1;nan;3", 3, "test")
+
+
+
+class GasGuardIdentityTests(unittest.TestCase):
+    def facts(self):
+        assets = dict(module.GAS_RUNTIME_FILES)
+        loaded = {
+            "verified": True,
+            "expected_path": module.GAS_RUNTIME_DYLIB,
+            "expected_sha256": module.GAS_RUNTIME_DYLIB_SHA256,
+            "observed_images": [{"path": module.GAS_RUNTIME_DYLIB}],
+        }
+        build = {
+            "runtime_source": str(module.GAS_RUNTIME_SOURCE_ROOT),
+            "runtime_source_head": module.GAS_RUNTIME_SOURCE_HEAD,
+            "runtime_files": dict(module.GAS_RUNTIME_FILES),
+        }
+        return {
+            "build": build, "declaration_assets": dict(assets),
+            "invocation_assets": dict(assets),
+            "metadata": {"asset_sha256": dict(assets), "loaded_metal_runtime": loaded},
+            "source_hashes": dict(module.GAS_RUNTIME_SOURCE_PINS),
+            "build_rule_sha256": module.GAS_BUILD_RULE_SHA256,
+            "build_rule_matches_source": True,
+        }
+
+    def classify(self, facts):
+        return module.classify_gas_guard_identity(**facts)
+
+    def test_exact_1271_identity_qualifies_source_rule_but_not_normalized_residual(self):
+        result = self.classify(self.facts())
+        self.assertTrue(result["identity_verified"])
+        self.assertEqual(result["guard_definition"]["threshold_fraction"], 5.0e-5)
+        self.assertFalse(result["guard_definition"]["direct_normalized_residual_available"])
+        self.assertEqual(result["reasons_unverified"], [])
+
+    def test_014_runtime_identity_does_not_qualify_1271_pair(self):
+        facts = self.facts()
+        facts["build"]["runtime_source"] = "/Users/n/numi-human-performance-source-014"
+        facts["build"]["runtime_source_head"] = "historical-014"
+        result = self.classify(facts)
+        self.assertFalse(result["identity_verified"])
+        self.assertTrue(any("source root" in reason or "source revision" in reason
+                            for reason in result["reasons_unverified"]))
+
+    def test_wrong_metallib_or_missing_invocation_pin_fails_closed(self):
+        facts = self.facts()
+        facts["invocation_assets"][module.GAS_RESPIRATION_METALLIB] = "0" * 64
+        result = self.classify(facts)
+        self.assertFalse(result["identity_verified"])
+        self.assertTrue(any("invocation" in reason for reason in result["reasons_unverified"]))
+        facts = self.facts()
+        del facts["declaration_assets"][module.GAS_RESPIRATION_METALLIB]
+        result = self.classify(facts)
+        self.assertFalse(result["identity_verified"])
+
+    def test_wrong_loaded_dylib_or_source_hash_fails_closed(self):
+        facts = self.facts()
+        facts["metadata"]["loaded_metal_runtime"]["expected_sha256"] = "0" * 64
+        self.assertFalse(self.classify(facts)["identity_verified"])
+        facts = self.facts()
+        facts["source_hashes"][str(module.GAS_METAL_SOURCE)] = "0" * 64
+        self.assertFalse(self.classify(facts)["identity_verified"])
+
+    def test_build_rule_must_bind_source_to_shader_target(self):
+        facts = self.facts()
+        facts["build_rule_matches_source"] = False
+        self.assertFalse(self.classify(facts)["identity_verified"])
+
+
+class RuntimeGuardStatusTests(unittest.TestCase):
+    def test_guard_pass_is_separate_from_direct_residual_availability(self):
+        self.assertTrue(module.accepted_runtime_guard_passed(True, module.STEPS))
+        self.assertFalse(module.accepted_runtime_guard_passed(False, module.STEPS))
+        self.assertFalse(module.accepted_runtime_guard_passed(True, module.STEPS - 1))
+
+    def test_identity_match_alone_does_not_pass_incomplete_horizon(self):
+        self.assertFalse(module.accepted_runtime_guard_passed(True, 0))
+        self.assertFalse(module.accepted_runtime_guard_passed(1, module.STEPS))
+
+
+if __name__ == "__main__":
+    unittest.main()

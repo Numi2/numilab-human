@@ -1,0 +1,186 @@
+{
+  "accepted_runtime_guard_passed": true,
+  "accepted_steps": 155000,
+  "arm": "intervention",
+  "build_closure": {
+    "artifact_sha256": {
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/bin/numi-human-native": "e051343771dd48acb83704bc1ef2c470530d5b3a5790f7342349f5fcc6c434b4",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/lib/libmetalrobo.dylib": "9c307105bdb3627efd2b5ec7c73dc35bf2b1811d59baf4d73d93f89e3bec0193",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/shaders/HumanRespiration.metallib": "8444ba02aa176fb54a4331806aac39a372311852708d9bdb2698ba37dd71fa8b",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/shaders/NumiMatter.metallib": "38d4b64ed55cef2e0e0f243616d0db5bd21441f232ca38bca439108c1d6130f9",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/shaders/NumiMatterPhysicalStateDigest.metallib": "3d5db8b11fe561def3f0f4aa73c1a4d8d1828e746f0a7f737d8a31725deb2d68",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/shaders/MetalRobo.metallib": "a0920bd99ea39c97e15eca62371116be5fc0f719b2b6c0682c2bc690b8ba8189",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/shaders/MetalRoboHyperPolicy.metallib": "f227836841015b40467a20c47a9fa38cf44eb8e1132cad1de4e65fa79c55d309",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/shaders/NumiNeuron.metallib": "4ccbb796a6bfd5bdb18f7d37c8e18e0d767c9489d16047c523c97f679da33f1d"
+    },
+    "build_claim_limit": "The compiled source bytes match the committed revision per build provenance; this is not an independent reproducible-build claim.",
+    "build_report_sha256": "64742416b6457eff2383206102ca6134fbd69d09ecea241d9b4dbe606cd474e4",
+    "build_rule_sha256": "0854c524a8483dc1989fc1703275fbe83cb70e137bc80f0d7575f61855eeb765",
+    "head": "f47429c30289fef2de2cade0962a2e2d8d91fe44",
+    "source_sha256": {
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/apps/NumiHumanRestingTransactionProbe.hpp": "e72310781207a01f7053c7ad12e776b4ee3dde16b67c77682de8876a42fa8785",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/apps/numilab_human_myosim_visual_probe.mm": "6b7f094693bfbd748e7f74b48ca220700dbdf0c9ce1e9833b2382ad424e67186",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/include/metalrobo/MetalArticulatedOperator.hpp": "f0085574985a96941f0f08ea9ada598c5bbc476d677cefd9905502b6a2d75c00",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/include/metalrobo/numi_human_stand_gpu.h": "f48905aa6736af0460fc2cb15a447161f36ad68ab9eb2dd03e0fe94aaee043a1",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/include/numi/matter/human_respiration.h": "e963800429edba5dd5fab210823bd2a88ccfce2844a5ba0f029ca9d41a2f1126",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/src/human_respiration.metal": "bf984a88ff542f528753d368d9b4f884a74319a9d2e24ac8d6dc5ccb5040bc54",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_respiration_parameters.hpp": "6a5df71f0868f928269e5ca9c75384f1762a190c29fef5610595ea2ea73e097d",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_resting_gas_transport_fixture.mm": "cbeaadef98da6b28d2d369f52ae980f1b8a87be7ff3a93b349695391b1583c0e",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_resting_runtime.hpp": "97fd4a5a646a989f2c91f077b37d019447a5ef847d174bf3087ae3b9eca7cacb",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/src/metal/MetalArticulatedOperator.mm": "ce2153f9f6e870575919af6a54b2d388dee55a8b4ccfbfcd94c10ebf0d2f934e",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/src/metal/NumiHumanStand.metal": "6528dc7b9e89949b5661cd4a56a53cb59e65d62333b651a4a3d1a9f6065e65fe",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/src/metal/NumiHumanStandSolve.metalinc": "80ca0fc938d7ede9f284a5a92b08e1cdc557f7c76152a81695233260eb4d6244"
+    },
+    "status_clean": true
+  },
+  "capture_steps": [
+    0,
+    47519,
+    151999,
+    152607,
+    153215,
+    153823,
+    154431,
+    155000
+  ],
+  "execution_closed_cleanly": true,
+  "gas_guard": {
+    "accepted_state_guard_status": "passed_for_committed_accepted_states",
+    "accepted_step_scope": {
+      "accepted_steps": 155000,
+      "claim_limit": "Committed accepted states only; rejected candidates are outside this check, and normalized gas residuals are not independently recomputed.",
+      "expected_steps": 155000
+    },
+    "build_provenance_reference": {
+      "bytes": 2629,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/build-provenance.json",
+      "sha256": "8cdb6a616b2821246561939f36bbb66ae07ca75c8ddcdd8bc8977773ef46fb5f"
+    },
+    "gas_guard_source": {
+      "addGas_block_sha256": "ad637f530f98de8b9244decc747f0fa057103fe5004bb09d30e633c1f58ba084",
+      "exchange_block_sha256": "90d82827d4c7bf69ad7e27a4668a18ac0cbbc555e61edba7f2a607b4506d7e0d",
+      "path": "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/src/human_respiration.metal",
+      "resolve_block_sha256": "1f91d46295196ec01b9843e876085d2a79ca5365a6c71603643486eff5db6909",
+      "sha256": "bf984a88ff542f528753d368d9b4f884a74319a9d2e24ac8d6dc5ccb5040bc54"
+    },
+    "guard_definition": {
+      "csv_writer_source": {
+        "path": "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_resting_runtime.hpp",
+        "sha256": "97fd4a5a646a989f2c91f077b37d019447a5ef847d174bf3087ae3b9eca7cacb"
+      },
+      "direct_normalized_residual_available": false,
+      "direct_normalized_residual_limit": "The trace exports the absolute running maxima in STPD mL; it does not export initial gasBudget.xy, so this analyzer cannot independently divide by the source-defined initial budget.",
+      "initial_budget_source": {
+        "path": "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_respiration_parameters.hpp",
+        "sha256": "6a5df71f0868f928269e5ca9c75384f1762a190c29fef5610595ea2ea73e097d"
+      },
+      "per_accepted_candidate": "The shader updates gasBudget.zw to the running maximum absolute oxygen/CO2 balance defect, then sets status.w=7 when either absolute defect exceeds 5e-5 times the corresponding initial gasBudget.xy amount. The resolver copies candidate state only when status is success and candidate.status.w is zero.",
+      "threshold_fraction": 5e-05
+    },
+    "identity_verified": true,
+    "loaded_dylib_metadata": {
+      "expected_path": "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/lib/libmetalrobo.dylib",
+      "expected_sha256": "9c307105bdb3627efd2b5ec7c73dc35bf2b1811d59baf4d73d93f89e3bec0193",
+      "observed_images": [
+        {
+          "dyld_uuid": "b85144f3-542f-3394-a56f-284057a69598",
+          "path": "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/lib/libmetalrobo.dylib"
+        }
+      ],
+      "verified": true
+    },
+    "qualification_basis": "Frozen 1271 gas-guard identity predicate applied to this arm's source, build-001 artifacts, invocation assets, loaded dylib identity, and accepted 155000-step horizon.",
+    "reasons_unverified": [],
+    "runtime_artifacts": {
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/lib/libmetalrobo.dylib": "9c307105bdb3627efd2b5ec7c73dc35bf2b1811d59baf4d73d93f89e3bec0193",
+      "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/shaders/HumanRespiration.metallib": "8444ba02aa176fb54a4331806aac39a372311852708d9bdb2698ba37dd71fa8b"
+    },
+    "runtime_guard_passed": true,
+    "shader_build_rule": {
+      "path": "/Users/n/numi-lab-resting-window-vector-trace-build-1271-001/matter/CMakeFiles/numi_human_respiration_shaders.dir/build.make",
+      "sha256": "0854c524a8483dc1989fc1703275fbe83cb70e137bc80f0d7575f61855eeb765",
+      "source_and_metallib_paths_verified": true
+    },
+    "source_context": {
+      "historical_014": {
+        "current_guard_block_sha256": {
+          "addGas": "ad637f530f98de8b9244decc747f0fa057103fe5004bb09d30e633c1f58ba084",
+          "exchange": "90d82827d4c7bf69ad7e27a4668a18ac0cbbc555e61edba7f2a607b4506d7e0d",
+          "resolve": "1f91d46295196ec01b9843e876085d2a79ca5365a6c71603643486eff5db6909"
+        },
+        "full_source_differs_from_1271": true,
+        "historical_guard_block_sha256": {
+          "addGas": "ad637f530f98de8b9244decc747f0fa057103fe5004bb09d30e633c1f58ba084",
+          "exchange": "90d82827d4c7bf69ad7e27a4668a18ac0cbbc555e61edba7f2a607b4506d7e0d",
+          "resolve": "1f91d46295196ec01b9843e876085d2a79ca5365a6c71603643486eff5db6909"
+        },
+        "relevant_guard_blocks_match_1271": true,
+        "respiration_metallib": {
+          "path": "/Users/n/numi-human-retired-alias-visibility-build-018-attempt2/matter/shaders/HumanRespiration.metallib",
+          "sha256": "4b61361f513bf0996d687398498b85ba4e379edca91c36f134e1b0398f31c426"
+        },
+        "scope": "Historical 014/018 source/artifact identity is kept separate. The relevant parsed source blocks are compared directly; even if equal, the full source file and built metallib differ, so this does not qualify the historical run as 1271.",
+        "source_path": "/Users/n/numi-human-performance-source-014/matter/src/human_respiration.metal",
+        "source_sha256": "503a3c99f374f56bb440359ba5561a993c0e5ebad5eee34fea31b39828bc4e9e"
+      },
+      "runtime_fixture": {
+        "path": "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_resting_gas_transport_fixture.mm",
+        "scope": "Source test fixture only; not evidence that the fixture was executed.",
+        "sha256": "cbeaadef98da6b28d2d369f52ae980f1b8a87be7ff3a93b349695391b1583c0e"
+      }
+    },
+    "source_file_sha256": {
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/include/numi/matter/human_respiration.h": "e963800429edba5dd5fab210823bd2a88ccfce2844a5ba0f029ca9d41a2f1126",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/src/human_respiration.metal": "bf984a88ff542f528753d368d9b4f884a74319a9d2e24ac8d6dc5ccb5040bc54",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_respiration_parameters.hpp": "6a5df71f0868f928269e5ca9c75384f1762a190c29fef5610595ea2ea73e097d",
+      "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/human_resting_runtime.hpp": "97fd4a5a646a989f2c91f077b37d019447a5ef847d174bf3087ae3b9eca7cacb"
+    },
+    "source_head": "f47429c30289fef2de2cade0962a2e2d8d91fe44",
+    "source_root": "/Users/n/numi-lab-resting-window-vector-trace-1271"
+  },
+  "identity_predicate_passed": true,
+  "limitations": [
+    "310-second matched physiology pair; not anatomy acceptance.",
+    "Guard covers committed accepted states only; rejected candidates are outside the check.",
+    "Initial gasBudget amounts are not exported, so normalized residual is not independently computed.",
+    "Passing gas guard does not qualify anatomy or clinical validity."
+  ],
+  "pins": {
+    "build_provenance": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/build-provenance.json",
+      "sha256": "8cdb6a616b2821246561939f36bbb66ae07ca75c8ddcdd8bc8977773ef46fb5f"
+    },
+    "build_report": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/q-window-root-momentum-observer-1271/build-001/build-report.json",
+      "sha256": "64742416b6457eff2383206102ca6134fbd69d09ecea241d9b4dbe606cd474e4"
+    },
+    "declaration": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/run-declaration.json",
+      "sha256": "c7332e1b3c089ef68953bf2fb89275c6bb39bc1ff35501a1dd385754a4469a57"
+    },
+    "execution": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/execution.json",
+      "sha256": "6174ae74fdc91eeabb3d86b5b0e762b752edc7ec06758d7990914a32034689fc"
+    },
+    "frozen_predicate": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_matched_native_pair_011.py",
+      "sha256": "9511d759d2be4f25677fbcc40821c10d92a5f0c327dcb553e4b2aed730194224"
+    },
+    "invocation": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/invocation.json",
+      "sha256": "ae0f14016d00d20f80724575d0dd5576fbf316f7889cae1c93f605abef492285"
+    },
+    "metadata": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/run-metadata.json",
+      "sha256": "47248afd089e4cb4f8bda710b3be83ac13701352a70758b934fc663464e8a75b"
+    },
+    "native_log": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/native.log",
+      "sha256": "52046588aad19c75c9e2b01d1d5a8f87e9bc05593220867142c28149898a99a3"
+    }
+  },
+  "runtime_source_head": "f47429c30289fef2de2cade0962a2e2d8d91fe44",
+  "schema": "numi.human.matched-pair.gas-guard-postflight.v1",
+  "simulated_seconds": 310.0000147242099,
+  "status": "pass"
+}

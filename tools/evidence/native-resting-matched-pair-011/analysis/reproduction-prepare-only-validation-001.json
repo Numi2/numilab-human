@@ -1,0 +1,39 @@
+{
+  "created_utc": "2026-10-10T15:14:16.155369+00:00",
+  "script": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/reproduce_native_pair_011.py",
+    "sha256": "7b9a8da842d833afdb5e8ea1a69cddeeb4d505aba8bb1707b2baeadac89824e0"
+  },
+  "preparation_summary": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-reproduction-x4q02r8w/preparation-summary.json",
+    "sha256": "db2f0ca09beae60ab95d2174f0ae0f565e0d4715fc5fd2a03ae7bd9382c0a2ca"
+  },
+  "guard": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-reproduction-x4q02r8w/launch-guard.json",
+    "sha256": "ed9b8c71c89f477f38fa5affe5b3b0092dc76c24fef5f22cc3de39d26ab9e9fc"
+  },
+  "declarations": {
+    "baseline": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-reproduction-x4q02r8w/baseline/run-declaration.json",
+      "sha256": "1839d583a7e83a13ef1189f85b31c7748149ec1ff994033945366ebef5296f35"
+    },
+    "intervention": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-reproduction-x4q02r8w/intervention/run-declaration.json",
+      "sha256": "0ca1dc2070f2d0eff7b37fda1605ed4f3596889538796c531cea55cc4487d790"
+    }
+  },
+  "checks": {
+    "baseline:argv": true,
+    "baseline:native_argv": true,
+    "baseline:native_environment": true,
+    "baseline:assets_except_preparation_directory": true,
+    "baseline:no_execution": true,
+    "intervention:argv": true,
+    "intervention:native_argv": true,
+    "intervention:native_environment": true,
+    "intervention:assets_except_preparation_directory": true,
+    "intervention:no_execution": true
+  },
+  "native_execution": false,
+  "scope": "Fresh owner preparation and command equivalence only. The wrapper delegates runtime execution to the unchanged launcher used by the completed pair; no third simulation was run."
+}

@@ -1,0 +1,18 @@
+import importlib.util
+from pathlib import Path
+
+GUARD = Path("/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_native_pair_011_gas_guard_revision_002.py")
+
+def test_baseline_gas_postflight_loads_pinned_physiology_log_parser():
+    spec = importlib.util.spec_from_file_location("gas_guard_011_revision_002_test", GUARD)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    result = module.analyze("baseline")
+    assert result["status"] == "pass"
+    assert result["identity_predicate_passed"] is True
+    assert result["accepted_runtime_guard_passed"] is True
+    assert result["accepted_steps"] == 155000
+    physiology = module.load_owner().load_owner()
+    assert Path(physiology.__file__).resolve() == module.SOURCE / "matter/tools/resting_intervention_study.py"
+    assert callable(physiology.native_scene_summary)

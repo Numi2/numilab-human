@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Single-arm read-only validation through the matched-pair analyzer's existing owner."""
+import hashlib, importlib.util, json, sys, traceback
+from pathlib import Path
+
+ANALYZER = Path("/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_matched_native_pair_011_revision_003.py")
+ANALYZER_SHA256 = "b7e47e9e593dfe11b6ee47d40cf2fc6c8d4d19ffd88d3dce062c43c73f862a6e"
+DECLARATION = Path("/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/run-declaration.json")
+DECLARATION_SHA256 = "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d"
+EXECUTION = DECLARATION.parent / "execution.json"
+EXECUTION_SHA256 = "c244daacd8c8b7eab245d9806b14128a32ed6037a9d81542c0763670e50c8323"
+OUTPUT = Path(__file__).with_name("baseline-arm-validation-revision-004.json")
+
+def digest(path):
+    h=hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda:f.read(1<<20), b""):
+            h.update(block)
+    return h.hexdigest()
+
+def main():
+    if OUTPUT.exists() or OUTPUT.is_symlink():
+        raise FileExistsError(OUTPUT)
+    report={"schema":"numi.human.matched-pair-single-arm-validation.v1","arm":"baseline","status":"failed","analyzer_path":str(ANALYZER),"analyzer_sha256":ANALYZER_SHA256,"declaration_path":str(DECLARATION),"declaration_sha256":DECLARATION_SHA256,"execution_receipt_path":str(EXECUTION),"execution_receipt_sha256":EXECUTION_SHA256}
+    try:
+        if digest(ANALYZER)!=ANALYZER_SHA256 or digest(DECLARATION)!=DECLARATION_SHA256 or digest(EXECUTION)!=EXECUTION_SHA256:
+            raise ValueError("pinned analyzer/declaration/execution identity changed")
+        spec=importlib.util.spec_from_file_location("native_pair_011_analyzer_baseline_check",ANALYZER)
+        if spec is None or spec.loader is None:
+            raise RuntimeError("cannot load analyzer")
+        mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        owner=mod.load_owner()
+        result=mod.verify_declared_arm(DECLARATION,"baseline",owner)
+        report["status"]="passed"
+        report["verified_arm"]={k:result[k] for k in ("arm","execution_receipt","run_directory","invocation_sha256","run_metadata_sha256","native_log_sha256","native","gas_guard_provenance","capture_schedule","accepted_grid","owner_observation","body_trace_check","surface_trace_check","respiration_identity_check","post_initialization_cycle_check","q_root_momentum_observer","support_com_diagnostic","support_impulse_diagnostic","captures","recording")}
+        report["analysis_inputs_sha256"]=dict(sorted(mod.PINNED_READS.items()))
+        report["analysis_input_count"]=len(mod.PINNED_READS)
+        if digest(ANALYZER)!=ANALYZER_SHA256 or digest(DECLARATION)!=DECLARATION_SHA256 or digest(EXECUTION)!=EXECUTION_SHA256:
+            raise ValueError("analyzer/declaration/execution changed during single-arm validation")
+    except Exception as e:
+        report["error"]={"type":type(e).__name__,"message":str(e)}
+        report["traceback"]=traceback.format_exc()
+        if "mod" in locals():
+            report["analysis_inputs_sha256"]=dict(sorted(mod.PINNED_READS.items()))
+            report["analysis_input_count"]=len(mod.PINNED_READS)
+    OUTPUT.write_text(json.dumps(report,sort_keys=True,indent=2,allow_nan=False)+chr(10),encoding='utf-8')
+    print(OUTPUT)
+    return 0 if report["status"]=="passed" else 1
+
+if __name__=="__main__":
+    raise SystemExit(main())

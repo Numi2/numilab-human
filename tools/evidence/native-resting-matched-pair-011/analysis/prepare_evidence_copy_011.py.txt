@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+"""Copy a bounded evidence bundle after both native arms and their audits close.
+
+Uses the existing evidence COPY-MANIFEST convention. Does not launch simulation,
+modify source inputs, replace owner analyses, or qualify whole-body anatomy.
+"""
+import argparse, datetime, gzip, hashlib, json, shutil
+from pathlib import Path
+
+BASE=Path(__file__).resolve().parent.parent
+ANALYSIS=BASE/'analysis-preparation-001'
+def digest(p):
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for b in iter(lambda:f.read(8*1024*1024),b''):h.update(b)
+    return h.hexdigest()
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--output',type=Path,required=True)
+    args=ap.parse_args()
+    out=args.output.resolve()
+    if out.exists():raise SystemExit('Refusing to reuse evidence output')
+    guard=json.loads((BASE/'launch-guard.json').read_text())
+    for arm in ['baseline','intervention']:
+        root=BASE/arm
+        dp=root/'run-declaration.json'
+        declaration=json.loads(dp.read_text())
+        e=json.loads((root/'execution.json').read_text())
+        start=json.loads((root/'execution-start.json').read_text())
+        invocation=json.loads((root/'native-run/invocation.json').read_text())
+        assert digest(dp)==e['declaration_sha256']==start['declaration_sha256']==guard['arms'][arm]['run_declaration_sha256']
+        assert digest(BASE/'launch_arm.py')==e['launcher_sha256']==start['launcher_sha256']==guard['launcher_sha256']
+        assert start['argv']==declaration['argv']
+        assert invocation['argv']==e['observed_native_argv']==declaration['owner_cli_preview']['native_argv']
+        assert invocation['environment']==e['observed_environment']==declaration['owner_cli_preview']['recorded_invocation_environment']
+        assert e['returncode']==0 and not e['changed_inputs'] and not e['timed_out']
+        assert e['native_argv_matches_prepared_cli_preview']
+        assert e['native_environment_matches_prepared_cli_preview']
+    pair=json.loads((ANALYSIS/'matched-pair-analysis-001.json').read_text())
+    assert pair['status']=='measured_pair_analysis_complete'
+    assert digest(Path(pair['analysis_source']['path']))==pair['analysis_source']['sha256']
+    for path,expected in pair['read_input_sha256'].items():
+        assert digest(Path(path))==expected,'Validated analysis input changed: '+path
+    for name in ['matched-pair-analysis-001.json','profile-baseline-002.json',
+                 'profile-intervention-002.json',
+                 'baseline-capture-audit-001/summary.json',
+                 'intervention-capture-audit-002/summary.json',
+                 'paired-plots-002/plot-receipt.json']:
+        assert (ANALYSIS/name).is_file(),name
+    assert pair['paired_response']['all_declared_response_checks_met']
+    schedule=[0,47519,151999,152607,153215,153823,154431,155000]
+    for arm,suffix in [('baseline','001'),('intervention','002')]:
+        audit=json.loads((ANALYSIS/(arm+'-capture-audit-'+suffix)/'summary.json').read_text())
+        assert audit['status']=='complete_exact_geometry_clear'
+        assert audit['capture_steps_requested']==schedule
+        assert len(audit['pose_results'])==len(schedule)
+        assert audit['all_scheduled_captures_complete']
+        assert audit['all_859_target_skin_self_pair_coverage_complete']
+        assert audit['all_target_and_skin_self_gates_clear']
+        assert audit['input_hashes_unchanged']
+        assert audit['input_hashes_before']==audit['input_hashes_after']
+        for path,expected in audit['input_hashes_after'].items():
+            assert digest(Path(path))==expected,'Audited geometry input changed: '+path
+    selections=[]
+    def select(p,rel):
+        # Retain task-specific source snapshots as exact text, including failed
+        # drafts. Only the supported Mini scene launcher is executable here.
+        if p.suffix=='.py' and p.name!='reproduce_native_pair_011.py':rel+='.txt'
+        selections.append((p,rel))
+    select(ANALYSIS/'evidence-README-001.md','README.md')
+    for name in ['prepare.py','launch_arm.py','launch-guard.json','build-provenance.json',
+                 'preparation-summary.json','prior-attempt-correction.json']:
+        select(BASE/name,'launch/'+name)
+    for arm in ['baseline','intervention']:
+        root=BASE/arm
+        for name in ['run-declaration.json','execution-start.json','execution.json',
+                     'launcher-stdout.log']:
+            select(root/name,'native/'+arm+'/'+name)
+        for name in ['native.log','invocation.json','run-metadata.json',
+                     'resting-coupled.csv','resting-surface-audit.csv',
+                     'resting-com-q-index-map.csv','common-field-map-identity.json']:
+            select(root/'native-run'/name,'native/'+arm+'/native-run/'+name)
+        audit=ANALYSIS/(arm+'-capture-audit-'+('001' if arm=='baseline' else '002'))
+        for p in sorted(audit.iterdir()):
+            if p.is_file() and not p.name.endswith('muscle-crossing-witnesses.jsonl'):
+                select(p,'geometry/'+arm+'/'+p.name)
+        review=ANALYSIS/('recording-review-'+arm+'-001')
+        for name in ['recording-review.json','inspect.log','frame-skin.png',
+                     'frame-heart.png','frame-lungs.png','frame-final.png']:
+            select(review/name,'recording/'+arm+'/'+name)
+    for p in sorted(ANALYSIS.iterdir()):
+        if p.is_file() and p.suffix in ['.json','.py','.log']:
+            select(p,'analysis/'+p.name)
+    for sub in ['baseline-single-arm-validation-001','baseline-late-root-product-001',
+                'paired-plots-001','paired-plots-002']:
+        for p in sorted((ANALYSIS/sub).iterdir()):
+            if p.is_file() and p.suffix in ['.json','.py','.png','.pdf','.log']:
+                select(p,'analysis/'+sub+'/'+p.name)
+    for sub in ['achilles-interface-audit-001','achilles-interface-audit-intervention-001','sensitivity-evidence-linkage-001']:
+        root=BASE/sub
+        assert root.is_dir(),str(root)
+        for p in sorted(root.iterdir()):
+            if p.is_file() and p.suffix in ['.json','.py','.log']:
+                select(p,'geometry/'+sub+'/'+p.name)
+    for name in ['sparse-media-operation-002.json','sparse-media-operation-003.json','retained-media-recovery-verification-001.json','cleanup-summary.txt']:
+        select(BASE.parent.parent/'storage-bloat-cleanup-1270'/name,'storage/'+name)
+    assert len({rel for _,rel in selections})==len(selections)
+    for p,_ in selections:assert p.is_file() and not p.is_symlink(),str(p)
+    out.mkdir(parents=True)
+    copied=[]
+    for source,rel in selections:
+        before=digest(source)
+        compress=source.suffix not in ['.png','.pdf','.py'] and source.stat().st_size>100000
+        dest=out/(rel+('.gz' if compress else ''))
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        if compress:
+            with source.open('rb') as src, dest.open('xb') as raw:
+                with gzip.GzipFile(filename='',mode='wb',fileobj=raw,mtime=0) as gz:
+                    shutil.copyfileobj(src,gz)
+            h=hashlib.sha256()
+            with gzip.open(dest,'rb') as f:
+                for b in iter(lambda:f.read(8*1024*1024),b''):h.update(b)
+            assert h.hexdigest()==before,str(source)
+        else:
+            shutil.copyfile(source,dest)
+            assert digest(dest)==before,str(source)
+        assert digest(source)==before,str(source)
+        copied.append({'source':str(source),'source_sha256':before,
+                       'source_bytes':source.stat().st_size,
+                       'destination':str(dest.relative_to(out)),
+                       'encoding':'gzip' if compress else 'identity',
+                       'destination_bytes':dest.stat().st_size,
+                       'destination_sha256':digest(dest)})
+    # Larger media, accepted packs, and diagnostic streams remain on the Mini.
+    external=[]
+    for arm in ['baseline','intervention']:
+        native=BASE/arm/'native-run'
+        paths=[native/name for name in ['native-viewer.mov','resting-human.mrvpack',
+              'resting-com-momentum-diagnostic.csv','resting-com-q-integration.csv',
+              'resting-com-q-support-slip.csv','resting-com-support-impulses.csv',
+              'common-field-map-f32.bin']]
+        paths+=sorted((native/'accepted-geometry').rglob('*.mrvpack'))
+        paths+=sorted((ANALYSIS/(arm+'-capture-audit-'+('001' if arm=='baseline' else '002'))).glob('*.muscle-crossing-witnesses.jsonl'))
+        for p in paths:
+            assert p.is_file(),str(p)
+            external.append({'path':str(p),'bytes':p.stat().st_size,'sha256':digest(p)})
+    (out/'COPY-MANIFEST.json').write_text(json.dumps({
+        'created_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'scope':'Exact retained evidence copies; no execution or anatomy acceptance implied.',
+        'files':copied},indent=2)+'\n')
+    (out/'external-artifacts.json').write_text(json.dumps({
+        'host':'macmini','scope':'Large retained evidence; runtime/assets are pinned by each native declaration.',
+        'files':external},indent=2)+'\n')
+    print(json.dumps({'output':str(out),'copied_files':len(copied),
+                      'copied_bytes':sum(x['destination_bytes'] for x in copied),
+                      'external_files':len(external),
+                      'copy_manifest_sha256':digest(out/'COPY-MANIFEST.json')}))
+if __name__=='__main__':main()

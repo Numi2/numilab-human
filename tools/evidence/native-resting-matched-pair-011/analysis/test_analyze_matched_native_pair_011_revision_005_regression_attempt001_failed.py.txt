@@ -1,0 +1,117 @@
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import re
+from pathlib import Path
+
+import pytest
+
+ROOT = Path("/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011")
+ANALYSIS = ROOT / "analysis-preparation-001"
+ANALYZER = ANALYSIS / "analyze_matched_native_pair_011_revision_005.py"
+ANALYZER_SHA256 = "9fb4cd3cc2479374a68caf8e5d38844aaff2a69dda454c7098a5eb41a71c8315"
+BASELINE_LOG = ROOT / "baseline/native-run/native.log"
+BASELINE_LOG_SHA256 = "edc959a6613fdf6c268bd2c86b5cfb0512bed4b3bb5cdbe3be7d4d0f38491338"
+INTERVENTION_LOG = ROOT / "intervention/native-run/native.log"
+INTERVENTION_LOG_SHA256 = "52046588aad19c75c9e2b01d1d5a8f87e9bc05593220867142c28149898a99a3"
+BASELINE_INVOCATION = ROOT / "baseline/native-run/invocation.json"
+BASELINE_INVOCATION_SHA256 = "d303da3078ad6186bb6b8c6c0f5f73d679ffc97f99622c18588a29955f2684a6"
+INTERVENTION_INVOCATION = ROOT / "intervention/native-run/invocation.json"
+INTERVENTION_INVOCATION_SHA256 = "ae0f14016d00d20f80724575d0dd5576fbf316f7889cae1c93f605abef492285"
+
+
+def _sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _load():
+    assert _sha(ANALYZER) == ANALYZER_SHA256
+    spec = importlib.util.spec_from_file_location("pair_analyzer_011_revision_005_test", ANALYZER)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _source_fingerprint(path: Path, expected_sha: str) -> str:
+    assert _sha(path) == expected_sha
+    matches = re.findall(r"resting_body_source_fingerprint=([0-9]+)", path.read_text(errors="replace"))
+    assert len(matches) == 1
+    return matches[0]
+
+
+def test_real_011_pair_matches_exact_declared_source_append():
+    analyzer = _load()
+    baseline = _source_fingerprint(BASELINE_LOG, BASELINE_LOG_SHA256)
+    intervention = _source_fingerprint(INTERVENTION_LOG, INTERVENTION_LOG_SHA256)
+    result = analyzer.verify_intervention_body_source_fingerprint(
+        baseline, intervention, (60.0, 100.0, 0.5))
+    assert result["matched"] is True
+    assert result["baseline_fingerprint_fnv64"] == "8518689296879886289"
+    assert result["intervention_fingerprint_fnv64"] == "8303647443809329182"
+    assert result["expected_intervention_fingerprint_fnv64"] == intervention
+    assert result["payload_bytes_hex_little_endian_f64"] == (
+        "0000000000004e400000000000005940000000000000e03f")
+    base_inv = json.loads(BASELINE_INVOCATION.read_text())
+    int_inv = json.loads(INTERVENTION_INVOCATION.read_text())
+    assert _sha(BASELINE_INVOCATION) == BASELINE_INVOCATION_SHA256
+    assert _sha(INTERVENTION_INVOCATION) == INTERVENTION_INVOCATION_SHA256
+    analyzer.validate_paired_native_arm_argv(base_inv["argv"], "control")
+    analyzer.validate_paired_native_arm_argv(int_inv["argv"], "intervention")
+
+
+def test_changed_intervention_tuple_is_rejected():
+    analyzer = _load()
+    with pytest.raises(ValueError, match="tuple differs"):
+        analyzer.verify_intervention_body_source_fingerprint(
+            "8518689296879886289", "8303647443809329182", (60.0, 101.0, 0.5))
+
+
+def test_wrong_intervention_fingerprint_is_rejected():
+    analyzer = _load()
+    with pytest.raises(ValueError, match="does not match"):
+        analyzer.verify_intervention_body_source_fingerprint(
+            "8518689296879886289", "8303647443809329183", (60.0, 100.0, 0.5))
+
+
+def test_baseline_fingerprint_cannot_be_reused_for_intervention():
+    analyzer = _load()
+    with pytest.raises(ValueError, match="incorrectly reuses"):
+        analyzer.verify_intervention_body_source_fingerprint(
+            "8518689296879886289", "8518689296879886289", (60.0, 100.0, 0.5))
+
+
+def test_real_native_pair_argv_normalizes_exact_arm_local_outputs():
+    analyzer = _load()
+    assert _sha(BASELINE_INVOCATION) == BASELINE_INVOCATION_SHA256
+    assert _sha(INTERVENTION_INVOCATION) == INTERVENTION_INVOCATION_SHA256
+    baseline_argv = json.loads(BASELINE_INVOCATION.read_text())["argv"]
+    intervention_argv = json.loads(INTERVENTION_INVOCATION.read_text())["argv"]
+    result = analyzer.normalize_pair_commands(
+        baseline_argv, intervention_argv,
+        ROOT / "baseline/native-run", ROOT / "intervention/native-run",
+        native=True)
+    assert result["passed"] is True
+    assert result["intervention_flag"] == "--resting-drive-intervention"
+
+
+def test_wrong_native_movie_output_path_is_rejected():
+    analyzer = _load()
+    argv = json.loads(INTERVENTION_INVOCATION.read_text())["argv"]
+    argv = list(argv)
+    index = argv.index("--resting-movie") + 1
+    argv[index] = str(ROOT / "baseline/native-run/native-viewer.mov")
+    with pytest.raises(ValueError, match="movie output differs"):
+        analyzer.normalize_arm_local_paths(
+            argv, ROOT / "intervention/native-run", native=True)
+
+
+def test_duplicate_native_movie_option_is_rejected():
+    analyzer = _load()
+    argv = json.loads(INTERVENTION_INVOCATION.read_text())["argv"]
+    argv = list(argv) + ["--resting-movie", str(ROOT / "intervention/native-run/native-viewer.mov")]
+    with pytest.raises(ValueError, match="exactly one complete --resting-movie"):
+        analyzer.normalize_arm_local_paths(
+            argv, ROOT / "intervention/native-run", native=True)

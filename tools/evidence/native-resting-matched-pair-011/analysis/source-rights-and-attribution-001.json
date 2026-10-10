@@ -1,0 +1,100 @@
+{
+  "created_utc": "2026-10-10T15:45:34.910063+00:00",
+  "source_lock_revision": "6b71f7c7fce6f6d7cba00a3e4afc91b104a44081",
+  "source_lock_sha256": "03d20d46bfb47b67fb251182758eebbc8f1bbe2f38ce51881dc4c2694774fdee",
+  "source_entries": {
+    "bodyparts3d_4": {
+      "version": "4.0",
+      "license": "CC-BY-4.0",
+      "license_url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+      "attribution": "BodyParts3D, \u00a9 The Database Center for Life Science licensed under CC Attribution 4.0 International",
+      "base_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/",
+      "files": {
+        "isa_parts_list_e.txt": {
+          "sha256": "ab7796deedd49205e77f3609a1cb8c53e2bbee14ecb5c9a6ca05227469780513",
+          "role": "is_a_labels"
+        },
+        "partof_parts_list_e.txt": {
+          "sha256": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd",
+          "role": "part_of_labels"
+        },
+        "partof_inclusion_relation_list.txt": {
+          "sha256": "1b40738270931e3c1d955ce34e0fce0d8d10d8c5ad543463e40b4b4c0243007c",
+          "role": "part_of_edges"
+        },
+        "isa_inclusion_relation_list.txt": {
+          "sha256": "26e7d818e03a8c909fe09c561f38d0d513423c87681f9450a803bc38f5b07564",
+          "role": "is_a_edges"
+        },
+        "isa_element_parts.txt": {
+          "sha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+          "role": "is_a_compound_definitions"
+        },
+        "partof_element_parts.txt": {
+          "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+          "role": "part_of_compound_definitions"
+        },
+        "isa_BP3D_4.0_obj_99.zip": {
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+          "bytes": 142903898,
+          "role": "is_a_obj_geometry"
+        },
+        "partof_BP3D_4.0_obj_99.zip": {
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97",
+          "bytes": 64888505,
+          "role": "part_of_obj_geometry"
+        }
+      }
+    },
+    "myosim_fullbody": {
+      "repository": "https://github.com/MyoHub/myo_sim",
+      "revision": "33c89c2bde282553dde3f526768eb3bdcfaa7649",
+      "archive_url": "https://github.com/MyoHub/myo_sim/archive/33c89c2bde282553dde3f526768eb3bdcfaa7649.tar.gz",
+      "archive_file": "myo_sim-33c89c2b.tar.gz",
+      "storage_dir": "myosim",
+      "archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "expected_file": "myo_sim/build/compose.py",
+      "license": "Apache-2.0",
+      "role": "active full-body MuJoCo muscle-tendon source"
+    }
+  },
+  "active_scene": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/package-preparation-005/composed-candidate-001/resting-supine-scene.manifest.json",
+    "sha256": "5a90eaa177cbfbb81c4100138a3b74d41e42822a0d317a315bf62f43d7decfa3",
+    "license_and_provenance": {
+      "BodyParts3D": "CC-BY-4.0; FJ2810 exterior shell, current NHSKIN1 manifest contains source asset identities",
+      "MyoSim": "Apache-2.0; archive SHA bound in NHRIGID2",
+      "mixed_source_reference": true
+    }
+  },
+  "active_skin_manifest": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/package-preparation-005/composed-candidate-001/common-atlas-skin-geometry-registration.manifest.json",
+    "sha256": "8163b346507050aef5221d1ef1670a3eec515ef549cc47a7a777b0ac2f11d6ab",
+    "source_rights_and_provenance": {
+      "carried_from_registration": {
+        "archives": [
+          {
+            "file": "isa_BP3D_4.0_obj_99.zip",
+            "hierarchy": "is_a",
+            "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+          },
+          {
+            "file": "partof_BP3D_4.0_obj_99.zip",
+            "hierarchy": "part_of",
+            "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+          }
+        ],
+        "id": "bodyparts3d_4",
+        "version": "4.0"
+      },
+      "epl143_inferred_correction": {
+        "bytes": 60263,
+        "path": "/Users/n/numi-human-resting-evidence-20261005/native-skin-epl143-clearance-1187/attempt-006/report.json",
+        "sha256": "9df248cf4cdcad92dc28a7ad5b0336c365e93ecf712e5811b8d392a11b708e69"
+      },
+      "no_new_rights_or_measurements_claimed": true,
+      "raw_member_sha256": "682f402206f15592acdeaae8ffb6b34c3e5c3267fa4685e63d2e4920ef2a80e0"
+    }
+  },
+  "changes": "Registered, posed and mechanically deformed mixed-source reference anatomy; inferred registrations and surface corrections are retained in the original asset provenance. No new measurements or new source rights claimed."
+}

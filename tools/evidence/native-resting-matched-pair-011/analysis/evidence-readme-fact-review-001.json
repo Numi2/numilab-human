@@ -1,0 +1,97 @@
+{
+  "artifact_type": "evidence_readme_fact_review.v1",
+  "reviewed_at_utc": "2026-10-10",
+  "scope": "Read-only fact review against retained pair analysis, run declarations, geometry-capture summaries/corrections, and recording-review evidence; no reruns or scientific-input changes.",
+  "reviewed_document": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/evidence-README-001.md",
+    "sha256": "853e3202d91b536bb19660d1659e801e409ebfe37159ed54e551b129b98da5b8"
+  },
+  "final_document_after_root_disposition": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/evidence-README-001.md",
+    "sha256": "46503aa7618cf8a07203d6e4eba1aeb57e700f3c509138266278c656d2000bb5"
+  },
+  "root_disposition": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/evidence-readme-review-disposition-001.json",
+    "sha256": "707e44b8a8d296271a1db2666b1530c114cd2ff11eeda83f5cdf597de788419a",
+    "native_or_numeric_changes": false,
+    "actions": [
+      "Changed the 10-second description from a declared initialization duration to an analysis boundary.",
+      "Clarified 56/59 as complete breaths after excluding the boundary-spanning cycle; raw counter increments after the boundary are 57/60.",
+      "Narrowed footer clipping to lung/final views; removed the unsupported heart-view clipping claim.",
+      "Embedded a retained native whole-body final frame."
+    ]
+  },
+  "findings": [
+    {
+      "id": "breath-boundary-and-initialization-wording",
+      "status": "corrected",
+      "original_readme_lines": [
+        5,
+        6,
+        103,
+        105
+      ],
+      "basis": "The 310-second declarations pin 155000 steps at dt 0.002 and release initialization, but do not declare a 10-second initialization interval. The 10-second point is the analysis boundary. Counter changes after that boundary are 57 baseline and 60 intervention; excluding the breath spanning the boundary gives 56 and 59 complete post-boundary breaths. The 350 cardiac cycles are post-boundary (12 at step 5000, 362 at step 155000).",
+      "evidence": [
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/run-declaration.json",
+          "sha256": "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d"
+        },
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/run-declaration.json",
+          "sha256": "c7332e1b3c089ef68953bf2fb89275c6bb39bc1ff35501a1dd385754a4469a57"
+        },
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-001.json",
+          "sha256": "feec1b941e060489d672e11a3ecfb251fccb9b4eb9c5861e4803f42b05c2c8b9"
+        }
+      ]
+    },
+    {
+      "id": "recording-footer-clipping",
+      "status": "corrected-with-review-conflict-retained",
+      "original_readme_lines": [
+        195,
+        197
+      ],
+      "basis": "The later root re-review found lower footer prefixes clipped in lung and terminal/final views, while the heart frame was left-aligned and did not support a clipping claim. An earlier visual-review receipt says heart/lung; the README disposition follows the later re-review and narrows the claim.",
+      "evidence": [
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-visual-review-intervention-001.json",
+          "sha256": "e91cbc4439783d605f0b2c0c3fa54176a6674b8b7dcc0ba2b43c12c79450cb43"
+        },
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-review-intervention-001/recording-review.json",
+          "sha256": "545bbe2e75fbda1c6910f8a2f07556874b6eba8dfd5ab6b40a5adc1cdd0752b5"
+        }
+      ]
+    },
+    {
+      "id": "geometry-scope-and-capture-count",
+      "status": "consistent-after-retained-correction",
+      "basis": "The current README correctly limits the geometry result to eight sampled accepted captures, 859 declared targets, skin self/invalid checks, and selected muscle surfaces 63/64; it does not claim all-step or whole-body anatomy acceptance. Both capture summaries and retained correction sidecars confirm the eight-step schedule.",
+      "evidence": [
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/baseline-capture-audit-001/summary-qualification-correction-001.json",
+          "sha256": "58198ddc83ec43cc5623fb098fc337c28d91b6eb808af2e5639b0da0716219bb"
+        },
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/intervention-capture-audit-002/summary-qualification-correction-001.json",
+          "sha256": "579b26b8f4c71c02aa687147afbd5892e621659340b2c1e2b5f17667cbc1ff7e"
+        }
+      ]
+    },
+    {
+      "id": "criteria-chronology",
+      "status": "consistent-after-retained-correction",
+      "basis": "The README correctly says criteria were unchanged before intervention launch while baseline was already running. The chronology correction identifies that criteria were not pinned before baseline start.",
+      "evidence": [
+        {
+          "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-criteria-chronology-correction-001.json",
+          "sha256": "7611e4329921a5749715b43a2c11a2d75a8f2e7ae7c1326a5dc9daacd1e48a9a"
+        }
+      ]
+    }
+  ],
+  "conclusion": "The two concrete wording mismatches identified in the reviewed README were corrected by root before publication. No further blocking factual discrepancy was identified in this bounded review."
+}

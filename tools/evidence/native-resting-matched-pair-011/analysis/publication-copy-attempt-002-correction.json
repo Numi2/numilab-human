@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-10-10T15:48:02.662899+00:00",
+  "failed_check": "Compile every archived Python source during publication-copy verification.",
+  "observed_failure": "SyntaxError in historical test_analyze_matched_native_pair_011_revision_002.py line6: unquoted absolute Path argument.",
+  "scope": "Previously failed draft retained as evidence. This was not the executed revision006 analyzer/test.",
+  "correction": "Copy all archived test_*.py sources with .txt suffix while preserving exact bytes, source hashes and provenance. Active scene launcher and analyzer scripts retain .py. Prevents accidental repository test collection of historical, path-bound tests.",
+  "prior_copier_sha256": "c4cccfe37f644aa672d4d2c557b27ccde2278db11b1e0e8ab00c02f9e3c4fbdd",
+  "publication_copier_sha256": "fcf62638e98d56b48569712686a8f999335673f2f333a56253362b830a00c5af",
+  "native_execution_or_results_changed": false
+}

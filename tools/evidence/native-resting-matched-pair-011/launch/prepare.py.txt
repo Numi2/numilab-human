@@ -1,0 +1,119 @@
+from pathlib import Path
+import argparse,copy,hashlib,json,os,subprocess,sys,datetime,shutil
+O=Path(__file__).resolve().parent
+R=O.parent.parent
+P=O.parent/'native-skin-smoke-preparation-009/baseline-20s/run-declaration.json'
+OLD=R/'q-window-root-momentum-observer-1271/native-2s-preparation-002/abi18-on/run-declaration.json'
+BR=R/'q-window-root-momentum-observer-1271/build-001/build-report.json'
+PAR=OLD.with_name('postflight-parity-001.json')
+CLEAN=R/'storage-bloat-cleanup-1270/sparse-media-operation-003.json'
+SCREEN=R/'passive-muscle-self-diagnosis-1227/all-muscle-captured-screen-002/report.json'
+BUILD=Path('/Users/n/numi-lab-resting-window-vector-trace-build-1271-001')
+SOURCE=Path('/Users/n/numi-lab-resting-window-vector-trace-1271')
+HUMAN=Path('/Users/n/numi-human-self-separation-integration-1259')
+BRAIN=Path('/Users/n/numi-human-resting-integration-20261005/numi-brain')
+CAP=[0,47519,151999,152607,153215,153823,154431,155000]
+assert len(CAP)==8 and all(x in (0,155000) or (x+1)%32==0 for x in CAP)
+ARMS={'baseline':None,'intervention':[60.0,100.0,0.5]}
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb') as f:
+  for x in iter(lambda:f.read(8*1024*1024),b''):h.update(x)
+ return h.hexdigest()
+def pin(p):return {'path':str(p),'sha256':sha(p),'bytes':Path(p).stat().st_size}
+def load(p):return json.loads(p.read_text())
+def write(p,v):
+ with p.open('x') as f:json.dump(v,f,indent=2,sort_keys=True,allow_nan=False);f.write('\n')
+def envcli(argv):
+ assert argv[:2]==['/usr/bin/env','-i'];env={};i=2
+ while '=' in argv[i] and not argv[i].startswith('/'):
+  k,v=argv[i].split('=',1);assert k not in env;env[k]=v;i+=1
+ return env,argv[i:]
+def flag(argv,k,v):argv[argv.index(k)+1]=str(v)
+def head(p):return subprocess.check_output(['git','-C',str(p),'rev-parse','HEAD'],text=True).strip()
+def main():
+ expected={P:'b74c74ca532bfd90cbebade65dd83e517f2f712772ecd1acb8150935b68c4ecd',
+ OLD:'e5a0b6af01bd0dbfd38c216cbc147014b2e69257ad7487d2e614939810fbe2f2',
+ BR:'64742416b6457eff2383206102ca6134fbd69d09ecea241d9b4dbe606cd474e4',
+ PAR:'87d28a29ae8c718d607b9ac9d057fd66d31072df95e11d41350739f2b4108824',
+ CLEAN:'f5750f57c372f6380357ebdb2f20f2e205ab81952282e83421670b51443bf997',
+ SCREEN:'11ff58915f44c839787750cf29fb856378c57cc9c324317547cc31ea745b9af0'}
+ for p,h in expected.items():assert sha(p)==h,str(p)
+ assert head(SOURCE)=='f47429c30289fef2de2cade0962a2e2d8d91fe44'
+ assert head(BRAIN)=='a1cf7218fae5d26f9aed9d845047fc6c472ad596'
+ assert not subprocess.check_output(['git','-C',str(SOURCE),'status','--porcelain'],text=True).strip()
+ assert shutil.disk_usage(O).free>=8_000_000_000
+ parent=load(P); old=load(OLD);br=load(BR);par=load(PAR)
+ assert all(par['checks'].values())
+ assert br['inputs_unchanged'] and br['source_tree_sha256_before']==br['source_tree_sha256_after']
+ assert br['source_head_before']=='e3d2d937dae379ad20d077fa8aca3237345682d8'
+ assert br['source_status_after'].strip()=='M apps/numilab_human_myosim_visual_probe.mm'
+ assets={}
+ def add(p,h):
+  p=str(p)
+  assert p not in assets or assets[p]==h,p
+  assets[p]=h
+ for d in [parent,old]:
+  for p,h in d['immutable_assets'].items():add(p,h)
+ for p,h in expected.items():add(p,h)
+ add(Path(__file__),sha(Path(__file__)));add(O/'launch_arm.py',sha(O/'launch_arm.py'))
+ compiled={}
+ for rel,h in br['source_tree_sha256_after'].items():
+  if rel.startswith(('apps/','include/','src/','matter/','third_party/')) or rel=='CMakeLists.txt':
+   p=SOURCE/rel;assert sha(p)==h,rel;compiled[str(p)]=h;add(p,h)
+ for p,v in br['artifacts'].items():assert sha(p)==v['sha256'];add(p,v['sha256'])
+ runtime={}
+ for rel in ['lib/libmetalrobo.dylib','shaders/MetalRobo.metallib','shaders/MetalRoboHyperPolicy.metallib','shaders/NumiNeuron.metallib','matter/shaders/HumanRespiration.metallib','matter/shaders/NumiMatter.metallib','matter/shaders/NumiMatterPhysicalStateDigest.metallib']:
+  p=BUILD/rel;runtime[str(p)]=sha(p);add(p,sha(p))
+ for p,h in assets.items():assert sha(p)==h,p
+ provenance={'runtime_source':str(SOURCE),'runtime_source_head':head(SOURCE),'runtime_files':runtime,'binary':pin(BUILD/'bin/numi-human-native'),'build_report':pin(BR),'compiled_source_files_match_current_commit':True,'checked_source_file_count':len(compiled),'brain_source':str(BRAIN),'brain_source_head':head(BRAIN),'note':'Build1271-001 was compiled from e3d2d937 plus one dirty viewer source file. Its compiled input bytes equal the committed f47429c source; bounded 2s state parity passed. This is not an independent reproducible-build or long-horizon parity claim.','bounded_parity':pin(PAR)}
+ prov=O/'build-provenance.json';write(prov,provenance);add(prov,sha(prov))
+ sys.path.insert(0,str(HUMAN/'src'))
+ from numilab_human import resting_run
+ guards={}; declarations={}
+ for arm,intervention in ARMS.items():
+  arm_dir=O/arm;arm_dir.mkdir();out=arm_dir/'native-run'
+  d=copy.deepcopy(parent);env,cli=envcli(d['argv'])
+  env.update(NUMI_BUILD_DIR=str(BUILD),NUMI_LAB_ROOT=str(SOURCE),NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT=str(out/'common-field-failure.json'),NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS=','.join(map(str,CAP)),NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP='152501',NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP='155000')
+  env.pop('NUMI_HUMAN_ACCEPTED_FORCE_AUDIT',None)
+  flag(cli,'--output',out);flag(cli,'--seconds','310.0');flag(cli,'--inspection-period-seconds','2.0')
+  assert '--drive-intervention' not in cli
+  if intervention:cli+=['--drive-intervention']+list(map(str,intervention))
+  parser=argparse.ArgumentParser();resting_run.add_arguments(parser)
+  ns=parser.parse_args(cli[2:]+['--lab',str(SOURCE),'--build',str(BUILD)])
+  native,owner_assets=resting_run.command(ns)
+  for p,h in owner_assets.items():add(p,h)
+  assert '--resting-bed-surface' not in native and '--resting-hip-capsule-reference' not in native
+  assert '--resting-release-initialization' in native and '--resting-rigid-hands' in native
+  assert native[native.index('--muscle-step-count')+1]=='155000'
+  assert sha(native[native.index('--skin-payload')+1])=='171ca7ac8aa3d72b1decfb950bdb678db2a55b9482fb7989d92a38e601006cc7'
+  assert sha(native[native.index('--soft-tissue-payload')+1])=='6579d06d358bfcf51f964feb57425fe568c467fd361930bce46d376ec8aedaa4'
+  native_env=dict(env)
+  native_env.update(NUMI_HUMAN_SPLIT_STAND='1',NUMI_HUMAN_EXECUTION_STAGES=env.get('NUMI_HUMAN_EXECUTION_STAGES','1'),NUMI_HUMAN_TRAINING_PROFILE='1',DYLD_LIBRARY_PATH=os.pathsep.join(str((BUILD/part).resolve()) for part in ('lib','matter')),DYLD_PRINT_LIBRARIES='1',NUMI_HUMAN_RESTING_INSPECTION_TOUR='1',NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS='2.0')
+  d.update(argv=['/usr/bin/env','-i']+[k+'='+v for k,v in sorted(env.items())]+cli,immutable_assets=dict(sorted(assets.items())),seconds=310.0,accepted_steps=155000,capture_steps=CAP,inspection_period_seconds=2.0,parent_declaration=pin(P),launch_adapter=pin(O/'launch_arm.py'),owner_cli_preview={'native_argv':native,'recorded_invocation_environment':resting_run.invocation_environment(native_env),'asset_sha256':owner_assets},status='prepared_unlaunched',launch_status='unlaunched')
+  d['capture_schedule']=[{'step':x,'physical_time_seconds_float32_dt':x*0.0020000000949949026,'purpose':'initial, intervention, recovery and late six-second sampled breathing-cycle geometry'} for x in CAP]
+  d['observer_windows']={'q_integration_and_gpu_root_momentum':{'first_accepted_step':152501,'last_accepted_step':155000,'expected_rows':2500},'com_normal_stride':8,'force_contributions_enabled':False}
+  d['observer_vector_trace']={'expected_free_velocity_and_source_limit_count':128,'expected_executed_joint_equality_count':91,'source_nheq_record_count':51,'derived_internal_equality_count':40,'all_serialized_values_must_be_finite':True,'bounded_rows':2500,'correction_from_short_preparation':pin(PAR)}
+  d['source_provenance'].update(lab_source_head=head(SOURCE),binary=pin(BUILD/'bin/numi-human-native'),lab_build_source_head_recorded_by_build=br['source_head_before'],lab_build_and_observer_evidence={'build_report':pin(BR),'bounded_parity':pin(PAR)})
+  d['runtime_launcher_chain'].update(build_provenance=pin(prov),focused_lab_build_report=pin(BR),current_runtime_template=pin(OLD),bounded_observer_smoke_execution=pin(OLD.with_name('execution.json')))
+  d['physical_scope']={'arm':arm,'drive_intervention':intervention,'changed_from_parent':'310-second horizon and late five-second observer window, with bounded constraint-vector serialization on current committed Lab build. Same corrected skin, flat support, 64 contact sweeps, 72kg, dt, circulation, respiration, Brain, MyoSim, rigid hands, release and layer tour. Paired arms differ only in drive intervention and output paths.'}
+  d['qualification_boundary']='Matched continuous coupled-physiology evaluation, not final whole-anatomy acceptance. Current passive atlas meshes have known self intersections, EHL open boundaries and subscapularis-rib conflicts. Initial all150 screen is retained. Candidate offline repairs are not installed. Late six-second geometry is sampled, not a proof of clearance at every physical step.'
+  d['known_anatomy_screen']=pin(SCREEN);d['cleanup_before_run']=pin(CLEAN)
+  dp=arm_dir/'run-declaration.json';write(dp,d)
+  guards[arm]={'run_declaration':str(dp),'run_declaration_sha256':sha(dp),'native_output':str(out)}
+  declarations[arm]=pin(dp)
+ # Compare the constructed native owner argv after removing precisely the
+ # intervention tuple and substituting per-arm output paths.
+ a=load(O/'baseline/run-declaration.json');b=load(O/'intervention/run-declaration.json')
+ av=a['owner_cli_preview']['native_argv'];bv=b['owner_cli_preview']['native_argv'][:]
+ j=bv.index('--resting-drive-intervention');del bv[j:j+4]
+ bv=[x.replace(str(O/'intervention'),str(O/'baseline')) for x in bv]
+ assert av==bv
+ ae=a['owner_cli_preview']['recorded_invocation_environment'];be=b['owner_cli_preview']['recorded_invocation_environment']
+ assert ae=={k:v.replace(str(O/'intervention'),str(O/'baseline')) for k,v in be.items()}
+ guard={'schema':'numi.human.native-smoke-launch-guard.v1','launcher_path':str(O/'launch_arm.py'),'launcher_sha256':sha(O/'launch_arm.py'),'arms':guards}
+ write(O/'launch-guard.json',guard)
+ for p,h in assets.items():assert sha(p)==h,p
+ summary={'prepared_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'declarations':declarations,'launcher':pin(O/'launch_arm.py'),'guard':pin(O/'launch-guard.json'),'input_count':len(assets),'native_execution':False,'expected_steps_per_arm':155000,'capture_steps_per_arm':CAP,'free_bytes':shutil.disk_usage(O).free,'matched_owner_argv_and_recorded_environment_except_declared_intervention_and_output':True}
+ write(O/'preparation-summary.json',summary);print(json.dumps(summary,indent=2))
+if __name__=='__main__':main()

@@ -1,0 +1,30 @@
+import csv,hashlib,json,pathlib,time
+ROOT=pathlib.Path('/Users/n/numi-human-retained-delivery-20261009')
+P=ROOT/'skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011'
+OUT=P/'analysis-preparation-001/baseline-prior-1264-comparison-001.json'
+paths={'current':P/'baseline/native-run/resting-coupled.csv','prior':ROOT/'late-force-diagnostic-1264/window/native-run/resting-coupled.csv'}
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+assert not OUT.exists()
+ex=json.loads((P/'baseline/execution.json').read_text())
+assert ex['returncode']==0 and not ex['changed_inputs']
+pins={k:sha(v) for k,v in paths.items()}
+tables={k:list(csv.DictReader(v.open())) for k,v in paths.items()}
+a,b=tables['current'],tables['prior']
+assert len(a)==len(b) and list(a[0])==list(b[0])
+assert all(x['step']==y['step'] for x,y in zip(a,b))
+fields={}
+for k in a[0]:
+ bad=[(x,y) for x,y in zip(a,b) if x[k]!=y[k]]
+ fields[k]={'byte_equal_cells':len(a)-len(bad),'different_cells':len(bad)}
+ if bad:
+  x,y=bad[0]
+  fields[k].update({'first_different_step':x['step'],'current_value':x[k],'prior_value':y[k],'max_absolute_numeric_difference':max(abs(float(x[k])-float(y[k])) for x,y in bad)})
+report={'scope':'Exact textual comparison of all paired coupled-trace cells at matched accepted steps; different skin assets and observer windows. This does not qualify anatomy, same-window diagnostics, or arbitrary-run replay.',
+ 'inputs':{k:{'path':str(p),'sha256':pins[k]} for k,p in paths.items()},
+ 'source_script':{'path':str(pathlib.Path(__file__).resolve()),'sha256':sha(pathlib.Path(__file__))},
+ 'rows_per_run':len(a),'columns':len(fields),'byte_identical_columns':[k for k,v in fields.items() if v['different_cells']==0],
+ 'differing_columns':[k for k,v in fields.items() if v['different_cells']], 'column_comparison':fields,
+ 'inputs_unchanged':all(sha(paths[k])==pins[k] for k in pins)}
+assert report['inputs_unchanged']
+OUT.write_text(json.dumps(report,indent=2,sort_keys=True)+'\n')
+print(json.dumps({'output':str(OUT),'sha256':sha(OUT),'rows':len(a),'identical_columns':len(report['byte_identical_columns']),'different_columns':report['differing_columns']},indent=2))

@@ -1,0 +1,56 @@
+{
+  "criteria_comparison": {
+    "accepted_steps": 155000,
+    "all_common_top_level_function_ASTs_except_main_and_arm_identity_path_normalization_equal": true,
+    "all_other_common_top_level_function_ASTs_equal": true,
+    "changed_common_top_level_function_ast_names": [
+      "main",
+      "normalize_arm_local_paths",
+      "verify_declared_arm"
+    ],
+    "dose_start_step": 30000,
+    "dt_s": 0.002,
+    "exact_function_source_match": true,
+    "paired_response_function_source_sha256_executed": "90d14fcd14f8116b419f9e23b5e89702f324effac15f4f40f8c02789a3bdc972",
+    "paired_response_function_source_sha256_preflighted": "90d14fcd14f8116b419f9e23b5e89702f324effac15f4f40f8c02789a3bdc972",
+    "response_window_and_horizon_constants_equal": true,
+    "windows_s": {
+      "dose": [
+        70.0,
+        100.0
+      ],
+      "pre": [
+        30.0,
+        60.0
+      ],
+      "recovery": [
+        280.0,
+        310.0
+      ]
+    }
+  },
+  "criteria_source_label_interpretation": "The text Revision004 pre-pair response contract is present in the original analyzer pinned before the pair by static-preflight.json. It identifies the inherited pre-pair criteria revision; it was not added after observing this pair. The final analyzer kept the paired_response function and response constants byte/AST-equivalent and only added source-derived intervention fingerprint validation, exact arm-local native movie output normalization, and a pinned vascular-reference SHA at report construction.",
+  "executed_analyzer": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_matched_native_pair_011_revision_006.py",
+    "sha256": "3780516fcda44e1aa8109798e8452ef9177e2c9b6f293f3bcde48302462c33f8"
+  },
+  "final_pair_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-001.json",
+    "sha256": "feec1b941e060489d672e11a3ecfb251fccb9b4eb9c5861e4803f42b05c2c8b9"
+  },
+  "preflight": {
+    "mtime_utc": "2026-10-10T13:50:23.314111+00:00",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/static-preflight.json",
+    "pinned_analysis_source_name": "analyze_matched_native_pair_011.py",
+    "pinned_analysis_source_sha256": "9511d759d2be4f25677fbcc40821c10d92a5f0c327dcb553e4b2aed730194224",
+    "sha256": "85c2d91a40c09d6430bf4a7d8d5a20358aaab49b5379eefa8f154a7afc5668a4"
+  },
+  "preflighted_source": {
+    "mtime_utc": "2026-10-10T13:48:00.241246+00:00",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_matched_native_pair_011.py",
+    "sha256": "9511d759d2be4f25677fbcc40821c10d92a5f0c327dcb553e4b2aed730194224"
+  },
+  "schema": "numi.human.native-pair-011.response-criteria-provenance.v1",
+  "scope": "No native input or numerical report was changed; this sidecar resolves source-timing provenance only.",
+  "status": "source_equivalence_verified"
+}

@@ -1,0 +1,98 @@
+{
+  "baseline_matched_physiology_comparison": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/baseline-prior-1264-comparison-001.json",
+    "result": "all 60 coupled physiology columns exact across 19375 matching rows; this does not compare the intervention",
+    "sha256": "563034a1847f160386ac4f5c4a08066d67172da9c2a612961b3eb0761b7469b4"
+  },
+  "baseline_native": {
+    "accepted_steps": 155000,
+    "changed_inputs": {},
+    "execution_sha256": "c244daacd8c8b7eab245d9806b14128a32ed6037a9d81542c0763670e50c8323",
+    "native_wall_seconds": 2727.727312708,
+    "simulated_seconds": 310.0000147242099,
+    "wrapper_wall_seconds": 2734.231846167
+  },
+  "capture_anatomy": {
+    "scope": "sparse accepted-pose scan: 859 skin targets and skin self/degeneracy, plus stable surfaces 63 and 64 self/topology/enclosure; not all 148 tissues, bed support, or continuous time",
+    "script": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/audit_native_candidate_1218_paired_011.py",
+      "sha256": "7bc0ca07b6c7c28479332fe106c11b08c7dd25dbffa56d7faa18eb298582e97c"
+    },
+    "static_check": "passed: package-preparation-005 review binds NHSKIN 171ca7..., NHTISS 6579d0..., NHA 1c0c37..., and 859 target inventory",
+    "step0_prior_identity": {
+      "capture_sha256": "d7d7c01a9d066d52a0599cfa7cd295cda8ed02f4b8383da6b14c029a1580f277",
+      "scope": "initial capture only; does not imply all-muscle self-clearance",
+      "screen_sha256": "11ff58915f44c839787750cf29fb856378c57cc9c324317547cc31ea745b9af0"
+    },
+    "steps": [
+      0,
+      47519,
+      151999,
+      152607,
+      153215,
+      153823,
+      154431,
+      155000
+    ]
+  },
+  "declarations": {
+    "baseline": {
+      "sha256": "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d"
+    },
+    "intervention": {
+      "sha256": "c7332e1b3c089ef68953bf2fb89275c6bb39bc1ff35501a1dd385754a4469a57"
+    }
+  },
+  "gas_guard": {
+    "failed_attempt": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/gas-guard-adapter-attempt-001-failure.json",
+      "sha256": "281693b5c37283ebe8e166ad0f594b36f292e3d6e3ae60da11c3d238cf321594"
+    },
+    "fixed_script": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_native_pair_011_gas_guard_revision_002.py",
+      "sha256": "9fea068bfedf0d427415f98365b8ec857fdfc56dbe9fbffa44015a2840b4d0a6"
+    },
+    "focused_test": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/test_analyze_native_pair_011_gas_guard_revision_002.py",
+      "result": "1 passed",
+      "sha256": "c1f444da5e3443e7dbecb2d1508037140f135d637f61fce4dfdb218179078a75"
+    },
+    "report": {
+      "accepted_runtime_guard_passed": true,
+      "claim": "committed accepted states only; normalized residual unavailable",
+      "identity_predicate_passed": true,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/gas-guard-baseline-002.json",
+      "sha256": "fa2ea12380af6ecb4c2af63252b40929c20a2922f43deedac8b093b377ff184c",
+      "status": "pass"
+    }
+  },
+  "limits": [
+    "Intervention is still running; no paired response comparison has been made.",
+    "A sparse eight-pose scan is not continuous-time geometry evidence or an all-muscle self-clearance result.",
+    "The framebuffer log says recording output with window drawable unavailable; live interactive display is unverified."
+  ],
+  "original_static_preflight": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/static-preflight.json",
+    "preserved": true,
+    "sha256": "85c2d91a40c09d6430bf4a7d8d5a20358aaab49b5379eefa8f154a7afc5668a4"
+  },
+  "recording": {
+    "framebuffer_markers": [
+      {
+        "line": 1563,
+        "text": "2026-10-10 15:27:30.838 numi-human-native[16626:19056608] Human native framebuffer output: recording; window drawable unavailable"
+      }
+    ],
+    "image_samples": 4846,
+    "live_window_display_verified": false,
+    "movie_bytes": 34190330,
+    "movie_sha256": "14235ccdc545eaba8c00cfe927c24fdaa0cb20c9b0a498549abcd1a61c210d93",
+    "note": "Ten exact representative frames extracted on Mini AVFoundation; no movie copy.",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/recording-review-baseline-001/recording-review.json",
+    "pts_summary": "frames=4846 timing_markers=5 first_wall_s=1.3483333333333334 last_wall_s=2723.6966666666667 max_gap_wall_s=2.1100000000000003 duration_wall_s=2724.25",
+    "sha256": "0376b856dd841478fdd448b60d64227d1d96174b9fb1c685b6632437e5836853",
+    "surface_rows": 4846
+  },
+  "schema": "numi.human.native-pair-011.analysis-preflight-revision.v1",
+  "status": "baseline_postflight_validated_and_intervention_ready"
+}

@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Read-only postflight for one arm of the bounded 011 matched native physiology pair.
+
+Reuses the frozen gas-guard identity predicate rebound to committed 1271
+source/build artifacts. It does not compute normalized gas residuals or qualify
+rejected trial states.
+"""
+from __future__ import annotations
+import argparse, hashlib, importlib.util, json, math, struct, subprocess
+from pathlib import Path
+from typing import Any
+
+PREP = Path("/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011")
+BUILD_PROVENANCE = PREP / "build-provenance.json"
+BUILD_REPORT = Path("/Users/n/numi-human-retained-delivery-20261009/q-window-root-momentum-observer-1271/build-001/build-report.json")
+SOURCE = Path("/Users/n/numi-lab-resting-window-vector-trace-1271")
+BUILD = Path("/Users/n/numi-lab-resting-window-vector-trace-build-1271-001")
+OLD = PREP / "analysis-preparation-001/analyze_matched_native_pair_011.py"
+STEPS, SECONDS, DT, CAPTURES = 155000, 310.0, 0.002, [0, 47519, 151999, 152607, 153215, 153823, 154431, 155000]
+EXPECTED = {
+ "source_head":"f47429c30289fef2de2cade0962a2e2d8d91fe44",
+ "baseline_declaration":"538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d",
+ "intervention_declaration":"c7332e1b3c089ef68953bf2fb89275c6bb39bc1ff35501a1dd385754a4469a57",
+ "provenance":"8cdb6a616b2821246561939f36bbb66ae07ca75c8ddcdd8bc8977773ef46fb5f",
+ "build_report":"64742416b6457eff2383206102ca6134fbd69d09ecea241d9b4dbe606cd474e4",
+ "old_analyzer":"9511d759d2be4f25677fbcc40821c10d92a5f0c327dcb553e4b2aed730194224",
+ "binary":"e051343771dd48acb83704bc1ef2c470530d5b3a5790f7342349f5fcc6c434b4",
+ "dylib":"9c307105bdb3627efd2b5ec7c73dc35bf2b1811d59baf4d73d93f89e3bec0193",
+ "resp_metallib":"8444ba02aa176fb54a4331806aac39a372311852708d9bdb2698ba37dd71fa8b",
+ "build_rule":"0854c524a8483dc1989fc1703275fbe83cb70e137bc80f0d7575f61855eeb765",
+}
+DECLARATIONS = {
+ "baseline": EXPECTED["baseline_declaration"],
+ "intervention": EXPECTED["intervention_declaration"],
+}
+GAS_SOURCES = {
+ SOURCE/"matter/src/human_respiration.metal":"bf984a88ff542f528753d368d9b4f884a74319a9d2e24ac8d6dc5ccb5040bc54",
+ SOURCE/"matter/include/numi/matter/human_respiration.h":"e963800429edba5dd5fab210823bd2a88ccfce2844a5ba0f029ca9d41a2f1126",
+ SOURCE/"matter/tools/human_respiration_parameters.hpp":"6a5df71f0868f928269e5ca9c75384f1762a190c29fef5610595ea2ea73e097d",
+ SOURCE/"matter/tools/human_resting_runtime.hpp":"97fd4a5a646a989f2c91f077b37d019447a5ef847d174bf3087ae3b9eca7cacb",
+}
+FIXTURE = SOURCE/"matter/tools/human_resting_gas_transport_fixture.mm"
+FIXTURE_SHA = "cbeaadef98da6b28d2d369f52ae980f1b8a87be7ff3a93b349695391b1583c0e"
+BINARY, DYLIB = BUILD/"bin/numi-human-native", BUILD/"lib/libmetalrobo.dylib"
+RESP = BUILD/"matter/shaders/HumanRespiration.metallib"
+RULE = BUILD/"matter/CMakeFiles/numi_human_respiration_shaders.dir/build.make"
+ARTIFACTS = {
+ BINARY:EXPECTED["binary"], DYLIB:EXPECTED["dylib"], RESP:EXPECTED["resp_metallib"],
+ BUILD/"matter/shaders/NumiMatter.metallib":"38d4b64ed55cef2e0e0f243616d0db5bd21441f232ca38bca439108c1d6130f9",
+ BUILD/"matter/shaders/NumiMatterPhysicalStateDigest.metallib":"3d5db8b11fe561def3f0f4aa73c1a4d8d1828e746f0a7f737d8a31725deb2d68",
+ BUILD/"shaders/MetalRobo.metallib":"a0920bd99ea39c97e15eca62371116be5fc0f719b2b6c0682c2bc690b8ba8189",
+ BUILD/"shaders/MetalRoboHyperPolicy.metallib":"f227836841015b40467a20c47a9fa38cf44eb8e1132cad1de4e65fa79c55d309",
+ BUILD/"shaders/NumiNeuron.metallib":"4ccbb796a6bfd5bdb18f7d37c8e18e0d767c9489d16047c523c97f679da33f1d",
+}
+BUILT_SOURCES = (
+ "apps/NumiHumanRestingTransactionProbe.hpp","apps/numilab_human_myosim_visual_probe.mm",
+ "include/metalrobo/MetalArticulatedOperator.hpp","include/metalrobo/numi_human_stand_gpu.h",
+ "src/metal/MetalArticulatedOperator.mm","src/metal/NumiHumanStand.metal",
+ "src/metal/NumiHumanStandSolve.metalinc",
+ "matter/src/human_respiration.metal","matter/include/numi/matter/human_respiration.h",
+ "matter/tools/human_respiration_parameters.hpp","matter/tools/human_resting_runtime.hpp",
+ "matter/tools/human_resting_gas_transport_fixture.mm",
+)
+OUTPUT_DIR = PREP/"analysis-preparation-001"
+
+def sha(path: Path) -> str:
+ h=hashlib.sha256()
+ with path.open("rb") as f:
+  for b in iter(lambda:f.read(1<<20),b""): h.update(b)
+ return h.hexdigest()
+
+def pin(path: Path, expected: str|None=None) -> str:
+ if path.is_symlink() or not path.is_file(): raise ValueError(f"not a regular file: {path}")
+ got=sha(path)
+ if expected is not None and got!=expected: raise ValueError(f"SHA mismatch: {path}")
+ return got
+
+def loadj(path: Path) -> dict[str,Any]:
+ pin(path); obj=json.loads(path.read_text())
+ if not isinstance(obj,dict): raise ValueError(f"expected JSON object: {path}")
+ return obj
+
+def load_owner():
+ pin(OLD,EXPECTED["old_analyzer"])
+ spec=importlib.util.spec_from_file_location("matched_native_pair_011_gas_owner",OLD)
+ if spec is None or spec.loader is None: raise ValueError("cannot import pinned 011 gas predicate")
+ m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); m.PINNED_READS={}
+ return m
+
+def invocation_matches_preview(declaration: dict[str,Any], invocation: dict[str,Any]) -> bool:
+ preview=declaration.get("owner_cli_preview",{})
+ return (invocation.get("argv")==preview.get("native_argv") and
+         invocation.get("environment")==preview.get("recorded_invocation_environment"))
+
+def final_guard_passed(identity: bool, accepted_steps: int, expected_steps: int,
+                       execution_code: int, changed_inputs: dict[str,Any]) -> bool:
+ return identity is True and accepted_steps==expected_steps and execution_code==0 and changed_inputs=={}
+
+def verify_build(prov: dict[str,Any]) -> dict[str,Any]:
+ report=loadj(BUILD_REPORT)
+ if report.get("native_execution") is not False or report.get("inputs_unchanged") is not True or report.get("build")!=str(BUILD):
+  raise ValueError("build report is not the pinned CPU-closed build1271-001")
+ if prov.get("runtime_source")!=str(SOURCE) or prov.get("runtime_source_head")!=EXPECTED["source_head"] or prov.get("compiled_source_files_match_current_commit") is not True:
+  raise ValueError("build provenance does not bind committed 1271 source")
+ if prov.get("binary",{}).get("path")!=str(BINARY) or prov.get("binary",{}).get("sha256")!=EXPECTED["binary"]:
+  raise ValueError("build provenance executable mismatch")
+ if prov.get("build_report",{}).get("path")!=str(BUILD_REPORT) or prov.get("build_report",{}).get("sha256")!=EXPECTED["build_report"]:
+  raise ValueError("build provenance report mismatch")
+ if prov.get("runtime_files",{}).get(str(DYLIB))!=EXPECTED["dylib"] or prov.get("runtime_files",{}).get(str(RESP))!=EXPECTED["resp_metallib"]:
+  raise ValueError("build provenance runtime library mismatch")
+ sources=report.get("source_tree_sha256_after",{}); source_pins={}
+ for rel in BUILT_SOURCES:
+  expected=sources.get(rel)
+  if not isinstance(expected,str): raise ValueError(f"missing build source row: {rel}")
+  source_pins[str(SOURCE/rel)]=pin(SOURCE/rel,expected)
+ artifacts=report.get("artifacts",{}); artifact_pins={}
+ runtime_files=prov.get("runtime_files",{})
+ for path,expected in ARTIFACTS.items():
+  report_row=artifacts.get(str(path))
+  if report_row is not None:
+   if report_row.get("sha256")!=expected: raise ValueError(f"build artifact row mismatch: {path}")
+  elif runtime_files.get(str(path))!=expected:
+   raise ValueError(f"runtime file absent from both report and provenance: {path}")
+  artifact_pins[str(path)]=pin(path,expected)
+ head=subprocess.check_output(["git","-C",str(SOURCE),"rev-parse","HEAD"],text=True).strip()
+ status=subprocess.check_output(["git","-C",str(SOURCE),"status","--porcelain"],text=True).strip()
+ if head!=EXPECTED["source_head"] or status: raise ValueError(f"source checkout differs from pinned commit: {head} {status[:160]}")
+ rule_sha=pin(RULE,EXPECTED["build_rule"]); rule=RULE.read_text()
+ if str(SOURCE/"matter/src/human_respiration.metal") not in rule or "matter/shaders/HumanRespiration.metallib" not in rule:
+  raise ValueError("shader build rule does not bind source to respiration metallib")
+ pin(BUILD_PROVENANCE,EXPECTED["provenance"])
+ return {"head":head,"status_clean":True,"build_report_sha256":sha(BUILD_REPORT),
+         "source_sha256":source_pins,"artifact_sha256":artifact_pins,"build_rule_sha256":rule_sha,
+         "build_claim_limit":"The compiled source bytes match the committed revision per build provenance; this is not an independent reproducible-build claim."}
+
+def output_path(declaration: dict[str,Any], arm: str) -> Path:
+ argv=declaration.get("argv",[])
+ if not isinstance(argv,list) or argv.count("--output")!=1: raise ValueError("bad declaration output")
+ out=Path(argv[argv.index("--output")+1])
+ expected=PREP/arm/"native-run"
+ if out!=expected: raise ValueError(f"{arm} declaration points outside its native-run directory")
+ return out
+
+def declared_env(argv: list[str]) -> dict[str,str]:
+ if argv[:2]!=["/usr/bin/env","-i"]: raise ValueError("unexpected declaration env wrapper")
+ env={}
+ for tok in argv[2:]:
+  if "=" not in tok: break
+  k,v=tok.split("=",1)
+  if k in env: raise ValueError("duplicate environment variable")
+  env[k]=v
+ required={"NUMI_BUILD_DIR":str(BUILD),"NUMI_LAB_ROOT":str(SOURCE),
+ "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING":"1","NUMI_HUMAN_RESPIRATORY_SUBCYCLING":"1",
+ "NUMI_HUMAN_PARALLEL_RESPIRATORY_GAS":"0",
+ "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP":"152501",
+ "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP":"155000"}
+ for k,v in required.items():
+  if env.get(k)!=v: raise ValueError(f"declaration environment mismatch: {k}")
+ if env.get("NUMI_HUMAN_ACCEPTED_FORCE_AUDIT")=="1":
+  raise ValueError("separate force-contributions audit is unexpectedly enabled")
+ return env
+
+def analyze(arm: str) -> dict[str,Any]:
+ if arm not in DECLARATIONS: raise ValueError(f"unknown pair arm: {arm}")
+ arm_dir=PREP/arm
+ decl_path=arm_dir/"run-declaration.json"; exec_path=arm_dir/"execution.json"
+ if not exec_path.is_file(): raise RuntimeError(f"{arm} has not closed; execution.json is absent")
+ decl_sha=pin(decl_path,DECLARATIONS[arm]); d=loadj(decl_path)
+ if (d.get("schema")!="numi.human.resting.native-run.declaration.v1" or d.get("seconds")!=SECONDS or
+     d.get("accepted_steps")!=STEPS or d.get("dt")!=DT or d.get("capture_steps")!=CAPTURES or
+     d.get("contact_iterations")!=64 or d.get("postural_activation_cap")!=0.01):
+  raise ValueError(f"{arm} declaration does not match the bounded 310-second pair")
+ observer=d.get("observer_windows",{})
+ q=observer.get("q_integration_and_gpu_root_momentum",{})
+ if (observer.get("force_contributions_enabled") is not False or q.get("first_accepted_step")!=152501 or
+     q.get("last_accepted_step")!=155000 or q.get("expected_rows")!=2500):
+  raise ValueError(f"{arm} declaration observer contract mismatch")
+ env=declared_env(d["argv"]); out=output_path(d,arm); ex=loadj(exec_path)
+ if ex.get("declaration_sha256")!=decl_sha or ex.get("returncode")!=0 or ex.get("changed_inputs")!={}:
+  raise ValueError(f"{arm} execution receipt did not close cleanly")
+ invp,metap,logp=out/"invocation.json",out/"run-metadata.json",out/"native.log"
+ inv,meta=loadj(invp),loadj(metap); log=logp.read_text(encoding="utf-8",errors="replace"); pin(logp)
+ if (inv.get("argv",[None])[0]!=str(BINARY) or not invocation_matches_preview(d,inv) or
+     meta.get("argv")!=inv.get("argv") or meta.get("environment")!=inv.get("environment") or
+     meta.get("asset_sha256")!=inv.get("asset_sha256") or meta.get("exit_code")!=0 or
+     meta.get("source_files_changed_during_run")!=[] or
+     meta.get("loaded_metal_runtime",{}).get("verified") is not True):
+  raise ValueError(f"{arm} invocation/native metadata identity mismatch")
+ da=d.get("immutable_assets",{}); ia=inv.get("asset_sha256",{}); ma=meta.get("asset_sha256",{})
+ if not all(isinstance(x,dict) for x in (da,ia,ma)): raise ValueError("asset identity maps malformed")
+ for path,expected in ARTIFACTS.items():
+  key=str(path)
+  if da.get(key)!=expected or ia.get(key)!=expected or ma.get(key)!=expected:
+   raise ValueError(f"{arm} run artifact pin mismatch: {key}")
+ for path,expected in GAS_SOURCES.items():
+  if da.get(str(path))!=expected: raise ValueError(f"{arm} gas-source pin mismatch: {path}")
+ if da.get(str(FIXTURE))!=FIXTURE_SHA: raise ValueError(f"{arm} gas fixture not pinned")
+ ref=d.get("runtime_launcher_chain",{}).get("build_provenance",{})
+ if ref.get("path")!=str(BUILD_PROVENANCE) or ref.get("sha256")!=EXPECTED["provenance"]:
+  raise ValueError(f"{arm} build provenance reference mismatch")
+ prov=loadj(BUILD_PROVENANCE); build=verify_build(prov)
+ owner=load_owner(); gas=owner.gas_guard_provenance(d,inv,meta)
+ gas["qualification_basis"]="Frozen 1271 gas-guard identity predicate applied to this arm's source, build-001 artifacts, invocation assets, loaded dylib identity, and accepted 155000-step horizon."
+ if gas.get("identity_verified") is not True:
+  raise ValueError(f"{arm} gas-guard identity failed: "+"; ".join(gas.get("reasons_unverified",[])))
+ native=owner.load_owner().native_scene_summary(log)
+ steps=native.get("accepted_steps")
+ if steps!=STEPS: raise ValueError(f"{arm} accepted {steps} steps, expected {STEPS}")
+ expected_s=STEPS*struct.unpack("<f",struct.pack("<f",DT))[0]
+ if not math.isfinite(float(native.get("simulated_s",math.nan))) or abs(native["simulated_s"]-expected_s)>0.002:
+  raise ValueError(f"{arm} native simulated time inconsistent with accepted horizon")
+ runtime_guard=owner.accepted_runtime_guard_passed(gas["identity_verified"],steps,expected_steps=STEPS)
+ passed=final_guard_passed(gas["identity_verified"],steps,STEPS,ex["returncode"],ex["changed_inputs"])
+ gas["runtime_guard_passed"]=runtime_guard
+ gas["accepted_state_guard_status"]="passed_for_committed_accepted_states" if runtime_guard else "not_verified_runtime_identity_or_incomplete_horizon"
+ gas["accepted_step_scope"]={"accepted_steps":steps,"expected_steps":STEPS,"claim_limit":"Committed accepted states only; rejected candidates are outside this check, and normalized gas residuals are not independently recomputed."}
+ return {"schema":"numi.human.matched-pair.gas-guard-postflight.v1","arm":arm,
+         "status":"pass" if passed else "fail","accepted_runtime_guard_passed":passed,
+         "identity_predicate_passed":gas["identity_verified"],"execution_closed_cleanly":ex["returncode"]==0 and ex["changed_inputs"]=={},
+         "runtime_source_head":EXPECTED["source_head"],"accepted_steps":steps,"simulated_seconds":native["simulated_s"],
+         "capture_steps":CAPTURES,"gas_guard":gas,"build_closure":build,
+         "pins":{"declaration":{"path":str(decl_path),"sha256":decl_sha},"execution":{"path":str(exec_path),"sha256":sha(exec_path)},
+         "invocation":{"path":str(invp),"sha256":sha(invp)},"metadata":{"path":str(metap),"sha256":sha(metap)},
+         "native_log":{"path":str(logp),"sha256":sha(logp)},"build_provenance":{"path":str(BUILD_PROVENANCE),"sha256":sha(BUILD_PROVENANCE)},
+         "build_report":{"path":str(BUILD_REPORT),"sha256":sha(BUILD_REPORT)},"frozen_predicate":{"path":str(OLD),"sha256":sha(OLD)}},
+         "limitations":["310-second matched physiology pair; not anatomy acceptance.",
+         "Guard covers committed accepted states only; rejected candidates are outside the check.",
+         "Initial gasBudget amounts are not exported, so normalized residual is not independently computed.",
+         "Passing gas guard does not qualify anatomy or clinical validity."]}
+
+def main() -> int:
+ ap=argparse.ArgumentParser()
+ ap.add_argument("--arm",choices=("baseline","intervention"),required=True)
+ ap.add_argument("--output",type=Path)
+ args=ap.parse_args()
+ output=args.output or (OUTPUT_DIR/f"gas-guard-{args.arm}.json")
+ if output.exists() or output.is_symlink(): raise FileExistsError(output)
+ result=analyze(args.arm)
+ output.write_text(json.dumps(result,indent=2,sort_keys=True,allow_nan=False)+"\n")
+ print(output)
+ return 0 if result["status"]=="pass" else 1
+
+if __name__=="__main__": raise SystemExit(main())

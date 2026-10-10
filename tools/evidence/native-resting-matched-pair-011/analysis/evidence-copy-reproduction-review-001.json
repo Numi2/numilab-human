@@ -1,0 +1,173 @@
+{
+  "created_utc": "2026-10-10T15:36:55.484129+00:00",
+  "evidence_copy_review": {
+    "audit_snapshots": {
+      "baseline": {
+        "all_859_target_skin_self_pair_coverage_complete": true,
+        "all_geometry_gates_clear": true,
+        "all_scheduled_captures_complete": true,
+        "all_target_and_skin_self_gates_clear": true,
+        "current_input_hashes_match_recorded_after_map": true,
+        "input_hash_map_count": 103,
+        "input_hash_maps_equal": true,
+        "native_log_changed_during_scan": false,
+        "native_run_closed_successfully": true,
+        "observed_pose_steps": [
+          0,
+          47519,
+          151999,
+          152607,
+          153215,
+          153823,
+          154431,
+          155000
+        ],
+        "observed_steps_match_requested": true,
+        "requested_steps": [
+          0,
+          47519,
+          151999,
+          152607,
+          153215,
+          153823,
+          154431,
+          155000
+        ],
+        "status": "complete_exact_geometry_clear",
+        "unhandled_actual_capture_gates": [
+          "bed-plane/32 support-anchor geometry",
+          "source-relative mesh orientation beyond exact topology, self-intersection, and degenerate checks",
+          "all passive 148 tissue-tissue intersections"
+        ]
+      },
+      "intervention": {
+        "all_859_target_skin_self_pair_coverage_complete": true,
+        "all_geometry_gates_clear": true,
+        "all_scheduled_captures_complete": true,
+        "all_target_and_skin_self_gates_clear": true,
+        "current_input_hashes_match_recorded_after_map": true,
+        "input_hash_map_count": 103,
+        "input_hash_maps_equal": true,
+        "native_log_changed_during_scan": false,
+        "native_run_closed_successfully": true,
+        "observed_pose_steps": [
+          0,
+          47519,
+          151999,
+          152607,
+          153215,
+          153823,
+          154431,
+          155000
+        ],
+        "observed_steps_match_requested": true,
+        "requested_steps": [
+          0,
+          47519,
+          151999,
+          152607,
+          153215,
+          153823,
+          154431,
+          155000
+        ],
+        "status": "complete_exact_geometry_clear",
+        "unhandled_actual_capture_gates": [
+          "bed-plane/32 support-anchor geometry",
+          "source-relative mesh orientation beyond exact topology, self-intersection, and degenerate checks",
+          "all passive 148 tissue-tissue intersections"
+        ]
+      }
+    },
+    "capture_gate": "Both audits have the exact requested eight steps, eight matching observed pose steps, complete status, all-859 target/self coverage, clear target/skin gates and current source hashes matching the before/after audit map.",
+    "crossbinding_fix_verified": "The final copier now asserts input_hashes_before == input_hashes_after and recomputes current SHA256 for every path in the after map before packaging. In this review, both 103-entry maps matched and all current hashes matched.",
+    "execution_and_analysis_crossbinding": "adequate: declaration, launch guard, execution-start, launcher, native invocation, argv/environment, return code, changed inputs, and timeout are tied; final analysis source and all read_input_sha256 inputs are rehashed.",
+    "remaining_nonblocking_check": "The copier does not directly require native_run_closed_successfully=true, native_log_changed_during_scan=false, all_geometry_gates_clear=true, or an empty unhandled_actual_capture_gates list. Current summaries have closed=true, log_changed=false and all_geometry_gates_clear=true; they intentionally retain unhandled bed-plane/support-anchor, broader source-relative orientation, and 148-surface interface gates. The README explicitly keeps anatomy acceptance false. Consider direct checks for the first three in a future copier revision; do not require the unhandled list to be empty because those are declared scope limits.",
+    "response_check": "The copier requires all declared paired response checks to pass; this is not treated as a claim that all reference comparisons pass."
+  },
+  "inputs": {
+    "README": {
+      "bytes": 12676,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/evidence-README-001.md",
+      "sha256": "853e3202d91b536bb19660d1659e801e409ebfe37159ed54e551b129b98da5b8"
+    },
+    "criteria_provenance": {
+      "bytes": 3232,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-criteria-provenance-001.json",
+      "sha256": "8da7d562bddc10b719752bb0b71c21b698e79ebcfaf417817c31fe523c565e5c"
+    },
+    "final_evidence_copy_script": {
+      "bytes": 9219,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/prepare_evidence_copy_011.py",
+      "sha256": "c4cccfe37f644aa672d4d2c557b27ccde2278db11b1e0e8ab00c02f9e3c4fbdd"
+    },
+    "matched_pair_analysis": {
+      "bytes": 1983701,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/matched-pair-analysis-001.json",
+      "sha256": "feec1b941e060489d672e11a3ecfb251fccb9b4eb9c5861e4803f42b05c2c8b9"
+    },
+    "plot_receipt": {
+      "bytes": 4731,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/paired-plots-002/plot-receipt.json",
+      "sha256": "96e475b42e64f48b57797facbf324ddde842ed6792e4fb0b1310b9a150af64de"
+    },
+    "plot_script": {
+      "bytes": 6629,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/plot_coupled_pair_011_revision_002.py",
+      "sha256": "c304bca683aa6ead918c4df3aed8fc64d2c09920d4321ccbc0b055a009be3f5e"
+    },
+    "prepare_only_validation": {
+      "bytes": 2129,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/reproduction-prepare-only-validation-001.json",
+      "sha256": "1d6edab774a7f1717cba07bda3a6feb8ec87b4382922b6476e495c9b587e4600"
+    },
+    "reproduction_wrapper": {
+      "bytes": 2143,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/reproduce_native_pair_011.py",
+      "sha256": "7b9a8da842d833afdb5e8ea1a69cddeeb4d505aba8bb1707b2baeadac89824e0"
+    }
+  },
+  "matched_pair_analysis_review": {
+    "criteria_provenance_status": "source_equivalence_verified",
+    "declared_response_checks_met": true,
+    "gas_guard": "Exact pinned 1271 source/build/artifact identity; pass only for committed accepted candidates. The initial gas budget is not exported, so direct normalized residual is unavailable.",
+    "limits": [
+      "No target curve or old-run response values are read; values come from these two accepted-state traces.",
+      "Respiratory pressure-flow/compliance identities and cycle counters are numerical checks, not independent physiological calibration.",
+      "Support/COM are stride-8 diagnostics; sampled force is not a proof of static equilibrium or momentum closure.",
+      "The Q-window root-momentum observer covers accepted steps 152501\u2013155000 only; its per-step vectors do not qualify anatomy or by themselves prove momentum closure.",
+      "No whole-body anatomy/interface or clinical qualification is implied.",
+      "The accepted CSVs do not expose every latent controller/Brain state; equal pre-dose outputs are not full hidden-state equivalence proof.",
+      "This analyzer does not decode or visually review recordings; it records the native movie hashes only."
+    ],
+    "plot_semantics": {
+      "blood_error_ml": "Running high-water absolute deviation of native Float32 blood-volume sum from 0.00515f m3; not an instantaneous or accumulated-error curve.",
+      "cardiac_loop": "Sampled interval whose completed-filling/ejection counter equals final counter minus1; 16ms trace cadence.",
+      "drive_scale": 0.5,
+      "drive_scale_window_s": [
+        60,
+        100
+      ],
+      "initialized_after_s": 10,
+      "pressure_conversion": "1 cmH2O =98.0665Pa",
+      "ventilation": "Native accumulated inspired-volume difference over trailing30 seconds, multiplied by60/30 and divided by1000. No gas state is integrated in this script."
+    },
+    "pre_dose_exact_state_comparison_passed": true,
+    "replay_scope": "Each native log must contain the pinned startup integrated-rejection probe. It covers the recorded in-memory predecessor, state/history, clock, retry, and fresh-context replay assertions; same-context retry is reported unsupported. This is not general checkpoint/archive rollback identity.",
+    "reporting_review": "No corrective change recommended. README distinguishes declared dose/recovery response checks from clinical/reference comparisons and explicitly reports resting-rate and selected O2/pulmonary-pressure comparisons outside bounds, with anatomy and clinical qualification still false.",
+    "status": "measured_pair_analysis_complete"
+  },
+  "overall_disposition": "Final scripts and completed report are suitable for the documented bounded use. Audit hash crossbinding was fixed and verified. Remaining explicit gate fields are nonblocking because the README preserves their scope limits; no whole-body anatomy admission is implied.",
+  "reproduction_wrapper_review": {
+    "disposition": "no_actionable_defect_found",
+    "findings": [
+      "Pins and copies existing prepare/launch owner scripts, then does fresh preparation and prints exact launch argv.",
+      "Default behavior intentionally launches one baseline arm; --arm selects either baseline or intervention, so pair reproduction uses separate invocations.",
+      "--prepare-only is an explicit safe inspection path and was exercised with native_execution=false; all ten preparation checks passed."
+    ],
+    "prepare_only_native_execution": false,
+    "validation_sha256": "1d6edab774a7f1717cba07bda3a6feb8ec87b4382922b6476e495c9b587e4600"
+  },
+  "schema": "numi.human.native-pair-011.read-only-review.v1",
+  "scope": "Independent read-only review on Mac mini. No simulation, script edits, or analysis rerun."
+}

@@ -1,0 +1,117 @@
+{
+  "analysis_sources": {
+    "analyze_matched_native_pair_011.py": "9511d759d2be4f25677fbcc40821c10d92a5f0c327dcb553e4b2aed730194224",
+    "analyze_native_pair_011_gas_guard.py": "634186a72384999ca44afafa307e88953aeb048ce85fa98d65b971d66770b7be",
+    "test_analyze_matched_native_pair_011.py": "521a460afe0d0b2f19c1b6dd89d589c5cbec1784d27d356f0a3de4dfef924b4c",
+    "test_analyze_native_pair_011_gas_guard.py": "81f7e55c1a5d5f9e7ee99b50a521b6baf61813477c070cba3ec15fc7c5292ff6"
+  },
+  "arms": {
+    "baseline": {
+      "capture_steps": [
+        0,
+        47519,
+        151999,
+        152607,
+        153215,
+        153823,
+        154431,
+        155000
+      ],
+      "declaration_sha256": "538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d",
+      "env_and_observer_contract": "pass",
+      "force_contributions_enabled": false
+    },
+    "intervention": {
+      "capture_steps": [
+        0,
+        47519,
+        151999,
+        152607,
+        153215,
+        153823,
+        154431,
+        155000
+      ],
+      "declaration_sha256": "c7332e1b3c089ef68953bf2fb89275c6bb39bc1ff35501a1dd385754a4469a57",
+      "env_and_observer_contract": "pass",
+      "force_contributions_enabled": false
+    }
+  },
+  "build_provenance": {
+    "binary_sha256": "e051343771dd48acb83704bc1ef2c470530d5b3a5790f7342349f5fcc6c434b4",
+    "build_report_sha256": "64742416b6457eff2383206102ca6134fbd69d09ecea241d9b4dbe606cd474e4",
+    "build_rule_sha256": "0854c524a8483dc1989fc1703275fbe83cb70e137bc80f0d7575f61855eeb765",
+    "dylib_sha256": "9c307105bdb3627efd2b5ec7c73dc35bf2b1811d59baf4d73d93f89e3bec0193",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/build-provenance.json",
+    "respiration_metallib_sha256": "8444ba02aa176fb54a4331806aac39a372311852708d9bdb2698ba37dd71fa8b",
+    "sha256": "8cdb6a616b2821246561939f36bbb66ae07ca75c8ddcdd8bc8977773ef46fb5f",
+    "source_head": "f47429c30289fef2de2cade0962a2e2d8d91fe44"
+  },
+  "capture_contract": "eight MRV exports at 0,47519,151999,152607,153215,153823,154431,155000; explicit capture window only, not continuous geometry proof",
+  "execution_performed_by_analyzer": false,
+  "focused_tests": {
+    "command": "/Users/n/numi-human-prep-venv-20261005/bin/python3.13 -m pytest -q /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/test_analyze_matched_native_pair_011.py /Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/test_analyze_native_pair_011_gas_guard.py",
+    "passed": 28
+  },
+  "gas_predicate": {
+    "committed_state_only": true,
+    "normalized_residual_exported": false,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/analysis-preparation-001/analyze_matched_native_pair_011.py",
+    "source_guard_threshold_fraction": 5e-05
+  },
+  "limits": [
+    "011 native baseline/intervention outputs are not analyzed by this preflight.",
+    "No anatomy or clinical qualification is implied.",
+    "Gas status applies to committed accepted states only; the normalized gas residual is not independently recomputed."
+  ],
+  "observer_contract": {
+    "com_support_stride": 8,
+    "expected_rows": 2500,
+    "q_window": [
+      152501,
+      155000
+    ],
+    "separate_force_contributions_enabled": false,
+    "vectors": {
+      "executed_joint_equality_impulses": 91,
+      "free_velocity": 128,
+      "source_limit_impulses": 128
+    }
+  },
+  "physiology_owner": {
+    "path": "/Users/n/numi-lab-resting-window-vector-trace-1271/matter/tools/resting_intervention_study.py",
+    "sha256": "ef87b09a17b96c985d6f584932e806ba9e7c6a53785da32a37a56ac846a3ac5f"
+  },
+  "q_schema_control": {
+    "index_map_path": "/Users/n/numi-human-retained-delivery-20261009/q-window-root-momentum-observer-1271/native-2s-preparation-002/abi18-on/native-run/resting-com-q-index-map.csv",
+    "index_map_sha256": "0d28196086180ad69256142c3c68db5000d9f431319ac2b4c9310956469ff9ab",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/q-window-root-momentum-observer-1271/native-2s-preparation-002/abi18-on/native-run/resting-com-q-integration.csv",
+    "sha256": "7780046f25f10b8a6c176416732d84e75950059065e8efbe3c9381f66197b880",
+    "validation": {
+      "accepted_time_matches_float32_clock": true,
+      "all_vectors_finite_and_correct_length": true,
+      "configuration_count": 129,
+      "first_step": 500,
+      "gpu_vector_widths": {
+        "executed_joint_equality_impulse_records": 91,
+        "free_velocity": 128,
+        "source_limit_impulses": 128
+      },
+      "index_map_rows": 132,
+      "interpretation": "The 91 equality entries are indexed by executed equality-record order after fixed/linear reduction; they are not the 51 source equality rows. The GPU root mass rows and free/post-sweep root momentum are observer diagnostics. This Q-window instrument does not independently qualify anatomy or imply complete momentum closure.",
+      "last_step": 1000,
+      "mapped_configuration_indices": 129,
+      "mapped_velocity_indices": 128,
+      "passed": true,
+      "record_kind_counts": {
+        "configuration_without_direct_velocity": 4,
+        "scalar_dof": 125,
+        "velocity_only": 3
+      },
+      "rows": 501,
+      "velocity_dof_count": 128
+    }
+  },
+  "schema": "numi.human.native-pair-011-analysis-preparation.v1",
+  "status": "static_preflight_passed"
+}
