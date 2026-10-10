@@ -1511,9 +1511,17 @@ def _propose_local_self_separation_increment(
     A pose sample contains sorted ``vertex_ids``; matching Float32 Vx3
     ``baseline_world_positions`` and ``rejected_world_positions``; a Vx3x3
     dimensionless Jacobian mapping source metres to world metres; and integer
-    ``self_pair_rows`` indexing ``faces``. The constraints preserve the positive
-    SAT gap measured in the accepted baseline for each supplied pair. A
-    conservative quantization reserve tightens only the solver constraints;
+    ``self_pair_rows`` indexing ``faces``. Optional
+    ``clearance_preservation_pair_rows`` identify pairs that are exactly clear
+    both in the accepted baseline and current candidate; their accepted-baseline
+    SAT gaps join the resolving rows in the same QP. Resolving and preserving
+    rows must be disjoint. A resolving row may include a caller-derived
+    self_pair_axis_overrides entry naming one pair and a finite world
+    direction; it is used only when its accepted-baseline projection gap is
+    positive. A positive interval gap along any direction is a separating
+    witness, even when that direction is not a standard SAT axis. The
+    constraints preserve the selected positive gap. A conservative
+    quantization reserve tightens only the solver constraints;
     the original accepted gap and displacement limits remain the postchecks.
 
     After rounding source coordinates to Float32, this rechecks the linearized
@@ -1598,14 +1606,58 @@ def _propose_local_self_separation_increment(
             raise human.ImportError(f"local self-separation pose {pose_index} Jacobians need shape Vx3x3")
         if not np.isfinite(baseline).all() or not np.isfinite(rejected).all() or not np.isfinite(jac).all():
             raise human.ImportError(f"local self-separation pose {pose_index} contains non-finite inputs")
-        raw_pairs = np.asarray(sample.get("self_pair_rows"))
-        if raw_pairs.ndim != 2 or raw_pairs.shape[1] != 2 or raw_pairs.size == 0 or raw_pairs.dtype.kind not in "iu":
-            raise human.ImportError(f"local self-separation pose {pose_index} needs a nonempty integer pair table")
-        pairs = np.asarray(raw_pairs, dtype=np.int64)
-        if (pairs.min() < 0 or pairs.max() >= face_count or np.any(pairs[:, 0] >= pairs[:, 1])
-                or len(np.unique(pairs, axis=0)) != len(pairs)):
-            raise human.ImportError(f"local self-separation pose {pose_index} pair rows are malformed")
-        pairs = pairs[np.lexsort((pairs[:, 1], pairs[:, 0]))]
+        def checked_pair_rows(value: Any, label: str) -> np.ndarray:
+            raw = np.asarray(value)
+            if raw.size == 0:
+                return np.empty((0, 2), dtype=np.int64)
+            if raw.ndim != 2 or raw.shape[1] != 2 or raw.dtype.kind not in "iu":
+                raise human.ImportError(f"local self-separation pose {pose_index} {label} must be an integer pair table")
+            pairs = np.asarray(raw, dtype=np.int64)
+            if (pairs.min() < 0 or pairs.max() >= face_count or np.any(pairs[:, 0] >= pairs[:, 1])
+                    or len(np.unique(pairs, axis=0)) != len(pairs)):
+                raise human.ImportError(f"local self-separation pose {pose_index} {label} are malformed")
+            return pairs
+
+        resolving_pairs = checked_pair_rows(sample.get("self_pair_rows", np.empty((0, 2), dtype=np.int64)),
+                                             "self-pair rows")
+        preserving_pairs = checked_pair_rows(
+            sample.get("clearance_preservation_pair_rows", np.empty((0, 2), dtype=np.int64)),
+            "clearance-preservation pair rows",
+        )
+        if not len(resolving_pairs) and not len(preserving_pairs):
+            raise human.ImportError(f"local self-separation pose {pose_index} needs at least one pair row")
+        if set(map(tuple, resolving_pairs)) & set(map(tuple, preserving_pairs)):
+            raise human.ImportError(f"local self-separation pose {pose_index} pair is both resolving and preserved")
+        raw_axis_overrides = sample.get("self_pair_axis_overrides", [])
+        if not isinstance(raw_axis_overrides, (list, tuple)):
+            raise human.ImportError(f"local self-separation pose {pose_index} axis overrides must be a list")
+        axis_overrides: dict[tuple[int, int], np.ndarray] = {}
+        resolving_set = set(map(tuple, resolving_pairs))
+        for override in raw_axis_overrides:
+            if not isinstance(override, dict) or set(override) != {"face_pair", "axis_world"}:
+                raise human.ImportError(f"local self-separation pose {pose_index} axis override needs face_pair and axis_world")
+            pair_raw = np.asarray(override["face_pair"])
+            axis_raw = np.asarray(override["axis_world"], dtype=np.float64)
+            if (pair_raw.shape != (2,) or pair_raw.dtype.kind not in "iu"
+                    or int(pair_raw[0]) >= int(pair_raw[1])
+                    or tuple(map(int, pair_raw)) not in resolving_set):
+                raise human.ImportError(f"local self-separation pose {pose_index} axis override is not a resolving pair")
+            pair_key = tuple(map(int, pair_raw))
+            if pair_key in axis_overrides:
+                raise human.ImportError(f"local self-separation pose {pose_index} duplicates a pair axis override")
+            if axis_raw.shape != (3,) or not np.isfinite(axis_raw).all():
+                raise human.ImportError(f"local self-separation pose {pose_index} axis override must be finite xyz")
+            axis_norm = float(np.linalg.norm(axis_raw))
+            if not math.isfinite(axis_norm) or axis_norm <= 1.0e-14:
+                raise human.ImportError(f"local self-separation pose {pose_index} axis override is degenerate")
+            axis_overrides[pair_key] = axis_raw / axis_norm
+        pairs = np.concatenate((resolving_pairs, preserving_pairs), axis=0)
+        pair_kinds = np.asarray(
+            ["resolve"] * len(resolving_pairs) + ["preserve"] * len(preserving_pairs),
+            dtype=object,
+        )
+        order = np.lexsort((pairs[:, 1], pairs[:, 0]))
+        pairs, pair_kinds = pairs[order], pair_kinds[order]
         if len(pairs) > 128:
             raise human.ImportError(f"local self-separation pose {pose_index} exceeds its pair bound")
         pair_vertices = face_rows[pairs]
@@ -1623,20 +1675,24 @@ def _propose_local_self_separation_increment(
         rejected_records = _exact_surface_records(rejected, local_pair_faces)
         exact_record_by_face = {int(face): rejected_records[index]
                                 for index, face in enumerate(unique_pair_faces)}
-        for first_face, second_face in pairs:
+        for pair_index, (first_face, second_face) in enumerate(pairs):
             if ci.triangle_intersection_points(baseline_record_by_face[int(first_face)][0],
                                                baseline_record_by_face[int(second_face)][0]):
                 raise human.ImportError(
                     f"local self-separation pose {pose_index} accepted-baseline identity precondition failed: "
                     "a supplied pair is not exactly clear"
                 )
-            tri_a = exact_record_by_face[int(first_face)][0]
-            tri_b = exact_record_by_face[int(second_face)][0]
-            if not ci.triangle_intersection_points(tri_a, tri_b):
+            trial_intersects = ci.triangle_intersection_points(
+                exact_record_by_face[int(first_face)][0], exact_record_by_face[int(second_face)][0],
+            )
+            if pair_kinds[pair_index] == "resolve" and not trial_intersects:
                 raise human.ImportError(f"local self-separation pose {pose_index} supplied a pair absent from its exact rejected geometry")
+            if pair_kinds[pair_index] == "preserve" and trial_intersects:
+                raise human.ImportError(f"local self-separation pose {pose_index} preservation pair is not clear in its current geometry")
         total_pairs += len(pairs)
         checked.append({"vertex_ids": vertex_ids, "baseline": baseline, "rejected": rejected,
-                        "jacobian": jac, "pairs": pairs})
+                        "jacobian": jac, "pairs": pairs, "pair_kinds": pair_kinds,
+                        "axis_overrides": axis_overrides})
     if total_pairs > _LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS:
         raise human.ImportError("local self-separation pair/pose rows exceed the bounded count")
 
@@ -1655,44 +1711,105 @@ def _propose_local_self_separation_increment(
         rejected = sample["rejected"].astype(np.float64)
         jac = sample["jacobian"]
         start = len(constraints)
-        for face_a, face_b in sample["pairs"]:
+        for pair_index, (face_a, face_b) in enumerate(sample["pairs"]):
             face_a, face_b = int(face_a), int(face_b)
+            pair_kind = str(sample["pair_kinds"][pair_index])
             ids_a, ids_b = face_rows[face_a], face_rows[face_b]
             local_a, local_b = local_index[ids_a], local_index[ids_b]
             tri_a, tri_b = baseline[local_a], baseline[local_b]
             trial_a, trial_b = rejected[local_a], rejected[local_b]
-            edges_a = np.roll(tri_a, -1, axis=0) - tri_a
-            edges_b = np.roll(tri_b, -1, axis=0) - tri_b
-            normal_a, normal_b = np.cross(edges_a[0], edges_a[1]), np.cross(edges_b[0], edges_b[1])
             trial_edges_a = np.roll(trial_a, -1, axis=0) - trial_a
             trial_edges_b = np.roll(trial_b, -1, axis=0) - trial_b
-            trial_normal_a = np.cross(trial_edges_a[0], trial_edges_a[1])
-            trial_normal_b = np.cross(trial_edges_b[0], trial_edges_b[1])
-            if min(np.linalg.norm(normal_a), np.linalg.norm(normal_b),
-                   np.linalg.norm(trial_normal_a), np.linalg.norm(trial_normal_b)) <= 1.0e-14:
-                raise human.ImportError("local self-separation supplied pair contains a degenerate SAT triangle")
-            axes = np.asarray([
-                normal_a, normal_b,
-                *[np.cross(a, b) for a in edges_a for b in edges_b],
-                *[np.cross(edge, normal_a) for edge in edges_a],
-                *[np.cross(edge, normal_b) for edge in edges_b],
-            ], dtype=np.float64)
-            lengths = np.linalg.norm(axes, axis=1)
-            valid = lengths > 1.0e-14
-            if not np.any(valid):
-                raise human.ImportError("accepted self-pair has no valid SAT axis")
-            axes = axes[valid] / lengths[valid, None]
-            proj_a, proj_b = tri_a @ axes.T, tri_b @ axes.T
-            gap_ab = proj_b.min(axis=0) - proj_a.max(axis=0)
-            gap_ba = proj_a.min(axis=0) - proj_b.max(axis=0)
-            ia, ib = int(np.argmax(gap_ab)), int(np.argmax(gap_ba))
-            if gap_ab[ia] >= gap_ba[ib]:
-                axis, gap_m = axes[ia], float(gap_ab[ia])
+
+            def sat_axes(points_a: np.ndarray, points_b: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+                edges_a = np.roll(points_a, -1, axis=0) - points_a
+                edges_b = np.roll(points_b, -1, axis=0) - points_b
+                normal_a = np.cross(edges_a[0], edges_a[1])
+                normal_b = np.cross(edges_b[0], edges_b[1])
+                if min(np.linalg.norm(normal_a), np.linalg.norm(normal_b)) <= 1.0e-14:
+                    raise human.ImportError("local self-separation supplied pair contains a degenerate SAT triangle")
+                axes = np.asarray([
+                    normal_a, normal_b,
+                    *[np.cross(a, b) for a in edges_a for b in edges_b],
+                    *[np.cross(edge, normal_a) for edge in edges_a],
+                    *[np.cross(edge, normal_b) for edge in edges_b],
+                ], dtype=np.float64)
+                lengths = np.linalg.norm(axes, axis=1)
+                valid = lengths > 1.0e-14
+                if not np.any(valid):
+                    raise human.ImportError("local self-separation pair has no valid SAT axis")
+                axes = axes[valid] / lengths[valid, None]
+                return axes, edges_a, edges_b
+
+            baseline_axes, _, _ = sat_axes(tri_a, tri_b)
+            if pair_kind == "preserve":
+                current_axes, _, _ = sat_axes(trial_a, trial_b)
+                axes = np.concatenate((baseline_axes, current_axes), axis=0)
             else:
-                axis, gap_m = -axes[ib], float(gap_ba[ib])
-            if not math.isfinite(gap_m) or gap_m <= 0.0:
+                axes = baseline_axes
+            override = sample["axis_overrides"].get((face_a, face_b)) if pair_kind == "resolve" else None
+            if override is not None and float(np.max(np.abs(axes @ override), initial=0.0)) < 1.0 - 1.0e-10:
+                axes = np.concatenate((axes, override[None, :]), axis=0)
+            base_proj_a, base_proj_b = tri_a @ axes.T, tri_b @ axes.T
+            base_gap_ab = base_proj_b.min(axis=0) - base_proj_a.max(axis=0)
+            base_gap_ba = base_proj_a.min(axis=0) - base_proj_b.max(axis=0)
+            current_proj_a, current_proj_b = trial_a @ axes.T, trial_b @ axes.T
+            current_gap_ab = current_proj_b.min(axis=0) - current_proj_a.max(axis=0)
+            current_gap_ba = current_proj_a.min(axis=0) - current_proj_b.max(axis=0)
+            best_index: int | None = None
+            best_floor_m = -math.inf
+            best_axis = np.zeros(3, dtype=np.float64)
+            best_baseline_gap_m = -math.inf
+            best_current_gap_m = -math.inf
+            if override is not None:
+                alignment = np.abs(axes @ override)
+                best_index = int(np.argmax(alignment))
+                if float(alignment[best_index]) < 1.0 - 1.0e-10:
+                    raise human.ImportError("resolving-pair axis override could not be matched to its appended direction")
+                if base_gap_ab[best_index] >= base_gap_ba[best_index]:
+                    best_axis = axes[best_index]
+                    best_baseline_gap_m = float(base_gap_ab[best_index])
+                    best_current_gap_m = float(current_gap_ab[best_index])
+                else:
+                    best_axis = -axes[best_index]
+                    best_baseline_gap_m = float(base_gap_ba[best_index])
+                    best_current_gap_m = float(current_gap_ba[best_index])
+                if best_baseline_gap_m <= 0.0:
+                    raise human.ImportError("resolving-pair axis override has no positive accepted-baseline separation")
+                best_floor_m = best_baseline_gap_m
+            else:
+                for axis_index in range(len(axes)):
+                    if base_gap_ab[axis_index] >= base_gap_ba[axis_index]:
+                        axis = axes[axis_index]
+                        baseline_gap_m = float(base_gap_ab[axis_index])
+                        current_gap_m = float(current_gap_ab[axis_index])
+                    else:
+                        axis = -axes[axis_index]
+                        baseline_gap_m = float(base_gap_ba[axis_index])
+                        current_gap_m = float(current_gap_ba[axis_index])
+                    if pair_kind == "preserve":
+                        floor_m = min(baseline_gap_m, current_gap_m)
+                        if baseline_gap_m > 0.0 and current_gap_m > 0.0 and floor_m > best_floor_m:
+                            best_index = axis_index
+                            best_floor_m = floor_m
+                            best_axis = axis
+                            best_baseline_gap_m = baseline_gap_m
+                            best_current_gap_m = current_gap_m
+                    else:
+                        if baseline_gap_m > best_baseline_gap_m:
+                            best_index = axis_index
+                            best_floor_m = baseline_gap_m
+                            best_axis = axis
+                            best_baseline_gap_m = baseline_gap_m
+                            best_current_gap_m = current_gap_m
+            if best_index is None or not math.isfinite(best_floor_m) or best_floor_m <= 0.0:
+                if pair_kind == "preserve":
+                    raise human.ImportError("clearance-preservation pair has no common positive baseline/current SAT axis")
                 raise human.ImportError("accepted self-pair does not have positive SAT separation")
-            gap_mm = gap_m * 1000.0
+            axis = best_axis
+            gap_m = best_baseline_gap_m
+            current_gap_m = best_current_gap_m
+            gap_mm = best_floor_m * 1000.0
             now_a, now_b = rejected[local_a] * 1000.0, rejected[local_b] * 1000.0
             max_rhs = -math.inf
             for i, source_a in enumerate(ids_a):
@@ -1716,14 +1833,26 @@ def _propose_local_self_separation_increment(
                     constraints.append(row)
                     rhs_rows.append(required_mm)
                     constraint_receipts.append({
-                        "sample_index": pose_index, "face_pair": [face_a, face_b],
+                        "sample_index": pose_index, "constraint_kind": pair_kind, "face_pair": [face_a, face_b],
                         "source_vertex_pair": [int(source_a), int(source_b)],
                         "axis_unit_world": axis.tolist(),
                         "accepted_sat_gap_mm": gap_mm,
+                        "baseline_sat_gap_mm": gap_m * 1000.0,
+                        "current_sat_gap_mm": current_gap_m * 1000.0,
+                        "preserved_sat_gap_floor_mm": gap_mm,
                         "required_projection_change_mm": required_mm,
                     })
-            pair_receipts.append({"pose_index": pose_index, "face_pair": [face_a, face_b],
-                                  "accepted_sat_gap_mm": gap_mm, "maximum_required_projection_change_mm": max_rhs})
+            pair_receipts.append({
+                "pose_index": pose_index, "constraint_kind": pair_kind, "face_pair": [face_a, face_b],
+                "accepted_sat_gap_mm": gap_mm, "baseline_sat_gap_mm": gap_m * 1000.0,
+                "current_sat_gap_mm": current_gap_m * 1000.0, "preserved_sat_gap_floor_mm": gap_mm,
+                "sat_axis_selection": ("common_positive_baseline_current" if pair_kind == "preserve"
+                                       else ("caller_supplied_positive_baseline_axis" if override is not None
+                                             else "accepted_baseline")),
+                "sat_axis_index": int(best_index),
+                "axis_unit_world": best_axis.tolist(),
+                "maximum_required_projection_change_mm": max_rhs,
+            })
         rows_by_pose.append(len(constraints) - start)
     if not constraints:
         raise human.ImportError("local self-separation produced no movable SAT constraints")

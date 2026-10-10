@@ -391,3 +391,169 @@ def test_local_self_separation_optimizer_has_bounded_lp_and_slsqp_wall_time(monk
     assert observed["lp_time_limit"] == pytest.approx(120.0)
     assert observed["options"]["maxiter"] == 1000
     assert callable(observed["callback"])
+def _preservation_fixture():
+    baseline = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [0.55, 0.05, 0.00025], [0.85, 0.05, 0.00025], [0.55, 0.35, 0.00025],
+        [0.05, 0.05, 0.00050], [0.25, 0.05, 0.00050], [0.05, 0.25, 0.00050],
+    ], dtype="<f4")
+    rejected = baseline.copy()
+    rejected[3:6, 2] = np.array([-0.00025, 0.00025, -0.00025], dtype="<f4")
+    rejected[6:9, 2] = np.float32(0.00025)
+    faces = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]], dtype=np.int64)
+    pose = {
+        "vertex_ids": np.arange(9, dtype=np.int64),
+        "baseline_world_positions": baseline,
+        "rejected_world_positions": rejected,
+        "jacobians": np.repeat(np.eye(3, dtype=np.float64)[None, :, :], 9, axis=0),
+        "self_pair_rows": np.array([[0, 1]], dtype=np.int64),
+        "clearance_preservation_pair_rows": np.array([[0, 2]], dtype=np.int64),
+    }
+    return {
+        "source_positions_m": rejected.copy(),
+        "faces": faces,
+        "movable_vertex_ids": np.array([3, 4, 5, 6, 7, 8], dtype=np.int64),
+        "self_patch_seed_vertex_ids": np.array([3, 4, 5], dtype=np.int64),
+        "required_target_seed_vertex_ids": np.array([0], dtype=np.int64),
+        "active_target_face_vertex_ids": np.array([0, 1, 2], dtype=np.int64),
+        "fixed_support_vertex_ids": np.empty(0, dtype=np.int64),
+        "preserved_anchor_vertex_ids": np.empty(0, dtype=np.int64),
+        "pose_samples": [pose],
+    }
+
+
+def test_local_self_separation_combines_resolving_and_clearance_preservation_rows():
+    args = _preservation_fixture()
+
+    result = _propose_local_self_separation_increment(**args)
+
+    assert result["status"] == "bounded_local_linearized_proposal"
+    assert result["constraint_rows_by_pose"] == [18]
+    assert [x["constraint_kind"] for x in result["pair_pose_receipts"]] == ["resolve", "preserve"]
+    applied = result["source_increment_mm_f32_applied"]
+    assert np.all(applied[:3, 2] > 0.0)
+    preservation = next(x for x in result["pair_pose_receipts"] if x["constraint_kind"] == "preserve")
+    assert preservation["baseline_sat_gap_mm"] == pytest.approx(0.5, abs=1e-6)
+    assert preservation["current_sat_gap_mm"] == pytest.approx(0.25, abs=1e-6)
+    assert preservation["preserved_sat_gap_floor_mm"] == pytest.approx(0.25, abs=1e-6)
+    assert np.max(np.abs(applied[3:, 2])) < 1e-6
+    assert result["post_rounding_linearized_minimum_sat_slack_mm"] >= -1e-7
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+
+
+def test_local_self_separation_rejects_preservation_pair_that_is_not_currently_clear():
+    args = _preservation_fixture()
+    args["pose_samples"][0]["rejected_world_positions"][6:9, 2] = np.float32(0.0)
+
+    with pytest.raises(ImportError, match="preservation pair is not clear"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_rejects_pair_marked_both_resolving_and_preserved():
+    args = _preservation_fixture()
+    args["pose_samples"][0]["clearance_preservation_pair_rows"] = np.array([[0, 1]], dtype=np.int64)
+
+    with pytest.raises(ImportError, match="both resolving and preserved"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_accepts_alternative_generated_baseline_axis():
+    args, baseline, rejected = _fixture()
+    # The two triangles are separated in both x and z in the accepted source,
+    # but the rejected triangle moves into the first triangle. The default
+    # largest-gap axis is x; the smaller positive z gap is also a valid SAT
+    # separator and can resolve the pair with less local movement.
+    baseline = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [2.1, 0.1, 0.00025], [2.8, 0.1, 0.00075], [2.1, 0.8, 0.00025],
+    ], dtype="<f4")
+    rejected = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [0.1, 0.1, -0.00025], [0.8, 0.1, 0.00025], [0.1, 0.8, -0.00025],
+    ], dtype="<f4")
+    args["source_positions_m"] = rejected.copy()
+    args["pose_samples"][0]["baseline_world_positions"] = baseline
+    args["pose_samples"][0]["rejected_world_positions"] = rejected
+    args["pose_samples"][0]["self_pair_axis_overrides"] = [
+        {"face_pair": [0, 1], "axis_world": [0.0, 0.0, 1.0]},
+    ]
+
+    result = _propose_local_self_separation_increment(**args)
+
+    receipt = result["pair_pose_receipts"][0]
+    assert receipt["sat_axis_selection"] == "caller_supplied_positive_baseline_axis"
+    assert receipt["axis_unit_world"] == pytest.approx([0.0, 0.0, 1.0], abs=1e-12)
+    assert receipt["baseline_sat_gap_mm"] == pytest.approx(0.25, abs=1e-6)
+    assert result["post_rounding_linearized_minimum_sat_slack_mm"] >= -1e-7
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+
+
+@pytest.mark.parametrize(
+    ("axis", "message"),
+    [
+        ([0.0, 1.0, 0.0], "no positive accepted-baseline separation"),
+        ([0.0, 0.0, 0.0], "axis override is degenerate"),
+        ([float("nan"), 0.0, 1.0], "axis override must be finite xyz"),
+    ],
+)
+def test_local_self_separation_rejects_invalid_or_nonseparating_axis_override(axis, message):
+    args, baseline, rejected = _fixture()
+    baseline = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [2.1, 0.1, 0.00025], [2.8, 0.1, 0.00075], [2.1, 0.8, 0.00025],
+    ], dtype="<f4")
+    rejected = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [0.1, 0.1, -0.00025], [0.8, 0.1, 0.00025], [0.1, 0.8, -0.00025],
+    ], dtype="<f4")
+    args["source_positions_m"] = rejected.copy()
+    args["pose_samples"][0]["baseline_world_positions"] = baseline
+    args["pose_samples"][0]["rejected_world_positions"] = rejected
+    args["pose_samples"][0]["self_pair_axis_overrides"] = [
+        {"face_pair": [0, 1], "axis_world": axis},
+    ]
+
+    with pytest.raises(ImportError, match=message):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_keeps_default_axis_selection_unchanged():
+    args, _, _ = _fixture()
+    result = _propose_local_self_separation_increment(**args)
+    assert result["pair_pose_receipts"][0]["sat_axis_selection"] == "accepted_baseline"
+    assert result["pair_pose_receipts"][0]["sat_axis_index"] >= 0
+
+
+def test_local_self_separation_rejects_axis_override_for_nonresolving_pair():
+    args, _, _ = _fixture()
+    args["pose_samples"][0]["self_pair_axis_overrides"] = [
+        {"face_pair": [0, 1], "axis_world": [0.0, 0.0, 1.0]},
+        {"face_pair": [0, 1], "axis_world": [0.0, 0.0, 1.0]},
+    ]
+    with pytest.raises(ImportError, match="duplicates a pair axis override"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_accepts_nonsat_direction_with_positive_baseline_gap():
+    args, _, _ = _fixture()
+    baseline = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [2.1, 0.1, 0.00025], [2.8, 0.1, 0.00075], [2.1, 0.8, 0.00025],
+    ], dtype="<f4")
+    rejected = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+        [0.1, 0.1, -0.00025], [0.8, 0.1, 0.00025], [0.1, 0.8, -0.00025],
+    ], dtype="<f4")
+    args["source_positions_m"] = rejected.copy()
+    args["pose_samples"][0]["baseline_world_positions"] = baseline
+    args["pose_samples"][0]["rejected_world_positions"] = rejected
+    args["pose_samples"][0]["self_pair_axis_overrides"] = [
+        {"face_pair": [0, 1], "axis_world": [0.000015, 0.0, 1.0]},
+    ]
+
+    result = _propose_local_self_separation_increment(**args)
+
+    receipt = result["pair_pose_receipts"][0]
+    assert receipt["sat_axis_selection"] == "caller_supplied_positive_baseline_axis"
+    assert receipt["baseline_sat_gap_mm"] > 0.25
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
