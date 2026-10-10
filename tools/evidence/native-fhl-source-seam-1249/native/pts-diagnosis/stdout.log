@@ -1,0 +1,11 @@
+/Users/n/numi-human-retained-delivery-20261009/muscle-conforming-refinement-1216/recording-review-terminal-sequential-1217/count_pts.swift:7:21: warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+ 5 | for (label, settings) in [("compressed", nil as [String: Any]?), ("bgra", [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA] as [String: Any]?)] {
+ 6 |   let asset = AVURLAsset(url: url)
+ 7 |   let track = asset.tracks(withMediaType: .video).first!
+   |                     `- warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+ 8 |   let reader = try AVAssetReader(asset: asset)
+ 9 |   let out = AVAssetReaderTrackOutput(track: track, outputSettings: settings)
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+compressed samples=164 first=0	0.0	0 last=163	92.89333333333333	0
+bgra samples=160 first=0	0.0	1 last=159	90.97666666666667	1

@@ -1,0 +1,12 @@
+/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/native-fhl-10s-preparation-001/recording-review-001/pts-diagnosis/decode_first.swift:19:25: warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+17 | let outDir = URL(fileURLWithPath: CommandLine.arguments[2], isDirectory: true)
+18 | let asset = AVURLAsset(url: movie)
+19 | guard let track = asset.tracks(withMediaType: .video).first else { fatalError("missing video track") }
+   |                         `- warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+20 | let reader = try AVAssetReader(asset: asset)
+21 | let settings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+first_sample_nonzero_rgb_bytes=0
+index=0 pts=0.0 size=1280x900 row_bytes=5120 bytes=4608000 file=reader-sample-000.png
+samples=160 nonmonotonic_or_duplicate_pts=0 last_pts=90.97666666666667 status=completed

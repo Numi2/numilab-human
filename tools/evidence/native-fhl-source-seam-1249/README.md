@@ -1,0 +1,20 @@
+# FHL source-seam correction and 10 s native smoke
+
+This increment restores the source-connected FHL27/FHL28 rows over the immediate 7b23 NHTISS parent. The candidate composition changes stable IDs 27 and 28 only; it preserves the parent payload's other rows, weights, bindings, and topology. The 7b23 parent already carries an earlier biceps103/104 source-preserving correction, so differences from the older 1218 scene are not attributable to FHL alone. The EHL23/24 correction was excluded: its retained source audit reports 15 unallowed source self-pairs per row, with corresponding registered-source pair evidence. The original EHL rows remain in this candidate.
+
+The fresh composition bound the source-row preparation and comparison, immediate parent payload/manifest, current composer, candidate manifest, and anatomy receipt. The 28 MB receipt and NHTISS candidate remain external and are pinned in `external-artifacts.json`; they are not duplicated in this compact package. Earlier FHL composition attempts and the stale command provenance correction are retained under `composition/`.
+
+The guarded native run completed with exit code 0 at 5,000 steps / 10.000000474974513 simulated seconds. It used the flat support scene, release initialization, rigid hands, 64 contact iterations, and 0.01 activation cap. The native integrated loop reports 89.000436 s, corresponding to a 0.112359 simulated-seconds-per-wall-second ratio. Run metadata records 95.682821292 s wall time, the owner wrapper records 96.263243125 s, and the outer guard records 96.541372709 s. A concurrent CPU fit was running, so none of these timings is an isolated performance result. The inherited declaration has a stale 310 s qualification-boundary field; `native/started.json` explicitly records that the actual run was 10 s and is only a bounded smoke. The compressed inspector reports 159 image timestamps plus five zero-sample timing markers, while sequential decode produced 160 frames. The retained PTS comparison shows every one of the 159 compressed image timestamps occurs in the decode, with no missing or duplicate image PTS. The sole extra decoded frame is PTS 0.0, all-black padding at 1280×900; the first viewer image is at PTS 1.9816667 s. Thus the 159 actual movie images map 1:1 to surface-audit rows, with an initial black padding frame. The compressed image timestamps span 0 to 10 s with a 2.1733 s maximum gap. Two sampled frames were visually inspected; this does not add a full-cycle qualification or imply padding-free video.
+
+The exact Float32-quotient self audit found both FHL surfaces closed/oriented, with zero degenerate faces and zero unallowed self-pairs in authored source, accepted step 0, and accepted step 5000 (six surface/state spaces total). The 148 non-FHL NHTISS surfaces were exact in world-space triangle coordinates at both endpoints relative to the immediate 7b23 parent. Three trace files were byte-identical to that parent's 10 s native run: coupled physiology (625 rows, 60 columns), COM/momentum (625 rows, 52 columns), and support impulses (20,000 rows, 21 columns).
+
+This verifies only FHL self geometry at two endpoints, exact unchanged geometry for the other 148 surfaces at those endpoints, and a short trace-prefix comparison. It does not qualify FHL cross-intersections, skin-target clearance, full-cycle geometry, long-horizon resting anatomy, physiological response, or clinical anatomy. The native build/runtime also differs from the 310 s baseline build. No broader qualification is claimed.
+
+Focused tests:
+
+```sh
+cd /Users/n/numi-human-fhl-source-composition-1248
+PYTHONPATH=src /Users/n/numi-human-prep-venv-20261005/bin/python3.13 -m pytest -q tests/test_passive_attachment_composition.py
+```
+
+Result: 28 passed in 0.37 s; raw output is `tests/focused-tests.log`. The bundle's composer/test SHA pins are in `source/source-and-test-pins.json`. Large native packs, movie, CSV traces, candidate NHTISS, anatomy receipt, and upstream source assets remain external and are SHA-pinned in `external-artifacts.json`.

@@ -1,0 +1,105 @@
+{
+  "input_sha256": {
+    "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "945d53ddf24c652af4b55e91f21e27e65754e89c5d6c027008e4196c9f2a3f08",
+    "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "7b23d0daf2eb73221944389716d01c8d9f2a9ebfb86dd815f605c8a45e54bbc9",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "7eeed2dba8b43b6cfa4bd412da4c9e3fc2ffc4652d6adeb2453da801298e2a9e",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "e13ac1065e70b63fb1dea68493d9023810507a7a13182d340142f67be4d8634a",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/regenerated-row-exact-f32-self-audit-001.json": "b9d21241947453de05855e215f92e11f966a670ac38100cc6ac4c3f87b9b62f8"
+  },
+  "parent_manifest_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+  "parent_manifest_sha256": "945d53ddf24c652af4b55e91f21e27e65754e89c5d6c027008e4196c9f2a3f08",
+  "parent_payload_path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+  "parent_payload_sha256": "7b23d0daf2eb73221944389716d01c8d9f2a9ebfb86dd815f605c8a45e54bbc9",
+  "registration_fingerprint32": "b1b410ad",
+  "rows": {
+    "27": {
+      "binding_indices_shape": [
+        1847,
+        4
+      ],
+      "body_bindings": [
+        {
+          "core_body_index": 136,
+          "myosim_body": "tibia_r"
+        },
+        {
+          "core_body_index": 138,
+          "myosim_body": "calcn_r"
+        },
+        {
+          "core_body_index": 139,
+          "myosim_body": "toes_r"
+        }
+      ],
+      "exact_f32_quotient_boundary_edges": 0,
+      "exact_f32_self_unallowed_pairs": 0,
+      "faces_shape": [
+        2758,
+        3
+      ],
+      "label": "right flexor hallucis longus",
+      "layer": "muscle",
+      "member_id": "FJ1415",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/fhl-row-patches-001/row-27.npz",
+      "sha256": "94b6fcd93aa494cb583a2d8452830c5af51d9bd0a9b479646e5ea4a3a46ebae7",
+      "vertices6_dtype": "float32",
+      "vertices6_shape": [
+        1847,
+        6
+      ],
+      "weights_shape": [
+        1847,
+        4
+      ]
+    },
+    "28": {
+      "binding_indices_shape": [
+        1847,
+        4
+      ],
+      "body_bindings": [
+        {
+          "core_body_index": 150,
+          "myosim_body": "tibia_l"
+        },
+        {
+          "core_body_index": 152,
+          "myosim_body": "calcn_l"
+        },
+        {
+          "core_body_index": 153,
+          "myosim_body": "toes_l"
+        }
+      ],
+      "exact_f32_quotient_boundary_edges": 0,
+      "exact_f32_self_unallowed_pairs": 0,
+      "faces_shape": [
+        2758,
+        3
+      ],
+      "label": "left flexor hallucis longus",
+      "layer": "muscle",
+      "member_id": "FJ1415M",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/fhl-row-patches-001/row-28.npz",
+      "sha256": "dc4763af332f0aaea9c1e48f05c7da97887d10a6fbbbf6e7992409fe9f31154e",
+      "vertices6_dtype": "float32",
+      "vertices6_shape": [
+        1847,
+        6
+      ],
+      "weights_shape": [
+        1847,
+        4
+      ]
+    }
+  },
+  "schema": "numi.human.fhl-source-row-patch-preparation.v1",
+  "scope": "Extract only passing FHL muscle rows 27/28 into existing NHTISS row-patch array layout. EHL rows 23/24 are deliberately excluded because their regenerated exact-F32 self-pair counts worsened. Prepared patches do not compose, update a receipt, qualify anatomy, or prove native pose clearance.",
+  "self_audit_report_path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/regenerated-row-exact-f32-self-audit-001.json",
+  "self_audit_report_sha256": "b9d21241947453de05855e215f92e11f966a670ac38100cc6ac4c3f87b9b62f8",
+  "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "source_subset_manifest_path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+  "source_subset_manifest_sha256": "7eeed2dba8b43b6cfa4bd412da4c9e3fc2ffc4652d6adeb2453da801298e2a9e",
+  "source_subset_payload_path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+  "source_subset_payload_sha256": "e13ac1065e70b63fb1dea68493d9023810507a7a13182d340142f67be4d8634a"
+}

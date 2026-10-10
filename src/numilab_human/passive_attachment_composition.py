@@ -1,8 +1,9 @@
 """Compose source-derived passive attachments in the existing NHTISS4 ABI5.
 
-Only stable IDs 7, 8 and 23 are replaceable. This is an asset preparation step;
-the native simulation retains ownership of mechanics, mass and tendon state.
-Composition validates identity and wire layout, not anatomical admission.
+The generic replacement path is limited to stable IDs 7, 8 and 23. Separate
+proof-bound branches admit only the reviewed 103/104 biceps and 27/28 FHL row
+pairs. This is asset preparation; the native simulation retains mechanics,
+mass and tendon state. Composition does not establish anatomical admission.
 """
 from __future__ import annotations
 import argparse
@@ -52,12 +53,51 @@ _BICEPS_SOURCE_CORRECTION_EXPECTED_PINS = {
     },
 }
 
+
+# This proof-bound branch admits only the regenerated FHL source-seam rows 27/28
+# as a direct child of the current 7b23 payload. It does not widen the generic
+# passive-attachment allowlist and does not imply native/anatomical admission.
+_FHL_SOURCE_SEAM_CORRECTION_EXPECTED_PINS = {
+    "direct_parent_payload": {"path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue", "sha256": "7b23d0daf2eb73221944389716d01c8d9f2a9ebfb86dd815f605c8a45e54bbc9"},
+    "direct_parent_manifest": {"path": "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", "sha256": "945d53ddf24c652af4b55e91f21e27e65754e89c5d6c027008e4196c9f2a3f08"},
+    "source_subset_payload": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue", "sha256": "e13ac1065e70b63fb1dea68493d9023810507a7a13182d340142f67be4d8634a"},
+    "source_subset_manifest": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json", "sha256": "7eeed2dba8b43b6cfa4bd412da4c9e3fc2ffc4652d6adeb2453da801298e2a9e"},
+    "row_comparison_report": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/regenerated-row-comparison-004.json", "sha256": "91c10218da0d1b0384ae5cc09a754a89ecb4eccab40cf1c5485bf2b0046861b0"},
+    "self_audit_report": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/regenerated-row-exact-f32-self-audit-001.json", "sha256": "b9d21241947453de05855e215f92e11f966a670ac38100cc6ac4c3f87b9b62f8"},
+    "source_topology_report": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/source-selection-comparison.json", "sha256": "4a62be2006a8879aea849553f619e793992ba72078c86f2edb4e85be1fb6412b"},
+    "row_patch_preparation_report": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/fhl-row-patches-001/row-patch-preparation.json", "sha256": "b3e8980a79108a1d119b72b44ebc600054466b129a53d9a1a757cce4ceafc293"},
+    "source_declaration": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/declaration.json", "sha256": "33be926987729d2a9e816b06c5012a1e7470697f19a324e246caacd35a3182a3"},
+    "row_patch_27": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/fhl-row-patches-001/row-27.npz", "sha256": "94b6fcd93aa494cb583a2d8452830c5af51d9bd0a9b479646e5ea4a3a46ebae7"},
+    "row_patch_28": {"path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/regen-4rows-001/fhl-row-patches-001/row-28.npz", "sha256": "dc4763af332f0aaea9c1e48f05c7da97887d10a6fbbbf6e7992409fe9f31154e"},
+    "registration": {"path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json", "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"},
+}
+_FHL_SOURCE_DECLARATION_INPUTS = {
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-reference.manifest.json": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_BP3D_4.0_obj_99.zip": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_element_parts.txt": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_inclusion_relation_list.txt": "26e7d818e03a8c909fe09c561f38d0d513423c87681f9450a803bc38f5b07564",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/isa_parts_list_e.txt": "ab7796deedd49205e77f3609a1cb8c53e2bbee14ecb5c9a6ca05227469780513",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/myosim/source-overlays/myosim-left-knee-translation2-range.v1.json": "05f6b7698e571c83a62bdbc7055ff24322800a36e9b53e455a18b451e7b9dad4",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_BP3D_4.0_obj_99.zip": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_element_parts.txt": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_inclusion_relation_list.txt": "1b40738270931e3c1d955ce34e0fce0d8d10d8c5ad543463e40b4b4c0243007c",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/output/nhtiss-source-prep-20261005/project/Sources/partof_parts_list_e.txt": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd",
+    "/Users/n/numi-human-source-seam-connectivity-1247/config/anatomy-classification.v1.json": "d1f832062adebfab361f86692e5ee49b57278d5ac58690f778eca08c64dff084",
+    "/Users/n/numi-human-source-seam-connectivity-1247/config/bodyparts3d-myosim-surface-map.v1.json": "bd08a3d604a754065fd693028c1a307487006f7d13acd40153bda87ed7e423f9",
+    "/Users/n/numi-human-source-seam-connectivity-1247/src/numilab_human/cli.py": "930f4854dabdd611628b0947ad953c9fa98943bfe2735ad78d6a4652affa5c5c",
+    "/Users/n/numi-human-source-seam-connectivity-1247/src/numilab_human/model.py": "23f6f02a93f7eb052cd46e890661519101f1274cfd69c64a44c40b2403edaebc",
+}
+
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise ValueError('passive attachment composition: ' + message)
 
 def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path]], *,
-            biceps_source_correction: dict | None = None) -> dict:
+            biceps_source_correction: dict | None = None,
+            fhl_source_seam_correction: dict | None = None) -> dict:
     import numpy as np
     (source, output) = (Path(source).resolve(), Path(output).resolve())
     sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -68,19 +108,29 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     require(bool(replacements), 'at least one passive attachment repair is required')
     replacement_ids = [int(item[0]) for item in replacements]
     biceps_correction = None
+    fhl_correction = None
     if any(sid not in (7, 8, 23) for sid in replacement_ids):
-        require(set(replacement_ids) == {103, 104} and len(replacement_ids) == 2
-                and biceps_source_correction is not None,
-                'only distinct passive attachment rows 7, 8, and 23 are allowed, except a proof-bound paired biceps 103/104 source correction')
-        biceps_correction = _verify_biceps_source_correction(T, biceps_source_correction)
-        inputs.update(biceps_correction['input_sha256'])
+        if set(replacement_ids) == {103, 104} and len(replacement_ids) == 2:
+            require(biceps_source_correction is not None and fhl_source_seam_correction is None,
+                    'proof-bound paired biceps correction is required without an FHL correction')
+            biceps_correction = _verify_biceps_source_correction(T, biceps_source_correction)
+            inputs.update(biceps_correction['input_sha256'])
+        elif set(replacement_ids) == {27, 28} and len(replacement_ids) == 2:
+            require(fhl_source_seam_correction is not None and biceps_source_correction is None,
+                    'the paired FHL rows require only their proof-bound source-seam correction')
+            fhl_correction = _verify_fhl_source_seam_correction(T, fhl_source_seam_correction)
+            inputs.update(fhl_correction['input_sha256'])
+        else:
+            require(False, 'only distinct passive attachment rows 7, 8, and 23 are allowed, except the proof-bound biceps 103/104 or FHL 27/28 pairs')
     else:
-        require(biceps_source_correction is None,
-                'biceps source correction proof may only accompany the paired 103/104 rows')
+        require(biceps_source_correction is None and fhl_source_seam_correction is None,
+                'source correction proofs may only accompany their exact paired rows')
     for (sid, z, report) in replacements:
         sid = int(sid)
-        if (sid not in (7, 8, 23) and not (biceps_correction is not None and sid in (103, 104))) or sid in repairs:
-            raise ValueError('Only distinct passive attachment rows7,8,23 or a proof-bound biceps pair103,104 are allowed')
+        allowed_pair = ((biceps_correction is not None and sid in (103, 104))
+                        or (fhl_correction is not None and sid in (27, 28)))
+        if (sid not in (7, 8, 23) and not allowed_pair) or sid in repairs:
+            raise ValueError('Only distinct passive attachment rows 7, 8, 23 or exact proof-bound biceps 103/104 and FHL 27/28 pairs are allowed')
         (z, report) = (Path(z), Path(report))
         if biceps_correction is not None:
             expected_patch = biceps_correction["row_patch_npz"].get(str(sid))
@@ -91,6 +141,15 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
             require(report.resolve() == Path(biceps_correction["source_candidate_report_path"]).resolve()
                     and sha(report) == biceps_correction["source_candidate_report_sha256"],
                     "replacement report does not match the proof-bound biceps source report")
+        if fhl_correction is not None:
+            expected_patch = fhl_correction["row_patch_npz"].get(str(sid))
+            require(isinstance(expected_patch, dict)
+                    and z.resolve() == Path(expected_patch["path"]).resolve()
+                    and sha(z) == expected_patch["sha256"],
+                    "replacement row does not match its proof-bound FHL NPZ")
+            require(report.resolve() == Path(fhl_correction["row_patch_preparation_report_path"]).resolve()
+                    and sha(report) == fhl_correction["row_patch_preparation_report_sha256"],
+                    "replacement report does not match the proof-bound FHL row-patch report")
         inputs.update({str(z): sha(z), str(report): sha(report)})
         repairs[sid] = (z, report)
     raw = T.read_bytes()
@@ -177,7 +236,7 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     P = output / T.name
     P.write_bytes(out)
     manifest = json.loads(M.read_text())
-    if biceps_correction is None:
+    if biceps_correction is None and fhl_correction is None:
         manifest['source']['upstream_runtime_binding_description'] = manifest['runtime_binding']
         manifest['runtime_binding'] = 'Unchanged passive rows retain their existing BodyParts3D route-body surface binding. Stable IDs ' + ','.join(map(str, sorted(repairs))) + ' use explicitly inferred source-derived reference attachment surfaces described per row. They retain the existing named MyoSim body-binding table and do not replace the authored physical force routes or compliant tendon state.'
         manifest['evidence_boundary'] = 'This mixed-source passive inspection package follows named articulated bodies. The reconstructed attachment rows are reference inferences, not measured-person source topology. This package does not create a force-transmitting continuum, new constitutive law, collision response, or clinical registration.'
@@ -190,10 +249,23 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
         proof = next((p for p in proofs if p['stable_id'] == sid))
         row['vertex_count'] = proof['vertex_count_after']
         row['triangle_count'] = proof['triangle_count_after']
-        if biceps_correction is None:
+        if biceps_correction is None and fhl_correction is None:
             row['reference_attachment_reconstruction'] = {**proof, 'scope': 'Passive source-derived reference inspection surface. Original anatomical identity/laterality, named attachment relationships, MyoSim force route and compliant tendon state remain their original owners. Not a measured-person reconstruction.', 'prior_registration_metadata': 'Retained above as upstream provenance; this reconstruction supersedes the listed source surface geometry.'}
-    if biceps_correction is None:
+        elif fhl_correction is not None:
+            row['fhl_source_seam_correction'] = {
+                'row_patch_preparation_report_sha256': fhl_correction['row_patch_preparation_report_sha256'],
+                'source_subset_payload_sha256': fhl_correction['source_subset_payload_sha256'],
+                'stable_id': sid,
+                'scope': 'Exact source-face seam restoration for the named FHL row; no vertex positions, normals, bindings, weights, or physical force routes changed.'}
+    if biceps_correction is None and fhl_correction is None:
         manifest['source']['reference_attachment_composition'] = {'source_payload_sha256': inputs[str(T)], 'changed_stable_ids': sorted(repairs), 'unchanged_row_vertex_bytes_and_local_faces': unchanged, 'binding_table_byte_exact': True, 'physical_route_mass_and_force_state_unchanged': True}
+    elif fhl_correction is not None:
+        fhl_correction['composed_parent_payload_sha256'] = inputs[str(T)]
+        fhl_correction['composed_parent_manifest_path'] = str(M)
+        fhl_correction['composed_parent_manifest_sha256'] = inputs[str(M)]
+        fhl_correction['changed_stable_ids'] = [27, 28]
+        fhl_correction['unchanged_row_vertex_bytes_and_local_faces'] = unchanged
+        manifest['source']['fhl_source_seam_correction'] = fhl_correction
     else:
         # This is an additive operation on the current receipted payload. Keep
         # the older 7/8 attachment composition and 64/23 operation lineage intact.
@@ -217,6 +289,8 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     proof = {'scope': 'Existing NHTISS4 ABI5 passive geometry composition; final native and anatomical admission separate.', 'input_sha256': inputs, 'inputs_unchanged': True, 'changed_rows': proofs, 'unchanged_row_vertex_bytes_and_local_faces': unchanged, 'binding_table_byte_exact': True, 'payload_sha256': sha(P), 'manifest_sha256': sha(PM), 'vertex_count': vcur, 'index_count': icur}
     if biceps_correction is not None:
         proof['biceps_source_preserving_correction'] = biceps_correction
+    if fhl_correction is not None:
+        proof['fhl_source_seam_correction'] = fhl_correction
     proof['composer_source_sha256'] = sha(Path(__file__))
     (output / 'report.json').write_text(json.dumps(proof, indent=2) + '\n')
     return proof
@@ -558,6 +632,436 @@ def _verify_biceps_source_correction(parent_payload: Path, correction: dict) -> 
     }
 
 
+
+def _verify_fhl_source_seam_correction(parent_payload: Path, correction: dict) -> dict:
+    """Verify the exact two-row FHL source-sheet restoration against its evidence."""
+    import collections
+    import numpy as np
+
+    parent_payload = Path(parent_payload).resolve()
+    require(isinstance(correction, dict)
+            and correction.get("schema") == "numi.human.fhl-source-seam-correction.v1",
+            "FHL source-seam proof schema")
+    path_fields = {
+        "direct_parent_payload": parent_payload,
+        "direct_parent_manifest": parent_payload.with_suffix(".manifest.json"),
+        "source_subset_payload": correction.get("source_subset_payload_path"),
+        "source_subset_manifest": correction.get("source_subset_manifest_path"),
+        "row_comparison_report": correction.get("row_comparison_report_path"),
+        "self_audit_report": correction.get("self_audit_report_path"),
+        "source_topology_report": correction.get("source_topology_report_path"),
+        "row_patch_preparation_report": correction.get("row_patch_preparation_report_path"),
+        "source_declaration": correction.get("source_declaration_path"),
+        "row_patch_27": correction.get("row_patch_npz", {}).get("27", {}).get("path"),
+        "row_patch_28": correction.get("row_patch_npz", {}).get("28", {}).get("path"),
+        "registration": correction.get("registration_path"),
+    }
+    require(all(value is not None for value in path_fields.values()),
+            "FHL proof is missing a pinned source, report, registration, or row patch")
+    path_fields = {key: Path(value).resolve() for key, value in path_fields.items()}
+    expected = correction.get("expected_pins")
+    require(expected == _FHL_SOURCE_SEAM_CORRECTION_EXPECTED_PINS
+            and set(expected) == set(path_fields),
+            "FHL source/report/registration/row-patch pins are not the reviewed exact set")
+    actual_inputs = {}
+    for key, path in path_fields.items():
+        pin = expected[key]
+        require(path == Path(pin["path"]).resolve()
+                and path.is_file() and _surface_sha256(path) == pin["sha256"],
+                "FHL expected pin mismatch: " + key)
+        actual_inputs[str(path)] = pin["sha256"]
+
+    parent_manifest_path, parent_manifest = _payload_manifest(parent_payload)
+    subset_payload = path_fields["source_subset_payload"]
+    subset_manifest_path, subset_manifest = _payload_manifest(subset_payload)
+    require(parent_manifest_path == path_fields["direct_parent_manifest"]
+            and subset_manifest_path == path_fields["source_subset_manifest"],
+            "FHL payload manifest path identity")
+    require(parent_manifest.get("source", {}).get("fhl_source_seam_correction") is None,
+            "FHL source correction is already present in the direct parent")
+    require(_producer_source_identity(parent_manifest["source"])
+            == _producer_source_identity(subset_manifest["source"]),
+            "FHL regenerated subset changed source, registration, or runtime producer identity")
+    registration_sha = expected["registration"]["sha256"]
+    for label, manifest in (("direct parent", parent_manifest), ("regenerated subset", subset_manifest)):
+        source = manifest["source"]
+        require(source.get("registration", {}).get("sha256") == registration_sha
+                and source.get("myosim_manifest", {}).get("sha256") == "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+                and source.get("myosim_source_archive_sha256") == "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+                "FHL " + label + " source registration identity")
+    require(subset_manifest.get("coverage", {}).get("selected_stable_ids") == [23, 24, 27, 28],
+            "FHL subset source selection differs from the reviewed four-row generation")
+
+    declaration = json.loads(path_fields["source_declaration"].read_text())
+    declaration_argv = declaration.get("argv")
+    require(isinstance(declaration_argv, list) and "--registration" in declaration_argv
+            and declaration_argv.index("--registration") + 1 < len(declaration_argv),
+            "FHL source regeneration declaration has no registration argument")
+    require(declaration.get("schema") == "numi.human.source-seam-regeneration-declaration.v1"
+            and declaration.get("expected_current_parent_payload_sha256") == expected["direct_parent_payload"]["sha256"]
+            and declaration.get("expected_current_parent_manifest_sha256") == expected["direct_parent_manifest"]["sha256"]
+            and declaration.get("expected_registration_sha256") == registration_sha
+            and declaration_argv[declaration_argv.index("--registration") + 1]
+                == str(path_fields["registration"]),
+            "FHL source regeneration declaration/registration binding")
+    declaration_inputs = declaration.get("input_sha256")
+    require(isinstance(declaration_inputs, dict)
+            and declaration_inputs == _FHL_SOURCE_DECLARATION_INPUTS,
+            "FHL source regeneration input set changed")
+    for raw_path, digest in declaration_inputs.items():
+        source_path = Path(raw_path)
+        require(source_path.is_file() and _surface_sha256(source_path) == digest,
+                "FHL regeneration source input changed: " + raw_path)
+        actual_inputs[str(source_path.resolve())] = digest
+
+    def verify_inputs(report: dict, field: str, label: str) -> None:
+        pins = report.get(field)
+        require(isinstance(pins, dict) and pins, label + " has no input hash set")
+        for raw_path, digest in pins.items():
+            source_path = Path(raw_path)
+            require(source_path.is_file() and _surface_sha256(source_path) == digest,
+                    label + " input changed: " + raw_path)
+            actual_inputs[str(source_path.resolve())] = digest
+
+    row_comparison = json.loads(path_fields["row_comparison_report"].read_text())
+    require(row_comparison.get("schema") == "numi.human.source-seam-regenerated-row-comparison.v2"
+            and row_comparison.get("source_topology_comparison_sha256") == expected["source_topology_report"]["sha256"],
+            "FHL regenerated-row comparison source topology binding")
+    verify_inputs(row_comparison, "pins_sha256", "FHL row comparison")
+    require(row_comparison["pins_sha256"].get(str(parent_payload)) == expected["direct_parent_payload"]["sha256"]
+            and row_comparison["pins_sha256"].get(str(parent_manifest_path)) == expected["direct_parent_manifest"]["sha256"]
+            and row_comparison["pins_sha256"].get(str(subset_payload)) == expected["source_subset_payload"]["sha256"]
+            and row_comparison["pins_sha256"].get(str(subset_manifest_path)) == expected["source_subset_manifest"]["sha256"],
+            "FHL row comparison does not bind the direct parent and regenerated subset")
+    comparison_rows = {int(row["stable_id"]): row for row in row_comparison.get("row_comparisons", [])}
+    require(set(comparison_rows).issuperset({27, 28}), "FHL rows are absent from exact coordinate comparison")
+
+    self_report = json.loads(path_fields["self_audit_report"].read_text())
+    require(self_report.get("schema") == "numi.human.regenerated-muscle-exact-f32-self-audit.v1",
+            "FHL exact-F32 self-audit schema")
+    self_input_map = self_report.get("inputs")
+    require(isinstance(self_input_map, dict), "FHL exact-F32 self audit input map")
+    for input_name, entry in self_input_map.items():
+        require(isinstance(entry, dict) and entry.get("path") and entry.get("sha256"),
+                "FHL exact-F32 self audit input entry")
+        source_path = Path(entry["path"])
+        require(source_path.is_file() and _surface_sha256(source_path) == entry["sha256"],
+                "FHL exact-F32 self audit input changed: " + str(input_name))
+        actual_inputs[str(source_path.resolve())] = entry["sha256"]
+    require(self_input_map.get("candidate_payload", {}).get("sha256") == expected["source_subset_payload"]["sha256"]
+            and self_input_map.get("candidate_manifest", {}).get("sha256") == expected["source_subset_manifest"]["sha256"]
+            and self_input_map.get("parent_payload", {}).get("sha256") == expected["direct_parent_payload"]["sha256"]
+            and self_input_map.get("parent_manifest", {}).get("sha256") == expected["direct_parent_manifest"]["sha256"],
+            "FHL exact-F32 self audit does not bind the parent and regenerated subset")
+    predicate = self_input_map.get("predicate", {})
+    package_init = self_input_map.get("package_init", {})
+    require(predicate.get("sha256") == self_report.get("predicate_source_expected_sha256", {}).get("predicate")
+            and package_init.get("sha256") == self_report.get("predicate_source_expected_sha256", {}).get("package_init"),
+            "FHL exact-F32 predicate source pin mismatch")
+    self_rows = {int(row["stable_id"]): row for row in self_report.get("regenerated_rows", [])}
+    require(set(self_rows).issuperset({27, 28}), "FHL rows absent from exact-F32 self audit")
+
+    topology = json.loads(path_fields["source_topology_report"].read_text())
+    require(topology.get("input_pins_unchanged") is True,
+            "FHL source topology comparison did not retain stable input pins")
+    verify_inputs(topology, "inputs", "FHL source topology comparison")
+    surfaces = topology.get("surfaces")
+    if isinstance(surfaces, dict):
+        topology_rows = {int(row.get("stable_id", key)): row for key, row in surfaces.items()}
+    else:
+        topology_rows = {int(row["stable_id"]): row for row in surfaces or []}
+    require(set(topology_rows).issuperset({27, 28}), "FHL source topology rows missing")
+
+    patch_report = json.loads(path_fields["row_patch_preparation_report"].read_text())
+    require(patch_report.get("schema") == "numi.human.fhl-source-row-patch-preparation.v1"
+            and patch_report.get("source_subset_payload_sha256") == expected["source_subset_payload"]["sha256"]
+            and patch_report.get("source_subset_manifest_sha256") == expected["source_subset_manifest"]["sha256"]
+            and patch_report.get("parent_payload_sha256") == expected["direct_parent_payload"]["sha256"]
+            and patch_report.get("parent_manifest_sha256") == expected["direct_parent_manifest"]["sha256"]
+            and patch_report.get("self_audit_report_sha256") == expected["self_audit_report"]["sha256"],
+            "FHL row-patch preparation does not bind the source, parent, and exact self audit")
+    verify_inputs(patch_report, "input_sha256", "FHL row-patch preparation")
+    patch_rows = patch_report.get("rows")
+    require(isinstance(patch_rows, dict) and set(patch_rows) == {"27", "28"},
+            "FHL row-patch preparation must contain exactly rows 27 and 28")
+    patch_paths = {sid: path_fields["row_patch_" + sid] for sid in ("27", "28")}
+    declared_npz = correction.get("row_patch_npz")
+    require(isinstance(declared_npz, dict) and set(declared_npz) == {"27", "28"},
+            "FHL correction requires exactly the 27/28 row patch arrays")
+
+    parent = _read_nhtiss4(parent_payload)
+    subset = _read_nhtiss4(subset_payload)
+    require(parent["surface_count"] == 150 and subset["surface_count"] == 4
+            and parent["fingerprint"] == subset["fingerprint"]
+            and parent["source_digest"] == subset["source_digest"]
+            and f'{parent["fingerprint"]:08x}' == "b1b410ad",
+            "FHL NHTISS inventory, registration, or source identity changed")
+    parent_rows = {int(row[6]): _row_slices(parent, row) for row in parent["records"]}
+    subset_rows = {int(row[6]): _row_slices(subset, row) for row in subset["records"]}
+    require(set(subset_rows) == {23, 24, 27, 28} and {27, 28}.issubset(parent_rows),
+            "FHL NHTISS row inventory changed")
+    expected_rows = {
+        27: {"member_id": "FJ1415", "member_sha256": "b00ad979e807617650ab158b609e9c2c1032a9483be5e9c9ec5a4796455c809c",
+             "bindings": [{"core_body_index": 136, "myosim_body": "tibia_r"}, {"core_body_index": 138, "myosim_body": "calcn_r"}, {"core_body_index": 139, "myosim_body": "toes_r"}], "route": "fhl_r"},
+        28: {"member_id": "FJ1415M", "member_sha256": "2cbe6f64ab578445284e188c89f454feb8a3a986e5460639720384e8269e6421",
+             "bindings": [{"core_body_index": 150, "myosim_body": "tibia_l"}, {"core_body_index": 152, "myosim_body": "calcn_l"}, {"core_body_index": 153, "myosim_body": "toes_l"}], "route": "fhl_l"},
+    }
+    for sid in (27, 28):
+        patch_path = patch_paths[str(sid)]
+        patch_entry = declared_npz[str(sid)]
+        require(Path(patch_entry.get("path", "")).resolve() == patch_path
+                and patch_entry.get("sha256") == expected["row_patch_" + str(sid)]["sha256"]
+                and _surface_sha256(patch_path) == patch_entry.get("sha256"),
+                "FHL row patch path/hash differs from reviewed source row")
+        rp = patch_rows[str(sid)]
+        expected_row = expected_rows[sid]
+        candidate_surface = _manifest_row(subset_manifest, sid)
+        parent_surface = _manifest_row(parent_manifest, sid)
+        for surface in (candidate_surface, parent_surface):
+            require(surface.get("member_id") == expected_row["member_id"]
+                    and surface.get("member_sha256") == expected_row["member_sha256"]
+                    and surface.get("layer") == "muscle"
+                    and surface.get("body_bindings") == expected_row["bindings"]
+                    and len(surface.get("matched_muscles", [])) == 1
+                    and surface["matched_muscles"][0].get("name") == expected_row["route"],
+                    "FHL named source member or body binding identity changed")
+        require(candidate_surface.get("body_bindings") == parent_surface.get("body_bindings")
+                and candidate_surface.get("matched_muscles") == parent_surface.get("matched_muscles")
+                and candidate_surface.get("endpoint_source") == parent_surface.get("endpoint_source"),
+                "FHL regenerated row changed its existing runtime route")
+        parent_row, candidate_row = parent_rows[sid], subset_rows[sid]
+        require(parent_row["binding_bytes"] == candidate_row["binding_bytes"]
+                and parent_row["layer"] == candidate_row["layer"] == 1,
+                "FHL regenerated row changed binding bytes or layer")
+        comparison = comparison_rows[sid]
+        require(comparison.get("binding_bytes_exact") is True
+                and comparison.get("body_binding_and_route_manifest_fields_exact") is True
+                and comparison.get("old_xyz_multiset_preserved") is True
+                and comparison.get("old_non_normal_attributes_preserved") is True
+                and comparison.get("old_oriented_f32_face_coordinates_missing") == 0
+                and comparison.get("old_normal_records_recomputed_or_changed_at_same_xyz") == 0
+                and comparison.get("old_normal_records_retained_at_same_xyz") == comparison.get("current_vertex_records")
+                and comparison.get("regenerated_face_rows") > comparison.get("current_face_rows")
+                and comparison.get("regenerated_oriented_f32_face_coordinates_added")
+                    == comparison.get("regenerated_face_rows") - comparison.get("current_face_rows"),
+                "FHL regenerated row did not preserve old positions, weights, normals, and oriented faces")
+        # Independently replay the row comparison's exact packed-coordinate
+        # multiplicity claims before permitting the source row-patch extraction.
+        def vertex_records(row):
+            return [row["vertex_bytes"][i:i+56] for i in range(0, len(row["vertex_bytes"]), 56)]
+        old_vertices, new_vertices = vertex_records(parent_row), vertex_records(candidate_row)
+        old_pos = collections.Counter(v[:12] for v in old_vertices)
+        new_pos = collections.Counter(v[:12] for v in new_vertices)
+        require(not (old_pos - new_pos), "FHL regeneration dropped an existing exact position record")
+        old_attr = collections.Counter((v[:12], v[24:56]) for v in old_vertices)
+        new_attr = collections.Counter((v[:12], v[24:56]) for v in new_vertices)
+        require(not (old_attr - new_attr), "FHL regeneration changed existing binding/weight attributes")
+        old_norm = collections.Counter((v[:12], v[12:24]) for v in old_vertices)
+        new_norm = collections.Counter((v[:12], v[12:24]) for v in new_vertices)
+        require(not (old_norm - new_norm), "FHL regeneration changed existing normals")
+        def oriented_face_counter(row):
+            vertices = vertex_records(row)
+            counts = collections.Counter()
+            for face in row["local_faces"]:
+                xyz = tuple(vertices[int(index)][:12] for index in face)
+                cyclic = min(xyz, (xyz[1], xyz[2], xyz[0]), (xyz[2], xyz[0], xyz[1]))
+                counts[cyclic] += 1
+            return counts
+        require(not (oriented_face_counter(parent_row) - oriented_face_counter(candidate_row)),
+                "FHL regeneration removed/reoriented an existing face-coordinate record")
+        require(candidate_row["index_count"] - parent_row["index_count"]
+                == (comparison.get("regenerated_face_rows") - comparison.get("current_face_rows")) * 3,
+                "FHL source seam restoration changed an unexpected face count")
+
+        topo = topology_rows[sid]
+        after = topo.get("after", {})
+        selection = after.get("selection", {})
+        closed = after.get("topology", {})
+        cancellation = topo.get("after_existing_opposite_pair_cancellation", {})
+        cancellation_stats = cancellation.get("cancellation", {})
+        cancellation_topology = cancellation.get("topology", {})
+        require(topo.get("stable_id", sid) == sid
+                and topo.get("source_points_moved") is False
+                and topo.get("new_inferred_faces") == 0
+                and topo.get("prior_retained_oriented_source_support_preserved") is True
+                and selection.get("connectivity_basis") == "exact_source_coordinate_edges_without_vertex_welding"
+                and selection.get("retained_triangle_count") == candidate_row["index_count"] // 3
+                and closed.get("closed_oriented_manifold_candidate") is True
+                and closed.get("boundary_edge_count") == 0
+                and closed.get("nonmanifold_edge_count") == 0
+                and closed.get("orientation_mismatch_edge_count") == 0
+                and closed.get("duplicate_face_row_count") == 0
+                and closed.get("degenerate_face_rows") == []
+                and cancellation_stats.get("source_coordinate_support_preserved") is True
+                and cancellation_stats.get("oriented_source_chain_preserved") is True
+                and cancellation_stats.get("vertices_moved") is False
+                and cancellation_stats.get("new_faces_added") is False
+                and cancellation_stats.get("cancelled_opposite_face_pairs") == []
+                and cancellation_topology.get("closed_oriented_manifold_candidate") is True
+                and cancellation_topology.get("boundary_edge_count") == 0,
+                "FHL source selection is not the pinned closed oriented source sheet")
+
+        audit = self_rows[sid]
+        audit_topology = audit.get("topology_after_exact_f32_coordinate_quotient", {})
+        exact = audit.get("exact_predicate", {})
+        require(audit.get("face_rows") == candidate_row["index_count"] // 3
+                and audit.get("vertex_records") == candidate_row["vertex_count"]
+                and audit_topology.get("boundary_edges") == 0
+                and audit_topology.get("nonmanifold_edges") == 0
+                and audit_topology.get("orientation_mismatch_edges") == 0
+                and audit_topology.get("duplicate_face_rows") == 0
+                and audit_topology.get("repeated-index_degenerate_faces") == 0
+                and exact.get("unallowed_self_intersection_pair_count") == 0
+                and exact.get("unallowed_pair_ids") == [],
+                "FHL regenerated row fails exact-F32 closure/orientation/self audit")
+        row_audit = rp
+        require(row_audit.get("member_id") == expected_row["member_id"]
+                and row_audit.get("layer") == "muscle"
+                and row_audit.get("body_bindings") == expected_row["bindings"]
+                and row_audit.get("exact_f32_quotient_boundary_edges") == 0
+                and row_audit.get("exact_f32_self_unallowed_pairs") == 0
+                and row_audit.get("vertices6_shape") == [candidate_row["vertex_count"], 6]
+                and row_audit.get("faces_shape") == [candidate_row["index_count"] // 3, 3]
+                and row_audit.get("weights_shape") == [candidate_row["vertex_count"], 4],
+                "FHL row-patch preparation lacks exact closed/self/route proof")
+        with np.load(patch_path, allow_pickle=False) as stored:
+            arrays = {key: np.asarray(stored[key]) for key in ("vertices6", "binding_indices", "weights", "faces")}
+        expected_arrays = _biceps_row_arrays(candidate_row)
+        require(all(arrays[key].dtype == expected_arrays[key].dtype
+                    and arrays[key].shape == expected_arrays[key].shape
+                    and arrays[key].tobytes(order="C") == expected_arrays[key].tobytes(order="C")
+                    for key in expected_arrays),
+                "FHL row patch arrays differ from the independently pinned regenerated source row")
+        require(np.isfinite(arrays["vertices6"]).all() and np.isfinite(arrays["weights"]).all()
+                and (arrays["weights"] >= 0).all()
+                and np.max(np.abs(arrays["weights"].sum(axis=1, dtype=np.float64) - 1.0)) < 1e-5,
+                "FHL row patch contains invalid position/normal/weight values")
+
+    # Expose a normalized proof record while preserving all source evidence pins.
+    return {
+        "schema": "numi.human.fhl-source-seam-correction.v1",
+        "source_subset_payload_path": str(subset_payload),
+        "source_subset_payload_sha256": expected["source_subset_payload"]["sha256"],
+        "source_subset_manifest_path": str(subset_manifest_path),
+        "source_subset_manifest_sha256": expected["source_subset_manifest"]["sha256"],
+        "row_comparison_report_path": str(path_fields["row_comparison_report"]),
+        "row_comparison_report_sha256": expected["row_comparison_report"]["sha256"],
+        "self_audit_report_path": str(path_fields["self_audit_report"]),
+        "self_audit_report_sha256": expected["self_audit_report"]["sha256"],
+        "source_topology_report_path": str(path_fields["source_topology_report"]),
+        "source_topology_report_sha256": expected["source_topology_report"]["sha256"],
+        "row_patch_preparation_report_path": str(path_fields["row_patch_preparation_report"]),
+        "row_patch_preparation_report_sha256": expected["row_patch_preparation_report"]["sha256"],
+        "source_declaration_path": str(path_fields["source_declaration"]),
+        "source_declaration_sha256": expected["source_declaration"]["sha256"],
+        "registration_path": str(path_fields["registration"]),
+        "registration_sha256": expected["registration"]["sha256"],
+        "expected_pins": expected,
+        "row_patch_npz": {sid: {"path": str(patch_paths[sid]),
+                                  "sha256": expected["row_patch_" + sid]["sha256"]}
+                           for sid in ("27", "28")},
+        "changed_stable_ids": [27, 28],
+        "source_experiment_accepted_pose_status": "not_run",
+        "direct_parent_payload_path": str(parent_payload),
+        "direct_parent_payload_sha256": expected["direct_parent_payload"]["sha256"],
+        "direct_parent_manifest_path": str(parent_manifest_path),
+        "direct_parent_manifest_sha256": expected["direct_parent_manifest"]["sha256"],
+        "binding_weights_and_original_geometry_preserved": True,
+        "source_sheet_closed_oriented": True,
+        "exact_f32_self_unallowed_pairs": {"27": 0, "28": 0},
+        "input_sha256": actual_inputs,
+    }
+
+
+def _verify_fhl_composed_child(parent_payload: Path, child_payload: Path, correction: dict) -> None:
+    """Prove the NHTISS child and its manifest differ only by the pinned FHL rows."""
+    import copy
+    import numpy as np
+
+    parent_payload, child_payload = Path(parent_payload).resolve(), Path(child_payload).resolve()
+    parent, child = _read_nhtiss4(parent_payload), _read_nhtiss4(child_payload)
+    require(parent["raw"][:20] == child["raw"][:20]
+            and parent["raw"][28:64] == child["raw"][28:64]
+            and parent["surface_count"] == child["surface_count"]
+            and parent["binding_count"] == child["binding_count"],
+            "FHL child changed NHTISS source, registration, or inventory")
+    require(parent["raw"][parent["binding_start"]:parent["vertex_start"]]
+            == child["raw"][child["binding_start"]:child["vertex_start"]],
+            "FHL child changed the global body binding table")
+
+    parent_record_ids = [int(row[6]) for row in parent["records"]]
+    child_record_ids = [int(row[6]) for row in child["records"]]
+    require(parent_record_ids == child_record_ids
+            and set(correction.get("changed_stable_ids", [])) == {27, 28},
+            "FHL child changed stable-row ordering or selected rows")
+    parent_rows = {int(row[6]): _row_slices(parent, row) for row in parent["records"]}
+    child_rows = {int(row[6]): _row_slices(child, row) for row in child["records"]}
+    require(all(parent_rows[sid]["layer"] == child_rows[sid]["layer"] for sid in parent_record_ids),
+            "FHL child changed a NHTISS row layer")
+    require(all(child_rows[sid]["layer"] == 1 for sid in (27, 28)),
+            "FHL target rows are not in the native muscle layer")
+
+    for sid, old_row in parent_rows.items():
+        new_row = child_rows[sid]
+        if sid not in (27, 28):
+            require(old_row["vertex_bytes"] == new_row["vertex_bytes"]
+                    and old_row["binding_bytes"] == new_row["binding_bytes"]
+                    and old_row["local_faces"] == new_row["local_faces"],
+                    "FHL child changed a non-target row")
+            continue
+        patch_path = Path(correction["row_patch_npz"][str(sid)]["path"])
+        with np.load(patch_path, allow_pickle=False) as stored:
+            arrays = {key: np.asarray(stored[key]) for key in ("vertices6", "binding_indices", "weights", "faces")}
+        n = len(arrays["vertices6"])
+        encoded = bytearray(n * 56)
+        np.ndarray((n, 6), dtype="<f4", buffer=encoded, offset=0, strides=(56, 4))[:] = arrays["vertices6"]
+        np.ndarray((n, 4), dtype="<u4", buffer=encoded, offset=24, strides=(56, 4))[:] = arrays["binding_indices"]
+        np.ndarray((n, 4), dtype="<f4", buffer=encoded, offset=40, strides=(56, 4))[:] = arrays["weights"]
+        require(new_row["vertex_bytes"] == bytes(encoded)
+                and new_row["binding_bytes"] == old_row["binding_bytes"]
+                and new_row["local_faces"] == arrays["faces"].tolist(),
+                "FHL child row does not equal the exact pinned source patch or changed bindings")
+
+    parent_manifest_path, parent_manifest = _payload_manifest(parent_payload)
+    child_manifest_path, child_manifest = _payload_manifest(child_payload)
+    parent_surfaces = parent_manifest.get("source", {}).get("surfaces")
+    child_surfaces = child_manifest.get("source", {}).get("surfaces")
+    require(isinstance(parent_surfaces, list) and isinstance(child_surfaces, list),
+            "FHL manifests are missing source surface rows")
+    parent_surface_ids = [row.get("stable_id") if isinstance(row, dict) else None for row in parent_surfaces]
+    child_surface_ids = [row.get("stable_id") if isinstance(row, dict) else None for row in child_surfaces]
+    require(parent_surface_ids == child_surface_ids == parent_record_ids,
+            "FHL manifest source row order/identity differs from NHTISS")
+    require(parent_manifest["source"].get("fhl_source_seam_correction") is None
+            and child_manifest["source"].get("fhl_source_seam_correction") == correction,
+            "FHL manifest correction lineage differs from its direct parent or proof")
+
+    expected_manifest = copy.deepcopy(parent_manifest)
+    expected_manifest["payload"].update({
+        "bytes": child_payload.stat().st_size,
+        "sha256": child["sha256"],
+        "vertex_count": child["vertex_count"],
+        "index_count": child["index_count"],
+    })
+    expected_surfaces = expected_manifest["source"]["surfaces"]
+    expected_surface_by_id = {int(row["stable_id"]): row for row in expected_surfaces}
+    for sid in (27, 28):
+        source_row = expected_surface_by_id[sid]
+        require(source_row.get("stable_id") == sid and source_row.get("layer") == "muscle",
+                "FHL manifest target row identity or source layer changed")
+        source_row["vertex_count"] = child_rows[sid]["vertex_count"]
+        source_row["triangle_count"] = len(child_rows[sid]["local_faces"])
+        source_row["fhl_source_seam_correction"] = {
+            "row_patch_preparation_report_sha256": correction["row_patch_preparation_report_sha256"],
+            "source_subset_payload_sha256": correction["source_subset_payload_sha256"],
+            "stable_id": sid,
+            "scope": ("Exact source-face seam restoration for the named FHL row; no vertex positions, "
+                      "normals, bindings, weights, or physical force routes changed."),
+        }
+    expected_manifest["source"]["fhl_source_seam_correction"] = correction
+    require(expected_manifest == child_manifest,
+            "FHL manifest changed source row metadata/order or fields outside the exact row-count/proof additions")
+
 def _verify_biceps_composed_child(parent_payload: Path, child_payload: Path, correction: dict) -> None:
     import numpy as np
     parent = _read_nhtiss4(parent_payload)
@@ -807,7 +1311,35 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     record = manifest["payload"]
     edge_composition = manifest["source"].get("conforming_edge_refinement_composition")
     biceps_composition = manifest["source"].get("biceps_source_preserving_correction")
-    if biceps_composition is not None:
+    fhl_composition = manifest["source"].get("fhl_source_seam_correction")
+    if fhl_composition is not None:
+        require(fhl_composition.get("changed_stable_ids") == [27, 28]
+                and fhl_composition.get("composed_parent_payload_sha256") == owner["sha256"],
+                "FHL child is not bound to the immediate anatomical parent")
+        source_path = old.resolve()
+        require(Path(fhl_composition["direct_parent_payload_path"]).resolve() == source_path
+                and sha(source_path) == owner["sha256"],
+                "FHL direct parent payload identity changed")
+        accepted_manifest_path = Path(owner.get("manifest_path", source_path.with_suffix(".manifest.json")))
+        if not accepted_manifest_path.is_absolute():
+            accepted_manifest_path = source_receipt.parent / accepted_manifest_path
+        require(accepted_manifest_path.resolve() == Path(fhl_composition["composed_parent_manifest_path"]).resolve()
+                and owner.get("manifest_sha256") == fhl_composition["composed_parent_manifest_sha256"]
+                and sha(accepted_manifest_path) == owner.get("manifest_sha256"),
+                "FHL direct parent manifest identity changed")
+        replay = _verify_fhl_source_seam_correction(source_path, fhl_composition)
+        _verify_fhl_composed_child(source_path, payload, fhl_composition)
+        require(fhl_composition.get("direct_parent_payload_sha256") == owner["sha256"]
+                and fhl_composition.get("source_subset_payload_sha256") == replay["source_subset_payload_sha256"]
+                and fhl_composition.get("row_patch_preparation_report_sha256") == replay["row_patch_preparation_report_sha256"],
+                "FHL direct-child source proof identity changed")
+        require(fhl_composition.get("binding_weights_and_original_geometry_preserved") is True
+                and fhl_composition.get("source_sheet_closed_oriented") is True
+                and fhl_composition.get("exact_f32_self_unallowed_pairs") == {"27": 0, "28": 0},
+                "FHL source-seam proof is incomplete")
+        composition = fhl_composition
+        changed_stable_ids = [27, 28]
+    elif biceps_composition is not None:
         require(biceps_composition.get("changed_stable_ids") == [103, 104]
                 and biceps_composition.get("composed_parent_payload_sha256") == owner["sha256"],
                 "biceps child is not bound to the immediate anatomical parent")
@@ -909,24 +1441,40 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         anatomical_payload = source_receipt.parent / anatomical_payload
     require(sha(anatomical_payload) == receipt["payload"]["sha256"], "anatomical payload changed")
     receipt["payload"]["path"] = str(anatomical_payload.resolve())
-    binding_key = ("biceps_source_preserving_correction_binding" if biceps_composition is not None
+    binding_key = ("fhl_source_seam_correction_binding" if fhl_composition is not None
+                   else "biceps_source_preserving_correction_binding" if biceps_composition is not None
                    else "conforming_surface_refinement_binding" if edge_composition is not None
                    else "passive_attachment_composition_binding")
-    if biceps_composition is not None:
+    if fhl_composition is not None:
+        require(binding_key not in receipt["provenance"],
+                "anatomy receipt already contains this FHL source-seam provenance binding")
+    elif biceps_composition is not None:
         require(binding_key not in receipt["provenance"],
                 "anatomy receipt already contains this biceps correction provenance binding")
     receipt["provenance"][binding_key] = {
         "prior_receipt_path": str(source_receipt), "prior_receipt_sha256": sha(source_receipt),
         "composition_manifest_sha256": sha(manifest_path),
         "changed_stable_ids": changed_stable_ids,
-        "scope": ("Explicit source-derived conforming surface refinement only; existing physical owners, "
+        "scope": ("Proof-bound FHL source-seam correction composed as a direct child of this receipt; anatomy acceptance remains separate."
+                  if fhl_composition is not None else
+                  "Explicit source-derived conforming surface refinement only; existing physical owners, "
                   "mass, forces, and tendon state are unchanged."
                   if edge_composition is not None and biceps_composition is None else
                   "Proof-bound biceps source-geometry patch composed as a direct child of this receipt; anatomy acceptance remains separate."
                   if biceps_composition is not None else
                   "Passive attachment source binding only; physical owners and anatomical acceptance are unchanged.")
     }
-    if biceps_composition is not None:
+    if fhl_composition is not None:
+        receipt["provenance"][binding_key]["source_seam_correction"] = {
+            "schema": fhl_composition["schema"],
+            "direct_parent_payload_sha256": fhl_composition["direct_parent_payload_sha256"],
+            "source_subset_payload_sha256": fhl_composition["source_subset_payload_sha256"],
+            "row_patch_preparation_report_sha256": fhl_composition["row_patch_preparation_report_sha256"],
+            "registration_sha256": fhl_composition["registration_sha256"],
+            "exact_f32_self_unallowed_pairs": fhl_composition["exact_f32_self_unallowed_pairs"],
+            "native_pose_qualification": "not_run",
+        }
+    if biceps_composition is not None and fhl_composition is None:
         receipt["provenance"][binding_key]["source_preserving_correction"] = {
             "schema": biceps_composition["schema"],
             "direct_parent_payload_sha256": biceps_composition["direct_parent_payload_sha256"],
@@ -961,11 +1509,15 @@ def main(argv: list[str] | None=None) -> int:
     parser.add_argument("--conforming-edge", nargs=3, type=int,
                         metavar=("STABLE_ID", "VERTEX_A", "VERTEX_B"),
                         help="single explicit source edge to replay from the producer context")
+    parser.add_argument("--fhl-source-seam-correction", type=Path,
+                        help="proof JSON for the exact pinned FHL 27/28 source-seam correction")
     parser.add_argument("--anatomy-receipt", type=Path,
                         help="bind the composed surface rows in a new native anatomy launch receipt")
     args = parser.parse_args(argv)
     edge_mode = args.conforming_edge_context is not None or args.conforming_edge is not None
     if edge_mode:
+        if args.fhl_source_seam_correction is not None:
+            parser.error("FHL correction mode cannot be combined with conforming edge mode")
         if args.row or args.conforming_edge_context is None or args.conforming_edge is None:
             parser.error("conforming edge mode requires only --conforming-edge-context and --conforming-edge")
         if args.conforming_edge[0] <= 0 or min(args.conforming_edge[1:]) < 0 or args.conforming_edge[1] == args.conforming_edge[2]:
@@ -977,7 +1529,10 @@ def main(argv: list[str] | None=None) -> int:
             report = compose_conforming_edge(args.source, args.output, args.conforming_edge_context,
                                              args.conforming_edge[0], tuple(args.conforming_edge[1:]))
         else:
-            report = compose(args.source, args.output, args.row)
+            fhl_proof = (json.loads(args.fhl_source_seam_correction.read_text())
+                         if args.fhl_source_seam_correction is not None else None)
+            report = compose(args.source, args.output, args.row,
+                             fhl_source_seam_correction=fhl_proof)
         if args.anatomy_receipt is not None:
             bind_anatomy_receipt(args.anatomy_receipt, args.output / args.source.name,
                                  args.output / "resting-anatomy-receipt.json")

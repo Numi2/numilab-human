@@ -1,0 +1,28 @@
+{
+  "candidate_output": {
+    "manifest_sha256": "c24335362011f71d8e2e53ffd90416c0e592eefc4213cb4fbdd1438215746aec",
+    "payload_sha256": "6579d06d358bfcf51f964feb57425fe568c467fd361930bce46d376ec8aedaa4"
+  },
+  "candidate_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-compose-001/candidate/report.json",
+    "report_composer_source_sha256": "bc9951ec2295a91a26cb673d46b49575825deec14a1f6141c3d70908f222b22c",
+    "sha256": "5cb7a9bd955d1c8ede5bab54a658c808dbd8489cf3f2b29bb9e3a9797be2052a"
+  },
+  "current_composer": {
+    "meaning": "current reviewed source used for fresh compose-004, not a replacement for the historical executed source",
+    "path": "/Users/n/numi-human-fhl-source-composition-1248/src/numilab_human/passive_attachment_composition.py",
+    "sha256": "ba7c20b76184eda6e55a80573b7d38322eebf7ce13c11860fab5b2dff8ef3484"
+  },
+  "executed_source_identity": {
+    "basis": "composer embeds this source hash into its own successful output report; original command sidecar recorded a stale different hash",
+    "sha256": "bc9951ec2295a91a26cb673d46b49575825deec14a1f6141c3d70908f222b22c"
+  },
+  "original_command_sidecar": {
+    "declared_composer_sha256": "56defdc9a952596e67572669a13ef19d117af3b3bd6df24b01d642298e4c17d5",
+    "path": "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-compose-001/command.json",
+    "sha256": "aa0928f16497181481ea2fb34aa17b0ff659e20d99402ee9c150542e2116559e"
+  },
+  "schema": "numi.human.passive-composition-command-provenance-correction.v1",
+  "source_snapshot_status": "The old executed composer bytes were not retained as a separate source snapshot; this sidecar preserves the report-declared hash without claiming the bytes are available.",
+  "status": "additive correction; original command.json retained byte-for-byte"
+}

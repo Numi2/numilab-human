@@ -1,0 +1,609 @@
+{
+  "input_pins_unchanged": true,
+  "inputs": {
+    "/Users/n/numi-human-retained-delivery-20261009/passive-biceps-micro-overlap-1225/compose-current-1cd-attempt003/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "945d53ddf24c652af4b55e91f21e27e65754e89c5d6c027008e4196c9f2a3f08",
+    "/Users/n/numi-human-retained-delivery-20261009/passive-muscle-self-audit-1213/audit_muscle_self_1213.py": "d56dff6df2286953ab6ffdcbb50ad51e794d12f2e371c1aa15efcf990ca26f46",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/compare_source_selection_002.py": "76bea38bf9dd5232b527e936cf10699d203385a265c38dabace534817a9eb0b1",
+    "/Users/n/numi-human-source-cache/isa_BP3D_4.0_obj_99.zip": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "/Users/n/numi-human-source-seam-connectivity-1247/src/numilab_human/model.py": "23f6f02a93f7eb052cd46e890661519101f1274cfd69c64a44c40b2403edaebc",
+    "/Users/n/numi-human-target-broadphase-1241/src/numilab_human/model.py": "a12a26af00fcab009d525094f3fb3d87ea575eff30cd15b91b1a0e12f0a316c3"
+  },
+  "scope": "Exact source-coordinate topology and source-face preservation only. Does not regenerate registration, admit anatomical surfaces, or run native physics.",
+  "surfaces": [
+    {
+      "after": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+          "discarded_component_count": 9,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 3864,
+          "retained_vertex_count": 3609,
+          "source_exact_coordinate_count": 1937,
+          "source_triangle_count": 3882,
+          "source_vertex_count": 3663
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 5796,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1910,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "after_existing_opposite_pair_cancellation": {
+        "cancellation": {
+          "cancelled_opposite_face_pairs": [],
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 0,
+          "removed_visual_support_area_mm2": 0.0,
+          "retained_triangle_count": 3864,
+          "retained_vertex_count": 3609,
+          "source_coordinate_support_preserved": true,
+          "source_triangle_count": 3864,
+          "source_vertex_count": 3609,
+          "vertices_moved": false
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 5796,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1910,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "before": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "discarded_component_count": 344,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 3247,
+          "retained_vertex_count": 2353,
+          "source_triangle_count": 3882,
+          "source_vertex_count": 3663
+        },
+        "topology": {
+          "boundary_edge_count": 543,
+          "closed_oriented_manifold_candidate": false,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 5142,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1796,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "label": "right calcaneal tendon",
+      "member": "isa_BP3D_4.0_obj_99/FJ1405.obj",
+      "member_id": "FJ1405",
+      "member_sha256": "64696f68cd961e4dfb7809ab9899a6777e994ea3bf696213da7a0ac1a507bed9",
+      "new_inferred_faces": 0,
+      "prior_retained_oriented_source_support_preserved": true,
+      "restored_source_face_count": 617,
+      "selected_geometry_identical": false,
+      "source": {
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_rows": [],
+        "duplicate_face_row_count": 9,
+        "edge_count": 5823,
+        "face_component_count": 10,
+        "nonmanifold_edge_count": 0,
+        "orientation_mismatch_edge_count": 0,
+        "referenced_vertex_count": 1937,
+        "unused_quotient_vertex_count": 0
+      },
+      "source_points_moved": false,
+      "stable_id": 7
+    },
+    {
+      "after": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+          "discarded_component_count": 9,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 3864,
+          "retained_vertex_count": 3607,
+          "source_exact_coordinate_count": 1937,
+          "source_triangle_count": 3882,
+          "source_vertex_count": 3661
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 5796,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1910,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "after_existing_opposite_pair_cancellation": {
+        "cancellation": {
+          "cancelled_opposite_face_pairs": [],
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 0,
+          "removed_visual_support_area_mm2": 0.0,
+          "retained_triangle_count": 3864,
+          "retained_vertex_count": 3607,
+          "source_coordinate_support_preserved": true,
+          "source_triangle_count": 3864,
+          "source_vertex_count": 3607,
+          "vertices_moved": false
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 5796,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1910,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "before": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "discarded_component_count": 343,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 3247,
+          "retained_vertex_count": 2353,
+          "source_triangle_count": 3882,
+          "source_vertex_count": 3661
+        },
+        "topology": {
+          "boundary_edge_count": 543,
+          "closed_oriented_manifold_candidate": false,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 5142,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1796,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "label": "left calcaneal tendon",
+      "member": "isa_BP3D_4.0_obj_99/FJ1405M.obj",
+      "member_id": "FJ1405M",
+      "member_sha256": "192692c7351198ed60745072f921cf10b0a3a73fa25bc2fe2df4fb1c45a449f0",
+      "new_inferred_faces": 0,
+      "prior_retained_oriented_source_support_preserved": true,
+      "restored_source_face_count": 617,
+      "selected_geometry_identical": false,
+      "source": {
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_rows": [],
+        "duplicate_face_row_count": 9,
+        "edge_count": 5823,
+        "face_component_count": 10,
+        "nonmanifold_edge_count": 0,
+        "orientation_mismatch_edge_count": 0,
+        "referenced_vertex_count": 1937,
+        "unused_quotient_vertex_count": 0
+      },
+      "source_points_moved": false,
+      "stable_id": 8
+    },
+    {
+      "after": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+          "discarded_component_count": 2,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 1664,
+          "retained_vertex_count": 1376,
+          "source_exact_coordinate_count": 834,
+          "source_triangle_count": 1668,
+          "source_vertex_count": 1388
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 2496,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 828,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "after_existing_opposite_pair_cancellation": {
+        "cancellation": {
+          "cancelled_opposite_face_pairs": [],
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 0,
+          "removed_visual_support_area_mm2": 0.0,
+          "retained_triangle_count": 1664,
+          "retained_vertex_count": 1376,
+          "source_coordinate_support_preserved": true,
+          "source_triangle_count": 1664,
+          "source_vertex_count": 1376,
+          "vertices_moved": false
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 2496,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 828,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "before": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "discarded_component_count": 85,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 1480,
+          "retained_vertex_count": 1043,
+          "source_triangle_count": 1668,
+          "source_vertex_count": 1388
+        },
+        "topology": {
+          "boundary_edge_count": 186,
+          "closed_oriented_manifold_candidate": false,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 2313,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 800,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "label": "right extensor hallucis longus",
+      "member": "isa_BP3D_4.0_obj_99/FJ1408.obj",
+      "member_id": "FJ1408",
+      "member_sha256": "5d04387c23d30f567bd43765a7eb860bb5844bd67a16e8ddf3c571eaaad9facc",
+      "new_inferred_faces": 0,
+      "prior_retained_oriented_source_support_preserved": true,
+      "restored_source_face_count": 184,
+      "selected_geometry_identical": false,
+      "source": {
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_rows": [],
+        "duplicate_face_row_count": 2,
+        "edge_count": 2502,
+        "face_component_count": 3,
+        "nonmanifold_edge_count": 0,
+        "orientation_mismatch_edge_count": 0,
+        "referenced_vertex_count": 834,
+        "unused_quotient_vertex_count": 0
+      },
+      "source_points_moved": false,
+      "stable_id": 23
+    },
+    {
+      "after": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+          "discarded_component_count": 2,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 1664,
+          "retained_vertex_count": 1372,
+          "source_exact_coordinate_count": 834,
+          "source_triangle_count": 1668,
+          "source_vertex_count": 1384
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 2496,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 828,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "after_existing_opposite_pair_cancellation": {
+        "cancellation": {
+          "cancelled_opposite_face_pairs": [],
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 0,
+          "removed_visual_support_area_mm2": 0.0,
+          "retained_triangle_count": 1664,
+          "retained_vertex_count": 1372,
+          "source_coordinate_support_preserved": true,
+          "source_triangle_count": 1664,
+          "source_vertex_count": 1372,
+          "vertices_moved": false
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 2496,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 828,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "before": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "discarded_component_count": 83,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 1481,
+          "retained_vertex_count": 1044,
+          "source_triangle_count": 1668,
+          "source_vertex_count": 1384
+        },
+        "topology": {
+          "boundary_edge_count": 187,
+          "closed_oriented_manifold_candidate": false,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 2315,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 801,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "label": "left extensor hallucis longus",
+      "member": "isa_BP3D_4.0_obj_99/FJ1408M.obj",
+      "member_id": "FJ1408M",
+      "member_sha256": "e97e27e52e6bb56cf3dac144bb7e16bdb86ff9783b664b6ac1df12ce3d395807",
+      "new_inferred_faces": 0,
+      "prior_retained_oriented_source_support_preserved": true,
+      "restored_source_face_count": 183,
+      "selected_geometry_identical": false,
+      "source": {
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_rows": [],
+        "duplicate_face_row_count": 2,
+        "edge_count": 2502,
+        "face_component_count": 3,
+        "nonmanifold_edge_count": 0,
+        "orientation_mismatch_edge_count": 0,
+        "referenced_vertex_count": 834,
+        "unused_quotient_vertex_count": 0
+      },
+      "source_points_moved": false,
+      "stable_id": 24
+    },
+    {
+      "after": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+          "discarded_component_count": 0,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 2758,
+          "retained_vertex_count": 1847,
+          "source_exact_coordinate_count": 1381,
+          "source_triangle_count": 2758,
+          "source_vertex_count": 1847
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 4137,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1381,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "after_existing_opposite_pair_cancellation": {
+        "cancellation": {
+          "cancelled_opposite_face_pairs": [],
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 0,
+          "removed_visual_support_area_mm2": 0.0,
+          "retained_triangle_count": 2758,
+          "retained_vertex_count": 1847,
+          "source_coordinate_support_preserved": true,
+          "source_triangle_count": 2758,
+          "source_vertex_count": 1847,
+          "vertices_moved": false
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 4137,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1381,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "before": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "discarded_component_count": 45,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 2677,
+          "retained_vertex_count": 1676,
+          "source_triangle_count": 2758,
+          "source_vertex_count": 1847
+        },
+        "topology": {
+          "boundary_edge_count": 85,
+          "closed_oriented_manifold_candidate": false,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 4058,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1364,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "label": "right flexor hallucis longus",
+      "member": "isa_BP3D_4.0_obj_99/FJ1415.obj",
+      "member_id": "FJ1415",
+      "member_sha256": "b00ad979e807617650ab158b609e9c2c1032a9483be5e9c9ec5a4796455c809c",
+      "new_inferred_faces": 0,
+      "prior_retained_oriented_source_support_preserved": true,
+      "restored_source_face_count": 81,
+      "selected_geometry_identical": false,
+      "source": {
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_rows": [],
+        "duplicate_face_row_count": 0,
+        "edge_count": 4137,
+        "face_component_count": 1,
+        "nonmanifold_edge_count": 0,
+        "orientation_mismatch_edge_count": 0,
+        "referenced_vertex_count": 1381,
+        "unused_quotient_vertex_count": 0
+      },
+      "source_points_moved": false,
+      "stable_id": 27
+    },
+    {
+      "after": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+          "discarded_component_count": 0,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 2758,
+          "retained_vertex_count": 1847,
+          "source_exact_coordinate_count": 1381,
+          "source_triangle_count": 2758,
+          "source_vertex_count": 1847
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 4137,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1381,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "after_existing_opposite_pair_cancellation": {
+        "cancellation": {
+          "cancelled_opposite_face_pairs": [],
+          "new_faces_added": false,
+          "oriented_source_chain_preserved": true,
+          "removed_unique_visual_support_triangle_count": 0,
+          "removed_visual_support_area_mm2": 0.0,
+          "retained_triangle_count": 2758,
+          "retained_vertex_count": 1847,
+          "source_coordinate_support_preserved": true,
+          "source_triangle_count": 2758,
+          "source_vertex_count": 1847,
+          "vertices_moved": false
+        },
+        "topology": {
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 4137,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1381,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "before": {
+        "selection": {
+          "boundary": "exact dominant edge-connected source sheet; disconnected or point-touching source sliver components are not presented as anatomical tissue geometry",
+          "discarded_component_count": 45,
+          "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+          "retained_triangle_count": 2677,
+          "retained_vertex_count": 1676,
+          "source_triangle_count": 2758,
+          "source_vertex_count": 1847
+        },
+        "topology": {
+          "boundary_edge_count": 85,
+          "closed_oriented_manifold_candidate": false,
+          "degenerate_face_rows": [],
+          "duplicate_face_row_count": 0,
+          "edge_count": 4058,
+          "face_component_count": 1,
+          "nonmanifold_edge_count": 0,
+          "orientation_mismatch_edge_count": 0,
+          "referenced_vertex_count": 1364,
+          "unused_quotient_vertex_count": 0
+        }
+      },
+      "label": "left flexor hallucis longus",
+      "member": "isa_BP3D_4.0_obj_99/FJ1415M.obj",
+      "member_id": "FJ1415M",
+      "member_sha256": "2cbe6f64ab578445284e188c89f454feb8a3a986e5460639720384e8269e6421",
+      "new_inferred_faces": 0,
+      "prior_retained_oriented_source_support_preserved": true,
+      "restored_source_face_count": 81,
+      "selected_geometry_identical": false,
+      "source": {
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_rows": [],
+        "duplicate_face_row_count": 0,
+        "edge_count": 4137,
+        "face_component_count": 1,
+        "nonmanifold_edge_count": 0,
+        "orientation_mismatch_edge_count": 0,
+        "referenced_vertex_count": 1381,
+        "unused_quotient_vertex_count": 0
+      },
+      "source_points_moved": false,
+      "stable_id": 28
+    }
+  ],
+  "wall_seconds": 0.5845575416460633
+}
