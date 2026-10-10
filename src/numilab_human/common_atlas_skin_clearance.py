@@ -7,6 +7,7 @@ import json
 import math
 import mmap
 import struct
+from time import monotonic
 from pathlib import Path
 from typing import Any
 
@@ -1283,6 +1284,402 @@ def _triangle_normal_translation_to_separate(
     if valid_axes == 0 or not np.isfinite(first_exit):
         raise human.ImportError("triangle separating-axis calculation found no direction-sensitive axis")
     return float(first_exit)
+
+
+_LOCAL_SELF_SEPARATION_MAX_POSES = 17
+_LOCAL_SELF_SEPARATION_MAX_SOURCE_VERTICES = 1_000_000
+_LOCAL_SELF_SEPARATION_MAX_SOURCE_FACES = 2_000_000
+_LOCAL_SELF_SEPARATION_MAX_MOVABLE_VERTICES = 256
+_LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS = 512
+_LOCAL_SELF_SEPARATION_COMPONENT_CAP_MM = 1.0 / math.sqrt(3.0)
+_LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM = 1.0
+_LOCAL_SELF_SEPARATION_GRAPH_LAMBDA = 5.0
+_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM = 1.0e-7
+_LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS = 120.0
+
+
+def _propose_local_self_separation_increment(
+    *,
+    source_positions_m: np.ndarray,
+    faces: np.ndarray,
+    movable_vertex_ids: np.ndarray,
+    self_patch_seed_vertex_ids: np.ndarray,
+    required_target_seed_vertex_ids: np.ndarray,
+    active_target_face_vertex_ids: np.ndarray,
+    fixed_support_vertex_ids: np.ndarray,
+    preserved_anchor_vertex_ids: np.ndarray,
+    pose_samples: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Return a bounded local proposal for supplied exact self-pair failures.
+
+    A pose sample contains sorted ``vertex_ids``; matching Float32 Vx3
+    ``baseline_world_positions`` and ``rejected_world_positions``; a Vx3x3
+    dimensionless Jacobian mapping source metres to world metres; and integer
+    ``self_pair_rows`` indexing ``faces``. The constraints preserve the positive
+    SAT gap measured in the accepted baseline for each supplied pair. No extra
+    clearance margin is added.
+
+    After rounding source coordinates to Float32, this rechecks the linearized
+    SAT rows and runs the exact triangle predicate on each supplied pair in its
+    first-order predicted Float32 pose. It does not run the production forward
+    model or full-mesh audit; the caller must rerun those gates. The caller
+    must also bind each baseline pose to its accepted receipt/source identity;
+    this helper checks that the supplied baseline pair rows are exactly clear,
+    but does not establish their external provenance.
+    """
+    from scipy.optimize import Bounds, LinearConstraint, linprog, minimize
+
+    source_raw = np.asarray(source_positions_m)
+    if (source_raw.ndim != 2 or source_raw.shape[1] != 3 or source_raw.size == 0
+            or source_raw.dtype.kind != "f" or source_raw.dtype.itemsize != 4):
+        raise human.ImportError("local self-separation source positions must be a nonempty Float32 Nx3 table")
+    source = np.ascontiguousarray(source_raw, dtype="<f4")
+    if not np.isfinite(source).all():
+        raise human.ImportError("local self-separation source positions contain non-finite values")
+    vertex_count = len(source)
+    if vertex_count > _LOCAL_SELF_SEPARATION_MAX_SOURCE_VERTICES:
+        raise human.ImportError("local self-separation source vertex count exceeds its bound")
+
+    faces_raw = np.asarray(faces)
+    if (faces_raw.ndim != 2 or faces_raw.shape[1] != 3 or faces_raw.size == 0
+            or faces_raw.dtype.kind not in "iu"):
+        raise human.ImportError("local self-separation faces must be a nonempty integer Fx3 table")
+    if faces_raw.min() < 0 or faces_raw.max() >= vertex_count:
+        raise human.ImportError("local self-separation face index is outside the source table")
+    face_rows = np.ascontiguousarray(faces_raw, dtype=np.int64)
+    face_count = len(face_rows)
+    if face_count > _LOCAL_SELF_SEPARATION_MAX_SOURCE_FACES:
+        raise human.ImportError("local self-separation face count exceeds its bound")
+
+    def ids_checked(value: np.ndarray, label: str, *, required: bool = False) -> np.ndarray:
+        raw = np.asarray(value)
+        if raw.ndim != 1 or raw.dtype.kind not in "iu" or (required and len(raw) == 0):
+            raise human.ImportError(f"local self-separation {label} must be a one-dimensional integer ID table")
+        ids = np.asarray(raw, dtype=np.int64)
+        if len(np.unique(ids)) != len(ids) or (len(ids) and (ids.min() < 0 or ids.max() >= vertex_count)):
+            raise human.ImportError(f"local self-separation {label} has duplicate or out-of-range IDs")
+        return np.sort(ids)
+
+    movable = ids_checked(movable_vertex_ids, "movable vertices", required=True)
+    patch_seeds = ids_checked(self_patch_seed_vertex_ids, "self-patch seeds", required=True)
+    target_seeds = ids_checked(required_target_seed_vertex_ids, "required target seeds")
+    active_target = ids_checked(active_target_face_vertex_ids, "active target-face vertices")
+    fixed_support = ids_checked(fixed_support_vertex_ids, "fixed support vertices")
+    anchors = ids_checked(preserved_anchor_vertex_ids, "preserved anchors")
+    if len(movable) > _LOCAL_SELF_SEPARATION_MAX_MOVABLE_VERTICES:
+        raise human.ImportError("local self-separation patch exceeds its bounded vertex count")
+    if not np.all(np.isin(patch_seeds, movable)):
+        raise human.ImportError("local self-separation patch omits a required self-pair seed vertex")
+    protected = np.unique(np.concatenate((target_seeds, active_target, fixed_support, anchors)))
+    if np.intersect1d(movable, protected).size:
+        raise human.ImportError("local self-separation patch overlaps a target seed, active target, support, or anchor")
+
+    if (not isinstance(pose_samples, (list, tuple)) or not pose_samples
+            or len(pose_samples) > _LOCAL_SELF_SEPARATION_MAX_POSES):
+        raise human.ImportError("local self-separation requires one to seventeen failing pose samples")
+    checked: list[dict[str, Any]] = []
+    total_pairs = 0
+    for pose_index, sample in enumerate(pose_samples):
+        if not isinstance(sample, dict):
+            raise human.ImportError(f"local self-separation pose {pose_index} is not a mapping")
+        raw_vertex_ids = np.asarray(sample.get("vertex_ids"))
+        vertex_ids = ids_checked(raw_vertex_ids, f"pose {pose_index} vertex IDs", required=True)
+        if not np.array_equal(np.asarray(raw_vertex_ids, dtype=np.int64), vertex_ids):
+            raise human.ImportError(f"local self-separation pose {pose_index} vertex IDs must be sorted to bind world/Jacobian rows")
+        if len(vertex_ids) > _LOCAL_SELF_SEPARATION_MAX_SOURCE_VERTICES:
+            raise human.ImportError(f"local self-separation pose {pose_index} vertex count exceeds its bound")
+        base_raw = np.asarray(sample.get("baseline_world_positions"))
+        trial_raw = np.asarray(sample.get("rejected_world_positions"))
+        if (base_raw.shape != (len(vertex_ids), 3) or trial_raw.shape != base_raw.shape
+                or base_raw.dtype.kind != "f" or base_raw.dtype.itemsize != 4
+                or trial_raw.dtype.kind != "f" or trial_raw.dtype.itemsize != 4):
+            raise human.ImportError(f"local self-separation pose {pose_index} needs matching Float32 Vx3 worlds")
+        baseline = np.ascontiguousarray(base_raw, dtype="<f4")
+        rejected = np.ascontiguousarray(trial_raw, dtype="<f4")
+        jac = np.asarray(sample.get("jacobians"), dtype=np.float64)
+        if jac.shape != (len(vertex_ids), 3, 3):
+            raise human.ImportError(f"local self-separation pose {pose_index} Jacobians need shape Vx3x3")
+        if not np.isfinite(baseline).all() or not np.isfinite(rejected).all() or not np.isfinite(jac).all():
+            raise human.ImportError(f"local self-separation pose {pose_index} contains non-finite inputs")
+        raw_pairs = np.asarray(sample.get("self_pair_rows"))
+        if raw_pairs.ndim != 2 or raw_pairs.shape[1] != 2 or raw_pairs.size == 0 or raw_pairs.dtype.kind not in "iu":
+            raise human.ImportError(f"local self-separation pose {pose_index} needs a nonempty integer pair table")
+        pairs = np.asarray(raw_pairs, dtype=np.int64)
+        if (pairs.min() < 0 or pairs.max() >= face_count or np.any(pairs[:, 0] >= pairs[:, 1])
+                or len(np.unique(pairs, axis=0)) != len(pairs)):
+            raise human.ImportError(f"local self-separation pose {pose_index} pair rows are malformed")
+        pairs = pairs[np.lexsort((pairs[:, 1], pairs[:, 0]))]
+        if len(pairs) > 128:
+            raise human.ImportError(f"local self-separation pose {pose_index} exceeds its pair bound")
+        pair_vertices = face_rows[pairs]
+        if not np.all(np.isin(pair_vertices, vertex_ids)):
+            raise human.ImportError(f"local self-separation pose {pose_index} omits a paired face vertex")
+        if np.any(np.any(pair_vertices[:, 0, :, None] == pair_vertices[:, 1, None, :], axis=(1, 2))):
+            raise human.ImportError(f"local self-separation pair table includes adjacent faces")
+        unique_pair_faces = np.unique(pairs.reshape(-1))
+        local_pair_faces = np.searchsorted(vertex_ids, face_rows[unique_pair_faces])
+        if not np.array_equal(vertex_ids[local_pair_faces], face_rows[unique_pair_faces]):
+            raise human.ImportError(f"local self-separation pose {pose_index} face-to-world row mapping is invalid")
+        baseline_records = _exact_surface_records(baseline, local_pair_faces)
+        baseline_record_by_face = {int(face): baseline_records[index]
+                                   for index, face in enumerate(unique_pair_faces)}
+        rejected_records = _exact_surface_records(rejected, local_pair_faces)
+        exact_record_by_face = {int(face): rejected_records[index]
+                                for index, face in enumerate(unique_pair_faces)}
+        for first_face, second_face in pairs:
+            if ci.triangle_intersection_points(baseline_record_by_face[int(first_face)][0],
+                                               baseline_record_by_face[int(second_face)][0]):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} accepted-baseline identity precondition failed: "
+                    "a supplied pair is not exactly clear"
+                )
+            tri_a = exact_record_by_face[int(first_face)][0]
+            tri_b = exact_record_by_face[int(second_face)][0]
+            if not ci.triangle_intersection_points(tri_a, tri_b):
+                raise human.ImportError(f"local self-separation pose {pose_index} supplied a pair absent from its exact rejected geometry")
+        total_pairs += len(pairs)
+        checked.append({"vertex_ids": vertex_ids, "baseline": baseline, "rejected": rejected,
+                        "jacobian": jac, "pairs": pairs})
+    if total_pairs > _LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS:
+        raise human.ImportError("local self-separation pair/pose rows exceed the bounded count")
+
+    variable_index = np.full(vertex_count, -1, dtype=np.int32)
+    variable_index[movable] = np.arange(len(movable), dtype=np.int32)
+    nvar = 3 * len(movable)
+    constraints: list[np.ndarray] = []
+    rhs_rows: list[float] = []
+    pair_receipts: list[dict[str, Any]] = []
+    rows_by_pose: list[int] = []
+    for pose_index, sample in enumerate(checked):
+        local_index = np.full(vertex_count, -1, dtype=np.int32)
+        local_index[sample["vertex_ids"]] = np.arange(len(sample["vertex_ids"]), dtype=np.int32)
+        baseline = sample["baseline"].astype(np.float64)
+        rejected = sample["rejected"].astype(np.float64)
+        jac = sample["jacobian"]
+        start = len(constraints)
+        for face_a, face_b in sample["pairs"]:
+            face_a, face_b = int(face_a), int(face_b)
+            ids_a, ids_b = face_rows[face_a], face_rows[face_b]
+            local_a, local_b = local_index[ids_a], local_index[ids_b]
+            tri_a, tri_b = baseline[local_a], baseline[local_b]
+            trial_a, trial_b = rejected[local_a], rejected[local_b]
+            edges_a = np.roll(tri_a, -1, axis=0) - tri_a
+            edges_b = np.roll(tri_b, -1, axis=0) - tri_b
+            normal_a, normal_b = np.cross(edges_a[0], edges_a[1]), np.cross(edges_b[0], edges_b[1])
+            trial_edges_a = np.roll(trial_a, -1, axis=0) - trial_a
+            trial_edges_b = np.roll(trial_b, -1, axis=0) - trial_b
+            trial_normal_a = np.cross(trial_edges_a[0], trial_edges_a[1])
+            trial_normal_b = np.cross(trial_edges_b[0], trial_edges_b[1])
+            if min(np.linalg.norm(normal_a), np.linalg.norm(normal_b),
+                   np.linalg.norm(trial_normal_a), np.linalg.norm(trial_normal_b)) <= 1.0e-14:
+                raise human.ImportError("local self-separation supplied pair contains a degenerate SAT triangle")
+            axes = np.asarray([
+                normal_a, normal_b,
+                *[np.cross(a, b) for a in edges_a for b in edges_b],
+                *[np.cross(edge, normal_a) for edge in edges_a],
+                *[np.cross(edge, normal_b) for edge in edges_b],
+            ], dtype=np.float64)
+            lengths = np.linalg.norm(axes, axis=1)
+            valid = lengths > 1.0e-14
+            if not np.any(valid):
+                raise human.ImportError("accepted self-pair has no valid SAT axis")
+            axes = axes[valid] / lengths[valid, None]
+            proj_a, proj_b = tri_a @ axes.T, tri_b @ axes.T
+            gap_ab = proj_b.min(axis=0) - proj_a.max(axis=0)
+            gap_ba = proj_a.min(axis=0) - proj_b.max(axis=0)
+            ia, ib = int(np.argmax(gap_ab)), int(np.argmax(gap_ba))
+            if gap_ab[ia] >= gap_ba[ib]:
+                axis, gap_m = axes[ia], float(gap_ab[ia])
+            else:
+                axis, gap_m = -axes[ib], float(gap_ba[ib])
+            if not math.isfinite(gap_m) or gap_m <= 0.0:
+                raise human.ImportError("accepted self-pair does not have positive SAT separation")
+            gap_mm = gap_m * 1000.0
+            now_a, now_b = rejected[local_a] * 1000.0, rejected[local_b] * 1000.0
+            max_rhs = -math.inf
+            for i, source_a in enumerate(ids_a):
+                for j, source_b in enumerate(ids_b):
+                    row = np.zeros(nvar, dtype=np.float64)
+                    for source_id, local_row, sign in (
+                        (int(source_a), int(local_a[i]), -1.0),
+                        (int(source_b), int(local_b[j]), 1.0),
+                    ):
+                        variable = int(variable_index[source_id])
+                        if variable >= 0:
+                            for dim in range(3):
+                                row[3 * variable + dim] += sign * float(np.dot(axis, jac[local_row, :, dim]))
+                    current_mm = float(np.dot(axis, now_b[j] - now_a[i]))
+                    required_mm = gap_mm - current_mm
+                    max_rhs = max(max_rhs, required_mm)
+                    if not np.any(row):
+                        if required_mm > 1.0e-8:
+                            raise human.ImportError("self-pair violates accepted SAT gap with no movable response")
+                        continue
+                    constraints.append(row)
+                    rhs_rows.append(required_mm)
+            pair_receipts.append({"pose_index": pose_index, "face_pair": [face_a, face_b],
+                                  "accepted_sat_gap_mm": gap_mm, "maximum_required_projection_change_mm": max_rhs})
+        rows_by_pose.append(len(constraints) - start)
+    if not constraints:
+        raise human.ImportError("local self-separation produced no movable SAT constraints")
+    matrix = np.ascontiguousarray(np.vstack(constraints), dtype=np.float64)
+    rhs = np.asarray(rhs_rows, dtype=np.float64)
+    if matrix.shape != (len(rhs), nvar) or not np.isfinite(matrix).all() or not np.isfinite(rhs).all():
+        raise human.ImportError("local self-separation SAT system is malformed or non-finite")
+
+    # Identity plus the attempt002 source-mesh graph-Laplacian penalty.
+    graph_edges = np.concatenate((face_rows[:, [0, 1]], face_rows[:, [1, 2]], face_rows[:, [2, 0]]), axis=0)
+    graph_edges.sort(axis=1)
+    graph_edges = np.unique(graph_edges, axis=0)
+    graph_edges = graph_edges[np.any(np.isin(graph_edges, movable), axis=1)]
+    q_matrix = np.eye(nvar, dtype=np.float64)
+    lam = _LOCAL_SELF_SEPARATION_GRAPH_LAMBDA
+    for first, second in graph_edges:
+        a, b = int(variable_index[int(first)]), int(variable_index[int(second)])
+        for dim in range(3):
+            if a >= 0:
+                q_matrix[3 * a + dim, 3 * a + dim] += lam
+            if b >= 0:
+                q_matrix[3 * b + dim, 3 * b + dim] += lam
+            if a >= 0 and b >= 0:
+                q_matrix[3 * a + dim, 3 * b + dim] -= lam
+                q_matrix[3 * b + dim, 3 * a + dim] -= lam
+    if not np.isfinite(q_matrix).all() or float(np.linalg.eigvalsh(q_matrix).min()) <= 0.0:
+        raise human.ImportError("local self-separation source graph objective is not positive definite")
+
+    cap = _LOCAL_SELF_SEPARATION_COMPONENT_CAP_MM
+    bounds = [(-cap, cap)] * nvar
+    optimizer_deadline = monotonic() + _LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS
+
+    class _OptimizerWallTimeExceeded(Exception):
+        pass
+
+    def remaining_optimizer_seconds() -> float:
+        remaining = optimizer_deadline - monotonic()
+        if remaining <= 0.0:
+            raise human.ImportError("local self-separation optimizer exceeded its 120 second wall-time budget")
+        return remaining
+
+    feasible = linprog(
+        np.zeros(nvar), A_ub=-matrix, b_ub=-rhs, bounds=bounds, method="highs",
+        options={"time_limit": remaining_optimizer_seconds()},
+    )
+    if not feasible.success:
+        lp_status = int(getattr(feasible, "status", -1))
+        lp_message = str(getattr(feasible, "message", "no solver message"))
+        if lp_status == 2:
+            raise human.ImportError(
+                "local self-separation constraints are infeasible within the fixed 1 mm vertex bound "
+                f"(HiGHS status={lp_status}; message={lp_message})"
+            )
+        if lp_status == 1 and monotonic() >= optimizer_deadline:
+            raise human.ImportError(
+                "local self-separation LP exceeded its 120 second wall-time budget "
+                f"(HiGHS status={lp_status}; message={lp_message})"
+            )
+        if lp_status == 1:
+            raise human.ImportError(
+                "local self-separation LP stopped without a feasible solution "
+                f"(HiGHS status={lp_status}; message={lp_message})"
+            )
+        raise human.ImportError(
+            "local self-separation LP solver failed without proving infeasibility "
+            f"(HiGHS status={lp_status}; message={lp_message})"
+        )
+
+    def check_optimizer_deadline(_x: np.ndarray) -> None:
+        if monotonic() >= optimizer_deadline:
+            raise _OptimizerWallTimeExceeded
+
+    try:
+        remaining_optimizer_seconds()
+        result = minimize(
+            lambda x: 0.5 * float(x @ (q_matrix @ x)), np.asarray(feasible.x, dtype=np.float64),
+            jac=lambda x: q_matrix @ x, method="SLSQP",
+            bounds=Bounds(np.full(nvar, -cap), np.full(nvar, cap)),
+            constraints=[LinearConstraint(matrix, rhs, np.full(len(rhs), np.inf))],
+            callback=check_optimizer_deadline,
+            options={"maxiter": 1000, "ftol": 1.0e-10, "disp": False},
+        )
+    except _OptimizerWallTimeExceeded as error:
+        raise human.ImportError("local self-separation SLSQP exceeded its 120 second wall-time budget") from error
+    if monotonic() >= optimizer_deadline:
+        raise human.ImportError("local self-separation SLSQP exceeded its 120 second wall-time budget")
+    if not result.success or not np.isfinite(result.x).all():
+        raise human.ImportError("local self-separation QP did not converge to a finite proposal")
+    requested = np.asarray(result.x, dtype=np.float64).reshape(len(movable), 3)
+    requested_slack = matrix @ result.x - rhs
+    requested_l2 = np.linalg.norm(requested, axis=1)
+    if (not np.isfinite(requested).all()
+            or np.any(np.abs(requested) > cap + 1.0e-10)
+            or not np.isfinite(requested_slack).all()
+            or float(requested_slack.min()) < -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM
+            or np.any(requested_l2 > _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM + 1.0e-10)):
+        raise human.ImportError(
+            "local self-separation optimizer failed the linear constraint, component bound, or 1 mm L2 bound"
+        )
+
+    proposed = source.copy()
+    proposed[movable] = np.asarray(source[movable].astype(np.float64) + requested / 1000.0, dtype="<f4")
+    actual_mm = (proposed[movable].astype(np.float64) - source[movable].astype(np.float64)) * 1000.0
+    actual_l2 = np.linalg.norm(actual_mm, axis=1)
+    actual_component = np.abs(actual_mm)
+    rounded_f32 = proposed[movable]
+    next_up = np.nextafter(rounded_f32, np.float32(np.inf))
+    next_down = np.nextafter(rounded_f32, np.float32(-np.inf))
+    component_rounding_tolerance_mm = 500.0 * np.maximum(
+        np.abs(next_up.astype(np.float64) - rounded_f32.astype(np.float64)),
+        np.abs(rounded_f32.astype(np.float64) - next_down.astype(np.float64)),
+    )
+    rounded_slack = matrix @ actual_mm.reshape(-1) - rhs
+    if (not np.isfinite(actual_mm).all() or np.any(actual_l2 > _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM + 1.0e-9)
+            or not np.isfinite(component_rounding_tolerance_mm).all()
+            or np.any(actual_component > cap + component_rounding_tolerance_mm + 1.0e-10)
+            or not np.isfinite(rounded_slack).all()
+            or float(rounded_slack.min()) < -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM):
+        raise human.ImportError(
+            "Float32-rounded local proposal fails its SAT constraints, component bound, or 1 mm L2 bound"
+        )
+    if proposed[protected].tobytes() != source[protected].tobytes():
+        raise human.ImportError("local self-separation changed a protected target, support, or anchor row")
+    outside = np.setdiff1d(np.arange(vertex_count, dtype=np.int64), movable, assume_unique=True)
+    if proposed[outside].tobytes() != source[outside].tobytes():
+        raise human.ImportError("local self-separation changed source rows outside its movable patch")
+
+    for pose_index, sample in enumerate(checked):
+        pose_variable = variable_index[sample["vertex_ids"]]
+        pose_delta_m = np.zeros((len(sample["vertex_ids"]), 3), dtype=np.float64)
+        movable_rows = pose_variable >= 0
+        pose_delta_m[movable_rows] = actual_mm[pose_variable[movable_rows]] / 1000.0
+        predicted_world = np.ascontiguousarray(
+            (sample["rejected"].astype(np.float64)
+             + np.einsum("vij,vj->vi", sample["jacobian"], pose_delta_m)).astype("<f4"),
+        )
+        unique_pair_faces = np.unique(sample["pairs"].reshape(-1))
+        local_pair_faces = np.searchsorted(sample["vertex_ids"], face_rows[unique_pair_faces])
+        predicted_records = _exact_surface_records(predicted_world, local_pair_faces)
+        record_by_face = {int(face): predicted_records[index]
+                          for index, face in enumerate(unique_pair_faces)}
+        for first_face, second_face in sample["pairs"]:
+            if ci.triangle_intersection_points(record_by_face[int(first_face)][0],
+                                               record_by_face[int(second_face)][0]):
+                raise human.ImportError(f"Float32-rounded first-order pose prediction retains an exact supplied self-pair at pose={pose_index}")
+
+    return {
+        "status": "bounded_local_linearized_proposal",
+        "proposal_source_positions_m_f32": proposed,
+        "movable_vertex_ids": movable.copy(),
+        "source_increment_mm_f32_applied": actual_mm,
+        "constraint_rows_by_pose": rows_by_pose,
+        "pair_pose_receipts": pair_receipts,
+        "requested_max_vertex_l2_increment_mm": float(requested_l2.max(initial=0.0)),
+        "float32_max_vertex_l2_increment_mm": float(actual_l2.max(initial=0.0)),
+        "float32_component_bound_rounding_tolerance_mm_max": float(component_rounding_tolerance_mm.max(initial=0.0)),
+        "post_rounding_linearized_minimum_sat_slack_mm": float(rounded_slack.min()),
+        "post_rounding_predicted_supplied_pair_exact_count": 0,
+        "protected_vertex_ids": protected.copy(),
+        "exact_forward_or_full_mesh_acceptance_performed": False,
+    }
 
 
 def _signed_surface_integral(vertices: np.ndarray, faces: np.ndarray) -> float:
@@ -3074,6 +3471,53 @@ def derive_shared_multipose_inferred_clearance(
             "source_positions_f32": packed_source,
         })
 
+    def audit_candidate_self(candidate_world, *, reuse_world=None, reuse_audits=None):
+        if (reuse_world is None) != (reuse_audits is None):
+            raise human.ImportError("self audit reuse requires both an exact world and its completed audit rows")
+        if reuse_world is not None and (
+                np.asarray(reuse_world).shape != current_world.shape or len(reuse_audits) != pose_count):
+            raise human.ImportError("self audit reuse rows do not cover the accepted poses")
+        audits = []
+        failures = []
+        for pose in range(pose_count):
+            baseline_self = current_self_audits[pose]
+            if baseline_self is None:
+                records = _exact_surface_records(current_world[pose], compact_faces)
+                baseline_self = _audit_pair(records, records, same_surface=True)
+                if int(baseline_self["count"]) != 0:
+                    raise human.ImportError(
+                        f"current accepted skin has {baseline_self['count']} exact self-pairs at pose={pose}"
+                    )
+                current_self_audits[pose] = baseline_self
+            if reuse_world is not None and np.array_equal(candidate_world[pose], reuse_world[pose]):
+                self_audit = reuse_audits[pose]
+            elif np.array_equal(candidate_world[pose], current_world[pose]):
+                self_audit = baseline_self
+            else:
+                self_audit = audit_incremental_skin_self_intersections(
+                    baseline_world_positions=current_world[pose],
+                    candidate_world_positions=candidate_world[pose],
+                    baseline_faces=compact_faces,
+                    candidate_faces=compact_faces,
+                    baseline_self_audit=baseline_self,
+                    expected_baseline_world_f32_sha256=_float32_xyz_sha256(current_world[pose]),
+                    expected_face_index_sha256=compact_face_sha,
+                    expected_baseline_self_pair_table_sha256=_baseline_self_pair_table_sha256(
+                        baseline_self, len(compact_faces),
+                    ),
+                )
+            audits.append(self_audit)
+            if int(self_audit.get("count", -1)) != len(self_audit.get("triangle_pairs", [])):
+                raise human.ImportError(f"candidate exact self audit is malformed at pose={pose}")
+            if self_audit.get("degenerate_face_rows"):
+                raise human.ImportError(f"candidate exact self audit found degenerate faces at pose={pose}")
+            if int(self_audit["count"]):
+                failures.append({
+                    "pose_index": pose,
+                    "triangle_pairs": [tuple(map(int, pair)) for pair in self_audit["triangle_pairs"]],
+                })
+        return audits, failures
+
     for iteration in range(max_iterations):
         before_by_pose = current_counts.copy()
         before_total = sum(before_by_pose)
@@ -3297,8 +3741,315 @@ def derive_shared_multipose_inferred_clearance(
                              f"source_vertex={int(referenced[vertex])}")
                 emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
                 continue
+            trial_self_audits, self_failures = audit_candidate_self(trial_world)
+            local_self_separation = None
+            if self_failures:
+                failed_pairs = [
+                    (int(failure["pose_index"]), np.asarray(failure["triangle_pairs"], dtype=np.int64).reshape(-1, 2))
+                    for failure in self_failures
+                ]
+                required_target_seed_ids = referenced[seeds]
+                active_target_ids = referenced[np.unique(active_compact).reshape(-1)]
+                protected_self_ids = np.unique(np.concatenate((
+                    required_target_seed_ids, active_target_ids, all_fixed_ids,
+                )))
+                selected_seed_faces = set()
+                protected_pair_side_faces = set()
+                pair_selection_receipts = []
+                ineligible_pair = None
+                source_displacement = trial_source - current_source
+                for pose, pairs in failed_pairs:
+                    for face_a_value, face_b_value in pairs:
+                        face_a, face_b = int(face_a_value), int(face_b_value)
+                        sides = (face_a, face_b)
+                        eligible = [
+                            face for face in sides
+                            if not np.intersect1d(source_faces[face], protected_self_ids).size
+                        ]
+                        if not eligible:
+                            ineligible_pair = {
+                                "pose_index": pose,
+                                "triangle_pair": [face_a, face_b],
+                                "protected_side_faces": [face_a, face_b],
+                            }
+                            break
+                        # Prefer the eligible face already closest to its accepted source
+                        # position; break exact ties by stable face-row order.
+                        movement_cost = {}
+                        for face in eligible:
+                            compact_face_vertices = lookup[source_faces[face]]
+                            if np.any(compact_face_vertices < 0):
+                                raise human.ImportError(
+                                    "self-pair face is absent from the sorted compact source map"
+                                )
+                            movement_cost[face] = float(np.sum(
+                                source_displacement[compact_face_vertices] ** 2
+                            ))
+                        selected_face = min(eligible, key=lambda face: (movement_cost[face], face))
+                        selected_seed_faces.add(selected_face)
+                        protected_sides = [face for face in sides if face not in eligible]
+                        protected_pair_side_faces.update(protected_sides)
+                        pair_selection_receipts.append({
+                            "pose_index": int(pose),
+                            "triangle_pair": [face_a, face_b],
+                            "eligible_seed_faces": eligible,
+                            "selected_seed_face": int(selected_face),
+                            "selected_face_source_displacement_squared_m2": movement_cost[selected_face],
+                            "protected_pair_side_faces": protected_sides,
+                        })
+                    if ineligible_pair is not None:
+                        break
+                if ineligible_pair is not None:
+                    rejection = (
+                        "local self-separation rejected: neither face in an exact self-pair "
+                        "is eligible for a movable seed"
+                    )
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                               diagnostics={
+                                   "self_pair_failures": [
+                                       {"pose_index": pose, "triangle_pairs": pairs.tolist()}
+                                       for pose, pairs in failed_pairs
+                                   ],
+                                   "ineligible_pair": ineligible_pair,
+                               })
+                    continue
+                self_seed_ids = np.unique(np.concatenate([
+                    source_faces[face] for face in sorted(selected_seed_faces)
+                ]))
+                protected_pair_side_ids = np.unique(np.concatenate([
+                    source_faces[face] for face in sorted(protected_pair_side_faces)
+                ])) if protected_pair_side_faces else np.empty(0, dtype=np.int64)
+                shared_protected_side_ids = np.intersect1d(self_seed_ids, protected_pair_side_ids)
+                if len(shared_protected_side_ids):
+                    rejection = (
+                        "local self-separation rejected: selected seed faces overlap vertices of a "
+                        "protected pair-side face"
+                    )
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                               diagnostics={
+                                   "shared_protected_pair_side_vertex_ids": shared_protected_side_ids.tolist(),
+                                   "pair_seed_face_selection": pair_selection_receipts,
+                                   "protected_pair_side_face_rows": sorted(protected_pair_side_faces),
+                               })
+                    continue
+                patch_blocked_ids = np.union1d(protected_self_ids, protected_pair_side_ids)
+                try:
+                    source_edge_rows = referenced[edges]
+                    adjacency = {}
+                    for first, second in source_edge_rows:
+                        first, second = int(first), int(second)
+                        adjacency.setdefault(first, set()).add(second)
+                        adjacency.setdefault(second, set()).add(first)
+                    movable_set = set(map(int, self_seed_ids))
+                    frontier = set(movable_set)
+                    patch_blocked_set = set(map(int, patch_blocked_ids))
+                    for _ring in range(2):
+                        next_frontier = {
+                            neighbor for vertex in frontier for neighbor in adjacency.get(vertex, ())
+                            if neighbor not in movable_set and neighbor not in patch_blocked_set
+                        }
+                        movable_set.update(next_frontier)
+                        frontier = next_frontier
+                        if len(movable_set) > _LOCAL_SELF_SEPARATION_MAX_MOVABLE_VERTICES:
+                            raise human.ImportError(
+                                "local self-separation two-ring patch exceeds the helper's 256-vertex bound"
+                            )
+                    movable_ids = np.asarray(sorted(movable_set), dtype=np.int64)
+                    if len(movable_ids) > _LOCAL_SELF_SEPARATION_MAX_MOVABLE_VERTICES:
+                        raise human.ImportError(
+                            "local self-separation patch exceeds the helper's 256-vertex bound"
+                        )
+                    pose_samples = []
+                    for pose, pair_rows in failed_pairs:
+                        pose_samples.append({
+                            "accepted_pose_index": int(pose),
+                            "vertex_ids": referenced,
+                            "baseline_world_positions": current_world[pose].astype("<f4"),
+                            "rejected_world_positions": trial_world[pose].astype("<f4"),
+                            "jacobians": trial_maps[pose],
+                            "self_pair_rows": pair_rows,
+                        })
+                    full_trial_source = source.astype("<f4").copy()
+                    full_trial_source[referenced] = trial_source.astype("<f4")
+                    preproposal_world = trial_world.copy()
+                    preproposal_self_audits = trial_self_audits
+                    proposal = _propose_local_self_separation_increment(
+                        source_positions_m=full_trial_source,
+                        faces=source_faces,
+                        movable_vertex_ids=movable_ids,
+                        self_patch_seed_vertex_ids=self_seed_ids,
+                        required_target_seed_vertex_ids=required_target_seed_ids,
+                        active_target_face_vertex_ids=active_target_ids,
+                        fixed_support_vertex_ids=fixed_ids,
+                        preserved_anchor_vertex_ids=anchor_ids,
+                        pose_samples=pose_samples,
+                    )
+                    if (not isinstance(proposal, dict)
+                            or proposal.get("status") != "bounded_local_linearized_proposal"):
+                        raise human.ImportError("local self-separation returned no recognized proposal record")
+                    raw_constraint_rows = proposal.get("constraint_rows_by_pose")
+                    if (not isinstance(raw_constraint_rows, (list, tuple))
+                            or len(raw_constraint_rows) != len(failed_pairs)):
+                        raise human.ImportError(
+                            "local self-separation constraint counts do not match the failing-pose samples"
+                        )
+                    constraint_rows_by_pose = [0] * pose_count
+                    for sample_index, row_count in enumerate(raw_constraint_rows):
+                        if (isinstance(row_count, (bool, np.bool_))
+                                or not isinstance(row_count, (int, np.integer)) or int(row_count) < 0):
+                            raise human.ImportError("local self-separation returned malformed per-pose constraint counts")
+                        accepted_pose_index = failed_pairs[sample_index][0]
+                        constraint_rows_by_pose[accepted_pose_index] = int(row_count)
+                    expected_pairs_by_sample = [
+                        {tuple(map(int, pair)) for pair in pairs.tolist()}
+                        for _, pairs in failed_pairs
+                    ]
+                    seen_pairs_by_sample = [set() for _ in failed_pairs]
+                    remapped_pair_receipts = []
+                    raw_pair_receipts = proposal.get("pair_pose_receipts", [])
+                    if (not isinstance(raw_pair_receipts, (list, tuple))
+                            or len(raw_pair_receipts) != sum(map(len, expected_pairs_by_sample))):
+                        raise human.ImportError(
+                            "local self-separation pair receipts do not cover the supplied pose/pair rows"
+                        )
+                    for receipt in raw_pair_receipts:
+                        if not isinstance(receipt, dict):
+                            raise human.ImportError("local self-separation returned a malformed pair receipt")
+                        sample_index = receipt.get("pose_index")
+                        if (isinstance(sample_index, (bool, np.bool_))
+                                or not isinstance(sample_index, (int, np.integer))
+                                or int(sample_index) < 0 or int(sample_index) >= len(failed_pairs)):
+                            raise human.ImportError("local self-separation pair receipt has an invalid sample index")
+                        pair_raw = receipt.get("face_pair")
+                        if (not isinstance(pair_raw, (list, tuple)) or len(pair_raw) != 2
+                                or any(isinstance(value, (bool, np.bool_))
+                                       or not isinstance(value, (int, np.integer)) for value in pair_raw)):
+                            raise human.ImportError("local self-separation pair receipt has a malformed face pair")
+                        face_pair = tuple(map(int, pair_raw))
+                        sample_index = int(sample_index)
+                        if (face_pair not in expected_pairs_by_sample[sample_index]
+                                or face_pair in seen_pairs_by_sample[sample_index]):
+                            raise human.ImportError(
+                                "local self-separation pair receipt does not match a unique supplied pose/pair row"
+                            )
+                        seen_pairs_by_sample[sample_index].add(face_pair)
+                        remapped_pair_receipts.append({
+                            **receipt,
+                            "sample_index": sample_index,
+                            "pose_index": int(failed_pairs[sample_index][0]),
+                        })
+                    if seen_pairs_by_sample != expected_pairs_by_sample:
+                        raise human.ImportError(
+                            "local self-separation pair receipts omit supplied pose/pair rows"
+                        )
+                    raw_proposed_source = np.asarray(proposal.get("proposal_source_positions_m_f32"))
+                    if (raw_proposed_source.dtype.kind != "f" or raw_proposed_source.dtype.itemsize != 4
+                            or raw_proposed_source.shape != full_trial_source.shape):
+                        raise human.ImportError("local self-separation did not return matching Float32 source positions")
+                    proposed_full_source = np.ascontiguousarray(raw_proposed_source, dtype="<f4")
+                    if not np.isfinite(proposed_full_source).all():
+                        raise human.ImportError("local self-separation returned non-finite source positions")
+                    if not np.array_equal(np.asarray(proposal.get("movable_vertex_ids"), dtype=np.int64), movable_ids):
+                        raise human.ImportError("local self-separation proposal changed its declared movable patch")
+                    if not np.array_equal(np.asarray(proposal.get("protected_vertex_ids"), dtype=np.int64),
+                                          protected_self_ids):
+                        raise human.ImportError("local self-separation proposal changed its protected vertex set")
+                    outside_patch = np.setdiff1d(
+                        np.arange(len(source), dtype=np.int64), movable_ids, assume_unique=True,
+                    )
+                    if not np.array_equal(proposed_full_source[outside_patch], full_trial_source[outside_patch]):
+                        raise human.ImportError("local self-separation changed source vertices outside its patch")
+                    trial_source = proposed_full_source[referenced].astype(np.float64)
+                    if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
+                        raise human.ImportError("local self-separation moved a fixed support or preserved anchor")
+                    if candidate_forward is None:
+                        trial_delta = trial_source - source_base
+                        trial_world = (captured + np.einsum(
+                            "pnij,nj->pni", current_maps, trial_delta,
+                        )).astype("<f4").astype(np.float64)
+                        trial_maps, trial_forward_diagnostics = current_maps, {}
+                    else:
+                        trial_world, trial_maps, trial_forward_diagnostics = evaluate_forward(trial_source)
+                        if trial_forward_diagnostics.get("admissible", True) is not True:
+                            raise human.ImportError(
+                                "local self-separation forward model violates a source-map invariant: "
+                                + str(trial_forward_diagnostics.get("rejection_reason", "unspecified invariant"))
+                            )
+                    if np.array_equal(trial_world, current_world):
+                        raise human.ImportError("local self-separation produced no changed accepted-pose coordinates")
+                    tri = trial_world[:, compact_faces]
+                    area = np.cross(tri[:, :, 1] - tri[:, :, 0], tri[:, :, 2] - tri[:, :, 0])
+                    area_norm = np.linalg.norm(area, axis=2)
+                    if not np.isfinite(area_norm).all() or np.any(area_norm == 0.0):
+                        raise human.ImportError("local self-separation produced zero-area/non-finite skin triangles")
+                    orientation_numerator = np.einsum("pfi,pfi->pf", base_area, area)
+                    orientation_denominator = base_area_norm * area_norm
+                    orientation = np.zeros_like(area_norm)
+                    np.divide(orientation_numerator, orientation_denominator, out=orientation,
+                              where=orientation_denominator > 0.0)
+                    if not np.isfinite(orientation).all() or float(orientation.min()) <= 0.0:
+                        raise human.ImportError("local self-separation violated accepted-pose area/orientation gates")
+                    source_winding = _verify_source_winding_in_accepted_poses(
+                        trial_source, compact_faces, source_outward_face_signs, trial_maps, area,
+                    )
+                    trial_bed_gap = np.einsum("pni,pi->pn", trial_world - origins[:, None, :], bed_normals)
+                    if not np.isfinite(trial_bed_gap).all() or np.any(trial_bed_gap < bed_floor):
+                        raise human.ImportError("local self-separation worsened an immutable baseline bed-plane gap")
+                    trial_self_audits, remaining_self_failures = audit_candidate_self(
+                        trial_world, reuse_world=preproposal_world, reuse_audits=preproposal_self_audits,
+                    )
+                    if remaining_self_failures:
+                        first = remaining_self_failures[0]
+                        raise human.ImportError(
+                            "nonlinear exact self recheck retained "
+                            f"{len(remaining_self_failures)} failing pose(s); first pose={first['pose_index']} "
+                            f"pairs={first['triangle_pairs'][:8]}"
+                        )
+                    local_self_separation = {
+                        "status": "bounded_local_proposal_revalidated_before_target_scans",
+                        "failure_pose_indices": [int(pose) for pose, _ in failed_pairs],
+                        "failure_pair_count_by_pose": [int(len(pairs)) for _, pairs in failed_pairs],
+                        "failure_triangle_pairs_by_pose": [
+                            {"pose_index": int(pose), "triangle_pairs": pairs.tolist()}
+                            for pose, pairs in failed_pairs
+                        ],
+                        "self_pair_seed_source_vertex_ids": self_seed_ids.tolist(),
+                        "movable_source_vertex_ids": movable_ids.tolist(),
+                        "movable_patch_expansion_rings": 2,
+                        "pair_pose_receipts": remapped_pair_receipts,
+                        "constraint_rows_by_pose": constraint_rows_by_pose,
+                        "constraint_rows_by_sample": [int(value) for value in raw_constraint_rows],
+                        "pair_seed_face_selection": pair_selection_receipts,
+                        "protected_pair_side_face_rows": sorted(protected_pair_side_faces),
+                        "requested_max_vertex_l2_increment_mm": proposal["requested_max_vertex_l2_increment_mm"],
+                        "float32_max_vertex_l2_increment_mm": proposal["float32_max_vertex_l2_increment_mm"],
+                        "post_rounding_linearized_minimum_sat_slack_mm": proposal[
+                            "post_rounding_linearized_minimum_sat_slack_mm"],
+                        "post_rounding_predicted_supplied_pair_exact_count": proposal[
+                            "post_rounding_predicted_supplied_pair_exact_count"],
+                        "nonlinear_exact_self_pair_count_by_pose": [int(row["count"]) for row in trial_self_audits],
+                        "source_winding": source_winding,
+                        "nonlinear_forward_revalidated": True,
+                        "full_mesh_self_revalidated": True,
+                        "full_target_admission_performed": False,
+                    }
+                    if trial_regularization is None:
+                        trial_regularization = {}
+                    trial_regularization["local_self_separation"] = local_self_separation
+                except human.ImportError as error:
+                    rejection = f"local self-separation proposal rejected: {error}"
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                               diagnostics=trial_regularization or {"self_pair_failures": [
+                                   {"pose_index": pose, "triangle_pairs": pairs.tolist()}
+                                   for pose, pairs in failed_pairs
+                               ]})
+                    continue
+            if any(int(row["count"]) != 0 for row in trial_self_audits):
+                rejection = "trial retains an exact skin self-intersection before target scans"
+                emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                           diagnostics=trial_regularization)
+                continue
             trial_audits = []
-            trial_self_audits = []
             valid = True
             trial_key = f"iteration-{iteration + 1:02d}-backtrack-{backtrack:02d}"
             if scan_progress_callback is not None:
@@ -3312,28 +4063,7 @@ def derive_shared_multipose_inferred_clearance(
                     "source_positions_f32": np.asarray(trial_source, dtype="<f4").copy(),
                 })
             for pose in range(pose_count):
-                if current_self_audits[pose] is None:
-                    records = _exact_surface_records(current_world[pose], compact_faces)
-                    baseline_self = _audit_pair(records, records, same_surface=True)
-                    if int(baseline_self["count"]) != 0:
-                        raise human.ImportError(
-                            f"current accepted skin has {baseline_self['count']} exact self-pairs at pose={pose}"
-                        )
-                    current_self_audits[pose] = baseline_self
-                baseline_self = current_self_audits[pose]
-                self_audit = audit_incremental_skin_self_intersections(
-                    baseline_world_positions=current_world[pose],
-                    candidate_world_positions=trial_world[pose],
-                    baseline_faces=compact_faces,
-                    candidate_faces=compact_faces,
-                    baseline_self_audit=baseline_self,
-                    expected_baseline_world_f32_sha256=_float32_xyz_sha256(current_world[pose]),
-                    expected_face_index_sha256=compact_face_sha,
-                    expected_baseline_self_pair_table_sha256=_baseline_self_pair_table_sha256(
-                        baseline_self, len(compact_faces),
-                    ),
-                )
-                trial_self_audits.append(self_audit)
+                self_audit = trial_self_audits[pose]
                 if int(self_audit["count"]) != 0:
                     rejection = f"trial has {self_audit['count']} exact self-pairs at pose={pose}"
                     emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
@@ -3425,6 +4155,7 @@ def derive_shared_multipose_inferred_clearance(
                 "maximum_source_increment_m": float(field.max() * scale),
                 "maximum_applied_source_increment_m": applied_source_increment,
                 "local_collateral_fold_regularization": trial_regularization,
+                "local_self_separation": local_self_separation,
                 "maximum_source_displacement_m": float(np.linalg.norm(current_source - source_base, axis=1).max()),
                 "maximum_world_displacement_m_by_pose": [
                     float(np.linalg.norm(current_world[p] - captured[p], axis=1).max()) for p in range(pose_count)
