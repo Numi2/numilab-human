@@ -7636,6 +7636,35 @@ def _bodyparts_source_mm_to_body_world(
     return result
 
 
+
+def _bodyparts_registered_member_world_vertices(
+    vertices_mm: list[list[float]], body_name: str, member_id: str,
+    anchor_records: dict[tuple[str, str], dict[str, Any]], target: dict[str, Any],
+) -> list[list[float]]:
+    """Use the named bone registration even when several bones share a body."""
+    anchor = anchor_records.get((body_name, member_id))
+    if not isinstance(anchor, dict):
+        raise ImportError(f"BodyParts3D {member_id} has no registered anchor on {body_name}")
+    source = anchor.get("source", {})
+    owner = anchor.get("target", {})
+    if (
+        source.get("member_id") != member_id or owner.get("name") != body_name
+        or owner.get("core_body_index") != target.get("core_body_index")
+    ):
+        raise ImportError(f"BodyParts3D {member_id} registered anchor has a different body identity")
+    local_pose = _bodyparts_visual_local_pose(
+        anchor.get("registration", {}).get("source_obj_mm_to_core_inertial_body_m"),
+        f"BodyParts3D {member_id} registered member transform",
+    )
+    return _bodyparts_source_mm_to_body_world(
+        vertices_mm,
+        _myosim_vector(target.get("default_com_position_world_m"),
+                       f"BodyParts3D {body_name} registered member position"),
+        list(target.get("default_inertial_quaternion_world_xyzw", [])),
+        *local_pose,
+    )
+
+
 def _bodyparts_world_to_body_stored_m(
     vertices_world_m: list[list[float]], body_position_world_m: list[float], body_quaternion_xyzw: list[float],
     local_translation_m: list[float], local_quaternion_xyzw: list[float], local_uniform_scale: float,
@@ -12093,9 +12122,9 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                     bone_vertices_mm, bone_triangles = _bodyparts_obj_triangles(
                         bone_obj, bone_member,
                     )
-                    bone_vertices_world = _bodyparts_source_mm_to_body_world(
-                        bone_vertices_mm, secondary_position, secondary_quaternion,
-                        *secondary_local_pose,
+                    bone_vertices_world = _bodyparts_registered_member_world_vertices(
+                        bone_vertices_mm, secondary_name, semantic_member,
+                        body_bone_anchor_records, secondary_target,
                     )
                     first_bone_vertex = len(enthesis_vertices_world)
                     enthesis_vertices_world.extend(bone_vertices_world)
