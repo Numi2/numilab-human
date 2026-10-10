@@ -20,6 +20,8 @@ The source-bound comparison covers the exact six affected source members:
 
 All six selected source sheets have zero boundary, nonmanifold, orientation
 mismatch and degenerate face counts under exact coordinate topology checks.
+The exact-area supplement also finds no collinear source triangles, using
+integer arithmetic on the dyadic lattice of the parsed source coordinates.
 Every previously retained oriented source face remains. These are source mesh
 checks, not registered anatomy or native physics qualification. Source
 provenance remains BodyParts3D 4.0 (CC BY 4.0); no source meshes are redistributed
