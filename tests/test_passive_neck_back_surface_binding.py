@@ -43,6 +43,15 @@ class PassiveNeckBackSurfaceBindingTests(unittest.TestCase):
         )
         self.assertTrue(all(not row.get("myosim_muscles") for row in surfaces[150:]))
 
+    def test_default_keeps_routed_inventory_and_explicit_subset_retains_stable_ids(self) -> None:
+        surfaces = model._bodyparts_myosim_surface_specifications()
+        selected = model._bodyparts_myosim_selected_visual_surfaces(surfaces, None)
+        self.assertEqual([sid for sid, _ in selected], list(range(1, 151)))
+        self.assertEqual([row for _, row in selected], surfaces[:150])
+        selected = model._bodyparts_myosim_selected_visual_surfaces(surfaces, {152, 157})
+        self.assertEqual([(sid, row["member_id"]) for sid, row in selected],
+                         [(152, "FJ1573"), (157, "FJ1521")])
+
     def test_passive_surface_map_rejects_non_object_binding(self) -> None:
         with patch.object(
             model,

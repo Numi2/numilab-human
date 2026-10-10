@@ -11328,6 +11328,18 @@ def _bodyparts_refine_conforming_route_edge(
     )
 
 
+def _bodyparts_myosim_selected_visual_surfaces(
+    specifications: list[dict[str, Any]], stable_id_subset: set[int] | None,
+) -> list[tuple[int, dict[str, Any]]]:
+    """Keep unqualified passive additions opt-in without renumbering source IDs."""
+    return [
+        (stable_id, specification)
+        for stable_id, specification in enumerate(specifications, start=1)
+        if (stable_id in stable_id_subset if stable_id_subset is not None
+            else specification.get("passive_visual_binding") is None)
+    ]
+
+
 def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, myosim_artifact: Path, output: Path,
     stable_id_subset: set[int] | None = None,
@@ -11457,9 +11469,12 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
     # retain exact OBJ vertices and their own source-route-derived binding
     # weights; this never guesses a new origin or insertion.
     source_surface_bindings: dict[str, dict[str, Any]] = {}
-    for stable_id, specification in enumerate(specifications, start=1):
-        if stable_id_subset is not None and stable_id not in stable_id_subset:
-            continue
+    # Passive neck/back additions still need source/pose/interface qualification.
+    # Existing default and mass workflows retain their 150 routed surfaces;
+    # explicit subsets prepare additional rows for proof-bound append.
+    for stable_id, specification in _bodyparts_myosim_selected_visual_surfaces(
+        specifications, stable_id_subset,
+    ):
         member_id, label = specification.get("member_id"), specification.get("source_name")
         source_muscles = specification.get("myosim_muscles", [])
         passive_binding_spec = specification.get("passive_visual_binding")
@@ -12527,6 +12542,7 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
                      "tendon_surface_count": sum(1 for entry in provenance if entry["layer"] == "tendon"),
                      "route_bound_muscle_surface_count": route_bound_muscle_surface_count,
                      "passive_registered_support_surface_count": passive_registered_support_surface_count,
+                     "passive_rows_require_explicit_stable_id_subset": True,
                      "opposite_face_pair_cancellation_surface_count": sum(
                          "source_topology_cancellation" in entry for entry in provenance
                      ),
