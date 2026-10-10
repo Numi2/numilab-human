@@ -425,7 +425,7 @@ def _passive_surface_append_bytes(source: dict, subset: dict,
                 "passive append invalid vertex fields")
         require((slots[weights > 0] < local["binding_count"]).all(),
                 "passive append invalid local binding index")
-        require(local["layer"] == 0 and local["binding_count"] > 0,
+        require(local["layer"] == 1 and local["binding_count"] > 0,
                 "passive append requires a muscle inspection row")
         binding_floats = np.ndarray((local["binding_count"], 8), "<f4",
                                     buffer=local["binding_bytes"], offset=4, strides=(36, 4))
@@ -509,8 +509,8 @@ def append_passive_surfaces(source: Path, subset: Path, output: Path, *,
                                bytes=len(raw), surface_count=nr, binding_count=nb,
                                vertex_count=nv, index_count=ni)
     manifest["coverage"].update(emitted_surface_count=nr,
-        muscle_surface_count=sum(int(r[7]) == 0 for r in parent["records"])+len(added),
-        tendon_surface_count=sum(int(r[7]) == 1 for r in parent["records"]))
+        muscle_surface_count=sum(int(r[7]) == 1 for r in parent["records"])+len(added),
+        tendon_surface_count=sum(int(r[7]) == 2 for r in parent["records"]))
     manifest["coverage"]["passive_append_added_stable_ids"] = [
         sid for item in history for sid in item["added_stable_ids"]]
     manifest["coverage"]["upstream_counts_not_recomputed_after_passive_append"] = [

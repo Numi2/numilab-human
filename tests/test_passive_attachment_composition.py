@@ -20,7 +20,7 @@ def inputs(tmp_path):
     source = tmp_path / "surfaces.nhtissue"
     count, bindings = 150, 300
     vertices = count * 3
-    records = b"".join(struct.pack("<8I", 2*i, 2, 3*i, 3, 3*i, 3, i, 0)
+    records = b"".join(struct.pack("<8I", 2*i, 2, 3*i, 3, 3*i, 3, i, 2 if i in (7,8) else 1)
                        for i in range(count))
     binding_bytes = b"".join(struct.pack("<I8f", i+100, 0, 0, 0, 0, 0, 0, 1, 1)
                              for i in range(bindings))
@@ -955,7 +955,7 @@ def test_sequential_reference_surface_composition_keeps_parent_chain(inputs, tmp
 @pytest.fixture
 def neck_subset(tmp_path):
     payload = tmp_path/"neck.nhtissue"
-    records = b"".join(struct.pack("<8I", fb, bc, 3*i, 3, 3*i, 3, 151+i, 0)
+    records = b"".join(struct.pack("<8I", fb, bc, 3*i, 3, 3*i, 3, 151+i, 1)
                        for i, (fb, bc) in enumerate(((0, 5), (5, 3))))
     bindings = b"".join(struct.pack("<I8f", i+400, 0, 0, 0, 0, 0, 0, 1, 1)
                         for i in range(8))
@@ -997,6 +997,9 @@ def test_append_preserves_prior_repair_and_every_parent_byte(inputs, neck_subset
     proof = pac.append_passive_surfaces(parent, neck_subset, out, stable_ids=selected)
     child = pac._read_nhtiss4(out/source.name)
     assert proof["inputs_unchanged"]
+    cm=json.loads((out/source.name).with_suffix(".manifest.json").read_text())
+    assert cm["coverage"]["muscle_surface_count"]==148+len(selected)
+    assert cm["coverage"]["tendon_surface_count"]==2
     assert child["records"][:150].tobytes() == old["records"].tobytes()
     for a,b in zip(old["records"], child["records"]):
         assert pac._row_local_equal(pac._row_slices(old,a),pac._row_slices(child,b))
