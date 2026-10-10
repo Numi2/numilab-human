@@ -18,7 +18,7 @@ These are declared reference corrections, not measurements of one individual or 
 
 ## Native checks and limits
 
-The new pair is self-intersection-free with closed oriented exact-coordinate topology in all eight actual native captures. Changed regions add no triangle-pair crossings against 859 neighbouring anatomical structures. Five existing crossing pairs with the same-side spinal deltoid remain unchanged; they are unresolved and are not admitted as an anatomical interface.
+The new pair is self-intersection-free with closed oriented exact-coordinate topology in all eight actual native captures. Changed regions add no triangle-pair crossings against 859 neighbouring anatomical structures. Within the changed triangle neighbourhood, five existing crossing pairs with the same-side spinal deltoid remain unchanged. This is not the whole interface count: the subsequent complete source-coordinate mutual audit finds 167 pairs per side. These interfaces remain unresolved and are not admitted as anatomically valid.
 
 All 858 other anatomical surfaces have byte-exact referenced triangle coordinates and all 157 accepted body poses match the previously verified 24-surface run. The prior repair checks are thereby preserved, including the separately bounded left-pronator shared-head classification. All 1,000 rows and 60 coupled mechanics/physiology columns match the previous native run exactly. The 8,000 accepted steps span about 16 simulated seconds, settling and complete breaths. An additional offline comparison checks the new pair against 24 retained early and late baseline/intervention poses.
 
