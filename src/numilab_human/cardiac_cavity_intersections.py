@@ -535,6 +535,169 @@ def point_location_prepared(point, prepared):
     return {"location": "indeterminate", "ray": None, "crossings": None, "attempts": 64}
 
 
+@dataclass(frozen=True)
+class PreparedSignedWinding:
+    """Exact signed-winding query snapshot for a closed oriented triangle 2-cycle.
+
+    The surface may self-intersect or have several closed components. Its
+    combinatorial edge orientation and vertex links must still form closed
+    oriented 2-manifolds. No inside/outside or material interpretation is made.
+    """
+    point_locator: PreparedPointLocation
+    face_component_count: int
+    record_identity_sha256: str
+
+
+def _validate_closed_oriented_record_topology(records):
+    """Validate a closed oriented 2-manifold using exact record vertex IDs."""
+    require(bool(records), "signed winding requires non-empty records")
+    vertex_points = {}
+    edge_uses = {}
+    vertex_links = {}
+    face_keys = set()
+    face_ids = set()
+    face_adjacency = [set() for _ in records]
+
+    for position, (triangle, _lower, _upper, face_id, ids) in enumerate(records):
+        require(face_id not in face_ids, "signed winding record face IDs must be unique")
+        face_ids.add(face_id)
+        face_key = tuple(sorted(ids))
+        require(face_key not in face_keys, "signed winding topology has duplicate faces")
+        face_keys.add(face_key)
+        for vertex_id, point in zip(ids, triangle):
+            previous = vertex_points.setdefault(vertex_id, point)
+            require(previous == point,
+                    "signed winding vertex ID has inconsistent exact coordinates")
+        for a, b in ((ids[0], ids[1]), (ids[1], ids[2]), (ids[2], ids[0])):
+            edge_uses.setdefault(tuple(sorted((a, b))), []).append((a, b, position))
+        for local, vertex_id in enumerate(ids):
+            a, b = ids[(local + 1) % 3], ids[(local + 2) % 3]
+            key = tuple(sorted((a, b)))
+            link = vertex_links.setdefault(vertex_id, {})
+            link[key] = link.get(key, 0) + 1
+
+    for uses in edge_uses.values():
+        require(len(uses) == 2,
+                "signed winding requires every topological edge to have exactly two incident faces")
+        first, second = uses
+        require(first[0] == second[1] and first[1] == second[0],
+                "signed winding requires consistently oriented shared edges")
+        face_adjacency[first[2]].add(second[2])
+        face_adjacency[second[2]].add(first[2])
+
+    for vertex_id, link_edges in vertex_links.items():
+        require(all(count == 1 for count in link_edges.values()),
+                f"signed winding vertex {vertex_id} has a repeated link edge")
+        link_adjacency = {}
+        for a, b in link_edges:
+            link_adjacency.setdefault(a, set()).add(b)
+            link_adjacency.setdefault(b, set()).add(a)
+        require(bool(link_adjacency) and all(len(neighbors) == 2
+                                             for neighbors in link_adjacency.values()),
+                f"signed winding vertex {vertex_id} link is not a cycle")
+        reached = set()
+        pending = [min(link_adjacency)]
+        while pending:
+            current = pending.pop()
+            if current in reached:
+                continue
+            reached.add(current)
+            pending.extend(link_adjacency[current] - reached)
+        require(len(reached) == len(link_adjacency),
+                f"signed winding vertex {vertex_id} link has multiple cycles")
+
+    unseen = set(range(len(records)))
+    component_count = 0
+    while unseen:
+        component_count += 1
+        pending = [min(unseen)]
+        while pending:
+            face = pending.pop()
+            if face not in unseen:
+                continue
+            unseen.remove(face)
+            pending.extend(face_adjacency[face] & unseen)
+    return component_count
+
+
+def prepare_signed_winding(records):
+    """Prepare exact signed winding for a closed oriented shell, including self-intersections.
+
+    Every point and record coordinate remains an exact integer or Fraction.
+    Open, nonmanifold, inconsistently oriented, duplicate-face, and degenerate
+    input is rejected before any query can report a winding.
+    """
+    point_locator = prepare_point_location(records)
+    component_count = _validate_closed_oriented_record_topology(point_locator.records)
+    return PreparedSignedWinding(
+        point_locator=point_locator,
+        face_component_count=component_count,
+        record_identity_sha256=point_locator.record_identity_sha256,
+    )
+
+
+def signed_winding_number(point, prepared):
+    """Return the exact signed ray-crossing sum, or a boundary/unresolved status.
+
+    Each forward crossing contributes sign(normal dot ray_direction).
+    Self-intersections are counted per oriented face crossing; values may be
+    negative or have magnitude greater than one. Boundary and unresolved queries
+    return no winding number, so callers cannot infer material there.
+    """
+    require(isinstance(prepared, PreparedSignedWinding),
+            "signed winding requires a PreparedSignedWinding snapshot")
+    locator = prepared.point_locator
+    point = _exact_rational_xyz(point, "signed-winding query")
+    numerators = tuple(plane - _dot(normal, point)
+                       for plane, normal in zip(locator.plane_constants, locator.normals))
+
+    for index, (lower, upper) in enumerate(zip(locator.lower_bounds, locator.upper_bounds)):
+        if any(point[axis] < lower[axis] or point[axis] > upper[axis] for axis in range(3)):
+            continue
+        if numerators[index] == 0 and _inside(
+                _signs(point, 1, locator.triangles[index], locator.normals[index])):
+            return {"status": "boundary", "winding_number": None, "ray": None,
+                    "crossings": None, "attempts": 0}
+
+    forward_candidates = tuple(
+        index for index, upper in enumerate(locator.upper_bounds)
+        if all(upper[axis] >= point[axis] for axis in range(3))
+    )
+    for attempt in range(1, 65):
+        direction = (1, attempt, attempt * attempt)
+        denominators, parallel_indices = _prepared_ray_data(locator, attempt)
+        # Match the existing exact classifier's deterministic coplanar retry,
+        # including planes behind the query point.
+        if any(numerators[index] == 0 for index in parallel_indices):
+            continue
+        winding = 0
+        crossings = 0
+        for index in forward_candidates:
+            denominator = denominators[index]
+            numerator = numerators[index]
+            if denominator == 0 or numerator * denominator <= 0:
+                continue
+            hit = tuple(point[axis] * denominator + numerator * direction[axis]
+                        for axis in range(3))
+            hit_denominator = denominator
+            if hit_denominator < 0:
+                hit_denominator = -hit_denominator
+                hit = tuple(-coordinate for coordinate in hit)
+            signs = _signs(hit, hit_denominator, locator.triangles[index],
+                           locator.normals[index])
+            if _inside(signs):
+                if 0 in signs:
+                    break
+                winding += 1 if denominator > 0 else -1
+                crossings += 1
+        else:
+            return {"status": "resolved", "winding_number": winding,
+                    "ray": list(direction), "crossings": crossings,
+                    "attempts": attempt}
+    return {"status": "indeterminate", "winding_number": None, "ray": None,
+            "crossings": None, "attempts": 64}
+
+
 def audit_cavity_intersections(cavities: dict) -> dict:
     """Audit quotient surfaces without trusting cached source topology claims."""
     require(isinstance(cavities, dict) and isinstance(cavities.get("chambers"), list) and

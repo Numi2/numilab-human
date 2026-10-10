@@ -7,6 +7,7 @@ from pathlib import Path
 import struct
 import sys
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
@@ -203,6 +204,112 @@ class PreparedPointLocationTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "snapshot"):
             audit.point_location_prepared((0, 0, 0), records)
 
+
+
+class PreparedSignedWindingTests(unittest.TestCase):
+    @staticmethod
+    def tetra_records(offset=(0, 0, 0), scale=12, reverse=False):
+        base = ((0, 0, 0), (scale, 0, 0), (0, scale, 0), (0, 0, scale))
+        vertices = tuple(tuple(offset[axis] + point[axis] for axis in range(3))
+                         for point in base)
+        faces = ((0, 2, 1), (0, 1, 3), (0, 3, 2), (1, 2, 3))
+        if reverse:
+            faces = tuple((a, c, b) for a, b, c in faces)
+        return vertices, faces, audit._records(vertices, faces)
+
+    def test_outward_and_reversed_tetra_have_signed_unit_winding(self):
+        _vertices, _faces, outward = self.tetra_records()
+        prepared = audit.prepare_signed_winding(outward)
+        self.assertEqual(prepared.face_component_count, 1)
+        result = audit.signed_winding_number((1, 1, 1), prepared)
+        self.assertEqual(result["status"], "resolved")
+        self.assertEqual(result["winding_number"], 1)
+        self.assertEqual(result["crossings"], 1)
+
+        _vertices, _faces, inward = self.tetra_records(reverse=True)
+        reversed_result = audit.signed_winding_number(
+            (1, 1, 1), audit.prepare_signed_winding(inward))
+        self.assertEqual(reversed_result["winding_number"], -1)
+
+    def test_overlapping_closed_tetrahedra_sum_to_winding_two(self):
+        outer_vertices, outer_faces, _outer = self.tetra_records(scale=12)
+        inner_vertices, inner_faces, _inner = self.tetra_records(
+            offset=(2, 2, 2), scale=12)
+        faces = outer_faces + tuple(tuple(index + 4 for index in face)
+                                    for face in inner_faces)
+        records = audit._records(outer_vertices + inner_vertices, faces)
+        first_records = audit._records(outer_vertices, outer_faces)
+        second_records = audit._records(inner_vertices, inner_faces)
+        self.assertGreater(audit._audit_pair(first_records, second_records,
+                                             same_surface=False)["count"], 0)
+        prepared = audit.prepare_signed_winding(records)
+        self.assertEqual(prepared.face_component_count, 2)
+        self.assertEqual(audit.signed_winding_number((3, 3, 3), prepared)["winding_number"], 2)
+
+    def test_nested_opposite_shell_is_zero_in_cavity_and_one_in_material(self):
+        outer_vertices, outer_faces, _outer = self.tetra_records(scale=12)
+        inner_vertices, inner_faces, _inner = self.tetra_records(
+            offset=(1, 1, 1), scale=4, reverse=True)
+        faces = outer_faces + tuple(tuple(index + 4 for index in face)
+                                    for face in inner_faces)
+        records = audit._records(outer_vertices + inner_vertices, faces)
+        prepared = audit.prepare_signed_winding(records)
+        self.assertEqual(prepared.face_component_count, 2)
+        self.assertEqual(audit.signed_winding_number((2, 2, 2), prepared)["winding_number"], 0)
+        self.assertEqual(audit.signed_winding_number((6, 1, 1), prepared)["winding_number"], 1)
+
+    def test_boundary_has_no_winding_and_primary_vertex_ray_retries(self):
+        _vertices, _faces, records = self.tetra_records()
+        prepared = audit.prepare_signed_winding(records)
+        boundary = audit.signed_winding_number((0, 0, 0), prepared)
+        self.assertEqual(boundary["status"], "boundary")
+        self.assertIsNone(boundary["winding_number"])
+        outside = audit.signed_winding_number((-1, -1, -1), prepared)
+        self.assertEqual(outside["status"], "resolved")
+        self.assertEqual(outside["winding_number"], 0)
+        self.assertGreater(outside["attempts"], 1)
+
+    def test_open_inconsistently_oriented_and_degenerate_shells_are_rejected(self):
+        _vertices, faces, records = self.tetra_records()
+        with self.assertRaisesRegex(HumanImportError, "exactly two incident faces"):
+            audit.prepare_signed_winding(records[:-1])
+        inconsistent_faces = list(faces)
+        inconsistent_faces[0] = tuple(reversed(inconsistent_faces[0]))
+        inconsistent = audit._records(_vertices, inconsistent_faces)
+        with self.assertRaisesRegex(HumanImportError, "consistently oriented"):
+            audit.prepare_signed_winding(inconsistent)
+        duplicate = records + [(records[0][0], records[0][1], records[0][2],
+                                len(records), records[0][4])]
+        with self.assertRaisesRegex(HumanImportError, "duplicate faces"):
+            audit.prepare_signed_winding(duplicate)
+
+        vertices_a, faces_a, _ = self.tetra_records(scale=4)
+        vertices_b, faces_b, _ = self.tetra_records(
+            offset=(0, 0, 0), scale=-4)
+        shared_vertex_mesh = vertices_a + vertices_b[1:]
+        second_map = (0, 4, 5, 6)
+        shared_vertex_faces = faces_a + tuple(
+            tuple(second_map[index] for index in face) for face in faces_b)
+        pinch = audit._records(shared_vertex_mesh, shared_vertex_faces)
+        with self.assertRaisesRegex(HumanImportError, "multiple cycles"):
+            audit.prepare_signed_winding(pinch)
+
+        degenerate = [(((0, 0, 0), (1, 0, 0), (2, 0, 0)),
+                       (0, 0, 0), (2, 0, 0), 0, (0, 1, 2))]
+        with self.assertRaisesRegex(HumanImportError, "degenerate"):
+            audit.prepare_signed_winding(degenerate)
+
+    def test_unresolved_ray_returns_no_winding(self):
+        _vertices, _faces, records = self.tetra_records()
+        prepared = audit.prepare_signed_winding(records)
+        # Force the exact parallel/coplanar retry path for every deterministic
+        # direction while the query lies in the z=0 plane, outside the face.
+        cached = (tuple(0 for _ in prepared.point_locator.normals), (0,))
+        with patch.object(audit, "_prepared_ray_data", return_value=cached):
+            result = audit.signed_winding_number((13, 1, 0), prepared)
+        self.assertEqual(result["status"], "indeterminate")
+        self.assertIsNone(result["winding_number"])
+        self.assertEqual(result["attempts"], 64)
 
 
 class ClosedDomainTests(unittest.TestCase):
