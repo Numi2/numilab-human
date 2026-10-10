@@ -219,6 +219,23 @@ def construct_nonzero_winding_self_union(source_surface):
     This is a rational source-space result; Float32 conversion requires a
     separate audit and is not implied here.
     """
+    return _construct_winding_self_union(source_surface, positive_only=False)
+
+
+def construct_positive_winding_self_union(source_surface):
+    """Extract the boundary of the strictly positive signed-winding material.
+
+    This is an explicit inference for an outward-oriented reference shell with
+    inverted exterior folds, not a substitute for the nonzero material rule.
+    Negative exterior lobes are excluded; opposite-oriented cavities inside
+    positive material remain cavities. A globally reversed shell is rejected.
+    Exact arrangement, manifold, self-intersection and side-probe checks remain
+    mandatory. Attribute ancestry and Float32 conversion need separate audits.
+    """
+    return _construct_winding_self_union(source_surface, positive_only=True)
+
+
+def _construct_winding_self_union(source_surface, *, positive_only):
     require(isinstance(source_surface, dict), "expected one named source surface")
     vertices = source_surface.get("vertices")
     faces = source_surface.get("triangles")
@@ -351,9 +368,11 @@ def construct_nonzero_winding_self_union(source_surface):
         winding_minus, winding_plus = minus["winding_number"], plus["winding_number"]
         require(winding_minus == winding_plus + 1,
                 "oriented patch does not separate adjacent winding levels by +1")
-        if winding_minus != 0 and winding_plus == 0:
+        inside_minus = winding_minus > 0 if positive_only else winding_minus != 0
+        inside_plus = winding_plus > 0 if positive_only else winding_plus != 0
+        if inside_minus and not inside_plus:
             keep, reverse = True, False
-        elif winding_minus == 0 and winding_plus != 0:
+        elif not inside_minus and inside_plus:
             keep, reverse = True, True
         else:
             keep, reverse = False, False
@@ -395,23 +414,24 @@ def construct_nonzero_winding_self_union(source_surface):
             tuple(point[axis] + step * normal[axis] for axis in range(3)),
         ))
 
-    require(output_triangles, "nonzero-winding self-union has no boundary")
+    require(output_triangles, "selected winding material has no boundary")
     output_mesh = indexed_mesh(output_triangles, convert=lambda value: value)
     output_records = predicates._records(output_mesh["vertices_m"], output_mesh["triangles"])
     output_winding = predicates.prepare_signed_winding(output_records)
     output_self_audit = predicates._audit_pair(output_records, output_records, same_surface=True)
     require(output_self_audit["count"] == 0,
-            "nonzero-winding boundary still has exact self-intersections")
+            "selected winding boundary still has exact self-intersections")
     output_topology = _validate_output_topology(output_records)
     for inside_point, outside_point in retained_patch_probes:
         inside = predicates.signed_winding_number(inside_point, output_winding)
         outside = predicates.signed_winding_number(outside_point, output_winding)
         require(inside["status"] == outside["status"] == "resolved" and
                 inside["winding_number"] == 1 and outside["winding_number"] == 0,
-                "emitted patch does not bound exactly the nonzero-winding material")
+                "emitted patch does not bound exactly the selected winding material")
 
     return {
         "source_sha256": source_sha,
+        "material_rule": "strictly_positive" if positive_only else "nonzero",
         "input_face_count": len(faces),
         "input_component_count": prepared.face_component_count,
         "input_self_intersection_pairs": intersection_audit["triangle_pairs"],

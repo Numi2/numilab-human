@@ -167,6 +167,51 @@ class NonzeroWindingSelfUnionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "point-only self-contact"):
             partition.construct_nonzero_winding_self_union(self.surface(vertices, faces))
 
+class PositiveWindingSelfUnionTests(unittest.TestCase):
+    tetra = staticmethod(NonzeroWindingSelfUnionTests.tetra)
+    combine = staticmethod(NonzeroWindingSelfUnionTests.combine)
+    surface = staticmethod(NonzeroWindingSelfUnionTests.surface)
+    signed_volume = staticmethod(NonzeroWindingSelfUnionTests.signed_volume)
+
+    def test_opposite_overlapping_lobes_positive_material_is_exact_difference(self):
+        first = self.tetra(scale=4)
+        second = self.tetra(offset=(1, 1, 1), scale=4, reverse=True)
+        vertices, faces = self.combine((first, second))
+        source = self.surface(vertices, faces)
+        # Nonzero material includes both lobes meeting on a four-face edge.
+        with self.assertRaisesRegex(HumanImportError, "exactly two incident faces"):
+            partition.construct_nonzero_winding_self_union(source)
+        result = partition.construct_positive_winding_self_union(source)
+        self.assertEqual(result["material_rule"], "strictly_positive")
+        self.assertEqual(result["output_self_intersection_audit"]["count"], 0)
+        self.assertTrue(result["output_topology"]["closed_oriented_2_manifold"])
+        self.assertEqual(self.signed_volume(result["output_mesh"]), F(63, 6))
+        winding = predicates.prepare_signed_winding(predicates._records(
+            result["output_mesh"]["vertices_m"], result["output_mesh"]["triangles"]))
+        for point, expected in [((F(1, 2),) * 3, 1),
+                                ((F(5, 4),) * 3, 0),
+                                ((F(2),) * 3, 0)]:
+            self.assertEqual(predicates.signed_winding_number(point, winding)["winding_number"], expected)
+        self.assertEqual(len(result["output_face_ancestry"]),
+                         len(result["output_mesh"]["triangles"]))
+
+    def test_positive_material_retains_nested_opposite_cavity(self):
+        vertices, faces = self.combine((self.tetra(scale=10),
+            self.tetra(offset=(1, 1, 1), scale=2, reverse=True)))
+        result = partition.construct_positive_winding_self_union(self.surface(vertices, faces))
+        self.assertEqual(result["output_topology"]["component_count"], 2)
+        self.assertEqual(self.signed_volume(result["output_mesh"]), F(496, 3))
+        winding = predicates.prepare_signed_winding(predicates._records(
+            result["output_mesh"]["vertices_m"], result["output_mesh"]["triangles"]))
+        self.assertEqual(predicates.signed_winding_number((F(5, 4),) * 3, winding)["winding_number"], 0)
+        self.assertEqual(predicates.signed_winding_number((1, 1, 6), winding)["winding_number"], 1)
+
+    def test_positive_material_rejects_globally_reversed_shell(self):
+        vertices, faces = self.tetra(reverse=True)
+        with self.assertRaisesRegex(HumanImportError, "selected winding material has no boundary"):
+            partition.construct_positive_winding_self_union(self.surface(vertices, faces))
+
+
 class PinnedArrangementTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
