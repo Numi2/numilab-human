@@ -1,0 +1,419 @@
+{
+  "scope": "19-stage encoder GPU counter samples; absent stages are not measured zero; stage samples are on different physical steps; instrumentation may alter scheduling",
+  "stages": {
+    "muscles": {
+      "count": 4,
+      "min_ms": 0.489083,
+      "median_ms": 0.494,
+      "max_ms": 0.496208,
+      "samples": [
+        {
+          "step": 5000,
+          "ns": 494708
+        },
+        {
+          "step": 5019,
+          "ns": 489083
+        },
+        {
+          "step": 5038,
+          "ns": 493292
+        },
+        {
+          "step": 5057,
+          "ns": 496208
+        }
+      ]
+    },
+    "active_force": {
+      "count": 4,
+      "min_ms": 0.01625,
+      "median_ms": 0.0166245,
+      "max_ms": 0.017083,
+      "samples": [
+        {
+          "step": 5001,
+          "ns": 16250
+        },
+        {
+          "step": 5020,
+          "ns": 16916
+        },
+        {
+          "step": 5039,
+          "ns": 17083
+        },
+        {
+          "step": 5058,
+          "ns": 16333
+        }
+      ]
+    },
+    "force_reduce": {
+      "count": 4,
+      "min_ms": 0.048166,
+      "median_ms": 0.0489165,
+      "max_ms": 0.052667,
+      "samples": [
+        {
+          "step": 5002,
+          "ns": 52667
+        },
+        {
+          "step": 5021,
+          "ns": 48833
+        },
+        {
+          "step": 5040,
+          "ns": 49000
+        },
+        {
+          "step": 5059,
+          "ns": 48166
+        }
+      ]
+    },
+    "tendon_transfer": {
+      "count": 4,
+      "min_ms": 0.083625,
+      "median_ms": 0.0842085,
+      "max_ms": 0.084458,
+      "samples": [
+        {
+          "step": 5003,
+          "ns": 83625
+        },
+        {
+          "step": 5022,
+          "ns": 84458
+        },
+        {
+          "step": 5041,
+          "ns": 84083
+        },
+        {
+          "step": 5060,
+          "ns": 84334
+        }
+      ]
+    },
+    "activation": {
+      "count": 4,
+      "min_ms": 0.00575,
+      "median_ms": 0.005896,
+      "max_ms": 0.00675,
+      "samples": [
+        {
+          "step": 5004,
+          "ns": 5792
+        },
+        {
+          "step": 5023,
+          "ns": 6750
+        },
+        {
+          "step": 5042,
+          "ns": 6000
+        },
+        {
+          "step": 5061,
+          "ns": 5750
+        }
+      ]
+    },
+    "stand_prework": {
+      "count": 4,
+      "min_ms": 0.826125,
+      "median_ms": 0.8395205,
+      "max_ms": 0.84975,
+      "samples": [
+        {
+          "step": 5005,
+          "ns": 832250
+        },
+        {
+          "step": 5024,
+          "ns": 849750
+        },
+        {
+          "step": 5043,
+          "ns": 826125
+        },
+        {
+          "step": 5062,
+          "ns": 846791
+        }
+      ]
+    },
+    "stand_mass": {
+      "count": 4,
+      "min_ms": 0.095416,
+      "median_ms": 0.096021,
+      "max_ms": 0.0965,
+      "samples": [
+        {
+          "step": 5006,
+          "ns": 96250
+        },
+        {
+          "step": 5025,
+          "ns": 95792
+        },
+        {
+          "step": 5044,
+          "ns": 95416
+        },
+        {
+          "step": 5063,
+          "ns": 96500
+        }
+      ]
+    },
+    "stand_factor": {
+      "count": 4,
+      "min_ms": 0.701958,
+      "median_ms": 0.718771,
+      "max_ms": 0.725916,
+      "samples": [
+        {
+          "step": 5007,
+          "ns": 721792
+        },
+        {
+          "step": 5026,
+          "ns": 725916
+        },
+        {
+          "step": 5045,
+          "ns": 701958
+        },
+        {
+          "step": 5064,
+          "ns": 715750
+        }
+      ]
+    },
+    "stand_equality_responses": {
+      "count": 4,
+      "min_ms": 0.006458,
+      "median_ms": 0.007125,
+      "max_ms": 0.007583,
+      "samples": [
+        {
+          "step": 5008,
+          "ns": 7333
+        },
+        {
+          "step": 5027,
+          "ns": 6458
+        },
+        {
+          "step": 5046,
+          "ns": 7583
+        },
+        {
+          "step": 5065,
+          "ns": 6917
+        }
+      ]
+    },
+    "stand_equality_factor": {
+      "count": 4,
+      "min_ms": 0.371584,
+      "median_ms": 0.3723335,
+      "max_ms": 0.373375,
+      "samples": [
+        {
+          "step": 5009,
+          "ns": 372458
+        },
+        {
+          "step": 5028,
+          "ns": 372209
+        },
+        {
+          "step": 5047,
+          "ns": 373375
+        },
+        {
+          "step": 5066,
+          "ns": 371584
+        }
+      ]
+    },
+    "stand_projected_responses": {
+      "count": 4,
+      "min_ms": 0.513042,
+      "median_ms": 0.524979,
+      "max_ms": 0.531917,
+      "samples": [
+        {
+          "step": 5010,
+          "ns": 526750
+        },
+        {
+          "step": 5029,
+          "ns": 531917
+        },
+        {
+          "step": 5048,
+          "ns": 513042
+        },
+        {
+          "step": 5067,
+          "ns": 523208
+        }
+      ]
+    },
+    "stand_equality_response_rebuild": {
+      "count": 4,
+      "min_ms": 0.007125,
+      "median_ms": 0.0077085,
+      "max_ms": 0.007958,
+      "samples": [
+        {
+          "step": 5011,
+          "ns": 7958
+        },
+        {
+          "step": 5030,
+          "ns": 7834
+        },
+        {
+          "step": 5049,
+          "ns": 7125
+        },
+        {
+          "step": 5068,
+          "ns": 7583
+        }
+      ]
+    },
+    "stand_equality_factor_rebuild": {
+      "count": 4,
+      "min_ms": 0.003792,
+      "median_ms": 0.0039375,
+      "max_ms": 0.004,
+      "samples": [
+        {
+          "step": 5012,
+          "ns": 3792
+        },
+        {
+          "step": 5031,
+          "ns": 4000
+        },
+        {
+          "step": 5050,
+          "ns": 3916
+        },
+        {
+          "step": 5069,
+          "ns": 3959
+        }
+      ]
+    },
+    "stand_projected_response_fallback": {
+      "count": 4,
+      "min_ms": 0.004458,
+      "median_ms": 0.00475,
+      "max_ms": 0.005,
+      "samples": [
+        {
+          "step": 5013,
+          "ns": 5000
+        },
+        {
+          "step": 5032,
+          "ns": 4458
+        },
+        {
+          "step": 5051,
+          "ns": 4875
+        },
+        {
+          "step": 5070,
+          "ns": 4625
+        }
+      ]
+    },
+    "stand_finish_cached": {
+      "count": 4,
+      "min_ms": 7.945125,
+      "median_ms": 7.950396,
+      "max_ms": 7.963375,
+      "samples": [
+        {
+          "step": 5014,
+          "ns": 7963375
+        },
+        {
+          "step": 5033,
+          "ns": 7945125
+        },
+        {
+          "step": 5052,
+          "ns": 7954959
+        },
+        {
+          "step": 5071,
+          "ns": 7945833
+        }
+      ]
+    },
+    "kinematics": {
+      "count": 4,
+      "min_ms": 1.24625,
+      "median_ms": 1.2577505,
+      "max_ms": 1.260125,
+      "samples": [
+        {
+          "step": 5017,
+          "ns": 1246250
+        },
+        {
+          "step": 5036,
+          "ns": 1260125
+        },
+        {
+          "step": 5055,
+          "ns": 1255959
+        },
+        {
+          "step": 5074,
+          "ns": 1259542
+        }
+      ]
+    },
+    "muscle_angular": {
+      "count": 4,
+      "min_ms": 0.008208,
+      "median_ms": 0.008521,
+      "max_ms": 0.008834,
+      "samples": [
+        {
+          "step": 5018,
+          "ns": 8375
+        },
+        {
+          "step": 5037,
+          "ns": 8208
+        },
+        {
+          "step": 5056,
+          "ns": 8834
+        },
+        {
+          "step": 5075,
+          "ns": 8667
+        }
+      ]
+    }
+  },
+  "coupled_rows": 875,
+  "coupled_exact_same_observer_control": true,
+  "native_log_sha256": "abdbf30220acea7d243f029bc680ac3c71b135cf7107ce40edbb3aec526842f7",
+  "resting-com-momentum-diagnostic.csv_byte_equal": true,
+  "resting-com-support-impulses.csv_byte_equal": true,
+  "resting-surface-audit.csv_byte_equal": true
+}

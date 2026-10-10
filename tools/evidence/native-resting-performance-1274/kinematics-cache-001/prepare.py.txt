@@ -1,0 +1,74 @@
+from pathlib import Path
+import argparse,copy,hashlib,json,sys,datetime
+P=Path('/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011')
+O=Path(__file__).resolve().parent
+H=Path('/Users/n/numi-human-self-separation-integration-1259')
+S=Path('/Users/n/numi-lab-performance-1274')
+B=Path('/Users/n/numi-lab-performance-1274-build-001')
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb') as f:
+  for x in iter(lambda:f.read(8388608),b''):h.update(x)
+ return h.hexdigest()
+def write(p,d):
+ with p.open('x') as f:json.dump(d,f,indent=2,sort_keys=True);f.write('\n')
+def main():
+ parent=P/'baseline/run-declaration.json'
+ assert sha(parent)=='538597542c7c6513ef994de0502dfac2e7a6849994b5136eb177bb78afe9b86d'
+ d=json.loads(parent.read_text());oldout=P/'baseline/native-run'
+ arm=O/'baseline';arm.mkdir();out=arm/'native-run'
+ argv=d['argv'];i=2;env={}
+ while '=' in argv[i] and not argv[i].startswith('/'):
+  k,v=argv[i].split('=',1);env[k]=v;i+=1
+ cli=argv[i:];cli[cli.index('--output')+1]=str(out);cli[cli.index('--seconds')+1]='14.0'
+ env['NUMI_BUILD_DIR']=str(B)
+ env['NUMI_LAB_ROOT']=str(S)
+ env.update({'NUMI_HUMAN_KINEMATICS_CACHE':'1','NUMI_HUMAN_GPU_TIMING':'1','NUMI_HUMAN_GPU_TIMING_STAGE':'cycle','NUMI_HUMAN_GPU_TIMING_ROOTS':','.join(map(str,range(5000,5076)))})
+ env['NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT']=str(out/'common-field-failure.json')
+ env['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']='0,6975,7000'
+ env['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP']='6501'
+ env['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP']='7000'
+ sys.path.insert(0,str(H/'src'))
+ from numilab_human import resting_run
+ parser=argparse.ArgumentParser();resting_run.add_arguments(parser)
+ ns=parser.parse_args(cli[2:]+['--lab',str(S),'--build',str(B)])
+ native,assets=resting_run.command(ns)
+ oldnative=d['owner_cli_preview']['native_argv'][:]
+ oldnative=[x.replace(str(oldout),str(out)) for x in oldnative]
+ oldnative[oldnative.index('--muscle-step-count')+1]='7000'
+ oldnative[0]=str(B/'bin/numi-human-native')
+ assert native==oldnative
+ nenv={k:v.replace(str(oldout),str(out)) for k,v in d['owner_cli_preview']['recorded_invocation_environment'].items()}
+ nenv['DYLD_LIBRARY_PATH']=str(B/'lib')+':'+str(B/'matter')
+ nenv.update({'NUMI_HUMAN_KINEMATICS_CACHE':'1','NUMI_HUMAN_GPU_TIMING':'1','NUMI_HUMAN_GPU_TIMING_STAGE':'cycle','NUMI_HUMAN_GPU_TIMING_ROOTS':','.join(map(str,range(5000,5076)))})
+ nenv['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']='0,6975,7000'
+ nenv['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP']='6501'
+ nenv['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP']='7000'
+ env['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_FIRST_STEP']='6501'
+ env['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP']='7000'
+ assert resting_run.invocation_environment(nenv)==nenv
+ pins=dict(d['immutable_assets'])
+ for p,h in assets.items():
+  if p in pins:assert pins[p]==h
+  pins[p]=h
+ pins[str(parent)]=sha(parent);pins[str(O/'launch_arm.py')]=sha(O/'launch_arm.py');pins[str(Path(__file__))]=sha(Path(__file__))
+ for base in ['apps','include','src','shaders']:
+  for p in (S/base).rglob('*'):
+   if p.is_file():pins[str(p)]=sha(p)
+ for base in ['matter/src','matter/include','matter/shaders']:
+  for p in (S/base).rglob('*'):
+   if p.is_file():pins[str(p)]=sha(p)
+ for p in [S/'CMakeLists.txt',B/'CMakeCache.txt',B/'compile_commands.json']:
+  pins[str(p)]=sha(p)
+ for p,h in pins.items():assert sha(p)==h,p
+ d.update(argv=['/usr/bin/env','-i']+[k+'='+v for k,v in sorted(env.items())]+cli,immutable_assets=pins,seconds=14.0,accepted_steps=7000,capture_steps=[0,6975,7000],launch_adapter={'path':str(O/'launch_arm.py'),'sha256':sha(O/'launch_arm.py')},owner_cli_preview={'native_argv':native,'recorded_invocation_environment':nenv,'asset_sha256':assets},parent_declaration={'path':str(parent),'sha256':sha(parent)},status='prepared_unlaunched',launch_status='unlaunched')
+ d['capture_schedule']=[{'step':x,'physical_time_seconds_float32_dt':x*0.0020000000949949026,'purpose':'bounded desktop viewer verification'} for x in [0,6975,7000]]
+ d['observer_windows']={'com_normal_stride':8,'q_integration_and_gpu_root_momentum':{'first_accepted_step':6501,'last_accepted_step':7000,'expected_rows':500,'reason':'bounded final1s observer window; fixes rejected out-of-horizon bounds in attempt001'},'force_contributions_enabled':False}
+ d['observer_vector_trace']['bounded_rows']=500
+ d['physical_scope']={'arm':'baseline','drive_intervention':None,'changed_from_parent':'14s horizon, capture schedule and final1s diagnostic Q-window; output paths remapped. Same native command otherwise. Desktop session now active; verify actual drawable/UI. 19-stage GPU timestamp sampling on roots5000..5075; instrumented source/build only. Existing GPU per-step kinematics-cache optimization enabled; no overlap queue, no anatomy change.'}
+ d['qualification_boundary']='14s desktop viewer and accepted-prefix verification only; not a new long-run physiology/anatomy qualification.'
+ write(arm/'run-declaration.json',d)
+ write(O/'launch-guard.json',{'schema':'numi.human.native-smoke-launch-guard.v1','launcher_path':str(O/'launch_arm.py'),'launcher_sha256':sha(O/'launch_arm.py'),'arms':{'baseline':{'run_declaration':str(arm/'run-declaration.json'),'run_declaration_sha256':sha(arm/'run-declaration.json'),'native_output':str(out)}}})
+ write(O/'preparation-summary.json',{'prepared_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'native_execution':False,'expected_steps':7000,'seconds':14.0,'capture_steps':[0,6975,7000],'input_count':len(pins),'parent_native_command_equivalent_except_duration_and_output':True,'checks':['native window drawable becomes available','seven-layer tour completes','accepted coupled prefix matches 011 baseline on shared steps','execution inputs and command/environment remain pinned'],'purpose':'14s GPU stage profile, 19-stage sampler including deferred equality paths. Compare accepted physical state with viewer002. Timing is instrumented; not a real-time achievement claim.'})
+ print(json.dumps({'output':str(O),'inputs':len(pins),'declaration_sha256':sha(arm/'run-declaration.json')}))
+if __name__=='__main__':main()

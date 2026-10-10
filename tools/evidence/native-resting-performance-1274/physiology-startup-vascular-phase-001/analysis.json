@@ -1,0 +1,27 @@
+{
+  "timers": [
+    [
+      "matter_after_frame_begin",
+      "100",
+      "1823750"
+    ]
+  ],
+  "rc": 0,
+  "changed_inputs": {},
+  "shared_coupled_rows": 62,
+  "differing_columns": {
+    "min_contact_gap_m": 6,
+    "peak_penetration_m": 6,
+    "pre_projection_contact_residual_m_s": 6,
+    "pre_projection_limit_residual_generalized_s": 6,
+    "pre_projection_equality_residual_generalized_s": 6,
+    "post_projection_contact_residual_m_s": 6,
+    "post_projection_limit_residual_generalized_s": 6,
+    "post_projection_equality_residual_generalized_s": 6,
+    "equality_position_projection_max_generalized": 5,
+    "equality_velocity_projection_max_generalized_s": 6
+  },
+  "scope": "single startup control step100; not a settled or whole-run speed measurement",
+  "comparison_key": "step",
+  "supersedes": "analysis-invalid-step-column.json, which accidentally indexed by respiratory_substeps"
+}

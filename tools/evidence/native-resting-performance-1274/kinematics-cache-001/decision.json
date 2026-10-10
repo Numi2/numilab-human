@@ -1,0 +1,12 @@
+{
+  "decision": "not enabled in reference launch",
+  "reason": "No meaningful complete-run speedup and no reduction of sampled prepare+consume GPU stage cost",
+  "numerical_result": "875 coupled samples and full COM/support/surface CSVs byte-identical to matched control",
+  "control_owner_wall_s": 134.158054958,
+  "candidate_owner_wall_s": 133.441021875,
+  "control_physical_gpu_s": 117.81213866266555,
+  "candidate_physical_gpu_s": 117.77304775083076,
+  "control_kinematics_median_ms": 1.2577505,
+  "candidate_prepare_plus_consume_median_ms": 1.2802704999999999,
+  "limits": "single short instrumented run; small wall change does not establish a performance gain"
+}

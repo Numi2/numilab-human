@@ -1,0 +1,419 @@
+{
+  "scope": "19-stage encoder GPU counter samples; absent stages are not measured zero; stage samples are on different physical steps; instrumentation may alter scheduling",
+  "stages": {
+    "muscles": {
+      "count": 4,
+      "min_ms": 0.489375,
+      "median_ms": 0.492437,
+      "max_ms": 0.49325,
+      "samples": [
+        {
+          "step": 5000,
+          "ns": 489375
+        },
+        {
+          "step": 5019,
+          "ns": 493041
+        },
+        {
+          "step": 5038,
+          "ns": 491833
+        },
+        {
+          "step": 5057,
+          "ns": 493250
+        }
+      ]
+    },
+    "active_force": {
+      "count": 4,
+      "min_ms": 0.016166,
+      "median_ms": 0.0165205,
+      "max_ms": 0.017375,
+      "samples": [
+        {
+          "step": 5001,
+          "ns": 16375
+        },
+        {
+          "step": 5020,
+          "ns": 16666
+        },
+        {
+          "step": 5039,
+          "ns": 17375
+        },
+        {
+          "step": 5058,
+          "ns": 16166
+        }
+      ]
+    },
+    "force_reduce": {
+      "count": 4,
+      "min_ms": 0.050708,
+      "median_ms": 0.052354,
+      "max_ms": 0.053541,
+      "samples": [
+        {
+          "step": 5002,
+          "ns": 50708
+        },
+        {
+          "step": 5021,
+          "ns": 53541
+        },
+        {
+          "step": 5040,
+          "ns": 53208
+        },
+        {
+          "step": 5059,
+          "ns": 51500
+        }
+      ]
+    },
+    "tendon_transfer": {
+      "count": 4,
+      "min_ms": 0.083208,
+      "median_ms": 0.0836245,
+      "max_ms": 0.084125,
+      "samples": [
+        {
+          "step": 5003,
+          "ns": 83583
+        },
+        {
+          "step": 5022,
+          "ns": 83666
+        },
+        {
+          "step": 5041,
+          "ns": 83208
+        },
+        {
+          "step": 5060,
+          "ns": 84125
+        }
+      ]
+    },
+    "activation": {
+      "count": 4,
+      "min_ms": 0.006042,
+      "median_ms": 0.006125,
+      "max_ms": 0.064417,
+      "samples": [
+        {
+          "step": 5004,
+          "ns": 64417
+        },
+        {
+          "step": 5023,
+          "ns": 6167
+        },
+        {
+          "step": 5042,
+          "ns": 6083
+        },
+        {
+          "step": 5061,
+          "ns": 6042
+        }
+      ]
+    },
+    "stand_prework": {
+      "count": 4,
+      "min_ms": 0.850917,
+      "median_ms": 0.854583,
+      "max_ms": 0.862416,
+      "samples": [
+        {
+          "step": 5005,
+          "ns": 857583
+        },
+        {
+          "step": 5024,
+          "ns": 862416
+        },
+        {
+          "step": 5043,
+          "ns": 850917
+        },
+        {
+          "step": 5062,
+          "ns": 851583
+        }
+      ]
+    },
+    "stand_mass": {
+      "count": 4,
+      "min_ms": 0.095125,
+      "median_ms": 0.0955625,
+      "max_ms": 0.09575,
+      "samples": [
+        {
+          "step": 5006,
+          "ns": 95375
+        },
+        {
+          "step": 5025,
+          "ns": 95125
+        },
+        {
+          "step": 5044,
+          "ns": 95750
+        },
+        {
+          "step": 5063,
+          "ns": 95750
+        }
+      ]
+    },
+    "stand_factor": {
+      "count": 4,
+      "min_ms": 0.711708,
+      "median_ms": 0.719708,
+      "max_ms": 0.727458,
+      "samples": [
+        {
+          "step": 5007,
+          "ns": 727458
+        },
+        {
+          "step": 5026,
+          "ns": 727458
+        },
+        {
+          "step": 5045,
+          "ns": 711958
+        },
+        {
+          "step": 5064,
+          "ns": 711708
+        }
+      ]
+    },
+    "stand_equality_responses": {
+      "count": 4,
+      "min_ms": 0.006666,
+      "median_ms": 0.0070625,
+      "max_ms": 0.007417,
+      "samples": [
+        {
+          "step": 5008,
+          "ns": 6959
+        },
+        {
+          "step": 5027,
+          "ns": 6666
+        },
+        {
+          "step": 5046,
+          "ns": 7417
+        },
+        {
+          "step": 5065,
+          "ns": 7166
+        }
+      ]
+    },
+    "stand_equality_factor": {
+      "count": 4,
+      "min_ms": 0.373125,
+      "median_ms": 0.373687,
+      "max_ms": 0.37575,
+      "samples": [
+        {
+          "step": 5009,
+          "ns": 373125
+        },
+        {
+          "step": 5028,
+          "ns": 374041
+        },
+        {
+          "step": 5047,
+          "ns": 375750
+        },
+        {
+          "step": 5066,
+          "ns": 373333
+        }
+      ]
+    },
+    "stand_projected_responses": {
+      "count": 4,
+      "min_ms": 0.527875,
+      "median_ms": 0.532021,
+      "max_ms": 0.534167,
+      "samples": [
+        {
+          "step": 5010,
+          "ns": 534167
+        },
+        {
+          "step": 5029,
+          "ns": 531250
+        },
+        {
+          "step": 5048,
+          "ns": 527875
+        },
+        {
+          "step": 5067,
+          "ns": 532792
+        }
+      ]
+    },
+    "stand_equality_response_rebuild": {
+      "count": 4,
+      "min_ms": 0.007208,
+      "median_ms": 0.0076455,
+      "max_ms": 0.007959,
+      "samples": [
+        {
+          "step": 5011,
+          "ns": 7791
+        },
+        {
+          "step": 5030,
+          "ns": 7959
+        },
+        {
+          "step": 5049,
+          "ns": 7208
+        },
+        {
+          "step": 5068,
+          "ns": 7500
+        }
+      ]
+    },
+    "stand_equality_factor_rebuild": {
+      "count": 4,
+      "min_ms": 0.003833,
+      "median_ms": 0.0040415,
+      "max_ms": 0.004208,
+      "samples": [
+        {
+          "step": 5012,
+          "ns": 4125
+        },
+        {
+          "step": 5031,
+          "ns": 3833
+        },
+        {
+          "step": 5050,
+          "ns": 3958
+        },
+        {
+          "step": 5069,
+          "ns": 4208
+        }
+      ]
+    },
+    "stand_projected_response_fallback": {
+      "count": 4,
+      "min_ms": 0.004167,
+      "median_ms": 0.0046875,
+      "max_ms": 0.004792,
+      "samples": [
+        {
+          "step": 5013,
+          "ns": 4750
+        },
+        {
+          "step": 5032,
+          "ns": 4167
+        },
+        {
+          "step": 5051,
+          "ns": 4792
+        },
+        {
+          "step": 5070,
+          "ns": 4625
+        }
+      ]
+    },
+    "stand_finish_cached": {
+      "count": 4,
+      "min_ms": 8.061333,
+      "median_ms": 8.124125,
+      "max_ms": 8.259042,
+      "samples": [
+        {
+          "step": 5014,
+          "ns": 8102292
+        },
+        {
+          "step": 5033,
+          "ns": 8145958
+        },
+        {
+          "step": 5052,
+          "ns": 8259042
+        },
+        {
+          "step": 5071,
+          "ns": 8061333
+        }
+      ]
+    },
+    "kinematics": {
+      "count": 4,
+      "min_ms": 1.273708,
+      "median_ms": 1.2790415,
+      "max_ms": 1.282667,
+      "samples": [
+        {
+          "step": 5017,
+          "ns": 1273708
+        },
+        {
+          "step": 5036,
+          "ns": 1282667
+        },
+        {
+          "step": 5055,
+          "ns": 1280625
+        },
+        {
+          "step": 5074,
+          "ns": 1277458
+        }
+      ]
+    },
+    "muscle_angular": {
+      "count": 4,
+      "min_ms": 0.006125,
+      "median_ms": 0.008479,
+      "max_ms": 0.009,
+      "samples": [
+        {
+          "step": 5018,
+          "ns": 8541
+        },
+        {
+          "step": 5037,
+          "ns": 8417
+        },
+        {
+          "step": 5056,
+          "ns": 6125
+        },
+        {
+          "step": 5075,
+          "ns": 9000
+        }
+      ]
+    }
+  },
+  "coupled_rows": 875,
+  "coupled_exact_same_observer_control": true,
+  "native_log_sha256": "4d023c31b9b6cb5807bb927ac8d6228afd0be196e51ffeca49bce5a463bfc8eb",
+  "resting-com-momentum-diagnostic.csv_byte_equal": true,
+  "resting-com-support-impulses.csv_byte_equal": true,
+  "resting-surface-audit.csv_byte_equal": true
+}
