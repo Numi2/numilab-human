@@ -1,0 +1,22 @@
+{
+  "check": {
+    "a4_forward_sha256": "8e56ed1c6dfa4f083a8883c8b6ad2538fd62d48488770dd2b959fe6f9735664f",
+    "accepted_step": 155000,
+    "bitwise_equal": false,
+    "captured_world_sha256": "fe10675bc9804dcc9d5195c226e524e4d8d7e5f469427b43fef6f670568c07ef",
+    "different_scalar_count": 7098,
+    "forward_admissible": true,
+    "forward_reason": "The A4 forward matches its retained accepted-checkpoint hash (8e56ed1c6dfa4f083a8883c8b6ad2538fd62d48488770dd2b959fe6f9735664f). It is expected to differ from the captured base: the native capture used the current composed/candidate source, while this replay uses accepted attempt-4 source coordinates. The original report's literal true for bitwise capture equality is incorrect.",
+    "max_abs_coordinate_difference_m": 0.0006973538547754288,
+    "max_abs_coordinate_difference_um": 697.3538547754288
+  },
+  "original_prototype_report": {
+    "incorrect_literal_field": true,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/incremental-self-prototype-001/run-006/report.json",
+    "recorded_a4_forward_sha256": "8e56ed1c6dfa4f083a8883c8b6ad2538fd62d48488770dd2b959fe6f9735664f",
+    "recorded_capture_sha256": "fe10675bc9804dcc9d5195c226e524e4d8d7e5f469427b43fef6f670568c07ef",
+    "sha256": "a9560f206aed86c16396d10e64457b77db2bbc89b5a277aeffddc25a9682e4a5"
+  },
+  "schema": "numi.human.changed-face-self-audit.capture-comparison-correction.v1",
+  "status": "capture_comparison_corrected_false_bitwise_claim"
+}

@@ -2657,15 +2657,10 @@ def derive_shared_multipose_inferred_clearance(
     def pair_set(row):
         return _triangle_pair_set(row)
 
-    # Cache only complete exact audits of the accepted current geometry.
-    # A failed trial must never become the baseline for a later backtrack.
-    current_self_audits: list[dict[str, Any] | None] = [None] * pose_count
-    compact_face_sha = _face_index_sha256(compact_faces)
     if candidate_forward is not None and not np.array_equal(base_world, captured):
         for pose in range(pose_count):
             records = _exact_surface_records(base_world[pose], compact_faces)
             self_audit = _audit_pair(records, records, same_surface=True)
-            current_self_audits[pose] = self_audit
             if int(self_audit["count"]) != 0:
                 raise human.ImportError(f"candidate forward baseline has {self_audit['count']} exact self-pairs at pose={pose}")
             replay_audit = scan_candidate_targets(pose, base_world[pose])
@@ -2728,7 +2723,6 @@ def derive_shared_multipose_inferred_clearance(
         for pose in range(pose_count):
             resume_records = _exact_surface_records(resume_world[pose], compact_faces)
             self_audit = _audit_pair(resume_records, resume_records, same_surface=True)
-            current_self_audits[pose] = self_audit
             count = int(self_audit["count"])
             resume_self_pair_counts.append(count)
             if count:
@@ -3123,7 +3117,6 @@ def derive_shared_multipose_inferred_clearance(
                 emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
                 continue
             trial_audits = []
-            trial_self_audits = []
             valid = True
             trial_key = f"iteration-{iteration + 1:02d}-backtrack-{backtrack:02d}"
             if scan_progress_callback is not None:
@@ -3137,28 +3130,8 @@ def derive_shared_multipose_inferred_clearance(
                     "source_positions_f32": np.asarray(trial_source, dtype="<f4").copy(),
                 })
             for pose in range(pose_count):
-                if current_self_audits[pose] is None:
-                    records = _exact_surface_records(current_world[pose], compact_faces)
-                    baseline_self = _audit_pair(records, records, same_surface=True)
-                    if int(baseline_self["count"]) != 0:
-                        raise human.ImportError(
-                            f"current accepted skin has {baseline_self['count']} exact self-pairs at pose={pose}"
-                        )
-                    current_self_audits[pose] = baseline_self
-                baseline_self = current_self_audits[pose]
-                self_audit = audit_incremental_skin_self_intersections(
-                    baseline_world_positions=current_world[pose],
-                    candidate_world_positions=trial_world[pose],
-                    baseline_faces=compact_faces,
-                    candidate_faces=compact_faces,
-                    baseline_self_audit=baseline_self,
-                    expected_baseline_world_f32_sha256=_float32_xyz_sha256(current_world[pose]),
-                    expected_face_index_sha256=compact_face_sha,
-                    expected_baseline_self_pair_table_sha256=_baseline_self_pair_table_sha256(
-                        baseline_self, len(compact_faces),
-                    ),
-                )
-                trial_self_audits.append(self_audit)
+                records = _exact_surface_records(trial_world[pose], compact_faces)
+                self_audit = _audit_pair(records, records, same_surface=True)
                 if int(self_audit["count"]) != 0:
                     rejection = f"trial has {self_audit['count']} exact self-pairs at pose={pose}"
                     emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source, diagnostics=trial_regularization)
@@ -3235,7 +3208,6 @@ def derive_shared_multipose_inferred_clearance(
             emit_trial(iteration, backtrack, scale, "accepted", "all pose gates and exact scans passed", trial_source, trial_counts, trial_audits, diagnostics=trial_regularization)
             applied_source_increment = float(np.linalg.norm(trial_source - current_source, axis=1).max())
             current_source, current_world, current_audits, current_counts = trial_source, trial_world, trial_audits, trial_counts
-            current_self_audits = trial_self_audits
             current_interiors, current_interior_counts = trial_interiors, trial_interior_counts
             current_maps = trial_maps
             current_forward_diagnostics = trial_forward_diagnostics
@@ -3302,11 +3274,6 @@ def derive_shared_multipose_inferred_clearance(
             "accepted_pose_affine_transport": source_winding_report,
         },
         "accepted_pose_count": pose_count,
-        "self_intersection_audit": {
-            "baseline": "complete exact same-surface owner audit of each accepted current pose",
-            "trials": "exact changed-face versus full candidate scan plus untouched accepted pair rows",
-            "cache_update": "only after every geometry, target, containment, and progress gate accepts the trial",
-        },
         "candidate_forward_model": {
             "mode": "recomputed_candidate_callback" if candidate_forward is not None else "fixed_affine_jacobian",
             "baseline_replay_max_vertex_error_m": baseline_replay_max,
