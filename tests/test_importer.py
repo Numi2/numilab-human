@@ -1564,6 +1564,37 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(evidence["retained_triangle_count"], 4)
         self.assertEqual(evidence["discarded_component_count"], 1)
 
+    def test_tendon_component_selection_preserves_faces_across_obj_seams(self) -> None:
+        corners = [
+            [-1.0, -1.0, -1.0], [1.0, -1.0, -1.0],
+            [0.0, 1.0, -1.0], [0.0, 0.0, 1.0],
+        ]
+        tetrahedron = [(0, 1, 2), (0, 3, 1), (1, 3, 2), (2, 3, 0)]
+        # Each face has independent OBJ vertex records at identical coordinates.
+        seam_vertices = [corners[index][:] for face in tetrahedron for index in face]
+        seam_faces = [tuple(range(3 * row, 3 * row + 3)) for row in range(4)]
+        vertices, faces, evidence = _bodyparts_largest_connected_surface_component(
+            seam_vertices, seam_faces, "seamed-tetrahedron",
+        )
+        self.assertEqual(vertices, seam_vertices)
+        self.assertEqual(faces, seam_faces)
+        self.assertEqual(evidence["discarded_component_count"], 0)
+        self.assertEqual(evidence["source_exact_coordinate_count"], 4)
+        self.assertEqual(evidence["retained_vertex_count"], 12)
+
+    def test_tendon_component_selection_does_not_join_nearby_seams(self) -> None:
+        vertices = [
+            [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+            [1.0, 1.0, 0.0],
+            [0.0, 0.0, 1e-12], [1.0, 0.0, 1e-12], [0.0, -1.0, 0.0],
+        ]
+        selected, faces, evidence = _bodyparts_largest_connected_surface_component(
+            vertices, [(0, 1, 2), (1, 3, 2), (4, 6, 5)], "nearby-sheet",
+        )
+        self.assertEqual(selected, vertices[:4])
+        self.assertEqual(faces, [(0, 1, 2), (1, 3, 2)])
+        self.assertEqual(evidence["discarded_component_count"], 1)
+
     def test_tendon_attachment_weight_lock_holds_secondary_bone_insertion(self) -> None:
         weights, evidence = _bodyparts_secondary_attachment_weight_lock(
             [[0.0, 0.0, 0.0], [0.008, 0.0, 0.0], [0.025, 0.0, 0.0]],

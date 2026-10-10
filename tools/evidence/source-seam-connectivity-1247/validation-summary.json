@@ -1,0 +1,20 @@
+{
+  "both_failed": 8,
+  "candidate_passed": 109,
+  "explanation": "The isolated worktrees lack the external Sources and Build inputs required by these eight tests. One source-availability gate therefore reports not_selected; the other failures report absent input files. Full suite is not green. The same failures occur on the unmodified parent.",
+  "failed_tests": [
+    "FAILED tests/test_importer.py::ImporterTests::test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating",
+    "FAILED tests/test_importer.py::ImporterTests::test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume",
+    "FAILED tests/test_importer.py::ImporterTests::test_gate_report_exposes_the_selected_free_human_foundation_stack",
+    "FAILED tests/test_importer.py::ImporterTests::test_lower_body_pilot_uses_four_temporary_foot_pads",
+    "FAILED tests/test_importer.py::ImporterTests::test_open_knee_exact_fiber_directions_are_source_authored_and_unit",
+    "FAILED tests/test_importer.py::ImporterTests::test_pectoralis_fascia_payload_is_bilateral_positive_and_explicitly_generated",
+    "FAILED tests/test_importer.py::ImporterTests::test_public_mobl_reports_its_real_runtime_lowering_boundaries",
+    "FAILED tests/test_importer.py::ImporterTests::test_torso_anatomy_map_is_unique_and_source_backed"
+  ],
+  "focused_selection_tests_passed": 3,
+  "native_run_performed": false,
+  "parent_passed": 107,
+  "parent_revision": "47bd2f6f246ce29b10ac58b6efbf4c67fe865cc4",
+  "same_failed_test_ids": true
+}

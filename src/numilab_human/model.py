@@ -5233,11 +5233,9 @@ _NUMI_HUMAN_TOE_VISUAL_LOCK_RADIUS_M = 0.008
 _NUMI_HUMAN_TOE_VISUAL_FEATHER_RADIUS_M = 0.018
 _NUMI_HUMAN_TOE_VISUAL_DISTAL_LOCK_FRACTION = 0.20
 _NUMI_HUMAN_TOE_VISUAL_DISTAL_FEATHER_FRACTION = 0.45
-# These four BodyParts3D hallucis members contain one complete anatomical
-# sheet plus 45--85 disconnected export shards.  The shards have no route or
-# bone correspondence and stretch into false digital fragments after sparse
-# three-body posing.  Retain the dominant exact source sheet, as is already
-# done for the compound calcaneal-tendon members.
+# Select the dominant geometric sheet for these hallucis members and the
+# compound calcaneal-tendon members. OBJ indices may split an exact shared
+# edge at a normal seam; those source triangles belong to the same sheet.
 _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS = frozenset({
     "FJ1408", "FJ1408M", "FJ1415", "FJ1415M",
 })
@@ -11314,11 +11312,8 @@ def bodyparts_myosim_fullbody_soft_tissue_visual_payload(
             layer == _BODYPARTS_MYOSIM_VISUAL_LAYER_TENDON
             or member_id in _NUMI_HUMAN_HALLUX_DOMINANT_SOURCE_SURFACE_MEMBERS
         ):
-            # These named OBJ members are compound source meshes. Their
-            # dominant sheet is the only complete connected anatomical
-            # surface; small disconnected export shards become floating or
-            # stretched fragments after articulated posing. Preserve the
-            # exact dominant sheet, not a remeshed repair.
+            # Preserve the dominant source sheet, including exact-coordinate
+            # OBJ seams whose adjacent faces use separate vertex indices.
             vertices_mm, triangles, source_component_selection = \
                 _bodyparts_largest_connected_surface_component(vertices_mm, triangles, member)
         _, _, face_cancellation = _bodyparts_cancel_opposite_surface_faces(
@@ -12810,12 +12805,11 @@ def _bodyparts_largest_connected_surface_component(
 ) -> tuple[list[list[float]], list[tuple[int, int, int]], dict[str, Any]]:
     """Retain one source mesh's dominant connected anatomical sheet.
 
-    Some BodyParts3D tendon and hallucis OBJ members include numerous
-    disconnected sliver components alongside their main sheet. They read as
-    floating or stretched tissue shards once posed against a bone. This
-    selector keeps the largest source-connected sheet without moving, filling,
-    welding, or remeshing it; provenance retains the discarded source-component
-    count.
+    Connectivity uses exact source-coordinate edges so OBJ normal seams do
+    not become false boundaries. Original vertex records and face winding are
+    retained: the coordinate quotient is used only to discover connectivity,
+    never to weld, move, fill, or remesh the selected surface. Components that
+    share only a point, or merely nearby coordinates, remain separate.
     """
     if not vertices_mm or not triangles:
         raise ImportError(f"BodyParts3D {member} connected-surface selection has empty source geometry")
@@ -12832,11 +12826,26 @@ def _bodyparts_largest_connected_surface_component(
         if first_root != second_root:
             parent[second_root] = first_root
 
+    coordinate_ids: dict[tuple[float, float, float], int] = {}
+    coordinate_quotient: list[int] = []
+    for vertex in vertices_mm:
+        if len(vertex) != 3 or not all(math.isfinite(value) for value in vertex):
+            raise ImportError(f"BodyParts3D {member} has an invalid source vertex")
+        coordinate_quotient.append(
+            coordinate_ids.setdefault(tuple(vertex), len(coordinate_ids))
+        )
     edge_owner: dict[tuple[int, int], int] = {}
     for triangle_index, triangle in enumerate(triangles):
         if len(triangle) != 3 or any(not 0 <= index < len(vertices_mm) for index in triangle):
             raise ImportError(f"BodyParts3D {member} has an invalid source triangle")
-        for first, second in ((triangle[0], triangle[1]), (triangle[1], triangle[2]), (triangle[2], triangle[0])):
+        quotient_triangle = tuple(coordinate_quotient[index] for index in triangle)
+        if len(set(quotient_triangle)) != 3:
+            raise ImportError(f"BodyParts3D {member} has a collapsed source triangle")
+        for first, second in (
+            (quotient_triangle[0], quotient_triangle[1]),
+            (quotient_triangle[1], quotient_triangle[2]),
+            (quotient_triangle[2], quotient_triangle[0]),
+        ):
             edge = (min(first, second), max(first, second))
             prior_triangle = edge_owner.setdefault(edge, triangle_index)
             if prior_triangle != triangle_index:
@@ -12865,6 +12874,8 @@ def _bodyparts_largest_connected_surface_component(
     ]
     return [vertices_mm[index] for index in selected_indices], selected_triangles, {
         "method": "exact_largest_edge_connected_component_of_bodyparts3d_source_surface",
+        "connectivity_basis": "exact_source_coordinate_edges_without_vertex_welding",
+        "source_exact_coordinate_count": len(coordinate_ids),
         "source_vertex_count": len(vertices_mm),
         "source_triangle_count": len(triangles),
         "retained_vertex_count": len(selected_indices),

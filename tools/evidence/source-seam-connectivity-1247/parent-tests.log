@@ -1,0 +1,392 @@
+F..........F.............F.........F.............................F...... [ 62%]
+..F.F.........................F............                              [100%]
+=================================== FAILURES ===================================
+_ ImporterTests.test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating _
+
+path = PosixPath('/Users/n/numi-human-target-broadphase-1241/Build/anterior-thorax-composite-v3.registration.json')
+
+    def read_json(path: Path) -> dict[str, Any]:
+        try:
+>           return json.loads(path.read_text(encoding="utf-8"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/numilab_human/model.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../miniforge3/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../miniforge3/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/n/numi-human-target-broadphase-1241/Build/anterior-thorax-composite-v3.registration.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-target-broadphase-1241/Build/anterior-thorax-composite-v3.registration.json'
+
+../miniforge3/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+self = <tests.test_importer.ImporterTests testMethod=test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating>
+
+    def test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            first = Path(temporary) / "first"
+            second = Path(temporary) / "second"
+>           manifest = anterior_thorax_composite_payload(
+                ROOT / "Build/anterior-thorax-composite-v3.registration.json",
+                ROOT / "Build/hand-enthesis-fixed-cluster-v2-tendon", first,
+            )
+
+tests/test_importer.py:1963: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/numilab_human/model.py:15568: in anterior_thorax_composite_payload
+    registration = read_json(registration_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/Users/n/numi-human-target-broadphase-1241/Build/anterior-thorax-composite-v3.registration.json')
+
+    def read_json(path: Path) -> dict[str, Any]:
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError as error:
+>           raise ImportError(f"required file is absent: {path}") from error
+E           numilab_human.model.ImportError: required file is absent: /Users/n/numi-human-target-broadphase-1241/Build/anterior-thorax-composite-v3.registration.json
+
+src/numilab_human/model.py:53: ImportError
+_ ImporterTests.test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume _
+
+self = <tests.test_importer.ImporterTests testMethod=test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume>
+
+    def test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            first = Path(temporary) / "first"
+            second = Path(temporary) / "second"
+>           manifest = bodyparts_costal_cartilage_payload(
+                ROOT / "sources", first,
+            )
+
+tests/test_importer.py:1906: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+sources = PosixPath('/Users/n/numi-human-target-broadphase-1241/sources')
+output = PosixPath('/var/folders/ks/sfmz3dh91_7c9_vyd_3lzj100000gn/T/tmpmgsur7v9/first')
+maximum_volume_error_fraction = 0.03, attachment_distance_m = 0.004
+
+    def bodyparts_costal_cartilage_payload(
+        sources: Path,
+        output: Path,
+        maximum_volume_error_fraction: float = 0.03,
+        attachment_distance_m: float = 0.004,
+    ) -> dict[str, Any]:
+        """Compile fourteen exact BodyParts3D costal-cartilage shells to FEM.
+    
+        The exact source shells own geometry.  Deterministic voxel tetrahedra and
+        source-bone proximity bands are mechanics derivations.  The payload does
+        not take production force ownership until a runtime binds both bands to
+        their named articulated rib/sternal bodies and returns equal-and-opposite
+        accepted reactions.
+        """
+        if (
+            not math.isfinite(maximum_volume_error_fraction)
+            or not 0.0 < maximum_volume_error_fraction <= 0.05
+        ):
+            raise ImportError("costal-cartilage maximum volume error must be in (0, 0.05]")
+        if (
+            not math.isfinite(attachment_distance_m)
+            or not 0.002 <= attachment_distance_m <= 0.006
+        ):
+            raise ImportError("costal-cartilage attachment distance must be in [2, 6] mm")
+        sources = sources.resolve()
+        archive_path = sources / "partof_BP3D_4.0_obj_99.zip"
+        if not archive_path.is_file():
+>           raise ImportError("BodyParts3D part-of OBJ archive is unavailable")
+E           numilab_human.model.ImportError: BodyParts3D part-of OBJ archive is unavailable
+
+src/numilab_human/model.py:15239: ImportError
+_ ImporterTests.test_gate_report_exposes_the_selected_free_human_foundation_stack _
+
+self = <tests.test_importer.ImporterTests testMethod=test_gate_report_exposes_the_selected_free_human_foundation_stack>
+
+    def test_gate_report_exposes_the_selected_free_human_foundation_stack(self) -> None:
+        source_lock = read_json(ROOT / "sources.lock.json")
+        public_upper = source_lock["sources"]["mobl_arms_ceinms_41_public_mirror"]
+        report = gate_report(
+            sources=ROOT / "Sources",
+            upper_archive=None,
+            upper_public_model=ROOT / "Sources" / public_upper["model_file"],
+            source_lock=source_lock,
+            runtime_contract=read_json(ROOT / "config/numi-runtime-contract.v1.json"),
+        )
+        free_foundation_gate = next(
+            gate for gate in report["gates"]
+            if gate["id"] == "free_human_foundation_source_stack"
+        )
+        original_bimanual_gate = next(
+            gate for gate in report["gates"]
+            if gate["id"] == "source_faithful_import"
+        )
+>       self.assertEqual(
+            free_foundation_gate["status"],
+            "ready_for_source_import_unimanual_upper_variant",
+        )
+E       AssertionError: 'not_selected' != 'ready_for_source_import_unimanual_upper_variant'
+E       - not_selected
+E       + ready_for_source_import_unimanual_upper_variant
+
+tests/test_importer.py:3287: AssertionError
+______ ImporterTests.test_lower_body_pilot_uses_four_temporary_foot_pads _______
+
+self = <tests.test_importer.ImporterTests testMethod=test_lower_body_pilot_uses_four_temporary_foot_pads>
+
+    def test_lower_body_pilot_uses_four_temporary_foot_pads(self) -> None:
+>       model = parse_opensim(
+            ROOT / "Sources/RajagopalLaiUhlrich2023.osim",
+            "rajagopal_lai_uhlrich_2023",
+        )
+
+tests/test_importer.py:2639: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/numilab_human/model.py:13913: in parse_opensim
+    root = ET.parse(path).getroot()
+           ^^^^^^^^^^^^^^
+../miniforge3/lib/python3.13/xml/etree/ElementTree.py:1210: in parse
+    tree.parse(source, parser)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0x10587d260>
+source = PosixPath('/Users/n/numi-human-target-broadphase-1241/Sources/RajagopalLaiUhlrich2023.osim')
+parser = None
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+>           source = open(source, "rb")
+                     ^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-target-broadphase-1241/Sources/RajagopalLaiUhlrich2023.osim'
+
+../miniforge3/lib/python3.13/xml/etree/ElementTree.py:562: FileNotFoundError
+_ ImporterTests.test_open_knee_exact_fiber_directions_are_source_authored_and_unit _
+
+self = <tests.test_importer.ImporterTests testMethod=test_open_knee_exact_fiber_directions_are_source_authored_and_unit>
+
+    def test_open_knee_exact_fiber_directions_are_source_authored_and_unit(self) -> None:
+>       directions = _parse_febio_fiber_directions(
+            Path(__file__).resolve().parents[1]
+            / "Sources/open-knee-oks003/FeBio_custom.feb"
+        )
+
+tests/test_importer.py:3903: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/numilab_human/open_knee.py:185: in _parse_febio_fiber_directions
+    root = ET.parse(path).getroot()
+           ^^^^^^^^^^^^^^
+../miniforge3/lib/python3.13/xml/etree/ElementTree.py:1210: in parse
+    tree.parse(source, parser)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0x10587f130>
+source = PosixPath('/Users/n/numi-human-target-broadphase-1241/Sources/open-knee-oks003/FeBio_custom.feb')
+parser = None
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+>           source = open(source, "rb")
+                     ^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-target-broadphase-1241/Sources/open-knee-oks003/FeBio_custom.feb'
+
+../miniforge3/lib/python3.13/xml/etree/ElementTree.py:562: FileNotFoundError
+_ ImporterTests.test_pectoralis_fascia_payload_is_bilateral_positive_and_explicitly_generated _
+
+path = PosixPath('/Users/n/numi-human-target-broadphase-1241/build/myosim-fullbody/myosim-fullbody-reference.manifest.json')
+
+    def read_json(path: Path) -> dict[str, Any]:
+        try:
+>           return json.loads(path.read_text(encoding="utf-8"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/numilab_human/model.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../miniforge3/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../miniforge3/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/n/numi-human-target-broadphase-1241/build/myosim-fullbody/myosim-fullbody-reference.manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-target-broadphase-1241/build/myosim-fullbody/myosim-fullbody-reference.manifest.json'
+
+../miniforge3/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+self = <tests.test_importer.ImporterTests testMethod=test_pectoralis_fascia_payload_is_bilateral_positive_and_explicitly_generated>
+
+    def test_pectoralis_fascia_payload_is_bilateral_positive_and_explicitly_generated(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            first = Path(temporary) / "first"
+            second = Path(temporary) / "second"
+>           manifest = bodyparts_pectoralis_fascia_payload(
+                ROOT / "sources", ROOT / "build/myosim-fullbody", first,
+            )
+
+tests/test_importer.py:1765: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/numilab_human/model.py:16037: in bodyparts_pectoralis_fascia_payload
+    myosim_manifest = read_json(myosim_manifest_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/Users/n/numi-human-target-broadphase-1241/build/myosim-fullbody/myosim-fullbody-reference.manifest.json')
+
+    def read_json(path: Path) -> dict[str, Any]:
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError as error:
+>           raise ImportError(f"required file is absent: {path}") from error
+E           numilab_human.model.ImportError: required file is absent: /Users/n/numi-human-target-broadphase-1241/build/myosim-fullbody/myosim-fullbody-reference.manifest.json
+
+src/numilab_human/model.py:53: ImportError
+_ ImporterTests.test_public_mobl_reports_its_real_runtime_lowering_boundaries __
+
+self = <tests.test_importer.ImporterTests testMethod=test_public_mobl_reports_its_real_runtime_lowering_boundaries>
+
+    def test_public_mobl_reports_its_real_runtime_lowering_boundaries(self) -> None:
+>       model = parse_opensim(
+            ROOT / "Sources" / "MOBL_ARMS_41.osim",
+            "mobl_arms_ceinms_41_public_mirror",
+        )
+
+tests/test_importer.py:3294: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/numilab_human/model.py:13913: in parse_opensim
+    root = ET.parse(path).getroot()
+           ^^^^^^^^^^^^^^
+../miniforge3/lib/python3.13/xml/etree/ElementTree.py:1210: in parse
+    tree.parse(source, parser)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0x10409b070>
+source = PosixPath('/Users/n/numi-human-target-broadphase-1241/Sources/MOBL_ARMS_41.osim')
+parser = None
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+>           source = open(source, "rb")
+                     ^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-target-broadphase-1241/Sources/MOBL_ARMS_41.osim'
+
+../miniforge3/lib/python3.13/xml/etree/ElementTree.py:562: FileNotFoundError
+_______ ImporterTests.test_torso_anatomy_map_is_unique_and_source_backed _______
+
+self = <tests.test_importer.ImporterTests testMethod=test_torso_anatomy_map_is_unique_and_source_backed>
+
+    def test_torso_anatomy_map_is_unique_and_source_backed(self) -> None:
+        mapping = read_json(ROOT / "config/bodyparts3d-myosim-torso-anatomy-map.v1.json")
+        self.assertEqual(mapping["schema"], "numi.human.bodyparts3d-myosim-torso-anatomy-map.v1")
+        entries = mapping["entries"]
+        self.assertEqual(len(entries), 304)
+        self.assertEqual({entry["layer"] for entry in entries},
+                         {"organ", "vessel", "nerve", "airway", "pulmonary_artery", "pulmonary_vein"})
+        self.assertEqual(len({entry["member_id"] for entry in entries}), len(entries))
+        source_relations = {
+>           hierarchy: {tuple(line.split("\t")) for line in (ROOT / path).read_text(encoding="utf-8").splitlines()}
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            for hierarchy, path in [("part_of", "Sources/partof_element_parts.txt"), ("is_a", "Sources/isa_element_parts.txt")]
+        }
+
+tests/test_importer.py:2918: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../miniforge3/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../miniforge3/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/n/numi-human-target-broadphase-1241/Sources/partof_element_parts.txt')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/n/numi-human-target-broadphase-1241/Sources/partof_element_parts.txt'
+
+../miniforge3/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_importer.py::ImporterTests::test_anterior_thorax_continuum_is_connected_converged_and_nonduplicating
+FAILED tests/test_importer.py::ImporterTests::test_costal_cartilage_payload_preserves_exact_bilateral_source_and_positive_volume
+FAILED tests/test_importer.py::ImporterTests::test_gate_report_exposes_the_selected_free_human_foundation_stack
+FAILED tests/test_importer.py::ImporterTests::test_lower_body_pilot_uses_four_temporary_foot_pads
+FAILED tests/test_importer.py::ImporterTests::test_open_knee_exact_fiber_directions_are_source_authored_and_unit
+FAILED tests/test_importer.py::ImporterTests::test_pectoralis_fascia_payload_is_bilateral_positive_and_explicitly_generated
+FAILED tests/test_importer.py::ImporterTests::test_public_mobl_reports_its_real_runtime_lowering_boundaries
+FAILED tests/test_importer.py::ImporterTests::test_torso_anatomy_map_is_unique_and_source_backed
+8 failed, 107 passed in 4.09s
