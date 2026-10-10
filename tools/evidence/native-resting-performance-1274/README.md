@@ -42,3 +42,4 @@ Storage deduplication preserved all paths and hashes, replacing only verified du
 
 The full requested deliverable remains open: anatomy/intersection qualification, a faster accepted integrated trajectory, and validation of new optimizations through the breathing/intervention cycle. Short numerical parity cannot establish physiological or clinical validity.
 
+Some historical declarations copied the parent 011 source_provenance and runtime_launcher_chain fields without replacing their ancestry labels. Those inherited fields are not the executing profiling build. For the new-build runs, the actual owner_cli_preview native path and immutable_assets hashes identify /Users/n/numi-lab-performance-1274-build-001; the profiling source commit above contains the compiled change. Viewer-baseline-002 instead uses the prior1271build. The next adaptive declarations explicitly separate inherited ancestry from executing provenance.
