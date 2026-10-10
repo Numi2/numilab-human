@@ -222,6 +222,13 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         argv.extend(["--resting-bed-surface", str(args.body_scene.resolve())])
     if getattr(args, "upper_passive_joints", False):
         argv.append("--persistent-source-passive-joint-tissue")
+    mtp_stiffness = getattr(args, "mtp_passive_stiffness_nm_per_rad", None)
+    if mtp_stiffness is not None:
+        _require(type(mtp_stiffness) in (float, int) and
+                 math.isfinite(mtp_stiffness) and mtp_stiffness >= 0,
+                 "aggregate MTP reference stiffness must be finite and nonnegative")
+        argv.extend(["--source-mtp-passive-stiffness-nm-per-rad",
+                     str(float(mtp_stiffness))])
     hip_capsule = getattr(args, "hip_capsule_reference", False)
     hip_scale = getattr(args, "hip_capsule_scale", None)
     _require(hip_scale is None or hip_capsule,
@@ -341,6 +348,9 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="use the fixed finite bed heightfield declared in the existing body scene manifest")
     parser.add_argument("--upper-passive-joints", action="store_true",
                         help="enable the existing source-bound wrist and non-thumb finger passive stiffness model")
+    parser.add_argument("--mtp-passive-stiffness-nm-per-rad", type=float,
+                        help="explicit aggregate reference tissue stiffness for each shared toe coordinate; "
+                             "0 disables it; not a measured five-joint law")
     parser.add_argument("--hip-capsule-reference", action="store_true",
                         help="enable the reduced literature reference for passive hip periarticular restraint")
     parser.add_argument("--hip-capsule-scale", type=float,

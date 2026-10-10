@@ -293,6 +293,29 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "missing owner file"):
             command(self.args)
 
+    def test_mtp_reference_stiffness_selects_only_its_native_owner(self):
+        baseline, _ = command(self.args)
+        flag = "--source-mtp-passive-stiffness-nm-per-rad"
+        self.assertNotIn(flag, baseline)
+        for value in (0., .5, 1., 2.):
+            with self.subTest(value=value):
+                self.args.mtp_passive_stiffness_nm_per_rad = value
+                argv, _ = command(self.args)
+                self.assertEqual(argv[argv.index(flag) + 1], str(value))
+                self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
+                self.assertNotIn("--resting-hip-capsule-reference", argv)
+        self.args.upper_passive_joints = True
+        argv, _ = command(self.args)
+        self.assertIn("--persistent-source-passive-joint-tissue", argv)
+        self.assertEqual(argv.count(flag), 1)
+
+    def test_mtp_reference_stiffness_rejects_nonphysical_values(self):
+        for invalid in (-1., float("nan"), float("inf"), True, "1.0"):
+            with self.subTest(invalid=invalid):
+                self.args.mtp_passive_stiffness_nm_per_rad = invalid
+                with self.assertRaisesRegex(HumanImportError, "finite and nonnegative"):
+                    command(self.args)
+
     def test_hip_capsule_reference_is_explicit_and_has_one_native_owner(self):
         baseline, _ = command(self.args)
         self.assertNotIn("--resting-hip-capsule-reference", baseline)
