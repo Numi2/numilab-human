@@ -165,18 +165,135 @@ def test_local_self_separation_preserves_non_successful_highs_status_and_message
         _propose_local_self_separation_increment(**args)
 
 
-def test_local_self_separation_rejects_a_float32_rounding_that_breaks_sat_constraints():
+def test_local_self_separation_rounding_reserve_bounds_f32_displacement_error():
+    cap = clearance._LOCAL_SELF_SEPARATION_COMPONENT_CAP_MM
+    below_quarter = np.nextafter(np.float32(0.25), np.float32(0.0))
+    above_quarter = np.nextafter(np.float32(0.25), np.float32(np.inf))
+    below_negative_quarter = np.nextafter(np.float32(-0.25), np.float32(0.0))
+    above_negative_quarter = np.nextafter(np.float32(-0.25), np.float32(-np.inf))
+    source = np.array([
+        [0.0, -0.0, 0.25],
+        [below_quarter, above_quarter, -0.25],
+        [below_negative_quarter, above_negative_quarter, 8192.0],
+        [-8192.0, 0.125, -0.125],
+    ], dtype="<f4")
+    reserve = clearance._local_self_separation_rounding_reserve_mm(source, cap)
+
+    assert reserve.shape == source.shape
+    assert reserve.dtype == np.float64
+    assert np.isfinite(reserve).all()
+    assert np.all(reserve >= 0.0)
+    assert np.all(reserve < cap)
+
+    for (row, column), source_f32 in np.ndenumerate(source):
+        source_value = float(source_f32)
+        targets = [
+            source_value - cap / 1000.0,
+            source_value,
+            source_value + cap / 1000.0,
+        ]
+        # Exercise both half-ULP boundaries around the source and the reachable
+        # endpoints, including the 0.25 m binade and the 8192 m scale.
+        for center in list(targets):
+            center_f32 = np.float32(center)
+            for neighbor in (
+                np.nextafter(center_f32, np.float32(-np.inf)),
+                np.nextafter(center_f32, np.float32(np.inf)),
+            ):
+                targets.append((float(center_f32) + float(neighbor)) * 0.5)
+        requests = [-cap, cap, 0.0]
+        for target in targets:
+            requested_mm = (target - source_value) * 1000.0
+            if abs(requested_mm) <= cap:
+                requests.append(requested_mm)
+        for requested_mm in requests:
+            actual_f32 = np.float32(np.float64(source_f32) + requested_mm / 1000.0)
+            actual_mm = (float(actual_f32) - source_value) * 1000.0
+            assert abs(actual_mm - requested_mm) <= reserve[row, column]
+
+
+def test_local_self_separation_rounding_reserve_rejects_no_safe_component_range():
+    source = np.full((1, 3), np.float32(32768.0), dtype="<f4")
+    with pytest.raises(ImportError, match="leave no positive Float32-safe component range"):
+        clearance._local_self_separation_rounding_reserve_mm(
+            source, clearance._LOCAL_SELF_SEPARATION_COMPONENT_CAP_MM,
+        )
+
+
+def test_local_self_separation_uses_reserve_to_clear_natural_float32_rounding_case():
     args, _, _ = _fixture(
         rejected_z=(0.0, 0.0, 0.0),
         baseline_translation_m=float(np.spacing(np.float32(0.1))),
         world_origin_z=0.1,
         source_world_offset_z=0.2,
     )
+    # The movable source vertices are at 0.3 m while the rejected world pair is
+    # at 0.1 m. The required correction is below a Float32 step at the source.
+    assert np.all(args["source_positions_m"][3:, 2] == np.float32(0.3))
+    result = _propose_local_self_separation_increment(**args)
+
+    assert result["status"] == "bounded_local_linearized_proposal"
+    assert result["rounding_reserve_max_component_mm"] > 0.0
+    assert result["requested_reserved_linearized_minimum_sat_slack_mm"] >= -1.0e-7
+    assert result["post_rounding_linearized_minimum_sat_slack_mm"] >= -1.0e-7
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+    assert np.all(result["source_increment_mm_f32_applied"][:, 2] > 0.0)
+    assert result["proposal_source_positions_m_f32"][3:, 2].tobytes() != (
+        args["source_positions_m"][3:, 2].tobytes()
+    )
+
+
+def test_local_self_separation_rejects_requested_move_below_rounding_reserve(monkeypatch):
+    from types import SimpleNamespace
+    import scipy.optimize
+
+    args, _, _ = _fixture(
+        rejected_z=(0.0, 0.0, 0.0),
+        baseline_translation_m=float(np.spacing(np.float32(0.1))),
+        world_origin_z=0.1,
+        source_world_offset_z=0.2,
+    )
+    gap_mm = float(np.spacing(np.float32(0.1))) * 1000.0
+
+    def original_gap_move(*_positional, **_keywords):
+        requested = np.zeros(9, dtype=np.float64)
+        requested[2::3] = gap_mm
+        return SimpleNamespace(success=True, x=requested, status=0, nit=1, message="fixture")
+
+    monkeypatch.setattr(scipy.optimize, "minimize", original_gap_move)
+    with pytest.raises(ImportError, match="Float32-reserved") as caught:
+        _propose_local_self_separation_increment(**args)
+    diagnostics = caught.value.local_self_separation_diagnostics
+    assert diagnostics["rejection_stage"] == "requested"
+    assert diagnostics["requested"]["sat_pass"] is True
+    assert diagnostics["requested"]["reserved_sat_pass"] is False
+    assert diagnostics["requested"]["minimum_sat_slack_mm"] >= -1.0e-7
+    assert diagnostics["requested"]["minimum_reserved_sat_slack_mm"] < -1.0e-7
+    assert diagnostics["requested"]["component_pass"] is True
+    assert diagnostics["requested"]["l2_pass"] is True
+    json.dumps(diagnostics, allow_nan=False)
+
+
+def test_local_self_separation_keeps_rounded_failure_diagnostic_under_zero_reserve(monkeypatch):
+    args, _, _ = _fixture(
+        rejected_z=(0.0, 0.0, 0.0),
+        baseline_translation_m=float(np.spacing(np.float32(0.1))),
+        world_origin_z=0.1,
+        source_world_offset_z=0.2,
+    )
+    monkeypatch.setattr(
+        clearance,
+        "_local_self_separation_rounding_reserve_mm",
+        lambda source_positions_m, component_cap_mm: np.zeros(
+            np.asarray(source_positions_m).shape, dtype=np.float64,
+        ),
+    )
     with pytest.raises(ImportError, match="Float32-rounded") as caught:
         _propose_local_self_separation_increment(**args)
     diagnostics = caught.value.local_self_separation_diagnostics
     assert diagnostics["rejection_stage"] == "rounded"
     assert all(diagnostics["requested"][key] for key in ("sat_pass", "component_pass", "l2_pass"))
+    assert diagnostics["requested"]["reserved_sat_pass"] is True
     assert diagnostics["rounded"]["sat_pass"] is False
     assert diagnostics["rounded"]["component_pass"] is True
     assert diagnostics["rounded"]["l2_pass"] is True

@@ -1298,6 +1298,44 @@ _LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM = 1.0e-7
 _LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS = 120.0
 
 
+def _local_self_separation_rounding_reserve_mm(
+    source_positions_m: np.ndarray, component_cap_mm: float,
+) -> np.ndarray:
+    """Bound requested-to-stored displacement error over the entire source box.
+
+    Source and result coordinates are Float32, while addition and displacement
+    measurement use binary64. Half the largest adjacent Float32 spacing over
+    the reachable interval covers round-to-nearest storage. The binary64 term
+    conservatively covers division, coordinate addition, subtraction, and
+    conversion back to millimetres, including construction of this bound.
+    """
+    source = np.asarray(source_positions_m, dtype=np.float64)
+    cap = float(component_cap_mm)
+    if not np.isfinite(source).all() or not math.isfinite(cap) or cap <= 0.0:
+        raise human.ImportError("local self-separation rounding reserve requires finite coordinates and a positive cap")
+    with np.errstate(over="ignore", invalid="ignore"):
+        arithmetic_mm = np.nextafter(
+            8.0 * np.finfo(np.float64).eps * (np.abs(source) * 1000.0 + 2.0 * cap),
+            np.inf,
+        )
+        # Include the binary64 evaluation error when choosing the endpoint
+        # spacing; looking only at the starting Float32 value misses binades.
+        endpoint_m = np.nextafter(
+            np.abs(source) + cap / 1000.0 + arithmetic_mm / 1000.0, np.inf,
+        )
+        endpoint_f32 = endpoint_m.astype("<f4")
+        up = np.nextafter(endpoint_f32, np.float32(np.inf)).astype(np.float64)
+        down = np.nextafter(endpoint_f32, np.float32(-np.inf)).astype(np.float64)
+        endpoint = endpoint_f32.astype(np.float64)
+        spacing_m = np.maximum(up - endpoint, endpoint - down)
+        reserve = np.nextafter(500.0 * spacing_m + arithmetic_mm, np.inf)
+    if not np.isfinite(reserve).all() or np.any(reserve >= cap):
+        raise human.ImportError(
+            "local self-separation source coordinates leave no positive Float32-safe component range"
+        )
+    return reserve
+
+
 def _propose_local_self_separation_increment(
     *,
     source_positions_m: np.ndarray,
@@ -1316,8 +1354,9 @@ def _propose_local_self_separation_increment(
     ``baseline_world_positions`` and ``rejected_world_positions``; a Vx3x3
     dimensionless Jacobian mapping source metres to world metres; and integer
     ``self_pair_rows`` indexing ``faces``. The constraints preserve the positive
-    SAT gap measured in the accepted baseline for each supplied pair. No extra
-    clearance margin is added.
+    SAT gap measured in the accepted baseline for each supplied pair. A
+    conservative quantization reserve tightens only the solver constraints;
+    the original accepted gap and displacement limits remain the postchecks.
 
     After rounding source coordinates to Float32, this rechecks the linearized
     SAT rows and runs the exact triangle predicate on each supplied pair in its
@@ -1556,7 +1595,15 @@ def _propose_local_self_separation_increment(
         raise human.ImportError("local self-separation source graph objective is not positive definite")
 
     cap = _LOCAL_SELF_SEPARATION_COMPONENT_CAP_MM
-    bounds = [(-cap, cap)] * nvar
+    rounding_reserve_mm = _local_self_separation_rounding_reserve_mm(source[movable], cap)
+    reserve_flat = rounding_reserve_mm.reshape(-1)
+    solver_cap = np.nextafter(cap - reserve_flat, -np.inf)
+    # A(x + e) >= rhs for every componentwise |e| <= reserve. Keep rhs
+    # unchanged for the measured Float32 postcheck; do not reserve twice.
+    solver_rhs = np.nextafter(rhs + np.abs(matrix) @ reserve_flat, np.inf)
+    if not np.isfinite(solver_rhs).all() or np.any(solver_cap <= 0.0):
+        raise human.ImportError("local self-separation Float32-safe solver bounds are invalid")
+    bounds = list(zip(-solver_cap, solver_cap))
     optimizer_deadline = monotonic() + _LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS
 
     class _OptimizerWallTimeExceeded(Exception):
@@ -1569,7 +1616,7 @@ def _propose_local_self_separation_increment(
         return remaining
 
     feasible = linprog(
-        np.zeros(nvar), A_ub=-matrix, b_ub=-rhs, bounds=bounds, method="highs",
+        np.zeros(nvar), A_ub=-matrix, b_ub=-solver_rhs, bounds=bounds, method="highs",
         options={"time_limit": remaining_optimizer_seconds()},
     )
     if not feasible.success:
@@ -1577,7 +1624,7 @@ def _propose_local_self_separation_increment(
         lp_message = str(getattr(feasible, "message", "no solver message"))
         if lp_status == 2:
             raise human.ImportError(
-                "local self-separation constraints are infeasible within the fixed 1 mm vertex bound "
+                "local self-separation constraints with a conservative Float32 reserve are infeasible within the fixed 1 mm vertex bound "
                 f"(HiGHS status={lp_status}; message={lp_message})"
             )
         if lp_status == 1 and monotonic() >= optimizer_deadline:
@@ -1604,8 +1651,8 @@ def _propose_local_self_separation_increment(
         result = minimize(
             lambda x: 0.5 * float(x @ (q_matrix @ x)), np.asarray(feasible.x, dtype=np.float64),
             jac=lambda x: q_matrix @ x, method="SLSQP",
-            bounds=Bounds(np.full(nvar, -cap), np.full(nvar, cap)),
-            constraints=[LinearConstraint(matrix, rhs, np.full(len(rhs), np.inf))],
+            bounds=Bounds(-solver_cap, solver_cap),
+            constraints=[LinearConstraint(matrix, solver_rhs, np.full(len(rhs), np.inf))],
             callback=check_optimizer_deadline,
             options={"maxiter": 1000, "ftol": 1.0e-10, "disp": False},
         )
@@ -1617,15 +1664,15 @@ def _propose_local_self_separation_increment(
         raise human.ImportError("local self-separation QP did not converge to a finite proposal")
     requested = np.asarray(result.x, dtype=np.float64).reshape(len(movable), 3)
     requested_slack = matrix @ result.x - rhs
+    requested_reserved_slack = matrix @ result.x - solver_rhs
     requested_l2 = np.linalg.norm(requested, axis=1)
 
     def reject_with_gate_diagnostics(
         message: str, *, stage: str, rounded: np.ndarray | None = None,
         rounding_allowance: np.ndarray | None = None,
     ) -> None:
-        # Observation only: preserve the optimizer, Float32 conversion, and every
-        # admission threshold. Failure records must identify the failing gate
-        # before any numerical or geometric correction is considered.
+        # Keep original admission metrics distinct from the solver reserve:
+        # a reserved solver failure must not masquerade as an original SAT miss.
         def scalar(value: float) -> float | None:
             value = float(value)
             return value if math.isfinite(value) else None
@@ -1684,6 +1731,17 @@ def _propose_local_self_separation_increment(
             },
             "requested": describe(requested, 0.0, 1.0e-10),
         }
+        reserved_component_margin = solver_cap.reshape(len(movable), 3) + 1.0e-10 - np.abs(requested)
+        details["rounding_reserve_max_component_mm"] = scalar(rounding_reserve_mm.max())
+        details["requested"].update({
+            "reserved_sat_pass": bool(np.isfinite(requested_reserved_slack).all() and
+                                      float(requested_reserved_slack.min()) >=
+                                      -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM),
+            "minimum_reserved_sat_slack_mm": scalar(requested_reserved_slack.min()),
+            "reserved_component_pass": bool(np.isfinite(reserved_component_margin).all() and
+                                            np.all(reserved_component_margin >= 0.0)),
+            "minimum_reserved_component_margin_mm": scalar(reserved_component_margin.min()),
+        })
         if rounded is not None:
             assert rounding_allowance is not None
             details["rounded"] = describe(rounded, rounding_allowance, 1.0e-9)
@@ -1698,11 +1756,14 @@ def _propose_local_self_separation_increment(
 
     if (not np.isfinite(requested).all()
             or np.any(np.abs(requested) > cap + 1.0e-10)
+            or np.any(np.abs(requested.reshape(-1)) > solver_cap + 1.0e-10)
+            or not np.isfinite(requested_reserved_slack).all()
+            or float(requested_reserved_slack.min()) < -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM
             or not np.isfinite(requested_slack).all()
             or float(requested_slack.min()) < -_LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM
             or np.any(requested_l2 > _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM + 1.0e-10)):
         reject_with_gate_diagnostics(
-            "local self-separation optimizer failed the linear constraint, component bound, or 1 mm L2 bound",
+            "local self-separation optimizer failed the Float32-reserved linear constraint, component bound, or 1 mm L2 bound",
             stage="requested",
         )
 
@@ -1761,6 +1822,8 @@ def _propose_local_self_separation_increment(
         "source_increment_mm_f32_applied": actual_mm,
         "constraint_rows_by_pose": rows_by_pose,
         "pair_pose_receipts": pair_receipts,
+        "rounding_reserve_max_component_mm": float(rounding_reserve_mm.max()),
+        "requested_reserved_linearized_minimum_sat_slack_mm": float(requested_reserved_slack.min()),
         "requested_max_vertex_l2_increment_mm": float(requested_l2.max(initial=0.0)),
         "float32_max_vertex_l2_increment_mm": float(actual_l2.max(initial=0.0)),
         "float32_component_bound_rounding_tolerance_mm_max": float(component_rounding_tolerance_mm.max(initial=0.0)),
@@ -4110,6 +4173,9 @@ def derive_shared_multipose_inferred_clearance(
                         "constraint_rows_by_sample": [int(value) for value in raw_constraint_rows],
                         "pair_seed_face_selection": pair_selection_receipts,
                         "protected_pair_side_face_rows": sorted(protected_pair_side_faces),
+                        "rounding_reserve_max_component_mm": proposal.get("rounding_reserve_max_component_mm"),
+                        "requested_reserved_linearized_minimum_sat_slack_mm": proposal.get(
+                            "requested_reserved_linearized_minimum_sat_slack_mm"),
                         "requested_max_vertex_l2_increment_mm": proposal["requested_max_vertex_l2_increment_mm"],
                         "float32_max_vertex_l2_increment_mm": proposal["float32_max_vertex_l2_increment_mm"],
                         "post_rounding_linearized_minimum_sat_slack_mm": proposal[
