@@ -3,8 +3,8 @@
 This offline geometry owner never steps physics, moves source vertices, applies
 welding tolerances, or resolves physiological ownership. It inserts rational
 intersection points and triangulates simple arrangement cells. Closed interior
-loops use noncrossing diagonals between existing vertices. Dangling cuts and
-nonsimple arrangement cells remain explicitly rejected.
+loops use noncrossing diagonals between existing vertices. Closed loops meeting at cut vertices gain visible triangulation diagonals.
+Dangling open cuts remain explicitly rejected.
 """
 from __future__ import annotations
 
@@ -112,6 +112,82 @@ def _triangulate_cell(polygon: list[Point2]) -> list[tuple[Point2, Point2, Point
     return result
 
 
+def _first_articulation(adjacency):
+    """Find a cut vertex without recursion; all graph vertices are exact points."""
+    root = min(adjacency)
+    discovery = {root: 0}
+    low = {root: 0}
+    parent = {}
+    children = Counter()
+    cuts = set()
+    stack = [(root, iter(sorted(adjacency[root])))]
+    while stack:
+        vertex, neighbors = stack[-1]
+        neighbor = next(neighbors, None)
+        if neighbor is None:
+            stack.pop()
+            if vertex in parent:
+                above = parent[vertex]
+                low[above] = min(low[above], low[vertex])
+                if above in parent and low[vertex] >= discovery[above]:
+                    cuts.add(above)
+            elif children[vertex] > 1:
+                cuts.add(vertex)
+        elif neighbor not in discovery:
+            parent[neighbor] = vertex
+            children[vertex] += 1
+            discovery[neighbor] = low[neighbor] = len(discovery)
+            stack.append((neighbor, iter(sorted(adjacency[neighbor]))))
+        elif parent.get(vertex) != neighbor:
+            low[vertex] = min(low[vertex], discovery[neighbor])
+    require(len(discovery) == len(adjacency), "cut-vertex scan requires a connected graph")
+    return min(cuts) if cuts else None
+
+
+def _bridge_touching_loops(adjacency, edges):
+    """Add exact visible triangulation edges across cut vertices.
+
+    No original point or cut is moved or removed. A convex source triangle
+    contains every proposed segment; intersections with existing edges are
+    permitted only at its own endpoints. Output incidence/area/T-junction
+    checks remain authoritative.
+    """
+    for _ in range(len(adjacency)):
+        cut = _first_articulation(adjacency)
+        if cut is None:
+            return
+        components = {}
+        for seed in sorted(set(adjacency) - {cut}):
+            if seed in components:
+                continue
+            component_id = len(set(components.values()))
+            pending = [seed]
+            while pending:
+                vertex = pending.pop()
+                if vertex in components:
+                    continue
+                components[vertex] = component_id
+                pending.extend(adjacency[vertex] - {cut} - components.keys())
+        best = None
+        points = sorted(components)
+        for index, a in enumerate(points):
+            for b in points[index+1:]:
+                if components[a] == components[b]:
+                    continue
+                distance2 = sum((a[k]-b[k])**2 for k in range(2))
+                candidate = (distance2, a, b)
+                if best is not None and candidate >= best:
+                    continue
+                if all(_segment_intersections(a, b, c, d) <= {a, b} for c, d in edges):
+                    best = candidate
+        require(best is not None, "touching loops have no visible triangulation bridge")
+        _, a, b = best
+        edges.add(tuple(sorted((a, b))))
+        adjacency[a].add(b)
+        adjacency[b].add(a)
+    require(_first_articulation(adjacency) is None, "touching-loop bridge bound exceeded")
+
+
 def subdivide_triangle(triangle, segments, boundary_points=()) -> list[tuple[Point, Point, Point]]:
     """Split one exact 3D triangle at a bounded rational segment arrangement.
 
@@ -216,6 +292,7 @@ def subdivide_triangle(triangle, segments, boundary_points=()) -> list[tuple[Poi
             edges.add(tuple(sorted((a, b))))
             adjacency[a].add(b); adjacency[b].add(a)
         reached.update(component)
+    _bridge_touching_loops(adjacency, edges)
     ordered_neighbors = {}
     for point, neighbors in adjacency.items():
         def compare(a, b):

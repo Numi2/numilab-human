@@ -164,10 +164,26 @@ class ArrangementTests(unittest.TestCase):
                 reverse = tuple(reversed(SOURCE))
                 self.verify(reverse, subdivide_triangle(reverse, constraints), constraints)
 
+    def test_touching_and_single_bridge_loops_preserve_constraints(self):
+        loop = lambda p: list(zip(p, p[1:] + p[:1]))
+        touching = loop([(0, 0, 0), (1, F(1, 2), 0), (F(1, 2), 1, 0)])
+        inner = loop([(1, 1, 0), (2, 1, 0), (1, 2, 0)])
+        bridged = inner + [((1, 0, 0), (1, 1, 0))]
+        figure_eight = (loop([(1, 1, 0), (1, F(1, 2), 0), (F(1, 2), 1, 0)])
+                        + loop([(1, 1, 0), (2, 1, 0), (1, 2, 0)]))
+        for cuts in (touching, bridged, figure_eight):
+            with self.subTest(cuts=cuts):
+                result = subdivide_triangle(SOURCE, cuts)
+                self.verify(SOURCE, result, cuts)
+                self.assertEqual({p for t in result for p in t},
+                                 set(map(point, SOURCE)) | {point(p) for pair in cuts for p in pair})
+                self.assertEqual(result, subdivide_triangle(
+                    SOURCE, [tuple(reversed(pair)) for pair in reversed(cuts)]))
+                reverse = tuple(reversed(SOURCE))
+                self.verify(reverse, subdivide_triangle(reverse, cuts), cuts)
+
     def test_orphan_or_dangling_cut_rejected(self):
-        loop = [((1, 1, 0), (2, 1, 0)), ((2, 1, 0), (1, 2, 0)), ((1, 2, 0), (1, 1, 0))]
-        cases = [[((1, 1, 0), (2, 1, 0))], [((1, 0, 0), (1, 1, 0))],
-                 loop + [((1, 0, 0), (1, 1, 0))]]
+        cases = [[((1, 1, 0), (2, 1, 0))], [((1, 0, 0), (1, 1, 0))]]
         for cuts in cases:
             with self.subTest(cuts=cuts), self.assertRaisesRegex(HumanImportError, 'loop|orphan|dangling|nonsimple'):
                 subdivide_triangle(SOURCE, cuts)
@@ -202,6 +218,27 @@ class PinnedArrangementTests(unittest.TestCase):
                 result = subdivide_triangle(triangle, list(segments), boundary)
                 self.verify(triangle, result, segments)
                 self.assertTrue(set(boundary) <= {point for tri in result for point in tri})
+
+    def test_actual_iliacus_touching_cut_loop(self):
+        fixture = json.loads((ROOT / 'tests/fixtures/iliacus_touching_cut_loop.json').read_text())
+        self.assertEqual(fixture['source_tissue_sha256'],
+                         '3796058dc2a31b6c48df3f8d7c83409218f360eae7711e9ac00f6dd0578515c4')
+        self.assertIn('dangling bridge or nonsimple', fixture['old_owner_error'])
+        def decode(value):
+            if isinstance(value, list):
+                if len(value) == 2 and all(isinstance(x, str) for x in value):
+                    return F(int(value[0], 16), int(value[1], 16))
+                return tuple(decode(x) for x in value)
+            return value
+        self.assertEqual(len(fixture['cases']), 1)
+        for case in fixture['cases']:
+            triangle, segments, boundary = (decode(case[key]) for key in ('triangle', 'segments', 'boundary'))
+            result = subdivide_triangle(triangle, list(segments), boundary)
+            self.verify(triangle, result, segments)
+            expected = set(triangle) | set(boundary) | {p for pair in segments for p in pair}
+            self.assertTrue(expected <= {p for tri in result for p in tri})
+            self.assertEqual(result, subdivide_triangle(
+                triangle, [tuple(reversed(pair)) for pair in reversed(segments)], tuple(reversed(boundary))))
 
     def test_actual_42_intersections_subdivide_every_affected_source_face(self):
         from numilab_human.cardiac_cavity_geometry import extract_cavity_surfaces
