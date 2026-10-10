@@ -229,7 +229,7 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     raw = T.read_bytes()
     require(len(raw) >= 64, 'truncated NHTISS4 header')
     (magic, abi, nr, nb, nv, ni, fp, source_digest) = struct.unpack_from('<8s6I32s', raw)
-    require(magic == b'NHTISS4\x00' and abi == 5 and (nr == 150), 'unsupported NHTISS4 ABI or source inventory')
+    require(magic == b'NHTISS4\x00' and abi == 5 and (nr == 150 or (reference_rows and 150 < nr <= 158)), 'unsupported NHTISS4 ABI or source inventory')
     require(len(raw) == 64 + nr * 32 + nb * 36 + nv * 56 + ni * 4, 'NHTISS4 byte ranges')
     declared = json.loads(M.read_text())
     expected = declared['payload']
@@ -393,6 +393,184 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     proof['composer_source_sha256'] = sha(Path(__file__))
     (output / 'report.json').write_text(json.dumps(proof, indent=2) + '\n')
     return proof
+
+
+
+def _passive_surface_append_bytes(source: dict, subset: dict,
+                                  stable_ids: tuple[int, ...]) -> bytes:
+    """Pack selected new passive rows without rewriting any parent row."""
+    import numpy as np
+    require(stable_ids and all(type(sid) is int and 151 <= sid <= 158 for sid in stable_ids)
+            and list(stable_ids) == sorted(set(stable_ids)),
+            "passive append requires distinct ordered neck/back stable IDs 151-158")
+    require(source["fingerprint"] == subset["fingerprint"]
+            and source["source_digest"] == subset["source_digest"],
+            "passive append registration or physical source differs")
+    old_ids = {int(row[6]) for row in source["records"]}
+    rows = {int(row[6]): row for row in subset["records"]}
+    require(not old_ids.intersection(stable_ids) and set(stable_ids).issubset(rows),
+            "passive append stable ID already exists or is absent from subset")
+    records = [source["records"].astype("<u4").tobytes()]
+    bindings = [source["raw"][source["binding_start"]:source["vertex_start"]]]
+    vertices = [source["raw"][source["vertex_start"]:source["index_start"]]]
+    indices = [source["raw"][source["index_start"]:]]
+    nb, nv, ni = (source[key] for key in ("binding_count", "vertex_count", "index_count"))
+    for sid in stable_ids:
+        local = _row_slices(subset, rows[sid])
+        arrays = _biceps_row_arrays(local)
+        weights, slots = arrays["weights"], arrays["binding_indices"]
+        require(np.isfinite(arrays["vertices6"]).all() and np.isfinite(weights).all()
+                and (weights >= 0).all()
+                and np.max(np.abs(weights.sum(axis=1, dtype=np.float64)-1)) < 1e-5,
+                "passive append invalid vertex fields")
+        require((slots[weights > 0] < local["binding_count"]).all(),
+                "passive append invalid local binding index")
+        require(local["layer"] == 0 and local["binding_count"] > 0,
+                "passive append requires a muscle inspection row")
+        binding_floats = np.ndarray((local["binding_count"], 8), "<f4",
+                                    buffer=local["binding_bytes"], offset=4, strides=(36, 4))
+        require(np.isfinite(binding_floats).all() and (binding_floats[:, 7] > 0).all()
+                and np.max(np.abs(np.sum(binding_floats[:, 3:7].astype(float)**2,
+                                         axis=1)-1)) < 1e-4,
+                "passive append invalid registered support transform")
+        bc, vc, ic = (local[key] for key in ("binding_count", "vertex_count", "index_count"))
+        require(max(nb+bc, nv+vc, ni+ic) < 2**32, "passive append exceeds ABI counts")
+        records.append(struct.pack("<8I", nb, bc, nv, vc, ni, ic, sid, local["layer"]))
+        bindings.append(local["binding_bytes"])
+        vertices.append(local["vertex_bytes"])
+        indices.append((arrays["faces"].astype("<u4")+nv).astype("<u4").tobytes())
+        nb, nv, ni = nb+bc, nv+vc, ni+ic
+    header = struct.pack("<8s6I32s", b"NHTISS4\0", 5,
+                         source["surface_count"]+len(stable_ids), nb, nv, ni,
+                         source["fingerprint"], source["source_digest"])
+    return header+b"".join(records+bindings+vertices+indices)
+
+
+def _passive_append_rows(manifest: dict, stable_ids: tuple[int, ...]) -> list[dict]:
+    expected = {151: "FJ1595", 152: "FJ1573", 153: "FJ1520", 154: "FJ1520M",
+                155: "FJ1554", 156: "FJ1554M", 157: "FJ1521", 158: "FJ1521M"}
+    selected = [_manifest_row(manifest, sid) for sid in stable_ids]
+    for row in selected:
+        binding = row.get("passive_visual_binding")
+        require(row.get("member_id") == expected[row["stable_id"]]
+                and row.get("layer") == "muscle" and row.get("matched_muscles") == []
+                and isinstance(binding, dict) and binding.get("mechanics_changed") is False
+                and binding.get("myosim_route_added") is False
+                and isinstance(binding.get("supports"), list) and binding["supports"],
+                "passive append source identity or passive ownership differs")
+    return selected
+
+
+def _validate_passive_payload_metadata(data: dict, manifest: dict) -> None:
+    record = manifest["payload"]
+    require(all(record.get(key) == data[key] for key in
+                ("surface_count", "binding_count", "vertex_count", "index_count"))
+            and record.get("registration_fingerprint32") == f'{data["fingerprint"]:08x}'
+            and manifest["source"].get("myosim_source_archive_sha256")
+            == data["source_digest"].hex(),
+            "passive append manifest count or registration identity differs")
+    rows = manifest["source"].get("surfaces")
+    require(isinstance(rows, list) and len(rows) == data["surface_count"]
+            and all(isinstance(a, dict) and a.get("stable_id") == int(b[6])
+                    and a.get("vertex_count") == int(b[3])
+                    and a.get("triangle_count") == int(b[5])//3
+                    for a, b in zip(rows, data["records"])),
+            "passive append manifest row identity or count differs")
+
+
+def append_passive_surfaces(source: Path, subset: Path, output: Path, *,
+                            stable_ids: tuple[int, ...]) -> dict:
+    """Append declared neck/back inspection rows in ABI5; no anatomical admission."""
+    source, subset, output = (Path(p).resolve() for p in (source, subset, output))
+    parent = _read_nhtiss4(source)
+    extra = _read_nhtiss4(subset)
+    pm, manifest = _payload_manifest(source)
+    sm, subset_manifest = _payload_manifest(subset)
+    _validate_passive_payload_metadata(parent, manifest)
+    _validate_passive_payload_metadata(extra, subset_manifest)
+    raw = _passive_surface_append_bytes(parent, extra, stable_ids)
+    added = _passive_append_rows(subset_manifest, stable_ids)
+    pins = {str(p): _surface_sha256(p) for p in (source, subset, pm, sm)}
+    operation = {
+        "source_payload_path": str(source), "source_payload_sha256": pins[str(source)],
+        "source_manifest_path": str(pm), "source_manifest_sha256": pins[str(pm)],
+        "subset_payload_path": str(subset), "subset_payload_sha256": pins[str(subset)],
+        "subset_manifest_path": str(sm), "subset_manifest_sha256": pins[str(sm)],
+        "added_stable_ids": list(stable_ids), "parent_rows_and_bindings_byte_exact": True,
+        "physical_route_mass_and_force_state_unchanged": True,
+        "scope": "Passive anatomical coverage preparation; native and anatomical admission separate.",
+    }
+    history = manifest["source"].setdefault("passive_surface_appends", [])
+    require(isinstance(history, list), "passive append operation history is invalid")
+    history.append(operation)
+    manifest["source"]["surfaces"].extend(added)
+    _, _, nr, nb, nv, ni, _, _ = struct.unpack_from("<8s6I32s", raw)
+    manifest["payload"].update(file=source.name, sha256=hashlib.sha256(raw).hexdigest(),
+                               bytes=len(raw), surface_count=nr, binding_count=nb,
+                               vertex_count=nv, index_count=ni)
+    manifest["coverage"].update(emitted_surface_count=nr,
+        muscle_surface_count=sum(int(r[7]) == 0 for r in parent["records"])+len(added),
+        tendon_surface_count=sum(int(r[7]) == 1 for r in parent["records"]))
+    manifest["coverage"]["passive_append_added_stable_ids"] = [
+        sid for item in history for sid in item["added_stable_ids"]]
+    manifest["coverage"]["upstream_counts_not_recomputed_after_passive_append"] = [
+        "configured_surface_count", "cancelled_opposite_face_pair_count",
+        "opposite_face_pair_cancellation_surface_count"]
+    manifest["runtime_binding"] = (
+        "Existing rows preserve their exact source-derived bindings. Appended neck/back "
+        "inspection rows use explicitly inferred registered anatomical support weights, "
+        "not new MyoSim routes or force-transmitting tissue.")
+    manifest["evidence_boundary"] = (
+        "Mixed-source passive anatomy preparation. Existing physical routes, mass and "
+        "tendon state retain their owners. Appending a row is not anatomical admission.")
+    require(all(_surface_sha256(p) == digest for p, digest in pins.items()),
+            "passive append input changed")
+    output.mkdir(exist_ok=False)
+    payload = output/source.name
+    payload.write_bytes(raw)
+    mp = payload.with_suffix(".manifest.json")
+    mp.write_text(json.dumps(manifest, indent=2, sort_keys=True)+"\n")
+    proof = {"scope": operation["scope"], "input_sha256": pins,
+             "payload_sha256": _surface_sha256(payload), "manifest_sha256": _surface_sha256(mp),
+             "added_stable_ids": list(stable_ids), "parent_rows_and_bindings_byte_exact": True,
+             "inputs_unchanged": all(_surface_sha256(p) == digest for p, digest in pins.items())}
+    require(proof["inputs_unchanged"], "passive append input changed during writing")
+    (output/"report.json").write_text(json.dumps(proof, indent=2, sort_keys=True)+"\n")
+    return proof
+
+
+def _verify_passive_surface_append(parent: Path, child: Path, manifest: dict,
+                                   operation: dict) -> None:
+    """Replay byte composition and check both source manifests before receipt binding."""
+    pm, parent_manifest = _payload_manifest(parent)
+    subset = Path(operation["subset_payload_path"])
+    sm, subset_manifest = _payload_manifest(subset)
+    for path, path_key, hash_key in (
+            (parent, "source_payload_path", "source_payload_sha256"),
+            (pm, "source_manifest_path", "source_manifest_sha256"),
+            (subset, "subset_payload_path", "subset_payload_sha256"),
+            (sm, "subset_manifest_path", "subset_manifest_sha256")):
+        require(path.resolve() == Path(operation[path_key]).resolve()
+                and _surface_sha256(path) == operation[hash_key],
+                "passive append input identity changed")
+    _validate_passive_payload_metadata(_read_nhtiss4(parent), parent_manifest)
+    _validate_passive_payload_metadata(_read_nhtiss4(subset), subset_manifest)
+    _validate_passive_payload_metadata(_read_nhtiss4(child), manifest)
+    ids = tuple(operation["added_stable_ids"])
+    selected = _passive_append_rows(subset_manifest, ids)
+    expected = _passive_surface_append_bytes(_read_nhtiss4(parent), _read_nhtiss4(subset), ids)
+    require(child.read_bytes() == expected, "passive append child differs from exact source rows")
+    require(manifest["source"].get("passive_surface_appends") ==
+            parent_manifest["source"].get("passive_surface_appends", [])+[operation],
+            "passive append ancestry changed")
+    require(manifest["source"]["surfaces"] == parent_manifest["source"]["surfaces"]+selected,
+            "passive append anatomical provenance changed")
+    for key, value in parent_manifest["source"].items():
+        if key not in {"surfaces", "passive_surface_appends"}:
+            require(manifest["source"].get(key) == value, "passive append parent provenance changed")
+    require(operation["parent_rows_and_bindings_byte_exact"] is True
+            and operation["physical_route_mass_and_force_state_unchanged"] is True,
+            "passive append physical ownership changed")
 
 
 def _surface_sha256(path: Path) -> str:
@@ -1490,7 +1668,24 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     reference_operations = manifest["source"].get("reference_surface_compositions", [])
     require(isinstance(reference_operations, list), "reference-surface operation history is invalid")
     reference_composition = reference_operations[-1] if reference_operations else None
-    if reference_composition is not None:
+    append_history = manifest["source"].get("passive_surface_appends", [])
+    require(isinstance(append_history, list), "passive append operation history is invalid")
+    append_composition = append_history[-1] if append_history else None
+    require(append_composition is None or isinstance(append_composition, dict),
+            "passive append operation is invalid")
+    if append_composition is not None and append_composition.get("source_payload_sha256") == owner["sha256"]:
+        _verify_passive_surface_append(old, payload, manifest, append_composition)
+        parent_manifest = Path(owner.get("manifest_path", old.with_suffix(".manifest.json")))
+        if not parent_manifest.is_absolute():
+            parent_manifest = source_receipt.parent/parent_manifest
+        require(parent_manifest.resolve() == Path(append_composition["source_manifest_path"]).resolve()
+                and sha(parent_manifest) == owner.get("manifest_sha256")
+                == append_composition["source_manifest_sha256"],
+                "passive append anatomical parent manifest identity changed")
+        composition = append_composition
+        changed_stable_ids = composition["added_stable_ids"]
+        edge_composition = biceps_composition = fhl_composition = reference_composition = None
+    elif reference_composition is not None:
         _verify_reference_surface_child(old, payload, manifest, reference_composition)
         require(reference_composition["source_payload_sha256"] == owner["sha256"],
                 "reference-surface child is not bound to the immediate anatomical parent")
@@ -1603,12 +1798,21 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     old_raw, new_raw = old.read_bytes(), payload.read_bytes()
     old_header = struct.unpack_from("<8s6I32s", old_raw)
     new_header = struct.unpack_from("<8s6I32s", new_raw)
-    require(old_header[:4] == new_header[:4] and old_header[6:] == new_header[6:],
-            "anatomical binding or source identity changed")
-    nr, nb = old_header[2:4]
-    binding_start, binding_end = 64 + nr * 32, 64 + nr * 32 + nb * 36
-    require(old_raw[binding_start:binding_end] == new_raw[binding_start:binding_end],
-            "anatomical binding table changed")
+    if append_composition is not None and composition is append_composition:
+        require(old_header[:2] == new_header[:2] and old_header[6:] == new_header[6:],
+                "passive append physical source identity changed")
+        nr, nb = old_header[2:4]
+        new_binding_start = 64+new_header[2]*32
+        require(old_raw[64+nr*32:64+nr*32+nb*36] ==
+                new_raw[new_binding_start:new_binding_start+nb*36],
+                "passive append changed parent binding table")
+    else:
+        require(old_header[:4] == new_header[:4] and old_header[6:] == new_header[6:],
+                "anatomical binding or source identity changed")
+        nr, nb = old_header[2:4]
+        binding_start, binding_end = 64 + nr * 32, 64 + nr * 32 + nb * 36
+        require(old_raw[binding_start:binding_end] == new_raw[binding_start:binding_end],
+                "anatomical binding table changed")
     require(record["registration_fingerprint32"] == owner["registration_fingerprint32"],
             "anatomical registration changed")
     owner.update(payload_path=str(payload), sha256=record["sha256"],
@@ -1634,7 +1838,9 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         anatomical_payload = source_receipt.parent / anatomical_payload
     require(sha(anatomical_payload) == receipt["payload"]["sha256"], "anatomical payload changed")
     receipt["payload"]["path"] = str(anatomical_payload.resolve())
-    binding_key = ("reference_surface_composition_binding" if reference_composition is not None
+    is_append = append_composition is not None and composition is append_composition
+    binding_key = ("passive_surface_append_binding" if is_append
+                   else "reference_surface_composition_binding" if reference_composition is not None
                    else "fhl_source_seam_correction_binding" if fhl_composition is not None
                    else "biceps_source_preserving_correction_binding" if biceps_composition is not None
                    else "conforming_surface_refinement_binding" if edge_composition is not None
@@ -1645,14 +1851,15 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     elif biceps_composition is not None:
         require(binding_key not in receipt["provenance"],
                 "anatomy receipt already contains this biceps correction provenance binding")
-    if reference_composition is not None and binding_key in receipt["provenance"]:
-        receipt["provenance"].setdefault("reference_surface_composition_binding_history", []).append(
+    if (reference_composition is not None or is_append) and binding_key in receipt["provenance"]:
+        receipt["provenance"].setdefault(binding_key+"_history", []).append(
             receipt["provenance"][binding_key])
     receipt["provenance"][binding_key] = {
         "prior_receipt_path": str(source_receipt), "prior_receipt_sha256": sha(source_receipt),
         "composition_manifest_sha256": sha(manifest_path),
         "changed_stable_ids": changed_stable_ids,
-        "scope": ("Source-derived reference surface composition, verified against its immediate parent and exact row patches; anatomical and native-cycle acceptance remain separate."
+        "scope": ("Passive neck/back inspection rows appended without changing parent rows or physical owners; anatomical and native-cycle acceptance remain separate."
+                  if is_append else "Source-derived reference surface composition, verified against its immediate parent and exact row patches; anatomical and native-cycle acceptance remain separate."
                   if reference_composition is not None else
                   "Proof-bound FHL source-seam correction composed as a direct child of this receipt; anatomy acceptance remains separate."
                   if fhl_composition is not None else

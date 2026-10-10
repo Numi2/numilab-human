@@ -950,3 +950,134 @@ def test_sequential_reference_surface_composition_keeps_parent_chain(inputs, tmp
     assert [o["changed_stable_ids"] for o in operations] == [[29], [85]]
     assert result["provenance"]["reference_surface_composition_binding_history"][0]["changed_stable_ids"] == [29]
     assert result["provenance"]["reference_surface_composition_binding"]["changed_stable_ids"] == [85]
+
+
+@pytest.fixture
+def neck_subset(tmp_path):
+    payload = tmp_path/"neck.nhtissue"
+    records = b"".join(struct.pack("<8I", fb, bc, 3*i, 3, 3*i, 3, 151+i, 0)
+                       for i, (fb, bc) in enumerate(((0, 5), (5, 3))))
+    bindings = b"".join(struct.pack("<I8f", i+400, 0, 0, 0, 0, 0, 0, 1, 1)
+                        for i in range(8))
+    vertices = b"".join(struct.pack("<6f4I4f", *point, 0, 0, 1,
+                                    *slots, .4, .3, .2, .1)
+                        for slots in ((4, 2, 1, 0), (2, 1, 0, 1))
+                        for point in ((0,0,0), (1,0,0), (0,1,0)))
+    payload.write_bytes(struct.pack("<8s6I32s", b"NHTISS4\0", 5, 2, 8, 6, 6,
+                                    42, b"s"*32)+records+bindings+vertices+
+                        np.arange(6, dtype="<u4").tobytes())
+    manifest = {
+        "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
+        "payload": {"file": payload.name, "sha256": digest(payload),
+                    "bytes": payload.stat().st_size, "surface_count": 2,
+                    "binding_count": 8, "vertex_count": 6, "index_count": 6,
+                    "registration_fingerprint32": "0000002a"},
+        "source": {"myosim_source_archive_sha256": (b"s"*32).hex(),
+                   "surfaces": [
+                       {"stable_id": sid, "member_id": member, "layer": "muscle",
+                        "vertex_count": 3, "triangle_count": 1, "matched_muscles": [],
+                        "passive_visual_binding": {"mechanics_changed": False,
+                            "myosim_route_added": False, "supports": ["torso", "head"]}}
+                       for sid, member in ((151, "FJ1595"), (152, "FJ1573"))]},
+        "coverage": {}, "runtime_binding": "inferred passive support"}
+    payload.with_suffix(".manifest.json").write_text(json.dumps(manifest))
+    return payload
+
+
+@pytest.mark.parametrize("selected", [(151,), (152,), (151,152)])
+def test_append_preserves_prior_repair_and_every_parent_byte(inputs, neck_subset, tmp_path, selected):
+    source, patch, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    repaired = tmp_path/"repaired"
+    compose(source, repaired, [(7, patch, report)], reference_surface_rows=(7,))
+    parent = repaired/source.name
+    bind_anatomy_receipt(receipt, parent, repaired/"anatomy.json")
+    old = pac._read_nhtiss4(parent)
+    out = tmp_path/"appended"
+    proof = pac.append_passive_surfaces(parent, neck_subset, out, stable_ids=selected)
+    child = pac._read_nhtiss4(out/source.name)
+    assert proof["inputs_unchanged"]
+    assert child["records"][:150].tobytes() == old["records"].tobytes()
+    for a,b in zip(old["records"], child["records"]):
+        assert pac._row_local_equal(pac._row_slices(old,a),pac._row_slices(child,b))
+    for sid in selected:
+        extra = pac._read_nhtiss4(neck_subset)
+        a = next(row for row in extra["records"] if row[6] == sid)
+        b = next(row for row in child["records"] if row[6] == sid)
+        assert pac._row_local_equal(pac._row_slices(extra,a),pac._row_slices(child,b))
+    bound = bind_anatomy_receipt(repaired/"anatomy.json", out/source.name, out/"anatomy.json")
+    assert bound["mass_geometry_accounting"] == {"reference_total_mass_kg": 72}
+    assert bound["provenance"]["native_muscle_surfaces"]["surface_count"] == 150+len(selected)
+    assert bound["provenance"]["passive_surface_append_binding"]["changed_stable_ids"] == list(selected)
+    for key, entry in bound["provenance"]["cardiac_geometry_binding"]["common_field"].items():
+        assert digest(out/entry["path"]) == digest(tmp_path/(key+".bin"))
+
+
+@pytest.mark.parametrize("defect", ["duplicate", "unknown", "reordered", "registration",
+    "negative_weight", "binding_slot", "transform", "identity", "active", "counts", "row_count"])
+def test_append_rejects_bad_source_before_output(inputs, neck_subset, tmp_path, defect):
+    source, _, _, _ = inputs
+    selected = (151,152)
+    if defect == "duplicate": selected=(151,151)
+    if defect == "unknown": selected=(159,)
+    if defect == "reordered": selected=(152,151)
+    raw = bytearray(neck_subset.read_bytes())
+    if defect == "registration": struct.pack_into("<I", raw, 28, 43)
+    vo = 64+2*32+8*36
+    if defect == "negative_weight": struct.pack_into("<f",raw,vo+40,-.4)
+    if defect == "binding_slot": struct.pack_into("<I",raw,vo+24,5)
+    if defect == "transform": struct.pack_into("<f",raw,64+2*32+32,-1)
+    neck_subset.write_bytes(raw)
+    _refresh_manifest(neck_subset)
+    mp = neck_subset.with_suffix(".manifest.json")
+    manifest=json.loads(mp.read_text())
+    if defect == "identity": manifest["source"]["surfaces"][0]["member_id"]="FJ1573"
+    if defect == "active": manifest["source"]["surfaces"][0]["passive_visual_binding"]["myosim_route_added"]=True
+    if defect == "counts": manifest["payload"]["vertex_count"] += 1
+    if defect == "row_count": manifest["source"]["surfaces"][0]["triangle_count"] += 1
+    mp.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError):
+        pac.append_passive_surfaces(source, neck_subset, tmp_path/"out",stable_ids=selected)
+    assert not (tmp_path/"out").exists()
+
+
+@pytest.mark.parametrize("defect", ["child", "subset", "manifest", "parent_provenance"])
+def test_append_receipt_rejects_drift(inputs, neck_subset, tmp_path, defect):
+    source, _, _, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    out = tmp_path/"out"
+    pac.append_passive_surfaces(source, neck_subset, out, stable_ids=(151,))
+    child = out/source.name
+    if defect == "child":
+        _rewrite_payload_row_vertex(child, 151, 0, position=(2,0,0))
+        _refresh_manifest(child)
+    elif defect == "subset":
+        _rewrite_payload_row_vertex(neck_subset,151,0,position=(2,0,0))
+        _refresh_manifest(neck_subset)
+    else:
+        mp = child.with_suffix(".manifest.json")
+        m = json.loads(mp.read_text())
+        if defect == "manifest": m["source"]["surfaces"][-1]["member_id"]="FJ1573"
+        else: m["source"]["myosim_source_archive_sha256"]="0"*64
+        mp.write_text(json.dumps(m))
+    with pytest.raises(ValueError):
+        bind_anatomy_receipt(receipt, child, out/"anatomy.json")
+    assert not (out/"anatomy.json").exists()
+
+
+def test_successive_append_and_reference_repair_use_immediate_parent(inputs, neck_subset, tmp_path):
+    source, patch, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    for name, sid in (("first",151),("second",152)):
+        out=tmp_path/name
+        pac.append_passive_surfaces(source, neck_subset, out, stable_ids=(sid,))
+        bound=bind_anatomy_receipt(receipt,out/source.name,out/"anatomy.json")
+        source,receipt=out/source.name,out/"anatomy.json"
+    assert len(bound["provenance"]["passive_surface_append_binding_history"]) == 1
+    with pytest.raises(ValueError):
+        pac.append_passive_surfaces(source,neck_subset,tmp_path/"duplicate",stable_ids=(151,))
+    out=tmp_path/"repair"
+    compose(source,out,[(151,patch,report)],reference_surface_rows=(151,))
+    bound=bind_anatomy_receipt(receipt,out/source.name,out/"anatomy.json")
+    assert bound["provenance"]["reference_surface_composition_binding"]["changed_stable_ids"] == [151]
+    assert bound["provenance"]["native_muscle_surfaces"]["surface_count"] == 152
