@@ -1,0 +1,119 @@
+{
+  "compared_rows": 1000,
+  "columns": 60,
+  "differences": {
+    "min_contact_gap_m": {
+      "rows": 328,
+      "first_row": 626,
+      "first_step": "5016",
+      "maximum_absolute_difference": 5.447518560699998e-07
+    },
+    "peak_penetration_m": {
+      "rows": 328,
+      "first_row": 626,
+      "first_step": "5016",
+      "maximum_absolute_difference": 5.447518560699998e-07
+    },
+    "pre_projection_contact_residual_m_s": {
+      "rows": 335,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 9.043080353900001e-06
+    },
+    "pre_projection_limit_residual_generalized_s": {
+      "rows": 324,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 1.1498003118553e-06
+    },
+    "pre_projection_equality_residual_generalized_s": {
+      "rows": 335,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 1.48903091190744e-06
+    },
+    "post_projection_contact_residual_m_s": {
+      "rows": 335,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 9.0430876298e-06
+    },
+    "post_projection_limit_residual_generalized_s": {
+      "rows": 325,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 1.1500417613824e-06
+    },
+    "post_projection_equality_residual_generalized_s": {
+      "rows": 326,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 1.150425241179e-11
+    },
+    "equality_position_projection_max_generalized": {
+      "rows": 230,
+      "first_row": 626,
+      "first_step": "5016",
+      "maximum_absolute_difference": 1.4889337762677e-08
+    },
+    "equality_velocity_projection_max_generalized_s": {
+      "rows": 351,
+      "first_row": 625,
+      "first_step": "5008",
+      "maximum_absolute_difference": 2.5039526008230003e-08
+    }
+  },
+  "unchanged_columns": [
+    "time_s",
+    "lung_volume_ml",
+    "airflow_ml_s",
+    "alveolar_pa",
+    "pleural_pa",
+    "diaphragm_mm",
+    "rib_mm",
+    "PaO2_mmhg",
+    "PaCO2_mmhg",
+    "SaO2",
+    "oxygen_balance_error_stpd_ml",
+    "co2_balance_error_stpd_ml",
+    "breaths",
+    "tidal_ml",
+    "lv_mmhg",
+    "rv_mmhg",
+    "aorta_mmhg",
+    "pulmonary_artery_mmhg",
+    "lv_ml",
+    "rv_ml",
+    "blood_ml",
+    "blood_error_ml",
+    "aortic_ejected_ml",
+    "pulmonary_ejected_ml",
+    "complete_filling_ejection_cycles",
+    "last_lv_stroke_ml",
+    "right_atrium_ml",
+    "left_atrium_ml",
+    "blood_continuity_residual_accum_ml",
+    "blood_physical_delta_accum_ml",
+    "blood_residual_minus_physical_ml",
+    "blood_endpoint_minus_physical_ml",
+    "inspired_volume_accum_ml",
+    "last_inspiration_step",
+    "last_inspiration_time_s",
+    "last_inspiration_volume_accum_ml",
+    "last_complete_breath_inspired_ml",
+    "respiratory_net_volume_ml",
+    "respiratory_volume_balance_ml",
+    "gas_max_donor_fraction",
+    "respiratory_gas_substeps",
+    "step",
+    "normal_impulse_ns",
+    "root_assistance_n",
+    "root_assistance_nm",
+    "diaphragm_excitation",
+    "intercostal_excitation",
+    "diaphragm_activation",
+    "intercostal_activation",
+    "contact_sweeps"
+  ],
+  "interpretation": "Respiratory, cardiac, gas, activation and normal-impulse columns are exact to baseline011. Projection diagnostics and minimum gap/penetration differ beginning with this run's quaternion audit window at step5001; baseline011 enables it only at152501. Maximum gap difference is 0.545 micrometres. Timing association is not causal proof; a matched-diagnostic-setting run is required before claiming identical mechanical trajectories."
+}

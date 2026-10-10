@@ -1,0 +1,1709 @@
+{
+  "complete": true,
+  "inputs_unchanged": true,
+  "pins": {
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/resting_lung_edge_repair.py": "48eaca48a01cf1c564f1a106d4751c8492b222fa4ce5f53549d637d3192bf70e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_apl_tfl_source_resolution_001.py": "b1fe23270ef40547845d2aaace5ce295f234a13f63740835f926e73d8b15792f",
+    "/Users/n/numi-human-retained-delivery-20261009/fullbody-source-surface-repair-1276/gluteus-maximus-pilot-001/attempt-010/run_gluteus_union_010.py": "3343c53df203e43d30d778b2f6178295ce250c1519326db55e97c5118e44fcd4",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json": "f8c587d40048e73396f07d639c8626620fed9bc2ec84ae192efcfdf3d669fc23",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json": "d13899f06de29cf78449ecaceb1ad8736720d53016cecf03b63c2126b81ace88",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json": "78f304707442a0270001c8c16f7078fb3b871045c97ff551321cebd54be7c8f9",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json": "8abeb93af638f585e6ad428641b526128e468b81be1c762d293623693908b9ff",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json": "8ed2dbcfa55a06b333fe86ee0029d8f38bcded93e5f3fec4bd9c0b43edd76153",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json": "92841bd9d4e96b092bdcd2170f32520128476bb8340668cd264374c3125535a1",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json": "46d85c863e2775b311adcef6a611c089e90910969344208f0bb2c69e67a46e52",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json": "f42552c110111b171c3b21d233f998b8952d6d76d2d35c6ac3f052735ee725c3",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-count-reconciliation-1258/attempt-002/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "80d775bef6b8a4108e159fb7882a84b2fb8dce5b492059cd8c7cf3644a137467",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-count-reconciliation-1258/attempt-002/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "6579d06d358bfcf51f964feb57425fe568c467fd361930bce46d376ec8aedaa4"
+  },
+  "rows": [
+    {
+      "attempts": [
+        {
+          "edge": [
+            72,
+            75
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00012968509009274345
+        },
+        {
+          "edge": [
+            74,
+            75
+          ],
+          "error": "ValueError: edge collapse reverses a surviving face in the changed local star",
+          "iteration": 0,
+          "length_m": 0.00028654372568844705
+        },
+        {
+          "edge": [
+            71,
+            75
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00029404290080000425
+        },
+        {
+          "edge": [
+            72,
+            74
+          ],
+          "error": "ValueError: edge collapse reverses a surviving face in the changed local star",
+          "iteration": 0,
+          "length_m": 0.00033162045585029244
+        },
+        {
+          "accepted_for_next_offline_iteration": true,
+          "collapse_report": {
+            "candidate_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2808,
+              "euler_characteristic": -2,
+              "face_count": 1872,
+              "genus": 2,
+              "minimum_triangle_area_m2": 8.84616905274883e-10,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 934,
+              "zero_area_faces": 0
+            },
+            "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+            "changed_star_diameter_m": 0.005924340286433075,
+            "collapse_position_f32_m": [
+              -0.2861415147781372,
+              -0.12650850415229797,
+              0.790619969367981
+            ],
+            "collapse_position_policy": "midpoint",
+            "common_neighbors": [
+              71,
+              89
+            ],
+            "deleted_face_indices": [
+              55,
+              58
+            ],
+            "deleted_face_origins": [
+              55,
+              58
+            ],
+            "edge_length_m": 0.0003642924338534067,
+            "endpoint_displacements_m": [
+              0.00018217904211400164,
+              0.00018211339222394524
+            ],
+            "face_origins_preserved_for_surviving_faces": true,
+            "maximum_endpoint_displacement_m": 0.00018217904211400164,
+            "minimum_surviving_changed_face_normal_dot": 2.0728409979228636e-16,
+            "operation": "one topology-preserving midpoint edge collapse",
+            "opposite_vertices": [
+              71,
+              89
+            ],
+            "removed_vertex_before_compaction": 78,
+            "retained_vertex_after_compaction": 77,
+            "retained_vertex_before_compaction": 77,
+            "signed_volume_after_m3": 1.5936319656685034e-05,
+            "signed_volume_before_m3": 1.5936251302015443e-05,
+            "signed_volume_delta_m3": 6.835466959096456e-11,
+            "source_face_indices_in_changed_one_ring": [
+              3,
+              6,
+              8,
+              9,
+              48,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60
+            ],
+            "source_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2811,
+              "euler_characteristic": -2,
+              "face_count": 1874,
+              "genus": 2,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 935
+            },
+            "surviving_changed_face_count": 10,
+            "surviving_changed_face_lineage": [
+              {
+                "output_face_index": 3,
+                "previous_face_index": 3,
+                "previous_face_origin": 3
+              },
+              {
+                "output_face_index": 6,
+                "previous_face_index": 6,
+                "previous_face_origin": 6
+              },
+              {
+                "output_face_index": 8,
+                "previous_face_index": 8,
+                "previous_face_origin": 8
+              },
+              {
+                "output_face_index": 9,
+                "previous_face_index": 9,
+                "previous_face_origin": 9
+              },
+              {
+                "output_face_index": 48,
+                "previous_face_index": 48,
+                "previous_face_origin": 48
+              },
+              {
+                "output_face_index": 54,
+                "previous_face_index": 54,
+                "previous_face_origin": 54
+              },
+              {
+                "output_face_index": 55,
+                "previous_face_index": 56,
+                "previous_face_origin": 56
+              },
+              {
+                "output_face_index": 56,
+                "previous_face_index": 57,
+                "previous_face_origin": 57
+              },
+              {
+                "output_face_index": 57,
+                "previous_face_index": 59,
+                "previous_face_origin": 59
+              },
+              {
+                "output_face_index": 58,
+                "previous_face_index": 60,
+                "previous_face_origin": 60
+              }
+            ]
+          },
+          "edge": [
+            77,
+            78
+          ],
+          "iteration": 0,
+          "length_m": 0.0003642924338534067,
+          "scores": {
+            "0": {
+              "count": 3,
+              "degenerates": []
+            },
+            "155000": {
+              "count": 3,
+              "degenerates": []
+            },
+            "source": {
+              "count": 3,
+              "degenerates": []
+            }
+          }
+        },
+        {
+          "edge": [
+            72,
+            75
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00012968509009274345
+        },
+        {
+          "edge": [
+            74,
+            77
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00013949138006674316
+        },
+        {
+          "edge": [
+            74,
+            75
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00028654372568844705
+        },
+        {
+          "edge": [
+            71,
+            75
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00029404290080000425
+        },
+        {
+          "edge": [
+            72,
+            74
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00033162045585029244
+        },
+        {
+          "accepted_for_next_offline_iteration": true,
+          "collapse_report": {
+            "candidate_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2805,
+              "euler_characteristic": -2,
+              "face_count": 1870,
+              "genus": 2,
+              "minimum_triangle_area_m2": 8.84616905274883e-10,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 933,
+              "zero_area_faces": 0
+            },
+            "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+            "changed_star_diameter_m": 0.0050067922069376505,
+            "collapse_position_f32_m": [
+              -0.2862575054168701,
+              -0.12677599489688873,
+              0.7905800342559814
+            ],
+            "collapse_position_policy": "midpoint",
+            "common_neighbors": [
+              75,
+              77
+            ],
+            "deleted_face_indices": [
+              47,
+              55
+            ],
+            "deleted_face_origins": [
+              47,
+              56
+            ],
+            "edge_length_m": 0.00040876279700643976,
+            "endpoint_displacements_m": [
+              0.00020436521233586607,
+              0.00020439758773414416
+            ],
+            "face_origins_preserved_for_surviving_faces": true,
+            "maximum_endpoint_displacement_m": 0.00020439758773414416,
+            "minimum_surviving_changed_face_normal_dot": 6.389264483943866e-16,
+            "operation": "one topology-preserving midpoint edge collapse",
+            "opposite_vertices": [
+              75,
+              77
+            ],
+            "removed_vertex_before_compaction": 74,
+            "retained_vertex_after_compaction": 71,
+            "retained_vertex_before_compaction": 71,
+            "signed_volume_after_m3": 1.5936277434252866e-05,
+            "signed_volume_before_m3": 1.5936319656685034e-05,
+            "signed_volume_delta_m3": -4.2222432168126985e-11,
+            "source_face_indices_in_changed_one_ring": [
+              5,
+              8,
+              11,
+              44,
+              46,
+              47,
+              50,
+              52,
+              53,
+              55,
+              57
+            ],
+            "source_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2808,
+              "euler_characteristic": -2,
+              "face_count": 1872,
+              "genus": 2,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 934
+            },
+            "surviving_changed_face_count": 9,
+            "surviving_changed_face_lineage": [
+              {
+                "output_face_index": 5,
+                "previous_face_index": 5,
+                "previous_face_origin": 5
+              },
+              {
+                "output_face_index": 8,
+                "previous_face_index": 8,
+                "previous_face_origin": 8
+              },
+              {
+                "output_face_index": 11,
+                "previous_face_index": 11,
+                "previous_face_origin": 11
+              },
+              {
+                "output_face_index": 44,
+                "previous_face_index": 44,
+                "previous_face_origin": 44
+              },
+              {
+                "output_face_index": 46,
+                "previous_face_index": 46,
+                "previous_face_origin": 46
+              },
+              {
+                "output_face_index": 49,
+                "previous_face_index": 50,
+                "previous_face_origin": 50
+              },
+              {
+                "output_face_index": 51,
+                "previous_face_index": 52,
+                "previous_face_origin": 52
+              },
+              {
+                "output_face_index": 52,
+                "previous_face_index": 53,
+                "previous_face_origin": 53
+              },
+              {
+                "output_face_index": 55,
+                "previous_face_index": 57,
+                "previous_face_origin": 59
+              }
+            ]
+          },
+          "edge": [
+            71,
+            74
+          ],
+          "iteration": 1,
+          "length_m": 0.00040876279700643976,
+          "scores": {
+            "0": {
+              "count": 0,
+              "degenerates": []
+            },
+            "155000": {
+              "count": 0,
+              "degenerates": []
+            },
+            "source": {
+              "count": 0,
+              "degenerates": []
+            }
+          }
+        }
+      ],
+      "baseline": {
+        "0": {
+          "count": 4,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 4,
+          "degenerates": []
+        },
+        "source": {
+          "count": 4,
+          "degenerates": []
+        }
+      },
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/stable-147-reference-resolution-row-patch.npz",
+      "candidate_sha256": "55cd6bc5a92ede5dc674aecf950b92c435af455d7a18ac37b87ae647482145f3",
+      "final": {
+        "0": {
+          "count": 0,
+          "degenerates": []
+        },
+        "151999": {
+          "count": 0,
+          "degenerates": []
+        },
+        "152607": {
+          "count": 0,
+          "degenerates": []
+        },
+        "153215": {
+          "count": 0,
+          "degenerates": []
+        },
+        "153823": {
+          "count": 0,
+          "degenerates": []
+        },
+        "154431": {
+          "count": 0,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 0,
+          "degenerates": []
+        },
+        "47519": {
+          "count": 0,
+          "degenerates": []
+        },
+        "source": {
+          "count": 0,
+          "degenerates": []
+        }
+      },
+      "initial_quotient_counts": [
+        935,
+        1874
+      ],
+      "operations": [
+        {
+          "candidate_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2808,
+            "euler_characteristic": -2,
+            "face_count": 1872,
+            "genus": 2,
+            "minimum_triangle_area_m2": 8.84616905274883e-10,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 934,
+            "zero_area_faces": 0
+          },
+          "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+          "changed_star_diameter_m": 0.005924340286433075,
+          "collapse_position_f32_m": [
+            -0.2861415147781372,
+            -0.12650850415229797,
+            0.790619969367981
+          ],
+          "collapse_position_policy": "midpoint",
+          "common_neighbors": [
+            71,
+            89
+          ],
+          "deleted_face_indices": [
+            55,
+            58
+          ],
+          "deleted_face_origins": [
+            55,
+            58
+          ],
+          "edge_length_m": 0.0003642924338534067,
+          "endpoint_displacements_m": [
+            0.00018217904211400164,
+            0.00018211339222394524
+          ],
+          "face_origins_preserved_for_surviving_faces": true,
+          "maximum_endpoint_displacement_m": 0.00018217904211400164,
+          "minimum_surviving_changed_face_normal_dot": 2.0728409979228636e-16,
+          "operation": "one topology-preserving midpoint edge collapse",
+          "opposite_vertices": [
+            71,
+            89
+          ],
+          "removed_vertex_before_compaction": 78,
+          "retained_vertex_after_compaction": 77,
+          "retained_vertex_before_compaction": 77,
+          "signed_volume_after_m3": 1.5936319656685034e-05,
+          "signed_volume_before_m3": 1.5936251302015443e-05,
+          "signed_volume_delta_m3": 6.835466959096456e-11,
+          "source_face_indices_in_changed_one_ring": [
+            3,
+            6,
+            8,
+            9,
+            48,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60
+          ],
+          "source_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2811,
+            "euler_characteristic": -2,
+            "face_count": 1874,
+            "genus": 2,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 935
+          },
+          "surviving_changed_face_count": 10,
+          "surviving_changed_face_lineage": [
+            {
+              "output_face_index": 3,
+              "previous_face_index": 3,
+              "previous_face_origin": 3
+            },
+            {
+              "output_face_index": 6,
+              "previous_face_index": 6,
+              "previous_face_origin": 6
+            },
+            {
+              "output_face_index": 8,
+              "previous_face_index": 8,
+              "previous_face_origin": 8
+            },
+            {
+              "output_face_index": 9,
+              "previous_face_index": 9,
+              "previous_face_origin": 9
+            },
+            {
+              "output_face_index": 48,
+              "previous_face_index": 48,
+              "previous_face_origin": 48
+            },
+            {
+              "output_face_index": 54,
+              "previous_face_index": 54,
+              "previous_face_origin": 54
+            },
+            {
+              "output_face_index": 55,
+              "previous_face_index": 56,
+              "previous_face_origin": 56
+            },
+            {
+              "output_face_index": 56,
+              "previous_face_index": 57,
+              "previous_face_origin": 57
+            },
+            {
+              "output_face_index": 57,
+              "previous_face_index": 59,
+              "previous_face_origin": 59
+            },
+            {
+              "output_face_index": 58,
+              "previous_face_index": 60,
+              "previous_face_origin": 60
+            }
+          ]
+        },
+        {
+          "candidate_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2805,
+            "euler_characteristic": -2,
+            "face_count": 1870,
+            "genus": 2,
+            "minimum_triangle_area_m2": 8.84616905274883e-10,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 933,
+            "zero_area_faces": 0
+          },
+          "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+          "changed_star_diameter_m": 0.0050067922069376505,
+          "collapse_position_f32_m": [
+            -0.2862575054168701,
+            -0.12677599489688873,
+            0.7905800342559814
+          ],
+          "collapse_position_policy": "midpoint",
+          "common_neighbors": [
+            75,
+            77
+          ],
+          "deleted_face_indices": [
+            47,
+            55
+          ],
+          "deleted_face_origins": [
+            47,
+            56
+          ],
+          "edge_length_m": 0.00040876279700643976,
+          "endpoint_displacements_m": [
+            0.00020436521233586607,
+            0.00020439758773414416
+          ],
+          "face_origins_preserved_for_surviving_faces": true,
+          "maximum_endpoint_displacement_m": 0.00020439758773414416,
+          "minimum_surviving_changed_face_normal_dot": 6.389264483943866e-16,
+          "operation": "one topology-preserving midpoint edge collapse",
+          "opposite_vertices": [
+            75,
+            77
+          ],
+          "removed_vertex_before_compaction": 74,
+          "retained_vertex_after_compaction": 71,
+          "retained_vertex_before_compaction": 71,
+          "signed_volume_after_m3": 1.5936277434252866e-05,
+          "signed_volume_before_m3": 1.5936319656685034e-05,
+          "signed_volume_delta_m3": -4.2222432168126985e-11,
+          "source_face_indices_in_changed_one_ring": [
+            5,
+            8,
+            11,
+            44,
+            46,
+            47,
+            50,
+            52,
+            53,
+            55,
+            57
+          ],
+          "source_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2808,
+            "euler_characteristic": -2,
+            "face_count": 1872,
+            "genus": 2,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 934
+          },
+          "surviving_changed_face_count": 9,
+          "surviving_changed_face_lineage": [
+            {
+              "output_face_index": 5,
+              "previous_face_index": 5,
+              "previous_face_origin": 5
+            },
+            {
+              "output_face_index": 8,
+              "previous_face_index": 8,
+              "previous_face_origin": 8
+            },
+            {
+              "output_face_index": 11,
+              "previous_face_index": 11,
+              "previous_face_origin": 11
+            },
+            {
+              "output_face_index": 44,
+              "previous_face_index": 44,
+              "previous_face_origin": 44
+            },
+            {
+              "output_face_index": 46,
+              "previous_face_index": 46,
+              "previous_face_origin": 46
+            },
+            {
+              "output_face_index": 49,
+              "previous_face_index": 50,
+              "previous_face_origin": 50
+            },
+            {
+              "output_face_index": 51,
+              "previous_face_index": 52,
+              "previous_face_origin": 52
+            },
+            {
+              "output_face_index": 52,
+              "previous_face_index": 53,
+              "previous_face_origin": 53
+            },
+            {
+              "output_face_index": 55,
+              "previous_face_index": 57,
+              "previous_face_origin": 59
+            }
+          ]
+        }
+      ],
+      "source_and_sampled_pose_self_clear": true,
+      "stable_id": 147
+    },
+    {
+      "attempts": [
+        {
+          "edge": [
+            859,
+            862
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00012968509009274345
+        },
+        {
+          "edge": [
+            859,
+            860
+          ],
+          "error": "ValueError: edge collapse reverses a surviving face in the changed local star",
+          "iteration": 0,
+          "length_m": 0.00028654372568844705
+        },
+        {
+          "edge": [
+            859,
+            863
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00029404290080000425
+        },
+        {
+          "edge": [
+            860,
+            862
+          ],
+          "error": "ValueError: edge collapse reverses a surviving face in the changed local star",
+          "iteration": 0,
+          "length_m": 0.00033162045585029244
+        },
+        {
+          "accepted_for_next_offline_iteration": true,
+          "collapse_report": {
+            "candidate_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2808,
+              "euler_characteristic": -2,
+              "face_count": 1872,
+              "genus": 2,
+              "minimum_triangle_area_m2": 8.84616905274883e-10,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 934,
+              "zero_area_faces": 0
+            },
+            "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+            "changed_star_diameter_m": 0.005924340286433075,
+            "collapse_position_f32_m": [
+              0.2861415147781372,
+              -0.12650850415229797,
+              0.790619969367981
+            ],
+            "collapse_position_policy": "midpoint",
+            "common_neighbors": [
+              845,
+              863
+            ],
+            "deleted_face_indices": [
+              55,
+              58
+            ],
+            "deleted_face_origins": [
+              55,
+              58
+            ],
+            "edge_length_m": 0.0003642924338534067,
+            "endpoint_displacements_m": [
+              0.00018211339222394524,
+              0.00018217904211400164
+            ],
+            "face_origins_preserved_for_surviving_faces": true,
+            "maximum_endpoint_displacement_m": 0.00018217904211400164,
+            "minimum_surviving_changed_face_normal_dot": 2.0728409979228636e-16,
+            "operation": "one topology-preserving midpoint edge collapse",
+            "opposite_vertices": [
+              845,
+              863
+            ],
+            "removed_vertex_before_compaction": 857,
+            "retained_vertex_after_compaction": 856,
+            "retained_vertex_before_compaction": 856,
+            "signed_volume_after_m3": 1.5936541266132153e-05,
+            "signed_volume_before_m3": 1.5936472911462555e-05,
+            "signed_volume_delta_m3": 6.835466959774082e-11,
+            "source_face_indices_in_changed_one_ring": [
+              3,
+              6,
+              8,
+              9,
+              48,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60
+            ],
+            "source_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2811,
+              "euler_characteristic": -2,
+              "face_count": 1874,
+              "genus": 2,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 935
+            },
+            "surviving_changed_face_count": 10,
+            "surviving_changed_face_lineage": [
+              {
+                "output_face_index": 3,
+                "previous_face_index": 3,
+                "previous_face_origin": 3
+              },
+              {
+                "output_face_index": 6,
+                "previous_face_index": 6,
+                "previous_face_origin": 6
+              },
+              {
+                "output_face_index": 8,
+                "previous_face_index": 8,
+                "previous_face_origin": 8
+              },
+              {
+                "output_face_index": 9,
+                "previous_face_index": 9,
+                "previous_face_origin": 9
+              },
+              {
+                "output_face_index": 48,
+                "previous_face_index": 48,
+                "previous_face_origin": 48
+              },
+              {
+                "output_face_index": 54,
+                "previous_face_index": 54,
+                "previous_face_origin": 54
+              },
+              {
+                "output_face_index": 55,
+                "previous_face_index": 56,
+                "previous_face_origin": 56
+              },
+              {
+                "output_face_index": 56,
+                "previous_face_index": 57,
+                "previous_face_origin": 57
+              },
+              {
+                "output_face_index": 57,
+                "previous_face_index": 59,
+                "previous_face_origin": 59
+              },
+              {
+                "output_face_index": 58,
+                "previous_face_index": 60,
+                "previous_face_origin": 60
+              }
+            ]
+          },
+          "edge": [
+            856,
+            857
+          ],
+          "iteration": 0,
+          "length_m": 0.0003642924338534067,
+          "scores": {
+            "0": {
+              "count": 3,
+              "degenerates": []
+            },
+            "155000": {
+              "count": 3,
+              "degenerates": []
+            },
+            "source": {
+              "count": 3,
+              "degenerates": []
+            }
+          }
+        },
+        {
+          "edge": [
+            858,
+            861
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00012968509009274345
+        },
+        {
+          "edge": [
+            856,
+            859
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00013949138006674316
+        },
+        {
+          "edge": [
+            858,
+            859
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00028654372568844705
+        },
+        {
+          "edge": [
+            858,
+            862
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00029404290080000425
+        },
+        {
+          "edge": [
+            859,
+            861
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 1,
+          "length_m": 0.00033162045585029244
+        },
+        {
+          "accepted_for_next_offline_iteration": true,
+          "collapse_report": {
+            "candidate_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2805,
+              "euler_characteristic": -2,
+              "face_count": 1870,
+              "genus": 2,
+              "minimum_triangle_area_m2": 8.84616905274883e-10,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 933,
+              "zero_area_faces": 0
+            },
+            "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+            "changed_star_diameter_m": 0.0050067922069376505,
+            "collapse_position_f32_m": [
+              0.2862575054168701,
+              -0.12677599489688873,
+              0.7905800342559814
+            ],
+            "collapse_position_policy": "midpoint",
+            "common_neighbors": [
+              856,
+              858
+            ],
+            "deleted_face_indices": [
+              47,
+              55
+            ],
+            "deleted_face_origins": [
+              47,
+              56
+            ],
+            "edge_length_m": 0.00040876279700643976,
+            "endpoint_displacements_m": [
+              0.00020439758773414416,
+              0.00020436521233586607
+            ],
+            "face_origins_preserved_for_surviving_faces": true,
+            "maximum_endpoint_displacement_m": 0.00020439758773414416,
+            "minimum_surviving_changed_face_normal_dot": 6.389264483943866e-16,
+            "operation": "one topology-preserving midpoint edge collapse",
+            "opposite_vertices": [
+              856,
+              858
+            ],
+            "removed_vertex_before_compaction": 862,
+            "retained_vertex_after_compaction": 859,
+            "retained_vertex_before_compaction": 859,
+            "signed_volume_after_m3": 1.593649901309153e-05,
+            "signed_volume_before_m3": 1.5936541266132153e-05,
+            "signed_volume_delta_m3": -4.2253040621859734e-11,
+            "source_face_indices_in_changed_one_ring": [
+              5,
+              8,
+              11,
+              44,
+              46,
+              47,
+              50,
+              52,
+              53,
+              55,
+              57
+            ],
+            "source_topology": {
+              "boundary_edges": 0,
+              "connected_components": 1,
+              "duplicate_faces": 0,
+              "edge_count": 2808,
+              "euler_characteristic": -2,
+              "face_count": 1872,
+              "genus": 2,
+              "nonmanifold_edges": 0,
+              "orientation_error_edges": 0,
+              "vertex_count": 934
+            },
+            "surviving_changed_face_count": 9,
+            "surviving_changed_face_lineage": [
+              {
+                "output_face_index": 5,
+                "previous_face_index": 5,
+                "previous_face_origin": 5
+              },
+              {
+                "output_face_index": 8,
+                "previous_face_index": 8,
+                "previous_face_origin": 8
+              },
+              {
+                "output_face_index": 11,
+                "previous_face_index": 11,
+                "previous_face_origin": 11
+              },
+              {
+                "output_face_index": 44,
+                "previous_face_index": 44,
+                "previous_face_origin": 44
+              },
+              {
+                "output_face_index": 46,
+                "previous_face_index": 46,
+                "previous_face_origin": 46
+              },
+              {
+                "output_face_index": 49,
+                "previous_face_index": 50,
+                "previous_face_origin": 50
+              },
+              {
+                "output_face_index": 51,
+                "previous_face_index": 52,
+                "previous_face_origin": 52
+              },
+              {
+                "output_face_index": 52,
+                "previous_face_index": 53,
+                "previous_face_origin": 53
+              },
+              {
+                "output_face_index": 55,
+                "previous_face_index": 57,
+                "previous_face_origin": 59
+              }
+            ]
+          },
+          "edge": [
+            859,
+            862
+          ],
+          "iteration": 1,
+          "length_m": 0.00040876279700643976,
+          "scores": {
+            "0": {
+              "count": 0,
+              "degenerates": []
+            },
+            "155000": {
+              "count": 0,
+              "degenerates": []
+            },
+            "source": {
+              "count": 0,
+              "degenerates": []
+            }
+          }
+        }
+      ],
+      "baseline": {
+        "0": {
+          "count": 4,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 4,
+          "degenerates": []
+        },
+        "source": {
+          "count": 4,
+          "degenerates": []
+        }
+      },
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/stable-148-reference-resolution-row-patch.npz",
+      "candidate_sha256": "8f78ef33f0ade691f686da7a398a305c5a9a28b6e431d056a843ae89291c7d5c",
+      "final": {
+        "0": {
+          "count": 0,
+          "degenerates": []
+        },
+        "151999": {
+          "count": 0,
+          "degenerates": []
+        },
+        "152607": {
+          "count": 0,
+          "degenerates": []
+        },
+        "153215": {
+          "count": 0,
+          "degenerates": []
+        },
+        "153823": {
+          "count": 0,
+          "degenerates": []
+        },
+        "154431": {
+          "count": 0,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 0,
+          "degenerates": []
+        },
+        "47519": {
+          "count": 0,
+          "degenerates": []
+        },
+        "source": {
+          "count": 0,
+          "degenerates": []
+        }
+      },
+      "initial_quotient_counts": [
+        935,
+        1874
+      ],
+      "operations": [
+        {
+          "candidate_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2808,
+            "euler_characteristic": -2,
+            "face_count": 1872,
+            "genus": 2,
+            "minimum_triangle_area_m2": 8.84616905274883e-10,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 934,
+            "zero_area_faces": 0
+          },
+          "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+          "changed_star_diameter_m": 0.005924340286433075,
+          "collapse_position_f32_m": [
+            0.2861415147781372,
+            -0.12650850415229797,
+            0.790619969367981
+          ],
+          "collapse_position_policy": "midpoint",
+          "common_neighbors": [
+            845,
+            863
+          ],
+          "deleted_face_indices": [
+            55,
+            58
+          ],
+          "deleted_face_origins": [
+            55,
+            58
+          ],
+          "edge_length_m": 0.0003642924338534067,
+          "endpoint_displacements_m": [
+            0.00018211339222394524,
+            0.00018217904211400164
+          ],
+          "face_origins_preserved_for_surviving_faces": true,
+          "maximum_endpoint_displacement_m": 0.00018217904211400164,
+          "minimum_surviving_changed_face_normal_dot": 2.0728409979228636e-16,
+          "operation": "one topology-preserving midpoint edge collapse",
+          "opposite_vertices": [
+            845,
+            863
+          ],
+          "removed_vertex_before_compaction": 857,
+          "retained_vertex_after_compaction": 856,
+          "retained_vertex_before_compaction": 856,
+          "signed_volume_after_m3": 1.5936541266132153e-05,
+          "signed_volume_before_m3": 1.5936472911462555e-05,
+          "signed_volume_delta_m3": 6.835466959774082e-11,
+          "source_face_indices_in_changed_one_ring": [
+            3,
+            6,
+            8,
+            9,
+            48,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60
+          ],
+          "source_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2811,
+            "euler_characteristic": -2,
+            "face_count": 1874,
+            "genus": 2,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 935
+          },
+          "surviving_changed_face_count": 10,
+          "surviving_changed_face_lineage": [
+            {
+              "output_face_index": 3,
+              "previous_face_index": 3,
+              "previous_face_origin": 3
+            },
+            {
+              "output_face_index": 6,
+              "previous_face_index": 6,
+              "previous_face_origin": 6
+            },
+            {
+              "output_face_index": 8,
+              "previous_face_index": 8,
+              "previous_face_origin": 8
+            },
+            {
+              "output_face_index": 9,
+              "previous_face_index": 9,
+              "previous_face_origin": 9
+            },
+            {
+              "output_face_index": 48,
+              "previous_face_index": 48,
+              "previous_face_origin": 48
+            },
+            {
+              "output_face_index": 54,
+              "previous_face_index": 54,
+              "previous_face_origin": 54
+            },
+            {
+              "output_face_index": 55,
+              "previous_face_index": 56,
+              "previous_face_origin": 56
+            },
+            {
+              "output_face_index": 56,
+              "previous_face_index": 57,
+              "previous_face_origin": 57
+            },
+            {
+              "output_face_index": 57,
+              "previous_face_index": 59,
+              "previous_face_origin": 59
+            },
+            {
+              "output_face_index": 58,
+              "previous_face_index": 60,
+              "previous_face_origin": 60
+            }
+          ]
+        },
+        {
+          "candidate_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2805,
+            "euler_characteristic": -2,
+            "face_count": 1870,
+            "genus": 2,
+            "minimum_triangle_area_m2": 8.84616905274883e-10,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 933,
+            "zero_area_faces": 0
+          },
+          "changed_star_bound_interpretation": "coarse support-diameter bound: all old and new changed triangles lie in the convex hull of the old edge star",
+          "changed_star_diameter_m": 0.0050067922069376505,
+          "collapse_position_f32_m": [
+            0.2862575054168701,
+            -0.12677599489688873,
+            0.7905800342559814
+          ],
+          "collapse_position_policy": "midpoint",
+          "common_neighbors": [
+            856,
+            858
+          ],
+          "deleted_face_indices": [
+            47,
+            55
+          ],
+          "deleted_face_origins": [
+            47,
+            56
+          ],
+          "edge_length_m": 0.00040876279700643976,
+          "endpoint_displacements_m": [
+            0.00020439758773414416,
+            0.00020436521233586607
+          ],
+          "face_origins_preserved_for_surviving_faces": true,
+          "maximum_endpoint_displacement_m": 0.00020439758773414416,
+          "minimum_surviving_changed_face_normal_dot": 6.389264483943866e-16,
+          "operation": "one topology-preserving midpoint edge collapse",
+          "opposite_vertices": [
+            856,
+            858
+          ],
+          "removed_vertex_before_compaction": 862,
+          "retained_vertex_after_compaction": 859,
+          "retained_vertex_before_compaction": 859,
+          "signed_volume_after_m3": 1.593649901309153e-05,
+          "signed_volume_before_m3": 1.5936541266132153e-05,
+          "signed_volume_delta_m3": -4.2253040621859734e-11,
+          "source_face_indices_in_changed_one_ring": [
+            5,
+            8,
+            11,
+            44,
+            46,
+            47,
+            50,
+            52,
+            53,
+            55,
+            57
+          ],
+          "source_topology": {
+            "boundary_edges": 0,
+            "connected_components": 1,
+            "duplicate_faces": 0,
+            "edge_count": 2808,
+            "euler_characteristic": -2,
+            "face_count": 1872,
+            "genus": 2,
+            "nonmanifold_edges": 0,
+            "orientation_error_edges": 0,
+            "vertex_count": 934
+          },
+          "surviving_changed_face_count": 9,
+          "surviving_changed_face_lineage": [
+            {
+              "output_face_index": 5,
+              "previous_face_index": 5,
+              "previous_face_origin": 5
+            },
+            {
+              "output_face_index": 8,
+              "previous_face_index": 8,
+              "previous_face_origin": 8
+            },
+            {
+              "output_face_index": 11,
+              "previous_face_index": 11,
+              "previous_face_origin": 11
+            },
+            {
+              "output_face_index": 44,
+              "previous_face_index": 44,
+              "previous_face_origin": 44
+            },
+            {
+              "output_face_index": 46,
+              "previous_face_index": 46,
+              "previous_face_origin": 46
+            },
+            {
+              "output_face_index": 49,
+              "previous_face_index": 50,
+              "previous_face_origin": 50
+            },
+            {
+              "output_face_index": 51,
+              "previous_face_index": 52,
+              "previous_face_origin": 52
+            },
+            {
+              "output_face_index": 52,
+              "previous_face_index": 53,
+              "previous_face_origin": 53
+            },
+            {
+              "output_face_index": 55,
+              "previous_face_index": 57,
+              "previous_face_origin": 59
+            }
+          ]
+        }
+      ],
+      "source_and_sampled_pose_self_clear": true,
+      "stable_id": 148
+    },
+    {
+      "attempts": [
+        {
+          "edge": [
+            199,
+            208
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0002735179999482179
+        },
+        {
+          "edge": [
+            185,
+            186
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0003032768104692155
+        },
+        {
+          "edge": [
+            186,
+            208
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00030397488275462405
+        },
+        {
+          "edge": [
+            204,
+            208
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.000338648819690906
+        },
+        {
+          "edge": [
+            185,
+            208
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0004066975049335035
+        },
+        {
+          "edge": [
+            184,
+            186
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0004197970200866288
+        },
+        {
+          "edge": [
+            184,
+            208
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00043373938715706486
+        }
+      ],
+      "baseline": {
+        "0": {
+          "count": 4,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 4,
+          "degenerates": []
+        },
+        "source": {
+          "count": 4,
+          "degenerates": []
+        }
+      },
+      "final": {
+        "0": {
+          "count": 4,
+          "degenerates": []
+        },
+        "151999": {
+          "count": 4,
+          "degenerates": []
+        },
+        "152607": {
+          "count": 4,
+          "degenerates": []
+        },
+        "153215": {
+          "count": 4,
+          "degenerates": []
+        },
+        "153823": {
+          "count": 4,
+          "degenerates": []
+        },
+        "154431": {
+          "count": 4,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 4,
+          "degenerates": []
+        },
+        "47519": {
+          "count": 4,
+          "degenerates": []
+        },
+        "source": {
+          "count": 4,
+          "degenerates": []
+        }
+      },
+      "initial_quotient_counts": [
+        627,
+        1254
+      ],
+      "operations": [],
+      "source_and_sampled_pose_self_clear": false,
+      "stable_id": 55
+    },
+    {
+      "attempts": [
+        {
+          "edge": [
+            418,
+            426
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0002735179999482179
+        },
+        {
+          "edge": [
+            440,
+            441
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0003032768104692155
+        },
+        {
+          "edge": [
+            418,
+            440
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00030397488275462405
+        },
+        {
+          "edge": [
+            418,
+            422
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.000338648819690906
+        },
+        {
+          "edge": [
+            418,
+            441
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0004066975049335035
+        },
+        {
+          "edge": [
+            440,
+            442
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.0004197970200866288
+        },
+        {
+          "edge": [
+            418,
+            442
+          ],
+          "error": "ValueError: edge collapse fails the two-manifold link condition",
+          "iteration": 0,
+          "length_m": 0.00043373938715706486
+        }
+      ],
+      "baseline": {
+        "0": {
+          "count": 4,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 4,
+          "degenerates": []
+        },
+        "source": {
+          "count": 4,
+          "degenerates": []
+        }
+      },
+      "final": {
+        "0": {
+          "count": 4,
+          "degenerates": []
+        },
+        "151999": {
+          "count": 4,
+          "degenerates": []
+        },
+        "152607": {
+          "count": 4,
+          "degenerates": []
+        },
+        "153215": {
+          "count": 4,
+          "degenerates": []
+        },
+        "153823": {
+          "count": 4,
+          "degenerates": []
+        },
+        "154431": {
+          "count": 4,
+          "degenerates": []
+        },
+        "155000": {
+          "count": 4,
+          "degenerates": []
+        },
+        "47519": {
+          "count": 4,
+          "degenerates": []
+        },
+        "source": {
+          "count": 4,
+          "degenerates": []
+        }
+      },
+      "initial_quotient_counts": [
+        627,
+        1254
+      ],
+      "operations": [],
+      "source_and_sampled_pose_self_clear": false,
+      "stable_id": 56
+    }
+  ],
+  "scope": "Bounded existing topology-preserving source edge-collapse owner, canonical mean binding inference; source and retained-pose diagnostic only; no whole-body or native admission."
+}
