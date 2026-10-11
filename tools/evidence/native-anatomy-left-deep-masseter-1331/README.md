@@ -14,3 +14,5 @@ A fresh16-second native run checks the composed scene. Across eight actual captu
     python3 tools/evidence/native-anatomy-left-deep-masseter-1331/reproduce.py
 
 Requires pinned retained source assets and existing native runtime. Source rights and attribution are retained. This is reference anatomy assembled from registered sources, not a measured individual. No complete jaw function, certified entheses, whole-body anatomy completion or final five-minute qualification is claimed. The parent is native-anatomy-sartorius-precision-1330. Performance work remains deferred.
+
+Provenance erratum: the original row162 manifest inherited a superficial160 reconstruction record. See [the correction](../anatomy-passive-provenance-1332/README.md). The native geometry and measurements are unchanged.

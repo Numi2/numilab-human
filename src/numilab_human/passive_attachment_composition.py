@@ -479,6 +479,17 @@ def _passive_append_rows(manifest: dict, stable_ids: tuple[int, ...]) -> list[di
                 and binding.get("myosim_route_added") is False
                 and isinstance(binding.get("supports"), list) and binding["supports"],
                 "passive append source identity or passive ownership differs")
+        reconstruction = row.get("reference_surface_reconstruction")
+        if reconstruction is not None:
+            require(isinstance(reconstruction, dict)
+                    and reconstruction.get("stable_id") == sid
+                    and reconstruction.get("vertex_count_after") == row.get("vertex_count")
+                    and reconstruction.get("triangle_count_after") == row.get("triangle_count"),
+                    "passive append reconstruction provenance identity or count differs")
+        external_source = row.get("external_source")
+        if isinstance(external_source, dict) and "source_member_id" in external_source:
+            require(external_source["source_member_id"] == row.get("member_id"),
+                    "passive append external source member identity differs")
         if sid >= 159:
             require(binding["supports"] == ["head"]
                     and binding.get("jaw_function") == "not_modeled",

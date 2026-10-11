@@ -1199,3 +1199,38 @@ def test_append_head_reference_rows_rejects_wrong_semantics(inputs, head_subset,
         pac.append_passive_surfaces(source, head_subset, tmp_path/"out",
                                     stable_ids=(159,))
     assert not (tmp_path/"out").exists()
+
+
+@pytest.mark.parametrize("defect", ["stable_id", "vertex_count_after",
+                                  "triangle_count_after", "external_member", "type", None])
+def test_append_reconstruction_provenance_matches_canonical_row(
+        inputs, head_subset, tmp_path, defect):
+    source, _, _, _ = inputs
+    mp = head_subset.with_suffix(".manifest.json")
+    manifest = json.loads(mp.read_text())
+    row = manifest["source"]["surfaces"][3]
+    row["reference_surface_reconstruction"] = {
+        "stable_id": 162, "vertex_count_after": 3, "triangle_count_after": 1}
+    row["external_source"] = {
+        "source_member_id": "FMA49005",
+        "identity_mapping": {"historical_offline_trial_stable_id": 161,
+                             "canonical_stable_id": 162}}
+    if defect == "external_member":
+        row["external_source"]["source_member_id"] = "FMA49002"
+    elif defect == "type":
+        row["reference_surface_reconstruction"] = "unstructured copied provenance"
+    elif defect is not None:
+        row["reference_surface_reconstruction"][defect] = {
+            "stable_id": 160, "vertex_count_after": 702,
+            "triangle_count_after": 1404}[defect]
+    mp.write_text(json.dumps(manifest))
+    out = tmp_path/"out"
+    if defect is not None:
+        with pytest.raises(ValueError, match="provenance|source member"):
+            pac.append_passive_surfaces(source, head_subset, out, stable_ids=(162,))
+        assert not out.exists()
+    else:
+        proof = pac.append_passive_surfaces(source, head_subset, out, stable_ids=(162,))
+        assert proof["inputs_unchanged"]
+        actual = json.loads((out/source.name).with_suffix(".manifest.json").read_text())
+        assert actual["source"]["surfaces"][-1] == row
