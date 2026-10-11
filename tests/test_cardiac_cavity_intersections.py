@@ -55,6 +55,54 @@ class PredicateTests(unittest.TestCase):
         b = ((0,-3,0),(-3,2,0),(3,2,0))
         self.assertEqual(len(audit.triangle_intersection_points(a, b)), 6)
 
+    def test_pair_local_lattice_preserves_huge_integer_and_fraction_intersections(self):
+        first = ((0, 0, 0), (4, 0, 0), (0, 4, 0))
+        second = ((1, 1, -1), (1, 1, 1), (2, 1, 0))
+        expected = audit.triangle_intersection_points(first, second)
+        self.assertTrue(expected)
+
+        scale = 1 << 2860
+        offset = (1 << 2900, -(1 << 2899), 1 << 2888)
+        def huge(point):
+            return tuple(offset[axis] + scale * point[axis] for axis in range(3))
+        huge_first, huge_second = tuple(map(huge, first)), tuple(map(huge, second))
+        actual = audit.triangle_intersection_points(huge_first, huge_second)
+        legacy = audit._triangle_intersection_points_integer(huge_first, huge_second)
+        self.assertEqual(actual, legacy)
+        self.assertEqual(actual, [tuple(offset[k] + scale * point[k] for k in range(3))
+                                  for point in expected])
+        normalized, _transform = audit._integer_lattice_normalization(huge_first + huge_second)
+        self.assertLess(max(abs(value).bit_length()
+                            for point in normalized for value in point), 5)
+
+        rational_scale = Fraction(5, 13)
+        rational_offset = (Fraction(1, 7), Fraction(-2, 9), Fraction(3, 11))
+        def rational(point):
+            return tuple(rational_offset[axis] + rational_scale * point[axis]
+                         for axis in range(3))
+        rational_actual = audit.triangle_intersection_points(
+            tuple(map(rational, first)), tuple(map(rational, second)))
+        self.assertEqual(rational_actual,
+                         [tuple(rational_offset[k] + rational_scale * point[k]
+                                for k in range(3)) for point in expected])
+
+    def test_pair_local_lattice_preserves_coplanar_and_disjoint_results(self):
+        first = ((0, 3, 0), (-3, -2, 0), (3, -2, 0))
+        second = ((0, -3, 0), (-3, 2, 0), (3, 2, 0))
+        expected = audit.triangle_intersection_points(first, second)
+        scale = 1 << 2870
+        offset = (1 << 2900, 1 << 2899, -(1 << 2880))
+        transform = lambda point: tuple(offset[k] + scale * point[k] for k in range(3))
+        huge_first, huge_second = tuple(map(transform, first)), tuple(map(transform, second))
+        actual = audit.triangle_intersection_points(huge_first, huge_second)
+        self.assertEqual(actual,
+                         audit._triangle_intersection_points_integer(huge_first, huge_second))
+        self.assertEqual(actual, [tuple(offset[k] + scale * point[k] for k in range(3))
+                                  for point in expected])
+        disjoint = tuple(tuple(point[k] + (100 if k == 2 else 0) for k in range(3))
+                         for point in first)
+        self.assertEqual(audit.triangle_intersection_points(first, disjoint), [])
+
     def test_exact_one_bit_separation_is_not_tolerance_contact(self):
         first = ((0,0,0),(1,0,0),(0,1,0))
         second = ((0,0,1),(1,0,1),(0,1,1))
@@ -138,6 +186,7 @@ class PreparedPointLocationTests(unittest.TestCase):
         expected = audit.point_location((0, 0, 0), records)
         self.assertEqual(expected["attempts"], 2)
         self.assertEqual(audit.point_location_prepared((0, 0, 0), prepared), expected)
+        self.assertEqual(audit.point_location_prepared_indexed((0, 0, 0), prepared), expected)
         self.assertIn(2, prepared._fallback_ray_data)
 
 
@@ -155,8 +204,11 @@ class PreparedPointLocationTests(unittest.TestCase):
         expected = audit.point_location((0, 0, 0), records)
         self.assertEqual(expected, {"location": "indeterminate", "ray": None,
                                     "crossings": None, "attempts": 64})
+        indexed_prepared = audit.prepare_point_location(records)
         self.assertEqual(audit.point_location_prepared((0, 0, 0), prepared), expected)
+        self.assertEqual(audit.point_location_prepared_indexed((0, 0, 0), indexed_prepared), expected)
         self.assertEqual(set(prepared._fallback_ray_data), set(range(2, 65)))
+        self.assertEqual(set(indexed_prepared._fallback_ray_data), set(range(2, 65)))
 
 
     def test_large_float32_lattice_integers_remain_exact(self):
@@ -165,6 +217,30 @@ class PreparedPointLocationTests(unittest.TestCase):
         points = ((scale // 8, scale // 8, scale // 8),
                   (scale, 0, 0), (2 * scale, 2 * scale, 2 * scale))
         self.assert_legacy_parity(records, points)
+
+    def test_local_lattices_bound_huge_surface_and_fraction_query_arithmetic(self):
+        scale = 1 << 2800
+        offset = (1 << 2900, -(1 << 2898), 1 << 2887)
+        base_vertices = ((0, 0, 0), (12, 0, 0), (0, 12, 0), (0, 0, 12))
+        vertices = tuple(tuple(offset[axis] + scale * point[axis] for axis in range(3))
+                         for point in base_vertices)
+        faces = ((0, 2, 1), (0, 1, 3), (0, 3, 2), (1, 2, 3))
+        records = audit._records(vertices, faces)
+        prepared = audit.prepare_point_location(records)
+        self.assertLess(max(abs(value).bit_length()
+                            for triangle in prepared.triangles
+                            for point in triangle for value in point), 5)
+        for point, expected in (
+                (tuple(offset[k] + scale for k in range(3)), "inside"),
+                (tuple(offset[k] + 20 * scale for k in range(3)), "outside"),
+                (offset, "boundary"),
+                (tuple(Fraction(offset[k]) + Fraction(scale, 8) for k in range(3)), "inside")):
+            with self.subTest(expected=expected):
+                result = audit.point_location_prepared(point, prepared)
+                self.assertEqual(result["location"], expected)
+        self.assertEqual(
+            audit.point_location(tuple(offset[k] + scale for k in range(3)), records)["location"],
+            "inside")
 
     def test_snapshot_is_immutable_after_caller_mutates_records(self):
         records = self.tetra_records()
@@ -204,6 +280,117 @@ class PreparedPointLocationTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "snapshot"):
             audit.point_location_prepared((0, 0, 0), records)
 
+
+
+
+
+class IndexedPreparedPointLocationTests(unittest.TestCase):
+    @staticmethod
+    def records():
+        scale = 1 << 900
+        offset = (1 << 2900, -(1 << 2890), 1 << 2880)
+        base = ((0, 0, 0), (12, 0, 0), (0, 12, 0), (0, 0, 12))
+        vertices = tuple(tuple(offset[axis] + scale * point[axis] for axis in range(3))
+                         for point in base)
+        faces = ((0, 2, 1), (0, 1, 3), (0, 3, 2), (1, 2, 3))
+        return audit._records(vertices, faces), offset, scale
+
+    def test_exact_aabb_candidates_match_exhaustive_closed_box_oracle(self):
+        records, offset, scale = self.records()
+        extra_records = []
+        for index in range(12):
+            x = 24 + 2 * index
+            triangle = tuple(
+                tuple(offset[axis] + scale * point[axis] for axis in range(3))
+                for point in ((x, 0, 0), (x + 1, 0, 0), (x, 1, 0)))
+            lower = tuple(min(point[axis] for point in triangle) for axis in range(3))
+            upper = tuple(max(point[axis] for point in triangle) for axis in range(3))
+            extra_records.append((triangle, lower, upper, 4 + index,
+                                  (4 + 3 * index, 5 + 3 * index, 6 + 3 * index)))
+        records = tuple(records) + tuple(extra_records)
+        prepared = audit.prepare_point_location(records)
+        points = (
+            offset,
+            tuple(offset[axis] + scale for axis in range(3)),
+            tuple(offset[axis] + 20 * scale for axis in range(3)),
+            tuple(Fraction(offset[axis]) + Fraction(scale, 3) for axis in range(3)),
+            tuple(Fraction(offset[axis]) + Fraction(scale * 4, 3) for axis in range(3)),
+        )
+        for point in points:
+            with self.subTest(point=point):
+                boundary, ray = audit._point_aabb_candidate_indices(point, prepared)
+                expected_boundary = tuple(index for index, row in enumerate(records)
+                    if all(row[1][axis] <= point[axis] <= row[2][axis] for axis in range(3)))
+                expected_ray = tuple(index for index, row in enumerate(records)
+                    if all(row[2][axis] >= point[axis] for axis in range(3)))
+                self.assertEqual(boundary, expected_boundary)
+                self.assertEqual(ray, expected_ray)
+                self.assertEqual(boundary, tuple(sorted(set(boundary))))
+                self.assertEqual(ray, tuple(sorted(set(ray))))
+        self.assertGreater(prepared.aabb_node_count, 1)
+
+    def test_exact_ray_aabb_candidates_match_exhaustive_closed_box_oracle(self):
+        records, offset, scale = self.records()
+        extra_records = []
+        for index in range(12):
+            x = 24 + 2 * index
+            triangle = tuple(
+                tuple(offset[axis] + scale * point[axis] for axis in range(3))
+                for point in ((x, 0, 0), (x + 1, 0, 0), (x, 1, 0)))
+            lower = tuple(min(point[axis] for point in triangle) for axis in range(3))
+            upper = tuple(max(point[axis] for point in triangle) for axis in range(3))
+            extra_records.append((triangle, lower, upper, 4 + index,
+                                  (4 + 3 * index, 5 + 3 * index, 6 + 3 * index)))
+        records = tuple(records) + tuple(extra_records)
+        prepared = audit.prepare_point_location(records)
+        points = (
+            offset,
+            tuple(Fraction(offset[axis]) + Fraction(scale, 3) for axis in range(3)),
+            tuple(offset[axis] + 20 * scale for axis in range(3)),
+            tuple(Fraction(offset[axis]) + Fraction(scale * 4, 3) for axis in range(3)),
+        )
+        directions = ((1, 1, 1), (1, 2, 4), (1, 3, 9))
+
+        def intersects(lower, upper, point, direction):
+            entry, exit = Fraction(0), None
+            for axis, component in enumerate(direction):
+                first = (Fraction(lower[axis]) - point[axis]) / component
+                last = (Fraction(upper[axis]) - point[axis]) / component
+                if first > last:
+                    first, last = last, first
+                if last < 0:
+                    return False
+                entry = max(entry, first)
+                exit = last if exit is None else min(exit, last)
+                if entry > exit:
+                    return False
+            return True
+
+        self.assertGreater(prepared.aabb_node_count, 1)
+        for point in points:
+            for direction in directions:
+                with self.subTest(point=point, direction=direction):
+                    actual = audit._ray_aabb_candidate_indices(point, prepared, direction)
+                    expected = tuple(index for index, row in enumerate(records)
+                                     if intersects(row[1], row[2], point, direction))
+                    self.assertEqual(actual, expected)
+                    self.assertEqual(actual, tuple(sorted(set(actual))))
+
+    def test_indexed_normalized_classifier_matches_full_scan(self):
+        records, offset, scale = self.records()
+        prepared = audit.prepare_point_location(records)
+        points = (
+            tuple(offset[axis] + scale for axis in range(3)),
+            tuple(offset[axis] + 20 * scale for axis in range(3)),
+            offset,
+            tuple(Fraction(offset[axis]) + Fraction(scale, 8) for axis in range(3)),
+            tuple(Fraction(offset[axis]) + Fraction(scale * 4, 3) for axis in range(3)),
+        )
+        for point in points:
+            with self.subTest(point=point):
+                full = audit.point_location_prepared(point, prepared)
+                indexed = audit.point_location_prepared_indexed(point, prepared)
+                self.assertEqual(indexed, full)
 
 
 class PreparedSignedWindingTests(unittest.TestCase):
@@ -268,6 +455,23 @@ class PreparedSignedWindingTests(unittest.TestCase):
         self.assertEqual(outside["status"], "resolved")
         self.assertEqual(outside["winding_number"], 0)
         self.assertGreater(outside["attempts"], 1)
+
+    def test_local_lattice_signed_winding_keeps_fractional_queries_exact(self):
+        scale = 1 << 1800
+        offset = (1 << 1900, -(1 << 1898), 1 << 1887)
+        vertices = tuple(tuple(offset[axis] + scale * point[axis] for axis in range(3))
+                         for point in ((0, 0, 0), (12, 0, 0), (0, 12, 0), (0, 0, 12)))
+        faces = ((0, 2, 1), (0, 1, 3), (0, 3, 2), (1, 2, 3))
+        prepared = audit.prepare_signed_winding(audit._records(vertices, faces))
+        self.assertLess(max(abs(value).bit_length()
+                            for triangle in prepared.point_locator.triangles
+                            for point in triangle for value in point), 5)
+        inside = tuple(Fraction(offset[k]) + Fraction(scale, 12) for k in range(3))
+        outside = tuple(Fraction(offset[k]) - scale for k in range(3))
+        boundary = tuple(Fraction(offset[k]) + scale * (12 if k == 0 else 0) for k in range(3))
+        self.assertEqual(audit.signed_winding_number(inside, prepared)["winding_number"], 1)
+        self.assertEqual(audit.signed_winding_number(outside, prepared)["winding_number"], 0)
+        self.assertEqual(audit.signed_winding_number(boundary, prepared)["status"], "boundary")
 
     def test_open_inconsistently_oriented_and_degenerate_shells_are_rejected(self):
         _vertices, faces, records = self.tetra_records()

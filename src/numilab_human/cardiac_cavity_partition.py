@@ -45,57 +45,17 @@ def rational_source_surfaces(cavities):
 
 
 class IntegerRayClassifier:
-    """Exact parity with cached source normals and integer query numerators.
+    """Exact source point classification through the normalized predicate owner."""
 
-    This authoring classifier is separately checked by the partition certificate.
-    Positive ray directions allow a conservative AABB rejection. Boundary rays
-    retry deterministically; unresolved queries fail closed.
-    """
     def __init__(self, records):
-        self.rows = [(tri, lower, upper, predicates._cross(predicates._sub(tri[1], tri[0]),
-                                                          predicates._sub(tri[2], tri[0])))
-                     for tri, lower, upper, _, _ in records]
-        self.lower = tuple(min(row[1][k] for row in self.rows) for k in range(3))
-        self.upper = tuple(max(row[2][k] for row in self.rows) for k in range(3))
+        self.prepared = predicates.prepare_point_location(records)
 
     def location(self, point):
-        denominator = math.lcm(*(Fraction(x).denominator for x in point))
-        numerator = tuple(Fraction(x).numerator*(denominator//Fraction(x).denominator) for x in point)
-        if any(numerator[k] < self.lower[k]*denominator or numerator[k] > self.upper[k]*denominator for k in range(3)):
-            return "outside"
-        for tri, lower, upper, normal in self.rows:
-            if any(numerator[k] < lower[k]*denominator or numerator[k] > upper[k]*denominator for k in range(3)):
-                continue
-            if sum(normal[k]*(tri[0][k]*denominator-numerator[k]) for k in range(3)) == 0 and predicates._inside(
-                    predicates._signs(numerator, denominator, tri, normal)):
-                return "boundary"
-        candidates = [row for row in self.rows if all(row[2][k]*denominator >= numerator[k] for k in range(3))]
-        for attempt in range(1, 65):
-            direction = (1, attempt, attempt*attempt)
-            crossings, ambiguous = 0, False
-            for tri, _, _, normal in candidates:
-                plane = sum(normal[k]*(tri[0][k]*denominator-numerator[k]) for k in range(3))
-                divisor = sum(normal[k]*direction[k] for k in range(3))
-                if divisor == 0:
-                    if plane == 0:
-                        ambiguous = True
-                        break
-                    continue
-                if plane*divisor <= 0:
-                    continue
-                hit = tuple(numerator[k]*divisor+plane*direction[k] for k in range(3))
-                hit_denominator = denominator*divisor
-                if hit_denominator < 0:
-                    hit_denominator, hit = -hit_denominator, tuple(-x for x in hit)
-                signs = predicates._signs(hit, hit_denominator, tri, normal)
-                if predicates._inside(signs):
-                    if 0 in signs:
-                        ambiguous = True
-                        break
-                    crossings += 1
-            if not ambiguous:
-                return "inside" if crossings % 2 else "outside"
-        require(False, "indeterminate exact ray classification")
+        result = predicates.point_location_prepared_indexed(point, self.prepared)
+        require(result["location"] != "indeterminate",
+                "indeterminate exact ray classification")
+        return result["location"]
+
 
 
 def _on_edge(point, a, b):

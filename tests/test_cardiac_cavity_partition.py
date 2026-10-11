@@ -42,6 +42,36 @@ class AuthoringTests(unittest.TestCase):
                       (4,4,4), (-1,-1,-1), (12,0,0), (5,5,5), (0,2,3), (20,20,20)):
             self.assertEqual(classifier.location(point), predicates.point_location(point, records)["location"])
 
+    def test_integer_classifier_fails_closed_after_all_64_rays_are_ambiguous(self):
+        records = []
+        for attempt in range(1, 65):
+            triangle = ((-1, -attempt, 0), (-2, -2 * attempt, 0),
+                        (-1, -attempt, -1))
+            lower = tuple(min(point[axis] for point in triangle) for axis in range(3))
+            upper = tuple(max(point[axis] for point in triangle) for axis in range(3))
+            vertex_base = 3 * (attempt - 1)
+            records.append((triangle, lower, upper, attempt - 1,
+                            (vertex_base, vertex_base + 1, vertex_base + 2)))
+        classifier = partition.IntegerRayClassifier(records)
+        with self.assertRaisesRegex(HumanImportError,
+                                   "indeterminate exact ray classification"):
+            classifier.location((0, 0, 0))
+
+    def test_integer_classifier_uses_local_lattice_on_huge_global_coordinates(self):
+        scale = 1 << 2800
+        offset = (1 << 2900, -(1 << 2898), 1 << 2887)
+        vertices = tuple(tuple(offset[k] + scale * point[k] for k in range(3))
+                         for point in ((0, 0, 0), (12, 0, 0), (0, 12, 0), (0, 0, 12)))
+        records = predicates._records(vertices, [(0,2,1),(0,1,3),(0,3,2),(1,2,3)])
+        classifier = partition.IntegerRayClassifier(records)
+        for point, expected in (
+                (tuple(offset[k] + scale for k in range(3)), "inside"),
+                (tuple(offset[k] - scale for k in range(3)), "outside"),
+                (offset, "boundary"),
+                (tuple(F( offset[k]) + F(scale, 8) for k in range(3)), "inside")):
+            with self.subTest(expected=expected):
+                self.assertEqual(classifier.location(point), expected)
+
     def test_float_conversion_cannot_merge_rational_vertices(self):
         with self.assertRaisesRegex(HumanImportError, "collapsed"):
             partition.indexed_mesh([((F(1),F(0),F(0)), (F(1)+F(1,2**100),F(0),F(0)), (F(0),F(1),F(0)))])

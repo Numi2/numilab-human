@@ -153,8 +153,42 @@ def _segment_triangle(p, q, triangle, normal):
     return [tuple(Fraction(x, denominator) for x in numerator)]
 
 
-def triangle_intersection_points(first, second):
-    """Convex-intersection vertices for two nondegenerate integer triangles."""
+def _integer_lattice_normalization(points):
+    """Map exact rational points to a small integer lattice, retaining its inverse."""
+    denominator = math.lcm(*(Fraction(value).denominator
+                             for point in points for value in point))
+    integer_points = tuple(tuple(Fraction(value).numerator *
+                                 (denominator // Fraction(value).denominator)
+                                 for value in point) for point in points)
+    origin = integer_points[0]
+    scale = 0
+    for point in integer_points:
+        for axis in range(3):
+            scale = math.gcd(scale, abs(point[axis] - origin[axis]))
+    if scale == 0:
+        scale = 1
+    normalized = tuple(tuple((point[axis] - origin[axis]) // scale
+                             for axis in range(3)) for point in integer_points)
+    return normalized, (denominator, origin, scale)
+
+
+def _normalized_query_lattice(point, transform):
+    denominator, origin, scale = transform
+    local = tuple((Fraction(point[axis]) * denominator - origin[axis]) / scale
+                  for axis in range(3))
+    common = math.lcm(*(coordinate.denominator for coordinate in local))
+    numerators = tuple(coordinate.numerator * (common // coordinate.denominator)
+                       for coordinate in local)
+    return numerators, common
+
+
+def _plane_numerator_at_local_query(numerator, denominator, triangle, normal):
+    return _dot(normal, tuple(triangle[0][axis] * denominator - numerator[axis]
+                              for axis in range(3)))
+
+
+def _triangle_intersection_points_integer(first, second):
+    """Unscaled exact predicate on integer-lattice triangles."""
     na = _cross(_sub(first[1], first[0]), _sub(first[2], first[0]))
     nb = _cross(_sub(second[1], second[0]), _sub(second[2], second[0]))
     require(any(na) and any(nb), "degenerate triangle")
@@ -169,6 +203,20 @@ def triangle_intersection_points(first, second):
         points.extend(_segment_triangle(first[i], first[(i+1) % 3], second, nb))
         points.extend(_segment_triangle(second[i], second[(i+1) % 3], first, na))
     return points
+
+
+def triangle_intersection_points(first, second):
+    """Exact intersection vertices using a reversible pair-local integer lattice."""
+    require(len(first) == 3 and len(second) == 3,
+            "triangle intersection requires two triangles")
+    exact_points = tuple(_exact_rational_xyz(point, "triangle intersection vertex")
+                         for point in tuple(first) + tuple(second))
+    normalized, transform = _integer_lattice_normalization(exact_points)
+    local_points = _triangle_intersection_points_integer(normalized[:3], normalized[3:])
+    denominator, origin, scale = transform
+    return [tuple(Fraction(origin[axis], denominator) +
+                  Fraction(scale, denominator) * point[axis]
+                  for axis in range(3)) for point in local_points]
 
 
 def _records(vertices, faces):
@@ -320,6 +368,128 @@ def point_location(point, records):
 
 
 
+
+
+def _prepare_exact_aabb_index(lower_bounds, upper_bounds, *, leaf_size=12):
+    """Build the deterministic exact-box tree used by repeated point queries."""
+    require(len(lower_bounds) == len(upper_bounds) and bool(lower_bounds),
+            "point-location AABB index requires non-empty bounds")
+    require(type(leaf_size) is int and leaf_size > 0, "invalid point-location AABB leaf size")
+    rows = tuple((tuple(lower), tuple(upper))
+                 for lower, upper in zip(lower_bounds, upper_bounds))
+    node_count = 0
+
+    def build(indices):
+        nonlocal node_count
+        node_count += 1
+        lower = tuple(min(rows[index][0][axis] for index in indices) for axis in range(3))
+        upper = tuple(max(rows[index][1][axis] for index in indices) for axis in range(3))
+        if len(indices) <= leaf_size:
+            return (lower, upper, tuple(sorted(indices)), None, None)
+        centers = {axis: [rows[index][0][axis] + rows[index][1][axis]
+                          for index in indices] for axis in range(3)}
+        spans = {axis: max(centers[axis]) - min(centers[axis]) for axis in range(3)}
+        axis = max(range(3), key=lambda coordinate: (spans[coordinate], -coordinate))
+        if spans[axis] == 0:
+            return (lower, upper, tuple(sorted(indices)), None, None)
+        indices.sort(key=lambda index: (rows[index][0][axis] + rows[index][1][axis], index))
+        middle = len(indices) // 2
+        if middle == 0 or middle == len(indices):
+            return (lower, upper, tuple(sorted(indices)), None, None)
+        left = build(indices[:middle])
+        right = build(indices[middle:])
+        return (lower, upper, None, left, right)
+
+    return build(list(range(len(rows)))), node_count
+
+
+def _point_aabb_candidate_indices(point, prepared, *, include_forward=True):
+    """Return sorted exact boundary-box and positive-ray face candidates."""
+    denominator = math.lcm(*(Fraction(value).denominator for value in point))
+    numerator = tuple(Fraction(value).numerator *
+                      (denominator // Fraction(value).denominator) for value in point)
+    boundary, forward = [], []
+    stack = [prepared.aabb_root]
+    while stack:
+        lower, upper, indices, left, right = stack.pop()
+        if any(numerator[axis] < lower[axis] * denominator or
+               numerator[axis] > upper[axis] * denominator for axis in range(3)):
+            continue
+        if indices is not None:
+            for index in indices:
+                row_lower, row_upper = prepared.lower_bounds[index], prepared.upper_bounds[index]
+                if all(row_lower[axis] * denominator <= numerator[axis] <=
+                       row_upper[axis] * denominator for axis in range(3)):
+                    boundary.append(index)
+        else:
+            stack.append(right)
+            stack.append(left)
+
+    if not include_forward:
+        boundary.sort()
+        return tuple(boundary), ()
+
+    stack = [prepared.aabb_root]
+    while stack:
+        _lower, upper, indices, left, right = stack.pop()
+        if any(upper[axis] * denominator < numerator[axis] for axis in range(3)):
+            continue
+        if indices is not None:
+            for index in indices:
+                if all(prepared.upper_bounds[index][axis] * denominator >= numerator[axis]
+                       for axis in range(3)):
+                    forward.append(index)
+        else:
+            stack.append(right)
+            stack.append(left)
+    boundary.sort()
+    forward.sort()
+    return tuple(boundary), tuple(forward)
+
+
+def _ray_intersects_exact_aabb(point, direction, lower, upper):
+    """Return whether an exact positive ray intersects a closed exact box."""
+    entry, exit = Fraction(0), None
+    for axis, component in enumerate(direction):
+        first = (Fraction(lower[axis]) - point[axis]) / component
+        last = (Fraction(upper[axis]) - point[axis]) / component
+        if first > last:
+            first, last = last, first
+        if last < 0:
+            return False
+        entry = max(entry, first)
+        exit = last if exit is None else min(exit, last)
+        if entry > exit:
+            return False
+    return True
+
+
+def _ray_aabb_candidate_indices(point, prepared, direction):
+    """Return sorted triangle boxes intersected by an exact positive ray."""
+    require(isinstance(prepared, PreparedPointLocation),
+            "ray AABB query requires a PreparedPointLocation snapshot")
+    point = _exact_rational_xyz(point, "ray AABB query")
+    direction = tuple(direction)
+    require(len(direction) == 3 and all(type(value) is int and value > 0 for value in direction),
+            "ray AABB query requires an exact positive integer direction")
+    stack, candidates = [prepared.aabb_root], []
+    while stack:
+        lower, upper, indices, left, right = stack.pop()
+        if not _ray_intersects_exact_aabb(point, direction, lower, upper):
+            continue
+        if indices is None:
+            stack.append(right)
+            stack.append(left)
+        else:
+            for index in indices:
+                if _ray_intersects_exact_aabb(point, direction,
+                                              prepared.lower_bounds[index],
+                                              prepared.upper_bounds[index]):
+                    candidates.append(index)
+    candidates.sort()
+    return tuple(candidates)
+
+
 @dataclass(frozen=True)
 class PreparedPointLocation:
     """Immutable exact surface snapshot for repeated point-location queries.
@@ -334,9 +504,12 @@ class PreparedPointLocation:
     plane_constants: tuple
     lower_bounds: tuple
     upper_bounds: tuple
+    normalization_transforms: tuple
     primary_denominators: tuple
     primary_parallel_indices: tuple
     record_identity_sha256: str
+    aabb_root: tuple
+    aabb_node_count: int
     _fallback_ray_data: dict
 
 
@@ -390,21 +563,13 @@ def _point_location_records_identity_sha256(records):
 
 
 def prepare_point_location(records):
-    """Snapshot exact triangle records and prepare repeated parity queries.
-
-    Record coordinates and query points must be integers or Fractions, matching
-    the exact lattice/rational callers of point_location. The prepared snapshot
-    does not retain mutable caller-owned arrays or lists.
-    """
+    """Snapshot exact records and prepare per-triangle normalized queries."""
     require(isinstance(records, (list, tuple)) and bool(records),
             "prepared point-location requires non-empty records")
     require(len(records) <= 200_000, "prepared point-location surface exceeds the bounded face count")
-    snapshots = []
-    triangles = []
-    normals = []
-    plane_constants = []
-    lower_bounds = []
-    upper_bounds = []
+    snapshots, triangles, normals = [], [], []
+    plane_constants, lower_bounds, upper_bounds = [], [], []
+    normalization_transforms = []
     for position, raw_row in enumerate(records):
         require(isinstance(raw_row, (list, tuple)) and len(raw_row) == 5,
                 f"prepared point-location record {position} must have five fields")
@@ -418,8 +583,6 @@ def prepare_point_location(records):
                 f"prepared point-location record {position} triangle must have three points")
         triangle = tuple(_exact_rational_xyz(point, f"prepared point-location record {position} vertex")
                          for point in raw_points)
-        normal = _cross(_sub(triangle[1], triangle[0]), _sub(triangle[2], triangle[0]))
-        require(any(normal), f"prepared point-location record {position} is degenerate")
         lower = tuple(min(point[axis] for point in triangle) for axis in range(3))
         upper = tuple(max(point[axis] for point in triangle) for axis in range(3))
         require(_exact_rational_xyz(raw_lower, f"prepared point-location record {position} lower bound") == lower
@@ -437,31 +600,111 @@ def prepare_point_location(records):
                                       and int(vertex_id) >= 0 for vertex_id in ids)
                 and len({int(vertex_id) for vertex_id in ids}) == 3,
                 f"prepared point-location record {position} vertex IDs are invalid")
-        ids = tuple(int(vertex_id) for vertex_id in ids)
-        face_id = int(raw_face_id)
-        snapshots.append((triangle, lower, upper, face_id, ids))
-        triangles.append(triangle)
+        normalized, transform = _integer_lattice_normalization(triangle)
+        normal = _cross(_sub(normalized[1], normalized[0]), _sub(normalized[2], normalized[0]))
+        require(any(normal), f"prepared point-location record {position} is degenerate")
+        snapshots.append((triangle, lower, upper, int(raw_face_id),
+                          tuple(int(vertex_id) for vertex_id in ids)))
+        triangles.append(normalized)
         normals.append(normal)
-        plane_constants.append(_dot(normal, triangle[0]))
+        plane_constants.append(_dot(normal, normalized[0]))
         lower_bounds.append(lower)
         upper_bounds.append(upper)
+        normalization_transforms.append(transform)
 
-    primary_direction = (1, 1, 1)
-    primary_denominators = tuple(_dot(normal, primary_direction) for normal in normals)
-    primary_parallel_indices = tuple(index for index, denominator in enumerate(primary_denominators)
-                                     if denominator == 0)
+    primary_denominators = tuple(_dot(normal, (1, 1, 1)) for normal in normals)
+    primary_parallel_indices = tuple(index for index, divisor in enumerate(primary_denominators)
+                                     if divisor == 0)
+    snapshot_tuple = tuple(snapshots)
+    aabb_root, aabb_node_count = _prepare_exact_aabb_index(lower_bounds, upper_bounds)
     return PreparedPointLocation(
-        records=tuple(snapshots),
+        records=snapshot_tuple,
         triangles=tuple(triangles),
         normals=tuple(normals),
         plane_constants=tuple(plane_constants),
         lower_bounds=tuple(lower_bounds),
         upper_bounds=tuple(upper_bounds),
+        normalization_transforms=tuple(normalization_transforms),
         primary_denominators=primary_denominators,
         primary_parallel_indices=primary_parallel_indices,
-        record_identity_sha256=_point_location_records_identity_sha256(tuple(snapshots)),
+        record_identity_sha256=_point_location_records_identity_sha256(snapshot_tuple),
+        aabb_root=aabb_root,
+        aabb_node_count=aabb_node_count,
         _fallback_ray_data={},
     )
+
+
+def point_location_prepared_indexed(point, prepared):
+    """Classify exactly using AABB candidates and normalized triangle arithmetic.
+
+    The AABB test is inclusive for boundary candidates. Forward-ray candidates
+    are conservative because every deterministic ray component is positive.
+    All final plane and triangle-side tests use the same exact normalized
+    predicates as point_location_prepared.
+    """
+    require(isinstance(prepared, PreparedPointLocation),
+            "indexed point-location requires a PreparedPointLocation snapshot")
+    point = _exact_rational_xyz(point, "indexed point-location query")
+    boundary_indices, _ = _point_aabb_candidate_indices(
+        point, prepared, include_forward=False)
+    local_cache = {}
+
+    def local_query(index):
+        if index not in local_cache:
+            local_cache[index] = _normalized_query_lattice(
+                point, prepared.normalization_transforms[index])
+        return local_cache[index]
+
+    for index in boundary_indices:
+        numerator, denominator = local_query(index)
+        triangle = prepared.triangles[index]
+        normal = prepared.normals[index]
+        plane = _plane_numerator_at_local_query(numerator, denominator, triangle, normal)
+        if plane == 0 and _inside(_signs(numerator, denominator, triangle, normal)):
+            return {"location": "boundary", "ray": None, "crossings": None}
+
+    for attempt in range(1, 65):
+        direction = (1, attempt, attempt * attempt)
+        divisors, parallel_indices = _prepared_ray_data(prepared, attempt)
+        # Preserve the established retry rule: any surface plane containing
+        # this ray makes the attempt ambiguous, even when that triangle's AABB
+        # lies behind or away from the positive ray segment.
+        if any(_plane_numerator_at_local_query(
+                *local_query(index), prepared.triangles[index], prepared.normals[index]) == 0
+               for index in parallel_indices):
+            continue
+        crossings, ambiguous = 0, False
+        ray_indices = _ray_aabb_candidate_indices(point, prepared, direction)
+        for index in ray_indices:
+            numerator, query_denominator = local_query(index)
+            triangle = prepared.triangles[index]
+            normal = prepared.normals[index]
+            plane = _plane_numerator_at_local_query(
+                numerator, query_denominator, triangle, normal)
+            divisor = _dot(normal, direction)
+            if divisor == 0:
+                if plane == 0:
+                    ambiguous = True
+                    break
+                continue
+            if plane * divisor <= 0:
+                continue
+            hit = tuple(numerator[axis] * divisor + plane * direction[axis]
+                        for axis in range(3))
+            hit_denominator = query_denominator * divisor
+            if hit_denominator < 0:
+                hit_denominator = -hit_denominator
+                hit = tuple(-coordinate for coordinate in hit)
+            signs = _signs(hit, hit_denominator, triangle, normal)
+            if _inside(signs):
+                if 0 in signs:
+                    ambiguous = True
+                    break
+                crossings += 1
+        if not ambiguous:
+            return {"location": "inside" if crossings % 2 else "outside",
+                    "ray": list(direction), "crossings": crossings, "attempts": attempt}
+    return {"location": "indeterminate", "ray": None, "crossings": None, "attempts": 64}
 
 
 def _prepared_ray_data(prepared, attempt):
@@ -481,24 +724,26 @@ def _prepared_ray_data(prepared, attempt):
 
 
 def point_location_prepared(point, prepared):
-    """Classify one exact point using a reusable prepared surface snapshot.
-
-    The forward-ray AABB filter is exact because every ray component is
-    positive. Parallel/coplanar ambiguity is checked against every face before
-    that filter, matching the legacy classifier even for a plane behind the
-    query point and outside its forward-ray AABB.
-    """
+    """Classify one exact point using per-triangle normalized coordinates."""
     require(isinstance(prepared, PreparedPointLocation),
             "prepared point-location requires a PreparedPointLocation snapshot")
     point = _exact_rational_xyz(point, "prepared point-location query")
-    numerators = tuple(plane - _dot(normal, point)
-                       for plane, normal in zip(prepared.plane_constants, prepared.normals))
+    local_cache = {}
+
+    def local_query(index):
+        if index not in local_cache:
+            local_cache[index] = _normalized_query_lattice(
+                point, prepared.normalization_transforms[index])
+        return local_cache[index]
+
     for index, (lower, upper) in enumerate(zip(prepared.lower_bounds, prepared.upper_bounds)):
         if any(point[axis] < lower[axis] or point[axis] > upper[axis] for axis in range(3)):
             continue
-        normal = prepared.normals[index]
+        numerator, denominator = local_query(index)
         triangle = prepared.triangles[index]
-        if numerators[index] == 0 and _inside(_signs(point, 1, triangle, normal)):
+        normal = prepared.normals[index]
+        plane = _plane_numerator_at_local_query(numerator, denominator, triangle, normal)
+        if plane == 0 and _inside(_signs(numerator, denominator, triangle, normal)):
             return {"location": "boundary", "ray": None, "crossings": None}
 
     forward_candidates = tuple(
@@ -507,24 +752,30 @@ def point_location_prepared(point, prepared):
     )
     for attempt in range(1, 65):
         direction = (1, attempt, attempt * attempt)
-        denominators, parallel_indices = _prepared_ray_data(prepared, attempt)
-        # The legacy loop marks any ray lying in any triangle plane ambiguous,
-        # even when that triangle is behind the point and cannot be hit forward.
-        if any(numerators[index] == 0 for index in parallel_indices):
+        divisors, parallel_indices = _prepared_ray_data(prepared, attempt)
+        if any(_plane_numerator_at_local_query(
+                *local_query(index), prepared.triangles[index], prepared.normals[index]) == 0
+               for index in parallel_indices):
             continue
         crossings = 0
         for index in forward_candidates:
-            denominator = denominators[index]
-            numerator = numerators[index]
-            if denominator == 0 or numerator * denominator <= 0:
+            divisor = divisors[index]
+            if divisor == 0:
                 continue
-            hit = tuple(point[axis] * denominator + numerator * direction[axis]
+            numerator, query_denominator = local_query(index)
+            triangle = prepared.triangles[index]
+            normal = prepared.normals[index]
+            plane = _plane_numerator_at_local_query(
+                numerator, query_denominator, triangle, normal)
+            if plane * divisor <= 0:
+                continue
+            hit = tuple(numerator[axis] * divisor + plane * direction[axis]
                         for axis in range(3))
-            hit_denominator = denominator
+            hit_denominator = query_denominator * divisor
             if hit_denominator < 0:
                 hit_denominator = -hit_denominator
                 hit = tuple(-coordinate for coordinate in hit)
-            signs = _signs(hit, hit_denominator, prepared.triangles[index], prepared.normals[index])
+            signs = _signs(hit, hit_denominator, triangle, normal)
             if _inside(signs):
                 if 0 in signs:
                     break
@@ -637,25 +888,30 @@ def prepare_signed_winding(records):
 
 
 def signed_winding_number(point, prepared):
-    """Return the exact signed ray-crossing sum, or a boundary/unresolved status.
-
-    Each forward crossing contributes sign(normal dot ray_direction).
-    Self-intersections are counted per oriented face crossing; values may be
-    negative or have magnitude greater than one. Boundary and unresolved queries
-    return no winding number, so callers cannot infer material there.
-    """
+    """Return exact signed winding using locally normalized triangle predicates."""
     require(isinstance(prepared, PreparedSignedWinding),
             "signed winding requires a PreparedSignedWinding snapshot")
     locator = prepared.point_locator
     point = _exact_rational_xyz(point, "signed-winding query")
-    numerators = tuple(plane - _dot(normal, point)
-                       for plane, normal in zip(locator.plane_constants, locator.normals))
+    local_cache = {}
+
+    def local_query(index):
+        if index not in local_cache:
+            local_cache[index] = _normalized_query_lattice(
+                point, locator.normalization_transforms[index])
+        return local_cache[index]
+
+    def plane_numerator(index):
+        numerator, denominator = local_query(index)
+        return _plane_numerator_at_local_query(
+            numerator, denominator, locator.triangles[index], locator.normals[index])
 
     for index, (lower, upper) in enumerate(zip(locator.lower_bounds, locator.upper_bounds)):
         if any(point[axis] < lower[axis] or point[axis] > upper[axis] for axis in range(3)):
             continue
-        if numerators[index] == 0 and _inside(
-                _signs(point, 1, locator.triangles[index], locator.normals[index])):
+        numerator, denominator = local_query(index)
+        if plane_numerator(index) == 0 and _inside(
+                _signs(numerator, denominator, locator.triangles[index], locator.normals[index])):
             return {"status": "boundary", "winding_number": None, "ray": None,
                     "crossings": None, "attempts": 0}
 
@@ -665,21 +921,22 @@ def signed_winding_number(point, prepared):
     )
     for attempt in range(1, 65):
         direction = (1, attempt, attempt * attempt)
-        denominators, parallel_indices = _prepared_ray_data(locator, attempt)
-        # Match the existing exact classifier's deterministic coplanar retry,
-        # including planes behind the query point.
-        if any(numerators[index] == 0 for index in parallel_indices):
+        divisors, parallel_indices = _prepared_ray_data(locator, attempt)
+        if any(plane_numerator(index) == 0 for index in parallel_indices):
             continue
         winding = 0
         crossings = 0
         for index in forward_candidates:
-            denominator = denominators[index]
-            numerator = numerators[index]
-            if denominator == 0 or numerator * denominator <= 0:
+            divisor = divisors[index]
+            if divisor == 0:
                 continue
-            hit = tuple(point[axis] * denominator + numerator * direction[axis]
+            plane = plane_numerator(index)
+            if plane * divisor <= 0:
+                continue
+            numerator, query_denominator = local_query(index)
+            hit = tuple(numerator[axis] * divisor + plane * direction[axis]
                         for axis in range(3))
-            hit_denominator = denominator
+            hit_denominator = query_denominator * divisor
             if hit_denominator < 0:
                 hit_denominator = -hit_denominator
                 hit = tuple(-coordinate for coordinate in hit)
@@ -688,7 +945,7 @@ def signed_winding_number(point, prepared):
             if _inside(signs):
                 if 0 in signs:
                     break
-                winding += 1 if denominator > 0 else -1
+                winding += 1 if divisor > 0 else -1
                 crossings += 1
         else:
             return {"status": "resolved", "winding_number": winding,
