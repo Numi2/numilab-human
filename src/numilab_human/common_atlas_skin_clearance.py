@@ -2335,7 +2335,7 @@ def _condition_shared_source_directions(
                 gradient_world = vertex_normals - selection_bound * world / world_length[:, None]
                 return np.einsum("ki,kij->kj", gradient_world, vertex_maps)
 
-            def checked_direction(candidate, required_projection):
+            def direction_metrics(candidate):
                 candidate = np.asarray(candidate, dtype=np.float64)
                 if candidate.shape != (3,) or not np.isfinite(candidate).all():
                     return None
@@ -2352,10 +2352,15 @@ def _condition_shared_source_directions(
                 candidate_alignment = np.einsum(
                     "ki,ki->k", candidate_world / candidate_lengths[:, None], vertex_normals,
                 )
-                if (not np.isfinite(candidate_alignment).all()
-                        or float(candidate_alignment.min()) < required_projection):
+                if not np.isfinite(candidate_alignment).all():
                     return None
                 return unit_candidate, candidate_length, candidate_alignment
+
+            def checked_direction(candidate, required_projection):
+                metrics = direction_metrics(candidate)
+                if metrics is None or float(metrics[2].min()) < required_projection:
+                    return None
+                return metrics
 
             result = minimize(
                 lambda direction: 0.5 * float(np.dot(direction - preferred, direction - preferred)),
@@ -2407,7 +2412,11 @@ def _condition_shared_source_directions(
                         # admit a branch against the unchanged original alignment
                         # contract. An optimizer result one ulp below its tightened
                         # target is still valid if it passes the original bound.
+                        branch_metrics = direction_metrics(branch_result.x)
                         branch_checked = checked_direction(branch_result.x, minimum)
+                        branch_minimum = (
+                            float(branch_metrics[2].min()) if branch_metrics is not None else None
+                        )
                         branch_attempts.append({
                             "branch_index": branch_index,
                             "dominant_axis": axis,
@@ -2417,8 +2426,9 @@ def _condition_shared_source_directions(
                             "optimizer_message": str(getattr(branch_result, "message", "")),
                             "optimizer_iterations": int(getattr(branch_result, "nit", 0)),
                             "feasible_nonzero": branch_checked is not None,
-                            "minimum_projection": (
-                                float(branch_checked[2].min()) if branch_checked is not None else None
+                            "minimum_projection": branch_minimum,
+                            "selection_projection_met": (
+                                branch_minimum is not None and branch_minimum >= selection_bound
                             ),
                         })
                         if branch_checked is not None:
@@ -2439,7 +2449,8 @@ def _condition_shared_source_directions(
                         f"active-face direction conditioning found no finite nonzero direction satisfying "
                         f"the unchanged active-face bound at vertex={int(vertex)}; "
                         f"preferred_optimizer={str(result.message)!r}; six dominant-coordinate branches "
-                        f"found no independently feasible direction"
+                        f"found no independently feasible direction; branch_minimum_projections="
+                        f"{[row['minimum_projection'] for row in branch_attempts]!r}"
                     )
                 # Angular preference is primary; branch index resolves exact ties.
                 branch_candidates.sort(key=lambda item: (item[0], item[1]))

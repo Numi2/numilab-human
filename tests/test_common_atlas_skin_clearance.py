@@ -973,7 +973,9 @@ def test_active_face_conditioning_rejects_nonfinite_zero_or_infeasible_optimizer
         ),
     )
 
-    with pytest.raises(ImportError, match="no finite nonzero direction satisfying"):
+    with pytest.raises(
+        ImportError, match="no finite nonzero direction satisfying.*branch_minimum_projections"
+    ):
         _condition_shared_source_directions(maps, source, faces, normals)
 
 
@@ -1072,6 +1074,9 @@ def test_active_face_fallback_accepts_original_bound_below_selection_target(monk
     assert fallback["original_acceptance_projection_bound"] == 0.5
     assert 0.5 <= minimum < 0.500001
     assert fallback["selected_branch_index"] == 0
+    selected = next(row for row in fallback["branch_attempts"] if row["branch_index"] == 0)
+    assert selected["feasible_nonzero"]
+    assert not selected["selection_projection_met"]
     assert np.isclose(np.linalg.norm(result[0]), 1.0, atol=1.0e-12)
     assert np.dot(result[0], np.array([0.0, 0.0, 1.0])) >= 0.5
 
