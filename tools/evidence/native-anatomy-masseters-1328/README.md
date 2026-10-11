@@ -1,5 +1,7 @@
 # Passive superficial masseters in the integrated native human
 
+**Orientation correction pending:** A subsequent signed-volume audit found the mirrored left masseter160 is inward-wound (−5.65116e−6 m³), although it is closed and intersection-free. This recording is retained as a bounded geometry/physiology result, not outward-orientation qualification. See orientation-erratum.json. A successor reverses that row's face order and normals while preserving positions and bindings, and will be checked in a fresh native run.
+
 Both source-registered superficial masseters are present in the existing native resting scene (stable159 right / FMA49001, stable160 left / FMA49002). This is an incremental anatomy delivery. Whole-body anatomy and the final five-minute qualification remain incomplete; performance work is deferred.
 
 The Z-Anatomy source is registered to the existing BodyParts3D reference with seven named head bones, a proper similarity transform, and an independent mandible check. Bone surface fit p95 is about 3.45–5.51 mm; the held-out mandible maximum is 7.31 mm. Source attachment markers are proximity proxies, not certified footprints. This mixed-source reference is not measurements of one individual. Original Z-Anatomy and upstream BodyParts3D license notices accompany the evidence.
