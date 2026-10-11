@@ -1573,6 +1573,7 @@ def _propose_local_self_separation_increment(
         return np.sort(ids)
 
     movable = ids_checked(movable_vertex_ids, "movable vertices", required=True)
+    movable_lookup = {int(vertex): index for index, vertex in enumerate(movable)}
     patch_seeds = ids_checked(self_patch_seed_vertex_ids, "self-patch seeds", required=True)
     target_seeds = ids_checked(required_target_seed_vertex_ids, "required target seeds")
     active_target = ids_checked(active_target_face_vertex_ids, "active target-face vertices")
@@ -1775,8 +1776,6 @@ def _propose_local_self_separation_increment(
                     raise human.ImportError(
                         f"local self-separation pose {pose_index} source contact has no exact one-sided SAT support plane"
                     )
-                (both_strict, _, negative_axis_index, axis_source, source_axis_index,
-                 source_signs_a, source_signs_b) = max(source_axis_candidates, key=lambda row: row[:3])
                 shared_local = int(np.searchsorted(vertex_ids, shared_id))
                 if shared_local >= len(vertex_ids) or int(vertex_ids[shared_local]) != shared_id:
                     raise human.ImportError(
@@ -1788,18 +1787,6 @@ def _propose_local_self_separation_increment(
                     raise human.ImportError(
                         f"local self-separation pose {pose_index} shared-vertex Jacobian cannot transform source sidedness"
                     )
-                try:
-                    axis_world = np.linalg.solve(shared_jacobian.T, axis_source)
-                except np.linalg.LinAlgError as error:
-                    raise human.ImportError(
-                        f"local self-separation pose {pose_index} shared-vertex Jacobian cannot transform source sidedness"
-                    ) from error
-                world_axis_norm = float(np.linalg.norm(axis_world))
-                if not math.isfinite(world_axis_norm) or world_axis_norm <= 1.0e-14:
-                    raise human.ImportError(
-                        f"local self-separation pose {pose_index} transformed source-side axis is degenerate"
-                    )
-                axis_world = axis_world / world_axis_norm
                 shared_world = rejected[shared_local].astype(np.float64)
                 source_shared = source[shared_id].astype(np.float64)
                 reference_triangles = []
@@ -1827,19 +1814,108 @@ def _propose_local_self_separation_increment(
                     raise human.ImportError(
                         f"local self-separation pose {pose_index} shared-vertex contact is not an invalid posed intersection"
                     )
+
+                # The exact source construction can provide several valid one-sided
+                # support axes. Prefer an axis whose fixed support vertices already
+                # satisfy the zero-gap halfspaces, then minimize the largest required
+                # first-order movable correction. This avoids rejecting a valid paired
+                # interface merely because the widest source support plane is locked.
+                local_a = np.searchsorted(vertex_ids, ids_a)
+                local_b = np.searchsorted(vertex_ids, ids_b)
+                axis_options = []
+                rejected_axis_rows = []
+                for candidate in source_axis_candidates:
+                    (candidate_strict, candidate_margin, _, axis_source, candidate_index,
+                     signs_a, signs_b) = candidate
+                    try:
+                        axis_world = np.linalg.solve(shared_jacobian.T, axis_source)
+                    except np.linalg.LinAlgError:
+                        rejected_axis_rows.append({"source_axis_index": int(candidate_index),
+                                                   "reason": "singular_shared_vertex_jacobian"})
+                        continue
+                    world_axis_norm = float(np.linalg.norm(axis_world))
+                    if not math.isfinite(world_axis_norm) or world_axis_norm <= 1.0e-14:
+                        rejected_axis_rows.append({"source_axis_index": int(candidate_index),
+                                                   "reason": "degenerate_transformed_axis"})
+                        continue
+                    axis_world = axis_world / world_axis_norm
+                    fixed_violations = []
+                    movement_demands = []
+                    for i, source_a in enumerate(ids_a):
+                        for j, source_b in enumerate(ids_b):
+                            response = np.zeros((len(movable), 3), dtype=np.float64)
+                            variable_a = movable_lookup.get(int(source_a))
+                            variable_b = movable_lookup.get(int(source_b))
+                            if variable_a is not None:
+                                response[variable_a] -= axis_world @ jac[int(local_a[i])]
+                            if variable_b is not None:
+                                response[variable_b] += axis_world @ jac[int(local_b[j])]
+                            current_gap_mm = float(np.dot(
+                                axis_world,
+                                (rejected[int(local_b[j])].astype(np.float64)
+                                 - rejected[int(local_a[i])].astype(np.float64)) * 1000.0,
+                            ))
+                            required_mm = -current_gap_mm
+                            response_norm = float(np.linalg.norm(response))
+                            if response_norm <= 1.0e-14:
+                                if required_mm > 1.0e-8:
+                                    fixed_violations.append({
+                                        "source_vertex_pair": [int(source_a), int(source_b)],
+                                        "required_projection_change_mm": required_mm,
+                                    })
+                            elif required_mm > 0.0:
+                                movement_demands.append(required_mm / response_norm)
+                    if fixed_violations:
+                        rejected_axis_rows.append({
+                            "source_axis_index": int(candidate_index),
+                            "reason": "fixed_support_halfspace_violation",
+                            "fixed_violation_count": len(fixed_violations),
+                            "maximum_fixed_violation_mm": max(row["required_projection_change_mm"]
+                                                                for row in fixed_violations),
+                            "witness": max(fixed_violations,
+                                           key=lambda row: row["required_projection_change_mm"]),
+                        })
+                        continue
+                    axis_options.append({
+                        "score_max_required_l2_mm": max(movement_demands, default=0.0),
+                        "score_sum_required_l2_mm": sum(movement_demands),
+                        "both_source_faces_strictly_sided": bool(candidate_strict),
+                        "normalized_source_margin_m": float(candidate_margin),
+                        "source_axis_index": int(candidate_index),
+                        "axis_world": axis_world,
+                        "source_axis_signs_face_a": list(signs_a),
+                        "source_axis_signs_face_b": list(signs_b),
+                    })
+                if not axis_options:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} all {len(source_axis_candidates)} exact source support axes "
+                        f"violate fixed paired-cap support for contact faces={pair_key}; "
+                        f"rejected={rejected_axis_rows}"
+                    )
+                selected_axis = min(axis_options, key=lambda row: (
+                    row["score_max_required_l2_mm"], row["score_sum_required_l2_mm"],
+                    not row["both_source_faces_strictly_sided"], -row["normalized_source_margin_m"],
+                    row["source_axis_index"],
+                ))
                 contact_proofs[pair_key] = {
                     "shared_vertex_id": shared_id,
-                    "axis_world": axis_world,
-                    "source_axis_index": int(source_axis_index),
-                    "source_axis_signs_face_a": list(source_signs_a),
-                    "source_axis_signs_face_b": list(source_signs_b),
-                    "both_source_faces_strictly_sided": bool(both_strict),
+                    "axis_world": selected_axis["axis_world"],
+                    "source_axis_index": selected_axis["source_axis_index"],
+                    "source_axis_signs_face_a": selected_axis["source_axis_signs_face_a"],
+                    "source_axis_signs_face_b": selected_axis["source_axis_signs_face_b"],
+                    "both_source_faces_strictly_sided": selected_axis["both_source_faces_strictly_sided"],
                     "shared_vertex_jacobian_condition_number": condition_number,
                     "reference_triangle_a": reference_triangles[0],
                     "reference_triangle_b": reference_triangles[1],
                     "source_intersection_points_only_shared_vertex": True,
                     "source_one_sided_support_proof": True,
+                    "axis_selection": "enumerated_exact_source_support_axes_ranked_by_fixed_support_feasibility_and_movable_response",
+                    "source_axis_candidate_count": len(source_axis_candidates),
+                    "fixed_support_rejected_axes": rejected_axis_rows,
+                    "selected_axis_score_max_required_l2_mm": selected_axis["score_max_required_l2_mm"],
+                    "selected_axis_score_sum_required_l2_mm": selected_axis["score_sum_required_l2_mm"],
                 }
+
             else:
                 if ci.triangle_intersection_points(baseline_record_by_face[pair_key[0]][0],
                                                    baseline_record_by_face[pair_key[1]][0]):
@@ -2008,7 +2084,12 @@ def _propose_local_self_separation_increment(
                     max_rhs = max(max_rhs, required_mm)
                     if not np.any(row):
                         if required_mm > 1.0e-8:
-                            raise human.ImportError("self-pair violates accepted SAT gap with no movable response")
+                            raise human.ImportError(
+                                "self-pair violates accepted SAT gap with no movable response: "
+                                f"pose={pose_index} kind={pair_kind} faces=({face_a},{face_b}) "
+                                f"source_vertices=({int(source_a)},{int(source_b)}) "
+                                f"required_projection_change_mm={required_mm:.9g}"
+                            )
                         continue
                     constraints.append(row)
                     rhs_rows.append(required_mm)
@@ -2045,6 +2126,9 @@ def _propose_local_self_separation_increment(
                 ),
                 "source_contact_floor_mm": (0.0 if pair_kind == "shared_vertex_contact" else None),
                 "shared_vertex_id": (contact_proof["shared_vertex_id"] if contact_proof is not None else None),
+                "source_axis_index": (contact_proof["source_axis_index"] if contact_proof is not None else None),
+                "source_axis_candidate_count": (contact_proof["source_axis_candidate_count"] if contact_proof is not None else None),
+                "source_axis_selection": (contact_proof["axis_selection"] if contact_proof is not None else None),
                 "source_intersection_points_only_shared_vertex":
                     (True if contact_proof is not None else None),
                 "source_one_sided_support_proof": (True if contact_proof is not None else None),

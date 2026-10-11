@@ -625,6 +625,11 @@ def test_local_self_separation_resolves_pose_crossing_from_source_proven_shared_
     assert receipt["source_intersection_points_only_shared_vertex"] is True
     assert receipt["source_one_sided_support_proof"] is True
     assert receipt["sat_axis_selection"] == "exact_source_shared_vertex_support_transformed_by_shared_jacobian"
+    assert receipt["source_axis_selection"] == (
+        "enumerated_exact_source_support_axes_ranked_by_fixed_support_feasibility_and_movable_response"
+    )
+    assert receipt["source_axis_candidate_count"] >= 1
+    assert receipt["source_axis_index"] is not None
     assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
     assert args["source_positions_m"].tobytes() == source_before.tobytes()
 
@@ -656,3 +661,15 @@ def test_local_self_separation_does_not_let_ordinary_pairs_use_zero_gap_contact_
     args, _, _ = _fixture(baseline_translation_m=0.0)
     with pytest.raises(ImportError, match="accepted-baseline identity precondition.*exactly clear"):
         _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_does_not_propose_when_only_shared_contact_vertex_can_move():
+    args, _, _ = _shared_vertex_contact_fixture()
+    args["movable_vertex_ids"] = np.array([0], dtype=np.int64)
+    args["self_patch_seed_vertex_ids"] = np.array([0], dtype=np.int64)
+    args["required_target_seed_vertex_ids"] = np.empty(0, dtype=np.int64)
+    args["active_target_face_vertex_ids"] = np.empty(0, dtype=np.int64)
+    args["fixed_support_vertex_ids"] = np.array([1, 2, 3, 4], dtype=np.int64)
+    with pytest.raises(ImportError) as error:
+        _propose_local_self_separation_increment(**args)
+    assert "did not converge to a finite proposal" in str(error.value) or "no movable response" in str(error.value)
