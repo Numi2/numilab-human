@@ -119,7 +119,7 @@ def _face_origin_values(face_origins: Sequence[int] | np.ndarray | None,
     origins = np.asarray(face_origins)
     if origins.ndim != 1 or not np.issubdtype(origins.dtype, np.integer):
         raise ValueError("face_origins must be a one-dimensional integer array")
-    if int(origins.max(initial=-1)) > np.iinfo(np.int64).max:
+    if origins.size and int(origins.max()) > np.iinfo(np.int64).max:
         raise ValueError("face origin exceeds signed 64-bit range")
     if max(face_indices) >= len(origins):
         raise ValueError("face_origins is shorter than the selected face array")

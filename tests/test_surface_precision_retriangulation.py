@@ -179,6 +179,29 @@ class SurfacePrecisionRetriangulationTests(unittest.TestCase):
         self.assertGreater(report["candidate_pair_minimum_altitude_m"], 1.0e-6)
         self.assertEqual(validate_closed_oriented_surface(vertices, output)["closed_oriented"], True)
 
+    def test_unsigned_face_origins_preserve_lineage_and_reject_int64_overflow(self):
+        vertices, faces = self._sliver_octahedron()
+        adjacency = build_surface_adjacency(faces)
+        origins = np.arange(len(faces), dtype=np.uint32) + np.uint32(700)
+        pair = adjacency.edge_faces[(0, 1)]
+        output, report = flip_interior_edge(
+            vertices, faces, edge=(0, 1), face_indices=pair,
+            minimum_altitude_m=1.0e-3, adjacency=adjacency, face_origins=origins,
+        )
+        self.assertEqual(output.shape, faces.shape)
+        self.assertEqual(
+            [row["source_parent_face_origins"] for row in report["output_face_lineage"]],
+            [[int(origins[i]) for i in pair], [int(origins[i]) for i in pair]],
+        )
+
+        oversized = np.arange(len(faces), dtype=np.uint64)
+        oversized[-1] = np.uint64(1 << 63)
+        with self.assertRaisesRegex(ValueError, "signed 64-bit range"):
+            flip_interior_edge(
+                vertices, faces, edge=(0, 1), face_indices=pair,
+                minimum_altitude_m=1.0e-3, adjacency=adjacency, face_origins=oversized,
+            )
+
     def test_full_validator_rejects_open_and_zero_area_surfaces(self):
         vertices, faces = self._sliver_octahedron()
         with self.assertRaisesRegex(ValueError, "expected two"):
