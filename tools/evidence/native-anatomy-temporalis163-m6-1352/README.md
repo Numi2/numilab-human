@@ -18,3 +18,5 @@ With the hash-bound retained assets on SSH numi:
     python3 tools/evidence/native-anatomy-temporalis163-m6-1352/reproduce.py
 
 The reproduction adapter uses the existing native owner and requires the retained source assets. Source, runtime, assets, configuration, timing and command identities are retained separately.
+
+A separate authoring audit had compared world-frame cap coordinates with row-local muscle coordinates. The retained correction supersedes that 1.31 m distance: cap/contact AABB separation is 14.3701 mm, nearest sampled vertex separation 31.1125 mm, and the exact cap-versus-world-muscle intersection count is zero. The authoring target's original skin triangles equal the current native skin exactly. No candidate or runtime geometry changed.
