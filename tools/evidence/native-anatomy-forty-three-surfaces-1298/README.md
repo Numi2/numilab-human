@@ -15,3 +15,5 @@ Eight actual native43 captures pass full exact self/topology checks and 859-targ
 The pinned Mac mini runtime and retained assets are required. Use --prepare-only to verify launch inputs. Exact source revisions, asset identities, configuration, device, launch command, timing, compact trace and continuous native framebuffer recording are retained. The viewer exposes seven anatomical layers. No remote-desktop visibility is asserted.
 
 Remaining work includes forearm, neck/back and foot surfaces, inherited unexplained tissue interfaces, and a final five-minute matched baseline/intervention recording using the completed anatomy. The older five-minute physiology evidence uses older anatomy.
+
+The complete 150-surface muscle/tendon inventory at the terminal 16s pose now has 126 closed, self-clear surfaces plus the two separately declared open Achilles attachment surfaces. Twenty-two surfaces retain defects at that pose. This inventory inherits the preceding exact checks only where native triangle coordinates are unchanged; it is not an all-pose or full-body certificate. See `checks/terminal-muscle-inventory.json.gz`.
