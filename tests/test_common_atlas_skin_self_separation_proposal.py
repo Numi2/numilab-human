@@ -673,3 +673,45 @@ def test_local_self_separation_does_not_propose_when_only_shared_contact_vertex_
     with pytest.raises(ImportError) as error:
         _propose_local_self_separation_increment(**args)
     assert "did not converge to a finite proposal" in str(error.value) or "no movable response" in str(error.value)
+
+
+
+def test_local_self_separation_accepts_only_enumerated_shared_contact_source_axis_override():
+    import copy
+
+    args, _, _ = _shared_vertex_contact_fixture()
+    automatic = _propose_local_self_separation_increment(**copy.deepcopy(args))
+    automatic_receipt = automatic["pair_pose_receipts"][0]
+    feasible_axes = automatic_receipt["fixed_support_feasible_source_axis_indices"]
+    alternative = next(index for index in feasible_axes if index != automatic_receipt["source_axis_index"])
+
+    forced_args = copy.deepcopy(args)
+    forced_args["pose_samples"][0]["shared_vertex_contact_axis_overrides"] = [
+        {"face_pair": [0, 1], "source_axis_index": alternative},
+    ]
+    forced = _propose_local_self_separation_increment(**forced_args)
+    forced_receipt = forced["pair_pose_receipts"][0]
+
+    assert forced_receipt["source_axis_selection"] == "caller_selected_exact_source_support_axis_index"
+    assert forced_receipt["source_axis_override_index"] == alternative
+    assert forced_receipt["source_axis_index"] == alternative
+    assert forced["post_rounding_predicted_supplied_pair_exact_count"] == 0
+    assert automatic["proposal_source_positions_m_f32"].tobytes() != forced["proposal_source_positions_m_f32"].tobytes()
+
+
+def test_local_self_separation_rejects_unproven_shared_contact_axis_override():
+    import copy
+
+    args, _, _ = _shared_vertex_contact_fixture()
+    args["pose_samples"][0]["shared_vertex_contact_axis_overrides"] = [
+        {"face_pair": [0, 1], "source_axis_index": 99},
+    ]
+    with pytest.raises(ImportError, match="not an exact one-sided source support axis"):
+        _propose_local_self_separation_increment(**args)
+
+    wrong_pair_args, _, _ = _shared_vertex_contact_fixture()
+    wrong_pair_args["pose_samples"][0]["shared_vertex_contact_axis_overrides"] = [
+        {"face_pair": [0, 0], "source_axis_index": 0},
+    ]
+    with pytest.raises(ImportError, match="not a shared-vertex contact pair"):
+        _propose_local_self_separation_increment(**wrong_pair_args)

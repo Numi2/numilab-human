@@ -1667,6 +1667,35 @@ def _propose_local_self_separation_increment(
             if not math.isfinite(axis_norm) or axis_norm <= 1.0e-14:
                 raise human.ImportError(f"local self-separation pose {pose_index} axis override is degenerate")
             axis_overrides[pair_key] = axis_raw / axis_norm
+        raw_contact_axis_overrides = sample.get("shared_vertex_contact_axis_overrides", [])
+        if not isinstance(raw_contact_axis_overrides, (list, tuple)):
+            raise human.ImportError(
+                f"local self-separation pose {pose_index} shared-vertex contact axis overrides must be a list"
+            )
+        contact_axis_overrides: dict[tuple[int, int], int] = {}
+        for override in raw_contact_axis_overrides:
+            if not isinstance(override, dict) or set(override) != {"face_pair", "source_axis_index"}:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} contact axis override needs face_pair and source_axis_index"
+                )
+            pair_raw = np.asarray(override["face_pair"])
+            axis_raw = np.asarray(override["source_axis_index"])
+            if (pair_raw.shape != (2,) or pair_raw.dtype.kind not in "iu"
+                    or int(pair_raw[0]) >= int(pair_raw[1])
+                    or tuple(map(int, pair_raw)) not in contact_set):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} contact axis override is not a shared-vertex contact pair"
+                )
+            if axis_raw.shape != () or axis_raw.dtype.kind not in "iu" or int(axis_raw) < 0:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} contact source axis index must be a nonnegative integer"
+                )
+            pair_key = tuple(map(int, pair_raw))
+            if pair_key in contact_axis_overrides:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} duplicates a contact axis override"
+                )
+            contact_axis_overrides[pair_key] = int(axis_raw)
         pairs = np.concatenate((resolving_pairs, contact_pairs, preserving_pairs), axis=0)
         pair_kinds = np.asarray(
             ["resolve"] * len(resolving_pairs)
@@ -1776,6 +1805,14 @@ def _propose_local_self_separation_increment(
                     raise human.ImportError(
                         f"local self-separation pose {pose_index} source contact has no exact one-sided SAT support plane"
                     )
+                requested_source_axis_index = contact_axis_overrides.get(pair_key)
+                if (requested_source_axis_index is not None
+                        and not any(int(candidate[4]) == requested_source_axis_index
+                                    for candidate in source_axis_candidates)):
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} contact source_axis_index="
+                        f"{requested_source_axis_index} is not an exact one-sided source support axis"
+                    )
                 shared_local = int(np.searchsorted(vertex_ids, shared_id))
                 if shared_local >= len(vertex_ids) or int(vertex_ids[shared_local]) != shared_id:
                     raise human.ImportError(
@@ -1824,9 +1861,12 @@ def _propose_local_self_separation_increment(
                 local_b = np.searchsorted(vertex_ids, ids_b)
                 axis_options = []
                 rejected_axis_rows = []
+                requested_source_axis_index = contact_axis_overrides.get(pair_key)
                 for candidate in source_axis_candidates:
                     (candidate_strict, candidate_margin, _, axis_source, candidate_index,
                      signs_a, signs_b) = candidate
+                    if requested_source_axis_index is not None and int(candidate_index) != requested_source_axis_index:
+                        continue
                     try:
                         axis_world = np.linalg.solve(shared_jacobian.T, axis_source)
                     except np.linalg.LinAlgError:
@@ -1887,9 +1927,13 @@ def _propose_local_self_separation_increment(
                         "source_axis_signs_face_b": list(signs_b),
                     })
                 if not axis_options:
+                    requested_note = (
+                        f" selected source axis {requested_source_axis_index} violates fixed paired-cap support;"
+                        if requested_source_axis_index is not None else
+                        f" all {len(source_axis_candidates)} exact source support axes violate fixed paired-cap support;"
+                    )
                     raise human.ImportError(
-                        f"local self-separation pose {pose_index} all {len(source_axis_candidates)} exact source support axes "
-                        f"violate fixed paired-cap support for contact faces={pair_key}; "
+                        f"local self-separation pose {pose_index}{requested_note} contact faces={pair_key}; "
                         f"rejected={rejected_axis_rows}"
                     )
                 selected_axis = min(axis_options, key=lambda row: (
@@ -1909,8 +1953,14 @@ def _propose_local_self_separation_increment(
                     "reference_triangle_b": reference_triangles[1],
                     "source_intersection_points_only_shared_vertex": True,
                     "source_one_sided_support_proof": True,
-                    "axis_selection": "enumerated_exact_source_support_axes_ranked_by_fixed_support_feasibility_and_movable_response",
+                    "axis_selection": (
+                        "caller_selected_exact_source_support_axis_index"
+                        if requested_source_axis_index is not None else
+                        "enumerated_exact_source_support_axes_ranked_by_fixed_support_feasibility_and_movable_response"
+                    ),
                     "source_axis_candidate_count": len(source_axis_candidates),
+                    "fixed_support_feasible_source_axis_indices": [int(row["source_axis_index"]) for row in axis_options],
+                    "source_axis_override_index": requested_source_axis_index,
                     "fixed_support_rejected_axes": rejected_axis_rows,
                     "selected_axis_score_max_required_l2_mm": selected_axis["score_max_required_l2_mm"],
                     "selected_axis_score_sum_required_l2_mm": selected_axis["score_sum_required_l2_mm"],
@@ -1933,7 +1983,8 @@ def _propose_local_self_separation_increment(
         total_pairs += len(pairs)
         checked.append({"vertex_ids": vertex_ids, "baseline": baseline, "rejected": rejected,
                         "jacobian": jac, "pairs": pairs, "pair_kinds": pair_kinds,
-                        "axis_overrides": axis_overrides, "contact_proofs": contact_proofs})
+                        "axis_overrides": axis_overrides, "contact_axis_overrides": contact_axis_overrides,
+                        "contact_proofs": contact_proofs})
     if total_pairs > _LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS:
         raise human.ImportError("local self-separation pair/pose rows exceed the bounded count")
 
@@ -2129,6 +2180,12 @@ def _propose_local_self_separation_increment(
                 "source_axis_index": (contact_proof["source_axis_index"] if contact_proof is not None else None),
                 "source_axis_candidate_count": (contact_proof["source_axis_candidate_count"] if contact_proof is not None else None),
                 "source_axis_selection": (contact_proof["axis_selection"] if contact_proof is not None else None),
+                "source_axis_override_index": (
+                    contact_proof["source_axis_override_index"] if contact_proof is not None else None
+                ),
+                "fixed_support_feasible_source_axis_indices": (
+                    contact_proof["fixed_support_feasible_source_axis_indices"] if contact_proof is not None else None
+                ),
                 "source_intersection_points_only_shared_vertex":
                     (True if contact_proof is not None else None),
                 "source_one_sided_support_proof": (True if contact_proof is not None else None),
