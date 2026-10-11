@@ -243,7 +243,7 @@ def _closest_point_on_triangle(
     if d6 >= 0.0 and d5 <= d6:
         return third, normal
     vb = d5 * d2 - d1 * d6
-    if vb <= 0.0 and d2 >= 0.0 and d6 <= d2:
+    if vb <= 0.0 and d2 >= 0.0 and d6 <= 0.0:
         return add_scaled(first, ac, d2 / (d2 - d6)), normal
     va = d3 * d6 - d5 * d4
     if va <= 0.0 and d4 - d3 >= 0.0 and d5 - d6 >= 0.0:
