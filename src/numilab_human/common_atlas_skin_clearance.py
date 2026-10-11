@@ -1520,7 +1520,14 @@ def _propose_local_self_separation_increment(
     direction; it is used only when its accepted-baseline projection gap is
     positive. A positive interval gap along any direction is a separating
     witness, even when that direction is not a standard SAT axis. The
-    constraints preserve the selected positive gap. A conservative
+    constraints preserve the selected positive gap. A separate
+    ``shared_vertex_contact_pair_rows`` input admits only source-proven exact
+    contact at one shared indexed vertex: the Float32 source predicate must
+    report intersections only at that vertex, and an exact integer-lattice
+    SAT support plane must place the two source triangles on opposite sides.
+    The plane normal is transformed by the shared vertex's inverse-transpose
+    Jacobian and the pair is constrained to a zero projection gap. No other
+    pair may use this zero-gap mode. A conservative
     quantization reserve tightens only the solver constraints;
     the original accepted gap and displacement limits remain the postchecks.
 
@@ -1620,19 +1627,27 @@ def _propose_local_self_separation_increment(
 
         resolving_pairs = checked_pair_rows(sample.get("self_pair_rows", np.empty((0, 2), dtype=np.int64)),
                                              "self-pair rows")
+        contact_pairs = checked_pair_rows(
+            sample.get("shared_vertex_contact_pair_rows", np.empty((0, 2), dtype=np.int64)),
+            "shared-vertex contact pair rows",
+        )
         preserving_pairs = checked_pair_rows(
             sample.get("clearance_preservation_pair_rows", np.empty((0, 2), dtype=np.int64)),
             "clearance-preservation pair rows",
         )
-        if not len(resolving_pairs) and not len(preserving_pairs):
+        if not len(resolving_pairs) and not len(contact_pairs) and not len(preserving_pairs):
             raise human.ImportError(f"local self-separation pose {pose_index} needs at least one pair row")
-        if set(map(tuple, resolving_pairs)) & set(map(tuple, preserving_pairs)):
+        resolving_set = set(map(tuple, resolving_pairs))
+        contact_set = set(map(tuple, contact_pairs))
+        preserving_set = set(map(tuple, preserving_pairs))
+        if resolving_set & preserving_set:
             raise human.ImportError(f"local self-separation pose {pose_index} pair is both resolving and preserved")
+        if resolving_set & contact_set or contact_set & preserving_set:
+            raise human.ImportError(f"local self-separation pose {pose_index} pair has conflicting contact constraint kinds")
         raw_axis_overrides = sample.get("self_pair_axis_overrides", [])
         if not isinstance(raw_axis_overrides, (list, tuple)):
             raise human.ImportError(f"local self-separation pose {pose_index} axis overrides must be a list")
         axis_overrides: dict[tuple[int, int], np.ndarray] = {}
-        resolving_set = set(map(tuple, resolving_pairs))
         for override in raw_axis_overrides:
             if not isinstance(override, dict) or set(override) != {"face_pair", "axis_world"}:
                 raise human.ImportError(f"local self-separation pose {pose_index} axis override needs face_pair and axis_world")
@@ -1651,9 +1666,11 @@ def _propose_local_self_separation_increment(
             if not math.isfinite(axis_norm) or axis_norm <= 1.0e-14:
                 raise human.ImportError(f"local self-separation pose {pose_index} axis override is degenerate")
             axis_overrides[pair_key] = axis_raw / axis_norm
-        pairs = np.concatenate((resolving_pairs, preserving_pairs), axis=0)
+        pairs = np.concatenate((resolving_pairs, contact_pairs, preserving_pairs), axis=0)
         pair_kinds = np.asarray(
-            ["resolve"] * len(resolving_pairs) + ["preserve"] * len(preserving_pairs),
+            ["resolve"] * len(resolving_pairs)
+            + ["shared_vertex_contact"] * len(contact_pairs)
+            + ["preserve"] * len(preserving_pairs),
             dtype=object,
         )
         order = np.lexsort((pairs[:, 1], pairs[:, 0]))
@@ -1663,8 +1680,15 @@ def _propose_local_self_separation_increment(
         pair_vertices = face_rows[pairs]
         if not np.all(np.isin(pair_vertices, vertex_ids)):
             raise human.ImportError(f"local self-separation pose {pose_index} omits a paired face vertex")
-        if np.any(np.any(pair_vertices[:, 0, :, None] == pair_vertices[:, 1, None, :], axis=(1, 2))):
-            raise human.ImportError(f"local self-separation pair table includes adjacent faces")
+        for pair_index, (face_a, face_b) in enumerate(pairs):
+            shared_source_ids = set(map(int, face_rows[int(face_a)])) & set(map(int, face_rows[int(face_b)]))
+            if pair_kinds[pair_index] == "shared_vertex_contact":
+                if len(shared_source_ids) != 1:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} shared-vertex contact must have exactly one shared indexed vertex"
+                    )
+            elif shared_source_ids:
+                raise human.ImportError(f"local self-separation pair table includes adjacent faces")
         unique_pair_faces = np.unique(pairs.reshape(-1))
         local_pair_faces = np.searchsorted(vertex_ids, face_rows[unique_pair_faces])
         if not np.array_equal(vertex_ids[local_pair_faces], face_rows[unique_pair_faces]):
@@ -1675,24 +1699,165 @@ def _propose_local_self_separation_increment(
         rejected_records = _exact_surface_records(rejected, local_pair_faces)
         exact_record_by_face = {int(face): rejected_records[index]
                                 for index, face in enumerate(unique_pair_faces)}
+        contact_proofs: dict[tuple[int, int], dict[str, Any]] = {}
         for pair_index, (first_face, second_face) in enumerate(pairs):
-            if ci.triangle_intersection_points(baseline_record_by_face[int(first_face)][0],
-                                               baseline_record_by_face[int(second_face)][0]):
-                raise human.ImportError(
-                    f"local self-separation pose {pose_index} accepted-baseline identity precondition failed: "
-                    "a supplied pair is not exactly clear"
+            pair_key = (int(first_face), int(second_face))
+            kind = str(pair_kinds[pair_index])
+            if kind == "shared_vertex_contact":
+                ids_a, ids_b = face_rows[pair_key[0]], face_rows[pair_key[1]]
+                shared_id = next(iter(set(map(int, ids_a)) & set(map(int, ids_b))))
+                source_tri_a = [ci.float32_point_lattice_key(source[int(v)]) for v in ids_a]
+                source_tri_b = [ci.float32_point_lattice_key(source[int(v)]) for v in ids_b]
+                common_source = source_tri_a[list(map(int, ids_a)).index(shared_id)]
+                source_points = ci.triangle_intersection_points(tuple(source_tri_a), tuple(source_tri_b))
+                common_fraction = tuple(Fraction(int(value)) for value in common_source)
+                if not source_points or any(tuple(point) != common_fraction for point in source_points):
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} contact pair lacks exact source-only shared-vertex intersection"
+                    )
+
+                def integer_sub(a, b):
+                    return tuple(int(x) - int(y) for x, y in zip(a, b))
+
+                def integer_cross(a, b):
+                    return (a[1] * b[2] - a[2] * b[1],
+                            a[2] * b[0] - a[0] * b[2],
+                            a[0] * b[1] - a[1] * b[0])
+
+                def integer_dot(a, b):
+                    return sum(int(x) * int(y) for x, y in zip(a, b))
+
+                edge_a = [integer_sub(source_tri_a[(i + 1) % 3], source_tri_a[i]) for i in range(3)]
+                edge_b = [integer_sub(source_tri_b[(i + 1) % 3], source_tri_b[i]) for i in range(3)]
+                source_axes = [
+                    integer_cross(edge_a[0], edge_a[1]),
+                    integer_cross(edge_b[0], edge_b[1]),
+                    *[integer_cross(a, b) for a in edge_a for b in edge_b],
+                ]
+                source_axis_candidates = []
+                for axis_index, raw_axis in enumerate(source_axes):
+                    if not any(raw_axis):
+                        continue
+                    projections_a = [integer_dot(point, raw_axis) for point in source_tri_a]
+                    projections_b = [integer_dot(point, raw_axis) for point in source_tri_b]
+                    center = integer_dot(common_source, raw_axis)
+                    if max(projections_a) == center and min(projections_b) == center:
+                        oriented_axis = tuple(int(value) for value in raw_axis)
+                    elif min(projections_a) == center and max(projections_b) == center:
+                        oriented_axis = tuple(-int(value) for value in raw_axis)
+                    else:
+                        continue
+                    relative_a = [integer_dot(integer_sub(point, common_source), oriented_axis)
+                                  for point in source_tri_a]
+                    relative_b = [integer_dot(integer_sub(point, common_source), oriented_axis)
+                                  for point in source_tri_b]
+                    if max(relative_a) != 0 or min(relative_b) != 0:
+                        continue
+                    if not (min(relative_a) < 0 or max(relative_b) > 0):
+                        continue
+                    scale = max(abs(value) for value in oriented_axis)
+                    axis_scaled = np.asarray([value / scale for value in oriented_axis], dtype=np.float64)
+                    axis_norm = float(np.linalg.norm(axis_scaled))
+                    if not math.isfinite(axis_norm) or axis_norm <= 0.0:
+                        continue
+                    axis_unit = axis_scaled / axis_norm
+                    normalized_margin = (
+                        max(0.0, float(-min(relative_a)) / scale / axis_norm)
+                        + max(0.0, float(max(relative_b)) / scale / axis_norm)
+                    )
+                    both_strict = min(relative_a) < 0 and max(relative_b) > 0
+                    source_axis_candidates.append(
+                        (bool(both_strict), normalized_margin, -axis_index, axis_unit, axis_index,
+                         tuple(1 if value > 0 else (-1 if value < 0 else 0) for value in relative_a),
+                         tuple(1 if value > 0 else (-1 if value < 0 else 0) for value in relative_b))
+                    )
+                if not source_axis_candidates:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} source contact has no exact one-sided SAT support plane"
+                    )
+                (both_strict, _, negative_axis_index, axis_source, source_axis_index,
+                 source_signs_a, source_signs_b) = max(source_axis_candidates, key=lambda row: row[:3])
+                shared_local = int(np.searchsorted(vertex_ids, shared_id))
+                if shared_local >= len(vertex_ids) or int(vertex_ids[shared_local]) != shared_id:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} omits shared contact vertex from its world/Jacobian rows"
+                    )
+                shared_jacobian = jac[shared_local]
+                condition_number = float(np.linalg.cond(shared_jacobian))
+                if not math.isfinite(condition_number) or condition_number > 1.0e10:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} shared-vertex Jacobian cannot transform source sidedness"
+                    )
+                try:
+                    axis_world = np.linalg.solve(shared_jacobian.T, axis_source)
+                except np.linalg.LinAlgError as error:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} shared-vertex Jacobian cannot transform source sidedness"
+                    ) from error
+                world_axis_norm = float(np.linalg.norm(axis_world))
+                if not math.isfinite(world_axis_norm) or world_axis_norm <= 1.0e-14:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} transformed source-side axis is degenerate"
+                    )
+                axis_world = axis_world / world_axis_norm
+                shared_world = rejected[shared_local].astype(np.float64)
+                source_shared = source[shared_id].astype(np.float64)
+                reference_triangles = []
+                reference_lattices = []
+                for ids in (ids_a, ids_b):
+                    mapped = (shared_world[None, :]
+                              + (source[np.asarray(ids, dtype=np.int64)].astype(np.float64)
+                                 - source_shared[None, :]) @ shared_jacobian.T).astype("<f4")
+                    mapped[list(map(int, ids)).index(shared_id)] = rejected[shared_local]
+                    reference_triangles.append(mapped)
+                    reference_lattices.append(tuple(ci.float32_point_lattice_key(point) for point in mapped))
+                reference_points = ci.triangle_intersection_points(
+                    reference_lattices[0], reference_lattices[1],
                 )
+                common_world_lattice = ci.float32_point_lattice_key(rejected[shared_local])
+                common_world_fraction = tuple(Fraction(int(value)) for value in common_world_lattice)
+                if any(tuple(point) != common_world_fraction for point in reference_points):
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} affine source-contact reference crosses beyond its shared vertex"
+                    )
+                trial_points = ci.triangle_intersection_points(
+                    exact_record_by_face[pair_key[0]][0], exact_record_by_face[pair_key[1]][0],
+                )
+                if not trial_points or all(tuple(point) == common_world_fraction for point in trial_points):
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} shared-vertex contact is not an invalid posed intersection"
+                    )
+                contact_proofs[pair_key] = {
+                    "shared_vertex_id": shared_id,
+                    "axis_world": axis_world,
+                    "source_axis_index": int(source_axis_index),
+                    "source_axis_signs_face_a": list(source_signs_a),
+                    "source_axis_signs_face_b": list(source_signs_b),
+                    "both_source_faces_strictly_sided": bool(both_strict),
+                    "shared_vertex_jacobian_condition_number": condition_number,
+                    "reference_triangle_a": reference_triangles[0],
+                    "reference_triangle_b": reference_triangles[1],
+                    "source_intersection_points_only_shared_vertex": True,
+                    "source_one_sided_support_proof": True,
+                }
+            else:
+                if ci.triangle_intersection_points(baseline_record_by_face[pair_key[0]][0],
+                                                   baseline_record_by_face[pair_key[1]][0]):
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} accepted-baseline identity precondition failed: "
+                        "a supplied pair is not exactly clear"
+                    )
             trial_intersects = ci.triangle_intersection_points(
-                exact_record_by_face[int(first_face)][0], exact_record_by_face[int(second_face)][0],
+                exact_record_by_face[pair_key[0]][0], exact_record_by_face[pair_key[1]][0],
             )
-            if pair_kinds[pair_index] == "resolve" and not trial_intersects:
+            if kind == "resolve" and not trial_intersects:
                 raise human.ImportError(f"local self-separation pose {pose_index} supplied a pair absent from its exact rejected geometry")
-            if pair_kinds[pair_index] == "preserve" and trial_intersects:
+            if kind == "preserve" and trial_intersects:
                 raise human.ImportError(f"local self-separation pose {pose_index} preservation pair is not clear in its current geometry")
         total_pairs += len(pairs)
         checked.append({"vertex_ids": vertex_ids, "baseline": baseline, "rejected": rejected,
                         "jacobian": jac, "pairs": pairs, "pair_kinds": pair_kinds,
-                        "axis_overrides": axis_overrides})
+                        "axis_overrides": axis_overrides, "contact_proofs": contact_proofs})
     if total_pairs > _LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS:
         raise human.ImportError("local self-separation pair/pose rows exceed the bounded count")
 
@@ -1716,7 +1881,12 @@ def _propose_local_self_separation_increment(
             pair_kind = str(sample["pair_kinds"][pair_index])
             ids_a, ids_b = face_rows[face_a], face_rows[face_b]
             local_a, local_b = local_index[ids_a], local_index[ids_b]
-            tri_a, tri_b = baseline[local_a], baseline[local_b]
+            contact_proof = sample["contact_proofs"].get((face_a, face_b))
+            if contact_proof is not None:
+                tri_a = contact_proof["reference_triangle_a"].astype(np.float64)
+                tri_b = contact_proof["reference_triangle_b"].astype(np.float64)
+            else:
+                tri_a, tri_b = baseline[local_a], baseline[local_b]
             trial_a, trial_b = rejected[local_a], rejected[local_b]
             trial_edges_a = np.roll(trial_a, -1, axis=0) - trial_a
             trial_edges_b = np.roll(trial_b, -1, axis=0) - trial_b
@@ -1741,12 +1911,15 @@ def _propose_local_self_separation_increment(
                 axes = axes[valid] / lengths[valid, None]
                 return axes, edges_a, edges_b
 
-            baseline_axes, _, _ = sat_axes(tri_a, tri_b)
-            if pair_kind == "preserve":
-                current_axes, _, _ = sat_axes(trial_a, trial_b)
-                axes = np.concatenate((baseline_axes, current_axes), axis=0)
+            if pair_kind == "shared_vertex_contact":
+                axes = contact_proof["axis_world"][None, :]
             else:
-                axes = baseline_axes
+                baseline_axes, _, _ = sat_axes(tri_a, tri_b)
+                if pair_kind == "preserve":
+                    current_axes, _, _ = sat_axes(trial_a, trial_b)
+                    axes = np.concatenate((baseline_axes, current_axes), axis=0)
+                else:
+                    axes = baseline_axes
             override = sample["axis_overrides"].get((face_a, face_b)) if pair_kind == "resolve" else None
             if override is not None and float(np.max(np.abs(axes @ override), initial=0.0)) < 1.0 - 1.0e-10:
                 axes = np.concatenate((axes, override[None, :]), axis=0)
@@ -1761,7 +1934,13 @@ def _propose_local_self_separation_increment(
             best_axis = np.zeros(3, dtype=np.float64)
             best_baseline_gap_m = -math.inf
             best_current_gap_m = -math.inf
-            if override is not None:
+            if pair_kind == "shared_vertex_contact":
+                best_index = 0
+                best_axis = axes[0]
+                best_floor_m = 0.0
+                best_baseline_gap_m = 0.0
+                best_current_gap_m = float(current_gap_ab[0])
+            elif override is not None:
                 alignment = np.abs(axes @ override)
                 best_index = int(np.argmax(alignment))
                 if float(alignment[best_index]) < 1.0 - 1.0e-10:
@@ -1802,7 +1981,8 @@ def _propose_local_self_separation_increment(
                             best_axis = axis
                             best_baseline_gap_m = baseline_gap_m
                             best_current_gap_m = current_gap_m
-            if best_index is None or not math.isfinite(best_floor_m) or best_floor_m <= 0.0:
+            if (best_index is None or not math.isfinite(best_floor_m)
+                    or (best_floor_m <= 0.0 and pair_kind != "shared_vertex_contact")):
                 if pair_kind == "preserve":
                     raise human.ImportError("clearance-preservation pair has no common positive baseline/current SAT axis")
                 raise human.ImportError("accepted self-pair does not have positive SAT separation")
@@ -1832,7 +2012,7 @@ def _propose_local_self_separation_increment(
                         continue
                     constraints.append(row)
                     rhs_rows.append(required_mm)
-                    constraint_receipts.append({
+                    row_receipt = {
                         "sample_index": pose_index, "constraint_kind": pair_kind, "face_pair": [face_a, face_b],
                         "source_vertex_pair": [int(source_a), int(source_b)],
                         "axis_unit_world": axis.tolist(),
@@ -1841,14 +2021,33 @@ def _propose_local_self_separation_increment(
                         "current_sat_gap_mm": current_gap_m * 1000.0,
                         "preserved_sat_gap_floor_mm": gap_mm,
                         "required_projection_change_mm": required_mm,
-                    })
+                    }
+                    if contact_proof is not None:
+                        row_receipt.update({
+                            "shared_vertex_id": contact_proof["shared_vertex_id"],
+                            "source_axis_index": contact_proof["source_axis_index"],
+                            "source_intersection_points_only_shared_vertex": True,
+                            "source_one_sided_support_proof": True,
+                            "shared_vertex_jacobian_condition_number":
+                                contact_proof["shared_vertex_jacobian_condition_number"],
+                        })
+                    constraint_receipts.append(row_receipt)
             pair_receipts.append({
                 "pose_index": pose_index, "constraint_kind": pair_kind, "face_pair": [face_a, face_b],
                 "accepted_sat_gap_mm": gap_mm, "baseline_sat_gap_mm": gap_m * 1000.0,
                 "current_sat_gap_mm": current_gap_m * 1000.0, "preserved_sat_gap_floor_mm": gap_mm,
-                "sat_axis_selection": ("common_positive_baseline_current" if pair_kind == "preserve"
-                                       else ("caller_supplied_positive_baseline_axis" if override is not None
-                                             else "accepted_baseline")),
+                "sat_axis_selection": (
+                    "exact_source_shared_vertex_support_transformed_by_shared_jacobian"
+                    if pair_kind == "shared_vertex_contact"
+                    else ("common_positive_baseline_current" if pair_kind == "preserve"
+                          else ("caller_supplied_positive_baseline_axis" if override is not None
+                                else "accepted_baseline"))
+                ),
+                "source_contact_floor_mm": (0.0 if pair_kind == "shared_vertex_contact" else None),
+                "shared_vertex_id": (contact_proof["shared_vertex_id"] if contact_proof is not None else None),
+                "source_intersection_points_only_shared_vertex":
+                    (True if contact_proof is not None else None),
+                "source_one_sided_support_proof": (True if contact_proof is not None else None),
                 "sat_axis_index": int(best_index),
                 "axis_unit_world": best_axis.tolist(),
                 "maximum_required_projection_change_mm": max_rhs,
@@ -2098,8 +2297,20 @@ def _propose_local_self_separation_increment(
         record_by_face = {int(face): predicted_records[index]
                           for index, face in enumerate(unique_pair_faces)}
         for first_face, second_face in sample["pairs"]:
-            if ci.triangle_intersection_points(record_by_face[int(first_face)][0],
-                                               record_by_face[int(second_face)][0]):
+            points = ci.triangle_intersection_points(record_by_face[int(first_face)][0],
+                                                     record_by_face[int(second_face)][0])
+            if (first_face, second_face) in sample["contact_proofs"]:
+                proof = sample["contact_proofs"][(int(first_face), int(second_face))]
+                shared_row = int(np.searchsorted(sample["vertex_ids"], proof["shared_vertex_id"]))
+                expected_common = tuple(
+                    Fraction(int(value))
+                    for value in ci.float32_point_lattice_key(predicted_world[shared_row])
+                )
+                if any(tuple(point) != expected_common for point in points):
+                    raise human.ImportError(
+                        f"Float32-rounded local proposal moves a shared-vertex contact beyond its source-proven interface at pose={pose_index}"
+                    )
+            elif points:
                 raise human.ImportError(f"Float32-rounded first-order pose prediction retains an exact supplied self-pair at pose={pose_index}")
 
     return {

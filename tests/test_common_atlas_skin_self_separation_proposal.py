@@ -557,3 +557,102 @@ def test_local_self_separation_accepts_nonsat_direction_with_positive_baseline_g
     assert receipt["sat_axis_selection"] == "caller_supplied_positive_baseline_axis"
     assert receipt["baseline_sat_gap_mm"] > 0.25
     assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+
+
+def _shared_vertex_contact_fixture():
+    source = np.array([
+        [0.0, 0.0, 0.0],
+        [-0.001, 0.0, 0.0],
+        [0.0, 0.001, 0.0],
+        [0.0, 0.0, 0.001],
+        [0.0, -0.001, 0.0],
+    ], dtype="<f4")
+    faces = np.array([[0, 1, 2], [0, 3, 4]], dtype=np.int64)
+    baseline = source.copy()
+    rejected = source.copy()
+    rejected[4, 1] = np.float32(0.0002)
+    jac = np.repeat(np.eye(3, dtype=np.float64)[None, :, :], len(source), axis=0)
+    pose = {
+        "vertex_ids": np.arange(len(source), dtype=np.int64),
+        "baseline_world_positions": baseline,
+        "rejected_world_positions": rejected,
+        "jacobians": jac,
+        "self_pair_rows": np.empty((0, 2), dtype=np.int64),
+        "shared_vertex_contact_pair_rows": np.array([[0, 1]], dtype=np.int64),
+    }
+    args = {
+        "source_positions_m": source,
+        "faces": faces,
+        "movable_vertex_ids": np.array([3, 4], dtype=np.int64),
+        "self_patch_seed_vertex_ids": np.array([3, 4], dtype=np.int64),
+        "required_target_seed_vertex_ids": np.array([0], dtype=np.int64),
+        "active_target_face_vertex_ids": np.array([0, 1, 2], dtype=np.int64),
+        "fixed_support_vertex_ids": np.array([1], dtype=np.int64),
+        "preserved_anchor_vertex_ids": np.array([2], dtype=np.int64),
+        "pose_samples": [pose],
+    }
+    return args, source, rejected
+
+
+def test_local_self_separation_resolves_pose_crossing_from_source_proven_shared_vertex_contact():
+    from fractions import Fraction
+    from numilab_human import cardiac_cavity_intersections as ci
+
+    args, source, rejected = _shared_vertex_contact_fixture()
+    source_before = source.copy()
+    source_triangles = [
+        tuple(ci.float32_point_lattice_key(source[int(vertex)]) for vertex in args["faces"][face])
+        for face in range(2)
+    ]
+    source_points = ci.triangle_intersection_points(*source_triangles)
+    common = tuple(Fraction(int(value)) for value in ci.float32_point_lattice_key(source[0]))
+    assert source_points and all(tuple(point) == common for point in source_points)
+    rejected_triangles = [
+        tuple(ci.float32_point_lattice_key(rejected[int(vertex)]) for vertex in args["faces"][face])
+        for face in range(2)
+    ]
+    assert any(tuple(point) != common for point in ci.triangle_intersection_points(*rejected_triangles))
+
+    result = _propose_local_self_separation_increment(**args)
+
+    assert result["status"] == "bounded_local_linearized_proposal"
+    assert result["proposal_source_positions_m_f32"].tobytes() != source_before.tobytes()
+    assert result["proposal_source_positions_m_f32"][[0, 1, 2]].tobytes() == source_before[[0, 1, 2]].tobytes()
+    receipt = result["pair_pose_receipts"][0]
+    assert receipt["constraint_kind"] == "shared_vertex_contact"
+    assert receipt["shared_vertex_id"] == 0
+    assert receipt["source_contact_floor_mm"] == 0.0
+    assert receipt["source_intersection_points_only_shared_vertex"] is True
+    assert receipt["source_one_sided_support_proof"] is True
+    assert receipt["sat_axis_selection"] == "exact_source_shared_vertex_support_transformed_by_shared_jacobian"
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+    assert args["source_positions_m"].tobytes() == source_before.tobytes()
+
+
+def test_local_self_separation_contact_mode_rejects_geometric_contact_without_shared_index():
+    args, source, _ = _shared_vertex_contact_fixture()
+    source_with_duplicate = np.vstack((source, source[0])).astype("<f4")
+    args["source_positions_m"] = source_with_duplicate
+    args["faces"] = np.array([[0, 1, 2], [5, 3, 4]], dtype=np.int64)
+    pose = args["pose_samples"][0]
+    pose["vertex_ids"] = np.arange(6, dtype=np.int64)
+    pose["baseline_world_positions"] = np.vstack((pose["baseline_world_positions"], pose["baseline_world_positions"][0])).astype("<f4")
+    pose["rejected_world_positions"] = np.vstack((pose["rejected_world_positions"], pose["rejected_world_positions"][0])).astype("<f4")
+    pose["jacobians"] = np.concatenate((pose["jacobians"], pose["jacobians"][[0]]), axis=0)
+    args["movable_vertex_ids"] = np.array([3, 4], dtype=np.int64)
+    args["self_patch_seed_vertex_ids"] = np.array([3, 4], dtype=np.int64)
+    with pytest.raises(ImportError, match="exactly one shared indexed vertex"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_contact_mode_rejects_source_intersection_beyond_shared_vertex():
+    args, _, _ = _shared_vertex_contact_fixture()
+    args["source_positions_m"][4, 1] = np.float32(0.0002)
+    with pytest.raises(ImportError, match="exact source-only shared-vertex intersection"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_separation_does_not_let_ordinary_pairs_use_zero_gap_contact_mode():
+    args, _, _ = _fixture(baseline_translation_m=0.0)
+    with pytest.raises(ImportError, match="accepted-baseline identity precondition.*exactly clear"):
+        _propose_local_self_separation_increment(**args)
