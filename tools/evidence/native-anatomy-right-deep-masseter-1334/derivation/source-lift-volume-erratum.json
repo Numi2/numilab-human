@@ -1,0 +1,41 @@
+{
+  "candidate_face_count": 2540,
+  "candidate_signed_volume_positive": true,
+  "changed_vertex_count": 4,
+  "corrected_source_signed_volume_m3": 4.609415664717763e-06,
+  "erratum_inputs_sha256": {
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-deep-masseter-native-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "b713695ae83b3ed06319cd5bd6e97f417b8d8d695b459bae76b8f690c1d7c604",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-retained-pose-audit-002/forward_all_positive_weights.py": "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5",
+    "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/replay-recovery-002/float32_source_lift.py": "77cd79244575699dbca6e85806c4d1e3dc7ec65f83a31175e12af5faf0902c9c",
+    "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/replay-recovery-002/output-001/result-001/report.json": "e1a8fe0068741f52dd1528409a4528157d5812f05185a5417d3ec5b012831fdf",
+    "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/replay-recovery-002/output-001/result-001/source-lift-f32.npz": "ce5a229e715aec9a6ee0cc6b6f143a77967366c8c9fe91afd09fd806345c0345",
+    "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/run-001/result-001/csg-output-f32-world.npz": "99c7e92bc80d3ba8b996679cb92f5e2952343fbd52787af3977ea5f1f1326548",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/cardiac_cavity_partition.py": "48dd0d826e5afc907706909b8e277421c700d2be7a94a5bc2454b967d1a50360",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/common_atlas_skin_clearance.py": "fd152a157cd698094592e64cb746a81a32fc29381a6e6ffc4d5524400041f6b5"
+  },
+  "face_ancestry_count": 2540,
+  "frame_comparison": "This erratum compares the uncorrected Float32 inverse-lift source candidate with the corrected Float32 source candidate in the same BP source frame. It does not subtract world-frame volume from BP-frame volume.",
+  "inputs_unchanged": true,
+  "invalid_field": "candidate_source_volume_delta_from_world_csg_m3 in the original report subtracted the corrected source mesh from itself; it is not a valid delta and must be ignored.",
+  "maximum_source_vertex_displacement_m": 1.6408201713521212e-07,
+  "maximum_source_vertex_displacement_um": 0.16408201713521212,
+  "original_gates_report_status": "offline_candidate_all_gates_passed_not_composed_or_native_admitted",
+  "original_report_input_hashes": {
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-deep-masseter-native-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "b713695ae83b3ed06319cd5bd6e97f417b8d8d695b459bae76b8f690c1d7c604",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-deep-masseter-native-001/baseline/native-run/accepted-geometry/step-0.mrvpack": "98ba81e3cf715b767b44121d856f833253559e29eaedfbc5cbb50fa62364c62f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-deep-masseter-native-001/baseline/native-run/accepted-geometry/step-0.receipt.json": "23dd0604bbf72db5e4092901c43146622e7aaf6e7bd7175ecefd977f5cce0a4c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-retained-pose-audit-002/forward_all_positive_weights.py": "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5",
+    "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/replay-recovery-002/float32_source_lift.py": "77cd79244575699dbca6e85806c4d1e3dc7ec65f83a31175e12af5faf0902c9c",
+    "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/run-001/result-001/csg-output-f32-world.npz": "99c7e92bc80d3ba8b996679cb92f5e2952343fbd52787af3977ea5f1f1326548",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/cardiac_cavity_partition.py": "48dd0d826e5afc907706909b8e277421c700d2be7a94a5bc2454b967d1a50360",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/common_atlas_skin_clearance.py": "fd152a157cd698094592e64cb746a81a32fc29381a6e6ffc4d5524400041f6b5"
+  },
+  "original_report_sha256": "e1a8fe0068741f52dd1528409a4528157d5812f05185a5417d3ec5b012831fdf",
+  "scope": "Corrects only the report's source-volume-delta arithmetic; it makes no geometry or admission change.",
+  "source_signed_volume_delta_m3": -7.714315297668861e-14,
+  "source_signed_volume_relative_delta": -1.6735993734760043e-08,
+  "status": "volume_field_erratum_for_report_e1a8fe0068741f52dd1528409a4528157d5812f05185a5417d3ec5b012831fdf",
+  "uncorrected_source_signed_volume_m3": 4.609415741860916e-06
+}

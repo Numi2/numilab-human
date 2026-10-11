@@ -1,0 +1,58 @@
+{
+  "admission": "offline metric only; does not change candidate or approve native integration",
+  "complete": true,
+  "coordinate_frame": "BodyParts3D-world metres after the pinned head-refined Z-to-BodyParts matrix; both original and final source arrays are directly measured in this same frame",
+  "final_minus_original": {
+    "absolute_removed_positive_volume_m3": 2.410458688422064e-07,
+    "fraction_of_original_signed_volume": -0.04969545004623346,
+    "signed_volume_m3": -2.410458688422064e-07,
+    "surface_area_m2": -3.8385933185513393e-05
+  },
+  "final_source_candidate": {
+    "signed_volume_m3": 4.609415664717763e-06,
+    "surface_area_m2": 0.0029850006314764517
+  },
+  "inputs": {
+    "final_npz": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/replay-recovery-002/output-001/result-001/source-lift-f32.npz",
+      "sha256": "ce5a229e715aec9a6ee0cc6b6f143a77967366c8c9fe91afd09fd806345c0345"
+    },
+    "final_report": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/shell-subtraction-001/replay-recovery-002/output-001/result-001/report.json",
+      "sha256": "e1a8fe0068741f52dd1528409a4528157d5812f05185a5417d3ec5b012831fdf"
+    },
+    "original_npz": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/stable-161-right-deep-z-row-candidate.npz",
+      "sha256": "eedc0e15c726ab1c43be2578523bb5692b0f18d2b26c4b29a7bffa6b69918024"
+    },
+    "original_report": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/right-deep-161-z-candidate-audit-001/report.json",
+      "sha256": "37f0a0607a38fc6857c802d3b5648264595930f6426c838aa5ba1bb2b2871b19"
+    },
+    "registration_report": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/corrected-helper-recheck-001/registration-and-interface-report-003.json",
+      "sha256": "5b8a5959c4a0e3e7ff559a3dfa2f3687afd1ff363aa6c0f8c686189a23e62ccf"
+    },
+    "z_source_metadata": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.json.meta",
+      "sha256": "cd7d30b4b8f8b448c9e433169b7e79a1cbabce3b5d8fdab376d38e4c5783c4a7"
+    },
+    "z_source_npz": {
+      "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.npz",
+      "sha256": "2a13e4fc4488aa2c4ceca15a82a32ba22e3bea4b54797bb650c59f707c0e344b"
+    }
+  },
+  "method": "Recompute signed volume and surface area from serialized Float32 positions and face rows; independently verify the original registered candidate position array exactly equals the F32 image of the Z-world mesh through the pinned homogeneous source registration matrix.",
+  "original_registered_candidate": {
+    "signed_volume_m3": 4.85046153355997e-06,
+    "surface_area_m2": 0.003023386564661965
+  },
+  "schema": "numi.right-deep-masseter-registered-source-volume-comparison.v1",
+  "source_frame_check": {
+    "final_face_count": 2540,
+    "final_vertex_count": 1270,
+    "original_face_count": 994,
+    "original_matches_transformed_z_source_f32_exactly": true,
+    "original_vertex_count": 497
+  }
+}
