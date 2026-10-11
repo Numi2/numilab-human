@@ -166,6 +166,29 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     if not surface_path.is_absolute():
         surface_path = args.anatomy_receipt.parent / surface_path
     surfaces = checked(surface_path, muscle_surfaces.get("sha256"))
+    # Optional passive refinement retains the existing anatomy receipt and GPU
+    # influence owner. Pin every raw source payload before native compilation.
+    parents = anatomy.get("passive_tissue_parent_bindings")
+    if parents is not None:
+        _require(isinstance(parents, dict) and
+                 parents.get("child_payload_sha256") == assets[str(surfaces)],
+                 "passive tissue parent child identity differs")
+        parent_sources = parents.get("source_payloads")
+        _require(isinstance(parent_sources, list) and 0 < len(parent_sources) <= 8,
+                 "passive tissue parent source inventory is invalid")
+        for record in parent_sources:
+            _require(isinstance(record, dict) and
+                     isinstance(record.get("path"), str) and bool(record["path"]) and
+                     isinstance(record.get("sha256"), str) and
+                     re.fullmatch(r"[0-9a-f]{64}", record["sha256"]) is not None,
+                     "passive tissue parent source identity is incomplete")
+            parent_path = Path(record["path"])
+            if not parent_path.is_absolute():
+                parent_path = args.anatomy_receipt.parent / parent_path
+            checked(parent_path, record["sha256"])
+        _require(isinstance(parents.get("surfaces"), list) and
+                 0 < len(parents["surfaces"]) <= 192,
+                 "passive tissue parent surface inventory is invalid")
     if "manifest_path" in muscle_surfaces:
         checked(muscle_surfaces["manifest_path"], muscle_surfaces["manifest_sha256"])
     tendon = checked(args.tendon)

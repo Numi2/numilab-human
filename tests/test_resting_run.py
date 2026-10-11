@@ -103,6 +103,33 @@ class RestingRunAdmissionTests(unittest.TestCase):
         self.assertIn(str(Path(self.scene["source"]["skin"]["path"]).resolve()), hashes)
         self.assertIn(str((self.root / "lib/libmetalrobo.dylib").resolve()), hashes)
 
+    def test_passive_parent_sources_are_pinned_and_drift_rejected(self):
+        parent = self.root / "raw-parent.nhtissue"
+        parent.write_bytes(b"source-parent-fixture")
+        child = self.root / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+        self.anatomy["passive_tissue_parent_bindings"] = {
+            "child_payload_sha256": hashlib.sha256(child.read_bytes()).hexdigest(),
+            "source_payloads": [{"path": parent.name,
+                                "sha256": hashlib.sha256(parent.read_bytes()).hexdigest()}],
+            "surfaces": [{"stable_id": 163, "vertices": [[[0, 163, 0, 1.0]]]}],
+        }
+        self.write_receipts()
+        _, hashes = command(self.args)
+        self.assertEqual(hashes[str(parent.resolve())],
+                         hashlib.sha256(parent.read_bytes()).hexdigest())
+        parent.write_bytes(b"changed-source-parent")
+        with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
+            command(self.args)
+
+    def test_passive_parent_map_cannot_be_reused_for_another_child(self):
+        self.anatomy["passive_tissue_parent_bindings"] = {
+            "child_payload_sha256": "0" * 64,
+            "source_payloads": [], "surfaces": [],
+        }
+        self.write_receipts()
+        with self.assertRaisesRegex(HumanImportError, "parent child identity differs"):
+            command(self.args)
+
     def test_changed_skin_is_rejected_before_launch(self):
         Path(self.scene["source"]["skin"]["path"]).write_bytes(b"changed")
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
