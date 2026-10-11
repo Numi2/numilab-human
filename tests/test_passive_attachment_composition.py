@@ -1084,3 +1084,118 @@ def test_successive_append_and_reference_repair_use_immediate_parent(inputs, nec
     bound=bind_anatomy_receipt(receipt,out/source.name,out/"anatomy.json")
     assert bound["provenance"]["reference_surface_composition_binding"]["changed_stable_ids"] == [151]
     assert bound["provenance"]["native_muscle_surfaces"]["surface_count"] == 152
+
+
+@pytest.fixture
+def head_subset(tmp_path):
+    payload = tmp_path/"head.nhtissue"
+    ids = (159, 160, 161, 162, 163, 164)
+    members = ("FMA49001", "FMA49002", "FMA49004", "FMA49005", "FMA49007", "FMA49008")
+    names = ("right superficial masseter", "left superficial masseter",
+             "right deep masseter", "left deep masseter",
+             "right temporalis", "left temporalis")
+    records = b"".join(
+        struct.pack("<8I", i, 1, 3*i, 3, 3*i, 3, sid, 1)
+        for i, sid in enumerate(ids)
+    )
+    bindings = b"".join(
+        struct.pack("<I8f", 23, 0.001*i, 0, 0, 0, 0, 0, 1, 1)
+        for i in range(len(ids))
+    )
+    vertices = b"".join(
+        struct.pack("<6f4I4f", *point, 0, 0, 1,
+                    0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+                    1, 0, 0, 0)
+        for i in range(len(ids))
+        for point in ((0.001*i, 0, 0), (0.001*i+0.001, 0, 0),
+                      (0.001*i, 0.001, 0))
+    )
+    payload.write_bytes(
+        struct.pack("<8s6I32s", b"NHTISS4\0", 5, len(ids), len(ids),
+                    len(ids)*3, len(ids)*3, 42, b"s"*32)
+        + records + bindings + vertices
+        + np.concatenate([np.arange(i*3, i*3+3, dtype="<u4")
+                          for i in range(len(ids))]).tobytes()
+    )
+    manifest = {
+        "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
+        "payload": {"file": payload.name, "sha256": digest(payload),
+                    "bytes": payload.stat().st_size, "surface_count": len(ids),
+                    "binding_count": len(ids), "vertex_count": len(ids)*3,
+                    "index_count": len(ids)*3, "registration_fingerprint32": "0000002a"},
+        "source": {"myosim_source_archive_sha256": (b"s"*32).hex(),
+                   "surfaces": [
+                       {"stable_id": sid, "member_id": member, "source_name": name,
+                        "layer": "muscle", "vertex_count": 3, "triangle_count": 1,
+                        "matched_muscles": [],
+                        "passive_visual_binding": {
+                            "supports": ["head"], "mechanics_changed": False,
+                            "myosim_route_added": False, "jaw_function": "not_modeled"}}
+                       for sid, member, name in zip(ids, members, names, strict=True)]},
+        "coverage": {}, "runtime_binding": "inferred passive rigid head presentation"
+    }
+    payload.with_suffix(".manifest.json").write_text(json.dumps(manifest))
+    return payload
+
+
+def test_append_head_reference_rows_preserves_parent_and_binds_exact_semantics(inputs, head_subset, tmp_path):
+    source, _, _, _ = inputs
+    parent = pac._read_nhtiss4(source)
+    subset = pac._read_nhtiss4(head_subset)
+    out = tmp_path/"head-appended"
+    proof = pac.append_passive_surfaces(source, head_subset, out,
+                                        stable_ids=(159,160,161,162,163,164))
+    child = pac._read_nhtiss4(out/source.name)
+    assert proof["inputs_unchanged"]
+    assert proof["added_stable_ids"] == [159,160,161,162,163,164]
+    assert child["surface_count"] == 156
+    assert child["records"][:150].tobytes() == parent["records"].tobytes()
+    parent_binding_bytes = parent["raw"][parent["binding_start"]:parent["vertex_start"]]
+    assert child["raw"][child["binding_start"]:child["binding_start"]+len(parent_binding_bytes)] == parent_binding_bytes
+    for sid in (159,160,161,162,163,164):
+        extra_row = next(row for row in subset["records"] if int(row[6]) == sid)
+        child_row = next(row for row in child["records"] if int(row[6]) == sid)
+        assert pac._row_local_equal(pac._row_slices(subset, extra_row),
+                                    pac._row_slices(child, child_row))
+        local = pac._row_slices(child, child_row)
+        assert local["binding_count"] == 1
+        assert struct.unpack_from("<I", local["binding_bytes"], 0)[0] == 23
+        fields = pac._biceps_row_arrays(local)
+        assert np.all(fields["binding_indices"][:,0] == 0)
+        assert np.all(fields["weights"][:,0] == 1.0)
+        assert np.all(fields["weights"][:,1:] == 0.0)
+
+
+@pytest.mark.parametrize("defect", ["member", "support", "core", "multi_binding", "id"])
+def test_append_head_reference_rows_rejects_wrong_semantics(inputs, head_subset, tmp_path, defect):
+    source, _, _, _ = inputs
+    mp = head_subset.with_suffix(".manifest.json")
+    manifest = json.loads(mp.read_text())
+    raw = bytearray(head_subset.read_bytes())
+    if defect == "member":
+        manifest["source"]["surfaces"][0]["member_id"] = "FMA49002"
+        mp.write_text(json.dumps(manifest))
+    elif defect == "support":
+        manifest["source"]["surfaces"][0]["passive_visual_binding"]["supports"] = ["mandible"]
+        mp.write_text(json.dumps(manifest))
+    elif defect == "core":
+        offset = 64 + 6*32
+        struct.pack_into("<I", raw, offset, 22)
+        head_subset.write_bytes(raw)
+        _refresh_manifest(head_subset)
+    elif defect == "multi_binding":
+        # Invalidates the single-binding semantic contract before any output.
+        offset = 64
+        struct.pack_into("<I", raw, offset+4, 2)
+        head_subset.write_bytes(raw)
+        _refresh_manifest(head_subset)
+    else:
+        with pytest.raises(ValueError):
+            pac.append_passive_surfaces(source, head_subset, tmp_path/"out",
+                                        stable_ids=(165,))
+        assert not (tmp_path/"out").exists()
+        return
+    with pytest.raises(ValueError):
+        pac.append_passive_surfaces(source, head_subset, tmp_path/"out",
+                                    stable_ids=(159,))
+    assert not (tmp_path/"out").exists()

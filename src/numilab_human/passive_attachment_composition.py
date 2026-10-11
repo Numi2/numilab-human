@@ -400,9 +400,10 @@ def _passive_surface_append_bytes(source: dict, subset: dict,
                                   stable_ids: tuple[int, ...]) -> bytes:
     """Pack selected new passive rows without rewriting any parent row."""
     import numpy as np
-    require(stable_ids and all(type(sid) is int and 151 <= sid <= 158 for sid in stable_ids)
+    allowed_ids = set(range(151, 159)) | set(range(159, 165))
+    require(stable_ids and all(type(sid) is int and sid in allowed_ids for sid in stable_ids)
             and list(stable_ids) == sorted(set(stable_ids)),
-            "passive append requires distinct ordered neck/back stable IDs 151-158")
+            "passive append requires distinct ordered declared stable IDs 151-164")
     require(source["fingerprint"] == subset["fingerprint"]
             and source["source_digest"] == subset["source_digest"],
             "passive append registration or physical source differs")
@@ -433,6 +434,13 @@ def _passive_surface_append_bytes(source: dict, subset: dict,
                 and np.max(np.abs(np.sum(binding_floats[:, 3:7].astype(float)**2,
                                          axis=1)-1)) < 1e-4,
                 "passive append invalid registered support transform")
+        if sid >= 159:
+            core_index = struct.unpack_from("<I", local["binding_bytes"], 0)[0]
+            require(local["binding_count"] == 1 and core_index == 23
+                    and np.all(weights[:, 0] == 1.0)
+                    and np.all(weights[:, 1:] == 0.0)
+                    and np.all(slots[:, 0] == 0),
+                    "head passive rows require one rigid head binding at core body 23")
         bc, vc, ic = (local[key] for key in ("binding_count", "vertex_count", "index_count"))
         require(max(nb+bc, nv+vc, ni+ic) < 2**32, "passive append exceeds ABI counts")
         records.append(struct.pack("<8I", nb, bc, nv, vc, ni, ic, sid, local["layer"]))
@@ -447,17 +455,34 @@ def _passive_surface_append_bytes(source: dict, subset: dict,
 
 
 def _passive_append_rows(manifest: dict, stable_ids: tuple[int, ...]) -> list[dict]:
-    expected = {151: "FJ1595", 152: "FJ1573", 153: "FJ1520", 154: "FJ1520M",
-                155: "FJ1554", 156: "FJ1554M", 157: "FJ1521", 158: "FJ1521M"}
+    expected = {
+        151: ("FJ1595", None), 152: ("FJ1573", None),
+        153: ("FJ1520", None), 154: ("FJ1520M", None),
+        155: ("FJ1554", None), 156: ("FJ1554M", None),
+        157: ("FJ1521", None), 158: ("FJ1521M", None),
+        159: ("FMA49001", "right superficial masseter"),
+        160: ("FMA49002", "left superficial masseter"),
+        161: ("FMA49004", "right deep masseter"),
+        162: ("FMA49005", "left deep masseter"),
+        163: ("FMA49007", "right temporalis"),
+        164: ("FMA49008", "left temporalis"),
+    }
     selected = [_manifest_row(manifest, sid) for sid in stable_ids]
     for row in selected:
+        sid = row.get("stable_id")
         binding = row.get("passive_visual_binding")
-        require(row.get("member_id") == expected[row["stable_id"]]
+        identity = expected.get(sid)
+        require(identity is not None and row.get("member_id") == identity[0]
+                and (identity[1] is None or row.get("source_name") == identity[1])
                 and row.get("layer") == "muscle" and row.get("matched_muscles") == []
                 and isinstance(binding, dict) and binding.get("mechanics_changed") is False
                 and binding.get("myosim_route_added") is False
                 and isinstance(binding.get("supports"), list) and binding["supports"],
                 "passive append source identity or passive ownership differs")
+        if sid >= 159:
+            require(binding["supports"] == ["head"]
+                    and binding.get("jaw_function") == "not_modeled",
+                    "head passive rows require explicit single-head support and no jaw function")
     return selected
 
 
