@@ -1,0 +1,5009 @@
+{
+  "all_simultaneously_repaired_pairs_pass": true,
+  "candidate_admitted": false,
+  "complete": true,
+  "inputs_unchanged": true,
+  "native_admitted": false,
+  "pins": {
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-anatomy-completion-1276/src/numilab_human/common_atlas_skin_clearance.py": "151ba8925910ae164bdf9a41417ca2cc5c63b07c3b05eb09496d20c4771c5e9b",
+    "/Users/n/numi-human-positive-winding-1279/src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+    "/Users/n/numi-human-positive-winding-1279/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-positive-winding-1279/src/numilab_human/resting_anatomy_interface_patch.py": "e7692e4239c6a5ca4c12667b9bce94c06efa9bc3bec86cbb74e4625eeb416187",
+    "/Users/n/numi-human-positive-winding-1279/src/numilab_human/resting_lung_edge_repair.py": "48eaca48a01cf1c564f1a106d4751c8492b222fa4ce5f53549d637d3192bf70e",
+    "/Users/n/numi-human-resting-evidence-20261005/native-complete-skin-containment-audit-890/pair-summary-v3.csv": "a43484aa8d65b207cc498bb470097ec5f06ef2bb9872837bde9f197e19e815e3",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "efbd43d10cc2185be7a89ce8cc7bf92db91fb733e0bffcc7a73d583938b16a4b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "583b7ac114175bde7890138d307a07250308e26e2d543a30a8f6465046d2d164",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.mrvpack": "ea05d746ec3988e8ca1e6cb454c291e3d3c8df2fd5a9ef85c04e97cc519c89e8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json": "4c68f271f9cb77fe3f80ec29fa951d68f76f2da3f04a13bb1dad667bde785305",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.mrvpack": "ee44b6a6e19d1998b8b2ee382c82d15f662a6b81469ee5fcaa7dfc095314345a",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json": "1efd83aa8adcb125815e414c582d3508f5336c5df6386b0a7e920217f56f7abe",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.mrvpack": "0820edf218183c8faec534650eb283d63ec92c04939aa14269b0b8c867b7d6e8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json": "5b9d8097530e79a2c314046febbece6473ef6e0cc01025ff2c30022cd7014ca1",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.mrvpack": "1c74f104a017dfd87b740034a4a4bf41f52fac70e25bd14a44c61bf7b1c781ea",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json": "200d9149bb07f8b89cf82127ebdc9cec2686553eed34a55530742da1dde21d16",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.mrvpack": "8d41d2561c6d94b2ad01abaea6a715c279bfd99a29285f6cbaf14dd5b27aa3db",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json": "8759dee68163f0cfbec3e3e1aea1980e9f64ccf73c918a293a8615c919661b00",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.mrvpack": "f3773645f5376af153a861f1d9380435b63d1d1ac6ccb384e1d0b9dfa9d15acd",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json": "3060f3fda516d2fcd062e8556d9a39c140189e8a34fa9c739bae14f4e5c3f777",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.mrvpack": "fe9932f18bffe5f26f703b9264828db30a8cc48349ac160603e6f5e22b3cc63f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json": "876d31505317dc747f89adf07f4994820e871dc99ce53741b913a1187230f2e3",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.mrvpack": "2e1dffbaacbdfe0d73c614db8c75cb79912294e9be94b64ae61a77aaeb8670ca",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json": "2c72d5dcac3b86ab1be0ba7e5fd971ec22cd009c0de4a6eb8901a5709bbabeb7",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forty-eight-surface-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "94399a66460f822671c02e724308191c99eaae2e1ff44c22e526dcc02d6f8d7b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.mrvpack": "cda6024e67ec544aee7335b6ff547ffe11325a57618bf100aad6b27ec5a0df41",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json": "96900342ab95251cafbc08d897fbf1f223adbed4e0d2a4b55b9c76287bb6125e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-retained-pose-audit-002/forward_all_positive_weights.py": "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_bounded_halfmm_source_resolution_001.py": "48a3bd44c4da7b4850e4c62fb9ac40806ce08da9c3b5a052e83a008fb0d5228a",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/audit_current50_targets_001.py": "a4e044495a86a4597c58a9f1dab2905e4dbd82c5a1ff0c862ae98aa0836a0e76",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/current50-target-audit-001/report.json": "7563dc48421a3ac87d39c069d5147ce5b64552a3316a84d6a060ed95a9d64122",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/lift_source_001.py": "5fc90802bc902698b1d0c90d621cc87f8fac592d62774a6751e0bab928008b64",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/original-quotient.npz": "c2210a22b19e86cd27bf28e20adba3891cfb840bec7a0d7c159fde4163aae045",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/separate_source_pinches.py": "bc4fa6b1f5fc205d6097fc506b56b38cde1b033e5c514550c6b5c0136237fd27",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-lift-001/parameterized_existing_attribute_calculation.py": "59bf0b54094623b3832aba1fbb5dd595ff60926f9ba5ed1c53d5c701e288bd8b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-lift-001/report.json": "4b22b47620331bcd58c463497dc0872ab5dcea0d6546a37424f34d5361a85436",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-lift-001/stable-121-geometric-reference-row-patch.npz": "1cc22f4c0616e268a8f8b602fe76e3ace9e677e9eb3ec6451fac64d402eded5d",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-separation/rejected-partition.json": "644c71f01cf7691ecdcfdcb2c0298a0e568d2897f55e9cb6f39f1dfe7c63eba0",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-separation/report.json": "44480448473a861075bfc5ece382ebf79c051dcf4b89356f1e52c5535d141364",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-separation/source-geometric-candidate-001um.npz": "fdf2b1dad47494f0095c6840f1cda7a12a45115540396b08e29f50d9af3b6dd6",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/audit_current50_targets_001.py": "403e7db03d3db6796dbcd307e0df0cc6274c41582df3555c604c24672496f88f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/current50-target-audit-001/report.json": "7d1504470f214aa07420afbb2aaa9b9be0ec58703e6ed811afedc5b71c5b11a1",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/lift_source_001.py": "ef5f2382f6848ec7885b4bd8c48f220180d3c3ff357623f45a92f746d64ca20a",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/original-quotient.npz": "c142f844f1ca726c28e7a451ed63acfb05ab293228156ffdeef6006e157f8b5e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/separate_source_pinches.py": "db1394cb3f66bc94f046c78c4d0195a2b891f81f1ecc0a454859c4d61f4874e9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-lift-001/parameterized_existing_attribute_calculation.py": "59bf0b54094623b3832aba1fbb5dd595ff60926f9ba5ed1c53d5c701e288bd8b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-lift-001/report.json": "e3f767c55db927ba89bc4a69ff20cfdb380daa341cde975db1444596a0f67796",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-lift-001/stable-122-geometric-reference-row-patch.npz": "0ef61c0a89103d1fa41bddd1cb0ebbe9aada746568132d497c78202b43cee55f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-separation/rejected-partition.json": "184951b68abbd1fba1a064edf6635786976614f3cc62c86e2116c0a6aef59a2c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-separation/report.json": "35a0d8d79b4e965d7a947446bc21f6bd10e0a091f65608494fd304e17c0d9b2b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-separation/source-geometric-candidate-001um.npz": "663a785d1e8ccd66691dbe6274ee67d1fef844b28e40bd4ad5a978cfb2e706c4",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/audit_current50_targets_002.py": "34f8c4cb942bf311329aaad0450c2e9ff77cf177d530eab392c60028b7af1b37",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/current50-target-audit-002/report.json": "526eb056c897e80f4a257fc2974913b0002ec197ccc2dfdcda63c5b243026931",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/lift_source_001.py": "f5b60fd00ed4bfcb3c562dfe4f81f62c5376d285bd4f05e410199614ee4152e2",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/original-quotient.npz": "eafe571d0eed42bcc3afcbe87dc78163483a4d03b5c4c04a95a3a60db8774937",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/separate_source_pinches.py": "e4d14e08f4e69ae76d81f1454556d513993fdcdcaf9d4d7a7057ab4c014dcbde",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/source-lift-001/parameterized_existing_attribute_calculation.py": "59bf0b54094623b3832aba1fbb5dd595ff60926f9ba5ed1c53d5c701e288bd8b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/source-lift-001/report.json": "bba5c0988a4886ba5403ff4ff91627754afe47368bf6f56edc3132e2ce18b030",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/source-lift-001/stable-135-geometric-reference-row-patch.npz": "6abc3ca14c1b552bbcea535dd44923c8e06e96cd970cf0986bb554f0b236cba8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/source-separation/rejected-partition.json": "7ca55204b4136de927c2072bf35a31d2c6359cc2339511098744aeb3b2ad8a19",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/source-separation/report.json": "726055dad66e5eb3e3707a735eab9ae9f5d877619145a44a255b8a1ee01c375c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/source-separation/source-geometric-candidate-001um.npz": "c7236d5728be01bc0ea67fe634106a38ff16d0e6e7edab6832d08687d06a56b0",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/submicrometre-resolution-001/report.json": "e9e33a5350fa10792aa8c64ebf99b366bdd027dca24dce7747f39574b4de10bd",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/submicrometre-resolution-001/stable-135-geometric-reference-row-patch.npz": "6f056f98ff55254210b6ec97f60c69b34fd29b28b84b92bca3a03d290dd63d8f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/audit_current50_targets_002.py": "003ab70c0fc30c9202d0e9c7a4c2325878b289259abc6bbb62179f87100886c8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/current50-target-audit-002/report.json": "38785b00d9d3bd15f0c652ee5a9b11508e4026c8e39737ab30dc9742197b5943",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/lift_source_001.py": "dbb4856fbc481281141a1a3f697c3579d30e5b85933080d39faac95f27c2a2f2",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/original-quotient.npz": "0d3ebcb2a23be46b4c0f1aaddfb18a6769ba4887a43c8f63ea5ae5082d79c479",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/separate_source_pinches.py": "48dbf234f9134e8c32f969ade04c8d64ee9fa99c1cf4f8fb584a01bbfff69678",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/source-lift-001/parameterized_existing_attribute_calculation.py": "59bf0b54094623b3832aba1fbb5dd595ff60926f9ba5ed1c53d5c701e288bd8b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/source-lift-001/report.json": "3b15e546eebaba23f8c37fd2246a4299538e1dad2d50de8a1166900c7edf2979",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/source-lift-001/stable-136-geometric-reference-row-patch.npz": "94398461f53f5c4764652ce086ce9787b67a59dd25afdcfd3b06022d08167aae",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/source-separation/rejected-partition.json": "407211c15a117b8d15a1cc0d054ef2e37a6666d9a0afef7e9575da6bedaac9c5",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/source-separation/report.json": "83148dd3dcab2c633ca3e71e6a7ee8e44c47ea8b3bbc65007e80fcca6ff37178",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/source-separation/source-geometric-candidate-001um.npz": "a188e54dba7177f20785dfc633722934dc3b3e22046e5c0b9279bd00137973ca",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/submicrometre-resolution-001/report.json": "229a049495f745ddd0c1e54f85f1d48b63c7f7b0bf078dd5a1c9497bd40eb8e6",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/submicrometre-resolution-001/stable-136-geometric-reference-row-patch.npz": "007c07cd3c5dbab1d93d2b93d9a6e35d5bcccfd2131ab0cb8fc90e50eeb64954",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/audit_current50_targets_001.py": "5c9a837c6d886e6e939c49d0023d2a9ff01ceacf472f659ab91dee6a309c6279",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/current50-target-audit-001/report.json": "9229d2adf904d02b75a12d6d995304b6008948562441a3878ee4f7485eb5951d",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/lift_source_001.py": "27cc66d91edd914a4ff8b5b2bd199e3bd393018562f2940aba988ac1f44af1f7",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/original-quotient.npz": "124d44ce6458067f6c3ee626621c693b7e83d70927b92680d2f0026bd3155434",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/separate_source_pinches.py": "7f6f25359cba53bf5566d008067adf971f37316e4a3ac1351001f154fbfe47c3",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-lift-001/parameterized_existing_attribute_calculation.py": "59bf0b54094623b3832aba1fbb5dd595ff60926f9ba5ed1c53d5c701e288bd8b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-lift-001/report.json": "e150a4415b1c202bff7d79b10c58669bb71316d29b31422ef7ad6c61699ec12c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-lift-001/stable-144-geometric-reference-row-patch.npz": "5834e410e2dbde24e7ff3c115cd47b4e3a055b1500906b07aae5d371f5dbeb73",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-separation/rejected-partition.json": "5c1480d266cd3c6f97f27004ef61f8a793afdaaa8d78ba19823177138bab7c61",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-separation/report.json": "acafdbab452739032a5a1ed0dae867d9704ce0a6dca4d052e0ef0e716b1d15f9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-separation/source-geometric-candidate-001um.npz": "c1131f923813d531c0b17f9addb67c7f42bc4ded98497805f21f9f250541f123",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/resolve_forearm_submicrometre_edges_001.py": "336b2d8b9ec8beba12032b3f96a9f955820fe175604faa6f5ffab4247ac936d9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/select_five_forearms_current50_001.py": "9fd0022a80113e5df09446b60550714dd9981b72869aec5bfa5d7ed84080fd3f",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-121-per-vertex-source-bounds.npz": "d82f0b54ae8d98570edd769dc77580954393c557b5a5d1b9a257f8fecfe950d6",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-122-per-vertex-source-bounds.npz": "1e509b6ee7eaf483517e9d2ca6dd4cfc6f0d9a0491573ec82e19fdc36ce9cfc0",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-135-per-vertex-source-bounds.npz": "d05f410505dd01649f2ac0c7119c8839e31550b7b377a02b0bafad6e79ae244c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-136-per-vertex-source-bounds.npz": "20e8e9c3cd1dce050beb76c25e869924af62f16b96aa62e3d6310a168d19ba0b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-144-per-vertex-source-bounds.npz": "a6e6ac31ab1976c65a2447fd2cd9af4f5527db41a71c58e70294b2315e9ef9fd",
+    "/Users/n/numi-human-retained-delivery-20261009/fullbody-source-surface-repair-1276/gluteus-maximus-pilot-001/attempt-010/run_gluteus_union_010.py": "3343c53df203e43d30d778b2f6178295ce250c1519326db55e97c5118e44fcd4",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.mrvpack": "d7d7c01a9d066d52a0599cfa7cd295cda8ed02f4b8383da6b14c029a1580f277",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json": "f8c587d40048e73396f07d639c8626620fed9bc2ec84ae192efcfdf3d669fc23",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.mrvpack": "db54d03f2b30740fb4f47164e79369ea5dc622cf51689f93972b1853f15e8954",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json": "d13899f06de29cf78449ecaceb1ad8736720d53016cecf03b63c2126b81ace88",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.mrvpack": "a662250d9358b98f41b0e49b7f45394be132c212d80ed3ea7f91101aba7b80f2",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json": "78f304707442a0270001c8c16f7078fb3b871045c97ff551321cebd54be7c8f9",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.mrvpack": "ee8ecac692e6c65c3774b880798c61acefb777f963110d4995764a4bff9f5f98",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json": "8abeb93af638f585e6ad428641b526128e468b81be1c762d293623693908b9ff",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.mrvpack": "aadbefc403afa442c19e72c9ca4e6242e25e0692856f176964cc166cde881448",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json": "8ed2dbcfa55a06b333fe86ee0029d8f38bcded93e5f3fec4bd9c0b43edd76153",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.mrvpack": "527cbe0ff2b04b5c45bf8b76a184dd95f746638539a1f084dd4798066c4d41e4",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json": "92841bd9d4e96b092bdcd2170f32520128476bb8340668cd264374c3125535a1",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.mrvpack": "5ef26b66702f40c59c06bc0e55f04e6018b0850ee7e5d58f9244779aa9de9c9f",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json": "46d85c863e2775b311adcef6a611c089e90910969344208f0bb2c69e67a46e52",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.mrvpack": "757d597262ecf61c55ecad5010699dc315a538ebb35ed9c70f202275effb641b",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json": "f42552c110111b171c3b21d233f998b8952d6d76d2d35c6ac3f052735ee725c3",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.mrvpack": "eb6f1cefc7a30530be078cea7244878837efd825f96028b4ba1c9e670de83583",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json": "39a2dedfb74b631ec1e000688afbf13ed7d37f480c89e8bf37fa8fcb82083471",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.mrvpack": "1411793235ffa4ded5ac691dee800c01eb23238806e19d16e4db9e7f29e1084d",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json": "ef31195c27eebfc6e261c37d81ad2ce7a68d4e154ae4d3594f82b448d7e8077d",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.mrvpack": "e565ff323281b237140e15a70e4870ddd3132b05a3ad2f0b5ed842fe4f13cbb7",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json": "cab0fb9b9b3fb9429d5f86c074e05199ad35e9576a0e86189eb4727f12effacc",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.mrvpack": "f045a4f8be8c755c8dd9ec3ba33bb32abf69cca846b19f50a46a5ee9b4fe05d4",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json": "84b400417236616d009249511712accde77c055c0278e68567f062395895d4f5",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.mrvpack": "cfa1ad535bb22d5fe6854c4a9a282ac7481bfe85894af2e5a7d92a97ffb48b3d",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json": "497d3116efc82783241790c2cec2f084f7ddf65547187d630eae8911dc8acda2",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.mrvpack": "b82477ee6a1e78d778d87857cb4963a9b336b2bf5c3831544e41884fc3cbb05c",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json": "c2612cf7b690cc5739124cb3c794f1325ffb28860cd445bb211c2bcfdf388560",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.mrvpack": "d77e65032787ac7c4567c5d75a31115123993e9de522534bad3604da24bc9168",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json": "7ef612e89d135db847539e7cdb4d793542adb9dd7f0252d01cf6f92932b86b49",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.mrvpack": "7d69d0db6bf2fb3d4e76fdecbc02701181ac46bb09b72b881be265abc63298c1",
+    "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json": "0f9c6c58cc3236cb01b5abf9829411e4935ccc5034db852b0bfe03209be0fdec",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-count-reconciliation-1258/attempt-002/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "80d775bef6b8a4108e159fb7882a84b2fb8dce5b492059cd8c7cf3644a137467",
+    "/Users/n/numi-human-retained-delivery-20261009/source-seam-connectivity-1247/fhl-current-7b23-count-reconciliation-1258/attempt-002/candidate/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "6579d06d358bfcf51f964feb57425fe568c467fd361930bce46d376ec8aedaa4",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/n/numi-human-touching-loop-arrangement-1290/src/numilab_human/cardiac_cavity_partition.py": "48dd0d826e5afc907706909b8e277421c700d2be7a94a5bc2454b967d1a50360"
+  },
+  "rows": [
+    {
+      "all25_actual_retained_target_contexts_no_new_pairs": true,
+      "bound_interpretation": "Per-child incident parent support bound plus actual geometric separation, and for contracted vertices the maximum displacement across every retained original endpoint ancestry, with1picometre arithmetic reserve. Not source measurement accuracy.",
+      "candidate_area_m2": 0.009050144773675859,
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-121/source-lift-001/stable-121-geometric-reference-row-patch.npz",
+      "candidate_sha256": "1cc22f4c0616e268a8f8b602fe76e3ace9e677e9eb3ec6451fac64d402eded5d",
+      "candidate_signed_volume_m3": 2.0323205560568514e-05,
+      "changed_or_missing_pure_attachment_proxies": [],
+      "construction": "Original coordinate quotient; positive-winding boundary with isolated multi-fan point contacts separated by1micrometre, followed by unchanged canonical ancestry binding lift. No midpoint source-edge collapse retained.",
+      "cumulative_source_displacement_bound_m": 1.0241780909690608e-06,
+      "current50_capture_pose_audits": [
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 3.607189189466895e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 0,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 3.67295487693171e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 4767,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 4.27743795347432e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 5023,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 3.6578101680532734e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 5599,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 4.285379400482631e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 6207,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 3.7045572425254435e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 6815,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 3.656102462525754e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 7423,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 3.665201031043781e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 119
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              119,
+              873,
+              1322
+            ],
+            [
+              51005,
+              119,
+              882,
+              1322
+            ],
+            [
+              51005,
+              119,
+              911,
+              1316
+            ],
+            [
+              51005,
+              119,
+              920,
+              1316
+            ]
+          ],
+          "step": 8000,
+          "target_keys_scanned": 859
+        }
+      ],
+      "label": "ulnar head of right flexor carpi ulnaris",
+      "maximum_displacement_from_union_reference_m": 1.0241770909690607e-06,
+      "member_id": "FJ1518",
+      "member_sha256": "22abf242ce9d43dd9c6e02ef297b8e5982227a7ec1c7ead965674b92b476bad2",
+      "per_vertex_bound_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-121-per-vertex-source-bounds.npz",
+      "physical_route_force_mass_state_unchanged": true,
+      "pure_attachment_proxy_count": 0,
+      "pure_attachment_proxy_meaning": "Exact onehot proxies only; zero does not certify anatomical attachment footprint accuracy.",
+      "source_and_sampled_pose_self_clear": true,
+      "source_area_m2": 0.009054029356610278,
+      "source_signed_volume_m3": 2.0323266755972e-05,
+      "stable_id": 121,
+      "volume_relative_change": -3.0111007358760304e-06
+    },
+    {
+      "all25_actual_retained_target_contexts_no_new_pairs": true,
+      "bound_interpretation": "Per-child incident parent support bound plus actual geometric separation, and for contracted vertices the maximum displacement across every retained original endpoint ancestry, with1picometre arithmetic reserve. Not source measurement accuracy.",
+      "candidate_area_m2": 0.009050188798890243,
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-122/source-lift-001/stable-122-geometric-reference-row-patch.npz",
+      "candidate_sha256": "0ef61c0a89103d1fa41bddd1cb0ebbe9aada746568132d497c78202b43cee55f",
+      "candidate_signed_volume_m3": 2.0323326227399927e-05,
+      "changed_or_missing_pure_attachment_proxies": [],
+      "construction": "Original coordinate quotient; positive-winding boundary with isolated multi-fan point contacts separated by1micrometre, followed by unchanged canonical ancestry binding lift. No midpoint source-edge collapse retained.",
+      "cumulative_source_displacement_bound_m": 1.0241780909690608e-06,
+      "current50_capture_pose_audits": [
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2731557704981462e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 0,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2377834115800373e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 4767,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2293457984924316e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 5023,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2377834115800373e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 5599,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2310379476739693e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 6207,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2202813740193247e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 6815,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.7916283989565147e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 7423,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 18,
+          "baseline_forward_capture_max_error_m": 1.2128666487410446e-07,
+          "candidate_exact_pairs": 14,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 4294967295,
+              "candidate_parent_pairs": 14,
+              "removed_parent_pairs": [
+                [
+                  873,
+                  1322
+                ],
+                [
+                  882,
+                  1322
+                ],
+                [
+                  911,
+                  1316
+                ],
+                [
+                  920,
+                  1316
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 120
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              120,
+              873,
+              1322
+            ],
+            [
+              51005,
+              120,
+              882,
+              1322
+            ],
+            [
+              51005,
+              120,
+              911,
+              1316
+            ],
+            [
+              51005,
+              120,
+              920,
+              1316
+            ]
+          ],
+          "step": 8000,
+          "target_keys_scanned": 859
+        }
+      ],
+      "label": "ulnar head of left flexor carpi ulnaris",
+      "maximum_displacement_from_union_reference_m": 1.0241770909690607e-06,
+      "member_id": "FJ1518M",
+      "member_sha256": "d3e731fc29ac9b42f06eb0a7c49979c7568813587c2b982e6c948163c02dccb8",
+      "per_vertex_bound_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-122-per-vertex-source-bounds.npz",
+      "physical_route_force_mass_state_unchanged": true,
+      "pure_attachment_proxy_count": 0,
+      "pure_attachment_proxy_meaning": "Exact onehot proxies only; zero does not certify anatomical attachment footprint accuracy.",
+      "source_and_sampled_pose_self_clear": true,
+      "source_area_m2": 0.009054072654989602,
+      "source_signed_volume_m3": 2.0323387433363195e-05,
+      "stable_id": 122,
+      "volume_relative_change": -3.01160244415781e-06
+    },
+    {
+      "all25_actual_retained_target_contexts_no_new_pairs": true,
+      "bound_interpretation": "Per-child incident parent support bound plus actual geometric separation, and for contracted vertices the maximum displacement across every retained original endpoint ancestry, with1picometre arithmetic reserve. Not source measurement accuracy.",
+      "candidate_area_m2": 0.005040651373079455,
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-135/submicrometre-resolution-001/stable-135-geometric-reference-row-patch.npz",
+      "candidate_sha256": "6f056f98ff55254210b6ec97f60c69b34fd29b28b84b92bca3a03d290dd63d8f",
+      "candidate_signed_volume_m3": 5.4497897509514156e-06,
+      "changed_or_missing_pure_attachment_proxies": [],
+      "construction": "Original coordinate quotient; positive-winding boundary with isolated multi-fan point contacts separated by1micrometre, followed by unchanged canonical ancestry binding lift. No midpoint source-edge collapse retained. Three topology-preserving link-condition contractions eliminate submicrometre edges that can coincide during Float32 posing. Each retained endpoint and its existing canonical map are unchanged; removed-face and vertex ancestry remains explicit.",
+      "cumulative_source_displacement_bound_m": 1.0042828860861344e-06,
+      "current50_capture_pose_audits": [
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 38,
+          "baseline_forward_capture_max_error_m": 3.042903223136386e-07,
+          "candidate_exact_pairs": 33,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 32,
+              "body": 43,
+              "candidate_parent_pairs": 30,
+              "removed_parent_pairs": [
+                [
+                  605,
+                  350
+                ],
+                [
+                  620,
+                  346
+                ]
+              ],
+              "semantic": 51004,
+              "stable_id": 16
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 6,
+              "body": 43,
+              "candidate_parent_pairs": 3,
+              "removed_parent_pairs": [
+                [
+                  608,
+                  3409
+                ],
+                [
+                  608,
+                  3410
+                ],
+                [
+                  634,
+                  3409
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 482
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51004,
+              16,
+              605,
+              350
+            ],
+            [
+              51004,
+              16,
+              620,
+              346
+            ],
+            [
+              51011,
+              482,
+              608,
+              3409
+            ],
+            [
+              51011,
+              482,
+              608,
+              3410
+            ],
+            [
+              51011,
+              482,
+              634,
+              3409
+            ]
+          ],
+          "step": 0,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 3.0901951055810585e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 4767,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 2.4510598405593604e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 5023,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 3.1680303253932744e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 5599,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 2.6238846261710425e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 6207,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 2.5378497437016815e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 6815,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 3.0836764107011074e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 7423,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 5,
+          "baseline_forward_capture_max_error_m": 2.6151431761360534e-07,
+          "candidate_exact_pairs": 5,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 8000,
+          "target_keys_scanned": 859
+        }
+      ],
+      "label": "right flexor pollicis longus",
+      "maximum_displacement_from_union_reference_m": 1.0042818860861344e-06,
+      "member_id": "FJ1498",
+      "member_sha256": "e0fc87382350f38acb2a5197e83dabb450ba6d823222388c8e169e30c0bbfb94",
+      "per_vertex_bound_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-135-per-vertex-source-bounds.npz",
+      "physical_route_force_mass_state_unchanged": true,
+      "pure_attachment_proxy_count": 0,
+      "pure_attachment_proxy_meaning": "Exact onehot proxies only; zero does not certify anatomical attachment footprint accuracy.",
+      "source_and_sampled_pose_self_clear": true,
+      "source_area_m2": 0.00505010073702881,
+      "source_signed_volume_m3": 5.449976626828132e-06,
+      "stable_id": 135,
+      "volume_relative_change": -3.428929874613029e-05
+    },
+    {
+      "all25_actual_retained_target_contexts_no_new_pairs": true,
+      "bound_interpretation": "Per-child incident parent support bound plus actual geometric separation, and for contracted vertices the maximum displacement across every retained original endpoint ancestry, with1picometre arithmetic reserve. Not source measurement accuracy.",
+      "candidate_area_m2": 0.005040625413784578,
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-136/submicrometre-resolution-001/stable-136-geometric-reference-row-patch.npz",
+      "candidate_sha256": "007c07cd3c5dbab1d93d2b93d9a6e35d5bcccfd2131ab0cb8fc90e50eeb64954",
+      "candidate_signed_volume_m3": 5.4499245403448735e-06,
+      "changed_or_missing_pure_attachment_proxies": [],
+      "construction": "Original coordinate quotient; positive-winding boundary with isolated multi-fan point contacts separated by1micrometre, followed by unchanged canonical ancestry binding lift. No midpoint source-edge collapse retained. Three topology-preserving link-condition contractions eliminate submicrometre edges that can coincide during Float32 posing. Each retained endpoint and its existing canonical map are unchanged; removed-face and vertex ancestry remains explicit.",
+      "cumulative_source_displacement_bound_m": 1.0042828860861344e-06,
+      "current50_capture_pose_audits": [
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 13,
+          "baseline_forward_capture_max_error_m": 1.812804499357408e-07,
+          "candidate_exact_pairs": 10,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 6,
+              "body": 93,
+              "candidate_parent_pairs": 3,
+              "removed_parent_pairs": [
+                [
+                  608,
+                  4172
+                ],
+                [
+                  608,
+                  4202
+                ],
+                [
+                  634,
+                  4202
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51011,
+              483,
+              608,
+              4172
+            ],
+            [
+              51011,
+              483,
+              608,
+              4202
+            ],
+            [
+              51011,
+              483,
+              634,
+              4202
+            ]
+          ],
+          "step": 0,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 34,
+          "baseline_forward_capture_max_error_m": 1.8289050840266367e-07,
+          "candidate_exact_pairs": 25,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 9,
+              "body": 4294967295,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  928,
+                  484
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 126
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 16,
+              "body": 93,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4103
+                ],
+                [
+                  608,
+                  4125
+                ],
+                [
+                  608,
+                  4126
+                ],
+                [
+                  608,
+                  4127
+                ],
+                [
+                  608,
+                  4128
+                ],
+                [
+                  609,
+                  4126
+                ],
+                [
+                  634,
+                  4127
+                ],
+                [
+                  634,
+                  4128
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              126,
+              928,
+              484
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4125
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ],
+            [
+              51011,
+              483,
+              608,
+              4127
+            ],
+            [
+              51011,
+              483,
+              608,
+              4128
+            ],
+            [
+              51011,
+              483,
+              609,
+              4126
+            ],
+            [
+              51011,
+              483,
+              634,
+              4127
+            ],
+            [
+              51011,
+              483,
+              634,
+              4128
+            ]
+          ],
+          "step": 4767,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 35,
+          "baseline_forward_capture_max_error_m": 1.3277145763633203e-07,
+          "candidate_exact_pairs": 26,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 10,
+              "body": 4294967295,
+              "candidate_parent_pairs": 9,
+              "removed_parent_pairs": [
+                [
+                  928,
+                  484
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 126
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 16,
+              "body": 93,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4103
+                ],
+                [
+                  608,
+                  4125
+                ],
+                [
+                  608,
+                  4126
+                ],
+                [
+                  608,
+                  4127
+                ],
+                [
+                  608,
+                  4128
+                ],
+                [
+                  609,
+                  4126
+                ],
+                [
+                  634,
+                  4127
+                ],
+                [
+                  634,
+                  4128
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              126,
+              928,
+              484
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4125
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ],
+            [
+              51011,
+              483,
+              608,
+              4127
+            ],
+            [
+              51011,
+              483,
+              608,
+              4128
+            ],
+            [
+              51011,
+              483,
+              609,
+              4126
+            ],
+            [
+              51011,
+              483,
+              634,
+              4127
+            ],
+            [
+              51011,
+              483,
+              634,
+              4128
+            ]
+          ],
+          "step": 5023,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 37,
+          "baseline_forward_capture_max_error_m": 1.8223486555568887e-07,
+          "candidate_exact_pairs": 26,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 10,
+              "body": 4294967295,
+              "candidate_parent_pairs": 9,
+              "removed_parent_pairs": [
+                [
+                  928,
+                  484
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 126
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 93,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4102
+                ],
+                [
+                  596,
+                  4103
+                ],
+                [
+                  599,
+                  4103
+                ],
+                [
+                  608,
+                  4125
+                ],
+                [
+                  608,
+                  4126
+                ],
+                [
+                  608,
+                  4127
+                ],
+                [
+                  608,
+                  4128
+                ],
+                [
+                  609,
+                  4126
+                ],
+                [
+                  634,
+                  4127
+                ],
+                [
+                  634,
+                  4128
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              126,
+              928,
+              484
+            ],
+            [
+              51011,
+              483,
+              596,
+              4102
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              599,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4125
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ],
+            [
+              51011,
+              483,
+              608,
+              4127
+            ],
+            [
+              51011,
+              483,
+              608,
+              4128
+            ],
+            [
+              51011,
+              483,
+              609,
+              4126
+            ],
+            [
+              51011,
+              483,
+              634,
+              4127
+            ],
+            [
+              51011,
+              483,
+              634,
+              4128
+            ]
+          ],
+          "step": 5599,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 36,
+          "baseline_forward_capture_max_error_m": 1.788527352237374e-07,
+          "candidate_exact_pairs": 25,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 9,
+              "body": 4294967295,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  928,
+                  484
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 126
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 93,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4102
+                ],
+                [
+                  596,
+                  4103
+                ],
+                [
+                  599,
+                  4103
+                ],
+                [
+                  608,
+                  4125
+                ],
+                [
+                  608,
+                  4126
+                ],
+                [
+                  608,
+                  4127
+                ],
+                [
+                  608,
+                  4128
+                ],
+                [
+                  609,
+                  4126
+                ],
+                [
+                  634,
+                  4127
+                ],
+                [
+                  634,
+                  4128
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              126,
+              928,
+              484
+            ],
+            [
+              51011,
+              483,
+              596,
+              4102
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              599,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4125
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ],
+            [
+              51011,
+              483,
+              608,
+              4127
+            ],
+            [
+              51011,
+              483,
+              608,
+              4128
+            ],
+            [
+              51011,
+              483,
+              609,
+              4126
+            ],
+            [
+              51011,
+              483,
+              634,
+              4127
+            ],
+            [
+              51011,
+              483,
+              634,
+              4128
+            ]
+          ],
+          "step": 6207,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 37,
+          "baseline_forward_capture_max_error_m": 1.8289050840266367e-07,
+          "candidate_exact_pairs": 26,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 11,
+              "body": 4294967295,
+              "candidate_parent_pairs": 10,
+              "removed_parent_pairs": [
+                [
+                  928,
+                  484
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 126
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 17,
+              "body": 93,
+              "candidate_parent_pairs": 7,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4102
+                ],
+                [
+                  596,
+                  4103
+                ],
+                [
+                  599,
+                  4103
+                ],
+                [
+                  608,
+                  4125
+                ],
+                [
+                  608,
+                  4126
+                ],
+                [
+                  608,
+                  4127
+                ],
+                [
+                  608,
+                  4128
+                ],
+                [
+                  634,
+                  4125
+                ],
+                [
+                  634,
+                  4127
+                ],
+                [
+                  634,
+                  4128
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              126,
+              928,
+              484
+            ],
+            [
+              51011,
+              483,
+              596,
+              4102
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              599,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4125
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ],
+            [
+              51011,
+              483,
+              608,
+              4127
+            ],
+            [
+              51011,
+              483,
+              608,
+              4128
+            ],
+            [
+              51011,
+              483,
+              634,
+              4125
+            ],
+            [
+              51011,
+              483,
+              634,
+              4127
+            ],
+            [
+              51011,
+              483,
+              634,
+              4128
+            ]
+          ],
+          "step": 6815,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 39,
+          "baseline_forward_capture_max_error_m": 1.837138534477048e-07,
+          "candidate_exact_pairs": 28,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 12,
+              "body": 4294967295,
+              "candidate_parent_pairs": 11,
+              "removed_parent_pairs": [
+                [
+                  928,
+                  484
+                ]
+              ],
+              "semantic": 51005,
+              "stable_id": 126
+            },
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 18,
+              "body": 93,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4102
+                ],
+                [
+                  596,
+                  4103
+                ],
+                [
+                  599,
+                  4103
+                ],
+                [
+                  608,
+                  4125
+                ],
+                [
+                  608,
+                  4126
+                ],
+                [
+                  608,
+                  4127
+                ],
+                [
+                  608,
+                  4128
+                ],
+                [
+                  634,
+                  4125
+                ],
+                [
+                  634,
+                  4127
+                ],
+                [
+                  634,
+                  4128
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51005,
+              126,
+              928,
+              484
+            ],
+            [
+              51011,
+              483,
+              596,
+              4102
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              599,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4125
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ],
+            [
+              51011,
+              483,
+              608,
+              4127
+            ],
+            [
+              51011,
+              483,
+              608,
+              4128
+            ],
+            [
+              51011,
+              483,
+              634,
+              4125
+            ],
+            [
+              51011,
+              483,
+              634,
+              4127
+            ],
+            [
+              51011,
+              483,
+              634,
+              4128
+            ]
+          ],
+          "step": 7423,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 36,
+          "baseline_forward_capture_max_error_m": 1.902817605305036e-07,
+          "candidate_exact_pairs": 32,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [
+            {
+              "added_parent_pairs": [],
+              "baseline_parent_pairs": 12,
+              "body": 93,
+              "candidate_parent_pairs": 8,
+              "removed_parent_pairs": [
+                [
+                  596,
+                  4102
+                ],
+                [
+                  596,
+                  4103
+                ],
+                [
+                  599,
+                  4103
+                ],
+                [
+                  608,
+                  4126
+                ]
+              ],
+              "semantic": 51011,
+              "stable_id": 483
+            }
+          ],
+          "removed_parent_pairs": [
+            [
+              51011,
+              483,
+              596,
+              4102
+            ],
+            [
+              51011,
+              483,
+              596,
+              4103
+            ],
+            [
+              51011,
+              483,
+              599,
+              4103
+            ],
+            [
+              51011,
+              483,
+              608,
+              4126
+            ]
+          ],
+          "step": 8000,
+          "target_keys_scanned": 859
+        }
+      ],
+      "label": "left flexor pollicis longus",
+      "maximum_displacement_from_union_reference_m": 1.0042818860861344e-06,
+      "member_id": "FJ1498M",
+      "member_sha256": "bca0645db90f8718edda9562da5ef5432d6df06dd4fdf7d5f5ef042d31ed8ca9",
+      "per_vertex_bound_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-136-per-vertex-source-bounds.npz",
+      "physical_route_force_mass_state_unchanged": true,
+      "pure_attachment_proxy_count": 0,
+      "pure_attachment_proxy_meaning": "Exact onehot proxies only; zero does not certify anatomical attachment footprint accuracy.",
+      "source_and_sampled_pose_self_clear": true,
+      "source_area_m2": 0.005050074831830001,
+      "source_signed_volume_m3": 5.450111423362905e-06,
+      "stable_id": 136,
+      "volume_relative_change": -3.428976098178073e-05
+    },
+    {
+      "all25_actual_retained_target_contexts_no_new_pairs": true,
+      "bound_interpretation": "Per-child incident parent support bound plus actual geometric separation, and for contracted vertices the maximum displacement across every retained original endpoint ancestry, with1picometre arithmetic reserve. Not source measurement accuracy.",
+      "candidate_area_m2": 0.003915485297928687,
+      "candidate_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/remaining-original-boundary-batch-001/stable-144/source-lift-001/stable-144-geometric-reference-row-patch.npz",
+      "candidate_sha256": "5834e410e2dbde24e7ff3c115cd47b4e3a055b1500906b07aae5d371f5dbeb73",
+      "candidate_signed_volume_m3": 4.991815227022215e-06,
+      "changed_or_missing_pure_attachment_proxies": [],
+      "construction": "Original coordinate quotient; positive-winding boundary with isolated multi-fan point contacts separated by1micrometre, followed by unchanged canonical ancestry binding lift. No midpoint source-edge collapse retained.",
+      "cumulative_source_displacement_bound_m": 1.0032597872155255e-06,
+      "current50_capture_pose_audits": [
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.8189185285171422e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 0,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.2867090135194766e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 4767,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.3013212736478872e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 5023,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.244248353880969e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 5599,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.8223486555568887e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 6207,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.378986538863152e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 6815,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.2561466768449073e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 7423,
+          "target_keys_scanned": 859
+        },
+        {
+          "added_parent_pairs": [],
+          "baseline_exact_pairs": 0,
+          "baseline_forward_capture_max_error_m": 1.3333208984265686e-07,
+          "candidate_exact_pairs": 0,
+          "group": "current50",
+          "no_new_parent_pairs": true,
+          "per_target": [],
+          "removed_parent_pairs": [],
+          "step": 8000,
+          "target_keys_scanned": 859
+        }
+      ],
+      "label": "left extensor pollicis longus",
+      "maximum_displacement_from_union_reference_m": 1.0032587872155255e-06,
+      "member_id": "FJ1495M",
+      "member_sha256": "b60c5e22a80aaab2f77c88357babc1ae22bdec2d51ee7a4eef8413ffd73b0a8e",
+      "per_vertex_bound_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-121-122-135-136-144-current50-selection-001/stable-144-per-vertex-source-bounds.npz",
+      "physical_route_force_mass_state_unchanged": true,
+      "pure_attachment_proxy_count": 0,
+      "pure_attachment_proxy_meaning": "Exact onehot proxies only; zero does not certify anatomical attachment footprint accuracy.",
+      "source_and_sampled_pose_self_clear": true,
+      "source_area_m2": 0.003915872422646906,
+      "source_signed_volume_m3": 4.991815224080939e-06,
+      "stable_id": 144,
+      "volume_relative_change": 5.892197602532324e-10
+    }
+  ],
+  "schema": "numi.human.reference-surface-selection.v1",
+  "scope": "Five passive source-derived anatomical surface repairs. Exact individual topology/self and all859 actual neighboring surfaces audited in25 retained contexts; simultaneous candidate interface tested separately here. Engineering reconstruction bounds are not source measurement accuracy or measured-person anatomy. No native or whole-body admission.",
+  "simultaneous_pair_audits": [
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/fifty-surface-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/mtp-passive-native-sensitivity-one-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-0.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-151999.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-152607.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153215.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-153823.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-154431.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-155000.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        122
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        121,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        122,
+        135
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        122,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        122,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        135,
+        136
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        135,
+        144
+      ]
+    },
+    {
+      "added_parent_pairs": [],
+      "baseline_pairs": 0,
+      "candidate_pairs": 0,
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/intervention/native-run/accepted-geometry/step-47519.receipt.json",
+      "stable_ids": [
+        136,
+        144
+      ]
+    }
+  ]
+}
