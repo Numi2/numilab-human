@@ -1424,6 +1424,19 @@ _LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM = 1.0e-7
 _LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS = 120.0
 
 
+def _maximum_source_displacement_from_reference_m(
+    source_positions: np.ndarray,
+    reference_positions: np.ndarray,
+) -> float:
+    """Return the maximum per-vertex L2 displacement in source metres."""
+    source = np.asarray(source_positions, dtype=np.float64)
+    reference = np.asarray(reference_positions, dtype=np.float64)
+    if (source.ndim != 2 or source.shape[1] != 3 or reference.shape != source.shape
+            or not np.isfinite(source).all() or not np.isfinite(reference).all()):
+        raise human.ImportError("source trust region requires matching finite Nx3 metre arrays")
+    return float(np.linalg.norm(source - reference, axis=1).max(initial=0.0))
+
+
 def _exact_coordinate_tied_source_vertex_ids(source_positions: np.ndarray) -> np.ndarray:
     """Return every source row in a repeated Float32 coordinate group.
 
@@ -2930,25 +2943,62 @@ def _shared_source_seed_demands(
     required_normal_distances_m: np.ndarray,
     *,
     minimum_projection: float = _MIN_CANDIDATE_DIRECTION_PROJECTION,
-) -> tuple[np.ndarray, dict[str, float]]:
+    target_axis_directions: np.ndarray | None = None,
+    minimum_target_axis_projection: float | None = None,
+    target_axis_required_distances_m: np.ndarray | None = None,
+) -> tuple[np.ndarray, dict[str, Any]]:
     """Take the maximum source scalar needed by every active face in every pose.
 
-    Arrays are indexed [pose, vertex] or [pose, active face]. The per-face normal
-    demand is projected through the actual per-vertex Jacobian, including scale;
-    the returned seed field is therefore in common-atlas source metres.
+    Arrays are indexed [pose, vertex] or [pose, active face]. Per-face demand is
+    projected through the actual per-vertex Jacobian, including scale. Callers may
+    supply exact target-separation axis alternatives shaped [pose, face, axis, xyz].
+    For each demanded face, the helper deterministically chooses the alternative
+    with the greatest minimum corner projection. If none meets the declared
+    minimum_target_axis_projection, it fails explicitly rather than dividing by a
+    near-tangent rate and manufacturing an arbitrarily large source demand. Axis
+    provenance and final exact intersection audits remain the caller's responsibility.
     """
     maps = np.asarray(jacobians, dtype=np.float64)
     source = np.asarray(source_directions, dtype=np.float64)
     faces = np.asarray(face_vertex_ids, dtype=np.int64)
     normals = np.asarray(outward_face_normals, dtype=np.float64)
     demands = np.asarray(required_normal_distances_m, dtype=np.float64)
+    target_axes = None
+    target_axis_threshold = None
+    target_axis_distances = None
+    if target_axis_directions is None:
+        if minimum_target_axis_projection is not None or target_axis_required_distances_m is not None:
+            raise human.ImportError("target-axis projection/distance data require target-axis directions")
+    else:
+        try:
+            target_axis_threshold = (
+                _MIN_CANDIDATE_DIRECTION_PROJECTION if minimum_target_axis_projection is None
+                else float(minimum_target_axis_projection)
+            )
+        except (TypeError, ValueError, OverflowError) as error:
+            raise human.ImportError("target-axis projection threshold must be finite and in (0, 1]") from error
+        if (isinstance(minimum_target_axis_projection, (bool, np.bool_))
+                or not math.isfinite(target_axis_threshold)
+                or target_axis_threshold <= 0.0 or target_axis_threshold > 1.0):
+            raise human.ImportError("target-axis projection threshold must be finite and in (0, 1]")
+        target_axes = np.asarray(target_axis_directions, dtype=np.float64)
+        if target_axis_required_distances_m is not None:
+            target_axis_distances = np.asarray(target_axis_required_distances_m, dtype=np.float64)
     if (maps.ndim != 4 or maps.shape[0] < 1 or maps.shape[2:] != (3, 3)
             or source.shape != maps.shape[1:2] + (3,)
             or faces.ndim != 2 or faces.shape[1] != 3
             or normals.shape != (maps.shape[0], len(faces), 3)
             or demands.shape != (maps.shape[0], len(faces))
+            or (target_axes is not None and (target_axes.ndim != 4 or target_axes.shape[0] != maps.shape[0]
+                                             or target_axes.shape[1] != len(faces) or target_axes.shape[2] < 1
+                                             or target_axes.shape[3] != 3))
+            or (target_axis_distances is not None and target_axes is not None
+                and target_axis_distances.shape != target_axes.shape[:3])
             or not np.isfinite(maps).all() or not np.isfinite(source).all()
             or not np.isfinite(normals).all() or not np.isfinite(demands).all()
+            or (target_axes is not None and not np.isfinite(target_axes).all())
+            or (target_axis_distances is not None and not np.isfinite(target_axis_distances).all())
+            or (target_axis_distances is not None and np.any(target_axis_distances < 0.0))
             or np.any(demands < 0.0)
             or (faces.size and (int(faces.min()) < 0 or int(faces.max()) >= maps.shape[1]))):
         raise human.ImportError("multi-pose active source demand received malformed or non-finite input")
@@ -2962,6 +3012,8 @@ def _shared_source_seed_demands(
             "active_face_count": 0,
             "minimum_active_projection": None,
             "maximum_source_seed_demand_m": 0.0,
+            "minimum_selected_target_axis_projection": None,
+            "selected_target_axis_index_by_pose_face": [],
         }
 
     face_maps = maps[:, faces]
@@ -2985,7 +3037,75 @@ def _shared_source_seed_demands(
     normal_motion = np.sum(mapped * normals[:, :, None, :], axis=3)
     if not np.isfinite(normal_motion).all() or np.any(normal_motion <= 0.0):
         raise human.ImportError("shared source direction has no positive active-face normal motion")
-    scalar_demands = demands[:, :, None] / normal_motion
+    selected_axis_indices: list[list[int]] = []
+    minimum_selected_target_projection = None
+    if target_axes is None:
+        scalar_demands = demands[:, :, None] / normal_motion
+    else:
+        axis_lengths = np.linalg.norm(target_axes, axis=3)
+        if np.any(axis_lengths <= 1.0e-12) or not np.isfinite(axis_lengths).all():
+            raise human.ImportError("target-axis alternatives include zero or non-finite directions")
+        target_axes = target_axes / axis_lengths[:, :, :, None]
+        target_projections = np.einsum(
+            "pfci,pfai->pfac", mapped / mapped_lengths[:, :, :, None], target_axes,
+        )
+        axis_scores = target_projections.min(axis=3)
+        demanded = demands > 0.0
+        infeasible = demanded & (axis_scores.max(axis=2) < target_axis_threshold)
+        if np.any(infeasible):
+            pose, face = np.argwhere(infeasible)[0]
+            raise human.ImportError(
+                "target-axis infeasible: no supplied exact separation direction satisfies all mapped face corners; "
+                f"pose={int(pose)}, face={int(face)}, best_minimum_corner_projection="
+                f"{float(axis_scores[pose, face].max()):.12g}, "
+                f"required_ge={target_axis_threshold:.12g}, alternatives={target_axes.shape[2]}"
+            )
+        if target_axis_distances is None:
+            selected = np.argmax(axis_scores, axis=2)
+            selected_axes = np.take_along_axis(target_axes, selected[:, :, None, None], axis=2)[:, :, 0, :]
+            target_motion = np.sum(mapped * selected_axes[:, :, None, :], axis=3)
+            scalar_demands = np.divide(
+                demands[:, :, None], target_motion, out=np.zeros_like(target_motion),
+                where=demands[:, :, None] > 0.0,
+            )
+            chosen_projection = np.take_along_axis(axis_scores, selected[:, :, None], axis=2)[:, :, 0]
+            bad_motion = (demands[:, :, None] > 0.0) & (target_motion <= 0.0)
+            if np.any(bad_motion) or not np.isfinite(target_motion).all():
+                raise human.ImportError("target-axis infeasible: selected direction has no positive mapped corner motion")
+        else:
+            target_motion_by_axis = np.einsum("pfci,pfai->pfac", mapped, target_axes)
+            feasible = axis_scores >= target_axis_threshold
+            feasible &= np.all(target_motion_by_axis > 1.0e-12, axis=3)
+            costs = np.divide(
+                target_axis_distances[:, :, :, None], target_motion_by_axis,
+                out=np.full_like(target_motion_by_axis, np.inf),
+                where=feasible[:, :, :, None] & (target_motion_by_axis > 1.0e-12),
+            )
+            axis_costs = np.max(costs, axis=3)
+            axis_costs[~feasible] = np.inf
+            no_feasible_cost = demanded & ~np.isfinite(axis_costs).any(axis=2)
+            if np.any(no_feasible_cost):
+                pose, face = np.argwhere(no_feasible_cost)[0]
+                raise human.ImportError(
+                    "target-axis infeasible: all exact separation alternatives violate mapped-corner "
+                    f"projection or positive motion at pose={int(pose)}, face={int(face)}"
+                )
+            selected = np.argmin(axis_costs, axis=2)
+            chosen_projection = np.take_along_axis(axis_scores, selected[:, :, None], axis=2)[:, :, 0]
+            chosen_motion = np.take_along_axis(
+                target_motion_by_axis, selected[:, :, None, None], axis=2,
+            )[:, :, 0, :]
+            chosen_distance = np.take_along_axis(
+                target_axis_distances, selected[:, :, None], axis=2,
+            )[:, :, 0]
+            scalar_demands = np.divide(
+                chosen_distance[:, :, None], chosen_motion,
+                out=np.zeros_like(chosen_motion), where=demanded[:, :, None],
+            )
+        if not np.isfinite(scalar_demands).all() or np.any(scalar_demands < 0.0):
+            raise human.ImportError("target-axis selected source scalar demand is non-finite or negative")
+        minimum_selected_target_projection = float(chosen_projection[demanded].min()) if np.any(demanded) else None
+        selected_axis_indices = selected.astype(np.int64).tolist()
     if not np.isfinite(scalar_demands).all() or np.any(scalar_demands < 0.0):
         raise human.ImportError("multi-pose source scalar demand is non-finite or negative")
     worst_pose_per_face_corner = scalar_demands.max(axis=0)
@@ -2995,6 +3115,8 @@ def _shared_source_seed_demands(
         "active_face_count": int(len(faces)),
         "minimum_active_projection": float(normal_projection.min()),
         "maximum_source_seed_demand_m": float(seed_required.max(initial=0.0)),
+        "minimum_selected_target_axis_projection": minimum_selected_target_projection,
+        "selected_target_axis_index_by_pose_face": selected_axis_indices,
     }
 
 
@@ -4007,6 +4129,7 @@ def derive_shared_multipose_inferred_clearance(
     closed_target_surfaces_by_pose: list[dict[str, tuple[np.ndarray, np.ndarray]]] | None = None,
     closed_target_face_counts: dict[str, int] | None = None,
     closed_target_outer_envelope_keys: set[str] | None = None,
+    maximum_source_displacement_from_reference_m: float | None = None,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     """Infer one source-space correction constrained by all supplied accepted poses.
 
@@ -4032,12 +4155,26 @@ def derive_shared_multipose_inferred_clearance(
     component for external-skin enclosure; every component remains in all scans.
     Every triangle must match the existing target lookup exactly. These direct vertex
     demands supplement the boundary-triangle demands and preserve all audits.
-    NHSKIN source and mapped world positions are metres; no runtime state changes.
+    An optional maximum_source_displacement_from_reference_m is a hard per-vertex
+    L2 trust region measured from the original source_positions, including resumed
+    and locally regularized candidates. It is checked before candidate forwarding
+    and exact scans; it never moves the reference center when a partial candidate
+    is resumed. NHSKIN source and mapped world positions are metres; no runtime state changes.
     """
     source = np.asarray(source_positions, dtype=np.float64)
     source_faces = np.asarray(faces, dtype=np.int64)
     maps = None if jacobians_by_pose is None else np.asarray(jacobians_by_pose, dtype=np.float64)
     captured = np.asarray(accepted_skin_world_by_pose, dtype=np.float64).astype("<f4").astype(np.float64)
+    source_displacement_bound = None
+    if maximum_source_displacement_from_reference_m is not None:
+        if isinstance(maximum_source_displacement_from_reference_m, (bool, np.bool_)):
+            raise human.ImportError("source trust-region bound must be a finite positive number of metres")
+        try:
+            source_displacement_bound = float(maximum_source_displacement_from_reference_m)
+        except (TypeError, ValueError, OverflowError) as error:
+            raise human.ImportError("source trust-region bound must be a finite positive number of metres") from error
+        if not math.isfinite(source_displacement_bound) or source_displacement_bound <= 0.0:
+            raise human.ImportError("source trust-region bound must be a finite positive number of metres")
     if (source.ndim != 2 or source.shape[1] != 3 or not np.isfinite(source).all()
             or source_faces.ndim != 2 or source_faces.shape[1] != 3 or source_faces.size == 0
             or source_faces.min() < 0 or source_faces.max() >= len(source)
@@ -4203,6 +4340,14 @@ def derive_shared_multipose_inferred_clearance(
                 resume_full[unreferenced].astype("<f4"), source[unreferenced].astype("<f4")):
             raise human.ImportError("resume source changed unreferenced NHSKIN positions")
         resume_rows = resume_full[referenced].astype("<f4").astype(np.float64)
+        if maximum_source_displacement_from_reference_m is not None:
+            resume_displacement = _maximum_source_displacement_from_reference_m(resume_rows, source_base)
+            if resume_displacement > source_displacement_bound:
+                raise human.ImportError(
+                    "resume candidate exceeds the declared source trust region from the original input: "
+                    f"maximum_source_displacement_m={resume_displacement:.12g}, "
+                    f"bound_m={source_displacement_bound:.12g}"
+                )
         expected_source_sha = resume_provenance.get("source_positions_f32_sha256")
         if (not isinstance(expected_source_sha, str) or len(expected_source_sha) != 64
                 or hashlib.sha256(np.asarray(resume_rows, dtype="<f4").tobytes()).hexdigest() != expected_source_sha):
@@ -4586,6 +4731,18 @@ def derive_shared_multipose_inferred_clearance(
             trial_interior_counts = None
             raw_trial_source = (current_source + scale * field[:, None] * source_directions).astype("<f4").astype(np.float64)
             trial_source = raw_trial_source
+            if maximum_source_displacement_from_reference_m is not None:
+                maximum_trial_displacement = _maximum_source_displacement_from_reference_m(trial_source, source_base)
+                if maximum_trial_displacement > source_displacement_bound:
+                    rejection = (
+                        "trial exceeds the declared source trust region from the original input: "
+                        f"maximum_source_displacement_m={maximum_trial_displacement:.12g}, "
+                        f"bound_m={source_displacement_bound:.12g}"
+                    )
+                    emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source,
+                               diagnostics={"maximum_source_displacement_from_reference_m": maximum_trial_displacement,
+                                            "source_trust_region_bound_m": source_displacement_bound})
+                    continue
             if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
                 rejection = "trial changed an exact bed/support witness source vertex"
                 emit_trial(iteration, backtrack, scale, "rejected", rejection, trial_source)
@@ -4646,6 +4803,14 @@ def derive_shared_multipose_inferred_clearance(
                             regularized_increment[seeds], (raw_trial_source - current_source)[seeds]):
                         raise human.ImportError("local smoothing changed a required source-seed increment")
                     trial_source = (current_source + regularized_increment).astype("<f4").astype(np.float64)
+                    if maximum_source_displacement_from_reference_m is not None:
+                        maximum_trial_displacement = _maximum_source_displacement_from_reference_m(trial_source, source_base)
+                        if maximum_trial_displacement > source_displacement_bound:
+                            raise human.ImportError(
+                                "local fold taper exceeds the declared source trust region from the original input: "
+                                f"maximum_source_displacement_m={maximum_trial_displacement:.12g}, "
+                                f"bound_m={source_displacement_bound:.12g}"
+                            )
                     if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
                         raise human.ImportError("local smoothing moved a fixed bed/support or preserved anchor")
                     if np.array_equal(trial_source, current_source):
@@ -4940,6 +5105,14 @@ def derive_shared_multipose_inferred_clearance(
                     if not np.array_equal(proposed_full_source[outside_patch], full_trial_source[outside_patch]):
                         raise human.ImportError("local self-separation changed source vertices outside its patch")
                     trial_source = proposed_full_source[referenced].astype(np.float64)
+                    if maximum_source_displacement_from_reference_m is not None:
+                        maximum_trial_displacement = _maximum_source_displacement_from_reference_m(trial_source, source_base)
+                        if maximum_trial_displacement > source_displacement_bound:
+                            raise human.ImportError(
+                                "local self-separation exceeds the declared source trust region from the original input: "
+                                f"maximum_source_displacement_m={maximum_trial_displacement:.12g}, "
+                                f"bound_m={source_displacement_bound:.12g}"
+                            )
                     if len(fixed) and not np.array_equal(trial_source[fixed], source_base[fixed]):
                         raise human.ImportError("local self-separation moved a fixed support or preserved anchor")
                     if candidate_forward is None:
@@ -5235,6 +5408,11 @@ def derive_shared_multipose_inferred_clearance(
         "iterations": iteration_rows,
         "outward_winding_checks": winding_receipt,
         "maximum_source_displacement_m": float(np.linalg.norm(current_source - source_base, axis=1).max()),
+        "source_trust_region": {
+            "status": "enforced" if source_displacement_bound is not None else "not_requested",
+            "center": "original_source_positions_input",
+            "maximum_source_displacement_from_reference_m": source_displacement_bound,
+        },
         "maximum_world_displacement_m_by_pose": [
             float(np.linalg.norm(current_world[p] - captured[p], axis=1).max()) for p in range(pose_count)
         ],

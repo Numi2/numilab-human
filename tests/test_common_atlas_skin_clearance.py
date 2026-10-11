@@ -304,6 +304,66 @@ def test_shared_source_seed_demand_takes_worst_pose_and_preserves_source_units()
     assert metrics["maximum_source_seed_demand_m"] == 0.006
 
 
+def test_shared_source_seed_demands_selects_feasible_exact_target_axis_alternative():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_seed_demands
+
+    maps = np.tile(np.eye(3)[None, None, :, :], (1, 3, 1, 1))
+    source = np.repeat([[1.0, 0.0, 0.0]], 3, axis=0)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    active_normals = np.array([[[1.0, 0.0, 0.0]]])
+    demands = np.array([[0.001]])
+    # The first supplied exact axis is incompatible. The second is a valid
+    # alternative and should avoid the huge scalar from a near-tangent axis.
+    axes = np.array([[[[-1.0, 0.0, 0.0], [1.0, 0.0, 0.0]]]])
+
+    seed, report = _shared_source_seed_demands(
+        maps, source, faces, active_normals, demands,
+        target_axis_directions=axes, minimum_target_axis_projection=0.5,
+    )
+
+    assert np.array_equal(seed, np.full(3, 0.001))
+    assert report["selected_target_axis_index_by_pose_face"] == [[1]]
+    assert report["minimum_selected_target_axis_projection"] == 1.0
+    assert report["maximum_source_seed_demand_m"] == 0.001
+
+
+def test_shared_source_seed_demands_reports_target_axis_infeasibility():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_seed_demands
+
+    maps = np.tile(np.eye(3)[None, None, :, :], (1, 3, 1, 1))
+    source = np.repeat([[1.0, 0.0, 0.0]], 3, axis=0)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    active_normals = np.array([[[1.0, 0.0, 0.0]]])
+    demands = np.array([[0.001]])
+    impossible_axes = np.array([[[[-1.0, 0.0, 0.0]]]])
+
+    with np.testing.assert_raises_regex(
+        ImportError, r"target-axis infeasible.*best_minimum_corner_projection=-1.*required_ge=0.5"
+    ):
+        _shared_source_seed_demands(
+            maps, source, faces, active_normals, demands,
+            target_axis_directions=impossible_axes, minimum_target_axis_projection=0.5,
+        )
+
+
+def test_maximum_source_displacement_uses_per_vertex_l2_and_rejects_bad_arrays():
+    from numilab_human.common_atlas_skin_clearance import _maximum_source_displacement_from_reference_m
+
+    reference = np.array([[0.0, 0.0, 0.0], [1.0, 2.0, 3.0]])
+    candidate = np.array([[0.0, 0.0, 0.0], [1.003, 2.004, 3.0]])
+    assert np.isclose(
+        _maximum_source_displacement_from_reference_m(candidate, reference),
+        0.005,
+        atol=1.0e-12,
+    )
+    with np.testing.assert_raises_regex(ImportError, "matching finite Nx3"):
+        _maximum_source_displacement_from_reference_m(candidate[:, :2], reference)
+    with np.testing.assert_raises_regex(ImportError, "matching finite Nx3"):
+        _maximum_source_displacement_from_reference_m(
+            np.array([[np.nan, 0.0, 0.0], [1.0, 2.0, 3.0]]), reference,
+        )
+
+
 def test_shared_source_seed_demand_rejects_inward_or_unbounded_active_face():
     from numilab_human.common_atlas_skin_clearance import _shared_source_seed_demands
 
@@ -382,7 +442,7 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
 
     monkeypatch.setattr(clearance, "audit_incremental_skin_self_intersections",
                         counted_incremental_self_audit)
-    result, report = derive_shared_multipose_inferred_clearance(
+    owner_arguments = dict(
         source_positions=source,
         faces=faces,
         jacobians_by_pose=maps,
@@ -401,7 +461,27 @@ def test_shared_multipose_clearance_uses_one_source_field_and_exact_all_pose_res
         progress_callback=trial_events.append,
         scan_progress_callback=scan_progress_events.append,
     )
+    limited_events = []
+    limited_arguments = dict(owner_arguments)
+    limited_arguments["progress_callback"] = limited_events.append
+    limited_arguments["maximum_source_displacement_from_reference_m"] = 0.001
+    with np.testing.assert_raises_regex(ImportError, "could not admit iteration=1.*source trust region"):
+        derive_shared_multipose_inferred_clearance(**limited_arguments)
+    assert limited_events and all(
+        event["status"] == "rejected" and "source trust region" in event["reason"]
+        for event in limited_events
+    )
+    assert scan_calls == [0, 1]
 
+    owner_arguments["maximum_source_displacement_from_reference_m"] = 0.2
+    result, report = derive_shared_multipose_inferred_clearance(**owner_arguments)
+
+    assert report["source_trust_region"] == {
+        "status": "enforced",
+        "center": "original_source_positions_input",
+        "maximum_source_displacement_from_reference_m": 0.2,
+    }
+    assert report["maximum_source_displacement_m"] <= 0.2
     assert report["final_nonocular_pair_count_by_pose"] == [0, 0]
     assert report["final_ocular_pair_count_by_pose"] == [0, 0]
     assert result[0, 2] > 0.15
@@ -1513,3 +1593,25 @@ def test_closed_target_rejects_stale_prepared_point_location():
     target["_interior_point_locator"] = shifted["_interior_point_locator"]
     with np.testing.assert_raises_regex(ImportError, "snapshot does not match"):
         _closed_target_inside_vertices(np.asarray([[0.1, 0.1, 0.1]], dtype="<f4"), target)
+
+
+def test_shared_source_seed_demands_chooses_axis_by_exact_distance_over_mapped_motion():
+    from numilab_human.common_atlas_skin_clearance import _shared_source_seed_demands
+
+    maps = np.tile(np.eye(3)[None, None, :, :], (1, 3, 1, 1))
+    source = np.repeat([[1.0, 0.0, 0.0]], 3, axis=0)
+    faces = np.array([[0, 1, 2]], dtype=np.int64)
+    active_normals = np.array([[[1.0, 0.0, 0.0]]])
+    axis_dirs = np.array([[[[1.0, 0.0, 0.0], [0.8, 0.6, 0.0]]]])
+    axis_distances = np.array([[[0.004, 0.001]]], dtype=np.float64)
+
+    seed, report = _shared_source_seed_demands(
+        maps, source, faces, active_normals, np.array([[0.004]]),
+        target_axis_directions=axis_dirs,
+        minimum_target_axis_projection=0.5,
+        target_axis_required_distances_m=axis_distances,
+    )
+
+    assert report["selected_target_axis_index_by_pose_face"] == [[1]]
+    assert np.allclose(seed, 0.00125, rtol=0.0, atol=1.0e-15)
+    assert report["maximum_source_seed_demand_m"] == 0.00125
