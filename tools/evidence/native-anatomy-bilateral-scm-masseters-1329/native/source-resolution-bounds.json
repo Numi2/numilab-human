@@ -1,0 +1,399 @@
+{
+  "152": {
+    "candidate": {
+      "exact_mesh": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/left-scm-minus-ijv-ica.exact.json",
+      "exact_mesh_sha256": "d551a9893aeda2cb69c4152fabacef06726c230429fdd0627174ad65ad5e3a07",
+      "npz": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/unadmitted-left-scm-minus-ijv-ica-source-lift.npz",
+      "npz_sha256": "efedf8c0270c0b823f68a23503aee59c57b943600ba8cd5fa1e74eb709991c32",
+      "pair_tables": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/candidate-pairs.json",
+      "pair_tables_sha256": "e921a8af2cdd5e1f9d22e43abc84979f39d3ec29002a03675a6afafefe8e057d",
+      "report": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/report.json",
+      "report_sha256": "d1d484b3067cd16996dea73070c835a37556d8699321e6099d4d9cdf8e2a4e2d"
+    },
+    "direct_parent": {
+      "manifest": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/append-to-right-scm-parent-002/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "manifest_sha256": "d9f0c38fadc5d29d87fd648f0ba7b89f12a3b2d1459d25646b83e4e8ff2ee239",
+      "masseter_native_run_declaration_sha256": "a2066216539d9cab36bbd9d4e8ab7df6728df0ec486172205b4232db7f36bef7",
+      "payload": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/append-to-right-scm-parent-002/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "payload_sha256": "f94c6d06f32564ca44cef54f9fe2b3fa232b7246eb636e75bca00e4cb85e3101",
+      "receipt": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/append-to-right-scm-parent-002/resting-anatomy-receipt.json",
+      "receipt_sha256": "e2f9a73fa2ed9e9870555be59cb5db9697c6f5a55cbb5e6c2563c3c0ca9bb971",
+      "surface_count": 153
+    },
+    "full_target_pair_proof": {
+      "accepted_pose_steps": [
+        0,
+        4767,
+        5023,
+        5599,
+        6207,
+        6815,
+        7423,
+        8000
+      ],
+      "added_pairs_on_cleared_vessels": 0,
+      "changed_target_keys_only": [
+        "51011:467",
+        "51011:469"
+      ],
+      "combined_target_count_when_state_hashes_match": 863,
+      "external_targets_per_pose": 861,
+      "left_ica_key": "51011:467",
+      "left_ijv_key": "51011:469",
+      "native_masseter_pair_check_report_sha256": "28100b9ccbd38225c8d53d404fa715cd3cc27ee92c8e937194d727f6653866fa",
+      "not_reaudited_after_composition": true,
+      "pair_tables": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/candidate-pairs.json",
+      "right_scm_key": "51005:151",
+      "run083_report": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/report.json",
+      "self_topology_vessel_skin_right_scm_pass_all_eight": true,
+      "skin_key": "51007:1",
+      "verified_parent_right151_exact_to_run083_target": true
+    },
+    "geometry": {
+      "ancestry_counts": {
+        "ICA_cap": 68,
+        "IJV_cap": 252,
+        "source_row152": 10282
+      },
+      "candidate_faces": 10602,
+      "candidate_vertices": 5303,
+      "duplicate_coordinate_groups": 692,
+      "generated_cap_vertices": 234,
+      "inferred_shell_offset_m": 0.0001,
+      "max_new_vertex_parent_projection_m": 0.00637312689385598,
+      "method": "Existing exact positive-winding subtraction of 0.10mm-expanded left IJV and ICA shells, then corrected nearest-parent source-face lift; vessels were not moved.",
+      "offset_is_measured_gap": false,
+      "projection_definition": "Maximum generated cap vertex to nearest original source parent face distance; this is a source projection bound, not a measured tissue displacement or attachment tolerance.",
+      "q0_forward_max_error_m": 4.4728311955343587e-07,
+      "quotient_vertices": 5114,
+      "raw_source_faces": 10224,
+      "raw_source_vertices": 6210,
+      "signed_volume_after_m3_exact": [
+        "0x304041ca7c874ac33f",
+        "0x1000000000000000000000"
+      ],
+      "signed_volume_before_m3_exact": [
+        "0x3157852073230d8abf",
+        "0x1000000000000000000000"
+      ],
+      "surviving_original_records_retained_exact": 5069,
+      "volume_delta_m3_exact": [
+        "-0x22e86abed37858f",
+        "0x20000000000000000000"
+      ]
+    },
+    "identity": "left sternocleidomastoid FJ1573; source identity/laterality retained",
+    "input_pins": {
+      "append_subset_manifest": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-append-preparation-002/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+        "sha256": "5ba55cf99701018e5e85dd1b8b3fb37781c12b406f0cb7673dc7f85099bd34a4"
+      },
+      "append_subset_payload": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-append-preparation-002/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "sha256": "5e026b3acdaf74d0133346be28928bc2d8c48f3427e3cf904aa5ea33df96e4c7"
+      },
+      "capture_exact_owner": {
+        "path": "/Users/n/numi-human-local-clearance-preservation-1280/src/numilab_human/cardiac_cavity_intersections.py",
+        "sha256": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561"
+      },
+      "capture_pack_owner": {
+        "path": "/Users/n/numi-human-local-clearance-preservation-1280/src/numilab_human/common_atlas_skin_clearance.py",
+        "sha256": "fd152a157cd698094592e64cb746a81a32fc29381a6e6ffc4d5524400041f6b5"
+      },
+      "composer": {
+        "path": "/Users/n/numi-human-local-clearance-preservation-1280/src/numilab_human/passive_attachment_composition.py",
+        "sha256": "ade9a9f504d1d8d071453d875c49f89ef33ef35dd896235222c1eb03935535d9"
+      },
+      "composition_owner": {
+        "path": "/Users/n/numi-human-local-clearance-preservation-1280/src/numilab_human/passive_attachment_composition.py",
+        "sha256": "ade9a9f504d1d8d071453d875c49f89ef33ef35dd896235222c1eb03935535d9"
+      },
+      "forward_owner": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-retained-pose-audit-002/forward_all_positive_weights.py",
+        "sha256": "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5"
+      },
+      "left_previous_patch": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-scm-native-composition-001/left-scm-row-patch.npz",
+        "sha256": "78c91f834ff98a58b8f355bf0eba536947bc05c010449c6f6d0ae90e7e69fb36"
+      },
+      "left_previous_payload": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-scm-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "sha256": "1d1b2f0fc85e709a3fb8286a11a31e0d05c88a6afff1e3e0c103ee151c6f4518"
+      },
+      "left_previous_proof": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-scm-native-composition-001/source-reconstruction-proof.json",
+        "sha256": "8dea97591250ff70e7715860a2e27f501531ca51c41f33043d80e095a0710d2d"
+      },
+      "masseter_composition_result": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/composition-result.json",
+        "sha256": "96962bbfc4f4c3d61dc0040a11100f86d9badb4e2d93185a93badc90fc83d1eb"
+      },
+      "masseter_declaration": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/run-declaration.json",
+        "sha256": "a2066216539d9cab36bbd9d4e8ab7df6728df0ec486172205b4232db7f36bef7"
+      },
+      "masseter_execution": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/execution.json",
+        "sha256": "c75a267d8dc6592236a51ccb9550918fd02abdad9f4cc6d0b33cd0011a9759b7"
+      },
+      "masseter_invocation": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/invocation.json",
+        "sha256": "5379d3dbe0050b946df628510949a55279bf3780950422c511765a8451987f31"
+      },
+      "masseter_pack_0": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-0.mrvpack",
+        "sha256": "0aa57d91265fc311e01b6fdb1fb731e22fc37bb7e4f41071ca52ce4b12b07e77"
+      },
+      "masseter_pack_4767": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-4767.mrvpack",
+        "sha256": "cfc6ac34690fc633d8d21c6047d3564072895ec84bba22e57090cada5a7324f4"
+      },
+      "masseter_pack_5023": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-5023.mrvpack",
+        "sha256": "ef3f73a6a109af2399ce32a21e214c2da3d02ffdeaf1226d5589b2847b53af63"
+      },
+      "masseter_pack_5599": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-5599.mrvpack",
+        "sha256": "3c26c52182976865a6d8f77721f7321abe73105acb8996149f1300aa20308900"
+      },
+      "masseter_pack_6207": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-6207.mrvpack",
+        "sha256": "7adf0411000adf3878859d3b1f8a26de80c7c6fa1363c6c868b9d5746c5fad3c"
+      },
+      "masseter_pack_6815": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-6815.mrvpack",
+        "sha256": "3861bf78ab8fa25877b8bd5b967fbeb8ca6af234183a68951c147d9079da19ad"
+      },
+      "masseter_pack_7423": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-7423.mrvpack",
+        "sha256": "ea6377963b29494733e600888a963920d1c558e1321707c98ddbb6f231172f4c"
+      },
+      "masseter_pack_8000": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-8000.mrvpack",
+        "sha256": "b28bdbc6be5d9184114f70aaef7f74629d33c0207482a213d6b3d9c8163b6a6f"
+      },
+      "masseter_receipt_0": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-0.receipt.json",
+        "sha256": "86411dd889f68ba95b1712554fb1bc6cbd04e3a25cef3ee7934d8c21c7340b12"
+      },
+      "masseter_receipt_4767": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+        "sha256": "86433b6ec8e908fa39d1c109c695d7d13b0db66390d3e304d18383a84e843b36"
+      },
+      "masseter_receipt_5023": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+        "sha256": "b7ae4a6973250f08dd083e04bcac7ccc3c9ba26231e37b66194235b570bd5005"
+      },
+      "masseter_receipt_5599": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+        "sha256": "efb45cc6df0a87b20637446a21fedc5e7cb2e9760395bd6f29a5aee9f9531add"
+      },
+      "masseter_receipt_6207": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+        "sha256": "c65c6cfed25bfbf8b76370656f0a4ce94c86ebffbe123f5dd9c43b9caba74bb7"
+      },
+      "masseter_receipt_6815": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+        "sha256": "2b7309b0928e477cd7e664ead418c75c93818e447ee8af5840e73318d866bfa3"
+      },
+      "masseter_receipt_7423": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+        "sha256": "709502e5ed416c1f3fdb368734d4c65c87be433a36e9e8cb09383aef4aa6b9ff"
+      },
+      "masseter_receipt_8000": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+        "sha256": "e8417449704fcdb671676c2ea47b09bffd2dc87c7b4ae5dbd79a1da7fb8aa24d"
+      },
+      "masseter_run_metadata": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/masseters-native-composition-004/baseline/native-run/run-metadata.json",
+        "sha256": "c7a6a345fdcfde85fb492aa467e76315660fd226ac46b073780d96f2a4d6a606"
+      },
+      "normal_owner": {
+        "path": "/Users/n/numi-human-local-clearance-preservation-1280/src/numilab_human/resting_anatomy_interface_patch.py",
+        "sha256": "e7692e4239c6a5ca4c12667b9bce94c06efa9bc3bec86cbb74e4625eeb416187"
+      },
+      "parent_manifest": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/append-to-right-scm-parent-002/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+        "sha256": "d9f0c38fadc5d29d87fd648f0ba7b89f12a3b2d1459d25646b83e4e8ff2ee239"
+      },
+      "parent_payload": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/append-to-right-scm-parent-002/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "sha256": "f94c6d06f32564ca44cef54f9fe2b3fa232b7246eb636e75bca00e4cb85e3101"
+      },
+      "parent_receipt": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/append-to-right-scm-parent-002/resting-anatomy-receipt.json",
+        "sha256": "e2f9a73fa2ed9e9870555be59cb5db9697c6f5a55cbb5e6c2563c3c0ca9bb971"
+      },
+      "right151_candidate_npz": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-072-scm-ica-offset-source-lift-001/result-001/unadmitted-scm-minus-ica-ijv-source-lift.npz",
+        "sha256": "ce1f5875fef87b5c2d4eea4238b29b4599ca28ff35bd44b3b3649a22698f36cf"
+      },
+      "right151_candidate_report": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-072-scm-ica-offset-source-lift-001/result-001/report.json",
+        "sha256": "80240935f802a05b617dd1551dd40536adadc1154cb7efc6fcfd5a45c8132546"
+      },
+      "right151_native_verification": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/native-verification-001/report.json",
+        "sha256": "75e5cb4aa6b6c51cf9121e5c8feeb87a9ee6c26aa6470568b254d1382930ff26"
+      },
+      "right151_pack_0": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-0.mrvpack",
+        "sha256": "5417ba56c0d4f69d70908c8e81aa0b78cbc7a3ca681d90e5573df2ce9a1c9ab5"
+      },
+      "right151_pack_4767": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-4767.mrvpack",
+        "sha256": "4e8a85879203a89da0907ea334cd5714714298dc41858528d770a49423b5823d"
+      },
+      "right151_pack_5023": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-5023.mrvpack",
+        "sha256": "60b984dfb5c4f9f5ded74ba341d7fb78a746c26276bfc1d41369cf4201bc80d1"
+      },
+      "right151_pack_5599": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-5599.mrvpack",
+        "sha256": "8e69b0ca0373a0933e5b60bb4d80707ef2b40ba3b002de30a7a4c8bccd126120"
+      },
+      "right151_pack_6207": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-6207.mrvpack",
+        "sha256": "ca30846d4fe26d7a05e9b1d4cc81c968b411b74cf2965e4f49259896c5383e08"
+      },
+      "right151_pack_6815": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-6815.mrvpack",
+        "sha256": "0c5429f6134650ec65169dc8c3c2797d8e09119fff41b0b58b734c9af6602df8"
+      },
+      "right151_pack_7423": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-7423.mrvpack",
+        "sha256": "31599c5801c3c7f3548b5c6b7a2dee79af934d029ef04bf7a64cd7fb52fc9b36"
+      },
+      "right151_pack_8000": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-8000.mrvpack",
+        "sha256": "8591ae32d46499f34dda9bae01289da878f37c4cdc706da0097ee13e2515f5ea"
+      },
+      "right151_receipt_0": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-0.receipt.json",
+        "sha256": "c0b557addd6a7b7851fafe8bc02e3a6afc761583158ad200102700c89ae6e996"
+      },
+      "right151_receipt_4767": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-4767.receipt.json",
+        "sha256": "bd06df392850090189010e2c7df393834523e48ac82d421e54e1da6248f81746"
+      },
+      "right151_receipt_5023": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-5023.receipt.json",
+        "sha256": "cdaf297168a5f652fef43d775439bea3fcbfb2936c860c2b1dc1b3f0dccf5794"
+      },
+      "right151_receipt_5599": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-5599.receipt.json",
+        "sha256": "f291a2b953fdc6020497349f474bf82c4359a1bab24b8b5e84b4354dbdc78f42"
+      },
+      "right151_receipt_6207": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-6207.receipt.json",
+        "sha256": "89b46fdce9d324cee2c2976ccae642f4061b89524d935925ff2944c82400f0de"
+      },
+      "right151_receipt_6815": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-6815.receipt.json",
+        "sha256": "f03cb5780fa89b868337ea749364d63f415fecc8ac42d9b661f2b91e4b241ba9"
+      },
+      "right151_receipt_7423": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-7423.receipt.json",
+        "sha256": "40c40e86fd9fdc111a00b7f974d732de023d896d5457810f45bfaef01b16b194"
+      },
+      "right151_receipt_8000": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+        "sha256": "0caf895815ada63eb3d40f05a82c2c7255fd22e38690e30292b1c7175e3aa5e9"
+      },
+      "run083_candidate_npz": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/unadmitted-left-scm-minus-ijv-ica-source-lift.npz",
+        "sha256": "efedf8c0270c0b823f68a23503aee59c57b943600ba8cd5fa1e74eb709991c32"
+      },
+      "run083_exact_mesh": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/left-scm-minus-ijv-ica.exact.json",
+        "sha256": "d551a9893aeda2cb69c4152fabacef06726c230429fdd0627174ad65ad5e3a07"
+      },
+      "run083_pair_tables": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/candidate-pairs.json",
+        "sha256": "e921a8af2cdd5e1f9d22e43abc84979f39d3ec29002a03675a6afafefe8e057d"
+      },
+      "run083_report": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/scm-vessel-clearance-001/run-083-left-scm-dual-vessel-corrected-nearest-source-lift-001/result-001/report.json",
+        "sha256": "d1d484b3067cd16996dea73070c835a37556d8699321e6099d4d9cdf8e2a4e2d"
+      },
+      "source_subset_manifest": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-append-preparation-002/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+        "sha256": "5ba55cf99701018e5e85dd1b8b3fb37781c12b406f0cb7673dc7f85099bd34a4"
+      },
+      "source_subset_payload": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-append-preparation-002/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "sha256": "5e026b3acdaf74d0133346be28928bc2d8c48f3427e3cf904aa5ea33df96e4c7"
+      },
+      "verified151_composition_result": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/composition-result.json",
+        "sha256": "47936e6e88308976773b96e48ad31a244aa862ae5cfcd94ba85cab5ea51ffead"
+      },
+      "verified151_native_report": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/native-verification-001/report.json",
+        "sha256": "75e5cb4aa6b6c51cf9121e5c8feeb87a9ee6c26aa6470568b254d1382930ff26"
+      },
+      "verified151_parent_manifest": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+        "sha256": "8c4804bf79cddf2d1ee6f24424a587a391ce9af73d3e28a41f16017f0d521edc"
+      },
+      "verified151_parent_payload": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "sha256": "61f5b3575ace78d4346fa1a02df9a76270ff3222352bdf3e9f5bf564946bcd43"
+      },
+      "verified151_parent_receipt": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/right-scm-native-composition-001/resting-anatomy-receipt.json",
+        "sha256": "79d38bf182fea883c94c447bf4749d67b87ad0f30c278ab1465b3ad5df89c9d9"
+      }
+    },
+    "limitations": [
+      "Inferred reference surface, not measured-person geometry or anatomical admission.",
+      "Eight retained baseline poses only; no intervention/full-breath re-audit or new native run.",
+      "The five remaining interfaces are unresolved, not exempted or called attachments.",
+      "Composition preserves other row bytes; it does not rerun geometric predicates.",
+      "Masseter interaction checks use actual captured rows159/160 at native accepted poses; left152 itself is forward-predicted and not in those packs. No integrated 154-row native run was made."
+    ],
+    "native_masseter_pair_checks": {
+      "all_eight_exact_pairs_zero_vs_159_160": true,
+      "all_eight_left_candidate_self_topology_clear": true,
+      "all_eight_match_run083_state_hash": true,
+      "captured_native_targets": [
+        "51005:159",
+        "51005:160"
+      ],
+      "combined_target_count": 863,
+      "left_candidate_is_forward_predicted_not_present_in_native_run": true,
+      "report_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-scm-and-masseters-composition-002/native-masseter-pair-check.json",
+      "report_sha256": "28100b9ccbd38225c8d53d404fa715cd3cc27ee92c8e937194d727f6653866fa"
+    },
+    "ownership": {
+      "binding_indices_and_weights_unchanged": true,
+      "binding_table_byte_exact": true,
+      "certified_attachment_footprint": false,
+      "mass_geometry_accounting_expected_unchanged": true,
+      "onehot_vertices_are_only_proxy": true,
+      "physical_myo_sim_routes_unchanged": true
+    },
+    "schema": "numi.human.inferred-reference-surface-proof.v1",
+    "stable_id": 152,
+    "status": "prepared_unlaunched_unadmitted_candidate",
+    "unresolved_interfaces_not_classified_as_attachments": [
+      "left SCM vs torso FJ3290 stable27",
+      "left SCM vs head FJ3281 stable31",
+      "left SCM vs head FJ3309 stable33",
+      "left SCM vs left clavicle FJ3237 stable9",
+      "left SCM vs left pectoralis major sternocostal row74"
+    ]
+  },
+  "160": {
+    "native_verification_pending": true,
+    "patch_sha256": "e7eab968f9fc6f08f5b268d7be8352f7789189d019b2ce3752f4d07f4b1abb45",
+    "positions_bindings_weights_exact": true,
+    "scope": "Correct mirrored left superficial masseter inward winding. Reverses each face's final two indices and negates vertex normals. All positions, weights, binding indices, body transforms and triangle face identity are unchanged. This fixes sign, not source shape or physiology.",
+    "signed_volume_source_after_m3": 5.651158705544007e-06,
+    "signed_volume_source_before_m3": -5.651158705544007e-06,
+    "source_tissue": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/left-scm-and-masseters-composition-002/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+    "source_tissue_sha256": "9dad5934475e3c3517e920c821b54e69fc0cceee4958a27692f1e5905a6c1a7f",
+    "stable_id": 160,
+    "triangle_vertex_sets_exact": true
+  }
+}

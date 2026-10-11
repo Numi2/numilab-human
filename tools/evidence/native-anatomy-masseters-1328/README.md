@@ -22,3 +22,5 @@ The launcher recorded a literal DYLD_LIBRARY_PATH mismatch: new build-directory 
 The retained Mac mini assets and pinned runtime are required. See the native run declaration for the exact launch command and asset identities, summary.json for timings and revisions, and checks/native-verification.json for the geometry and physiology checks.
 
 Head/neck/back coverage, eight original defective muscle rows, existing inter-tissue interfaces, and the final complete-anatomy five-minute pair still need work. No clinical validation or performance qualification is claimed.
+
+The outward-winding correction and bilateral SCM composition are verified in [the successor native increment](../native-anatomy-bilateral-scm-masseters-1329/README.md). The original result above remains retained.
