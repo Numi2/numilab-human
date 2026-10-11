@@ -1234,3 +1234,72 @@ def test_append_reconstruction_provenance_matches_canonical_row(
         assert proof["inputs_unchanged"]
         actual = json.loads((out/source.name).with_suffix(".manifest.json").read_text())
         assert actual["source"]["surfaces"][-1] == row
+
+
+@pytest.fixture
+def complete_neck_back_subset(neck_subset, tmp_path):
+    """Small ABI fixture for all eight declared passive neck/back identities."""
+    data = pac._read_nhtiss4(neck_subset)
+    local = pac._row_slices(data, data["records"][0])
+    members = ("FJ1595", "FJ1573", "FJ1520", "FJ1520M",
+               "FJ1554", "FJ1554M", "FJ1521", "FJ1521M")
+    count, bc, vc, ic = 8, local["binding_count"], local["vertex_count"], local["index_count"]
+    payload = tmp_path / "complete-neck-back.nhtissue"
+    records = b"".join(struct.pack("<8I", i*bc, bc, i*vc, vc, i*ic, ic, 151+i, 1)
+                       for i in range(count))
+    arrays = pac._biceps_row_arrays(local)
+    indices = b"".join((arrays["faces"].astype("<u4")+i*vc).astype("<u4").tobytes()
+                       for i in range(count))
+    payload.write_bytes(struct.pack("<8s6I32s", b"NHTISS4\0", 5, count,
+                                    count*bc, count*vc, count*ic, 42, b"s"*32)
+                        + records + local["binding_bytes"]*count
+                        + local["vertex_bytes"]*count + indices)
+    manifest = json.loads(neck_subset.with_suffix(".manifest.json").read_text())
+    manifest["payload"].update(file=payload.name, sha256=digest(payload),
+                               bytes=payload.stat().st_size, surface_count=count,
+                               binding_count=count*bc, vertex_count=count*vc,
+                               index_count=count*ic)
+    prototype = manifest["source"]["surfaces"][0]
+    manifest["source"]["surfaces"] = [
+        {**prototype, "stable_id": 151+i, "member_id": member}
+        for i, member in enumerate(members)
+    ]
+    payload.with_suffix(".manifest.json").write_text(json.dumps(manifest))
+    return payload
+
+
+@pytest.mark.parametrize("head_count", range(1, 7))
+def test_reference_repair_after_complete_passive_coverage(
+        inputs, complete_neck_back_subset, head_subset, tmp_path, head_count):
+    source, patch, report, _ = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    for name, subset, selected in (
+            ("neck-back", complete_neck_back_subset, tuple(range(151, 159))),
+            ("head", head_subset, tuple(range(159, 159+head_count)))):
+        out = tmp_path / name
+        pac.append_passive_surfaces(source, subset, out, stable_ids=selected)
+        bind_anatomy_receipt(receipt, out/source.name, out/"anatomy.json")
+        source, receipt = out/source.name, out/"anatomy.json"
+    parent = pac._read_nhtiss4(source)
+    assert parent["surface_count"] == 158+head_count
+    out = tmp_path/"repair"
+    proof = compose(source, out, [(7, patch, report)], reference_surface_rows=(7,))
+    child = pac._read_nhtiss4(out/source.name)
+    assert child["surface_count"] == parent["surface_count"]
+    assert proof["binding_table_byte_exact"]
+    for old, new in zip(parent["records"], child["records"], strict=True):
+        if int(old[6]) != 7:
+            assert pac._row_local_equal(pac._row_slices(parent, old),
+                                        pac._row_slices(child, new))
+    bound = bind_anatomy_receipt(receipt, out/source.name, out/"anatomy.json")
+    assert bound["provenance"]["native_muscle_surfaces"]["surface_count"] == 158+head_count
+    assert bound["provenance"]["reference_surface_composition_binding"]["changed_stable_ids"] == [7]
+    assert bound["mass_geometry_accounting"] == {"reference_total_mass_kg": 72}
+    # Reference mode remains explicit, and the declared total stays bounded.
+    with pytest.raises(ValueError, match="unsupported NHTISS4 ABI or source inventory"):
+        compose(source, tmp_path/"legacy", [(7, patch, report)])
+    raw = bytearray(source.read_bytes())
+    struct.pack_into("<I", raw, 12, 165)
+    source.write_bytes(raw)
+    with pytest.raises(ValueError, match="unsupported NHTISS4 ABI or source inventory"):
+        compose(source, tmp_path/"oversized", [(7, patch, report)], reference_surface_rows=(7,))

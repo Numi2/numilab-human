@@ -229,7 +229,7 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
     raw = T.read_bytes()
     require(len(raw) >= 64, 'truncated NHTISS4 header')
     (magic, abi, nr, nb, nv, ni, fp, source_digest) = struct.unpack_from('<8s6I32s', raw)
-    require(magic == b'NHTISS4\x00' and abi == 5 and (nr == 150 or (reference_rows and 150 < nr <= 158)), 'unsupported NHTISS4 ABI or source inventory')
+    require(magic == b'NHTISS4\x00' and abi == 5 and (nr == 150 or (reference_rows and 150 < nr <= 164)), 'unsupported NHTISS4 ABI or source inventory')
     require(len(raw) == 64 + nr * 32 + nb * 36 + nv * 56 + ni * 4, 'NHTISS4 byte ranges')
     declared = json.loads(M.read_text())
     expected = declared['payload']
