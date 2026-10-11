@@ -17,3 +17,5 @@ All 858 other rendered surfaces, 157 accepted body poses and every value in the 
 The pinned Mini runtime and retained assets are required; --prepare-only checks launch inputs. The bundle retains exact source revisions, asset identities, launch command, device, timing, traces and a continuous native framebuffer recording. The seven-layer native viewer runs on the SSH Mac mini. No remote-desktop visibility is asserted.
 
 Forearm, neck/back, remaining foot and unexplained-interface work is open. The older five-minute paired physiology run uses older anatomy and does not qualify this updated body.
+
+A separate full terminal screen of all 150 passive muscle/tendon rows is retained. At accepted step 8000, 125 are closed and self-clear; two additional self-clear Achilles rows have the previously declared distal attachment openings. The remaining 23 rows have self-intersections; the two extensor hallucis longus rows also have unqualified boundary defects. This is a single-pose self/topology inventory, not whole-body or all-time clearance. Intersurface interfaces and the unadmitted neck/back candidates are separate open work.
