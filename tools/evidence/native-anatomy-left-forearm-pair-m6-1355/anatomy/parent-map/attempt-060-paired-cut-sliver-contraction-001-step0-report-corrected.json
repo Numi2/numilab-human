@@ -1,0 +1,101 @@
+{
+  "actual_native006_step0_capture": {
+    "accepted_body_state_sha256": "b063191a425cdfc7939d83f7ba3fcf9ada59823b2cb24c826b3322549d12979c",
+    "counts": {
+      "132": {
+        "faces": 12150,
+        "max_parent_terms": 3,
+        "vertices": 6071
+      },
+      "134": {
+        "faces": 8546,
+        "max_parent_terms": 3,
+        "vertices": 4275
+      }
+    },
+    "pack_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-006/baseline/native-run/accepted-geometry/step-0.mrvpack",
+    "pack_sha256": "a6f92ec055e41c1207793831dd60ab16041fdeac68b3341f6f94d95ab746c160",
+    "receipt_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-006/baseline/native-run/accepted-geometry/step-0.receipt.json",
+    "receipt_sha256": "26a04e54838d6e0db7281eeaf43ac490d9a4a86dc0db2191467bfe2be844a8c6",
+    "remeshed_surface_audits": {
+      "132": {
+        "degenerate_count": 0,
+        "degenerate_indices": [],
+        "self_aabb_candidate_pairs": 149725,
+        "self_count": 0,
+        "self_pairs": []
+      },
+      "134": {
+        "degenerate_count": 0,
+        "degenerate_indices": [],
+        "self_aabb_candidate_pairs": 117077,
+        "self_count": 0,
+        "self_pairs": []
+      }
+    },
+    "shared_seam_bitwise_equal": true,
+    "source_054_face_order_verified": true
+  },
+  "candidate_admitted": false,
+  "candidate_construction_report_path": "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/report.json",
+  "candidate_construction_report_sha256": "a1e26a07503e1b7fc6a7c9b9eb9f0b34317c0b79d0ea03317f8b98a99b34bf00",
+  "candidate_exact_check_path": "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/exact-check-001/report.json",
+  "candidate_exact_check_sha256": "4970552874209da204c804e6d1f36b3a487aa1b98e30ddbb9e3cf513bd31b975",
+  "candidate_exact_check_union": {
+    "self_count": 0,
+    "self_pairs": [],
+    "topology": {
+      "closed": true,
+      "edge_count": 24606,
+      "face_components": 12,
+      "face_count": 16404,
+      "vertex_count": 8098
+    },
+    "topology_error": null
+  },
+  "candidate_exact_union_certificate": {
+    "complete": true,
+    "report_path": "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/exact-check-001/report.json",
+    "report_sha256": "4970552874209da204c804e6d1f36b3a487aa1b98e30ddbb9e3cf513bd31b975",
+    "union_self_count": 0,
+    "union_topology": {
+      "closed": true,
+      "edge_count": 24606,
+      "face_components": 12,
+      "face_count": 16404,
+      "vertex_count": 8098
+    }
+  },
+  "candidate_path": "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/candidate.pkl",
+  "candidate_sha256": "7d2a1593548c50f1d9f57cb23fa42e2b51eb7aca2a5a6f2e93a83cfb855eddb9",
+  "cpu_only": true,
+  "elapsed_seconds": 32.28597587500008,
+  "evidence_boundary": "CPU-only geometric remesh of actual native006 step0 Float32 child positions. Candidate060 exact child and union checks pass (union closed, 12 components, zero self pairs). This diagnostic does not execute candidate bindings or constitute a native run.",
+  "full_054_dominant_map_max_reproduction_um": 0.27677678497145636,
+  "gpu_used": false,
+  "map_adaptation": {
+    "all_terms_positive_normalized": true,
+    "cross_row_face_endpoints_supported": true,
+    "global_points": 8389,
+    "mapped_points": 8389,
+    "original_shared_vertices": 2015,
+    "retained_shared_vertices": 1986
+  },
+  "pins": {
+    "/Users/n/numi-human-fds132-m6-1350/attempt-050/arrangement-001/result-001/source-parent-refs-054/report.json": "a6689267aa72e72a2920d5873bf434f7ac704e03a33223f02ca8a895964f1c35",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-050/arrangement-001/result-001/source-parent-refs-054/source-parent-refs-and-shared-interface.json": "5ee5e94363b4fa104e3dea2cb67d06a0cba68a2c1b70f021ea4f372b56fbae39",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-006/baseline/native-run/accepted-geometry/step-0.mrvpack": "a6f92ec055e41c1207793831dd60ab16041fdeac68b3341f6f94d95ab746c160",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-006/baseline/native-run/accepted-geometry/step-0.receipt.json": "26a04e54838d6e0db7281eeaf43ac490d9a4a86dc0db2191467bfe2be844a8c6",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-006/rest-registration-preflight.json": "bdab63eb6d7ae5191eaaad79e89140ced6b96fe1c26d8ec796ada4243a2e0919",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/candidate.pkl": "7d2a1593548c50f1d9f57cb23fa42e2b51eb7aca2a5a6f2e93a83cfb855eddb9",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/exact-check-001/report.json": "4970552874209da204c804e6d1f36b3a487aa1b98e30ddbb9e3cf513bd31b975",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/report.json": "a1e26a07503e1b7fc6a7c9b9eb9f0b34317c0b79d0ea03317f8b98a99b34bf00"
+  },
+  "rest_gate_subset_reason": "Only exact original 054 points survive; retained endpoints reuse existing exact source-parent maps; no new point or coefficient.",
+  "rest_registration_preflight_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-006/rest-registration-preflight.json",
+  "rest_registration_preflight_sha256": "bdab63eb6d7ae5191eaaad79e89140ced6b96fe1c26d8ec796ada4243a2e0919",
+  "rest_registration_preflight_status": "passed",
+  "schema": "numi.human.left-fds132-fdp134-step0-native-capture-remesh-diagnostic.v1",
+  "source_parent_manifest_sha256": "5ee5e94363b4fa104e3dea2cb67d06a0cba68a2c1b70f021ea4f372b56fbae39",
+  "status": "step0_capture_remesh_self_clear"
+}

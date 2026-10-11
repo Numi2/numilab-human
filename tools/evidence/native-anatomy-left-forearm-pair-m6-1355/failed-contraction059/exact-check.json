@@ -1,0 +1,52 @@
+{
+  "candidate_sha256": "a5794a879c37090301824d6b8f5665958538f20fefdc61517bb292a3020efe44",
+  "complete": true,
+  "duplicate_orientation_failures": [],
+  "shared_interface_triangles": 2148,
+  "checks": {
+    "132": {
+      "topology": {
+        "closed": true,
+        "face_components": 1,
+        "vertex_count": 6068,
+        "face_count": 12144,
+        "edge_count": 18216
+      },
+      "topology_error": null,
+      "self_count": 0,
+      "self_pairs": []
+    },
+    "134": {
+      "topology": {
+        "closed": true,
+        "face_components": 4,
+        "vertex_count": 4274,
+        "face_count": 8544,
+        "edge_count": 12816
+      },
+      "topology_error": null,
+      "self_count": 0,
+      "self_pairs": []
+    },
+    "union": {
+      "topology": null,
+      "topology_error": "cardiac partition certificate: open, nonmanifold or inconsistently oriented edge chain",
+      "self_count": 3,
+      "self_pairs": [
+        [
+          5158,
+          15031
+        ],
+        [
+          5159,
+          15031
+        ],
+        [
+          5159,
+          15032
+        ]
+      ]
+    }
+  },
+  "elapsed_seconds": 31.81724670800031
+}

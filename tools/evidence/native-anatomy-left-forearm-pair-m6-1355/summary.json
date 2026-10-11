@@ -1,0 +1,76 @@
+{
+  "status": "failed_anatomy_not_admitted",
+  "native_execution_completed": true,
+  "simulated_seconds": 16.00000075995922,
+  "launcher_wall_seconds": 104.5300494589992,
+  "native_wall_seconds": 99.404346208,
+  "full_run_real_time_factor": 0.15306604027041096,
+  "individual_children_clear_at_all_eight_captures": true,
+  "shared_seam_vertices_bitwise_equal": 1986,
+  "native_union_self_pairs_by_step": {
+    "0": 0,
+    "3807": 416,
+    "4767": 416,
+    "5023": 416,
+    "5599": 416,
+    "6207": 408,
+    "7423": 398,
+    "8000": 401
+  },
+  "older_baseline_151999_exact_parent_union_pairs": 387,
+  "physiology_trace_exact_parent_rows": 1000,
+  "unchanged_non_target_native_surfaces": 866,
+  "limitation": "Source partition and individual child checks do not ensure joint geometry stays nonintersecting under independent source-parent deformation. This candidate is failed anatomical evidence, not a completed repair or final deliverable.",
+  "next_step": "Validate source-preserving interface refinement with correctly registered shared field; no final anatomical admission.",
+  "shared_registered_field_native008": {
+    "simulated_seconds": 16.00000075995922,
+    "launcher_wall_seconds": 104.89849008300007,
+    "real_time_factor": 0.15252841816216184,
+    "union_self_pairs_by_step": {
+      "0": 0,
+      "3807": 15,
+      "4767": 15,
+      "5023": 15,
+      "5599": 15,
+      "6207": 15,
+      "7423": 15,
+      "8000": 15
+    },
+    "child_self_pairs_by_step": {
+      "0": {
+        "132": 0,
+        "134": 0
+      },
+      "3807": {
+        "132": 3,
+        "134": 0
+      },
+      "4767": {
+        "132": 3,
+        "134": 0
+      },
+      "5023": {
+        "132": 3,
+        "134": 0
+      },
+      "5599": {
+        "132": 3,
+        "134": 0
+      },
+      "6207": {
+        "132": 3,
+        "134": 0
+      },
+      "7423": {
+        "132": 3,
+        "134": 0
+      },
+      "8000": {
+        "132": 3,
+        "134": 0
+      }
+    },
+    "status": "failed_anatomy_not_admitted",
+    "overbroad_child_provenance_comparison": "Retained child auditor also compares remeshed rows to unremeshed raw rows; that provenance failure is not a geometry failure. All actual self-pair failures remain valid."
+  }
+}
