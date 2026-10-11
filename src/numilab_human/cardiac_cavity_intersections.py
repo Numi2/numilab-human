@@ -308,6 +308,8 @@ def _audit_pair_prepared_first(first_index, second, *, same_surface=False):
 
 
 def _audit_pair(first, second, *, same_surface):
+    if first is None or second is None:
+        raise HumanImportError("missing triangle records: geometry preparation did not complete")
     return _audit_record_pairs(
         _aabb_candidate_pairs(first, second, same_surface=same_surface),
         same_surface=same_surface)

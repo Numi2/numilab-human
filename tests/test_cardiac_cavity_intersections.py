@@ -27,6 +27,13 @@ def run(*chambers):
 
 
 class PredicateTests(unittest.TestCase):
+    def test_missing_prepared_records_cannot_pass_as_empty_geometry(self):
+        for first, second in ((None, None), (None, []), ([], None)):
+            with self.subTest(first=first, second=second):
+                with self.assertRaisesRegex(HumanImportError, "missing triangle records"):
+                    audit._audit_pair(first, second, same_surface=True)
+        self.assertEqual(audit._audit_pair([], [], same_surface=True)["count"], 0)
+
     def pair(self, vertices, faces):
         records = audit._records(vertices, faces)
         return audit._audit_pair(records, records, same_surface=True)
