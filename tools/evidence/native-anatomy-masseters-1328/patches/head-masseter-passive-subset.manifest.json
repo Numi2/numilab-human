@@ -1,0 +1,394 @@
+{
+  "coverage": {
+    "configured_surface_count": 2,
+    "emitted_surface_count": 2,
+    "muscle_surface_count": 2,
+    "passive_registered_support_surface_count": 2,
+    "route_bound_muscle_surface_count": 0,
+    "selected_stable_ids": [
+      159,
+      160
+    ],
+    "tendon_surface_count": 0
+  },
+  "evidence_boundary": "Source/pose/target geometry is checked offline. This does not establish measured attachments, jaw mechanics, anatomy admission, or native cycle admission.",
+  "payload": {
+    "binding_count": 2,
+    "bytes": 112520,
+    "file": "head-masseter-passive-subset.nhtissue",
+    "index_count": 8424,
+    "registration_fingerprint32": "b1b410ad",
+    "sha256": "cd790ce2a8c68bdcbd6544b1f87b02e76ef42ddb1d1248b10067d1f2603c24aa",
+    "surface_count": 2,
+    "vertex_count": 1404
+  },
+  "runtime_binding": "One exact existing Core body-23 registered head transform per row; one-hot head-support visual weights only.",
+  "schema": "numi.human.bodyparts3d-myosim-fullbody-muscle-surface-visual-payload.v1",
+  "source": {
+    "bodyparts": {
+      "archives": [
+        {
+          "file": "isa_BP3D_4.0_obj_99.zip",
+          "hierarchy": "is_a",
+          "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+        },
+        {
+          "file": "partof_BP3D_4.0_obj_99.zip",
+          "hierarchy": "part_of",
+          "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+        }
+      ],
+      "id": "bodyparts3d_4",
+      "version": "4.0"
+    },
+    "external_source_attribution": [
+      "Z-Anatomy CC BY-SA 4.0",
+      "BodyParts3D - DBCLS CC BY-SA 2.1 Japan"
+    ],
+    "geometry_interpretation": "Two source-registered inferred passive head surfaces; they add no MyoSim route or jaw function.",
+    "myosim_manifest": {
+      "file": "myosim-fullbody-reference.manifest.json",
+      "sha256": "844d05330104a43f6c45867020f2abd493adec35d6e2f8f90fc636ee9bec04e7"
+    },
+    "myosim_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "registration": {
+      "file": "registration.json",
+      "sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
+    },
+    "surfaces": [
+      {
+        "external_source": {
+          "atlas": "Z-Anatomy",
+          "harmonic_source_report_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/source-report.json",
+          "harmonic_source_report_sha256": "0a35eee2499c855d3b41a9893ad726e116a10ef74ae6badc7e2fd69db267ee87",
+          "license": "CC BY-SA 4.0 International",
+          "license_text_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/License.txt",
+          "license_text_sha256": "196b66b56551a862e59872f7cdb70e6d9a6ad84e9105962fca8ec28c14e97520",
+          "readme_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/Readme.md",
+          "readme_sha256": "2439e8ccea759c644bbaf2f6fd48551fe054bfda30fd3d97d8384f75273466b3",
+          "registration_report_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/registration-and-interface-report-003.json",
+          "registration_report_sha256": "5b8a5959c4a0e3e7ff559a3dfa2f3687afd1ff363aa6c0f8c686189a23e62ccf",
+          "required_attribution": "Z-Anatomy - The libre 3D atlas of anatomy - CC BY-SA 4.0",
+          "source_array_export_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.npz",
+          "source_array_export_sha256": "2a13e4fc4488aa2c4ceca15a82a32ba22e3bea4b54797bb650c59f707c0e344b",
+          "source_attachment_proxy_markers": {
+            "insertion": {
+              "interpretation": "Marker-object proximity only; not a measured or certified attachment footprint.",
+              "nearest_face_ids_first_eight": [
+                973,
+                789,
+                728,
+                355,
+                737,
+                601,
+                392,
+                137
+              ],
+              "parent": "Mandible",
+              "point_count": 36,
+              "source_marker_to_canonical_bone_triangle_distance_mm": {
+                "count": 36,
+                "max_mm": 4.535793324484501,
+                "median_mm": 0.8988252808035092,
+                "min_mm": 0.023660756707650367,
+                "p95_mm": 3.849692364832962,
+                "p99_mm": 4.417798516380463
+              },
+              "target_member": "FJ3289",
+              "target_stable_id": 35
+            },
+            "interpretation": "Unchanged Blender endpoint/attachment-proxy objects and their bone distances; no vertex attachment footprint mask is supplied or inferred.",
+            "origin_proxy": {
+              "interpretation": "Marker-object proximity only; not a measured or certified attachment footprint.",
+              "nearest_face_ids_first_eight": [
+                957,
+                957,
+                680,
+                963,
+                680,
+                963,
+                977,
+                964
+              ],
+              "parent": "Temporal bone.r",
+              "point_count": 55,
+              "source_marker_to_canonical_bone_triangle_distance_mm": {
+                "count": 55,
+                "max_mm": 4.2011261264512925,
+                "median_mm": 1.0882028255747094,
+                "min_mm": 0.01317546741226668,
+                "p95_mm": 4.015767766036818,
+                "p99_mm": 4.117353135892474
+              },
+              "target_member": "FJ3386",
+              "target_stable_id": 30
+            },
+            "source_marker_metadata_file": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-attachment-objects.meta",
+            "source_marker_metadata_sha256": "50a7f117933ed23b3b167158db01556fd842b388cae6c87f57ed5e7015ec3045",
+            "source_marker_object_file": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-attachment-objects.npz",
+            "source_marker_object_sha256": "224a3b164b9ddf3c6f903d6aca771cdf3aaeb53e28167242cf73702cbbb3ce2e"
+          },
+          "source_blender_member": "Startup.blend",
+          "source_blender_member_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/Startup.blend",
+          "source_blender_member_sha256": "9f08a17ea0115fed80b2a73ecdf0a1bc2ab2f6956f37c593ce23d513ea35afcd",
+          "source_correction": "radius-1 uniform-Laplacian patch, blend alpha 0.25; inferred reference cleanup, not a measured individual",
+          "source_export_metadata_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.json.meta",
+          "source_export_metadata_sha256": "cd7d30b4b8f8b448c9e433169b7e79a1cbabce3b5d8fdab376d38e4c5783c4a7",
+          "source_member_id": "FMA49001",
+          "source_object_inventory_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.json",
+          "source_object_inventory_sha256": "329ba29ed4b8fff491b84fb7cf03bb551ff43ec007c0dc56b366bdfc307d8d77",
+          "source_object_name": "Superficial part of masseter.r",
+          "upstream_attribution": "BodyParts3D - The Database Center for Life Science - CC BY-SA 2.1 Japan"
+        },
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member_id": "FMA49001",
+        "passive_visual_binding": {
+          "inferred_support_not_source_attachment_mask": true,
+          "jaw_function": "not_modeled",
+          "mechanics_changed": false,
+          "method": "registered_head_rigid_visual_support",
+          "myosim_route_added": false,
+          "support_core_body_index": 23,
+          "supports": [
+            "head"
+          ]
+        },
+        "source_geometry_bounds": {
+          "attachment_masks_supplied": false,
+          "changed_source_vertex_count": 5,
+          "head_body_local_bounds_m": {
+            "max": [
+              0.06547157037686406,
+              0.007929610360339012,
+              0.14021086122834558
+            ],
+            "min": [
+              0.03757492660867757,
+              -0.047305246246993615,
+              0.08399840022864913
+            ]
+          },
+          "max_registered_correction_from_original_m": 0.0006757559998477188,
+          "max_source_correction_from_original_m": 0.0006523398850397918,
+          "max_weight_core_23": 1.0,
+          "member_id": "FMA49001",
+          "min_weight_core_23": 1.0,
+          "one_hot_head_support_vertex_count": 702,
+          "other_core_weight_min_max": [
+            0.0,
+            0.0
+          ],
+          "registered_bodyparts_world_bounds_m": {
+            "max": [
+              -0.03772382065653801,
+              -0.11168979108333588,
+              1.5002365112304688
+            ],
+            "min": [
+              -0.06527641415596008,
+              -0.15208923816680908,
+              1.436697006225586
+            ]
+          },
+          "registered_candidate_vertex_arrays_sha256": "24f978e95e041b8317193d52e5df09bf1e9ab32ca5c2b8ace5653abbc98076af",
+          "source_face_origins": {
+            "first": 0,
+            "last": 1403,
+            "method": "identity_original_triangle_row"
+          },
+          "source_faces_preserved": true,
+          "source_name": "right superficial masseter",
+          "source_object_name": "Superficial part of masseter.r",
+          "source_original_candidate_vertex_arrays_sha256": "626910a3fb0b60e88ce20b9d027b6cd5f9ab7f84e17ee1f2eb205db685f2b638",
+          "source_world_bounds_m": {
+            "max": [
+              -0.03621896728873253,
+              -0.017181361094117165,
+              1.574326515197754
+            ],
+            "min": [
+              -0.06270059198141098,
+              -0.05667736381292343,
+              1.5126748085021973
+            ]
+          },
+          "stable_id": 159,
+          "triangle_count": 1404,
+          "vertex_count": 702
+        },
+        "source_name": "right superficial masseter",
+        "stable_id": 159,
+        "triangle_count": 1404,
+        "vertex_count": 702
+      },
+      {
+        "external_source": {
+          "atlas": "Z-Anatomy",
+          "harmonic_source_report_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/masseter-harmonic-patch-001/source-report.json",
+          "harmonic_source_report_sha256": "0a35eee2499c855d3b41a9893ad726e116a10ef74ae6badc7e2fd69db267ee87",
+          "license": "CC BY-SA 4.0 International",
+          "license_text_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/License.txt",
+          "license_text_sha256": "196b66b56551a862e59872f7cdb70e6d9a6ad84e9105962fca8ec28c14e97520",
+          "readme_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/Readme.md",
+          "readme_sha256": "2439e8ccea759c644bbaf2f6fd48551fe054bfda30fd3d97d8384f75273466b3",
+          "registration_report_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-bone-triangle-registration-001/registration-and-interface-report-003.json",
+          "registration_report_sha256": "5b8a5959c4a0e3e7ff559a3dfa2f3687afd1ff363aa6c0f8c686189a23e62ccf",
+          "required_attribution": "Z-Anatomy - The libre 3D atlas of anatomy - CC BY-SA 4.0",
+          "source_array_export_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.npz",
+          "source_array_export_sha256": "2a13e4fc4488aa2c4ceca15a82a32ba22e3bea4b54797bb650c59f707c0e344b",
+          "source_attachment_proxy_markers": {
+            "insertion": {
+              "interpretation": "Marker-object proximity only; not a measured or certified attachment footprint.",
+              "nearest_face_ids_first_eight": [
+                4155,
+                4970,
+                4598,
+                5197,
+                4644,
+                4979,
+                5347,
+                5387
+              ],
+              "parent": "Mandible",
+              "point_count": 36,
+              "source_marker_to_canonical_bone_triangle_distance_mm": {
+                "count": 36,
+                "max_mm": 4.628649377185579,
+                "median_mm": 1.405114300149007,
+                "min_mm": 0.03678377003329872,
+                "p95_mm": 3.8839896309272754,
+                "p99_mm": 4.50688399889862
+              },
+              "target_member": "FJ3289",
+              "target_stable_id": 35
+            },
+            "interpretation": "Unchanged Blender endpoint/attachment-proxy objects and their bone distances; no vertex attachment footprint mask is supplied or inferred.",
+            "origin_proxy": {
+              "interpretation": "Marker-object proximity only; not a measured or certified attachment footprint.",
+              "nearest_face_ids_first_eight": [
+                3803,
+                3803,
+                4150,
+                3806,
+                3806,
+                3806,
+                3806,
+                3802
+              ],
+              "parent": "Temporal bone.l",
+              "point_count": 55,
+              "source_marker_to_canonical_bone_triangle_distance_mm": {
+                "count": 55,
+                "max_mm": 4.028187828296633,
+                "median_mm": 0.9343835738499264,
+                "min_mm": 0.005348389022417491,
+                "p95_mm": 3.8933760785709155,
+                "p99_mm": 3.959535267818021
+              },
+              "target_member": "FJ3281",
+              "target_stable_id": 31
+            },
+            "source_marker_metadata_file": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-attachment-objects.meta",
+            "source_marker_metadata_sha256": "50a7f117933ed23b3b167158db01556fd842b388cae6c87f57ed5e7015ec3045",
+            "source_marker_object_file": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-attachment-objects.npz",
+            "source_marker_object_sha256": "224a3b164b9ddf3c6f903d6aca771cdf3aaeb53e28167242cf73702cbbb3ce2e"
+          },
+          "source_blender_member": "Startup.blend",
+          "source_blender_member_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/Startup.blend",
+          "source_blender_member_sha256": "9f08a17ea0115fed80b2a73ecdf0a1bc2ab2f6956f37c593ce23d513ea35afcd",
+          "source_correction": "radius-1 uniform-Laplacian patch, blend alpha 0.25; inferred reference cleanup, not a measured individual",
+          "source_export_metadata_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.json.meta",
+          "source_export_metadata_sha256": "cd7d30b4b8f8b448c9e433169b7e79a1cbabce3b5d8fdab376d38e4c5783c4a7",
+          "source_member_id": "FMA49002",
+          "source_object_inventory_path": "/Users/n/numi-human-retained-delivery-20261009/head-muscle-coverage-1291/alternate-head-source-inventory-001/z-anatomy-range/head-main-meshes.json",
+          "source_object_inventory_sha256": "329ba29ed4b8fff491b84fb7cf03bb551ff43ec007c0dc56b366bdfc307d8d77",
+          "source_object_name": "Superficial part of masseter.l",
+          "upstream_attribution": "BodyParts3D - The Database Center for Life Science - CC BY-SA 2.1 Japan"
+        },
+        "layer": "muscle",
+        "matched_muscles": [],
+        "member_id": "FMA49002",
+        "passive_visual_binding": {
+          "inferred_support_not_source_attachment_mask": true,
+          "jaw_function": "not_modeled",
+          "mechanics_changed": false,
+          "method": "registered_head_rigid_visual_support",
+          "myosim_route_added": false,
+          "support_core_body_index": 23,
+          "supports": [
+            "head"
+          ]
+        },
+        "source_geometry_bounds": {
+          "attachment_masks_supplied": false,
+          "changed_source_vertex_count": 5,
+          "head_body_local_bounds_m": {
+            "max": [
+              -0.03803316166195966,
+              0.008027144068242453,
+              0.13979250704234025
+            ],
+            "min": [
+              -0.06541761092337162,
+              -0.04718502333134689,
+              0.08329837339658863
+            ]
+          },
+          "max_registered_correction_from_original_m": 0.0006757559998477188,
+          "max_source_correction_from_original_m": 0.0006523398850397918,
+          "max_weight_core_23": 1.0,
+          "member_id": "FMA49002",
+          "min_weight_core_23": 1.0,
+          "one_hot_head_support_vertex_count": 702,
+          "other_core_weight_min_max": [
+            0.0,
+            0.0
+          ],
+          "registered_bodyparts_world_bounds_m": {
+            "max": [
+              0.06462513655424118,
+              -0.11132269352674484,
+              1.5003993511199951
+            ],
+            "min": [
+              0.03731376305222511,
+              -0.15169429779052734,
+              1.436792016029358
+            ]
+          },
+          "registered_candidate_vertex_arrays_sha256": "9df6e741f6c4dfdbcc85d7cae8dcb66efc3d1823f347fdaa00390c02368cc110",
+          "source_face_origins": {
+            "first": 0,
+            "last": 1403,
+            "method": "identity_original_triangle_row"
+          },
+          "source_faces_preserved": true,
+          "source_name": "left superficial masseter",
+          "source_object_name": "Superficial part of masseter.l",
+          "source_original_candidate_vertex_arrays_sha256": "9ccb4c222f5d932246143ff722fc6862f480cdf5f03c83cff36a0ae12b67cf30",
+          "source_world_bounds_m": {
+            "max": [
+              0.06270062178373337,
+              -0.017181361094117165,
+              1.574326515197754
+            ],
+            "min": [
+              0.036218997091054916,
+              -0.05667736381292343,
+              1.5126748085021973
+            ]
+          },
+          "stable_id": 160,
+          "triangle_count": 1404,
+          "vertex_count": 702
+        },
+        "source_name": "left superficial masseter",
+        "stable_id": 160,
+        "triangle_count": 1404,
+        "vertex_count": 702
+      }
+    ]
+  },
+  "status": "inferred_passive_head_reference_visual_input_not_collision_or_physics"
+}

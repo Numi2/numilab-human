@@ -1,0 +1,43 @@
+{
+  "accepted_steps": 8000,
+  "anatomy_complete": false,
+  "coupled_physiology_columns": 60,
+  "coupled_physiology_exact_parent_rows": 1000,
+  "device": "SSH macmini; Apple M4 Pro 24GB; macOS26.6",
+  "environment_identity": {
+    "canonical_library_directories_identical": true,
+    "differences": {
+      "DYLD_LIBRARY_PATH": {
+        "declared": "/Users/n/numi-lab-passive-single-binding-build-1328/lib:/Users/n/numi-lab-passive-single-binding-build-1328/matter",
+        "observed": "/Users/n/numi-lab-complete-body-capture-build-1276-001/lib:/Users/n/numi-lab-complete-body-capture-build-1276-001/matter"
+      }
+    },
+    "explanation": "resting_run resolves symlinked reusable build library paths to the original pinned runtime. All other environment fields and native argv match exactly.",
+    "literal_environment_match": false
+  },
+  "five_minute_final_anatomy_qualification": false,
+  "labels": [
+    "right superficial masseter",
+    "left superficial masseter"
+  ],
+  "movie_frames": 252,
+  "native_capture_count": 8,
+  "new_passive_stable_ids": [
+    159,
+    160
+  ],
+  "new_surface_self_and_external_pairs": 0,
+  "owner_wall_seconds": 161.78676608297974,
+  "performance_work_deferred": true,
+  "prior_surfaces_exact": 861,
+  "real_time_factor": 0.0988956043029729,
+  "simulated_seconds": 16,
+  "source_revisions": {
+    "Numi2/numi-brain": "a1cf7218fae5d26f9aed9d845047fc6c472ad596",
+    "Numi2/numi-lab": "1c68fc98caffa9349e5b82f28161c29afc8e70a0",
+    "Numi2/numilab-human": "6a5596c2038ea98f56bb63b2994b04a98452c9b4"
+  },
+  "surface_audit_rows": 252,
+  "surrounding_surfaces_per_new_row": 862,
+  "tissue_sha256": "f94c6d06f32564ca44cef54f9fe2b3fa232b7246eb636e75bca00e4cb85e3101"
+}
