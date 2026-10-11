@@ -2403,7 +2403,11 @@ def _condition_shared_source_directions(
                             method="SLSQP",
                             options={"maxiter": 96, "ftol": 1.0e-12},
                         )
-                        branch_checked = checked_direction(branch_result.x, selection_bound)
+                        # Keep selection_bound as the solver's numerical target, but
+                        # admit a branch against the unchanged original alignment
+                        # contract. An optimizer result one ulp below its tightened
+                        # target is still valid if it passes the original bound.
+                        branch_checked = checked_direction(branch_result.x, minimum)
                         branch_attempts.append({
                             "branch_index": branch_index,
                             "dominant_axis": axis,
@@ -2457,6 +2461,8 @@ def _condition_shared_source_directions(
                     "selected_optimizer_message": str(getattr(selected_result, "message", "")),
                     "selected_optimizer_iterations": int(getattr(selected_result, "nit", 0)),
                     "selected_result_norm_before_normalization": length,
+                    "selection_projection_target": float(selection_bound),
+                    "original_acceptance_projection_bound": float(minimum),
                     "minimum_all_constraint_alignment": float(alignment.min()),
                     "branch_attempts": branch_attempts,
                 }

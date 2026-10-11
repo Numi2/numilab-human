@@ -1016,7 +1016,7 @@ def test_active_face_conditioning_falls_back_from_zero_polar_projection(monkeypa
     fallback = report["nonzero_direction_fallbacks"][0]
     repeated_fallback = repeated_report["nonzero_direction_fallbacks"][0]
     assert fallback["preferred_result_norm_before_normalization"] == 0.0
-    assert fallback["minimum_all_constraint_alignment"] >= 0.500001
+    assert fallback["minimum_all_constraint_alignment"] >= 0.5
     assert fallback["selected_branch_index"] == repeated_fallback["selected_branch_index"]
     assert [row["branch_index"] for row in fallback["branch_attempts"]] == list(range(6))
     assert any(row["feasible_nonzero"] for row in fallback["branch_attempts"])
@@ -1024,7 +1024,56 @@ def test_active_face_conditioning_falls_back_from_zero_polar_projection(monkeypa
                     if row["branch_index"] == fallback["selected_branch_index"])
     assert selected["feasible_nonzero"]
     assert np.isclose(np.linalg.norm(result[0]), 1.0, atol=1.0e-12)
-    assert np.dot(result[0], np.array([0.0, 0.0, 1.0])) >= 0.500001
+    assert np.dot(result[0], np.array([0.0, 0.0, 1.0])) >= 0.5
+
+
+def test_active_face_fallback_accepts_original_bound_below_selection_target(monkeypatch):
+    from types import SimpleNamespace
+    import scipy.optimize
+    from numilab_human.common_atlas_skin_clearance import _condition_shared_source_directions
+
+    maps = np.tile(np.eye(3), (1, 3, 1, 1))
+    source = np.array([[0.0, 0.0, -1.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]])
+    faces = np.array([[0, 1, 2]])
+    normals = np.array([[[0.0, 0.0, 1.0]]])
+    cosine = 0.5000005
+    side = cosine / np.sqrt(1.0 - cosine * cosine)
+    branch_candidates = (
+        np.array([1.0, 0.0, side]),
+        np.array([-1.0, 0.0, side]),
+        np.array([0.0, 1.0, side]),
+        np.array([0.0, -1.0, side]),
+        np.array([0.0, 0.0, 1.0]),
+        np.array([0.0, 0.0, -1.0]),
+    )
+    calls = []
+
+    def zero_projection_then_boundary_branches(*args, **kwargs):
+        if not calls:
+            calls.append("preferred")
+            return SimpleNamespace(
+                x=np.zeros(3), success=True, status=0,
+                message="synthetic zero homogeneous-cone projection", nit=1,
+            )
+        index = len(calls) - 1
+        calls.append(index)
+        return SimpleNamespace(
+            x=branch_candidates[index], success=True, status=0,
+            message="synthetic branch result at original contract boundary", nit=1,
+        )
+
+    monkeypatch.setattr(scipy.optimize, "minimize", zero_projection_then_boundary_branches)
+    result, report = _condition_shared_source_directions(maps, source, faces, normals)
+
+    assert len(calls) == 7
+    fallback = report["nonzero_direction_fallbacks"][0]
+    minimum = fallback["minimum_all_constraint_alignment"]
+    assert fallback["selection_projection_target"] == 0.500001
+    assert fallback["original_acceptance_projection_bound"] == 0.5
+    assert 0.5 <= minimum < 0.500001
+    assert fallback["selected_branch_index"] == 0
+    assert np.isclose(np.linalg.norm(result[0]), 1.0, atol=1.0e-12)
+    assert np.dot(result[0], np.array([0.0, 0.0, 1.0])) >= 0.5
 
 
 def test_active_face_conditioning_handles_empty_faces_and_rejects_zero_normals():
