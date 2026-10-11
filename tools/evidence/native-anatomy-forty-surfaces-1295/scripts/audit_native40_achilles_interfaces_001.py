@@ -1,0 +1,217 @@
+#!/usr/bin/env python3
+"""Read-only exact tendon self/topology/bound-bone audit of native40 captures."""
+from __future__ import annotations
+import hashlib, importlib.util, json, math, os, sys, time
+from pathlib import Path
+import numpy as np
+
+for key in ("OPENBLAS_NUM_THREADS","OMP_NUM_THREADS","VECLIB_MAXIMUM_THREADS","MKL_NUM_THREADS"):
+    os.environ[key]="1"
+
+BASE=Path("/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forty-surface-native-composition-001")
+RUN=BASE/"baseline/native-run"
+E=Path("/Users/n/numi-human-resting-evidence-20261005")
+TISS=Path("/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forty-surface-native-composition-001/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue")
+TM=TISS.with_suffix(".manifest.json")
+ROW_NPZ={7:E/"tendon-source-loft-clearance-039/composer-row-7.npz",8:E/"tendon-source-loft-clearance-039/composer-row-8.npz"}
+ROW_RECEIPT={7:E/"tendon-source-loft-clearance-039/composition-receipts/row-7.json",8:E/"tendon-source-loft-clearance-039/composition-receipts/row-8.json"}
+TISS_CODEC=Path("/Users/n/numi-human-self-separation-integration-1259/src/numilab_human/passive_attachment_composition.py")
+CLEARANCE=Path("/Users/n/numi-human-self-separation-integration-1259/src/numilab_human/common_atlas_skin_clearance.py")
+CI=Path("/Users/n/numi-human-self-separation-integration-1259/src/numilab_human/cardiac_cavity_intersections.py")
+GEOM=Path("/Users/n/numi-human-self-separation-integration-1259/src/numilab_human/cardiac_cavity_geometry.py")
+CAPTURES=(0,4767,5023,5599,6207,6815,7423,8000)
+EXPECTED_TISS_SHA="fc0847bda9a82441c8d0a35e6f62a33cfd3fe7933431fcefa165e661d14a374b"
+EXPECTED_NPZ={7:"191790fec0bb9cb5cae0549a6cf7e9c4d59415e9ad2e5ae5b16cf0f6926e988e",8:"e21aa7a14f433696114015b267a67c67cab6c5eda2c8fadbcedb833920ac098d"}
+EXPECTED_RUN_TENDON_SHA="49daaf61421254cb18f3aa32f1d332b1810537afd4c4ef813abd2f0d118dcecc"
+BINDINGS={7:{131,136,138},8:{145,150,152}}
+CALCANEUS={7:(138,6),8:(152,7)}
+
+
+def sha(p):
+    h=hashlib.sha256()
+    with Path(p).open("rb") as f:
+        for block in iter(lambda:f.read(4*1024*1024),b""):h.update(block)
+    return h.hexdigest()
+
+def need(x,msg):
+    if not x: raise RuntimeError(msg)
+def load_file(path,name):
+    spec=importlib.util.spec_from_file_location(name,path)
+    need(spec is not None and spec.loader is not None,"cannot load "+str(path))
+    mod=importlib.util.module_from_spec(spec);sys.modules[name]=mod;spec.loader.exec_module(mod);return mod
+
+def ring_group(face):
+    rr=[46 if int(i)==1504 else int(i)//32 for i in face]
+    lo,hi=min(rr),max(rr)
+    if hi<=2:return "admitted_rings_0_2"
+    if lo>=3 and hi<=11:return "repaired_rings_3_11"
+    if lo>=25 and hi<=43:return "repaired_rings_25_43"
+    if lo>=12 and hi<=24:return "fixed_rings_12_24"
+    if lo>=44 and hi<=46:return "fixed_rings_44_46_cap"
+    if (lo,hi)==(2,3):return "boundary_rings_2_3"
+    if (lo,hi)==(11,12):return "boundary_rings_11_12"
+    if (lo,hi)==(24,25):return "boundary_rings_24_25"
+    if (lo,hi)==(43,44):return "boundary_rings_43_44"
+    return f"unclassified_mixed_rings_{lo}_{hi}"
+
+def exact_degenerate_faces(lattice,faces):
+    bad=[]
+    for i,face in enumerate(faces):
+        a,b,c=(lattice[int(k)] for k in face)
+        u=tuple(b[j]-a[j] for j in range(3));v=tuple(c[j]-a[j] for j in range(3))
+        n=(u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0])
+        if not any(n):bad.append(i)
+    return bad
+
+def p2segment(p,a,b):
+    ab=b-a; den=float(np.dot(ab,ab))
+    if den==0:return float(np.dot(p-a,p-a))
+    t=float(np.clip(np.dot(p-a,ab)/den,0.0,1.0));d=p-(a+t*ab)
+    return float(np.dot(d,d))
+
+def point_triangle_distance(p,tri):
+    a,b,c=tri;ab=b-a;ac=c-a;ap=p-a
+    d00=float(np.dot(ab,ab));d01=float(np.dot(ab,ac));d11=float(np.dot(ac,ac));d20=float(np.dot(ap,ab));d21=float(np.dot(ap,ac))
+    den=d00*d11-d01*d01
+    if den>0:
+        v=(d11*d20-d01*d21)/den;w=(d00*d21-d01*d20)/den;u=1-v-w
+        if u>=0 and v>=0 and w>=0:
+            n=np.cross(ab,ac);return abs(float(np.dot(ap,n)))/float(np.linalg.norm(n))
+    return math.sqrt(min(p2segment(p,a,b),p2segment(p,b,c),p2segment(p,c,a)))
+def boundary_vertex_distances(boundary_ids,xyz,calc_xyz,calc_faces):
+    tri=calc_xyz[calc_faces]
+    out=[]
+    for vid in sorted(boundary_ids):
+        p=xyz[int(vid)]
+        dist=min(point_triangle_distance(p,t) for t in tri)
+        out.append({"vertex_id":int(vid),"nearest_calcaneus_triangle_surface_distance_m_float64":dist})
+    vals=[r["nearest_calcaneus_triangle_surface_distance_m_float64"] for r in out]
+    return {"method":"minimum Euclidean point-to-triangle distance computed in Float64 from captured Float32 coordinates; descriptive, not exact intersection or penetration depth","vertex_count":len(out),"minimum_m":min(vals) if vals else None,"median_m":float(np.median(vals)) if vals else None,"maximum_m":max(vals) if vals else None,"samples":out}
+
+def main():
+    started=time.monotonic()
+    sys.path.insert(0,"/Users/n/numi-human-self-separation-integration-1259/src")
+    from numilab_human import common_atlas_skin_clearance as clear
+    from numilab_human import cardiac_cavity_intersections as ci
+    from numilab_human import cardiac_cavity_geometry as geom
+    codec=load_file(TISS_CODEC,"_tendon_nhtiss_codec_011")
+    decl_path=BASE/"baseline/run-declaration.json"
+    meta_path=RUN/"run-metadata.json"
+    inv_path=RUN/"invocation.json"
+    declaration=json.loads(decl_path.read_text());meta=json.loads(meta_path.read_text());invocation=json.loads(inv_path.read_text())
+    need(meta.get("exit_code")==0,"baseline run metadata does not show exit_code 0")
+    need(meta.get("argv")==invocation.get("argv"),"run metadata/invocation argv differ")
+    need(tuple(declaration["capture_steps"])==CAPTURES,"declaration capture schedule differs")
+    tissue_hash=meta.get("asset_sha256",{}).get(str(TISS))
+    need(tissue_hash==EXPECTED_TISS_SHA and sha(TISS)==tissue_hash,"native NHTISS asset identity mismatch")
+    tendon_path=Path(next(p for p in meta["asset_sha256"] if p.endswith(".nhtendon")))
+    need(sha(tendon_path)==meta["asset_sha256"][str(tendon_path)]==EXPECTED_RUN_TENDON_SHA,"NHTENDON runtime input pin mismatch")
+    tiss=codec._read_nhtiss4(TISS)
+    manifest=json.loads(TM.read_text())
+    need(manifest["payload"]["sha256"]==tissue_hash and sha(TM)==manifest["payload"].get("manifest_sha256",sha(TM)),"NHTISS manifest does not bind payload")
+    rows={}; source_contract={}
+    pins={Path(__file__):sha(Path(__file__)),decl_path:sha(decl_path),meta_path:sha(meta_path),inv_path:sha(inv_path),TISS:sha(TISS),TM:sha(TM),tendon_path:sha(tendon_path),TISS_CODEC:sha(TISS_CODEC),CLEARANCE:sha(CLEARANCE),CI:sha(CI),GEOM:sha(GEOM)}
+    for sid in (7,8):
+        npz_path=ROW_NPZ[sid];receipt_path=ROW_RECEIPT[sid]
+        need(sha(npz_path)==EXPECTED_NPZ[sid],f"row{sid} NPZ SHA mismatch")
+        receipt=json.loads(receipt_path.read_text())
+        need(receipt["stable_id"]==sid and receipt["candidate_row_sha256"]==EXPECTED_NPZ[sid],f"row{sid} source receipt mismatch")
+        need(receipt["status"]=="offline_source_derived_candidate_for_composition",f"row{sid} receipt status mismatch")
+        row_record=next((r for r in tiss["records"] if int(r[6])==sid),None);need(row_record is not None,f"NHTISS row{sid} missing")
+        sl=codec._row_slices(tiss,row_record);mrow=codec._manifest_row(manifest,sid)
+        need(sl["layer"]==2 and mrow["layer"]=="tendon",f"row{sid} is not NHTISS tendon layer")
+        need(int(row_record[3])==1505 and int(row_record[5])==8928 and len(sl["local_faces"])==2976,f"row{sid} count mismatch")
+        with np.load(npz_path,allow_pickle=False) as z:
+            v6=np.asarray(z["vertices6"],dtype="<f4");bi=np.asarray(z["binding_indices"],dtype="<u4");w=np.asarray(z["weights"],dtype="<f4");faces=np.asarray(z["faces"],dtype="<u4")
+        row_v=np.ndarray((sl["vertex_count"],6),dtype="<f4",buffer=sl["vertex_bytes"],offset=0,strides=(56,4)).copy()
+        row_bi=np.ndarray((sl["vertex_count"],4),dtype="<u4",buffer=sl["vertex_bytes"],offset=24,strides=(56,4)).copy()
+        row_w=np.ndarray((sl["vertex_count"],4),dtype="<f4",buffer=sl["vertex_bytes"],offset=40,strides=(56,4)).copy()
+        need(np.array_equal(v6,row_v) and np.array_equal(bi,row_bi) and np.array_equal(w,row_w) and np.array_equal(faces,np.asarray(sl["local_faces"],dtype="<u4")),f"row{sid} current NHTISS row differs from exact NPZ fields")
+        binds=[int(x["core_body_index"]) for x in mrow["body_bindings"]]
+        need(set(binds)==BINDINGS[sid],f"row{sid} body binding metadata mismatch")
+        rows[sid]={"slices":sl,"faces":np.asarray(sl["local_faces"],dtype=np.int64),"manifest":mrow,"npz_sha":sha(npz_path),"receipt_sha":sha(receipt_path),"binding_bodies":binds}
+        source_contract[sid]={"label":mrow["label"],"member_id":mrow["member_id"],"body_bindings":mrow["body_bindings"],"stable_id":sid,"layer":sl["layer"],"source_local_faces_match_npz_exact":True,"source_local_vertex_fields_match_npz_exact":True,"faces":sl["index_count"]//3,"vertices":sl["vertex_count"],"declared_tendon_interface":{"named_member":"FJ3360 stable6 body138" if sid==7 else "FJ3256 stable7 body152","allowed_candidate_contact_rings":["admitted_rings_0_2","boundary_rings_2_3"] if sid==7 else ["admitted_rings_0_2"],"composition_receipt":str(receipt_path),"composition_receipt_sha256":sha(receipt_path)}}
+        pins[npz_path]=sha(npz_path);pins[receipt_path]=sha(receipt_path)
+    # Run metadata must bind all selected assets as invoked, not merely the receipt.
+    soft_path=Path(meta["argv"][meta["argv"].index("--soft-tissue-payload")+1])
+    need(soft_path.resolve()==TISS.resolve(),"native soft tissue CLI path differs from selected NHTISS")
+    bone_path=Path(next(p for p in meta["asset_sha256"] if p.endswith(".nhbones")))
+    need(sha(bone_path)==meta["asset_sha256"][str(bone_path)],"NHBONES input changed")
+    pins[bone_path]=sha(bone_path)
+    before={str(p):sha(p) for p in pins}
+    results=[]; previous={}
+    for step in CAPTURES:
+        pack=RUN/"accepted-geometry"/f"step-{step}.mrvpack"; receipt_path=pack.with_suffix(".receipt.json")
+        need(pack.is_file() and receipt_path.is_file(),f"missing accepted capture {step}")
+        pack_sha=sha(pack); creceipt=json.loads(receipt_path.read_text())
+        need(creceipt.get("accepted_step")==step and creceipt.get("physical_endpoint")=="accepted" and creceipt.get("surface_audit_endpoint")=="passed" and creceipt.get("pack_file_sha256")==pack_sha,f"capture receipt mismatch at {step}")
+        keys={(51006,7),(51006,8)}
+        pack_xyz,surfaces,counts=clear._pack_surfaces(pack,keys)
+        step_obj={"step":step,"capture_time_s":creceipt.get("accepted_time_s"),"pack_sha256":pack_sha,"capture_receipt_sha256":sha(receipt_path),"pack_counts":counts,"rows":{}}
+        pins[pack]=pack_sha;pins[receipt_path]=sha(receipt_path);before[str(pack)]=pack_sha;before[str(receipt_path)]=pins[receipt_path]
+        for sid in (7,8):
+            key=(51006,sid);need(key in surfaces,f"tendon surface {key} absent at {step}")
+            faces=rows[sid]["faces"];rec=rows[sid]["slices"];fpack=np.asarray(surfaces[key]["faces"],dtype=np.int64)
+            need(fpack.shape==faces.shape and np.array_equal(fpack-faces,(fpack-faces).flat[0]*np.ones_like(faces)),f"capture surface {key} face-row sequence differs")
+            base=int((fpack-faces).flat[0]);need(base>=0 and fpack.min()>=base and fpack.max()<base+rec["vertex_count"],f"capture surface {key} vertex-range mismatch")
+            binding_bodies=rows[sid]["binding_bodies"]
+            verts=pack_xyz[base:base+rec["vertex_count"]]
+            need(verts.shape==(rec["vertex_count"],3) and np.isfinite(verts).all(),f"capture surface {key} vertices invalid")
+            lattice=[ci.float32_point_lattice_key(v) for v in verts]
+            deg=exact_degenerate_faces(lattice,faces)
+            need(not deg,f"exact F32-degenerate tendon faces at step{step}, row{sid}: {deg[:10]}")
+            topo=geom.analyze_topology(verts.astype(np.float64).tolist(),faces.tolist())
+            t_records=ci._records(lattice,faces.tolist())
+            self_audit=ci._audit_pair(t_records,t_records,same_surface=True)
+            bound_surface_results=[]; all_pairs=[]; admitted=[]; unclassified=[]
+            bone_surface_keys=sorted(k for k,v in surfaces.items() if k[0]==51004 and int(v["body"]) in set(binding_bodies))
+            found_bodies={int(surfaces[k]["body"]) for k in bone_surface_keys}
+            need(found_bodies==set(binding_bodies),f"not all bound body surfaces present for row{sid} at step{step}: {found_bodies}")
+            calc_key=(51004,CALCANEUS[sid][1]);need(calc_key in surfaces and int(surfaces[calc_key]["body"])==CALCANEUS[sid][0],f"named calcaneus identity mismatch {calc_key}")
+            row_group_counts={};pair_changes=[]
+            row_pairs_by_surface={}
+            for bkey in bone_surface_keys:
+                bfaces=np.asarray(surfaces[bkey]["faces"],dtype=np.int64)
+                buse=np.unique(bfaces);bcompact=np.searchsorted(buse,bfaces)
+                blattice=[ci.float32_point_lattice_key(pack_xyz[int(i)]) for i in buse]
+                bdeg=exact_degenerate_faces(blattice,bcompact)
+                need(not bdeg,f"exact F32-degenerate bone faces {bkey} at step{step}: {bdeg[:10]}")
+                b_records=ci._records(blattice,bcompact.tolist())
+                audit=ci._audit_pair(t_records,b_records,same_surface=False)
+                pair_rows=[];groups={}
+                for tf,bf in audit["triangle_pairs"]:
+                    group=ring_group(faces[int(tf)])
+                    entry={"tendon_face_row":int(tf),"bone_surface_stable_id":int(bkey[1]),"bone_body_index":int(surfaces[bkey]["body"]),"bone_face_row":int(bf),"tendon_ring_group":group}
+                    pair_rows.append(entry);all_pairs.append(entry);groups[group]=groups.get(group,0)+1;row_group_counts[group]=row_group_counts.get(group,0)+1
+                    expected_calc=CALCANEUS[sid]==(entry["bone_body_index"],entry["bone_surface_stable_id"])
+                    allowed_group=group in source_contract[sid]["declared_tendon_interface"]["allowed_candidate_contact_rings"]
+                    if expected_calc and allowed_group: admitted.append(entry)
+                    else: unclassified.append(entry)
+                pairkey=(sid,int(bkey[0]),int(bkey[1]))
+                prior=set(previous.get(pairkey,()))
+                curr={(int(x["tendon_face_row"]),int(x["bone_face_row"])) for x in pair_rows}
+                if step!=CAPTURES[0]:
+                    pair_changes.append({"bone_surface":[int(bkey[0]),int(bkey[1])],"added_vs_previous_capture":sorted([list(x) for x in curr-prior]),"removed_vs_previous_capture":sorted([list(x) for x in prior-curr])})
+                previous[pairkey]=curr
+                bound_surface_results.append({"bone_surface":[int(bkey[0]),int(bkey[1])],"bone_body_index":int(surfaces[bkey]["body"]),"triangle_count":len(bfaces),"exact_triangle_pair_count":int(audit["count"]),"aabb_candidates":int(audit["aabb_candidate_pairs"]),"pair_count_by_tendon_ring_group":groups,"pairs":pair_rows,"bone_exact_degenerate_face_count":len(bdeg)})
+            boundary_ids=sorted({int(v) for edge in topo["boundary_edges"] for v in edge})
+            calc_sur=surfaces[calc_key];calc_faces=np.asarray(calc_sur["faces"],dtype=np.int64);calc_ids=np.unique(calc_faces);calc_local=np.searchsorted(calc_ids,calc_faces);calc_xyz=pack_xyz[calc_ids]
+            dist=boundary_vertex_distances(boundary_ids,verts,calc_xyz,calc_local)
+            loops=[]
+            for loop in topo["boundary_loops"]:
+                ring_counts={}
+                for vid in loop:
+                    rr=46 if int(vid)==1504 else int(vid)//32
+                    ring_counts[str(rr)]=ring_counts.get(str(rr),0)+1
+                loops.append({"edge_count":len(loop),"vertex_ids":list(map(int,loop)),"loft_ring_vertex_counts":ring_counts})
+            rowres={"surface_key":list(key),"capture_face_rows_match_source_local_faces_exact":True,"capture_vertex_base":base,"source_vertex_count":rec["vertex_count"],"face_count":len(faces),"topology":{k:topo[k] for k in ("boundary_edge_count","boundary_loop_count","boundary_branch_vertex_ids","nonmanifold_edges","orientation_defect_edges","degenerate_face_ids","repeated_vertex_face_ids","duplicate_face_ids","vertex_manifold_defect_ids","unused_vertex_ids","face_component_count","closed_oriented_manifold_candidate")},"boundary_loops":loops,"boundary_vertices_nearest_named_calcaneus":dist,"exact_f32_degenerate_face_count":len(deg),"exact_same_surface_unallowed_self_pair_count":int(self_audit["count"]),"self_pairs":self_audit["triangle_pairs"],"all_bound_body_bone_surfaces":bound_surface_results,"bound_body_exact_pair_count":len(all_pairs),"pairs_by_tendon_ring_group":row_group_counts,"previously_declared_enthesis_region_pair_count":len(admitted),"unclassified_or_changed_region_pairs":unclassified,"pair_set_changes_vs_previous_capture":pair_changes}
+            step_obj["rows"][str(sid)]=rowres
+        results.append(step_obj)
+    after={str(p):sha(p) for p in pins};need(before==after,"one or more audit inputs changed")
+    all_surf_self=all(r["exact_same_surface_unallowed_self_pair_count"]==0 and r["exact_f32_degenerate_face_count"]==0 for st in results for r in st["rows"].values())
+    all_capture_topo=all(r["topology"]["nonmanifold_edges"]==[] and r["topology"]["orientation_defect_edges"]==[] and r["topology"]["boundary_branch_vertex_ids"]==[] and r["topology"]["vertex_manifold_defect_ids"]==[] for st in results for r in st["rows"].values())
+    out={"schema":"numi.human.native-011-achilles-boundary-interface-audit.v1","status":"complete_read_only_sampled_capture_audit","scope":"Eight declared accepted baseline capture packs, tendon NHTISS stable IDs 7/8 only; exact source/pack face-row identity; exact Float32-lattice self and bound-body bone intersection predicates. Does not infer solid depth or inside/outside; bone/tendon surfaces are open. Intervention is not included unless separately closed and audited.","run":{"path":str(RUN),"declaration_path":str(decl_path),"declaration_sha256":sha(decl_path),"run_metadata_sha256":sha(meta_path),"invocation_sha256":sha(inv_path),"exit_code":meta.get("exit_code"),"declared_steps":list(CAPTURES)},"surface_source":{"nhtiss_path":str(TISS),"nhtiss_sha256":sha(TISS),"manifest_path":str(TM),"manifest_sha256":sha(TM),"tendon_endpoint_payload_path":str(tendon_path),"tendon_endpoint_payload_sha256":sha(tendon_path),"current_source_identity":source_contract},"inputs":{"before":before,"after":after,"unchanged":before==after},"summary":{"capture_count":len(results),"all_source_capture_face_rows_match_exactly":True,"all_tendon_capture_spaces_have_zero_self_and_degenerate":all_surf_self,"all_topology_structural_gates_consistent_no_branches_or_orientation_defects":all_capture_topo,"contains_unclassified_bound_bone_pairs":any(r["unclassified_or_changed_region_pairs"] for st in results for r in st["rows"].values())},"classification_limit":"Classifies contacts only against the predeclared row-specific interface ring groups and named calcaneus member; every other bound-body pair is retained as unclassified. Ring grouping is the existing 32-vertex loft face map. Boundary-to-bone distances are sampled vertex-to-triangle distances in Float64 from captured Float32 coordinates, not exact clearance or penetration depth.","captures":results,"elapsed_wall_seconds":time.monotonic()-started}
+    outdir=BASE/"achilles-interface-audit-001";outdir.mkdir(exist_ok=True)
+    dest=outdir/"report.json";dest.write_text(json.dumps(out,indent=2,sort_keys=True,allow_nan=False)+"\n")
+    print(json.dumps({"report":str(dest),"sha256":sha(dest),"capture_count":len(results),"all_zero_self_degenerate":all_surf_self,"all_topology_gates":all_capture_topo,"unclassified_pairs":out["summary"]["contains_unclassified_bound_bone_pairs"],"wall_s":out["elapsed_wall_seconds"]},indent=2),flush=True)
+if __name__=="__main__":main()

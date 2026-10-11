@@ -8,6 +8,8 @@ Both source surfaces and eight complete-body poses are closed, nondegenerate and
 
 All 858 other rendered surfaces, 157 accepted body poses and every value in the 1,000-row, 60-column coupled physiology trace are identical to the preceding run. Physical routes, mass, contact and physiological equations are unchanged.
 
+The existing bilateral Achilles surfaces also pass a fresh exact audit at all eight captures: no self-intersections, degenerate triangles, topology branches or orientation defects. Their single 32-edge distal boundaries are the previously declared calcaneal attachment interfaces. All observed bound-bone contacts fall within those original named heel-bone/ring regions; none is reclassified by this increment. Boundary vertices lie about 0.14–0.455 mm from the captured heel-bone triangles (descriptive unsigned Float64 distances, not penetration or clearance proof). These remain open interface surfaces, not closed-solid volume models. This check covers their bound bones, not every other anatomical structure.
+
 ## Reproduce
 
     /usr/bin/python3 tools/evidence/native-anatomy-forty-surfaces-1295/reproduce.py
