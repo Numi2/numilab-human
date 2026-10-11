@@ -1417,11 +1417,13 @@ _LOCAL_SELF_SEPARATION_MAX_SOURCE_VERTICES = 1_000_000
 _LOCAL_SELF_SEPARATION_MAX_SOURCE_FACES = 2_000_000
 _LOCAL_SELF_SEPARATION_MAX_MOVABLE_VERTICES = 256
 _LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS = 512
+_LOCAL_SELF_SEPARATION_MAX_EXTERNAL_PAIR_POSE_ROWS = 520
 _LOCAL_SELF_SEPARATION_COMPONENT_CAP_MM = 1.0 / math.sqrt(3.0)
 _LOCAL_SELF_SEPARATION_INCREMENT_CAP_MM = 1.0
 _LOCAL_SELF_SEPARATION_GRAPH_LAMBDA = 5.0
 _LOCAL_SELF_SEPARATION_LINEAR_TOLERANCE_MM = 1.0e-7
 _LOCAL_SELF_SEPARATION_OPTIMIZER_BUDGET_SECONDS = 120.0
+_LOCAL_SELF_SEPARATION_EXTERNAL_GAP_CAP_MM = 0.001
 
 
 def _maximum_source_displacement_from_reference_m(
@@ -1527,8 +1529,18 @@ def _propose_local_self_separation_increment(
     ``self_pair_rows`` indexing ``faces``. Optional
     ``clearance_preservation_pair_rows`` identify pairs that are exactly clear
     both in the accepted baseline and current candidate; their accepted-baseline
-    SAT gaps join the resolving rows in the same QP. Resolving and preserving
-    rows must be disjoint. A resolving row may include a caller-derived
+    SAT gaps join the resolving rows in the same QP. An optional
+    ``external_clearance_rows`` list constrains a moved candidate face against
+    a fixed captured target triangle. Its accepted-parent triangle is addressed
+    by ``parent_face_row`` in Float32 ``accepted_parent_world_positions`` and
+    integer ``accepted_parent_faces``; that triangle must be exactly clear of
+    the target. The
+    rejected candidate triangle must exactly intersect it. The helper derives
+    a positive SAT gap from those actual Float32 triangles and constrains only
+    ``min(parent_gap, 0.001 mm)``; caller-supplied gaps are not accepted. The
+    caller must bind pose arrays and targets to accepted capture receipts. The
+    mode reports original gap loss and is inactive when no rows are supplied.
+    Resolving and preserving rows must be disjoint. A resolving row may include a caller-derived
     self_pair_axis_overrides entry naming one pair and a finite world
     direction; it is used only when its accepted-baseline projection gap is
     positive. A positive interval gap along any direction is a separating
@@ -1587,7 +1599,7 @@ def _propose_local_self_separation_increment(
 
     movable = ids_checked(movable_vertex_ids, "movable vertices", required=True)
     movable_lookup = {int(vertex): index for index, vertex in enumerate(movable)}
-    patch_seeds = ids_checked(self_patch_seed_vertex_ids, "self-patch seeds", required=True)
+    patch_seeds = ids_checked(self_patch_seed_vertex_ids, "self-patch seeds")
     target_seeds = ids_checked(required_target_seed_vertex_ids, "required target seeds")
     active_target = ids_checked(active_target_face_vertex_ids, "active target-face vertices")
     fixed_support = ids_checked(fixed_support_vertex_ids, "fixed support vertices")
@@ -1604,6 +1616,7 @@ def _propose_local_self_separation_increment(
             or len(pose_samples) > _LOCAL_SELF_SEPARATION_MAX_POSES):
         raise human.ImportError("local self-separation requires one to seventeen failing pose samples")
     checked: list[dict[str, Any]] = []
+    external_pair_receipts: list[dict[str, Any]] = []
     total_pairs = 0
     for pose_index, sample in enumerate(pose_samples):
         if not isinstance(sample, dict):
@@ -1649,8 +1662,117 @@ def _propose_local_self_separation_increment(
             sample.get("clearance_preservation_pair_rows", np.empty((0, 2), dtype=np.int64)),
             "clearance-preservation pair rows",
         )
-        if not len(resolving_pairs) and not len(contact_pairs) and not len(preserving_pairs):
+        raw_external_rows = sample.get("external_clearance_rows", [])
+        if not isinstance(raw_external_rows, (list, tuple)):
+            raise human.ImportError(f"local self-separation pose {pose_index} external-clearance rows must be a list")
+        external_rows: list[dict[str, Any]] = []
+        external_keys: set[tuple[int, int, int, int, int]] = set()
+        for external_index, external in enumerate(raw_external_rows):
+            expected_keys = {
+                "candidate_face_row", "parent_face_row", "target_semantic", "target_stable_id", "target_face_id",
+                "target_triangle_world_positions",
+            }
+            if not isinstance(external, dict) or set(external) != expected_keys:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external row {external_index} has an invalid schema"
+                )
+            values: dict[str, int] = {}
+            for field in ("candidate_face_row", "parent_face_row", "target_semantic", "target_stable_id", "target_face_id"):
+                value = external[field]
+                if isinstance(value, (bool, np.bool_)) or not isinstance(value, (int, np.integer)):
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} external row {external_index} {field} must be an integer"
+                    )
+                values[field] = int(value)
+            candidate_face = values["candidate_face_row"]
+            if not 0 <= candidate_face < face_count:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external row {external_index} candidate face is out of range"
+                )
+            target_key = (values["target_semantic"], values["target_stable_id"], values["target_face_id"])
+            if min(target_key) < 0:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external row {external_index} target identity is negative"
+                )
+            identity = (candidate_face, values["parent_face_row"], *target_key)
+            if identity in external_keys:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} duplicates external row {identity}"
+                )
+            external_keys.add(identity)
+            accepted_parent_raw = np.asarray(sample.get("accepted_parent_world_positions"))
+            accepted_faces_raw = np.asarray(sample.get("accepted_parent_faces"))
+            if (accepted_parent_raw.ndim != 2 or accepted_parent_raw.shape[1] != 3
+                    or accepted_parent_raw.dtype.kind != "f" or accepted_parent_raw.dtype.itemsize != 4
+                    or accepted_parent_raw.size == 0 or not np.isfinite(accepted_parent_raw).all()):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external rows need finite Float32 accepted-parent Nx3 positions"
+                )
+            if (accepted_faces_raw.ndim != 2 or accepted_faces_raw.shape[1] != 3
+                    or accepted_faces_raw.dtype.kind not in "iu" or accepted_faces_raw.size == 0):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external rows need integer accepted-parent Fx3 faces"
+                )
+            accepted_parent_positions = np.ascontiguousarray(accepted_parent_raw, dtype="<f4")
+            accepted_parent_faces = np.ascontiguousarray(accepted_faces_raw, dtype=np.int64)
+            if (accepted_parent_faces.min() < 0 or accepted_parent_faces.max() >= len(accepted_parent_positions)
+                    or values["parent_face_row"] < 0 or values["parent_face_row"] >= len(accepted_parent_faces)):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external accepted-parent face index is out of range"
+                )
+            target_raw = np.asarray(external["target_triangle_world_positions"])
+            if target_raw.shape != (3, 3) or target_raw.dtype.kind != "f" or target_raw.dtype.itemsize != 4:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external row {external_index} target must be Float32 3x3"
+                )
+            target_triangle = np.ascontiguousarray(target_raw, dtype="<f4")
+            if not np.isfinite(target_triangle).all():
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external row {external_index} target is non-finite"
+                )
+            candidate_vertices = face_rows[candidate_face]
+            if not np.all(np.isin(candidate_vertices, vertex_ids)):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external row {external_index} omits candidate face vertices"
+                )
+            candidate_local = np.searchsorted(vertex_ids, candidate_vertices)
+            parent_triangle = accepted_parent_positions[accepted_parent_faces[values["parent_face_row"]]]
+            rejected_triangle = rejected[candidate_local]
+            for label, triangle in (("parent", parent_triangle), ("target", target_triangle),
+                                    ("rejected", rejected_triangle)):
+                normal = np.cross(triangle[1] - triangle[0], triangle[2] - triangle[0])
+                if not np.isfinite(normal).all() or float(np.linalg.norm(normal)) <= 1.0e-14:
+                    raise human.ImportError(
+                        f"local self-separation pose {pose_index} external row {external_index} has a degenerate {label} triangle"
+                    )
+            parent_points = ci.triangle_intersection_points(
+                tuple(ci.float32_point_lattice_key(point) for point in parent_triangle),
+                tuple(ci.float32_point_lattice_key(point) for point in target_triangle),
+            )
+            if parent_points:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external accepted-parent face {candidate_face} "
+                    f"already intersects target {target_key}; no external gap may be inferred"
+                )
+            rejected_points = ci.triangle_intersection_points(
+                tuple(ci.float32_point_lattice_key(point) for point in rejected_triangle),
+                tuple(ci.float32_point_lattice_key(point) for point in target_triangle),
+            )
+            if not rejected_points:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external rejected face {candidate_face} "
+                    f"does not exactly intersect target {target_key}"
+                )
+            external_rows.append({
+                **values,
+                "target_triangle": target_triangle,
+                "parent_triangle": parent_triangle,
+                "rejected_triangle": rejected_triangle,
+            })
+        if not len(resolving_pairs) and not len(contact_pairs) and not len(preserving_pairs) and not external_rows:
             raise human.ImportError(f"local self-separation pose {pose_index} needs at least one pair row")
+        if len(resolving_pairs) + len(contact_pairs) + len(preserving_pairs) + len(external_rows) > 128:
+            raise human.ImportError(f"local self-separation pose {pose_index} exceeds its pair bound")
         resolving_set = set(map(tuple, resolving_pairs))
         contact_set = set(map(tuple, contact_pairs))
         preserving_set = set(map(tuple, preserving_pairs))
@@ -1993,13 +2115,21 @@ def _propose_local_self_separation_increment(
                 raise human.ImportError(f"local self-separation pose {pose_index} supplied a pair absent from its exact rejected geometry")
             if kind == "preserve" and trial_intersects:
                 raise human.ImportError(f"local self-separation pose {pose_index} preservation pair is not clear in its current geometry")
-        total_pairs += len(pairs)
+        total_pairs += len(pairs) + len(external_rows)
         checked.append({"vertex_ids": vertex_ids, "baseline": baseline, "rejected": rejected,
                         "jacobian": jac, "pairs": pairs, "pair_kinds": pair_kinds,
                         "axis_overrides": axis_overrides, "contact_axis_overrides": contact_axis_overrides,
-                        "contact_proofs": contact_proofs})
+                        "contact_proofs": contact_proofs, "external_rows": external_rows})
     if total_pairs > _LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS:
-        raise human.ImportError("local self-separation pair/pose rows exceed the bounded count")
+        external_total = sum(len(sample["external_rows"]) for sample in checked)
+        if (external_total == 0
+                or total_pairs > _LOCAL_SELF_SEPARATION_MAX_EXTERNAL_PAIR_POSE_ROWS):
+            raise human.ImportError(
+                "local self-separation pair/pose rows exceed the legacy 512-row bound "
+                "or opt-in 520-row external-clearance bound"
+            )
+    if not len(patch_seeds) and any(len(sample["pairs"]) for sample in checked):
+        raise human.ImportError("local self-separation with self-pair rows requires at least one self-patch seed")
 
     variable_index = np.full(vertex_count, -1, dtype=np.int32)
     variable_index[movable] = np.arange(len(movable), dtype=np.int32)
@@ -2205,6 +2335,114 @@ def _propose_local_self_separation_increment(
                 "sat_axis_index": int(best_index),
                 "axis_unit_world": best_axis.tolist(),
                 "maximum_required_projection_change_mm": max_rhs,
+            })
+        for external in sample["external_rows"]:
+            face = int(external["candidate_face_row"])
+            candidate_ids = face_rows[face]
+            local_candidate = local_index[candidate_ids]
+            if np.any(local_candidate < 0):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external face {face} lacks world/Jacobian rows"
+                )
+            parent_tri = external["parent_triangle"].astype(np.float64)
+            target_tri = external["target_triangle"].astype(np.float64)
+            trial_tri = rejected[local_candidate].astype(np.float64)
+            parent_edges = np.roll(parent_tri, -1, axis=0) - parent_tri
+            target_edges = np.roll(target_tri, -1, axis=0) - target_tri
+            parent_normal = np.cross(parent_edges[0], parent_edges[1])
+            target_normal = np.cross(target_edges[0], target_edges[1])
+            axes = np.asarray([
+                parent_normal, target_normal,
+                *[np.cross(a, b) for a in parent_edges for b in target_edges],
+                *[np.cross(edge, parent_normal) for edge in parent_edges],
+                *[np.cross(edge, target_normal) for edge in target_edges],
+            ], dtype=np.float64)
+            lengths = np.linalg.norm(axes, axis=1)
+            valid = np.isfinite(lengths) & (lengths > 1.0e-14)
+            if not np.any(valid):
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external face {face} has no valid SAT axis"
+                )
+            axes = axes[valid] / lengths[valid, None]
+            best_gap_m = -math.inf
+            best_axis = None
+            for raw_axis in axes:
+                parent_projection = parent_tri @ raw_axis
+                target_projection = target_tri @ raw_axis
+                gap_target_after = float(target_projection.min() - parent_projection.max())
+                gap_parent_after = float(parent_projection.min() - target_projection.max())
+                if gap_target_after >= gap_parent_after:
+                    gap_m, axis = gap_target_after, raw_axis
+                else:
+                    gap_m, axis = gap_parent_after, -raw_axis
+                if gap_m > best_gap_m:
+                    best_gap_m, best_axis = gap_m, axis.copy()
+            if best_axis is None or not math.isfinite(best_gap_m) or best_gap_m <= 0.0:
+                raise human.ImportError(
+                    f"local self-separation pose {pose_index} external parent face {face} has no positive SAT gap"
+                )
+            axis = best_axis
+            parent_gap_mm = best_gap_m * 1000.0
+            floor_mm = min(parent_gap_mm, _LOCAL_SELF_SEPARATION_EXTERNAL_GAP_CAP_MM)
+            current_gap_mm = float((target_tri @ axis).min() - (trial_tri @ axis).max()) * 1000.0
+            max_required_mm = -math.inf
+            for i, source_id in enumerate(candidate_ids):
+                local_row = int(local_candidate[i])
+                for target_slot, target_vertex in enumerate(target_tri):
+                    current_mm = float(np.dot(axis, target_vertex - trial_tri[i])) * 1000.0
+                    required_mm = floor_mm - current_mm
+                    max_required_mm = max(max_required_mm, required_mm)
+                    row = np.zeros(nvar, dtype=np.float64)
+                    variable = int(variable_index[int(source_id)])
+                    if variable >= 0:
+                        for dim in range(3):
+                            row[3 * variable + dim] = -float(np.dot(axis, jac[local_row, :, dim]))
+                    if not np.any(row):
+                        if required_mm > 1.0e-8:
+                            raise human.ImportError(
+                                "external clearance pair violates its derived accepted-parent SAT floor with no movable response: "
+                                f"pose={pose_index} face={face} target="
+                                f"({external['target_semantic']},{external['target_stable_id']},{external['target_face_id']}) "
+                                f"required_projection_change_mm={required_mm:.9g}"
+                            )
+                        continue
+                    constraints.append(row)
+                    rhs_rows.append(required_mm)
+                    constraint_receipts.append({
+                        "sample_index": pose_index,
+                        "constraint_kind": "external_clearance",
+                        "candidate_face_row": face,
+                        "accepted_parent_face_row": int(external["parent_face_row"]),
+                        "target_semantic": int(external["target_semantic"]),
+                        "target_stable_id": int(external["target_stable_id"]),
+                        "target_face_id": int(external["target_face_id"]),
+                        "candidate_vertex_id": int(source_id),
+                        "target_vertex_slot": target_slot,
+                        "axis_unit_world": axis.tolist(),
+                        "accepted_parent_sat_gap_mm": parent_gap_mm,
+                        "minimum_gap_floor_mm": floor_mm,
+                        "accepted_parent_clearance_loss_mm": parent_gap_mm - floor_mm,
+                        "current_sat_gap_mm": current_gap_mm,
+                        "required_projection_change_mm": required_mm,
+                    })
+            external_pair_receipts.append({
+                "pose_index": pose_index,
+                "constraint_kind": "external_clearance",
+                "candidate_face_row": face,
+                "accepted_parent_face_row": int(external["parent_face_row"]),
+                "target_semantic": int(external["target_semantic"]),
+                "target_stable_id": int(external["target_stable_id"]),
+                "target_face_id": int(external["target_face_id"]),
+                "accepted_parent_exactly_clear": True,
+                "rejected_candidate_exactly_intersects": True,
+                "sat_axis_selection": "maximum_positive_gap_from_actual_accepted_parent_and_target_triangles",
+                "axis_unit_world": axis.tolist(),
+                "accepted_parent_sat_gap_mm": parent_gap_mm,
+                "minimum_gap_floor_mm": floor_mm,
+                "external_gap_cap_mm": _LOCAL_SELF_SEPARATION_EXTERNAL_GAP_CAP_MM,
+                "accepted_parent_clearance_loss_mm": parent_gap_mm - floor_mm,
+                "current_sat_gap_mm": current_gap_mm,
+                "maximum_required_projection_change_mm": max_required_mm,
             })
         rows_by_pose.append(len(constraints) - start)
     if not constraints:
@@ -2466,6 +2704,21 @@ def _propose_local_self_separation_increment(
                     )
             elif points:
                 raise human.ImportError(f"Float32-rounded first-order pose prediction retains an exact supplied self-pair at pose={pose_index}")
+        for external in sample["external_rows"]:
+            face = int(external["candidate_face_row"])
+            local_face = np.searchsorted(sample["vertex_ids"], face_rows[face])
+            predicted_triangle = predicted_world[local_face]
+            target_triangle = external["target_triangle"]
+            external_points = ci.triangle_intersection_points(
+                tuple(ci.float32_point_lattice_key(point) for point in predicted_triangle),
+                tuple(ci.float32_point_lattice_key(point) for point in target_triangle),
+            )
+            if external_points:
+                raise human.ImportError(
+                    f"Float32-rounded first-order pose prediction retains external intersection at pose={pose_index}, "
+                    f"candidate_face={face}, target=({external['target_semantic']},"
+                    f"{external['target_stable_id']},{external['target_face_id']})"
+                )
 
     return {
         "status": "bounded_local_linearized_proposal",
@@ -2474,6 +2727,8 @@ def _propose_local_self_separation_increment(
         "source_increment_mm_f32_applied": actual_mm,
         "constraint_rows_by_pose": rows_by_pose,
         "pair_pose_receipts": pair_receipts,
+        "external_clearance_pair_receipts": external_pair_receipts,
+        "external_clearance_exact_predicted_pair_count": 0,
         "rounding_reserve_max_component_mm": float(rounding_reserve_mm.max()),
         "requested_reserved_linearized_minimum_sat_slack_mm": float(requested_reserved_slack.min()),
         "requested_max_vertex_l2_increment_mm": float(requested_l2.max(initial=0.0)),

@@ -715,3 +715,197 @@ def test_local_self_separation_rejects_unproven_shared_contact_axis_override():
     ]
     with pytest.raises(ImportError, match="not a shared-vertex contact pair"):
         _propose_local_self_separation_increment(**wrong_pair_args)
+
+
+def _external_clearance_fixture(*, parent_z=0.0005):
+    target = np.array([
+        [0.2, 0.2, 0.0], [0.7, 0.2, 0.0], [0.2, 0.7, 0.0],
+    ], dtype="<f4")
+    parent = np.array([
+        [0.0, 0.0, parent_z], [1.0, 0.0, parent_z], [0.0, 1.0, parent_z],
+    ], dtype="<f4")
+    rejected = np.array([
+        [0.0, 0.0, -0.00025], [1.0, 0.0, 0.00025], [0.0, 1.0, -0.00025],
+    ], dtype="<f4")
+    unrelated_parent = np.array([
+        [10.0, 0.0, parent_z], [11.0, 0.0, parent_z], [10.0, 1.0, parent_z],
+    ], dtype="<f4")
+    accepted_parent_positions = np.concatenate((unrelated_parent, parent), axis=0)
+    pose = {
+        "vertex_ids": np.arange(3, dtype=np.int64),
+        "baseline_world_positions": parent,
+        "rejected_world_positions": rejected,
+        "accepted_parent_world_positions": accepted_parent_positions,
+        "accepted_parent_faces": np.array([[0, 1, 2], [3, 4, 5]], dtype=np.int64),
+        "jacobians": np.repeat(np.eye(3, dtype=np.float64)[None, :, :], 3, axis=0),
+        "external_clearance_rows": [{
+            "candidate_face_row": 0,
+            "parent_face_row": 1,
+            "target_semantic": 51005,
+            "target_stable_id": 134,
+            "target_face_id": 1478,
+            "target_triangle_world_positions": target,
+        }],
+    }
+    return {
+        "source_positions_m": rejected.copy(),
+        "faces": np.array([[0, 1, 2]], dtype=np.int64),
+        "movable_vertex_ids": np.array([0, 1, 2], dtype=np.int64),
+        "self_patch_seed_vertex_ids": np.empty(0, dtype=np.int64),
+        "required_target_seed_vertex_ids": np.empty(0, dtype=np.int64),
+        "active_target_face_vertex_ids": np.empty(0, dtype=np.int64),
+        "fixed_support_vertex_ids": np.empty(0, dtype=np.int64),
+        "preserved_anchor_vertex_ids": np.empty(0, dtype=np.int64),
+        "pose_samples": [pose],
+    }
+
+
+def _many_external_clearance_args(row_count):
+    import copy
+
+    args = _external_clearance_fixture()
+    template = args["pose_samples"][0]
+    samples = []
+    next_face_id = 0
+    remaining = row_count
+    while remaining:
+        count = min(128, remaining)
+        pose = copy.deepcopy(template)
+        pose["external_clearance_rows"] = []
+        for _ in range(count):
+            row = dict(template["external_clearance_rows"][0])
+            row["target_face_id"] = next_face_id
+            next_face_id += 1
+            pose["external_clearance_rows"].append(row)
+        samples.append(pose)
+        remaining -= count
+    args["pose_samples"] = samples
+    return args
+
+
+def _many_self_preservation_args(row_count):
+    vertices = []
+    faces = []
+    tri_a = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype="<f4")
+    tri_b = tri_a.copy()
+    tri_b[:, 2] = np.float32(0.001)
+    for face in range(46):
+        tri = tri_a if face < 23 else tri_b
+        start = len(vertices)
+        vertices.extend(tri.tolist())
+        faces.append([start, start + 1, start + 2])
+    source = np.asarray(vertices, dtype="<f4")
+    face_table = np.asarray(faces, dtype=np.int64)
+    all_pairs = np.asarray([[a, b] for a in range(23) for b in range(23, 46)], dtype=np.int64)[:row_count]
+    samples = []
+    for start in range(0, row_count, 128):
+        samples.append({
+            "vertex_ids": np.arange(len(source), dtype=np.int64),
+            "baseline_world_positions": source.copy(),
+            "rejected_world_positions": source.copy(),
+            "jacobians": np.repeat(np.eye(3, dtype=np.float64)[None, :, :], len(source), axis=0),
+            "clearance_preservation_pair_rows": all_pairs[start:start + 128].copy(),
+        })
+    return {
+        "source_positions_m": source,
+        "faces": face_table,
+        "movable_vertex_ids": np.arange(len(source), dtype=np.int64),
+        "self_patch_seed_vertex_ids": np.arange(len(source), dtype=np.int64),
+        "required_target_seed_vertex_ids": np.empty(0, dtype=np.int64),
+        "active_target_face_vertex_ids": np.empty(0, dtype=np.int64),
+        "fixed_support_vertex_ids": np.empty(0, dtype=np.int64),
+        "preserved_anchor_vertex_ids": np.empty(0, dtype=np.int64),
+        "pose_samples": samples,
+    }
+
+
+def test_legacy_self_only_pair_bound_remains_512_rows():
+    args = _many_self_preservation_args(513)
+
+    with pytest.raises(ImportError, match="legacy 512-row bound"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_external_clearance_opt_in_bound_accepts_514_joint_rows():
+    args = _many_external_clearance_args(514)
+
+    result = _propose_local_self_separation_increment(**args)
+
+    assert clearance._LOCAL_SELF_SEPARATION_MAX_PAIR_POSE_ROWS == 512
+    assert clearance._LOCAL_SELF_SEPARATION_MAX_EXTERNAL_PAIR_POSE_ROWS == 520
+    assert result["constraint_rows_by_pose"] == [1152, 1152, 1152, 1152, 18]
+    assert len(result["external_clearance_pair_receipts"]) == 514
+    assert result["external_clearance_exact_predicted_pair_count"] == 0
+
+
+def test_external_clearance_opt_in_bound_rejects_more_than_520_rows():
+    args = _many_external_clearance_args(521)
+
+    with pytest.raises(ImportError, match="opt-in 520-row external-clearance bound"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_external_clearance_floor_comes_from_exact_parent_and_target_triangles():
+    args = _external_clearance_fixture()
+
+    result = _propose_local_self_separation_increment(**args)
+
+    receipt, = result["external_clearance_pair_receipts"]
+    assert receipt["accepted_parent_exactly_clear"] is True
+    assert receipt["rejected_candidate_exactly_intersects"] is True
+    assert receipt["accepted_parent_sat_gap_mm"] == pytest.approx(0.5, abs=1e-6)
+    assert receipt["minimum_gap_floor_mm"] == pytest.approx(0.001, abs=1e-12)
+    assert receipt["accepted_parent_clearance_loss_mm"] == pytest.approx(0.499, abs=1e-6)
+    assert receipt["candidate_face_row"] == 0
+    assert receipt["accepted_parent_face_row"] == 1
+    assert receipt["target_semantic"] == 51005
+    assert receipt["target_stable_id"] == 134
+    assert receipt["target_face_id"] == 1478
+    assert result["external_clearance_exact_predicted_pair_count"] == 0
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+    assert np.max(result["source_increment_mm_f32_applied"][:, 2]) <= 1.0
+
+
+def test_external_clearance_rejects_intersecting_accepted_parent():
+    args = _external_clearance_fixture(parent_z=0.0)
+
+    with pytest.raises(ImportError, match="external accepted-parent face 0 already intersects target"):
+        _propose_local_self_separation_increment(**args)
+
+
+def test_local_self_resolution_and_external_clearance_constraints_are_jointly_applied():
+    args, baseline, _ = _fixture()
+    pose = args["pose_samples"][0]
+    pose["accepted_parent_world_positions"] = baseline.copy()
+    pose["accepted_parent_faces"] = args["faces"].copy()
+    pose["external_clearance_rows"] = [{
+        "candidate_face_row": 1,
+        "parent_face_row": 1,
+        "target_semantic": 51005,
+        "target_stable_id": 134,
+        "target_face_id": 0,
+        "target_triangle_world_positions": baseline[args["faces"][0]].copy(),
+    }]
+
+    result = _propose_local_self_separation_increment(**args)
+
+    assert len(result["pair_pose_receipts"]) == 1
+    assert result["pair_pose_receipts"][0]["constraint_kind"] == "resolve"
+    assert len(result["external_clearance_pair_receipts"]) == 1
+    assert result["external_clearance_pair_receipts"][0]["rejected_candidate_exactly_intersects"] is True
+    assert result["external_clearance_exact_predicted_pair_count"] == 0
+    assert result["post_rounding_predicted_supplied_pair_exact_count"] == 0
+
+
+def test_optional_external_clearance_does_not_change_default_self_proposal():
+    args, _, _ = _fixture()
+    legacy = _propose_local_self_separation_increment(**args)
+    unchanged_args, _, _ = _fixture()
+    unchanged_args["pose_samples"][0]["external_clearance_rows"] = []
+    unchanged = _propose_local_self_separation_increment(**unchanged_args)
+
+    assert legacy["proposal_source_positions_m_f32"].tobytes() == unchanged["proposal_source_positions_m_f32"].tobytes()
+    assert legacy["source_increment_mm_f32_applied"].tobytes() == unchanged["source_increment_mm_f32_applied"].tobytes()
+    assert legacy["constraint_rows_by_pose"] == unchanged["constraint_rows_by_pose"]
+    assert legacy["pair_pose_receipts"] == unchanged["pair_pose_receipts"]
+    assert unchanged["external_clearance_pair_receipts"] == []
