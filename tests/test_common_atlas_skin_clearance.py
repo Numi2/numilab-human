@@ -903,7 +903,7 @@ def test_active_face_conditioning_rejects_opposite_pose_cones():
     source = np.tile([0.0, 0.0, 1.0], (3, 1))
     faces = np.array([[0, 1, 2]])
     normals = np.array([[[0.0, 0.0, 1.0]], [[0.0, 0.0, -1.0]]])
-    with np.testing.assert_raises_regex(ImportError, "finite nonzero direction|unchanged active-face bound"):
+    with np.testing.assert_raises_regex(ImportError, "no finite nonzero direction satisfying"):
         _condition_shared_source_directions(maps, source, faces, normals)
 
 
@@ -946,16 +946,16 @@ def test_active_face_conditioning_admits_status8_only_after_all_constraints_pass
 
 
 @pytest.mark.parametrize(
-    "candidate,optimizer_success,expected_error",
+    "candidate,optimizer_success",
     [
-        (np.array([0.0, 0.0, -1.0]), False, "still fails unchanged active-face bound"),
-        (np.array([0.0, 0.0, -1.0]), True, "still fails unchanged active-face bound"),
-        (np.zeros(3), False, "finite nonzero direction"),
-        (np.array([np.nan, 0.0, 1.0]), False, "finite nonzero direction"),
+        (np.array([0.0, 0.0, -1.0]), False),
+        (np.array([0.0, 0.0, -1.0]), True),
+        (np.zeros(3), False),
+        (np.array([np.nan, 0.0, 1.0]), False),
     ],
 )
 def test_active_face_conditioning_rejects_nonfinite_zero_or_infeasible_optimizer_result(
-    monkeypatch, candidate, optimizer_success, expected_error
+    monkeypatch, candidate, optimizer_success
 ):
     from types import SimpleNamespace
     import scipy.optimize
@@ -973,8 +973,58 @@ def test_active_face_conditioning_rejects_nonfinite_zero_or_infeasible_optimizer
         ),
     )
 
-    with pytest.raises(ImportError, match=expected_error):
+    with pytest.raises(ImportError, match="no finite nonzero direction satisfying"):
         _condition_shared_source_directions(maps, source, faces, normals)
+
+
+def test_active_face_conditioning_falls_back_from_zero_polar_projection(monkeypatch):
+    from types import SimpleNamespace
+    import scipy.optimize
+    from numilab_human.common_atlas_skin_clearance import _condition_shared_source_directions
+
+    maps = np.tile(np.eye(3), (1, 3, 1, 1))
+    source = np.array([[0.0, 0.0, -1.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0]])
+    faces = np.array([[0, 1, 2]])
+    normals = np.array([[[0.0, 0.0, 1.0]]])
+    real_minimize = scipy.optimize.minimize
+
+    def run_once():
+        calls = []
+
+        def zero_preferred_projection(*args, **kwargs):
+            calls.append(None)
+            if len(calls) == 1:
+                return SimpleNamespace(
+                    x=np.zeros(3), success=True, status=0,
+                    message="synthetic homogeneous-cone zero projection", nit=1,
+                )
+            return real_minimize(*args, **kwargs)
+
+        monkeypatch.setattr(scipy.optimize, "minimize", zero_preferred_projection)
+        result, report = _condition_shared_source_directions(maps, source, faces, normals)
+        return result, report, calls
+
+    result, report, calls = run_once()
+    repeated, repeated_report, repeated_calls = run_once()
+
+    assert len(calls) == 7  # one original projection plus all six branches
+    assert len(repeated_calls) == 7
+    np.testing.assert_array_equal(result, repeated)
+    assert report["conditioned_compact_vertex_ids"] == [0]
+    assert len(report["nonzero_direction_fallbacks"]) == 1
+    assert len(repeated_report["nonzero_direction_fallbacks"]) == 1
+    fallback = report["nonzero_direction_fallbacks"][0]
+    repeated_fallback = repeated_report["nonzero_direction_fallbacks"][0]
+    assert fallback["preferred_result_norm_before_normalization"] == 0.0
+    assert fallback["minimum_all_constraint_alignment"] >= 0.500001
+    assert fallback["selected_branch_index"] == repeated_fallback["selected_branch_index"]
+    assert [row["branch_index"] for row in fallback["branch_attempts"]] == list(range(6))
+    assert any(row["feasible_nonzero"] for row in fallback["branch_attempts"])
+    selected = next(row for row in fallback["branch_attempts"]
+                    if row["branch_index"] == fallback["selected_branch_index"])
+    assert selected["feasible_nonzero"]
+    assert np.isclose(np.linalg.norm(result[0]), 1.0, atol=1.0e-12)
+    assert np.dot(result[0], np.array([0.0, 0.0, 1.0])) >= 0.500001
 
 
 def test_active_face_conditioning_handles_empty_faces_and_rejects_zero_normals():

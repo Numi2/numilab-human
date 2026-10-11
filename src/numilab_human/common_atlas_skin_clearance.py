@@ -2309,6 +2309,7 @@ def _condition_shared_source_directions(
     before_minimum = None
     corrected = []
     nonconverged_feasible_projections = []
+    fallback_directions = []
     maximum_angle = 0.0
     if len(faces):
         mapped = np.einsum("pfcij,fcj->pfci", maps[:, faces], unit_source[faces])
@@ -2334,6 +2335,28 @@ def _condition_shared_source_directions(
                 gradient_world = vertex_normals - selection_bound * world / world_length[:, None]
                 return np.einsum("ki,kij->kj", gradient_world, vertex_maps)
 
+            def checked_direction(candidate, required_projection):
+                candidate = np.asarray(candidate, dtype=np.float64)
+                if candidate.shape != (3,) or not np.isfinite(candidate).all():
+                    return None
+                candidate_length = float(np.linalg.norm(candidate))
+                if not np.isfinite(candidate_length) or candidate_length <= 1.0e-8:
+                    return None
+                unit_candidate = candidate / candidate_length
+                candidate_world = np.einsum("kij,j->ki", vertex_maps, unit_candidate)
+                candidate_lengths = np.linalg.norm(candidate_world, axis=1)
+                if (not np.isfinite(candidate_world).all()
+                        or not np.isfinite(candidate_lengths).all()
+                        or np.any(candidate_lengths <= 1.0e-12)):
+                    return None
+                candidate_alignment = np.einsum(
+                    "ki,ki->k", candidate_world / candidate_lengths[:, None], vertex_normals,
+                )
+                if (not np.isfinite(candidate_alignment).all()
+                        or float(candidate_alignment.min()) < required_projection):
+                    return None
+                return unit_candidate, candidate_length, candidate_alignment
+
             result = minimize(
                 lambda direction: 0.5 * float(np.dot(direction - preferred, direction - preferred)),
                 preferred,
@@ -2343,46 +2366,130 @@ def _condition_shared_source_directions(
                 options={"maxiter": 64, "ftol": 1.0e-12},
             )
             projected = np.asarray(result.x, dtype=np.float64)
-            if projected.shape != (3,) or not np.isfinite(projected).all():
-                raise human.ImportError(
-                    f"active-face direction conditioning found no finite nonzero direction at vertex={int(vertex)}: "
-                    f"{result.message}"
-                )
-            length = float(np.linalg.norm(projected))
-            if not np.isfinite(length) or length <= 1.0e-8:
-                raise human.ImportError(
-                    f"active-face direction conditioning found no finite nonzero direction at vertex={int(vertex)}: "
-                    f"{result.message}"
-                )
-            direction = projected / length
-            world = np.einsum("kij,j->ki", vertex_maps, direction)
-            world_lengths = np.linalg.norm(world, axis=1)
-            if np.any(world_lengths <= 1.0e-12):
-                raise human.ImportError(f"conditioned direction maps to zero world motion at vertex={int(vertex)}")
-            alignment = np.einsum("ki,ki->k", world / world_lengths[:, None], vertex_normals)
-            if not np.isfinite(alignment).all() or float(alignment.min()) < minimum:
-                raise human.ImportError(
-                    f"conditioned direction still fails unchanged active-face bound at vertex={int(vertex)}: "
-                    f"projection={float(alignment.min()):.12g}, required_ge={minimum:.12g}"
-                )
-            # Optimizer status alone is not an admission predicate. A line-search
-            # status can occur at a feasible point; accept it only after the
-            # normalized direction passes every unchanged face/pose projection
-            # above. The caller's seed-demand gate still independently rechecks
-            # the resulting field before use.
-            if not bool(result.success):
-                nonconverged_feasible_projections.append({
+            checked = checked_direction(projected, minimum)
+            fallback_record = None
+            if checked is None:
+                # The homogeneous cone includes zero. If the preferred vector is
+                # opposite every admissible direction, its nearest-point projection
+                # can therefore be zero even when nonzero feasible directions exist.
+                # Six convex cube-face branches cover every nonzero direction: one
+                # dominant signed coordinate is fixed to +/-1 and the others are
+                # bounded by [-1, 1], excluding the zero solution.
+                branch_candidates = []
+                branch_attempts = []
+                branch_index = 0
+                for axis in range(3):
+                    for sign in (1.0, -1.0):
+                        start_direction = np.zeros(3, dtype=np.float64)
+                        start_direction[axis] = sign
+
+                        def branch_equality(direction, axis=axis, sign=sign):
+                            return sign * direction[axis] - 1.0
+
+                        def branch_equality_jacobian(direction, axis=axis, sign=sign):
+                            gradient = np.zeros(3, dtype=np.float64)
+                            gradient[axis] = sign
+                            return gradient
+
+                        branch_result = minimize(
+                            lambda direction: 0.5 * float(np.dot(direction - preferred, direction - preferred)),
+                            start_direction,
+                            jac=lambda direction: direction - preferred,
+                            bounds=[(-1.0, 1.0)] * 3,
+                            constraints=[
+                                {"type": "ineq", "fun": constraints, "jac": constraint_jacobian},
+                                {"type": "eq", "fun": branch_equality, "jac": branch_equality_jacobian},
+                            ],
+                            method="SLSQP",
+                            options={"maxiter": 96, "ftol": 1.0e-12},
+                        )
+                        branch_checked = checked_direction(branch_result.x, selection_bound)
+                        branch_attempts.append({
+                            "branch_index": branch_index,
+                            "dominant_axis": axis,
+                            "dominant_sign": int(sign),
+                            "optimizer_success": bool(branch_result.success),
+                            "optimizer_status": int(getattr(branch_result, "status", -1)),
+                            "optimizer_message": str(getattr(branch_result, "message", "")),
+                            "optimizer_iterations": int(getattr(branch_result, "nit", 0)),
+                            "feasible_nonzero": branch_checked is not None,
+                            "minimum_projection": (
+                                float(branch_checked[2].min()) if branch_checked is not None else None
+                            ),
+                        })
+                        if branch_checked is not None:
+                            branch_direction, branch_length, branch_alignment = branch_checked
+                            branch_candidates.append((
+                                -float(np.dot(branch_direction, preferred)),
+                                branch_index,
+                                branch_direction,
+                                branch_length,
+                                branch_alignment,
+                                branch_result,
+                                axis,
+                                int(sign),
+                            ))
+                        branch_index += 1
+                if not branch_candidates:
+                    raise human.ImportError(
+                        f"active-face direction conditioning found no finite nonzero direction satisfying "
+                        f"the unchanged active-face bound at vertex={int(vertex)}; "
+                        f"preferred_optimizer={str(result.message)!r}; six dominant-coordinate branches "
+                        f"found no independently feasible direction"
+                    )
+                # Angular preference is primary; branch index resolves exact ties.
+                branch_candidates.sort(key=lambda item: (item[0], item[1]))
+                _, selected_branch, direction, length, alignment, selected_result, axis, sign = branch_candidates[0]
+                fallback_record = {
                     "compact_vertex_id": int(vertex),
-                    "optimizer_success": False,
-                    "optimizer_status": int(getattr(result, "status", -1)),
-                    "optimizer_message": str(getattr(result, "message", "")),
-                    "optimizer_iterations": int(getattr(result, "nit", 0)),
-                    "result_norm_before_normalization": length,
+                    "preferred_optimizer_success": bool(result.success),
+                    "preferred_optimizer_status": int(getattr(result, "status", -1)),
+                    "preferred_optimizer_message": str(getattr(result, "message", "")),
+                    "preferred_result_norm_before_normalization": (
+                        float(np.linalg.norm(projected))
+                        if projected.shape == (3,) and np.isfinite(projected).all() else None
+                    ),
+                    "selected_branch_index": int(selected_branch),
+                    "selected_dominant_axis": int(axis),
+                    "selected_dominant_sign": int(sign),
+                    "selected_optimizer_success": bool(selected_result.success),
+                    "selected_optimizer_status": int(getattr(selected_result, "status", -1)),
+                    "selected_optimizer_message": str(getattr(selected_result, "message", "")),
+                    "selected_optimizer_iterations": int(getattr(selected_result, "nit", 0)),
+                    "selected_result_norm_before_normalization": length,
                     "minimum_all_constraint_alignment": float(alignment.min()),
-                })
+                    "branch_attempts": branch_attempts,
+                }
+                fallback_directions.append(fallback_record)
+                if not bool(selected_result.success):
+                    nonconverged_feasible_projections.append({
+                        "compact_vertex_id": int(vertex),
+                        "optimizer_success": False,
+                        "optimizer_status": int(getattr(selected_result, "status", -1)),
+                        "optimizer_message": str(getattr(selected_result, "message", "")),
+                        "optimizer_iterations": int(getattr(selected_result, "nit", 0)),
+                        "result_norm_before_normalization": length,
+                        "minimum_all_constraint_alignment": float(alignment.min()),
+                    })
+            else:
+                direction, length, alignment = checked
+                if not bool(result.success):
+                    nonconverged_feasible_projections.append({
+                        "compact_vertex_id": int(vertex),
+                        "optimizer_success": False,
+                        "optimizer_status": int(getattr(result, "status", -1)),
+                        "optimizer_message": str(getattr(result, "message", "")),
+                        "optimizer_iterations": int(getattr(result, "nit", 0)),
+                        "result_norm_before_normalization": length,
+                        "minimum_all_constraint_alignment": float(alignment.min()),
+                    })
             output[vertex] = direction
             corrected.append(int(vertex))
             maximum_angle = max(maximum_angle, float(np.arccos(np.clip(np.dot(direction, preferred), -1.0, 1.0))))
+            if fallback_record is not None:
+                fallback_record["source_direction_change_radians"] = float(
+                    np.arccos(np.clip(np.dot(direction, preferred), -1.0, 1.0))
+                )
 
     _, verified = _shared_source_seed_demands(
         maps, output, faces, normals, np.zeros((maps.shape[0], len(faces))),
@@ -2396,6 +2503,7 @@ def _condition_shared_source_directions(
         "selection_projection_with_numerical_margin": selection_bound,
         "maximum_source_direction_change_radians": maximum_angle,
         "nonconverged_feasible_projections": nonconverged_feasible_projections,
+        "nonzero_direction_fallbacks": fallback_directions,
     }
 
 def _source_scalar_for_normal_demand(
