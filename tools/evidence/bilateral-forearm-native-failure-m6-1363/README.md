@@ -1,0 +1,9 @@
+# Bilateral native forearm failure on M6
+
+Native013 completed 8,000 accepted steps (16.00000076 simulated seconds) in 105.59136225 launcher wall seconds, approximately 0.15153 times real time. All 137 immutable input pins, invocation and environment checks passed. This is a failed anatomical candidate, not admission or five-minute qualification.
+
+The partial exact captured-geometry audit found joined right-forearm pairs at steps 0 / 3807 / 8000: 6 / 12 / 7. At step8000 row133 also has two self pairs. The 2,070 expected shared vertices match bitwise and 2,274 shared face pairs cancel. All 866 non-target surfaces and accepted body poses in the three audited captures match native012. The entire 1,000-row coupled physiology trace is byte-identical to native012. The remaining five captures were not audited after the failure was established; the retained report explicitly has complete=false.
+
+The continuous native recording contains 252 image frames spanning 0 to 16.00000076 simulated seconds. Presentation timestamps are strictly increasing, from 1.023333 to 99.44 wall seconds; duration is 99.808333 seconds and maximum frame gap is 1.676667 seconds. Five zero-sample timing markers are excluded from image counts. The existing AVFoundation inspection tool matched every frame to the surface trace. The retained final frame was visually inspected: whole reference adult, flat support plane, synchronized physiological HUD. It does not establish tissue-interface clearance.
+
+The recording and accepted geometry packs remain on numi with size and SHA256 pins in manifest.json. Prepared source provenance is retained in bilateral-forearm-preparation-m6-1360. Existing back and pronator-quadratus defects remain open. No physical or physiological state was modified to hide these geometry failures.
