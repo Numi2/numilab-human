@@ -56,6 +56,29 @@ class CarrierTests(unittest.TestCase):
             self.assertEqual(compiled[0], compiled[1])
             self.assertEqual(proof["compiled_positive_influences"], 36)
 
+    def test_reject_triangle_collapsed_by_storage_rounding(self):
+        row = self.row()
+        v = row.vertices6.astype(np.float64)
+        v[:, :3] = [[1, 0, 0], [1 + 2**-25, 0, 0], [1, 1, 0]]
+        self.assertGreater(np.linalg.norm(np.cross(v[1, :3]-v[0, :3],
+                                                  v[2, :3]-v[0, :3])), 0)
+        with self.assertRaisesRegex(ValueError, "exactly degenerate triangle"):
+            self.encode([dataclasses.replace(row, vertices6=v)])
+
+    def test_reject_distinct_collinear_stored_vertices(self):
+        row = self.row()
+        v = row.vertices6.copy()
+        v[:, :3] = [[0, 0, 0], [1, 1, 0], [2, 2, 0]]
+        with self.assertRaisesRegex(ValueError, "exactly degenerate triangle"):
+            self.encode([dataclasses.replace(row, vertices6=v)])
+
+    def test_accept_nonzero_subnormal_stored_triangle(self):
+        row = self.row()
+        v = row.vertices6.copy()
+        v[:, :3] = [[0, 0, 0], [2**-149, 0, 0], [0, 2**-149, 0]]
+        payload, _, _ = self.encode([dataclasses.replace(row, vertices6=v)])
+        self.assertTrue(payload)
+
     def test_shared_points_reject_different_fields(self):
         a, b = self.row(), self.row(134)
         w = b.weights.copy()

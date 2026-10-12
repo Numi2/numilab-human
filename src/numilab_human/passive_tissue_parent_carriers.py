@@ -63,6 +63,12 @@ def encode_carriers(
                 "source normals must be unit length")
         require(f.ndim == 2 and f.shape[1] == 3 and len(f) > 0
                 and f.min() >= 0 and f.max() < len(v), "invalid source faces")
+        # Validate the coordinates actually serialized, after Float32 rounding.
+        # A nonzero rational/Float64 source triangle can collapse in NHTISS.
+        # Reuse the exact dyadic predicate; no geometric tolerance or repair.
+        from .cardiac_cavity_intersections import float32_point_lattice_key, _records
+        _records([float32_point_lattice_key(tuple(float(x) for x in point))
+                  for point in v[:, :3]], f.tolist())
         require(isinstance(row.binding_bytes, bytes) and len(row.binding_bytes) % 36 == 0,
                 "invalid binding byte count")
         require(row.binding_bytes == rows[0].binding_bytes,
