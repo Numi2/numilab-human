@@ -1,0 +1,110 @@
+{
+  "capture_zero_area_face_sample": [
+    4040,
+    5714,
+    5715,
+    5727,
+    5959,
+    5961,
+    5988,
+    6147,
+    6148,
+    6149,
+    6161,
+    6360,
+    7245,
+    7250,
+    7629,
+    7642,
+    7700,
+    7701,
+    7704,
+    7709,
+    7874,
+    7904,
+    8046,
+    8167
+  ],
+  "execution": {
+    "argv_matches": true,
+    "changed_inputs": {},
+    "environment_matches": true
+  },
+  "face_4040": {
+    "captured_doubled_area_m2": 0.0,
+    "captured_edge_ulp_m_at_y": 5.960464477539063e-08,
+    "captured_xyz_f32_m": [
+      [
+        -0.024862082675099373,
+        -0.6070094108581543,
+        0.06477311253547668
+      ],
+      [
+        -0.025178832933306694,
+        -0.6068947911262512,
+        0.06425172090530396
+      ],
+      [
+        -0.024862082675099373,
+        -0.6070094108581543,
+        0.06477311253547668
+      ]
+    ],
+    "local_vertex_ids": [
+      7037,
+      2099,
+      2100
+    ],
+    "pack_vertex_ids": [
+      667074,
+      662136,
+      662137
+    ],
+    "rest_doubled_area_m2": 2.4687889279775035e-12,
+    "rest_xyz_f32_m": [
+      [
+        0.0,
+        -0.019276520237326622,
+        1.0604450702667236
+      ],
+      [
+        -0.0003143110079690814,
+        -0.01875709928572178,
+        1.0605499744415283
+      ],
+      [
+        0.0,
+        -0.01927652768790722,
+        1.0604450702667236
+      ]
+    ],
+    "source_edge_y_delta_m": 7.450580596923828e-09
+  },
+  "gpu_used": false,
+  "interpretation": "The source patch has no zero-area Float32 faces, and the whole-row 2um loader-rest gate passes. In the rejected step-0 native pack, at least 732 row153 triangles have exactly zero Float32 area; the reported triangle 4040 collapses because a 7.45nm source edge maps to identical captured Float32 endpoints near y=-0.607m (ULP about 59.6nm). The prep validates source-rest Float32 coordinates only; it does not apply its full runtime parent-term default-pose expansion to an exact face-area gate. The native audit reports 1,545 zero-area triangles, exceeding this direct exact-zero count, presumably due its near-zero area threshold; this report does not infer the threshold. No accepted run or admission claim.",
+  "native_error": "whole native mesh contains invalid triangles: zero_area=1545 nonfinite_area=0 semantic=51005 stable_id=153 local_triangle=4040",
+  "native_reported_nonfinite_area_faces": 0,
+  "native_reported_zero_area_faces": 1545,
+  "native_run_relaunched": false,
+  "native_step0_surface_audit": "rejected",
+  "pack_inventory": {
+    "indices": 15222546,
+    "primitives": 875,
+    "vertices": 2833133
+  },
+  "row153_capture_exact_f32_zero_area_faces": 732,
+  "row153_face_count": 13742,
+  "row153_loader_rest_preflight_max_um": 0.4385095527637649,
+  "row153_rest_exact_f32_zero_area_faces": 0,
+  "scene": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-015-back455-right177",
+  "schema": "numi.human.back455.step0.transform-degeneracy-audit.v1",
+  "source_hashes": {
+    "accepted_surface_rejection_pack_sha256": "3d59952cd9e82eed01ce4961ff67c5a691bcfa280020441f78217b6f23ab372c",
+    "execution_receipt_sha256": "724383c5cbb1ff1c5c10f8406fd4261b8f34d5bb8c4ef6346031f4a8715fbd54",
+    "native_log_sha256": "da8d82ff00315c524e3e3ea033f8a2db10fcdb015417337184a2ee7298836186",
+    "patch153_sha256": "f0693c68fa20e65835dcda629c442cdbbc159ade6ff5cc66b8eb810931b9e380",
+    "preparation_sha256": "7495cbc33e7975c77f593c81f0374e629a8849a51d5c25748abe4483f14ce238",
+    "preparer_sha256": "54f77c711ca1d97a464c62b164e49ff11b9ab898944bb9d5f78d737fda7ccc3f",
+    "rest_preflight_sha256": "f9ead99a93fc491b3cf110b0f3c4dadd353e971d354b2822d498e2ee59b662bb"
+  }
+}
