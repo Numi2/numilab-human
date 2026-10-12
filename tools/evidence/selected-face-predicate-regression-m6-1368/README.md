@@ -1,0 +1,6 @@
+# Selected-face exact audit regression
+The existing exact geometry audit now exposes a private helper for self-pairs touching selected faces in a complete record set. It preserves global vertex identities, handles selected faces on either side of the face-ID ordering, canonicalizes and deduplicates pairs, and rejects missing/duplicate face IDs. Existing whole-surface predicates and runtime behavior are unchanged.
+
+This closes the record-order trap that suppressed crossings in exploratory right-forearm subset screens. The 38-test existing predicate suite passes on numi, including three new regressions for low/high selected IDs, shuffled noncontiguous IDs, shared-edge semantics, and invalid records. Actual native166 row133 captures at steps0/7423/8000 match the complete audit: zero incident pairs at0; all three pairs3304–7167,3304–7169,3323–7167 at each late pose.
+
+The companion replay converts stored F32 coordinates to exact Fraction tuples, preserving their binary values. Its two earlier experimental wrappers rejected float coordinates and mutable list coordinates before producing any parity result; they remain retained remotely. The successful script is the third wrapper. Passing this regression validates the checker, not the anatomy.

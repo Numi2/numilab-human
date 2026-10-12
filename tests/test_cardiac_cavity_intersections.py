@@ -38,6 +38,48 @@ class PredicateTests(unittest.TestCase):
         records = audit._records(vertices, faces)
         return audit._audit_pair(records, records, same_surface=True)
 
+    def test_selected_faces_match_full_audit_for_either_record_order(self):
+        vertices = [(0, 0, 0), (4, 0, 0), (0, 4, 0),
+                    (1, 1, -1), (1, 1, 1), (2, 1, 0),
+                    (20, 0, 0), (21, 0, 0), (20, 1, 0)]
+        records = audit._records(vertices, [(0, 1, 2), (3, 4, 5), (6, 7, 8)])
+        records = [(*row[:3], face_id, row[4])
+                   for row, face_id in zip(records, (3323, 7167, 9900))]
+        full = audit._audit_pair(records, records, same_surface=True)
+        self.assertEqual(full["triangle_pairs"], [[3323, 7167]])
+        for order in (records, records[::-1]):
+            for selected in ({3323}, {7167}, {3323, 7167}, {9900}, set()):
+                with self.subTest(selected=selected, reversed=order is not records):
+                    expected = [pair for pair in full["triangle_pairs"]
+                                if selected.intersection(pair)]
+                    result = audit._audit_self_pairs_touching_faces(order, selected)
+                    self.assertEqual(result["triangle_pairs"], expected)
+                    self.assertEqual(result["count"], len(expected))
+
+    def test_selected_faces_preserve_shared_vertex_identity(self):
+        vertices = [(0, 0, 0), (2, 0, 0), (0, 2, 0),
+                    (0, -2, 0), (1, 1, 0)]
+        records = audit._records(vertices, [(0, 1, 2), (1, 0, 3), (1, 0, 4)])
+        full = audit._audit_pair(records, records, same_surface=True)
+        for selected in ({0}, {1}, {2}, {0, 1, 2}):
+            expected = [pair for pair in full["triangle_pairs"]
+                        if selected.intersection(pair)]
+            result = audit._audit_self_pairs_touching_faces(records, selected)
+            self.assertEqual(result["triangle_pairs"], expected)
+        allowed = audit._audit_self_pairs_touching_faces(records[:2], {0})
+        self.assertEqual(allowed["count"], 0)
+        self.assertEqual(allowed["allowed_shared_vertex_or_edge_pairs"], 1)
+
+    def test_selected_faces_reject_missing_or_ambiguous_records(self):
+        with self.assertRaisesRegex(HumanImportError, "missing triangle records"):
+            audit._audit_self_pairs_touching_faces(None, {0})
+        with self.assertRaisesRegex(HumanImportError, "selected face ID missing"):
+            audit._audit_self_pairs_touching_faces([], {0})
+        records = audit._records([(0, 0, 0), (1, 0, 0), (0, 1, 0)], [(0, 1, 2)])
+        with self.assertRaisesRegex(HumanImportError, "duplicate face IDs"):
+            audit._audit_self_pairs_touching_faces(records + records, {0})
+        self.assertEqual(audit._audit_self_pairs_touching_faces([], set())["count"], 0)
+
     def test_shared_edge_contact_allowed_but_same_side_overlap_rejected(self):
         vertices = [(0,0,0),(2,0,0),(0,2,0),(0,-2,0),(1,1,0)]
         self.assertEqual(self.pair(vertices, [(0,1,2),(1,0,3)])['count'], 0)

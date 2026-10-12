@@ -315,6 +315,39 @@ def _audit_pair(first, second, *, same_surface):
         same_surface=same_surface)
 
 
+def _audit_self_pairs_touching_faces(records, face_ids):
+    """Audit all self-pairs incident on selected faces in one complete record set.
+
+    Face IDs need not be contiguous or sorted. Keep the original vertex IDs
+    for shared-edge classification; never compact a patch independently from
+    its complement. Canonicalize candidate order instead of filtering one
+    direction, which can silently omit a crossing when a selected face has
+    the lower ID.
+    """
+    if records is None:
+        raise HumanImportError("missing triangle records: geometry preparation did not complete")
+    snapshot = tuple(records)
+    by_id = {row[3]: row for row in snapshot}
+    require(len(by_id) == len(snapshot), "duplicate face IDs in selected-face audit")
+    selected_ids = set(face_ids)
+    require(selected_ids <= set(by_id), "selected face ID missing from complete record set")
+    selected = tuple(row for row in snapshot if row[3] in selected_ids)
+
+    def candidates():
+        seen = set()
+        for first, other in _query_surface_aabb(selected, _prepare_surface_aabb(snapshot)):
+            i, j = first[3], other[3]
+            if i == j:
+                continue
+            key = (min(i, j), max(i, j))
+            if key in seen:
+                continue
+            seen.add(key)
+            yield (first, other) if i < j else (other, first)
+
+    return _audit_record_pairs(candidates(), same_surface=True)
+
+
 def _audit_record_pairs(candidate_pairs, *, same_surface):
     candidates, allowed, pairs = 0, 0, []
     for (tri, lo, hi, i, ids), (other, lower, upper, j, other_ids) in candidate_pairs:
