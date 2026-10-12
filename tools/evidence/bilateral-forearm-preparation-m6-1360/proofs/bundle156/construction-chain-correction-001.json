@@ -1,0 +1,117 @@
+{
+  "candidate_chain": {
+    "attempt118_input_candidate116": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-116-right-paired-cap-edge-flips-001/result-001/candidate.pkl",
+      "role": "Attempt118 input after the preceding attempt116 cap edge-flip conditioning; not counted as a paired endpoint contraction.",
+      "sha256": "a99bf36d0ee5a5dc7f94f54db97fd17f10e2cbc93da6f7b20629228fb5c7fbe8"
+    },
+    "attempt118_output": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-118-right-paired-cap-short-edge-contractions-001/result-001/candidate.pkl",
+      "sha256": "cfd81debd3317b076bddc82a6f58c5490748a02a100370d4958697c08775a2a2"
+    },
+    "attempt121_output": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-121-right-witness-band-guarded-contractions-001/result-001/candidate.pkl",
+      "sha256": "6f60f73521017f3e0f3e5b35e89dd78d29c88d29303a97f5f71950eb7e4548ce"
+    },
+    "attempt122_output": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-122-right-cap-boundary-directed-contractions-001/result-001/candidate.pkl",
+      "sha256": "aeeaac9444ef873624d7a0c9e667ffa694b0cb1509ee89e3ccdea8acbc665f94"
+    },
+    "reference_candidate104": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-104-right-witness-band-refinement-001/result-001/candidate.pkl",
+      "sha256": "28ab429feb10615a5cfbd2345148d6b0619a7e75b41301b3f86f0a244202ad6d"
+    }
+  },
+  "construction_stages": [
+    {
+      "accepted_contractions": 16,
+      "attempt": 118,
+      "gpu_launched": false,
+      "output_candidate_sha256": "cfd81debd3317b076bddc82a6f58c5490748a02a100370d4958697c08775a2a2",
+      "publication_copy": "proofs/bundle156/construction-chain/attempt-118-construction-checkpoint.json",
+      "report_path": "/Users/n/numi-human-fds132-m6-1350/attempt-118-right-paired-cap-short-edge-contractions-001/result-001/construction-checkpoint.json",
+      "report_sha256": "bc55e9093bdc60d7762e52ddd175ba8dfcf1d5e56b7002bb80e31b75526545d5",
+      "report_size_bytes": 1621
+    },
+    {
+      "accepted_contractions": 2,
+      "attempt": 121,
+      "gpu_launched": false,
+      "output_candidate_sha256": "6f60f73521017f3e0f3e5b35e89dd78d29c88d29303a97f5f71950eb7e4548ce",
+      "publication_copy": "proofs/bundle156/construction-chain/attempt-121-construction-report.json",
+      "report_path": "/Users/n/numi-human-fds132-m6-1350/attempt-121-right-witness-band-guarded-contractions-001/result-001/construction-report.json",
+      "report_sha256": "db6d445350b55da96e9fc283cc5bc48bc812059586d2b026183b8bc42a414faf",
+      "report_size_bytes": 3905
+    },
+    {
+      "accepted_contractions": 7,
+      "attempt": 122,
+      "gpu_launched": false,
+      "output_candidate_sha256": "aeeaac9444ef873624d7a0c9e667ffa694b0cb1509ee89e3ccdea8acbc665f94",
+      "publication_copy": "proofs/bundle156/construction-chain/attempt-122-construction-report.json",
+      "report_path": "/Users/n/numi-human-fds132-m6-1350/attempt-122-right-cap-boundary-directed-contractions-001/result-001/construction-report.json",
+      "report_sha256": "463cb9fedbf1618b9e1dd82aa98781e15cc826099b6ec6130c51e24ee74d27f3",
+      "report_size_bytes": 9403
+    }
+  ],
+  "cumulative_accepted_contractions": 25,
+  "interpretation": "Across attempts118,121,122,25 paired-cap endpoint contractions were accepted (16+2+7). Candidate104-to122 face incidence decreases by25 vertices in each row, and each row's oriented-face count decreases by50. The same25 global vertex IDs remain in each listed vertex inventory as unreferenced entries; active_vertex_ids_removed=0 describes the listed-ID inventory, not face incidence. Common retained coordinates and weights are unchanged. Tessellation changed, so exact surface coverage equivalence is not claimed.",
+  "max_cumulative_endpoint_displacement_from_candidate104_um": 21.42687322037398,
+  "report_pins": [
+    {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-118-right-paired-cap-short-edge-contractions-001/result-001/construction-checkpoint.json",
+      "publication_copy": "proofs/bundle156/construction-chain/attempt-118-construction-checkpoint.json",
+      "sha256": "bc55e9093bdc60d7762e52ddd175ba8dfcf1d5e56b7002bb80e31b75526545d5",
+      "size_bytes": 1621
+    },
+    {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-121-right-witness-band-guarded-contractions-001/result-001/construction-report.json",
+      "publication_copy": "proofs/bundle156/construction-chain/attempt-121-construction-report.json",
+      "sha256": "db6d445350b55da96e9fc283cc5bc48bc812059586d2b026183b8bc42a414faf",
+      "size_bytes": 3905
+    },
+    {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-122-right-cap-boundary-directed-contractions-001/result-001/construction-report.json",
+      "publication_copy": "proofs/bundle156/construction-chain/attempt-122-construction-report.json",
+      "sha256": "463cb9fedbf1618b9e1dd82aa98781e15cc826099b6ec6130c51e24ee74d27f3",
+      "size_bytes": 9403
+    }
+  ],
+  "rows": {
+    "131": {
+      "all_common_coordinates_unchanged": true,
+      "all_common_weights_unchanged": true,
+      "face_incident_vertices_after": 6728,
+      "face_incident_vertices_before": 6753,
+      "face_incident_vertices_removed": 25,
+      "listed_but_unreferenced_after": 25,
+      "listed_vertex_ids_after": 6753,
+      "listed_vertex_ids_before": 6753,
+      "listed_vertex_ids_removed": 0,
+      "oriented_face_count_after": 13464,
+      "oriented_face_count_before": 13514,
+      "oriented_faces_removed": 50
+    },
+    "133": {
+      "all_common_coordinates_unchanged": true,
+      "all_common_weights_unchanged": true,
+      "face_incident_vertices_after": 6064,
+      "face_incident_vertices_before": 6089,
+      "face_incident_vertices_removed": 25,
+      "listed_but_unreferenced_after": 25,
+      "listed_vertex_ids_after": 6089,
+      "listed_vertex_ids_before": 6089,
+      "listed_vertex_ids_removed": 0,
+      "oriented_face_count_after": 12124,
+      "oriented_face_count_before": 12174,
+      "oriented_faces_removed": 50
+    }
+  },
+  "schema": "numi.human.bilateral-forearm-preparation-1360.construction-chain-correction.v1",
+  "scope": "Evidence interpretation overlay only; no geometry, bundle156 payload, or native013 input was changed.",
+  "supersedes": {
+    "publication_file": "proofs/bundle156/construction-delta-104-to-122.json",
+    "publication_file_sha256": "97f4a270e0a1b49a8c7f039f1a3e5e5d129a2ce9868f9e40b2bea20ce08f06c1",
+    "specific_correction": "The retained delta's accepted_contractions value7 describes attempt122 only, not the cumulative candidate104-to122 chain."
+  }
+}

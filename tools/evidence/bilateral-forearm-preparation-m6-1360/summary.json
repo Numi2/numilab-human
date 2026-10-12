@@ -1,0 +1,113 @@
+{
+  "candidate": {
+    "admitted": false,
+    "path": "/Users/n/numi-human-fds132-m6-1350/attempt-150-right-canonical-midpoint-field-correction-001/result-001/candidate.pkl",
+    "sha256": "8607d93a055a2045e823f80b4e04b6d6dcd6f5d8bfa95b442485a35b555918b1"
+  },
+  "composition013_003": {
+    "anatomical_admission_claimed": false,
+    "binding_table_byte_exact": true,
+    "changed_stable_ids": [
+      131,
+      133
+    ],
+    "child_payload_sha256": "2e32132820094dd510b588bd6ca6eb7a82a2f973383568a7fdd39c4b31e75b4e",
+    "full_runtime_influences": 842394,
+    "index_count": 2203746,
+    "max_registered_rest_error_um": {
+      "131": 0.5960464477539062,
+      "133": 0.47892804980242837
+    },
+    "rest_gate": "passed",
+    "status": "loader_preflight_passed_native_verification_pending",
+    "vertex_count": 407870
+  },
+  "current8000_cpu_float32": {
+    "fma": {
+      "row_degenerates": {
+        "131": 0,
+        "133": 0
+      },
+      "row_pairs": {
+        "131": 0,
+        "133": 0
+      },
+      "union_degeneracy": "not computed",
+      "union_pairs": 4
+    },
+    "separate": {
+      "row_degenerates": {
+        "131": 0,
+        "133": 0
+      },
+      "row_pairs": {
+        "131": 0,
+        "133": 0
+      },
+      "union_degeneracy": "not computed",
+      "union_pairs": 7
+    }
+  },
+  "current8000_float64": {
+    "arithmetic": "CPU Float64 binding and weight accumulation; exact triangle predicates on Float64 points; not native GPU.",
+    "rows": {
+      "131": 0,
+      "133": 0
+    },
+    "union_pairs": 0
+  },
+  "exact_route_replay": {
+    "attempt153": "Float32-quantized-coordinate diagnostic; small nonzero deltas retained as superseded diagnostic.",
+    "attempt154": "Exact rational source coordinates; zero changed full21 route-field scalar entries for candidate150."
+  },
+  "input_pin_verification_status": "verified",
+  "late151999_float64": {
+    "rows": {
+      "131": 0,
+      "133": 0
+    },
+    "union_components": 12,
+    "union_pairs": 0
+  },
+  "native013": {
+    "anatomical_admission_claimed": false,
+    "child_payload_sha256": "2e32132820094dd510b588bd6ca6eb7a82a2f973383568a7fdd39c4b31e75b4e",
+    "extension_sha256": "0d0a9266b641a766c5a5c621f268e8f8dd66f2bac600e2d4bb02349faa6679f3",
+    "gpu_run_performed": false,
+    "immutable_input_count": 137,
+    "not_run_reason": "The numi macOS desktop was logged out after the SSH drop; root requested user sign-in before native launch.",
+    "preparation_sha256": "cf2de95cf3d76d7059bae68636db84dbc847ebb967649546f532b5a9787139b0",
+    "run_declaration_sha256": "ba3eb5ba9ad9ced21d0b38413f7cb2f3cebe348a3d0f6465291b81aecc406cd5",
+    "status": "prepared_experimental_not_admitted"
+  },
+  "prior_native012": {
+    "accepted_steps": 8000,
+    "launcher_wall_seconds": 106.59056649999911,
+    "only_prior_completed_native_forearm_evidence": true,
+    "scope": "Prior left-only bounded native012 run; not bilateral native013 or long-run admission.",
+    "simulation_seconds": 16.00000076
+  },
+  "source_delta_correction": {
+    "path": "proofs/bundle156/construction-chain-correction-001.json",
+    "sha256": "948b2d342111a80a19ab64c0bc050152616c3297f46e3bc6acdff5ecfc9097cf",
+    "supersedes": "The 7-contraction interpretation of proofs/bundle156/construction-delta-104-to-122.json."
+  },
+  "source_deltas": {
+    "104_to_122": "25 paired-cap endpoint contractions across attempts118 (16), 121 (2), and122 (7); the previous 7 count is only the last stage. Each row lost25 face-incident vertices and50 oriented faces, while those25 global IDs remain listed but unreferenced. Common retained coordinates/weights are unchanged; max cumulative endpoint displacement is21.4269 um. Tessellation changed; exact surface coverage is not claimed.",
+    "122_to_150": "One exact midpoint vertex per row; common coordinates/weights unchanged; each row added4 and removed2 oriented faces."
+  },
+  "source_gate": {
+    "rows": {
+      "131": 0,
+      "133": 0
+    },
+    "union_components": 12,
+    "union_pairs": 0
+  },
+  "status": "prepared_candidate_unadmitted_native013_not_run",
+  "unresolved": [
+    "No native013 execution or anatomical admission.",
+    "CPU Float32 current8000 joined-union diagnostics retain7 pairs (separate accumulation) and4 pairs (FMA); union degeneracy was not computed.",
+    "Pronator quadratus interfaces and six-part back remain unresolved."
+  ]
+}

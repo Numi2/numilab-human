@@ -1,0 +1,4213 @@
+{
+  "inputs": {
+    "compose_source_path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-inputs/myosim/checkout/myo_sim/build/compose.py",
+    "compose_source_sha256": "93dd551216e94081cba8a86e9d13d065a2a0e8f4580a658c99eb5d3c33d40062",
+    "mujoco_version": "3.9.0",
+    "myosim_archive_path": "/Users/n/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-inputs/myosim/myo_sim-33c89c2b.tar.gz",
+    "myosim_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "nhrigid_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+    "nhrigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+  },
+  "interpretation": "These are exact named muscle route sites/wraps from the compiled source model. The separate NHTISS weights in witness 056 remain inferred nearest-four visual route-support weights; the match does not transform them into direct attachments.",
+  "matching_muscles": [
+    {
+      "actuator_index": 242,
+      "actuator_name": "FDS5",
+      "first_route_endpoint": {
+        "core_body_index": 41,
+        "kind": "site",
+        "name": "FDS5-P1_r",
+        "position_body_m": [
+          0.0042,
+          -0.276,
+          -0.0386
+        ],
+        "position_world_m": [
+          -0.15636499999908113,
+          0.19534499999894153,
+          1.1981999999988346
+        ],
+        "source_body_id": 23,
+        "source_body_name": "humerus_r",
+        "source_id": 729
+      },
+      "last_route_endpoint": {
+        "core_body_index": 75,
+        "kind": "site",
+        "name": "FDS5-P8_r",
+        "position_body_m": [
+          0.0011,
+          -0.0182,
+          -0.0046
+        ],
+        "position_world_m": [
+          -0.21679899999717414,
+          0.1987249999947986,
+          0.8053689999985056
+        ],
+        "source_body_id": 51,
+        "source_body_name": "midph5_r",
+        "source_id": 1156
+      },
+      "route_body_names": [
+        "5proxph_r",
+        "capitate_r",
+        "fifthmc_r",
+        "fourthmc_r",
+        "humerus_r",
+        "lunate_r",
+        "midph5_r",
+        "radius_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 41,
+          "kind": "site",
+          "name": "FDS5-P1_r",
+          "position_body_m": [
+            0.0042,
+            -0.276,
+            -0.0386
+          ],
+          "position_world_m": [
+            -0.15636499999908113,
+            0.19534499999894153,
+            1.1981999999988346
+          ],
+          "source_body_id": 23,
+          "source_body_name": "humerus_r",
+          "source_id": 729
+        },
+        {
+          "core_body_index": 41,
+          "kind": "sphere",
+          "name": "Elbow_PT_FCU_wrap",
+          "position_body_m": [
+            -0.005,
+            -0.29,
+            -0.053
+          ],
+          "position_world_m": [
+            -0.14196499999905762,
+            0.20454499999887496,
+            1.184199999998815
+          ],
+          "side_site": {
+            "core_body_index": 41,
+            "name": "Elbow_PT_FCU_site_FCU_side_r",
+            "position_body_m": [
+              0.03,
+              -0.2872,
+              -0.04
+            ],
+            "position_world_m": [
+              -0.15496499999889995,
+              0.1695449999988387,
+              1.1869999999990941
+            ],
+            "source_body_id": 23,
+            "source_body_name": "humerus_r",
+            "source_id": 721
+          },
+          "source_body_id": 23,
+          "source_body_name": "humerus_r",
+          "source_id": 53
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDS5-P2_r",
+          "position_body_m": [
+            0.0138,
+            -0.1872,
+            0.002
+          ],
+          "position_world_m": [
+            -0.20466499999795884,
+            0.1792449999966181,
+            0.9850999999987557
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 876
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            0.0123
+          ],
+          "position_world_m": [
+            -0.23996499999763612,
+            0.17384499999585276,
+            0.9245999999986357
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDS_ellipsoid_site_FDS5_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 927
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 114
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDS5-P3_r",
+          "position_body_m": [
+            -0.0024,
+            -0.0139,
+            -0.0138
+          ],
+          "position_world_m": [
+            -0.21619199999752037,
+            0.17345299999574146,
+            0.901345999998756
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 946
+        },
+        {
+          "core_body_index": 67,
+          "kind": "site",
+          "name": "FDS5-P4_r",
+          "position_body_m": [
+            -0.0029,
+            0.0085,
+            -0.0121
+          ],
+          "position_world_m": [
+            -0.22140499999749305,
+            0.18599899999553848,
+            0.8832269999986075
+          ],
+          "source_body_id": 45,
+          "source_body_name": "fourthmc_r",
+          "source_id": 1090
+        },
+        {
+          "core_body_index": 72,
+          "kind": "site",
+          "name": "FDS5-P5_r",
+          "position_body_m": [
+            -0.00010445,
+            -0.01308,
+            -0.00952
+          ],
+          "position_world_m": [
+            -0.2162539999974505,
+            0.19305344999540952,
+            0.8674829999985638
+          ],
+          "source_body_id": 49,
+          "source_body_name": "fifthmc_r",
+          "source_id": 1128
+        },
+        {
+          "core_body_index": 74,
+          "kind": "site",
+          "name": "FDS5-P6_r",
+          "position_body_m": [
+            -0.0017,
+            -0.0149,
+            -0.0071
+          ],
+          "position_world_m": [
+            -0.2171779999973523,
+            0.1962459999951773,
+            0.8442319999985279
+          ],
+          "source_body_id": 50,
+          "source_body_name": "5proxph_r",
+          "source_id": 1142
+        },
+        {
+          "core_body_index": 74,
+          "kind": "site",
+          "name": "FDS5-P7_r",
+          "position_body_m": [
+            -0.0025,
+            -0.0259,
+            -0.0054
+          ],
+          "position_world_m": [
+            -0.21887799999730234,
+            0.19704599999506126,
+            0.8332319999985118
+          ],
+          "source_body_id": 50,
+          "source_body_name": "5proxph_r",
+          "source_id": 1143
+        },
+        {
+          "core_body_index": 75,
+          "kind": "site",
+          "name": "FDS5-P8_r",
+          "position_body_m": [
+            0.0011,
+            -0.0182,
+            -0.0046
+          ],
+          "position_world_m": [
+            -0.21679899999717414,
+            0.1987249999947986,
+            0.8053689999985056
+          ],
+          "source_body_id": 51,
+          "source_body_name": "midph5_r",
+          "source_id": 1156
+        }
+      ],
+      "tendon_index": 246,
+      "tendon_name": "FDS5_tendon"
+    },
+    {
+      "actuator_index": 243,
+      "actuator_name": "FDS4",
+      "first_route_endpoint": {
+        "core_body_index": 41,
+        "kind": "site",
+        "name": "FDS4-P1_r",
+        "position_body_m": [
+          0.0048,
+          -0.2788,
+          -0.0373
+        ],
+        "position_world_m": [
+          -0.15766499999906447,
+          0.19474499999890776,
+          1.195399999998834
+        ],
+        "source_body_id": 23,
+        "source_body_name": "humerus_r",
+        "source_id": 730
+      },
+      "last_route_endpoint": {
+        "core_body_index": 70,
+        "kind": "site",
+        "name": "FDS4-P8_r",
+        "position_body_m": [
+          0.0,
+          -0.0119,
+          -0.0018
+        ],
+        "position_world_m": [
+          -0.23287699999709208,
+          0.18845699999465632,
+          0.7988829999985274
+        ],
+        "source_body_id": 47,
+        "source_body_name": "midph4_r",
+        "source_id": 1115
+      },
+      "route_body_names": [
+        "4proxph_r",
+        "capitate_r",
+        "fourthmc_r",
+        "humerus_r",
+        "lunate_r",
+        "midph4_r",
+        "radius_r",
+        "thirdmc_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 41,
+          "kind": "site",
+          "name": "FDS4-P1_r",
+          "position_body_m": [
+            0.0048,
+            -0.2788,
+            -0.0373
+          ],
+          "position_world_m": [
+            -0.15766499999906447,
+            0.19474499999890776,
+            1.195399999998834
+          ],
+          "source_body_id": 23,
+          "source_body_name": "humerus_r",
+          "source_id": 730
+        },
+        {
+          "core_body_index": 41,
+          "kind": "sphere",
+          "name": "Elbow_PT_FCU_wrap",
+          "position_body_m": [
+            -0.005,
+            -0.29,
+            -0.053
+          ],
+          "position_world_m": [
+            -0.14196499999905762,
+            0.20454499999887496,
+            1.184199999998815
+          ],
+          "side_site": {
+            "core_body_index": 41,
+            "name": "Elbow_PT_FCU_site_FCU_side_r",
+            "position_body_m": [
+              0.03,
+              -0.2872,
+              -0.04
+            ],
+            "position_world_m": [
+              -0.15496499999889995,
+              0.1695449999988387,
+              1.1869999999990941
+            ],
+            "source_body_id": 23,
+            "source_body_name": "humerus_r",
+            "source_id": 721
+          },
+          "source_body_id": 23,
+          "source_body_name": "humerus_r",
+          "source_id": 53
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDS4-P2_r",
+          "position_body_m": [
+            0.0157,
+            -0.1867,
+            0.0027
+          ],
+          "position_world_m": [
+            -0.20536499999795196,
+            0.17734499999661957,
+            0.9855999999987709
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 877
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            0.0123
+          ],
+          "position_world_m": [
+            -0.23996499999763612,
+            0.17384499999585276,
+            0.9245999999986357
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDS_ellipsoid_site_FDS4_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 928
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 114
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDS4-P3_r",
+          "position_body_m": [
+            -0.0008,
+            -0.0134,
+            -0.0136
+          ],
+          "position_world_m": [
+            -0.21639199999751496,
+            0.17185299999574535,
+            0.9018459999987707
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 947
+        },
+        {
+          "core_body_index": 62,
+          "kind": "site",
+          "name": "FDS4-P4_r",
+          "position_body_m": [
+            -0.0091,
+            0.0054,
+            -0.0108
+          ],
+          "position_world_m": [
+            -0.22656899999745317,
+            0.17967599999549538,
+            0.8814069999986442
+          ],
+          "source_body_id": 41,
+          "source_body_name": "thirdmc_r",
+          "source_id": 1042
+        },
+        {
+          "core_body_index": 67,
+          "kind": "site",
+          "name": "FDS4-P5_r",
+          "position_body_m": [
+            0.002,
+            -0.0138,
+            -0.006
+          ],
+          "position_world_m": [
+            -0.22750499999735987,
+            0.18109899999529022,
+            0.8609269999986257
+          ],
+          "source_body_id": 45,
+          "source_body_name": "fourthmc_r",
+          "source_id": 1091
+        },
+        {
+          "core_body_index": 69,
+          "kind": "site",
+          "name": "FDS4-P6_r",
+          "position_body_m": [
+            0.0001,
+            -0.0127,
+            -0.0075
+          ],
+          "position_world_m": [
+            -0.22583199999726752,
+            0.1848289999950772,
+            0.8383379999985974
+          ],
+          "source_body_id": 46,
+          "source_body_name": "4proxph_r",
+          "source_id": 1102
+        },
+        {
+          "core_body_index": 69,
+          "kind": "site",
+          "name": "FDS4-P7_r",
+          "position_body_m": [
+            0.0006,
+            -0.0361,
+            -0.001
+          ],
+          "position_world_m": [
+            -0.23233199999715048,
+            0.18432899999481622,
+            0.8149379999985704
+          ],
+          "source_body_id": 46,
+          "source_body_name": "4proxph_r",
+          "source_id": 1103
+        },
+        {
+          "core_body_index": 70,
+          "kind": "site",
+          "name": "FDS4-P8_r",
+          "position_body_m": [
+            0.0,
+            -0.0119,
+            -0.0018
+          ],
+          "position_world_m": [
+            -0.23287699999709208,
+            0.18845699999465632,
+            0.7988829999985274
+          ],
+          "source_body_id": 47,
+          "source_body_name": "midph4_r",
+          "source_id": 1115
+        }
+      ],
+      "tendon_index": 247,
+      "tendon_name": "FDS4_tendon"
+    },
+    {
+      "actuator_index": 244,
+      "actuator_name": "FDS3",
+      "first_route_endpoint": {
+        "core_body_index": 42,
+        "kind": "site",
+        "name": "FDS3-P1_r",
+        "position_body_m": [
+          -0.0067,
+          -0.0271,
+          -0.0019
+        ],
+        "position_world_m": [
+          -0.18076499999890144,
+          0.20014499999841565,
+          1.156699999998668
+        ],
+        "source_body_id": 24,
+        "source_body_name": "ulna_r",
+        "source_id": 845
+      },
+      "last_route_endpoint": {
+        "core_body_index": 65,
+        "kind": "site",
+        "name": "FDS3-P8_r",
+        "position_body_m": [
+          0.0002,
+          -0.0107,
+          -0.0054
+        ],
+        "position_world_m": [
+          -0.23997699999697436,
+          0.16848599999458164,
+          0.7948059999986882
+        ],
+        "source_body_id": 43,
+        "source_body_name": "midph3_r",
+        "source_id": 1079
+      },
+      "route_body_names": [
+        "3proxph_r",
+        "capitate_r",
+        "lunate_r",
+        "midph3_r",
+        "radius_r",
+        "thirdmc_r",
+        "ulna_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 42,
+          "kind": "site",
+          "name": "FDS3-P1_r",
+          "position_body_m": [
+            -0.0067,
+            -0.0271,
+            -0.0019
+          ],
+          "position_world_m": [
+            -0.18076499999890144,
+            0.20014499999841565,
+            1.156699999998668
+          ],
+          "source_body_id": 24,
+          "source_body_name": "ulna_r",
+          "source_id": 845
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDS3-P2_r",
+          "position_body_m": [
+            0.019,
+            -0.1871,
+            0.0042
+          ],
+          "position_world_m": [
+            -0.20686499999793384,
+            0.1740449999966083,
+            0.9851999999987959
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 878
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            0.0123
+          ],
+          "position_world_m": [
+            -0.23996499999763612,
+            0.17384499999585276,
+            0.9245999999986357
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDS_ellipsoid_site_FDS3_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 929
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 114
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDS3-P3_r",
+          "position_body_m": [
+            0.0068,
+            -0.0138,
+            -0.014
+          ],
+          "position_world_m": [
+            -0.2159919999974758,
+            0.16425299999574342,
+            0.9014459999988471
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 948
+        },
+        {
+          "core_body_index": 62,
+          "kind": "site",
+          "name": "FDS3-P4_r",
+          "position_body_m": [
+            0.0013,
+            0.0064,
+            -0.0095
+          ],
+          "position_world_m": [
+            -0.22786899999740715,
+            0.1692759999954988,
+            0.8824069999987397
+          ],
+          "source_body_id": 41,
+          "source_body_name": "thirdmc_r",
+          "source_id": 1043
+        },
+        {
+          "core_body_index": 64,
+          "kind": "site",
+          "name": "FDS3-P6_r",
+          "position_body_m": [
+            0.0006,
+            -0.0146,
+            -0.0088
+          ],
+          "position_world_m": [
+            -0.23034699999717784,
+            0.16973599999502356,
+            0.8351169999987231
+          ],
+          "source_body_id": 42,
+          "source_body_name": "3proxph_r",
+          "source_id": 1065
+        },
+        {
+          "core_body_index": 64,
+          "kind": "site",
+          "name": "FDS3-P7_r",
+          "position_body_m": [
+            0.0045,
+            -0.0376,
+            -0.0021
+          ],
+          "position_world_m": [
+            -0.23704699999704612,
+            0.1658359999947655,
+            0.8121169999987284
+          ],
+          "source_body_id": 42,
+          "source_body_name": "3proxph_r",
+          "source_id": 1066
+        },
+        {
+          "core_body_index": 65,
+          "kind": "site",
+          "name": "FDS3-P8_r",
+          "position_body_m": [
+            0.0002,
+            -0.0107,
+            -0.0054
+          ],
+          "position_world_m": [
+            -0.23997699999697436,
+            0.16848599999458164,
+            0.7948059999986882
+          ],
+          "source_body_id": 43,
+          "source_body_name": "midph3_r",
+          "source_id": 1079
+        }
+      ],
+      "tendon_index": 248,
+      "tendon_name": "FDS3_tendon"
+    },
+    {
+      "actuator_index": 245,
+      "actuator_name": "FDS2",
+      "first_route_endpoint": {
+        "core_body_index": 42,
+        "kind": "site",
+        "name": "FDS2-P1_r",
+        "position_body_m": [
+          -0.0068,
+          -0.0282,
+          -0.0014
+        ],
+        "position_world_m": [
+          -0.18126499999889653,
+          0.20024499999840242,
+          1.1555999999986646
+        ],
+        "source_body_id": 24,
+        "source_body_name": "ulna_r",
+        "source_id": 846
+      },
+      "last_route_endpoint": {
+        "core_body_index": 60,
+        "kind": "site",
+        "name": "FDS2-P8_r",
+        "position_body_m": [
+          -0.0002,
+          -0.0088,
+          -0.0041
+        ],
+        "position_world_m": [
+          -0.24186999999688413,
+          0.14555699999461646,
+          0.7993099999989033
+        ],
+        "source_body_id": 39,
+        "source_body_name": "midph2_r",
+        "source_id": 1024
+      },
+      "route_body_names": [
+        "2proxph_r",
+        "capitate_r",
+        "lunate_r",
+        "midph2_r",
+        "radius_r",
+        "secondmc_r",
+        "ulna_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 42,
+          "kind": "site",
+          "name": "FDS2-P1_r",
+          "position_body_m": [
+            -0.0068,
+            -0.0282,
+            -0.0014
+          ],
+          "position_world_m": [
+            -0.18126499999889653,
+            0.20024499999840242,
+            1.1555999999986646
+          ],
+          "source_body_id": 24,
+          "source_body_name": "ulna_r",
+          "source_id": 846
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDS2-P2_r",
+          "position_body_m": [
+            0.0214,
+            -0.1862,
+            0.0055
+          ],
+          "position_world_m": [
+            -0.2081649999979265,
+            0.17164499999661076,
+            0.986099999998813
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 879
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            0.0123
+          ],
+          "position_world_m": [
+            -0.23996499999763612,
+            0.17384499999585276,
+            0.9245999999986357
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDS_ellipsoid_site_FDS2_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 930
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 114
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDS2-P3_r",
+          "position_body_m": [
+            0.0089,
+            -0.0137,
+            -0.0139
+          ],
+          "position_world_m": [
+            -0.216091999997466,
+            0.1621529999957439,
+            0.9015459999988672
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 949
+        },
+        {
+          "core_body_index": 57,
+          "kind": "site",
+          "name": "FDS2-P4_r",
+          "position_body_m": [
+            -0.0041,
+            -0.0002,
+            -0.0048
+          ],
+          "position_world_m": [
+            -0.23022399999733964,
+            0.16046799999543848,
+            0.8774259999988144
+          ],
+          "source_body_id": 37,
+          "source_body_name": "secondmc_r",
+          "source_id": 987
+        },
+        {
+          "core_body_index": 57,
+          "kind": "site",
+          "name": "FDS2-P5_r",
+          "position_body_m": [
+            0.0049,
+            -0.0138,
+            -0.0007
+          ],
+          "position_world_m": [
+            -0.23432399999722897,
+            0.15146799999528524,
+            0.8638259999988824
+          ],
+          "source_body_id": 37,
+          "source_body_name": "secondmc_r",
+          "source_id": 988
+        },
+        {
+          "core_body_index": 59,
+          "kind": "site",
+          "name": "FDS2-P6_r",
+          "position_body_m": [
+            0.0013,
+            -0.0084,
+            -0.012
+          ],
+          "position_world_m": [
+            -0.2266439999971176,
+            0.15156699999509912,
+            0.8409829999989191
+          ],
+          "source_body_id": 38,
+          "source_body_name": "2proxph_r",
+          "source_id": 1005
+        },
+        {
+          "core_body_index": 59,
+          "kind": "site",
+          "name": "FDS2-P7_r",
+          "position_body_m": [
+            0.0064,
+            -0.0368,
+            0.0023
+          ],
+          "position_world_m": [
+            -0.24094399999695357,
+            0.14646699999475096,
+            0.812582999998899
+          ],
+          "source_body_id": 38,
+          "source_body_name": "2proxph_r",
+          "source_id": 1006
+        },
+        {
+          "core_body_index": 60,
+          "kind": "site",
+          "name": "FDS2-P8_r",
+          "position_body_m": [
+            -0.0002,
+            -0.0088,
+            -0.0041
+          ],
+          "position_world_m": [
+            -0.24186999999688413,
+            0.14555699999461646,
+            0.7993099999989033
+          ],
+          "source_body_id": 39,
+          "source_body_name": "midph2_r",
+          "source_id": 1024
+        }
+      ],
+      "tendon_index": 249,
+      "tendon_name": "FDS2_tendon"
+    },
+    {
+      "actuator_index": 246,
+      "actuator_name": "FDP5",
+      "first_route_endpoint": {
+        "core_body_index": 42,
+        "kind": "site",
+        "name": "FDP5-P1_r",
+        "position_body_m": [
+          -0.0063,
+          -0.0321,
+          0.0025
+        ],
+        "position_world_m": [
+          -0.18516499999887498,
+          0.19974499999834514,
+          1.1516999999986504
+        ],
+        "source_body_id": 24,
+        "source_body_name": "ulna_r",
+        "source_id": 847
+      },
+      "last_route_endpoint": {
+        "core_body_index": 76,
+        "kind": "site",
+        "name": "FDP5-P10_r",
+        "position_body_m": [
+          -0.0003,
+          -0.0139,
+          -0.0048
+        ],
+        "position_world_m": [
+          -0.21435599999711485,
+          0.20299599999465018,
+          0.7889919999984757
+        ],
+        "source_body_id": 52,
+        "source_body_name": "distph5_r",
+        "source_id": 1165
+      },
+      "route_body_names": [
+        "5proxph_r",
+        "capitate_r",
+        "distph5_r",
+        "fifthmc_r",
+        "fourthmc_r",
+        "lunate_r",
+        "midph5_r",
+        "radius_r",
+        "ulna_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 42,
+          "kind": "site",
+          "name": "FDP5-P1_r",
+          "position_body_m": [
+            -0.0063,
+            -0.0321,
+            0.0025
+          ],
+          "position_world_m": [
+            -0.18516499999887498,
+            0.19974499999834514,
+            1.1516999999986504
+          ],
+          "source_body_id": 24,
+          "source_body_name": "ulna_r",
+          "source_id": 847
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDP5-P2_r",
+          "position_body_m": [
+            0.0141,
+            -0.1852,
+            0.0086
+          ],
+          "position_world_m": [
+            -0.21126499999796716,
+            0.17894499999660538,
+            0.9870999999987263
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 880
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            0.0182
+          ],
+          "position_world_m": [
+            -0.2458649999976469,
+            0.1772449999958121,
+            0.9233999999985735
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDP_ellipsoid_site_FDP5_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 931
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 115
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDP5-P3_r",
+          "position_body_m": [
+            -0.0009,
+            -0.0103,
+            -0.0119
+          ],
+          "position_world_m": [
+            -0.21809199999753062,
+            0.1719529999957674,
+            0.9049459999987614
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 950
+        },
+        {
+          "core_body_index": 67,
+          "kind": "site",
+          "name": "FDP5-P4_r",
+          "position_body_m": [
+            -0.0069,
+            0.0089,
+            -0.0062
+          ],
+          "position_world_m": [
+            -0.2273049999975146,
+            0.1899989999955135,
+            0.8836269999985396
+          ],
+          "source_body_id": 45,
+          "source_body_name": "fourthmc_r",
+          "source_id": 1092
+        },
+        {
+          "core_body_index": 72,
+          "kind": "site",
+          "name": "FDP5-P5_r",
+          "position_body_m": [
+            0.001,
+            -0.013,
+            -0.0087
+          ],
+          "position_world_m": [
+            -0.2170739999974455,
+            0.1919489999954063,
+            0.8675629999985706
+          ],
+          "source_body_id": 49,
+          "source_body_name": "fifthmc_r",
+          "source_id": 1129
+        },
+        {
+          "core_body_index": 74,
+          "kind": "site",
+          "name": "FDP5-P6_r",
+          "position_body_m": [
+            -0.001,
+            -0.0137,
+            -0.0051
+          ],
+          "position_world_m": [
+            -0.21917799999735474,
+            0.19554599999517927,
+            0.845431999998525
+          ],
+          "source_body_id": 50,
+          "source_body_name": "5proxph_r",
+          "source_id": 1144
+        },
+        {
+          "core_body_index": 74,
+          "kind": "site",
+          "name": "FDP5-P7_r",
+          "position_body_m": [
+            -0.0005,
+            -0.0291,
+            -0.008
+          ],
+          "position_world_m": [
+            -0.2162779999972769,
+            0.19504599999504266,
+            0.8300319999985442
+          ],
+          "source_body_id": 50,
+          "source_body_name": "5proxph_r",
+          "source_id": 1145
+        },
+        {
+          "core_body_index": 75,
+          "kind": "site",
+          "name": "FDP5-P8_r",
+          "position_body_m": [
+            -0.001,
+            -0.009,
+            -0.004
+          ],
+          "position_world_m": [
+            -0.21739899999722948,
+            0.20082499999488573,
+            0.8145689999984821
+          ],
+          "source_body_id": 51,
+          "source_body_name": "midph5_r",
+          "source_id": 1157
+        },
+        {
+          "core_body_index": 75,
+          "kind": "site",
+          "name": "FDP5-P9_r",
+          "position_body_m": [
+            -0.001,
+            -0.016,
+            -0.004
+          ],
+          "position_world_m": [
+            -0.2173989999971952,
+            0.20082499999481718,
+            0.8075689999984821
+          ],
+          "source_body_id": 51,
+          "source_body_name": "midph5_r",
+          "source_id": 1158
+        },
+        {
+          "core_body_index": 76,
+          "kind": "site",
+          "name": "FDP5-P10_r",
+          "position_body_m": [
+            -0.0003,
+            -0.0139,
+            -0.0048
+          ],
+          "position_world_m": [
+            -0.21435599999711485,
+            0.20299599999465018,
+            0.7889919999984757
+          ],
+          "source_body_id": 52,
+          "source_body_name": "distph5_r",
+          "source_id": 1165
+        }
+      ],
+      "tendon_index": 250,
+      "tendon_name": "FDP5_tendon"
+    },
+    {
+      "actuator_index": 247,
+      "actuator_name": "FDP4",
+      "first_route_endpoint": {
+        "core_body_index": 42,
+        "kind": "site",
+        "name": "FDP4-P1_r",
+        "position_body_m": [
+          -0.005,
+          -0.0337,
+          0.0027
+        ],
+        "position_world_m": [
+          -0.18536499999886077,
+          0.1984449999983285,
+          1.150099999998662
+        ],
+        "source_body_id": 24,
+        "source_body_name": "ulna_r",
+        "source_id": 848
+      },
+      "last_route_endpoint": {
+        "core_body_index": 71,
+        "kind": "site",
+        "name": "FDP4-P10_r",
+        "position_body_m": [
+          0.0002,
+          -0.014,
+          -0.0022
+        ],
+        "position_world_m": [
+          -0.23303999999697078,
+          0.1905739999943922,
+          0.7719939999985058
+        ],
+        "source_body_id": 48,
+        "source_body_name": "distph4_r",
+        "source_id": 1123
+      },
+      "route_body_names": [
+        "4proxph_r",
+        "capitate_r",
+        "distph4_r",
+        "fourthmc_r",
+        "lunate_r",
+        "midph4_r",
+        "radius_r",
+        "thirdmc_r",
+        "ulna_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 42,
+          "kind": "site",
+          "name": "FDP4-P1_r",
+          "position_body_m": [
+            -0.005,
+            -0.0337,
+            0.0027
+          ],
+          "position_world_m": [
+            -0.18536499999886077,
+            0.1984449999983285,
+            1.150099999998662
+          ],
+          "source_body_id": 24,
+          "source_body_name": "ulna_r",
+          "source_id": 848
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDP4-P2_r",
+          "position_body_m": [
+            0.0158,
+            -0.1863,
+            0.008
+          ],
+          "position_world_m": [
+            -0.21066499999795343,
+            0.17724499999659754,
+            0.9859999999987459
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 881
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            0.0182
+          ],
+          "position_world_m": [
+            -0.2458649999976469,
+            0.1772449999958121,
+            0.9233999999985735
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDP_ellipsoid_site_FDP4_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 932
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 115
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDP4-P3_r",
+          "position_body_m": [
+            0.0011,
+            -0.0118,
+            -0.0118
+          ],
+          "position_world_m": [
+            -0.21819199999751349,
+            0.16995299999575222,
+            0.9034459999987805
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 951
+        },
+        {
+          "core_body_index": 62,
+          "kind": "site",
+          "name": "FDP4-P4_r",
+          "position_body_m": [
+            -0.0104,
+            0.0047,
+            -0.008
+          ],
+          "position_world_m": [
+            -0.2293689999974561,
+            0.1809759999954748,
+            0.8807069999986178
+          ],
+          "source_body_id": 41,
+          "source_body_name": "thirdmc_r",
+          "source_id": 1045
+        },
+        {
+          "core_body_index": 67,
+          "kind": "cylinder",
+          "name": "4thmcp_ellipsoid_wrap",
+          "position_body_m": [
+            -0.0003,
+            -0.0254,
+            -0.0003
+          ],
+          "position_world_m": [
+            -0.23320499999731434,
+            0.18339899999514872,
+            0.8493269999985753
+          ],
+          "side_site": {
+            "core_body_index": 67,
+            "name": "4thmcp_ellipsoid_site_FDP4_side_r",
+            "position_body_m": [
+              -0.002,
+              -0.024,
+              0.002
+            ],
+            "position_world_m": [
+              -0.23550499999732952,
+              0.18509899999515117,
+              0.8507269999985474
+            ],
+            "source_body_id": 45,
+            "source_body_name": "fourthmc_r",
+            "source_id": 1099
+          },
+          "source_body_id": 45,
+          "source_body_name": "fourthmc_r",
+          "source_id": 167
+        },
+        {
+          "core_body_index": 67,
+          "kind": "site",
+          "name": "FDP4-P5_r",
+          "position_body_m": [
+            -0.0006,
+            -0.0136,
+            -0.0063
+          ],
+          "position_world_m": [
+            -0.2272049999973736,
+            0.18369899999529365,
+            0.8611269999986016
+          ],
+          "source_body_id": 45,
+          "source_body_name": "fourthmc_r",
+          "source_id": 1093
+        },
+        {
+          "core_body_index": 69,
+          "kind": "site",
+          "name": "FDP4-P6_r",
+          "position_body_m": [
+            -0.0012,
+            -0.012,
+            -0.0088
+          ],
+          "position_world_m": [
+            -0.22453199999727733,
+            0.18612899999509042,
+            0.839037999998591
+          ],
+          "source_body_id": 46,
+          "source_body_name": "4proxph_r",
+          "source_id": 1104
+        },
+        {
+          "core_body_index": 70,
+          "kind": "site",
+          "name": "FDP4-P8_r",
+          "position_body_m": [
+            0.0023,
+            -0.0071,
+            -0.006
+          ],
+          "position_world_m": [
+            -0.22867699999710434,
+            0.18615699999472388,
+            0.8036829999985704
+          ],
+          "source_body_id": 47,
+          "source_body_name": "midph4_r",
+          "source_id": 1116
+        },
+        {
+          "core_body_index": 70,
+          "kind": "site",
+          "name": "FDP4-P9_r",
+          "position_body_m": [
+            -0.0007,
+            -0.0197,
+            -0.0013
+          ],
+          "position_world_m": [
+            -0.23337699999705733,
+            0.18915699999457747,
+            0.791082999998518
+          ],
+          "source_body_id": 47,
+          "source_body_name": "midph4_r",
+          "source_id": 1117
+        },
+        {
+          "core_body_index": 71,
+          "kind": "site",
+          "name": "FDP4-P10_r",
+          "position_body_m": [
+            0.0002,
+            -0.014,
+            -0.0022
+          ],
+          "position_world_m": [
+            -0.23303999999697078,
+            0.1905739999943922,
+            0.7719939999985058
+          ],
+          "source_body_id": 48,
+          "source_body_name": "distph4_r",
+          "source_id": 1123
+        }
+      ],
+      "tendon_index": 251,
+      "tendon_name": "FDP4_tendon"
+    },
+    {
+      "actuator_index": 248,
+      "actuator_name": "FDP3",
+      "first_route_endpoint": {
+        "core_body_index": 42,
+        "kind": "site",
+        "name": "FDP3-P1_r",
+        "position_body_m": [
+          -0.0052,
+          -0.0333,
+          0.0021
+        ],
+        "position_world_m": [
+          -0.18476499999886373,
+          0.19864499999833535,
+          1.1504999999986631
+        ],
+        "source_body_id": 24,
+        "source_body_name": "ulna_r",
+        "source_id": 849
+      },
+      "last_route_endpoint": {
+        "core_body_index": 66,
+        "kind": "site",
+        "name": "FDP3-P10_r",
+        "position_body_m": [
+          0.0008,
+          -0.004,
+          -0.002
+        ],
+        "position_world_m": [
+          -0.2453309999968553,
+          0.16652099999433656,
+          0.7724589999986813
+        ],
+        "source_body_id": 44,
+        "source_body_name": "distph3_r",
+        "source_id": 1087
+      },
+      "route_body_names": [
+        "3proxph_r",
+        "capitate_r",
+        "distph3_r",
+        "lunate_r",
+        "midph3_r",
+        "radius_r",
+        "thirdmc_r",
+        "ulna_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 42,
+          "kind": "site",
+          "name": "FDP3-P1_r",
+          "position_body_m": [
+            -0.0052,
+            -0.0333,
+            0.0021
+          ],
+          "position_world_m": [
+            -0.18476499999886373,
+            0.19864499999833535,
+            1.1504999999986631
+          ],
+          "source_body_id": 24,
+          "source_body_name": "ulna_r",
+          "source_id": 849
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDP3-P2_r",
+          "position_body_m": [
+            0.0191,
+            -0.1864,
+            0.0078
+          ],
+          "position_world_m": [
+            -0.2104649999979368,
+            0.17394499999659754,
+            0.9858999999987792
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 882
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            0.0182
+          ],
+          "position_world_m": [
+            -0.2458649999976469,
+            0.1772449999958121,
+            0.9233999999985735
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDP_ellipsoid_site_FDP3_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 933
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 115
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDP3-P3_r",
+          "position_body_m": [
+            0.0034,
+            -0.0128,
+            -0.0114
+          ],
+          "position_world_m": [
+            -0.21859199999749734,
+            0.16765299999574046,
+            0.902445999998801
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 952
+        },
+        {
+          "core_body_index": 62,
+          "kind": "site",
+          "name": "FDP3-P4_r",
+          "position_body_m": [
+            -0.0013,
+            0.0061,
+            -0.0084
+          ],
+          "position_world_m": [
+            -0.2289689999974184,
+            0.17187599999549047,
+            0.8821069999987089
+          ],
+          "source_body_id": 41,
+          "source_body_name": "thirdmc_r",
+          "source_id": 1046
+        },
+        {
+          "core_body_index": 62,
+          "kind": "site",
+          "name": "FDP3-P5_r",
+          "position_body_m": [
+            0.0019,
+            -0.0151,
+            -0.0068
+          ],
+          "position_world_m": [
+            -0.23056899999729893,
+            0.16867599999527502,
+            0.8609069999987324
+          ],
+          "source_body_id": 41,
+          "source_body_name": "thirdmc_r",
+          "source_id": 1047
+        },
+        {
+          "core_body_index": 64,
+          "kind": "site",
+          "name": "FDP3-P6_r",
+          "position_body_m": [
+            0.0007,
+            -0.0158,
+            -0.0081
+          ],
+          "position_world_m": [
+            -0.2310469999971715,
+            0.16963599999500836,
+            0.8339169999987206
+          ],
+          "source_body_id": 42,
+          "source_body_name": "3proxph_r",
+          "source_id": 1067
+        },
+        {
+          "core_body_index": 65,
+          "kind": "site",
+          "name": "FDP3-P8_r",
+          "position_body_m": [
+            0.0016,
+            -0.0115,
+            -0.0051
+          ],
+          "position_world_m": [
+            -0.2402769999969636,
+            0.16708599999457233,
+            0.7940059999987005
+          ],
+          "source_body_id": 43,
+          "source_body_name": "midph3_r",
+          "source_id": 1080
+        },
+        {
+          "core_body_index": 65,
+          "kind": "site",
+          "name": "FDP3-P9_r",
+          "position_body_m": [
+            0.0021,
+            -0.0214,
+            -0.0021
+          ],
+          "position_world_m": [
+            -0.24327699999691266,
+            0.16658599999446067,
+            0.7841059999986907
+          ],
+          "source_body_id": 43,
+          "source_body_name": "midph3_r",
+          "source_id": 1081
+        },
+        {
+          "core_body_index": 66,
+          "kind": "site",
+          "name": "FDP3-P10_r",
+          "position_body_m": [
+            0.0008,
+            -0.004,
+            -0.002
+          ],
+          "position_world_m": [
+            -0.2453309999968553,
+            0.16652099999433656,
+            0.7724589999986813
+          ],
+          "source_body_id": 44,
+          "source_body_name": "distph3_r",
+          "source_id": 1087
+        }
+      ],
+      "tendon_index": 252,
+      "tendon_name": "FDP3_tendon"
+    },
+    {
+      "actuator_index": 249,
+      "actuator_name": "FDP2",
+      "first_route_endpoint": {
+        "core_body_index": 42,
+        "kind": "site",
+        "name": "FDP2-P1_r",
+        "position_body_m": [
+          -0.0065,
+          -0.0318,
+          0.0028
+        ],
+        "position_world_m": [
+          -0.18546499999887744,
+          0.1999449999983466,
+          1.151999999998647
+        ],
+        "source_body_id": 24,
+        "source_body_name": "ulna_r",
+        "source_id": 850
+      },
+      "last_route_endpoint": {
+        "core_body_index": 61,
+        "kind": "site",
+        "name": "FDP2-P10_r",
+        "position_body_m": [
+          0.0007,
+          -0.0056,
+          -0.004
+        ],
+        "position_world_m": [
+          -0.2431899999967572,
+          0.1413239999943976,
+          0.7776219999989383
+        ],
+        "source_body_id": 40,
+        "source_body_name": "distph2_r",
+        "source_id": 1035
+      },
+      "route_body_names": [
+        "2proxph_r",
+        "capitate_r",
+        "distph2_r",
+        "lunate_r",
+        "midph2_r",
+        "radius_r",
+        "secondmc_r",
+        "ulna_r"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 42,
+          "kind": "site",
+          "name": "FDP2-P1_r",
+          "position_body_m": [
+            -0.0065,
+            -0.0318,
+            0.0028
+          ],
+          "position_world_m": [
+            -0.18546499999887744,
+            0.1999449999983466,
+            1.151999999998647
+          ],
+          "source_body_id": 24,
+          "source_body_name": "ulna_r",
+          "source_id": 850
+        },
+        {
+          "core_body_index": 43,
+          "kind": "site",
+          "name": "FDP2-P2_r",
+          "position_body_m": [
+            0.0208,
+            -0.1856,
+            0.0092
+          ],
+          "position_world_m": [
+            -0.21186499999793237,
+            0.1722449999965985,
+            0.986699999998789
+          ],
+          "source_body_id": 25,
+          "source_body_name": "radius_r",
+          "source_id": 883
+        },
+        {
+          "core_body_index": 45,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            0.0182
+          ],
+          "position_world_m": [
+            -0.2458649999976469,
+            0.1772449999958121,
+            0.9233999999985735
+          ],
+          "side_site": {
+            "core_body_index": 45,
+            "name": "FDP_ellipsoid_site_FDP2_side_r",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              -0.0213554
+            ],
+            "position_world_m": [
+              -0.20630959999752477,
+              0.17985501999573597,
+              0.8958459999987416
+            ],
+            "source_body_id": 26,
+            "source_body_name": "lunate_r",
+            "source_id": 934
+          },
+          "source_body_id": 26,
+          "source_body_name": "lunate_r",
+          "source_id": 115
+        },
+        {
+          "core_body_index": 49,
+          "kind": "site",
+          "name": "FDP2-P3_r",
+          "position_body_m": [
+            0.009,
+            -0.0117,
+            -0.0121
+          ],
+          "position_world_m": [
+            -0.2178919999974753,
+            0.16205299999575468,
+            0.9035459999988593
+          ],
+          "source_body_id": 30,
+          "source_body_name": "capitate_r",
+          "source_id": 953
+        },
+        {
+          "core_body_index": 57,
+          "kind": "site",
+          "name": "FDP2-P4_r",
+          "position_body_m": [
+            -0.0043,
+            0.0066,
+            -0.0025
+          ],
+          "position_world_m": [
+            -0.23252399999737391,
+            0.16066799999549383,
+            0.8842259999988012
+          ],
+          "source_body_id": 37,
+          "source_body_name": "secondmc_r",
+          "source_id": 989
+        },
+        {
+          "core_body_index": 57,
+          "kind": "site",
+          "name": "FDP2-P5_r",
+          "position_body_m": [
+            0.0041,
+            -0.016,
+            -0.0042
+          ],
+          "position_world_m": [
+            -0.2308239999972221,
+            0.15226799999528082,
+            0.8616259999988918
+          ],
+          "source_body_id": 37,
+          "source_body_name": "secondmc_r",
+          "source_id": 990
+        },
+        {
+          "core_body_index": 57,
+          "kind": "cylinder",
+          "name": "2ndmcp_ellipsoid_wrap",
+          "position_body_m": [
+            0.0058,
+            -0.0314,
+            0.0007
+          ],
+          "position_world_m": [
+            -0.2357239999971384,
+            0.150567999995106,
+            0.8462259999988845
+          ],
+          "side_site": {
+            "core_body_index": 57,
+            "name": "2ndmcp_ellipsoid_site_FDP2_side_r",
+            "position_body_m": [
+              0.0058,
+              -0.0294,
+              -0.0087
+            ],
+            "position_world_m": [
+              -0.2263239999971482,
+              0.15056799999517162,
+              0.8482259999989304
+            ],
+            "source_body_id": 37,
+            "source_body_name": "secondmc_r",
+            "source_id": 1001
+          },
+          "source_body_id": 37,
+          "source_body_name": "secondmc_r",
+          "source_id": 143
+        },
+        {
+          "core_body_index": 59,
+          "kind": "site",
+          "name": "FDP2-P6_r",
+          "position_body_m": [
+            0.0033,
+            -0.0202,
+            -0.005
+          ],
+          "position_world_m": [
+            -0.23364399999705002,
+            0.1495669999949493,
+            0.8291829999989044
+          ],
+          "source_body_id": 38,
+          "source_body_name": "2proxph_r",
+          "source_id": 1007
+        },
+        {
+          "core_body_index": 59,
+          "kind": "site",
+          "name": "FDP2-P7_r",
+          "position_body_m": [
+            0.0063,
+            -0.0343,
+            -0.0006
+          ],
+          "position_world_m": [
+            -0.2380439999969663,
+            0.14656699999478967,
+            0.8150829999989122
+          ],
+          "source_body_id": 38,
+          "source_body_name": "2proxph_r",
+          "source_id": 1008
+        },
+        {
+          "core_body_index": 60,
+          "kind": "site",
+          "name": "FDP2-P8_r",
+          "position_body_m": [
+            0.0006,
+            -0.0088,
+            -0.0058
+          ],
+          "position_world_m": [
+            -0.2401699999968802,
+            0.1447569999946248,
+            0.7993099999989195
+          ],
+          "source_body_id": 39,
+          "source_body_name": "midph2_r",
+          "source_id": 1025
+        },
+        {
+          "core_body_index": 60,
+          "kind": "site",
+          "name": "FDP2-P9_r",
+          "position_body_m": [
+            0.0043,
+            -0.0196,
+            -0.0035
+          ],
+          "position_world_m": [
+            -0.2424699999968092,
+            0.14105699999450777,
+            0.7885099999989444
+          ],
+          "source_body_id": 39,
+          "source_body_name": "midph2_r",
+          "source_id": 1026
+        },
+        {
+          "core_body_index": 61,
+          "kind": "site",
+          "name": "FDP2-P10_r",
+          "position_body_m": [
+            0.0007,
+            -0.0056,
+            -0.004
+          ],
+          "position_world_m": [
+            -0.2431899999967572,
+            0.1413239999943976,
+            0.7776219999989383
+          ],
+          "source_body_id": 40,
+          "source_body_name": "distph2_r",
+          "source_id": 1035
+        }
+      ],
+      "tendon_index": 253,
+      "tendon_name": "FDP2_tendon"
+    },
+    {
+      "actuator_index": 305,
+      "actuator_name": "FDS5_l",
+      "first_route_endpoint": {
+        "core_body_index": 91,
+        "kind": "site",
+        "name": "FDS5-P1_l",
+        "position_body_m": [
+          0.0042,
+          -0.276,
+          0.0386
+        ],
+        "position_world_m": [
+          0.10636500000091886,
+          0.19534500000022803,
+          1.1982000000001207
+        ],
+        "source_body_id": 60,
+        "source_body_name": "humerus_l",
+        "source_id": 1220
+      },
+      "last_route_endpoint": {
+        "core_body_index": 125,
+        "kind": "site",
+        "name": "FDS5-P8_l",
+        "position_body_m": [
+          0.0011,
+          -0.0182,
+          0.0046
+        ],
+        "position_world_m": [
+          0.16679900000282585,
+          0.19872499999667687,
+          0.8053690000003838
+        ],
+        "source_body_id": 88,
+        "source_body_name": "midph5_l",
+        "source_id": 1647
+      },
+      "route_body_names": [
+        "5proxph_l",
+        "capitate_l",
+        "fifthmc_l",
+        "fourthmc_l",
+        "humerus_l",
+        "lunate_l",
+        "midph5_l",
+        "radius_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 91,
+          "kind": "site",
+          "name": "FDS5-P1_l",
+          "position_body_m": [
+            0.0042,
+            -0.276,
+            0.0386
+          ],
+          "position_world_m": [
+            0.10636500000091886,
+            0.19534500000022803,
+            1.1982000000001207
+          ],
+          "source_body_id": 60,
+          "source_body_name": "humerus_l",
+          "source_id": 1220
+        },
+        {
+          "core_body_index": 91,
+          "kind": "sphere",
+          "name": "Elbow_PT_FCU_wrap_l",
+          "position_body_m": [
+            -0.005,
+            -0.29,
+            0.053
+          ],
+          "position_world_m": [
+            0.09196500000094238,
+            0.2045450000000204,
+            1.1841999999999602
+          ],
+          "side_site": {
+            "core_body_index": 91,
+            "name": "Elbow_PT_FCU_site_FCU_side_l",
+            "position_body_m": [
+              0.03,
+              -0.2872,
+              0.04
+            ],
+            "position_world_m": [
+              0.10496500000110004,
+              0.1695450000001115,
+              1.1870000000003667
+            ],
+            "source_body_id": 60,
+            "source_body_name": "humerus_l",
+            "source_id": 1212
+          },
+          "source_body_id": 60,
+          "source_body_name": "humerus_l",
+          "source_id": 200
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDS5-P2_l",
+          "position_body_m": [
+            0.0138,
+            -0.1872,
+            -0.002
+          ],
+          "position_world_m": [
+            0.15466500000204117,
+            0.1792449999983776,
+            0.985100000000515
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1367
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap_l",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            -0.0123
+          ],
+          "position_world_m": [
+            0.18996500000236385,
+            0.17384499999795797,
+            0.9246000000007408
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDS_ellipsoid_site_FDS5_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1418
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 261
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDS5-P3_l",
+          "position_body_m": [
+            -0.0024,
+            -0.0139,
+            0.0138
+          ],
+          "position_world_m": [
+            0.16619200000247963,
+            0.17345299999761382,
+            0.9013460000006283
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1437
+        },
+        {
+          "core_body_index": 117,
+          "kind": "site",
+          "name": "FDS5-P4_l",
+          "position_body_m": [
+            -0.0029,
+            0.0085,
+            0.0121
+          ],
+          "position_world_m": [
+            0.17140500000250694,
+            0.18599899999746192,
+            0.8832270000005309
+          ],
+          "source_body_id": 82,
+          "source_body_name": "fourthmc_l",
+          "source_id": 1581
+        },
+        {
+          "core_body_index": 122,
+          "kind": "site",
+          "name": "FDS5-P5_l",
+          "position_body_m": [
+            -0.00010445,
+            -0.01308,
+            0.00952
+          ],
+          "position_world_m": [
+            0.16625400000254947,
+            0.1930534499972825,
+            0.8674830000004367
+          ],
+          "source_body_id": 86,
+          "source_body_name": "fifthmc_l",
+          "source_id": 1619
+        },
+        {
+          "core_body_index": 124,
+          "kind": "site",
+          "name": "FDS5-P6_l",
+          "position_body_m": [
+            -0.0017,
+            -0.0149,
+            0.0071
+          ],
+          "position_world_m": [
+            0.1671780000026477,
+            0.19624599999705933,
+            0.8442320000004099
+          ],
+          "source_body_id": 87,
+          "source_body_name": "5proxph_l",
+          "source_id": 1633
+        },
+        {
+          "core_body_index": 124,
+          "kind": "site",
+          "name": "FDS5-P7_l",
+          "position_body_m": [
+            -0.0025,
+            -0.0259,
+            0.0054
+          ],
+          "position_world_m": [
+            0.16887800000269765,
+            0.19704599999695993,
+            0.8332320000004104
+          ],
+          "source_body_id": 87,
+          "source_body_name": "5proxph_l",
+          "source_id": 1634
+        },
+        {
+          "core_body_index": 125,
+          "kind": "site",
+          "name": "FDS5-P8_l",
+          "position_body_m": [
+            0.0011,
+            -0.0182,
+            0.0046
+          ],
+          "position_world_m": [
+            0.16679900000282585,
+            0.19872499999667687,
+            0.8053690000003838
+          ],
+          "source_body_id": 88,
+          "source_body_name": "midph5_l",
+          "source_id": 1647
+        }
+      ],
+      "tendon_index": 313,
+      "tendon_name": "FDS5_tendon_l"
+    },
+    {
+      "actuator_index": 306,
+      "actuator_name": "FDS4_l",
+      "first_route_endpoint": {
+        "core_body_index": 91,
+        "kind": "site",
+        "name": "FDS4-P1_l",
+        "position_body_m": [
+          0.0048,
+          -0.2788,
+          0.0373
+        ],
+        "position_world_m": [
+          0.10766500000093551,
+          0.19474500000020697,
+          1.195400000000133
+        ],
+        "source_body_id": 60,
+        "source_body_name": "humerus_l",
+        "source_id": 1221
+      },
+      "last_route_endpoint": {
+        "core_body_index": 120,
+        "kind": "site",
+        "name": "FDS4-P8_l",
+        "position_body_m": [
+          0.0,
+          -0.0119,
+          0.0018
+        ],
+        "position_world_m": [
+          0.1828770000029079,
+          0.1884569999966921,
+          0.7988830000005631
+        ],
+        "source_body_id": 84,
+        "source_body_name": "midph4_l",
+        "source_id": 1606
+      },
+      "route_body_names": [
+        "4proxph_l",
+        "capitate_l",
+        "fourthmc_l",
+        "humerus_l",
+        "lunate_l",
+        "midph4_l",
+        "radius_l",
+        "thirdmc_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 91,
+          "kind": "site",
+          "name": "FDS4-P1_l",
+          "position_body_m": [
+            0.0048,
+            -0.2788,
+            0.0373
+          ],
+          "position_world_m": [
+            0.10766500000093551,
+            0.19474500000020697,
+            1.195400000000133
+          ],
+          "source_body_id": 60,
+          "source_body_name": "humerus_l",
+          "source_id": 1221
+        },
+        {
+          "core_body_index": 91,
+          "kind": "sphere",
+          "name": "Elbow_PT_FCU_wrap_l",
+          "position_body_m": [
+            -0.005,
+            -0.29,
+            0.053
+          ],
+          "position_world_m": [
+            0.09196500000094238,
+            0.2045450000000204,
+            1.1841999999999602
+          ],
+          "side_site": {
+            "core_body_index": 91,
+            "name": "Elbow_PT_FCU_site_FCU_side_l",
+            "position_body_m": [
+              0.03,
+              -0.2872,
+              0.04
+            ],
+            "position_world_m": [
+              0.10496500000110004,
+              0.1695450000001115,
+              1.1870000000003667
+            ],
+            "source_body_id": 60,
+            "source_body_name": "humerus_l",
+            "source_id": 1212
+          },
+          "source_body_id": 60,
+          "source_body_name": "humerus_l",
+          "source_id": 200
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDS4-P2_l",
+          "position_body_m": [
+            0.0157,
+            -0.1867,
+            -0.0027
+          ],
+          "position_world_m": [
+            0.15536500000204803,
+            0.17734499999838593,
+            0.985600000000537
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1368
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap_l",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            -0.0123
+          ],
+          "position_world_m": [
+            0.18996500000236385,
+            0.17384499999795797,
+            0.9246000000007408
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDS_ellipsoid_site_FDS4_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1419
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 261
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDS4-P3_l",
+          "position_body_m": [
+            -0.0008,
+            -0.0134,
+            0.0136
+          ],
+          "position_world_m": [
+            0.16639200000248502,
+            0.17185299999761972,
+            0.9018460000006449
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1438
+        },
+        {
+          "core_body_index": 112,
+          "kind": "site",
+          "name": "FDS4-P4_l",
+          "position_body_m": [
+            -0.0091,
+            0.0054,
+            0.0108
+          ],
+          "position_world_m": [
+            0.1765690000025468,
+            0.1796759999974694,
+            0.8814070000006181
+          ],
+          "source_body_id": 78,
+          "source_body_name": "thirdmc_l",
+          "source_id": 1533
+        },
+        {
+          "core_body_index": 117,
+          "kind": "site",
+          "name": "FDS4-P5_l",
+          "position_body_m": [
+            0.002,
+            -0.0138,
+            0.006
+          ],
+          "position_world_m": [
+            0.17750500000264013,
+            0.18109899999727339,
+            0.8609270000006087
+          ],
+          "source_body_id": 82,
+          "source_body_name": "fourthmc_l",
+          "source_id": 1582
+        },
+        {
+          "core_body_index": 119,
+          "kind": "site",
+          "name": "FDS4-P6_l",
+          "position_body_m": [
+            0.0001,
+            -0.0127,
+            0.0075
+          ],
+          "position_world_m": [
+            0.17583200000273247,
+            0.18482899999704397,
+            0.838338000000564
+          ],
+          "source_body_id": 83,
+          "source_body_name": "4proxph_l",
+          "source_id": 1593
+        },
+        {
+          "core_body_index": 119,
+          "kind": "site",
+          "name": "FDS4-P7_l",
+          "position_body_m": [
+            0.0006,
+            -0.0361,
+            0.001
+          ],
+          "position_world_m": [
+            0.18233200000284952,
+            0.18432899999684665,
+            0.8149380000006008
+          ],
+          "source_body_id": 83,
+          "source_body_name": "4proxph_l",
+          "source_id": 1594
+        },
+        {
+          "core_body_index": 120,
+          "kind": "site",
+          "name": "FDS4-P8_l",
+          "position_body_m": [
+            0.0,
+            -0.0119,
+            0.0018
+          ],
+          "position_world_m": [
+            0.1828770000029079,
+            0.1884569999966921,
+            0.7988830000005631
+          ],
+          "source_body_id": 84,
+          "source_body_name": "midph4_l",
+          "source_id": 1606
+        }
+      ],
+      "tendon_index": 314,
+      "tendon_name": "FDS4_tendon_l"
+    },
+    {
+      "actuator_index": 307,
+      "actuator_name": "FDS3_l",
+      "first_route_endpoint": {
+        "core_body_index": 92,
+        "kind": "site",
+        "name": "FDS3-P1_l",
+        "position_body_m": [
+          -0.0067,
+          -0.0271,
+          0.0019
+        ],
+        "position_world_m": [
+          0.13076500000109856,
+          0.2001449999999411,
+          1.1567000000001932
+        ],
+        "source_body_id": 61,
+        "source_body_name": "ulna_l",
+        "source_id": 1336
+      },
+      "last_route_endpoint": {
+        "core_body_index": 115,
+        "kind": "site",
+        "name": "FDS3-P8_l",
+        "position_body_m": [
+          0.0002,
+          -0.0107,
+          0.0054
+        ],
+        "position_world_m": [
+          0.18997700000302564,
+          0.16848599999668692,
+          0.7948060000007934
+        ],
+        "source_body_id": 80,
+        "source_body_name": "midph3_l",
+        "source_id": 1570
+      },
+      "route_body_names": [
+        "3proxph_l",
+        "capitate_l",
+        "lunate_l",
+        "midph3_l",
+        "radius_l",
+        "thirdmc_l",
+        "ulna_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 92,
+          "kind": "site",
+          "name": "FDS3-P1_l",
+          "position_body_m": [
+            -0.0067,
+            -0.0271,
+            0.0019
+          ],
+          "position_world_m": [
+            0.13076500000109856,
+            0.2001449999999411,
+            1.1567000000001932
+          ],
+          "source_body_id": 61,
+          "source_body_name": "ulna_l",
+          "source_id": 1336
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDS3-P2_l",
+          "position_body_m": [
+            0.019,
+            -0.1871,
+            -0.0042
+          ],
+          "position_world_m": [
+            0.15686500000206616,
+            0.17404499999838935,
+            0.9852000000005767
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1369
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap_l",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            -0.0123
+          ],
+          "position_world_m": [
+            0.18996500000236385,
+            0.17384499999795797,
+            0.9246000000007408
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDS_ellipsoid_site_FDS3_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1420
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 261
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDS3-P3_l",
+          "position_body_m": [
+            0.0068,
+            -0.0138,
+            0.014
+          ],
+          "position_world_m": [
+            0.1659920000025242,
+            0.16425299999761384,
+            0.9014460000007174
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1439
+        },
+        {
+          "core_body_index": 112,
+          "kind": "site",
+          "name": "FDS3-P4_l",
+          "position_body_m": [
+            0.0013,
+            0.0064,
+            0.0095
+          ],
+          "position_world_m": [
+            0.17786900000259284,
+            0.16927599999748555,
+            0.8824070000007264
+          ],
+          "source_body_id": 78,
+          "source_body_name": "thirdmc_l",
+          "source_id": 1534
+        },
+        {
+          "core_body_index": 114,
+          "kind": "site",
+          "name": "FDS3-P6_l",
+          "position_body_m": [
+            0.0006,
+            -0.0146,
+            0.0088
+          ],
+          "position_world_m": [
+            0.18034700000282214,
+            0.16973599999703456,
+            0.835117000000734
+          ],
+          "source_body_id": 79,
+          "source_body_name": "3proxph_l",
+          "source_id": 1556
+        },
+        {
+          "core_body_index": 114,
+          "kind": "site",
+          "name": "FDS3-P7_l",
+          "position_body_m": [
+            0.0045,
+            -0.0376,
+            0.0021
+          ],
+          "position_world_m": [
+            0.18704700000295385,
+            0.16583599999684212,
+            0.812117000000805
+          ],
+          "source_body_id": 79,
+          "source_body_name": "3proxph_l",
+          "source_id": 1557
+        },
+        {
+          "core_body_index": 115,
+          "kind": "site",
+          "name": "FDS3-P8_l",
+          "position_body_m": [
+            0.0002,
+            -0.0107,
+            0.0054
+          ],
+          "position_world_m": [
+            0.18997700000302564,
+            0.16848599999668692,
+            0.7948060000007934
+          ],
+          "source_body_id": 80,
+          "source_body_name": "midph3_l",
+          "source_id": 1570
+        }
+      ],
+      "tendon_index": 315,
+      "tendon_name": "FDS3_tendon_l"
+    },
+    {
+      "actuator_index": 308,
+      "actuator_name": "FDS2_l",
+      "first_route_endpoint": {
+        "core_body_index": 92,
+        "kind": "site",
+        "name": "FDS2-P1_l",
+        "position_body_m": [
+          -0.0068,
+          -0.0282,
+          0.0014
+        ],
+        "position_world_m": [
+          0.13126500000110347,
+          0.20024499999993275,
+          1.1556000000001947
+        ],
+        "source_body_id": 61,
+        "source_body_name": "ulna_l",
+        "source_id": 1337
+      },
+      "last_route_endpoint": {
+        "core_body_index": 110,
+        "kind": "site",
+        "name": "FDS2-P8_l",
+        "position_body_m": [
+          -0.0002,
+          -0.0088,
+          0.0041
+        ],
+        "position_world_m": [
+          0.19187000000311585,
+          0.14555699999674032,
+          0.7993100000010273
+        ],
+        "source_body_id": 76,
+        "source_body_name": "midph2_l",
+        "source_id": 1515
+      },
+      "route_body_names": [
+        "2proxph_l",
+        "capitate_l",
+        "lunate_l",
+        "midph2_l",
+        "radius_l",
+        "secondmc_l",
+        "ulna_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 92,
+          "kind": "site",
+          "name": "FDS2-P1_l",
+          "position_body_m": [
+            -0.0068,
+            -0.0282,
+            0.0014
+          ],
+          "position_world_m": [
+            0.13126500000110347,
+            0.20024499999993275,
+            1.1556000000001947
+          ],
+          "source_body_id": 61,
+          "source_body_name": "ulna_l",
+          "source_id": 1337
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDS2-P2_l",
+          "position_body_m": [
+            0.0214,
+            -0.1862,
+            -0.0055
+          ],
+          "position_world_m": [
+            0.1581650000020735,
+            0.17164499999840452,
+            0.9861000000006066
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1370
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDS_ellipsoid_wrap_l",
+          "position_body_m": [
+            0.0012,
+            -0.0057,
+            -0.0123
+          ],
+          "position_world_m": [
+            0.18996500000236385,
+            0.17384499999795797,
+            0.9246000000007408
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDS_ellipsoid_site_FDS2_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1421
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 261
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDS2-P3_l",
+          "position_body_m": [
+            0.0089,
+            -0.0137,
+            0.0139
+          ],
+          "position_world_m": [
+            0.166092000002534,
+            0.16215299999761532,
+            0.9015460000007384
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1440
+        },
+        {
+          "core_body_index": 107,
+          "kind": "site",
+          "name": "FDS2-P4_l",
+          "position_body_m": [
+            -0.0041,
+            -0.0002,
+            0.0048
+          ],
+          "position_world_m": [
+            0.18022400000266034,
+            0.1604679999974483,
+            0.877426000000824
+          ],
+          "source_body_id": 74,
+          "source_body_name": "secondmc_l",
+          "source_id": 1478
+        },
+        {
+          "core_body_index": 107,
+          "kind": "site",
+          "name": "FDS2-P5_l",
+          "position_body_m": [
+            0.0049,
+            -0.0138,
+            0.0007
+          ],
+          "position_world_m": [
+            0.184324000002771,
+            0.15146799999733518,
+            0.8638260000009323
+          ],
+          "source_body_id": 74,
+          "source_body_name": "secondmc_l",
+          "source_id": 1479
+        },
+        {
+          "core_body_index": 109,
+          "kind": "site",
+          "name": "FDS2-P6_l",
+          "position_body_m": [
+            0.0013,
+            -0.0084,
+            0.012
+          ],
+          "position_world_m": [
+            0.17664400000288238,
+            0.15156699999707388,
+            0.8409830000008938
+          ],
+          "source_body_id": 75,
+          "source_body_name": "2proxph_l",
+          "source_id": 1496
+        },
+        {
+          "core_body_index": 109,
+          "kind": "site",
+          "name": "FDS2-P7_l",
+          "position_body_m": [
+            0.0064,
+            -0.0368,
+            -0.0023
+          ],
+          "position_world_m": [
+            0.1909440000030464,
+            0.14646699999686577,
+            0.8125830000010138
+          ],
+          "source_body_id": 75,
+          "source_body_name": "2proxph_l",
+          "source_id": 1497
+        },
+        {
+          "core_body_index": 110,
+          "kind": "site",
+          "name": "FDS2-P8_l",
+          "position_body_m": [
+            -0.0002,
+            -0.0088,
+            0.0041
+          ],
+          "position_world_m": [
+            0.19187000000311585,
+            0.14555699999674032,
+            0.7993100000010273
+          ],
+          "source_body_id": 76,
+          "source_body_name": "midph2_l",
+          "source_id": 1515
+        }
+      ],
+      "tendon_index": 316,
+      "tendon_name": "FDS2_tendon_l"
+    },
+    {
+      "actuator_index": 309,
+      "actuator_name": "FDP5_l",
+      "first_route_endpoint": {
+        "core_body_index": 92,
+        "kind": "site",
+        "name": "FDP5-P1_l",
+        "position_body_m": [
+          -0.0063,
+          -0.0321,
+          -0.0025
+        ],
+        "position_world_m": [
+          0.13516500000112502,
+          0.19974499999991366,
+          1.1517000000002187
+        ],
+        "source_body_id": 61,
+        "source_body_name": "ulna_l",
+        "source_id": 1338
+      },
+      "last_route_endpoint": {
+        "core_body_index": 126,
+        "kind": "site",
+        "name": "FDP5-P10_l",
+        "position_body_m": [
+          -0.0003,
+          -0.0139,
+          0.0048
+        ],
+        "position_world_m": [
+          0.1643560000028851,
+          0.20299599999650453,
+          0.78899200000033
+        ],
+        "source_body_id": 89,
+        "source_body_name": "distph5_l",
+        "source_id": 1656
+      },
+      "route_body_names": [
+        "5proxph_l",
+        "capitate_l",
+        "distph5_l",
+        "fifthmc_l",
+        "fourthmc_l",
+        "lunate_l",
+        "midph5_l",
+        "radius_l",
+        "ulna_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 92,
+          "kind": "site",
+          "name": "FDP5-P1_l",
+          "position_body_m": [
+            -0.0063,
+            -0.0321,
+            -0.0025
+          ],
+          "position_world_m": [
+            0.13516500000112502,
+            0.19974499999991366,
+            1.1517000000002187
+          ],
+          "source_body_id": 61,
+          "source_body_name": "ulna_l",
+          "source_id": 1338
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDP5-P2_l",
+          "position_body_m": [
+            0.0141,
+            -0.1852,
+            -0.0086
+          ],
+          "position_world_m": [
+            0.16126500000203287,
+            0.1789449999984295,
+            0.9871000000005503
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1371
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap_l",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            -0.0182
+          ],
+          "position_world_m": [
+            0.19586500000235307,
+            0.1772449999979751,
+            0.9234000000007364
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDP_ellipsoid_site_FDP5_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1422
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 262
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDP5-P3_l",
+          "position_body_m": [
+            -0.0009,
+            -0.0103,
+            0.0119
+          ],
+          "position_world_m": [
+            0.16809200000246935,
+            0.1719529999976584,
+            0.9049460000006523
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1441
+        },
+        {
+          "core_body_index": 117,
+          "kind": "site",
+          "name": "FDP5-P4_l",
+          "position_body_m": [
+            -0.0069,
+            0.0089,
+            0.0062
+          ],
+          "position_world_m": [
+            0.1773050000024854,
+            0.18999899999749473,
+            0.8836270000005206
+          ],
+          "source_body_id": 82,
+          "source_body_name": "fourthmc_l",
+          "source_id": 1583
+        },
+        {
+          "core_body_index": 122,
+          "kind": "site",
+          "name": "FDP5-P5_l",
+          "position_body_m": [
+            0.001,
+            -0.013,
+            0.0087
+          ],
+          "position_world_m": [
+            0.16707400000255448,
+            0.1919489999972873,
+            0.8675630000004515
+          ],
+          "source_body_id": 86,
+          "source_body_name": "fifthmc_l",
+          "source_id": 1620
+        },
+        {
+          "core_body_index": 124,
+          "kind": "site",
+          "name": "FDP5-P6_l",
+          "position_body_m": [
+            -0.001,
+            -0.0137,
+            0.0051
+          ],
+          "position_world_m": [
+            0.16917800000264524,
+            0.19554599999708086,
+            0.8454320000004265
+          ],
+          "source_body_id": 87,
+          "source_body_name": "5proxph_l",
+          "source_id": 1635
+        },
+        {
+          "core_body_index": 124,
+          "kind": "site",
+          "name": "FDP5-P7_l",
+          "position_body_m": [
+            -0.0005,
+            -0.0291,
+            0.008
+          ],
+          "position_world_m": [
+            0.1662780000027231,
+            0.19504599999691585,
+            0.8300320000004172
+          ],
+          "source_body_id": 87,
+          "source_body_name": "5proxph_l",
+          "source_id": 1636
+        },
+        {
+          "core_body_index": 125,
+          "kind": "site",
+          "name": "FDP5-P8_l",
+          "position_body_m": [
+            -0.001,
+            -0.009,
+            0.004
+          ],
+          "position_world_m": [
+            0.16739900000277053,
+            0.20082499999676992,
+            0.8145690000003661
+          ],
+          "source_body_id": 88,
+          "source_body_name": "midph5_l",
+          "source_id": 1648
+        },
+        {
+          "core_body_index": 125,
+          "kind": "site",
+          "name": "FDP5-P9_l",
+          "position_body_m": [
+            -0.001,
+            -0.016,
+            0.004
+          ],
+          "position_world_m": [
+            0.16739900000280478,
+            0.20082499999670136,
+            0.8075690000003662
+          ],
+          "source_body_id": 88,
+          "source_body_name": "midph5_l",
+          "source_id": 1649
+        },
+        {
+          "core_body_index": 126,
+          "kind": "site",
+          "name": "FDP5-P10_l",
+          "position_body_m": [
+            -0.0003,
+            -0.0139,
+            0.0048
+          ],
+          "position_world_m": [
+            0.1643560000028851,
+            0.20299599999650453,
+            0.78899200000033
+          ],
+          "source_body_id": 89,
+          "source_body_name": "distph5_l",
+          "source_id": 1656
+        }
+      ],
+      "tendon_index": 317,
+      "tendon_name": "FDP5_tendon_l"
+    },
+    {
+      "actuator_index": 310,
+      "actuator_name": "FDP4_l",
+      "first_route_endpoint": {
+        "core_body_index": 92,
+        "kind": "site",
+        "name": "FDP4-P1_l",
+        "position_body_m": [
+          -0.005,
+          -0.0337,
+          -0.0027
+        ],
+        "position_world_m": [
+          0.1353650000011392,
+          0.19844499999989898,
+          1.1501000000002324
+        ],
+        "source_body_id": 61,
+        "source_body_name": "ulna_l",
+        "source_id": 1339
+      },
+      "last_route_endpoint": {
+        "core_body_index": 121,
+        "kind": "site",
+        "name": "FDP4-P10_l",
+        "position_body_m": [
+          0.0002,
+          -0.014,
+          0.0022
+        ],
+        "position_world_m": [
+          0.1830400000030292,
+          0.19057399999642954,
+          0.7719940000005432
+        ],
+        "source_body_id": 85,
+        "source_body_name": "distph4_l",
+        "source_id": 1614
+      },
+      "route_body_names": [
+        "4proxph_l",
+        "capitate_l",
+        "distph4_l",
+        "fourthmc_l",
+        "lunate_l",
+        "midph4_l",
+        "radius_l",
+        "thirdmc_l",
+        "ulna_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 92,
+          "kind": "site",
+          "name": "FDP4-P1_l",
+          "position_body_m": [
+            -0.005,
+            -0.0337,
+            -0.0027
+          ],
+          "position_world_m": [
+            0.1353650000011392,
+            0.19844499999989898,
+            1.1501000000002324
+          ],
+          "source_body_id": 61,
+          "source_body_name": "ulna_l",
+          "source_id": 1339
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDP4-P2_l",
+          "position_body_m": [
+            0.0158,
+            -0.1863,
+            -0.008
+          ],
+          "position_world_m": [
+            0.16066500000204656,
+            0.17724499999841578,
+            0.986000000000564
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1372
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap_l",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            -0.0182
+          ],
+          "position_world_m": [
+            0.19586500000235307,
+            0.1772449999979751,
+            0.9234000000007364
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDP_ellipsoid_site_FDP4_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1423
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 262
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDP4-P3_l",
+          "position_body_m": [
+            0.0011,
+            -0.0118,
+            0.0118
+          ],
+          "position_world_m": [
+            0.1681920000024865,
+            0.16995299999764418,
+            0.9034460000006723
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1442
+        },
+        {
+          "core_body_index": 112,
+          "kind": "site",
+          "name": "FDP4-P4_l",
+          "position_body_m": [
+            -0.0104,
+            0.0047,
+            0.008
+          ],
+          "position_world_m": [
+            0.17936900000254385,
+            0.18097599999747624,
+            0.8807070000006191
+          ],
+          "source_body_id": 78,
+          "source_body_name": "thirdmc_l",
+          "source_id": 1536
+        },
+        {
+          "core_body_index": 117,
+          "kind": "cylinder",
+          "name": "4thmcp_ellipsoid_wrap_l",
+          "position_body_m": [
+            -0.0003,
+            -0.0254,
+            0.0003
+          ],
+          "position_world_m": [
+            0.18320500000268566,
+            0.1833989999971877,
+            0.8493270000006141
+          ],
+          "side_site": {
+            "core_body_index": 117,
+            "name": "4thmcp_ellipsoid_site_FDP4_side_l",
+            "position_body_m": [
+              -0.002,
+              -0.024,
+              -0.002
+            ],
+            "position_world_m": [
+              0.18550500000267048,
+              0.1850989999972127,
+              0.8507270000006087
+            ],
+            "source_body_id": 82,
+            "source_body_name": "fourthmc_l",
+            "source_id": 1590
+          },
+          "source_body_id": 82,
+          "source_body_name": "fourthmc_l",
+          "source_id": 314
+        },
+        {
+          "core_body_index": 117,
+          "kind": "site",
+          "name": "FDP4-P5_l",
+          "position_body_m": [
+            -0.0006,
+            -0.0136,
+            0.0063
+          ],
+          "position_world_m": [
+            0.1772050000026264,
+            0.18369899999727388,
+            0.8611270000005818
+          ],
+          "source_body_id": 82,
+          "source_body_name": "fourthmc_l",
+          "source_id": 1584
+        },
+        {
+          "core_body_index": 119,
+          "kind": "site",
+          "name": "FDP4-P6_l",
+          "position_body_m": [
+            -0.0012,
+            -0.012,
+            0.0088
+          ],
+          "position_world_m": [
+            0.17453200000272268,
+            0.18612899999704446,
+            0.839038000000545
+          ],
+          "source_body_id": 83,
+          "source_body_name": "4proxph_l",
+          "source_id": 1595
+        },
+        {
+          "core_body_index": 120,
+          "kind": "site",
+          "name": "FDP4-P8_l",
+          "position_body_m": [
+            0.0023,
+            -0.0071,
+            0.006
+          ],
+          "position_world_m": [
+            0.1786770000028957,
+            0.18615699999671853,
+            0.803683000000565
+          ],
+          "source_body_id": 84,
+          "source_body_name": "midph4_l",
+          "source_id": 1607
+        },
+        {
+          "core_body_index": 120,
+          "kind": "site",
+          "name": "FDP4-P9_l",
+          "position_body_m": [
+            -0.0007,
+            -0.0197,
+            0.0013
+          ],
+          "position_world_m": [
+            0.18337700000294269,
+            0.18915699999661817,
+            0.7910830000005586
+          ],
+          "source_body_id": 84,
+          "source_body_name": "midph4_l",
+          "source_id": 1608
+        },
+        {
+          "core_body_index": 121,
+          "kind": "site",
+          "name": "FDP4-P10_l",
+          "position_body_m": [
+            0.0002,
+            -0.014,
+            0.0022
+          ],
+          "position_world_m": [
+            0.1830400000030292,
+            0.19057399999642954,
+            0.7719940000005432
+          ],
+          "source_body_id": 85,
+          "source_body_name": "distph4_l",
+          "source_id": 1614
+        }
+      ],
+      "tendon_index": 318,
+      "tendon_name": "FDP4_tendon_l"
+    },
+    {
+      "actuator_index": 311,
+      "actuator_name": "FDP3_l",
+      "first_route_endpoint": {
+        "core_body_index": 92,
+        "kind": "site",
+        "name": "FDP3-P1_l",
+        "position_body_m": [
+          -0.0052,
+          -0.0333,
+          -0.0021
+        ],
+        "position_world_m": [
+          0.13476500000113628,
+          0.19864499999989996,
+          1.1505000000002275
+        ],
+        "source_body_id": 61,
+        "source_body_name": "ulna_l",
+        "source_id": 1340
+      },
+      "last_route_endpoint": {
+        "core_body_index": 116,
+        "kind": "site",
+        "name": "FDP3-P10_l",
+        "position_body_m": [
+          0.0008,
+          -0.004,
+          0.002
+        ],
+        "position_world_m": [
+          0.19533100000314468,
+          0.1665209999964943,
+          0.7724590000008388
+        ],
+        "source_body_id": 81,
+        "source_body_name": "distph3_l",
+        "source_id": 1578
+      },
+      "route_body_names": [
+        "3proxph_l",
+        "capitate_l",
+        "distph3_l",
+        "lunate_l",
+        "midph3_l",
+        "radius_l",
+        "thirdmc_l",
+        "ulna_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 92,
+          "kind": "site",
+          "name": "FDP3-P1_l",
+          "position_body_m": [
+            -0.0052,
+            -0.0333,
+            -0.0021
+          ],
+          "position_world_m": [
+            0.13476500000113628,
+            0.19864499999989996,
+            1.1505000000002275
+          ],
+          "source_body_id": 61,
+          "source_body_name": "ulna_l",
+          "source_id": 1340
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDP3-P2_l",
+          "position_body_m": [
+            0.0191,
+            -0.1864,
+            -0.0078
+          ],
+          "position_world_m": [
+            0.1604650000020632,
+            0.17394499999841384,
+            0.9859000000005953
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1373
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap_l",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            -0.0182
+          ],
+          "position_world_m": [
+            0.19586500000235307,
+            0.1772449999979751,
+            0.9234000000007364
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDP_ellipsoid_site_FDP3_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1424
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 262
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDP3-P3_l",
+          "position_body_m": [
+            0.0034,
+            -0.0128,
+            0.0114
+          ],
+          "position_world_m": [
+            0.16859200000250266,
+            0.16765299999763636,
+            0.9024460000006967
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1443
+        },
+        {
+          "core_body_index": 112,
+          "kind": "site",
+          "name": "FDP3-P4_l",
+          "position_body_m": [
+            -0.0013,
+            0.0061,
+            0.0084
+          ],
+          "position_world_m": [
+            0.17896900000258156,
+            0.171875999997488,
+            0.8821070000007063
+          ],
+          "source_body_id": 78,
+          "source_body_name": "thirdmc_l",
+          "source_id": 1537
+        },
+        {
+          "core_body_index": 112,
+          "kind": "site",
+          "name": "FDP3-P5_l",
+          "position_body_m": [
+            0.0019,
+            -0.0151,
+            0.0068
+          ],
+          "position_world_m": [
+            0.18056900000270104,
+            0.16867599999728822,
+            0.8609070000007455
+          ],
+          "source_body_id": 78,
+          "source_body_name": "thirdmc_l",
+          "source_id": 1538
+        },
+        {
+          "core_body_index": 114,
+          "kind": "site",
+          "name": "FDP3-P6_l",
+          "position_body_m": [
+            0.0007,
+            -0.0158,
+            0.0081
+          ],
+          "position_world_m": [
+            0.1810470000028285,
+            0.16963599999702622,
+            0.8339170000007384
+          ],
+          "source_body_id": 79,
+          "source_body_name": "3proxph_l",
+          "source_id": 1558
+        },
+        {
+          "core_body_index": 115,
+          "kind": "site",
+          "name": "FDP3-P8_l",
+          "position_body_m": [
+            0.0016,
+            -0.0115,
+            0.0051
+          ],
+          "position_world_m": [
+            0.1902770000030364,
+            0.16708599999668056,
+            0.7940060000008086
+          ],
+          "source_body_id": 80,
+          "source_body_name": "midph3_l",
+          "source_id": 1571
+        },
+        {
+          "core_body_index": 115,
+          "kind": "site",
+          "name": "FDP3-P9_l",
+          "position_body_m": [
+            0.0021,
+            -0.0214,
+            0.0021
+          ],
+          "position_world_m": [
+            0.19327700000308734,
+            0.1665859999965983,
+            0.7841060000008281
+          ],
+          "source_body_id": 80,
+          "source_body_name": "midph3_l",
+          "source_id": 1572
+        },
+        {
+          "core_body_index": 116,
+          "kind": "site",
+          "name": "FDP3-P10_l",
+          "position_body_m": [
+            0.0008,
+            -0.004,
+            0.002
+          ],
+          "position_world_m": [
+            0.19533100000314468,
+            0.1665209999964943,
+            0.7724590000008388
+          ],
+          "source_body_id": 81,
+          "source_body_name": "distph3_l",
+          "source_id": 1578
+        }
+      ],
+      "tendon_index": 319,
+      "tendon_name": "FDP3_tendon_l"
+    },
+    {
+      "actuator_index": 312,
+      "actuator_name": "FDP2_l",
+      "first_route_endpoint": {
+        "core_body_index": 92,
+        "kind": "site",
+        "name": "FDP2-P1_l",
+        "position_body_m": [
+          -0.0065,
+          -0.0318,
+          -0.0028
+        ],
+        "position_world_m": [
+          0.13546500000112258,
+          0.19994499999991808,
+          1.1520000000002182
+        ],
+        "source_body_id": 61,
+        "source_body_name": "ulna_l",
+        "source_id": 1341
+      },
+      "last_route_endpoint": {
+        "core_body_index": 111,
+        "kind": "site",
+        "name": "FDP2-P10_l",
+        "position_body_m": [
+          0.0007,
+          -0.0056,
+          0.004
+        ],
+        "position_world_m": [
+          0.1931900000032428,
+          0.1413239999965344,
+          0.7776220000010752
+        ],
+        "source_body_id": 77,
+        "source_body_name": "distph2_l",
+        "source_id": 1526
+      },
+      "route_body_names": [
+        "2proxph_l",
+        "capitate_l",
+        "distph2_l",
+        "lunate_l",
+        "midph2_l",
+        "radius_l",
+        "secondmc_l",
+        "ulna_l"
+      ],
+      "route_nodes": [
+        {
+          "core_body_index": 92,
+          "kind": "site",
+          "name": "FDP2-P1_l",
+          "position_body_m": [
+            -0.0065,
+            -0.0318,
+            -0.0028
+          ],
+          "position_world_m": [
+            0.13546500000112258,
+            0.19994499999991808,
+            1.1520000000002182
+          ],
+          "source_body_id": 61,
+          "source_body_name": "ulna_l",
+          "source_id": 1341
+        },
+        {
+          "core_body_index": 93,
+          "kind": "site",
+          "name": "FDP2-P2_l",
+          "position_body_m": [
+            0.0208,
+            -0.1856,
+            -0.0092
+          ],
+          "position_world_m": [
+            0.16186500000206763,
+            0.17224499999842852,
+            0.9867000000006189
+          ],
+          "source_body_id": 62,
+          "source_body_name": "radius_l",
+          "source_id": 1374
+        },
+        {
+          "core_body_index": 95,
+          "kind": "cylinder",
+          "name": "FDP_ellipsoid_wrap_l",
+          "position_body_m": [
+            -0.0022,
+            -0.0069,
+            -0.0182
+          ],
+          "position_world_m": [
+            0.19586500000235307,
+            0.1772449999979751,
+            0.9234000000007364
+          ],
+          "side_site": {
+            "core_body_index": 95,
+            "name": "FDP_ellipsoid_site_FDP2_side_l",
+            "position_body_m": [
+              -0.00481002,
+              -0.034454,
+              0.0213554
+            ],
+            "position_world_m": [
+              0.15630960000247524,
+              0.17985501999751158,
+              0.8958460000005172
+            ],
+            "source_body_id": 63,
+            "source_body_name": "lunate_l",
+            "source_id": 1425
+          },
+          "source_body_id": 63,
+          "source_body_name": "lunate_l",
+          "source_id": 262
+        },
+        {
+          "core_body_index": 99,
+          "kind": "site",
+          "name": "FDP2-P3_l",
+          "position_body_m": [
+            0.009,
+            -0.0117,
+            0.0121
+          ],
+          "position_world_m": [
+            0.1678920000025247,
+            0.16205299999764372,
+            0.9035460000007483
+          ],
+          "source_body_id": 67,
+          "source_body_name": "capitate_l",
+          "source_id": 1444
+        },
+        {
+          "core_body_index": 107,
+          "kind": "site",
+          "name": "FDP2-P4_l",
+          "position_body_m": [
+            -0.0043,
+            0.0066,
+            0.0025
+          ],
+          "position_world_m": [
+            0.18252400000262606,
+            0.16066799999752615,
+            0.8842260000008334
+          ],
+          "source_body_id": 74,
+          "source_body_name": "secondmc_l",
+          "source_id": 1480
+        },
+        {
+          "core_body_index": 107,
+          "kind": "site",
+          "name": "FDP2-P5_l",
+          "position_body_m": [
+            0.0041,
+            -0.016,
+            0.0042
+          ],
+          "position_world_m": [
+            0.18082400000277785,
+            0.15226799999729648,
+            0.8616260000009074
+          ],
+          "source_body_id": 74,
+          "source_body_name": "secondmc_l",
+          "source_id": 1481
+        },
+        {
+          "core_body_index": 107,
+          "kind": "cylinder",
+          "name": "2ndmcp_ellipsoid_wrap_l",
+          "position_body_m": [
+            0.0058,
+            -0.0314,
+            -0.0007
+          ],
+          "position_world_m": [
+            0.1857240000028616,
+            0.15056799999716966,
+            0.8462260000009479
+          ],
+          "side_site": {
+            "core_body_index": 107,
+            "name": "2ndmcp_ellipsoid_site_FDP2_side_l",
+            "position_body_m": [
+              0.0058,
+              -0.0294,
+              0.0087
+            ],
+            "position_world_m": [
+              0.1763240000028518,
+              0.15056799999714324,
+              0.848226000000902
+            ],
+            "source_body_id": 74,
+            "source_body_name": "secondmc_l",
+            "source_id": 1492
+          },
+          "source_body_id": 74,
+          "source_body_name": "secondmc_l",
+          "source_id": 290
+        },
+        {
+          "core_body_index": 109,
+          "kind": "site",
+          "name": "FDP2-P6_l",
+          "position_body_m": [
+            0.0033,
+            -0.0202,
+            0.005
+          ],
+          "position_world_m": [
+            0.18364400000294995,
+            0.1495669999969926,
+            0.8291830000009477
+          ],
+          "source_body_id": 75,
+          "source_body_name": "2proxph_l",
+          "source_id": 1498
+        },
+        {
+          "core_body_index": 109,
+          "kind": "site",
+          "name": "FDP2-P7_l",
+          "position_body_m": [
+            0.0063,
+            -0.0343,
+            0.0006
+          ],
+          "position_world_m": [
+            0.18804400000303367,
+            0.14656699999687606,
+            0.8150830000009985
+          ],
+          "source_body_id": 75,
+          "source_body_name": "2proxph_l",
+          "source_id": 1499
+        },
+        {
+          "core_body_index": 110,
+          "kind": "site",
+          "name": "FDP2-P8_l",
+          "position_body_m": [
+            0.0006,
+            -0.0088,
+            0.0058
+          ],
+          "position_world_m": [
+            0.19017000000311976,
+            0.14475699999673197,
+            0.7993100000010267
+          ],
+          "source_body_id": 76,
+          "source_body_name": "midph2_l",
+          "source_id": 1516
+        },
+        {
+          "core_body_index": 110,
+          "kind": "site",
+          "name": "FDP2-P9_l",
+          "position_body_m": [
+            0.0043,
+            -0.0196,
+            0.0035
+          ],
+          "position_world_m": [
+            0.19247000000319078,
+            0.14105699999663748,
+            0.7885100000010743
+          ],
+          "source_body_id": 76,
+          "source_body_name": "midph2_l",
+          "source_id": 1517
+        },
+        {
+          "core_body_index": 111,
+          "kind": "site",
+          "name": "FDP2-P10_l",
+          "position_body_m": [
+            0.0007,
+            -0.0056,
+            0.004
+          ],
+          "position_world_m": [
+            0.1931900000032428,
+            0.1413239999965344,
+            0.7776220000010752
+          ],
+          "source_body_id": 77,
+          "source_body_name": "distph2_l",
+          "source_id": 1526
+        }
+      ],
+      "tendon_index": 320,
+      "tendon_name": "FDP2_tendon_l"
+    }
+  ],
+  "schema": "numi.human.fds-fdp-source-route-provenance-061.v1",
+  "scope": "Read-only dump of named source FDS/FDP compiled MyoSim muscle route endpoints and all site/wrap body identities, joined through exact source-body-to-NHRIGID core map. Route is the source muscle-tendon path. It is not a tissue-attachment or clinical truth claim.",
+  "source_model": {
+    "actuator_count": 416,
+    "body_count_including_world": 104,
+    "engine_body_count": 157,
+    "name": "myofullbody",
+    "source_body_count": 103,
+    "tendon_count": 424
+  },
+  "status": "complete"
+}

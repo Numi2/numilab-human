@@ -1,0 +1,410 @@
+{
+  "source_manifest_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm054-native-diagnostic-007-candidate060/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+  "source_manifest_sha256": "1349005adb8dc71c4ee04c6fdc2fec104f693c1178a7a96b7d82a241f1896b5e",
+  "source_archives": {
+    "archives": [
+      {
+        "file": "isa_BP3D_4.0_obj_99.zip",
+        "hierarchy": "is_a",
+        "sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e"
+      },
+      {
+        "file": "partof_BP3D_4.0_obj_99.zip",
+        "hierarchy": "part_of",
+        "sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+      }
+    ],
+    "id": "bodyparts3d_4",
+    "version": "4.0"
+  },
+  "surfaces": [
+    {
+      "body_bindings": [
+        {
+          "core_body_index": 92,
+          "myosim_body": "ulna_l"
+        },
+        {
+          "core_body_index": 93,
+          "myosim_body": "radius_l"
+        },
+        {
+          "core_body_index": 95,
+          "myosim_body": "lunate_l"
+        },
+        {
+          "core_body_index": 99,
+          "myosim_body": "capitate_l"
+        },
+        {
+          "core_body_index": 107,
+          "myosim_body": "secondmc_l"
+        },
+        {
+          "core_body_index": 109,
+          "myosim_body": "2proxph_l"
+        },
+        {
+          "core_body_index": 110,
+          "myosim_body": "midph2_l"
+        },
+        {
+          "core_body_index": 112,
+          "myosim_body": "thirdmc_l"
+        },
+        {
+          "core_body_index": 114,
+          "myosim_body": "3proxph_l"
+        },
+        {
+          "core_body_index": 115,
+          "myosim_body": "midph3_l"
+        },
+        {
+          "core_body_index": 91,
+          "myosim_body": "humerus_l"
+        },
+        {
+          "core_body_index": 117,
+          "myosim_body": "fourthmc_l"
+        },
+        {
+          "core_body_index": 119,
+          "myosim_body": "4proxph_l"
+        },
+        {
+          "core_body_index": 120,
+          "myosim_body": "midph4_l"
+        },
+        {
+          "core_body_index": 122,
+          "myosim_body": "fifthmc_l"
+        },
+        {
+          "core_body_index": 124,
+          "myosim_body": "5proxph_l"
+        },
+        {
+          "core_body_index": 125,
+          "myosim_body": "midph5_l"
+        }
+      ],
+      "body_weight_count": 17,
+      "endpoint_source": "all_named_authored_myosim_route_nodes_with_sparse_four_influence_binding",
+      "label": "left flexor digitorum superficialis",
+      "layer": "muscle",
+      "matched_muscles": [
+        {
+          "binding_bodies": [
+            "ulna_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "secondmc_l",
+            "2proxph_l",
+            "midph2_l"
+          ],
+          "name": "FDS2_l",
+          "primary_body": "ulna_l",
+          "secondary_body": "midph2_l",
+          "source_actuator_index": 308,
+          "source_route_node_count": 9
+        },
+        {
+          "binding_bodies": [
+            "ulna_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "thirdmc_l",
+            "3proxph_l",
+            "midph3_l"
+          ],
+          "name": "FDS3_l",
+          "primary_body": "ulna_l",
+          "secondary_body": "midph3_l",
+          "source_actuator_index": 307,
+          "source_route_node_count": 8
+        },
+        {
+          "binding_bodies": [
+            "humerus_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "thirdmc_l",
+            "fourthmc_l",
+            "4proxph_l",
+            "midph4_l"
+          ],
+          "name": "FDS4_l",
+          "primary_body": "humerus_l",
+          "secondary_body": "midph4_l",
+          "source_actuator_index": 306,
+          "source_route_node_count": 10
+        },
+        {
+          "binding_bodies": [
+            "humerus_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "fourthmc_l",
+            "fifthmc_l",
+            "5proxph_l",
+            "midph5_l"
+          ],
+          "name": "FDS5_l",
+          "primary_body": "humerus_l",
+          "secondary_body": "midph5_l",
+          "source_actuator_index": 305,
+          "source_route_node_count": 10
+        }
+      ],
+      "member": "isa_BP3D_4.0_obj_99/FJ1475M.obj",
+      "member_id": "FJ1475M",
+      "member_sha256": "9174a210f8b7ce149355545208551a4d001f6c78570256a8596d3410023fb1ec",
+      "reference_surface_reconstruction": {
+        "candidate": "/Users/numi/numi-human-fds132-m6-1350/attempt-049/result-001/stable-132-candidate049-current-pq-retained-root-union-candidate.npz",
+        "candidate_sha256": "7d072ccbadbb13fdcad255b10c6ab1bf692c442b47fb12b917a8e68e80d7d0cf",
+        "original_member_identity_retained": true,
+        "report": "/Users/numi/numi-human-fds132-m6-1350/attempt-049/audit-all25/result-002/report.json",
+        "report_sha256": "f26c63be91c4a99452737a3ea43fb337f3a7116dbda0d7fa888f9a8d00249538",
+        "scope": "Source-derived passive reference surface repair; source identity and laterality retained. Physical routes and attachment bindings unchanged. Not measured-person geometry; anatomical and native-pose admission separate.",
+        "stable_id": 132,
+        "triangle_count_after": 8706,
+        "triangle_count_before": 8698,
+        "vertex_count_after": 4349,
+        "vertex_count_before": 6106
+      },
+      "route_binding": {
+        "binding_body_count": 17,
+        "matched_route_count": 4,
+        "maximum_nearest_route_distance_m": 0.11643505084504718,
+        "maximum_vertex_influences": 4,
+        "method": "nearest_exact_myosim_route_nodes_inverse_squared_four_influence"
+      },
+      "stable_id": 132,
+      "triangle_count": 12150,
+      "vertex_count": 6071
+    },
+    {
+      "body_bindings": [
+        {
+          "core_body_index": 92,
+          "myosim_body": "ulna_l"
+        },
+        {
+          "core_body_index": 93,
+          "myosim_body": "radius_l"
+        },
+        {
+          "core_body_index": 95,
+          "myosim_body": "lunate_l"
+        },
+        {
+          "core_body_index": 99,
+          "myosim_body": "capitate_l"
+        },
+        {
+          "core_body_index": 107,
+          "myosim_body": "secondmc_l"
+        },
+        {
+          "core_body_index": 109,
+          "myosim_body": "2proxph_l"
+        },
+        {
+          "core_body_index": 110,
+          "myosim_body": "midph2_l"
+        },
+        {
+          "core_body_index": 111,
+          "myosim_body": "distph2_l"
+        },
+        {
+          "core_body_index": 112,
+          "myosim_body": "thirdmc_l"
+        },
+        {
+          "core_body_index": 114,
+          "myosim_body": "3proxph_l"
+        },
+        {
+          "core_body_index": 115,
+          "myosim_body": "midph3_l"
+        },
+        {
+          "core_body_index": 116,
+          "myosim_body": "distph3_l"
+        },
+        {
+          "core_body_index": 117,
+          "myosim_body": "fourthmc_l"
+        },
+        {
+          "core_body_index": 119,
+          "myosim_body": "4proxph_l"
+        },
+        {
+          "core_body_index": 120,
+          "myosim_body": "midph4_l"
+        },
+        {
+          "core_body_index": 121,
+          "myosim_body": "distph4_l"
+        },
+        {
+          "core_body_index": 122,
+          "myosim_body": "fifthmc_l"
+        },
+        {
+          "core_body_index": 124,
+          "myosim_body": "5proxph_l"
+        },
+        {
+          "core_body_index": 125,
+          "myosim_body": "midph5_l"
+        },
+        {
+          "core_body_index": 126,
+          "myosim_body": "distph5_l"
+        }
+      ],
+      "body_weight_count": 20,
+      "endpoint_source": "all_named_authored_myosim_route_nodes_with_sparse_four_influence_binding",
+      "label": "left flexor digitorum profundus",
+      "layer": "muscle",
+      "matched_muscles": [
+        {
+          "binding_bodies": [
+            "ulna_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "secondmc_l",
+            "2proxph_l",
+            "midph2_l",
+            "distph2_l"
+          ],
+          "name": "FDP2_l",
+          "primary_body": "ulna_l",
+          "secondary_body": "distph2_l",
+          "source_actuator_index": 312,
+          "source_route_node_count": 12
+        },
+        {
+          "binding_bodies": [
+            "ulna_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "thirdmc_l",
+            "3proxph_l",
+            "midph3_l",
+            "distph3_l"
+          ],
+          "name": "FDP3_l",
+          "primary_body": "ulna_l",
+          "secondary_body": "distph3_l",
+          "source_actuator_index": 311,
+          "source_route_node_count": 10
+        },
+        {
+          "binding_bodies": [
+            "ulna_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "thirdmc_l",
+            "fourthmc_l",
+            "4proxph_l",
+            "midph4_l",
+            "distph4_l"
+          ],
+          "name": "FDP4_l",
+          "primary_body": "ulna_l",
+          "secondary_body": "distph4_l",
+          "source_actuator_index": 310,
+          "source_route_node_count": 11
+        },
+        {
+          "binding_bodies": [
+            "ulna_l",
+            "radius_l",
+            "lunate_l",
+            "capitate_l",
+            "fourthmc_l",
+            "fifthmc_l",
+            "5proxph_l",
+            "midph5_l",
+            "distph5_l"
+          ],
+          "name": "FDP5_l",
+          "primary_body": "ulna_l",
+          "secondary_body": "distph5_l",
+          "source_actuator_index": 309,
+          "source_route_node_count": 11
+        }
+      ],
+      "member": "isa_BP3D_4.0_obj_99/FJ1497M.obj",
+      "member_id": "FJ1497M",
+      "member_sha256": "c3d1710b4b9465ab35cd53d18a3f00f38b37340d084c57fed2cb011d585a5013",
+      "reference_surface_reconstruction": {
+        "candidate": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-134-pose-repair-001/local-reference-search-001/stable-134-unadmitted-local-reference.npz",
+        "candidate_sha256": "6a8f902a17bb850cef1be8c29802a7c0d631c6d26c2f6165e4e1b0e0bf734f01",
+        "original_member_identity_retained": true,
+        "report": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/stable-134-pose-repair-001/current42-selection-003/report.json",
+        "report_sha256": "9035563cb191b826fd6a1c15286a8e3e9de710f5c17e30e1943656b0fdf7e3d3",
+        "scope": "Source-derived passive reference surface repair; source identity and laterality retained. Physical routes and attachment bindings unchanged. Not measured-person geometry; anatomical and native-pose admission separate.",
+        "stable_id": 134,
+        "triangle_count_after": 4834,
+        "triangle_count_before": 4834,
+        "vertex_count_after": 2419,
+        "vertex_count_before": 3852
+      },
+      "route_binding": {
+        "binding_body_count": 20,
+        "matched_route_count": 4,
+        "maximum_nearest_route_distance_m": 0.11651465729226587,
+        "maximum_vertex_influences": 4,
+        "method": "nearest_exact_myosim_route_nodes_inverse_squared_four_influence"
+      },
+      "source_topology_cancellation": {
+        "cancelled_opposite_face_pairs": [
+          [
+            721,
+            722
+          ],
+          [
+            1636,
+            1638
+          ]
+        ],
+        "emitted_triangle_count": 4834,
+        "emitted_vertex_count": 3852,
+        "emitted_vertices_compacted": false,
+        "new_faces_added": false,
+        "oriented_source_chain_preserved": true,
+        "removed_unique_visual_support_triangle_count": 2,
+        "removed_visual_support_area_mm2": 0.00015800422621261618,
+        "retained_triangle_count": 4834,
+        "retained_vertex_count": 3840,
+        "source_coordinate_support_preserved": false,
+        "source_triangle_count": 4838,
+        "source_vertex_count": 3852,
+        "vertices_moved": false
+      },
+      "stable_id": 134,
+      "triangle_count": 8546,
+      "vertex_count": 4275
+    }
+  ],
+  "anatomy_attribution": "BodyParts3D, The Database Center for Life Science",
+  "anatomy_license": "CC-BY-SA-2.1-JP",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.1/jp/",
+  "source_url": "https://lifesciencedb.jp/bp3d/",
+  "source_license_listing": "https://wiki.lifesciencedb.jp/mw/利用ライセンス.html",
+  "changes": "Registered mixed-source reference geometry; surface repair, paired partition and topology-guarded endpoint contractions. Inferred deformation, not measurements of one individual.",
+  "derived_anatomy_license": "CC-BY-SA-2.1-JP"
+}
