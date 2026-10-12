@@ -1,0 +1,1605 @@
+Analysis of sampling Python (pid 15005) every 1 millisecond
+Process:         Python [15005]
+Path:            /opt/homebrew/*/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python
+Load Address:    0x100388000
+Identifier:      org.python.python
+Version:         3.13.16 (3.13.16)
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  sshd-session [15004]
+Target Type:     live task (Roots Present)
+
+Date/Time:       2026-10-11 19:59:57.988 -0700
+Launch Time:     2026-10-11 19:40:04.656 -0700
+OS Version:      macOS 27.0 (26A425)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         349.5M
+Physical footprint (peak):  381.9M
+Idle exit:                  untracked
+----
+
+Call graph:
+    737 Thread_824415   DispatchQueue_1: com.apple.main-thread  (serial)
+      737 start  (in dyld) + 6688  [0x19dc1d158]
+        737 Py_BytesMain  (in Python) + 44  [0x100f19988]
+          737 pymain_main  (in Python) + 304  [0x100f198e4]
+            737 Py_RunMain  (in Python) + 1076  [0x100f192ac]
+              737 pymain_run_file  (in Python) + 76  [0x100f1a07c]
+                737 pymain_run_file_obj  (in Python) + 164  [0x100f1a35c]
+                  737 _PyRun_AnyFile  (in Python) + 80  [0x100ef7014]
+                    737 _PyRun_SimpleFile  (in Python) + 260  [0x100ef73d0]
+                      737 _PyRun_File  (in Python) + 176  [0x100ef8130]
+                        737 run_mod  (in Python) + 168  [0x100fd6240]
+                          737 run_eval_code_obj  (in Python) + 104  [0x100ef9868]
+                            737 PyEval_EvalCode  (in Python) + 200  [0x100e9fd00]
+                              403 _PyEval_EvalFrameDefault  (in Python) + 22324  [0x100ea56a8]
+                              + 306 PySequence_Tuple  (in Python) + 448  [0x100d8e200]
+                              + ! 306 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   301 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !   : 212 _PyEval_EvalFrameDefault  (in Python) + 22324  [0x100ea56a8]
+                              + !   : | 151 PySequence_Tuple  (in Python) + 448  [0x100d8e200]
+                              + !   : | + 151 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   : | +   150 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !   : | +   ! 57 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !   : | +   ! : 55 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !   : | +   ! : | 52 type_call  (in Python) + 96  [0x100e19258]
+                              + !   : | +   ! : | + 43 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + !   : | +   ! : | + ! 43 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + !   : | +   ! : | + !   14 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !   : | +   ! : | + !   : 13 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !   : | +   ! : | + !   : | 13 cfunction_call  (in Python) + 76  [0x100df359c]
+                              + !   : | +   ! : | + !   : |   9 tp_new_wrapper  (in Python) + 328  [0x100e25494]
+                              + !   : | +   ! : | + !   : |   + 8 PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+                              + !   : | +   ! : | + !   : |   + ! 3 _PyType_AllocNoTrack  (in Python) + 188  [0x100e17c48]
+                              + !   : | +   ! : | + !   : |   + ! : 3 _platform_memset  (in libsystem_platform.dylib) + 180  [0x19dff2ab4]
+                              + !   : | +   ! : | + !   : |   + ! 3 _PyType_AllocNoTrack  (in Python) + 12,48,...  [0x100e17b98,0x100e17bbc,...]
+                              + !   : | +   ! : | + !   : |   + ! 2 _PyType_AllocNoTrack  (in Python) + 100  [0x100e17bf0]
+                              + !   : | +   ! : | + !   : |   + !   1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +   ! : | + !   : |   + !   | 1 pymalloc_alloc  (in Python) + 48  [0x100e030c4]
+                              + !   : | +   ! : | + !   : |   + !   1 _PyObject_Malloc  (in Python) + 24  [0x100e03030]
+                              + !   : | +   ! : | + !   : |   + 1 object_new  (in Python) + 68  [0x100e1c044]
+                              + !   : | +   ! : | + !   : |   3 tp_new_wrapper  (in Python) + 12,108,...  [0x100e25358,0x100e253b8,...]
+                              + !   : | +   ! : | + !   : |   1 tp_new_wrapper  (in Python) + 300  [0x100e25478]
+                              + !   : | +   ! : | + !   : |     1 tupleslice  (in Python) + 48  [0x100fa9554]
+                              + !   : | +   ! : | + !   : 1 _PyObject_MakeTpCall  (in Python) + 96  [0x100da3334]
+                              + !   : | +   ! : | + !   10 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : | +   ! : | + !   : 10 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : | +   ! : | + !   :   10 _PyFrame_ClearExceptCode  (in Python) + 72  [0x100ecf6e8]
+                              + !   : | +   ! : | + !   9 _PyEval_EvalFrameDefault  (in Python) + 40704,30320,...  [0x100ea9e74,0x100ea75e4,...]
+                              + !   : | +   ! : | + !   7 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + !   : | +   ! : | + !   : 7 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + !   : | +   ! : | + !   :   6 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + !   : | +   ! : | + !   :   | 5 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !   : | +   ! : | + !   :   | + 3 _Py_dict_lookup  (in Python) + 84,80  [0x100ddfb0c,0x100ddfb08]
+                              + !   : | +   ! : | + !   :   | + 2 _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+                              + !   : | +   ! : | + !   :   | +   2 unicodekeys_lookup_unicode  (in Python) + 84,88  [0x100fa11e8,0x100fa11ec]
+                              + !   : | +   ! : | + !   :   | 1 PyDict_GetItemRef  (in Python) + 44  [0x100de0c94]
+                              + !   : | +   ! : | + !   :   1 PyDict_GetItemRef  (in Python) + 152  [0x100de0d00]
+                              + !   : | +   ! : | + !   1 _PyEval_EvalFrameDefault  (in Python) + 432  [0x100ea0124]
+                              + !   : | +   ! : | + !   : 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : | +   ! : | + !   1 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + !   : | +   ! : | + !   : 1 _PyEvalFramePushAndInit  (in Python) + 180  [0x100eadec0]
+                              + !   : | +   ! : | + !   1 _PyFunction_Vectorcall  (in Python) + 68  [0x100da3fdc]
+                              + !   : | +   ! : | + 6 slot_tp_new  (in Python) + 132  [0x100e1fed4]
+                              + !   : | +   ! : | + ! 4 _Py_type_getattro_impl  (in Python) + 312,332,...  [0x100e18a2c,0x100e18a40,...]
+                              + !   : | +   ! : | + ! 1 _PyType_LookupRef  (in Python) + 152  [0x100e17fc0]
+                              + !   : | +   ! : | + ! 1 _Py_type_getattro_impl  (in Python) + 352  [0x100e18a54]
+                              + !   : | +   ! : | + !   1 sm_descr_get  (in Python) + 20  [0x100dcafb4]
+                              + !   : | +   ! : | + 2 slot_tp_new  (in Python) + 52,92  [0x100e1fe84,0x100e1feac]
+                              + !   : | +   ! : | + 1 _PyObject_VectorcallDictTstate  (in Python) + 124  [0x100da3178]
+                              + !   : | +   ! : | 2 type_call  (in Python) + 44,80  [0x100e19224,0x100e19248]
+                              + !   : | +   ! : | 1 type_call  (in Python) + 52  [0x100e1922c]
+                              + !   : | +   ! : |   1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : | +   ! : 1 PyObject_Vectorcall  (in Python) + 48  [0x100da3af4]
+                              + !   : | +   ! : | 1 _tlv_get_addr  (in libdyld.dylib) + 24  [0x19dbcd770]
+                              + !   : | +   ! : 1 _PyObject_MakeTpCall  (in Python) + 72  [0x100da331c]
+                              + !   : | +   ! :   1 _PyTuple_FromArray  (in Python) + 52  [0x100e146cc]
+                              + !   : | +   ! 45 _PyEval_EvalFrameDefault  (in Python) + 16468  [0x100ea3fc8]
+                              + !   : | +   ! : 37 object_recursive_isinstance  (in Python) + 356  [0x100f927e4]
+                              + !   : | +   ! : | 37 PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+                              + !   : | +   ! : |   36 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + !   : | +   ! : |   + 34 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + !   : | +   ! : |   + ! 25 _abc__abc_instancecheck  (in Python) + 388  [0x100f808b0]
+                              + !   : | +   ! : |   + ! : 18 PyObject_VectorcallMethod  (in Python) + 152  [0x100da4944]
+                              + !   : | +   ! : |   + ! : | 18 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + !   : | +   ! : |   + ! : |   14 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + !   : | +   ! : |   + ! : |   + 6 _abc__abc_subclasscheck  (in Python) + 228  [0x100f80b1c]
+                              + !   : | +   ! : |   + ! : |   + ! 5 PyObject_VectorcallMethod  (in Python) + 76  [0x100da48f8]
+                              + !   : | +   ! : |   + ! : |   + ! : 4 _PyObject_GetMethod  (in Python) + 288  [0x100df9dc0]
+                              + !   : | +   ! : |   + ! : |   + ! : | 1 _PyType_LookupRef  (in Python) + 152  [0x100e17fc0]
+                              + !   : | +   ! : |   + ! : |   + ! : | 1 _Py_type_getattro_impl  (in Python) + 88  [0x100e1894c]
+                              + !   : | +   ! : |   + ! : |   + ! : | + 1 _PyType_LookupRef  (in Python) + 84  [0x100e17f7c]
+                              + !   : | +   ! : |   + ! : |   + ! : | 1 _Py_type_getattro_impl  (in Python) + 292  [0x100e18a18]
+                              + !   : | +   ! : |   + ! : |   + ! : | + 1 _PyType_LookupRef  (in Python) + 48  [0x100e17f58]
+                              + !   : | +   ! : |   + ! : |   + ! : | +   1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : | +   ! : |   + ! : |   + ! : | 1 _Py_type_getattro_impl  (in Python) + 312  [0x100e18a2c]
+                              + !   : | +   ! : |   + ! : |   + ! : 1 _PyObject_GetMethod  (in Python) + 80  [0x100df9cf0]
+                              + !   : | +   ! : |   + ! : |   + ! 1 PyObject_VectorcallMethod  (in Python) + 12  [0x100da48b8]
+                              + !   : | +   ! : |   + ! : |   + 4 _abc__abc_subclasscheck  (in Python) + 176  [0x100f80ae8]
+                              + !   : | +   ! : |   + ! : |   + ! 2 _in_weak_set  (in Python) + 48  [0x100f8186c]
+                              + !   : | +   ! : |   + ! : |   + ! : 2 get_or_create_weakref  (in Python) + 132,400  [0x100fb9ea4,0x100fb9fb0]
+                              + !   : | +   ! : |   + ! : |   + ! 2 _in_weak_set  (in Python) + 68  [0x100f81880]
+                              + !   : | +   ! : |   + ! : |   + !   1 PySet_Contains  (in Python) + 60  [0x100e0cb6c]
+                              + !   : | +   ! : |   + ! : |   + !   1 weakref_hash  (in Python) + 36  [0x100e59410]
+                              + !   : | +   ! : |   + ! : |   + 3 _abc__abc_subclasscheck  (in Python) + 352  [0x100f80b98]
+                              + !   : | +   ! : |   + ! : |   + ! 2 _in_weak_set  (in Python) + 48  [0x100f8186c]
+                              + !   : | +   ! : |   + ! : |   + ! : 2 get_or_create_weakref  (in Python) + 56,172  [0x100fb9e58,0x100fb9ecc]
+                              + !   : | +   ! : |   + ! : |   + ! 1 _in_weak_set  (in Python) + 68  [0x100f81880]
+                              + !   : | +   ! : |   + ! : |   + !   1 PySet_Contains  (in Python) + 116  [0x100e0cba4]
+                              + !   : | +   ! : |   + ! : |   + !     1 set_lookkey  (in Python) + 216  [0x100fa7a08]
+                              + !   : | +   ! : |   + ! : |   + !       1 PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+                              + !   : | +   ! : |   + ! : |   + !         1 weakref_richcompare  (in Python) + 176  [0x100e5963c]
+                              + !   : | +   ! : |   + ! : |   + !           1 PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+                              + !   : | +   ! : |   + ! : |   + 1 _abc__abc_subclasscheck  (in Python) + 104  [0x100f80aa0]
+                              + !   : | +   ! : |   + ! : |   +   1 _get_impl  (in Python) + 80  [0x100f81268]
+                              + !   : | +   ! : |   + ! : |   +     1 _Py_type_getattro_impl  (in Python) + 408  [0x100e18a8c]
+                              + !   : | +   ! : |   + ! : |   3 _PyEval_EvalFrameDefault  (in Python) + 424,12916,...  [0x100ea011c,0x100ea31e8,...]
+                              + !   : | +   ! : |   + ! : |   1 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + !   : | +   ! : |   + ! : |     1 _PyEvalFramePushAndInit  (in Python) + 148  [0x100eadea0]
+                              + !   : | +   ! : |   + ! : 3 PyObject_VectorcallMethod  (in Python) + 76  [0x100da48f8]
+                              + !   : | +   ! : |   + ! : | 3 _PyObject_GetMethod  (in Python) + 288  [0x100df9dc0]
+                              + !   : | +   ! : |   + ! : |   2 _Py_type_getattro_impl  (in Python) + 132  [0x100e18978]
+                              + !   : | +   ! : |   + ! : |   + 2 func_descr_get  (in Python) + 52  [0x100dca320]
+                              + !   : | +   ! : |   + ! : |   +   1 _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+                              + !   : | +   ! : |   + ! : |   +   ! 1 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + !   : | +   ! : |   + ! : |   +   !   1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : | +   ! : |   + ! : |   +   1 _PyObject_GC_New  (in Python) + 156  [0x100ed0820]
+                              + !   : | +   ! : |   + ! : |   1 _Py_type_getattro_impl  (in Python) + 88  [0x100e1894c]
+                              + !   : | +   ! : |   + ! : 3 PyObject_VectorcallMethod  (in Python) + 224  [0x100da498c]
+                              + !   : | +   ! : |   + ! : | 3 _PyObject_Free  (in Python) + 28,64,...  [0x100e03554,0x100e03578,...]
+                              + !   : | +   ! : |   + ! : 1 method_vectorcall  (in Python) + 380  [0x100f99a08]
+                              + !   : | +   ! : |   + ! 5 _abc__abc_instancecheck  (in Python) + 108  [0x100f80798]
+                              + !   : | +   ! : |   + ! : 3 PyObject_GetOptionalAttr  (in Python) + 72  [0x100df84bc]
+                              + !   : | +   ! : |   + ! : | 1 _PyObject_GenericGetAttrWithDict  (in Python) + 104  [0x100df9660]
+                              + !   : | +   ! : |   + ! : | + 1 _PyType_LookupRef  (in Python) + 40  [0x100e17f50]
+                              + !   : | +   ! : |   + ! : | 1 _PyObject_GenericGetAttrWithDict  (in Python) + 280  [0x100df9710]
+                              + !   : | +   ! : |   + ! : | + 1 object_get_class  (in Python) + 20  [0x100e2a3b4]
+                              + !   : | +   ! : |   + ! : | 1 _PyObject_GenericGetAttrWithDict  (in Python) + 116  [0x100df966c]
+                              + !   : | +   ! : |   + ! : 1 PyObject_GetOptionalAttr  (in Python) + 52  [0x100df84a8]
+                              + !   : | +   ! : |   + ! : 1 _PyObject_GenericGetAttrWithDict  (in Python) + 460  [0x100df97c4]
+                              + !   : | +   ! : |   + ! 2 _abc__abc_instancecheck  (in Python) + 72  [0x100f80774]
+                              + !   : | +   ! : |   + ! : 2 _get_impl  (in Python) + 80  [0x100f81268]
+                              + !   : | +   ! : |   + ! :   2 _Py_type_getattro_impl  (in Python) + 88  [0x100e1894c]
+                              + !   : | +   ! : |   + ! :     1 _PyType_LookupRef  (in Python) + 48  [0x100e17f58]
+                              + !   : | +   ! : |   + ! :     | 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : | +   ! : |   + ! :     1 _PyType_LookupRef  (in Python) + 40  [0x100e17f50]
+                              + !   : | +   ! : |   + ! 2 _abc__abc_instancecheck  (in Python) + 184  [0x100f807e4]
+                              + !   : | +   ! : |   + !   2 _in_weak_set  (in Python) + 68  [0x100f81880]
+                              + !   : | +   ! : |   + !     2 set_lookkey  (in Python) + 372  [0x100fa7aa4]
+                              + !   : | +   ! : |   + 1 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : | +   ! : |   + ! 1 _PyEval_FrameClearAndPop  (in Python) + 108  [0x100eaf6e8]
+                              + !   : | +   ! : |   + 1 _PyEval_EvalFrameDefault  (in Python) + 1224  [0x100ea043c]
+                              + !   : | +   ! : |   1 method_vectorcall  (in Python) + 48  [0x100f998bc]
+                              + !   : | +   ! : 3 object_recursive_isinstance  (in Python) + 300  [0x100f927ac]
+                              + !   : | +   ! : | 2 func_descr_get  (in Python) + 52  [0x100dca320]
+                              + !   : | +   ! : | + 2 _PyObject_GC_New  (in Python) + 60,156  [0x100ed07c0,0x100ed0820]
+                              + !   : | +   ! : | 1 func_descr_get  (in Python) + 32  [0x100dca30c]
+                              + !   : | +   ! : 2 object_recursive_isinstance  (in Python) + 520  [0x100f92888]
+                              + !   : | +   ! : | 1 _PyObject_Free  (in Python) + 136  [0x100e035c0]
+                              + !   : | +   ! : | 1 method_dealloc  (in Python) + 96  [0x100da5a44]
+                              + !   : | +   ! : 2 object_recursive_isinstance  (in Python) + 264,504  [0x100f92788,0x100f92878]
+                              + !   : | +   ! : 1 object_isinstance  (in Python) + 124  [0x100f92eb8]
+                              + !   : | +   ! :   1 PyObject_GetOptionalAttr  (in Python) + 72  [0x100df84bc]
+                              + !   : | +   ! :     1 _PyObject_GenericGetAttrWithDict  (in Python) + 36  [0x100df961c]
+                              + !   : | +   ! 23 _PyEval_EvalFrameDefault  (in Python) + 39436,30028,...  [0x100ea9980,0x100ea74c0,...]
+                              + !   : | +   ! 9 _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+                              + !   : | +   ! : 9 PyNumber_FloorDivide  (in Python) + 36  [0x100d8bb50]
+                              + !   : | +   ! :   9 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + !   : | +   ! :     9 long_div  (in Python) + 120  [0x100ddbf70]
+                              + !   : | +   ! :       8 l_divmod  (in Python) + 96  [0x100ddca1c]
+                              + !   : | +   ! :       | 6 long_divrem  (in Python) + 344  [0x100dd8a10]
+                              + !   : | +   ! :       | + 2 x_divrem  (in Python) + 216  [0x100dd9838]
+                              + !   : | +   ! :       | + ! 2 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +   ! :       | + !   2 pymalloc_alloc  (in Python) + 60  [0x100e030d0]
+                              + !   : | +   ! :       | + 1 x_divrem  (in Python) + 96  [0x100dd97c0]
+                              + !   : | +   ! :       | + ! 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +   ! :       | + !   1 pymalloc_alloc  (in Python) + 44  [0x100e030c0]
+                              + !   : | +   ! :       | + 1 x_divrem  (in Python) + 536  [0x100dd9978]
+                              + !   : | +   ! :       | + ! 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +   ! :       | + !   1 pymalloc_alloc  (in Python) + 44  [0x100e030c0]
+                              + !   : | +   ! :       | + 1 x_divrem  (in Python) + 740  [0x100dd9a44]
+                              + !   : | +   ! :       | + ! 1 pthread_self  (in libsystem_pthread.dylib) + 36  [0x19dfe45e4]
+                              + !   : | +   ! :       | + 1 x_divrem  (in Python) + 776  [0x100dd9a68]
+                              + !   : | +   ! :       | 1 long_divrem  (in Python) + 832  [0x100dd8bf8]
+                              + !   : | +   ! :       | + 1 _PyObject_Free  (in Python) + 24  [0x100e03550]
+                              + !   : | +   ! :       | 1 long_divrem  (in Python) + 488  [0x100dd8aa0]
+                              + !   : | +   ! :       1 long_div  (in Python) + 120  [0x100ddbf70]
+                              + !   : | +   ! 8 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : | +   ! : 6 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : | +   ! : | 4 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + !   : | +   ! : | + 3 subtype_dealloc  (in Python) + 92,128,...  [0x100e1d480,0x100e1d4a4,...]
+                              + !   : | +   ! : | + 1 subtype_dealloc  (in Python) + 436  [0x100e1d5d8]
+                              + !   : | +   ! : | +   1 _PyObject_Free  (in Python) + 32  [0x100e03558]
+                              + !   : | +   ! : | +     1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : | +   ! : | 2 _PyFrame_ClearExceptCode  (in Python) + 84,120  [0x100ecf6f4,0x100ecf718]
+                              + !   : | +   ! : 2 _PyEval_FrameClearAndPop  (in Python) + 0,28  [0x100eaf67c,0x100eaf698]
+                              + !   : | +   ! 4 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + !   : | +   ! : 4 _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+                              + !   : | +   ! :   2 func_dealloc  (in Python) + 0  [0x100dc9ac0]
+                              + !   : | +   ! :   1 _PyFrame_ClearExceptCode  (in Python) + 28  [0x100ecf6bc]
+                              + !   : | +   ! :   1 func_dealloc  (in Python) + 172  [0x100dc9b6c]
+                              + !   : | +   ! :     1 func_clear  (in Python) + 600  [0x100dca100]
+                              + !   : | +   ! :       1 tupledealloc  (in Python) + 96  [0x100e14a30]
+                              + !   : | +   ! 3 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + !   : | +   ! : 2 _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+                              + !   : | +   ! : | 1 _PyErr_CheckSignalsTstate  (in Python) + 76  [0x100f31f18]
+                              + !   : | +   ! : | 1 k_mul  (in Python) + 32  [0x100f9fd98]
+                              + !   : | +   ! : 1 _PyLong_Multiply  (in Python) + 140  [0x100dd6c00]
+                              + !   : | +   ! 1 _PyEval_EvalFrameDefault  (in Python) + 4436  [0x100ea10c8]
+                              + !   : | +   !   1 x_sub  (in Python) + 136  [0x100f9fa6c]
+                              + !   : | +   !     1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +   !       1 pymalloc_alloc  (in Python) + 80  [0x100e030e4]
+                              + !   : | +   1 gen_send_ex2  (in Python) + 280  [0x100dbd4e0]
+                              + !   : | 56 PySequence_Tuple  (in Python) + 396  [0x100d8e1cc]
+                              + !   : | + 56 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   : | +   55 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !   : | +   ! 22 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !   : | +   ! : 21 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !   : | +   ! : | 21 type_call  (in Python) + 96  [0x100e19258]
+                              + !   : | +   ! : |   20 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + !   : | +   ! : |   + 20 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + !   : | +   ! : |   +   6 _PyEval_EvalFrameDefault  (in Python) + 364,27336,...  [0x100ea00e0,0x100ea6a3c,...]
+                              + !   : | +   ! : |   +   5 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : | +   ! : |   +   ! 4 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : | +   ! : |   +   ! : 4 _PyFrame_ClearExceptCode  (in Python) + 72  [0x100ecf6e8]
+                              + !   : | +   ! : |   +   ! 1 _PyEval_FrameClearAndPop  (in Python) + 0  [0x100eaf67c]
+                              + !   : | +   ! : |   +   4 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + !   : | +   ! : |   +   ! 4 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + !   : | +   ! : |   +   !   4 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + !   : | +   ! : |   +   !     3 PyDict_GetItemRef  (in Python) + 128,28  [0x100de0ce8,0x100de0c84]
+                              + !   : | +   ! : |   +   !     1 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !   : | +   ! : |   +   !       1 _Py_dict_lookup  (in Python) + 80  [0x100ddfb08]
+                              + !   : | +   ! : |   +   3 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !   : | +   ! : |   +   ! 2 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !   : | +   ! : |   +   ! : 2 cfunction_call  (in Python) + 76  [0x100df359c]
+                              + !   : | +   ! : |   +   ! :   1 tp_new_wrapper  (in Python) + 328  [0x100e25494]
+                              + !   : | +   ! : |   +   ! :   | 1 PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+                              + !   : | +   ! : |   +   ! :   |   1 _PyType_AllocNoTrack  (in Python) + 100  [0x100e17bf0]
+                              + !   : | +   ! : |   +   ! :   |     1 pymalloc_alloc  (in Python) + 96  [0x100e030f4]
+                              + !   : | +   ! : |   +   ! :   1 tp_new_wrapper  (in Python) + 308  [0x100e25480]
+                              + !   : | +   ! : |   +   ! 1 _PyObject_MakeTpCall  (in Python) + 96  [0x100da3334]
+                              + !   : | +   ! : |   +   1 _PyEvalFramePushAndInit  (in Python) + 336  [0x100eadf5c]
+                              + !   : | +   ! : |   +   1 _PyFunction_Vectorcall  (in Python) + 168  [0x100da4040]
+                              + !   : | +   ! : |   1 slot_tp_new  (in Python) + 132  [0x100e1fed4]
+                              + !   : | +   ! : |     1 _Py_type_getattro_impl  (in Python) + 312  [0x100e18a2c]
+                              + !   : | +   ! : 1 PyObject_Vectorcall  (in Python) + 40  [0x100da3aec]
+                              + !   : | +   ! 15 _PyEval_EvalFrameDefault  (in Python) + 16468  [0x100ea3fc8]
+                              + !   : | +   ! : 8 object_recursive_isinstance  (in Python) + 356  [0x100f927e4]
+                              + !   : | +   ! : | 8 PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+                              + !   : | +   ! : |   8 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + !   : | +   ! : |     8 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + !   : | +   ! : |       6 _abc__abc_instancecheck  (in Python) + 388  [0x100f808b0]
+                              + !   : | +   ! : |       + 5 PyObject_VectorcallMethod  (in Python) + 152  [0x100da4944]
+                              + !   : | +   ! : |       + ! 5 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + !   : | +   ! : |       + !   3 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + !   : | +   ! : |       + !   : 2 _abc__abc_subclasscheck  (in Python) + 352  [0x100f80b98]
+                              + !   : | +   ! : |       + !   : | 2 _in_weak_set  (in Python) + 68  [0x100f81880]
+                              + !   : | +   ! : |       + !   : |   2 PySet_Contains  (in Python) + 116  [0x100e0cba4]
+                              + !   : | +   ! : |       + !   : |     1 PyObject_RichCompare  (in Python) + 176  [0x100df87fc]
+                              + !   : | +   ! : |       + !   : |     1 set_lookkey  (in Python) + 216  [0x100fa7a08]
+                              + !   : | +   ! : |       + !   : |       1 PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+                              + !   : | +   ! : |       + !   : |         1 weakref_richcompare  (in Python) + 176  [0x100e5963c]
+                              + !   : | +   ! : |       + !   : |           1 PyObject_RichCompare  (in Python) + 20  [0x100df8760]
+                              + !   : | +   ! : |       + !   : 1 _abc__abc_subclasscheck  (in Python) + 228  [0x100f80b1c]
+                              + !   : | +   ! : |       + !   :   1 PyObject_VectorcallMethod  (in Python) + 48  [0x100da48dc]
+                              + !   : | +   ! : |       + !   1 _PyEval_EvalFrameDefault  (in Python) + 432  [0x100ea0124]
+                              + !   : | +   ! : |       + !   : 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : | +   ! : |       + !   1 _PyEval_EvalFrameDefault  (in Python) + 40944  [0x100ea9f64]
+                              + !   : | +   ! : |       + 1 PyObject_VectorcallMethod  (in Python) + 76  [0x100da48f8]
+                              + !   : | +   ! : |       +   1 _PyObject_GetMethod  (in Python) + 288  [0x100df9dc0]
+                              + !   : | +   ! : |       +     1 _Py_type_getattro_impl  (in Python) + 108  [0x100e18960]
+                              + !   : | +   ! : |       1 _abc__abc_instancecheck  (in Python) + 72  [0x100f80774]
+                              + !   : | +   ! : |       + 1 _get_impl  (in Python) + 80  [0x100f81268]
+                              + !   : | +   ! : |       +   1 _Py_type_getattro_impl  (in Python) + 88  [0x100e1894c]
+                              + !   : | +   ! : |       +     1 _PyType_LookupRef  (in Python) + 84  [0x100e17f7c]
+                              + !   : | +   ! : |       1 _abc__abc_instancecheck  (in Python) + 184  [0x100f807e4]
+                              + !   : | +   ! : |         1 _in_weak_set  (in Python) + 24  [0x100f81854]
+                              + !   : | +   ! : 2 object_isinstance  (in Python) + 124  [0x100f92eb8]
+                              + !   : | +   ! : | 2 PyObject_GetOptionalAttr  (in Python) + 72  [0x100df84bc]
+                              + !   : | +   ! : |   1 _PyObject_GenericGetAttrWithDict  (in Python) + 104  [0x100df9660]
+                              + !   : | +   ! : |   + 1 _PyType_LookupRef  (in Python) + 84  [0x100e17f7c]
+                              + !   : | +   ! : |   1 _PyObject_GenericGetAttrWithDict  (in Python) + 400  [0x100df9788]
+                              + !   : | +   ! : 2 object_recursive_isinstance  (in Python) + 264  [0x100f92788]
+                              + !   : | +   ! : | 1 _PyType_LookupRef  (in Python) + 48  [0x100e17f58]
+                              + !   : | +   ! : | + 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : | +   ! : | 1 _PyType_LookupRef  (in Python) + 116  [0x100e17f9c]
+                              + !   : | +   ! : 2 object_recursive_isinstance  (in Python) + 300  [0x100f927ac]
+                              + !   : | +   ! : | 2 func_descr_get  (in Python) + 52  [0x100dca320]
+                              + !   : | +   ! : |   2 _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+                              + !   : | +   ! : |     2 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +   ! : |       2 pymalloc_alloc  (in Python) + 88,280  [0x100e030ec,0x100e031ac]
+                              + !   : | +   ! : 1 _PyType_LookupRef  (in Python) + 152  [0x100e17fc0]
+                              + !   : | +   ! 8 _PyEval_EvalFrameDefault  (in Python) + 48,1224,...  [0x100e9ffa4,0x100ea043c,...]
+                              + !   : | +   ! 3 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : | +   ! : 3 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : | +   ! :   3 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + !   : | +   ! :     3 subtype_dealloc  (in Python) + 176,208,...  [0x100e1d4d4,0x100e1d4f4,...]
+                              + !   : | +   ! 2 _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+                              + !   : | +   ! : 2 PyNumber_FloorDivide  (in Python) + 36  [0x100d8bb50]
+                              + !   : | +   ! :   2 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + !   : | +   ! :     2 long_div  (in Python) + 120  [0x100ddbf70]
+                              + !   : | +   ! :       2 l_divmod  (in Python) + 96  [0x100ddca1c]
+                              + !   : | +   ! :         2 long_divrem  (in Python) + 344  [0x100dd8a10]
+                              + !   : | +   ! :           1 x_divrem  (in Python) + 96  [0x100dd97c0]
+                              + !   : | +   ! :           | 1 pymalloc_alloc  (in Python) + 96  [0x100e030f4]
+                              + !   : | +   ! :           1 x_divrem  (in Python) + 916  [0x100dd9af4]
+                              + !   : | +   ! 2 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + !   : | +   ! : 2 _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+                              + !   : | +   ! :   1 k_mul  (in Python) + 184  [0x100f9fe30]
+                              + !   : | +   ! :   | 1 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + !   : | +   ! :   |   1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : | +   ! :   1 k_mul  (in Python) + 552  [0x100f9ffa0]
+                              + !   : | +   ! 1 _PyEval_EvalFrameDefault  (in Python) + 4436  [0x100ea10c8]
+                              + !   : | +   ! : 1 x_sub  (in Python) + 88  [0x100f9fa3c]
+                              + !   : | +   ! 1 _PyEval_EvalFrameDefault  (in Python) + 31660  [0x100ea7b20]
+                              + !   : | +   ! : 1 PyObject_GetIter  (in Python) + 20  [0x100d8e520]
+                              + !   : | +   ! 1 _PyEval_EvalFrameDefault  (in Python) + 40292  [0x100ea9cd8]
+                              + !   : | +   !   1 _PyFrame_PushUnchecked  (in Python) + 84  [0x100eaddcc]
+                              + !   : | +   1 _PyEval_EvalFrameDefault  (in Python) + 1268  [0x100ea0468]
+                              + !   : | 2 PySequence_Tuple  (in Python) + 516  [0x100d8e244]
+                              + !   : | + 2 _PyTuple_Resize  (in Python) + 208  [0x100e154e8]
+                              + !   : | +   2 _PyObject_GC_Resize  (in Python) + 100  [0x100ed0c68]
+                              + !   : | +     2 _PyObject_Realloc  (in Python) + 132,180  [0x100e037f8,0x100e03828]
+                              + !   : | 1 PySequence_Tuple  (in Python) + 332  [0x100d8e18c]
+                              + !   : | + 1 DYLD-STUB$$bzero  (in Python) + 4  [0x100fdacb0]
+                              + !   : | 1 PySequence_Tuple  (in Python) + 824  [0x100d8e378]
+                              + !   : | + 1 _PyObject_GC_NewVar  (in Python) + 132  [0x100ed0a68]
+                              + !   : | +   1 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + !   : | +     1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : | 1 PySequence_Tuple  (in Python) + 564  [0x100d8e274]
+                              + !   : 30 _PyEval_EvalFrameDefault  (in Python) + 1224,51568,...  [0x100ea043c,0x100eac8e4,...]
+                              + !   : 11 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + !   : | 10 _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+                              + !   : | + 8 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + !   : | + ! 3 zip_dealloc  (in Python) + 164  [0x100e97cac]
+                              + !   : | + ! : 2 tupledealloc  (in Python) + 52,116  [0x100e14a04,0x100e14a44]
+                              + !   : | + ! : 1 _PyObject_Free  (in Python) + 152  [0x100e035d0]
+                              + !   : | + ! 2 zip_dealloc  (in Python) + 208  [0x100e97cd8]
+                              + !   : | + ! : 2 tupledealloc  (in Python) + 52,236  [0x100e14a04,0x100e14abc]
+                              + !   : | + ! 1 PyObject_GC_Del  (in Python) + 12  [0x100ed0c98]
+                              + !   : | + ! 1 _PyObject_Free  (in Python) + 88  [0x100e03590]
+                              + !   : | + ! 1 zip_dealloc  (in Python) + 80  [0x100e97c58]
+                              + !   : | + 1 _PyFrame_ClearExceptCode  (in Python) + 64  [0x100ecf6e0]
+                              + !   : | + 1 func_dealloc  (in Python) + 268  [0x100dc9bcc]
+                              + !   : | 1 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : |   1 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + !   : |     1 unicode_dealloc  (in Python) + 0  [0x100fb4240]
+                              + !   : 10 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !   : | 10 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !   : |   10 type_call  (in Python) + 96  [0x100e19258]
+                              + !   : |     9 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + !   : |     + 9 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + !   : |     +   3 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + !   : |     +   ! 3 _PyLong_GCD  (in Python) + 192,748,...  [0x100dd743c,0x100dd7668,...]
+                              + !   : |     +   3 _PyEval_EvalFrameDefault  (in Python) + 24864,40704,...  [0x100ea6094,0x100ea9e74,...]
+                              + !   : |     +   1 _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+                              + !   : |     +   ! 1 binary_iop  (in Python) + 84  [0x100d8bf94]
+                              + !   : |     +   !   1 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + !   : |     +   !     1 long_div  (in Python) + 120  [0x100ddbf70]
+                              + !   : |     +   !       1 l_divmod  (in Python) + 48  [0x100ddc9ec]
+                              + !   : |     +   1 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + !   : |     +   ! 1 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + !   : |     +   !   1 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + !   : |     +   !     1 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !   : |     +   !       1 _Py_dict_lookup  (in Python) + 80  [0x100ddfb08]
+                              + !   : |     +   1 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + !   : |     +     1 _PyEvalFramePushAndInit  (in Python) + 180  [0x100eadec0]
+                              + !   : |     +       1 __bzero  (in libsystem_platform.dylib) + 0  [0x19dff29a0]
+                              + !   : |     1 slot_tp_new  (in Python) + 132  [0x100e1fed4]
+                              + !   : |       1 _Py_type_getattro_impl  (in Python) + 332  [0x100e18a40]
+                              + !   : 7 _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+                              + !   : | 4 PyNumber_Add  (in Python) + 32  [0x100d8b910]
+                              + !   : | + 4 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + !   : | +   4 slot_nb_add  (in Python) + 152  [0x100e20a90]
+                              + !   : | +     4 vectorcall_maybe  (in Python) + 100  [0x100e24c88]
+                              + !   : | +       1 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !   : | +       ! 1 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !   : | +       !   1 cfunction_call  (in Python) + 76  [0x100df359c]
+                              + !   : | +       !     1 tp_new_wrapper  (in Python) + 328  [0x100e25494]
+                              + !   : | +       !       1 PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+                              + !   : | +       !         1 _PyType_AllocNoTrack  (in Python) + 100  [0x100e17bf0]
+                              + !   : | +       !           1 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + !   : | +       !             1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : | +       1 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + !   : | +       ! 1 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + !   : | +       !   1 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + !   : | +       !     1 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !   : | +       !       1 _Py_dict_lookup  (in Python) + 88  [0x100ddfb10]
+                              + !   : | +       1 _PyEval_EvalFrameDefault  (in Python) + 40944  [0x100ea9f64]
+                              + !   : | +       1 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + !   : | +         1 _PyEvalFramePushAndInit  (in Python) + 180  [0x100eadec0]
+                              + !   : | +           1 _platform_memset  (in libsystem_platform.dylib) + 180  [0x19dff2ab4]
+                              + !   : | 3 PyNumber_Multiply  (in Python) + 36  [0x100d8ba18]
+                              + !   : |   3 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + !   : |     3 slot_nb_multiply  (in Python) + 244  [0x100e2108c]
+                              + !   : |       3 vectorcall_maybe  (in Python) + 100  [0x100e24c88]
+                              + !   : |         1 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + !   : |         ! 1 _PyLong_GCD  (in Python) + 784  [0x100dd768c]
+                              + !   : |         1 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : |         ! 1 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : |         !   1 _PyFrame_ClearExceptCode  (in Python) + 84  [0x100ecf6f4]
+                              + !   : |         1 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + !   : |           1 _PyEvalFramePushAndInit  (in Python) + 300  [0x100eadf38]
+                              + !   : 7 _PyEval_EvalFrameDefault  (in Python) + 44928  [0x100eaaef4]
+                              + !   : | 3 PyFunction_NewWithQualName  (in Python) + 240  [0x100dc9058]
+                              + !   : | + 2 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !   : | + ! 2 _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+                              + !   : | + !   2 unicodekeys_lookup_unicode  (in Python) + 20,84  [0x100fa11a8,0x100fa11e8]
+                              + !   : | + 1 PyDict_GetItemRef  (in Python) + 28  [0x100de0c84]
+                              + !   : | 3 PyFunction_NewWithQualName  (in Python) + 292  [0x100dc908c]
+                              + !   : | + 2 _PyObject_GC_New  (in Python) + 108,196  [0x100ed07f0,0x100ed0848]
+                              + !   : | + 1 _PyObject_GC_New  (in Python) + 68  [0x100ed07c8]
+                              + !   : | +   1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : | 1 PyFunction_NewWithQualName  (in Python) + 324  [0x100dc90ac]
+                              + !   : 5 _PyEval_EvalFrameDefault  (in Python) + 17204  [0x100ea42a8]
+                              + !   : | 5 PyObject_Vectorcall  (in Python) + 92  [0x100da3b20]
+                              + !   : |   5 cfunction_vectorcall_FASTCALL_KEYWORDS  (in Python) + 88  [0x100fa5968]
+                              + !   : |     4 min_max  (in Python) + 780  [0x100e9e988]
+                              + !   : |     + 3 PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+                              + !   : |     + ! 2 _PyEval_EvalFrameDefault  (in Python) + 13964  [0x100ea3600]
+                              + !   : |     + ! : 2 long_abs  (in Python) + 64  [0x100dd7f28]
+                              + !   : |     + ! 1 _PyEval_EvalFrameDefault  (in Python) + 48624  [0x100eabd64]
+                              + !   : |     + 1 PyObject_CallOneArg  (in Python) + 56  [0x100da3e50]
+                              + !   : |     1 min_max  (in Python) + 760  [0x100e9e974]
+                              + !   : |       1 PyObject_GetIter  (in Python) + 32  [0x100d8e52c]
+                              + !   : |         1 range_iter  (in Python) + 188  [0x100e089f4]
+                              + !   : |           1 pymalloc_alloc  (in Python) + 96  [0x100e030f4]
+                              + !   : 4 _PyEval_EvalFrameDefault  (in Python) + 22224  [0x100ea5644]
+                              + !   : | 4 gen_dealloc  (in Python) + 32,156,...  [0x100dbbda4,0x100dbbe20,...]
+                              + !   : 3 _PyEval_EvalFrameDefault  (in Python) + 4212  [0x100ea0fe8]
+                              + !   : | 3 _PyLong_FromSTwoDigits  (in Python) + 108  [0x100f9f600]
+                              + !   : |   2 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : |   + 2 pymalloc_alloc  (in Python) + 0,80  [0x100e03094,0x100e030e4]
+                              + !   : |   1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : 3 _PyEval_EvalFrameDefault  (in Python) + 31660  [0x100ea7b20]
+                              + !   : | 3 PyObject_GetIter  (in Python) + 32  [0x100d8e52c]
+                              + !   : |   2 tuple_iter  (in Python) + 40  [0x100e15240]
+                              + !   : |   + 1 _PyObject_GC_New  (in Python) + 68  [0x100ed07c8]
+                              + !   : |   + ! 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : |   + 1 _PyObject_GC_New  (in Python) + 156  [0x100ed0820]
+                              + !   : |   1 range_iter  (in Python) + 188  [0x100e089f4]
+                              + !   : |     1 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + !   : |       1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !   : 2 _PyEval_EvalFrameDefault  (in Python) + 48192  [0x100eabbb4]
+                              + !   : | 2 _Py_MakeCoro  (in Python) + 64  [0x100dbc364]
+                              + !   : |   1 _PyObject_GC_NewVar  (in Python) + 132  [0x100ed0a68]
+                              + !   : |   + 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : |   +   1 pymalloc_alloc  (in Python) + 80  [0x100e030e4]
+                              + !   : |   1 _PyObject_GC_NewVar  (in Python) + 12  [0x100ed09f0]
+                              + !   : 2 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !   : | 1 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !   : | + 1 _PyFrame_ClearExceptCode  (in Python) + 84  [0x100ecf6f4]
+                              + !   : | 1 _PyEval_FrameClearAndPop  (in Python) + 92  [0x100eaf6d8]
+                              + !   : 1 _PyEval_EvalFrameDefault  (in Python) + 432  [0x100ea0124]
+                              + !   : | 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   : 1 _PyEval_EvalFrameDefault  (in Python) + 17404  [0x100ea4370]
+                              + !   : | 1 func_dealloc  (in Python) + 172  [0x100dc9b6c]
+                              + !   : |   1 func_clear  (in Python) + 600  [0x100dca100]
+                              + !   : |     1 tupledealloc  (in Python) + 124  [0x100e14a4c]
+                              + !   : 1 _PyEval_EvalFrameDefault  (in Python) + 29424  [0x100ea7264]
+                              + !   : | 1 zip_next  (in Python) + 28  [0x100e97d84]
+                              + !   : 1 _PyEval_EvalFrameDefault  (in Python) + 30176  [0x100ea7554]
+                              + !   : | 1 tupledealloc  (in Python) + 192  [0x100e14a90]
+                              + !   : 1 _PyObject_Free  (in Python) + 152  [0x100e035d0]
+                              + !   3 gen_send_ex2  (in Python) + 44,156  [0x100dbd3f4,0x100dbd464]
+                              + !   1 _PyEval_EvalFrameDefault  (in Python) + 1268  [0x100ea0468]
+                              + !   1 gen_send_ex2  (in Python) + 52  [0x100dbd3fc]
+                              + !     1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + 87 PySequence_Tuple  (in Python) + 396  [0x100d8e1cc]
+                              + ! 86 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + ! : 86 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + ! :   50 _PyEval_EvalFrameDefault  (in Python) + 22324  [0x100ea56a8]
+                              + ! :   | 27 PySequence_Tuple  (in Python) + 448  [0x100d8e200]
+                              + ! :   | + 27 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + ! :   | +   27 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + ! :   | +     8 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + ! :   | +     ! 8 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + ! :   | +     !   8 type_call  (in Python) + 96  [0x100e19258]
+                              + ! :   | +     !     8 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + ! :   | +     !       8 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + ! :   | +     !         3 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + ! :   | +     !         : 2 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + ! :   | +     !         : | 2 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + ! :   | +     !         : |   1 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + ! :   | +     !         : |   + 1 _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+                              + ! :   | +     !         : |   +   1 unicodekeys_lookup_unicode  (in Python) + 84  [0x100fa11e8]
+                              + ! :   | +     !         : |   1 PyDict_GetItemRef  (in Python) + 28  [0x100de0c84]
+                              + ! :   | +     !         : 1 supercheck  (in Python) + 448  [0x100fae1f8]
+                              + ! :   | +     !         3 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :   | +     !         : 3 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! :   | +     !         :   3 _PyFrame_ClearExceptCode  (in Python) + 72  [0x100ecf6e8]
+                              + ! :   | +     !         1 _PyEval_EvalFrameDefault  (in Python) + 42024  [0x100eaa39c]
+                              + ! :   | +     !         1 _PyObject_MakeTpCall  (in Python) + 228  [0x100da33b8]
+                              + ! :   | +     7 _PyEval_EvalFrameDefault  (in Python) + 39436,1224,...  [0x100ea9980,0x100ea043c,...]
+                              + ! :   | +     5 _PyEval_EvalFrameDefault  (in Python) + 16468  [0x100ea3fc8]
+                              + ! :   | +     ! 3 object_recursive_isinstance  (in Python) + 356  [0x100f927e4]
+                              + ! :   | +     ! : 3 PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+                              + ! :   | +     ! :   3 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + ! :   | +     ! :     3 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + ! :   | +     ! :       3 _abc__abc_instancecheck  (in Python) + 388  [0x100f808b0]
+                              + ! :   | +     ! :         3 PyObject_VectorcallMethod  (in Python) + 152  [0x100da4944]
+                              + ! :   | +     ! :           3 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + ! :   | +     ! :             2 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + ! :   | +     ! :             | 2 _abc__abc_subclasscheck  (in Python) + 228  [0x100f80b1c]
+                              + ! :   | +     ! :             |   2 PyObject_VectorcallMethod  (in Python) + 76  [0x100da48f8]
+                              + ! :   | +     ! :             |     2 _PyObject_GetMethod  (in Python) + 288  [0x100df9dc0]
+                              + ! :   | +     ! :             |       1 _Py_type_getattro_impl  (in Python) + 292  [0x100e18a18]
+                              + ! :   | +     ! :             |       + 1 _PyType_LookupRef  (in Python) + 116  [0x100e17f9c]
+                              + ! :   | +     ! :             |       1 _Py_type_getattro_impl  (in Python) + 312  [0x100e18a2c]
+                              + ! :   | +     ! :             1 _PyEval_EvalFrameDefault  (in Python) + 120  [0x100e9ffec]
+                              + ! :   | +     ! 1 _PyObject_Free  (in Python) + 156  [0x100e035d4]
+                              + ! :   | +     ! 1 object_recursive_isinstance  (in Python) + 504  [0x100f92878]
+                              + ! :   | +     3 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :   | +     ! 2 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! :   | +     ! : 2 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + ! :   | +     ! :   2 subtype_dealloc  (in Python) + 436  [0x100e1d5d8]
+                              + ! :   | +     ! :     2 PyObject_GC_Del  (in Python) + 12,36  [0x100ed0c98,0x100ed0cb0]
+                              + ! :   | +     ! 1 _PyEval_FrameClearAndPop  (in Python) + 60  [0x100eaf6b8]
+                              + ! :   | +     2 _PyEval_EvalFrameDefault  (in Python) + 40292  [0x100ea9cd8]
+                              + ! :   | +     ! 2 _PyFrame_PushUnchecked  (in Python) + 20,88  [0x100eadd8c,0x100eaddd0]
+                              + ! :   | +     1 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + ! :   | +     ! 1 _PyLong_Multiply  (in Python) + 140  [0x100dd6c00]
+                              + ! :   | +     1 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + ! :   | +       1 _PyEval_FrameClearAndPop  (in Python) + 4  [0x100eaf680]
+                              + ! :   | 17 PySequence_Tuple  (in Python) + 396  [0x100d8e1cc]
+                              + ! :   | + 17 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + ! :   | +   16 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + ! :   | +   ! 7 _PyEval_EvalFrameDefault  (in Python) + 16468  [0x100ea3fc8]
+                              + ! :   | +   ! : 5 object_recursive_isinstance  (in Python) + 356  [0x100f927e4]
+                              + ! :   | +   ! : | 5 PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+                              + ! :   | +   ! : |   5 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + ! :   | +   ! : |     4 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + ! :   | +   ! : |     + 2 _abc__abc_instancecheck  (in Python) + 72  [0x100f80774]
+                              + ! :   | +   ! : |     + ! 2 _get_impl  (in Python) + 80  [0x100f81268]
+                              + ! :   | +   ! : |     + !   2 _Py_type_getattro_impl  (in Python) + 304,332  [0x100e18a24,0x100e18a40]
+                              + ! :   | +   ! : |     + 2 _abc__abc_instancecheck  (in Python) + 388  [0x100f808b0]
+                              + ! :   | +   ! : |     +   1 PyObject_VectorcallMethod  (in Python) + 76  [0x100da48f8]
+                              + ! :   | +   ! : |     +   : 1 _PyObject_GetMethod  (in Python) + 288  [0x100df9dc0]
+                              + ! :   | +   ! : |     +   :   1 _Py_type_getattro_impl  (in Python) + 292  [0x100e18a18]
+                              + ! :   | +   ! : |     +   :     1 _PyType_LookupRef  (in Python) + 136  [0x100e17fb0]
+                              + ! :   | +   ! : |     +   1 PyObject_VectorcallMethod  (in Python) + 152  [0x100da4944]
+                              + ! :   | +   ! : |     +     1 method_vectorcall  (in Python) + 316  [0x100f999c8]
+                              + ! :   | +   ! : |     +       1 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + ! :   | +   ! : |     +         1 _abc__abc_subclasscheck  (in Python) + 104  [0x100f80aa0]
+                              + ! :   | +   ! : |     +           1 _get_impl  (in Python) + 8  [0x100f81220]
+                              + ! :   | +   ! : |     1 _PyEval_EvalFrameDefault  (in Python) + 13056  [0x100ea3274]
+                              + ! :   | +   ! : 1 object_isinstance  (in Python) + 124  [0x100f92eb8]
+                              + ! :   | +   ! : | 1 PyObject_GetOptionalAttr  (in Python) + 72  [0x100df84bc]
+                              + ! :   | +   ! : |   1 _PyObject_GenericGetAttrWithDict  (in Python) + 400  [0x100df9788]
+                              + ! :   | +   ! : 1 object_isinstance  (in Python) + 128  [0x100f92ebc]
+                              + ! :   | +   ! 5 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + ! :   | +   ! : 5 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + ! :   | +   ! :   5 type_call  (in Python) + 96  [0x100e19258]
+                              + ! :   | +   ! :     5 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + ! :   | +   ! :       5 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + ! :   | +   ! :         2 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + ! :   | +   ! :         | 2 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + ! :   | +   ! :         |   1 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + ! :   | +   ! :         |   + 1 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + ! :   | +   ! :         |   +   1 _Py_dict_lookup  (in Python) + 80  [0x100ddfb08]
+                              + ! :   | +   ! :         |   1 do_super_lookup  (in Python) + 92  [0x100fae2f0]
+                              + ! :   | +   ! :         2 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :   | +   ! :         | 2 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! :   | +   ! :         |   2 _PyFrame_ClearExceptCode  (in Python) + 72,92  [0x100ecf6e8,0x100ecf6fc]
+                              + ! :   | +   ! :         1 _PySuper_Lookup  (in Python) + 116  [0x100e1cb88]
+                              + ! :   | +   ! 3 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :   | +   ! : 2 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! :   | +   ! : | 2 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + ! :   | +   ! : |   1 _PyObject_Free  (in Python) + 152  [0x100e035d0]
+                              + ! :   | +   ! : |   1 subtype_dealloc  (in Python) + 320  [0x100e1d564]
+                              + ! :   | +   ! : 1 _PyEval_FrameClearAndPop  (in Python) + 28  [0x100eaf698]
+                              + ! :   | +   ! 1 _PyEval_EvalFrameDefault  (in Python) + 21504  [0x100ea5374]
+                              + ! :   | +   1 _PyEval_EvalFrameDefault  (in Python) + 1260  [0x100ea0460]
+                              + ! :   | 2 PySequence_Tuple  (in Python) + 516  [0x100d8e244]
+                              + ! :   | + 2 _PyTuple_Resize  (in Python) + 208  [0x100e154e8]
+                              + ! :   | +   1 _PyObject_GC_Resize  (in Python) + 100  [0x100ed0c68]
+                              + ! :   | +   ! 1 _PyObject_Realloc  (in Python) + 44  [0x100e037a0]
+                              + ! :   | +   !   1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + ! :   | +   1 _PyObject_GC_Resize  (in Python) + 56  [0x100ed0c3c]
+                              + ! :   | 1 PySequence_Tuple  (in Python) + 200  [0x100d8e108]
+                              + ! :   | + 1 PyObject_LengthHint  (in Python) + 420  [0x100d896d0]
+                              + ! :   | +   1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + ! :   | 1 PySequence_Tuple  (in Python) + 824  [0x100d8e378]
+                              + ! :   | + 1 _PyObject_GC_NewVar  (in Python) + 132  [0x100ed0a68]
+                              + ! :   | +   1 pymalloc_alloc  (in Python) + 96  [0x100e030f4]
+                              + ! :   | 1 PySequence_Tuple  (in Python) + 372  [0x100d8e1b4]
+                              + ! :   | 1 _PyObject_GC_NewVar  (in Python) + 240  [0x100ed0ad4]
+                              + ! :   8 _PyEval_EvalFrameDefault  (in Python) + 140,30220,...  [0x100ea0000,0x100ea7580,...]
+                              + ! :   7 _PyEval_EvalFrameDefault  (in Python) + 17204  [0x100ea42a8]
+                              + ! :   | 7 PyObject_Vectorcall  (in Python) + 92  [0x100da3b20]
+                              + ! :   |   7 cfunction_vectorcall_FASTCALL_KEYWORDS  (in Python) + 88  [0x100fa5968]
+                              + ! :   |     7 min_max  (in Python) + 780  [0x100e9e988]
+                              + ! :   |       7 PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+                              + ! :   |         2 _PyEval_EvalFrameDefault  (in Python) + 13964  [0x100ea3600]
+                              + ! :   |         + 1 long_abs  (in Python) + 140  [0x100dd7f74]
+                              + ! :   |         + ! 1 _PyLong_FromDigits  (in Python) + 180  [0x100dd2bb4]
+                              + ! :   |         + !   1 DYLD-STUB$$memcpy  (in Python) + 4  [0x100fdb214]
+                              + ! :   |         + 1 long_abs  (in Python) + 64  [0x100dd7f28]
+                              + ! :   |         2 _PyEval_EvalFrameDefault  (in Python) + 7508,42068  [0x100ea1cc8,0x100eaa3c8]
+                              + ! :   |         1 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :   |         + 1 _PyEval_FrameClearAndPop  (in Python) + 28  [0x100eaf698]
+                              + ! :   |         1 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + ! :   |         + 1 _PyEvalFramePushAndInit  (in Python) + 300  [0x100eadf38]
+                              + ! :   |         1 _PyFunction_Vectorcall  (in Python) + 36  [0x100da3fbc]
+                              + ! :   6 _PyEval_EvalFrameDefault  (in Python) + 29424  [0x100ea7264]
+                              + ! :   | 4 zip_next  (in Python) + 108  [0x100e97dd4]
+                              + ! :   | + 4 tupleiter_next  (in Python) + 60  [0x100e1596c]
+                              + ! :   | 2 zip_next  (in Python) + 100,120  [0x100e97dcc,0x100e97de0]
+                              + ! :   5 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + ! :   | 5 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + ! :   |   3 type_call  (in Python) + 96  [0x100e19258]
+                              + ! :   |   + 3 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + ! :   |   +   3 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + ! :   |   +     1 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + ! :   |   +     ! 1 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + ! :   |   +     !   1 cfunction_call  (in Python) + 76  [0x100df359c]
+                              + ! :   |   +     !     1 tp_new_wrapper  (in Python) + 328  [0x100e25494]
+                              + ! :   |   +     !       1 PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+                              + ! :   |   +     !         1 _PyType_AllocNoTrack  (in Python) + 196  [0x100e17c50]
+                              + ! :   |   +     1 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + ! :   |   +     ! 1 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + ! :   |   +     !   1 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + ! :   |   +     !     1 PyDict_GetItemRef  (in Python) + 48  [0x100de0c98]
+                              + ! :   |   +     1 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :   |   +       1 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! :   |   +         1 _PyFrame_ClearExceptCode  (in Python) + 64  [0x100ecf6e0]
+                              + ! :   |   2 type_call  (in Python) + 52  [0x100e1922c]
+                              + ! :   |     2 _tlv_get_addr  (in libdyld.dylib) + 0,12  [0x19dbcd758,0x19dbcd764]
+                              + ! :   2 _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+                              + ! :   | 2 PyNumber_Multiply  (in Python) + 36  [0x100d8ba18]
+                              + ! :   |   2 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + ! :   |     2 slot_nb_multiply  (in Python) + 244  [0x100e2108c]
+                              + ! :   |       2 vectorcall_maybe  (in Python) + 100  [0x100e24c88]
+                              + ! :   |         1 _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+                              + ! :   |         + 1 binary_iop  (in Python) + 84  [0x100d8bf94]
+                              + ! :   |         +   1 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + ! :   |         +     1 long_div  (in Python) + 120  [0x100ddbf70]
+                              + ! :   |         +       1 long_divrem  (in Python) + 152  [0x100dd8950]
+                              + ! :   |         1 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + ! :   |           1 _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+                              + ! :   |             1 k_mul  (in Python) + 544  [0x100f9ff98]
+                              + ! :   2 _PyEval_EvalFrameDefault  (in Python) + 4212  [0x100ea0fe8]
+                              + ! :   | 1 _PyLong_FromSTwoDigits  (in Python) + 192  [0x100f9f654]
+                              + ! :   | 1 _PyObject_Malloc  (in Python) + 60  [0x100e03054]
+                              + ! :   2 _PyEval_EvalFrameDefault  (in Python) + 44928  [0x100eaaef4]
+                              + ! :   | 1 PyFunction_NewWithQualName  (in Python) + 240  [0x100dc9058]
+                              + ! :   | + 1 _Py_dict_lookup  (in Python) + 364  [0x100ddfc24]
+                              + ! :   | 1 PyFunction_NewWithQualName  (in Python) + 256  [0x100dc9068]
+                              + ! :   |   1 _PyEval_BuiltinsFromGlobals  (in Python) + 136  [0x100dc5b5c]
+                              + ! :   |     1 _Py_dict_lookup  (in Python) + 1536  [0x100de00b8]
+                              + ! :   1 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + ! :   | 1 _PyLong_Multiply  (in Python) + 140  [0x100dd6c00]
+                              + ! :   1 _PyEval_EvalFrameDefault  (in Python) + 12764  [0x100ea3150]
+                              + ! :   | 1 range_from_array  (in Python) + 124  [0x100e0aee0]
+                              + ! :   |   1 make_range_object  (in Python) + 1372  [0x100e0a28c]
+                              + ! :   |     1 PyLong_FromLong  (in Python) + 32  [0x100dd2c94]
+                              + ! :   1 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + ! :   | 1 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! :   |   1 _PyFrame_ClearExceptCode  (in Python) + 132  [0x100ecf724]
+                              + ! :   1 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + ! :     1 _PyEval_FrameClearAndPop  (in Python) + 92  [0x100eaf6d8]
+                              + ! 1 gen_send_ex2  (in Python) + 232  [0x100dbd4b0]
+                              + 4 PySequence_Tuple  (in Python) + 516  [0x100d8e244]
+                              + ! 4 _PyTuple_Resize  (in Python) + 208  [0x100e154e8]
+                              + !   4 _PyObject_GC_Resize  (in Python) + 100  [0x100ed0c68]
+                              + !     3 _PyObject_Realloc  (in Python) + 204,132  [0x100e03840,0x100e037f8]
+                              + !     1 _PyObject_Realloc  (in Python) + 204  [0x100e03840]
+                              + !       1 _platform_memmove  (in libsystem_platform.dylib) + 208  [0x19dff2da0]
+                              + 2 PySequence_Tuple  (in Python) + 824  [0x100d8e378]
+                              + ! 1 _PyObject_GC_NewVar  (in Python) + 132  [0x100ed0a68]
+                              + ! : 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + ! :   1 pymalloc_alloc  (in Python) + 48  [0x100e030c4]
+                              + ! 1 _PyObject_GC_NewVar  (in Python) + 172  [0x100ed0a90]
+                              + 2 PySequence_Tuple  (in Python) + 156,372  [0x100d8e0dc,0x100d8e1b4]
+                              + 1 PyObject_LengthHint  (in Python) + 304  [0x100d8965c]
+                              + 1 PySequence_Tuple  (in Python) + 332  [0x100d8e18c]
+                              +   1 DYLD-STUB$$bzero  (in Python) + 4  [0x100fdacb0]
+                              66 _PyEval_EvalFrameDefault  (in Python) + 4220,7508,...  [0x100ea0ff0,0x100ea1cc8,...]
+                              57 _PyEval_EvalFrameDefault  (in Python) + 14324  [0x100ea3768]
+                              + 52 PySequence_Tuple  (in Python) + 448  [0x100d8e200]
+                              + ! 52 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   52 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !     39 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !     : 38 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !     : | 38 type_call  (in Python) + 96  [0x100e19258]
+                              + !     : |   38 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              + !     : |     36 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              + !     : |     + 13 _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+                              + !     : |     + ! 13 _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+                              + !     : |     + !   10 do_super_lookup  (in Python) + 368  [0x100fae404]
+                              + !     : |     + !   : 8 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !     : |     + !   : | 5 _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+                              + !     : |     + !   : | + 5 unicodekeys_lookup_unicode  (in Python) + 84,20,...  [0x100fa11e8,0x100fa11a8,...]
+                              + !     : |     + !   : | 3 _Py_dict_lookup  (in Python) + 24,80,...  [0x100ddfad0,0x100ddfb08,...]
+                              + !     : |     + !   : 1 PyDict_GetItemRef  (in Python) + 28  [0x100de0c84]
+                              + !     : |     + !   : 1 _Py_dict_lookup  (in Python) + 372  [0x100ddfc2c]
+                              + !     : |     + !   1 PyDict_GetItemRef  (in Python) + 152  [0x100de0d00]
+                              + !     : |     + !   1 do_super_lookup  (in Python) + 308  [0x100fae3c8]
+                              + !     : |     + !   : 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !     : |     + !   1 do_super_lookup  (in Python) + 340  [0x100fae3e8]
+                              + !     : |     + 9 _PyEval_EvalFrameDefault  (in Python) + 116,460,...  [0x100e9ffe8,0x100ea0140,...]
+                              + !     : |     + 7 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              + !     : |     + ! 5 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + !     : |     + ! : 4 cfunction_call  (in Python) + 76  [0x100df359c]
+                              + !     : |     + ! : | 3 tp_new_wrapper  (in Python) + 328  [0x100e25494]
+                              + !     : |     + ! : | + 3 PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+                              + !     : |     + ! : | +   1 _PyType_AllocNoTrack  (in Python) + 100  [0x100e17bf0]
+                              + !     : |     + ! : | +   ! 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !     : |     + ! : | +   !   1 pymalloc_alloc  (in Python) + 48  [0x100e030c4]
+                              + !     : |     + ! : | +   1 _PyType_AllocNoTrack  (in Python) + 188  [0x100e17c48]
+                              + !     : |     + ! : | +   ! 1 _platform_memset  (in libsystem_platform.dylib) + 180  [0x19dff2ab4]
+                              + !     : |     + ! : | +   1 _PyType_AllocNoTrack  (in Python) + 224  [0x100e17c6c]
+                              + !     : |     + ! : | 1 tp_new_wrapper  (in Python) + 300  [0x100e25478]
+                              + !     : |     + ! : |   1 tupleslice  (in Python) + 28  [0x100fa9540]
+                              + !     : |     + ! : 1 tp_new_wrapper  (in Python) + 184  [0x100e25404]
+                              + !     : |     + ! 2 _PyObject_MakeTpCall  (in Python) + 136  [0x100da335c]
+                              + !     : |     + 5 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !     : |     + ! 4 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !     : |     + ! : 4 _PyFrame_ClearExceptCode  (in Python) + 72,64  [0x100ecf6e8,0x100ecf6e0]
+                              + !     : |     + ! 1 _PyEval_FrameClearAndPop  (in Python) + 0  [0x100eaf67c]
+                              + !     : |     + 2 _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+                              + !     : |     +   1 _PyEvalFramePushAndInit  (in Python) + 180  [0x100eadec0]
+                              + !     : |     +   : 1 _platform_memset  (in libsystem_platform.dylib) + 160  [0x19dff2aa0]
+                              + !     : |     +   1 _PyEvalFramePushAndInit  (in Python) + 148  [0x100eadea0]
+                              + !     : |     2 _PyEval_EvalFrameDefault  (in Python) + 1268  [0x100ea0468]
+                              + !     : 1 _PyTuple_FromArray  (in Python) + 224  [0x100e14778]
+                              + !     8 _PyEval_EvalFrameDefault  (in Python) + 21004,29976,...  [0x100ea5180,0x100ea748c,...]
+                              + !     5 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + !       5 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + !         3 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + !         | 2 subtype_dealloc  (in Python) + 176,252  [0x100e1d4d4,0x100e1d520]
+                              + !         | 1 subtype_dealloc  (in Python) + 436  [0x100e1d5d8]
+                              + !         |   1 _PyObject_Free  (in Python) + 24  [0x100e03550]
+                              + !         2 _PyFrame_ClearExceptCode  (in Python) + 68,132  [0x100ecf6e4,0x100ecf724]
+                              + 5 PySequence_Tuple  (in Python) + 396  [0x100d8e1cc]
+                              +   5 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              +     4 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              +     : 2 _PyEval_EvalFrameDefault  (in Python) + 40,30804  [0x100e9ff9c,0x100ea77c8]
+                              +     : 1 _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+                              +     : | 1 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              +     : |   1 type_call  (in Python) + 96  [0x100e19258]
+                              +     : |     1 slot_tp_new  (in Python) + 208  [0x100e1ff20]
+                              +     : |       1 _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+                              +     : |         1 _PyFunction_Vectorcall  (in Python) + 132  [0x100da401c]
+                              +     : 1 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              +     :   1 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              +     :     1 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              +     :       1 subtype_dealloc  (in Python) + 252  [0x100e1d520]
+                              +     1 gen_send_ex2  (in Python) + 36  [0x100dbd3ec]
+                              56 _PyEval_EvalFrameDefault  (in Python) + 13528  [0x100ea344c]
+                              + 23 builtin_sum  (in Python) + 1104  [0x100e9daf4]
+                              + ! 23 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   21 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !   : 10 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + !   : | 7 _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+                              + !   : | + 4 k_mul  (in Python) + 284  [0x100f9fe94]
+                              + !   : | + ! 3 _platform_memset  (in libsystem_platform.dylib) + 200  [0x19dff2ac8]
+                              + !   : | + ! 1 DYLD-STUB$$bzero  (in Python) + 4  [0x100fdacb0]
+                              + !   : | + 1 _PyObject_Malloc  (in Python) + 60  [0x100e03054]
+                              + !   : | + 1 k_mul  (in Python) + 184  [0x100f9fe30]
+                              + !   : | + ! 1 _PyObject_Malloc  (in Python) + 24  [0x100e03030]
+                              + !   : | + 1 k_mul  (in Python) + 96  [0x100f9fdd8]
+                              + !   : | 2 k_mul  (in Python) + 2684  [0x100fa07f4]
+                              + !   : | 1 _PyLong_Multiply  (in Python) + 164  [0x100dd6c18]
+                              + !   : 6 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + !   : | 6 _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+                              + !   : |   3 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + !   : |   + 2 zip_dealloc  (in Python) + 164  [0x100e97cac]
+                              + !   : |   + ! 1 tupledealloc  (in Python) + 228  [0x100e14ab4]
+                              + !   : |   + ! : 1 tupleiter_dealloc  (in Python) + 100  [0x100e15854]
+                              + !   : |   + ! 1 tupleiter_dealloc  (in Python) + 180  [0x100e158a4]
+                              + !   : |   + 1 _PyObject_Free  (in Python) + 80  [0x100e03588]
+                              + !   : |   1 _PyFrame_ClearExceptCode  (in Python) + 144  [0x100ecf730]
+                              + !   : |   1 _PyObject_Free  (in Python) + 136  [0x100e035c0]
+                              + !   : |   1 func_dealloc  (in Python) + 48  [0x100dc9af0]
+                              + !   : 3 _PyEval_EvalFrameDefault  (in Python) + 29424  [0x100ea7264]
+                              + !   : | 2 zip_next  (in Python) + 108  [0x100e97dd4]
+                              + !   : | + 2 tupleiter_next  (in Python) + 4,44  [0x100e15934,0x100e1595c]
+                              + !   : | 1 zip_next  (in Python) + 28  [0x100e97d84]
+                              + !   : 2 _PyEval_EvalFrameDefault  (in Python) + 460,51864  [0x100ea0140,0x100eaca0c]
+                              + !   1 gen_send_ex2  (in Python) + 52  [0x100dbd3fc]
+                              + !   : 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !   1 gen_send_ex2  (in Python) + 200  [0x100dbd490]
+                              + 19 builtin_sum  (in Python) + 276  [0x100e9d7b8]
+                              + ! 18 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + ! : 17 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + ! : | 8 _PyEval_EvalFrameDefault  (in Python) + 120,4276,...  [0x100e9ffec,0x100ea1028,...]
+                              + ! : | 5 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + ! : | + 3 _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+                              + ! : | + ! 3 k_mul  (in Python) + 320,484,...  [0x100f9feb8,0x100f9ff5c,...]
+                              + ! : | + 1 _PyLong_Multiply  (in Python) + 168  [0x100dd6c1c]
+                              + ! : | + 1 k_mul  (in Python) + 2676  [0x100fa07ec]
+                              + ! : | 2 _PyEval_EvalFrameDefault  (in Python) + 29424  [0x100ea7264]
+                              + ! : | + 2 zip_next  (in Python) + 28  [0x100e97d84]
+                              + ! : | 1 _PyEval_EvalFrameDefault  (in Python) + 31660  [0x100ea7b20]
+                              + ! : | + 1 PyObject_GetIter  (in Python) + 20  [0x100d8e520]
+                              + ! : | 1 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + ! : |   1 _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+                              + ! : |     1 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + ! : |       1 zip_dealloc  (in Python) + 164  [0x100e97cac]
+                              + ! : |         1 tupledealloc  (in Python) + 228  [0x100e14ab4]
+                              + ! : |           1 tupleiter_dealloc  (in Python) + 132  [0x100e15874]
+                              + ! : 1 _PyEval_EvalFrameDefault  (in Python) + 1252  [0x100ea0458]
+                              + ! 1 gen_iternext  (in Python) + 44  [0x100dbc28c]
+                              + 3 builtin_sum  (in Python) + 1248  [0x100e9db84]
+                              + ! 2 _PyObject_Free  (in Python) + 116,128  [0x100e035ac,0x100e035b8]
+                              + ! 1 _PyObject_Free  (in Python) + 32  [0x100e03558]
+                              + !   1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + 2 builtin_sum  (in Python) + 108  [0x100e9d710]
+                              + ! 2 builtin_sum  (in Python) + 164,180  [0x100e9d748,0x100e9d758]
+                              + 2 min_max  (in Python) + 240  [0x100e9e76c]
+                              + ! 1 PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+                              + ! : 1 long_richcompare  (in Python) + 88  [0x100dd9264]
+                              + ! 1 PyObject_RichCompare  (in Python) + 124  [0x100df87c8]
+                              + 2 min_max  (in Python) + 316,560  [0x100e9e7b8,0x100e9e8ac]
+                              + 1 _PyObject_Free  (in Python) + 152  [0x100e035d0]
+                              + 1 builtin_sum  (in Python) + 1128  [0x100e9db0c]
+                              + ! 1 binary_op1  (in Python) + 88  [0x100f91c38]
+                              + !   1 x_sub  (in Python) + 912  [0x100f9fd74]
+                              + 1 builtin_sum  (in Python) + 1288  [0x100e9dbac]
+                              + ! 1 builtin_sum  (in Python) + 1156  [0x100e9db28]
+                              + 1 builtin_sum  (in Python) + 2212  [0x100e9df48]
+                              + ! 1 _PyObject_Free  (in Python) + 80  [0x100e03588]
+                              + 1 min_max  (in Python) + 748  [0x100e9e968]
+                              +   1 listiter_dealloc  (in Python) + 124  [0x100dce9c8]
+                              +     1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              26 _PyEval_EvalFrameDefault  (in Python) + 10000  [0x100ea2684]
+                              + 22 _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+                              + ! 22 type_call  (in Python) + 96  [0x100e19258]
+                              + !   9 zip_new  (in Python) + 236  [0x100e98304]
+                              + !   : 8 PyObject_GetIter  (in Python) + 32  [0x100d8e52c]
+                              + !   : | 7 tuple_iter  (in Python) + 40  [0x100e15240]
+                              + !   : | + 4 _PyObject_GC_New  (in Python) + 8,44,...  [0x100ed078c,0x100ed07b0,...]
+                              + !   : | + 3 _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+                              + !   : | +   3 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | +     3 pymalloc_alloc  (in Python) + 48,0  [0x100e030c4,0x100e03094]
+                              + !   : | 1 tuple_iter  (in Python) + 52  [0x100e1524c]
+                              + !   : 1 tuple_iter  (in Python) + 140  [0x100e152a4]
+                              + !   9 zip_new  (in Python) + 460  [0x100e983e4]
+                              + !   : 9 PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+                              + !   :   5 _PyType_AllocNoTrack  (in Python) + 100  [0x100e17bf0]
+                              + !   :   | 2 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + !   :   | + 2 _tlv_get_addr  (in libdyld.dylib) + 12,20  [0x19dbcd764,0x19dbcd76c]
+                              + !   :   | 2 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   :   | + 2 pymalloc_alloc  (in Python) + 44,280  [0x100e030c0,0x100e031ac]
+                              + !   :   | 1 _PyObject_Malloc  (in Python) + 24  [0x100e03030]
+                              + !   :   2 _PyType_AllocNoTrack  (in Python) + 140  [0x100e17c18]
+                              + !   :   | 2 _tlv_get_addr  (in libdyld.dylib) + 12,20  [0x19dbcd764,0x19dbcd76c]
+                              + !   :   2 _PyType_AllocNoTrack  (in Python) + 164,196  [0x100e17c30,0x100e17c50]
+                              + !   3 zip_new  (in Python) + 104,236,...  [0x100e98280,0x100e98304,...]
+                              + !   1 zip_new  (in Python) + 352  [0x100e98378]
+                              + !     1 _platform_memset  (in libsystem_platform.dylib) + 180  [0x19dff2ab4]
+                              + 2 _PyObject_MakeTpCall  (in Python) + 188  [0x100da3390]
+                              + ! 1 tupledealloc  (in Python) + 124  [0x100e14a4c]
+                              + ! : 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + ! 1 tupledealloc  (in Python) + 104  [0x100e14a38]
+                              + 1 PyObject_Vectorcall  (in Python) + 68  [0x100da3b08]
+                              + 1 _PyObject_MakeTpCall  (in Python) + 136  [0x100da335c]
+                              19 _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+                              + 18 _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+                              + ! 15 _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+                              + ! : 7 tupledealloc  (in Python) + 228  [0x100e14ab4]
+                              + ! : | 2 _PyObject_Free  (in Python) + 80,152  [0x100e03588,0x100e035d0]
+                              + ! : | 2 tupledealloc  (in Python) + 228  [0x100e14ab4]
+                              + ! : | + 1 PyObject_Free  (in Python) + 16  [0x100e02e24]
+                              + ! : | + 1 long_dealloc  (in Python) + 0  [0x100dd910c]
+                              + ! : | 2 tupledealloc  (in Python) + 388  [0x100e14b54]
+                              + ! : | + 1 PyObject_GC_Del  (in Python) + 104  [0x100ed0cf4]
+                              + ! : | + 1 _PyObject_Free  (in Python) + 80  [0x100e03588]
+                              + ! : | 1 long_dealloc  (in Python) + 52  [0x100dd9140]
+                              + ! : 2 tupledealloc  (in Python) + 64,104  [0x100e14a10,0x100e14a38]
+                              + ! : 1 _PyObject_Free  (in Python) + 136  [0x100e035c0]
+                              + ! : 1 cell_dealloc  (in Python) + 212  [0x100da5580]
+                              + ! : | 1 long_dealloc  (in Python) + 0  [0x100dd910c]
+                              + ! : 1 cell_dealloc  (in Python) + 0  [0x100da54ac]
+                              + ! : 1 list_dealloc  (in Python) + 224  [0x100dcddec]
+                              + ! : | 1 tupledealloc  (in Python) + 228  [0x100e14ab4]
+                              + ! : |   1 subtype_dealloc  (in Python) + 368  [0x100e1d594]
+                              + ! : 1 list_dealloc  (in Python) + 244  [0x100dcde00]
+                              + ! : | 1 _PyObject_Free  (in Python) + 80  [0x100e03588]
+                              + ! : 1 tupledealloc  (in Python) + 388  [0x100e14b54]
+                              + ! :   1 _PyObject_Free  (in Python) + 24  [0x100e03550]
+                              + ! 3 _PyFrame_ClearExceptCode  (in Python) + 28,84,...  [0x100ecf6bc,0x100ecf6f4,...]
+                              + 1 _PyEval_FrameClearAndPop  (in Python) + 96  [0x100eaf6dc]
+                              18 _PyEval_EvalFrameDefault  (in Python) + 13964  [0x100ea3600]
+                              + 10 builtin_all  (in Python) + 92  [0x100e99920]
+                              + ! 10 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   10 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !     6 _PyEval_EvalFrameDefault  (in Python) + 1220,1224,...  [0x100ea0438,0x100ea043c,...]
+                              + !     1 _PyEval_EvalFrameDefault  (in Python) + 432  [0x100ea0124]
+                              + !     : 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + !     1 _PyEval_EvalFrameDefault  (in Python) + 23856  [0x100ea5ca4]
+                              + !     : 1 PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+                              + !     :   1 long_richcompare  (in Python) + 180  [0x100dd92c0]
+                              + !     1 _PyEval_EvalFrameDefault  (in Python) + 30292  [0x100ea75c8]
+                              + !     : 1 PyLong_FromLong  (in Python) + 0  [0x100dd2c74]
+                              + !     1 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + !       1 _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+                              + !         1 _PyFrame_ClearExceptCode  (in Python) + 72  [0x100ecf6e8]
+                              + 6 builtin_any  (in Python) + 92  [0x100e99ba4]
+                              + ! 6 gen_iternext  (in Python) + 36  [0x100dbc284]
+                              + !   6 gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+                              + !     3 _PyEval_EvalFrameDefault  (in Python) + 7452,40764,...  [0x100ea1c90,0x100ea9eb0,...]
+                              + !     2 _PyEval_EvalFrameDefault  (in Python) + 23856  [0x100ea5ca4]
+                              + !     : 1 PyObject_RichCompare  (in Python) + 56  [0x100df8784]
+                              + !     : | 1 _tlv_get_addr  (in libdyld.dylib) + 12  [0x19dbcd764]
+                              + !     : 1 PyObject_RichCompare  (in Python) + 116  [0x100df87c0]
+                              + !     1 _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+                              + !       1 _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+                              + !         1 _PyFrame_ClearExceptCode  (in Python) + 84  [0x100ecf6f4]
+                              + 1 builtin_any  (in Python) + 124  [0x100e99bc4]
+                              + 1 long_abs  (in Python) + 140  [0x100dd7f74]
+                              +   1 _PyLong_FromDigits  (in Python) + 180  [0x100dd2bb4]
+                              +     1 _platform_memmove  (in libsystem_platform.dylib) + 428  [0x19dff2e7c]
+                              14 _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+                              + 11 _PyLong_GCD  (in Python) + 812  [0x100dd76a8]
+                              + ! 11 l_mod  (in Python) + 332  [0x100dd819c]
+                              + !   6 x_divrem  (in Python) + 308,536,...  [0x100dd9894,0x100dd9978,...]
+                              + !   2 x_divrem  (in Python) + 216  [0x100dd9838]
+                              + !   : 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : | 1 pymalloc_alloc  (in Python) + 60  [0x100e030d0]
+                              + !   : 1 pymalloc_alloc  (in Python) + 96  [0x100e030f4]
+                              + !   1 _PyObject_Free  (in Python) + 152  [0x100e035d0]
+                              + !   1 x_divrem  (in Python) + 740  [0x100dd9a44]
+                              + !   : 1 pthread_self  (in libsystem_pthread.dylib) + 28  [0x19dfe45dc]
+                              + !   1 x_divrem  (in Python) + 1368  [0x100dd9cb8]
+                              + !     1 PyObject_Free  (in Python) + 16  [0x100e02e24]
+                              + 1 DYLD-STUB$$_PyLong_GCD  (in math.cpython-313-darwin.so) + 4  [0x100d36790]
+                              + 1 _PyLong_GCD  (in Python) + 464  [0x100dd754c]
+                              + ! 1 long_compare  (in Python) + 92  [0x100dd8010]
+                              + 1 _PyLong_GCD  (in Python) + 572  [0x100dd75b8]
+                              14 _PyEval_EvalFrameDefault  (in Python) + 44928  [0x100eaaef4]
+                              + 6 PyFunction_NewWithQualName  (in Python) + 256  [0x100dc9068]
+                              + ! 5 _PyEval_BuiltinsFromGlobals  (in Python) + 136  [0x100dc5b5c]
+                              + ! : 3 _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+                              + ! : | 2 unicodekeys_lookup_unicode  (in Python) + 84,100  [0x100fa11e8,0x100fa11f8]
+                              + ! : | 1 unicodekeys_lookup_unicode  (in Python) + 188  [0x100fa1250]
+                              + ! : |   1 compare_unicode_unicode  (in Python) + 4  [0x100fa4108]
+                              + ! : 2 _Py_dict_lookup  (in Python) + 80,1536  [0x100ddfb08,0x100de00b8]
+                              + ! 1 _PyEval_BuiltinsFromGlobals  (in Python) + 80  [0x100dc5b24]
+                              + 6 PyFunction_NewWithQualName  (in Python) + 292  [0x100dc908c]
+                              + ! 4 _PyObject_GC_New  (in Python) + 156,44,...  [0x100ed0820,0x100ed07b0,...]
+                              + ! 1 _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+                              + ! : 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + ! :   1 pymalloc_alloc  (in Python) + 48  [0x100e030c4]
+                              + ! 1 _PyObject_Malloc  (in Python) + 60  [0x100e03054]
+                              + 1 PyFunction_NewWithQualName  (in Python) + 240  [0x100dc9058]
+                              + ! 1 PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+                              + !   1 _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+                              + !     1 unicodekeys_lookup_unicode  (in Python) + 20  [0x100fa11a8]
+                              + 1 PyFunction_NewWithQualName  (in Python) + 116  [0x100dc8fdc]
+                              11 _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+                              + 8 _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+                              + ! 5 k_mul  (in Python) + 168,40,...  [0x100f9fe20,0x100f9fda0,...]
+                              + ! 2 k_mul  (in Python) + 184  [0x100f9fe30]
+                              + ! : 1 _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+                              + ! : | 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + ! : 1 pymalloc_alloc  (in Python) + 96  [0x100e030f4]
+                              + ! 1 k_mul  (in Python) + 284  [0x100f9fe94]
+                              + !   1 __bzero  (in libsystem_platform.dylib) + 0  [0x19dff29a0]
+                              + 1 _PyLong_FromSTwoDigits  (in Python) + 324  [0x100f9f6d8]
+                              + ! 1 _PyLong_FromSTwoDigits  (in Python) + 412  [0x100f9f730]
+                              + 1 _PyLong_FromSTwoDigits  (in Python) + 0  [0x100f9f594]
+                              + 1 _PyLong_Multiply  (in Python) + 164  [0x100dd6c18]
+                              7 _PyEval_EvalFrameDefault  (in Python) + 48192  [0x100eabbb4]
+                              + 4 _Py_MakeCoro  (in Python) + 64  [0x100dbc364]
+                              + ! 4 _PyObject_GC_NewVar  (in Python) + 132  [0x100ed0a68]
+                              + !   2 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + !   : 2 pymalloc_alloc  (in Python) + 80  [0x100e030e4]
+                              + !   2 _PyObject_Malloc  (in Python) + 24  [0x100e03030]
+                              + 3 _PyObject_GC_NewVar  (in Python) + 236  [0x100ed0ad0]
+                              5 _PyEval_EvalFrameDefault  (in Python) + 31660  [0x100ea7b20]
+                              + 5 PyObject_GetIter  (in Python) + 32  [0x100d8e52c]
+                              +   2 tuple_iter  (in Python) + 40  [0x100e15240]
+                              +   ! 1 _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+                              +   ! : 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              +   ! :   1 pymalloc_alloc  (in Python) + 80  [0x100e030e4]
+                              +   ! 1 _PyObject_GC_New  (in Python) + 68  [0x100ed07c8]
+                              +   1 PyLong_AsLong  (in Python) + 80  [0x100dd3408]
+                              +   1 _PyObject_Malloc  (in Python) + 64  [0x100e03058]
+                              +   1 range_iter  (in Python) + 188  [0x100e089f4]
+                              +     1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              +       1 pymalloc_alloc  (in Python) + 32  [0x100e030b4]
+                              5 _PyEval_EvalFrameDefault  (in Python) + 44808  [0x100eaae7c]
+                              + 2 _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+                              + ! 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + ! : 1 pymalloc_alloc  (in Python) + 80  [0x100e030e4]
+                              + ! 1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              + 2 _PyObject_GC_New  (in Python) + 156  [0x100ed0820]
+                              + 1 _PyObject_GC_New  (in Python) + 68  [0x100ed07c8]
+                              +   1 _tlv_get_addr  (in libdyld.dylib) + 0  [0x19dbcd758]
+                              4 _PyEval_EvalFrameDefault  (in Python) + 6128  [0x100ea1764]
+                              + 2 tuplesubscript  (in Python) + 112,232  [0x100e161d8,0x100e16250]
+                              + 1 _PyEval_SliceIndex  (in Python) + 156  [0x100eb0d14]
+                              + 1 tuplesubscript  (in Python) + 108  [0x100e161d4]
+                              +   1 _PyEval_SliceIndex  (in Python) + 108  [0x100eb0ce4]
+                              +     1 PyLong_AsSsize_t  (in Python) + 32  [0x100dd380c]
+                              4 _PyEval_EvalFrameDefault  (in Python) + 14408  [0x100ea37bc]
+                              + 4 cfunction_vectorcall_FASTCALL  (in Python) + 92  [0x100fa5834]
+                              +   2 math_lcm  (in math.cpython-313-darwin.so) + 160  [0x100d32d30]
+                              +   ! 1 PyLong_AsLong  (in Python) + 80  [0x100dd3408]
+                              +   ! 1 _PyLong_GCD  (in Python) + 172  [0x100dd7428]
+                              +   1 math_lcm  (in math.cpython-313-darwin.so) + 180  [0x100d32d44]
+                              +   ! 1 PyNumber_FloorDivide  (in Python) + 36  [0x100d8bb50]
+                              +   !   1 binary_op1  (in Python) + 32  [0x100f91c00]
+                              +   1 math_lcm  (in math.cpython-313-darwin.so) + 228  [0x100d32d74]
+                              +     1 PyNumber_Multiply  (in Python) + 36  [0x100d8ba18]
+                              +       1 binary_op1  (in Python) + 88  [0x100f91c38]
+                              +         1 _PyLong_FromSTwoDigits  (in Python) + 12  [0x100f9f5a0]
+                              3 _PyEval_EvalFrameDefault  (in Python) + 4436  [0x100ea10c8]
+                              + 2 x_sub  (in Python) + 532,792  [0x100f9fbf8,0x100f9fcfc]
+                              + 1 x_sub  (in Python) + 136  [0x100f9fa6c]
+                              +   1 _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+                              +     1 pymalloc_alloc  (in Python) + 80  [0x100e030e4]
+                              3 _PyEval_EvalFrameDefault  (in Python) + 8564  [0x100ea20e8]
+                              + 2 _PyList_FromArraySteal  (in Python) + 12,52  [0x100dcdba4,0x100dcdbcc]
+                              + 1 _PyList_FromArraySteal  (in Python) + 192  [0x100dcdc58]
+                              +   1 PyList_New  (in Python) + 8  [0x100dcd118]
+                              3 _PyEval_EvalFrameDefault  (in Python) + 13608  [0x100ea349c]
+                              + 1 _PyGen_Finalize  (in Python) + 40  [0x100dbb660]
+                              + 1 gen_dealloc  (in Python) + 84  [0x100dbbdd8]
+                              + ! 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + 1 gen_dealloc  (in Python) + 332  [0x100dbbed0]
+                              2 _PyEval_EvalFrameDefault  (in Python) + 4328  [0x100ea105c]
+                              + 1 _PyObject_Free  (in Python) + 32  [0x100e03558]
+                              + ! 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + 1 _PyObject_Free  (in Python) + 116  [0x100e035ac]
+                              2 _PyEval_EvalFrameDefault  (in Python) + 14116  [0x100ea3698]
+                              + 1 _PyObject_Free  (in Python) + 32  [0x100e03558]
+                              + ! 1 _tlv_get_addr  (in libdyld.dylib) + 20  [0x19dbcd76c]
+                              + 1 _PyObject_Free  (in Python) + 116  [0x100e035ac]
+                              2 _PyEval_EvalFrameDefault  (in Python) + 22224  [0x100ea5644]
+                              + 2 gen_dealloc  (in Python) + 56,252  [0x100dbbdbc,0x100dbbe80]
+                              1 PyObject_GC_Del  (in Python) + 108  [0x100ed0cf8]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 4212  [0x100ea0fe8]
+                              + 1 _PyEval_EvalFrameDefault  (in Python) + 4212  [0x100ea0fe8]
+                              +   1 _PyLong_FromSTwoDigits  (in Python) + 76  [0x100f9f5e0]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 4368  [0x100ea1084]
+                              + 1 _PyObject_Free  (in Python) + 136  [0x100e035c0]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 4500  [0x100ea1108]
+                              + 1 x_add  (in Python) + 468  [0x100f9f978]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 12764  [0x100ea3150]
+                              + 1 range_from_array  (in Python) + 60  [0x100e0aea0]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 21724  [0x100ea5450]
+                              + 1 _platform_memset  (in libsystem_platform.dylib) + 180  [0x19dff2ab4]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 23856  [0x100ea5ca4]
+                              + 1 PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+                              +   1 long_richcompare  (in Python) + 44  [0x100dd9238]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 29424  [0x100ea7264]
+                              + 1 zip_next  (in Python) + 120  [0x100e97de0]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 30104  [0x100ea750c]
+                              + 1 _PyObject_Free  (in Python) + 52  [0x100e0356c]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 30744  [0x100ea778c]
+                              + 1 _PyObject_Free  (in Python) + 136  [0x100e035c0]
+                              1 _PyEval_EvalFrameDefault  (in Python) + 51644  [0x100eac930]
+                              + 1 list_dealloc  (in Python) + 224  [0x100dcddec]
+                              +   1 tupledealloc  (in Python) + 228  [0x100e14ab4]
+                              +     1 subtype_dealloc  (in Python) + 428  [0x100e1d5d0]
+                              1 _PyObject_MakeTpCall  (in Python) + 228  [0x100da33b8]
+                              1 range_from_array  (in Python) + 144  [0x100e0aef4]
+
+Total number in stack (recursive counted multiple, when >=5):
+        34       _tlv_get_addr  (in libdyld.dylib) + 0  [0x19dbcd758]
+        31       _PyEval_EvalFrameDefault  (in Python) + 0  [0x100e9ff74]
+        25       _PyObject_Free  (in Python) + 0  [0x100e03538]
+        25       pymalloc_alloc  (in Python) + 0  [0x100e03094]
+        19       _PyObject_Malloc  (in Python) + 52  [0x100e0304c]
+        18       _PyEval_EvalFrameDefault  (in Python) + 48564  [0x100eabd28]
+        17       _PyEval_FrameClearAndPop  (in Python) + 56  [0x100eaf6b4]
+        17       _PyFrame_ClearExceptCode  (in Python) + 0  [0x100ecf6a0]
+        14       _PyObject_MakeTpCall  (in Python) + 120  [0x100da334c]
+        13       _PyEval_EvalFrameDefault  (in Python) + 21068  [0x100ea51c0]
+        12       gen_iternext  (in Python) + 36  [0x100dbc284]
+        12       gen_send_ex2  (in Python) + 196  [0x100dbd48c]
+        11       _PyEval_EvalFrameDefault  (in Python) + 13156  [0x100ea32d8]
+        11       _PyEval_FrameClearAndPop  (in Python) + 0  [0x100eaf67c]
+        11       _PyFrame_ClearExceptCode  (in Python) + 128  [0x100ecf720]
+        11       _PyType_LookupRef  (in Python) + 0  [0x100e17f28]
+        10       _PyObject_Malloc  (in Python) + 0  [0x100e03018]
+        10       _Py_dict_lookup  (in Python) + 0  [0x100ddfab8]
+        9       PyDict_GetItemRef  (in Python) + 120  [0x100de0ce0]
+        9       _Py_type_getattro_impl  (in Python) + 0  [0x100e188f4]
+        9       binary_op1  (in Python) + 88  [0x100f91c38]
+        9       type_call  (in Python) + 96  [0x100e19258]
+        8       PyDict_GetItemRef  (in Python) + 0  [0x100de0c68]
+        8       _PyEval_EvalFrameDefault  (in Python) + 44256  [0x100eaac54]
+        8       _PyEval_EvalFrameDefault  (in Python) + 48112  [0x100eabb64]
+        8       _PyEval_EvalFrameDefault  (in Python) + 5772  [0x100ea1600]
+        8       _PyObject_GC_New  (in Python) + 0  [0x100ed0784]
+        8       _PyObject_VectorcallDictTstate  (in Python) + 92  [0x100da3158]
+        8       _PySuper_Lookup  (in Python) + 76  [0x100e1cb60]
+        8       do_super_lookup  (in Python) + 368  [0x100fae404]
+        8       k_mul  (in Python) + 0  [0x100f9fd78]
+        8       method_vectorcall  (in Python) + 316  [0x100f999c8]
+        8       slot_tp_new  (in Python) + 208  [0x100e1ff20]
+        7       _PyFunction_Vectorcall  (in Python) + 156  [0x100da4034]
+        7       _PyObject_Malloc  (in Python) + 32  [0x100e03038]
+        7       _platform_memset  (in libsystem_platform.dylib) + 0  [0x19dff2a00]
+        7       subtype_dealloc  (in Python) + 0  [0x100e1d424]
+        7       tupledealloc  (in Python) + 0  [0x100e149d0]
+        6       PyObject_CallOneArg  (in Python) + 112  [0x100da3e88]
+        6       PyType_GenericAlloc  (in Python) + 20  [0x100e17b30]
+        6       _PyEvalFramePushAndInit  (in Python) + 0  [0x100eade0c]
+        6       _PyEval_EvalFrameDefault  (in Python) + 3224  [0x100ea0c0c]
+        6       _PyEval_FrameClearAndPop  (in Python) + 176  [0x100eaf72c]
+        6       _PyLong_Multiply  (in Python) + 0  [0x100dd6b74]
+        6       _PyLong_Multiply  (in Python) + 108  [0x100dd6be0]
+        6       _PyObject_GC_New  (in Python) + 116  [0x100ed07f8]
+        6       _PyObject_MakeTpCall  (in Python) + 0  [0x100da32d4]
+        6       _Py_dict_lookup  (in Python) + 328  [0x100ddfc00]
+        6       tupledealloc  (in Python) + 228  [0x100e14ab4]
+        6       unicodekeys_lookup_unicode  (in Python) + 0  [0x100fa1194]
+        5       PyObject_RichCompare  (in Python) + 0  [0x100df874c]
+        5       PyObject_RichCompare  (in Python) + 140  [0x100df87d8]
+        5       PyObject_VectorcallMethod  (in Python) + 76  [0x100da48f8]
+        5       _PyEval_EvalFrameDefault  (in Python) + 29424  [0x100ea7264]
+        5       _PyLong_FromSTwoDigits  (in Python) + 0  [0x100f9f594]
+        5       _PyObject_GC_NewVar  (in Python) + 132  [0x100ed0a68]
+        5       _PyObject_GenericGetAttrWithDict  (in Python) + 0  [0x100df95f8]
+        5       _PyObject_GetMethod  (in Python) + 288  [0x100df9dc0]
+        5       _PyType_AllocNoTrack  (in Python) + 100  [0x100e17bf0]
+        5       cfunction_call  (in Python) + 76  [0x100df359c]
+        5       gen_send_ex2  (in Python) + 0  [0x100dbd3c8]
+        5       tp_new_wrapper  (in Python) + 328  [0x100e25494]
+        5       zip_next  (in Python) + 0  [0x100e97d68]
+
+Sort by top of stack, same collapsed (when >= 5):
+        _PyEval_EvalFrameDefault  (in Python)        217
+        _PyFrame_ClearExceptCode  (in Python)        39
+        _tlv_get_addr  (in libdyld.dylib)        37
+        pymalloc_alloc  (in Python)        32
+        _PyObject_Free  (in Python)        29
+        _PyObject_GC_New  (in Python)        17
+        _Py_dict_lookup  (in Python)        15
+        k_mul  (in Python)        15
+        _Py_type_getattro_impl  (in Python)        13
+        unicodekeys_lookup_unicode  (in Python)        13
+        _PyEval_FrameClearAndPop  (in Python)        12
+        subtype_dealloc  (in Python)        12
+        _PyObject_Malloc  (in Python)        11
+        _PyType_LookupRef  (in Python)        11
+        _platform_memset  (in libsystem_platform.dylib)        11
+        PyDict_GetItemRef  (in Python)        10
+        tupledealloc  (in Python)        10
+        x_divrem  (in Python)        8
+        _PyObject_MakeTpCall  (in Python)        7
+        _PyType_AllocNoTrack  (in Python)        7
+        gen_dealloc  (in Python)        7
+        gen_send_ex2  (in Python)        7
+        zip_next  (in Python)        7
+        _PyEvalFramePushAndInit  (in Python)        6
+        _PyLong_GCD  (in Python)        6
+        _PyLong_Multiply  (in Python)        6
+        _PyObject_GC_NewVar  (in Python)        6
+        tupleiter_next  (in Python)        6
+        PyObject_GC_Del  (in Python)        5
+        PyObject_RichCompare  (in Python)        5
+        _PyLong_FromSTwoDigits  (in Python)        5
+        _PyObject_GenericGetAttrWithDict  (in Python)        5
+        _PyObject_Realloc  (in Python)        5
+        tp_new_wrapper  (in Python)        5
+
+Binary Images:
+       0x100388000 -        0x10038915f +org.python.python (3.13.16 - 3.13.16) <F6201C3D-4E1C-3F2C-BC4C-F8692662C2D6> /opt/homebrew/*/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python
+       0x1007d4000 -        0x1007d9c3b +_json.cpython-313-darwin.so (0) <11D99922-A62B-391E-A2BE-083BC6385F27> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_json.cpython-313-darwin.so
+       0x1007e8000 -        0x1007ef8f3 +_hashlib.cpython-313-darwin.so (0) <D0B1F848-FF72-3480-B4DE-05DDC6B4E4BE> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_hashlib.cpython-313-darwin.so
+       0x100d04000 -        0x100d0a657 +_blake2.cpython-313-darwin.so (0) <FCC42B1F-B189-3151-B45B-12C15C2C82B5> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_blake2.cpython-313-darwin.so
+       0x100d18000 -        0x100d19afb +grp.cpython-313-darwin.so (0) <216FEE78-4D44-3E4F-AF24-84512F422416> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/grp.cpython-313-darwin.so
+       0x100d30000 -        0x100d39d6f +math.cpython-313-darwin.so (0) <D060ADAE-5C16-3559-B5FA-0B72304563E0> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/math.cpython-313-darwin.so
+       0x100d4c000 -        0x1010d1187 +org.python.python (3.13.16, [c] 2001-2024 Python Software Foundation. - 3.13.16) <4FD9BF73-80C4-3321-A712-23C1929784B8> /opt/homebrew/*/Python.framework/Versions/3.13/Python
+       0x105594000 -        0x105594aff +_contextvars.cpython-313-darwin.so (0) <43F68FFD-54AA-3E96-AF37-0B2EF4A69E27> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_contextvars.cpython-313-darwin.so
+       0x1055a4000 -        0x1055a66ff +_opcode.cpython-313-darwin.so (0) <FAE55B66-0E29-38FA-8AAB-3EA2B4548D36> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_opcode.cpython-313-darwin.so
+       0x1055c0000 -        0x1055dbf07 +_decimal.cpython-313-darwin.so (0) <73705A6E-882D-336C-9405-E5B2C878E24A> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_decimal.cpython-313-darwin.so
+       0x1055ec000 -        0x1056077ff +libmpdec.4.0.1.dylib (0) <A75BE669-B1DD-323B-BE31-70D4E3C00D34> /opt/homebrew/*/libmpdec.4.0.1.dylib
+       0x105718000 -        0x105726fe3 +_datetime.cpython-313-darwin.so (0) <E3FFB830-A440-3806-8A31-35606DE00E2B> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_datetime.cpython-313-darwin.so
+       0x105938000 -        0x10593dfd3 +_struct.cpython-313-darwin.so (0) <F6099244-097E-3E53-955B-8AB1CD48D4F4> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_struct.cpython-313-darwin.so
+       0x10594c000 -        0x10594fd63 +binascii.cpython-313-darwin.so (0) <C6BEF51C-58B7-37D7-8160-00A31E727CC0> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/binascii.cpython-313-darwin.so
+       0x10595c000 -        0x105962f97 +zlib.cpython-313-darwin.so (0) <C0715FF1-24CA-3ABA-8C87-92B789992485> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/zlib.cpython-313-darwin.so
+       0x105974000 -        0x105988897 +_pickle.cpython-313-darwin.so (0) <2659C0FF-11C3-3D04-933E-13C3E0414962> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_pickle.cpython-313-darwin.so
+       0x10599c000 -        0x1059afd27 +_ctypes.cpython-313-darwin.so (0) <F2AF21BC-F7ED-3B66-8FF5-82AD156B79B6> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_ctypes.cpython-313-darwin.so
+       0x1059c0000 -        0x1059d7ff3 +_umath_linalg.cpython-313-darwin.so (0) <ADC574BA-1D04-32BF-B253-67D326E809DD> /Users/*/_umath_linalg.cpython-313-darwin.so
+       0x1059e8000 -        0x1059eae83 +_bz2.cpython-313-darwin.so (0) <9F37702C-F9CC-357B-80C0-8E8095089A6E> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_bz2.cpython-313-darwin.so
+       0x1059f8000 -        0x1059fd433 +_lzma.cpython-313-darwin.so (0) <876A43BD-35AF-3A77-A041-2110D669EEE4> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_lzma.cpython-313-darwin.so
+       0x105a0c000 -        0x105a0f50b +_heapq.cpython-313-darwin.so (0) <8530CB4B-722F-34FE-8A26-69458590C140> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_heapq.cpython-313-darwin.so
+       0x105a1c000 -        0x105a1ed1b +fcntl.cpython-313-darwin.so (0) <81F14ED6-0426-34DF-A4F3-A17FFC369AFC> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/fcntl.cpython-313-darwin.so
+       0x105a2c000 -        0x105a2ea33 +_posixsubprocess.cpython-313-darwin.so (0) <A8E6DC68-FB93-3C5B-9CB6-DC983A3D2830> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_posixsubprocess.cpython-313-darwin.so
+       0x105a3c000 -        0x105d7d647 +libcrypto.3.dylib (0) <F373B83B-2378-3ED3-B07C-4E13114C2417> /opt/homebrew/*/libcrypto.3.dylib
+       0x1061e4000 -        0x106201a3f +liblzma.5.dylib (0) <EE743822-2399-31A5-83DE-33580E7738B2> /opt/homebrew/*/liblzma.5.dylib
+       0x106210000 -        0x106214b53 +select.cpython-313-darwin.so (0) <19916E48-7F82-37DC-8F5F-4AACE1ADF9C5> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/select.cpython-313-darwin.so
+       0x106224000 -        0x1062264e3 +_bisect.cpython-313-darwin.so (0) <D6123606-8271-375C-B59E-F6C70E26F694> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_bisect.cpython-313-darwin.so
+       0x106234000 -        0x106235eaf +_random.cpython-313-darwin.so (0) <452D7A32-5127-35A1-A855-86BDA18DCFF8> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_random.cpython-313-darwin.so
+       0x106260000 -        0x10626aeb7 +_elementtree.cpython-313-darwin.so (0) <0206CE73-B8C5-33AA-8A7D-CC61E8D29E38> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/_elementtree.cpython-313-darwin.so
+       0x10627c000 -        0x106284ccb +pyexpat.cpython-313-darwin.so (0) <BAA79806-A961-35E6-8991-1D769822FEED> /opt/homebrew/*/Python.framework/Versions/3.13/lib/python3.13/lib-dynload/pyexpat.cpython-313-darwin.so
+       0x1062b4000 -        0x1065dfff7 +_multiarray_umath.cpython-313-darwin.so (0) <516F743D-EB3A-3610-A26B-B91C6464D905> /Users/*/_multiarray_umath.cpython-313-darwin.so
+       0x19db70000 -        0x19dbba75f  libobjc.A.dylib (973.1) <469331F5-0C68-350E-8168-A9EB0B825F6A> /usr/lib/libobjc.A.dylib
+       0x19dbbb000 -        0x19dbc523f  libsharedcache.dylib (0) <E795CB42-FC83-3E43-B536-CB2D5111A679> /usr/lib/libsharedcache.dylib
+       0x19dbc6000 -        0x19dbec063  libdyld.dylib (27062) <3DAA2B5F-5B55-3C79-AFB2-56BF8C15B1BE> /usr/lib/system/libdyld.dylib
+       0x19dbed000 -        0x19dca7beb  dyld (1.0.0 - 27062) <8831382F-3800-372B-99C1-B23F876C0DA9> /usr/lib/dyld
+       0x19dca8000 -        0x19dcaaeef  libsystem_blocks.dylib (98.1) <E63FE5C9-24D3-3097-8816-6742368DD02C> /usr/lib/system/libsystem_blocks.dylib
+       0x19dcab000 -        0x19dcff37f  libxpc.dylib (3298.1.1) <AF476F31-B2BA-3FD8-BBF3-600DD9C85FB7> /usr/lib/system/libxpc.dylib
+       0x19dd00000 -        0x19dd1fa53  libsystem_trace.dylib (1966.1.1) <D5E4B788-A179-34F6-8FB5-2C53A1790186> /usr/lib/system/libsystem_trace.dylib
+       0x19dd20000 -        0x19ddd4ddf  libcorecrypto.dylib (2109.0.22) <5CE34ED6-6C95-3412-90E6-03D6A5A634C2> /usr/lib/system/libcorecrypto.dylib
+       0x19ddd5000 -        0x19de29c07  libsystem_malloc.dylib (886.0.8) <5B02126A-A861-3F34-84F3-C0FB32A99093> /usr/lib/system/libsystem_malloc.dylib
+       0x19de2a000 -        0x19de6ecef  libdispatch.dylib (1605.0.2) <3EFC0FCD-6B49-3299-B370-65ADA0802100> /usr/lib/system/libdispatch.dylib
+       0x19de6f000 -        0x19de71d03  libsystem_featureflags.dylib (108) <32D49061-BAE0-3E12-929E-BF7FF707E478> /usr/lib/system/libsystem_featureflags.dylib
+       0x19de72000 -        0x19def44ab  libsystem_c.dylib (1786.0.3) <822187A9-92CD-3EA2-BB59-65C6A1BB0D77> /usr/lib/system/libsystem_c.dylib
+       0x19def5000 -        0x19df884eb  libc++.1.dylib (2200.27) <BB934D80-43C0-373C-B5F7-A6ED45DDF13B> /usr/lib/libc++.1.dylib
+       0x19df89000 -        0x19dfa2667  libc++abi.dylib (2200.27) <9ADF9E48-AC10-3D19-8AE4-73ADF3015E4E> /usr/lib/libc++abi.dylib
+       0x19dfa3000 -        0x19dfe146b  libsystem_kernel.dylib (13432.1.9) <215799FC-408F-314D-8085-F59EF059135E> /usr/lib/system/libsystem_kernel.dylib
+       0x19dfe2000 -        0x19dfee5fb  libsystem_pthread.dylib (553.0.1) <B70220C6-9BED-395B-A68D-74410436AE0F> /usr/lib/system/libsystem_pthread.dylib
+       0x19dfef000 -        0x19dff847b  libsystem_platform.dylib (402.0.1.0.1) <015F8F2B-73ED-3B1E-B9B8-9A407A8C4D6A> /usr/lib/system/libsystem_platform.dylib
+       0x19dff9000 -        0x19e02772b  libsystem_info.dylib (603) <14556EEC-52F5-34AE-B476-8F8D17BC5A12> /usr/lib/system/libsystem_info.dylib
+       0x19e028000 -        0x19e4b3517  com.apple.CoreFoundation (6.9 - 5027.0.69) <BF8A4F8B-F836-34DD-8E84-D47B3F9209EE> /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+       0x19e4b4000 -        0x19e7ab87f  com.apple.LaunchServices (1141.1 - 1141.1) <711DF208-5C37-36F1-B148-9B9A5F64BACA> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices
+       0x19e7ac000 -        0x19e953f33  com.apple.gpusw.MetalTools (1.0 - 1) <4A8601FF-1168-3BEC-AD39-B37DFDECAB10> /System/Library/PrivateFrameworks/MetalTools.framework/Versions/A/MetalTools
+       0x19e954000 -        0x19f112617  libBLAS.dylib (1617.1.1) <81C0E179-5227-3AA0-93CB-150782AAB18D> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+       0x19f113000 -        0x19f22252b  com.apple.Lexicon-framework (1.0 - 216) <F578FD37-67A3-3295-B825-6E35239B3A35> /System/Library/PrivateFrameworks/Lexicon.framework/Versions/A/Lexicon
+       0x19f223000 -        0x19f38df17  libSparse.dylib (196.0.1) <C3E9BA5B-2FC4-38FB-9928-FDDDCB701993> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparse.dylib
+       0x19f38e000 -        0x19f41ea23  com.apple.SystemConfiguration (1.21 - 1.21) <5C88BAF2-2019-3A37-BED0-7F52B89E9EC4> /System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration
+       0x19f41f000 -        0x19f453257  libCRFSuite.dylib (55) <96BC7203-5898-3E75-9B8E-16B7511B3ABA> /usr/lib/libCRFSuite.dylib
+       0x19f71d000 -        0x1a09c33df  com.apple.Foundation (6.9 - 5027.0.69) <B42F81E3-AE34-34CC-AA40-F94DBFBA9FBE> /System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+       0x1a0b6f000 -        0x1a0c85243  com.apple.CoreDisplay (291.4 - 291.4) <C61D31EA-AAF2-3E07-8C4F-502D69ED5D4B> /System/Library/Frameworks/CoreDisplay.framework/Versions/A/CoreDisplay
+       0x1a0c86000 -        0x1a10445c3  com.apple.audio.AudioToolboxCore (1.0 - 1638.104.3) <15B6B787-E27B-3CE6-BA1B-A208C386A9EA> /System/Library/PrivateFrameworks/AudioToolboxCore.framework/Versions/A/AudioToolboxCore
+       0x1a1045000 -        0x1a1265237  com.apple.CoreText (904 - 904) <68FBFFB9-C74D-3AA5-A184-0AB65649117C> /System/Library/Frameworks/CoreText.framework/Versions/A/CoreText
+       0x1a1266000 -        0x1a19f79e3  com.apple.audio.CoreAudio (5.0 - 5.0) <FF651440-8421-3DF2-BB45-B0E617D28FCB> /System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
+       0x1a19f8000 -        0x1a1dffe4f  com.apple.security (7.0 - 62460.1.2) <BE273638-BA7D-3819-A41F-93DA2FCE2962> /System/Library/Frameworks/Security.framework/Versions/A/Security
+       0x1a1e00000 -        0x1a20dbbd5  libicucore.A.dylib (78132) <00835D03-F802-3FF3-BF40-7433365BAF4A> /usr/lib/libicucore.A.dylib
+       0x1a20dc000 -        0x1a20e5a0b  libsystem_darwin.dylib (1786.0.3) <5F81FA8E-F519-3892-BA8C-489DD2F1240C> /usr/lib/system/libsystem_darwin.dylib
+       0x1a20e6000 -        0x1a23d5ec3  com.apple.CoreServices.CarbonCore (1333 - 1333) <FEC8B325-B186-3D4D-9FC0-AD74C9D7E24C> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore
+       0x1a23d6000 -        0x1a241408b  com.apple.CoreServicesInternal (505 - 505) <421C5B30-DEC2-3422-BD85-A7416126B5B7> /System/Library/PrivateFrameworks/CoreServicesInternal.framework/Versions/A/CoreServicesInternal
+       0x1a2415000 -        0x1a244da27  com.apple.CSStore (1141.1 - 1141.1) <F3929C25-E826-3E51-A8A2-CBE68A2F8D9A> /System/Library/PrivateFrameworks/CoreServicesStore.framework/Versions/A/CoreServicesStore
+       0x1a244e000 -        0x1a2532da7  com.apple.framework.IOKit (2.0.2 - 100288.0.9) <ACFD1957-2E1E-3D2C-9897-21331C9DB7C2> /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+       0x1a2533000 -        0x1a2544a8b  libsystem_notify.dylib (368) <3E473D76-5DDF-3D0B-9526-7E628D02326F> /usr/lib/system/libsystem_notify.dylib
+       0x1a3d02000 -        0x1a3d14d87  com.apple.UniformTypeIdentifiers (709 - 709) <7EC6A90E-1F52-38A3-9F69-0A0E32544424> /System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers
+       0x1a41cd000 -        0x1a42a2da7  libboringssl.dylib (583) <7007374E-3C12-3535-809A-17C614506BBD> /usr/lib/libboringssl.dylib
+       0x1a42a3000 -        0x1a4616287  com.apple.CFNetwork (1.0 - 3896.100.1.1.1) <91498DBE-E3A2-3F3D-8FD1-A05A2D15C30C> /System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork
+       0x1a4617000 -        0x1a4631cab  libsystem_networkextension.dylib (2340.1.2) <65589133-B0EB-32F0-B2E5-35358D41EF24> /usr/lib/system/libsystem_networkextension.dylib
+       0x1a4632000 -        0x1a4632ee7  libenergytrace.dylib (23) <13F7409D-A136-302C-9BB1-99467A54C7B6> /usr/lib/libenergytrace.dylib
+       0x1a4633000 -        0x1a46bd327  libMobileGestalt.dylib (1622.0.5) <57589BF0-E84C-3F6F-AA5D-62A4307DD8C0> /usr/lib/libMobileGestalt.dylib
+       0x1a46be000 -        0x1a46d4fd7  libsystem_asl.dylib (409) <E3BD6A0F-8D4E-3B51-B2CA-F730EAF8B288> /usr/lib/system/libsystem_asl.dylib
+       0x1a46d5000 -        0x1a46faecf  com.apple.TCC (1.0 - 1) <CC461438-BE0F-3636-B7A5-38259928352A> /System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC
+       0x1a46fb000 -        0x1a4d278ff  com.apple.SkyLight (1.600.0 - 953.5.5) <60FBB24F-16F4-3D26-8BD2-CADA77465B18> /System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight
+       0x1a4d28000 -        0x1a54d2837  com.apple.CoreGraphics (2.0 - 2050) <4F8B5B95-20C2-3CC2-8484-7C43E9B43E21> /System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
+       0x1a54d3000 -        0x1a56858df  com.apple.ColorSync (4.13.0 - 3929) <7E72557A-F12A-30A6-ABDF-C86C3489A191> /System/Library/Frameworks/ColorSync.framework/Versions/A/ColorSync
+       0x1a576c000 -        0x1a576cef7  libobjcMsgSend.dylib (973.1) <2768A56B-75D9-3A9E-A4F0-322975133E35> /usr/lib/objc/libobjcMsgSend.dylib
+       0x1a5ef9000 -        0x1a6331c47  com.apple.CoreData (120 - 1629.1) <8354F060-85EC-3118-8B47-2A0F92B542B8> /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData
+       0x1a6332000 -        0x1a63480ff  com.apple.ProtocolBuffer (1 - 325.20.6.4.1) <96B4CCB3-0C02-3F50-8F54-02FB131345ED> /System/Library/PrivateFrameworks/ProtocolBuffer.framework/Versions/A/ProtocolBuffer
+       0x1a6349000 -        0x1a6541247  libsqlite3.dylib (406) <0CA7087F-3E80-3D21-B33B-DE92BBBFC64D> /usr/lib/libsqlite3.dylib
+       0x1a65df000 -        0x1a66b059b  com.apple.BaseBoard (827 - 827) <8E26F66B-B42B-3529-9E86-283FB292E778> /System/Library/PrivateFrameworks/BaseBoard.framework/Versions/A/BaseBoard
+       0x1a66b1000 -        0x1a6708073  com.apple.RunningBoardServices (1.0 - 1080) <2A53D082-C2A4-3B34-A68D-19CDA0D46975> /System/Library/PrivateFrameworks/RunningBoardServices.framework/Versions/A/RunningBoardServices
+       0x1a6709000 -        0x1a677a78f  com.apple.AE (944 - 944) <EAC2B953-BFCE-3801-B312-00E01E2EA9F5> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE
+       0x1a677b000 -        0x1a678c887  libdns_services.dylib (3111.0.5.0.1) <48FB0FAE-E38D-33A5-A731-2A4414A77E78> /usr/lib/libdns_services.dylib
+       0x1a678d000 -        0x1a6794dd7  libsystem_symptoms.dylib (2394.0.4) <4F430327-9E7F-3190-8386-AD90AA9C6C5B> /usr/lib/system/libsystem_symptoms.dylib
+       0x1a6795000 -        0x1a8059c1f  com.apple.Network (1.0 - 6681.1.1) <3AF73DF0-E2D7-322D-A459-7747E240D058> /System/Library/Frameworks/Network.framework/Versions/A/Network
+       0x1a805a000 -        0x1a809060f  com.apple.analyticsd (1.0 - 1) <03F930C8-12EE-33DB-B2FC-042C9C15C403> /System/Library/PrivateFrameworks/CoreAnalytics.framework/Versions/A/CoreAnalytics
+       0x1a8091000 -        0x1a8092633  libDiagnosticMessagesClient.dylib (113) <1CB6DFAB-B68C-37F0-B767-253F26A54DF2> /usr/lib/libDiagnosticMessagesClient.dylib
+       0x1a8093000 -        0x1a81193ab  com.apple.spotlight.metadata.utilities (1.0 - 2459.405) <F6096A9B-4FAB-3657-BA88-B0D33D0AF9BD> /System/Library/PrivateFrameworks/MetadataUtilities.framework/Versions/A/MetadataUtilities
+       0x1a811a000 -        0x1a8199e37  com.apple.Metadata (27.0 - 2459.405) <9226662D-3CE7-3389-9883-8B3337322B67> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata
+       0x1a819a000 -        0x1a81a3453  com.apple.DiskArbitration (2.7 - 2.7) <97CA5147-99B0-3C60-8A81-F364F0065639> /System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration
+       0x1a81a4000 -        0x1a85e3de3  com.apple.vImage (8.1 - 650.0.1) <BEB2211B-91F8-3C08-AC14-5AD61AEB704D> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage
+       0x1a85e4000 -        0x1a8a4bdff  com.apple.QuartzCore (1223.2.2 - 1223.2.2) <A700955F-C882-3D69-A5F9-50AAFDED35EC> /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore
+       0x1a8a4c000 -        0x1a8a9bd6b  libFontRegistry.dylib (424) <B02A16FB-C9B7-38A1-BFC6-12506A969239> /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontRegistry.dylib
+       0x1a8d14000 -        0x1a8d1d44b  com.apple.OpenDirectory (27.0 - 737) <31FEF9F2-7C68-351F-8E5E-239E9685D545> /System/Library/Frameworks/OpenDirectory.framework/Versions/A/OpenDirectory
+       0x1a8d1e000 -        0x1a8d8138f  com.apple.CFOpenDirectory (27.0 - 737) <C26E8AD3-576E-34A4-9F13-B39A6751B01C> /System/Library/Frameworks/OpenDirectory.framework/Versions/A/Frameworks/CFOpenDirectory.framework/Versions/A/CFOpenDirectory
+       0x1a8d82000 -        0x1a8d8dd2b  com.apple.CoreServices.FSEvents (1433 - 1433) <04ED03A9-9510-3CAA-86D4-1F27330D8D3D> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/FSEvents
+       0x1a8d8e000 -        0x1a8daec6b  com.apple.coreservices.SharedFileList (225 - 225) <7BD05377-6381-3ADC-A6B2-9A0F424A6C04> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SharedFileList.framework/Versions/A/SharedFileList
+       0x1a8daf000 -        0x1a8db1e17  libapp_launch_measurement.dylib (17) <8060541C-C8B1-38B9-B951-BC86107E36B8> /usr/lib/libapp_launch_measurement.dylib
+       0x1a8db2000 -        0x1a8def55f  com.apple.CoreAutoLayout (1.0 - 35) <F968DE97-BB0A-3160-8727-A596A7BE0521> /System/Library/PrivateFrameworks/CoreAutoLayout.framework/Versions/A/CoreAutoLayout
+       0x1a8df0000 -        0x1a8ed4b73  libxml2.2.dylib (40.1) <D6AFABA7-C73C-3568-BEE1-15F0F2E775DD> /usr/lib/libxml2.2.dylib
+       0x1a8ed5000 -        0x1a8f77923  com.apple.CoreVideo (1.8 - 758.27) <19280F4A-A7D7-3740-AB05-1457F8B0DDFB> /System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo
+       0x1a8f78000 -        0x1a8f7ab7b  com.apple.loginsupport (3.0 - 273) <AB448110-A45F-369B-94C1-AC38C724711C> /System/Library/PrivateFrameworks/login.framework/Versions/A/Frameworks/loginsupport.framework/Versions/A/loginsupport
+       0x1a8faf000 -        0x1a8fd506f  com.apple.UserManagement (1.0 - 1) <25370C99-BAD1-3337-81FD-196E42A21796> /System/Library/PrivateFrameworks/UserManagement.framework/Versions/A/UserManagement
+       0x1aaaa9000 -        0x1aaae3a5b  libsystem_containermanager.dylib (833.0.8.0.1) <86EAA04B-F3F4-3B7B-8F81-E82CD7BE71AF> /usr/lib/system/libsystem_containermanager.dylib
+       0x1aaae4000 -        0x1aaafc52f  com.apple.IOSurface (402.5 - 402.5) <A07DC130-0E07-39D3-831A-3FFE13FEC9D4> /System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface
+       0x1aaafd000 -        0x1aab06603  com.apple.IOAccelerator (491 - 491) <17EA12B1-5DEF-3DE3-A93F-3B3C0044E232> /System/Library/PrivateFrameworks/IOAccelerator.framework/Versions/A/IOAccelerator
+       0x1aab07000 -        0x1aad89607  com.apple.Metal (382.5.3 - 382.5.3) <91BC9ED7-D6B3-3F47-BEE2-8AE7E8CEA456> /System/Library/Frameworks/Metal.framework/Versions/A/Metal
+       0x1aad8a000 -        0x1aadb39a3  com.apple.audio.caulk (1.0 - 247) <E4893068-A3AC-3C15-AB74-A9209603396D> /System/Library/PrivateFrameworks/caulk.framework/Versions/A/caulk
+       0x1aadb4000 -        0x1aafe034f  com.apple.CoreMedia (1.0 - 3350.77.5.6) <565F91A0-11ED-3136-B0B1-BEC6E0FD0A4E> /System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia
+       0x1aafe1000 -        0x1ab27d17f  libFontParser.dylib (459) <DD7E152F-DC97-3CB3-BB16-EDA21A5FFD44> /System/Library/PrivateFrameworks/FontServices.framework/libFontParser.dylib
+       0x1ab5af000 -        0x1aba6e19b  com.apple.ImageIO (3.3.0 - 2851) <80F733A5-9723-368B-9B21-76233DDB91A2> /System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO
+       0x1aba6f000 -        0x1ac027387  com.apple.CoreImage (27.0.0 - 1667.21.2) <BE3C0564-66A3-378C-8959-FC053A35B18D> /System/Library/Frameworks/CoreImage.framework/Versions/A/CoreImage
+       0x1ac028000 -        0x1ac0d792f  com.apple.MetalPerformanceShaders.MPSCore (1.0 - 130.0.19) <55496DC0-7484-37C1-822A-553AA608768C> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSCore.framework/Versions/A/MPSCore
+       0x1ac0d8000 -        0x1ac0dc297  libsystem_configuration.dylib (1446) <7FAD4088-9795-377D-AF0F-5251CE9C1215> /usr/lib/system/libsystem_configuration.dylib
+       0x1ac0dd000 -        0x1ac0e3e7b  libsystem_sandbox.dylib (3051.0.52) <343E5445-22CA-31F9-B663-3A860C6511EC> /usr/lib/system/libsystem_sandbox.dylib
+       0x1ac0e4000 -        0x1ac0e506b  com.apple.AggregateDictionary (1.0 - 1) <E53E87E6-0448-349D-B9CB-47116C036FCA> /System/Library/PrivateFrameworks/AggregateDictionary.framework/Versions/A/AggregateDictionary
+       0x1ac0e6000 -        0x1ac0e9f23  com.apple.AppleSystemInfo (3.1.5 - 3.1.5) <FEEAB68A-F21F-38CE-AA26-C8CCE7997F31> /System/Library/PrivateFrameworks/AppleSystemInfo.framework/Versions/A/AppleSystemInfo
+       0x1ac0ea000 -        0x1ac0eb35f  liblangid.dylib (140) <020AD58C-FA7C-3085-AE78-1A96E84E1F29> /usr/lib/liblangid.dylib
+       0x1ac0ec000 -        0x1ac20452b  com.apple.CoreNLP (1.0 - 313) <A32711F9-2744-344A-86E0-70690B9FF78A> /System/Library/PrivateFrameworks/CoreNLP.framework/Versions/A/CoreNLP
+       0x1ac205000 -        0x1ac20aceb  com.apple.LinguisticData (1.0 - 483.10) <4A9B423B-5606-32B9-A9FA-2C3E9640AC4B> /System/Library/PrivateFrameworks/LinguisticData.framework/Versions/A/LinguisticData
+       0x1ac20b000 -        0x1ad42e57f  libBNNS.dylib (2212.1.1) <C1CDDC89-6EF8-3D0A-B5E5-E9A76ACCE07C> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBNNS.dylib
+       0x1ad42f000 -        0x1ad56ad73  libvDSP.dylib (1155) <B7FFF140-31B3-300C-A855-F9A3F91F7653> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib
+       0x1ad59e000 -        0x1ad5e578b  com.apple.IOMobileFramebuffer (343.0.0 - 343.0.0) <ACC6EEAD-92F1-345A-991F-E0DAB07E7EFA> /System/Library/PrivateFrameworks/IOMobileFramebuffer.framework/Versions/A/IOMobileFramebuffer
+       0x1ad651000 -        0x1ad665e2f  com.apple.MobileKeyBag (2.0 - 1.0) <89D333F1-E8D5-32C2-892B-6BCCD2B23221> /System/Library/PrivateFrameworks/MobileKeyBag.framework/Versions/A/MobileKeyBag
+       0x1ad666000 -        0x1ad670043  com.apple.AssertionServices (1.0 - 1080) <AF7C7306-4689-3CBD-9EC7-95C46E8CCADE> /System/Library/PrivateFrameworks/AssertionServices.framework/Versions/A/AssertionServices
+       0x1ad671000 -        0x1ad6eeb4f  com.apple.securityfoundation (6.0 - 55294.0.2) <AFCD1DE8-39F2-3A99-8C82-2761F769041A> /System/Library/Frameworks/SecurityFoundation.framework/Versions/A/SecurityFoundation
+       0x1ad6ef000 -        0x1ad715ef3  com.apple.coreservices.BackgroundTaskManagement (1.0 - 104) <F5389EB0-1D7D-36AB-8E4E-793844C9EB6C> /System/Library/PrivateFrameworks/BackgroundTaskManagement.framework/Versions/A/BackgroundTaskManagement
+       0x1ad71f000 -        0x1ad721fab  libquarantine.dylib (217.0.4) <8F493C99-2D0B-328A-B10D-9F22B60D5EFF> /usr/lib/system/libquarantine.dylib
+       0x1ad722000 -        0x1ad72e083  libCheckFix.dylib (33) <E1E4C171-4BB8-3575-8D73-662E6AEF3C18> /usr/lib/libCheckFix.dylib
+       0x1ad76c000 -        0x1ad76cef7  libobjcMsgSend1.dylib (973.1) <53B68083-F7C1-39F5-A693-61FB1DF3410C> /usr/lib/objc/libobjcMsgSend1.dylib
+       0x1adcc3000 -        0x1adcda06b  libcoretls.dylib (189) <9F5B538B-2115-3EA9-87DF-0601ED466A7E> /usr/lib/libcoretls.dylib
+       0x1adcdb000 -        0x1adcebe6b  libbsm.0.dylib (91.0.1) <334F39FB-B9A1-397D-AD82-182D3A129C0C> /usr/lib/libbsm.0.dylib
+       0x1adcec000 -        0x1add4ae8f  libmecab.dylib (1159) <88DB8270-B3CB-3498-976D-80E2C92EB648> /usr/lib/libmecab.dylib
+       0x1add4b000 -        0x1add4d2d3  libgermantok.dylib (31) <E1EA695F-2A1E-3087-83F0-74BC0BB57C6F> /usr/lib/libgermantok.dylib
+       0x1add4e000 -        0x1add619b3  libLinearAlgebra.dylib (1617.1.1) <D8A7A557-4EEA-3CF8-AFEF-F97DB51611BE> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLinearAlgebra.dylib
+       0x1add62000 -        0x1adf7ce27  com.apple.MetalPerformanceShaders.MPSNeuralNetwork (1.0 - 130.0.19) <8C100B0C-8676-340F-AA80-CF6F108F8D2C> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSNeuralNetwork.framework/Versions/A/MPSNeuralNetwork
+       0x1adf7d000 -        0x1adfcfb7f  com.apple.MetalPerformanceShaders.MPSRayIntersector (1.0 - 130.0.19) <32E2C73A-6D3B-3422-85F2-5756BC9F239B> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSRayIntersector.framework/Versions/A/MPSRayIntersector
+       0x1ae115000 -        0x1ae143027  com.apple.MetalPerformanceShaders.MPSMatrix (1.0 - 130.0.19) <4EA8CE1D-C398-35D5-9F14-BEC8969C2E93> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSMatrix.framework/Versions/A/MPSMatrix
+       0x1ae144000 -        0x1ae315957  com.apple.MetalPerformanceShaders.MPSNDArray (1.0 - 130.0.19) <74640204-BFB0-311C-8ECA-50321057FAB9> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSNDArray.framework/Versions/A/MPSNDArray
+       0x1ae316000 -        0x1ae3a43d7  com.apple.MetalPerformanceShaders.MPSImage (1.0 - 130.0.19) <2C9EC222-3962-3663-A09E-05033433540A> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSImage.framework/Versions/A/MPSImage
+       0x1ae3a5000 -        0x1ae3afc63  com.apple.AppleFSCompression (182 - 1.0) <39CD819A-0C6A-3824-8E59-F5CE4439AF40> /System/Library/PrivateFrameworks/AppleFSCompression.framework/Versions/A/AppleFSCompression
+       0x1ae3b0000 -        0x1ae3bc3fb  libbz2.1.0.dylib (49) <D5771B35-E71C-30AD-9C27-284391A3691D> /usr/lib/libbz2.1.0.dylib
+       0x1ae3bd000 -        0x1ae3c321f  libsystem_coreservices.dylib (203) <EF5BF375-E9AC-3A47-BC34-B1E79DD6B85A> /usr/lib/system/libsystem_coreservices.dylib
+       0x1ae3c4000 -        0x1ae3f42af  com.apple.CoreServices.OSServices (1141.1 - 1141.1) <5ABFFB3F-EBF5-3B4C-A76A-42CFC7855DDC> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices
+       0x1ae96e000 -        0x1ae97caf7  libz.1.dylib (105) <05FFBEA5-17E1-3DDE-BA0B-E1BB8E55E554> /usr/lib/libz.1.dylib
+       0x1ae97d000 -        0x1ae9bab97  libsystem_m.dylib (3326.0.1) <2A375CA6-658A-3233-A24E-F7B85DE26D49> /usr/lib/system/libsystem_m.dylib
+       0x1ae9bb000 -        0x1ae9bbb4f  libcharset.1.dylib (121) <2BC0DC19-C7C3-33C8-881C-E1E9565CBF6F> /usr/lib/libcharset.1.dylib
+       0x1ae9bc000 -        0x1ae9bf4f7  libmacho.dylib (27062) <364CD398-68A6-3066-B32D-311927DA5332> /usr/lib/system/libmacho.dylib
+       0x1ae9c0000 -        0x1ae9d8f1f  libkxld.dylib (13432.1.9) <45983851-AAB6-3087-9598-8FA4AA76935E> /usr/lib/system/libkxld.dylib
+       0x1ae9d9000 -        0x1ae9e571f  libcommonCrypto.dylib (600041) <CAE1CA0A-9AEA-3D5D-8F01-A240856AF81F> /usr/lib/system/libcommonCrypto.dylib
+       0x1ae9e6000 -        0x1ae9ef49f  libunwind.dylib (2200.5) <BBA63515-6BCA-3D66-9242-1D86E06262FF> /usr/lib/system/libunwind.dylib
+       0x1ae9f0000 -        0x1ae9f6f55  liboah.dylib (385) <78496769-7478-387F-BAC2-0B372BA3EDA0> /usr/lib/liboah.dylib
+       0x1ae9f7000 -        0x1aea017e3  libcopyfile.dylib (260.0.3) <D450F1FC-8B63-3360-8A26-B3F2A98E029B> /usr/lib/system/libcopyfile.dylib
+       0x1aea02000 -        0x1aea0582f  libcompiler_rt.dylib (103.4) <65021260-0723-3C00-9D5C-AF09B9513362> /usr/lib/system/libcompiler_rt.dylib
+       0x1aea06000 -        0x1aea0afb7  libsystem_collections.dylib (1786.0.3) <49BE7DD7-691F-32F7-B97B-1EF19AD7C504> /usr/lib/system/libsystem_collections.dylib
+       0x1aea0b000 -        0x1aea0df1f  libsystem_secinit.dylib (182) <41613DD9-F4DF-3E5C-B782-A14219DE2E5E> /usr/lib/system/libsystem_secinit.dylib
+       0x1aea0e000 -        0x1aea10967  libremovefile.dylib (96) <75147E55-3374-3EAA-9076-3E95A33F889B> /usr/lib/system/libremovefile.dylib
+       0x1aea11000 -        0x1aea11e17  libkeymgr.dylib (31) <D2DE635F-9F9D-310C-BEDD-5D80D4F146E6> /usr/lib/system/libkeymgr.dylib
+       0x1aea12000 -        0x1aea1aabf  libsystem_dnssd.dylib (3111.0.5.0.1) <5B22EF34-7CFF-3DE0-9662-218EDA44EE1F> /usr/lib/system/libsystem_dnssd.dylib
+       0x1aea1b000 -        0x1aea1fef3  libcache.dylib (95) <3DF5EFB3-5FDF-3638-959D-1BEAF59CD9E1> /usr/lib/system/libcache.dylib
+       0x1aea20000 -        0x1aea218d3  libSystem.B.dylib (1359) <A5E56237-9450-36D9-AC1B-BBAEAE9EBCD1> /usr/lib/libSystem.B.dylib
+       0x1aea22000 -        0x1aea23d9f  libfakelink.dylib (5) <6FB2A0E7-9505-3D12-BC5E-B0496EA1BE2A> /usr/lib/libfakelink.dylib
+       0x1aea24000 -        0x1aea24963  com.apple.SoftLinking (1.0 - 72) <9C6CAC56-4BC5-3233-AB1B-37800DCD210B> /System/Library/PrivateFrameworks/SoftLinking.framework/Versions/A/SoftLinking
+       0x1aea5a000 -        0x1aea6107b  libiconv.2.dylib (121) <25C3E80C-3993-3611-9D60-1E28CEA2D168> /usr/lib/libiconv.2.dylib
+       0x1aea74000 -        0x1aeb6cf6f  libarchive.2.dylib (182.0.1) <A65CA8AB-C5A0-39CC-A766-316FF45A9EAA> /usr/lib/libarchive.2.dylib
+       0x1aeb6d000 -        0x1aebd0c0f  com.apple.SearchKit (1.4.2 - 1.4.2) <AD63CB18-B9E1-3F4B-A1F4-24CD4FE70F08> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit
+       0x1aebd1000 -        0x1aebd8ea7  libThaiTokenizer.dylib (28) <FB5783D8-57EC-35D8-8D14-6BAA83848274> /usr/lib/libThaiTokenizer.dylib
+       0x1aebd9000 -        0x1aebfc137  com.apple.applesauce (1.0 - 17.7) <122A3791-5155-3E79-AD23-A9840EAD4528> /System/Library/PrivateFrameworks/AppleSauce.framework/Versions/A/AppleSauce
+       0x1aebfd000 -        0x1aec156e3  libapple_nghttp2.dylib (42) <8B12FDCF-77B6-3BCC-B10F-B3B6B1E74A69> /usr/lib/libapple_nghttp2.dylib
+       0x1aec16000 -        0x1aecbdaff  libSparseBLAS.dylib (196.0.1) <980149F9-0FC2-35F2-8165-82187024D367> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparseBLAS.dylib
+       0x1aecbe000 -        0x1aecbf3cb  com.apple.MetalPerformanceShaders.MetalPerformanceShaders (1.0 - 130.0.19) <7325132A-6CD6-3E36-818D-9DA6C4BC79C5> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/MetalPerformanceShaders
+       0x1aecc0000 -        0x1aecc5cff  libpam.2.dylib (35) <7EAB3777-A356-3DF2-9919-4826DD3D792A> /usr/lib/libpam.2.dylib
+       0x1aecc6000 -        0x1aeda27ef  libcompression.dylib (212.0.1) <8B37DD66-F367-3A67-8971-BCBCF4A6BC3E> /usr/lib/libcompression.dylib
+       0x1aeda3000 -        0x1aeda743f  libQuadrature.dylib (10) <6CE2E934-655C-374E-9A11-717AF297FA0E> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libQuadrature.dylib
+       0x1aeda8000 -        0x1b0051757  libLAPACK.dylib (1617.1.1) <C2D7E8C4-F61B-3D56-B0AE-B0537D2B105D> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+       0x1b0052000 -        0x1b00a6baf  com.apple.DictionaryServices (1.2 - 383.7) <5ED28C7D-E595-30EC-BEDC-A4B75E6C1C0A> /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/DictionaryServices.framework/Versions/A/DictionaryServices
+       0x1b00a7000 -        0x1b00c542f  liblzma.5.dylib (21) <97B3126F-9135-3E45-916B-D75DDE582891> /usr/lib/liblzma.5.dylib
+       0x1b00c6000 -        0x1b00c7527  libcoretls_cfhelpers.dylib (189) <93A40E0C-3CF5-3CD9-A06E-8BD7B1ED6305> /usr/lib/libcoretls_cfhelpers.dylib
+       0x1b00c8000 -        0x1b0138997  com.apple.APFS (3288.1.3 - 3288.1.3) <ADC3534D-FE03-3D62-B0F9-2DA96E1CFDB2> /System/Library/PrivateFrameworks/APFS.framework/Versions/A/APFS
+       0x1b0139000 -        0x1b014709b  libxar.1.dylib (514.0.1) <115C3C3B-EC3F-319A-A9FE-CC0F6DB7F84B> /usr/lib/libxar.1.dylib
+       0x1b0148000 -        0x1b014b27b  libutil.dylib (76) <A4BD2559-FA09-3294-AF10-9B907B2F63A0> /usr/lib/libutil.dylib
+       0x1b014c000 -        0x1b0175be7  libxslt.1.dylib (22) <BFFA33FC-B1F4-377D-AE22-D540FE90E9E2> /usr/lib/libxslt.1.dylib
+       0x1b017d000 -        0x1b01f6cb7  libvMisc.dylib (1155) <D300FEE8-A84F-3717-8325-ED8C55050F26> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib
+       0x1b01f7000 -        0x1b02870d7  libate.dylib (3.0.11) <72E38849-AD8F-384F-80B4-6C88CE1BDBA8> /usr/lib/libate.dylib
+       0x1b0291000 -        0x1b02a20d7  com.apple.CrashReporterSupport (10.13 - 15146) <1E23FBB8-01CC-3444-BDC5-7F19B4F6EB53> /System/Library/PrivateFrameworks/CrashReporterSupport.framework/Versions/A/CrashReporterSupport
+       0x1b03c5000 -        0x1b03f6673  com.apple.pluginkit.framework (1.0 - 1) <D8E5AF0F-F2E4-35BB-984D-5B613D1CE20A> /System/Library/PrivateFrameworks/PlugInKit.framework/Versions/A/PlugInKit
+       0x1b046d000 -        0x1b04b6087  com.apple.AppleVAFramework (6.2.10 - 6.2.10) <A75E1F7F-97CE-32F9-B2BE-E5F82AF8486E> /System/Library/PrivateFrameworks/AppleVA.framework/Versions/A/AppleVA
+       0x1b04b7000 -        0x1b04d1e57  libexpat.1.dylib (47) <4D176250-D1E2-308C-9217-0B93A9461EB0> /usr/lib/libexpat.1.dylib
+       0x1b04d2000 -        0x1b04dbce3  libheimdal-asn1.dylib (725.0.12) <C9392B63-4E74-3305-978C-8920CECE52DC> /usr/lib/libheimdal-asn1.dylib
+       0x1b05ce000 -        0x1b068a927  com.apple.MediaExperience (1.0 - 1) <1382D61C-5EAC-331B-93BD-5DE9CA0CF2CB> /System/Library/PrivateFrameworks/MediaExperience.framework/Versions/A/MediaExperience
+       0x1b06ad000 -        0x1b06c39cf  com.apple.GraphVisualizer (1.0 - 310) <4DAADFAB-1272-3FDA-A0B9-FFDACCA3C602> /System/Library/PrivateFrameworks/GraphVisualizer.framework/Versions/A/GraphVisualizer
+       0x1b06c4000 -        0x1b06fc573  com.apple.OTSVG (1.0 - 904) <B7B3D233-76F7-329C-A9AD-5E865B767E6D> /System/Library/PrivateFrameworks/OTSVG.framework/Versions/A/OTSVG
+       0x1b06fd000 -        0x1b0707e57  com.apple.xpc.AppServerSupport (1.0 - 3298.1.1) <D38E40C3-AB76-3F32-B922-1ABFD2883612> /System/Library/PrivateFrameworks/AppServerSupport.framework/Versions/A/AppServerSupport
+       0x1b0708000 -        0x1b070e44b  libspindump.dylib (448) <3FB69307-6838-3CCF-BE3B-0090B2F9D708> /usr/lib/libspindump.dylib
+       0x1b070f000 -        0x1b07d022b  com.apple.Heimdal (4.0 - 2.0) <38745894-1AD6-3AF0-8C3B-DD3DE1F53B9A> /System/Library/PrivateFrameworks/Heimdal.framework/Versions/A/Heimdal
+       0x1b0abd000 -        0x1b0b01b2f  com.apple.AppleJPEG (1.0 - 1) <DB9DCC16-D2F1-352E-BC91-88611A54E436> /System/Library/PrivateFrameworks/AppleJPEG.framework/Versions/A/AppleJPEG
+       0x1b0b02000 -        0x1b0c0899f  libJP2.dylib (2851) <DB65F857-C412-32B9-AEAC-A43F2845AB1C> /System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib
+       0x1b0c09000 -        0x1b0c0ac37  com.apple.WatchdogClient.framework (1.0 - 334.0.4) <7D2DD1B5-37C6-325F-BA7B-585DA968BAD8> /System/Library/PrivateFrameworks/WatchdogClient.framework/Versions/A/WatchdogClient
+       0x1b0c0b000 -        0x1b0c4e66f  com.apple.MultitouchSupport.framework (10400.44 - 10400.44) <1DAEB7E5-62DE-35CA-9C63-C214DE18F488> /System/Library/PrivateFrameworks/MultitouchSupport.framework/Versions/A/MultitouchSupport
+       0x1b0c4f000 -        0x1b11ce26f  com.apple.VideoToolbox (1.0 - 3350.77.5.6) <BE9A42D2-A8DE-3C80-9128-58C9A0E456D5> /System/Library/Frameworks/VideoToolbox.framework/Versions/A/VideoToolbox
+       0x1b11cf000 -        0x1b11f8bb7  libPng.dylib (2851) <0D16CF3B-DA9A-3FB9-A9A1-9AB8BB7F40BE> /System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib
+       0x1b11f9000 -        0x1b125a497  libTIFF.dylib (2851) <B4F10836-0179-32F9-8D62-B3D7FA800C57> /System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib
+       0x1b125b000 -        0x1b127912f  com.apple.IOPresentment (67 - 67) <5CF0CA69-D5BF-3514-94C9-2D65F75A9D5A> /System/Library/PrivateFrameworks/IOPresentment.framework/Versions/A/IOPresentment
+       0x1b127a000 -        0x1b127e30f  com.apple.GPUWrangler (8.1.12 - 8.1.12) <3FD338A8-68F0-3546-A332-240EC584354A> /System/Library/PrivateFrameworks/GPUWrangler.framework/Versions/A/GPUWrangler
+       0x1b127f000 -        0x1b1281287  libRadiance.dylib (2851) <814158E0-8A46-3E2B-BD07-AD2B86B51772> /System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib
+       0x1b1282000 -        0x1b1286b6b  com.apple.DSExternalDisplay (3.1 - 380) <9533DB28-45B0-3EC0-8706-FF84098B08C5> /System/Library/PrivateFrameworks/DSExternalDisplay.framework/Versions/A/DSExternalDisplay
+       0x1b1287000 -        0x1b12b1e4f  libJPEG.dylib (2851) <A79FA9B9-5836-30D3-9C24-9F91D2894364> /System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib
+       0x1b12df000 -        0x1b12e4bf7  libGIF.dylib (2851) <7F76C1C8-72D0-3F48-8C0D-2982EB3CCB87> /System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib
+       0x1b12e5000 -        0x1b12f6cdb  com.apple.CMCaptureCore (1.0 - 764.21.3) <752C348D-AF57-33C5-B4DE-36539163216A> /System/Library/PrivateFrameworks/CMCaptureCore.framework/Versions/A/CMCaptureCore
+       0x1b2291000 -        0x1b22fdc57  libusrtcp.dylib (6681.1.1) <05B04C74-007A-3BB1-8486-A901D0CE5F0E> /usr/lib/libusrtcp.dylib
+       0x1b22fe000 -        0x1b2876447  libswiftCore.dylib (6.4.0 - 6.4.0.31.5) <1DF91E12-7DD8-3F2E-BE69-C4B62352F747> /usr/lib/swift/libswiftCore.dylib
+       0x1b2905000 -        0x1b2956ffb  libSessionUtility.dylib (449.108) <7074E8AC-9034-37C8-B116-CA070D9F824F> /System/Library/PrivateFrameworks/AudioSession.framework/libSessionUtility.dylib
+       0x1b2957000 -        0x1b2b2d2fb  com.apple.audio.toolbox.AudioToolbox (1.14 - 1.14) <A345D6C4-179C-39B9-AA9E-F6DB7001829A> /System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox
+       0x1b2b2e000 -        0x1b2b9804b  com.apple.audio.AudioSession (1.0 - 449.108) <173E4DEA-A0B4-3403-A32E-491D7280E1F2> /System/Library/PrivateFrameworks/AudioSession.framework/Versions/A/AudioSession
+       0x1b2b99000 -        0x1b2b9b1c3  libAudioStatistics.dylib (300) <345E24F8-FB72-3FC6-88BC-84883BFD148D> /usr/lib/libAudioStatistics.dylib
+       0x1b2bc7000 -        0x1b2be2b1b  libresolv.9.dylib (96) <B476F664-0486-3C2A-B3A4-871BCC5A950A> /usr/lib/libresolv.9.dylib
+       0x1b2be3000 -        0x1b2bf551f  libsasl2.2.dylib (219) <9CE377C0-9953-3E8D-A091-29552578D702> /usr/lib/libsasl2.2.dylib
+       0x1b2da9000 -        0x1b2e88f7f  libSMC.dylib (40) <578E0CEB-6D41-3ACE-9F12-61D61036FAAD> /usr/lib/libSMC.dylib
+       0x1b2ee7000 -        0x1b2ef3de7  com.apple.NetAuth (6.2 - 6.2) <C399CD37-4CC8-3E7B-97D6-A70E09E1728B> /System/Library/PrivateFrameworks/NetAuth.framework/Versions/A/NetAuth
+       0x1b2f02000 -        0x1b2f0c52b  com.apple.perfdata (1.0 - 135.0.1) <11ECF3B7-94E3-38ED-85AF-F7ACB3F42FEA> /System/Library/PrivateFrameworks/perfdata.framework/Versions/A/perfdata
+       0x1b2f0d000 -        0x1b2f198a7  libperfcheck.dylib (46) <9208364F-1015-35BC-A773-20C319FED4BF> /usr/lib/libperfcheck.dylib
+       0x1b2f1a000 -        0x1b2f2a1f7  com.apple.Kerberos (3.0 - 1) <3BA28FEB-4309-3F6B-A0E2-24EECB996570> /System/Library/Frameworks/Kerberos.framework/Versions/A/Kerberos
+       0x1b2f2b000 -        0x1b2f7b41f  com.apple.GSS (4.0 - 2.0) <854658C8-45F9-354A-89A8-3C509ABA665B> /System/Library/Frameworks/GSS.framework/Versions/A/GSS
+       0x1b2f7c000 -        0x1b2f8cc0f  com.apple.CommonAuth (4.0 - 2.0) <A79239B3-D5C6-3286-8AA2-4E2FCCED018A> /System/Library/PrivateFrameworks/CommonAuth.framework/Versions/A/CommonAuth
+       0x1b2f8d000 -        0x1b304dc87  com.apple.MobileAssets (1.0 - 2215.0.20) <54C32ACD-C749-38DB-A418-E4863A9D678F> /System/Library/PrivateFrameworks/MobileAsset.framework/Versions/A/MobileAsset
+       0x1b30cb000 -        0x1b30d9cf7  com.apple.CorePhoneNumbers (1.0 - 1) <38EFCBF5-BA60-33A8-A13F-8BCA7679BA1D> /System/Library/PrivateFrameworks/CorePhoneNumbers.framework/Versions/A/CorePhoneNumbers
+       0x1b31fe000 -        0x1b3210197  libffi.dylib (40) <B9831653-2641-320D-8F39-DE1DF45C356B> /usr/lib/libffi.dylib
+       0x1b4aae000 -        0x1b4b90337  com.apple.combine (1.0 - 3023) <56997D5B-F888-3188-AAD9-B8511715E909> /System/Library/Frameworks/Combine.framework/Versions/A/Combine
+       0x1b4f3b000 -        0x1b4f3b86f  com.apple.Accelerate.vecLib (3.11 - vecLib 3.11) <22241C4B-DC1E-3EF7-B467-6FB7CE742298> /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib
+       0x1b4f58000 -        0x1b4f5898f  com.apple.CoreServices (1226 - 1226) <F8ADD6B7-62B5-3F0F-9FE7-2314D41E3251> /System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices
+       0x1b5162000 -        0x1b5162417  com.apple.Accelerate (1.11 - Accelerate 1.11) <068E9BD5-96C4-3ECB-B949-F2B6A34762B3> /System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate
+       0x1b566b000 -        0x1b56778e3  com.apple.SymptomDiagnosticReporter (1.0 - 469) <2E22720A-35AF-3CF4-A006-8483414789F8> /System/Library/PrivateFrameworks/SymptomDiagnosticReporter.framework/Versions/A/SymptomDiagnosticReporter
+       0x1b5678000 -        0x1b569cf6b  com.apple.PowerLog (1.0 - 1) <8E69AFA7-EBBA-3928-B7A4-905B9405B6E4> /System/Library/PrivateFrameworks/PowerLog.framework/Versions/A/PowerLog
+       0x1b56a8000 -        0x1b56d855f  com.apple.MediaKit (16 - 944) <2447AEAC-9BCB-3080-8107-1CD16458EB17> /System/Library/PrivateFrameworks/MediaKit.framework/Versions/A/MediaKit
+       0x1b576c000 -        0x1b576cef7  libobjcMsgSend2.dylib (973.1) <6833B098-BED8-3D2F-A54C-0E6DBF0CFD95> /usr/lib/objc/libobjcMsgSend2.dylib
+       0x1b96db000 -        0x1b9782a43  com.apple.DiscRecording (9.0.3 - 9030.4.5) <15E95AEF-9516-3660-BCED-6AA064B9E6BE> /System/Library/Frameworks/DiscRecording.framework/Versions/A/DiscRecording
+       0x1ba0f6000 -        0x1ba10bfa7  libswiftDispatch.dylib (1605.0.2) <6CA38B3C-63A5-39F8-8DF5-6AFED818A428> /usr/lib/swift/libswiftDispatch.dylib
+       0x1ba3d5000 -        0x1ba47ae6f  com.apple.BoardServices (1.0 - 827) <6D360785-AC41-39B7-AFD1-E746C3D6C3D1> /System/Library/PrivateFrameworks/BoardServices.framework/Versions/A/BoardServices
+       0x1ba4a9000 -        0x1ba4b5e1f  com.apple.GraphicsServices (1.0 - 1.0) <95E225B6-9AC7-3F70-A168-ABA296D2D004> /System/Library/PrivateFrameworks/GraphicsServices.framework/Versions/A/GraphicsServices
+       0x1ba746000 -        0x1ba765a67  com.apple.DebugSymbols (219 - 219) <39E52D4B-639C-35A3-9EFC-1E0A17F61975> /System/Library/PrivateFrameworks/DebugSymbols.framework/Versions/A/DebugSymbols
+       0x1ba766000 -        0x1ba8cbc9b  com.apple.CoreSymbolication (16.0 - 64578.82.2) <3DA62E1E-DB91-33F6-9E77-8DB130C63EB9> /System/Library/PrivateFrameworks/CoreSymbolication.framework/Versions/A/CoreSymbolication
+       0x1ba8cc000 -        0x1ba8d59ab  com.apple.CoreTime (340.0.14 - 340.0.14) <C5E66C81-8021-375D-81A3-045371E09FCF> /System/Library/PrivateFrameworks/CoreTime.framework/Versions/A/CoreTime
+       0x1bc144000 -        0x1bc1b48af  com.apple.BackBoardServices (1.0 - 1.0) <89D162BC-6C02-3B1E-8235-8726C547C905> /System/Library/PrivateFrameworks/BackBoardServices.framework/Versions/A/BackBoardServices
+       0x1bc1b5000 -        0x1bc1f001f  com.apple.LDAPFramework (2.4.28 - 194.5) <98C7B484-02C6-3592-A6F1-A4C216683D6C> /System/Library/Frameworks/LDAP.framework/Versions/A/LDAP
+       0x1bc1f1000 -        0x1bc1f2637  com.apple.TrustEvaluationAgent (2.0 - 38) <496287F2-ADDB-384F-90EE-6331A2F59FBA> /System/Library/PrivateFrameworks/TrustEvaluationAgent.framework/Versions/A/TrustEvaluationAgent
+       0x1bc31e000 -        0x1bc3d1fbf  com.apple.DiskImagesFramework (704 - 704) <33AABFFC-0B2B-3F01-96E9-8B5D692F07C0> /System/Library/PrivateFrameworks/DiskImages.framework/Versions/A/DiskImages
+       0x1bc40f000 -        0x1bc423f6b  com.apple.RemoteServiceDiscovery (1.0 - 245.0.7) <6FA530FD-D84B-37EF-975F-F938F4267B8E> /System/Library/PrivateFrameworks/RemoteServiceDiscovery.framework/Versions/A/RemoteServiceDiscovery
+       0x1bc424000 -        0x1bc4375ef  com.apple.xpc.RemoteXPC (1.0 - 3298.1.1) <468BB2D5-028D-36DC-B247-00B115CD083D> /System/Library/PrivateFrameworks/RemoteXPC.framework/Versions/A/RemoteXPC
+       0x1bc4bb000 -        0x1bc53a31b  libcurl.4.dylib (168.0.2) <4A170240-0D81-3F07-9BE8-74A041D9F43B> /usr/lib/libcurl.4.dylib
+       0x1bc541000 -        0x1bc57aadb  com.apple.AppSupport (1.0.0 - 29) <C7908019-8938-3625-9B86-8516B9DAEA9A> /System/Library/PrivateFrameworks/AppSupport.framework/Versions/A/AppSupport
+       0x1bc7df000 -        0x1bc7e1963  com.apple.InternationalTextSearch (1.0 - 1) <E4EA601B-9112-3423-A8EA-417AE942766C> /System/Library/PrivateFrameworks/InternationalTextSearch.framework/Versions/A/InternationalTextSearch
+       0x1bce18000 -        0x1bce183f7  libHeimdalProxy.dylib (88) <66304C90-F352-3DEF-BB35-68BF8E358A6D> /System/Library/Frameworks/Kerberos.framework/Versions/A/Libraries/libHeimdalProxy.dylib
+       0x1bce3a000 -        0x1bce5673b  com.apple.StreamingZip (1.0 - 1) <914064B1-F085-39ED-B8FE-ECE90054D126> /System/Library/PrivateFrameworks/StreamingZip.framework/Versions/A/StreamingZip
+       0x1bcea5000 -        0x1bcea8397  libswiftObjectiveC.dylib (973.1) <32B4AD8F-0F8C-31D0-AAD2-8B8239ACA9E0> /usr/lib/swift/libswiftObjectiveC.dylib
+       0x1bcea9000 -        0x1bcec50b7  libswiftos.dylib (1090) <580B482C-8D46-3858-83A5-3BD223940CC5> /usr/lib/swift/libswiftos.dylib
+       0x1bcfab000 -        0x1bd0201ff  com.apple.proactive.support.ProactiveSupport (1.0 - 423.0.1) <A2C0E95C-FBBE-3AE2-B4A5-C9701B410BC6> /System/Library/PrivateFrameworks/ProactiveSupport.framework/Versions/A/ProactiveSupport
+       0x1bd0e7000 -        0x1bd10ee1f  com.apple.ASEProcessing (1.59.0 - 1.59.0) <4AA4937C-DC9D-3980-ABCC-177035422ACA> /System/Library/PrivateFrameworks/ASEProcessing.framework/Versions/A/ASEProcessing
+       0x1bd76c000 -        0x1bd76cef7  libobjcMsgSend3.dylib (973.1) <5F1ECBD9-D831-3DE5-87DC-F36DED32D6C1> /usr/lib/objc/libobjcMsgSend3.dylib
+       0x1bf4bc000 -        0x1bf581043  com.apple.audio.midi.CoreMIDI (2.0 - 88) <6DE359A8-AF32-37FC-966F-92234671D1E6> /System/Library/Frameworks/CoreMIDI.framework/Versions/A/CoreMIDI
+       0x1c010a000 -        0x1c010e5cf  com.apple.IOSurfaceAccelerator (1.0.0 - 1.0.0) <4B0DEAAC-E3BC-3CB2-A9DA-4FB488EF2CCE> /System/Library/PrivateFrameworks/IOSurfaceAccelerator.framework/Versions/A/IOSurfaceAccelerator
+       0x1c55db000 -        0x1c55f4cff  com.apple.HID (1.0 - 1) <CF01F0A7-20E4-3F4E-9FB5-48E4D7599563> /System/Library/PrivateFrameworks/HID.framework/Versions/A/HID
+       0x1c576c000 -        0x1c576cef7  libobjcMsgSend4.dylib (973.1) <96A17F93-C25C-3E06-B192-C812E6D9472D> /usr/lib/objc/libobjcMsgSend4.dylib
+       0x1ca753000 -        0x1ca760c9b  com.apple.NetFS (6.0 - 4.0) <628D2D5C-8A38-30A7-B8D3-2DB886C82B5A> /System/Library/Frameworks/NetFS.framework/Versions/A/NetFS
+       0x1cac03000 -        0x1cac057f7  libswiftDarwin.dylib (428.0.10) <147598B5-3E9B-3497-8F66-2ADF9394FCEB> /usr/lib/swift/libswiftDarwin.dylib
+       0x1cce5c000 -        0x1ccf4866b  libquic.dylib (6681.1.1) <7984FF38-2CF5-3058-85AA-47A30208217B> /usr/lib/libquic.dylib
+       0x1ccf52000 -        0x1ccf713e3  com.apple.private.SystemPolicy (1.0 - 1) <31074AE5-C16E-3310-A80D-F9AC851A2202> /System/Library/PrivateFrameworks/SystemPolicy.framework/Versions/A/SystemPolicy
+       0x1cd76c000 -        0x1cd76cef7  libobjcMsgSend5.dylib (973.1) <683C576D-082D-3DE5-8B52-7932CCE5CD6D> /usr/lib/objc/libobjcMsgSend5.dylib
+       0x1ce2da000 -        0x1ce352183  com.apple.LoggingSupport (1.0 - 1966.1.1) <11C6EA51-1186-3615-A32C-4329E1969901> /System/Library/PrivateFrameworks/LoggingSupport.framework/Versions/A/LoggingSupport
+       0x1ce353000 -        0x1ce35f387  com.apple.MallocStackLogging (1.0 - 65000) <4A20DAEB-7D36-3159-B1B0-475693E7257B> /System/Library/PrivateFrameworks/MallocStackLogging.framework/Versions/A/MallocStackLogging
+       0x1ce37a000 -        0x1ce3daf3b  libmis.dylib (487.0.2) <479F8045-FEEE-362B-95D9-8998DF7B1602> /usr/lib/libmis.dylib
+       0x1ce3db000 -        0x1ce3dd87f  com.apple.gpusw.GPURawCounter (35 - 35) <6D9804F0-C345-3BD4-B60F-51997CFC3568> /System/Library/PrivateFrameworks/GPURawCounter.framework/Versions/A/GPURawCounter
+       0x1ce3de000 -        0x1ce3fcb73  libswiftCoreAudio.dylib (482.102.10) <2DCB5741-09E6-31EF-BD41-4D8D84876F50> /usr/lib/swift/libswiftCoreAudio.dylib
+       0x1ce3fd000 -        0x1ce402b4f  libswiftCoreFoundation.dylib (2412) <C7532A29-9A67-3907-A800-5A7CB1239809> /usr/lib/swift/libswiftCoreFoundation.dylib
+       0x1ce40c000 -        0x1ce454a0f  libswiftXPC.dylib (167.0.2) <4371D5E4-18EB-3EEF-93F8-44E70B899ABA> /usr/lib/swift/libswiftXPC.dylib
+       0x1ce456000 -        0x1ce4568a3  libswiftIOKit.dylib (1) <CCACD706-8F07-37CE-B84E-AD7A3A1413B6> /usr/lib/swift/libswiftIOKit.dylib
+       0x1d014f000 -        0x1d01968cf  libbootpolicy.dylib (304) <23090040-613C-3306-920E-4AB1EA690D6E> /usr/lib/libbootpolicy.dylib
+       0x1d1ab6000 -        0x1d1acd60b  libswiftsimd.dylib (25) <894C6EAC-9ABC-340A-B216-353C0D9838DE> /usr/lib/swift/libswiftsimd.dylib
+       0x1d2fce000 -        0x1d2fd599b  com.apple.IOAccelMemoryInfo (1.0 - 1) <C96DC593-9622-3C88-A93F-99B5C712E8EF> /System/Library/PrivateFrameworks/IOAccelMemoryInfo.framework/Versions/A/IOAccelMemoryInfo
+       0x1d4788000 -        0x1d4790e37  libswiftCoreMIDI.dylib (6) <C97AB7A9-4C43-3CE1-9865-C55756C1F1F3> /usr/lib/swift/libswiftCoreMIDI.dylib
+       0x1d4f4f000 -        0x1d4f54653  com.apple.MSUDataAccessor (1.0 - 1) <3118065A-D522-3136-A12A-63A816BCA585> /System/Library/PrivateFrameworks/MSUDataAccessor.framework/Versions/A/MSUDataAccessor
+       0x1d53e6000 -        0x1d5430f8b  com.apple.SoftwareUpdateCoreSupport (1.0 - 1) <2FEB5285-D304-3E6E-8CC0-7136A8BD5185> /System/Library/PrivateFrameworks/SoftwareUpdateCoreSupport.framework/Versions/A/SoftwareUpdateCoreSupport
+       0x1d576c000 -        0x1d576cef7  libobjcMsgSend6.dylib (973.1) <6AE3BA2E-7FFD-361B-BC16-F91997987A0C> /usr/lib/objc/libobjcMsgSend6.dylib
+       0x1d9102000 -        0x1d9148cbb  com.apple.biome.BiomeFoundation (1.0 - 250.0.0.3) <A3B3335B-1A3F-3A11-9D89-411516219711> /System/Library/PrivateFrameworks/BiomeFoundation.framework/Versions/A/BiomeFoundation
+       0x1db92c000 -        0x1db933c07  libswiftMetal.dylib (382.5.3) <4759C05C-A503-3E15-82E3-20EC3C326D19> /usr/lib/swift/libswiftMetal.dylib
+       0x1db934000 -        0x1db93a517  libswiftCompression.dylib (18) <97A32A3E-084E-35F1-B6A7-2C90A6D9BC54> /usr/lib/swift/libswiftCompression.dylib
+       0x1dc725000 -        0x1dc7d9ba3  libFDR.dylib (1636.0.17) <5C091305-A23E-3AC7-B9D4-5FDE9C5353E4> /usr/lib/libFDR.dylib
+       0x1dc7da000 -        0x1dc84de97  com.apple.TimeSync (1.0 - 1501.7) <B0493002-4889-3DB8-883A-EF4F60F8B2F4> /System/Library/PrivateFrameworks/TimeSync.framework/Versions/A/TimeSync
+       0x1dc84e000 -        0x1dcd8798f  com.apple.biome.BiomeStreams (1.0 - 250.0.0.3) <578036AC-E1AC-3838-BB48-1E6D72BEC76D> /System/Library/PrivateFrameworks/BiomeStreams.framework/Versions/A/BiomeStreams
+       0x1dd321000 -        0x1dd330d33  com.apple.SoftwareUpdateCoreConnect (1.0 - 1) <F9802162-093A-3628-9921-D0AF23D9FBE4> /System/Library/PrivateFrameworks/SoftwareUpdateCoreConnect.framework/Versions/A/SoftwareUpdateCoreConnect
+       0x1dd76c000 -        0x1dd76cef7  libobjcMsgSend7.dylib (973.1) <9D1C66E1-1F10-3F79-BB94-595ED33DEF04> /usr/lib/objc/libobjcMsgSend7.dylib
+       0x1dea42000 -        0x1dea490a3  com.apple.audio.IOKitten (300.1 - 300.1) <B4B3ADFE-5532-35C8-88AD-E024018B3F74> /System/Library/PrivateFrameworks/IOKitten.framework/Versions/A/IOKitten
+       0x1e026b000 -        0x1e02c82d7  com.apple.osanalytics.OSAnalytics (1.0 - 1) <4D34A064-BCFF-3790-8F86-D5CEFD7B08C1> /System/Library/PrivateFrameworks/OSAnalytics.framework/Versions/A/OSAnalytics
+       0x1e1601000 -        0x1e1602e03  libswiftQuartzCore.dylib (5) <60C4FFB3-CCAC-3BBE-AB68-9D6106B1A41B> /usr/lib/swift/libswiftQuartzCore.dylib
+       0x1e193d000 -        0x1e1942727  com.apple.kperf (1.0 - 1) <582F8EA9-1C88-3F70-8AB4-203127D1FB78> /System/Library/PrivateFrameworks/kperf.framework/Versions/A/kperf
+       0x1e1a4c000 -        0x1e1a4fe57  com.apple.MobileSystemServices (1.0 - 1) <2E52EE4D-04D3-3D30-A9EA-DB3432F23AE1> /System/Library/PrivateFrameworks/MobileSystemServices.framework/Versions/A/MobileSystemServices
+       0x1e2f13000 -        0x1e2f386b3  libamsupport.dylib (475.0.9) <9041F65F-B244-3786-A7A1-DDCDC3D05D12> /usr/lib/libamsupport.dylib
+       0x1e32d2000 -        0x1e332100f  com.apple.biome.BiomePubSub (1.0 - 250.0.0.3) <171202CF-F0A2-3766-921F-348F511D47B9> /System/Library/PrivateFrameworks/BiomePubSub.framework/Versions/A/BiomePubSub
+       0x1e3322000 -        0x1e3357667  com.apple.biome.BiomeStorage (1.0 - 250.0.0.3) <2226F6CC-78F4-37AD-B6D2-F912AC3789B7> /System/Library/PrivateFrameworks/BiomeStorage.framework/Versions/A/BiomeStorage
+       0x1e5695000 -        0x1e56a23c7  libswiftUniformTypeIdentifiers.dylib (917.0.1.403) <31607FB3-DDF1-317D-91AA-16D9AA7EBCC3> /usr/lib/swift/libswiftUniformTypeIdentifiers.dylib
+       0x1e56f7000 -        0x1e5705ce3  libpartition2_dynamic.dylib (3696.0.12.0.3) <B5E4860C-89AE-3EF1-BF4D-A15FEB7BA9D1> /usr/lib/libpartition2_dynamic.dylib
+       0x1e576c000 -        0x1e576cef7  libobjcMsgSend8.dylib (973.1) <E867E236-F699-3A76-8C53-003C7E6EE699> /usr/lib/objc/libobjcMsgSend8.dylib
+       0x1e5da8000 -        0x1e5e675fb  libswiftAccelerate.dylib (82) <D0585376-2EE3-3269-81E9-F78251A7861A> /usr/lib/swift/libswiftAccelerate.dylib
+       0x1e63b9000 -        0x1e63c279f  com.apple.AFKUser (1) <117E66D3-45D9-3BD4-BBCC-4CF5C34E91BA> /System/Library/PrivateFrameworks/AFKUser.framework/Versions/A/AFKUser
+       0x1eb97b000 -        0x1eb97c8e7  libswiftOSLog.dylib (10) <23ADAEE8-2C09-3149-8E7E-C820C2995306> /usr/lib/swift/libswiftOSLog.dylib
+       0x1ec305000 -        0x1ec3edeb7  com.apple.Symbolication (16.0 - 64578.100.1) <D05B97E5-A7BE-3A26-B48A-F2273C69A720> /System/Library/PrivateFrameworks/Symbolication.framework/Versions/A/Symbolication
+       0x1ed5e4000 -        0x1ed5f19cf  com.apple.OSLog (1.0 - 1966.1.1) <915BB326-EFAE-3AC5-A15D-E6C91816CA7B> /System/Library/Frameworks/OSLog.framework/Versions/A/OSLog
+       0x1ed6b3000 -        0x1ed6bc0d7  com.apple.HIDDisplay (1.0 - 1) <BC153F25-93F8-31D2-A0D8-BF52F72108D7> /System/Library/PrivateFrameworks/HIDDisplay.framework/Versions/A/HIDDisplay
+       0x1ed76c000 -        0x1ed76cef7  libobjcMsgSend9.dylib (973.1) <26ED0D98-1DC9-3B98-AF3D-18D22DD5CE15> /usr/lib/objc/libobjcMsgSend9.dylib
+       0x1f4db4000 -        0x1f4eb9c8f  com.apple.InternalSwiftProtobuf (1.0 - 1.26.0) <A78FD9CF-7405-360D-A248-6541174A0EB6> /System/Library/PrivateFrameworks/InternalSwiftProtobuf.framework/Versions/A/InternalSwiftProtobuf
+       0x1f576c000 -        0x1f576cef7  libobjcMsgSend10.dylib (973.1) <D04824BC-E185-3419-B5CB-564147416880> /usr/lib/objc/libobjcMsgSend10.dylib
+       0x1fce28000 -        0x1fce28ad3  com.apple.FeatureFlags (1.0 - 108) <73BB2A95-9499-3EB9-85C9-295D407EE837> /System/Library/PrivateFrameworks/FeatureFlags.framework/Versions/A/FeatureFlags
+       0x1fd76c000 -        0x1fd76cef7  libobjcMsgSend11.dylib (973.1) <0BA47514-28DB-37CD-9E9E-8977FA26FFDC> /usr/lib/objc/libobjcMsgSend11.dylib
+       0x22576c000 -        0x22576cef7  libobjcMsgSend12.dylib (973.1) <59623E8F-FA22-333C-A1ED-DEFE264C794B> /usr/lib/objc/libobjcMsgSend12.dylib
+       0x226541000 -        0x226543027  com.apple.ConfigProfileHelper (18.0 - 1800) <3DCD72AA-59A2-3430-87AD-2394623D7D7F> /System/Library/PrivateFrameworks/ConfigProfileHelper.framework/Versions/A/ConfigProfileHelper
+       0x22a7ea000 -        0x22a7f0d03  libCoreFSCache.dylib (404) <83549AE1-C0C0-3069-88DA-3B7B5F75A3E4> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreFSCache.dylib
+       0x22a7f1000 -        0x22a7f63b7  libCoreVMClient.dylib (404) <E6079830-6328-33A5-95B2-15359869BB40> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.dylib
+       0x22a7f7000 -        0x22a8067bf  com.apple.opengl (24.0.2 - 24.0.2) <13808B49-79C4-3D76-9D0B-F25B1DD13919> /System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL
+       0x22a807000 -        0x22a80960f  libCVMSPluginSupport.dylib (24.0.2) <3426296F-4D46-3C63-BAB5-F304A84B8C01> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCVMSPluginSupport.dylib
+       0x22a80a000 -        0x22a8120df  libGFXShared.dylib (24.0.2) <73F3494A-3487-3C05-AC67-48707970A652> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGFXShared.dylib
+       0x22a813000 -        0x22a846293  libGLImage.dylib (24.0.2) <7E719203-AB83-37FE-9C8C-D32556266876> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib
+       0x22a847000 -        0x22a87f50f  libGLU.dylib (24.0.2) <21381532-9057-3AA8-A7B0-4FC3E13BF229> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib
+       0x22a9d3000 -        0x22a9dcbdf  libGL.dylib (24.0.2) <09ACF00A-2154-3E3A-B659-E61FC55ED1EE> /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+       0x22d76c000 -        0x22d76cef7  libobjcMsgSend13.dylib (973.1) <A26671D8-39E4-3382-9232-E90519B502C5> /usr/lib/objc/libobjcMsgSend13.dylib
+       0x23576c000 -        0x23576cef7  libobjcMsgSend14.dylib (973.1) <2A79FE90-2183-34F8-993F-13D7AA4D9D4E> /usr/lib/objc/libobjcMsgSend14.dylib
+       0x238a46000 -        0x238b8f4d7  com.apple.ExtensionFoundation (97 - 97) <787823C8-5B5B-3870-BD9F-F53030DE2F4F> /System/Library/Frameworks/ExtensionFoundation.framework/Versions/A/ExtensionFoundation
+       0x23a7ea000 -        0x23a829ac7  com.apple.LightweightCodeRequirements (1.0 - 1) <6BC6EE73-5C0C-3AB9-8959-9A8AE5E5A30F> /System/Library/Frameworks/LightweightCodeRequirements.framework/Versions/A/LightweightCodeRequirements
+       0x23b6c3000 -        0x23b6d3faf  com.apple.MPSBenchmarkLoop (1.0 - 130.0.19) <3033D376-1AFD-3106-A7A0-87CE64C67AD4> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSBenchmarkLoop.framework/Versions/A/MPSBenchmarkLoop
+       0x23b6d4000 -        0x23b6e6667  com.apple.MPSFunctions (1.0 - 130.0.19) <04A678D4-47E9-33A6-924D-BC14E43F32C3> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSFunctions.framework/Versions/A/MPSFunctions
+       0x23b6e7000 -        0x23b6eb7f3  com.apple.MPSHost (1.0 - 130.0.19) <5A28C37F-95FA-326C-95E8-CCBBC530576A> /System/Library/Frameworks/MetalPerformanceShaders.framework/Versions/A/Frameworks/MPSHost.framework/Versions/A/MPSHost
+       0x23d76c000 -        0x23d76cef7  libobjcMsgSend15.dylib (973.1) <4591A67E-4419-3EF1-AE42-3C245D00F86D> /usr/lib/objc/libobjcMsgSend15.dylib
+       0x24007a000 -        0x24021e7e3  com.apple.SwiftData (1.0 - 180) <82C99A2E-1BF8-3184-9B4A-606666A0C855> /System/Library/Frameworks/SwiftData.framework/Versions/A/SwiftData
+       0x24576c000 -        0x24576cef7  libobjcMsgSend16.dylib (973.1) <13D076B0-D9D0-36F4-B6DB-93AB6B8360C2> /usr/lib/objc/libobjcMsgSend16.dylib
+       0x2478f0000 -        0x24790268f  com.apple.AppleDeviceQuerySupport (1.0 - 459.0.15) <E71EF840-744F-3BD1-93DC-860F91BE3E98> /System/Library/PrivateFrameworks/AppleDeviceQuerySupport.framework/Versions/A/AppleDeviceQuerySupport
+       0x2480e3000 -        0x24816fa4f  com.apple.AppleKeyStore (1.0 - 1.0) <49BD0707-2DDC-3D67-9D31-6CB468E62A2F> /System/Library/PrivateFrameworks/AppleKeyStore.framework/Versions/A/AppleKeyStore
+       0x248c0e000 -        0x248c22b3b  com.apple.private.AppleMobileFileIntegrity-fmk (1.0 - 1) <491383AB-B389-32ED-9BE5-6A7C50CB26F3> /System/Library/PrivateFrameworks/AppleMobileFileIntegrity.framework/Versions/A/AppleMobileFileIntegrity
+       0x248c23000 -        0x248c3ca03  com.apple.AppleMSG (1.0 - 1) <EA2C3460-B86F-3C88-810D-59C6B806D7D0> /System/Library/PrivateFrameworks/AppleMSG.framework/Versions/A/AppleMSG
+       0x24a8d9000 -        0x24a8ea987  com.apple.AtomicsInternal (1.1.0 - 5027.0.64) <64B04173-5ECC-3563-B250-17C86F232B90> /System/Library/PrivateFrameworks/AtomicsInternal.framework/Versions/A/AtomicsInternal
+       0x24a980000 -        0x24a99d61f  com.apple.imgaudio.AudioAnalytics (1.0 - 1) <F46848C6-9FF6-32DC-9F29-4BF551669389> /System/Library/PrivateFrameworks/AudioAnalytics.framework/Versions/A/AudioAnalytics
+       0x24b288000 -        0x24b2d77e7  com.apple.BackBoardHIDEventFoundation (1.0 - 1) <4E585105-B0B3-3188-B9C8-F10314BB6A32> /System/Library/PrivateFrameworks/BackBoardHIDEventFoundation.framework/Versions/A/BackBoardHIDEventFoundation
+       0x24b2d8000 -        0x24b32279f  com.apple.BackBoardHIDTouchEventProcessor (1.0 - 1) <C7D38F0E-D5E0-3CED-9E14-AD2EF3B82C71> /System/Library/PrivateFrameworks/BackBoardHIDTouchEventProcessor.framework/Versions/A/BackBoardHIDTouchEventProcessor
+       0x24b3c9000 -        0x24b3dc3ab  com.apple.biome.BiomeDSL (1.0 - 250.0.0.3) <3237E308-006B-3000-8BCA-8B2B6D2F3174> /System/Library/PrivateFrameworks/BiomeDSL.framework/Versions/A/BiomeDSL
+       0x24b3dd000 -        0x24bc1a437  com.apple.BiomeLibrary (436.6) <E439F70A-1296-3F25-949C-B41D36A389C4> /System/Library/PrivateFrameworks/BiomeLibrary.framework/Versions/A/BiomeLibrary
+       0x24bc1b000 -        0x24bc20473  com.apple.biome.BiomeSync (1.0 - 250.0.0.3) <D6CBC280-6000-30E2-876C-0782887014A7> /System/Library/PrivateFrameworks/BiomeSync.framework/Versions/A/BiomeSync
+       0x24d24a000 -        0x24d320b37  com.apple.biome.CascadeSets (1.0 - 250.0.0.3) <BF3D1C18-6C67-3953-8759-59A345A7368E> /System/Library/PrivateFrameworks/CascadeSets.framework/Versions/A/CascadeSets
+       0x24d76c000 -        0x24d76cef7  libobjcMsgSend17.dylib (973.1) <785F2943-9319-3E83-B267-5A6A479E63D1> /usr/lib/objc/libobjcMsgSend17.dylib
+       0x24f6ca000 -        0x24f8132f3  com.apple.CollectionsInternal (1.2.0 - 5027.0.64) <E4C78F7F-05E2-38AF-9458-25CE26A840BB> /System/Library/PrivateFrameworks/CollectionsInternal.framework/Versions/A/CollectionsInternal
+       0x24fb99000 -        0x24fba66cf  com.apple.ConnectedMode (1.0 - 1) <1EDA3010-BECF-379A-B485-727C83E3029F> /System/Library/PrivateFrameworks/ConnectedMode.framework/Versions/A/ConnectedMode
+       0x25576c000 -        0x25576cef7  libobjcMsgSend18.dylib (973.1) <22D9A5CE-1C77-33BA-8734-B3D5CF70D8CE> /usr/lib/objc/libobjcMsgSend18.dylib
+       0x25d76c000 -        0x25d76cef7  libobjcMsgSend19.dylib (973.1) <4D26851D-B809-3C58-BD8F-AFA4773C63A8> /usr/lib/objc/libobjcMsgSend19.dylib
+       0x25e6cb000 -        0x25e6dfe43  com.apple.DeviceRecovery (1.0 - 1) <930BE8B7-A44B-3525-B59A-C5E2CE080EE9> /System/Library/PrivateFrameworks/DeviceRecovery.framework/Versions/A/DeviceRecovery
+       0x26194d000 -        0x261a5ba3f  libXTFontStaticRegistryData.dylib (351) <9605762F-6829-3ECB-847B-EBCC8A3F975F> /System/Library/PrivateFrameworks/FontServices.framework/libXTFontStaticRegistryData.dylib
+       0x261a5c000 -        0x261a5eb47  com.apple.FontServices (1.0 - 1) <8591FBCA-62F7-3FE3-893C-2FE9C084D4EB> /System/Library/PrivateFrameworks/FontServices.framework/Versions/A/FontServices
+       0x261a60000 -        0x261a9bc67  com.apple.FramePacing (1.0 - 1) <B13D7625-28A1-3965-A29A-BE5DDAC7ABBD> /System/Library/PrivateFrameworks/FramePacing.framework/Versions/A/FramePacing
+       0x2655a5000 -        0x2655aae17  libGPUCompilerUtils.dylib (32023.921.5) <C150F7E0-2E5D-3100-8CBD-9193919CE9F5> /System/Library/PrivateFrameworks/GPUCompiler.framework/Versions/32023/Libraries/libGPUCompilerUtils.dylib
+       0x2655ab000 -        0x2655ead9f  libllvm-flatbuffers.dylib (32023.921.5) <52E4E667-ED39-3A1E-8444-6A43308B327F> /System/Library/PrivateFrameworks/GPUCompiler.framework/Versions/32023/Libraries/libllvm-flatbuffers.dylib
+       0x26576c000 -        0x26576cef7  libobjcMsgSend20.dylib (973.1) <17FE20AF-0257-3C2B-832D-9A6CEBC681E6> /usr/lib/objc/libobjcMsgSend20.dylib
+       0x265b70000 -        0x2660a4c8f  com.apple.Gestures (9127.0.84 - 9127.0.84) <25E3C1C5-9DE2-3494-94FA-49F7FAAC77E3> /System/Library/PrivateFrameworks/Gestures.framework/Versions/A/Gestures
+       0x26d76c000 -        0x26d76cef7  libobjcMsgSend21.dylib (973.1) <0D6C12E6-E426-3118-A1A9-F908FECBF8F7> /usr/lib/objc/libobjcMsgSend21.dylib
+       0x2742af000 -        0x27439f907  com.apple.InstalledContentLibrary (1.0 - 1.0) <893E43A7-CE14-394D-8C39-80E222636868> /System/Library/PrivateFrameworks/InstalledContentLibrary.framework/Versions/A/InstalledContentLibrary
+       0x27576c000 -        0x27576cef7  libobjcMsgSend22.dylib (973.1) <A07859E9-6FF7-368C-9BF5-BEDC9DFD8A30> /usr/lib/objc/libobjcMsgSend22.dylib
+       0x279492000 -        0x279d12277  com.apple.IntelligencePlatformLibrary (436.6) <23729E3F-7985-39CD-A2B5-1AE41D204477> /System/Library/PrivateFrameworks/IntelligencePlatformLibrary.framework/Versions/A/IntelligencePlatformLibrary
+       0x27d76c000 -        0x27d76cef7  libobjcMsgSend23.dylib (973.1) <FF9110D3-01E4-3B19-A05D-EC34385C6BD3> /usr/lib/objc/libobjcMsgSend23.dylib
+       0x27f8f4000 -        0x27f94fee7  com.apple.MessageSecurity (1.0 - 341.0.17) <45317D8F-D43C-3C30-84E7-34C469EE6947> /System/Library/PrivateFrameworks/MessageSecurity.framework/Versions/A/MessageSecurity
+       0x27fff4000 -        0x2806acd87  com.apple.MIL (3600.16 - 3600.16.1) <924CF3A1-0152-321F-A759-2C352888A364> /System/Library/PrivateFrameworks/MIL.framework/Versions/A/MIL
+       0x28576c000 -        0x28576cef7  libobjcMsgSend24.dylib (973.1) <51037ABB-A8E1-3C4A-80A4-3AC98CABD44F> /usr/lib/objc/libobjcMsgSend24.dylib
+       0x286ddc000 -        0x286de722b  com.apple.gpusw.MTL3On4 (1.0 - 1) <3E43AD6C-EE45-3A65-B3F0-334E792529F1> /System/Library/PrivateFrameworks/MTL3On4.framework/Versions/A/MTL3On4
+       0x289886000 -        0x28988ff63  com.apple.sear.NSPredicateSecurityPolicy (1.0 - 1) <75F116FB-478E-313B-9202-9966D319A07D> /System/Library/PrivateFrameworks/NSPredicateSecurityPolicy.framework/Versions/A/NSPredicateSecurityPolicy
+       0x28b645000 -        0x28b66f26f  com.apple.OSEligibility (446.1.3) <34165B82-A9AC-35B8-A379-E1C04C285EDD> /System/Library/PrivateFrameworks/OSEligibility.framework/Versions/A/OSEligibility
+       0x28b762000 -        0x28b7b66cf  com.apple.ParsingInternal (0.0.1 - 5027.0.64) <E55DEE77-5CCB-3CD2-A759-FFF4D0CE11C8> /System/Library/PrivateFrameworks/ParsingInternal.framework/Versions/A/ParsingInternal
+       0x28d37e000 -        0x28d3912df  com.apple.accessibility.PhotosensitivityProcessing (1.0 - 1) <C0A5D8BC-340B-36DB-A099-4FD72DE50C41> /System/Library/PrivateFrameworks/PhotosensitivityProcessing.framework/Versions/A/PhotosensitivityProcessing
+       0x28d76c000 -        0x28d76cef7  libobjcMsgSend25.dylib (973.1) <AB7F4015-400D-39C8-A6B8-5072A827E716> /usr/lib/objc/libobjcMsgSend25.dylib
+       0x2a7c79000 -        0x2a7cf733f  com.apple.PoirotSchematizer (1.0 - 1) <6673B51A-8CEE-3084-9CE1-BDD36A12ED1B> /System/Library/PrivateFrameworks/PoirotSchematizer.framework/Versions/A/PoirotSchematizer
+       0x2a7cf8000 -        0x2a7d3427f  com.apple.PoirotSQLite (1.0 - 1) <5EEA9300-903A-3C9D-AD6C-143F474D074F> /System/Library/PrivateFrameworks/PoirotSQLite.framework/Versions/A/PoirotSQLite
+       0x2a7d35000 -        0x2a7d67567  com.apple.PoirotUDFs (1.0 - 1) <FF8B2B4B-F86C-3487-B40D-6509814970FA> /System/Library/PrivateFrameworks/PoirotUDFs.framework/Versions/A/PoirotUDFs
+       0x2a9673000 -        0x2a97cd8f3  com.apple.ProDisplayLibrary (11.0.21 - 11.0.21) <76006D23-0C1E-3032-973F-17C63B8DCDAC> /System/Library/PrivateFrameworks/ProDisplayLibrary.framework/Versions/A/ProDisplayLibrary
+       0x2aa2fa000 -        0x2aa301da3  com.apple.ReflectionInternal (1.0.0 - 5027.0.64) <3A8AE9DC-912A-38C1-A8CC-9EF2DDB9B6ED> /System/Library/PrivateFrameworks/ReflectionInternal.framework/Versions/A/ReflectionInternal
+       0x2ab426000 -        0x2ab4390d7  com.apple.RuntimeInternal (1.0.0 - 5027.0.64) <B9580241-B061-3406-AB31-8C1B7669BEFB> /System/Library/PrivateFrameworks/RuntimeInternal.framework/Versions/A/RuntimeInternal
+       0x2ad76c000 -        0x2ad76cef7  libobjcMsgSend26.dylib (973.1) <E1D58842-6113-3877-8D37-0550885E0511> /usr/lib/objc/libobjcMsgSend26.dylib
+       0x2aeb7d000 -        0x2aebf0087  com.apple.SILManager (67.13 - 67.13) <7506DE06-1FEF-3338-A888-4854595AA212> /System/Library/PrivateFrameworks/SILManager.framework/Versions/A/SILManager
+       0x2b576c000 -        0x2b576cef7  libobjcMsgSend27.dylib (973.1) <229F502C-7D46-3A9A-A363-626362611F1B> /usr/lib/objc/libobjcMsgSend27.dylib
+       0x2bafb2000 -        0x2bafe1b0f  com.apple.security.SwiftASN1Internal (1.0 - 1) <606D1A53-6E04-316E-989C-BDA33A74EFF1> /System/Library/PrivateFrameworks/SwiftASN1Internal.framework/Versions/A/SwiftASN1Internal
+       0x2bd76c000 -        0x2bd76cef7  libobjcMsgSend28.dylib (973.1) <457FC903-43E7-3618-83CA-1B605CC07858> /usr/lib/objc/libobjcMsgSend28.dylib
+       0x2bebb2000 -        0x2bec01b47  com.apple.tightbeam (1.0 - 631.0.5) <2D426990-05F5-3716-BA51-FC88CC48C521> /System/Library/PrivateFrameworks/Tightbeam.framework/Versions/A/Tightbeam
+       0x2c473c000 -        0x2c473d0e7  com.apple.VideoToolboxParavirtualizationSupport (71.0.14 - 71.0.14) <BC7B0072-6143-32A9-9E4E-67D9AFD45BE4> /System/Library/PrivateFrameworks/VideoToolboxParavirtualizationSupport.framework/Versions/A/VideoToolboxParavirtualizationSupport
+       0x2c576c000 -        0x2c576cef7  libobjcMsgSend29.dylib (973.1) <37B5286E-91DA-3BE8-A077-AF62BB0C83E7> /usr/lib/objc/libobjcMsgSend29.dylib
+       0x2ccfcb000 -        0x2cd064ce3  libAppleArchive.dylib (469) <76553ACC-DEC0-3CD4-AF36-4628F3F91FA7> /usr/lib/libAppleArchive.dylib
+       0x2cd720000 -        0x2cd72a033  libCoreEntitlements.dylib (94) <C1EEDEB5-1FA7-358F-BE3E-4377A7951CCB> /usr/lib/libCoreEntitlements.dylib
+       0x2cd76c000 -        0x2cd76cef7  libobjcMsgSend30.dylib (973.1) <972EFE79-D4B9-3B1F-BA2C-DB27B524F779> /usr/lib/objc/libobjcMsgSend30.dylib
+       0x2cdcf4000 -        0x2cde0519f  libcrypto.46.dylib (111.0.5) <00F8412E-1F21-3AD0-8BE9-5854EF1F8DF8> /usr/lib/libcrypto.46.dylib
+       0x2ce09c000 -        0x2ce0b6b1f  libhvf.dylib (14) <38950451-5A48-3392-966F-1B98E87A7FBF> /usr/lib/libhvf.dylib
+       0x2ceba8000 -        0x2cebae1bb  libReverseProxyDevice.dylib (114) <26015E4C-D24D-3FF4-91E8-67EA1302E4EC> /usr/lib/libReverseProxyDevice.dylib
+       0x2cebaf000 -        0x2cebb5f55  libRosetta.dylib (385) <78496769-7478-387F-BAC2-0B372BA3EDA0> /usr/lib/libRosetta.dylib
+       0x2cec9a000 -        0x2cecd0def  libssl.48.dylib (111.0.5) <B45AFA08-F1CE-36B6-8124-9D65E64AD401> /usr/lib/libssl.48.dylib
+       0x2ced0a000 -        0x2ced41f77  libswiftPrespecialized.dylib (0) <8D6F3C57-A1A2-3B54-9AC3-E59216C4E880> /usr/lib/libswiftPrespecialized.dylib
+       0x2ced8e000 -        0x2ced9694b  libTLE.dylib (94) <4242C7D0-A666-33EE-B919-2351ECD18C3D> /usr/lib/libTLE.dylib
+       0x2cf00d000 -        0x2cf00d669  libswift_Builtin_float.dylib (6.4.0.31.5) <2BB1B2A0-4DB3-33C0-8512-CCADFEDDF9AF> /usr/lib/swift/libswift_Builtin_float.dylib
+       0x2cf00e000 -        0x2cf09186f  libswift_Concurrency.dylib (6.4.0 - 6.4.0.31.5) <F144943D-22F1-30BD-B9F9-CFA3C5670778> /usr/lib/swift/libswift_Concurrency.dylib
+       0x2cf092000 -        0x2cf094a73  libswift_DarwinFoundation1.dylib (428.0.10) <A05F2BB4-0003-3E0A-B3AF-F019E60E87E4> /usr/lib/swift/libswift_DarwinFoundation1.dylib
+       0x2cf095000 -        0x2cf095d13  libswift_DarwinFoundation2.dylib (428.0.10) <100CB8DF-3790-34C4-BA41-3EF98686A71B> /usr/lib/swift/libswift_DarwinFoundation2.dylib
+       0x2cf096000 -        0x2cf0967a7  libswift_DarwinFoundation3.dylib (428.0.10) <23B2F061-4435-3FB5-9640-FB00DF4BECC8> /usr/lib/swift/libswift_DarwinFoundation3.dylib
+       0x2cf099000 -        0x2cf130b2f  libswift_RegexParser.dylib (6.4.0 - 6.4.0.31.5) <43D6678F-9248-35D0-A6FD-DF1F504CF90C> /usr/lib/swift/libswift_RegexParser.dylib
+       0x2cf133000 -        0x2cf1be13f  libswift_StringProcessing.dylib (6.4.0 - 6.4.0.31.5) <5DC89DEC-5FD0-3F69-A803-BD8E18627460> /usr/lib/swift/libswift_StringProcessing.dylib
+       0x2cf222000 -        0x2cf232e5f  libswiftDistributed.dylib (6.4.0 - 6.4.0.31.5) <36402F53-7FD5-3FA0-82D7-7E3DD4EB62D0> /usr/lib/swift/libswiftDistributed.dylib
+       0x2cf247000 -        0x2cf25f4ef  libswiftObservation.dylib (6.4.0 - 6.4.0.31.5) <462F474B-D640-3075-A89F-F501C2736E81> /usr/lib/swift/libswiftObservation.dylib
+       0x2cf26b000 -        0x2cf274d77  libswiftRegexBuilder.dylib (6.4.0 - 6.4.0.31.5) <9E30B17C-0887-3751-BBFE-75217A1B7252> /usr/lib/swift/libswiftRegexBuilder.dylib
+       0x2cf3eb000 -        0x2cf3fdd47  libswiftSynchronization.dylib (6.4.0 - 6.4.0.31.5) <EECA5D34-4159-3936-B131-74D0FBCE552A> /usr/lib/swift/libswiftSynchronization.dylib
+       0x2cf3ff000 -        0x2cf41cabf  libswiftSystem.dylib (5027.0.67) <9160A18B-BD7D-376C-81A5-5DE8D25EA6A2> /usr/lib/swift/libswiftSystem.dylib
+       0x2cf588000 -        0x2cf58b73b  libsystem_darwindirectory.dylib (129.0.1) <FBA1E4E3-72B1-3D9D-8A5F-1EAC3894C1EF> /usr/lib/system/libsystem_darwindirectory.dylib
+       0x2cf58c000 -        0x2cf596da3  libsystem_eligibility.dylib (446.1.3) <D80EF6F0-E651-3E74-B908-66787D24736E> /usr/lib/system/libsystem_eligibility.dylib
+       0x2cf597000 -        0x2cf5a019b  libsystem_sanitizers.dylib (32) <AE1A1EDB-0FD3-303F-B609-AA32BFC6525F> /usr/lib/system/libsystem_sanitizers.dylib
+       0x2cf5a1000 -        0x2cf5a1a1b  libsystem_trial.dylib (511) <7E9E7F32-CABD-3244-89C6-0FE3B289E822> /usr/lib/system/libsystem_trial.dylib
+       0x2d576c000 -        0x2d576cef7  libobjcMsgSend31.dylib (973.1) <4DF1DC37-6AD3-3E31-9EC5-8B47938EB945> /usr/lib/objc/libobjcMsgSend31.dylib
+       0x2dd76c000 -        0x2dd76cef7  libobjcMsgSend32.dylib (973.1) <BCEAA43C-8057-346E-B9F1-053DFEE11200> /usr/lib/objc/libobjcMsgSend32.dylib
+       0x2e576c000 -        0x2e576cef7  libobjcMsgSend33.dylib (973.1) <F4291D9F-2C70-305D-BBB8-948034E9ED5D> /usr/lib/objc/libobjcMsgSend33.dylib
+       0x2ed76c000 -        0x2ed76cef7  libobjcMsgSend34.dylib (973.1) <596382C5-C6CC-3337-8699-059817538D6F> /usr/lib/objc/libobjcMsgSend34.dylib

@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Users/numi/numi-human-back-m6-1349/attempt-386-sixrow-frozen-field-critical-pose-audit-001.py", line 233, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/numi-human-back-m6-1349/attempt-386-sixrow-frozen-field-critical-pose-audit-001.py", line 190, in main
+    upaudit,ua=compact_topology(up,u['faces']);upnaudit,uan=compact_topology(upn,u['faces'])
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/numi/numi-human-back-m6-1349/attempt-386-sixrow-frozen-field-critical-pose-audit-001.py", line 29, in compact_topology
+    aud=M366.exact_topology_audit(points,faces)
+  File "/Users/n/numi-human-back-m6-1349/attempt-366-cap-multi-ulp-conditioned-edgeflips-001/pose_audit366.py", line 46, in exact_topology_audit
+    audit=ci._audit_pair(rec,rec,same_surface=True) if rec else {'count':0,'triangle_pairs':[],'aabb_candidate_pairs':0,'allowed_shared_vertex_or_edge_pairs':0}
+          ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-exact-normalization-m6-1348/src/numilab_human/cardiac_cavity_intersections.py", line 311, in _audit_pair
+    return _audit_record_pairs(
+        _aabb_candidate_pairs(first, second, same_surface=same_surface),
+        same_surface=same_surface)
+  File "/Users/n/numi-human-exact-normalization-m6-1348/src/numilab_human/cardiac_cavity_intersections.py", line 320, in _audit_record_pairs
+    points = triangle_intersection_points(tri, other)
+  File "/Users/n/numi-human-exact-normalization-m6-1348/src/numilab_human/cardiac_cavity_intersections.py", line 215, in triangle_intersection_points
+    local_points = _triangle_intersection_points_integer(normalized[:3], normalized[3:])
+  File "/Users/n/numi-human-exact-normalization-m6-1348/src/numilab_human/cardiac_cavity_intersections.py", line 196, in _triangle_intersection_points_integer
+    sb = [_dot(nb, _sub(p, second[0])) for p in first]
+                   ~~~~^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-exact-normalization-m6-1348/src/numilab_human/cardiac_cavity_intersections.py", line 35, in _sub
+    return tuple(x-y for x, y in zip(a, b))
+KeyboardInterrupt
