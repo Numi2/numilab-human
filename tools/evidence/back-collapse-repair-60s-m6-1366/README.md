@@ -1,0 +1,10 @@
+# One-minute native back-collapse regression
+The same six-surface repair published in 3ddb0439 completed 30,000 accepted steps (60.00000285 simulated seconds) on SSH numi, Apple M6. The launcher took 358.641897791 seconds: 0.16730 times real time. The native executable and all 124 declared immutable inputs remained unchanged.
+
+All eight exported accepted poses (0, 7999, 10015, 15007, 19999, 24991, 27999, 30000) have zero exactly degenerate back faces, preserved closed oriented components and component volume signs, and all 2,792 declared interface facet pairs remain bit-identical with opposite winding. The original 158 source rows are unchanged. Initial original 868 rendered surfaces and 157 poses match native012; later captures have no matched baseline geometry and are not claimed equivalent. The first 16 seconds of the physiology trace match native012 byte for byte.
+
+The recording has 940 image frames and five timing markers, from simulated time 0 to 60.00000285 seconds. Presentation timestamps increase strictly; duration is 353.066667 wall seconds and maximum frame gap is 1.736667 seconds. The final muscle-layer image was inspected. The accepted final display records 11 breaths and 70 beats; these counts are observations, not physiological qualification.
+
+Residual raw self-intersection counts at start/end are row153 0/0, row154 0/0, row155 0/4, row156 0/0, row157 47/43, row158 31/25. The run is not anatomically admitted. Forearm crossings and medial back crossings remain open, as do five-minute final qualification and intervention comparison.
+
+An earlier 60-second preparation requested step8000 as an interior capture, which the native cadence validator rejected before simulation. Its failure is retained. The corrected run uses valid submission endpoints; no guard was disabled. Large geometry packs, parent data and the continuous movie remain on numi with exact hashes in manifest.json. Source rights and mixed-source reference provenance remain as published in the preceding repair; no measured-person claim is made.
