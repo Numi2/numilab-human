@@ -1,0 +1,1445 @@
+{
+  "candidate": "/Users/n/numi-human-fds132-m6-1350/attempt-166-right-capB-ancestry-correction-001/result-001/candidate.pkl",
+  "candidate_sha256": "25d759377d4861660f12c6458cd5bde4d48e152462048f15aea6410b70b2c17d",
+  "interface_extension": {
+    "classification": "inferred extension of the retained source-partition interface; not a measured anatomical attachment",
+    "new_global_face_ids": [
+      4632,
+      4658,
+      4661
+    ],
+    "new_shared_pair_count": 2275,
+    "opposite_winding": true,
+    "pooled_ancestry_by_modified_133_face": {
+      "3304": [
+        [
+          133,
+          2594
+        ],
+        [
+          133,
+          2597
+        ]
+      ],
+      "3325": [
+        [
+          133,
+          2594
+        ],
+        [
+          133,
+          2597
+        ]
+      ]
+    },
+    "prior_shared_pair_count": 2274,
+    "role_overrides": [
+      {
+        "face_index": 6542,
+        "from_role": 0,
+        "parent_ancestry": [
+          [
+            131,
+            5230
+          ]
+        ],
+        "reason": "opposite exact facet added by cap-B; adjacent along two edges to existing paired role1 facets",
+        "stable_id": 131,
+        "to_role": 1
+      },
+      {
+        "face_index": 3325,
+        "from_role": 0,
+        "parent_ancestry": [
+          [
+            133,
+            2594
+          ],
+          [
+            133,
+            2597
+          ]
+        ],
+        "reason": "opposite exact facet added by cap-B; new triangle spans two retained native parent faces",
+        "stable_id": 133,
+        "to_role": 1
+      }
+    ],
+    "schema": "numi.human.right-capB-inferred-interface-extension.v1",
+    "shared_pair": [
+      {
+        "face_index": 6542,
+        "oriented_global_vertex_ids": [
+          4632,
+          4661,
+          4658
+        ],
+        "stable_id": 131
+      },
+      {
+        "face_index": 3325,
+        "oriented_global_vertex_ids": [
+          4661,
+          4632,
+          4658
+        ],
+        "stable_id": 133
+      }
+    ]
+  },
+  "operations": [
+    {
+      "derived_face_indices": [
+        6555,
+        6556
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            131,
+            5230
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 6555,
+            "new_global_face": [
+              4658,
+              4668,
+              4679
+            ],
+            "old_global_face": [
+              4658,
+              4671,
+              4679
+            ],
+            "parent_face": 5230,
+            "parent_id": 131,
+            "role": 1,
+            "sid": 131
+          },
+          {
+            "face_index": 6556,
+            "new_global_face": [
+              4668,
+              4671,
+              4679
+            ],
+            "old_global_face": [
+              4658,
+              4668,
+              4671
+            ],
+            "parent_face": 5230,
+            "parent_id": 131,
+            "role": 1,
+            "sid": 131
+          }
+        ],
+        "faces": [
+          6555,
+          6556
+        ],
+        "new": [
+          [
+            4658,
+            4668,
+            4679
+          ],
+          [
+            4668,
+            4671,
+            4679
+          ]
+        ],
+        "old": [
+          [
+            4658,
+            4671,
+            4679
+          ],
+          [
+            4658,
+            4668,
+            4671
+          ]
+        ],
+        "sid": 131
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          131,
+          5230
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        6592,
+        6593
+      ],
+      "stable_id": 131
+    },
+    {
+      "derived_face_indices": [
+        8910,
+        8911
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            131,
+            6566
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 8910,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              131,
+              6566
+            ],
+            "new_global_vertex_ids": [
+              4666,
+              4689,
+              4690
+            ],
+            "old_global_vertex_ids": [
+              4682,
+              4690,
+              4666
+            ],
+            "operation": "ext3807_131_8910_8911",
+            "source_xyz_unchanged": true,
+            "stable_id": 131,
+            "stored_primary_parent": [
+              131,
+              6566
+            ]
+          },
+          {
+            "face_index": 8911,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              131,
+              6566
+            ],
+            "new_global_vertex_ids": [
+              4689,
+              4666,
+              4682
+            ],
+            "old_global_vertex_ids": [
+              4682,
+              4689,
+              4690
+            ],
+            "operation": "ext3807_131_8910_8911",
+            "source_xyz_unchanged": true,
+            "stable_id": 131,
+            "stored_primary_parent": [
+              131,
+              6566
+            ]
+          }
+        ],
+        "faces": [
+          8910,
+          8911
+        ],
+        "new": [
+          [
+            4666,
+            4689,
+            4690
+          ],
+          [
+            4689,
+            4666,
+            4682
+          ]
+        ],
+        "old": [
+          [
+            4682,
+            4690,
+            4666
+          ],
+          [
+            4682,
+            4689,
+            4690
+          ]
+        ],
+        "sid": 131
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          131,
+          6566
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        9090,
+        9091
+      ],
+      "stable_id": 131
+    },
+    {
+      "derived_face_indices": [
+        10671,
+        10672
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            131,
+            7765
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 10671,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              131,
+              7765
+            ],
+            "new_global_vertex_ids": [
+              785,
+              812,
+              799
+            ],
+            "old_global_vertex_ids": [
+              799,
+              785,
+              813
+            ],
+            "operation": "ext4767_131_10671_10672",
+            "source_xyz_unchanged": true,
+            "stable_id": 131,
+            "stored_primary_parent": [
+              131,
+              7765
+            ]
+          },
+          {
+            "face_index": 10672,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              131,
+              7765
+            ],
+            "new_global_vertex_ids": [
+              812,
+              785,
+              813
+            ],
+            "old_global_vertex_ids": [
+              799,
+              813,
+              812
+            ],
+            "operation": "ext4767_131_10671_10672",
+            "source_xyz_unchanged": true,
+            "stable_id": 131,
+            "stored_primary_parent": [
+              131,
+              7765
+            ]
+          }
+        ],
+        "faces": [
+          10671,
+          10672
+        ],
+        "new": [
+          [
+            785,
+            812,
+            799
+          ],
+          [
+            812,
+            785,
+            813
+          ]
+        ],
+        "old": [
+          [
+            799,
+            785,
+            813
+          ],
+          [
+            799,
+            813,
+            812
+          ]
+        ],
+        "sid": 131
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          131,
+          7765
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        10849,
+        10850
+      ],
+      "stable_id": 131
+    },
+    {
+      "derived_face_indices": [
+        10686,
+        10687
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            131,
+            7769
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 10686,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              131,
+              7769
+            ],
+            "new_global_vertex_ids": [
+              785,
+              800,
+              782
+            ],
+            "old_global_vertex_ids": [
+              782,
+              785,
+              796
+            ],
+            "operation": "ext4767_131_10686_10687",
+            "source_xyz_unchanged": true,
+            "stable_id": 131,
+            "stored_primary_parent": [
+              131,
+              7769
+            ]
+          },
+          {
+            "face_index": 10687,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              131,
+              7769
+            ],
+            "new_global_vertex_ids": [
+              800,
+              785,
+              796
+            ],
+            "old_global_vertex_ids": [
+              782,
+              796,
+              800
+            ],
+            "operation": "ext4767_131_10686_10687",
+            "source_xyz_unchanged": true,
+            "stable_id": 131,
+            "stored_primary_parent": [
+              131,
+              7769
+            ]
+          }
+        ],
+        "faces": [
+          10686,
+          10687
+        ],
+        "new": [
+          [
+            785,
+            800,
+            782
+          ],
+          [
+            800,
+            785,
+            796
+          ]
+        ],
+        "old": [
+          [
+            782,
+            785,
+            796
+          ],
+          [
+            782,
+            796,
+            800
+          ]
+        ],
+        "sid": 131
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          131,
+          7769
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        10864,
+        10865
+      ],
+      "stable_id": 131
+    },
+    {
+      "derived_face_indices": [
+        5885,
+        5886
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            4470
+          ]
+        ],
+        "detail": {
+          "edge_global_ids": [
+            5955,
+            5962
+          ],
+          "face_indices": [
+            5885,
+            5886
+          ],
+          "name": "flip133_5885_5886",
+          "new_faces": [
+            [
+              6087,
+              5958,
+              5962
+            ],
+            [
+              5958,
+              6087,
+              5955
+            ]
+          ],
+          "new_min_altitude_um": 12.580712975008398,
+          "nondegenerate_orientation_preserved": true,
+          "old_faces": [
+            [
+              5962,
+              6087,
+              5955
+            ],
+            [
+              5955,
+              5958,
+              5962
+            ]
+          ],
+          "old_min_altitude_um": 0.11188927777535666,
+          "parent_identity": [
+            133,
+            4470
+          ],
+          "same_parent_same_role0": true,
+          "sid": 133,
+          "source_patch_change": {
+            "new_patch_area_m2": 1.831478356450992e-07,
+            "old_new_projection_hull_area_m2": 1.831478331243607e-07,
+            "old_patch_area_m2": 1.8314788139742814e-07,
+            "relative_area_change": 2.49810855441706e-07,
+            "same_projection_pointwise_displacement_upper_bound_um": 0.008483672032503312
+          }
+        },
+        "faces": [
+          5885,
+          5886
+        ],
+        "new": [
+          [
+            6087,
+            5958,
+            5962
+          ],
+          [
+            5958,
+            6087,
+            5955
+          ]
+        ],
+        "old": [
+          [
+            5962,
+            6087,
+            5955
+          ],
+          [
+            5955,
+            5958,
+            5962
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          4470
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        6053,
+        6054
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        4554,
+        4556
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            3482
+          ]
+        ],
+        "detail": {
+          "edge_global_ids": [
+            894,
+            911
+          ],
+          "face_indices": [
+            4554,
+            4556
+          ],
+          "name": "flip133_4554_4556",
+          "new_faces": [
+            [
+              915,
+              897,
+              894
+            ],
+            [
+              897,
+              915,
+              911
+            ]
+          ],
+          "new_min_altitude_um": 3.549117254464732,
+          "nondegenerate_orientation_preserved": true,
+          "old_faces": [
+            [
+              894,
+              915,
+              911
+            ],
+            [
+              911,
+              897,
+              894
+            ]
+          ],
+          "old_min_altitude_um": 0.08674219898478285,
+          "parent_identity": [
+            133,
+            3482
+          ],
+          "same_parent_same_role0": true,
+          "sid": 133,
+          "source_patch_change": {
+            "new_patch_area_m2": 1.270386750289552e-08,
+            "old_new_projection_hull_area_m2": 1.2703846514404654e-08,
+            "old_patch_area_m2": 1.2704666631771564e-08,
+            "relative_area_change": 6.290042070416933e-05,
+            "same_projection_pointwise_displacement_upper_bound_um": 0.020235465875021955
+          }
+        },
+        "faces": [
+          4554,
+          4556
+        ],
+        "new": [
+          [
+            915,
+            897,
+            894
+          ],
+          [
+            897,
+            915,
+            911
+          ]
+        ],
+        "old": [
+          [
+            894,
+            915,
+            911
+          ],
+          [
+            911,
+            897,
+            894
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          3482
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        4719,
+        4721
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        3044,
+        3045
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            2409
+          ]
+        ],
+        "detail": {
+          "edge_global_ids": [
+            3231,
+            3517
+          ],
+          "face_indices": [
+            3044,
+            3045
+          ],
+          "name": "flip133_3044_3045",
+          "new_faces": [
+            [
+              2934,
+              3334,
+              3517
+            ],
+            [
+              3334,
+              2934,
+              3231
+            ]
+          ],
+          "new_min_altitude_um": 158.9551462293337,
+          "nondegenerate_orientation_preserved": true,
+          "old_faces": [
+            [
+              3517,
+              2934,
+              3231
+            ],
+            [
+              3517,
+              3231,
+              3334
+            ]
+          ],
+          "old_min_altitude_um": 5.667306338689901,
+          "parent_identity": [
+            133,
+            2409
+          ],
+          "same_parent_same_role0": true,
+          "sid": 133,
+          "source_patch_change": {
+            "new_patch_area_m2": 7.530934673480597e-07,
+            "old_new_projection_hull_area_m2": 7.530934672770343e-07,
+            "old_patch_area_m2": 7.530934685979082e-07,
+            "relative_area_change": 1.6596194536811009e-09,
+            "same_projection_pointwise_displacement_upper_bound_um": 0.0027760366453680983
+          }
+        },
+        "faces": [
+          3044,
+          3045
+        ],
+        "new": [
+          [
+            2934,
+            3334,
+            3517
+          ],
+          [
+            3334,
+            2934,
+            3231
+          ]
+        ],
+        "old": [
+          [
+            3517,
+            2934,
+            3231
+          ],
+          [
+            3517,
+            3231,
+            3334
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          2409
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        3162,
+        3163
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        4000,
+        4003
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            3140
+          ]
+        ],
+        "detail": {
+          "edge_global_ids": [
+            1390,
+            10748
+          ],
+          "face_indices": [
+            4000,
+            4003
+          ],
+          "name": "flip133_4000_4003",
+          "new_faces": [
+            [
+              1379,
+              1391,
+              1390
+            ],
+            [
+              1391,
+              1379,
+              10748
+            ]
+          ],
+          "new_min_altitude_um": 101.29918572918992,
+          "nondegenerate_orientation_preserved": true,
+          "old_faces": [
+            [
+              10748,
+              1390,
+              1379
+            ],
+            [
+              1390,
+              10748,
+              1391
+            ]
+          ],
+          "old_min_altitude_um": 7.8048502601346454,
+          "parent_identity": [
+            133,
+            3140
+          ],
+          "same_parent_same_role0": true,
+          "sid": 133,
+          "source_patch_change": {
+            "new_patch_area_m2": 2.531148671138108e-06,
+            "old_new_projection_hull_area_m2": 2.531148670698142e-06,
+            "old_patch_area_m2": 2.531148673343948e-06,
+            "relative_area_change": 8.71477774631738e-10,
+            "same_projection_pointwise_displacement_upper_bound_um": 0.0035310783385909712
+          }
+        },
+        "faces": [
+          4000,
+          4003
+        ],
+        "new": [
+          [
+            1379,
+            1391,
+            1390
+          ],
+          [
+            1391,
+            1379,
+            10748
+          ]
+        ],
+        "old": [
+          [
+            10748,
+            1390,
+            1379
+          ],
+          [
+            1390,
+            10748,
+            1391
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          3140
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        4164,
+        4167
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        7167,
+        7168
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            131,
+            5230
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 7167,
+            "new_global_face": [
+              4658,
+              4679,
+              4668
+            ],
+            "old_global_face": [
+              4658,
+              4679,
+              4671
+            ],
+            "parent_face": 5230,
+            "parent_id": 131,
+            "role": 1,
+            "sid": 133
+          },
+          {
+            "face_index": 7168,
+            "new_global_face": [
+              4679,
+              4671,
+              4668
+            ],
+            "old_global_face": [
+              4658,
+              4671,
+              4668
+            ],
+            "parent_face": 5230,
+            "parent_id": 131,
+            "role": 1,
+            "sid": 133
+          }
+        ],
+        "faces": [
+          7167,
+          7168
+        ],
+        "new": [
+          [
+            4658,
+            4679,
+            4668
+          ],
+          [
+            4679,
+            4671,
+            4668
+          ]
+        ],
+        "old": [
+          [
+            4658,
+            4679,
+            4671
+          ],
+          [
+            4658,
+            4671,
+            4668
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          131,
+          5230
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        7342,
+        7343
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        3325,
+        3304
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            2594
+          ],
+          [
+            133,
+            2597
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 3325,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              2594,
+              2597
+            ],
+            "inherited_parent_pool_stable_id": 133,
+            "new_global_vertex_ids": [
+              4661,
+              4632,
+              4658
+            ],
+            "old_global_vertex_ids": [
+              4658,
+              4661,
+              4675
+            ],
+            "operation": "cap_B_3325_3304",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              2597
+            ]
+          },
+          {
+            "face_index": 3304,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              2594,
+              2597
+            ],
+            "inherited_parent_pool_stable_id": 133,
+            "new_global_vertex_ids": [
+              4632,
+              4661,
+              4675
+            ],
+            "old_global_vertex_ids": [
+              4632,
+              4658,
+              4675
+            ],
+            "operation": "cap_B_3325_3304",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              2594
+            ]
+          }
+        ],
+        "faces": [
+          3325,
+          3304
+        ],
+        "new": [
+          [
+            4661,
+            4632,
+            4658
+          ],
+          [
+            4632,
+            4661,
+            4675
+          ]
+        ],
+        "old": [
+          [
+            4658,
+            4661,
+            4675
+          ],
+          [
+            4632,
+            4658,
+            4675
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          2594
+        ],
+        [
+          133,
+          2597
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        3456,
+        3426
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        1072,
+        1073
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            1000
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 1072,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              133,
+              1000
+            ],
+            "new_global_vertex_ids": [
+              4628,
+              4740,
+              4735
+            ],
+            "old_global_vertex_ids": [
+              4735,
+              4628,
+              4689
+            ],
+            "operation": "ext3807_133_1072_1073",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              1000
+            ]
+          },
+          {
+            "face_index": 1073,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              133,
+              1000
+            ],
+            "new_global_vertex_ids": [
+              4740,
+              4628,
+              4689
+            ],
+            "old_global_vertex_ids": [
+              4689,
+              4740,
+              4735
+            ],
+            "operation": "ext3807_133_1072_1073",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              1000
+            ]
+          }
+        ],
+        "faces": [
+          1072,
+          1073
+        ],
+        "new": [
+          [
+            4628,
+            4740,
+            4735
+          ],
+          [
+            4740,
+            4628,
+            4689
+          ]
+        ],
+        "old": [
+          [
+            4735,
+            4628,
+            4689
+          ],
+          [
+            4689,
+            4740,
+            4735
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          1000
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        1082,
+        1083
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        1444,
+        1445
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            1260
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 1444,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              133,
+              1260
+            ],
+            "new_global_vertex_ids": [
+              4628,
+              4657,
+              4689
+            ],
+            "old_global_vertex_ids": [
+              4689,
+              4628,
+              4630
+            ],
+            "operation": "ext3807_133_1444_1445",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              1260
+            ]
+          },
+          {
+            "face_index": 1445,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              133,
+              1260
+            ],
+            "new_global_vertex_ids": [
+              4657,
+              4628,
+              4630
+            ],
+            "old_global_vertex_ids": [
+              4689,
+              4630,
+              4657
+            ],
+            "operation": "ext3807_133_1444_1445",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              1260
+            ]
+          }
+        ],
+        "faces": [
+          1444,
+          1445
+        ],
+        "new": [
+          [
+            4628,
+            4657,
+            4689
+          ],
+          [
+            4657,
+            4628,
+            4630
+          ]
+        ],
+        "old": [
+          [
+            4689,
+            4628,
+            4630
+          ],
+          [
+            4689,
+            4630,
+            4657
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          1260
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        1471,
+        1472
+      ],
+      "stable_id": 133
+    },
+    {
+      "derived_face_indices": [
+        4398,
+        4400
+      ],
+      "operation": {
+        "ancestry": [
+          [
+            133,
+            3395
+          ]
+        ],
+        "detail": [
+          {
+            "face_index": 4398,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              133,
+              3395
+            ],
+            "new_global_vertex_ids": [
+              787,
+              799,
+              823
+            ],
+            "old_global_vertex_ids": [
+              796,
+              823,
+              787
+            ],
+            "operation": "ext4767_133_4398_4400",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              3395
+            ]
+          },
+          {
+            "face_index": 4400,
+            "full21_weights_unchanged": true,
+            "inherited_parent_pool": [
+              133,
+              3395
+            ],
+            "new_global_vertex_ids": [
+              799,
+              787,
+              796
+            ],
+            "old_global_vertex_ids": [
+              823,
+              796,
+              799
+            ],
+            "operation": "ext4767_133_4398_4400",
+            "source_xyz_unchanged": true,
+            "stable_id": 133,
+            "stored_primary_parent": [
+              133,
+              3395
+            ]
+          }
+        ],
+        "faces": [
+          4398,
+          4400
+        ],
+        "new": [
+          [
+            787,
+            799,
+            823
+          ],
+          [
+            799,
+            787,
+            796
+          ]
+        ],
+        "old": [
+          [
+            796,
+            823,
+            787
+          ],
+          [
+            823,
+            796,
+            799
+          ]
+        ],
+        "sid": 133
+      },
+      "pooled_source_parent_ancestry": [
+        [
+          133,
+          3395
+        ]
+      ],
+      "predecessor_input_local_face_indices": [
+        4563,
+        4565
+      ],
+      "stable_id": 133
+    }
+  ],
+  "scope": "Pooled predecessor ancestry for inferred tessellation, not exact prior patch coverage. Ordered operations replay candidate150 exactly to candidate165."
+}

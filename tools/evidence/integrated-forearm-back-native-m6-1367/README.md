@@ -1,0 +1,12 @@
+# Integrated forearm and back native increment
+One whole-body native scene combines the back408 collapse repair with right-forearm166 inferred local tessellation. It completed 8,000 accepted steps (16.00000076 simulated seconds) on SSH numi, Apple M6, in 107.036941834 launcher seconds (0.14948 times real time). All 160 immutable inputs and the prepared invocation match.
+
+The independent full-mesh exact audit finds zero right FDS/FDP joined-exterior crossings at all eight actual captures: steps 0, 3807, 4767, 5023, 5599, 6207, 7423 and 8000. Both rows are individually clear at the first six captures. Three row133 self-pairs remain at both late captures: (3304,7167), (3304,7169), (3323,7167). This candidate is not anatomically admitted.
+
+The source exact row and union tests pass. Coordinates and all 21 influence weights are unchanged. Twenty-six triangle faces are retessellated from candidate150; one contiguous, explicitly declared opposite-wound interface facet extends the paired interface from 2,274 to 2,275 facets. The 2,070 shared referenced vertices remain exact. Inferred patch geometry bounds and ordered predecessor ancestry are retained, including both parent faces2594/2597 for each cap-B descendant. No exact old-patch coverage or measured-person claim is made.
+
+All other 872 rendered surfaces (including the six repaired back rows), all 157 accepted body poses, and the full 1,000-row physiology trace are byte-identical to back native007. Physical mass, forces, contact, heart, gas transport and controller owners are unchanged.
+
+Earlier subset-screen claims of only one late row133 crossing are superseded by this full native audit. The subset screen used an invalid record-order assumption that suppressed some changed-vs-unchanged pairs; later subset variants also disagreed with full-row results. Those exploratory screens do not establish clearance. This evidence uses complete record lists, exact predicates and actual accepted native geometry.
+
+Source candidates, parent terms, large capture packs and the continuous native-viewer recording remain on numi with exact hashes in manifest.json. Preparation binds the existing receipts in order: prior scene, right composition, back append, back composition. Failed preparations remain retained remotely. The back's separately verified one-minute collapse regression is in e2b994aa; medial-back crossings, left PQ/forearm registration and final five-minute/intervention acceptance remain open.
