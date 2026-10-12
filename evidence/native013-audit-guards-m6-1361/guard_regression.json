@@ -1,0 +1,86 @@
+{
+  "pins": {
+    "bundle_preparation_sha256": "083190aa3407ea27669fd6966a4f4b0302720cff1c7c364f265cc734d999e60f",
+    "external_original_sha256": "a6c93eb73095de63cee517240fd24c72f455d4f13f6db36560c3120f208b4d28",
+    "main_original_sha256": "7080983ff27295d949f6225c4ac4f2f7ff6f85191367ed1d7e4f345a9aced564"
+  },
+  "schema": "numi.human.native013-audit-guard-regression-1361.v1",
+  "scope": "Synthetic compact-ID/shared-count guard tests and read-only validation of the prepared candidate150 bundle. No native capture, GPU launch, or anatomy admission.",
+  "status": "passed_guard_regressions_and_read_only_preflight",
+  "successors": [
+    {
+      "prepared_geometry_sha256": {
+        "131": "ce78b12f6ac676a917e83e781284483e3ded73cc0d313677ef0bb32e841038f0",
+        "133": "b943a17819034e307bdf1aa4ef81e39a14ece8866cc5eb002bbe42b40bb4365f"
+      },
+      "prepared_row_counts": {
+        "131": 6729,
+        "133": 6065
+      },
+      "prepared_shared_identity_count": 2070,
+      "prepared_shared_metadata_count": 2070,
+      "sha256": "0491badcb55b5d6950f9eacb5b576d97871fb10a73bc604453c12ae5474a17fb",
+      "successor": "audit_bilateral_native_013_successor_001.py",
+      "synthetic_rejections": [
+        {
+          "case": "duplicate_global_ids",
+          "rejected": true
+        },
+        {
+          "case": "global_local_face_mapping_mismatch",
+          "rejected": true
+        },
+        {
+          "case": "local_face_out_of_range",
+          "rejected": true
+        },
+        {
+          "case": "empty_shared_intersection",
+          "rejected": true
+        },
+        {
+          "case": "wrong_shared_cardinality",
+          "rejected": true
+        }
+      ],
+      "synthetic_valid_mapping": "passed"
+    },
+    {
+      "prepared_geometry_sha256": {
+        "131": "ce78b12f6ac676a917e83e781284483e3ded73cc0d313677ef0bb32e841038f0",
+        "133": "b943a17819034e307bdf1aa4ef81e39a14ece8866cc5eb002bbe42b40bb4365f"
+      },
+      "prepared_row_counts": {
+        "131": 6729,
+        "133": 6065
+      },
+      "prepared_shared_identity_count": 2070,
+      "prepared_shared_metadata_count": 2070,
+      "sha256": "73de1d73919c74eb584394744b7872bffff498deb21ce9631c747a161a116d5c",
+      "successor": "audit_bilateral_external_native_013_successor_001.py",
+      "synthetic_rejections": [
+        {
+          "case": "duplicate_global_ids",
+          "rejected": true
+        },
+        {
+          "case": "global_local_face_mapping_mismatch",
+          "rejected": true
+        },
+        {
+          "case": "local_face_out_of_range",
+          "rejected": true
+        },
+        {
+          "case": "empty_shared_intersection",
+          "rejected": true
+        },
+        {
+          "case": "wrong_shared_cardinality",
+          "rejected": true
+        }
+      ],
+      "synthetic_valid_mapping": "passed"
+    }
+  ]
+}
