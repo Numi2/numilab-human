@@ -1,0 +1,408 @@
+{
+  "candidate_face_only_identity": {
+    "132": {
+      "changed_face_indices": [
+        5111,
+        5112
+      ],
+      "face_count": 25104,
+      "global_ids_equal": true,
+      "parent_refs_equal": true,
+      "vertex_count": 12548,
+      "vertices_exact_equal": true,
+      "vertices_float32_equal": true
+    },
+    "134": {
+      "changed_face_indices": [],
+      "face_count": 29540,
+      "global_ids_equal": true,
+      "parent_refs_equal": true,
+      "vertex_count": 14772,
+      "vertices_exact_equal": true,
+      "vertices_float32_equal": true
+    }
+  },
+  "elapsed_seconds": 73.86026637500254,
+  "environment": {
+    "cpu_workers": 1,
+    "maxrss_platform_units": 243580928,
+    "numpy": "2.5.3",
+    "python": "3.13.16 (main, Sep 30 2026, 18:57:20) [Clang 21.0.0 (clang-2100.3.34.2)]"
+  },
+  "exact_rational_source_support_proof": {
+    "exact_oriented_patch_volume_delta_is_zero": true,
+    "exact_oriented_patch_volume_delta_m3": [
+      0,
+      1
+    ],
+    "exact_vertices_identical_before_after": true,
+    "patch_global_vertex_ids": [
+      5490,
+      5491,
+      5492,
+      5581
+    ],
+    "raw_parent_plane_signed_tripleproducts": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "source_parent": {
+      "parent_candidate_face_index": 4867,
+      "parent_original_source_face_index": 4859,
+      "parent_stable_id": 132
+    },
+    "source_parent_plane_max_distance_um": 0.0,
+    "source_support_claim": "Exact rational parent-plane membership plus same four vertices and a convex planar quadrilateral; old and new diagonals triangulate the same patch.",
+    "vertices_on_raw_source_parent_plane_exactly": true
+  },
+  "p011_step151999_full_cpu_ordinary_path_audit": {
+    "arithmetic": "same 088 F32 binding transforms and per-core FMA route field accumulation used to reproduce 092 witnesses; CPU pose reproduction, not native capture",
+    "full_children_and_union": {
+      "baseline_092_target_witnesses": {
+        "known_baseline_counts": [
+          1,
+          2,
+          1
+        ],
+        "original": "(132,5112) with (134,3723),(134,3724),(134,3741)",
+        "screen": "full exact union; all pairs preserved with candidate face provenance"
+      },
+      "rows": {
+        "132": {
+          "degenerate_count": 0,
+          "exact_float32_self_pair_count": 0,
+          "exact_float32_self_pairs": [],
+          "face_count": 25104,
+          "name": "P011151999_row132",
+          "passed": true
+        },
+        "134": {
+          "degenerate_count": 0,
+          "exact_float32_self_pair_count": 0,
+          "exact_float32_self_pairs": [],
+          "face_count": 29540,
+          "name": "P011151999_row134",
+          "passed": true
+        }
+      },
+      "union": {
+        "cancelled_opposite_shared_faces": 7010,
+        "exact_self": {
+          "degenerate_count": 0,
+          "exact_float32_self_pair_count": 0,
+          "exact_float32_self_pairs": [],
+          "face_count": 40624,
+          "name": "P011151999_joined_union",
+          "passed": true
+        },
+        "topology": {
+          "bad_edge_incidence_count": 0,
+          "bad_edge_incidence_examples": [],
+          "bad_edge_winding_count": 0,
+          "bad_edge_winding_examples": [],
+          "closed": true,
+          "component_signed_volumes": [
+            {
+              "face_count": 40180,
+              "sign": "positive",
+              "signed_volume_m3": 0.00010314554012149404,
+              "vertex_count": 19964
+            },
+            {
+              "face_count": 26,
+              "sign": "negative",
+              "signed_volume_m3": -3.82164102637228e-12,
+              "vertex_count": 15
+            },
+            {
+              "face_count": 64,
+              "sign": "negative",
+              "signed_volume_m3": -1.1228186713880993e-10,
+              "vertex_count": 34
+            },
+            {
+              "face_count": 4,
+              "sign": "negative",
+              "signed_volume_m3": -8.51048772312572e-14,
+              "vertex_count": 4
+            },
+            {
+              "face_count": 30,
+              "sign": "negative",
+              "signed_volume_m3": -3.0398013660658825e-11,
+              "vertex_count": 17
+            },
+            {
+              "face_count": 4,
+              "sign": "negative",
+              "signed_volume_m3": -2.314720663102411e-13,
+              "vertex_count": 4
+            },
+            {
+              "face_count": 22,
+              "sign": "negative",
+              "signed_volume_m3": -1.517560379684413e-12,
+              "vertex_count": 13
+            },
+            {
+              "face_count": 14,
+              "sign": "negative",
+              "signed_volume_m3": -9.943440764919647e-13,
+              "vertex_count": 9
+            },
+            {
+              "face_count": 94,
+              "sign": "negative",
+              "signed_volume_m3": -1.6214077155412197e-10,
+              "vertex_count": 49
+            },
+            {
+              "face_count": 122,
+              "sign": "negative",
+              "signed_volume_m3": -1.1121807940986965e-08,
+              "vertex_count": 63
+            },
+            {
+              "face_count": 26,
+              "sign": "negative",
+              "signed_volume_m3": -1.669681438194854e-10,
+              "vertex_count": 15
+            },
+            {
+              "face_count": 38,
+              "sign": "negative",
+              "signed_volume_m3": -6.437075116732148e-10,
+              "vertex_count": 21
+            }
+          ],
+          "consistently_oriented": true,
+          "edge_count": 60936,
+          "face_components": 12,
+          "face_count": 40624,
+          "vertex_count": 20208
+        }
+      }
+    },
+    "pose_receipt_path": "/Users/numi/numi-human-retained-delivery-20261009/skin-resting-multipose-clearance-1218/native-coupled-pair-preparation-011/baseline/native-run/accepted-geometry/step-151999.receipt.json",
+    "pose_receipt_sha256": "d13899f06de29cf78449ecaceb1ad8736720d53016cecf03b63c2126b81ace88"
+  },
+  "pins": {
+    "/Users/numi/numi-human-anatomy-completion-1276/src/numilab_human/cardiac_cavity_intersections.py": "90c7a7fb0ce4383397f97519dd5fe163201d86a0c97e18e3a9eb3fa9858cd561",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-085-interface-refinement-2mm-001/result-001/candidate.pkl": "4792b40d2828a019cee8fdd5160f29f4667a0596bfe423960abd8f90e7bc1e2a",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-088-registered-route-field-refined-2mm-001.py": "1b488e9d9c372dbd4417a86b5516c1c9b87d0b79752d43ecc9655d0113963f4c",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-088-registered-route-field-refined-2mm-001/result-001/route-anchor-reference-field-001.npz": "71497028ba99db22e048a020a4e58799ccadd5dae0f5f9bac006ac270ab5b02b",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-093-unit-correction-001/corrected-unit-receipt.json": "fe05903c29e8b709e1e275bbd4dca418ae12f0677737361430c51480f823fcfb",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-097-minimal-late-witness-diagonal-screen-001/candidate-source-preserving-flip.pkl": "7b0ae1efee39b3350e64692c0e5868ab4dcd2239bcc2160966ffca839365f244",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-098-full-source-and-late-audit-001/progress.jsonl": "ae4085ac01f7b22411762f1d4bbe7a9851c7efe081c9c959309524523b624d60",
+    "/Users/numi/numi-human-fds132-m6-1350/registration-source-b1b410ad.json": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "/Users/numi/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-retained-pose-audit-002/forward_all_positive_weights.py": "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/temporalis164-native-m6-002/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "9d512c808bc57e6f1481e520558a8a6ae83af755a0480f04dc85c54d49566f69",
+    "/Users/numi/numi-human-retained-delivery-20261009/skin-source-binding-1202/source-inputs/myosim/myo_sim-33c89c2b.tar.gz": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"
+  },
+  "qualification": {
+    "admitted": false,
+    "all25": false,
+    "claim": "candidate source/CPU P011 gates only; root fresh native check required",
+    "gpu": false,
+    "native": false,
+    "ordinary_path_p011_late": true
+  },
+  "schema": "numi.human.forearm085-candidate097-full-source-and-late-audit.v1",
+  "scope": "Full exact Float32-lattice child and joined-union self/topology audit for candidate097 source geometry, plus full P011 baseline step151999 CPU ordinary-path F32 route-field child/union audit. Candidate identity against base085 is exact except row132 faces5111/5112. Base085 full audit is durably recorded in prior 098 progress.jsonl. CPU-only, no native run, no all25 qualification.",
+  "source_full_audits": {
+    "candidate097": {
+      "132": {
+        "exact_self": {
+          "degenerate_count": 0,
+          "exact_float32_self_pair_count": 0,
+          "exact_float32_self_pairs": [],
+          "face_count": 25104,
+          "name": "source_candidate097_row132",
+          "passed": true
+        },
+        "topology": {
+          "bad_edge_incidence_count": 0,
+          "bad_edge_incidence_examples": [],
+          "bad_edge_winding_count": 0,
+          "bad_edge_winding_examples": [],
+          "closed": true,
+          "component_signed_volumes": [
+            {
+              "face_count": 25104,
+              "sign": "positive",
+              "signed_volume_m3": 4.769970555072242e-05,
+              "vertex_count": 12548
+            }
+          ],
+          "consistently_oriented": true,
+          "edge_count": 37656,
+          "face_components": 1,
+          "face_count": 25104,
+          "vertex_count": 12548
+        }
+      },
+      "134": {
+        "exact_self": {
+          "degenerate_count": 0,
+          "exact_float32_self_pair_count": 0,
+          "exact_float32_self_pairs": [],
+          "face_count": 29540,
+          "name": "source_candidate097_row134",
+          "passed": true
+        },
+        "topology": {
+          "bad_edge_incidence_count": 0,
+          "bad_edge_incidence_examples": [],
+          "bad_edge_winding_count": 0,
+          "bad_edge_winding_examples": [],
+          "closed": true,
+          "component_signed_volumes": [
+            {
+              "face_count": 29354,
+              "sign": "positive",
+              "signed_volume_m3": 5.388640757489229e-05,
+              "vertex_count": 14673
+            },
+            {
+              "face_count": 122,
+              "sign": "negative",
+              "signed_volume_m3": -1.097705906725746e-08,
+              "vertex_count": 63
+            },
+            {
+              "face_count": 26,
+              "sign": "negative",
+              "signed_volume_m3": -1.648110318107591e-10,
+              "vertex_count": 15
+            },
+            {
+              "face_count": 38,
+              "sign": "negative",
+              "signed_volume_m3": -6.351807558234555e-10,
+              "vertex_count": 21
+            }
+          ],
+          "consistently_oriented": true,
+          "edge_count": 44310,
+          "face_components": 4,
+          "face_count": 29540,
+          "vertex_count": 14772
+        }
+      },
+      "union": {
+        "cancelled_opposite_shared_faces": 7010,
+        "exact_self": {
+          "degenerate_count": 0,
+          "exact_float32_self_pair_count": 0,
+          "exact_float32_self_pairs": [],
+          "face_count": 40624,
+          "name": "source_candidate097_joined_union",
+          "passed": true
+        },
+        "face_sources": 40624,
+        "topology": {
+          "bad_edge_incidence_count": 0,
+          "bad_edge_incidence_examples": [],
+          "bad_edge_winding_count": 0,
+          "bad_edge_winding_examples": [],
+          "closed": true,
+          "component_signed_volumes": [
+            {
+              "face_count": 40180,
+              "sign": "positive",
+              "signed_volume_m3": 0.00010158641916808415,
+              "vertex_count": 19964
+            },
+            {
+              "face_count": 26,
+              "sign": "negative",
+              "signed_volume_m3": -3.74564678447803e-12,
+              "vertex_count": 15
+            },
+            {
+              "face_count": 64,
+              "sign": "negative",
+              "signed_volume_m3": -1.1006392097612915e-10,
+              "vertex_count": 34
+            },
+            {
+              "face_count": 4,
+              "sign": "negative",
+              "signed_volume_m3": -8.387606026452203e-14,
+              "vertex_count": 4
+            },
+            {
+              "face_count": 30,
+              "sign": "negative",
+              "signed_volume_m3": -2.99355378627628e-11,
+              "vertex_count": 17
+            },
+            {
+              "face_count": 4,
+              "sign": "negative",
+              "signed_volume_m3": -2.2799306931823317e-13,
+              "vertex_count": 4
+            },
+            {
+              "face_count": 22,
+              "sign": "negative",
+              "signed_volume_m3": -1.4936962646434007e-12,
+              "vertex_count": 13
+            },
+            {
+              "face_count": 14,
+              "sign": "negative",
+              "signed_volume_m3": -9.720957749516427e-13,
+              "vertex_count": 9
+            },
+            {
+              "face_count": 94,
+              "sign": "negative",
+              "signed_volume_m3": -1.5951970236163287e-10,
+              "vertex_count": 49
+            },
+            {
+              "face_count": 122,
+              "sign": "negative",
+              "signed_volume_m3": -1.097705906725746e-08,
+              "vertex_count": 63
+            },
+            {
+              "face_count": 26,
+              "sign": "negative",
+              "signed_volume_m3": -1.648110318107591e-10,
+              "vertex_count": 15
+            },
+            {
+              "face_count": 38,
+              "sign": "negative",
+              "signed_volume_m3": -6.351807558234555e-10,
+              "vertex_count": 21
+            }
+          ],
+          "consistently_oriented": true,
+          "edge_count": 60936,
+          "face_components": 12,
+          "face_count": 40624,
+          "vertex_count": 20208
+        }
+      }
+    }
+  },
+  "status": "completed"
+}

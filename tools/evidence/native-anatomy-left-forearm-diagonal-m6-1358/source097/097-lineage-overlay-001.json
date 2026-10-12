@@ -1,0 +1,169 @@
+{
+  "candidate_rows": {
+    "changed_face_count": 2,
+    "changed_row_local_faces_vs_085": [
+      5111,
+      5112
+    ],
+    "stable_id": 132
+  },
+  "inputs": {
+    "/Users/n/numi-human-fds132-m6-1350/attempt-060-paired-cut-sliver-contraction-001/candidate.pkl": "7d2a1593548c50f1d9f57cb23fa42e2b51eb7aca2a5a6f2e93a83cfb855eddb9",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-085-interface-refinement-2mm-001/result-001/candidate.pkl": "4792b40d2828a019cee8fdd5160f29f4667a0596bfe423960abd8f90e7bc1e2a",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-097-minimal-late-witness-diagonal-screen-001/candidate-source-preserving-flip.pkl": "7b0ae1efee39b3350e64692c0e5868ab4dcd2239bcc2160966ffca839365f244"
+  },
+  "overlay": {
+    "all_four_old_and_new_triangles_exactly_coplanar": true,
+    "interpretation": "Each new triangle overlaps both old060 triangles by positive exact area; their per-face fractions are recorded. Correct ancestry is the pooled pair [5819,5820]. Retained scalar parent IDs are historical labels after this flip, not an exclusive single-triangle support claim.",
+    "new_face_overlays": [
+      {
+        "area_fraction_by_old060_row_local_parent": {
+          "5819": {
+            "decimal": 0.0003256737475938266,
+            "denominator": "3279760366999932200307505676597335844924410692649",
+            "numerator": "1068131849930571905051612255432911737982811560"
+          },
+          "5820": {
+            "decimal": 0.9996743262524062,
+            "denominator": "3279760366999932200307505676597335844924410692649",
+            "numerator": "3278692235150001628402454064341902933186427881089"
+          }
+        },
+        "area_partition_exact": true,
+        "new_candidate097_row_local_face_index": 5111,
+        "new_face_global_vertex_ids": [
+          5491,
+          5581,
+          5490
+        ],
+        "new_triangle_projected_double_area_m2": {
+          "decimal": 1.9015422732844317e-07,
+          "denominator": "236622043664421453260665078139891182391111180091392",
+          "numerator": "44994681881885199617484585794896719383619885"
+        },
+        "old060_overlay_projected_double_area_m2_by_row_local_parent": {
+          "5819": {
+            "decimal": 6.192823983486252e-11,
+            "denominator": "89107785090085358891199933838568209892706012798078655228867721371001629957402736459776",
+            "numerator": "5518288286212192122825117416023045353045452586434047060780867323526965678825"
+          },
+          "5820": {
+            "decimal": 1.9009229908860828e-07,
+            "denominator": "1673757491399140485382564308466601332670118737536273139028753201197250528308136201158656",
+            "numerator": "318168409656844136301473884694549429420269740835820810519379410150326326100633605"
+          }
+        },
+        "positive_overlap_with_both_old_faces": true,
+        "retained_scalar_parent_row_local_face_index": 5819
+      },
+      {
+        "area_fraction_by_old060_row_local_parent": {
+          "5819": {
+            "decimal": 0.0003256737475938266,
+            "denominator": "3279760366999932200307505676597335844924410692649",
+            "numerator": "1068131849930571905051612255432911737982811560"
+          },
+          "5820": {
+            "decimal": 0.9996743262524062,
+            "denominator": "3279760366999932200307505676597335844924410692649",
+            "numerator": "3278692235150001628402454064341902933186427881089"
+          }
+        },
+        "area_partition_exact": true,
+        "new_candidate097_row_local_face_index": 5112,
+        "new_face_global_vertex_ids": [
+          5581,
+          5491,
+          5492
+        ],
+        "new_triangle_projected_double_area_m2": {
+          "decimal": 2.1395699595098934e-08,
+          "denominator": "2076456387997186027095184615226934565279940848123904",
+          "numerator": "44427237099911989445213762671651197058081515"
+        },
+        "old060_overlay_projected_double_area_m2_by_row_local_parent": {
+          "5819": {
+            "decimal": 6.968017669527588e-12,
+            "denominator": "21133991953280426672233337989333788657081472277378282515376919430596144462074925285376",
+            "numerator": "147262029358111869931405768365429600020665599765595548731568163470100882275"
+          },
+          "5820": {
+            "decimal": 2.138873157742941e-08,
+            "denominator": "14687914875347960137020646457140287320069784474910608851025991376884941453014682642153472",
+            "numerator": "314155868700950028351558931385009770607549642766273418089480702177044931998048595"
+          }
+        },
+        "positive_overlap_with_both_old_faces": true,
+        "retained_scalar_parent_row_local_face_index": 5820
+      }
+    ],
+    "new_internal_diagonal_global_ids": [
+      5491,
+      5581
+    ],
+    "old060_global_vertex_ids_by_row_local_face": {
+      "5819": [
+        5490,
+        5491,
+        5492
+      ],
+      "5820": [
+        5490,
+        5492,
+        5581
+      ]
+    },
+    "old060_source_ancestry_by_row_local_face": {
+      "5819": {
+        "parent_candidate_face_index": 4867,
+        "parent_original_source_face_index": 4859,
+        "parent_stable_id": 132,
+        "role": "owner",
+        "row_local_face_index": 5819,
+        "winding_reversed": false
+      },
+      "5820": {
+        "parent_candidate_face_index": 4867,
+        "parent_original_source_face_index": 4859,
+        "parent_stable_id": 132,
+        "role": "owner",
+        "row_local_face_index": 5820,
+        "winding_reversed": false
+      }
+    },
+    "old_candidate060_candidate_array_indices": {
+      "5819": 5805,
+      "5820": 5806
+    },
+    "old_candidate060_row_local_face_indices": [
+      5819,
+      5820
+    ],
+    "old_internal_diagonal_global_ids": [
+      5490,
+      5492
+    ],
+    "pooled_area_fraction_by_old060_row_local_face": {
+      "5819": {
+        "decimal": 0.0003256737475938266,
+        "denominator": "3279760366999932200307505676597335844924410692649",
+        "numerator": "1068131849930571905051612255432911737982811560"
+      },
+      "5820": {
+        "decimal": 0.9996743262524062,
+        "denominator": "3279760366999932200307505676597335844924410692649",
+        "numerator": "3278692235150001628402454064341902933186427881089"
+      }
+    },
+    "pooled_partition_exact": true,
+    "pooled_projected_double_area_m2": {
+      "decimal": 2.1154992692354208e-07,
+      "denominator": "13832534277466868216736729434998869465894838274007750179117072384",
+      "numerator": "2926271615565507062679376073017788223454717045133747716085"
+    },
+    "projection_dropped_axis": 1,
+    "quad_boundary_exact_coordinate_edges_unchanged": true
+  },
+  "schema": "numi.human.forearm097-diagonal-flip-exact-pooled-lineage-100.v3",
+  "scope": "Exact Fraction overlay audit only; no geometry changed. The flipped stable132 triangles are overlaid against the two old060 faces selected by their row-local ancestry IDs 5819 and 5820. The old060 candidate array indices are reported separately because they are 5805 and 5806."
+}
