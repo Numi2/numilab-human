@@ -9,3 +9,7 @@ The copied audit is read-only and pins the rejected native pack, source patch an
 A subsequent CPU default-pose predictor also rejects known native-safe back408 row157. Therefore CPU prediction is a diagnostic, not a replacement for the actual Metal transform and native audit. New repairs must preserve interface topology and source ancestry, and pass native checks over the breathing cycle before admission.
 
 No performance, complete anatomy, or five-minute qualification claim is made.
+
+## Audit interpretation correction
+
+The copied historical report speculates that the native count might use a near-zero threshold. Source inspection disproves that speculation: numi-lab ac816674, matter/src/human_respiration.metal, nm_human_resting_audit_mesh_triangles calls nm_human_exact_binary32_triangle_is_zero. There is no area epsilon in that test. The 1,545 count covers the whole mesh; 732 covers only row153. The copied report is preserved byte-for-byte as historical evidence, with this correction taking precedence.
