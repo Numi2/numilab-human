@@ -1,0 +1,76 @@
+{
+  "accepted_body_state_sha256": "89e1c498eb406dbaeef833cfbb7fda8eb54333403ac15c1f08a29d402e1b1d47",
+  "accepted_receipt_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm-shared-field-native-012-diagonal097/baseline/native-run/accepted-geometry/step-8000.receipt.json",
+  "accepted_receipt_sha256": "71b869e3b64571e40918889a72c48b8a95aebabf2d4dec3ec8437bb4bdb08c3e",
+  "accepted_step": 8000,
+  "candidate_geometry_sha256": "e62640ff578cba1b71bd1903152ec2b486da391deb88cfe616db622356fdb58f",
+  "elapsed_seconds": 86.73141066699463,
+  "field_path": "/Users/n/numi-human-fds132-m6-1350/attempt-270-forearm-bone-axial-field-002/forearm-axial-bone-field.npz",
+  "field_sha256": "751c0015a93b1dd7227fc308b4f25d52571a6c8c57c3a12ce8387fb653f8d44f",
+  "gpu_used": false,
+  "input_pins": {
+    "/Users/n/numi-human-fds132-m6-1350/attempt-097-minimal-late-witness-diagonal-screen-001/candidate-source-preserving-flip.pkl": "7b0ae1efee39b3350e64692c0e5868ab4dcd2239bcc2160966ffca839365f244",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-200-pq-contact-local-refinement-2mm-001/result-001/candidate.pkl": "e62640ff578cba1b71bd1903152ec2b486da391deb88cfe616db622356fdb58f",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-258-source-owner-field-pose-audit-001.py": "a892265edfbcb2fa4d52609823983fb36eefaddfa7a43267c86c6f00cd802fbd",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-266-local-owner-field-full-pq-gates-001.py": "dbce406840d569563e850de971613ffeb2438ae26441b0296d7f9328b42bb28a",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-270-forearm-bone-axial-field-002/forearm-axial-bone-field.npz": "751c0015a93b1dd7227fc308b4f25d52571a6c8c57c3a12ce8387fb653f8d44f",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-272-bone-axial-field-self-union-001.py": "459af23fb71b438afdb8294a6134921b343d588a9afbfee1ee7c1e44d1986e86",
+    "/Users/n/numi-human-left-pq-publication-1344/src/numilab_human/cardiac_cavity_intersections.py": "05ba7856fc373f55a1270eb5f3ef887a4eac493ad9fb4590a618caee952d2a32",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm-shared-field-native-012-diagonal097/baseline/native-run/accepted-geometry/step-8000.receipt.json": "71b869e3b64571e40918889a72c48b8a95aebabf2d4dec3ec8437bb4bdb08c3e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm-shared-field-native-012-diagonal097/passive-tissue-parent-bindings.json": "3527a4fe0a3b1be1e99d39a385af50a428320c3881810bd30529ca6725adb678",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/neck-back-retained-pose-audit-002/forward_all_positive_weights.py": "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/forearm-shared-field-native-012-diagonal097/assets/shared-field-carriers.nhtissue": "ac435503a9b0826f79a4b95a1b0be6d656114b3378239b210b06c4dcf54e54f6"
+  },
+  "inputs_unchanged": true,
+  "joined_union": {
+    "aabb_candidates": 961990,
+    "paired_interface_face_pairs_cancelled": 7011,
+    "remaining_faces_by_row": {
+      "132": 20137,
+      "134": 28425
+    },
+    "self_pair_count": 6,
+    "self_pairs": [
+      [
+        2365,
+        22834
+      ],
+      [
+        2365,
+        22835
+      ],
+      [
+        2365,
+        22838
+      ],
+      [
+        2365,
+        22839
+      ],
+      [
+        2365,
+        22840
+      ],
+      [
+        2365,
+        22841
+      ]
+    ]
+  },
+  "predictor": "CPU replay through existing registered raw one-hot parent carriers with ordered full21 Float32 products/adds, then candidate200 original-GID barycentric child interpolation and one Float32 cast; no GPU output.",
+  "row_self": {
+    "132": {
+      "aabb_candidates": 396652,
+      "self_pair_count": 0,
+      "self_pairs": []
+    },
+    "134": {
+      "aabb_candidates": 535824,
+      "self_pair_count": 0,
+      "self_pairs": []
+    }
+  },
+  "schema": "numi.human.forearm.axial-bone-field-self-union-272.v1",
+  "scope": "row and joined-union exact self checks only; no PQ, all-neighbor, or native admission gate",
+  "step": 8000
+}

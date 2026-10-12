@@ -1,0 +1,1909 @@
+{
+  "all_captures_zero_reference_within_1e-4_deg": true,
+  "all_step0_wrist_q_matches_nhrigid_default_within_1e-4_deg": true,
+  "all_wrist_relative_orientation_residuals_below_1e-5": true,
+  "complete": true,
+  "inputs_unchanged_at_end": true,
+  "method": {
+    "coordinate_units": "accepted geometry and body positions are metres; report geometry centroids/displacements in millimetres; wrist angles in degrees.",
+    "geometry": "accepted MRVPACK stable rows 130/132/134; centroid is arithmetic mean of unique captured surface vertex positions; relative vector is centroid(other) - centroid(PQ), with changes relative to same-run step 0.",
+    "interpretation_limit": "Body-pose-derived q is reconstructed from accepted body orientations, not a directly serialized generalized-coordinate trace. Surface centroid motion is descriptive whole-surface kinematics, not local contact/separation or anatomical efficacy.",
+    "joint_pose_formula": "motion = inverse(parent_body_quaternion * parent_joint_rotation) * (child_body_quaternion * child_joint_rotation); q = 2 atan2(dot(motion.xyz, authored_axis), motion.w).",
+    "validation": "NHRIGID2 joint type/indices/axes are pinned; all four coordinates reconstruct approximately zero at accepted step 0 and retain quaternion-vector orthogonal residual below the threshold recorded per sample."
+  },
+  "model": {
+    "engine_body_count": 157,
+    "joint_count": 156,
+    "nhrigid_source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "nq": 129,
+    "nv": 128,
+    "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "source_body_count": 103
+  },
+  "pins": {
+    "/Users/n/numi-human-anatomy-publication-1308/src/numilab_human/common_atlas_skin_clearance.py": "430e764b0b8e8a80da7b4825370a05a948be97e03bf4fc8e69bbd1edcde565d1",
+    "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "6dbdcbf7bff625aab33961b145be1f43692ee70186c6cdb90475149533660c83",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "4066dd3ac272f28837211624517fb3e3f15e74fb4862c3009d43912b4c5304ef",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/execution.json": "1683206cacab2b1c673ef4c38695e63440e47a78b8c191cada8996713769fd91",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-0.mrvpack": "e71c420da7103fb1945c665b9af27d8af981018f0a0038b31a3cbe02395c74bc",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-0.receipt.json": "7681219d6ff78280a4a03f0392a99134cbf23751bea2be11730e9ddaee92e294",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-10015.mrvpack": "83dd8c029bc93d155dc7f7977c5493a938c0782d97ee2406333e23de12a56026",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-10015.receipt.json": "06b39cca17f8f2df9818a37eaeae9bf026ba2867a55d62d3cacbdcfce90533ef",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-15007.mrvpack": "b2160abf199b3ec5db37fe134eb86f5a26d5158b3bea98725d30c54a0aef72a8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-15007.receipt.json": "fe7662b7be669b44541b1de668aa7ebf5410f0c94450a6080f38139424a7089e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-19999.mrvpack": "78be7baf2cf70b81c54da8ceb2e8cc64346a716c197e41c31f382aa677a80f28",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-19999.receipt.json": "2c93b98d24bca9ec009ecebf59c95070ca4afa0f7821d38f386f10cd7dab49b7",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-24991.mrvpack": "697274a7ecfb8f7fb4e67898d2fbd2622061a8eb2ecc2201f808c76ef6e94068",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-24991.receipt.json": "972256dc28387986df3865703451f55290e2c48bc67e6c04e7b9e3060cb523d9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-27999.mrvpack": "3a45a415fe4b6ac7cb48be8ffb27e3b0baed38f5915230a7400376c9ca8fb15e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-27999.receipt.json": "9fc4db07f02c1aa36e32cbb29ce23029fec58dcbbc3fe7ce294ef5b178edfc54",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-30000.mrvpack": "d19d81d0b16a3d3c35918c5cdf534e597c746bfcc3cd3e96be09500fc63ace79",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-30000.receipt.json": "429e86357b742e13b940f42c05c64c3bf8ee7e7b16c3213d8ad52d0412b69b4b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-7999.mrvpack": "9de3899958a1c8301c6f9ddb71da8752518e87a94125f4b826c048b5418704cd",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/accepted-geometry/step-7999.receipt.json": "4aa97103511bb6c4908b00a993224c532324e181001b1cd10fde44bfed24c4c6",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s/baseline/native-run/invocation.json": "0a8fc823c5e3996b15cad4d5c72965552df2785f90751e0545b91ce1d07699ea",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json": "1c195d7d32f8f4ed371045e3dac09ffcf7491a43700d5d2b15d5f48e8d247667",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/assets/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "3aa1dcf1458f6c7cda617a63ae4b4ed37a3280128da0b3dd3f1af571a0ce56d4",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/execution.json": "581c5ba1f7b1af39b92e0f17a6b1c0b5ffe1754954343ab89d5400a18909ae53",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-0.mrvpack": "db433941e6844ee91ec9a1f666641951ff68ff0c4fd471fcf3bb965e9fc0c3d1",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-0.receipt.json": "44c10777068594efd0fbb65809ededc0ab0f36eaaa5c3d84cd83a09aa953e9cb",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-3807.mrvpack": "6087a7e54138b00634745c5e8b86350f8bd420202b6e8d166d40bd824f5cbc9b",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-3807.receipt.json": "f7a3e0b988d8d08f4f3662c99501ed5be20ae5641f17b0c8113f88142a7b1782",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-4767.mrvpack": "64af7dc813add5fcc7dc0374f22180996fcb309b637febc6f3f0fe0ee6e41e98",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-4767.receipt.json": "256c605706ff5a645b54bfb282dac0de58a556aab50a062f0114009372bfeaac",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-5023.mrvpack": "a841df4110f49f1cc7e99f7d69b1e6934af0793ac5fbaf9c8fd2a2f88df37160",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-5023.receipt.json": "97a3de2127762f036bede414a6e4d48a51c4abe55d6b0e17bda272411fc71b2e",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-5599.mrvpack": "166e4a029df203ac38ea512569de82b1f63303a4e4a181ccb54c5eeef466e9aa",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-5599.receipt.json": "e3f7bcee7fb35105e5ef1c7e19289fe0cf5dc1dd89443be98ac3f615e394a3dc",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-6207.mrvpack": "472c42a78169c4c4293fa9121628f0f0b4e56af1735d767d4d9f65f2fc56abd4",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-6207.receipt.json": "f0c7e133c9485c77831b69eefb34a521358f078bef5cd0063f05964863b3a658",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-7423.mrvpack": "3748b2508b5a1c5ec36296b8307a5f2214cf3475614fdeaae7d5a9ae195b6034",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-7423.receipt.json": "67036a1760ae6c0c2945832b5bba80622c8c70faf5d90bc7b186a6b7441973bb",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-8000.mrvpack": "f39f00e3d434022039b0f907026cf6803f797f37650c5f486ff0a3bd4ea91826",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/accepted-geometry/step-8000.receipt.json": "86d125462a490dae06c4bff0fc105feea412c3a4cf35188ed8356488b5e551ce",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177/baseline/native-run/invocation.json": "3edfd96a299ac799e6848ff5fafb1c7ece27a818b8248dbdf289435ef745faf8",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/wrist-motion-census-001/analyze_wrist_motion.py": "ca6b0e224e267029ff095b5d0821bf07e6116be017956abb438896a5927523df"
+  },
+  "runs": {
+    "N14_right177_60s": {
+      "accepted_steps": [
+        0,
+        7999,
+        10015,
+        15007,
+        19999,
+        24991,
+        27999,
+        30000
+      ],
+      "captured_geometry": [
+        {
+          "pack_sha256": "e71c420da7103fb1945c665b9af27d8af981018f0a0038b31a3cbe02395c74bc",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.01905421970712,
+              "centroid_vector_mm": [
+                3.7125961792386364,
+                -7.049569359030672,
+                0.9085329056897906
+              ],
+              "relative_displacement_from_step0_mm": 0.0,
+              "relative_vector_change_from_step0_mm": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 29.256905442850663,
+              "centroid_vector_mm": [
+                4.297779618797071,
+                -25.754436156462667,
+                13.198659958603587
+              ],
+              "relative_displacement_from_step0_mm": 0.0,
+              "relative_vector_change_from_step0_mm": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 22.388874570740953,
+              "centroid_vector_mm": [
+                0.5851834395584343,
+                -18.704866797431997,
+                12.290127052913796
+              ],
+              "relative_displacement_from_step0_mm": 0.0,
+              "relative_vector_change_from_step0_mm": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 8.083729989314146e-07,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 2.959686948488229e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": -2.0663302285248754e-06,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 2.4014888635052084e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 9.625652246709043e-07,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 3.68960621223611e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -1.9701251359290357e-06,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 1.4979768381925404e-08
+            }
+          },
+          "receipt_sha256": "7681219d6ff78280a4a03f0392a99134cbf23751bea2be11730e9ddaee92e294",
+          "step": 0,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                220.310195239456,
+                -843.9471871427428,
+                167.11639202909276
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                216.59759906021736,
+                -836.8976177837121,
+                166.20785912340295
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                216.0124156206589,
+                -818.1927509862801,
+                153.91773207048917
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 0.0
+        },
+        {
+          "pack_sha256": "9de3899958a1c8301c6f9ddb71da8752518e87a94125f4b826c048b5418704cd",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.073900705726603,
+              "centroid_vector_mm": [
+                3.938882862792037,
+                -6.644987267069635,
+                -2.3488760332589163
+              ],
+              "relative_displacement_from_step0_mm": 3.2902287652733366,
+              "relative_vector_change_from_step0_mm": [
+                0.22628668355340054,
+                0.40458209196103656,
+                -3.2574089389487066
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.092924385965684,
+              "centroid_vector_mm": [
+                14.933189207441494,
+                -23.741547901879436,
+                -1.597236323498348
+              ],
+              "relative_displacement_from_step0_mm": 18.332544914288,
+              "relative_vector_change_from_step0_mm": [
+                10.635409588644423,
+                2.012888254583234,
+                -14.795896282101936
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.340406087219996,
+              "centroid_vector_mm": [
+                10.994306344649457,
+                -17.096560634809798,
+                0.7516397097605682
+              ],
+              "relative_displacement_from_step0_mm": 15.622841564008974,
+              "relative_vector_change_from_step0_mm": [
+                10.409122905091023,
+                1.6083061626221973,
+                -11.538487343153228
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.438492208272075,
+              "degrees": 2.4384913998990756,
+              "off_axis_quaternion_vector_norm": 2.066153071198692e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8582901810671784,
+              "degrees": 1.8582922473974068,
+              "off_axis_quaternion_vector_norm": 1.4349958091097665e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.1487621159990309,
+              "degrees": 1.1487611534338062,
+              "off_axis_quaternion_vector_norm": 6.561177958905843e-09
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.2343494161511329,
+              "degrees": -0.23434744602599697,
+              "off_axis_quaternion_vector_norm": 1.9616156657414605e-08
+            }
+          },
+          "receipt_sha256": "4aa97103511bb6c4908b00a993224c532324e181001b1cd10fde44bfed24c4c6",
+          "step": 7999,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                248.80064197637157,
+                -836.7471860501297,
+                45.32039987887696
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                244.86175911357952,
+                -830.10219878306,
+                47.66927591213588
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.86745276893006,
+                -813.0056381482502,
+                46.91763620237531
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 15.998000759864226
+        },
+        {
+          "pack_sha256": "83dd8c029bc93d155dc7f7977c5493a938c0782d97ee2406333e23de12a56026",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.073941310614572,
+              "centroid_vector_mm": [
+                3.9399311478219845,
+                -6.648168719461833,
+                -2.33823085157131
+              ],
+              "relative_displacement_from_step0_mm": 3.279371671044818,
+              "relative_vector_change_from_step0_mm": [
+                0.22733496858334812,
+                0.40140063956883854,
+                -3.2467637572611006
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.14852686839104,
+              "centroid_vector_mm": [
+                14.84802607151936,
+                -23.867212881001798,
+                -1.493933041657347
+              ],
+              "relative_displacement_from_step0_mm": 18.186302564730884,
+              "relative_vector_change_from_step0_mm": [
+                10.55024645272229,
+                1.8872232754608698,
+                -14.692593000260935
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.40085428341866,
+              "centroid_vector_mm": [
+                10.908094923697377,
+                -17.219044161539966,
+                0.8442978099139631
+              ],
+              "relative_displacement_from_step0_mm": 15.484740148759581,
+              "relative_vector_change_from_step0_mm": [
+                10.322911484138942,
+                1.4858226358920312,
+                -11.445829242999833
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.3554572215960428,
+              "degrees": 2.355456413223044,
+              "off_axis_quaternion_vector_norm": 5.6389049786312956e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8663249147372514,
+              "degrees": 1.8663269810674799,
+              "off_axis_quaternion_vector_norm": 1.8353268599862918e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.031190908643352,
+              "degrees": 1.0311899460781273,
+              "off_axis_quaternion_vector_norm": 4.954994712992862e-09
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.2308966861482007,
+              "degrees": -0.23089471602306477,
+              "off_axis_quaternion_vector_norm": 3.77119929277733e-08
+            }
+          },
+          "receipt_sha256": "06b39cca17f8f2df9818a37eaeae9bf026ba2867a55d62d3cacbdcfce90533ef",
+          "step": 10015,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                248.80854998388136,
+                -836.6559286597554,
+                45.345334812792984
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                244.86861883605937,
+                -830.0077599402937,
+                47.683565664364295
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.960523912362,
+                -812.7887157787536,
+                46.839267854450334
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 20.03000095137395
+        },
+        {
+          "pack_sha256": "b2160abf199b3ec5db37fe134eb86f5a26d5158b3bea98725d30c54a0aef72a8",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.078534446616636,
+              "centroid_vector_mm": [
+                3.9526861778796665,
+                -6.651590142176089,
+                -2.3227869822427665
+              ],
+              "relative_displacement_from_step0_mm": 3.2645763710846327,
+              "relative_vector_change_from_step0_mm": [
+                0.24008999864102987,
+                0.3979792168545826,
+                -3.2313198879325573
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.30118147908034,
+              "centroid_vector_mm": [
+                14.817463018391486,
+                -24.070829731940634,
+                -1.4123805529543676
+              ],
+              "relative_displacement_from_step0_mm": 18.082609719030653,
+              "relative_vector_change_from_step0_mm": [
+                10.519683399594415,
+                1.6836064245220328,
+                -14.611040511557954
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.549990840538886,
+              "centroid_vector_mm": [
+                10.86477684051182,
+                -17.419239589764544,
+                0.910406429288399
+              ],
+              "relative_displacement_from_step0_mm": 15.388986947742348,
+              "relative_vector_change_from_step0_mm": [
+                10.279593400953384,
+                1.2856272076674502,
+                -11.379720623625397
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 0.8948749882053966,
+              "degrees": 0.8948741798323976,
+              "off_axis_quaternion_vector_norm": 5.606070900642353e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 0.7488787108141459,
+              "degrees": 0.7488807771443744,
+              "off_axis_quaternion_vector_norm": 2.0222701101922895e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 0.8156164191814993,
+              "degrees": 0.8156154566162745,
+              "off_axis_quaternion_vector_norm": 3.738287000976528e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.17031910783294832,
+              "degrees": -0.1703171377078124,
+              "off_axis_quaternion_vector_norm": 1.5109442764551253e-08
+            }
+          },
+          "receipt_sha256": "fe7662b7be669b44541b1de668aa7ebf5410f0c94450a6080f38139424a7089e",
+          "step": 15007,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.2839623622913,
+                -836.151832972411,
+                45.43259543977777
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.33127618441165,
+                -829.5002428302348,
+                47.75538242202054
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                234.4664993438998,
+                -812.0810032404703,
+                46.84497599273214
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 30.014001425588503
+        },
+        {
+          "pack_sha256": "78be7baf2cf70b81c54da8ceb2e8cc64346a716c197e41c31f382aa677a80f28",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.082948677329899,
+              "centroid_vector_mm": [
+                3.9613459659901817,
+                -6.650751181425996,
+                -2.3257915170632124
+              ],
+              "relative_displacement_from_step0_mm": 3.2683003024222548,
+              "relative_vector_change_from_step0_mm": [
+                0.24874978675154535,
+                0.3988181776046762,
+                -3.234324422753003
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.334639197651715,
+              "centroid_vector_mm": [
+                14.845566166664687,
+                -24.090951767638536,
+                -1.4446406409884747
+              ],
+              "relative_displacement_from_step0_mm": 18.123168426664577,
+              "relative_vector_change_from_step0_mm": [
+                10.547786547867616,
+                1.6634843888241324,
+                -14.643300599592061
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.57676536121522,
+              "centroid_vector_mm": [
+                10.884220200674505,
+                -17.44020058621254,
+                0.8811508760747377
+              ],
+              "relative_displacement_from_step0_mm": 15.421876547174847,
+              "relative_vector_change_from_step0_mm": [
+                10.29903676111607,
+                1.2646662112194562,
+                -11.408976176839058
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 0.7648985959527717,
+              "degrees": 0.7648977875797728,
+              "off_axis_quaternion_vector_norm": 2.9448847654337642e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 0.5580830503952554,
+              "degrees": 0.5580851167254839,
+              "off_axis_quaternion_vector_norm": 6.154620899322877e-09
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 0.8323872802312633,
+              "degrees": 0.8323863176660385,
+              "off_axis_quaternion_vector_norm": 4.043212747900433e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.0959359298791031,
+              "degrees": -0.09593395975396717,
+              "off_axis_quaternion_vector_norm": 3.850038564681216e-08
+            }
+          },
+          "receipt_sha256": "2c93b98d24bca9ec009ecebf59c95070ca4afa0f7821d38f386f10cd7dab49b7",
+          "step": 19999,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.25094272970605,
+                -836.1011369826184,
+                45.387888602880146
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.28959676371588,
+                -829.4503858011925,
+                47.713680119943355
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                234.40537656304136,
+                -812.01018521498,
+                46.83252924386862
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 39.99800189980306
+        },
+        {
+          "pack_sha256": "697274a7ecfb8f7fb4e67898d2fbd2622061a8eb2ecc2201f808c76ef6e94068",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.088692970249898,
+              "centroid_vector_mm": [
+                3.9726494846681613,
+                -6.650629131356056,
+                -2.3268309341449993
+              ],
+              "relative_displacement_from_step0_mm": 3.270223265013019,
+              "relative_vector_change_from_step0_mm": [
+                0.2600533054295251,
+                0.3989402276746157,
+                -3.23536383983479
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.399967752084713,
+              "centroid_vector_mm": [
+                14.875977969395853,
+                -24.147471457314108,
+                -1.4707379072089466
+              ],
+              "relative_displacement_from_step0_mm": 18.15686783656327,
+              "relative_vector_change_from_step0_mm": [
+                10.578198350598782,
+                1.6069646991485609,
+                -14.669397865812533
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.63383044168193,
+              "centroid_vector_mm": [
+                10.903328484727693,
+                -17.49684232595805,
+                0.8560930269360528
+              ],
+              "relative_displacement_from_step0_mm": 15.44864312501417,
+              "relative_vector_change_from_step0_mm": [
+                10.318145045169258,
+                1.2080244714739452,
+                -11.434034025977743
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 0.7812438081382238,
+              "degrees": 0.7812429997652248,
+              "off_axis_quaternion_vector_norm": 2.8479280685948324e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 0.3903710132949008,
+              "degrees": 0.3903730796251293,
+              "off_axis_quaternion_vector_norm": 4.177771635571198e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 0.8115378315514572,
+              "degrees": 0.8115368689862326,
+              "off_axis_quaternion_vector_norm": 3.665512492468643e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.003351146876958229,
+              "degrees": -0.0033491767518223,
+              "off_axis_quaternion_vector_norm": 3.944724949189697e-08
+            }
+          },
+          "receipt_sha256": "972256dc28387986df3865703451f55290e2c48bc67e6c04e7b9e3060cb523d9",
+          "step": 24991,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.3361885415533,
+                -836.0206085090033,
+                45.366431358342226
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.36353905688512,
+                -829.3699793776473,
+                47.69326229248722
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                234.46021057215742,
+                -811.8731370516891,
+                46.83716926555117
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 49.98200237401761
+        },
+        {
+          "pack_sha256": "3a45a415fe4b6ac7cb48be8ffb27e3b0baed38f5915230a7400376c9ca8fb15e",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.092460557406728,
+              "centroid_vector_mm": [
+                3.979974009238801,
+                -6.650621672757651,
+                -2.3274355253826986
+              ],
+              "relative_displacement_from_step0_mm": 3.2714128212831746,
+              "relative_vector_change_from_step0_mm": [
+                0.267377830000165,
+                0.39894768627302124,
+                -3.235968431072489
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.443360136318923,
+              "centroid_vector_mm": [
+                14.89473739898936,
+                -24.185980774706906,
+                -1.486562351531842
+              ],
+              "relative_displacement_from_step0_mm": 18.1772198308167,
+              "relative_vector_change_from_step0_mm": [
+                10.59695778019229,
+                1.5684553817557623,
+                -14.68522231013543
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.671912015656794,
+              "centroid_vector_mm": [
+                10.91476338975056,
+                -17.535359101949254,
+                0.8408731738508562
+              ],
+              "relative_displacement_from_step0_mm": 15.464584850051498,
+              "relative_vector_change_from_step0_mm": [
+                10.329579950192125,
+                1.169507695482741,
+                -11.44925387906294
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 0.8291642989032846,
+              "degrees": 0.8291634905302856,
+              "off_axis_quaternion_vector_norm": 3.283854285890995e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 0.31450176031040467,
+              "degrees": 0.31450382664063314,
+              "off_axis_quaternion_vector_norm": 3.168292040968463e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 0.7965593798911365,
+              "degrees": 0.7965584173259117,
+              "off_axis_quaternion_vector_norm": 1.1569881906946837e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": 0.05748648820123569,
+              "degrees": 0.05748845832637162,
+              "off_axis_quaternion_vector_norm": 1.5107643942069323e-08
+            }
+          },
+          "receipt_sha256": "9fc4db07f02c1aa36e32cbb29ce23029fec58dcbbc3fe7ce294ef5b178edfc54",
+          "step": 27999,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.39563783980662,
+                -835.9706535503659,
+                45.3534314949585
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.4156638305678,
+                -829.3200318776082,
+                47.680867020341196
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                234.50090044081725,
+                -811.784672775659,
+                46.83999384649034
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 55.99800265976228
+        },
+        {
+          "pack_sha256": "d19d81d0b16a3d3c35918c5cdf534e597c746bfcc3cd3e96be09500fc63ace79",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.095058049389639,
+              "centroid_vector_mm": [
+                3.985024047519492,
+                -6.650623002897316,
+                -2.327823411904871
+              ],
+              "relative_displacement_from_step0_mm": 3.272212913751642,
+              "relative_vector_change_from_step0_mm": [
+                0.27242786828085563,
+                0.39894635613335616,
+                -3.2363563175946615
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.473370366287927,
+              "centroid_vector_mm": [
+                14.907310628734072,
+                -24.21289084387679,
+                -1.4969391493120932
+              ],
+              "relative_displacement_from_step0_mm": 18.190633395848053,
+              "relative_vector_change_from_step0_mm": [
+                10.609531009937001,
+                1.5415453125858791,
+                -14.69559910791568
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.698308253050687,
+              "centroid_vector_mm": [
+                10.92228658121458,
+                -17.562267840979473,
+                0.8308842625927779
+              ],
+              "relative_displacement_from_step0_mm": 15.47499528478274,
+              "relative_vector_change_from_step0_mm": [
+                10.337103141656145,
+                1.142598956452523,
+                -11.459242790321019
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 0.8615575625991571,
+              "degrees": 0.8615567542261581,
+              "off_axis_quaternion_vector_norm": 7.987861153370343e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 0.26279628814561296,
+              "degrees": 0.26279835447584143,
+              "off_axis_quaternion_vector_norm": 2.7529458116744746e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 0.785958123445418,
+              "degrees": 0.7859571608801933,
+              "off_axis_quaternion_vector_norm": 2.2349438057665108e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": 0.09941407333222392,
+              "degrees": 0.09941604345735985,
+              "off_axis_quaternion_vector_norm": 6.226280052169553e-08
+            }
+          },
+          "receipt_sha256": "429e86357b742e13b940f42c05c64c3bf8ee7e7b16c3213d8ad52d0412b69b4b",
+          "step": 30000,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.4386729128374,
+                -835.9356705546218,
+                45.34483915739591
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.45364886531792,
+                -829.2850475517245,
+                47.672662569300776
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                234.53136228410335,
+                -811.722779710745,
+                46.841778306708
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 60.00000284984708
+        }
+      ],
+      "execution_sha256": "1683206cacab2b1c673ef4c38695e63440e47a78b8c191cada8996713769fd91",
+      "invocation_sha256": "0a8fc823c5e3996b15cad4d5c72965552df2785f90751e0545b91ce1d07699ea",
+      "manifest_sha256": "6dbdcbf7bff625aab33961b145be1f43692ee70186c6cdb90475149533660c83",
+      "native_execution": {
+        "native_argv_matches_prepared_cli_preview": true,
+        "native_environment_matches_prepared_cli_preview": true,
+        "qualification": "Bounded native014 whole-body back408 plus right-forearm177 diagnostic. Medial back interface ownership remains unresolved; right177 full native validation pending. No full anatomical admission or long-run qualification.",
+        "returncode": 0,
+        "schema": "numi.human.native-smoke.execution.v1",
+        "timed_out": false,
+        "utc_finished": "2026-10-12T13:00:23.724486+00:00",
+        "wall_seconds": 361.27629958299804
+      },
+      "run_root": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-014-right177-60s",
+      "run_variant_note": "N16 and N14 are distinct native composition/run variants; within-run deltas use each run\u2019s own step 0.",
+      "surface_labels": {
+        "130": "left pronator quadratus",
+        "132": "left flexor digitorum superficialis",
+        "134": "left flexor digitorum profundus"
+      },
+      "tissue_sha256": "4066dd3ac272f28837211624517fb3e3f15e74fb4862c3009d43912b4c5304ef",
+      "wrist_summary": {
+        "41": {
+          "max_deg": 2.4384913998990756,
+          "max_step": 7999,
+          "min_deg": 0.0,
+          "min_step": 0,
+          "peak_abs_deg": 2.4384913998990756,
+          "peak_abs_step": 7999,
+          "range_deg": 2.4384913998990756
+        },
+        "42": {
+          "max_deg": 1.8663269810674799,
+          "max_step": 10015,
+          "min_deg": 0.0,
+          "min_step": 0,
+          "peak_abs_deg": 1.8663269810674799,
+          "peak_abs_step": 10015,
+          "range_deg": 1.8663269810674799
+        },
+        "79": {
+          "max_deg": 1.1487611534338062,
+          "max_step": 7999,
+          "min_deg": 0.0,
+          "min_step": 0,
+          "peak_abs_deg": 1.1487611534338062,
+          "peak_abs_step": 7999,
+          "range_deg": 1.1487611534338062
+        },
+        "80": {
+          "max_deg": 0.09941604345735985,
+          "max_step": 30000,
+          "min_deg": -0.23434744602599697,
+          "min_step": 7999,
+          "peak_abs_deg": 0.23434744602599697,
+          "peak_abs_step": 7999,
+          "range_deg": 0.3337634894833568
+        }
+      }
+    },
+    "N16_back412_right177_16s": {
+      "accepted_steps": [
+        0,
+        3807,
+        4767,
+        5023,
+        5599,
+        6207,
+        7423,
+        8000
+      ],
+      "captured_geometry": [
+        {
+          "pack_sha256": "db433941e6844ee91ec9a1f666641951ff68ff0c4fd471fcf3bb965e9fc0c3d1",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.01905421970712,
+              "centroid_vector_mm": [
+                3.7125961792386364,
+                -7.049569359030672,
+                0.9085329056897906
+              ],
+              "relative_displacement_from_step0_mm": 0.0,
+              "relative_vector_change_from_step0_mm": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 29.256905442850663,
+              "centroid_vector_mm": [
+                4.297779618797071,
+                -25.754436156462667,
+                13.198659958603587
+              ],
+              "relative_displacement_from_step0_mm": 0.0,
+              "relative_vector_change_from_step0_mm": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 22.388874570740953,
+              "centroid_vector_mm": [
+                0.5851834395584343,
+                -18.704866797431997,
+                12.290127052913796
+              ],
+              "relative_displacement_from_step0_mm": 0.0,
+              "relative_vector_change_from_step0_mm": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 8.083729989314146e-07,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 2.959686948488229e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": -2.0663302285248754e-06,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 2.4014888635052084e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 9.625652246709043e-07,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 3.68960621223611e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -1.9701251359290357e-06,
+              "degrees": 0.0,
+              "off_axis_quaternion_vector_norm": 1.4979768381925404e-08
+            }
+          },
+          "receipt_sha256": "44c10777068594efd0fbb65809ededc0ab0f36eaaa5c3d84cd83a09aa953e9cb",
+          "step": 0,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                220.310195239456,
+                -843.9471871427428,
+                167.11639202909276
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                216.59759906021736,
+                -836.8976177837121,
+                166.20785912340295
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                216.0124156206589,
+                -818.1927509862801,
+                153.91773207048917
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 0.0
+        },
+        {
+          "pack_sha256": "6087a7e54138b00634745c5e8b86350f8bd420202b6e8d166d40bd824f5cbc9b",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.082560930097046,
+              "centroid_vector_mm": [
+                3.9369946155144997,
+                -6.643980659072679,
+                -2.3844046611280616
+              ],
+              "relative_displacement_from_step0_mm": 3.3254014300076533,
+              "relative_vector_change_from_step0_mm": [
+                0.2243984362758633,
+                0.40558869995799274,
+                -3.2929375668178524
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.076675249253764,
+              "centroid_vector_mm": [
+                15.157813273192156,
+                -23.558281326228947,
+                -1.8835527020370848
+              ],
+              "relative_displacement_from_step0_mm": 18.714608351599093,
+              "relative_vector_change_from_step0_mm": [
+                10.860033654395085,
+                2.196154830233721,
+                -15.082212660640671
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.303969835782738,
+              "centroid_vector_mm": [
+                11.220818657677656,
+                -16.91430066715627,
+                0.5008519590909768
+              ],
+              "relative_displacement_from_step0_mm": 15.978418907940158,
+              "relative_vector_change_from_step0_mm": [
+                10.635635218119221,
+                1.790566130275728,
+                -11.78927509382282
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.3641043316840897,
+              "degrees": 2.3641035233110905,
+              "off_axis_quaternion_vector_norm": 3.617144685174014e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.882078822808021,
+              "degrees": 1.8820808891382494,
+              "off_axis_quaternion_vector_norm": 4.666202212806803e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.364218412398887,
+              "degrees": 1.3642174498336623,
+              "off_axis_quaternion_vector_norm": 3.8685114052579804e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.09527966118966708,
+              "degrees": -0.09527769106453114,
+              "off_axis_quaternion_vector_norm": 5.374388334612229e-08
+            }
+          },
+          "receipt_sha256": "f7a3e0b988d8d08f4f3662c99501ed5be20ae5641f17b0c8113f88142a7b1782",
+          "step": 3807,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.21796052050146,
+                -836.5674709607165,
+                45.44659433677094
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.28096590498697,
+                -829.9234903016438,
+                47.83099899789901
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                234.06014724730932,
+                -813.0091896344875,
+                47.33014703880803
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 7.614000361645594
+        },
+        {
+          "pack_sha256": "64af7dc813add5fcc7dc0374f22180996fcb309b637febc6f3f0fe0ee6e41e98",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.081676591129906,
+              "centroid_vector_mm": [
+                3.9381959285417487,
+                -6.643502213993124,
+                -2.3807535959655195
+              ],
+              "relative_displacement_from_step0_mm": 3.3219258665925104,
+              "relative_vector_change_from_step0_mm": [
+                0.22559974930311255,
+                0.4060671450375475,
+                -3.28928650165531
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.075067987371302,
+              "centroid_vector_mm": [
+                15.144691378106312,
+                -23.566324514483927,
+                -1.8644340791422742
+              ],
+              "relative_displacement_from_step0_mm": 18.690642826344387,
+              "relative_vector_change_from_step0_mm": [
+                10.846911759309242,
+                2.1881116419787405,
+                -15.063094037745861
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.303547490981785,
+              "centroid_vector_mm": [
+                11.206495449564564,
+                -16.922822300490804,
+                0.5163195168232451
+              ],
+              "relative_displacement_from_step0_mm": 15.956518896672968,
+              "relative_vector_change_from_step0_mm": [
+                10.621312010006129,
+                1.782044496941193,
+                -11.773807536090551
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.3894224755896616,
+              "degrees": 2.389421667216663,
+              "off_axis_quaternion_vector_norm": 7.324160416038245e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8855900695939005,
+              "degrees": 1.8855921359241292,
+              "off_axis_quaternion_vector_norm": 1.1949959112175782e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.350822539451773,
+              "degrees": 1.3508215768865484,
+              "off_axis_quaternion_vector_norm": 3.2447901345273286e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.11146280256769123,
+              "degrees": -0.1114608324425553,
+              "off_axis_quaternion_vector_norm": 1.9728874806085562e-08
+            }
+          },
+          "receipt_sha256": "256c605706ff5a645b54bfb282dac0de58a556aab50a062f0114009372bfeaac",
+          "step": 4767,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.13463821130782,
+                -836.5968673202748,
+                45.41737096136521
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.19644228276607,
+                -829.9533651062817,
+                47.79812455733073
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.98994683320151,
+                -813.0305428057909,
+                47.281805040507486
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 9.5340004528407
+        },
+        {
+          "pack_sha256": "a841df4110f49f1cc7e99f7d69b1e6934af0793ac5fbaf9c8fd2a2f88df37160",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.081455015667546,
+              "centroid_vector_mm": [
+                3.9385007102197833,
+                -6.643323929557576,
+                -2.379994641343565
+              ],
+              "relative_displacement_from_step0_mm": 3.3212168904910158,
+              "relative_vector_change_from_step0_mm": [
+                0.22590453098114693,
+                0.4062454294730955,
+                -3.2885275470333557
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.074041508009167,
+              "centroid_vector_mm": [
+                15.143464881260781,
+                -23.566076501604805,
+                -1.862073119926519
+              ],
+              "relative_displacement_from_step0_mm": 18.688057353672775,
+              "relative_vector_change_from_step0_mm": [
+                10.84568526246371,
+                2.188359654857863,
+                -15.060733078530106
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.302685029113526,
+              "centroid_vector_mm": [
+                11.204964171040999,
+                -16.92275257204723,
+                0.5179215214170461
+              ],
+              "relative_displacement_from_step0_mm": 15.954325337440308,
+              "relative_vector_change_from_step0_mm": [
+                10.619780731482564,
+                1.7821142253847677,
+                -11.77220553149675
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.400129189826728,
+              "degrees": 2.4001283814537286,
+              "off_axis_quaternion_vector_norm": 2.0762202961896237e-09
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8893798278543723,
+              "degrees": 1.8893818941846008,
+              "off_axis_quaternion_vector_norm": 2.7116080890103492e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.349128262055575,
+              "degrees": 1.3491272994903503,
+              "off_axis_quaternion_vector_norm": 5.812573943192238e-09
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.11579490404420595,
+              "degrees": -0.11579293391907002,
+              "off_axis_quaternion_vector_norm": 4.035722384116901e-08
+            }
+          },
+          "receipt_sha256": "97a3de2127762f036bede414a6e4d48a51c4abe55d6b0e17bda272411fc71b2e",
+          "step": 5023,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.11252857202797,
+                -836.6040528030406,
+                45.40995548429074
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.17402786180818,
+                -829.960728873483,
+                47.789950125634306
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.9690636907672,
+                -813.0379763014358,
+                47.27202860421726
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 10.046000477159396
+        },
+        {
+          "pack_sha256": "166e4a029df203ac38ea512569de82b1f63303a4e4a181ccb54c5eeef466e9aa",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.080613385854491,
+              "centroid_vector_mm": [
+                3.939019360572088,
+                -6.64311911518467,
+                -2.376848247187244
+              ],
+              "relative_displacement_from_step0_mm": 3.3181619275507437,
+              "relative_vector_change_from_step0_mm": [
+                0.22642318133345163,
+                0.4064502438460016,
+                -3.2853811528770342
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.07322970399361,
+              "centroid_vector_mm": [
+                15.1289725037827,
+                -23.575965112937357,
+                -1.8423588104755293
+              ],
+              "relative_displacement_from_step0_mm": 18.662602203632588,
+              "relative_vector_change_from_step0_mm": [
+                10.83119288498563,
+                2.1784710435253096,
+                -15.041018769079116
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.303251066979758,
+              "centroid_vector_mm": [
+                11.189953143210612,
+                -16.932845997752686,
+                0.5344894367117146
+              ],
+              "relative_displacement_from_step0_mm": 15.930982830492932,
+              "relative_vector_change_from_step0_mm": [
+                10.604769703652178,
+                1.772020799679308,
+                -11.755637616202081
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.421712190364372,
+              "degrees": 2.4217113819913734,
+              "off_axis_quaternion_vector_norm": 2.0557904885368114e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8942434073065981,
+              "degrees": 1.8942454736368266,
+              "off_axis_quaternion_vector_norm": 1.5110378951281536e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.334206562801845,
+              "degrees": 1.3342056002366203,
+              "off_axis_quaternion_vector_norm": 4.240188120834539e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.13056525008573833,
+              "degrees": -0.13056327996060238,
+              "off_axis_quaternion_vector_norm": 4.867008665803988e-08
+            }
+          },
+          "receipt_sha256": "e3f7bcee7fb35105e5ef1c7e19289fe0cf5dc1dd89443be98ac3f615e394a3dc",
+          "step": 5599,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                249.05612833259264,
+                -836.6267278310312,
+                45.39186141705617
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.11710897202056,
+                -829.9836087158466,
+                47.76870966424342
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.92715582880993,
+                -813.0507627180939,
+                47.2342202275317
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 11.19800053187646
+        },
+        {
+          "pack_sha256": "472c42a78169c4c4293fa9121628f0f0b4e56af1735d767d4d9f65f2fc56abd4",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.07942828515368,
+              "centroid_vector_mm": [
+                3.939530502449884,
+                -6.64325854118375,
+                -2.3715768573245657
+              ],
+              "relative_displacement_from_step0_mm": 3.3129605680075453,
+              "relative_vector_change_from_step0_mm": [
+                0.2269343232112475,
+                0.40631081784692213,
+                -3.2801097630143565
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.076670953387232,
+              "centroid_vector_mm": [
+                15.097378444354437,
+                -23.60344236813827,
+                -1.8017003931551576
+              ],
+              "relative_displacement_from_step0_mm": 18.608302441464293,
+              "relative_vector_change_from_step0_mm": [
+                10.799598825557366,
+                2.1509937883243957,
+                -15.000360351758744
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.309361519338015,
+              "centroid_vector_mm": [
+                11.157847941904553,
+                -16.960183826954523,
+                0.5698764641694082
+              ],
+              "relative_displacement_from_step0_mm": 15.880473141868505,
+              "relative_vector_change_from_step0_mm": [
+                10.572664502346118,
+                1.7446829704774736,
+                -11.720250588744388
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.4433437433910195,
+              "degrees": 2.4433429350180202,
+              "off_axis_quaternion_vector_norm": 3.4856395978115334e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8964191826163979,
+              "degrees": 1.8964212489466263,
+              "off_axis_quaternion_vector_norm": 4.8893595468156137e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.3020566510865643,
+              "degrees": 1.3020556885213397,
+              "off_axis_quaternion_vector_norm": 3.40266102866168e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.14990507042360124,
+              "degrees": -0.14990310029846532,
+              "off_axis_quaternion_vector_norm": 1.4061624339890135e-08
+            }
+          },
+          "receipt_sha256": "f0c7e133c9485c77831b69eefb34a521358f078bef5cd0063f05964863b3a658",
+          "step": 6207,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                248.99115674792833,
+                -836.6575708217875,
+                45.372049659747816
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                245.05162624547845,
+                -830.0143122806038,
+                47.743626517072386
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.8937783035739,
+                -813.0541284536494,
+                47.173750052902975
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 12.41400058963336
+        },
+        {
+          "pack_sha256": "3748b2508b5a1c5ec36296b8307a5f2214cf3475614fdeaae7d5a9ae195b6034",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.075575055225995,
+              "centroid_vector_mm": [
+                3.9397112334421944,
+                -6.644525036955451,
+                -2.3545434595585375
+              ],
+              "relative_displacement_from_step0_mm": 3.2959535063670877,
+              "relative_vector_change_from_step0_mm": [
+                0.22711505420355826,
+                0.4050443220752209,
+                -3.2630763652483283
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.093294388242832,
+              "centroid_vector_mm": [
+                14.981316817104656,
+                -23.707577706604035,
+                -1.6565311030418417
+              ],
+              "relative_displacement_from_step0_mm": 18.412069358422745,
+              "relative_vector_change_from_step0_mm": [
+                10.683537198307585,
+                2.046858449858635,
+                -14.855191061645428
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.335978990995677,
+              "centroid_vector_mm": [
+                11.041605583662461,
+                -17.06305266964858,
+                0.698012356516696
+              ],
+              "relative_displacement_from_step0_mm": 15.697434211371105,
+              "relative_vector_change_from_step0_mm": [
+                10.456422144104028,
+                1.6418141277834142,
+                -11.5921146963971
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.4610967456162447,
+              "degrees": 2.4610959372432455,
+              "off_axis_quaternion_vector_norm": 8.698643725448747e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8762724150132783,
+              "degrees": 1.8762744813435068,
+              "off_axis_quaternion_vector_norm": 4.0265314480655924e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.1849678359241447,
+              "degrees": 1.18496687335892,
+              "off_axis_quaternion_vector_norm": 5.05938081815405e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.21051756936420335,
+              "degrees": -0.21051559923906743,
+              "off_axis_quaternion_vector_norm": 1.335705187648403e-08
+            }
+          },
+          "receipt_sha256": "67036a1760ae6c0c2945832b5bba80622c8c70faf5d90bc7b186a6b7441973bb",
+          "step": 7423,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                248.83801765959822,
+                -836.746248132389,
+                45.33225757801477
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                244.89830642615604,
+                -830.1017230954336,
+                47.686801037573304
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.85670084249358,
+                -813.0386704257851,
+                46.98878868105661
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 14.846000705147162
+        },
+        {
+          "pack_sha256": "f39f00e3d434022039b0f907026cf6803f797f37650c5f486ff0a3bd4ea91826",
+          "pairwise_centroid_motion": {
+            "FDS_to_FDP": {
+              "centroid_distance_mm": 8.07388832086799,
+              "centroid_vector_mm": [
+                3.9389082401788675,
+                -6.6449960839315425,
+                -2.348765960634221
+              ],
+              "relative_displacement_from_step0_mm": 3.290120451960253,
+              "relative_vector_change_from_step0_mm": [
+                0.22631206094023137,
+                0.4045732750991293,
+                -3.257298866324011
+              ]
+            },
+            "PQ_to_FDP": {
+              "centroid_distance_mm": 28.093612433930588,
+              "centroid_vector_mm": [
+                14.933555077110972,
+                -23.7421066290906,
+                -1.5976123308502204
+              ],
+              "relative_displacement_from_step0_mm": 18.3329993015345,
+              "relative_vector_change_from_step0_mm": [
+                10.635775458313901,
+                2.01232952737207,
+                -14.796272289453807
+              ]
+            },
+            "PQ_to_FDS": {
+              "centroid_distance_mm": 20.34103438465674,
+              "centroid_vector_mm": [
+                10.994646836932104,
+                -17.097110545159055,
+                0.7511536297840002
+              ],
+              "relative_displacement_from_step0_mm": 15.623370828591398,
+              "relative_vector_change_from_step0_mm": [
+                10.409463397373669,
+                1.6077562522729405,
+                -11.538973423129796
+              ]
+            }
+          },
+          "q_degrees_relative_step0": {
+            "41": {
+              "absolute_degrees_from_nhrigid_default": 2.4383076939089805,
+              "degrees": 2.4383068855359817,
+              "off_axis_quaternion_vector_norm": 1.4321508060707807e-08
+            },
+            "42": {
+              "absolute_degrees_from_nhrigid_default": 1.8581521405943255,
+              "degrees": 1.858154206924554,
+              "off_axis_quaternion_vector_norm": 5.524449177572484e-08
+            },
+            "79": {
+              "absolute_degrees_from_nhrigid_default": 1.1473240070186461,
+              "degrees": 1.1473230444534215,
+              "off_axis_quaternion_vector_norm": 3.7873530942091565e-08
+            },
+            "80": {
+              "absolute_degrees_from_nhrigid_default": -0.23498464045394762,
+              "degrees": -0.2349826703288117,
+              "off_axis_quaternion_vector_norm": 7.405676758661171e-09
+            }
+          },
+          "receipt_sha256": "86d125462a490dae06c4bff0fc105feea412c3a4cf35188ed8356488b5e551ce",
+          "step": 8000,
+          "surface_centroids": {
+            "FDP": {
+              "centroid_mm": [
+                248.8008398868319,
+                -836.7476601233302,
+                45.321229998488356
+              ],
+              "triangle_count": 29540,
+              "unique_vertex_count": 14772
+            },
+            "FDS": {
+              "centroid_mm": [
+                244.86193164665303,
+                -830.1026640393987,
+                47.66999595912258
+              ],
+              "triangle_count": 25104,
+              "unique_vertex_count": 12548
+            },
+            "PQ": {
+              "centroid_mm": [
+                233.86728480972093,
+                -813.0055534942396,
+                46.91884232933858
+              ],
+              "triangle_count": 1900,
+              "unique_vertex_count": 928
+            }
+          },
+          "time_s": 16.00000075995922
+        }
+      ],
+      "execution_sha256": "581c5ba1f7b1af39b92e0f17a6b1c0b5ffe1754954343ab89d5400a18909ae53",
+      "invocation_sha256": "3edfd96a299ac799e6848ff5fafb1c7ece27a818b8248dbdf289435ef745faf8",
+      "manifest_sha256": "1c195d7d32f8f4ed371045e3dac09ffcf7491a43700d5d2b15d5f48e8d247667",
+      "native_execution": {
+        "native_argv_matches_prepared_cli_preview": true,
+        "native_environment_matches_prepared_cli_preview": true,
+        "qualification": "Bounded native014 whole-body back-interface diagnostic from back412-parent-composition-014-001 with unchanged right-forearm177. Right177 passed the separate retained one-minute run; this new back composition remains unadmitted. No full anatomical admission or long-run qualification.",
+        "returncode": 0,
+        "schema": "numi.human.native-smoke.execution.v1",
+        "timed_out": false,
+        "utc_finished": "2026-10-12T17:58:48.034004+00:00",
+        "wall_seconds": 106.24912012500863
+      },
+      "run_root": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-016-back412-right177",
+      "run_variant_note": "N16 and N14 are distinct native composition/run variants; within-run deltas use each run\u2019s own step 0.",
+      "surface_labels": {
+        "130": "left pronator quadratus",
+        "132": "left flexor digitorum superficialis",
+        "134": "left flexor digitorum profundus"
+      },
+      "tissue_sha256": "3aa1dcf1458f6c7cda617a63ae4b4ed37a3280128da0b3dd3f1af571a0ce56d4",
+      "wrist_summary": {
+        "41": {
+          "max_deg": 2.4610959372432455,
+          "max_step": 7423,
+          "min_deg": 0.0,
+          "min_step": 0,
+          "peak_abs_deg": 2.4610959372432455,
+          "peak_abs_step": 7423,
+          "range_deg": 2.4610959372432455
+        },
+        "42": {
+          "max_deg": 1.8964212489466263,
+          "max_step": 6207,
+          "min_deg": 0.0,
+          "min_step": 0,
+          "peak_abs_deg": 1.8964212489466263,
+          "peak_abs_step": 6207,
+          "range_deg": 1.8964212489466263
+        },
+        "79": {
+          "max_deg": 1.3642174498336623,
+          "max_step": 3807,
+          "min_deg": 0.0,
+          "min_step": 0,
+          "peak_abs_deg": 1.3642174498336623,
+          "peak_abs_step": 3807,
+          "range_deg": 1.3642174498336623
+        },
+        "80": {
+          "max_deg": 0.0,
+          "max_step": 0,
+          "min_deg": -0.2349826703288117,
+          "min_step": 8000,
+          "peak_abs_deg": 0.2349826703288117,
+          "peak_abs_step": 8000,
+          "range_deg": 0.2349826703288117
+        }
+      }
+    }
+  },
+  "schema": "numi.human.wrist-motion-census.v1",
+  "scope": "Read-only reconstruction of four wrist revolute coordinates from accepted rigid body poses, plus centroid-motion comparison for the captured left PQ/FDS/FDP passive rows. No simulation, runtime changes, or admission claim.",
+  "surface_labels": {
+    "130": "left pronator quadratus",
+    "132": "left flexor digitorum superficialis",
+    "134": "left flexor digitorum profundus"
+  },
+  "wrist_coordinates": {
+    "41": {
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_label": "authored local axis (0,0,1)",
+      "child_body": 44,
+      "joint": 43,
+      "joint_index": 43,
+      "joint_type": 0,
+      "nq": 1,
+      "nv": 1,
+      "parent_body": 43,
+      "q_offset": 41,
+      "v_offset": 40
+    },
+    "42": {
+      "axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "axis_label": "authored local axis (1,0,0)",
+      "child_body": 45,
+      "joint": 44,
+      "joint_index": 44,
+      "joint_type": 0,
+      "nq": 1,
+      "nv": 1,
+      "parent_body": 44,
+      "q_offset": 42,
+      "v_offset": 41
+    },
+    "79": {
+      "axis": [
+        -0.0,
+        -0.0,
+        1.0
+      ],
+      "axis_label": "authored local axis (0,0,1)",
+      "child_body": 94,
+      "joint": 93,
+      "joint_index": 93,
+      "joint_type": 0,
+      "nq": 1,
+      "nv": 1,
+      "parent_body": 93,
+      "q_offset": 79,
+      "v_offset": 78
+    },
+    "80": {
+      "axis": [
+        -1.0,
+        -0.0,
+        0.0
+      ],
+      "axis_label": "authored local axis (-1,0,0)",
+      "child_body": 95,
+      "joint": 94,
+      "joint_index": 94,
+      "joint_type": 0,
+      "nq": 1,
+      "nv": 1,
+      "parent_body": 94,
+      "q_offset": 80,
+      "v_offset": 79
+    }
+  }
+}
