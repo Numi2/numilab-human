@@ -13,3 +13,5 @@ No performance, complete anatomy, or five-minute qualification claim is made.
 ## Audit interpretation correction
 
 The copied historical report speculates that the native count might use a near-zero threshold. Source inspection disproves that speculation: numi-lab ac816674, matter/src/human_respiration.metal, nm_human_resting_audit_mesh_triangles calls nm_human_exact_binary32_triangle_is_zero. There is no area epsilon in that test. The 1,545 count covers the whole mesh; 732 covers only row153. The copied report is preserved byte-for-byte as historical evidence, with this correction taking precedence.
+
+The independent six-row audit accounts for all 1,545 rejected native faces: rows153–158 have 732,719,30,64,0,0 respectively. The default-pose positive control uses a different pose from the supine native run (maximum coordinate distance1.6292m), so it does not isolate arithmetic differences. It predicts two row157 degeneracies while the native step0 has none. Use the existing normal native viewer path with one step and export step0 for actual-transform preflight; preserve the configured timestep. This is not a new geometry-only runtime mode.
