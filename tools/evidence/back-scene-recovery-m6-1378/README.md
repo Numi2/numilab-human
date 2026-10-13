@@ -21,3 +21,9 @@ Executed:
     /Users/n/numi-human-prep-venv-20261005/bin/python /Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-018-back412-recovery-16s/launch_arm.py baseline
 
 Preserve existing outputs and prepare a new directory for reruns. Assets remain mixed-source reference anatomy; passive structures do not imply complete organ physiology or clinical validation.
+
+## Compiled-source identity correction
+
+The recorded N18 declaration pinned repository source at ac81667401e0b4f6b543c82f5597ed82ccb019ed, while binary147 was built from separately retained executed-source snapshots. Visual.hpp differs only in indentation; the probe snapshot predates a NUMI_HUMAN_RESTING_SCENE guard around the same parent-influence member. These differences must still be distinguished by exact hash. The unchanged parent loader snapshot is shared by both. The actual three compiled snapshots and their inventory are retained here under source-retention-1380; ac816 is not presented as the byte-exact compiled revision.
+
+The original Lab checkout disappeared after the N18 run. Three pinned files were restored only after matching their exact recorded hashes against retained build bytes or the pinned upstream commit. All163 declared inputs were verified and hard-linked into a separate retention capsule on numi; the receipt lists their exact locations. This does not reconstruct the whole former checkout. Native binary SHA and completed execution remain bound to the retained compiled snapshot.
