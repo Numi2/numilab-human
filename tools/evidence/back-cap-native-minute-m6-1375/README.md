@@ -8,7 +8,7 @@ At the five capture times shared with the previous right177/back408 minute (0, 1
 
 At step30000, raw self-contact pairs are 43→43 in row157 and 25→21 in row158. These remaining contacts require anatomical interface classification; this run does not establish intersection clearance. The left forearm remains unresolved and no rejected forearm attachment candidate was installed.
 
-The continuous native movie has 940 image frames, five timing markers, duration 353.05 wall seconds and maximum image gap 1.675 seconds. Its final frame, visually inspected, shows the muscle layer at accepted time 60.00s, 11 breaths and 70 beats. These are coupled-state values. The recording and source assets remain on numi, pinned in source-pins.json.
+The continuous native movie has 940 image frames, five timing markers, duration 353.05 wall seconds and maximum image gap 1.675 seconds. Its final frame, visually inspected, shows the muscle layer at accepted time 60.00s, 11 breaths and 70 beats. These are coupled-state values. The recording and source assets were pinned on numi when this report was written. On Oct 13 the native017 output directory was absent; the one-minute continuous recording is no longer available at that path. See ../back-scene-recovery-m6-1378 for a fresh retained 16-second recording and the retention correction.
 
 Run directory:
     /Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back-forearm-native-014-017-back412-right177-60s
