@@ -1,0 +1,57 @@
+{
+  "status": "retained_offline_nearest_triangle_owner_equivalence",
+  "host": "ssh numi Apple M6",
+  "files": [
+    {
+      "retained_source": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/bounded_triangle_nearest_052.py",
+      "published_file": "bounded_triangle_nearest_052.py",
+      "sha256": "705804c51901838cb0b6654b59ecb7cbf6b0172b8a506194e6a4430bc8b3885f"
+    },
+    {
+      "retained_source": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/benchmark_nearest_triangles_053.py",
+      "published_file": "benchmark_nearest_triangles_053.py",
+      "sha256": "a618bd9fbd1746c228cd9dc345de062ba5b50bc1ea91c16d69e3183839b55f71"
+    },
+    {
+      "retained_source": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/nearest-triangle-owner-control-053-001/report.json",
+      "published_file": "report-053.json",
+      "sha256": "dc162ef53f9116d6cd4ff056c47faa209b23a15ce6ba1f2f764b0270cd2e613a"
+    },
+    {
+      "retained_source": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/nearest-triangle-owner-control-051-001/report.json",
+      "published_file": "report-051-small-target-control.json",
+      "sha256": "c3a193e3dae7744497249c65b76491a1045c77c11db1a1ab61b4f183ec20c761"
+    },
+    {
+      "retained_source": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/nearest-triangle-broadphase-regression-1388-001/report.json",
+      "published_file": "regression-report.json",
+      "sha256": "36ada777419996f6104d3cf77f63d67f1eb0d5c65c0231a69b0c8584c5f459aa"
+    },
+    {
+      "executed_source": "/Users/n/numi-human-anatomy-input-guard-publish-1386/tools/evidence/nearest-triangle-owner-control-m6-1388/regression.py",
+      "published_file": "regression.py",
+      "sha256": "d9a80929dc257a5029a74d03b965f9fbc246311db09e9d3037311878684a64bd"
+    }
+  ],
+  "executed_report_sha256": "dc162ef53f9116d6cd4ff056c47faa209b23a15ce6ba1f2f764b0270cd2e613a",
+  "tested_queries": 320,
+  "notes": [
+    "Retained scripts and reports are byte-identical to their executed copies.",
+    "Benchmark command has absolute retained input paths and creates a new output directory; preserve previous output before any rerun.",
+    "052 is used by the isolated corrected-target-role source preparation074; this does not admit that exploratory anatomical candidate.",
+    "Small-target control051 is retained because its slower KD path informed the052 full-scan fallback.",
+    "No GPU simulation real-time factor or anatomical clearance claimed."
+  ],
+  "regression": {
+    "queries": 126,
+    "status": "conservative_nearest_regression_pass",
+    "cases": [
+      "distant-centroid long triangle missed by nearest-centroid shortlist",
+      "coincident global face ties",
+      "random target",
+      "small full-scan fallback"
+    ],
+    "initial_syntax_rejection": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/nearest-triangle-broadphase-regression-1388-001/syntax-rejection.json",
+    "no_simulation_or_anatomy_admission": true
+  }
+}

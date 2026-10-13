@@ -1,0 +1,113 @@
+{
+  "status": "nearest_triangle_broadphase_owner_equivalence_pass",
+  "input_sha256": {
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/bounded_triangle_nearest_050.py": "4a346f495b1737665f497c2d67bb3f101f26a17e94221633f34ecd2a3fa172cf",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/arterial-venous-route-field-073/build_route073.py": "d63019077e33605558844b4f1882f0974a1dcab4b14dbc546b6695b2529356e0",
+    "/Users/numi/numi-human-left-pq-publication-1344/src/numilab_human/myosim_bone_proximity.py": "c01306982da4f8b09f370dda98281d123a012b11b855f2f49481de3c6de7e094",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-native-022-001-60s/baseline/native-run/accepted-geometry/step-14975.mrvpack": "b1c25b89e828ecf62b5b7dfd58ac3a38c9f1d420306e5f9b789d04ec29859c3d",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-native-022-001-60s/baseline/native-run/accepted-geometry/step-14975.receipt.json": "84a98b1d4d4098c762798517e91248b6f3f47df3b841ce344c04d593f9b58b79",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/benchmark_nearest_triangles_051.py": "aa200f561257d62e59dd730c9e575492da4ea15520e06f5fb7d2ff21685cb345"
+  },
+  "captured_accepted_step": 14975,
+  "rows": [
+    {
+      "target": [
+        51004,
+        9
+      ],
+      "faces": 1176,
+      "queries": 72,
+      "exact_face_and_squared_distance_mismatches": 0,
+      "full_scan_s": 0.01209754100000282,
+      "bounded_query_s": 0.007259040999997524,
+      "index_build_s": 0.0004633329999705893,
+      "query_speedup": 1.6665481018783264,
+      "candidate_face_count_quantiles": [
+        16.0,
+        26.0,
+        51.70000000000002,
+        70.0
+      ]
+    },
+    {
+      "target": [
+        51005,
+        92
+      ],
+      "faces": 440,
+      "queries": 72,
+      "exact_face_and_squared_distance_mismatches": 0,
+      "full_scan_s": 0.005569332999584731,
+      "bounded_query_s": 0.006398167000043031,
+      "index_build_s": 8.479099960823078e-05,
+      "query_speedup": 0.8704575856721579,
+      "candidate_face_count_quantiles": [
+        26.0,
+        38.0,
+        56.45,
+        64.0
+      ]
+    },
+    {
+      "target": [
+        51005,
+        72
+      ],
+      "faces": 1828,
+      "queries": 72,
+      "exact_face_and_squared_distance_mismatches": 0,
+      "full_scan_s": 0.017479875000390166,
+      "bounded_query_s": 0.006814124999436899,
+      "index_build_s": 0.0002327919992239913,
+      "query_speedup": 2.565241318853801,
+      "candidate_face_count_quantiles": [
+        18.0,
+        34.0,
+        64.0,
+        74.0
+      ]
+    },
+    {
+      "target": [
+        51010,
+        313
+      ],
+      "faces": 98928,
+      "queries": 72,
+      "exact_face_and_squared_distance_mismatches": 0,
+      "full_scan_s": 0.8295241250007166,
+      "bounded_query_s": 0.012632167000447225,
+      "index_build_s": 0.015189208000265353,
+      "query_speedup": 65.66760279304005,
+      "candidate_face_count_quantiles": [
+        22.0,
+        55.0,
+        160.45,
+        199.0
+      ]
+    },
+    {
+      "target": [
+        51007,
+        1
+      ],
+      "faces": 109211,
+      "queries": 32,
+      "exact_face_and_squared_distance_mismatches": 0,
+      "full_scan_s": 0.40649512500021956,
+      "bounded_query_s": 0.005065334000391886,
+      "index_build_s": 0.016749750000599306,
+      "query_speedup": 80.25040895008514,
+      "candidate_face_count_quantiles": [
+        16.0,
+        19.0,
+        51.39999999999999,
+        77.0
+      ]
+    }
+  ],
+  "max_rss_bytes": 191414272,
+  "gpu_used": false,
+  "simulation_real_time_factor_claimed": false,
+  "qualification": "Offline static-target nearest-distance acceleration only. Exact inside/outside classification and physical simulation owners unchanged."
+}

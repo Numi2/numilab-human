@@ -1,0 +1,36 @@
+{
+  "status": "conservative_nearest_regression_pass",
+  "rows": [
+    {
+      "case": "long_triangle_distant_centroid",
+      "target_faces": 2304,
+      "queries": 3,
+      "face_and_distance_mismatches": 0
+    },
+    {
+      "case": "coincident_triangle_global_tie",
+      "target_faces": 2304,
+      "queries": 3,
+      "face_and_distance_mismatches": 0
+    },
+    {
+      "case": "random_static_target",
+      "target_faces": 2304,
+      "queries": 96,
+      "face_and_distance_mismatches": 0
+    },
+    {
+      "case": "small_full_scan_fallback",
+      "target_faces": 440,
+      "queries": 24,
+      "face_and_distance_mismatches": 0
+    }
+  ],
+  "input_sha256": {
+    "/Users/n/numi-human-anatomy-input-guard-publish-1386/tools/evidence/nearest-triangle-owner-control-m6-1388/bounded_triangle_nearest_052.py": "705804c51901838cb0b6654b59ecb7cbf6b0172b8a506194e6a4430bc8b3885f",
+    "/Users/n/numi-human-anatomy-input-guard-publish-1386/tools/evidence/nearest-triangle-owner-control-m6-1388/regression.py": "d9a80929dc257a5029a74d03b965f9fbc246311db09e9d3037311878684a64bd",
+    "/Users/n/numi-human-left-pq-publication-1344/src/numilab_human/myosim_bone_proximity.py": "c01306982da4f8b09f370dda98281d123a012b11b855f2f49481de3c6de7e094"
+  },
+  "gpu_used": false,
+  "scope": "Offline exact-owner nearest-query selection, not physical simulation or anatomy admission."
+}
