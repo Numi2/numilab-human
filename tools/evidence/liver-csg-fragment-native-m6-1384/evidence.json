@@ -1,0 +1,42 @@
+{
+  "status": "bounded_liver_anatomy_pass",
+  "native_binary_sha256": "eba485b973e74582f92fda1e204f96b11bbd16ee45c2678de2a979be0bf6210a",
+  "executed_lab_source_commit": "3d0c09e",
+  "published_lab_compatible_extension": "84e886d",
+  "device": "Apple M6,numi.local",
+  "seconds": 16.00000076,
+  "wall_seconds": 107.5848085419857,
+  "real_time_factor": 0.14871988877273404,
+  "removed_fragment_faces": 48,
+  "removed_signed_volume_mm3": 0.32382983862723524,
+  "source_coordinates_and_normals_preserved": true,
+  "all873_other_surfaces_and_retained_liver_faces_byte_exact": true,
+  "all157_body_poses_and_coupled_physiology_byte_exact": true,
+  "main_shell_all8_poses_closed_connected_outward_self_pair_count0": true,
+  "main_shell_volume_range_ml": [
+    1320.1710387332046,
+    1377.8441736622308
+  ],
+  "compressed_artifacts": {
+    "resting-thorax.nhanatomy.gz": {
+      "original_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-retirement-candidate-1384-002/resting-thorax.nhanatomy",
+      "original_sha256": "cde8705a813fe56686776c9cc038cbf06f413e1de76099d2a019d5e1b748a8d4",
+      "archive_sha256": "36f37ed67532ed6a763715d6756d9c562ab10cc94587a99ade0a71693a694efe",
+      "archive_bytes": 58112872
+    },
+    "resting-anatomy-receipt.json.gz": {
+      "original_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-native-027-002/resting-anatomy-receipt.json",
+      "original_sha256": "944bc88d257137f2bedd5898404c45cefd2901d719707519771ae5f4cfce3752",
+      "archive_sha256": "5e2ec798bbcb341d11fbfd4d2161b7762879f8a065a5d79bdc8702f136ba6e48",
+      "archive_bytes": 12766854
+    },
+    "source-island-audit.json.gz": {
+      "original_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-source-audit-1384-001/report.json",
+      "original_sha256": "4744eb7589af97255b485353e52c42178e823ec0a1042a44d672335077431a0c",
+      "archive_sha256": "9e05d54265055b1b0aa3b43a7e190c5b6903925c8e4b8335f76349870693b398",
+      "archive_bytes": 279902
+    }
+  },
+  "failure_retention": "First candidate001/prepare027001 failed before native launch because anatomy parent digest was not rebound; original helper, candidate and source report retained on numi. Successor002 corrects only receipt binding; same candidate geometry hash.",
+  "limitations": "Passive liver geometry follows existing accepted common field, has no independently simulated hepatic mass/physiology/incompressibility claim. Historical unused fragment vertices are retained unrendered to preserve source-local common-field map indices. Forearm and later axillary crossing remain; complete anatomy qualification pending."
+}

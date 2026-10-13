@@ -1,0 +1,9 @@
+# Retire a detached inferred liver fragment
+
+The registered CSG liver exterior contained a detached closed fragment: 48 triangles, 26 exact-coordinate vertices and 0.324 mm³ of signed enclosed volume, about 1 mm from the main envelope. All fragment faces belonged to display patch19. These patches are inferred nearest-source identity guides, not measured hepatic segments or independent segment volumes. The fragment has no diaphragm interface or functional compartment ownership. This increment removes only its faces and retains the original source assets and provenance.
+
+The numi M6 native replay passed 16 simulated seconds at eight matched accepted captures. All retained liver faces, the other873 surfaces, all157 body poses and the coupled physiology CSV remained byte-identical to the unchanged control. The resulting 58,552-triangle main liver was one closed, consistently wound, outward-positive component with zero exact self-intersection pairs at every capture. Back412, repaired skin, retired obsolete row22 and the original-body91 positive parent control are preserved.
+
+The compact receipt and NHANAT1 ABI5 payload are losslessly compressed here; standard gzip decompression recovers the recorded hashes. Historical unused fragment vertices remain unrendered to preserve existing common-field source-local indexing. The exact launch declaration, native binary/source pins, unretimed viewer movie, compact trace and executable audit helpers are retained. The initial failed digest-binding preparation remains recorded separately; it was never run natively.
+
+This is a bounded anatomical repair. The passive liver follows the existing accepted common field; its enclosed volume varies over the breathing cycle and is not an incompressible hepatic mechanics or liver physiology qualification. Forearm and later axillary crossing failures remain. This increment does not finish the full anatomy deliverable.
