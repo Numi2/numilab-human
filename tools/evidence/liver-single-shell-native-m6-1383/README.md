@@ -7,3 +7,5 @@ This asset requires the native loader fix published in Numi2/numi-lab at 69a5f3e
 The anatomy payload and receipt are losslessly gzip-compressed for repository retention; decompress before using the existing numi human resting-run owner. prepare_liver_alias_native_023_002.py reproduces the bounded existing-scene substitution and seals invocation/input identities. This is a working integrated native increment, not complete anatomy qualification: late forearm crossings and a transient left axillary-vein/skin crossing still require repair, and the final paired five-minute run has not been performed with finished anatomy. Functional organ physiology and passive inspection geometry remain distinguished by the existing receipt/viewer.
 
 The first rebuilt legacy arm completed natively but the outer evidence guard rejected the old expected DYLD_LIBRARY_PATH. That failed record is retained with the Lab evidence; corrected passing arms bind the actual library locations.
+
+The source-identity audit script is gzip-retained byte-for-byte, including its original trailing blank line. Decompress audit_liver_id22.py.gz to reproduce the hash-pinned audit.
