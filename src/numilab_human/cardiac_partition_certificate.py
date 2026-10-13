@@ -172,6 +172,25 @@ def _face_coverage(parent, children):
         require(position==1, 'incomplete source-face boundary coverage')
 
 
+_RAY_DIRECTIONS = tuple((1, attempt, attempt * attempt) for attempt in range(1, 65))
+require(bool(_RAY_DIRECTIONS) and all(all(component > 0 for component in direction)
+                                      for direction in _RAY_DIRECTIONS),
+        "upper-orthant rejection requires strictly positive ray directions")
+
+
+def _positive_ray_upper_orthant_candidates(records, point):
+    """Keep face order while rejecting AABBs unreachable by any positive ray.
+
+    Every configured parity ray has strictly positive XYZ components, so a hit
+    at t > 0 must be coordinatewise greater than its origin. A face whose
+    closed AABB has an upper bound below the query point on any axis therefore
+    cannot be hit. Equality is retained to preserve boundary and edge cases. The
+    remaining exact slab, plane, and triangle predicates are unchanged.
+    """
+    return tuple(row for row in records
+                 if all(row[2][axis] >= point[axis] for axis in range(3)))
+
+
 class _Prepared:
     def __init__(self, triangles):
         self.triangles=triangles
@@ -203,9 +222,12 @@ class _Prepared:
                 normal=self.normals[row[3]]
                 if _dot(normal,_sub(point,row[0][0]))==0 and predicates._inside(predicates._signs(point,1,row[0],normal)):
                     return 'boundary'
-        for attempt in range(1,65):
-            direction=(1,attempt,attempt*attempt);crossings=0;ambiguous=False
-            for row in self.records:
+        ray_candidates = _positive_ray_upper_orthant_candidates(self.records, point)
+        if not ray_candidates:
+            return "outside"
+        for direction in _RAY_DIRECTIONS:
+            crossings=0;ambiguous=False
+            for row in ray_candidates:
                 # Positive-direction slab intersection avoids most exact plane
                 # predicates. Fraction ratios keep this broadphase conservative.
                 lo=max(Fraction(row[1][k]-point[k],direction[k]) for k in range(3))

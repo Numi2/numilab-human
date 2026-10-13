@@ -50,6 +50,120 @@ def emitted(rows,priority=A):
     return {s:convert(t) for s,t in p['regions'].items()},convert(p['shared_interface'])
 
 
+def legacy_prepared_location(prepared, point):
+    """Reference the pre-filter _Prepared.location loop for parity tests."""
+    if any(point[k] < prepared.lo[k] or point[k] > prepared.hi[k] for k in range(3)):
+        return "outside", 0
+    for row in prepared.records:
+        if all(row[1][k] <= point[k] <= row[2][k] for k in range(3)):
+            normal = prepared.normals[row[3]]
+            if cert._dot(normal, cert._sub(point, row[0][0])) == 0 and cert.predicates._inside(
+                    cert.predicates._signs(point, 1, row[0], normal)):
+                return "boundary", 0
+    for attempt, direction in enumerate(cert._RAY_DIRECTIONS, 1):
+        crossings, ambiguous = 0, False
+        for row in prepared.records:
+            lo = max(F(row[1][k] - point[k], direction[k]) for k in range(3))
+            hi = min(F(row[2][k] - point[k], direction[k]) for k in range(3))
+            if hi <= 0 or lo > hi:
+                continue
+            tri = row[0]
+            normal = prepared.normals[row[3]]
+            numerator = cert._dot(normal, cert._sub(tri[0], point))
+            denominator = cert._dot(normal, direction)
+            if not denominator:
+                if not numerator:
+                    ambiguous = True
+                    break
+                continue
+            if numerator * denominator <= 0:
+                continue
+            hit = tuple(point[k] * denominator + numerator * direction[k] for k in range(3))
+            if denominator < 0:
+                denominator, hit = -denominator, tuple(-x for x in hit)
+            signs = cert.predicates._signs(hit, denominator, tri, normal)
+            if cert.predicates._inside(signs):
+                if 0 in signs:
+                    ambiguous = True
+                    break
+                crossings += 1
+        if not ambiguous:
+            return ("inside" if crossings % 2 else "outside"), attempt
+    return "indeterminate", 64
+
+
+class PositiveRayUpperOrthantTests(unittest.TestCase):
+    @staticmethod
+    def tetra(vertices, faces):
+        return cert._Prepared([tuple(vertices[index] for index in face) for face in faces])
+
+    def test_boundary_edge_inside_outside_and_negative_queries_match_full_face_loop(self):
+        vertices = ((F(0), F(0), F(0)), (F(12), F(0), F(0)),
+                    (F(0), F(12), F(0)), (F(0), F(0), F(12)))
+        prepared = self.tetra(vertices, FACES)
+        points = ((F(1, 4), F(1, 4), F(1, 4)), (-1, -1, -1),
+                  (F(0), F(0), F(0)), (F(6), F(6), F(0)),
+                  (F(12), F(0), F(0)), (F(30), F(-4), F(2)))
+        for point in points:
+            with self.subTest(point=point):
+                self.assertEqual(prepared.location(point), legacy_prepared_location(prepared, point)[0])
+
+    def test_exact_rational_query_grid_matches_unfiltered_closed_surfaces(self):
+        base = ((F(0), F(0), F(0)), (F(4), F(0), F(0)),
+                (F(0), F(4), F(0)), (F(0), F(0), F(4)))
+        # Translation and a nonsingular rational shear exercise negative origins,
+        # oblique faces, exact boundary points and ambiguous-ray retries.
+        for shift in (F(0), F(-3)):
+            vertices = tuple((x + y / 2 + shift, y + z / 3 + shift, z + shift)
+                             for x, y, z in base)
+            prepared = self.tetra(vertices, FACES)
+            for x in (F(-1), F(0), F(1, 3), F(2), F(4)):
+                for y in (F(-1), F(0), F(1, 3), F(2), F(4)):
+                    for z in (F(-1), F(0), F(1, 3), F(2), F(4)):
+                        point = (x + y / 2 + shift, y + z / 3 + shift, z + shift)
+                        with self.subTest(shift=shift, point=point):
+                            self.assertEqual(prepared.location(point),
+                                             legacy_prepared_location(prepared, point)[0])
+
+    def test_parallel_coplanar_ray_retries_with_identical_location(self):
+        # The face x=y is coplanar with the first (1,1,1) ray. This negative
+        # query remains inside the mesh whole bounds, lies before that face,
+        # and the ray crosses the face interior; the unfiltered ray must retry.
+        vertices = ((F(0), F(0), F(0)), (F(4), F(4), F(0)),
+                    (F(0), F(0), F(4)), (F(-2), F(-1), F(-2)))
+        prepared = self.tetra(vertices, FACES)
+        point = (F(-1), F(-1), F(-1, 2))
+        expected, attempts = legacy_prepared_location(prepared, point)
+        self.assertEqual(attempts, 2)
+        self.assertEqual(prepared.location(point), expected)
+
+    def test_upper_orthant_filter_keeps_equality_and_original_face_order(self):
+        vertices = ((F(0), F(0), F(0)), (F(2), F(0), F(0)),
+                    (F(0), F(2), F(0)), (F(0), F(0), F(2)))
+        prepared = self.tetra(vertices, FACES)
+        point = (F(2), F(0), F(0))
+        expected = tuple(row for row in prepared.records
+                         if all(row[2][axis] >= point[axis] for axis in range(3)))
+        actual = cert._positive_ray_upper_orthant_candidates(prepared.records, point)
+        self.assertEqual(actual, expected)
+        self.assertTrue(any(row[2][0] == point[0] for row in actual))
+        self.assertEqual([row[3] for row in actual], sorted(row[3] for row in actual))
+        self.assertTrue(any(any(row[2][axis] < point[axis] for axis in range(3))
+                            for row in prepared.records))
+        self.assertLess(len(actual), len(prepared.records))
+
+    def test_empty_orthant_inside_global_bounds_matches_full_loop(self):
+        triangles = (
+            ((F(0), F(-2), F(-2)), (F(2), F(-2), F(-2)), (F(1), F(0), F(-2))),
+            ((F(-2), F(0), F(0)), (F(-2), F(2), F(0)), (F(-2), F(1), F(2))),
+        )
+        prepared = cert._Prepared(triangles)
+        point = (F(0), F(0), F(0))
+        self.assertTrue(all(prepared.lo[k] <= point[k] <= prepared.hi[k] for k in range(3)))
+        self.assertEqual(cert._positive_ray_upper_orthant_candidates(prepared.records, point), ())
+        self.assertEqual(prepared.location(point), legacy_prepared_location(prepared, point)[0])
+
+
 class ExactCoverageTests(unittest.TestCase):
     def test_custom_source_names_must_be_two_distinct_nonempty_strings(self):
         for names in (("same","same"), ("", "other"), (1, "other")):

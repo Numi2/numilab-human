@@ -1,0 +1,36 @@
+{
+  "scope": "Same-process CPU exact-Fraction fixture workload, 24 separated closed tetrahedra, 96 faces, 24 interior queries, 5 alternating-order pairs. This is not a full anatomy, Metal or whole-application benchmark.",
+  "source_sha256": "633bb7db11ffc1bd6d7326fe45793f417211619c91e5e359addf52c0a9424b46",
+  "reference_sha256": "11e1dff8e18ee3495d13b8d65132ae75977c39e1d2fe5134f23bc03fc7af850a",
+  "queries": 24,
+  "faces": 96,
+  "exact_parity": true,
+  "unfiltered_candidate_rows": 2304,
+  "filtered_candidate_rows": 430,
+  "trials_seconds": [
+    {
+      "unfiltered": 0.027164708997588605,
+      "filtered": 0.008933208999224007
+    },
+    {
+      "filtered": 0.009005707979667932,
+      "unfiltered": 0.027385875000618398
+    },
+    {
+      "unfiltered": 0.028596707998076454,
+      "filtered": 0.00944879199960269
+    },
+    {
+      "filtered": 0.008625875023426488,
+      "unfiltered": 0.027399167011026293
+    },
+    {
+      "unfiltered": 0.028812000004108995,
+      "filtered": 0.008987792010884732
+    }
+  ],
+  "median_seconds": {
+    "unfiltered": 0.027399167011026293,
+    "filtered": 0.008987792010884732
+  }
+}
