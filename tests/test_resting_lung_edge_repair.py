@@ -4,7 +4,7 @@ import numpy as np
 
 from numilab_human.resting_anatomy_interface_patch import signed_volume, topology_report
 from numilab_human.resting_lung_edge_repair import (
-    _collapse_reciprocal_shared_edge, collapse_midpoint_edge,
+    _collapse_free_diaphragm_microedges, _collapse_reciprocal_shared_edge, collapse_midpoint_edge,
 )
 
 
@@ -191,6 +191,184 @@ class RestingLungEdgeRepairTests(unittest.TestCase):
             np.testing.assert_array_equal(rows[sid]["vertices6"], before[sid][0])
             np.testing.assert_array_equal(rows[sid]["faces"], before[sid][1])
 
+
+
+    def test_diaphragm_microedge_collapse_keeps_reciprocal_patch_and_maps_origins(self):
+        vertices6, faces = self._torus()
+        patch_face = next(
+            fi for fi, face in enumerate(faces)
+            if 1 in face and 0 not in face
+        )
+        patch_ids = set(map(int, faces[patch_face]))
+        patch_before = {
+            tuple(np.asarray(vertices6[i, :3], dtype="<f4").view("<u4").tolist())
+            for i in patch_ids
+        }
+        rows = {
+            305: {"vertices6": vertices6.copy(), "faces": faces.copy()},
+            311: {"vertices6": vertices6.copy(), "faces": faces.copy()},
+        }
+        candidate, origins, report = _collapse_free_diaphragm_microedges(
+            rows,
+            interface_rows=[{"lung_stable_id": 305,
+                "diaphragm_patch_face_start": patch_face,
+                "diaphragm_patch_face_count": 1}],
+            edge_vertex_pairs=[(0, 1)],
+            max_endpoint_displacement_m=30e-6,
+        )
+        self.assertEqual(len(report["operations"]), 1)
+        self.assertEqual(report["operations"][0]["removed_face_origins"],
+                         report["operations"][0]["collapse"]["deleted_face_origins"])
+        self.assertEqual(len(origins), len(candidate[311]["faces"]))
+        self.assertEqual(set(range(len(faces))) - set(map(int, origins)),
+                         set(report["operations"][0]["removed_face_origins"]))
+        self.assertEqual(topology_report(candidate[311]["faces"])["boundary_edge_count"], 0)
+        final_patch = set()
+        for out_index, origin in enumerate(origins):
+            if int(origin) == patch_face:
+                final_patch = {
+                    tuple(np.asarray(candidate[311]["vertices6"][int(i), :3], dtype="<f4").view("<u4").tolist())
+                    for i in candidate[311]["faces"][out_index]
+                }
+                break
+        self.assertEqual(final_patch, patch_before)
+        self.assertTrue(report["patch_coordinates_unchanged"])
+        self.assertTrue(report["source_face_connectivity_changed_only_by_two_incident_face_deletions_per_collapse"])
+
+
+    def test_diaphragm_microedge_collapse_rejects_removed_patch_vertex(self):
+        vertices6, faces = self._torus()
+        patch_face = next(
+            fi for fi, face in enumerate(faces)
+            if 0 in face and 1 not in face
+        )
+        rows = {
+            305: {"vertices6": vertices6.copy(), "faces": faces.copy()},
+            311: {"vertices6": vertices6.copy(), "faces": faces.copy()},
+        }
+        with self.assertRaisesRegex(ValueError, "remove a free vertex"):
+            _collapse_free_diaphragm_microedges(
+                rows,
+                interface_rows=[{"lung_stable_id": 305,
+                    "diaphragm_patch_face_start": patch_face,
+                    "diaphragm_patch_face_count": 1}],
+                edge_vertex_pairs=[(0, 1)],
+            )
+
+
+    def test_free_diaphragm_sidewall_clearance_preserves_patch_and_lobe(self):
+        from numilab_human.resting_lung_edge_repair import _move_free_diaphragm_sidewall_clearance
+        from numilab_human.resting_anatomy_interface_patch import normals
+
+        lobe_xyz = np.asarray([
+            [0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1],
+        ], dtype=np.float32)
+        lobe_faces = np.asarray([[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype=np.int64)
+        if signed_volume(lobe_xyz.astype(np.float64), lobe_faces) < 0:
+            lobe_faces = lobe_faces[:, [0, 2, 1]]
+        lobe_v6 = np.column_stack((lobe_xyz, normals(lobe_xyz.astype(float), lobe_faces))).astype(np.float32)
+        diaphragm_xyz = np.asarray([
+            [10, 0, 0], [11, 0, 0], [10, 1, 0],
+            [.1, .1, 1.5], [.2, .2, .05], [.4, .1, 1.5],
+        ], dtype=np.float32)
+        diaphragm_faces = np.asarray([[0, 1, 2], [3, 4, 5]], dtype=np.int64)
+        diaphragm_v6 = np.column_stack((diaphragm_xyz, np.zeros_like(diaphragm_xyz))).astype(np.float32)
+        rows = {
+            305: {"body_index": 20, "vertices6": lobe_v6.copy(), "faces": lobe_faces.copy()},
+            311: {"body_index": 20, "vertices6": diaphragm_v6.copy(), "faces": diaphragm_faces.copy()},
+        }
+        before_lobe = rows[305]["vertices6"].copy()
+        before_patch = rows[311]["vertices6"][:3, :3].copy()
+        before_faces = rows[311]["faces"].copy()
+        candidate, report = _move_free_diaphragm_sidewall_clearance(
+            rows, interface_rows=[{
+                "lung_stable_id": 305, "diaphragm_patch_face_start": 0,
+                "diaphragm_patch_face_count": 1,
+            }],
+            event_faces_by_lobe={305: [1]}, target_clearance_m=.1,
+            max_vertex_displacement_m=.2,
+        )
+        np.testing.assert_array_equal(rows[305]["vertices6"], before_lobe)
+        np.testing.assert_array_equal(candidate[305]["vertices6"], before_lobe)
+        np.testing.assert_array_equal(candidate[311]["vertices6"][:3, :3], before_patch)
+        np.testing.assert_array_equal(candidate[311]["faces"], before_faces)
+        np.testing.assert_array_equal(rows[311]["vertices6"], diaphragm_v6)
+        self.assertIn(4, report["changed_vertex_ids"])
+        self.assertEqual(report["moved_vertex_count"], len(report["changed_vertex_ids"]))
+        tol = report["per_vertex"][1]["clearance_rounding_bound_m"]
+        self.assertGreaterEqual(report["per_vertex"][1]["candidate_signed_distance_m"], .1-tol)
+        self.assertLess(tol, 1e-6)
+        self.assertTrue(report["reciprocal_patch_positions_unchanged"])
+        self.assertTrue(report["lobes_unchanged_bytewise"])
+
+
+    def test_free_diaphragm_sidewall_clearance_rejects_reciprocal_patch_faces(self):
+        from numilab_human.resting_lung_edge_repair import _move_free_diaphragm_sidewall_clearance
+        from numilab_human.resting_anatomy_interface_patch import normals
+
+        xyz = np.asarray([[0,0,0],[1,0,0],[0,1,0],[0,0,1]], dtype=np.float32)
+        faces = np.asarray([[0,2,1],[0,1,3],[0,3,2],[1,2,3]], dtype=np.int64)
+        if signed_volume(xyz.astype(float), faces) < 0:
+            faces = faces[:, [0,2,1]]
+        lobe = np.column_stack((xyz, normals(xyz.astype(float), faces))).astype(np.float32)
+        dxyz = np.asarray([[10,0,0],[11,0,0],[10,1,0]], dtype=np.float32)
+        dfaces = np.asarray([[0,1,2]], dtype=np.int64)
+        d = np.column_stack((dxyz, np.zeros_like(dxyz))).astype(np.float32)
+        rows = {305: {"vertices6": lobe, "faces": faces},
+                311: {"vertices6": d, "faces": dfaces}}
+        before = rows[311]["vertices6"].copy()
+        with self.assertRaisesRegex(ValueError, "itself a reciprocal patch face"):
+            _move_free_diaphragm_sidewall_clearance(
+                rows, interface_rows=[{"lung_stable_id":305,
+                    "diaphragm_patch_face_start":0,"diaphragm_patch_face_count":1}],
+                event_faces_by_lobe={305:[0]}, target_clearance_m=.1,
+                max_vertex_displacement_m=.2)
+        np.testing.assert_array_equal(rows[311]["vertices6"], before)
+
+
+    def test_free_diaphragm_sidewall_clearance_enforces_displacement_bound(self):
+        from numilab_human.resting_lung_edge_repair import _move_free_diaphragm_sidewall_clearance
+        from numilab_human.resting_anatomy_interface_patch import normals
+
+        xyz = np.asarray([[0,0,0],[1,0,0],[0,1,0],[0,0,1]], dtype=np.float32)
+        faces = np.asarray([[0,2,1],[0,1,3],[0,3,2],[1,2,3]], dtype=np.int64)
+        if signed_volume(xyz.astype(float), faces) < 0:
+            faces = faces[:, [0,2,1]]
+        lobe = np.column_stack((xyz, normals(xyz.astype(float), faces))).astype(np.float32)
+        dxyz = np.asarray([[10,0,0],[11,0,0],[10,1,0],
+                           [.1,.1,1.5],[.2,.2,.05],[.4,.1,1.5]], dtype=np.float32)
+        dfaces = np.asarray([[0,1,2],[3,4,5]], dtype=np.int64)
+        d = np.column_stack((dxyz, np.zeros_like(dxyz))).astype(np.float32)
+        rows = {305: {"vertices6": lobe, "faces": faces},
+                311: {"vertices6": d, "faces": dfaces}}
+        before = rows[311]["vertices6"].copy()
+        with self.assertRaisesRegex(ValueError, "exceeds displacement bound"):
+            _move_free_diaphragm_sidewall_clearance(
+                rows, interface_rows=[{"lung_stable_id":305,
+                    "diaphragm_patch_face_start":0,"diaphragm_patch_face_count":1}],
+                event_faces_by_lobe={305:[1]}, target_clearance_m=.1,
+                max_vertex_displacement_m=.1)
+        np.testing.assert_array_equal(rows[311]["vertices6"], before)
+
+
+    def test_source_indices_reject_boolean_fractional_and_string_coercion(self):
+        from numilab_human.resting_lung_edge_repair import _strict_source_index
+        for value in (True, np.bool_(False), 1.5, 1.0, "1", float("nan")):
+            with self.subTest(value=str(value)):
+                with self.assertRaisesRegex(ValueError, "source indices"):
+                    _strict_source_index(value)
+        self.assertEqual(_strict_source_index(np.int64(7)), 7)
+
+    def test_closest_surface_rejects_nonfinite_query_and_triangle(self):
+        from numilab_human.resting_lung_edge_repair import _closest_point_on_oriented_triangles
+        triangle = np.asarray([[[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]])
+        for value in (float("nan"), float("inf")):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(ValueError, "dimensions"):
+                    _closest_point_on_oriented_triangles([value, 0., 0.], triangle)
+                invalid = triangle.copy(); invalid[0, 0, 0] = value
+                with self.assertRaisesRegex(ValueError, "dimensions"):
+                    _closest_point_on_oriented_triangles([0., 0., 1.], invalid)
 
 
 if __name__ == "__main__":

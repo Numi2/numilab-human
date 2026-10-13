@@ -205,7 +205,7 @@ def collapse_midpoint_edge(vertices6, faces, face_origins, *, remove_vertex: int
         raise ValueError("edge-collapse changed-face lineage is inconsistent")
 
     report = {
-        "operation": "one topology-preserving midpoint edge collapse",
+        "operation": f"one topology-preserving {position_policy}-position edge collapse",
         "removed_vertex_before_compaction": u,
         "retained_vertex_before_compaction": w,
         "retained_vertex_after_compaction": survivor,
@@ -1693,6 +1693,409 @@ def _relocate_subthreshold_vertices(original_rows, *, selection_altitude_m=128e-
         "native_transformed_pose_qualification": "not performed",
     }
 
+
+
+
+def _strict_source_index(value):
+    if isinstance(value, (bool, np.bool_)) or not isinstance(value, (int, np.integer)):
+        raise ValueError("source indices must be integers, without boolean or fractional coercion")
+    return int(value)
+
+
+def _closest_point_on_oriented_triangles(point, triangles, triangle_vertex_normals=None):
+    """Numerically compute the nearest Float64 point and face normal on a triangle soup."""
+    p = np.asarray(point, dtype=np.float64)
+    tri = np.asarray(triangles, dtype=np.float64)
+    if (p.shape != (3,) or tri.ndim != 3 or tri.shape[1:] != (3, 3) or not len(tri)
+            or not np.isfinite(p).all() or not np.isfinite(tri).all()):
+        raise ValueError("closest-surface query has invalid dimensions")
+    a, b, c = tri[:, 0], tri[:, 1], tri[:, 2]
+    ab, ac = b-a, c-a
+    cross = np.cross(ab, ac)
+    lengths = np.linalg.norm(cross, axis=1)
+    if not np.isfinite(lengths).all() or np.any(lengths <= 0):
+        raise ValueError("closest-surface triangles must have nonzero finite area")
+    normals = cross / lengths[:, None]
+    ap = p-a
+    signed_plane = np.einsum("ij,ij->i", ap, normals)
+    projected = p-signed_plane[:, None]*normals
+    vp = projected-a
+    d00 = np.einsum("ij,ij->i", ab, ab)
+    d01 = np.einsum("ij,ij->i", ab, ac)
+    d11 = np.einsum("ij,ij->i", ac, ac)
+    d20 = np.einsum("ij,ij->i", vp, ab)
+    d21 = np.einsum("ij,ij->i", vp, ac)
+    denom = d00*d11-d01*d01
+    if np.any(denom <= 0):
+        raise ValueError("closest-surface triangle has a singular Gram matrix")
+    v = (d11*d20-d01*d21)/denom
+    w = (d00*d21-d01*d20)/denom
+    u = 1-v-w
+    inside = (u >= 0) & (v >= 0) & (w >= 0)
+    best = np.full(len(tri), np.inf)
+    closest = np.zeros((len(tri), 3), dtype=np.float64)
+    bary = np.zeros((len(tri), 3), dtype=np.float64)
+    best[inside] = signed_plane[inside]**2
+    closest[inside] = projected[inside]
+    bary[inside] = np.column_stack((u[inside], v[inside], w[inside]))
+    for x, y, ix, iy in ((a,b,0,1),(b,c,1,2),(c,a,2,0)):
+        edge = y-x
+        t = np.clip(np.einsum("ij,ij->i", p-x, edge) /
+                    np.einsum("ij,ij->i", edge, edge), 0, 1)
+        q = x+t[:, None]*edge
+        d2 = np.einsum("ij,ij->i", q-p, q-p)
+        take = d2 < best
+        best[take] = d2[take]
+        closest[take] = q[take]
+        bary[take] = 0
+        bary[take, ix] = 1-t[take]
+        bary[take, iy] = t[take]
+    index = int(np.argmin(best))
+    q, face_normal = closest[index], normals[index]
+    n = face_normal
+    if triangle_vertex_normals is not None:
+        vn = np.asarray(triangle_vertex_normals, dtype=np.float64)
+        if vn.shape != tri.shape or not np.isfinite(vn).all():
+            raise ValueError("closest-surface vertex normals have invalid dimensions")
+        n = np.einsum("i,ij->j", bary[index], vn[index])
+        nlength = float(np.linalg.norm(n))
+        if not np.isfinite(nlength) or nlength <= 1e-12:
+            raise ValueError("closest-surface interpolated normal is ambiguous")
+        n = n / nlength
+        if float(np.dot(n, face_normal)) < -1e-8:
+            raise ValueError("closest-surface interpolated normal is not outward")
+    return {"distance_m": float(np.sqrt(best[index])),
+            "signed_distance_m": float(np.dot(p-q, n)),
+            "point_m": q, "normal": n, "face_normal": face_normal, "face_index": index,
+            "barycentric": bary[index]}
+
+
+def _collapse_free_diaphragm_microedges(original_rows, *, interface_rows,
+                                       edge_vertex_pairs,
+                                       max_endpoint_displacement_m=30e-6,
+                                       max_abs_volume_delta_m3=1e-12):
+    """Remove diagnosed tiny free-sidewall stars while retaining patch coordinates.
+
+    edge_vertex_pairs names remove/keep indices in the original row-311 vertex
+    array. The retained endpoint must belong to the exact reciprocal patch and
+    the removed endpoint must be free. Each operation uses the existing
+    closed-manifold link-condition collapse owner.
+    """
+    if 311 not in original_rows or not edge_vertex_pairs:
+        raise ValueError("diaphragm microedge inputs are missing")
+    source = original_rows[311]
+    initial_vertices = np.asarray(source["vertices6"], dtype=np.float32)
+    faces = np.asarray(source["faces"], dtype=np.int64)
+    if (initial_vertices.ndim != 2 or initial_vertices.shape[1] != 6
+            or faces.ndim != 2 or faces.shape[1] != 3 or not len(faces)
+            or not np.isfinite(initial_vertices).all()
+            or faces.min() < 0 or faces.max() >= len(initial_vertices)):
+        raise ValueError("diaphragm microedge source geometry is malformed")
+
+    def key(point):
+        return np.ascontiguousarray(point, dtype="<f4").tobytes()
+
+    patch_face_ids = set()
+    for row in interface_rows:
+        start, count = _strict_source_index(row["diaphragm_patch_face_start"]), _strict_source_index(row["diaphragm_patch_face_count"])
+        if count <= 0 or start < 0 or start + count > len(faces):
+            raise ValueError("diaphragm patch range is invalid for microedge collapse")
+        patch_face_ids.update(range(start, start + count))
+    patch_coordinates = {
+        key(initial_vertices[int(vertex), :3])
+        for vertex in faces[sorted(patch_face_ids)].reshape(-1)
+    }
+    origins = np.arange(len(faces), dtype=np.int64)
+    vertices = initial_vertices.copy()
+    reports = []
+
+    def find_unique(point_key):
+        found = np.flatnonzero(np.asarray([key(point) == point_key for point in vertices[:, :3]]))
+        if len(found) != 1:
+            raise ValueError(f"microedge coordinate is not unique in current diaphragm: {len(found)}")
+        return int(found[0])
+
+    for ordinal, pair in enumerate(edge_vertex_pairs):
+        if len(pair) != 2:
+            raise ValueError("each microedge pair must contain remove and keep source indices")
+        remove_original, keep_original = map(_strict_source_index, pair)
+        if min(remove_original, keep_original) < 0 or max(remove_original, keep_original) >= len(initial_vertices):
+            raise ValueError("microedge source vertex index is out of range")
+        remove_key = key(initial_vertices[remove_original, :3])
+        keep_key = key(initial_vertices[keep_original, :3])
+        if remove_key == keep_key:
+            raise ValueError("microedge endpoints are coincident")
+        if remove_key in patch_coordinates or keep_key not in patch_coordinates:
+            raise ValueError("microedge must remove a free vertex onto a fixed reciprocal-patch vertex")
+        remove_current, keep_current = find_unique(remove_key), find_unique(keep_key)
+        vertices, faces, origins, report = collapse_midpoint_edge(
+            vertices, faces, origins,
+            remove_vertex=remove_current, keep_vertex=keep_current,
+            position_policy="keep",
+            max_endpoint_displacement_m=max_endpoint_displacement_m,
+            max_abs_volume_delta_m3=max_abs_volume_delta_m3,
+        )
+        if (len(report["deleted_face_indices"]) != 2
+                or report["maximum_endpoint_displacement_m"] > max_endpoint_displacement_m
+                or report["candidate_topology"]["genus"] != report["source_topology"]["genus"]):
+            raise ValueError("microedge collapse failed its bounded local topology contract")
+        surviving_patch_coordinates = {
+            key(vertices[int(vertex), :3])
+            for vertex in faces.reshape(-1)
+            if key(vertices[int(vertex), :3]) in patch_coordinates
+        }
+        if surviving_patch_coordinates != patch_coordinates:
+            raise ValueError("microedge collapse changed or removed a reciprocal-patch coordinate")
+        reports.append({
+            "ordinal": ordinal,
+            "original_remove_vertex": remove_original,
+            "original_keep_vertex": keep_original,
+            "current_remove_vertex": remove_current,
+            "current_keep_vertex": keep_current,
+            "removed_face_origins": report["deleted_face_origins"],
+            "collapse": report,
+        })
+
+    result = {sid: dict(row) for sid, row in original_rows.items()}
+    result[311] = dict(source)
+    result[311]["vertices6"] = vertices
+    result[311]["faces"] = faces
+    return result, origins, {
+        "algorithm": "bounded_free_diaphragm_microedge_collapse_v1",
+        "inference": "removes diagnosed 21-29 um sidewall sliver stars whose 100 um clearance move reverses incident triangles; no reciprocal-patch vertex moves",
+        "position_policy": "retain the exact reciprocal-patch endpoint",
+        "maximum_endpoint_displacement_m": float(max_endpoint_displacement_m),
+        "maximum_abs_volume_delta_per_collapse_m3": float(max_abs_volume_delta_m3),
+        "patch_coordinates_unchanged": True,
+        "operations": reports,
+        "face_origins_after_collapse": origins.astype(int).tolist(),
+        "source_face_connectivity_changed_only_by_two_incident_face_deletions_per_collapse": True,
+    }
+
+
+def _move_free_diaphragm_sidewall_clearance(original_rows, *, interface_rows,
+                                              event_faces_by_lobe,
+                                              target_clearance_m=100e-6,
+                                              max_vertex_displacement_m=200e-6):
+    """Move only free row-311 sidewall vertices away from the involved lobes.
+
+    This is an inferred, bounded source-registration guard, not a measured
+    tissue thickness. Reciprocal patch coordinates and all lobe geometry stay
+    fixed.
+    """
+    did = 311
+    lobe_ids = tuple(sorted(map(_strict_source_index, event_faces_by_lobe)))
+    if not lobe_ids or any(sid not in original_rows or sid not in range(305,310)
+                           for sid in lobe_ids) or did not in original_rows:
+        raise ValueError("sidewall clearance owners are missing or invalid")
+    if (not np.isfinite(target_clearance_m) or target_clearance_m <= 0
+            or not np.isfinite(max_vertex_displacement_m)
+            or max_vertex_displacement_m < target_clearance_m):
+        raise ValueError("sidewall clearance bounds are invalid")
+    source = original_rows[did]
+    xyz = np.asarray(source["vertices6"][:, :3], dtype=np.float32)
+    faces = np.asarray(source["faces"], dtype=np.int64)
+    if (xyz.ndim != 2 or xyz.shape[1] != 3 or not np.isfinite(xyz).all() or faces.ndim != 2 or faces.shape[1] != 3 or not len(faces)
+            or faces.min() < 0 or faces.max() >= len(xyz)):
+        raise ValueError("diaphragm geometry is malformed")
+    patch_ids, matched = set(), set()
+    for interface in interface_rows:
+        sid = _strict_source_index(interface["lung_stable_id"])
+        start, count = _strict_source_index(interface["diaphragm_patch_face_start"]), _strict_source_index(interface["diaphragm_patch_face_count"])
+        if count <= 0 or start < 0 or start+count > len(faces) or sid in matched:
+            raise ValueError("reciprocal diaphragm patch range is invalid")
+        matched.add(sid)
+        patch_ids.update(range(start, start+count))
+    if not set(lobe_ids).issubset(matched):
+        raise ValueError("every clearance lobe must have a reciprocal diaphragm patch")
+    target_faces, target_keys = set(), set()
+    for sid, values in event_faces_by_lobe.items():
+        if not isinstance(values, (list, tuple)):
+            raise ValueError("event face indices must be sequences")
+        ids = set(map(_strict_source_index, values))
+        if any(fi < 0 or fi >= len(faces) for fi in ids) or ids & patch_ids:
+            raise ValueError("event face is invalid or is itself a reciprocal patch face")
+        target_faces.update(ids)
+        target_keys.update(np.ascontiguousarray(xyz[int(vi)], dtype="<f4").tobytes()
+                           for vi in faces[sorted(ids)].reshape(-1))
+    if not target_faces:
+        raise ValueError("sidewall clearance has no crossing-face seeds")
+    patch_vertex_ids = set(map(int, faces[sorted(patch_ids)].reshape(-1)))
+    patch_keys = {np.ascontiguousarray(xyz[vi], dtype="<f4").tobytes()
+                  for vi in patch_vertex_ids}
+    patch_vertex_ids.update(i for i, p in enumerate(xyz)
+                            if np.ascontiguousarray(p, dtype="<f4").tobytes() in patch_keys)
+    groups = {}
+    for i, p in enumerate(xyz):
+        groups.setdefault(np.ascontiguousarray(p, dtype="<f4").tobytes(), []).append(i)
+    selected = set()
+    for key in target_keys:
+        members = groups.get(key)
+        if not members:
+            raise ValueError("event coordinate is absent from diaphragm")
+        if not set(members).issubset(patch_vertex_ids):
+            selected.update(set(members)-patch_vertex_ids)
+    if not selected:
+        raise ValueError("all implicated coordinates are fixed reciprocal-patch vertices")
+    constraints = {i: set() for i in selected}
+    for sid, values in event_faces_by_lobe.items():
+        keys = {np.ascontiguousarray(xyz[int(vi)], dtype="<f4").tobytes()
+                for fi in map(_strict_source_index, values) for vi in faces[fi]}
+        for i in selected:
+            if np.ascontiguousarray(xyz[i], dtype="<f4").tobytes() in keys:
+                constraints[i].add(int(sid))
+    if any(len(v) != 1 for v in constraints.values()):
+        raise ValueError("a sidewall vertex has conflicting lobe constraints")
+    from .cardiac_cavity_intersections import float32_point_lattice_key, point_location
+    lobe_cache = {}
+    for sid in lobe_ids:
+        lobe = original_rows[sid]
+        lv = np.asarray(lobe["vertices6"][:, :3], dtype=np.float32)
+        lf = np.asarray(lobe["faces"], dtype=np.int64)
+        if signed_volume(lv.astype(np.float64), lf) <= 0:
+            raise ValueError(f"lobe {sid} does not have positive outward source winding")
+        tri = lv[lf].astype(np.float64)
+        vertex_normals = np.asarray(lobe["vertices6"][:, 3:6], dtype=np.float64)
+        norm_lengths = np.linalg.norm(vertex_normals, axis=1)
+        if not np.isfinite(vertex_normals).all() or np.any(norm_lengths <= 1e-12):
+            raise ValueError(f"lobe {sid} has invalid outward vertex normals")
+        vertex_normals = vertex_normals/norm_lengths[:, None]
+        tri_vertex_normals = vertex_normals[lf]
+        lattice = [float32_point_lattice_key(tuple(float(v) for v in point)) for point in lv]
+        records = [(tuple(lattice[int(v)] for v in face), None, None, fi, None)
+                   for fi, face in enumerate(lf)]
+        lobe_cache[sid] = (tri, tri_vertex_normals, records)
+
+    def locate(point, records):
+        return point_location(float32_point_lattice_key(tuple(float(v) for v in point)),
+                              records)["location"]
+
+    proposals, per_vertex = {}, []
+    for i in sorted(selected):
+        sid = next(iter(constraints[i]))
+        tri, _, records = lobe_cache[sid]
+        start = xyz[i].copy()
+        candidate = start.copy()
+        before = _closest_point_on_oriented_triangles(start.astype(np.float64), tri)
+        source_location = locate(start, records)
+        if source_location not in ("inside", "outside"):
+            raise ValueError(f"sidewall vertex {i} has unresolved source containment")
+        source_signed = before["distance_m"]*(1.0 if source_location == "outside" else -1.0)
+        for _ in range(24):
+            near = _closest_point_on_oriented_triangles(candidate.astype(np.float64), tri)
+            location = locate(candidate, records)
+            if location not in ("inside", "outside"):
+                raise ValueError(f"sidewall vertex {i} has unresolved candidate containment")
+            signed = near["distance_m"]*(1.0 if location == "outside" else -1.0)
+            spacing = np.spacing(np.abs(candidate.astype(np.float32))).astype(np.float64)
+            clearance_rounding_bound = 0.5*float(np.linalg.norm(spacing))
+            if location == "outside" and signed >= target_clearance_m-clearance_rounding_bound:
+                break
+            direction = candidate.astype(np.float64)-near["point_m"]
+            if location == "inside":
+                direction = -direction
+            direction_length = float(np.linalg.norm(direction))
+            if not np.isfinite(direction_length) or direction_length <= 1e-15:
+                raise ValueError(f"sidewall vertex {i} has ambiguous nearest-surface direction")
+            direction /= direction_length
+            movement = max(0.0, target_clearance_m-signed)
+            updated = (candidate.astype(np.float64)+movement*direction).astype(np.float32)
+            if np.array_equal(updated, candidate):
+                if location == "outside" and signed >= target_clearance_m-clearance_rounding_bound:
+                    break
+                raise ValueError(f"sidewall vertex {i} cannot make Float32 outward progress")
+            if np.linalg.norm(updated.astype(np.float64)-start.astype(np.float64)) > max_vertex_displacement_m:
+                raise ValueError(f"sidewall vertex {i} exceeds displacement bound")
+            candidate = updated
+        else:
+            raise ValueError(f"sidewall vertex {i} did not reach outward source clearance")
+        after = _closest_point_on_oriented_triangles(candidate.astype(np.float64), tri)
+        candidate_location = locate(candidate, records)
+        final_spacing = np.spacing(np.abs(candidate.astype(np.float32))).astype(np.float64)
+        clearance_rounding_bound = 0.5*float(np.linalg.norm(final_spacing))
+        displacement = float(np.linalg.norm(candidate.astype(np.float64)-start.astype(np.float64)))
+        if candidate_location != "outside" or after["distance_m"] < target_clearance_m-clearance_rounding_bound:
+            raise ValueError(f"Float32 candidate for vertex {i} is not outside at target clearance")
+        initial_direction = start.astype(np.float64)-before["point_m"]
+        if source_location == "inside":
+            initial_direction = -initial_direction
+        initial_direction /= np.linalg.norm(initial_direction)
+        proposals[i] = candidate
+        per_vertex.append({
+            "diaphragm_vertex": i, "lobe_stable_id": sid,
+            "source_location": source_location, "candidate_location": candidate_location,
+            "source_signed_distance_m": source_signed,
+            "candidate_signed_distance_m": after["distance_m"],
+            "clearance_rounding_bound_m": clearance_rounding_bound,
+            "nearest_lobe_face": before["face_index"],
+            "nearest_lobe_face_barycentric": before["barycentric"].tolist(),
+            "oriented_lobe_face_normal": before["face_normal"].tolist(),
+            "outward_nearest_surface_direction": initial_direction.tolist(),
+            "vertex_displacement_m": displacement,
+            "source_vertex_xyz_f32_m": start.astype(float).tolist(),
+            "candidate_vertex_xyz_f32_m": candidate.astype(float).tolist(),
+        })
+    result = {sid: dict(row) for sid, row in original_rows.items()}
+    out = source["vertices6"].copy()
+    patch_xyz = xyz[faces[sorted(patch_ids)]].copy()
+    for i, p in proposals.items():
+        out[i, :3] = p
+    out[:, 3:6] = normals(out[:, :3].astype(np.float64), faces).astype(np.float32)
+    new_xyz = out[:, :3]
+    old_tri, new_tri = xyz[faces].astype(np.float64), new_xyz[faces].astype(np.float64)
+    old_n = np.cross(old_tri[:,1]-old_tri[:,0], old_tri[:,2]-old_tri[:,0])
+    new_n = np.cross(new_tri[:,1]-new_tri[:,0], new_tri[:,2]-new_tri[:,0])
+    new_area2 = np.linalg.norm(new_n, axis=1)
+    old_area2 = np.linalg.norm(old_n, axis=1)
+    orientation_dot = np.einsum("ij,ij->i", old_n, new_n)
+    bad = np.flatnonzero((~np.isfinite(new_area2)) | (new_area2 <= 0) | (orientation_dot <= 0))
+    if len(bad):
+        details = []
+        for fi in bad[:16]:
+            ids = list(map(int, faces[int(fi)]))
+            details.append({
+                "face": int(fi), "vertices": ids,
+                "changed_vertices": [vi for vi in ids if vi in proposals and not np.array_equal(proposals[vi], xyz[vi])],
+                "source_area_m2": float(old_area2[fi]*.5),
+                "candidate_area_m2": float(new_area2[fi]*.5),
+                "normal_dot": float(orientation_dot[fi]),
+            })
+        raise ValueError("sidewall correction degenerates or reverses diaphragm faces: "
+                         + json.dumps({"bad_face_count": int(len(bad)), "sample": details}, sort_keys=True))
+    if not np.array_equal(new_xyz[faces[sorted(patch_ids)]], patch_xyz):
+        raise ValueError("sidewall correction moved reciprocal patch coordinates")
+    area_before = float(np.linalg.norm(old_n,axis=1).sum()*.5)
+    area_after = float(np.linalg.norm(new_n,axis=1).sum()*.5)
+    result[did] = dict(source)
+    result[did]["vertices6"] = out
+    result[did]["faces"] = faces.copy()
+    return result, {
+        "algorithm": "free_diaphragm_sidewall_projection_to_nearest_lobe_surface_v2",
+        "inference": "bounded source-registration guard, not measured tissue spacing",
+        "clearance_rounding_rule": (
+            "candidate distance may fall below target by at most half the Euclidean norm "
+            "of the candidate vertex's three Float32 coordinate spacings; exact source "
+            "intersection predicates and native acceptance gates are unchanged"),
+        "target_clearance_m": float(target_clearance_m),
+        "maximum_vertex_displacement_m": float(max_vertex_displacement_m),
+        "target_row311_face_indices_by_lobe": {
+            str(sid): sorted(set(map(_strict_source_index, values))) for sid, values in event_faces_by_lobe.items()},
+        "protected_reciprocal_patch_face_count": len(patch_ids),
+        "protected_reciprocal_patch_vertex_count": len(patch_vertex_ids),
+        "selected_free_vertex_count": len(selected),
+        "selected_vertex_ids": sorted(selected),
+        "moved_vertex_count": sum(not np.array_equal(proposals[i], xyz[i]) for i in proposals),
+        "maximum_displacement_m": max((x["vertex_displacement_m"] for x in per_vertex),default=0.0),
+        "changed_vertex_ids": sorted(i for i in proposals if not np.array_equal(proposals[i], xyz[i])),
+        "per_vertex": per_vertex,
+        "diaphragm_face_connectivity_unchanged": True,
+        "reciprocal_patch_positions_unchanged": True,
+        "lobes_unchanged_bytewise": True,
+        "diaphragm_surface_area_before_m2": area_before,
+        "diaphragm_surface_area_after_m2": area_after,
+        "diaphragm_surface_area_delta_m2": area_after-area_before,
+        "native_pose_qualification": "not performed",
+    }
 
 
 
