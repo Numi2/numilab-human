@@ -100,6 +100,36 @@ def float32_triangle_lattice_key(vertices, face):
     return tuple(sorted(points))
 
 
+
+def prepare_float32_point_location_meters(points, faces):
+    """Prepare packed Float32 surface geometry for exact queries in metres.
+
+    Mesh coordinates must exactly represent finite Float32 values. Lattice
+    identity keys are converted back to rational metres before preparing the
+    existing predicate owner. Query with exact integer/Fraction metre triples
+    through point_location_prepared or point_location_prepared_indexed.
+
+    Face indices are local to points. Closed-surface topology must be verified
+    separately before interpreting ray parity as solid containment.
+    """
+    vertices = tuple(
+        tuple(Fraction(value, _FLOAT32_LATTICE_DENOMINATOR) for value in
+              float32_point_lattice_key(point))
+        for point in points
+    )
+    require(bool(vertices), "Float32 surface has no points")
+    local_faces = []
+    for face in faces:
+        ids = tuple(face)
+        require(len(ids) == 3, "Float32 surface face must be a triangle")
+        require(all(isinstance(index, Integral) and not isinstance(index, bool)
+                    and 0 <= index < len(vertices) for index in ids),
+                "Float32 surface face index is outside the local point array")
+        local_faces.append(tuple(int(index) for index in ids))
+    require(bool(local_faces), "Float32 surface has no faces")
+    return prepare_point_location(_records(vertices, local_faces))
+
+
 def float32_lattice_point_on_triangle(point_numerator, denominator, triangle):
     """Test a rational point against an exact triangle on the Float32 lattice.
 

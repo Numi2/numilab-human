@@ -1,0 +1,56 @@
+{
+  "timestamp_utc": "2026-10-13T21:43:18.171398+00:00",
+  "host": "ssh numi",
+  "device": "Apple M6",
+  "base_human_revision": "afad4599e79ae10425085255fe53020afc937eab",
+  "source_sha256": {
+    "src/numilab_human/cardiac_cavity_intersections.py": "4e6fb1f4ee75ea0ba9cdd06a072702a238f066fc8e63a61aa9eae32f2356a384",
+    "tests/test_cardiac_point_location_meters.py": "3625fc10e34380f57fd598eedb21ea18d1d98a06144adcd956641dfa70282851"
+  },
+  "change": "Existing exact owner now prepares Float32 surface records in exact rational metres for exact integer/Fraction metre queries. Generic lattice-key and point-location contracts are unchanged.",
+  "checks": [
+    {
+      "command": "PYTHONPATH=src /Users/n/numi-human-prep-venv-20261005/bin/python -m unittest discover -s tests -p test_cardiac_point_location_meters.py -v",
+      "passed_tests": 3,
+      "elapsed_s": 0.001,
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=src /Users/n/numi-human-prep-venv-20261005/bin/python -m unittest discover -s tests -p test_cardiac_cavity_intersections.py -v",
+      "passed_tests": 38,
+      "elapsed_s": 2.851,
+      "exit_code": 0
+    },
+    {
+      "command": "ruff check --select F821,F822,F823 src/numilab_human/cardiac_cavity_intersections.py tests/test_cardiac_point_location_meters.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m py_compile src/numilab_human/cardiac_cavity_intersections.py tests/test_cardiac_point_location_meters.py",
+      "exit_code": 0
+    }
+  ],
+  "test_source_recovery": {
+    "initial_existing_source_test": "missing partof_element_parts.txt in sparse publication checkout;37 other tests passed; not a source predicate failure",
+    "action": "Hardlinked three existing verified locked inputs from frozen publication1344/Sources without changing source files or allocating duplicate archive bytes",
+    "source_hashes": {
+      "partof_element_parts.txt": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+      "isa_element_parts.txt": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+      "partof_BP3D_4.0_obj_99.zip": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97"
+    }
+  },
+  "new_regressions": [
+    "Inside/outside/boundary exact metre queries including non-Float32 rational query",
+    "Historical unscaled lattice query misclassifies a known outside point as inside; correct adapter resolves it",
+    "Translated sub-metre Float32 solid",
+    "Reject binary64-only geometry and invalid local face indices"
+  ],
+  "physical_simulation_path_changed": false,
+  "gpu_used": false,
+  "native_scene_admitted": false,
+  "notes": [
+    "Old executed audit sources/reports are retained unmodified. This entry point prevents their metre-versus2**149 lattice-record mismatch.",
+    "Point-location audit corrections do not invalidate independent exact triangle-pair or Manifold intersection-volume evidence.",
+    "Closed oriented topology must still be verified separately. Anatomy repair and native current-scene qualification remain open."
+  ]
+}
