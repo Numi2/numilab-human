@@ -1,0 +1,41 @@
+{
+  "candidate": {
+    "abi": 5,
+    "index_count": 11076873,
+    "payload": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/liver-runtime-single-shell-candidate-001/resting-thorax.nhanatomy",
+    "payload_sha256": "7808473ddb7bb78c00598566887ce7cce4fc2e2db04c51bdaa2b82b88efee3b7",
+    "receipt": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/liver-runtime-single-shell-candidate-001/resting-anatomy-receipt.json",
+    "receipt_sha256": "9953da80423486968e6a47dddadf4642d7f1a695e6024b2c67caee8e327410d7",
+    "registration_fingerprint32": "b1b410ad",
+    "runtime_stable_ids_match_current_receipt_source_map": true,
+    "stable_id_22_absent": true,
+    "stable_id_gaps_preserved": true,
+    "surface_count": 523,
+    "vertex_count": 2077803
+  },
+  "exact_regression": {
+    "all_non22_rows_byte_identical_after_decode_and_repack": true,
+    "mass_geometry_and_functional_bindings_other_than_payload_sha_unchanged": true,
+    "native_runtime_changed": false,
+    "non22_stable_id_count": 523,
+    "record_body_layer_flags_vertices6_and_local_faces_equal": true,
+    "source_files_deleted_or_modified": false,
+    "source_mesh_and_preaggregate_id22_identity_preserved_in_receipt": true
+  },
+  "inputs": {
+    "geometry_report": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/liver-id22-aggregate-geometry-audit-002.json",
+    "geometry_report_sha256": "18011492b1907b38ee5f5d1837ade3c384ac0706a86ee6652f5a0c129026cbac",
+    "id22_source_sha256": "2f5e34fceea6c8b718bd3f50a125bf24c434ae7eb3d925b9795b0585272c1349",
+    "source_map_count": 523,
+    "source_map_has_22": false,
+    "source_payload": "/Users/numi/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-thorax.nhanatomy",
+    "source_payload_had_extra_22": true,
+    "source_payload_sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241",
+    "source_receipt": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-reference-native-021-003/resting-anatomy-receipt.json",
+    "source_receipt_sha256": "00c154dc9f9abf7378f4621bb5a7db464182ee77ddec10a53b71efb1ed4b1382"
+  },
+  "limits": "This is a bounded anatomy-payload candidate, not a native replay. Native acceptance must confirm that removing row22 keeps the accepted 14-21 liver surface and all other emitted anatomy stable; user-level mass remains the authorized generic 72 kg reference and no independent liver tissue-mass claim is added.",
+  "schema": "numi.human.anatomy.retired-liver-source-alias-candidate.v1",
+  "scope": "New NHANAT1 ABI5 payload and receipt omit only stable ID22 from runtime geometry. Original payload, receipts, source assets, mesh assets, and native runtime were not edited.",
+  "status": "candidate_ready_for_native_replay"
+}

@@ -1,0 +1,88 @@
+{
+  "identity_trace": {
+    "current_source_id22_present": false,
+    "patch21_template": {
+      "current_aggregate_surface_sha256": "14d70c30802a87e9c80084bd11c8bf260571c1d97e4fed583fcc8769f83df379",
+      "current_assignment_guide_receipt_sha256": "102ea0cbbdd41a0f30b787e9180f3810a1d881f37d39c5a91eb41921a4fa60a3",
+      "interpretation": "Z-Anatomy names/FMA crosswalks are identity templates for inferred exterior display patches; the rendered geometry is the one closed CSG aggregate liver shell, not the source segment meshes or internal Couinaud planes.",
+      "receipt_sha256": "82f5b8efed37ecd2992263cd0476df49878783f8c3ddf04a088edf0f596b72d7",
+      "retired_source_aliases": {
+        "22": 21
+      },
+      "source_path": "/Users/n/numi-human-resting-evidence-20261005/liver-segment-composed-native-inputs-001/resting-anatomy-receipt.json",
+      "source_stable_ids": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    "pre_aggregate_id22": {
+      "body_index": 7,
+      "head_family": null,
+      "layer": 1,
+      "name": "liver",
+      "provider": "BodyParts3D v4.0 current registration owner",
+      "repair": null,
+      "source_member": "FJ2824",
+      "source_owner_metadata": {
+        "concept_id": "FMA7197",
+        "core_body_index": 7,
+        "hierarchy": "part_of",
+        "label": "liver",
+        "layer": "organ",
+        "member_id": "FJ2824",
+        "member_sha256": "2f5e34fceea6c8b718bd3f50a125bf24c434ae7eb3d925b9795b0585272c1349",
+        "myosim_body": "Abdomen",
+        "organ_coverage": "source_part_of_organ_component",
+        "source_structure_kind": "organ_component"
+      },
+      "source_sha256": "2f5e34fceea6c8b718bd3f50a125bf24c434ae7eb3d925b9795b0585272c1349"
+    },
+    "retired_alias_claim": {
+      "canonical_stable_id": 21,
+      "interpretation": "ID 22 is a retired source alias of aggregate liver display patch 21; references are deduplicated at 21 and no second surface or segment volume is defined.",
+      "retired_stable_id": 22,
+      "rewritten_fields": [
+        "passive_viscera_geometry_binding.stable_ids",
+        "passive_viscera_geometry_binding.upper_anchor_stable_ids",
+        "passive_viscera_geometry_binding.source_body_index_by_stable_id",
+        "vascular_compartment_bindings[].stable_ids"
+      ]
+    }
+  },
+  "interpretation": "A passing source geometry match proves ID22 is the retained FJ2824 source component, distinct from the liver display aggregate patch21. It does not make it a second liver organ or establish a segment volume; the current receipt's alias and current source_id_map omission must be reconciled before claiming complete source provenance.",
+  "pins": {
+    "current_payload_path": "/Users/numi/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-thorax.nhanatomy",
+    "current_payload_sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241",
+    "native_receipt_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-reference-native-021-003/resting-anatomy-receipt.json",
+    "native_receipt_sha256": "00c154dc9f9abf7378f4621bb5a7db464182ee77ddec10a53b71efb1ed4b1382",
+    "registration_path": "/Users/numi/numi-human-anatomy-finish-1378/Docs/media/skin-patella-rebase-source-preflight-20261003/registration.json",
+    "registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+    "source_archive_path": "/Users/numi/numi-human-left-pq-publication-1344/Sources/partof_BP3D_4.0_obj_99.zip",
+    "source_archive_sha256": "9fbc713fffeee924a5a657d9813d84d7eb957bded63adb854931dd5e3eb61c97",
+    "source_obj_member": "partof_BP3D_4.0_obj_99/FJ2824.obj",
+    "source_obj_sha256": "2f5e34fceea6c8b718bd3f50a125bf24c434ae7eb3d925b9795b0585272c1349"
+  },
+  "scope": "Read-only direct comparison of current NHANAT1 stable ID22 with the exact pre-aggregate source owner recorded in the current native receipt; no anatomy payload or runtime was changed.",
+  "source_to_payload": {
+    "matching_unique_exact_vertex_bit_patterns": 0,
+    "payload21_and_22_shared_exact_vertex_bit_patterns": 0,
+    "payload22_boundary_edge_count": 1522,
+    "payload22_nonmanifold_edge_count": 0,
+    "payload22_triangle_count": 21592,
+    "payload22_unique_vertices": 10798,
+    "payload22_vertex_count": 11459,
+    "source_coordinate_triangle_multiset_equal_payload22": false,
+    "source_faces_indexwise_equal_payload22": true,
+    "source_triangle_count": 21592,
+    "source_unique_vertices": 10798,
+    "source_vertex_count": 11459,
+    "source_vertices_float32_bitwise_equal_payload22": false
+  },
+  "status": "pass"
+}
