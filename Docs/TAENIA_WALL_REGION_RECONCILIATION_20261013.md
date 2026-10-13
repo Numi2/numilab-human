@@ -1,0 +1,7 @@
+# Taenia wall-region preparation reconciliation
+
+The recovered mesocolica workspace also implemented taenia omentalis (stable ID 458/FJ2570). The preparation owner now admits all three source-registered colon taenia wall regions, requires each member's exact anatomical component hierarchy, and retains the member-specific sampled projection limits. These regions use copied colon faces, add no independent physical mass or physiology, and keep the source shell in provenance. Passive row composition includes ID 458.
+
+Wall-region preparation preserves the inherited cardiac binding verbatim. It records the input and inherited binding hashes and explicitly marks the output as pending final owner re-emission and an integrated cycle audit. It cannot qualify the assembled payload by merely replacing its cardiac hash. The separate repaired closed-surface candidate path retains its existing strict input binding admission.
+
+Validation: 35 taenia preparation tests pass, including rejection of each incorrect hierarchy field across all three members (18 field/member cases), omentalis-specific projection limits, unchanged neighboring records, nonadditive accounting, stale binding preservation, and transfer ownership. These are source-preparation regression fixtures. No new subject geometry, sustained mechanics or cardiac/respiratory qualification is claimed. The original source workspace remains open pending original source-evidence and integrated acceptance review.

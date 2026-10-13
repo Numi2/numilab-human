@@ -20,6 +20,10 @@ MEMBERS = {454: "FJ2566", 455: "FJ2567", 456: "FJ2568", 457: "FJ2569",
            458: "FJ2570", 459: "FJ2571", 460: "FJ2572"}
 
 
+TAENIA_CONCEPTS = {456: "FMA15044", 457: "FMA15042", 458: "FMA15043"}
+TAENIA_NAMES = {456: "taenia libera", 457: "taenia mesocolica", 458: "taenia omentalis"}
+
+
 def _sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -179,7 +183,7 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
     from .resting_anatomy_interface_patch import normals, topology_report
     from . import cardiac_cavity_intersections as exact
 
-    _require(stable_id in (456, 457), "only the two source-registered taenia members are supported")
+    _require(stable_id in TAENIA_CONCEPTS, "only source-registered colon taenia members are supported")
     detail = json.loads(derivation_path.read_text())
     digest = _sha(candidate_path)
     _require(detail.get("representation") == "passive_colon_wall_surface_region_v1",
@@ -191,6 +195,14 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
                  for s in required), "wall-region source component identities changed")
     _require(all(rows[s]["body_index"] == 20 and rows[s]["layer"] == 1 for s in required),
              "wall region and colon do not share the passive torso frame")
+    component = source_map[str(stable_id)].get("source_owner_metadata", {}).get("anatomical_component", {})
+    _require(component.get("concept_id") == TAENIA_CONCEPTS[stable_id]
+             and component.get("family_concept_id") == "FMA7201"
+             and component.get("geometry_role") == "colon wall muscle component"
+             and component.get("hierarchy") == "part_of"
+             and component.get("source_member") == MEMBERS[stable_id]
+             and component.get("name") == TAENIA_NAMES[stable_id],
+             "source hierarchy does not identify this member as a colon taenia")
     source_record = hashlib.sha256(_record_content_bytes(rows[stable_id])).hexdigest()
     _require(detail.get("source_record_sha256") == source_record,
              "wall-region derivation refers to another source muscle")
@@ -211,11 +223,12 @@ def prepare_wall_region(rows: dict, source_map: dict, candidate_path: Path,
     # These are explicit reference-asset limits, not physiological tolerances.
     if stable_id == 456:
         source_to_limit, region_to_limit, selection_limit = .006, .005, .005
-    else:
-        # FJ2569's registered shell is substantially larger than its host patch.
-        # The coarse derived region is anchored to copied colon triangles and
-        # uses explicit sampled (not Hausdorff) limits from this source pairing.
+    elif stable_id == 457:
+        # The registered shell is substantially larger than its host patch.
         source_to_limit, region_to_limit, selection_limit = .004, .015, .002
+    else:
+        # The host-face projection is sampled with a 7.5 mm maximum source distance.
+        source_to_limit, region_to_limit, selection_limit = .004, .0075, .0075
     _require(shape["source_to_region"]["maximum_m"] <= source_to_limit
              and shape["region_to_source"]["maximum_m"] <= region_to_limit
              and shape.get("face_selection_sampled_distance_limit_m") == selection_limit,
@@ -316,11 +329,14 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
              "wall region lacks the existing passive motion owner")
     cardiac = receipt["provenance"]["cardiac_geometry_binding"]
     wall = cardiac["ventricular_wall_binding"]
-    _require(cardiac.get("output_anatomy_payload_sha256") == source_sha
-             and wall.get("output_anatomy_payload_sha256") == source_sha,
-             "existing cardiac bindings are stale")
     _require("local_coefficient_refinement" not in wall.get("wall_map", {}),
              "attach source-bound cardiac correction after passive asset preparation")
+    # This compiler only prepares passive rows. The cardiac binding is bound to
+    # a complete-payload digest and cannot be re-hashed here without its owner.
+    # Preserve it verbatim and mark every output as pending that owner rebind.
+    inherited_cardiac_binding = copy.deepcopy(cardiac)
+    inherited_cardiac_payload_sha256 = cardiac.get("output_anatomy_payload_sha256")
+    inherited_wall_payload_sha256 = wall.get("output_anatomy_payload_sha256")
     source_map = receipt["provenance"]["source_id_map"]
     vertices, faces, detail = prepare_wall_region(
         rows, source_map, candidate_path, derivation_path, stable_id=stable_id)
@@ -347,14 +363,25 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
     regions[str(stable_id)] = detail
     source_map[str(stable_id)]["reference_geometry_status"] = detail["parameter_status"]
     source_map[str(stable_id)]["passive_representation"] = detail["representation"]
-    if stable_id == 457:
-        source_map["457"]["source_shell_status"] = "retained_in_provenance_not_rendered_as_independent_solid"
+    if stable_id in (457, 458):
+        source_map[str(stable_id)]["source_shell_status"] = "retained_in_provenance_not_rendered_as_independent_solid"
     receipt["payload"].update(path=str(output/"resting-thorax.nhanatomy"), sha256=output_sha,
                               surface_count=len(records), vertex_count=nv, index_count=ni)
     receipt["functional_bindings"]["anatomy_payload_sha256"] = output_sha
-    cardiac["output_anatomy_payload_sha256"] = output_sha
-    wall["output_anatomy_payload_sha256"] = output_sha
-    receipt["qualification"][f"passive_taenia_wall_region_{stable_id}"] = detail["qualification"]
+    receipt.setdefault("provenance", {})["passive_taenia_preparation"] = {
+        "schema": "numi.human.passive_taenia_preparation.v1",
+        "owner": "numilab_human.resting_taenia_reference.build_wall_region_candidate",
+        "base_payload_sha256": source_sha,
+        "cardiac_binding_preserved_verbatim": True,
+        "inherited_cardiac_payload_sha256": inherited_cardiac_payload_sha256,
+        "inherited_ventricular_wall_payload_sha256": inherited_wall_payload_sha256,
+        "native_readiness": "not_ready_pending_final_cardiac_binding_reemit_and_integrated_cycle_audit",
+    }
+    _require(receipt["provenance"]["cardiac_geometry_binding"] == inherited_cardiac_binding,
+             "passive preparation unexpectedly changed the cardiac binding")
+    receipt["qualification"][f"passive_taenia_wall_region_{stable_id}"] = (
+        detail["qualification"] + " Cardiac binding is preserved unchanged and remains pending re-emission "
+        "against the complete assembled payload by its owner.")
     output.mkdir(parents=True)
     (output/"resting-thorax.nhanatomy").write_bytes(result)
     receipt_path = output/"resting-anatomy-receipt.json"
@@ -370,7 +397,7 @@ def build_wall_region_candidate(base_payload: Path, base_receipt: Path,
 # Rows explicitly prepared by the passive reference composition; respiratory,
 # cardiac, and every unlisted anatomy record remain owned by the target base.
 PASSIVE_REFERENCE_TRANSFER_IDS = tuple(sorted({
-    2, 3, 13, *range(398, 454), 455, 456, 457, 462,
+    2, 3, 13, *range(398, 454), 455, 456, 457, 458, 462,
 }))
 
 

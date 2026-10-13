@@ -118,7 +118,12 @@ class TaeniaWallRegionTests(unittest.TestCase):
         self.payload = self.root/"source.nhanatomy"; self.payload.write_bytes(raw)
         self.sha = hashlib.sha256(raw).hexdigest()
         _, _, self.rows = _parse_payload(raw)
+        from numilab_human.resting_taenia_reference import TAENIA_CONCEPTS, TAENIA_NAMES
         self.source_map = {str(s): {"source_member": MEMBERS.get(s, "fixture")} for s in self.ids}
+        component = {"concept_id": TAENIA_CONCEPTS[self.stable_id], "family_concept_id": "FMA7201",
+                     "geometry_role": "colon wall muscle component", "hierarchy": "part_of",
+                     "name": TAENIA_NAMES[self.stable_id], "source_member": MEMBERS[self.stable_id]}
+        self.source_map[str(self.stable_id)]["source_owner_metadata"] = {"anatomical_component": component}
         self.arrays = dict(vertices=np.asarray(selected_v, dtype="<f4"),
                            faces=np.asarray(selected_f, dtype="<i4"),
                            colon_owner=np.asarray(owners, dtype="<i4"),
@@ -132,9 +137,9 @@ class TaeniaWallRegionTests(unittest.TestCase):
             "rectal_scope": "excluded_no_taenia_band",
             "sampled_shape": {
                 "distance_is_sampled_not_hausdorff_bound": True,
-                "source_to_region": {"sample_count": 1, "maximum_m": .0058 if self.stable_id == 456 else .0038},
-                "region_to_source": {"sample_count": 1, "maximum_m": .0049 if self.stable_id == 456 else .0149},
-                "face_selection_sampled_distance_limit_m": .005 if self.stable_id == 456 else .002},
+                "source_to_region": {"sample_count": 1, "maximum_m": .0058 if self.stable_id == 456 else (.0038 if self.stable_id == 457 else .0037)},
+                "region_to_source": {"sample_count": 1, "maximum_m": .0049 if self.stable_id == 456 else (.0149 if self.stable_id == 457 else .0074)},
+                "face_selection_sampled_distance_limit_m": .005 if self.stable_id == 456 else (.002 if self.stable_id == 457 else .0075)},
             "sensitivity": [{"fixture": "4mm"}, {"fixture": "5mm"}],
             "references": ["Synthetic admission fixture, not anatomical evidence."]}
         self.receipt = {
@@ -174,7 +179,33 @@ class TaeniaWallRegionTests(unittest.TestCase):
         self.assertIsNone(detail["independent_volume_m3"])
         self.assertEqual(detail["additional_physical_mass_kg"], 0)
         self.assertEqual(r["mass_geometry_accounting"], self.receipt["mass_geometry_accounting"])
+        self.assertEqual(r["provenance"]["cardiac_geometry_binding"], self.receipt["provenance"]["cardiac_geometry_binding"])
+        prep = r["provenance"]["passive_taenia_preparation"]
+        self.assertTrue(prep["cardiac_binding_preserved_verbatim"])
+        self.assertEqual(prep["native_readiness"], "not_ready_pending_final_cardiac_binding_reemit_and_integrated_cycle_audit")
+        self.assertNotEqual(r["provenance"]["cardiac_geometry_binding"]["output_anatomy_payload_sha256"], result["payload"]["sha256"])
         self.assertEqual(r["provenance"]["source_id_map"][str(self.stable_id)]["source_member"], MEMBERS[self.stable_id])
+
+    def test_wall_region_rejects_each_wrong_source_hierarchy_field(self):
+        component = self.source_map[str(self.stable_id)]["source_owner_metadata"]["anatomical_component"]
+        for field in ("concept_id", "family_concept_id", "geometry_role", "hierarchy", "source_member", "name"):
+            with self.subTest(field=field, stable_id=self.stable_id):
+                original = component[field]
+                component[field] = "incorrect-source-identity"
+                try:
+                    with self.assertRaisesRegex(ValueError, "source hierarchy"):
+                        self.prepare()
+                finally:
+                    component[field] = original
+
+    def test_stale_cardiac_binding_is_preserved_as_preparation_not_falsely_rebound(self):
+        self.receipt["provenance"]["cardiac_geometry_binding"]["output_anatomy_payload_sha256"] = "prior-complete-payload"
+        self.receipt["provenance"]["cardiac_geometry_binding"]["ventricular_wall_binding"]["output_anatomy_payload_sha256"] = "prior-complete-payload"
+        result = self.compile()
+        receipt = json.loads(Path(result["receipt"]["path"]).read_text())
+        self.assertEqual(receipt["provenance"]["cardiac_geometry_binding"], self.receipt["provenance"]["cardiac_geometry_binding"])
+        self.assertEqual(receipt["provenance"]["passive_taenia_preparation"]["inherited_cardiac_payload_sha256"], "prior-complete-payload")
+        self.assertNotEqual(receipt["provenance"]["cardiac_geometry_binding"]["output_anatomy_payload_sha256"], result["payload"]["sha256"])
 
     def test_stale_parent_and_source_frame_are_rejected(self):
         self.rows[454]["vertices6"][0, 0] += .0001
@@ -206,10 +237,10 @@ class TaeniaWallRegionTests(unittest.TestCase):
         shape["distance_is_sampled_not_hausdorff_bound"] = True
         shape["source_to_region"]["maximum_m"] = float("nan")
         with self.assertRaisesRegex(ValueError, "sampling"): self.prepare()
-        excessive = .0061 if self.stable_id == 456 else .0041
-        shape["source_to_region"]["maximum_m"] = excessive
+        source_limit = .006 if self.stable_id == 456 else .004
+        shape["source_to_region"]["maximum_m"] = source_limit + 1e-4
         with self.assertRaisesRegex(ValueError, "extent"): self.prepare()
-        shape["source_to_region"]["maximum_m"] = .0058 if self.stable_id == 456 else .0038
+        shape["source_to_region"]["maximum_m"] = .0058 if self.stable_id == 456 else (.0038 if self.stable_id == 457 else .0037)
         self.receipt["provenance"]["cardiac_geometry_binding"]["ventricular_wall_binding"]["wall_map"]["local_coefficient_refinement"] = {}
         with self.assertRaisesRegex(ValueError, "cardiac correction"): self.compile()
         self.assertFalse((self.root/"output").exists())
@@ -335,3 +366,23 @@ class PassiveRowTransferTests(unittest.TestCase):
         self.passive_receipt.write_text(json.dumps(r))
         with self.assertRaisesRegex(ValueError,"colon parent 454"):
             self.compose()
+
+
+class TaeniaOmentalisWallRegionTests(TaeniaWallRegionTests):
+    stable_id = 458
+
+    def test_omentalis_requires_part_of_colon_identity_and_keeps_source_shell_as_provenance(self):
+        result = self.compile()
+        receipt = json.loads(Path(result["receipt"]["path"]).read_text())
+        detail = receipt["provenance"]["passive_taenia_wall_regions"]["458"]
+        self.assertEqual(detail["source_member"], "FJ2570")
+        self.assertEqual(detail["stable_id"], 458)
+        self.assertEqual(receipt["provenance"]["source_id_map"]["458"]["source_shell_status"],
+                         "retained_in_provenance_not_rendered_as_independent_solid")
+        self.assertEqual(detail["additional_physical_mass_kg"], 0)
+        self.assertIsNone(detail["independent_volume_m3"])
+
+    def test_omentalis_projection_limit_is_not_reused_from_other_taenia(self):
+        self.derivation["sampled_shape"]["region_to_source"]["maximum_m"] = .0076
+        with self.assertRaisesRegex(ValueError, "extent"):
+            self.prepare()
