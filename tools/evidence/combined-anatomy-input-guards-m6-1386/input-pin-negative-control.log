@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_042.py", line 249, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_042.py", line 36, in main
+    req(all(sha(p)==h for p,h in source_pins.items()),'vascular preparation input drift')
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_042.py", line 8, in req
+    if not v:raise ValueError(m)
+             ^^^^^^^^^^^^^^^^^^^
+ValueError: vascular preparation input drift
