@@ -89,7 +89,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
                                        tendon=Path(tendon["path"]), build=self.root, lab=self.root,
                                        output=self.root / "run", seconds=310., dimension=512,
                                        mechanics_only=False, inspection_tour=False, drive_intervention=None,
-                                       circulation=None)
+                                       circulation=None, initial_posture=None)
         self.write_receipts()
 
     def write_receipts(self):
@@ -290,6 +290,48 @@ class RestingRunAdmissionTests(unittest.TestCase):
         argv, _ = command(self.args)
         self.assertIn("--resting-rigid-hands", argv)
         self.assertNotIn("--persistent-source-passive-joint-tissue", argv)
+
+    def test_imported_initial_posture_requires_release_and_an_owner_file(self):
+        posture = self.root / "completed-native.log"
+        posture.write_text("completed native construction posture\n")
+        self.args.initial_posture = posture
+        with self.assertRaisesRegex(HumanImportError, "requires explicit release initialization"):
+            command(self.args)
+
+        self.args.release_initialization = True
+        missing = self.root / "missing-native.log"
+        self.args.initial_posture = missing
+        with self.assertRaisesRegex(HumanImportError, "missing owner file"):
+            command(self.args)
+
+    def test_imported_initial_posture_rejects_oversized_log_before_hashing(self):
+        posture = self.root / "oversized-native.log"
+        with posture.open("wb") as stream:
+            stream.truncate(256 * 1024 * 1024 + 1)
+        self.args.initial_posture = posture
+        self.args.release_initialization = True
+        with self.assertRaisesRegex(HumanImportError, "256 MiB admission bound"):
+            command(self.args)
+
+    def test_imported_posture_is_hashed_passed_to_native_and_replaces_root_pose(self):
+        baseline, baseline_assets = command(self.args)
+        self.assertIn("--root-pose", baseline)
+        self.assertEqual(
+            baseline[baseline.index("--root-pose"):baseline.index("--resting-scene")],
+            ["--root-pose", "0", "0", "0.1", "-0.7", "0", "0", "0.714"])
+        self.assertNotIn("--resting-initial-posture", baseline)
+        self.assertNotIn(str((self.root / "completed-native.log").resolve()), baseline_assets)
+
+        posture = self.root / "completed-native.log"
+        posture.write_text("completed native construction posture\n")
+        self.args.initial_posture = posture
+        self.args.release_initialization = True
+        argv, hashes = command(self.args)
+        owner = str(posture.resolve())
+        self.assertEqual(argv[argv.index("--resting-initial-posture") + 1], owner)
+        self.assertIn("--resting-release-initialization", argv)
+        self.assertNotIn("--root-pose", argv)
+        self.assertEqual(hashes[owner], hashlib.sha256(posture.read_bytes()).hexdigest())
 
     def test_contoured_bed_uses_the_pinned_body_scene_and_explicit_release(self):
         baseline, _ = command(self.args)

@@ -211,16 +211,33 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
              "duration must be an integer number of native steps (at most 4000000 steps)")
     pose = scene["pose"]["root_translation_xyz_m"] + scene["pose"]["root_delta_quaternion_xyzw"]
     _require(len(pose) == 7 and all(math.isfinite(x) for x in pose), "invalid root seed")
+    initial_posture_path = getattr(args, "initial_posture", None)
+    initial_posture = None
+    if initial_posture_path is not None:
+        _require(getattr(args, "release_initialization", False),
+                 "an imported construction posture requires explicit release initialization")
+        # Structural source/terminal/completion and exact Float32 posture
+        # admission belongs to the native reader. Bound its owner file before
+        # hashing or starting a native process.
+        owner_path = Path(initial_posture_path).resolve()
+        _require(owner_path.is_file(), f"missing owner file: {owner_path}")
+        _require(owner_path.stat().st_size <= 256 * 1024 * 1024,
+                 "initial-posture log exceeds the native 256 MiB admission bound")
+        initial_posture = checked(owner_path)
     mass = anatomy["mass_geometry_accounting"]["reference_total_mass_kg"]
     argv = [str(binary), str(rigid), str(muscles), str(bones), str(args.output.resolve()),
             "--persistent-metal-stand", "--muscle-step-seconds", str(dt),
             "--muscle-step-count", str(steps), "--support-contact-payload", str(contact),
-            "--joint-equality-payload", str(equalities), "--tendon-payload", str(tendon),
-            "--root-pose", *map(str, pose), "--resting-scene", str(network), str(respiration),
+            "--joint-equality-payload", str(equalities), "--tendon-payload", str(tendon)]
+    if initial_posture is None:
+        argv.extend(["--root-pose", *map(str, pose)])
+    else:
+        argv.extend(["--resting-initial-posture", str(initial_posture)])
+    argv.extend(["--resting-scene", str(network), str(respiration),
             "--vascular-dense45", "--resting-reference-mass-kg", str(mass),
             "--skin-payload", str(skin), "--soft-tissue-payload", str(surfaces),
             "--torso-anatomy-payload", str(organs), "--resting-anatomy-receipt", str(args.anatomy_receipt.resolve()),
-            "--dimension", str(args.dimension)]
+            "--dimension", str(args.dimension)])
     if args.mechanics_only:
         argv.append("--mechanics-only")
     else:
@@ -367,6 +384,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
                         help="cap initial source muscle recruitment retained as postural drive; default uses the native owner setting")
     parser.add_argument("--release-initialization", action="store_true",
                         help="explicitly initialize outside static equilibrium and let native bed contact settle the body")
+    parser.add_argument("--initial-posture", type=Path,
+                        help="import root/joint posture from an existing completed native log as a construction posture; requires --release-initialization and starts with zero velocity and fresh muscle, respiration, circulation, and Brain state (not a coupled-state restart)")
     parser.add_argument("--contoured-bed", action="store_true",
                         help="use the fixed finite bed heightfield declared in the existing body scene manifest")
     parser.add_argument("--upper-passive-joints", action="store_true",
