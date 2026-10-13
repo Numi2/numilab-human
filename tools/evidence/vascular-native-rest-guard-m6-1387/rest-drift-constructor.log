@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_047.py", line 290, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_047.py", line 107, in main
+    vessel_rest_rows,poseproof=registered_vessel_rest_preflight(loaded,d,pins)
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_047.py", line 35, in registered_vessel_rest_preflight
+    req(stats['native_float32_gate_failures']==0 and stats['max_um']<=2,
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        'fixed native vessel registered-rest gate failed')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/prepare_combined_anatomy_native_047.py", line 8, in req
+    if not v:raise ValueError(m)
+             ^^^^^^^^^^^^^^^^^^^
+ValueError: fixed native vessel registered-rest gate failed
