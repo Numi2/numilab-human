@@ -26,3 +26,14 @@ The launcher admission tests cover release/missing/oversized inputs, exact owner
 hashes and root-argument replacement. Native admission controls and a real retained
 completed 6,000-step log cover the reader independently. Real scene execution is
 recorded separately and retains its source-bound qualification limits.
+
+Native M4 Pro validation preserved all 129 coordinates of an exact retained
+64-step source posture and advanced four fresh unassisted 2 ms steps with fixed
+bed contact. Its nonzero prior velocity was discarded. A retained 10,000-step
+posture exceeding joint 114's source upper bound was rejected before common
+initialization; the source limit and 1e-7 recruitment tolerance were unchanged.
+Fresh recruitment uses no legacy standing ground-plane load for this bed-owned
+posture. This verifies construction and bounded advancement, not sustained
+resting stability, checkpoint restart, or physiological completion.
+
+Native implementation validated at Numi Lab `9358384302818aaf9c9e22e76bed0058bdfe8bd6`; the same-device four-step terminal state replays byte exactly. The standing branch retains byte-exact first-four physical, sensor and motor audits from the accepted 10-second quiet reference.
