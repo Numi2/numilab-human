@@ -549,20 +549,14 @@ def _canonical_json_sha256(value):
 
 
 def _surface_source_hashes(surface):
-    if surface.source_face_lineage is None or surface.source_vertex_lineage is None:
-        raise ValueError("source-bound overlap requires source face and vertex lineage")
     gids = np.asarray(surface.source_vertex_ids)
     if gids.ndim != 1 or gids.dtype.kind not in "iu":
         raise ValueError("source-bound overlap requires integer source GIDs")
     canonical_gids = np.ascontiguousarray(gids.astype("<u8", copy=False))
-    vertex_lineage = [[int(gid), surface.source_vertex_lineage[int(gid)]]
-                      for gid in sorted(surface.source_vertex_lineage)]
     return {
         "positions_sha256": hashlib.sha256(surface.positions.tobytes()).hexdigest(),
         "faces_sha256": hashlib.sha256(surface.faces.tobytes()).hexdigest(),
         "gids_sha256": hashlib.sha256(canonical_gids.tobytes()).hexdigest(),
-        "source_face_lineage_sha256": _canonical_json_sha256(surface.source_face_lineage),
-        "source_vertex_lineage_sha256": _canonical_json_sha256(vertex_lineage),
     }
 
 
@@ -592,7 +586,7 @@ def _proof_surface_descriptor(proof, key):
 
 def audit_source_bound_connected_overlap(
         first, second, *, source_proof_bytes, expected_source_proof_sha256,
-        source_binding, expected_source_map_sha256):
+        source_binding, expected_source_binding_sha256, expected_source_map_sha256):
     """Verify one source-proven passive overlap without waiving generic containment.
 
     ``source_proof_bytes`` is the frozen pair report. ``source_binding`` is the
@@ -622,6 +616,11 @@ def audit_source_bound_connected_overlap(
         raise ValueError("source map SHA-256 pin is invalid")
     if not isinstance(source_binding, dict):
         raise TypeError("verified source binding must be a mapping")
+    if (not isinstance(expected_source_binding_sha256, str)
+            or len(expected_source_binding_sha256) != 64
+            or any(ch not in "0123456789abcdef" for ch in expected_source_binding_sha256)
+            or _canonical_json_sha256(source_binding) != expected_source_binding_sha256):
+        raise ValueError("source binding bytes do not match their SHA-256 pin")
     if (source_binding.get("source_proof_sha256") != proof_sha256
             or source_binding.get("source_map_sha256") != expected_source_map_sha256):
         raise ValueError("source binding is not pinned to the supplied proof and map")
@@ -664,6 +663,11 @@ def audit_source_bound_connected_overlap(
                     or any(ch not in "0123456789abcdef" for ch in value)
                     or value != actual_hash):
                 raise ValueError("source binding does not match prepared surface " + hash_name)
+        for hash_name in ("source_face_lineage_sha256", "source_vertex_lineage_sha256"):
+            value = row.get(hash_name)
+            if (not isinstance(value, str) or len(value) != 64
+                    or any(ch not in "0123456789abcdef" for ch in value)):
+                raise ValueError("verified source binding lacks " + hash_name)
     if set(bound) != {first_key, second_key}:
         raise ValueError("source binding omits one typed surface")
     for surface in (first, second):
@@ -762,6 +766,7 @@ def audit_source_bound_connected_overlap(
         "identities": [list(first_key), list(second_key)],
         "source_proof_sha256": proof_sha256,
         "source_map_sha256": expected_source_map_sha256,
+        "source_binding_sha256": expected_source_binding_sha256,
         "surface_bindings": [bound[key] for key in (first_key, second_key)],
         "surface_checks": [
             {"identity": list(surface.key), "closed": True, "self_intersections": 0,

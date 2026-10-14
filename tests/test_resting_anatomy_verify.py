@@ -125,8 +125,14 @@ def source_bound_overlap_case(*, altered_contact=False, open_first=False, discon
                "surface_identities": [list(first.key), list(second.key)],
                "surfaces": []}
     for surface in (first, second):
-        binding["surfaces"].append({"identity": list(surface.key),
-                                    **av._surface_source_hashes(surface)})
+        binding["surfaces"].append({
+            "identity": list(surface.key),
+            **av._surface_source_hashes(surface),
+            "source_face_lineage_sha256": av._canonical_json_sha256(surface.source_face_lineage),
+            "source_vertex_lineage_sha256": av._canonical_json_sha256([
+                [int(gid), surface.source_vertex_lineage[int(gid)]]
+                for gid in sorted(surface.source_vertex_lineage)]),
+        })
     return first, second, proof, proof_bytes, proof_sha, source_map_sha, binding
 
 
@@ -409,6 +415,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertTrue(result["passed"])
         self.assertEqual(result["exact_face_pair_count"], len(proof["contact_witnesses"]))
@@ -421,12 +428,20 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             audit_source_bound_connected_overlap(
                 first, second, source_proof_bytes=raw,
                 expected_source_proof_sha256="c" * 64, source_binding=binding,
+                expected_source_binding_sha256=av._canonical_json_sha256(binding),
                 expected_source_map_sha256=map_sha)
         with self.assertRaisesRegex(ValueError, "not pinned"):
             audit_source_bound_connected_overlap(
                 first, second, source_proof_bytes=raw,
                 expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_binding_sha256=av._canonical_json_sha256(binding),
                 expected_source_map_sha256="d" * 64)
+        with self.assertRaisesRegex(ValueError, "source binding bytes"):
+            audit_source_bound_connected_overlap(
+                first, second, source_proof_bytes=raw,
+                expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_binding_sha256="e" * 64,
+                expected_source_map_sha256=map_sha)
 
     def test_source_bound_connected_overlap_rejects_surface_gid_hash_mismatch(self):
         first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case()
@@ -435,6 +450,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             audit_source_bound_connected_overlap(
                 first, second, source_proof_bytes=raw,
                 expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_binding_sha256=av._canonical_json_sha256(binding),
                 expected_source_map_sha256=map_sha)
 
     def test_source_bound_connected_overlap_rejects_identity_mismatch(self):
@@ -444,6 +460,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             audit_source_bound_connected_overlap(
                 first, second, source_proof_bytes=raw,
                 expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_binding_sha256=av._canonical_json_sha256(binding),
                 expected_source_map_sha256=map_sha)
 
     def test_source_bound_connected_overlap_rejects_pair_or_contact_changes(self):
@@ -459,6 +476,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertFalse(result["passed"])
         self.assertEqual(result["reason"], "observed_exact_face_pairs_differ_from_source_proof")
@@ -467,6 +485,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertFalse(result["passed"])
         self.assertEqual(result["reason"], "exact_contact_points_differ_from_source_proof")
@@ -476,6 +495,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertFalse(result["passed"])
         self.assertEqual(result["reason"], "surface_not_closed")
@@ -485,6 +505,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertFalse(result["passed"])
         self.assertEqual(result["reason"], "surface_not_single_component")
@@ -498,6 +519,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertFalse(result["passed"])
         self.assertEqual(result["reason"], "frozen_overlap_witness_not_inside_both")
@@ -507,6 +529,7 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_source_bound_connected_overlap(
             first, second, source_proof_bytes=raw,
             expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_binding_sha256=av._canonical_json_sha256(binding),
             expected_source_map_sha256=map_sha)
         self.assertFalse(result["passed"])
         self.assertEqual(result["reason"], "surface_self_intersection")
