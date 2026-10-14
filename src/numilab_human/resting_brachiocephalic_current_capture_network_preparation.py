@@ -185,7 +185,7 @@ PARENT_POSE_FORWARD_OWNER = DATA_ROOT.parent / (
     "neck-back-retained-pose-audit-002/forward_all_positive_weights.py")
 PARENT_POSE_FORWARD_OWNER_SHA256 = (
     "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5")
-PARENT_POSE_SOURCE_INDEX = 6
+LEGACY_PARENT_POSE_SOURCE_INDEX = 6  # historical 1b32/f77 owner only
 PARENT_POSE_ROWS = {475: (1, 2), 477: (3, 4)}
 PARENT_POSE_BODY_BY_SOURCE_ROW = {1: 20, 2: 91, 3: 20, 4: 91}
 COMMON_FIELD_BASELINE_ROWS = {7: 381, 10: 318, 471: 362, 525: 376, 526: 275}
@@ -1478,6 +1478,64 @@ def _load_parent_pose_forward_owner():
     return module
 
 
+def _current_parent_pose_owner_inputs(
+    receipt: dict, current_source_rows: dict,
+) -> tuple[int, dict, dict[int, list], dict[str, str]]:
+    """Select parent rows and carrier by payload identity from this exact receipt."""
+    bindings = receipt.get("passive_tissue_parent_bindings", {})
+    owner_rows = _stable_owner_rows(bindings)
+    payloads = bindings.get("source_payloads")
+    _require(isinstance(payloads, list) and bool(payloads),
+             "current receipt has no passive parent source payload inventory")
+    selected_terms = {}
+    source_indexes = set()
+    map_hashes = {}
+    for stable_id, expected_source_rows in PARENT_POSE_ROWS.items():
+        owner = owner_rows.get(stable_id)
+        source_row = current_source_rows.get(stable_id)
+        _require(isinstance(owner, dict) and isinstance(source_row, dict),
+                 f"current receipt/source is missing parent-mapped row {stable_id}")
+        vertices = owner.get("vertices")
+        _require(isinstance(vertices, list)
+                 and len(vertices) == len(source_row["vertices6"]),
+                 f"current parent owner vertex count changed for {stable_id}")
+        for vertex_id, terms in enumerate(vertices):
+            _require(isinstance(terms, list) and bool(terms),
+                     f"current parent owner has an empty term row {stable_id}/{vertex_id}")
+            total = 0.0
+            for term in terms:
+                _require(
+                    isinstance(term, list) and len(term) == 4
+                    and type(term[0]) is int and 0 <= term[0] < len(payloads)
+                    and type(term[1]) is int and term[1] in expected_source_rows
+                    and type(term[2]) is int and term[2] >= 0
+                    and type(term[3]) in (int, float)
+                    and not isinstance(term[3], bool)
+                    and np.isfinite(term[3]) and 0.0 < float(term[3]) <= 1.0,
+                    f"invalid current parent term for {stable_id}/{vertex_id}",
+                )
+                source_indexes.add(term[0])
+                total += float(term[3])
+            _require(abs(total - 1.0) <= 1e-12,
+                     f"current parent terms do not partition {stable_id}/{vertex_id}")
+        selected_terms[stable_id] = vertices
+        map_hashes[str(stable_id)] = _sha_bytes(json.dumps(
+            vertices, sort_keys=True, separators=(",", ":"),
+            allow_nan=False).encode())
+    _require(len(source_indexes) == 1,
+             "current 475/477 parent maps do not share one registered carrier payload")
+    source_index = next(iter(source_indexes))
+    source_payload = payloads[source_index]
+    _require(isinstance(source_payload, dict)
+             and isinstance(source_payload.get("path"), str)
+             and Path(source_payload["path"]).is_absolute()
+             and isinstance(source_payload.get("sha256"), str)
+             and len(source_payload["sha256"]) == 64
+             and all(c in "0123456789abcdef" for c in source_payload["sha256"]),
+             "current parent carrier descriptor is malformed")
+    return source_index, source_payload, selected_terms, map_hashes
+
+
 def _parent_pose_source_surfaces(
     context: dict, current_source_rows: dict, current_receipt: dict,
 ) -> tuple[dict, dict]:
@@ -1537,40 +1595,27 @@ def _parent_pose_source_surfaces(
             _require(cap["source_face_id_zero_based"] == 1858,
                      "row 477 face delta is not the frozen source cap reinstatement")
 
-    bindings = baseline_receipt.get("passive_tissue_parent_bindings", {})
-    parent_rows = _stable_owner_rows(bindings)
-    payloads = bindings.get("source_payloads", [])
-    _require(PARENT_POSE_SOURCE_INDEX < len(payloads),
-             "historical parent map does not contain source payload index 6")
-    source_payload = payloads[PARENT_POSE_SOURCE_INDEX]
-    _require(source_payload.get("sha256") == PARENT_POSE_BASELINE_CARRIER_SHA256
-             and Path(source_payload.get("path", "")).resolve()
-             == PARENT_POSE_BASELINE_CARRIER.resolve(),
-             "historical parent map source index 6 is not the pinned route110 carrier")
-    parent_terms = {}
-    for stable_id, source_ids in PARENT_POSE_ROWS.items():
-        owner = parent_rows.get(stable_id)
-        _require(isinstance(owner, dict)
-                 and len(owner.get("vertices", []))
-                 == len(current_source_rows[stable_id]["vertices6"]),
-                 f"historical parent map has the wrong vertex count for {stable_id}")
-        parent_terms[stable_id] = owner["vertices"]
-        _require(all(
-            isinstance(terms, list) and bool(terms)
-            and all(isinstance(term, list) and len(term) == 4
-                    and type(term[1]) is int for term in terms)
-            for terms in owner["vertices"]),
-            f"historical parent map terms are malformed for {stable_id}")
-        used = {term[1] for terms in owner["vertices"] for term in terms}
-        _require(used.issubset(set(source_ids)) and used,
-                 f"historical parent map uses an unexpected source row for {stable_id}")
+    legacy_bindings = baseline_receipt.get("passive_tissue_parent_bindings", {})
+    legacy_rows = _stable_owner_rows(legacy_bindings)
+    legacy_map_sha256 = {}
+    for stable_id in PARENT_POSE_ROWS:
+        legacy_owner = legacy_rows.get(stable_id)
+        _require(isinstance(legacy_owner, dict),
+                 f"historical parent receipt lacks row {stable_id}")
+        legacy_map_sha256[str(stable_id)] = _sha_bytes(json.dumps(
+            legacy_owner.get("vertices"), sort_keys=True, separators=(",", ":"),
+            allow_nan=False).encode())
 
+    parent_source_index, source_payload, parent_terms, parent_map_sha256 = (
+        _current_parent_pose_owner_inputs(current_receipt, current_source_rows))
+    current_carrier = Path(source_payload["path"]).resolve(strict=True)
+    current_carrier_sha256 = source_payload["sha256"]
+    _resolved_pin(current_carrier, current_carrier_sha256)
     helper = _load_parent_pose_forward_owner()
-    tissue = helper.load_tissue(PARENT_POSE_BASELINE_CARRIER)
+    tissue = helper.load_tissue(current_carrier)
     _require(tissue.get("raw") is not None
-             and hashlib.sha256(tissue["raw"]).hexdigest()
-             == PARENT_POSE_BASELINE_CARRIER_SHA256,
-             "parent-pose carrier decoder did not return the exact pinned bytes")
+             and hashlib.sha256(tissue["raw"]).hexdigest() == current_carrier_sha256,
+             "current parent carrier decoder did not return the receipt-pinned bytes")
     accepted = context["capture_receipt"].get("accepted_body_poses")
     _require(isinstance(accepted, list) and accepted,
              "accepted current capture has no body-pose list")
@@ -1639,7 +1684,7 @@ def _parent_pose_source_surfaces(
     for stable_id, source_ids in PARENT_POSE_ROWS.items():
         positions, blend_report = _blend_parent_pose_vertices(
             parent_terms[stable_id], parent_world,
-            expected_source_index=PARENT_POSE_SOURCE_INDEX,
+            expected_source_index=parent_source_index,
             stable_id=stable_id,
         )
         current = current_source_rows[stable_id]
@@ -1676,11 +1721,10 @@ def _parent_pose_source_surfaces(
         vessel_reports[str(stable_id)] = {
             "typed_identity": [51011, stable_id],
             "baseline_source_rows": list(source_ids),
-            "baseline_parent_source_payload_index": PARENT_POSE_SOURCE_INDEX,
-            "baseline_parent_source_payload_sha256": PARENT_POSE_BASELINE_CARRIER_SHA256,
-            "baseline_parent_source_map_sha256": _sha_bytes(json.dumps(
-                parent_terms[stable_id], sort_keys=True, separators=(",", ":"),
-                allow_nan=False).encode()),
+            "baseline_parent_source_payload_index": parent_source_index,
+            "baseline_parent_source_payload_sha256": current_carrier_sha256,
+            "baseline_parent_source_map_sha256": parent_map_sha256[str(stable_id)],
+            "historical_legacy_parent_source_map_sha256": legacy_map_sha256[str(stable_id)],
             "baseline_face_source": (
                 "candidate NHA row after exact source-identity/face-transition checks"),
             "capture_vertex_ancestry": alignment,
@@ -1697,27 +1741,48 @@ def _parent_pose_source_surfaces(
             "same_capture_delta_is_not_a_physiology_or_native_error_bound": True,
             **blend_report,
         }
+    source_paths = context.get("capture_source_paths", {})
+    source_sha = context.get("capture_source_sha256", {})
+    owner_receipt_path = source_paths.get("anatomy_receipt_path", OWNER_COMPOSITION_RECEIPT)
+    owner_receipt_sha256 = source_sha.get(
+        "anatomy_receipt", OWNER_COMPOSITION_RECEIPT_SHA256)
+    _require(_sha_file(Path(owner_receipt_path).resolve(strict=True))
+             == owner_receipt_sha256,
+             "current owner receipt bytes differ from the supplied capture/source pin")
+    current_input_pins = {
+        str(Path(owner_receipt_path).resolve()): owner_receipt_sha256,
+        str(current_carrier): current_carrier_sha256,
+    }
     return surfaces, {
-        "status": "PARENT_POSE_SOURCE_BASELINES_RECONSTRUCTED_OFFLINE",
-        "source_baseline_receipt_path": str(PARENT_POSE_BASELINE_RECEIPT.resolve()),
-        "source_baseline_receipt_sha256": PARENT_POSE_BASELINE_RECEIPT_SHA256,
+        "status": "CURRENT_RECEIPT_PARENT_OWNER_BASELINES_RECONSTRUCTED_OFFLINE",
+        "current_owner_receipt_path": str(Path(owner_receipt_path).resolve()),
+        "current_owner_receipt_sha256": owner_receipt_sha256,
+        "current_parent_source_payload_index": parent_source_index,
+        "source_parent_carrier_path": str(current_carrier),
+        "source_parent_carrier_sha256": current_carrier_sha256,
         "source_baseline_payload_path": str(PARENT_POSE_BASELINE_PAYLOAD.resolve()),
         "source_baseline_payload_sha256": PARENT_POSE_BASELINE_PAYLOAD_SHA256,
-        "source_parent_carrier_path": str(PARENT_POSE_BASELINE_CARRIER.resolve()),
-        "source_parent_carrier_sha256": PARENT_POSE_BASELINE_CARRIER_SHA256,
         "forward_owner_path": str(PARENT_POSE_FORWARD_OWNER.resolve()),
         "forward_owner_sha256": PARENT_POSE_FORWARD_OWNER_SHA256,
+        "historical_legacy_owner_receipt_path": str(PARENT_POSE_BASELINE_RECEIPT.resolve()),
+        "historical_legacy_owner_receipt_sha256": PARENT_POSE_BASELINE_RECEIPT_SHA256,
+        "historical_legacy_carrier_path": str(PARENT_POSE_BASELINE_CARRIER.resolve()),
+        "historical_legacy_carrier_sha256": PARENT_POSE_BASELINE_CARRIER_SHA256,
+        "historical_legacy_owner_maps_are_not_used_for_baseline": True,
+        "historical_legacy_source_payload_index": LEGACY_PARENT_POSE_SOURCE_INDEX,
+        "input_sha256": current_input_pins,
         "accepted_body_pose_count": len(accepted),
         "parent_source_rows": parent_reports,
         "vessels": vessel_reports,
         "anatomical_admission": False,
         "native_or_gpu_work_performed": False,
         "method_limit": (
-            "Existing NHTISS parent rows are forwarded through the accepted rigid body poses, "
-            "then blended with the predecessor receipt's exact Float64 parent-map terms using "
-            "ordered Float32 owner arithmetic. This supplies an independent source-parent "
-            "calibre reference only for rows 475 and 477. It does not reconstruct cardiac "
-            "common-field motion or prove native emission."),
+            "Current receipt-bound NHTISS parent rows are forwarded through accepted rigid body "
+            "poses, then blended with the current receipt's Float64 parent-map terms using "
+            "ordered Float32 source-owner arithmetic. The predecessor map/carrier remain "
+            "pinned as historical diagnostics only. This is an offline source-parent calibre "
+            "reference for rows 475 and 477; it does not reconstruct common-field motion or "
+            "prove native arithmetic bit identity."),
     }
 
 
@@ -2657,6 +2722,11 @@ def build_preflight(capture_inputs: dict | None = None, *,
             **source_history_pins,
             **ulnar_proof["proof_recorded_data_input_sha256"],
         }
+    parent_owner_inputs = parent_pose_report.get("input_sha256", {})
+    _require(isinstance(parent_owner_inputs, dict) and bool(parent_owner_inputs),
+             "current parent-owner baseline lacks exact current-receipt/carrier pins")
+    input_paths = (*input_paths, *(Path(path) for path in parent_owner_inputs))
+    expected_inputs = {**expected_inputs, **parent_owner_inputs}
     input_pins = {
         str(Path(path).resolve(strict=True)): _sha_file(Path(path).resolve(strict=True))
         for path in input_paths

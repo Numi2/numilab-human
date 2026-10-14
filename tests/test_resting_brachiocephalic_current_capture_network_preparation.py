@@ -233,6 +233,65 @@ def test_source0_network_inventory_is_exactly_13_plus_two_and_keeps_469_473_sepa
     }
 
 
+def test_parent_pose_baseline_selects_current_receipt_carrier_not_legacy_index():
+    payloads = [
+        {"path": f"/tmp/unused-{index}.nhtissue", "sha256": str(index) * 64}
+        for index in range(8)
+    ]
+    current_terms = [
+        {"stable_id": 475, "vertices": [
+            [[7, 1, 0, 0.25], [7, 2, 0, 0.75]],
+        ]},
+        {"stable_id": 477, "vertices": [
+            [[7, 3, 0, 0.125], [7, 4, 0, 0.875]],
+        ]},
+    ]
+    receipt = {"passive_tissue_parent_bindings": {
+        "source_payloads": payloads,
+        "anatomy_surfaces": current_terms,
+    }}
+    source_rows = {
+        stable_id: {"vertices6": np.zeros((1, 6), dtype="<f4")}
+        for stable_id in (475, 477)
+    }
+
+    index, payload, terms, hashes = prep._current_parent_pose_owner_inputs(
+        receipt, source_rows)
+
+    assert index == 7
+    assert payload == payloads[7]
+    assert terms[475] == current_terms[0]["vertices"]
+    assert terms[477] == current_terms[1]["vertices"]
+    assert set(hashes) == {"475", "477"}
+
+    receipt["passive_tissue_parent_bindings"]["anatomy_surfaces"][1][
+        "vertices"][0][0][0] = 6
+    with pytest.raises(ValueError, match="do not share one registered carrier"):
+        prep._current_parent_pose_owner_inputs(receipt, source_rows)
+
+
+def test_current_parent_owner_terms_preserve_duplicate_source_aliases():
+    parents = {
+        3: np.asarray([[0.125, -0.25, 0.5], [0.125, -0.25, 0.5]], dtype="<f4"),
+        4: np.asarray([[0.875, 0.5, -0.25], [0.875, 0.5, -0.25]], dtype="<f4"),
+    }
+    current_terms = [
+        [[7, 3, 0, 0.25], [7, 4, 0, 0.75]],
+        [[7, 3, 1, 0.25], [7, 4, 1, 0.75]],
+    ]
+    current, _ = prep._blend_parent_pose_vertices(
+        current_terms, parents, expected_source_index=7, stable_id=477)
+    assert current[0].tobytes() == current[1].tobytes()
+
+    legacy_terms = [
+        [[6, 3, 0, 0.25], [6, 4, 0, 0.75]],
+        [[6, 3, 1, 0.5], [6, 4, 1, 0.5]],
+    ]
+    legacy, _ = prep._blend_parent_pose_vertices(
+        legacy_terms, parents, expected_source_index=6, stable_id=477)
+    assert legacy[0].tobytes() != legacy[1].tobytes()
+
+
 def test_parent_pose_source_vertex_map_uses_ordered_face_corner_ancestry():
     source_faces = np.asarray([[0, 1, 2], [2, 1, 3]], dtype="<u4")
     capture_faces = np.asarray([[2, 0, 1], [1, 0, 3]], dtype="<u4")
