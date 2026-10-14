@@ -1,0 +1,165 @@
+{
+  "schema": "numi.human.forearm.474.actual-gpu-local-edge-flip-trials.v1",
+  "status": "self_clear_actual_gpu_candidate474",
+  "pins": {
+    "/Users/n/numi-human-fds132-m6-1350/attempt-473-local-cap-retriangulation-001/audit-exact-delta-self-002/actual-gpu-emitted-candidate-473.npz": "2868c288926d3b1ce2aa438f3a891bf968e9f0ed8645cf8fb4f8831cca39a701",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-473-local-cap-retriangulation-001/candidate-473-local-cap.npz": "343e636d278dbc56013632a91bcb332800acdd57b8e85345d51c14006876ad7f",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-134-fdp-material-handoff.npz": "b8a74a7b1e6f2ad3b5b25eb8305b1a2533183179de98e01d92bf80639942eee9",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-473-local-cap-retriangulation-001/face-lineage-473.json": "a2fcf512297e5cc079f696e61212e6663b852ddedda3a7d8cc82f9ff943b17ba",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-473-local-cap-retriangulation-001/construction-473.json": "de314625893de184897785e3c6e50522b295bf19bedc9267fef0e5a1b23e7a8d",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-actual-gpu-self-gate-001/row-134-actual-gpu.npz": "e779ae24045752673a05597c02457125efdbf2b0b5f5c8407013b74a3dccfe7a",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-actual-gpu-self-gate-001/report.json": "d088439fe87d7bc63f2e30c74016fa81438306ca3b15ee31028a65b6dfef7ad6",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-132-fds-material-handoff.npz": "5181d249838347530130c5271cee518546cae9ff37481cabb3a114b662d500cd",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/resting_anatomy_verify.py": "e6682d4c46d96c467c6d35bd352f2d628a2aa5fd6e5f9b421e6b6da42a4924d8",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/cardiac_cavity_intersections.py": "4e6fb1f4ee75ea0ba9cdd06a072702a238f066fc8e63a61aa9eae32f2356a384",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/model.py": "29d5664ce1485c520c8ab8cb088f496a82c68e570400030dcaea98b2c9d6450e",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/torso_anatomy_audit.py": "64443fd487c8c0f86c6aab02163cb2a735009d731fe3444a89a2e4dd117276ec"
+  },
+  "runner_sha256": "75682c991d49ab92743b08ad6b462be8cda48a54ca14209190052fe28b1b86a7",
+  "geometry_basis": "Topology-only edge flips on actual accepted-GPU Float32 positions; preserve all GIDs and 21-core material rows.",
+  "target_face": {
+    "index": 64128,
+    "gids": [
+      49126,
+      49059,
+      49164
+    ]
+  },
+  "candidate_edges": [
+    {
+      "edge": [
+        49126,
+        49059
+      ],
+      "target_edge_orientation": [
+        49126,
+        49059
+      ],
+      "neighbor_face": 64129,
+      "neighbor_edge_orientation": [
+        49059,
+        49126
+      ],
+      "neighbor_gids": [
+        49059,
+        49126,
+        49058
+      ]
+    },
+    {
+      "edge": [
+        49059,
+        49164
+      ],
+      "target_edge_orientation": [
+        49059,
+        49164
+      ],
+      "neighbor_face": 64118,
+      "neighbor_edge_orientation": [
+        49164,
+        49059
+      ],
+      "neighbor_gids": [
+        49059,
+        49056,
+        49164
+      ]
+    },
+    {
+      "edge": [
+        49164,
+        49126
+      ],
+      "target_edge_orientation": [
+        49164,
+        49126
+      ],
+      "neighbor_face": 64131,
+      "neighbor_edge_orientation": [
+        49126,
+        49164
+      ],
+      "neighbor_gids": [
+        49091,
+        49126,
+        49164
+      ]
+    }
+  ],
+  "trials": [
+    {
+      "trial": 1,
+      "neighbor_face": 64129,
+      "shared_edge": [
+        49126,
+        49059
+      ],
+      "opposite_vertices": [
+        49164,
+        49058
+      ],
+      "candidate_diagonal": [
+        49058,
+        49164
+      ],
+      "orientation_dot_products": [
+        6.283634495616531e-16,
+        -3.2801777495584584e-18
+      ],
+      "construction_precheck": "rejected",
+      "reason": "orientation changes relative to the two source faces"
+    },
+    {
+      "trial": 2,
+      "neighbor_face": 64118,
+      "shared_edge": [
+        49059,
+        49164
+      ],
+      "opposite_vertices": [
+        49126,
+        49056
+      ],
+      "candidate_diagonal": [
+        49056,
+        49126
+      ],
+      "candidate_faces": [
+        [
+          49126,
+          49056,
+          49164
+        ],
+        [
+          49056,
+          49126,
+          49059
+        ]
+      ],
+      "orientation_dot_products": [
+        9.42694110838038e-15,
+        2.260632434104736e-15
+      ],
+      "topology_closed": true,
+      "changed_face_delta_count": 0,
+      "aabb_candidate_pairs": 925,
+      "allowed_shared_vertex_or_edge_pairs": 364,
+      "residual_pairs": [],
+      "elapsed_s": 1.5833318750010221,
+      "candidate_npz": "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/candidate-474-trial-02.npz",
+      "candidate_sha256": "d3ee9c33a7b39fa30b94f51d80d364cff0a84ecb0a820d86ae71865ec671b3f0",
+      "lineage_path": "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/face-lineage-474-trial-02.json",
+      "lineage_sha256": "4e131bc6cd0ae14d95f923487520a17af48f45b141c569ce81138a445baa78ad"
+    }
+  ],
+  "full_self": {
+    "count": 0,
+    "aabb_candidate_pairs": 3808726,
+    "allowed_shared_vertex_or_edge_pairs": 503763,
+    "pairs": [],
+    "seconds": 100.40473129199381
+  },
+  "passing_trial": 2
+}

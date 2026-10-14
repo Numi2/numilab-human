@@ -1,0 +1,97 @@
+{
+  "candidate": {
+    "checks": {
+      "body_index_order_identical": true,
+      "candidate_core_weight_gids": [
+        49243,
+        49244,
+        49245,
+        49246,
+        49247,
+        49248
+      ],
+      "candidate_face_count": 64698,
+      "candidate_material_rows_byte_identical_to_471_keyed_by_core_weight_gid": true,
+      "candidate_material_rows_checked": 6,
+      "gid_order_identical": true,
+      "previous_471_face_count": 64704,
+      "source_positions_byte_identical": true,
+      "unused_allocated_GIDs": 6816,
+      "world_positions_byte_identical": true
+    },
+    "lineage_candidate_sha256_matches": true,
+    "lineage_path": "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/face-lineage-474-trial-02.json",
+    "lineage_sha256": "4e131bc6cd0ae14d95f923487520a17af48f45b141c569ce81138a445baa78ad",
+    "path": "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/candidate-474-trial-02.npz",
+    "preserve_from_471_FDP": [
+      "gids",
+      "source_positions_f32",
+      "world_positions_f32",
+      "core_weight_gids",
+      "core_weights_float64",
+      "core_body_indices"
+    ],
+    "sha256": "d3ee9c33a7b39fa30b94f51d80d364cff0a84ecb0a820d86ae71865ec671b3f0",
+    "take_from_candidate": [
+      "faces_global",
+      "faces_local"
+    ]
+  },
+  "disposition": "topology-only FDP patch handoff; no NPZ copied or repacked",
+  "evidence": {
+    "self": {
+      "actual_gpu_self_pair_count": 0,
+      "candidate_sha256": "d3ee9c33a7b39fa30b94f51d80d364cff0a84ecb0a820d86ae71865ec671b3f0",
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/report.json",
+      "sha256": "ce1084ef9941ba6813558f83faee5554e8524dd8f9bafbff33dd04800b3d6fc9",
+      "status": "self_clear_actual_gpu_candidate474"
+    },
+    "union": {
+      "capture_pack_sha256": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934",
+      "capture_receipt_sha256": "a704bdd7b69a6a97cd437900a68127342ac6ae66f9aad40b173bf81d3becccc9",
+      "containment_count": 2,
+      "detail_path": "/Users/n/numi-human-fds132-m6-1350/attempt-476-fds-fdp-union-material-gate-001/result-002/exact-union-result.json",
+      "detail_sha256": "823194d6523d61c080cf7cd897369aaf94ef324e7cc1fbf1d91b403577449f9b",
+      "elapsed_s": 252.17610687499837,
+      "exact_triangle_pairs": 154578,
+      "inside_component_witnesses": 0,
+      "nonhit_feature_declarations": 0,
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-476-fds-fdp-union-material-gate-001/result-002/report.json",
+      "reciprocal_full_faces": 7081,
+      "rejected_feature_contacts": 0,
+      "sha256": "65bafec1c8c12193edbc1b151f9d2b9cea408bab147dda4b6fd8b70a8e791f08",
+      "status": "passed_frame0_union",
+      "supported_feature_contacts": 147497,
+      "unexpected_pairs": 0
+    }
+  },
+  "limits": [
+    "frame 0 only",
+    "no bones/PQ/skin/other nearby targets or later-pose admission",
+    "no native integration admission",
+    "preserve all failed and earlier evidence"
+  ],
+  "schema": "numi.human.forearm.native-handoff-474.v1",
+  "source_arrays": {
+    "FDP": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-134-fdp-material-handoff.npz",
+      "sha256": "b8a74a7b1e6f2ad3b5b25eb8305b1a2533183179de98e01d92bf80639942eee9",
+      "use": "source GID order, source/world Float32 positions, full ordered 21-core weights, and body index order"
+    },
+    "FDS": {
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-132-fds-material-handoff.npz",
+      "sha256": "5181d249838347530130c5271cee518546cae9ff37481cabb3a114b662d500cd",
+      "use": "preserve complete row unchanged"
+    }
+  },
+  "typed_rows": {
+    "FDP": [
+      51005,
+      134
+    ],
+    "FDS": [
+      51005,
+      132
+    ]
+  }
+}

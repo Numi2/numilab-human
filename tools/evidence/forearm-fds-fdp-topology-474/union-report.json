@@ -1,0 +1,195 @@
+{
+  "actual_frame": "accepted native one-step capture step 0, actual emitted Float32 positions",
+  "candidate_topology": "474 trial 2 topology-only edge flip; points and 21-core material rows unchanged",
+  "elapsed_s": 252.17610687499837,
+  "exact_union": {
+    "accepted_exact_feature_contacts": 147497,
+    "containment_count": 2,
+    "containment_statuses": [
+      "checked_exact_rational_metres",
+      "checked_exact_rational_metres"
+    ],
+    "containment_unresolved": false,
+    "exact_triangle_pair_count": 154578,
+    "full_helper_result_file": "exact-union-result.json",
+    "helper_passed": true,
+    "inside_component_witness_count": 0,
+    "nonhit_feature_declarations": 0,
+    "reciprocal_full_face_pairs_exact": 7081,
+    "reciprocal_full_face_pairs_expected": 7081,
+    "rejected_exact_feature_contacts": 0,
+    "root_gate": "all full reciprocal faces declared from keyed GIDs and positive actual owners; all remaining contacts must be exact supported vertex/edge features; both-direction closed-solid containment must resolve with no inside witness",
+    "shared_gid_feature_candidates": 147497,
+    "unexpected_exact_triangle_pairs": 0,
+    "unexpected_pair_witness_file": "exact-union-witnesses.npz"
+  },
+  "final_gate": {
+    "containment_unresolved": false,
+    "frame0_union_clear": true,
+    "full_reciprocal_face_set_exact": true,
+    "inside_component_witness_count": 0,
+    "scope": "frame 0 only; later accepted poses, bone/PQ/skin/nearby targets and native qualification remain required",
+    "unexpected_exact_pairs": 0,
+    "unsupported_feature_contacts": 0
+  },
+  "finished_unix": 1791974183.270795,
+  "interface_declarations": {
+    "candidate_file_sha256": "4a910c8fb87d7ae33ac421cd0955c241ec4b56bc0ab5b294d96789948ec5ed61",
+    "feature_candidate_GID_count": 173006,
+    "feature_candidates_with_one_or_two_shared_GIDs": 147497,
+    "proof": "actual typed surfaces, exact shared GID, keyed actual 21-core owner row, keyed source lineage, byte-identical emitted F32 point, and exact triangle intersection must agree",
+    "reciprocal_full_face_pairs": 7081,
+    "shared_gid_feature_candidates_after_conservative_aabb": 147497
+  },
+  "material_and_interface_preflight": {
+    "FDP_actual_vertices": 32354,
+    "FDP_candidate_faces": 64698,
+    "FDS_actual_vertices": 14706,
+    "FDS_faces": 29420,
+    "actual_position_byte_mismatches": 0,
+    "common_active_GIDs": 4657,
+    "invalid_positive_normalized_shared_material_rows": 0,
+    "keyed_material_row_mismatches": 0,
+    "keyed_source_position_byte_mismatches": 0,
+    "material_join": "keyed by core_weight_gids",
+    "ordered_body_indices_equal": true,
+    "shared_face_duplicate_or_winding_errors": 0,
+    "shared_reciprocal_face_pairs": 7081
+  },
+  "native_capture_provenance": {
+    "accepted_pack_sha256": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934",
+    "accepted_receipt_sha256": "a704bdd7b69a6a97cd437900a68127342ac6ae66f9aad40b173bf81d3becccc9",
+    "capture_geometry_basis": "Actual native GPU accepted step-0 capture; no CPU forward approximation.",
+    "capture_report_status": "failed_self"
+  },
+  "pin_manifest_sha256": "53f3308df9b831c3ed373eff65663716109f942a04247347cd3a097832952f3d",
+  "prepared_surface_diagnostics": {
+    "FDP": {
+      "exact_coordinate_quotient_topology": {
+        "boundary_branch_vertex_ids_count": 0,
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": false,
+        "degenerate_face_ids_count": 0,
+        "duplicate_face_ids_count": 0,
+        "face_component_count": 4,
+        "face_count": 64698,
+        "nonmanifold_edges_count": 0,
+        "orientation_defect_edges_count": 0,
+        "repeated_vertex_face_ids_count": 0,
+        "unused_vertex_ids_count": 3,
+        "vertex_count": 32354,
+        "vertex_manifold_defect_ids_count": 0
+      },
+      "exact_duplicate_vertex_count": 0,
+      "faces_sha256": "c1a9a882632b1a2eb8747c01cefb805c7c7068b48656034ca60d3de2f65642fc",
+      "identity": [
+        51005,
+        134
+      ],
+      "positions_sha256": "6ed16b990e7dcaf3628b3d2856a79a5db9d67d8b4d999deedf3907dedb37f68f",
+      "raw_topology": {
+        "boundary_branch_vertex_ids_count": 0,
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": false,
+        "degenerate_face_ids_count": 0,
+        "duplicate_face_ids_count": 0,
+        "face_component_count": 4,
+        "face_count": 64698,
+        "nonmanifold_edges_count": 0,
+        "orientation_defect_edges_count": 0,
+        "repeated_vertex_face_ids_count": 0,
+        "unused_vertex_ids_count": 3,
+        "vertex_count": 32354,
+        "vertex_manifold_defect_ids_count": 0
+      },
+      "referenced_surface_closed": true,
+      "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained.",
+      "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary."
+    },
+    "FDS": {
+      "exact_coordinate_quotient_topology": {
+        "boundary_branch_vertex_ids_count": 0,
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_ids_count": 0,
+        "duplicate_face_ids_count": 0,
+        "face_component_count": 1,
+        "face_count": 29420,
+        "nonmanifold_edges_count": 0,
+        "orientation_defect_edges_count": 0,
+        "repeated_vertex_face_ids_count": 0,
+        "unused_vertex_ids_count": 0,
+        "vertex_count": 14706,
+        "vertex_manifold_defect_ids_count": 0
+      },
+      "exact_duplicate_vertex_count": 0,
+      "faces_sha256": "2d60b3c24cd7177f2d91a4f63e5eee53799808f32a263802e6b52b84fed015e6",
+      "identity": [
+        51005,
+        132
+      ],
+      "positions_sha256": "7e515ee4799472cf6dd64ed6167df46da8df659b1ddacfaddccd319835384ee4",
+      "raw_topology": {
+        "boundary_branch_vertex_ids_count": 0,
+        "boundary_edge_count": 0,
+        "closed_oriented_manifold_candidate": true,
+        "degenerate_face_ids_count": 0,
+        "duplicate_face_ids_count": 0,
+        "face_component_count": 1,
+        "face_count": 29420,
+        "nonmanifold_edges_count": 0,
+        "orientation_defect_edges_count": 0,
+        "repeated_vertex_face_ids_count": 0,
+        "unused_vertex_ids_count": 0,
+        "vertex_count": 14706,
+        "vertex_manifold_defect_ids_count": 0
+      },
+      "referenced_surface_closed": true,
+      "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained.",
+      "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary."
+    }
+  },
+  "schema": "numi.human.forearm.476.actual-gpu-fds-fdp-union-material-gate.v1",
+  "sha256": {
+    "/Users/n/numi-human-fds132-m6-1350/attempt-466-local-shared-edge-classification-001/result-001/joint-cross-lineage-466-v7.json": "d2ceb34429d17a2d8884e3a3a88f94c43af996a965c49a82b3b4feaf5c00cd22",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/forearm-native-material-lineage.json": "ebd229b18b93720ca57b39b0e638e68082b0512bb8fd8b9301fd1c0b9c151e0e",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-132-fds-material-handoff.npz": "5181d249838347530130c5271cee518546cae9ff37481cabb3a114b662d500cd",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-134-fdp-material-handoff.npz": "b8a74a7b1e6f2ad3b5b25eb8305b1a2533183179de98e01d92bf80639942eee9",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/candidate-474-trial-02.npz": "d3ee9c33a7b39fa30b94f51d80d364cff0a84ecb0a820d86ae71865ec671b3f0",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/face-lineage-474-trial-02.json": "4e131bc6cd0ae14d95f923487520a17af48f45b141c569ce81138a445baa78ad",
+    "/Users/n/numi-human-fds132-m6-1350/attempt-474-collapse-neighborhood-edgeflip-001/report.json": "ce1084ef9941ba6813558f83faee5554e8524dd8f9bafbff33dd04800b3d6fc9",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/cardiac_cavity_intersections.py": "4e6fb1f4ee75ea0ba9cdd06a072702a238f066fc8e63a61aa9eae32f2356a384",
+    "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/resting_anatomy_verify.py": "2c3ed5799d73d3076b5e6c8497b1095efad31419691c0469535bb7ef47983015",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-actual-gpu-self-gate-001/report.json": "d088439fe87d7bc63f2e30c74016fa81438306ca3b15ee31028a65b6dfef7ad6",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-actual-gpu-self-gate-001/row-132-actual-gpu.npz": "5d1333bfb377625356c68c37552a36c4c32c0800976d835b527480c80a75dcad",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-actual-gpu-self-gate-001/row-134-actual-gpu.npz": "e779ae24045752673a05597c02457125efdbf2b0b5f5c8407013b74a3dccfe7a",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/invocation.json": "6da2886300ff3881cd9994b03cda9cc28564fa376e0242b014f255f533df0803",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.mrvpack": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.receipt.json": "a704bdd7b69a6a97cd437900a68127342ac6ae66f9aad40b173bf81d3becccc9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/run_forearm470_actual_gpu_self_gate_001.py": "5e17b4a1df9230f6fd4704168d6fe8eb95ccf696f1afae687342796a492427ef"
+  },
+  "source_lineage_preflight": {
+    "FDP_faces_missing_source_lineage": 0,
+    "FDP_faces_with_source_lineage": 64698,
+    "FDS_faces_missing_source_lineage": 0,
+    "FDS_faces_with_source_lineage": 29420,
+    "shared_GIDs_with_supported_birth_lineage": 4657
+  },
+  "stage": "exact_shared_interface_union_and_containment",
+  "started_unix": 1791973931.093577,
+  "status": "passed_frame0_union",
+  "typed_identities": [
+    [
+      51005,
+      132
+    ],
+    [
+      51005,
+      134
+    ]
+  ],
+  "verifier": {
+    "cardiac_ci_sha256": "4e6fb1f4ee75ea0ba9cdd06a072702a238f066fc8e63a61aa9eae32f2356a384",
+    "resting_anatomy_verify_sha256": "2c3ed5799d73d3076b5e6c8497b1095efad31419691c0469535bb7ef47983015"
+  }
+}

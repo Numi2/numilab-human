@@ -35,6 +35,33 @@ def typed_key(value):
     return tuple(value)
 
 
+def gid_index_map(gids):
+    """Index unique integer GIDs without assuming their source order is sorted."""
+    values = np.asarray(gids)
+    if values.ndim != 1 or values.dtype.kind not in "iu":
+        raise ValueError("GIDs must be a one-dimensional integer array")
+    result = {}
+    for index, value in enumerate(values):
+        gid = int(value)
+        if gid in result:
+            raise ValueError(f"duplicate GID: {gid}")
+        result[gid] = index
+    return result
+
+
+def keyed_row_indices(source_gids, requested_gids):
+    """Return source row indices in requested GID order, failing on missing IDs."""
+    source_index = gid_index_map(source_gids)
+    requested = np.asarray(requested_gids)
+    if requested.ndim != 1 or requested.dtype.kind not in "iu":
+        raise ValueError("requested GIDs must be a one-dimensional integer array")
+    missing = [int(gid) for gid in requested if int(gid) not in source_index]
+    if missing:
+        raise ValueError("missing GIDs: " + str(missing[:8]))
+    return np.fromiter((source_index[int(gid)] for gid in requested),
+                       dtype=np.intp, count=len(requested))
+
+
 def _compact_topology(topology):
     keys = ("vertex_count", "face_count", "face_component_count",
             "boundary_edge_count", "closed_oriented_manifold_candidate")
@@ -80,9 +107,7 @@ class PreparedSurface:
 
     def vertex_index(self, gid):
         if self._vertex_indices is None:
-            self._vertex_indices = {}
-            for index, source_id in enumerate(self.source_vertex_ids):
-                self._vertex_indices.setdefault(int(source_id), index)
+            self._vertex_indices = gid_index_map(self.source_vertex_ids)
         return self._vertex_indices.get(gid)
 
     def self_audit(self):
@@ -179,10 +204,9 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                 or weights.shape != (len(weight_gids), 21)
                 or weights.dtype != np.dtype("float64") or not np.isfinite(weights).all()):
             raise ValueError("material weights must be finite Float64 rows keyed by GID")
-        if len(np.unique(weight_gids)) != len(weight_gids):
-            raise ValueError("duplicate material weight GID")
-        weights_by_gid = {int(gid): np.array(row, dtype=np.float64, copy=True)
-                          for gid, row in zip(weight_gids, weights)}
+        weight_index = gid_index_map(weight_gids)
+        weights_by_gid = {gid: np.array(weights[index], dtype=np.float64, copy=True)
+                          for gid, index in weight_index.items()}
         referenced_gids = {int(source_vertex_ids[int(local)]) for face in f for local in face}
         missing = sorted(referenced_gids - weights_by_gid.keys())
         if missing:
