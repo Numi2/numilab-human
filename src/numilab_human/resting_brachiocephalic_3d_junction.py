@@ -427,14 +427,28 @@ def _read_pinned_source_baseline_observation(
              "pinned observation source ancestry differs from current ABI5 link evidence")
     expected_additions = {
         tuple(item["face_pair"]) for item in declarations}
-    audit = link.get("port_interfaces", {}).get(
-        "baseline", {}).get("audit_result", {})
-    observed = _strict_face_pair_set(
+    baseline_port = link.get("port_interfaces", {}).get("baseline", {})
+    audit = baseline_port.get("audit_result", {})
+    declared_pairs = _strict_face_pair_set(
         audit.get("declared_interface_triangle_pairs"),
-        name="pinned baseline observed face pairs")
+        name="pinned baseline declared interface face pairs")
     unexpected = _strict_face_pair_set(
         audit.get("unexpected_triangle_pairs"),
         name="pinned baseline unexpected face pairs")
+    port_observed = _strict_face_pair_set(
+        baseline_port.get("observed_face_pairs"),
+        name="pinned baseline port observed face pairs")
+    port_unexpected = _strict_face_pair_set(
+        baseline_port.get("unexpected_face_pairs"),
+        name="pinned baseline port unexpected face pairs")
+    observed = declared_pairs | unexpected
+    _require(declared_pairs.isdisjoint(unexpected)
+             and port_observed == declared_pairs
+             and port_unexpected == unexpected
+             and baseline_port.get("observed_pair_count") == len(port_observed)
+             and type(audit.get("triangle_pair_count")) is int
+             and audit.get("triangle_pair_count") == len(observed),
+             "pinned baseline declared/unexpected pair counts disagree")
     _require(unexpected == expected_additions
              and expected_additions.issubset(observed)
              and audit.get("passed") is False,
@@ -471,6 +485,23 @@ def _read_pinned_source_baseline_observation(
         }
         for role, surface in (("bridge", bridge), ("target", target))
     }
+    inventory = report.get("candidate_and_source_baseline_inventory", {})
+    addendum = (inventory.get("baseline_matched_collar_addendum", {})
+                if isinstance(inventory, Mapping) else {})
+    frozen_lineage = (addendum.get("baseline_surface_lineage", {})
+                      if isinstance(addendum, Mapping) else {})
+    if frozen_lineage:
+        for role, prefix in (("bridge", "parent"), ("target", "target")):
+            expected_hashes = {
+                "position_f32_sha256": frozen_lineage.get(
+                    f"{prefix}_position_f32_sha256"),
+                "face_u32_sha256": frozen_lineage.get(
+                    f"{prefix}_face_u32_sha256"),
+                "gids_u64_sha256": frozen_lineage.get(
+                    f"{prefix}_gids_u64_sha256"),
+            }
+            _require(expected_hashes == surface_lineage[role],
+                     f"pinned independent baseline {role} position/GID/face hashes changed")
     return {
         "path": str(report_path),
         "sha256": report_sha,
@@ -479,6 +510,7 @@ def _read_pinned_source_baseline_observation(
         "observed_pairs": observed,
         "unexpected_pairs": unexpected,
         "surface_lineage": surface_lineage,
+        "frozen_surface_lineage": frozen_lineage or None,
         "link": link,
     }
 
@@ -842,6 +874,8 @@ def _declared_baseline_collar_addendum(
             "unexpected_pairs": [list(pair) for pair in sorted(
                 observation["unexpected_pairs"])],
             "baseline_surface_lineage": observation["surface_lineage"],
+            "frozen_inventory_surface_lineage": observation[
+                "frozen_surface_lineage"],
             "baseline_surfaces_reconstructed_from_pinned_source_and_capture": True,
             "candidate_geometry_used": False,
         },

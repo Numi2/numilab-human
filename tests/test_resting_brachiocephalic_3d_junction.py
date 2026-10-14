@@ -565,16 +565,45 @@ def _declared_source_baseline_addendum_fixture(
     baseline_observed_pairs = set(map(tuple, baseline_pairs.tolist()))
     if target_edge_contact_chain:
         baseline_observed_pairs.discard((717, 184))
-    observed_pairs = sorted({
-        *baseline_observed_pairs,
-        *(tuple(item["face_pair"]) for item in declarations),
-    })
+    declared_pairs = set(baseline_observed_pairs)
+    for bridge_face in range(len(parent_faces)):
+        if len(declared_pairs) == 80:
+            break
+        declared_pairs.add((bridge_face, 250))
+    assert len(declared_pairs) == 80
+    unexpected_pairs = {
+        tuple(item["face_pair"]) for item in declarations}
+    observed_pairs = sorted(declared_pairs | unexpected_pairs)
+    frozen_surface_lineage = {
+        role: {
+            "position_f32_sha256": hashlib.sha256(
+                np.ascontiguousarray(surface.positions, dtype="<f4").tobytes()
+            ).hexdigest(),
+            "face_u32_sha256": hashlib.sha256(
+                np.ascontiguousarray(surface.faces, dtype="<u4").tobytes()
+            ).hexdigest(),
+            "gids_u64_sha256": hashlib.sha256(
+                np.ascontiguousarray(surface.source_vertex_ids, dtype="<u8").tobytes()
+            ).hexdigest(),
+        }
+        for role, surface in (
+            ("parent", parent_surface), ("target", target_surface))
+    }
     report = {
         "status": "STOPPED_AT_FIRST_FAILED_NETWORK_LINK",
         "anatomical_admission": False,
         "native_or_gpu_work_performed": False,
         "source_preflight_path": str(preflight.resolve()),
         "source_preflight_sha256": preflight_sha,
+        "candidate_and_source_baseline_inventory": {
+            "baseline_matched_collar_addendum": {
+                "baseline_surface_lineage": {
+                    f"{role}_{key}": value
+                    for role, hashes in frozen_surface_lineage.items()
+                    for key, value in hashes.items()
+                },
+            },
+        },
         "network_source_continuity": {
             "first_failed_link": [list(parent_key), list(child_key)],
             "links": [{
@@ -587,13 +616,22 @@ def _declared_source_baseline_addendum_fixture(
                     "source_parent_faces_sha256": parent_faces_sha,
                     "source_child_faces_sha256": child_faces_sha,
                 },
-                "port_interfaces": {"baseline": {"audit_result": {
-                    "declared_interface_triangle_pairs": [list(pair)
-                                                          for pair in observed_pairs],
-                    "unexpected_triangle_pairs": [
-                        list(item["face_pair"]) for item in declarations],
+                "port_interfaces": {"baseline": {
+                    "observed_face_pairs": [list(pair)
+                                             for pair in sorted(declared_pairs)],
+                    "observed_pair_count": len(declared_pairs),
+                    "unexpected_face_pairs": [list(pair)
+                                              for pair in sorted(unexpected_pairs)],
                     "passed": False,
-                }}},
+                    "audit_result": {
+                        "declared_interface_triangle_pairs": [list(pair)
+                                                              for pair in sorted(declared_pairs)],
+                        "unexpected_triangle_pairs": [list(pair)
+                                                      for pair in sorted(unexpected_pairs)],
+                        "triangle_pair_count": len(observed_pairs),
+                        "passed": False,
+                    },
+                }},
                 "abi5_face_corner_ancestry": {
                     role: {
                         "typed_identity": [51011, stable_id],
@@ -670,6 +708,32 @@ def test_declared_baseline_additions_require_exact_pinned_baseline_report(
     assert {item["face_pair"][0] for item in pair_reports} == {704, 737}
     assert proof["source_baseline_observation"]["unexpected_pairs"] == [
         [704, 184], [704, 185], [737, 176]]
+    assert proof["source_baseline_observation"]["observed_pair_count"] == 83
+    raw_report = json.loads(inputs["baseline_report_path"].read_text())
+    baseline_port = raw_report["network_source_continuity"]["links"][0][
+        "port_interfaces"]["baseline"]
+    assert len(baseline_port["audit_result"][
+        "declared_interface_triangle_pairs"]) == 80
+    assert len(baseline_port["audit_result"]["unexpected_triangle_pairs"]) == 3
+    assert baseline_port["audit_result"]["triangle_pair_count"] == 83
+    assert proof["source_baseline_observation"][
+        "baseline_surface_lineage"] == {
+            role: {
+                "position_f32_sha256": proof[
+                    "source_baseline_observation"][
+                        "frozen_inventory_surface_lineage"][
+                            f"{prefix}_position_f32_sha256"],
+                "face_u32_sha256": proof[
+                    "source_baseline_observation"][
+                        "frozen_inventory_surface_lineage"][
+                            f"{prefix}_face_u32_sha256"],
+                "gids_u64_sha256": proof[
+                    "source_baseline_observation"][
+                        "frozen_inventory_surface_lineage"][
+                            f"{prefix}_gids_u64_sha256"],
+            }
+            for role, prefix in (("bridge", "parent"), ("target", "target"))
+        }
     assert proof["candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"]
 
 
@@ -700,6 +764,38 @@ def test_declared_baseline_additions_reject_unbound_pairs_and_changed_report(
         junction.verify_baseline_matched_collar_addendum(
             av, bridge_key=inputs["bridge_key"], target_key=inputs["target_key"],
             declarations=inputs["declarations"], **kwargs)
+
+
+def test_declared_baseline_additions_bind_frozen_baseline_position_and_gid_hashes(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    report_path = inputs["baseline_report_path"]
+    report = json.loads(report_path.read_text())
+    report["candidate_and_source_baseline_inventory"][
+        "baseline_matched_collar_addendum"]["baseline_surface_lineage"][
+            "parent_position_f32_sha256"] = "0" * 64
+    report_path.write_text(json.dumps(report))
+    report_sha = hashlib.sha256(report_path.read_bytes()).hexdigest()
+    monkeypatch.setattr(
+        junction, "SOURCE_BASELINE_OBSERVATION_REPORT_SHA256", report_sha)
+    with pytest.raises(ValueError, match="baseline bridge position/GID/face hashes changed"):
+        junction.verify_baseline_matched_collar_addendum(
+            av,
+            bridge_key=inputs["bridge_key"],
+            target_key=inputs["target_key"],
+            source_link_evidence=inputs["source_link_evidence"],
+            source_rows=inputs["source_rows"],
+            source_map=inputs["source_map"],
+            independent_source_baseline_bridge_surface=inputs["bridge"],
+            independent_source_baseline_target_surface=inputs["target"],
+            native_nha_gid_base_offset=inputs["gid_base_offset"],
+            baseline_binding=inputs["baseline_binding"],
+            declarations=inputs["declarations"],
+            baseline_observation={
+                "report_path": str(report_path.resolve()),
+                "report_sha256": report_sha,
+            },
+        )
 
 
 def test_declared_baseline_additions_accept_exact_target_edge_contact_chain(
