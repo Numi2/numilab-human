@@ -573,6 +573,84 @@ def test_port_replay_preflight_is_pinned_single_port_and_keeps_topology_metrics(
     assert summary["coplanar_edge_count"] == 0
 
 
+def test_six_port_diagnostic_scope_matches_source007_and_is_separate():
+    assert portdiag.SIX_PORT_KEYS == source007.PORT_KEYS
+    assert portdiag.SIX_REPLAY_SCOPE["port_count"] == 6
+    assert portdiag.SIX_REPLAY_SCOPE["ports"] == [
+        {"bridge": list(bridge), "target": list(target)}
+        for bridge, target in source007.PORT_KEYS
+    ]
+    assert portdiag.SIX_REPLAY_SCOPE["source_candidate_compiler_invoked"] is False
+    assert portdiag.SIX_REPLAY_SCOPE["all_nearby_collision_checks_invoked"] is False
+    assert portdiag.SIX_REPLAY_SCOPE["stop_after_first_failed_port"] is True
+    assert portdiag.SIX_DIAGNOSTIC_DIR != portdiag.DIAGNOSTIC_DIR
+    assert portdiag.SIX_PREFLIGHT_PATH != portdiag.PREFLIGHT_PATH
+
+
+def test_port_recorder_resets_stage_indices_and_tags_each_port_event():
+    recorder = portdiag.Recorder()
+    left_bridge, left_target = source007.PORT_KEYS[0]
+    left_failed_bridge, left_failed_target = source007.PORT_KEYS[1]
+    recorder.set_port(left_bridge, left_target)
+    assert recorder.next_index("section_calls") == 0
+    assert recorder.next_index("section_calls") == 1
+    recorder.record("port_results", {"passed": True})
+    recorder.set_port(left_failed_bridge, left_failed_target)
+    assert recorder.next_index("section_calls") == 0
+    recorder.record("port_results", {"passed": False})
+    assert recorder.data["port_results"][0]["port_identity"] == {
+        "bridge": list(left_bridge), "target": list(left_target)}
+    assert recorder.data["port_results"][1]["port_identity"] == {
+        "bridge": list(left_failed_bridge), "target": list(left_failed_target)}
+
+
+def test_recording_wrappers_restart_stage_names_for_each_frozen_port():
+    from types import SimpleNamespace
+
+    def section(_positions, _faces, _center, _tangent, *, derived_csg=False):
+        return {"passed": True, "loop_count": 1, "derived_csg": derived_csg}
+
+    gate = SimpleNamespace(
+        _section_loops=section,
+        _section_comparison=lambda candidate, baseline: {
+            "passed": candidate["passed"] and baseline["passed"]},
+        _validated_station_spec=lambda *args, **kwargs: {},
+        _transport_material_station=lambda *args, **kwargs: {},
+        _make_manifold=lambda *args, **kwargs: (object(), {}),
+        _exact_inside_witness=lambda *args, **kwargs: {},
+        audit_brachiocephalic_port_pair_continuity=None,
+    )
+    verifier = SimpleNamespace(audit_surface_pair=lambda *args, **kwargs: {})
+    def one_port(_verifier, _manifold, *, bridge_key, target_key, **_kwargs):
+        gate._section_loops(
+            np.zeros((1, 3), dtype="<f4"),
+            np.zeros((1, 3), dtype="<u4"),
+            np.zeros(3), np.asarray([1.0, 0.0, 0.0]),
+        )
+        return {"bridge": list(bridge_key), "target": list(target_key),
+                "passed": True}
+    gate.audit_brachiocephalic_port_pair_continuity = one_port
+
+    recorder = portdiag.Recorder()
+    restore = portdiag.install_recording_wrappers(gate, verifier, recorder)
+    try:
+        for bridge_key, target_key in source007.PORT_KEYS[:2]:
+            gate.audit_brachiocephalic_port_pair_continuity(
+                verifier, object(), bridge_key=bridge_key, target_key=target_key)
+    finally:
+        restore()
+
+    assert [entry["stage"] for entry in recorder.data["section_calls"]] == [
+        "bridge_candidate", "bridge_candidate"]
+    assert [entry["port_identity"] for entry in recorder.data["section_calls"]] == [
+        {"bridge": list(pair[0]), "target": list(pair[1])}
+        for pair in source007.PORT_KEYS[:2]
+    ]
+    assert len(recorder.data["port_results"]) == 2
+    assert [entry["result"]["passed"] for entry in recorder.data["port_results"]] == [
+        True, True]
+
+
 def test_port_diagnostic_records_solid_boolean_metrics_before_return_or_error():
     from types import SimpleNamespace
 
