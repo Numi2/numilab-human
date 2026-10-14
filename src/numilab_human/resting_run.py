@@ -10,14 +10,13 @@ import hashlib
 import json
 import math
 import os
-from pathlib import Path
 import platform
 import re
 import subprocess
 import time
+from pathlib import Path
 
 from .model import ImportError as HumanImportError
-
 
 INVOCATION_ENVIRONMENT_KEYS = (
     "DYLD_LIBRARY_PATH", "DYLD_PRINT_LIBRARIES",
@@ -101,6 +100,53 @@ def _hash(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _validate_parent_partitions(parents: dict) -> None:
+    """Reject loader-ineligible receipt terms before starting a native process.
+
+    This checks load-time JSON invariants only. The native owner still verifies
+    actual child counts, raw source vertices, registration and compiled weights.
+    """
+    sources = parents["source_payloads"]
+    for family in ("surfaces", "anatomy_surfaces"):
+        if family not in parents:
+            continue
+        rows = parents[family]
+        _require(isinstance(rows, list) and 0 < len(rows) <= 192,
+                 f"{family} parent surface inventory is invalid")
+        seen_rows = set()
+        for row in rows:
+            _require(isinstance(row, dict) and type(row.get("stable_id")) is int
+                     and 0 <= row["stable_id"] <= 0xffffffff
+                     and row["stable_id"] not in seen_rows,
+                     f"{family} parent child identity is invalid or duplicated")
+            seen_rows.add(row["stable_id"])
+            vertices = row.get("vertices")
+            _require(isinstance(vertices, list) and bool(vertices),
+                     f"{family} parent vertex map is empty")
+            for vertex, terms in enumerate(vertices):
+                label = f"{family} row {row['stable_id']} vertex {vertex}"
+                _require(isinstance(terms, list) and 0 < len(terms) <= 128,
+                         label + " parent term inventory is invalid")
+                seen_terms = set()
+                coefficient_sum = 0.0
+                for term in terms:
+                    _require(isinstance(term, list) and len(term) == 4
+                             and all(type(v) is int and 0 <= v <= 0xffffffff
+                                     for v in term[:3])
+                             and term[0] < len(sources),
+                             label + " parent raw identity is invalid")
+                    identity = tuple(term[:3])
+                    _require(identity not in seen_terms,
+                             label + " parent raw identity is repeated")
+                    seen_terms.add(identity)
+                    c = term[3]
+                    _require(type(c) in (int, float) and math.isfinite(c) and 0 < c <= 1,
+                             label + " parent coefficient is invalid")
+                    coefficient_sum += c  # Match native binary64 load order.
+                _require(abs(coefficient_sum - 1.0) <= 1e-12,
+                         label + " parent coefficients do not form a native partition of unity")
 
 
 def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
@@ -189,6 +235,7 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
         _require(isinstance(parents.get("surfaces"), list) and
                  0 < len(parents["surfaces"]) <= 192,
                  "passive tissue parent surface inventory is invalid")
+        _validate_parent_partitions(parents)
     if "manifest_path" in muscle_surfaces:
         checked(muscle_surfaces["manifest_path"], muscle_surfaces["manifest_sha256"])
     tendon = checked(args.tendon)

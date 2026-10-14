@@ -2,10 +2,11 @@
 import argparse
 import hashlib
 import json
-from pathlib import Path
-import tempfile
+import struct
 import subprocess
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from numilab_human.model import ImportError as HumanImportError
@@ -120,6 +121,32 @@ class RestingRunAdmissionTests(unittest.TestCase):
         parent.write_bytes(b"changed-source-parent")
         with self.assertRaisesRegex(HumanImportError, "receipt hash differs"):
             command(self.args)
+
+    def test_float32_unit_sum_is_not_enough_for_native_parent_partition(self):
+        parent = self.root / "raw-parent.nhtissue"
+        parent.write_bytes(b"source-parent-fixture")
+        child = self.root / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+        weights = [struct.unpack("<f", struct.pack("<f", v))[0] for v in (.1, .9)]
+        bindings = {
+            "child_payload_sha256": hashlib.sha256(child.read_bytes()).hexdigest(),
+            "source_payloads": [{"path": parent.name,
+                                "sha256": hashlib.sha256(parent.read_bytes()).hexdigest()}],
+            "surfaces": [{"stable_id": 163, "vertices": [[[0, 163, 0, 1.0]]]}],
+        }
+        for family, stable in (("surfaces", 163), ("anatomy_surfaces", 475)):
+            with self.subTest(family=family):
+                self.anatomy["passive_tissue_parent_bindings"] = dict(bindings)
+                row = {"stable_id": stable, "vertices": [
+                    [[0, stable, 0, weights[0]], [0, stable, 1, weights[1]]]]}
+                self.anatomy["passive_tissue_parent_bindings"][family] = [row]
+                self.write_receipts()
+                with self.assertRaisesRegex(HumanImportError, "native partition of unity"):
+                    command(self.args)
+                total = sum(weights)
+                for term in row["vertices"][0]:
+                    term[3] /= total
+                self.write_receipts()
+                command(self.args)
 
     def test_passive_parent_map_cannot_be_reused_for_another_child(self):
         self.anatomy["passive_tissue_parent_bindings"] = {
