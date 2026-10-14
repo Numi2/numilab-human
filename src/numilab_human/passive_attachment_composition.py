@@ -1819,6 +1819,10 @@ def _repair_rest_orientation_f32_neighbors(row_data, source_positions,
             break
         bad_face_ids = touched_faces[current_bad]
         candidate_vertices = np.unique(faces[bad_face_ids].reshape(-1))
+        # Only adjust vertices in the original changed set. touched_faces is
+        # the complete incident star of that set, so every face affected by a
+        # candidate coordinate is checked against its authoritative target.
+        candidate_vertices = candidate_vertices[changed[candidate_vertices]]
         best = None
         for vertex in candidate_vertices:
             if time.monotonic() >= deadline:

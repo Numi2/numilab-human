@@ -1805,6 +1805,48 @@ def test_registered_rest_f32_neighbor_adjustment_repairs_target_sliver():
     assert repaired["minimum_corrected_target_orientation_cosine"] > 0.0
 
 
+def test_registered_rest_neighbor_repair_only_moves_vertices_with_complete_checked_stars():
+    pose = np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")
+    row = {
+        "stable_id": 134, "vertex_count": 4,
+        "bindings": [{
+            "core": 10, "translation": np.zeros(3, dtype="<f4"),
+            "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"),
+            "scale": np.float32(1),
+        }],
+        "binding_indices": np.zeros((4, 4), dtype="<u4"),
+        "weights": np.asarray([[1, 0, 0, 0]] * 4, dtype="<f4"),
+        # Face 1 shares vertices 0/1 with the thin bad face but is outside
+        # the changed vertex 2 star. A repair may not move 0 or 1 unless it
+        # also brings their complete incident stars into the target gate.
+        "faces": np.asarray([[0, 1, 2], [0, 1, 3]], dtype="<u4"),
+    }
+    target = np.asarray([
+        [0.1, 0.1, 0.0], [0.1003, 0.1, 0.0],
+        [0.10015, 0.10000003, 0.0], [0.1, 0.2, 0.0],
+    ], dtype="<f4")
+    source = target.copy()
+    source[2, 1] = np.nextafter(np.float32(0.1), np.float32(-np.inf))
+    source_after, actual_after, report = pac._repair_rest_orientation_f32_neighbors(
+        row, source, source, target, {10: pose}, np.asarray([2]),
+    )
+    assert report["initial_reversed_face_ids"] == [0]
+    assert report["remaining_reversed_face_ids"] == []
+    assert report["adjustments"]
+    assert {item["vertex"] for item in report["adjustments"]} == {2}
+    assert np.array_equal(source_after[[0, 1, 3]], source[[0, 1, 3]])
+    assert np.array_equal(actual_after[[0, 1, 3]], source[[0, 1, 3]])
+    all_face_normals = np.cross(
+        actual_after[row["faces"][:, 1]] - actual_after[row["faces"][:, 0]],
+        actual_after[row["faces"][:, 2]] - actual_after[row["faces"][:, 0]],
+    )
+    target_face_normals = np.cross(
+        target[row["faces"][:, 1]] - target[row["faces"][:, 0]],
+        target[row["faces"][:, 2]] - target[row["faces"][:, 0]],
+    )
+    assert np.all(np.einsum("ij,ij->i", all_face_normals, target_face_normals) > 0)
+
+
 def test_registered_rest_f32_neighbor_adjustment_does_not_waive_unreachable_sliver():
     pose = np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")
     row = {
