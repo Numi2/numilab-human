@@ -1410,6 +1410,647 @@ def rebind_registration_bindings(
 
 
 
+
+def _rotate_points_f32(quaternion, points):
+    """Vectorized spelling of native rotatePoint, with each lane rounded to FP32."""
+    import numpy as np
+    q = np.asarray(quaternion, dtype="<f4")
+    p = np.asarray(points, dtype="<f4")
+    require(q.shape == (4,) and p.ndim == 2 and p.shape[1] == 3,
+            "registered-rest rotation shape")
+    two = np.float32(2.0)
+    ax, ay, az, aw = q
+    tx = two * (ay * p[:, 2] - az * p[:, 1])
+    ty = two * (az * p[:, 0] - ax * p[:, 2])
+    tz = two * (ax * p[:, 1] - ay * p[:, 0])
+    cx = (aw * tx + ay * tz) - az * ty
+    cy = (aw * ty + az * tx) - ax * tz
+    cz = (aw * tz + ax * ty) - ay * tx
+    return np.asarray(p + np.stack((cx, cy, cz), axis=1), dtype="<f4")
+
+
+def _rotation_matrix_xyzw_f64(quaternion):
+    import numpy as np
+    x, y, z, w = (float(np.float32(value)) for value in quaternion)
+    return np.asarray([
+        [1.0 - 2.0 * (y*y + z*z), 2.0 * (x*y - z*w), 2.0 * (x*z + y*w)],
+        [2.0 * (x*y + z*w), 1.0 - 2.0 * (x*x + z*z), 2.0 * (y*z - x*w)],
+        [2.0 * (x*z - y*w), 2.0 * (y*z + x*w), 1.0 - 2.0 * (x*x + y*y)],
+    ], dtype=np.float64)
+
+
+def _nhtiss_row_arrays(data, row):
+    import numpy as np
+    fb, bc, fv, vc, fi, ic, sid, _layer = (int(value) for value in row)
+    vertex_offset = data["vertex_start"] + fv * 56
+    positions = np.ndarray((vc, 3), dtype="<f4", buffer=data["raw"],
+                           offset=vertex_offset, strides=(56, 4))
+    normals = np.ndarray((vc, 3), dtype="<f4", buffer=data["raw"],
+                         offset=vertex_offset + 12, strides=(56, 4))
+    binding_indices = np.ndarray((vc, 4), dtype="<u4", buffer=data["raw"],
+                                 offset=vertex_offset + 24, strides=(56, 4))
+    weights = np.ndarray((vc, 4), dtype="<f4", buffer=data["raw"],
+                         offset=vertex_offset + 40, strides=(56, 4))
+    binding_bytes = data["raw"][
+        data["binding_start"] + fb * 36:data["binding_start"] + (fb + bc) * 36]
+    bindings = []
+    for index in range(bc):
+        core, *values = struct.unpack_from("<I8f", binding_bytes, index * 36)
+        bindings.append({
+            "core": int(core),
+            "translation": np.asarray(values[:3], dtype="<f4"),
+            "quaternion": np.asarray(values[3:7], dtype="<f4"),
+            "scale": np.float32(values[7]),
+        })
+    local_faces = (data["indices"][fi:fi + ic].astype("<i8") - fv).reshape(-1, 3)
+    require(len(local_faces) > 0 and int(local_faces.min()) >= 0
+            and int(local_faces.max()) < vc,
+            f"registered-rest row {sid} face allocation")
+    require(np.isfinite(positions).all() and np.isfinite(normals).all()
+            and np.isfinite(weights).all() and np.all(weights >= 0),
+            f"registered-rest row {sid} has invalid vertex lanes")
+    return {
+        "stable_id": sid, "first_vertex": fv, "vertex_count": vc,
+        "first_binding": fb, "binding_count": bc,
+        "positions": positions, "normals": normals,
+        "binding_indices": binding_indices, "weights": weights,
+        "bindings": bindings, "faces": local_faces,
+        "vertex_offset": vertex_offset,
+    }
+
+
+def _rest_body_poses_f32(rigid_path):
+    import numpy as np
+
+    from .resting_scene import load_rigid
+    rigid = load_rigid(Path(rigid_path))
+    poses = {}
+    for core, pose in rigid["core_poses"].items():
+        value = np.asarray(pose, dtype="<f4")
+        require(value.shape == (7,) and np.isfinite(value).all(),
+                f"NHRIGID rest pose for Core {core} is invalid")
+        poses[int(core)] = value
+    return rigid, poses
+
+
+def _binding_world_positions(row_data, positions, poses):
+    import numpy as np
+    points = np.asarray(positions, dtype="<f4")
+    world = np.empty((len(points), len(row_data["bindings"]), 3), dtype="<f4")
+    for index, binding in enumerate(row_data["bindings"]):
+        core = binding["core"]
+        require(core in poses, f"registered-rest binding Core {core} is absent from NHRIGID")
+        pose = poses[core]
+        local = np.float32(
+            binding["translation"][None, :]
+            + np.float32(_rotate_points_f32(binding["quaternion"], points)
+                         * binding["scale"])
+        )
+        world[:, index, :] = np.float32(
+            pose[None, :3] + _rotate_points_f32(pose[3:7], local)
+        )
+    return world
+
+
+def _native_blended_rest_positions(row_data, positions, poses):
+    import numpy as np
+    points = np.asarray(positions, dtype="<f4")
+    world_by_binding = _binding_world_positions(row_data, points, poses)
+    result = np.zeros((len(points), 3), dtype="<f4")
+    binding_indices = row_data["binding_indices"]
+    weights = row_data["weights"]
+    for lane in range(4):
+        active = weights[:, lane] > 0
+        if not np.any(active):
+            continue
+        indices = binding_indices[active, lane].astype(np.int64)
+        require(int(indices.max()) < world_by_binding.shape[1],
+                f"registered-rest row {row_data['stable_id']} uses an absent child binding")
+        contribution = np.float32(
+            world_by_binding[np.flatnonzero(active), indices]
+            * weights[active, lane, None]
+        )
+        result[active] = np.float32(result[active] + contribution)
+    return result
+
+
+def _child_rest_affine(row_data, poses):
+    """Return the per-vertex affine map used by the sparse child rest join."""
+    import numpy as np
+    matrices = []
+    offsets = []
+    for binding in row_data["bindings"]:
+        core = binding["core"]
+        require(core in poses, f"registered-rest binding Core {core} is absent from NHRIGID")
+        pose = poses[core]
+        body_rotation = _rotation_matrix_xyzw_f64(pose[3:7])
+        local_rotation = _rotation_matrix_xyzw_f64(binding["quaternion"])
+        matrices.append(body_rotation @ local_rotation * float(binding["scale"]))
+        offsets.append(pose[:3].astype(np.float64)
+                       + body_rotation @ binding["translation"].astype(np.float64))
+    matrices = np.asarray(matrices, dtype=np.float64)
+    offsets = np.asarray(offsets, dtype=np.float64)
+    weights = row_data["weights"].astype(np.float64)
+    binding_indices = row_data["binding_indices"].astype(np.int64)
+    active = weights > 0
+    safe = np.where(active, binding_indices, 0)
+    require(int(safe.max()) < len(matrices),
+            f"registered-rest row {row_data['stable_id']} binding index is out of range")
+    selected_matrices = matrices[safe]
+    selected_offsets = offsets[safe]
+    affine = np.sum(weights[:, :, None, None] * selected_matrices, axis=1)
+    bias = np.sum(weights[:, :, None] * selected_offsets, axis=1)
+    return affine, bias
+
+
+def _solve_sparse_rest_positions(row_data, targets, initial_positions, poses,
+                                 vertex_indices=None):
+    """Invert a subset of the child affine; caller verifies native FP32 residuals."""
+    import numpy as np
+    affine, bias = _child_rest_affine(row_data, poses)
+    if vertex_indices is None:
+        vertex_indices = np.arange(row_data["vertex_count"], dtype=np.int64)
+    else:
+        vertex_indices = np.asarray(vertex_indices, dtype=np.int64)
+    targets = np.asarray(targets, dtype=np.float64)
+    initial = np.asarray(initial_positions, dtype="<f4")
+    require(targets.shape == initial.shape == (len(vertex_indices), 3)
+            and (vertex_indices >= 0).all()
+            and (vertex_indices < row_data["vertex_count"]).all(),
+            "registered-rest inverse point shape or indices")
+    affine = affine[vertex_indices]
+    residual = targets - bias[vertex_indices]
+    try:
+        singular = np.linalg.svd(affine, compute_uv=False)
+        require(np.isfinite(singular).all() and np.all(singular[:, 0] > 0)
+                and np.all(singular[:, -1] > 0),
+                f"registered-rest row {row_data['stable_id']} has a singular child affine")
+        condition = singular[:, 0] / singular[:, -1]
+        solved = np.linalg.solve(affine, residual[..., None])[..., 0]
+    except np.linalg.LinAlgError as error:
+        raise ValueError(
+            f"registered-rest row {row_data['stable_id']} child affine inversion failed"
+        ) from error
+    require(np.isfinite(solved).all() and np.isfinite(condition).all(),
+            f"registered-rest row {row_data['stable_id']} inverse is nonfinite")
+    return np.asarray(solved, dtype="<f4"), condition
+
+
+def _native_squared_rest_residual(targets, actual):
+    import numpy as np
+    delta = np.asarray(targets, dtype="<f4") - np.asarray(actual, dtype="<f4")
+    x2 = delta[:, 0] * delta[:, 0]
+    y2 = delta[:, 1] * delta[:, 1]
+    z2 = delta[:, 2] * delta[:, 2]
+    return np.asarray(np.asarray(x2 + y2, dtype="<f4") + z2, dtype="<f4")
+
+
+def _recompute_rest_conforming_normals(row_data, source_normals, world_positions,
+                                       changed_vertices, poses):
+    import numpy as np
+    faces = row_data["faces"].astype(np.int64)
+    points = np.asarray(world_positions, dtype=np.float64)
+    face_points = points[faces]
+    face_normals = np.cross(face_points[:, 1] - face_points[:, 0],
+                            face_points[:, 2] - face_points[:, 0])
+    require(np.isfinite(face_normals).all(),
+            f"registered-rest row {row_data['stable_id']} generated nonfinite world normals")
+    world_normals = np.zeros_like(points)
+    for corner in range(3):
+        np.add.at(world_normals, faces[:, corner], face_normals)
+    lengths = np.linalg.norm(world_normals, axis=1)
+    referenced = np.zeros(row_data["vertex_count"], dtype=bool)
+    referenced[faces.reshape(-1)] = True
+    require(np.all(lengths[referenced] > 0),
+            f"registered-rest row {row_data['stable_id']} has degenerate accumulated normals")
+    world_normals[referenced] /= lengths[referenced, None]
+
+    affected = np.zeros(row_data["vertex_count"], dtype=bool)
+    affected[np.asarray(changed_vertices, dtype=np.int64)] = True
+    touched_faces = np.any(affected[faces], axis=1)
+    if np.any(touched_faces):
+        affected[faces[touched_faces].reshape(-1)] = True
+
+    binding_rotations = []
+    for binding in row_data["bindings"]:
+        pose = poses[binding["core"]]
+        binding_rotations.append(
+            _rotation_matrix_xyzw_f64(pose[3:7])
+            @ _rotation_matrix_xyzw_f64(binding["quaternion"])
+        )
+    binding_rotations = np.asarray(binding_rotations, dtype=np.float64)
+    indices = row_data["binding_indices"].astype(np.int64)
+    weights = row_data["weights"].astype(np.float64)
+    safe = np.where(weights > 0, indices, 0)
+    blend = np.sum(weights[:, :, None, None] * binding_rotations[safe], axis=1)
+    use = np.flatnonzero(affected & referenced)
+    require(len(use) > 0, "registered-rest correction has no referenced normal vertices")
+    source = np.einsum("nij,nj->ni", blend[use].transpose(0, 2, 1),
+                       world_normals[use])
+    lengths = np.linalg.norm(source, axis=1)
+    require(np.isfinite(source).all() and np.all(lengths > 1e-12),
+            f"registered-rest row {row_data['stable_id']} blended normal inverse is singular")
+    source /= lengths[:, None]
+    result = np.asarray(source_normals, dtype="<f4").copy()
+    result[use] = np.asarray(source, dtype="<f4")
+    return result, affected
+
+
+def reemit_parent_rest_conformance(
+    child_payload: Path,
+    parent_bindings_path: Path,
+    rigid_path: Path,
+    output: Path,
+) -> dict:
+    """Conform child reference vertices to existing full-parent rest interpolation.
+
+    This source-emission operation preserves the existing child faces, sparse
+    binding maps, weights, and parent terms. It inverts the current sparse
+    child rest map only for vertices whose native-order FP32 residual exceeds
+    the unchanged 2 micrometre NHTISS loader gate. It does not establish
+    self-intersection, anatomy, pose, or native-cycle admission.
+    """
+    import numpy as np
+    child_payload = Path(child_payload).resolve()
+    parent_bindings_path = Path(parent_bindings_path).resolve()
+    rigid_path = Path(rigid_path).resolve()
+    output = Path(output).resolve()
+    child_manifest_path, manifest = _payload_manifest(child_payload)
+    child = _read_nhtiss4(child_payload)
+    parent_raw = parent_bindings_path.read_bytes()
+    parent_extension = json.loads(parent_raw)
+    require(parent_extension.get("child_payload_sha256") == child["sha256"],
+            "parent-rest extension does not bind the exact child payload")
+    surfaces = parent_extension.get("surfaces")
+    sources = parent_extension.get("source_payloads")
+    require(isinstance(surfaces, list) and isinstance(sources, list)
+            and len(surfaces) == 10 and len(sources) == 8,
+            "parent-rest extension does not contain the reviewed ten surfaces and eight carriers")
+    rigid, poses = _rest_body_poses_f32(rigid_path)
+    require(child["source_digest"].hex() == rigid["source_sha256"],
+            "child and NHRIGID source archives differ")
+
+    source_data = []
+    source_paths = []
+    for index, source in enumerate(sources):
+        require(isinstance(source, dict) and isinstance(source.get("path"), str)
+                and isinstance(source.get("sha256"), str),
+                f"parent-rest carrier {index} is malformed")
+        path = Path(source["path"])
+        if not path.is_absolute():
+            path = parent_bindings_path.parent / path
+        path = path.resolve()
+        require(path.is_file() and _surface_sha256(path) == source["sha256"],
+                f"parent-rest carrier {index} identity differs")
+        data = _read_nhtiss4(path)
+        require(data["source_digest"].hex() == rigid["source_sha256"],
+                f"parent-rest carrier {index} source archive differs from NHRIGID")
+        source_data.append(data)
+        source_paths.append(path)
+
+    child_rows = {int(row[6]): row for row in child["records"]}
+    surface_by_id = {}
+    for surface in surfaces:
+        require(isinstance(surface, dict) and type(surface.get("stable_id")) is int
+                and surface["stable_id"] not in surface_by_id,
+                "parent-rest child row identities are malformed or duplicated")
+        surface_by_id[int(surface["stable_id"])] = surface
+    require(set(surface_by_id).issubset(child_rows),
+            "parent-rest surface inventory references a missing child row")
+
+    parent_rows = []
+    for data in source_data:
+        parent_rows.append({int(row[6]): row for row in data["records"]})
+    parent_cache = {}
+
+    def source_row(source_index, stable_id):
+        key = (int(source_index), int(stable_id))
+        if key not in parent_cache:
+            require(0 <= key[0] < len(source_data),
+                    f"parent-rest source index {key[0]} is out of range")
+            row = parent_rows[key[0]].get(key[1])
+            require(row is not None,
+                    f"parent-rest carrier {key[0]} lacks row {key[1]}")
+            source_row_data = _nhtiss_row_arrays(source_data[key[0]], row)
+            world = _binding_world_positions(
+                source_row_data, source_row_data["positions"], poses,
+            )
+            parent_cache[key] = {
+                "row": source_row_data,
+                "world_by_binding": world,
+            }
+        return parent_cache[key]
+
+    inputs = {
+        str(child_payload): child["sha256"],
+        str(child_manifest_path): _surface_sha256(child_manifest_path),
+        str(parent_bindings_path): hashlib.sha256(parent_raw).hexdigest(),
+        str(rigid_path): rigid["sha256"],
+        str(Path(__file__).resolve()): _surface_sha256(Path(__file__).resolve()),
+    }
+    for path, source in zip(source_paths, sources, strict=True):
+        inputs[str(path)] = source["sha256"]
+    raw = bytearray(child["raw"])
+    threshold2 = np.float32(4e-12)
+    row_reports = []
+    targets_by_id = {}
+    modified_ids = []
+    for stable_id in sorted(surface_by_id):
+        row = child_rows[stable_id]
+        row_data = _nhtiss_row_arrays(child, row)
+        terms_per_vertex = surface_by_id[stable_id].get("vertices")
+        require(isinstance(terms_per_vertex, list)
+                and len(terms_per_vertex) == row_data["vertex_count"],
+                f"parent-rest terms do not cover child row {stable_id}")
+        max_terms = max((len(terms) for terms in terms_per_vertex), default=0)
+        require(max_terms > 0, f"parent-rest row {stable_id} has no terms")
+        n = row_data["vertex_count"]
+        term_source = np.full((n, max_terms), -1, dtype="<i4")
+        term_sid = np.full((n, max_terms), -1, dtype="<i4")
+        term_vertex = np.full((n, max_terms), -1, dtype="<i4")
+        term_coefficient = np.zeros((n, max_terms), dtype=np.float64)
+        for vertex_index, terms in enumerate(terms_per_vertex):
+            require(isinstance(terms, list) and len(terms) > 0,
+                    f"parent-rest child vertex {stable_id}:{vertex_index} has no terms")
+            coefficient_sum = 0.0
+            for ordinal, term in enumerate(terms):
+                require(isinstance(term, list) and len(term) == 4
+                        and all(type(value) is int for value in term[:3])
+                        and isinstance(term[3], (int, float)),
+                        f"parent-rest term {stable_id}:{vertex_index}:{ordinal} is malformed")
+                source_index, parent_sid, parent_vertex, coefficient = term
+                require(0 <= source_index < len(source_data)
+                        and parent_sid in parent_rows[source_index]
+                        and 0 <= parent_vertex < int(parent_rows[source_index][parent_sid][3])
+                        and np.isfinite(coefficient) and coefficient > 0,
+                        f"parent-rest term {stable_id}:{vertex_index}:{ordinal} is out of range")
+                term_source[vertex_index, ordinal] = source_index
+                term_sid[vertex_index, ordinal] = parent_sid
+                term_vertex[vertex_index, ordinal] = parent_vertex
+                term_coefficient[vertex_index, ordinal] = float(coefficient)
+                coefficient_sum += float(coefficient)
+            require(abs(coefficient_sum - 1.0) <= 1e-12,
+                    f"parent-rest terms for child vertex {stable_id}:{vertex_index} do not sum to one")
+
+        targets = np.zeros((n, 3), dtype="<f4")
+        for ordinal in range(max_terms):
+            valid_vertices = np.flatnonzero(term_source[:, ordinal] >= 0)
+            if len(valid_vertices) == 0:
+                continue
+            pairs = np.unique(np.column_stack((
+                term_source[valid_vertices, ordinal],
+                term_sid[valid_vertices, ordinal],
+            )), axis=0)
+            for source_index, parent_sid in pairs:
+                child_indices = valid_vertices[
+                    (term_source[valid_vertices, ordinal] == source_index)
+                    & (term_sid[valid_vertices, ordinal] == parent_sid)
+                ]
+                parent = source_row(int(source_index), int(parent_sid))
+                parent_data = parent["row"]
+                parent_vertices = term_vertex[child_indices, ordinal].astype(np.int64)
+                require(int(parent_vertices.max()) < parent_data["vertex_count"],
+                        f"parent-rest row {stable_id} references an absent source vertex")
+                lane_weights = parent_data["weights"][parent_vertices]
+                lane_bindings = parent_data["binding_indices"][parent_vertices].astype(np.int64)
+                require(np.all((lane_weights <= 0) | (lane_bindings < len(parent_data["bindings"]))),
+                        f"parent-rest row {stable_id} references an absent source binding")
+                coefficients = term_coefficient[child_indices, ordinal]
+                for lane in range(4):
+                    active = lane_weights[:, lane] > 0
+                    if not np.any(active):
+                        continue
+                    child_active = child_indices[active]
+                    source_active = parent_vertices[active]
+                    binding_active = lane_bindings[active, lane]
+                    term_weight = np.asarray(
+                        coefficients[active].astype(np.float64)
+                        * lane_weights[active, lane].astype(np.float64),
+                        dtype="<f4",
+                    )
+                    world = parent["world_by_binding"][source_active, binding_active]
+                    contribution = np.asarray(world * term_weight[:, None], dtype="<f4")
+                    targets[child_active] = np.asarray(
+                        targets[child_active] + contribution, dtype="<f4",
+                    )
+
+        original_positions = np.asarray(row_data["positions"], dtype="<f4").copy()
+        targets_by_id[stable_id] = targets.copy()
+        actual_before = _native_blended_rest_positions(
+            row_data, original_positions, poses,
+        )
+        squared_before = _native_squared_rest_residual(targets, actual_before)
+        failing = np.flatnonzero(squared_before > threshold2)
+        report_row = {
+            "stable_id": stable_id,
+            "vertex_count": n,
+            "term_count_max": max_terms,
+            "before_failing_vertex_count": len(failing),
+            "before_first_witness_vertex": int(failing[0]) if len(failing) else None,
+            "before_worst_vertex": int(np.argmax(squared_before)),
+            "before_max_residual_m": float(np.sqrt(float(squared_before.max(initial=np.float32(0))))),
+            "changed_vertex_count": 0,
+            "max_source_position_delta_m": 0.0,
+            "max_affine_condition_number": 0.0,
+            "after_failing_vertex_count": len(failing),
+        }
+        if len(failing):
+            candidate, condition = _solve_sparse_rest_positions(
+                row_data, targets[failing], original_positions[failing], poses,
+                vertex_indices=failing,
+            )
+            report_row["max_affine_condition_number"] = float(condition.max(initial=0.0))
+            proposed = original_positions.copy()
+            proposed[failing] = candidate
+            for _refinement in range(4):
+                actual = _native_blended_rest_positions(row_data, proposed, poses)
+                squared = _native_squared_rest_residual(targets, actual)
+                remaining = np.flatnonzero(squared > threshold2)
+                if len(remaining) == 0:
+                    break
+                affine, _bias = _child_rest_affine(row_data, poses)
+                correction_rhs = targets[remaining].astype(np.float64) - actual[remaining].astype(np.float64)
+                try:
+                    correction = np.linalg.solve(
+                        affine[remaining], correction_rhs[..., None],
+                    )[..., 0]
+                except np.linalg.LinAlgError as error:
+                    raise ValueError(
+                        f"registered-rest row {stable_id} refinement affine is singular"
+                    ) from error
+                proposed[remaining] = np.asarray(
+                    proposed[remaining].astype(np.float64) + correction, dtype="<f4",
+                )
+            actual_after = _native_blended_rest_positions(row_data, proposed, poses)
+            squared_after = _native_squared_rest_residual(targets, actual_after)
+            remaining = np.flatnonzero(squared_after > threshold2)
+            require(len(remaining) == 0,
+                    f"registered-rest row {stable_id} remains outside the 2 um gate at vertex {int(remaining[0]) if len(remaining) else -1}")
+            changed = np.flatnonzero(np.any(proposed != original_positions, axis=1))
+            require(len(changed) > 0,
+                    f"registered-rest row {stable_id} has no representable correction")
+            source_normals, affected = _recompute_rest_conforming_normals(
+                row_data, row_data["normals"], actual_after, changed, poses,
+            )
+            position_view = np.ndarray(
+                (n, 3), dtype="<f4", buffer=raw,
+                offset=row_data["vertex_offset"], strides=(56, 4),
+            )
+            normal_view = np.ndarray(
+                (n, 3), dtype="<f4", buffer=raw,
+                offset=row_data["vertex_offset"] + 12, strides=(56, 4),
+            )
+            position_view[changed] = proposed[changed]
+            affected_indices = np.flatnonzero(affected)
+            normal_view[affected_indices] = source_normals[affected_indices]
+            modified_ids.append(stable_id)
+            report_row.update({
+                "changed_vertex_count": len(changed),
+                "max_source_position_delta_m": float(np.linalg.norm(
+                    proposed[changed].astype(np.float64)
+                    - original_positions[changed].astype(np.float64), axis=1,
+                ).max(initial=0.0)),
+                "recomputed_normal_count": len(affected_indices),
+                "after_failing_vertex_count": 0,
+                "after_first_witness_vertex": None,
+                "after_worst_vertex": int(np.argmax(squared_after)),
+                "after_max_residual_m": float(np.sqrt(float(squared_after.max(initial=np.float32(0))))),
+            })
+        else:
+            report_row["after_first_witness_vertex"] = None
+            report_row["after_worst_vertex"] = report_row["before_worst_vertex"]
+            report_row["after_max_residual_m"] = report_row["before_max_residual_m"]
+        row_reports.append(report_row)
+
+    require(inputs == {path: _surface_sha256(Path(path)) for path in inputs},
+            "registered-rest inputs changed during reconstruction")
+    payload_out = output / child_payload.name
+    manifest_out = output / child_manifest_path.name
+    extension_out = output / parent_bindings_path.name
+    report_out = output / "registered-rest-conformance.json"
+    registration_meta = manifest.get("source", {}).get("registration", {})
+    registration_source = None
+    if isinstance(registration_meta, dict) and isinstance(registration_meta.get("file"), str):
+        registration_source = Path(registration_meta["file"])
+        if not registration_source.is_absolute():
+            registration_source = child_manifest_path.parent / registration_source
+        registration_source = registration_source.resolve()
+        require(registration_source.is_file(),
+                "registered-rest owner registration file is missing")
+    names = [payload_out.name, manifest_out.name, extension_out.name, report_out.name]
+    if registration_source is not None:
+        names.append(registration_source.name)
+    require(len(set(names)) == len(names),
+            "registered-rest output filenames collide")
+    output.mkdir(parents=True, exist_ok=False)
+    payload_out.write_bytes(raw)
+    output_manifest = json.loads(json.dumps(manifest))
+    operation = {
+        "schema": "numi.human.passive-parent-rest-conformance.v1",
+        "child_input_path": str(child_payload),
+        "child_input_sha256": child["sha256"],
+        "parent_bindings_input_path": str(parent_bindings_path),
+        "parent_bindings_input_sha256": hashlib.sha256(parent_raw).hexdigest(),
+        "rigid_rest_input_path": str(rigid_path),
+        "rigid_rest_input_sha256": rigid["sha256"],
+        "rest_gate_maximum_m": 2e-6,
+        "rest_gate_squared_limit_f32": float(threshold2),
+        "changed_stable_ids": modified_ids,
+        "row_checks": row_reports,
+        "all_ten_surface_rows_rechecked": len(row_reports) == 10,
+        "faces_sparse_bindings_and_weights_preserved": True,
+        "normal_policy": "affected child-row neighborhoods regenerated from actual sparse child rest geometry and inverse blended normal map",
+        "anatomical_self_pose_and_native_cycle_admission": False,
+    }
+    output_manifest["source"].setdefault("parent_rest_conformance", []).append(operation)
+    output_manifest["payload"].update(
+        file=payload_out.name, sha256=_surface_sha256(payload_out),
+        bytes=payload_out.stat().st_size,
+    )
+    manifest_out.write_text(json.dumps(output_manifest, indent=2, sort_keys=True) + "\n")
+    extension_output = json.loads(parent_raw)
+    extension_output["child_payload_sha256"] = _surface_sha256(payload_out)
+    extension_output.setdefault("provenance", {})["registered_rest_conformance"] = {
+        "schema": operation["schema"],
+        "source_child_payload_sha256": child["sha256"],
+        "output_child_payload_sha256": _surface_sha256(payload_out),
+        "parent_bindings_input_sha256": operation["parent_bindings_input_sha256"],
+        "rigid_rest_input_sha256": rigid["sha256"],
+        "changed_stable_ids": modified_ids,
+        "source_faces_and_parent_term_order_preserved": True,
+    }
+    extension_out.write_text(json.dumps(extension_output, indent=2, sort_keys=True) + "\n")
+    copied_registration = None
+    if registration_source is not None:
+        copied_registration = output / registration_source.name
+        shutil.copyfile(registration_source, copied_registration)
+        require(_surface_sha256(copied_registration) == _surface_sha256(registration_source),
+                "registered-rest copied registration source changed")
+    operation["output_payload_path"] = str(payload_out)
+    operation["output_payload_sha256"] = _surface_sha256(payload_out)
+    operation["output_manifest_path"] = str(manifest_out)
+    operation["output_manifest_sha256"] = _surface_sha256(manifest_out)
+    operation["output_parent_bindings_path"] = str(extension_out)
+    operation["output_parent_bindings_sha256"] = _surface_sha256(extension_out)
+    operation["copied_registration_path"] = str(copied_registration) if copied_registration else None
+    operation["copied_registration_sha256"] = (
+        _surface_sha256(copied_registration) if copied_registration else None
+    )
+    report_out.write_text(json.dumps(operation, indent=2, sort_keys=True) + "\n")
+    json.loads(manifest_out.read_text())
+    json.loads(extension_out.read_text())
+    json.loads(report_out.read_text())
+    final_data = _read_nhtiss4(payload_out)
+    require(final_data["sha256"] == _surface_sha256(payload_out),
+            "registered-rest output failed NHTISS parse-back")
+    require(final_data["raw"][:child["vertex_start"]]
+            == child["raw"][:child["vertex_start"]]
+            and final_data["raw"][child["index_start"]:]
+            == child["raw"][child["index_start"]:],
+            "registered-rest serialization changed header, row maps, bindings, or faces")
+    final_rows = {int(row[6]): row for row in final_data["records"]}
+    final_report_by_id = {int(row["stable_id"]): row for row in row_reports}
+    for stable_id, target in targets_by_id.items():
+        old_row = _nhtiss_row_arrays(child, child_rows[stable_id])
+        final_row = _nhtiss_row_arrays(final_data, final_rows[stable_id])
+        require(old_row["binding_indices"].tobytes() == final_row["binding_indices"].tobytes()
+                and old_row["weights"].tobytes() == final_row["weights"].tobytes()
+                and np.array_equal(old_row["faces"], final_row["faces"]),
+                f"registered-rest serialized row {stable_id} changed maps, weights, or faces")
+        final_world = _native_blended_rest_positions(
+            final_row, final_row["positions"], poses,
+        )
+        final_squared = _native_squared_rest_residual(target, final_world)
+        remaining = np.flatnonzero(final_squared > threshold2)
+        require(len(remaining) == 0,
+                f"registered-rest serialized row {stable_id} fails at vertex {int(remaining[0]) if len(remaining) else -1}")
+        final_report_by_id[stable_id]["serialized_after_failing_vertex_count"] = len(remaining)
+        final_report_by_id[stable_id]["serialized_after_first_witness_vertex"] = None
+        final_report_by_id[stable_id]["serialized_after_max_residual_m"] = float(
+            np.sqrt(float(final_squared.max(initial=np.float32(0))))
+        )
+    final_extension = json.loads(extension_out.read_text())
+    require(final_extension.get("child_payload_sha256") == _surface_sha256(payload_out)
+            and final_extension.get("surfaces") == parent_extension.get("surfaces")
+            and final_extension.get("source_payloads") == parent_extension.get("source_payloads"),
+            "registered-rest output extension changed parent terms or misses child payload")
+    require(inputs == {path: _surface_sha256(Path(path)) for path in inputs},
+            "registered-rest input changed before report completion")
+    return {
+        "schema": "numi.human.passive-parent-rest-conformance-report.v1",
+        "status": "registered_rest_geometry_emitted_anatomical_and_native_admission_pending",
+        "operation": operation,
+        "output_payload_path": str(payload_out),
+        "output_payload_sha256": _surface_sha256(payload_out),
+        "output_manifest_path": str(manifest_out),
+        "output_manifest_sha256": _surface_sha256(manifest_out),
+        "output_parent_bindings_path": str(extension_out),
+        "output_parent_bindings_sha256": _surface_sha256(extension_out),
+        "copied_registration_path": str(copied_registration) if copied_registration else None,
+        "anatomical_and_native_admission": False,
+    }
+
+
 def _row_local_equal(a: dict, b: dict) -> bool:
     """Compare row-local identity while allowing parent arrays to be repacked."""
     keys = ("binding_count", "vertex_count", "index_count", "stable_id", "layer",

@@ -1675,3 +1675,80 @@ def test_rebind_rejects_invalid_terminal_binding_recovery_proof(inputs, tmp_path
         pac.rebind_registration_bindings(
             source, base, current_registration, output, (7,), source_evolution_proof=proof)
     assert not output.exists()
+
+def test_registered_rest_vector_rotation_matches_native_float32_order():
+    points = np.asarray([
+        [0.2, -0.4, 0.7], [-1.1, 0.03, 0.8], [0.0, 0.0, 0.0],
+        [1e-8, -3e-8, 7e-8],
+    ], dtype="<f4")
+    quaternion = np.asarray([0.17, -0.21, 0.31, 0.91], dtype="<f4")
+    actual = pac._rotate_points_f32(quaternion, points)
+    x, y, z, w = quaternion
+    expected = []
+    for point in points:
+        px, py, pz = point
+        tx = np.float32(np.float32(2.0) * np.float32(np.float32(y * pz) - np.float32(z * py)))
+        ty = np.float32(np.float32(2.0) * np.float32(np.float32(z * px) - np.float32(x * pz)))
+        tz = np.float32(np.float32(2.0) * np.float32(np.float32(x * py) - np.float32(y * px)))
+        cx = np.float32(np.float32(np.float32(w * tx) + np.float32(y * tz))
+                         - np.float32(z * ty))
+        cy = np.float32(np.float32(np.float32(w * ty) + np.float32(z * tx))
+                         - np.float32(x * tz))
+        cz = np.float32(np.float32(np.float32(w * tz) + np.float32(x * ty))
+                         - np.float32(y * tx))
+        expected.append([
+            np.float32(px + cx), np.float32(py + cy), np.float32(pz + cz),
+        ])
+    assert np.array_equal(actual, np.asarray(expected, dtype="<f4"))
+
+
+def test_registered_rest_sparse_inverse_hits_two_micrometre_float32_gate():
+    pose_a = np.asarray([0.12, -0.07, 0.03, 0.0, 0.0, 0.0, 1.0], dtype="<f4")
+    pose_b = np.asarray([-0.04, 0.05, 0.01, 0.0, 0.0,
+                         np.float32(0.38268343), np.float32(0.9238795)], dtype="<f4")
+    poses = {10: pose_a, 11: pose_b}
+    bindings = [
+        {"core": 10, "translation": np.asarray([0.01, 0.0, -0.02], dtype="<f4"),
+         "quaternion": np.asarray([0.0, 0.0, 0.0, 1.0], dtype="<f4"),
+         "scale": np.float32(1.0)},
+        {"core": 11, "translation": np.asarray([-0.03, 0.02, 0.01], dtype="<f4"),
+         "quaternion": np.asarray([0.0, 0.0, 0.0, 1.0], dtype="<f4"),
+         "scale": np.float32(0.97)},
+    ]
+    row = {
+        "stable_id": 132, "vertex_count": 1, "bindings": bindings,
+        "binding_indices": np.asarray([[0, 1, 0, 0]], dtype="<u4"),
+        "weights": np.asarray([[0.37, 0.63, 0.0, 0.0]], dtype="<f4"),
+    }
+    desired = np.asarray([[0.014, -0.008, 0.027]], dtype="<f4")
+    target = pac._native_blended_rest_positions(row, desired, poses)
+    starting = np.asarray([[-0.02, 0.04, -0.01]], dtype="<f4")
+    corrected, condition = pac._solve_sparse_rest_positions(
+        row, target, starting, poses, vertex_indices=np.asarray([0]),
+    )
+    replay = pac._native_blended_rest_positions(row, corrected, poses)
+    residual2 = pac._native_squared_rest_residual(target, replay)
+    assert float(residual2[0]) <= float(np.float32(4e-12))
+    assert np.max(np.abs(corrected - desired)) < 2e-6
+    assert np.isfinite(condition).all()
+
+
+def test_registered_rest_sparse_inverse_rejects_singular_child_map():
+    poses = {10: np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")}
+    bindings = [
+        {"core": 10, "translation": np.zeros(3, dtype="<f4"),
+         "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"), "scale": np.float32(1)},
+        {"core": 10, "translation": np.zeros(3, dtype="<f4"),
+         "quaternion": np.asarray([0, 0, 1, 0], dtype="<f4"), "scale": np.float32(1)},
+    ]
+    row = {
+        "stable_id": 134, "vertex_count": 1, "bindings": bindings,
+        "binding_indices": np.asarray([[0, 1, 0, 0]], dtype="<u4"),
+        "weights": np.asarray([[0.5, 0.5, 0.0, 0.0]], dtype="<f4"),
+    }
+    with pytest.raises(ValueError, match="singular child affine"):
+        pac._solve_sparse_rest_positions(
+            row, np.zeros((1, 3)), np.zeros((1, 3), dtype="<f4"), poses,
+            vertex_indices=np.asarray([0]),
+        )
+
