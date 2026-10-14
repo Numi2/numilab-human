@@ -41,7 +41,8 @@ def _compact_topology(topology):
     result = {k: topology[k] for k in keys}
     for k in ("nonmanifold_edges", "orientation_defect_edges",
               "degenerate_face_ids", "repeated_vertex_face_ids",
-              "duplicate_face_ids", "vertex_manifold_defect_ids"):
+              "duplicate_face_ids", "vertex_manifold_defect_ids",
+              "unused_vertex_ids", "boundary_branch_vertex_ids"):
         if k in topology:
             result[k + "_count"] = len(topology[k])
     return result
@@ -72,7 +73,13 @@ class PreparedSurface:
 
     @property
     def closed(self):
-        return self.quotient_topology["closed_oriented_manifold_candidate"]
+        # Unreferenced source slots carry ancestry, not a boundary of the
+        # rendered solid. Preserve their bytes and diagnose them separately.
+        topology = self.quotient_topology
+        return not any(topology[key] for key in (
+            "boundary_edges", "nonmanifold_edges", "orientation_defect_edges",
+            "degenerate_face_ids", "repeated_vertex_face_ids", "duplicate_face_ids",
+            "vertex_manifold_defect_ids", "boundary_branch_vertex_ids"))
 
     def meter_index(self):
         if not self.closed or self.self_audit()["count"]:
@@ -90,6 +97,8 @@ class PreparedSurface:
             "exact_duplicate_vertex_count": len(self.positions) - len(self.quotient_positions),
             "raw_topology": _compact_topology(self.raw_topology),
             "exact_coordinate_quotient_topology": _compact_topology(self.quotient_topology),
+            "referenced_surface_closed": self.closed,
+            "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary.",
             "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained.",
         }
 
@@ -170,8 +179,24 @@ def _contained_components(source, target):
     return {"status": "checked_exact_rational_metres", "inside_component_witnesses": witnesses}
 
 
-def audit_surface_pair(first, second, *, intended_face_pairs=()):
+def _intended_enclosures(value):
+    """Ordered enclosed-surface/container identities, never a boundary exemption."""
+    pairs = set()
+    for pair in value:
+        if not isinstance(pair, (tuple, list)) or len(pair) != 2:
+            raise ValueError("intended enclosure requires enclosed and container identities")
+        inside, container = (typed_key(key) for key in pair)
+        if inside == container:
+            raise ValueError("surface cannot be its own intended enclosure")
+        pairs.add((inside, container))
+    return pairs
+
+
+def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=()):
     allowed = {tuple(pair) for pair in intended_face_pairs}
+    enclosures = _intended_enclosures(intended_enclosures)
+    if any(set(pair) != {first.key, second.key} for pair in enclosures):
+        raise ValueError("intended enclosure must identify this surface pair")
     if not _overlap(first, second):
         return {"identities": [list(first.key), list(second.key)], "passed": True,
                 "aabb_disjoint": True, "triangle_pair_count": 0}
@@ -183,7 +208,12 @@ def audit_surface_pair(first, second, *, intended_face_pairs=()):
     containment = []
     if not pairs:
         containment = [_contained_components(first, second), _contained_components(second, first)]
-    inside = any(row["inside_component_witnesses"] for row in containment)
+    for row, (source, target) in zip(containment, ((first, second), (second, first))):
+        row["source_identity"] = list(source.key)
+        row["target_identity"] = list(target.key)
+        row["declared_intended_enclosure"] = (source.key, target.key) in enclosures
+    inside = any(row["inside_component_witnesses"] and
+                 not row["declared_intended_enclosure"] for row in containment)
     unresolved = any(row["status"] in ("not_checked_nonembedded_target",
                                      "unresolved_exact_point_location") for row in containment)
     return {"identities": [list(first.key), list(second.key)],
@@ -191,7 +221,8 @@ def audit_surface_pair(first, second, *, intended_face_pairs=()):
             "triangle_pair_count": len(pairs), "unexpected_triangle_pairs": unexpected,
             "declared_interface_triangle_pairs": [p for p in pairs if tuple(p) in allowed],
             "containment": containment,
-            "boundary": "Declared face interfaces do not prove vessel lumen continuity."}
+            "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)],
+            "boundary": "Declared enclosures permit interior placement only; all boundary crossings remain checked. Declared face interfaces do not prove vessel lumen continuity."}
 
 
 def validate_capture_receipt(receipt, pack_sha256):
@@ -278,10 +309,14 @@ def load_capture(pack, receipt_path):
                       **endpoint}
 
 
-def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=()):
+def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=(),
+                           intended_enclosures=()):
     changed = [typed_key(key) for key in changed]
     targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
     interfaces = interfaces or {}
+    enclosures = _intended_enclosures(intended_enclosures)
+    if any(a not in surfaces or b not in surfaces for a, b in enclosures):
+        raise ValueError("intended enclosure identity absent from capture")
     required_closed = {typed_key(key) for key in required_closed} | {key for key in changed if key[0] == 51011}
     cache, rows = {}, []
     def prepared(key):
@@ -315,7 +350,9 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                 continue
             other = prepared(target)
             pair = audit_surface_pair(surface, other,
-                                      intended_face_pairs=interfaces.get((key, target), ()))
+                                      intended_face_pairs=interfaces.get((key, target), ()),
+                                      intended_enclosures=[pair for pair in enclosures
+                                                           if set(pair) == {key, target}])
             rows.append({"stage": "nearby_pair", **pair})
             if not pair["passed"]:
                 return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
@@ -350,14 +387,23 @@ def main(argv=None):
     parser.add_argument("--capture-receipt", type=Path, required=True)
     parser.add_argument("--changed", action="append", required=True, help="semantic:stable_id")
     parser.add_argument("--target", action="append", help="semantic:stable_id; default all anatomy")
+    parser.add_argument("--intended-enclosure", action="append", default=[],
+                        help="enclosed SEM:ID,container SEM:ID; permits containment, never crossings")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     key = lambda value: typed_key(tuple(int(v) for v in value.split(":")))
     identity = {"pack": str(args.pack), "capture_receipt": str(args.capture_receipt)}
     try:
         surfaces, identity = load_capture(args.pack, args.capture_receipt)
+        enclosures = []
+        for value in args.intended_enclosure:
+            pair = value.split(",")
+            if len(pair) != 2:
+                raise ValueError("intended enclosure requires two comma-separated typed identities")
+            enclosures.append(tuple(key(v) for v in pair))
         report = audit_changed_surfaces(surfaces, [key(v) for v in args.changed],
-                                       targets=None if args.target is None else [key(v) for v in args.target])
+                                       targets=None if args.target is None else [key(v) for v in args.target],
+                                       intended_enclosures=enclosures)
     except (ValueError, KeyError, OSError, HumanImportError) as error:
         report = {"passed": False, "failed_stage": "preparation", "error": str(error)}
     report.update(identity)

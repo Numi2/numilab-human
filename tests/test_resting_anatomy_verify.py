@@ -43,6 +43,25 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         np.testing.assert_array_equal(surface.positions, p)
         np.testing.assert_array_equal(surface.faces, f)
 
+    def test_unused_ancestry_slot_is_not_a_solid_boundary(self):
+        p = np.concatenate([tetra(), np.array([[8, 9, 10]], dtype=np.float32)])
+        surface = prepare_surface((51006, 132), p, FACES)
+        self.assertFalse(surface.quotient_topology["closed_oriented_manifold_candidate"])
+        self.assertEqual(surface.quotient_topology["unused_vertex_ids"], [4])
+        self.assertTrue(surface.closed)
+        self.assertEqual(surface.self_audit()["count"], 0)
+        self.assertEqual(surface.diagnostics()["exact_coordinate_quotient_topology"]["unused_vertex_ids_count"], 1)
+        np.testing.assert_array_equal(surface.positions, p)
+        inner = prepare_surface((51011, 525), tetra(.1, .1), FACES)
+        result = audit_surface_pair(inner, surface)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["containment"][0]["status"], "checked_exact_rational_metres")
+
+    def test_unused_slots_do_not_hide_an_open_boundary(self):
+        p = np.concatenate([tetra(), np.array([[8, 9, 10]], dtype=np.float32)])
+        surface = prepare_surface((51006, 132), p, FACES[:3])
+        self.assertFalse(surface.closed)
+
     def test_seam_identification_does_not_hide_real_crossing(self):
         p = np.concatenate([tetra(), tetra(offset=.2)])
         f = np.concatenate([FACES, FACES + 4])
@@ -57,6 +76,38 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertEqual(result["containment"][0]["status"], "checked_exact_rational_metres")
         self.assertEqual(len(result["containment"][0]["inside_component_witnesses"]), 1)
+
+    def test_intended_skin_enclosure_preserves_inside_witness(self):
+        outer = prepare_surface((51007, 1), tetra(), FACES)
+        inner = prepare_surface((51011, 525), tetra(.1, .1), FACES)
+        role = [(inner.key, outer.key)]
+        result = audit_surface_pair(inner, outer, intended_enclosures=role)
+        self.assertTrue(result["passed"])
+        self.assertTrue(result["containment"][0]["declared_intended_enclosure"])
+        self.assertEqual(len(result["containment"][0]["inside_component_witnesses"]), 1)
+        self.assertTrue(audit_surface_pair(outer, inner, intended_enclosures=role)["passed"])
+
+    def test_intended_enclosure_direction_is_not_symmetric(self):
+        outer = prepare_surface((51007, 1), tetra(), FACES)
+        inner = prepare_surface((51011, 525), tetra(.1, .1), FACES)
+        self.assertFalse(audit_surface_pair(
+            inner, outer, intended_enclosures=[(outer.key, inner.key)])["passed"])
+
+    def test_intended_enclosure_never_exempts_boundary_crossings(self):
+        outer = prepare_surface((51007, 1), tetra(), FACES)
+        crossing = prepare_surface((51011, 525), tetra(.5, .2), FACES)
+        result = audit_surface_pair(
+            crossing, outer, intended_enclosures=[(crossing.key, outer.key)])
+        self.assertGreater(result["triangle_pair_count"], 0)
+        self.assertFalse(result["passed"])
+
+    def test_invalid_enclosure_identity_rejects(self):
+        outer = prepare_surface((51007, 1), tetra(), FACES)
+        inner = prepare_surface((51011, 525), tetra(.1, .1), FACES)
+        with self.assertRaises(ValueError):
+            audit_surface_pair(inner, outer, intended_enclosures=[(inner.key, (51007, 2))])
+        with self.assertRaises(ValueError):
+            audit_surface_pair(inner, outer, intended_enclosures=[(inner.key, inner.key)])
 
     def test_open_surface_is_not_a_closed_solid(self):
         outer = prepare_surface((51007, 1), tetra(), FACES[:3])
