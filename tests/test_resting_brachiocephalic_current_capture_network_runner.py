@@ -386,19 +386,28 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
     monkeypatch.setattr(runner, "_baseline_collar_addendum", lambda *_args: proof)
     stages = []
 
-    def execute(_runtime, *, progress_callback=None, matched_collar_addendum=None):
+    def execute(_runtime, *, progress_callback=None, matched_collar_addendum=None,
+                run_all_targets=True):
         assert matched_collar_addendum == proof
+        assert run_all_targets is False
         stages.append("continuity")
         progress_callback("STARTING_FAIL_FIRST_15_LINK_CONTINUITY")
         return {
-            "status": "STOPPED_AT_FIRST_FAILED_NETWORK_LINK",
-            "network_source_continuity": {"passed": False},
+            "status": (
+                "NETWORK_CONTINUITY_PASSED_ALL_TARGET_PENDING_VERIFIED_JUNCTION_HANDOFF"),
+            "network_source_continuity": {"passed": True, "evaluated_link_count": 15},
+            "all_target_collision_gate": {
+                "status": "NOT_RUN_VERIFIED_JUNCTION_HANDOFF_NOT_FROZEN",
+                "passed": False,
+            },
         }
 
     monkeypatch.setattr(runner, "execute_ordered_network_gates", execute)
     result = runner.run(bundle, output)
     assert stages == ["continuity"]
-    assert result["status"] == "STOPPED_AT_FIRST_FAILED_NETWORK_LINK"
+    assert result["status"] == (
+        "NETWORK_CONTINUITY_PASSED_ALL_TARGET_PENDING_VERIFIED_JUNCTION_HANDOFF")
+    assert result["all_target_collision_gate"]["passed"] is False
     assert result["geometry_predicates_run"] is True
     assert result["source_preflight_sha256"] == runner._sha_file(
         output / "source-and-capture-preflight.json")

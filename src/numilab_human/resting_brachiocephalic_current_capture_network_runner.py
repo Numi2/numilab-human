@@ -350,8 +350,9 @@ def prepare_baseline_collar_addendum(capture_inputs_json: Path,
 
 def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
                                  progress_callback=None,
-                                 matched_collar_addendum=None) -> dict:
-    """Run the 15-link continuity owner first, then all-target collision on success."""
+                                 matched_collar_addendum=None,
+                                 run_all_targets=True) -> dict:
+    """Run fail-first 15-link continuity; all-target is an explicit later stage."""
     candidates, _baselines, link_inputs, inventory = _bind_runtime_inputs(runtime)
     if matched_collar_addendum is not None:
         _require(matched_collar_addendum.get("passed") is True
@@ -391,6 +392,17 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
     if continuity.get("passed") is not True:
         report["status"] = "STOPPED_AT_FIRST_FAILED_NETWORK_LINK"
         return report
+    if not run_all_targets:
+        report["status"] = (
+            "NETWORK_CONTINUITY_PASSED_ALL_TARGET_PENDING_VERIFIED_JUNCTION_HANDOFF")
+        report["all_target_collision_gate"] = {
+            "status": "NOT_RUN_VERIFIED_JUNCTION_HANDOFF_NOT_FROZEN",
+            "passed": False,
+            "reason": (
+                "declared partial-overlap vessel junction proofs are not yet bound "
+                "into the all-target screen"),
+        }
+        return report
     collision_surfaces = dict(runtime["context"]["surfaces"])
     collision_surfaces.update(candidates)
     if progress_callback is not None:
@@ -417,7 +429,8 @@ def _execution_manifest(bundle_path: Path, bundle_sha256: str) -> dict:
         "stage_order": [
             "strict ABI5/source017 ancestry binding and independent source baseline",
             "fail-first 15-link closed-solid and own-station calibre continuity",
-            "only after all 15 links pass: current shared-verifier all-target collision gate",
+            ("15-link fail-first continuity only; all-target deferred until a verified "
+             "junction handoff is frozen"),
         ],
         "geometry_predicates_run_during_preflight": False,
         "historical_source007_P6_used_for_current_geometry": False,
@@ -595,7 +608,8 @@ def run(capture_inputs_json: Path, output_dir: Path) -> dict:
                  "frozen baseline collar addendum does not replay against current source inputs")
         result = execute_ordered_network_gates(
             runtime, progress_callback=mark_geometry_stage,
-            matched_collar_addendum=replayed_addendum)
+            matched_collar_addendum=replayed_addendum,
+            run_all_targets=False)
         result.update({
             "recorded_finish_utc": datetime.now(UTC).isoformat(),
             "capture_input_bundle_path": str(bundle_path),
