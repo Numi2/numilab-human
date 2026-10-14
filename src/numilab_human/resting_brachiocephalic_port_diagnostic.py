@@ -23,16 +23,34 @@ RUN_RECEIPT = A / "brachiocephalic-source-007-six-port-geometry-001/source-007-e
 CANDIDATE_DIR = A / "brachiocephalic-source-candidate-007-001"
 PREPARATION_DIR = A / "brachiocephalic-common-field-preparation-007-001"
 CAPTURE_MANIFEST = A / "accepted-capture-inputs-1398-001.json"
-DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-001"
-PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-preflight-001.json"
+DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-005"
+PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-preflight-005.json"
 HP98_ROOT = Path("/Users/n/numi-human-resting-anatomy-gates-publish-1398")
 HP98_VERIFIER = HP98_ROOT / "src/numilab_human/resting_anatomy_verify.py"
 HP98_SHA256 = "87d21c53c4ac003fa8df7410cc681d91a90465af808217d8af4561155d5094bb"
 RUN_REPORT_SHA256 = "9d0fb2fc1b0b68f111387f867aec35168587ca0bd1bada50519b4ccc9da1a612"
 RUN_RECEIPT_SHA256 = "4ab6f9c475a90ac76df18989396098736b005b3a9a657aaf1b95a9e69641371f"
 EXPECTED_COMMIT = "e921f79b9b078911c30f552890d22274fb8cf56e"
+RUNTIME_CODE_EXPECTED_SHA256 = {
+    "resting_brachiocephalic_geometry_gate.py":
+        "103bc36649ddb7fb921e2c77e72d24b6ae118f223b75025d2e1f7e1f094c3e0b",
+    "resting_brachiocephalic_source007.py":
+        "975b2124ccfc96131197986893ea79c18f2fb7943de27227ff103883c245c8d3",
+    "resting_brachiocephalic_pose_predictor.py":
+        "3d1d6f4d69cd2d92dee0aaeaf39b6060979984508cb4c19bbfd2768b7621d748",
+    "resting_pleura_proxy.py":
+        "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683",
+}
 BRIDGE_KEY = (51011, 525)
 TARGET_KEY = (51011, 469)
+REPLAY_SCOPE = {
+    "bridge": list(BRIDGE_KEY),
+    "target": list(TARGET_KEY),
+    "port_count": 1,
+    "source_candidate_compiler_invoked": False,
+    "all_target_checks_invoked": False,
+    "stop_after_single_port_result": True,
+}
 SECTION_STAGES = (
     "bridge_candidate", "bridge_baseline",
     "target_candidate", "target_baseline",
@@ -144,6 +162,19 @@ def build_preflight() -> dict:
             and sha_file(CAPTURE_MANIFEST) == capture_manifest_sha,
             "accepted-capture manifest differs from source-007")
     code_path = Path(__file__).resolve()
+    runtime_code = {}
+    for name, expected in RUNTIME_CODE_EXPECTED_SHA256.items():
+        path = code_path.with_name(name)
+        require(path.is_file() and sha_file(path) == expected,
+                "runtime owner code changed: " + str(path))
+        runtime_code[str(path)] = sha_file(path)
+    manifold_pins = run.get("code_and_dependency_pins", {}).get(
+        "manifold3d_retained_wheel", {})
+    require(bool(manifold_pins), "source-007 did not pin the retained Manifold wheel")
+    for raw_path, expected in manifold_pins.items():
+        path = Path(raw_path)
+        require(path.is_file() and sha_file(path) == expected,
+                "retained Manifold wheel file changed: " + raw_path)
     repo = Path(__file__).resolve().parents[2]
     commit = subprocess.run(
         ["git", "-C", str(repo), "rev-parse", "HEAD"],
@@ -151,13 +182,17 @@ def build_preflight() -> dict:
     git_status = subprocess.run(
         ["git", "-C", str(repo), "status", "--porcelain"],
         check=True, capture_output=True, text=True).stdout.splitlines()
+    require(not git_status, "replay preflight requires a clean pinned source checkout")
     return {
-        "schema": "numi.human.brachiocephalic-port-525-469-diagnostic-preflight.v1",
+        "schema": "numi.human.brachiocephalic-port-525-469-diagnostic-preflight.v2",
         "status": "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED",
         "diagnostic_code_path": str(code_path),
         "diagnostic_code_sha256": sha_file(code_path),
         "diagnostic_repository": {"head": commit, "dirty": bool(git_status),
                                   "status_lines": git_status},
+        "replay_scope": REPLAY_SCOPE,
+        "runtime_owner_code_sha256": runtime_code,
+        "source_compiler_invoked": False,
         "source007_commit": EXPECTED_COMMIT,
         "source007_failure_report_sha256": RUN_REPORT_SHA256,
         "source007_execution_receipt_sha256": RUN_RECEIPT_SHA256,
@@ -194,7 +229,13 @@ def _section_summary(section: dict) -> dict:
             "passed", "loop_count", "vertex_count", "segment_count", "area_m2",
             "minimum_feret_width_m", "area_mm2", "minimum_feret_width_mm",
             "coordinate_dtype", "coordinate_ulp_tolerance_m",
-            "positive_measure_floor_m", "reason")
+            "positive_measure_floor_m", "section_node_count",
+            "section_degree_histogram", "section_node_kind_counts",
+            "section_edge_intersection_count", "minimum_section_segment_length_m",
+            "exact_coordinate_quotient_vertex_count",
+            "exact_coordinate_duplicate_vertex_count", "coplanar_edge_count",
+            "isolated_tangent_vertex_ids", "coplanar_face_count",
+            "reason")
         if key in section
     }
 
@@ -211,6 +252,7 @@ class Recorder:
             "port_interface_audit": [],
             "manifold_inputs": [],
             "inside_both_witnesses": [],
+            "solid_boolean_operations": [],
         }
 
     def bind(self, context: dict) -> None:
@@ -244,8 +286,60 @@ def _surface_ancestry(surface: Any) -> dict:
     return result
 
 
+def _solid_metrics(solid: Any) -> dict:
+    metrics = {}
+    for name, getter in (
+        ("status", lambda value: str(value.status())),
+        ("volume_m3", lambda value: float(value.volume())),
+        ("component_count", lambda value: len(value.decompose())),
+        ("triangle_count", lambda value: int(value.num_tri())),
+        ("vertex_count", lambda value: int(value.num_vert())),
+        ("genus", lambda value: int(value.genus())),
+    ):
+        try:
+            metrics[name] = getter(solid)
+        except Exception as error:  # noqa: BLE001 - retain partial solid diagnostics
+            metrics[name + "_error"] = {
+                "type": type(error).__name__, "message": str(error)}
+    return metrics
+
+
+def _recording_manifold_proxy(manifold3d: Any, recorder: Recorder):
+    """Wrap only static Boolean dispatch so port-level CSG metrics survive errors."""
+    native_manifold = manifold3d.Manifold
+    native_batch_boolean = native_manifold.batch_boolean
+
+    class ObservedManifold:
+        def __new__(cls, *args, **kwargs):
+            return native_manifold(*args, **kwargs)
+
+        @staticmethod
+        def batch_boolean(solids, operation):
+            inputs = list(solids)
+            record = {
+                "operation": str(operation),
+                "inputs": [_solid_metrics(solid) for solid in inputs],
+                "input_count": len(inputs),
+            }
+            try:
+                result = native_batch_boolean(inputs, operation)
+                record["result"] = _solid_metrics(result)
+                recorder.record("solid_boolean_operations", record)
+                return result
+            except Exception as error:
+                record["error"] = {"type": type(error).__name__, "message": str(error)}
+                recorder.record("solid_boolean_operations", record)
+                raise
+
+    return type("ObservedManifoldModule", (), {
+        "Manifold": ObservedManifold,
+        "Mesh": manifold3d.Mesh,
+        "OpType": manifold3d.OpType,
+    })()
+
+
 def install_recording_wrappers(gate: Any, verifier: Any, recorder: Recorder):
-    """Wrap read-only helper calls in process to persist station/section witnesses."""
+    """Wrap read-only helpers to persist station, section, and port witnesses."""
     originals = []
     section_count = 0
     comparison_count = 0
@@ -447,6 +541,13 @@ def run_diagnostic() -> dict:
     code_path = Path(__file__).resolve()
     require(preflight.get("diagnostic_code_sha256") == sha_file(code_path),
             "diagnostic source changed after preflight")
+    for raw_path, expected in preflight.get("runtime_owner_code_sha256", {}).items():
+        path = Path(raw_path)
+        require(path.is_file() and sha_file(path) == expected,
+                "runtime owner code changed after preflight: " + raw_path)
+    require(preflight.get("replay_scope") == REPLAY_SCOPE
+            and preflight.get("source_compiler_invoked") is False,
+            "single-port replay scope changed after preflight")
     require(not DIAGNOSTIC_DIR.exists(), "retain diagnostic outputs and use a new directory")
 
     from . import resting_brachiocephalic_geometry_gate as gate
@@ -460,7 +561,7 @@ def run_diagnostic() -> dict:
     report_path = DIAGNOSTIC_DIR / "port-525-469-section-diagnostic.json"
     recorder = Recorder(progress_path)
     report = {
-        "schema": "numi.human.brachiocephalic-port-525-469-section-diagnostic.v1",
+        "schema": "numi.human.brachiocephalic-port-525-469-section-diagnostic.v2",
         "status": "RUNNING_SINGLE_FROZEN_PORT_DIAGNOSTIC",
         "recorded_start_utc": recorded_at,
         "preflight_path": str(PREFLIGHT_PATH),
@@ -473,6 +574,9 @@ def run_diagnostic() -> dict:
         "port": {"bridge": list(BRIDGE_KEY), "target": list(TARGET_KEY)},
         "source_or_helper_changed": False,
         "other_ports_or_targets_evaluated": False,
+        "replay_scope": REPLAY_SCOPE,
+        "source_compiler_invoked": False,
+        "all_target_checks_invoked": False,
         "native_or_gpu_work_performed": False,
         "trace": recorder.data,
     }
@@ -540,10 +644,11 @@ def run_diagnostic() -> dict:
         report["status"] = "RUNNING_PORT_525_469_WITH_SECTION_WITNESS_CAPTURE"
         _write_json(progress_path, report)
         manifold = source007._load_retained_manifold()
+        observed_manifold = _recording_manifold_proxy(manifold, recorder)
         restore = install_recording_wrappers(gate, av, recorder)
         try:
             result = gate.audit_brachiocephalic_port_pair_continuity(
-                av, manifold,
+                av, observed_manifold,
                 bridge_key=BRIDGE_KEY, bridge_surface=bridge_surface,
                 target_key=TARGET_KEY, target_surface=target_surface,
                 frozen_face_pairs=frozen_pairs,
@@ -615,7 +720,8 @@ def main(argv: list[str] | None = None) -> int:
         "helper_error": result.get("helper_error", result.get("failure")),
         "elapsed_seconds": result.get("elapsed_seconds"),
     }, sort_keys=True))
-    return 0 if result.get("status") == "DIAGNOSTIC_CAPTURED_HELPER_REJECTION" else 2
+    return 0 if result.get("status") in {
+        "DIAGNOSTIC_CAPTURED_HELPER_REJECTION", "DIAGNOSTIC_HELPER_RETURNED"} else 2
 
 
 if __name__ == "__main__":

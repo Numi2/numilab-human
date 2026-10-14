@@ -544,6 +544,84 @@ def test_source007_step0_collision_geometry_uses_captured_svc_prediction():
         assert details[member]["source_geometry_mutated"] is False
 
 
+def test_port_replay_preflight_is_pinned_single_port_and_keeps_topology_metrics():
+    assert portdiag.DIAGNOSTIC_DIR.name == "port-525-469-diagnostic-005"
+    assert portdiag.PREFLIGHT_PATH.name == "port-525-469-diagnostic-preflight-005.json"
+    assert portdiag.REPLAY_SCOPE == {
+        "bridge": [51011, 525],
+        "target": [51011, 469],
+        "port_count": 1,
+        "source_candidate_compiler_invoked": False,
+        "all_target_checks_invoked": False,
+        "stop_after_single_port_result": True,
+    }
+    assert portdiag.RUNTIME_CODE_EXPECTED_SHA256[
+        "resting_brachiocephalic_geometry_gate.py"] == (
+            "103bc36649ddb7fb921e2c77e72d24b6ae118f223b75025d2e1f7e1f094c3e0b")
+    summary = portdiag._section_summary({
+        "passed": False,
+        "section_node_count": 39,
+        "section_degree_histogram": {"1": 2, "2": 37},
+        "minimum_section_segment_length_m": 1.3e-7,
+        "exact_coordinate_duplicate_vertex_count": 0,
+        "coplanar_edge_count": 0,
+    })
+    assert summary["section_node_count"] == 39
+    assert summary["section_degree_histogram"] == {"1": 2, "2": 37}
+    assert summary["minimum_section_segment_length_m"] == 1.3e-7
+    assert summary["exact_coordinate_duplicate_vertex_count"] == 0
+    assert summary["coplanar_edge_count"] == 0
+
+
+def test_port_diagnostic_records_solid_boolean_metrics_before_return_or_error():
+    from types import SimpleNamespace
+
+    class FakeSolid:
+        def status(self):
+            return "NoError"
+
+        def volume(self):
+            return 0.25
+
+        def decompose(self):
+            return [object()]
+
+        def num_tri(self):
+            return 12
+
+        def num_vert(self):
+            return 8
+
+        def genus(self):
+            return 0
+
+    class FakeManifold:
+        def __new__(cls, _mesh):
+            return FakeSolid()
+
+        @staticmethod
+        def batch_boolean(solids, operation):
+            assert len(solids) == 2
+            assert operation == "add"
+            return FakeSolid()
+
+    recorder = portdiag.Recorder()
+    proxy = portdiag._recording_manifold_proxy(
+        SimpleNamespace(Manifold=FakeManifold, Mesh=object, OpType=object), recorder)
+    first = proxy.Manifold(object())
+    result = proxy.Manifold.batch_boolean([first, FakeSolid()], "add")
+
+    assert isinstance(result, FakeSolid)
+    event = recorder.data["solid_boolean_operations"][0]
+    assert event["input_count"] == 2
+    assert event["operation"] == "add"
+    assert event["inputs"][0]["volume_m3"] == 0.25
+    assert event["inputs"][0]["component_count"] == 1
+    assert event["result"]["status"] == "NoError"
+    assert event["result"]["triangle_count"] == 12
+    assert event["result"]["genus"] == 0
+
+
 def test_port_diagnostic_wrappers_preserve_failed_section_and_comparison():
     from types import SimpleNamespace
 
