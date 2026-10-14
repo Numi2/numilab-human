@@ -17,6 +17,7 @@ from . import resting_anatomy as anatomy
 from . import model as human
 from .organ_family_geometry import compiled_surface
 from .physiology import load_anatomy
+from .resting_scene import load_rigid
 from .resting_pleura_proxy import _parse_payload, _record_content_bytes
 
 
@@ -851,9 +852,178 @@ def compose_pylorus_stomach_arrangement(*, base_payload: Path, base_receipt: Pat
     return manifest
 
 
+
+def _validated_torso_rest_body(receipt: dict, registration: dict,
+                               rigid_path: Path) -> dict[str, dict]:
+    """Derive the one source body used by the vein append from pinned NHRIGID2.
+
+    The full-body source manifest is intentionally not synthesized. This
+    narrow path verifies the existing receipt-pinned rigid payload, its
+    embedded MyoSim source identity, source-body 8 -> core-body 20 mapping,
+    and the receipt's recorded torso rest transform.
+    """
+    rigid_path = Path(rigid_path)
+    expected_rigid = receipt.get("provenance", {}).get("rigid_payload_sha256")
+    if not isinstance(expected_rigid, str) or human.sha256(rigid_path) != expected_rigid:
+        raise ValueError("brachiocephalic source: NHRIGID2 differs from the base receipt")
+    rigid = load_rigid(rigid_path)
+    provenance = receipt.get("provenance", {})
+    registered_source = (registration.get("source", {}).get("myosim", {})
+                         .get("source", {}).get("archive_sha256"))
+    if (not isinstance(registered_source, str)
+            or rigid["source_sha256"] != registered_source
+            or provenance.get("myosim_source_archive_sha256") != registered_source):
+        raise ValueError("brachiocephalic source: NHRIGID2 and registration source archive differ")
+    source_map = rigid.get("source_map")
+    if (not isinstance(source_map, list) or len(source_map) != rigid.get("source_count")
+            or len(source_map) <= 8 or source_map[8] != 20 or source_map.count(20) != 1
+            or 20 not in rigid.get("core_poses", {})):
+        raise ValueError("brachiocephalic source: pinned source-body 8 to core-body 20 mapping changed")
+    pose = np.asarray(rigid["core_poses"][20], dtype=np.float64)
+    expected_position = np.asarray(provenance.get("torso_rest_position_world_m", []), dtype=np.float64)
+    expected_orientation = np.asarray(provenance.get("torso_rest_orientation_xyzw", []), dtype=np.float64)
+    if (pose.shape != (7,) or expected_position.shape != (3,) or expected_orientation.shape != (4,)
+            or not np.isfinite(pose).all() or not np.isfinite(expected_position).all()
+            or not np.isfinite(expected_orientation).all()
+            or not np.allclose(pose[:3], expected_position, rtol=0.0, atol=1.0e-8)
+            or not np.allclose(pose[3:], expected_orientation, rtol=0.0, atol=1.0e-8)):
+        raise ValueError("brachiocephalic source: NHRIGID2 torso rest pose differs from receipt")
+    base_row = provenance.get("source_id_map", {}).get("10", {})
+    owner = base_row.get("source_owner_metadata", {})
+    if (base_row.get("body_index") != 20 or owner.get("core_body_index") != 20
+            or owner.get("myosim_body") != "torso"):
+        raise ValueError("brachiocephalic source: existing torso-owned SVC row changed")
+    return {"torso": {
+        "core_body_index": 20,
+        "source_body_id": 8,
+        "default_com_position_world_m": pose[:3].tolist(),
+        "default_inertial_quaternion_world_xyzw": pose[3:].tolist(),
+    }}
+
+
+def _exact_float32_seam_quotient(local_vertices: np.ndarray, faces: np.ndarray,
+                                 source_vertices_mm: np.ndarray,
+                                 member_id: str) -> dict[str, np.ndarray]:
+    """Collapse exact serialized seam duplicates while retaining face lineage."""
+    local = np.asarray(local_vertices, dtype=np.float64)
+    tri = np.asarray(faces, dtype=np.int64)
+    source = np.asarray(source_vertices_mm, dtype=np.float64)
+    if (local.ndim != 2 or local.shape[1] != 3 or source.shape != local.shape
+            or tri.ndim != 2 or tri.shape[1] != 3 or len(tri) == 0
+            or not np.isfinite(local).all() or not np.isfinite(source).all()
+            or int(tri.min()) < 0 or int(tri.max()) >= len(local)):
+        raise ValueError("brachiocephalic source: malformed compiled mesh " + member_id)
+    native_xyz = local.astype("<f4")
+    _, first, inverse = np.unique(native_xyz, axis=0, return_index=True, return_inverse=True)
+    first_order = np.argsort(first, kind="stable")
+    first = first[first_order]
+    remap = np.empty(len(first), dtype=np.int64)
+    remap[first_order] = np.arange(len(first), dtype=np.int64)
+    lift = remap[inverse]
+    for quotient_id in range(len(first)):
+        source_ids = np.flatnonzero(lift == quotient_id)
+        if not np.all(source[source_ids] == source[source_ids[0]]):
+            raise ValueError("brachiocephalic source: Float32 quotient would merge distinct source coordinates " + member_id)
+    quotient_faces = lift[tri]
+    if (len(first) < 3 or np.any(quotient_faces[:, 0] == quotient_faces[:, 1])
+            or np.any(quotient_faces[:, 1] == quotient_faces[:, 2])
+            or np.any(quotient_faces[:, 2] == quotient_faces[:, 0])):
+        raise ValueError("brachiocephalic source: quotient collapsed a source face " + member_id)
+    quotient_xyz = native_xyz[first]
+    normals = _area_weighted_vertex_normals(quotient_xyz, quotient_faces)
+    return {
+        "vertices": np.column_stack((quotient_xyz, normals)).astype("<f4"),
+        "faces": quotient_faces.astype("<u4"),
+        "source_vertex_to_quotient": lift.astype("<u4"),
+        "source_face_ids": np.arange(len(tri), dtype="<u4"),
+    }
+
+
+def _load_brachiocephalic_quotient_rows(*, quotient_npz_path: Path,
+                                         quotient_report_path: Path,
+                                         base_receipt_path: Path,
+                                         base_payload_path: Path,
+                                         rigid_path: Path,
+                                         sources_path: Path) -> tuple[dict[str, dict], dict]:
+    """Load the pinned seam-quotient artifact, without treating it as admission."""
+    report_path = Path(quotient_report_path)
+    npz_path = Path(quotient_npz_path)
+    expected_report_sha = "f189f18efcbfa2953374caf5c3b11af90b135f972764713953de3360bbe140da"
+    expected_npz_sha = "02df2dba7d698d8e22ca7b6493d1b0b97d1afa00b06150b39d1e0a7990e3e385"
+    if human.sha256(report_path) != expected_report_sha or human.sha256(npz_path) != expected_npz_sha:
+        raise ValueError("brachiocephalic source: pinned quotient report or NPZ hash changed")
+    report = json.loads(report_path.read_text())
+    if (report.get("prepared_npz_sha256") != expected_npz_sha
+            or report.get("native_admission") is not False
+            or "junction_probe_not_nonintersection_gate" not in {
+                row.get("classification") for row in report.get("default_source_junction_probes", [])
+            }):
+        raise ValueError("brachiocephalic source: quotient report scope or identity changed")
+    pins = report.get("input_sha256")
+    if not isinstance(pins, dict) or not pins:
+        raise ValueError("brachiocephalic source: quotient report lacks pinned input hashes")
+    for name, expected in pins.items():
+        path = Path(name)
+        if not path.is_file() or human.sha256(path) != expected:
+            raise ValueError("brachiocephalic source: quotient input hash changed: " + str(path))
+    required_inputs = {
+        Path(base_receipt_path).resolve(),
+        Path(base_payload_path).resolve(),
+        Path(rigid_path).resolve(),
+        (Path(sources_path) / "partof_BP3D_4.0_obj_99.zip").resolve(),
+    }
+    pinned_paths = {Path(name).resolve() for name in pins}
+    if not required_inputs.issubset(pinned_paths):
+        raise ValueError("brachiocephalic source: explicit source inputs differ from quotient report")
+    expected_rows = {
+        "FJ3482": (377, 376, 748, [[4, 376]]),
+        "FJ3583": (275, 275, 546, []),
+    }
+    rows = report.get("rows")
+    if (not isinstance(rows, list) or len(rows) != len(expected_rows)
+            or {row.get("member") for row in rows} != set(expected_rows)):
+        raise ValueError("brachiocephalic source: quotient report does not contain both named veins")
+    for row in rows:
+        source_count, quotient_count, face_count, duplicate_groups = expected_rows[row["member"]]
+        if (row.get("source_vertices"), row.get("quotient_vertices"), row.get("faces"),
+                row.get("duplicate_source_groups")) != (
+                source_count, quotient_count, face_count, duplicate_groups):
+            raise ValueError("brachiocephalic source: quotient row dimensions changed for " + row["member"])
+        if (row.get("source_displacement_m") != 0 or row.get("source_triangles_preserved_geometrically") is not True
+                or row.get("closed_oriented") is not True or row.get("euler_characteristic") != 2
+                or row.get("exact_self_pairs") != 0):
+            raise ValueError("brachiocephalic source: quotient topology/source identity changed for " + row["member"])
+    loaded = {}
+    with np.load(npz_path, allow_pickle=False) as archive:
+        expected_names = {
+            f"{member}_{suffix}"
+            for member in expected_rows
+            for suffix in ("vertices", "faces", "source_vertex_to_quotient", "source_face_ids")
+        }
+        if set(archive.files) != expected_names:
+            raise ValueError("brachiocephalic source: quotient NPZ array inventory changed")
+        for member in expected_rows:
+            item = {suffix: np.asarray(archive[f"{member}_{suffix}"]).copy()
+                    for suffix in ("vertices", "faces", "source_vertex_to_quotient", "source_face_ids")}
+            if (item["vertices"].dtype != np.dtype("<f4") or item["vertices"].ndim != 2
+                    or item["vertices"].shape[1] != 6 or not np.isfinite(item["vertices"]).all()
+                    or item["faces"].dtype.kind != "u" or item["faces"].ndim != 2
+                    or item["faces"].shape[1] != 3 or len(item["faces"]) == 0
+                    or int(item["faces"].max()) >= len(item["vertices"])
+                    or item["source_vertex_to_quotient"].dtype.kind != "u"
+                    or item["source_face_ids"].dtype.kind != "u"):
+                raise ValueError("brachiocephalic source: malformed quotient NPZ row " + member)
+            loaded[member] = item
+    return loaded, report
+
+
 def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                    hierarchy="part_of", layer=1, extension_key="passive_viscera_extension",
-                   compartment_by_name=None) -> dict:
+                   compartment_by_name=None, members_by_name=None,
+                   sources_path: Path | None = None,
+                   registration_path: Path | None = None, rigid_path: Path | None = None,
+                   quotient_npz_path: Path | None = None,
+                   quotient_report_path: Path | None = None) -> dict:
     if output.exists():
         raise ValueError("retain previous anatomy evidence; choose a new output directory")
     receipt = json.loads(base_receipt.read_text())
@@ -866,29 +1036,76 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
     io = vo + nv * 24
     if magic != b"NHANAT1\0" or abi != 5 or len(raw) != io + ni * 4:
         raise ValueError("expected existing exact NHANAT ABI5 payload")
-    registration = json.loads(anatomy.REGISTRATION_PATH.read_text())
-    registration_sha = human.sha256(anatomy.REGISTRATION_PATH)
+    sources = Path(anatomy.SOURCES if sources_path is None else sources_path).resolve()
+    registration_file = Path(anatomy.REGISTRATION_PATH if registration_path is None else registration_path)
+    registration = json.loads(registration_file.read_text())
+    registration_sha = human.sha256(registration_file)
     if registration_sha != receipt["provenance"]["bodyparts_registration_sha256"] or int(registration_sha[:8], 16) != registration_fp:
         raise ValueError("passive anatomy registration differs from the existing body")
     for entry in receipt["provenance"]["bodyparts3d_archives"]:
-        if human.sha256(anatomy.SOURCES / entry["file"]) != entry["sha256"]:
-            raise ValueError("pinned BodyParts3D archive changed")
-    if human.sha256(anatomy.RIGID_PATH) != receipt["provenance"]["rigid_payload_sha256"]:
+        archive = sources / entry["file"]
+        # An explicit narrow source directory may contain only the archive for
+        # the selected hierarchy. Both relationship tables are still checked
+        # by load_anatomy against sources.lock.json below.
+        if entry.get("hierarchy") == hierarchy or archive.is_file() or sources_path is None:
+            if not archive.is_file() or human.sha256(archive) != entry["sha256"]:
+                raise ValueError("pinned BodyParts3D archive changed: " + entry["file"])
+    rigid_file = Path(anatomy.RIGID_PATH if rigid_path is None else rigid_path)
+    if human.sha256(rigid_file) != receipt["provenance"]["rigid_payload_sha256"]:
         raise ValueError("passive anatomy rigid source identity differs")
-    bodies, _, _ = human._myosim_surface_route_context(anatomy.RIGID_PATH.parent,
-        registration["source"]["myosim"]["source"]["archive_sha256"])
-    atlas = load_anatomy(anatomy.SOURCES)
+    if rigid_path is None:
+        bodies, _, _ = human._myosim_surface_route_context(
+            rigid_file.parent, registration["source"]["myosim"]["source"]["archive_sha256"])
+    else:
+        bodies = _validated_torso_rest_body(receipt, registration, rigid_file)
+    atlas = load_anatomy(sources)
     source_map = receipt["provenance"]["source_id_map"]
     existing_members = {v["source_member"]: int(k) for k, v in source_map.items()}
-    records, vertices, indices = [raw[anatomy.HEADER.size:vo]], [raw[vo:io]], [raw[io:]]
-    next_id = max(map(int, source_map)) + 1
+    base_header, base_records, base_rows = _parse_payload(raw)
+    decoded_ids = set(base_rows)
+    mapped_ids = {int(stable_id) for stable_id in source_map}
+    if len(decoded_ids) != count or decoded_ids != mapped_ids:
+        raise ValueError("passive anatomy decoded rows and source_id_map differ")
+    next_id = max(decoded_ids) + 1
+    records, vertices, indices = (
+        [raw[anatomy.HEADER.size:vo]], [raw[vo:io]], [raw[io:]])
+    if rigid_path is not None and (quotient_npz_path is None or quotient_report_path is None):
+        raise ValueError("brachiocephalic source requires both pinned quotient inputs")
+    if (quotient_npz_path is None) != (quotient_report_path is None):
+        raise ValueError("passive source quotient requires both NPZ and report inputs")
+    quotient_rows = None
+    quotient_report = None
+    if quotient_npz_path is not None:
+        expected_families = (
+            ("FMA4761", "left brachiocephalic vein", "torso", 1),
+            ("FMA4751", "right brachiocephalic vein", "torso", 1),
+        )
+        expected_members = {
+            "left brachiocephalic vein": {"FJ3482"},
+            "right brachiocephalic vein": {"FJ3583"},
+        }
+        expected_compartments = {
+            "left brachiocephalic vein": 4,
+            "right brachiocephalic vein": 4,
+        }
+        if (hierarchy != "part_of" or layer != 2 or tuple(families) != expected_families
+                or members_by_name != expected_members or compartment_by_name != expected_compartments
+                or extension_key != "passive_brachiocephalic_vein_extension"):
+            raise ValueError("pinned quotient is restricted to the exact left/right torso vein source rows")
+        quotient_rows, quotient_report = _load_brachiocephalic_quotient_rows(
+            quotient_npz_path=quotient_npz_path, quotient_report_path=quotient_report_path,
+            base_receipt_path=base_receipt, base_payload_path=base,
+            rigid_path=rigid_file, sources_path=sources)
     additions = []
     added_members = {}
     family_rows = []
     for concept, label, body, expected_count in families:
-        members = atlas["tables"][hierarchy].get((concept, label), set())
-        if len(members) != expected_count:
-            raise ValueError("passive source membership changed: " + label)
+        concept_members = atlas["tables"][hierarchy].get((concept, label), set())
+        members = (set(concept_members) if members_by_name is None
+                   else set(members_by_name.get(label, ())))
+        if (len(members) != expected_count or not members
+                or not members.issubset(concept_members)):
+            raise ValueError("passive source member selection changed: " + label)
         family_ids = []
         for member_id in sorted(members):
             if member_id in existing_members:
@@ -903,15 +1120,43 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
             if member_id in added_members:
                 family_ids.append(added_members[member_id])
                 continue
-            _, member, obj = human._bodyparts_obj_member(anatomy.SOURCES, hierarchy, member_id)
+            _, member, obj = human._bodyparts_obj_member(sources, hierarchy, member_id)
             digest = hashlib.sha256(obj).hexdigest()
             # Rectum follows the existing pelvic rigid frame; the remaining
             # large intestine and small intestine follow the abdominal frame.
             target = "pelvis" if member_id == "FJ2571" else body
             spec = {"hierarchy": hierarchy, "member_id": member_id,
                     "source_member_sha256": digest, "myosim_body": target}
-            owner, source_body, local, normals, faces = compiled_surface(anatomy.SOURCES, spec, registration, bodies)
+            owner, source_body, local, normals, faces = compiled_surface(sources, spec, registration, bodies)
             packed = np.column_stack((local, normals)).astype("<f4")
+            repair = None
+            if quotient_rows is not None:
+                prepared = quotient_rows.get(member_id)
+                if prepared is None:
+                    raise ValueError("brachiocephalic source quotient lacks " + member_id)
+                source_vertices_mm, source_faces = human._bodyparts_obj_triangles(obj, member)
+                source_vertices_mm = np.asarray(source_vertices_mm, dtype=np.float64)
+                if not np.array_equal(np.asarray(source_faces, dtype=np.int64), np.asarray(faces, dtype=np.int64)):
+                    raise ValueError("brachiocephalic source: compiled face order changed for " + member_id)
+                recomputed = _exact_float32_seam_quotient(
+                    local, faces, source_vertices_mm, member_id)
+                for field in ("vertices", "faces", "source_vertex_to_quotient", "source_face_ids"):
+                    if recomputed[field].tobytes() != prepared[field].tobytes():
+                        raise ValueError("brachiocephalic source quotient does not match compiled member: "
+                                         + member_id + "/" + field)
+                packed = recomputed["vertices"]
+                faces = recomputed["faces"]
+                local = packed[:, :3]
+                normals = packed[:, 3:]
+                repair = {
+                    "kind": "exact_float32_source_seam_quotient",
+                    "source_vertex_count": int(len(source_vertices_mm)),
+                    "quotient_vertex_count": int(len(local)),
+                    "source_face_count": int(len(source_faces)),
+                    "face_lineage": "all source faces retained in source order through source_vertex_to_quotient",
+                    "moved_source_coordinates_m": 0,
+                    "non_source_coordinate_added": False,
+                }
             if not np.isfinite(packed).all() or faces.min() < 0 or faces.max() >= len(local):
                 raise ValueError("invalid registered passive surface")
             records.append(anatomy.RECORD.pack(owner, nv, len(local), ni, faces.size, next_id, layer, 0))
@@ -921,29 +1166,43 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                     "family_label": label, "concept_id": concept,
                     "source_member": member_id, "source_member_path": member,
                     "source_sha256": digest, "hierarchy": hierarchy, "body_index": owner,
-                    "source_body_id": source_body, "myosim_body": target,
+                    "myosim_body": target,
                     "vertex_count": len(local), "triangle_count": len(faces),
                     "local_bounds_m": [local.min(axis=0).tolist(), local.max(axis=0).tolist()]}
+            if repair is not None:
+                item["source_body_id"] = source_body
+                item["geometry_repair"] = repair
             if component is not None:
                 item["anatomical_component"] = component
             additions.append(item)
             source_map[str(next_id)] = {"name": component["name"] if component else label,
                 "provider": "BodyParts3D v4.0 existing organ-family compiler",
                 "source_member": member_id, "source_sha256": digest, "layer": layer, "body_index": owner,
-                "repair": None, "head_family": None,
+                "repair": repair, "head_family": None,
                 "source_owner_metadata": {"concept_id": concept, "hierarchy": hierarchy, "label": label,
                                           "member_id": member_id, "member_sha256": digest,
                                           "myosim_body": target, "core_body_index": owner,
                                           "layer": "vessel" if layer == 2 else "organ"}}
+            if repair is not None:
+                source_map[str(next_id)]["source_owner_metadata"]["source_body_id"] = source_body
             if component is not None:
                 source_map[str(next_id)]["source_owner_metadata"]["anatomical_component"] = component
             if compartment_by_name is not None:
                 source_map[str(next_id)]["vascular_compartment_id"] = compartment_by_name[label]
             added_members[member_id] = next_id; family_ids.append(next_id)
             next_id += 1; nv += len(local); ni += faces.size
-        family_rows.append({"concept_id": concept, "name": label, "source_members": sorted(members), "stable_ids": family_ids})
+        family_row = {"concept_id": concept, "name": label,
+                      "source_members": sorted(members), "stable_ids": family_ids}
+        if members_by_name is not None:
+            family_row["concept_member_count"] = len(concept_members)
+            family_row["member_selection"] = "explicit source member allowlist"
+        family_rows.append(family_row)
     payload = anatomy.HEADER.pack(magic, abi, count + len(additions), nv, ni, registration_fp, source_sha)
     payload += b"".join(records) + b"".join(vertices) + b"".join(indices)
+    _, _, appended_rows = _parse_payload(payload)
+    for stable_id in base_rows:
+        if _record_content_bytes(base_rows[stable_id]) != _record_content_bytes(appended_rows[stable_id]):
+            raise ValueError("passive append changed existing anatomy row bytes: " + str(stable_id))
     output.mkdir(parents=True)
     path = output / "resting-thorax.nhanatomy"
     path.write_bytes(payload)
@@ -955,12 +1214,39 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
         "base_receipt": str(base_receipt), "base_receipt_sha256": human.sha256(base_receipt),
         "base_payload_sha256": hashlib.sha256(raw).hexdigest(), "added_surfaces": additions,
         "complete_source_families": family_rows,
-        "source_component_table_sha256": human.sha256(anatomy.SOURCES / "partof_element_parts.txt"),
+        "source_component_table_sha256": human.sha256(sources / "partof_element_parts.txt"),
         "preserved_base_record_bytes_sha256": hashlib.sha256(raw[anatomy.HEADER.size:vo]).hexdigest(),
         "preserved_base_vertex_bytes_sha256": hashlib.sha256(raw[vo:io]).hexdigest(),
         "preserved_base_index_bytes_sha256": hashlib.sha256(raw[io:]).hexdigest(),
-        "geometry_repair_applied": False, "additional_physical_mass_kg": 0,
-        "license": "CC-BY-4.0", "scope": "passive atlas inspection with existing body-frame registration; no added constitutive tissue or vessel-wall mechanics; source interfaces not yet qualified under loaded motion"}
+        "geometry_repair_applied": quotient_report is not None,
+        "additional_physical_mass_kg": 0,
+        "license": "CC-BY-4.0",
+        "scope": "passive atlas inspection with existing body-frame registration; no added constitutive tissue or vessel-wall mechanics; source interfaces not yet qualified under loaded motion"}
+    if quotient_report is not None:
+        receipt["provenance"][extension_key].update({
+            "source_quotient_report": {
+                "path": str(Path(quotient_report_path)),
+                "sha256": human.sha256(Path(quotient_report_path)),
+                "npz_path": str(Path(quotient_npz_path)),
+                "npz_sha256": human.sha256(Path(quotient_npz_path)),
+                "native_admission": False,
+                "junction_probe_classification": "junction_probe_not_nonintersection_gate",
+            },
+            "verified_registration_sha256": registration_sha,
+            "verified_registration_path": str(registration_file),
+            "verified_rigid_payload_sha256": human.sha256(rigid_file),
+            "verified_rigid_payload_path": str(rigid_file),
+            "verified_rest_body_context": {
+                "body_name": "torso",
+                "source_body_id": int(bodies["torso"]["source_body_id"]),
+                "core_body_index": int(bodies["torso"]["core_body_index"]),
+                "default_com_position_world_m": bodies["torso"]["default_com_position_world_m"],
+                "default_inertial_quaternion_world_xyzw": bodies["torso"]["default_inertial_quaternion_world_xyzw"],
+                "validated_against_receipt_torso_rest": True,
+            },
+            "additional_force_or_state": False,
+            "scope": "passive atlas vessel identities compiled by the existing NHANAT ABI5 append owner; no added CVSim state, blood volume, physical mass, constitutive tissue, or vessel-wall mechanics; source junction probes do not establish route collars, nonintersection, shared cardiac deformation, accepted poses, or native admission",
+        })
     # Existing derivation receipts stay bound to their original intermediate
     # payload. The append-only lineage above binds them to this new composite.
     receipt_path = output / "resting-anatomy-receipt.json"

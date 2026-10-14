@@ -72,6 +72,41 @@ VESSELS = (
 )
 
 
+BRACHIOCEPHALIC_VEINS = (
+    ("FMA4761", "left brachiocephalic vein", "torso", 1, 4),
+    ("FMA4751", "right brachiocephalic vein", "torso", 1, 4),
+)
+
+
+def append_brachiocephalic_veins(*, base_receipt: Path, output: Path,
+                                  sources_path: Path, registration_path: Path,
+                                  rigid_path: Path, quotient_npz_path: Path,
+                                  quotient_report_path: Path) -> dict:
+    """Append the two source-bound brachiocephalic veins through NHANAT ABI5.
+
+    Every source/registration/rest-pose input is explicit. The pinned seam
+    quotient is recompiled and checked by the existing passive append owner.
+    This adds passive compartment-4 identities only; route, collision,
+    common-field and native qualification remain separate gates.
+    """
+    return append_viscera(
+        base_receipt, output,
+        families=tuple(row[:4] for row in BRACHIOCEPHALIC_VEINS),
+        hierarchy="part_of", layer=2,
+        extension_key="passive_brachiocephalic_vein_extension",
+        compartment_by_name={row[1]: row[4] for row in BRACHIOCEPHALIC_VEINS},
+        members_by_name={
+            "left brachiocephalic vein": {"FJ3482"},
+            "right brachiocephalic vein": {"FJ3583"},
+        },
+        sources_path=sources_path,
+        registration_path=registration_path,
+        rigid_path=rigid_path,
+        quotient_npz_path=quotient_npz_path,
+        quotient_report_path=quotient_report_path,
+    )
+
+
 def append_major_vessels(base_receipt: Path, output: Path) -> dict:
     return append_viscera(base_receipt, output,
         families=tuple(row[:4] for row in VESSELS), hierarchy="is_a", layer=2,
