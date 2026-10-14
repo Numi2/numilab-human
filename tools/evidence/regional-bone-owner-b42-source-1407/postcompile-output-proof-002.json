@@ -1,0 +1,39 @@
+{
+  "anatomical_or_native_admission": false,
+  "elapsed_owner_and_report_attempt_s": 13.080350399017334,
+  "failed_compile_report_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-manifest-recovery-004/bilateral-b42-native-bone-owner-001/compile-report.json",
+  "failed_compile_report_sha256": "bf227441664bdc362d5924b6b4d88fbfb7b20713550368aa55dad81efd942f05",
+  "input_hashes_unchanged": true,
+  "myosim_source_tree_file_count_verified": 230,
+  "owner_compile_repeated": false,
+  "owner_output_manifest_sha256": "8c3c93b4367f15e50578b7f6efc0b573c2df7402201b6e97df71e47d078aa899",
+  "owner_output_payload_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-manifest-recovery-004/bilateral-b42-native-bone-owner-001/owner-base/bodyparts3d-myosim-major-bones.nhbones",
+  "owner_output_payload_sha256": "4d74bc786176c1d4479e3be8ebb7c97797a0d55feca687f83c89136e7c6635b0",
+  "payload": {
+    "bone_count": 185,
+    "bytes": 11577432,
+    "file": "bodyparts3d-myosim-major-bones.nhbones",
+    "index_count": 1378566,
+    "magic": "NHBONES1",
+    "payload_abi": 3,
+    "registration_fingerprint32": "31c77660",
+    "sha256": "4d74bc786176c1d4479e3be8ebb7c97797a0d55feca687f83c89136e7c6635b0",
+    "vertex_count": 252167
+  },
+  "postcheck_unix": 1792001432.855339,
+  "preparation_erratum": "Borrowed tissue report finalization expected coverage key; bone manifest has separate continuity/extent fields. Owner returned and payload/source checks completed; original failure retained.",
+  "runtime_reference": {
+    "bound_anchor_count": 185,
+    "manifest": {
+      "file": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-manifest-recovery-004/recovered-artifact/myosim-fullbody-reference.manifest.json",
+      "sha256": "99401961daa509af80bc089fd750ff9c83e0a2ae3a734d242efa920e12e067db"
+    },
+    "rigid": {
+      "bytes": 60324,
+      "file": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-manifest-recovery-004/recovered-artifact/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    "source_archive_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"
+  },
+  "status": "OWNER_COMPILED_SOURCE_OUTPUT_VERIFIED_AFTER_REPORT_FINALIZATION_FAILURE"
+}
