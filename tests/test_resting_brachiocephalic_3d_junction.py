@@ -168,3 +168,20 @@ def test_source004_plane_failure_is_multiloop_then_missing_not_branching():
          198, 199, 200, 201, 287, 288, 289, 306, 307, 308, 316],
     ]
     assert first["edge_ids_retained_in_source004"] is False
+
+
+def test_source007_compiler_owner_hashes_resolve_to_frozen_emission_revision():
+    compiler_preflight = json.loads(source007.PREFLIGHT_PATH.read_text())
+
+    verified = junction._verify_source007_compiler_code_pins(
+        compiler_preflight["code_and_dependency_pins"])
+
+    assert verified["passed"]
+    assert verified["source_code_file_count"] == 242
+    assert verified["frozen_source_repository"]["head"] == (
+        "e921f79b9b078911c30f552890d22274fb8cf56e")
+    changed_gate = verified["verified_source_code"][
+        "/Users/numi/numi-human-vein-geometry-gate-20261014/src/"
+        "numilab_human/resting_brachiocephalic_geometry_gate.py"]
+    assert changed_gate["verification_method"] == "frozen_source_commit_git_object"
+    assert changed_gate["verified_sha256"] == changed_gate["expected_sha256"]

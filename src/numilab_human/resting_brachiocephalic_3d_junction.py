@@ -186,6 +186,58 @@ def _source004_plane_failure(report: dict) -> dict:
     }
 
 
+def _verify_source007_compiler_code_pins(code_and_dependency_pins: dict) -> dict:
+    """Verify the historical owner sources that emitted source007, not today's tree."""
+    source_repo = code_and_dependency_pins.get("source_repository", {})
+    revision = source_repo.get("head")
+    _require(isinstance(revision, str) and len(revision) == 40
+             and source_repo.get("dirty") is False,
+             "source007 compiler source revision is not a clean frozen commit")
+    source_hashes = code_and_dependency_pins.get("source_code_sha256", {})
+    _require(isinstance(source_hashes, dict) and source_hashes,
+             "source007 compiler owner code hash set is missing")
+    repo = Path(source007.__file__).resolve().parents[2]
+    verified = {}
+    for raw_path, expected in sorted(source_hashes.items()):
+        path = Path(raw_path)
+        actual_current = sha_file(path) if path.is_file() else None
+        if actual_current == expected:
+            method = "current_file_bytes"
+            verified_hash = actual_current
+        else:
+            try:
+                relative = path.resolve().relative_to(repo.resolve())
+            except ValueError as error:
+                raise ValueError(
+                    "source007 external compiler code changed and has no pinned git object: "
+                    + str(path)) from error
+            historical = subprocess.run(
+                ["git", "-C", str(repo), "show",
+                 f"{revision}:{relative.as_posix()}"],
+                check=True, capture_output=True).stdout
+            verified_hash = _sha_bytes(historical)
+            _require(verified_hash == expected,
+                     "source007 historical compiler code hash mismatch at " + str(path))
+            method = "frozen_source_commit_git_object"
+        verified[str(path)] = {
+            "expected_sha256": expected,
+            "current_sha256": actual_current,
+            "verified_sha256": verified_hash,
+            "verification_method": method,
+        }
+    current = source007._code_and_dependency_pins()
+    expected_wheel = code_and_dependency_pins.get("manifold3d_retained_wheel", {})
+    _require(current.get("manifold3d_retained_wheel") == expected_wheel,
+             "source007 retained Manifold dependency hashes changed")
+    return {
+        "frozen_source_repository": source_repo,
+        "source_code_file_count": len(verified),
+        "verified_source_code": verified,
+        "manifold3d_retained_wheel_sha256": expected_wheel,
+        "passed": True,
+    }
+
+
 def _runtime_code_pins() -> dict:
     repo = Path(__file__).resolve().parents[2]
     source = repo / "src/numilab_human"
@@ -240,13 +292,9 @@ def build_preflight() -> dict:
     source_input_pins = source007._frozen_input_pins()
     _require(source_input_pins == source_preflight.get("input_sha256"),
              "source007 compiler input hashes differ from its retained preflight")
-    source_owner_code_pins = source007._code_and_dependency_pins()
-    frozen_owner_code_pins = source_preflight.get("code_and_dependency_pins", {})
-    _require(source_owner_code_pins.get("source_code_sha256")
-             == frozen_owner_code_pins.get("source_code_sha256")
-             and source_owner_code_pins.get("manifold3d_retained_wheel")
-             == frozen_owner_code_pins.get("manifold3d_retained_wheel"),
-             "source007 compiler owner/P6 code or dependency hashes changed")
+    source_owner_code_verification = _verify_source007_compiler_code_pins(
+        source_preflight.get("code_and_dependency_pins", {}))
+    source_owner_code_pins = source_preflight["code_and_dependency_pins"]
     plane_failure = _source004_plane_failure(previous)
     candidate_files = portdiag._actual_file_hashes(source007.CANDIDATE_DIR)
     preparation_files = portdiag._actual_file_hashes(source007.PREPARATION_DIR)
@@ -285,6 +333,9 @@ def build_preflight() -> dict:
         "source007_input_sha256": source_input_pins,
         "source007_compiler_source_code_sha256": source_owner_code_pins[
             "source_code_sha256"],
+        "source007_compiler_repository": source_owner_code_pins[
+            "source_repository"],
+        "source007_compiler_source_code_verification": source_owner_code_verification,
         "candidate007_files": candidate_files,
         "preparation007_files": preparation_files,
         "source004_report": {"path": str(SOURCE004_REPORT),
@@ -881,10 +932,19 @@ def _assert_current_pins(preflight: dict) -> None:
     pins = preflight["inputs"]
     _require(source007._frozen_input_pins() == pins["source007_input_sha256"],
              "source007 compiler input hash set changed after preflight")
-    current_owner_code = source007._code_and_dependency_pins()
-    _require(current_owner_code.get("source_code_sha256")
-             == pins["source007_compiler_source_code_sha256"],
-             "source007 compiler source/P6 owner code changed after preflight")
+    compiler_preflight = json.loads(Path(
+        pins["source007_preflight"]["path"]).read_text())
+    current_owner_code_verification = _verify_source007_compiler_code_pins(
+        compiler_preflight.get("code_and_dependency_pins", {}))
+    _require(current_owner_code_verification
+             == pins["source007_compiler_source_code_verification"]
+             and compiler_preflight.get("code_and_dependency_pins", {}).get(
+                 "source_code_sha256")
+             == pins["source007_compiler_source_code_sha256"]
+             and compiler_preflight.get("code_and_dependency_pins", {}).get(
+                 "source_repository")
+             == pins["source007_compiler_repository"],
+             "source007 historical compiler source/P6 owner code changed after preflight")
     for key in ("source007_report", "source007_receipt", "source007_preflight",
                 "source004_report", "source004_preflight", "source0_pack",
                 "source0_receipt", "capture_manifest"):
