@@ -9,9 +9,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from copy import deepcopy
 from fractions import Fraction
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import numpy as np
 
@@ -2330,6 +2331,55 @@ def _validate_route110_source_declaration(route_decl: dict, route_data: dict, pi
     )
 
 
+_CAPTURE_DECODER_CONTEXT_KEYS = frozenset({
+    "capture_loader_source_path",
+    "capture_loader_source_sha256",
+})
+
+
+def _capture_reference_identity(reference: dict) -> dict:
+    """Return the frozen capture/geometry identity without decoder code context."""
+    _require(isinstance(reference, dict), "captured reference is not an object")
+    return {key: value for key, value in reference.items()
+            if key not in _CAPTURE_DECODER_CONTEXT_KEYS}
+
+
+def _historical_capture_loader_commit(path: str, expected_sha256: str) -> str:
+    """Prove historical decoder bytes by owner-relative Git identity.
+
+    Historical receipts record an absolute checkout path. That path is provenance,
+    not a requirement that the old checkout still exist or share the current
+    checkout's location. Bind the suffix to the one permitted decoder owner and
+    find its exact bytes in this repository's immutable Git objects.
+    """
+    repo_root = Path(__file__).resolve().parents[2]
+    normalized = PurePosixPath(str(path).replace("\\", "/"))
+    owner_parts = ("src", "numilab_human", "resting_anatomy_verify.py")
+    if ".." in normalized.parts or normalized.parts[-3:] != owner_parts:
+        raise ValueError(
+            "local intercostal arrangement: historical capture decoder path has the wrong repository owner"
+        )
+    if (not isinstance(expected_sha256, str) or len(expected_sha256) != 64
+            or any(char not in "0123456789abcdef" for char in expected_sha256)):
+        raise ValueError(
+            "local intercostal arrangement: historical capture decoder SHA is malformed"
+        )
+    relative = "/".join(owner_parts)
+    commits = subprocess.run(
+        ["git", "-C", str(repo_root), "log", "--all", "--format=%H", "--", relative],
+        check=True, capture_output=True, text=True,
+    ).stdout.splitlines()
+    for commit in commits:
+        result = subprocess.run(
+            ["git", "-C", str(repo_root), "show", f"{commit}:{relative}"],
+            check=False, capture_output=True,
+        )
+        if result.returncode == 0 and sha_bytes(result.stdout) == expected_sha256:
+            return commit
+    raise ValueError(
+        "local intercostal arrangement: historical capture decoder SHA is not present in Git history"
+    )
+
 def validate_receipt_composition(
     *,
     base_receipt_path: Path,
@@ -2415,8 +2465,32 @@ def validate_receipt_composition(
         "rows": {str(stable_id): summaries[str(stable_id)]["captured_reference_row"]
                  for stable_id in sorted(REPAIRED_IDS)},
     }
-    _require(reconstructed_capture_reference == captured_reference,
-             "captured-world source rows or P6 input provenance differ from the append receipt")
+    historical_loader_path = captured_reference.get("capture_loader_source_path")
+    historical_loader_sha = captured_reference.get("capture_loader_source_sha256")
+    _require(isinstance(historical_loader_path, str)
+             and isinstance(historical_loader_sha, str)
+             and len(historical_loader_sha) == 64,
+             "append receipt lacks the historical capture decoder identity")
+    historical_loader_commit = _historical_capture_loader_commit(
+        historical_loader_path, historical_loader_sha)
+    current_loader_path = Path(__file__).with_name("resting_anatomy_verify.py").resolve()
+    current_loader_sha = sha_file(current_loader_path)
+    _require(reconstructed_capture_reference.get("capture_loader_source_path")
+             == str(current_loader_path)
+             and reconstructed_capture_reference.get("capture_loader_source_sha256")
+             == current_loader_sha,
+             "current capture decoder execution identity is malformed")
+    _require(_capture_reference_identity(reconstructed_capture_reference)
+             == _capture_reference_identity(captured_reference),
+             "captured-world source rows, pack identity, or pose differ from the append receipt")
+    capture_decoder_provenance = {
+        "historical_decoder_path": historical_loader_path,
+        "historical_decoder_sha256": historical_loader_sha,
+        "historical_decoder_git_commit": historical_loader_commit,
+        "current_execution_decoder_path": str(current_loader_path),
+        "current_execution_decoder_sha256": current_loader_sha,
+        "captured_world_pack_pose_and_row_identity_exact": True,
+    }
     extension = provenance.get("passive_brachiocephalic_vein_extension", {})
     vessel_blend = extension.get("passive_tissue_owner_blend", {})
     retirement = vessel_blend.get("local_source_face_retirement")
@@ -2624,6 +2698,7 @@ def validate_receipt_composition(
         "exact_local_vessel_source_face_retirement_reconstructed": bool(retired_rows),
         "all_three_repaired_rows_reconstructed_from_pinned_positive_maps": True,
         "captured_step0_world_points_and_local_abi5_emission_bound": True,
+        "capture_decoder_provenance": capture_decoder_provenance,
         "all_source_id_map_repair_pointers_match_aggregate": True,
         "physical_mass_or_state_added": False,
         "row_summaries": summaries,

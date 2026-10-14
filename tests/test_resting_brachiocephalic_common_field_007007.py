@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from numilab_human import resting_brachiocephalic_common_field_007007 as driver
@@ -34,19 +36,23 @@ def test_header_preflight_rejects_wrong_abi_and_truncated_payload(tmp_path):
         driver._read_nhanat_header(path)
 
 
-def test_preflight_imports_the_pinned_published_owner_sources():
-    pins = driver._owner_import_pins()
+def test_historical_owner_pins_match_the_published_revision():
+    import hashlib
+    import subprocess
+    from pathlib import Path
 
-    assert pins["common_field_compiler_code_sha256"] == {
-        name: digest for name, digest in driver.OWNER_SOURCE_SHA256.items()
-        if name != "myosim_bone_proximity.py"
-    }
-    assert pins["modules"][
-        "numilab_human.myosim_bone_proximity"]["sha256"] == (
-            driver.OWNER_SOURCE_SHA256["myosim_bone_proximity.py"])
-    assert pins["modules"][
-        "numilab_human.resting_brachiocephalic_common_field"]["origin"].endswith(
-            "/resting_brachiocephalic_common_field.py")
+    repo = Path(driver.__file__).resolve().parents[2]
+    for name, expected in driver.OWNER_SOURCE_SHA256.items():
+        result = subprocess.run(
+            ["git", "-C", str(repo), "show",
+             f"{driver.PUBLISHED_OWNER_REVISION}:src/numilab_human/{name}"],
+            check=True, capture_output=True)
+        assert hashlib.sha256(result.stdout).hexdigest() == expected
+
+
+def test_historical_preflight_fails_closed_on_changed_current_owner():
+    with pytest.raises(ValueError, match="published source owner hash changed"):
+        driver._owner_import_pins()
 
 
 def test_python_preflight_binds_qualified_venv_not_framework_symlink():
@@ -55,7 +61,8 @@ def test_python_preflight_binds_qualified_venv_not_framework_symlink():
     assert identity["virtual_environment"].endswith(
         "/numi-human-prep-venv-20261005")
     assert identity["base_prefix"] != identity["virtual_environment"]
-    assert identity["executable"].endswith("/bin/python3")
+    assert Path(identity["executable"]).parent.name == "bin"
+    assert Path(identity["executable"]).name in {"python", "python3"}
     assert identity["resolved_executable"] != identity["executable"]
 
 

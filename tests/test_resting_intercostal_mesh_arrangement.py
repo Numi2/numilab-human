@@ -725,3 +725,61 @@ def test_current_candidate_replay_rejects_unpinned_fan_child_ancestry(damage):
     with pytest.raises(ValueError, match="313|fan-split|source parent|ancestry"):
         arrangement._validate_current_candidate_replay(
             executed_row=executed, current_row=current, lineage=lineage, stable_id=313)
+
+
+def test_capture_reference_allows_new_decoder_context_but_keeps_geometry_identity():
+    frozen = {
+        "capture_manifest_sha256": "a" * 64,
+        "pack_sha256": "b" * 64,
+        "accepted_step": 0,
+        "accepted_time_s": 0,
+        "accepted_body20_pose": {"position_m": [1, 2, 3]},
+        "rows": {"313": {"captured_world_parent_xyz_f32_sha256": "c" * 64}},
+        "capture_loader_source_path": "/old/checkout/resting_anatomy_verify.py",
+        "capture_loader_source_sha256": "d" * 64,
+    }
+    replay = {
+        **frozen,
+        "capture_loader_source_path": "/current/checkout/resting_anatomy_verify.py",
+        "capture_loader_source_sha256": "e" * 64,
+    }
+
+    assert arrangement._capture_reference_identity(replay) == \
+        arrangement._capture_reference_identity(frozen)
+
+    replay["pack_sha256"] = "f" * 64
+    assert arrangement._capture_reference_identity(replay) != \
+        arrangement._capture_reference_identity(frozen)
+
+
+def test_capture_reference_rejects_row_or_pose_drift_with_same_decoder_context():
+    frozen = {
+        "pack_sha256": "b" * 64,
+        "accepted_body20_pose": {"position_m": [1, 2, 3]},
+        "rows": {"313": {"captured_world_parent_xyz_f32_sha256": "c" * 64}},
+        "capture_loader_source_path": "/checkout/resting_anatomy_verify.py",
+        "capture_loader_source_sha256": "d" * 64,
+    }
+    changed_row = json.loads(json.dumps(frozen))
+    changed_row["rows"]["313"]["captured_world_parent_xyz_f32_sha256"] = "e" * 64
+    changed_pose = json.loads(json.dumps(frozen))
+    changed_pose["accepted_body20_pose"]["position_m"][0] = 1.001
+
+    assert arrangement._capture_reference_identity(changed_row) != \
+        arrangement._capture_reference_identity(frozen)
+    assert arrangement._capture_reference_identity(changed_pose) != \
+        arrangement._capture_reference_identity(frozen)
+
+
+def test_historical_capture_loader_is_bound_by_owner_relative_git_identity():
+    relocated = "/retired/checkouts/human/src/numilab_human/resting_anatomy_verify.py"
+    historical_sha = "00cf51d56f6152b56659eb5bc5569fe1d564d9ad6b6a7d79f2b754bf06c753ef"
+    commit = arrangement._historical_capture_loader_commit(relocated, historical_sha)
+    assert len(commit) == 40
+
+    with pytest.raises(ValueError, match="wrong repository owner"):
+        arrangement._historical_capture_loader_commit(
+            "/retired/checkouts/human/src/numilab_lab/resting_anatomy_verify.py",
+            historical_sha)
+    with pytest.raises(ValueError, match="SHA is not present"):
+        arrangement._historical_capture_loader_commit(relocated, "f" * 64)
