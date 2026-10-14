@@ -1,0 +1,37 @@
+{
+  "host": "ssh numi",
+  "source_commits": [
+    "e624635a713f35a995d1d5456bdd46ab41ae55a7",
+    "fedc109c5794ec64e09094d3cfb287d7c738e454"
+  ],
+  "publication_commits": [
+    "b30de16d",
+    "3c0ade3d"
+  ],
+  "tests": {
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_resting_passive_viscera_identity.py tests/test_passive_tissue_parent_carriers.py tests/test_forearm_material_carrier_compiler.py",
+    "passed": 20,
+    "subtests_passed": 12,
+    "vein_and_shared_verifier_prior_passed": 14
+  },
+  "source_preparation": {
+    "manifest_path": "/Users/n/numi-human-vein-integration-20261014/source-candidate-003/resting-anatomy-manifest.json",
+    "manifest_sha256": "234e3c52c787bdb261bdc488611b0cc577f047a6e447c0c53a844d4d6afea557",
+    "payload": {
+      "abi": 5,
+      "index_count": 11080611,
+      "input_payload_sha256": "7808473ddb7bb78c00598566887ce7cce4fc2e2db04c51bdaa2b82b88efee3b7",
+      "path": "/Users/n/numi-human-vein-integration-20261014/source-candidate-003/resting-thorax.nhanatomy",
+      "registration_fingerprint32": "b1b410ad",
+      "sha256": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150",
+      "source_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+      "surface_count": 525,
+      "vertex_count": 2078454
+    },
+    "receipt": {
+      "path": "/Users/n/numi-human-vein-integration-20261014/source-candidate-003/resting-anatomy-receipt.json",
+      "sha256": "7e862dc0978fbf5dc52fd18816414796f9c792628f951a66d342a6a92d8d2b70"
+    }
+  },
+  "scope": "Source-compatible passive NHA append API; existing mass and blood compartments retain single ownership. Source preparation is not current-N27 native admission. Cardiac common-field extension, vessel continuity, all-pose geometry and native confirmation remain pending."
+}
