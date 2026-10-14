@@ -28,6 +28,17 @@ DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-
 PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-preflight-005.json"
 SIX_DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-diagnostic-002"
 SIX_PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-preflight-002.json"
+SIX_JUNCTION_SOURCE_REPORT = A / (
+    "brachiocephalic-source-007-six-port-geometry-001/"
+    "port-525-526-six-port-diagnostic-001/six-port-section-diagnostic.json")
+SIX_JUNCTION_SOURCE_REPORT_SHA256 = (
+    "40d01f68619153ef94f09e79bf83f160c2c83ed695899c1713693f9a2a88fe5f")
+SIX_JUNCTION_SOURCE_PREFLIGHT = A / (
+    "brachiocephalic-source-007-six-port-geometry-001/"
+    "port-525-526-six-port-preflight-001.json")
+SIX_JUNCTION_SOURCE_PREFLIGHT_SHA256 = (
+    "feedad4833ec03331554b0b733a1a9764ac13d556017a22302ba9293005f1995")
+SIX_JUNCTION_PAIR = ((51011, 526), (51011, 472))
 HP98_ROOT = Path("/Users/n/numi-human-resting-anatomy-gates-publish-1398")
 HP98_VERIFIER = HP98_ROOT / "src/numilab_human/resting_anatomy_verify.py"
 HP98_SHA256 = "87d21c53c4ac003fa8df7410cc681d91a90465af808217d8af4561155d5094bb"
@@ -40,7 +51,7 @@ SOURCE007_GATE_SHA256 = (
     "adf7120f4257d0579b70fb4c7c1c98bb49e479596e0bbc604015bdee9608e977")
 RUNTIME_CODE_EXPECTED_SHA256 = {
     "resting_brachiocephalic_geometry_gate.py":
-        "a8f66b2d4444220460389f995bcf3bfed0125f5fd8b32e2a52e7c60a0321340a",
+        "f80c2128420620b4670e3ea6f672d2c56ca077ceac25c7e7b6819fdb8608dfad",
     "resting_brachiocephalic_source007.py":
         "975b2124ccfc96131197986893ea79c18f2fb7943de27227ff103883c245c8d3",
     "resting_brachiocephalic_pose_predictor.py":
@@ -76,6 +87,17 @@ SIX_REPLAY_SCOPE = {
     "all_target_checks_invoked": False,
     "all_nearby_collision_checks_invoked": False,
     "stop_after_first_failed_port": True,
+    "junction_station_source": {
+        "bridge": [51011, 526],
+        "target": [51011, 472],
+        "station_role": "bridge",
+        "anchor_owner_id": 526,
+        "report_sha256": SIX_JUNCTION_SOURCE_REPORT_SHA256,
+        "station_method": "inferred PCA source station reused through frozen material-vertex ancestry",
+        "per_pose_transport": "weighted frozen anchor vertices and ordered tangent-support vertices; recompute the section plane on current pose geometry",
+        "measured_station": False,
+        "source0_scope": "undeformed rigid-source screen only; cardiac displacement and captured-pose admission not evaluated",
+    },
     "junction_section_policy": {
         "ordinary_union_sections_require_exactly_one_closed_loop": True,
         "two_loop_exception": "only a declared two-vessel junction station with one complete Mesh64 source-face lineage per stable owner, one closed standalone source section per branch, one candidate and baseline union component, positive candidate and baseline volumetric intersection, exact inside-both and port-interface witnesses, and per-vessel area/minimum-Feret preservation",
@@ -830,13 +852,143 @@ def run_diagnostic() -> dict:
     return report
 
 
+def _frozen_junction_station_input() -> dict:
+    require(SIX_JUNCTION_SOURCE_REPORT.is_file()
+            and sha_file(SIX_JUNCTION_SOURCE_REPORT)
+            == SIX_JUNCTION_SOURCE_REPORT_SHA256,
+            "retained 526-to-472 station diagnostic changed")
+    require(SIX_JUNCTION_SOURCE_PREFLIGHT.is_file()
+            and sha_file(SIX_JUNCTION_SOURCE_PREFLIGHT)
+            == SIX_JUNCTION_SOURCE_PREFLIGHT_SHA256,
+            "retained 526-to-472 station preflight changed")
+    prior_preflight = json.loads(SIX_JUNCTION_SOURCE_PREFLIGHT.read_text())
+    require(prior_preflight.get("status") == "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED"
+            and prior_preflight.get("geometry_arrays_loaded") is False
+            and prior_preflight.get("geometry_predicates_run") is False,
+            "retained station source was not produced by a no-geometry preflight")
+    prior = json.loads(SIX_JUNCTION_SOURCE_REPORT.read_text())
+    require(prior.get("preflight_path") == str(SIX_JUNCTION_SOURCE_PREFLIGHT)
+            and prior.get("preflight_sha256") == SIX_JUNCTION_SOURCE_PREFLIGHT_SHA256
+            and prior.get("status") == "SIX_PORT_RIGID_ONLY_SOURCE_SCREEN_REJECTED"
+            and prior.get("source_compiler_invoked") is False
+            and prior.get("source_or_helper_changed") is False
+            and prior.get("native_or_gpu_work_performed") is False
+            and prior.get("input_geometry", {}).get(
+                "bridge_and_target_are_source007_rigid_only_screen") is True
+            and prior.get("input_geometry", {}).get(
+                "bridge_field_displacement_predicted") is False,
+            "retained junction station diagnostic scope changed")
+    run = json.loads(RUN_REPORT.read_text())
+    candidate_files = run.get("candidate007_files_sha256", {})
+    preparation_files = run.get("prep007_files_sha256", {})
+    require(prior.get("source007_failure_report_sha256") == RUN_REPORT_SHA256
+            and prior.get("candidate_payload_sha256")
+            == candidate_files.get("resting-thorax.nhanatomy")
+            and prior.get("preparation_report_sha256")
+            == preparation_files.get("brachiocephalic-common-field-preparation.json"),
+            "retained station diagnostic no longer matches pinned source-007 inputs")
+
+    pair_identity = {"bridge": list(SIX_JUNCTION_PAIR[0]),
+                     "target": list(SIX_JUNCTION_PAIR[1])}
+    matches = [
+        row for row in prior.get("trace", {}).get("section_derivation", [])
+        if row.get("port_identity") == pair_identity and row.get("role") == "bridge"
+    ]
+    require(len(matches) == 1, "retained diagnostic needs one bridge station for 526-to-472")
+    station_record = matches[0]
+    station = station_record.get("station")
+    require(isinstance(station, dict)
+            and station.get("inferred") is True
+            and station.get("transported_from_source_vertex_ancestry") is True
+            and station.get("provenance")
+            == "inferred PCA axis oriented toward source-surface interior centroid",
+            "retained bridge station must preserve its inferred-source provenance")
+    bridge_geometry = prior.get("input_geometry", {}).get(
+        "bridge_surfaces", {}).get("526", {})
+    ancestry = station_record.get("surface_ancestry", {})
+    require(ancestry.get("positions_sha256") == bridge_geometry.get("positions_sha256")
+            and ancestry.get("faces_sha256") == bridge_geometry.get("faces_sha256")
+            and ancestry.get("source_vertex_ids_sha256"),
+            "retained station material ancestry is not bound to the source-526 surface")
+    required_station_fields = (
+        "material_anchor_source_vertex_ids",
+        "tangent_support_source_vertex_ids",
+        "frozen_collar_face_ids",
+    )
+    require(all(isinstance(station.get(key), list) and station[key]
+                and all(type(value) is int and value >= 0 for value in station[key])
+                for key in required_station_fields),
+            "retained bridge station lacks explicit source-vertex/collar ancestry")
+    require(len(station["tangent_support_source_vertex_ids"]) == 2,
+            "retained bridge station needs exactly two tangent support vertices")
+    ancestry_keys = (
+        "material_anchor_local_vertex_ids", "material_anchor_source_vertex_ids",
+        "material_anchor_weights", "tangent_support_local_vertex_ids",
+        "tangent_support_source_vertex_ids", "frozen_collar_face_ids")
+    require(station_record.get("station_center_sha256")
+            == _array_hash(station.get("section_center_world_m"), "<f8")
+            and station_record.get("station_tangent_sha256")
+            == _array_hash(station.get("tangent_world_unit"), "<f8")
+            and station_record.get("material_ancestry_sha256")
+            == _json_hash({key: station.get(key) for key in ancestry_keys}),
+            "retained station numerical and material-ancestry digests disagree")
+    declarations = {
+        "declaration_id": (
+            "retained-station-report-sha256:"
+            + SIX_JUNCTION_SOURCE_REPORT_SHA256
+            + ":port-526-to-472:bridge"),
+        "station_role": "bridge",
+        "expected_owner_ids": [472, 526],
+        "bridge_owner_id": 526,
+        "target_owner_id": 472,
+        "anchor_owner_id": 526,
+        "source_ancestry": {
+            key: station[key] for key in required_station_fields
+        },
+    }
+    return {
+        "source_report_path": str(SIX_JUNCTION_SOURCE_REPORT),
+        "source_report_sha256": SIX_JUNCTION_SOURCE_REPORT_SHA256,
+        "source_preflight_path": str(SIX_JUNCTION_SOURCE_PREFLIGHT),
+        "source_preflight_sha256": SIX_JUNCTION_SOURCE_PREFLIGHT_SHA256,
+        "source_candidate_payload_path": str(
+            CANDIDATE_DIR / "resting-thorax.nhanatomy"),
+        "source_candidate_payload_sha256": prior["candidate_payload_sha256"],
+        "source_preparation_report_path": str(
+            PREPARATION_DIR / "brachiocephalic-common-field-preparation.json"),
+        "source_preparation_report_sha256": prior["preparation_report_sha256"],
+        "source_bridge_surface_ancestry": {
+            "positions_sha256": ancestry["positions_sha256"],
+            "faces_sha256": ancestry["faces_sha256"],
+            "source_vertex_ids_sha256": ancestry["source_vertex_ids_sha256"],
+        },
+        "source_station_center_sha256": station_record["station_center_sha256"],
+        "source_station_tangent_sha256": station_record["station_tangent_sha256"],
+        "source_material_ancestry_sha256": station_record["material_ancestry_sha256"],
+        "station_spec": station,
+        "station_spec_sha256": _json_hash(station),
+        "station_declaration": declarations,
+        "station_declaration_sha256": _json_hash(declarations),
+        "station_status": (
+            "INFERRED_REGISTERED_SOURCE_STATION_REUSED_AS_MATERIAL_ANCESTRY_ONLY"),
+        "geometry_arrays_loaded": False,
+        "geometry_predicates_run": False,
+    }
+
+
 def write_six_port_preflight() -> dict:
-    return write_preflight(
+    report = build_preflight(
         diagnostic_dir=SIX_DIAGNOSTIC_DIR,
         preflight_path=SIX_PREFLIGHT_PATH,
         replay_scope=SIX_REPLAY_SCOPE,
         schema_suffix="six-port",
     )
+    binding = _frozen_junction_station_input()
+    report["junction_station_binding"] = binding
+    _write_json(SIX_PREFLIGHT_PATH, report)
+    report["report_path"] = str(SIX_PREFLIGHT_PATH)
+    report["report_sha256"] = sha_file(SIX_PREFLIGHT_PATH)
+    return report
 
 
 def run_six_port_diagnostic() -> dict:
@@ -855,6 +1007,9 @@ def run_six_port_diagnostic() -> dict:
     require(preflight.get("replay_scope") == SIX_REPLAY_SCOPE
             and preflight.get("source_compiler_invoked") is False,
             "six-port replay scope changed after preflight")
+    station_binding = _frozen_junction_station_input()
+    require(preflight.get("junction_station_binding") == station_binding,
+            "retained junction station declaration changed after preflight")
     require(not SIX_DIAGNOSTIC_DIR.exists(),
             "retain six-port diagnostic outputs and choose a successor")
 
@@ -881,6 +1036,7 @@ def run_six_port_diagnostic() -> dict:
         "preparation_report_sha256": preflight["prep007_files_sha256"][
             "brachiocephalic-common-field-preparation.json"],
         "ports": SIX_REPLAY_SCOPE["ports"],
+        "junction_station_binding": station_binding,
         "source_or_helper_changed": False,
         "only_declared_six_ports_evaluated": True,
         "undeclared_targets_evaluated": False,
@@ -991,9 +1147,18 @@ def run_six_port_diagnostic() -> dict:
         observed_manifold = _recording_manifold_proxy(manifold, recorder)
         restore = install_recording_wrappers(gate, av, recorder)
         try:
+            station_specs = {
+                SIX_JUNCTION_PAIR: {"bridge": station_binding["station_spec"]},
+            }
+            junction_station_declarations = {
+                SIX_JUNCTION_PAIR: {
+                    "bridge": station_binding["station_declaration"],
+                },
+            }
             result = gate.audit_brachiocephalic_six_port_continuity(
                 av, observed_manifold, candidate_surfaces, baseline_surfaces,
-                port_map)
+                port_map, station_specs=station_specs,
+                junction_station_declarations=junction_station_declarations)
             report["helper_result"] = _jsonable(result)
             report["evaluated_port_count"] = result.get("evaluated_port_count")
             report["requested_port_count"] = result.get("requested_port_count")

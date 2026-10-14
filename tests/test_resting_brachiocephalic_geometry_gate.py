@@ -755,7 +755,15 @@ def test_port_replay_preflight_is_pinned_single_port_and_keeps_topology_metrics(
     }
     assert portdiag.RUNTIME_CODE_EXPECTED_SHA256[
         "resting_brachiocephalic_geometry_gate.py"] == (
-            "a8f66b2d4444220460389f995bcf3bfed0125f5fd8b32e2a52e7c60a0321340a")
+            "f80c2128420620b4670e3ea6f672d2c56ca077ceac25c7e7b6819fdb8608dfad")
+    assert portdiag.SIX_JUNCTION_SOURCE_REPORT_SHA256 == (
+        "40d01f68619153ef94f09e79bf83f160c2c83ed695899c1713693f9a2a88fe5f")
+    assert portdiag.SIX_JUNCTION_SOURCE_PREFLIGHT_SHA256 == (
+        "feedad4833ec03331554b0b733a1a9764ac13d556017a22302ba9293005f1995")
+    station_source = portdiag.SIX_REPLAY_SCOPE["junction_station_source"]
+    assert station_source["station_method"].startswith("inferred PCA")
+    assert station_source["measured_station"] is False
+    assert "captured-pose admission not evaluated" in station_source["source0_scope"]
     summary = portdiag._section_summary({
         "passed": False,
         "section_node_count": 39,
@@ -953,3 +961,69 @@ def test_port_diagnostic_wrappers_preserve_failed_section_and_comparison():
     assert comparison["candidate_section"]["passed"] is False
     assert comparison["baseline_section"]["passed"] is False
     assert comparison["error"]["message"].endswith("positive closed-loop measures")
+
+def test_material_station_transports_frozen_vertex_ancestry_across_a_pose():
+    positions, faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.25, sectors=12, axial=8)
+    source_ids = np.arange(len(positions), dtype=np.uint64)
+    surface = av.prepare_surface(
+        (51011, 526), np.ascontiguousarray(positions, dtype="<f4"),
+        faces, source_vertex_ids=source_ids)
+    collar_faces = [0, 1, 2, 3]
+    original_station = bg._validated_station_spec(
+        surface, None, witness_points=positions[:4],
+        collar_face_ids=collar_faces)
+
+    angle = 0.63
+    cosine, sine = np.cos(angle), np.sin(angle)
+    rotation = np.asarray([
+        [cosine, 0.0, sine],
+        [0.0, 1.0, 0.0],
+        [-sine, 0.0, cosine],
+    ])
+    rotated_positions = np.ascontiguousarray(
+        positions @ rotation.T, dtype="<f4")
+    rotated = av.prepare_surface(
+        (51011, 526), rotated_positions, faces,
+        source_vertex_ids=source_ids)
+    transported = bg._validated_station_spec(
+        rotated, original_station,
+        witness_points=rotated_positions[:4],
+        collar_face_ids=[1, 3])
+
+    for field in (
+        "material_anchor_local_vertex_ids",
+        "material_anchor_source_vertex_ids",
+        "material_anchor_weights",
+        "tangent_support_local_vertex_ids",
+        "tangent_support_source_vertex_ids",
+        "frozen_collar_face_ids",
+    ):
+        assert transported[field] == original_station[field]
+    assert not np.allclose(
+        transported["section_center_world_m"],
+        original_station["section_center_world_m"])
+    support = np.asarray(transported["tangent_support_local_vertex_ids"])
+    expected_tangent = (
+        rotated_positions[support[1]].astype(np.float64)
+        - rotated_positions[support[0]].astype(np.float64))
+    expected_tangent /= np.linalg.norm(expected_tangent)
+    assert np.allclose(
+        transported["tangent_world_unit"], expected_tangent,
+        rtol=0.0, atol=2e-7)
+
+    with pytest.raises(ValueError, match="leave the frozen interface patch"):
+        bg._validated_station_spec(
+            rotated, original_station,
+            witness_points=rotated_positions[:4],
+            collar_face_ids=[4])
+
+    mismatched = dict(original_station)
+    mismatched["material_anchor_source_vertex_ids"] = list(
+        original_station["material_anchor_source_vertex_ids"])
+    mismatched["material_anchor_source_vertex_ids"][0] += 1
+    with pytest.raises(ValueError, match="anchor source vertex IDs"):
+        bg._validated_station_spec(
+            rotated, mismatched,
+            witness_points=rotated_positions[:4],
+            collar_face_ids=collar_faces)

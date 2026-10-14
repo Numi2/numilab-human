@@ -559,6 +559,74 @@ def _port_station_spec(surface, witness_points, collar_face_ids, *, route_anchor
     return _transport_material_station(surface, spec)
 
 
+def _explicit_material_vertex_ancestry(surface, value, collar_face_ids):
+    fields = (
+        "material_anchor_local_vertex_ids",
+        "material_anchor_source_vertex_ids",
+        "material_anchor_weights",
+        "tangent_support_local_vertex_ids",
+        "tangent_support_source_vertex_ids",
+        "frozen_collar_face_ids",
+    )
+    present = [field in value for field in fields]
+    if not any(present):
+        return None
+    _require(all(present),
+             "explicit material station ancestry must provide every vertex and collar field")
+    source_ids = np.asarray(surface.source_vertex_ids)
+    _require(source_ids.shape == (len(surface.positions),)
+             and source_ids.dtype.kind in "iu",
+             "material station requires per-vertex source identity")
+    anchor_local = value["material_anchor_local_vertex_ids"]
+    anchor_source = value["material_anchor_source_vertex_ids"]
+    anchor_weights = value["material_anchor_weights"]
+    tangent_local = value["tangent_support_local_vertex_ids"]
+    tangent_source = value["tangent_support_source_vertex_ids"]
+    frozen_collar = value["frozen_collar_face_ids"]
+    _require(isinstance(anchor_local, (list, tuple)) and len(anchor_local) > 0
+             and all(type(index) is int and 0 <= index < len(source_ids)
+                     for index in anchor_local),
+             "material station anchor local vertex IDs are invalid")
+    _require(isinstance(anchor_source, (list, tuple))
+             and len(anchor_source) == len(anchor_local)
+             and all(type(index) is int and index >= 0 for index in anchor_source)
+             and np.array_equal(source_ids[np.asarray(anchor_local, dtype=np.int64)],
+                                np.asarray(anchor_source, dtype=source_ids.dtype)),
+             "material station anchor source vertex IDs do not match current topology")
+    weights = np.asarray(anchor_weights, dtype=np.float64)
+    _require(weights.shape == (len(anchor_local),) and np.isfinite(weights).all()
+             and np.all(weights > 0.0)
+             and abs(float(np.sum(weights)) - 1.0) <= 1e-12,
+             "material station anchor weights must be positive and sum to one")
+    _require(isinstance(tangent_local, (list, tuple)) and len(tangent_local) == 2
+             and all(type(index) is int and 0 <= index < len(source_ids)
+                     for index in tangent_local)
+             and tangent_local[0] != tangent_local[1],
+             "material station tangent support local IDs must be two distinct vertices")
+    _require(isinstance(tangent_source, (list, tuple)) and len(tangent_source) == 2
+             and all(type(index) is int and index >= 0 for index in tangent_source)
+             and np.array_equal(source_ids[np.asarray(tangent_local, dtype=np.int64)],
+                                np.asarray(tangent_source, dtype=source_ids.dtype)),
+             "material station tangent source IDs do not match current topology")
+    collar_ids = np.asarray(collar_face_ids, dtype=np.int64)
+    _require(isinstance(frozen_collar, (list, tuple)) and len(frozen_collar) > 0
+             and all(type(index) is int and 0 <= index < len(surface.faces)
+                     for index in frozen_collar),
+             "material station frozen collar face IDs are invalid")
+    frozen_collar_ids = np.asarray(frozen_collar, dtype=np.int64)
+    _require(collar_ids.ndim == 1 and len(collar_ids) > 0
+             and np.all(np.isin(collar_ids, frozen_collar_ids)),
+             "observed station collar faces leave the frozen interface patch")
+    return {
+        "material_anchor_local_vertex_ids": [int(index) for index in anchor_local],
+        "material_anchor_source_vertex_ids": [int(index) for index in anchor_source],
+        "material_anchor_weights": weights.tolist(),
+        "tangent_support_local_vertex_ids": [int(index) for index in tangent_local],
+        "tangent_support_source_vertex_ids": [int(index) for index in tangent_source],
+        "frozen_collar_face_ids": [int(index) for index in frozen_collar],
+    }
+
+
 def _validated_station_spec(surface, value, *, witness_points, collar_face_ids,
                             route_anchor=None):
     if value is None:
@@ -575,6 +643,20 @@ def _validated_station_spec(surface, value, *, witness_points, collar_face_ids,
     tangent /= norm
     _require(isinstance(value.get("provenance"), str) and value["provenance"].strip(),
              "explicit station specification needs provenance")
+    retained_ancestry = _explicit_material_vertex_ancestry(
+        surface, value, collar_face_ids)
+    if retained_ancestry is not None:
+        offset = float(value.get("station_offset_from_anchor_m", 0.0))
+        _require(np.isfinite(offset) and offset > 0.0,
+                 "explicit material station needs a positive ancestry-relative offset")
+        spec = {
+            "tangent_world_unit": tangent.tolist(),
+            "provenance": value["provenance"],
+            "inferred": bool(value.get("inferred", False)),
+            "station_offset_from_anchor_m": offset,
+            **retained_ancestry,
+        }
+        return _transport_material_station(surface, spec)
     ancestry = _material_vertex_ancestry(surface, tangent, collar_face_ids)
     anchor_ids = np.asarray(ancestry["material_anchor_local_vertex_ids"], dtype=np.int64)
     weights = np.asarray(ancestry["material_anchor_weights"], dtype=np.float64)
