@@ -564,6 +564,9 @@ def load_full_candidate_arrangement_binding(
     lineage_sha256: str,
     report_path: Path,
     report_sha256: str,
+    stable_id: int,
+    null_face_retirement_ledger_path: Path,
+    null_face_retirement_ledger_sha256: str,
 ) -> dict:
     """Load the exact full_candidate triplet against its pinned 028 source parent."""
     from .resting_intercostal_mesh_arrangement import load_pinned_arrangement
@@ -583,6 +586,9 @@ def load_full_candidate_arrangement_binding(
         report_sha256=report_sha256,
         source_payload_sha256=source_payload_sha256,
         source_payload_index=source_payload_index,
+        stable_id=stable_id,
+        null_face_retirement_ledger_path=null_face_retirement_ledger_path,
+        null_face_retirement_ledger_sha256=null_face_retirement_ledger_sha256,
     )
 
 
@@ -594,8 +600,9 @@ def prepare_full_candidate_arrangement_binding(
     candidate_row: dict,
     repair_parent_row: dict,
     repair_report: dict,
+    captured_source_xyz,
 ) -> dict:
-    """Compose the compiled candidate from original N27 plus the pinned 028 lineage."""
+    """Compose the compiled candidate from original N27 plus pinned step-0 ancestry."""
     from .resting_intercostal_mesh_arrangement import (
         compose_intercostal_arrangement_row,
         verify_compiled_candidate_row,
@@ -607,6 +614,7 @@ def prepare_full_candidate_arrangement_binding(
         parent_row=repair_parent_row,
         arrangement=binding,
         repair_report=repair_report,
+        captured_source_xyz=captured_source_xyz,
     )
     verified = verify_compiled_candidate_row(
         stable_id=stable_id,
@@ -615,6 +623,7 @@ def prepare_full_candidate_arrangement_binding(
         candidate_row=candidate_row,
         arrangement=binding,
         repair_report=repair_report,
+        captured_source_xyz=captured_source_xyz,
     )
     _require(
         _canonical_row_bytes(expected_row) == _canonical_row_bytes(candidate_row),
@@ -1548,6 +1557,18 @@ def _runtime_input_context(preflight: dict) -> dict:
         repair_report_path=Path(repair_binding["repair_report_path"]),
         repair_report_sha256=repair_binding["repair_report_sha256"],
     )
+    from .resting_intercostal_mesh_arrangement import (
+        load_pinned_step0_capture_parent_xyz,
+    )
+    captured_reference = repair_binding.get("captured_reference", {})
+    _require(isinstance(captured_reference, dict),
+             "append receipt lacks its captured-world parent binding")
+    captured_parent_xyz_by_id, reconstructed_capture_reference = load_pinned_step0_capture_parent_xyz(
+        capture_manifest_path=Path(captured_reference.get("capture_manifest_path", "")),
+        capture_manifest_sha256=captured_reference.get("capture_manifest_sha256"),
+        source_rows=baseline_rows)
+    _require(reconstructed_capture_reference == captured_reference,
+             "captured-world parent binding differs from pinned P6 source inputs")
     arrangement_candidates = {}
     for record in repair_binding["rows"]:
         stable_id = int(record["stable_id"])
@@ -1561,6 +1582,11 @@ def _runtime_input_context(preflight: dict) -> dict:
             lineage_sha256=descriptor["lineage_sha256"],
             report_path=Path(descriptor["report_path"]),
             report_sha256=descriptor["report_sha256"],
+            stable_id=stable_id,
+            null_face_retirement_ledger_path=Path(
+                descriptor["null_face_retirement_ledger_path"]),
+            null_face_retirement_ledger_sha256=descriptor[
+                "null_face_retirement_ledger_sha256"],
         )
         arrangement_candidates[stable_id] = prepare_full_candidate_arrangement_binding(
             binding=binding,
@@ -1569,6 +1595,7 @@ def _runtime_input_context(preflight: dict) -> dict:
             repair_parent_row=repair_context["repair_parent_rows"][stable_id],
             repair_report=repair_context["repair_report"],
             candidate_row=candidate_rows[stable_id],
+            captured_source_xyz=captured_parent_xyz_by_id[stable_id],
         )
     append_owner = _validate_appended_bridge_owner_inputs(
         candidate_rows, candidate_map, prep

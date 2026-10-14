@@ -4,6 +4,7 @@ The explicit side, source concept and existing MyoSim body frame are retained.
 These surfaces identify regional CVSim compartments; they are not additional
 hydraulic compartments or independently simulated vessel walls.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -11,7 +12,6 @@ import json
 from pathlib import Path
 
 from .resting_passive_viscera import append_viscera
-
 
 # concept, exact source name, existing body owner, source member count, CVSim ID
 VESSELS = (
@@ -78,11 +78,18 @@ BRACHIOCEPHALIC_VEINS = (
 )
 
 
-def append_brachiocephalic_veins(*, base_receipt: Path, output: Path,
-                                  sources_path: Path, registration_path: Path,
-                                  rigid_path: Path, quotient_npz_path: Path,
-                                  quotient_report_path: Path,
-                                  local_intercostal_arrangement_binding: dict | None = None) -> dict:
+def append_brachiocephalic_veins(
+    *,
+    base_receipt: Path,
+    output: Path,
+    sources_path: Path,
+    registration_path: Path,
+    rigid_path: Path,
+    quotient_npz_path: Path,
+    quotient_report_path: Path,
+    local_intercostal_arrangement_binding: dict | None = None,
+    vessel_owner_blend_binding: dict | None = None,
+) -> dict:
     """Append the two source-bound brachiocephalic veins through NHANAT ABI5.
 
     Every source/registration/rest-pose input is explicit. The pinned seam
@@ -91,9 +98,11 @@ def append_brachiocephalic_veins(*, base_receipt: Path, output: Path,
     common-field and native qualification remain separate gates.
     """
     return append_viscera(
-        base_receipt, output,
+        base_receipt,
+        output,
         families=tuple(row[:4] for row in BRACHIOCEPHALIC_VEINS),
-        hierarchy="part_of", layer=2,
+        hierarchy="part_of",
+        layer=2,
         extension_key="passive_brachiocephalic_vein_extension",
         compartment_by_name={row[1]: row[4] for row in BRACHIOCEPHALIC_VEINS},
         members_by_name={
@@ -106,14 +115,20 @@ def append_brachiocephalic_veins(*, base_receipt: Path, output: Path,
         quotient_npz_path=quotient_npz_path,
         quotient_report_path=quotient_report_path,
         local_intercostal_arrangement_binding=local_intercostal_arrangement_binding,
+        vessel_owner_blend_binding=vessel_owner_blend_binding,
     )
 
 
 def append_major_vessels(base_receipt: Path, output: Path) -> dict:
-    return append_viscera(base_receipt, output,
-        families=tuple(row[:4] for row in VESSELS), hierarchy="is_a", layer=2,
+    return append_viscera(
+        base_receipt,
+        output,
+        families=tuple(row[:4] for row in VESSELS),
+        hierarchy="is_a",
+        layer=2,
         extension_key="passive_major_vessel_extension",
-        compartment_by_name={row[1]: row[4] for row in VESSELS})
+        compartment_by_name={row[1]: row[4] for row in VESSELS},
+    )
 
 
 if __name__ == "__main__":
@@ -121,4 +136,9 @@ if __name__ == "__main__":
     parser.add_argument("--base-receipt", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    print(json.dumps(append_major_vessels(args.base_receipt, args.output)["payload"], sort_keys=True))
+    print(
+        json.dumps(
+            append_major_vessels(args.base_receipt, args.output)["payload"],
+            sort_keys=True,
+        )
+    )

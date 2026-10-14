@@ -10,9 +10,10 @@ from pathlib import Path
 from typing import Any
 
 from .myosim_bone_proximity import _closest_point_on_triangle
-from .resting_anatomy_interface_patch import HEADER as NHANAT_HEADER, RECORD as NHANAT_RECORD
-from .resting_pleura_proxy import _parse_payload
+from .resting_anatomy_interface_patch import HEADER as NHANAT_HEADER
+from .resting_anatomy_interface_patch import RECORD as NHANAT_RECORD
 from .resting_passive_viscera import _validated_torso_rest_body
+from .resting_pleura_proxy import _parse_payload
 
 N27_RECEIPT_SHA = "944bc88d257137f2bedd5898404c45cefd2901d719707519771ae5f4cfce3752"
 N27_PAYLOAD_SHA = "cde8705a813fe56686776c9cc038cbf06f413e1de76099d2a019d5e1b748a8d4"
@@ -87,6 +88,22 @@ def _validate_common_field_descriptor(candidate: dict, pinned_base: dict) -> Non
         child_record["path"] = base_record["path"]
     _require(child == base,
              "candidate common-field descriptor differs from pinned N27 outside anatomy hash/path relocation")
+
+
+def _source_code_pins() -> dict[str, str]:
+    """Bind this preparation to the existing serializer and source owners."""
+    source_dir = Path(__file__).resolve().parent
+    names = (
+        "resting_brachiocephalic_common_field.py",
+        "resting_brachiocephalic_source007.py",
+        "resting_major_vessels.py",
+        "resting_passive_viscera.py",
+        "resting_vessel_owner_blend.py",
+        "resting_intercostal_mesh_arrangement.py",
+        "resting_anatomy_interface_patch.py",
+        "resting_pleura_proxy.py",
+    )
+    return {name: _sha_file(source_dir / name) for name in names}
 
 
 def _payload_sections(raw: bytes) -> tuple[tuple[bytes, bytes, bytes], tuple]:
@@ -189,6 +206,73 @@ def _validate_n27_parent(receipt: dict, candidate_raw: bytes, base_receipt_path:
     return {"base_receipt": base_receipt, "base_path": base_path, "base_raw": base_raw,
             "parent_bytes": parent_bytes}
 
+def _validated_bridge_source_geometry(row: dict, bridge: dict, receipt: dict) -> tuple:
+    """Bind a default bridge to 060 or the left bridge to the exact route110 transfer."""
+    import numpy as np
+
+    xyz = np.ascontiguousarray(row["vertices6"][:, :3], dtype="<f4")
+    faces = np.ascontiguousarray(row["faces"], dtype="<u4")
+    xyz_sha, faces_sha = _sha_bytes(xyz.tobytes()), _sha_bytes(faces.tobytes())
+    if int(bridge["stable_id"]) == 525:
+        from .resting_vessel_owner_blend import ROUTE110_PINS
+
+        extension = receipt.get("provenance", {}).get(
+            "passive_brachiocephalic_vein_extension", {})
+        route = extension.get("route110_reference_field", {})
+        source_map = receipt.get("provenance", {}).get("source_id_map", {})
+        pointer = (source_map.get("525", {}).get("repair") or {}).get(
+            "route110_reference_field", {})
+        compiler = route.get("bridge_compiler_binding", {})
+        _require(
+            route.get("schema") == "numi.human.route110.registered-reference-row-transfer.v1"
+            and route.get("candidate_npz_sha256") == ROUTE110_PINS["npz"]
+            and route.get("candidate_report_sha256") == ROUTE110_PINS["report"]
+            and route.get("candidate_runner_sha256") == ROUTE110_PINS["runner"]
+            and route.get("target_preparation_checkpoint_sha256") == ROUTE110_PINS["checkpoint"]
+            and route.get("native_or_gpu_run") is False,
+            "left bridge route110 transfer is not the pinned offline source candidate",
+        )
+        _require(
+            compiler.get("stable_id") == 525
+            and compiler.get("source_member") == bridge["member"] == "FJ3482"
+            and compiler.get("existing_compiler_before_xyz_sha256") == bridge["xyz"]
+            and compiler.get("existing_compiler_faces_sha256") == bridge["faces"]
+            and compiler.get("compiler_output_matches_route110_before_exact") is True,
+            "left bridge route110 compiler ancestry does not bind the 060 source row",
+        )
+        _require(
+            pointer.get("stable_id") == 525
+            and pointer.get("source_member") == bridge["member"]
+            and pointer.get("candidate_npz_sha256") == ROUTE110_PINS["npz"]
+            and pointer.get("candidate_report_sha256") == ROUTE110_PINS["report"]
+            and pointer.get("candidate_runner_sha256") == ROUTE110_PINS["runner"]
+            and pointer.get("target_preparation_checkpoint_sha256") == ROUTE110_PINS["checkpoint"]
+            and pointer.get("after_xyz_sha256") == xyz_sha
+            and pointer.get("faces_sha256") == faces_sha == bridge["faces"]
+            and pointer.get("xyz_changed") is True,
+            "left bridge current geometry differs from exact route110 source transfer",
+        )
+        provenance = {
+            "geometry_owner": "pinned route110 source transfer on existing FJ3482 material vertices",
+            "baseline_060_xyz_sha256": bridge["xyz"],
+            "current_xyz_sha256": xyz_sha,
+            "faces_sha256": faces_sha,
+            "route110_npz_sha256": ROUTE110_PINS["npz"],
+            "route110_source_row_transfer_verified": True,
+        }
+    else:
+        _require(xyz_sha == bridge["xyz"] and faces_sha == bridge["faces"],
+                 "candidate source bridge geometry differs for " + bridge["member"])
+        provenance = {
+            "geometry_owner": "unchanged exact source-060 ABI5 compilation",
+            "baseline_060_xyz_sha256": bridge["xyz"],
+            "current_xyz_sha256": xyz_sha,
+            "faces_sha256": faces_sha,
+            "route110_source_row_transfer_verified": False,
+        }
+    return xyz, faces, provenance
+
+
 def _route_data(rows: dict, receipt: dict, paths: dict[str, Path], np: Any) -> tuple:
     for key, path in paths.items():
         _require(path.is_file() and _sha_file(path) == ROUTE_HASHES[key],
@@ -232,11 +316,9 @@ def _route_data(rows: dict, receipt: dict, paths: dict[str, Path], np: Any) -> t
                      "bridge geometry is not stationary in frozen route report")
             row = rows.get(bridge["stable_id"])
             _require(row is not None, "missing bridge row " + str(bridge["stable_id"]))
-            xyz = np.asarray(row["vertices6"][:, :3], dtype="<f4")
-            faces = np.asarray(row["faces"], dtype="<i4")
-            _require(_sha_bytes(xyz.tobytes()) == bridge["xyz"]
-                     and _sha_bytes(faces.tobytes()) == bridge["faces"],
-                     "candidate source bridge geometry differs for " + member)
+            xyz, faces_u32, geometry_provenance = _validated_bridge_source_geometry(
+                row, bridge, receipt)
+            faces = faces_u32.astype("<i4")
             identity = receipt["provenance"]["source_id_map"].get(str(bridge["stable_id"]), {})
             _require(identity.get("source_member") == member
                      and int(identity.get("body_index", -1)) == 20
@@ -255,22 +337,36 @@ def _route_data(rows: dict, receipt: dict, paths: dict[str, Path], np: Any) -> t
                          "malformed bridge collar witness")
                 key = bridge["dist"][str(pid)]
                 _require(key in dist.files, "missing source geodesic array " + key)
-                values = np.asarray(dist[key], dtype=np.float32)
-                _require(values.shape == (len(xyz),) and np.isfinite(values).all()
-                         and (values >= 0).all(), "malformed collar geodesic values")
-                zeros = set(map(int, np.flatnonzero(values == 0.0)))
-                _require(zeros == ids, "distance zero set differs from triangle witness " + key)
+                frozen_values = np.asarray(dist[key], dtype=np.float32)
+                _require(frozen_values.shape == (len(xyz),) and np.isfinite(frozen_values).all()
+                         and (frozen_values >= 0).all(), "malformed frozen collar geodesic values")
+                zeros = set(map(int, np.flatnonzero(frozen_values == 0.0)))
+                _require(zeros == ids, "frozen distance zero set differs from triangle witness " + key)
                 support[pid] = ids
             svc_support = support[10]
             distal_support = set().union(*(support[p] for p in bridge["ports"]))
             _require(not (svc_support & distal_support), "SVC and distal collars overlap")
-            d_svc = np.asarray(dist[bridge["dist"]["10"]], dtype=np.float64) * 1e-3
+            from .resting_vessel_owner_blend import (
+                _geodesic_distance,
+                _mesh_components,
+                _mesh_graph,
+            )
+            graph, _ = _mesh_graph(xyz, faces)
+            components = _mesh_components(graph)
+            source_component = next(
+                (component for component in components if svc_support.intersection(component)),
+                set())
+            _require(len(components) == 1
+                     and svc_support.issubset(source_component)
+                     and distal_support.issubset(source_component),
+                     "material collar witnesses do not share one connected source mesh")
+            d_svc = _geodesic_distance(graph, svc_support, source_component)
             d_distal = np.minimum.reduce([
-                np.asarray(dist[bridge["dist"][str(p)]], dtype=np.float64) * 1e-3
-                for p in bridge["ports"]])
+                _geodesic_distance(graph, support[pid], source_component)
+                for pid in bridge["ports"]])
             _require(np.all(d_svc[np.asarray(sorted(svc_support), dtype=int)] == 0.0)
                      and np.all(d_distal[np.asarray(sorted(distal_support), dtype=int)] == 0.0),
-                     "collar distance arrays do not terminate at witness vertices")
+                     "route-adjusted geodesic distances do not terminate at frozen collar vertices")
             svc_row = rows.get(10)
             _require(svc_row is not None, "missing SVC10 source geometry")
             svc_xyz = np.asarray(svc_row["vertices6"][:, :3], dtype=np.float64)
@@ -292,6 +388,8 @@ def _route_data(rows: dict, receipt: dict, paths: dict[str, Path], np: Any) -> t
             output[member] = {
                 "report": report, "d_svc_m": d_svc, "d_distal_m": d_distal,
                 "svc_support": sorted(svc_support), "distal_support": sorted(distal_support),
+                "geodesic_metric": "recomputed from candidate Float32 material coordinates; frozen ancestry sets seed collars",
+                "geometry_provenance": geometry_provenance,
                 "projection_bound_m": bound,
                 "route_geodesic_extent_m": route_extent,
                 "max_svc_collar_to_svc_surface_m": max_collar_offset,
@@ -494,8 +592,15 @@ def prepare_brachiocephalic_common_field(
                        "vertex_count": len(row["vertices6"]), "body_index": 20,
                        "semantic": 51011, "vascular_compartment_id": 4})
         bridge_reports[b["member"]] = {
-            "stable_id": b["stable_id"], "source_local_xyz_sha256": b["xyz"],
-            "source_faces_sha256": b["faces"], "vertex_count": len(row["vertices6"]),
+            "stable_id": b["stable_id"],
+            "source_local_xyz_sha256": _sha_bytes(np.ascontiguousarray(
+                row["vertices6"][:, :3], dtype="<f4").tobytes()),
+            "baseline_060_xyz_sha256": b["xyz"],
+            "source_faces_sha256": _sha_bytes(np.ascontiguousarray(
+                row["faces"], dtype="<u4").tobytes()),
+            "geometry_provenance": route["geometry_provenance"],
+            "geodesic_metric": route["geodesic_metric"],
+            "vertex_count": len(row["vertices6"]),
             "triangle_count": len(row["faces"]), "distal_port_ids": list(b["ports"]),
             "svc_port_support_vertices": route["svc_support"],
             "distal_port_support_vertices": route["distal_support"],
@@ -518,6 +623,12 @@ def prepare_brachiocephalic_common_field(
     report = {
         "format": "numi.human.brachiocephalic-common-field-source-preparation",
         "method": "Project each bridge vertex to the nearest SVC10 triangle with the established deterministic closest-triangle/barycentric routine, interpolate the seven existing float4 coefficients, and apply quintic C2 fade to the existing zero field at IJV/subclavian collar support.",
+        "source_code_sha256": _source_code_pins(),
+        "source_preparation_invocation": {
+            "entrypoint": "numilab_human.resting_brachiocephalic_common_field.prepare_brachiocephalic_common_field",
+            "geometry_predicates_run": False,
+            "native_or_gpu_run": False,
+        },
         "input_candidate_receipt_path": str(candidate_receipt_path),
         "input_candidate_receipt_sha256": _sha_bytes(receipt_raw),
         "input_candidate_payload_sha256": payload["sha256"],

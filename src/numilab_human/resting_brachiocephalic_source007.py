@@ -41,6 +41,19 @@ COLLAR_ATTRIBUTION = ROUTE_DIR / "bridge-collar-ancestry-107-002/report.json"
 COLLAR_REPLAY = ROUTE_DIR / "bridge-collar-ancestry-107-003/verification.json"
 COLLAR_STATIONARITY = ROUTE_DIR / "bridge-collar-ancestry-107-004/report.json"
 COLLAR_DISTANCES = ROUTE_DIR / "bridge-collar-ancestry-107-001/bridge-port-geodesic-distances-mm.npz"
+VESSEL_OWNER_PORT_REPORT = ROUTE_DIR / "arterial-venous-route-field-086/proximal-source-port-witnesses-086.json"
+VESSEL_OWNER_PORT_REPORT_SHA = "e638c6dfeb1030ab6aca113f8d658acf02820ffec883d7e19ebf7f9a8aa7c249"
+ROUTE110_DIR = ROUTE_DIR / "route-candidate-110-nonlinear-closed-volume-runner-004"
+ROUTE110_NPZ = ROUTE110_DIR / "candidate-110-source-rows.npz"
+ROUTE110_REPORT = ROUTE110_DIR / "report.json"
+ROUTE110_RUNNER = ROUTE110_DIR / "run_route110.py"
+ROUTE110_CHECKPOINT = ROUTE110_DIR / "target-prep-checkpoint.json"
+ROUTE110_SHA = {
+    str(ROUTE110_NPZ): "2f30c92319f24f8163fd9f8e6cbffec45c1171838fb23908d78c29f74672125b",
+    str(ROUTE110_REPORT): "d313b78d7d2a0a2cf64878d76c15c03f0ea5a64a4f5767c172828197d90c332c",
+    str(ROUTE110_RUNNER): "f1c2c0613851a6faacf084ead04d98da98ada5b735705237d05a3cdcd5de6941",
+    str(ROUTE110_CHECKPOINT): "6f980184b96f5af917a0ef5db7c66b3514acb586f5cfc3b5e09323e7adcd0909",
+}
 CAPTURE_MANIFEST = A / "accepted-capture-inputs-1398-001.json"
 CANDIDATE_DIR = A / "brachiocephalic-source-candidate-007-001"
 PREPARATION_DIR = A / "brachiocephalic-common-field-preparation-007-001"
@@ -105,6 +118,8 @@ INPUT_SHA = {
     str(COLLAR_REPLAY): COLLAR_SHA["replay"],
     str(COLLAR_STATIONARITY): COLLAR_SHA["stationarity"],
     str(COLLAR_DISTANCES): COLLAR_SHA["distances"],
+    str(VESSEL_OWNER_PORT_REPORT): VESSEL_OWNER_PORT_REPORT_SHA,
+    **ROUTE110_SHA,
     str(CAPTURE_MANIFEST): CAPTURE_MANIFEST_SHA,
     str(PREDICTOR_PATH): PREDICTOR_SHA,
     str(P6_PACKAGE / "resting_anatomy_verify.py"): P6_VERIFIER_SHA,
@@ -144,6 +159,7 @@ def _code_paths() -> list[Path]:
         source / "resting_major_vessels.py",
         source / "resting_passive_viscera.py",
         source / "resting_intercostal_mesh_arrangement.py",
+        source / "resting_vessel_owner_blend.py",
         source / "organ_family_geometry.py",
         source / "resting_pleura_proxy.py",
         source / "resting_anatomy_interface_patch.py",
@@ -183,6 +199,7 @@ def _frozen_input_pins() -> dict:
 def _load_local_intercostal_arrangement_config(config_path: Path) -> tuple[dict, dict]:
     """Resolve the narrow source owner inputs without decoding geometry arrays."""
     from .resting_intercostal_mesh_arrangement import (
+        N27_CAPTURE_MANIFEST_SHA256,
         N27_PAYLOAD_SHA256,
         REPAIR_PARENT_PAYLOAD_SHA256,
         REPAIR_PARENT_RECEIPT_SHA256,
@@ -198,6 +215,10 @@ def _load_local_intercostal_arrangement_config(config_path: Path) -> tuple[dict,
              and config.get("schema") == "numi.human.local-intercostal-arrangement-inputs.v1",
              "local arrangement config schema differs")
     binding = {key: value for key, value in config.items() if key != "schema"}
+    binding["captured_reference"] = {
+        "capture_manifest_path": str(CAPTURE_MANIFEST.resolve()),
+        "capture_manifest_sha256": N27_CAPTURE_MANIFEST_SHA256,
+    }
     _require(binding.get("repair_parent_receipt_sha256") == REPAIR_PARENT_RECEIPT_SHA256
              and binding.get("repair_parent_payload_sha256") == REPAIR_PARENT_PAYLOAD_SHA256
              and binding.get("repair_report_sha256") == REPAIR_REPORT_SHA256,
@@ -225,6 +246,7 @@ def _load_local_intercostal_arrangement_config(config_path: Path) -> tuple[dict,
             ("candidate_path", "candidate_sha256"),
             ("lineage_path", "lineage_sha256"),
             ("report_path", "report_sha256"),
+            ("null_face_retirement_ledger_path", "null_face_retirement_ledger_sha256"),
         ):
             path = Path(descriptor.get(key, "")).resolve()
             expected = descriptor.get(digest_key)
@@ -472,13 +494,22 @@ def _validate_source_candidate(receipt_path: Path, prep_path: Path) -> dict:
     parent_validation = _validate_n27_parent(
         receipt, payload_path.read_bytes(), base_receipt_path)
     parent = preparation.get("original_523_row_byte_preservation", {})
-    _require(parent.get("all_520_unmodified_rows_byte_exact") is True
+    parent_bytes = parent_validation["parent_bytes"]
+    _require(parent.get("all_unmodified_original_rows_byte_exact") is True
+             and parent.get("unchanged_original_row_count")
+             == parent_bytes.get("unchanged_original_row_count")
+             and parent.get("route_transferred_original_row_count")
+             == parent_bytes.get("route_transferred_original_row_count")
+             and parent.get("all_512_unmodified_rows_byte_exact") is True
+             and parent.get("exact_local_vessel_source_face_retirement_reconstructed") is True
              and parent.get("all_three_repaired_rows_reconstructed_from_pinned_positive_maps") is True
              and parent.get("all_source_id_map_repair_pointers_match_aggregate") is True
              and parent.get("receipt_sha256") == N27_RECEIPT_SHA
              and parent.get("payload_sha256") == N27_PAYLOAD_SHA
-             and parent_validation["parent_bytes"]["all_520_unmodified_rows_byte_exact"] is True,
-             "candidate does not preserve the N27 rows outside its scoped local repairs")
+             and parent_bytes.get("all_512_unmodified_rows_byte_exact") is True
+             and parent_bytes.get("all_unmodified_original_rows_byte_exact") is True
+             and parent_bytes.get("exact_local_vessel_source_face_retirement_reconstructed") is True,
+             "candidate does not preserve the N27 rows outside its scoped local repairs and route transfers")
     ranges = preparation.get("ranges", [])
     _require([int(row.get("stable_id", -1)) for row in ranges] == [525, 526],
              "common-field appended stable IDs differ from max(N27)+1")
@@ -941,6 +972,8 @@ def run_source007(local_intercostal_arrangement_config: Path | None = None) -> d
             "repair_parent_payload_sha256": arrangement_binding[
                 "repair_parent_payload_sha256"],
             "repair_report_sha256": arrangement_binding["repair_report_sha256"],
+            "captured_reference_manifest_sha256": arrangement_binding[
+                "captured_reference"]["capture_manifest_sha256"],
         }
         report["code_and_dependency_pins"] = _code_and_dependency_pins()
         _require(not CANDIDATE_DIR.exists() and not PREPARATION_DIR.exists(),
@@ -964,6 +997,16 @@ def run_source007(local_intercostal_arrangement_config: Path | None = None) -> d
             quotient_npz_path=QUOTIENT_NPZ,
             quotient_report_path=QUOTIENT_REPORT,
             local_intercostal_arrangement_binding=arrangement_binding,
+            vessel_owner_blend_binding={
+                "n27_receipt_path": str(BASE_RECEIPT),
+                "port_report_path": str(VESSEL_OWNER_PORT_REPORT),
+                "rigid_path": str(RIGID),
+                "sources_path": str(SOURCE_DIR),
+                "route_npz_path": str(ROUTE110_NPZ),
+                "route_report_path": str(ROUTE110_REPORT),
+                "route_script_path": str(ROUTE110_RUNNER),
+                "route_checkpoint_path": str(ROUTE110_CHECKPOINT),
+            },
         )
         candidate_receipt_path = CANDIDATE_DIR / "resting-anatomy-receipt.json"
         _require(candidate_receipt_path.is_file()
