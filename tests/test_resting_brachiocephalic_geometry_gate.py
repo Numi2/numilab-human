@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from numilab_human import resting_anatomy_verify as av
+from numilab_human import resting_brachiocephalic_3d_junction as junction3d
 from numilab_human import resting_brachiocephalic_geometry_gate as bg
 from numilab_human import resting_brachiocephalic_port_diagnostic as portdiag
 from numilab_human import resting_brachiocephalic_source007 as source007
@@ -173,42 +174,70 @@ def _port_pairs(bridge, bridge_faces, target, target_faces):
     return av.audit_surface_pair(first, second)["unexpected_triangle_pairs"]
 
 
+def _source_y_target(*, radius=0.2, radial_ring_scales=None):
+    positions, faces = _closed_cylinder(
+        -1.0, 1.0, radius=radius, sectors=12, axial=8)
+    if radial_ring_scales is not None:
+        for level, scale in radial_ring_scales.items():
+            start, end = level * 12, (level + 1) * 12
+            positions[start:end, :2] *= np.float32(scale)
+    angle = np.arctan(0.7)
+    cosine, sine = np.cos(angle), np.sin(angle)
+    local_x = positions[:, 0].copy()
+    local_z = positions[:, 2].copy()
+    positions[:, 0] = cosine * local_x + sine * local_z + np.float32(0.55)
+    positions[:, 2] = -sine * local_x + cosine * local_z
+    return np.ascontiguousarray(positions, dtype="<f4"), faces
+
+
 def _run_cylinder_port(candidate_target, baseline_target, baseline_bridge=None):
+    """Exercise the already-scoped 526/472 matched-collar 3D owner."""
     manifold3d = _manifold3d()
-    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
     bridge_baseline = bridge if baseline_bridge is None else baseline_bridge[0]
     bridge_baseline_faces = bridge_faces if baseline_bridge is None else baseline_bridge[1]
-    target_faces = _closed_cylinder(0.8, 2.0, radius=0.18)[1]
-    baseline_target_faces = target_faces
-    pairs = _port_pairs(bridge, bridge_faces, candidate_target, target_faces)
-    return audit_brachiocephalic_port_pair_continuity(
+    target_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)[1]
+    bridge_source = av.prepare_surface(
+        (51011, 526), bridge_baseline, bridge_baseline_faces,
+        source_vertex_ids=np.arange(len(bridge_baseline), dtype=np.uint64))
+    target_source = av.prepare_surface(
+        (51011, 472), baseline_target, target_faces,
+        source_vertex_ids=np.arange(len(baseline_target), dtype=np.uint64))
+    # The frozen patch is derived only from the registered baseline source pair;
+    # candidate contacts must remain inside that collar cross-product.
+    pairs = av.audit_surface_pair(bridge_source, target_source)[
+        "unexpected_triangle_pairs"]
+    return junction3d.audit_brachiocephalic_3d_junction(
         av, manifold3d,
-        bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
-        target_key=(51011, 10), target_surface=(candidate_target, target_faces),
+        bridge_key=(51011, 526), bridge_surface=(bridge, bridge_faces),
+        target_key=(51011, 472), target_surface=(candidate_target, target_faces),
         frozen_face_pairs=pairs,
         baseline_bridge_surface=(bridge_baseline, bridge_baseline_faces),
-        baseline_target_surface=(baseline_target, baseline_target_faces))
+        baseline_target_surface=(baseline_target, target_faces))
 
 
 def test_overlapping_closed_cylinders_pass_solid_continuity_and_calibre_screen():
-    target, _ = _closed_cylinder(0.8, 2.0, radius=0.18)
+    target, _ = _source_y_target()
     report = _run_cylinder_port(target, target)
 
     assert report["passed"]
-    assert report["solid_gate"]["strict_positive_volume"]
-    assert report["solid_gate"]["intersection_volume_m3"] > 0.0
-    assert report["solid_gate"]["exact_inside_both_witness"]["first_location"] == "inside"
-    assert report["solid_gate"]["exact_inside_both_witness"]["second_location"] == "inside"
-    assert report["solid_gate"]["union_component_count"] == 1
-    assert report["solid_gate"]["union_numerical_solid_contract_passed"]
-    assert report["solid_gate"]["union_csg_analysis_precision"].startswith(
-        "Manifold Mesh64 Float64")
-    assert report["solid_gate"]["union_section_mesh_position_dtype"] == "float64"
-    assert report["solid_gate"]["union_boolean_exact_topology_proven"] is False
-    assert report["calibre_gate"]["station_results"]["bridge"]["candidate_vs_baseline"]["passed"]
-    assert report["calibre_gate"]["station_results"]["target"]["candidate_vs_baseline"]["passed"]
-    assert report["calibre_gate"]["declared_preservation_intervals"] == {
-        "area": [0.8, 1.25], "minimum_feret_width": [0.9, 1.1]}
+    solid = report["solid_gates"]["candidate"]
+    assert solid["positive_intersection_volume"]
+    assert solid["intersection_volume_m3"] > 0.0
+    assert solid["exact_inside_both_witness"]["first_location"] == "inside"
+    assert solid["exact_inside_both_witness"]["second_location"] == "inside"
+    assert solid["union_component_count"] == 1
+    assert solid["union_connected_numerical_solid"]
+    assert solid["csg_analysis_precision"].startswith("Manifold Mesh64 Float64")
+    assert solid["floating_boolean_exact_topology_proven"] is False
+    for role in ("bridge", "target"):
+        calibre = report["independent_collar_calibre"][role]
+        assert calibre["passed"]
+        assert calibre["candidate_to_baseline_comparison"]["passed"]
+        assert calibre["declared_area_ratio"] == [0.8, 1.25]
+        assert calibre["declared_minimum_feret_ratio"] == [0.9, 1.1]
 
 
 def test_tangent_closed_cylinders_reject_zero_volume_contact():
@@ -245,47 +274,62 @@ def test_disconnected_closed_cylinders_reject_missing_port_contact():
 
 
 def test_pinch_beyond_declared_local_calibre_range_rejects():
-    manifold3d = _manifold3d()
-    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
-    baseline_target, target_faces = _closed_cylinder(0.8, 2.0, radius=0.18)
-    candidate_target, _ = _closed_cylinder(0.8, 2.0, radius=0.08)
-    pairs = _port_pairs(bridge, bridge_faces, candidate_target, target_faces)
+    baseline_target, target_faces = _source_y_target()
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    bridge_source = av.prepare_surface((51011, 526), bridge, bridge_faces)
+    target_source = av.prepare_surface((51011, 472), baseline_target, target_faces)
+    frozen_pairs = av.audit_surface_pair(bridge_source, target_source)[
+        "unexpected_triangle_pairs"]
+    frozen_target_faces = sorted({int(pair[1]) for pair in frozen_pairs})
+    collar_vertices = set(map(int, np.unique(target_faces[frozen_target_faces])))
 
-    with pytest.raises(ValueError, match="target section calibre ratio"):
-        audit_brachiocephalic_port_pair_continuity(
-            av, manifold3d,
-            bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
-            target_key=(51011, 10), target_surface=(candidate_target, target_faces),
-            frozen_face_pairs=pairs,
-            baseline_bridge_surface=(bridge, bridge_faces),
-            baseline_target_surface=(baseline_target, target_faces))
+    # Keep every source vertex used by the frozen exact interface unchanged.
+    # The first material section just beyond that collar is locally pinched.
+    candidate_local, _ = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    for vertex_id in range(36, 48):
+        if vertex_id not in collar_vertices:
+            candidate_local[vertex_id, :2] *= np.float32(0.75)
+    for level in range(4, 9):
+        candidate_local[level * 12:(level + 1) * 12, :2] *= np.float32(0.8)
+    # Apply the local source-profile edit before the registered rigid map.
+    angle = np.arctan(0.7)
+    cosine, sine = np.cos(angle), np.sin(angle)
+    local_x = candidate_local[:, 0].copy()
+    local_z = candidate_local[:, 2].copy()
+    candidate_local[:, 0] = cosine * local_x + sine * local_z + np.float32(0.55)
+    candidate_local[:, 2] = -sine * local_x + cosine * local_z
+    candidate_target = np.ascontiguousarray(candidate_local, dtype="<f4")
+
+    report = _run_cylinder_port(candidate_target, baseline_target)
+    target_calibre = report["independent_collar_calibre"]["target"]
+    assert not report["passed"]
+    assert not target_calibre["passed"]
+    ratios = target_calibre["candidate_to_baseline_comparison"][
+        "candidate_to_baseline_ratios"]
+    assert ratios["area"] < 0.8 or ratios["minimum_feret_width"] < 0.9
+    assert target_calibre["declared_area_ratio"] == [0.8, 1.25]
+    assert target_calibre["declared_minimum_feret_ratio"] == [0.9, 1.1]
 
 
 def test_baseline_section_is_transported_with_source_vertex_ancestry():
-    manifold3d = _manifold3d()
-    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
-    candidate_target, target_faces = _closed_cylinder(0.84, 2.04, radius=0.18)
-    baseline_target, _ = _closed_cylinder(0.8, 2.0, radius=0.18)
-    pairs = _port_pairs(bridge, bridge_faces, candidate_target, target_faces)
-
-    report = audit_brachiocephalic_port_pair_continuity(
-        av, manifold3d,
-        bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
-        target_key=(51011, 10), target_surface=(candidate_target, target_faces),
-        frozen_face_pairs=pairs,
-        baseline_bridge_surface=(bridge, bridge_faces),
-        baseline_target_surface=(baseline_target, target_faces))
-    candidate_station = np.asarray(
-        report["calibre_gate"]["station_results"]["target"]["station"]
-        ["section_center_world_m"])
+    baseline_target, _ = _source_y_target()
+    candidate_target = np.ascontiguousarray(
+        baseline_target + np.asarray([0.005, 0.0, 0.0], dtype="<f4"), dtype="<f4")
+    report = _run_cylinder_port(candidate_target, baseline_target)
+    calibre = report["independent_collar_calibre"]["target"]
+    candidate_station = np.asarray(calibre["station"]["section_center_world_m"])
     baseline_station = np.asarray(
-        report["calibre_gate"]["station_results"]["target"]
-        ["baseline_station_transported_by_ancestry"]["section_center_world_m"])
+        calibre["baseline_station_transported_by_source_ancestry"]
+        ["section_center_world_m"])
 
     assert report["passed"]
-    assert np.linalg.norm(candidate_station - baseline_station) > 0.03
-    assert (report["calibre_gate"]["station_results"]["target"]
-            ["candidate_vs_baseline"]["passed"])
+    assert np.linalg.norm(candidate_station - baseline_station) > 0.004
+    assert calibre["candidate_to_baseline_comparison"]["passed"]
+    assert calibre["station"]["material_anchor_source_vertex_ids"] == (
+        calibre["baseline_station_transported_by_source_ancestry"]
+        ["material_anchor_source_vertex_ids"])
 
 
 
@@ -444,104 +488,127 @@ def _synthetic_two_branch_section_proof(
     manifold3d = _manifold3d()
     bridge_positions, bridge_faces = _closed_cylinder(
         -1.0, 1.0, radius=0.2, sectors=12, axial=8)
-    target_positions, target_faces = _closed_cylinder(
-        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    baseline_target_positions, target_faces = _source_y_target(radius=0.2)
+    candidate_target_positions = baseline_target_positions.copy()
     if disconnected:
-        target_positions[:, 0] += np.float32(0.45)
-    else:
-        angle = np.arctan(0.7)
-        cosine, sine = np.cos(angle), np.sin(angle)
-        x = target_positions[:, 0].copy()
-        z = target_positions[:, 2].copy()
-        target_positions[:, 0] = cosine * x + sine * z + np.float32(0.55)
-        target_positions[:, 2] = -sine * x + cosine * z
+        candidate_target_positions[:, 0] += np.float32(0.45)
     bridge_positions = np.ascontiguousarray(bridge_positions, dtype="<f4")
-    target_positions = np.ascontiguousarray(target_positions, dtype="<f4")
+    baseline_target_positions = np.ascontiguousarray(
+        baseline_target_positions, dtype="<f4")
+    candidate_target_positions = np.ascontiguousarray(
+        candidate_target_positions, dtype="<f4")
     bridge = av.prepare_surface(
         (51011, 526), bridge_positions, bridge_faces,
         source_vertex_ids=np.arange(len(bridge_positions), dtype=np.uint64))
     target = av.prepare_surface(
-        (51011, 472), target_positions, target_faces,
-        source_vertex_ids=np.arange(len(target_positions), dtype=np.uint64))
-    bridge_solid, _ = bg._make_manifold(bridge, manifold3d)
-    target_solid, _ = bg._make_manifold(target, manifold3d)
-    intersection = manifold3d.Manifold.batch_boolean(
-        [bridge_solid, target_solid], manifold3d.OpType.Intersect)
-    union = manifold3d.Manifold.batch_boolean(
-        [bridge_solid, target_solid], manifold3d.OpType.Add)
-    positions, faces, mesh = bg._manifold_mesh(union)
-    lineage = bg._mesh_face_lineage(mesh, {
-        526: len(bridge.quotient_faces), 472: len(target.quotient_faces)})
-    owners = lineage["face_owner_ids"].copy()
-    if corrupt_lineage:
-        owners[owners == 472] = 526
-    section_options = {
-        "derived_csg": True,
-        "face_owner_ids": owners,
-        "face_source_ids": lineage["source_face_ids"],
-        "face_generated_mask": lineage["generated_face_mask"],
-    }
-    candidate_union_section = bg._section_loops(
-        positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0],
-        **section_options)
-    baseline_union_section = candidate_union_section
-    def source_station(surface):
-        source_ids = surface.source_vertex_ids.astype(int).tolist()
+        (51011, 472), candidate_target_positions, target_faces,
+        source_vertex_ids=np.arange(len(candidate_target_positions), dtype=np.uint64))
+    baseline_target = av.prepare_surface(
+        (51011, 472), baseline_target_positions, target_faces,
+        source_vertex_ids=np.arange(len(baseline_target_positions), dtype=np.uint64))
+
+    def solids(second):
+        bridge_solid, _ = bg._make_manifold(bridge, manifold3d)
+        second_solid, _ = bg._make_manifold(second, manifold3d)
+        intersection = manifold3d.Manifold.batch_boolean(
+            [bridge_solid, second_solid], manifold3d.OpType.Intersect)
+        union = manifold3d.Manifold.batch_boolean(
+            [bridge_solid, second_solid], manifold3d.OpType.Add)
+        positions, faces, mesh = bg._manifold_mesh(union)
+        lineage = bg._mesh_face_lineage(mesh, {
+            526: len(bridge.quotient_faces), 472: len(second.quotient_faces)})
+        owners = lineage["face_owner_ids"].copy()
+        if corrupt_lineage:
+            owners[owners == 472] = 526
+        section = bg._section_loops(
+            positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0],
+            derived_csg=True,
+            face_owner_ids=owners,
+            face_source_ids=lineage["source_face_ids"],
+            face_generated_mask=lineage["generated_face_mask"],
+        )
+        inside = (bg._exact_inside_witness(av, bridge, second, intersection)
+                  if float(intersection.volume()) > 0.0 else None)
+        return bridge_solid, second_solid, intersection, union, section, inside
+
+    candidate = solids(target)
+    baseline = solids(baseline_target)
+    raw_port = av.audit_surface_pair(bridge, baseline_target)
+    frozen_pairs = raw_port.get("unexpected_triangle_pairs", [])
+    baseline_interface = junction3d._interface_gate(
+        av, bridge, baseline_target, frozen_pairs)
+    candidate_interface = junction3d._interface_gate(
+        av, bridge, target, frozen_pairs)
+    bridge_patch = sorted({int(pair[0]) for pair in frozen_pairs})
+    target_patch = sorted({int(pair[1]) for pair in frozen_pairs})
+
+    def source_station(surface, collar_faces, *, level=4):
+        source_ids = surface.source_vertex_ids.astype(int)
+        ring_start = level * 12
         return {
             "section_center_world_m": [0.0, 0.0, 0.0],
             "tangent_world_unit": [0.0, 0.0, 1.0],
-            "material_anchor_source_vertex_ids": source_ids[:4],
-            "tangent_support_source_vertex_ids": [source_ids[0], source_ids[-1]],
-            "frozen_collar_face_ids": [0, 1],
+            "material_anchor_source_vertex_ids": source_ids[
+                ring_start:ring_start + 12].tolist(),
+            "tangent_support_source_vertex_ids": [
+                int(source_ids[0]), int(source_ids[96])],
+            "frozen_collar_face_ids": sorted(set(map(int, collar_faces))),
         }
 
-    bridge_station = source_station(bridge)
+    bridge_station = source_station(bridge, bridge_patch)
+    candidate_target_station = source_station(target, target_patch)
+    baseline_target_station = source_station(baseline_target, target_patch)
     candidate_branch_sections = {
         526: bg._source_surface_section(bridge, bridge_station),
-        472: bg._source_surface_section(target, bridge_station),
+        472: bg._source_surface_section(target, candidate_target_station),
     }
-    baseline_branch_sections = candidate_branch_sections
-    intersection_volume = float(intersection.volume())
-    inside_witness = (
-        bg._exact_inside_witness(av, bridge, target, intersection)
-        if intersection_volume > 0.0 else None)
-    raw_port = av.audit_surface_pair(bridge, target)
-    allowed_pairs = tuple(tuple(map(int, pair))
-                          for pair in raw_port.get("unexpected_triangle_pairs", []))
-    port = av.audit_surface_pair(
-        bridge, target, intended_face_pairs=allowed_pairs)
-    exact_points = bg._exact_interface_points(
-        av, bridge, target,
-        port.get("declared_interface_triangle_pairs", []))
+    baseline_branch_sections = {
+        526: bg._source_surface_section(bridge, bridge_station),
+        472: bg._source_surface_section(baseline_target, baseline_target_station),
+    }
+
+    def status(solid):
+        return str(solid.status())
+
+    def component_count(solid):
+        return len(solid.decompose())
+
+    def volume(solid):
+        return float(solid.volume())
+
+    candidate_bridge_solid, candidate_target_solid, candidate_intersection, candidate_union, candidate_section, candidate_inside = candidate
+    baseline_bridge_solid, baseline_target_solid, baseline_intersection, baseline_union, baseline_section, baseline_inside = baseline
     evidence = {
-        "candidate_bridge_status": str(bridge_solid.status()),
-        "candidate_target_status": str(target_solid.status()),
-        "baseline_bridge_status": str(bridge_solid.status()),
-        "baseline_target_status": str(target_solid.status()),
-        "candidate_union_status": str(union.status()),
-        "baseline_union_status": str(union.status()),
-        "candidate_intersection_status": str(intersection.status()),
-        "baseline_intersection_status": str(intersection.status()),
+        "candidate_bridge_status": status(candidate_bridge_solid),
+        "candidate_target_status": status(candidate_target_solid),
+        "baseline_bridge_status": status(baseline_bridge_solid),
+        "baseline_target_status": status(baseline_target_solid),
+        "candidate_union_status": status(candidate_union),
+        "baseline_union_status": status(baseline_union),
+        "candidate_intersection_status": status(candidate_intersection),
+        "baseline_intersection_status": status(baseline_intersection),
         "candidate_branch_component_counts": {
-            "526": len(bridge_solid.decompose()),
-            "472": len(target_solid.decompose()),
+            "526": component_count(candidate_bridge_solid),
+            "472": component_count(candidate_target_solid),
         },
         "baseline_branch_component_counts": {
-            "526": len(bridge_solid.decompose()),
-            "472": len(target_solid.decompose()),
+            "526": component_count(baseline_bridge_solid),
+            "472": component_count(baseline_target_solid),
         },
-        "candidate_union_component_count": len(union.decompose()),
-        "baseline_union_component_count": len(union.decompose()),
-        "candidate_union_volume_m3": float(union.volume()),
-        "baseline_union_volume_m3": float(union.volume()),
-        "candidate_intersection_volume_m3": intersection_volume,
-        "baseline_intersection_volume_m3": intersection_volume,
-        "candidate_exact_inside_both_witness": inside_witness,
-        "baseline_exact_inside_both_witness": inside_witness,
-        "candidate_port_audit_passed": bool(port.get("passed")),
-        "baseline_port_audit_passed": bool(port.get("passed")),
-        "candidate_port_exact_interface_point_count": len(exact_points),
-        "baseline_port_exact_interface_point_count": len(exact_points),
+        "candidate_union_component_count": component_count(candidate_union),
+        "baseline_union_component_count": component_count(baseline_union),
+        "candidate_union_volume_m3": volume(candidate_union),
+        "baseline_union_volume_m3": volume(baseline_union),
+        "candidate_intersection_volume_m3": volume(candidate_intersection),
+        "baseline_intersection_volume_m3": volume(baseline_intersection),
+        "candidate_exact_inside_both_witness": candidate_inside,
+        "baseline_exact_inside_both_witness": baseline_inside,
+        "candidate_port_audit_passed": bool(candidate_interface.get("passed")),
+        "baseline_port_audit_passed": bool(baseline_interface.get("passed")),
+        "candidate_port_exact_interface_point_count": len(
+            candidate_interface.get("exact_interface_points_world_m", [])),
+        "baseline_port_exact_interface_point_count": len(
+            baseline_interface.get("exact_interface_points_world_m", [])),
     }
     station_ancestry = {
         key: bridge_station[key] for key in (
@@ -563,8 +630,8 @@ def _synthetic_two_branch_section_proof(
     } if declared else None)
     junction_call = {
         "expected_owner_ids": (526, 472),
-        "candidate_union_section": candidate_union_section,
-        "baseline_union_section": baseline_union_section,
+        "candidate_union_section": candidate_section,
+        "baseline_union_section": baseline_section,
         "candidate_branch_sections": candidate_branch_sections,
         "baseline_branch_sections": baseline_branch_sections,
         "solid_evidence": evidence,
@@ -573,16 +640,28 @@ def _synthetic_two_branch_section_proof(
     proof = bg._junction_aware_two_loop_section_proof(**junction_call)
     if include_internal:
         internal = {
-            "section_positions": positions,
-            "section_faces": faces,
+            "section_positions": candidate[4].get("_positions"),
+            "section_faces": candidate[4].get("_faces"),
             "section_center": [0.0, 0.0, 0.0],
             "section_tangent": [0.0, 0.0, 1.0],
-            "section_options": section_options,
+            "section_options": {},
             "junction_call": junction_call,
         }
-        return proof, candidate_union_section, evidence, internal
-    return proof, candidate_union_section, evidence
-
+        # Keep the actual mesh inputs for the recording-wrapper regression.
+        candidate_lineage_mesh = bg._manifold_mesh(candidate_union)[2]
+        internal_positions, internal_faces, _ = bg._manifold_mesh(candidate_union)
+        candidate_lineage = bg._mesh_face_lineage(candidate_lineage_mesh, {
+            526: len(bridge.quotient_faces), 472: len(target.quotient_faces)})
+        internal["section_positions"] = internal_positions
+        internal["section_faces"] = internal_faces
+        internal["section_options"] = {
+            "derived_csg": True,
+            "face_owner_ids": candidate_lineage["face_owner_ids"].copy(),
+            "face_source_ids": candidate_lineage["source_face_ids"],
+            "face_generated_mask": candidate_lineage["generated_face_mask"],
+        }
+        return proof, candidate_section, evidence, internal
+    return proof, candidate_section, evidence
 
 def test_target_collar_station_candidates_use_target_source_ancestry_without_moving_mesh():
     from types import SimpleNamespace
