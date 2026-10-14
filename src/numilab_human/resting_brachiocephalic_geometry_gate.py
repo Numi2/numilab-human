@@ -15,6 +15,10 @@ import numpy as np
 
 BRIDGE_KEYS = ((51011, 525), (51011, 526))
 PORT_TARGET_IDS = {525: (10, 469, 473), 526: (10, 468, 472)}
+DECLARED_VESSEL_PORTS = frozenset(
+    (bridge_key, (51011, stable_id))
+    for bridge_key in BRIDGE_KEYS
+    for stable_id in PORT_TARGET_IDS[bridge_key[1]])
 
 
 def _require(condition: bool, message: str) -> None:
@@ -893,6 +897,75 @@ def _exact_interface_points(verifier, first, second, face_pairs):
                     for point in points})
 
 
+def _declared_partial_vessel_port_overlap(
+    bridge_key, target_key, port_audit, observed_pairs, unexpected_pairs,
+    exact_points, allowed_pairs,
+) -> dict:
+    """Classify only symmetric partial overlap at one of the six frozen vein ports.
+
+    This is an interface-boundary continuation predicate. It never proves
+    vessel continuity by itself: callers must still pass independent source
+    section/calibre and positive-intersection/exact-inside/connected-union gates.
+    """
+    typed_port = (_identity(bridge_key), _identity(target_key))
+    audit = port_audit if isinstance(port_audit, Mapping) else {}
+    containment_value = audit.get("containment", [])
+    containment = containment_value if isinstance(containment_value, list) else []
+    component_rows_complete = (
+        isinstance(containment_value, list) and len(containment) == 2
+        and all(
+            isinstance(row, Mapping)
+            and row.get("status") == "checked_exact_rational_metres"
+            and bool(row.get("inside_component_witnesses"))
+            and bool(row.get("outside_component_witnesses"))
+            and bool(row.get("component_checks"))
+            and all(
+                isinstance(item, Mapping)
+                and item.get("sampled_face_count", 0) > 0
+                and item.get("has_inside_face_interior") is True
+                and item.get("has_outside_face_interior") is True
+                for item in row["component_checks"])
+            for row in containment)
+    )
+    observed = tuple(tuple(map(int, pair)) for pair in observed_pairs)
+    unexpected = tuple(tuple(map(int, pair)) for pair in unexpected_pairs)
+    allowed = {tuple(map(int, pair)) for pair in allowed_pairs}
+    conditions = {
+        "declared_typed_vessel_port": typed_port in DECLARED_VESSEL_PORTS,
+        "surface_pair_audit_identity_matches": audit.get("identities") == [
+            list(typed_port[0]), list(typed_port[1])],
+        "central_p6_rejected_only_partial_overlap": audit.get("passed") is False,
+        "observed_exact_interface_pairs_nonempty": bool(observed),
+        "all_observed_pairs_inside_frozen_collar_patch": (
+            bool(observed) and all(pair in allowed for pair in observed)),
+        "no_unexpected_pairs_outside_frozen_patch": not unexpected,
+        "exact_interface_points_nonempty": bool(exact_points),
+        "no_rejected_declared_feature_contacts": not audit.get(
+            "rejected_interface_feature_contacts", []),
+        "no_other_declared_feature_contacts": not audit.get(
+            "declared_interface_feature_contacts", []),
+        "symmetric_exact_inside_and_outside_face_witnesses": component_rows_complete,
+        "no_intended_enclosure_exception": not any(
+            row.get("declared_intended_enclosure") for row in containment
+            if isinstance(row, Mapping)),
+    }
+    return {
+        "passed": all(conditions.values()),
+        "classification": (
+            "DECLARED_VESSEL_PORT_PARTIAL_OVERLAP_BOUNDARY_ONLY"
+            if all(conditions.values()) else "NOT_A_DECLARED_PARTIAL_VESSEL_PORT"),
+        "typed_port": [list(typed_port[0]), list(typed_port[1])],
+        "conditions": conditions,
+        "observed_pair_count": len(observed),
+        "unexpected_pair_count": len(unexpected),
+        "exact_interface_point_count": len(exact_points),
+        "containment_statuses": [
+            row.get("status") for row in containment if isinstance(row, Mapping)],
+        "requires_separate_solid_and_calibre_proofs": True,
+        "clinical_or_anatomical_admission": False,
+    }
+
+
 def _section_loop_lineage(face_indices, face_owner_ids, face_source_ids,
                           face_generated_mask, *, lineage_available):
     if not lineage_available:
@@ -1722,7 +1795,12 @@ def audit_brachiocephalic_port_pair_continuity(
                      for pair in port_audit.get("declared_interface_triangle_pairs", []))
     exact_points = _exact_interface_points(
         verifier, bridge, target, observed)
-    port_pair_passed = bool(port_audit.get("passed")) and bool(exact_points)
+    partial_overlap_boundary = _declared_partial_vessel_port_overlap(
+        bridge_key, target_key, port_audit, observed,
+        port_audit.get("unexpected_triangle_pairs", ()),
+        exact_points, allowed)
+    port_pair_passed = bool(exact_points) and (
+        bool(port_audit.get("passed")) or partial_overlap_boundary["passed"])
 
     first, first_info = _make_manifold(bridge, manifold3d)
     second, second_info = _make_manifold(target, manifold3d)
@@ -2181,6 +2259,8 @@ def audit_brachiocephalic_port_pair_continuity(
         "source_preservation": source_preservation,
         "port_pair_gate": {
             "passed": port_pair_passed,
+            "central_p6_audit_passed": bool(port_audit.get("passed")),
+            "declared_partial_overlap_boundary_only": partial_overlap_boundary,
             "frozen_bridge_patch_faces": bridge_patch,
             "frozen_target_patch_faces": target_patch,
             "allowed_patch_cross_product_pair_count": len(allowed),

@@ -5,14 +5,13 @@ import subprocess
 import numpy as np
 import pytest
 
+from numilab_human import resting_anatomy_verify as av
+from numilab_human import resting_brachiocephalic_3d_junction as junction
 from numilab_human import resting_brachiocephalic_source007 as source007
 from tests.test_resting_brachiocephalic_geometry_gate import (
     _closed_cylinder,
     _manifold3d,
 )
-
-av = source007._load_central_p6()
-from numilab_human import resting_brachiocephalic_3d_junction as junction
 
 
 def _surface(points, faces):
@@ -97,6 +96,23 @@ def _proof(bridge, bridge_faces, target, target_faces, *,
             target if baseline_target is None else baseline_target[0],
             target_faces if baseline_target is None else baseline_target[1]),
     )
+
+
+def test_new_junction_gate_uses_current_package_verifier(monkeypatch):
+    def historical_loader_must_not_run():
+        raise AssertionError("new gate must not reload historical HP98 verifier")
+
+    monkeypatch.setattr(source007, "_load_central_p6",
+                        historical_loader_must_not_run)
+    assert junction._execution_verifier() is av
+    assert junction.current_shared_verifier is av
+    runtime_pins = junction._runtime_code_pins()
+    assert runtime_pins["current_shared_verifier"]["path"] == str(
+        junction.Path(av.__file__).resolve())
+    assert "hp98_verifier" not in runtime_pins
+    assert junction.PREFLIGHT_PATH.name == (
+        "port-526-472-3d-junction-preflight-004.json")
+    assert junction.OUTPUT_DIR.name == "port-526-472-3d-junction-diagnostic-003"
 
 
 def test_overlapping_vessels_pass_with_independent_collar_sections_and_3d_witnesses():

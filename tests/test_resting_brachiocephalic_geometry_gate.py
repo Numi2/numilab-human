@@ -151,6 +151,34 @@ def _closed_cylinder(z_min, z_max, radius=0.2, *, center_x=0.0, sectors=12, axia
             np.asarray(faces, dtype="<u4"))
 
 
+def _profiled_closed_cylinder(stations, *, sectors=12):
+    rings = []
+    for z, radius in stations:
+        for sector in range(sectors):
+            angle = 2.0 * np.pi * sector / sectors
+            rings.append([radius * np.cos(angle), radius * np.sin(angle), z])
+    bottom_center = len(rings)
+    rings.append([0.0, 0.0, stations[0][0]])
+    top_center = len(rings)
+    rings.append([0.0, 0.0, stations[-1][0]])
+    faces = []
+    for level in range(len(stations) - 1):
+        for sector in range(sectors):
+            following = (sector + 1) % sectors
+            a = level * sectors + sector
+            b = level * sectors + following
+            c = (level + 1) * sectors + following
+            d = (level + 1) * sectors + sector
+            faces.extend(([a, b, c], [a, c, d]))
+    for sector in range(sectors):
+        following = (sector + 1) % sectors
+        faces.extend(([bottom_center, following, sector],
+                      [top_center, (len(stations) - 1) * sectors + sector,
+                       (len(stations) - 1) * sectors + following]))
+    return (np.asarray(rings, dtype="<f4"),
+            np.asarray(faces, dtype="<u4"))
+
+
 def _manifold3d():
     import importlib
     import sys
@@ -238,6 +266,79 @@ def test_overlapping_closed_cylinders_pass_solid_continuity_and_calibre_screen()
         assert calibre["candidate_to_baseline_comparison"]["passed"]
         assert calibre["declared_area_ratio"] == [0.8, 1.25]
         assert calibre["declared_minimum_feret_ratio"] == [0.9, 1.1]
+
+
+def test_declared_partial_collar_continues_only_after_solid_and_calibre_proofs():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _profiled_closed_cylinder(
+        ((0.8, 0.18), (1.0, 0.2), (1.05, 0.2), (2.0, 0.18)))
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, _manifold3d(),
+        bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+        target_key=(51011, 10), target_surface=(target, target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces))
+
+    assert report["passed"]
+    boundary = report["port_pair_gate"]["declared_partial_overlap_boundary_only"]
+    assert report["port_pair_gate"]["central_p6_audit_passed"] is False
+    assert boundary["passed"]
+    assert boundary["requires_separate_solid_and_calibre_proofs"]
+    assert report["solid_gate"]["passed"]
+    assert report["solid_gate"]["strict_positive_volume"]
+    assert report["solid_gate"]["exact_inside_both_witness"] is not None
+    assert report["solid_gate"]["union_component_count"] == 1
+    assert report["calibre_gate"]["passed"]
+
+
+def test_partial_overlap_cannot_use_unrelated_typed_surfaces_or_unmatched_pairs():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _profiled_closed_cylinder(
+        ((0.8, 0.18), (1.0, 0.2), (1.05, 0.2), (2.0, 0.18)))
+    prepared_bridge = av.prepare_surface((51011, 525), bridge, bridge_faces)
+    prepared_target = av.prepare_surface((51011, 10), target, target_faces)
+    raw = av.audit_surface_pair(prepared_bridge, prepared_target)
+    pairs = raw["unexpected_triangle_pairs"]
+    bridge_patch = {first for first, _ in pairs}
+    target_patch = {second for _, second in pairs}
+    allowed = {(first, second) for first in bridge_patch for second in target_patch}
+    audit = av.audit_surface_pair(
+        prepared_bridge, prepared_target, intended_face_pairs=allowed)
+    observed = audit["declared_interface_triangle_pairs"]
+    exact_points = bg._exact_interface_points(
+        av, prepared_bridge, prepared_target, observed)
+
+    valid = bg._declared_partial_vessel_port_overlap(
+        (51011, 525), (51011, 10), audit, observed, (), exact_points, allowed)
+    unrelated = bg._declared_partial_vessel_port_overlap(
+        (51005, 525), (51005, 10), audit, observed, (), exact_points, allowed)
+    outside = bg._declared_partial_vessel_port_overlap(
+        (51011, 525), (51011, 10), audit, observed,
+        ((max(first for first, _ in pairs) + 1, max(second for _, second in pairs) + 1),),
+        exact_points, allowed)
+    wrong_identity = bg._declared_partial_vessel_port_overlap(
+        (51011, 525), (51011, 10),
+        {**audit, "identities": [[51011, 526], [51011, 472]]},
+        observed, (), exact_points, allowed)
+    malformed = bg._declared_partial_vessel_port_overlap(
+        (51011, 525), (51011, 10), {**audit, "containment": None},
+        observed, (), exact_points, allowed)
+
+    assert valid["passed"]
+    assert not unrelated["passed"]
+    assert not unrelated["conditions"]["declared_typed_vessel_port"]
+    assert not outside["passed"]
+    assert not outside["conditions"]["no_unexpected_pairs_outside_frozen_patch"]
+    assert not wrong_identity["passed"]
+    assert not wrong_identity["conditions"]["surface_pair_audit_identity_matches"]
+    assert not malformed["passed"]
+    assert not bg._declared_partial_vessel_port_overlap(
+        (51011, 525), (51011, 10), audit, observed, (), (), allowed)["passed"]
 
 
 def test_tangent_closed_cylinders_reject_zero_volume_contact():

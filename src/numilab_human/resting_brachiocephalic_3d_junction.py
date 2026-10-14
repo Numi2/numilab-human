@@ -1,8 +1,9 @@
 """Source-bound 3D continuity proof for the right brachiocephalic junction.
 
-This is an offline source geometry screen for the existing ABI5 NHA rows. It
-reuses the frozen HP98 exact predicates, source007 inputs, and retained
-Manifold wheel. It does not modify meshes or simulate blood state.
+This offline geometry screen consumes retained source007 ABI5 rows and the
+current shared Human verifier from this package. Historical HP98 source007
+receipts remain provenance only. It does not modify meshes or simulate blood
+state.
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ from pathlib import Path
 
 import numpy as np
 
+from . import resting_anatomy_verify as current_shared_verifier
 from . import resting_brachiocephalic_geometry_gate as gate
 from . import resting_brachiocephalic_port_diagnostic as portdiag
 from . import resting_brachiocephalic_source007 as source007
@@ -31,11 +33,11 @@ FIRST_EXECUTION_REPORT = FIRST_EXECUTION_DIR / "3d-junction-continuity-report.js
 FIRST_EXECUTION_REPORT_SHA256 = "25fbacbf5546a944007287ee7ada8e5ae34dd9bbd7e1a45b7313a894ffb404ab"
 FIRST_EXECUTION_PREFLIGHT = GATE_DIR / "port-526-472-3d-junction-preflight-002.json"
 FIRST_EXECUTION_PREFLIGHT_SHA256 = "5a7b2af5735a7c1d8808a78455ee5362844466e7079e669bd1d5d922ef3a1669"
-OUTPUT_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-002"
-INITIALIZATION_DRYRUN_REPORT = GATE_DIR / "port-526-472-3d-junction-initialization-dryrun-001.json"
+OUTPUT_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-003"
+INITIALIZATION_DRYRUN_REPORT = GATE_DIR / "port-526-472-3d-junction-initialization-dryrun-002.json"
 PREVIOUS_PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-001.json"
 PREVIOUS_PREFLIGHT_SHA256 = "48d5b21121eab978f0f3e8165d2afd4197c17bd4d8c5ba317b523dff8dc39179"
-PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-003.json"
+PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-004.json"
 SOURCE_INTEGRITY_DIR = GATE_DIR / "port-526-472-source-integrity-preparation-003"
 SOURCE_INTEGRITY_REPORT = SOURCE_INTEGRITY_DIR / "source-integrity-preparation.json"
 SOURCE_INTEGRITY_SCRIPT = SOURCE_INTEGRITY_DIR / "prepare-source-integrity.py"
@@ -262,6 +264,16 @@ def _verify_source007_compiler_code_pins(code_and_dependency_pins: dict) -> dict
     }
 
 
+def _execution_verifier():
+    """Return the package's current shared verifier for this new gate."""
+    verifier = current_shared_verifier
+    required = ("load_capture", "prepare_surface", "audit_surface_pair")
+    if not all(callable(getattr(verifier, name, None)) for name in required):
+        raise ValueError(
+            "brachiocephalic 3D junction: current shared Human verifier API is incomplete")
+    return verifier
+
+
 def _runtime_code_pins() -> dict:
     repo = Path(__file__).resolve().parents[2]
     source = repo / "src/numilab_human"
@@ -272,7 +284,7 @@ def _runtime_code_pins() -> dict:
         "legacy_port_diagnostic": source / "resting_brachiocephalic_port_diagnostic.py",
         "nhanat_codec": source / "resting_pleura_proxy.py",
         "pose_predictor": source / "resting_brachiocephalic_pose_predictor.py",
-        "hp98_verifier": source007.P6_PACKAGE / "resting_anatomy_verify.py",
+        "current_shared_verifier": source / "resting_anatomy_verify.py",
     }
     return {name: {"path": str(path.resolve()), "sha256": sha_file(path)}
             for name, path in paths.items()}
@@ -485,7 +497,13 @@ def build_preflight() -> dict:
         "source_integrity_preparation": source_integrity,
         "runtime_code_sha256": code_pins,
         "manifold3d_retained_wheel_sha256": wheel,
-        "hp98_verifier_sha256": source007.P6_VERIFIER_SHA,
+        "current_shared_verifier_sha256": code_pins[
+            "current_shared_verifier"]["sha256"],
+        "historical_source007_p6_evidence_only": {
+            "path": str((source007.P6_PACKAGE / "resting_anatomy_verify.py").resolve()),
+            "sha256": source007.P6_VERIFIER_SHA,
+            "loaded_by_this_gate": False,
+        },
         "geometry_arrays_loaded": False,
         "geometry_predicates_run": False,
     }
@@ -680,28 +698,10 @@ def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
     exact_points = gate._exact_interface_points(verifier, bridge, target, observed)
     within_patch = all(pair in allowed for pair in observed)
     containment = audit.get("containment", [])
-    component_rows_complete = (
-        len(containment) == 2
-        and all(
-            row.get("status") == "checked_exact_rational_metres"
-            and bool(row.get("inside_component_witnesses"))
-            and bool(row.get("outside_component_witnesses"))
-            and bool(row.get("component_checks"))
-            and all(item.get("sampled_face_count", 0) > 0
-                    and item.get("has_inside_face_interior")
-                    and item.get("has_outside_face_interior")
-                    for item in row["component_checks"])
-            for row in containment
-        )
-    )
+    partial_overlap_boundary = gate._declared_partial_vessel_port_overlap(
+        bridge.key, target.key, audit, observed, unexpected, exact_points, allowed)
     exact_partial_overlap = bool(
-        port_scope_passed
-        and not audit.get("passed")
-        and not unexpected
-        and not audit.get("rejected_interface_feature_contacts")
-        and component_rows_complete
-        and not any(row.get("declared_intended_enclosure") for row in containment)
-    )
+        port_scope_passed and partial_overlap_boundary.get("passed"))
     pair_patch_and_collar_passed = bool(
         port_scope_passed and not unexpected and within_patch and bool(exact_points)
         and (bool(audit.get("passed")) or exact_partial_overlap)
@@ -724,6 +724,7 @@ def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
             "classification": (
                 "symmetric_exact_partial_volumetric_overlap"
                 if exact_partial_overlap else "not_classified_as_expected_partial_overlap"),
+            "boundary_predicate": partial_overlap_boundary,
             "containment": containment,
         },
         "observed_pair_count": len(observed),
@@ -897,7 +898,8 @@ def _prepare_source007_inputs(preflight: dict) -> dict:
         "nhanat_codec._parse_payload": getattr(nhanat_codec, "_parse_payload", None),
         "source007._validate_source_candidate": getattr(
             source007, "_validate_source_candidate", None),
-        "source007._load_central_p6": getattr(source007, "_load_central_p6", None),
+        "current_shared_verifier.audit_surface_pair": getattr(
+            current_shared_verifier, "audit_surface_pair", None),
         "source007._step0_source": getattr(source007, "_step0_source", None),
         "source007._load_predictor_transform": getattr(
             source007, "_load_predictor_transform", None),
@@ -922,11 +924,7 @@ def _prepare_source007_inputs(preflight: dict) -> dict:
     header, records, rows = _decode_candidate_payload(
         candidate_payload.read_bytes(), validation["source_map"])
 
-    verifier = source007._load_central_p6()
-    _require(callable(getattr(verifier, "load_capture", None))
-             and callable(getattr(verifier, "prepare_surface", None))
-             and callable(getattr(verifier, "audit_surface_pair", None)),
-             "pinned HP98/P6 verifier lacks the required capture/surface contract")
+    verifier = _execution_verifier()
     manifest = json.loads(source007.CAPTURE_MANIFEST.read_text())
     captured, identity, capture_meta = source007._step0_source(manifest, verifier)
     body20_pose = capture_meta.get("body20", {})
@@ -990,7 +988,7 @@ def run_initialization_dryrun() -> dict:
     started = time.perf_counter()
     report = {
         "schema": "numi.human.brachiocephalic-3d-junction-initialization.v1",
-        "status": "RUNNING_SOURCE007_INITIALIZATION_DRYRUN",
+        "status": "RUNNING_CURRENT_SHARED_VERIFIER_INITIALIZATION_DRYRUN",
         "preflight_path": str(PREFLIGHT_PATH),
         "preflight_sha256": sha_file(PREFLIGHT_PATH),
         "recorded_start_utc": datetime.now(UTC).isoformat(),
@@ -1010,6 +1008,10 @@ def run_initialization_dryrun() -> dict:
         target = prepared["target_surfaces"][TARGET_KEY]
         report.update({
             "status": "INITIALIZATION_AND_DECODE_PASS_PRE_EXACT_PREDICATES",
+            "current_shared_verifier_path": str(
+                Path(current_shared_verifier.__file__).resolve()),
+            "current_shared_verifier_sha256": sha_file(
+                Path(current_shared_verifier.__file__).resolve()),
             "geometry_arrays_loaded": True,
             "candidate_payload_sha256": sha_file(prepared["candidate_payload"]),
             "source0_pack_sha256": prepared["identity"]["pack_sha256"],
@@ -1403,7 +1405,11 @@ def run() -> dict:
     started = time.perf_counter()
     report = {
         "schema": "numi.human.brachiocephalic-3d-junction-execution.v1",
-        "status": "RUNNING_SOURCE007_3D_JUNCTION_SCREEN",
+        "status": "RUNNING_CURRENT_SHARED_VERIFIER_3D_JUNCTION_SCREEN",
+        "current_shared_verifier_path": str(
+            Path(current_shared_verifier.__file__).resolve()),
+        "current_shared_verifier_sha256": sha_file(
+            Path(current_shared_verifier.__file__).resolve()),
         "recorded_start_utc": datetime.now(UTC).isoformat(),
         "elapsed_seconds": None,
         "scope": preflight["scope"],
