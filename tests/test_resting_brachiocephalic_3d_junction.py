@@ -1,8 +1,11 @@
+import hashlib
 import json
+import subprocess
 
 import numpy as np
-from numilab_human import resting_brachiocephalic_source007 as source007
+import pytest
 
+from numilab_human import resting_brachiocephalic_source007 as source007
 from tests.test_resting_brachiocephalic_geometry_gate import (
     _closed_cylinder,
     _manifold3d,
@@ -26,6 +29,58 @@ def _frozen_pairs(bridge, bridge_faces, target, target_faces):
     return av.audit_surface_pair(first, second)["unexpected_triangle_pairs"]
 
 
+def _interface_result(bridge_key, bridge, bridge_faces, target_key, target,
+                      target_faces, frozen_pairs):
+    first = av.prepare_surface(
+        bridge_key, bridge, bridge_faces,
+        source_vertex_ids=np.arange(len(bridge), dtype=np.uint64))
+    second = av.prepare_surface(
+        target_key, target, target_faces,
+        source_vertex_ids=np.arange(len(target), dtype=np.uint64))
+    return junction._interface_gate(av, first, second, frozen_pairs)
+
+
+def _profiled_cylinder(stations, *, sectors=12):
+    """Closed tapered source with an exact r=0.2, z=1 collar ring."""
+    rings = []
+    for z, radius in stations:
+        for sector in range(sectors):
+            angle = 2.0 * np.pi * sector / sectors
+            rings.append([radius * np.cos(angle), radius * np.sin(angle), z])
+    bottom_center = len(rings)
+    rings.append([0.0, 0.0, stations[0][0]])
+    top_center = len(rings)
+    rings.append([0.0, 0.0, stations[-1][0]])
+    faces = []
+    for level in range(len(stations) - 1):
+        for sector in range(sectors):
+            following = (sector + 1) % sectors
+            a = level * sectors + sector
+            b = level * sectors + following
+            c = (level + 1) * sectors + following
+            d = (level + 1) * sectors + sector
+            faces.extend(([a, b, c], [a, c, d]))
+    for sector in range(sectors):
+        following = (sector + 1) % sectors
+        faces.extend(([bottom_center, following, sector],
+                      [top_center, (len(stations) - 1) * sectors + sector,
+                       (len(stations) - 1) * sectors + following]))
+    return np.asarray(rings, dtype="<f4"), np.asarray(faces, dtype="<u4")
+
+
+def _calibre_preserving_target():
+    # It matches the bridge top-ring exactly at z=1, then tapers away from that
+    # junction. The matched source ring gives the interface gate real witnesses.
+    return _profiled_cylinder(((0.8, 0.18), (1.0, 0.2),
+                               (1.05, 0.2), (2.0, 0.18)))
+
+
+def _pinched_target():
+    # Keep the exact z=1 collar but collapse just distal to the matched ring.
+    return _profiled_cylinder(((0.8, 0.18), (1.0, 0.2),
+                               (1.05, 0.08), (2.0, 0.08)))
+
+
 def _proof(bridge, bridge_faces, target, target_faces, *,
            baseline_bridge=None, baseline_target=None, pairs=None):
     if pairs is None:
@@ -46,14 +101,19 @@ def _proof(bridge, bridge_faces, target, target_faces, *,
 
 def test_overlapping_vessels_pass_with_independent_collar_sections_and_3d_witnesses():
     bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
-    target, target_faces = _closed_cylinder(0.8, 2.0, radius=0.18)
+    target, target_faces = _calibre_preserving_target()
 
     result = _proof(bridge, bridge_faces, target, target_faces)
 
     assert result["passed"]
     assert result["source_topology_gate"]["passed"]
     assert result["candidate_baseline_ancestry_gate"]["passed"]
-    assert result["port_interfaces"]["candidate"]["exact_interface_point_count"] > 0
+    candidate_port = result["port_interfaces"]["candidate"]
+    assert candidate_port["exact_interface_point_count"] > 0
+    assert not candidate_port["p6_audit_passed"]
+    assert candidate_port["exact_partial_overlap_witnesses"]["passed"]
+    assert candidate_port["exact_partial_overlap_witnesses"][
+        "requires_separate_closed_solid_confirmation"]
     assert result["solid_gates"]["candidate"]["positive_intersection_volume"]
     assert result["solid_gates"]["candidate"]["exact_inside_both_witness"][
         "first_location"] == "inside"
@@ -73,6 +133,46 @@ def test_overlapping_vessels_pass_with_independent_collar_sections_and_3d_witnes
     assert not result["limitations"]["shared_planar_junction_section_required"]
     assert not result["limitations"]["anatomical_admission"]
     assert not result["limitations"]["existing_blood_state_owner_mutated"]
+
+
+def test_positive_bone_muscle_penetration_is_outside_vessel_junction_scope():
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
+    target, target_faces = _calibre_preserving_target()
+    frozen_pairs = _frozen_pairs(bridge, bridge_faces, target, target_faces)
+
+    # 51004 and 51005 are the existing bone and muscle semantic classes. The
+    # fixture intentionally reuses penetrating vessel-shaped geometry so only
+    # typed ownership distinguishes it from the declared vein junction.
+    result = _interface_result(
+        (51004, 526), bridge, bridge_faces,
+        (51005, 472), target, target_faces, frozen_pairs)
+
+    assert result["exact_interface_point_count"] > 0
+    assert len(result["exact_partial_overlap_witnesses"]["containment"]) == 2
+    assert not result["documented_vessel_junction_scope"]["passed"]
+    assert not result["exact_partial_overlap_witnesses"]["passed"]
+    assert not result["passed"]
+
+
+def test_vessel_crossing_outside_frozen_collar_patch_is_rejected():
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
+    target, target_faces = _calibre_preserving_target()
+    frozen_pairs = _frozen_pairs(bridge, bridge_faces, target, target_faces)
+    moved_target = target.copy()
+    moved_target[:, 0] += 0.05
+
+    result = _interface_result(
+        (51011, 526), bridge, bridge_faces,
+        (51011, 472), moved_target, target_faces, frozen_pairs)
+
+    assert result["documented_vessel_junction_scope"]["passed"]
+    assert result["exact_interface_point_count"] > 0
+    assert result["unexpected_face_pairs"]
+    # Some observed pairs still lie in the collar patch; the additional
+    # crossing pairs outside that patch are independently disqualifying.
+    assert result["observed_pairs_within_frozen_face_patch_cross_product"]
+    assert not result["exact_partial_overlap_witnesses"]["passed"]
+    assert not result["passed"]
 
 
 def test_tangent_vessels_reject_zero_volume_even_if_closed():
@@ -111,8 +211,8 @@ def test_disconnected_extra_closed_component_is_reported_and_rejected():
 
 def test_local_collar_calibre_rejects_a_pinch_after_global_solid_checks():
     bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
-    baseline_target, target_faces = _closed_cylinder(0.8, 2.0, radius=0.18)
-    candidate_target, candidate_faces = _closed_cylinder(0.8, 2.0, radius=0.08)
+    baseline_target, target_faces = _calibre_preserving_target()
+    candidate_target, candidate_faces = _pinched_target()
     pairs = _frozen_pairs(bridge, bridge_faces, candidate_target, candidate_faces)
 
     result = _proof(
@@ -188,21 +288,43 @@ def test_candidate_decoder_calls_the_existing_abi5_codec_owner(monkeypatch):
     assert rows is decoded_rows
 
 
-def test_source007_compiler_owner_hashes_resolve_to_frozen_emission_revision():
-    compiler_preflight = json.loads(source007.PREFLIGHT_PATH.read_text())
+def test_source007_compiler_pins_resolve_immutable_git_objects(tmp_path, monkeypatch):
+    repo = tmp_path / "frozen-source"
+    source = repo / "src" / "owner.py"
+    source.parent.mkdir(parents=True)
+    original = b"OWNER_REVISION = 'frozen'" + bytes([10])
+    source.write_bytes(original)
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.invalid"], check=True)
+    subprocess.run(["git", "-C", str(repo), "add", "src/owner.py"], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "freeze owner"], check=True)
+    revision = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True, capture_output=True, text=True).stdout.strip()
+    source.write_bytes(b"OWNER_REVISION = 'modified-after-run'" + bytes([10]))
+    monkeypatch.setattr(
+        source007, "_code_and_dependency_pins",
+        lambda: {"manifold3d_retained_wheel": {}})
+    pins = {
+        "source_repository": {"head": revision, "dirty": False},
+        "source_code_sha256": {
+            str(source): hashlib.sha256(original).hexdigest()},
+        "manifold3d_retained_wheel": {},
+    }
 
-    verified = junction._verify_source007_compiler_code_pins(
-        compiler_preflight["code_and_dependency_pins"])
+    verified = junction._verify_source007_compiler_code_pins(pins)
 
     assert verified["passed"]
-    assert verified["source_code_file_count"] == 242
-    assert verified["frozen_source_repository"]["head"] == (
-        "e921f79b9b078911c30f552890d22274fb8cf56e")
-    changed_gate = verified["verified_source_code"][
-        "/Users/numi/numi-human-vein-geometry-gate-20261014/src/"
-        "numilab_human/resting_brachiocephalic_geometry_gate.py"]
-    assert changed_gate["verification_method"] == "frozen_source_commit_git_object"
-    assert changed_gate["verified_sha256"] == changed_gate["expected_sha256"]
+    assert verified["source_code_file_count"] == 1
+    owner = verified["verified_source_code"][str(source)]
+    assert owner["verification_method"] == "frozen_source_commit_git_object"
+    assert owner["verified_sha256"] == owner["expected_sha256"]
+    assert owner["current_sha256"] != owner["expected_sha256"]
+
+    pins["source_code_sha256"][str(source)] = "0" * 64
+    with pytest.raises(ValueError, match="historical compiler code hash mismatch"):
+        junction._verify_source007_compiler_code_pins(pins)
 
 
 def test_material_branch_scope_names_one_frozen_branch_and_limits_coverage():

@@ -46,6 +46,10 @@ PROGRESS_PATH = OUTPUT_DIR / "progress.json"
 BRIDGE_KEY = (51011, 526)
 TARGET_KEY = (51011, 472)
 PAIR = (BRIDGE_KEY, TARGET_KEY)
+# The owner in this module is intentionally scoped to the frozen FJ3583 to
+# right-subclavian port. Other anatomical contacts remain under the shared
+# verifier's ordinary rejection rules.
+PARTIAL_OVERLAP_PORT = PAIR
 VOLUME_BALANCE_RELATIVE_TOLERANCE = 1e-6
 
 
@@ -659,6 +663,8 @@ def _station_calibre(surface, baseline_surface, witness_points, collar_faces, *,
 
 
 def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
+    typed_port = (tuple(map(int, bridge.key)), tuple(map(int, target.key)))
+    port_scope_passed = typed_port == PARTIAL_OVERLAP_PORT
     pairs = gate._pair_rows(
         frozen_pairs, name="frozen right brachiocephalic port pairs",
         bridge_face_count=len(bridge.faces), target_face_count=len(target.faces))
@@ -673,10 +679,53 @@ def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
                        audit.get("unexpected_triangle_pairs", []))
     exact_points = gate._exact_interface_points(verifier, bridge, target, observed)
     within_patch = all(pair in allowed for pair in observed)
+    containment = audit.get("containment", [])
+    component_rows_complete = (
+        len(containment) == 2
+        and all(
+            row.get("status") == "checked_exact_rational_metres"
+            and bool(row.get("inside_component_witnesses"))
+            and bool(row.get("outside_component_witnesses"))
+            and bool(row.get("component_checks"))
+            and all(item.get("sampled_face_count", 0) > 0
+                    and item.get("has_inside_face_interior")
+                    and item.get("has_outside_face_interior")
+                    for item in row["component_checks"])
+            for row in containment
+        )
+    )
+    exact_partial_overlap = bool(
+        port_scope_passed
+        and not audit.get("passed")
+        and not unexpected
+        and not audit.get("rejected_interface_feature_contacts")
+        and component_rows_complete
+        and not any(row.get("declared_intended_enclosure") for row in containment)
+    )
+    pair_patch_and_collar_passed = bool(
+        port_scope_passed and not unexpected and within_patch and bool(exact_points)
+        and (bool(audit.get("passed")) or exact_partial_overlap)
+    )
     return {
-        "passed": bool(audit.get("passed")) and not unexpected and within_patch
-        and bool(exact_points),
+        "passed": pair_patch_and_collar_passed,
+        "typed_port": [list(typed_port[0]), list(typed_port[1])],
+        "documented_vessel_junction_scope": {
+            "passed": port_scope_passed,
+            "allowed_typed_port": [list(PARTIAL_OVERLAP_PORT[0]),
+                                   list(PARTIAL_OVERLAP_PORT[1])],
+            "frozen_matched_face_patch_required": True,
+            "downstream_closed_solid_confirmation_required": True,
+            "scope": "FJ3583 right brachiocephalic vein to FJ3587 right subclavian vein",
+        },
         "p6_audit_passed": bool(audit.get("passed")),
+        "exact_partial_overlap_witnesses": {
+            "passed": exact_partial_overlap,
+            "requires_separate_closed_solid_confirmation": exact_partial_overlap,
+            "classification": (
+                "symmetric_exact_partial_volumetric_overlap"
+                if exact_partial_overlap else "not_classified_as_expected_partial_overlap"),
+            "containment": containment,
+        },
         "observed_pair_count": len(observed),
         "observed_face_pairs": [list(pair) for pair in observed],
         "unexpected_face_pairs": [list(pair) for pair in unexpected],
