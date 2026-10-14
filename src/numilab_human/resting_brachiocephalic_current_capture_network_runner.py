@@ -25,6 +25,7 @@ from . import resting_brachiocephalic_source007 as retained_owner
 REPO = Path(__file__).resolve().parents[2]
 RUNNER_SCHEMA = "numi.human.current-capture-vascular-network-execution.v1"
 BASELINE_ADDENDUM_NAME = "baseline-collar-addendum.json"
+SOURCE_BASELINE_ADDENDUM_NAME = "source-baseline-collar-addendum.json"
 NETWORK_KEYS = tuple(sorted({
     key for edge in network_owner.declared_network_links() for key in edge
 }))
@@ -283,6 +284,36 @@ def _baseline_collar_addendum(runtime: dict, preflight_report: dict) -> dict:
     return proof
 
 
+def _source_baseline_collar_addendum(runtime: dict, preflight_report: dict) -> dict:
+    """Replay the frozen 023 source-baseline additions for typed link 525->469."""
+    _candidates, baselines, link_inputs, inventory = _bind_runtime_inputs(runtime)
+    edge = network_owner.SOURCE_BASELINE_ADDITIONS_LINK
+    item = next((value for value in link_inputs
+                 if (value["bridge_key"], value["target_key"]) == edge), None)
+    _require(item is not None,
+             "source-baseline additions link 525->469 is absent from the declared graph")
+    report_path = network_owner.SOURCE_BASELINE_OBSERVATION_REPORT.resolve(strict=True)
+    report_sha = network_owner.SOURCE_BASELINE_OBSERVATION_REPORT_SHA256
+    _require(_sha_file(report_path) == report_sha,
+             "pinned 023 source-baseline report changed before replay")
+    return network_owner.verify_baseline_matched_collar_addendum(
+        verifier,
+        bridge_key=edge[0], target_key=edge[1],
+        source_link_evidence=item["source_link_evidence"],
+        source_rows=runtime["source_rows"], source_map=runtime["source_map"],
+        independent_source_baseline_bridge_surface=baselines[edge[0]],
+        independent_source_baseline_target_surface=baselines[edge[1]],
+        native_nha_gid_base_offset=(
+            inventory["native_source_slot_identity"]["native_nha_gid_base_offset"]),
+        baseline_binding=preflight_report,
+        declarations=network_owner.SOURCE_BASELINE_ADDITIONS,
+        baseline_observation={
+            "report_path": str(report_path),
+            "report_sha256": report_sha,
+        },
+    )
+
+
 def prepare_baseline_collar_addendum(capture_inputs_json: Path,
                                      output_dir: Path) -> dict:
     """Run and freeze only the baseline 475->479 exact P6/Rat extension proof."""
@@ -348,24 +379,127 @@ def prepare_baseline_collar_addendum(capture_inputs_json: Path,
             "sha256": _sha_file(addendum_path)}
 
 
+def prepare_source_baseline_collar_addendum(
+    capture_inputs_json: Path, output_dir: Path,
+) -> dict:
+    """Freeze the exact source-baseline 525->469 multi-face collar proof."""
+    started = time.perf_counter()
+    bundle_path = Path(capture_inputs_json).resolve(strict=True)
+    destination = Path(output_dir).resolve()
+    preflight_path = destination / "source-and-capture-preflight.json"
+    progress_path = destination / "progress.json"
+    prior_addendum_path = destination / BASELINE_ADDENDUM_NAME
+    addendum_path = destination / SOURCE_BASELINE_ADDENDUM_NAME
+    _require(destination.is_dir() and preflight_path.is_file()
+             and progress_path.is_file() and prior_addendum_path.is_file()
+             and not addendum_path.exists(),
+             "source-baseline addendum requires the frozen preflight and legacy collar proof")
+    progress = json.loads(progress_path.read_text())
+    prior = json.loads(prior_addendum_path.read_text())
+    frozen = json.loads(preflight_path.read_text())
+    bundle_sha = _sha_file(bundle_path)
+    manifest = frozen.get("execution_runner", {})
+    _require(progress.get("status") == "BASELINE_COLLAR_ADDENDUM_VERIFIED"
+             and progress.get("baseline_addendum_sha256")
+             == _sha_file(prior_addendum_path)
+             and prior.get("status")
+             == "VERIFIED_BASELINE_ONLY_475_479_EXACT_P6_RAT_COLLAR_ADDENDUM"
+             and prior.get("capture_input_bundle_path") == str(bundle_path)
+             and prior.get("capture_input_bundle_sha256") == bundle_sha
+             and prior.get("source_preflight_path") == str(preflight_path.resolve())
+             and prior.get("source_preflight_sha256") == _sha_file(preflight_path)
+             and prior.get("runner_code_pins") == _runtime_code_pins()
+             and manifest.get("capture_input_bundle_path") == str(bundle_path)
+             and manifest.get("capture_input_bundle_sha256") == bundle_sha
+             and manifest.get("code_pins") == _runtime_code_pins()
+             and manifest.get("sha256") == _sha_file(Path(__file__).resolve())
+             and frozen.get("source_repository") == preparation._git_state(),
+             "source-baseline addendum preflight/legacy proof is stale or mismatched")
+    capture_inputs = json.loads(bundle_path.read_bytes())
+    live, runtime = preparation.build_preflight(
+        capture_inputs, return_runtime_inputs=True)
+    live["execution_runner"] = manifest
+    live["capture_source_slot_identity_preflight"] = _source_binding_preflight(runtime)
+    _require(_stable_preflight(live) == _stable_preflight(frozen),
+             "live source/capture inputs differ from the frozen source preflight")
+    proof = _source_baseline_collar_addendum(runtime, live)
+    report = {
+        "schema": "numi.human.current-capture-source-baseline-collar-addendum-execution.v1",
+        "status": "VERIFIED_SOURCE_BASELINE_ONLY_525_469_DECLARED_COLLAR_ADDITIONS",
+        "recorded_at_utc": datetime.now(UTC).isoformat(),
+        "capture_input_bundle_path": str(bundle_path),
+        "capture_input_bundle_sha256": bundle_sha,
+        "source_preflight_path": str(preflight_path.resolve()),
+        "source_preflight_sha256": _sha_file(preflight_path),
+        "runner_code_pins": _runtime_code_pins(),
+        "source_baseline_report_path": str(
+            network_owner.SOURCE_BASELINE_OBSERVATION_REPORT.resolve()),
+        "source_baseline_report_sha256": (
+            network_owner.SOURCE_BASELINE_OBSERVATION_REPORT_SHA256),
+        "candidate_surface_predicates_run": False,
+        "baseline_exact_p6_predicate_run": True,
+        "native_or_gpu_work_performed": False,
+        "anatomical_admission": False,
+        "verified_addendum": proof,
+        "scope": "exact three declared pairs on source-baseline link 525->469",
+    }
+    _write_json(addendum_path, report)
+    progress.update({
+        "status": "SOURCE_BASELINE_COLLAR_ADDITIONS_VERIFIED",
+        "source_baseline_addendum_path": str(addendum_path.resolve()),
+        "source_baseline_addendum_sha256": _sha_file(addendum_path),
+        "geometry_predicates_run": True,
+        "candidate_surface_predicates_run": False,
+        "source_baseline_exact_p6_predicate_run": True,
+        "native_or_gpu_work_performed": False,
+        "anatomical_admission": False,
+        "elapsed_source_baseline_addendum_seconds": time.perf_counter() - started,
+    })
+    _write_json(progress_path, progress)
+    return {**report, "path": str(addendum_path.resolve()),
+            "sha256": _sha_file(addendum_path)}
+
+
 def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
                                  progress_callback=None,
                                  matched_collar_addendum=None,
+                                 matched_collar_addenda=None,
                                  run_all_targets=True) -> dict:
     """Run fail-first 15-link continuity; all-target is an explicit later stage."""
     candidates, _baselines, link_inputs, inventory = _bind_runtime_inputs(runtime)
-    if matched_collar_addendum is not None:
-        _require(matched_collar_addendum.get("passed") is True
-                 and matched_collar_addendum.get("typed_link")
-                 == [[51011, 475], [51011, 479]],
-                 "network execution requires the frozen independent 475->479 addendum")
+    if matched_collar_addenda is None:
+        collar_addenda = {}
+        if matched_collar_addendum is not None:
+            addendum_edge = tuple(tuple(row) for row in
+                                  matched_collar_addendum.get("typed_link", []))
+            collar_addenda[addendum_edge] = matched_collar_addendum
+    else:
+        _require(matched_collar_addendum is None
+                 and isinstance(matched_collar_addenda, dict),
+                 "network execution accepts either one legacy addendum or a typed addendum map")
+        collar_addenda = {
+            tuple(tuple(row) for row in edge): proof
+            for edge, proof in matched_collar_addenda.items()
+        }
+    declared_edges = set(network_owner.declared_network_links())
+    _require(set(collar_addenda).issubset(declared_edges),
+             "network execution received an addendum for an undeclared link")
+    for edge, proof in collar_addenda.items():
+        _require(isinstance(proof, dict) and proof.get("passed") is True
+                 and proof.get("typed_link") == [list(edge[0]), list(edge[1])],
+                 "network execution addendum does not bind its exact typed link")
         edge_item = next((item for item in link_inputs
-                          if item["bridge_key"] == (51011, 475)
-                          and item["target_key"] == (51011, 479)), None)
+                          if item["bridge_key"] == edge[0]
+                          and item["target_key"] == edge[1]), None)
         _require(edge_item is not None,
-                 "network execution is missing typed link 475->479")
-        edge_item["matched_collar_addendum"] = matched_collar_addendum
-        inventory["baseline_matched_collar_addendum"] = matched_collar_addendum
+                 f"network execution is missing typed link {edge[0][1]}->{edge[1][1]}")
+        edge_item["matched_collar_addendum"] = proof
+    if ((51011, 475), (51011, 479)) in collar_addenda:
+        inventory["baseline_matched_collar_addendum"] = collar_addenda[
+            ((51011, 475), (51011, 479))]
+    if ((51011, 525), (51011, 469)) in collar_addenda:
+        inventory["source_baseline_matched_collar_addendum"] = collar_addenda[
+            ((51011, 525), (51011, 469))]
     if manifold3d is None:
         manifold3d = retained_owner._load_retained_manifold()
     if progress_callback is not None:
@@ -378,6 +512,10 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
         "schema": RUNNER_SCHEMA,
         "status": continuity.get("status"),
         "baseline_matched_collar_addendum": matched_collar_addendum,
+        "baseline_matched_collar_addenda": [
+            {"typed_link": [list(edge[0]), list(edge[1])], "proof": proof}
+            for edge, proof in sorted(collar_addenda.items())
+        ],
         "network_source_continuity": continuity,
         "candidate_and_source_baseline_inventory": inventory,
         "all_target_collision_gate": {
@@ -434,9 +572,11 @@ def _execution_manifest(bundle_path: Path, bundle_sha256: str) -> dict:
         ],
         "geometry_predicates_run_during_preflight": False,
         "historical_source007_P6_used_for_current_geometry": False,
-        "baseline_addendum_stage": (
-            "exact P6/Rat source-baseline contact proof for one bounded 475->479 pair; "
-            "candidate geometry remains unaudited until the fail-first network run"),
+        "baseline_addendum_stages": [
+            "exact P6/Rat source-baseline contact proof for one bounded 475->479 pair",
+            "exact P6/Rat source-baseline contact proof for three declared 525->469 pairs",
+        ],
+        "candidate_geometry_remains_unaudited_until_fail_first_network_run": True,
     }
 
 
@@ -515,19 +655,26 @@ def run(capture_inputs_json: Path, output_dir: Path) -> dict:
     progress_path = destination / "progress.json"
     report_path = destination / "network-gate-report.json"
     addendum_path = destination / BASELINE_ADDENDUM_NAME
+    source_addendum_path = destination / SOURCE_BASELINE_ADDENDUM_NAME
     _require(destination.is_dir() and preflight_path.is_file()
              and progress_path.is_file() and addendum_path.is_file()
+             and source_addendum_path.is_file()
              and not report_path.exists()
              and not (destination / "network-gate-error.json").exists(),
              "run requires a fresh prepared output directory with no prior execution")
     progress = json.loads(progress_path.read_text())
     _require(progress.get("geometry_predicates_run") is True
-             and progress.get("status") == "BASELINE_COLLAR_ADDENDUM_VERIFIED"
+             and progress.get("status") == "SOURCE_BASELINE_COLLAR_ADDITIONS_VERIFIED"
              and progress.get("candidate_surface_predicates_run") is False
              and progress.get("baseline_exact_p6_predicate_run") is True
              and progress.get("baseline_addendum_path") == str(addendum_path.resolve())
-             and progress.get("baseline_addendum_sha256") == _sha_file(addendum_path),
-             "run requires the separately frozen baseline-only collar addendum and no candidate predicates")
+             and progress.get("baseline_addendum_sha256") == _sha_file(addendum_path)
+             and progress.get("source_baseline_addendum_path")
+             == str(source_addendum_path.resolve())
+             and progress.get("source_baseline_addendum_sha256")
+             == _sha_file(source_addendum_path)
+             and progress.get("source_baseline_exact_p6_predicate_run") is True,
+             "run requires both separately frozen baseline-only collar proofs and no candidate predicates")
     bundle_bytes = bundle_path.read_bytes()
     bundle_sha = _sha_bytes(bundle_bytes)
     frozen_preflight = json.loads(preflight_path.read_text())
@@ -606,9 +753,32 @@ def run(capture_inputs_json: Path, output_dir: Path) -> dict:
         _require(_stable_preflight(replayed_addendum) == _stable_preflight(
                      frozen_addendum.get("verified_addendum", {})),
                  "frozen baseline collar addendum does not replay against current source inputs")
+        frozen_source_addendum = json.loads(source_addendum_path.read_text())
+        _require(frozen_source_addendum.get("status")
+                 == "VERIFIED_SOURCE_BASELINE_ONLY_525_469_DECLARED_COLLAR_ADDITIONS"
+                 and frozen_source_addendum.get("capture_input_bundle_path") == str(bundle_path)
+                 and frozen_source_addendum.get("capture_input_bundle_sha256") == bundle_sha
+                 and frozen_source_addendum.get("source_preflight_path")
+                 == str(preflight_path.resolve())
+                 and frozen_source_addendum.get("source_preflight_sha256")
+                 == _sha_file(preflight_path)
+                 and frozen_source_addendum.get("runner_code_pins")
+                 == _runtime_code_pins()
+                 and frozen_source_addendum.get("source_baseline_report_path")
+                 == str(network_owner.SOURCE_BASELINE_OBSERVATION_REPORT.resolve())
+                 and frozen_source_addendum.get("source_baseline_report_sha256")
+                 == network_owner.SOURCE_BASELINE_OBSERVATION_REPORT_SHA256,
+                 "source-baseline collar addendum does not bind exact preflight, bundle, and 023 report")
+        replayed_source_addendum = _source_baseline_collar_addendum(runtime, live_preflight)
+        _require(_stable_preflight(replayed_source_addendum) == _stable_preflight(
+                     frozen_source_addendum.get("verified_addendum", {})),
+                 "frozen source-baseline collar addendum does not replay against current source inputs")
         result = execute_ordered_network_gates(
             runtime, progress_callback=mark_geometry_stage,
-            matched_collar_addendum=replayed_addendum,
+            matched_collar_addenda={
+                ((51011, 475), (51011, 479)): replayed_addendum,
+                ((51011, 525), (51011, 469)): replayed_source_addendum,
+            },
             run_all_targets=False)
         result.update({
             "recorded_finish_utc": datetime.now(UTC).isoformat(),
@@ -661,6 +831,8 @@ def main(argv: list[str] | None = None) -> int:
                       help="freeze source and capture inputs without geometry")
     mode.add_argument("--prepare-baseline-addendum", action="store_true",
                       help="run only the exact independent-baseline P6/Rat 475->479 collar proof")
+    mode.add_argument("--prepare-source-baseline-addendum", action="store_true",
+                      help="run only the pinned 023 source-baseline P6/Rat proof for three 525->469 collar additions")
     mode.add_argument("--run", action="store_true",
                       help="execute 15-link continuity, then all-target only on full pass")
     args = parser.parse_args(argv)
@@ -668,6 +840,9 @@ def main(argv: list[str] | None = None) -> int:
         result = prepare(args.capture_inputs_json, args.output_dir)
     elif args.prepare_baseline_addendum:
         result = prepare_baseline_collar_addendum(
+            args.capture_inputs_json, args.output_dir)
+    elif args.prepare_source_baseline_addendum:
+        result = prepare_source_baseline_collar_addendum(
             args.capture_inputs_json, args.output_dir)
     else:
         result = run(args.capture_inputs_json, args.output_dir)

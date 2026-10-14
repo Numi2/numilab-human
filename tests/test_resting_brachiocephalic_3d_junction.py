@@ -735,6 +735,60 @@ def test_declared_baseline_additions_require_exact_pinned_baseline_report(
             for role, prefix in (("bridge", "parent"), ("target", "target"))
         }
     assert proof["candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"]
+    scope = junction.bind_network_link_source_ancestry(
+        inputs["bridge_key"], inputs["target_key"],
+        source_link_evidence=inputs["source_link_evidence"],
+        source_rows=inputs["source_rows"], source_map=inputs["source_map"])
+    replayed = junction._verify_declared_source_baseline_addendum_replay(
+        proof, source_scope=scope, baseline_bridge=inputs["bridge"],
+        baseline_target=inputs["target"])
+    assert replayed == {(704, 184), (704, 185), (737, 176)}
+
+
+def test_interface_gate_hands_off_only_verified_exact_source_addition_pairs():
+    from types import SimpleNamespace
+    captured = {}
+
+    class PairVerifier:
+        def audit_surface_pair(self, bridge, target, *, intended_face_pairs):
+            captured["allowed"] = set(intended_face_pairs)
+            return {
+                "passed": True,
+                "declared_interface_triangle_pairs": [],
+                "unexpected_triangle_pairs": [],
+                "containment": [],
+            }
+
+    bridge_key, target_key = (51011, 525), (51011, 469)
+    bridge = SimpleNamespace(key=bridge_key, faces=np.zeros((748, 3), dtype="<u4"))
+    target = SimpleNamespace(key=target_key, faces=np.zeros((280, 3), dtype="<u4"))
+    addendum = {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [list(bridge_key), list(target_key)],
+        "candidate_geometry_used": False,
+        "source_geometry_modified": False,
+        "bounded_port_region": {
+            "additional_allowed_face_pairs": [[704, 184], [704, 185], [737, 176]],
+            "no_cross_product_expansion": True,
+        },
+        "exact_p6_rat_contact": {
+            "source_baseline_observation": (
+                junction.SOURCE_BASELINE_OBSERVATION_REPORT_SHA256),
+        },
+    }
+    result = junction._interface_gate(
+        PairVerifier(), bridge, target, ((0, 0),),
+        declared_vessel_ports=junction.declared_network_links(),
+        verified_collar_addendum=addendum)
+    assert captured["allowed"] == {
+        (0, 0), (704, 184), (704, 185), (737, 176)}
+    assert result["baseline_verified_declared_source_additions"] == {
+        "used": True,
+        "pairs": [[704, 184], [704, 185], [737, 176]],
+        "added_to_frozen_patch_cross_product": False,
+        "candidate_and_baseline_still_require_exact_points": True,
+    }
 
 
 def test_declared_baseline_additions_reject_unbound_pairs_and_changed_report(

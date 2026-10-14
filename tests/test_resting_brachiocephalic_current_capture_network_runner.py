@@ -92,7 +92,7 @@ def _patch_input_owner(monkeypatch):
 
 
 
-def _freeze_test_addendum(output, bundle, proof):
+def _freeze_test_addendum(output, bundle, proof, source_proof=None):
     preflight_path = output / "source-and-capture-preflight.json"
     progress_path = output / "progress.json"
     report = {
@@ -115,6 +115,32 @@ def _freeze_test_addendum(output, bundle, proof):
         "geometry_predicates_run": True,
         "candidate_surface_predicates_run": False,
         "baseline_exact_p6_predicate_run": True,
+    })
+    if source_proof is None:
+        source_proof = {
+            "passed": True,
+            "typed_link": [[51011, 525], [51011, 469]],
+        }
+    source_report = runner.network_owner.SOURCE_BASELINE_OBSERVATION_REPORT.resolve()
+    source_sha = runner.network_owner.SOURCE_BASELINE_OBSERVATION_REPORT_SHA256
+    source_addendum = {
+        "status": "VERIFIED_SOURCE_BASELINE_ONLY_525_469_DECLARED_COLLAR_ADDITIONS",
+        "capture_input_bundle_path": str(bundle.resolve()),
+        "capture_input_bundle_sha256": runner._sha_file(bundle.resolve()),
+        "source_preflight_path": str(preflight_path.resolve()),
+        "source_preflight_sha256": runner._sha_file(preflight_path),
+        "runner_code_pins": runner._runtime_code_pins(),
+        "source_baseline_report_path": str(source_report),
+        "source_baseline_report_sha256": source_sha,
+        "verified_addendum": source_proof,
+    }
+    source_addendum_path = output / runner.SOURCE_BASELINE_ADDENDUM_NAME
+    runner._write_json(source_addendum_path, source_addendum)
+    progress.update({
+        "status": "SOURCE_BASELINE_COLLAR_ADDITIONS_VERIFIED",
+        "source_baseline_addendum_path": str(source_addendum_path.resolve()),
+        "source_baseline_addendum_sha256": runner._sha_file(source_addendum_path),
+        "source_baseline_exact_p6_predicate_run": True,
     })
     runner._write_json(progress_path, progress)
 
@@ -349,6 +375,11 @@ def test_run_rejects_capture_bundle_drift_before_geometry(tmp_path, monkeypatch)
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
     runner.prepare(bundle, output)
+    report = tmp_path / "source-baseline-023.json"
+    report.write_text("{}")
+    monkeypatch.setattr(runner.network_owner, "SOURCE_BASELINE_OBSERVATION_REPORT", report)
+    monkeypatch.setattr(runner.network_owner, "SOURCE_BASELINE_OBSERVATION_REPORT_SHA256",
+                        runner._sha_file(report))
     _freeze_test_addendum(output, bundle, {"passed": True})
     bundle.write_text('{"changed":true}')
     monkeypatch.setattr(
@@ -377,18 +408,35 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
     runner.prepare(bundle, output)
+    source_report = tmp_path / "source-baseline-023.json"
+    source_report.write_text("{}")
+    monkeypatch.setattr(runner.network_owner, "SOURCE_BASELINE_OBSERVATION_REPORT",
+                        source_report)
+    monkeypatch.setattr(runner.network_owner, "SOURCE_BASELINE_OBSERVATION_REPORT_SHA256",
+                        runner._sha_file(source_report))
     proof = {
         "schema": "numi.human.registered-source-collar-addendum.v1",
         "passed": True,
         "typed_link": [[51011, 475], [51011, 479]],
     }
-    _freeze_test_addendum(output, bundle, proof)
+    source_proof = {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [[51011, 525], [51011, 469]],
+    }
+    _freeze_test_addendum(output, bundle, proof, source_proof)
     monkeypatch.setattr(runner, "_baseline_collar_addendum", lambda *_args: proof)
+    monkeypatch.setattr(runner, "_source_baseline_collar_addendum",
+                        lambda *_args: source_proof)
     stages = []
 
     def execute(_runtime, *, progress_callback=None, matched_collar_addendum=None,
-                run_all_targets=True):
-        assert matched_collar_addendum == proof
+                matched_collar_addenda=None, run_all_targets=True):
+        assert matched_collar_addendum is None
+        assert matched_collar_addenda == {
+            ((51011, 475), (51011, 479)): proof,
+            ((51011, 525), (51011, 469)): source_proof,
+        }
         assert run_all_targets is False
         stages.append("continuity")
         progress_callback("STARTING_FAIL_FIRST_15_LINK_CONTINUITY")
@@ -505,3 +553,101 @@ def test_runtime_binding_retains_exact_abi5_to_pack_gid_map_when_slots_are_compa
     )
     with pytest.raises(ValueError, match="differ after uint64 canonicalization"):
         runner._bind_runtime_inputs(runtime)
+
+
+def test_source_baseline_addendum_replays_only_pinned_023_typed_link(tmp_path, monkeypatch):
+    report_path = tmp_path / "023.json"
+    report_path.write_text('{"frozen":"023"}')
+    report_sha = runner._sha_file(report_path)
+    monkeypatch.setattr(runner.network_owner, "SOURCE_BASELINE_OBSERVATION_REPORT",
+                        report_path)
+    monkeypatch.setattr(runner.network_owner, "SOURCE_BASELINE_OBSERVATION_REPORT_SHA256",
+                        report_sha)
+
+    bridge = _CachedSurface(
+        (51011, 525), [[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]], [1, 2, 3])
+    target = _CachedSurface(
+        (51011, 469), [[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]], [4, 5, 6])
+    link = {
+        "bridge_key": (51011, 525),
+        "target_key": (51011, 469),
+        "source_link_evidence": {"source_report": "pinned"},
+    }
+    inventory = {"native_source_slot_identity": {"native_nha_gid_base_offset": 300}}
+    monkeypatch.setattr(
+        runner, "_bind_runtime_inputs",
+        lambda _runtime: (
+            {(51011, 525): bridge, (51011, 469): target},
+            {(51011, 525): bridge, (51011, 469): target},
+            (link,), inventory))
+    calls = []
+
+    def verify(_verifier, **kwargs):
+        calls.append(kwargs)
+        return {"passed": True, "typed_link": [[51011, 525], [51011, 469]]}
+
+    monkeypatch.setattr(runner.network_owner, "verify_baseline_matched_collar_addendum",
+                        verify)
+    preflight = {"source_preflight": "exact"}
+    proof = runner._source_baseline_collar_addendum(
+        {"source_rows": {}, "source_map": {}}, preflight)
+
+    assert proof["passed"] is True
+    assert len(calls) == 1
+    call = calls[0]
+    assert call["bridge_key"] == (51011, 525)
+    assert call["target_key"] == (51011, 469)
+    assert call["source_link_evidence"] == link["source_link_evidence"]
+    assert call["independent_source_baseline_bridge_surface"] is bridge
+    assert call["independent_source_baseline_target_surface"] is target
+    assert call["native_nha_gid_base_offset"] == 300
+    assert call["baseline_binding"] is preflight
+    assert tuple(call["declarations"]) == runner.network_owner.SOURCE_BASELINE_ADDITIONS
+    assert call["baseline_observation"] == {
+        "report_path": str(report_path.resolve()),
+        "report_sha256": report_sha,
+    }
+
+
+def test_execute_ordered_network_gates_binds_addenda_by_exact_typed_link(monkeypatch):
+    _patch_input_owner(monkeypatch)
+    proof_475_479 = {
+        "passed": True,
+        "typed_link": [[51011, 475], [51011, 479]],
+    }
+    proof_525_469 = {
+        "passed": True,
+        "typed_link": [[51011, 525], [51011, 469]],
+    }
+    expected = {
+        ((51011, 475), (51011, 479)): proof_475_479,
+        ((51011, 525), (51011, 469)): proof_525_469,
+    }
+
+    def audit(_verifier, _manifold, inputs, *, expected_nha_gid_base_offset):
+        assert expected_nha_gid_base_offset == 300
+        by_edge = {
+            (item["bridge_key"], item["target_key"]): item
+            for item in inputs
+        }
+        assert by_edge[((51011, 475), (51011, 479))][
+            "matched_collar_addendum"] == proof_475_479
+        assert by_edge[((51011, 525), (51011, 469))][
+            "matched_collar_addendum"] == proof_525_469
+        assert all(
+            item.get("matched_collar_addendum") == expected.get(
+                (item["bridge_key"], item["target_key"]))
+            for item in inputs if (item["bridge_key"], item["target_key"]) in expected)
+        assert len([item for item in inputs
+                    if item.get("matched_collar_addendum")]) == 2
+        return {"passed": False, "first_failed_link": [[51011, 7], [51011, 471]]}
+
+    monkeypatch.setattr(
+        runner.network_owner, "audit_brachiocephalic_network_links_3d", audit)
+    report = runner.execute_ordered_network_gates(
+        _runtime_fixture(), manifold3d=object(), matched_collar_addenda=expected)
+    assert report["status"] == "STOPPED_AT_FIRST_FAILED_NETWORK_LINK"
+    inventory = report["candidate_and_source_baseline_inventory"]
+    assert inventory["baseline_matched_collar_addendum"] == proof_475_479
+    assert inventory["source_baseline_matched_collar_addendum"] == proof_525_469
+    assert len(report["baseline_matched_collar_addenda"]) == 2

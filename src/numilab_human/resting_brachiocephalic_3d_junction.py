@@ -1842,6 +1842,118 @@ def _station_calibre(surface, baseline_surface, witness_points, collar_faces, *,
     return result
 
 
+def _verified_collar_addendum_pairs(typed_port, addendum):
+    if typed_port == BASELINE_COLLAR_ADDENDUM_LINK:
+        _require(addendum.get("passed") is True
+                 and addendum.get("schema")
+                 == "numi.human.registered-source-collar-addendum.v1"
+                 and addendum.get("typed_link")
+                 == [list(typed_port[0]), list(typed_port[1])]
+                 and addendum.get("bounded_port_region", {}).get(
+                     "only_additional_allowed_face_pair") == [1577, 391]
+                 and addendum.get("bounded_port_region", {}).get(
+                     "no_cross_product_expansion") is True,
+                 "matched-collar addendum is invalid or belongs to another typed port")
+        return {(1577, 391)}
+    if typed_port == SOURCE_BASELINE_ADDITIONS_LINK:
+        expected = [list(item["face_pair"])
+                    for item in SOURCE_BASELINE_ADDITIONS]
+        _require(addendum.get("passed") is True
+                 and addendum.get("schema")
+                 == "numi.human.registered-source-collar-addendum.v1"
+                 and addendum.get("typed_link")
+                 == [list(typed_port[0]), list(typed_port[1])]
+                 and addendum.get("candidate_geometry_used") is False
+                 and addendum.get("source_geometry_modified") is False
+                 and addendum.get("bounded_port_region", {}).get(
+                     "additional_allowed_face_pairs") == expected
+                 and addendum.get("bounded_port_region", {}).get(
+                     "no_cross_product_expansion") is True
+                 and addendum.get("exact_p6_rat_contact", {}).get(
+                     "source_baseline_observation")
+                 == SOURCE_BASELINE_OBSERVATION_REPORT_SHA256,
+                 "declared source-baseline collar additions are outside their exact pinned scope")
+        return {tuple(pair) for pair in expected}
+    raise ValueError("baseline collar addendum is not registered for this typed port")
+
+
+def _verify_declared_source_baseline_addendum_replay(
+    addendum, *, source_scope, baseline_bridge, baseline_target,
+):
+    pair_order = tuple(tuple(item["face_pair"])
+                       for item in SOURCE_BASELINE_ADDITIONS)
+    pairs = set(pair_order)
+    source = addendum.get("source_evidence", {})
+    _require(source.get("path") == source_scope.get("source_evidence_path")
+             and source.get("sha256") == source_scope.get("source_evidence_sha256")
+             and source.get("frozen_source_pairs_sha256")
+             == source_scope.get("source_face_pair_ancestry_sha256")
+             and source.get("registered_parent_face_sha256")
+             == source_scope.get("source_parent_faces_sha256")
+             and source.get("registered_child_face_sha256")
+             == source_scope.get("source_child_faces_sha256"),
+             "declared baseline collar proof is not bound to current source ancestry")
+    lineage = addendum.get("baseline_surface_lineage", {})
+    expected_lineage = {
+        "parent_position_f32_sha256": _sha_bytes(
+            np.ascontiguousarray(baseline_bridge.positions, dtype="<f4").tobytes()),
+        "parent_face_u32_sha256": _sha_bytes(
+            np.ascontiguousarray(baseline_bridge.faces, dtype="<u4").tobytes()),
+        "parent_gids_u64_sha256": _sha_bytes(
+            np.ascontiguousarray(baseline_bridge.source_vertex_ids, dtype="<u8").tobytes()),
+        "target_position_f32_sha256": _sha_bytes(
+            np.ascontiguousarray(baseline_target.positions, dtype="<f4").tobytes()),
+        "target_face_u32_sha256": _sha_bytes(
+            np.ascontiguousarray(baseline_target.faces, dtype="<u4").tobytes()),
+        "target_gids_u64_sha256": _sha_bytes(
+            np.ascontiguousarray(baseline_target.source_vertex_ids, dtype="<u8").tobytes()),
+        "independent_from_actual_candidate_geometry": True,
+    }
+    _require(all(lineage.get(key) == value
+                 for key, value in expected_lineage.items()),
+             "declared baseline collar proof does not bind supplied independent surfaces")
+    regions = addendum.get("bounded_port_region", {}).get("pair_regions", [])
+    _require([item.get("face_pair") for item in regions]
+             == [list(item["face_pair"]) for item in SOURCE_BASELINE_ADDITIONS],
+             "declared source-baseline collar proof pair-region list differs")
+    recorded = addendum.get("exact_p6_rat_contact", {}).get("per_pair_proofs", [])
+    _require([item.get("face_pair") for item in recorded]
+             == [list(item["face_pair"]) for item in SOURCE_BASELINE_ADDITIONS],
+             "declared source-baseline exact P6/Rat pair list differs")
+    for pair, contact in zip(pair_order, recorded):
+        points = baseline_bridge.intersection_points_meters(
+            baseline_target, pair[0], pair[1])
+        bridge_triangle = baseline_bridge.triangle_meters(pair[0])
+        target_triangle = baseline_target.triangle_meters(pair[1])
+        bridge_bary = [_exact_barycentric(point, bridge_triangle) for point in points]
+        target_bary = [_exact_barycentric(point, target_triangle) for point in points]
+        length_squared = sum(
+            ((points[1][axis] - points[0][axis]) ** 2 for axis in range(3)),
+            Fraction(0)) if len(points) == 2 else Fraction(0)
+        expected_contact = {
+            "face_pair": list(pair),
+            "contact_topology": "one positive-length segment",
+            "exact_contact_point_count": 2,
+            "points": [{
+                "point_m": [_fraction_record(value) for value in point],
+                "bridge_exact_barycentric": [
+                    _fraction_record(value) for value in bridge_bary[index]],
+                "target_exact_barycentric": [
+                    _fraction_record(value) for value in target_bary[index]],
+            } for index, point in enumerate(points)],
+            "segment_length_squared_m2": _fraction_record(length_squared),
+        }
+        _require(len(points) == 2 and points[0] != points[1]
+                 and all(weight >= 0 for bary in bridge_bary for weight in bary)
+                 and all(weight >= 0 for bary in target_bary for weight in bary)
+                 and length_squared > 0 and contact == expected_contact,
+                 f"declared source-baseline collar pair {pair} exact P6/Rat replay differs")
+    for region in regions:
+        _require(region.get("bounded_contact_connection", {}).get("passed") is True,
+                 "declared source-baseline collar region lacks indexed contact-chain proof")
+    return pairs
+
+
 def _interface_gate(
     verifier, bridge, target, frozen_pairs, *, declared_vessel_ports=None,
     verified_collar_addendum=None,
@@ -1858,22 +1970,12 @@ def _interface_gate(
     bridge_patch = sorted({first for first, _ in pairs})
     target_patch = sorted({second for _, second in pairs})
     allowed = {(first, second) for first in bridge_patch for second in target_patch}
-    addendum_pair = None
     if verified_collar_addendum is not None:
-        _require(verified_collar_addendum.get("passed") is True
-                 and verified_collar_addendum.get("schema")
-                 == "numi.human.registered-source-collar-addendum.v1"
-                 and verified_collar_addendum.get("typed_link")
-                 == [list(typed_port[0]), list(typed_port[1])]
-                 and verified_collar_addendum.get("bounded_port_region", {}).get(
-                     "only_additional_allowed_face_pair") == [1577, 391]
-                 and verified_collar_addendum.get("bounded_port_region", {}).get(
-                     "no_cross_product_expansion") is True,
-                 "matched-collar addendum is invalid or belongs to another typed port")
-        addendum_pair = (1577, 391)
-        _require(addendum_pair not in allowed,
+        addendum_pairs = _verified_collar_addendum_pairs(
+            typed_port, verified_collar_addendum)
+        _require(not (addendum_pairs & allowed),
                  "matched-collar addendum pair is already covered by the frozen patch")
-        allowed.add(addendum_pair)
+        allowed.update(addendum_pairs)
     audit = verifier.audit_surface_pair(
         bridge, target, intended_face_pairs=tuple(sorted(allowed)))
     observed = tuple(tuple(map(int, pair)) for pair in
@@ -1924,9 +2026,18 @@ def _interface_gate(
         "observed_pair_count": len(observed),
         "observed_face_pairs": [list(pair) for pair in observed],
         "baseline_verified_single_pair_addendum": {
-            "used": addendum_pair is not None,
-            "pair": list(addendum_pair) if addendum_pair is not None else None,
+            "used": typed_port == BASELINE_COLLAR_ADDENDUM_LINK and bool(addendum_pairs),
+            "pair": ([1577, 391] if typed_port == BASELINE_COLLAR_ADDENDUM_LINK
+                     and addendum_pairs else None),
             "target_face_added_to_patch_cross_product": False,
+            "candidate_and_baseline_still_require_exact_points": True,
+        },
+        "baseline_verified_declared_source_additions": {
+            "used": typed_port == SOURCE_BASELINE_ADDITIONS_LINK
+                    and bool(addendum_pairs),
+            "pairs": [list(pair) for pair in sorted(addendum_pairs)]
+                     if typed_port == SOURCE_BASELINE_ADDITIONS_LINK else [],
+            "added_to_frozen_patch_cross_product": False,
             "candidate_and_baseline_still_require_exact_points": True,
         },
         "unexpected_face_pairs": [list(pair) for pair in unexpected],
@@ -2430,20 +2541,13 @@ def audit_brachiocephalic_3d_junction(
                     role + " candidate/baseline source identity, orientation, or volume changed")
     ancestry_passed = topology_passed and not ancestry_issues
 
-    addendum_pair = None
     if matched_collar_addendum is not None:
-        addendum_link = matched_collar_addendum.get("typed_link")
-        _require(matched_collar_addendum.get("passed") is True
-                 and matched_collar_addendum.get("schema")
-                 == "numi.human.registered-source-collar-addendum.v1"
-                 and addendum_link == [list(bridge_key), list(target_key)]
-                 and typed_link == BASELINE_COLLAR_ADDENDUM_LINK
-                 and matched_collar_addendum.get("candidate_geometry_used") is False
-                 and matched_collar_addendum.get("bounded_port_region", {}).get(
-                     "only_additional_allowed_face_pair") == [1577, 391]
-                 and matched_collar_addendum.get("bounded_port_region", {}).get(
-                     "no_cross_product_expansion") is True,
-                 "baseline-matched collar addendum is outside its exact typed source scope")
+        _verified_collar_addendum_pairs(typed_link, matched_collar_addendum)
+        if typed_link == SOURCE_BASELINE_ADDITIONS_LINK:
+            _verify_declared_source_baseline_addendum_replay(
+                matched_collar_addendum, source_scope=_source_link_scope,
+                baseline_bridge=surfaces["baseline_bridge"],
+                baseline_target=surfaces["baseline_target"])
         baseline_lineage = matched_collar_addendum.get("baseline_surface_lineage", {})
         _require(
             _sha_bytes(np.ascontiguousarray(
@@ -2461,18 +2565,18 @@ def audit_brachiocephalic_3d_junction(
             "baseline-matched collar proof is not bound to the supplied independent baseline surfaces")
         recorded_endpoints = matched_collar_addendum.get(
             "exact_p6_rat_contact", {}).get("endpoints", [])
-        current_points = surfaces["baseline_bridge"].intersection_points_meters(
-            surfaces["baseline_target"], 1577, 391)
-        _require(len(current_points) == 2
-                 and recorded_endpoints == [
-                     {**recorded_endpoints[index],
-                      "point_m": [_fraction_record(value) for value in point]}
-                     for index, point in enumerate(current_points)]
-                 and all(row.get("target_frozen_neighbor_face") in (392, 394)
-                         and row.get("exact_point_on_target_neighbor_edge") is True
-                         for row in recorded_endpoints),
-                 "baseline-matched collar proof does not replay the exact P6/Rat segment")
-        addendum_pair = (1577, 391)
+        if typed_link == BASELINE_COLLAR_ADDENDUM_LINK:
+            current_points = surfaces["baseline_bridge"].intersection_points_meters(
+                surfaces["baseline_target"], 1577, 391)
+            _require(len(current_points) == 2
+                     and recorded_endpoints == [
+                         {**recorded_endpoints[index],
+                          "point_m": [_fraction_record(value) for value in point]}
+                         for index, point in enumerate(current_points)]
+                     and all(row.get("target_frozen_neighbor_face") in (392, 394)
+                             and row.get("exact_point_on_target_neighbor_edge") is True
+                             for row in recorded_endpoints),
+                     "baseline-matched collar proof does not replay the exact P6/Rat segment")
 
     result = {
         "schema": "numi.human.brachiocephalic-3d-junction-continuity.v1",
@@ -2547,7 +2651,7 @@ def audit_brachiocephalic_3d_junction(
             declared_vessel_ports=(declared_network_links()
                                    if _source_link_scope is not None else None),
             verified_collar_addendum=(
-                matched_collar_addendum if addendum_pair is not None else None))
+                matched_collar_addendum if matched_collar_addendum is not None else None))
 
     if not all(item.get("passed") for item in result["port_interfaces"].values()):
         result["status"] = "REJECT_FROZEN_COLLAR_EXACT_INTERFACE_GATE"
