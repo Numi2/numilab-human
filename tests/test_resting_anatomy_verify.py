@@ -7,6 +7,7 @@ import numpy as np
 from numilab_human.resting_anatomy_verify import (
     audit_surface_pair,
     prepare_surface,
+    source_surface_key,
     typed_key,
     validate_capture_receipt,
 )
@@ -666,3 +667,22 @@ class CaptureDecoderTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class NativeSourceIdentityTests(unittest.TestCase):
+    def test_source_layer_resolves_spinal_cord_as_native_nerve(self):
+        self.assertEqual(source_surface_key(12, 3, payload_kind="nhanatomy"),
+                         (51012, 12))
+        self.assertEqual(source_surface_key(323, 1, payload_kind="nhanatomy"),
+                         (51010, 323))
+        # Named muscle/tendon source surfaces use their emitted record layer.
+        self.assertEqual(source_surface_key(132, 2, payload_kind="nhtissue"),
+                         (51006, 132))
+        self.assertEqual(source_surface_key(1, 15, payload_kind="nhanatomy"),
+                         (51031, 1))
+
+    def test_source_layer_rejects_untyped_or_unknown_inputs(self):
+        for stable, layer, kind in ((True, 3, "nhanatomy"), (12, 3.0, "nhanatomy"),
+                                   (12, 16, "nhanatomy"), (132, 4, "nhtissue"),
+                                   (12, 3, "unknown")):
+            with self.subTest(stable=stable, layer=layer, kind=kind), self.assertRaises(ValueError):
+                source_surface_key(stable, layer, payload_kind=kind)

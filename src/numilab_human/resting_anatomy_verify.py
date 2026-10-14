@@ -21,8 +21,29 @@ from .cardiac_cavity_geometry import analyze_topology
 from .model import ImportError as HumanImportError
 from .torso_anatomy_audit import _pack_sections
 
-ANATOMY_SEMANTICS = frozenset((51004, 51005, 51006, 51007, 51010, 51011, 51012,
-                               51020, 51021, 51022, 51023, 51024, 51025))
+# Native appendTorsoAnatomyGeometry uses this layer-indexed semantic table.
+# In particular, a nerve's stable ID must not be looked up as an organ ID.
+NHA_LAYER_SEMANTICS = (51010, 51011, 51012, 51020, 51021, 51022, 51023,
+                       51024, 51025, 51026, 51027, 51028, 51029, 51030, 51031)
+ANATOMY_SEMANTICS = frozenset((51004, 51005, 51006, 51007, 51009,
+                              *NHA_LAYER_SEMANTICS))
+
+
+def source_surface_key(stable_id, layer, *, payload_kind):
+    """Resolve typed source IDs using the existing native layer convention."""
+    if type(stable_id) is not int or stable_id <= 0 or type(layer) is not int:
+        raise ValueError("source surface identity and layer must be integers")
+    if payload_kind == "nhanatomy":
+        if not 1 <= layer <= len(NHA_LAYER_SEMANTICS):
+            raise ValueError("invalid native anatomy layer")
+        semantic = NHA_LAYER_SEMANTICS[layer - 1]
+    elif payload_kind == "nhtissue":
+        if layer not in (1, 2, 3):
+            raise ValueError("invalid native tissue layer")
+        semantic = {1: 51005, 2: 51006, 3: 51004}[layer]
+    else:
+        raise ValueError("unsupported native surface payload kind")
+    return typed_key((semantic, stable_id))
 
 
 def typed_key(value):
