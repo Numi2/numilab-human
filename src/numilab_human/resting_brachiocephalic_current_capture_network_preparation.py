@@ -910,10 +910,14 @@ def _edge_ancestry(context: dict) -> tuple[dict, dict]:
                 np.ascontiguousarray(source_child["faces"], dtype="<u4").tobytes())
         evidence[f"{parent}->{child}"] = item
 
-    svc = {
-        f"{bridge_id}->10": _bridge_witness_pairs(context, bridge_id, 10)
-        for bridge_id in (525, 526)
-    }
+    svc = {}
+    for bridge_id in (525, 526):
+        item = _bridge_witness_pairs(context, bridge_id, 10)
+        item["source_parent_faces_sha256"] = _sha_bytes(
+            np.ascontiguousarray(context["rows"][bridge_id]["faces"], dtype="<u4").tobytes())
+        item["source_child_faces_sha256"] = _sha_bytes(
+            np.ascontiguousarray(context["rows"][10]["faces"], dtype="<u4").tobytes())
+        svc[f"{bridge_id}->10"] = item
     # This known overlap is deliberately kept outside the route graph.
     potential = _source_witness_pairs(PORT086, PORT086_SHA256, 469, 473)
     potential["classification"] = "separate_potential_overlap_not_a_declared_circulation_edge"

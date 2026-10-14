@@ -18,12 +18,13 @@ def _surface(points, faces):
     return (points, faces, None, np.arange(len(points), dtype=np.uint64))
 
 
-def _frozen_pairs(bridge, bridge_faces, target, target_faces):
+def _frozen_pairs(bridge, bridge_faces, target, target_faces, *,
+                  bridge_key=(51011, 526), target_key=(51011, 472)):
     first = av.prepare_surface(
-        (51011, 526), bridge, bridge_faces,
+        bridge_key, bridge, bridge_faces,
         source_vertex_ids=np.arange(len(bridge), dtype=np.uint64))
     second = av.prepare_surface(
-        (51011, 472), target, target_faces,
+        target_key, target, target_faces,
         source_vertex_ids=np.arange(len(target), dtype=np.uint64))
     return av.audit_surface_pair(first, second)["unexpected_triangle_pairs"]
 
@@ -341,6 +342,252 @@ def test_source007_compiler_pins_resolve_immutable_git_objects(tmp_path, monkeyp
     pins["source_code_sha256"][str(source)] = "0" * 64
     with pytest.raises(ValueError, match="historical compiler code hash mismatch"):
         junction._verify_source007_compiler_code_pins(pins)
+
+
+def _synthetic_network_link_inputs(parent_key, child_key, bridge, bridge_faces,
+                                   target, target_faces):
+    pairs = _frozen_pairs(
+        bridge, bridge_faces, target, target_faces,
+        bridge_key=parent_key, target_key=child_key)
+    parent_faces = np.ascontiguousarray(bridge_faces, dtype="<u4")
+    child_faces = np.ascontiguousarray(target_faces, dtype="<u4")
+    pair_array = np.ascontiguousarray(pairs, dtype="<i8")
+    parent_id, child_id = parent_key[1], child_key[1]
+    evidence = {
+        "bridge_stable_id": parent_id,
+        "target_stable_id": child_id,
+        "pairs": pair_array,
+        "pairs_sha256": hashlib.sha256(pair_array.tobytes()).hexdigest(),
+        "source_parent_faces_sha256": hashlib.sha256(
+            parent_faces.tobytes()).hexdigest(),
+        "source_child_faces_sha256": hashlib.sha256(
+            child_faces.tobytes()).hexdigest(),
+        "path": "/retained/source-collar-report.json",
+        "sha256": "a" * 64,
+        "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+    }
+    source_rows = {
+        parent_id: {"faces": parent_faces},
+        child_id: {"faces": child_faces},
+    }
+    source_map = {
+        str(parent_id): {
+            "source_member": f"SYNTHETIC-{parent_id}",
+            "body_index": 20,
+            "layer": 2,
+            "vascular_compartment_id": 4,
+        },
+        str(child_id): {
+            "source_member": f"SYNTHETIC-{child_id}",
+            "body_index": 20,
+            "layer": 2,
+            # The SVC has no compartment annotation in the source receipt.
+        },
+    }
+    return evidence, source_rows, source_map
+
+
+def test_network_registry_is_exactly_thirteen_edges_and_two_svc_ports():
+    from numilab_human import (
+        resting_brachiocephalic_current_capture_network_preparation as network,
+    )
+
+    expected = (*network.NETWORK_EDGES, *network.SVC_PORTS)
+    assert junction.declared_network_links() == expected
+    assert len(expected) == 15
+    assert ((51011, 469), (51011, 473)) not in expected
+    assert ((51011, 473), (51011, 469)) not in expected
+
+
+def test_source_link_binding_rejects_wrong_branch_and_wrong_face_ancestry():
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
+    target, target_faces = _calibre_preserving_target()
+    parent_key, child_key = (51011, 525), (51011, 10)
+    evidence, source_rows, source_map = _synthetic_network_link_inputs(
+        parent_key, child_key, bridge, bridge_faces, target, target_faces)
+
+    scope = junction.bind_network_link_source_ancestry(
+        parent_key, child_key, source_link_evidence=evidence,
+        source_rows=source_rows, source_map=source_map)
+    assert scope["typed_link"] == [[51011, 525], [51011, 10]]
+    assert scope["source_face_pair_count"] > 0
+    assert scope["source_identities"]["10"]["vascular_compartment_id"] is None
+
+    with pytest.raises(ValueError, match="undeclared vascular link"):
+        junction.bind_network_link_source_ancestry(
+            (51011, 469), (51011, 473), source_link_evidence=evidence,
+            source_rows=source_rows, source_map=source_map)
+
+    pending = dict(evidence)
+    pending["evidence_status"] = "SOURCE_BOUND_COLLAR_DERIVATION_REQUIRED"
+    with pytest.raises(ValueError, match="pending"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=pending,
+            source_rows=source_rows, source_map=source_map)
+
+    bad_pairs = dict(evidence)
+    bad_pairs["pairs_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="face-pair array SHA-256"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=bad_pairs,
+            source_rows=source_rows, source_map=source_map)
+
+    bad_faces = dict(evidence)
+    bad_faces["source_parent_faces_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="not bound to the current ABI5"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=bad_faces,
+            source_rows=source_rows, source_map=source_map)
+
+    wrong_svc = dict(evidence)
+    wrong_svc["target_stable_id"] = 526
+    with pytest.raises(ValueError, match="disagree with the frozen"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=wrong_svc,
+            source_rows=source_rows, source_map=source_map)
+
+
+def test_svc_network_link_uses_solid_and_independent_calibre_not_pair_count():
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
+    target, target_faces = _calibre_preserving_target()
+    parent_key, child_key = (51011, 525), (51011, 10)
+    evidence, source_rows, source_map = _synthetic_network_link_inputs(
+        parent_key, child_key, bridge, bridge_faces, target, target_faces)
+
+    result = junction.audit_brachiocephalic_network_link_3d(
+        av, _manifold3d(),
+        bridge_key=parent_key, bridge_surface=_surface(bridge, bridge_faces),
+        target_key=child_key, target_surface=_surface(target, target_faces),
+        source_link_evidence=evidence, source_rows=source_rows,
+        source_map=source_map,
+        baseline_bridge_surface=_surface(bridge, bridge_faces),
+        baseline_target_surface=_surface(target, target_faces))
+
+    assert result["passed"]
+    metric = result["continuity_metric"]
+    assert metric["collision_pair_counts_are_not_continuity_metrics"]
+    assert metric["source_face_pair_count_is_patch_ancestry_only"] > 0
+    assert metric["candidate_and_independent_baseline_solid_metrics"][
+        "candidate"]["positive_intersection_volume"]
+    assert metric["candidate_and_independent_baseline_solid_metrics"][
+        "candidate"]["exact_inside_both_witness"]["first_location"] == "inside"
+    assert metric["independent_material_station_calibre"]["bridge"][
+        "declared_area_ratio"] == [0.8, 1.25]
+    assert metric["independent_material_station_calibre"]["target"][
+        "declared_minimum_feret_ratio"] == [0.9, 1.1]
+    assert result["declared_network_link_source_ancestry"][
+        "source_identities"]["10"]["vascular_compartment_id"] is None
+
+
+def test_source_preparation_binds_every_typed_link_and_source_face_array():
+    from numilab_human import (
+        resting_brachiocephalic_current_capture_network_preparation as network,
+    )
+
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    rows = {stable_id: {"faces": faces.copy()}
+            for edge in junction.declared_network_links()
+            for stable_id in (edge[0][1], edge[1][1])}
+    source_map = {
+        str(stable_id): {
+            "source_member": f"MEMBER-{stable_id}",
+            "body_index": 20,
+            "layer": 2,
+        }
+        for stable_id in rows
+    }
+    pairs = np.asarray([[0, 0]], dtype="<i8")
+    evidence_by_edge = {}
+    for first, second in network.NETWORK_EDGES:
+        parent, child = first[1], second[1]
+        evidence_by_edge[f"{parent}->{child}"] = {
+            "parent_stable_id": parent,
+            "child_stable_id": child,
+            "pairs": pairs.copy(),
+            "pairs_sha256": hashlib.sha256(pairs.tobytes()).hexdigest(),
+            "source_parent_faces_sha256": hashlib.sha256(
+                rows[parent]["faces"].tobytes()).hexdigest(),
+            "source_child_faces_sha256": hashlib.sha256(
+                rows[child]["faces"].tobytes()).hexdigest(),
+            "path": "/retained/route-source.json",
+            "sha256": "b" * 64,
+            "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+        }
+    svc = {}
+    for first, second in network.SVC_PORTS:
+        parent, child = first[1], second[1]
+        svc[f"{parent}->{child}"] = {
+            "bridge_stable_id": parent,
+            "target_stable_id": child,
+            "pairs": pairs.copy(),
+            "pairs_sha256": hashlib.sha256(pairs.tobytes()).hexdigest(),
+            "source_parent_faces_sha256": hashlib.sha256(
+                rows[parent]["faces"].tobytes()).hexdigest(),
+            "source_child_faces_sha256": hashlib.sha256(
+                rows[child]["faces"].tobytes()).hexdigest(),
+            "path": "/retained/svc-source.json",
+            "sha256": "c" * 64,
+            "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+        }
+    keys = {key for edge in junction.declared_network_links() for key in edge}
+    surfaces = {key: ("source", key) for key in keys}
+
+    inputs = junction.prepare_network_link_audit_inputs(
+        evidence_by_edge, {"svc_bridge_ports": svc},
+        source_rows=rows, source_map=source_map,
+        candidate_surfaces=surfaces, baseline_surfaces=surfaces)
+
+    assert len(inputs) == 15
+    assert tuple((item["bridge_key"], item["target_key"]) for item in inputs) == (
+        junction.declared_network_links())
+    assert all(
+        item["source_link_evidence"]["source_parent_faces_sha256"]
+        == hashlib.sha256(rows[item["bridge_key"][1]]["faces"].tobytes()).hexdigest()
+        for item in inputs)
+    assert all(
+        item["source_link_evidence"]["source_child_faces_sha256"]
+        == hashlib.sha256(rows[item["target_key"][1]]["faces"].tobytes()).hexdigest()
+        for item in inputs)
+
+    wrong = dict(evidence_by_edge)
+    wrong["525->469"] = dict(wrong["525->469"])
+    wrong["525->469"]["parent_stable_id"] = 469
+    wrong["525->469"]["child_stable_id"] = 473
+    with pytest.raises(ValueError, match="typed link IDs disagree"):
+        junction.prepare_network_link_audit_inputs(
+            wrong, {"svc_bridge_ports": svc},
+            source_rows=rows, source_map=source_map,
+            candidate_surfaces=surfaces, baseline_surfaces=surfaces)
+
+
+def test_network_link_aggregator_requires_exact_graph_and_stops_at_first_failure(monkeypatch):
+    links = junction.declared_network_links()
+    records = [{"bridge_key": edge[0], "target_key": edge[1]} for edge in links]
+    calls = []
+
+    def fake_link_audit(_verifier, _manifold, **kwargs):
+        calls.append((kwargs["bridge_key"], kwargs["target_key"]))
+        return {"passed": len(calls) < 3}
+
+    monkeypatch.setattr(junction, "audit_brachiocephalic_network_link_3d",
+                        fake_link_audit)
+    result = junction.audit_brachiocephalic_network_links_3d(av, object(), records)
+
+    assert result["status"] == "REJECT_SOURCE_NETWORK_LINK_CONTINUITY"
+    assert result["requested_link_count"] == 15
+    assert result["evaluated_link_count"] == 3
+    assert result["first_failed_link"] == [
+        list(links[2][0]), list(links[2][1])]
+    assert calls == list(links[:3])
+
+    with pytest.raises(ValueError, match="exactly 15"):
+        junction.audit_brachiocephalic_network_links_3d(
+            av, object(), records[:-1])
+
+    wrong = list(records)
+    wrong[-1] = {"bridge_key": (51011, 469), "target_key": (51011, 473)}
+    with pytest.raises(ValueError, match="undeclared or duplicate"):
+        junction.audit_brachiocephalic_network_links_3d(av, object(), wrong)
 
 
 def test_material_branch_scope_names_one_frozen_branch_and_limits_coverage():

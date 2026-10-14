@@ -1002,16 +1002,28 @@ def _exact_interface_points(verifier, first, second, face_pairs):
 
 def _declared_partial_vessel_port_overlap(
     bridge_key, target_key, port_audit, observed_pairs, unexpected_pairs,
-    exact_points, allowed_pairs,
+    exact_points, allowed_pairs, *, declared_vessel_ports=None,
 ) -> dict:
     """Classify partial overlap at an explicitly named vascular interface.
 
-    The explicit set is the six frozen bridge ports plus the two named left
-    ulnar source branch links. This only continues interface-boundary handling;
-    independent source section/calibre and positive-intersection/exact-inside/
-    connected-union gates are still mandatory.
+    The default explicit set is the six frozen bridge ports plus the two named
+    left ulnar source branch links. A higher-level source-network owner may pass
+    its separately validated canonical edge set. This only continues interface
+    boundary handling; independent source section/calibre and
+    positive-intersection/exact-inside/connected-union gates remain mandatory.
     """
     typed_port = (_identity(bridge_key), _identity(target_key))
+    declared_ports = DECLARED_VESSEL_PORTS
+    if declared_vessel_ports is not None:
+        _require(isinstance(declared_vessel_ports, (set, frozenset, tuple, list))
+                 and bool(declared_vessel_ports),
+                 "explicit vessel port registry must be a nonempty collection")
+        declared_ports = frozenset(
+            (_identity(edge[0]), _identity(edge[1]))
+            for edge in declared_vessel_ports
+            if isinstance(edge, (tuple, list)) and len(edge) == 2)
+        _require(len(declared_ports) == len(declared_vessel_ports),
+                 "explicit vessel port registry contains malformed or duplicate links")
     audit = port_audit if isinstance(port_audit, Mapping) else {}
     containment_value = audit.get("containment", [])
     containment = containment_value if isinstance(containment_value, list) else []
@@ -1035,7 +1047,7 @@ def _declared_partial_vessel_port_overlap(
     unexpected = tuple(tuple(map(int, pair)) for pair in unexpected_pairs)
     allowed = {tuple(map(int, pair)) for pair in allowed_pairs}
     conditions = {
-        "declared_typed_vessel_port": typed_port in DECLARED_VESSEL_PORTS,
+        "declared_typed_vessel_port": typed_port in declared_ports,
         "surface_pair_audit_identity_matches": audit.get("identities") == [
             list(typed_port[0]), list(typed_port[1])],
         "central_p6_rejected_only_partial_overlap": audit.get("passed") is False,

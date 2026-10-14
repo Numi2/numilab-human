@@ -11,12 +11,16 @@ import hashlib
 import json
 import subprocess
 import time
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
 
 from . import resting_anatomy_verify as current_shared_verifier
+from . import (
+    resting_brachiocephalic_current_capture_network_preparation as network_preparation,
+)
 from . import resting_brachiocephalic_geometry_gate as gate
 from . import resting_brachiocephalic_port_diagnostic as portdiag
 from . import resting_brachiocephalic_source007 as source007
@@ -48,9 +52,9 @@ PROGRESS_PATH = OUTPUT_DIR / "progress.json"
 BRIDGE_KEY = (51011, 526)
 TARGET_KEY = (51011, 472)
 PAIR = (BRIDGE_KEY, TARGET_KEY)
-# The owner in this module is intentionally scoped to the frozen FJ3583 to
-# right-subclavian port. Other anatomical contacts remain under the shared
-# verifier's ordinary rejection rules.
+# Legacy entry point remains restricted to the frozen FJ3583/right-subclavian
+# test. The network entry point below consumes the canonical source-preparation
+# owner's exact 13 branch edges plus two SVC ports.
 PARTIAL_OVERLAP_PORT = PAIR
 VOLUME_BALANCE_RELATIVE_TOLERANCE = 1e-6
 
@@ -62,6 +66,203 @@ def _require(condition: bool, message: str) -> None:
 
 def _sha_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def declared_network_links() -> tuple[tuple[tuple[int, int], tuple[int, int]], ...]:
+    """Return the canonical 13 route edges and two SVC ports from their owner."""
+    links = (*network_preparation.NETWORK_EDGES,
+             *network_preparation.SVC_PORTS)
+    _require(len(links) == 15 and len(set(links)) == 15,
+             "canonical source graph must contain exactly 15 unique directed links")
+    _require(all(
+        isinstance(edge, (tuple, list)) and len(edge) == 2
+        and all(isinstance(identity, (tuple, list)) and len(identity) == 2
+                and type(identity[0]) is int and type(identity[1]) is int
+                and identity[0] == 51011 and identity[1] > 0
+                for identity in edge)
+        and edge[0] != edge[1]
+        for edge in links),
+        "canonical source graph contains malformed typed surface identities")
+    _require(((51011, 469), (51011, 473)) not in links
+             and ((51011, 473), (51011, 469)) not in links,
+             "separate 469/473 overlap must not be promoted to a route edge")
+    return links
+
+
+def _strict_source_link_ids(evidence: dict) -> tuple[int, int]:
+    if "parent_stable_id" in evidence or "child_stable_id" in evidence:
+        parent, child = evidence.get("parent_stable_id"), evidence.get("child_stable_id")
+    else:
+        parent, child = evidence.get("bridge_stable_id"), evidence.get("target_stable_id")
+    _require(type(parent) is int and type(child) is int,
+             "source collar ancestry must carry exact integer parent/child IDs")
+    return parent, child
+
+
+def _source_face_array(source_rows: Mapping, stable_id: int) -> np.ndarray:
+    row = source_rows.get(stable_id, source_rows.get(str(stable_id)))
+    _require(isinstance(row, dict) and "faces" in row,
+             f"source row {stable_id} has no ABI5 face array")
+    faces = np.asarray(row["faces"])
+    _require(faces.ndim == 2 and faces.shape[1] == 3
+             and faces.dtype.kind in "iu" and len(faces) > 0
+             and int(faces.min()) >= 0,
+             f"source row {stable_id} has malformed indexed faces")
+    return np.ascontiguousarray(faces, dtype="<u4")
+
+
+def bind_network_link_source_ancestry(
+    bridge_key, target_key, *, source_link_evidence: dict,
+    source_rows: Mapping, source_map: Mapping,
+) -> dict:
+    """Bind one declared edge to exact typed rows and frozen source face ancestry."""
+    bridge_key, target_key = gate._identity(bridge_key), gate._identity(target_key)
+    edge = (bridge_key, target_key)
+    _require(edge in set(declared_network_links()),
+             f"undeclared vascular link {bridge_key[1]}->{target_key[1]}")
+    _require(isinstance(source_link_evidence, dict)
+             and isinstance(source_rows, Mapping)
+             and isinstance(source_map, Mapping),
+             "source link evidence, ABI5 rows, and receipt map must be mappings")
+    evidence_status = source_link_evidence.get("evidence_status")
+    _require(isinstance(evidence_status, str) and bool(evidence_status)
+             and evidence_status != "SOURCE_BOUND_COLLAR_DERIVATION_REQUIRED",
+             "source link ancestry is pending or has no frozen evidence status")
+    parent, child = _strict_source_link_ids(source_link_evidence)
+    _require(edge == ((51011, parent), (51011, child)),
+             "typed link IDs disagree with the frozen source-face ancestry IDs")
+    path = source_link_evidence.get("path")
+    report_sha = source_link_evidence.get("sha256")
+    _require(isinstance(path, str) and path
+             and isinstance(report_sha, str) and len(report_sha) == 64
+             and all(character in "0123456789abcdef" for character in report_sha),
+             "source ancestry must name its frozen report path and SHA-256")
+    raw_pairs = np.asarray(source_link_evidence.get("pairs"))
+    _require(raw_pairs.ndim == 2 and raw_pairs.shape[1] == 2
+             and raw_pairs.dtype.kind in "iu" and len(raw_pairs) > 0
+             and int(raw_pairs.min()) >= 0,
+             "source ancestry must contain nonempty exact integer face pairs")
+    pairs = np.ascontiguousarray(raw_pairs, dtype="<i8")
+    _require(len(set(map(tuple, pairs.tolist()))) == len(pairs),
+             "source face-pair ancestry contains duplicate pairs")
+    pair_sha = _sha_bytes(pairs.tobytes())
+    _require(source_link_evidence.get("pairs_sha256") == pair_sha,
+             "frozen source face-pair array SHA-256 does not match its ancestry row")
+
+    parent_faces = _source_face_array(source_rows, parent)
+    child_faces = _source_face_array(source_rows, child)
+    parent_faces_sha = _sha_bytes(parent_faces.tobytes())
+    child_faces_sha = _sha_bytes(child_faces.tobytes())
+    _require(source_link_evidence.get("source_parent_faces_sha256")
+             == parent_faces_sha
+             and source_link_evidence.get("source_child_faces_sha256")
+             == child_faces_sha,
+             "frozen source ancestry is not bound to the current ABI5 parent/child face arrays")
+    _require(int(pairs[:, 0].max()) < len(parent_faces)
+             and int(pairs[:, 1].max()) < len(child_faces),
+             "frozen source face-pair ancestry is outside its typed source rows")
+
+    identities = {}
+    for stable_id in (parent, child):
+        identity = source_map.get(str(stable_id))
+        _require(isinstance(identity, dict)
+                 and isinstance(identity.get("source_member"), str)
+                 and bool(identity["source_member"])
+                 and type(identity.get("body_index")) is int
+                 and identity["body_index"] >= 0
+                 and type(identity.get("layer")) is int
+                 and identity["layer"] > 0,
+                 f"receipt source identity for stable ID {stable_id} is incomplete")
+        compartment = identity.get("vascular_compartment_id")
+        _require(compartment is None or (type(compartment) is int and compartment > 0),
+                 f"receipt vascular compartment for stable ID {stable_id} is malformed")
+        owner_metadata = identity.get("source_owner_metadata")
+        identities[str(stable_id)] = {
+            "typed_identity": [51011, stable_id],
+            "source_member": identity["source_member"],
+            "source_name": identity.get("name"),
+            "source_concept_id": (
+                owner_metadata.get("concept_id")
+                if isinstance(owner_metadata, dict) else None),
+            "body_index": identity["body_index"],
+            "layer": identity["layer"],
+            "vascular_compartment_id": compartment,
+        }
+    return {
+        "typed_link": [list(bridge_key), list(target_key)],
+        "link_id": f"{parent}->{child}",
+        "source_evidence_path": path,
+        "source_evidence_sha256": report_sha,
+        "source_evidence_status": source_link_evidence.get("evidence_status"),
+        "source_parent_faces_sha256": parent_faces_sha,
+        "source_child_faces_sha256": child_faces_sha,
+        "source_face_pair_ancestry_sha256": pair_sha,
+        "source_face_pair_count": len(pairs),
+        "source_face_pair_ancestry": pairs.tolist(),
+        "source_identities": identities,
+        "source_local_face_indices_bound": True,
+        "clinical_or_anatomical_admission": False,
+    }
+
+
+def _network_edge_name(edge) -> str:
+    return f"{edge[0][1]}->{edge[1][1]}"
+
+
+def prepare_network_link_audit_inputs(
+    edge_evidence: Mapping, separate_evidence: Mapping, *,
+    source_rows: Mapping, source_map: Mapping,
+    candidate_surfaces: Mapping, baseline_surfaces: Mapping,
+) -> tuple[dict, ...]:
+    """Bind existing source/capture owners into the exact 15-link 3D input list."""
+    links = declared_network_links()
+    expected_edges = {
+        _network_edge_name(edge): edge
+        for edge in network_preparation.NETWORK_EDGES
+    }
+    _require(isinstance(edge_evidence, Mapping)
+             and set(edge_evidence) == set(expected_edges),
+             "source edge evidence must cover exactly the 13 declared route edges")
+    svc_evidence = separate_evidence.get("svc_bridge_ports")
+    expected_svc = {
+        _network_edge_name(edge): edge
+        for edge in network_preparation.SVC_PORTS
+    }
+    _require(isinstance(svc_evidence, Mapping)
+             and set(svc_evidence) == set(expected_svc),
+             "source interface evidence must cover exactly the two declared SVC ports")
+    required_surface_keys = {
+        key for edge in links for key in edge
+    }
+    _require(isinstance(candidate_surfaces, Mapping)
+             and required_surface_keys.issubset(candidate_surfaces)
+             and isinstance(baseline_surfaces, Mapping)
+             and required_surface_keys.issubset(baseline_surfaces),
+             "candidate or independent source-baseline surface mapping lacks a network row")
+    output = []
+    for edge in links:
+        name = _network_edge_name(edge)
+        evidence = (edge_evidence[name] if name in expected_edges
+                    else svc_evidence[name])
+        bind_network_link_source_ancestry(
+            edge[0], edge[1], source_link_evidence=evidence,
+            source_rows=source_rows, source_map=source_map)
+        output.append({
+            "bridge_key": edge[0],
+            "target_key": edge[1],
+            "bridge_surface": candidate_surfaces[edge[0]],
+            "target_surface": candidate_surfaces[edge[1]],
+            "source_link_evidence": evidence,
+            "source_rows": source_rows,
+            "source_map": source_map,
+            "baseline_bridge_surface": baseline_surfaces[edge[0]],
+            "baseline_target_surface": baseline_surfaces[edge[1]],
+        })
+    _require(len(output) == 15
+             and tuple((item["bridge_key"], item["target_key"]) for item in output)
+             == links,
+             "prepared source network inputs differ from the canonical 15-link order")
+    return tuple(output)
 
 
 def sha_file(path: Path) -> str:
@@ -285,6 +486,8 @@ def _runtime_code_pins() -> dict:
         "nhanat_codec": source / "resting_pleura_proxy.py",
         "pose_predictor": source / "resting_brachiocephalic_pose_predictor.py",
         "current_shared_verifier": source / "resting_anatomy_verify.py",
+        "current_capture_network_preparation": source /
+            "resting_brachiocephalic_current_capture_network_preparation.py",
     }
     return {name: {"path": str(path.resolve()), "sha256": sha_file(path)}
             for name, path in paths.items()}
@@ -680,11 +883,16 @@ def _station_calibre(surface, baseline_surface, witness_points, collar_faces, *,
     return result
 
 
-def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
+def _interface_gate(
+    verifier, bridge, target, frozen_pairs, *, declared_vessel_ports=None,
+) -> dict:
     typed_port = (tuple(map(int, bridge.key)), tuple(map(int, target.key)))
-    port_scope_passed = typed_port == PARTIAL_OVERLAP_PORT
+    declared_ports = (gate.DECLARED_VESSEL_PORTS if declared_vessel_ports is None
+                      else frozenset(declared_vessel_ports))
+    port_scope_passed = typed_port in declared_ports
     pairs = gate._pair_rows(
-        frozen_pairs, name="frozen right brachiocephalic port pairs",
+        frozen_pairs, name=(
+            f"frozen source collar ancestry {typed_port[0][1]}->{typed_port[1][1]}"),
         bridge_face_count=len(bridge.faces), target_face_count=len(target.faces))
     bridge_patch = sorted({first for first, _ in pairs})
     target_patch = sorted({second for _, second in pairs})
@@ -699,7 +907,8 @@ def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
     within_patch = all(pair in allowed for pair in observed)
     containment = audit.get("containment", [])
     partial_overlap_boundary = gate._declared_partial_vessel_port_overlap(
-        bridge.key, target.key, audit, observed, unexpected, exact_points, allowed)
+        bridge.key, target.key, audit, observed, unexpected, exact_points, allowed,
+        declared_vessel_ports=declared_ports)
     exact_partial_overlap = bool(
         port_scope_passed and partial_overlap_boundary.get("passed"))
     pair_patch_and_collar_passed = bool(
@@ -711,11 +920,19 @@ def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
         "typed_port": [list(typed_port[0]), list(typed_port[1])],
         "documented_vessel_junction_scope": {
             "passed": port_scope_passed,
-            "allowed_typed_port": [list(PARTIAL_OVERLAP_PORT[0]),
-                                   list(PARTIAL_OVERLAP_PORT[1])],
+            "typed_port": [list(typed_port[0]), list(typed_port[1])],
+            "allowed_typed_port": (
+                [list(typed_port[0]), list(typed_port[1])]
+                if port_scope_passed else None),
+            "scope_kind": ("declared_source_network_link"
+                           if declared_vessel_ports is not None
+                           else "legacy_single_port_entrypoint"),
             "frozen_matched_face_patch_required": True,
             "downstream_closed_solid_confirmation_required": True,
-            "scope": "FJ3583 right brachiocephalic vein to FJ3587 right subclavian vein",
+            "scope": (
+                "FJ3583 right brachiocephalic vein to FJ3587 right subclavian vein"
+                if typed_port == PARTIAL_OVERLAP_PORT else
+                "the exact typed link named by its source ancestry"),
         },
         "p6_audit_passed": bool(audit.get("passed")),
         "exact_partial_overlap_witnesses": {
@@ -1155,12 +1372,20 @@ def _solid_gate(verifier, manifold3d, bridge, target, *, role: str) -> dict:
 def audit_brachiocephalic_3d_junction(
     verifier, manifold3d, *, bridge_key, bridge_surface, target_key, target_surface,
     frozen_face_pairs, baseline_bridge_surface, baseline_target_surface,
+    _source_link_scope=None,
 ) -> dict:
-    """Prove one explicit vessel pair in 3D without a shared planar junction cut."""
+    """Prove one source-bound vessel link without a shared planar junction cut."""
     bridge_key = gate._identity(bridge_key)
     target_key = gate._identity(target_key)
-    _require((bridge_key, target_key) == PAIR,
-             "3D junction proof is restricted to stable IDs 526 and 472")
+    typed_link = (bridge_key, target_key)
+    if _source_link_scope is None:
+        _require(typed_link == PAIR,
+                 "legacy 3D junction entry point is restricted to stable IDs 526 and 472")
+    else:
+        _require(typed_link in set(declared_network_links())
+                 and _source_link_scope.get("typed_link")
+                 == [list(bridge_key), list(target_key)],
+                 "3D source-link scope does not match a declared network edge")
 
     surfaces = {}
     surface_reports = {}
@@ -1258,9 +1483,15 @@ def audit_brachiocephalic_3d_junction(
             "added_blood_state_or_force": False,
             "existing_blood_state_owner_mutated": False,
         },
-        "source004_plane_failure": _source004_plane_failure(
-            json.loads(SOURCE004_REPORT.read_text())),
+        "source004_plane_failure": (
+            _source004_plane_failure(json.loads(SOURCE004_REPORT.read_text()))
+            if typed_link == PAIR else {
+                "applies": False,
+                "historical_report_scope": "526->472 only",
+            }),
     }
+    if _source_link_scope is not None:
+        result["declared_network_link_source_ancestry"] = _source_link_scope
     if not topology_passed:
         result["status"] = "REJECT_SOURCE_CLOSED_SELF_FREE_COMPONENT_GATE"
         result["rejections"] = [
@@ -1283,7 +1514,9 @@ def audit_brachiocephalic_3d_junction(
         ("baseline", "baseline_bridge", "baseline_target"),
     ):
         result["port_interfaces"][name] = _interface_gate(
-            verifier, surfaces[bridge_name], surfaces[target_name], pairs)
+            verifier, surfaces[bridge_name], surfaces[target_name], pairs,
+            declared_vessel_ports=(declared_network_links()
+                                   if _source_link_scope is not None else None))
 
     if not all(item.get("passed") for item in result["port_interfaces"].values()):
         result["status"] = "REJECT_FROZEN_COLLAR_EXACT_INTERFACE_GATE"
@@ -1345,6 +1578,168 @@ def audit_brachiocephalic_3d_junction(
         for role, item in result["solid_gates"].items()
         if item.get("passed") is not True)
     return result
+
+
+def _network_continuity_metric(result: dict, source_scope: dict) -> dict:
+    solid = result.get("solid_gates", {})
+    interfaces = result.get("port_interfaces", {})
+    calibre = result.get("independent_collar_calibre", {})
+    return {
+        "link_id": source_scope["link_id"],
+        "collision_pair_counts_are_not_continuity_metrics": True,
+        "source_face_pair_count_is_patch_ancestry_only":
+            source_scope["source_face_pair_count"],
+        "source_face_pair_ancestry_sha256":
+            source_scope["source_face_pair_ancestry_sha256"],
+        "observed_exact_interface_points_by_reference": {
+            role: value.get("exact_interface_point_count")
+            for role, value in interfaces.items()},
+        "source_solid_connectivity_inference": {
+            "premises": (
+                "each original input is closed, exact-self-free, and one "
+                "connected surface component; the exact predicate locates "
+                "a strict interior point in both bounded solids"),
+            "conclusion": (
+                "the bounded source solids have nonempty interior intersection "
+                "and their set-theoretic union is connected"),
+            "based_on_original_surfaces_and_exact_inside_both_witness": True,
+            "floating_boolean_union_is_separate_diagnostic": True,
+        },
+        "candidate_and_independent_baseline_solid_metrics": {
+            role: {
+                "passed": value.get("passed"),
+                "intersection_volume_m3": value.get("intersection_volume_m3"),
+                "positive_intersection_volume": value.get(
+                    "positive_intersection_volume"),
+                "exact_inside_both_witness": value.get(
+                    "exact_inside_both_witness"),
+                "floating_union_component_count": value.get(
+                    "union_component_count"),
+                "floating_union_volume_accounting": value.get(
+                    "volume_accounting"),
+                "floating_boolean_exact_topology_proven": False,
+            }
+            for role, value in solid.items()},
+        "independent_material_station_calibre": {
+            role: {
+                "passed": value.get("passed"),
+                "candidate_to_baseline_ratios": (
+                    value.get("candidate_to_baseline_comparison", {})
+                    .get("candidate_to_baseline_ratios")),
+                "declared_area_ratio": value.get("declared_area_ratio"),
+                "declared_minimum_feret_ratio": value.get(
+                    "declared_minimum_feret_ratio"),
+                "candidate_station_offset_from_own_collar_m": (
+                    value.get("station", {}).get(
+                        "station_offset_from_anchor_m")),
+                "baseline_station_offset_from_own_collar_m": (
+                    value.get("baseline_station_transported_by_source_ancestry", {})
+                    .get("station_offset_from_anchor_m")),
+                "candidate_interface_signed_distance_to_station_m": (
+                    value.get("station", {}).get(
+                        "junction_witness_signed_distance_to_station_m")),
+            }
+            for role, value in calibre.items()},
+        "calibre_bounds_are_source_geometry_consistency_not_clinical": True,
+    }
+
+
+def audit_brachiocephalic_network_link_3d(
+    verifier, manifold3d, *, bridge_key, bridge_surface, target_key, target_surface,
+    source_link_evidence: dict, source_rows: Mapping, source_map: Mapping,
+    baseline_bridge_surface, baseline_target_surface,
+) -> dict:
+    """Apply the existing closed-solid and independent station owner to one graph edge."""
+    scope = bind_network_link_source_ancestry(
+        bridge_key, target_key, source_link_evidence=source_link_evidence,
+        source_rows=source_rows, source_map=source_map)
+    parent, child = gate._identity(bridge_key), gate._identity(target_key)
+    for label, surface, stable_id, expected_sha in (
+        ("candidate parent", bridge_surface, parent[1],
+         scope["source_parent_faces_sha256"]),
+        ("baseline parent", baseline_bridge_surface, parent[1],
+         scope["source_parent_faces_sha256"]),
+        ("candidate child", target_surface, child[1],
+         scope["source_child_faces_sha256"]),
+        ("baseline child", baseline_target_surface, child[1],
+         scope["source_child_faces_sha256"]),
+    ):
+        _require(isinstance(surface, (tuple, list)) and len(surface) >= 2,
+                 f"{label} has no indexed source faces")
+        faces = np.asarray(surface[1])
+        _require(faces.ndim == 2 and faces.shape[1] == 3
+                 and faces.dtype.kind in "iu"
+                 and _sha_bytes(np.ascontiguousarray(faces, dtype="<u4").tobytes())
+                 == expected_sha,
+                 f"{label} face ancestry differs from source ABI5 row {stable_id}")
+    result = audit_brachiocephalic_3d_junction(
+        verifier, manifold3d,
+        bridge_key=parent, bridge_surface=bridge_surface,
+        target_key=child, target_surface=target_surface,
+        frozen_face_pairs=scope["source_face_pair_ancestry"],
+        baseline_bridge_surface=baseline_bridge_surface,
+        baseline_target_surface=baseline_target_surface,
+        _source_link_scope=scope)
+    result["continuity_metric"] = _network_continuity_metric(result, scope)
+    result["continuity_metric"]["passed"] = bool(result.get("passed"))
+    return result
+
+
+def audit_brachiocephalic_network_links_3d(
+    verifier, manifold3d, link_inputs,
+) -> dict:
+    """Fail-first continuity audit over the exact 13 source edges plus two SVC ports."""
+    links = declared_network_links()
+    _require(isinstance(link_inputs, (tuple, list)) and len(link_inputs) == len(links),
+             "network 3D audit requires exactly 15 declared per-link inputs")
+    normalized = {}
+    for item in link_inputs:
+        _require(isinstance(item, dict), "network link input must be an object")
+        bridge = gate._identity(item.get("bridge_key"))
+        target = gate._identity(item.get("target_key"))
+        edge = (bridge, target)
+        _require(edge in set(links) and edge not in normalized,
+                 f"network 3D audit contains an undeclared or duplicate edge {edge}")
+        normalized[edge] = item
+    _require(set(normalized) == set(links),
+             "network 3D audit input does not cover the exact 13 route edges and two SVC ports")
+    results = []
+    for edge in links:
+        item = normalized[edge]
+        result = audit_brachiocephalic_network_link_3d(
+            verifier, manifold3d,
+            bridge_key=edge[0], target_key=edge[1],
+            bridge_surface=item.get("bridge_surface"),
+            target_surface=item.get("target_surface"),
+            source_link_evidence=item.get("source_link_evidence"),
+            source_rows=item.get("source_rows"),
+            source_map=item.get("source_map"),
+            baseline_bridge_surface=item.get("baseline_bridge_surface"),
+            baseline_target_surface=item.get("baseline_target_surface"),
+        )
+        results.append(result)
+        if result.get("passed") is not True:
+            return {
+                "status": "REJECT_SOURCE_NETWORK_LINK_CONTINUITY",
+                "passed": False,
+                "requested_link_count": len(links),
+                "evaluated_link_count": len(results),
+                "first_failed_link": [list(edge[0]), list(edge[1])],
+                "links": results,
+                "all_target_collision_gate_is_separate": True,
+                "anatomical_admission": False,
+            }
+    return {
+        "status": "PASS_SOURCE_NETWORK_LINK_CONTINUITY_UNADMITTED",
+        "passed": True,
+        "requested_link_count": len(links),
+        "evaluated_link_count": len(results),
+        "first_failed_link": None,
+        "links": results,
+        "all_target_collision_gate_is_separate": True,
+        "anatomical_admission": False,
+        "native_gpu_confirmation_required": True,
+    }
 
 
 def _assert_current_pins(preflight: dict) -> None:
