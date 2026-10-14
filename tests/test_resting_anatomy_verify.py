@@ -1,10 +1,15 @@
 import copy
+import hashlib
+import json
 import unittest
 from fractions import Fraction
 
 import numpy as np
 
+from numilab_human import cardiac_cavity_intersections as ci
+from numilab_human import resting_anatomy_verify as av
 from numilab_human.resting_anatomy_verify import (
+    audit_source_bound_connected_overlap,
     audit_surface_pair,
     prepare_surface,
     source_surface_key,
@@ -69,6 +74,60 @@ def declarations_for_actual_shared_features(first, second):
         if 1 <= len(common) <= 2:
             declarations.append(feature_declaration(first, second, first_face, second_face, common))
     return declarations
+
+
+def source_bound_overlap_case(*, altered_contact=False, open_first=False, disconnected_first=False):
+    if open_first:
+        first = feature_surface(
+            (51010, 323), tetra(), FACES[:-1], [700, 701, 702, 703])
+    elif disconnected_first:
+        points = np.concatenate((tetra(), tetra(offset=3.0)))
+        faces = np.concatenate((FACES, FACES + 4))
+        first = feature_surface(
+            (51010, 323), points, faces, list(range(700, 708)))
+    else:
+        first = feature_surface(
+            (51010, 323), tetra(), FACES, [700, 701, 702, 703])
+    second = feature_surface(
+        (51010, 326), tetra(offset=.1), FACES, [800, 801, 802, 803])
+    exact = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
+    pairs = sorted(tuple(int(face) for face in pair) for pair in exact["triangle_pairs"])
+    contacts = []
+    for first_face, second_face in pairs:
+        points = first.intersection_points_meters(second, first_face, second_face)
+        if altered_contact and not contacts:
+            points = ((Fraction(99), Fraction(98), Fraction(97)),)
+        contacts.append({"face_pair": [first_face, second_face],
+                         "points_world_m": [[str(value) for value in point] for point in points]})
+    inside = {"candidate_source": "synthetic exact binary64 point",
+              "first_location": "inside", "method": "intersection_volume_centroid",
+              "point_world_m": [.2, .2, .2], "predicate": "P6 exact rational point location",
+              "second_location": "inside"}
+    proof = {"schema": "numi.human.head-csf-pair-continuity.v1",
+             "scope": ("only captured typed rows (51010,323) fourth ventricle and "
+                       "(51010,326) cerebral aqueduct; no broad target scan and no native admission"),
+             "status": "complete", "not_admission": True,
+             "pins": {"verifier_sha256": "b" * 64},
+             "surfaces": {}, "contact_witnesses": contacts,
+             "exact_pair_gate": {"exact_face_pairs": [list(pair) for pair in pairs]},
+             "closed_solid_connection": {"exact_inside_both_witness": inside,
+                                         "union_components": 1}}
+    for surface in (first, second):
+        diag = surface.diagnostics()
+        proof["surfaces"][str(surface.key)] = {
+            "position_sha256": diag["positions_sha256"],
+            "face_sha256": diag["faces_sha256"],
+            "closed": surface.closed, "exact_self_count": surface.self_audit()["count"]}
+    proof_bytes = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    proof_sha = hashlib.sha256(proof_bytes).hexdigest()
+    source_map_sha = "a" * 64
+    binding = {"source_proof_sha256": proof_sha, "source_map_sha256": source_map_sha,
+               "surface_identities": [list(first.key), list(second.key)],
+               "surfaces": []}
+    for surface in (first, second):
+        binding["surfaces"].append({"identity": list(surface.key),
+                                    **av._surface_source_hashes(surface)})
+    return first, second, proof, proof_bytes, proof_sha, source_map_sha, binding
 
 
 class RestingAnatomyVerifierTests(unittest.TestCase):
@@ -343,6 +402,114 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             outer, separated,
             intended_shared_feature_pairs=declarations_for_actual_shared_features(outer, separated),
             intended_enclosures=[(outer.key, separated.key)])["passed"])
+
+
+    def test_source_bound_connected_overlap_rechecks_exact_source_proof(self):
+        first, second, proof, raw, proof_sha, map_sha, binding = source_bound_overlap_case()
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["exact_face_pair_count"], len(proof["contact_witnesses"]))
+        self.assertTrue(result["exact_inside_both_witness"]["first_location"] == "inside")
+        self.assertIn("No CSF flow", result["claim_limit"])
+
+    def test_source_bound_connected_overlap_rejects_wrong_proof_or_map_hash(self):
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case()
+        with self.assertRaisesRegex(ValueError, "proof bytes"):
+            audit_source_bound_connected_overlap(
+                first, second, source_proof_bytes=raw,
+                expected_source_proof_sha256="c" * 64, source_binding=binding,
+                expected_source_map_sha256=map_sha)
+        with self.assertRaisesRegex(ValueError, "not pinned"):
+            audit_source_bound_connected_overlap(
+                first, second, source_proof_bytes=raw,
+                expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_map_sha256="d" * 64)
+
+    def test_source_bound_connected_overlap_rejects_surface_gid_hash_mismatch(self):
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case()
+        binding["surfaces"][0]["gids_sha256"] = "e" * 64
+        with self.assertRaisesRegex(ValueError, "gids_sha256"):
+            audit_source_bound_connected_overlap(
+                first, second, source_proof_bytes=raw,
+                expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_map_sha256=map_sha)
+
+    def test_source_bound_connected_overlap_rejects_identity_mismatch(self):
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case()
+        binding["surface_identities"][1] = [51010, 345]
+        with self.assertRaisesRegex(ValueError, "identities or scope"):
+            audit_source_bound_connected_overlap(
+                first, second, source_proof_bytes=raw,
+                expected_source_proof_sha256=proof_sha, source_binding=binding,
+                expected_source_map_sha256=map_sha)
+
+    def test_source_bound_connected_overlap_rejects_pair_or_contact_changes(self):
+        first, second, proof, _, _, map_sha, binding = source_bound_overlap_case()
+        proof["exact_pair_gate"]["exact_face_pairs"].append([999, 999])
+        proof["contact_witnesses"].append({
+            "face_pair": [999, 999],
+            "points_world_m": [["99", "98", "97"]],
+        })
+        raw = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        proof_sha = hashlib.sha256(raw).hexdigest()
+        binding["source_proof_sha256"] = proof_sha
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["reason"], "observed_exact_face_pairs_differ_from_source_proof")
+
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case(altered_contact=True)
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["reason"], "exact_contact_points_differ_from_source_proof")
+
+    def test_source_bound_connected_overlap_rejects_open_or_disconnected_surfaces(self):
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case(open_first=True)
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["reason"], "surface_not_closed")
+
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case(
+            disconnected_first=True)
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["reason"], "surface_not_single_component")
+
+    def test_source_bound_connected_overlap_rechecks_inside_witness_and_topology(self):
+        first, second, proof, _, _, map_sha, binding = source_bound_overlap_case()
+        proof["closed_solid_connection"]["exact_inside_both_witness"]["point_world_m"] = [9., 9., 9.]
+        raw = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        proof_sha = hashlib.sha256(raw).hexdigest()
+        binding["source_proof_sha256"] = proof_sha
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["reason"], "frozen_overlap_witness_not_inside_both")
+
+        first, second, _, raw, proof_sha, map_sha, binding = source_bound_overlap_case()
+        second.self_audit = lambda: {"count": 1, "pairs": [[0, 1]]}
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=raw,
+            expected_source_proof_sha256=proof_sha, source_binding=binding,
+            expected_source_map_sha256=map_sha)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["reason"], "surface_self_intersection")
 
     def test_capture_rejects_hash_rejected_endpoint_and_duplicate_pose(self):
         receipt = {"schema": "numi.human.accepted-render-geometry.v1",

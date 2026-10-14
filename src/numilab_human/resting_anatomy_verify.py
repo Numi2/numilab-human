@@ -543,6 +543,243 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
     return True, "exact_shared_GID_feature_with_source_and_owner_proof"
 
 
+def _canonical_json_sha256(value):
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(payload.encode("ascii")).hexdigest()
+
+
+def _surface_source_hashes(surface):
+    if surface.source_face_lineage is None or surface.source_vertex_lineage is None:
+        raise ValueError("source-bound overlap requires source face and vertex lineage")
+    gids = np.asarray(surface.source_vertex_ids)
+    if gids.ndim != 1 or gids.dtype.kind not in "iu":
+        raise ValueError("source-bound overlap requires integer source GIDs")
+    canonical_gids = np.ascontiguousarray(gids.astype("<u8", copy=False))
+    vertex_lineage = [[int(gid), surface.source_vertex_lineage[int(gid)]]
+                      for gid in sorted(surface.source_vertex_lineage)]
+    return {
+        "positions_sha256": hashlib.sha256(surface.positions.tobytes()).hexdigest(),
+        "faces_sha256": hashlib.sha256(surface.faces.tobytes()).hexdigest(),
+        "gids_sha256": hashlib.sha256(canonical_gids.tobytes()).hexdigest(),
+        "source_face_lineage_sha256": _canonical_json_sha256(surface.source_face_lineage),
+        "source_vertex_lineage_sha256": _canonical_json_sha256(vertex_lineage),
+    }
+
+
+def _parse_source_rational_xyz(value, label):
+    if not isinstance(value, (list, tuple)) or len(value) != 3:
+        raise ValueError(label + " must be a three-coordinate rational point")
+    result = []
+    for coordinate in value:
+        if not isinstance(coordinate, str):
+            raise TypeError(label + " coordinates must be exact rational strings")
+        try:
+            result.append(Fraction(coordinate))
+        except (ValueError, ZeroDivisionError) as exc:
+            raise ValueError(label + " contains an invalid rational coordinate") from exc
+    return tuple(result)
+
+
+def _proof_surface_descriptor(proof, key):
+    descriptors = proof.get("surfaces")
+    if not isinstance(descriptors, dict):
+        raise TypeError("source proof has no surface descriptors")
+    descriptor = descriptors.get(str(tuple(key)))
+    if not isinstance(descriptor, dict):
+        raise TypeError("source proof lacks a typed surface descriptor")
+    return descriptor
+
+
+def audit_source_bound_connected_overlap(
+        first, second, *, source_proof_bytes, expected_source_proof_sha256,
+        source_binding, expected_source_map_sha256):
+    """Verify one source-proven passive overlap without waiving generic containment.
+
+    ``source_proof_bytes`` is the frozen pair report. ``source_binding`` is the
+    caller's already-verified source-map binding for these exact prepared rows;
+    its hashes are compared to both the report and the actual surfaces here.
+    The function independently rechecks exact intersections and the reported
+    binary64 interior witness with the existing P6 predicates. It accepts only
+    the scoped connected-overlap conclusion; it makes no flow or clinical claim.
+    """
+    if not isinstance(first, PreparedSurface) or not isinstance(second, PreparedSurface):
+        raise TypeError("source-bound overlap requires prepared surfaces")
+    first_key, second_key = typed_key(first.key), typed_key(second.key)
+    if first_key == second_key:
+        raise ValueError("source-bound overlap requires two distinct typed identities")
+    if not isinstance(source_proof_bytes, bytes):
+        raise TypeError("source proof must be frozen bytes")
+    if (not isinstance(expected_source_proof_sha256, str)
+            or len(expected_source_proof_sha256) != 64
+            or any(ch not in "0123456789abcdef" for ch in expected_source_proof_sha256)):
+        raise ValueError("source proof SHA-256 pin is invalid")
+    proof_sha256 = hashlib.sha256(source_proof_bytes).hexdigest()
+    if proof_sha256 != expected_source_proof_sha256:
+        raise ValueError("source proof bytes do not match their SHA-256 pin")
+    if (not isinstance(expected_source_map_sha256, str)
+            or len(expected_source_map_sha256) != 64
+            or any(ch not in "0123456789abcdef" for ch in expected_source_map_sha256)):
+        raise ValueError("source map SHA-256 pin is invalid")
+    if not isinstance(source_binding, dict):
+        raise TypeError("verified source binding must be a mapping")
+    if (source_binding.get("source_proof_sha256") != proof_sha256
+            or source_binding.get("source_map_sha256") != expected_source_map_sha256):
+        raise ValueError("source binding is not pinned to the supplied proof and map")
+    try:
+        proof = json.loads(source_proof_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("source proof is not valid UTF-8 JSON") from exc
+    if (not isinstance(proof, dict)
+            or proof.get("schema") != "numi.human.head-csf-pair-continuity.v1"
+            or proof.get("status") != "complete"
+            or proof.get("not_admission") is not True):
+        raise ValueError("source proof is not the expected frozen CSF pair report")
+    expected_scope = (
+        "only captured typed rows (51010,323) fourth ventricle and "
+        "(51010,326) cerebral aqueduct; no broad target scan and no native admission")
+    if (source_binding.get("surface_identities") != [list(first_key), list(second_key)]
+            or proof.get("scope") != expected_scope
+            or (first_key, second_key) != ((51010, 323), (51010, 326))):
+        raise ValueError("source proof and source binding identities or scope differ")
+    binding_rows = source_binding.get("surfaces")
+    if not isinstance(binding_rows, list) or len(binding_rows) != 2:
+        raise ValueError("source binding must contain exactly two surface rows")
+    bound = {}
+    surfaces_by_key = {first_key: first, second_key: second}
+    for row in binding_rows:
+        if not isinstance(row, dict):
+            raise TypeError("source binding surface row must be a mapping")
+        key = typed_key(row.get("identity"))
+        if key not in surfaces_by_key:
+            raise ValueError("source binding includes an unrelated surface identity")
+        if key in bound:
+            raise ValueError("duplicate typed identity in source binding")
+        if row.get("identity") != list(key):
+            raise ValueError("source binding identity must use canonical integer list")
+        actual = _surface_source_hashes(surfaces_by_key[key])
+        bound[key] = row
+        for hash_name, actual_hash in actual.items():
+            value = row.get(hash_name)
+            if (not isinstance(value, str) or len(value) != 64
+                    or any(ch not in "0123456789abcdef" for ch in value)
+                    or value != actual_hash):
+                raise ValueError("source binding does not match prepared surface " + hash_name)
+    if set(bound) != {first_key, second_key}:
+        raise ValueError("source binding omits one typed surface")
+    for surface in (first, second):
+        descriptor = _proof_surface_descriptor(proof, surface.key)
+        actual = _surface_source_hashes(surface)
+        if (descriptor.get("position_sha256") != actual["positions_sha256"]
+                or descriptor.get("face_sha256") != actual["faces_sha256"]):
+            raise ValueError("frozen source proof geometry does not match the prepared surface")
+        if not surface.closed or descriptor.get("closed") is not True:
+            return {"passed": False, "reason": "surface_not_closed",
+                    "identity": list(surface.key)}
+        self_result = surface.self_audit()
+        if (type(descriptor.get("exact_self_count")) is not int
+                or descriptor.get("exact_self_count") != 0
+                or self_result.get("count") != 0):
+            return {"passed": False, "reason": "surface_self_intersection",
+                    "identity": list(surface.key), "self_audit": self_result}
+        if surface.quotient_topology.get("face_component_count") != 1:
+            return {"passed": False, "reason": "surface_not_single_component",
+                    "identity": list(surface.key),
+                    "face_component_count": surface.quotient_topology.get("face_component_count")}
+    connection = proof.get("closed_solid_connection")
+    exact_gate = proof.get("exact_pair_gate")
+    witnesses = proof.get("contact_witnesses")
+    if not isinstance(connection, dict) or not isinstance(exact_gate, dict) or not isinstance(witnesses, list):
+        raise TypeError("source proof lacks exact contact and solid witness records")
+    inside = connection.get("exact_inside_both_witness")
+    if not isinstance(inside, dict) or inside.get("method") != "intersection_volume_centroid":
+        raise ValueError("source proof lacks the declared exact inside-both witness")
+    inside_point = inside.get("point_world_m")
+    if (not isinstance(inside_point, list) or len(inside_point) != 3
+            or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                   or not math.isfinite(value) for value in inside_point)):
+        raise ValueError("source inside witness must be a finite binary64 point")
+    exact_inside_point = tuple(Fraction.from_float(float(value)) for value in inside_point)
+    first_inside = ci.point_location_prepared_indexed(exact_inside_point, first.meter_index())
+    second_inside = ci.point_location_prepared_indexed(exact_inside_point, second.meter_index())
+    if first_inside.get("location") != "inside" or second_inside.get("location") != "inside":
+        return {"passed": False, "reason": "frozen_overlap_witness_not_inside_both",
+                "point_m": [str(value) for value in exact_inside_point],
+                "first_location": first_inside.get("location"),
+                "second_location": second_inside.get("location")}
+    if (inside.get("first_location") != "inside" or inside.get("second_location") != "inside"):
+        raise ValueError("source proof does not describe an exact inside-both witness")
+    expected_pairs_raw = exact_gate.get("exact_face_pairs")
+    if not isinstance(expected_pairs_raw, list):
+        raise TypeError("source proof exact face-pair set is missing")
+    expected_pairs = []
+    for pair in expected_pairs_raw:
+        if (not isinstance(pair, list) or len(pair) != 2
+                or any(type(face) is not int or face < 0 for face in pair)):
+            raise ValueError("source proof face pair must contain nonnegative integer indices")
+        expected_pairs.append(tuple(pair))
+    if len(set(expected_pairs)) != len(expected_pairs):
+        raise ValueError("source proof contains duplicate exact face pairs")
+    expected_contacts = {}
+    for witness in witnesses:
+        if not isinstance(witness, dict):
+            raise TypeError("source contact witness must be a mapping")
+        pair_raw = witness.get("face_pair")
+        if (not isinstance(pair_raw, list) or len(pair_raw) != 2
+                or any(type(face) is not int or face < 0 for face in pair_raw)):
+            raise ValueError("source contact witness face pair is invalid")
+        pair = tuple(pair_raw)
+        if pair in expected_contacts:
+            raise ValueError("source proof repeats an exact contact pair")
+        points = witness.get("points_world_m")
+        if not isinstance(points, list) or not points:
+            raise ValueError("source contact witness has no exact rational points")
+        parsed = tuple(sorted({_parse_source_rational_xyz(point, "source contact point")
+                               for point in points}))
+        if len(parsed) != len(points):
+            raise ValueError("source proof repeats a rational contact point")
+        expected_contacts[pair] = parsed
+    if set(expected_contacts) != set(expected_pairs):
+        raise ValueError("source proof face-pair and contact-witness sets differ")
+    exact_result = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
+    observed_pairs = tuple(sorted(tuple(pair) for pair in exact_result["triangle_pairs"]))
+    if set(observed_pairs) != set(expected_pairs):
+        return {"passed": False, "reason": "observed_exact_face_pairs_differ_from_source_proof",
+                "expected_pair_count": len(expected_pairs),
+                "observed_pair_count": len(observed_pairs),
+                "unexpected_pairs": [list(pair) for pair in sorted(set(observed_pairs) - set(expected_pairs))],
+                "missing_pairs": [list(pair) for pair in sorted(set(expected_pairs) - set(observed_pairs))]}
+    for first_face, second_face in observed_pairs:
+        actual_points = first.intersection_points_meters(second, first_face, second_face)
+        if actual_points != expected_contacts[(first_face, second_face)]:
+            return {"passed": False, "reason": "exact_contact_points_differ_from_source_proof",
+                    "face_pair": [first_face, second_face],
+                    "expected_points_m": [[str(v) for v in p]
+                                           for p in expected_contacts[(first_face, second_face)]],
+                    "observed_points_m": [[str(v) for v in p] for p in actual_points]}
+    return {
+        "passed": True,
+        "scope": "source-bound passive geometric overlap only",
+        "identities": [list(first_key), list(second_key)],
+        "source_proof_sha256": proof_sha256,
+        "source_map_sha256": expected_source_map_sha256,
+        "surface_bindings": [bound[key] for key in (first_key, second_key)],
+        "surface_checks": [
+            {"identity": list(surface.key), "closed": True, "self_intersections": 0,
+             "connected_face_components": 1}
+            for surface in (first, second)],
+        "exact_face_pair_count": len(observed_pairs),
+        "exact_rational_contact_pair_set_matches_source_proof": True,
+        "exact_rational_contact_points_match_source_proof": True,
+        "exact_inside_both_witness": {
+            "point_m": [str(value) for value in exact_inside_point],
+            "first_location": first_inside["location"],
+            "second_location": second_inside["location"]},
+        "connected_union_reason": (
+            "Both closed embedded surfaces are each one connected component, and the "
+            "rechecked exact point is in the interior of both; their union is connected."),
+        "claim_limit": "No CSF flow, caliber, pressure, clinical, or native-motion claim.",
+    }
+
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
                        intended_shared_feature_pairs=()):
     allowed = {tuple(pair) for pair in intended_face_pairs}
