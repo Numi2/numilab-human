@@ -28,6 +28,8 @@ OUTPUT_DIR = A / "brachiocephalic-common-field-preparation-007-007"
 PREFLIGHT_PATH = A / "brachiocephalic-common-field-preparation-007-007-preflight.json"
 EXPECTED_PYTHON = Path("/Users/n/numi-human-prep-venv-20261005/bin/python")
 PUBLISHED_OWNER_REVISION = "fdabf993b469b0e4e99d8dcb58c46cf89d7ee61c"
+UNCONSUMED_P6_VERIFIER = (
+    source007.P6_PACKAGE / "resting_anatomy_verify.py")
 
 # Hashes of the exact published owners from fdabf993, including the actual
 # imported closest-point helper that the existing field compiler calls.
@@ -164,7 +166,13 @@ def _input_files() -> dict[Path, str]:
         source007.VESSEL_OWNER_PORT_REPORT: source007.VESSEL_OWNER_PORT_REPORT_SHA,
     }
     for raw_path, expected in source007.INPUT_SHA.items():
-        files[Path(raw_path)] = expected
+        path = Path(raw_path)
+        if path.resolve() == UNCONSUMED_P6_VERIFIER.resolve():
+            # The 007-006 source receipt retains its historical P6 pin. The
+            # common-field owner does not import or execute P6, so keep that
+            # pin as provenance rather than binding this common-only prep to it.
+            continue
+        files[path] = expected
     files.update({Path(path): expected for path, expected in source007.ROUTE110_SHA.items()})
     for relative_path, expected in SOURCE_007006_FILE_SHA256.items():
         files[SOURCE_DIR / relative_path] = expected
@@ -198,6 +206,46 @@ def _python_executable_identity() -> dict[str, str]:
     }
 
 
+def _verify_file_pins(files: dict[Path, str]) -> dict[str, str]:
+    actual_pins = {}
+    for path, expected in files.items():
+        resolved = Path(path).resolve()
+        if not resolved.is_file():
+            raise ValueError(f"required common-preparation input is missing: {resolved}")
+        actual = _sha_file(resolved)
+        if actual != expected:
+            raise ValueError(f"input hash changed at {resolved}: {actual}")
+        actual_pins[str(resolved)] = actual
+    return actual_pins
+
+
+def _current_unconsumed_p6_context() -> dict[str, Any]:
+    path = UNCONSUMED_P6_VERIFIER.resolve()
+    root = source007.P6_ROOT.resolve()
+    revision = None
+    clean = None
+    try:
+        revision = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"], check=True,
+            capture_output=True, text=True).stdout.strip()
+        status = subprocess.run(
+            ["git", "-C", str(root), "status", "--porcelain"], check=True,
+            capture_output=True, text=True).stdout.splitlines()
+        clean = not status
+    except (OSError, subprocess.CalledProcessError):
+        pass
+    return {
+        "status": "HISTORICAL_UNCONSUMED_CONTEXT_ONLY",
+        "historical_source007_verifier_sha256": source007.P6_VERIFIER_SHA,
+        "current_path": str(path),
+        "current_sha256": _sha_file(path) if path.is_file() else None,
+        "current_repository_head": revision,
+        "current_repository_clean": clean,
+        "consumed_by_common_field_preparation": False,
+        "p6_predicates_invoked": False,
+    }
+
+
 def build_preflight() -> dict:
     python_identity = _python_executable_identity()
     if OUTPUT_DIR.exists():
@@ -205,13 +253,7 @@ def build_preflight() -> dict:
 
     repo = Path(__file__).resolve().parents[2]
     owner_imports = _owner_import_pins()
-    input_pins = {}
-    for path, expected in _input_files().items():
-        resolved = Path(path).resolve()
-        actual = _sha_file(resolved)
-        if actual != expected:
-            raise ValueError(f"input hash changed at {resolved}: {actual}")
-        input_pins[str(resolved)] = actual
+    input_pins = _verify_file_pins(_input_files())
 
     source_receipt = json.loads(SOURCE_RECEIPT.read_text())
     source_payload_path = Path(source_receipt["payload"]["path"])
@@ -278,6 +320,7 @@ def build_preflight() -> dict:
             "version": platform.python_version(),
         },
         "owner_imports": owner_imports,
+        "p6_provenance": _current_unconsumed_p6_context(),
         "source_candidate": {
             "path": str(SOURCE_DIR),
             "receipt_path": str(SOURCE_RECEIPT),

@@ -64,3 +64,39 @@ def test_python_preflight_rejects_another_venv(monkeypatch):
 
     with pytest.raises(ValueError, match="qualified Numi interpreter"):
         driver._python_executable_identity()
+
+
+@pytest.mark.parametrize("present", [False, True])
+def test_unconsumed_historical_p6_pin_does_not_block_common_preflight(
+    tmp_path, monkeypatch, present):
+    p6_path = tmp_path / "resting_anatomy_verify.py"
+    if present:
+        p6_path.write_text("current verifier differs from historical source pin")
+    monkeypatch.setattr(driver, "UNCONSUMED_P6_VERIFIER", p6_path)
+    monkeypatch.setattr(driver.source007, "P6_ROOT", tmp_path)
+    monkeypatch.setattr(driver.source007, "INPUT_SHA", {str(p6_path): "old-pin"})
+
+    files = driver._input_files()
+    context = driver._current_unconsumed_p6_context()
+
+    assert p6_path.resolve() not in {path.resolve() for path in files}
+    assert driver._verify_file_pins({}) == {}
+    assert context["status"] == "HISTORICAL_UNCONSUMED_CONTEXT_ONLY"
+    assert context["historical_source007_verifier_sha256"] == (
+        driver.source007.P6_VERIFIER_SHA)
+    assert context["current_sha256"] == (
+        driver._sha_file(p6_path) if present else None)
+    assert context["consumed_by_common_field_preparation"] is False
+    assert context["p6_predicates_invoked"] is False
+
+
+def test_common_preparation_rejects_drift_in_a_consumed_input(tmp_path):
+    consumed = tmp_path / "consumed-owner.py"
+    consumed.write_text("pinned source owner")
+    expected = driver._sha_file(consumed)
+
+    assert driver._verify_file_pins({consumed: expected}) == {
+        str(consumed.resolve()): expected}
+    consumed.write_text("changed source owner")
+    with pytest.raises(ValueError, match="input hash changed"):
+        driver._verify_file_pins({consumed: expected})
