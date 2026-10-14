@@ -313,6 +313,23 @@ def _closed_extruded_polygon_section(points_xy):
     return positions, np.asarray(faces, dtype="<u4")
 
 
+def test_section_topology_keeps_distinct_sub_tolerance_hits_in_open_triangle():
+    positions = np.asarray(
+        [[0.0, 0.0, 3.2e-7], [0.0, 0.0, -1.0], [0.2, 0.0, -1.0]],
+        dtype="<f4")
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+
+    report = _section_loops(
+        positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+
+    assert not report["passed"]
+    assert report["reason"] == "section graph is open or branched"
+    assert report["segment_count"] == 1
+    assert report["section_node_count"] == 2
+    assert report["section_edge_intersection_count"] == 2
+    assert report["minimum_section_segment_length_m"] < report["coordinate_ulp_tolerance_m"]
+
+
 def test_section_topology_keeps_distinct_nearby_edge_hits_and_tiny_valid_segment():
     delta = float(np.float32(-1.0 + 1.0e-7) - np.float32(-1.0))
     polygon = [(-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1 + 1.0e-7)]
