@@ -1,0 +1,123 @@
+{
+  "all_aabb_predicted_source0_gate_reached": false,
+  "anatomical_admission": false,
+  "candidate007_files_sha256": {
+    "resting-anatomy-manifest.json": "b57c7d6b2e251009d42170584c5098566f49fb9a1295e11af8baecc3fa59c0fc",
+    "resting-anatomy-receipt.json": "2b672f43f3fb3bd1624218244dc41c60a220abdd2847d76e7187cdb7ed616b5f",
+    "resting-thorax.nhanatomy": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150"
+  },
+  "candidate007_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-candidate-007-001",
+  "command": "ssh -4 numi 'cd /Users/n/numi-human-vein-geometry-gate-20261014 && PYTHONPATH=src /Users/n/numi-human-prep-venv-20261005/bin/python -m numilab_human.resting_brachiocephalic_source007 --run-source007'",
+  "exit_code": 2,
+  "failed_stage": "six-port-overlap-and-sections",
+  "failure": {
+    "message": "source-007 brachiocephalic gate: source-0 six-port continuity/calibre screen stopped or failed",
+    "type": "ValueError"
+  },
+  "geometry_report_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/source-007-geometry-report.json",
+  "geometry_report_sha256": "9d0fb2fc1b0b68f111387f867aec35168587ca0bd1bada50519b4ccc9da1a612",
+  "later_pose_native_or_gpu_work_performed": false,
+  "prep007_files_sha256": {
+    "brachiocephalic-common-field-preparation.json": "52561304ff785f73fe980c9dfe796d430cbc2f8671e32b2a810746c5501fd8ba",
+    "common-cardiac-domains-f32.bin": "7652785c9ea164b16ee96f64a3dcf940398af36cfd535a5f9b7a7d6bd2c7a611",
+    "common-cardiac-map-f32.bin": "741e086be763cc779f70f803878b6183895c43b55d16c9c157f9a6f05d63a8f4",
+    "common-cardiac-volumes-f32.bin": "7be4f62996c996c6cfdd49480d27766c8253387bb24aeb504fef73cd553ae699",
+    "resting-anatomy-manifest.json": "31ba31e4985b55ad88c4cb6dcbd47c57b6ee920233b7784b2c906d2faa5aea0a",
+    "resting-anatomy-receipt.json": "ef7b03c107638b30d6104ef878a583bfed516dd5bea2923c84c1339f75b6fefc"
+  },
+  "prep007_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-common-field-preparation-007-001",
+  "recorded_at_utc": "2026-10-14T02:02:57.272989+00:00",
+  "schema": "numi.human.brachiocephalic-source-007-execution-receipt.v1",
+  "six_port_result": {
+    "evaluated_port_count": 2,
+    "failed_port_helper_witness_limitation": "The port helper raised ValueError before returning section diagnostics; the aggregator retained the exact error string but no failed-port section witness.",
+    "failed_port_section_witness_retained": false,
+    "first_failed_port": {
+      "bridge": [
+        51011,
+        525
+      ],
+      "target": [
+        51011,
+        469
+      ]
+    },
+    "first_failed_port_error": "brachiocephalic captured-pose geometry: candidate and baseline sections must have positive closed-loop measures",
+    "first_port_passed": true,
+    "first_port_section_gate_passed": true,
+    "first_port_solid_volume_m3": 2.2116426294259437e-06,
+    "ports_not_evaluated_after_first_failure": [
+      {
+        "bridge": [
+          51011,
+          525
+        ],
+        "target": [
+          51011,
+          473
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          526
+        ],
+        "target": [
+          51011,
+          10
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          526
+        ],
+        "target": [
+          51011,
+          468
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          526
+        ],
+        "target": [
+          51011,
+          472
+        ]
+      }
+    ],
+    "requested_port_count": 6
+  },
+  "source_bridge_closure_self_checks": [
+    {
+      "closed_oriented_source": true,
+      "exact_self_intersection_count": 0,
+      "faces_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+      "identity": [
+        51011,
+        525
+      ],
+      "positions_sha256": "33b65f799202405564cdcd42627f5c8db59f87a323161e69e62c3e3f115bd913"
+    },
+    {
+      "closed_oriented_source": true,
+      "exact_self_intersection_count": 0,
+      "faces_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+      "identity": [
+        51011,
+        526
+      ],
+      "positions_sha256": "97d79e5216b73a944596efb714e7d0cd445c4acdd3fe215b17382336af6ffcd2"
+    }
+  ],
+  "source_repository_commit": "e921f79b9b078911c30f552890d22274fb8cf56e",
+  "status": "SOURCE007_REJECTED_OR_INCOMPLETE_AT_SIX_PORT_OVERLAP_AND_SECTIONS",
+  "step0_captured_svc_prediction_reached": false,
+  "timing": {
+    "observed_elapsed_seconds": 9.432,
+    "source": "functions.exec_command wall_time_seconds",
+    "start_and_finish_timestamps": "not separately captured"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "anatomical_admission": false,
+  "coupled_pose_prediction_executed": false,
+  "execution_host": "ssh numi",
+  "focused_tests": {
+    "failed": 0,
+    "groups": [
+      "resting_brachiocephalic_geometry_gate",
+      "resting_brachiocephalic_common_field",
+      "resting_brachiocephalic_pose_predictor",
+      "resting_anatomy_verify"
+    ],
+    "passed": 46,
+    "wall_s": 3.59
+  },
+  "geometry_report_hashes": {
+    "source-007-execution-receipt-001.json": "4ab6f9c475a90ac76df18989396098736b005b3a9a657aaf1b95a9e69641371f",
+    "source-007-geometry-report.json": "9d0fb2fc1b0b68f111387f867aec35168587ca0bd1bada50519b4ccc9da1a612"
+  },
+  "limits": "Software predicates and retained source rejection only. No all-pose geometry, whole-Human, physiological or clinical qualification.",
+  "native_run": false,
+  "source_gate_status": "rejected at second port525->469; source bridge closure/self both pass; first SVC port pass; failed section witness pending instrumented replay",
+  "source_revision": "3629eb4e"
+}
