@@ -1399,3 +1399,79 @@ def main() -> None:
 
 
 if __name__=='__main__':main()
+
+
+def reemit_core_local_registration(
+    payload_path: Path, previous_registration_path: Path,
+    registration_path: Path, artifact: Path, output_path: Path,
+) -> dict:
+    """Retain compiled NHANAT geometry when its global and rigid source frames agree.
+
+    Bone-fit changes do not redefine NHANAT Core-local coordinates. Both
+    registrations must retain the exact source identities, global atlas frame,
+    and the consumed NHRIGID rest frames. This operation cannot admit geometry.
+    """
+    from .resting_pleura_proxy import _parse_payload
+
+    payload_path, previous_registration_path, registration_path, artifact, output_path = (
+        Path(p).resolve() for p in
+        (payload_path, previous_registration_path, registration_path, artifact, output_path))
+    if output_path.exists():
+        raise ValueError("anatomy registration output already exists")
+    previous = json.loads(previous_registration_path.read_text())
+    current = json.loads(registration_path.read_text())
+    old_context, old_bodies = human._bodyparts_runtime_bindings(previous, artifact)
+    context, bodies = human._bodyparts_runtime_bindings(current, artifact)
+    if (old_context["rigid"] != context["rigid"] or old_bodies != bodies
+            or previous.get("coordinate_system") != current.get("coordinate_system")
+            or previous["source"]["bodyparts"] != current["source"]["bodyparts"]):
+        raise ValueError("anatomy registration changes a global or rigid source frame")
+    old_anchors, anchors = previous["anchors"], current["anchors"]
+    if (len(old_anchors) != len(anchors)
+            or any(a["source"] != b["source"] or a["target"] != b["target"]
+                   for a, b in zip(old_anchors, anchors, strict=True))):
+        raise ValueError("anatomy registration changes source or attachment identities")
+    raw = payload_path.read_bytes()
+    header, records, rows = _parse_payload(raw)
+    previous_sha, registration_sha = human.sha256(previous_registration_path), human.sha256(registration_path)
+    if (header[5] != int(previous_sha[:8], 16)
+            or header[6].hex() != context["source_archive_sha256"]):
+        raise ValueError("anatomy payload registration or source digest differs")
+    body_indices = {int(index) for index, _ in bodies.values()}
+    for stable_id, row in rows.items():
+        if (row["body_index"] not in body_indices
+                or not np.isfinite(row["vertices6"]).all()
+                or np.max(np.abs(np.linalg.norm(
+                    row["vertices6"][:, 3:].astype(np.float64), axis=1)-1)) > 2e-3):
+            raise ValueError(f"anatomy row {stable_id} has invalid Core identity or normals")
+    new_header = (*header[:5], int(registration_sha[:8], 16), header[6])
+    emitted = HEADER.pack(*new_header) + raw[HEADER.size:]
+    if emitted[HEADER.size:] != raw[HEADER.size:]:
+        raise ValueError("anatomy registration re-emission changed row geometry")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("xb") as stream:
+        stream.write(emitted)
+    check_header, check_records, _ = _parse_payload(output_path.read_bytes())
+    if check_header != new_header or check_records != records:
+        raise ValueError("anatomy registration output differs from verified owner result")
+    return {
+        "owner": "numilab_human.resting_anatomy.reemit_core_local_registration",
+        "source_payload_path": str(payload_path),
+        "source_payload_sha256": hashlib.sha256(raw).hexdigest(),
+        "output_payload_path": str(output_path),
+        "output_payload_sha256": human.sha256(output_path),
+        "previous_registration_path": str(previous_registration_path),
+        "previous_registration_sha256": previous_sha,
+        "registration_path": str(registration_path),
+        "registration_sha256": registration_sha,
+        "previous_registration_fingerprint32": f"{header[5]:08x}",
+        "registration_fingerprint32": f"{new_header[5]:08x}",
+        "actual_rigid_payload_sha256": context["rigid"]["sha256"],
+        "owner_source_sha256": human.sha256(Path(__file__)),
+        "source_anchor_count": len(anchors), "surface_count": len(rows),
+        "source_and_attachment_identities_exact": True,
+        "global_atlas_and_actual_rigid_frames_exact": True,
+        "all_core_local_geometry_normals_indices_and_owner_records_byte_exact": True,
+        "anatomical_and_native_admission": False,
+        "scope": "Registration source preparation only; NHANAT physical and deformation owners and geometry retained.",
+    }
