@@ -122,7 +122,8 @@ def main() -> None:
     }
     native_pins = {}
     for name, path in NATIVE_OWNERS.items():
-        require(path.is_file() and sha_file(path) == EXPECTED[name if name != "anatomy" else "anatomy_owner"],
+        owner_key = {"anatomy": "anatomy_owner", "visual": "visual_owner"}.get(name, name)
+        require(path.is_file() and sha_file(path) == EXPECTED[owner_key],
                 f"functional respiratory source owner changed: {name}")
         native_pins[name] = {"path": str(path.resolve()), "sha256": sha_file(path)}
     native_pins["source_git_commit"] = git_commit(NATIVE_SOURCE_ROOT)
