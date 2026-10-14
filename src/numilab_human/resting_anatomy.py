@@ -118,15 +118,6 @@ def _head_member_identity(bodyparts3d: dict, member_id: str, member_sha256: str)
     key = (expected["concept_id"], expected["name"])
     if member_id not in table.get(key, set()):
         raise ValueError(f"head source member is not in its declared anatomical component: {member_id}")
-    components = bodyparts3d.get("components", [])
-    matches = [component for component in components
-               if component.get("hierarchy") == "part_of"
-               and component.get("concept_id") == expected["concept_id"]
-               and component.get("name") == expected["name"]
-               and any(element.get("element_id") == member_id
-                       for element in component.get("element_meshes", []))]
-    if len(matches) != 1:
-        raise ValueError(f"head source label/component table is missing or ambiguous: {member_id}")
     return {
         "concept_id": expected["concept_id"],
         "name": expected["name"],

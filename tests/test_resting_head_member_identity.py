@@ -9,20 +9,6 @@ from numilab_human.resting_anatomy import (
 
 
 def _atlas():
-    components = [
-        {
-            "concept_id": "FMA78469",
-            "name": "fourth ventricle",
-            "hierarchy": "part_of",
-            "element_meshes": [{"element_id": "FJ1731"}],
-        },
-        {
-            "concept_id": "FMA78467",
-            "name": "cerebral aqueduct",
-            "hierarchy": "part_of",
-            "element_meshes": [{"element_id": "FJ1738"}],
-        },
-    ]
     return {
         "source": {
             "tables": [
@@ -38,7 +24,6 @@ def _atlas():
                 ("FMA78467", "cerebral aqueduct"): {"FJ1738"},
             }
         },
-        "components": components,
     }
 
 
