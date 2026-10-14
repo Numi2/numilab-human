@@ -1,0 +1,255 @@
+{
+  "all_other_receipt_fields_unchanged": true,
+  "common_field_map_poly_domains_unchanged": true,
+  "compiled_body_ids_source_points_normals_byte_identical": true,
+  "existing_brachiocephalic_extension_canonical_sha256": "7140cb1746a3ea1d3c2701cdc5ad51165b1b210fe8a80b3a3fdbc4a16d24fb72",
+  "existing_brachiocephalic_extension_unchanged": true,
+  "geometry_predicates_run": false,
+  "naive_complement_failure_counts": {
+    "475": 54,
+    "477": 72
+  },
+  "native_arithmetic_source": {
+    "binary_sha256": "8ed8a436953cce8344817f95a54e0f502432588b01540561653418d9cfc30eba",
+    "build_seal_sha256": "64a896828665c6c217d98f62c3dd08bce3dfd33d9ab659286749a51c00db70b5",
+    "expression": "point.w=float(c*double(pv.weight[j]))",
+    "partition_tolerance": "abs(sequential_double_sum(coefficients)-1)<=1e-12",
+    "path": "/Users/n/numi-lab-resting-qualification-publish-1395/apps/NumiHumanRestingTissueParents.hpp",
+    "sha256": "e6c38385940e28103a3e8575c96ec7e7ba751feb6983efc30d57333919a281a9",
+    "source_revision": "1e33214a4871f87d9ef5bb888fa0c0dddca6a18f"
+  },
+  "native_retry_performed": false,
+  "nha_payload_byte_identity": {
+    "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-candidate-007-006/resting-thorax.nhanatomy",
+    "sha256": "3a3693b8de2264127e9190a151dca460002ae3b8a0a09edea312bd4eed73ea42",
+    "unchanged": true
+  },
+  "normalization_policy": "For each out-of-tolerance two-term vertex, move the smaller positive Float64 coefficient by signed one-eighth of the smaller term's adjacent float32 spacing toward the partition residual; set the larger term to 1.0 minus that adjusted value. Prove both results lie strictly between the exact binary64 midpoints to their adjacent float32 values, then prove the actual float32 casts and native float32(c*double(source_weight)) products are byte-identical. Exact midpoint ties are excluded by the strict-interior test; the report records both exact hex midpoint bounds and margins.",
+  "parent_binding_metadata_excluding_coefficients_sha256": "4a0d65aed498f1e5532b3d6d49c8d431be3f6bd9f9156c270134719ce574a735",
+  "per_surface": {
+    "475": {
+      "actual_carrier_stable_ids": [
+        1,
+        2
+      ],
+      "actual_source_body_owner_term_counts": {
+        "20": 837,
+        "91": 829
+      },
+      "coefficient_float32_byte_changes": 0,
+      "compiled_positive_influence_count": 1666,
+      "compiled_weight_float32_byte_changes": 0,
+      "corrected_vertex_count": 646,
+      "max_abs_coefficient_delta_f64": 2.974999802063394e-08,
+      "max_abs_partition_error_after_f64": 0.0,
+      "max_abs_partition_error_before_f64": 2.9802322387695312e-08,
+      "naive_complement_float32_byte_changes": 54,
+      "term_count": 1666,
+      "terms_per_vertex": {
+        "1": 138,
+        "2": 764
+      },
+      "vertex_count": 902
+    },
+    "477": {
+      "actual_carrier_stable_ids": [
+        3,
+        4
+      ],
+      "actual_source_body_owner_term_counts": {
+        "20": 1022,
+        "91": 1011
+      },
+      "coefficient_float32_byte_changes": 0,
+      "compiled_positive_influence_count": 2033,
+      "compiled_weight_float32_byte_changes": 0,
+      "corrected_vertex_count": 811,
+      "max_abs_coefficient_delta_f64": 2.9787770472466946e-08,
+      "max_abs_partition_error_after_f64": 0.0,
+      "max_abs_partition_error_before_f64": 2.9802322387695312e-08,
+      "naive_complement_float32_byte_changes": 72,
+      "term_count": 2033,
+      "terms_per_vertex": {
+        "1": 145,
+        "2": 944
+      },
+      "vertex_count": 1089
+    }
+  },
+  "physical_mass_state_or_force_added": false,
+  "preflight_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-native-coefficient-normalization-003/preflight.json",
+  "preflight_sha256": "eeaeadaa0039b8af4ffc69a88e7ed3c16339b8222f1812c9914fe22c07ef8341",
+  "receipt_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-native-coefficient-normalization-003/resting-anatomy-receipt.json",
+  "receipt_sha256": "78b3a9fdb818efc41a948ee559249e7d099c465f8d9ecbcc9a6525ee0881e7a4",
+  "regression_fixtures": {
+    "row475_vertex271": {
+      "adjusted_term_index": 0,
+      "before_f32_hex": [
+        "77ab753f",
+        "8848253d"
+      ],
+      "budget_delta_f64_hex": "0x1.0000000000000p-31",
+      "budget_term_index": 1,
+      "coefficients_before_f64_hex": [
+        "0x1.eb56ee0000000p-1",
+        "0x1.4a91100000000p-5"
+      ],
+      "complement_f32_hex": [
+        "78ab753f",
+        "8848253d"
+      ],
+      "complement_float32_byte_changes": 1,
+      "complement_result_f64_hex": [
+        "0x1.eb56ef0000000p-1",
+        "0x1.4a91100000000p-5"
+      ],
+      "positive_coefficients": true,
+      "rounding_intervals": [
+        {
+          "lower_inclusive_if_exact_tie": false,
+          "lower_margin_f64_hex": "0x1.fc00000000000p-25",
+          "lower_midpoint_f64_hex": "0x1.eb56ed0000000p-1",
+          "rounded_f32_hex": "77ab753f",
+          "strict_interior": true,
+          "upper_inclusive_if_exact_tie": false,
+          "upper_margin_f64_hex": "0x1.0000000000000p-31",
+          "upper_midpoint_f64_hex": "0x1.eb56ef0000000p-1"
+        },
+        {
+          "lower_inclusive_if_exact_tie": true,
+          "lower_margin_f64_hex": "0x1.4000000000000p-29",
+          "lower_midpoint_f64_hex": "0x1.4a910f0000000p-5",
+          "rounded_f32_hex": "8848253d",
+          "strict_interior": true,
+          "upper_inclusive_if_exact_tie": true,
+          "upper_margin_f64_hex": "0x1.8000000000000p-30",
+          "upper_midpoint_f64_hex": "0x1.4a91110000000p-5"
+        }
+      ],
+      "sum_after_f64_hex": "0x1.0000000000000p+0",
+      "tie_safe_f32_hex": [
+        "77ab753f",
+        "8848253d"
+      ],
+      "tie_safe_float32_byte_changes": 0,
+      "tie_safe_result_f64_hex": [
+        "0x1.eb56eefc00000p-1",
+        "0x1.4a91104000000p-5"
+      ]
+    },
+    "row477_vertex401": {
+      "adjusted_term_index": 0,
+      "before_f32_hex": [
+        "53386d3f",
+        "643d963d"
+      ],
+      "budget_delta_f64_hex": "0x1.0000000000000p-30",
+      "budget_term_index": 1,
+      "coefficients_before_f64_hex": [
+        "0x1.da70a60000000p-1",
+        "0x1.2c7ac80000000p-4"
+      ],
+      "complement_f32_hex": [
+        "54386d3f",
+        "643d963d"
+      ],
+      "complement_float32_byte_changes": 1,
+      "complement_result_f64_hex": [
+        "0x1.da70a70000000p-1",
+        "0x1.2c7ac80000000p-4"
+      ],
+      "positive_coefficients": true,
+      "rounding_intervals": [
+        {
+          "lower_inclusive_if_exact_tie": false,
+          "lower_margin_f64_hex": "0x1.f800000000000p-25",
+          "lower_midpoint_f64_hex": "0x1.da70a50000000p-1",
+          "rounded_f32_hex": "53386d3f",
+          "strict_interior": true,
+          "upper_inclusive_if_exact_tie": false,
+          "upper_margin_f64_hex": "0x1.0000000000000p-30",
+          "upper_midpoint_f64_hex": "0x1.da70a70000000p-1"
+        },
+        {
+          "lower_inclusive_if_exact_tie": true,
+          "lower_margin_f64_hex": "0x1.4000000000000p-28",
+          "lower_midpoint_f64_hex": "0x1.2c7ac70000000p-4",
+          "rounded_f32_hex": "643d963d",
+          "strict_interior": true,
+          "upper_inclusive_if_exact_tie": true,
+          "upper_margin_f64_hex": "0x1.8000000000000p-29",
+          "upper_midpoint_f64_hex": "0x1.2c7ac90000000p-4"
+        }
+      ],
+      "sum_after_f64_hex": "0x1.0000000000000p+0",
+      "tie_safe_f32_hex": [
+        "53386d3f",
+        "643d963d"
+      ],
+      "tie_safe_float32_byte_changes": 0,
+      "tie_safe_result_f64_hex": [
+        "0x1.da70a6f800000p-1",
+        "0x1.2c7ac84000000p-4"
+      ]
+    }
+  },
+  "rounding_interval_method": "For each coefficient c rounded to finite positive binary32 r with predecessor p and successor n, calculate lower=(p+r)/2 and upper=(r+n)/2 exactly in binary64 (all operands are binary rationals exactly representable there); require lower<c<upper. Endpoint inclusion would follow ties-to-even only when the selected float32 significand LSB is even, but no adjusted value relies on endpoint inclusion.",
+  "script_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/normalize_vein008_parent_coefficients_003.py",
+  "script_sha256": "da14da6b06b49048ddf9810eeba463c3023a530f4e22dab3fcff733603e5d8e4",
+  "serialized_receipt_replay": {
+    "all_coefficient_casts_byte_identical": true,
+    "all_compiled_weight_bytes_identical": true,
+    "all_partitions_within_native_tolerance": true,
+    "all_source_body_ids_points_normals_preserved_by_same_locator_and_carrier_sha": true,
+    "compiled_positive_influences_replayed": 3699,
+    "status": "PASS"
+  },
+  "source_asset_inventory": [
+    {
+      "index": 0,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-native-preparation-003/assets/shared-field-carriers-132.nhtissue",
+      "sha256": "7c67b00fdefcb4cb9f8350b78ab3ed8a49b38e22b5ca1e9c624a575fc9ef919f"
+    },
+    {
+      "index": 1,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-native-027-002/assets/prior-parent-1.nhtissue",
+      "sha256": "2c0bb0e69c9254cc34f9d90a25dd313a8362524529fdde4f9210641cd79424d3"
+    },
+    {
+      "index": 2,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-native-027-002/assets/back-parent-0.nhtissue",
+      "sha256": "e00dd0b40dd544433ccf66ac7afbbf64396b891af9ec90c90361dca9606a2d5f"
+    },
+    {
+      "index": 3,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-native-027-002/assets/back-parent-1.nhtissue",
+      "sha256": "4fd0bbc6739f01f025982fe19a0fa28205c8667c877b11a08194b78213b9cefd"
+    },
+    {
+      "index": 4,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-island-native-027-002/assets/axillary-477-reference-carriers.nhtissue",
+      "sha256": "4c9a443d8a77101847e8513a7ef102c322b9af5e317298bedb87c75b85e80cd9"
+    },
+    {
+      "index": 5,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm470-native-preparation-003/assets/shared-field-carriers-134.nhtissue",
+      "sha256": "57f7aab9b2fe58a39f88b7a688adb57efe08ffe849b6d473497ad01ffc5d2642"
+    },
+    {
+      "index": 6,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachiocephalic-joint-parent-composition-008-008/joint/assets/route110-dual-vessel-reference-carriers.nhtissue",
+      "sha256": "f77cf7d6da5677178e858f68abe92d7272925f5a783eb8739eba01ad14027393"
+    }
+  ],
+  "source_asset_order_and_hashes_unchanged": true,
+  "source_receipt_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-integrated-receipt-002/resting-anatomy-receipt.json",
+  "source_receipt_sha256": "0ad634926055467712b9aa1de00e1c2a2fb88e095f7f153b8ec281cc3ce5a83d",
+  "status": "prepared_source_only_native_coefficient_partition_correction_not_anatomical_admission",
+  "conversion_ledger_summary": {
+    "entry_count": 1457,
+    "canonical_sha256": "e6afee6961bba774d4c2cd857ba6094bc81d54efce084e885a2844700b7adb5c",
+    "full_report_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-native-coefficient-normalization-003/report.json",
+    "full_report_sha256": "51f868b7c3c232037945adaf7104ffb912aba5d13b34b497ebae6de6ca641072",
+    "scope": "Compact publication; complete per-vertex conversion ledger retained in bound remote report."
+  }
+}
