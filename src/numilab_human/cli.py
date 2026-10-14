@@ -418,6 +418,7 @@ def myosim_upper_limb_registration(arguments: argparse.Namespace) -> int:
         "--source-audit", str(arguments.source_audit.resolve()),
         "--worklist", str(arguments.worklist.resolve()),
         "--tendon-manifest", str(arguments.tendon_manifest.resolve()),
+        "--scope", getattr(arguments, "scope", "all"),
         "--output", str(output),
     ]
     completed = subprocess.run(command, capture_output=True, text=True, check=False, env=environment)
@@ -1638,6 +1639,10 @@ def parser() -> argparse.ArgumentParser:
     upper_limb_registration_parser.add_argument("--source-audit", type=Path, required=True)
     upper_limb_registration_parser.add_argument("--worklist", type=Path, required=True)
     upper_limb_registration_parser.add_argument("--tendon-manifest", type=Path, required=True)
+    upper_limb_registration_parser.add_argument(
+        "--scope", choices=("all", "bilateral_hands"), default="all",
+        help="anchor targets to transform; bilateral_hands preserves all non-hand registrations",
+    )
     upper_limb_registration_parser.add_argument("--output", type=Path, required=True)
     upper_limb_registration_parser.add_argument(
         "--python", type=Path, default=Path(sys.executable),

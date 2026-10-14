@@ -755,6 +755,57 @@ def _hand_names(side: str) -> set[str]:
     }
 
 
+def _scope_target_names(scope: str) -> set[str]:
+    """Return the explicit anchor targets a registration scope may transform."""
+    all_names = _upper_names("r") | _upper_names("l")
+    if scope == "all":
+        return all_names - {"clavicle_r", "clavicle_l"}
+    if scope == "bilateral_hands":
+        return _hand_names("r") | _hand_names("l")
+    raise ValueError(f"unsupported upper-limb registration scope: {scope}")
+
+
+def _validate_scope_anchor_preservation(
+    original: dict[str, Any],
+    candidate: dict[str, Any],
+    selected_names: set[str],
+) -> None:
+    """Require stable anchor order/identity and byte-value equality off-scope."""
+    original_anchors = original.get("anchors")
+    candidate_anchors = candidate.get("anchors")
+    if (
+        not isinstance(original_anchors, list)
+        or not isinstance(candidate_anchors, list)
+        or len(original_anchors) != len(candidate_anchors)
+    ):
+        raise RuntimeError("scoped registration changed the complete anchor allocation")
+    for original_anchor, candidate_anchor in zip(
+        original_anchors, candidate_anchors, strict=True
+    ):
+        original_source = original_anchor.get("source", {})
+        candidate_source = candidate_anchor.get("source", {})
+        original_identity = (
+            original_source.get("archive_sha256"),
+            original_source.get("member_id"),
+            original_source.get("member_sha256"),
+            original_source.get("concept_id"),
+            original_anchor.get("target", {}).get("name"),
+        )
+        candidate_identity = (
+            candidate_source.get("archive_sha256"),
+            candidate_source.get("member_id"),
+            candidate_source.get("member_sha256"),
+            candidate_source.get("concept_id"),
+            candidate_anchor.get("target", {}).get("name"),
+        )
+        if original_identity != candidate_identity:
+            raise RuntimeError("scoped registration reordered or replaced an anchor")
+        if original_identity[4] not in selected_names and original_anchor != candidate_anchor:
+            raise RuntimeError(
+                f"scoped registration modified out-of-scope anchor {original_identity[4]}"
+            )
+
+
 def propose_upper_limb_registration(
     *,
     sources: Path,
@@ -762,6 +813,7 @@ def propose_upper_limb_registration(
     source_audit_path: Path,
     worklist_path: Path,
     tendon_manifest_path: Path,
+    scope: str = "all",
 ) -> dict[str, Any]:
     try:
         import mujoco
@@ -809,7 +861,9 @@ def propose_upper_limb_registration(
 
     all_upper_names = _upper_names("r") | _upper_names("l")
     candidate_names = all_upper_names - {"clavicle_r", "clavicle_l"}
-    selected_names = candidate_names
+    selected_names = _scope_target_names(scope)
+    if not selected_names or not selected_names <= candidate_names:
+        raise RuntimeError("upper-limb registration scope selected an invalid target set")
     body_records: dict[str, dict[str, Any]] = {}
     for name in sorted(all_upper_names):
         anchors = anchors_by_name.get(name)
@@ -855,7 +909,7 @@ def propose_upper_limb_registration(
             "source_vertices": source_vertices_core,
             "fit_candidates": [],
         }
-        if name in candidate_names:
+        if name in selected_names:
             record["fit_candidates"] = _fit_candidates(
                 record["vertices"], source_vertices_core, np,
                 scale_bounds=UPPER_LIMB_UNIFORM_SCALE_BOUNDS.get(
@@ -1075,6 +1129,8 @@ def propose_upper_limb_registration(
     for side in ("r", "l"):
         label_prefix = "right" if side == "r" else "left"
         scapula_name = f"scapula_{side}"
+        if scapula_name not in selected_names:
+            continue
         target = body_records[scapula_name]["target"]
         refinement = chosen[scapula_name]["endpoint_landmark_refinement"]
         endpoint_delta_core = np.asarray(
@@ -1132,20 +1188,20 @@ def propose_upper_limb_registration(
     # an independent gap patch.
     for side in ("r", "l"):
         label_prefix = "right" if side == "r" else "left"
-        for _ in range(4):
-            transition = next(
-                record for record in human_model._NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
-                if record[0] == f"{label_prefix}_humerus_to_radius"
-            )
-            _, first_member, second_member, gate = transition
-            gap, first_point, second_point = _minimum_gap(
-                world_vertices(first_member), world_vertices(second_member), np
-            )
-            if gap <= 0.90 * gate:
-                break
-            correction = (first_point - second_point) * ((gap - 0.90 * gate) / gap)
-            world_deltas[f"radius_{side}"] += correction
-
+        if f"radius_{side}" in selected_names:
+            for _ in range(4):
+                transition = next(
+                    record for record in human_model._NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
+                    if record[0] == f"{label_prefix}_humerus_to_radius"
+                )
+                _, first_member, second_member, gate = transition
+                gap, first_point, second_point = _minimum_gap(
+                    world_vertices(first_member), world_vertices(second_member), np
+                )
+                if gap <= 0.90 * gate:
+                    break
+                correction = (first_point - second_point) * ((gap - 0.90 * gate) / gap)
+                world_deltas[f"radius_{side}"] += correction
         hand_names = _hand_names(side)
         wrist_transitions = [
             record for record in human_model._NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS
@@ -1169,8 +1225,15 @@ def propose_upper_limb_registration(
             for name in hand_names:
                 world_deltas[name] += correction
 
+    selected_member_ids = {
+        str(anchor["source"]["member_id"])
+        for anchor in registration.get("anchors", [])
+        if anchor.get("target", {}).get("name") in selected_names
+    }
     continuity = []
     for name, first_member, second_member, gate in human_model._NUMI_HUMAN_UPPER_LIMB_CONTINUITY_TRANSITIONS:
+        if scope != "all" and not ({first_member, second_member} & selected_member_ids):
+            continue
         first_vertices = world_vertices(first_member)
         second_vertices = world_vertices(second_member)
         gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
@@ -1189,6 +1252,8 @@ def propose_upper_limb_registration(
             ),
         })
     for name, first_member, second_member in human_model._NUMI_HUMAN_HAND_CONTINUITY_TRANSITIONS:
+        if scope != "all" and not ({first_member, second_member} & selected_member_ids):
+            continue
         first_vertices = world_vertices(first_member)
         second_vertices = world_vertices(second_member)
         gap, _, _ = _minimum_gap(first_vertices, second_vertices, np)
@@ -1421,8 +1486,22 @@ def propose_upper_limb_registration(
             anchor["registration"]["upper_limb_source_mesh_registration"] = receipt
         body_receipts.append({"myosim_body": name, **receipt})
 
+    _validate_scope_anchor_preservation(registration, output, selected_names)
+    changed_anchor_ordinals_0based = [
+        ordinal for ordinal, anchor in enumerate(output["anchors"])
+        if anchor.get("target", {}).get("name") in selected_names
+    ]
+    preserved_anchor_ordinals_0based = [
+        ordinal for ordinal, anchor in enumerate(registration.get("anchors", []))
+        if anchor.get("target", {}).get("name") not in selected_names
+    ]
     output["upper_limb_source_mesh_registration"] = {
         "schema": SCHEMA,
+        "scope": scope,
+        "scope_target_names": sorted(selected_names),
+        "changed_anchor_ordinals_0based": changed_anchor_ordinals_0based,
+        "preserved_anchor_ordinals_0based": preserved_anchor_ordinals_0based,
+        "out_of_scope_anchor_rule": "input_anchor_json_value_and_list_order_must_remain_identical",
         "status": "candidate_passed_source_mesh_endpoint_and_default_pose_continuity_gates",
         "inputs": {
             "registration": {"file": registration_path.name, "sha256": _sha256(registration_path)},
@@ -1474,6 +1553,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source-audit", type=Path, required=True)
     parser.add_argument("--worklist", type=Path, required=True)
     parser.add_argument("--tendon-manifest", type=Path, required=True)
+    parser.add_argument(
+        "--scope", choices=("all", "bilateral_hands"), default="all",
+        help="anchor targets to transform; bilateral_hands preserves all non-hand registrations",
+    )
     parser.add_argument("--output", type=Path, required=True)
     arguments = parser.parse_args(argv)
     try:
@@ -1483,6 +1566,7 @@ def main(argv: list[str] | None = None) -> int:
             source_audit_path=arguments.source_audit.resolve(),
             worklist_path=arguments.worklist.resolve(),
             tendon_manifest_path=arguments.tendon_manifest.resolve(),
+            scope=arguments.scope,
         )
     except (RuntimeError, OSError, ValueError) as error:
         print(f"numilab-human upper-limb registration: {error}", file=sys.stderr)
