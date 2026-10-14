@@ -23,6 +23,58 @@ class CarrierRow:
     layer: int = 1
 
 
+
+def validate_compiled_core_weights(
+    source_gids, source_weights_float64, source_core_body_indices,
+    compiled_gids, compiled_weights, compiled_core_body_indices,
+) -> dict:
+    """Prove native Float32 casts by source GID without normalizing either field.
+
+    Source doubles obey the existing 1e-12 partition guard. Compiled floats,
+    including exact promotion back to doubles for diagnostics, are compared
+    to their source casts; their row sums are not reinterpreted as source data.
+    """
+    from .resting_anatomy_verify import keyed_row_indices
+
+    source = np.asarray(source_weights_float64)
+    compiled = np.asarray(compiled_weights)
+    source_ids = np.asarray(source_gids)
+    compiled_ids = np.asarray(compiled_gids)
+    source_bodies = tuple(source_core_body_indices)
+    compiled_bodies = tuple(compiled_core_body_indices)
+    if (not source_bodies or len(source_bodies) > 24
+            or any(isinstance(body, (bool, np.bool_)) or not isinstance(body, (int, np.integer))
+                   or body < 0 for body in source_bodies)
+            or len(set(source_bodies)) != len(source_bodies)
+            or compiled_bodies != source_bodies):
+        raise ValueError("ordered core-body identities differ or are invalid")
+    if (source.dtype != np.dtype("float64")
+            or source.shape != (len(source_ids), len(source_bodies))
+            or not len(source_ids) or not np.isfinite(source).all()
+            or (source < 0).any() or (source > 1).any()
+            or np.max(np.abs(source.sum(axis=1) - 1)) > 1e-12):
+        raise ValueError("source Float64 weights must be a normalized partition")
+    if (compiled.dtype not in (np.dtype("float32"), np.dtype("float64"))
+            or compiled.shape != (len(compiled_ids), len(source_bodies))
+            or not len(compiled_ids) or not np.isfinite(compiled).all()):
+        raise ValueError("compiled weights must be aligned Float32 or exact promoted Float64")
+    # Validate both complete ID inventories before selecting the active subset.
+    keyed_row_indices(source_ids, source_ids)
+    keyed_row_indices(compiled_ids, compiled_ids)
+    rows = keyed_row_indices(source_ids, compiled_ids)
+    expected = source[rows].astype(np.float32).astype(compiled.dtype)
+    if compiled.tobytes() != expected.tobytes():
+        raise ValueError("compiled weights differ from exact keyed source Float32 casts")
+    return {
+        "source_rows": len(source_ids), "compiled_rows": len(compiled_ids),
+        "ordered_core_body_indices": [int(body) for body in source_bodies],
+        "source_partition_max_error": float(np.max(np.abs(source.sum(axis=1) - 1))),
+        "compiled_partition_max_error_diagnostic":
+            float(np.max(np.abs(compiled.astype(np.float64).sum(axis=1) - 1))),
+        "compiled_rows_equal_keyed_source_float32_casts": True,
+        "source_guard_unchanged": True, "weights_modified": False,
+    }
+
 def encode_carriers(
     rows: list[CarrierRow], *, registration_fingerprint: int, source_digest: bytes
 ) -> tuple[bytes, list[dict], dict]:
@@ -66,7 +118,7 @@ def encode_carriers(
         # Validate the coordinates actually serialized, after Float32 rounding.
         # A nonzero rational/Float64 source triangle can collapse in NHTISS.
         # Reuse the exact dyadic predicate; no geometric tolerance or repair.
-        from .cardiac_cavity_intersections import float32_point_lattice_key, _records
+        from .cardiac_cavity_intersections import _records, float32_point_lattice_key
         _records([float32_point_lattice_key(tuple(float(x) for x in point))
                   for point in v[:, :3]], f.tolist())
         require(isinstance(row.binding_bytes, bytes) and len(row.binding_bytes) % 36 == 0,

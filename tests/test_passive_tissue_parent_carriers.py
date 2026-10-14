@@ -1,19 +1,49 @@
 """Load-only carrier regression checks; these do not qualify anatomy."""
 import dataclasses
-from pathlib import Path
 import struct
 import tempfile
 import unittest
+from pathlib import Path
 
 import numpy as np
 
 from numilab_human.passive_attachment_composition import (
-    _read_nhtiss4, _row_slices, _biceps_row_arrays,
+    _biceps_row_arrays,
+    _read_nhtiss4,
+    _row_slices,
 )
-from numilab_human.passive_tissue_parent_carriers import CarrierRow, encode_carriers
+from numilab_human.passive_tissue_parent_carriers import (
+    CarrierRow,
+    encode_carriers,
+    validate_compiled_core_weights,
+)
 
 
 class CarrierTests(unittest.TestCase):
+    def test_keyed_compiled_partition_keeps_source_and_cast_guards_separate(self):
+        gids = np.array([30, 10, 20], dtype=np.uint64)
+        source = np.array([[.2, .3, .5], [.1, .2, .7], [.6, .2, .2]], dtype=np.float64)
+        active = np.array([20, 30], dtype=np.uint64)
+        compiled = source[[2, 0]].astype(np.float32)
+        for field in (compiled, compiled.astype(np.float64)):
+            proof = validate_compiled_core_weights(gids, source, [91, 92, 93],
+                                                    active, field, [91, 92, 93])
+            self.assertTrue(proof["compiled_rows_equal_keyed_source_float32_casts"])
+            self.assertGreater(proof["compiled_partition_max_error_diagnostic"], 1e-12)
+            self.assertFalse(proof["weights_modified"])
+        with self.assertRaisesRegex(ValueError, "source Float64"):
+            validate_compiled_core_weights(gids, source.astype(np.float32).astype(np.float64),
+                                           [91, 92, 93], active, compiled, [91, 92, 93])
+        with self.assertRaisesRegex(ValueError, "exact keyed"):
+            validate_compiled_core_weights(gids, source, [91, 92, 93],
+                                           active, compiled[::-1].copy(), [91, 92, 93])
+        with self.assertRaisesRegex(ValueError, "core-body"):
+            validate_compiled_core_weights(gids, source, [91, 92, 93],
+                                           active, compiled, [93, 92, 91])
+        with self.assertRaisesRegex(ValueError, "duplicate GID"):
+            validate_compiled_core_weights(gids, source, [91, 92, 93],
+                                           np.array([20, 20]), compiled, [91, 92, 93])
+
     def row(self, sid=132, normal=1):
         v = np.array([[0, 0, 0, 0, 0, normal],
                       [1, 0, 0, 0, 0, normal],
@@ -107,9 +137,8 @@ class CarrierTests(unittest.TestCase):
         tiny[:, 0] = 1e-100
         cases.append((dataclasses.replace(r, weights=tiny), "underflows"))
         for bad, message in cases:
-            with self.subTest(message=message):
-                with self.assertRaisesRegex(ValueError, message):
-                    self.encode([bad])
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                self.encode([bad])
         changed_bindings = struct.pack("<I8f", 99, 0, 0, 0, 0, 0, 0, 1, 1)+r.binding_bytes[36:]
         with self.assertRaisesRegex(ValueError, "canonical binding"):
             self.encode([r, dataclasses.replace(self.row(134), binding_bytes=changed_bindings)])
@@ -118,7 +147,7 @@ class CarrierTests(unittest.TestCase):
         r = self.row()
         w = np.zeros_like(r.weights)
         w[:, 5] = 1
-        payload, surfaces, proof = self.encode([dataclasses.replace(r, weights=w)])
+        _payload, surfaces, proof = self.encode([dataclasses.replace(r, weights=w)])
         self.assertEqual(proof["source_vertices"], 3)
         self.assertEqual(surfaces[0]["vertices"][2], [[0, 132, 2, 1.0]])
 
