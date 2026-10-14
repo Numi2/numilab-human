@@ -85,6 +85,19 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         surface = prepare_surface((51011, 7), p, f)
         self.assertGreater(surface.self_audit()["count"], 0)
 
+    def test_nonembedded_target_retains_actual_self_witnesses(self):
+        target = prepare_surface((51010, 313), np.concatenate([tetra(), tetra(offset=.2)]),
+                                 np.concatenate([FACES, FACES + 4]))
+        source = prepare_surface((51011, 7), tetra(.03, .05), FACES)
+        result = audit_surface_pair(source, target)
+        self.assertEqual(result["triangle_pair_count"], 0)
+        self.assertFalse(result["passed"])
+        row = result["containment"][0]
+        self.assertEqual(row["status"], "not_checked_nonembedded_target")
+        self.assertGreater(row["target_self_audit"]["count"], 0)
+        self.assertEqual(row["target_self_audit"], target.self_audit())
+        self.assertEqual(row["target_preparation"]["identity"], [51010, 313])
+
     def test_contained_mesh_fails_without_triangle_crossings(self):
         outer = prepare_surface((51004, 15), tetra(), FACES)
         inner = prepare_surface((51005, 132), tetra(.1, .1), FACES)

@@ -161,8 +161,10 @@ def _overlap(first, second):
 def _contained_components(source, target):
     if not target.closed:
         return {"status": "not_checked_open_target", "inside_component_witnesses": []}
-    if target.self_audit()["count"]:
-        return {"status": "not_checked_nonembedded_target", "inside_component_witnesses": []}
+    self_result = target.self_audit()
+    if self_result["count"]:
+        return {"status": "not_checked_nonembedded_target", "inside_component_witnesses": [],
+                "target_self_audit": self_result, "target_preparation": target.diagnostics()}
     prepared = target.meter_index()
     witnesses = []
     for component in source.quotient_topology["face_components"]:
