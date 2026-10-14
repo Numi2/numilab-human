@@ -287,6 +287,119 @@ def test_baseline_section_is_transported_with_source_vertex_ancestry():
             ["candidate_vs_baseline"]["passed"])
 
 
+
+def _closed_extruded_polygon_section(points_xy):
+    points_xy = np.asarray(points_xy, dtype="<f4")
+    count = len(points_xy)
+    bottom = np.column_stack((points_xy, np.full(count, -1.0, dtype="<f4")))
+    top = np.column_stack((points_xy, np.full(count, 1.0, dtype="<f4")))
+    positions = np.concatenate((bottom, top), axis=0)
+    faces = []
+    for index in range(count):
+        following = (index + 1) % count
+        a, b = index, following
+        c, d = following + count, index + count
+        faces.extend(([a, b, c], [a, c, d]))
+    bottom_center = len(positions)
+    top_center = bottom_center + 1
+    positions = np.concatenate((
+        positions,
+        np.asarray([[0.0, 0.0, -1.0], [0.0, 0.0, 1.0]], dtype="<f4"),
+    ), axis=0)
+    for index in range(count):
+        following = (index + 1) % count
+        faces.extend(([bottom_center, following, index],
+                      [top_center, count + index, count + following]))
+    return positions, np.asarray(faces, dtype="<u4")
+
+
+def test_section_topology_keeps_distinct_nearby_edge_hits_and_tiny_valid_segment():
+    delta = float(np.float32(-1.0 + 1.0e-7) - np.float32(-1.0))
+    polygon = [(-1, -1), (1, -1), (1, 1), (-1, 1), (-1, -1 + 1.0e-7)]
+    positions, faces = _closed_extruded_polygon_section(polygon)
+
+    report = _section_loops(
+        positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+
+    assert report["passed"]
+    assert report["section_node_count"] == 2 * len(polygon)
+    assert report["section_edge_intersection_count"] == 2 * len(polygon)
+    assert report["minimum_section_segment_length_m"] == pytest.approx(delta / 2.0, abs=1e-12)
+    assert report["minimum_section_segment_length_m"] < report["coordinate_ulp_tolerance_m"]
+    assert report["minimum_feret_width_m"] > 1.0
+
+
+def test_section_topology_quotients_exact_coordinate_seam_duplicates():
+    positions, faces = _closed_cylinder(-1.0, 1.0, sectors=8, axial=4)
+    duplicate_id = len(positions)
+    duplicate_source_id = 0
+    positions = np.concatenate((positions, positions[duplicate_source_id:duplicate_source_id + 1]))
+    faces = faces.copy()
+    # Rewire a single topological incident face to an exactly equal seam copy.
+    incident = int(np.flatnonzero(np.any(faces == duplicate_source_id, axis=1))[0])
+    faces[incident, np.flatnonzero(faces[incident] == duplicate_source_id)[0]] = duplicate_id
+
+    report = _section_loops(
+        positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+
+    assert report["passed"]
+    assert report["exact_coordinate_duplicate_vertex_count"] == 1
+    assert report["coplanar_edge_count"] == 8
+
+
+def test_section_topology_accepts_coplanar_ring_edges_crossed_from_both_sides():
+    positions, faces = _closed_cylinder(-1.0, 1.0, sectors=8, axial=4)
+
+    report = _section_loops(
+        positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+
+    assert report["passed"]
+    assert report["coplanar_edge_count"] == 8
+    assert report["loop_count"] == 1
+
+
+def test_section_topology_reports_coplanar_face_and_tangent_degeneracies():
+    coplanar_positions = np.asarray(
+        [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="<f4")
+    tetra_faces = np.asarray(
+        [[0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3]], dtype="<u4")
+    coplanar = _section_loops(
+        coplanar_positions, tetra_faces, [0, 0, 0], [0, 0, 1])
+    assert not coplanar["passed"]
+    assert coplanar["reason"] == "section plane contains a coplanar source face"
+    assert coplanar["coplanar_face_count"] == 1
+
+    tangent_vertex_positions = np.asarray(
+        [[0, 0, 0], [1, 0, -1], [0, 1, -1], [0, 0, -1]], dtype="<f4")
+    tangent_vertex = _section_loops(
+        tangent_vertex_positions, tetra_faces, [0, 0, 0], [0, 0, 1])
+    assert not tangent_vertex["passed"]
+    assert tangent_vertex["reason"] == "section plane touches an isolated tangent source vertex"
+    assert tangent_vertex["isolated_tangent_vertex_ids"] == [0]
+
+    tangent_edge_positions = np.asarray(
+        [[0, 0, 0], [1, 0, 0], [0, 1, -1], [0, 0, -1]], dtype="<f4")
+    tangent_edge = _section_loops(
+        tangent_edge_positions, tetra_faces, [0, 0, 0], [0, 0, 1])
+    assert not tangent_edge["passed"]
+    assert tangent_edge["reason"] == "section plane is tangent along a coplanar source edge"
+    assert tangent_edge["incident_side_signs"] == [-1, -1]
+
+
+def test_section_topology_is_translation_stable_for_binary_float32_offsets():
+    positions, faces = _closed_cylinder(-1.0, 1.0, sectors=8, axial=8)
+    offset = np.asarray([2.0 ** -10, -(2.0 ** -11), 2.0 ** -10], dtype="<f4")
+    translated = np.ascontiguousarray(positions + offset, dtype="<f4")
+
+    report = _section_loops(
+        translated, faces, [float(offset[0]), float(offset[1]), float(offset[2])],
+        [0.0, 0.0, 1.0])
+
+    assert report["passed"]
+    assert report["loop_count"] == 1
+    assert report["section_degree_histogram"] == {"2": report["section_node_count"]}
+
+
 def test_derived_boolean_sections_use_mesh64_without_weakening_source_float32_contract():
     manifold3d = _manifold3d()
     assert hasattr(manifold3d, "Mesh64")

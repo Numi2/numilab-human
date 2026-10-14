@@ -566,51 +566,214 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False):
     triangles = _faces(faces, name="section surface", vertex_count=len(points))
     center = np.asarray(center, dtype=np.float64)
     tangent = np.asarray(tangent, dtype=np.float64)
-    tangent /= np.linalg.norm(tangent)
+    _require(center.shape == (3,) and np.isfinite(center).all()
+             and tangent.shape == (3,) and np.isfinite(tangent).all()
+             and float(np.linalg.norm(tangent)) > 0.0,
+             "section plane center and tangent must be finite XYZ values")
+    tangent = tangent / np.linalg.norm(tangent)
     helper = np.eye(3)[int(np.argmin(np.abs(tangent)))]
     u = np.cross(tangent, helper)
     u /= np.linalg.norm(u)
     v = np.cross(tangent, u)
+
+    # Quotient only bitwise-equal source coordinates before deriving topological
+    # section identities. This rejoins duplicated seam vertices without changing
+    # the input arrays or merging merely-nearby anatomical points.
+    canonical_by_coordinate = {}
+    canonical_source_ids = np.empty(len(points), dtype=np.int64)
+    canonical_points = []
+    for source_id, point in enumerate(points):
+        coordinate = tuple(0.0 if float(value) == 0.0 else float(value)
+                           for value in point)
+        canonical_id = canonical_by_coordinate.get(coordinate)
+        if canonical_id is None:
+            canonical_id = len(canonical_points)
+            canonical_by_coordinate[coordinate] = canonical_id
+            canonical_points.append(np.asarray(point, dtype=np.float64))
+        canonical_source_ids[source_id] = canonical_id
+    canonical_points = np.ascontiguousarray(canonical_points, dtype=np.float64)
+    canonical_triangles = canonical_source_ids[triangles]
+    _require(not np.any(
+        (canonical_triangles[:, 0] == canonical_triangles[:, 1])
+        | (canonical_triangles[:, 1] == canonical_triangles[:, 2])
+        | (canonical_triangles[:, 2] == canonical_triangles[:, 0])),
+        "section surface has a triangle degenerate after exact-coordinate quotient")
+
     world_scale = max(1.0, float(np.max(np.abs(points))))
     coordinate_precision = np.finfo(points.dtype)
     ulp = max(float(np.max(np.abs(np.spacing(points)))),
               float(coordinate_precision.eps) * world_scale)
     tolerance = max(ulp * 2.0, float(coordinate_precision.tiny))
+    signed_distances = (canonical_points - center) @ tangent
+    signs = np.zeros(len(canonical_points), dtype=np.int8)
+    signs[signed_distances > tolerance] = 1
+    signs[signed_distances < -tolerance] = -1
+
     segments = set()
-    projected_points = {}
-    for face in triangles:
-        tri = points[face].astype(np.float64)
-        distances = (tri - center) @ tangent
-        hits = []
-        for edge in range(3):
-            a, b = edge, (edge + 1) % 3
-            da, db = float(distances[a]), float(distances[b])
-            if abs(da) <= tolerance:
-                hits.append(tri[a])
-            if (da < -tolerance and db > tolerance) or (da > tolerance and db < -tolerance):
-                fraction = da / (da - db)
-                hits.append(tri[a] + fraction * (tri[b] - tri[a]))
-        unique = []
-        for hit in hits:
-            if not any(float(np.linalg.norm(hit - prior)) <= tolerance for prior in unique):
-                unique.append(hit)
-        if len(unique) != 2:
-            continue
-        nodes = []
-        for hit in unique:
-            xy = (float(np.dot(hit - center, u)), float(np.dot(hit - center, v)))
-            key = (int(round(xy[0] / tolerance)), int(round(xy[1] / tolerance)))
-            projected_points.setdefault(key, np.asarray(xy, dtype=np.float64))
-            nodes.append(key)
-        if nodes[0] != nodes[1]:
-            segments.add(tuple(sorted(nodes)))
+    node_positions = {}
+    tangent_vertex_ids = set()
+    coplanar_edge_incidence = {}
+    coplanar_face_ids = []
+    face_signs = signs[canonical_triangles]
+    for face_index, (face, face_sign) in enumerate(zip(canonical_triangles, face_signs)):
+        zero = np.flatnonzero(face_sign == 0)
+        if len(zero) == 3:
+            coplanar_face_ids.append(face_index)
+        elif len(zero) == 2:
+            zero_ids = tuple(sorted(int(face[index]) for index in zero))
+            third = next(index for index in range(3) if index not in zero)
+            coplanar_edge_incidence.setdefault(zero_ids, []).append(
+                (face_index, int(face_sign[third])))
+    if coplanar_face_ids:
+        return {
+            "passed": False, "loop_count": 0,
+            "reason": "section plane contains a coplanar source face",
+            "segment_count": 0, "section_node_count": 0,
+            "coplanar_face_count": len(coplanar_face_ids),
+            "coplanar_face_ids": coplanar_face_ids[:32],
+            "coordinate_dtype": str(points.dtype),
+            "coordinate_ulp_tolerance_m": tolerance,
+        }
+    for edge, incidents in sorted(coplanar_edge_incidence.items()):
+        if len(incidents) != 2:
+            return {
+                "passed": False, "loop_count": 0,
+                "reason": "coplanar section edge does not have exactly two incident faces",
+                "segment_count": 0, "section_node_count": 0,
+                "coplanar_edge_count": len(coplanar_edge_incidence),
+                "coplanar_edge_vertex_ids": list(edge),
+                "coplanar_edge_incident_face_count": len(incidents),
+                "coordinate_dtype": str(points.dtype),
+                "coordinate_ulp_tolerance_m": tolerance,
+            }
+        if incidents[0][1] == incidents[1][1]:
+            return {
+                "passed": False, "loop_count": 0,
+                "reason": "section plane is tangent along a coplanar source edge",
+                "segment_count": 0, "section_node_count": 0,
+                "coplanar_edge_count": len(coplanar_edge_incidence),
+                "coplanar_edge_vertex_ids": list(edge),
+                "coplanar_edge_incident_face_ids": [item[0] for item in incidents],
+                "incident_side_signs": [item[1] for item in incidents],
+                "coordinate_dtype": str(points.dtype),
+                "coordinate_ulp_tolerance_m": tolerance,
+            }
+
+    def vertex_node(vertex_id):
+        key = ("v", int(vertex_id))
+        node_positions.setdefault(key, canonical_points[int(vertex_id)])
+        return key
+
+    edge_intersections = {}
+
+    def crossing_edge_node(first_id, second_id):
+        edge = tuple(sorted((int(first_id), int(second_id))))
+        cached = edge_intersections.get(edge)
+        if cached is not None:
+            return cached[0]
+        first, second = edge
+        first_sign, second_sign = int(signs[first]), int(signs[second])
+        _require(first_sign * second_sign == -1,
+                 "section edge intersection lacks opposite signed endpoints")
+        first_distance = float(signed_distances[first])
+        second_distance = float(signed_distances[second])
+        fraction = first_distance / (first_distance - second_distance)
+        point = canonical_points[first] + fraction * (
+            canonical_points[second] - canonical_points[first])
+        key = ("e", edge[0], edge[1])
+        edge_intersections[edge] = (key, np.asarray(point, dtype=np.float64))
+        node_positions.setdefault(key, edge_intersections[edge][1])
+        return key
+
+    def add_segment(first, second):
+        # Distinct source edges stay distinct even when their geometric
+        # intersections are closer than the Float32 coordinate tolerance.
+        if first != second:
+            segments.add(tuple(sorted((first, second))))
+
+    for face, face_sign in zip(canonical_triangles, face_signs):
+        zero = np.flatnonzero(face_sign == 0)
+        if len(zero) == 2:
+            first, second = (vertex_node(int(face[index])) for index in zero)
+            add_segment(first, second)
+        elif len(zero) == 1:
+            on_plane_index = int(zero[0])
+            others = [index for index in range(3) if index != on_plane_index]
+            first_index, second_index = others
+            first_sign, second_sign = int(face_sign[first_index]), int(face_sign[second_index])
+            if first_sign == second_sign:
+                tangent_vertex_ids.add(int(face[on_plane_index]))
+            else:
+                first = vertex_node(int(face[on_plane_index]))
+                second = crossing_edge_node(
+                    int(face[first_index]), int(face[second_index]))
+                add_segment(first, second)
+        else:
+            crossing_edges = []
+            for edge_index in range(3):
+                first_index, second_index = edge_index, (edge_index + 1) % 3
+                if int(face_sign[first_index]) * int(face_sign[second_index]) == -1:
+                    crossing_edges.append(crossing_edge_node(
+                        int(face[first_index]), int(face[second_index])))
+            if len(crossing_edges) == 2:
+                add_segment(crossing_edges[0], crossing_edges[1])
+            else:
+                _require(len(crossing_edges) == 0,
+                         "section triangle has an unsupported sign arrangement")
+
     adjacency = {}
     for first, second in segments:
         adjacency.setdefault(first, set()).add(second)
         adjacency.setdefault(second, set()).add(first)
+    isolated_tangent_vertices = sorted(
+        vertex for vertex in tangent_vertex_ids if ("v", vertex) not in adjacency)
+
+    def graph_details():
+        degree_histogram = {}
+        for neighbors in adjacency.values():
+            degree = str(len(neighbors))
+            degree_histogram[degree] = degree_histogram.get(degree, 0) + 1
+        node_kind_counts = {}
+        for key in adjacency:
+            node_kind_counts[key[0]] = node_kind_counts.get(key[0], 0) + 1
+        segment_lengths = [
+            float(np.linalg.norm(node_positions[first] - node_positions[second]))
+            for first, second in segments
+        ]
+        return {
+            "section_node_count": len(adjacency),
+            "minimum_section_segment_length_m": min(segment_lengths, default=None),
+            "section_degree_histogram": degree_histogram,
+            "section_node_kind_counts": node_kind_counts,
+            "section_edge_intersection_count": len(edge_intersections),
+            "exact_coordinate_quotient_vertex_count": len(canonical_points),
+            "exact_coordinate_duplicate_vertex_count": len(points) - len(canonical_points),
+            "coplanar_edge_count": len(coplanar_edge_incidence),
+            "isolated_tangent_vertex_ids": isolated_tangent_vertices[:32],
+            "coordinate_dtype": str(points.dtype),
+            "coordinate_ulp_tolerance_m": tolerance,
+        }
+
+    details = graph_details()
+    if isolated_tangent_vertices:
+        return {
+            "passed": False, "loop_count": 0,
+            "reason": "section plane touches an isolated tangent source vertex",
+            "segment_count": len(segments), **details,
+        }
     if not adjacency or any(len(neighbors) != 2 for neighbors in adjacency.values()):
-        return {"passed": False, "loop_count": 0, "reason": "section graph is open or branched",
-                "segment_count": len(segments), "tolerance_m": tolerance}
+        return {
+            "passed": False, "loop_count": 0,
+            "reason": "section graph is open or branched",
+            "segment_count": len(segments), **details,
+        }
+
+    projected_points = {}
+    for key, point in node_positions.items():
+        projected_points[key] = np.asarray([
+            float(np.dot(point - center, u)),
+            float(np.dot(point - center, v)),
+        ], dtype=np.float64)
     unused = set(segments)
     loops = []
     while unused:
@@ -635,20 +798,26 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False):
             if len(loop) > len(adjacency):
                 break
         if not closed:
-            return {"passed": False, "loop_count": len(loops),
-                    "reason": "section cycle did not close",
-                    "segment_count": len(segments), "tolerance_m": tolerance}
+            return {
+                "passed": False, "loop_count": len(loops),
+                "reason": "section cycle did not close",
+                "segment_count": len(segments), **details,
+            }
         if len(loop) >= 3 and len(set(loop)) == len(loop):
             loops.append(np.asarray([projected_points[key] for key in loop],
                                     dtype=np.float64))
         else:
-            return {"passed": False, "loop_count": len(loops),
-                    "reason": "section cycle did not close",
-                    "segment_count": len(segments), "tolerance_m": tolerance}
+            return {
+                "passed": False, "loop_count": len(loops),
+                "reason": "section cycle did not close",
+                "segment_count": len(segments), **details,
+            }
     if len(loops) != 1:
-        return {"passed": False, "loop_count": len(loops),
-                "reason": "section must have exactly one closed loop",
-                "segment_count": len(segments), "tolerance_m": tolerance}
+        return {
+            "passed": False, "loop_count": len(loops),
+            "reason": "section must have exactly one closed loop",
+            "segment_count": len(segments), **details,
+        }
     loop = loops[0]
     area = abs(float(np.dot(loop[:, 0], np.roll(loop[:, 1], -1))
                      - np.dot(loop[:, 1], np.roll(loop[:, 0], -1)))) / 2.0
@@ -668,8 +837,9 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False):
         "coordinate_ulp_tolerance_m": tolerance,
         "positive_measure_floor_m": positive_floor,
         "reason": None if passed else "cross-section area or minimum Feret width collapsed",
+        "segment_count": len(segments),
+        **details,
     }
-
 
 def _section_comparison(candidate, baseline):
     _require(candidate["passed"] and baseline["passed"],
