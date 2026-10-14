@@ -1,12 +1,12 @@
 import json
 
 import numpy as np
+from numilab_human import resting_brachiocephalic_source007 as source007
+
 from tests.test_resting_brachiocephalic_geometry_gate import (
     _closed_cylinder,
     _manifold3d,
 )
-
-from numilab_human import resting_brachiocephalic_source007 as source007
 
 av = source007._load_central_p6()
 from numilab_human import resting_brachiocephalic_3d_junction as junction
