@@ -1,0 +1,1977 @@
+{
+  "actual_capture_inputs": {
+    "anatomy_receipt_path": {
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-manifest-recovery-004/registered-resting-scene-source-preparation-004/resting-anatomy-receipt.json",
+      "sha256": "84d53a9ba9021df1a13327c4beb9f3d2845dcf4cc1d40819d247402f27512e4e"
+    },
+    "capture_pack_path": {
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/registered-resting-head-body-native-emission-diagnostic-007/native-run/accepted-geometry/step-0.mrvpack",
+      "sha256": "fffd226819b8fe59e1b4ca0d6273a035347851c399b952bb3dae810bef504f89"
+    },
+    "capture_receipt_path": {
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/registered-resting-head-body-native-emission-diagnostic-007/native-run/accepted-geometry/step-0.receipt.json",
+      "sha256": "74113429ce6141258665ad7652cf4873954e66a97503e57db5ebec0a4ceb822c"
+    }
+  },
+  "all_target_geometry_predicates_run": false,
+  "anatomical_admission": false,
+  "bound_link_count": 15,
+  "bound_network_row_count": 17,
+  "capture_input_bundle_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-017-registered007-gid-preflight-001-inputs.json",
+  "capture_input_bundle_sha256": "a8e1aca612221a75360bd7ff6953c6aaff9ea66c846c08fe37658d19b6a64942",
+  "compatibility_report_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vascular028-shared-verifier-compatibility-002/report.json",
+  "compatibility_report_sha256": "1ae155b8bf0d28ae6802279920ce0117ac26d86f0e8ebaf7d0252b54fdaeec6a",
+  "current_code_pins": {
+    "resting_anatomy_verify.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_anatomy_verify.py",
+      "sha256": "b60f17eeda39b8a0143bf13cdcd1e89c7af3460a074eff85314a3668a2e6b899"
+    },
+    "resting_brachiocephalic_3d_junction.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_3d_junction.py",
+      "sha256": "5d3b10f68f38072f749f3eedc359681cb5e7ae2fcafef5e0743ced2489be64f6"
+    },
+    "resting_brachiocephalic_current_capture_network_preparation.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_current_capture_network_preparation.py",
+      "sha256": "6c78bba2e4e77e6fed74167afab8fa9972f3548e795b5734830a1a5cae964789"
+    },
+    "resting_brachiocephalic_current_capture_network_runner.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_current_capture_network_runner.py",
+      "sha256": "429042cd230dca3d27e8d77ef243311ea9f6088d0cb9b38faabc2797afb0667b"
+    },
+    "resting_brachiocephalic_geometry_gate.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_geometry_gate.py",
+      "sha256": "b012b79c26e0413091ef33848561347a99d091e6641ac8faae109051e8e622e7"
+    },
+    "resting_pleura_proxy.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_pleura_proxy.py",
+      "sha256": "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683"
+    }
+  },
+  "current_verifier_sha256": "b60f17eeda39b8a0143bf13cdcd1e89c7af3460a074eff85314a3668a2e6b899",
+  "elapsed_seconds": 10.907554749996052,
+  "execution_commit": {
+    "dirty": true,
+    "head": "ee882e780c1bf5f9bdae9401494be760a5ac2a11",
+    "status_lines": [
+      " M src/numilab_human/resting_brachiocephalic_geometry_gate.py",
+      " M tests/test_resting_brachiocephalic_geometry_gate.py"
+    ]
+  },
+  "frozen_028_preflight_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-028-current-owner-baseline-runner-preflight-001/source-and-capture-preflight.json",
+  "frozen_028_preflight_sha256": "00028b1f448f65e6e38d380c4922e7e1c66cb12b2da0923838fbe816c093bcfc",
+  "frozen_028_report_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-028-current-owner-baseline-runner-preflight-001/network-gate-report.json",
+  "frozen_028_report_sha256": "8435c2ccf0808236839ff6f5011c2b5c2a21f90d0dcae44623971915d1adef90",
+  "native_or_gpu_work_performed": false,
+  "passed": true,
+  "per_link": [
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "a8d87ba6b4a0e045d634392f041372a7f2205f86de494c3e8e50edd5d70c5358",
+          "baseline_station_witness_point_count": 51,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999996606081353,
+            "minimum_feret_width": 0.9999999636446268
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 7
+        },
+        "target": {
+          "baseline_interface_point_sha256": "a8d87ba6b4a0e045d634392f041372a7f2205f86de494c3e8e50edd5d70c5358",
+          "baseline_station_witness_point_count": 51,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999995137912984,
+            "minimum_feret_width": 0.9999986449834405
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 471
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 51,
+          "exact_interface_points_sha256": "a8d87ba6b4a0e045d634392f041372a7f2205f86de494c3e8e50edd5d70c5358",
+          "frozen_face_pairs_sha256": "645fc93b0d0cbb5db81d0468726b50841c08650d66c2ec2b25f7c8a7324754c7"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 51,
+          "exact_interface_points_sha256": "a8d87ba6b4a0e045d634392f041372a7f2205f86de494c3e8e50edd5d70c5358",
+          "frozen_face_pairs_sha256": "645fc93b0d0cbb5db81d0468726b50841c08650d66c2ec2b25f7c8a7324754c7"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 51,
+          "exact_interface_points_sha256": "07d5ed103c9b0a6407cc9d54fa313237dd1d97c30e967cdfbe037e1b751654a3",
+          "frozen_face_pairs_sha256": "645fc93b0d0cbb5db81d0468726b50841c08650d66c2ec2b25f7c8a7324754c7"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 51,
+          "exact_interface_points_sha256": "07d5ed103c9b0a6407cc9d54fa313237dd1d97c30e967cdfbe037e1b751654a3",
+          "frozen_face_pairs_sha256": "645fc93b0d0cbb5db81d0468726b50841c08650d66c2ec2b25f7c8a7324754c7"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "bd1b68b7ee6da377fd5b6a7d67339a2f1063b6cbef866e24149e1dad66083da8",
+          "identity": [
+            51011,
+            7
+          ],
+          "positions_f32_sha256": "f145fe714885c0c2b3294ba33cc18ce29a75c100ddb9ea13c4a7a2255f76920f",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "c83466b48ba442b8ef9751f2c4d277a2230953eccdd4c1957af10113b1bd87ec"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "bd1b68b7ee6da377fd5b6a7d67339a2f1063b6cbef866e24149e1dad66083da8",
+          "identity": [
+            51011,
+            7
+          ],
+          "positions_f32_sha256": "b02079f5db3a3f9e16d37dac8d3552188669a0ffeb7e23ae6e7f9064962e4a98",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "c83466b48ba442b8ef9751f2c4d277a2230953eccdd4c1957af10113b1bd87ec"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "e0a7f705c8859dccc85b1fa6ed183cd1f664a537e34fb340f6a9a2db6e9bc678",
+          "identity": [
+            51011,
+            471
+          ],
+          "positions_f32_sha256": "8b4628a1618078da9d4a1c000f725ec2ad2b971f4f6dee649b6c022b9a5a3bd7",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ab2fdc38de5dc684ada420ef0125f59926884556eed3019da3634eaed3db8e72"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "e0a7f705c8859dccc85b1fa6ed183cd1f664a537e34fb340f6a9a2db6e9bc678",
+          "identity": [
+            51011,
+            471
+          ],
+          "positions_f32_sha256": "bfae3ff37a30f89ded3e7da79418e89f917db02940360bf51d7abcae11b85a6f",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ab2fdc38de5dc684ada420ef0125f59926884556eed3019da3634eaed3db8e72"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          7
+        ],
+        [
+          51011,
+          471
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "fd1f07be959ac742b01c76548700dfee2592b04839ae254da3dd689fc2ff0ac9",
+          "baseline_station_witness_point_count": 136,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999997124976415,
+            "minimum_feret_width": 0.9999987714894613
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 471
+        },
+        "target": {
+          "baseline_interface_point_sha256": "fd1f07be959ac742b01c76548700dfee2592b04839ae254da3dd689fc2ff0ac9",
+          "baseline_station_witness_point_count": 136,
+          "candidate_to_baseline_ratios": {
+            "area": 1.000001173157043,
+            "minimum_feret_width": 1.0000039204345226
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 475
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 136,
+          "exact_interface_points_sha256": "fd1f07be959ac742b01c76548700dfee2592b04839ae254da3dd689fc2ff0ac9",
+          "frozen_face_pairs_sha256": "c5387df0952e81e2f3cc764102082b03a6bab3bbe61767994914e4fab253419e"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 136,
+          "exact_interface_points_sha256": "fd1f07be959ac742b01c76548700dfee2592b04839ae254da3dd689fc2ff0ac9",
+          "frozen_face_pairs_sha256": "c5387df0952e81e2f3cc764102082b03a6bab3bbe61767994914e4fab253419e"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 136,
+          "exact_interface_points_sha256": "d19d7ea8afd737440ef3bd29df830186210f896a2af474083b8bb57140255337",
+          "frozen_face_pairs_sha256": "c5387df0952e81e2f3cc764102082b03a6bab3bbe61767994914e4fab253419e"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 136,
+          "exact_interface_points_sha256": "d19d7ea8afd737440ef3bd29df830186210f896a2af474083b8bb57140255337",
+          "frozen_face_pairs_sha256": "c5387df0952e81e2f3cc764102082b03a6bab3bbe61767994914e4fab253419e"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "e0a7f705c8859dccc85b1fa6ed183cd1f664a537e34fb340f6a9a2db6e9bc678",
+          "identity": [
+            51011,
+            471
+          ],
+          "positions_f32_sha256": "8b4628a1618078da9d4a1c000f725ec2ad2b971f4f6dee649b6c022b9a5a3bd7",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ab2fdc38de5dc684ada420ef0125f59926884556eed3019da3634eaed3db8e72"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "e0a7f705c8859dccc85b1fa6ed183cd1f664a537e34fb340f6a9a2db6e9bc678",
+          "identity": [
+            51011,
+            471
+          ],
+          "positions_f32_sha256": "bfae3ff37a30f89ded3e7da79418e89f917db02940360bf51d7abcae11b85a6f",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ab2fdc38de5dc684ada420ef0125f59926884556eed3019da3634eaed3db8e72"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+          "identity": [
+            51011,
+            475
+          ],
+          "positions_f32_sha256": "f927a664df9bbd1369335b2085d7101effaa4d6fe25b5bd22648d5d9a2ef5680",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "df9f6aae83dcb8c2dbd9880ebf31eeffd8a82b7c70bd9ec4ef9a1c9d902b7581"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+          "identity": [
+            51011,
+            475
+          ],
+          "positions_f32_sha256": "c82068cfd5fd351dfef8db6eb68cb84f3f8edcf67ac51dc55b5a1f0c20dd89be",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "df9f6aae83dcb8c2dbd9880ebf31eeffd8a82b7c70bd9ec4ef9a1c9d902b7581"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          471
+        ],
+        [
+          51011,
+          475
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "39b12e38e4891e95481fd161d56da5684e90225dca731310e62198101cd3b486",
+          "baseline_station_witness_point_count": 160,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999995344151785,
+            "minimum_feret_width": 1.0000000113060117
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 475
+        },
+        "target": {
+          "baseline_interface_point_sha256": "39b12e38e4891e95481fd161d56da5684e90225dca731310e62198101cd3b486",
+          "baseline_station_witness_point_count": 160,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999997698660423,
+            "minimum_feret_width": 0.9999989956473162
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 479
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 160,
+          "exact_interface_points_sha256": "39b12e38e4891e95481fd161d56da5684e90225dca731310e62198101cd3b486",
+          "frozen_face_pairs_sha256": "94ede8fdce96e0ea721b9c66b84d58094005647ae0a705551ea3d629bb83211e"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 160,
+          "exact_interface_points_sha256": "39b12e38e4891e95481fd161d56da5684e90225dca731310e62198101cd3b486",
+          "frozen_face_pairs_sha256": "94ede8fdce96e0ea721b9c66b84d58094005647ae0a705551ea3d629bb83211e"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 160,
+          "exact_interface_points_sha256": "7126394a088563a16d25c69c0d2a1196302f8c0d335f29d76573bd097af5f70a",
+          "frozen_face_pairs_sha256": "94ede8fdce96e0ea721b9c66b84d58094005647ae0a705551ea3d629bb83211e"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 160,
+          "exact_interface_points_sha256": "7126394a088563a16d25c69c0d2a1196302f8c0d335f29d76573bd097af5f70a",
+          "frozen_face_pairs_sha256": "94ede8fdce96e0ea721b9c66b84d58094005647ae0a705551ea3d629bb83211e"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+          "identity": [
+            51011,
+            475
+          ],
+          "positions_f32_sha256": "f927a664df9bbd1369335b2085d7101effaa4d6fe25b5bd22648d5d9a2ef5680",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "df9f6aae83dcb8c2dbd9880ebf31eeffd8a82b7c70bd9ec4ef9a1c9d902b7581"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+          "identity": [
+            51011,
+            475
+          ],
+          "positions_f32_sha256": "c82068cfd5fd351dfef8db6eb68cb84f3f8edcf67ac51dc55b5a1f0c20dd89be",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "df9f6aae83dcb8c2dbd9880ebf31eeffd8a82b7c70bd9ec4ef9a1c9d902b7581"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+          "identity": [
+            51011,
+            479
+          ],
+          "positions_f32_sha256": "ffe86aef99e3796cc067b235a0c8d330dbcbd0639b3f0477b5f9b42cc23bc83d",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+          "identity": [
+            51011,
+            479
+          ],
+          "positions_f32_sha256": "3c33d8efa806f6ebe2a6885dfb8270f443e7b0b101d8e27b84c22b24034171f9",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87"
+        }
+      },
+      "source_addendum": {
+        "baseline_surface_lineage_bound": true,
+        "candidate_geometry_used_by_addendum": false,
+        "independent_additional_source_face_pairs": [
+          [
+            1577,
+            391
+          ]
+        ],
+        "source_addendum_sha256": "a908b185a6da2276ffda6da6f0a16b148d8c1a8166096faf16d0a7a5df1da122",
+        "source_evidence_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/arterial-venous-route-field-086/proximal-source-port-witnesses-086.json",
+        "source_evidence_sha256": "e638c6dfeb1030ab6aca113f8d658acf02820ffec883d7e19ebf7f9a8aa7c249"
+      },
+      "typed_link": [
+        [
+          51011,
+          475
+        ],
+        [
+          51011,
+          479
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "1b9591616ff8ddcd872436ad1e8f375c9cf78345fa266c544cc8394fc0374645",
+          "baseline_station_witness_point_count": 140,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000010106157913,
+            "minimum_feret_width": 1.0000048721052672
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 479
+        },
+        "target": {
+          "baseline_interface_point_sha256": "1b9591616ff8ddcd872436ad1e8f375c9cf78345fa266c544cc8394fc0374645",
+          "baseline_station_witness_point_count": 140,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999982803069337,
+            "minimum_feret_width": 0.9999978985802032
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 483
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 140,
+          "exact_interface_points_sha256": "1b9591616ff8ddcd872436ad1e8f375c9cf78345fa266c544cc8394fc0374645",
+          "frozen_face_pairs_sha256": "712cf3be07033eb603300f193965f2d62f4415a83c2b32643a1d17899446f072"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 140,
+          "exact_interface_points_sha256": "1b9591616ff8ddcd872436ad1e8f375c9cf78345fa266c544cc8394fc0374645",
+          "frozen_face_pairs_sha256": "712cf3be07033eb603300f193965f2d62f4415a83c2b32643a1d17899446f072"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 140,
+          "exact_interface_points_sha256": "856ac5133bea41d65a9eb9b1089c7fd06b1a972119d86100295d9442bc0f4237",
+          "frozen_face_pairs_sha256": "712cf3be07033eb603300f193965f2d62f4415a83c2b32643a1d17899446f072"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 140,
+          "exact_interface_points_sha256": "856ac5133bea41d65a9eb9b1089c7fd06b1a972119d86100295d9442bc0f4237",
+          "frozen_face_pairs_sha256": "712cf3be07033eb603300f193965f2d62f4415a83c2b32643a1d17899446f072"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+          "identity": [
+            51011,
+            479
+          ],
+          "positions_f32_sha256": "ffe86aef99e3796cc067b235a0c8d330dbcbd0639b3f0477b5f9b42cc23bc83d",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+          "identity": [
+            51011,
+            479
+          ],
+          "positions_f32_sha256": "3c33d8efa806f6ebe2a6885dfb8270f443e7b0b101d8e27b84c22b24034171f9",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "adcb0190d25a8d0927f45e0fdbc4fa52129734da0fa7ed92939739929d15a4fd",
+          "identity": [
+            51011,
+            483
+          ],
+          "positions_f32_sha256": "202492442e308511a1edda62e556c081324ad82e686a363313428a8b855ba276",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "20ad6c8c0596b4839b99da585f78bb6e32508de2f6378cbdc4bafd7ef97bb166"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "adcb0190d25a8d0927f45e0fdbc4fa52129734da0fa7ed92939739929d15a4fd",
+          "identity": [
+            51011,
+            483
+          ],
+          "positions_f32_sha256": "63ddc792656787bc33434dba5114fae070d8e21ec8105d3db83068fa6714cad4",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "20ad6c8c0596b4839b99da585f78bb6e32508de2f6378cbdc4bafd7ef97bb166"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          479
+        ],
+        [
+          51011,
+          483
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "7509d76074243d8a18eff9097f1cbbde669581db492fd79b3899dccd441ed1af",
+          "baseline_station_witness_point_count": 139,
+          "candidate_to_baseline_ratios": {
+            "area": 1.000001861290836,
+            "minimum_feret_width": 1.0000043528252884
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 479
+        },
+        "target": {
+          "baseline_interface_point_sha256": "7509d76074243d8a18eff9097f1cbbde669581db492fd79b3899dccd441ed1af",
+          "baseline_station_witness_point_count": 139,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000005350225518,
+            "minimum_feret_width": 0.9999994575046964
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 487
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 139,
+          "exact_interface_points_sha256": "7509d76074243d8a18eff9097f1cbbde669581db492fd79b3899dccd441ed1af",
+          "frozen_face_pairs_sha256": "4c8cee231cac1c01f517e3f0437df1c895bcf9cb6b2c9bd561a8ceabe03a9660"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 139,
+          "exact_interface_points_sha256": "7509d76074243d8a18eff9097f1cbbde669581db492fd79b3899dccd441ed1af",
+          "frozen_face_pairs_sha256": "4c8cee231cac1c01f517e3f0437df1c895bcf9cb6b2c9bd561a8ceabe03a9660"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 139,
+          "exact_interface_points_sha256": "4ecf3a804ca97fbbcd8f0e082b5cd2fa285118671abb4951be8c2015d368b06b",
+          "frozen_face_pairs_sha256": "4c8cee231cac1c01f517e3f0437df1c895bcf9cb6b2c9bd561a8ceabe03a9660"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 139,
+          "exact_interface_points_sha256": "4ecf3a804ca97fbbcd8f0e082b5cd2fa285118671abb4951be8c2015d368b06b",
+          "frozen_face_pairs_sha256": "4c8cee231cac1c01f517e3f0437df1c895bcf9cb6b2c9bd561a8ceabe03a9660"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+          "identity": [
+            51011,
+            479
+          ],
+          "positions_f32_sha256": "ffe86aef99e3796cc067b235a0c8d330dbcbd0639b3f0477b5f9b42cc23bc83d",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+          "identity": [
+            51011,
+            479
+          ],
+          "positions_f32_sha256": "3c33d8efa806f6ebe2a6885dfb8270f443e7b0b101d8e27b84c22b24034171f9",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "a16c27e9f51d136bbebec02b4bc55ab0b295a8f714e2df30d1e2ac2cc3ffbaba",
+          "identity": [
+            51011,
+            487
+          ],
+          "positions_f32_sha256": "b20825c60ebc103636aa96d05b88ab95fcce4b949fd3d446b21d8249ffda8682",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "83bad5ee57e709f5bafcac0c138f681c68145ef7d558dee4e62b9212e1b677fe"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "a16c27e9f51d136bbebec02b4bc55ab0b295a8f714e2df30d1e2ac2cc3ffbaba",
+          "identity": [
+            51011,
+            487
+          ],
+          "positions_f32_sha256": "9315dee60a995170f83fe9656c38b12017697254ecd94345feb7f1b40650d82b",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "83bad5ee57e709f5bafcac0c138f681c68145ef7d558dee4e62b9212e1b677fe"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          479
+        ],
+        [
+          51011,
+          487
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "d7ed43c5457d1b1dc0392d942de0a722366b489aee2663829bb0ba9de20883a7",
+          "baseline_station_witness_point_count": 83,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000003753074789,
+            "minimum_feret_width": 1.000000290516747
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 525
+        },
+        "target": {
+          "baseline_interface_point_sha256": "d7ed43c5457d1b1dc0392d942de0a722366b489aee2663829bb0ba9de20883a7",
+          "baseline_station_witness_point_count": 83,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000003498905943,
+            "minimum_feret_width": 1.0000009269128272
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 469
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 83,
+          "exact_interface_points_sha256": "d7ed43c5457d1b1dc0392d942de0a722366b489aee2663829bb0ba9de20883a7",
+          "frozen_face_pairs_sha256": "ec7f620515e6261f321548797f919c879f819cd886fa16678639ed1cffd322ea"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 83,
+          "exact_interface_points_sha256": "d7ed43c5457d1b1dc0392d942de0a722366b489aee2663829bb0ba9de20883a7",
+          "frozen_face_pairs_sha256": "ec7f620515e6261f321548797f919c879f819cd886fa16678639ed1cffd322ea"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 83,
+          "exact_interface_points_sha256": "9628b02ece207e4df27b3e4fcbe7c3bca29b0b84462e18652d9b80cd24740dd0",
+          "frozen_face_pairs_sha256": "ec7f620515e6261f321548797f919c879f819cd886fa16678639ed1cffd322ea"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 83,
+          "exact_interface_points_sha256": "9628b02ece207e4df27b3e4fcbe7c3bca29b0b84462e18652d9b80cd24740dd0",
+          "frozen_face_pairs_sha256": "ec7f620515e6261f321548797f919c879f819cd886fa16678639ed1cffd322ea"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+          "identity": [
+            51011,
+            525
+          ],
+          "positions_f32_sha256": "2ff131070fd2e48ccbc41078177d0df5c17528c683c5368d3ff579429c5f3ea9",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3bc22e5aedce972a1c5d19df5eb411715ced79ab480f2ade82bb95b75e0673c6"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+          "identity": [
+            51011,
+            525
+          ],
+          "positions_f32_sha256": "a7abaea9dd977fb1f85e0ea04db3ec2fb2f07e6e8f72e66316d6589325f2376c",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3bc22e5aedce972a1c5d19df5eb411715ced79ab480f2ade82bb95b75e0673c6"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "8add574f11126eb0e0f16b57cb2cd95ec4bfc3410957fb6b44bdf4a64439c91b",
+          "identity": [
+            51011,
+            469
+          ],
+          "positions_f32_sha256": "d171c62cadea43cdc66587eef25e0707622d647814b34eb121d6ed4ad238f277",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "d9e35615dc676e7c6269a5c91800fe4773c96c35d82d65d0a93fc10baa180795"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "8add574f11126eb0e0f16b57cb2cd95ec4bfc3410957fb6b44bdf4a64439c91b",
+          "identity": [
+            51011,
+            469
+          ],
+          "positions_f32_sha256": "6d0f46dc22d1c1a793b820f5e7eeb45552e4a375f36c63b06edec47371159c23",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "d9e35615dc676e7c6269a5c91800fe4773c96c35d82d65d0a93fc10baa180795"
+        }
+      },
+      "source_addendum": {
+        "baseline_surface_lineage_bound": true,
+        "candidate_geometry_used_by_addendum": false,
+        "independent_additional_source_face_pairs": [
+          [
+            704,
+            184
+          ],
+          [
+            704,
+            185
+          ],
+          [
+            737,
+            176
+          ]
+        ],
+        "source_addendum_sha256": "02354a89052cf612fbe6b020894bafef89c013231cca63f7876e44b4d11dfc74",
+        "source_evidence_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/bridge-collar-ancestry-107-001/report.json",
+        "source_evidence_sha256": "e72864fb11923322a39e6a924481fc3928e060fe029d7baa68ca1740c82a544a"
+      },
+      "typed_link": [
+        [
+          51011,
+          525
+        ],
+        [
+          51011,
+          469
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "1e8e33c01c98695c65617e93a5d706cda18f0c57dcf13f1acfebfc77677bc3de",
+          "baseline_station_witness_point_count": 57,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000004510178,
+            "minimum_feret_width": 1.000000815816647
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 525
+        },
+        "target": {
+          "baseline_interface_point_sha256": "1e8e33c01c98695c65617e93a5d706cda18f0c57dcf13f1acfebfc77677bc3de",
+          "baseline_station_witness_point_count": 57,
+          "candidate_to_baseline_ratios": {
+            "area": 0.999994319693916,
+            "minimum_feret_width": 0.9999931224993975
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 473
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 57,
+          "exact_interface_points_sha256": "1e8e33c01c98695c65617e93a5d706cda18f0c57dcf13f1acfebfc77677bc3de",
+          "frozen_face_pairs_sha256": "ec5b412810d8072585309f3362ada50ff2d9664606d430d14066ea64ed0267e5"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 57,
+          "exact_interface_points_sha256": "1e8e33c01c98695c65617e93a5d706cda18f0c57dcf13f1acfebfc77677bc3de",
+          "frozen_face_pairs_sha256": "ec5b412810d8072585309f3362ada50ff2d9664606d430d14066ea64ed0267e5"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 57,
+          "exact_interface_points_sha256": "1ccd9d6838806cc5ca002c4b7f7ff522e87fa6883856d90285387419e8939cb4",
+          "frozen_face_pairs_sha256": "ec5b412810d8072585309f3362ada50ff2d9664606d430d14066ea64ed0267e5"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 57,
+          "exact_interface_points_sha256": "1ccd9d6838806cc5ca002c4b7f7ff522e87fa6883856d90285387419e8939cb4",
+          "frozen_face_pairs_sha256": "ec5b412810d8072585309f3362ada50ff2d9664606d430d14066ea64ed0267e5"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+          "identity": [
+            51011,
+            525
+          ],
+          "positions_f32_sha256": "2ff131070fd2e48ccbc41078177d0df5c17528c683c5368d3ff579429c5f3ea9",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3bc22e5aedce972a1c5d19df5eb411715ced79ab480f2ade82bb95b75e0673c6"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+          "identity": [
+            51011,
+            525
+          ],
+          "positions_f32_sha256": "a7abaea9dd977fb1f85e0ea04db3ec2fb2f07e6e8f72e66316d6589325f2376c",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3bc22e5aedce972a1c5d19df5eb411715ced79ab480f2ade82bb95b75e0673c6"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "bbfebc0d6ab646f27d0f1dfd905937b41f21fbfe4da13cc6edbd98aa94a72965",
+          "identity": [
+            51011,
+            473
+          ],
+          "positions_f32_sha256": "15d3095ae6ec266b98070eb2c9d18dd64858e73ab67a1a4ce8b033bbab26db2d",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "d6bef2f9e6539d37b924ee359cd52ca761b7e492726d9cdf5c8b94d396cca8ad"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "bbfebc0d6ab646f27d0f1dfd905937b41f21fbfe4da13cc6edbd98aa94a72965",
+          "identity": [
+            51011,
+            473
+          ],
+          "positions_f32_sha256": "aef2a8834ca8cb608de530d7a869581775ba79ab6bbc80c6e5b725546921b08b",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "d6bef2f9e6539d37b924ee359cd52ca761b7e492726d9cdf5c8b94d396cca8ad"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          525
+        ],
+        [
+          51011,
+          473
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "55e43cce8d0cd9e310b3caa1e7f5af8a68092e582a517ccfe335fd7a0b26ce28",
+          "baseline_station_witness_point_count": 127,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000042063680654,
+            "minimum_feret_width": 1.0000018520200131
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 473
+        },
+        "target": {
+          "baseline_interface_point_sha256": "55e43cce8d0cd9e310b3caa1e7f5af8a68092e582a517ccfe335fd7a0b26ce28",
+          "baseline_station_witness_point_count": 127,
+          "candidate_to_baseline_ratios": {
+            "area": 1.000000287645979,
+            "minimum_feret_width": 1.0000014619078181
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 477
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 127,
+          "exact_interface_points_sha256": "55e43cce8d0cd9e310b3caa1e7f5af8a68092e582a517ccfe335fd7a0b26ce28",
+          "frozen_face_pairs_sha256": "c4f863b1d2b17cb14db8236747d1d01f36ff6217905b0016b9048e63b58ec76a"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 127,
+          "exact_interface_points_sha256": "55e43cce8d0cd9e310b3caa1e7f5af8a68092e582a517ccfe335fd7a0b26ce28",
+          "frozen_face_pairs_sha256": "c4f863b1d2b17cb14db8236747d1d01f36ff6217905b0016b9048e63b58ec76a"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 127,
+          "exact_interface_points_sha256": "b8a3b3dbecf43cdce8c46362c114dd9939ac656b944a78b1245241c03a54ec15",
+          "frozen_face_pairs_sha256": "c4f863b1d2b17cb14db8236747d1d01f36ff6217905b0016b9048e63b58ec76a"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 127,
+          "exact_interface_points_sha256": "b8a3b3dbecf43cdce8c46362c114dd9939ac656b944a78b1245241c03a54ec15",
+          "frozen_face_pairs_sha256": "c4f863b1d2b17cb14db8236747d1d01f36ff6217905b0016b9048e63b58ec76a"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "bbfebc0d6ab646f27d0f1dfd905937b41f21fbfe4da13cc6edbd98aa94a72965",
+          "identity": [
+            51011,
+            473
+          ],
+          "positions_f32_sha256": "15d3095ae6ec266b98070eb2c9d18dd64858e73ab67a1a4ce8b033bbab26db2d",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "d6bef2f9e6539d37b924ee359cd52ca761b7e492726d9cdf5c8b94d396cca8ad"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "bbfebc0d6ab646f27d0f1dfd905937b41f21fbfe4da13cc6edbd98aa94a72965",
+          "identity": [
+            51011,
+            473
+          ],
+          "positions_f32_sha256": "aef2a8834ca8cb608de530d7a869581775ba79ab6bbc80c6e5b725546921b08b",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "d6bef2f9e6539d37b924ee359cd52ca761b7e492726d9cdf5c8b94d396cca8ad"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2664808ef884b753d57157af23474ff7f00e728781367196173edbd478273017",
+          "identity": [
+            51011,
+            477
+          ],
+          "positions_f32_sha256": "f177a97feafb1ea5065453f52901450d19782b576493f3f9e0f59f457658f78a",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "24c28da8b357c6498b052a793e74229dcdf13a942da9b56e78693e6a6e0fc7ff"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2664808ef884b753d57157af23474ff7f00e728781367196173edbd478273017",
+          "identity": [
+            51011,
+            477
+          ],
+          "positions_f32_sha256": "8b3ccfff3c7576bbab5d5e059fbea11ea535843cf1550ea4432824e3feec3bfb",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "24c28da8b357c6498b052a793e74229dcdf13a942da9b56e78693e6a6e0fc7ff"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          473
+        ],
+        [
+          51011,
+          477
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "664308e7b926634a3871f1a1d71e86cab00f9d56b905c70c24f6be41d242a235",
+          "baseline_station_witness_point_count": 116,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000007629182508,
+            "minimum_feret_width": 1.0000012214505722
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 477
+        },
+        "target": {
+          "baseline_interface_point_sha256": "664308e7b926634a3871f1a1d71e86cab00f9d56b905c70c24f6be41d242a235",
+          "baseline_station_witness_point_count": 116,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000000766909065,
+            "minimum_feret_width": 1.0000000000000002
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 481
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 116,
+          "exact_interface_points_sha256": "664308e7b926634a3871f1a1d71e86cab00f9d56b905c70c24f6be41d242a235",
+          "frozen_face_pairs_sha256": "83db8f76e403d82c573e29cd055eab71029fdd1dcb542475ec0823aeb5da8d1a"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 116,
+          "exact_interface_points_sha256": "664308e7b926634a3871f1a1d71e86cab00f9d56b905c70c24f6be41d242a235",
+          "frozen_face_pairs_sha256": "83db8f76e403d82c573e29cd055eab71029fdd1dcb542475ec0823aeb5da8d1a"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 116,
+          "exact_interface_points_sha256": "f62c2e05f69f6e466228552db0623a9247c8e62e42402bcb77c7efdc0e3c71e4",
+          "frozen_face_pairs_sha256": "83db8f76e403d82c573e29cd055eab71029fdd1dcb542475ec0823aeb5da8d1a"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 116,
+          "exact_interface_points_sha256": "f62c2e05f69f6e466228552db0623a9247c8e62e42402bcb77c7efdc0e3c71e4",
+          "frozen_face_pairs_sha256": "83db8f76e403d82c573e29cd055eab71029fdd1dcb542475ec0823aeb5da8d1a"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2664808ef884b753d57157af23474ff7f00e728781367196173edbd478273017",
+          "identity": [
+            51011,
+            477
+          ],
+          "positions_f32_sha256": "f177a97feafb1ea5065453f52901450d19782b576493f3f9e0f59f457658f78a",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "24c28da8b357c6498b052a793e74229dcdf13a942da9b56e78693e6a6e0fc7ff"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2664808ef884b753d57157af23474ff7f00e728781367196173edbd478273017",
+          "identity": [
+            51011,
+            477
+          ],
+          "positions_f32_sha256": "8b3ccfff3c7576bbab5d5e059fbea11ea535843cf1550ea4432824e3feec3bfb",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "24c28da8b357c6498b052a793e74229dcdf13a942da9b56e78693e6a6e0fc7ff"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "b23b8aa29fdca78b6b3a9bcc1f43d8dfb195e95352ca92fb172b2e41241d6cbe",
+          "identity": [
+            51011,
+            481
+          ],
+          "positions_f32_sha256": "26d53d74a52f3d8500110bdf103951d0fb23d975b842e9c6412b31f632ada1ff",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "cb09e2da1f9d7d425551ece6bd97a3130c9a5af3bf8a951949f7150e2f3af63f"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "b23b8aa29fdca78b6b3a9bcc1f43d8dfb195e95352ca92fb172b2e41241d6cbe",
+          "identity": [
+            51011,
+            481
+          ],
+          "positions_f32_sha256": "e5e162e3771999f470a3719464ed417cfeedd0378d8c31de9d739bc0c8f60ac7",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "cb09e2da1f9d7d425551ece6bd97a3130c9a5af3bf8a951949f7150e2f3af63f"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          477
+        ],
+        [
+          51011,
+          481
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "70124e79252af6dc27d7d14854bc2f1ccdc72f2748643beb8c0b624977b53e3d",
+          "baseline_station_witness_point_count": 202,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999988204199314,
+            "minimum_feret_width": 1.0000025170595024
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 481
+        },
+        "target": {
+          "baseline_interface_point_sha256": "70124e79252af6dc27d7d14854bc2f1ccdc72f2748643beb8c0b624977b53e3d",
+          "baseline_station_witness_point_count": 202,
+          "candidate_to_baseline_ratios": {
+            "area": 1.000002672375453,
+            "minimum_feret_width": 0.9999981542556671
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 485
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 202,
+          "exact_interface_points_sha256": "70124e79252af6dc27d7d14854bc2f1ccdc72f2748643beb8c0b624977b53e3d",
+          "frozen_face_pairs_sha256": "21f826c36507641e38317231d4b0c7e5e18938fa9a1f767d1eec3eb5e2ab6faf"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 202,
+          "exact_interface_points_sha256": "70124e79252af6dc27d7d14854bc2f1ccdc72f2748643beb8c0b624977b53e3d",
+          "frozen_face_pairs_sha256": "21f826c36507641e38317231d4b0c7e5e18938fa9a1f767d1eec3eb5e2ab6faf"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 202,
+          "exact_interface_points_sha256": "2ff10292a1eda5aa0ce28e448510b85dee5f27e1024a9f70bc455470f14e038d",
+          "frozen_face_pairs_sha256": "21f826c36507641e38317231d4b0c7e5e18938fa9a1f767d1eec3eb5e2ab6faf"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 202,
+          "exact_interface_points_sha256": "2ff10292a1eda5aa0ce28e448510b85dee5f27e1024a9f70bc455470f14e038d",
+          "frozen_face_pairs_sha256": "21f826c36507641e38317231d4b0c7e5e18938fa9a1f767d1eec3eb5e2ab6faf"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "b23b8aa29fdca78b6b3a9bcc1f43d8dfb195e95352ca92fb172b2e41241d6cbe",
+          "identity": [
+            51011,
+            481
+          ],
+          "positions_f32_sha256": "26d53d74a52f3d8500110bdf103951d0fb23d975b842e9c6412b31f632ada1ff",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "cb09e2da1f9d7d425551ece6bd97a3130c9a5af3bf8a951949f7150e2f3af63f"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "b23b8aa29fdca78b6b3a9bcc1f43d8dfb195e95352ca92fb172b2e41241d6cbe",
+          "identity": [
+            51011,
+            481
+          ],
+          "positions_f32_sha256": "e5e162e3771999f470a3719464ed417cfeedd0378d8c31de9d739bc0c8f60ac7",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "cb09e2da1f9d7d425551ece6bd97a3130c9a5af3bf8a951949f7150e2f3af63f"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "24094bf37993ffb3b191276b64cafa7fa39e6066fc54422a48af1bf6e4879bcc",
+          "identity": [
+            51011,
+            485
+          ],
+          "positions_f32_sha256": "43a9cc082652e7d4b95beb852901e407e2324568268d61497218e86299602632",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "887712c2414f0a184a2c569824b0a946b715d09175800dbd0fe8615bc756147b"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "24094bf37993ffb3b191276b64cafa7fa39e6066fc54422a48af1bf6e4879bcc",
+          "identity": [
+            51011,
+            485
+          ],
+          "positions_f32_sha256": "7b12b2d034d3127e67d083893df6ab6d9cb697adf32d0ec2e00e332021bf8ec3",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "887712c2414f0a184a2c569824b0a946b715d09175800dbd0fe8615bc756147b"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          481
+        ],
+        [
+          51011,
+          485
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "35eeec544d54f9870702cca1eac7e33ef651a4187dac98ae78020378c5b5128b",
+          "baseline_station_witness_point_count": 152,
+          "candidate_to_baseline_ratios": {
+            "area": 1.000000371547321,
+            "minimum_feret_width": 1.0000021335641571
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 481
+        },
+        "target": {
+          "baseline_interface_point_sha256": "35eeec544d54f9870702cca1eac7e33ef651a4187dac98ae78020378c5b5128b",
+          "baseline_station_witness_point_count": 152,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999998423338752,
+            "minimum_feret_width": 0.9999998153825066
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 489
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 152,
+          "exact_interface_points_sha256": "35eeec544d54f9870702cca1eac7e33ef651a4187dac98ae78020378c5b5128b",
+          "frozen_face_pairs_sha256": "bcf66bdc23c097b6d1716a431eeea7e32eb0704fc35d48c822c20bf3dd42f562"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 152,
+          "exact_interface_points_sha256": "35eeec544d54f9870702cca1eac7e33ef651a4187dac98ae78020378c5b5128b",
+          "frozen_face_pairs_sha256": "bcf66bdc23c097b6d1716a431eeea7e32eb0704fc35d48c822c20bf3dd42f562"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 152,
+          "exact_interface_points_sha256": "597873ddab620da9499ddb2dfab459ae0a310c54816631cb14653dd6b02cb213",
+          "frozen_face_pairs_sha256": "bcf66bdc23c097b6d1716a431eeea7e32eb0704fc35d48c822c20bf3dd42f562"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 152,
+          "exact_interface_points_sha256": "597873ddab620da9499ddb2dfab459ae0a310c54816631cb14653dd6b02cb213",
+          "frozen_face_pairs_sha256": "bcf66bdc23c097b6d1716a431eeea7e32eb0704fc35d48c822c20bf3dd42f562"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "b23b8aa29fdca78b6b3a9bcc1f43d8dfb195e95352ca92fb172b2e41241d6cbe",
+          "identity": [
+            51011,
+            481
+          ],
+          "positions_f32_sha256": "26d53d74a52f3d8500110bdf103951d0fb23d975b842e9c6412b31f632ada1ff",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "cb09e2da1f9d7d425551ece6bd97a3130c9a5af3bf8a951949f7150e2f3af63f"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "b23b8aa29fdca78b6b3a9bcc1f43d8dfb195e95352ca92fb172b2e41241d6cbe",
+          "identity": [
+            51011,
+            481
+          ],
+          "positions_f32_sha256": "e5e162e3771999f470a3719464ed417cfeedd0378d8c31de9d739bc0c8f60ac7",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "cb09e2da1f9d7d425551ece6bd97a3130c9a5af3bf8a951949f7150e2f3af63f"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "7db2eae96b64cfcc3b657731fbeef2464f7bea04acf2996b5f4ef20bd6be0574",
+          "identity": [
+            51011,
+            489
+          ],
+          "positions_f32_sha256": "eba2c0bc4cd1f76ea66235d65f8f10756f693b30c01c722ac625e0c409e95e47",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "70975833ce74413ac6d4ccf242dba7321065a6f247dc3e3a592c9146f932fc0e"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "7db2eae96b64cfcc3b657731fbeef2464f7bea04acf2996b5f4ef20bd6be0574",
+          "identity": [
+            51011,
+            489
+          ],
+          "positions_f32_sha256": "05c90f2e01b42d88aa455b614dbcf4e40c722309d10a145a9861cbaef246e634",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "70975833ce74413ac6d4ccf242dba7321065a6f247dc3e3a592c9146f932fc0e"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          481
+        ],
+        [
+          51011,
+          489
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "8af5ebf19ecfb00632b8b27b93c7263caa9636de91f66e32f1e3a049553e76d1",
+          "baseline_station_witness_point_count": 58,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999998219982376,
+            "minimum_feret_width": 1.0000002153825411
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 526
+        },
+        "target": {
+          "baseline_interface_point_sha256": "8af5ebf19ecfb00632b8b27b93c7263caa9636de91f66e32f1e3a049553e76d1",
+          "baseline_station_witness_point_count": 58,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999995595084364,
+            "minimum_feret_width": 1.0000005767677014
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 468
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 58,
+          "exact_interface_points_sha256": "8af5ebf19ecfb00632b8b27b93c7263caa9636de91f66e32f1e3a049553e76d1",
+          "frozen_face_pairs_sha256": "fc28a738978df7998892a3aec2126d6d702fb4f378bf16679aef09b738f89728"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 58,
+          "exact_interface_points_sha256": "8af5ebf19ecfb00632b8b27b93c7263caa9636de91f66e32f1e3a049553e76d1",
+          "frozen_face_pairs_sha256": "fc28a738978df7998892a3aec2126d6d702fb4f378bf16679aef09b738f89728"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 58,
+          "exact_interface_points_sha256": "99f144604fc85ae2774b267016167301a65aad28d38a4308cda9778c4062388b",
+          "frozen_face_pairs_sha256": "fc28a738978df7998892a3aec2126d6d702fb4f378bf16679aef09b738f89728"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 58,
+          "exact_interface_points_sha256": "99f144604fc85ae2774b267016167301a65aad28d38a4308cda9778c4062388b",
+          "frozen_face_pairs_sha256": "fc28a738978df7998892a3aec2126d6d702fb4f378bf16679aef09b738f89728"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "identity": [
+            51011,
+            526
+          ],
+          "positions_f32_sha256": "f2b46f6607940dcbfe945bf8ecd54bd9173832f4f5cda7e56d3da203859691c4",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ea17d65cbc9f4edb0ae0dc41a9a6b3209fbe36ba575be207f8ef53aa1e7cfde3"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "identity": [
+            51011,
+            526
+          ],
+          "positions_f32_sha256": "af629a90ec573286348954b3dbe55300b19f5c47186936ea90b5ad2f13c78368",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ea17d65cbc9f4edb0ae0dc41a9a6b3209fbe36ba575be207f8ef53aa1e7cfde3"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "3f7fc070749bf837cf59ac87d226e42657d97b68a63be558cce57516d1e22de6",
+          "identity": [
+            51011,
+            468
+          ],
+          "positions_f32_sha256": "0e35d7ee50df312f8ad7017c079d2a766f028f0989e6c15575cdaffb09b9faad",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ceac3b8bd9b223165e9454911446cea050967e793cd013da90dfcbae81d45d83"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "3f7fc070749bf837cf59ac87d226e42657d97b68a63be558cce57516d1e22de6",
+          "identity": [
+            51011,
+            468
+          ],
+          "positions_f32_sha256": "2773de7808aa3f1cd3290848ffb8c273fd6e3c53bcbc9dbedb42f9a5c587720b",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ceac3b8bd9b223165e9454911446cea050967e793cd013da90dfcbae81d45d83"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          526
+        ],
+        [
+          51011,
+          468
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "5c243341aa07f6f5136e902235424515fd4f0ca4fdbb44e5cda91434963a30fe",
+          "baseline_station_witness_point_count": 63,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000003275520806,
+            "minimum_feret_width": 1.0000005772995415
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 526
+        },
+        "target": {
+          "baseline_interface_point_sha256": "5c243341aa07f6f5136e902235424515fd4f0ca4fdbb44e5cda91434963a30fe",
+          "baseline_station_witness_point_count": 63,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999993363021868,
+            "minimum_feret_width": 0.999997708539403
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 472
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 63,
+          "exact_interface_points_sha256": "5c243341aa07f6f5136e902235424515fd4f0ca4fdbb44e5cda91434963a30fe",
+          "frozen_face_pairs_sha256": "f20602c61711f79f192c42ebd53c19e2ee56a64f722d15e9dbab1f6dbdfabbde"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 63,
+          "exact_interface_points_sha256": "5c243341aa07f6f5136e902235424515fd4f0ca4fdbb44e5cda91434963a30fe",
+          "frozen_face_pairs_sha256": "f20602c61711f79f192c42ebd53c19e2ee56a64f722d15e9dbab1f6dbdfabbde"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 63,
+          "exact_interface_points_sha256": "3422d4cbb824764390105a79460a5c3f80cdc7a50c45aa8ae6f4e9dbd82d0684",
+          "frozen_face_pairs_sha256": "f20602c61711f79f192c42ebd53c19e2ee56a64f722d15e9dbab1f6dbdfabbde"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 63,
+          "exact_interface_points_sha256": "3422d4cbb824764390105a79460a5c3f80cdc7a50c45aa8ae6f4e9dbd82d0684",
+          "frozen_face_pairs_sha256": "f20602c61711f79f192c42ebd53c19e2ee56a64f722d15e9dbab1f6dbdfabbde"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "identity": [
+            51011,
+            526
+          ],
+          "positions_f32_sha256": "f2b46f6607940dcbfe945bf8ecd54bd9173832f4f5cda7e56d3da203859691c4",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ea17d65cbc9f4edb0ae0dc41a9a6b3209fbe36ba575be207f8ef53aa1e7cfde3"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "identity": [
+            51011,
+            526
+          ],
+          "positions_f32_sha256": "af629a90ec573286348954b3dbe55300b19f5c47186936ea90b5ad2f13c78368",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ea17d65cbc9f4edb0ae0dc41a9a6b3209fbe36ba575be207f8ef53aa1e7cfde3"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "102de8ee22f308327530a48d9aa950c20cdc441101df4b29a4a376b6c5590ccb",
+          "identity": [
+            51011,
+            472
+          ],
+          "positions_f32_sha256": "b43f79588a30d320d39cd3417352dbc7c5d74177d4dbf1e4834bda3a6493b2c3",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "8db32057679765d41b9e99311888a847f0fffa932391c29f184ac7c814255197"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "102de8ee22f308327530a48d9aa950c20cdc441101df4b29a4a376b6c5590ccb",
+          "identity": [
+            51011,
+            472
+          ],
+          "positions_f32_sha256": "d283bd81c4f2dbaa23356214dd0527a283703cfae6ad2912235aaf8cd2befc2e",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "8db32057679765d41b9e99311888a847f0fffa932391c29f184ac7c814255197"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          526
+        ],
+        [
+          51011,
+          472
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "27d6946abd543c3d8584cc7f332431ec0d50dafd95a4e7d61c0fa6b4263c595b",
+          "baseline_station_witness_point_count": 150,
+          "candidate_to_baseline_ratios": {
+            "area": 1.0000007240165427,
+            "minimum_feret_width": 1.000000192093796
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 525
+        },
+        "target": {
+          "baseline_interface_point_sha256": "27d6946abd543c3d8584cc7f332431ec0d50dafd95a4e7d61c0fa6b4263c595b",
+          "baseline_station_witness_point_count": 150,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999998225438368,
+            "minimum_feret_width": 1.000000126713602
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 10
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 150,
+          "exact_interface_points_sha256": "27d6946abd543c3d8584cc7f332431ec0d50dafd95a4e7d61c0fa6b4263c595b",
+          "frozen_face_pairs_sha256": "cb317db774eac9693d34e586cd6e2392ae88a771cd77d3d28c241bccbf55ebb1"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 150,
+          "exact_interface_points_sha256": "27d6946abd543c3d8584cc7f332431ec0d50dafd95a4e7d61c0fa6b4263c595b",
+          "frozen_face_pairs_sha256": "cb317db774eac9693d34e586cd6e2392ae88a771cd77d3d28c241bccbf55ebb1"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 150,
+          "exact_interface_points_sha256": "b2432d4c59d591e23b9ad86dfbcac981046029eabf10197c0d67c97aef3b5df1",
+          "frozen_face_pairs_sha256": "cb317db774eac9693d34e586cd6e2392ae88a771cd77d3d28c241bccbf55ebb1"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 150,
+          "exact_interface_points_sha256": "b2432d4c59d591e23b9ad86dfbcac981046029eabf10197c0d67c97aef3b5df1",
+          "frozen_face_pairs_sha256": "cb317db774eac9693d34e586cd6e2392ae88a771cd77d3d28c241bccbf55ebb1"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+          "identity": [
+            51011,
+            525
+          ],
+          "positions_f32_sha256": "2ff131070fd2e48ccbc41078177d0df5c17528c683c5368d3ff579429c5f3ea9",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3bc22e5aedce972a1c5d19df5eb411715ced79ab480f2ade82bb95b75e0673c6"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+          "identity": [
+            51011,
+            525
+          ],
+          "positions_f32_sha256": "a7abaea9dd977fb1f85e0ea04db3ec2fb2f07e6e8f72e66316d6589325f2376c",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3bc22e5aedce972a1c5d19df5eb411715ced79ab480f2ade82bb95b75e0673c6"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "4854f55a08adb044b39b0e041ed88f9dbab797bf893f36eaa3ebdc3af6665b65",
+          "identity": [
+            51011,
+            10
+          ],
+          "positions_f32_sha256": "79aca41a03285ae9da119e76c103e0b1ed6f244a589afa33019282c2a6282c55",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3c20a497661218f938d5d0274dd86735753c3d63d8b897258d4cc3a3adad9a46"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "4854f55a08adb044b39b0e041ed88f9dbab797bf893f36eaa3ebdc3af6665b65",
+          "identity": [
+            51011,
+            10
+          ],
+          "positions_f32_sha256": "38d9eaab017490fb82abaf8d3d77c02b835cd0fc4b355f04f592bdce3d545928",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3c20a497661218f938d5d0274dd86735753c3d63d8b897258d4cc3a3adad9a46"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          525
+        ],
+        [
+          51011,
+          10
+        ]
+      ]
+    },
+    {
+      "calibre_proofs": {
+        "bridge": {
+          "baseline_interface_point_sha256": "c025bac40bff65ea1bdf85cd18f605295b438643fb4ab0ca27ac39202f7d62d9",
+          "baseline_station_witness_point_count": 92,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999998573266778,
+            "minimum_feret_width": 1.0000000378277798
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 526
+        },
+        "target": {
+          "baseline_interface_point_sha256": "c025bac40bff65ea1bdf85cd18f605295b438643fb4ab0ca27ac39202f7d62d9",
+          "baseline_station_witness_point_count": 92,
+          "candidate_to_baseline_ratios": {
+            "area": 0.9999999990030949,
+            "minimum_feret_width": 0.9999998997680009
+          },
+          "declared_preservation_intervals": {
+            "area": [
+              0.8,
+              1.25
+            ],
+            "minimum_feret_width": [
+              0.9,
+              1.1
+            ]
+          },
+          "owner_id": 10
+        }
+      },
+      "candidate_and_baseline_interface_proofs": {
+        "baseline_bridge": {
+          "exact_interface_point_count": 92,
+          "exact_interface_points_sha256": "c025bac40bff65ea1bdf85cd18f605295b438643fb4ab0ca27ac39202f7d62d9",
+          "frozen_face_pairs_sha256": "f2efc67fd44612bc21b34dceb7053e8fc03422269ec78560147e96fd69d3d171"
+        },
+        "baseline_target": {
+          "exact_interface_point_count": 92,
+          "exact_interface_points_sha256": "c025bac40bff65ea1bdf85cd18f605295b438643fb4ab0ca27ac39202f7d62d9",
+          "frozen_face_pairs_sha256": "f2efc67fd44612bc21b34dceb7053e8fc03422269ec78560147e96fd69d3d171"
+        },
+        "candidate_bridge": {
+          "exact_interface_point_count": 92,
+          "exact_interface_points_sha256": "fdd26cb4bdb69e2a5b420a91c3c6ed3bfb2ae952185580e8f855f81cf55a64b9",
+          "frozen_face_pairs_sha256": "f2efc67fd44612bc21b34dceb7053e8fc03422269ec78560147e96fd69d3d171"
+        },
+        "candidate_target": {
+          "exact_interface_point_count": 92,
+          "exact_interface_points_sha256": "fdd26cb4bdb69e2a5b420a91c3c6ed3bfb2ae952185580e8f855f81cf55a64b9",
+          "frozen_face_pairs_sha256": "f2efc67fd44612bc21b34dceb7053e8fc03422269ec78560147e96fd69d3d171"
+        }
+      },
+      "candidate_and_source_row_hashes": {
+        "bridge_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "identity": [
+            51011,
+            526
+          ],
+          "positions_f32_sha256": "f2b46f6607940dcbfe945bf8ecd54bd9173832f4f5cda7e56d3da203859691c4",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ea17d65cbc9f4edb0ae0dc41a9a6b3209fbe36ba575be207f8ef53aa1e7cfde3"
+        },
+        "bridge_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "identity": [
+            51011,
+            526
+          ],
+          "positions_f32_sha256": "af629a90ec573286348954b3dbe55300b19f5c47186936ea90b5ad2f13c78368",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "ea17d65cbc9f4edb0ae0dc41a9a6b3209fbe36ba575be207f8ef53aa1e7cfde3"
+        },
+        "target_candidate": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "4854f55a08adb044b39b0e041ed88f9dbab797bf893f36eaa3ebdc3af6665b65",
+          "identity": [
+            51011,
+            10
+          ],
+          "positions_f32_sha256": "79aca41a03285ae9da119e76c103e0b1ed6f244a589afa33019282c2a6282c55",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3c20a497661218f938d5d0274dd86735753c3d63d8b897258d4cc3a3adad9a46"
+        },
+        "target_independent_source_baseline": {
+          "closed_self_free_single_component": true,
+          "exact_self_audit_count": 0,
+          "faces_u32_sha256": "4854f55a08adb044b39b0e041ed88f9dbab797bf893f36eaa3ebdc3af6665b65",
+          "identity": [
+            51011,
+            10
+          ],
+          "positions_f32_sha256": "38d9eaab017490fb82abaf8d3d77c02b835cd0fc4b355f04f592bdce3d545928",
+          "referenced_face_component_count": 1,
+          "source_vertex_ids_u64_sha256": "3c20a497661218f938d5d0274dd86735753c3d63d8b897258d4cc3a3adad9a46"
+        }
+      },
+      "source_addendum": null,
+      "typed_link": [
+        [
+          51011,
+          526
+        ],
+        [
+          51011,
+          10
+        ]
+      ]
+    }
+  ],
+  "schema": "numi.human.brachiocephalic.current-network-handoff-cold-validation.v1",
+  "status": "PASS_FROZEN_028_HANDOFF_JSON_ONLY_NO_GEOMETRY_PREDICATES"
+}

@@ -1,0 +1,59 @@
+{
+  "all_target_screen_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-029-source028-all-target-screen-004/all-target-collision-gate.json",
+  "anatomical_admission": false,
+  "current_shared_verifier_sha256": "b60f17eeda39b8a0143bf13cdcd1e89c7af3460a074eff85314a3668a2e6b899",
+  "current_source_revalidation_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-029-source028-all-target-screen-004/source-revalidation.json",
+  "current_source_revalidation_sha256": "8cd0251ec1698faca558b63a16e37ecbe334bbf6d7192663024b037f6cf71621",
+  "execution_code_pins": {
+    "resting_anatomy_verify.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_anatomy_verify.py",
+      "sha256": "b60f17eeda39b8a0143bf13cdcd1e89c7af3460a074eff85314a3668a2e6b899"
+    },
+    "resting_brachiocephalic_3d_junction.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_3d_junction.py",
+      "sha256": "5d3b10f68f38072f749f3eedc359681cb5e7ae2fcafef5e0743ced2489be64f6"
+    },
+    "resting_brachiocephalic_current_capture_network_preparation.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_current_capture_network_preparation.py",
+      "sha256": "6c78bba2e4e77e6fed74167afab8fa9972f3548e795b5734830a1a5cae964789"
+    },
+    "resting_brachiocephalic_current_capture_network_runner.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_current_capture_network_runner.py",
+      "sha256": "429042cd230dca3d27e8d77ef243311ea9f6088d0cb9b38faabc2797afb0667b"
+    },
+    "resting_brachiocephalic_geometry_gate.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_brachiocephalic_geometry_gate.py",
+      "sha256": "b012b79c26e0413091ef33848561347a99d091e6641ac8faae109051e8e622e7"
+    },
+    "resting_pleura_proxy.py": {
+      "path": "/Users/numi/numi-human-alltarget-handoff-20261014/src/numilab_human/resting_pleura_proxy.py",
+      "sha256": "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683"
+    }
+  },
+  "execution_commit": "f7f72ca3978886e5162e42f41e1f53527c57f1c2",
+  "execution_mode": "all-target-only using retained 028 continuity result; no continuity predicates rerun",
+  "execution_repository": {
+    "dirty": false,
+    "head": "f7f72ca3978886e5162e42f41e1f53527c57f1c2",
+    "status_lines": []
+  },
+  "frozen_028_shared_verifier_sha256": "65bc63192a4eea5a4e5dbc7d5ab72d565fbca774e34b26c678fad94f365b5e48",
+  "frozen_capture_input_bundle_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-017-registered007-gid-preflight-001-inputs.json",
+  "frozen_capture_input_bundle_sha256": "a8e1aca612221a75360bd7ff6953c6aaff9ea66c846c08fe37658d19b6a64942",
+  "frozen_continuity_report_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-028-current-owner-baseline-runner-preflight-001/network-gate-report.json",
+  "frozen_continuity_report_sha256": "8435c2ccf0808236839ff6f5011c2b5c2a21f90d0dcae44623971915d1adef90",
+  "frozen_source_preflight_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-028-current-owner-baseline-runner-preflight-001/source-and-capture-preflight.json",
+  "frozen_source_preflight_sha256": "00028b1f448f65e6e38d380c4922e7e1c66cb12b2da0923838fbe816c093bcfc",
+  "launcher_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-029-source028-all-target-screen-004/run_all_targets.py",
+  "launcher_sha256": "477c9ad799e3915b02b98e3c4394dcaf27da4794acbb2bd265ee8e836846a292",
+  "native_or_gpu_work_performed": false,
+  "schema": "numi.human.brachiocephalic.current-network-all-target-execution.v1",
+  "shared_verifier_compatibility_report_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vascular028-shared-verifier-compatibility-002/report.json",
+  "shared_verifier_compatibility_report_sha256": "1ae155b8bf0d28ae6802279920ce0117ac26d86f0e8ebaf7d0252b54fdaeec6a",
+  "stage_order": [
+    "revalidate current source/capture arrays against frozen 028",
+    "full network-to-nonnetwork target screen",
+    "all non-edge network pair screen"
+  ],
+  "surface_cache_policy": "Current 17 network candidate PreparedSurface objects are created once, reused by the central all-target verifier, and reused for non-edge network pairs; nonnetwork targets are prepared lazily once by the central verifier."
+}
