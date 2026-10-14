@@ -18,6 +18,7 @@ import numpy as np
 from . import resting_brachiocephalic_geometry_gate as gate
 from . import resting_brachiocephalic_port_diagnostic as portdiag
 from . import resting_brachiocephalic_source007 as source007
+from . import resting_pleura_proxy as nhanat_codec
 
 A = source007.A
 GATE_DIR = source007.GATE_DIR
@@ -25,10 +26,16 @@ SOURCE004_REPORT = portdiag.SIX_DIAGNOSTIC_DIR / "six-port-section-diagnostic.js
 SOURCE004_PREFLIGHT = portdiag.SIX_PREFLIGHT_PATH
 SOURCE004_REPORT_SHA256 = "354876d040f774d8acf18071779289ee9cfc2ce50137650087ecf2f099399700"
 SOURCE004_PREFLIGHT_SHA256 = "9d32d5a707ea4ba6444fd680e4fc9256473c486c84c3f9a17def56b392e70d5e"
-OUTPUT_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-001"
+FIRST_EXECUTION_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-001"
+FIRST_EXECUTION_REPORT = FIRST_EXECUTION_DIR / "3d-junction-continuity-report.json"
+FIRST_EXECUTION_REPORT_SHA256 = "25fbacbf5546a944007287ee7ada8e5ae34dd9bbd7e1a45b7313a894ffb404ab"
+FIRST_EXECUTION_PREFLIGHT = GATE_DIR / "port-526-472-3d-junction-preflight-002.json"
+FIRST_EXECUTION_PREFLIGHT_SHA256 = "5a7b2af5735a7c1d8808a78455ee5362844466e7079e669bd1d5d922ef3a1669"
+OUTPUT_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-002"
+INITIALIZATION_DRYRUN_REPORT = GATE_DIR / "port-526-472-3d-junction-initialization-dryrun-001.json"
 PREVIOUS_PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-001.json"
 PREVIOUS_PREFLIGHT_SHA256 = "48d5b21121eab978f0f3e8165d2afd4197c17bd4d8c5ba317b523dff8dc39179"
-PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-002.json"
+PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-003.json"
 SOURCE_INTEGRITY_DIR = GATE_DIR / "port-526-472-source-integrity-preparation-003"
 SOURCE_INTEGRITY_REPORT = SOURCE_INTEGRITY_DIR / "source-integrity-preparation.json"
 SOURCE_INTEGRITY_SCRIPT = SOURCE_INTEGRITY_DIR / "prepare-source-integrity.py"
@@ -253,6 +260,7 @@ def _runtime_code_pins() -> dict:
         "geometry_gate": source / "resting_brachiocephalic_geometry_gate.py",
         "source007": source / "resting_brachiocephalic_source007.py",
         "legacy_port_diagnostic": source / "resting_brachiocephalic_port_diagnostic.py",
+        "nhanat_codec": source / "resting_pleura_proxy.py",
         "pose_predictor": source / "resting_brachiocephalic_pose_predictor.py",
         "hp98_verifier": source007.P6_PACKAGE / "resting_anatomy_verify.py",
     }
@@ -264,6 +272,19 @@ def build_preflight() -> dict:
     """Pin execution inputs without decoding geometry arrays or running predicates."""
     _require(not OUTPUT_DIR.exists(), "retain an existing diagnostic output; do not overwrite")
     _require(not PREFLIGHT_PATH.exists(), "retain an existing preflight; do not overwrite")
+    _require(FIRST_EXECUTION_REPORT.is_file()
+             and sha_file(FIRST_EXECUTION_REPORT) == FIRST_EXECUTION_REPORT_SHA256
+             and FIRST_EXECUTION_PREFLIGHT.is_file()
+             and sha_file(FIRST_EXECUTION_PREFLIGHT) == FIRST_EXECUTION_PREFLIGHT_SHA256,
+             "preserved diagnostic-001 report or its source preflight changed")
+    failed_execution = json.loads(FIRST_EXECUTION_REPORT.read_text())
+    _require(failed_execution.get("error") == {
+                 "type": "AttributeError",
+                 "message": "module 'numilab_human.resting_brachiocephalic_port_diagnostic' has no attribute '_parse_payload'"}
+             and failed_execution.get("native_or_gpu_work_performed") is False
+             and failed_execution.get("source_compiler_invoked") is False
+             and failed_execution.get("source_geometry_mutated") is False,
+             "diagnostic-001 is not the retained pre-geometry codec wiring failure")
     _require(PREVIOUS_PREFLIGHT_PATH.is_file()
              and sha_file(PREVIOUS_PREFLIGHT_PATH) == PREVIOUS_PREFLIGHT_SHA256,
              "the first 3D preflight predecessor changed")
@@ -364,6 +385,12 @@ def build_preflight() -> dict:
     pins = {
         "previous_3d_preflight": {"path": str(PREVIOUS_PREFLIGHT_PATH),
                                   "sha256": PREVIOUS_PREFLIGHT_SHA256},
+        "superseded_failed_run_preflight": {
+            "path": str(FIRST_EXECUTION_PREFLIGHT),
+            "sha256": FIRST_EXECUTION_PREFLIGHT_SHA256},
+        "superseded_failed_run_report": {
+            "path": str(FIRST_EXECUTION_REPORT),
+            "sha256": FIRST_EXECUTION_REPORT_SHA256},
         "source_integrity_preparation_report": {
             "path": str(SOURCE_INTEGRITY_REPORT),
             "sha256": SOURCE_INTEGRITY_REPORT_SHA256},
@@ -403,7 +430,7 @@ def build_preflight() -> dict:
     state = _git_state()
     _require(not state["dirty"], "preflight requires a clean committed source checkout")
     return {
-        "schema": "numi.human.brachiocephalic-3d-junction-preflight.v2",
+        "schema": "numi.human.brachiocephalic-3d-junction-preflight.v3",
         "status": "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED",
         "source_repository": state,
         "scope": {
@@ -793,6 +820,190 @@ def _source007_bridge_self_check_reuse(source007_report: dict,
     return output
 
 
+def _decode_candidate_payload(raw: bytes, source_map: dict):
+    """Decode ABI5 through the existing NHANAT codec owner and bind row IDs."""
+    parser = getattr(nhanat_codec, "_parse_payload", None)
+    _require(callable(parser), "existing resting_pleura_proxy NHANAT decoder is missing")
+    decoded = parser(raw)
+    _require(isinstance(decoded, tuple) and len(decoded) == 3,
+             "existing ABI5 decoder must return header, records, and row map")
+    header, records, rows = decoded
+    _require(isinstance(rows, dict)
+             and set(rows) == set(map(int, source_map)),
+             "decoded NHANAT stable IDs differ from the bound source_id_map")
+    _require({525, 526, 472}.issubset(rows),
+             "decoded NHANAT payload lacks the selected bridge and target IDs")
+    return header, records, rows
+
+
+def _prepare_source007_inputs(preflight: dict) -> dict:
+    """Run source/capture initialization only, stopping before geometry predicates."""
+    required_helpers = {
+        "nhanat_codec._parse_payload": getattr(nhanat_codec, "_parse_payload", None),
+        "source007._validate_source_candidate": getattr(
+            source007, "_validate_source_candidate", None),
+        "source007._load_central_p6": getattr(source007, "_load_central_p6", None),
+        "source007._step0_source": getattr(source007, "_step0_source", None),
+        "source007._load_predictor_transform": getattr(
+            source007, "_load_predictor_transform", None),
+        "source007._port_target_surfaces": getattr(
+            source007, "_port_target_surfaces", None),
+        "source007._bridge_surfaces": getattr(source007, "_bridge_surfaces", None),
+        "source007._read_port_pairs": getattr(source007, "_read_port_pairs", None),
+        "source007._load_retained_manifold": getattr(
+            source007, "_load_retained_manifold", None),
+    }
+    _require(all(callable(helper) for helper in required_helpers.values()),
+             "one or more pinned source/capture/dependency owner helpers are missing")
+
+    candidate_payload = source007.CANDIDATE_DIR / "resting-thorax.nhanatomy"
+    candidate_receipt = source007.PREPARATION_DIR / "resting-anatomy-receipt.json"
+    prep_report = source007.PREPARATION_DIR / "brachiocephalic-common-field-preparation.json"
+    validation = source007._validate_source_candidate(candidate_receipt, prep_report)
+    expected_payload_sha = preflight["inputs"]["candidate007_files"][
+        "resting-thorax.nhanatomy"]
+    _require(sha_file(candidate_payload) == expected_payload_sha,
+             "candidate NHA payload differs from the current preflight")
+    header, records, rows = _decode_candidate_payload(
+        candidate_payload.read_bytes(), validation["source_map"])
+
+    verifier = source007._load_central_p6()
+    _require(callable(getattr(verifier, "load_capture", None))
+             and callable(getattr(verifier, "prepare_surface", None))
+             and callable(getattr(verifier, "audit_surface_pair", None)),
+             "pinned HP98/P6 verifier lacks the required capture/surface contract")
+    manifest = json.loads(source007.CAPTURE_MANIFEST.read_text())
+    captured, identity, capture_meta = source007._step0_source(manifest, verifier)
+    body20_pose = capture_meta.get("body20", {})
+    _require(isinstance(identity, dict) and identity.get("accepted_step") == 0
+             and isinstance(body20_pose, dict)
+             and np.asarray(body20_pose.get("quaternion_xyzw")).shape == (4,)
+             and np.asarray(body20_pose.get("position_m")).shape == (3,),
+             "accepted source-0 pack/receipt/body20 initialization contract failed")
+    transform = source007._load_predictor_transform()
+    _require(callable(transform), "pinned source-0 Float32 rigid transform is not callable")
+    target_surfaces = source007._port_target_surfaces(captured, rows)
+    bridge_surfaces = source007._bridge_surfaces(
+        rows, capture_meta["body20"], transform)
+    _require(set(target_surfaces) == set(source007.REQUIRED_SOURCE_TARGETS)
+             and TARGET_KEY in target_surfaces,
+             "accepted source-0 target surface identity contract failed")
+    _require(set(bridge_surfaces) == set(source007.BRIDGE_KEYS)
+             and BRIDGE_KEY in bridge_surfaces,
+             "source-0 rigid bridge surface identity contract failed")
+
+    source007_report = json.loads(portdiag.RUN_REPORT.read_text())
+    bridge_self_check_reuse = _source007_bridge_self_check_reuse(
+        source007_report, bridge_surfaces)
+    pairs_by_port, attribution, stationarity = source007._read_port_pairs()
+    material_branch = _material_branch_scope(validation["source_map"], pairs_by_port)
+    _require(PAIR in pairs_by_port and len(pairs_by_port[PAIR]) == 63,
+             "frozen selected 526-to-472 face-pair interface is missing or changed")
+    _require(stationarity.get("status") == "PASS_SOURCE_PORT_SUPPORT_FIXED",
+             "frozen source collar support stationarity evidence changed")
+
+    return {
+        "candidate_payload": candidate_payload,
+        "candidate_receipt": candidate_receipt,
+        "preparation_report": prep_report,
+        "validation": validation,
+        "header": header,
+        "record_count": len(records),
+        "rows": rows,
+        "verifier": verifier,
+        "captured": captured,
+        "identity": identity,
+        "capture_meta": capture_meta,
+        "target_surfaces": target_surfaces,
+        "bridge_surfaces": bridge_surfaces,
+        "bridge_self_check_reuse": bridge_self_check_reuse,
+        "pairs_by_port": pairs_by_port,
+        "attribution": attribution,
+        "stationarity": stationarity,
+        "material_branch": material_branch,
+        "required_helper_symbols": sorted(required_helpers),
+    }
+
+
+def run_initialization_dryrun() -> dict:
+    """Exercise the real source/capture/dependency setup before exact predicates."""
+    _require(PREFLIGHT_PATH.is_file(), "run the no-geometry 3D preflight first")
+    preflight = json.loads(PREFLIGHT_PATH.read_text())
+    _assert_current_pins(preflight)
+    _require(not INITIALIZATION_DRYRUN_REPORT.exists(),
+             "retain an existing initialization dry-run report; do not overwrite")
+    started = time.perf_counter()
+    report = {
+        "schema": "numi.human.brachiocephalic-3d-junction-initialization.v1",
+        "status": "RUNNING_SOURCE007_INITIALIZATION_DRYRUN",
+        "preflight_path": str(PREFLIGHT_PATH),
+        "preflight_sha256": sha_file(PREFLIGHT_PATH),
+        "recorded_start_utc": datetime.now(UTC).isoformat(),
+        "geometry_arrays_loaded": False,
+        "exact_geometry_predicates_invoked": False,
+        "numerical_boolean_invoked": False,
+        "source_compiler_invoked": False,
+        "source_geometry_mutated": False,
+        "native_or_gpu_work_performed": False,
+    }
+    try:
+        prepared = _prepare_source007_inputs(preflight)
+        manifold3d = source007._load_retained_manifold()
+        _require(callable(getattr(manifold3d.Manifold, "to_mesh64", None)),
+                 "retained Manifold Mesh64 setup contract failed")
+        bridge = prepared["bridge_surfaces"][BRIDGE_KEY]
+        target = prepared["target_surfaces"][TARGET_KEY]
+        report.update({
+            "status": "INITIALIZATION_AND_DECODE_PASS_PRE_EXACT_PREDICATES",
+            "geometry_arrays_loaded": True,
+            "candidate_payload_sha256": sha_file(prepared["candidate_payload"]),
+            "source0_pack_sha256": prepared["identity"]["pack_sha256"],
+            "source0_receipt_sha256": prepared["identity"][
+                "capture_receipt_sha256"],
+            "decoded_surface_count": prepared["record_count"],
+            "decoded_stable_id_count": len(prepared["rows"]),
+            "decoded_max_stable_id": max(prepared["rows"]),
+            "decoded_ids_include_472_525_526": all(
+                stable_id in prepared["rows"] for stable_id in (472, 525, 526)),
+            "source0_target_surface_count": len(prepared["target_surfaces"]),
+            "source0_bridge_surface_count": len(prepared["bridge_surfaces"]),
+            "selected_bridge_vertex_count": len(bridge[0]),
+            "selected_bridge_triangle_count": len(bridge[1]),
+            "selected_target_vertex_count": len(target[0]),
+            "selected_target_triangle_count": len(target[1]),
+            "selected_frozen_face_pair_count": len(
+                prepared["pairs_by_port"][PAIR]),
+            "material_branch_scope": prepared["material_branch"],
+            "source007_bridge_self_check_reuse": prepared[
+                "bridge_self_check_reuse"],
+            "stationarity_status": prepared["stationarity"]["status"],
+            "attribution_candidate107": prepared["attribution"].get(
+                "candidate107_payload", {}),
+            "required_helper_symbols_called_or_loaded": prepared[
+                "required_helper_symbols"],
+            "retained_manifold_module_path": str(Path(manifold3d.__file__).resolve()),
+            "retained_manifold_mesh64_callable": True,
+            "first_not_invoked_exact_geometry_stage": "audit_brachiocephalic_3d_junction",
+            "limitations": [
+                "This is source/capture/dependency initialization only.",
+                "No exact closure/self, pair, inside, overlap, section, or CSG predicate was invoked.",
+                "No anatomical or junction admission is claimed.",
+            ],
+        })
+    except Exception as error:  # noqa: BLE001 - preserve the exact setup failure
+        report["status"] = "INITIALIZATION_DRYRUN_ABORTED_WITH_ERROR"
+        report["error"] = {"type": type(error).__name__, "message": str(error)}
+    report["recorded_finish_utc"] = datetime.now(UTC).isoformat()
+    report["elapsed_seconds"] = time.perf_counter() - started
+    _write_json(INITIALIZATION_DRYRUN_REPORT, report)
+    return {
+        "status": report["status"],
+        "report_path": str(INITIALIZATION_DRYRUN_REPORT),
+        "report_sha256": sha_file(INITIALIZATION_DRYRUN_REPORT),
+        "elapsed_seconds": report["elapsed_seconds"],
+    }
+
+
 def _solid_gate(verifier, manifold3d, bridge, target, *, role: str) -> dict:
     output = {"role": role, "passed": False, "floating_boolean_exact_topology_proven": False}
     try:
@@ -1088,7 +1299,8 @@ def _assert_current_pins(preflight: dict) -> None:
     _require(current == preflight.get("runtime_code_sha256"),
              "source or runtime code differs from preflight")
     pins = preflight["inputs"]
-    for key in ("previous_3d_preflight", "source_integrity_preparation_report",
+    for key in ("previous_3d_preflight", "superseded_failed_run_preflight",
+                "superseded_failed_run_report", "source_integrity_preparation_report",
                 "source_integrity_preparation_script"):
         entry = pins[key]
         path = Path(entry["path"])
@@ -1155,32 +1367,22 @@ def run() -> dict:
     }
     _write_json(PROGRESS_PATH, report)
     try:
-        candidate_payload = source007.CANDIDATE_DIR / "resting-thorax.nhanatomy"
-        candidate_receipt = source007.PREPARATION_DIR / "resting-anatomy-receipt.json"
-        prep_report = source007.PREPARATION_DIR / "brachiocephalic-common-field-preparation.json"
-        validation = source007._validate_source_candidate(candidate_receipt, prep_report)
-        _require(sha_file(candidate_payload) == preflight["inputs"]["candidate007_files"][
-            "resting-thorax.nhanatomy"], "candidate NHA payload changed")
-        _, _, rows = portdiag._parse_payload(candidate_payload.read_bytes())
-        _require(526 in rows and 472 in rows, "source007/N27 lacks stable IDs 526/472")
-        verifier = source007._load_central_p6()
-        manifest = json.loads(source007.CAPTURE_MANIFEST.read_text())
-        captured, identity, capture_meta = source007._step0_source(manifest, verifier)
-        transform = source007._load_predictor_transform()
-        target_surfaces = source007._port_target_surfaces(captured, rows)
-        bridge_surfaces = source007._bridge_surfaces(
-            rows, capture_meta["body20"], transform)
-        source007_report = json.loads(portdiag.RUN_REPORT.read_text())
-        bridge_self_check_reuse = _source007_bridge_self_check_reuse(
-            source007_report, bridge_surfaces)
+        prepared = _prepare_source007_inputs(preflight)
+        candidate_receipt = prepared["candidate_receipt"]
+        prep_report = prepared["preparation_report"]
+        validation = prepared["validation"]
+        verifier = prepared["verifier"]
+        identity = prepared["identity"]
+        capture_meta = prepared["capture_meta"]
+        bridge_surfaces = prepared["bridge_surfaces"]
+        target_surfaces = prepared["target_surfaces"]
+        bridge_self_check_reuse = prepared["bridge_self_check_reuse"]
         report["source007_bridge_exact_self_check_reuse"] = bridge_self_check_reuse
-        pairs_by_port, attribution, stationarity = source007._read_port_pairs()
-        material_branch = _material_branch_scope(validation["source_map"], pairs_by_port)
+        pairs_by_port = prepared["pairs_by_port"]
+        attribution = prepared["attribution"]
+        stationarity = prepared["stationarity"]
+        material_branch = prepared["material_branch"]
         report["material_branch_scope"] = material_branch
-        _require(PAIR in pairs_by_port and pairs_by_port[PAIR],
-                 "frozen source bridge collar interface is missing")
-        _require(stationarity.get("status") == "PASS_SOURCE_PORT_SUPPORT_FIXED",
-                 "source collar support stationarity evidence changed")
         candidate_bridge = bridge_surfaces[BRIDGE_KEY]
         candidate_target = target_surfaces[TARGET_KEY]
         baseline_bridge = candidate_bridge
@@ -1273,14 +1475,21 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--preflight", action="store_true")
+    group.add_argument("--initialize-only", action="store_true")
     group.add_argument("--run", action="store_true")
     args = parser.parse_args()
-    result = write_preflight() if args.preflight else run()
+    if args.preflight:
+        result = write_preflight()
+    elif args.initialize_only:
+        result = run_initialization_dryrun()
+    else:
+        result = run()
     print(json.dumps(result, sort_keys=True))
-    return 2 if result.get("status") == "DIAGNOSTIC_ABORTED_OR_REJECTED_WITH_ERROR" else (
-        0 if result.get("status", "").startswith(
-            ("PREFLIGHT_PINNED", "PASS_SOURCE_BOUND", "REJECT_SOURCE_BOUND",
-             "REJECT_SOURCE_CLOSED", "REJECT_CANDIDATE", "REJECT_FROZEN")) else 2)
+    status = result.get("status", "")
+    return 0 if status.startswith((
+        "PREFLIGHT_PINNED", "INITIALIZATION_AND_DECODE_PASS_PRE_EXACT_PREDICATES",
+        "PASS_SOURCE_BOUND", "REJECT_SOURCE_BOUND", "REJECT_SOURCE_CLOSED",
+        "REJECT_CANDIDATE", "REJECT_FROZEN")) else 2
 
 
 if __name__ == "__main__":

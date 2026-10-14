@@ -170,6 +170,24 @@ def test_source004_plane_failure_is_multiloop_then_missing_not_branching():
     assert first["edge_ids_retained_in_source004"] is False
 
 
+def test_candidate_decoder_calls_the_existing_abi5_codec_owner(monkeypatch):
+    calls = []
+    source_map = {"472": {}, "525": {}, "526": {}}
+    decoded_rows = {472: {}, 525: {}, 526: {}}
+
+    def parse_with_existing_owner(raw):
+        calls.append(raw)
+        return ("NHANAT-header", ["record"], decoded_rows)
+
+    monkeypatch.setattr(junction.nhanat_codec, "_parse_payload", parse_with_existing_owner)
+    header, records, rows = junction._decode_candidate_payload(b"pinned-payload", source_map)
+
+    assert calls == [b"pinned-payload"]
+    assert header == "NHANAT-header"
+    assert records == ["record"]
+    assert rows is decoded_rows
+
+
 def test_source007_compiler_owner_hashes_resolve_to_frozen_emission_revision():
     compiler_preflight = json.loads(source007.PREFLIGHT_PATH.read_text())
 
