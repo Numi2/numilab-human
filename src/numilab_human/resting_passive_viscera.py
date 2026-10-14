@@ -1669,7 +1669,7 @@ def _load_brachiocephalic_quotient_rows(
 def _historical_fj2217_retirement_fields(prior_owner_blend: dict) -> dict:
     """Retain a prior cap retirement only when the input receipt actually had one."""
     if not isinstance(prior_owner_blend, dict):
-        raise ValueError("prior passive vessel owner blend is not an object")
+        raise TypeError("prior passive vessel owner blend is not an object")
     retirement = prior_owner_blend.get("historical_local_source_face_retirement")
     if retirement is None:
         retirement = prior_owner_blend.get("local_source_face_retirement")
@@ -1681,7 +1681,7 @@ def _historical_fj2217_retirement_fields(prior_owner_blend: dict) -> dict:
             raise ValueError("historical FJ2217 retirement proof has no retirement record")
         return {}
     if not isinstance(retirement, dict) or not isinstance(reemit, dict):
-        raise ValueError("historical FJ2217 retirement record/proof is incomplete")
+        raise TypeError("historical FJ2217 retirement record/proof is incomplete")
     return {
         "historical_local_source_face_retirement": deepcopy(retirement),
         "historical_abi5_retirement_reemit_proof": deepcopy(reemit),
@@ -1716,7 +1716,7 @@ def append_viscera(
     )
     prior_owner_blend = prior_extension.get("passive_tissue_owner_blend", {})
     if not isinstance(prior_owner_blend, dict):
-        raise ValueError("prior passive vessel owner blend is not an object")
+        raise TypeError("prior passive vessel owner blend is not an object")
     base = Path(receipt["payload"]["path"])
     if human.sha256(base) != receipt["payload"]["sha256"]:
         raise ValueError("base anatomy receipt and payload differ")
