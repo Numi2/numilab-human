@@ -133,8 +133,39 @@ def _head_member_identity(bodyparts3d: dict, member_id: str, member_sha256: str)
     }
 
 
-def rebind_head_member_identity_metadata(receipt: dict, bodyparts3d: dict, member_sha256_by_id: dict[str, str]) -> tuple[dict, dict]:
-    """Copy a receipt with verified narrow labels; the NHANAT payload is unchanged."""
+def rebind_head_member_identity_metadata(
+    receipt: dict,
+    bodyparts3d: dict,
+    member_sha256_by_id: dict[str, str],
+    *,
+    payload_raw: bytes,
+) -> tuple[dict, dict]:
+    """Rebind head labels only after verifying the exact ABI5 typed source rows."""
+    if not isinstance(payload_raw, bytes):
+        raise TypeError("head identity migration requires raw NHANAT payload bytes")
+    declared_payload = receipt.get("payload")
+    if not isinstance(declared_payload, dict):
+        raise TypeError("head identity migration requires payload metadata")
+    payload_sha256 = hashlib.sha256(payload_raw).hexdigest()
+    if declared_payload.get("sha256") != payload_sha256:
+        raise ValueError("NHANAT payload bytes differ from the receipt payload hash")
+    if not isinstance(declared_payload.get("path"), str) or not declared_payload["path"]:
+        raise ValueError("NHANAT receipt must name the exact payload path")
+
+    from .resting_pleura_proxy import _parse_payload
+
+    header, _records, decoded_rows = _parse_payload(payload_raw)
+    header_fields = {
+        "abi": int(header[1]),
+        "surface_count": int(header[2]),
+        "vertex_count": int(header[3]),
+        "index_count": int(header[4]),
+        "registration_fingerprint32": f"{int(header[5]):08x}",
+        "source_sha256": header[6].hex(),
+    }
+    for field, value in header_fields.items():
+        if declared_payload.get(field) != value:
+            raise ValueError(f"NHANAT header {field} differs from the receipt")
     result = copy.deepcopy(receipt)
     source_map = result.get("provenance", {}).get("source_id_map")
     if not isinstance(source_map, dict):
@@ -153,6 +184,13 @@ def rebind_head_member_identity_metadata(receipt: dict, bodyparts3d: dict, membe
             raise ValueError(f"head source member maps to unexpected stable ID for {member_id}")
         if row.get("source_sha256") != digest:
             raise ValueError(f"receipt source member hash differs for {member_id}")
+        if row.get("layer") != 1 or row.get("body_index") != 23:
+            raise ValueError(f"receipt typed owner differs for head row {sid}")
+        decoded = decoded_rows.get(expected["stable_id"])
+        if decoded is None:
+            raise ValueError(f"NHANAT payload is missing head row {sid}")
+        if decoded.get("layer") != 1 or decoded.get("body_index") != 23:
+            raise ValueError(f"NHANAT typed owner differs for head row {sid}")
         family = row.get("head_family")
         if family != {"concept_id": expected["family_concept_id"], "source_name": "brain", "hierarchy": "part_of"}:
             raise ValueError(f"head receipt family provenance differs for {member_id}")
@@ -163,8 +201,28 @@ def rebind_head_member_identity_metadata(receipt: dict, bodyparts3d: dict, membe
             raise ValueError(f"unexpected head owner label for {member_id}")
         owner.update(label="brain", anatomical_component=identity)
         row.update(name=identity["name"], source_owner_metadata=owner)
-        migrated.append({"stable_id": sid, "source_member": member_id, "before_name": "brain", "after_name": identity["name"], "source_member_sha256": digest})
-    return result, {"status": "METADATA_ONLY_SOURCE_IDENTITY_REBIND_NOT_GEOMETRY_ADMISSION", "changed_stable_ids": [row["stable_id"] for row in migrated], "rows": migrated, "membership_table_sha256": HEAD_MEMBERSHIP_TABLE_SHA256, "native_payload_sha256_unchanged": True, "separate_physiological_compartment_added": False}
+        migrated.append({
+            "semantic_id_from_layer": 51010,
+            "stable_id": sid,
+            "source_member": member_id,
+            "before_name": "brain",
+            "after_name": identity["name"],
+            "source_member_sha256": digest,
+            "layer": 1,
+            "body_index": 23,
+            "payload_record": list(decoded["record"]),
+        })
+    return result, {
+        "status": "METADATA_ONLY_SOURCE_IDENTITY_REBIND_NOT_GEOMETRY_ADMISSION",
+        "changed_stable_ids": [row["stable_id"] for row in migrated],
+        "rows": migrated,
+        "membership_table_sha256": HEAD_MEMBERSHIP_TABLE_SHA256,
+        "native_payload_sha256_unchanged": True,
+        "native_payload_sha256": payload_sha256,
+        "native_payload_path": declared_payload["path"],
+        "payload_typed_rows_verified": True,
+        "separate_physiological_compartment_added": False,
+    }
 
 
 def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_manifest_path: Path | None = None) -> dict:
