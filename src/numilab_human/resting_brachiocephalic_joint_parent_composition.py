@@ -97,6 +97,31 @@ def _validated_vascular_rows(
 
 
 
+
+def native_unit_partition(terms: list[list[Any]]) -> tuple[list[list[Any]], bool]:
+    """Satisfy the native binary64 input partition without changing GPU f32.
+
+    The driver must additionally prove one-hot source vertices before claiming
+    unchanged compiled products. Native loading multiplies binary64 coefficients
+    by the source vertex lane weight before its final Float32 cast.
+    """
+    values = [float(term[3]) for term in terms]
+    total = math.fsum(values)
+    _require(math.isfinite(total) and total > 0
+             and abs(total - 1.0) <= 2.0 ** -24,
+             "source coefficients are outside the native normalization budget")
+    normalized = [value / total for value in values]
+    _require(all(struct.pack("<f", before) == struct.pack("<f", after)
+                 for before, after in zip(values, normalized)),
+             "native partition normalization changes a GPU coefficient")
+    _require(abs(sum(normalized) - 1.0) <= 1e-12,
+             "native binary64 coefficient partition remains invalid")
+    output = deepcopy(terms)
+    for term, value in zip(output, normalized):
+        term[3] = value
+    return output, normalized != values
+
+
 def _joint_vascular_ids(extension: dict[str, Any]) -> tuple[int, ...]:
     """Accept the original row477 owner or its existing two-row successor."""
     rows = extension.get("anatomy_surfaces")
@@ -170,6 +195,7 @@ def merge_vascular_parent_maps(
 
     output_rows = []
     remapped_term_count = 0
+    normalized_vertex_count = 0
     referenced_source_hashes: dict[str, int] = {}
     for stable_id in _VASCULAR_IDS:
         source_row = deepcopy(common_rows[stable_id])
@@ -180,6 +206,9 @@ def merge_vascular_parent_maps(
                 referenced_source_hashes[common_sources[original_index]["sha256"]] = mapped_index
                 term[0] = mapped_index
                 remapped_term_count += 1
+            native_terms, changed = native_unit_partition(terms)
+            source_row["vertices"][vertex_index] = native_terms
+            normalized_vertex_count += int(changed)
         prior_row = existing_rows.get(stable_id)
         if prior_row is not None:
             for key, value in prior_row.items():
@@ -217,6 +246,9 @@ def merge_vascular_parent_maps(
         "referenced_common_source_indices": referenced,
         "source_hash_to_joint_index": referenced_source_hashes,
         "remapped_parent_term_count": remapped_term_count,
+        "native_binary64_partition_normalized_vertex_count": normalized_vertex_count,
+        "stored_gpu_coefficient_float32_bytes_preserved": True,
+        "compiled_product_preservation_requires_one_hot_carrier_proof": True,
         "joint_muscle_surface_maps_byte_semantics_preserved": True,
         "joint_source_payload_prefix_preserved": True,
         "physical_state_mass_and_force_fields_added": False,

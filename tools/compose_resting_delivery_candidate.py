@@ -13,6 +13,9 @@ import shutil
 import sys
 from pathlib import Path
 
+import numpy as np
+
+from numilab_human.passive_attachment_composition import _read_nhtiss4
 from numilab_human.resting_brachiocephalic_common_field import _resolve_sidecar
 from numilab_human.resting_brachiocephalic_joint_parent_composition import (
     extend_joint_source_inventory,
@@ -86,6 +89,26 @@ def compose(forearm_path, vascular_path, head_path, evidence_path, output):
     for extension in (fext, vext):
         for source in extension["source_payloads"]:
             require(sha(source["path"]) == source["sha256"], "parent source changed")
+    # The native loader computes float(c * double(source_lane_weight)).
+    # Prove every replaced source vertex is one-hot before normalizing c.
+    carriers = {}
+    one_hot_terms = 0
+    for row in vext["anatomy_surfaces"]:
+        for terms in row["vertices"]:
+            for source_index, stable_id, vertex_index, _coefficient in terms:
+                if source_index not in carriers:
+                    carriers[source_index] = _read_nhtiss4(
+                        Path(vext["source_payloads"][source_index]["path"]))
+                tissue = carriers[source_index]
+                record = next(r for r in tissue["records"] if int(r[6]) == stable_id)
+                require(vertex_index < record[3], "carrier vertex out of range")
+                weights = np.ndarray((record[3], 4), dtype="<f4",
+                    buffer=tissue["raw"], offset=tissue["vertex_start"] + record[2] * 56 + 40,
+                    strides=(56, 4))[vertex_index]
+                active = weights[weights > 0]
+                require(len(active) == 1 and float(active[0]) == 1.0,
+                        "replaced carrier is not one-hot; GPU products need a different proof")
+                one_hot_terms += 1
     extended, index_map, source_audit = extend_joint_source_inventory(
         vext, fext, append_paths_by_common_index={
             index: source["path"] for index, source in enumerate(vext["source_payloads"])
@@ -117,6 +140,8 @@ def compose(forearm_path, vascular_path, head_path, evidence_path, output):
         "status": "SOURCE_PREPARATION_ONLY_NOT_ADMISSION",
         "inputs": {key: {"path": str(path), "sha256": PINS[key]} for key, path in inputs.items()},
         "source_inventory": source_audit, "parent_composition": parent_audit,
+        "native_one_hot_carrier_terms_verified": one_hot_terms,
+        "native_compiled_coefficient_products_byte_preserved": True,
         "passive_head_rebind": head_audit,
         "physical_mass_accounting_unchanged": True,
         "functional_bindings_unchanged_except_anatomy_sha256": True,

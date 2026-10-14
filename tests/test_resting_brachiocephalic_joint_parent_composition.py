@@ -5,6 +5,7 @@ import pytest
 from numilab_human.resting_brachiocephalic_joint_parent_composition import (
     extend_joint_source_inventory,
     merge_vascular_parent_maps,
+    native_unit_partition,
 )
 from tools import prepare_brachiocephalic_joint_parent_bindings as prepare
 
@@ -534,3 +535,27 @@ def test_prior_binary64_unit_map_can_be_replaced_but_new_map_requires_exact_f32(
     with pytest.raises(ValueError, match="not exact Float32"):
         extend_joint_source_inventory(
             common, joint, append_paths_by_common_index={5: "new-source.nhtissue"})
+
+
+def test_native_input_partition_preserves_float32_emitted_coefficients():
+    import math
+    import struct
+
+    weights = [struct.unpack("<f", struct.pack("<f", value))[0] for value in (0.1, 0.9)]
+    assert abs(sum(weights) - 1) > 1e-12
+    terms = [[0, 1, 0, weights[0]], [0, 2, 0, weights[1]]]
+    normalized, changed = native_unit_partition(terms)
+    assert changed
+    assert abs(sum(term[3] for term in normalized) - 1) <= 1e-12
+    assert math.fsum(term[3] for term in normalized) == 1
+    assert [struct.pack("<f", term[3]) for term in normalized] == [
+        struct.pack("<f", value) for value in weights]
+    assert terms[0][3] == weights[0]  # input source receipt is untouched
+
+
+def test_native_partition_rejects_float32_coefficient_change():
+    # The input sum fits the preparation budget, but normalization moves a
+    # source coefficient to another representable GPU value.
+    terms = [[0, 1, 0, 0.5], [0, 2, 0, 0.5000000596046448]]
+    with pytest.raises(ValueError, match="changes a GPU coefficient"):
+        native_unit_partition(terms)
