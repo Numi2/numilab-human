@@ -272,7 +272,8 @@ def test_parent_pose_baseline_blends_in_exact_float32_term_order():
         expected + np.asarray(second[0] * np.float32(0.5), dtype="<f4"),
         dtype="<f4")
     np.testing.assert_array_equal(output[0], expected)
-    assert report["native_accumulation_order_preserved"]
+    assert report["source_term_order_diagnostic"]
+    assert report["bit_exact_native_accumulation_claim"] is False
     assert report["used_parent_source_rows"] == [1, 2]
     assert report["maximum_partition_residual_f64"] == 0.0
 
@@ -304,6 +305,57 @@ def test_source0_gate_stays_blocked_until_current_native_capture_and_missing_col
     owner_delta["current_capture_candidate_ready"] = True
     assert prep._source0_preflight_status([], [], owner_delta) == (
         "SOURCE0_SEAMOWNER_CAPTURE_READY_NO_GEOMETRY_PREDICATE")
+
+
+def test_ulnar_proof_separates_data_inputs_from_executable_dependency_pins(tmp_path):
+    data_path = tmp_path / "source.json"
+    code_path = tmp_path / "manifold.so"
+    data_sha = "a" * 64
+    code_sha = "b" * 64
+    data, code = prep._validate_ulnar_proof_pin_namespaces(
+        {str(data_path): data_sha},
+        {str(code_path): code_sha},
+        {str(data_path): data_sha},
+        {str(code_path): code_sha},
+    )
+    assert data[str(data_path.resolve())] == data_sha
+    assert code[str(code_path.resolve())] == code_sha
+
+    with pytest.raises(ValueError, match="historical data-input identity"):
+        prep._validate_ulnar_proof_pin_namespaces(
+            {}, {str(code_path): code_sha},
+            {str(data_path): data_sha}, {str(code_path): code_sha})
+    with pytest.raises(ValueError, match="executable dependency identity"):
+        prep._validate_ulnar_proof_pin_namespaces(
+            {str(data_path): data_sha}, {},
+            {str(data_path): data_sha}, {str(code_path): code_sha})
+
+
+def test_common_field_displacement_uses_ordered_float32_map_products_and_sums():
+    local = np.asarray([[16_777_216.0, -4.0, 2.0]], dtype="<f4")
+    basis = np.zeros((1, 7, 4), dtype="<f4")
+    basis[0, 0, :3] = [1.0, 2.0, -3.0]
+    basis[0, 1, :3] = [-16_777_216.0, 1.0, 4.0]
+    basis[0, 2, :3] = [0.25, -2.0, 1.0]
+    coordinates = np.asarray([1.0, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0], dtype="<f4")
+    output = prep._common_field_displace_vertices(local, basis, coordinates)
+    expected = local.copy()
+    for index in range(7):
+        product = np.asarray(basis[:, index, :3] * coordinates[index], dtype="<f4")
+        expected = np.asarray(expected + product, dtype="<f4")
+    np.testing.assert_array_equal(output, expected)
+    assert output.dtype == np.dtype("<f4")
+
+
+def test_common_field_displacement_rejects_nonfinite_or_wrong_record_width():
+    local = np.zeros((1, 3), dtype="<f4")
+    basis = np.zeros((1, 7, 4), dtype="<f4")
+    coordinates = np.zeros(7, dtype="<f4")
+    with pytest.raises(ValueError, match="malformed"):
+        prep._common_field_displace_vertices(local, basis[:, :, :3], coordinates)
+    basis[0, 0, 0] = np.nan
+    with pytest.raises(ValueError, match="malformed"):
+        prep._common_field_displace_vertices(local, basis, coordinates)
 
 
 def test_owner_composition_delta_allows_only_475_477_and_preserves_eight_source_cap(

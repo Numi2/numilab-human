@@ -8,6 +8,7 @@ source-collar ancestry. It deliberately runs no geometry predicates.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import importlib.util
 import json
@@ -180,7 +181,14 @@ PARENT_POSE_FORWARD_OWNER_SHA256 = (
 PARENT_POSE_SOURCE_INDEX = 6
 PARENT_POSE_ROWS = {475: (1, 2), 477: (3, 4)}
 PARENT_POSE_BODY_BY_SOURCE_ROW = {1: 20, 2: 91, 3: 20, 4: 91}
-COMMON_FIELD_BASELINE_PENDING_IDS = (7, 10, 525, 526)
+COMMON_FIELD_BASELINE_ROWS = {7: 381, 10: 318, 471: 362, 525: 376, 526: 275}
+COMMON_FIELD_COORDINATE_COLUMNS = (
+    "common_coordinate_RA", "common_coordinate_RV",
+    "common_coordinate_LA", "common_coordinate_LV",
+    "common_coordinate_RA_material",
+    "common_coordinate_ventricular_material",
+    "common_coordinate_LA_material",
+)
 
 
 def _require(ok: bool, message: str) -> None:
@@ -553,6 +561,40 @@ def _ulnar_source_witness_pairs(
     }
 
 
+def _validate_ulnar_proof_pin_namespaces(
+    raw_data_pins: dict, raw_code_pins: dict,
+    expected_data_pins: dict, expected_code_pins: dict,
+) -> tuple[dict, dict]:
+    """Keep immutable proof inputs separate from its executable dependencies."""
+    _require(isinstance(raw_data_pins, dict) and isinstance(raw_code_pins, dict),
+             "ulnar source proof lacks separate data/code pin maps")
+
+    def normalize(pins, label):
+        result = {}
+        for raw_path, digest in pins.items():
+            _require(isinstance(raw_path, str) and Path(raw_path).is_absolute()
+                     and isinstance(digest, str) and len(digest) == 64
+                     and all(ch in "0123456789abcdef" for ch in digest),
+                     f"ulnar proof {label} pin is malformed")
+            path = str(Path(raw_path).resolve())
+            _require(path not in result,
+                     f"ulnar proof {label} pins repeat a resolved path")
+            result[path] = digest
+        return result
+
+    data_pins = normalize(raw_data_pins, "data")
+    code_pins = normalize(raw_code_pins, "code")
+    expected_data = normalize(expected_data_pins, "expected data")
+    expected_code = normalize(expected_code_pins, "expected code")
+    _require(all(data_pins.get(path) == digest
+                 for path, digest in expected_data.items()),
+             "ulnar source proof historical data-input identity changed")
+    _require(all(code_pins.get(path) == digest
+                 for path, digest in expected_code.items()),
+             "ulnar source proof executable dependency identity changed")
+    return data_pins, code_pins
+
+
 def _load_ulnar_source_witnesses(
     current_rows: dict, current_source_map: dict,
 ) -> tuple[dict[tuple[int, int], dict], dict]:
@@ -561,18 +603,28 @@ def _load_ulnar_source_witnesses(
     data = json.loads(ULNAR_SOURCE_PROOF.read_text())
     raw_inputs = data.get("source_input_sha256")
     _require(isinstance(raw_inputs, dict), "ulnar source proof lacks input hashes")
-    normalized_inputs = {str(Path(path).resolve()): sha for path, sha in raw_inputs.items()}
     source_input_pins = {
         str(ULNAR_PROOF_BASE_RECEIPT.resolve()): ULNAR_PROOF_BASE_RECEIPT_SHA256,
         str(ULNAR_PROOF_BASE_PAYLOAD.resolve()): ULNAR_PROOF_BASE_PAYLOAD_SHA256,
+        str(source007.SOURCE_ARCHIVE.resolve()): source007.SOURCE_ARCHIVE_SHA,
+        str(source007.QUOTIENT_REPORT.resolve()): source007.QUOTIENT_REPORT_SHA,
+        str(source007.QUOTIENT_NPZ.resolve()): source007.QUOTIENT_NPZ_SHA,
         str(source007.REGISTRATION.resolve()): source007.REGISTRATION_SHA,
         str(source007.RIGID.resolve()): source007.RIGID_SHA,
-        **source007.MANIFOLD_SHA,
+        **{str(Path(path).resolve()): digest
+           for path, digest in source007.ROUTE110_SHA.items()},
     }
-    _require(all(normalized_inputs.get(path) == digest
-                 for path, digest in source_input_pins.items()),
-             "ulnar source proof input receipt, payload, registration, or NHRIGID identity changed")
-    code_pins = data.get("current_shared_geometry_owner_code_sha256", {})
+    raw_code_pins = data.get("current_shared_geometry_owner_code_sha256", {})
+    normalized_inputs, normalized_code_pins = (
+        _validate_ulnar_proof_pin_namespaces(
+            raw_inputs, raw_code_pins, source_input_pins, source007.MANIFOLD_SHA))
+    manifold_code_pins = {
+        str(Path(path).resolve()): digest
+        for path, digest in source007.MANIFOLD_SHA.items()
+    }
+    code_pins = normalized_code_pins
+    for path, digest in manifold_code_pins.items():
+        _resolved_pin(Path(path), digest)
     transform_pins = [
         (Path(path).resolve(), digest) for path, digest in code_pins.items()
         if Path(path).name == TRANSFORM_OWNER.name
@@ -609,7 +661,9 @@ def _load_ulnar_source_witnesses(
              "pairs_sha256": current_pairs[(parent, child)]["pairs_sha256"]}
             for parent, child in ULNAR_SOURCE_LINKS
         ],
-        "source_input_sha256": source_input_pins,
+        "source_data_input_sha256": source_input_pins,
+        "proof_recorded_data_input_sha256": normalized_inputs,
+        "manifold_dependency_code_sha256": manifold_code_pins,
         "proof_code_pin_count": len(code_pins),
         "proof_source_rows_match_current_candidate_exactly": True,
     }
@@ -1034,9 +1088,264 @@ def _blend_parent_pose_vertices(
         "maximum_partition_residual_f64": max(
             abs(sum(float(term[3]) for term in terms) - 1.0)
             for terms in terms_by_vertex),
-        "native_accumulation_order_preserved": True,
+        "source_term_order_diagnostic": True,
+        "bit_exact_native_accumulation_claim": False,
         "output_xyz_f32_sha256": _sha_bytes(output.tobytes()),
     }
+
+
+def _common_field_displace_vertices(local_xyz, displacement_basis, coordinates):
+    """Apply the existing seven-coordinate material map in explicit Float32 order."""
+    local = np.ascontiguousarray(local_xyz, dtype="<f4").copy()
+    basis = np.ascontiguousarray(displacement_basis, dtype="<f4")
+    q = np.ascontiguousarray(coordinates, dtype="<f4")
+    _require(local.ndim == 2 and local.shape[1] == 3
+             and basis.shape == (len(local), 7, 4) and q.shape == (7,)
+             and np.isfinite(local).all() and np.isfinite(basis).all()
+             and np.isfinite(q).all(),
+             "common-field source displacement inputs are malformed")
+    for coordinate_index in range(7):
+        product = np.ascontiguousarray(
+            basis[:, coordinate_index, :3] * q[coordinate_index], dtype="<f4")
+        local = np.ascontiguousarray(local + product, dtype="<f4")
+    return local
+
+
+def _common_field_source_surfaces(
+    context: dict, source_rows: dict, source_map: dict,
+    current_receipt: dict,
+) -> tuple[dict, dict, dict]:
+    """Reconstruct the five mapped torso vessel rows from the actually invoked common owner.
+
+    This is a source-coordinate reconstruction using the accepted native
+    coordinate vector and existing map. It is an offline arithmetic model;
+    Metal FMA/order and native output are not claimed bit-exact.
+    """
+    pack_path = context.get("capture_source_paths", {}).get(
+        "capture_pack_path", capture_gate.CAPTURE_PACK)
+    native_run = Path(pack_path).resolve().parents[1]
+    identity_path = native_run / "common-field-map-identity.json"
+    _require(identity_path.is_file(),
+             "accepted run lacks the existing common-field identity receipt")
+    identity_bytes = identity_path.read_bytes()
+    identity_sha = _sha_bytes(identity_bytes)
+    identity = json.loads(identity_bytes)
+    capture_receipt = context["capture_receipt"]
+    source_payload_sha = current_receipt.get("payload", {}).get("sha256")
+    _require(identity_sha == capture_receipt.get(
+                 "common_field_identity_receipt_sha256")
+             and identity.get("source_anatomy_payload_sha256") == source_payload_sha
+             and capture_receipt.get("common_field_source_anatomy_payload_sha256")
+             == source_payload_sha
+             and identity.get("geometry_mode") == "common_seven_coordinate_v1"
+             and identity.get("coordinate_order") == [
+                 "RA", "RV", "LA", "LV", "RA-material",
+                 "ventricular-material", "LA-material"],
+             "accepted common-field receipt is not bound to the invoked NHA/map ABI")
+    _require(identity.get("map_record_layout")
+             == "seven float4 displacements, xyz metres per unit dimensionless coordinate, W exact +0",
+             "common-field map record layout changed")
+    components = {
+        "identity": identity_path,
+        "map": native_run / identity["map"]["path"],
+        "parameters": native_run / identity["parameters"]["path"],
+        "polynomials": native_run / identity["polynomials"]["path"],
+        "domain_boxes": native_run / identity["domain_boxes"]["path"],
+        "surface_audit": native_run / "resting-surface-audit.csv",
+    }
+    for name, record_name in (
+        ("map", "common_field_map_sha256"),
+        ("parameters", "common_field_parameters_sha256"),
+        ("polynomials", "common_field_polynomial_sha256"),
+        ("domain_boxes", "common_field_domain_boxes_sha256"),
+    ):
+        record = identity[{
+            "map": "map", "parameters": "parameters",
+            "polynomials": "polynomials", "domain_boxes": "domain_boxes",
+        }[name]]
+        _require(record.get("sha256") == capture_receipt.get(record_name),
+                 f"accepted capture common-field {name} hash differs from identity receipt")
+    expected_component_sizes = {
+        "map": int(identity["map"]["record_count"])
+                   * int(identity["map"]["record_stride_bytes"]),
+        "parameters": int(identity["parameters"]["record_bytes"]),
+        "polynomials": int(identity["polynomials"]["term_count"])
+                        * int(identity["polynomials"]["volume_count"]) * 4,
+        "domain_boxes": int(identity["domain_boxes"]["count"])
+                        * int(identity["domain_boxes"]["record_stride_bytes"]),
+    }
+    component_pins = {}
+    component_bytes = {}
+    for name, path in components.items():
+        _require(path.is_file(), f"accepted common-field {name} input is missing")
+        raw = path.read_bytes()
+        digest = _sha_bytes(raw)
+        if name in expected_component_sizes:
+            _require(len(raw) == expected_component_sizes[name],
+                     f"common-field {name} byte count differs from the identity receipt")
+            record_name = {
+                "map": "map", "parameters": "parameters",
+                "polynomials": "polynomials", "domain_boxes": "domain_boxes",
+            }[name]
+            _require(digest == identity[record_name]["sha256"],
+                     f"common-field {name} digest differs from the identity receipt")
+        component_pins[str(path.resolve())] = digest
+        component_bytes[name] = raw
+    map_record_count = int(identity["map"]["record_count"])
+    map_stride = int(identity["map"]["record_stride_bytes"])
+    _require(map_stride == 112
+             and len(component_bytes["map"]) == map_record_count * map_stride,
+             "common-field map is not the existing 112-byte ABI")
+    all_records = np.frombuffer(component_bytes["map"], dtype="<f4").reshape(
+        map_record_count, 7, 4)
+    coordinate_bits = np.ascontiguousarray(all_records[:, :, 3]).view("<u4")
+    _require(np.all(coordinate_bits == 0),
+             "common-field map W lanes are not canonical positive zero")
+    csv_text = component_bytes["surface_audit"].decode("utf-8")
+    parsed = list(csv.DictReader(csv_text.splitlines()))
+    zero_rows = [row for row in parsed
+                 if row.get("step") == "0" and row.get("time_s") == "0"]
+    _require(bool(zero_rows)
+             and all(row.get("geometry_mode") == "common_seven_coordinate_v1"
+                     and row.get("common_coordinate_solver_status") == "0"
+                     for row in zero_rows),
+             "accepted surface audit lacks a valid step-zero common coordinate record")
+    coordinate_rows = [np.asarray([
+        np.float32(float(row[column])) for column in COMMON_FIELD_COORDINATE_COLUMNS
+    ], dtype="<f4") for row in zero_rows]
+    _require(all(np.isfinite(row).all() for row in coordinate_rows)
+             and all(row.tobytes() == coordinate_rows[0].tobytes()
+                     for row in coordinate_rows[1:]),
+             "duplicate step-zero audit records disagree on solved common coordinates")
+    coordinates = coordinate_rows[0]
+    pose_rows = [
+        row for row in capture_receipt.get("accepted_body_poses", [])
+        if row.get("body_index") == 20
+    ]
+    _require(len(pose_rows) == 1,
+             "accepted capture lacks a unique Body20 pose for passive vessel rows")
+    pose = pose_rows[0]
+    q = np.ascontiguousarray(pose.get("quaternion_xyzw"), dtype="<f4")
+    t = np.ascontiguousarray(pose.get("position_m"), dtype="<f4")
+    _require(q.shape == (4,) and t.shape == (3,)
+             and np.isfinite(q).all() and np.isfinite(t).all(),
+             "accepted Body20 pose is invalid")
+    transform_f32 = _load_transform()
+    ranges = identity.get("passive_attachment_ranges", [])
+    mapped_network_ids = {
+        item.get("stable_id") for item in ranges
+        if item.get("semantic") == 51011
+        and item.get("stable_id") in NETWORK_STABLE_IDS
+    }
+    _require(mapped_network_ids == set(COMMON_FIELD_BASELINE_ROWS),
+             "existing common-field map covers an undeclared network-row set")
+    surfaces = {}
+    row_reports = {}
+    for stable_id, expected_count in COMMON_FIELD_BASELINE_ROWS.items():
+        row = source_rows.get(stable_id)
+        source_identity = source_map.get(str(stable_id))
+        _require(isinstance(row, dict) and isinstance(source_identity, dict),
+                 f"common-field baseline row {stable_id} is absent")
+        _require(int(row["body_index"]) == 20
+                 and int(row["record"][2]) == expected_count
+                 and int(row["record"][5]) == stable_id
+                 and source_identity.get("body_index") == 20,
+                 f"common-field row {stable_id} lost its ABI5 Body20 source identity")
+        matches = [
+            item for item in ranges
+            if item.get("semantic") == 51011
+            and item.get("stable_id") == stable_id
+        ]
+        _require(len(matches) == 1,
+                 f"common-field map lacks a unique stable-ID range for row {stable_id}")
+        region = matches[0]
+        first = region.get("first_vertex")
+        count = region.get("vertex_count")
+        _require(type(region.get("body_index")) is int
+                 and region["body_index"] == 20
+                 and type(first) is int and type(count) is int
+                 and count == expected_count and 0 <= first <= map_record_count - count,
+                 f"common-field range is invalid for row {stable_id}")
+        basis = all_records[first:first + count]
+        local_xyz = np.ascontiguousarray(row["vertices6"][:, :3], dtype="<f4")
+        deformed_local = _common_field_displace_vertices(
+            local_xyz, basis, coordinates)
+        world = np.ascontiguousarray(
+            transform_f32(q, t, deformed_local), dtype="<f4")
+        faces = np.ascontiguousarray(row["faces"], dtype="<u4")
+        captured = context["surfaces"].get((51011, stable_id))
+        _require(captured is not None,
+                 f"accepted capture lacks common-field row {(51011, stable_id)}")
+        capture_faces = np.ascontiguousarray(captured[1], dtype="<u4")
+        vertex_map, ancestry = _source_to_capture_vertex_map(
+            faces, capture_faces, len(world), len(captured[0]))
+        _require(vertex_map is not None
+                 and np.all(vertex_map >= 0)
+                 and len(world) == len(captured[0]),
+                 f"common-field row {stable_id} cannot align to exact capture ancestry")
+        aligned = np.empty_like(np.asarray(captured[0], dtype="<f4"))
+        for source_vertex, capture_vertex in enumerate(vertex_map):
+            aligned[int(capture_vertex)] = world[source_vertex]
+        actual = np.ascontiguousarray(captured[0], dtype="<f4")
+        residual = np.abs(aligned.astype("<f8") - actual.astype("<f8"))
+        surfaces[(51011, stable_id)] = (
+            aligned, capture_faces, None,
+            np.ascontiguousarray(captured[3], dtype="<u8"))
+        row_reports[str(stable_id)] = {
+            "typed_identity": [51011, stable_id],
+            "body_index": 20,
+            "source_vertex_count": len(local_xyz),
+            "source_face_count": len(faces),
+            "common_map_range": {"first_vertex": first, "vertex_count": count},
+            "source_local_xyz_f32_sha256": _sha_bytes(local_xyz.tobytes()),
+            "source_faces_u32_sha256": _sha_bytes(faces.tobytes()),
+            "map_range_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(basis, dtype="<f4").tobytes()),
+            "source_deformed_local_xyz_f32_sha256": _sha_bytes(
+                deformed_local.tobytes()),
+            "source_owner_world_xyz_f32_sha256": _sha_bytes(world.tobytes()),
+            "capture_vertex_ancestry": ancestry,
+            "aligned_owner_world_xyz_f32_sha256": _sha_bytes(aligned.tobytes()),
+            "actual_capture_xyz_f32_sha256": _sha_bytes(actual.tobytes()),
+            "owner_reconstruction_vs_capture_max_abs_m": float(residual.max()),
+            "owner_reconstruction_vs_capture_rms_m": float(
+                np.sqrt(np.mean(residual * residual))),
+            "exact_position_match_count": int(np.count_nonzero(
+                np.all(aligned.view("<u4") == actual.view("<u4"), axis=1))),
+            "comparison_scope": (
+                "diagnostic comparison of an offline Float32 source/map reconstruction "
+                "with actual captured positions; does not establish native arithmetic equivalence"),
+        }
+    method = (
+        "Read the actual captured step-zero solved seven-coordinate vector, then apply "
+        "the existing bound common-field map range to each source-local vertex using "
+        "sequential Float32 product/add arithmetic and the existing Body20 transform. "
+        "This is a source-owner reconstruction baseline; Metal FMA and exact native "
+        "arithmetic are not claimed."
+    )
+    report = {
+        "status": "COMMON_FIELD_OWNER_SOURCE_RECONSTRUCTION_READY_NOT_ADMISSION",
+        "geometry_predicates_run": False,
+        "native_arithmetic_bit_exact_claim": False,
+        "common_field_identity_receipt_sha256": identity_sha,
+        "source_anatomy_payload_sha256": source_payload_sha,
+        "map_record_count": map_record_count,
+        "map_record_stride_bytes": map_stride,
+        "coordinate_order": identity["coordinate_order"],
+        "accepted_step_zero_coordinates_f32": [float(value) for value in coordinates],
+        "identical_step_zero_audit_record_count": len(zero_rows),
+        "accepted_body20_pose": {
+            "position_m_f32": [float(value) for value in t],
+            "quaternion_xyzw_f32": [float(value) for value in q],
+            "body_pose_source": "actual accepted capture receipt",
+        },
+        "input_sha256": component_pins,
+        "rows": row_reports,
+        "method": method,
+        "historical_map_prefix_and_physical_state_changed": False,
+        "clinical_or_physiological_claim": False,
+    }
+    return surfaces, report, component_pins
 
 
 def _load_parent_pose_forward_owner():
@@ -2114,6 +2423,13 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
     _require(set(parent_pose_surfaces) == {
         (51011, stable_id) for stable_id in PARENT_POSE_ROWS
     }, "independent parent-pose baseline does not cover rows 475 and 477")
+    common_field_surfaces, common_field_report, common_field_input_pins = (
+        _common_field_source_surfaces(
+            context, current_source_rows,
+            current_receipt["provenance"]["source_id_map"], current_receipt))
+    _require(set(common_field_surfaces) == {
+        (51011, stable_id) for stable_id in COMMON_FIELD_BASELINE_ROWS
+    }, "existing common-field source baseline does not cover all five mapped network rows")
     _require(set(source_baselines) == {
         (51011, stable_id) for stable_id in NETWORK_STABLE_IDS
     }, "source-rigid baseline does not cover the exact 17 typed network rows")
@@ -2143,6 +2459,7 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         PARENT_POSE_FORWARD_OWNER_SHA256)
     code_pins[str(Path(shared_verifier.__file__).resolve())] = _sha_file(
         Path(shared_verifier.__file__).resolve())
+    ulnar_proof = separate_evidence["ulnar_source_proof"]
     source_history_paths = (
         ULNAR_SOURCE_PROOF, ULNAR_SOURCE_PREFLIGHT,
         ULNAR_PROOF_BASE_RECEIPT, ULNAR_PROOF_BASE_PAYLOAD,
@@ -2187,21 +2504,24 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         source_paths = context["capture_source_paths"]
         source_hashes = context["capture_source_sha256"]
         input_paths = (
-            source_paths["capture_pack"], source_paths["capture_receipt"],
-            source_paths["anatomy_receipt"], source_paths["payload_path"],
+            source_paths["capture_pack_path"], source_paths["capture_receipt_path"],
+            source_paths["anatomy_receipt_path"], source_paths["payload_path"],
             *source_history_paths,
+            *(Path(path) for path in ulnar_proof["proof_recorded_data_input_sha256"]),
         )
         expected_inputs = {
-            str(source_paths["capture_pack"].resolve()): source_hashes["capture_pack"],
-            str(source_paths["capture_receipt"].resolve()): source_hashes["capture_receipt"],
-            str(source_paths["anatomy_receipt"].resolve()): source_hashes["anatomy_receipt"],
+            str(source_paths["capture_pack_path"].resolve()): source_hashes["capture_pack"],
+            str(source_paths["capture_receipt_path"].resolve()): source_hashes["capture_receipt"],
+            str(source_paths["anatomy_receipt_path"].resolve()): source_hashes["anatomy_receipt"],
             str(source_paths["payload_path"].resolve()): source_hashes["anatomy_payload"],
             **source_history_pins,
+            **ulnar_proof["proof_recorded_data_input_sha256"],
         }
     else:
         input_paths = (
             capture_gate.CAPTURE_PACK, capture_gate.CAPTURE_RECEIPT,
             *source_history_paths,
+            *(Path(path) for path in ulnar_proof["proof_recorded_data_input_sha256"]),
             capture_gate.ANATOMY_RECEIPT, capture_gate.PREPARED_SUCCESSOR_RECEIPT,
             OWNER_COMPOSITION_RECEIPT, OWNER_COMPOSITION_REPORT, OWNER_COMPOSITION_CARRIER,
             OWNER_COMPOSITION_PAYLOAD_PATH, OWNER_REPORT_28FC, OWNER_REPORT_C37,
@@ -2218,11 +2538,17 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
             str(OWNER_MODULE.resolve()): OWNER_MODULE_SHA256,
             str(OWNER_COMPOSER.resolve()): OWNER_COMPOSER_SHA256,
             **source_history_pins,
+            **ulnar_proof["proof_recorded_data_input_sha256"],
         }
     input_pins = {
         str(Path(path).resolve(strict=True)): _sha_file(Path(path).resolve(strict=True))
         for path in input_paths
     }
+    for path, expected in common_field_input_pins.items():
+        _require(input_pins.get(path, expected) == expected,
+                 f"common-field source input changed after reconstruction: {path}")
+        input_pins[path] = expected
+        expected_inputs[path] = expected
     for path, expected in expected_inputs.items():
         _require(input_pins.get(path) == expected,
                  f"pinned source/capture witness input changed: {path}")
@@ -2233,13 +2559,13 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         context["capture_source_sha256"]["capture_receipt"]
         if explicit_capture else capture_gate.CAPTURE_RECEIPT_SHA256)
     capture_paths = context.get("capture_source_paths", {})
-    actual_pack_path = (capture_paths.get("capture_pack", capture_gate.CAPTURE_PACK)
+    actual_pack_path = (capture_paths.get("capture_pack_path", capture_gate.CAPTURE_PACK)
                         if explicit_capture else capture_gate.CAPTURE_PACK)
     actual_capture_receipt_path = (
-        capture_paths.get("capture_receipt", capture_gate.CAPTURE_RECEIPT)
+        capture_paths.get("capture_receipt_path", capture_gate.CAPTURE_RECEIPT)
         if explicit_capture else capture_gate.CAPTURE_RECEIPT)
     actual_anatomy_receipt_path = (
-        capture_paths.get("anatomy_receipt", capture_gate.ANATOMY_RECEIPT)
+        capture_paths.get("anatomy_receipt_path", capture_gate.ANATOMY_RECEIPT)
         if explicit_capture else capture_gate.ANATOMY_RECEIPT)
     actual_anatomy_receipt_sha = (
         context["capture_source_sha256"]["anatomy_receipt"]
@@ -2267,6 +2593,22 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         parent_pose_ids == parent_mapped_ids
         and all(row["capture_aligned_current_surface"]
                 for row in parent_pose_report["vessels"].values()))
+    common_field_capture_aligned = all(
+        row["capture_vertex_ancestry"]["status"]
+        == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+        and row["source_vertex_count"] == row["common_map_range"]["vertex_count"]
+        for row in common_field_report["rows"].values())
+    rigid_only_network_rows = sorted(
+        set(NETWORK_STABLE_IDS)
+        - parent_mapped_ids
+        - set(COMMON_FIELD_BASELINE_ROWS))
+    all_network_owner_baselines_ready = (
+        set(map(int, parent_pose_report["vessels"])) == parent_mapped_ids
+        and set(common_field_report["rows"]) == set(map(
+            str, COMMON_FIELD_BASELINE_ROWS))
+        and parent_pose_capture_aligned
+        and common_field_capture_aligned
+        and len(source_baselines) == len(NETWORK_STABLE_IDS))
     return {
         "schema": "numi.human.brachiocephalic.current-capture-network-preflight.v2",
         "status": _source0_preflight_status(
@@ -2343,14 +2685,18 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
             "independent_parent_pose_calibre_baseline": parent_pose_report,
             "parent_mapped_row_calibre_baseline_ready":
                 parent_pose_capture_aligned,
-            "common_field_rows_still_pending_independent_baseline":
-                list(COMMON_FIELD_BASELINE_PENDING_IDS),
+            "existing_common_field_owner_source_baseline": common_field_report,
+            "common_field_owner_source_baseline_ready": common_field_capture_aligned,
+            "common_field_rows_still_pending_independent_baseline": [],
+            "rigid_only_network_row_ids": rigid_only_network_rows,
             "rows_with_exact_capture_face_order": len(baseline_records) - len(mismatched_faces),
             "rows_with_face_order_mismatch": mismatched_faces,
             "meaningful_calibre_baseline_ready": (
                 all_known_edges_bound and not mismatched_faces
-                and parent_pose_capture_aligned
-                and not COMMON_FIELD_BASELINE_PENDING_IDS),
+                and all_network_owner_baselines_ready),
+            "network_owner_baseline_coverage_complete":
+                all_network_owner_baselines_ready,
+            "network_calibre_gate_passed": False,
             "parent_motion_owner_inventory": parent_motion_inventory,
             "parent_mapped_rows_requiring_a_parent_pose_calibre_baseline": [
                 int(stable_id) for stable_id, row
@@ -2435,22 +2781,25 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
             "status": (
                 "PARENT_POSE_SOURCE_BASELINES_COMPUTED_CAPTURE_ALIGNMENT_PENDING"
                 if not parent_pose_capture_aligned
-                else "PARENT_POSE_BASELINES_READY_FOR_475_477_COMMON_FIELD_BASELINES_PENDING"
-                if parent_pose_report.get("status")
-                == "PARENT_POSE_SOURCE_BASELINES_RECONSTRUCTED_OFFLINE"
-                else "PARENT_POSE_CALIBRE_BASELINE_PENDING"),
+                else "SOURCE_OWNER_BASELINES_READY_FOR_GEOMETRY_REVIEW"
+                if all_network_owner_baselines_ready
+                else "SOURCE_OWNER_BASELINE_CAPTURE_ALIGNMENT_PENDING"),
             "owner_inventory": parent_motion_inventory,
             "independent_parent_pose_baseline": parent_pose_report,
             "parent_pose_source_surfaces_available": sorted(
                 [list(key) for key in parent_pose_surfaces]),
             "parent_mapped_rows_with_independent_baselines": sorted(
                 int(value) for value in parent_pose_report["vessels"]),
-            "common_field_rows_still_pending_independent_baseline":
-                list(COMMON_FIELD_BASELINE_PENDING_IDS),
+            "existing_common_field_owner_source_baseline": common_field_report,
+            "common_field_rows_still_pending_independent_baseline": [],
             "source_rigid_baseline_is_independent_of_same_capture_geometry": True,
             "parent_pose_matched_calibre_baseline_ready":
                 parent_pose_capture_aligned,
-            "whole_network_calibre_baseline_ready": False,
+            "common_field_source_baseline_ready": common_field_capture_aligned,
+            "rigid_only_network_rows": rigid_only_network_rows,
+            "whole_network_calibre_baseline_ready":
+                all_network_owner_baselines_ready,
+            "whole_network_calibre_gate_passed": False,
             "no_unverified_multi_body_parent_motion_is_claimed": True,
         },
         "planned_solid_and_collar_gate": {
