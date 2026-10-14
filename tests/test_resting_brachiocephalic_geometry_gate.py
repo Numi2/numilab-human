@@ -3,6 +3,7 @@ import pytest
 
 from numilab_human import resting_anatomy_verify as av
 from numilab_human import resting_brachiocephalic_geometry_gate as bg
+from numilab_human import resting_brachiocephalic_port_diagnostic as portdiag
 from numilab_human import resting_brachiocephalic_source007 as source007
 from numilab_human.resting_brachiocephalic_geometry_gate import (
     BRIDGE_KEYS,
@@ -541,3 +542,43 @@ def test_source007_step0_collision_geometry_uses_captured_svc_prediction():
             "OFFLINE_CAPTURED_SVC_DISPLACEMENT_PREDICTION_ONLY")
         assert details[member]["native_field_error_bound"] == "not_available"
         assert details[member]["source_geometry_mutated"] is False
+
+
+def test_port_diagnostic_wrappers_preserve_failed_section_and_comparison():
+    from types import SimpleNamespace
+
+    def section(_positions, _faces, _center, _tangent, *, derived_csg=False):
+        return {"passed": False, "loop_count": 0, "reason": "section graph is open",
+                "derived_csg": derived_csg}
+
+    def compare(_candidate, _baseline):
+        raise ValueError("candidate and baseline sections must have positive closed-loop measures")
+
+    gate = SimpleNamespace(
+        _section_loops=section,
+        _section_comparison=compare,
+        _validated_station_spec=lambda *args, **kwargs: {},
+        _transport_material_station=lambda *args, **kwargs: {},
+        _make_manifold=lambda *args, **kwargs: None,
+        _exact_inside_witness=lambda *args, **kwargs: None,
+    )
+    verifier = SimpleNamespace(audit_surface_pair=lambda *args, **kwargs: {})
+    recorder = portdiag.Recorder()
+    restore = portdiag.install_recording_wrappers(gate, verifier, recorder)
+    positions = np.asarray([[0, 0, -1], [1, 0, 1], [0, 1, 1]], dtype="<f4")
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    try:
+        metrics = gate._section_loops(
+            positions, faces, [0, 0, 0], [0, 0, 1])
+        with pytest.raises(ValueError, match="positive closed-loop measures"):
+            gate._section_comparison(metrics, metrics)
+    finally:
+        restore()
+
+    assert recorder.data["section_calls"][0]["stage"] == "bridge_candidate"
+    assert recorder.data["section_calls"][0]["section_metrics"]["reason"] == "section graph is open"
+    comparison = recorder.data["section_comparisons"][0]
+    assert comparison["stage"] == "bridge_source_section"
+    assert comparison["candidate_section"]["passed"] is False
+    assert comparison["baseline_section"]["passed"] is False
+    assert comparison["error"]["message"].endswith("positive closed-loop measures")
