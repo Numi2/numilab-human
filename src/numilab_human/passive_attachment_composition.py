@@ -9,13 +9,14 @@ Composition does not establish anatomical admission.
 """
 from __future__ import annotations
 import argparse
+import errno
 import hashlib
 import json
 import os
+import re
 import shutil
-import errno
-from pathlib import Path
 import struct
+from pathlib import Path
 
 # This opt-in is intentionally pinned to the single reviewed biceps patch and
 # the current 1216 anatomical parent. A different source or parent requires a
@@ -3494,6 +3495,351 @@ def _verify_registration_metadata_reemission(
     return operation
 
 
+def _parent_rest_manifest_replay_view(manifest: dict) -> dict:
+    """Copy a rest-conformance manifest, removing only measured neighbor timings."""
+    normalized = json.loads(json.dumps(manifest))
+    operations = normalized.get("source", {}).get("parent_rest_conformance", [])
+    require(isinstance(operations, list),
+            "parent-rest conformance operation history is invalid")
+    for operation in operations:
+        require(isinstance(operation, dict),
+                "parent-rest conformance operation is malformed")
+        rows = operation.get("row_checks", [])
+        require(isinstance(rows, list),
+                "parent-rest conformance row checks are malformed")
+        for row in rows:
+            require(isinstance(row, dict),
+                    "parent-rest conformance row check is malformed")
+            neighbor = row.get("f32_orientation_neighbor_repair")
+            if neighbor is not None:
+                require(isinstance(neighbor, dict),
+                        "parent-rest neighbor repair record is malformed")
+                neighbor.pop("elapsed_seconds", None)
+    return normalized
+
+
+def _verify_parent_rest_conformance_replay(
+    source_payload: Path, payload: Path, manifest: dict, operation: dict,
+) -> dict:
+    """Replay and bind a conformed child to its exact parent/carrier/rigid inputs."""
+    import tempfile
+
+    source_payload, payload = Path(source_payload).resolve(), Path(payload).resolve()
+    sha = _surface_sha256
+    require(operation.get("schema") == "numi.human.passive-parent-rest-conformance.v1",
+            "parent-rest conformance schema")
+    require(Path(operation.get("child_input_path", "")).resolve() == source_payload
+            and operation.get("child_input_sha256") == sha(source_payload),
+            "parent-rest direct child input identity changed")
+    source_manifest_path, source_manifest = _payload_manifest(source_payload)
+    require(operation.get("parent_bindings_input_path")
+            and operation.get("rigid_rest_input_path"),
+            "parent-rest operation lacks carrier or rigid source")
+    parent_bindings_path = Path(operation["parent_bindings_input_path"]).resolve()
+    rigid_path = Path(operation["rigid_rest_input_path"]).resolve()
+    require(parent_bindings_path.is_file()
+            and sha(parent_bindings_path) == operation.get("parent_bindings_input_sha256"),
+            "parent-rest carrier extension identity changed")
+    require(rigid_path.is_file()
+            and sha(rigid_path) == operation.get("rigid_rest_input_sha256"),
+            "parent-rest rigid source identity changed")
+    source_extension = json.loads(parent_bindings_path.read_text())
+    source_child_data = _read_nhtiss4(source_payload)
+    require(source_extension.get("child_payload_sha256") == sha(source_payload),
+            "parent-rest extension is not bound to its direct child")
+    source_list = source_extension.get("source_payloads")
+    require(isinstance(source_list, list) and len(source_list) == 8,
+            "parent-rest extension carrier inventory changed")
+    carriers = []
+    for index, source in enumerate(source_list):
+        require(isinstance(source, dict) and isinstance(source.get("path"), str)
+                and isinstance(source.get("sha256"), str),
+                f"parent-rest carrier {index} record is malformed")
+        carrier = Path(source["path"])
+        if not carrier.is_absolute():
+            carrier = parent_bindings_path.parent / carrier
+        carrier = carrier.resolve()
+        require(carrier.is_file() and sha(carrier) == source["sha256"],
+                f"parent-rest carrier {index} content identity changed")
+        header = carrier.open("rb").read(64)
+        require(len(header) == 64, f"parent-rest carrier {index} header is truncated")
+        magic, abi, _nr, _nb, _nv, _ni, fingerprint, archive_sha = struct.unpack(
+            "<8s6I32s", header,
+        )
+        require(magic == b"NHTISS4\x00" and abi == 5
+                and fingerprint == source_child_data["fingerprint"]
+                and archive_sha == source_child_data["source_digest"],
+                f"parent-rest carrier {index} fingerprint/archive differs")
+        carriers.append({
+            "index": index, "path": str(carrier), "sha256": source["sha256"],
+            "registration_fingerprint32": f"{fingerprint:08x}",
+            "source_archive_sha256": archive_sha.hex(),
+        })
+    rigid, _poses = _rest_body_poses_f32(rigid_path)
+    require(rigid["source_sha256"] == source_child_data["source_digest"].hex(),
+            "parent-rest rigid archive differs from child source")
+    helper_path = Path(__file__).resolve()
+    helper_sha = sha(helper_path)
+    producer_dir = payload.parent.parent
+    producer_invocation_path = producer_dir / "invocation.json"
+    require(producer_invocation_path.is_file(),
+            "parent-rest producer invocation record is missing")
+    producer_invocation = json.loads(producer_invocation_path.read_text())
+    producer_pins_path = Path(producer_invocation.get("pins_path", "")).resolve()
+    require(producer_pins_path.is_file()
+            and producer_invocation.get("pins_sha256") == sha(producer_pins_path),
+            "parent-rest producer pins do not match invocation")
+    producer_pins = json.loads(producer_pins_path.read_text())
+    producer_runner_path = Path(producer_pins.get("runner_path", "")).resolve()
+    require(producer_invocation.get("runner_path")
+            and Path(producer_invocation["runner_path"]).resolve() == producer_runner_path
+            and producer_pins.get("runner_sha256") == sha(producer_runner_path),
+            "parent-rest producer runner identity changed")
+    require(producer_invocation.get("anatomy_predicates_called") is False
+            and Path(producer_invocation.get("output_path", "")).resolve()
+            == payload.parent.resolve(),
+            "parent-rest producer scope or output identity changed")
+    producer_result = producer_invocation.get("result", {})
+    require(isinstance(producer_result, dict)
+            and producer_result.get("output_payload_sha256") == sha(payload)
+            and producer_result.get("output_manifest_sha256")
+            == sha(payload.with_suffix(".manifest.json"))
+            and producer_result.get("output_parent_bindings_sha256")
+            == sha(payload.parent / parent_bindings_path.name),
+            "parent-rest producer result does not bind output artifacts")
+    producer_files = producer_pins.get("files")
+    require(isinstance(producer_files, list),
+            "parent-rest producer input pins are malformed")
+    producer_file_by_label = {
+        item.get("label"): item for item in producer_files if isinstance(item, dict)
+    }
+    required_file_pins = {
+        "child": (source_payload, sha(source_payload)),
+        "child_manifest": (source_manifest_path, sha(source_manifest_path)),
+        "parent_extension": (parent_bindings_path, sha(parent_bindings_path)),
+        "rigid": (rigid_path, sha(rigid_path)),
+    }
+    for label, (expected_path, expected_sha) in required_file_pins.items():
+        pin = producer_file_by_label.get(label)
+        require(isinstance(pin, dict)
+                and Path(pin.get("path", "")).resolve() == expected_path.resolve()
+                and pin.get("sha256") == expected_sha,
+                f"parent-rest producer {label} input pin changed")
+    for index, carrier in enumerate(carriers):
+        pin = producer_file_by_label.get(f"parent_{index}")
+        require(isinstance(pin, dict)
+                and Path(pin.get("path", "")).resolve() == Path(carrier["path"]).resolve()
+                and pin.get("sha256") == carrier["sha256"],
+                f"parent-rest producer carrier {index} pin changed")
+    require(producer_pins.get("helper", {}).get("path")
+            and Path(producer_pins["helper"]["path"]).resolve() == helper_path
+            and producer_pins["helper"].get("sha256"),
+            "parent-rest producer helper source pin is missing")
+    require(manifest.get("payload", {}).get("sha256") == sha(payload)
+            and manifest.get("payload", {}).get("file") == payload.name,
+            "parent-rest output manifest does not bind this child")
+    history = manifest.get("source", {}).get("parent_rest_conformance", [])
+    require(isinstance(history, list) and history and history[-1] == operation,
+            "parent-rest manifest operation differs from its receipt operation")
+    expected_extension_path = payload.parent / parent_bindings_path.name
+    report_path = payload.parent / "registered-rest-conformance.json"
+    require(expected_extension_path.is_file() and report_path.is_file(),
+            "parent-rest replay sidecars are missing")
+    actual_report = json.loads(report_path.read_text())
+    require(actual_report.get("schema")
+            == "numi.human.passive-parent-rest-conformance.v1"
+            and actual_report.get("anatomical_self_pose_and_native_cycle_admission") is False,
+            "parent-rest report claims an unsupported admission state")
+    require(all(actual_report.get(key) == value for key, value in operation.items()),
+            "parent-rest report operation differs from the manifest")
+    require(Path(actual_report.get("output_payload_path", "")).resolve() == payload
+            and actual_report.get("output_payload_sha256") == sha(payload)
+            and Path(actual_report.get("output_manifest_path", "")).resolve()
+            == payload.with_suffix(".manifest.json").resolve()
+            and actual_report.get("output_manifest_sha256")
+            == sha(payload.with_suffix(".manifest.json"))
+            and Path(actual_report.get("output_parent_bindings_path", "")).resolve()
+            == expected_extension_path.resolve()
+            and actual_report.get("output_parent_bindings_sha256")
+            == sha(expected_extension_path),
+            "parent-rest output report paths or hashes differ")
+    require(Path(actual_report.get("copied_registration_path") or "").resolve()
+            == (payload.parent / str(
+                manifest.get("source", {}).get("registration", {}).get("file", ""),
+            )).resolve()
+            and actual_report.get("copied_registration_sha256")
+            == manifest.get("source", {}).get("registration", {}).get("sha256"),
+            "parent-rest copied registration identity differs")
+    changed_ids = operation.get("changed_stable_ids")
+    require(isinstance(changed_ids, list) and all(type(value) is int for value in changed_ids)
+            and operation.get("all_ten_surface_rows_rechecked") is True
+            and operation.get("faces_sparse_bindings_and_weights_preserved") is True
+            and operation.get("anatomical_self_pose_and_native_cycle_admission") is False,
+            "parent-rest operation does not retain required scope and limits")
+    with tempfile.TemporaryDirectory(prefix="numi-parent-rest-replay-") as temporary:
+        replay = reemit_parent_rest_conformance(
+            source_payload, parent_bindings_path, rigid_path, Path(temporary) / "replay",
+        )
+        replay_payload = Path(replay["output_payload_path"])
+        replay_manifest_path = Path(replay["output_manifest_path"])
+        replay_extension_path = Path(replay["output_parent_bindings_path"])
+        require(payload.read_bytes() == replay_payload.read_bytes(),
+                "parent-rest output payload differs from exact owner replay")
+        replay_manifest = json.loads(replay_manifest_path.read_text())
+        require(_parent_rest_manifest_replay_view(manifest)
+                == _parent_rest_manifest_replay_view(replay_manifest),
+                "parent-rest manifest differs beyond measured neighbor timing")
+        require(expected_extension_path.read_bytes() == replay_extension_path.read_bytes(),
+                "parent-rest extension differs from exact owner replay")
+    source_data = _read_nhtiss4(source_payload)
+    output_data = _read_nhtiss4(payload)
+    require(source_data["raw"][:source_data["vertex_start"]]
+            == output_data["raw"][:output_data["vertex_start"]]
+            and source_data["raw"][source_data["index_start"]:]
+            == output_data["raw"][output_data["index_start"]:],
+            "parent-rest replay changed records, bindings, or index bytes")
+    source_rows = {int(row[6]): row for row in source_data["records"]}
+    output_rows = {int(row[6]): row for row in output_data["records"]}
+    require(source_rows.keys() == output_rows.keys(),
+            "parent-rest replay changed stable row identities")
+    unchanged_rows = []
+    for stable_id in sorted(source_rows):
+        old_row = _row_slices(source_data, source_rows[stable_id])
+        new_row = _row_slices(output_data, output_rows[stable_id])
+        require(old_row["binding_bytes"] == new_row["binding_bytes"]
+                and old_row["local_faces"] == new_row["local_faces"],
+                f"parent-rest replay changed row {stable_id} bindings or faces")
+        old_vertices = old_row["vertex_bytes"]
+        new_vertices = new_row["vertex_bytes"]
+        require(len(old_vertices) == len(new_vertices),
+                f"parent-rest replay changed row {stable_id} vertex allocation")
+        for vertex in range(old_row["vertex_count"]):
+            old_record = old_vertices[vertex * 56:(vertex + 1) * 56]
+            new_record = new_vertices[vertex * 56:(vertex + 1) * 56]
+            require(old_record[24:] == new_record[24:],
+                    f"parent-rest replay changed row {stable_id} material terms")
+            if stable_id not in changed_ids:
+                require(old_record == new_record,
+                        f"parent-rest replay changed unlisted row {stable_id}")
+        if stable_id not in changed_ids:
+            unchanged_rows.append(stable_id)
+    source_ext = json.loads(parent_bindings_path.read_text())
+    output_ext = json.loads(expected_extension_path.read_text())
+    require(source_ext.get("surfaces") == output_ext.get("surfaces")
+            and source_ext.get("source_payloads") == output_ext.get("source_payloads")
+            and source_ext.get("anatomy_surfaces") == output_ext.get("anatomy_surfaces")
+            and source_ext.get("anatomy_payload_sha256")
+            == output_ext.get("anatomy_payload_sha256"),
+            "parent-rest replay changed terms or anatomy source ownership")
+    require(sha(helper_path) == helper_sha,
+            "parent-rest replay helper changed during verification")
+    return {
+        "schema": "numi.human.parent-rest-replay-binding.v1",
+        "status": "exact_owner_replay_and_source_binding_pass",
+        "source_child_path": str(source_payload),
+        "source_child_sha256": sha(source_payload),
+        "source_manifest_path": str(source_manifest_path),
+        "source_manifest_sha256": sha(source_manifest_path),
+        "parent_bindings_input_path": str(parent_bindings_path),
+        "parent_bindings_input_sha256": sha(parent_bindings_path),
+        "parent_bindings_output_path": str(expected_extension_path.resolve()),
+        "parent_bindings_output_sha256": sha(expected_extension_path),
+        "rigid_rest_input_path": str(rigid_path),
+        "rigid_rest_input_sha256": sha(rigid_path),
+        "rigid_source_archive_sha256": rigid["source_sha256"],
+        "registration_fingerprint32": f"{source_data['fingerprint']:08x}",
+        "carrier_inputs": carriers,
+        "helper_source_path": str(helper_path),
+        "helper_source_sha256": helper_sha,
+        "producer_invocation_path": str(producer_invocation_path.resolve()),
+        "producer_invocation_sha256": sha(producer_invocation_path),
+        "producer_pins_path": str(producer_pins_path),
+        "producer_pins_sha256": sha(producer_pins_path),
+        "producer_runner_path": str(producer_runner_path),
+        "producer_runner_sha256": producer_pins["runner_sha256"],
+        "producer_git_head": producer_pins.get("git_head"),
+        "producer_helper_source_sha256": producer_pins["helper"]["sha256"],
+        "output_payload_path": str(payload),
+        "output_payload_sha256": sha(payload),
+        "output_manifest_path": str(payload.with_suffix(".manifest.json")),
+        "output_manifest_sha256": sha(payload.with_suffix(".manifest.json")),
+        "unchanged_row_ids_byte_exact": unchanged_rows,
+        "changed_row_ids": changed_ids,
+        "all_binding_records_faces_weights_and_parent_terms_preserved": True,
+        "all_eight_carriers_match_child_fingerprint_and_rigid_archive": True,
+        "all_ten_parent_term_surfaces_unchanged": True,
+        "anatomical_pose_and_native_admission": "not_run",
+        "measured_neighbor_elapsed_seconds_normalized_only_for_manifest_replay": True,
+    }
+
+
+def _rebind_parent_rest_receipt_extension(
+    receipt: dict, replay: dict, child_payload_sha256: str,
+) -> dict | None:
+    """Rebind the embedded extension to the exact replay output/current anatomy."""
+    embedded = receipt.get("passive_tissue_parent_bindings")
+    if embedded is None:
+        return None
+    require(isinstance(embedded, dict),
+            "receipt passive parent extension is malformed")
+    input_path = Path(replay.get("parent_bindings_input_path", "")).resolve()
+    output_path = Path(replay.get("parent_bindings_output_path", "")).resolve()
+    require(input_path.is_file() and output_path.is_file()
+            and _surface_sha256(input_path) == replay.get("parent_bindings_input_sha256")
+            and _surface_sha256(output_path) == replay.get("parent_bindings_output_sha256"),
+            "parent-rest receipt extension replay files changed")
+    source_extension = json.loads(input_path.read_text())
+    output_extension = json.loads(output_path.read_text())
+    require(embedded.keys() == source_extension.keys()
+            and embedded.get("child_payload_sha256")
+            == replay.get("source_child_sha256"),
+            "receipt parent extension is not the replayed direct-child owner")
+    current_anatomy_sha = receipt.get("payload", {}).get("sha256")
+    require(isinstance(current_anatomy_sha, str)
+            and re.fullmatch(r"[0-9a-f]{64}", current_anatomy_sha) is not None
+            and embedded.get("anatomy_payload_sha256") == current_anatomy_sha,
+            "receipt parent extension is not bound to the current anatomy payload")
+    for key, value in source_extension.items():
+        if key in {"child_payload_sha256", "anatomy_payload_sha256"}:
+            continue
+        require(embedded.get(key) == value,
+                f"receipt parent extension {key} differs from replay input")
+    require(output_extension.keys() == source_extension.keys()
+            and output_extension.get("child_payload_sha256") == child_payload_sha256
+            and output_extension.get("anatomy_payload_sha256")
+            == source_extension.get("anatomy_payload_sha256")
+            and output_extension.get("source_payloads") == source_extension.get("source_payloads")
+            and output_extension.get("surfaces") == source_extension.get("surfaces")
+            and output_extension.get("anatomy_surfaces") == source_extension.get("anatomy_surfaces"),
+            "parent-rest output extension changed anatomy or carrier ownership")
+    source_provenance = source_extension.get("provenance")
+    output_provenance = output_extension.get("provenance")
+    require(isinstance(source_provenance, dict) and isinstance(output_provenance, dict)
+            and {key: value for key, value in output_provenance.items()
+                 if key != "registered_rest_conformance"} == source_provenance
+            and output_provenance.get("registered_rest_conformance", {}).get(
+                "output_child_payload_sha256") == child_payload_sha256,
+            "parent-rest output extension provenance is not bound to replayed child")
+    rebound_extension = json.loads(json.dumps(output_extension))
+    legacy_anatomy_sha = rebound_extension["anatomy_payload_sha256"]
+    rebound_extension["anatomy_payload_sha256"] = current_anatomy_sha
+    receipt["passive_tissue_parent_bindings"] = rebound_extension
+    return {
+        "schema": "numi.human.parent-rest-extension-receipt-rebind.v1",
+        "status": "exact_replay_extension_bound_to_current_anatomy_and_muscle_child",
+        "previous_child_payload_sha256": embedded["child_payload_sha256"],
+        "source_extension_anatomy_payload_sha256": legacy_anatomy_sha,
+        "current_anatomy_payload_sha256": current_anatomy_sha,
+        "replay_input_extension_path": str(input_path),
+        "replay_input_extension_sha256": replay["parent_bindings_input_sha256"],
+        "output_extension_path": str(output_path),
+        "output_extension_sha256": replay["parent_bindings_output_sha256"],
+        "child_payload_sha256": child_payload_sha256,
+        "surfaces_carriers_and_parent_terms_preserved_from_exact_replay": True,
+        "anatomy_hash_rebound_only_after_current_receipt_owner_identity": True,
+    }
+
+
 def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Path) -> dict:
     """Bind this composition to the existing anatomy receipt for native launch."""
     source_receipt, payload = Path(source_receipt).resolve(), Path(payload).resolve()
@@ -3524,7 +3870,31 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     append_composition = append_history[-1] if append_history else None
     require(append_composition is None or isinstance(append_composition, dict),
             "passive append operation is invalid")
-    if (metadata_composition is not None
+    parent_rest_history = manifest["source"].get("parent_rest_conformance", [])
+    require(isinstance(parent_rest_history, list),
+            "parent-rest conformance operation history is invalid")
+    parent_rest_composition = parent_rest_history[-1] if parent_rest_history else None
+    parent_rest_replay = None
+    if (isinstance(parent_rest_composition, dict)
+            and parent_rest_composition.get("child_input_sha256") == owner["sha256"]):
+        parent_manifest = Path(owner.get("manifest_path", old.with_suffix(".manifest.json")))
+        if not parent_manifest.is_absolute():
+            parent_manifest = source_receipt.parent / parent_manifest
+        source_manifest_path, _source_manifest = _payload_manifest(old)
+        require(parent_manifest.resolve() == source_manifest_path.resolve()
+                and sha(parent_manifest) == owner.get("manifest_sha256"),
+                "parent-rest direct parent manifest identity changed")
+        require(Path(parent_rest_composition.get("child_input_path", "")).resolve()
+                == old.resolve(),
+                "parent-rest operation is not a direct child of the receipt owner")
+        parent_rest_replay = _verify_parent_rest_conformance_replay(
+            old, payload, manifest, parent_rest_composition,
+        )
+        composition = parent_rest_composition
+        changed_stable_ids = composition["changed_stable_ids"]
+        edge_composition = biceps_composition = fhl_composition = None
+        reference_composition = metadata_composition = append_composition = None
+    elif (metadata_composition is not None
             and metadata_composition.get("source_payload_sha256") == owner["sha256"]):
         _verify_registration_metadata_reemission(
             old, payload, manifest, metadata_composition,
@@ -3659,6 +4029,10 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         changed_stable_ids = composition["changed_stable_ids"]
         require(set(changed_stable_ids).issubset({7, 8, 23}),
                 "unsupported anatomical attachment replacements")
+    is_parent_rest_conformance = (
+        parent_rest_replay is not None
+        and composition is parent_rest_composition
+    )
     is_metadata_reemission = (
         metadata_composition is not None
         and metadata_composition.get("source_payload_sha256") == owner.get("sha256")
@@ -3722,13 +4096,17 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     receipt["payload"]["path"] = str(anatomical_payload.resolve())
     is_append = append_composition is not None and composition is append_composition
     binding_key = ("passive_surface_append_binding" if is_append
+                   else "parent_rest_conformance_binding" if is_parent_rest_conformance
                    else "registration_metadata_reemission_binding" if is_metadata_reemission
                    else "reference_surface_composition_binding" if reference_composition is not None
                    else "fhl_source_seam_correction_binding" if fhl_composition is not None
                    else "biceps_source_preserving_correction_binding" if biceps_composition is not None
                    else "conforming_surface_refinement_binding" if edge_composition is not None
                    else "passive_attachment_composition_binding")
-    if fhl_composition is not None:
+    if is_parent_rest_conformance:
+        require(binding_key not in receipt["provenance"],
+                "anatomy receipt already contains this parent-rest conformance binding")
+    elif fhl_composition is not None:
         require(binding_key not in receipt["provenance"],
                 "anatomy receipt already contains this FHL source-seam provenance binding")
     elif biceps_composition is not None:
@@ -3749,12 +4127,21 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
                   "Explicit source-derived conforming surface refinement only; existing physical owners, "
                   "mass, forces, and tendon state are unchanged."
                   if edge_composition is not None and biceps_composition is None else
+                  "Exact owner replay conformed child rest coordinates to the pinned full-parent carriers and rigid rest source; anatomical and native-pose admission remain separate."
+                  if is_parent_rest_conformance else
                   "Registration metadata re-emission from the pinned owner-compiled base; accepted row arrays, maps, and bindings remain byte-identical. This is not anatomical or native-pose admission."
                   if is_metadata_reemission else
                   "Proof-bound biceps source-geometry patch composed as a direct child of this receipt; anatomy acceptance remains separate."
                   if biceps_composition is not None else
                   "Passive attachment source binding only; physical owners and anatomical acceptance are unchanged.")
     }
+    if is_parent_rest_conformance:
+        receipt["provenance"][binding_key]["source_rest_replay"] = parent_rest_replay
+        extension_rebind = _rebind_parent_rest_receipt_extension(
+            receipt, parent_rest_replay, record["sha256"],
+        )
+        if extension_rebind is not None:
+            receipt["provenance"][binding_key]["parent_extension_rebind"] = extension_rebind
     if fhl_composition is not None:
         receipt["provenance"][binding_key]["source_seam_correction"] = {
             "schema": fhl_composition["schema"],

@@ -1769,6 +1769,154 @@ def test_registered_rest_subset_forward_matches_full_native_fp32_order():
     assert np.array_equal(subset, full[[4, 0, 3]])
 
 
+def test_parent_rest_manifest_replay_normalizes_only_measured_neighbor_timing():
+    manifest = {
+        "source": {
+            "parent_rest_conformance": [{
+                "row_checks": [{
+                    "elapsed_seconds": 4.0,
+                    "f32_orientation_neighbor_repair": {
+                        "elapsed_seconds": 0.12,
+                        "candidate_evaluations": 3,
+                    },
+                }],
+            }],
+        },
+    }
+    normalized = pac._parent_rest_manifest_replay_view(manifest)
+    assert normalized["source"]["parent_rest_conformance"][0]["row_checks"][0] == {
+        "elapsed_seconds": 4.0,
+        "f32_orientation_neighbor_repair": {"candidate_evaluations": 3},
+    }
+    assert manifest["source"]["parent_rest_conformance"][0]["row_checks"][0][
+        "f32_orientation_neighbor_repair"]["elapsed_seconds"] == 0.12
+
+
+def test_parent_rest_receipt_binding_uses_strict_replay_owner(inputs, tmp_path, monkeypatch):
+    source, _candidate, _report, _fields = inputs
+    receipt = anatomy_fixture(source, tmp_path)
+    out = tmp_path / "rest-conformed"
+    out.mkdir()
+    child = out / source.name
+    child.write_bytes(source.read_bytes())
+    source_receipt_data = json.loads(receipt.read_text())
+    current_anatomy_sha = source_receipt_data["payload"]["sha256"]
+    parent_extension = {
+        "anatomy_payload_sha256": current_anatomy_sha,
+        "child_payload_sha256": digest(source),
+        "source_payloads": [{"path": "carrier.nhtissue", "sha256": "d" * 64}],
+        "surfaces": [{"stable_id": 7, "vertices": [[[1, 0, 0, 1.0]]]}],
+        "anatomy_surfaces": [{"stable_id": 90, "vertices": [[[1, 0, 0, 1.0]]]}],
+        "provenance": {"owner": "source-fixture"},
+    }
+    source_extension_path = tmp_path / "parents.json"
+    source_extension_path.write_text(json.dumps(parent_extension))
+    source_receipt_data["passive_tissue_parent_bindings"] = parent_extension
+    receipt.write_text(json.dumps(source_receipt_data))
+    output_extension = json.loads(json.dumps(parent_extension))
+    output_extension["child_payload_sha256"] = digest(child)
+    output_extension["provenance"]["registered_rest_conformance"] = {
+        "output_child_payload_sha256": digest(child),
+    }
+    output_extension_path = out / source_extension_path.name
+    output_extension_path.write_text(json.dumps(output_extension))
+    manifest = json.loads(source.with_suffix(".manifest.json").read_text())
+    manifest["payload"]["file"] = child.name
+    manifest["payload"]["sha256"] = digest(child)
+    manifest["payload"]["bytes"] = child.stat().st_size
+    operation = {
+        "schema": "numi.human.passive-parent-rest-conformance.v1",
+        "child_input_path": str(source.resolve()),
+        "child_input_sha256": digest(source),
+        "parent_bindings_input_path": str(source_extension_path.resolve()),
+        "parent_bindings_input_sha256": digest(source_extension_path),
+        "rigid_rest_input_path": str((tmp_path / "rigid.nhrigid").resolve()),
+        "rigid_rest_input_sha256": "b" * 64,
+        "changed_stable_ids": [7],
+        "all_ten_surface_rows_rechecked": True,
+        "faces_sparse_bindings_and_weights_preserved": True,
+        "anatomical_self_pose_and_native_cycle_admission": False,
+        "row_checks": [],
+    }
+    manifest["source"]["parent_rest_conformance"] = [operation]
+    child.with_suffix(".manifest.json").write_text(json.dumps(manifest))
+    replay_evidence = {
+        "schema": "numi.human.parent-rest-replay-binding.v1",
+        "status": "exact_owner_replay_and_source_binding_pass",
+        "source_child_sha256": digest(source),
+        "parent_bindings_input_path": str(source_extension_path.resolve()),
+        "parent_bindings_input_sha256": digest(source_extension_path),
+        "parent_bindings_output_path": str(output_extension_path.resolve()),
+        "parent_bindings_output_sha256": digest(output_extension_path),
+        "helper_source_sha256": "c" * 64,
+        "carrier_inputs": [{"index": i, "sha256": f"{i:064x}"} for i in range(8)],
+        "all_binding_records_faces_weights_and_parent_terms_preserved": True,
+    }
+    seen = []
+
+    def verify(parent, output, actual_manifest, actual_operation):
+        seen.append((parent, output, actual_manifest, actual_operation))
+        return replay_evidence
+
+    monkeypatch.setattr(pac, "_verify_parent_rest_conformance_replay", verify)
+    source_receipt_bytes = receipt.read_bytes()
+    bound = pac.bind_anatomy_receipt(
+        receipt, child, out / "resting-anatomy-receipt.json",
+    )
+    assert len(seen) == 1 and seen[0][0] == source.resolve()
+    assert seen[0][1] == child.resolve() and seen[0][3] == operation
+    assert receipt.read_bytes() == source_receipt_bytes
+    owner = bound["provenance"]["native_muscle_surfaces"]
+    assert owner["payload_path"] == str(child.resolve())
+    binding = bound["provenance"]["parent_rest_conformance_binding"]
+    assert binding["changed_stable_ids"] == [7]
+    assert binding["source_rest_replay"] == replay_evidence
+    assert bound["passive_tissue_parent_bindings"]["child_payload_sha256"] == owner["sha256"]
+    assert bound["passive_tissue_parent_bindings"]["anatomy_payload_sha256"] == current_anatomy_sha
+    assert bound["passive_tissue_parent_bindings"]["surfaces"] == parent_extension["surfaces"]
+    assert bound["passive_tissue_parent_bindings"]["source_payloads"] == parent_extension["source_payloads"]
+    assert binding["parent_extension_rebind"]["output_extension_sha256"] == digest(output_extension_path)
+    assert binding["parent_extension_rebind"]["source_extension_anatomy_payload_sha256"] == current_anatomy_sha
+    assert bound["provenance"]["parent_rest_conformance_binding"]["scope"].endswith(
+        "anatomical and native-pose admission remain separate."
+    )
+
+
+def test_parent_rest_receipt_extension_rebind_rejects_changed_surface_ownership(tmp_path):
+    input_extension = {
+        "anatomy_payload_sha256": "a" * 64,
+        "child_payload_sha256": "b" * 64,
+        "source_payloads": [{"path": "carrier.nhtissue", "sha256": "c" * 64}],
+        "surfaces": [{"stable_id": 132, "vertices": [[[0, 1, 0, 1.0]]]}],
+        "anatomy_surfaces": [{"stable_id": 475, "vertices": [[[0, 1, 0, 1.0]]]}],
+        "provenance": {"source": "fixture"},
+    }
+    output_extension = json.loads(json.dumps(input_extension))
+    output_extension["child_payload_sha256"] = "d" * 64
+    output_extension["provenance"]["registered_rest_conformance"] = {
+        "output_child_payload_sha256": "d" * 64,
+    }
+    input_path = tmp_path / "input-parent.json"
+    output_path = tmp_path / "output-parent.json"
+    input_path.write_text(json.dumps(input_extension))
+    output_path.write_text(json.dumps(output_extension))
+    embedded = json.loads(json.dumps(input_extension))
+    embedded["surfaces"][0]["vertices"][0][0][3] = 0.5
+    receipt = {
+        "payload": {"sha256": "a" * 64},
+        "passive_tissue_parent_bindings": embedded,
+    }
+    replay = {
+        "source_child_sha256": "b" * 64,
+        "parent_bindings_input_path": str(input_path),
+        "parent_bindings_input_sha256": digest(input_path),
+        "parent_bindings_output_path": str(output_path),
+        "parent_bindings_output_sha256": digest(output_path),
+    }
+    with pytest.raises(ValueError, match="surfaces differs from replay input"):
+        pac._rebind_parent_rest_receipt_extension(receipt, replay, "d" * 64)
+
+
 def test_registered_rest_f32_neighbor_adjustment_repairs_target_sliver():
     pose = np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")
     row = {
