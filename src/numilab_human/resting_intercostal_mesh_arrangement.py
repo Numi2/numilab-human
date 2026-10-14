@@ -2722,6 +2722,12 @@ def validate_receipt_composition(
         "all_512_unmodified_rows_byte_exact": unchanged_count == 512,
         "fj2217_cap_operation": cap_operation_proof,
         "legacy_retirement_replayed": bool(legacy_retirement_rows),
+        # Compatibility for the historical source-007 validator. This alias is
+        # true only when its exact old retirement operation was reconstructed;
+        # a fresh reinstatement never fabricates a retirement proof.
+        "exact_local_vessel_source_face_retirement_reconstructed": bool(
+            legacy_retirement_rows
+        ),
         "reinstatement_reconstructed": bool(
             cap_operation_proof
             and cap_operation_proof["receipt_operation"]
