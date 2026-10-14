@@ -1,0 +1,370 @@
+{
+  "schema": "numi.human.back157158.scoped-evidence.v1",
+  "snapshot_date": "2026-10-14",
+  "execution_host": "numi",
+  "scope": "Source lineage and exact captured step-0 self evidence for two passive trapezius surfaces, with current receipt binding and retained neighboring-coverage status. This is not whole-body anatomical admission.",
+  "current_receipt": {
+    "pin": "integrated_receipt",
+    "nha_payload_pin": "integrated_nha_payload",
+    "nhtiss_payload_pin": "integrated_nhtiss_payload",
+    "nhtiss_manifest_pin": "integrated_nhtiss_manifest",
+    "nhtiss_child_bound_by_receipt": true
+  },
+  "composition_chain": {
+    "row158_input_payload_pin": "pre_back_row_source_nhtiss",
+    "row158_output_payload_pin": "row158_composed_nhtiss",
+    "row157_input_payload_pin": "row158_composed_nhtiss",
+    "row157_output_payload_pin": "integrated_nhtiss_payload",
+    "row157_output_manifest_pin": "integrated_nhtiss_manifest",
+    "row158_changed_rows": [
+      158
+    ],
+    "row157_changed_rows": [
+      157
+    ],
+    "all_other_rows_and_binding_table_unchanged": true,
+    "row158_input_manifest_pin": "pre_back_row_source_manifest"
+  },
+  "rows": {
+    "157": {
+      "typed_identity": [
+        51005,
+        157
+      ],
+      "label": "descending part of right trapezius",
+      "source_member": "isa_BP3D_4.0_obj_99/FJ1521.obj",
+      "source_sha256": "19bd9d1cbbb84e10826eb770068f6e271cd79dde960bca62ac71da24120fc354",
+      "candidate_pin": "row157_candidate",
+      "preparation_pin": "row157_preparation",
+      "lineage_pin": "row157_lineage",
+      "composition_pin": "row157_composition_report",
+      "step0_self_pin": "row157_step0_self",
+      "step0_self_count": 0,
+      "step0_capture_pin": "self_capture_pack_92c",
+      "fresh_capture_equivalence_pin": "row157_fresh_capture_equivalence",
+      "protected_412_face_ids": [
+        8841,
+        8845,
+        9314,
+        9315
+      ],
+      "retired_input_face_ids": [
+        9349,
+        9382
+      ],
+      "mechanics_changed": false,
+      "myosim_route_added": false,
+      "candidate_admission": false,
+      "native_admission": false,
+      "scope": "One source edge collapse retires two 3.85 nm incident faces. XYZ, normals, indices outside the declared face edit, and bindings remain byte-exact. Full self is on the actual step-0 captured row; the separate equivalence report proves row-157 source capture positions/normals/GIDs/faces match the fresher step-0 capture. No moving-pose or neighbor admission."
+    },
+    "158": {
+      "typed_identity": [
+        51005,
+        158
+      ],
+      "label": "descending part of left trapezius",
+      "source_member": "isa_BP3D_4.0_obj_99/FJ1521M.obj",
+      "source_sha256": "fe756252f820a47e9c757f67de4ca37adf44837dbe0d10c6d2e5df3a5a6a0751",
+      "candidate_pin": "row158_candidate",
+      "identity_correction_pin": "row158_identity_correction",
+      "lineage_pin": "row158_retired_face_lineage",
+      "composition_pin": "row158_composition_report",
+      "step0_self_pin": "row158_step0_self",
+      "step0_self_count": 0,
+      "step0_capture_pin": "self_capture_pack_92c",
+      "retired_face_count": 36,
+      "mechanics_changed": false,
+      "myosim_route_added": false,
+      "candidate_admission": false,
+      "native_admission": false,
+      "scope": "A 36-face residual microcomponent is retired with per-face lineage; source coordinates, normals, bindings, and route state are unchanged. The self report is scoped to its pinned actual step-0 capture. No report establishes equivalence to the later ba3e capture, moving-pose clearance, or neighbor clearance."
+    }
+  },
+  "protected_back412": {
+    "face_ids": [
+      8841,
+      8845,
+      9314,
+      9315
+    ],
+    "proof_pin": "row157_lineage",
+    "proof_field": "protected_412_faces_unchanged",
+    "value": true,
+    "historical_flip_reference_pin": "back412_flip_reference",
+    "historical_reference_is_admission": false
+  },
+  "current_all_neighbor_gate": {
+    "capture_pin": "fresh_step0_pack_ba3e",
+    "capture_receipt_pin": "fresh_step0_receipt_ba3e",
+    "report_pin": "all_neighbor_484_report",
+    "first_failure_pin": "all_neighbor_484_first_failure",
+    "status": "stopped_at_first_unexpected_pair",
+    "first_failure_typed_pair": [
+      [
+        51005,
+        132
+      ],
+      [
+        51004,
+        13
+      ]
+    ],
+    "unexpected_triangle_pair_count": 211,
+    "skin_target_reached": false
+  },
+  "retained_placement_inventory": {
+    "head_and_eyes": {
+      "receipt_functional_binding": "head_structure_stable_ids",
+      "bound_stable_id_count": 76,
+      "eye_boundary_status": "source_eye_repair_and_limbal_interface_classified; native_float32_and_cardio_rebind_pending",
+      "contralateral_lens_candidate_status": "candidate_not_native_admitted",
+      "source_cleanup_status": "source_only_candidate_pending_whole_payload_binding_refresh",
+      "scope_limit": "Receipt provenance binds head IDs and records source/limbal work. It does not record a current whole-head/eye all-neighbor motion pass.",
+      "existing_test_report": {
+        "path": "/Users/n/numi-human-resting-evidence-20261005/head-eye-387-contralateral-test-006/report.json",
+        "sha256_recorded_in_current_receipt": "cf407818fb4142336135dc8543d39b3ccc53393c237320371d0b72ad962808ec",
+        "artifact_retrieved_from_snapshot": false,
+        "interpretation": "Hash/path are receipt provenance only; underlying report file was absent from the searched retained roots."
+      }
+    },
+    "pons_brainstem": {
+      "stable_id": 345,
+      "source_member": "FJ1775",
+      "status": "self_embedded_in_body_local_frame; source-neighbor intersections unchanged or reduced; whole-head native qualification pending",
+      "fit_report_sha256": "b2f0487e0148a82c71c7a05e794ca13f88d5db1720b720b0d36f959a4cfed9be",
+      "neighbor_audit_sha256": "2bc5fd10f3b092cd3b33e4e07dc23c86df46c84531b1be5535f1f47a093c6cf5",
+      "scope_limit": "Scoped pons self/neighbor evidence only; current receipt itself leaves whole-head native qualification pending."
+    },
+    "pleura_and_lungs": {
+      "functional_lung_stable_ids": [
+        305,
+        306,
+        307,
+        308,
+        309
+      ],
+      "functional_pleura_stable_id": 310,
+      "functional_diaphragm_stable_id": 311,
+      "pleura_representation": "inferred passive external lung-lobe union surface; no parietal pleura, interlobar fissure lining, fluid, or pleural mechanics",
+      "lung_rebuild_status": "source candidate; native acceptance pending",
+      "lung_761_native_admission": "pending",
+      "scope_limit": "The receipt binds the source geometry and respiratory field, but does not provide final integrated all-target/accepted-cycle lung or pleura clearance."
+    },
+    "liver": {
+      "functional_stable_ids": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "retired_alias": {
+        "22": 21
+      },
+      "main_shell_report_pin": "liver_main_shell_eight_capture_report",
+      "main_shell_scope": "8 accepted captures; main aggregate shell self-pairs zero, closed/oriented/connected",
+      "alias_replay_status_in_receipt": "pending",
+      "source_asset_deleted": false,
+      "scope_limit": "Main shell self/topology evidence is scoped; it does not establish all-neighbor clearance or complete visceral physiology."
+    },
+    "passive_organs_and_viscera": {
+      "functional_stable_id_count": 79,
+      "motion_model": "common respiratory field with torso/pelvis blend",
+      "parameter_status": "inferred reference attachment, not measured-subject motion",
+      "geometry_rebase_recorded_neutral_position_max_error_m": 1.6028172426665863e-08,
+      "mass_or_volume_changed": false,
+      "extension_scope": "passive atlas inspection; no digestive, urinary, endocrine or reproductive physiology; source interfaces not yet qualified under loaded motion",
+      "scope_limit": "Neutral registration is not moving-pose or all-neighbor qualification."
+    },
+    "skin": {
+      "current_typed_identity": [
+        51007,
+        1
+      ],
+      "prior_skin_report_pin": "skin_021_audit",
+      "prior_report_scope": "N18/N21-era skin self plus 92 selected muscle/ocular/vessel targets at eight captures",
+      "current_integrated_skin_gate": "not reached by the current 484 all-neighbor gate"
+    }
+  },
+  "evidence_pins": [
+    {
+      "id": "integrated_receipt",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-back157158-integrated-receipt-001/resting-anatomy-receipt.json",
+      "sha256": "86a227bf20861cd68c9597e91d15fa3fd4d03c696d85c29229fa3f45c373ed31"
+    },
+    {
+      "id": "integrated_nha_payload",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-candidate-007-006/resting-thorax.nhanatomy",
+      "sha256": "3a3693b8de2264127e9190a151dca460002ae3b8a0a09edea312bd4eed73ea42"
+    },
+    {
+      "id": "integrated_nhtiss_payload",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-row-composition-002/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "1acb3d401f270c43794d02fc8f33c5002317b174822d95dbab3115649b094965"
+    },
+    {
+      "id": "integrated_nhtiss_manifest",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-row-composition-002/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "sha256": "f939085562f834acfad62fdb8c57da7a6cfb2f9958f535a64fd138aad8096c92"
+    },
+    {
+      "id": "pre_back_row_source_nhtiss",
+      "path": "/Users/numi/numi-human-fds132-m6-1350/attempt-478-source-compose-row134-474/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "2ad056de6308f2e84d5cc6ce0f0416c28858a8829e50fe388143725000fe9200"
+    },
+    {
+      "id": "pre_back_row_source_manifest",
+      "path": "/Users/numi/numi-human-fds132-m6-1350/attempt-478-source-compose-row134-474/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "sha256": "c441becefd0467e75771d842f981e82cae46a8da80a3f92d8b3dc0b94af21ce4"
+    },
+    {
+      "id": "row158_composed_nhtiss",
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-composition-003/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "7ef4f6cff6feb62913bc5a463780725e3543271a5699d601807ac70a67cb345c"
+    },
+    {
+      "id": "row158_composed_manifest",
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-composition-003/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.manifest.json",
+      "sha256": "1a278505466192a6c1556a660c8a79a15ee54c28cabf7981a54976062a3f791a"
+    },
+    {
+      "id": "row158_composition_report",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-composition-003/composed/report.json",
+      "sha256": "4a3174921478fde387df1f5daf193b3643ac898b342c1dbbea254cb9512f956c"
+    },
+    {
+      "id": "row157_candidate",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-directed-edge-collapse-002/candidate-001/candidate-row-157.npz",
+      "sha256": "d104af55363eb8f95ca704668d2da23c50eb282df1f1004a220e0059b4fbf072"
+    },
+    {
+      "id": "row157_preparation",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-directed-edge-collapse-002/candidate-001/preparation-report.json",
+      "sha256": "1ff3bda61cb9dd14fb8f8d2f9a4b7818f02d307b90f93e43db334db1869ea64b"
+    },
+    {
+      "id": "row157_lineage",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-directed-edge-collapse-002/candidate-001/face-lineage.json",
+      "sha256": "f40c6ff5861bd9e500604cee7ee8f6a0bd707733d8c868c31a232bae9c2c93ad"
+    },
+    {
+      "id": "row157_step0_self",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-directed-edge-collapse-002/candidate-001/full-self-001/report.json",
+      "sha256": "bcde573af476269d6c3c2ba69f1670da332543246eeecabc3e299321cf43211c"
+    },
+    {
+      "id": "row157_fresh_capture_equivalence",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-directed-edge-collapse-002/candidate-001/capture-row-equivalence.json",
+      "sha256": "83f4035f79b2db65bcba6cf71b094d375d77f452be5e8514a3ff9b50f3a9b8e0"
+    },
+    {
+      "id": "row157_composition_report",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-row-composition-002/composed/report.json",
+      "sha256": "825cf9a25f32cbaadd524d614c32e754d100908f5e7b37e0b2c51a2efd84c7df"
+    },
+    {
+      "id": "row158_candidate",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-retirement-001/candidate-row-158.npz",
+      "sha256": "026926ae0b9c394a62b9536f86f0e14713ee0a3eeb65f09aace435eec196acc9"
+    },
+    {
+      "id": "row158_identity_correction",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-retirement-001/identity-lineage-correction-002.json",
+      "sha256": "6b16958c65ba48722ed3fedaae565f718e7f7948460d922a6c30f714e5bd6c52"
+    },
+    {
+      "id": "row158_retired_face_lineage",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-retirement-001/retired-face-lineage.json",
+      "sha256": "b132dbf06c18f7c19e8cb5829b720931e086834ee231108e6456973f98ad7c25"
+    },
+    {
+      "id": "row158_step0_self",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-candidate-step0-self-002/report.json",
+      "sha256": "162cae02cc650eb4d80c31b35d6e7eda3bf48853ec659946535e451614f22489"
+    },
+    {
+      "id": "self_capture_pack_92c",
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.mrvpack",
+      "sha256": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934"
+    },
+    {
+      "id": "self_capture_receipt_92c",
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.receipt.json",
+      "sha256": "a704bdd7b69a6a97cd437900a68127342ac6ae66f9aad40b173bf81d3becccc9"
+    },
+    {
+      "id": "fresh_step0_pack_ba3e",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vein008-forearm474-back158-native-emission-diagnostic-002/native-run/accepted-geometry/step-0.mrvpack",
+      "sha256": "ba3e3160c135a3b04b927f7d9a1d56ca7cb8e9f90982b50eebb6a70bb169c523"
+    },
+    {
+      "id": "fresh_step0_receipt_ba3e",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vein008-forearm474-back158-native-emission-diagnostic-002/native-run/accepted-geometry/step-0.receipt.json",
+      "sha256": "6deba756ae333e0c4e8a7609d90c8f21aa8a5990c9708971dc7c75f4196e852f"
+    },
+    {
+      "id": "all_neighbor_484_report",
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-484-fresh-all-target-step0-002/result-001/report.json",
+      "sha256": "96c94c747630a8df8d487227249fa5a9f90b1f234e4c47521a2b6af7e70da05e"
+    },
+    {
+      "id": "all_neighbor_484_first_failure",
+      "path": "/Users/n/numi-human-fds132-m6-1350/attempt-484-fresh-all-target-step0-002/result-001/first-failed-pair.json",
+      "sha256": "2d430b6e266ea23ee6610821e9a67423977ea3a7d30b287328683f0c199d58bd"
+    },
+    {
+      "id": "liver_main_shell_eight_capture_report",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/liver-main-shell-native-1384-001/report.json",
+      "sha256": "88068788a779091796e0962dbb2068455688de322a0e11f32efdf4af50cfc128"
+    },
+    {
+      "id": "liver_id22_geometry_report",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/liver-id22-aggregate-geometry-audit-002.json",
+      "sha256": "18011492b1907b38ee5f5d1837ade3c384ac0706a86ee6652f5a0c129026cbac"
+    },
+    {
+      "id": "liver_id22_identity_report",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/liver-id22-source-identity-audit.json",
+      "sha256": "728ac97ff3b0325b728798e8a4ead8d93e2cccad1eb3b6ac1ed23090d56659f0"
+    },
+    {
+      "id": "skin_021_alltarget",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/native-skin-repair-021-alltarget-audit.json",
+      "sha256": "913d87a42fdd5c6eb3707152fcc4a3e9bb54dfb2e67ea9919110585b400e5e6e"
+    },
+    {
+      "id": "skin_021_audit",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/native-skin-repair-021-audit.json",
+      "sha256": "070073361fc74d5e397395337605f0b02f445a0bbd1cfc2033ae0ed46c1abde7"
+    },
+    {
+      "id": "intercostal_313_self",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/intercostal-local-regularization-audit-038-001/report.json",
+      "sha256": "236ee269e89ad5db0e900829b7a6d730e6e3f413d4067e123d147c99ccebef03"
+    },
+    {
+      "id": "intercostal_315_self",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/intercostal-inner-fan-regularization-040-001/row-315/report.json",
+      "sha256": "f991dc202f3b22217015b1695831f472ec8ea3952f4dfdf366119999c6244bbb"
+    },
+    {
+      "id": "intercostal_317_delta_self",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/intercostal-local-tip-retessellation-044-001/report.json",
+      "sha256": "fba64f5524ee611bdb2620c4f4dccd47cdcc72a14f3bb715bc0692cd5f409de8"
+    },
+    {
+      "id": "predicate_owner",
+      "path": "/Users/n/numi-human-final-integration-publish-1397/src/numilab_human/resting_anatomy_verify.py",
+      "sha256": "a72878c0380279947f57e50c6c651e1b448554f224bc72f4cce84733b7761a76"
+    },
+    {
+      "id": "back412_flip_reference",
+      "path": "/Users/n/numi-human-final-integration-publish-1397/tools/evidence/back-cap-retriangulation-native-m6-1374/flip-412.json",
+      "sha256": "0ead75bfee5a0abde2f213b26e7f272b78f58af1539d56c85aea80f22021d8c2"
+    }
+  ]
+}
