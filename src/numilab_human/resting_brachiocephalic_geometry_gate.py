@@ -355,7 +355,9 @@ def _verified_network_link_handoff(
                  and isinstance(source_inventory.get("candidate_surfaces"), Mapping)
                  and isinstance(source_inventory.get("independent_source_baselines"), Mapping)
                  and isinstance(source_inventory.get(
-                     "candidate_baseline_gid_identity_by_typed_row"), Mapping)),
+                     "candidate_baseline_gid_identity_by_typed_row"), Mapping)
+                 and isinstance(source_inventory.get(
+                     "source_face_ancestry_by_typed_row"), Mapping)),
              "all-target handoff source/baseline inventory is malformed")
     _require(not (addendum_edges & set(edges)) or source_inventory is not None,
              "special source-collar links require the current source/baseline inventory")
@@ -651,10 +653,6 @@ def _verified_network_link_handoff(
                      == fingerprint["source_vertex_ids_u64_sha256"]
                      and ancestry_row.get("candidate_face_ancestry_sha256")
                      == fingerprint["faces_u32_sha256"]
-                     and ancestry.get(
-                         "source_parent_faces_sha256" if role == "bridge"
-                         else "source_child_faces_sha256")
-                     == fingerprint["faces_u32_sha256"]
                      and ancestry_row.get("candidate_source_vertex_ids_sha256")
                      == fingerprint["source_vertex_ids_u64_sha256"]
                      and ancestry_row.get("baseline_face_ancestry_sha256")
@@ -666,6 +664,38 @@ def _verified_network_link_handoff(
                      and ancestry_row.get("candidate_source_vertex_ids_sha256")
                      == ancestry_row.get("baseline_source_vertex_ids_sha256"),
                      f"candidate or independent baseline bytes differ from link proof for {key}")
+            source_face_sha = ancestry.get(
+                "source_parent_faces_sha256" if role == "bridge"
+                else "source_child_faces_sha256")
+            if source_inventory is None:
+                _require(source_face_sha == fingerprint["faces_u32_sha256"],
+                         f"unmapped source face bytes differ from current row for {key}")
+            else:
+                ancestry_inventory = source_inventory[
+                    "source_face_ancestry_by_typed_row"].get(
+                        f"{key[0]}:{key[1]}")
+                _require(
+                    isinstance(ancestry_inventory, Mapping)
+                    and ancestry_inventory.get("typed_identity") == list(key)
+                    and ancestry_inventory.get("source_faces_u32_sha256") == source_face_sha
+                    and ancestry_inventory.get("source_abi5_face_array_sha256")
+                    == source_face_sha
+                    and ancestry_inventory.get("capture_faces_u32_sha256")
+                    == fingerprint["faces_u32_sha256"]
+                    and ancestry_inventory.get("packed_face_array_sha256")
+                    == fingerprint["faces_u32_sha256"]
+                    and ancestry_inventory.get(
+                        "ordered_source_face_ids_are_preserved") is True
+                    and ancestry_inventory.get("status")
+                    == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+                    and type(ancestry_inventory.get("source_face_count")) is int
+                    and type(ancestry_inventory.get("capture_face_count")) is int
+                    and ancestry_inventory["source_face_count"]
+                    == ancestry_inventory["capture_face_count"]
+                    and valid_sha(ancestry_inventory.get("map_sha256"))
+                    and valid_sha(ancestry_inventory.get(
+                        "source_local_vertex_to_capture_global_gid_sha256")),
+                    f"source-to-capture face ancestry is incomplete for {key}")
             for source_kind, source_row in (
                     ("candidate", candidate_row), ("baseline", baseline_row)):
                 solid = solid_gates.get(source_kind)

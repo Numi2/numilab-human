@@ -1705,6 +1705,64 @@ def _handoff_fixture():
     return surfaces, edges, source_pairs, continuity
 
 
+def _handoff_source_inventory(surfaces, edges, *, source_face_sha_overrides=None):
+    source_face_sha_overrides = source_face_sha_overrides or {}
+    candidate_rows = {}
+    baseline_rows = {}
+    gid_rows = {}
+    ancestry_rows = {}
+    network_keys = {key for edge in edges for key in edge}
+    for key in network_keys:
+        points, faces, _normals, source_ids = surfaces[key]
+        name = f"{key[0]}:{key[1]}"
+        positions_sha = _handoff_hash(points, "<f4")
+        faces_sha = _handoff_hash(faces, "<u4")
+        gids_sha = _handoff_hash(source_ids, "<u8")
+        candidate_rows[name] = {
+            "typed_identity": list(key),
+            "positions_f32_sha256": positions_sha,
+            "faces_u32_sha256": faces_sha,
+            "captured_global_vertex_ids_u64_sha256": gids_sha,
+        }
+        baseline_rows[name] = {
+            "typed_identity": list(key),
+            "positions_f32_sha256": _handoff_hash(
+                np.asarray(points + np.float32(0.01), dtype="<f4"), "<f4"),
+            "faces_u32_sha256": faces_sha,
+            "captured_global_vertex_ids_u64_sha256": gids_sha,
+        }
+        gid_rows[name] = {
+            "typed_identity": list(key),
+            "numeric_gid_values_equal": True,
+            "candidate_gid_values_sha256": gids_sha,
+            "baseline_gid_values_sha256": gids_sha,
+        }
+        source_faces_sha = source_face_sha_overrides.get(key, faces_sha)
+        ancestry_rows[name] = {
+            "typed_identity": list(key),
+            "source_faces_u32_sha256": source_faces_sha,
+            "source_abi5_face_array_sha256": source_faces_sha,
+            "capture_faces_u32_sha256": faces_sha,
+            "packed_face_array_sha256": faces_sha,
+            "ordered_source_face_ids_are_preserved": True,
+            "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+            "source_face_count": len(faces),
+            "capture_face_count": len(faces),
+            "map_sha256": "d" * 64,
+            "source_local_vertex_to_capture_global_gid_sha256": "e" * 64,
+        }
+    return {
+        "candidate_gid_values_were_read_from_actual_capture_pack": True,
+        "baseline_coordinates_are_independently_cpu_reconstructed": True,
+        "baseline_gid_values_are_transported_current_nha_source_slots": True,
+        "source_face_arrays_bound_by_exact_ordered_abi5_corner_ancestry": True,
+        "candidate_surfaces": candidate_rows,
+        "independent_source_baselines": baseline_rows,
+        "candidate_baseline_gid_identity_by_typed_row": gid_rows,
+        "source_face_ancestry_by_typed_row": ancestry_rows,
+    }
+
+
 def test_verified_handoff_skips_only_proven_edges_and_checks_every_other_pair():
     surfaces, edges, source_pairs, continuity = _handoff_fixture()
     verifier = _HandoffVerifier()
@@ -1735,6 +1793,55 @@ def test_verified_handoff_skips_only_proven_edges_and_checks_every_other_pair():
     assert len([event for event in progress
                 if event.startswith("CHECKING_UNDECLARED_NETWORK_PAIR_")]) == len(
                     expected_nonedges)
+
+
+def test_verified_handoff_binds_repaired_faces_through_exact_source_corner_ancestry():
+    import copy
+
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    remapped_key = (51011, 477)
+    raw_source_sha = "f" * 64
+    for link in continuity["links"]:
+        if link["target"] == list(remapped_key):
+            link["declared_network_link_source_ancestry"][
+                "source_child_faces_sha256"] = raw_source_sha
+    inventory = _handoff_source_inventory(
+        surfaces, edges, source_face_sha_overrides={remapped_key: raw_source_sha})
+
+    verifier = _HandoffVerifier()
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_network_source_inventory=inventory)
+    assert result["passed"] is True
+
+    tampered_inventory = copy.deepcopy(inventory)
+    tampered_inventory["source_face_ancestry_by_typed_row"][
+        "51011:477"]["source_faces_u32_sha256"] = "a" * 64
+    verifier = _HandoffVerifier()
+    with pytest.raises(ValueError, match="source-to-capture face ancestry"):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, edges, source_pairs,
+            verified_network_continuity=continuity,
+            verified_network_source_inventory=tampered_inventory)
+    assert verifier.shared_calls == []
+    assert verifier.pair_calls == []
+
+
+def test_verified_handoff_without_source_map_still_requires_identical_face_bytes():
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    remapped_key = (51011, 477)
+    for link in continuity["links"]:
+        if link["target"] == list(remapped_key):
+            link["declared_network_link_source_ancestry"][
+                "source_child_faces_sha256"] = "f" * 64
+    verifier = _HandoffVerifier()
+    with pytest.raises(ValueError, match="unmapped source face bytes"):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, edges, source_pairs,
+            verified_network_continuity=continuity)
+    assert verifier.shared_calls == []
+    assert verifier.pair_calls == []
 
 
 def test_verified_handoff_binds_calibre_to_distinct_candidate_and_baseline_interfaces():
