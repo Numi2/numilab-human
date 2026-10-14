@@ -68,6 +68,22 @@ class PreparedSurface:
     core_weights_by_gid: dict | None = field(default=None, repr=False)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
+    _face_records: dict | None = field(default=None, repr=False)
+    _vertex_indices: dict | None = field(default=None, repr=False)
+
+    def face_record(self, face_id):
+        if self._face_records is None:
+            self._face_records = {}
+            for record in self.records:
+                self._face_records.setdefault(int(record[3]), record)
+        return self._face_records.get(face_id)
+
+    def vertex_index(self, gid):
+        if self._vertex_indices is None:
+            self._vertex_indices = {}
+            for index, source_id in enumerate(self.source_vertex_ids):
+                self._vertex_indices.setdefault(int(source_id), index)
+        return self._vertex_indices.get(gid)
 
     def self_audit(self):
         if self._self_result is None:
@@ -347,8 +363,8 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
         if json.dumps(lineage_a, sort_keys=True, separators=(",", ":")) != json.dumps(
                 lineage_b, sort_keys=True, separators=(",", ":")):
             return False, "feature_GID_birth_lineage_differs_between_owners"
-        ix_a = int(np.flatnonzero(first.source_vertex_ids == gid)[0])
-        ix_b = int(np.flatnonzero(second.source_vertex_ids == gid)[0])
+        ix_a = first.vertex_index(gid)
+        ix_b = second.vertex_index(gid)
         pa, pb = first.positions[ix_a], second.positions[ix_b]
         if pa.tobytes() != pb.tobytes():
             return False, "feature_GID_emitted_Float32_positions_differ"
@@ -372,8 +388,8 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
                         or not np.array_equal(lineage_weights, owner_weights)):
                     return False, "kind3_feature_lineage_differs_from_actual_owner_row"
         expected.add(tuple(Fraction(int(value)) for value in ci.float32_point_lattice_key(pa.tolist())))
-    record_a = next((record for record in first.records if int(record[3]) == first_face), None)
-    record_b = next((record for record in second.records if int(record[3]) == second_face), None)
+    record_a = first.face_record(first_face)
+    record_b = second.face_record(second_face)
     if record_a is None or record_b is None:
         return False, "face_record_missing"
     actual = set(ci.triangle_intersection_points(record_a[0], record_b[0]))
