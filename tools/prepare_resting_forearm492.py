@@ -112,7 +112,14 @@ def prepare(base_path, candidate_path, handoff_path, ancestry_path, output):
                 "nonfinite source fields")
         require(np.max(np.abs(np.linalg.norm(normals.astype(float), axis=1)-1)) <= 2e-3,
                 "undefined source normals")
-        binding = old["binding_bytes"]
+        source_zero = composition._read_nhtiss4(Path(extension["source_payloads"][0]["path"]))
+        source_rows = {int(row[6]): composition._row_slices(source_zero, row)
+                       for row in source_zero["records"]}
+        require(set(source_rows) == {132}, "source0 must exclusively own FDS132")
+        require(source_zero["fingerprint"] == tissue["fingerprint"]
+                and source_zero["source_digest"] == tissue["source_digest"],
+                "parent source registration identity changed")
+        binding = source_rows[132]["binding_bytes"]
         actual_cores = [struct.unpack_from("<I", binding, offset)[0]
                         for offset in range(0, len(binding), 36)]
         require(actual_cores == cores.tolist(), "existing ordered body basis changed")
