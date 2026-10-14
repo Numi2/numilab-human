@@ -1400,3 +1400,262 @@ def test_reference_repair_after_complete_passive_coverage(
     source.write_bytes(raw)
     with pytest.raises(ValueError, match="unsupported NHTISS4 ABI or source inventory"):
         compose(source, tmp_path/"oversized", [(7, patch, report)], reference_surface_rows=(7,))
+
+
+def _mutate_binding_core(payload, stable_id, binding_ordinal, core_index):
+    raw = bytearray(payload.read_bytes())
+    _, _, nr, _, _, _, _, _ = struct.unpack_from("<8s6I32s", raw)
+    records = np.frombuffer(raw, "<u4", nr*8, 64).reshape(-1, 8)
+    row = next(record for record in records if int(record[6]) == stable_id)
+    binding_start = 64 + nr*32
+    global_binding = int(row[0]) + binding_ordinal
+    struct.pack_into("<I", raw, binding_start + global_binding*36, core_index)
+    payload.write_bytes(raw)
+
+
+def _refresh_surface_binding_name(payload, stable_id, binding_ordinal, *, core_index=None, name=None):
+    manifest_path = payload.with_suffix(".manifest.json")
+    data = json.loads(manifest_path.read_text())
+    row = next(item for item in data["source"]["surfaces"] if item["stable_id"] == stable_id)
+    if core_index is not None:
+        row["body_bindings"][binding_ordinal]["core_body_index"] = core_index
+    if name is not None:
+        row["body_bindings"][binding_ordinal]["myosim_body"] = name
+    manifest_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+    _refresh_manifest(payload)
+
+
+def test_rebind_selected_rows_from_current_owner_preserves_geometry_and_maps(inputs, tmp_path):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    raw = bytearray(base.read_bytes())
+    _, _, nr, _, _, _, _, _ = struct.unpack_from("<8s6I32s", raw)
+    records = np.frombuffer(raw, "<u4", nr*8, 64).reshape(-1, 8)
+    row = next(record for record in records if int(record[6]) == 7)
+    binding_start = 64 + nr*32
+    selected_binding = int(row[0])
+    # The current owner transform changes while Core and MyoSim identities stay fixed.
+    struct.pack_into("<f", raw, binding_start + selected_binding*36 + 4, 0.125)
+    base.write_bytes(raw)
+    _refresh_manifest(base)
+
+    output = tmp_path / "retargeted"
+    report = pac.compose(
+        source, output, [], registration_metadata_base=base,
+        registration_path=registration, registration_binding_rows=(7,),
+    )
+    child = output / source.name
+    old_raw, new_raw = source.read_bytes(), child.read_bytes()
+    _, _, old_nr, old_nb, old_nv, old_ni, old_fp, _ = struct.unpack_from("<8s6I32s", old_raw)
+    _, _, new_nr, new_nb, new_nv, new_ni, new_fp, _ = struct.unpack_from("<8s6I32s", new_raw)
+    assert (new_nr, new_nb, new_nv, new_ni) == (old_nr, old_nb, old_nv, old_ni)
+    assert new_fp != old_fp
+    old_binding_start = 64 + old_nr*32
+    old_vertex_start = old_binding_start + old_nb*36
+    assert new_raw[old_vertex_start:] == old_raw[old_vertex_start:]
+    assert new_raw[64:old_binding_start] == old_raw[64:old_binding_start]
+    assert new_raw[old_binding_start:old_binding_start+selected_binding*36] == old_raw[
+        old_binding_start:old_binding_start+selected_binding*36]
+    assert new_raw[old_binding_start+selected_binding*36:old_binding_start+(selected_binding+1)*36] != old_raw[
+        old_binding_start+selected_binding*36:old_binding_start+(selected_binding+1)*36]
+    assert report["operation"]["selected_stable_ids"] == [7]
+    assert report["operation"]["changed_binding_record_count"] == 1
+    assert report["anatomical_and_native_admission"] is False
+    child_manifest = json.loads(child.with_suffix(".manifest.json").read_text())
+    assert child_manifest["source"]["registration"]["file"] == registration.name
+    assert (output / registration.name).read_bytes() == registration.read_bytes()
+
+
+def test_rebind_rejects_owner_core_alias_and_missing_core(inputs, tmp_path):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    _mutate_binding_core(base, 8, 0, 114)
+    _refresh_surface_binding_name(base, 8, 0, core_index=114)
+    with pytest.raises(ValueError, match="aliases one Core index"):
+        pac.rebind_registration_bindings(source, base, registration, tmp_path/"alias", (7,))
+    assert not (tmp_path/"alias").exists()
+
+    # A selected accepted binding cannot refer to a Core body absent from the full owner base.
+    missing_case = tmp_path / "missing-case"
+    missing_case.mkdir()
+    base, registration = _metadata_base(source, missing_case)
+    _mutate_binding_core(source, 7, 0, 999)
+    _refresh_surface_binding_name(source, 7, 0, core_index=999, name="not-in-owner")
+    with pytest.raises(ValueError, match="absent from owner base"):
+        pac.rebind_registration_bindings(source, base, registration, tmp_path/"missing-core", (7,))
+    assert not (tmp_path/"missing-core").exists()
+
+
+def test_rebind_rejects_changed_physical_source_identity(inputs, tmp_path):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    manifest_path = base.with_suffix(".manifest.json")
+    manifest = json.loads(manifest_path.read_text())
+    manifest["source"]["myosim_source_archive_sha256"] = "0"*64
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    with pytest.raises(ValueError, match="source archive differs"):
+        pac.rebind_registration_bindings(source, base, registration, tmp_path/"wrong-source", (7,))
+    assert not (tmp_path/"wrong-source").exists()
+
+
+def test_rebind_requires_pinned_map_evolution_and_accepts_exact_prefix(inputs, tmp_path):
+    source, _, _, _ = inputs
+    bodyparts = {"file": "bodyparts.json", "sha256": "b"*64,
+                 "archives": [{"sha256": "b"*64}]}
+    accepted_manifest_path = source.with_suffix(".manifest.json")
+    accepted_manifest = json.loads(accepted_manifest_path.read_text())
+    accepted_manifest["source"]["bodyparts"] = bodyparts
+    accepted_manifest["source"]["surface_map"] = {"file": "old-map.json"}
+    accepted_manifest["source"]["myosim_manifest"] = {"file": "old-myosim.json", "sha256": "m"*64}
+    old_map = tmp_path/"old-map.json"
+    new_map = tmp_path/"new-map.json"
+    old_entries = [{"member": "A.obj"}]
+    old_map.write_text(json.dumps({"schema": "surface-map.v1", "entries": old_entries}))
+    new_map.write_text(json.dumps({"schema": "surface-map.v1",
+                                   "entries": old_entries + [{"member": "B.obj"}]}))
+    accepted_manifest["source"]["surface_map"]["sha256"] = digest(old_map)
+    accepted_manifest_path.write_text(json.dumps(accepted_manifest, indent=2, sort_keys=True)+"\n")
+
+    base, registration = _metadata_base(source, tmp_path)
+    base_manifest_path = base.with_suffix(".manifest.json")
+    base_manifest = json.loads(base_manifest_path.read_text())
+    base_manifest["source"]["bodyparts"] = bodyparts
+    base_manifest["source"]["surface_map"] = {"file": "new-map.json", "sha256": digest(new_map)}
+    base_manifest["source"]["myosim_manifest"] = {"file": "new-myosim.json", "sha256": "n"*64}
+    base_manifest_path.write_text(json.dumps(base_manifest, indent=2, sort_keys=True)+"\n")
+
+    compat_report = tmp_path/"compatibility.json"
+    compat_report.write_text(json.dumps({
+        "schema": "numi.human.b42-current-source-compatibility.v1",
+        "status": "prepared_for_source_compilation_only",
+        "active_source": {"archive_sha256": "73"*32},
+        "bodypart_source_geometry": {"archive_sha256": "b"*64},
+        "source_binary_compatibility": {
+            "route_table_exact": True, "site_table_exact": True,
+            "wrap_table_exact": True, "site_wrap_route_prefix_exact": True,
+            "old_current_nhrigid_byte_identical": True},
+        "stale_candidate_source_corrected_in_copy": {
+            "current_manifest_sha256": "n"*64}}, indent=2, sort_keys=True)+"\n")
+    proof = {
+        "schema": "numi.human.passive-registration-source-evolution-proof.v1",
+        "compatibility_report_path": str(compat_report),
+        "compatibility_report_sha256": digest(compat_report),
+        "accepted_surface_map_path": str(old_map),
+        "owner_surface_map_path": str(new_map),
+    }
+    output = tmp_path/"retargeted-with-source-proof"
+    report = pac.rebind_registration_bindings(
+        source, base, registration, output, (7,), source_evolution_proof=proof)
+    assert report["operation"]["source_evolution_proof"]["compatibility_report_sha256"] == digest(compat_report)
+    assert report["anatomical_and_native_admission"] is False
+
+    # Same descriptor drift without the proof must fail before creating output.
+    with pytest.raises(ValueError, match="requires its pinned compatibility proof"):
+        pac.rebind_registration_bindings(source, base, registration, tmp_path/"unproven", (7,))
+    assert not (tmp_path/"unproven").exists()
+
+
+def _terminal_binding_recovery_case(source, tmp_path, *, omit="last"):
+    base, current_registration = _metadata_base(source, tmp_path)
+    accepted_manifest_path = source.with_suffix(".manifest.json")
+    accepted_manifest = json.loads(accepted_manifest_path.read_text())
+    accepted_registration = tmp_path / "accepted-registration.json"
+    accepted_registration.write_text(json.dumps({
+        "anchors": [{
+            "target": {"core_body_index": 115, "name": "body-15"},
+            "registration": {"source_obj_mm_to_core_inertial_body_m": [
+                [0.001, 0.0, 0.0, 0.0], [0.0, 0.001, 0.0, 0.0],
+                [0.0, 0.0, 0.001, 0.0], [0.0, 0.0, 0.0, 1.0]]},
+        }],
+    }, sort_keys=True) + "\n")
+    accepted_manifest["source"]["registration"] = {
+        "file": accepted_registration.name, "sha256": digest(accepted_registration)}
+    row = next(item for item in accepted_manifest["source"]["surfaces"]
+               if item["stable_id"] == 7)
+    if omit == "last":
+        row["body_bindings"].pop()
+    elif omit == "first":
+        row["body_bindings"].pop(0)
+    accepted_manifest_path.write_text(json.dumps(accepted_manifest, indent=2, sort_keys=True) + "\n")
+
+    # Give the owner base a distinguishable transform for the recovered binding.
+    raw = bytearray(base.read_bytes())
+    _, _, row_count, _, _, _, _, _ = struct.unpack_from("<8s6I32s", raw)
+    records = np.frombuffer(raw, "<u4", row_count * 8, 64).reshape(-1, 8)
+    row_record = next(record for record in records if int(record[6]) == 7)
+    binding_start = 64 + row_count * 32
+    binding_index = int(row_record[0]) + 1
+    struct.pack_into("<f", raw, binding_start + binding_index * 36 + 4, 0.02)
+    base.write_bytes(raw)
+    _refresh_manifest(base)
+
+    recovery = {
+        "stable_id": 7, "binding_ordinal": 1,
+        "core_body_index": 115, "myosim_body": "body-15",
+        "method": "one_missing_terminal_binding_name_from_accepted_registration_and_current_owner_core_map",
+        "accepted_payload_sha256": digest(source),
+        "accepted_manifest_sha256": digest(accepted_manifest_path),
+        "owner_base_payload_sha256": digest(base),
+        "owner_base_manifest_sha256": digest(base.with_suffix(".manifest.json")),
+        "accepted_registration_path": str(accepted_registration),
+        "accepted_registration_sha256": digest(accepted_registration),
+    }
+    proof = {"accepted_binding_metadata_recoveries": [recovery]}
+    return base, current_registration, recovery, proof
+
+
+def test_rebind_recovers_one_proof_bound_terminal_binding_name(inputs, tmp_path):
+    source, _, _, _ = inputs
+    base, current_registration, recovery, proof = _terminal_binding_recovery_case(
+        source, tmp_path)
+    out = tmp_path / "recovered-terminal-binding"
+    result = pac.rebind_registration_bindings(
+        source, base, current_registration, out, (7,), source_evolution_proof=proof)
+
+    child = out / source.name
+    child_manifest = json.loads(child.with_suffix(".manifest.json").read_text())
+    row_meta = next(item for item in child_manifest["source"]["surfaces"]
+                    if item["stable_id"] == 7)
+    assert row_meta["body_bindings"][-1] == {
+        "core_body_index": 115, "myosim_body": "body-15"}
+    assert len(row_meta["body_bindings"]) == 2
+    assert row_meta["body_weight_count"] == 2
+    before, after = source.read_bytes(), child.read_bytes()
+    old, new = pac._read_nhtiss4(source), pac._read_nhtiss4(child)
+    old_binding = pac._row_slices(old, next(r for r in old["records"] if int(r[6]) == 7))["binding_bytes"]
+    new_binding = pac._row_slices(new, next(r for r in new["records"] if int(r[6]) == 7))["binding_bytes"]
+    assert new_binding[:36] == old_binding[:36]
+    assert new_binding[36:] != old_binding[36:]
+    assert after[old["vertex_start"]:] == before[old["vertex_start"]:]
+    assert result["operation"]["accepted_binding_metadata_recoveries"] == [{
+        "stable_id": 7,
+        "binding_ordinal": 1,
+        "recovered_body_binding": {"core_body_index": 115, "myosim_body": "body-15"},
+        "method": recovery["method"],
+        "accepted_registration_path": str(Path(recovery["accepted_registration_path"]).resolve()),
+        "accepted_registration_sha256": recovery["accepted_registration_sha256"],
+        "accepted_binding_record_sha256": hashlib.sha256(old_binding[36:]).hexdigest(),
+    }]
+
+
+@pytest.mark.parametrize("defect", ["nonterminal", "wrong_core", "multiple", "stale_payload"])
+def test_rebind_rejects_invalid_terminal_binding_recovery_proof(inputs, tmp_path, defect):
+    source, _, _, _ = inputs
+    base, current_registration, recovery, proof = _terminal_binding_recovery_case(
+        source, tmp_path, omit="first" if defect == "nonterminal" else "last")
+    if defect == "wrong_core":
+        recovery["core_body_index"] = 114
+        recovery["myosim_body"] = "body-14"
+    elif defect == "multiple":
+        proof["accepted_binding_metadata_recoveries"].append(dict(recovery))
+    elif defect == "stale_payload":
+        raw = bytearray(source.read_bytes())
+        raw[-1] ^= 1
+        source.write_bytes(raw)
+        _refresh_manifest(source)
+
+    output = tmp_path / "invalid-recovery"
+    with pytest.raises(ValueError):
+        pac.rebind_registration_bindings(
+            source, base, current_registration, output, (7,), source_evolution_proof=proof)
+    assert not output.exists()

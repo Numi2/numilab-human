@@ -163,8 +163,22 @@ def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path
             fhl_source_seam_correction: dict | None = None,
             reference_surface_rows: tuple[int, ...] = (),
             registration_metadata_base: Path | None = None,
-            registration_path: Path | None = None) -> dict:
+            registration_path: Path | None = None,
+            registration_binding_rows: tuple[int, ...] = (),
+            source_evolution_proof: dict | None = None) -> dict:
     import numpy as np
+    if registration_binding_rows:
+        require(not replacements and biceps_source_correction is None
+                and fhl_source_seam_correction is None and not reference_surface_rows,
+                "registration binding retarget cannot mix row replacement operations")
+        require(registration_metadata_base is not None and registration_path is not None,
+                "registration binding retarget requires the exact current owner base and registration source")
+        return rebind_registration_bindings(
+            source, registration_metadata_base, registration_path, output,
+            registration_binding_rows, source_evolution_proof=source_evolution_proof,
+        )
+    require(source_evolution_proof is None,
+            "source evolution proof is only accepted for registration binding retarget")
     if registration_metadata_base is not None:
         require(not replacements and biceps_source_correction is None
                 and fhl_source_seam_correction is None and not reference_surface_rows,
@@ -917,6 +931,477 @@ def reemit_registration_metadata(
         json.dumps(report, indent=2, sort_keys=True) + "\n",
     )
     return report
+
+
+
+def rebind_registration_bindings(
+    accepted_payload: Path, owner_base_payload: Path, registration_path: Path,
+    output: Path, stable_ids: tuple[int, ...], *,
+    source_evolution_proof: dict | None = None,
+) -> dict:
+    """Retarget selected accepted rows to exact current owner bindings.
+
+    Row geometry, per-vertex influence indices/weights, and face maps are
+    retained. For each selected binding, only the 36-byte owner transform is
+    replaced, keyed by the serialized Core index and the declared MyoSim body
+    name. This is registration preparation only; geometry admission is separate.
+    """
+    accepted_payload = Path(accepted_payload).resolve()
+    owner_base_payload = Path(owner_base_payload).resolve()
+    registration_path = Path(registration_path).resolve()
+    output = Path(output).resolve()
+    selected = tuple(int(value) for value in stable_ids)
+    require(bool(selected) and len(set(selected)) == len(selected)
+            and all(value > 0 for value in selected),
+            "registration retarget stable IDs must be distinct positive integers")
+    accepted_manifest_path, accepted_manifest = _payload_manifest(accepted_payload)
+    base_manifest_path, base_manifest = _payload_manifest(owner_base_payload)
+    accepted = _read_nhtiss4(accepted_payload)
+    base = _read_nhtiss4(owner_base_payload)
+    accepted_source = accepted_manifest.get("source", {})
+    base_source = base_manifest.get("source", {})
+    require(isinstance(accepted_source, dict) and isinstance(base_source, dict),
+            "registration retarget source identity is missing")
+    registration_record = base_source.get("registration")
+    registration_sha = _surface_sha256(registration_path)
+    require(isinstance(registration_record, dict)
+            and registration_record.get("sha256") == registration_sha,
+            "owner base does not name the exact registration input")
+    require(base_manifest.get("payload", {}).get("registration_fingerprint32")
+            == f"{base['fingerprint']:08x}"
+            and int(registration_sha[:8], 16) == base["fingerprint"],
+            "owner base registration fingerprint is inconsistent")
+    require(accepted_manifest.get("payload", {}).get("registration_fingerprint32")
+            == f"{accepted['fingerprint']:08x}",
+            "accepted payload registration fingerprint is inconsistent")
+    require(accepted_manifest.get("payload", {}).get("registration_fingerprint32")
+            == f"{accepted['fingerprint']:08x}",
+            "accepted payload registration fingerprint is inconsistent")
+    require(accepted["source_digest"] == base["source_digest"]
+            == bytes.fromhex(str(base_source.get("myosim_source_archive_sha256", "")))
+            and accepted_source.get("myosim_source_archive_sha256")
+            == base_source.get("myosim_source_archive_sha256"),
+            "registration retarget MyoSim source archive differs")
+    require(accepted_source.get("bodyparts") == base_source.get("bodyparts"),
+            "registration retarget BodyParts source descriptor differs")
+
+    def rows_by_id(data: dict, manifest: dict, context: str) -> tuple[dict[int, dict], dict[int, object]]:
+        surfaces = manifest.get("source", {}).get("surfaces")
+        require(isinstance(surfaces, list) and len(surfaces) == data["surface_count"],
+                f"{context} manifest row inventory is incomplete")
+        ids = [int(row[6]) for row in data["records"]]
+        require(ids == [row.get("stable_id") for row in surfaces],
+                f"{context} payload/manifest row identities differ")
+        for field, expected in (("surface_count", data["surface_count"]),
+                                ("binding_count", data["binding_count"]),
+                                ("vertex_count", data["vertex_count"]),
+                                ("index_count", data["index_count"])):
+            require(manifest["payload"].get(field) == expected,
+                    f"{context} manifest {field} differs from payload")
+        records = {int(row[6]): row for row in data["records"]}
+        return {int(row["stable_id"]): row for row in surfaces}, records
+
+    accepted_rows, accepted_records = rows_by_id(accepted, accepted_manifest, "accepted")
+    base_rows, base_records = rows_by_id(base, base_manifest, "owner base")
+    require(set(selected).issubset(accepted_records)
+            and set(selected).issubset(base_records),
+            "registration retarget selected rows are absent from an input")
+    common = sorted(set(accepted_rows).intersection(base_rows))
+    for stable_id in common:
+        old, fresh = accepted_rows[stable_id], base_rows[stable_id]
+        require(all(old.get(key) == fresh.get(key)
+                    for key in ("member_id", "member", "member_sha256", "layer")),
+                f"registration retarget source member identity differs for row {stable_id}")
+
+    descriptor_drift = any(accepted_source.get(key) != base_source.get(key)
+                           for key in ("myosim_manifest", "surface_map"))
+    if descriptor_drift:
+        require(isinstance(source_evolution_proof, dict),
+                "source descriptor evolution requires its pinned compatibility proof")
+        proof = source_evolution_proof
+        require(proof.get("schema") == "numi.human.passive-registration-source-evolution-proof.v1",
+                "source evolution proof schema differs")
+        proof_fields = ("compatibility_report_path", "compatibility_report_sha256",
+                        "accepted_surface_map_path", "owner_surface_map_path")
+        require(all(isinstance(proof.get(key), str) and proof[key]
+                    for key in proof_fields),
+                "source evolution proof is missing a pinned input")
+        report_path = Path(proof["compatibility_report_path"]).resolve()
+        old_map_path = Path(proof["accepted_surface_map_path"]).resolve()
+        new_map_path = Path(proof["owner_surface_map_path"]).resolve()
+        report_sha = proof["compatibility_report_sha256"]
+        require(report_path.is_file() and _surface_sha256(report_path) == report_sha,
+                "source compatibility report is not the pinned input")
+        require(old_map_path.is_file() and new_map_path.is_file()
+                and _surface_sha256(old_map_path)
+                    == accepted_source.get("surface_map", {}).get("sha256")
+                and _surface_sha256(new_map_path)
+                    == base_source.get("surface_map", {}).get("sha256"),
+                "source surface maps do not match their declared identities")
+        old_map = json.loads(old_map_path.read_text())
+        new_map = json.loads(new_map_path.read_text())
+        old_entries, new_entries = old_map.get("entries"), new_map.get("entries")
+        require(old_map.get("schema") == new_map.get("schema")
+                and isinstance(old_entries, list) and isinstance(new_entries, list)
+                and len(old_entries) <= len(new_entries)
+                and old_entries == new_entries[:len(old_entries)],
+                "current source map does not preserve the exact accepted map prefix")
+        report = json.loads(report_path.read_text())
+        require(report.get("schema") == "numi.human.b42-current-source-compatibility.v1"
+                and report.get("status") == "prepared_for_source_compilation_only",
+                "source compatibility proof schema or status differs")
+        active = report.get("active_source", {})
+        binary = report.get("source_binary_compatibility", {})
+        geometry = report.get("bodypart_source_geometry", {})
+        require(active.get("archive_sha256")
+                    == accepted_source.get("myosim_source_archive_sha256")
+                and geometry.get("archive_sha256")
+                    == accepted_source.get("bodyparts", {}).get("archives", [{}])[0].get("sha256"),
+                "source compatibility proof names a different source archive")
+        require(binary.get("route_table_exact") is True
+                and binary.get("site_table_exact") is True
+                and binary.get("wrap_table_exact") is True
+                and binary.get("site_wrap_route_prefix_exact") is True
+                and binary.get("old_current_nhrigid_byte_identical") is True,
+                "source compatibility proof does not preserve route/site/wrap or rigid inputs")
+        current_manifest_sha = report.get("stale_candidate_source_corrected_in_copy", {}).get(
+            "current_manifest_sha256")
+        require(current_manifest_sha == base_source.get("myosim_manifest", {}).get("sha256"),
+                "source compatibility proof does not pin the owner-base MyoSim manifest")
+    else:
+        recovery_only_proof = (
+            isinstance(source_evolution_proof, dict)
+            and isinstance(source_evolution_proof.get("accepted_binding_metadata_recoveries"), list)
+            and bool(source_evolution_proof["accepted_binding_metadata_recoveries"])
+        )
+        require(source_evolution_proof is None or recovery_only_proof,
+                "unneeded source evolution proof was supplied for identical descriptors")
+
+    base_name_by_core: dict[int, str] = {}
+    base_binding_by_core: dict[int, bytes] = {}
+    for row in base["records"]:
+        sid = int(row[6])
+        meta = base_rows[sid]
+        fields = meta.get("body_bindings")
+        require(isinstance(fields, list) and len(fields) == int(row[1]),
+                f"owner-base row {sid} has incomplete body-binding names")
+        local = _row_slices(base, row)
+        for bi, item in enumerate(fields):
+            require(isinstance(item, dict) and isinstance(item.get("myosim_body"), str)
+                    and type(item.get("core_body_index")) is int,
+                    f"owner-base row {sid} has malformed binding identity")
+            start = bi * 36
+            record = local["binding_bytes"][start:start + 36]
+            core_index = struct.unpack_from("<I", record)[0]
+            require(core_index == item["core_body_index"],
+                    f"owner-base row {sid} binding index/name mismatch")
+            name = item["myosim_body"]
+            require(core_index not in base_name_by_core or base_name_by_core[core_index] == name,
+                    "owner base aliases one Core index to multiple MyoSim bodies")
+            require(core_index not in base_binding_by_core
+                    or base_binding_by_core[core_index] == record,
+                    "owner base has inconsistent transforms for one Core body")
+            base_name_by_core[core_index] = name
+            base_binding_by_core[core_index] = record
+
+    current_registration_doc = json.loads(Path(registration_path).read_text())
+    anchors = current_registration_doc.get("anchors")
+    require(anchors is None or isinstance(anchors, list),
+            "current registration anchor inventory is malformed")
+    current_name_by_core: dict[int, str] = {}
+    current_binding_by_core: dict[int, bytes] = {}
+    if anchors is not None:
+        from .model import _bodyparts_visual_local_pose
+        for anchor in anchors:
+            require(isinstance(anchor, dict) and isinstance(anchor.get("target"), dict)
+                    and isinstance(anchor.get("registration"), dict),
+                    "current registration anchor is malformed")
+            target = anchor["target"]
+            core_index = target.get("core_body_index")
+            name = target.get("name")
+            matrix = anchor["registration"].get("source_obj_mm_to_core_inertial_body_m")
+            require(type(core_index) is int and isinstance(name, str) and isinstance(matrix, list),
+                    "current registration anchor identity is malformed")
+            translation, quaternion, scale = _bodyparts_visual_local_pose(
+                matrix, f"current registration Core {core_index} binding map",
+            )
+            record = struct.pack("<I8f", core_index, *translation, *quaternion, scale)
+            require(core_index not in current_name_by_core
+                    or current_name_by_core[core_index] == name,
+                    "current registration aliases one Core index to multiple body names")
+            require(core_index not in current_binding_by_core
+                    or current_binding_by_core[core_index] == record,
+                    "current registration has inconsistent transforms for one Core body")
+            current_name_by_core[core_index] = name
+            current_binding_by_core[core_index] = record
+    for core_index in sorted(set(base_name_by_core).intersection(current_name_by_core)):
+        require(base_name_by_core[core_index] == current_name_by_core[core_index]
+                and base_binding_by_core[core_index] == current_binding_by_core[core_index],
+                f"owner-base payload differs from current registration for Core {core_index}")
+
+    declared_recoveries = []
+    if source_evolution_proof is not None:
+        declared_recoveries = source_evolution_proof.get(
+            "accepted_binding_metadata_recoveries", [],
+        )
+    require(isinstance(declared_recoveries, list) and len(declared_recoveries) <= 1,
+            "at most one proof-bound accepted binding-name omission may be recovered")
+    recovery_by_sid: dict[int, dict] = {}
+    accepted_manifest_sha = _surface_sha256(accepted_manifest_path)
+    base_manifest_sha = _surface_sha256(base_manifest_path)
+    for recovery in declared_recoveries:
+        require(isinstance(recovery, dict), "binding-name recovery proof is malformed")
+        required = (
+            "stable_id", "binding_ordinal", "core_body_index", "myosim_body",
+            "method", "accepted_payload_sha256", "accepted_manifest_sha256",
+            "owner_base_payload_sha256", "owner_base_manifest_sha256",
+            "accepted_registration_path", "accepted_registration_sha256",
+        )
+        require(all(key in recovery for key in required),
+                "binding-name recovery proof is missing pinned identities")
+        sid = recovery["stable_id"]
+        ordinal = recovery["binding_ordinal"]
+        core_index = recovery["core_body_index"]
+        name = recovery["myosim_body"]
+        require(type(sid) is int and type(ordinal) is int and type(core_index) is int
+                and isinstance(name, str) and name
+                and recovery["method"] ==
+                    "one_missing_terminal_binding_name_from_accepted_registration_and_current_owner_core_map",
+                "binding-name recovery method or identity is unsupported")
+        require(sid in selected and sid in accepted_records and sid not in recovery_by_sid,
+                "binding-name recovery must target one selected accepted row")
+        require(recovery["accepted_payload_sha256"] == accepted["sha256"]
+                and recovery["accepted_manifest_sha256"] == accepted_manifest_sha
+                and recovery["owner_base_payload_sha256"] == base["sha256"]
+                and recovery["owner_base_manifest_sha256"] == base_manifest_sha,
+                "binding-name recovery does not pin the exact accepted and owner-base assets")
+        require(core_index in base_name_by_core and base_name_by_core[core_index] == name
+                and current_name_by_core.get(core_index, name) == name,
+                "binding-name recovery differs from the current owner Core/name maps")
+        reg_path = Path(recovery["accepted_registration_path"]).resolve()
+        reg_sha = recovery["accepted_registration_sha256"]
+        accepted_reg = accepted_source.get("registration", {})
+        require(reg_path.is_file() and _surface_sha256(reg_path) == reg_sha
+                and accepted_reg.get("sha256") == reg_sha,
+                "binding-name recovery does not pin the accepted registration input")
+        reg_doc = json.loads(reg_path.read_text())
+        anchors = reg_doc.get("anchors")
+        require(isinstance(anchors, list), "accepted registration has no anchor inventory")
+        anchors_for_core = [
+            anchor for anchor in anchors
+            if isinstance(anchor, dict)
+            and isinstance(anchor.get("target"), dict)
+            and anchor["target"].get("core_body_index") == core_index
+        ]
+        require(len(anchors_for_core) == 1
+                and anchors_for_core[0]["target"].get("name") == name,
+                "accepted registration does not uniquely prove the omitted Core/name identity")
+        matrix = anchors_for_core[0].get("registration", {}).get(
+            "source_obj_mm_to_core_inertial_body_m",
+        )
+        require(isinstance(matrix, list), "accepted registration anchor has no local transform")
+        from .model import _bodyparts_visual_local_pose
+        translation, quaternion, scale = _bodyparts_visual_local_pose(
+            matrix, f"accepted registration Core {core_index} binding-name recovery",
+        )
+        expected_record = struct.pack(
+            "<I8f", core_index, *translation, *quaternion, scale,
+        )
+        row = accepted_records[sid]
+        local = _row_slices(accepted, row)
+        encoded_core_ids = [
+            struct.unpack_from("<I", local["binding_bytes"], index * 36)[0]
+            for index in range(int(row[1]))
+        ]
+        fields = accepted_rows[sid].get("body_bindings")
+        require(ordinal == int(row[1]) - 1 and encoded_core_ids[-1] == core_index
+                and isinstance(fields, list) and len(fields) == int(row[1]) - 1
+                and all(isinstance(item, dict) for item in fields)
+                and [item.get("core_body_index") for item in fields] == encoded_core_ids[:-1],
+                "binding-name omission is not exactly one missing terminal entry after the encoded prefix")
+        require(all(isinstance(item, dict)
+                    and item.get("myosim_body") ==
+                        base_name_by_core.get(item.get("core_body_index"),
+                                              current_name_by_core.get(item.get("core_body_index")))
+                    for item in fields),
+                "existing accepted binding names do not match the current owner Core/name map")
+        old_record = local["binding_bytes"][ordinal * 36:(ordinal + 1) * 36]
+        require(old_record == expected_record,
+                "omitted terminal binding bytes do not match the accepted registration transform")
+        recovered_item = {"core_body_index": core_index, "myosim_body": name}
+        recovery_by_sid[sid] = {
+            "binding_ordinal": ordinal,
+            "recovered_body_binding": recovered_item,
+            "method": recovery["method"],
+            "accepted_registration_path": str(reg_path),
+            "accepted_registration_sha256": reg_sha,
+            "accepted_binding_record_sha256": hashlib.sha256(old_record).hexdigest(),
+        }
+
+    accepted_raw = accepted["raw"]
+    retargeted_raw = bytearray(accepted_raw)
+    changed_records = []
+    for row in accepted["records"]:
+        sid = int(row[6])
+        local = _row_slices(accepted, row)
+        fields = accepted_rows[sid].get("body_bindings")
+        if fields is not None:
+            require(isinstance(fields, list),
+                    f"accepted row {sid} body-binding names are malformed")
+            recovery = recovery_by_sid.get(sid)
+            if len(fields) != int(row[1]):
+                require(recovery is not None
+                        and len(fields) == int(row[1]) - 1
+                        and recovery["binding_ordinal"] == int(row[1]) - 1,
+                        f"accepted row {sid} body-binding names are malformed")
+                fields = [*fields, recovery["recovered_body_binding"]]
+            else:
+                require(recovery is None,
+                        f"accepted row {sid} did not contain the declared missing binding")
+        for bi in range(int(row[1])):
+            start = bi * 36
+            old_record = local["binding_bytes"][start:start + 36]
+            core_index = struct.unpack_from("<I", old_record)[0]
+            current_name = base_name_by_core.get(
+                core_index, current_name_by_core.get(core_index),
+            )
+            require(current_name is not None,
+                    f"accepted row {sid} references Core index {core_index} absent from owner base and current registration")
+            if fields is not None:
+                item = fields[bi]
+                require(isinstance(item, dict)
+                        and item.get("core_body_index") == core_index
+                        and item.get("myosim_body") == current_name,
+                        f"accepted row {sid} Core/name identity differs from current owner")
+            if sid in selected:
+                require(core_index in base_binding_by_core,
+                        f"selected row {sid} Core index {core_index} is absent from owner-base payload")
+                fresh_record = base_binding_by_core[core_index]
+                binding_offset = accepted["binding_start"] + (int(row[0]) + bi) * 36
+                retargeted_raw[binding_offset:binding_offset + 36] = fresh_record
+                if old_record != fresh_record:
+                    changed_records.append({"stable_id": sid, "binding_ordinal": bi,
+                                            "core_body_index": core_index,
+                                            "myosim_body": base_name_by_core[core_index],
+                                            "old_binding_sha256": hashlib.sha256(old_record).hexdigest(),
+                                            "new_binding_sha256": hashlib.sha256(fresh_record).hexdigest()})
+            else:
+                current_record = base_binding_by_core.get(
+                    core_index, current_binding_by_core.get(core_index),
+                )
+                require(current_record is not None,
+                        f"unselected row {sid} Core {core_index} has no current owner transform")
+                require(old_record == current_record,
+                        f"unselected row {sid} has a stale Core binding for {core_index}")
+
+    new_fingerprint = base["fingerprint"]
+    retargeted_raw[:64] = struct.pack(
+        "<8s6I32s", b"NHTISS4\x00", 5, accepted["surface_count"],
+        accepted["binding_count"], accepted["vertex_count"], accepted["index_count"],
+        new_fingerprint, accepted["source_digest"],
+    )
+    require(retargeted_raw[accepted["vertex_start"]:] == accepted_raw[accepted["vertex_start"]:]
+            and retargeted_raw[64:accepted["binding_start"]]
+                == accepted_raw[64:accepted["binding_start"]],
+            "registration retarget changed accepted vertices, weights, faces, or row maps")
+    output_manifest = json.loads(json.dumps(accepted_manifest))
+    output_manifest["source"]["bodyparts"] = base_source["bodyparts"]
+    output_manifest["source"]["myosim_manifest"] = base_source["myosim_manifest"]
+    output_manifest["source"]["surface_map"] = base_source["surface_map"]
+    output_surfaces = output_manifest["source"].get("surfaces")
+    require(isinstance(output_surfaces, list), "retargeted manifest has no surface inventory")
+    output_surfaces_by_id = {
+        int(surface["stable_id"]): surface for surface in output_surfaces
+        if isinstance(surface, dict) and type(surface.get("stable_id")) is int
+    }
+    for sid, recovery in recovery_by_sid.items():
+        require(sid in output_surfaces_by_id,
+                f"recovered body-binding metadata row {sid} is absent from output manifest")
+        row_meta = output_surfaces_by_id[sid]
+        row_meta["body_bindings"] = [
+            *row_meta.get("body_bindings", []), recovery["recovered_body_binding"],
+        ]
+        row_meta["body_weight_count"] = int(accepted_records[sid][1])
+    registration_file_path = (Path(base_source["registration"]["file"])
+                              if Path(base_source["registration"]["file"]).is_absolute()
+                              else base_manifest_path.parent / base_source["registration"]["file"]).resolve()
+    require(_surface_sha256(registration_file_path) == registration_sha,
+            "owner-base registration file does not match its source identity")
+    output_manifest["source"]["registration"] = {
+        "file": registration_file_path.name, "sha256": registration_sha,
+    }
+    output_manifest["payload"].update(
+        file=accepted_payload.name,
+        sha256=hashlib.sha256(retargeted_raw).hexdigest(),
+        bytes=len(retargeted_raw),
+        registration_fingerprint32=f"{new_fingerprint:08x}",
+    )
+    operation = {
+        "schema": "numi.human.passive-registration-binding-retarget.v1",
+        "accepted_payload_path": str(accepted_payload),
+        "accepted_payload_sha256": accepted["sha256"],
+        "owner_base_payload_path": str(owner_base_payload),
+        "owner_base_payload_sha256": base["sha256"],
+        "registration_path": str(registration_path),
+        "registration_sha256": registration_sha,
+        "selected_stable_ids": list(selected),
+        "selected_row_count": len(selected),
+        "selected_binding_record_count": sum(
+            int(row[1]) for row in accepted["records"] if int(row[6]) in selected),
+        "changed_binding_record_count": len(changed_records),
+        "retargeted_bindings": changed_records,
+        "accepted_binding_metadata_recoveries": [
+            {"stable_id": sid, **recovery}
+            for sid, recovery in sorted(recovery_by_sid.items())
+        ],
+        "geometry_arrays_and_per_vertex_weights_byte_exact": True,
+        "unselected_binding_records_byte_exact_to_current_owner": True,
+        "source_member_identity_checked_common_rows": len(common),
+        "source_evolution_proof": ({
+            "compatibility_report_path": str(Path(source_evolution_proof["compatibility_report_path"]).resolve()),
+            "compatibility_report_sha256": source_evolution_proof["compatibility_report_sha256"],
+            "accepted_surface_map_path": str(Path(source_evolution_proof["accepted_surface_map_path"]).resolve()),
+            "accepted_surface_map_sha256": _surface_sha256(Path(source_evolution_proof["accepted_surface_map_path"])),
+            "owner_surface_map_path": str(Path(source_evolution_proof["owner_surface_map_path"]).resolve()),
+            "owner_surface_map_sha256": _surface_sha256(Path(source_evolution_proof["owner_surface_map_path"])),
+        } if descriptor_drift else None),
+        "scope": "Selected NHTISS registration transforms retargeted by exact Core index and MyoSim body identity. Geometry and per-vertex weights remain byte-exact; anatomical and native-pose admission remain separate.",
+    }
+    output_manifest["source"].setdefault("registration_binding_retargets", []).append(operation)
+    output_manifest["evidence_boundary"] = (
+        str(output_manifest.get("evidence_boundary", ""))
+        + " Selected registration bindings were retargeted from the pinned owner base; "
+          "accepted surface geometry and weights remain byte-exact. This is not anatomical or native-pose admission."
+    ).strip()
+    names = [accepted_payload.name, accepted_payload.with_suffix(".manifest.json").name,
+             registration_file_path.name, "registration-binding-retarget.json", "report.json"]
+    require(len(set(names)) == len(names), "registration retarget output filenames collide")
+    require(not output.exists(), "registration retarget output already exists")
+    output.mkdir(parents=True)
+    payload_path = output / accepted_payload.name
+    manifest_path = output / accepted_payload.with_suffix(".manifest.json").name
+    payload_path.write_bytes(retargeted_raw)
+    manifest_path.write_text(json.dumps(output_manifest, indent=2, sort_keys=True) + "\n")
+    shutil.copyfile(registration_file_path, output / registration_file_path.name)
+    report = {
+        "schema": "numi.human.passive-registration-binding-retarget-report.v1",
+        "status": "registration_bindings_retargeted_geometry_preserved_admission_pending",
+        "operation": operation,
+        "output_payload_path": str(payload_path),
+        "output_payload_sha256": _surface_sha256(payload_path),
+        "output_manifest_path": str(manifest_path),
+        "output_manifest_sha256": _surface_sha256(manifest_path),
+        "copied_registration_path": str(output / registration_file_path.name),
+        "copied_registration_sha256": _surface_sha256(output / registration_file_path.name),
+        "anatomical_and_native_admission": False,
+    }
+    (output / "registration-binding-retarget.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n")
+    # Parse every written JSON before reporting completion.
+    json.loads(manifest_path.read_text())
+    json.loads((output / "registration-binding-retarget.json").read_text())
+    return report
+
 
 
 def _row_local_equal(a: dict, b: dict) -> bool:
