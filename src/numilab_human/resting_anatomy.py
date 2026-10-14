@@ -87,12 +87,14 @@ LUNG_306_EXPECTED_SELF_PAIRS = (
 # grouping while exposing each exact source-member identity in the receipt.
 HEAD_MEMBER_COMPONENTS = {
     "FJ1731": {
+        "stable_id": 323,
         "concept_id": "FMA78469",
         "name": "fourth ventricle",
         "family_concept_id": "FMA50801",
         "source_member_sha256": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8",
     },
     "FJ1738": {
+        "stable_id": 326,
         "concept_id": "FMA78467",
         "name": "cerebral aqueduct",
         "family_concept_id": "FMA50801",
@@ -129,6 +131,40 @@ def _head_member_identity(bodyparts3d: dict, member_id: str, member_sha256: str)
         "geometry_role": "passive intracranial cavity surface",
         "separate_physiological_compartment": False,
     }
+
+
+def rebind_head_member_identity_metadata(receipt: dict, bodyparts3d: dict, member_sha256_by_id: dict[str, str]) -> tuple[dict, dict]:
+    """Copy a receipt with verified narrow labels; the NHANAT payload is unchanged."""
+    result = copy.deepcopy(receipt)
+    source_map = result.get("provenance", {}).get("source_id_map")
+    if not isinstance(source_map, dict):
+        raise TypeError("head identity migration requires source_id_map")
+    migrated = []
+    for member_id, expected in HEAD_MEMBER_COMPONENTS.items():
+        digest = member_sha256_by_id.get(member_id)
+        if digest != expected["source_member_sha256"]:
+            raise ValueError(f"head source member bytes changed for {member_id}")
+        identity = _head_member_identity(bodyparts3d, member_id, digest)
+        matches = [(sid, row) for sid, row in source_map.items() if row.get("source_member") == member_id]
+        if identity is None or len(matches) != 1:
+            raise ValueError(f"head source member must map exactly once: {member_id}")
+        sid, row = matches[0]
+        if sid != str(expected["stable_id"]):
+            raise ValueError(f"head source member maps to unexpected stable ID for {member_id}")
+        if row.get("source_sha256") != digest:
+            raise ValueError(f"receipt source member hash differs for {member_id}")
+        family = row.get("head_family")
+        if family != {"concept_id": expected["family_concept_id"], "source_name": "brain", "hierarchy": "part_of"}:
+            raise ValueError(f"head receipt family provenance differs for {member_id}")
+        if row.get("name") not in ("brain", identity["name"]):
+            raise ValueError(f"unexpected head label for {member_id}")
+        owner = copy.deepcopy(row.get("source_owner_metadata") or {})
+        if owner.get("label") not in (None, "brain"):
+            raise ValueError(f"unexpected head owner label for {member_id}")
+        owner.update(label="brain", anatomical_component=identity)
+        row.update(name=identity["name"], source_owner_metadata=owner)
+        migrated.append({"stable_id": sid, "source_member": member_id, "before_name": "brain", "after_name": identity["name"], "source_member_sha256": digest})
+    return result, {"status": "METADATA_ONLY_SOURCE_IDENTITY_REBIND_NOT_GEOMETRY_ADMISSION", "changed_stable_ids": [row["stable_id"] for row in migrated], "rows": migrated, "membership_table_sha256": HEAD_MEMBERSHIP_TABLE_SHA256, "native_payload_sha256_unchanged": True, "separate_physiological_compartment_added": False}
 
 
 def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_manifest_path: Path | None = None) -> dict:

@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import copy
+
 import pytest
 
 from numilab_human.resting_anatomy import (
     HEAD_MEMBERSHIP_TABLE_SHA256,
     _head_member_identity,
+    rebind_head_member_identity_metadata,
 )
 
 
@@ -84,3 +87,67 @@ def test_head_member_identity_rejects_wrong_membership_table_pin():
             "FJ1731",
             "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8",
         )
+
+
+
+def _receipt():
+    return {
+        "payload": {"sha256": "a" * 64, "path": "/pinned/resting.nhanatomy", "surface_count": 525},
+        "functional_bindings": {"anatomy_payload_sha256": "a" * 64, "channels": [1, 2]},
+        "mass_geometry_accounting": {"total_mass_kg": 72.0},
+        "provenance": {
+            "source_id_map": {
+                "323": {"name": "brain", "source_member": "FJ1731", "source_sha256": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8", "head_family": {"concept_id": "FMA50801", "source_name": "brain", "hierarchy": "part_of"}, "source_owner_metadata": None},
+                "326": {"name": "brain", "source_member": "FJ1738", "source_sha256": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3", "head_family": {"concept_id": "FMA50801", "source_name": "brain", "hierarchy": "part_of"}, "source_owner_metadata": None},
+                "325": {"name": "brain", "source_member": "FJ1775", "source_sha256": "c" * 64, "head_family": {"concept_id": "FMA50801", "source_name": "brain", "hierarchy": "part_of"}, "source_owner_metadata": None},
+            },
+            "other": {"preserve": True},
+        },
+    }
+
+
+def test_metadata_rebind_updates_only_the_two_verified_source_rows():
+    receipt = _receipt()
+    result, audit = rebind_head_member_identity_metadata(
+        receipt, _atlas(), {
+            "FJ1731": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8",
+            "FJ1738": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3",
+        },
+    )
+    assert result["payload"] == receipt["payload"]
+    assert result["functional_bindings"] == receipt["functional_bindings"]
+    assert result["mass_geometry_accounting"] == receipt["mass_geometry_accounting"]
+    assert result["provenance"]["source_id_map"]["323"]["name"] == "fourth ventricle"
+    assert result["provenance"]["source_id_map"]["326"]["name"] == "cerebral aqueduct"
+    assert result["provenance"]["source_id_map"]["325"] == receipt["provenance"]["source_id_map"]["325"]
+    assert result["provenance"]["other"] == receipt["provenance"]["other"]
+    assert audit["changed_stable_ids"] == ["323", "326"]
+    normalized = copy.deepcopy(result)
+    normalized["provenance"]["source_id_map"] = copy.deepcopy(receipt["provenance"]["source_id_map"])
+    assert normalized == receipt
+
+
+def test_metadata_rebind_rejects_wrong_input_member_hash():
+    with pytest.raises(ValueError, match="source member bytes changed"):
+        rebind_head_member_identity_metadata(_receipt(), _atlas(), {"FJ1731": "0" * 64, "FJ1738": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3"})
+
+
+def test_metadata_rebind_rejects_wrong_receipt_stable_id():
+    receipt = _receipt()
+    receipt["provenance"]["source_id_map"]["999"] = receipt["provenance"]["source_id_map"].pop("323")
+    with pytest.raises(ValueError, match="unexpected stable ID"):
+        rebind_head_member_identity_metadata(receipt, _atlas(), {"FJ1731": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8", "FJ1738": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3"})
+
+
+def test_metadata_rebind_rejects_wrong_receipt_obj_hash():
+    receipt = _receipt()
+    receipt["provenance"]["source_id_map"]["323"]["source_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="receipt source member hash differs"):
+        rebind_head_member_identity_metadata(receipt, _atlas(), {"FJ1731": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8", "FJ1738": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3"})
+
+
+def test_metadata_rebind_rejects_membership_table_drift():
+    atlas = _atlas()
+    atlas["source"]["tables"][0]["sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="pinned BodyParts3D"):
+        rebind_head_member_identity_metadata(_receipt(), atlas, {"FJ1731": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8", "FJ1738": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3"})
