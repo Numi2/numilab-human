@@ -42,7 +42,8 @@ def test_projects_captured_svc_motion_with_fade_and_exact_source_copy():
     np.testing.assert_array_equal(positions[2], bridge[2])
     assert result["status"] == "OFFLINE_CAPTURED_SVC_DISPLACEMENT_PREDICTION_ONLY"
     assert result["native_confirmation"] == "required"
-    assert result["float32_forward_error_bound_max_m"] >= result["float32_observed_order_error_max_m"]
+    assert result["native_field_error_bound"] == "not_available"
+    assert result["float32_interpolation_roundoff_bound_max_m"] >= result["float32_interpolation_roundoff_observed_max_m"]
 
 
 def test_rejects_non_float32_or_incompatible_pose_surfaces():
@@ -79,3 +80,13 @@ def test_does_not_mutate_captured_or_source_inputs():
     predict_brachiocephalic_world_positions(
         bridge, svc_native, svc_rigid, [_ancestry()])
     assert tuple(x.tobytes() for x in (bridge, svc_native, svc_rigid)) == before
+
+
+def test_zero_fade_canonicalizes_negative_captured_residual_to_positive_zero():
+    svc_rigid = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype="<f4")
+    svc_native = svc_rigid + np.asarray([[-1, 0, 0], [0, -2, 0], [0, 0, -3]], dtype="<f4")
+    bridge = np.asarray([[2, 3, 4]], dtype="<f4")
+    ancestry = [_ancestry(scale=0.0, distal=True)]
+    result = predict_brachiocephalic_world_positions(bridge, svc_native, svc_rigid, ancestry)
+    assert np.all(result["projected_bridge_displacement_world_m"].view("<u4") == 0)
+    np.testing.assert_array_equal(result["positions_world_m"], bridge)

@@ -116,6 +116,9 @@ def predict_brachiocephalic_world_positions(
             partial = np.add(term0, term1, dtype=np.float32)
             projected[i] = np.add(partial, term2, dtype=np.float32)
         projected[i] = np.multiply(projected[i], scales32[i], dtype=np.float32)
+    # Multiplying a negative residual by +0 produces -0; native range W and
+    # zero-field collars require canonical positive zero displacement.
+    projected[distal_zero] = np.float32(0.0)
     predicted = np.add(bridge, projected, dtype=np.float32)
     if not np.isfinite(predicted).all():
         raise ValueError("predicted bridge positions are nonfinite")
@@ -162,7 +165,9 @@ def predict_brachiocephalic_world_positions(
         "projected_bridge_displacement_world_m": projected,
         "status": "OFFLINE_CAPTURED_SVC_DISPLACEMENT_PREDICTION_ONLY",
         "native_confirmation": "required",
-        "float32_forward_error_bound_max_m": float(arithmetic_bound.max(initial=0.0)),
-        "float32_observed_order_error_max_m": float(observed_error.max(initial=0.0)),
-        "float32_forward_error_bound_per_vertex_xyz_m": arithmetic_bound,
+        "native_field_error_bound": "not_available",
+        "float32_bound_scope": "Roundoff of this captured-displacement barycentric interpolation against the ideal interpolation of supplied Float32 capture coordinates and ancestry only; it does not bound native common-map coefficient reconstruction, polynomial evaluation, or GPU kernel arithmetic.",
+        "float32_interpolation_roundoff_bound_max_m": float(arithmetic_bound.max(initial=0.0)),
+        "float32_interpolation_roundoff_observed_max_m": float(observed_error.max(initial=0.0)),
+        "float32_interpolation_roundoff_bound_per_vertex_xyz_m": arithmetic_bound,
     }
