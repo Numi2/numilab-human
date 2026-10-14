@@ -26,7 +26,14 @@ SOURCE004_PREFLIGHT = portdiag.SIX_PREFLIGHT_PATH
 SOURCE004_REPORT_SHA256 = "354876d040f774d8acf18071779289ee9cfc2ce50137650087ecf2f099399700"
 SOURCE004_PREFLIGHT_SHA256 = "9d32d5a707ea4ba6444fd680e4fc9256473c486c84c3f9a17def56b392e70d5e"
 OUTPUT_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-001"
-PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-001.json"
+PREVIOUS_PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-001.json"
+PREVIOUS_PREFLIGHT_SHA256 = "48d5b21121eab978f0f3e8165d2afd4197c17bd4d8c5ba317b523dff8dc39179"
+PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-002.json"
+SOURCE_INTEGRITY_DIR = GATE_DIR / "port-526-472-source-integrity-preparation-003"
+SOURCE_INTEGRITY_REPORT = SOURCE_INTEGRITY_DIR / "source-integrity-preparation.json"
+SOURCE_INTEGRITY_SCRIPT = SOURCE_INTEGRITY_DIR / "prepare-source-integrity.py"
+SOURCE_INTEGRITY_REPORT_SHA256 = "34e540ec56ec8fd09b1fe94ecc42f6a5edced055f0e007874000973442bdcdda"
+SOURCE_INTEGRITY_SCRIPT_SHA256 = "f5361a110afa93f55750a46e6b8fb8497c39e1f56afedffa90b8734067c2de78"
 REPORT_PATH = OUTPUT_DIR / "3d-junction-continuity-report.json"
 PROGRESS_PATH = OUTPUT_DIR / "progress.json"
 BRIDGE_KEY = (51011, 526)
@@ -257,6 +264,37 @@ def build_preflight() -> dict:
     """Pin execution inputs without decoding geometry arrays or running predicates."""
     _require(not OUTPUT_DIR.exists(), "retain an existing diagnostic output; do not overwrite")
     _require(not PREFLIGHT_PATH.exists(), "retain an existing preflight; do not overwrite")
+    _require(PREVIOUS_PREFLIGHT_PATH.is_file()
+             and sha_file(PREVIOUS_PREFLIGHT_PATH) == PREVIOUS_PREFLIGHT_SHA256,
+             "the first 3D preflight predecessor changed")
+    _require(SOURCE_INTEGRITY_REPORT.is_file()
+             and sha_file(SOURCE_INTEGRITY_REPORT) == SOURCE_INTEGRITY_REPORT_SHA256
+             and SOURCE_INTEGRITY_SCRIPT.is_file()
+             and sha_file(SOURCE_INTEGRITY_SCRIPT) == SOURCE_INTEGRITY_SCRIPT_SHA256,
+             "source integrity precheck report or program changed")
+    source_integrity = json.loads(SOURCE_INTEGRITY_REPORT.read_text())
+    _require(source_integrity.get("status")
+             == "SOURCE_INTEGRITY_PRECHECK_PASS_SELF_AUDIT_AND_3D_GEOMETRY_DEFERRED"
+             and source_integrity.get("passed") is True
+             and source_integrity.get("scope", {}).get("exact_self_audit_invoked") is False
+             and source_integrity.get("scope", {}).get("numerical_or_exact_boolean_invoked") is False,
+             "source identity/finite/index/closure precheck is not the pinned narrow pass")
+    prior_preflight = json.loads(PREVIOUS_PREFLIGHT_PATH.read_text())
+    _require(source_integrity.get("program", {}).get(
+                 "repository_runner_sha256") == prior_preflight.get("runtime_code_sha256"),
+             "source integrity precheck did not use the exact predecessor runner")
+    source_bridge_checks = source_integrity.get(
+        "source007_bridge_exact_self_checks", {}).get("bridges", {})
+    _require(set(source_bridge_checks) == {"525", "526"}
+             and all(item.get("pinned_source007_exact_self_clear") is True
+                     and item.get("matches_pinned_source007_geometry") is True
+                     for item in source_bridge_checks.values()),
+             "source007 exact self-clear evidence for appended bridge rows is incomplete")
+    target_integrity = source_integrity.get("surfaces", {}).get("472", {})
+    _require(target_integrity.get("closed_after_exact_coordinate_seam_quotient") is True
+             and target_integrity.get("one_referenced_face_component") is True
+             and target_integrity.get("exact_self_audit_performed") is False,
+             "source target 472 integrity precheck is not a closure-only pass")
     _require(SOURCE004_REPORT.is_file()
              and sha_file(SOURCE004_REPORT) == SOURCE004_REPORT_SHA256,
              "source007 004 rejection report changed")
@@ -324,6 +362,14 @@ def build_preflight() -> dict:
              "accepted source0 pack or receipt bytes changed")
 
     pins = {
+        "previous_3d_preflight": {"path": str(PREVIOUS_PREFLIGHT_PATH),
+                                  "sha256": PREVIOUS_PREFLIGHT_SHA256},
+        "source_integrity_preparation_report": {
+            "path": str(SOURCE_INTEGRITY_REPORT),
+            "sha256": SOURCE_INTEGRITY_REPORT_SHA256},
+        "source_integrity_preparation_script": {
+            "path": str(SOURCE_INTEGRITY_SCRIPT),
+            "sha256": SOURCE_INTEGRITY_SCRIPT_SHA256},
         "source007_report": {"path": str(portdiag.RUN_REPORT),
                              "sha256": portdiag.RUN_REPORT_SHA256},
         "source007_receipt": {"path": str(portdiag.RUN_RECEIPT),
@@ -357,7 +403,7 @@ def build_preflight() -> dict:
     state = _git_state()
     _require(not state["dirty"], "preflight requires a clean committed source checkout")
     return {
-        "schema": "numi.human.brachiocephalic-3d-junction-preflight.v1",
+        "schema": "numi.human.brachiocephalic-3d-junction-preflight.v2",
         "status": "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED",
         "source_repository": state,
         "scope": {
@@ -370,6 +416,15 @@ def build_preflight() -> dict:
             "all_pose_checks": False,
             "native_or_gpu_work": False,
             "mesh_coordinates_modified": False,
+            "material_branch": {
+                "bridge": {"stable_id": 526, "source_member": "FJ3583",
+                           "material": "right brachiocephalic vein"},
+                "selected_target": {"stable_id": 472, "source_member": "FJ3587",
+                                    "material": "right subclavian vein"},
+                "selected_frozen_port": [[51011, 526], [51011, 472]],
+                "expected_frozen_port_count_for_both_appended_bridges": 6,
+                "coverage_limit": "one of three FJ3583 ports; not full tree admission",
+            },
             "method": "independent closed-solid 3D overlap and two separately ancestry-bound source collar sections",
             "shared_planar_junction_section_required": False,
             "plane_candidate_sweep": False,
@@ -390,6 +445,7 @@ def build_preflight() -> dict:
         },
         "inputs": pins,
         "source004_plane_failure": plane_failure,
+        "source_integrity_preparation": source_integrity,
         "runtime_code_sha256": code_pins,
         "manifold3d_retained_wheel_sha256": wheel,
         "hp98_verifier_sha256": source007.P6_VERIFIER_SHA,
@@ -633,6 +689,108 @@ def _volume_accounting(first_volume: float, second_volume: float,
         "identity": "V(union)=V(first)+V(second)-V(intersection)",
         "scope": "floating Manifold volume accounting, not physical blood volume",
     }
+
+
+def _material_branch_scope(source_map: dict, pairs_by_port: dict) -> dict:
+    """Bind the selected right bridge/subclavian branch without overclaiming the tree."""
+    expected_ports = set(source007.PORT_KEYS)
+    _require(set(pairs_by_port) == expected_ports,
+             "all six expected frozen collar-port ancestry arrays are required")
+    bridge = source_map.get("526", {})
+    target = source_map.get("472", {})
+    _require(bridge.get("source_member") == "FJ3583"
+             and int(bridge.get("body_index", -1)) == 20
+             and int(bridge.get("layer", -1)) == 2
+             and int(bridge.get("vascular_compartment_id", -1)) == 4,
+             "stable ID 526 is not the pinned FJ3583 right brachiocephalic branch")
+    _require(target.get("source_member") == "FJ3587"
+             and target.get("name") == "right subclavian vein"
+             and int(target.get("body_index", -1)) == 20
+             and int(target.get("layer", -1)) == 2
+             and int(target.get("vascular_compartment_id", -1)) == 4,
+             "stable ID 472 is not the pinned FJ3587 right subclavian target")
+    ports = []
+    for pair in source007.PORT_KEYS:
+        pairs = pairs_by_port[pair]
+        ports.append({
+            "bridge": list(pair[0]),
+            "target": list(pair[1]),
+            "face_pair_count": len(pairs),
+            "ordered_face_pairs_json_sha256": portdiag._json_hash(pairs),
+        })
+    selected = next(item for item in ports
+                    if item["bridge"] == [51011, 526]
+                    and item["target"] == [51011, 472])
+    _require(selected["face_pair_count"] == 63,
+             "selected FJ3583-to-FJ3587 frozen interface pair count changed")
+    return {
+        "bridge_identity": bridge,
+        "target_identity": target,
+        "selected_material_branch": "FJ3583 right brachiocephalic vein to FJ3587 right subclavian vein",
+        "selected_frozen_interface": selected,
+        "all_six_expected_ports_present": True,
+        "all_frozen_ports": ports,
+        "coverage_limit": (
+            "This screen proves only the 526-to-472 interface among FJ3583's "
+            "three frozen ports; it does not establish the complete right venous tree."),
+        "existing_cvsim_compartment_id": 4,
+        "added_physical_mass_kg": 0,
+        "added_blood_state_or_force": False,
+    }
+
+
+def _source007_bridge_self_check_reuse(source007_report: dict,
+                                        bridge_surfaces: dict) -> dict:
+    """Reuse pinned exact source-0 self checks for both appended bridge IDs."""
+    checks = {
+        int(item.get("identity", [-1, -1])[1]): item
+        for item in source007_report.get("source_closed_self_checks", [])
+        if isinstance(item.get("identity"), list) and len(item["identity"]) == 2
+    }
+    output = {
+        "source007_report_path": str(portdiag.RUN_REPORT),
+        "source007_report_sha256": portdiag.RUN_REPORT_SHA256,
+        "reused_existing_exact_p6_self_audits": True,
+        "bridges": {},
+    }
+    for stable_id in (525, 526):
+        key = (51011, stable_id)
+        pinned = checks.get(stable_id, {})
+        surface = bridge_surfaces.get(key)
+        if surface is None:
+            output["bridges"][str(stable_id)] = {
+                "passed": False,
+                "error": "source007 bridge surface is missing",
+            }
+            continue
+        positions_sha = _sha_bytes(
+            np.ascontiguousarray(surface[0], dtype="<f4").tobytes())
+        faces_sha = _sha_bytes(np.ascontiguousarray(surface[1]).tobytes())
+        matched = bool(
+            pinned.get("closed_oriented_source") is True
+            and pinned.get("exact_self_clear") is True
+            and int(pinned.get("exact_self_intersection_count", -1)) == 0
+            and pinned.get("positions_sha256") == positions_sha
+            and pinned.get("faces_sha256") == faces_sha)
+        output["bridges"][str(stable_id)] = {
+            "positions_sha256": positions_sha,
+            "faces_sha256": faces_sha,
+            "vertex_count": len(surface[0]),
+            "triangle_count": len(surface[1]),
+            "pinned_source007_closed_oriented_source": pinned.get(
+                "closed_oriented_source"),
+            "pinned_source007_exact_self_intersection_count": pinned.get(
+                "exact_self_intersection_count"),
+            "pinned_source007_exact_self_clear": pinned.get("exact_self_clear"),
+            "matches_pinned_geometry_bytes": bool(
+                pinned.get("positions_sha256") == positions_sha
+                and pinned.get("faces_sha256") == faces_sha),
+            "passed": matched,
+        }
+    output["passed"] = (
+        set(checks) == {525, 526}
+        and all(item.get("passed") is True for item in output["bridges"].values()))
+    return output
 
 
 def _solid_gate(verifier, manifold3d, bridge, target, *, role: str) -> dict:
@@ -930,6 +1088,12 @@ def _assert_current_pins(preflight: dict) -> None:
     _require(current == preflight.get("runtime_code_sha256"),
              "source or runtime code differs from preflight")
     pins = preflight["inputs"]
+    for key in ("previous_3d_preflight", "source_integrity_preparation_report",
+                "source_integrity_preparation_script"):
+        entry = pins[key]
+        path = Path(entry["path"])
+        _require(path.is_file() and sha_file(path) == entry["sha256"],
+                 "pinned source preparation input changed: " + str(path))
     _require(source007._frozen_input_pins() == pins["source007_input_sha256"],
              "source007 compiler input hash set changed after preflight")
     compiler_preflight = json.loads(Path(
@@ -984,6 +1148,7 @@ def run() -> dict:
             "brachiocephalic-common-field-preparation.json"],
         "source004_rejection_sha256": SOURCE004_REPORT_SHA256,
         "source004_plane_failure": preflight["source004_plane_failure"],
+        "source_integrity_preparation_report_sha256": SOURCE_INTEGRITY_REPORT_SHA256,
         "source_geometry_mutated": False,
         "native_or_gpu_work_performed": False,
         "source_compiler_invoked": False,
@@ -1005,7 +1170,13 @@ def run() -> dict:
         target_surfaces = source007._port_target_surfaces(captured, rows)
         bridge_surfaces = source007._bridge_surfaces(
             rows, capture_meta["body20"], transform)
+        source007_report = json.loads(portdiag.RUN_REPORT.read_text())
+        bridge_self_check_reuse = _source007_bridge_self_check_reuse(
+            source007_report, bridge_surfaces)
+        report["source007_bridge_exact_self_check_reuse"] = bridge_self_check_reuse
         pairs_by_port, attribution, stationarity = source007._read_port_pairs()
+        material_branch = _material_branch_scope(validation["source_map"], pairs_by_port)
+        report["material_branch_scope"] = material_branch
         _require(PAIR in pairs_by_port and pairs_by_port[PAIR],
                  "frozen source bridge collar interface is missing")
         _require(stationarity.get("status") == "PASS_SOURCE_PORT_SUPPORT_FIXED",
@@ -1019,6 +1190,8 @@ def run() -> dict:
             "preparation_report_sha256": sha_file(prep_report),
             "source_map_525": validation["source_map"].get("525"),
             "source_map_526": validation["source_map"].get("526"),
+            "source_map_472": validation["source_map"].get("472"),
+            "candidate_baseline_same_source0_geometry": True,
             "body20_pose": _jsonable(capture_meta["body20"]),
             "source0_identity": _jsonable(identity),
             "target_capture_pack_sha256": identity["pack_sha256"],
@@ -1053,6 +1226,15 @@ def run() -> dict:
             frozen_face_pairs=pairs_by_port[PAIR],
             baseline_bridge_surface=baseline_bridge,
             baseline_target_surface=baseline_target)
+        proof["material_branch_scope"] = material_branch
+        proof["source007_bridge_exact_self_check_reuse"] = bridge_self_check_reuse
+        proof["limitations"]["candidate_baseline_same_source0_geometry"] = True
+        proof["limitations"]["candidate_baseline_ratios_are_source0_self_comparisons"] = True
+        if not bridge_self_check_reuse.get("passed"):
+            proof["passed"] = False
+            proof["status"] = "REJECT_SOURCE007_APPENDED_BRIDGE_SELF_CHECK_REUSE"
+            proof.setdefault("rejections", []).append(
+                "pinned source007 exact closure/self-clear checks do not match current source 525/526 geometry")
         report["helper_result"] = _jsonable(proof)
         report["status"] = proof["status"]
         report["source007_frozen_collar_attribution"] = {

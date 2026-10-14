@@ -185,3 +185,34 @@ def test_source007_compiler_owner_hashes_resolve_to_frozen_emission_revision():
         "numilab_human/resting_brachiocephalic_geometry_gate.py"]
     assert changed_gate["verification_method"] == "frozen_source_commit_git_object"
     assert changed_gate["verified_sha256"] == changed_gate["expected_sha256"]
+
+
+def test_material_branch_scope_names_one_frozen_branch_and_limits_coverage():
+    source_map = {
+        "526": {
+            "source_member": "FJ3583",
+            "body_index": 20,
+            "layer": 2,
+            "vascular_compartment_id": 4,
+        },
+        "472": {
+            "source_member": "FJ3587",
+            "name": "right subclavian vein",
+            "body_index": 20,
+            "layer": 2,
+            "vascular_compartment_id": 4,
+        },
+    }
+    pairs = {key: [[0, 0]] for key in source007.PORT_KEYS}
+    pairs[((51011, 526), (51011, 472))] = [[0, 0] for _ in range(63)]
+
+    scope = junction._material_branch_scope(source_map, pairs)
+
+    assert scope["selected_material_branch"] == (
+        "FJ3583 right brachiocephalic vein to FJ3587 right subclavian vein")
+    assert scope["all_six_expected_ports_present"]
+    assert scope["selected_frozen_interface"]["face_pair_count"] == 63
+    assert "does not establish the complete right venous tree" in scope["coverage_limit"]
+    assert scope["existing_cvsim_compartment_id"] == 4
+    assert scope["added_physical_mass_kg"] == 0
+    assert not scope["added_blood_state_or_force"]
