@@ -21,6 +21,14 @@ N27_RECEIPT_SHA256 = "944bc88d257137f2bedd5898404c45cefd2901d719707519771ae5f4cf
 REPAIR_PARENT_RECEIPT_SHA256 = "92a2215222230e4f1ad02a06583240e5c569c57807c2b9558c289c495c62fa2e"
 REPAIR_PARENT_PAYLOAD_SHA256 = "50ab8248d2e0f55dd6cb8b24afc34c8844061d5841ecdf89d7daf03288816bfd"
 REPAIR_REPORT_SHA256 = "9327e129cc630c24d2abe1e316fe0077568729f2600dee40359da50e910f1bd6"
+FJ2217_CAP_PARENT_RECEIPT_SHA256 = "a7795cc7b6bde0eb1fade7fca0d792eb24cc9ac73a29fc3fe4b001b91ff692e5"
+FJ2217_CAP_PARENT_PAYLOAD_SHA256 = "3a3693b8de2264127e9190a151dca460002ae3b8a0a09edea312bd4eed73ea42"
+FJ2217_CAP_CANDIDATE_PAYLOAD_SHA256 = "f83a541b794fe9bae699e6784fe091e147d5bad284847773c803c5309027d361"
+SOURCE004_INDEX_PARENT_RECEIPT_SHA256 = "98fc9e82233c4a4a6bc6af38c23e774d3a3373afec94d7cef9122108a76a238d"
+SOURCE004_INDEX_PARENT_PAYLOAD_SHA256 = "9fb3ffb10e458589b2c69779bd1336bfc4dc8e704079a1e68e4b22a2b5b7ba09"
+SOURCE004_INDEX_CHILD_PAYLOAD_SHA256 = "5613eb15de08a7dfe38f583f24c67c8cd4848f7f809c7e4783d27b3ccf326104"
+SOURCE004_INDEX_REPORT_SHA256 = "c10a12145733fa73f20211bea75fb2c442ea7883ab275b9ef30c294c24999a1d"
+SOURCE004_INDEX_DESCRIPTORS_SHA256 = "f52417e691a28c2a3419916845599fbf2fcb13db615d377a92794e9912fbe498"
 N27_CAPTURE_MANIFEST_SHA256 = "3df61c8bf202e343a9124588fa94be17e9876db17d1a6ef5dd5fa615aaa7b815"
 ARRANGEMENT_INPUTS_045_SHA256 = "288c31c4333333a0a186adf8dd07b76a65c176fd80ec75db84280bba1ceaab87"
 GENERIC_NULL_RETIREMENT_SOURCE = Path(
@@ -2443,6 +2451,339 @@ def _validate_route110_reemit_proofs(
     return route_reemit
 
 
+def _load_source004_index_only_parent(
+    *, receipt: dict, candidate_rows: dict, aggregate: dict
+) -> dict:
+    """Verify the one pinned source004 child that changes only intercostal faces."""
+    from .resting_pleura_proxy import _parse_payload
+
+    declaration = aggregate.get("source004_index_only_reemit")
+    _require(
+        isinstance(declaration, dict)
+        and declaration.get("schema") == "numi.human.intercostal.source004-index-only-reemit.v1"
+        and declaration.get("source004_receipt_sha256") == SOURCE004_INDEX_PARENT_RECEIPT_SHA256
+        and declaration.get("source004_payload_sha256") == SOURCE004_INDEX_PARENT_PAYLOAD_SHA256
+        and declaration.get("candidate_payload_sha256") == SOURCE004_INDEX_CHILD_PAYLOAD_SHA256
+        and declaration.get("candidate_payload_source_sha256")
+        == SOURCE004_INDEX_CHILD_PAYLOAD_SHA256
+        and declaration.get("composition_report_sha256") == SOURCE004_INDEX_REPORT_SHA256
+        and declaration.get("arrangement_descriptors_sha256") == SOURCE004_INDEX_DESCRIPTORS_SHA256
+        and declaration.get("changed_stable_ids") == sorted(REPAIRED_IDS),
+        "source004 index-only reemit declaration differs from pinned inputs",
+    )
+    parent_receipt_path = Path(str(declaration.get("source004_receipt_path", ""))).resolve()
+    parent_payload_path = Path(str(declaration.get("source004_payload_path", ""))).resolve()
+    candidate_payload_path = Path(str(declaration.get("candidate_payload_path", ""))).resolve()
+    candidate_payload_source_path = Path(
+        str(declaration.get("candidate_payload_source_path", ""))
+    ).resolve()
+    report_path = Path(str(declaration.get("composition_report_path", ""))).resolve()
+    descriptor_path = Path(str(declaration.get("arrangement_descriptors_path", ""))).resolve()
+    _require(
+        parent_receipt_path.is_file()
+        and sha_file(parent_receipt_path) == SOURCE004_INDEX_PARENT_RECEIPT_SHA256
+        and parent_payload_path.is_file()
+        and sha_file(parent_payload_path) == SOURCE004_INDEX_PARENT_PAYLOAD_SHA256
+        and report_path.is_file()
+        and sha_file(report_path) == SOURCE004_INDEX_REPORT_SHA256
+        and descriptor_path.is_file()
+        and sha_file(descriptor_path) == SOURCE004_INDEX_DESCRIPTORS_SHA256
+        and candidate_payload_path.is_file()
+        and sha_file(candidate_payload_path) == SOURCE004_INDEX_CHILD_PAYLOAD_SHA256
+        and candidate_payload_source_path.is_file()
+        and sha_file(candidate_payload_source_path) == SOURCE004_INDEX_CHILD_PAYLOAD_SHA256
+        and Path(receipt.get("payload", {}).get("path", "")).resolve() == candidate_payload_path
+        and receipt.get("payload", {}).get("sha256") == SOURCE004_INDEX_CHILD_PAYLOAD_SHA256,
+        "source004 index-only parent, candidate, or preparation bytes changed",
+    )
+    try:
+        parent_receipt = json.loads(parent_receipt_path.read_bytes())
+        report = json.loads(report_path.read_bytes())
+        descriptors = json.loads(descriptor_path.read_bytes())
+        parent_header, _, parent_rows = _parse_payload(parent_payload_path.read_bytes())
+        child_header, _, child_rows = _parse_payload(candidate_payload_path.read_bytes())
+    except (OSError, json.JSONDecodeError, ValueError) as error:
+        raise ValueError("source004 index-only parent/candidate inputs are unreadable") from error
+    parent_payload = parent_receipt.get("payload", {})
+    _require(
+        descriptors.get("schema") == "numi.human.local-intercostal-arrangement-inputs.v1"
+        and descriptors.get("status")
+        == "IMMUTABLE_046_DESCRIPTOR_SUCCESSOR_METADATA_ONLY_NOT_ADMISSION"
+        and descriptors.get("candidate_geometry_bytes_unchanged") is True
+        and descriptors.get("source_payload_index") == 1
+        and descriptors.get("source_payload_sha256") == REPAIR_PARENT_PAYLOAD_SHA256
+        and set(descriptors.get("rows", {})) == {str(stable_id) for stable_id in REPAIRED_IDS}
+        and report.get("row_summaries", {}).keys() == descriptors.get("rows", {}).keys(),
+        "source004 046 arrangement descriptor identity differs",
+    )
+    for stable_id in REPAIRED_IDS:
+        key = str(stable_id)
+        descriptor = descriptors["rows"][key]
+        summary = report["row_summaries"][key]
+        _require(
+            descriptor.get("source_payload_index") == descriptors["source_payload_index"]
+            and descriptor.get("source_payload_sha256") == descriptors["source_payload_sha256"]
+            and descriptor.get("candidate_sha256") == summary.get("full_candidate_sha256")
+            and descriptor.get("lineage_sha256") == summary.get("lineage_sha256")
+            and descriptor.get("report_sha256") == summary.get("report_sha256")
+            and descriptor.get("null_face_retirement_ledger_sha256")
+            == summary.get("null_face_retirement_ledger_sha256")
+            and all(
+                isinstance(descriptor.get(path_key), str)
+                and isinstance(descriptor.get(sha_key), str)
+                and Path(descriptor[path_key]).is_file()
+                and sha_file(Path(descriptor[path_key]).resolve()) == descriptor[sha_key]
+                for path_key, sha_key in (
+                    ("candidate_path", "candidate_sha256"),
+                    ("lineage_path", "lineage_sha256"),
+                    ("report_path", "report_sha256"),
+                    ("null_face_retirement_ledger_path", "null_face_retirement_ledger_sha256"),
+                )
+            ),
+            f"source004 row {stable_id} descriptor lineage or source file differs",
+        )
+    parent_payload = parent_receipt.get("payload", {})
+    _require(
+        parent_payload.get("abi") == 5
+        and parent_payload.get("sha256") == SOURCE004_INDEX_PARENT_PAYLOAD_SHA256
+        and len(parent_rows) == len(child_rows) == 525
+        and list(parent_rows) == list(child_rows) == list(candidate_rows)
+        and parent_header[0:4] == child_header[0:4]
+        and parent_header[5:7] == child_header[5:7]
+        and child_header[4] == sum(len(row["faces"]) * 3 for row in child_rows.values())
+        and report.get("changed_row_ids") == sorted(REPAIRED_IDS)
+        and report.get("geometry_predicates_run") is False
+        and report.get("native_or_gpu_run") is False
+        and report.get("candidate_payload", {}).get("sha256") == SOURCE004_INDEX_CHILD_PAYLOAD_SHA256
+        and Path(report.get("candidate_payload", {}).get("path", "")).resolve()
+        == candidate_payload_source_path
+        and report.get("inputs", {}).get("source004_receipt", {}).get("sha256")
+        == SOURCE004_INDEX_PARENT_RECEIPT_SHA256
+        and report.get("inputs", {}).get("source004_payload", {}).get("sha256")
+        == SOURCE004_INDEX_PARENT_PAYLOAD_SHA256
+        and report.get("inputs", {}).get("arrangement_descriptors_046", {}).get("sha256")
+        == SOURCE004_INDEX_DESCRIPTORS_SHA256,
+        "source004 index-only ABI5 row/header/report identity differs",
+    )
+    reemit = declaration.get("abi5_reemit_proof")
+    _require(
+        isinstance(reemit, dict)
+        and reemit.get("replaced_stable_ids") == sorted(REPAIRED_IDS)
+        and reemit.get("row_count_preserved") == len(parent_rows)
+        and reemit.get("unmodified_rows_byte_exact") == len(parent_rows) - len(REPAIRED_IDS)
+        and reemit.get("stable_id_order_preserved") is True
+        and reemit.get("global_offsets_rebased_by_existing_abi5_encoder") is True
+        and reemit.get("registration_and_source_header_bytes_preserved") is True
+        and reemit == report.get("abi5_reemit_proof"),
+        "source004 index-only ABI5 row-replacement proof is incomplete",
+    )
+    for stable_id in parent_rows:
+        before, after = parent_rows[stable_id], child_rows[stable_id]
+        _require(
+            _row_identity(before, stable_id) == _row_identity(after, stable_id)
+            and _same_bytes(before["vertices6"], after["vertices6"], "<f4"),
+            f"source004 index-only child changed row {stable_id} identity or vertex/normal bytes",
+        )
+        if stable_id in REPAIRED_IDS:
+            _require(
+                not _same_bytes(before["faces"], after["faces"], "<u4"),
+                f"source004 declared index repair has no face-index delta at {stable_id}",
+            )
+        else:
+            _require(
+                _normalized_row_bytes(before) == _normalized_row_bytes(after),
+                f"source004 index-only child changed unrelated row {stable_id}",
+            )
+        _require(
+            _normalized_row_bytes(after) == _normalized_row_bytes(candidate_rows[stable_id]),
+            f"source004 parsed child differs from supplied row {stable_id}",
+        )
+    parent_source_map = parent_receipt.get("provenance", {}).get("source_id_map", {})
+    candidate_source_map = receipt.get("provenance", {}).get("source_id_map", {})
+    _require(
+        set(parent_source_map) == set(candidate_source_map)
+        and set(parent_source_map) == {str(stable_id) for stable_id in child_rows},
+        "source004 index-only source-ID map inventory differs",
+    )
+    for stable_id in child_rows:
+        key = str(stable_id)
+        if stable_id in REPAIRED_IDS:
+            before = deepcopy(parent_source_map[key])
+            after = deepcopy(candidate_source_map[key])
+            before_repair = before.get("repair", {}) or {}
+            after_repair = after.get("repair", {}) or {}
+            before_local = before_repair.pop("local_intersection_remesh", None)
+            after_local = after_repair.pop("local_intersection_remesh", None)
+            _require(
+                before == after
+                and before_repair == after_repair
+                and isinstance(before_local, dict)
+                and isinstance(after_local, dict),
+                f"source004 index-only source identity changed at stable ID {stable_id}",
+            )
+        else:
+            _require(
+                parent_source_map[key] == candidate_source_map[key],
+                f"source004 index-only source-ID map changed at stable ID {stable_id}",
+            )
+    return {
+        "rows": parent_rows,
+        "source_id_map": parent_source_map,
+        "proof": reemit,
+        "audit": {
+            "method": "pinned_source004_ABI5_child_with_only_313_315_317_face_index_replacements",
+            "source004_receipt_sha256": SOURCE004_INDEX_PARENT_RECEIPT_SHA256,
+            "source004_payload_sha256": SOURCE004_INDEX_PARENT_PAYLOAD_SHA256,
+            "candidate_payload_sha256": SOURCE004_INDEX_CHILD_PAYLOAD_SHA256,
+            "candidate_payload_source_path": str(candidate_payload_source_path),
+            "candidate_payload_source_sha256": SOURCE004_INDEX_CHILD_PAYLOAD_SHA256,
+            "composition_report_sha256": SOURCE004_INDEX_REPORT_SHA256,
+            "arrangement_descriptors_sha256": SOURCE004_INDEX_DESCRIPTORS_SHA256,
+            "all_other_source004_rows_byte_exact": True,
+            "repaired_row_vertex_and_normal_bytes_exact": True,
+            "source_id_map_unchanged_outside_repaired_row_pointers": True,
+        },
+    }
+
+
+def _resolve_historical_fj2217_retirement_reemit_proof(
+    *,
+    receipt_provenance: dict,
+    vessel_blend: dict,
+    historical_retirement: dict,
+    reinstatement: dict,
+    route_reemit_proof: dict,
+    expected_route_row: dict,
+    candidate_rows: dict,
+) -> tuple[dict, dict, dict, dict]:
+    """Resolve the omitted cap-history proof from its exact ABI5 parent receipt."""
+    from .resting_pleura_proxy import _parse_payload
+    from .resting_vessel_owner_blend import (
+        FJ2217_CAP_SOURCE_FACE_ID,
+        _retire_isolated_source_face,
+        validate_local_source_face_retirement,
+    )
+
+    cap = receipt_provenance.get("axillary_477_cap_reinstatement_successor")
+    _require(
+        isinstance(cap, dict)
+        and cap.get("schema") == "numi.human.axillary-477-cap-reinstatement-successor.v1",
+        "FJ2217 reinsertion lacks its pinned cap-successor provenance",
+    )
+    parent_receipt_path = Path(str(cap.get("base_receipt_path", ""))).resolve()
+    parent_receipt_sha = cap.get("base_receipt_sha256")
+    parent_payload_sha = cap.get("base_payload_sha256")
+    _require(
+        parent_receipt_sha == FJ2217_CAP_PARENT_RECEIPT_SHA256
+        and parent_payload_sha == FJ2217_CAP_PARENT_PAYLOAD_SHA256
+        and parent_receipt_path.is_file()
+        and sha_file(parent_receipt_path) == FJ2217_CAP_PARENT_RECEIPT_SHA256,
+        "FJ2217 cap parent receipt is not the exact pinned a779 source",
+    )
+    try:
+        parent_receipt = json.loads(parent_receipt_path.read_bytes())
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("FJ2217 pinned cap parent receipt is unreadable") from error
+    parent_payload = parent_receipt.get("payload", {})
+    parent_payload_path = Path(str(parent_payload.get("path", ""))).resolve()
+    _require(
+        parent_payload.get("abi") == 5
+        and parent_payload.get("sha256") == FJ2217_CAP_PARENT_PAYLOAD_SHA256
+        and parent_payload_path.is_file()
+        and sha_file(parent_payload_path) == FJ2217_CAP_PARENT_PAYLOAD_SHA256,
+        "FJ2217 cap parent payload does not match its pinned ABI5 receipt",
+    )
+    try:
+        parent_header, _, parent_rows = _parse_payload(parent_payload_path.read_bytes())
+    except (OSError, ValueError) as error:
+        raise ValueError("FJ2217 cap parent payload is not a valid ABI5 source") from error
+
+    parent_blend = (
+        parent_receipt.get("provenance", {})
+        .get("passive_brachiocephalic_vein_extension", {})
+        .get("passive_tissue_owner_blend", {})
+    )
+    parent_retirement = parent_blend.get("local_source_face_retirement")
+    parent_reemit = parent_blend.get("abi5_retirement_reemit_proof")
+    _require(
+        parent_retirement == historical_retirement
+        and isinstance(parent_reemit, dict)
+        and parent_reemit == route_reemit_proof
+        and parent_reemit == vessel_blend.get("abi5_retirement_reemit_proof")
+        and parent_reemit.get("row_count_preserved") == len(parent_rows)
+        and parent_payload.get("surface_count") == len(parent_rows)
+        and 477 in parent_rows,
+        "FJ2217 parent retirement declaration or aggregate ABI5 proof differs",
+    )
+
+    source_faces = np.ascontiguousarray(expected_route_row.get("faces"), dtype="<u4")
+    _require(
+        0 <= FJ2217_CAP_SOURCE_FACE_ID < len(source_faces),
+        "FJ2217 route source row lacks its pinned cap face",
+    )
+    reconstructed_parent_row, _ = _retire_isolated_source_face(
+        expected_route_row,
+        FJ2217_CAP_SOURCE_FACE_ID,
+        source_faces[FJ2217_CAP_SOURCE_FACE_ID],
+    )
+    validate_local_source_face_retirement(
+        expected_route_row,
+        reconstructed_parent_row,
+        historical_retirement,
+        parent_reemit,
+        expected_pre_retirement_row=expected_route_row,
+    )
+    _require(
+        _normalized_row_bytes(parent_rows[477])
+        == _normalized_row_bytes(reconstructed_parent_row),
+        "pinned a779 row 477 differs from exact source-face retirement replay",
+    )
+
+    candidate_payload_path = Path(str(cap.get("candidate_payload_path", ""))).resolve()
+    _require(
+        cap.get("candidate_payload_sha256") == FJ2217_CAP_CANDIDATE_PAYLOAD_SHA256
+        and candidate_payload_path.is_file()
+        and sha_file(candidate_payload_path) == FJ2217_CAP_CANDIDATE_PAYLOAD_SHA256,
+        "FJ2217 cap candidate is not the exact pinned reinstatement output",
+    )
+    try:
+        candidate_header, _, reinstated_rows = _parse_payload(candidate_payload_path.read_bytes())
+    except (OSError, ValueError) as error:
+        raise ValueError("FJ2217 reinstatement candidate is not a valid ABI5 source") from error
+    scoped_reemit = vessel_blend.get("abi5_reinstatement_reemit_proof")
+    parent_record = tuple(map(int, parent_rows[477]["record"]))
+    cap_record = tuple(map(int, reinstated_rows[477]["record"]))
+    _require(
+        cap.get("reinstatement") == reinstatement
+        and cap.get("abi5_reemit_proof") == scoped_reemit
+        and isinstance(scoped_reemit, dict)
+        and scoped_reemit.get("replaced_stable_ids") == [477]
+        and candidate_header[0:4] == parent_header[0:4]
+        and candidate_header[4] == parent_header[4] + 3
+        and candidate_header[5:7] == parent_header[5:7]
+        and len(reinstated_rows) == len(parent_rows)
+        and cap_record[:4] == parent_record[:4]
+        and cap_record[4] == parent_record[4] + 3
+        and cap_record[5:] == parent_record[5:] == (477, 2, 0)
+        and 477 in candidate_rows
+        and _normalized_row_bytes(reinstated_rows[477])
+        == _normalized_row_bytes(candidate_rows[477]),
+        "pinned FJ2217 cap payload, scoped proof, or current row differs",
+    )
+    proof_sha256 = sha_bytes(
+        json.dumps(parent_reemit, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    )
+    return parent_reemit, {
+        "method": "resolve_exact_abi5_retirement_proof_from_cap_pinned_parent_receipt",
+        "parent_receipt_sha256": FJ2217_CAP_PARENT_RECEIPT_SHA256,
+        "parent_payload_sha256": FJ2217_CAP_PARENT_PAYLOAD_SHA256,
+        "parent_row_477_matches_exact_retirement_reconstruction": True,
+        "parent_aggregate_proof_sha256": proof_sha256,
+        "cap_candidate_payload_sha256": FJ2217_CAP_CANDIDATE_PAYLOAD_SHA256,
+        "cap_candidate_row_477_matches_current_candidate": True,
+    }, parent_rows[477], reinstated_rows[477]
+
+
 def validate_receipt_composition(
     *,
     base_receipt_path: Path,
@@ -2490,6 +2831,11 @@ def validate_receipt_composition(
              and reemit.get("unmodified_rows_byte_exact") == 522,
              "aggregate repair declaration omits its scoped ABI5 preservation proof")
     source_map = provenance.get("source_id_map", {})
+    source004_index_only = None
+    if "source004_index_only_reemit" in aggregate:
+        source004_index_only = _load_source004_index_only_parent(
+            receipt=receipt, candidate_rows=candidate_rows, aggregate=aggregate
+        )
     base_receipt = json.loads(Path(base_receipt_path).read_text())
     base_map = base_receipt.get("provenance", {}).get("source_id_map", {})
     _, _, base_rows = _parse_payload(Path(base_receipt["payload"]["path"]).read_bytes())
@@ -2587,9 +2933,37 @@ def validate_receipt_composition(
     historical_retirement_reemit = vessel_blend.get(
         "historical_abi5_retirement_reemit_proof"
     )
+    historical_retirement_proof_resolution = None
+    reinstatement_parent_row = None
+    reinstatement_candidate_row = None
     route_reemit = _validate_route110_reemit_proofs(
         route_decl, vessel_blend, expected_route_replaced, len(candidate_rows)
     )
+    if (
+        isinstance(reinstatement, dict)
+        and reinstatement.get("operation")
+        == "reinsert_retired_source_face_at_original_order_position"
+    ):
+        (
+            resolved_proof,
+            historical_retirement_proof_resolution,
+            reinstatement_parent_row,
+            reinstatement_candidate_row,
+        ) = _resolve_historical_fj2217_retirement_reemit_proof(
+                receipt_provenance=provenance,
+                vessel_blend=vessel_blend,
+                historical_retirement=historical_retirement,
+                reinstatement=reinstatement,
+                route_reemit_proof=route_reemit,
+                expected_route_row=route_data["rows"][477],
+                candidate_rows=candidate_rows,
+            )
+        _require(
+            historical_retirement_reemit is None
+            or historical_retirement_reemit == resolved_proof,
+            "inline FJ2217 historical proof differs from its pinned parent proof",
+        )
+        historical_retirement_reemit = resolved_proof
     bridge = route_data["bridge_rows"][525]
     _require(
         candidate_rows[525]["vertices6"][:, :3].astype("<f4").tobytes()
@@ -2625,10 +2999,16 @@ def validate_receipt_composition(
             477 in route_changed_ids,
             "FJ2217 cap face operation lacks route110 row transfer",
         )
+        cap_expected_route_row = expected_route_rows[477]
+        if reinstatement_candidate_row is not None:
+            cap_expected_route_row = {
+                **expected_route_rows[477],
+                "record": reinstatement_candidate_row["record"],
+            }
         cap_operation_proof = validate_fj2217_route_face_operation(
-            base_rows[477],
-            candidate_rows[477],
-            expected_route_rows[477],
+            reinstatement_parent_row if reinstatement_parent_row is not None else base_rows[477],
+            reinstatement_candidate_row if reinstatement_candidate_row is not None else candidate_rows[477],
+            cap_expected_route_row,
             reinstatement=reinstatement,
             active_retirement=active_retirement,
             historical_retirement=historical_retirement,
@@ -2753,13 +3133,28 @@ def validate_receipt_composition(
                     == _normalized_row_bytes(expected_route_rows[stable_id]),
                     f"route110 source-row transfer differs at stable ID {stable_id}",
                 )
+        elif source004_index_only is not None:
+            _require(
+                _normalized_row_bytes(source004_index_only["rows"][stable_id])
+                == _normalized_row_bytes(candidate),
+                f"source004 child changed unrelated original row {stable_id}",
+            )
+            _require(
+                source_map.get(str(stable_id))
+                == source004_index_only["source_id_map"].get(str(stable_id)),
+                f"source004 child changed unrelated source identity {stable_id}",
+            )
         else:
             _require(_normalized_row_bytes(base_rows[stable_id])
                      == _normalized_row_bytes(candidate),
                      f"unrelated original N27 row changed: {stable_id}")
             _require(source_map.get(str(stable_id)) == base_map.get(str(stable_id)),
                      f"unrelated original source identity changed: {stable_id}")
-    unchanged_count = len(base_rows) - len(changed_original_ids)
+    unchanged_count = (
+        len(source004_index_only["rows"]) - len(REPAIRED_IDS)
+        if source004_index_only is not None
+        else len(base_rows) - len(changed_original_ids)
+    )
     _require(unchanged_count >= 0,
              "original N27 changed-row accounting is negative")
     return {
@@ -2771,6 +3166,13 @@ def validate_receipt_composition(
         "bridge_appended_row_count": 2,
         "all_unmodified_original_rows_byte_exact": True,
         "all_512_unmodified_rows_byte_exact": unchanged_count == 512,
+        "source004_index_only_reemit": (
+            source004_index_only["audit"] if source004_index_only is not None else None
+        ),
+        "all_source004_unmodified_rows_byte_exact": (
+            unchanged_count == len(source004_index_only["rows"]) - len(REPAIRED_IDS)
+            if source004_index_only is not None else None
+        ),
         "fj2217_cap_operation": cap_operation_proof,
         "legacy_retirement_replayed": bool(legacy_retirement_rows),
         # Compatibility for the historical source-007 validator. This alias is
@@ -2790,6 +3192,7 @@ def validate_receipt_composition(
         "historical_failed_source_face_retirement_preserved": isinstance(
             historical_retirement, dict
         ) or bool(legacy_retirement_rows),
+        "historical_retirement_proof_resolution": historical_retirement_proof_resolution,
         "all_three_repaired_rows_reconstructed_from_pinned_positive_maps": True,
         "captured_step0_world_points_and_local_abi5_emission_bound": True,
         "capture_decoder_provenance": capture_decoder_provenance,

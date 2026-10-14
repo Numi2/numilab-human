@@ -1,6 +1,7 @@
 import hashlib
 import json
 from fractions import Fraction
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -895,3 +896,394 @@ def test_historical_capture_loader_is_bound_by_owner_relative_git_identity():
             historical_sha)
     with pytest.raises(ValueError, match="SHA is not present"):
         arrangement._historical_capture_loader_commit(relocated, "f" * 64)
+
+
+def _cap_parent_proof_fixture(tmp_path, monkeypatch):
+    from numilab_human import resting_vessel_owner_blend as vessel
+
+    source = np.zeros((1089, 6), dtype="<f4")
+    for source_id, alias_id, point in (
+        (930, 1068, (1.0, 2.0, 3.0)),
+        (1066, 1065, (4.0, 5.0, 6.0)),
+        (1063, 926, (7.0, 8.0, 9.0)),
+    ):
+        source[source_id, :3] = point
+        source[alias_id, :3] = point
+    faces = np.tile(np.asarray([[0, 1, 2]], dtype="<u4"), (2110, 1))
+    faces[0] = [1068, 1065, 926]
+    faces[1858] = [930, 1066, 1063]
+    full = {
+        "record": (91, 0, 1089, 0, 2110 * 3, 477, 2, 0),
+        "body_index": 91,
+        "layer": 2,
+        "flags": 0,
+        "vertices6": source,
+        "faces": faces,
+    }
+    retired_row, _ = vessel._retire_isolated_source_face(full, 1858, faces[1858])
+    face_sha = hashlib.sha256(faces[1858].tobytes()).hexdigest()
+    retirement = {
+        "stable_id": 477,
+        "removed_face_count": 1,
+        "source_archive_sha256": vessel.ISA_ARCHIVE_SHA256,
+        "source_member_sha256": vessel.FJ2217_OBJ_SHA256,
+        "source_face_and_nha_ancestry_exact": True,
+        "all_other_source_faces_retained_in_original_order": True,
+        "unchanged_source_vertex_prefix_byte_exact": True,
+        "input_face_count": 2110,
+        "output_face_count": 2109,
+        "input_vertex_count": 1089,
+        "output_vertex_count": 1089,
+        "retained_unused_vertex_slots": 3,
+        "source_face_bytes_sha256": face_sha,
+        "source_face_id_zero_based": 1858,
+        "lineage": {
+            "classification": "unexplained_isolated_raw_source_face; scoped_reference_retirement",
+            "anatomical_interface_proven": False,
+            "local_retirement_proposed": True,
+            "retirement_operation_changes_no_mesh_coordinates": True,
+            "source_archive_sha256": vessel.ISA_ARCHIVE_SHA256,
+            "source_member_sha256": vessel.FJ2217_OBJ_SHA256,
+            "source_face_and_nha_face_arrays_exact": True,
+            "source_face_id_zero_based": 1858,
+            "nha_local_face_id_zero_based": 1858,
+            "ordered_source_vertex_ids_zero_based": faces[1858].astype(int).tolist(),
+            "nha_local_vertex_ids_zero_based": faces[1858].astype(int).tolist(),
+        },
+    }
+    route_proof = {
+        "replaced_stable_ids": [7, 469, 471, 473, 475, 477, 479, 481, 525],
+        "row_count_preserved": 525,
+        "unmodified_rows_byte_exact": 516,
+        "stable_id_order_preserved": True,
+        "global_offsets_rebased_by_existing_abi5_encoder": True,
+        "registration_and_source_header_bytes_preserved": True,
+    }
+    scoped_proof = {
+        "replaced_stable_ids": [477],
+        "row_count_preserved": 525,
+        "unmodified_rows_byte_exact": 524,
+        "stable_id_order_preserved": True,
+        "global_offsets_rebased_by_existing_abi5_encoder": True,
+        "registration_and_source_header_bytes_preserved": True,
+    }
+    reinstated, reinstatement = vessel.reinstate_source_face_through_exact_aliases(
+        retired_row, 1858, faces[1858], source_row=full
+    )
+    source_rows = {}
+    for stable_id in [*range(1, 524), 525, 526]:
+        if stable_id == 477:
+            source_rows[stable_id] = retired_row
+        else:
+            source_rows[stable_id] = {
+                "body_index": 20,
+                "layer": 2,
+                "flags": 0,
+                "vertices6": np.zeros((0, 6), dtype="<f4"),
+                "faces": np.zeros((0, 3), dtype="<u4"),
+            }
+    candidate_rows = dict(source_rows)
+    candidate_rows[477] = reinstated
+    header = (b"NHANAT1\0", 5, 0, 0, 0, 0xB1B410AD, b"S" * 32)
+    parent_payload_path = tmp_path / "parent.nhanatomy"
+    cap_payload_path = tmp_path / "cap.nhanatomy"
+    parent_payload_path.write_bytes(encode_payload(header, source_rows))
+    cap_payload_path.write_bytes(encode_payload(header, candidate_rows))
+    parent_payload_sha = hashlib.sha256(parent_payload_path.read_bytes()).hexdigest()
+    cap_payload_sha = hashlib.sha256(cap_payload_path.read_bytes()).hexdigest()
+    parent_receipt = {
+        "payload": {
+            "abi": 5,
+            "path": str(parent_payload_path),
+            "sha256": parent_payload_sha,
+            "surface_count": 525,
+        },
+        "provenance": {
+            "passive_brachiocephalic_vein_extension": {
+                "passive_tissue_owner_blend": {
+                    "local_source_face_retirement": retirement,
+                    "abi5_retirement_reemit_proof": route_proof,
+                }
+            }
+        },
+    }
+    parent_receipt_path = tmp_path / "parent-receipt.json"
+    parent_receipt_path.write_text(json.dumps(parent_receipt, sort_keys=True))
+    parent_receipt_sha = hashlib.sha256(parent_receipt_path.read_bytes()).hexdigest()
+    monkeypatch.setattr(arrangement, "FJ2217_CAP_PARENT_RECEIPT_SHA256", parent_receipt_sha)
+    monkeypatch.setattr(arrangement, "FJ2217_CAP_PARENT_PAYLOAD_SHA256", parent_payload_sha)
+    monkeypatch.setattr(arrangement, "FJ2217_CAP_CANDIDATE_PAYLOAD_SHA256", cap_payload_sha)
+    cap = {
+        "schema": "numi.human.axillary-477-cap-reinstatement-successor.v1",
+        "base_receipt_path": str(parent_receipt_path),
+        "base_receipt_sha256": parent_receipt_sha,
+        "base_payload_sha256": parent_payload_sha,
+        "candidate_payload_path": str(cap_payload_path),
+        "candidate_payload_sha256": cap_payload_sha,
+        "reinstatement": reinstatement,
+        "abi5_reemit_proof": scoped_proof,
+    }
+    blend = {
+        "local_source_face_reinstatement": reinstatement,
+        "historical_local_source_face_retirement": retirement,
+        "abi5_retirement_reemit_proof": route_proof,
+        "abi5_reinstatement_reemit_proof": scoped_proof,
+    }
+    return {
+        "provenance": {"axillary_477_cap_reinstatement_successor": cap},
+        "blend": blend,
+        "full": full,
+        "retirement": retirement,
+        "route_proof": route_proof,
+        "candidate_rows": candidate_rows,
+        "parent_receipt_path": parent_receipt_path,
+    }
+
+
+def test_historical_cap_retirement_proof_resolves_from_exact_pinned_parent(tmp_path, monkeypatch):
+    fixture = _cap_parent_proof_fixture(tmp_path, monkeypatch)
+    proof, audit, parent_row, cap_row = arrangement._resolve_historical_fj2217_retirement_reemit_proof(
+        receipt_provenance=fixture["provenance"],
+        vessel_blend=fixture["blend"],
+        historical_retirement=fixture["retirement"],
+        reinstatement=fixture["blend"]["local_source_face_reinstatement"],
+        route_reemit_proof=fixture["route_proof"],
+        expected_route_row=fixture["full"],
+        candidate_rows=fixture["candidate_rows"],
+    )
+    assert proof == fixture["route_proof"]
+    assert audit["parent_row_477_matches_exact_retirement_reconstruction"] is True
+    assert audit["cap_candidate_row_477_matches_current_candidate"] is True
+    assert parent_row["record"][5] == 477
+    assert parent_row["faces"].shape == (2109, 3)
+    assert cap_row["faces"].shape == (2110, 3)
+
+
+def test_historical_cap_parent_proof_rejects_wrong_parent_pin(tmp_path, monkeypatch):
+    fixture = _cap_parent_proof_fixture(tmp_path, monkeypatch)
+    cap = fixture["provenance"]["axillary_477_cap_reinstatement_successor"]
+    cap["base_receipt_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="exact pinned a779 source"):
+        arrangement._resolve_historical_fj2217_retirement_reemit_proof(
+            receipt_provenance=fixture["provenance"], vessel_blend=fixture["blend"],
+            historical_retirement=fixture["retirement"],
+            reinstatement=fixture["blend"]["local_source_face_reinstatement"],
+            route_reemit_proof=fixture["route_proof"],
+            expected_route_row=fixture["full"], candidate_rows=fixture["candidate_rows"],
+        )
+
+
+def test_historical_cap_parent_proof_rejects_parent_row_drift(tmp_path, monkeypatch):
+    fixture = _cap_parent_proof_fixture(tmp_path, monkeypatch)
+    cap = fixture["provenance"]["axillary_477_cap_reinstatement_successor"]
+    parent_receipt_path = fixture["parent_receipt_path"]
+    parent_receipt = json.loads(parent_receipt_path.read_text())
+    parent_payload_path = Path(parent_receipt["payload"]["path"])
+    source_rows = {sid: row for sid, row in fixture["candidate_rows"].items()}
+    bad = dict(source_rows[477])
+    bad_faces = bad["faces"].copy()
+    bad_faces[0] = [3, 4, 5]
+    bad["faces"] = bad_faces
+    source_rows[477] = bad
+    parent_bytes = encode_payload(
+        (b"NHANAT1\0", 5, 0, 0, 0, 0xB1B410AD, b"S" * 32), source_rows
+    )
+    parent_payload_path.write_bytes(parent_bytes)
+    payload_sha = hashlib.sha256(parent_bytes).hexdigest()
+    parent_receipt["payload"]["sha256"] = payload_sha
+    parent_receipt_path.write_text(json.dumps(parent_receipt, sort_keys=True))
+    receipt_sha = hashlib.sha256(parent_receipt_path.read_bytes()).hexdigest()
+    cap["base_payload_sha256"] = payload_sha
+    cap["base_receipt_sha256"] = receipt_sha
+    monkeypatch.setattr(arrangement, "FJ2217_CAP_PARENT_RECEIPT_SHA256", receipt_sha)
+    monkeypatch.setattr(arrangement, "FJ2217_CAP_PARENT_PAYLOAD_SHA256", payload_sha)
+    with pytest.raises(ValueError, match="pinned a779 row 477 differs"):
+        arrangement._resolve_historical_fj2217_retirement_reemit_proof(
+            receipt_provenance=fixture["provenance"], vessel_blend=fixture["blend"],
+            historical_retirement=fixture["retirement"],
+            reinstatement=fixture["blend"]["local_source_face_reinstatement"],
+            route_reemit_proof=fixture["route_proof"],
+            expected_route_row=fixture["full"], candidate_rows=fixture["candidate_rows"],
+        )
+
+
+def _source004_index_only_fixture(tmp_path, monkeypatch, *, corrupt_unrelated=False):
+    import copy
+
+    changed = sorted(arrangement.REPAIRED_IDS)
+    parent_rows = {}
+    for stable_id in [*range(1, 524), 525, 526]:
+        if stable_id in changed:
+            parent_rows[stable_id] = {
+                "body_index": 20,
+                "layer": 1,
+                "flags": 0,
+                "vertices6": np.asarray([
+                    [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1],
+                    [0, 1, 0, 0, 0, 1], [0, 0, 1, 0, 0, 1],
+                ], dtype="<f4"),
+                "faces": np.asarray([[0, 1, 2], [0, 2, 3]], dtype="<u4"),
+            }
+        else:
+            parent_rows[stable_id] = {
+                "body_index": 20, "layer": 2, "flags": 0,
+                "vertices6": np.zeros((0, 6), dtype="<f4"),
+                "faces": np.zeros((0, 3), dtype="<u4"),
+            }
+    child_rows = copy.deepcopy(parent_rows)
+    for stable_id in changed:
+        child_rows[stable_id]["faces"] = np.asarray([[0, 1, 3], [0, 2, 3]], dtype="<u4")
+    if corrupt_unrelated:
+        child_rows[323]["body_index"] = 91
+    header = (b"NHANAT1\0", 5, 0, 0, 0, 0xB1B410AD, b"I" * 32)
+    parent_payload = tmp_path / "source004.nhanatomy"
+    child_payload = tmp_path / "child.nhanatomy"
+    parent_payload.write_bytes(encode_payload(header, parent_rows))
+    child_payload.write_bytes(encode_payload(header, child_rows))
+    _, _, parsed_child_rows = __import__(
+        "numilab_human.resting_pleura_proxy", fromlist=["_parse_payload"]
+    )._parse_payload(child_payload.read_bytes())
+    parent_payload_sha = hashlib.sha256(parent_payload.read_bytes()).hexdigest()
+    child_payload_sha = hashlib.sha256(child_payload.read_bytes()).hexdigest()
+    source_map = {
+        str(sid): {
+            "stable_id": sid,
+            "repair": {"local_intersection_remesh": {"stable_id": sid}}
+            if sid in changed else {},
+        }
+        for sid in parent_rows
+    }
+    parent_receipt = {
+        "payload": {"abi": 5, "path": str(parent_payload), "sha256": parent_payload_sha},
+        "provenance": {"source_id_map": source_map},
+    }
+    parent_receipt_path = tmp_path / "source004-receipt.json"
+    parent_receipt_path.write_text(json.dumps(parent_receipt, sort_keys=True))
+    parent_receipt_sha = hashlib.sha256(parent_receipt_path.read_bytes()).hexdigest()
+    descriptor_path = tmp_path / "arrangement-inputs.json"
+    descriptor_rows = {}
+    report_rows = {}
+    for stable_id in changed:
+        row_dir = tmp_path / f"row-{stable_id}"
+        row_dir.mkdir()
+        files = {}
+        for role in ("candidate", "lineage", "report", "null-face-retirement-ledger"):
+            path = row_dir / f"{role}.json"
+            path.write_text(json.dumps({"stable_id": stable_id, "role": role}))
+            files[role] = {
+                "path": str(path),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        descriptor_rows[str(stable_id)] = {
+            "candidate_path": files["candidate"]["path"],
+            "candidate_sha256": files["candidate"]["sha256"],
+            "lineage_path": files["lineage"]["path"],
+            "lineage_sha256": files["lineage"]["sha256"],
+            "report_path": files["report"]["path"],
+            "report_sha256": files["report"]["sha256"],
+            "null_face_retirement_ledger_path": files["null-face-retirement-ledger"]["path"],
+            "null_face_retirement_ledger_sha256": files["null-face-retirement-ledger"]["sha256"],
+            "source_payload_index": 1,
+            "source_payload_sha256": arrangement.REPAIR_PARENT_PAYLOAD_SHA256,
+        }
+        report_rows[str(stable_id)] = {
+            "full_candidate_sha256": files["candidate"]["sha256"],
+            "lineage_sha256": files["lineage"]["sha256"],
+            "report_sha256": files["report"]["sha256"],
+            "null_face_retirement_ledger_sha256": files["null-face-retirement-ledger"]["sha256"],
+        }
+    descriptor_data = {
+        "schema": "numi.human.local-intercostal-arrangement-inputs.v1",
+        "status": "IMMUTABLE_046_DESCRIPTOR_SUCCESSOR_METADATA_ONLY_NOT_ADMISSION",
+        "candidate_geometry_bytes_unchanged": True,
+        "source_payload_index": 1,
+        "source_payload_sha256": arrangement.REPAIR_PARENT_PAYLOAD_SHA256,
+        "rows": descriptor_rows,
+    }
+    descriptor_path.write_text(json.dumps(descriptor_data, sort_keys=True))
+    descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
+    report = {
+        "changed_row_ids": changed,
+        "row_summaries": report_rows,
+        "geometry_predicates_run": False,
+        "native_or_gpu_run": False,
+        "candidate_payload": {
+            "path": str(child_payload),
+            "sha256": child_payload_sha,
+        },
+        "inputs": {
+            "source004_receipt": {"sha256": parent_receipt_sha},
+            "source004_payload": {"sha256": parent_payload_sha},
+            "arrangement_descriptors_046": {"sha256": descriptor_sha},
+        },
+        "abi5_reemit_proof": {
+            "replaced_stable_ids": changed,
+            "row_count_preserved": 525,
+            "unmodified_rows_byte_exact": 522,
+            "stable_id_order_preserved": True,
+            "global_offsets_rebased_by_existing_abi5_encoder": True,
+            "registration_and_source_header_bytes_preserved": True,
+        },
+    }
+    report_path = tmp_path / "source-only-report.json"
+    report_path.write_text(json.dumps(report, sort_keys=True))
+    report_sha = hashlib.sha256(report_path.read_bytes()).hexdigest()
+    monkeypatch.setattr(arrangement, "SOURCE004_INDEX_PARENT_RECEIPT_SHA256", parent_receipt_sha)
+    monkeypatch.setattr(arrangement, "SOURCE004_INDEX_PARENT_PAYLOAD_SHA256", parent_payload_sha)
+    monkeypatch.setattr(arrangement, "SOURCE004_INDEX_CHILD_PAYLOAD_SHA256", child_payload_sha)
+    monkeypatch.setattr(arrangement, "SOURCE004_INDEX_REPORT_SHA256", report_sha)
+    monkeypatch.setattr(arrangement, "SOURCE004_INDEX_DESCRIPTORS_SHA256", descriptor_sha)
+    declaration = {
+        "schema": "numi.human.intercostal.source004-index-only-reemit.v1",
+        "source004_receipt_path": str(parent_receipt_path),
+        "source004_receipt_sha256": parent_receipt_sha,
+        "source004_payload_path": str(parent_payload),
+        "source004_payload_sha256": parent_payload_sha,
+        "candidate_payload_path": str(child_payload),
+        "candidate_payload_sha256": child_payload_sha,
+        "candidate_payload_source_path": str(child_payload),
+        "candidate_payload_source_sha256": child_payload_sha,
+        "composition_report_path": str(report_path),
+        "composition_report_sha256": report_sha,
+        "arrangement_descriptors_path": str(descriptor_path),
+        "arrangement_descriptors_sha256": descriptor_sha,
+        "changed_stable_ids": changed,
+        "abi5_reemit_proof": report["abi5_reemit_proof"],
+    }
+    receipt = {
+        "payload": {"path": str(child_payload), "sha256": child_payload_sha},
+        "provenance": {"source_id_map": copy.deepcopy(source_map)},
+    }
+    aggregate = {"source004_index_only_reemit": declaration}
+    return receipt, aggregate, parsed_child_rows
+
+
+def test_source004_index_only_parent_checks_every_row_and_owner_map(tmp_path, monkeypatch):
+    receipt, aggregate, candidate_rows = _source004_index_only_fixture(tmp_path, monkeypatch)
+    result = arrangement._load_source004_index_only_parent(
+        receipt=receipt, candidate_rows=candidate_rows, aggregate=aggregate
+    )
+    assert result["audit"]["all_other_source004_rows_byte_exact"] is True
+    assert result["audit"]["repaired_row_vertex_and_normal_bytes_exact"] is True
+
+
+def test_source004_index_only_parent_rejects_drifted_descriptor_source(tmp_path, monkeypatch):
+    receipt, aggregate, candidate_rows = _source004_index_only_fixture(tmp_path, monkeypatch)
+    declaration = aggregate["source004_index_only_reemit"]
+    descriptors = json.loads(Path(declaration["arrangement_descriptors_path"]).read_bytes())
+    candidate_path = Path(descriptors["rows"]["313"]["candidate_path"])
+    candidate_path.write_text(candidate_path.read_text() + "drift")
+    with pytest.raises(ValueError, match="row 313 descriptor lineage"):
+        arrangement._load_source004_index_only_parent(
+            receipt=receipt, candidate_rows=candidate_rows, aggregate=aggregate
+        )
+
+
+def test_source004_index_only_parent_rejects_unlisted_row_change(tmp_path, monkeypatch):
+    receipt, aggregate, candidate_rows = _source004_index_only_fixture(
+        tmp_path, monkeypatch, corrupt_unrelated=True
+    )
+    with pytest.raises(ValueError, match="changed row 323 identity"):
+        arrangement._load_source004_index_only_parent(
+            receipt=receipt, candidate_rows=candidate_rows, aggregate=aggregate
+        )
