@@ -58,6 +58,35 @@ PAIR = (BRIDGE_KEY, TARGET_KEY)
 # owner's exact 13 branch edges plus two SVC ports.
 PARTIAL_OVERLAP_PORT = PAIR
 VOLUME_BALANCE_RELATIVE_TOLERANCE = 1e-6
+SOURCE_BASELINE_ADDITIONS_LINK = ((51011, 525), (51011, 469))
+SOURCE_BASELINE_OBSERVATION_REPORT = (
+    source007.A / "full-anatomy-delivery-audit-1378"
+    / "current-capture-network-gate-023-continuity-only-001"
+    / "network-gate-report.json")
+SOURCE_BASELINE_OBSERVATION_REPORT_SHA256 = (
+    "b8993152b5ecaabb00765bc30ac5aec6c1fea77a99ab106e7f469185af8f5795")
+SOURCE_BASELINE_OBSERVATION_PREFLIGHT_SHA256 = (
+    "68f7dffaba2f433cfdf35dca3bf9d3357b9441709367662b144ac8f6ea93451d")
+SOURCE_BASELINE_ADDITIONS = (
+    {
+        "face_pair": (704, 184),
+        "extension_side": "bridge",
+        "frozen_neighbor_faces": (697,),
+        "endpoint_rule": "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+    },
+    {
+        "face_pair": (704, 185),
+        "extension_side": "bridge",
+        "frozen_neighbor_faces": (697,),
+        "endpoint_rule": "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+    },
+    {
+        "face_pair": (737, 176),
+        "extension_side": "bridge",
+        "frozen_neighbor_faces": (733, 741),
+        "endpoint_rule": "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+    },
+)
 
 
 def _require(condition: bool, message: str) -> None:
@@ -317,14 +346,551 @@ def _exact_source_collar_addendum_baseline_identity(
     }
 
 
+
+
+def _strict_face_pair_set(rows, *, name: str) -> set[tuple[int, int]]:
+    _require(isinstance(rows, list),
+             f"{name} must be a JSON array of face pairs")
+    output = set()
+    for row in rows:
+        _require(isinstance(row, list) and len(row) == 2
+                 and all(type(value) is int and value >= 0 for value in row),
+                 f"{name} contains a malformed face pair")
+        pair = tuple(row)
+        _require(pair not in output, f"{name} contains duplicate face pairs")
+        output.add(pair)
+    return output
+
+
+def _read_pinned_source_baseline_observation(
+    observation, *, bridge_key, target_key, scope, declarations, identity,
+    bridge, target, source_rows, native_nha_gid_base_offset,
+):
+    _require((bridge_key, target_key) == SOURCE_BASELINE_ADDITIONS_LINK,
+             "declared baseline additions are restricted to source link 525->469")
+    _require(isinstance(observation, Mapping)
+             and observation.get("report_path") == str(
+                 SOURCE_BASELINE_OBSERVATION_REPORT.resolve())
+             and observation.get("report_sha256")
+             == SOURCE_BASELINE_OBSERVATION_REPORT_SHA256,
+             "baseline observations must name the immutable pinned 023 report")
+    report_path = SOURCE_BASELINE_OBSERVATION_REPORT.resolve(strict=True)
+    report_sha = sha_file(report_path)
+    _require(report_sha == SOURCE_BASELINE_OBSERVATION_REPORT_SHA256,
+             "pinned baseline observation report bytes changed")
+    report = json.loads(report_path.read_text())
+    _require(report.get("status") == "STOPPED_AT_FIRST_FAILED_NETWORK_LINK"
+             and report.get("anatomical_admission") is False
+             and report.get("native_or_gpu_work_performed") is False,
+             "pinned source-baseline report has an unexpected execution status")
+    preflight_path = Path(report.get("source_preflight_path", "")).resolve(strict=True)
+    _require(report.get("source_preflight_sha256")
+             == SOURCE_BASELINE_OBSERVATION_PREFLIGHT_SHA256
+             and sha_file(preflight_path)
+             == SOURCE_BASELINE_OBSERVATION_PREFLIGHT_SHA256,
+             "pinned baseline source/capture preflight bytes changed")
+    preflight = json.loads(preflight_path.read_text())
+    capture = preflight.get("actual_accepted_capture")
+    _require(isinstance(capture, Mapping)
+             and identity.get("accepted_pack_sha256") == capture.get("pack_sha256")
+             and identity.get("accepted_capture_receipt_sha256")
+             == capture.get("capture_receipt_sha256")
+             and identity.get("invoked_anatomy_receipt_sha256")
+             == capture.get("invoked_anatomy_receipt_sha256")
+             and identity.get("source_nha_payload_sha256")
+             == capture.get("common_field_source_anatomy_payload_sha256")
+             and identity.get("accepted_step") == capture.get("accepted_step") == 0
+             and identity.get("accepted_time_s") == capture.get("accepted_time_s") == 0,
+             "pinned source-baseline observation does not match the current exact source/capture")
+    network = report.get("network_source_continuity")
+    _require(isinstance(network, Mapping)
+             and network.get("first_failed_link")
+             == [list(bridge_key), list(target_key)],
+             "pinned baseline report did not stop first at this typed network link")
+    matches = [
+        item for item in network.get("links", [])
+        if item.get("bridge") == list(bridge_key)
+        and item.get("target") == list(target_key)]
+    _require(len(matches) == 1,
+             "pinned baseline report must contain exactly one typed link result")
+    link = matches[0]
+    source = link.get("declared_network_link_source_ancestry", {})
+    _require(source.get("typed_link") == [list(bridge_key), list(target_key)]
+             and source.get("source_evidence_sha256")
+             == scope["source_evidence_sha256"]
+             and source.get("source_face_pair_ancestry_sha256")
+             == scope["source_face_pair_ancestry_sha256"]
+             and source.get("source_parent_faces_sha256")
+             == scope["source_parent_faces_sha256"]
+             and source.get("source_child_faces_sha256")
+             == scope["source_child_faces_sha256"],
+             "pinned observation source ancestry differs from current ABI5 link evidence")
+    expected_additions = {
+        tuple(item["face_pair"]) for item in declarations}
+    audit = link.get("port_interfaces", {}).get(
+        "baseline", {}).get("audit_result", {})
+    observed = _strict_face_pair_set(
+        audit.get("declared_interface_triangle_pairs"),
+        name="pinned baseline observed face pairs")
+    unexpected = _strict_face_pair_set(
+        audit.get("unexpected_triangle_pairs"),
+        name="pinned baseline unexpected face pairs")
+    _require(unexpected == expected_additions
+             and expected_additions.issubset(observed)
+             and audit.get("passed") is False,
+             "pinned baseline unexpected pairs differ from the exact three declared collar additions")
+    ancestry = link.get("abi5_face_corner_ancestry", {})
+    for role, surface, stable_id, label in (
+        ("baseline_parent", bridge, bridge_key[1], "bridge"),
+        ("baseline_child", target, target_key[1], "target"),
+    ):
+        owner = ancestry.get(role, {})
+        row = source_rows.get(stable_id, source_rows.get(str(stable_id)))
+        record = row.get("record") if isinstance(row, Mapping) else None
+        _require(isinstance(record, (tuple, list)) and len(record) == 8
+                 and owner.get("typed_identity") == [51011, stable_id]
+                 and owner.get("native_nha_gid_base_offset")
+                 == native_nha_gid_base_offset
+                 and owner.get("nha_source_row_first_vertex") == record[1]
+                 and owner.get("capture_face_count") == len(surface.faces)
+                 and owner.get("capture_faces_u32_sha256")
+                 == _sha_bytes(np.ascontiguousarray(surface.faces, dtype="<u4").tobytes())
+                 and owner.get("source_abi5_face_array_sha256")
+                 == scope[(
+                     "source_parent_faces_sha256" if label == "bridge"
+                     else "source_child_faces_sha256")],
+                 f"pinned baseline {label} face/GID ancestry differs from current ABI5 slots")
+    surface_lineage = {
+        role: {
+            "position_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(surface.positions, dtype="<f4").tobytes()),
+            "face_u32_sha256": _sha_bytes(
+                np.ascontiguousarray(surface.faces, dtype="<u4").tobytes()),
+            "gids_u64_sha256": _sha_bytes(
+                np.ascontiguousarray(surface.source_vertex_ids, dtype="<u8").tobytes()),
+        }
+        for role, surface in (("bridge", bridge), ("target", target))
+    }
+    return {
+        "path": str(report_path),
+        "sha256": report_sha,
+        "preflight_path": str(preflight_path),
+        "preflight_sha256": SOURCE_BASELINE_OBSERVATION_PREFLIGHT_SHA256,
+        "observed_pairs": observed,
+        "unexpected_pairs": unexpected,
+        "surface_lineage": surface_lineage,
+        "link": link,
+    }
+
+
+def _indexed_face_shared_edge(faces, first_face: int, second_face: int):
+    first = set(map(int, faces[first_face]))
+    second = set(map(int, faces[second_face]))
+    shared = tuple(sorted(first & second))
+    return shared if len(shared) == 2 else None
+
+
+def _declared_baseline_collar_addendum(
+    verifier, *, bridge_key, target_key, source_rows, source_map,
+    bridge, target, native_nha_gid_base_offset, scope, declarations,
+    baseline_observation, identity,
+) -> dict:
+    """Verify explicitly observed one-ring collar additions without widening a patch."""
+    _require((bridge_key, target_key) == SOURCE_BASELINE_ADDITIONS_LINK,
+             "declared collar additions are restricted to source link 525->469")
+    _require(isinstance(declarations, (tuple, list))
+             and tuple((tuple(item.get("face_pair", ())),
+                        item.get("extension_side"),
+                        tuple(item.get("frozen_neighbor_faces", ())),
+                        item.get("endpoint_rule"))
+                       for item in declarations if isinstance(item, Mapping))
+             == tuple((item["face_pair"], item["extension_side"],
+                       item["frozen_neighbor_faces"], item["endpoint_rule"])
+                      for item in SOURCE_BASELINE_ADDITIONS)
+             and len(declarations) == len(SOURCE_BASELINE_ADDITIONS),
+             "declared collar additions differ from the three pinned 525->469 source pairs")
+    _require(getattr(verifier, "PreparedSurface", ())
+             and isinstance(bridge, verifier.PreparedSurface)
+             and bridge.key == bridge_key
+             and isinstance(target, verifier.PreparedSurface)
+             and target.key == target_key,
+             "declared source collar proof accepts only independently reconstructed baseline surfaces")
+    observation = _read_pinned_source_baseline_observation(
+        baseline_observation, bridge_key=bridge_key, target_key=target_key,
+        scope=scope, declarations=declarations, identity=identity,
+        bridge=bridge, target=target, source_rows=source_rows,
+        native_nha_gid_base_offset=native_nha_gid_base_offset)
+    observation_sha = observation["sha256"]
+    observed_pair_set = observation["observed_pairs"]
+    frozen_pairs = set(map(tuple, scope["source_face_pair_ancestry"]))
+    frozen_bridge_patch = {first for first, _ in frozen_pairs}
+    frozen_target_patch = {second for _, second in frozen_pairs}
+    allowed_cross_product = {
+        (first, second)
+        for first in frozen_bridge_patch for second in frozen_target_patch}
+    source_faces = {}
+    source_vertex_maps = {}
+    source_identities = {}
+    for stable_id, surface in ((bridge_key[1], bridge), (target_key[1], target)):
+        row = source_rows.get(stable_id, source_rows.get(str(stable_id)))
+        mapped_identity = source_map.get(str(stable_id))
+        identity_check = network_preparation.validate_network_source_identity(
+            stable_id, source_row=row, identity=mapped_identity)
+        faces = _source_face_array({stable_id: row}, stable_id)
+        vertices = np.asarray(row.get("vertices6"))
+        record = row.get("record")
+        _require(isinstance(record, (tuple, list)) and len(record) == 8
+                 and all(type(value) is int for value in record)
+                 and record[1] >= 0 and record[2] == len(vertices),
+                 f"ABI5 row {stable_id} lacks a valid source vertex range")
+        vertex_map, ancestry = network_preparation._source_to_capture_vertex_map(
+            faces, np.asarray(surface.faces), len(vertices), len(surface.positions))
+        _require(vertex_map is not None
+                 and ancestry.get("status") == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+                 and np.array_equal(vertex_map[faces], surface.faces),
+                 f"independent baseline row {stable_id} does not preserve ordered ABI5 face corners")
+        used = np.unique(faces)
+        expected_gids = native_nha_gid_base_offset + record[1] + used.astype(np.uint64)
+        actual_gids = np.asarray(surface.source_vertex_ids)[vertex_map[used]]
+        _require(actual_gids.dtype.kind in "iu"
+                 and np.array_equal(
+                     np.ascontiguousarray(actual_gids, dtype="<u8"),
+                     np.ascontiguousarray(expected_gids, dtype="<u8")),
+                 f"independent baseline row {stable_id} GIDs do not bind exact NHA source slots")
+        source_faces[stable_id] = faces
+        source_vertex_maps[stable_id] = vertex_map
+        source_identities[str(stable_id)] = {
+            **identity_check,
+            "source_name": mapped_identity.get("name"),
+            "source_sha256": mapped_identity.get("source_sha256"),
+            "source_faces_u32_sha256": _sha_bytes(
+                np.ascontiguousarray(faces, dtype="<u4").tobytes()),
+            "source_vertices6_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(vertices, dtype="<f4").tobytes()),
+            "source_face_order_preserved": True,
+            "native_source_slot_gid_formula": (
+                "capture GID = native NHA base offset + ABI5 firstVertex + source-local vertex"),
+            "source_face_to_baseline_vertex_map_sha256": _sha_bytes(
+                np.ascontiguousarray(vertex_map, dtype="<i8").tobytes()),
+        }
+
+    parent_faces = source_faces[bridge_key[1]]
+    child_faces = source_faces[target_key[1]]
+    _require(all(0 <= first < len(parent_faces)
+                 and 0 <= second < len(child_faces)
+                 for first, second in observed_pair_set),
+             "pinned source-baseline observations exceed ABI5 face bounds")
+    added_pairs = []
+    seen_pairs = set()
+    for declaration in declarations:
+        _require(isinstance(declaration, Mapping),
+                 "declared collar face addition must be a mapping")
+        pair = declaration.get("face_pair")
+        _require(isinstance(pair, (tuple, list)) and len(pair) == 2
+                 and all(type(value) is int and value >= 0 for value in pair),
+                 "declared collar face pair must contain exact nonnegative integer indices")
+        pair = tuple(pair)
+        _require(pair not in seen_pairs,
+                 "declared collar additions repeat a source face pair")
+        seen_pairs.add(pair)
+        _require(pair in observed_pair_set,
+                 f"declared face pair {pair} was not observed by the pinned source baseline")
+        _require(pair not in frozen_pairs and pair not in allowed_cross_product,
+                 f"declared face pair {pair} is already covered by frozen collar ancestry")
+        side = declaration.get("extension_side")
+        _require(side in ("bridge", "target"),
+                 "collar extension side must be bridge or target")
+        neighbors = declaration.get("frozen_neighbor_faces")
+        _require(isinstance(neighbors, (tuple, list)) and neighbors
+                 and all(type(value) is int and value >= 0 for value in neighbors)
+                 and len(set(neighbors)) == len(neighbors),
+                 f"declared face pair {pair} requires distinct frozen indexed neighbors")
+        if side == "bridge":
+            extension_face, patch_faces = pair[0], frozen_bridge_patch
+            faces = parent_faces
+            other_face, other_patch = pair[1], frozen_target_patch
+        else:
+            extension_face, patch_faces = pair[1], frozen_target_patch
+            faces = child_faces
+            other_face, other_patch = pair[0], frozen_bridge_patch
+        _require(extension_face not in patch_faces and other_face in other_patch
+                 and set(neighbors).issubset(patch_faces),
+                 f"declared face pair {pair} must extend one side by exactly one face")
+        _require(pair[0] < len(parent_faces) and pair[1] < len(child_faces),
+                 f"declared face pair {pair} exceeds source face bounds")
+        shared_edges = {}
+        for neighbor in neighbors:
+            edge = _indexed_face_shared_edge(faces, extension_face, neighbor)
+            _require(edge is not None,
+                     f"extension face {extension_face} is not edge-adjacent to frozen face {neighbor}")
+            shared_edges[neighbor] = edge
+        endpoint_rule = declaration.get(
+            "endpoint_rule",
+            "one_shared_edge_endpoint_or_exact_indexed_contact_chain")
+        _require(endpoint_rule in (
+            "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+            "distinct_neighbor_edges"),
+            "declared collar endpoint rule is unsupported")
+        if side == "target":
+            _require(len(neighbors) == 2
+                     and len(set(shared_edges.values())) == 2
+                     and set().union(*(set(edge) for edge in shared_edges.values()))
+                     == set(map(int, faces[extension_face])),
+                     "target-face extension must be bounded by its two distinct frozen collar edges")
+            _require(endpoint_rule == "distinct_neighbor_edges",
+                     "target-face extension requires both distinct indexed collar edges")
+        else:
+            _require(endpoint_rule
+                     == "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+                     "bridge-face extension requires direct shared-edge or exact contact-chain support")
+        added_pairs.append({
+            "face_pair": list(pair),
+            "extension_side": side,
+            "extension_face": extension_face,
+            "frozen_neighbor_faces": list(neighbors),
+            "shared_source_edges": {
+                str(face): list(edge) for face, edge in sorted(shared_edges.items())},
+            "endpoint_rule": endpoint_rule,
+        })
+
+    _require(seen_pairs.issubset(observed_pair_set),
+             "collar addendum pairs are not a subset of prior source-baseline observations")
+    observation_source_pairs = set(map(tuple, scope["source_face_pair_ancestry"]))
+    frozen_observed_pairs = (
+        observation_source_pairs.intersection(observed_pair_set)
+        .intersection(allowed_cross_product))
+    _require(frozen_observed_pairs,
+             "pinned source baseline has no observed pair inside the original collar ancestry")
+
+    def exact_contact(pair, *, require_positive_segment):
+        points = bridge.intersection_points_meters(target, pair[0], pair[1])
+        _require(points and (not require_positive_segment
+                             or (len(points) == 2 and points[0] != points[1])),
+                 f"baseline face pair {pair} lacks its required exact P6/Rat contact")
+        bridge_triangle = bridge.triangle_meters(pair[0])
+        target_triangle = target.triangle_meters(pair[1])
+        bridge_bary = [_exact_barycentric(point, bridge_triangle) for point in points]
+        target_bary = [_exact_barycentric(point, target_triangle) for point in points]
+        _require(all(weight >= 0 for bary in bridge_bary for weight in bary)
+                 and all(weight >= 0 for bary in target_bary for weight in bary),
+                 f"baseline exact contact for {pair} leaves its source triangles")
+        length_squared = Fraction(0)
+        if len(points) >= 2:
+            length_squared = sum(
+                ((points[1][axis] - points[0][axis]) ** 2
+                 for axis in range(3)), Fraction(0))
+        _require(not require_positive_segment or length_squared > 0,
+                 f"baseline face pair {pair} has zero contact length")
+        record = {
+            "face_pair": list(pair),
+            "contact_topology": (
+                "one positive-length segment" if require_positive_segment
+                else "exact point or segment contact"),
+            "exact_contact_point_count": len(points),
+            "points": [{
+                "point_m": [_fraction_record(value) for value in point],
+                "bridge_exact_barycentric": [
+                    _fraction_record(value) for value in bridge_bary[index]],
+                "target_exact_barycentric": [
+                    _fraction_record(value) for value in target_bary[index]],
+            } for index, point in enumerate(points)],
+            "segment_length_squared_m2": _fraction_record(length_squared),
+        }
+        return points, record
+
+    added_segments = {}
+    for item in added_pairs:
+        points, contact_record = exact_contact(
+            tuple(item["face_pair"]), require_positive_segment=True)
+        item["exact_p6_rat_contact"] = contact_record
+        added_segments[tuple(item["face_pair"])] = points
+
+    def source_edge_points(side, edge):
+        stable_id = bridge_key[1] if side == "bridge" else target_key[1]
+        surface = bridge if side == "bridge" else target
+        vertex_map = source_vertex_maps[stable_id]
+        return tuple(tuple(float(value) for value in
+                            surface.positions[int(vertex_map[vertex])])
+                     for vertex in edge)
+
+    def endpoint_on_extension_boundary(points, item):
+        side = item["extension_side"]
+        result = []
+        for point in points:
+            neighbors = []
+            for face_text, edge in item["shared_source_edges"].items():
+                edge_points = source_edge_points(side, tuple(edge))
+                if _exact_point_on_segment(point, *edge_points):
+                    neighbors.append(int(face_text))
+            result.append(sorted(neighbors))
+        return result
+
+    # Build a tiny exact contact graph from declared additions and original
+    # observed collar pairs. Graph edges require coincident P6 endpoints on a
+    # shared indexed edge; face adjacency by itself never extends admission.
+    node_segments = dict(added_segments)
+    def pair_edge(first, second):
+        if first[1] == second[1]:
+            edge = _indexed_face_shared_edge(parent_faces, first[0], second[0])
+            return ("bridge", edge) if edge else None
+        if first[0] == second[0]:
+            edge = _indexed_face_shared_edge(child_faces, first[1], second[1])
+            return ("target", edge) if edge else None
+        return None
+
+    addendum_pair_set = set(added_segments)
+    adjacency = {pair: [] for pair in addendum_pair_set}
+    for pair in addendum_pair_set:
+        candidates = addendum_pair_set | frozen_observed_pairs
+        for neighbor in candidates:
+            if neighbor == pair:
+                continue
+            shared = pair_edge(pair, neighbor)
+            if shared is None:
+                continue
+            side, edge = shared
+            if neighbor not in node_segments:
+                neighbor_points, _ = exact_contact(
+                    neighbor, require_positive_segment=False)
+                node_segments[neighbor] = neighbor_points
+            common = sorted(set(node_segments[pair]).intersection(node_segments[neighbor]))
+            edge_points = source_edge_points(side, edge)
+            common = [point for point in common
+                      if _exact_point_on_segment(point, *edge_points)]
+            if common:
+                transition = {
+                    "to_face_pair": list(neighbor),
+                    "shared_indexed_side": side,
+                    "shared_source_edge_vertex_ids": list(edge),
+                    "shared_exact_point_m": [
+                        _fraction_record(value) for value in common[0]],
+                }
+                adjacency[pair].append(transition)
+                if neighbor in addendum_pair_set:
+                    adjacency.setdefault(neighbor, []).append({
+                        **transition, "to_face_pair": list(pair)})
+
+    for item in added_pairs:
+        pair = tuple(item["face_pair"])
+        boundary_points = endpoint_on_extension_boundary(
+            added_segments[pair], item)
+        item["exact_endpoints_on_frozen_extension_edges"] = boundary_points
+        if item["extension_side"] == "target":
+            matched = [neighbors[0] if neighbors else None
+                       for neighbors in boundary_points]
+            _require(all(neighbor is not None for neighbor in matched)
+                     and set(matched) == set(item["frozen_neighbor_faces"]),
+                     f"target extension pair {pair} endpoints must span both frozen collar edges")
+            item["bounded_contact_connection"] = {
+                "kind": "two_distinct_exact_endpoints_on_two_frozen_indexed_edges",
+                "passed": True,
+            }
+            continue
+        if any(boundary_points):
+            item["bounded_contact_connection"] = {
+                "kind": "exact_endpoint_on_frozen_bridge_edge",
+                "passed": True,
+            }
+            continue
+        queue = [(pair, [])]
+        visited = {pair}
+        path = None
+        while queue and path is None:
+            current, chain = queue.pop(0)
+            for transition in adjacency.get(current, []):
+                neighbor = tuple(transition["to_face_pair"])
+                candidate_path = [*chain, {
+                    "from_face_pair": list(current), **transition}]
+                if neighbor in frozen_observed_pairs:
+                    path = candidate_path
+                    break
+                if neighbor in addendum_pair_set and neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append((neighbor, candidate_path))
+        _require(path is not None,
+                 f"bridge extension pair {pair} has no exact indexed-edge contact chain to frozen source collar")
+        item["bounded_contact_connection"] = {
+            "kind": "exact_indexed_contact_chain_to_original_frozen_contact",
+            "passed": True,
+            "path": path,
+        }
+
+    return {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "status": "VERIFIED_INDEPENDENT_BASELINE_DECLARED_COLLAR_ADDITIONS",
+        "passed": True,
+        "typed_link": [list(bridge_key), list(target_key)],
+        "baseline_identity": identity,
+        "source_evidence": {
+            "path": scope["source_evidence_path"],
+            "sha256": scope["source_evidence_sha256"],
+            "status": scope["source_evidence_status"],
+            "frozen_source_pair_count": scope["source_face_pair_count"],
+            "frozen_source_pairs_sha256": scope["source_face_pair_ancestry_sha256"],
+            "frozen_source_pairs_unchanged": True,
+            "registered_parent_face_sha256": scope["source_parent_faces_sha256"],
+            "registered_child_face_sha256": scope["source_child_faces_sha256"],
+        },
+        "source_baseline_observation": {
+            "path": observation["path"],
+            "sha256": observation_sha,
+            "preflight_path": observation["preflight_path"],
+            "preflight_sha256": observation["preflight_sha256"],
+            "observed_pair_count": len(observed_pair_set),
+            "observed_pairs_sha256": _sha_bytes(np.asarray(
+                sorted(observed_pair_set), dtype="<i8").tobytes()),
+            "unexpected_pairs": [list(pair) for pair in sorted(
+                observation["unexpected_pairs"])],
+            "baseline_surface_lineage": observation["surface_lineage"],
+            "baseline_surfaces_reconstructed_from_pinned_source_and_capture": True,
+            "candidate_geometry_used": False,
+        },
+        "source_identities": source_identities,
+        "native_nha_gid_base_offset": native_nha_gid_base_offset,
+        "baseline_surface_lineage": {
+            "provenance": "independently CPU-reconstructed registered rigid-source baseline; candidate surface not accepted by this API",
+            "parent_position_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(bridge.positions, dtype="<f4").tobytes()),
+            "parent_face_u32_sha256": _sha_bytes(
+                np.ascontiguousarray(bridge.faces, dtype="<u4").tobytes()),
+            "parent_gids_u64_sha256": _sha_bytes(
+                np.ascontiguousarray(bridge.source_vertex_ids, dtype="<u8").tobytes()),
+            "target_position_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(target.positions, dtype="<f4").tobytes()),
+            "target_face_u32_sha256": _sha_bytes(
+                np.ascontiguousarray(target.faces, dtype="<u4").tobytes()),
+            "target_gids_u64_sha256": _sha_bytes(
+                np.ascontiguousarray(target.source_vertex_ids, dtype="<u8").tobytes()),
+            "independent_from_actual_candidate_geometry": True,
+        },
+        "bounded_port_region": {
+            "kind": "declarative one-ring source-face extensions attached to frozen collar",
+            "additional_allowed_face_pairs": [item["face_pair"] for item in added_pairs],
+            "pair_regions": added_pairs,
+            "no_cross_product_expansion": True,
+        },
+        "exact_p6_rat_contact": {
+            "predicate": "PreparedSurface.intersection_points_meters",
+            "coordinate_units": "exact rational metres over emitted Float32 input coordinates",
+            "rational_lattice": "integer 2^-149 metres before exact triangle intersection",
+            "per_pair_proofs": [item["exact_p6_rat_contact"] for item in added_pairs],
+            "source_baseline_observation": observation_sha,
+        },
+        "candidate_geometry_used": False,
+        "candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof": True,
+        "source_geometry_modified": False,
+        "clinical_or_anatomical_admission": False,
+    }
+
 def verify_baseline_matched_collar_addendum(
     verifier, *, bridge_key, target_key, source_link_evidence: dict,
     source_rows: Mapping, source_map: Mapping,
     independent_source_baseline_bridge_surface,
     independent_source_baseline_target_surface,
     native_nha_gid_base_offset: int, baseline_binding: Mapping,
+    declarations=None, baseline_observation: Mapping | None = None,
 ) -> dict:
-    """Verify the sole one-face 475->479 collar extension on independent baseline.
+    """Verify declared source-baseline collar additions on independent baseline.
 
     This does not alter frozen 086 ancestry. It proves one extra face pair from
     the current registered source baseline using exact P6/Rat triangle contact,
@@ -332,14 +898,27 @@ def verify_baseline_matched_collar_addendum(
     original target collar faces.
     """
     bridge_key, target_key = gate._identity(bridge_key), gate._identity(target_key)
-    _require((bridge_key, target_key) == BASELINE_COLLAR_ADDENDUM_LINK,
-             "verified collar addendum is restricted to typed link 475->479")
+    if declarations is None:
+        _require((bridge_key, target_key) == BASELINE_COLLAR_ADDENDUM_LINK,
+                 "verified legacy collar addendum is restricted to typed link 475->479")
+    else:
+        _require((bridge_key, target_key) == SOURCE_BASELINE_ADDITIONS_LINK,
+                 "declared collar additions are restricted to source link 525->469")
     _require(type(native_nha_gid_base_offset) is int and native_nha_gid_base_offset >= 0,
              "verified collar addendum requires the current native NHA GID base offset")
     identity = _exact_source_collar_addendum_baseline_identity(baseline_binding)
     scope = bind_network_link_source_ancestry(
         bridge_key, target_key, source_link_evidence=source_link_evidence,
         source_rows=source_rows, source_map=source_map)
+    if declarations is not None:
+        return _declared_baseline_collar_addendum(
+            verifier, bridge_key=bridge_key, target_key=target_key,
+            source_rows=source_rows, source_map=source_map,
+            bridge=independent_source_baseline_bridge_surface,
+            target=independent_source_baseline_target_surface,
+            native_nha_gid_base_offset=native_nha_gid_base_offset,
+            identity=identity, scope=scope, declarations=declarations,
+            baseline_observation=baseline_observation)
     pairs = np.asarray(scope["source_face_pair_ancestry"], dtype="<i8")
     bridge_patch = {int(pair[0]) for pair in pairs}
     target_patch = {int(pair[1]) for pair in pairs}

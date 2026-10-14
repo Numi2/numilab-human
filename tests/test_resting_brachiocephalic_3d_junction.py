@@ -445,6 +445,313 @@ def _exact_prepared_surface_for_source_test(key, points, faces, source_vertex_id
         int(record[3]): record for record in surface.records}
     return surface
 
+def _declared_source_baseline_addendum_fixture(
+        monkeypatch, tmp_path, *, disconnect_bridge_extension=False,
+        target_edge_contact_chain=False):
+    parent_key, child_key = (51011, 525), (51011, 469)
+    if target_edge_contact_chain:
+        parent_points = np.asarray([
+            [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+            [0.0, -1.0, 0.0], [0.5, -0.5, 0.0], [0.5, -0.2, 0.0],
+            [3.0, 0.0, 0.0], [4.0, 0.0, 0.0], [4.0, -1.0, 0.0],
+            [3.0, 1.0, 0.0], [5.0, -1.0, 0.0],
+        ], dtype="<f4")
+        target_points = np.asarray([
+            [0.5, -0.5, 1.0], [0.5, -0.5, -1.0],
+            [0.5, -0.2, 0.0], [0.0, 0.0, 0.0],
+            [3.0, 0.0, 0.0], [4.0, 0.0, 0.0],
+            [3.0, 0.0, 1.0],
+        ], dtype="<f4")
+    else:
+        parent_points = np.asarray([
+            [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0],
+            [0.0, -1.0, 0.0], [3.0, 0.0, 0.0], [4.0, 0.0, 0.0],
+            [4.0, -1.0, 0.0], [3.0, 1.0, 0.0], [5.0, -1.0, 0.0],
+        ], dtype="<f4")
+        target_points = np.asarray([
+            [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0],
+            [0.0, 0.0, -1.0], [3.0, 0.0, 0.0], [4.0, 0.0, 0.0],
+            [3.0, 0.0, 1.0],
+        ], dtype="<f4")
+    parent_faces = np.tile(np.asarray([[0, 1, 2]], dtype="<u4"), (748, 1))
+    target_faces = np.tile(np.asarray([[0, 1, 2]], dtype="<u4"), (280, 1))
+    parent_faces[704] = [0, 1, 3]
+    if disconnect_bridge_extension:
+        parent_faces[704] = [0, 3, 7]
+    if target_edge_contact_chain:
+        parent_faces[0] = [3, 4, 5]
+        parent_faces[733] = [6, 7, 9]
+        parent_faces[737] = [6, 7, 8]
+        parent_faces[741] = [7, 8, 10]
+        baseline_pairs = np.asarray(
+            [[697, 185], [717, 184], [733, 176], [741, 176]], dtype="<i8")
+    else:
+        parent_faces[733] = [4, 5, 7]
+        parent_faces[737] = [4, 5, 6]
+        parent_faces[741] = [5, 6, 8]
+        baseline_pairs = np.asarray(
+            [[697, 184], [697, 185], [733, 176], [741, 176]], dtype="<i8")
+    target_faces[176] = [4, 5, 6]
+    target_faces[185] = [0, 1, 3]
+    evidence = {
+        "parent_stable_id": 525,
+        "child_stable_id": 469,
+        "path": "/frozen/bridge-collar-ancestry-107-001/report.json",
+        "sha256": "e" * 64,
+        "pairs": baseline_pairs,
+        "pairs_sha256": hashlib.sha256(baseline_pairs.tobytes()).hexdigest(),
+        "source_parent_faces_sha256": hashlib.sha256(
+            parent_faces.tobytes()).hexdigest(),
+        "source_child_faces_sha256": hashlib.sha256(
+            target_faces.tobytes()).hexdigest(),
+        "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+    }
+    source_rows = {
+        525: {
+            "record": (20, 100, len(parent_points), 0,
+                       len(parent_faces) * 3, 525, 2, 0),
+            "faces": parent_faces, "vertices6": parent_points,
+            "body_index": 20, "layer": 2,
+        },
+        469: {
+            "record": (22, 200, len(target_points), 0,
+                       len(target_faces) * 3, 469, 2, 0),
+            "faces": target_faces, "vertices6": target_points,
+            "body_index": 22, "layer": 2,
+        },
+    }
+    source_map = {
+        "525": {"source_member": "FJ3482", "body_index": 20,
+                "layer": 2, "vascular_compartment_id": 4},
+        "469": {"source_member": "FJ3485", "body_index": 22,
+                "layer": 2, "vascular_compartment_id": 4},
+    }
+    parent_surface = _exact_prepared_surface_for_source_test(
+        parent_key, parent_points, parent_faces,
+        np.arange(10100, 10100 + len(parent_points), dtype="<u8"))
+    target_surface = _exact_prepared_surface_for_source_test(
+        child_key, target_points, target_faces,
+        np.arange(10200, 10200 + len(target_points), dtype="<u8"))
+    monkeypatch.setattr(
+        junction.network_preparation, "_read_registered_source_link_evidence",
+        lambda _parent, _child, **_kwargs: evidence)
+    capture = {
+        "pack_sha256": "1" * 64,
+        "receipt_sha256": "2" * 64,
+        "capture_receipt_sha256": "2" * 64,
+        "invoked_anatomy_receipt_sha256": "3" * 64,
+        "common_field_source_anatomy_payload_sha256": "4" * 64,
+        "accepted_step": 0,
+        "accepted_time_s": 0.0,
+    }
+    baseline_binding = {
+        "actual_accepted_capture": capture,
+        "source_bound_rigid_rest_baseline": {
+            "source_nha_payload_sha256": "4" * 64,
+            "payload_is_current_capture_source": True,
+            "method": (
+                "apply the existing pinned transform_f32 to exact NHA vertices6 XYZ "
+                "using the actual accepted rigid pose; cardiac common-field "
+                "displacement is excluded"),
+        },
+    }
+    preflight = tmp_path / "source-preflight.json"
+    preflight.write_text(json.dumps({"actual_accepted_capture": capture}))
+    preflight_sha = hashlib.sha256(preflight.read_bytes()).hexdigest()
+    source_pairs_sha = evidence["pairs_sha256"]
+    parent_faces_sha = evidence["source_parent_faces_sha256"]
+    child_faces_sha = evidence["source_child_faces_sha256"]
+    declarations = junction.SOURCE_BASELINE_ADDITIONS
+    baseline_observed_pairs = set(map(tuple, baseline_pairs.tolist()))
+    if target_edge_contact_chain:
+        baseline_observed_pairs.discard((717, 184))
+    observed_pairs = sorted({
+        *baseline_observed_pairs,
+        *(tuple(item["face_pair"]) for item in declarations),
+    })
+    report = {
+        "status": "STOPPED_AT_FIRST_FAILED_NETWORK_LINK",
+        "anatomical_admission": False,
+        "native_or_gpu_work_performed": False,
+        "source_preflight_path": str(preflight.resolve()),
+        "source_preflight_sha256": preflight_sha,
+        "network_source_continuity": {
+            "first_failed_link": [list(parent_key), list(child_key)],
+            "links": [{
+                "bridge": list(parent_key),
+                "target": list(child_key),
+                "declared_network_link_source_ancestry": {
+                    "typed_link": [list(parent_key), list(child_key)],
+                    "source_evidence_sha256": evidence["sha256"],
+                    "source_face_pair_ancestry_sha256": source_pairs_sha,
+                    "source_parent_faces_sha256": parent_faces_sha,
+                    "source_child_faces_sha256": child_faces_sha,
+                },
+                "port_interfaces": {"baseline": {"audit_result": {
+                    "declared_interface_triangle_pairs": [list(pair)
+                                                          for pair in observed_pairs],
+                    "unexpected_triangle_pairs": [
+                        list(item["face_pair"]) for item in declarations],
+                    "passed": False,
+                }}},
+                "abi5_face_corner_ancestry": {
+                    role: {
+                        "typed_identity": [51011, stable_id],
+                        "native_nha_gid_base_offset": 10000,
+                        "nha_source_row_first_vertex": first_vertex,
+                        "capture_face_count": len(row["faces"]),
+                        "capture_faces_u32_sha256": hashlib.sha256(
+                            row["faces"].tobytes()).hexdigest(),
+                        "source_abi5_face_array_sha256": hashlib.sha256(
+                            row["faces"].tobytes()).hexdigest(),
+                    }
+                    for role, stable_id, first_vertex, row in (
+                        ("baseline_parent", 525, 100, source_rows[525]),
+                        ("baseline_child", 469, 200, source_rows[469]),
+                    )
+                },
+            }],
+        },
+    }
+    report_path = tmp_path / "baseline-report.json"
+    report_path.write_text(json.dumps(report))
+    report_sha = hashlib.sha256(report_path.read_bytes()).hexdigest()
+    monkeypatch.setattr(junction, "SOURCE_BASELINE_OBSERVATION_REPORT", report_path)
+    monkeypatch.setattr(
+        junction, "SOURCE_BASELINE_OBSERVATION_REPORT_SHA256", report_sha)
+    monkeypatch.setattr(
+        junction, "SOURCE_BASELINE_OBSERVATION_PREFLIGHT_SHA256", preflight_sha)
+    return {
+        "bridge_key": parent_key,
+        "target_key": child_key,
+        "source_link_evidence": evidence,
+        "source_rows": source_rows,
+        "source_map": source_map,
+        "bridge": parent_surface,
+        "target": target_surface,
+        "baseline_binding": baseline_binding,
+        "gid_base_offset": 10000,
+        "declarations": declarations,
+        "baseline_report_path": report_path,
+        "baseline_observation": {
+            "report_path": str(report_path.resolve()),
+            "report_sha256": report_sha,
+        },
+        "observed_pairs": observed_pairs,
+    }
+
+
+def test_declared_baseline_additions_require_exact_pinned_baseline_report(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    proof = junction.verify_baseline_matched_collar_addendum(
+        av,
+        bridge_key=inputs["bridge_key"],
+        target_key=inputs["target_key"],
+        source_link_evidence=inputs["source_link_evidence"],
+        source_rows=inputs["source_rows"],
+        source_map=inputs["source_map"],
+        independent_source_baseline_bridge_surface=inputs["bridge"],
+        independent_source_baseline_target_surface=inputs["target"],
+        native_nha_gid_base_offset=inputs["gid_base_offset"],
+        baseline_binding=inputs["baseline_binding"],
+        declarations=inputs["declarations"],
+        baseline_observation=inputs["baseline_observation"],
+    )
+    assert proof["passed"]
+    assert proof["candidate_geometry_used"] is False
+    assert proof["source_geometry_modified"] is False
+    assert proof["bounded_port_region"]["additional_allowed_face_pairs"] == [
+        [704, 184], [704, 185], [737, 176]]
+    pair_reports = proof["bounded_port_region"]["pair_regions"]
+    assert len(pair_reports) == 3
+    assert all(item["bounded_contact_connection"]["passed"]
+               for item in pair_reports)
+    assert {item["face_pair"][0] for item in pair_reports} == {704, 737}
+    assert proof["source_baseline_observation"]["unexpected_pairs"] == [
+        [704, 184], [704, 185], [737, 176]]
+    assert proof["candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"]
+
+
+def test_declared_baseline_additions_reject_unbound_pairs_and_changed_report(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    wrong_declarations = (dict(inputs["declarations"][0],
+                               face_pair=(704, 183)),
+                          *inputs["declarations"][1:])
+    kwargs = {
+        "source_link_evidence": inputs["source_link_evidence"],
+        "source_rows": inputs["source_rows"],
+        "source_map": inputs["source_map"],
+        "independent_source_baseline_bridge_surface": inputs["bridge"],
+        "independent_source_baseline_target_surface": inputs["target"],
+        "native_nha_gid_base_offset": inputs["gid_base_offset"],
+        "baseline_binding": inputs["baseline_binding"],
+        "baseline_observation": inputs["baseline_observation"],
+    }
+    with pytest.raises(ValueError, match="three pinned 525->469 source pairs"):
+        junction.verify_baseline_matched_collar_addendum(
+            av, bridge_key=inputs["bridge_key"], target_key=inputs["target_key"],
+            declarations=wrong_declarations, **kwargs)
+
+    report_path = inputs["baseline_report_path"]
+    report_path.write_text(report_path.read_text() + " ")
+    with pytest.raises(ValueError, match="bytes changed"):
+        junction.verify_baseline_matched_collar_addendum(
+            av, bridge_key=inputs["bridge_key"], target_key=inputs["target_key"],
+            declarations=inputs["declarations"], **kwargs)
+
+
+def test_declared_baseline_additions_accept_exact_target_edge_contact_chain(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(
+        monkeypatch, tmp_path, target_edge_contact_chain=True)
+    proof = junction.verify_baseline_matched_collar_addendum(
+        av,
+        bridge_key=inputs["bridge_key"],
+        target_key=inputs["target_key"],
+        source_link_evidence=inputs["source_link_evidence"],
+        source_rows=inputs["source_rows"],
+        source_map=inputs["source_map"],
+        independent_source_baseline_bridge_surface=inputs["bridge"],
+        independent_source_baseline_target_surface=inputs["target"],
+        native_nha_gid_base_offset=inputs["gid_base_offset"],
+        baseline_binding=inputs["baseline_binding"],
+        declarations=inputs["declarations"],
+        baseline_observation=inputs["baseline_observation"],
+    )
+    first = next(item for item in proof["bounded_port_region"]["pair_regions"]
+                 if item["face_pair"] == [704, 184])
+    assert first["exact_endpoints_on_frozen_extension_edges"] == [[], []]
+    assert first["bounded_contact_connection"]["kind"] == (
+        "exact_indexed_contact_chain_to_original_frozen_contact")
+    assert [item["to_face_pair"]
+            for item in first["bounded_contact_connection"]["path"]] == [
+                [704, 185], [697, 185]]
+    assert proof["candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"]
+
+
+def test_declared_baseline_additions_reject_face_adjacency_without_shared_edge(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(
+        monkeypatch, tmp_path, disconnect_bridge_extension=True)
+    with pytest.raises(ValueError, match="not edge-adjacent to frozen face 697"):
+        junction.verify_baseline_matched_collar_addendum(
+            av,
+            bridge_key=inputs["bridge_key"],
+            target_key=inputs["target_key"],
+            source_link_evidence=inputs["source_link_evidence"],
+            source_rows=inputs["source_rows"],
+            source_map=inputs["source_map"],
+            independent_source_baseline_bridge_surface=inputs["bridge"],
+            independent_source_baseline_target_surface=inputs["target"],
+            native_nha_gid_base_offset=inputs["gid_base_offset"],
+            baseline_binding=inputs["baseline_binding"],
+            declarations=inputs["declarations"],
+            baseline_observation=inputs["baseline_observation"],
+        )
+
+
 def _registered_baseline_addendum_fixture(monkeypatch, *, unbound_target_neighbor=False):
     parent_key, child_key = (51011, 475), (51011, 479)
     parent_points = np.asarray([
