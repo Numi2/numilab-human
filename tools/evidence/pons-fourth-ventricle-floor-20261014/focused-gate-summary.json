@@ -1,0 +1,119 @@
+{
+  "candidate_status": "candidate_emitted_not_admitted",
+  "classified_contacts": {
+    "by_category": {
+      "cap_parent_shared_indexed_feature": 50531,
+      "coincident_cap_parent": 3314,
+      "reciprocal_floor_point_junction": 16596,
+      "retained_ventricle_reciprocal_edge": 15236
+    },
+    "cap_face_count": 3314,
+    "dual_face_lineage_verified": true,
+    "exact_triangle_pairs": 85677,
+    "opposed_cap_orientation_verified": true,
+    "reciprocal_boundary_edge_count": 2848
+  },
+  "containment": {
+    "pons_outside_csf": {
+      "inside_component_count": 0,
+      "status": "checked_exact_rational_metres"
+    },
+    "ventricle_outside_main_pons": {
+      "inside_component_count": 0,
+      "status": "checked_exact_rational_metres"
+    }
+  },
+  "focused_gate_report_bytes": 107700474,
+  "focused_gate_report_sha256": "66792e15b47c922d4628ed5e00cca07629cda7f82b385d194dbb8474930c9d37",
+  "focused_gate_status": "focused_source_gate_pass_not_motion_or_native_admission",
+  "representative_witnesses": {
+    "cap_parent_shared_indexed_feature": {
+      "cap_output_face": 9362,
+      "classification": "cap exact reversed-parent overlay; contact equals the existing Pons same-surface shared-indexed-feature contact; both sides retain positive source ancestry on the shared source feature",
+      "declared_pons_parent_output_face": 493,
+      "exact_intersection_points_m_rational": [
+        [
+          "10361511/34359738368",
+          "-2166173/134217728",
+          "3812075/134217728"
+        ]
+      ],
+      "pons_output_face": 487,
+      "positive_source_support": true,
+      "shared_candidate_vertex_ids": [
+        5154
+      ],
+      "shared_source_feature_ids": [
+        239,
+        241,
+        262
+      ]
+    },
+    "reciprocal_floor_boundary_edge": {
+      "cap_output_face": 12652,
+      "cap_source_pons_face": 6615,
+      "cap_source_surface_stable_id": 345,
+      "edge_xyz_f32_m": [
+        [
+          -0.011925282888114452,
+          0.006286404561251402,
+          0.0378529354929924
+        ],
+        [
+          -0.011834230273962021,
+          0.006218749564141035,
+          0.03790038824081421
+        ]
+      ],
+      "ventricle_output_face": 9124,
+      "ventricle_source_face": 6702
+    },
+    "reciprocal_floor_point_junction": {
+      "classification": "zero-dimensional vertex junction incident to a dual-lineage reciprocal floor edge and its matched Pons/retained-ventricle support faces; not a segment/area",
+      "point_m_exact_rational": [
+        "10361511/34359738368",
+        "-2166173/134217728",
+        "3812075/134217728"
+      ],
+      "pons_output_face": 487,
+      "pons_shared_indexed_vertex_ids": [
+        5154
+      ],
+      "reciprocal_cap_output_face": 9362,
+      "same_rigid_owner_body_index": 23,
+      "unique_intersection_point_count": 1,
+      "ventricle_output_face": 3425
+    }
+  },
+  "scope": "Exact source-frame Pons/fourth-ventricle focused gate only; no motion, native, all-neighbor, physiology, or individual-measurement admission.",
+  "self": {
+    "pons": {
+      "count": 0,
+      "reused_from_candidate004": true
+    },
+    "pons_main": {
+      "count": 0,
+      "reused_from_candidate004": true
+    },
+    "ventricle": {
+      "count": 0,
+      "reused_from_candidate004": true
+    }
+  },
+  "signed_volume_diagnostic": {
+    "candidate_fourth_ventricle_signed_closed_volume_m3": 2.580511367887605e-06,
+    "candidate_minus_source_m3": -1.5489857634799577e-09,
+    "interpretation": "geometric signed-volume diagnostic only; no physical mass change or individual measurement is claimed",
+    "mass_state_changed": false,
+    "pons_candidate_signed_closed_volume_m3": 1.1279902280426836e-05,
+    "source_fourth_ventricle_signed_closed_volume_m3": 2.582060353651085e-06
+  },
+  "source_pins": {
+    "base_nha_sha256": "3a3693b8de2264127e9190a151dca460002ae3b8a0a09edea312bd4eed73ea42",
+    "candidate_npz_sha256": "7c9f5fb245169ce033caf6919c1397b6084acab802c7a745792e282dd024c989",
+    "candidate_report_sha256": "0c66ba44381b6dc9011b11b4801fd8d4f9ee9b51984345b7fc8a360696aefda3",
+    "dual_lineage_sha256": "65fd020482a41b6d85d2ed91bd4d1bf68cb436487af77e093ab0f0cd0fe56458",
+    "focused_gate_runner_sha256": "eb6fa710aae6e861076f1a947cb580d5b5b1cc0160f8fcfcb88e312333ab3089",
+    "verifier_sha256": "de87c97732baed438a50cce4856b602b4abed4dc2c05230bc233004b5e84ba60"
+  }
+}
