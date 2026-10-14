@@ -1,0 +1,126 @@
+{
+  "abi5_encode_proof": {
+    "global_offsets_rebased_by_existing_abi5_encoder": true,
+    "registration_and_source_header_bytes_preserved": true,
+    "replaced_stable_ids": [
+      323
+    ],
+    "row_count_preserved": 525,
+    "stable_id_order_preserved": true,
+    "unmodified_rows_byte_exact": 524
+  },
+  "body_index": 23,
+  "candidate_admission": false,
+  "candidate_npz": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/pons-fourth-ventricle-reconstruction-001/cord-local-clearance-candidate-003/candidate-01.npz",
+  "changed_geometry_support_faces": 572,
+  "changed_vertex_slots": 315,
+  "decoded_rows": 525,
+  "floor_cap_vertices_unchanged": true,
+  "layer": 1,
+  "limitation": "source serialization only; native and retained-pose confirmation remains required before admission",
+  "native_or_motion_confirmation": false,
+  "ordered_faces_unchanged": true,
+  "output": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/pons-fourth-ventricle-reconstruction-001/cord-local-clearance-candidate-compile-001/resting-thorax-candidate.nhanatomy",
+  "physical_mass_or_state_added": false,
+  "pins": {
+    "candidate_gate_report": "3e04eb8ee9fcc653951b245f285d3a99e84c2b299a1605cb9694018ded5ff33f",
+    "candidate_npz": "d9798684d4412fd97093ea056d009e2594cbaa40855cab2e1e82b2b84c5bdab6",
+    "decoder": "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683",
+    "encoder": "fdedd40342ce9d8b14b7497dd1a188425aae2d28b2e623a24fb1a6f81f375447",
+    "output_nha": "9fb3ffb10e458589b2c69779bd1336bfc4dc8e704079a1e68e4b22a2b5b7ba09",
+    "parser": "aad523b4606ff17e7aa3ada0ac9c9c519f85597393cd4ea86492852e5b632add",
+    "serializer_script": "7f29dbe605c977ea84925b6a0d6304981eca93cb9305f4757e810c37bcd9d3b7",
+    "source_nha": "2f8af1031b3c5b8cc26866f32935c9b695127a2f357732e566be3f14fdc2666d"
+  },
+  "schema": "numi.human.pons_cord_local_clearance_compile.v1",
+  "scope": "ABI5 row323 vertices only; ordered faces and owner retained; all other 524 decoded rows byte-identical",
+  "source_gate": {
+    "ambient_jacobian_lower_bound": 0.9126063140577578,
+    "containment": [
+      {
+        "component_checks": [
+          {
+            "boundary_centroid_face_count": 0,
+            "component_index": 0,
+            "face_count": 12676,
+            "has_inside_face_interior": false,
+            "has_outside_face_interior": true,
+            "sampled_face_count": 1,
+            "sampled_off_boundary_face_count": 1
+          }
+        ],
+        "declared_intended_enclosure": false,
+        "inside_component_witnesses": [],
+        "outside_component_witnesses": [
+          {
+            "component_index": 0,
+            "point_m": [
+              -0.03937286759416262,
+              -0.16448012987772623,
+              0.12050039817889531
+            ],
+            "sample": "exact_triangle_centroid_off_target_boundary",
+            "source_face_id": 0
+          }
+        ],
+        "source_identity": [
+          51010,
+          323
+        ],
+        "status": "checked_exact_rational_metres",
+        "target_identity": [
+          51012,
+          12
+        ]
+      },
+      {
+        "component_checks": [
+          {
+            "boundary_centroid_face_count": 0,
+            "component_index": 0,
+            "face_count": 728,
+            "has_inside_face_interior": false,
+            "has_outside_face_interior": true,
+            "sampled_face_count": 1,
+            "sampled_off_boundary_face_count": 1
+          }
+        ],
+        "declared_intended_enclosure": false,
+        "inside_component_witnesses": [],
+        "outside_component_witnesses": [
+          {
+            "component_index": 0,
+            "point_m": [
+              -0.026025991265972454,
+              -0.17398259043693542,
+              0.11679854740699132
+            ],
+            "sample": "exact_triangle_centroid_off_target_boundary",
+            "source_face_id": 0
+          }
+        ],
+        "source_identity": [
+          51012,
+          12
+        ],
+        "status": "checked_exact_rational_metres",
+        "target_identity": [
+          51010,
+          323
+        ]
+      }
+    ],
+    "max_displacement_m": 0.00017133781938452865,
+    "self_count": 0,
+    "self_pairs_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "signed_volume_after_m3": 2.5767270045271268e-06,
+    "signed_volume_before_m3": 2.580511367887605e-06,
+    "signed_volume_delta_m3": -3.78436336047816e-09,
+    "unexpected_cord_pairs": 0,
+    "unexpected_pairs_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stable_id": 323,
+  "status": "source_candidate_serialized",
+  "untouched_ids_sha256": "0d49847abddc5c1b9fadbf2e976a466f79c31b9aa7b26a24d7cb78fa5fad900b",
+  "untouched_rows": 524
+}
