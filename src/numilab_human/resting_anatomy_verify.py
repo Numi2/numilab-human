@@ -62,6 +62,10 @@ class PreparedSurface:
     source_vertex_to_quotient: np.ndarray
     records: tuple
     index: object
+    source_face_lineage: tuple | None = field(default=None, repr=False)
+    source_vertex_lineage: dict | None = field(default=None, repr=False)
+    ordered_core_body_indices: tuple | None = field(default=None, repr=False)
+    core_weights_by_gid: dict | None = field(default=None, repr=False)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
 
@@ -103,7 +107,10 @@ class PreparedSurface:
         }
 
 
-def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=None):
+def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=None,
+                    source_face_lineage=None, source_vertex_lineage=None,
+                    ordered_core_body_indices=None, core_weight_gids=None,
+                    core_weights_float64=None):
     key = typed_key(key)
     p = np.asarray(positions)
     f = np.asarray(faces)
@@ -128,6 +135,47 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         raise ValueError("invalid source vertex ancestry")
     if len(np.unique(source_vertex_ids)) != len(p):
         raise ValueError("duplicate source vertex ancestry")
+    metadata = (source_face_lineage, source_vertex_lineage,
+                ordered_core_body_indices, core_weight_gids, core_weights_float64)
+    has_material_proof = any(value is not None for value in metadata)
+    if has_material_proof and any(value is None for value in metadata):
+        raise ValueError("shared-interface proof requires complete source and material lineage")
+    face_lineage = None
+    vertex_lineage = None
+    core_body_indices = None
+    weights_by_gid = None
+    if has_material_proof:
+        face_lineage = tuple(source_face_lineage)
+        if len(face_lineage) != len(f) or any(not isinstance(row, dict) for row in face_lineage):
+            raise ValueError("source face lineage must map every emitted face")
+        vertex_lineage = {}
+        for gid, row in source_vertex_lineage.items():
+            if type(gid) is not int or not isinstance(row, dict):
+                raise ValueError("source vertex lineage must use integer GIDs and records")
+            vertex_lineage[gid] = row
+        core_body_indices = tuple(ordered_core_body_indices)
+        if (len(core_body_indices) != 21 or any(type(value) is not int for value in core_body_indices)
+                or len(set(core_body_indices)) != 21):
+            raise ValueError("material owner order must contain 21 unique integer body indices")
+        weight_gids = np.asarray(core_weight_gids)
+        weights = np.asarray(core_weights_float64)
+        if (weight_gids.ndim != 1 or weight_gids.dtype.kind not in "iu"
+                or weights.shape != (len(weight_gids), 21)
+                or weights.dtype != np.dtype("float64") or not np.isfinite(weights).all()):
+            raise ValueError("material weights must be finite Float64 rows keyed by GID")
+        if len(np.unique(weight_gids)) != len(weight_gids):
+            raise ValueError("duplicate material weight GID")
+        weights_by_gid = {int(gid): np.array(row, dtype=np.float64, copy=True)
+                          for gid, row in zip(weight_gids, weights)}
+        referenced_gids = {int(source_vertex_ids[int(local)]) for face in f for local in face}
+        missing = sorted(referenced_gids - weights_by_gid.keys())
+        if missing:
+            raise ValueError("missing ordered material rows for referenced GIDs: " + str(missing[:8]))
+        bad = [gid for gid in referenced_gids
+               if np.any(weights_by_gid[gid] <= 0)
+               or abs(float(weights_by_gid[gid].sum()) - 1.0) > 1e-12]
+        if bad:
+            raise ValueError("referenced material rows must be strictly positive and normalized: " + str(bad[:8]))
     # Numeric coordinate identity treats +0 and -0 as the same exact point.
     keys = [ci.float32_point_lattice_key(row) for row in p.tolist()]
     identities = {}
@@ -150,7 +198,8 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
     records = tuple(ci._records([keys[i] for i in keep], qf.tolist()))
     return PreparedSurface(key, np.array(p, copy=True, order="C"), np.array(f, dtype=np.uint32, copy=True, order="C"),
                            source_vertex_ids.copy(), normals, raw, quotient, qp, qf, mapping,
-                           records, ci._prepare_surface_aabb(records))
+                           records, ci._prepare_surface_aabb(records), face_lineage,
+                           vertex_lineage, core_body_indices, weights_by_gid)
 
 
 def _overlap(first, second):
@@ -158,27 +207,65 @@ def _overlap(first, second):
                 np.all(second.positions.min(axis=0) <= first.positions.max(axis=0)))
 
 
-def _contained_components(source, target):
+def _contained_components(source, target, *, inspect_all_faces=False):
     if not target.closed:
-        return {"status": "not_checked_open_target", "inside_component_witnesses": []}
+        return {"status": "not_checked_open_target", "inside_component_witnesses": [],
+                "outside_component_witnesses": [], "target_preparation": target.diagnostics()}
     self_result = target.self_audit()
     if self_result["count"]:
         return {"status": "not_checked_nonembedded_target", "inside_component_witnesses": [],
-                "target_self_audit": self_result, "target_preparation": target.diagnostics()}
+                "outside_component_witnesses": [], "target_self_audit": self_result,
+                "target_preparation": target.diagnostics()}
     prepared = target.meter_index()
-    witnesses = []
-    for component in source.quotient_topology["face_components"]:
-        face_id = component[0]
-        vertex_id = int(source.quotient_faces[face_id, 0])
-        point = tuple(Fraction(float(v)) for v in source.quotient_positions[vertex_id])
-        result = ci.point_location_prepared_indexed(point, prepared)
-        if result["location"] not in ("inside", "outside", "boundary"):
-            return {"status": "unresolved_exact_point_location", "inside_component_witnesses": witnesses}
-        if result["location"] == "inside":
-            witnesses.append({"source_face_id": int(face_id),
-                              "source_quotient_vertex_id": vertex_id,
-                              "point_m": [float(v) for v in point]})
-    return {"status": "checked_exact_rational_metres", "inside_component_witnesses": witnesses}
+    inside_witnesses, outside_witnesses = [], []
+    component_rows = []
+    for component_index, component in enumerate(source.quotient_topology["face_components"]):
+        inside = outside = None
+        boundary_count = 0
+        face_ids = component if inspect_all_faces else component[:1]
+        for face_id in face_ids:
+            triangle = source.quotient_positions[source.quotient_faces[int(face_id)]]
+            point = tuple(sum((Fraction.from_float(float(row[axis])) for row in triangle),
+                              Fraction(0)) / 3 for axis in range(3))
+            result = ci.point_location_prepared_indexed(point, prepared)
+            location = result["location"]
+            if location == "boundary":
+                boundary_count += 1
+                continue
+            if location not in ("inside", "outside"):
+                return {"status": "unresolved_exact_point_location",
+                        "inside_component_witnesses": inside_witnesses,
+                        "outside_component_witnesses": outside_witnesses,
+                        "component_checks": component_rows}
+            witness = {"component_index": component_index, "source_face_id": int(face_id),
+                       "sample": "exact_triangle_centroid_off_target_boundary",
+                       "point_m": [float(v) for v in point]}
+            if location == "inside" and inside is None:
+                inside = witness
+            elif location == "outside" and outside is None:
+                outside = witness
+        if inside is None and outside is None:
+            return {"status": "unresolved_all_component_samples_on_boundary",
+                    "inside_component_witnesses": inside_witnesses,
+                    "outside_component_witnesses": outside_witnesses,
+                    "component_checks": component_rows}
+        if inside is not None:
+            inside_witnesses.append(inside)
+        if outside is not None:
+            outside_witnesses.append(outside)
+        component_rows.append({
+            "component_index": component_index,
+            "face_count": len(component),
+            "sampled_face_count": len(face_ids),
+            "sampled_off_boundary_face_count": len(face_ids) - boundary_count,
+            "boundary_centroid_face_count": boundary_count,
+            "has_inside_face_interior": inside is not None,
+            "has_outside_face_interior": outside is not None,
+        })
+    return {"status": "checked_exact_rational_metres",
+            "inside_component_witnesses": inside_witnesses,
+            "outside_component_witnesses": outside_witnesses,
+            "component_checks": component_rows}
 
 
 def _intended_enclosures(value):
@@ -194,7 +281,109 @@ def _intended_enclosures(value):
     return pairs
 
 
-def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=()):
+def _lineage_value_present(value):
+    if value is None:
+        return False
+    if isinstance(value, (list, tuple, dict, set)):
+        return bool(value)
+    return True
+
+
+def _has_source_face_lineage(record):
+    if not isinstance(record, dict):
+        return False
+    if any(_lineage_value_present(record.get(key)) for key in (
+            "source_parent_face", "source_parent_faces_component_union",
+            "source_face_support", "source_face_support_provenance")):
+        return True
+    parent = record.get("parent_054_face_ref")
+    return isinstance(parent, dict) and any(_lineage_value_present(parent.get(key)) for key in (
+        "parent_original_source_face_index", "parent_candidate_face_index", "row_local_face_index"))
+
+
+def _has_source_vertex_lineage(record):
+    if not isinstance(record, dict):
+        return False
+    if any(_lineage_value_present(record.get(key)) for key in (
+            "source_gid", "source_vertex_id", "source_parent_gids",
+            "source_parent_faces", "source_face_support", "source_face_support_provenance",
+            "alias_of", "contraction_of")):
+        return True
+    return (record.get("material_mapping_kind") == 3
+            and record.get("material_binding") == "independent_existing_core_carrier"
+            and len(record.get("core_body_indices", ())) == 21
+            and len(record.get("core_weights", ())) == 21)
+
+
+def _shared_feature_contact(first, second, first_face, second_face, feature_gids):
+    """Fail-closed proof that a cross-surface hit is only a supported shared GID feature."""
+    if len(feature_gids) not in (1, 2) or len(set(feature_gids)) != len(feature_gids):
+        return False, "feature_must_be_one_vertex_or_one_edge"
+    if any(type(gid) is not int for gid in feature_gids):
+        return False, "feature_GIDs_must_be_integers"
+    if (first.source_face_lineage is None or second.source_face_lineage is None
+            or first.source_vertex_lineage is None or second.source_vertex_lineage is None
+            or first.core_weights_by_gid is None or second.core_weights_by_gid is None
+            or first.ordered_core_body_indices is None or second.ordered_core_body_indices is None):
+        return False, "missing_source_or_actual_owner_material_proof"
+    if first.ordered_core_body_indices != second.ordered_core_body_indices:
+        return False, "ordered_core_owner_lists_differ"
+    if not _has_source_face_lineage(first.source_face_lineage[first_face]):
+        return False, "first_face_has_no_source_lineage"
+    if not _has_source_face_lineage(second.source_face_lineage[second_face]):
+        return False, "second_face_has_no_source_lineage"
+    face_a = [int(first.source_vertex_ids[int(i)]) for i in first.faces[first_face]]
+    face_b = [int(second.source_vertex_ids[int(i)]) for i in second.faces[second_face]]
+    if not set(feature_gids).issubset(face_a) or not set(feature_gids).issubset(face_b):
+        return False, "declared_feature_GIDs_not_shared_by_both_faces"
+    expected = set()
+    for gid in feature_gids:
+        if gid not in first.source_vertex_lineage or gid not in second.source_vertex_lineage:
+            return False, "feature_GID_has_no_birth_or_alias_lineage"
+        lineage_a = first.source_vertex_lineage[gid]
+        lineage_b = second.source_vertex_lineage[gid]
+        if not _has_source_vertex_lineage(lineage_a) or not _has_source_vertex_lineage(lineage_b):
+            return False, "feature_GID_lineage_has_no_source_support"
+        if json.dumps(lineage_a, sort_keys=True, separators=(",", ":")) != json.dumps(
+                lineage_b, sort_keys=True, separators=(",", ":")):
+            return False, "feature_GID_birth_lineage_differs_between_owners"
+        ix_a = int(np.flatnonzero(first.source_vertex_ids == gid)[0])
+        ix_b = int(np.flatnonzero(second.source_vertex_ids == gid)[0])
+        pa, pb = first.positions[ix_a], second.positions[ix_b]
+        if pa.tobytes() != pb.tobytes():
+            return False, "feature_GID_emitted_Float32_positions_differ"
+        wa = first.core_weights_by_gid.get(gid)
+        wb = second.core_weights_by_gid.get(gid)
+        if wa is None or wb is None:
+            return False, "feature_GID_has_no_actual_ordered_21_core_row"
+        if (not np.array_equal(wa, wb) or np.any(wa <= 0)
+                or abs(float(wa.sum()) - 1.0) > 1e-12):
+            return False, "feature_GID_ordered_21_core_rows_differ_or_are_invalid"
+        for lineage, owner_weights in ((lineage_a, wa), (lineage_b, wb)):
+            if lineage.get("material_mapping_kind") == 3:
+                try:
+                    lineage_bodies = tuple(lineage["core_body_indices"])
+                    lineage_weights = np.asarray(lineage["core_weights"], dtype=np.float64)
+                except (KeyError, TypeError, ValueError):
+                    return False, "kind3_feature_lineage_lacks_ordered_owner_rows"
+                if (lineage.get("material_binding") != "independent_existing_core_carrier"
+                        or lineage_bodies != first.ordered_core_body_indices
+                        or lineage_weights.shape != (21,)
+                        or not np.array_equal(lineage_weights, owner_weights)):
+                    return False, "kind3_feature_lineage_differs_from_actual_owner_row"
+        expected.add(tuple(Fraction(int(value)) for value in ci.float32_point_lattice_key(pa.tolist())))
+    record_a = next((record for record in first.records if int(record[3]) == first_face), None)
+    record_b = next((record for record in second.records if int(record[3]) == second_face), None)
+    if record_a is None or record_b is None:
+        return False, "face_record_missing"
+    actual = set(ci.triangle_intersection_points(record_a[0], record_b[0]))
+    if actual != expected:
+        return False, "exact_intersection_exceeds_declared_shared_feature"
+    return True, "exact_shared_GID_feature_with_source_and_owner_proof"
+
+
+def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
+                       intended_shared_feature_pairs=()):
     allowed = {tuple(pair) for pair in intended_face_pairs}
     enclosures = _intended_enclosures(intended_enclosures)
     if any(set(pair) != {first.key, second.key} for pair in enclosures):
@@ -204,27 +393,80 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
                 "aabb_disjoint": True, "triangle_pair_count": 0}
     result = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
     pairs = result["triangle_pairs"]
-    unexpected = [pair for pair in pairs if tuple(pair) not in allowed]
-    # Complete containment is invisible to triangle-pair counts. With no
-    # boundary crossing, location is constant on each connected component.
+    pair_set = {tuple(pair) for pair in pairs}
+    accepted_features = {}
+    rejected_features = []
+    declared = set()
+    for row in intended_shared_feature_pairs:
+        if not isinstance(row, dict):
+            raise TypeError("shared feature declarations must be mappings")
+        try:
+            declared_first = typed_key(row.get("first_identity"))
+            declared_second = typed_key(row.get("second_identity"))
+        except ValueError as exc:
+            raise ValueError("shared feature declaration requires ordered typed surface identities") from exc
+        if (declared_first, declared_second) != (first.key, second.key):
+            raise ValueError("shared feature declaration identities do not match audit arguments")
+        first_face = row.get("first_face_index")
+        second_face = row.get("second_face_index")
+        feature_gids = row.get("feature_gids")
+        if type(first_face) is not int or type(second_face) is not int:
+            raise ValueError("shared feature face indices must be integers")
+        if not (0 <= first_face < len(first.faces) and 0 <= second_face < len(second.faces)):
+            raise ValueError("shared feature face index out of range")
+        pair = (first_face, second_face)
+        if pair in declared:
+            raise ValueError("duplicate shared feature face pair")
+        declared.add(pair)
+        if not isinstance(feature_gids, (list, tuple)):
+            raise TypeError("shared feature GIDs must be a list or tuple")
+        if pair not in pair_set:
+            rejected_features.append({"face_pair": list(pair), "feature_gids": list(feature_gids),
+                                      "reason": "declared_pair_has_no_exact_intersection"})
+            continue
+        passed, reason = _shared_feature_contact(first, second, first_face, second_face, feature_gids)
+        if passed:
+            accepted_features[pair] = {
+                "identities": [list(first.key), list(second.key)],
+                "face_pair": list(pair), "feature_gids": list(feature_gids),
+                "feature_kind": "vertex" if len(feature_gids) == 1 else "edge",
+                "proof": reason}
+        else:
+            rejected_features.append({"face_pair": list(pair), "feature_gids": list(feature_gids),
+                                      "reason": reason})
+    unexpected = [pair for pair in pairs
+                  if tuple(pair) not in allowed and tuple(pair) not in accepted_features]
+    # Shared boundary features can divide a connected surface component into
+    # regions on opposite sides. Check every triangle interior centroid rather
+    # than assuming one sample represents the whole connected component.
     containment = []
-    if not pairs:
-        containment = [_contained_components(first, second), _contained_components(second, first)]
+    if not unexpected:
+        inspect_all_faces = bool(pairs)
+        containment = [
+            _contained_components(first, second, inspect_all_faces=inspect_all_faces),
+            _contained_components(second, first, inspect_all_faces=inspect_all_faces),
+        ]
     for row, (source, target) in zip(containment, ((first, second), (second, first))):
         row["source_identity"] = list(source.key)
         row["target_identity"] = list(target.key)
         row["declared_intended_enclosure"] = (source.key, target.key) in enclosures
     inside = any(row["inside_component_witnesses"] and
                  not row["declared_intended_enclosure"] for row in containment)
+    outside_declared_enclosure = any(
+        row["outside_component_witnesses"] and row["declared_intended_enclosure"]
+        for row in containment)
     unresolved = any(row["status"] in ("not_checked_nonembedded_target",
-                                     "unresolved_exact_point_location") for row in containment)
+                                     "unresolved_exact_point_location",
+                                     "unresolved_all_component_samples_on_boundary") for row in containment)
     return {"identities": [list(first.key), list(second.key)],
-            "passed": not unexpected and not inside and not unresolved,
+            "passed": not unexpected and not inside and not outside_declared_enclosure and not unresolved,
             "triangle_pair_count": len(pairs), "unexpected_triangle_pairs": unexpected,
             "declared_interface_triangle_pairs": [p for p in pairs if tuple(p) in allowed],
+            "declared_interface_feature_contacts": [accepted_features[p] for p in sorted(accepted_features)],
+            "rejected_interface_feature_contacts": rejected_features,
             "containment": containment,
             "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)],
-            "boundary": "Declared enclosures permit interior placement only; all boundary crossings remain checked. Declared face interfaces do not prove vessel lumen continuity."}
+            "boundary": "Declared enclosures permit interior placement only; every off-boundary face interior is checked and outside samples reject an intended enclosure. Shared feature contacts require exact GID, owner-map, source-lineage, and intersection proof. Declared face interfaces do not prove vessel lumen continuity."}
 
 
 def validate_capture_receipt(receipt, pack_sha256):

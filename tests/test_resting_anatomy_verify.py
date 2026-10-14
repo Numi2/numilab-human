@@ -17,6 +17,58 @@ def tetra(scale=1., offset=0.):
     return np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32) * np.float32(scale) + np.float32(offset)
 
 
+def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overrides=None):
+    positions = np.asarray(positions, dtype=np.float32)
+    faces = np.asarray(faces, dtype=np.uint32)
+    gids = np.asarray(gids, dtype=np.uint64)
+    weights = np.full((len(gids), 21), 1.0 / 21.0, dtype=np.float64)
+    for row, gid in enumerate(gids):
+        if weight_overrides and int(gid) in weight_overrides:
+            weights[row] = np.asarray(weight_overrides[int(gid)], dtype=np.float64)
+    ordered = list(range(21))
+    vertex_lineage = {}
+    for gid in gids:
+        record = {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
+        if int(gid) in kind3_gids:
+            record.update({
+                "material_mapping_kind": 3,
+                "material_binding": "independent_existing_core_carrier",
+                "core_body_indices": ordered,
+                "core_weights": weights[np.flatnonzero(gids == gid)[0]].tolist(),
+            })
+        vertex_lineage[int(gid)] = record
+    return prepare_surface(
+        key, positions, faces, source_vertex_ids=gids,
+        source_face_lineage=[{"source_parent_face": i} for i in range(len(faces))],
+        source_vertex_lineage=vertex_lineage,
+        ordered_core_body_indices=ordered,
+        core_weight_gids=gids,
+        core_weights_float64=weights,
+    )
+
+
+def feature_declaration(first, second, first_face, second_face, gids):
+    return {
+        "first_identity": list(first.key),
+        "second_identity": list(second.key),
+        "first_face_index": first_face,
+        "second_face_index": second_face,
+        "feature_gids": list(gids),
+    }
+
+
+def declarations_for_actual_shared_features(first, second):
+    baseline = audit_surface_pair(first, second)
+    declarations = []
+    for first_face, second_face in baseline["unexpected_triangle_pairs"]:
+        first_gids = {int(first.source_vertex_ids[int(i)]) for i in first.faces[first_face]}
+        second_gids = {int(second.source_vertex_ids[int(i)]) for i in second.faces[second_face]}
+        common = sorted(first_gids & second_gids)
+        if 1 <= len(common) <= 2:
+            declarations.append(feature_declaration(first, second, first_face, second_face, common))
+    return declarations
+
+
 class RestingAnatomyVerifierTests(unittest.TestCase):
 
     def test_bound_source_facet_projection_requires_full_namespace_correspondence(self):
@@ -144,6 +196,117 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         inner = prepare_surface((51005, 132), tetra(.1, .1), FACES)
         result = audit_surface_pair(inner, outer)
         self.assertEqual(result["containment"][0]["status"], "not_checked_open_target")
+
+    def test_declared_shared_edge_requires_exact_identity_lineage_and_owner_map(self):
+        a = feature_surface(
+            (51006, 132),
+            [[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]], [100, 101, 102],
+            kind3_gids={100, 101})
+        b = feature_surface(
+            (51006, 134),
+            [[0, 0, 0], [1, 0, 0], [0, -1, 0]], [[0, 1, 2]], [100, 101, 103],
+            kind3_gids={100, 101})
+        self.assertFalse(audit_surface_pair(a, b)["passed"])
+        result = audit_surface_pair(
+            a, b, intended_shared_feature_pairs=[
+                feature_declaration(a, b, 0, 0, [100, 101])])
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["triangle_pair_count"], 1)
+        self.assertEqual(result["unexpected_triangle_pairs"], [])
+        self.assertEqual(result["declared_interface_feature_contacts"][0]["feature_kind"], "edge")
+
+        wrong_identity = feature_declaration(a, b, 0, 0, [100, 101])
+        wrong_identity["second_identity"] = [51006, 135]
+        with self.assertRaisesRegex(ValueError, "identities"):
+            audit_surface_pair(a, b, intended_shared_feature_pairs=[wrong_identity])
+
+        wrong_row = np.full(21, 1.0 / 21.0, dtype=np.float64)
+        wrong_row[0] += 0.01
+        wrong_row[1] -= 0.01
+        b_wrong = feature_surface(
+            (51006, 135),
+            [[0, 0, 0], [1, 0, 0], [0, -1, 0]], [[0, 1, 2]], [100, 101, 104],
+            kind3_gids={100, 101}, weight_overrides={100: wrong_row})
+        rejected = audit_surface_pair(
+            a, b_wrong, intended_shared_feature_pairs=[
+                feature_declaration(a, b_wrong, 0, 0, [100, 101])])
+        self.assertFalse(rejected["passed"])
+        self.assertTrue(rejected["rejected_interface_feature_contacts"])
+        self.assertIn([0, 0], rejected["unexpected_triangle_pairs"])
+
+    def test_declared_shared_vertex_does_not_hide_a_transversal_segment(self):
+        a = feature_surface(
+            (51006, 132),
+            [[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]], [200, 201, 202])
+        b = feature_surface(
+            (51006, 134),
+            [[0, 0, 0], [0.5, 0, 0], [0, 0, 1]], [[0, 1, 2]], [200, 203, 204])
+        result = audit_surface_pair(
+            a, b, intended_shared_feature_pairs=[
+                feature_declaration(a, b, 0, 0, [200])])
+        self.assertFalse(result["passed"])
+        self.assertIn([0, 0], result["unexpected_triangle_pairs"])
+        self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
+                         "exact_intersection_exceeds_declared_shared_feature")
+
+    def test_coordinate_coincidence_without_shared_gid_is_not_an_interface(self):
+        a = feature_surface(
+            (51006, 132),
+            [[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]], [300, 301, 302])
+        b = feature_surface(
+            (51006, 134),
+            [[0, 0, 0], [-0.5, 0, 0], [0, 0, 1]], [[0, 1, 2]], [400, 401, 402])
+        result = audit_surface_pair(
+            a, b, intended_shared_feature_pairs=[
+                feature_declaration(a, b, 0, 0, [300])])
+        self.assertFalse(result["passed"])
+        self.assertIn([0, 0], result["unexpected_triangle_pairs"])
+        self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
+                         "declared_feature_GIDs_not_shared_by_both_faces")
+
+    def test_tangent_declared_interface_does_not_hide_solid_containment(self):
+        outer_points = np.array([[0, 0, 0], [4, 0, 0], [0, 4, 0], [0, 0, 4]], dtype=np.float32)
+        inner_points = np.array([[0, 0, 0], [.2, .1, .1], [.1, .2, .1], [.1, .1, .2]], dtype=np.float32)
+        outer = feature_surface((51006, 132), outer_points, FACES, [500, 501, 502, 503])
+        inner = feature_surface((51006, 134), inner_points, FACES, [500, 504, 505, 506])
+        declarations = [
+            feature_declaration(inner, outer, fi, fo, [500])
+            for fi in range(3) for fo in range(3)
+        ]
+        result = audit_surface_pair(inner, outer, intended_shared_feature_pairs=declarations)
+        self.assertEqual(result["unexpected_triangle_pairs"], [])
+        self.assertEqual(len(result["declared_interface_feature_contacts"]), 9)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["containment"][0]["status"], "checked_exact_rational_metres")
+        self.assertEqual(len(result["containment"][0]["inside_component_witnesses"]), 1)
+
+    def test_shared_edge_tangent_solids_pass_but_nested_wedges_fail(self):
+        outer_points = np.array(
+            [[0, 0, 0], [2, 0, 0], [0, 2, 0], [0, 0, 2]], dtype=np.float32)
+        nested_points = np.array(
+            [[0, 0, 0], [2, 0, 0], [.3, .3, .3], [.4, .1, .2]], dtype=np.float32)
+        outer = feature_surface((51006, 132), outer_points, FACES, [600, 601, 602, 603])
+        nested = feature_surface((51006, 134), nested_points, FACES, [600, 601, 604, 605])
+        nested_result = audit_surface_pair(
+            nested, outer,
+            intended_shared_feature_pairs=declarations_for_actual_shared_features(nested, outer))
+        self.assertEqual(nested_result["unexpected_triangle_pairs"], [])
+        self.assertFalse(nested_result["passed"])
+        self.assertEqual(nested_result["containment"][0]["status"], "checked_exact_rational_metres")
+        self.assertEqual(len(nested_result["containment"][0]["inside_component_witnesses"]), 1)
+
+        separated_points = np.array(
+            [[0, 0, 0], [2, 0, 0], [.3, -1, 0], [.5, -.2, -1]], dtype=np.float32)
+        separated = feature_surface((51006, 134), separated_points, FACES, [600, 601, 606, 607])
+        tangent_result = audit_surface_pair(
+            outer, separated,
+            intended_shared_feature_pairs=declarations_for_actual_shared_features(outer, separated))
+        self.assertEqual(tangent_result["unexpected_triangle_pairs"], [])
+        self.assertTrue(tangent_result["passed"])
+        self.assertFalse(audit_surface_pair(
+            outer, separated,
+            intended_shared_feature_pairs=declarations_for_actual_shared_features(outer, separated),
+            intended_enclosures=[(outer.key, separated.key)])["passed"])
 
     def test_capture_rejects_hash_rejected_endpoint_and_duplicate_pose(self):
         receipt = {"schema": "numi.human.accepted-render-geometry.v1",
