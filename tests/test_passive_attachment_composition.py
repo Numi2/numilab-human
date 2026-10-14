@@ -1733,6 +1733,36 @@ def test_registered_rest_sparse_inverse_hits_two_micrometre_float32_gate():
     assert np.isfinite(condition).all()
 
 
+def test_registered_rest_orientation_uses_authoritative_parent_target():
+    row = {
+        "stable_id": 131,
+        "vertex_count": 3,
+        "faces": np.asarray([[0, 1, 2]], dtype="<u4"),
+    }
+    target = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype="<f4")
+    # The old sparse child embedding has the opposite winding, while the
+    # corrected emitted geometry matches the authoritative parent target.
+    before = np.asarray([[0, 0, 0], [0, 1, 0], [1, 0, 0]], dtype="<f4")
+    diagnostics = pac._rest_face_orientation_diagnostics(
+        row, before, target, target, np.asarray([1]),
+    )
+    assert diagnostics["preconformance_reversal_count_vs_parent_target"] == 1
+    assert diagnostics["minimum_corrected_target_orientation_cosine"] == 1.0
+    assert diagnostics["minimum_corrected_face_area_m2"] == 0.5
+
+    reversed_after = before
+    with pytest.raises(ValueError, match="reverses the parent-rest target"):
+        pac._rest_face_orientation_diagnostics(
+            row, target, reversed_after, target, np.asarray([1]),
+        )
+
+    degenerate_target = np.asarray([[0, 0, 0], [1, 0, 0], [2, 0, 0]], dtype="<f4")
+    with pytest.raises(ValueError, match="degenerate parent-rest target"):
+        pac._rest_face_orientation_diagnostics(
+            row, before, target, degenerate_target, np.asarray([1]),
+        )
+
+
 def test_registered_rest_sparse_inverse_rejects_singular_child_map():
     poses = {10: np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")}
     bindings = [

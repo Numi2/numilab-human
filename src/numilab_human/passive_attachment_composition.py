@@ -1712,6 +1712,61 @@ def _recompute_rest_conforming_normals(row_data, source_normals, world_positions
     }
 
 
+def _rest_face_orientation_diagnostics(row_data, before_positions, after_positions,
+                                       target_positions, changed_vertices):
+    """Compare corrected faces to the authoritative full-parent rest target.
+
+    The pre-conformance child coordinates can be an invalid sparse-rest
+    embedding, so their winding relative to the repaired target is diagnostic.
+    """
+    import numpy as np
+
+    faces = np.asarray(row_data["faces"], dtype=np.int64)
+    changed = np.zeros(row_data["vertex_count"], dtype=bool)
+    changed[np.asarray(changed_vertices, dtype=np.int64)] = True
+    touched = np.any(changed[faces], axis=1)
+    if not np.any(touched):
+        return {
+            "touched_face_count": 0,
+            "preconformance_reversal_count_vs_parent_target": 0,
+            "preconformance_degenerate_count": 0,
+            "minimum_corrected_target_orientation_cosine": None,
+            "minimum_corrected_face_area_m2": None,
+            "minimum_parent_target_face_area_m2": None,
+        }
+
+    def face_normals(positions):
+        tri = np.asarray(positions, dtype=np.float64)[faces[touched]]
+        return np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
+
+    before = face_normals(before_positions)
+    after = face_normals(after_positions)
+    target = face_normals(target_positions)
+    require(np.isfinite(before).all() and np.isfinite(after).all()
+            and np.isfinite(target).all(),
+            f"registered-rest row {row_data['stable_id']} has nonfinite touched face geometry")
+    before_area = np.linalg.norm(before, axis=1)
+    after_area = np.linalg.norm(after, axis=1)
+    target_area = np.linalg.norm(target, axis=1)
+    require(np.all(after_area > 0.0),
+            f"registered-rest row {row_data['stable_id']} has a zero corrected face")
+    require(np.all(target_area > 0.0),
+            f"registered-rest row {row_data['stable_id']} has a degenerate parent-rest target face")
+    dot = np.einsum("ij,ij->i", after, target)
+    cosine = dot / (after_area * target_area)
+    require(np.all(dot > 0.0),
+            f"registered-rest row {row_data['stable_id']} corrected face reverses the parent-rest target")
+    before_dot = np.einsum("ij,ij->i", before, target)
+    return {
+        "touched_face_count": int(np.count_nonzero(touched)),
+        "preconformance_reversal_count_vs_parent_target": int(np.count_nonzero(before_dot <= 0.0)),
+        "preconformance_degenerate_count": int(np.count_nonzero(before_area == 0.0)),
+        "minimum_corrected_target_orientation_cosine": float(cosine.min()),
+        "minimum_corrected_face_area_m2": float(after_area.min() * 0.5),
+        "minimum_parent_target_face_area_m2": float(target_area.min() * 0.5),
+    }
+
+
 def _validated_parent_rest_terms(terms, parent_vertex_counts, stable_id, vertex_index):
     """Validate exact JSON parent-term identities before any carrier reads."""
     import math
@@ -1979,25 +2034,9 @@ def reemit_parent_rest_conformance(
                     f"registered-rest row {stable_id} has no representable correction")
             faces = row_data["faces"].astype(np.int64)
             touched_faces = np.any(np.isin(faces, changed), axis=1)
-            before_triangles = actual_before[faces[touched_faces]].astype(np.float64)
-            after_triangles = actual_after[faces[touched_faces]].astype(np.float64)
-            before_face_normals = np.cross(
-                before_triangles[:, 1] - before_triangles[:, 0],
-                before_triangles[:, 2] - before_triangles[:, 0],
+            face_diagnostics = _rest_face_orientation_diagnostics(
+                row_data, actual_before, actual_after, targets, changed,
             )
-            after_face_normals = np.cross(
-                after_triangles[:, 1] - after_triangles[:, 0],
-                after_triangles[:, 2] - after_triangles[:, 0],
-            )
-            after_area2 = np.einsum("ij,ij->i", after_face_normals, after_face_normals)
-            before_area2 = np.einsum("ij,ij->i", before_face_normals, before_face_normals)
-            orientation_dot = np.einsum(
-                "ij,ij->i", before_face_normals, after_face_normals,
-            )
-            require(np.isfinite(after_face_normals).all() and np.all(after_area2 > 0.0),
-                    f"registered-rest row {stable_id} has a zero or nonfinite corrected face")
-            require(np.all((before_area2 == 0.0) | (orientation_dot > 0.0)),
-                    f"registered-rest row {stable_id} has a corrected face orientation reversal")
             source_normals, affected, normal_replay = _recompute_rest_conforming_normals(
                 row_data, row_data["normals"], actual_after, changed, poses,
             )
@@ -2021,8 +2060,13 @@ def reemit_parent_rest_conformance(
                 ).max(initial=0.0)),
                 "recomputed_normal_count": len(affected_indices),
                 "changed_incident_face_count": int(np.count_nonzero(touched_faces)),
-                "minimum_corrected_face_area_vector_norm_squared_m4": float(after_area2.min(initial=np.inf)),
+                "minimum_corrected_face_area_vector_norm_squared_m4": float(
+                    4.0 * face_diagnostics["minimum_corrected_face_area_m2"] ** 2
+                    if face_diagnostics["minimum_corrected_face_area_m2"] is not None
+                    else np.inf
+                ),
                 "normal_replay": normal_replay,
+                "face_orientation": face_diagnostics,
                 "after_failing_vertex_count": 0,
                 "after_first_witness_vertex": None,
                 "after_worst_vertex": int(np.argmax(squared_after)),
