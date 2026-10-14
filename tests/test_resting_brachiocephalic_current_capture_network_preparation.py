@@ -331,6 +331,71 @@ def test_ulnar_proof_separates_data_inputs_from_executable_dependency_pins(tmp_p
             {str(data_path): data_sha}, {str(code_path): code_sha})
 
 
+def test_common_field_coordinates_require_matching_step_zero_capture_and_csv():
+    columns = prep.COMMON_FIELD_COORDINATE_COLUMNS
+    header = "step,time_s,geometry_mode,common_coordinate_solver_status," + ",".join(columns)
+    row = "0,0,common_seven_coordinate_v1,0," + ",".join(["0.25"] * 7)
+    coordinates, count = prep._accepted_step_zero_common_coordinates(
+        {"accepted_step": 0, "accepted_time_s": 0.0}, header + "\n" + row)
+    np.testing.assert_array_equal(coordinates, np.full(7, 0.25, dtype="<f4"))
+    assert count == 1
+
+    with pytest.raises(ValueError, match="requires accepted step zero"):
+        prep._accepted_step_zero_common_coordinates(
+            {"accepted_step": 1, "accepted_time_s": 0.01}, header + "\n" + row)
+    with pytest.raises(ValueError, match="requires accepted time zero"):
+        prep._accepted_step_zero_common_coordinates(
+            {"accepted_step": 0, "accepted_time_s": 0.01}, header + "\n" + row)
+
+
+def test_common_field_coordinates_reject_disagreeing_duplicate_step_zero_q():
+    columns = prep.COMMON_FIELD_COORDINATE_COLUMNS
+    header = "step,time_s,geometry_mode,common_coordinate_solver_status," + ",".join(columns)
+    first = "0,0,common_seven_coordinate_v1,0," + ",".join(["0.25"] * 7)
+    second_values = ["0.25"] * 7
+    second_values[3] = "0.5"
+    second = "0,0,common_seven_coordinate_v1,0," + ",".join(second_values)
+    with pytest.raises(ValueError, match="disagree on solved common coordinates"):
+        prep._accepted_step_zero_common_coordinates(
+            {"accepted_step": 0, "accepted_time_s": 0.0},
+            header + "\n" + first + "\n" + second)
+
+
+def test_network_screen_normalizes_exact_integer_pair_arrays_for_existing_oracle(monkeypatch):
+    pair_map = {
+        edge: np.asarray([[2, 3], [4, 5]], dtype="<i8")
+        for edge in (*prep.NETWORK_EDGES, *prep.SVC_PORTS)
+    }
+    monkeypatch.setattr(
+        prep, "_runtime_network_source_pairs", lambda _edges, _separate: pair_map)
+    captured = {}
+
+    def oracle(_verifier, surfaces, edges, source_pairs):
+        captured["surfaces"] = surfaces
+        captured["edges"] = edges
+        captured["source_pairs"] = source_pairs
+        return {"passed": False}
+
+    monkeypatch.setattr(prep.geometry_gate, "audit_network_rows_against_all_targets", oracle)
+    prep.run_all_target_network_screen({"surfaces": {"frozen": True}}, {}, {})
+    assert captured["source_pairs"] == {
+        edge: [(2, 3), (4, 5)] for edge in pair_map
+    }
+    assert all(type(value) is int for pairs in captured["source_pairs"].values()
+               for pair in pairs for value in pair)
+
+
+def test_network_screen_rejects_noninteger_source_pair_arrays(monkeypatch):
+    pair_map = {
+        edge: np.asarray([[2.0, 3.0]], dtype="<f8")
+        for edge in (*prep.NETWORK_EDGES, *prep.SVC_PORTS)
+    }
+    monkeypatch.setattr(
+        prep, "_runtime_network_source_pairs", lambda _edges, _separate: pair_map)
+    with pytest.raises(ValueError, match="source collar face pairs are malformed"):
+        prep.run_all_target_network_screen({"surfaces": {}}, {}, {})
+
+
 def test_common_field_displacement_uses_ordered_float32_map_products_and_sums():
     local = np.asarray([[16_777_216.0, -4.0, 2.0]], dtype="<f4")
     basis = np.zeros((1, 7, 4), dtype="<f4")

@@ -967,7 +967,15 @@ def run_all_target_network_screen(
     context: dict, edge_evidence: dict, separate_evidence: dict,
 ) -> dict:
     """Run the existing central collision oracle against the full captured pack."""
-    source_pairs = _runtime_network_source_pairs(edge_evidence, separate_evidence)
+    raw_pairs = _runtime_network_source_pairs(edge_evidence, separate_evidence)
+    source_pairs = {}
+    for edge, raw in raw_pairs.items():
+        pairs = np.asarray(raw)
+        _require(pairs.ndim == 2 and pairs.shape[1] == 2
+                 and pairs.dtype.kind in "iu" and len(pairs) > 0,
+                 f"source collar face pairs are malformed for {edge}")
+        source_pairs[edge] = [(int(parent), int(child))
+                              for parent, child in pairs]
     return geometry_gate.audit_network_rows_against_all_targets(
         shared_verifier,
         context["surfaces"],
@@ -1094,6 +1102,38 @@ def _blend_parent_pose_vertices(
     }
 
 
+def _accepted_step_zero_common_coordinates(
+    capture_identity: dict, audit_csv: str,
+) -> tuple[np.ndarray, int]:
+    """Use only a capture whose accepted time matches the existing step-zero CSV."""
+    _require(isinstance(capture_identity, dict)
+             and type(capture_identity.get("accepted_step")) is int
+             and capture_identity["accepted_step"] == 0,
+             "common-field reconstruction currently requires accepted step zero")
+    accepted_time = capture_identity.get("accepted_time_s")
+    _require(type(accepted_time) in (int, float)
+             and not isinstance(accepted_time, bool)
+             and np.isfinite(float(accepted_time))
+             and float(accepted_time) == 0.0,
+             "step-zero common-field reconstruction requires accepted time zero")
+    parsed = list(csv.DictReader(audit_csv.splitlines()))
+    rows = [row for row in parsed
+            if row.get("step") == "0" and row.get("time_s") == "0"]
+    _require(bool(rows)
+             and all(row.get("geometry_mode") == "common_seven_coordinate_v1"
+                     and row.get("common_coordinate_solver_status") == "0"
+                     for row in rows),
+             "accepted surface audit lacks a valid step-zero common coordinate record")
+    coordinates = [np.asarray([
+        np.float32(float(row[column])) for column in COMMON_FIELD_COORDINATE_COLUMNS
+    ], dtype="<f4") for row in rows]
+    _require(all(np.isfinite(row).all() for row in coordinates)
+             and all(row.tobytes() == coordinates[0].tobytes()
+                     for row in coordinates[1:]),
+             "duplicate step-zero audit records disagree on solved common coordinates")
+    return coordinates[0], len(rows)
+
+
 def _common_field_displace_vertices(local_xyz, displacement_basis, coordinates):
     """Apply the existing seven-coordinate material map in explicit Float32 order."""
     local = np.ascontiguousarray(local_xyz, dtype="<f4").copy()
@@ -1201,23 +1241,9 @@ def _common_field_source_surfaces(
     coordinate_bits = np.ascontiguousarray(all_records[:, :, 3]).view("<u4")
     _require(np.all(coordinate_bits == 0),
              "common-field map W lanes are not canonical positive zero")
-    csv_text = component_bytes["surface_audit"].decode("utf-8")
-    parsed = list(csv.DictReader(csv_text.splitlines()))
-    zero_rows = [row for row in parsed
-                 if row.get("step") == "0" and row.get("time_s") == "0"]
-    _require(bool(zero_rows)
-             and all(row.get("geometry_mode") == "common_seven_coordinate_v1"
-                     and row.get("common_coordinate_solver_status") == "0"
-                     for row in zero_rows),
-             "accepted surface audit lacks a valid step-zero common coordinate record")
-    coordinate_rows = [np.asarray([
-        np.float32(float(row[column])) for column in COMMON_FIELD_COORDINATE_COLUMNS
-    ], dtype="<f4") for row in zero_rows]
-    _require(all(np.isfinite(row).all() for row in coordinate_rows)
-             and all(row.tobytes() == coordinate_rows[0].tobytes()
-                     for row in coordinate_rows[1:]),
-             "duplicate step-zero audit records disagree on solved common coordinates")
-    coordinates = coordinate_rows[0]
+    coordinates, common_record_count = _accepted_step_zero_common_coordinates(
+        context.get("capture_identity"),
+        component_bytes["surface_audit"].decode("utf-8"))
     pose_rows = [
         row for row in capture_receipt.get("accepted_body_poses", [])
         if row.get("body_index") == 20
@@ -1333,7 +1359,7 @@ def _common_field_source_surfaces(
         "map_record_stride_bytes": map_stride,
         "coordinate_order": identity["coordinate_order"],
         "accepted_step_zero_coordinates_f32": [float(value) for value in coordinates],
-        "identical_step_zero_audit_record_count": len(zero_rows),
+        "identical_step_zero_audit_record_count": common_record_count,
         "accepted_body20_pose": {
             "position_m_f32": [float(value) for value in t],
             "quaternion_xyzw_f32": [float(value) for value in q],
