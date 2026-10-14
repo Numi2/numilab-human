@@ -98,6 +98,26 @@ def test_exact_coordinate_quotient_shares_owner_weights_across_duplicate_seam():
     assert report["exact_coordinate_alias_class_count"] == 2
 
 
+def test_exact_coordinate_quotient_canonicalizes_signed_zero_without_mesh_edit():
+    vertices, faces = _duplicate_coordinate_seam_strip()
+    vertices[4, 2] = np.float32(-0.0)
+    assert vertices[1].tobytes() != vertices[4].tobytes()
+    assert np.array_equal(vertices[1], vertices[4])
+
+    weights, report = geodesic_owner_partition(
+        vertices,
+        faces,
+        {0, 2},
+        {6, 7},
+        exact_coordinate_quotient=True,
+    )
+
+    assert np.array_equal(weights[1], weights[4])
+    assert report["exact_coordinate_alias_class_count"] == 2
+    assert report["all_exact_coordinate_alias_members_share_f32_owner_weights"]
+    assert np.signbit(vertices[4, 2])  # quotienting never rewrites source bytes
+
+
 def test_exact_coordinate_quotient_rejects_conflicting_collar_aliases():
     vertices, faces = _duplicate_coordinate_seam_strip()
     with pytest.raises(ValueError, match="merges proximal and distal collar constraints"):

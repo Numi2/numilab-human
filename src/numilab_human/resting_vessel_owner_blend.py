@@ -135,7 +135,11 @@ def _exact_coordinate_quotient_graph(
     classes: list[list[int]] = []
     class_xyz: list[np.ndarray] = []
     for local_id, point in enumerate(xyz):
-        key = point.tobytes()
+        # IEEE-754 +0 and -0 are the same physical coordinate. Canonicalize
+        # zero only in the quotient key; retain each original Float32 slot.
+        key_point = point.copy()
+        key_point[key_point == 0.0] = np.float32(0.0)
+        key = key_point.tobytes()
         class_id = key_to_class.get(key)
         if class_id is None:
             class_id = len(classes)
