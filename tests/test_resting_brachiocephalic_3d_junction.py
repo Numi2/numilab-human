@@ -367,8 +367,18 @@ def _synthetic_network_link_inputs(parent_key, child_key, bridge, bridge_faces,
         "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
     }
     source_rows = {
-        parent_id: {"faces": parent_faces, "body_index": 20, "layer": 2},
-        child_id: {"faces": child_faces, "body_index": 20, "layer": 2},
+        parent_id: {
+            "record": (20, 0, len(bridge), 0, len(parent_faces) * 3,
+                       parent_id, 2, 0),
+            "faces": parent_faces, "vertices6": np.asarray(bridge, dtype="<f4"),
+            "body_index": 20, "layer": 2,
+        },
+        child_id: {
+            "record": (20, 0, len(target), 0, len(child_faces) * 3,
+                       child_id, 2, 0),
+            "faces": child_faces, "vertices6": np.asarray(target, dtype="<f4"),
+            "body_index": 20, "layer": 2,
+        },
     }
     source_map = {
         str(parent_id): {
@@ -522,7 +532,8 @@ def test_svc_network_link_uses_solid_and_independent_calibre_not_pair_count(monk
         source_link_evidence=evidence, source_rows=source_rows,
         source_map=source_map,
         baseline_bridge_surface=_surface(bridge, bridge_faces),
-        baseline_target_surface=_surface(target, target_faces))
+        baseline_target_surface=_surface(target, target_faces),
+        expected_nha_gid_base_offset=0)
 
     assert result["passed"]
     metric = result["continuity_metric"]
@@ -673,7 +684,8 @@ def test_network_link_aggregator_requires_exact_graph_and_stops_at_first_failure
 
     monkeypatch.setattr(junction, "audit_brachiocephalic_network_link_3d",
                         fake_link_audit)
-    result = junction.audit_brachiocephalic_network_links_3d(av, object(), records)
+    result = junction.audit_brachiocephalic_network_links_3d(
+        av, object(), records, expected_nha_gid_base_offset=0)
 
     assert result["status"] == "REJECT_SOURCE_NETWORK_LINK_CONTINUITY"
     assert result["requested_link_count"] == 15
@@ -684,12 +696,13 @@ def test_network_link_aggregator_requires_exact_graph_and_stops_at_first_failure
 
     with pytest.raises(ValueError, match="exactly 15"):
         junction.audit_brachiocephalic_network_links_3d(
-            av, object(), records[:-1])
+            av, object(), records[:-1], expected_nha_gid_base_offset=0)
 
     wrong = list(records)
     wrong[-1] = {"bridge_key": (51011, 469), "target_key": (51011, 473)}
     with pytest.raises(ValueError, match="undeclared or duplicate"):
-        junction.audit_brachiocephalic_network_links_3d(av, object(), wrong)
+        junction.audit_brachiocephalic_network_links_3d(
+            av, object(), wrong, expected_nha_gid_base_offset=0)
 
 
 def test_material_branch_scope_names_one_frozen_branch_and_limits_coverage():

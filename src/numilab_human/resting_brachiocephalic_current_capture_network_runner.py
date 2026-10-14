@@ -46,6 +46,37 @@ def _sha_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
+def _native_nha_gid_base_offset(context: dict) -> dict:
+    """Derive the NHA global GID base from this capture's recorded skin range."""
+    receipt = context.get("capture_receipt")
+    _require(isinstance(receipt, dict),
+             "actual capture context lacks its validated capture receipt")
+    skin = receipt.get("skin_source_mapping")
+    _require(isinstance(skin, dict),
+             "actual capture receipt lacks the native skin source range")
+    first = skin.get("pack_first_vertex")
+    count = skin.get("source_vertex_count")
+    total = receipt.get("vertex_count")
+    _require(type(first) is int and first >= 0
+             and type(count) is int and count > 0
+             and type(total) is int and total > 0,
+             "actual capture receipt has invalid skin/anatomy vertex ranges")
+    base = first + count
+    _require(base <= total,
+             "native skin range ends beyond the actual captured vertex buffer")
+    return {
+        "native_nha_gid_base_offset": base,
+        "skin_pack_first_vertex": first,
+        "skin_source_vertex_count": count,
+        "captured_vertex_count": total,
+        "derivation": "skin pack_first_vertex + source_vertex_count",
+        "identity_contract": (
+            "captured GID = native NHA base offset + ABI5 record firstVertex "
+            "+ source-local vertex index"),
+        "bound_to_validated_actual_capture_receipt": True,
+    }
+
+
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".tmp")
@@ -128,6 +159,8 @@ def _bind_runtime_inputs(runtime: dict) -> tuple[dict, dict, tuple[dict, ...], d
     baselines, baseline_records = _prepared_network_surfaces(
         runtime["baseline_surfaces"], "independently reconstructed source baseline")
     source_face_ancestry = {}
+    source_slot_identity = _native_nha_gid_base_offset(runtime.get("context", {}))
+    native_nha_gid_base_offset = source_slot_identity["native_nha_gid_base_offset"]
     for key in NETWORK_KEYS:
         candidate, baseline = candidates[key], baselines[key]
         _require(candidate.faces.tobytes() == baseline.faces.tobytes(),
@@ -138,26 +171,13 @@ def _bind_runtime_inputs(runtime: dict) -> tuple[dict, dict, tuple[dict, ...], d
         row = runtime["source_rows"].get(key[1])
         _require(isinstance(row, dict),
                  f"decoded ABI5 source row is missing for {key}")
-        source_faces = np.ascontiguousarray(row["faces"], dtype="<u4")
-        source_vertices = np.asarray(row.get("vertices6"))
-        _require(source_vertices.ndim == 2 and source_vertices.shape[1] >= 3,
-                 f"invoked ABI5 row lacks its source vertex slots for {key}")
-        vertex_map, ancestry = preparation._source_to_capture_vertex_map(
-            source_faces, candidate.faces, len(source_vertices), len(candidate.positions))
-        _require(vertex_map is not None
-                 and ancestry.get("status")
-                 == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
-                 f"actual pack topology lacks exact ordered ABI5 corner ancestry for {key}")
-        mapped_gids = np.full(
-            len(source_vertices), np.iinfo(np.uint64).max, dtype="<u8")
-        for source_vertex, capture_vertex in enumerate(vertex_map):
-            if int(capture_vertex) >= 0:
-                mapped_gids[source_vertex] = candidate.source_vertex_ids[
-                    int(capture_vertex)]
+        _vertex_map, ancestry = network_owner._source_face_capture_ancestry(
+            row, candidate, key[1], "actual-capture",
+            native_nha_gid_base_offset=native_nha_gid_base_offset)
         source_face_ancestry[f"{key[0]}:{key[1]}"] = {
             **ancestry,
-            "source_local_vertex_to_capture_global_gid_sha256": _sha_bytes(
-                mapped_gids.tobytes()),
+            "source_local_vertex_to_capture_global_gid_sha256": (
+                ancestry["source_local_vertex_to_actual_global_gid_sha256"]),
             "unused_source_vertex_slots_use_uint64_max_sentinel": True,
         }
     link_inputs = network_owner.prepare_network_link_audit_inputs(
@@ -182,6 +202,7 @@ def _bind_runtime_inputs(runtime: dict) -> tuple[dict, dict, tuple[dict, ...], d
         "candidate_surfaces": candidate_records,
         "independent_source_baselines": baseline_records,
         "source_face_arrays_bound_by_exact_ordered_abi5_corner_ancestry": True,
+        "native_source_slot_identity": source_slot_identity,
         "source_face_ancestry_by_typed_row": source_face_ancestry,
         "candidate_and_baseline_global_gid_arrays_identical_per_row": True,
         "global_vertex_ids_were_read_from_actual_capture_pack": True,
@@ -201,7 +222,9 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
     if progress_callback is not None:
         progress_callback("STARTING_FAIL_FIRST_15_LINK_CONTINUITY")
     continuity = network_owner.audit_brachiocephalic_network_links_3d(
-        verifier, manifold3d, link_inputs)
+        verifier, manifold3d, link_inputs,
+        expected_nha_gid_base_offset=(
+            inventory["native_source_slot_identity"]["native_nha_gid_base_offset"]))
     report = {
         "schema": RUNNER_SCHEMA,
         "status": continuity.get("status"),

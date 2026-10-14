@@ -1664,14 +1664,35 @@ def _network_continuity_metric(result: dict, source_scope: dict) -> dict:
 
 
 def _source_face_capture_ancestry(
-    source_row: Mapping, surface, stable_id: int, label: str,
+    source_row: Mapping, surface, stable_id: int, label: str, *,
+    native_nha_gid_base_offset: int,
 ) -> tuple[np.ndarray, dict]:
-    """Bind packed local faces/GIDs to ordered ABI5 face-corner ancestry."""
+    """Bind packed faces/GIDs to ABI5 corners and native global source slots."""
+    _require(type(native_nha_gid_base_offset) is int
+             and native_nha_gid_base_offset >= 0,
+             f"{label} native NHA GID base offset is invalid")
     source_faces = _source_face_array({stable_id: source_row}, stable_id)
     source_vertices = np.asarray(source_row.get("vertices6"))
     _require(source_vertices.ndim == 2 and source_vertices.shape[1] >= 3,
              f"{label} ABI5 row {stable_id} lacks its source vertex slots")
-    if isinstance(surface, current_shared_verifier.PreparedSurface):
+    source_record = source_row.get("record")
+    _require(isinstance(source_record, (tuple, list))
+             and len(source_record) == 8
+             and all(type(value) is int for value in source_record),
+             f"{label} ABI5 row {stable_id} lacks its exact native source record")
+    _require(type(source_row.get("body_index")) is int
+             and type(source_row.get("layer")) is int,
+             f"{label} ABI5 row {stable_id} typed owner metadata is invalid")
+    source_row_first_vertex = source_record[1]
+    _require(source_row_first_vertex >= 0
+             and source_record[2] == len(source_vertices)
+             and source_record[5] == stable_id
+             and source_record[0] == source_row.get("body_index")
+             and source_record[6] == source_row.get("layer"),
+             f"{label} ABI5 row {stable_id} source record identity/range differs")
+    if (isinstance(surface, current_shared_verifier.PreparedSurface)
+            or all(hasattr(surface, name) for name in (
+                "positions", "faces", "source_vertex_ids"))):
         positions = surface.positions
         packed_faces = surface.faces
         gids = surface.source_vertex_ids
@@ -1687,6 +1708,8 @@ def _source_face_capture_ancestry(
     global_ids = np.asarray(gids)
     _require(global_ids.shape == (len(positions),)
              and global_ids.dtype.kind in "iu"
+             and (global_ids.dtype.kind == "u" or bool(np.all(global_ids >= 0)))
+             and int(global_ids.max(initial=0)) <= np.iinfo(np.int64).max
              and len(np.unique(global_ids)) == len(global_ids),
              f"{label} packed global vertex IDs are invalid for {stable_id}")
     mapped_gids = np.full(
@@ -1694,9 +1717,34 @@ def _source_face_capture_ancestry(
     for source_vertex, packed_vertex in enumerate(vertex_map):
         if int(packed_vertex) >= 0:
             mapped_gids[source_vertex] = global_ids[int(packed_vertex)]
+    used_source_vertices = np.flatnonzero(vertex_map >= 0)
+    _require(len(used_source_vertices) > 0,
+             f"{label} source row {stable_id} has no mapped source vertices")
+    observed_nha_offsets = (
+        mapped_gids[used_source_vertices].astype(np.int64)
+        - (source_row_first_vertex + used_source_vertices))
+    _require(bool(np.all(observed_nha_offsets == native_nha_gid_base_offset)),
+             f"{label} source row {stable_id} capture GIDs do not equal native NHA "
+             f"firstVertex+base offset {source_row_first_vertex}+"
+             f"{native_nha_gid_base_offset}; observed offset range "
+             f"{int(observed_nha_offsets.min())}..{int(observed_nha_offsets.max())} "
+             f"across {len(np.unique(observed_nha_offsets))} values")
+    first_source_vertex = int(used_source_vertices[0])
     return vertex_map, {
         **ancestry,
         "typed_identity": [51011, stable_id],
+        "nha_source_row_first_vertex": source_row_first_vertex,
+        "native_nha_gid_base_offset": native_nha_gid_base_offset,
+        "capture_gid_formula": (
+            "native NHA base offset + ABI5 record firstVertex + source-local vertex index"),
+        "observed_gid_minus_nha_global_vertex_index_min": int(
+            observed_nha_offsets.min()),
+        "observed_gid_minus_nha_global_vertex_index_max": int(
+            observed_nha_offsets.max()),
+        "observed_gid_minus_nha_global_vertex_index_unique_count": len(np.unique(observed_nha_offsets)),
+        "first_used_source_vertex_local_index": first_source_vertex,
+        "first_used_source_vertex_capture_gid": int(mapped_gids[first_source_vertex]),
+        "native_source_slot_identity_is_contiguous": True,
         "source_abi5_face_array_sha256": _sha_bytes(source_faces.tobytes()),
         "packed_face_array_sha256": _sha_bytes(
             np.ascontiguousarray(packed_faces, dtype="<u4").tobytes()),
@@ -1711,6 +1759,7 @@ def audit_brachiocephalic_network_link_3d(
     verifier, manifold3d, *, bridge_key, bridge_surface, target_key, target_surface,
     source_link_evidence: dict, source_rows: Mapping, source_map: Mapping,
     baseline_bridge_surface, baseline_target_surface,
+    expected_nha_gid_base_offset: int,
 ) -> dict:
     """Apply the existing closed-solid and independent station owner to one graph edge."""
     scope = bind_network_link_source_ancestry(
@@ -1732,7 +1781,8 @@ def audit_brachiocephalic_network_link_3d(
         _require(isinstance(source_row, dict),
                  f"{label} source ABI5 row {stable_id} is absent")
         _vertex_map, proof = _source_face_capture_ancestry(
-            source_row, surface, stable_id, label)
+            source_row, surface, stable_id, label,
+            native_nha_gid_base_offset=expected_nha_gid_base_offset)
         _require(proof["source_abi5_face_array_sha256"] == expected_sha,
                  f"{label} source face bytes differ from registered ABI5 row {stable_id}")
         ancestry[label] = proof
@@ -1751,9 +1801,12 @@ def audit_brachiocephalic_network_link_3d(
 
 
 def audit_brachiocephalic_network_links_3d(
-    verifier, manifold3d, link_inputs,
+    verifier, manifold3d, link_inputs, *, expected_nha_gid_base_offset: int,
 ) -> dict:
     """Fail-first continuity audit over the exact 13 source edges plus two SVC ports."""
+    _require(type(expected_nha_gid_base_offset) is int
+             and expected_nha_gid_base_offset >= 0,
+             "network audit requires the exact native NHA GID base offset")
     links = declared_network_links()
     _require(isinstance(link_inputs, (tuple, list)) and len(link_inputs) == len(links),
              "network 3D audit requires exactly 15 declared per-link inputs")
@@ -1781,6 +1834,7 @@ def audit_brachiocephalic_network_links_3d(
             source_map=item.get("source_map"),
             baseline_bridge_surface=item.get("baseline_bridge_surface"),
             baseline_target_surface=item.get("baseline_target_surface"),
+            expected_nha_gid_base_offset=expected_nha_gid_base_offset,
         )
         results.append(result)
         if result.get("passed") is not True:

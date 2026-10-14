@@ -47,16 +47,31 @@ def _runtime_fixture():
     keys = runner.NETWORK_KEYS
     positions = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32)
     faces = np.asarray([[0, 1, 2]], dtype=np.uint32)
-    gids = np.asarray([101, 102, 103], dtype=np.uint64)
+    gids = np.asarray([310, 311, 312], dtype=np.uint64)
     value = (positions, faces, None, gids)
     candidates = {key: value for key in keys}
     baselines = {key: value for key in keys}
     source_rows = {
-        key[1]: {"faces": faces, "vertices6": np.zeros((3, 6), dtype=np.float32)}
+        key[1]: {
+            "record": (20, 10, 3, 0, 3, key[1], 2, 0),
+            "faces": faces,
+            "body_index": 20,
+            "layer": 2,
+            "vertices6": np.zeros((3, 6), dtype=np.float32),
+        }
         for key in keys
     }
     return {
-        "context": {"surfaces": dict(candidates)},
+        "context": {
+            "surfaces": dict(candidates),
+            "capture_receipt": {
+                "skin_source_mapping": {
+                    "pack_first_vertex": 100,
+                    "source_vertex_count": 200,
+                },
+                "vertex_count": 1000,
+            },
+        },
         "candidate_surfaces": candidates,
         "baseline_surfaces": baselines,
         "source_rows": source_rows,
@@ -76,14 +91,24 @@ def _patch_input_owner(monkeypatch):
         } for edge in links))
 
 
+def test_native_nha_gid_base_offset_uses_receipt_ranges_and_rejects_bad_types():
+    context = {"capture_receipt": {"skin_source_mapping": {"pack_first_vertex": 712060, "source_vertex_count": 54949}, "vertex_count": 2854518}}
+    proof = runner._native_nha_gid_base_offset(context)
+    assert proof["native_nha_gid_base_offset"] == 767009
+    assert proof["bound_to_validated_actual_capture_receipt"] is True
+    context["capture_receipt"]["skin_source_mapping"]["pack_first_vertex"] = True
+    with pytest.raises(ValueError, match="invalid skin/anatomy vertex ranges"):
+        runner._native_nha_gid_base_offset(context)
+
 def test_cached_prepared_surfaces_are_reused_by_link_owner(monkeypatch):
     fake_verifier = _Verifier()
     monkeypatch.setattr(runner, "verifier", fake_verifier)
     _patch_input_owner(monkeypatch)
     events = []
 
-    def link_audit(verifier, manifold, inputs):
+    def link_audit(verifier, manifold, inputs, *, expected_nha_gid_base_offset):
         events.append("links")
+        assert expected_nha_gid_base_offset == 300
         assert len(inputs) == 15
         assert all(isinstance(item["bridge_surface"], _CachedSurface)
                    and isinstance(item["target_surface"], _CachedSurface)
@@ -113,8 +138,9 @@ def test_all_target_runs_only_after_all_fifteen_links_pass_and_reuses_candidates
     _patch_input_owner(monkeypatch)
     events = []
 
-    def link_audit(verifier, manifold, inputs):
+    def link_audit(verifier, manifold, inputs, *, expected_nha_gid_base_offset):
         events.append("links")
+        assert expected_nha_gid_base_offset == 300
         assert len(inputs) == 15
         return {"passed": True, "evaluated_link_count": 15}
 
@@ -276,25 +302,41 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
 def test_abi5_face_corner_binding_allows_packed_gid_compaction_not_face_reordering():
     key = (51011, 526)
     source_row = {
+        "record": (20, 10, 5, 0, 6, 526, 2, 0),
         "vertices6": np.zeros((5, 6), dtype=np.float32),
+        "body_index": 20,
+        "layer": 2,
         "faces": np.asarray([[1, 2, 3], [1, 3, 4]], dtype=np.uint32),
     }
     packed = _CachedSurface(
         key,
         np.zeros((4, 3), dtype=np.float32),
         np.asarray([[0, 1, 2], [0, 2, 3]], dtype=np.uint32),
-        [9001, 9004, 9007, 9010])
+        [9011, 9012, 9013, 9014])
     packed_value = (packed.positions, packed.faces, None, packed.source_vertex_ids)
     vertex_map, proof = junction._source_face_capture_ancestry(
-        source_row, packed_value, 526, "test_candidate")
+        source_row, packed_value, 526, "test_candidate",
+        native_nha_gid_base_offset=9000)
     assert vertex_map.tolist() == [-1, 0, 1, 2, 3]
     assert proof["ordered_source_face_ids_are_preserved"] is True
     assert proof["capture_global_vertex_ids_are_actual_pack_values"] is True
+    assert proof["native_nha_gid_base_offset"] == 9000
+    assert proof["nha_source_row_first_vertex"] == 10
+    assert proof["observed_gid_minus_nha_global_vertex_index_unique_count"] == 1
+    assert proof["first_used_source_vertex_local_index"] == 1
+    assert proof["first_used_source_vertex_capture_gid"] == 9011
     wrong_order = (packed.positions, packed.faces[::-1].copy(),
                    None, packed.source_vertex_ids)
     with pytest.raises(ValueError, match="maps to multiple capture vertices"):
         junction._source_face_capture_ancestry(
-            source_row, wrong_order, 526, "reordered_candidate")
+            source_row, wrong_order, 526, "reordered_candidate",
+            native_nha_gid_base_offset=9000)
+    permuted = (packed.positions, packed.faces, None,
+                np.asarray([9012, 9011, 9013, 9014], dtype=np.uint64))
+    with pytest.raises(ValueError, match="capture GIDs do not equal native NHA"):
+        junction._source_face_capture_ancestry(
+            source_row, permuted, 526, "permuted_gid_candidate",
+            native_nha_gid_base_offset=9000)
 
 
 def test_runtime_binding_retains_exact_abi5_to_pack_gid_map_when_slots_are_compacted(
@@ -305,12 +347,14 @@ def test_runtime_binding_retains_exact_abi5_to_pack_gid_map_when_slots_are_compa
     source_faces = np.asarray([[1, 2, 3]], dtype=np.uint32)
     for key in keys:
         runtime["source_rows"][key[1]] = {
+            "record": (20, 10, 4, 0, 3, key[1], 2, 0),
             "faces": source_faces,
             "vertices6": np.zeros((4, 6), dtype=np.float32),
+            "body_index": 20,
+            "layer": 2,
         }
         positions = np.zeros((3, 3), dtype=np.float32)
-        gids = np.asarray([1000 + key[1], 2000 + key[1], 3000 + key[1]],
-                          dtype=np.uint64)
+        gids = np.asarray([311, 312, 313], dtype=np.uint64)
         value = (positions, np.asarray([[0, 1, 2]], dtype=np.uint32), None, gids)
         runtime["candidate_surfaces"][key] = value
         runtime["baseline_surfaces"][key] = value
@@ -323,3 +367,6 @@ def test_runtime_binding_retains_exact_abi5_to_pack_gid_map_when_slots_are_compa
     proof = inventory["source_face_ancestry_by_typed_row"]["51011:526"]
     assert proof["status"] == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
     assert proof["source_unreferenced_vertex_count"] == 1
+    assert proof["native_nha_gid_base_offset"] == 300
+    assert proof["nha_source_row_first_vertex"] == 10
+    assert proof["first_used_source_vertex_capture_gid"] == 311
