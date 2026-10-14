@@ -1,0 +1,1046 @@
+"""Source-bound 3D continuity proof for the right brachiocephalic junction.
+
+This is an offline source geometry screen for the existing ABI5 NHA rows. It
+reuses the frozen HP98 exact predicates, source007 inputs, and retained
+Manifold wheel. It does not modify meshes or simulate blood state.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import subprocess
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+
+import numpy as np
+
+from . import resting_brachiocephalic_geometry_gate as gate
+from . import resting_brachiocephalic_port_diagnostic as portdiag
+from . import resting_brachiocephalic_source007 as source007
+
+A = source007.A
+GATE_DIR = source007.GATE_DIR
+SOURCE004_REPORT = portdiag.SIX_DIAGNOSTIC_DIR / "six-port-section-diagnostic.json"
+SOURCE004_PREFLIGHT = portdiag.SIX_PREFLIGHT_PATH
+SOURCE004_REPORT_SHA256 = "354876d040f774d8acf18071779289ee9cfc2ce50137650087ecf2f099399700"
+SOURCE004_PREFLIGHT_SHA256 = "9d32d5a707ea4ba6444fd680e4fc9256473c486c84c3f9a17def56b392e70d5e"
+OUTPUT_DIR = GATE_DIR / "port-526-472-3d-junction-diagnostic-001"
+PREFLIGHT_PATH = GATE_DIR / "port-526-472-3d-junction-preflight-001.json"
+REPORT_PATH = OUTPUT_DIR / "3d-junction-continuity-report.json"
+PROGRESS_PATH = OUTPUT_DIR / "progress.json"
+BRIDGE_KEY = (51011, 526)
+TARGET_KEY = (51011, 472)
+PAIR = (BRIDGE_KEY, TARGET_KEY)
+VOLUME_BALANCE_RELATIVE_TOLERANCE = 1e-6
+
+
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError("brachiocephalic 3D junction: " + message)
+
+
+def _sha_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
+
+
+def sha_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _git_state() -> dict:
+    repo = Path(__file__).resolve().parents[2]
+    head = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True, capture_output=True, text=True).stdout.strip()
+    status = subprocess.run(
+        ["git", "-C", str(repo), "status", "--porcelain"],
+        check=True, capture_output=True, text=True).stdout.splitlines()
+    return {"head": head, "dirty": bool(status), "status_lines": status}
+
+
+def _jsonable(value):
+    return portdiag._jsonable(value)
+
+
+def _write_json(path: Path, value: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True,
+                                     ensure_ascii=False, allow_nan=False) + "\n")
+    temporary.replace(path)
+
+
+def _source004_plane_failure(report: dict) -> dict:
+    """Summarize the retained 004 failure without re-running its plane cuts."""
+    calls = {
+        int(item["call_index"]): item
+        for item in report.get("trace", {}).get("section_calls", [])
+        if item.get("port_identity") == {
+            "bridge": list(BRIDGE_KEY), "target": list(TARGET_KEY)}
+    }
+    candidates = []
+    for ordinal, (fraction, base) in enumerate(
+            zip((0.2, 0.4, 0.6, 0.8), (8, 14, 20, 26), strict=True), start=1):
+        bridge = calls.get(base)
+        target = calls.get(base + 1)
+        union = calls.get(base + 4)
+        _require(bridge is not None and target is not None and union is not None,
+                 "pinned source004 section witness set is incomplete")
+        bridge_metrics = bridge["section_metrics"]
+        target_metrics = target["section_metrics"]
+        union_metrics = union["section_metrics"]
+        _require(bridge["positions_dtype"] == "float32"
+                 and target["positions_dtype"] == "float32",
+                 "source004 direct-source plane witness is not native F32 geometry")
+        bridge_loops = bridge_metrics.get("loop_metrics", [])
+        target_loops = target_metrics.get("loop_metrics", [])
+        candidates.append({
+            "candidate_ordinal": ordinal,
+            "candidate_fraction_from_pinned_004_policy": fraction,
+            "section_plane_signature_sha256": bridge["section_plane_signature_sha256"],
+            "center_world_m": bridge["center_world_m"],
+            "tangent_world_unit": bridge["tangent_world_unit"],
+            "bridge526_source_section": {
+                "call_index": int(bridge["call_index"]),
+                "coordinate_dtype": bridge["positions_dtype"],
+                "surface_positions_sha256": bridge["positions_sha256"],
+                "source_faces_sha256": bridge["faces_sha256"],
+                "loop_count": int(bridge_metrics.get("loop_count", -1)),
+                "segment_count": int(bridge_metrics.get("segment_count", -1)),
+                "node_count": int(bridge_metrics.get("section_node_count", -1)),
+                "degree_histogram": bridge_metrics.get("section_degree_histogram", {}),
+                "degree_not_two_node_count": sum(
+                    int(count) for degree, count in
+                    bridge_metrics.get("section_degree_histogram", {}).items()
+                    if int(degree) != 2),
+                "loop_face_ancestry": [{
+                    "owner_ids": loop.get("owner_ids", []),
+                    "source_face_ancestor_ids": loop.get("source_face_ancestor_ids", []),
+                    "source_face_ancestor_ids_sha256": loop.get(
+                        "source_face_ancestor_ids_sha256"),
+                    "area_mm2": loop.get("area_mm2"),
+                    "minimum_feret_width_mm": loop.get("minimum_feret_width_mm"),
+                } for loop in bridge_loops],
+                "edge_ids_retained_in_source004": False,
+            },
+            "target472_source_section": {
+                "call_index": int(target["call_index"]),
+                "coordinate_dtype": target["positions_dtype"],
+                "surface_positions_sha256": target["positions_sha256"],
+                "source_faces_sha256": target["faces_sha256"],
+                "loop_count": int(target_metrics.get("loop_count", -1)),
+                "segment_count": int(target_metrics.get("segment_count", -1)),
+                "node_count": int(target_metrics.get("section_node_count", -1)),
+                "degree_histogram": target_metrics.get("section_degree_histogram", {}),
+                "loop_face_ancestry": [{
+                    "owner_ids": loop.get("owner_ids", []),
+                    "source_face_ancestor_ids": loop.get("source_face_ancestor_ids", []),
+                    "source_face_ancestor_ids_sha256": loop.get(
+                        "source_face_ancestor_ids_sha256"),
+                } for loop in target_loops],
+            },
+            "floating_union_section": {
+                "call_index": int(union["call_index"]),
+                "coordinate_dtype": union["positions_dtype"],
+                "mesh_face_sha256": union["faces_sha256"],
+                "loop_count": int(union_metrics.get("loop_count", -1)),
+                "degree_histogram": union_metrics.get("section_degree_histogram", {}),
+                "loop_face_ancestry": [{
+                    "owner_ids": loop.get("owner_ids", []),
+                    "source_face_ancestor_ids": loop.get("source_face_ancestor_ids", []),
+                    "source_face_ancestor_ids_sha256": loop.get(
+                        "source_face_ancestor_ids_sha256"),
+                } for loop in union_metrics.get("loop_metrics", [])],
+                "precision_limitation": "floating derived CSG section, not exact topology proof",
+            },
+        })
+    _require([item["bridge526_source_section"]["loop_count"] for item in candidates]
+             == [2, 0, 0, 0],
+             "pinned source004 526 section failure pattern changed")
+    _require(all(item["target472_source_section"]["loop_count"] == 1
+                 for item in candidates),
+             "pinned source004 target 472 section failure pattern changed")
+    _require(candidates[0]["bridge526_source_section"]["degree_not_two_node_count"] == 0,
+             "source004's first source-526 multi-loop witness has unexpected branching")
+    return {
+        "report_path": str(SOURCE004_REPORT),
+        "report_sha256": SOURCE004_REPORT_SHA256,
+        "diagnosis": "target_tangent_plane_multi_loop_then_bridge_absent",
+        "candidate_count": len(candidates),
+        "candidate_planes": candidates,
+        "source_section_graph_branching_proven": False,
+        "reason_shared_planar_section_uniqueness_is_not_a_valid_construction_premise": (
+            "The first target-tangent plane produces two disjoint closed 526 loops; "
+            "the other three candidate planes produce no 526 section at all while "
+            "472 has one. Retained degree histograms show no degree-not-two node "
+            "for the first multi-loop witness. This is a plane/station mismatch at "
+            "a curved junction, not evidence of a broken closed 3D source vessel."),
+        "source_edge_witness_limitation": (
+            "004 retained segment/node counts and exact source-face ancestry, but "
+            "not the individual section edge IDs."),
+    }
+
+
+def _runtime_code_pins() -> dict:
+    repo = Path(__file__).resolve().parents[2]
+    source = repo / "src/numilab_human"
+    paths = {
+        "diagnostic": Path(__file__).resolve(),
+        "geometry_gate": source / "resting_brachiocephalic_geometry_gate.py",
+        "source007": source / "resting_brachiocephalic_source007.py",
+        "legacy_port_diagnostic": source / "resting_brachiocephalic_port_diagnostic.py",
+        "pose_predictor": source / "resting_brachiocephalic_pose_predictor.py",
+        "hp98_verifier": source007.P6_PACKAGE / "resting_anatomy_verify.py",
+    }
+    return {name: {"path": str(path.resolve()), "sha256": sha_file(path)}
+            for name, path in paths.items()}
+
+
+def build_preflight() -> dict:
+    """Pin execution inputs without decoding geometry arrays or running predicates."""
+    _require(not OUTPUT_DIR.exists(), "retain an existing diagnostic output; do not overwrite")
+    _require(not PREFLIGHT_PATH.exists(), "retain an existing preflight; do not overwrite")
+    _require(SOURCE004_REPORT.is_file()
+             and sha_file(SOURCE004_REPORT) == SOURCE004_REPORT_SHA256,
+             "source007 004 rejection report changed")
+    _require(SOURCE004_PREFLIGHT.is_file()
+             and sha_file(SOURCE004_PREFLIGHT) == SOURCE004_PREFLIGHT_SHA256,
+             "source007 004 preflight changed")
+    previous = json.loads(SOURCE004_REPORT.read_text())
+    previous_preflight = json.loads(SOURCE004_PREFLIGHT.read_text())
+    _require(previous.get("status") == "SIX_PORT_RIGID_ONLY_SOURCE_SCREEN_REJECTED"
+             and previous.get("first_failed_port") == {
+                 "bridge": list(BRIDGE_KEY), "target": list(TARGET_KEY)},
+             "source007 004 is not the pinned 526-to-472 rejection")
+    prior_ports = previous.get("helper_result", {}).get("ports", [])
+    _require(len(prior_ports) == 6, "source007 004 did not evaluate all six frozen ports")
+    search = prior_ports[-1].get("target_station_candidate_search", {})
+    _require(search.get("candidate_count_requested") == 4
+             and search.get("candidate_count_evaluated") == 4
+             and search.get("passed") is False
+             and search.get("mesh_coordinates_modified") is False,
+             "source007 004 did not exhaust exactly four immutable station candidates")
+
+    _require(portdiag.RUN_REPORT.is_file()
+             and sha_file(portdiag.RUN_REPORT) == portdiag.RUN_REPORT_SHA256,
+             "pinned source007 geometry report changed")
+    _require(portdiag.RUN_RECEIPT.is_file()
+             and sha_file(portdiag.RUN_RECEIPT) == portdiag.RUN_RECEIPT_SHA256,
+             "pinned source007 execution receipt changed")
+    _require(source007.PREFLIGHT_PATH.is_file(),
+             "source007 source preflight is missing")
+    source_preflight = json.loads(source007.PREFLIGHT_PATH.read_text())
+    _require(source_preflight.get("status") == "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED",
+             "source007 source preflight status changed")
+    source_input_pins = source007._frozen_input_pins()
+    _require(source_input_pins == source_preflight.get("input_sha256"),
+             "source007 compiler input hashes differ from its retained preflight")
+    source_owner_code_pins = source007._code_and_dependency_pins()
+    frozen_owner_code_pins = source_preflight.get("code_and_dependency_pins", {})
+    _require(source_owner_code_pins.get("source_code_sha256")
+             == frozen_owner_code_pins.get("source_code_sha256")
+             and source_owner_code_pins.get("manifold3d_retained_wheel")
+             == frozen_owner_code_pins.get("manifold3d_retained_wheel"),
+             "source007 compiler owner/P6 code or dependency hashes changed")
+    plane_failure = _source004_plane_failure(previous)
+    candidate_files = portdiag._actual_file_hashes(source007.CANDIDATE_DIR)
+    preparation_files = portdiag._actual_file_hashes(source007.PREPARATION_DIR)
+    _require(candidate_files == previous_preflight.get("candidate007_files_sha256"),
+             "source007 candidate files differ from the completed 004 replay")
+    _require(preparation_files == previous_preflight.get("prep007_files_sha256"),
+             "source007 common-field preparation files differ from 004")
+    _require(candidate_files.get("resting-thorax.nhanatomy")
+             == previous.get("candidate_payload_sha256"),
+             "source007 NHANAT payload differs from completed 004")
+    prep_report_sha = previous.get("preparation_report_sha256")
+    _require(prep_report_sha == preparation_files.get(
+        "brachiocephalic-common-field-preparation.json"),
+        "source007 preparation report differs from completed 004")
+
+    capture_manifest = json.loads(source007.CAPTURE_MANIFEST.read_text())
+    rows = capture_manifest.get("capture_rows", [])
+    source0 = [row for row in rows if int(row.get("step", -1)) == 0]
+    _require(len(source0) == 1
+             and source0[0].get("recorded_pack_sha256") == source007.STEP0_PACK_SHA
+             and source0[0].get("receipt_sha256") == source007.STEP0_RECEIPT_SHA,
+             "accepted source0 capture pins changed")
+    pack_path = Path(source0[0]["pack_path"])
+    receipt_path = Path(source0[0]["receipt_path"])
+    _require(sha_file(pack_path) == source007.STEP0_PACK_SHA
+             and sha_file(receipt_path) == source007.STEP0_RECEIPT_SHA,
+             "accepted source0 pack or receipt bytes changed")
+
+    pins = {
+        "source007_report": {"path": str(portdiag.RUN_REPORT),
+                             "sha256": portdiag.RUN_REPORT_SHA256},
+        "source007_receipt": {"path": str(portdiag.RUN_RECEIPT),
+                              "sha256": portdiag.RUN_RECEIPT_SHA256},
+        "source007_preflight": {"path": str(source007.PREFLIGHT_PATH),
+                                "sha256": sha_file(source007.PREFLIGHT_PATH)},
+        "source007_input_sha256": source_input_pins,
+        "source007_compiler_source_code_sha256": source_owner_code_pins[
+            "source_code_sha256"],
+        "candidate007_files": candidate_files,
+        "preparation007_files": preparation_files,
+        "source004_report": {"path": str(SOURCE004_REPORT),
+                             "sha256": SOURCE004_REPORT_SHA256},
+        "source004_preflight": {"path": str(SOURCE004_PREFLIGHT),
+                                "sha256": SOURCE004_PREFLIGHT_SHA256},
+        "source0_pack": {"path": str(pack_path), "sha256": source007.STEP0_PACK_SHA},
+        "source0_receipt": {"path": str(receipt_path),
+                            "sha256": source007.STEP0_RECEIPT_SHA},
+        "capture_manifest": {"path": str(source007.CAPTURE_MANIFEST),
+                             "sha256": source007.CAPTURE_MANIFEST_SHA},
+    }
+    code_pins = _runtime_code_pins()
+    wheel = dict(source007.MANIFOLD_SHA)
+    for raw_path, expected in wheel.items():
+        path = Path(raw_path)
+        _require(path.is_file() and sha_file(path) == expected,
+                 "retained Manifold wheel pin changed: " + raw_path)
+    state = _git_state()
+    _require(not state["dirty"], "preflight requires a clean committed source checkout")
+    return {
+        "schema": "numi.human.brachiocephalic-3d-junction-preflight.v1",
+        "status": "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED",
+        "source_repository": state,
+        "scope": {
+            "bridge": list(BRIDGE_KEY),
+            "target": list(TARGET_KEY),
+            "port_count": 1,
+            "source007_compiler_invoked": False,
+            "all_six_ports_replayed": False,
+            "all_nearby_targets_evaluated": False,
+            "all_pose_checks": False,
+            "native_or_gpu_work": False,
+            "mesh_coordinates_modified": False,
+            "method": "independent closed-solid 3D overlap and two separately ancestry-bound source collar sections",
+            "shared_planar_junction_section_required": False,
+            "plane_candidate_sweep": False,
+            "requirements": [
+                "exact-coordinate-quotiented source closure and zero exact self intersections for candidate and baseline bridge and target",
+                "one connected source face component per vessel after exact seam quotient",
+                "frozen collar face-patch ancestry with exact captured source interface points for candidate and baseline",
+                "positive volumetric intersection and one exact P6 inside-both witness for candidate and baseline",
+                "one connected closed source component per vessel and one connected numerical union component",
+                "numerical union-volume accounting equals source volumes minus overlap within declared relative tolerance 1e-6",
+                "one positive closed source section per vessel at its own collar-ancestry material station",
+                "candidate-to-baseline section area ratio [0.8,1.25] and minimum-Feret ratio [0.9,1.1]",
+            ],
+            "volume_balance_relative_tolerance": VOLUME_BALANCE_RELATIVE_TOLERANCE,
+            "existing_cvsim_compartment_id": 4,
+            "added_physical_mass_kg": 0,
+            "added_blood_state_or_force": False,
+        },
+        "inputs": pins,
+        "source004_plane_failure": plane_failure,
+        "runtime_code_sha256": code_pins,
+        "manifold3d_retained_wheel_sha256": wheel,
+        "hp98_verifier_sha256": source007.P6_VERIFIER_SHA,
+        "geometry_arrays_loaded": False,
+        "geometry_predicates_run": False,
+    }
+
+
+def write_preflight() -> dict:
+    report = build_preflight()
+    _write_json(PREFLIGHT_PATH, report)
+    return {"report_path": str(PREFLIGHT_PATH),
+            "report_sha256": sha_file(PREFLIGHT_PATH),
+            "status": report["status"]}
+
+
+def _source_surface(verifier, key, value, label: str):
+    detail = {"role": label, "identity": list(key)}
+    try:
+        _require(isinstance(value, (tuple, list)) and len(value) >= 2,
+                 label + " surface must contain positions and faces")
+        positions = gate._float32_xyz(value[0], name=label)
+        faces = gate._faces(value[1], name=label, vertex_count=len(positions))
+        normals = value[2] if len(value) > 2 else None
+        source_ids = (value[3] if len(value) > 3
+                      else np.arange(len(positions), dtype=np.uint64))
+        prepared = verifier.prepare_surface(
+            key, positions, faces, normals=normals, source_vertex_ids=source_ids)
+        self_audit = prepared.self_audit()
+        topology = prepared.quotient_topology
+        component_count = int(topology.get("face_component_count", -1))
+        signed_volume = gate._signed_volume(prepared.positions, prepared.faces)
+        detail.update({
+            "prepared_surface": prepared.diagnostics(),
+            "source_vertex_ids_sha256": _sha_bytes(
+                np.asarray(prepared.source_vertex_ids, dtype="<u8").tobytes()),
+            "referenced_face_component_count": component_count,
+            "exact_self_audit_count": int(self_audit.get("count", -1)),
+            "exact_self_audit_pairs": _jsonable(self_audit.get("pairs", [])),
+            "signed_volume_m3": signed_volume,
+            "absolute_source_volume_m3": abs(signed_volume),
+            "closed_self_free_single_component": bool(
+                prepared.closed and int(self_audit.get("count", -1)) == 0
+                and component_count == 1 and np.isfinite(signed_volume)
+                and abs(signed_volume) > 0.0),
+        })
+        return prepared, detail
+    except Exception as error:  # noqa: BLE001 - retain exact source-preparation failures
+        detail["error"] = {"type": type(error).__name__, "message": str(error)}
+        return None, detail
+
+
+def _own_collar_station(surface, witness_points, collar_face_ids, *, role: str):
+    """Derive one section from this vessel's own frozen collar and source interior."""
+    positions = surface.positions.astype(np.float64)
+    faces = surface.faces
+    collar_faces = np.asarray(sorted(set(map(int, collar_face_ids))), dtype=np.int64)
+    _require(collar_faces.ndim == 1 and len(collar_faces) > 0
+             and int(collar_faces.min()) >= 0 and int(collar_faces.max()) < len(faces),
+             role + " has no valid frozen collar face ancestry")
+    collar_vertices = np.unique(faces[collar_faces].reshape(-1))
+    referenced_vertices = np.unique(faces.reshape(-1))
+    interior_vertices = np.setdiff1d(referenced_vertices, collar_vertices)
+    _require(len(collar_vertices) >= 3 and len(interior_vertices) >= 2,
+             role + " collar or non-collar source ancestry is insufficient")
+    collar_center = positions[collar_vertices].mean(axis=0)
+    interior_center = positions[interior_vertices].mean(axis=0)
+    direction = interior_center - collar_center
+    direction_norm = float(np.linalg.norm(direction))
+    _require(np.isfinite(direction_norm) and direction_norm > 1e-15,
+             role + " source has no collar-to-interior direction")
+    direction /= direction_norm
+
+    projection = positions[referenced_vertices] @ direction
+    support = referenced_vertices[[int(np.argmin(projection)), int(np.argmax(projection))]]
+    tangent = positions[int(support[1])] - positions[int(support[0])]
+    tangent_norm = float(np.linalg.norm(tangent))
+    _require(np.isfinite(tangent_norm) and tangent_norm > 1e-15,
+             role + " source tangent support collapsed")
+    tangent /= tangent_norm
+    if float(np.dot(tangent, direction)) < 0.0:
+        support = support[::-1]
+        tangent = -tangent
+
+    weights = np.full(len(collar_vertices), 1.0 / len(collar_vertices), dtype=np.float64)
+    ancestry = {
+        "material_anchor_local_vertex_ids": collar_vertices.astype(int).tolist(),
+        "material_anchor_source_vertex_ids": [
+            int(surface.source_vertex_ids[int(index)]) for index in collar_vertices],
+        "material_anchor_weights": weights.tolist(),
+        "tangent_support_local_vertex_ids": support.astype(int).tolist(),
+        "tangent_support_source_vertex_ids": [
+            int(surface.source_vertex_ids[int(index)]) for index in support],
+        "frozen_collar_face_ids": collar_faces.astype(int).tolist(),
+    }
+    anchor = np.sum(positions[collar_vertices] * weights[:, None], axis=0)
+    collar_points = positions[faces[collar_faces]].reshape(-1, 3)
+    raw_positive_extent = float(np.max((collar_points - anchor) @ tangent))
+    margin = max(float(np.max(np.abs(np.spacing(surface.positions))) * 8.0),
+                 float(np.finfo(np.float32).tiny))
+    _require(np.isfinite(raw_positive_extent) and raw_positive_extent >= -margin,
+             role + " frozen collar extent is inconsistent with its material anchor")
+    positive_extent = max(0.0, raw_positive_extent)
+    station = gate._transport_material_station(surface, {
+        **ancestry,
+        "tangent_world_unit": tangent.tolist(),
+        "provenance": (
+            "single vessel-local collar-to-interior direction and referenced "
+            "source-vertex extreme tangent; no shared junction plane"),
+        "inferred": True,
+        "station_offset_from_anchor_m": positive_extent + margin,
+    })
+    points = np.asarray(witness_points, dtype=np.float64)
+    _require(points.ndim == 2 and points.shape[1] == 3 and len(points) > 0
+             and np.isfinite(points).all(),
+             role + " needs finite exact frozen-interface witness points")
+    junction = points.mean(axis=0)
+    station["own_collar_station_policy"] = "OWN_COLLAR_OUTSIDE_PATCH_V1"
+    station["source_role"] = role
+    station["collar_to_interior_direction_world_unit"] = direction.tolist()
+    station["collar_center_world_m"] = collar_center.tolist()
+    station["noncollar_referenced_centroid_world_m"] = interior_center.tolist()
+    station["referenced_tangent_support_local_vertex_ids"] = support.astype(int).tolist()
+    station["referenced_tangent_support_source_vertex_ids"] = ancestry[
+        "tangent_support_source_vertex_ids"]
+    station["raw_positive_collar_projection_extent_m"] = raw_positive_extent
+    station["positive_collar_projection_extent_m"] = positive_extent
+    station["exact_interface_witness_points_sha256"] = _sha_bytes(
+        np.ascontiguousarray(points, dtype="<f8").tobytes())
+    station["exact_interface_witness_centroid_world_m"] = junction.tolist()
+    station["junction_witness_signed_distance_to_station_m"] = float(
+        np.dot(junction - np.asarray(station["section_center_world_m"]), tangent))
+    station["mesh_coordinates_modified"] = False
+    return station
+
+
+def _station_calibre(surface, baseline_surface, witness_points, collar_faces, *,
+                     role: str, owner_id: int) -> dict:
+    result = {"role": role, "owner_id": owner_id}
+    try:
+        station = _own_collar_station(
+            surface, witness_points, collar_faces, role=role)
+        baseline_station = gate._transport_material_station(baseline_surface, station)
+        candidate_section = gate._source_surface_section(surface, station)
+        baseline_section = gate._source_surface_section(
+            baseline_surface, baseline_station)
+        candidate_metric, candidate_error = gate._section_metric_for_owner(
+            candidate_section, owner_id, label=f"{role} candidate source section")
+        baseline_metric, baseline_error = gate._section_metric_for_owner(
+            baseline_section, owner_id, label=f"{role} baseline source section")
+        comparison = None
+        comparison_error = None
+        if candidate_metric is not None and baseline_metric is not None:
+            try:
+                comparison = gate._section_comparison(candidate_metric, baseline_metric)
+            except Exception as error:  # noqa: BLE001 - retain the actual comparison failure
+                comparison_error = {"type": type(error).__name__, "message": str(error)}
+        result.update({
+            "passed": bool(comparison and comparison.get("passed")),
+            "station": station,
+            "baseline_station_transported_by_source_ancestry": baseline_station,
+            "candidate_section": candidate_section,
+            "baseline_section": baseline_section,
+            "candidate_metric_error": candidate_error,
+            "baseline_metric_error": baseline_error,
+            "candidate_to_baseline_comparison": comparison,
+            "comparison_error": comparison_error,
+            "declared_area_ratio": [0.8, 1.25],
+            "declared_minimum_feret_ratio": [0.9, 1.1],
+            "clinical_calibre_claim": False,
+        })
+    except Exception as error:  # noqa: BLE001 - preserve failed station derivation/evaluation
+        result.update({
+            "passed": False,
+            "error": {"type": type(error).__name__, "message": str(error)},
+        })
+    return result
+
+
+def _interface_gate(verifier, bridge, target, frozen_pairs) -> dict:
+    pairs = gate._pair_rows(
+        frozen_pairs, name="frozen right brachiocephalic port pairs",
+        bridge_face_count=len(bridge.faces), target_face_count=len(target.faces))
+    bridge_patch = sorted({first for first, _ in pairs})
+    target_patch = sorted({second for _, second in pairs})
+    allowed = {(first, second) for first in bridge_patch for second in target_patch}
+    audit = verifier.audit_surface_pair(
+        bridge, target, intended_face_pairs=tuple(sorted(allowed)))
+    observed = tuple(tuple(map(int, pair)) for pair in
+                     audit.get("declared_interface_triangle_pairs", []))
+    unexpected = tuple(tuple(map(int, pair)) for pair in
+                       audit.get("unexpected_triangle_pairs", []))
+    exact_points = gate._exact_interface_points(verifier, bridge, target, observed)
+    within_patch = all(pair in allowed for pair in observed)
+    return {
+        "passed": bool(audit.get("passed")) and not unexpected and within_patch
+        and bool(exact_points),
+        "p6_audit_passed": bool(audit.get("passed")),
+        "observed_pair_count": len(observed),
+        "observed_face_pairs": [list(pair) for pair in observed],
+        "unexpected_face_pairs": [list(pair) for pair in unexpected],
+        "observed_pairs_within_frozen_face_patch_cross_product": within_patch,
+        "frozen_face_pairs": [list(pair) for pair in pairs],
+        "frozen_face_pairs_sha256": _sha_bytes(
+            np.ascontiguousarray(pairs, dtype="<i8").tobytes()),
+        "bridge_frozen_collar_faces": bridge_patch,
+        "bridge_frozen_collar_faces_sha256": _sha_bytes(
+            np.ascontiguousarray(bridge_patch, dtype="<i8").tobytes()),
+        "target_frozen_collar_faces": target_patch,
+        "target_frozen_collar_faces_sha256": _sha_bytes(
+            np.ascontiguousarray(target_patch, dtype="<i8").tobytes()),
+        "exact_interface_point_count": len(exact_points),
+        "exact_interface_points_world_m": [list(point) for point in exact_points],
+        "exact_interface_points_sha256": _sha_bytes(
+            np.ascontiguousarray(exact_points, dtype="<f8").tobytes()),
+        "audit_result": _jsonable(audit),
+    }
+
+
+def _volume_accounting(first_volume: float, second_volume: float,
+                       intersection_volume: float, union_volume: float) -> dict:
+    expected_union = first_volume + second_volume - intersection_volume
+    scale = max(first_volume + second_volume, np.finfo(np.float64).tiny)
+    residual = union_volume - expected_union
+    relative_error = abs(residual) / max(abs(expected_union), np.finfo(np.float64).tiny)
+    tolerance = VOLUME_BALANCE_RELATIVE_TOLERANCE
+    no_input_volume_loss = union_volume + scale * tolerance >= max(
+        first_volume, second_volume)
+    return {
+        "first_source_volume_m3": first_volume,
+        "second_source_volume_m3": second_volume,
+        "intersection_volume_m3": intersection_volume,
+        "expected_union_volume_m3": expected_union,
+        "observed_union_volume_m3": union_volume,
+        "signed_volume_balance_residual_m3": residual,
+        "relative_volume_balance_error": relative_error,
+        "declared_relative_tolerance": tolerance,
+        "union_volume_not_less_than_either_source": no_input_volume_loss,
+        "passed": bool(expected_union > 0.0 and relative_error <= tolerance
+                       and no_input_volume_loss),
+        "identity": "V(union)=V(first)+V(second)-V(intersection)",
+        "scope": "floating Manifold volume accounting, not physical blood volume",
+    }
+
+
+def _solid_gate(verifier, manifold3d, bridge, target, *, role: str) -> dict:
+    output = {"role": role, "passed": False, "floating_boolean_exact_topology_proven": False}
+    try:
+        first, first_info = gate._make_manifold(bridge, manifold3d)
+        second, second_info = gate._make_manifold(target, manifold3d)
+        first_status, second_status = str(first.status()), str(second.status())
+        first_components = len(first.decompose())
+        second_components = len(second.decompose())
+        inputs_passed = (first_status.endswith("NoError")
+                         and second_status.endswith("NoError")
+                         and first_components == 1 and second_components == 1)
+        bridge_volume = abs(gate._signed_volume(bridge.positions, bridge.faces))
+        target_volume = abs(gate._signed_volume(target.positions, target.faces))
+        result = {
+            "bridge_manifold_input": _jsonable(first_info),
+            "target_manifold_input": _jsonable(second_info),
+            "bridge_status": first_status,
+            "target_status": second_status,
+            "bridge_component_count": first_components,
+            "target_component_count": second_components,
+            "bridge_source_volume_m3": bridge_volume,
+            "target_source_volume_m3": target_volume,
+            "manifold_inputs_passed": inputs_passed,
+        }
+        if not inputs_passed:
+            output.update(result)
+            output["rejection"] = "Manifold input status/component check failed"
+            return output
+
+        intersection = manifold3d.Manifold.batch_boolean(
+            [first, second], manifold3d.OpType.Intersect)
+        union = manifold3d.Manifold.batch_boolean(
+            [first, second], manifold3d.OpType.Add)
+        intersection_status, union_status = str(intersection.status()), str(union.status())
+        intersection_volume = float(intersection.volume())
+        union_volume = float(union.volume())
+        intersection_components = len(intersection.decompose())
+        union_components = len(union.decompose())
+        intersection_witness = (
+            gate._exact_inside_witness(verifier, bridge, target, intersection)
+            if intersection_volume > 0.0 else None)
+        union_positions, union_faces, union_mesh = gate._manifold_mesh(union)
+        lineage = gate._mesh_face_lineage(
+            union_mesh, {
+                bridge.key[1]: len(bridge.quotient_faces),
+                target.key[1]: len(target.quotient_faces),
+            })
+        lineage_report = lineage["report"]
+        lineage_passed = bool(
+            lineage_report.get("generated_face_count") == 0
+            and lineage_report.get("unmapped_face_count") == 0
+            and set(lineage_report.get("run_original_ids", []))
+            == {bridge.key[1], target.key[1]})
+        accounting = _volume_accounting(
+            bridge_volume, target_volume, intersection_volume, union_volume)
+        status_passed = (
+            intersection_status.endswith("NoError")
+            and union_status.endswith("NoError"))
+        output.update(result)
+        output.update({
+            "intersection_status": intersection_status,
+            "intersection_volume_m3": intersection_volume,
+            "intersection_component_count": intersection_components,
+            "positive_intersection_volume": intersection_volume > 0.0,
+            "exact_inside_both_witness": intersection_witness,
+            "union_status": union_status,
+            "union_volume_m3": union_volume,
+            "union_component_count": union_components,
+            "union_connected_numerical_solid": bool(
+                union_status.endswith("NoError") and union_components == 1),
+            "union_triangle_count": len(union_faces),
+            "union_vertex_count": len(union_positions),
+            "union_float64_mesh64_lineage": lineage_report,
+            "union_lineage_has_both_sources_without_generated_or_unmapped_faces":
+                lineage_passed,
+            "volume_accounting": accounting,
+            "csg_analysis_precision": "Manifold Mesh64 Float64; floating Boolean only",
+            "floating_boolean_exact_topology_proven": False,
+        })
+        output["passed"] = bool(
+            status_passed and intersection_volume > 0.0
+            and intersection_witness is not None
+            and union_status.endswith("NoError") and union_components == 1
+            and lineage_passed and accounting["passed"])
+        if not output["passed"]:
+            output["rejection"] = "solid overlap, exact witness, connected union, source lineage, or volume accounting failed"
+    except Exception as error:  # noqa: BLE001 - retain partial numerical solid evidence
+        output["error"] = {"type": type(error).__name__, "message": str(error)}
+    return output
+
+
+def audit_brachiocephalic_3d_junction(
+    verifier, manifold3d, *, bridge_key, bridge_surface, target_key, target_surface,
+    frozen_face_pairs, baseline_bridge_surface, baseline_target_surface,
+) -> dict:
+    """Prove one explicit vessel pair in 3D without a shared planar junction cut."""
+    bridge_key = gate._identity(bridge_key)
+    target_key = gate._identity(target_key)
+    _require((bridge_key, target_key) == PAIR,
+             "3D junction proof is restricted to stable IDs 526 and 472")
+
+    surfaces = {}
+    surface_reports = {}
+    for label, key, value in (
+        ("candidate_bridge", bridge_key, bridge_surface),
+        ("candidate_target", target_key, target_surface),
+        ("baseline_bridge", bridge_key, baseline_bridge_surface),
+        ("baseline_target", target_key, baseline_target_surface),
+    ):
+        prepared, evidence = _source_surface(verifier, key, value, label)
+        surfaces[label] = prepared
+        surface_reports[label] = evidence
+
+    topology_passed = all(
+        surfaces[name] is not None
+        and surface_reports[name].get("closed_self_free_single_component") is True
+        for name in ("candidate_bridge", "candidate_target",
+                     "baseline_bridge", "baseline_target"))
+    ancestry = {}
+    ancestry_issues = []
+    if topology_passed:
+        for role in ("bridge", "target"):
+            candidate = surfaces["candidate_" + role]
+            baseline = surfaces["baseline_" + role]
+            same_faces = (candidate.faces.shape == baseline.faces.shape
+                          and np.array_equal(candidate.faces, baseline.faces))
+            same_ids = (candidate.source_vertex_ids.shape == baseline.source_vertex_ids.shape
+                        and np.array_equal(candidate.source_vertex_ids,
+                                           baseline.source_vertex_ids))
+            candidate_volume = gate._signed_volume(candidate.positions, candidate.faces)
+            baseline_volume = gate._signed_volume(baseline.positions, baseline.faces)
+            orientation = candidate_volume * baseline_volume > 0.0
+            ratio = (abs(candidate_volume) / abs(baseline_volume)
+                     if baseline_volume != 0.0 else None)
+            positive_volumes = bool(
+                np.isfinite(candidate_volume) and np.isfinite(baseline_volume)
+                and abs(candidate_volume) > 0.0 and abs(baseline_volume) > 0.0)
+            evidence = {
+                "candidate_face_ancestry_sha256": _sha_bytes(candidate.faces.tobytes()),
+                "baseline_face_ancestry_sha256": _sha_bytes(baseline.faces.tobytes()),
+                "candidate_source_vertex_ids_sha256": _sha_bytes(
+                    np.asarray(candidate.source_vertex_ids, dtype="<u8").tobytes()),
+                "baseline_source_vertex_ids_sha256": _sha_bytes(
+                    np.asarray(baseline.source_vertex_ids, dtype="<u8").tobytes()),
+                "same_ordered_source_face_ancestry": same_faces,
+                "same_source_vertex_ancestry": same_ids,
+                "candidate_signed_volume_m3": candidate_volume,
+                "baseline_signed_volume_m3": baseline_volume,
+                "candidate_to_baseline_source_volume_ratio": ratio,
+                "source_volumes_finite_and_positive": positive_volumes,
+                "source_volume_ratio_is_diagnostic_only": True,
+                "source_orientation_preserved": orientation,
+                "passed": bool(same_faces and same_ids and orientation
+                               and positive_volumes),
+            }
+            ancestry[role] = evidence
+            if not evidence["passed"]:
+                ancestry_issues.append(
+                    role + " candidate/baseline source identity, orientation, or volume changed")
+    ancestry_passed = topology_passed and not ancestry_issues
+
+    result = {
+        "schema": "numi.human.brachiocephalic-3d-junction-continuity.v1",
+        "bridge": list(bridge_key),
+        "target": list(target_key),
+        "status": "RUNNING",
+        "passed": False,
+        "source_topology_gate": {
+            "passed": topology_passed,
+            "require_one_referenced_source_component_per_vessel": True,
+            "surfaces": surface_reports,
+        },
+        "candidate_baseline_ancestry_gate": {
+            "passed": ancestry_passed,
+            "vessels": ancestry,
+            "rejections": ancestry_issues,
+        },
+        "port_interfaces": {},
+        "solid_gates": {},
+        "independent_collar_calibre": {},
+        "limitations": {
+            "shared_planar_junction_section_required": False,
+            "union_section_loop_count_used_as_continuity_premise": False,
+            "plane_candidate_sweep": False,
+            "candidate_source_faces_or_coordinates_modified": False,
+            "union_boolean_exact_topology_proven": False,
+            "clinical_calibre": "not_established",
+            "native_gpu_confirmation": "required",
+            "accepted_pose_scope": "source-0 rigid-source screen only",
+            "all_pose_qualification": "not_performed",
+            "all_nearby_collision_checks": "not_performed",
+            "anatomical_admission": False,
+            "existing_cvsim_compartment_id": 4,
+            "added_physical_mass_kg": 0,
+            "added_blood_state_or_force": False,
+            "existing_blood_state_owner_mutated": False,
+        },
+        "source004_plane_failure": _source004_plane_failure(
+            json.loads(SOURCE004_REPORT.read_text())),
+    }
+    if not topology_passed:
+        result["status"] = "REJECT_SOURCE_CLOSED_SELF_FREE_COMPONENT_GATE"
+        result["rejections"] = [
+            name + " is not exact-coordinate-quotiented closed, exact-self-free, and single-component"
+            for name in ("candidate_bridge", "candidate_target",
+                         "baseline_bridge", "baseline_target")
+            if surface_reports[name].get("closed_self_free_single_component") is not True]
+        return result
+    if not ancestry_passed:
+        result["status"] = "REJECT_CANDIDATE_BASELINE_SOURCE_ANCESTRY_OR_VOLUME"
+        result["rejections"] = ancestry_issues
+        return result
+
+    pairs = gate._pair_rows(
+        frozen_face_pairs, name="frozen 526/472 source collar ancestry",
+        bridge_face_count=len(surfaces["candidate_bridge"].faces),
+        target_face_count=len(surfaces["candidate_target"].faces))
+    for name, bridge_name, target_name in (
+        ("candidate", "candidate_bridge", "candidate_target"),
+        ("baseline", "baseline_bridge", "baseline_target"),
+    ):
+        result["port_interfaces"][name] = _interface_gate(
+            verifier, surfaces[bridge_name], surfaces[target_name], pairs)
+
+    if not all(item.get("passed") for item in result["port_interfaces"].values()):
+        result["status"] = "REJECT_FROZEN_COLLAR_EXACT_INTERFACE_GATE"
+        result["rejections"] = [
+            name + " does not have exact interface points within its frozen collar face ancestry"
+            for name, item in result["port_interfaces"].items()
+            if item.get("passed") is not True]
+        return result
+
+    candidate_points = result["port_interfaces"]["candidate"][
+        "exact_interface_points_world_m"]
+    baseline_points = result["port_interfaces"]["baseline"][
+        "exact_interface_points_world_m"]
+    for role, candidate_name, baseline_name, owner, collar_name in (
+        ("bridge", "candidate_bridge", "baseline_bridge", bridge_key[1],
+         "bridge_frozen_collar_faces"),
+        ("target", "candidate_target", "baseline_target", target_key[1],
+         "target_frozen_collar_faces"),
+    ):
+        collar_faces = result["port_interfaces"]["candidate"][collar_name]
+        result["independent_collar_calibre"][role] = _station_calibre(
+            surfaces[candidate_name], surfaces[baseline_name],
+            candidate_points, collar_faces, role=role, owner_id=owner)
+        result["independent_collar_calibre"][role]["baseline_interface_point_sha256"] = (
+            result["port_interfaces"]["baseline"]["exact_interface_points_sha256"])
+        result["independent_collar_calibre"][role]["baseline_station_witness_point_count"] = (
+            len(baseline_points))
+
+    result["solid_gates"]["candidate"] = _solid_gate(
+        verifier, manifold3d, surfaces["candidate_bridge"],
+        surfaces["candidate_target"], role="candidate")
+    result["solid_gates"]["baseline"] = _solid_gate(
+        verifier, manifold3d, surfaces["baseline_bridge"],
+        surfaces["baseline_target"], role="baseline")
+    interface_passed = all(item.get("passed") for item in result["port_interfaces"].values())
+    calibre_passed = all(item.get("passed") for item in
+                         result["independent_collar_calibre"].values())
+    solid_passed = all(item.get("passed") for item in result["solid_gates"].values())
+    result["passed"] = bool(topology_passed and ancestry_passed
+                            and interface_passed and calibre_passed and solid_passed)
+    result["status"] = (
+        "PASS_SOURCE_BOUND_3D_JUNCTION_CONTINUITY_SCREEN"
+        if result["passed"] else "REJECT_SOURCE_BOUND_3D_JUNCTION_CONTINUITY_SCREEN")
+    result["requirements"] = {
+        "exact_source_closure_and_self_free_after_exact_seam_quotient": topology_passed,
+        "one_connected_referenced_face_component_per_source_vessel": topology_passed,
+        "candidate_baseline_source_ancestry_and_volume": ancestry_passed,
+        "matched_frozen_collar_ancestry_and_exact_interface_points": interface_passed,
+        "positive_overlap_exact_inside_both_and_connected_union": solid_passed,
+        "each_vessel_positive_one_loop_at_its_own_collar_station": all(
+            item.get("passed") for item in result["independent_collar_calibre"].values()),
+    }
+    result["rejections"] = [
+        f"independent {role} collar section or calibre comparison failed"
+        for role, item in result["independent_collar_calibre"].items()
+        if item.get("passed") is not True]
+    result["rejections"].extend(
+        f"{role} candidate/baseline 3D overlap or union proof failed"
+        for role, item in result["solid_gates"].items()
+        if item.get("passed") is not True)
+    return result
+
+
+def _assert_current_pins(preflight: dict) -> None:
+    _require(preflight.get("status") == "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED",
+             "preflight has not been source-bound")
+    _require(preflight.get("source_repository") == _git_state(),
+             "source checkout revision or cleanliness differs from preflight")
+    current = _runtime_code_pins()
+    _require(current == preflight.get("runtime_code_sha256"),
+             "source or runtime code differs from preflight")
+    pins = preflight["inputs"]
+    _require(source007._frozen_input_pins() == pins["source007_input_sha256"],
+             "source007 compiler input hash set changed after preflight")
+    current_owner_code = source007._code_and_dependency_pins()
+    _require(current_owner_code.get("source_code_sha256")
+             == pins["source007_compiler_source_code_sha256"],
+             "source007 compiler source/P6 owner code changed after preflight")
+    for key in ("source007_report", "source007_receipt", "source007_preflight",
+                "source004_report", "source004_preflight", "source0_pack",
+                "source0_receipt", "capture_manifest"):
+        entry = pins[key]
+        path = Path(entry["path"])
+        _require(path.is_file() and sha_file(path) == entry["sha256"],
+                 "pinned input changed: " + str(path))
+    _require(portdiag._actual_file_hashes(source007.CANDIDATE_DIR)
+             == pins["candidate007_files"]
+             and portdiag._actual_file_hashes(source007.PREPARATION_DIR)
+             == pins["preparation007_files"],
+             "source007 emitted candidate/preparation bytes changed")
+    for raw_path, expected in preflight["manifold3d_retained_wheel_sha256"].items():
+        path = Path(raw_path)
+        _require(path.is_file() and sha_file(path) == expected,
+                 "retained Manifold wheel changed: " + raw_path)
+
+
+def run() -> dict:
+    _require(PREFLIGHT_PATH.is_file(), "run the no-geometry 3D preflight first")
+    preflight = json.loads(PREFLIGHT_PATH.read_text())
+    _assert_current_pins(preflight)
+    _require(not OUTPUT_DIR.exists(), "retain existing diagnostic output; do not overwrite")
+    OUTPUT_DIR.mkdir(parents=True)
+    started = time.perf_counter()
+    report = {
+        "schema": "numi.human.brachiocephalic-3d-junction-execution.v1",
+        "status": "RUNNING_SOURCE007_3D_JUNCTION_SCREEN",
+        "recorded_start_utc": datetime.now(UTC).isoformat(),
+        "elapsed_seconds": None,
+        "scope": preflight["scope"],
+        "preflight_path": str(PREFLIGHT_PATH),
+        "preflight_sha256": sha_file(PREFLIGHT_PATH),
+        "candidate_payload_sha256": preflight["inputs"]["candidate007_files"][
+            "resting-thorax.nhanatomy"],
+        "preparation_report_sha256": preflight["inputs"]["preparation007_files"][
+            "brachiocephalic-common-field-preparation.json"],
+        "source004_rejection_sha256": SOURCE004_REPORT_SHA256,
+        "source004_plane_failure": preflight["source004_plane_failure"],
+        "source_geometry_mutated": False,
+        "native_or_gpu_work_performed": False,
+        "source_compiler_invoked": False,
+    }
+    _write_json(PROGRESS_PATH, report)
+    try:
+        candidate_payload = source007.CANDIDATE_DIR / "resting-thorax.nhanatomy"
+        candidate_receipt = source007.PREPARATION_DIR / "resting-anatomy-receipt.json"
+        prep_report = source007.PREPARATION_DIR / "brachiocephalic-common-field-preparation.json"
+        validation = source007._validate_source_candidate(candidate_receipt, prep_report)
+        _require(sha_file(candidate_payload) == preflight["inputs"]["candidate007_files"][
+            "resting-thorax.nhanatomy"], "candidate NHA payload changed")
+        _, _, rows = portdiag._parse_payload(candidate_payload.read_bytes())
+        _require(526 in rows and 472 in rows, "source007/N27 lacks stable IDs 526/472")
+        verifier = source007._load_central_p6()
+        manifest = json.loads(source007.CAPTURE_MANIFEST.read_text())
+        captured, identity, capture_meta = source007._step0_source(manifest, verifier)
+        transform = source007._load_predictor_transform()
+        target_surfaces = source007._port_target_surfaces(captured, rows)
+        bridge_surfaces = source007._bridge_surfaces(
+            rows, capture_meta["body20"], transform)
+        pairs_by_port, attribution, stationarity = source007._read_port_pairs()
+        _require(PAIR in pairs_by_port and pairs_by_port[PAIR],
+                 "frozen source bridge collar interface is missing")
+        _require(stationarity.get("status") == "PASS_SOURCE_PORT_SUPPORT_FIXED",
+                 "source collar support stationarity evidence changed")
+        candidate_bridge = bridge_surfaces[BRIDGE_KEY]
+        candidate_target = target_surfaces[TARGET_KEY]
+        baseline_bridge = candidate_bridge
+        baseline_target = candidate_target
+        report["source007_identity"] = {
+            "candidate_receipt_sha256": sha_file(candidate_receipt),
+            "preparation_report_sha256": sha_file(prep_report),
+            "source_map_525": validation["source_map"].get("525"),
+            "source_map_526": validation["source_map"].get("526"),
+            "body20_pose": _jsonable(capture_meta["body20"]),
+            "source0_identity": _jsonable(identity),
+            "target_capture_pack_sha256": identity["pack_sha256"],
+            "target_capture_receipt_sha256": identity["capture_receipt_sha256"],
+            "common_field_map_record_count": validation["common_field"]["map"]["record_count"],
+            "existing_cvsim_compartment_id": 4,
+            "added_physical_mass_kg": 0,
+            "added_blood_state_or_force": False,
+        }
+        report["input_geometry"] = {
+            "bridge_positions_sha256": _sha_bytes(candidate_bridge[0].tobytes()),
+            "bridge_faces_sha256": _sha_bytes(candidate_bridge[1].tobytes()),
+            "bridge_source_vertex_count": len(candidate_bridge[0]),
+            "bridge_source_face_count": len(candidate_bridge[1]),
+            "target_positions_sha256": _sha_bytes(candidate_target[0].tobytes()),
+            "target_faces_sha256": _sha_bytes(candidate_target[1].tobytes()),
+            "target_source_vertex_count": len(candidate_target[0]),
+            "target_source_face_count": len(candidate_target[1]),
+            "frozen_face_pairs_sha256": _sha_bytes(
+                np.ascontiguousarray(pairs_by_port[PAIR], dtype="<i8").tobytes()),
+            "frozen_face_pair_count": len(pairs_by_port[PAIR]),
+            "candidate_bridge_matches_source007_rigid_only_step0": True,
+            "baseline_is_same_source0_geometry_for_this_screen": True,
+            "candidate_payload_unchanged": True,
+        }
+        _write_json(PROGRESS_PATH, report)
+        manifold = source007._load_retained_manifold()
+        proof = audit_brachiocephalic_3d_junction(
+            verifier, manifold,
+            bridge_key=BRIDGE_KEY, bridge_surface=candidate_bridge,
+            target_key=TARGET_KEY, target_surface=candidate_target,
+            frozen_face_pairs=pairs_by_port[PAIR],
+            baseline_bridge_surface=baseline_bridge,
+            baseline_target_surface=baseline_target)
+        report["helper_result"] = _jsonable(proof)
+        report["status"] = proof["status"]
+        report["source007_frozen_collar_attribution"] = {
+            "candidate107_contains_FJ3583": attribution.get(
+                "candidate107_payload", {}).get("contains_FJ3583"),
+            "stationarity_status": stationarity.get("status"),
+            "right_bridge_source_id": 526,
+            "target_source_id": 472,
+            "frozen_pair_count": len(pairs_by_port[PAIR]),
+        }
+    except Exception as error:  # noqa: BLE001 - keep every bounded failure on disk
+        report["status"] = "DIAGNOSTIC_ABORTED_OR_REJECTED_WITH_ERROR"
+        report["error"] = {"type": type(error).__name__, "message": str(error)}
+    report["recorded_finish_utc"] = datetime.now(UTC).isoformat()
+    report["elapsed_seconds"] = time.perf_counter() - started
+    report["source_geometry_mutated"] = False
+    report["native_or_gpu_work_performed"] = False
+    report["source_compiler_invoked"] = False
+    report["candidate_payload_sha256_after"] = sha_file(
+        source007.CANDIDATE_DIR / "resting-thorax.nhanatomy")
+    report["preparation_report_sha256_after"] = sha_file(
+        source007.PREPARATION_DIR / "brachiocephalic-common-field-preparation.json")
+    _write_json(REPORT_PATH, report)
+    _write_json(PROGRESS_PATH, report)
+    return {
+        "status": report["status"],
+        "report": str(REPORT_PATH),
+        "report_sha256": sha_file(REPORT_PATH),
+        "elapsed_seconds": report["elapsed_seconds"],
+    }
+
+
+def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--preflight", action="store_true")
+    group.add_argument("--run", action="store_true")
+    args = parser.parse_args()
+    result = write_preflight() if args.preflight else run()
+    print(json.dumps(result, sort_keys=True))
+    return 2 if result.get("status") == "DIAGNOSTIC_ABORTED_OR_REJECTED_WITH_ERROR" else (
+        0 if result.get("status", "").startswith(
+            ("PREFLIGHT_PINNED", "PASS_SOURCE_BOUND", "REJECT_SOURCE_BOUND",
+             "REJECT_SOURCE_CLOSED", "REJECT_CANDIDATE", "REJECT_FROZEN")) else 2)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
