@@ -1,0 +1,983 @@
+{
+  "elapsed_s": 124.66755899999407,
+  "exact_shared_triangle_count": 690,
+  "inputs": {
+    "certificate_source": {
+      "path": "/Users/numi/numi-human-anatomy-finish-1378/src/numilab_human/cardiac_partition_certificate.py",
+      "sha256": "633bb7db11ffc1bd6d7326fe45793f417211619c91e5e359addf52c0a9424b46"
+    },
+    "current_native_receipt": {
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-reference-native-021-003/resting-anatomy-receipt.json",
+      "sha256": "00c154dc9f9abf7378f4621bb5a7db464182ee77ddec10a53b71efb1ed4b1382"
+    },
+    "intersection_predicate_source": {
+      "path": "/Users/numi/numi-human-anatomy-finish-1378/src/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "05ba7856fc373f55a1270eb5f3ef887a4eac493ad9fb4590a618caee952d2a32"
+    },
+    "payload": {
+      "path": "/Users/numi/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-thorax.nhanatomy",
+      "sha256": "1c0c37af76ab3f8e86870fd6cd3abab00b7bcdae51fe934e3461722ca306c241"
+    },
+    "payload_parser_source": {
+      "path": "/Users/numi/numi-human-anatomy-finish-1378/src/numilab_human/resting_anatomy_interface_patch.py",
+      "sha256": "e7692e4239c6a5ca4c12667b9bce94c06efa9bc3bec86cbb74e4625eeb416187"
+    }
+  },
+  "inputs_unchanged": true,
+  "payload_rows": {
+    "right_atrium": {
+      "triangle_count": 83630,
+      "vertex_count": 41817
+    },
+    "right_ventricle": {
+      "triangle_count": 122150,
+      "vertex_count": 61077
+    }
+  },
+  "proof": {
+    "biological_valve_interface": false,
+    "coordinate_semantics": "exact_binary64_metres",
+    "cross_domain_contact_pairs": 11568,
+    "interiors_disjoint": true,
+    "mechanical_mass_assigned": false,
+    "outside_classification": "exact_uncut_connected_boundary_patches",
+    "per_region": {
+      "right_atrium": {
+        "moments": {
+          "first_volume_moment_m4": [
+            [
+              "0x3a3c1ab73af5ffafafb",
+              "0x180000000000000000000000"
+            ],
+            [
+              "0x1120c0b18de7bf339fef",
+              "0x3000000000000000000000000"
+            ],
+            [
+              "0x1caa3819c72e672e01b1",
+              "0x3000000000000000000000000"
+            ]
+          ],
+          "second_volume_moment_m5": [
+            [
+              [
+                "0xab72b07dd0c90f0bf6a47c9",
+                "0x3c000000000000000000000000000"
+              ],
+              [
+                "0x1d63b544c36a062b58b763a3",
+                "0x400000000000000000000000000000"
+              ],
+              [
+                "0x2b699d0c11db35e4af401dfd",
+                "0x400000000000000000000000000000"
+              ]
+            ],
+            [
+              [
+                "0x1d63b544c36a062b58b763a3",
+                "0x400000000000000000000000000000"
+              ],
+              [
+                "0x616b66a131ed8aeefc1ce0725",
+                "0x14000000000000000000000000000000"
+              ],
+              [
+                "0x5af29d76303d83b8103a98ff1",
+                "0x3c000000000000000000000000000000"
+              ]
+            ],
+            [
+              [
+                "0x2b699d0c11db35e4af401dfd",
+                "0x400000000000000000000000000000"
+              ],
+              [
+                "0x5af29d76303d83b8103a98ff1",
+                "0x3c000000000000000000000000000000"
+              ],
+              [
+                "0x3b4bee94744142877e6b78ce5",
+                "0x14000000000000000000000000000000"
+              ]
+            ]
+          ],
+          "volume_m3": [
+            "0x32bf2e9e09aa8f",
+            "0x180000000000000000"
+          ]
+        },
+        "outside_noninterface_face_count": 82940,
+        "outside_patch_count": 83,
+        "outside_patch_witnesses": [
+          {
+            "face_count": 82858,
+            "representative_face": 0
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29511
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29528
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29531
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29551
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29553
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29554
+          },
+          {
+            "face_count": 1,
+            "representative_face": 29641
+          },
+          {
+            "face_count": 1,
+            "representative_face": 30191
+          },
+          {
+            "face_count": 1,
+            "representative_face": 30193
+          },
+          {
+            "face_count": 1,
+            "representative_face": 30196
+          },
+          {
+            "face_count": 1,
+            "representative_face": 30207
+          },
+          {
+            "face_count": 1,
+            "representative_face": 36854
+          },
+          {
+            "face_count": 1,
+            "representative_face": 36994
+          },
+          {
+            "face_count": 1,
+            "representative_face": 36997
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37022
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37024
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37331
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37451
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37453
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37454
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37455
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37517
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37518
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37521
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37523
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37525
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37526
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37539
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37540
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37542
+          },
+          {
+            "face_count": 1,
+            "representative_face": 37545
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44130
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44131
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44136
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44157
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44182
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44183
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44185
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44187
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44245
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44246
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44276
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44319
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44348
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44349
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44350
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44365
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44380
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44397
+          },
+          {
+            "face_count": 1,
+            "representative_face": 44956
+          },
+          {
+            "face_count": 1,
+            "representative_face": 50089
+          },
+          {
+            "face_count": 1,
+            "representative_face": 50102
+          },
+          {
+            "face_count": 1,
+            "representative_face": 50134
+          },
+          {
+            "face_count": 1,
+            "representative_face": 50143
+          },
+          {
+            "face_count": 1,
+            "representative_face": 50144
+          },
+          {
+            "face_count": 1,
+            "representative_face": 50149
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51357
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51364
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51366
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51391
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51395
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51397
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51415
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51457
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51458
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51460
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51465
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51466
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51479
+          },
+          {
+            "face_count": 1,
+            "representative_face": 51481
+          },
+          {
+            "face_count": 1,
+            "representative_face": 52177
+          },
+          {
+            "face_count": 1,
+            "representative_face": 52192
+          },
+          {
+            "face_count": 1,
+            "representative_face": 56607
+          },
+          {
+            "face_count": 1,
+            "representative_face": 56620
+          },
+          {
+            "face_count": 1,
+            "representative_face": 56637
+          },
+          {
+            "face_count": 1,
+            "representative_face": 57932
+          },
+          {
+            "face_count": 1,
+            "representative_face": 57940
+          },
+          {
+            "face_count": 1,
+            "representative_face": 57946
+          },
+          {
+            "face_count": 1,
+            "representative_face": 57955
+          },
+          {
+            "face_count": 1,
+            "representative_face": 57957
+          },
+          {
+            "face_count": 1,
+            "representative_face": 59564
+          },
+          {
+            "face_count": 1,
+            "representative_face": 59608
+          }
+        ],
+        "self_intersection_count": 0,
+        "topology": {
+          "closed": true,
+          "edge_count": 125445,
+          "face_components": 1,
+          "face_count": 83630,
+          "vertex_count": 41817
+        }
+      },
+      "right_ventricle": {
+        "moments": {
+          "first_volume_moment_m4": [
+            [
+              "0x15d285fc074216c9804d",
+              "0x180000000000000000000000"
+            ],
+            [
+              "-0x101fe285195dc6ebd751",
+              "0x1000000000000000000000000"
+            ],
+            [
+              "-0x6fd4b6b4a4af20bfbfed",
+              "0x3000000000000000000000000"
+            ]
+          ],
+          "second_volume_moment_m5": [
+            [
+              [
+                "0x16504857279aa9f8f3f6b32d7",
+                "0xf0000000000000000000000000000"
+              ],
+              [
+                "-0x5dfb646fdb756964b7bc9c31f",
+                "0x3c00000000000000000000000000000"
+              ],
+              [
+                "-0xf0ffbb42cabb5d45812af5ee1",
+                "0x3c00000000000000000000000000000"
+              ]
+            ],
+            [
+              [
+                "-0x5dfb646fdb756964b7bc9c31f",
+                "0x3c00000000000000000000000000000"
+              ],
+              [
+                "0x1bb4a26cd2f6fccd8509e9759d",
+                "0x1e000000000000000000000000000000"
+              ],
+              [
+                "0x1ec0c02b2cbc52308d72ae0c9",
+                "0xa000000000000000000000000000000"
+              ]
+            ],
+            [
+              [
+                "-0xf0ffbb42cabb5d45812af5ee1",
+                "0x3c00000000000000000000000000000"
+              ],
+              [
+                "0x1ec0c02b2cbc52308d72ae0c9",
+                "0xa000000000000000000000000000000"
+              ],
+              [
+                "0x23800e2c64df00f08f6a74a7ad",
+                "0x1e000000000000000000000000000000"
+              ]
+            ]
+          ],
+          "volume_m3": [
+            "0x1b33d1b1ad16d5",
+            "0x30000000000000000"
+          ]
+        },
+        "outside_noninterface_face_count": 121460,
+        "outside_patch_count": 83,
+        "outside_patch_witnesses": [
+          {
+            "face_count": 121378,
+            "representative_face": 0
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113066
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113068
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113073
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113192
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113195
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113206
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113207
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113208
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113289
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113292
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113302
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113320
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113336
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113337
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113339
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113344
+          },
+          {
+            "face_count": 1,
+            "representative_face": 113347
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115326
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115338
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115341
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115351
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115352
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115357
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115367
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115368
+          },
+          {
+            "face_count": 1,
+            "representative_face": 115369
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117609
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117649
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117796
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117810
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117858
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117859
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117861
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117863
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117874
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117883
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117893
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117897
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117898
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117962
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117969
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117971
+          },
+          {
+            "face_count": 1,
+            "representative_face": 117978
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118709
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118730
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118732
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118733
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118735
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118736
+          },
+          {
+            "face_count": 1,
+            "representative_face": 118737
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119116
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119118
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119120
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119175
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119176
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119177
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119179
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119191
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119193
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119197
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119243
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119245
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119247
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119249
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119314
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119315
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119317
+          },
+          {
+            "face_count": 1,
+            "representative_face": 119319
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121276
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121277
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121280
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121282
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121283
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121285
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121286
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121287
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121354
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121355
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121356
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121358
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121435
+          },
+          {
+            "face_count": 1,
+            "representative_face": 121442
+          }
+        ],
+        "self_intersection_count": 0,
+        "topology": {
+          "closed": true,
+          "edge_count": 183225,
+          "face_components": 1,
+          "face_count": 122150,
+          "vertex_count": 61077
+        }
+      }
+    },
+    "schema": "HumanPack.cardiac-shared-interface-audit.v1",
+    "shared_interface_face_count": 690,
+    "shared_interface_opposite_chain": true,
+    "strict_interior_witnesses_m": {
+      "right_atrium": [
+        [
+          "0x6354c1dfcbab9",
+          "0x6d21a400000000"
+        ],
+        [
+          "0x8a8abfcee3",
+          "0x918230000000"
+        ],
+        [
+          "0x1ef8531",
+          "0x60000000"
+        ]
+      ],
+      "right_ventricle": [
+        [
+          "0x1a189b2f2a203",
+          "0xf8f4000000000"
+        ],
+        [
+          "-0xe4fdc612a3",
+          "0x14bf00000000"
+        ],
+        [
+          "-0x4f63da91",
+          "0x600000000"
+        ]
+      ]
+    },
+    "union_moments": {
+      "first_volume_moment_m4": [
+        [
+          "0x32ec8f4ef5e2ed88f69",
+          "0x30000000000000000000000"
+        ],
+        [
+          "-0x7cfb9b76f8c6563f981",
+          "0xc00000000000000000000000"
+        ],
+        [
+          "-0x14ca9fa6b7602e646f8f",
+          "0xc00000000000000000000000"
+        ]
+      ],
+      "second_volume_moment_m5": [
+        [
+          [
+            "0x18fe13191eddce3523d1451fb",
+            "0xf0000000000000000000000000000"
+          ],
+          [
+            "-0x2136f53fb22101ce0a4857649",
+            "0x1e00000000000000000000000000000"
+          ],
+          [
+            "-0x64265c03bcfeed5f8e6f6ce87",
+            "0x1e00000000000000000000000000000"
+          ]
+        ],
+        [
+          [
+            "-0x2136f53fb22101ce0a4857649",
+            "0x1e00000000000000000000000000000"
+          ],
+          [
+            "0x49ad6817df4a83a7d9593d00a9",
+            "0x3c000000000000000000000000000000"
+          ],
+          [
+            "0x113771e793ca770db60eaad4a7",
+            "0x3c000000000000000000000000000000"
+          ]
+        ],
+        [
+          [
+            "-0x64265c03bcfeed5f8e6f6ce87",
+            "0x1e00000000000000000000000000000"
+          ],
+          [
+            "0x113771e793ca770db60eaad4a7",
+            "0x3c000000000000000000000000000000"
+          ],
+          [
+            "0x521e59149f8a3e5a86890ff609",
+            "0x3c000000000000000000000000000000"
+          ]
+        ]
+      ],
+      "volume_m3": [
+        "0x5974940e7b75bd",
+        "0x80000000000000000"
+      ]
+    }
+  },
+  "scope": "Current 1c0c37 NHA payload, direct stable-ID 318/319 source-neutral cavity geometry check only; geometrically shared face complex is not a biological valve plane or clinical validation.",
+  "source_binding": {
+    "canonical_four_surface_geometry_sha256": "849bd41e2fa7e172e8cda2c6889658eda203c4c5e240b3a2adb7c5649c9243c1",
+    "right_atrium": {
+      "body_index": 20,
+      "layer": 9,
+      "name": "right_atrium",
+      "source_member": "FJ2424",
+      "source_sha256": "8bd340059ff697cfe9ce57f2427e8c5a982e248a1d2230d477a4fe094adc2a2a"
+    },
+    "right_ventricle": {
+      "body_index": 20,
+      "layer": 9,
+      "name": "right_ventricle",
+      "source_member": "FJ2423",
+      "source_sha256": "390747e238ba9239961d02d1e02516d7af7aacc86d2bc0c29fc835381032ceeb"
+    }
+  },
+  "status": "pass"
+}
