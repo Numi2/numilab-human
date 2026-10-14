@@ -12,7 +12,10 @@ from pathlib import Path
 REPOSITORY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPOSITORY / "src"))
 
-from numilab_human.resting_pons_floor_compiler import compile_pinned_candidate
+from numilab_human.resting_pons_floor_compiler import (
+    compile_pinned_candidate,
+    compile_rebased_candidate,
+)
 
 
 def _sha256(data: bytes) -> str:
@@ -42,6 +45,11 @@ def main() -> int:
     parser.add_argument("--candidate-report", type=Path, required=True)
     parser.add_argument("--dual-lineage", type=Path, required=True)
     parser.add_argument("--focused-gate-report", type=Path, required=True)
+    parser.add_argument("--source-base-nha", type=Path)
+    parser.add_argument("--owner-rigid", type=Path)
+    parser.add_argument("--source-receipt", type=Path)
+    parser.add_argument("--rebase-receipt", type=Path)
+    parser.add_argument("--registration", type=Path)
     parser.add_argument("--output-nha", type=Path, required=True)
     parser.add_argument("--output-evidence", type=Path, required=True)
     args = parser.parse_args()
@@ -55,18 +63,38 @@ def main() -> int:
         args.dual_lineage.resolve(),
         args.focused_gate_report.resolve(),
     }
+    rebase_inputs = (args.source_base_nha, args.owner_rigid,
+                     args.source_receipt, args.rebase_receipt, args.registration)
+    if any(item is None for item in rebase_inputs) and any(item is not None for item in rebase_inputs):
+        raise SystemExit("all four rebase arguments must be supplied together")
+    if args.source_base_nha is not None:
+        input_paths.update(item.resolve() for item in rebase_inputs)
     if output_nha in input_paths or output_evidence in input_paths:
         raise SystemExit("refusing to overwrite a pinned input")
     if output_nha.exists() or output_evidence.exists():
         raise SystemExit("refusing to overwrite an existing compile output")
 
-    payload, proof = compile_pinned_candidate(
-        args.base_nha,
-        args.candidate_npz,
-        args.candidate_report,
-        args.dual_lineage,
-        args.focused_gate_report,
-    )
+    if args.source_base_nha is None:
+        payload, proof = compile_pinned_candidate(
+            args.base_nha,
+            args.candidate_npz,
+            args.candidate_report,
+            args.dual_lineage,
+            args.focused_gate_report,
+        )
+    else:
+        payload, proof = compile_rebased_candidate(
+            args.base_nha,
+            args.source_base_nha,
+            args.owner_rigid,
+            args.source_receipt,
+            args.rebase_receipt,
+            args.registration,
+            args.candidate_npz,
+            args.candidate_report,
+            args.dual_lineage,
+            args.focused_gate_report,
+        )
     proof["compiled_payload_sha256"] = _sha256(payload)
     proof["compiled_payload_bytes"] = len(payload)
     proof["compiled_payload_path"] = str(output_nha)

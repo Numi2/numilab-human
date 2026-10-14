@@ -17,6 +17,11 @@ from .resting_intercostal_mesh_arrangement import encode_payload_with_row_replac
 from .resting_pleura_proxy import _parse_payload
 
 BASE_NHA_SHA256 = "3a3693b8de2264127e9190a151dca460002ae3b8a0a09edea312bd4eed73ea42"
+F83_REBASE_NHA_SHA256 = "f83a541b794fe9bae699e6784fe091e147d5bad284847773c803c5309027d361"
+BODY23_RIGID_SHA256 = "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+SOURCE_BASE_RECEIPT_SHA256 = "689acf7a54f629e67fa59a4efff1285bf6862fa60e31cea3b0ac9d2e3a5efe8b"
+F83_RECEIPT_SHA256 = "5ed44e1cfa912f8bf291347aff19c16cf2c55c4b9a36c3ab04fb6aaf17b70474"
+REGISTRATION_SHA256 = "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e"
 CANDIDATE_NPZ_SHA256 = "7c9f5fb245169ce033caf6919c1397b6084acab802c7a745792e282dd024c989"
 CANDIDATE_REPORT_SHA256 = "0c66ba44381b6dc9011b11b4801fd8d4f9ee9b51984345b7fc8a360696aefda3"
 DUAL_LINEAGE_SHA256 = "65fd020482a41b6d85d2ed91bd4d1bf68cb436487af77e093ab0f0cd0fe56458"
@@ -110,6 +115,59 @@ def verify_pinned_inputs(
         "focused_gate_report_sha256": FOCUSED_GATE_SHA256,
         "focused_gate_runner_sha256": FOCUSED_RUNNER_SHA256,
     }
+
+
+def verify_source_identity_maps(
+    source_id_map: dict[str, Any],
+    rebase_id_map: dict[str, Any],
+) -> dict[str, Any]:
+    """Require matching receipt-backed FMA family and source-member identity."""
+    result = {}
+    for stable_id in ("323", "345"):
+        source_identity = source_id_map.get(stable_id)
+        target_identity = rebase_id_map.get(stable_id)
+        _need(source_identity is not None and source_identity == target_identity,
+              f"source identity receipt changed for row {stable_id}")
+        _need(source_identity.get("body_index") == 23
+              and source_identity.get("layer") == 1
+              and source_identity.get("head_family", {}).get("concept_id") == "FMA50801"
+              and source_identity.get("source_member")
+              and source_identity.get("source_sha256"),
+              f"row {stable_id} is not the pinned body-23 brain source")
+        result[stable_id] = source_identity
+    return result
+
+
+def verify_rebase_row_identity(
+    source_base_rows: dict[int, dict[str, Any]],
+    rebase_base_rows: dict[int, dict[str, Any]],
+) -> dict[str, Any]:
+    """Require both floor source rows to be exact body-local matches."""
+    _need(set(source_base_rows) == set(rebase_base_rows),
+          "rebase changed stable-ID inventory")
+    rows = {}
+    for stable_id in (323, 345):
+        source = source_base_rows[stable_id]
+        target = rebase_base_rows[stable_id]
+        _need(
+            (source["body_index"], source["layer"], source["flags"])
+            == (target["body_index"], target["layer"], target["flags"])
+            == (23, 1, 0),
+            f"rebase changed row {stable_id} owner/layer/flags",
+        )
+        _need(source["vertices6"].tobytes() == target["vertices6"].tobytes(),
+              f"rebase changed body-local vertex bytes for row {stable_id}")
+        _need(source["faces"].tobytes() == target["faces"].tobytes(),
+              f"rebase changed source face bytes for row {stable_id}")
+        rows[str(stable_id)] = {
+            "body_index": 23,
+            "layer": 1,
+            "flags": 0,
+            "vertices6_sha256": _sha256(source["vertices6"].tobytes()),
+            "faces_sha256": _sha256(source["faces"].tobytes()),
+            "body_local_geometry_exact": True,
+        }
+    return {"typed_rows": rows, "exact_body_local_row_identity": True}
 
 
 def build_row_replacements(
@@ -268,6 +326,74 @@ def compile_payload(
         "unmodified_rows_content_exact": len(base_rows) - 2,
         "registration_and_source_header_unchanged": True,
     }
+
+
+def compile_rebased_candidate(
+    rebase_base_nha: Path,
+    source_base_nha: Path,
+    owner_rigid: Path,
+    source_receipt: Path,
+    rebase_receipt: Path,
+    registration: Path,
+    candidate_npz: Path,
+    candidate_report_path: Path,
+    dual_lineage: Path,
+    focused_gate_report: Path,
+) -> tuple[bytes, dict[str, Any]]:
+    """Compile the pinned floor onto f83 after strict source-row identity checks."""
+    pins = verify_pinned_inputs(
+        source_base_nha, candidate_npz, candidate_report_path, dual_lineage, focused_gate_report
+    )
+    _need(sha256_file(rebase_base_nha) == F83_REBASE_NHA_SHA256,
+          "rebase NHA SHA-256 mismatch")
+    _need(sha256_file(owner_rigid) == BODY23_RIGID_SHA256,
+          "body-23 rigid owner SHA-256 mismatch")
+    _need(sha256_file(source_receipt) == SOURCE_BASE_RECEIPT_SHA256,
+          "historical source receipt SHA-256 mismatch")
+    _need(sha256_file(rebase_receipt) == F83_RECEIPT_SHA256,
+          "f83 receipt SHA-256 mismatch")
+    _need(sha256_file(registration) == REGISTRATION_SHA256,
+          "source registration SHA-256 mismatch")
+    source_receipt_json = json.loads(source_receipt.read_text())
+    rebase_receipt_json = json.loads(rebase_receipt.read_text())
+    source_id_map = source_receipt_json.get("provenance", {}).get("source_id_map", {})
+    rebase_id_map = rebase_receipt_json.get("provenance", {}).get("source_id_map", {})
+    source_identity = verify_source_identity_maps(source_id_map, rebase_id_map)
+    source_raw = source_base_nha.read_bytes()
+    rebase_raw = rebase_base_nha.read_bytes()
+    source_header, _source_records, source_rows = _parse_payload(source_raw)
+    rebase_header, _rebase_records, rebase_rows = _parse_payload(rebase_raw)
+    _need(source_header[:4] == rebase_header[:4]
+          and source_header[5:] == rebase_header[5:],
+          "rebase changed ABI, surface inventory, registration, or source header")
+    _need(len(source_rows) == 525 and len(rebase_rows) == 525,
+          "rebase source surface count changed")
+    row_identity = verify_rebase_row_identity(source_rows, rebase_rows)
+
+    candidate_report = json.loads(candidate_report_path.read_text())
+    with np.load(candidate_npz, allow_pickle=False) as arrays:
+        replacements = build_row_replacements(rebase_rows, arrays, candidate_report)
+        output, proof = compile_payload(rebase_raw, replacements)
+    proof["pins"] = {
+        **pins,
+        "rebased_base_nha_sha256": F83_REBASE_NHA_SHA256,
+        "historical_source_base_nha_sha256": BASE_NHA_SHA256,
+        "body23_rigid_sha256": BODY23_RIGID_SHA256,
+        "historical_source_receipt_sha256": SOURCE_BASE_RECEIPT_SHA256,
+        "rebased_receipt_sha256": F83_RECEIPT_SHA256,
+        "registration_sha256": REGISTRATION_SHA256,
+        "source_identity": {
+            "323": source_identity["323"],
+            "345": source_identity["345"],
+        },
+    }
+    proof["rebase_identity"] = row_identity
+    proof["scope"] = (
+        "source-only ABI5 compile rebased onto the pinned f83 payload after exact body-local "
+        "identity for rows 323 and 345; no motion, native, all-neighbor, physiology, or "
+        "individual-measurement admission"
+    )
+    return output, proof
 
 
 def compile_pinned_candidate(

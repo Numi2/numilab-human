@@ -10,6 +10,8 @@ from numilab_human.resting_pleura_proxy import _parse_payload
 from numilab_human.resting_pons_floor_compiler import (
     build_row_replacements,
     compile_payload,
+    verify_rebase_row_identity,
+    verify_source_identity_maps,
 )
 
 
@@ -119,3 +121,48 @@ def test_compiler_rejects_candidate_that_changes_original_source_prefix():
 
     with pytest.raises(ValueError, match="candidate vertex digest disagrees"):
         build_row_replacements(rows, arrays, report)
+
+
+
+def test_rebase_requires_exact_local_source_rows_and_owner_metadata():
+    rows, _arrays, _report = _fixture()
+    proof = verify_rebase_row_identity(rows, dict(rows))
+    assert proof["exact_body_local_row_identity"] is True
+    assert proof["typed_rows"]["323"]["vertices6_sha256"] == _sha(
+        rows[323]["vertices6"].tobytes()
+    )
+
+    changed = dict(rows)
+    changed_row = dict(rows[345])
+    changed_row["faces"] = changed_row["faces"].copy()
+    changed_row["faces"][0, 0] = 1
+    changed[345] = changed_row
+    with pytest.raises(ValueError, match="rebase changed source face bytes for row 345"):
+        verify_rebase_row_identity(rows, changed)
+
+
+def test_rebase_rejects_changed_body_owner_even_when_geometry_matches():
+    rows, _arrays, _report = _fixture()
+    changed = dict(rows)
+    changed_row = dict(rows[323])
+    changed_row["body_index"] = 24
+    changed[323] = changed_row
+    with pytest.raises(ValueError, match="rebase changed row 323 owner/layer/flags"):
+        verify_rebase_row_identity(rows, changed)
+
+
+
+def test_source_identity_receipts_keep_rows_in_pinned_brain_family():
+    source_map = {
+        "323": {"body_index": 23, "layer": 1,
+                "head_family": {"concept_id": "FMA50801"},
+                "source_member": "FJ1731", "source_sha256": "a" * 64},
+        "345": {"body_index": 23, "layer": 1,
+                "head_family": {"concept_id": "FMA50801"},
+                "source_member": "FJ1775", "source_sha256": "b" * 64},
+    }
+    assert verify_source_identity_maps(source_map, dict(source_map)) == source_map
+    changed = dict(source_map)
+    changed["323"] = {**source_map["323"], "source_member": "FJ-other"}
+    with pytest.raises(ValueError, match="source identity receipt changed for row 323"):
+        verify_source_identity_maps(source_map, changed)
