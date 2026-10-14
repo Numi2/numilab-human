@@ -380,10 +380,13 @@ def test_runtime_binding_retains_exact_abi5_to_pack_gid_map_when_slots_are_compa
             "layer": 2,
         }
         positions = np.zeros((3, 3), dtype=np.float32)
-        gids = np.asarray([311, 312, 313], dtype=np.uint64)
-        value = (positions, np.asarray([[0, 1, 2]], dtype=np.uint32), None, gids)
-        runtime["candidate_surfaces"][key] = value
-        runtime["baseline_surfaces"][key] = value
+        faces = np.asarray([[0, 1, 2]], dtype=np.uint32)
+        candidate_gids = np.asarray([311, 312, 313], dtype=np.uint32)
+        baseline_gids = np.asarray([311, 312, 313], dtype=np.uint64)
+        runtime["candidate_surfaces"][key] = (
+            positions, faces, None, candidate_gids)
+        runtime["baseline_surfaces"][key] = (
+            positions, faces, None, baseline_gids)
     fake_verifier = _Verifier()
     monkeypatch.setattr(runner, "verifier", fake_verifier)
     _patch_input_owner(monkeypatch)
@@ -396,3 +399,21 @@ def test_runtime_binding_retains_exact_abi5_to_pack_gid_map_when_slots_are_compa
     assert proof["native_nha_gid_base_offset"] == 300
     assert proof["nha_source_row_first_vertex"] == 10
     assert proof["first_used_source_vertex_capture_gid"] == 311
+    assert inventory["candidate_baseline_gid_comparison_dtype"] == "little-endian uint64"
+    assert inventory["baseline_coordinates_are_independently_cpu_reconstructed"] is True
+    assert inventory["baseline_gid_values_are_transported_current_nha_source_slots"] is True
+    gid_proof = inventory["candidate_baseline_gid_identity_by_typed_row"]["51011:526"]
+    assert gid_proof["canonical_dtype"] == "little-endian uint64"
+    assert gid_proof["numeric_gid_values_equal"] is True
+    assert gid_proof["candidate_gid_values_sha256"] == gid_proof["baseline_gid_values_sha256"]
+
+    first_key = keys[0]
+    bad_baseline_gids = np.asarray([311, 312, 314], dtype=np.uint64)
+    runtime["baseline_surfaces"][first_key] = (
+        np.zeros((3, 3), dtype=np.float32),
+        np.asarray([[0, 1, 2]], dtype=np.uint32),
+        None,
+        bad_baseline_gids,
+    )
+    with pytest.raises(ValueError, match="differ after uint64 canonicalization"):
+        runner._bind_runtime_inputs(runtime)

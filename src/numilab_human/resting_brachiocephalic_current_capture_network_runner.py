@@ -130,8 +130,9 @@ def _prepared_network_surfaces(surface_map: dict, label: str) -> tuple[dict, dic
                      f"{label} face array is not valid local ABI5/capture topology for {key}")
             _require(gids.shape == (len(positions),)
                      and gids.dtype.kind in "iu"
+                     and int(gids.min()) >= 0
                      and len(np.unique(gids)) == len(gids),
-                     f"{label} source IDs are not unique actual global capture vertex IDs for {key}")
+                     f"{label} source IDs are not unique nonnegative global vertex IDs for {key}")
             normals = value[2]
             surface = verifier.prepare_surface(
                 key, positions, faces, normals=normals, source_vertex_ids=gids)
@@ -149,6 +150,15 @@ def _prepared_network_surfaces(surface_map: dict, label: str) -> tuple[dict, dic
             "captured_global_vertex_id_min": int(surface.source_vertex_ids.min()),
             "captured_global_vertex_id_max": int(surface.source_vertex_ids.max()),
             "face_index_space": "actual pack local indices bound to ABI5 row face-array bytes",
+            "coordinate_source": (
+                "actual accepted capture pack Float32 positions"
+                if label == "actual captured candidate"
+                else "independently CPU-reconstructed source positions"),
+            "global_vertex_id_namespace": (
+                "actual accepted capture pack global vertex IDs"
+                if label == "actual captured candidate"
+                else "current invoked NHA material source slots transported through "
+                     "the exact candidate vertex map"),
         }
     return prepared, records
 
@@ -159,15 +169,30 @@ def _bind_runtime_inputs(runtime: dict) -> tuple[dict, dict, tuple[dict, ...], d
     baselines, baseline_records = _prepared_network_surfaces(
         runtime["baseline_surfaces"], "independently reconstructed source baseline")
     source_face_ancestry = {}
+    source_gid_identity = {}
     source_slot_identity = _native_nha_gid_base_offset(runtime.get("context", {}))
     native_nha_gid_base_offset = source_slot_identity["native_nha_gid_base_offset"]
     for key in NETWORK_KEYS:
         candidate, baseline = candidates[key], baselines[key]
         _require(candidate.faces.tobytes() == baseline.faces.tobytes(),
                  f"candidate/source baseline face order or ABI5 ancestry differs for {key}")
-        _require(candidate.source_vertex_ids.tobytes()
-                 == baseline.source_vertex_ids.tobytes(),
-                 f"candidate/source baseline global GID ancestry differs for {key}")
+        candidate_gids_u64 = np.ascontiguousarray(
+            candidate.source_vertex_ids, dtype="<u8")
+        baseline_gids_u64 = np.ascontiguousarray(
+            baseline.source_vertex_ids, dtype="<u8")
+        _require(candidate_gids_u64.shape == baseline_gids_u64.shape
+                 and candidate_gids_u64.tobytes() == baseline_gids_u64.tobytes(),
+                 f"candidate/source baseline global GID values differ after uint64 "
+                 f"canonicalization for {key}")
+        gid_sha256 = _sha_bytes(candidate_gids_u64.tobytes())
+        source_gid_identity[f"{key[0]}:{key[1]}"] = {
+            "typed_identity": list(key),
+            "vertex_count": len(candidate_gids_u64),
+            "canonical_dtype": "little-endian uint64",
+            "candidate_gid_values_sha256": gid_sha256,
+            "baseline_gid_values_sha256": _sha_bytes(baseline_gids_u64.tobytes()),
+            "numeric_gid_values_equal": True,
+        }
         row = runtime["source_rows"].get(key[1])
         _require(isinstance(row, dict),
                  f"decoded ABI5 source row is missing for {key}")
@@ -205,7 +230,11 @@ def _bind_runtime_inputs(runtime: dict) -> tuple[dict, dict, tuple[dict, ...], d
         "native_source_slot_identity": source_slot_identity,
         "source_face_ancestry_by_typed_row": source_face_ancestry,
         "candidate_and_baseline_global_gid_arrays_identical_per_row": True,
-        "global_vertex_ids_were_read_from_actual_capture_pack": True,
+        "candidate_baseline_gid_identity_by_typed_row": source_gid_identity,
+        "candidate_baseline_gid_comparison_dtype": "little-endian uint64",
+        "candidate_gid_values_were_read_from_actual_capture_pack": True,
+        "baseline_coordinates_are_independently_cpu_reconstructed": True,
+        "baseline_gid_values_are_transported_current_nha_source_slots": True,
         "repeated_candidate_self_audit_policy": (
             "The same PreparedSurface objects are passed to all edge audits and then "
             "to the all-target verifier. Their existing self_audit cache is reused."),
