@@ -1,0 +1,294 @@
+{
+  "anatomical_admission": false,
+  "baseline_exact_p6_predicate_run": true,
+  "candidate_surface_predicates_run": false,
+  "capture_input_bundle_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-017-registered007-gid-preflight-001-inputs.json",
+  "capture_input_bundle_sha256": "a8e1aca612221a75360bd7ff6953c6aaff9ea66c846c08fe37658d19b6a64942",
+  "native_or_gpu_work_performed": false,
+  "recorded_at_utc": "2026-10-14T20:30:00.940854+00:00",
+  "runner_code_pins": {
+    "abi5_codec": {
+      "path": "/Users/numi/numi-human-collar-addendum-20261014/src/numilab_human/resting_pleura_proxy.py",
+      "sha256": "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683"
+    },
+    "collision_owner": {
+      "path": "/Users/numi/numi-human-collar-addendum-20261014/src/numilab_human/resting_brachiocephalic_geometry_gate.py",
+      "sha256": "61d91afd800645253c06d4804fa7b31f47f5e3adff9a67ed1c6343d0e286bf77"
+    },
+    "network_3d_owner": {
+      "path": "/Users/numi/numi-human-collar-addendum-20261014/src/numilab_human/resting_brachiocephalic_3d_junction.py",
+      "sha256": "89837efecc355304325b6754834c345972b70a5e29209cea01a68dc6dfd78299"
+    },
+    "network_preparation": {
+      "path": "/Users/numi/numi-human-collar-addendum-20261014/src/numilab_human/resting_brachiocephalic_current_capture_network_preparation.py",
+      "sha256": "361bfc6c729666caa81575b5efe4ae0acb005247dc22c940eb00aaf7cb1956a3"
+    },
+    "runner": {
+      "path": "/Users/numi/numi-human-collar-addendum-20261014/src/numilab_human/resting_brachiocephalic_current_capture_network_runner.py",
+      "sha256": "7f814fad933ce6575bca9b692e91ecd63e162d16dec9b5bc2d612b042626397a"
+    },
+    "shared_verifier": {
+      "path": "/Users/numi/numi-human-collar-addendum-20261014/src/numilab_human/resting_anatomy_verify.py",
+      "sha256": "65bc63192a4eea5a4e5dbc7d5ab72d565fbca774e34b26c678fad94f365b5e48"
+    }
+  },
+  "schema": "numi.human.current-capture-baseline-collar-addendum-execution.v1",
+  "scope": "only source-baseline face pair 1577/391 on typed link 475->479",
+  "source_preflight_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-capture-network-gate-023-continuity-only-001/source-and-capture-preflight.json",
+  "source_preflight_sha256": "68f7dffaba2f433cfdf35dca3bf9d3357b9441709367662b144ac8f6ea93451d",
+  "status": "VERIFIED_BASELINE_ONLY_475_479_EXACT_P6_RAT_COLLAR_ADDENDUM",
+  "verified_addendum": {
+    "baseline_identity": {
+      "accepted_capture_receipt_sha256": "74113429ce6141258665ad7652cf4873954e66a97503e57db5ebec0a4ceb822c",
+      "accepted_pack_sha256": "fffd226819b8fe59e1b4ca0d6273a035347851c399b952bb3dae810bef504f89",
+      "accepted_step": 0,
+      "accepted_time_s": 0.0,
+      "baseline_method": "pinned transform_f32 over NHA vertices6 with invoked accepted rigid pose; common cardiac field excluded",
+      "candidate_geometry_used": false,
+      "invoked_anatomy_receipt_sha256": "84d53a9ba9021df1a13327c4beb9f3d2845dcf4cc1d40819d247402f27512e4e",
+      "source_nha_payload_sha256": "1e6da4fa8c550334f31a6b74fda7aed6f26b0c436bff0b9ad168fe97d41cbb23"
+    },
+    "baseline_surface_lineage": {
+      "independent_from_actual_candidate_geometry": true,
+      "parent_face_u32_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+      "parent_gids_u64_sha256": "df9f6aae83dcb8c2dbd9880ebf31eeffd8a82b7c70bd9ec4ef9a1c9d902b7581",
+      "parent_position_f32_sha256": "3b3e5397aefed53eccabcb75e57794ef3bb56b96bd2086cf14f5528204150ee7",
+      "provenance": "independently CPU-reconstructed registered rigid-source baseline; candidate surface not accepted by this API",
+      "target_face_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+      "target_gids_u64_sha256": "b4f6829d86027570ff64f7d65ef05bceff6c28f72259b7a4cb09241956c31b87",
+      "target_position_f32_sha256": "3c33d8efa806f6ebe2a6885dfb8270f443e7b0b101d8e27b84c22b24034171f9"
+    },
+    "bounded_port_region": {
+      "all_contact_points_and_segment_inside_parent_face_and_bounded_target_face": true,
+      "kind": "one-face target collar extension attached by two indexed source edges",
+      "no_cross_product_expansion": true,
+      "one_added_target_source_face": 391,
+      "only_additional_allowed_face_pair": [
+        1577,
+        391
+      ],
+      "original_frozen_target_neighbor_faces": [
+        392,
+        394
+      ],
+      "original_parent_patch_face": 1577,
+      "segment_midpoint_bridge_barycentric": [
+        {
+          "denominator": "516785659354973543925329991",
+          "numerator": "95581393226264313496674524"
+        },
+        {
+          "denominator": "57420628817219282658369999",
+          "numerator": "9296622617909153152457392"
+        },
+        {
+          "denominator": "516785659354973543925329991",
+          "numerator": "337534662567526852056538939"
+        }
+      ],
+      "segment_midpoint_target_barycentric": [
+        {
+          "denominator": "2067142637419894175701319964",
+          "numerator": "1941090913503557694677433641"
+        },
+        {
+          "denominator": "47941768120446",
+          "numerator": "1643930956165"
+        },
+        {
+          "denominator": "86235561117668",
+          "numerator": "2301503338631"
+        }
+      ],
+      "target_shared_source_edges": {
+        "392": [
+          189,
+          192
+        ],
+        "394": [
+          191,
+          192
+        ]
+      }
+    },
+    "candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof": true,
+    "candidate_geometry_used": false,
+    "clinical_or_anatomical_admission": false,
+    "exact_p6_rat_contact": {
+      "contact_topology": "one positive-length segment, exactly two unique endpoints",
+      "coordinate_units": "exact rational metres over emitted Float32 input coordinates",
+      "endpoints": [
+        {
+          "bridge_exact_barycentric": [
+            {
+              "denominator": "21558890279417",
+              "numerator": "3686114364316"
+            },
+            {
+              "denominator": "21558890279417",
+              "numerator": "3860103584389"
+            },
+            {
+              "denominator": "21558890279417",
+              "numerator": "14012672330712"
+            }
+          ],
+          "bridge_source_face_index": 1577,
+          "exact_point_on_target_neighbor_edge": true,
+          "point_m": [
+            {
+              "denominator": "361698158938079363072",
+              "numerator": "47041653840590174275"
+            },
+            {
+              "denominator": "361698158938079363072",
+              "numerator": "-142712102814913866731"
+            },
+            {
+              "denominator": "723396317876158726144",
+              "numerator": "95320729199455946709"
+            }
+          ],
+          "target_exact_barycentric": [
+            {
+              "denominator": "43117780558834",
+              "numerator": "40816277220203"
+            },
+            {
+              "denominator": "1",
+              "numerator": "0"
+            },
+            {
+              "denominator": "43117780558834",
+              "numerator": "2301503338631"
+            }
+          ],
+          "target_frozen_neighbor_face": 392,
+          "target_shared_source_edge_vertex_ids": [
+            189,
+            192
+          ],
+          "target_source_face_index": 391
+        },
+        {
+          "bridge_exact_barycentric": [
+            {
+              "denominator": "23970884060223",
+              "numerator": "4768490634740"
+            },
+            {
+              "denominator": "2663431562247",
+              "numerator": "385554330853"
+            },
+            {
+              "denominator": "23970884060223",
+              "numerator": "15732404447806"
+            }
+          ],
+          "bridge_source_face_index": 1577,
+          "exact_point_on_target_neighbor_edge": true,
+          "point_m": [
+            {
+              "denominator": "201082349794659139584",
+              "numerator": "26154551538115697189"
+            },
+            {
+              "denominator": "201082349794659139584",
+              "numerator": "-79335884043313333033"
+            },
+            {
+              "denominator": "804329399178636558336",
+              "numerator": "105962347560250599709"
+            }
+          ],
+          "target_exact_barycentric": [
+            {
+              "denominator": "23970884060223",
+              "numerator": "22326953104058"
+            },
+            {
+              "denominator": "23970884060223",
+              "numerator": "1643930956165"
+            },
+            {
+              "denominator": "1",
+              "numerator": "0"
+            }
+          ],
+          "target_frozen_neighbor_face": 394,
+          "target_shared_source_edge_vertex_ids": [
+            191,
+            192
+          ],
+          "target_source_face_index": 391
+        }
+      ],
+      "exact_endpoint_count": 2,
+      "predicate": "PreparedSurface.intersection_points_meters",
+      "rational_lattice": "integer 2^-149 metres before exact triangle intersection",
+      "segment_length_squared_m2": {
+        "denominator": "25057598393830642415103583804614023615145079245710168209361272307712",
+        "numerator": "30521184397521646522356550972068297567388534709066121395737"
+      },
+      "source_face_pair": [
+        1577,
+        391
+      ]
+    },
+    "native_nha_gid_base_offset": 767009,
+    "passed": true,
+    "schema": "numi.human.registered-source-collar-addendum.v1",
+    "source_evidence": {
+      "frozen_source_pair_count": 161,
+      "frozen_source_pairs_sha256": "94ede8fdce96e0ea721b9c66b84d58094005647ae0a705551ea3d629bb83211e",
+      "frozen_source_pairs_unchanged": true,
+      "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/arterial-venous-route-field-086/proximal-source-port-witnesses-086.json",
+      "registered_child_face_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+      "registered_parent_face_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+      "sha256": "e638c6dfeb1030ab6aca113f8d658acf02820ffec883d7e19ebf7f9a8aa7c249",
+      "status": "source-witnesses-for-inferred-common-collars; no geometry admitted"
+    },
+    "source_geometry_modified": false,
+    "source_identities": {
+      "475": {
+        "abi5_body_index": 91,
+        "abi5_layer": 2,
+        "canonical_source_member": "FJ2216",
+        "native_source_slot_gid_formula": "capture GID = native NHA base offset + ABI5 firstVertex + source-local vertex",
+        "receipt_identity_matches_abi5_owner": true,
+        "source_face_order_preserved": true,
+        "source_face_to_baseline_vertex_map_sha256": "08d53e6be3384c02e42e65adb4c23d3ac75b4fae0ab880143f213f00b4c91375",
+        "source_faces_u32_sha256": "75105b34bef73294a029dfedaaefe929fd3b0b8afddcd4915a5146b0505ac320",
+        "source_name": "left axillary artery",
+        "source_sha256": "fe9295ce260df56c46f29e56e410937c9fa2f3e104411fb7e91b5f9681509ccb",
+        "source_vertices6_f32_sha256": "61deff2291436cce36ea3f3221897dd26561eb64f9454b50a08d5d1048ce54a9",
+        "stable_id": 475
+      },
+      "479": {
+        "abi5_body_index": 91,
+        "abi5_layer": 2,
+        "canonical_source_member": "FJ2219",
+        "native_source_slot_gid_formula": "capture GID = native NHA base offset + ABI5 firstVertex + source-local vertex",
+        "receipt_identity_matches_abi5_owner": true,
+        "source_face_order_preserved": true,
+        "source_face_to_baseline_vertex_map_sha256": "dc37690658a01c687173ffda70b28c409b4e4699ec7f1f2fb511f30e4aad4fec",
+        "source_faces_u32_sha256": "1c7efaa8ff3f939f27eeb0039b1445a7e0a27507d9b8e39f609f7eec47d47eb0",
+        "source_name": "left brachial artery",
+        "source_sha256": "e3c8e2be45d0f25f4e2efa9a046bc13b66c4e43e724a2c2b0424d230719cc6db",
+        "source_vertices6_f32_sha256": "caf29ac3025003db763ebf14b867b75c90a6c61b5d7f8dbb7438b6647efada71",
+        "stable_id": 479
+      }
+    },
+    "status": "VERIFIED_INDEPENDENT_BASELINE_EXACT_ONE_FACE_COLLAR_EXTENSION",
+    "typed_link": [
+      [
+        51011,
+        475
+      ],
+      [
+        51011,
+        479
+      ]
+    ]
+  }
+}
