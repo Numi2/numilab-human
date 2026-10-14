@@ -236,6 +236,19 @@ def test_owner_field_composition_rejects_coercive_ids_and_hashes():
             with pytest.raises(ValueError, match="owner IDs must be JSON integers"):
                 compose_owner_field_parent_bindings(bindings, malformed, **common)
 
+    for position in range(3):
+        for bad_value in (5.5, True):
+            malformed_existing = {
+                **bindings,
+                "anatomy_surfaces": [
+                    {"stable_id": 475, "vertices": [[[6, 1, 0, 1.0]]]},
+                    {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
+                ],
+            }
+            malformed_existing["anatomy_surfaces"][0]["vertices"][0][0][position] = bad_value
+            with pytest.raises(ValueError, match="existing passive anatomy owner IDs must be JSON integers"):
+                compose_owner_field_parent_bindings(malformed_existing, updates, **common)
+
     malformed_surface = {
         **bindings,
         "anatomy_surfaces": [
