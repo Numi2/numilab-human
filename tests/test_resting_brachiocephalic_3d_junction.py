@@ -367,24 +367,52 @@ def _synthetic_network_link_inputs(parent_key, child_key, bridge, bridge_faces,
         "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
     }
     source_rows = {
-        parent_id: {"faces": parent_faces},
-        child_id: {"faces": child_faces},
+        parent_id: {"faces": parent_faces, "body_index": 20, "layer": 2},
+        child_id: {"faces": child_faces, "body_index": 20, "layer": 2},
     }
     source_map = {
         str(parent_id): {
-            "source_member": f"SYNTHETIC-{parent_id}",
+            "source_member": junction.network_preparation.SOURCE_MEMBER_BY_STABLE_ID[parent_id],
             "body_index": 20,
             "layer": 2,
             "vascular_compartment_id": 4,
         },
         str(child_id): {
-            "source_member": f"SYNTHETIC-{child_id}",
+            "source_member": junction.network_preparation.SOURCE_MEMBER_BY_STABLE_ID[child_id],
             "body_index": 20,
             "layer": 2,
-            # The SVC has no compartment annotation in the source receipt.
+            "vascular_compartment_id": None if child_id == 10 else 4,
         },
     }
     return evidence, source_rows, source_map
+
+
+
+def _registered_svc_source_inputs():
+    network = junction.network_preparation
+    raw = source007._read_port_pairs()[0][((51011, 525), (51011, 10))]
+    pair_array = np.ascontiguousarray(raw, dtype="<i8")
+    counts = {525: int(pair_array[:, 0].max()) + 1,
+              10: int(pair_array[:, 1].max()) + 1}
+    rows = {
+        stable_id: {
+            "faces": np.tile(np.asarray([[0, 1, 2]], dtype="<u4"),
+                             (counts[stable_id], 1)),
+            "body_index": 20,
+            "layer": 2,
+        }
+        for stable_id in (525, 10)
+    }
+    source_map = {
+        "525": {"source_member": "FJ3482", "body_index": 20,
+                "layer": 2, "vascular_compartment_id": 4},
+        "10": {"source_member": "FJ3645", "body_index": 20,
+               "layer": 2, "vascular_compartment_id": None},
+    }
+    evidence = network._read_registered_source_link_evidence(
+        525, 10, source_rows=rows, source_map=source_map)
+    return evidence, rows, source_map
+
 
 
 def test_network_registry_is_exactly_thirteen_edges_and_two_svc_ports():
@@ -400,11 +428,8 @@ def test_network_registry_is_exactly_thirteen_edges_and_two_svc_ports():
 
 
 def test_source_link_binding_rejects_wrong_branch_and_wrong_face_ancestry():
-    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
-    target, target_faces = _calibre_preserving_target()
     parent_key, child_key = (51011, 525), (51011, 10)
-    evidence, source_rows, source_map = _synthetic_network_link_inputs(
-        parent_key, child_key, bridge, bridge_faces, target, target_faces)
+    evidence, source_rows, source_map = _registered_svc_source_inputs()
 
     scope = junction.bind_network_link_source_ancestry(
         parent_key, child_key, source_link_evidence=evidence,
@@ -412,6 +437,8 @@ def test_source_link_binding_rejects_wrong_branch_and_wrong_face_ancestry():
     assert scope["typed_link"] == [[51011, 525], [51011, 10]]
     assert scope["source_face_pair_count"] > 0
     assert scope["source_identities"]["10"]["vascular_compartment_id"] is None
+    assert scope["source_identities"]["525"]["canonical_source_identity"][
+        "canonical_source_member"] == "FJ3482"
 
     with pytest.raises(ValueError, match="undeclared vascular link"):
         junction.bind_network_link_source_ancestry(
@@ -439,6 +466,37 @@ def test_source_link_binding_rejects_wrong_branch_and_wrong_face_ancestry():
             parent_key, child_key, source_link_evidence=bad_faces,
             source_rows=source_rows, source_map=source_map)
 
+    bad_path = dict(evidence)
+    bad_path["path"] = "/retained/forged-report.json"
+    with pytest.raises(ValueError, match="not the registered frozen report"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=bad_path,
+            source_rows=source_rows, source_map=source_map)
+
+    bad_report_sha = dict(evidence)
+    bad_report_sha["sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="report SHA-256 differs"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=bad_report_sha,
+            source_rows=source_rows, source_map=source_map)
+
+    tampered_pairs = dict(evidence)
+    tampered_pairs["pairs"] = evidence["pairs"].copy()
+    tampered_pairs["pairs"][0, 0] = int(tampered_pairs["pairs"][:, 0].max()) + 1
+    tampered_pairs["pairs_sha256"] = hashlib.sha256(
+        tampered_pairs["pairs"].tobytes()).hexdigest()
+    with pytest.raises(ValueError, match="pairs parsed from the actual frozen report"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=tampered_pairs,
+            source_rows=source_rows, source_map=source_map)
+
+    forged_map = dict(source_map)
+    forged_map["525"] = dict(source_map["525"], source_member="FJ3583")
+    with pytest.raises(ValueError, match="not canonical FJ3482"):
+        junction.bind_network_link_source_ancestry(
+            parent_key, child_key, source_link_evidence=evidence,
+            source_rows=source_rows, source_map=forged_map)
+
     wrong_svc = dict(evidence)
     wrong_svc["target_stable_id"] = 526
     with pytest.raises(ValueError, match="disagree with the frozen"):
@@ -447,12 +505,15 @@ def test_source_link_binding_rejects_wrong_branch_and_wrong_face_ancestry():
             source_rows=source_rows, source_map=source_map)
 
 
-def test_svc_network_link_uses_solid_and_independent_calibre_not_pair_count():
+def test_svc_network_link_uses_solid_and_independent_calibre_not_pair_count(monkeypatch):
     bridge, bridge_faces = _closed_cylinder(-1.0, 1.0, radius=0.2)
     target, target_faces = _calibre_preserving_target()
     parent_key, child_key = (51011, 525), (51011, 10)
     evidence, source_rows, source_map = _synthetic_network_link_inputs(
         parent_key, child_key, bridge, bridge_faces, target, target_faces)
+    monkeypatch.setattr(
+        junction.network_preparation, "_read_registered_source_link_evidence",
+        lambda _parent, _child, **_kwargs: evidence)
 
     result = junction.audit_brachiocephalic_network_link_3d(
         av, _manifold3d(),
@@ -479,20 +540,54 @@ def test_svc_network_link_uses_solid_and_independent_calibre_not_pair_count():
         "source_identities"]["10"]["vascular_compartment_id"] is None
 
 
-def test_source_preparation_binds_every_typed_link_and_source_face_array():
+
+def test_legacy_interface_scope_does_not_expand_with_network_registry(monkeypatch):
+    other_network_link = ((51011, 525), (51011, 469))
+    monkeypatch.setattr(
+        junction.gate, "DECLARED_VESSEL_PORTS",
+        frozenset({junction.PARTIAL_OVERLAP_PORT, other_network_link}))
+
+    class PassingPairVerifier:
+        def audit_surface_pair(self, *_args, **_kwargs):
+            return {
+                "passed": True,
+                "declared_interface_triangle_pairs": [],
+                "unexpected_triangle_pairs": [],
+                "containment": [],
+            }
+
+    triangle = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype="<f4")
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    bridge = av.prepare_surface((51011, 525), triangle, faces)
+    target = av.prepare_surface((51011, 469), triangle, faces)
+    result = junction._interface_gate(
+        PassingPairVerifier(), bridge, target, [[0, 0]])
+
+    scope = result["documented_vessel_junction_scope"]
+    assert not scope["passed"]
+    assert scope["scope_kind"] == "legacy_single_port_entrypoint"
+
+
+
+def test_source_preparation_binds_every_typed_link_and_source_face_array(monkeypatch):
     from numilab_human import (
         resting_brachiocephalic_current_capture_network_preparation as network,
     )
 
     faces = np.asarray([[0, 1, 2]], dtype="<u4")
-    rows = {stable_id: {"faces": faces.copy()}
-            for edge in junction.declared_network_links()
-            for stable_id in (edge[0][1], edge[1][1])}
+    rows = {
+        stable_id: {"faces": faces.copy(), "body_index": 20, "layer": 2}
+        for edge in junction.declared_network_links()
+        for stable_id in (edge[0][1], edge[1][1])
+    }
     source_map = {
         str(stable_id): {
-            "source_member": f"MEMBER-{stable_id}",
+            "source_member": network.SOURCE_MEMBER_BY_STABLE_ID[stable_id],
             "body_index": 20,
             "layer": 2,
+            "vascular_compartment_id": (
+                4 if stable_id in (525, 526) else
+                None if stable_id == 10 else 1),
         }
         for stable_id in rows
     }
@@ -532,6 +627,13 @@ def test_source_preparation_binds_every_typed_link_and_source_face_array():
     keys = {key for edge in junction.declared_network_links() for key in edge}
     surfaces = {key: ("source", key) for key in keys}
 
+    fake_evidence = {
+        **evidence_by_edge,
+        **svc,
+    }
+    monkeypatch.setattr(
+        junction.network_preparation, "_read_registered_source_link_evidence",
+        lambda parent, child, **_kwargs: fake_evidence[f"{parent}->{child}"])
     inputs = junction.prepare_network_link_audit_inputs(
         evidence_by_edge, {"svc_bridge_ports": svc},
         source_rows=rows, source_map=source_map,

@@ -131,10 +131,23 @@ def bind_network_link_source_ancestry(
     parent, child = _strict_source_link_ids(source_link_evidence)
     _require(edge == ((51011, parent), (51011, child)),
              "typed link IDs disagree with the frozen source-face ancestry IDs")
+    rows_by_id = {
+        (int(key) if isinstance(key, str) and key.isdecimal() else key): value
+        for key, value in source_rows.items()
+    }
+    expected_evidence = network_preparation._read_registered_source_link_evidence(
+        parent, child, source_rows=rows_by_id, source_map=source_map)
     path = source_link_evidence.get("path")
     report_sha = source_link_evidence.get("sha256")
     _require(isinstance(path, str) and path
-             and isinstance(report_sha, str) and len(report_sha) == 64
+             and Path(path).resolve() == Path(expected_evidence["path"]).resolve(),
+             "source ancestry path is not the registered frozen report for this link")
+    _require(isinstance(report_sha, str)
+             and report_sha == expected_evidence["sha256"],
+             "source ancestry report SHA-256 differs from the actual registered frozen report")
+    _require(evidence_status == expected_evidence["evidence_status"],
+             "source ancestry status differs from the actual registered frozen report")
+    _require(len(report_sha) == 64
              and all(character in "0123456789abcdef" for character in report_sha),
              "source ancestry must name its frozen report path and SHA-256")
     raw_pairs = np.asarray(source_link_evidence.get("pairs"))
@@ -148,6 +161,10 @@ def bind_network_link_source_ancestry(
     pair_sha = _sha_bytes(pairs.tobytes())
     _require(source_link_evidence.get("pairs_sha256") == pair_sha,
              "frozen source face-pair array SHA-256 does not match its ancestry row")
+    expected_pairs = np.ascontiguousarray(expected_evidence["pairs"], dtype="<i8")
+    _require(pair_sha == expected_evidence["pairs_sha256"]
+             and pairs.tobytes() == expected_pairs.tobytes(),
+             "source face-pair ancestry differs from pairs parsed from the actual frozen report")
 
     parent_faces = _source_face_array(source_rows, parent)
     child_faces = _source_face_array(source_rows, child)
@@ -165,14 +182,8 @@ def bind_network_link_source_ancestry(
     identities = {}
     for stable_id in (parent, child):
         identity = source_map.get(str(stable_id))
-        _require(isinstance(identity, dict)
-                 and isinstance(identity.get("source_member"), str)
-                 and bool(identity["source_member"])
-                 and type(identity.get("body_index")) is int
-                 and identity["body_index"] >= 0
-                 and type(identity.get("layer")) is int
-                 and identity["layer"] > 0,
-                 f"receipt source identity for stable ID {stable_id} is incomplete")
+        source_identity = network_preparation.validate_network_source_identity(
+            stable_id, source_row=rows_by_id.get(stable_id), identity=identity)
         compartment = identity.get("vascular_compartment_id")
         _require(compartment is None or (type(compartment) is int and compartment > 0),
                  f"receipt vascular compartment for stable ID {stable_id} is malformed")
@@ -187,6 +198,7 @@ def bind_network_link_source_ancestry(
             "body_index": identity["body_index"],
             "layer": identity["layer"],
             "vascular_compartment_id": compartment,
+            "canonical_source_identity": source_identity,
         }
     return {
         "typed_link": [list(bridge_key), list(target_key)],
@@ -887,7 +899,8 @@ def _interface_gate(
     verifier, bridge, target, frozen_pairs, *, declared_vessel_ports=None,
 ) -> dict:
     typed_port = (tuple(map(int, bridge.key)), tuple(map(int, target.key)))
-    declared_ports = (gate.DECLARED_VESSEL_PORTS if declared_vessel_ports is None
+    declared_ports = (frozenset({PARTIAL_OVERLAP_PORT})
+                      if declared_vessel_ports is None
                       else frozenset(declared_vessel_ports))
     port_scope_passed = typed_port in declared_ports
     pairs = gate._pair_rows(

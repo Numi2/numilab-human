@@ -114,6 +114,13 @@ POTENTIAL_NONNETWORK_OVERLAP = ((51011, 469), (51011, 473))
 NETWORK_STABLE_IDS = tuple(sorted({
     key[1] for edge in (*NETWORK_EDGES, *SVC_PORTS) for key in edge
 } | {POTENTIAL_NONNETWORK_OVERLAP[0][1], POTENTIAL_NONNETWORK_OVERLAP[1][1]}))
+SOURCE_MEMBER_BY_STABLE_ID = {
+    7: "FJ3411", 10: "FJ3645", 468: "FJ3585", 469: "FJ3485",
+    471: "FJ3479", 472: "FJ3587", 473: "FJ3486", 475: "FJ2216",
+    477: "FJ2217", 479: "FJ2219", 481: "FJ2313", 483: "FJ2242",
+    485: "FJ2244", 487: "FJ2258", 489: "FJ2260", 525: "FJ3482",
+    526: "FJ3583",
+}
 OUTPUT_DIR = DATA_ROOT / "current-capture-network-gate-005-seamowner"
 PREFLIGHT_PATH = OUTPUT_DIR / "source0-seamowner-preflight-003.json"
 OWNER_COMPOSITION_DIR = DATA_ROOT / "brachiocephalic-seam-owner-composition-001"
@@ -801,6 +808,85 @@ def _apply_receipt_face_retirements(item: dict, parent: int, child: int,
             "successor receipt repair.local_source_face_reinstatement; no face-ID decrement"
         )
     return item
+
+
+
+def _read_registered_source_link_evidence(
+    parent: int, child: int, *, source_rows: dict, source_map: dict,
+) -> dict:
+    """Re-read one edge's actual frozen report through its established owner."""
+    edge = (parent, child)
+    source_report_specs = {
+        (7, 471): (PORT087, PORT087_SHA256),
+        (471, 475): (PORT086, PORT086_SHA256),
+        (475, 479): (PORT086, PORT086_SHA256),
+        (473, 477): (PORT086, PORT086_SHA256),
+        (477, 481): (PORT086, PORT086_SHA256),
+    }
+    route100_specs = {(479, 483), (481, 485)}
+    bridge_specs = {(525, 469), (525, 473), (526, 468), (526, 472),
+                    (525, 10), (526, 10)}
+    context = {"rows": source_rows, "source_map": source_map}
+    if edge in source_report_specs:
+        path, digest = source_report_specs[edge]
+        item = _source_witness_pairs(path, digest, parent, child)
+    elif edge in route100_specs:
+        item = _route100_witness_pairs(parent, child)
+    elif edge in bridge_specs:
+        _resolved_pin(BRIDGE_ANCESTRY_REPORT, BRIDGE_ANCESTRY_SHA256)
+        port_pairs, _, _ = source007._read_port_pairs()
+        context["port_pairs"] = port_pairs
+        item = _bridge_witness_pairs(context, parent, child)
+    elif edge in ULNAR_SOURCE_LINKS:
+        pairs, _ = _load_ulnar_source_witnesses(source_rows, source_map)
+        item = pairs[edge]
+    else:
+        raise ValueError(
+            f"current-capture network preparation: no frozen source reader for {parent}->{child}")
+
+    _apply_receipt_face_retirements(item, parent, child, context)
+    parent_row = source_rows[parent]
+    child_row = source_rows[child]
+    item["source_parent_faces_sha256"] = _sha_bytes(
+        np.ascontiguousarray(parent_row["faces"], dtype="<u4").tobytes())
+    item["source_child_faces_sha256"] = _sha_bytes(
+        np.ascontiguousarray(child_row["faces"], dtype="<u4").tobytes())
+    return item
+
+
+def validate_network_source_identity(
+    stable_id: int, *, source_row: dict, identity: dict,
+) -> dict:
+    """Check receipt identity against ABI5 body/layer and canonical FJ membership."""
+    _require(type(stable_id) is int and stable_id in SOURCE_MEMBER_BY_STABLE_ID,
+             f"no canonical source-member mapping for network row {stable_id}")
+    _require(isinstance(source_row, dict) and isinstance(identity, dict),
+             f"source row/receipt identity is missing for network row {stable_id}")
+    expected_member = SOURCE_MEMBER_BY_STABLE_ID[stable_id]
+    _require(identity.get("source_member") == expected_member,
+             f"receipt source member for stable ID {stable_id} is not canonical {expected_member}")
+    _require(type(source_row.get("body_index")) is int
+             and type(source_row.get("layer")) is int
+             and type(identity.get("body_index")) is int
+             and type(identity.get("layer")) is int
+             and source_row["body_index"] == identity["body_index"]
+             and source_row["layer"] == identity["layer"],
+             f"receipt owner body/layer differs from decoded ABI5 row {stable_id}")
+    if stable_id in source007.BRIDGE_ROWS:
+        _require(source_row["body_index"] == 20 and source_row["layer"] == 2
+                 and identity.get("vascular_compartment_id") == 4,
+                 f"bridge source identity/owner map changed for stable ID {stable_id}")
+    if stable_id == 10:
+        _require(source_row["body_index"] == 20 and source_row["layer"] == 2
+                 and identity.get("vascular_compartment_id") is None,
+                 "SVC10 source identity/owner map changed")
+    return {
+        "stable_id": stable_id,
+        "canonical_source_member": expected_member,
+        "abi5_body_index": source_row["body_index"],
+        "abi5_layer": source_row["layer"],
+        "receipt_identity_matches_abi5_owner": True,
+    }
 
 
 def _source_edge_occurrences(data: dict, parent: int, child: int) -> int:
