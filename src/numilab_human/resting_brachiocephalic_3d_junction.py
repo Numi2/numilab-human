@@ -735,15 +735,21 @@ def write_preflight() -> dict:
 def _source_surface(verifier, key, value, label: str):
     detail = {"role": label, "identity": list(key)}
     try:
-        _require(isinstance(value, (tuple, list)) and len(value) >= 2,
-                 label + " surface must contain positions and faces")
-        positions = gate._float32_xyz(value[0], name=label)
-        faces = gate._faces(value[1], name=label, vertex_count=len(positions))
-        normals = value[2] if len(value) > 2 else None
-        source_ids = (value[3] if len(value) > 3
-                      else np.arange(len(positions), dtype=np.uint64))
-        prepared = verifier.prepare_surface(
-            key, positions, faces, normals=normals, source_vertex_ids=source_ids)
+        prepared_type = getattr(verifier, "PreparedSurface", ())
+        if isinstance(value, prepared_type):
+            _require(value.key == key,
+                     label + " prepared surface identity differs from its link identity")
+            prepared = value
+        else:
+            _require(isinstance(value, (tuple, list)) and len(value) >= 2,
+                     label + " surface must contain positions and faces")
+            positions = gate._float32_xyz(value[0], name=label)
+            faces = gate._faces(value[1], name=label, vertex_count=len(positions))
+            normals = value[2] if len(value) > 2 else None
+            source_ids = (value[3] if len(value) > 3
+                          else np.arange(len(positions), dtype=np.uint64))
+            prepared = verifier.prepare_surface(
+                key, positions, faces, normals=normals, source_vertex_ids=source_ids)
         self_audit = prepared.self_audit()
         topology = prepared.quotient_topology
         component_count = int(topology.get("face_component_count", -1))
@@ -1657,6 +1663,50 @@ def _network_continuity_metric(result: dict, source_scope: dict) -> dict:
     }
 
 
+def _source_face_capture_ancestry(
+    source_row: Mapping, surface, stable_id: int, label: str,
+) -> tuple[np.ndarray, dict]:
+    """Bind packed local faces/GIDs to ordered ABI5 face-corner ancestry."""
+    source_faces = _source_face_array({stable_id: source_row}, stable_id)
+    source_vertices = np.asarray(source_row.get("vertices6"))
+    _require(source_vertices.ndim == 2 and source_vertices.shape[1] >= 3,
+             f"{label} ABI5 row {stable_id} lacks its source vertex slots")
+    if isinstance(surface, current_shared_verifier.PreparedSurface):
+        positions = surface.positions
+        packed_faces = surface.faces
+        gids = surface.source_vertex_ids
+    else:
+        _require(isinstance(surface, (tuple, list)) and len(surface) >= 4,
+                 f"{label} surface {stable_id} lacks packed positions/faces/GIDs")
+        positions, packed_faces, gids = surface[0], surface[1], surface[3]
+    vertex_map, ancestry = network_preparation._source_to_capture_vertex_map(
+        source_faces, np.asarray(packed_faces), len(source_vertices), len(positions))
+    _require(vertex_map is not None
+             and ancestry.get("status") == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+             f"{label} packed triangles do not preserve ABI5 ordered face-corner ancestry for {stable_id}")
+    global_ids = np.asarray(gids)
+    _require(global_ids.shape == (len(positions),)
+             and global_ids.dtype.kind in "iu"
+             and len(np.unique(global_ids)) == len(global_ids),
+             f"{label} packed global vertex IDs are invalid for {stable_id}")
+    mapped_gids = np.full(
+        len(source_vertices), np.iinfo(np.uint64).max, dtype="<u8")
+    for source_vertex, packed_vertex in enumerate(vertex_map):
+        if int(packed_vertex) >= 0:
+            mapped_gids[source_vertex] = global_ids[int(packed_vertex)]
+    return vertex_map, {
+        **ancestry,
+        "typed_identity": [51011, stable_id],
+        "source_abi5_face_array_sha256": _sha_bytes(source_faces.tobytes()),
+        "packed_face_array_sha256": _sha_bytes(
+            np.ascontiguousarray(packed_faces, dtype="<u4").tobytes()),
+        "source_local_vertex_to_actual_global_gid_sha256": _sha_bytes(
+            mapped_gids.tobytes()),
+        "capture_global_vertex_ids_are_actual_pack_values": True,
+        "ordered_source_face_ids_are_preserved": True,
+    }
+
+
 def audit_brachiocephalic_network_link_3d(
     verifier, manifold3d, *, bridge_key, bridge_surface, target_key, target_surface,
     source_link_evidence: dict, source_rows: Mapping, source_map: Mapping,
@@ -1667,24 +1717,25 @@ def audit_brachiocephalic_network_link_3d(
         bridge_key, target_key, source_link_evidence=source_link_evidence,
         source_rows=source_rows, source_map=source_map)
     parent, child = gate._identity(bridge_key), gate._identity(target_key)
+    ancestry = {}
     for label, surface, stable_id, expected_sha in (
-        ("candidate parent", bridge_surface, parent[1],
+        ("candidate_parent", bridge_surface, parent[1],
          scope["source_parent_faces_sha256"]),
-        ("baseline parent", baseline_bridge_surface, parent[1],
+        ("baseline_parent", baseline_bridge_surface, parent[1],
          scope["source_parent_faces_sha256"]),
-        ("candidate child", target_surface, child[1],
+        ("candidate_child", target_surface, child[1],
          scope["source_child_faces_sha256"]),
-        ("baseline child", baseline_target_surface, child[1],
+        ("baseline_child", baseline_target_surface, child[1],
          scope["source_child_faces_sha256"]),
     ):
-        _require(isinstance(surface, (tuple, list)) and len(surface) >= 2,
-                 f"{label} has no indexed source faces")
-        faces = np.asarray(surface[1])
-        _require(faces.ndim == 2 and faces.shape[1] == 3
-                 and faces.dtype.kind in "iu"
-                 and _sha_bytes(np.ascontiguousarray(faces, dtype="<u4").tobytes())
-                 == expected_sha,
-                 f"{label} face ancestry differs from source ABI5 row {stable_id}")
+        source_row = source_rows.get(stable_id, source_rows.get(str(stable_id)))
+        _require(isinstance(source_row, dict),
+                 f"{label} source ABI5 row {stable_id} is absent")
+        _vertex_map, proof = _source_face_capture_ancestry(
+            source_row, surface, stable_id, label)
+        _require(proof["source_abi5_face_array_sha256"] == expected_sha,
+                 f"{label} source face bytes differ from registered ABI5 row {stable_id}")
+        ancestry[label] = proof
     result = audit_brachiocephalic_3d_junction(
         verifier, manifold3d,
         bridge_key=parent, bridge_surface=bridge_surface,
@@ -1693,6 +1744,7 @@ def audit_brachiocephalic_network_link_3d(
         baseline_bridge_surface=baseline_bridge_surface,
         baseline_target_surface=baseline_target_surface,
         _source_link_scope=scope)
+    result["abi5_face_corner_ancestry"] = ancestry
     result["continuity_metric"] = _network_continuity_metric(result, scope)
     result["continuity_metric"]["passed"] = bool(result.get("passed"))
     return result

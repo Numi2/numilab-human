@@ -2482,7 +2482,8 @@ def _load_current_capture_context(inputs: dict) -> dict:
     return context
 
 
-def build_preflight(capture_inputs: dict | None = None) -> dict:
+def build_preflight(capture_inputs: dict | None = None, *,
+                    return_runtime_inputs: bool = False) -> dict | tuple[dict, dict]:
     metadata_pin = _resolved_pin(METADATA_PREFLIGHT, METADATA_PREFLIGHT_SHA256)
     metadata = json.loads(METADATA_PREFLIGHT.read_text())
     links = metadata.get("candidate_network_links", {})
@@ -2725,7 +2726,7 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         and parent_pose_capture_aligned
         and common_field_capture_aligned
         and len(source_baselines) == len(NETWORK_STABLE_IDS))
-    return {
+    report = {
         "schema": "numi.human.brachiocephalic.current-capture-network-preflight.v2",
         "status": _source0_preflight_status(
             separate_evidence["pending_source_collar_edges"], mismatched_faces,
@@ -2970,6 +2971,34 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         "all_target_geometry_predicates_run": False,
         "native_or_gpu_work_performed": False,
         "anatomical_admission": False,
+    }
+    if not return_runtime_inputs:
+        return report
+    baseline_surfaces = dict(source_baselines)
+    for owner_name, owner_surfaces in (
+        ("common-field", common_field_surfaces),
+        ("parent-pose", parent_pose_surfaces),
+    ):
+        for key, owner_surface in owner_surfaces.items():
+            prior = baseline_surfaces.get(key)
+            _require(prior is not None
+                     and np.ascontiguousarray(prior[1], dtype="<u4").tobytes()
+                     == np.ascontiguousarray(owner_surface[1], dtype="<u4").tobytes()
+                     and np.ascontiguousarray(prior[3], dtype="<u8").tobytes()
+                     == np.ascontiguousarray(owner_surface[3], dtype="<u8").tobytes(),
+                     f"{owner_name} baseline changes exact face/GID ancestry for {key}")
+        baseline_surfaces.update(owner_surfaces)
+    _require(set(baseline_surfaces) == {
+        (51011, stable_id) for stable_id in NETWORK_STABLE_IDS
+    }, "independent source-owner baseline does not cover the exact 17 network rows")
+    return report, {
+        "context": context,
+        "source_rows": current_source_rows,
+        "source_map": current_receipt["provenance"]["source_id_map"],
+        "candidate_surfaces": context["surfaces"],
+        "baseline_surfaces": baseline_surfaces,
+        "edge_evidence": edge_evidence,
+        "separate_evidence": separate_evidence,
     }
 
 

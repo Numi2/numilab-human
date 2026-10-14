@@ -117,10 +117,19 @@ def audit_network_rows_against_all_targets(
     interface_records = []
     for first, second in normalized_edges:
         first_value, second_value = surfaces[first], surfaces[second]
-        first_faces = _faces(first_value[1], name=f"network row {first[1]}",
-                             vertex_count=len(first_value[0]))
-        second_faces = _faces(second_value[1], name=f"network row {second[1]}",
-                              vertex_count=len(second_value[0]))
+        prepared_type = getattr(verifier, "PreparedSurface", ())
+        if isinstance(first_value, prepared_type):
+            first_positions, first_raw_faces = first_value.positions, first_value.faces
+        else:
+            first_positions, first_raw_faces = first_value[0], first_value[1]
+        if isinstance(second_value, prepared_type):
+            second_positions, second_raw_faces = second_value.positions, second_value.faces
+        else:
+            second_positions, second_raw_faces = second_value[0], second_value[1]
+        first_faces = _faces(first_raw_faces, name=f"network row {first[1]}",
+                             vertex_count=len(first_positions))
+        second_faces = _faces(second_raw_faces, name=f"network row {second[1]}",
+                              vertex_count=len(second_positions))
         raw_pairs = source_face_pairs[(first, second)]
         pairs = _pair_rows(raw_pairs, name=f"source collar {first[1]}->{second[1]}",
                            bridge_face_count=len(first_faces),
@@ -370,6 +379,14 @@ def _signed_volume(positions, faces):
 
 
 def _prepare_vessel(verifier, key, value):
+    prepared_type = getattr(verifier, "PreparedSurface", ())
+    if isinstance(value, prepared_type):
+        _require(value.key == key,
+                 f"prepared surface identity differs from requested surface {key}")
+        prepared = value
+        _require(prepared.closed and prepared.self_audit()["count"] == 0,
+                 f"surface {key} must be closed and exact-self-clear")
+        return prepared
     _require(isinstance(value, (tuple, list)) and len(value) >= 2,
              f"surface {key} must contain positions and faces")
     positions = _float32_xyz(value[0], name=f"surface {key}")
