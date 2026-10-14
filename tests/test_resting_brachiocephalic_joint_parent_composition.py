@@ -328,6 +328,11 @@ def _serialized_output_fixture(root):
         "cardiac_geometry_binding": {"common_field": {"map": {"record_count": 621369}}},
         "native_muscle_surfaces": native_owner(
             common_owner, Path(common_manifest["path"]), common_manifest["sha256"]),
+        "reference_surface_composition_binding": {
+            "prior_receipt_path": str(common_dir / "pre-common-receipt.json"),
+            "prior_receipt_sha256": _hash("p"),
+            "composition_manifest_sha256": _hash("m"),
+        },
         "reference_surface_composition_binding_history": [],
     }
     common_payload = {
@@ -350,7 +355,8 @@ def _serialized_output_fixture(root):
     back_receipt["provenance"]["native_muscle_surfaces"] = native_owner(
         back_child, back_manifest_path, back_manifest_sha)
     back_receipt["provenance"]["reference_surface_composition_binding"] = back_binding
-    back_receipt["provenance"]["reference_surface_composition_binding_history"] = [back_binding]
+    back_receipt["provenance"]["reference_surface_composition_binding_history"] = [
+        common_receipt["provenance"]["reference_surface_composition_binding"]]
     back_receipt_path = _write_json(output / "back" / "resting-anatomy-receipt.json",
                                     back_receipt)
 
@@ -363,7 +369,7 @@ def _serialized_output_fixture(root):
         joint_child, joint_manifest_path, joint_manifest_sha)
     final_receipt["provenance"]["reference_surface_composition_binding"] = joint_binding
     final_receipt["provenance"]["reference_surface_composition_binding_history"].append(
-        joint_binding)
+        back_binding)
 
     route_carrier = common_sources[5]
     append_asset = output / "joint" / "assets" / "route110-carriers.nhtissue"
@@ -426,6 +432,7 @@ def _serialized_output_fixture(root):
     frozen = {
         "ancestor_chain": chain, "joint_muscle_owner_indices": roles,
         "common_validation": {"source_asset_validation": source_validation},
+        "validated_common_carrier_paths_by_index": {"5": route_carrier["path"]},
     }
     proof = prepare._validate_final_composition_output(
         args, frozen, back_receipt_path=back_receipt_path,

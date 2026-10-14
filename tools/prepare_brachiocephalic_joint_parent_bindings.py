@@ -783,7 +783,7 @@ def _validate_final_parent_extension(
     original_joint_extension: dict[str, Any],
     final_extension: dict[str, Any],
     *,
-    common_receipt_path: Path,
+    validated_common_source_paths: dict[str, str],
     final_receipt_path: Path,
     output_dir: Path,
     final_anatomy_sha256: str,
@@ -859,8 +859,13 @@ def _validate_final_parent_extension(
                      and source_path.is_relative_to(joint_assets_dir),
                      "new parent source is not materialized inside the final joint assets")
         source_paths.append(str(source_path))
+    _require(isinstance(validated_common_source_paths, dict),
+             "frozen preflight lacks validated common source paths")
     for common_index in referenced:
-        source_path = _record_path(common_sources[common_index], common_receipt_path.parent)
+        raw_source_path = validated_common_source_paths.get(str(common_index))
+        _require(isinstance(raw_source_path, str) and bool(raw_source_path),
+                 f"frozen preflight lacks common source path {common_index}")
+        source_path = Path(raw_source_path).resolve()
         _require(source_path.is_file()
                  and _sha(source_path) == common_sources[common_index]["sha256"],
                  f"common referenced source {common_index} path or SHA-256 is invalid")
@@ -998,10 +1003,13 @@ def _validate_final_composition_output(
              and isinstance(final_history, list)
              and back_history[:len(common_history)] == common_history
              and len(back_history) == len(common_history) + 1
-             and back_history[-1] == back_binding
+             and common.get("provenance", {}).get(
+                 "reference_surface_composition_binding") is not None
+             and back_history[-1] == common["provenance"][
+                 "reference_surface_composition_binding"]
              and final_history[:len(back_history)] == back_history
              and len(final_history) == len(back_history) + 1
-             and final_history[-1] == final_binding,
+             and final_history[-1] == back_binding,
              "receipt reference-composition history is not a direct append chain")
 
     composition = final["provenance"].get(
@@ -1039,7 +1047,8 @@ def _validate_final_composition_output(
     final_extension = final["passive_tissue_parent_bindings"]
     inventory_audit, map_audit, extension_proof = _validate_final_parent_extension(
         common_extension, joint_extension, final_extension,
-        common_receipt_path=common_path,
+        validated_common_source_paths=frozen.get(
+            "validated_common_carrier_paths_by_index", {}),
         final_receipt_path=final_path,
         output_dir=output_dir,
         final_anatomy_sha256=common["payload"]["sha256"],
