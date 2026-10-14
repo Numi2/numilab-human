@@ -68,6 +68,27 @@ def _resolve_sidecar(receipt_path: Path, base_receipt_path: Path, record: dict) 
             return path.resolve()
     raise ValueError("brachiocephalic common field: sidecar missing/hash mismatch: " + str(rel))
 
+def _validate_common_field_descriptor(candidate: dict, pinned_base: dict) -> None:
+    """Allow only the anatomy rebind and sidecar path relocation on a child."""
+    _require(isinstance(candidate, dict) and isinstance(pinned_base, dict),
+             "candidate or pinned N27 common-field descriptor is missing")
+    child = copy.deepcopy(candidate)
+    base = copy.deepcopy(pinned_base)
+    _require(isinstance(child.get("anatomy_payload_sha256"), str)
+             and isinstance(base.get("anatomy_payload_sha256"), str),
+             "common-field anatomy payload binding is malformed")
+    child["anatomy_payload_sha256"] = base["anatomy_payload_sha256"]
+    for owner in ("map", "polynomials", "domain_boxes"):
+        child_record, base_record = child.get(owner), base.get(owner)
+        _require(isinstance(child_record, dict) and isinstance(base_record, dict)
+                 and isinstance(child_record.get("path"), str)
+                 and isinstance(base_record.get("path"), str),
+                 "common-field sidecar descriptor is malformed: " + owner)
+        child_record["path"] = base_record["path"]
+    _require(child == base,
+             "candidate common-field descriptor differs from pinned N27 outside anatomy hash/path relocation")
+
+
 def _payload_sections(raw: bytes) -> tuple[tuple[bytes, bytes, bytes], tuple]:
     _require(len(raw) >= NHANAT_HEADER.size, "truncated NHANAT payload")
     header = NHANAT_HEADER.unpack_from(raw)
@@ -276,6 +297,8 @@ def _compile_records(bridge_xyz: Any, d_svc: Any, d_distal: Any, svc_xyz: Any,
              and int(faces.min()) >= 0 and int(faces.max()) < len(svc_xyz)
              and coeff.shape == (len(svc_xyz), 7, 4)
              and np.isfinite(coeff).all(), "malformed SVC source map")
+    _require(np.all(coeff.view("<u4")[:, :, 3] == 0),
+             "SVC map float4 W components must be canonical positive zero")
     _require(math.isfinite(projection_bound_m) and projection_bound_m > 0,
              "invalid projection distance bound")
     denom = d_svc + d_distal
@@ -322,6 +345,8 @@ def _compile_records(bridge_xyz: Any, d_svc: Any, d_distal: Any, svc_xyz: Any,
         _require(np.isfinite(out[vi]).all() and
                  (not distal_zero[vi] or np.all(out[vi] == 0.0)),
                  "interpolation is nonfinite or fails distal zero-field collar")
+        _require(np.all(out[vi].view("<u4").reshape(7, 4)[:, 3] == 0),
+                 "compiled float4 W components must be canonical positive zero")
         ancestry.append({
             "bridge_local_vertex": vi, "svc_local_face": best_face,
             "svc_local_vertices": list(best_vids), "svc_map_record_offsets": list(best_vids),
@@ -379,6 +404,9 @@ def prepare_brachiocephalic_common_field(
     ancestry, attribution, routes = _route_data(rows, receipt, route_paths, np)
 
     common = receipt["provenance"]["cardiac_geometry_binding"]["common_field"]
+    base_common = parent["base_receipt"].get("provenance", {}).get(
+        "cardiac_geometry_binding", {}).get("common_field")
+    _validate_common_field_descriptor(common, base_common)
     _require(common.get("schema") == "numi.human.cardiac_common_field.v1"
              and common.get("anatomy_payload_sha256") in {N27_PAYLOAD_SHA, payload["sha256"]},
              "candidate does not bind the existing common-field map")
@@ -390,11 +418,26 @@ def prepare_brachiocephalic_common_field(
              "one or both vein ranges already exist in the map")
     sidecars = {key: _resolve_sidecar(candidate_receipt_path, base_receipt_path, common[key])
                 for key in ("map", "polynomials", "domain_boxes")}
-    old_map = sidecars["map"].read_bytes()
+    base_sidecars = {key: _resolve_sidecar(base_receipt_path, base_receipt_path, base_common[key])
+                     for key in ("map", "polynomials", "domain_boxes")}
+    sidecar_bytes = {}
+    for key in ("map", "polynomials", "domain_boxes"):
+        expected_sha = base_common[key]["sha256"]
+        candidate_bytes = sidecars[key].read_bytes()
+        base_bytes = base_sidecars[key].read_bytes()
+        _require(_sha_bytes(base_bytes) == expected_sha
+                 and _sha_bytes(candidate_bytes) == expected_sha
+                 and candidate_bytes == base_bytes,
+                 "candidate common-field sidecar differs from pinned N27 bytes: " + key)
+        sidecar_bytes[key] = candidate_bytes
+    old_map = sidecar_bytes["map"]
     _require(len(old_map) == 620718 * 112 and _sha_bytes(old_map) == common["map"]["sha256"],
              "input map bytes differ from its pinned descriptor")
-    polynomials = sidecars["polynomials"].read_bytes()
-    domain_boxes = sidecars["domain_boxes"].read_bytes()
+    old_map_words = np.frombuffer(old_map, dtype="<u4").reshape(-1, 28)
+    _require(np.all(old_map_words[:, 3::4] == 0),
+             "existing common-map float4 W components must be canonical positive zero")
+    polynomials = sidecar_bytes["polynomials"]
+    domain_boxes = sidecar_bytes["domain_boxes"]
 
     svc = rows.get(10)
     svc_range = next((r for r in common["passive_attachment_ranges"]
