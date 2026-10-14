@@ -1,0 +1,131 @@
+{
+  "candidate_admission": false,
+  "capture_mapping": {
+    "candidate_active_source_vertex_count": 4467,
+    "candidate_faces_match_old_and_fresh_exactly": true,
+    "candidate_unused_source_slots_retained": 20,
+    "fresh_capture_candidate_faces_sha256": "7d8e08342886b5eae3a0416104b93bd663ecd95602c1d86fe2f694391cd3c3b5",
+    "global_face_offset": 252167,
+    "old_tested_capture_candidate_faces_sha256": "697d9501e53e5f970b844c29dac385fd95eef440f05115a2922876a8ac38d620",
+    "ordered_candidate_face_count": 8934,
+    "retired_source_face_count": 36
+  },
+  "correction_of": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-tested-candidate-fresh-step0-equivalence-001.json",
+    "reason": "The v1 field final_receipt_sha256 was ambiguous. The fresh native diagnostic used receipt a7795cc7\u2026; receipt 86a227bf\u2026 is the later prepared row157+row158 composition, not the receipt passed to the diagnostic.",
+    "sha256": "2c05fc23397c277dc413b59bffe388ccb58bea667e35b1d6162a944594d97717"
+  },
+  "geometry_predicates_called": false,
+  "input_pins": {
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back-source-owner-composition-005/candidate-001/row-patches/row-158.npz": "e3add8860d91c7bc1bed95f32440e1be63046ac296a19eecf4bb08203e49f8a5",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-local-cap-retessellation-001/candidate-008/exact-step0-gate-001.py": "3d399d3b93ab843eb797ca0cdd1966f1b337a023dba2daa3c7302cf650b0cd32",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-row-composition-002/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "1acb3d401f270c43794d02fc8f33c5002317b174822d95dbab3115649b094965",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157-row-composition-002/composed/report.json": "825cf9a25f32cbaadd524d614c32e754d100908f5e7b37e0b2c51a2efd84c7df",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157158-capture-equivalence-158.json": "cd60984c8e3c035626fec6c6e639828d35c5cb026152a79bdb5edf5147f50d13",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-back-forearm-source-002/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "b837f69e2acb2ad1edbf9bd24b14c4a856064b2f8c594ca75d5e097edbcbf206",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.mrvpack": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-candidate-step0-self-002/preflight.json": "1042b431c8a5997b95491e97af35336ae4b2dc8a9d50fa34ff0746d8c740c893",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-candidate-step0-self-002/report.json": "162cae02cc650eb4d80c31b35d6e7eda3bf48853ec659946535e451614f22489",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-composition-003/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "7ef4f6cff6feb62913bc5a463780725e3543271a5699d601807ac70a67cb345c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-composition-003/composed/report.json": "4a3174921478fde387df1f5daf193b3643ac898b342c1dbbea254cb9512f956c",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-composition-003/composition-verification.json": "add40febece39ebb30043cecdbb82eeb4a6b35e9d7758ba754e5ca772e459699",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-retirement-001/candidate-row-158.npz": "026926ae0b9c394a62b9536f86f0e14713ee0a3eeb65f09aace435eec196acc9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-retirement-001/report.json": "99f84dbebdd4e6c4560744d40139b4886651f365685afbb51c1ef7129af35bec",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-microcomponent-retirement-001/retired-face-lineage.json": "b132dbf06c18f7c19e8cb5829b720931e086834ee231108e6456973f98ad7c25",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vein008-forearm474-back158-native-emission-diagnostic-002/invocation.json": "0307b3c25a3f81cb26ccde9b7b5f391038918d4cb3f9aafccad852e0749cc1a9",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vein008-forearm474-back158-native-emission-diagnostic-002/native-run/accepted-geometry/step-0.mrvpack": "ba3e3160c135a3b04b927f7d9a1d56ca7cb8e9f90982b50eebb6a70bb169c523",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vein008-forearm474-back158-native-emission-diagnostic-002/native-run/accepted-geometry/step-0.receipt.json": "6deba756ae333e0c4e8a7609d90c8f21aa8a5990c9708971dc7c75f4196e852f"
+  },
+  "native_admission": false,
+  "nhtiss_source_row": {
+    "candidate_base_npz_sha256": "e3add8860d91c7bc1bed95f32440e1be63046ac296a19eecf4bb08203e49f8a5",
+    "candidate_npz_sha256": "026926ae0b9c394a62b9536f86f0e14713ee0a3eeb65f09aace435eec196acc9",
+    "final_composition_report_sha256": "825cf9a25f32cbaadd524d614c32e754d100908f5e7b37e0b2c51a2efd84c7df",
+    "final_integrated_source_sha256": "1acb3d401f270c43794d02fc8f33c5002317b174822d95dbab3115649b094965",
+    "final_prepared_receipt": {
+      "meaning": "later row157 composition receipt; row158 data verified unchanged except global first-index relocation",
+      "passed_to_native": false,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-back157158-integrated-receipt-001/resting-anatomy-receipt.json",
+      "sha256": "86a227bf20861cd68c9597e91d15fa3fd4d03c696d85c29229fa3f45c373ed31"
+    },
+    "fresh_emission_source_sha256": "7ef4f6cff6feb62913bc5a463780725e3543271a5699d601807ac70a67cb345c",
+    "native_invocation_receipt": {
+      "actually_passed_to_native": true,
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-back158-integrated-receipt-001/resting-anatomy-receipt.json",
+      "sha256": "a7795cc7b6bde0eb1fade7fca0d792eb24cc9ac73a29fc3fe4b001b91ff692e5"
+    },
+    "old_tested_source_sha256": "b837f69e2acb2ad1edbf9bd24b14c4a856064b2f8c594ca75d5e097edbcbf206",
+    "row158_binding_vertex_and_face_index_bytes_equal_fresh_to_final": true,
+    "row158_global_first_index_shift_due_row157_delta": 6
+  },
+  "prior_old_full_row_comparison": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157158-capture-equivalence-158.json",
+    "retained_as_distinct_old_full_row_result": true,
+    "sha256": "cd60984c8e3c035626fec6c6e639828d35c5cb026152a79bdb5edf5147f50d13"
+  },
+  "reused_candidate_self_gate": {
+    "exact_pair_count": 0,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-candidate-step0-self-002/report.json",
+    "scope": "row158 retirement candidate only, evaluated on previous actual step0 capture",
+    "sha256": "162cae02cc650eb4d80c31b35d6e7eda3bf48853ec659946535e451614f22489",
+    "stage": "candidate_actual_step0_full_self",
+    "status": "pass_row158_candidate_actual_step0_self"
+  },
+  "schema": "numi.human.row158.tested-candidate-fresh-native-step0-equivalence.v2",
+  "scope": "Metadata and exact-F32 correspondence only. Fresh emitted row158 topology and active positions/normals equal the previously self-tested retirement candidate at step0. This reuses only that candidate step0 self result; it does not qualify motion, neighbors, skin containment, or whole-anatomy admission.",
+  "skin_scope_equivalence": {
+    "actual_invocation_skin_payload_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-reference-native-021-003/assets/bodyparts3d-myosim-skinned-shell.nhskin",
+    "actual_invocation_skin_payload_sha256": "b01028f163bde0d46c9605d730f2e104713a1c490be3c718e77ff9cebb865710",
+    "boundary_edges": 115,
+    "boundary_loops": 2,
+    "boundary_repair_qualification": "topology repair only; ocular openings retained; not a closed body-volume or self-intersection certificate",
+    "branch_vertices": 0,
+    "closed_skin_volume_m3": null,
+    "final_prepared_receipt_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-back157158-integrated-receipt-001/resting-anatomy-receipt.json",
+    "final_prepared_receipt_sha256": "86a227bf20861cd68c9597e91d15fa3fd4d03c696d85c29229fa3f45c373ed31",
+    "intended_openings": [
+      "ocular surface opening; passive eyeball interface",
+      "ocular surface opening; passive eyeball interface"
+    ],
+    "medial_thigh_candidate_sha256": "b01028f163bde0d46c9605d730f2e104713a1c490be3c718e77ff9cebb865710",
+    "native_invocation_receipt_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-back158-integrated-receipt-001/resting-anatomy-receipt.json",
+    "native_invocation_receipt_sha256": "a7795cc7b6bde0eb1fade7fca0d792eb24cc9ac73a29fc3fe4b001b91ff692e5",
+    "native_skin_qualification": "pending",
+    "ocular_source_vertices_unchanged": true,
+    "open_surface_signed_integral_m3_diagnostic_only": 0.07219889250901716,
+    "skin_accounting_canonical_sha256": "cb4eabd6eb338e83250a93f63ffff1f3ca7d463f80d119129378a952750313ca",
+    "skin_accounting_equal_between_actual_and_final_receipts": true
+  },
+  "source_and_composition": {
+    "candidate_binding_table_byte_exact": true,
+    "candidate_composition_status": "source_composition_verified_not_admitted",
+    "candidate_material_array_sha256": {
+      "binding_indices": "09a1d86712ef473633b77cd04ffd21323cf7177ea974e039bd2423ea291e4bf6",
+      "vertices6": "48eddf1a6ee2ef2fdb22d9e73aa4f3777b223ba9109d407f556dc314a224b00f",
+      "weights": "926f02224c533060f9efacc7712890b211ba098beae5dd03d2eb7b16fb906afd"
+    },
+    "candidate_vertices6_binding_indices_weights_equal_to_base_row": true,
+    "final_composition_changed_rows": [
+      157
+    ],
+    "row158_binding_vertex_and_ordered_face_bytes_equal_fresh_source": true,
+    "row158_global_first_index_shift_due_row157_delta": 6
+  },
+  "status": "fresh_emission_byte_equivalent_to_tested_candidate_step0",
+  "step0_capture_equivalence": {
+    "active_vertex_count": 4467,
+    "normal_changed_scalars": 0,
+    "normal_max_absolute_difference": 0.0,
+    "normal_max_ulp": 0,
+    "normals_sha256": "3439789f839869fcde8c603d498708352a443056f590d4777625f9d9e6a9d3bd",
+    "position_changed_scalars": 0,
+    "position_max_absolute_difference_m": 0.0,
+    "position_max_ulp": 0,
+    "positions_dtype": "float32",
+    "positions_sha256": "1d1f1ca9c6510ab20ffde8d4f95913d2f0cacf27ac2206a0bc7149506844ebae"
+  },
+  "typed_identity": [
+    51005,
+    158
+  ]
+}

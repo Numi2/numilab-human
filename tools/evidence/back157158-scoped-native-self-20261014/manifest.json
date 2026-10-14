@@ -8,7 +8,11 @@
     "nha_payload_pin": "integrated_nha_payload",
     "nhtiss_payload_pin": "integrated_nhtiss_payload",
     "nhtiss_manifest_pin": "integrated_nhtiss_manifest",
-    "nhtiss_child_bound_by_receipt": true
+    "nhtiss_child_bound_by_receipt": true,
+    "prepared_integrated_receipt_pin": "integrated_receipt",
+    "prepared_integrated_receipt_was_passed_to_row158_native": false,
+    "row158_native_invocation_pin": "row158_actual_native_invocation",
+    "row158_native_invocation_receipt_pin": "row158_actual_native_invocation_receipt"
   },
   "composition_chain": {
     "row158_input_payload_pin": "pre_back_row_source_nhtiss",
@@ -78,7 +82,19 @@
       "myosim_route_added": false,
       "candidate_admission": false,
       "native_admission": false,
-      "scope": "A 36-face residual microcomponent is retired with per-face lineage; source coordinates, normals, bindings, and route state are unchanged. The self report is scoped to its pinned actual step-0 capture. No report establishes equivalence to the later ba3e capture, moving-pose clearance, or neighbor clearance."
+      "scope": "The later fresh native step-0 emission is byte-equivalent on all 4,467 active vertices and the 8,934 ordered candidate faces to the already self-tested row158 retirement candidate; 20 unused source slots are retained and 36 faces have explicit retirement lineage. The actual native invocation consumed the row158 composition receipt a779\u2026 and source NHTISS 7ef\u2026 . Receipt 86a\u2026 is a later prepared composition and was not passed to that invocation. This reuses only the prior candidate step-0 self result; motion, neighbor clearance, and anatomy-wide admission remain unqualified.",
+      "fresh_capture_equivalence_pin": "row158_fresh_capture_equivalence_v2",
+      "fresh_capture_equivalence_v1_erratum_pin": "row158_fresh_capture_equivalence_v1_erratum",
+      "native_invocation_pin": "row158_actual_native_invocation",
+      "native_invocation_receipt_pin": "row158_actual_native_invocation_receipt",
+      "prepared_integrated_receipt_pin": "integrated_receipt",
+      "candidate_base_pin": "row158_candidate_base",
+      "old_tested_source_pin": "row158_old_tested_source_nhtiss",
+      "prior_old_full_row_comparison_pin": "row158_old_full_row_capture_comparison",
+      "fresh_capture_equivalence_status": "fresh_emission_byte_equivalent_to_tested_candidate_step0",
+      "fresh_capture_equivalence_geometry_predicates_called": false,
+      "fresh_capture_equivalence_candidate_admission": false,
+      "fresh_capture_equivalence_remote_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-tested-candidate-fresh-step0-equivalence-002.json"
     }
   },
   "protected_back412": {
@@ -187,7 +203,52 @@
       ],
       "prior_skin_report_pin": "skin_021_audit",
       "prior_report_scope": "N18/N21-era skin self plus 92 selected muscle/ocular/vessel targets at eight captures",
-      "current_integrated_skin_gate": "not reached by the current 484 all-neighbor gate"
+      "current_integrated_skin_gate": "not reached by the current 484 all-neighbor gate",
+      "current_payload_pin": "skin_payload_b010",
+      "boundary_edges": 115,
+      "boundary_loops": 2,
+      "branch_vertices": 0,
+      "closed_skin_volume_m3": null,
+      "declared_openings": [
+        "ocular surface opening; passive eyeball interface",
+        "ocular surface opening; passive eyeball interface"
+      ],
+      "boundary_repair_qualification": "topology repair only; ocular openings retained; not a closed body-volume or self-intersection certificate",
+      "skin_accounting_sha256": "cb4eabd6eb338e83250a93f63ffff1f3ca7d463f80d119129378a952750313ca",
+      "skin_accounting_equal_between_actual_and_prepared_receipts": true,
+      "native_skin_qualification": "pending",
+      "ocular_source_vertices_unchanged": true,
+      "scope_limit": "The current b010 skin payload retains two declared ocular openings. Boundary counts and accounting are verified from the actual native-invocation receipt and the later prepared receipt, whose skin accounting is identical. The open shell has no admitted enclosed volume; the current all-neighbor gate stopped before reaching skin.",
+      "declared_opening_bounds_world_m": [
+        [
+          [
+            -0.070671413168695,
+            0.08369642792926407,
+            1.648014981319725
+          ],
+          [
+            -0.043790965560770057,
+            0.0921603717450362,
+            1.658635257443761
+          ]
+        ],
+        [
+          [
+            -0.007142334682133583,
+            0.08369642884036155,
+            1.648055357510074
+          ],
+          [
+            0.0196546833489656,
+            0.09221579012352119,
+            1.6586352639235085
+          ]
+        ]
+      ],
+      "declared_opening_source_vertex_counts": [
+        60,
+        55
+      ]
     }
   },
   "evidence_pins": [
@@ -365,6 +426,51 @@
       "id": "back412_flip_reference",
       "path": "/Users/n/numi-human-final-integration-publish-1397/tools/evidence/back-cap-retriangulation-native-m6-1374/flip-412.json",
       "sha256": "0ead75bfee5a0abde2f213b26e7f272b78f58af1539d56c85aea80f22021d8c2"
+    },
+    {
+      "id": "row158_fresh_capture_equivalence_v2",
+      "path": "/Users/n/numi-human-back157158-metadata-evidence-20261014/tools/evidence/back157158-scoped-native-self-20261014/row158-fresh-step0-equivalence-v2.json",
+      "sha256": "f68bbcf65836809cd01a1f3e43a845360f9029575a176472cecccdb74279c0f4"
+    },
+    {
+      "id": "row158_fresh_capture_equivalence_v1_erratum",
+      "path": "/Users/n/numi-human-back157158-metadata-evidence-20261014/tools/evidence/back157158-scoped-native-self-20261014/row158-fresh-step0-equivalence-v1-erratum.json",
+      "sha256": "4d71f91412d0148f5274cb3f1e97d58da9d3eb746ea167fbf0af892a8322c3fa"
+    },
+    {
+      "id": "row158_fresh_capture_equivalence_v1",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/row158-tested-candidate-fresh-step0-equivalence-001.json",
+      "sha256": "2c05fc23397c277dc413b59bffe388ccb58bea667e35b1d6162a944594d97717"
+    },
+    {
+      "id": "row158_old_full_row_capture_comparison",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back157158-capture-equivalence-158.json",
+      "sha256": "cd60984c8e3c035626fec6c6e639828d35c5cb026152a79bdb5edf5147f50d13"
+    },
+    {
+      "id": "row158_candidate_base",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/back-source-owner-composition-005/candidate-001/row-patches/row-158.npz",
+      "sha256": "e3add8860d91c7bc1bed95f32440e1be63046ac296a19eecf4bb08203e49f8a5"
+    },
+    {
+      "id": "row158_old_tested_source_nhtiss",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-back-forearm-source-002/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+      "sha256": "b837f69e2acb2ad1edbf9bd24b14c4a856064b2f8c594ca75d5e097edbcbf206"
+    },
+    {
+      "id": "row158_actual_native_invocation",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/vein008-forearm474-back158-native-emission-diagnostic-002/invocation.json",
+      "sha256": "0307b3c25a3f81cb26ccde9b7b5f391038918d4cb3f9aafccad852e0749cc1a9"
+    },
+    {
+      "id": "row158_actual_native_invocation_receipt",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/forearm474-vein008-back158-integrated-receipt-001/resting-anatomy-receipt.json",
+      "sha256": "a7795cc7b6bde0eb1fade7fca0d792eb24cc9ac73a29fc3fe4b001b91ff692e5"
+    },
+    {
+      "id": "skin_payload_b010",
+      "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-reference-native-021-003/assets/bodyparts3d-myosim-skinned-shell.nhskin",
+      "sha256": "b01028f163bde0d46c9605d730f2e104713a1c490be3c718e77ff9cebb865710"
     }
   ]
 }
