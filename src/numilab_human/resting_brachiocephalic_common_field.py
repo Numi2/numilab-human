@@ -123,6 +123,9 @@ def _validate_n27_parent(receipt: dict, candidate_raw: bytes, base_receipt_path:
                  for row in provenance.get("bodyparts3d_archives", [])),
              "BodyParts3D archive differs from pinned input")
     ext = provenance.get("passive_brachiocephalic_vein_extension", {})
+    _require(ext.get("additional_physical_mass_kg") == 0
+             and ext.get("additional_force_or_state") is False,
+             "passive bridge append added physical mass, force, or state")
     registration_path = Path(ext.get("verified_registration_path", ""))
     rigid_path = Path(ext.get("verified_rigid_payload_path", ""))
     _require(registration_path.is_file() and _sha_file(registration_path) == REGISTRATION_SHA
@@ -142,24 +145,49 @@ def _validate_n27_parent(receipt: dict, candidate_raw: bytes, base_receipt_path:
                  "recorded torso rest transform differs from NHRIGID for " + key)
     base_raw = base_path.read_bytes()
     base_parts, base_header = _payload_sections(base_raw)
-    child_parts, child_header = _payload_sections(candidate_raw)
-    _require(base_header[2] == 523 and child_header[2] == 525
-             and child_header[3] == base_header[3] + 651
-             and child_header[5:] == base_header[5:],
+    _child_parts, child_header = _payload_sections(candidate_raw)
+    from .resting_pleura_proxy import _parse_payload
+    _, _, base_rows = _parse_payload(base_raw)
+    _, _, child_rows = _parse_payload(candidate_raw)
+    _require(base_header[2] == 523 and len(base_rows) == 523 and max(base_rows) == 524
+             and child_header[2] == 525 and child_header[5:] == base_header[5:]
+             and set(child_rows) == set(base_rows) | {525, 526},
              "candidate is not the two-row append on the pinned 523-row N27")
-    _require(all(child_parts[i][:len(base_parts[i])] == base_parts[i] for i in range(3)),
-             "one or more original N27 payload sections changed")
+    from .resting_intercostal_mesh_arrangement import validate_receipt_composition
+    intercostal = validate_receipt_composition(
+        base_receipt_path=base_receipt_path,
+        base_payload_sha256=base_receipt["payload"]["sha256"],
+        receipt=receipt,
+        candidate_rows=child_rows,
+    )
+    added_intercostal_vertices = sum(
+        int(row["new_appended_vertex_count"])
+        for row in receipt["provenance"]["local_intercostal_mesh_repair"]["rows"]
+    )
+    _require(child_header[3] == base_header[3] + 651 + added_intercostal_vertices,
+             "NHA vertex delta is not exactly bridge append plus mapped intercostal children")
+    _require(sum(len(row["faces"]) * 3 for row in child_rows.values()) == child_header[4]
+             and sum(len(row["faces"]) * 3 for row in base_rows.values()) == base_header[4],
+             "decoded NHA index counts differ from ABI5 headers")
+    for stable_id in (525, 526):
+        row = child_rows[stable_id]
+        _require(int(row["body_index"]) == 20 and int(row["layer"]) == 2
+                 and int(row["flags"]) == 0,
+                 "appended passive bridge row changed NHA body/layer/flags")
     _require(ext.get("preserved_base_record_bytes_sha256") == _sha_bytes(base_parts[0])
              and ext.get("preserved_base_vertex_bytes_sha256") == _sha_bytes(base_parts[1])
              and ext.get("preserved_base_index_bytes_sha256") == _sha_bytes(base_parts[2]),
-             "append receipt does not bind byte-exact N27 parent rows")
+             "append receipt does not bind the original N27 source bytes")
+    parent_bytes = {
+        "receipt_sha256": N27_RECEIPT_SHA, "payload_sha256": N27_PAYLOAD_SHA,
+        "records_sha256": _sha_bytes(base_parts[0]),
+        "vertices_sha256": _sha_bytes(base_parts[1]),
+        "indices_sha256": _sha_bytes(base_parts[2]),
+        **intercostal,
+        "global_buffer_offsets_may_be_rebased": True,
+    }
     return {"base_receipt": base_receipt, "base_path": base_path, "base_raw": base_raw,
-            "parent_bytes": {
-                "receipt_sha256": N27_RECEIPT_SHA, "payload_sha256": N27_PAYLOAD_SHA,
-                "records_sha256": _sha_bytes(base_parts[0]),
-                "vertices_sha256": _sha_bytes(base_parts[1]),
-                "indices_sha256": _sha_bytes(base_parts[2]),
-                "all_523_existing_rows_byte_exact": True}}
+            "parent_bytes": parent_bytes}
 
 def _route_data(rows: dict, receipt: dict, paths: dict[str, Path], np: Any) -> tuple:
     for key, path in paths.items():

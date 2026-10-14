@@ -81,7 +81,8 @@ BRACHIOCEPHALIC_VEINS = (
 def append_brachiocephalic_veins(*, base_receipt: Path, output: Path,
                                   sources_path: Path, registration_path: Path,
                                   rigid_path: Path, quotient_npz_path: Path,
-                                  quotient_report_path: Path) -> dict:
+                                  quotient_report_path: Path,
+                                  local_intercostal_arrangement_binding: dict | None = None) -> dict:
     """Append the two source-bound brachiocephalic veins through NHANAT ABI5.
 
     Every source/registration/rest-pose input is explicit. The pinned seam
@@ -104,6 +105,7 @@ def append_brachiocephalic_veins(*, base_receipt: Path, output: Path,
         rigid_path=rigid_path,
         quotient_npz_path=quotient_npz_path,
         quotient_report_path=quotient_report_path,
+        local_intercostal_arrangement_binding=local_intercostal_arrangement_binding,
     )
 
 

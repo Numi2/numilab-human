@@ -1030,7 +1030,8 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                    sources_path: Path | None = None,
                    registration_path: Path | None = None, rigid_path: Path | None = None,
                    quotient_npz_path: Path | None = None,
-                   quotient_report_path: Path | None = None) -> dict:
+                   quotient_report_path: Path | None = None,
+                   local_intercostal_arrangement_binding: dict | None = None) -> dict:
     if output.exists():
         raise ValueError("retain previous anatomy evidence; choose a new output directory")
     receipt = json.loads(base_receipt.read_text())
@@ -1074,6 +1075,81 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
     if len(decoded_ids) != count or decoded_ids != mapped_ids:
         raise ValueError("passive anatomy decoded rows and source_id_map differ")
     next_id = max(decoded_ids) + 1
+    arrangement_rows = {}
+    arrangement_summaries = {}
+    arrangement_row_records = []
+    arrangement_context = None
+    arrangement_module_sha = None
+    append_owner_sha = None
+    if local_intercostal_arrangement_binding is not None:
+        if not (extension_key == "passive_brachiocephalic_vein_extension"
+                and receipt["payload"]["sha256"]
+                == "cde8705a813fe56686776c9cc038cbf06f413e1de76099d2a019d5e1b748a8d4"):
+            raise ValueError("local intercostal arrangement is restricted to the direct pinned N27 vein append")
+        from . import resting_intercostal_mesh_arrangement as intercostal
+        arrangement_context = intercostal.load_pinned_fragment_repair(
+            base_receipt_path=base_receipt,
+            base_payload_sha256=receipt["payload"]["sha256"],
+            repair_parent_receipt_path=Path(
+                local_intercostal_arrangement_binding["repair_parent_receipt_path"]),
+            repair_parent_receipt_sha256=local_intercostal_arrangement_binding[
+                "repair_parent_receipt_sha256"],
+            repair_parent_payload_path=Path(
+                local_intercostal_arrangement_binding["repair_parent_payload_path"]),
+            repair_report_path=Path(
+                local_intercostal_arrangement_binding["repair_report_path"]),
+            repair_report_sha256=local_intercostal_arrangement_binding[
+                "repair_report_sha256"],
+        )
+        arrangement_descriptors = {
+            int(stable_id): descriptor
+            for stable_id, descriptor in local_intercostal_arrangement_binding["rows"].items()
+        }
+        arrangement_rows, arrangement_summaries = intercostal.compose_pinned_arrangement_set(
+            base_rows=base_rows,
+            repair_context=arrangement_context,
+            arrangement_descriptors=arrangement_descriptors,
+        )
+        arrangement_module_sha = human.sha256(Path(intercostal.__file__))
+        append_owner_sha = human.sha256(Path(__file__))
+        for stable_id in sorted(arrangement_rows):
+            descriptor = arrangement_descriptors[stable_id]
+            summary = arrangement_summaries[str(stable_id)]
+            row_binding = {
+                "stable_id": stable_id,
+                "method": "existing ABI5 append owner; exact 028 retained-face parent plus positive full_candidate parent maps",
+                "full_candidate": {
+                    key: str(value) if key.endswith("_path") else value
+                    for key, value in descriptor.items()
+                },
+                "repair_parent_receipt_sha256": arrangement_context["repair_parent_receipt_sha256"],
+                "repair_parent_payload_sha256": arrangement_context["repair_parent_payload_sha256"],
+                "fragment_repair_report_sha256": arrangement_context["repair_report_sha256"],
+                "compiled_row_sha256": summary["compiled_row_sha256"],
+                "retained_n27_face_map_sha256": summary["retained_n27_face_map_sha256"],
+                "retained_n27_source_face_count": summary["retained_n27_source_face_count"],
+                "new_appended_vertex_count": summary["new_appended_vertex_count"],
+                "full_candidate_patch_face_count": summary["full_candidate_patch_face_count"],
+                "positive_exact_parent_map_for_each_appended_vertex": True,
+                "append_owner_source_sha256": append_owner_sha,
+                "arrangement_composer_source_sha256": arrangement_module_sha,
+                "physical_mass_or_state_added": False,
+            }
+            arrangement_row_records.append(row_binding)
+            map_row = source_map[str(stable_id)]
+            prior_repair = arrangement_context["repair_parent_source_id_map"][
+                str(stable_id)].get("repair")
+            if prior_repair is None:
+                prior_repair = {}
+            if not isinstance(prior_repair, dict):
+                raise ValueError("intercostal source map repair metadata is not an object")
+            prior_repair = deepcopy(prior_repair)
+            if "local_intersection_remesh" in prior_repair:
+                raise ValueError("intercostal source map already has a local remesh repair")
+            prior_repair["local_intersection_remesh"] = row_binding
+            map_row["repair"] = prior_repair
+        if arrangement_context["unrelated_n27_rows_byte_exact"] is not True:
+            raise ValueError("pinned 028 repair did not preserve unrelated N27 rows")
     records, vertices, indices = (
         [raw[anatomy.HEADER.size:vo]], [raw[vo:io]], [raw[io:]])
     if rigid_path is not None and (quotient_npz_path is None or quotient_report_path is None):
@@ -1205,10 +1281,15 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
         family_rows.append(family_row)
     payload = anatomy.HEADER.pack(magic, abi, count + len(additions), nv, ni, registration_fp, source_sha)
     payload += b"".join(records) + b"".join(vertices) + b"".join(indices)
+    if arrangement_rows:
+        from .resting_intercostal_mesh_arrangement import encode_payload_with_row_replacements
+        payload, reemit_proof = encode_payload_with_row_replacements(payload, arrangement_rows)
+        if reemit_proof["replaced_stable_ids"] != sorted(arrangement_rows):
+            raise ValueError("existing ABI5 row-replacement proof differs from requested IDs")
     _, _, appended_rows = _parse_payload(payload)
     for stable_id in base_rows:
-        if _record_content_bytes(base_rows[stable_id]) != _record_content_bytes(appended_rows[stable_id]):
-            raise ValueError("passive append changed existing anatomy row bytes: " + str(stable_id))
+        if stable_id not in arrangement_rows and _record_content_bytes(base_rows[stable_id]) != _record_content_bytes(appended_rows[stable_id]):
+            raise ValueError("passive append changed an unmodified N27 anatomy row: " + str(stable_id))
     output.mkdir(parents=True)
     path = output / "resting-thorax.nhanatomy"
     path.write_bytes(payload)
@@ -1228,6 +1309,31 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
         "additional_physical_mass_kg": 0,
         "license": "CC-BY-4.0",
         "scope": "passive atlas inspection with existing body-frame registration; no added constitutive tissue or vessel-wall mechanics; source interfaces not yet qualified under loaded motion"}
+    if arrangement_rows:
+        receipt["provenance"]["local_intercostal_source_fragment_repair"] = deepcopy(
+            arrangement_context["fragment_repair_declaration"])
+        receipt["provenance"]["local_intercostal_mesh_repair"] = {
+            "schema": "numi.human.local_intercostal_mesh_repair.v1",
+            "method": "documented local arrangement remesh composed through the existing NHANAT ABI5 append owner",
+            "base_receipt_path": str(Path(base_receipt).resolve()),
+            "base_receipt_sha256": human.sha256(Path(base_receipt)),
+            "base_payload_sha256": hashlib.sha256(raw).hexdigest(),
+            "repair_parent_receipt_path": arrangement_context["repair_parent_receipt_path"],
+            "repair_parent_receipt_sha256": arrangement_context["repair_parent_receipt_sha256"],
+            "repair_parent_payload_path": arrangement_context["repair_parent_payload_path"],
+            "repair_parent_payload_sha256": arrangement_context["repair_parent_payload_sha256"],
+            "repair_report_path": arrangement_context["repair_report_path"],
+            "repair_report_sha256": arrangement_context["repair_report_sha256"],
+            "rows": arrangement_row_records,
+            "abi5_payload_reemit_proof": reemit_proof,
+            "unrelated_n27_rows_byte_exact": True,
+            "unchanged_original_vertex_slots_preserved": True,
+            "old_original_faces_preserved_or_explicitly_reported": True,
+            "all_028_retained_faces_preserved": True,
+            "no_physical_mass_or_state_added": True,
+            "native_confirmation_required": True,
+            "anatomical_admission": False,
+        }
     if quotient_report is not None:
         receipt["provenance"][extension_key].update({
             "source_quotient_report": {

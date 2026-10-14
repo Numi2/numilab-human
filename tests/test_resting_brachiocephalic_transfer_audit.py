@@ -460,3 +460,129 @@ def test_source_binding_scope_preserves_other_capture_surfaces():
     assert report["unbound_capture_semantic_counts"] == {"51004": 1}
     assert report["all_captured_targets_source_bound"] is False
     assert set(projected) == {route_key, proxy_key}
+
+
+def test_body20_emission_records_repaired_and_bridge_rows_with_parent_projection_residuals():
+    rows = {
+        313: _row(313, body=20, layer=1),
+        315: _row(315, body=20, layer=1),
+        317: _row(317, body=20, layer=1),
+        525: _row(525, body=20, layer=2),
+        526: _row(526, body=20, layer=2),
+    }
+    source_map = {}
+    for stable_id in (313, 315, 317):
+        source_map[str(stable_id)] = _identity(
+            stable_id, source_member="intercostal-" + str(stable_id), layer=1
+        )
+        source_map[str(stable_id)]["source_owner_metadata"] = None
+    for stable_id, spec in audit.source007.BRIDGE_ROWS.items():
+        source_map[str(stable_id)] = _identity(
+            stable_id, source_member=spec["member"], layer=2
+        )
+        source_map[str(stable_id)]["vascular_compartment_id"] = 4
+        source_map[str(stable_id)]["source_owner_metadata"] = {
+            "myosim_body": "torso",
+            "core_body_index": 20,
+            "layer": "vessel",
+        }
+
+    pose = {
+        "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+        "position_m": [0.125, -0.25, 0.5],
+    }
+
+    def transform(q, t, points):
+        assert np.asarray(q, dtype="<f4").tolist() == [0.0, 0.0, 0.0, 1.0]
+        return np.asarray(
+            np.asarray(points, dtype="<f4") + np.asarray(t, dtype="<f4"),
+            dtype="<f4",
+        )
+
+    bridges = audit.source007._bridge_surfaces(rows, pose, transform)
+    projected = {}
+    for stable_id in (313, 315, 317):
+        row = rows[stable_id]
+        projected[(51010, stable_id)] = (
+            row["vertices6"][:, :3] + np.asarray(pose["position_m"], dtype="<f4"),
+            row["faces"].astype("<u4"),
+            row["vertices6"][:, 3:6].copy(),
+            np.arange(len(row["vertices6"]), dtype=np.uint64),
+        )
+    report = audit.source007._body20_source_to_owner_f32_emission(
+        rows,
+        pose,
+        bridges,
+        source_map,
+        transform,
+        comparison_surfaces=projected,
+        captured_owners={
+            (51010, stable_id): audit.DEFORMABLE_OWNER
+            for stable_id in (313, 315, 317)
+        },
+    )
+
+    assert report["schema"].endswith(".v2")
+    assert report["compiled_body20_rows_replayed"] == [313, 315, 317, 525, 526]
+    for stable_id, expected_layer in (
+        (313, 1), (315, 1), (317, 1), (525, 2), (526, 2)
+    ):
+        row_report = report["rows"][str(stable_id)]
+        assert row_report["body_index"] == 20
+        assert row_report["layer"] == expected_layer
+        assert row_report["flags"] == 0
+        assert row_report[
+            "abi5_record_fields_body_offset_vertex_count_index_offset_index_count_stable_id_layer_flags"
+        ][5:] == [stable_id, expected_layer, 0]
+        assert row_report["owner_world_normals_sha256"]
+    for stable_id in (313, 315, 317):
+        row_report = report["rows"][str(stable_id)]
+        assert row_report["captured_primitive_body_owner"] == audit.DEFORMABLE_OWNER
+        comparison = row_report["captured_parent_projection_comparison"]
+        assert comparison is not None
+        assert comparison["owner_world_xyz_byte_exact_match"]
+        assert comparison["owner_world_normals_byte_exact_match"]
+        assert comparison["position_delta_max_norm_m"] == 0.0
+        assert comparison["normal_angle_max_rad"] == 0.0
+    for stable_id in (525, 526):
+        assert report["rows"][str(stable_id)][
+            "owner_world_xyz_exactly_matches_geometry_gate_input"
+        ]
+    transfer_report = audit.source007._body20_source_to_owner_f32_emission(
+        rows,
+        pose,
+        None,
+        source_map,
+        transform,
+        comparison_surfaces=projected,
+        captured_owners={
+            (51010, stable_id): audit.DEFORMABLE_OWNER
+            for stable_id in (313, 315, 317)
+        },
+    )
+    assert transfer_report["geometry_gate_inputs_replayed_byte_exact"] is False
+    assert transfer_report["rows"]["525"][
+        "owner_world_xyz_exactly_matches_geometry_gate_input"
+    ] is None
+    assert transfer_report["rows"]["313"][
+        "captured_parent_projection_comparison"
+    ]["owner_world_xyz_byte_exact_match"]
+    perturbed_projection = dict(projected)
+    xyz, faces, normals, gids = perturbed_projection[(51010, 315)]
+    shifted_xyz = xyz.copy()
+    shifted_xyz[0, 0] += np.float32(1.0e-4)
+    perturbed_projection[(51010, 315)] = (shifted_xyz, faces, normals, gids)
+    residual_report = audit.source007._body20_source_to_owner_f32_emission(
+        rows,
+        pose,
+        None,
+        source_map,
+        transform,
+        comparison_surfaces=perturbed_projection,
+    )
+    residual = residual_report["rows"]["315"][
+        "captured_parent_projection_comparison"
+    ]
+    assert residual["owner_world_xyz_byte_exact_match"] is False
+    assert residual["position_delta_max_norm_m"] == pytest.approx(1.0e-4, abs=3.0e-9)
+    assert "no native common-map" in residual["bound_scope"]

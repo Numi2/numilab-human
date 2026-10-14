@@ -146,6 +146,7 @@ def _code_paths(verifier=None, retention_owner=None) -> list[Path]:
         Path(shared_verifier.__file__).resolve(),
         Path(nhanat_codec.__file__).resolve(),
         Path(source007.PREDICTOR_PATH).resolve(),
+        Path(__file__).with_name("resting_intercostal_mesh_arrangement.py").resolve(),
     ]
     if verifier is not None:
         paths.append(Path(verifier.__file__).resolve())
@@ -246,7 +247,7 @@ def _all_input_paths() -> list[Path]:
     return sorted({path.resolve() for path in paths}, key=str)
 
 
-def build_preflight() -> dict:
+def build_preflight(arrangement_candidates: dict[int, dict] | None = None) -> dict:
     """Hash all inputs and code without decoding geometry or invoking predicates."""
     _require(
         not RUN_DIR.exists() and not PREFLIGHT_PATH.exists(),
@@ -299,7 +300,58 @@ def build_preflight() -> dict:
         and binding.get("n22_source_sha256") == late_source["sha256"],
         "late preparation scope or N22 source binding changed",
     )
-    input_paths = _all_input_paths()
+    aggregate = validation["receipt"].get("provenance", {}).get(
+        "local_intercostal_mesh_repair", {})
+    repair_rows = aggregate.get("rows", [])
+    _require(
+        [int(row.get("stable_id", -1)) for row in repair_rows] == sorted(REPAIRED_IDS),
+        "source candidate receipt lacks the exact three-row arrangement provenance",
+    )
+    arrangement_preflight = {}
+    arrangement_paths = [
+        Path(aggregate["repair_parent_receipt_path"]),
+        Path(aggregate["repair_parent_payload_path"]),
+        Path(aggregate["repair_report_path"]),
+    ]
+    if arrangement_candidates:
+        _require(
+            set(arrangement_candidates) == REPAIRED_IDS,
+            "explicit arrangement preflight must cover exactly rows 313/315/317",
+        )
+    for record in repair_rows:
+        stable_id = int(record["stable_id"])
+        descriptor = record.get("full_candidate", {})
+        _require(
+            isinstance(descriptor, dict)
+            and descriptor.get("source_payload_sha256")
+            == "50ab8248d2e0f55dd6cb8b24afc34c8844061d5841ecdf89d7daf03288816bfd"
+            and descriptor.get("source_payload_index") == 1,
+            f"candidate row {stable_id} has the wrong full_candidate parent namespace",
+        )
+        normalized = {
+            key: descriptor.get(key) for key in (
+                "candidate_path", "candidate_sha256", "lineage_path", "lineage_sha256",
+                "report_path", "report_sha256", "source_payload_sha256",
+                "source_payload_index",
+            )
+        }
+        if arrangement_candidates:
+            supplied = arrangement_candidates[stable_id]
+            for key, value in normalized.items():
+                _require(supplied.get(key) == value,
+                         f"explicit arrangement preflight descriptor differs for {stable_id}/{key}")
+        for path_key, sha_key in (
+            ("candidate_path", "candidate_sha256"),
+            ("lineage_path", "lineage_sha256"),
+            ("report_path", "report_sha256"),
+        ):
+            path = Path(normalized[path_key]).resolve()
+            expected = normalized[sha_key]
+            _require(path.is_file() and sha_file(path) == expected,
+                     f"retained arrangement {path_key} path/hash differs for {stable_id}")
+            arrangement_paths.append(path)
+        arrangement_preflight[str(stable_id)] = normalized
+    input_paths = _all_input_paths() + arrangement_paths
     code_paths = sorted(
         set(_code_paths(verifier, shared_verifier) + source007._code_paths()), key=str
     )
@@ -370,6 +422,7 @@ def build_preflight() -> dict:
             "report_sha256": sha_file(REPAIR_REPORT),
             "stable_ids": sorted(REPAIRED_IDS),
         },
+        "arrangement_candidates": arrangement_preflight,
         "decoded_geometry_arrays_loaded": False,
         "geometry_predicates_invoked": False,
         "source_compiler_invoked": False,
@@ -378,8 +431,8 @@ def build_preflight() -> dict:
     }
 
 
-def write_preflight() -> dict:
-    report = build_preflight()
+def write_preflight(arrangement_candidates: dict[int, dict] | None = None) -> dict:
+    report = build_preflight(arrangement_candidates)
     _write_json(PREFLIGHT_PATH, report)
     return {
         "status": report["status"],
@@ -418,6 +471,22 @@ def _assert_preflight(preflight: dict) -> None:
         == _normalized_pin_map(source007.INPUT_SHA),
         "source007 frozen source/compiler pins changed",
     )
+    for stable_id, descriptor in preflight.get("arrangement_candidates", {}).items():
+        _require(
+            str(int(stable_id)) == stable_id
+            and int(stable_id) in REPAIRED_IDS
+            and isinstance(descriptor, dict),
+            "preflight full_candidate binding targets an unsupported stable ID",
+        )
+        candidate_path = str(Path(descriptor.get("candidate_path", "")).resolve())
+        _require(
+            preflight.get("input_sha256", {}).get(candidate_path)
+            == descriptor.get("candidate_sha256")
+            and descriptor.get("source_payload_sha256")
+            == "50ab8248d2e0f55dd6cb8b24afc34c8844061d5841ecdf89d7daf03288816bfd"
+            and descriptor.get("source_payload_index") == 1,
+            "preflight full_candidate hash or N27 parent binding is missing",
+        )
     expected_candidate = preflight["source_candidate"]
     _require(
         portdiag._actual_file_hashes(source007.CANDIDATE_DIR)
@@ -482,6 +551,234 @@ def _exact_array_bytes(first, second, dtype) -> bool:
         np.ascontiguousarray(first, dtype=dtype).tobytes()
         == np.ascontiguousarray(second, dtype=dtype).tobytes()
     )
+
+
+
+def load_full_candidate_arrangement_binding(
+    *,
+    candidate_path: Path,
+    candidate_sha256: str,
+    source_payload_sha256: str,
+    source_payload_index: int,
+    lineage_path: Path,
+    lineage_sha256: str,
+    report_path: Path,
+    report_sha256: str,
+) -> dict:
+    """Load the exact full_candidate triplet against its pinned 028 source parent."""
+    from .resting_intercostal_mesh_arrangement import load_pinned_arrangement
+
+    _require(
+        source_payload_sha256
+        == "50ab8248d2e0f55dd6cb8b24afc34c8844061d5841ecdf89d7daf03288816bfd"
+        and source_payload_index == 1,
+        "full_candidate must retain the pinned 028 source payload/index namespace",
+    )
+    return load_pinned_arrangement(
+        candidate_path=candidate_path,
+        candidate_sha256=candidate_sha256,
+        lineage_path=lineage_path,
+        lineage_sha256=lineage_sha256,
+        report_path=report_path,
+        report_sha256=report_sha256,
+        source_payload_sha256=source_payload_sha256,
+        source_payload_index=source_payload_index,
+    )
+
+
+def prepare_full_candidate_arrangement_binding(
+    *,
+    binding: dict,
+    stable_id: int,
+    source_row: dict,
+    candidate_row: dict,
+    repair_parent_row: dict,
+    repair_report: dict,
+) -> dict:
+    """Compose the compiled candidate from original N27 plus the pinned 028 lineage."""
+    from .resting_intercostal_mesh_arrangement import (
+        compose_intercostal_arrangement_row,
+        verify_compiled_candidate_row,
+    )
+
+    expected_row, summary = compose_intercostal_arrangement_row(
+        stable_id=stable_id,
+        source_row=source_row,
+        parent_row=repair_parent_row,
+        arrangement=binding,
+        repair_report=repair_report,
+    )
+    verified = verify_compiled_candidate_row(
+        stable_id=stable_id,
+        source_row=source_row,
+        parent_row=repair_parent_row,
+        candidate_row=candidate_row,
+        arrangement=binding,
+        repair_report=repair_report,
+    )
+    _require(
+        _canonical_row_bytes(expected_row) == _canonical_row_bytes(candidate_row),
+        "ABI5 candidate row differs from the source-bound N27/028 composition",
+    )
+    return {
+        "typed_identity": [51010, int(stable_id)],
+        "candidate_path": binding["candidate_path"],
+        "candidate_sha256": binding["candidate_sha256"],
+        "source_payload_sha256": N27_CAPTURE_SOURCE_SHA256,
+        "full_candidate_parent_payload_sha256": binding["source_payload_sha256"],
+        "source_payload_index": binding["source_payload_index"],
+        "full_candidate_raw": binding["candidate_raw"],
+        "full_candidate_file_hash_verified": True,
+        "source_row_sha256": _sha_bytes(_canonical_row_bytes(source_row)),
+        "compiled_candidate_row_sha256": _sha_bytes(_canonical_row_bytes(candidate_row)),
+        "full_candidate_parent_lineage_sha256": binding["lineage_sha256"],
+        "full_candidate_report_sha256": binding["report_sha256"],
+        "repair_parent_row_sha256": _sha_bytes(_canonical_row_bytes(repair_parent_row)),
+        "repair_parent_face_count": len(repair_parent_row["faces"]),
+        "candidate_faces": summary["candidate_faces"],
+        "parent_map_terms": summary["candidate_vertex_parent_maps"],
+        "retained_n27_face_map_sha256": verified["retained_n27_face_map_sha256"],
+        "patch_parent_face_ids_in_N27_namespace": verified[
+            "patch_parent_face_ids_in_N27_namespace"
+        ],
+        "new_appended_vertex_count": verified["new_appended_vertex_count"],
+        "all_028_faces_preserved_byte_exact_in_original_order": verified[
+            "all_028_faces_preserved_byte_exact_in_original_order"
+        ],
+        "positive_exact_parent_map_for_each_appended_vertex": verified[
+            "positive_exact_parent_map_for_each_appended_vertex"
+        ],
+        "physical_mass_or_state_added": False,
+        "native_confirmation": "required",
+    }
+
+
+def _project_arrangement_capture_surface(
+    *,
+    key: tuple[int, int],
+    capture_surface: tuple,
+    source_row: dict,
+    prepared_binding: dict,
+    verifier,
+) -> tuple[tuple, dict]:
+    """Project an arrangement through the exact original capture vertex namespace."""
+    retain = getattr(verifier, "retain_bound_source_faces", None)
+    _require(
+        callable(retain),
+        "central P6 retained-face owner is required to bind arrangement parents",
+    )
+    source_faces = np.ascontiguousarray(source_row["faces"], dtype="<u4")
+    positions, capture_faces, normals, gids = capture_surface
+    gids = np.asarray(gids)
+    capture_faces = np.asarray(capture_faces, dtype="<u4")
+    _require(
+        len(source_faces) > 0 and capture_faces.size > 0 and gids.ndim == 1
+        and capture_faces.shape == source_faces.shape,
+        "original parent source surface is empty or has a different face inventory",
+    )
+    first_capture_local = int(capture_faces[0, 0])
+    first_source_local = int(source_faces[0, 0])
+    _require(
+        0 <= first_capture_local < len(gids),
+        "first source face corner is absent from captured global IDs",
+    )
+    global_base = int(gids[first_capture_local]) - first_source_local
+    _projected_parent, parent_proof = retain(
+        key,
+        capture_surface,
+        source_faces,
+        global_base,
+        np.arange(len(source_faces), dtype=np.int64),
+    )
+    _require(
+        parent_proof.get("all_ordered_source_facets_match") is True
+        and parent_proof.get("captured_positions_normals_and_vertex_ids_unchanged") is True
+        and int(parent_proof.get("retained_source_face_count", -1)) == len(source_faces),
+        "central P6 did not bind the complete original source face inventory",
+    )
+    local_by_source = {}
+    for capture_slot, gid in enumerate(gids):
+        source_vertex = int(gid) - global_base
+        if 0 <= source_vertex < len(source_row["vertices6"]):
+            _require(
+                source_vertex not in local_by_source,
+                "capture vertex namespace maps one source vertex more than once",
+            )
+            local_by_source[source_vertex] = capture_slot
+    needed = {
+        source_vertex
+        for face in prepared_binding["candidate_faces"]
+        for candidate_vertex in face
+        for source_vertex, _weight in prepared_binding["parent_map_terms"][int(candidate_vertex)]
+    }
+    _require(
+        needed.issubset(local_by_source),
+        "captured source row omits vertices required by full_candidate parent maps",
+    )
+    candidate_count = len(prepared_binding["parent_map_terms"])
+    projected_positions = np.empty((candidate_count, 3), dtype="<f4")
+    projected_normals = np.empty((candidate_count, 3), dtype="<f4")
+    source_positions = np.asarray(positions, dtype="<f4")
+    source_normals = np.asarray(normals, dtype="<f4")
+    for candidate_vertex, terms in enumerate(prepared_binding["parent_map_terms"]):
+        slots = [local_by_source[source_vertex] for source_vertex, _weight in terms]
+        if len(terms) == 1 and terms[0][1] == 1:
+            projected_positions[candidate_vertex] = source_positions[slots[0]]
+            projected_normals[candidate_vertex] = source_normals[slots[0]]
+            continue
+        weights = np.asarray([float(weight) for _source_vertex, weight in terms], dtype=np.float64)
+        point = np.einsum("i,ij->j", weights, source_positions[slots].astype(np.float64))
+        normal = np.einsum("i,ij->j", weights, source_normals[slots].astype(np.float64))
+        normal_length = float(np.linalg.norm(normal))
+        _require(
+            np.isfinite(point).all() and np.isfinite(normal).all()
+            and normal_length > 1e-12,
+            "captured parent-map interpolation produced invalid coordinates or normals",
+        )
+        projected_positions[candidate_vertex] = point.astype("<f4")
+        projected_normals[candidate_vertex] = (normal / normal_length).astype("<f4")
+    _require(
+        np.isfinite(projected_positions).all() and np.isfinite(projected_normals).all(),
+        "captured arrangement projection is nonfinite",
+    )
+    surface = (
+        projected_positions,
+        prepared_binding["candidate_faces"].copy(),
+        projected_normals,
+        np.arange(candidate_count, dtype=np.uint64),
+    )
+    return surface, {
+        "typed_identity": list(key),
+        "full_candidate_sha256": prepared_binding["candidate_sha256"],
+        "source_payload_sha256": prepared_binding["source_payload_sha256"],
+        "source_payload_index": prepared_binding["source_payload_index"],
+        "source_capture_pack_positions_sha256": _sha_bytes(
+            np.asarray(positions, dtype="<f4").tobytes()
+        ),
+        "source_capture_pack_faces_sha256": _sha_bytes(
+            np.asarray(capture_faces, dtype="<u4").tobytes()
+        ),
+        "source_global_vertex_base": global_base,
+        "central_p6_complete_ordered_parent_face_proof": parent_proof,
+        "projected_candidate_positions_sha256": _sha_bytes(projected_positions.tobytes()),
+        "projected_candidate_faces_sha256": _sha_bytes(
+            prepared_binding["candidate_faces"].tobytes()
+        ),
+        "projected_candidate_normals_sha256": _sha_bytes(projected_normals.tobytes()),
+        "parent_map_terms": sum(
+            len(terms) for terms in prepared_binding["parent_map_terms"]
+        ),
+        "projection": (
+            "full_candidate positive exact rational parent maps over actual accepted-capture "
+            "parent vertices; weighted Float64 interpolation lowered once to Float32, "
+            "unit normals renormalized"
+        ),
+        "source_vertex_ids": (
+            "candidate-local map ordinals for offline P6 preparation; source lineage "
+            "remains in full_candidate parent maps"
+        ),
+        "native_confirmation": "required",
+    }
 
 
 def _retained_face_ids(
@@ -594,6 +891,7 @@ def _audit_capture_row_bindings(
     verifier,
     transfer_label: str,
     source_bound_keys=None,
+    arrangement_candidates: dict[int, dict] | None = None,
 ) -> tuple[dict, dict]:
     """Bind explicitly mapped ABI5 surfaces and preserve all capture targets."""
     surface_keys = set(surfaces)
@@ -603,6 +901,13 @@ def _audit_capture_row_bindings(
         "an explicitly source-bound typed surface is absent from the accepted capture",
     )
     selected_faces: dict[str, np.ndarray] = {}
+    arrangement_surfaces = {}
+    arrangement_projections = {}
+    arrangement_candidates = arrangement_candidates or {}
+    _require(
+        set(arrangement_candidates).issubset(bound_keys and {int(key[1]) for key in bound_keys}),
+        "arrangement binding is supplied for an unrequested capture target",
+    )
     rows = []
     failures = []
     for key in sorted(bound_keys):
@@ -653,8 +958,40 @@ def _audit_capture_row_bindings(
                     )
             repair = repair_surfaces.get(str(stable_id))
             try:
-                retained = _retained_face_ids(baseline, candidate, repair)
-                selected_faces[str(stable_id)] = retained
+                arrangement = arrangement_candidates.get(stable_id)
+                if arrangement is None:
+                    retained = _retained_face_ids(baseline, candidate, repair)
+                    selected_faces[str(stable_id)] = retained
+                else:
+                    _require(
+                        arrangement.get("typed_identity") == [int(key[0]), stable_id]
+                        and arrangement.get("source_payload_sha256")
+                        == N27_CAPTURE_SOURCE_SHA256
+                        and arrangement.get("candidate_sha256"),
+                        "prepared full_candidate binding does not match this typed N27 row",
+                    )
+                    _require(
+                        arrangement.get("compiled_candidate_row_sha256")
+                        == _sha_bytes(_canonical_row_bytes(candidate)),
+                        "prepared full_candidate binding differs from the compiled ABI5 row",
+                    )
+                    projected_surface, projection = _project_arrangement_capture_surface(
+                        key=key,
+                        capture_surface=surfaces[key],
+                        source_row=baseline,
+                        prepared_binding=arrangement,
+                        verifier=verifier,
+                    )
+                    arrangement_surfaces[key] = projected_surface
+                    arrangement_projections[str(stable_id)] = {
+                        "full_candidate_binding": {
+                            field: value for field, value in arrangement.items()
+                            if field not in {
+                                "parent_map_terms", "source_parent_faces", "candidate_faces"
+                            }
+                        },
+                        "capture_projection": projection,
+                    }
             except (ValueError, KeyError) as error:
                 row_failure.append(str(error))
         owner = captured_owners.get(key)
@@ -703,6 +1040,10 @@ def _audit_capture_row_bindings(
                     and candidate is not None
                     and str(stable_id) in selected_faces
                 ),
+                "candidate_row_has_verified_full_candidate_parent_maps": (
+                    stable_id in arrangement_candidates
+                    and str(stable_id) in arrangement_projections
+                ),
                 "source_identity_matches_N27": bool(
                     baseline_source_map.get(str(stable_id)) is not None
                     and candidate_source_map.get(str(stable_id)) is not None
@@ -742,6 +1083,7 @@ def _audit_capture_row_bindings(
             ),
             "per_target_rows": rows,
             "retained_face_projection": [],
+            "full_candidate_parent_map_projection": arrangement_projections,
             "all_requested_source_bound_targets_bound": False,
             "all_captured_targets_source_bound": len(bound_keys) == len(surface_keys),
             "failures": failures,
@@ -751,7 +1093,10 @@ def _audit_capture_row_bindings(
     # owner before strict target preparation; coordinates/normals/vertex IDs
     # remain the actual captured arrays.
     retain = getattr(verifier, "retain_bound_source_faces", None)
-    repaired_keys = [key for key in sorted(bound_keys) if key[1] in REPAIRED_IDS]
+    repaired_keys = [
+        key for key in sorted(bound_keys)
+        if key[1] in REPAIRED_IDS and key[1] not in arrangement_candidates
+    ]
     _require(
         all(str(key[1]) in selected_faces for key in repaired_keys),
         "repaired target row has no source-face ancestry selection",
@@ -795,6 +1140,7 @@ def _audit_capture_row_bindings(
                 "owner": "central HP97/P6 retain_bound_source_faces",
             }
         )
+    projected.update(arrangement_surfaces)
     return {
         "passed": True,
         "transfer_label": transfer_label,
@@ -807,6 +1153,7 @@ def _audit_capture_row_bindings(
         ),
         "per_target_rows": rows,
         "retained_face_projection": ancestry,
+        "full_candidate_parent_map_projection": arrangement_projections,
         "all_requested_source_bound_targets_bound": True,
         "all_captured_targets_source_bound": len(bound_keys) == len(surface_keys),
         "N27_continuation_claim": transfer_label == "N27 accepted capture",
@@ -1190,6 +1537,39 @@ def _runtime_input_context(preflight: dict) -> dict:
         set(repair_surfaces) == {str(value) for value in REPAIRED_IDS},
         "fragment repair report does not cover exactly the retained three IDs",
     )
+    from .resting_intercostal_mesh_arrangement import load_pinned_fragment_repair
+    repair_binding = validation["receipt"]["provenance"]["local_intercostal_mesh_repair"]
+    repair_context = load_pinned_fragment_repair(
+        base_receipt_path=source007.BASE_RECEIPT,
+        base_payload_sha256=N27_CAPTURE_SOURCE_SHA256,
+        repair_parent_receipt_path=Path(repair_binding["repair_parent_receipt_path"]),
+        repair_parent_receipt_sha256=repair_binding["repair_parent_receipt_sha256"],
+        repair_parent_payload_path=Path(repair_binding["repair_parent_payload_path"]),
+        repair_report_path=Path(repair_binding["repair_report_path"]),
+        repair_report_sha256=repair_binding["repair_report_sha256"],
+    )
+    arrangement_candidates = {}
+    for record in repair_binding["rows"]:
+        stable_id = int(record["stable_id"])
+        descriptor = record["full_candidate"]
+        binding = load_full_candidate_arrangement_binding(
+            candidate_path=Path(descriptor["candidate_path"]),
+            candidate_sha256=descriptor["candidate_sha256"],
+            source_payload_sha256=descriptor["source_payload_sha256"],
+            source_payload_index=descriptor["source_payload_index"],
+            lineage_path=Path(descriptor["lineage_path"]),
+            lineage_sha256=descriptor["lineage_sha256"],
+            report_path=Path(descriptor["report_path"]),
+            report_sha256=descriptor["report_sha256"],
+        )
+        arrangement_candidates[stable_id] = prepare_full_candidate_arrangement_binding(
+            binding=binding,
+            stable_id=stable_id,
+            source_row=baseline_rows[stable_id],
+            repair_parent_row=repair_context["repair_parent_rows"][stable_id],
+            repair_report=repair_context["repair_report"],
+            candidate_row=candidate_rows[stable_id],
+        )
     append_owner = _validate_appended_bridge_owner_inputs(
         candidate_rows, candidate_map, prep
     )
@@ -1212,6 +1592,7 @@ def _runtime_input_context(preflight: dict) -> dict:
         "baseline_map": baseline_map,
         "preparation": prep,
         "repair_surfaces": repair_surfaces,
+        "arrangement_candidates": arrangement_candidates,
         "append_owner": append_owner,
         "transform": source007._load_predictor_transform(),
         "manifold": source007._load_retained_manifold(),
@@ -1392,11 +1773,23 @@ def _verify_n27_capture_rows(manifest_rows, context, report) -> None:
                 verifier=retention_owner,
                 transfer_label="N27 accepted capture",
                 source_bound_keys=SOURCE_BOUND_TYPED_KEYS,
+                arrangement_candidates=context.get("arrangement_candidates"),
             )
             entry["source_row_binding"] = binding
             _require(
                 binding.get("passed") is True,
                 "per-target exact source row, source identity, or owner binding failed",
+            )
+            entry["compiled_body20_row_emission"] = (
+                source007._body20_source_to_owner_f32_emission(
+                    candidate_rows,
+                    capture_meta["body20"],
+                    None,
+                    candidate_map,
+                    transform,
+                    comparison_surfaces=strict_targets,
+                    captured_owners=owners,
+                )
             )
             rigid = source007._bridge_surfaces(
                 candidate_rows, capture_meta["body20"], transform
@@ -1551,11 +1944,23 @@ def _verify_late_transfer(context, report) -> None:
         verifier=retention_owner,
         transfer_label="N22 late transfer capture",
         source_bound_keys=SOURCE_BOUND_TYPED_KEYS,
+        arrangement_candidates=context.get("arrangement_candidates"),
     )
     entry["source_row_binding"] = binding
     _require(
         binding.get("passed") is True,
         "late per-target exact source row, source identity, or owner binding failed",
+    )
+    entry["compiled_body20_row_emission"] = (
+        source007._body20_source_to_owner_f32_emission(
+            candidate_rows,
+            capture_meta["body20"],
+            None,
+            candidate_map,
+            transform,
+            comparison_surfaces=strict_targets,
+            captured_owners=owners,
+        )
     )
     entry["whole_source_payload_hash_difference"] = {
         "N22_source_payload_sha256": late_source["sha256"],
@@ -1655,6 +2060,7 @@ def _initialize_capture_record(
         verifier=retention_owner,
         transfer_label=transfer_label,
         source_bound_keys=SOURCE_BOUND_TYPED_KEYS,
+        arrangement_candidates=context.get("arrangement_candidates"),
     )
     entry = {
         "capture_kind": transfer_label,

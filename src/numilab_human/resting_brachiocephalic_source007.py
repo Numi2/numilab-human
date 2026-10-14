@@ -143,6 +143,7 @@ def _code_paths() -> list[Path]:
         source / "resting_brachiocephalic_pose_predictor.py",
         source / "resting_major_vessels.py",
         source / "resting_passive_viscera.py",
+        source / "resting_intercostal_mesh_arrangement.py",
         source / "organ_family_geometry.py",
         source / "resting_pleura_proxy.py",
         source / "resting_anatomy_interface_patch.py",
@@ -178,6 +179,66 @@ def _frozen_input_pins() -> dict:
     return pins
 
 
+
+def _load_local_intercostal_arrangement_config(config_path: Path) -> tuple[dict, dict]:
+    """Resolve the narrow source owner inputs without decoding geometry arrays."""
+    from .resting_intercostal_mesh_arrangement import (
+        N27_PAYLOAD_SHA256,
+        REPAIR_PARENT_PAYLOAD_SHA256,
+        REPAIR_PARENT_RECEIPT_SHA256,
+        REPAIR_REPORT_SHA256,
+        REPAIRED_IDS,
+    )
+
+    config_path = Path(config_path).resolve()
+    _require(config_path.is_file(), "local intercostal arrangement config is missing")
+    config_raw = config_path.read_bytes()
+    config = json.loads(config_raw)
+    _require(isinstance(config, dict)
+             and config.get("schema") == "numi.human.local-intercostal-arrangement-inputs.v1",
+             "local arrangement config schema differs")
+    binding = {key: value for key, value in config.items() if key != "schema"}
+    _require(binding.get("repair_parent_receipt_sha256") == REPAIR_PARENT_RECEIPT_SHA256
+             and binding.get("repair_parent_payload_sha256") == REPAIR_PARENT_PAYLOAD_SHA256
+             and binding.get("repair_report_sha256") == REPAIR_REPORT_SHA256,
+             "local arrangement config does not pin the existing 028 source repair")
+    _require(Path(binding.get("repair_parent_payload_path", "")).is_file()
+             and sha_file(Path(binding["repair_parent_payload_path"])) == REPAIR_PARENT_PAYLOAD_SHA256,
+             "local arrangement config 028 NHA payload differs")
+    _require(Path(binding.get("repair_parent_receipt_path", "")).is_file()
+             and sha_file(Path(binding["repair_parent_receipt_path"])) == REPAIR_PARENT_RECEIPT_SHA256,
+             "local arrangement config 028 receipt differs")
+    _require(Path(binding.get("repair_report_path", "")).is_file()
+             and sha_file(Path(binding["repair_report_path"])) == REPAIR_REPORT_SHA256,
+             "local arrangement config 028 report differs")
+    rows = binding.get("rows", {})
+    _require(isinstance(rows, dict) and set(rows) == {str(sid) for sid in REPAIRED_IDS},
+             "local arrangement config must bind exactly IDs 313/315/317")
+    pins = {str(config_path): sha_file(config_path)}
+    for stable_id in sorted(REPAIRED_IDS):
+        descriptor = rows[str(stable_id)]
+        _require(isinstance(descriptor, dict)
+                 and descriptor.get("source_payload_sha256") == REPAIR_PARENT_PAYLOAD_SHA256
+                 and descriptor.get("source_payload_index") == 1,
+                 f"full_candidate parent namespace differs for {stable_id}")
+        for key, digest_key in (
+            ("candidate_path", "candidate_sha256"),
+            ("lineage_path", "lineage_sha256"),
+            ("report_path", "report_sha256"),
+        ):
+            path = Path(descriptor.get(key, "")).resolve()
+            expected = descriptor.get(digest_key)
+            _require(path.is_file() and isinstance(expected, str)
+                     and sha_file(path) == expected,
+                     f"local arrangement {key} path/hash differs for {stable_id}")
+            pins[str(path)] = expected
+    pins[str(Path(binding["repair_parent_receipt_path"]).resolve())] = REPAIR_PARENT_RECEIPT_SHA256
+    pins[str(Path(binding["repair_parent_payload_path"]).resolve())] = REPAIR_PARENT_PAYLOAD_SHA256
+    pins[str(Path(binding["repair_report_path"]).resolve())] = REPAIR_REPORT_SHA256
+    _require(BASE_PAYLOAD.is_file() and sha_file(BASE_PAYLOAD) == N27_PAYLOAD_SHA256,
+             "local arrangement does not bind to the pinned direct N27 append base")
+    return binding, pins
+
 def _code_and_dependency_pins() -> dict:
     code = {}
     for path in _code_paths():
@@ -192,9 +253,15 @@ def _code_and_dependency_pins() -> dict:
     }
 
 
-def build_source007_preflight() -> dict:
+def build_source007_preflight(local_intercostal_arrangement_config: Path | None = None) -> dict:
     """Pin the bounded run inputs without decoding any geometry arrays."""
     input_pins = _frozen_input_pins()
+    arrangement_binding = None
+    arrangement_input_pins = {}
+    if local_intercostal_arrangement_config is not None:
+        arrangement_binding, arrangement_input_pins = _load_local_intercostal_arrangement_config(
+            local_intercostal_arrangement_config)
+        input_pins.update(arrangement_input_pins)
     code_pins = _code_and_dependency_pins()
     _require(not CANDIDATE_DIR.exists() and not PREPARATION_DIR.exists()
              and not GATE_DIR.exists(),
@@ -239,6 +306,16 @@ def build_source007_preflight() -> dict:
             "max_stable_id_from_receipt_source_map": 524,
             "next_stable_ids": [525, 526],
         },
+        "local_intercostal_arrangement": {
+            "config_path": str(Path(local_intercostal_arrangement_config).resolve())
+            if local_intercostal_arrangement_config is not None else None,
+            "config_sha256": arrangement_input_pins.get(
+                str(Path(local_intercostal_arrangement_config).resolve()))
+                if local_intercostal_arrangement_config is not None else None,
+            "bound_row_ids": sorted(map(int, arrangement_binding["rows"]))
+            if arrangement_binding is not None else [],
+            "arrangement_inputs_pinned": arrangement_binding is not None,
+        },
         "candidate007_path": str(CANDIDATE_DIR),
         "prep007_path": str(PREPARATION_DIR),
         "geometry_gate_path": str(GATE_DIR),
@@ -254,8 +331,8 @@ def build_source007_preflight() -> dict:
     }
 
 
-def write_source007_preflight() -> dict:
-    report = build_source007_preflight()
+def write_source007_preflight(local_intercostal_arrangement_config: Path | None = None) -> dict:
+    report = build_source007_preflight(local_intercostal_arrangement_config)
     _write_json(PREFLIGHT_PATH, report)
     report["report_path"] = str(PREFLIGHT_PATH)
     report["report_sha256"] = sha_file(PREFLIGHT_PATH)
@@ -388,16 +465,23 @@ def _validate_source_candidate(receipt_path: Path, prep_path: Path) -> dict:
              and preparation.get("added_physical_mass_kg") == 0
              and preparation.get("additional_physical_state_or_force") is False,
              "source rows added vascular state, mass, or force")
+    extension = receipt.get("provenance", {}).get(
+        "passive_brachiocephalic_vein_extension", {})
+    base_receipt_path = Path(extension.get("base_receipt", ""))
+    from .resting_brachiocephalic_common_field import _validate_n27_parent
+    parent_validation = _validate_n27_parent(
+        receipt, payload_path.read_bytes(), base_receipt_path)
     parent = preparation.get("original_523_row_byte_preservation", {})
-    _require(parent.get("all_523_existing_rows_byte_exact") is True
+    _require(parent.get("all_520_unmodified_rows_byte_exact") is True
+             and parent.get("all_three_repaired_rows_reconstructed_from_pinned_positive_maps") is True
+             and parent.get("all_source_id_map_repair_pointers_match_aggregate") is True
              and parent.get("receipt_sha256") == N27_RECEIPT_SHA
-             and parent.get("payload_sha256") == N27_PAYLOAD_SHA,
-             "candidate does not retain exact N27 parent geometry")
+             and parent.get("payload_sha256") == N27_PAYLOAD_SHA
+             and parent_validation["parent_bytes"]["all_520_unmodified_rows_byte_exact"] is True,
+             "candidate does not preserve the N27 rows outside its scoped local repairs")
     ranges = preparation.get("ranges", [])
     _require([int(row.get("stable_id", -1)) for row in ranges] == [525, 526],
              "common-field appended stable IDs differ from max(N27)+1")
-    extension = receipt.get("provenance", {}).get(
-        "passive_brachiocephalic_vein_extension", {})
     _require(extension.get("base_receipt_sha256") == N27_RECEIPT_SHA
              and extension.get("base_payload_sha256") == N27_PAYLOAD_SHA
              and receipt.get("provenance", {}).get("rigid_payload_sha256") == RIGID_SHA
@@ -462,6 +546,249 @@ def _bridge_surfaces(rows: dict, body20_pose: dict, transform_f32) -> dict:
         output[(51011, stable_id)] = (
             world, faces, None, np.arange(len(world), dtype=np.uint64))
     return output
+
+
+def _body20_source_to_owner_f32_emission(
+    rows: dict,
+    body20_pose: dict,
+    bridges: dict | None,
+    source_id_map: dict,
+    transform_f32,
+    *,
+    comparison_surfaces: dict | None = None,
+    captured_owners: dict | None = None,
+) -> dict:
+    """Replay compiled Body20 rows and compare repaired rows to capture ancestry."""
+    _require(PREDICTOR_PATH.is_file() and sha_file(PREDICTOR_PATH) == PREDICTOR_SHA,
+             "Body20 source-to-owner transform bytes differ from the pinned P6 source")
+    q = np.asarray(body20_pose.get("quaternion_xyzw"), dtype="<f4")
+    t = np.asarray(body20_pose.get("position_m"), dtype="<f4")
+    _require(q.shape == (4,) and t.shape == (3,) and np.isfinite(q).all()
+             and np.isfinite(t).all(), "accepted Body20 pose is malformed")
+    q_norm = float(np.linalg.norm(q.astype(np.float64)))
+    _require(abs(q_norm - 1.0) <= 2.0e-5,
+             "accepted Body20 quaternion is outside the source Float32 unit tolerance")
+    zero = np.zeros(3, dtype="<f4")
+    output = {}
+    bridges = bridges or {}
+    comparison_surfaces = comparison_surfaces or {}
+    captured_owners = captured_owners or {}
+    for stable_id, spec in BRIDGE_ROWS.items():
+        row = rows[stable_id]
+        key = (51011, stable_id)
+        _require(int(row["body_index"]) == 20 and int(row["layer"]) == 2
+                 and int(row["flags"]) == 0,
+                 "compiled bridge is not passive Body20/layer2 ABI5 geometry")
+        identity = source_id_map.get(str(stable_id), {})
+        owner = identity.get("source_owner_metadata", {})
+        _require(identity.get("source_member") == spec["member"]
+                 and isinstance(identity.get("source_sha256"), str)
+                 and int(identity.get("body_index", -1)) == 20
+                 and int(identity.get("layer", -1)) == 2
+                 and int(identity.get("vascular_compartment_id", -1)) == 4
+                 and owner.get("myosim_body") == "torso"
+                 and int(owner.get("core_body_index", -1)) == 20,
+                 "compiled bridge source identity or existing compartment-4 owner changed")
+        record = tuple(map(int, row.get("record", ())))
+        _require(len(record) == 8 and record[0] == 20 and record[5] == stable_id
+                 and record[6] == 2 and record[7] == 0,
+                 "compiled bridge ABI5 record fields changed")
+        vertices6 = np.ascontiguousarray(row["vertices6"], dtype="<f4")
+        faces = np.ascontiguousarray(row["faces"], dtype="<u4")
+        local_xyz, local_normals = vertices6[:, :3], vertices6[:, 3:6]
+        local_normal_lengths = np.linalg.norm(local_normals.astype(np.float64), axis=1)
+        _require(vertices6.ndim == 2 and vertices6.shape[1] == 6
+                 and len(vertices6) > 0 and np.isfinite(vertices6).all()
+                 and faces.ndim == 2 and faces.shape[1] == 3
+                 and np.isfinite(local_normal_lengths).all()
+                 and float(local_normal_lengths.min()) >= 0.9998
+                 and float(local_normal_lengths.max()) <= 1.0002,
+                 "compiled bridge Float32 local XYZ/normals are malformed or non-unit")
+        world_xyz = np.asarray(transform_f32(q, t, local_xyz))
+        world_normals = np.asarray(transform_f32(q, zero, local_normals))
+        _require(world_xyz.dtype == np.dtype("<f4")
+                 and world_normals.dtype == np.dtype("<f4")
+                 and world_xyz.shape == local_xyz.shape
+                 and world_normals.shape == local_normals.shape
+                 and np.isfinite(world_xyz).all()
+                 and np.isfinite(world_normals).all(),
+                 "pinned Body20 Float32 owner transform emitted malformed coordinates/normals")
+        gate_match = None
+        if key in bridges:
+            gate_xyz, gate_faces = bridges[key][:2]
+            gate_xyz = np.ascontiguousarray(gate_xyz, dtype="<f4")
+            gate_faces = np.ascontiguousarray(gate_faces, dtype="<u4")
+            _require(world_xyz.tobytes() == gate_xyz.tobytes()
+                     and faces.tobytes() == gate_faces.tobytes(),
+                     "Body20 Float32 emission replay differs from the exact geometry-gate input")
+            gate_match = True
+        world_normal_lengths = np.linalg.norm(world_normals.astype(np.float64), axis=1)
+        _require(np.isfinite(world_normal_lengths).all()
+                 and float(world_normal_lengths.min()) >= 0.9995
+                 and float(world_normal_lengths.max()) <= 1.0005,
+                 "Body20 normal rotation changed unit normals beyond Float32 tolerance")
+        output[str(stable_id)] = {
+            "typed_identity": list(key),
+            "source_member": spec["member"],
+            "source_member_sha256": identity["source_sha256"],
+            "source_frame": "NHA ABI5 Body20-local compiled XYZ and vertex normals",
+            "destination_frame": "accepted source-0 Body20 pose from the pinned capture receipt",
+            "abi5_record_fields_body_offset_vertex_count_index_offset_index_count_stable_id_layer_flags": list(record),
+            "body_index": int(row["body_index"]),
+            "layer": int(row["layer"]),
+            "flags": int(row["flags"]),
+            "captured_primitive_body_owner": captured_owners.get(key),
+            "vascular_compartment_id": 4,
+            "vertex_count": len(vertices6),
+            "face_count": len(faces),
+            "local_vertices6_sha256": hashlib.sha256(vertices6.tobytes()).hexdigest(),
+            "local_xyz_sha256": hashlib.sha256(local_xyz.tobytes()).hexdigest(),
+            "local_normals_sha256": hashlib.sha256(local_normals.tobytes()).hexdigest(),
+            "faces_sha256": hashlib.sha256(faces.tobytes()).hexdigest(),
+            "owner_world_xyz_sha256": hashlib.sha256(world_xyz.tobytes()).hexdigest(),
+            "owner_world_normals_sha256": hashlib.sha256(world_normals.tobytes()).hexdigest(),
+            "owner_world_xyz_exactly_matches_geometry_gate_input": gate_match,
+            "local_normal_length_min_max": [float(local_normal_lengths.min()),
+                                             float(local_normal_lengths.max())],
+            "owner_world_normal_length_min_max": [float(world_normal_lengths.min()),
+                                                   float(world_normal_lengths.max())],
+            "normal_translation_input_is_canonical_positive_zero": bool(
+                np.all(zero.view("<u4") == 0)),
+        }
+    from .resting_intercostal_mesh_arrangement import REPAIRED_IDS
+    for stable_id in sorted(REPAIRED_IDS):
+        row = rows.get(stable_id)
+        _require(row is not None, "compiled repaired Body20 row is absent: " + str(stable_id))
+        key = (51010, stable_id)
+        record = tuple(map(int, row.get("record", ())))
+        identity = source_id_map.get(str(stable_id), {})
+        _require(len(record) == 8 and record[0] == int(row["body_index"]) == 20
+                 and record[5] == stable_id
+                 and record[6] == int(row["layer"]) == 1
+                 and record[7] == int(row["flags"]) == 0,
+                 "compiled intercostal ABI5 record/body/layer/flags mismatch for "
+                 + str(stable_id))
+        _require(int(identity.get("body_index", -1)) == 20
+                 and int(identity.get("layer", -1)) == 1,
+                 "compiled intercostal source identity owner differs from ABI5 Body20 row "
+                 + str(stable_id))
+        vertices6 = np.ascontiguousarray(row["vertices6"], dtype="<f4")
+        faces = np.ascontiguousarray(row["faces"], dtype="<u4")
+        _require(vertices6.ndim == 2 and vertices6.shape[1] == 6
+                 and len(vertices6) > 0 and np.isfinite(vertices6).all()
+                 and faces.ndim == 2 and faces.shape[1] == 3
+                 and len(faces) > 0 and int(faces.min()) >= 0
+                 and int(faces.max()) < len(vertices6),
+                 "compiled intercostal Body20 vertices/faces are malformed")
+        local_xyz, local_normals = vertices6[:, :3], vertices6[:, 3:6]
+        local_normal_lengths = np.linalg.norm(local_normals.astype(np.float64), axis=1)
+        _require(np.isfinite(local_normal_lengths).all()
+                 and float(local_normal_lengths.min()) >= 0.9998
+                 and float(local_normal_lengths.max()) <= 1.0002,
+                 "compiled intercostal local normals are not unit length")
+        world_xyz = np.asarray(transform_f32(q, t, local_xyz))
+        world_normals = np.asarray(transform_f32(q, zero, local_normals))
+        _require(world_xyz.dtype == np.dtype("<f4") and world_normals.dtype == np.dtype("<f4")
+                 and world_xyz.shape == local_xyz.shape
+                 and world_normals.shape == local_normals.shape
+                 and np.isfinite(world_xyz).all() and np.isfinite(world_normals).all(),
+                 "pinned Body20 Float32 owner transform emitted invalid intercostal data")
+        world_normal_lengths = np.linalg.norm(world_normals.astype(np.float64), axis=1)
+        _require(float(world_normal_lengths.min()) >= 0.9995
+                 and float(world_normal_lengths.max()) <= 1.0005,
+                 "Body20 transform changed intercostal normal lengths beyond Float32 tolerance")
+        projection = None
+        projected = comparison_surfaces.get(key)
+        if projected is not None:
+            projected_xyz = np.ascontiguousarray(projected[0], dtype="<f4")
+            projected_faces = np.ascontiguousarray(projected[1], dtype="<u4")
+            projected_normals = np.ascontiguousarray(projected[2], dtype="<f4")
+            _require(projected_xyz.shape == world_xyz.shape
+                     and projected_faces.tobytes() == faces.tobytes()
+                     and projected_normals.shape == world_normals.shape
+                     and np.isfinite(projected_xyz).all()
+                     and np.isfinite(projected_normals).all(),
+                     "P6 captured-parent projection differs from compiled intercostal row")
+            delta_xyz = world_xyz.astype(np.float64) - projected_xyz.astype(np.float64)
+            delta_normals = world_normals.astype(np.float64) - projected_normals.astype(np.float64)
+            delta_lengths = np.linalg.norm(delta_xyz, axis=1)
+            dots = np.sum(world_normals.astype(np.float64)
+                          * projected_normals.astype(np.float64), axis=1)
+            angles = np.arccos(np.clip(dots, -1.0, 1.0))
+            projection = {
+                "kind": "offline exact-positive-parent-map projection from accepted capture vertices",
+                "xyz_sha256": hashlib.sha256(projected_xyz.tobytes()).hexdigest(),
+                "normals_sha256": hashlib.sha256(projected_normals.tobytes()).hexdigest(),
+                "faces_sha256": hashlib.sha256(projected_faces.tobytes()).hexdigest(),
+                "owner_world_xyz_byte_exact_match": world_xyz.tobytes() == projected_xyz.tobytes(),
+                "owner_world_normals_byte_exact_match": world_normals.tobytes() == projected_normals.tobytes(),
+                "position_delta_max_abs_component_m": float(np.max(np.abs(delta_xyz))),
+                "position_delta_max_norm_m": float(np.max(delta_lengths)),
+                "position_delta_rms_norm_m": float(np.sqrt(np.mean(delta_lengths ** 2))),
+                "normal_delta_max_abs_component": float(np.max(np.abs(delta_normals))),
+                "normal_angle_max_rad": float(np.max(angles)),
+                "normal_angle_rms_rad": float(np.sqrt(np.mean(angles ** 2))),
+                "bound_scope": (
+                    "Construction-path comparison only: pinned body transform of compiled local F32 row "
+                    "versus exact positive-parent interpolation of captured source vertices; no native "
+                    "common-map, polynomial, deformation-kernel, or GPU rounding bound."),
+                "native_confirmation_required": True,
+            }
+        output[str(stable_id)] = {
+            "typed_identity": list(key),
+            "row_class": "repaired_intercostal",
+            "source_member": identity.get("source_member"),
+            "source_member_sha256": identity.get("source_sha256"),
+            "source_identity_sha256": hashlib.sha256(
+                json.dumps(identity, sort_keys=True, separators=(",", ":"),
+                           ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest(),
+            "abi5_record_fields_body_offset_vertex_count_index_offset_index_count_stable_id_layer_flags": list(record),
+            "source_frame": "NHA ABI5 Body20-local compiled XYZ and vertex normals",
+            "destination_frame": "accepted capture Body20 pose through pinned Float32 transform owner",
+            "body_index": int(row["body_index"]),
+            "layer": int(row["layer"]),
+            "flags": int(row["flags"]),
+            "captured_primitive_body_owner": captured_owners.get(key),
+            "vertex_count": len(vertices6),
+            "face_count": len(faces),
+            "local_vertices6_sha256": hashlib.sha256(vertices6.tobytes()).hexdigest(),
+            "local_xyz_sha256": hashlib.sha256(local_xyz.tobytes()).hexdigest(),
+            "local_normals_sha256": hashlib.sha256(local_normals.tobytes()).hexdigest(),
+            "faces_sha256": hashlib.sha256(faces.tobytes()).hexdigest(),
+            "owner_world_xyz_sha256": hashlib.sha256(world_xyz.tobytes()).hexdigest(),
+            "owner_world_normals_sha256": hashlib.sha256(world_normals.tobytes()).hexdigest(),
+            "owner_world_xyz_exactly_matches_geometry_gate_input": None,
+            "local_normal_length_min_max": [float(local_normal_lengths.min()),
+                                             float(local_normal_lengths.max())],
+            "owner_world_normal_length_min_max": [float(world_normal_lengths.min()),
+                                                   float(world_normal_lengths.max())],
+            "normal_translation_input_is_canonical_positive_zero": bool(
+                np.all(zero.view("<u4") == 0)),
+            "captured_parent_projection_comparison": projection,
+        }
+    return {
+        "schema": "numi.human.body20_source_to_owner_float32_emission.v2",
+        "status": "EXACT_PINNED_F32_TRANSFORM_REPLAY_PASSED_SOURCE_GEOMETRY_ONLY",
+        "body20_pose_source": "exact accepted capture receipt bound to its source pack",
+        "body20_quaternion_xyzw_f32_sha256": hashlib.sha256(q.tobytes()).hexdigest(),
+        "body20_position_m_f32_sha256": hashlib.sha256(t.tobytes()).hexdigest(),
+        "body20_quaternion_norm": q_norm,
+        "transform_owner": {
+            "path": str(PREDICTOR_PATH),
+            "sha256": PREDICTOR_SHA,
+            "function": "transform_f32",
+            "position_operation_order": "pinned P6 explicit Float32 quaternion rotation then t + (p + correction)",
+            "normal_operation_order": "same pinned Float32 quaternion rotation with canonical +0 translation",
+        },
+        "rows": output,
+        "compiled_body20_rows_replayed": sorted(map(int, output)),
+        "geometry_gate_inputs_replayed_byte_exact": all(
+            output[str(sid)]["owner_world_xyz_exactly_matches_geometry_gate_input"] is True
+            for sid in BRIDGE_ROWS if str(sid) in output),
+        "native_or_gpu_emission_performed": False,
+        "native_confirmation_required": True,
+        "anatomical_admission": False,
+    }
 
 
 def _source_closed_checks(av, bridges: dict) -> list[dict]:
@@ -571,7 +898,7 @@ def _decorate_same_source_calibre(result: dict) -> dict:
     return result
 
 
-def run_source007() -> dict:
+def run_source007(local_intercostal_arrangement_config: Path | None = None) -> dict:
     report_path = GATE_DIR / "source-007-geometry-report.json"
     _require(not GATE_DIR.exists(), "retain any existing source-007 gate output; do not overwrite")
     report = {
@@ -598,6 +925,23 @@ def run_source007() -> dict:
     stage = "pinned-input-preflight"
     try:
         report["input_sha256"] = _frozen_input_pins()
+        arrangement_binding = None
+        if local_intercostal_arrangement_config is not None:
+            arrangement_binding, arrangement_input_pins = _load_local_intercostal_arrangement_config(
+                local_intercostal_arrangement_config)
+            report["input_sha256"].update(arrangement_input_pins)
+        _require(arrangement_binding is not None,
+                 "source007 requires the explicit pinned 313/315/317 arrangement composition inputs")
+        report["local_intercostal_arrangement"] = {
+            "config_path": str(Path(local_intercostal_arrangement_config).resolve()),
+            "config_sha256": report["input_sha256"][
+                str(Path(local_intercostal_arrangement_config).resolve())],
+            "row_ids": sorted(map(int, arrangement_binding["rows"])),
+            "base_payload_sha256": N27_PAYLOAD_SHA,
+            "repair_parent_payload_sha256": arrangement_binding[
+                "repair_parent_payload_sha256"],
+            "repair_report_sha256": arrangement_binding["repair_report_sha256"],
+        }
         report["code_and_dependency_pins"] = _code_and_dependency_pins()
         _require(not CANDIDATE_DIR.exists() and not PREPARATION_DIR.exists(),
                  "candidate007 or prep007 already exists; retain it and choose a reviewed successor")
@@ -619,6 +963,7 @@ def run_source007() -> dict:
             rigid_path=RIGID,
             quotient_npz_path=QUOTIENT_NPZ,
             quotient_report_path=QUOTIENT_REPORT,
+            local_intercostal_arrangement_binding=arrangement_binding,
         )
         candidate_receipt_path = CANDIDATE_DIR / "resting-anatomy-receipt.json"
         _require(candidate_receipt_path.is_file()
@@ -708,6 +1053,8 @@ def run_source007() -> dict:
                  "source-0 pack does not contain required skin identity (51007,1)")
         transform_f32 = _load_predictor_transform()
         bridges = _bridge_surfaces(rows, capture_meta["body20"], transform_f32)
+        body20_emission = _body20_source_to_owner_f32_emission(
+            rows, capture_meta["body20"], bridges, validated["source_map"], transform_f32)
         report["source0"] = {
             "capture_manifest_path": str(CAPTURE_MANIFEST),
             "capture_manifest_sha256": CAPTURE_MANIFEST_SHA,
@@ -727,6 +1074,7 @@ def run_source007() -> dict:
             "mandatory_source_targets": [list(key) for key in REQUIRED_SOURCE_TARGETS],
             "skin_enclosure_identities": [list(key) for key in skin_container_keys],
             "source_geometry_screen": "rigid-only body20 transformed source bridge coordinates; not a coupled pose gate",
+            "body20_source_to_owner_f32_emission": body20_emission,
             "bridge_rigid_source_positions_sha256": {
                 str(sid): hashlib.sha256(bridges[(51011, sid)][0].tobytes()).hexdigest()
                 for sid in sorted(BRIDGE_ROWS)
@@ -912,9 +1260,11 @@ def main(argv: list[str] | None = None) -> int:
                       help="hash pins and read NHA/capture headers only; do not load geometry")
     mode.add_argument("--run-source007", action="store_true",
                       help="execute append, source prep and bounded source-0 geometry gates")
+    parser.add_argument("--local-intercostal-arrangement-config", type=Path,
+                        help="explicit hashes/paths for the 028-bound rows 313/315/317 source composition")
     args = parser.parse_args(argv)
     if args.preflight_only:
-        result = write_source007_preflight()
+        result = write_source007_preflight(args.local_intercostal_arrangement_config)
         print(json.dumps({
             "status": result.get("status"),
             "report": result.get("report_path"),
@@ -922,7 +1272,7 @@ def main(argv: list[str] | None = None) -> int:
             "geometry_predicates_run": result.get("geometry_predicates_run"),
         }, sort_keys=True))
         return 0
-    result = run_source007()
+    result = run_source007(args.local_intercostal_arrangement_config)
     print(json.dumps({
         "status": result.get("status"),
         "report": str(GATE_DIR / "source-007-geometry-report.json"),
