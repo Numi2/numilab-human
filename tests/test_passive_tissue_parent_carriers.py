@@ -154,3 +154,60 @@ class CarrierTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CarrierRegistrationReemissionTests(unittest.TestCase):
+    def fixture(self):
+        # Existing ABI with one triangular load-only row and one Core influence.
+        bindings = struct.pack("<I8f", 91, 1, 0, 0, 0, 0, 0, 1, 1)
+        fresh = struct.pack("<I8f", 91, 2, 0, 0, 0, 0, 0, 1, 1)
+        vertices = np.zeros(3, dtype=np.dtype([
+            ("vertex", "<f4", (6,)), ("binding", "<u4", (4,)),
+            ("weight", "<f4", (4,))]))
+        vertices["vertex"] = [[0,0,0,0,0,1],[1,0,0,0,0,1],[0,1,0,0,0,1]]
+        vertices["weight"][:,0] = 1
+        raw = (struct.pack("<8s6I32s",b"NHTISS4\0",5,1,1,3,3,42,b"x"*32)
+               + struct.pack("<8I",0,1,0,3,0,3,132,1) + bindings
+               + vertices.tobytes() + struct.pack("<3I",0,1,2))
+        return raw, {"previous_fingerprint": 42, "fingerprint": 43,
+                         "source_digest": b"x"*32, "previous_bindings": {91:bindings},
+                         "bindings": {91:fresh}, "coordinate_frame": "registered_source_atlas"}
+
+    def test_changes_only_binding_and_registration(self):
+        from numilab_human.passive_tissue_parent_carriers import (
+            _retarget_carrier_binding_bytes,
+        )
+        raw,args = self.fixture()
+        out,proof = _retarget_carrier_binding_bytes(raw,**args)
+        self.assertEqual(out[64:96],raw[64:96])
+        self.assertEqual(out[132:],raw[132:])
+        self.assertEqual(out[96:132],args["bindings"][91])
+        self.assertEqual(struct.unpack_from("<I",out,28)[0],43)
+        self.assertTrue(proof["geometry_normals_weights_indices_and_rows_byte_exact"])
+
+    def test_core_local_stays_exact_with_changed_atlas_registration(self):
+        from numilab_human.passive_tissue_parent_carriers import (
+            _retarget_carrier_binding_bytes,
+        )
+        raw,args = self.fixture()
+        identity=struct.pack("<I8f",91,0,0,0,0,0,0,1,1)
+        raw=raw[:96]+identity+raw[132:]
+        args["coordinate_frame"]="core_inertial_local"
+        out,proof=_retarget_carrier_binding_bytes(raw,**args)
+        self.assertEqual(out[64:],raw[64:])
+        self.assertEqual(proof["changed_binding_records"],[])
+
+    def test_reject_source_frame_or_identity_drift(self):
+        from numilab_human.passive_tissue_parent_carriers import (
+            _retarget_carrier_binding_bytes,
+        )
+        raw,args=self.fixture()
+        for delta in [
+            {"previous_fingerprint":41}, {"source_digest":b"y"*32},
+            {"bindings":{}}, {"previous_bindings":{92:args["previous_bindings"][91]}},
+            {"coordinate_frame":"unknown"}, {"coordinate_frame":"core_inertial_local"},
+            {"bindings":{91:struct.pack("<I8f",92,2,0,0,0,0,0,1,1)}},
+            {"previous_bindings":{91:args["bindings"][91]}}
+        ]:
+            with self.subTest(delta=delta),self.assertRaises(ValueError):
+                _retarget_carrier_binding_bytes(raw,**{**args,**delta})

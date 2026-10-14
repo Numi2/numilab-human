@@ -192,3 +192,141 @@ def encode_carriers(
         "runtime_format": "existing NHTISS4 ABI5 and passive_tissue_parent_bindings",
         "scope": "Inferred load-only passive field carrier; no physical state, forces, or anatomy admission.",
     }
+
+
+def _retarget_carrier_binding_bytes(
+    raw: bytes, *, previous_fingerprint: int, fingerprint: int,
+    source_digest: bytes, previous_bindings: dict[int, bytes],
+    bindings: dict[int, bytes], coordinate_frame: str,
+) -> tuple[bytes, dict]:
+    """Re-emit an existing carrier under its verified source coordinate frame."""
+    import hashlib
+
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+
+    require(coordinate_frame in ("registered_source_atlas", "core_inertial_local"),
+            "unsupported carrier coordinate frame")
+    require(len(raw) >= 64, "truncated carrier")
+    magic, abi, nr, nb, nv, ni, old_fp, digest = struct.unpack_from("<8s6I32s", raw)
+    require(magic == b"NHTISS4\x00" and abi == 5 and 0 < nr <= 192
+            and len(raw) == 64 + nr*32 + nb*36 + nv*56 + ni*4,
+            "invalid existing carrier ABI")
+    require(old_fp == previous_fingerprint and digest == source_digest
+            and type(fingerprint) is int and 0 < fingerprint < 2**32,
+            "carrier source identity or registration differs")
+    require(set(previous_bindings) == set(bindings), "carrier Core identity map differs")
+    start = 64 + nr*32
+    out = bytearray(raw)
+    changes = []
+    for ordinal in range(nb):
+        offset = start + ordinal*36
+        record = raw[offset:offset+36]
+        core = struct.unpack_from("<I", record)[0]
+        require(core in previous_bindings, "carrier Core index is absent from registration")
+        if coordinate_frame == "registered_source_atlas":
+            require(record == previous_bindings[core],
+                    "carrier binding differs from its exact previous registration")
+            new_record = bindings[core]
+        else:
+            identity = struct.pack("<I8f", core, 0, 0, 0, 0, 0, 0, 1, 1)
+            require(record == identity, "Core-local carrier binding is not identity")
+            new_record = record
+        require(len(new_record) == 36 and struct.unpack_from("<I", new_record)[0] == core,
+                "new carrier binding changes Core identity")
+        values = struct.unpack_from("<I8f", new_record)[1:]
+        require(np.isfinite(values).all() and values[-1] > 0
+                and abs(np.linalg.norm(values[3:7])-1) <= 2e-3,
+                "new carrier binding transform is invalid")
+        out[offset:offset+36] = new_record
+        if record != new_record:
+            changes.append({"binding_ordinal": ordinal, "core_body_index": core,
+                            "previous_sha256": hashlib.sha256(record).hexdigest(),
+                            "sha256": hashlib.sha256(new_record).hexdigest()})
+    out[:64] = struct.pack("<8s6I32s", magic, abi, nr, nb, nv, ni, fingerprint, digest)
+    require(out[64:start] == raw[64:start]
+            and out[start+nb*36:] == raw[start+nb*36:],
+            "carrier re-emission changed geometry or influence state")
+    return bytes(out), {
+        "coordinate_frame": coordinate_frame, "carrier_rows": nr,
+        "binding_count": nb, "vertex_count": nv, "index_count": ni,
+        "previous_registration_fingerprint32": f"{old_fp:08x}",
+        "registration_fingerprint32": f"{fingerprint:08x}",
+        "changed_binding_records": changes,
+        "geometry_normals_weights_indices_and_rows_byte_exact": True,
+        "source_terms_not_modified": True,
+        "scope": "Existing load-only carrier registration preparation; no new physical state or anatomy admission.",
+    }
+
+
+def reemit_registered_carrier(
+    payload, previous_registration, registration, artifact, output, *,
+    coordinate_frame: str,
+) -> dict:
+    """Validate both actual rigid rest frames before carrier registration re-emission."""
+    import hashlib
+    import json
+    from pathlib import Path
+
+    from .model import _bodyparts_runtime_bindings, _bodyparts_visual_local_pose
+    from .passive_attachment_composition import _read_nhtiss4
+
+    def sha(path):
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+    payload, previous_registration, registration, artifact, output = (
+        Path(p).resolve() for p in
+        (payload, previous_registration, registration, artifact, output))
+    if output.exists():
+        raise ValueError("carrier output already exists")
+    old_doc = json.loads(previous_registration.read_text())
+    doc = json.loads(registration.read_text())
+    old_context, old_bodies = _bodyparts_runtime_bindings(old_doc, artifact)
+    context, bodies = _bodyparts_runtime_bindings(doc, artifact)
+    if (old_context["rigid"]["sha256"] != context["rigid"]["sha256"]
+            or old_bodies != bodies
+            or old_doc["source"]["bodyparts"] != doc["source"]["bodyparts"]):
+        raise ValueError("carrier registration changes rigid frames or source anatomy")
+
+    def binding_map(document):
+        result = {}
+        names = {}
+        for anchor in document["anchors"]:
+            core = anchor["target"]["core_body_index"]
+            name = anchor["target"]["name"]
+            translation, quaternion, scale = _bodyparts_visual_local_pose(
+                anchor["registration"]["source_obj_mm_to_core_inertial_body_m"],
+                f"carrier Core {core} registration")
+            record = struct.pack("<I8f", core, *translation, *quaternion, scale)
+            if core in result and (result[core] != record or names[core] != name):
+                raise ValueError("carrier registration aliases one Core frame")
+            result[core], names[core] = record, name
+        return result, names
+
+    old_bindings, old_names = binding_map(old_doc)
+    bindings, names = binding_map(doc)
+    if old_names != names:
+        raise ValueError("carrier registration changes anatomical Core identities")
+    data = _read_nhtiss4(payload)
+    raw, report = _retarget_carrier_binding_bytes(
+        data["raw"], previous_fingerprint=int(sha(previous_registration)[:8], 16),
+        fingerprint=int(sha(registration)[:8], 16),
+        source_digest=bytes.fromhex(context["source_archive_sha256"]),
+        previous_bindings=old_bindings, bindings=bindings,
+        coordinate_frame=coordinate_frame)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(raw)
+    emitted = _read_nhtiss4(output)
+    if emitted["raw"] != raw:
+        raise ValueError("carrier output differs from verified owner emission")
+    report.update(
+        source_payload_path=str(payload), source_payload_sha256=data["sha256"],
+        output_payload_path=str(output), output_payload_sha256=sha(output),
+        previous_registration_path=str(previous_registration),
+        previous_registration_sha256=sha(previous_registration),
+        registration_path=str(registration), registration_sha256=sha(registration),
+        actual_rigid_payload_sha256=context["rigid"]["sha256"],
+        owner_source_sha256=sha(Path(__file__)),
+        anatomical_and_native_admission=False)
+    return report

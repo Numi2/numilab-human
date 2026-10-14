@@ -1,0 +1,12 @@
+{
+  "admission": false,
+  "error": "AttributeError(\"'dict' object has no attribute 'append'\")",
+  "previous_registration_sha256": "b1b410ad6d4ac8c0c95fd0c3e10f655b24c890d5767a5c377cf78e28ef598f8e",
+  "registration_sha256": "31c77660a16e8688fe68489eadff9d3861ceb27ed3b73d0288bda330d2a13b8c",
+  "schema": "numi.human.upper-limb-full-owner-base-compile.v1",
+  "source_extension_sha256": "c52a657582aa482db5f92e0e7a392eb644034a08f169852fa95b2057faf0bfd5",
+  "source_receipt_sha256": "98fc9e82233c4a4a6bc6af38c23e774d3a3373afec94d7cef9122108a76a238d",
+  "started_unix": 1792002477.222429,
+  "status": "failed",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/current-manifest-recovery-004/run_eight_parent_carrier_reemission_001.py\", line 36, in <module>\n    ext[\"provenance\"].append({\"operation\":\"registered_carrier_owner_reemission\",\"report_path\":str(OUT/\"report.json\"),\"scope\":\"Registration source preparation only. Source terms/order/Float64 coefficients unchanged; native child-rest reconstruction and anatomy receipt rebind pending.\"})\n    ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'dict' object has no attribute 'append'\n"
+}
