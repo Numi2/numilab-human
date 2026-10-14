@@ -367,3 +367,47 @@ def test_source007_same_source_calibre_is_not_physical_claim():
     assert "not independent" in report["calibre_interpretation"]
     assert report["ports"][0]["calibre_gate"]["same_source_geometry_sanity_only"]
     assert not report["ports"][0]["calibre_gate"]["independent_physical_calibration"]
+
+
+def test_source007_step0_collision_geometry_uses_captured_svc_prediction():
+    svc = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype="<f4")
+    svc_faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    captured_svc = svc + np.asarray([[0, 0, 0.2]] * 3, dtype="<f4")
+    row10 = {"vertices6": np.column_stack([svc, np.zeros((3, 3), dtype="<f4")]),
+             "faces": svc_faces}
+    rows = {10: row10}
+    rigid_bridges = {}
+    preparation = {"bridges": {}}
+    for stable_id, member in ((525, "FJ3482"), (526, "FJ3583")):
+        bridge = np.asarray([[2, 0, 0], [3, 0, 0], [4, 0, 0]], dtype="<f4")
+        rows[stable_id] = {
+            "vertices6": np.column_stack([bridge, np.zeros((3, 3), dtype="<f4")]),
+            "faces": svc_faces,
+        }
+        rigid_bridges[(51011, stable_id)] = (
+            bridge.copy(), svc_faces.copy(), None, np.arange(3, dtype=np.uint64))
+        preparation["bridges"][member] = {"vertex_ancestry": [
+            {"svc_local_vertices": [0, 1, 2], "barycentric_weights": [1, 0, 0],
+             "coefficient_scale": 1.0},
+            {"svc_local_vertices": [0, 1, 2], "barycentric_weights": [0, 1, 0],
+             "coefficient_scale": 0.5},
+            {"svc_local_vertices": [0, 1, 2], "barycentric_weights": [0, 0, 1],
+             "coefficient_scale": 0.0, "distal_zero_field_vertex": True},
+        ]}
+    captured = {(51011, 10): (captured_svc, svc_faces, None,
+                                np.arange(3, dtype=np.uint64))}
+    body20_pose = {"quaternion_xyzw": [0, 0, 0, 1], "position_m": [0, 0, 0]}
+
+    predicted, details = source007._predict_step0_bridges(
+        rows, rigid_bridges, captured, body20_pose, preparation,
+        lambda _q, _t, points: np.ascontiguousarray(points, dtype="<f4"))
+
+    for stable_id, member in ((525, "FJ3482"), (526, "FJ3583")):
+        positions = predicted[(51011, stable_id)][0]
+        np.testing.assert_allclose(positions[:, 2], [0.2, 0.1, 0.0],
+                                   rtol=0, atol=2e-7)
+        np.testing.assert_array_equal(positions[2], rigid_bridges[(51011, stable_id)][0][2])
+        assert details[member]["prediction_status"] == (
+            "OFFLINE_CAPTURED_SVC_DISPLACEMENT_PREDICTION_ONLY")
+        assert details[member]["native_field_error_bound"] == "not_available"
+        assert details[member]["source_geometry_mutated"] is False

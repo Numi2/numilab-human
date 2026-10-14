@@ -45,7 +45,7 @@ CAPTURE_MANIFEST = A / "accepted-capture-inputs-1398-001.json"
 CANDIDATE_DIR = A / "brachiocephalic-source-candidate-007-001"
 PREPARATION_DIR = A / "brachiocephalic-common-field-preparation-007-001"
 GATE_DIR = A / "brachiocephalic-source-007-six-port-geometry-001"
-PREFLIGHT_PATH = A / "brachiocephalic-source-007-preflight-001.json"
+PREFLIGHT_PATH = A / "brachiocephalic-source-007-preflight-002.json"
 MANIFOLD_ROOT = A / "retained-cpu-reference-deps-1384/manifold3d-3.5.4"
 MANIFOLD_SO = MANIFOLD_ROOT / "manifold3d.cpython-313-darwin.so"
 MANIFOLD_RECORD = MANIFOLD_ROOT / "manifold3d-3.5.4.dist-info/RECORD"
@@ -140,6 +140,7 @@ def _code_paths() -> list[Path]:
         Path(__file__).resolve(),
         source / "resting_brachiocephalic_geometry_gate.py",
         source / "resting_brachiocephalic_common_field.py",
+        source / "resting_brachiocephalic_pose_predictor.py",
         source / "resting_major_vessels.py",
         source / "resting_passive_viscera.py",
         source / "organ_family_geometry.py",
@@ -492,6 +493,71 @@ def _source_closed_checks(av, bridges: dict) -> list[dict]:
     return output
 
 
+def _predict_step0_bridges(
+    rows: dict, rigid_bridges: dict, captured: dict, body20_pose: dict,
+    preparation: dict, transform_f32,
+) -> tuple[dict, dict]:
+    """Predict step-0 bridge poses from the accepted capture's SVC10 motion."""
+    from .resting_brachiocephalic_pose_predictor import (
+        predict_brachiocephalic_world_positions,
+    )
+
+    svc_key = (51011, 10)
+    _require(svc_key in captured, "accepted source-0 capture lacks SVC10")
+    svc_native = np.ascontiguousarray(captured[svc_key][0], dtype="<f4")
+    svc_faces = np.ascontiguousarray(captured[svc_key][1], dtype="<u4")
+    svc_row = rows[10]
+    _require(np.array_equal(svc_faces, np.ascontiguousarray(svc_row["faces"], dtype="<u4")),
+             "captured SVC10 face order differs from source-map ancestry")
+    q = np.asarray(body20_pose.get("quaternion_xyzw"), dtype="<f4")
+    t = np.asarray(body20_pose.get("position_m"), dtype="<f4")
+    svc_rigid = transform_f32(
+        q, t, np.ascontiguousarray(svc_row["vertices6"][:, :3], dtype="<f4"))
+    _require(svc_rigid.shape == svc_native.shape,
+             "same-pose rigid-only and captured SVC10 vertex arrays differ")
+    predicted = {}
+    details = {}
+    bridge_records = preparation.get("bridges", {})
+    for stable_id, spec in BRIDGE_ROWS.items():
+        key = (51011, stable_id)
+        _require(key in rigid_bridges, "rigid-only source bridge is missing " + spec["member"])
+        bridge_record = bridge_records.get(spec["member"], {})
+        ancestry = bridge_record.get("vertex_ancestry")
+        _require(isinstance(ancestry, list) and len(ancestry) == len(rigid_bridges[key][0]),
+                 "compiled common-map vertex ancestry is missing for " + spec["member"])
+        result = predict_brachiocephalic_world_positions(
+            rigid_bridges[key][0], svc_native, svc_rigid, ancestry)
+        positions = np.ascontiguousarray(result["positions_world_m"], dtype="<f4")
+        _require(positions.shape == rigid_bridges[key][0].shape
+                 and np.isfinite(positions).all(),
+                 "captured-SVC predictor returned invalid bridge coordinates")
+        predicted[key] = (
+            positions, rigid_bridges[key][1], None, rigid_bridges[key][3])
+        details[spec["member"]] = {
+            "stable_id": stable_id,
+            "vertex_count": len(positions),
+            "vertex_ancestry_count": len(ancestry),
+            "positions_sha256": hashlib.sha256(positions.tobytes()).hexdigest(),
+            "svc_native_world_positions_sha256": hashlib.sha256(svc_native.tobytes()).hexdigest(),
+            "svc_rigid_only_world_positions_sha256": hashlib.sha256(svc_rigid.tobytes()).hexdigest(),
+            "captured_minus_rigid_svc_displacement_sha256": hashlib.sha256(
+                result["captured_svc_displacement_world_m"].tobytes()).hexdigest(),
+            "svc_faces_sha256": hashlib.sha256(svc_faces.tobytes()).hexdigest(),
+            "projected_displacement_sha256": hashlib.sha256(
+                result["projected_bridge_displacement_world_m"].tobytes()).hexdigest(),
+            "prediction_status": result["status"],
+            "native_field_error_bound": result["native_field_error_bound"],
+            "float32_roundoff_bound_max_m":
+                result["float32_interpolation_roundoff_bound_max_m"],
+            "float32_roundoff_observed_max_m":
+                result["float32_interpolation_roundoff_observed_max_m"],
+            "float32_roundoff_bound_scope": result["float32_bound_scope"],
+            "native_confirmation": result["native_confirmation"],
+            "source_geometry_mutated": False,
+        }
+    return predicted, details
+
+
 def _decorate_same_source_calibre(result: dict) -> dict:
     result["calibre_interpretation"] = (
         "same-source geometry sanity only: source-0 candidate and comparison meshes "
@@ -519,12 +585,13 @@ def run_source007() -> dict:
         "native_admission": False,
         "native_confirmation": "required",
         "limits": {
-            "source0_scope": "pinned accepted source-0 step/time zero; the bridges are transformed by its accepted body20 rigid pose with no predicted common-field displacement",
-            "later_pose_scope": "all eight accepted-pose bridge predictions and exact P6 target checks remain pending",
+            "source0_scope": "rigid-only source closure and six-port checks are separate from the step-0 captured-SVC displacement prediction; the all-nearby P6 target screen uses predicted coupled bridge coordinates",
+            "later_pose_scope": "the other seven accepted-pose predictions and exact P6 target checks remain pending",
             "physical_calibre": "not established; source-identical baseline ratios are geometry sanity only",
             "floating_union": "Manifold3D CSG and Mesh64 sections are numerical analysis, not exact union topology or emitted assets",
-            "native_common_field": "not evaluated",
-            "overall_anatomy": "source-0 six-port and all-target checks are bounded regional screens, not Human completion",
+            "captured_field_prediction": "step-0 bridge displacement reuses actual captured SVC10 minus same-pose rigid-only NHA SVC10 through prepared barycentric ancestry; its roundoff bound covers interpolation only and does not bound native map/kernel error",
+            "native_common_field": "not evaluated; native 16-pose confirmation remains required",
+            "overall_anatomy": "rigid-source closure/six-port plus step-0 predicted all-target checks are bounded regional screens, not Human completion",
         },
     }
     _write_json(GATE_DIR / "progress.json", report)
@@ -659,8 +726,8 @@ def run_source007() -> dict:
             "target_universe": "every typed anatomical surface returned by pinned HP98/P6 load_capture for this exact accepted step-0 pack",
             "mandatory_source_targets": [list(key) for key in REQUIRED_SOURCE_TARGETS],
             "skin_enclosure_identities": [list(key) for key in skin_container_keys],
-            "bridges_have_no_predicted_common_field_displacement": True,
-            "bridge_source_positions_sha256": {
+            "source_geometry_screen": "rigid-only body20 transformed source bridge coordinates; not a coupled pose gate",
+            "bridge_rigid_source_positions_sha256": {
                 str(sid): hashlib.sha256(bridges[(51011, sid)][0].tobytes()).hexdigest()
                 for sid in sorted(BRIDGE_ROWS)
             },
@@ -727,24 +794,51 @@ def run_source007() -> dict:
                  and six_port.get("requested_port_count") == 6
                  and six_port.get("evaluated_port_count") == 6,
                  "source-0 six-port continuity/calibre screen stopped or failed")
-        report["source0"]["collar_attribution"] = {
-            "candidate107_left_bridge_present": True,
+        report["source0"]["rigid_only_six_port_screen"] = {
+            "status": "PASSED_SOURCE_GEOMETRY_ONLY",
+            "scope": "closed source bridge against frozen source interfaces; same-source calibre ratios are geometry sanity only",
+            "candidate107_left_bridge_present": bool(
+                attribution.get("candidate107_payload", {}).get("contains_FJ3482")),
             "right_bridge_scope": "frozen source-060 baseline ancestry; candidate107 does not contain FJ3583",
             "station_method": "P6 exact port witnesses plus deterministic PCA axis oriented toward each source-segment interior; inferred source station, not measured centerline",
-            "same_source_calibre_baseline": True,
             "physical_calibre_preservation_claim": False,
         }
-        report["status"] = "SIX_PORT_SOURCE_SCREEN_COMPLETE"
+        report["status"] = "RIGID_ONLY_SIX_PORT_SOURCE_SCREEN_COMPLETE"
         _write_json(GATE_DIR / "progress.json", report)
 
-        stage = "all-aabb-source0-collisions"
-        report["status"] = "CHECKING_ALL_DECODED_SOURCE0_TARGETS_WITH_HP98_P6"
+        stage = "step0-captured-svc-displacement-prediction"
+        report["status"] = "PREDICTING_STEP0_BRIDGES_FROM_CAPTURED_SVC_DISPLACEMENT"
+        _write_json(GATE_DIR / "progress.json", report)
+        predicted_bridges, prediction_details = _predict_step0_bridges(
+            rows, bridges, captured, capture_meta["body20"], validated["preparation"],
+            transform_f32)
+        prediction_path = GATE_DIR / "predicted-step0-bridge-positions.npz"
+        with prediction_path.open("wb") as stream:
+            np.savez_compressed(stream, **{
+                f"stable_{stable_id}_xyz_f32": predicted_bridges[(51011, stable_id)][0]
+                for stable_id in sorted(BRIDGE_ROWS)
+            })
+        report["source0"]["captured_svc_displacement_prediction"] = {
+            "status": "OFFLINE_CAPTURED_SVC_DISPLACEMENT_PREDICTION_ONLY",
+            "method": "same accepted source-0 receipt: captured packed SVC10 world coordinates minus same-pose rigid-only NHA SVC10, interpolated through each compiled bridge vertex ancestry and quintic fade",
+            "bridges": prediction_details,
+            "prediction_arrays_path": str(prediction_path),
+            "prediction_arrays_sha256": sha_file(prediction_path),
+            "native_field_error_bound": "not_available",
+            "float32_roundoff_scope": "interpolation of supplied Float32 captured coordinates and pinned ancestry only; no bound on native common-map reconstruction, polynomial evaluation, or GPU kernel arithmetic",
+            "native_confirmation": "required",
+            "source_geometry_mutated": False,
+        }
+        _write_json(GATE_DIR / "progress.json", report)
+
+        stage = "all-aabb-source0-predicted-collisions"
+        report["status"] = "CHECKING_PREDICTED_BRIDGES_AGAINST_ALL_DECODED_SOURCE0_TARGETS_WITH_HP98_P6"
         _write_json(GATE_DIR / "progress.json", report)
         from .resting_brachiocephalic_geometry_gate import (
             audit_captured_pose_surface_intersections,
         )
-        bridge_positions = {key: value[0] for key, value in bridges.items()}
-        bridge_faces = {key: value[1] for key, value in bridges.items()}
+        bridge_positions = {key: value[0] for key, value in predicted_bridges.items()}
+        bridge_faces = {key: value[1] for key, value in predicted_bridges.items()}
         collision = audit_captured_pose_surface_intersections(
             av, captured, bridge_positions, bridge_faces, port_pairs)
         report["all_aabb_source0_collision_gate"] = collision
@@ -754,6 +848,7 @@ def run_source007() -> dict:
             "passed": bool(collision.get("surface_intersection_stage_passed")),
             "central_verifier": "HP98/P6 audit_changed_surfaces; no duplicate triangle-intersection or enclosure predicate",
             "aabb_pair_selection": "all decoded targets were supplied to P6; its existing source-0 AABB routing selected pair predicates",
+            "bridge_coordinates": "step-0 captured-SVC offline prediction using the existing predictor and compiled per-vertex common-map ancestry; not native coordinates",
             "decoded_target_count": len(captured),
             "nearby_pair_count": len(nearby),
             "nearby_pairs": [
@@ -770,16 +865,17 @@ def run_source007() -> dict:
                 "containment_allowed": True,
                 "boundary_crossings_still_rejected": True,
                 "same_accepted_source0_pose": True,
+                "bridge_pose_source": "captured SVC10 displacement predictor; native common-map error is not bounded",
             },
         }
         _require(collision.get("surface_intersection_stage_passed") is True,
                  "source-0 all-AABB target collision screen rejected a bridge")
-        report["status"] = "SOURCE0_SIX_PORT_AND_ALL_AABB_SCREENS_PASSED_UNADMITTED"
+        report["status"] = "SOURCE0_RIGID_SOURCE_AND_PREDICTED_ALL_AABB_SCREENS_PASSED_UNADMITTED"
         report["anatomical_admission"] = False
         report["all_pose_admission"] = False
         report["native_admission"] = False
         report["acceptance_gates_remaining"] = [
-            "all eight accepted-pose offline common-field projections and exact P6 checks",
+            "the other seven accepted-pose offline common-field projections and exact P6 checks",
             "native common-map and bridge deformation confirmation",
             "remaining route-wide artery, muscle, and other Human integration gates",
         ]
@@ -833,7 +929,7 @@ def main(argv: list[str] | None = None) -> int:
         "failed_stage": result.get("failed_stage"),
         "failure": result.get("failure"),
     }, sort_keys=True))
-    return 0 if result.get("status") == "SOURCE0_SIX_PORT_AND_ALL_AABB_SCREENS_PASSED_UNADMITTED" else 2
+    return 0 if result.get("status") == "SOURCE0_RIGID_SOURCE_AND_PREDICTED_ALL_AABB_SCREENS_PASSED_UNADMITTED" else 2
 
 
 if __name__ == "__main__":
