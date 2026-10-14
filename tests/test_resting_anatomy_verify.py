@@ -384,5 +384,146 @@ class CaptureDecoderTests(unittest.TestCase):
         self.assertFalse(report["passed"])
         self.assertEqual(report["outside_tolerance_vertex_ids"], [1])
 
+
+    def _sequence_fixture(self, directory):
+        import hashlib
+        import json
+        from pathlib import Path
+        root = Path(directory)
+        source = root / "source.nhtissue"
+        source.write_bytes(b"pinned-existing-source")
+        source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+        rows = []
+        for index, step in enumerate((0, 1)):
+            rows.append({
+                "step": step, "accepted_time_s": float(index),
+                "pack_path": str(root / (f"step-{step}.mrvpack")),
+                "recorded_pack_sha256": (f"{index + 1:064x}"),
+                "receipt_path": str(root / (f"step-{step}.receipt.json")),
+                "receipt_sha256": (f"{index + 101:064x}"),
+            })
+        manifest_path = root / "accepted-capture-index.json"
+        manifest_path.write_text(json.dumps({"source": "existing accepted capture index",
+                                             "capture_rows": rows, "scope": "test"}))
+        manifest_sha = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+        positions = tetra()
+        normals = np.asarray([[1, 0, 0]] * 4, dtype=np.float32)
+        gids = np.arange(4, dtype=np.uint64)
+        capture = {(51011, 7): (positions, FACES, normals, gids)}
+        prepared_surface = prepare_surface(
+            (51011, 7), positions.copy(), FACES.copy(), normals=normals.copy(),
+            source_vertex_ids=gids.copy())
+        prepared = {step: {(51011, 7): prepared_surface} for step in (0, 1)}
+        identities = {
+            step: {"pack_sha256": rows[index]["recorded_pack_sha256"],
+                   "capture_receipt_sha256": rows[index]["receipt_sha256"],
+                   "accepted_step": step, "accepted_time_s": float(index)}
+            for index, step in enumerate((0, 1))
+        }
+        return manifest_path, manifest_sha, source, source_sha, rows, capture, prepared, identities
+
+    def test_capture_sequence_stops_after_first_geometry_failure(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import audit_capture_sequence
+
+        with TemporaryDirectory() as directory:
+            manifest, manifest_sha, source, source_sha, _rows, capture, prepared, identities = self._sequence_fixture(directory)
+            def load(pack, receipt):
+                step = int(Path(pack).stem.split("-")[1])
+                return capture, identities[step]
+            failed = {"passed": False, "failed_stage": "self", "rows": [{"stage": "self", "passed": False}]}
+            with patch("numilab_human.resting_anatomy_verify.load_capture", side_effect=load) as loader, \
+                 patch("numilab_human.resting_anatomy_verify.audit_changed_surfaces", return_value=failed) as audit:
+                result = audit_capture_sequence(
+                    manifest, expected_manifest_sha256=manifest_sha,
+                    expected_source_sha256={str(source): source_sha}, changed=[(51011, 7)],
+                    prepared_surfaces_by_step=prepared)
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["capture_step"], 0)
+            self.assertEqual(result["failed_stage"], "self")
+            self.assertEqual(loader.call_count, 1)
+            self.assertEqual(audit.call_count, 1)
+
+    def test_capture_sequence_binds_exact_ordered_faces_with_unused_source_slot(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import audit_capture_sequence
+
+        with TemporaryDirectory() as directory:
+            manifest, manifest_sha, source, source_sha, _rows, _, _, identities = self._sequence_fixture(directory)
+            captured_positions = tetra()
+            captured_normals = np.asarray([[1, 0, 0]] * 4, dtype=np.float32)
+            captured_gids = np.arange(1001, 1005, dtype=np.uint64)
+            capture = {(51011, 7): (captured_positions, FACES, captured_normals, captured_gids)}
+            source_positions = np.vstack((np.asarray([[9, 9, 9]], dtype=np.float32), captured_positions))
+            source_normals = np.vstack((np.asarray([[0, 1, 0]], dtype=np.float32), captured_normals))
+            source_faces = (FACES + np.uint32(1)).copy()
+            source_gids = np.arange(900, 905, dtype=np.uint64)
+            prepared_surface = prepare_surface(
+                (51011, 7), source_positions, source_faces, normals=source_normals,
+                source_vertex_ids=source_gids)
+            prepared = {step: {(51011, 7): prepared_surface} for step in (0, 1)}
+            def load(pack, receipt):
+                step = int(Path(pack).stem.split("-")[1])
+                return capture, identities[step]
+            with patch("numilab_human.resting_anatomy_verify.load_capture", side_effect=load), \
+                 patch("numilab_human.resting_anatomy_verify.audit_changed_surfaces",
+                       return_value={"passed": True, "rows": []}):
+                result = audit_capture_sequence(
+                    manifest, expected_manifest_sha256=manifest_sha,
+                    expected_source_sha256={str(source): source_sha}, changed=[(51011, 7)],
+                    prepared_surfaces_by_step=prepared)
+            self.assertTrue(result["passed"], result)
+            self.assertEqual(result["completed_captures"][0]["surface_bindings"][0]
+                             ["source_capture_vertex_namespace_offset"], 1000)
+            self.assertEqual(result["completed_captures"][0]["surface_bindings"][0]
+                             ["referenced_corner_count"], 12)
+
+    def test_capture_sequence_rejects_misaligned_typed_lineage_before_predicate(self):
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import audit_capture_sequence
+
+        with TemporaryDirectory() as directory:
+            manifest, manifest_sha, source, source_sha, _rows, _capture, prepared, _identities = self._sequence_fixture(directory)
+            for surface_map in prepared.values():
+                surface = feature_surface((51011, 7), tetra(), FACES, np.arange(4, dtype=np.uint64))
+                surface.source_face_lineage = surface.source_face_lineage[:-1]
+                surface_map[(51011, 7)] = surface
+            with (patch("numilab_human.resting_anatomy_verify.load_capture") as loader,
+                  patch("numilab_human.resting_anatomy_verify.audit_changed_surfaces") as audit,
+                  self.assertRaisesRegex(ValueError, "face lineage is not aligned")):
+                audit_capture_sequence(
+                    manifest, expected_manifest_sha256=manifest_sha,
+                    expected_source_sha256={str(source): source_sha}, changed=[(51011, 7)],
+                    prepared_surfaces_by_step=prepared)
+            loader.assert_not_called()
+            audit.assert_not_called()
+
+    def test_capture_sequence_rejects_source_hash_identity_before_capture_load(self):
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import audit_capture_sequence
+
+        with TemporaryDirectory() as directory:
+            manifest, manifest_sha, source, _source_sha, _rows, _capture, prepared, _identities = self._sequence_fixture(directory)
+            with (patch("numilab_human.resting_anatomy_verify.load_capture") as loader,
+                  patch("numilab_human.resting_anatomy_verify.audit_changed_surfaces") as audit,
+                  self.assertRaisesRegex(ValueError, "source input SHA-256 mismatch")):
+                audit_capture_sequence(
+                    manifest, expected_manifest_sha256=manifest_sha,
+                    expected_source_sha256={str(source): "0" * 64}, changed=[(51011, 7)],
+                    prepared_surfaces_by_step=prepared)
+            loader.assert_not_called()
+            audit.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()
