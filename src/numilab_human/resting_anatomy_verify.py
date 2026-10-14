@@ -413,3 +413,42 @@ def main(argv=None):
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def retain_bound_source_faces(key, captured_surface, source_faces, source_vertex_offset,
+                              retained_source_face_ids):
+    """Apply source-facet ancestry only after proving the complete ordered ID mapping.
+
+    Capture and NHA vertex IDs use different namespaces. One constant offset must
+    explain every ordered facet corner; proximity and partial matching are rejected.
+    Positions, normals and source vertex IDs remain the exact captured arrays.
+    """
+    key = typed_key(key)
+    positions, faces, normals, gids = captured_surface
+    sf = np.asarray(source_faces)
+    selected = np.asarray(retained_source_face_ids)
+    if sf.ndim != 2 or sf.shape[1] != 3 or not np.issubdtype(sf.dtype, np.integer):
+        raise ValueError('source facet indices must be integer triangles')
+    if selected.ndim != 1 or not np.issubdtype(selected.dtype, np.integer):
+        raise ValueError('retained source facet ancestry must be integer ordinals')
+    if len(selected) and (selected.min() < 0 or selected.max() >= len(sf)
+                         or np.any(np.diff(selected.astype(np.int64)) <= 0)):
+        raise ValueError('retained source facet ancestry must be ordered and unique')
+    cf = np.asarray(faces)
+    ids = np.asarray(gids)
+    if cf.shape != sf.shape or not len(sf):
+        raise ValueError('complete source/capture facet inventories disagree')
+    global_capture = ids[cf].astype(np.int64)
+    global_source = sf.astype(np.int64) + int(source_vertex_offset)
+    offset = int(global_capture[0, 0]) - int(global_source[0, 0])
+    if not np.array_equal(global_capture - offset, global_source):
+        raise ValueError('complete ordered source/capture facet mapping disagrees')
+    projected = (positions, cf[selected].copy(), normals, gids)
+    return projected, {
+        'typed_identity': list(key), 'source_capture_vertex_namespace_offset': offset,
+        'all_ordered_source_facets_match': True,
+        'source_face_count': len(sf), 'retained_source_face_count': len(selected),
+        'source_face_ancestry': selected.tolist(),
+        'captured_positions_normals_and_vertex_ids_unchanged': True,
+        'scope': 'retained captured deformation only; native emission confirmation remains required',
+    }

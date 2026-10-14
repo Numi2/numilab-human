@@ -532,3 +532,88 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def remove_isolated_opposed_fragments(vertices6: np.ndarray, faces: np.ndarray):
+    """Remove only isolated zero-volume two-facet fragments in exact source coordinates.
+
+    Vertex slots, normals, source ancestry and all retained face winding remain intact.
+    A coincident pair touching any other face, a repeated winding or a larger duplicate
+    group fails closed. This is a preparation repair, not an embedding certificate.
+    """
+    v = np.asarray(vertices6)
+    f = np.asarray(faces)
+    if v.dtype != np.float32 or v.ndim != 2 or v.shape[1] != 6 or not np.isfinite(v).all():
+        raise ValueError('require finite emitted Float32 vertex and normal slots')
+    if f.ndim != 2 or f.shape[1] != 3 or not np.issubdtype(f.dtype, np.integer):
+        raise ValueError('require integer triangle indices')
+    if f.size and (f.min() < 0 or f.max() >= len(v)):
+        raise ValueError('source triangle index outside vertex slots')
+    _, quotient = np.unique(v[:, :3], axis=0, return_inverse=True)
+    qf = quotient[f]
+    if np.any((qf[:, 0] == qf[:, 1]) | (qf[:, 1] == qf[:, 2]) | (qf[:, 0] == qf[:, 2])):
+        raise ValueError('degenerate source facet cannot be classified as a paired fragment')
+    _, inverse, counts = np.unique(np.sort(qf, axis=1), axis=0, return_inverse=True, return_counts=True)
+    vertex_faces = defaultdict(set)
+    for fi, tri in enumerate(qf):
+        for vertex in tri:
+            vertex_faces[int(vertex)].add(fi)
+    removed = []
+    groups = []
+    for group_id in np.flatnonzero(counts > 1):
+        group = np.flatnonzero(inverse == group_id).tolist()
+        if len(group) != 2:
+            raise ValueError('duplicate source group is not exactly two facets')
+        parities = [(-1 if sum(int(qf[fi, i] > qf[fi, j])
+                     for i in range(3) for j in range(i + 1, 3)) % 2 else 1) for fi in group]
+        if parities[0] * parities[1] != -1:
+            raise ValueError('duplicate facets do not have opposite winding')
+        tri = v[f[group[0]], :3]
+        lattice = [[int(float(x) * 2**149) for x in point] for point in tri]
+        ab = [lattice[1][i] - lattice[0][i] for i in range(3)]
+        ac = [lattice[2][i] - lattice[0][i] for i in range(3)]
+        cross = [ab[1]*ac[2]-ab[2]*ac[1], ab[2]*ac[0]-ab[0]*ac[2], ab[0]*ac[1]-ab[1]*ac[0]]
+        if not any(cross):
+            raise ValueError('collinear source fragment is degenerate')
+        neighbors = set().union(*(vertex_faces[int(vertex)] for vertex in qf[group[0]]))
+        if neighbors != set(group):
+            raise ValueError('duplicate fragment touches another source face')
+        removed.extend(group)
+        groups.append({'source_face_ids': group, 'quotient_vertex_triples': qf[group].tolist(),
+                       'orientation_parities': parities, 'exact_signed_volume_sum_m3': '0'})
+    keep = np.ones(len(f), dtype=bool)
+    keep[removed] = False
+    retained = np.flatnonzero(keep)
+    return f[keep].copy(), {
+        'method': 'remove_exact_coordinate_isolated_opposed_zero_volume_source_fragments',
+        'source_face_count': len(f), 'retained_face_count': int(keep.sum()),
+        'removed_source_face_ids': sorted(removed),
+        'retained_source_face_index_ranges': index_ranges(retained),
+        'removed_fragment_pairs': groups,
+        'vertex_slots_and_normals_unchanged': True, 'exact_signed_volume_change_m3': '0',
+        'new_vertices': 0, 'new_faces': 0, 'source_coordinates_modified': False,
+        'scope': 'source-facet preparation only; full geometry and native motion remain unqualified',
+    }
+
+
+def encode_payload(header, rows):
+    """Emit the existing NHANAT1 ABI5 layout with source IDs and owners preserved."""
+    if header[0] != b'NHANAT1\0' or header[1] != 5:
+        raise ValueError('expected existing NHANAT1 ABI5 header')
+    records, vertices, indices = [], [], []
+    nv = ni = 0
+    for sid, row in rows.items():
+        v = np.asarray(row['vertices6'])
+        f = np.asarray(row['faces'])
+        if v.dtype != np.float32 or v.ndim != 2 or v.shape[1] != 6 or not np.isfinite(v).all():
+            raise ValueError(f'invalid Float32 vertex slots for source {sid}')
+        if f.ndim != 2 or f.shape[1] != 3 or not np.issubdtype(f.dtype, np.integer):
+            raise ValueError(f'invalid facet indices for source {sid}')
+        if f.size and (f.min() < 0 or f.max() >= len(v)):
+            raise ValueError(f'nonlocal facet index for source {sid}')
+        records.append(RECORD.pack(row['body_index'], nv, len(v), ni, f.size, int(sid), row['layer'], row['flags']))
+        vertices.append(v.astype('<f4', copy=False).tobytes())
+        indices.append((f.reshape(-1).astype(np.uint64) + nv).astype('<u4').tobytes())
+        nv += len(v)
+        ni += f.size
+    return HEADER.pack(header[0], header[1], len(records), nv, ni, header[5], header[6]) + b''.join(records + vertices + indices)

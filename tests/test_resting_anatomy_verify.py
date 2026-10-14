@@ -18,6 +18,23 @@ def tetra(scale=1., offset=0.):
 
 
 class RestingAnatomyVerifierTests(unittest.TestCase):
+
+    def test_bound_source_facet_projection_requires_full_namespace_correspondence(self):
+        from numilab_human.resting_anatomy_verify import retain_bound_source_faces
+        p=tetra();n=np.ones_like(p);g=np.arange(1000,1004,dtype=np.uint64)
+        old=(p,FACES,n,g)
+        projected,proof=retain_bound_source_faces((51010,313),old,FACES,200,[0,2,3])
+        self.assertIs(projected[0],p);self.assertIs(projected[2],n);self.assertIs(projected[3],g)
+        np.testing.assert_array_equal(projected[1],FACES[[0,2,3]])
+        self.assertEqual(proof['source_capture_vertex_namespace_offset'],800)
+        self.assertEqual(proof['source_face_ancestry'],[0,2,3])
+        changed=FACES.copy();changed[-1]=changed[-1,[1,0,2]]
+        with self.assertRaisesRegex(ValueError,'mapping disagrees'):
+            retain_bound_source_faces((51010,313),(p,changed,n,g),FACES,200,[0,2,3])
+        for ancestry in ([0,0],[2,1],[-1],[4]):
+            with self.subTest(ancestry=ancestry),self.assertRaises(ValueError):
+                retain_bound_source_faces((51010,313),old,FACES,200,ancestry)
+
     def test_identity_requires_semantic_not_untyped_stable_id(self):
         with self.assertRaises(ValueError):
             typed_key(313)
