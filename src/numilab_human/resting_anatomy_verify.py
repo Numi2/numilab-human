@@ -923,8 +923,16 @@ def validate_rest_emission(emitted, rigid_rest_reconstruction, *, tolerance_m=2e
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--pack", type=Path, required=True)
-    parser.add_argument("--capture-receipt", type=Path, required=True)
+    capture = parser.add_mutually_exclusive_group(required=True)
+    capture.add_argument("--pack", type=Path)
+    capture.add_argument("--capture-manifest", type=Path,
+                         help="existing accepted-capture index with capture_rows")
+    parser.add_argument("--capture-receipt", type=Path)
+    parser.add_argument("--manifest-sha256")
+    parser.add_argument("--source-pin", action="append", default=[],
+                        help="existing source PATH=SHA256; required for a capture sequence")
+    parser.add_argument("--required-closed", action="append", default=[],
+                        help="semantic:stable_id; reject open changed surfaces")
     parser.add_argument("--changed", action="append", required=True, help="semantic:stable_id")
     parser.add_argument("--target", action="append", help="semantic:stable_id; default all anatomy")
     parser.add_argument("--intended-enclosure", action="append", default=[],
@@ -932,19 +940,45 @@ def main(argv=None):
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     key = lambda value: typed_key(tuple(int(v) for v in value.split(":")))
+    if args.pack is not None:
+        if args.capture_receipt is None:
+            parser.error("--pack requires --capture-receipt")
+        if args.manifest_sha256 is not None or args.source_pin:
+            parser.error("sequence pins require --capture-manifest")
+    elif args.capture_receipt is not None or not args.manifest_sha256 or not args.source_pin:
+        parser.error("--capture-manifest requires --manifest-sha256 and --source-pin, without --capture-receipt")
     identity = {"pack": str(args.pack), "capture_receipt": str(args.capture_receipt)}
+    if args.capture_manifest is not None:
+        identity = {"capture_manifest": str(args.capture_manifest)}
     try:
-        surfaces, identity = load_capture(args.pack, args.capture_receipt)
         enclosures = []
         for value in args.intended_enclosure:
             pair = value.split(",")
             if len(pair) != 2:
                 raise ValueError("intended enclosure requires two comma-separated typed identities")
             enclosures.append(tuple(key(v) for v in pair))
-        report = audit_changed_surfaces(surfaces, [key(v) for v in args.changed],
-                                       targets=None if args.target is None else [key(v) for v in args.target],
-                                       intended_enclosures=enclosures)
-    except (ValueError, KeyError, OSError, HumanImportError) as error:
+        changed = [key(v) for v in args.changed]
+        targets = None if args.target is None else [key(v) for v in args.target]
+        closed = [key(v) for v in args.required_closed]
+        if args.capture_manifest is None:
+            surfaces, identity = load_capture(args.pack, args.capture_receipt)
+            report = audit_changed_surfaces(surfaces, changed, targets=targets,
+                                           required_closed=closed,
+                                           intended_enclosures=enclosures)
+        else:
+            pins = {}
+            for value in args.source_pin:
+                source, separator, digest = value.rpartition("=")
+                if not separator or not source or source in pins:
+                    raise ValueError("source pins require unique PATH=SHA256 entries")
+                pins[source] = digest
+            manifest = json.loads(args.capture_manifest.read_bytes())
+            declarations = {row["step"]: enclosures for row in manifest["capture_rows"]}
+            report = audit_capture_sequence(
+                args.capture_manifest, expected_manifest_sha256=args.manifest_sha256,
+                expected_source_sha256=pins, changed=changed, targets=targets,
+                required_closed=closed, intended_enclosures_by_step=declarations)
+    except (TypeError, ValueError, KeyError, OSError, HumanImportError) as error:
         report = {"passed": False, "failed_stage": "preparation", "error": str(error)}
     report.update(identity)
     args.output.write_text(json.dumps(report, indent=2) + "\n")

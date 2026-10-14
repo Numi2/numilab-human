@@ -385,6 +385,63 @@ class CaptureDecoderTests(unittest.TestCase):
         self.assertEqual(report["outside_tolerance_vertex_ids"], [1])
 
 
+    def test_cli_sequence_uses_existing_manifest_and_pinned_sources(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import main
+        with tempfile.TemporaryDirectory() as directory:
+            manifest, digest, source, source_sha, *_ = self._sequence_fixture(directory)
+            output = Path(directory) / "report.json"
+            with patch("numilab_human.resting_anatomy_verify.audit_capture_sequence",
+                       return_value={"passed": True}) as audit:
+                code = main(["--capture-manifest", str(manifest),
+                             "--manifest-sha256", digest,
+                             "--source-pin", str(source) + "=" + source_sha,
+                             "--changed", "51011:7", "--required-closed", "51011:7",
+                             "--intended-enclosure", "51011:7,51007:1",
+                             "--output", str(output)])
+            self.assertEqual(code, 0)
+            arguments = audit.call_args.kwargs
+            self.assertEqual(arguments["expected_source_sha256"], {str(source): source_sha})
+            self.assertEqual(arguments["required_closed"], [(51011, 7)])
+            self.assertEqual(arguments["intended_enclosures_by_step"],
+                             {0: [((51011, 7), (51007, 1))],
+                              1: [((51011, 7), (51007, 1))]})
+            self.assertTrue(json.loads(output.read_text())["passed"])
+
+    def test_cli_sequence_rejects_changed_manifest_before_geometry(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import main
+        with tempfile.TemporaryDirectory() as directory:
+            manifest, _digest, source, source_sha, *_ = self._sequence_fixture(directory)
+            output = Path(directory) / "report.json"
+            with patch("numilab_human.resting_anatomy_verify.load_capture") as load:
+                code = main(["--capture-manifest", str(manifest),
+                             "--manifest-sha256", "0" * 64,
+                             "--source-pin", str(source) + "=" + source_sha,
+                             "--changed", "51011:7", "--output", str(output)])
+            load.assert_not_called()
+            self.assertEqual(code, 1)
+            result = json.loads(output.read_text())
+            self.assertEqual(result["failed_stage"], "preparation")
+            self.assertIn("manifest SHA", result["error"])
+
+    def test_cli_pack_requires_receipt_and_rejects_sequence_pins(self):
+        from unittest.mock import patch
+
+        from numilab_human.resting_anatomy_verify import main
+        for arguments in (["--pack", "a"],
+                          ["--pack", "a", "--capture-receipt", "b", "--source-pin", "c=d"]):
+            with self.subTest(arguments=arguments), patch("sys.stderr"), self.assertRaises(SystemExit):
+                main(arguments + ["--changed", "51011:7", "--output", "unused.json"])
+
     def _sequence_fixture(self, directory):
         import hashlib
         import json
@@ -448,6 +505,7 @@ class CaptureDecoderTests(unittest.TestCase):
         from pathlib import Path
         from tempfile import TemporaryDirectory
         from unittest.mock import patch
+
         from numilab_human.resting_anatomy_verify import audit_capture_sequence
 
         with TemporaryDirectory() as directory:
