@@ -1,0 +1,659 @@
+{
+  "schema": "numi.human.forearm.step0.actual-forward-self-gate.v1",
+  "status": "failed_self",
+  "geometry_basis": "Actual native GPU accepted step-0 capture; no CPU forward approximation.",
+  "pins": {
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/run_forearm470_actual_gpu_self_gate_001.py": "5e17b4a1df9230f6fd4704168d6fe8eb95ccf696f1afae687342796a492427ef",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/resting_anatomy_verify.py": "00cf51d56f6152b56659eb5bc5569fe1d564d9ad6b6a7d79f2b754bf06c753ef",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/cardiac_cavity_intersections.py": "4e6fb1f4ee75ea0ba9cdd06a072702a238f066fc8e63a61aa9eae32f2356a384",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/invocation.json": "6da2886300ff3881cd9994b03cda9cc28564fa376e0242b014f255f533df0803",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.mrvpack": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934",
+    "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/joint-native-emission-diagnostic-001/native-run/accepted-geometry/step-0.receipt.json": "a704bdd7b69a6a97cd437900a68127342ac6ae66f9aad40b173bf81d3becccc9",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-132-fds-material-handoff.npz": "5181d249838347530130c5271cee518546cae9ff37481cabb3a114b662d500cd",
+    "/Users/numi/numi-human-fds132-m6-1350/attempt-471-native-material-handoff-001/result-001/row-134-fdp-material-handoff.npz": "b8a74a7b1e6f2ad3b5b25eb8305b1a2533183179de98e01d92bf80639942eee9",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/__init__.py": "e06e46ca88bde0b4c4a6235c6135dafdb2e75d27633776dba0098698a082cf42",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/model.py": "29d5664ce1485c520c8ab8cb088f496a82c68e570400030dcaea98b2c9d6450e",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/physiology.py": "efb717aee62893268b266abe6a5c2901b0259333ccbae90110fda2070d84ecef",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/cardiac_cavity_geometry.py": "f6e98744dad9e23cd3b505efc02e7faa618fccce81d2ee08b07f948ef182fb72",
+    "/Users/numi/numi-human-final-integration-publish-1397/src/numilab_human/torso_anatomy_audit.py": "64443fd487c8c0f86c6aab02163cb2a735009d731fe3444a89a2e4dd117276ec"
+  },
+  "stages": [
+    {
+      "stage": "preparation",
+      "row": 132,
+      "exact_full_ordered_face_mapping": true,
+      "source_capture_offset": 587244,
+      "source_allocated_vertices": 14710,
+      "active_vertices": 14706,
+      "positions_sha256": "7e515ee4799472cf6dd64ed6167df46da8df659b1ddacfaddccd319835384ee4",
+      "diagnostics": {
+        "identity": [
+          51005,
+          132
+        ],
+        "positions_sha256": "7e515ee4799472cf6dd64ed6167df46da8df659b1ddacfaddccd319835384ee4",
+        "faces_sha256": "2d60b3c24cd7177f2d91a4f63e5eee53799808f32a263802e6b52b84fed015e6",
+        "exact_duplicate_vertex_count": 0,
+        "raw_topology": {
+          "vertex_count": 14706,
+          "face_count": 29420,
+          "face_component_count": 1,
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "nonmanifold_edges_count": 0,
+          "orientation_defect_edges_count": 0,
+          "degenerate_face_ids_count": 0,
+          "repeated_vertex_face_ids_count": 0,
+          "duplicate_face_ids_count": 0,
+          "vertex_manifold_defect_ids_count": 0,
+          "unused_vertex_ids_count": 0,
+          "boundary_branch_vertex_ids_count": 0
+        },
+        "exact_coordinate_quotient_topology": {
+          "vertex_count": 14706,
+          "face_count": 29420,
+          "face_component_count": 1,
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "nonmanifold_edges_count": 0,
+          "orientation_defect_edges_count": 0,
+          "degenerate_face_ids_count": 0,
+          "repeated_vertex_face_ids_count": 0,
+          "duplicate_face_ids_count": 0,
+          "vertex_manifold_defect_ids_count": 0,
+          "unused_vertex_ids_count": 0,
+          "boundary_branch_vertex_ids_count": 0
+        },
+        "referenced_surface_closed": true,
+        "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary.",
+        "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained."
+      },
+      "seconds": 0.5035509580047801
+    },
+    {
+      "stage": "self",
+      "row": 132,
+      "count": 0,
+      "pairs": [],
+      "seconds": 16.257373874999757
+    },
+    {
+      "stage": "preparation",
+      "row": 134,
+      "exact_full_ordered_face_mapping": true,
+      "source_capture_offset": 608019,
+      "source_allocated_vertices": 39167,
+      "active_vertices": 32354,
+      "positions_sha256": "6ed16b990e7dcaf3628b3d2856a79a5db9d67d8b4d999deedf3907dedb37f68f",
+      "diagnostics": {
+        "identity": [
+          51005,
+          134
+        ],
+        "positions_sha256": "6ed16b990e7dcaf3628b3d2856a79a5db9d67d8b4d999deedf3907dedb37f68f",
+        "faces_sha256": "4a4e7d15909c49360f1ee9a23533e7c550d637fc63256ac837b7a8303b7909cb",
+        "exact_duplicate_vertex_count": 0,
+        "raw_topology": {
+          "vertex_count": 32354,
+          "face_count": 64704,
+          "face_component_count": 4,
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "nonmanifold_edges_count": 0,
+          "orientation_defect_edges_count": 0,
+          "degenerate_face_ids_count": 0,
+          "repeated_vertex_face_ids_count": 0,
+          "duplicate_face_ids_count": 0,
+          "vertex_manifold_defect_ids_count": 0,
+          "unused_vertex_ids_count": 0,
+          "boundary_branch_vertex_ids_count": 0
+        },
+        "exact_coordinate_quotient_topology": {
+          "vertex_count": 32354,
+          "face_count": 64704,
+          "face_component_count": 4,
+          "boundary_edge_count": 0,
+          "closed_oriented_manifold_candidate": true,
+          "nonmanifold_edges_count": 0,
+          "orientation_defect_edges_count": 0,
+          "degenerate_face_ids_count": 0,
+          "repeated_vertex_face_ids_count": 0,
+          "duplicate_face_ids_count": 0,
+          "vertex_manifold_defect_ids_count": 0,
+          "unused_vertex_ids_count": 0,
+          "boundary_branch_vertex_ids_count": 0
+        },
+        "referenced_surface_closed": true,
+        "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary.",
+        "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained."
+      },
+      "seconds": 1.237123499995505
+    },
+    {
+      "stage": "self",
+      "row": 134,
+      "count": 17,
+      "pairs": [
+        {
+          "face_indices": [
+            4530,
+            63938
+          ],
+          "source_gids": [
+            [
+              47320,
+              47321,
+              47322
+            ],
+            [
+              47321,
+              49160,
+              47324
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30426,
+              30427,
+              30428
+            ],
+            [
+              30427,
+              32266,
+              30430
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            4531,
+            63938
+          ],
+          "source_gids": [
+            [
+              47322,
+              47323,
+              47320
+            ],
+            [
+              47321,
+              49160,
+              47324
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30428,
+              30429,
+              30426
+            ],
+            [
+              30427,
+              32266,
+              30430
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            4533,
+            63938
+          ],
+          "source_gids": [
+            [
+              47323,
+              47322,
+              47324
+            ],
+            [
+              47321,
+              49160,
+              47324
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30429,
+              30428,
+              30430
+            ],
+            [
+              30427,
+              32266,
+              30430
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            4543,
+            63946
+          ],
+          "source_gids": [
+            [
+              47329,
+              47330,
+              27354
+            ],
+            [
+              47321,
+              47329,
+              47336
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30435,
+              30436,
+              17827
+            ],
+            [
+              30427,
+              30435,
+              30442
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            4544,
+            63946
+          ],
+          "source_gids": [
+            [
+              47330,
+              47321,
+              27354
+            ],
+            [
+              47321,
+              47329,
+              47336
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30436,
+              30427,
+              17827
+            ],
+            [
+              30427,
+              30435,
+              30442
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            4720,
+            63787
+          ],
+          "source_gids": [
+            [
+              29946,
+              47364,
+              47365
+            ],
+            [
+              47365,
+              47363,
+              47395
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              19325,
+              30470,
+              30471
+            ],
+            [
+              30471,
+              30469,
+              30501
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            4723,
+            63787
+          ],
+          "source_gids": [
+            [
+              47363,
+              47364,
+              29946
+            ],
+            [
+              47365,
+              47363,
+              47395
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30469,
+              30470,
+              19325
+            ],
+            [
+              30471,
+              30469,
+              30501
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            50138,
+            64142
+          ],
+          "source_gids": [
+            [
+              49058,
+              24169,
+              49059
+            ],
+            [
+              49126,
+              49059,
+              49060
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              32164,
+              15692,
+              32165
+            ],
+            [
+              32232,
+              32165,
+              32166
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            54428,
+            64142
+          ],
+          "source_gids": [
+            [
+              49126,
+              24169,
+              49058
+            ],
+            [
+              49126,
+              49059,
+              49060
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              32232,
+              15692,
+              32164
+            ],
+            [
+              32232,
+              32165,
+              32166
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64401,
+            64596
+          ],
+          "source_gids": [
+            [
+              47075,
+              47071,
+              47074
+            ],
+            [
+              47072,
+              49176,
+              32536
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30181,
+              30178,
+              30180
+            ],
+            [
+              30179,
+              32282,
+              20855
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64401,
+            64614
+          ],
+          "source_gids": [
+            [
+              47075,
+              47071,
+              47074
+            ],
+            [
+              49176,
+              47072,
+              47071
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30181,
+              30178,
+              30180
+            ],
+            [
+              32282,
+              30179,
+              30178
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64596,
+            64615
+          ],
+          "source_gids": [
+            [
+              47072,
+              49176,
+              32536
+            ],
+            [
+              49176,
+              47071,
+              47075
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              30179,
+              32282,
+              20855
+            ],
+            [
+              32282,
+              30178,
+              30181
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64604,
+            64610
+          ],
+          "source_gids": [
+            [
+              49171,
+              48731,
+              49172
+            ],
+            [
+              48665,
+              49172,
+              48732
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              32277,
+              31837,
+              32278
+            ],
+            [
+              31771,
+              32278,
+              31838
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64605,
+            64610
+          ],
+          "source_gids": [
+            [
+              49171,
+              48724,
+              48731
+            ],
+            [
+              48665,
+              49172,
+              48732
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              32277,
+              31830,
+              31837
+            ],
+            [
+              31771,
+              32278,
+              31838
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64606,
+            64610
+          ],
+          "source_gids": [
+            [
+              49171,
+              48661,
+              48724
+            ],
+            [
+              48665,
+              49172,
+              48732
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              32277,
+              31767,
+              31830
+            ],
+            [
+              31771,
+              32278,
+              31838
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64608,
+            64610
+          ],
+          "source_gids": [
+            [
+              48661,
+              49171,
+              48660
+            ],
+            [
+              48665,
+              49172,
+              48732
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              31767,
+              32277,
+              31766
+            ],
+            [
+              31771,
+              32278,
+              31838
+            ]
+          ]
+        },
+        {
+          "face_indices": [
+            64608,
+            64611
+          ],
+          "source_gids": [
+            [
+              48661,
+              49171,
+              48660
+            ],
+            [
+              48665,
+              49171,
+              49172
+            ]
+          ],
+          "active_vertex_indices": [
+            [
+              31767,
+              32277,
+              31766
+            ],
+            [
+              31771,
+              32277,
+              32278
+            ]
+          ]
+        }
+      ],
+      "seconds": 100.62769312500313
+    }
+  ],
+  "capture": {
+    "pack_sha256": "92c409ef18d7296f16d7ba5b7ec67209fb11c3465928c7cb1f49fb1c26678934",
+    "capture_receipt_sha256": "a704bdd7b69a6a97cd437900a68127342ac6ae66f9aad40b173bf81d3becccc9",
+    "accepted_step": 0,
+    "accepted_time_s": 0,
+    "accepted_body_pose_count": 157,
+    "registered_body_pose_count": 86
+  }
+}
