@@ -30,11 +30,11 @@ def validate_parent_point(point, oldpoint, deltas, child_gid, parent_gid, kind):
             'source offset differs from declared material parent correction')
 
 def carrier_normal(kind, old, child_normal):
-    if kind in (1, 2):
+    if kind in (1, 2, 3):
         require(np.isfinite(child_normal).all() and
                 abs(float(np.linalg.norm(child_normal.astype(float))) - 1) <= 2e-3,
                 'new material child requires a defined surface normal')
-    return child_normal.tobytes() if kind in (1, 2) else old[12:24]
+    return child_normal.tobytes() if kind in (1, 2, 3) else old[12:24]
 
 
 def corrected_child_normals(positions, faces):
@@ -58,8 +58,8 @@ def corrected_child_normals(positions, faces):
 def validate_lineage(lineage, grouped):
     """Require explicit source-face ancestry for every new material child."""
     records = lineage.get('new_vertices', {})
-    children = {g for g, terms in grouped.items() if any(t[2] == 2 for t in terms)}
-    require(bool(children), 'lineage supplied without barycentric material children')
+    children = {g for g, terms in grouped.items() if any(t[2] in (2, 3) for t in terms)}
+    require(bool(children), 'lineage supplied without new material children')
     for gid in children:
         r = records.get(str(gid))
         require(isinstance(r, dict), 'missing new child source-face lineage')
@@ -74,14 +74,34 @@ def validate_lineage(lineage, grouped):
         offset = np.asarray(face.get('inferred_source_offset_from_face_base_m', []), dtype=float)
         require(offset.shape == (3,) and np.isfinite(offset).all(),
                 'missing inferred source displacement')
+        kinds = {t[2] for t in grouped[gid]}
+        require(len(kinds) == 1, 'mixed material child ownership')
         parents = r.get('material_parents', [])
-        require(0 < len(parents) <= 4, 'invalid material parent support')
-        weights = [float(p['coefficient']) for p in parents]
-        require(all(np.isfinite(w) and w > 0 for w in weights) and
-                abs(sum(weights)-1) <= 1e-12, 'invalid material parent partition')
-        require({int(p['global_gid']) for p in parents} ==
-                {t[0] for t in grouped[gid] if t[2] == 2},
-                'field parent identity differs from lineage')
+        if kinds == {2}:
+            require(0 < len(parents) <= 4, 'invalid material parent support')
+            weights = [float(p['coefficient']) for p in parents]
+            require(all(np.isfinite(w) and w > 0 for w in weights) and
+                    abs(sum(weights)-1) <= 1e-12, 'invalid material parent partition')
+            require({int(p['global_gid']) for p in parents} ==
+                    {t[0] for t in grouped[gid]},
+                    'field parent identity differs from lineage')
+        else:
+            require(r.get('material_binding') == 'independent_existing_core_carrier' and
+                    parents == [], 'independent carrier ancestry must be explicit')
+            cores = r.get('core_body_indices', [])
+            weights = r.get('core_weights', [])
+            require(len(cores) == len(weights) == 21 and len(set(cores)) == 21,
+                    'independent carrier requires existing 21-core ownership')
+            require([(int(t[1]), float(t[3])) for t in grouped[gid]] ==
+                    [(int(core), float(w)) for core, w in zip(cores, weights)],
+                    'independent core coefficients differ from lineage')
+            require(all(np.isfinite(w) and w > 0 for w in weights) and
+                    abs(sum(weights)-1) <= 1e-12, 'invalid independent partition')
+            condition = float(r.get('affine_condition_number', float('inf')))
+            error = float(r.get('step0_native_forward_error_m', float('inf')))
+            require(np.isfinite(condition) and condition >= 1 and
+                    np.isfinite(error) and 0 <= error <= 2e-6,
+                    'unverified independent carrier rest reconstruction')
 
 def main():
     ap = argparse.ArgumentParser()
@@ -103,9 +123,20 @@ def main():
         require(overlay['field_carrier_sha256'] == sha(a.carriers), 'offset carrier differs')
     deltas = {int(g): np.asarray(d, dtype='<f4') for g, d in
               overlay['source_offsets_by_global_gid'].items()}
-    require(all(d.shape == (3,) and np.isfinite(d).all() and
-                np.linalg.norm(d.astype(float)) <= .003 + 1e-9
+    lineage = json.loads(a.lineage.read_text()) if a.lineage else None
+    new_records = lineage.get('new_vertices', {}) if lineage else {}
+    require(all(d.shape == (3,) and np.isfinite(d).all()
                 for d in deltas.values()), 'invalid reference offset')
+    for gid, delta in deltas.items():
+        if str(gid) in new_records:
+            declared = np.asarray(new_records[str(gid)].get(
+                'nearest_source_face', {}).get('inferred_source_offset_from_face_base_m', []),
+                dtype='<f4')
+            require(delta.tobytes() == declared.tobytes(),
+                    'new source offset differs from pinned face ancestry')
+        else:
+            require(np.linalg.norm(delta.astype(float)) <= .003 + 1e-9,
+                    'original reference offset exceeds construction bound')
     t = pc._read_nhtiss4(a.carriers)
     rows = {int(r[6]): pc._row_slices(t, r) for r in t['records']}
     require(set(rows) == {132, 134}, 'unexpected carrier inventory')
@@ -151,15 +182,15 @@ def main():
             z['term_carrier_source_position_f32']):
         g,pg,core,kind = int(g),int(pg),int(core),int(kind)
         coefficient = float(coefficient)
-        require(kind in (0,1,2) and np.isfinite(coefficient) and coefficient > 0,
+        require(kind in (0,1,2,3) and np.isfinite(coefficient) and coefficient > 0,
                 'invalid hybrid parent term')
         point = np.asarray(point,dtype='<f4')
         require(point.shape == (3,) and np.isfinite(point).all(),'invalid source point')
         grouped[g].append((pg,core,kind,coefficient,point))
-    has_barycentric = any(t[2] == 2 for ts in grouped.values() for t in ts)
-    require(not has_barycentric or a.lineage is not None, 'kind 2 requires source-face lineage')
+    has_barycentric = any(t[2] in (2, 3) for ts in grouped.values() for t in ts)
+    require(not has_barycentric or a.lineage is not None, 'new material child requires source-face lineage')
     if a.lineage is not None:
-        validate_lineage(json.loads(a.lineage.read_text()), grouped)
+        validate_lineage(lineage, grouped)
     extras = []
     seed = rows[132]
     require(rows[134]['binding_bytes'] == seed['binding_bytes'], 'different carrier registration tables')
@@ -190,7 +221,8 @@ def main():
                     require((pg,core) in lookup,'positive original carrier missing')
                     rs,vi = lookup[pg,core]
                 else:
-                    require(core in (92,93) and core in templates,'invalid PQ owner')
+                    require(core in templates and (kind == 3 or core in (92,93)),
+                            'invalid existing carrier owner')
                     rs,vi = templates[core]
                 row = rows[rs]
                 old = row['vertex_bytes'][vi*56:(vi+1)*56]
@@ -202,7 +234,7 @@ def main():
                     k = int(np.searchsorted(ids,gid))
                     require(k < len(ids) and int(ids[k]) == gid and
                             np.array_equal(point,z['canonical_corrected_source_positions_f32'][k]),
-                            'PQ target differs from corrected anatomical child point')
+                            'new carrier target differs from corrected anatomical child point')
                 normal = carrier_normal(kind, old, normals[local_vertex])
                 if point.tobytes() == oldpoint.tobytes() and normal == old[12:24]:
                     # Source zero is the existing, unmodified frozen carrier.
@@ -218,7 +250,7 @@ def main():
                                       seed['vertex_count'] + extra%capacity]
                         require(new[24:] == old[24:],
                                 'registered binding or one-body ownership changed')
-                        require(kind in (1, 2) or new[12:24] == old[12:24],
+                        require(kind in (1, 2, 3) or new[12:24] == old[12:24],
                                 'original material carrier normal changed')
                     term = cache[key] + [coefficient]
                 terms.append(term)
@@ -267,9 +299,9 @@ def main():
         'original_carrier_vertices': t['vertex_count'], 'added_offset_carriers': len(extras),
         'maximum_partition_error': maximum_error,
         'runtime_owner': 'existing NHTISS4 ABI5 and passive_tissue_parent_bindings',
-        'source_interpretation': 'Declared passive reference geometry and material attachment field. Ordered positive coefficients and carrier coordinates are copied exactly from the pinned field; coefficient-reference provenance belongs to that field construction. Declared source offsets are bounded to 3mm per canonical GID; new material-child source-face ancestry and inferred offsets are pinned separately. No measured-person or original097 covariance claim.',
+        'source_interpretation': 'Declared passive reference geometry and material attachment field. Ordered positive coefficients and carrier coordinates are copied exactly from the pinned field; coefficient-reference provenance belongs to that field construction. Original source offsets retain the 3mm construction bound; new material-child offsets are checked byte-exact against pinned source-face ancestry and reported without a fabricated anatomical bound. No measured-person or original097 covariance claim.',
         'new_carrier_normal_owner': 'Area-weighted corrected child row source surface; private interface rows retain their own orientation. Positions, ordered positive coefficients, registration and physical state are unchanged by normal reconstruction.',
-        'source_face_lineage_sha256': sha(a.lineage) if a.lineage else None, 'barycentric_parent_material_children': sum(any(t[2] == 2 for t in ts) for ts in grouped.values()), 'original_carrier_bytes_preserved': True, 'maximum_source_offset_m':max((float(np.linalg.norm(d.astype(float))) for d in deltas.values()),default=0.), 'physical_routes_changed': False,
+        'source_face_lineage_sha256': sha(a.lineage) if a.lineage else None, 'barycentric_parent_material_children': sum(any(t[2] == 2 for t in ts) for ts in grouped.values()), 'independent_existing_core_material_children': sum(any(t[2] == 3 for t in ts) for ts in grouped.values()), 'original_carrier_bytes_preserved': True, 'maximum_source_offset_m':max((float(np.linalg.norm(d.astype(float))) for d in deltas.values()),default=0.), 'physical_routes_changed': False,
         'native_admission': False,
     }
     (a.output/'preparation.json').write_text(json.dumps(report, indent=2)+'\n')

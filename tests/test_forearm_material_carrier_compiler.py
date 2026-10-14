@@ -77,3 +77,22 @@ def test_referenced_degenerate_face_is_rejected():
     positions = np.zeros((3, 3), dtype='<f4')
     with pytest.raises(ValueError, match="degenerate"):
         compiler.corrected_child_normals(positions, np.asarray([[0, 1, 2]]))
+
+
+def test_independent_carrier_has_explicit_existing_core_ownership():
+    doc = lineage()
+    r = doc['new_vertices']['99']
+    cores = list(range(21))
+    weights = [1 / 21] * 21
+    r.update(material_binding='independent_existing_core_carrier',
+             material_parents=[], core_body_indices=cores, core_weights=weights,
+             affine_condition_number=1.1, step0_native_forward_error_m=1e-6)
+    grouped = {99: [(99, core, 3, w, None) for core, w in zip(cores, weights)]}
+    compiler.validate_lineage(doc, grouped)
+    r['step0_native_forward_error_m'] = 3e-6
+    with pytest.raises(ValueError, match="rest reconstruction"):
+        compiler.validate_lineage(doc, grouped)
+    r['step0_native_forward_error_m'] = 1e-6
+    r['core_body_indices'][0] = 999
+    with pytest.raises(ValueError, match="coefficients differ"):
+        compiler.validate_lineage(doc, grouped)
