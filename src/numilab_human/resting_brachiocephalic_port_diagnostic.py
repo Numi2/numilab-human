@@ -31,6 +31,10 @@ HP98_SHA256 = "87d21c53c4ac003fa8df7410cc681d91a90465af808217d8af4561155d5094bb"
 RUN_REPORT_SHA256 = "9d0fb2fc1b0b68f111387f867aec35168587ca0bd1bada50519b4ccc9da1a612"
 RUN_RECEIPT_SHA256 = "4ab6f9c475a90ac76df18989396098736b005b3a9a657aaf1b95a9e69641371f"
 EXPECTED_COMMIT = "e921f79b9b078911c30f552890d22274fb8cf56e"
+SOURCE007_GATE_RELATIVE_PATH = (
+    "src/numilab_human/resting_brachiocephalic_geometry_gate.py")
+SOURCE007_GATE_SHA256 = (
+    "adf7120f4257d0579b70fb4c7c1c98bb49e479596e0bbc604015bdee9608e977")
 RUNTIME_CODE_EXPECTED_SHA256 = {
     "resting_brachiocephalic_geometry_gate.py":
         "103bc36649ddb7fb921e2c77e72d24b6ae118f223b75025d2e1f7e1f094c3e0b",
@@ -138,10 +142,29 @@ def build_preflight() -> dict:
                 "source_repository", {}).get("head") == EXPECTED_COMMIT,
             "source-007 inputs were not produced by the pinned e921 runner")
     code_pins = run.get("code_and_dependency_pins", {}).get("source_code_sha256", {})
+    repo = Path(__file__).resolve().parents[2]
+    historical_gate_pins = []
     for raw, expected in code_pins.items():
         path = Path(raw)
+        if (path.name == "resting_brachiocephalic_geometry_gate.py"
+                and expected == SOURCE007_GATE_SHA256):
+            historical = subprocess.run(
+                ["git", "-C", str(repo), "show",
+                 f"{EXPECTED_COMMIT}:{SOURCE007_GATE_RELATIVE_PATH}"],
+                check=True, capture_output=True).stdout
+            require(hashlib.sha256(historical).hexdigest() == SOURCE007_GATE_SHA256,
+                    "source-007 pre-fix section-helper blob differs from its e921 pin")
+            historical_gate_pins.append({
+                "source_path": raw,
+                "source_sha256": expected,
+                "verified_from_commit": EXPECTED_COMMIT,
+                "relative_path": SOURCE007_GATE_RELATIVE_PATH,
+            })
+            continue
         require(path.is_file() and sha_file(path) == expected,
                 "source-007 code/helper pin changed: " + raw)
+    require(len(historical_gate_pins) == 1,
+            "source-007 must preserve exactly one historical section-helper pin")
     verifier_pin = code_pins.get(str(HP98_VERIFIER.resolve()))
     require(verifier_pin == HP98_SHA256 and sha_file(HP98_VERIFIER) == HP98_SHA256,
             "central HP98 verifier differs from the run's frozen owner")
@@ -175,7 +198,6 @@ def build_preflight() -> dict:
         path = Path(raw_path)
         require(path.is_file() and sha_file(path) == expected,
                 "retained Manifold wheel file changed: " + raw_path)
-    repo = Path(__file__).resolve().parents[2]
     commit = subprocess.run(
         ["git", "-C", str(repo), "rev-parse", "HEAD"],
         check=True, capture_output=True, text=True).stdout.strip()
@@ -205,6 +227,7 @@ def build_preflight() -> dict:
         "hp98_verifier_path": str(HP98_VERIFIER),
         "hp98_verifier_sha256": HP98_SHA256,
         "source007_code_dependency_pins": code_pins,
+        "source007_historical_section_helper_provenance": historical_gate_pins,
         "retained_manifold_wheel_pins": run.get(
             "code_and_dependency_pins", {}).get("manifold3d_retained_wheel"),
         "port": {"bridge": list(BRIDGE_KEY), "target": list(TARGET_KEY)},
