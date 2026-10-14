@@ -11,6 +11,7 @@ import heapq
 import json
 import math
 import struct
+import tempfile
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -111,6 +112,54 @@ def _geodesic_distance(graph, seeds: set[int], component: set[int]) -> np.ndarra
     return dist
 
 
+def _exact_coordinate_quotient_graph(
+    vertices: np.ndarray, faces: np.ndarray
+) -> tuple[list[dict[int, float]], np.ndarray, np.ndarray, list[list[int]]]:
+    """Build the existing edge graph after exact F32 XYZ alias quotienting."""
+    xyz = np.ascontiguousarray(vertices, dtype="<f4")
+    source_tri = np.ascontiguousarray(faces, dtype=np.int64)
+    _require(
+        xyz.ndim == 2 and xyz.shape[1] == 3 and np.isfinite(xyz).all(),
+        "invalid source coordinates",
+    )
+    _require(
+        source_tri.ndim == 2
+        and source_tri.shape[1] == 3
+        and len(source_tri)
+        and source_tri.min() >= 0
+        and source_tri.max() < len(xyz),
+        "invalid source faces",
+    )
+    key_to_class: dict[bytes, int] = {}
+    class_ids = np.empty(len(xyz), dtype=np.int64)
+    classes: list[list[int]] = []
+    class_xyz: list[np.ndarray] = []
+    for local_id, point in enumerate(xyz):
+        key = point.tobytes()
+        class_id = key_to_class.get(key)
+        if class_id is None:
+            class_id = len(classes)
+            key_to_class[key] = class_id
+            classes.append([])
+            class_xyz.append(point.copy())
+        classes[class_id].append(local_id)
+        class_ids[local_id] = class_id
+    quotient_tri = class_ids[source_tri]
+    _require(
+        np.all(
+            (quotient_tri[:, 0] != quotient_tri[:, 1])
+            & (quotient_tri[:, 1] != quotient_tri[:, 2])
+            & (quotient_tri[:, 2] != quotient_tri[:, 0])
+        ),
+        "exact coordinate quotient collapses a source face",
+    )
+    graph, tri = _mesh_graph(
+        np.asarray(class_xyz, dtype="<f4"),
+        quotient_tri,
+    )
+    return graph, tri, class_ids, classes
+
+
 def geodesic_owner_partition(
     vertices: np.ndarray,
     faces: np.ndarray,
@@ -118,6 +167,7 @@ def geodesic_owner_partition(
     distal_vertices: set[int],
     *,
     isolated_distal_remainder: set[int] | None = None,
+    exact_coordinate_quotient: bool = False,
 ):
     """Return exact-collar [Body20 proximal, Body91 distal] F32 weights.
 
@@ -129,30 +179,64 @@ def geodesic_owner_partition(
         prox and distal and prox.isdisjoint(distal),
         "collar sets are empty or overlapping",
     )
-    graph, tri = _mesh_graph(vertices, faces)
+    source_tri = np.ascontiguousarray(faces, dtype=np.int64)
+    if exact_coordinate_quotient:
+        graph, _tri, class_ids, classes = _exact_coordinate_quotient_graph(
+            vertices, source_tri
+        )
+        prox_graph = {int(class_ids[v]) for v in prox}
+        distal_graph = {int(class_ids[v]) for v in distal}
+        _require(
+            prox_graph.isdisjoint(distal_graph),
+            "exact coordinate alias merges proximal and distal collar constraints",
+        )
+    else:
+        graph, _tri = _mesh_graph(vertices, source_tri)
+        class_ids = np.arange(len(vertices), dtype=np.int64)
+        classes = [[i] for i in range(len(vertices))]
+        prox_graph, distal_graph = prox, distal
     components = _mesh_components(graph)
-    seed_components = [c for c in components if c.intersection(prox | distal)]
+    seed_components = [
+        c for c in components if c.intersection(prox_graph | distal_graph)
+    ]
     _require(
-        len(seed_components) == 1 and (prox | distal).issubset(seed_components[0]),
+        len(seed_components) == 1
+        and (prox_graph | distal_graph).issubset(seed_components[0]),
         "proximal/distal collars do not share one connected source component",
     )
     connected = seed_components[0]
     remainder_components = [c for c in components if c is not connected]
     remainder = set().union(*remainder_components) if remainder_components else set()
-    allowed = set(isolated_distal_remainder or ())
+    allowed_source = set(map(int, isolated_distal_remainder or ()))
     _require(
-        remainder == allowed,
-        "unmapped disconnected source component is not explicitly retained",
+        allowed_source.issubset(set(range(len(class_ids)))),
+        "declared distal remainder leaves source vertex slots",
     )
-    if allowed:
+    if allowed_source:
         _require(
-            len(remainder_components) == 1
-            and len(allowed) == 3
-            and sum(all(int(v) in allowed for v in face) for face in tri) == 1,
+            len(allowed_source) == 3
+            and sum(
+                all(int(v) in allowed_source for v in face) for face in source_tri
+            )
+            == 1,
             "only the declared isolated one-face remainder may retain distal ownership",
         )
-    dp = _geodesic_distance(graph, prox, connected)
-    dd = _geodesic_distance(graph, distal, connected)
+    allowed = {int(class_ids[v]) for v in allowed_source}
+    quotient_joined_remainder = bool(
+        exact_coordinate_quotient and allowed and allowed.issubset(connected)
+    )
+    expected_remainder = set() if quotient_joined_remainder else allowed
+    _require(
+        remainder == expected_remainder,
+        "unmapped disconnected source component is not explicitly retained",
+    )
+    if allowed and not quotient_joined_remainder:
+        _require(
+            len(remainder_components) == 1,
+            "only the declared isolated one-face remainder may retain distal ownership",
+        )
+    dp = _geodesic_distance(graph, prox_graph, connected)
+    dd = _geodesic_distance(graph, distal_graph, connected)
     ids = np.asarray(sorted(connected), dtype=np.int64)
     denom = dp + dd
     _require(
@@ -161,24 +245,57 @@ def geodesic_owner_partition(
     )
     t = np.clip(dp[ids] / denom[ids], 0, 1)
     q = t * t * t * (t * (t * 6 - 15) + 10)
-    distal_weight = np.ones(len(graph), dtype=np.float64)
-    distal_weight[ids] = q
-    distal_weight[np.asarray(sorted(prox), dtype=np.int64)] = 0.0
-    distal_weight[np.asarray(sorted(distal), dtype=np.int64)] = 1.0
-    weights = np.column_stack((1 - distal_weight, distal_weight)).astype("<f4")
+    interior_graph = np.asarray(
+        sorted(connected - prox_graph - distal_graph), dtype=np.int64
+    )
+    saturation_corrections = []
+    if exact_coordinate_quotient:
+        q_f32 = q.astype("<f4")
+        lower = np.nextafter(np.float32(0.0), np.float32(1.0), dtype=np.float32)
+        upper = np.nextafter(np.float32(1.0), np.float32(0.0), dtype=np.float32)
+        for graph_vertex in interior_graph:
+            position = int(np.searchsorted(ids, graph_vertex))
+            original = np.float32(q_f32[position])
+            corrected = lower if original == 0.0 else upper if original == 1.0 else original
+            if corrected != original:
+                saturation_corrections.append(
+                    {
+                        "quotient_vertex_id": int(graph_vertex),
+                        "original_rounded_distal_f32": float(original),
+                        "corrected_distal_f32": float(corrected),
+                        "correction_abs": float(abs(float(corrected) - float(q[position]))),
+                    }
+                )
+                q_f32[position] = corrected
+        distal_weight = np.ones(len(graph), dtype="<f4")
+        distal_weight[ids] = q_f32
+        distal_weight[np.asarray(sorted(prox_graph), dtype=np.int64)] = np.float32(0.0)
+        distal_weight[np.asarray(sorted(distal_graph), dtype=np.int64)] = np.float32(1.0)
+        one = np.ones(len(graph), dtype="<f4")
+        weights_graph = np.column_stack((one - distal_weight, distal_weight)).astype("<f4")
+    else:
+        distal_weight = np.ones(len(graph), dtype=np.float64)
+        distal_weight[ids] = q
+        distal_weight[np.asarray(sorted(prox_graph), dtype=np.int64)] = 0.0
+        distal_weight[np.asarray(sorted(distal_graph), dtype=np.int64)] = 1.0
+        weights_graph = np.column_stack((1 - distal_weight, distal_weight)).astype("<f4")
+    weights = weights_graph[class_ids]
     _require(
         np.isfinite(weights).all()
         and np.all(weights >= 0)
         and np.max(np.abs(weights.astype(np.float64).sum(axis=1) - 1)) <= 1e-7,
         "invalid owner partition",
     )
-    pids, dids = np.asarray(sorted(prox)), np.asarray(sorted(distal))
+    pids = np.asarray(sorted(prox), dtype=np.int64)
+    dids = np.asarray(sorted(distal), dtype=np.int64)
     _require(
         np.all(weights[pids] == [1, 0]) and np.all(weights[dids] == [0, 1]),
         "collar weights changed",
     )
-    interior = np.asarray(sorted(connected - prox - distal), dtype=np.int64)
-    _require(np.all(weights[interior] > 0), "interior owner coefficient underflows F32")
+    _require(
+        np.all(weights_graph[interior_graph] > 0),
+        "interior owner coefficient underflows F32 after minimal saturation correction",
+    )
     return weights, {
         "method": "quintic smoothstep of source-mesh edge-geodesic distance ratio",
         "proximal_owner_core_body": 20,
@@ -187,10 +304,44 @@ def geodesic_owner_partition(
         "distal_vertex_count": len(distal),
         "source_geodesic_extent_m": float(denom[ids].max()),
         "minimum_positive_float32_coefficient": float(weights[weights > 0].min()),
-        "interior_vertex_count": len(interior),
-        "isolated_distal_remainder_vertex_count": len(allowed),
-        "isolated_distal_remainder_face_count": 1 if allowed else 0,
-        "isolated_distal_remainder_preserves_existing_body91_owner": bool(allowed),
+        "interior_vertex_count": len(interior_graph),
+        "interior_float32_saturation_correction_count": len(saturation_corrections),
+        "interior_float32_saturation_corrections": saturation_corrections,
+        "graph_method": (
+            "exact Float32 XYZ coordinate quotient before edge-geodesic solve"
+            if exact_coordinate_quotient
+            else "indexed source-vertex edge graph"
+        ),
+        "exact_coordinate_quotient_class_count": len(classes) if exact_coordinate_quotient else 0,
+        "exact_coordinate_alias_class_count": (
+            sum(len(group) > 1 for group in classes)
+            if exact_coordinate_quotient
+            else 0
+        ),
+        "exact_coordinate_alias_classes": (
+            [group for group in classes if len(group) > 1]
+            if exact_coordinate_quotient
+            else []
+        ),
+        "all_exact_coordinate_alias_members_share_f32_owner_weights": (
+            all(
+                np.all(weights[group] == weights[group[0]])
+                for group in classes
+                if len(group) > 1
+            )
+            if exact_coordinate_quotient
+            else False
+        ),
+        "declared_distal_remainder_joined_by_exact_coordinate_quotient": quotient_joined_remainder,
+        "isolated_distal_remainder_vertex_count": (
+            0 if quotient_joined_remainder else len(allowed_source)
+        ),
+        "isolated_distal_remainder_face_count": (
+            0 if quotient_joined_remainder else (1 if allowed_source else 0)
+        ),
+        "isolated_distal_remainder_preserves_existing_body91_owner": bool(
+            allowed_source and not quotient_joined_remainder
+        ),
         "weights_are_inferred_not_measured": True,
     }
 
@@ -241,6 +392,128 @@ def _terms(weights: np.ndarray, source_index: int, surface_ids=(1, 2)):
         ]
         for i, row in enumerate(weights)
     ]
+
+
+def _verify_encoded_vessel_owner_maps(
+    carrier_bytes: bytes,
+    carrier_surfaces: list[dict[str, Any]],
+    owner_updates: dict[int, list],
+    expected_rows: dict[int, dict[str, Any]],
+    aliases: list[list[int]],
+) -> dict[str, Any]:
+    """Verify emitted ABI5 carrier points and parent terms for rows 475/477."""
+    from .passive_attachment_composition import (
+        _biceps_row_arrays,
+        _read_nhtiss4,
+        _row_slices,
+    )
+
+    with tempfile.TemporaryDirectory(prefix="numi-vessel-owner-proof-") as directory:
+        path = Path(directory) / "carrier.nhtissue"
+        path.write_bytes(carrier_bytes)
+        data = _read_nhtiss4(path)
+        records = {int(row[6]): row for row in data["records"]}
+        surface_by_id = {int(row["stable_id"]): row for row in carrier_surfaces}
+        expected_specs = {
+            475: ((1, 2), (20, 91)),
+            477: ((3, 4), (20, 91)),
+        }
+        decoded_rows = {}
+        for source_id, (surface_ids, core_ids) in expected_specs.items():
+            source = expected_rows[source_id]
+            _require(source_id in owner_updates, f"missing owner update for {source_id}")
+            for surface_id, core_id in zip(surface_ids, core_ids):
+                _require(surface_id in records and surface_id in surface_by_id,
+                         f"emitted carrier row {surface_id} is missing")
+                row = _row_slices(data, records[surface_id])
+                arrays = _biceps_row_arrays(row)
+                expected_vertices = np.ascontiguousarray(
+                    source["carrier_vertices6"][core_id], dtype="<f4"
+                )
+                expected_faces = np.ascontiguousarray(source["faces"], dtype="<u4")
+                _require(arrays["vertices6"].tobytes() == expected_vertices.tobytes()
+                         and arrays["faces"].tobytes() == expected_faces.tobytes(),
+                         f"carrier {surface_id} points/faces differ from source owner {source_id}")
+                bindings = row["binding_bytes"]
+                _require(len(bindings) == 72,
+                         f"carrier {surface_id} binding table is not the exact body20/body91 pair")
+                for local_id in range(len(expected_vertices)):
+                    binding_slot = int(arrays["binding_indices"][local_id, 0])
+                    _require(binding_slot in (0, 1)
+                             and struct.unpack_from("<I", bindings, binding_slot * 36)[0] == core_id
+                             and np.array_equal(arrays["weights"][local_id],
+                                                np.asarray([1, 0, 0, 0], dtype="<f4")),
+                             f"carrier {surface_id} vertex {local_id} does not resolve to body {core_id}")
+                emitted_terms = surface_by_id[surface_id].get("vertices", [])
+                _require(len(emitted_terms) == len(expected_vertices)
+                         and all(term == [[0, surface_id, local_id, 1.0]]
+                                 for local_id, term in enumerate(emitted_terms)),
+                         f"carrier {surface_id} source-vertex ordering changed")
+                decoded_rows[surface_id] = arrays["vertices6"]
+        for source_id, (surface_ids, _core_ids) in expected_specs.items():
+            source_terms = owner_updates[source_id]
+            _require(len(source_terms) == len(expected_rows[source_id]["weights"]),
+                     f"source owner-map length changed for {source_id}")
+            weights = np.ascontiguousarray(expected_rows[source_id]["weights"], dtype="<f4")
+            for local_id, terms in enumerate(source_terms):
+                expected = [
+                    [5, surface_id, local_id, float(weights[local_id, column])]
+                    for column, surface_id in enumerate(surface_ids)
+                    if weights[local_id, column] > 0
+                ]
+                _require(terms == expected,
+                         f"source owner terms differ at row {source_id} vertex {local_id}")
+        alias_rows = []
+        weights477 = np.ascontiguousarray(expected_rows[477]["weights"], dtype="<f4")
+        terms477 = owner_updates[477]
+        for group in aliases:
+            members = sorted(map(int, group))
+            _require(len(members) > 1 and all(i < len(weights477) for i in members),
+                     "exact-coordinate alias class is malformed")
+            first = members[0]
+            _require(all(weights477[i].tobytes() == weights477[first].tobytes()
+                         and [term[0:2] + term[3:] for term in terms477[i]]
+                         == [term[0:2] + term[3:] for term in terms477[first]]
+                         for i in members),
+                     "exact-coordinate aliases have different compiled owner coefficients")
+            owner_records = []
+            for column, surface_id, core_id in ((0, 3, 20), (1, 4, 91)):
+                if weights477[first, column] == 0:
+                    _require(all(not any(int(term[1]) == surface_id for term in terms477[i])
+                                 for i in members),
+                             "zero-weight body unexpectedly appears in alias parent terms")
+                    continue
+                points = decoded_rows[surface_id][np.asarray(members, dtype=np.int64), :3]
+                _require(all(point.tobytes() == points[0].tobytes() for point in points[1:]),
+                         f"body {core_id} carrier points differ across exact aliases")
+                expected_coeff = float(weights477[first, column])
+                _require(all(any(int(term[1]) == surface_id
+                                 and int(term[2]) == i
+                                 and struct.pack("<f", float(term[3]))
+                                 == struct.pack("<f", expected_coeff)
+                                 for term in terms477[i]) for i in members),
+                         f"body {core_id} parent terms differ across exact aliases")
+                owner_records.append({
+                    "core_body_index": core_id,
+                    "carrier_surface_id": surface_id,
+                    "coefficient_f32_hex": weights477[first, column].tobytes().hex(),
+                    "carrier_xyz_sha256": hashlib.sha256(points.tobytes()).hexdigest(),
+                })
+            alias_rows.append({"source_local_vertex_ids": members,
+                               "owner_coefficients_f32_hex": weights477[first].tobytes().hex(),
+                               "resolved_carrier_owners": owner_records,
+                               "per_slot_normals_retained_without_alias_normal_equality": True})
+    return {
+        "carrier_payload_sha256": hashlib.sha256(carrier_bytes).hexdigest(),
+        "all_four_existing_carrier_rows_redecoded_and_matched_exact_source_points": True,
+        "carrier_rows_resolve_to_core_bodies_20_and_91": True,
+        "source_rows_475_and_477_parent_maps_match_emitted_carriers": True,
+        "row477_exact_coordinate_alias_class_count": len(alias_rows),
+        "all_row477_aliases_have_equal_parent_coefficients_and_same_body_local_points": True,
+        "alias_classes": alias_rows,
+        "normals_are_preserved_per_slot_and_not_used_as_an_alias_continuity_test": True,
+        "scope": "Source-owner algebra proof only; native coupled-pose and anatomy gates remain required.",
+    }
 
 
 def _retire_isolated_source_face(
@@ -1015,7 +1288,10 @@ def prepare_vessel_owner_blend(
     owner475 = route_rows[475]
     owner477 = route_rows[477]
     w475, q475 = geodesic_owner_partition(
-        owner475["vertices6"][:, :3], owner475["faces"], *collars[475]
+        owner475["vertices6"][:, :3],
+        owner475["faces"],
+        *collars[475],
+        exact_coordinate_quotient=True,
     )
     baseline_477 = next(
         (
@@ -1054,6 +1330,7 @@ def prepare_vessel_owner_blend(
         owner477["faces"],
         *collars[477],
         isolated_distal_remainder=isolated477,
+        exact_coordinate_quotient=True,
     )
     isolated_face_ids = [
         int(face_id)
@@ -1148,7 +1425,9 @@ def prepare_vessel_owner_blend(
             "coincident_main_component_vertex_ids": coincident_main_ids,
             "geometric_edge_matching_main_face_ids": geometric_edge_face_ancestry,
             "exact_coordinate_main_face_matches": exact_coordinate_face_matches,
-            "source_face_retained_with_existing_body91_only_parent_terms": True,
+            "source_face_retained_with_existing_body91_only_parent_terms": False,
+            "source_face_owner_terms_reassigned_by_exact_coordinate_quotient": True,
+            "source_face_parent_assignment_is_not_anatomical_admission": True,
             "route110_source_transform_applied_before_retirement": True,
             "reinstatement_scope": "restore only this source face at original index 1858 with the pinned existing Float32-exact alias IDs; preserve all vertex/normal bytes and every other source face",
             "reinstatement_operation_changes_no_mesh_coordinates": True,
@@ -1168,6 +1447,49 @@ def prepare_vessel_owner_blend(
             source_faces[source_face_id],
             source_row=owner477,
         )
+        final_faces = np.asarray(row477_replacement["faces"], dtype="<u4")
+        used_vertices = set(map(int, np.unique(final_faces.reshape(-1))))
+        exact_alias_groups = q477["exact_coordinate_alias_classes"]
+        cap_owner_classes = []
+        cap_ids = set(map(int, FJ2217_CAP_ALIAS_VERTEX_IDS))
+        source_cap_ids = set(map(int, source_faces[source_face_id]))
+        for group in exact_alias_groups:
+            members = set(map(int, group))
+            if members.intersection(cap_ids | source_cap_ids):
+                _require(
+                    np.all(w477[np.asarray(sorted(members))] == w477[min(members)]),
+                    "FJ2217 cap source/active coordinate aliases have different F32 owner weights",
+                )
+                cap_owner_classes.append(
+                    {
+                        "local_vertex_ids": sorted(members),
+                        "active_reinstated_face_vertex_ids": sorted(members & cap_ids),
+                        "active_referenced_members": sorted(members & used_vertices),
+                        "historical_source_cap_vertex_ids": sorted(members & source_cap_ids),
+                        "owner_terms": w477[min(members)].astype("<f4").tolist(),
+                    }
+                )
+        _require(
+            len(cap_owner_classes) == 3
+            and all(
+                item["active_reinstated_face_vertex_ids"]
+                and item["active_referenced_members"]
+                for item in cap_owner_classes
+            ),
+            "FJ2217 cap does not have three referenced exact-coordinate owner classes",
+        )
+        isolated_face_lineage["exact_coordinate_quotient_owner_field_repair"] = {
+            "method": q477["graph_method"],
+            "scope": "rows475+477 prepared jointly by existing 471-475 and 473-477 collar seeds",
+            "cap_coordinate_owner_classes": cap_owner_classes,
+            "all_29_exact_coordinate_alias_classes_share_owner_weights": q477[
+                "all_exact_coordinate_alias_members_share_f32_owner_weights"
+            ],
+            "active_source_and_alias_owner_terms_are_identical": True,
+            "per_slot_normals_and_vertex_allocation_preserved": True,
+            "no_mesh_coordinates_or_faces_changed_by_owner_repair": True,
+            "remaining_motion_claim": "identical source points, per-body carrier points, coefficients, and body IDs make each exact alias class share the existing deterministic body-owner point map; no native run or physiological claim is included",
+        }
         reinstatement.update(
             {
                 "source_member_path": source_member_path,
@@ -1201,7 +1523,7 @@ def prepare_vessel_owner_blend(
         return result
 
     faces477 = row477_replacement["faces"] if row477_replacement is not None else owner477["faces"]
-    carrier, _, encode_proof = encode_carriers(
+    carrier, carrier_surface_rows, encode_proof = encode_carriers(
         [
             CarrierRow(1, row20, owner475["faces"], binds, owner_weights(w475, 0)),
             CarrierRow(2, owner475["vertices6"], owner475["faces"], binds, owner_weights(w475, 1)),
@@ -1211,16 +1533,30 @@ def prepare_vessel_owner_blend(
         registration_fingerprint=int(cd["fingerprint"]),
         source_digest=bytes(cd["source_digest"]),
     )
+    owner_updates = {
+        475: _terms(w475, 5, (1, 2)),
+        477: _terms(w477, 5, (3, 4)),
+    }
+    emitted_owner_proof = _verify_encoded_vessel_owner_maps(
+        carrier,
+        carrier_surface_rows,
+        owner_updates,
+        {
+            475: {"weights": w475, "faces": owner475["faces"],
+                  "carrier_vertices6": {20: row20, 91: owner475["vertices6"]}},
+            477: {"weights": w477, "faces": faces477,
+                  "carrier_vertices6": {20: row20_477, 91: owner477["vertices6"]}},
+        },
+        q477["exact_coordinate_alias_classes"],
+    )
     return {
         "carrier_payload": carrier,
         "carrier_payload_sha256": hashlib.sha256(carrier).hexdigest(),
         "carrier_source_index": 5,
         "carrier_source_path": "assets/route110-dual-vessel-reference-carriers.nhtissue",
         "carrier_encoding_proof": encode_proof,
-        "parent_surface_updates": {
-            475: _terms(w475, 5, (1, 2)),
-            477: _terms(w477, 5, (3, 4)),
-        },
+        "parent_surface_updates": owner_updates,
+        "emitted_owner_map_proof": emitted_owner_proof,
         "route110": route,
         "route_row_replacements": {
             sid: row for sid, row in route_rows.items() if sid != 477

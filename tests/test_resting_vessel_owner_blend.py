@@ -1,4 +1,5 @@
 import json
+import struct
 
 import numpy as np
 import pytest
@@ -7,6 +8,8 @@ from numilab_human.resting_vessel_owner_blend import (
     FJ2217_OBJ_SHA256,
     ISA_ARCHIVE_SHA256,
     _retire_isolated_source_face,
+    _terms,
+    _verify_encoded_vessel_owner_maps,
     apply_parent_surface_updates,
     apply_route110_bridge_row,
     geodesic_owner_partition,
@@ -48,6 +51,150 @@ def test_geodesic_owner_partition_has_exact_ports_and_positive_interior():
     assert np.all(weights[2:6] > 0)
     assert np.max(np.abs(weights.sum(axis=1) - 1)) < 1e-7
     assert report["weights_are_inferred_not_measured"] is True
+
+
+def _duplicate_coordinate_seam_strip():
+    # Two indexed components meet only through exact Float32-coordinate aliases.
+    vertices = np.asarray(
+        [
+            [0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0],
+            [1.0, 1.0, 0.0],
+            [2.0, 0.0, 0.0],
+            [2.0, 1.0, 0.0],
+        ],
+        dtype="<f4",
+    )
+    faces = np.asarray(
+        [[0, 1, 2], [2, 1, 3], [4, 6, 5], [5, 6, 7]],
+        dtype="<u4",
+    )
+    return vertices, faces
+
+
+def test_exact_coordinate_quotient_shares_owner_weights_across_duplicate_seam():
+    vertices, faces = _duplicate_coordinate_seam_strip()
+    with pytest.raises(ValueError, match="one connected source component"):
+        geodesic_owner_partition(vertices, faces, {0, 2}, {6, 7})
+
+    weights, report = geodesic_owner_partition(
+        vertices,
+        faces,
+        {0, 2},
+        {6, 7},
+        exact_coordinate_quotient=True,
+    )
+    assert np.array_equal(weights[1], weights[4])
+    assert np.array_equal(weights[3], weights[5])
+    assert np.array_equal(weights[[0, 2]], [[1, 0], [1, 0]])
+    assert np.array_equal(weights[[6, 7]], [[0, 1], [0, 1]])
+    assert report["graph_method"] == (
+        "exact Float32 XYZ coordinate quotient before edge-geodesic solve"
+    )
+    assert report["all_exact_coordinate_alias_members_share_f32_owner_weights"]
+    assert report["exact_coordinate_alias_class_count"] == 2
+
+
+def test_exact_coordinate_quotient_rejects_conflicting_collar_aliases():
+    vertices, faces = _duplicate_coordinate_seam_strip()
+    with pytest.raises(ValueError, match="merges proximal and distal collar constraints"):
+        geodesic_owner_partition(
+            vertices,
+            faces,
+            {0, 1},
+            {4, 6},
+            exact_coordinate_quotient=True,
+        )
+
+
+def test_emitted_alias_owner_map_proves_same_resolved_body_points():
+    from numilab_human.passive_tissue_parent_carriers import CarrierRow, encode_carriers
+
+    def vertices(offset, points):
+        xyz = np.asarray(points, dtype="<f4") + np.asarray(offset, dtype="<f4")
+        normals = np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (len(xyz), 1))
+        return np.column_stack((xyz, normals)).astype("<f4")
+
+    faces475 = np.asarray([[0, 1, 2]], dtype="<u4")
+    faces477 = np.asarray([[0, 1, 2]], dtype="<u4")
+    v475_91 = vertices([10, 0, 0], [[0, 0, 0], [1, 0, 0], [0, 1, 0]])
+    v475_20 = vertices([20, 0, 0], [[0, 0, 0], [1, 0, 0], [0, 1, 0]])
+    v477_91 = vertices([30, 0, 0], [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 0]])
+    v477_20 = vertices([40, 0, 0], [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 0]])
+    bindings = (struct.pack("<I8f", 20, 0, 0, 0, 0, 0, 0, 1, 1)
+                + struct.pack("<I8f", 91, 0, 0, 0, 0, 0, 0, 1, 1))
+    w475 = np.asarray([[.4, .6], [0, 1], [1, 0]], dtype="<f4")
+    w477 = np.asarray([[.4, .6], [.2, .8], [0, 1], [.4, .6]], dtype="<f4")
+
+    def onehot(weights, column):
+        result = np.zeros_like(weights, dtype="<f4")
+        result[:, column] = 1
+        return result
+
+    carrier, encoded_surfaces, _ = encode_carriers(
+        [
+            CarrierRow(1, v475_20, faces475, bindings, onehot(w475, 0)),
+            CarrierRow(2, v475_91, faces475, bindings, onehot(w475, 1)),
+            CarrierRow(3, v477_20, faces477, bindings, onehot(w477, 0)),
+            CarrierRow(4, v477_91, faces477, bindings, onehot(w477, 1)),
+        ],
+        registration_fingerprint=42,
+        source_digest=b"x" * 32,
+    )
+    owner_updates = {475: _terms(w475, 5, (1, 2)), 477: _terms(w477, 5, (3, 4))}
+    expected_rows = {
+        475: {"weights": w475, "faces": faces475,
+              "carrier_vertices6": {20: v475_20, 91: v475_91}},
+        477: {"weights": w477, "faces": faces477,
+              "carrier_vertices6": {20: v477_20, 91: v477_91}},
+    }
+    proof = _verify_encoded_vessel_owner_maps(
+        carrier, encoded_surfaces, owner_updates, expected_rows, [[0, 3]]
+    )
+    assert proof["carrier_rows_resolve_to_core_bodies_20_and_91"]
+    assert proof["all_row477_aliases_have_equal_parent_coefficients_and_same_body_local_points"]
+    emitted_owners = proof["alias_classes"][0]["resolved_carrier_owners"]
+    assert [(row["core_body_index"], row["carrier_surface_id"],
+             row["coefficient_f32_hex"]) for row in emitted_owners] == [
+        (20, 3, np.asarray([.4], dtype="<f4").tobytes().hex()),
+        (91, 4, np.asarray([.6], dtype="<f4").tobytes().hex()),
+    ]
+    assert all(len(row["carrier_xyz_sha256"]) == 64 for row in emitted_owners)
+    assert emitted_owners[0]["carrier_xyz_sha256"] != emitted_owners[1]["carrier_xyz_sha256"]
+
+    bad_owner_terms = {475: owner_updates[475], 477: [list(map(list, row)) for row in owner_updates[477]]}
+    bad_owner_terms[477][3][0][3] = .5
+    with pytest.raises(ValueError, match="source owner terms differ"):
+        _verify_encoded_vessel_owner_maps(
+            carrier, encoded_surfaces, bad_owner_terms, expected_rows, [[0, 3]]
+        )
+    bad_rows = {**expected_rows,
+                477: {**expected_rows[477], "carrier_vertices6": {
+                    20: v477_20, 91: v477_91.copy()}}}
+    bad_rows[477]["carrier_vertices6"][91][3, 0] = np.nextafter(
+        bad_rows[477]["carrier_vertices6"][91][3, 0], np.float32(np.inf)
+    )
+    with pytest.raises(ValueError, match="carrier 4 points/faces"):
+        _verify_encoded_vessel_owner_maps(
+            carrier, encoded_surfaces, owner_updates, bad_rows, [[0, 3]]
+        )
+
+
+def test_exact_coordinate_quotient_does_not_weld_nearby_nonaliases():
+    vertices, faces = _duplicate_coordinate_seam_strip()
+    shifted = np.nextafter(np.float32(1.0), np.float32(np.inf))
+    vertices[4:6, 0] = shifted
+    with pytest.raises(ValueError, match="one connected source component"):
+        geodesic_owner_partition(
+            vertices,
+            faces,
+            {0, 2},
+            {6, 7},
+            exact_coordinate_quotient=True,
+        )
 
 
 def test_geodesic_owner_partition_rejects_overlapping_or_disconnected_ports():
