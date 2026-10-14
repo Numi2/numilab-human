@@ -1,0 +1,27 @@
+{
+  "status": "software_and_capture_input_checks_passed",
+  "source_baseline_revision": "b0a0d353e39a18bb3a2891bf68333ceffe4b7849",
+  "host": "numi.local",
+  "tests": {
+    "new_regressions": 9,
+    "existing_exact_predicate_regressions": 37,
+    "passed": 46,
+    "ruff": "passed",
+    "excluded_source_fixture": "Existing source-geometry test cannot run in sparse publication checkout: missing Sources/partof_element_parts.txt; failure retained in execution log, no source-geometry admission claimed."
+  },
+  "native_capture_input": {
+    "status": "capture_input_gate_passed",
+    "elapsed_s": 0.7318600000016886,
+    "typed_surface_count": 873,
+    "skin_identity_present": true,
+    "intercostal_identity_present": true,
+    "pack_sha256": "a70cbdc2e42b97a38fd6afa46598f023ae705bbd36686dcebf1840399295c1fd",
+    "capture_receipt_sha256": "b7847f3970694f770d4e36d1c72dd8f8bdea77840df352b9cffa84bd025ae7f2",
+    "accepted_step": 0,
+    "accepted_time_s": 0,
+    "accepted_body_pose_count": 157,
+    "registered_body_pose_count": 86
+  },
+  "scope": "Offline oracle consolidating existing exact geometry owners. No scene mesh, GPU state, controller history, physical mass or physiological state changed. Full scene anatomy remains unaccepted.",
+  "implementation_sha256": "c9f47cb68fdef1acb4d544dcceb06775c38d555db85d1618131efed3b68fbb9c"
+}
