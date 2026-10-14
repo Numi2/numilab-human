@@ -1,0 +1,101 @@
+{
+  "first_failure": {
+    "accepted_step": 0,
+    "capture_kind": "N27 accepted source-0 capture",
+    "message": "N27 accepted source-0 capture failed exact source-row, identity, or owner binding",
+    "stage": "decode-and-source-bind",
+    "type": "ValueError"
+  },
+  "focused_test_source": {
+    "includes_resolved_symlink_and_typed_namespace_regressions": true,
+    "path": "tests/test_resting_brachiocephalic_transfer_audit.py",
+    "sha256": "b21e77aab434745a1fbb67b55943f30c1718b8042832331b5af9f27e476e623f"
+  },
+  "initialization": {
+    "accepted_step": 0,
+    "capture_source_payload_sha256": "cde8705a813fe56686776c9cc038cbf06f413e1de76099d2a019d5e1b748a8d4",
+    "decoded_typed_surface_count": 873,
+    "elapsed_seconds": 1.6015991250023944,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/multipose-transfer-initialization-003.json",
+    "sha256": "3333dd1224fb605e60c325e30a5457bf4e5c57da3d36486b213c92a2504ff52d",
+    "source_binding": {
+      "capture_surface_count_total": 873,
+      "captured_target_count": 9,
+      "failed_typed_identities": [
+        [
+          51010,
+          313
+        ],
+        [
+          51010,
+          315
+        ],
+        [
+          51010,
+          317
+        ]
+      ],
+      "failure_reasons": [
+        "brachiocephalic transfer gate: candidate row is not the exact retained N27 source-face ancestry for stable ID 313",
+        "brachiocephalic transfer gate: candidate row is not the exact retained N27 source-face ancestry for stable ID 315",
+        "brachiocephalic transfer gate: candidate row is not the exact retained N27 source-face ancestry for stable ID 317"
+      ],
+      "passed": false,
+      "passed_typed_identities": [
+        [
+          51011,
+          7
+        ],
+        [
+          51011,
+          10
+        ],
+        [
+          51011,
+          468
+        ],
+        [
+          51011,
+          469
+        ],
+        [
+          51011,
+          472
+        ],
+        [
+          51011,
+          473
+        ]
+      ]
+    },
+    "status": "STOPPED_AT_FIRST_SOURCE_CAPTURE_FAILURE"
+  },
+  "negative_scope": {
+    "anatomical_admission": false,
+    "boolean_or_collision_work_invoked": false,
+    "geometry_arrays_loaded": true,
+    "geometry_predicates_invoked": false,
+    "late_N22_decoded": false,
+    "native_or_gpu_work_performed": false,
+    "reason_late_stage_not_reached": "stop-first source-0 binding failure",
+    "source_geometry_mutated": false
+  },
+  "preflight": {
+    "code_pins": {
+      "/Users/numi/numi-human-resting-anatomy-gates-publish-1398/scripts/predict_brachiocephalic_captured_svc_poses.py": "017a90ed6c9eadbdfda9c4d4b31a4966ca10c8dd1c79577686635a296145f7d2",
+      "/Users/numi/numi-human-resting-anatomy-gates-publish-1398/src/numilab_human/resting_anatomy_verify.py": "87d21c53c4ac003fa8df7410cc681d91a90465af808217d8af4561155d5094bb",
+      "/Users/numi/numi-human-vein-geometry-gate-20261014/src/numilab_human/resting_anatomy_verify.py": "e831f78cdd7de85d8887c7bc0ce2c4f8c32e0e2aa0663aba48f7c37514df02ff",
+      "/Users/numi/numi-human-vein-geometry-gate-20261014/src/numilab_human/resting_brachiocephalic_3d_junction.py": "5af694c6e48369fd1d64511ba853c7515b9243b8f9fe2438b0640dbaaa5be396",
+      "/Users/numi/numi-human-vein-geometry-gate-20261014/src/numilab_human/resting_brachiocephalic_source007.py": "975b2124ccfc96131197986893ea79c18f2fb7943de27227ff103883c245c8d3"
+    },
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/multipose-transfer-gate-preflight-003.json",
+    "sha256": "bf2035214a9fcb96d18322e97fb054a369dde389bb6b9f9060982cc56dc675c9",
+    "status": "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED"
+  },
+  "runner_source": {
+    "path": "src/numilab_human/resting_brachiocephalic_transfer_audit.py",
+    "sha256": "d9b850b8bc8a8f338fced5816aa87f78cf694a31a1c1a12f8989aa780260bf23"
+  },
+  "schema": "numi.human.brachiocephalic-transfer-initialization-summary.v1",
+  "scope": "real source/capture initialization only; no geometry acceptance"
+}
