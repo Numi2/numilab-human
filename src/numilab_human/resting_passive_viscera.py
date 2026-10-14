@@ -939,10 +939,20 @@ def _exact_float32_seam_quotient(local_vertices: np.ndarray, faces: np.ndarray,
     }
 
 
+def _require_brachiocephalic_source_coverage(pins: dict, *, rigid_path: Path,
+                                                sources_path: Path) -> None:
+    """Require source-frame inputs, not the historical producer parent path."""
+    pinned_paths = {Path(name).resolve() for name in pins}
+    required_sources = {
+        Path(rigid_path).resolve(),
+        (Path(sources_path) / "partof_BP3D_4.0_obj_99.zip").resolve(),
+    }
+    if not required_sources.issubset(pinned_paths):
+        raise ValueError("brachiocephalic source: explicit rigid/archive inputs differ from quotient report")
+
+
 def _load_brachiocephalic_quotient_rows(*, quotient_npz_path: Path,
                                          quotient_report_path: Path,
-                                         base_receipt_path: Path,
-                                         base_payload_path: Path,
                                          rigid_path: Path,
                                          sources_path: Path) -> tuple[dict[str, dict], dict]:
     """Load the pinned seam-quotient artifact, without treating it as admission."""
@@ -966,15 +976,12 @@ def _load_brachiocephalic_quotient_rows(*, quotient_npz_path: Path,
         path = Path(name)
         if not path.is_file() or human.sha256(path) != expected:
             raise ValueError("brachiocephalic source: quotient input hash changed: " + str(path))
-    required_inputs = {
-        Path(base_receipt_path).resolve(),
-        Path(base_payload_path).resolve(),
-        Path(rigid_path).resolve(),
-        (Path(sources_path) / "partof_BP3D_4.0_obj_99.zip").resolve(),
-    }
-    pinned_paths = {Path(name).resolve() for name in pins}
-    if not required_inputs.issubset(pinned_paths):
-        raise ValueError("brachiocephalic source: explicit source inputs differ from quotient report")
+    # The report is permanently bound to its original N27 producer parent.
+    # A later append parent is independently validated by append_viscera's
+    # receipt/payload, registration, NHRIGID, source archive, and torso-owner
+    # gates; its path is not expected in this historical quotient report.
+    _require_brachiocephalic_source_coverage(
+        pins, rigid_path=rigid_path, sources_path=sources_path)
     expected_rows = {
         "FJ3482": (377, 376, 748, [[4, 376]]),
         "FJ3583": (275, 275, 546, []),
@@ -1094,7 +1101,6 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
             raise ValueError("pinned quotient is restricted to the exact left/right torso vein source rows")
         quotient_rows, quotient_report = _load_brachiocephalic_quotient_rows(
             quotient_npz_path=quotient_npz_path, quotient_report_path=quotient_report_path,
-            base_receipt_path=base_receipt, base_payload_path=base,
             rigid_path=rigid_file, sources_path=sources)
     additions = []
     added_members = {}
@@ -1231,6 +1237,7 @@ def append_viscera(base_receipt: Path, output: Path, *, families=FAMILIES,
                 "npz_sha256": human.sha256(Path(quotient_npz_path)),
                 "native_admission": False,
                 "junction_probe_classification": "junction_probe_not_nonintersection_gate",
+                "pinned_input_sha256": quotient_report.get("input_sha256"),
             },
             "verified_registration_sha256": registration_sha,
             "verified_registration_path": str(registration_file),

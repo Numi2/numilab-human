@@ -91,6 +91,30 @@ def test_torso_context_comes_from_receipt_pinned_rigid_source_pose():
                 receipt, registration, Path("/tmp/pinned.nhrigid"))
 
 
+def test_quotient_report_keeps_historical_parent_but_accepts_later_source_parent(tmp_path):
+    historical = tmp_path / "060-producer-parent"
+    current = tmp_path / "later-repaired-parent"
+    sources = tmp_path / "sources"
+    rigid = tmp_path / "pinned.nhrigid"
+    pins = {
+        str((historical / "receipt.json").resolve()): "1" * 64,
+        str((historical / "resting-thorax.nhanatomy").resolve()): "2" * 64,
+        str(rigid.resolve()): "3" * 64,
+        str((sources / "partof_BP3D_4.0_obj_99.zip").resolve()): "4" * 64,
+    }
+
+    resting_passive_viscera._require_brachiocephalic_source_coverage(
+        pins, rigid_path=rigid, sources_path=sources)
+
+    pinned_paths = {Path(name) for name in pins}
+    assert (current / "receipt.json").resolve() not in pinned_paths
+    assert (current / "resting-thorax.nhanatomy").resolve() not in pinned_paths
+    with pytest.raises(ValueError, match="rigid/archive inputs"):
+        resting_passive_viscera._require_brachiocephalic_source_coverage(
+            {name: digest for name, digest in pins.items() if name != str(rigid.resolve())},
+            rigid_path=rigid, sources_path=sources)
+
+
 def test_public_append_wrapper_requires_explicit_sources_and_binds_existing_compartment():
     paths = {
         "base_receipt": Path("/tmp/base-receipt.json"),
