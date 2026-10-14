@@ -29,6 +29,66 @@ ANATOMY_SEMANTICS = frozenset((51004, 51005, 51006, 51007, 51009,
                               *NHA_LAYER_SEMANTICS))
 
 
+class SurfaceTopologyError(ValueError):
+    """A source surface failed indexed or exact-coordinate topology checks."""
+
+    def __init__(self, diagnostic):
+        self.diagnostic = diagnostic
+        super().__init__(json.dumps(diagnostic, sort_keys=True, separators=(",", ":")))
+
+
+def _surface_topology_diagnostic(key, stage, topology, triangles,
+                                 input_faces, topology_to_input_vertex,
+                                 input_source_vertex_ids, input_positions):
+    degenerate = [int(value) for value in topology["degenerate_face_ids"]]
+    duplicate_ids = {int(value) for value in topology["duplicate_face_ids"]}
+    if not degenerate and not duplicate_ids:
+        return None
+    groups = {}
+    for face_id, face in enumerate(triangles):
+        groups.setdefault(tuple(sorted(int(value) for value in face)), []).append(face_id)
+    duplicate_groups = [face_ids for face_ids in groups.values() if len(face_ids) > 1]
+    duplicate_groups.sort(key=lambda face_ids: face_ids[0])
+    witness_face_ids = set(degenerate)
+    for group in duplicate_groups:
+        if duplicate_ids.intersection(group):
+            witness_face_ids.update(group)
+    reported_duplicate_groups = [group for group in duplicate_groups
+                                 if duplicate_ids.intersection(group)]
+    witness_faces = []
+    for face_id in sorted(witness_face_ids)[:24]:
+        topology_vertices = [int(value) for value in triangles[face_id]]
+        input_vertices = [int(value) for value in input_faces[face_id]]
+        representative_vertices = [int(topology_to_input_vertex[value])
+                                   for value in topology_vertices]
+        witness_faces.append({
+            "source_face_index": int(face_id),
+            "topology_vertex_ids": topology_vertices,
+            "input_local_vertex_indices": input_vertices,
+            "representative_input_local_vertex_indices": representative_vertices,
+            "input_source_vertex_ids": [int(input_source_vertex_ids[value]) for value in input_vertices],
+            "input_float32_xyz_bits": [
+                [int(value) for value in input_positions[index].view(np.uint32)]
+                for index in input_vertices
+            ],
+        })
+    return {
+        "typed_identity": list(key),
+        "topology_stage": stage,
+        "degenerate_face_count": len(degenerate),
+        "degenerate_face_ids": degenerate[:24],
+        "duplicate_face_count": len(duplicate_ids),
+        "duplicate_face_ids": sorted(duplicate_ids)[:24],
+        "duplicate_face_group_count": len(reported_duplicate_groups),
+        "duplicate_face_groups": reported_duplicate_groups[:12],
+        "witness_faces": witness_faces,
+        "witness_truncated": (len(degenerate) > 24 or len(duplicate_ids) > 24
+                              or len(reported_duplicate_groups) > 12
+                              or len(witness_face_ids) > 24),
+        "coordinate_rule": "exact emitted Float32 coordinates; no tolerance welding",
+    }
+
+
 def source_surface_key(stable_id, layer, *, payload_kind):
     """Resolve typed source IDs using the existing native layer convention."""
     if type(stable_id) is not int or stable_id <= 0 or type(layer) is not int:
@@ -283,9 +343,17 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
     qf = np.ascontiguousarray(mapping[f], dtype=np.uint32)
     raw = analyze_topology(p.tolist(), f.tolist())
     quotient = analyze_topology(qp.tolist(), qf.tolist())
-    for topology in (raw, quotient):
-        if topology["degenerate_face_ids"] or topology["duplicate_face_ids"]:
-            raise ValueError("degenerate or duplicate source faces")
+    topology_inputs = (
+        ("indexed", raw, f, np.arange(len(p), dtype=np.int64)),
+        ("exact_float32_coordinate_quotient", quotient, qf,
+         np.asarray(keep, dtype=np.int64)),
+    )
+    for stage, topology, triangles, topology_to_input_vertex in topology_inputs:
+        diagnostic = _surface_topology_diagnostic(
+            key, stage, topology, triangles, f, topology_to_input_vertex,
+            source_vertex_ids, p)
+        if diagnostic is not None:
+            raise SurfaceTopologyError(diagnostic)
     if quotient["nonmanifold_edges"] or quotient["orientation_defect_edges"]:
         raise ValueError("exact seam quotient is nonmanifold or inconsistently oriented")
     records = tuple(ci._records([keys[i] for i in keep], qf.tolist()))
@@ -686,7 +754,23 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                 rows.append({"stage": "nearby_pair", "identities": [list(key), list(target)],
                              "passed": True, "aabb_disjoint": True, "triangle_pair_count": 0})
                 continue
-            other = prepared(target)
+            try:
+                other = prepared(target)
+            except ValueError as exc:
+                row = {
+                    "stage": "target_preparation",
+                    "identities": [list(key), list(target)],
+                    "failed_identity": list(target),
+                    "passed": False,
+                    "reason": "target surface preparation failed before pair predicates",
+                    "preparation_error_type": type(exc).__name__,
+                    "preparation_error": str(exc),
+                }
+                diagnostic = getattr(exc, "diagnostic", None)
+                if diagnostic is not None:
+                    row["target_topology_witness"] = diagnostic
+                rows.append(row)
+                return {"passed": False, "failed_stage": "target_preparation", "rows": rows}
             pair = audit_surface_pair(surface, other,
                                       intended_face_pairs=interfaces.get((key, target), ()),
                                       intended_shared_feature_pairs=shared_feature_interfaces.get((key, target), ()),

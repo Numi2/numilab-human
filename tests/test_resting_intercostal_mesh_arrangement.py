@@ -217,6 +217,53 @@ def test_local_composer_preserves_original_vertex_prefix_and_retained_faces():
     assert summary["physical_mass_or_state_added"] is False
 
 
+def _candidate_with_explicitly_replaced_parent_cap():
+    value = _candidate()
+    candidate = json.loads(value["candidate_raw"])
+    candidate["faces"]["313"][0] = None
+    candidate["faces"]["313"].append([0, 1, 2])
+    candidate["face_ancestry"]["313"].append({
+        "input_index": 0, "origin_kind": 1, "parent_face_index": 0,
+        "parent_stable_id": 313, "partition_role": 0,
+    })
+    value["candidate_raw"] = json.dumps(candidate, separators=(",", ":")).encode()
+    value["candidate_sha256"] = hashlib.sha256(value["candidate_raw"]).hexdigest()
+    value["lineage"] = {"adds_physical_mass_or_state": False}
+    value["null_face_retirement_ledger"] = arrangement.build_null_face_retirement_ledger(
+        stable_id=313, candidate=candidate, candidate_sha256=value["candidate_sha256"],
+        lineage=value["lineage"], lineage_sha256=value["lineage_sha256"],
+        report_sha256=value["report_sha256"])
+    return value
+
+
+def test_composer_omits_retired_parent_cap_and_emits_its_generated_replacement():
+    source = _row(313, [[0, 1, 2], [0, 2, 3], [0, 3, 1], [1, 2, 3]])
+    parent = _row(313, [[0, 1, 2], [0, 2, 3], [0, 3, 1]])
+    value = _candidate_with_explicitly_replaced_parent_cap()
+    composed, summary = arrangement.compose_intercostal_arrangement_row(
+        stable_id=313, source_row=source, parent_row=parent,
+        arrangement=value, repair_report=_repair_report())
+
+    # The historical raw-prefix assembly duplicated the same-winding cap:
+    # parent face 0 plus the generated child at candidate slot 4.
+    old_raw_prefix_assembly = np.concatenate((parent["faces"], composed["faces"][2:]))
+    assert np.count_nonzero(np.all(old_raw_prefix_assembly == [0, 1, 2], axis=1)) == 2
+
+    np.testing.assert_array_equal(composed["faces"][:2], parent["faces"][1:])
+    np.testing.assert_array_equal(composed["faces"][2], [0, 4, 2])
+    np.testing.assert_array_equal(composed["faces"][3], [0, 1, 2])
+    assert np.count_nonzero(np.all(composed["faces"] == [0, 1, 2], axis=1)) == 1
+    assert summary["retained_028_parent_face_ids"] == [1, 2]
+    assert summary["omitted_replaced_or_fully_retired_028_parent_face_ids"] == [0]
+    assert summary["omitted_replaced_or_fully_retired_n27_source_face_ids"] == [0]
+    assert summary["emitted_028_parent_face_count"] == 2
+    assert summary["omitted_028_parent_face_count"] == 1
+    assert summary["retained_parent_faces_emitted_byte_exact_in_original_order"] is True
+    assert summary["explicit_null_retirements_complete"] is True
+    retirement = value["null_face_retirement_ledger"]["retirements"][0]
+    assert retirement["classification"] == "superseded_by_active_generated_child"
+
+
 def test_local_composer_rejects_child_support_outside_declared_028_parent_face():
     source = _row(313, [[0, 1, 2], [0, 2, 3], [0, 3, 1], [1, 2, 3]])
     parent = _row(313, [[0, 1, 2], [0, 2, 3], [0, 3, 1]])

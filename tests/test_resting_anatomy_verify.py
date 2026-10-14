@@ -537,6 +537,44 @@ class CaptureDecoderTests(unittest.TestCase):
         self.assertFalse(failed["passed"], failed)
         self.assertTrue(failed["rows"][-1]["rejected_interface_feature_contacts"])
 
+    def test_target_preparation_failure_reports_identity_and_exact_face_sources(self):
+        from numilab_human.resting_anatomy_verify import audit_changed_surfaces
+
+        vessel = prepare_surface((51011, 7), tetra(), FACES)
+        triangle = np.asarray([[.05, .05, .05], [.2, .05, .05], [.05, .2, .05]],
+                              dtype=np.float32)
+        target_positions = np.concatenate((triangle, triangle), axis=0)
+        target_faces = np.asarray([[0, 1, 2], [3, 4, 5]], dtype=np.uint32)
+        target_gids = np.asarray([101, 102, 103, 201, 202, 203], dtype=np.uint64)
+        surfaces = {
+            vessel.key: vessel,
+            (51010, 313): (target_positions, target_faces, None, target_gids),
+        }
+
+        result = audit_changed_surfaces(
+            surfaces, changed=[vessel.key], targets=[(51010, 313)],
+            required_closed=[vessel.key])
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["failed_stage"], "target_preparation")
+        row = result["rows"][-1]
+        self.assertEqual(row["identities"], [[51011, 7], [51010, 313]])
+        self.assertEqual(row["failed_identity"], [51010, 313])
+        self.assertIn("before pair predicates", row["reason"])
+        witness = row["target_topology_witness"]
+        self.assertEqual(witness["typed_identity"], [51010, 313])
+        self.assertEqual(witness["topology_stage"], "exact_float32_coordinate_quotient")
+        self.assertEqual(witness["duplicate_face_ids"], [1])
+        self.assertEqual(witness["duplicate_face_groups"], [[0, 1]])
+        self.assertEqual(
+            [face["source_face_index"] for face in witness["witness_faces"]], [0, 1])
+        self.assertEqual(
+            [face["input_source_vertex_ids"] for face in witness["witness_faces"]],
+            [[101, 102, 103], [201, 202, 203]])
+        first_bits, second_bits = (
+            face["input_float32_xyz_bits"] for face in witness["witness_faces"])
+        self.assertEqual(first_bits, second_bits)
+
     def test_capture_sequence_passes_pose_specific_material_declarations(self):
         from pathlib import Path
         from tempfile import TemporaryDirectory

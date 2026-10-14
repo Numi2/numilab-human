@@ -2183,14 +2183,24 @@ def compose_intercostal_arrangement_row(
         "parent-map resolution created a repeated-index patch face",
     )
     vertices6 = np.ascontiguousarray(np.concatenate(output_vertices, axis=0), dtype="<f4")
+    retained_parent_face_ids_028 = np.asarray(original_parent_faces, dtype=np.int64)
+    retained_parent_faces = np.ascontiguousarray(
+        parent_faces[retained_parent_face_ids_028], dtype="<u4"
+    )
+    omitted_parent_face_ids_028 = [
+        parent_face for parent_face in range(len(parent_faces))
+        if parent_face not in retained_parent_set
+    ]
     faces = np.ascontiguousarray(
-        np.concatenate((parent_faces, mapped_patch_faces), axis=0), dtype="<u4"
+        np.concatenate((retained_parent_faces, mapped_patch_faces), axis=0), dtype="<u4"
     )
     _require(
-        np.isfinite(vertices6).all()
+        _same_bytes(faces[:len(retained_parent_faces)], retained_parent_faces, "<u4")
+        and len(faces) == len(retained_parent_faces) + len(mapped_patch_faces)
+        and np.isfinite(vertices6).all()
         and int(faces.max(initial=0)) < len(vertices6)
         and len(vertices6) > len(source_vertices6),
-        "arrangement did not append valid source-bound vertices",
+        "arrangement did not emit the exact retained source faces and positive generated children",
     )
     candidate_row = {
         **source_row,
@@ -2222,6 +2232,15 @@ def compose_intercostal_arrangement_row(
                         for parent_face in original_parent_faces], dtype="<u8").tobytes()),
         "retained_n27_source_face_count": len(original_parent_faces),
         "028_parent_source_face_count": len(parent_faces),
+        "retained_028_parent_face_ids": original_parent_faces,
+        "omitted_replaced_or_fully_retired_028_parent_face_ids": omitted_parent_face_ids_028,
+        "omitted_replaced_or_fully_retired_n27_source_face_ids": [
+            int(retained_n27_face_ids[parent_face])
+            for parent_face in omitted_parent_face_ids_028
+        ],
+        "emitted_028_parent_face_count": len(retained_parent_faces),
+        "omitted_028_parent_face_count": len(omitted_parent_face_ids_028),
+        "retained_parent_faces_emitted_byte_exact_in_original_order": True,
         "active_generated_parent_face_count": len(active_generated_by_parent),
         "fully_retired_028_source_face_count": len(fully_retired_source_parents),
         "full_candidate_sha256": arrangement["candidate_sha256"],
