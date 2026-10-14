@@ -233,6 +233,67 @@ def test_source0_network_inventory_is_exactly_13_plus_two_and_keeps_469_473_sepa
     }
 
 
+def test_parent_pose_source_vertex_map_uses_ordered_face_corner_ancestry():
+    source_faces = np.asarray([[0, 1, 2], [2, 1, 3]], dtype="<u4")
+    capture_faces = np.asarray([[2, 0, 1], [1, 0, 3]], dtype="<u4")
+    vertex_map, report = prep._source_to_capture_vertex_map(
+        source_faces, capture_faces, 5, 4)
+    np.testing.assert_array_equal(vertex_map, [2, 0, 1, 3, -1])
+    assert report["status"] == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+    assert report["source_unreferenced_vertex_count"] == 1
+    assert report["capture_unreferenced_vertex_count"] == 0
+
+
+def test_parent_pose_source_vertex_map_rejects_incomplete_or_merged_ancestry():
+    source_faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    no_match, report = prep._source_to_capture_vertex_map(
+        source_faces, np.asarray([[0, 1, 2], [1, 0, 2]], dtype="<u4"), 3, 3)
+    assert no_match is None
+    assert report["status"] == "CAPTURE_TO_SOURCE_FACE_ANCESTRY_NOT_ALIGNED"
+
+    with pytest.raises(ValueError, match="merges distinct source vertices"):
+        prep._source_to_capture_vertex_map(
+            np.asarray([[0, 1, 2], [3, 1, 2]], dtype="<u4"),
+            np.asarray([[0, 1, 2], [0, 1, 2]], dtype="<u4"), 4, 3)
+
+
+def test_parent_pose_baseline_blends_in_exact_float32_term_order():
+    first = np.asarray([[16_777_216.0, 3.0, -4.0]], dtype="<f4")
+    second = np.asarray([[-16_777_216.0, 9.0, 2.0]], dtype="<f4")
+    terms = [[[6, 1, 0, 0.5], [6, 2, 0, 0.5]]]
+    output, report = prep._blend_parent_pose_vertices(
+        terms, {1: first, 2: second},
+        expected_source_index=6, stable_id=475)
+    expected = np.zeros(3, dtype="<f4")
+    expected = np.asarray(
+        expected + np.asarray(first[0] * np.float32(0.5), dtype="<f4"),
+        dtype="<f4")
+    expected = np.asarray(
+        expected + np.asarray(second[0] * np.float32(0.5), dtype="<f4"),
+        dtype="<f4")
+    np.testing.assert_array_equal(output[0], expected)
+    assert report["native_accumulation_order_preserved"]
+    assert report["used_parent_source_rows"] == [1, 2]
+    assert report["maximum_partition_residual_f64"] == 0.0
+
+
+@pytest.mark.parametrize(
+    ("terms", "parents", "source_index"),
+    [
+        ([[[5, 1, 0, 1.0]]], {1: np.zeros((1, 3), dtype="<f4")}, 6),
+        ([[[6, 1, 1, 1.0]]], {1: np.zeros((1, 3), dtype="<f4")}, 6),
+        ([[[6, 1, 0, 0.4]]], {1: np.zeros((1, 3), dtype="<f4")}, 6),
+        ([[[6, 1, 0, True]]], {1: np.zeros((1, 3), dtype="<f4")}, 6),
+    ],
+)
+def test_parent_pose_baseline_rejects_wrong_ancestry_or_nonpartition(
+    terms, parents, source_index,
+):
+    with pytest.raises(ValueError, match="invalid parent baseline term|do not partition"):
+        prep._blend_parent_pose_vertices(
+            terms, parents, expected_source_index=source_index, stable_id=477)
+
+
 def test_source0_gate_stays_blocked_until_current_native_capture_and_missing_collars():
     pending = ["479->487", "481->489"]
     owner_delta = {"current_capture_candidate_ready": False}

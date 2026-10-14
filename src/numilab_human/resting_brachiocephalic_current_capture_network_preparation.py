@@ -157,6 +157,31 @@ OWNER_COMPOSER_SHA256 = (
     "c653f9b3440eec8a0e7271c2ae6733bdfe417160dc079ff1a21759c508ec3e66"
 )
 
+# Independent source-parent calibration baseline for the two vessels whose
+# native motion is driven by existing NHTISS parent influences. These inputs
+# predate the seam-owner replacement and remain separately hash-pinned.
+PARENT_POSE_BASELINE_RECEIPT = DATA_ROOT / (
+    "forearm492-native-source-preparation-001/resting-anatomy-receipt.json")
+PARENT_POSE_BASELINE_RECEIPT_SHA256 = (
+    "1b32f01e90b821f8b04dd15b2951c6a28613db0b90385f9b0510ea1090e942f4")
+PARENT_POSE_BASELINE_PAYLOAD = DATA_ROOT.parent / (
+    "brachiocephalic-source-candidate-007-006/resting-thorax.nhanatomy")
+PARENT_POSE_BASELINE_PAYLOAD_SHA256 = (
+    "3a3693b8de2264127e9190a151dca460002ae3b8a0a09edea312bd4eed73ea42")
+PARENT_POSE_BASELINE_CARRIER = DATA_ROOT / (
+    "brachiocephalic-joint-parent-composition-008-008/joint/assets/"
+    "route110-dual-vessel-reference-carriers.nhtissue")
+PARENT_POSE_BASELINE_CARRIER_SHA256 = (
+    "f77cf7d6da5677178e858f68abe92d7272925f5a783eb8739eba01ad14027393")
+PARENT_POSE_FORWARD_OWNER = DATA_ROOT.parent / (
+    "neck-back-retained-pose-audit-002/forward_all_positive_weights.py")
+PARENT_POSE_FORWARD_OWNER_SHA256 = (
+    "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5")
+PARENT_POSE_SOURCE_INDEX = 6
+PARENT_POSE_ROWS = {475: (1, 2), 477: (3, 4)}
+PARENT_POSE_BODY_BY_SOURCE_ROW = {1: 20, 2: 91, 3: 20, 4: 91}
+COMMON_FIELD_BASELINE_PENDING_IDS = (7, 10, 525, 526)
+
 
 def _require(ok: bool, message: str) -> None:
     if not ok:
@@ -260,8 +285,23 @@ def _registered_rigid_source_surfaces(
         captured = context["surfaces"].get(key)
         _require(captured is not None, f"actual accepted capture lacks typed row {key}")
         capture_faces = np.ascontiguousarray(captured[1], dtype="<u4")
-        same_faces = capture_faces.shape == faces.shape and capture_faces.tobytes() == faces.tobytes()
-        source_surfaces[key] = (world, faces, None, np.arange(len(world), dtype=np.uint64))
+        vertex_map, ancestry = _source_to_capture_vertex_map(
+            faces, capture_faces, len(local_xyz), len(captured[0]))
+        same_faces = vertex_map is not None
+        if same_faces:
+            aligned_world = np.empty((len(captured[0]), 3), dtype="<f4")
+            for source_vertex, capture_vertex in enumerate(vertex_map):
+                if capture_vertex >= 0:
+                    aligned_world[int(capture_vertex)] = world[source_vertex]
+            source_positions = aligned_world
+            source_faces = capture_faces
+            source_vertex_ids = np.ascontiguousarray(captured[3], dtype="<u8")
+        else:
+            source_positions = world
+            source_faces = faces
+            source_vertex_ids = np.arange(len(world), dtype="<u8")
+        source_surfaces[key] = (
+            source_positions, source_faces, None, source_vertex_ids)
         ident = capture_gate._source_identity(source_map, stable_id)
         records[str(stable_id)] = {
             "typed_identity": list(key),
@@ -278,10 +318,12 @@ def _registered_rigid_source_surfaces(
             "body_pose_q_sha256": _sha_bytes(q.tobytes()),
             "body_pose_t_sha256": _sha_bytes(t.tobytes()),
             "nha_local_vertices6_xyz_f32_sha256": _sha_bytes(local_xyz.tobytes()),
-            "rigid_source_world_xyz_f32_sha256": _sha_bytes(world.tobytes()),
+            "rigid_source_world_xyz_f32_sha256": _sha_bytes(source_positions.tobytes()),
+            "rigid_source_world_xyz_f32_raw_order_sha256": _sha_bytes(world.tobytes()),
             "nha_faces_u32_sha256": _sha_bytes(faces.tobytes()),
             "captured_faces_u32_sha256": _sha_bytes(capture_faces.tobytes()),
             "capture_face_order_equals_nha": same_faces,
+            "capture_face_vertex_ancestry": ancestry,
             "source_vertex_count": len(local_xyz),
             "source_face_count": len(faces),
             "source_nha_row_sha256": capture_gate._source_row_record(
@@ -878,6 +920,380 @@ def run_all_target_network_screen(
         (*NETWORK_EDGES, *SVC_PORTS),
         source_pairs,
     )
+
+
+def _source_to_capture_vertex_map(
+    source_faces: np.ndarray, capture_faces: np.ndarray,
+    source_vertex_count: int, capture_vertex_count: int,
+) -> tuple[np.ndarray | None, dict]:
+    """Match raw NHA corners to capture-local vertices by exact ordered face ancestry."""
+    source = np.ascontiguousarray(source_faces, dtype="<u4")
+    captured = np.ascontiguousarray(capture_faces, dtype="<u4")
+    if (source.ndim != 2 or source.shape[1] != 3
+            or captured.ndim != 2 or captured.shape[1] != 3
+            or source.shape != captured.shape):
+        return None, {
+            "status": "CAPTURE_TO_SOURCE_FACE_ANCESTRY_NOT_ALIGNED",
+            "source_face_count": len(source),
+            "capture_face_count": len(captured),
+            "face_count_equal": source.shape == captured.shape,
+        }
+    if (int(source.max(initial=0)) >= source_vertex_count
+            or int(captured.max(initial=0)) >= capture_vertex_count):
+        raise ValueError("capture/source face corner index is out of range")
+    source_to_capture = np.full(source_vertex_count, -1, dtype="<i8")
+    capture_to_source = np.full(capture_vertex_count, -1, dtype="<i8")
+    for face_id, (source_face, capture_face) in enumerate(zip(source, captured, strict=True)):
+        for source_vertex, capture_vertex in zip(source_face, capture_face, strict=True):
+            source_vertex, capture_vertex = int(source_vertex), int(capture_vertex)
+            if source_to_capture[source_vertex] not in (-1, capture_vertex):
+                raise ValueError(
+                    f"source vertex {source_vertex} maps to multiple capture vertices")
+            if capture_to_source[capture_vertex] not in (-1, source_vertex):
+                raise ValueError(
+                    f"capture vertex {capture_vertex} merges distinct source vertices")
+            source_to_capture[source_vertex] = capture_vertex
+            capture_to_source[capture_vertex] = source_vertex
+    used_source = set(map(int, np.unique(source)))
+    used_capture = set(map(int, np.unique(captured)))
+    if (set(map(int, np.flatnonzero(source_to_capture >= 0))) != used_source
+            or set(map(int, np.flatnonzero(capture_to_source >= 0))) != used_capture
+            or len(used_capture) != capture_vertex_count):
+        return None, {
+            "status": "CAPTURE_TO_SOURCE_VERTEX_ANCESTRY_INCOMPLETE",
+            "source_used_vertex_count": len(used_source),
+            "capture_used_vertex_count": len(used_capture),
+            "source_unreferenced_vertex_count": source_vertex_count - len(used_source),
+            "capture_unreferenced_vertex_count": capture_vertex_count - len(used_capture),
+        }
+    return source_to_capture, {
+        "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+        "source_face_count": len(source),
+        "capture_face_count": len(captured),
+        "source_used_vertex_count": len(used_source),
+        "capture_used_vertex_count": len(used_capture),
+        "source_unreferenced_vertex_count": source_vertex_count - len(used_source),
+        "capture_unreferenced_vertex_count": capture_vertex_count - len(used_capture),
+        "source_faces_u32_sha256": _sha_bytes(source.tobytes()),
+        "capture_faces_u32_sha256": _sha_bytes(captured.tobytes()),
+        "map_sha256": _sha_bytes(source_to_capture.tobytes()),
+    }
+
+
+def _blend_parent_pose_vertices(
+    terms_by_vertex: list, parent_world_positions: dict[int, np.ndarray],
+    *, expected_source_index: int, stable_id: int,
+) -> tuple[np.ndarray, dict]:
+    """Reconstruct mapped material vertices in Float32 owner-term order."""
+    _require(isinstance(terms_by_vertex, list) and bool(terms_by_vertex),
+             f"parent baseline map for {stable_id} is empty")
+    arrays = {
+        source_id: np.ascontiguousarray(values, dtype="<f4")
+        for source_id, values in parent_world_positions.items()
+    }
+    _require(all(values.ndim == 2 and values.shape[1] == 3
+                 and np.isfinite(values).all()
+                 for values in arrays.values()),
+             "parent baseline source positions are not finite XYZ arrays")
+    output = np.zeros((len(terms_by_vertex), 3), dtype="<f4")
+    used_rows = set()
+    coefficients = []
+    total_terms = 0
+    for vertex_id, terms in enumerate(terms_by_vertex):
+        _require(isinstance(terms, list) and bool(terms),
+                 f"parent baseline map has an empty row {stable_id}/{vertex_id}")
+        coefficient_sum = 0.0
+        accum = np.zeros(3, dtype="<f4")
+        for term in terms:
+            _require(
+                isinstance(term, list) and len(term) == 4
+                and type(term[0]) is int and term[0] == expected_source_index
+                and type(term[1]) is int and term[1] in arrays
+                and type(term[2]) is int and 0 <= term[2] < len(arrays[term[1]])
+                and type(term[3]) in (int, float) and not isinstance(term[3], bool)
+                and np.isfinite(term[3]) and 0.0 < float(term[3]) <= 1.0,
+                f"invalid parent baseline term for {stable_id}/{vertex_id}",
+            )
+            coefficient = np.float32(term[3])
+            source_point = arrays[term[1]][term[2]]
+            product = np.asarray(source_point * coefficient, dtype="<f4")
+            accum = np.asarray(accum + product, dtype="<f4")
+            coefficient_sum += float(term[3])
+            coefficients.append(float(term[3]))
+            used_rows.add(term[1])
+            total_terms += 1
+        _require(abs(coefficient_sum - 1.0) <= 1e-12,
+                 f"parent baseline coefficients do not partition vertex {stable_id}/{vertex_id}")
+        output[vertex_id] = accum
+    return output, {
+        "vertex_count": len(terms_by_vertex),
+        "parent_term_count": total_terms,
+        "used_parent_source_rows": sorted(used_rows),
+        "coefficient_min_f64": min(coefficients),
+        "coefficient_max_f64": max(coefficients),
+        "maximum_partition_residual_f64": max(
+            abs(sum(float(term[3]) for term in terms) - 1.0)
+            for terms in terms_by_vertex),
+        "native_accumulation_order_preserved": True,
+        "output_xyz_f32_sha256": _sha_bytes(output.tobytes()),
+    }
+
+
+def _load_parent_pose_forward_owner():
+    _resolved_pin(PARENT_POSE_FORWARD_OWNER, PARENT_POSE_FORWARD_OWNER_SHA256)
+    spec = importlib.util.spec_from_file_location(
+        "_numi_retained_parent_pose_forward_owner", PARENT_POSE_FORWARD_OWNER)
+    _require(spec is not None and spec.loader is not None,
+             "retained parent-pose forward owner cannot be imported")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    for name in ("load_tissue", "row_data", "forward"):
+        _require(callable(getattr(module, name, None)),
+                 f"retained parent-pose owner lacks {name}")
+    return module
+
+
+def _parent_pose_source_surfaces(
+    context: dict, current_source_rows: dict, current_receipt: dict,
+) -> tuple[dict, dict]:
+    """Build separate 475/477 source baselines from their registered tissue parents."""
+    for path, digest in (
+        (PARENT_POSE_BASELINE_RECEIPT, PARENT_POSE_BASELINE_RECEIPT_SHA256),
+        (PARENT_POSE_BASELINE_PAYLOAD, PARENT_POSE_BASELINE_PAYLOAD_SHA256),
+        (PARENT_POSE_BASELINE_CARRIER, PARENT_POSE_BASELINE_CARRIER_SHA256),
+        (PARENT_POSE_FORWARD_OWNER, PARENT_POSE_FORWARD_OWNER_SHA256),
+    ):
+        _resolved_pin(path, digest)
+    baseline_receipt = json.loads(PARENT_POSE_BASELINE_RECEIPT.read_text())
+    baseline_payload = baseline_receipt.get("payload", {})
+    _require(Path(baseline_payload.get("path", "")).resolve()
+             == PARENT_POSE_BASELINE_PAYLOAD.resolve()
+             and baseline_payload.get("sha256") == PARENT_POSE_BASELINE_PAYLOAD_SHA256
+             and baseline_payload.get("abi") == 5,
+             "retained parent-pose baseline receipt does not bind its exact ABI5 source")
+    _, _, baseline_rows = capture_gate.nhanat_codec._parse_payload(
+        PARENT_POSE_BASELINE_PAYLOAD.read_bytes())
+    _require(set(PARENT_POSE_ROWS).issubset(baseline_rows)
+             and set(PARENT_POSE_ROWS).issubset(current_source_rows),
+             "parent-pose baseline is missing source vessel rows")
+    for stable_id in PARENT_POSE_ROWS:
+        old_map = baseline_receipt.get("provenance", {}).get(
+            "source_id_map", {}).get(str(stable_id), {})
+        new_map = current_receipt.get("provenance", {}).get(
+            "source_id_map", {}).get(str(stable_id), {})
+        identity_fields = ("name", "body_index", "layer", "source_member",
+                           "source_member_sha256", "vascular_compartment_id")
+        _require(all(old_map.get(field) == new_map.get(field)
+                     for field in identity_fields),
+                 f"registered source identity changed for parent-mapped row {stable_id}")
+        old_owner = old_map.get("source_owner_metadata", {})
+        new_owner = new_map.get("source_owner_metadata", {})
+        _require(all(old_owner.get(field) == new_owner.get(field)
+                     for field in ("label", "concept_id")),
+                 f"anatomical identity changed for parent-mapped row {stable_id}")
+        old_vertices = np.ascontiguousarray(
+            baseline_rows[stable_id]["vertices6"], dtype="<f4")
+        new_vertices = np.ascontiguousarray(
+            current_source_rows[stable_id]["vertices6"], dtype="<f4")
+        old_faces = np.ascontiguousarray(
+            baseline_rows[stable_id]["faces"], dtype="<u4")
+        new_faces = np.ascontiguousarray(
+            current_source_rows[stable_id]["faces"], dtype="<u4")
+        _require(old_vertices.shape == new_vertices.shape
+                 and old_vertices.tobytes() == new_vertices.tobytes(),
+                 f"source material vertices changed for parent-mapped row {stable_id}")
+        if stable_id == 475:
+            _require(old_faces.shape == new_faces.shape
+                     and old_faces.tobytes() == new_faces.tobytes(),
+                     "row 475 source face ancestry changed")
+        elif old_faces.tobytes() != new_faces.tobytes():
+            cap = _validate_reinstated_cap_face_transition(
+                old_faces, new_faces, old_vertices, new_vertices)
+            _require(cap["source_face_id_zero_based"] == 1858,
+                     "row 477 face delta is not the frozen source cap reinstatement")
+
+    bindings = baseline_receipt.get("passive_tissue_parent_bindings", {})
+    parent_rows = _stable_owner_rows(bindings)
+    payloads = bindings.get("source_payloads", [])
+    _require(PARENT_POSE_SOURCE_INDEX < len(payloads),
+             "historical parent map does not contain source payload index 6")
+    source_payload = payloads[PARENT_POSE_SOURCE_INDEX]
+    _require(source_payload.get("sha256") == PARENT_POSE_BASELINE_CARRIER_SHA256
+             and Path(source_payload.get("path", "")).resolve()
+             == PARENT_POSE_BASELINE_CARRIER.resolve(),
+             "historical parent map source index 6 is not the pinned route110 carrier")
+    parent_terms = {}
+    for stable_id, source_ids in PARENT_POSE_ROWS.items():
+        owner = parent_rows.get(stable_id)
+        _require(isinstance(owner, dict)
+                 and len(owner.get("vertices", []))
+                 == len(current_source_rows[stable_id]["vertices6"]),
+                 f"historical parent map has the wrong vertex count for {stable_id}")
+        parent_terms[stable_id] = owner["vertices"]
+        _require(all(
+            isinstance(terms, list) and bool(terms)
+            and all(isinstance(term, list) and len(term) == 4
+                    and type(term[1]) is int for term in terms)
+            for terms in owner["vertices"]),
+            f"historical parent map terms are malformed for {stable_id}")
+        used = {term[1] for terms in owner["vertices"] for term in terms}
+        _require(used.issubset(set(source_ids)) and used,
+                 f"historical parent map uses an unexpected source row for {stable_id}")
+
+    helper = _load_parent_pose_forward_owner()
+    tissue = helper.load_tissue(PARENT_POSE_BASELINE_CARRIER)
+    _require(tissue.get("raw") is not None
+             and hashlib.sha256(tissue["raw"]).hexdigest()
+             == PARENT_POSE_BASELINE_CARRIER_SHA256,
+             "parent-pose carrier decoder did not return the exact pinned bytes")
+    accepted = context["capture_receipt"].get("accepted_body_poses")
+    _require(isinstance(accepted, list) and accepted,
+             "accepted current capture has no body-pose list")
+    poses = {}
+    pose_digests = {}
+    for pose in accepted:
+        _require(isinstance(pose, dict) and type(pose.get("body_index")) is int,
+                 "accepted body pose identity is not a JSON integer")
+        body = pose["body_index"]
+        _require(body not in poses,
+                 f"accepted body pose list has duplicate body {body}")
+        position = np.ascontiguousarray(pose.get("position_m"), dtype="<f4")
+        quaternion = np.ascontiguousarray(pose.get("quaternion_xyzw"), dtype="<f4")
+        _require(position.shape == (3,) and quaternion.shape == (4,)
+                 and np.isfinite(position).all() and np.isfinite(quaternion).all(),
+                 f"accepted body pose {body} is invalid")
+        poses[body] = (position, quaternion)
+        pose_digests[str(body)] = {
+            "position_m_f32_sha256": _sha_bytes(position.tobytes()),
+            "quaternion_xyzw_f32_sha256": _sha_bytes(quaternion.tobytes()),
+        }
+
+    parent_world = {}
+    parent_reports = {}
+    for source_row, expected_body in PARENT_POSE_BODY_BY_SOURCE_ROW.items():
+        row = helper.row_data(tissue, source_row)
+        _require(row["vc"] == (902 if source_row in (1, 2) else 1089)
+                 and expected_body in poses,
+                 f"registered carrier row {source_row} count or accepted pose changed")
+        active_counts = (row["weights"] > 0).sum(axis=1)
+        row_bodies = set()
+        for vertex_id, active in enumerate(active_counts):
+            _require(int(active) == 1,
+                     f"carrier row {source_row}/{vertex_id} is not one-hot")
+            slot = int(np.flatnonzero(row["weights"][vertex_id] > 0)[0])
+            local_binding = int(row["local"][vertex_id, slot])
+            binding = tissue["bindings"][row["fb"] + local_binding]
+            row_bodies.add(int(binding["core"]))
+            _require(float(row["weights"][vertex_id, slot]) == 1.0,
+                     f"carrier row {source_row}/{vertex_id} weight is not exactly one")
+        _require(row_bodies == {expected_body},
+                 f"carrier row {source_row} is not owned only by body {expected_body}")
+        positions = np.ascontiguousarray(
+            helper.forward(row["positions"], row["local"], row["weights"],
+                           row, tissue, poses), dtype="<f4")
+        _require(positions.shape == (row["vc"], 3)
+                 and np.isfinite(positions).all(),
+                 f"parent-pose forward output is invalid for carrier row {source_row}")
+        parent_world[source_row] = positions
+        parent_reports[str(source_row)] = {
+            "vertex_count": row["vc"],
+            "triangle_count": row["ic"] // 3,
+            "resolved_core_body_index": expected_body,
+            "binding_cardinality": 1,
+            "all_positive_weights_exactly_one": True,
+            "source_vertex_bytes_sha256": _sha_bytes(row["positions"].tobytes()),
+            "source_binding_bytes_sha256": _sha_bytes(row["binding_bytes"]),
+            "source_local_binding_and_weight_sha256": _sha_bytes(
+                row["local"].tobytes() + row["weights"].tobytes()),
+            "accepted_body_pose": pose_digests[str(expected_body)],
+            "forward_xyz_f32_sha256": _sha_bytes(positions.tobytes()),
+        }
+
+    surfaces = {}
+    vessel_reports = {}
+    for stable_id, source_ids in PARENT_POSE_ROWS.items():
+        positions, blend_report = _blend_parent_pose_vertices(
+            parent_terms[stable_id], parent_world,
+            expected_source_index=PARENT_POSE_SOURCE_INDEX,
+            stable_id=stable_id,
+        )
+        current = current_source_rows[stable_id]
+        faces = np.ascontiguousarray(current["faces"], dtype="<u4")
+        capture_surface = context["surfaces"].get((51011, stable_id))
+        _require(capture_surface is not None
+                 and len(capture_surface[3]) == len(capture_surface[0]),
+                 f"accepted capture lacks typed material identities for {stable_id}")
+        capture_faces = np.ascontiguousarray(capture_surface[1], dtype="<u4")
+        vertex_map, alignment = _source_to_capture_vertex_map(
+            faces, capture_faces, len(positions), len(capture_surface[0]))
+        captured = np.ascontiguousarray(capture_surface[0], dtype="<f4")
+        delta_report = None
+        if vertex_map is None:
+            surface_positions = positions
+            surface_faces = faces
+            surface_ids = np.arange(len(positions), dtype="<u8")
+        else:
+            surface_positions = np.empty_like(captured, dtype="<f4")
+            for source_vertex, capture_vertex in enumerate(vertex_map):
+                if capture_vertex >= 0:
+                    surface_positions[int(capture_vertex)] = positions[source_vertex]
+            surface_faces = capture_faces
+            surface_ids = np.ascontiguousarray(capture_surface[3], dtype="<u8")
+            delta = np.linalg.norm(
+                captured.astype(np.float64) - surface_positions.astype(np.float64), axis=1)
+            delta_report = {
+                "max": float(delta.max()),
+                "mean": float(delta.mean()),
+                "p95": float(np.quantile(delta, 0.95)),
+            }
+        surfaces[(51011, stable_id)] = (
+            surface_positions, surface_faces, None, surface_ids)
+        vessel_reports[str(stable_id)] = {
+            "typed_identity": [51011, stable_id],
+            "baseline_source_rows": list(source_ids),
+            "baseline_parent_source_payload_index": PARENT_POSE_SOURCE_INDEX,
+            "baseline_parent_source_payload_sha256": PARENT_POSE_BASELINE_CARRIER_SHA256,
+            "baseline_parent_source_map_sha256": _sha_bytes(json.dumps(
+                parent_terms[stable_id], sort_keys=True, separators=(",", ":"),
+                allow_nan=False).encode()),
+            "baseline_face_source": (
+                "candidate NHA row after exact source-identity/face-transition checks"),
+            "capture_vertex_ancestry": alignment,
+            "capture_aligned_current_surface": vertex_map is not None,
+            "face_count": len(surface_faces),
+            "material_vertex_count": len(surface_positions),
+            "source_baseline_vertex_count": len(positions),
+            "baseline_xyz_f32_sha256": _sha_bytes(positions.tobytes()),
+            "capture_aligned_baseline_xyz_f32_sha256": (
+                _sha_bytes(surface_positions.tobytes())
+                if vertex_map is not None else None),
+            "accepted_capture_xyz_f32_sha256": _sha_bytes(captured.tobytes()),
+            "same_capture_position_delta_diagnostic_m": delta_report,
+            "same_capture_delta_is_not_a_physiology_or_native_error_bound": True,
+            **blend_report,
+        }
+    return surfaces, {
+        "status": "PARENT_POSE_SOURCE_BASELINES_RECONSTRUCTED_OFFLINE",
+        "source_baseline_receipt_path": str(PARENT_POSE_BASELINE_RECEIPT.resolve()),
+        "source_baseline_receipt_sha256": PARENT_POSE_BASELINE_RECEIPT_SHA256,
+        "source_baseline_payload_path": str(PARENT_POSE_BASELINE_PAYLOAD.resolve()),
+        "source_baseline_payload_sha256": PARENT_POSE_BASELINE_PAYLOAD_SHA256,
+        "source_parent_carrier_path": str(PARENT_POSE_BASELINE_CARRIER.resolve()),
+        "source_parent_carrier_sha256": PARENT_POSE_BASELINE_CARRIER_SHA256,
+        "forward_owner_path": str(PARENT_POSE_FORWARD_OWNER.resolve()),
+        "forward_owner_sha256": PARENT_POSE_FORWARD_OWNER_SHA256,
+        "accepted_body_pose_count": len(accepted),
+        "parent_source_rows": parent_reports,
+        "vessels": vessel_reports,
+        "anatomical_admission": False,
+        "native_or_gpu_work_performed": False,
+        "method_limit": (
+            "Existing NHTISS parent rows are forwarded through the accepted rigid body poses, "
+            "then blended with the predecessor receipt's exact Float64 parent-map terms using "
+            "ordered Float32 owner arithmetic. This supplies an independent source-parent "
+            "calibre reference only for rows 475 and 477. It does not reconstruct cardiac "
+            "common-field motion or prove native emission."),
+    }
 
 
 def _parent_motion_owner_inventory(receipt: dict, network_ids: set[int]) -> dict:
@@ -1693,6 +2109,11 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         context, current_source_rows, current_receipt["provenance"]["source_id_map"])
     parent_motion_inventory = _parent_motion_owner_inventory(
         current_receipt, set(NETWORK_STABLE_IDS))
+    parent_pose_surfaces, parent_pose_report = _parent_pose_source_surfaces(
+        context, current_source_rows, current_receipt)
+    _require(set(parent_pose_surfaces) == {
+        (51011, stable_id) for stable_id in PARENT_POSE_ROWS
+    }, "independent parent-pose baseline does not cover rows 475 and 477")
     _require(set(source_baselines) == {
         (51011, stable_id) for stable_id in NETWORK_STABLE_IDS
     }, "source-rigid baseline does not cover the exact 17 typed network rows")
@@ -1718,6 +2139,8 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
     code_pins = capture_gate._current_package_pins()
     code_pins[str(Path(__file__).resolve())] = _sha_file(Path(__file__).resolve())
     code_pins[str(TRANSFORM_OWNER.resolve())] = TRANSFORM_OWNER_SHA256
+    code_pins[str(PARENT_POSE_FORWARD_OWNER.resolve())] = (
+        PARENT_POSE_FORWARD_OWNER_SHA256)
     code_pins[str(Path(shared_verifier.__file__).resolve())] = _sha_file(
         Path(shared_verifier.__file__).resolve())
     source_history_paths = (
@@ -1729,6 +2152,8 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         source007.SOURCE_ARCHIVE, source007.REGISTRATION, source007.RIGID,
         source007.MANIFOLD_SO, source007.MANIFOLD_RECORD,
         source007.MANIFOLD_METADATA, source007.MANIFOLD_WHEEL,
+        PARENT_POSE_BASELINE_RECEIPT, PARENT_POSE_BASELINE_PAYLOAD,
+        PARENT_POSE_BASELINE_CARRIER, PARENT_POSE_FORWARD_OWNER,
     )
     source_history_pins = {
         str(METADATA_PREFLIGHT.resolve()): METADATA_PREFLIGHT_SHA256,
@@ -1749,6 +2174,14 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         str(source007.SOURCE_ARCHIVE.resolve()): source007.SOURCE_ARCHIVE_SHA,
         str(source007.REGISTRATION.resolve()): source007.REGISTRATION_SHA,
         str(source007.RIGID.resolve()): source007.RIGID_SHA,
+        str(PARENT_POSE_BASELINE_RECEIPT.resolve()):
+            PARENT_POSE_BASELINE_RECEIPT_SHA256,
+        str(PARENT_POSE_BASELINE_PAYLOAD.resolve()):
+            PARENT_POSE_BASELINE_PAYLOAD_SHA256,
+        str(PARENT_POSE_BASELINE_CARRIER.resolve()):
+            PARENT_POSE_BASELINE_CARRIER_SHA256,
+        str(PARENT_POSE_FORWARD_OWNER.resolve()):
+            PARENT_POSE_FORWARD_OWNER_SHA256,
     }
     if explicit_capture:
         source_paths = context["capture_source_paths"]
@@ -1824,6 +2257,16 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
     all_known_edges_bound = all(
         edge_evidence[f"{first[1]}->{second[1]}"].get("pairs") is not None
         for first, second in NETWORK_EDGES)
+    parent_mapped_ids = {
+        int(stable_id) for stable_id, row
+        in parent_motion_inventory["rows"].items()
+        if row["parent_map_present"]
+    }
+    parent_pose_ids = set(map(int, parent_pose_report["vessels"]))
+    parent_pose_capture_aligned = (
+        parent_pose_ids == parent_mapped_ids
+        and all(row["capture_aligned_current_surface"]
+                for row in parent_pose_report["vessels"].values()))
     return {
         "schema": "numi.human.brachiocephalic.current-capture-network-preflight.v2",
         "status": _source0_preflight_status(
@@ -1883,12 +2326,31 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
             "transform_owner_path": str(TRANSFORM_OWNER.resolve()),
             "transform_owner_sha256": TRANSFORM_OWNER_SHA256,
             "rows": baseline_records,
+            "independent_parent_pose_source_surfaces": {
+                str(stable_id): {
+                    "typed_identity": [51011, stable_id],
+                    "positions_world_f32_sha256": _sha_bytes(
+                        np.ascontiguousarray(
+                            parent_pose_surfaces[(51011, stable_id)][0],
+                            dtype="<f4").tobytes()),
+                    "faces_u32_sha256": _sha_bytes(
+                        np.ascontiguousarray(
+                            parent_pose_surfaces[(51011, stable_id)][1],
+                            dtype="<u4").tobytes()),
+                }
+                for stable_id in PARENT_POSE_ROWS
+            },
+            "independent_parent_pose_calibre_baseline": parent_pose_report,
+            "parent_mapped_row_calibre_baseline_ready":
+                parent_pose_capture_aligned,
+            "common_field_rows_still_pending_independent_baseline":
+                list(COMMON_FIELD_BASELINE_PENDING_IDS),
             "rows_with_exact_capture_face_order": len(baseline_records) - len(mismatched_faces),
             "rows_with_face_order_mismatch": mismatched_faces,
             "meaningful_calibre_baseline_ready": (
                 all_known_edges_bound and not mismatched_faces
-                and not any(row["parent_map_present"]
-                            for row in parent_motion_inventory["rows"].values())),
+                and parent_pose_capture_aligned
+                and not COMMON_FIELD_BASELINE_PENDING_IDS),
             "parent_motion_owner_inventory": parent_motion_inventory,
             "parent_mapped_rows_requiring_a_parent_pose_calibre_baseline": [
                 int(stable_id) for stable_id, row
@@ -1971,15 +2433,24 @@ def build_preflight(capture_inputs: dict | None = None) -> dict:
         },
         "source_and_parent_motion_ownership": {
             "status": (
-                "PARENT_MAPS_MATCH_INVOKED_RECEIPT_PARENT_POSE_CALIBRE_BASELINE_PENDING"
-                if any(row["parent_map_present"]
-                       for row in parent_motion_inventory["rows"].values())
-                else "RIGID_SOURCE_BASELINE_READY"),
+                "PARENT_POSE_SOURCE_BASELINES_COMPUTED_CAPTURE_ALIGNMENT_PENDING"
+                if not parent_pose_capture_aligned
+                else "PARENT_POSE_BASELINES_READY_FOR_475_477_COMMON_FIELD_BASELINES_PENDING"
+                if parent_pose_report.get("status")
+                == "PARENT_POSE_SOURCE_BASELINES_RECONSTRUCTED_OFFLINE"
+                else "PARENT_POSE_CALIBRE_BASELINE_PENDING"),
             "owner_inventory": parent_motion_inventory,
+            "independent_parent_pose_baseline": parent_pose_report,
+            "parent_pose_source_surfaces_available": sorted(
+                [list(key) for key in parent_pose_surfaces]),
+            "parent_mapped_rows_with_independent_baselines": sorted(
+                int(value) for value in parent_pose_report["vessels"]),
+            "common_field_rows_still_pending_independent_baseline":
+                list(COMMON_FIELD_BASELINE_PENDING_IDS),
             "source_rigid_baseline_is_independent_of_same_capture_geometry": True,
-            "parent_pose_matched_calibre_baseline_ready": not any(
-                row["parent_map_present"]
-                for row in parent_motion_inventory["rows"].values()),
+            "parent_pose_matched_calibre_baseline_ready":
+                parent_pose_capture_aligned,
+            "whole_network_calibre_baseline_ready": False,
             "no_unverified_multi_body_parent_motion_is_claimed": True,
         },
         "planned_solid_and_collar_gate": {
