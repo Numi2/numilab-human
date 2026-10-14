@@ -82,6 +82,64 @@ LUNG_306_EXPECTED_SELF_PAIRS = (
 )
 
 
+# Two brain-family source meshes carry narrower anatomical identities in the
+# pinned BodyParts3D part_of table. Keep the broad family for existing owner
+# grouping while exposing each exact source-member identity in the receipt.
+HEAD_MEMBER_COMPONENTS = {
+    "FJ1731": {
+        "concept_id": "FMA78469",
+        "name": "fourth ventricle",
+        "family_concept_id": "FMA50801",
+        "source_member_sha256": "b56e1cd574977821f5331174a31a830ec6a477e2c6c3f32667f7e46a6716eae8",
+    },
+    "FJ1738": {
+        "concept_id": "FMA78467",
+        "name": "cerebral aqueduct",
+        "family_concept_id": "FMA50801",
+        "source_member_sha256": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3",
+    },
+}
+HEAD_MEMBERSHIP_TABLE_SHA256 = "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
+
+
+def _head_member_identity(bodyparts3d: dict, member_id: str, member_sha256: str) -> dict | None:
+    # Bind narrow labels to exact source membership and OBJ bytes.
+    expected = HEAD_MEMBER_COMPONENTS.get(member_id)
+    if expected is None:
+        return None
+    source = bodyparts3d.get("source", {})
+    table_rows = source.get("tables", [])
+    membership = [row for row in table_rows if row.get("file") == "partof_element_parts.txt"]
+    if len(membership) != 1 or membership[0].get("sha256") != HEAD_MEMBERSHIP_TABLE_SHA256:
+        raise ValueError("head component identity requires the pinned BodyParts3D part_of membership table")
+    if member_sha256 != expected["source_member_sha256"]:
+        raise ValueError(f"head source member bytes changed for {member_id}")
+    table = bodyparts3d.get("tables", {}).get("part_of", {})
+    key = (expected["concept_id"], expected["name"])
+    if member_id not in table.get(key, set()):
+        raise ValueError(f"head source member is not in its declared anatomical component: {member_id}")
+    components = bodyparts3d.get("components", [])
+    matches = [component for component in components
+               if component.get("hierarchy") == "part_of"
+               and component.get("concept_id") == expected["concept_id"]
+               and component.get("name") == expected["name"]
+               and any(element.get("element_id") == member_id
+                       for element in component.get("element_meshes", []))]
+    if len(matches) != 1:
+        raise ValueError(f"head source label/component table is missing or ambiguous: {member_id}")
+    return {
+        "concept_id": expected["concept_id"],
+        "name": expected["name"],
+        "hierarchy": "part_of",
+        "source_member": member_id,
+        "source_member_sha256": member_sha256,
+        "membership_table_sha256": HEAD_MEMBERSHIP_TABLE_SHA256,
+        "family_concept_id": expected["family_concept_id"],
+        "geometry_role": "passive intracranial cavity surface",
+        "separate_physiological_compartment": False,
+    }
+
+
 def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_manifest_path: Path | None = None) -> dict:
     """Bind reference mass and skin closure diagnostics to exact NHSKIN inputs."""
     from .resting_scene import load_rigid, load_skin, source_shell_world
@@ -706,11 +764,19 @@ def _registered_passive_surfaces() -> tuple[list[dict],dict]:
                 normals.append(human._bodyparts_unit_vector(
                     human._myosim_matrix_vector(head_inverse,world_normal),
                     f'resting head anatomy {member_id} local normal'))
-            head_members.append({'id':322+len(head_members),'layer':1,'name':label,
+            member_sha256=hashlib.sha256(obj).hexdigest()
+            component_identity=_head_member_identity(bodyparts3d,member_id,member_sha256)
+            owner_metadata=None
+            display_name=label
+            if component_identity is not None:
+                display_name=component_identity['name']
+                owner_metadata={'label':label,'anatomical_component':component_identity}
+            head_members.append({'id':322+len(head_members),'layer':1,'name':display_name,
                 'source':'BodyParts3D v4.0 current head registration','vertices':np.asarray(local,dtype=np.float64),
                 'normals':np.asarray(normals,dtype=np.float64),'faces':np.asarray(faces,dtype=np.int64),
-                'body_index':head_body_index,'source_hash':hashlib.sha256(obj).hexdigest(),
+                'body_index':head_body_index,'source_hash':member_sha256,
                 'source_member':member_id,'source_license':'CC-BY-4.0','repair':None,
+                'source_owner_metadata':owner_metadata,
                 'head_family':{'concept_id':concept,'source_name':label,'hierarchy':'part_of'},
                 'source_member_path':member})
     extra={'owner_payload':owner_manifest['payload'],
