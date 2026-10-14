@@ -1540,7 +1540,7 @@ def _handoff_interface(edge, pair_sha, *, source_kind):
         "observed_pairs_within_frozen_face_patch_cross_product": True,
         "unexpected_face_pairs": [],
         "exact_interface_point_count": 3,
-        "exact_interface_points_sha256": "a" * 64,
+        "exact_interface_points_sha256": ("a" if source_kind == "candidate" else "c") * 64,
         "frozen_face_pairs_sha256": pair_sha,
         "documented_vessel_junction_scope": {"passed": True},
         "baseline_verified_declared_source_additions": {
@@ -1553,17 +1553,19 @@ def _handoff_interface(edge, pair_sha, *, source_kind):
     }
 
 
-def _handoff_calibre(key, role):
+def _handoff_calibre(key, role, candidate_interface_sha, baseline_interface_sha):
     station = {
         "transported_from_source_vertex_ancestry": True,
-        "exact_interface_witness_points_sha256": "b" * 64,
+        "inferred": True,
+        "exact_interface_witness_points_sha256": candidate_interface_sha,
+        "material_anchor_local_vertex_ids": [0, 1],
+        "material_anchor_source_vertex_ids": [100, 101],
+        "material_anchor_weights": [0.5, 0.5],
         "frozen_collar_face_ids": [0, 1],
+        "tangent_support_local_vertex_ids": [0, 1],
+        "tangent_support_source_vertex_ids": [100, 101],
     }
-    baseline_station = {
-        "transported_from_source_vertex_ancestry": True,
-        "exact_interface_witness_points_sha256": "b" * 64,
-        "frozen_collar_face_ids": [0, 1],
-    }
+    baseline_station = dict(station)
     section = {
         "passed": True,
         "loop_count": 1,
@@ -1578,7 +1580,7 @@ def _handoff_calibre(key, role):
         "owner_id": key[1],
         "role": role,
         "baseline_station_witness_point_count": 3,
-        "baseline_interface_point_sha256": "b" * 64,
+        "baseline_interface_point_sha256": baseline_interface_sha,
         "station": station,
         "baseline_station_transported_by_source_ancestry": baseline_station,
         "candidate_section": dict(section),
@@ -1667,6 +1669,15 @@ def _handoff_fixture():
             baseline_surfaces[key] = (
                 np.asarray(surfaces[key][0] + np.float32(0.01), dtype="<f4"),
                 surfaces[key][1], None, surfaces[key][3])
+        port_interfaces = {
+            kind: _handoff_interface(edge, pair_sha, source_kind=kind)
+            for kind in ("candidate", "baseline")}
+        independent_calibre = {
+            role: _handoff_calibre(
+                key, role,
+                port_interfaces["candidate"]["exact_interface_points_sha256"],
+                port_interfaces["baseline"]["exact_interface_points_sha256"])
+            for role, key in (("bridge", edge[0]), ("target", edge[1]))}
         links.append({
             "bridge": list(edge[0]),
             "target": list(edge[1]),
@@ -1681,12 +1692,8 @@ def _handoff_fixture():
                 "baseline": _handoff_solid(edge, baseline_surfaces,
                                            source_kind="baseline"),
             },
-            "port_interfaces": {
-                kind: _handoff_interface(edge, pair_sha, source_kind=kind)
-                for kind in ("candidate", "baseline")},
-            "independent_collar_calibre": {
-                role: _handoff_calibre(key, role)
-                for role, key in (("bridge", edge[0]), ("target", edge[1]))},
+            "port_interfaces": port_interfaces,
+            "independent_collar_calibre": independent_calibre,
         })
     continuity = {
         "status": "PASS_SOURCE_NETWORK_LINK_CONTINUITY_UNADMITTED",
@@ -1728,6 +1735,56 @@ def test_verified_handoff_skips_only_proven_edges_and_checks_every_other_pair():
     assert len([event for event in progress
                 if event.startswith("CHECKING_UNDECLARED_NETWORK_PAIR_")]) == len(
                     expected_nonedges)
+
+
+def test_verified_handoff_binds_calibre_to_distinct_candidate_and_baseline_interfaces():
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    first = continuity["links"][0]
+    interfaces = first["port_interfaces"]
+    calibre = first["independent_collar_calibre"]["bridge"]
+    candidate_sha = interfaces["candidate"]["exact_interface_points_sha256"]
+    baseline_sha = interfaces["baseline"]["exact_interface_points_sha256"]
+
+    assert candidate_sha != baseline_sha
+    assert calibre["station"]["exact_interface_witness_points_sha256"] == candidate_sha
+    assert calibre["baseline_station_transported_by_source_ancestry"][
+        "exact_interface_witness_points_sha256"] == candidate_sha
+    assert calibre["baseline_interface_point_sha256"] == baseline_sha
+
+    verifier = _HandoffVerifier()
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity)
+    assert result["passed"] is True
+
+
+@pytest.mark.parametrize("mutation", ["baseline_interface", "candidate_station", "station_ancestry"])
+def test_verified_handoff_rejects_cross_bound_calibre_station_hashes(mutation):
+    import copy
+
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    tampered = copy.deepcopy(continuity)
+    link = tampered["links"][0]
+    calibre = link["independent_collar_calibre"]["bridge"]
+    candidate_sha = link["port_interfaces"]["candidate"][
+        "exact_interface_points_sha256"]
+    baseline_sha = link["port_interfaces"]["baseline"][
+        "exact_interface_points_sha256"]
+    if mutation == "baseline_interface":
+        calibre["baseline_interface_point_sha256"] = candidate_sha
+    elif mutation == "candidate_station":
+        calibre["station"]["exact_interface_witness_points_sha256"] = baseline_sha
+    else:
+        calibre["baseline_station_transported_by_source_ancestry"][
+            "material_anchor_source_vertex_ids"] = [100, 102]
+
+    verifier = _HandoffVerifier()
+    with pytest.raises(ValueError, match="source station|source ancestry"):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, edges, source_pairs,
+            verified_network_continuity=tampered)
+    assert verifier.shared_calls == []
+    assert verifier.pair_calls == []
 
 
 def test_verified_handoff_rejects_muscle_contact_and_stops_at_first_nonedge_failure():

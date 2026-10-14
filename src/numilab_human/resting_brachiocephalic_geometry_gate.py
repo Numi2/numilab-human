@@ -496,24 +496,78 @@ def _verified_network_link_handoff(
                 "frozen_face_pairs_sha256": pair_sha,
             }
 
-        def validate_calibre(calibre, key, role):
+        def validate_calibre(calibre, key, role, candidate_interface,
+                             baseline_interface):
             _require(isinstance(calibre, Mapping)
                      and calibre.get("passed") is True
                      and calibre.get("owner_id") == key[1]
                      and calibre.get("role") == role
                      and type(calibre.get("baseline_station_witness_point_count")) is int
                      and calibre["baseline_station_witness_point_count"] > 0
-                     and valid_sha(calibre.get("baseline_interface_point_sha256")),
+                     and valid_sha(calibre.get("baseline_interface_point_sha256"))
+                     and isinstance(candidate_interface, Mapping)
+                     and isinstance(baseline_interface, Mapping)
+                     and valid_sha(candidate_interface.get(
+                         "exact_interface_points_sha256"))
+                     and valid_sha(baseline_interface.get(
+                         "exact_interface_points_sha256"))
+                     and type(candidate_interface.get("exact_interface_point_count")) is int
+                     and type(baseline_interface.get("exact_interface_point_count")) is int
+                     and calibre["baseline_interface_point_sha256"]
+                     == baseline_interface["exact_interface_points_sha256"]
+                     and calibre["baseline_station_witness_point_count"]
+                     == baseline_interface["exact_interface_point_count"],
                      f"{role} lacks an independent source station for {key}")
             station = calibre.get("station")
             baseline_station = calibre.get("baseline_station_transported_by_source_ancestry")
+            ancestry_fields = (
+                "material_anchor_local_vertex_ids",
+                "material_anchor_source_vertex_ids",
+                "material_anchor_weights",
+                "frozen_collar_face_ids",
+                "tangent_support_local_vertex_ids",
+                "tangent_support_source_vertex_ids",
+            )
             _require(isinstance(station, Mapping)
                      and station.get("transported_from_source_vertex_ancestry") is True
+                     and station.get("exact_interface_witness_points_sha256")
+                     == candidate_interface["exact_interface_points_sha256"]
                      and isinstance(baseline_station, Mapping)
                      and baseline_station.get("transported_from_source_vertex_ancestry") is True
                      and baseline_station.get("exact_interface_witness_points_sha256")
-                     == calibre["baseline_interface_point_sha256"],
+                     == station.get("exact_interface_witness_points_sha256")
+                     and all(station.get(field) == baseline_station.get(field)
+                             for field in ancestry_fields)
+                     and station.get("inferred") is True
+                     and baseline_station.get("inferred") is True,
                      f"{role} station is not transported from source ancestry for {key}")
+            anchor_local = station.get("material_anchor_local_vertex_ids")
+            anchor_source = station.get("material_anchor_source_vertex_ids")
+            anchor_weights = station.get("material_anchor_weights")
+            collar_faces = station.get("frozen_collar_face_ids")
+            tangent_local = station.get("tangent_support_local_vertex_ids")
+            tangent_source = station.get("tangent_support_source_vertex_ids")
+            _require(
+                isinstance(anchor_local, list) and bool(anchor_local)
+                and all(type(value) is int and value >= 0 for value in anchor_local)
+                and len(set(anchor_local)) == len(anchor_local)
+                and isinstance(anchor_source, list)
+                and len(anchor_source) == len(anchor_local)
+                and all(type(value) is int and value >= 0 for value in anchor_source)
+                and len(set(anchor_source)) == len(anchor_source)
+                and isinstance(anchor_weights, list)
+                and len(anchor_weights) == len(anchor_local)
+                and all(isinstance(value, (int, float)) and not isinstance(value, bool)
+                        and np.isfinite(value) and value > 0.0 for value in anchor_weights)
+                and abs(sum(anchor_weights) - 1.0) <= 1e-12
+                and isinstance(collar_faces, list) and bool(collar_faces)
+                and all(type(value) is int and value >= 0 for value in collar_faces)
+                and len(set(collar_faces)) == len(collar_faces)
+                and isinstance(tangent_local, list) and len(tangent_local) == 2
+                and all(type(value) is int and value >= 0 for value in tangent_local)
+                and isinstance(tangent_source, list) and len(tangent_source) == 2
+                and all(type(value) is int and value >= 0 for value in tangent_source),
+                f"{role} source station ancestry is incomplete for {key}")
             for section_name in ("candidate_section", "baseline_section"):
                 section = calibre.get(section_name)
                 _require(isinstance(section, Mapping)
@@ -633,7 +687,10 @@ def _verified_network_link_handoff(
             for source_kind in ("candidate", "baseline"):
                 interface_proofs[f"{source_kind}_{role}"] = validate_interface(
                     interfaces.get(source_kind), edge, pair_sha, role=source_kind)
-            calibre_proofs[role] = validate_calibre(calibres.get(role), key, role)
+            calibre_proofs[role] = validate_calibre(
+                calibres.get(role), key, role,
+                interface_proofs[f"candidate_{role}"],
+                interface_proofs[f"baseline_{role}"])
 
             if source_inventory is not None:
                 inventory_key = f"{key[0]}:{key[1]}"
