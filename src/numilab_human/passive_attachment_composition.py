@@ -904,6 +904,16 @@ def reemit_registration_metadata(
     output_raw, output_manifest, operation = _prepare_registration_metadata_reemission(
         accepted_payload, owner_base_payload, registration_path,
     )
+    registration_source = Path(operation["registration_path"]).resolve()
+    output_names = [
+        accepted_payload.name,
+        accepted_payload.with_suffix(".manifest.json").name,
+        registration_source.name,
+        "registration-metadata-reemission.json",
+    ]
+    require(len(set(output_names)) == len(output_names),
+            "registration metadata output filenames collide")
+    require(not output.exists(), "registration metadata output already exists")
     output.mkdir(exist_ok=False)
     payload_path = output / accepted_payload.name
     payload_path.write_bytes(output_raw)
@@ -920,7 +930,6 @@ def reemit_registration_metadata(
         "composer_source_sha256": _surface_sha256(Path(__file__)),
         "anatomical_and_native_admission": False,
     }
-    registration_source = Path(operation["registration_path"]).resolve()
     registration_destination = output / registration_source.name
     shutil.copyfile(registration_source, registration_destination)
     require(_surface_sha256(registration_destination) == operation["registration_sha256"],
@@ -971,9 +980,6 @@ def rebind_registration_bindings(
             == f"{base['fingerprint']:08x}"
             and int(registration_sha[:8], 16) == base["fingerprint"],
             "owner base registration fingerprint is inconsistent")
-    require(accepted_manifest.get("payload", {}).get("registration_fingerprint32")
-            == f"{accepted['fingerprint']:08x}",
-            "accepted payload registration fingerprint is inconsistent")
     require(accepted_manifest.get("payload", {}).get("registration_fingerprint32")
             == f"{accepted['fingerprint']:08x}",
             "accepted payload registration fingerprint is inconsistent")

@@ -271,6 +271,22 @@ def test_registration_metadata_reemission_rejects_identity_drift(inputs, tmp_pat
     assert not (tmp_path / "bad-metadata").exists()
 
 
+def test_registration_metadata_reemission_rejects_output_filename_collision(inputs, tmp_path):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    collision = registration.with_name("registration-metadata-reemission.json")
+    registration.rename(collision)
+    manifest_path = base.with_suffix(".manifest.json")
+    manifest = json.loads(manifest_path.read_text())
+    manifest["source"]["registration"]["file"] = collision.name
+    manifest["source"]["registration"]["sha256"] = digest(collision)
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    output = tmp_path / "collision-output"
+    with pytest.raises(ValueError, match="output filenames collide"):
+        pac.reemit_registration_metadata(source, base, collision, output)
+    assert not output.exists()
+
+
 def test_registration_metadata_reemission_cli_mode(inputs, tmp_path, capsys):
     source, _, _, _ = inputs
     base, registration = _metadata_base(source, tmp_path)
