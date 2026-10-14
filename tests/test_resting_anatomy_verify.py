@@ -1,5 +1,6 @@
 import copy
 import unittest
+from fractions import Fraction
 
 import numpy as np
 
@@ -86,6 +87,40 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         for ancestry in ([0,0],[2,1],[-1],[4]):
             with self.subTest(ancestry=ancestry),self.assertRaises(ValueError):
                 retain_bound_source_faces((51010,313),old,FACES,200,ancestry)
+
+    def test_metric_contacts_preserve_exact_float32_units_and_unique_points(self):
+        a = prepare_surface((51010, 323), np.array([
+            [.125, .25, .5], [.375, .25, .5], [.125, .5, .5],
+        ], dtype=np.float32), np.array([[0, 1, 2]], dtype=np.uint32))
+        b = prepare_surface((51010, 345), np.array([
+            [.125, .25, .5], [.125, .125, .75], [0., .25, .75],
+        ], dtype=np.float32), np.array([[0, 1, 2]], dtype=np.uint32))
+        point = (Fraction(1, 8), Fraction(1, 4), Fraction(1, 2))
+        self.assertEqual(a.triangle_meters(0)[0], point)
+        self.assertEqual(a.intersection_points_meters(b, 0, 0), (point,))
+        self.assertEqual(b.intersection_points_meters(a, 0, 0), (point,))
+
+    def test_metric_transverse_segment_retains_nonbinary_rational_intersection(self):
+        a = prepare_surface((51010, 323), np.array([
+            [0., 0., 0.], [1., 0., 0.], [0., 1., 0.],
+        ], dtype=np.float32), np.array([[0, 1, 2]], dtype=np.uint32))
+        b = prepare_surface((51010, 345), np.array([
+            [0., 0., -1.], [1., 0., 2.], [0., 1., 2.],
+        ], dtype=np.float32), np.array([[0, 1, 2]], dtype=np.uint32))
+        self.assertEqual(a.intersection_points_meters(b, 0, 0), (
+            (Fraction(0), Fraction(1, 3), Fraction(0)),
+            (Fraction(1, 3), Fraction(0), Fraction(0)),
+        ))
+
+    def test_metric_face_ids_reject_coercion_and_out_of_range(self):
+        surface = prepare_surface((51011, 7), tetra(), FACES)
+        for face in (True, False, 0., "0", -1, len(FACES), np.int64(0)):
+            with self.subTest(face=face), self.assertRaises(ValueError):
+                surface.triangle_meters(face)
+            with self.subTest(face=face), self.assertRaises(ValueError):
+                surface.intersection_points_meters(surface, 0, face)
+        with self.assertRaises(TypeError):
+            surface.intersection_points_meters(None, 0, 0)
 
     def test_identity_requires_semantic_not_untyped_stable_id(self):
         with self.assertRaises(ValueError):

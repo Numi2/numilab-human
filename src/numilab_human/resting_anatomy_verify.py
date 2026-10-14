@@ -105,6 +105,38 @@ class PreparedSurface:
                 self._face_records.setdefault(int(record[3]), record)
         return self._face_records.get(face_id)
 
+    def _required_face_record(self, face_id):
+        if type(face_id) is not int or not 0 <= face_id < len(self.faces):
+            raise ValueError("face identity must be an in-range integer")
+        record = self.face_record(face_id)
+        if record is None:
+            raise ValueError("face identity has no prepared record")
+        return record
+
+    def triangle_meters(self, face_id):
+        """Exact rational metres, retaining emitted Float32 coordinate values.
+
+        Predicate records use an integer lattice with one unit equal to
+        2**-149 metres. Do not mix those records with metric lineage points.
+        """
+        record = self._required_face_record(face_id)
+        return tuple(tuple(Fraction(value, 1 << 149) for value in point)
+                     for point in record[0])
+
+    def intersection_points_meters(self, other, first_face, second_face):
+        """Return sorted unique geometric contacts in exact rational metres.
+
+        The predicate can repeat endpoints while enumerating triangle edges.
+        Deduplication affects contact classification only, never mesh bytes.
+        """
+        if not isinstance(other, PreparedSurface):
+            raise TypeError("intersection requires another prepared surface")
+        first = self._required_face_record(first_face)
+        second = other._required_face_record(second_face)
+        points = ci.triangle_intersection_points(first[0], second[0])
+        return tuple(sorted({tuple(Fraction(value) / (1 << 149)
+                                   for value in point) for point in points}))
+
     def vertex_index(self, gid):
         if self._vertex_indices is None:
             self._vertex_indices = gid_index_map(self.source_vertex_ids)
