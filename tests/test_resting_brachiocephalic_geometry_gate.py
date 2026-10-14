@@ -437,6 +437,204 @@ def test_derived_boolean_sections_use_mesh64_without_weakening_source_float32_co
 
 
 
+
+def _synthetic_two_branch_section_proof(
+    *, disconnected=False, corrupt_lineage=False, declared=True):
+    manifold3d = _manifold3d()
+    bridge_positions, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target_positions, target_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    if disconnected:
+        target_positions[:, 0] += np.float32(0.45)
+    else:
+        angle = np.arctan(0.7)
+        cosine, sine = np.cos(angle), np.sin(angle)
+        x = target_positions[:, 0].copy()
+        z = target_positions[:, 2].copy()
+        target_positions[:, 0] = cosine * x + sine * z + np.float32(0.55)
+        target_positions[:, 2] = -sine * x + cosine * z
+    bridge_positions = np.ascontiguousarray(bridge_positions, dtype="<f4")
+    target_positions = np.ascontiguousarray(target_positions, dtype="<f4")
+    bridge = av.prepare_surface(
+        (51011, 526), bridge_positions, bridge_faces,
+        source_vertex_ids=np.arange(len(bridge_positions), dtype=np.uint64))
+    target = av.prepare_surface(
+        (51011, 472), target_positions, target_faces,
+        source_vertex_ids=np.arange(len(target_positions), dtype=np.uint64))
+    bridge_solid, _ = bg._make_manifold(bridge, manifold3d)
+    target_solid, _ = bg._make_manifold(target, manifold3d)
+    intersection = manifold3d.Manifold.batch_boolean(
+        [bridge_solid, target_solid], manifold3d.OpType.Intersect)
+    union = manifold3d.Manifold.batch_boolean(
+        [bridge_solid, target_solid], manifold3d.OpType.Add)
+    positions, faces, mesh = bg._manifold_mesh(union)
+    lineage = bg._mesh_face_lineage(mesh, {
+        526: len(bridge.quotient_faces), 472: len(target.quotient_faces)})
+    owners = lineage["face_owner_ids"].copy()
+    if corrupt_lineage:
+        owners[owners == 472] = 526
+    candidate_union_section = bg._section_loops(
+        positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0],
+        derived_csg=True, face_owner_ids=owners,
+        face_source_ids=lineage["source_face_ids"],
+        face_generated_mask=lineage["generated_face_mask"])
+    baseline_union_section = candidate_union_section
+    def source_station(surface):
+        source_ids = surface.source_vertex_ids.astype(int).tolist()
+        return {
+            "section_center_world_m": [0.0, 0.0, 0.0],
+            "tangent_world_unit": [0.0, 0.0, 1.0],
+            "material_anchor_source_vertex_ids": source_ids[:4],
+            "tangent_support_source_vertex_ids": [source_ids[0], source_ids[-1]],
+            "frozen_collar_face_ids": [0, 1],
+        }
+
+    bridge_station = source_station(bridge)
+    candidate_branch_sections = {
+        526: bg._source_surface_section(bridge, bridge_station),
+        472: bg._source_surface_section(target, bridge_station),
+    }
+    baseline_branch_sections = candidate_branch_sections
+    intersection_volume = float(intersection.volume())
+    inside_witness = (
+        bg._exact_inside_witness(av, bridge, target, intersection)
+        if intersection_volume > 0.0 else None)
+    raw_port = av.audit_surface_pair(bridge, target)
+    allowed_pairs = tuple(tuple(map(int, pair))
+                          for pair in raw_port.get("unexpected_triangle_pairs", []))
+    port = av.audit_surface_pair(
+        bridge, target, intended_face_pairs=allowed_pairs)
+    exact_points = bg._exact_interface_points(
+        av, bridge, target,
+        port.get("declared_interface_triangle_pairs", []))
+    evidence = {
+        "candidate_bridge_status": str(bridge_solid.status()),
+        "candidate_target_status": str(target_solid.status()),
+        "baseline_bridge_status": str(bridge_solid.status()),
+        "baseline_target_status": str(target_solid.status()),
+        "candidate_union_status": str(union.status()),
+        "baseline_union_status": str(union.status()),
+        "candidate_intersection_status": str(intersection.status()),
+        "baseline_intersection_status": str(intersection.status()),
+        "candidate_branch_component_counts": {
+            "526": len(bridge_solid.decompose()),
+            "472": len(target_solid.decompose()),
+        },
+        "baseline_branch_component_counts": {
+            "526": len(bridge_solid.decompose()),
+            "472": len(target_solid.decompose()),
+        },
+        "candidate_union_component_count": len(union.decompose()),
+        "baseline_union_component_count": len(union.decompose()),
+        "candidate_union_volume_m3": float(union.volume()),
+        "baseline_union_volume_m3": float(union.volume()),
+        "candidate_intersection_volume_m3": intersection_volume,
+        "baseline_intersection_volume_m3": intersection_volume,
+        "candidate_exact_inside_both_witness": inside_witness,
+        "baseline_exact_inside_both_witness": inside_witness,
+        "candidate_port_audit_passed": bool(port.get("passed")),
+        "baseline_port_audit_passed": bool(port.get("passed")),
+        "candidate_port_exact_interface_point_count": len(exact_points),
+        "baseline_port_exact_interface_point_count": len(exact_points),
+    }
+    station_ancestry = {
+        key: bridge_station[key] for key in (
+            "material_anchor_source_vertex_ids",
+            "tangent_support_source_vertex_ids",
+            "frozen_collar_face_ids",
+        )
+    }
+    station_declaration = ({
+        "declaration_id": "synthetic-source-bound-y-junction-526-472",
+        "station_role": "bridge",
+        "expected_owner_ids": [472, 526],
+        "bridge_owner_id": 526,
+        "target_owner_id": 472,
+        "anchor_owner_id": 526,
+        "source_ancestry": station_ancestry,
+        "candidate_station": bridge_station,
+        "baseline_station": bridge_station,
+    } if declared else None)
+    proof = bg._junction_aware_two_loop_section_proof(
+        expected_owner_ids=(526, 472),
+        candidate_union_section=candidate_union_section,
+        baseline_union_section=baseline_union_section,
+        candidate_branch_sections=candidate_branch_sections,
+        baseline_branch_sections=baseline_branch_sections,
+        solid_evidence=evidence,
+        station_declaration=station_declaration,
+    )
+    return proof, candidate_union_section, evidence
+
+
+def test_y_junction_two_contours_pass_only_with_per_vessel_lineage_and_solid_witnesses():
+    proof, section, evidence = _synthetic_two_branch_section_proof()
+
+    assert section["loop_count"] == 2
+    assert not section["passed"]
+    assert {tuple(loop["owner_ids"]) for loop in section["loop_metrics"]} == {
+        (472,), (526,)}
+    assert all(loop["lineage_complete"] for loop in section["loop_metrics"])
+    assert evidence["candidate_union_component_count"] == 1
+    assert evidence["candidate_intersection_volume_m3"] > 0.0
+    assert evidence["candidate_exact_inside_both_witness"] is not None
+    assert proof["passed"]
+    assert proof["status"] == "PASS_EXPLICIT_TWO_VESSEL_JUNCTION_SECTION"
+    assert set(proof["per_vessel_section_comparisons"]) == {"472", "526"}
+
+
+def test_nearby_disconnected_section_loops_do_not_pass_as_a_junction():
+    proof, section, evidence = _synthetic_two_branch_section_proof(disconnected=True)
+
+    assert section["loop_count"] == 2
+    assert not section["passed"]
+    assert evidence["candidate_union_component_count"] == 2
+    assert evidence["candidate_intersection_volume_m3"] == 0.0
+    assert not proof["passed"]
+    assert any("candidate_union_component_count" in item
+               for item in proof["rejections"])
+    assert any("candidate_intersection_volume_m3" in item
+               for item in proof["rejections"])
+
+
+def test_two_loop_junction_requires_an_explicit_source_material_station():
+    proof, section, _ = _synthetic_two_branch_section_proof(declared=False)
+
+    assert section["loop_count"] == 2
+    assert not proof["passed"]
+    assert proof["junction_station"]["status"] == (
+        "MISSING_EXPLICIT_JUNCTION_STATION_DECLARATION")
+    assert any("explicit source station declaration" in item
+               for item in proof["rejections"])
+
+
+def test_mixed_mesh64_loop_ancestry_rejects_the_junction_exception():
+    proof, section, _ = _synthetic_two_branch_section_proof(corrupt_lineage=True)
+
+    assert section["loop_count"] == 2
+    assert not proof["passed"]
+    assert any("ownership" in item or "lineage" in item
+               for item in proof["rejections"])
+
+
+def test_mesh64_face_lineage_requires_triangle_aligned_runs_and_explicit_generated_faces():
+    class MeshLineage:
+        tri_verts = np.asarray([[0, 1, 2], [2, 3, 0],
+                                [4, 5, 6], [6, 7, 4]], dtype="<u8")
+        run_index = (0, 6, 12)
+        run_original_id = (526, 472)
+        face_id = (0, 1, 0, np.iinfo(np.uint32).max)
+
+    lineage = bg._mesh_face_lineage(
+        MeshLineage(), {526: 2, 472: 1})
+
+    assert lineage["face_owner_ids"].tolist() == [526, 526, 472, 472]
+    assert lineage["source_face_ids"][:3].tolist() == [0, 1, 0]
+    assert lineage["generated_face_mask"].tolist() == [False, False, False, True]
+    assert lineage["report"]["generated_face_count"] == 1
+    assert lineage["report"]["unmapped_face_count"] == 0
+
 def test_six_port_continuity_stops_at_first_failed_port(monkeypatch):
     expected = [
         (BRIDGE_KEYS[0], (51011, 10)),
@@ -557,11 +755,16 @@ def test_port_replay_preflight_is_pinned_single_port_and_keeps_topology_metrics(
     }
     assert portdiag.RUNTIME_CODE_EXPECTED_SHA256[
         "resting_brachiocephalic_geometry_gate.py"] == (
-            "103bc36649ddb7fb921e2c77e72d24b6ae118f223b75025d2e1f7e1f094c3e0b")
+            "a8f66b2d4444220460389f995bcf3bfed0125f5fd8b32e2a52e7c60a0321340a")
     summary = portdiag._section_summary({
         "passed": False,
         "section_node_count": 39,
         "section_degree_histogram": {"1": 2, "2": 37},
+        "loop_metrics": [{"owner_ids": [526], "source_face_ancestor_ids": [4, 7]}],
+        "lineage_available": True,
+        "lineage_complete": True,
+        "owner_ids": [526],
+        "source_face_ancestor_ids": [4, 7],
         "minimum_section_segment_length_m": 1.3e-7,
         "exact_coordinate_duplicate_vertex_count": 0,
         "coplanar_edge_count": 0,
@@ -571,6 +774,9 @@ def test_port_replay_preflight_is_pinned_single_port_and_keeps_topology_metrics(
     assert summary["minimum_section_segment_length_m"] == 1.3e-7
     assert summary["exact_coordinate_duplicate_vertex_count"] == 0
     assert summary["coplanar_edge_count"] == 0
+    assert summary["loop_metrics"] == [
+        {"owner_ids": [526], "source_face_ancestor_ids": [4, 7]}]
+    assert summary["lineage_complete"]
 
 
 def test_six_port_diagnostic_scope_matches_source007_and_is_separate():
@@ -583,8 +789,16 @@ def test_six_port_diagnostic_scope_matches_source007_and_is_separate():
     assert portdiag.SIX_REPLAY_SCOPE["source_candidate_compiler_invoked"] is False
     assert portdiag.SIX_REPLAY_SCOPE["all_nearby_collision_checks_invoked"] is False
     assert portdiag.SIX_REPLAY_SCOPE["stop_after_first_failed_port"] is True
+    assert portdiag.SIX_DIAGNOSTIC_DIR.name == "port-525-526-six-port-diagnostic-002"
+    assert portdiag.SIX_PREFLIGHT_PATH.name == "port-525-526-six-port-preflight-002.json"
     assert portdiag.SIX_DIAGNOSTIC_DIR != portdiag.DIAGNOSTIC_DIR
     assert portdiag.SIX_PREFLIGHT_PATH != portdiag.PREFLIGHT_PATH
+    policy = portdiag.SIX_REPLAY_SCOPE["junction_section_policy"]
+    assert policy["ordinary_union_sections_require_exactly_one_closed_loop"]
+    assert "one complete Mesh64 source-face lineage" in policy["two_loop_exception"]
+    assert policy["mixed_generated_or_unmapped_loop_lineage"] == "reject"
+    assert not policy["clinical_calibre_claim"]
+    assert not policy["floating_boolean_exact_topology_claim"]
 
 
 def test_port_recorder_resets_stage_indices_and_tags_each_port_event():

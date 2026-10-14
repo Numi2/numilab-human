@@ -26,8 +26,8 @@ PREPARATION_DIR = A / "brachiocephalic-common-field-preparation-007-001"
 CAPTURE_MANIFEST = A / "accepted-capture-inputs-1398-001.json"
 DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-005"
 PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-preflight-005.json"
-SIX_DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-diagnostic-001"
-SIX_PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-preflight-001.json"
+SIX_DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-diagnostic-002"
+SIX_PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-preflight-002.json"
 HP98_ROOT = Path("/Users/n/numi-human-resting-anatomy-gates-publish-1398")
 HP98_VERIFIER = HP98_ROOT / "src/numilab_human/resting_anatomy_verify.py"
 HP98_SHA256 = "87d21c53c4ac003fa8df7410cc681d91a90465af808217d8af4561155d5094bb"
@@ -40,7 +40,7 @@ SOURCE007_GATE_SHA256 = (
     "adf7120f4257d0579b70fb4c7c1c98bb49e479596e0bbc604015bdee9608e977")
 RUNTIME_CODE_EXPECTED_SHA256 = {
     "resting_brachiocephalic_geometry_gate.py":
-        "103bc36649ddb7fb921e2c77e72d24b6ae118f223b75025d2e1f7e1f094c3e0b",
+        "a8f66b2d4444220460389f995bcf3bfed0125f5fd8b32e2a52e7c60a0321340a",
     "resting_brachiocephalic_source007.py":
         "975b2124ccfc96131197986893ea79c18f2fb7943de27227ff103883c245c8d3",
     "resting_brachiocephalic_pose_predictor.py":
@@ -76,6 +76,14 @@ SIX_REPLAY_SCOPE = {
     "all_target_checks_invoked": False,
     "all_nearby_collision_checks_invoked": False,
     "stop_after_first_failed_port": True,
+    "junction_section_policy": {
+        "ordinary_union_sections_require_exactly_one_closed_loop": True,
+        "two_loop_exception": "only a declared two-vessel junction station with one complete Mesh64 source-face lineage per stable owner, one closed standalone source section per branch, one candidate and baseline union component, positive candidate and baseline volumetric intersection, exact inside-both and port-interface witnesses, and per-vessel area/minimum-Feret preservation",
+        "mixed_generated_or_unmapped_loop_lineage": "reject",
+        "unrelated_extra_or_repeated_owner_loop": "reject",
+        "clinical_calibre_claim": False,
+        "floating_boolean_exact_topology_claim": False,
+    },
 }
 SECTION_STAGES = (
     "bridge_candidate", "bridge_baseline",
@@ -290,6 +298,11 @@ def _section_summary(section: dict) -> dict:
             "exact_coordinate_quotient_vertex_count",
             "exact_coordinate_duplicate_vertex_count", "coplanar_edge_count",
             "isolated_tangent_vertex_ids", "coplanar_face_count",
+            "loop_metrics", "lineage_available", "lineage_complete",
+            "section_center_world_m", "section_tangent_world_unit",
+            "owner_ids", "source_face_ancestor_ids",
+            "source_face_ancestor_ids_sha256", "generated_face_count",
+            "generated_face_ids", "unmapped_face_count", "unmapped_face_ids",
             "reason")
         if key in section
     }
@@ -309,6 +322,7 @@ class Recorder:
             "manifold_inputs": [],
             "inside_both_witnesses": [],
             "solid_boolean_operations": [],
+            "junction_section_proofs": [],
         }
         self.active_port = None
         self.port_counters = {}
@@ -585,6 +599,31 @@ def install_recording_wrappers(gate: Any, verifier: Any, recorder: Recorder):
         })
         return result
 
+    original_junction = getattr(gate, "_junction_aware_two_loop_section_proof", None)
+    def wrapped_junction(**kwargs):
+        index = recorder.next_index("junction_section_proofs")
+        record = {
+            "call_index": index,
+            "expected_owner_ids": _jsonable(kwargs.get("expected_owner_ids")),
+            "candidate_union_section": _section_summary(
+                kwargs.get("candidate_union_section", {})),
+            "baseline_union_section": _section_summary(
+                kwargs.get("baseline_union_section", {})),
+            "station_declaration": _jsonable(kwargs.get("station_declaration")),
+            "solid_evidence": _jsonable(kwargs.get("solid_evidence")),
+        }
+        try:
+            result = original_junction(**kwargs)
+            record["proof"] = _jsonable(result)
+            record["passed"] = result.get("passed") is True
+            recorder.record("junction_section_proofs", record)
+            return result
+        except Exception as error:
+            record["passed"] = False
+            record["error"] = {"type": type(error).__name__, "message": str(error)}
+            recorder.record("junction_section_proofs", record)
+            raise
+
     original_port = gate.audit_brachiocephalic_port_pair_continuity
     def wrapped_port(verifier_module, manifold3d, **kwargs):
         bridge_key = kwargs["bridge_key"]
@@ -616,6 +655,9 @@ def install_recording_wrappers(gate: Any, verifier: Any, recorder: Recorder):
         (gate, "audit_brachiocephalic_port_pair_continuity", wrapped_port),
         (verifier, "audit_surface_pair", wrapped_pair),
     ]
+    if callable(original_junction):
+        replacements.append(
+            (gate, "_junction_aware_two_loop_section_proof", wrapped_junction))
     for module, name, replacement in replacements:
         originals.append((module, name, getattr(module, name)))
         setattr(module, name, replacement)
