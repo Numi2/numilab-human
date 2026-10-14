@@ -493,8 +493,18 @@ def _transport_material_station(surface, spec):
     patch_extent = float(np.max((patch - anchor) @ tangent))
     margin = max(float(np.max(np.abs(np.spacing(surface.positions)))) * 8.0,
                  float(np.finfo(np.float32).tiny))
-    offset = max(float(spec["station_offset_from_anchor_m"]),
-                 patch_extent + margin)
+    requested_offset = float(spec["station_offset_from_anchor_m"])
+    station_scope = spec.get("station_scope")
+    if station_scope == "TARGET_COLLAR_LOCAL_SWEEP_V1":
+        _require(np.isfinite(requested_offset)
+                 and requested_offset >= 0.0
+                 and requested_offset <= patch_extent + margin,
+                 "target-local station must remain inside its frozen collar extent")
+        offset = requested_offset
+    else:
+        _require(station_scope is None,
+                 "unknown material station scope")
+        offset = max(requested_offset, patch_extent + margin)
     center = anchor + tangent * offset
     projection = (positions - center) @ tangent
     _require(projection.min() < 0.0 < projection.max(),
@@ -557,6 +567,130 @@ def _port_station_spec(surface, witness_points, collar_face_ids, *, route_anchor
         **ancestry,
     }
     return _transport_material_station(surface, spec)
+
+
+
+TARGET_COLLAR_STATION_FRACTIONS = (0.2, 0.4, 0.6, 0.8)
+
+
+def _target_collar_material_station_candidates(
+    surface, witness_points, collar_face_ids, *, fractions=TARGET_COLLAR_STATION_FRACTIONS,
+):
+    """Derive <=4 target-local planes from frozen collar source ancestry.
+
+    The tangent points from matched collar vertices toward non-collar target
+    source vertices. Offsets are fixed fractions of the positive target-collar
+    projection extent. These are bounded source geometry probes, not fitted
+    anatomical centerlines or clinical station locations.
+    """
+    _require(isinstance(fractions, (tuple, list)) and 0 < len(fractions) <= 4,
+             "target-collar selector accepts one to four frozen fractions")
+    normalized = tuple(float(value) for value in fractions)
+    _require(all(np.isfinite(value) and 0.0 < value < 1.0 for value in normalized)
+             and bool(np.all(np.diff(np.asarray(normalized, dtype=np.float64)) > 0.0)),
+             "target-collar fractions must be finite, unique, increasing, and inside (0, 1)")
+    positions = surface.positions.astype(np.float64)
+    faces = surface.faces
+    source_ids = np.asarray(surface.source_vertex_ids)
+    collar_ids = np.asarray(collar_face_ids, dtype=np.int64)
+    _require(collar_ids.ndim == 1 and len(collar_ids) > 0
+             and int(collar_ids.min()) >= 0 and int(collar_ids.max()) < len(faces),
+             "target-collar station needs valid frozen target face ancestry")
+    witness = np.asarray(witness_points, dtype=np.float64)
+    _require(witness.ndim == 2 and witness.shape[1] == 3 and len(witness) > 0
+             and np.isfinite(witness).all(),
+             "target-collar station requires exact interface witness points")
+    collar_vertices = np.unique(faces[collar_ids].reshape(-1))
+    noncollar_vertices = np.setdiff1d(
+        np.arange(len(positions), dtype=np.int64), collar_vertices, assume_unique=True)
+    _require(len(noncollar_vertices) >= 2,
+             "target-collar station needs at least two non-collar source vertices")
+    collar_center = positions[collar_vertices].mean(axis=0)
+    interior_center = positions[noncollar_vertices].mean(axis=0)
+    direction = interior_center - collar_center
+    direction_norm = float(np.linalg.norm(direction))
+    _require(np.isfinite(direction_norm) and direction_norm > 1e-15,
+             "matched target collar has no stable source-interior direction")
+    direction /= direction_norm
+    ancestry = _material_vertex_ancestry(surface, direction, collar_ids)
+    tangent_support = np.asarray(
+        ancestry["tangent_support_local_vertex_ids"], dtype=np.int64)
+    tangent = positions[int(tangent_support[1])] - positions[int(tangent_support[0])]
+    tangent_norm = float(np.linalg.norm(tangent))
+    _require(np.isfinite(tangent_norm) and tangent_norm > 1e-15,
+             "target source tangent support collapsed")
+    tangent /= tangent_norm
+    if float(np.dot(tangent, direction)) < 0.0:
+        tangent = -tangent
+        ancestry["tangent_support_local_vertex_ids"] = [
+            int(tangent_support[1]), int(tangent_support[0])]
+        ancestry["tangent_support_source_vertex_ids"] = [
+            int(source_ids[int(tangent_support[1])]),
+            int(source_ids[int(tangent_support[0])])]
+    anchor_ids = np.asarray(
+        ancestry["material_anchor_local_vertex_ids"], dtype=np.int64)
+    weights = np.asarray(ancestry["material_anchor_weights"], dtype=np.float64)
+    material_anchor = np.sum(positions[anchor_ids] * weights[:, None], axis=0)
+    collar_points = positions[faces[collar_ids]].reshape(-1, 3)
+    collar_projection = (collar_points - material_anchor) @ tangent
+    positive_extent = float(collar_projection.max())
+    lower_extent = float(collar_projection.min())
+    margin = max(float(np.max(np.abs(np.spacing(surface.positions))) * 8.0),
+                 float(np.finfo(np.float32).tiny))
+    _require(np.isfinite(positive_extent) and positive_extent > margin,
+             "matched target collar has no positive source-tangent extent")
+    junction = witness.mean(axis=0)
+    result = []
+    for index, fraction in enumerate(normalized):
+        offset = positive_extent * fraction
+        spec = {
+            **ancestry,
+            "tangent_world_unit": tangent.tolist(),
+            "provenance": (
+                "inferred target-source tangent from matched collar centroid "
+                "toward non-collar target-source centroid"),
+            "inferred": True,
+            "station_offset_from_anchor_m": offset,
+            "station_scope": "TARGET_COLLAR_LOCAL_SWEEP_V1",
+            "station_candidate_index": index,
+            "station_candidate_fraction_of_target_collar_extent": fraction,
+            "target_collar_projection_bounds_from_material_anchor_m": [
+                lower_extent, positive_extent],
+            "target_source_positions_sha256": hashlib.sha256(
+                np.ascontiguousarray(surface.positions).tobytes()).hexdigest(),
+            "target_source_faces_sha256": hashlib.sha256(
+                np.ascontiguousarray(surface.faces).tobytes()).hexdigest(),
+            "target_source_vertex_ids_sha256": hashlib.sha256(
+                np.ascontiguousarray(source_ids).tobytes()).hexdigest(),
+            "exact_interface_witness_points_sha256": hashlib.sha256(
+                np.ascontiguousarray(witness, dtype="<f8").tobytes()).hexdigest(),
+            "frozen_target_collar_face_ids_sha256": hashlib.sha256(
+                np.ascontiguousarray(collar_ids, dtype="<i8").tobytes()).hexdigest(),
+            "target_collar_source_face_ids": [int(value) for value in collar_ids],
+            "target_collar_source_face_ids_sha256": hashlib.sha256(
+                np.ascontiguousarray(collar_ids, dtype="<i8").tobytes()).hexdigest(),
+            "target_collar_vertex_ids": [int(value) for value in collar_vertices],
+            "target_collar_vertex_ids_sha256": hashlib.sha256(
+                np.ascontiguousarray(collar_vertices, dtype="<i8").tobytes()).hexdigest(),
+            "target_noncollar_vertex_ids_sha256": hashlib.sha256(
+                np.ascontiguousarray(noncollar_vertices, dtype="<i8").tobytes()).hexdigest(),
+            "target_collar_centroid_world_m": collar_center.tolist(),
+            "target_noncollar_centroid_world_m": interior_center.tolist(),
+            "target_source_direction_unit": direction.tolist(),
+            "target_collar_positive_extent_m": positive_extent,
+            "target_collar_fraction_offset_m": offset,
+            "junction_witness_centroid_world_m": junction.tolist(),
+            "junction_witness_signed_distance_to_plane_m": float(
+                np.dot(junction - material_anchor, tangent) - offset),
+            "junction_witness_perpendicular_distance_to_plane_m": float(
+                np.linalg.norm((junction - material_anchor)
+                               - tangent * np.dot(junction - material_anchor, tangent))),
+            "station_plane_normal_is_target_source_tangent": True,
+            "station_plane_inferred_from_bridge_tangent": False,
+            "mesh_coordinates_modified": False,
+        }
+        result.append(_transport_material_station(surface, spec))
+    return result
 
 
 def _explicit_material_vertex_ancestry(surface, value, collar_face_ids):
@@ -647,13 +781,42 @@ def _validated_station_spec(surface, value, *, witness_points, collar_face_ids,
         surface, value, collar_face_ids)
     if retained_ancestry is not None:
         offset = float(value.get("station_offset_from_anchor_m", 0.0))
-        _require(np.isfinite(offset) and offset > 0.0,
-                 "explicit material station needs a positive ancestry-relative offset")
+        station_scope = value.get("station_scope")
+        _require(np.isfinite(offset)
+                 and (offset > 0.0 if station_scope is None else offset >= 0.0),
+                 "explicit material station offset is invalid")
+        _require(station_scope in (None, "TARGET_COLLAR_LOCAL_SWEEP_V1"),
+                 "explicit material station scope is not supported")
         spec = {
             "tangent_world_unit": tangent.tolist(),
             "provenance": value["provenance"],
             "inferred": bool(value.get("inferred", False)),
             "station_offset_from_anchor_m": offset,
+            **({"station_scope": station_scope} if station_scope is not None else {}),
+            **{key: value[key] for key in (
+                "station_candidate_index",
+                "station_candidate_fraction_of_target_collar_extent",
+                "target_collar_projection_bounds_from_material_anchor_m",
+                "target_source_positions_sha256", "target_source_faces_sha256",
+                "target_source_vertex_ids_sha256",
+                "exact_interface_witness_points_sha256",
+                "frozen_target_collar_face_ids_sha256",
+                "target_collar_source_face_ids",
+                "target_collar_source_face_ids_sha256",
+                "target_collar_vertex_ids", "target_collar_vertex_ids_sha256",
+                "target_noncollar_vertex_ids_sha256",
+                "target_collar_centroid_world_m",
+                "target_noncollar_centroid_world_m",
+                "target_source_direction_unit",
+                "target_collar_positive_extent_m",
+                "target_collar_fraction_offset_m",
+                "junction_witness_centroid_world_m",
+                "junction_witness_signed_distance_to_plane_m",
+                "junction_witness_perpendicular_distance_to_plane_m",
+                "station_plane_normal_is_target_source_tangent",
+                "station_plane_inferred_from_bridge_tangent",
+                "mesh_coordinates_modified",
+            ) if key in value},
             **retained_ancestry,
         }
         return _transport_material_station(surface, spec)
@@ -1499,6 +1662,7 @@ def audit_brachiocephalic_port_pair_continuity(
     bridge_station=None, target_station=None, bridge_route_anchor_world_m=None,
     target_route_anchor_world_m=None,
     junction_station_declarations=None,
+    target_station_candidate_fractions=None,
 ):
     """Check one declared bridge port as closed solids and local section loops.
 
@@ -1506,6 +1670,9 @@ def audit_brachiocephalic_port_pair_continuity(
     physiology, native acceptance, or clinical calibre.
     """
     bridge_key, target_key = _identity(bridge_key), _identity(target_key)
+    if target_station_candidate_fractions is not None:
+        _require((bridge_key, target_key) == ((51011, 526), (51011, 472)),
+                 "target-collar station search is restricted to bridge 526 / target 472")
     if junction_station_declarations is None:
         junction_station_declarations = {}
     _require(isinstance(junction_station_declarations, Mapping),
@@ -1796,24 +1963,216 @@ def audit_brachiocephalic_port_pair_continuity(
             "junction_aware_proof": proof,
         }
 
-    station_results["union_at_bridge_station"] = {
-        "station": bridge_station,
-        "candidate": union_candidate_section,
-        "baseline_station_transported_by_ancestry": base_bridge_station,
-        "baseline": baseline_union_bridge_section,
-        "candidate_vs_baseline": compare_union_station(
-            "union section at bridge station", "bridge", union_candidate_section,
-            baseline_union_bridge_section, bridge_station, base_bridge_station),
-    }
-    station_results["union_at_target_station"] = {
-        "station": target_station,
-        "baseline_station_transported_by_ancestry": base_target_station,
-        "candidate": union_target_section,
-        "baseline": baseline_union_target_section,
-        "candidate_vs_baseline": compare_union_station(
-            "union section at target station", "target", union_target_section,
-            baseline_union_target_section, target_station, base_target_station),
-    }
+    if target_station_candidate_fractions is not None:
+        fractions = tuple(float(value) for value in target_station_candidate_fractions)
+        candidates = _target_collar_material_station_candidates(
+            target, exact_points, target_patch, fractions=fractions)
+        search = {
+            "status": "RUNNING_TARGET_COLLAR_LOCAL_STATION_CANDIDATES",
+            "bridge_owner_id": bridge_key[1],
+            "target_owner_id": target_key[1],
+            "candidate_count_requested": len(candidates),
+            "candidate_count_evaluated": 0,
+            "candidate_fraction_order": list(fractions),
+            "selector_method": (
+                "target source tangent from matched target-collar centroid toward "
+                "non-collar target-source centroid; candidate planes lie at fixed "
+                "fractions of the frozen target-collar projection extent"),
+            "plane_normal_source_owner_id": target_key[1],
+            "plane_normal_inferred_from_bridge_tangent": False,
+            "mesh_coordinates_modified": False,
+            "candidates": [],
+            "selected_candidate_index": None,
+            "passed": False,
+        }
+        selected = None
+        for candidate_spec in candidates:
+            candidate_index = int(candidate_spec["station_candidate_index"])
+            baseline_spec = _transport_material_station(base_target, candidate_spec)
+            candidate_branch_sections = {
+                bridge_key[1]: _source_surface_section(bridge, candidate_spec),
+                target_key[1]: _source_surface_section(target, candidate_spec),
+            }
+            baseline_branch_sections = {
+                bridge_key[1]: _source_surface_section(base_bridge, baseline_spec),
+                target_key[1]: _source_surface_section(base_target, baseline_spec),
+            }
+            candidate_union = _section_loops(
+                union_positions, union_faces,
+                candidate_spec["section_center_world_m"],
+                candidate_spec["tangent_world_unit"], derived_csg=True,
+                face_owner_ids=union_lineage["face_owner_ids"],
+                face_source_ids=union_lineage["source_face_ids"],
+                face_generated_mask=union_lineage["generated_face_mask"])
+            baseline_union = _section_loops(
+                base_union_positions, base_union_faces,
+                baseline_spec["section_center_world_m"],
+                baseline_spec["tangent_world_unit"], derived_csg=True,
+                face_owner_ids=base_union_lineage["face_owner_ids"],
+                face_source_ids=base_union_lineage["source_face_ids"],
+                face_generated_mask=base_union_lineage["generated_face_mask"])
+            declaration = {
+                "declaration_id": (
+                    "target-collar-source-station-v1:"
+                    + str(candidate_spec["target_source_positions_sha256"])
+                    + ":" + str(candidate_index)),
+                "station_role": "target",
+                "expected_owner_ids": sorted((bridge_key[1], target_key[1])),
+                "bridge_owner_id": bridge_key[1],
+                "target_owner_id": target_key[1],
+                "anchor_owner_id": target_key[1],
+                "source_ancestry": {
+                    key: candidate_spec[key] for key in (
+                        "material_anchor_source_vertex_ids",
+                        "tangent_support_source_vertex_ids",
+                        "frozen_collar_face_ids",
+                    )
+                },
+                "candidate_station": candidate_spec,
+                "baseline_station": baseline_spec,
+            }
+            proof = _junction_aware_two_loop_section_proof(
+                expected_owner_ids=(bridge_key[1], target_key[1]),
+                candidate_union_section=candidate_union,
+                baseline_union_section=baseline_union,
+                candidate_branch_sections=candidate_branch_sections,
+                baseline_branch_sections=baseline_branch_sections,
+                solid_evidence=junction_solid_evidence(),
+                station_declaration=declaration,
+            )
+            try:
+                bridge_section_comparison = _section_comparison(
+                    candidate_branch_sections[bridge_key[1]],
+                    baseline_branch_sections[bridge_key[1]])
+                target_section_comparison = _section_comparison(
+                    candidate_branch_sections[target_key[1]],
+                    baseline_branch_sections[target_key[1]])
+                branch_comparisons = {
+                    str(bridge_key[1]): bridge_section_comparison,
+                    str(target_key[1]): target_section_comparison,
+                }
+                branch_calibre_passed = (
+                    bridge_section_comparison.get("passed") is True
+                    and target_section_comparison.get("passed") is True)
+            except ValueError as error:
+                branch_comparisons = {
+                    "error": {"type": type(error).__name__, "message": str(error)}}
+                branch_calibre_passed = False
+            tangent_dot = float(np.dot(
+                np.asarray(candidate_spec["tangent_world_unit"], dtype=np.float64),
+                np.asarray(bridge_station["tangent_world_unit"], dtype=np.float64)))
+            candidate_result = {
+                "candidate_index": candidate_index,
+                "fraction_of_frozen_target_collar_extent": (
+                    candidate_spec["station_candidate_fraction_of_target_collar_extent"]),
+                "station": candidate_spec,
+                "baseline_station_transported_by_target_vertex_ancestry": baseline_spec,
+                "target_local_tangent_vs_previous_bridge_plane_normal": {
+                    "signed_dot": tangent_dot,
+                    "absolute_normal_dot": abs(tangent_dot),
+                    "unsigned_normal_angle_degrees": float(np.degrees(
+                        np.arccos(np.clip(abs(tangent_dot), -1.0, 1.0)))),
+                },
+                "candidate_source_sections": {
+                    str(owner): {
+                        "passed": section.get("passed"),
+                        "loop_count": section.get("loop_count"),
+                        "area_mm2": section.get("area_mm2"),
+                        "minimum_feret_width_mm": section.get(
+                            "minimum_feret_width_mm"),
+                        "owner_ids": section.get("owner_ids"),
+                        "lineage_complete": section.get("lineage_complete"),
+                        "source_face_ancestor_ids_sha256": section.get(
+                            "source_face_ancestor_ids_sha256"),
+                        "reason": section.get("reason"),
+                    } for owner, section in candidate_branch_sections.items()
+                },
+                "baseline_source_sections": {
+                    str(owner): {
+                        "passed": section.get("passed"),
+                        "loop_count": section.get("loop_count"),
+                        "area_mm2": section.get("area_mm2"),
+                        "minimum_feret_width_mm": section.get(
+                            "minimum_feret_width_mm"),
+                        "owner_ids": section.get("owner_ids"),
+                        "lineage_complete": section.get("lineage_complete"),
+                        "source_face_ancestor_ids_sha256": section.get(
+                            "source_face_ancestor_ids_sha256"),
+                        "reason": section.get("reason"),
+                    } for owner, section in baseline_branch_sections.items()
+                },
+                "candidate_union_section": {
+                    "passed": candidate_union.get("passed"),
+                    "loop_count": candidate_union.get("loop_count"),
+                    "loop_metrics": candidate_union.get("loop_metrics"),
+                    "reason": candidate_union.get("reason"),
+                },
+                "baseline_union_section": {
+                    "passed": baseline_union.get("passed"),
+                    "loop_count": baseline_union.get("loop_count"),
+                    "loop_metrics": baseline_union.get("loop_metrics"),
+                    "reason": baseline_union.get("reason"),
+                },
+                "branch_source_calibre_comparisons": branch_comparisons,
+                "branch_source_calibre_passed": branch_calibre_passed,
+                "lineaged_union_proof": proof,
+                "passed": bool(branch_calibre_passed and proof.get("passed") is True),
+            }
+            search["candidates"].append(candidate_result)
+            search["candidate_count_evaluated"] += 1
+            if candidate_result["passed"]:
+                selected = candidate_result
+                break
+        if selected is not None:
+            search["status"] = "PASS_TARGET_COLLAR_LOCAL_TWO_VESSEL_STATION"
+            search["selected_candidate_index"] = selected["candidate_index"]
+            search["passed"] = True
+        else:
+            search["status"] = "REJECT_NO_TARGET_COLLAR_STATION_PASSED_STRICT_JUNCTION_PROOF"
+        station_results["target_collar_station_candidate_search"] = search
+        station_results["union_at_bridge_station"] = {
+            "status": "NOT_USED_BY_TARGET_LOCAL_STATION_SELECTOR",
+            "reason": (
+                "This pair is evaluated on source-bound target 472 collar-local "
+                "planes; the frozen 003 bridge-tangent plane remains preserved as "
+                "prior evidence and is not reused as the selected target station."),
+        }
+        station_results["union_at_target_station"] = (
+            {} if selected is None else {
+                "status": "SELECTED_TARGET_COLLAR_JUNCTION_STATION",
+                "station": selected["station"],
+                "baseline_station_transported_by_target_vertex_ancestry":
+                    selected["baseline_station_transported_by_target_vertex_ancestry"],
+                "candidate": selected["candidate_union_section"],
+                "baseline": selected["baseline_union_section"],
+                "candidate_vs_baseline": selected["lineaged_union_proof"],
+            })
+        if selected is None:
+            error = ValueError(
+                "no frozen target-collar station candidate passed the strict "
+                "one-section-per-vessel, lineaged-union, positive-solid, and "
+                "per-branch calibre gates")
+            error.target_station_candidate_search = search
+            raise error
+    if target_station_candidate_fractions is None:
+        station_results["union_at_bridge_station"] = {
+            "station": bridge_station,
+            "candidate": union_candidate_section,
+            "baseline_station_transported_by_ancestry": base_bridge_station,
+            "baseline": baseline_union_bridge_section,
+            "candidate_vs_baseline": compare_union_station(
+                "union section at bridge station", "bridge", union_candidate_section,
+                baseline_union_bridge_section, bridge_station, base_bridge_station),
+        }
+        station_results["union_at_target_station"] = {
+            "station": target_station,
+            "baseline_station_transported_by_ancestry": base_target_station,
+            "candidate": union_target_section,
+            "baseline": baseline_union_target_section,
+            "candidate_vs_baseline": compare_union_station(
+                "union section at target station", "target", union_target_section,
+                baseline_union_target_section, target_station, base_target_station),
+        }
     return {
         "schema": "numi.human.brachiocephalic-port-solid-continuity.v1",
         "bridge": list(bridge_key),
@@ -1884,13 +2243,19 @@ def audit_brachiocephalic_port_pair_continuity(
 def audit_brachiocephalic_six_port_continuity(
     verifier, manifold3d, candidate_surfaces, baseline_surfaces, port_face_pairs,
     *, station_specs=None, route_anchors=None,
-    junction_station_declarations=None,
+    junction_station_declarations=None, station_candidate_fractions=None,
 ):
     """Run source-ordered bridge port checks and stop at the first failure."""
     station_specs = {} if station_specs is None else station_specs
     route_anchors = {} if route_anchors is None else route_anchors
     junction_station_declarations = (
         {} if junction_station_declarations is None else junction_station_declarations)
+    station_candidate_fractions = (
+        {} if station_candidate_fractions is None else station_candidate_fractions)
+    _require(isinstance(station_candidate_fractions, Mapping),
+             "target station candidate fractions must be source-bound by port")
+    _require(set(station_candidate_fractions) <= {((51011, 526), (51011, 472))},
+             "target-collar station search is restricted to the 526-to-472 port")
     reports = []
     expected = []
     for bridge_key in BRIDGE_KEYS:
@@ -1918,6 +2283,7 @@ def audit_brachiocephalic_six_port_continuity(
                 bridge_route_anchor_world_m=anchors.get("bridge"),
                 target_route_anchor_world_m=anchors.get("target"),
                 junction_station_declarations=junction_station_declarations.get(pair, {}),
+                target_station_candidate_fractions=station_candidate_fractions.get(pair),
             )
         except ValueError as error:
             report = {
@@ -1926,6 +2292,9 @@ def audit_brachiocephalic_six_port_continuity(
                 "passed": False, "failure": str(error),
                 "source_geometry_mutated": False,
             }
+            candidate_search = getattr(error, "target_station_candidate_search", None)
+            if candidate_search is not None:
+                report["target_station_candidate_search"] = candidate_search
         reports.append(report)
         if not report.get("passed"):
             break

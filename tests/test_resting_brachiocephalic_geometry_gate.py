@@ -584,6 +584,89 @@ def _synthetic_two_branch_section_proof(
     return proof, candidate_union_section, evidence
 
 
+def test_target_collar_station_candidates_use_target_source_ancestry_without_moving_mesh():
+    from types import SimpleNamespace
+
+    positions, faces = _closed_cylinder(-1.0, 1.0, sectors=12, axial=16)
+    surface = SimpleNamespace(
+        positions=positions,
+        faces=faces,
+        source_vertex_ids=np.arange(1000, 1000 + len(positions), dtype=np.uint64),
+    )
+    collar_faces = np.arange(24, dtype=np.int64)
+    witness = np.asarray([
+        [0.18, 0.0, -0.93], [0.0, 0.18, -0.93], [-0.18, 0.0, -0.93],
+    ], dtype=np.float64)
+    original_bytes = positions.tobytes()
+
+    candidates = bg._target_collar_material_station_candidates(
+        surface, witness, collar_faces)
+
+    assert len(candidates) == 4
+    assert [row["station_candidate_fraction_of_target_collar_extent"]
+            for row in candidates] == [0.2, 0.4, 0.6, 0.8]
+    assert all(row["station_plane_normal_is_target_source_tangent"] for row in candidates)
+    assert all(not row["station_plane_inferred_from_bridge_tangent"] for row in candidates)
+    assert all(row["mesh_coordinates_modified"] is False for row in candidates)
+    assert all(row["station_scope"] == "TARGET_COLLAR_LOCAL_SWEEP_V1"
+               for row in candidates)
+    assert all(row["transported_from_source_vertex_ancestry"] for row in candidates)
+    assert all(row["material_anchor_source_vertex_ids"]
+               and row["tangent_support_source_vertex_ids"]
+               and row["frozen_collar_face_ids"] == collar_faces.tolist()
+               and row["target_collar_source_face_ids"] == collar_faces.tolist()
+               and row["target_collar_source_face_ids_sha256"]
+               for row in candidates)
+    tangent = np.asarray(candidates[0]["tangent_world_unit"])
+    assert tangent[2] > 0.99
+    offsets = [row["station_offset_from_anchor_m"] for row in candidates]
+    assert offsets == sorted(offsets)
+    assert offsets[-1] < candidates[-1]["collar_projection_extent_m"]
+    assert positions.tobytes() == original_bytes
+
+
+def test_target_collar_station_candidate_selector_is_hard_bounded_at_four():
+    from types import SimpleNamespace
+
+    positions, faces = _closed_cylinder(-1.0, 1.0, sectors=12, axial=16)
+    surface = SimpleNamespace(
+        positions=positions,
+        faces=faces,
+        source_vertex_ids=np.arange(len(positions), dtype=np.uint64),
+    )
+    with pytest.raises(ValueError, match="one to four frozen fractions"):
+        bg._target_collar_material_station_candidates(
+            surface, [[0.0, 0.0, -1.0]], np.arange(24),
+            fractions=(0.1, 0.2, 0.3, 0.4, 0.5))
+
+
+def test_explicit_junction_proof_still_rejects_two_loops_from_one_source_vessel():
+    proof, _, _, internal = _synthetic_two_branch_section_proof(include_internal=True)
+    assert proof["passed"]
+    call = dict(internal["junction_call"])
+    candidate = dict(call["candidate_branch_sections"])
+    baseline = dict(call["baseline_branch_sections"])
+    for collection in (candidate, baseline):
+        one_loop = collection[472]
+        duplicate = dict(one_loop)
+        duplicate["loop_count"] = 2
+        duplicate["loop_metrics"] = [
+            dict(one_loop["loop_metrics"][0]),
+            dict(one_loop["loop_metrics"][0]),
+        ]
+        collection[472] = duplicate
+    call["candidate_branch_sections"] = candidate
+    call["baseline_branch_sections"] = baseline
+
+    rejected = bg._junction_aware_two_loop_section_proof(**call)
+
+    assert not rejected["passed"]
+    assert any("candidate source section 472 must have one positive closed section loop"
+               in item for item in rejected["rejections"])
+    assert any("baseline source section 472 must have one positive closed section loop"
+               in item for item in rejected["rejections"])
+
+
 def test_y_junction_two_contours_pass_only_with_per_vessel_lineage_and_solid_witnesses():
     proof, section, evidence = _synthetic_two_branch_section_proof()
 
@@ -805,7 +888,7 @@ def test_port_replay_preflight_is_pinned_single_port_and_keeps_topology_metrics(
     }
     assert portdiag.RUNTIME_CODE_EXPECTED_SHA256[
         "resting_brachiocephalic_geometry_gate.py"] == (
-            "f80c2128420620b4670e3ea6f672d2c56ca077ceac25c7e7b6819fdb8608dfad")
+            "35d2df7a6f982c086c9442438f815fe39e91270d601ae92a9b71bd60a1365661")
     assert portdiag.SIX_JUNCTION_SOURCE_REPORT_SHA256 == (
         "40d01f68619153ef94f09e79bf83f160c2c83ed695899c1713693f9a2a88fe5f")
     assert portdiag.SIX_JUNCTION_SOURCE_PREFLIGHT_SHA256 == (
@@ -847,10 +930,22 @@ def test_six_port_diagnostic_scope_matches_source007_and_is_separate():
     assert portdiag.SIX_REPLAY_SCOPE["source_candidate_compiler_invoked"] is False
     assert portdiag.SIX_REPLAY_SCOPE["all_nearby_collision_checks_invoked"] is False
     assert portdiag.SIX_REPLAY_SCOPE["stop_after_first_failed_port"] is True
-    assert portdiag.SIX_DIAGNOSTIC_DIR.name == "port-525-526-six-port-diagnostic-003"
-    assert portdiag.SIX_PREFLIGHT_PATH.name == "port-525-526-six-port-preflight-003.json"
+    assert portdiag.SIX_DIAGNOSTIC_DIR.name == (
+        "port-525-526-target-collar-diagnostic-004")
+    assert portdiag.SIX_PREFLIGHT_PATH.name == (
+        "port-525-526-target-collar-preflight-004.json")
+    station_selector = portdiag.SIX_REPLAY_SCOPE["target_collar_station_selector"]
+    assert station_selector["pair"] == {
+        "bridge": [51011, 526], "target": [51011, 472]}
+    assert station_selector["candidate_fractions"] == [0.2, 0.4, 0.6, 0.8]
+    assert station_selector["maximum_candidates"] == 4
+    assert station_selector["normal_from_bridge_tangent"] is False
+    assert station_selector["post_failure_expansion"] is False
+    assert station_selector["requires_one_positive_source_loop_per_owner_at_same_plane"]
     assert portdiag.SIX_REPLAY_SCOPE["retained_prior_attempt"]["report_sha256"] == (
         "c916c16230114ae679dc7d3145ea76b9433b223aefe38bd6472fe1adf601d054")
+    assert portdiag.SIX_PREVIOUS_REPORT_SHA256 == (
+        "5b0d95318a7eba859d316736a8e046320327209f98c7eb541f39212b55c5826a")
     assert portdiag.SIX_DIAGNOSTIC_DIR != portdiag.DIAGNOSTIC_DIR
     assert portdiag.SIX_PREFLIGHT_PATH != portdiag.PREFLIGHT_PATH
     policy = portdiag.SIX_REPLAY_SCOPE["junction_section_policy"]
