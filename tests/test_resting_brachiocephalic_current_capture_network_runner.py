@@ -91,6 +91,30 @@ def _patch_input_owner(monkeypatch):
         } for edge in links))
 
 
+
+def _freeze_test_addendum(output, bundle, proof):
+    preflight_path = output / "source-and-capture-preflight.json"
+    progress_path = output / "progress.json"
+    report = {
+        "status": "VERIFIED_BASELINE_ONLY_475_479_EXACT_P6_RAT_COLLAR_ADDENDUM",
+        "capture_input_bundle_path": str(bundle.resolve()),
+        "capture_input_bundle_sha256": runner._sha_file(bundle.resolve()),
+        "source_preflight_path": str(preflight_path.resolve()),
+        "source_preflight_sha256": runner._sha_file(preflight_path),
+        "runner_code_pins": runner._runtime_code_pins(),
+        "verified_addendum": proof,
+    }
+    runner._write_json(output / runner.BASELINE_ADDENDUM_NAME, report)
+    progress = json.loads(progress_path.read_text())
+    progress.update({
+        "status": "BASELINE_COLLAR_ADDENDUM_VERIFIED",
+        "geometry_predicates_run": True,
+        "candidate_surface_predicates_run": False,
+        "baseline_exact_p6_predicate_run": True,
+    })
+    runner._write_json(progress_path, progress)
+
+
 def test_native_nha_gid_base_offset_uses_receipt_ranges_and_rejects_bad_types():
     context = {"capture_receipt": {"skin_source_mapping": {"pack_first_vertex": 712060, "source_vertex_count": 54949}, "vertex_count": 2854518}}
     proof = runner._native_nha_gid_base_offset(context)
@@ -279,6 +303,7 @@ def test_run_rejects_capture_bundle_drift_before_geometry(tmp_path, monkeypatch)
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
     runner.prepare(bundle, output)
+    _freeze_test_addendum(output, bundle, {"passed": True})
     bundle.write_text('{"changed":true}')
     monkeypatch.setattr(
         runner, "execute_ordered_network_gates",
@@ -306,9 +331,17 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
     runner.prepare(bundle, output)
+    proof = {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [[51011, 475], [51011, 479]],
+    }
+    _freeze_test_addendum(output, bundle, proof)
+    monkeypatch.setattr(runner, "_baseline_collar_addendum", lambda *_args: proof)
     stages = []
 
-    def execute(_runtime, *, progress_callback=None):
+    def execute(_runtime, *, progress_callback=None, matched_collar_addendum=None):
+        assert matched_collar_addendum == proof
         stages.append("continuity")
         progress_callback("STARTING_FAIL_FIRST_15_LINK_CONTINUITY")
         return {

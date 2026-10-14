@@ -425,6 +425,200 @@ def _registered_svc_source_inputs():
 
 
 
+
+
+def _exact_prepared_surface_for_source_test(key, points, faces, source_vertex_ids):
+    """Build only the PreparedSurface fields used by the exact pair primitive."""
+    points = np.ascontiguousarray(points, dtype="<f4")
+    faces = np.ascontiguousarray(faces, dtype="<u4")
+    surface = object.__new__(av.PreparedSurface)
+    surface.key = key
+    surface.positions = points
+    surface.faces = faces
+    surface.source_vertex_ids = np.asarray(source_vertex_ids, dtype="<u8")
+    lattice = [av.ci.float32_point_lattice_key(row) for row in points.tolist()]
+    surface.records = tuple(
+        (tuple(tuple(int(value) for value in lattice[int(vertex)])
+               for vertex in face), None, None, face_id)
+        for face_id, face in enumerate(faces))
+    surface._face_records = {
+        int(record[3]): record for record in surface.records}
+    return surface
+
+def _registered_baseline_addendum_fixture(monkeypatch, *, unbound_target_neighbor=False):
+    parent_key, child_key = (51011, 475), (51011, 479)
+    parent_points = np.asarray([
+        [1.0, 0.0, -1.0],
+        [0.0, 1.0, -1.0],
+        [0.0, 0.0, 1.0],
+    ], dtype="<f4")
+    target_points = np.asarray([
+        [0.0, 0.0, 0.0],
+        [1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, 0.0, -1.0],
+        [0.0, -1.0, 0.0],
+    ], dtype="<f4")
+    parent_faces = np.tile(np.asarray([[0, 1, 2]], dtype="<u4"), (1578, 1))
+    target_faces = np.tile(np.asarray([[0, 1, 2]], dtype="<u4"), (395, 1))
+    target_faces[392] = [2, 0, 3]
+    target_faces[394] = [0, 1, 4]
+    if unbound_target_neighbor:
+        target_faces[394] = [1, 2, 4]
+    parent_first, target_first, base = 100, 200, 10000
+    rows = {
+        475: {
+            "record": (20, parent_first, len(parent_points), 0,
+                       len(parent_faces) * 3, 475, 2, 0),
+            "faces": parent_faces,
+            "vertices6": parent_points,
+            "body_index": 20,
+            "layer": 2,
+        },
+        479: {
+            "record": (20, target_first, len(target_points), 0,
+                       len(target_faces) * 3, 479, 2, 0),
+            "faces": target_faces,
+            "vertices6": target_points,
+            "body_index": 20,
+            "layer": 2,
+        },
+    }
+    parent_surface = _exact_prepared_surface_for_source_test(
+        parent_key, parent_points, parent_faces,
+        np.arange(base + parent_first, base + parent_first + len(parent_points),
+                  dtype="<u8"))
+    target_surface = _exact_prepared_surface_for_source_test(
+        child_key, target_points, target_faces,
+        np.arange(base + target_first, base + target_first + len(target_points),
+                  dtype="<u8"))
+    pair_array = np.asarray([[1577, 392], [1577, 394]], dtype="<i8")
+    evidence = {
+        "parent_stable_id": 475,
+        "child_stable_id": 479,
+        "path": "/frozen/arterial-venous-route-field-086/report.json",
+        "sha256": "e" * 64,
+        "pairs": pair_array,
+        "pairs_sha256": hashlib.sha256(pair_array.tobytes()).hexdigest(),
+        "source_parent_faces_sha256": hashlib.sha256(
+            parent_faces.tobytes()).hexdigest(),
+        "source_child_faces_sha256": hashlib.sha256(
+            target_faces.tobytes()).hexdigest(),
+        "evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+    }
+    source_map = {
+        "475": {
+            "source_member": "FJ2216", "body_index": 20, "layer": 2,
+            "vascular_compartment_id": 4, "source_sha256": "a" * 64,
+            "name": "left axillary artery",
+        },
+        "479": {
+            "source_member": "FJ2219", "body_index": 20, "layer": 2,
+            "vascular_compartment_id": 4, "source_sha256": "b" * 64,
+            "name": "left brachial artery",
+        },
+    }
+    monkeypatch.setattr(
+        junction.network_preparation, "_read_registered_source_link_evidence",
+        lambda _parent, _child, **_kwargs: evidence)
+    baseline_binding = {
+        "actual_accepted_capture": {
+            "pack_sha256": "1" * 64,
+            "receipt_sha256": "2" * 64,
+            "capture_receipt_sha256": "2" * 64,
+            "invoked_anatomy_receipt_sha256": "3" * 64,
+            "accepted_step": 0,
+            "accepted_time_s": 0.0,
+            "common_field_source_anatomy_payload_sha256": "4" * 64,
+        },
+        "source_bound_rigid_rest_baseline": {
+            "source_nha_payload_sha256": "4" * 64,
+            "payload_is_current_capture_source": True,
+            "method": (
+                "apply the existing pinned transform_f32 to exact NHA vertices6 XYZ "
+                "using the actual accepted rigid pose; cardiac common-field "
+                "displacement is excluded"),
+        },
+    }
+    return {
+        "bridge_key": parent_key,
+        "target_key": child_key,
+        "source_link_evidence": evidence,
+        "source_rows": rows,
+        "source_map": source_map,
+        "bridge": parent_surface,
+        "target": target_surface,
+        "baseline_binding": baseline_binding,
+        "gid_base_offset": base,
+    }
+
+
+def test_baseline_collaredge_addendum_is_exact_and_one_face_bounded(monkeypatch):
+    inputs = _registered_baseline_addendum_fixture(monkeypatch)
+
+    proof = junction.verify_baseline_matched_collar_addendum(
+        av,
+        bridge_key=inputs["bridge_key"],
+        target_key=inputs["target_key"],
+        source_link_evidence=inputs["source_link_evidence"],
+        source_rows=inputs["source_rows"],
+        source_map=inputs["source_map"],
+        independent_source_baseline_bridge_surface=inputs["bridge"],
+        independent_source_baseline_target_surface=inputs["target"],
+        native_nha_gid_base_offset=inputs["gid_base_offset"],
+        baseline_binding=inputs["baseline_binding"],
+    )
+
+    assert proof["passed"]
+    assert proof["candidate_geometry_used"] is False
+    assert proof["source_evidence"]["frozen_source_pairs_unchanged"]
+    assert proof["bounded_port_region"]["only_additional_allowed_face_pair"] == [1577, 391]
+    assert proof["bounded_port_region"]["no_cross_product_expansion"]
+    contact = proof["exact_p6_rat_contact"]
+    assert contact["contact_topology"] == "one positive-length segment, exactly two unique endpoints"
+    assert contact["exact_endpoint_count"] == 2
+    assert {row["target_frozen_neighbor_face"] for row in contact["endpoints"]} == {392, 394}
+    assert all(row["exact_point_on_target_neighbor_edge"] for row in contact["endpoints"])
+    assert all(
+        isinstance(component["numerator"], str)
+        and isinstance(component["denominator"], str)
+        for row in contact["endpoints"] for component in row["point_m"])
+    assert proof["source_identities"]["475"]["canonical_source_member"] == "FJ2216"
+    assert proof["source_identities"]["479"]["canonical_source_member"] == "FJ2219"
+    assert proof["baseline_surface_lineage"]["independent_from_actual_candidate_geometry"]
+
+
+def test_baseline_collaredge_addendum_rejects_wrong_link_or_wrong_source_region(monkeypatch):
+    inputs = _registered_baseline_addendum_fixture(monkeypatch)
+    kwargs = {
+        "source_link_evidence": inputs["source_link_evidence"],
+        "source_rows": inputs["source_rows"],
+        "source_map": inputs["source_map"],
+        "independent_source_baseline_bridge_surface": inputs["bridge"],
+        "independent_source_baseline_target_surface": inputs["target"],
+        "native_nha_gid_base_offset": inputs["gid_base_offset"],
+        "baseline_binding": inputs["baseline_binding"],
+    }
+    with pytest.raises(ValueError, match="restricted to typed link 475->479"):
+        junction.verify_baseline_matched_collar_addendum(
+            av, bridge_key=(51011, 525), target_key=(51011, 479), **kwargs)
+
+    unbound = _registered_baseline_addendum_fixture(
+        monkeypatch, unbound_target_neighbor=True)
+    with pytest.raises(ValueError, match="exact contact endpoint must land"):
+        junction.verify_baseline_matched_collar_addendum(
+            av,
+            bridge_key=unbound["bridge_key"],
+            target_key=unbound["target_key"],
+            source_link_evidence=unbound["source_link_evidence"],
+            source_rows=unbound["source_rows"],
+            source_map=unbound["source_map"],
+            independent_source_baseline_bridge_surface=unbound["bridge"],
+            independent_source_baseline_target_surface=unbound["target"],
+            native_nha_gid_base_offset=unbound["gid_base_offset"],
+            baseline_binding=unbound["baseline_binding"],
+        )
+
 def test_network_registry_is_exactly_thirteen_edges_and_two_svc_ports():
     from numilab_human import (
         resting_brachiocephalic_current_capture_network_preparation as network,
@@ -550,6 +744,69 @@ def test_svc_network_link_uses_solid_and_independent_calibre_not_pair_count(monk
     assert result["declared_network_link_source_ancestry"][
         "source_identities"]["10"]["vascular_compartment_id"] is None
 
+
+
+
+
+def test_verified_collar_addendum_adds_only_single_face_pair(monkeypatch):
+    captured = {}
+
+    class PassingPairVerifier:
+        def audit_surface_pair(self, bridge, target, *, intended_face_pairs):
+            captured["allowed"] = tuple(intended_face_pairs)
+            return {
+                "passed": True,
+                "declared_interface_triangle_pairs": [],
+                "unexpected_triangle_pairs": [],
+                "containment": [],
+            }
+
+    from types import SimpleNamespace
+    bridge = SimpleNamespace(key=(51011, 475), faces=np.zeros((1578, 3), dtype=np.uint32))
+    target = SimpleNamespace(key=(51011, 479), faces=np.zeros((392, 3), dtype=np.uint32))
+    pairs = [[0, 0], [1, 1]]
+    addendum = {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [[51011, 475], [51011, 479]],
+        "bounded_port_region": {
+            "only_additional_allowed_face_pair": [1577, 391],
+            "no_cross_product_expansion": True,
+        },
+    }
+
+    junction._interface_gate(
+        PassingPairVerifier(), bridge, target, pairs,
+        declared_vessel_ports=junction.declared_network_links(),
+        verified_collar_addendum=addendum)
+
+    assert set(captured["allowed"]) == {
+        (0, 0), (0, 1), (1, 0), (1, 1), (1577, 391)}
+    assert (1577, 0) not in captured["allowed"]
+    assert (0, 391) not in captured["allowed"]
+
+
+def test_verified_collar_addendum_rejects_wrong_link_before_pair_audit():
+    from types import SimpleNamespace
+    class NeverCalledVerifier:
+        def audit_surface_pair(self, *_args, **_kwargs):
+            raise AssertionError("wrong-link addendum must fail before geometry")
+
+    bridge = SimpleNamespace(key=(51011, 475), faces=np.zeros((1578, 3), dtype=np.uint32))
+    target = SimpleNamespace(key=(51011, 479), faces=np.zeros((392, 3), dtype=np.uint32))
+    with pytest.raises(ValueError, match="invalid or belongs to another typed port"):
+        junction._interface_gate(
+            NeverCalledVerifier(), bridge, target, [[0, 0]],
+            declared_vessel_ports=junction.declared_network_links(),
+            verified_collar_addendum={
+                "passed": True,
+                "schema": "numi.human.registered-source-collar-addendum.v1",
+                "typed_link": [[51011, 525], [51011, 469]],
+                "bounded_port_region": {
+                    "only_additional_allowed_face_pair": [1577, 391],
+                    "no_cross_product_expansion": True,
+                },
+            })
 
 
 def test_legacy_interface_scope_does_not_expand_with_network_registry(monkeypatch):
