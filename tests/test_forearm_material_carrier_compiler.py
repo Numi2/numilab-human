@@ -60,3 +60,20 @@ def test_lineage_pins_parent_identities_and_positive_partition():
         compiler.validate_lineage(wrong, grouped)
     with pytest.raises(ValueError, match="missing new child"):
         compiler.validate_lineage({'new_vertices': {}}, grouped)
+
+
+def test_retired_source_slots_preserve_carrier_normal():
+    positions = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0], [5, 5, 5]], dtype='<f4')
+    normals = compiler.corrected_child_normals(positions, np.asarray([[0, 1, 2]]))
+    assert np.array_equal(normals[:3], [[0, 0, 1]] * 3)
+    assert np.array_equal(normals[3], [0, 0, 0])
+    old = struct.pack('<6f4I4f', 0, 0, 0, 1, 0, 0, 7, 0, 0, 0, 1, 0, 0, 0)
+    assert compiler.carrier_normal(0, old, normals[3]) == old[12:24]
+    with pytest.raises(ValueError, match="defined surface normal"):
+        compiler.carrier_normal(2, old, normals[3])
+
+
+def test_referenced_degenerate_face_is_rejected():
+    positions = np.zeros((3, 3), dtype='<f4')
+    with pytest.raises(ValueError, match="degenerate"):
+        compiler.corrected_child_normals(positions, np.asarray([[0, 1, 2]]))

@@ -30,7 +30,30 @@ def validate_parent_point(point, oldpoint, deltas, child_gid, parent_gid, kind):
             'source offset differs from declared material parent correction')
 
 def carrier_normal(kind, old, child_normal):
+    if kind in (1, 2):
+        require(np.isfinite(child_normal).all() and
+                abs(float(np.linalg.norm(child_normal.astype(float))) - 1) <= 2e-3,
+                'new material child requires a defined surface normal')
     return child_normal.tobytes() if kind in (1, 2) else old[12:24]
+
+
+def corrected_child_normals(positions, faces):
+    area_vectors = np.cross(positions[faces[:, 1]].astype(float)-positions[faces[:, 0]],
+                            positions[faces[:, 2]].astype(float)-positions[faces[:, 0]])
+    require(np.isfinite(area_vectors).all() and
+            np.all(np.linalg.norm(area_vectors, axis=1) > 0),
+            'degenerate corrected child surface')
+    normals = np.zeros(positions.shape, dtype=np.float64)
+    for lane in range(3):
+        np.add.at(normals, faces[:, lane], area_vectors)
+    lengths = np.linalg.norm(normals, axis=1)
+    referenced = np.unique(faces)
+    require(np.isfinite(lengths).all() and np.all(lengths[referenced] > 0),
+            'undefined corrected child vertex normal')
+    # Removed source slots remain as ancestry. Kind 0 retains their original
+    # carrier normal; kind 1/2 may never consume an unreferenced zero normal.
+    normals[referenced] /= lengths[referenced, None]
+    return np.asarray(normals, dtype='<f4')
 
 def validate_lineage(lineage, grouped):
     """Require explicit source-face ancestry for every new material child."""
@@ -157,18 +180,7 @@ def main():
             np.searchsorted(z['canonical_output_gids'], s['global_vertex_ids'])]),
             'actual corrected child source differs from geometry and declared offsets')
         faces = np.asarray(s['faces'], dtype=np.int64)
-        area_vectors = np.cross(expected[faces[:,1]].astype(float)-expected[faces[:,0]],
-                                expected[faces[:,2]].astype(float)-expected[faces[:,0]])
-        require(np.isfinite(area_vectors).all() and
-                np.all(np.linalg.norm(area_vectors,axis=1) > 0),
-                'degenerate corrected child surface')
-        normals = np.zeros(expected.shape,dtype=np.float64)
-        for lane in range(3):
-            np.add.at(normals,faces[:,lane],area_vectors)
-        lengths = np.linalg.norm(normals,axis=1)
-        require(np.isfinite(lengths).all() and np.all(lengths > 0),
-                'undefined corrected child vertex normal')
-        normals = np.asarray(normals/lengths[:,None],dtype='<f4')
+        normals = corrected_child_normals(expected, faces)
         output = []
         for local_vertex, raw_gid in enumerate(s['global_vertex_ids']):
             gid = int(raw_gid)
