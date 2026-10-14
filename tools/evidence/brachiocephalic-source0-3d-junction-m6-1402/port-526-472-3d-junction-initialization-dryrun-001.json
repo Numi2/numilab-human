@@ -1,0 +1,232 @@
+{
+  "attribution_candidate107": {
+    "FJ3482_before_after_xyz_bitwise_equal": true,
+    "FJ3482_max_displacement_mm": 0.0,
+    "contains_FJ3482": true,
+    "contains_FJ3583": false,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/route-candidate-107-local-ambient-profile-001/candidate-107-source-rows.npz",
+    "sha256": "709ad323b7f19057f5f3bfdf02dbd309fb86d0e4c6dc501d307ac8a23c811401"
+  },
+  "candidate_payload_sha256": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150",
+  "decoded_ids_include_472_525_526": true,
+  "decoded_max_stable_id": 526,
+  "decoded_stable_id_count": 525,
+  "decoded_surface_count": 525,
+  "elapsed_seconds": 1.2346434999999474,
+  "exact_geometry_predicates_invoked": false,
+  "first_not_invoked_exact_geometry_stage": "audit_brachiocephalic_3d_junction",
+  "geometry_arrays_loaded": true,
+  "limitations": [
+    "This is source/capture/dependency initialization only.",
+    "No exact closure/self, pair, inside, overlap, section, or CSG predicate was invoked.",
+    "No anatomical or junction admission is claimed."
+  ],
+  "material_branch_scope": {
+    "added_blood_state_or_force": false,
+    "added_physical_mass_kg": 0,
+    "all_frozen_ports": [
+      {
+        "bridge": [
+          51011,
+          525
+        ],
+        "face_pair_count": 150,
+        "ordered_face_pairs_json_sha256": "2585a12906a0bd59bdf0178191436874fd98407c9c2487f871cc7bdce6ca692e",
+        "target": [
+          51011,
+          10
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          525
+        ],
+        "face_pair_count": 82,
+        "ordered_face_pairs_json_sha256": "3400edb14f0c5fc459c8a69f838654275b6a25f14703afb7526099987eb2bd38",
+        "target": [
+          51011,
+          469
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          525
+        ],
+        "face_pair_count": 57,
+        "ordered_face_pairs_json_sha256": "31939d84873b1edeb188211a62c095f167d09be0bae10a3d64f162669eed8c93",
+        "target": [
+          51011,
+          473
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          526
+        ],
+        "face_pair_count": 92,
+        "ordered_face_pairs_json_sha256": "591a9c1dee1cc8631f55f02ac4617ba1000bd4c35f57d44f80260a54b7f8130d",
+        "target": [
+          51011,
+          10
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          526
+        ],
+        "face_pair_count": 58,
+        "ordered_face_pairs_json_sha256": "252f254bd5947139f170476eca66317060b9b89ee071504f20f85f63c7e51a2b",
+        "target": [
+          51011,
+          468
+        ]
+      },
+      {
+        "bridge": [
+          51011,
+          526
+        ],
+        "face_pair_count": 63,
+        "ordered_face_pairs_json_sha256": "205009fbf17def72e788d1c105c681575433f8a98792ea147e15c4c0651498ae",
+        "target": [
+          51011,
+          472
+        ]
+      }
+    ],
+    "all_six_expected_ports_present": true,
+    "bridge_identity": {
+      "body_index": 20,
+      "head_family": null,
+      "layer": 2,
+      "name": "right brachiocephalic vein",
+      "provider": "BodyParts3D v4.0 existing organ-family compiler",
+      "repair": {
+        "face_lineage": "all source faces retained in source order through source_vertex_to_quotient",
+        "kind": "exact_float32_source_seam_quotient",
+        "moved_source_coordinates_m": 0,
+        "non_source_coordinate_added": false,
+        "quotient_vertex_count": 275,
+        "source_face_count": 546,
+        "source_vertex_count": 275
+      },
+      "source_member": "FJ3583",
+      "source_owner_metadata": {
+        "concept_id": "FMA4751",
+        "core_body_index": 20,
+        "hierarchy": "part_of",
+        "label": "right brachiocephalic vein",
+        "layer": "vessel",
+        "member_id": "FJ3583",
+        "member_sha256": "ca53e5ac012df552c56026a95afed7094ed79f0053ff6425862fef047aab9537",
+        "myosim_body": "torso",
+        "source_body_id": 8
+      },
+      "source_sha256": "ca53e5ac012df552c56026a95afed7094ed79f0053ff6425862fef047aab9537",
+      "vascular_compartment_id": 4
+    },
+    "coverage_limit": "This screen proves only the 526-to-472 interface among FJ3583's three frozen ports; it does not establish the complete right venous tree.",
+    "existing_cvsim_compartment_id": 4,
+    "selected_frozen_interface": {
+      "bridge": [
+        51011,
+        526
+      ],
+      "face_pair_count": 63,
+      "ordered_face_pairs_json_sha256": "205009fbf17def72e788d1c105c681575433f8a98792ea147e15c4c0651498ae",
+      "target": [
+        51011,
+        472
+      ]
+    },
+    "selected_material_branch": "FJ3583 right brachiocephalic vein to FJ3587 right subclavian vein",
+    "target_identity": {
+      "body_index": 20,
+      "head_family": null,
+      "layer": 2,
+      "name": "right subclavian vein",
+      "provider": "BodyParts3D v4.0 existing organ-family compiler",
+      "repair": null,
+      "source_member": "FJ3587",
+      "source_owner_metadata": {
+        "concept_id": "FMA4755",
+        "core_body_index": 20,
+        "hierarchy": "is_a",
+        "label": "right subclavian vein",
+        "layer": "vessel",
+        "member_id": "FJ3587",
+        "member_sha256": "3ed476e466dbc681e284005f910b546a97ac24999236cae1ec7487149da7bb53",
+        "myosim_body": "torso"
+      },
+      "source_sha256": "3ed476e466dbc681e284005f910b546a97ac24999236cae1ec7487149da7bb53",
+      "vascular_compartment_id": 4
+    }
+  },
+  "native_or_gpu_work_performed": false,
+  "numerical_boolean_invoked": false,
+  "preflight_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/port-526-472-3d-junction-preflight-003.json",
+  "preflight_sha256": "021e7fc3282762f5f7d8cf006727701cd460c674031509faf910b601cba58f74",
+  "recorded_finish_utc": "2026-10-14T04:43:51.337719+00:00",
+  "recorded_start_utc": "2026-10-14T04:43:50.103180+00:00",
+  "required_helper_symbols_called_or_loaded": [
+    "nhanat_codec._parse_payload",
+    "source007._bridge_surfaces",
+    "source007._load_central_p6",
+    "source007._load_predictor_transform",
+    "source007._load_retained_manifold",
+    "source007._port_target_surfaces",
+    "source007._read_port_pairs",
+    "source007._step0_source",
+    "source007._validate_source_candidate"
+  ],
+  "retained_manifold_mesh64_callable": true,
+  "retained_manifold_module_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/retained-cpu-reference-deps-1384/manifold3d-3.5.4/manifold3d.cpython-313-darwin.so",
+  "schema": "numi.human.brachiocephalic-3d-junction-initialization.v1",
+  "selected_bridge_triangle_count": 546,
+  "selected_bridge_vertex_count": 275,
+  "selected_frozen_face_pair_count": 63,
+  "selected_target_triangle_count": 368,
+  "selected_target_vertex_count": 209,
+  "source007_bridge_self_check_reuse": {
+    "bridges": {
+      "525": {
+        "faces_sha256": "2fa66bf9e54a16450c710720c99b1cebf17340c0bd51010c4be81e354816885d",
+        "matches_pinned_geometry_bytes": true,
+        "passed": true,
+        "pinned_source007_closed_oriented_source": true,
+        "pinned_source007_exact_self_clear": true,
+        "pinned_source007_exact_self_intersection_count": 0,
+        "positions_sha256": "33b65f799202405564cdcd42627f5c8db59f87a323161e69e62c3e3f115bd913",
+        "triangle_count": 748,
+        "vertex_count": 376
+      },
+      "526": {
+        "faces_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+        "matches_pinned_geometry_bytes": true,
+        "passed": true,
+        "pinned_source007_closed_oriented_source": true,
+        "pinned_source007_exact_self_clear": true,
+        "pinned_source007_exact_self_intersection_count": 0,
+        "positions_sha256": "97d79e5216b73a944596efb714e7d0cd445c4acdd3fe215b17382336af6ffcd2",
+        "triangle_count": 546,
+        "vertex_count": 275
+      }
+    },
+    "passed": true,
+    "reused_existing_exact_p6_self_audits": true,
+    "source007_report_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/source-007-geometry-report.json",
+    "source007_report_sha256": "9d0fb2fc1b0b68f111387f867aec35168587ca0bd1bada50519b4ccc9da1a612"
+  },
+  "source0_bridge_surface_count": 2,
+  "source0_pack_sha256": "a70cbdc2e42b97a38fd6afa46598f023ae705bbd36686dcebf1840399295c1fd",
+  "source0_receipt_sha256": "b7847f3970694f770d4e36d1c72dd8f8bdea77840df352b9cffa84bd025ae7f2",
+  "source0_target_surface_count": 6,
+  "source_compiler_invoked": false,
+  "source_geometry_mutated": false,
+  "stationarity_status": "PASS_SOURCE_PORT_SUPPORT_FIXED",
+  "status": "INITIALIZATION_AND_DECODE_PASS_PRE_EXACT_PREDICATES"
+}

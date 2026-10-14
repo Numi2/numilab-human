@@ -1,7 +1,7 @@
 import json
 
 import numpy as np
-from test_resting_brachiocephalic_geometry_gate import (
+from tests.test_resting_brachiocephalic_geometry_gate import (
     _closed_cylinder,
     _manifold3d,
 )

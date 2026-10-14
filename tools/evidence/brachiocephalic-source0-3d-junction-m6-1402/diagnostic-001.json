@@ -1,0 +1,681 @@
+{
+  "candidate_payload_sha256": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150",
+  "candidate_payload_sha256_after": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150",
+  "elapsed_seconds": 0.3244794170022942,
+  "error": {
+    "message": "module 'numilab_human.resting_brachiocephalic_port_diagnostic' has no attribute '_parse_payload'",
+    "type": "AttributeError"
+  },
+  "native_or_gpu_work_performed": false,
+  "preflight_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/port-526-472-3d-junction-preflight-002.json",
+  "preflight_sha256": "5a7b2af5735a7c1d8808a78455ee5362844466e7079e669bd1d5d922ef3a1669",
+  "preparation_report_sha256": "52561304ff785f73fe980c9dfe796d430cbc2f8671e32b2a810746c5501fd8ba",
+  "preparation_report_sha256_after": "52561304ff785f73fe980c9dfe796d430cbc2f8671e32b2a810746c5501fd8ba",
+  "recorded_finish_utc": "2026-10-14T04:38:15.331515+00:00",
+  "recorded_start_utc": "2026-10-14T04:38:15.007044+00:00",
+  "schema": "numi.human.brachiocephalic-3d-junction-execution.v1",
+  "scope": {
+    "added_blood_state_or_force": false,
+    "added_physical_mass_kg": 0,
+    "all_nearby_targets_evaluated": false,
+    "all_pose_checks": false,
+    "all_six_ports_replayed": false,
+    "bridge": [
+      51011,
+      526
+    ],
+    "existing_cvsim_compartment_id": 4,
+    "material_branch": {
+      "bridge": {
+        "material": "right brachiocephalic vein",
+        "source_member": "FJ3583",
+        "stable_id": 526
+      },
+      "coverage_limit": "one of three FJ3583 ports; not full tree admission",
+      "expected_frozen_port_count_for_both_appended_bridges": 6,
+      "selected_frozen_port": [
+        [
+          51011,
+          526
+        ],
+        [
+          51011,
+          472
+        ]
+      ],
+      "selected_target": {
+        "material": "right subclavian vein",
+        "source_member": "FJ3587",
+        "stable_id": 472
+      }
+    },
+    "mesh_coordinates_modified": false,
+    "method": "independent closed-solid 3D overlap and two separately ancestry-bound source collar sections",
+    "native_or_gpu_work": false,
+    "plane_candidate_sweep": false,
+    "port_count": 1,
+    "requirements": [
+      "exact-coordinate-quotiented source closure and zero exact self intersections for candidate and baseline bridge and target",
+      "one connected source face component per vessel after exact seam quotient",
+      "frozen collar face-patch ancestry with exact captured source interface points for candidate and baseline",
+      "positive volumetric intersection and one exact P6 inside-both witness for candidate and baseline",
+      "one connected closed source component per vessel and one connected numerical union component",
+      "numerical union-volume accounting equals source volumes minus overlap within declared relative tolerance 1e-6",
+      "one positive closed source section per vessel at its own collar-ancestry material station",
+      "candidate-to-baseline section area ratio [0.8,1.25] and minimum-Feret ratio [0.9,1.1]"
+    ],
+    "shared_planar_junction_section_required": false,
+    "source007_compiler_invoked": false,
+    "target": [
+      51011,
+      472
+    ],
+    "volume_balance_relative_tolerance": 1e-06
+  },
+  "source004_plane_failure": {
+    "candidate_count": 4,
+    "candidate_planes": [
+      {
+        "bridge526_source_section": {
+          "call_index": 8,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {
+            "2": 36
+          },
+          "degree_not_two_node_count": 0,
+          "edge_ids_retained_in_source004": false,
+          "loop_count": 2,
+          "loop_face_ancestry": [
+            {
+              "area_mm2": 6.477166612050017,
+              "minimum_feret_width_mm": 2.6340036630003523,
+              "owner_ids": [
+                526
+              ],
+              "source_face_ancestor_ids": [
+                1,
+                2,
+                3,
+                4,
+                6,
+                7,
+                8,
+                17,
+                18,
+                40,
+                41,
+                65,
+                67
+              ],
+              "source_face_ancestor_ids_sha256": "56d3c870a16c2cd8d82c9214d254682e2aa66a63db4dee1f91c4b92938d16f2c"
+            },
+            {
+              "area_mm2": 75.31883223001039,
+              "minimum_feret_width_mm": 7.956086774417711,
+              "owner_ids": [
+                526
+              ],
+              "source_face_ancestor_ids": [
+                112,
+                128,
+                129,
+                130,
+                131,
+                133,
+                134,
+                135,
+                136,
+                159,
+                168,
+                169,
+                198,
+                199,
+                200,
+                201,
+                287,
+                288,
+                289,
+                306,
+                307,
+                308,
+                316
+              ],
+              "source_face_ancestor_ids_sha256": "b7a2be56ceacb9b1bd8556448d243a9c814287b4c380fba34dec8d2ba784b8f1"
+            }
+          ],
+          "node_count": 36,
+          "segment_count": 36,
+          "source_faces_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "surface_positions_sha256": "97d79e5216b73a944596efb714e7d0cd445c4acdd3fe215b17382336af6ffcd2"
+        },
+        "candidate_fraction_from_pinned_004_policy": 0.2,
+        "candidate_ordinal": 1,
+        "center_world_m": [
+          -0.056852326460557025,
+          -0.32188421160329017,
+          0.16779183558865185
+        ],
+        "floating_union_section": {
+          "call_index": 12,
+          "coordinate_dtype": "float64",
+          "degree_histogram": {
+            "2": 79
+          },
+          "loop_count": 2,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                526
+              ],
+              "source_face_ancestor_ids": [
+                112,
+                128,
+                129,
+                130,
+                131,
+                133,
+                134,
+                135,
+                136,
+                159,
+                168,
+                169,
+                198,
+                199,
+                200,
+                201,
+                287,
+                288,
+                289,
+                306,
+                307,
+                308,
+                316
+              ],
+              "source_face_ancestor_ids_sha256": "b7a2be56ceacb9b1bd8556448d243a9c814287b4c380fba34dec8d2ba784b8f1"
+            },
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                221,
+                224,
+                225,
+                227,
+                241,
+                242,
+                243,
+                244,
+                245,
+                246,
+                247,
+                249,
+                250,
+                251,
+                257,
+                258,
+                261,
+                268,
+                271,
+                272,
+                273,
+                278,
+                279,
+                286,
+                287,
+                288,
+                289,
+                313
+              ],
+              "source_face_ancestor_ids_sha256": "1b873b3e003147c52d966b07dd537a47f115647165542447b43dbb5548adac9d"
+            }
+          ],
+          "mesh_face_sha256": "61faddde2517da7fe341fc98747628c139ba768cab2ac6c1cb5b1ebd70ee1c2b",
+          "precision_limitation": "floating derived CSG section, not exact topology proof"
+        },
+        "section_plane_signature_sha256": "c59b1d6ff435f2217a91bb848f306cdd4e934d9bcdec979cfbb05d88f8ee61d3",
+        "tangent_world_unit": [
+          -0.9726872057921497,
+          -0.19517576574546994,
+          -0.1256424297517751
+        ],
+        "target472_source_section": {
+          "call_index": 9,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {
+            "2": 28
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                221,
+                224,
+                225,
+                227,
+                241,
+                242,
+                243,
+                244,
+                245,
+                246,
+                247,
+                249,
+                250,
+                251,
+                257,
+                258,
+                261,
+                268,
+                271,
+                272,
+                273,
+                278,
+                279,
+                286,
+                287,
+                288,
+                289,
+                313
+              ],
+              "source_face_ancestor_ids_sha256": "1b873b3e003147c52d966b07dd537a47f115647165542447b43dbb5548adac9d"
+            }
+          ],
+          "node_count": 28,
+          "segment_count": 28,
+          "source_faces_sha256": "102de8ee22f308327530a48d9aa950c20cdc441101df4b29a4a376b6c5590ccb",
+          "surface_positions_sha256": "b43f79588a30d320d39cd3417352dbc7c5d74177d4dbf1e4834bda3a6493b2c3"
+        }
+      },
+      {
+        "bridge526_source_section": {
+          "call_index": 14,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {},
+          "degree_not_two_node_count": 0,
+          "edge_ids_retained_in_source004": false,
+          "loop_count": 0,
+          "loop_face_ancestry": [],
+          "node_count": 0,
+          "segment_count": 0,
+          "source_faces_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "surface_positions_sha256": "97d79e5216b73a944596efb714e7d0cd445c4acdd3fe215b17382336af6ffcd2"
+        },
+        "candidate_fraction_from_pinned_004_policy": 0.4,
+        "candidate_ordinal": 2,
+        "center_world_m": [
+          -0.0587751498676873,
+          -0.3222700381348259,
+          0.16754346365220937
+        ],
+        "floating_union_section": {
+          "call_index": 18,
+          "coordinate_dtype": "float64",
+          "degree_histogram": {
+            "2": 41
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                200,
+                214,
+                220,
+                221,
+                224,
+                225,
+                227,
+                241,
+                242,
+                243,
+                244,
+                245,
+                246,
+                247,
+                249,
+                250,
+                252,
+                253,
+                254,
+                255,
+                256,
+                257,
+                258,
+                260,
+                261,
+                278,
+                279,
+                287,
+                289
+              ],
+              "source_face_ancestor_ids_sha256": "938d105ecdeb4393935d51227dc18a2ddaccafd335a9170056df5a08c88ce572"
+            }
+          ],
+          "mesh_face_sha256": "61faddde2517da7fe341fc98747628c139ba768cab2ac6c1cb5b1ebd70ee1c2b",
+          "precision_limitation": "floating derived CSG section, not exact topology proof"
+        },
+        "section_plane_signature_sha256": "3fce98c48bb9acc9a2e2b28c743f2c93d0ed27eab5d45b127f03bf42904c1ed3",
+        "tangent_world_unit": [
+          -0.9726872057921497,
+          -0.19517576574546994,
+          -0.1256424297517751
+        ],
+        "target472_source_section": {
+          "call_index": 15,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {
+            "2": 29
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                200,
+                214,
+                220,
+                221,
+                224,
+                225,
+                227,
+                241,
+                242,
+                243,
+                244,
+                245,
+                246,
+                247,
+                249,
+                250,
+                252,
+                253,
+                254,
+                255,
+                256,
+                257,
+                258,
+                260,
+                261,
+                278,
+                279,
+                287,
+                289
+              ],
+              "source_face_ancestor_ids_sha256": "938d105ecdeb4393935d51227dc18a2ddaccafd335a9170056df5a08c88ce572"
+            }
+          ],
+          "node_count": 29,
+          "segment_count": 29,
+          "source_faces_sha256": "102de8ee22f308327530a48d9aa950c20cdc441101df4b29a4a376b6c5590ccb",
+          "surface_positions_sha256": "b43f79588a30d320d39cd3417352dbc7c5d74177d4dbf1e4834bda3a6493b2c3"
+        }
+      },
+      {
+        "bridge526_source_section": {
+          "call_index": 20,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {},
+          "degree_not_two_node_count": 0,
+          "edge_ids_retained_in_source004": false,
+          "loop_count": 0,
+          "loop_face_ancestry": [],
+          "node_count": 0,
+          "segment_count": 0,
+          "source_faces_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "surface_positions_sha256": "97d79e5216b73a944596efb714e7d0cd445c4acdd3fe215b17382336af6ffcd2"
+        },
+        "candidate_fraction_from_pinned_004_policy": 0.6,
+        "candidate_ordinal": 3,
+        "center_world_m": [
+          -0.06069797327481759,
+          -0.32265586466636165,
+          0.16729509171576687
+        ],
+        "floating_union_section": {
+          "call_index": 24,
+          "coordinate_dtype": "float64",
+          "degree_histogram": {
+            "2": 31
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                200,
+                204,
+                206,
+                214,
+                220,
+                221,
+                222,
+                224,
+                225,
+                227,
+                234,
+                235,
+                237,
+                238,
+                239,
+                240,
+                241,
+                242,
+                243,
+                244,
+                245,
+                247,
+                249,
+                250,
+                253,
+                257,
+                258
+              ],
+              "source_face_ancestor_ids_sha256": "737c5d3ccc009fd8768331af429cf35570c2fcb0a40518d95553f448745f8865"
+            }
+          ],
+          "mesh_face_sha256": "61faddde2517da7fe341fc98747628c139ba768cab2ac6c1cb5b1ebd70ee1c2b",
+          "precision_limitation": "floating derived CSG section, not exact topology proof"
+        },
+        "section_plane_signature_sha256": "393c5c9b60950db9f49769ae4ce89a2e8e64879ad10f957cdf11245d989e310e",
+        "tangent_world_unit": [
+          -0.9726872057921497,
+          -0.19517576574546994,
+          -0.1256424297517751
+        ],
+        "target472_source_section": {
+          "call_index": 21,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {
+            "2": 27
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                200,
+                204,
+                206,
+                214,
+                220,
+                221,
+                222,
+                224,
+                225,
+                227,
+                234,
+                235,
+                237,
+                238,
+                239,
+                240,
+                241,
+                242,
+                243,
+                244,
+                245,
+                247,
+                249,
+                250,
+                253,
+                257,
+                258
+              ],
+              "source_face_ancestor_ids_sha256": "737c5d3ccc009fd8768331af429cf35570c2fcb0a40518d95553f448745f8865"
+            }
+          ],
+          "node_count": 27,
+          "segment_count": 27,
+          "source_faces_sha256": "102de8ee22f308327530a48d9aa950c20cdc441101df4b29a4a376b6c5590ccb",
+          "surface_positions_sha256": "b43f79588a30d320d39cd3417352dbc7c5d74177d4dbf1e4834bda3a6493b2c3"
+        }
+      },
+      {
+        "bridge526_source_section": {
+          "call_index": 26,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {},
+          "degree_not_two_node_count": 0,
+          "edge_ids_retained_in_source004": false,
+          "loop_count": 0,
+          "loop_face_ancestry": [],
+          "node_count": 0,
+          "segment_count": 0,
+          "source_faces_sha256": "9147eadfba51c64fbde14f82a6ae606e4c60f7b792e2488b86b6552fcbffbf16",
+          "surface_positions_sha256": "97d79e5216b73a944596efb714e7d0cd445c4acdd3fe215b17382336af6ffcd2"
+        },
+        "candidate_fraction_from_pinned_004_policy": 0.8,
+        "candidate_ordinal": 4,
+        "center_world_m": [
+          -0.06262079668194787,
+          -0.32304169119789733,
+          0.16704671977932437
+        ],
+        "floating_union_section": {
+          "call_index": 30,
+          "coordinate_dtype": "float64",
+          "degree_histogram": {
+            "2": 28
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                196,
+                200,
+                204,
+                205,
+                206,
+                208,
+                213,
+                214,
+                218,
+                219,
+                220,
+                222,
+                223,
+                224,
+                225,
+                226,
+                227,
+                228,
+                229,
+                230,
+                231,
+                232,
+                233,
+                236,
+                241,
+                250
+              ],
+              "source_face_ancestor_ids_sha256": "8716a86034010df6ab808db889f47db54fe0caa37c1811f33bae0da3120b0fe9"
+            }
+          ],
+          "mesh_face_sha256": "61faddde2517da7fe341fc98747628c139ba768cab2ac6c1cb5b1ebd70ee1c2b",
+          "precision_limitation": "floating derived CSG section, not exact topology proof"
+        },
+        "section_plane_signature_sha256": "20b53a7ecf19f9160b3350726a93554dd7638efd22123856d0d7fa75d034c768",
+        "tangent_world_unit": [
+          -0.9726872057921497,
+          -0.19517576574546994,
+          -0.1256424297517751
+        ],
+        "target472_source_section": {
+          "call_index": 27,
+          "coordinate_dtype": "float32",
+          "degree_histogram": {
+            "2": 26
+          },
+          "loop_count": 1,
+          "loop_face_ancestry": [
+            {
+              "owner_ids": [
+                472
+              ],
+              "source_face_ancestor_ids": [
+                196,
+                200,
+                204,
+                205,
+                206,
+                208,
+                213,
+                214,
+                218,
+                219,
+                220,
+                222,
+                223,
+                224,
+                225,
+                226,
+                227,
+                228,
+                229,
+                230,
+                231,
+                232,
+                233,
+                236,
+                241,
+                250
+              ],
+              "source_face_ancestor_ids_sha256": "8716a86034010df6ab808db889f47db54fe0caa37c1811f33bae0da3120b0fe9"
+            }
+          ],
+          "node_count": 26,
+          "segment_count": 26,
+          "source_faces_sha256": "102de8ee22f308327530a48d9aa950c20cdc441101df4b29a4a376b6c5590ccb",
+          "surface_positions_sha256": "b43f79588a30d320d39cd3417352dbc7c5d74177d4dbf1e4834bda3a6493b2c3"
+        }
+      }
+    ],
+    "diagnosis": "target_tangent_plane_multi_loop_then_bridge_absent",
+    "reason_shared_planar_section_uniqueness_is_not_a_valid_construction_premise": "The first target-tangent plane produces two disjoint closed 526 loops; the other three candidate planes produce no 526 section at all while 472 has one. Retained degree histograms show no degree-not-two node for the first multi-loop witness. This is a plane/station mismatch at a curved junction, not evidence of a broken closed 3D source vessel.",
+    "report_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/brachiocephalic-source-007-six-port-geometry-001/port-525-526-target-collar-diagnostic-004/six-port-section-diagnostic.json",
+    "report_sha256": "354876d040f774d8acf18071779289ee9cfc2ce50137650087ecf2f099399700",
+    "source_edge_witness_limitation": "004 retained segment/node counts and exact source-face ancestry, but not the individual section edge IDs.",
+    "source_section_graph_branching_proven": false
+  },
+  "source004_rejection_sha256": "354876d040f774d8acf18071779289ee9cfc2ce50137650087ecf2f099399700",
+  "source_compiler_invoked": false,
+  "source_geometry_mutated": false,
+  "source_integrity_preparation_report_sha256": "34e540ec56ec8fd09b1fe94ecc42f6a5edced055f0e007874000973442bdcdda",
+  "status": "DIAGNOSTIC_ABORTED_OR_REJECTED_WITH_ERROR"
+}

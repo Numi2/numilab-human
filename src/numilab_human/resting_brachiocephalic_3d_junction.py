@@ -219,14 +219,20 @@ def _verify_source007_compiler_code_pins(code_and_dependency_pins: dict) -> dict
             method = "current_file_bytes"
             verified_hash = actual_current
         else:
+            # Emission pins retain original absolute source paths. Integration
+            # can run from another checkout; resolve the original file's Git
+            # owner rather than pretending it belongs to this runtime checkout.
+            historical_repo = repo
             try:
                 relative = path.resolve().relative_to(repo.resolve())
-            except ValueError as error:
-                raise ValueError(
-                    "source007 external compiler code changed and has no pinned git object: "
-                    + str(path)) from error
+            except ValueError:
+                owner = subprocess.run(
+                    ["git", "-C", str(path.parent), "rev-parse", "--show-toplevel"],
+                    check=True, capture_output=True, text=True).stdout.strip()
+                historical_repo = Path(owner).resolve()
+                relative = path.resolve().relative_to(historical_repo)
             historical = subprocess.run(
-                ["git", "-C", str(repo), "show",
+                ["git", "-C", str(historical_repo), "show",
                  f"{revision}:{relative.as_posix()}"],
                 check=True, capture_output=True).stdout
             verified_hash = _sha_bytes(historical)
