@@ -439,7 +439,8 @@ def test_derived_boolean_sections_use_mesh64_without_weakening_source_float32_co
 
 
 def _synthetic_two_branch_section_proof(
-    *, disconnected=False, corrupt_lineage=False, declared=True):
+    *, disconnected=False, corrupt_lineage=False, declared=True,
+    include_internal=False):
     manifold3d = _manifold3d()
     bridge_positions, bridge_faces = _closed_cylinder(
         -1.0, 1.0, radius=0.2, sectors=12, axial=8)
@@ -474,11 +475,15 @@ def _synthetic_two_branch_section_proof(
     owners = lineage["face_owner_ids"].copy()
     if corrupt_lineage:
         owners[owners == 472] = 526
+    section_options = {
+        "derived_csg": True,
+        "face_owner_ids": owners,
+        "face_source_ids": lineage["source_face_ids"],
+        "face_generated_mask": lineage["generated_face_mask"],
+    }
     candidate_union_section = bg._section_loops(
         positions, faces, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0],
-        derived_csg=True, face_owner_ids=owners,
-        face_source_ids=lineage["source_face_ids"],
-        face_generated_mask=lineage["generated_face_mask"])
+        **section_options)
     baseline_union_section = candidate_union_section
     def source_station(surface):
         source_ids = surface.source_vertex_ids.astype(int).tolist()
@@ -556,15 +561,26 @@ def _synthetic_two_branch_section_proof(
         "candidate_station": bridge_station,
         "baseline_station": bridge_station,
     } if declared else None)
-    proof = bg._junction_aware_two_loop_section_proof(
-        expected_owner_ids=(526, 472),
-        candidate_union_section=candidate_union_section,
-        baseline_union_section=baseline_union_section,
-        candidate_branch_sections=candidate_branch_sections,
-        baseline_branch_sections=baseline_branch_sections,
-        solid_evidence=evidence,
-        station_declaration=station_declaration,
-    )
+    junction_call = {
+        "expected_owner_ids": (526, 472),
+        "candidate_union_section": candidate_union_section,
+        "baseline_union_section": baseline_union_section,
+        "candidate_branch_sections": candidate_branch_sections,
+        "baseline_branch_sections": baseline_branch_sections,
+        "solid_evidence": evidence,
+        "station_declaration": station_declaration,
+    }
+    proof = bg._junction_aware_two_loop_section_proof(**junction_call)
+    if include_internal:
+        internal = {
+            "section_positions": positions,
+            "section_faces": faces,
+            "section_center": [0.0, 0.0, 0.0],
+            "section_tangent": [0.0, 0.0, 1.0],
+            "section_options": section_options,
+            "junction_call": junction_call,
+        }
+        return proof, candidate_union_section, evidence, internal
     return proof, candidate_union_section, evidence
 
 
@@ -582,6 +598,40 @@ def test_y_junction_two_contours_pass_only_with_per_vessel_lineage_and_solid_wit
     assert proof["passed"]
     assert proof["status"] == "PASS_EXPLICIT_TWO_VESSEL_JUNCTION_SECTION"
     assert set(proof["per_vessel_section_comparisons"]) == {"472", "526"}
+
+
+def test_recording_wrappers_forward_lineage_into_real_junction_section():
+    from numilab_human.resting_brachiocephalic_port_diagnostic import Recorder
+
+    _, _, _, internal = _synthetic_two_branch_section_proof(include_internal=True)
+    recorder = Recorder()
+    restore = portdiag.install_recording_wrappers(bg, av, recorder)
+    try:
+        section = bg._section_loops(
+            internal["section_positions"],
+            internal["section_faces"],
+            internal["section_center"],
+            internal["section_tangent"],
+            **internal["section_options"])
+        call = dict(internal["junction_call"])
+        call["candidate_union_section"] = section
+        proof = bg._junction_aware_two_loop_section_proof(**call)
+    finally:
+        restore()
+
+    assert proof["passed"]
+    section_record = recorder.data["section_calls"][0]
+    assert section_record["section_metrics"]["loop_count"] == 2
+    assert section_record["section_options"] == [
+        "derived_csg", "face_generated_mask", "face_owner_ids", "face_source_ids"]
+    for name in ("face_owner_ids", "face_source_ids", "face_generated_mask"):
+        assert section_record[name + "_sha256"] == portdiag._array_hash(
+            internal["section_options"][name])
+        assert section_record[name + "_shape"] == [len(internal["section_faces"])]
+    junction_record = recorder.data["junction_section_proofs"][0]
+    assert junction_record["passed"] is True
+    assert junction_record["proof"]["status"] == (
+        "PASS_EXPLICIT_TWO_VESSEL_JUNCTION_SECTION")
 
 
 def test_nearby_disconnected_section_loops_do_not_pass_as_a_junction():
@@ -797,8 +847,10 @@ def test_six_port_diagnostic_scope_matches_source007_and_is_separate():
     assert portdiag.SIX_REPLAY_SCOPE["source_candidate_compiler_invoked"] is False
     assert portdiag.SIX_REPLAY_SCOPE["all_nearby_collision_checks_invoked"] is False
     assert portdiag.SIX_REPLAY_SCOPE["stop_after_first_failed_port"] is True
-    assert portdiag.SIX_DIAGNOSTIC_DIR.name == "port-525-526-six-port-diagnostic-002"
-    assert portdiag.SIX_PREFLIGHT_PATH.name == "port-525-526-six-port-preflight-002.json"
+    assert portdiag.SIX_DIAGNOSTIC_DIR.name == "port-525-526-six-port-diagnostic-003"
+    assert portdiag.SIX_PREFLIGHT_PATH.name == "port-525-526-six-port-preflight-003.json"
+    assert portdiag.SIX_REPLAY_SCOPE["retained_prior_attempt"]["report_sha256"] == (
+        "c916c16230114ae679dc7d3145ea76b9433b223aefe38bd6472fe1adf601d054")
     assert portdiag.SIX_DIAGNOSTIC_DIR != portdiag.DIAGNOSTIC_DIR
     assert portdiag.SIX_PREFLIGHT_PATH != portdiag.PREFLIGHT_PATH
     policy = portdiag.SIX_REPLAY_SCOPE["junction_section_policy"]

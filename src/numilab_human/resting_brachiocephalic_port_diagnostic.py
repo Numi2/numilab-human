@@ -26,8 +26,25 @@ PREPARATION_DIR = A / "brachiocephalic-common-field-preparation-007-001"
 CAPTURE_MANIFEST = A / "accepted-capture-inputs-1398-001.json"
 DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-005"
 PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-469-diagnostic-preflight-005.json"
-SIX_DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-diagnostic-002"
-SIX_PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-preflight-002.json"
+SIX_DIAGNOSTIC_DIR = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-diagnostic-003"
+SIX_PREFLIGHT_PATH = A / "brachiocephalic-source-007-six-port-geometry-001/port-525-526-six-port-preflight-003.json"
+SIX_PRIOR_DIAGNOSTIC_DIR = A / (
+    "brachiocephalic-source-007-six-port-geometry-001/"
+    "port-525-526-six-port-diagnostic-002")
+SIX_PRIOR_PROGRESS_PATH = SIX_PRIOR_DIAGNOSTIC_DIR / "progress.json"
+SIX_PRIOR_REPORT_PATH = SIX_PRIOR_DIAGNOSTIC_DIR / "six-port-section-diagnostic.json"
+SIX_PRIOR_PROGRESS_SHA256 = (
+    "28a7bdda6fa246c3ddc0e5043e67d275c97e963d8ec8db2adef64abbedae88bc")
+SIX_PRIOR_REPORT_SHA256 = (
+    "c916c16230114ae679dc7d3145ea76b9433b223aefe38bd6472fe1adf601d054")
+SIX_PRIOR_PREFLIGHT_PATH = A / (
+    "brachiocephalic-source-007-six-port-geometry-001/"
+    "port-525-526-six-port-preflight-002.json")
+SIX_PRIOR_PREFLIGHT_SHA256 = (
+    "e215272cb8167bcedae4f998879b136435c5ae56927ce8210f4fadad356cbafa")
+SIX_PRIOR_FAILURE = (
+    "install_recording_wrappers.<locals>.wrapped_section() got an unexpected "
+    + "keyword argument " + chr(39) + "face_owner_ids" + chr(39))
 SIX_JUNCTION_SOURCE_REPORT = A / (
     "brachiocephalic-source-007-six-port-geometry-001/"
     "port-525-526-six-port-diagnostic-001/six-port-section-diagnostic.json")
@@ -87,6 +104,16 @@ SIX_REPLAY_SCOPE = {
     "all_target_checks_invoked": False,
     "all_nearby_collision_checks_invoked": False,
     "stop_after_first_failed_port": True,
+    "retained_prior_attempt": {
+        "preflight_path": str(SIX_PRIOR_PREFLIGHT_PATH),
+        "preflight_sha256": SIX_PRIOR_PREFLIGHT_SHA256,
+        "progress_path": str(SIX_PRIOR_PROGRESS_PATH),
+        "progress_sha256": SIX_PRIOR_PROGRESS_SHA256,
+        "report_path": str(SIX_PRIOR_REPORT_PATH),
+        "report_sha256": SIX_PRIOR_REPORT_SHA256,
+        "status": "SIX_PORT_DIAGNOSTIC_CAPTURED_HELPER_ERROR",
+        "first_error": SIX_PRIOR_FAILURE,
+    },
     "junction_station_source": {
         "bridge": [51011, 526],
         "target": [51011, 472],
@@ -462,7 +489,8 @@ def install_recording_wrappers(gate: Any, verifier: Any, recorder: Recorder):
     originals = []
 
     original_section = gate._section_loops
-    def wrapped_section(positions, faces, center, tangent, *, derived_csg=False):
+    def wrapped_section(positions, faces, center, tangent, **section_options):
+        derived_csg = bool(section_options.get("derived_csg", False))
         index = recorder.next_index("section_calls")
         stage = SECTION_STAGES[index] if index < len(SECTION_STAGES) else f"section_{index}"
         point = np.asarray(center, dtype=np.float64)
@@ -482,10 +510,18 @@ def install_recording_wrappers(gate: Any, verifier: Any, recorder: Recorder):
             "tangent_world_sha256": _array_hash(direction, "<f8"),
             "section_plane_signature_sha256": _json_hash({
                 "center_f64": point.tolist(), "tangent_f64": direction.tolist()}),
+            "section_options": sorted(section_options),
         }
+        for name in ("face_owner_ids", "face_source_ids", "face_generated_mask"):
+            value = section_options.get(name)
+            if value is not None:
+                array = np.asarray(value)
+                record[name + "_sha256"] = _array_hash(array)
+                record[name + "_shape"] = list(array.shape)
+                record[name + "_dtype"] = str(array.dtype)
         try:
             result = original_section(positions, faces, center, tangent,
-                                      derived_csg=derived_csg)
+                                      **section_options)
             record["section_metrics"] = _section_summary(result)
             recorder.record("section_calls", record)
             return result
@@ -852,6 +888,57 @@ def run_diagnostic() -> dict:
     return report
 
 
+def _retained_prior_six_port_attempt() -> dict:
+    require(SIX_PRIOR_PREFLIGHT_PATH.is_file()
+            and sha_file(SIX_PRIOR_PREFLIGHT_PATH) == SIX_PRIOR_PREFLIGHT_SHA256,
+            "retained six-port preflight-002 changed")
+    require(SIX_PRIOR_PROGRESS_PATH.is_file()
+            and sha_file(SIX_PRIOR_PROGRESS_PATH) == SIX_PRIOR_PROGRESS_SHA256,
+            "retained six-port diagnostic-002 progress changed")
+    require(SIX_PRIOR_REPORT_PATH.is_file()
+            and sha_file(SIX_PRIOR_REPORT_PATH) == SIX_PRIOR_REPORT_SHA256,
+            "retained six-port diagnostic-002 report changed")
+    previous_preflight = json.loads(SIX_PRIOR_PREFLIGHT_PATH.read_text())
+    require(previous_preflight.get("status") == "PREFLIGHT_PINNED_NO_GEOMETRY_DECODED"
+            and previous_preflight.get("geometry_arrays_loaded") is False
+            and previous_preflight.get("geometry_predicates_run") is False,
+            "retained six-port attempt is not bound to no-geometry preflight-002")
+    progress = json.loads(SIX_PRIOR_PROGRESS_PATH.read_text())
+    previous = json.loads(SIX_PRIOR_REPORT_PATH.read_text())
+    expected_error = {"type": "TypeError", "message": SIX_PRIOR_FAILURE}
+    require(progress.get("status") == "SIX_PORT_DIAGNOSTIC_CAPTURED_HELPER_ERROR"
+            and progress.get("preflight_sha256") == SIX_PRIOR_PREFLIGHT_SHA256
+            and progress.get("helper_error") == expected_error
+            and previous.get("status") == progress.get("status")
+            and previous.get("preflight_sha256") == SIX_PRIOR_PREFLIGHT_SHA256
+            and previous.get("helper_error") == expected_error
+            and previous.get("source_or_helper_changed") is False,
+            "retained six-port attempt error receipt changed")
+    port_results = previous.get("trace", {}).get("port_results", [])
+    require(len(port_results) == 1
+            and port_results[0].get("bridge") == [51011, 525]
+            and port_results[0].get("target") == [51011, 10]
+            and port_results[0].get("error") == expected_error
+            and not previous.get("trace", {}).get("junction_section_proofs")
+            and not previous.get("trace", {}).get("section_calls"),
+            "retained six-port attempt proof boundary changed")
+    return {
+        "preflight_path": str(SIX_PRIOR_PREFLIGHT_PATH),
+        "preflight_sha256": SIX_PRIOR_PREFLIGHT_SHA256,
+        "progress_path": str(SIX_PRIOR_PROGRESS_PATH),
+        "progress_sha256": SIX_PRIOR_PROGRESS_SHA256,
+        "report_path": str(SIX_PRIOR_REPORT_PATH),
+        "report_sha256": SIX_PRIOR_REPORT_SHA256,
+        "status": previous["status"],
+        "elapsed_seconds": previous["elapsed_seconds"],
+        "failed_port": port_results[0],
+        "first_error": previous["helper_error"],
+        "geometry_arrays_loaded_during_preflight": False,
+        "junction_section_proofs_captured": 0,
+        "section_calls_captured": 0,
+    }
+
+
 def _frozen_junction_station_input() -> dict:
     require(SIX_JUNCTION_SOURCE_REPORT.is_file()
             and sha_file(SIX_JUNCTION_SOURCE_REPORT)
@@ -984,7 +1071,10 @@ def write_six_port_preflight() -> dict:
         schema_suffix="six-port",
     )
     binding = _frozen_junction_station_input()
+    prior_attempt = _retained_prior_six_port_attempt()
+    report["diagnostic_output_dir"] = str(SIX_DIAGNOSTIC_DIR)
     report["junction_station_binding"] = binding
+    report["retained_prior_attempt"] = prior_attempt
     _write_json(SIX_PREFLIGHT_PATH, report)
     report["report_path"] = str(SIX_PREFLIGHT_PATH)
     report["report_sha256"] = sha_file(SIX_PREFLIGHT_PATH)
@@ -1010,6 +1100,9 @@ def run_six_port_diagnostic() -> dict:
     station_binding = _frozen_junction_station_input()
     require(preflight.get("junction_station_binding") == station_binding,
             "retained junction station declaration changed after preflight")
+    prior_attempt = _retained_prior_six_port_attempt()
+    require(preflight.get("retained_prior_attempt") == prior_attempt,
+            "retained prior six-port failure evidence changed after preflight")
     require(not SIX_DIAGNOSTIC_DIR.exists(),
             "retain six-port diagnostic outputs and choose a successor")
 
@@ -1037,6 +1130,7 @@ def run_six_port_diagnostic() -> dict:
             "brachiocephalic-common-field-preparation.json"],
         "ports": SIX_REPLAY_SCOPE["ports"],
         "junction_station_binding": station_binding,
+        "retained_prior_attempt": prior_attempt,
         "source_or_helper_changed": False,
         "only_declared_six_ports_evaluated": True,
         "undeclared_targets_evaluated": False,
