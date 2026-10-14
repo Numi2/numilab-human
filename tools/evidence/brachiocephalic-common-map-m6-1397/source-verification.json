@@ -1,0 +1,50 @@
+{
+  "acceptance_gates_remaining": [
+    "connected lumen topology and calibre at all three source collars",
+    "all-target and nonintersection against adjacent route surfaces",
+    "accepted-pose common-field displacement and junction continuity",
+    "native common-map loader/runtime qualification"
+  ],
+  "all_pose_admission": false,
+  "anatomical_admission": false,
+  "candidate_007_map_path": "/Users/n/numi-human-vein-integration-20261014/source-candidate-007/common-cardiac-map-f32.bin",
+  "candidate_007_map_record_count": 621369,
+  "candidate_007_map_sha256": "741e086be763cc779f70f803878b6183895c43b55d16c9c157f9a6f05d63a8f4",
+  "candidate_007_payload_sha256": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150",
+  "candidate_007_preparation_report_path": "/Users/n/numi-human-vein-integration-20261014/source-candidate-007/brachiocephalic-common-field-preparation.json",
+  "candidate_007_preparation_report_sha256": "6006b3e53acf741fa7ab8b5f6a241067c94c557335020a64323548b43e9af1ac",
+  "candidate_007_receipt_sha256": "91dd4b60a0e5b1716f242869e19fc0d8bde31d033de53d6da28098eb29fec216",
+  "common_map_w_lanes_are_canonical_positive_zero": true,
+  "current_helper_reproduced_candidate_007_map_and_report_byte_exact": true,
+  "domain_boxes_byte_exact": true,
+  "execution_command": "cd /Users/n/numi-human-vein-integration-20261014 && uv run --isolated --no-project --python 3.13 --with numpy --with pytest python -c 'import runpy; runpy.run_path(\"/tmp/verify_brachiocephalic_common_field_007.py\", run_name=\"__main__\")'",
+  "format": "numi.human.brachiocephalic-common-field-source-verification",
+  "git_commit": "de37de3c3a5c94bf75eaf9edcdd783f39e4fa759",
+  "helper_and_source_owner_sha256": {
+    "closest_triangle_barycentric_owner": "c01306982da4f8b09f370dda98281d123a012b11b855f2f49481de3c6de7e094",
+    "common_field_composition_helper": "01aeedc8ed0ba778c26ad6ec75eaca98e0146906d4dfa232fede66ef0323caf9",
+    "compiled_surface_owner": "abe662a79508b8373a9dc60510c5a265070e8b9c08b8bcdfd980cf1f5296f2ed",
+    "existing_nhanat_payload_decoder": "d874f599b8aeb9e9f02318fbae30ed5bf017920170d41c8b775cc3a9f792d683",
+    "source_append_and_rest_validator": "2848e1bfdb52f460047a8ea0a7173941d20d3e9a3dcf7c8a63025a4ccfc53a59",
+    "source_append_wrapper": "17340af6a2f28560ff03ded01ee35f8e6e90b78620f822868821880ff178d20e"
+  },
+  "independent_interpolation_records_recomputed": 651,
+  "map_prefix_byte_exact": true,
+  "map_prefix_sha256": "c0b0811fe2e2fb45dc37201205e36af39cf092739cfb52c56fdbad9a67dbb858",
+  "n27_base_payload_sha256": "cde8705a813fe56686776c9cc038cbf06f413e1de76099d2a019d5e1b748a8d4",
+  "n27_base_receipt_sha256": "944bc88d257137f2bedd5898404c45cefd2901d719707519771ae5f4cfce3752",
+  "native_admission": false,
+  "original_523_rows_byte_exact": {
+    "indices": "86ea100b6345ee4a0179e1e87ad86175d3d064948d52c38bf7d2f303ec53c856",
+    "records": "d4c0a9f1934701a4b9a0434db9ad99a5f7bb175cb32eb5d5a326787a235cae93",
+    "vertices": "f58197b52da118b853e56734619034c0ec05f4db28c2773e1b54d8aadc614db3"
+  },
+  "prepared_candidate_payload_sha256": "a1bd10a88dd9064bc64ddcf24976693c790960ca85ee15826bbda55b104ad150",
+  "prepared_candidate_receipt_sha256": "df121cc1e892a7acf21a17a36594d355d4a123f345ed111c6c027ab562d1f7d8",
+  "python": "3.13.16",
+  "scope": "immutable source-candidate-007 map and report reproduction from pinned N27 append candidate",
+  "status": "PASS_SOURCE_REPRODUCTION_AND_BYTES_NOT_ADMISSION",
+  "verification_program_path": "/private/tmp/verify_brachiocephalic_common_field_007.py",
+  "verification_program_sha256": "c4206afb01c2b34abfb85f59d6defd154c67964893ca924afabba2639e674a37",
+  "volume_polynomials_byte_exact": true
+}\n

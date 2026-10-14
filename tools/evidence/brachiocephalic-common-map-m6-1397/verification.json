@@ -1,0 +1,20 @@
+{
+  "host": "ssh numi",
+  "source_commits": [
+    "ef80bc9f5bd31bf082614e3613a8cbbb1d063e7a",
+    "de37de3c3a5c94bf75eaf9edcdd783f39e4fa759"
+  ],
+  "publication_commits": [
+    "77f917fb",
+    "a93071a3"
+  ],
+  "verification_sha256": "f3112b64e6f71490c5426aa79d318f75a10e2ffcb88edc370297209178db572b",
+  "scope": "Source preparation and software consistency only; connected lumen/calibre, adjacent-route geometry, all breathing poses and native admission remain pending. Existing cardiac common map, circulation compartments, physical mass, and evolution retain their owners.",
+  "tests": {
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_resting_brachiocephalic_common_field.py tests/test_brachiocephalic_vein_append.py tests/test_forearm_material_carrier_compiler.py tests/test_resting_anatomy_verify.py tests/test_resting_passive_viscera_identity.py tests/test_passive_tissue_parent_carriers.py",
+    "passed": 43,
+    "subtests_passed": 12,
+    "ruff_critical_checks": "pass",
+    "diff_check": "pass"
+  }
+}
