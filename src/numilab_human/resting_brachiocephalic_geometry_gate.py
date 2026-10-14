@@ -15,10 +15,18 @@ import numpy as np
 
 BRIDGE_KEYS = ((51011, 525), (51011, 526))
 PORT_TARGET_IDS = {525: (10, 469, 473), 526: (10, 468, 472)}
-DECLARED_VESSEL_PORTS = frozenset(
+BRIDGE_VESSEL_PORTS = frozenset(
     (bridge_key, (51011, stable_id))
     for bridge_key in BRIDGE_KEYS
     for stable_id in PORT_TARGET_IDS[bridge_key[1]])
+# Two source-bound left ulnar branch links are explicit vascular interfaces.
+# They still require the exact source-derived face patch and the full solid,
+# inside-both, connected-union, and independent section/calibre proof below.
+ULNAR_BRANCH_PORTS = frozenset({
+    ((51011, 479), (51011, 487)),
+    ((51011, 481), (51011, 489)),
+})
+DECLARED_VESSEL_PORTS = BRIDGE_VESSEL_PORTS | ULNAR_BRANCH_PORTS
 
 
 def _require(condition: bool, message: str) -> None:
@@ -901,11 +909,12 @@ def _declared_partial_vessel_port_overlap(
     bridge_key, target_key, port_audit, observed_pairs, unexpected_pairs,
     exact_points, allowed_pairs,
 ) -> dict:
-    """Classify only symmetric partial overlap at one of the six frozen vein ports.
+    """Classify partial overlap at an explicitly named vascular interface.
 
-    This is an interface-boundary continuation predicate. It never proves
-    vessel continuity by itself: callers must still pass independent source
-    section/calibre and positive-intersection/exact-inside/connected-union gates.
+    The explicit set is the six frozen bridge ports plus the two named left
+    ulnar source branch links. This only continues interface-boundary handling;
+    independent source section/calibre and positive-intersection/exact-inside/
+    connected-union gates are still mandatory.
     """
     typed_port = (_identity(bridge_key), _identity(target_key))
     audit = port_audit if isinstance(port_audit, Mapping) else {}
