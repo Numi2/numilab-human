@@ -1,0 +1,29 @@
+{
+  "GPU_used": false,
+  "anatomical_admission": false,
+  "execution_host": "ssh numi",
+  "geometry_captures_loaded": false,
+  "native_field_error_bound": "not_available",
+  "python": "Python 3.13.16",
+  "retained_failures": [
+    "Initial root test command named missing test_forearm_material_carriers.py; no tests ran. Corrected to tracked test_forearm_material_carrier_compiler.py.",
+    "Initial static command could not find scripts path in sparse checkout; added scripts to checkout. Initial commit-range diff check found trailing blank EOF; successor removes it."
+  ],
+  "scope": "Source-only captured SVC displacement projection; no native, anatomical or continuity admission.",
+  "source_revision": "03edbdebef17fa90b4587d382e9a859f49306d03",
+  "source_sha256": {
+    "scripts/predict_brachiocephalic_captured_svc_poses.py": "017a90ed6c9eadbdfda9c4d4b31a4966ca10c8dd1c79577686635a296145f7d2",
+    "src/numilab_human/resting_brachiocephalic_pose_predictor.py": "3d1d6f4d69cd2d92dee0aaeaf39b6060979984508cb4c19bbfd2768b7621d748",
+    "tests/test_resting_brachiocephalic_pose_predictor.py": "9332ab7041cab6623096bc50c20652f12a0412243a558ef4a6b86e269a9c3638"
+  },
+  "static_checks": {
+    "diff_check_after_trailing_blank_line_fix": "passed",
+    "ruff_critical": "passed",
+    "runner_help": "passed"
+  },
+  "tests": {
+    "command": "PYTHONPATH=src /Users/n/numi-human-prep-venv-20261005/bin/python -m pytest -q tests/test_resting_brachiocephalic_pose_predictor.py tests/test_resting_brachiocephalic_common_field.py tests/test_resting_anatomy_verify.py tests/test_forearm_material_carrier_compiler.py",
+    "failed": 0,
+    "passed": 32
+  }
+}
