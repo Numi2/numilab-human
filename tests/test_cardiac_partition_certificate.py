@@ -36,8 +36,8 @@ def fixture():
     return sources,rows
 
 
-def check(sources,rows):
-    return cert.certify_partition(sources,rows,expected_geometry_sha256={s:cert.source_geometry_sha256(v) for s,v in sources.items()})
+def check(sources,rows,**kwargs):
+    return cert.certify_partition(sources,rows,expected_geometry_sha256={s:cert.source_geometry_sha256(v) for s,v in sources.items()},**kwargs)
 
 
 def decode(value):return F(int(value[0],16),int(value[1],16))
@@ -174,6 +174,71 @@ class ExactCoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "source coverage differs"):
             cert.certify_partition(sources, rows, expected_geometry_sha256=expected,
                                    source_names=("same","same"))
+    @staticmethod
+    def append_component(sources, rows, name, origin, edge=F(1), reverse=False):
+        points = [origin, tuple(origin[k] + (edge if k == 0 else 0) for k in range(3)),
+                  tuple(origin[k] + (edge if k == 1 else 0) for k in range(3)),
+                  tuple(origin[k] + (edge if k == 2 else 0) for k in range(3))]
+        offset = len(sources[name]['vertices'])
+        parent = len(sources[name]['triangles'])
+        faces = [(a,c,b) if reverse else (a,b,c) for a,b,c in FACES]
+        sources[name]['vertices'].extend(points)
+        sources[name]['triangles'].extend(tuple(offset+i for i in face) for face in faces)
+        rows.extend({'source':name,'source_face':parent+i,
+                     'vertices':tuple(points[k] for k in face),'other_location':'outside'}
+                    for i,face in enumerate(faces))
+
+    def test_disconnected_source_requires_exact_declared_component_inventory(self):
+        sources,rows=fixture()
+        self.append_component(sources,rows,A,(F(10),F(10),F(10)))
+        with self.assertRaisesRegex(HumanImportError,'one connected boundary'):
+            check(sources,rows)
+        proof=check(sources,rows,expected_source_component_counts={A:2,B:1})
+        self.assertEqual(proof['source_topology'][A]['face_components'],2)
+        self.assertEqual(proof['expected_source_component_counts'],{A:2,B:1})
+        self.assertTrue(proof['source_face_coverage_exact'])
+        self.assertEqual(decode(proof['source_moments'][A]['volume_m3']),F(3,2))
+        for partition in proof['partitions'].values():
+            self.assertTrue(partition['interiors_disjoint_by_source_membership'])
+            self.assertTrue(partition['shared_interface_opposite_chain'])
+        for counts in ({A:1,B:1},{A:3,B:1}):
+            with self.assertRaisesRegex(HumanImportError,'component count differs'):
+                check(sources,rows,expected_source_component_counts=counts)
+        for counts in ({A:True,B:1},{A:0,B:1},{A:2},[2,1]):
+            with self.assertRaisesRegex(HumanImportError,'invalid expected source'):
+                check(sources,rows,expected_source_component_counts=counts)
+
+    def test_declared_negative_cavity_preserves_full_source_coverage_and_signed_volume(self):
+        sources,rows=fixture()
+        self.append_component(sources,rows,B,(F(3,4),F(3,4),F(9,8)),F(1,16),reverse=True)
+        counts={A:1,B:2}
+        proof=check(sources,rows,expected_source_component_counts=counts)
+        self.assertEqual(decode(proof['source_moments'][B]['volume_m3']),F(4,3)-F(1,24576))
+        self.assertEqual(proof['source_topology'][B]['face_components'],2)
+        with self.assertRaises(HumanImportError):
+            check(sources,rows[:-1],expected_source_component_counts=counts)
+        altered=deepcopy(rows);altered[-1]['other_location']='inside'
+        with self.assertRaisesRegex(HumanImportError,'classification'):
+            check(sources,altered,expected_source_component_counts=counts)
+
+    def test_component_inventory_rejects_wrong_nested_or_isolated_shell_orientation(self):
+        for reverse,origin in ((False,(F(3,4),F(3,4),F(9,8))),
+                               (True,(F(10),F(10),F(10)))):
+            sources,rows=fixture()
+            self.append_component(sources,rows,B,origin,F(1,16),reverse=reverse)
+            with self.assertRaisesRegex(HumanImportError,'component winding'):
+                check(sources,rows,expected_source_component_counts={A:1,B:2})
+            regions,interface=emitted(rows)
+            with self.assertRaisesRegex(HumanImportError,'component winding'):
+                cert.audit_shared_interface_partition(
+                    regions,interface,expected_region_component_counts={A:1,B:2})
+
+    def test_component_inventory_does_not_bypass_source_embedding(self):
+        sources,rows=fixture()
+        self.append_component(sources,rows,A,(F(1,4),F(1,4),F(1,4)),edge=F(2))
+        with self.assertRaisesRegex(HumanImportError,'source self-intersection'):
+            check(sources,rows,expected_source_component_counts={A:2,B:1})
+
     def test_hand_authored_arrangement_has_exact_known_volume_and_raw_moments(self):
         sources,rows=fixture();proof=check(sources,rows)
         self.assertTrue(proof['source_face_coverage_exact'])
@@ -266,6 +331,32 @@ class EmittedInterfaceTests(unittest.TestCase):
             self.assertTrue(proof['shared_interface_opposite_chain'])
             self.assertEqual(decode(proof['union_moments']['volume_m3']),F(127,48))
             self.assertTrue(all(v['outside_noninterface_face_count']>0 for v in proof['per_region'].values()))
+
+    def test_inventory_preserves_emitted_negative_cavity_without_waiving_contacts(self):
+        sources,rows=fixture()
+        ExactCoverageTests.append_component(
+            sources,rows,B,(F(3,4),F(3,4),F(9,8)),F(1,16),reverse=True)
+        for priority in (A,B):
+            regions,interface=emitted(rows,priority)
+            with self.assertRaisesRegex(HumanImportError,'one connected boundary'):
+                cert.audit_shared_interface_partition(regions,interface)
+            for patch_mode in (False,True):
+                proof=cert.audit_shared_interface_partition(
+                    regions,interface,expected_region_component_counts={A:1,B:2},
+                    classify_connected_patches=patch_mode)
+                self.assertTrue(proof['interiors_disjoint'])
+                self.assertEqual(proof['per_region'][B]['topology']['face_components'],2)
+                self.assertEqual(decode(proof['union_moments']['volume_m3']),F(127,48)-F(1,24576))
+            with self.assertRaisesRegex(HumanImportError,'component count differs'):
+                cert.audit_shared_interface_partition(
+                    regions,interface,expected_region_component_counts={A:1,B:1})
+            with self.assertRaises(HumanImportError):
+                cert.audit_shared_interface_partition(
+                    regions,interface[:-1],expected_region_component_counts={A:1,B:2})
+            for counts in ({A:True,B:2},{A:1,B:0},{B:2},[1,2]):
+                with self.assertRaisesRegex(HumanImportError,'invalid expected emitted'):
+                    cert.audit_shared_interface_partition(
+                        regions,interface,expected_region_component_counts=counts)
 
     def test_connected_patch_mode_matches_full_proof_after_exact_refinement(self):
         _, rows = fixture()

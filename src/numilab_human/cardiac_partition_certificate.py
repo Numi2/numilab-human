@@ -295,12 +295,72 @@ def build_triangle_sets(subtriangles, *, source_names=SOURCES):
                           b+'_priority':{'regions':{a:ao+reverse(bi),b:bo+bi},'shared_interface':bi}}}
 
 
-def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,source_names=SOURCES):
+def _component_winding(prepared):
+    """Prove alternating shell orientation after closure and embedding checks.
+
+    A closed embedded component cannot cross another without the self audit
+    failing. One exact boundary-face centroid therefore establishes its nesting
+    relative to each other component, independently of shell orientation.
+    """
+    edge_faces = defaultdict(list)
+    for index, face in enumerate(prepared.faces):
+        for a,b in zip(face,face[1:]+face[:1]):
+            edge_faces[_edge_key(a,b)].append(index)
+    adjacent = defaultdict(set)
+    for incident in edge_faces.values():
+        for face in incident:
+            adjacent[face].update(incident)
+    unseen = set(range(len(prepared.faces)))
+    components = []
+    while unseen:
+        stack = [min(unseen)];component = []
+        while stack:
+            face = stack.pop()
+            if face not in unseen:
+                continue
+            unseen.remove(face);component.append(face)
+            stack.extend(adjacent[face] & unseen)
+        components.append(sorted(component))
+    meshes = [_Prepared([prepared.triangles[i] for i in ids]) for ids in components]
+    reports = []
+    for index,(ids,mesh) in enumerate(zip(components,meshes)):
+        triangle = mesh.triangles[0]
+        point = tuple(Fraction(sum(p[k] for p in triangle),3) for k in range(3))
+        locations = [other.location(point) for j,other in enumerate(meshes) if j != index]
+        require(all(location in ('inside','outside') for location in locations),
+                'component nesting is boundary or indeterminate')
+        depth = locations.count('inside')
+        signed_six_volume = sum(_dot(t[0],predicates._cross(t[1],t[2]))
+                                for t in mesh.triangles)
+        expected_sign = -1 if depth % 2 else 1
+        require(signed_six_volume * expected_sign > 0,
+                'component winding disagrees with exact nesting')
+        reports.append({'representative_face':ids[0],'face_count':len(ids),
+                        'nesting_depth':depth,'signed_volume_sign':expected_sign})
+    return reports
+
+
+def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,source_names=SOURCES,
+                      expected_source_component_counts=None):
+    """Certify all source faces, including explicitly inventoried disconnected shells.
+
+    The default retains the original single-boundary admission. A declared count
+    only binds source topology; it does not bypass embedding, exact membership,
+    coverage, winding, moments, or shared-interface checks.
+    """
     source_names = tuple(source_names)
     require(len(source_names) == 2 and all(isinstance(name, str) and name for name in source_names)
             and len(set(source_names)) == 2 and isinstance(source_surfaces,dict)
             and set(source_surfaces)==set(source_names) and isinstance(expected_geometry_sha256,dict)
             and set(expected_geometry_sha256)==set(source_names),'source coverage differs')
+    component_counts = {name: 1 for name in source_names}
+    if expected_source_component_counts is not None:
+        require(isinstance(expected_source_component_counts, dict)
+                and set(expected_source_component_counts) == set(source_names)
+                and all(type(count) is int and count >= 1
+                        for count in expected_source_component_counts.values()),
+                'invalid expected source component counts')
+        component_counts = dict(expected_source_component_counts)
     require(isinstance(subtriangles,list) and 1<=len(subtriangles)<=40000,'invalid arrangement size')
     originals,source_ids,scale={}, {}, 1
     for name in source_names:
@@ -321,12 +381,19 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,so
     def scaled(p):
         values=[x*scale for x in p]
         return tuple(x.numerator if x.denominator==1 else x for x in values)
-    prepared={}
+    prepared={};source_topology={}
     for name,triangles in originals.items():
         topology=_topology(triangles)
-        require(topology['face_components']==1,'source must have one connected boundary')
+        if expected_source_component_counts is None:
+            require(topology['face_components']==1,'source must have one connected boundary')
+        else:
+            require(topology['face_components']==component_counts[name],
+                    'source component count differs from declared inventory')
+        source_topology[name] = topology
         mesh=_Prepared([tuple(scaled(p) for p in t) for t in triangles])
         require(predicates._audit_pair(mesh.records,mesh.records,same_surface=True)['count']==0,'source self-intersection')
+        if topology['face_components'] > 1:
+            source_topology[name]['component_winding'] = _component_winding(mesh)
         prepared[name]=mesh
     coverage=defaultdict(list);classification=Counter();canonical_rows=[]
     for row in subtriangles:
@@ -376,7 +443,7 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,so
                                        'triangle_sha256':hashlib.sha256(canonical(encode_triangles(regions[s]))).hexdigest()} for s in source_names},
                           'interface_face_count':len(interface),'shared_interface_opposite_chain':True,
                           'interiors_disjoint_by_source_membership':True,'union_moments_exact':True}
-    return {'schema':SCHEMA,'coordinate_semantics':'exact_rational_value_of_published_binary64_metres',
+    proof = {'schema':SCHEMA,'coordinate_semantics':'exact_rational_value_of_published_binary64_metres',
             'source_identity':source_ids,'arrangement_sha256':hashlib.sha256(canonical(canonical_rows)).hexdigest(),
             'source_face_coverage_exact':True,'child_interiors_uncut':True,'independent_classification_exact':True,
             'classification_counts':{s:{loc:classification[(s,loc)] for loc in ('inside','outside')} for s in source_names},
@@ -385,6 +452,11 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,so
             'union':{'moments':_moments_json(union),'topology':topology['union']},'partitions':partitions,
             'source_union_preserved':True,'source_exclusive_regions_preserved':True,
             'physical_stepping':False,'biological_valve_interface':False,'mechanical_mass_assigned':False}
+    if expected_source_component_counts is not None:
+        proof['source_topology'] = source_topology
+        proof['expected_source_component_counts'] = component_counts
+    return proof
+
 
 
 def _oriented_key(tri):
@@ -446,7 +518,8 @@ def _outside_connected_boundary_patches(mesh, other, shared_keys, blocked_edges)
     return face_count, witnesses
 
 
-def audit_shared_interface_partition(regions,shared_interface, *, classify_connected_patches=False):
+def audit_shared_interface_partition(regions,shared_interface, *, classify_connected_patches=False,
+                                     expected_region_component_counts=None):
     """Audit final binary64 geometry independently of the rational construction.
 
     `regions` maps two IDs to triangle lists of float metre points. Interface
@@ -455,6 +528,15 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
     """
     require(type(classify_connected_patches) is bool, 'classification mode must be Boolean')
     require(isinstance(regions,dict) and len(regions)==2,'two emitted regions required')
+    region_counts = {name: 1 for name in regions}
+    if expected_region_component_counts is not None:
+        require(isinstance(expected_region_component_counts, dict)
+                and set(expected_region_component_counts) == set(regions)
+                and all(type(count) is int and count >= 1
+                        for count in expected_region_component_counts.values()),
+                'invalid expected emitted region component counts')
+        region_counts = dict(expected_region_component_counts)
+
     def exact(triangles):
         require(isinstance(triangles,list) and triangles,'empty emitted triangles')
         result=[]
@@ -474,12 +556,18 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
     prepared={};reports={};moments={}
     for name,triangles in precise.items():
         topo=_topology(triangles)
-        require(topo['face_components']==1,'emitted region must have one connected boundary')
+        if expected_region_component_counts is None:
+            require(topo['face_components']==1,'emitted region must have one connected boundary')
+        else:
+            require(topo['face_components']==region_counts[name],
+                    'emitted region component count differs from declared inventory')
         moments[name]=_moment_vector(triangles)
         require(moments[name][0]>0,'emitted region winding must be outward')
         mesh=_Prepared(integer(triangles))
         audit=predicates._audit_pair(mesh.records,mesh.records,same_surface=True)
         require(audit['count']==0,'emitted region self-intersects')
+        if topo['face_components'] > 1:
+            topo['component_winding'] = _component_winding(mesh)
         prepared[name]=mesh;reports[name]={'topology':topo,'self_intersection_count':0,'moments':_moments_json(moments[name])}
     shared=integer(interface)
     shared_keys={tuple(sorted(t)) for t in shared}
@@ -548,4 +636,6 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
             'biological_valve_interface':False,'mechanical_mass_assigned':False}
     if classify_connected_patches:
         result['outside_classification'] = 'exact_uncut_connected_boundary_patches'
+    if expected_region_component_counts is not None:
+        result['expected_region_component_counts'] = region_counts
     return result
