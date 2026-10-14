@@ -6,6 +6,9 @@ from numilab_human.resting_brachiocephalic_geometry_gate import (
     BRIDGE_KEYS,
     PORT_TARGET_IDS,
     audit_captured_pose_surface_intersections,
+    audit_brachiocephalic_port_pair_continuity,
+    _manifold_mesh,
+    _section_loops,
 )
 
 
@@ -71,7 +74,7 @@ def test_missing_port_pair_witness_fails_closed():
         audit_captured_pose_surface_intersections(av, targets, positions, faces, ports)
 
 
-def test_a_port_pair_list_must_match_exact_observed_pair_set():
+def test_pose_pair_locus_may_change_inside_frozen_patch_cross_product():
     targets, positions, faces, ports = _inputs()
     pair_key = (BRIDGE_KEYS[0], (51011, 469))
     ports[pair_key] = ports[pair_key][:-1]
@@ -79,10 +82,26 @@ def test_a_port_pair_list_must_match_exact_observed_pair_set():
     result = audit_captured_pose_surface_intersections(
         av, targets, positions, faces, ports)
 
+    assert result["surface_intersection_stage_passed"]
+    observation = next(row for row in result["port_observations"]
+                       if row["target"] == [51011, 469]
+                       and row["bridge"] == [51011, 525])
+    assert observation["observed_pose_pairs_within_frozen_patch"]
+    assert not observation["observed_exactly_matches_frozen_pairs"]
+    assert not result["port_pair_mismatches"]
+
+
+def test_pose_pair_outside_frozen_patch_cross_product_rejects():
+    targets, positions, faces, ports = _inputs()
+    pair_key = (BRIDGE_KEYS[0], (51011, 469))
+    ports[pair_key] = [[0, 0]]
+
+    result = audit_captured_pose_surface_intersections(
+        av, targets, positions, faces, ports)
+
     assert not result["surface_intersection_stage_passed"]
-    assert result["status"] == "CAPTURED_POSE_SURFACE_INTERSECTION_STAGE_REJECTED"
     assert any(row["target"] == [51011, 469]
-               and row["unexpected_actual_face_pairs"]
+               and row["unexpected_actual_face_pairs_outside_frozen_patch"]
                for row in result["port_pair_mismatches"])
 
 
@@ -96,3 +115,188 @@ def test_input_geometry_is_not_mutated():
     after = {key: value[0].tobytes() for key, value in targets.items()}
     after.update({key: value.tobytes() for key, value in positions.items()})
     assert after == before
+
+
+def _closed_cylinder(z_min, z_max, radius=0.2, *, center_x=0.0, sectors=12, axial=16):
+    rings = []
+    for z in np.linspace(z_min, z_max, axial + 1):
+        for sector in range(sectors):
+            angle = 2.0 * np.pi * sector / sectors
+            rings.append([center_x + radius * np.cos(angle),
+                          radius * np.sin(angle), z])
+    bottom_center = len(rings)
+    rings.append([center_x, 0.0, z_min])
+    top_center = len(rings)
+    rings.append([center_x, 0.0, z_max])
+    faces = []
+    for level in range(axial):
+        for sector in range(sectors):
+            following = (sector + 1) % sectors
+            a = level * sectors + sector
+            b = level * sectors + following
+            c = (level + 1) * sectors + following
+            d = (level + 1) * sectors + sector
+            faces.extend(([a, b, c], [a, c, d]))
+    for sector in range(sectors):
+        following = (sector + 1) % sectors
+        faces.extend(([bottom_center, following, sector],
+                      [top_center, axial * sectors + sector,
+                       axial * sectors + following]))
+    return (np.asarray(rings, dtype="<f4"),
+            np.asarray(faces, dtype="<u4"))
+
+
+def _manifold3d():
+    import importlib
+    import sys
+    try:
+        return importlib.import_module("manifold3d")
+    except ImportError:
+        from pathlib import Path
+        dependency = Path(
+            "/Users/n/numi-human-retained-delivery-20261009/"
+            "anatomy-completion-1276/retained-cpu-reference-deps-1384/"
+            "manifold3d-3.5.4")
+        if not dependency.is_dir():
+            pytest.skip("pinned Manifold3D CPU reference dependency is unavailable")
+        sys.path.insert(0, str(dependency))
+        return importlib.import_module("manifold3d")
+
+
+def _port_pairs(bridge, bridge_faces, target, target_faces):
+    first = av.prepare_surface((51011, 525), bridge, bridge_faces)
+    second = av.prepare_surface((51011, 10), target, target_faces)
+    return av.audit_surface_pair(first, second)["unexpected_triangle_pairs"]
+
+
+def _run_cylinder_port(candidate_target, baseline_target, baseline_bridge=None):
+    manifold3d = _manifold3d()
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    bridge_baseline = bridge if baseline_bridge is None else baseline_bridge[0]
+    bridge_baseline_faces = bridge_faces if baseline_bridge is None else baseline_bridge[1]
+    target_faces = _closed_cylinder(0.8, 2.0, radius=0.18)[1]
+    baseline_target_faces = target_faces
+    pairs = _port_pairs(bridge, bridge_faces, candidate_target, target_faces)
+    return audit_brachiocephalic_port_pair_continuity(
+        av, manifold3d,
+        bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+        target_key=(51011, 10), target_surface=(candidate_target, target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge_baseline, bridge_baseline_faces),
+        baseline_target_surface=(baseline_target, baseline_target_faces))
+
+
+def test_overlapping_closed_cylinders_pass_solid_continuity_and_calibre_screen():
+    target, _ = _closed_cylinder(0.8, 2.0, radius=0.18)
+    report = _run_cylinder_port(target, target)
+
+    assert report["passed"]
+    assert report["solid_gate"]["strict_positive_volume"]
+    assert report["solid_gate"]["intersection_volume_m3"] > 0.0
+    assert report["solid_gate"]["exact_inside_both_witness"]["first_location"] == "inside"
+    assert report["solid_gate"]["exact_inside_both_witness"]["second_location"] == "inside"
+    assert report["solid_gate"]["union_component_count"] == 1
+    assert report["solid_gate"]["union_numerical_solid_contract_passed"]
+    assert report["solid_gate"]["union_csg_analysis_precision"].startswith(
+        "Manifold Mesh64 Float64")
+    assert report["solid_gate"]["union_section_mesh_position_dtype"] == "float64"
+    assert report["solid_gate"]["union_boolean_exact_topology_proven"] is False
+    assert report["calibre_gate"]["station_results"]["bridge"]["candidate_vs_baseline"]["passed"]
+    assert report["calibre_gate"]["station_results"]["target"]["candidate_vs_baseline"]["passed"]
+    assert report["calibre_gate"]["declared_preservation_intervals"] == {
+        "area": [0.8, 1.25], "minimum_feret_width": [0.9, 1.1]}
+
+
+def test_tangent_closed_cylinders_reject_zero_volume_contact():
+    manifold3d = _manifold3d()
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    target, target_faces = _closed_cylinder(1.0, 2.0)
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+
+    with pytest.raises(ValueError, match="overlap, exact inside witness, or closed connected union"):
+        audit_brachiocephalic_port_pair_continuity(
+            av, manifold3d,
+            bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+            target_key=(51011, 10), target_surface=(target, target_faces),
+            frozen_face_pairs=pairs,
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces))
+
+
+def test_disconnected_closed_cylinders_reject_missing_port_contact():
+    manifold3d = _manifold3d()
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    target, target_faces = _closed_cylinder(1.1, 2.1)
+    tangent_target, tangent_faces = _closed_cylinder(1.0, 2.0)
+    pairs = _port_pairs(bridge, bridge_faces, tangent_target, tangent_faces)
+
+    with pytest.raises(ValueError, match="lacks a frozen-patch exact interface witness"):
+        audit_brachiocephalic_port_pair_continuity(
+            av, manifold3d,
+            bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+            target_key=(51011, 10), target_surface=(target, target_faces),
+            frozen_face_pairs=pairs,
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces))
+
+
+def test_pinch_beyond_declared_local_calibre_range_rejects():
+    manifold3d = _manifold3d()
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    baseline_target, target_faces = _closed_cylinder(0.8, 2.0, radius=0.18)
+    candidate_target, _ = _closed_cylinder(0.8, 2.0, radius=0.08)
+    pairs = _port_pairs(bridge, bridge_faces, candidate_target, target_faces)
+
+    with pytest.raises(ValueError, match="target section calibre ratio"):
+        audit_brachiocephalic_port_pair_continuity(
+            av, manifold3d,
+            bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+            target_key=(51011, 10), target_surface=(candidate_target, target_faces),
+            frozen_face_pairs=pairs,
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(baseline_target, target_faces))
+
+
+def test_baseline_section_is_transported_with_source_vertex_ancestry():
+    manifold3d = _manifold3d()
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    candidate_target, target_faces = _closed_cylinder(0.84, 2.04, radius=0.18)
+    baseline_target, _ = _closed_cylinder(0.8, 2.0, radius=0.18)
+    pairs = _port_pairs(bridge, bridge_faces, candidate_target, target_faces)
+
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, manifold3d,
+        bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+        target_key=(51011, 10), target_surface=(candidate_target, target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(baseline_target, target_faces))
+    candidate_station = np.asarray(
+        report["calibre_gate"]["station_results"]["target"]["station"]
+        ["section_center_world_m"])
+    baseline_station = np.asarray(
+        report["calibre_gate"]["station_results"]["target"]
+        ["baseline_station_transported_by_ancestry"]["section_center_world_m"])
+
+    assert report["passed"]
+    assert np.linalg.norm(candidate_station - baseline_station) > 0.03
+    assert (report["calibre_gate"]["station_results"]["target"]
+            ["candidate_vs_baseline"]["passed"])
+
+
+def test_derived_boolean_sections_use_mesh64_without_weakening_source_float32_contract():
+    manifold3d = _manifold3d()
+    assert hasattr(manifold3d, "Mesh64")
+    assert hasattr(manifold3d.Manifold, "to_mesh64")
+    solid = manifold3d.Manifold.cylinder(0.2, 1.0, 1.0, 16)
+    positions, faces, mesh = _manifold_mesh(solid)
+
+    assert isinstance(mesh, manifold3d.Mesh64)
+    assert positions.dtype == np.dtype("<f8")
+    assert _section_loops(
+        positions, faces, np.asarray([0.0, 0.0, 0.1]),
+        np.asarray([0.0, 0.0, 1.0]), derived_csg=True)["passed"]
+    with pytest.raises(ValueError, match="emitted Float32 section positions"):
+        _section_loops(
+            positions, faces, np.asarray([0.0, 0.0, 0.1]),
+            np.asarray([0.0, 0.0, 1.0]))
