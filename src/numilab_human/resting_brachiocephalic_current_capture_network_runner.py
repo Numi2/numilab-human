@@ -511,7 +511,9 @@ def run(capture_inputs_json: Path, output_dir: Path) -> dict:
     _require(progress.get("geometry_predicates_run") is True
              and progress.get("status") == "BASELINE_COLLAR_ADDENDUM_VERIFIED"
              and progress.get("candidate_surface_predicates_run") is False
-             and progress.get("baseline_exact_p6_predicate_run") is True,
+             and progress.get("baseline_exact_p6_predicate_run") is True
+             and progress.get("baseline_addendum_path") == str(addendum_path.resolve())
+             and progress.get("baseline_addendum_sha256") == _sha_file(addendum_path),
              "run requires the separately frozen baseline-only collar addendum and no candidate predicates")
     bundle_bytes = bundle_path.read_bytes()
     bundle_sha = _sha_bytes(bundle_bytes)

@@ -108,6 +108,10 @@ def _freeze_test_addendum(output, bundle, proof):
     progress = json.loads(progress_path.read_text())
     progress.update({
         "status": "BASELINE_COLLAR_ADDENDUM_VERIFIED",
+        "baseline_addendum_path": str(
+            (output / runner.BASELINE_ADDENDUM_NAME).resolve()),
+        "baseline_addendum_sha256": runner._sha_file(
+            output / runner.BASELINE_ADDENDUM_NAME),
         "geometry_predicates_run": True,
         "candidate_surface_predicates_run": False,
         "baseline_exact_p6_predicate_run": True,
