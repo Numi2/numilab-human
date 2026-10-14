@@ -4,12 +4,15 @@ import numpy as np
 import pytest
 
 from numilab_human.resting_vessel_owner_blend import (
+    FJ2217_OBJ_SHA256,
+    ISA_ARCHIVE_SHA256,
     _retire_isolated_source_face,
     apply_parent_surface_updates,
     apply_route110_bridge_row,
     geodesic_owner_partition,
     reinstate_source_face_through_exact_aliases,
     validate_fj2217_reinstatement_parent_maps_unchanged,
+    validate_fj2217_route_face_operation,
     validate_local_source_face_reinstatement,
 )
 
@@ -323,3 +326,158 @@ def test_fj2217_reinstatement_parent_map_proof_is_separate_and_exact():
     candidate["anatomy_surfaces"][0]["vertices"][0].reverse()
     with pytest.raises(ValueError, match="anatomy_surfaces"):
         validate_fj2217_reinstatement_parent_maps_unchanged(base, candidate)
+
+
+def _full_fj2217_row():
+    vertices = np.zeros((1089, 6), dtype="<f4")
+    vertices[:, 5] = 1.0
+    for source_id, alias_id in ((930, 1068), (1066, 1065), (1063, 926)):
+        vertices[alias_id, :3] = vertices[source_id, :3]
+    faces = np.zeros((2110, 3), dtype="<u4")
+    faces[:, 0] = 0
+    faces[:, 1] = 1
+    faces[:, 2] = 2
+    faces[1858] = [930, 1066, 1063]
+    faces[0] = [1068, 1065, 926]
+    row = {
+        "record": (91, 0, 1089, 0, faces.size, 477, 2, 0),
+        "body_index": 91,
+        "layer": 2,
+        "flags": 0,
+        "vertices6": vertices,
+        "faces": faces,
+    }
+    return row
+
+
+def _legacy_fj2217_retirement(row):
+    face = row["faces"][1858].copy()
+    faces = np.concatenate((row["faces"][:1858], row["faces"][1859:]))
+    candidate = {
+        **row,
+        "faces": faces,
+        "record": (*row["record"][:4], faces.size, *row["record"][5:]),
+    }
+    lineage = {
+        "classification": "unexplained_isolated_raw_source_face; scoped_reference_retirement",
+        "anatomical_interface_proven": False,
+        "local_retirement_proposed": True,
+        "retirement_operation_changes_no_mesh_coordinates": True,
+        "source_archive_sha256": ISA_ARCHIVE_SHA256,
+        "source_member_sha256": FJ2217_OBJ_SHA256,
+        "source_face_and_nha_face_arrays_exact": True,
+        "source_face_id_zero_based": 1858,
+        "nha_local_face_id_zero_based": 1858,
+        "ordered_source_vertex_ids_zero_based": face.astype(int).tolist(),
+        "nha_local_vertex_ids_zero_based": face.astype(int).tolist(),
+    }
+    retirement = {
+        "stable_id": 477,
+        "removed_face_count": 1,
+        "source_archive_sha256": ISA_ARCHIVE_SHA256,
+        "source_member_sha256": FJ2217_OBJ_SHA256,
+        "source_face_and_nha_ancestry_exact": True,
+        "all_other_source_faces_retained_in_original_order": True,
+        "unchanged_source_vertex_prefix_byte_exact": True,
+        "input_face_count": 2110,
+        "output_face_count": 2109,
+        "input_vertex_count": 1089,
+        "output_vertex_count": 1089,
+        "retained_unused_vertex_slots": 3,
+        "source_face_bytes_sha256": __import__("hashlib").sha256(
+            face.astype("<u4").tobytes()
+        ).hexdigest(),
+        "source_face_id_zero_based": 1858,
+        "lineage": lineage,
+    }
+    proof = {
+        "replaced_stable_ids": [477],
+        "stable_id_order_preserved": True,
+        "global_offsets_rebased_by_existing_abi5_encoder": True,
+        "registration_and_source_header_bytes_preserved": True,
+    }
+    return candidate, retirement, proof
+
+
+def test_fj2217_exact_legacy_retirement_receipt_replays():
+    full = _full_fj2217_row()
+    retired, declaration, proof = _legacy_fj2217_retirement(full)
+    result = validate_fj2217_route_face_operation(
+        full,
+        retired,
+        full,
+        reinstatement=None,
+        active_retirement=declaration,
+        historical_retirement=None,
+        route_reemit_proof=proof,
+        historical_retirement_reemit_proof=None,
+    )
+    assert result["receipt_operation"] == "legacy_scoped_retirement_replay"
+    assert result["all_other_faces_exact_and_ordered"] is True
+    assert result["anatomical_admission"] is False
+
+
+def test_fj2217_reinsertion_replays_the_exact_historical_retirement():
+    full = _full_fj2217_row()
+    retired, history, proof = _legacy_fj2217_retirement(full)
+    candidate, declaration = reinstate_source_face_through_exact_aliases(
+        retired,
+        1858,
+        full["faces"][1858],
+        source_row=full,
+    )
+    result = validate_fj2217_route_face_operation(
+        retired,
+        candidate,
+        full,
+        reinstatement=declaration,
+        active_retirement=None,
+        historical_retirement=history,
+        route_reemit_proof=proof,
+        historical_retirement_reemit_proof=proof,
+    )
+    assert result["receipt_operation"] == (
+        "reinsert_retired_source_face_at_original_order_position"
+    )
+    assert result["all_other_faces_exact_and_ordered"] is True
+
+
+def test_fj2217_fresh_reinstatement_does_not_fabricate_retirement():
+    base = _full_fj2217_row()
+    candidate, declaration = reinstate_source_face_through_exact_aliases(
+        base,
+        1858,
+        base["faces"][1858],
+        source_row=base,
+    )
+    proof = {
+        "replaced_stable_ids": [477],
+        "stable_id_order_preserved": True,
+        "global_offsets_rebased_by_existing_abi5_encoder": True,
+        "registration_and_source_header_bytes_preserved": True,
+    }
+    result = validate_fj2217_route_face_operation(
+        base,
+        candidate,
+        base,
+        reinstatement=declaration,
+        active_retirement=None,
+        historical_retirement=None,
+        route_reemit_proof=proof,
+        historical_retirement_reemit_proof=None,
+    )
+    assert result["receipt_operation"] == (
+        "replace_original_face_corners_by_exact_coordinate_aliases"
+    )
+    assert result["all_vertices_and_normals_unchanged"] is True
+    with pytest.raises(ValueError, match="must not fabricate historical retirement"):
+        validate_fj2217_route_face_operation(
+            base,
+            candidate,
+            base,
+            reinstatement=declaration,
+            active_retirement=None,
+            historical_retirement={"source_face_id_zero_based": 1858},
+            route_reemit_proof=proof,
+            historical_retirement_reemit_proof=proof,
+        )

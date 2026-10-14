@@ -619,6 +619,76 @@ def validate_local_source_face_reinstatement(
     }
 
 
+
+def validate_fj2217_route_face_operation(
+    base_row: dict[str, Any],
+    candidate_row: dict[str, Any],
+    expected_route_row: dict[str, Any],
+    *,
+    reinstatement: dict[str, Any] | None,
+    active_retirement: dict[str, Any] | None,
+    historical_retirement: dict[str, Any] | None,
+    route_reemit_proof: dict[str, Any],
+    historical_retirement_reemit_proof: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Validate a current reinstatement or replay one exact legacy retirement receipt."""
+    if reinstatement is not None:
+        _require(
+            active_retirement is None,
+            "FJ2217 reinstatement receipt must not retain an active retirement",
+        )
+        operation = reinstatement.get("operation")
+        if operation == "replace_original_face_corners_by_exact_coordinate_aliases":
+            _require(
+                historical_retirement is None
+                and historical_retirement_reemit_proof is None,
+                "fresh FJ2217 replacement must not fabricate historical retirement",
+            )
+        elif operation == "reinsert_retired_source_face_at_original_order_position":
+            _require(
+                isinstance(historical_retirement, dict)
+                and isinstance(historical_retirement_reemit_proof, dict),
+                "FJ2217 reinsertion must retain its exact historical retirement receipt",
+            )
+            source_face = np.ascontiguousarray(
+                expected_route_row["faces"][FJ2217_CAP_SOURCE_FACE_ID], dtype="<u4"
+            )
+            historical_row, _ = _retire_isolated_source_face(
+                expected_route_row, FJ2217_CAP_SOURCE_FACE_ID, source_face
+            )
+            validate_local_source_face_retirement(
+                expected_route_row,
+                historical_row,
+                historical_retirement,
+                historical_retirement_reemit_proof,
+                expected_pre_retirement_row=expected_route_row,
+            )
+        else:
+            raise ValueError("FJ2217 reinstatement operation is not a pinned operation")
+        proof = validate_local_source_face_reinstatement(
+            base_row,
+            candidate_row,
+            reinstatement,
+            route_reemit_proof,
+            expected_source_row=expected_route_row,
+        )
+        return {**proof, "receipt_operation": operation}
+
+    _require(
+        isinstance(active_retirement, dict)
+        and historical_retirement is None
+        and historical_retirement_reemit_proof is None,
+        "legacy FJ2217 receipt lacks its active scoped retirement proof",
+    )
+    proof = validate_local_source_face_retirement(
+        base_row,
+        candidate_row,
+        active_retirement,
+        route_reemit_proof,
+        expected_pre_retirement_row=expected_route_row,
+    )
+    return {**proof, "receipt_operation": "legacy_scoped_retirement_replay"}
+
 def validate_fj2217_reinstatement_parent_maps_unchanged(
     base_parent_bindings: dict[str, Any],
     candidate_parent_bindings: dict[str, Any],

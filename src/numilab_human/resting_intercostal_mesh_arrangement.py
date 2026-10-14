@@ -2493,17 +2493,14 @@ def validate_receipt_composition(
     }
     extension = provenance.get("passive_brachiocephalic_vein_extension", {})
     vessel_blend = extension.get("passive_tissue_owner_blend", {})
-    reinstatement = vessel_blend.get("local_source_face_reinstatement")
-    historical_retirement = vessel_blend.get("historical_local_source_face_retirement")
     route_decl = extension.get("route110_reference_field")
     _require(isinstance(route_decl, dict)
              and route_decl.get("schema") == "numi.human.route110.registered-reference-row-transfer.v1",
              "append receipt lacks the exact route110 source-row transfer declaration")
     from .resting_vessel_owner_blend import (
-        FJ2217_OBJ_SHA256,
         ROUTE110_PINS,
         load_route110_reference_rows,
-        validate_local_source_face_reinstatement,
+        validate_fj2217_route_face_operation,
     )
     route_paths = route_decl.get("input_paths", {})
     route_data = load_route110_reference_rows(
@@ -2522,14 +2519,25 @@ def validate_receipt_composition(
     }
     expected_route_replaced = sorted(route_changed_ids | {525})
     route_reemit = route_decl.get("abi5_reemit_proof", {})
+    reinstatement = vessel_blend.get("local_source_face_reinstatement")
+    active_retirement = vessel_blend.get("local_source_face_retirement")
+    historical_retirement = vessel_blend.get("historical_local_source_face_retirement")
+    historical_retirement_reemit = vessel_blend.get(
+        "historical_abi5_retirement_reemit_proof"
+    )
+    owner_reemit = (
+        vessel_blend.get("abi5_reinstatement_reemit_proof")
+        if reinstatement is not None
+        else vessel_blend.get("abi5_retirement_reemit_proof")
+    )
     _require(
         route_decl.get("replaced_stable_ids") == expected_route_replaced
         and route_reemit.get("replaced_stable_ids") == expected_route_replaced
         and route_reemit.get("stable_id_order_preserved") is True
         and route_reemit.get("global_offsets_rebased_by_existing_abi5_encoder") is True
         and route_reemit.get("registration_and_source_header_bytes_preserved") is True
-        and vessel_blend.get("abi5_reinstatement_reemit_proof") == route_reemit,
-        "route110 ABI5 replacement set or cap-reinstatement append-owner proof differs",
+        and owner_reemit == route_reemit,
+        "route110 ABI5 replacement set or scoped FJ2217 append-owner proof differs",
     )
     bridge = route_data["bridge_rows"][525]
     _require(
@@ -2559,30 +2567,30 @@ def validate_receipt_composition(
             == _normalized_row_bytes(expected_route_rows[stable_id]),
             f"route110 source-row transfer differs at stable ID {stable_id}",
         )
-    reinstated_rows = {}
-    if reinstatement is not None:
-        _require(477 in route_changed_ids, "FJ2217 cap reinstatement lacks route110 row transfer")
+    cap_operation_proof = None
+    legacy_retirement_rows = {}
+    if reinstatement is not None or active_retirement is not None:
         _require(
-            isinstance(historical_retirement, dict)
-            and historical_retirement.get("source_member_sha256") == FJ2217_OBJ_SHA256
-            and historical_retirement.get("source_face_id_zero_based") == 1858
-            and historical_retirement.get("output_face_count") == 2109
-            and historical_retirement.get("lineage", {}).get("classification")
-            == "unexplained_isolated_raw_source_face; scoped_reference_retirement",
-            "historical failed FJ2217 retirement evidence was not preserved",
+            477 in route_changed_ids,
+            "FJ2217 cap face operation lacks route110 row transfer",
         )
-        reinstated_rows[477] = validate_local_source_face_reinstatement(
+        cap_operation_proof = validate_fj2217_route_face_operation(
             base_rows[477],
             candidate_rows[477],
-            reinstatement,
-            route_reemit,
-            expected_source_row=expected_route_rows[477],
+            expected_route_rows[477],
+            reinstatement=reinstatement,
+            active_retirement=active_retirement,
+            historical_retirement=historical_retirement,
+            route_reemit_proof=route_reemit,
+            historical_retirement_reemit_proof=historical_retirement_reemit,
         )
+        if cap_operation_proof["receipt_operation"] == "legacy_scoped_retirement_replay":
+            legacy_retirement_rows[477] = cap_operation_proof
     else:
         _require(
             477 not in route_changed_ids
             and _normalized_row_bytes(base_rows[477]) == _normalized_row_bytes(candidate_rows[477]),
-            "FJ2217 changed without its pinned route transfer/cap reinstatement",
+            "FJ2217 changed without its pinned route transfer/cap operation",
         )
 
     def expected_route_pointer(stable_id: int) -> dict:
@@ -2620,9 +2628,13 @@ def validate_receipt_composition(
         baseline_repair = baseline.pop("repair", {}) or {}
         expected_repair = deepcopy(baseline_repair)
         expected_repair["route110_reference_field"] = expected_route_pointer(stable_id)
-        if stable_id == 477 and reinstatement is not None:
-            expected_repair["historical_local_source_face_retirement"] = historical_retirement
-            expected_repair["local_source_face_reinstatement"] = reinstatement
+        if stable_id == 477:
+            if reinstatement is not None:
+                if historical_retirement is not None:
+                    expected_repair["historical_local_source_face_retirement"] = historical_retirement
+                expected_repair["local_source_face_reinstatement"] = reinstatement
+            elif active_retirement is not None:
+                expected_repair["local_source_face_retirement"] = active_retirement
         expected_identity = deepcopy(baseline)
         if stable_id in (475, 477):
             expected_identity["passive_tissue_owner_binding"] = {
@@ -2679,9 +2691,11 @@ def validate_receipt_composition(
                      and row_binding == row_record,
                      f"source identity, prior 028 repair, or row repair pointer differs for {stable_id}")
         elif stable_id in route_changed_ids:
-            if stable_id == 477 and reinstated_rows:
-                _require(477 in reinstated_rows,
-                         "FJ2217 route row cap-reinstatement proof was not reconstructed")
+            if stable_id == 477 and cap_operation_proof is not None:
+                _require(
+                    cap_operation_proof.get("stable_id") == 477,
+                    "FJ2217 route row cap-operation proof was not reconstructed",
+                )
             else:
                 _require(
                     _normalized_row_bytes(candidate)
@@ -2706,11 +2720,19 @@ def validate_receipt_composition(
         "bridge_appended_row_count": 2,
         "all_unmodified_original_rows_byte_exact": True,
         "all_512_unmodified_rows_byte_exact": unchanged_count == 512,
-        "reinstated_source_face_rows": reinstated_rows,
-        "exact_local_vessel_source_face_reinstatement_reconstructed": bool(reinstated_rows),
-        "historical_failed_source_face_retirement_preserved": bool(
-            historical_retirement if isinstance(historical_retirement, dict) else False
+        "fj2217_cap_operation": cap_operation_proof,
+        "legacy_retirement_replayed": bool(legacy_retirement_rows),
+        "reinstatement_reconstructed": bool(
+            cap_operation_proof
+            and cap_operation_proof["receipt_operation"]
+            in {
+                "replace_original_face_corners_by_exact_coordinate_aliases",
+                "reinsert_retired_source_face_at_original_order_position",
+            }
         ),
+        "historical_failed_source_face_retirement_preserved": isinstance(
+            historical_retirement, dict
+        ) or bool(legacy_retirement_rows),
         "all_three_repaired_rows_reconstructed_from_pinned_positive_maps": True,
         "captured_step0_world_points_and_local_abi5_emission_bound": True,
         "capture_decoder_provenance": capture_decoder_provenance,

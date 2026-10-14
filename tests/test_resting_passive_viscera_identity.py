@@ -1,10 +1,11 @@
+import hashlib
 import unittest
 from copy import deepcopy
-import hashlib
 
 from numilab_human.resting_passive_viscera import (
     COLON_COMPONENTS,
     SMALL_INTESTINE_MEMBERS,
+    _historical_fj2217_retirement_fields,
     anatomical_component_identity,
     refresh_passive_component_identities,
     vascular_bindings,
@@ -122,9 +123,11 @@ class PassiveVisceraIdentityTests(unittest.TestCase):
         for table in ({}, {
                 ("FMA14964", "proximal part of ileum"): {"FJ2574"},
                 ("FMA16981", "proximal part of jejunum"): {"FJ2574"}}):
-            with self.subTest(table=table):
-                with self.assertRaisesRegex(ValueError, "membership changed or ambiguous"):
-                    anatomical_component_identity({"tables": {"is_a": table}}, "FJ2574")
+            with (
+                self.subTest(table=table),
+                self.assertRaisesRegex(ValueError, "membership changed or ambiguous"),
+            ):
+                anatomical_component_identity({"tables": {"is_a": table}}, "FJ2574")
 
     def test_receipt_refresh_adds_exact_source_identity_without_reimport(self):
         atlas, receipt = _refresh_fixture()
@@ -224,3 +227,23 @@ class PassiveVisceraIdentityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_append_owner_retains_only_real_historical_cap_retirement():
+    retirement = {"source_face_id_zero_based": 1858, "output_face_count": 2109}
+    proof = {"replaced_stable_ids": [477]}
+    preserved = _historical_fj2217_retirement_fields({
+        "local_source_face_retirement": retirement,
+        "abi5_retirement_reemit_proof": proof,
+    })
+    assert preserved == {
+        "historical_local_source_face_retirement": retirement,
+        "historical_abi5_retirement_reemit_proof": proof,
+    }
+    assert _historical_fj2217_retirement_fields({}) == {}
+    import pytest
+
+    with pytest.raises(ValueError, match="no retirement record"):
+        _historical_fj2217_retirement_fields({
+            "abi5_retirement_reemit_proof": proof,
+        })

@@ -1666,6 +1666,28 @@ def _load_brachiocephalic_quotient_rows(
     return loaded, report
 
 
+def _historical_fj2217_retirement_fields(prior_owner_blend: dict) -> dict:
+    """Retain a prior cap retirement only when the input receipt actually had one."""
+    if not isinstance(prior_owner_blend, dict):
+        raise ValueError("prior passive vessel owner blend is not an object")
+    retirement = prior_owner_blend.get("historical_local_source_face_retirement")
+    if retirement is None:
+        retirement = prior_owner_blend.get("local_source_face_retirement")
+    reemit = prior_owner_blend.get("historical_abi5_retirement_reemit_proof")
+    if reemit is None:
+        reemit = prior_owner_blend.get("abi5_retirement_reemit_proof")
+    if retirement is None:
+        if reemit is not None:
+            raise ValueError("historical FJ2217 retirement proof has no retirement record")
+        return {}
+    if not isinstance(retirement, dict) or not isinstance(reemit, dict):
+        raise ValueError("historical FJ2217 retirement record/proof is incomplete")
+    return {
+        "historical_local_source_face_retirement": deepcopy(retirement),
+        "historical_abi5_retirement_reemit_proof": deepcopy(reemit),
+    }
+
+
 def append_viscera(
     base_receipt: Path,
     output: Path,
@@ -1689,6 +1711,12 @@ def append_viscera(
             "retain previous anatomy evidence; choose a new output directory"
         )
     receipt = json.loads(base_receipt.read_text())
+    prior_extension = deepcopy(
+        receipt.get("provenance", {}).get(extension_key, {})
+    )
+    prior_owner_blend = prior_extension.get("passive_tissue_owner_blend", {})
+    if not isinstance(prior_owner_blend, dict):
+        raise ValueError("prior passive vessel owner blend is not an object")
     base = Path(receipt["payload"]["path"])
     if human.sha256(base) != receipt["payload"]["sha256"]:
         raise ValueError("base anatomy receipt and payload differ")
@@ -2486,13 +2514,10 @@ def append_viscera(
             }
         )
     if vessel_owner_preparation is not None:
-        prior_owner_blend = (
-            receipt["provenance"]
-            .get(extension_key, {})
-            .get("passive_tissue_owner_blend", {})
+        historical_retirement_fields = _historical_fj2217_retirement_fields(
+            prior_owner_blend
         )
-        historical_retirement = prior_owner_blend.get("local_source_face_retirement")
-        receipt["provenance"][extension_key]["passive_tissue_owner_blend"] = {
+        owner_blend_record = {
             "schema": "numi.human.passive_vessel_owner_blend.v1",
             "method": "source-mesh edge-geodesic distance ratio with quintic smoothstep, encoded through existing NHTISS4 ABI5 passive parent bindings",
             "rows": vessel_owner_preparation["rows"],
@@ -2505,10 +2530,6 @@ def append_viscera(
             "local_source_face_reinstatement": vessel_owner_preparation[
                 "local_source_face_reinstatement"
             ],
-            "historical_local_source_face_retirement": historical_retirement,
-            "historical_abi5_retirement_reemit_proof": prior_owner_blend.get(
-                "abi5_retirement_reemit_proof"
-            ),
             "abi5_reinstatement_reemit_proof": vessel_reemit_proof,
             "existing_common_map_and_volume_ranges_unchanged": True,
             "vascular_compartment_bindings_unchanged": True,
@@ -2518,6 +2539,10 @@ def append_viscera(
             "anatomical_admission": False,
             "scope": vessel_owner_preparation["scope"],
         }
+        owner_blend_record.update(historical_retirement_fields)
+        receipt["provenance"][extension_key]["passive_tissue_owner_blend"] = (
+            owner_blend_record
+        )
     # Existing derivation receipts stay bound to their original intermediate
     # payload. The append-only lineage above binds them to this new composite.
     receipt_path = output / "resting-anatomy-receipt.json"
