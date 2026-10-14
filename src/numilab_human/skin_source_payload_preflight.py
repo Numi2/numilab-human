@@ -17,7 +17,6 @@ import numpy as np
 from . import model as human
 from .skin_surface_audit import _rotation, _source_oracle, _verified_weights
 
-
 SCHEMA = 'numi.human.skin-source-payload-independent-preflight.v1'
 CODE_FILES = ('skin_source_payload_preflight.py', 'skin_surface_audit.py',
               'skin_surface_binding.py', 'model.py')
@@ -101,7 +100,7 @@ def audit(sources: Path, artifact: Path, registration_path: Path,
             and manifest['source']['skin']['member_sha256'] == hashlib.sha256(skin_obj).hexdigest(),
             'source skin member identity')
 
-    reference, _ = human._bodyparts_runtime_bindings(registration, artifact)
+    _reference, _ = human._bodyparts_runtime_bindings(registration, artifact)
     rigid_check = human._require_myosim_rigid_program(sources, artifact)
     rigid_path = artifact / 'myosim-fullbody-core-reference.nhrigid'
     reference_manifest_path = artifact / 'myosim-fullbody-reference.manifest.json'
@@ -262,7 +261,6 @@ def audit(sources: Path, artifact: Path, registration_path: Path,
 
 
 def main() -> int:
-    root = human.REPOSITORY_ROOT
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sources', type=Path, required=True)
     parser.add_argument('--artifact', type=Path, required=True)
@@ -284,6 +282,110 @@ def main() -> int:
                       'bindings': result['runtime']['body_binding_count'],
                       'rest_error_m': result['runtime']['maximum_rest_reconstruction_error_m']}))
     return 0
+
+
+
+def _canonical_skin_registration_reemission(raw, previous, current, previous_sha, current_sha, runtime_reference):
+    """Re-emit a discriminator after the existing atlas owner proves all bindings."""
+    decoded = decode_payload(raw)
+    require(decoded["registration_fingerprint32"] == int(previous_sha[:8], 16),
+            "previous registration does not own the actual skin")
+    require(previous.get("schema") == current.get("schema")
+            == "numi.human.bodyparts3d-myosim-bone-registration-candidate.v2", "registration schema")
+    require(previous["source"]["bodyparts"] == current["source"]["bodyparts"],
+            "skin BodyParts3D source identity changed")
+    for registration in (previous, current):
+        require(registration["source"]["myosim"]["source"]["archive_sha256"]
+                == decoded["source_archive_sha256"], "skin MyoSim archive identity changed")
+    frame = previous["coordinate_system"]["global_source_mm_to_myosim_world_m"]
+    require(frame == current["coordinate_system"]["global_source_mm_to_myosim_world_m"],
+            "skin common atlas frame changed")
+
+    def anchors(registration):
+        rows = registration.get("anchors")
+        require(isinstance(rows, list) and bool(rows), "skin registration has no anchors")
+        members, owners = set(), {}
+        for row in rows:
+            source, target = row["source"], row["target"]
+            core, name = target["core_body_index"], target["name"]
+            require(type(core) is int and core >= 0 and isinstance(name, str) and bool(name),
+                    "skin target identity is invalid")
+            member = source["member_id"]
+            require(member not in members, "duplicate skin source anchor")
+            members.add(member)
+            require(core not in owners or owners[core] == target,
+                    "skin Core owner aliases different targets")
+            owners[core] = target
+        return rows, owners
+
+    old_rows, old_owners = anchors(previous)
+    new_rows, new_owners = anchors(current)
+    require(len(old_rows) == len(new_rows), "skin source anchor inventory changed")
+    for old, new in zip(old_rows, new_rows, strict=True):
+        require(old["source"] == new["source"] and old["target"] == new["target"],
+                "skin source anchor or runtime rest frame changed")
+    require(old_owners == new_owners, "skin runtime target inventory changed")
+    core_ids = [int(value) for value in decoded["bindings_u"][:, 0]]
+    require(len(set(core_ids)) == len(core_ids), "duplicate skin binding owner")
+    for index, core in enumerate(core_ids):
+        require(core in new_owners, "skin binding owner absent from registration")
+        pose = new_owners[core]
+        matrix = human._bodyparts_local_registration_matrix(
+            frame, pose["default_com_position_world_m"],
+            pose["default_inertial_quaternion_world_xyzw"])
+        translation, quaternion, scale = human._bodyparts_visual_local_pose(
+            matrix, "canonical skin registration re-emission")
+        canonical = struct.pack("<I8f", core, *translation, *quaternion, scale)
+        require(raw[60 + 36 * index:60 + 36 * (index + 1)] == canonical,
+                "skin binding differs from the existing canonical atlas owner")
+    candidate = bytearray(raw)
+    struct.pack_into("<I", candidate, 24, int(current_sha[:8], 16))
+    candidate = bytes(candidate)
+    require(candidate[:24] == raw[:24] and candidate[28:] == raw[28:],
+            "skin geometry, normals, topology, bindings or weights changed")
+    return candidate, {
+        "schema": SCHEMA, "operation": "canonical_skin_registration_metadata_reemission",
+        "passed": True, "source_skin_sha256": hashlib.sha256(raw).hexdigest(),
+        "candidate_skin_sha256": hashlib.sha256(candidate).hexdigest(),
+        "previous_registration_sha256": previous_sha, "registration_sha256": current_sha,
+        "runtime_reference": runtime_reference, "canonical_binding_count": len(core_ids),
+        "all_binding_records_byte_exact": True,
+        "all_geometry_normals_topology_and_full_weights_byte_exact": True,
+        "physical_mass_state_forces_or_controller_changed": False,
+        "evidence_boundary": "Existing common-atlas owner compatibility proof only; no anatomical or native-pose admission.",
+    }
+
+
+def reemit_canonical_skin_registration(payload: Path, previous_registration: Path,
+                                     registration: Path, artifact: Path, output: Path) -> dict:
+    """Preserve repaired skin using the consumed rigid owner, not header edits alone."""
+    payload, previous_registration, registration, artifact, output = (
+        Path(path).resolve() for path in
+        (payload, previous_registration, registration, artifact, output))
+    previous_raw, current_raw = previous_registration.read_bytes(), registration.read_bytes()
+    previous, current = json.loads(previous_raw), json.loads(current_raw)
+    # Existing owner verifies source IDs and COM/rotation against actual NHRIGID.
+    reference, _ = human._bodyparts_runtime_bindings(current, artifact)
+    candidate, report = _canonical_skin_registration_reemission(
+        payload.read_bytes(), previous, current,
+        hashlib.sha256(previous_raw).hexdigest(), hashlib.sha256(current_raw).hexdigest(), reference)
+    require(payload.name != "skin-registration-source-preflight.json", "skin output filename collision")
+    output.mkdir(parents=True, exist_ok=False)
+    destination = output / payload.name
+    destination.write_bytes(candidate)
+    report["owner_code_sha256"] = {
+        "skin_source_payload_preflight.py": _sha(Path(__file__)),
+        "model.py": _sha(Path(human.__file__)),
+    }
+    report["inputs"] = {
+        "payload_path": str(payload), "previous_registration_path": str(previous_registration),
+        "registration_path": str(registration), "artifact_path": str(artifact)}
+    report["payload"] = {"path": str(destination), "sha256": hashlib.sha256(candidate).hexdigest(),
+                         "bytes": len(candidate)}
+    report_path = output / "skin-registration-source-preflight.json"
+    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    return {**report["payload"], "report_path": str(report_path),
+            "report_sha256": human.sha256(report_path)}
 
 
 if __name__ == '__main__':

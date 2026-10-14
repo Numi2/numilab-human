@@ -1,0 +1,4 @@
+# Preserving repaired skin under the regional registration
+The existing atlas owner proves all 86 actual accepted skin bindings byte-exact against the refreshed registration and consumed NHRIGID reference. Its common atlas frame and runtime target identities are unchanged. The source re-emission changes only the four-byte registration discriminator; the 52-vertex medial-thigh repair, ocular boundaries, complete weights, normals, topology and every binding record remain exact.
+
+The candidate is retained remotely with the path and SHA in the source preflight. This is compatibility preparation only, not geometry or native admission. The first invocation stopped before output creation because the active build directory lacked the reference manifest; the successful invocation uses the authenticated recovered artifact from the full owner compile. No new skin solve or physical state was introduced.
