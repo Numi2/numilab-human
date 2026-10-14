@@ -1946,7 +1946,7 @@ def append_viscera(
             route_checkpoint_path=Path(vessel_owner_blend_binding["route_checkpoint_path"]),
         )
         if set(vessel_owner_preparation["row_replacements"]) != {477}:
-            raise ValueError("scoped FJ2217 local source-face retirement set changed")
+            raise ValueError("scoped FJ2217 local source-face reinstatement set changed")
     additions = []
     added_members = {}
     family_rows = []
@@ -2195,7 +2195,7 @@ def append_viscera(
         )
         expected_replaced = sorted(route_row_replacements)
         if vessel_reemit_proof["replaced_stable_ids"] != expected_replaced:
-            raise ValueError("route110/retirement ABI5 row-replacement set changed")
+            raise ValueError("route110/cap-reinstatement ABI5 row-replacement set changed")
     _, _, appended_rows = _parse_payload(payload)
     allowed_row_replacements = set(arrangement_rows)
     if vessel_owner_preparation is not None:
@@ -2214,10 +2214,10 @@ def append_viscera(
             _record_content_bytes(expected_477)
             != _record_content_bytes(appended_rows[477])
             or len(appended_rows[477]["vertices6"]) != len(base_rows[477]["vertices6"])
-            or len(appended_rows[477]["faces"]) != len(base_rows[477]["faces"]) - 1
+            or len(appended_rows[477]["faces"]) != len(base_rows[477]["faces"])
         ):
             raise ValueError(
-                "scoped FJ2217 retirement differs from its exact one-face replacement"
+                "scoped FJ2217 cap reinstatement differs from its exact alias-face replacement"
             )
     output.mkdir(parents=True)
     path = output / "resting-thorax.nhanatomy"
@@ -2363,16 +2363,21 @@ def append_viscera(
             raise ValueError(
                 "existing parent binding composer returned a different carrier path"
             )
-        retirement = vessel_owner_preparation["local_source_face_retirement"]
+        reinstatement = vessel_owner_preparation["local_source_face_reinstatement"]
         prior_repair = receipt["provenance"]["source_id_map"]["477"].get("repair")
         if prior_repair is None:
             prior_repair = {}
         if not isinstance(prior_repair, dict):
             raise ValueError("FJ2217 repair metadata is not an object")
         prior_repair = deepcopy(prior_repair)
-        if "local_source_face_retirement" in prior_repair:
-            raise ValueError("FJ2217 source-face retirement is already recorded")
-        prior_repair["local_source_face_retirement"] = retirement
+        historical_retirement = prior_repair.pop("local_source_face_retirement", None)
+        if historical_retirement is not None:
+            if "historical_local_source_face_retirement" in prior_repair:
+                raise ValueError("FJ2217 historical retirement is already preserved")
+            prior_repair["historical_local_source_face_retirement"] = historical_retirement
+        if "local_source_face_reinstatement" in prior_repair:
+            raise ValueError("FJ2217 cap reinstatement is already recorded")
+        prior_repair["local_source_face_reinstatement"] = reinstatement
         receipt["provenance"]["source_id_map"]["477"]["repair"] = prior_repair
         for sid in (475, 477):
             receipt["provenance"]["source_id_map"][str(sid)][
@@ -2481,6 +2486,12 @@ def append_viscera(
             }
         )
     if vessel_owner_preparation is not None:
+        prior_owner_blend = (
+            receipt["provenance"]
+            .get(extension_key, {})
+            .get("passive_tissue_owner_blend", {})
+        )
+        historical_retirement = prior_owner_blend.get("local_source_face_retirement")
         receipt["provenance"][extension_key]["passive_tissue_owner_blend"] = {
             "schema": "numi.human.passive_vessel_owner_blend.v1",
             "method": "source-mesh edge-geodesic distance ratio with quintic smoothstep, encoded through existing NHTISS4 ABI5 passive parent bindings",
@@ -2491,8 +2502,14 @@ def append_viscera(
                 "carrier_payload_sha256"
             ],
             "new_carrier_payload_path": carrier_relative.as_posix(),
-            "local_source_face_retirement": retirement,
-            "abi5_retirement_reemit_proof": vessel_reemit_proof,
+            "local_source_face_reinstatement": vessel_owner_preparation[
+                "local_source_face_reinstatement"
+            ],
+            "historical_local_source_face_retirement": historical_retirement,
+            "historical_abi5_retirement_reemit_proof": prior_owner_blend.get(
+                "abi5_retirement_reemit_proof"
+            ),
+            "abi5_reinstatement_reemit_proof": vessel_reemit_proof,
             "existing_common_map_and_volume_ranges_unchanged": True,
             "vascular_compartment_bindings_unchanged": True,
             "additional_physical_mass_kg": 0,

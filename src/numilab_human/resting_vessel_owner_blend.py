@@ -392,6 +392,279 @@ def validate_local_source_face_retirement(
     }
 
 
+
+FJ2217_CAP_SOURCE_FACE_ID = 1858
+FJ2217_CAP_SOURCE_VERTEX_IDS = (930, 1066, 1063)
+FJ2217_CAP_ALIAS_VERTEX_IDS = (1068, 1065, 926)
+
+
+def reinstate_source_face_through_exact_aliases(
+    row: dict[str, Any],
+    face_id: int,
+    source_face: np.ndarray,
+    *,
+    source_row: dict[str, Any] | None = None,
+    alias_vertex_ids: tuple[int, int, int] = FJ2217_CAP_ALIAS_VERTEX_IDS,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Restore one source face using existing Float32-equal row vertices.
+
+    The only supported use is the pinned FJ2217 face 1858 cap. It either
+    replaces that face's original corner IDs or inserts it into the exact
+    source-order hole left by the historical retirement.
+    """
+    faces = np.ascontiguousarray(row.get("faces"), dtype="<u4")
+    source = np.ascontiguousarray(source_face, dtype="<u4").reshape(-1)
+    vertices6 = np.ascontiguousarray(row.get("vertices6"), dtype="<f4")
+    expected = row if source_row is None else source_row
+    expected_faces = np.ascontiguousarray(expected.get("faces"), dtype="<u4")
+    expected_vertices6 = np.ascontiguousarray(expected.get("vertices6"), dtype="<f4")
+    aliases = tuple(map(int, alias_vertex_ids))
+    _require(
+        int(row.get("record", (0, 0, 0, 0, 0, -1, 0, 0))[5]) == 477
+        and int(face_id) == FJ2217_CAP_SOURCE_FACE_ID
+        and source.tolist() == list(FJ2217_CAP_SOURCE_VERTEX_IDS)
+        and aliases == FJ2217_CAP_ALIAS_VERTEX_IDS,
+        "only the pinned FJ2217 source cap and exact alias triple may be reinstated",
+    )
+    _require(
+        faces.ndim == 2 and faces.shape[1] == 3
+        and expected_faces.ndim == 2 and expected_faces.shape[1] == 3
+        and vertices6.ndim == 2 and vertices6.shape[1] == 6
+        and expected_vertices6.shape == vertices6.shape
+        and 0 <= face_id < len(expected_faces)
+        and np.array_equal(expected_faces[face_id], source)
+        and expected_vertices6.tobytes() == vertices6.tobytes(),
+        "FJ2217 source face/order or unchanged vertex/normal bytes are not pinned",
+    )
+    _require(
+        max((*source.tolist(), *aliases)) < len(vertices6)
+        and all(alias in set(map(int, faces.reshape(-1))) for alias in aliases),
+        "FJ2217 cap aliases are not existing referenced source slots",
+    )
+    for source_vertex, alias_vertex in zip(source.tolist(), aliases):
+        _require(
+            vertices6[source_vertex, :3].astype("<f4").tobytes()
+            == vertices6[alias_vertex, :3].astype("<f4").tobytes(),
+            f"FJ2217 cap alias {alias_vertex} is not Float32-coordinate exact",
+        )
+    if len(faces) == len(expected_faces):
+        _require(
+            faces.tobytes() == expected_faces.tobytes(),
+            "FJ2217 source row differs outside its exact cap replacement",
+        )
+        output_faces = faces.copy()
+        output_faces[face_id] = np.asarray(aliases, dtype="<u4")
+        operation = "replace_original_face_corners_by_exact_coordinate_aliases"
+    elif len(faces) + 1 == len(expected_faces):
+        _require(
+            np.array_equal(faces, np.concatenate((expected_faces[:face_id], expected_faces[face_id + 1 :]))),
+            "FJ2217 retired input is not the exact source-order face hole",
+        )
+        output_faces = np.concatenate(
+            (faces[:face_id], np.asarray([aliases], dtype="<u4"), faces[face_id:]),
+            axis=0,
+        )
+        operation = "reinsert_retired_source_face_at_original_order_position"
+    else:
+        raise ValueError("vessel owner blend: FJ2217 cap input face count is unsupported")
+    original_record = tuple(map(int, row["record"]))
+    replacement = {
+        **row,
+        "faces": output_faces,
+        "record": (*original_record[:4], int(output_faces.size), *original_record[5:]),
+    }
+    _require(
+        replacement["vertices6"].tobytes() == vertices6.tobytes()
+        and len(output_faces) == len(expected_faces)
+        and output_faces[face_id].tolist() == list(aliases),
+        "FJ2217 cap reinsertion changed coordinates, count, or source face order",
+    )
+    source_digest = hashlib.sha256(source.tobytes()).hexdigest()
+    declaration = {
+        "schema": "numi.human.local-source-face-exact-alias-reinstatement.v1",
+        "stable_id": 477,
+        "source_member": "FJ2217",
+        "source_archive_sha256": ISA_ARCHIVE_SHA256,
+        "source_member_sha256": FJ2217_OBJ_SHA256,
+        "source_face_id_zero_based": int(face_id),
+        "source_vertex_ids_zero_based": list(FJ2217_CAP_SOURCE_VERTEX_IDS),
+        "alias_vertex_ids_zero_based": list(FJ2217_CAP_ALIAS_VERTEX_IDS),
+        "source_face_bytes_sha256": source_digest,
+        "operation": operation,
+        "input_face_count": len(faces),
+        "output_face_count": len(output_faces),
+        "input_vertex_count": len(vertices6),
+        "output_vertex_count": len(vertices6),
+        "coordinate_equivalence": "bitwise Float32 xyz equality for each corresponding source/alias vertex",
+        "coordinate_aliases_float32_bit_exact": True,
+        "source_face_ancestry_exact": True,
+        "all_other_faces_byte_exact_and_ordered": True,
+        "all_vertex_and_normal_bytes_unchanged": True,
+        "unused_original_vertex_slots_preserved": True,
+        "physical_mass_or_blood_state_added": False,
+        "native_confirmation_required": True,
+        "anatomical_admission": False,
+    }
+    return replacement, declaration
+
+
+def validate_local_source_face_reinstatement(
+    base_row: dict[str, Any],
+    candidate_row: dict[str, Any],
+    reinstatement: dict[str, Any],
+    reemit_proof: dict[str, Any],
+    expected_source_row: dict[str, Any],
+) -> dict[str, Any]:
+    """Verify the exact ABI5 FJ2217 cap successor and its retained source ancestry."""
+    face_id = int(reinstatement.get("source_face_id_zero_based", -1))
+    aliases = tuple(map(int, reinstatement.get("alias_vertex_ids_zero_based", ())))
+    source_ids = tuple(map(int, reinstatement.get("source_vertex_ids_zero_based", ())))
+    expected_faces = np.ascontiguousarray(expected_source_row.get("faces"), dtype="<u4")
+    expected_vertices = np.ascontiguousarray(expected_source_row.get("vertices6"), dtype="<f4")
+    candidate_faces = np.ascontiguousarray(candidate_row.get("faces"), dtype="<u4")
+    candidate_vertices = np.ascontiguousarray(candidate_row.get("vertices6"), dtype="<f4")
+    base_faces = np.ascontiguousarray(base_row.get("faces"), dtype="<u4")
+    base_vertices = np.ascontiguousarray(base_row.get("vertices6"), dtype="<f4")
+    _require(
+        reinstatement.get("schema") == "numi.human.local-source-face-exact-alias-reinstatement.v1"
+        and reinstatement.get("stable_id") == 477
+        and reinstatement.get("source_member") == "FJ2217"
+        and reinstatement.get("source_archive_sha256") == ISA_ARCHIVE_SHA256
+        and reinstatement.get("source_member_sha256") == FJ2217_OBJ_SHA256
+        and face_id == FJ2217_CAP_SOURCE_FACE_ID
+        and source_ids == FJ2217_CAP_SOURCE_VERTEX_IDS
+        and aliases == FJ2217_CAP_ALIAS_VERTEX_IDS
+        and reinstatement.get("coordinate_aliases_float32_bit_exact") is True
+        and reinstatement.get("source_face_ancestry_exact") is True
+        and reinstatement.get("all_other_faces_byte_exact_and_ordered") is True
+        and reinstatement.get("all_vertex_and_normal_bytes_unchanged") is True
+        and reinstatement.get("physical_mass_or_blood_state_added") is False,
+        "FJ2217 cap reinstatement declaration is not the exact pinned operation",
+    )
+    _require(
+        expected_faces.ndim == 2 and expected_faces.shape[1] == 3
+        and 0 <= face_id < len(expected_faces)
+        and expected_faces[face_id].tolist() == list(source_ids)
+        and candidate_faces.shape == expected_faces.shape
+        and candidate_faces.tobytes()
+        == np.concatenate(
+            (expected_faces[:face_id], np.asarray([aliases], dtype="<u4"), expected_faces[face_id + 1 :]),
+            axis=0,
+        ).tobytes(),
+        "FJ2217 output face ancestry or order differs from the exact source cap",
+    )
+    _require(
+        candidate_vertices.shape == expected_vertices.shape
+        and candidate_vertices.tobytes() == expected_vertices.tobytes()
+        and base_vertices.shape == expected_vertices.shape
+        and base_vertices.tobytes() == expected_vertices.tobytes(),
+        "FJ2217 cap repair changed position, normal, or vertex-prefix bytes",
+    )
+    for source_vertex, alias_vertex in zip(source_ids, aliases):
+        _require(
+            expected_vertices[source_vertex, :3].astype("<f4").tobytes()
+            == expected_vertices[alias_vertex, :3].astype("<f4").tobytes(),
+            f"FJ2217 alias {alias_vertex} is not Float32-coordinate exact",
+        )
+    _require(
+        len(base_faces) in (len(expected_faces), len(expected_faces) - 1)
+        and reinstatement.get("input_face_count") == len(base_faces)
+        and reinstatement.get("output_face_count") == len(expected_faces)
+        and reinstatement.get("input_vertex_count") == len(base_vertices)
+        and reinstatement.get("output_vertex_count") == len(candidate_vertices),
+        "FJ2217 cap input/output dimensions differ from its receipt",
+    )
+    if len(base_faces) == len(expected_faces):
+        _require(
+            np.array_equal(base_faces, expected_faces),
+            "FJ2217 base face namespace differs outside the cap",
+        )
+    else:
+        _require(
+            np.array_equal(base_faces, np.concatenate((expected_faces[:face_id], expected_faces[face_id + 1 :]))),
+            "FJ2217 base is not the exact historical one-face retirement",
+        )
+    original_record = tuple(map(int, expected_source_row["record"]))
+    candidate_record = tuple(map(int, candidate_row["record"]))
+    _require(
+        len(candidate_record) == 8
+        and candidate_record[0] == original_record[0] == 91
+        and candidate_record[2] == original_record[2] == len(candidate_vertices)
+        and candidate_record[4] == candidate_faces.size
+        and candidate_record[5:] == original_record[5:] == (477, 2, 0)
+        and candidate_record[3] == original_record[3],
+        "FJ2217 ABI5 identity, bounds, or face-count metadata changed",
+    )
+    _require(
+        reinstatement.get("source_face_bytes_sha256")
+        == hashlib.sha256(expected_faces[face_id].tobytes()).hexdigest()
+        and 477 in reemit_proof.get("replaced_stable_ids", [])
+        and reemit_proof.get("stable_id_order_preserved") is True
+        and reemit_proof.get("global_offsets_rebased_by_existing_abi5_encoder") is True
+        and reemit_proof.get("registration_and_source_header_bytes_preserved") is True,
+        "FJ2217 source ancestry or existing ABI5 row-replacement proof is incomplete",
+    )
+    return {
+        "stable_id": 477,
+        "source_face_id_zero_based": face_id,
+        "restored_face_count": 1,
+        "source_vertex_ids_zero_based": list(source_ids),
+        "alias_vertex_ids_zero_based": list(aliases),
+        "alias_coordinates_float32_bit_exact": True,
+        "all_other_faces_exact_and_ordered": True,
+        "all_vertices_and_normals_unchanged": True,
+        "existing_abi5_reemit_proof": True,
+        "physical_mass_or_blood_state_added": False,
+        "anatomical_admission": False,
+    }
+
+
+def validate_fj2217_reinstatement_parent_maps_unchanged(
+    base_parent_bindings: dict[str, Any],
+    candidate_parent_bindings: dict[str, Any],
+) -> dict[str, Any]:
+    """Prove the direct cap successor leaves all existing parent maps intact."""
+    _require(
+        isinstance(base_parent_bindings, dict)
+        and isinstance(candidate_parent_bindings, dict),
+        "FJ2217 parent-binding tables must be objects",
+    )
+    for key in ("child_payload_sha256", "source_payloads", "surfaces", "anatomy_surfaces"):
+        _require(
+            base_parent_bindings.get(key) == candidate_parent_bindings.get(key),
+            f"FJ2217 cap successor changed passive parent field {key}",
+        )
+    base_rows = {
+        int(item["stable_id"]): item
+        for item in base_parent_bindings.get("anatomy_surfaces", [])
+    }
+    candidate_rows = {
+        int(item["stable_id"]): item
+        for item in candidate_parent_bindings.get("anatomy_surfaces", [])
+    }
+    _require(
+        477 in base_rows and base_rows == candidate_rows,
+        "FJ2217 cap successor changed ordered passive parent maps",
+    )
+    encoded = json.dumps(
+        base_parent_bindings.get("anatomy_surfaces"),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
+    ).encode("utf-8")
+    return {
+        "stable_id": 477,
+        "anatomy_surface_map_sha256": hashlib.sha256(encoded).hexdigest(),
+        "parent_source_payload_sha256s": [
+            item["sha256"] for item in base_parent_bindings["source_payloads"]
+        ],
+        "all_parent_surface_maps_unchanged": True,
+        "ordered_parent_terms_unchanged": True,
+        "source_payload_order_unchanged": True,
+    }
+
+
 ROUTE110_DIR = Path(
     "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/"
     "full-anatomy-delivery-audit-1378/route-candidate-110-nonlinear-closed-volume-runner-004"
@@ -783,9 +1056,9 @@ def prepare_vessel_owner_blend(
             "isolated FJ2217 source face has invalid source geometry",
         )
         isolated_face_lineage = {
-            "classification": "unexplained_isolated_raw_source_face; scoped_reference_retirement",
+            "classification": "exact-source-ancestral-cap-reinstatement-candidate",
             "anatomical_interface_proven": False,
-            "local_retirement_proposed": True,
+            "local_exact_alias_reinstatement_proposed": True,
             "source_archive_sha256": ISA_ARCHIVE_SHA256,
             "source_member_path": source_member_path,
             "source_member_sha256": FJ2217_OBJ_SHA256,
@@ -807,28 +1080,29 @@ def prepare_vessel_owner_blend(
             "exact_coordinate_main_face_matches": exact_coordinate_face_matches,
             "source_face_retained_with_existing_body91_only_parent_terms": True,
             "route110_source_transform_applied_before_retirement": True,
-            "retirement_scope": "remove only this isolated source face from the NHANAT reference-row face list; preserve all 1089 original vertex slots and all other source faces byte-exact",
-            "retirement_operation_changes_no_mesh_coordinates": True,
+            "reinstatement_scope": "restore only this source face at original index 1858 with the pinned existing Float32-exact alias IDs; preserve all vertex/normal bytes and every other source face",
+            "reinstatement_operation_changes_no_mesh_coordinates": True,
         }
     row477_replacement = None
-    retirement = None
+    reinstatement = None
     if isolated_face_lineage is not None:
         source_face_id = int(isolated_face_lineage["source_face_id_zero_based"])
         _require(
             np.array_equal(br[477]["faces"], nr[477]["faces"])
             and np.array_equal(br[477]["vertices6"], nr[477]["vertices6"]),
-            "FJ2217 retirement parent row differs from pinned N27 source",
+            "FJ2217 source parent row differs from pinned N27",
         )
-        row477_replacement, retirement = _retire_isolated_source_face(
-            owner477, source_face_id, source_faces[source_face_id]
+        row477_replacement, reinstatement = reinstate_source_face_through_exact_aliases(
+            owner477,
+            source_face_id,
+            source_faces[source_face_id],
+            source_row=owner477,
         )
-        retirement.update(
+        reinstatement.update(
             {
-                "source_member_sha256": FJ2217_OBJ_SHA256,
-                "source_archive_sha256": ISA_ARCHIVE_SHA256,
+                "source_member_path": source_member_path,
                 "source_face_and_nha_ancestry_exact": True,
-                "retained_unused_vertex_slots": len(isolated477),
-                "all_other_source_faces_retained_in_original_order": True,
+                "original_unused_vertex_slots_retained": len(isolated477),
                 "lineage": isolated_face_lineage,
             }
         )
@@ -884,7 +1158,7 @@ def prepare_vessel_owner_blend(
         "row_replacements": {477: row477_replacement}
         if row477_replacement is not None
         else {},
-        "local_source_face_retirement": retirement,
+        "local_source_face_reinstatement": reinstatement,
         "rows": {
             "475": {
                 **q475,
@@ -908,7 +1182,7 @@ def prepare_vessel_owner_blend(
                 "body20_carrier_rest_world_max_error_m": errpos_477,
                 "body20_carrier_rest_normal_max_error": errnormal_477,
                 "body91_carrier_vertices_byte_exact_to_nha": True,
-                "isolated_source_face_ancestry": isolated_face_lineage,
+                "source_cap_ancestry": isolated_face_lineage,
             },
         },
         "input_pins": {
