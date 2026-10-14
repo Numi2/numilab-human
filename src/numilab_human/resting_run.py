@@ -12,6 +12,7 @@ import math
 import os
 import platform
 import re
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -256,6 +257,7 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     steps = round(args.seconds / dt)
     _require(0 < steps <= 4_000_000 and abs(steps * dt - args.seconds) < 1e-8,
              "duration must be an integer number of native steps (at most 4000000 steps)")
+    capture_steps(args, steps)
     pose = scene["pose"]["root_translation_xyz_m"] + scene["pose"]["root_delta_quaternion_xyzw"]
     _require(len(pose) == 7 and all(math.isfinite(x) for x in pose), "invalid root seed")
     initial_posture_path = getattr(args, "initial_posture", None)
@@ -362,11 +364,38 @@ def loaded_metal_runtime(log: Path, expected: Path, digest: str) -> dict:
             "scope": "Loaded MetalRobo image path and unchanged file hash; source and shader identities remain separate bindings"}
 
 
+def capture_steps(args: argparse.Namespace, total_steps: int) -> list[int] | None:
+    """Validate inspection captures against the native accepted-step clock."""
+    selected = getattr(args, "capture_steps", None)
+    if selected is None:
+        return None
+    _require(1 <= len(selected) <= 8, "select one to eight geometry captures")
+    _require(all(type(step) is int and 0 <= step <= total_steps for step in selected),
+             "capture steps must be integer accepted steps within the run")
+    _require(selected == sorted(set(selected)),
+             "capture steps must be unique and strictly increasing")
+    return selected
+
+
 def run(args: argparse.Namespace) -> int:
     _require(platform.system() == "Darwin" and platform.machine() == "arm64",
              "the native scene requires an Apple silicon Mac")
     argv, assets = command(args)
     _require(not args.output.exists(), "output already exists; retain earlier evidence and choose a new directory")
+    minimum_free_gib = getattr(args, "minimum_free_gib", None)
+    storage = None
+    if minimum_free_gib is not None:
+        _require(math.isfinite(minimum_free_gib) and minimum_free_gib > 0,
+                 "minimum free storage must be positive finite GiB")
+        volume_path = args.output.resolve().parent
+        while not volume_path.exists():
+            volume_path = volume_path.parent
+        free_bytes = shutil.disk_usage(volume_path).free
+        _require(free_bytes >= minimum_free_gib * 2**30,
+                 f"native run requires {minimum_free_gib:g} GiB free; "
+                 f"available {free_bytes / 2**30:.3f} GiB")
+        storage = {"volume_path": str(volume_path), "free_bytes_before_run": free_bytes,
+                   "required_free_gib": minimum_free_gib}
     args.output.mkdir(parents=True)
     env = os.environ.copy()
     _require(not any(key.startswith("NUMI_HUMAN_STAND_CPU_") and
@@ -379,6 +408,9 @@ def run(args: argparse.Namespace) -> int:
                DYLD_LIBRARY_PATH=os.pathsep.join(str((args.build / part).resolve())
                                                 for part in ("lib", "matter")),
                DYLD_PRINT_LIBRARIES="1")
+    selected_captures = capture_steps(args, round(args.seconds / getattr(args, "dt", .001)))
+    if selected_captures is not None:
+        env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = ",".join(map(str, selected_captures))
     if args.inspection_tour:
         _require(not args.mechanics_only, "an inspection tour requires the native viewer")
         _require(math.isfinite(args.inspection_period_seconds) and args.inspection_period_seconds > 0,
@@ -389,6 +421,8 @@ def run(args: argparse.Namespace) -> int:
                "environment": invocation_environment(env),
                "host": platform.node(), "machine": platform.machine(), "system": platform.platform(),
                "qualification": "native execution receipt; physiological and anatomical acceptance require separate audits"}
+    if storage is not None:
+        receipt["storage_preflight"] = storage
     (args.output / "invocation.json").write_text(json.dumps(receipt, indent=2) + "\n")
     start = time.monotonic()
     with (args.output / "native.log").open("w") as log:
@@ -421,6 +455,10 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--dt", type=float, default=.001,
                         help="physical timestep in seconds, at most .002; default .001")
     parser.add_argument("--dimension", type=int, choices=(512, 768, 1024), default=512)
+    parser.add_argument("--capture-steps", type=int, nargs="+",
+                        help="one to eight increasing accepted-step indices for existing native geometry exports")
+    parser.add_argument("--minimum-free-gib", type=float,
+                        help="require this much free storage on the output volume immediately before launch")
     parser.add_argument("--mechanics-only", action="store_true", help="diagnostic without the native viewer or movie")
     parser.add_argument("--inspection-tour", action="store_true",
                         help="cycle the native anatomical layers every five simulated seconds without changing physics")

@@ -10,7 +10,12 @@ from pathlib import Path
 from unittest.mock import patch
 
 from numilab_human.model import ImportError as HumanImportError
-from numilab_human.resting_run import command, invocation_environment, run
+from numilab_human.resting_run import (
+    capture_steps,
+    command,
+    invocation_environment,
+    run,
+)
 
 
 class RestingRunAdmissionTests(unittest.TestCase):
@@ -484,13 +489,27 @@ class RestingRunAdmissionTests(unittest.TestCase):
                 run(self.args)
         self.assertFalse((self.args.output / "native.log").exists())
 
+    def test_storage_shortfall_stops_before_creating_output_or_scheduling_native_work(self):
+        self.args.minimum_free_gib = 12
+        with patch("numilab_human.resting_run.shutil.disk_usage",
+                   return_value=argparse.Namespace(free=11 * 2**30)), \
+             patch("numilab_human.resting_run.subprocess.run") as native, \
+             self.assertRaisesRegex(HumanImportError, "requires 12 GiB free"):
+            run(self.args)
+        native.assert_not_called()
+        self.assertFalse(self.args.output.exists())
+
     def test_launcher_overrides_inherited_library_path_and_records_actual_image(self):
+        self.args.capture_steps = [0, 15000, 90000, 165000]
+        self.args.minimum_free_gib = 12
         runtime = (self.root / "lib/libmetalrobo.dylib").resolve()
 
         def native(argv, **kwargs):
             self.assertEqual(kwargs["env"]["DYLD_LIBRARY_PATH"],
                              f"{(self.root / 'lib').resolve()}:{(self.root / 'matter').resolve()}")
             self.assertEqual(kwargs["env"]["DYLD_PRINT_LIBRARIES"], "1")
+            self.assertEqual(kwargs["env"]["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"],
+                             "0,15000,90000,165000")
             kwargs["stdout"].write(f"dyld[123]: <BE23DF33-01EE-306E-A947-B7342DB0A863> {runtime}\n")
             return subprocess.CompletedProcess(argv, 0)
 
@@ -514,9 +533,12 @@ class RestingRunAdmissionTests(unittest.TestCase):
                                        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP": "221",
                                        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/run/failure.json",
                                        "NUMI_HUMAN_ACCEPTED_FORCE_AUDIT_UNLISTED": "secret"}), \
+             patch("numilab_human.resting_run.shutil.disk_usage",
+                   return_value=argparse.Namespace(free=13 * 2**30)), \
              patch("numilab_human.resting_run.subprocess.run", side_effect=native):
             self.assertEqual(run(self.args), 0)
         receipt = json.loads((self.args.output / "run-metadata.json").read_text())
+        self.assertEqual(receipt["storage_preflight"]["free_bytes_before_run"], 13 * 2**30)
         self.assertTrue(receipt["loaded_metal_runtime"]["verified"])
         self.assertEqual(receipt["loaded_metal_runtime"]["observed_images"][0]["path"], str(runtime))
         self.assertEqual(receipt["environment"]["DYLD_PRINT_LIBRARIES"], "1")
@@ -565,6 +587,23 @@ class RestingRunAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "output already exists"):
             run(self.args)
         self.assertEqual(sentinel.read_text(), "retained failed run")
+
+
+
+
+class RestingCaptureScheduleTests(unittest.TestCase):
+    def test_full_breath_schedule_and_qualification_schedule_use_accepted_steps(self):
+        for schedule, total in (([0, 3807, 4767, 5023, 5599, 6207, 7423, 8000], 8000),
+                                ([0, 15000, 90000, 165000], 165000)):
+            self.assertEqual(capture_steps(argparse.Namespace(capture_steps=schedule), total), schedule)
+
+    def test_invalid_schedule_is_rejected_before_native_launch(self):
+        for schedule in ([], list(range(9)), [0, 0], [2, 1], [-1], [8001], [True], [.5]):
+            with self.subTest(schedule=schedule), self.assertRaises(HumanImportError):
+                capture_steps(argparse.Namespace(capture_steps=schedule), 8000)
+
+    def test_existing_environment_schedule_remains_available_when_no_cli_schedule_given(self):
+        self.assertIsNone(capture_steps(argparse.Namespace(), 8000))
 
 
 if __name__ == "__main__":
