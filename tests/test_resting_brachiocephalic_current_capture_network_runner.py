@@ -100,6 +100,22 @@ def test_native_nha_gid_base_offset_uses_receipt_ranges_and_rejects_bad_types():
     with pytest.raises(ValueError, match="invalid skin/anatomy vertex ranges"):
         runner._native_nha_gid_base_offset(context)
 
+def test_source_binding_preflight_freezes_all_typed_rows_without_geometry(monkeypatch):
+    links = [
+        {"bridge_key": edge[0], "target_key": edge[1]}
+        for edge in runner.network_owner.declared_network_links()
+    ]
+    monkeypatch.setattr(runner.network_owner, "prepare_network_link_audit_inputs",
+                        lambda *_args, **_kwargs: links)
+    report = runner._source_binding_preflight(_runtime_fixture())
+    assert report["status"] == "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE"
+    assert report["typed_network_surface_count"] == 17
+    assert report["requested_source_link_count"] == 15
+    assert report["candidate_and_independent_baseline_geometry_predicates_run"] is False
+    rows = report["typed_row_inventory"]["source_face_ancestry_by_typed_row"]
+    assert len(rows) == 17
+    assert {row["native_nha_gid_base_offset"] for row in rows.values()} == {300}
+
 def test_cached_prepared_surfaces_are_reused_by_link_owner(monkeypatch):
     fake_verifier = _Verifier()
     monkeypatch.setattr(runner, "verifier", fake_verifier)
@@ -225,7 +241,11 @@ def test_prepare_freezes_exact_bundle_without_calling_geometry(tmp_path, monkeyp
     output = tmp_path / "prepared"
     preflight = _source_preflight_fixture()
     monkeypatch.setattr(runner.preparation, "build_preflight",
-                        lambda _inputs: dict(preflight))
+                        lambda _inputs, **_kwargs: (dict(preflight), {})
+                        if _kwargs.get("return_runtime_inputs")
+                        else dict(preflight))
+    monkeypatch.setattr(runner, "_source_binding_preflight",
+                        lambda _runtime: {"status": "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE"})
     monkeypatch.setattr(runner.preparation, "_git_state",
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
@@ -250,7 +270,11 @@ def test_run_rejects_capture_bundle_drift_before_geometry(tmp_path, monkeypatch)
     output = tmp_path / "prepared"
     preflight = _source_preflight_fixture()
     monkeypatch.setattr(runner.preparation, "build_preflight",
-                        lambda _inputs: dict(preflight))
+                        lambda _inputs, **_kwargs: (dict(preflight), {})
+                        if _kwargs.get("return_runtime_inputs")
+                        else dict(preflight))
+    monkeypatch.setattr(runner, "_source_binding_preflight",
+                        lambda _runtime: {"status": "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE"})
     monkeypatch.setattr(runner.preparation, "_git_state",
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
@@ -276,6 +300,8 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
         return (dict(preflight), runtime) if return_runtime_inputs else dict(preflight)
 
     monkeypatch.setattr(runner.preparation, "build_preflight", build)
+    monkeypatch.setattr(runner, "_source_binding_preflight",
+                        lambda _runtime: {"status": "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE"})
     monkeypatch.setattr(runner.preparation, "_git_state",
                         lambda: preflight["source_repository"])
     monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})

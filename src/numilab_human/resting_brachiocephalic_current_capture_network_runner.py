@@ -213,6 +213,24 @@ def _bind_runtime_inputs(runtime: dict) -> tuple[dict, dict, tuple[dict, ...], d
     return candidates, baselines, tuple(normalized_inputs), inventory
 
 
+def _source_binding_preflight(runtime: dict) -> dict:
+    "Freeze ABI5 face/GID identity for all 17 rows before any geometry predicate."
+    candidates, _baselines, link_inputs, inventory = _bind_runtime_inputs(runtime)
+    _require(len(candidates) == len(NETWORK_KEYS) == 17
+             and len(link_inputs) == len(network_owner.declared_network_links()) == 15,
+             "source binding preflight did not cover exact 17 rows and 15 links")
+    return {
+        "status": "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE",
+        "typed_network_surface_count": len(candidates),
+        "requested_network_surface_count": 17,
+        "prepared_source_link_count": len(link_inputs),
+        "requested_source_link_count": 15,
+        "candidate_and_independent_baseline_geometry_predicates_run": False,
+        "native_or_gpu_work_performed": False,
+        "anatomical_admission": False,
+        "typed_row_inventory": inventory,
+    }
+
 def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
                                  progress_callback=None) -> dict:
     """Run the 15-link continuity owner first, then all-target collision on success."""
@@ -301,8 +319,11 @@ def prepare(capture_inputs_json: Path, output_dir: Path) -> dict:
     _write_json(progress_path, start)
     try:
         capture_inputs = json.loads(bundle_bytes)
-        preflight = preparation.build_preflight(capture_inputs)
+        preflight, runtime = preparation.build_preflight(
+            capture_inputs, return_runtime_inputs=True)
         preflight["execution_runner"] = _execution_manifest(bundle_path, bundle_sha)
+        preflight["capture_source_slot_identity_preflight"] = (
+            _source_binding_preflight(runtime))
         preflight_path = destination / "source-and-capture-preflight.json"
         _write_json(preflight_path, preflight)
         result = {
@@ -384,11 +405,17 @@ def run(capture_inputs_json: Path, output_dir: Path) -> dict:
         live_preflight, runtime = preparation.build_preflight(
             capture_inputs, return_runtime_inputs=True)
         live_preflight["execution_runner"] = manifest
+        live_preflight["capture_source_slot_identity_preflight"] = (
+            _source_binding_preflight(runtime))
         _require(_stable_preflight(live_preflight) == _stable_preflight(frozen_preflight),
                  "live source/capture inputs differ from the frozen preflight")
         _require(live_preflight.get("status")
                  == "SOURCE0_SEAMOWNER_CAPTURE_READY_NO_GEOMETRY_PREDICATE",
                  "explicit accepted capture is not source/owner ready for the network gate")
+        _require(live_preflight["capture_source_slot_identity_preflight"].get(
+                     "status")
+                 == "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE",
+                 "actual capture lacks frozen ABI5 global slot identity proof")
         baseline_report = live_preflight["source_bound_rigid_rest_baseline"]
         _require(baseline_report.get("meaningful_calibre_baseline_ready") is True
                  and baseline_report.get("network_owner_baseline_coverage_complete") is True
