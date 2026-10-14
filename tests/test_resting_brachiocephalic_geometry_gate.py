@@ -717,6 +717,7 @@ def test_port_diagnostic_wrappers_preserve_failed_section_and_comparison():
         _transport_material_station=lambda *args, **kwargs: {},
         _make_manifold=lambda *args, **kwargs: None,
         _exact_inside_witness=lambda *args, **kwargs: None,
+        audit_brachiocephalic_port_pair_continuity=lambda *args, **kwargs: {},
     )
     verifier = SimpleNamespace(audit_surface_pair=lambda *args, **kwargs: {})
     recorder = portdiag.Recorder()
