@@ -1085,6 +1085,152 @@ def apply_parent_surface_updates(
     return updated, owner_map_sha256
 
 
+def compose_owner_field_parent_bindings(
+    parent_bindings: dict[str, Any],
+    owner_updates: dict[str, Any],
+    *,
+    source_payload_path: str,
+    source_payload_sha256: str,
+    prepared_source_index: int,
+    anatomy_payload_sha256: str,
+    expected_source_count: int = 7,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Append a source-carrier payload and replace only prepared rows 475/477.
+
+    The source preparation is independently produced against the N27 owner
+    table. Its source index is therefore remapped to the next index in this
+    existing cap006 passive-parent inventory. Every prior source and every
+    non-target row remains semantically unchanged.
+    """
+    updated = deepcopy(parent_bindings)
+    sources = updated.get("source_payloads")
+    _require(
+        isinstance(sources, list)
+        and len(sources) == expected_source_count
+        and len(sources) < 8,
+        "cap006 source inventory changed or native eight-payload bound would be exceeded",
+    )
+    _require(
+        all(isinstance(entry, dict) and len(entry.get("sha256", "")) == 64 for entry in sources),
+        "existing parent source inventory is malformed",
+    )
+    _require(
+        isinstance(source_payload_path, str)
+        and bool(source_payload_path)
+        and isinstance(source_payload_sha256, str)
+        and len(source_payload_sha256) == 64,
+        "new parent source payload identity is malformed",
+    )
+    _require(
+        not any(
+            entry.get("path") == source_payload_path
+            or entry.get("sha256") == source_payload_sha256
+            for entry in sources
+        ),
+        "new owner carrier is already present in the inventory",
+    )
+    _require(
+        isinstance(anatomy_payload_sha256, str) and len(anatomy_payload_sha256) == 64
+        and updated.get("anatomy_payload_sha256") == anatomy_payload_sha256,
+        "anatomy payload identity differs from cap006 owner bindings",
+    )
+    source_index = len(sources)
+    updates = {int(sid): rows for sid, rows in owner_updates.items()}
+    _require(set(updates) == {475, 477}, "prepared owner rows must be exactly 475 and 477")
+    maps = updated.get("anatomy_surfaces")
+    _require(isinstance(maps, list), "passive anatomy surface maps are missing")
+    by_id = {int(row["stable_id"]): deepcopy(row) for row in maps}
+    _require(len(by_id) == len(maps) and {475, 477}.issubset(by_id),
+             "cap006 475/477 passive maps are missing or duplicated")
+    expected_surfaces = {475: (1, 2), 477: (3, 4)}
+    original_non_targets = {
+        sid: deepcopy(row) for sid, row in by_id.items() if sid not in (475, 477)
+    }
+    updated_counts = {}
+    mapped_rows = {}
+    for sid in (475, 477):
+        terms_by_vertex = updates[sid]
+        old_vertices = by_id[sid].get("vertices")
+        _require(
+            isinstance(terms_by_vertex, list)
+            and isinstance(old_vertices, list)
+            and len(terms_by_vertex) == len(old_vertices),
+            f"row {sid} map cardinality differs from cap006",
+        )
+        surfaces = expected_surfaces[sid]
+        remapped = []
+        for vertex_id, vertex_terms in enumerate(terms_by_vertex):
+            _require(
+                isinstance(vertex_terms, list) and len(vertex_terms) > 0,
+                f"row {sid} vertex {vertex_id} has no parent terms",
+            )
+            new_vertex_terms = []
+            seen_surfaces = set()
+            positive_sum = 0.0
+            for term in vertex_terms:
+                _require(
+                    isinstance(term, list) and len(term) == 4,
+                    f"row {sid} vertex {vertex_id} has malformed owner term",
+                )
+                old_index, surface_id, carrier_vertex, coefficient = term
+                coefficient = float(coefficient)
+                _require(
+                    int(old_index) == int(prepared_source_index)
+                    and int(surface_id) in surfaces
+                    and int(carrier_vertex) == vertex_id
+                    and math.isfinite(coefficient)
+                    and coefficient > 0.0
+                    and int(surface_id) not in seen_surfaces,
+                    f"row {sid} vertex {vertex_id} owner term leaves prepared carrier contract",
+                )
+                seen_surfaces.add(int(surface_id))
+                positive_sum += coefficient
+                new_vertex_terms.append(
+                    [source_index, int(surface_id), int(carrier_vertex), coefficient]
+                )
+            _require(
+                seen_surfaces.issubset(set(surfaces))
+                and abs(positive_sum - 1.0) <= 1e-7,
+                f"row {sid} vertex {vertex_id} owner weights are incomplete or not normalized",
+            )
+            remapped.append(new_vertex_terms)
+        by_id[sid] = {**by_id[sid], "vertices": remapped}
+        updated_counts[sid] = len(remapped)
+        mapped_rows[sid] = remapped
+    _require(
+        {sid: by_id[sid] for sid in by_id if sid not in (475, 477)} == original_non_targets,
+        "a non-target passive anatomy owner row changed",
+    )
+    updated["source_payloads"] = [
+        *sources,
+        {"path": source_payload_path, "sha256": source_payload_sha256},
+    ]
+    updated["anatomy_surfaces"] = [by_id[sid] for sid in sorted(by_id)]
+    updated["anatomy_payload_sha256"] = anatomy_payload_sha256
+    owner_map_sha256 = hashlib.sha256(
+        json.dumps(
+            {str(sid): mapped_rows[sid] for sid in (475, 477)},
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    proof = {
+        "source_index_appended": source_index,
+        "prepared_source_index_remapped_from": int(prepared_source_index),
+        "source_payload_count_before": len(sources),
+        "source_payload_count_after": len(updated["source_payloads"]),
+        "source_payload_prefix_semantics_preserved": updated["source_payloads"][:len(sources)] == sources,
+        "replaced_stable_ids": [475, 477],
+        "map_vertex_counts": {str(sid): updated_counts[sid] for sid in (475, 477)},
+        "all_non_target_anatomy_owner_rows_semantically_unchanged": True,
+        "owner_maps_sha256": owner_map_sha256,
+        "additional_force_or_state": False,
+        "additional_physical_mass_kg": 0,
+        "anatomical_admission": False,
+    }
+    return updated, proof
+
+
 def prepare_vessel_owner_blend(
     *,
     base_receipt_path: Path,

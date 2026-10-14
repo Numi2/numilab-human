@@ -12,6 +12,7 @@ from numilab_human.resting_vessel_owner_blend import (
     _verify_encoded_vessel_owner_maps,
     apply_parent_surface_updates,
     apply_route110_bridge_row,
+    compose_owner_field_parent_bindings,
     geodesic_owner_partition,
     reinstate_source_face_through_exact_aliases,
     validate_fj2217_reinstatement_parent_maps_unchanged,
@@ -127,6 +128,79 @@ def test_exact_coordinate_quotient_rejects_conflicting_collar_aliases():
             {0, 1},
             {4, 6},
             exact_coordinate_quotient=True,
+        )
+
+
+def test_owner_field_composition_appends_and_remaps_without_dropping_routes():
+    prior_sources = [
+        {"path": f"parent-{i}.nhtissue", "sha256": f"{i:064x}"}
+        for i in range(7)
+    ]
+    bindings = {
+        "anatomy_payload_sha256": "a" * 64,
+        "source_payloads": prior_sources,
+        "anatomy_surfaces": [
+            {"stable_id": 7, "vertices": [[[2, 1, 0, 1.0]]]},
+            {"stable_id": 475, "route_metadata": "keep", "vertices": [[[6, 1, 0, 1.0]]]},
+            {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
+            {"stable_id": 525, "vertices": [[[1, 4, 0, 1.0]]]},
+        ],
+    }
+    updates = {
+        "475": [
+            [[5, 1, 0, 0.75], [5, 2, 0, 0.25]],
+        ],
+        "477": [
+            [[5, 3, 0, 0.4], [5, 4, 0, 0.6]],
+        ],
+    }
+
+    output, proof = compose_owner_field_parent_bindings(
+        bindings,
+        updates,
+        source_payload_path="assets/new-vessel-carriers.nhtissue",
+        source_payload_sha256="b" * 64,
+        prepared_source_index=5,
+        anatomy_payload_sha256="a" * 64,
+    )
+
+    assert len(output["source_payloads"]) == 8
+    assert output["source_payloads"][:7] == prior_sources
+    rows = {row["stable_id"]: row for row in output["anatomy_surfaces"]}
+    assert rows[475]["vertices"] == [[[7, 1, 0, 0.75], [7, 2, 0, 0.25]]]
+    assert rows[477]["vertices"] == [[[7, 3, 0, 0.4], [7, 4, 0, 0.6]]]
+    assert rows[475]["route_metadata"] == "keep"
+    assert rows[7] == bindings["anatomy_surfaces"][0]
+    assert rows[525] == bindings["anatomy_surfaces"][3]
+    assert proof["source_index_appended"] == 7
+    assert proof["source_payload_prefix_semantics_preserved"]
+    assert proof["all_non_target_anatomy_owner_rows_semantically_unchanged"]
+
+
+def test_owner_field_composition_rejects_unexpected_rows_and_bad_terms():
+    bindings = {
+        "anatomy_payload_sha256": "a" * 64,
+        "source_payloads": [{"path": str(i), "sha256": f"{i:064x}"} for i in range(7)],
+        "anatomy_surfaces": [
+            {"stable_id": 475, "vertices": [[[6, 1, 0, 1.0]]]},
+            {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
+        ],
+    }
+    common = {
+        "source_payload_path": "new-carrier.nhtissue",
+        "source_payload_sha256": "b" * 64,
+        "prepared_source_index": 5,
+        "anatomy_payload_sha256": "a" * 64,
+    }
+    with pytest.raises(ValueError, match="exactly 475 and 477"):
+        compose_owner_field_parent_bindings(
+            bindings, {"475": [[[5, 1, 0, 1.0]]]}, **common
+        )
+    with pytest.raises(ValueError, match="leaves prepared carrier contract"):
+        compose_owner_field_parent_bindings(
+            bindings,
+            {"475": [[[4, 1, 0, 1.0]]], "477": [[[5, 3, 0, 1.0]]]},
+            **common,
         )
 
 
