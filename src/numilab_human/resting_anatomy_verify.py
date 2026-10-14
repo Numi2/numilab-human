@@ -570,10 +570,11 @@ def load_capture(pack, receipt_path):
 
 
 def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=(),
-                           intended_enclosures=()):
+                           intended_enclosures=(), shared_feature_interfaces=None):
     changed = [typed_key(key) for key in changed]
     targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
     interfaces = interfaces or {}
+    shared_feature_interfaces = shared_feature_interfaces or {}
     enclosures = _intended_enclosures(intended_enclosures)
     if any(a not in surfaces or b not in surfaces for a, b in enclosures):
         raise ValueError("intended enclosure identity absent from capture")
@@ -611,6 +612,7 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
             other = prepared(target)
             pair = audit_surface_pair(surface, other,
                                       intended_face_pairs=interfaces.get((key, target), ()),
+                                      intended_shared_feature_pairs=shared_feature_interfaces.get((key, target), ()),
                                       intended_enclosures=[pair for pair in enclosures
                                                            if set(pair) == {key, target}])
             rows.append({"stage": "nearby_pair", **pair})
@@ -722,7 +724,8 @@ def _bind_prepared_surface_to_capture(key, surface, captured):
 def audit_capture_sequence(capture_manifest, *, expected_manifest_sha256,
                            expected_source_sha256, changed, prepared_surfaces_by_step=None,
                            targets=None, interfaces_by_step=None, required_closed=(),
-                           intended_enclosures_by_step=None):
+                           intended_enclosures_by_step=None,
+                           shared_feature_interfaces_by_step=None):
     """Run the existing exact audit in accepted-capture order and stop at first failure.
 
     Prepared faces remain in the source owner's local vertex namespace; the existing
@@ -774,6 +777,8 @@ def audit_capture_sequence(capture_manifest, *, expected_manifest_sha256,
         steps.append(step)
     if len(set(steps)) != len(steps):
         raise ValueError("accepted capture steps are duplicated")
+    if steps != sorted(steps):
+        raise ValueError("accepted capture steps must be increasing")
     changed_keys = [typed_key(key) for key in changed]
     if not changed_keys or len(set(changed_keys)) != len(changed_keys):
         raise ValueError("changed typed surface identities are empty or duplicated")
@@ -803,6 +808,10 @@ def audit_capture_sequence(capture_manifest, *, expected_manifest_sha256,
     required_closed = [typed_key(key) for key in required_closed]
     if any(type(step) is not int for step in interfaces_by_step) or set(interfaces_by_step) - set(steps):
         raise ValueError("interface declarations refer to an absent capture step")
+    shared_feature_interfaces_by_step = shared_feature_interfaces_by_step or {}
+    if (any(type(step) is not int for step in shared_feature_interfaces_by_step)
+            or set(shared_feature_interfaces_by_step) - set(steps)):
+        raise ValueError("shared feature declarations refer to an absent capture step")
     intended_enclosures_by_step = intended_enclosures_by_step or {}
     if (any(type(step) is not int for step in intended_enclosures_by_step)
             or set(intended_enclosures_by_step) - set(steps)):
@@ -847,6 +856,7 @@ def audit_capture_sequence(capture_manifest, *, expected_manifest_sha256,
         result = audit_changed_surfaces(
             surfaces, changed_keys, targets=targets,
             interfaces=interfaces_by_step.get(step),
+            shared_feature_interfaces=shared_feature_interfaces_by_step.get(step),
             required_closed=required_closed,
             intended_enclosures=intended_enclosures_by_step.get(step, ()))
         capture_pins.append({"capture_index": capture_index, "capture_step": step,

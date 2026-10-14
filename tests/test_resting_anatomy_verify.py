@@ -422,6 +422,52 @@ class CaptureDecoderTests(unittest.TestCase):
         }
         return manifest_path, manifest_sha, source, source_sha, rows, capture, prepared, identities
 
+    def test_changed_surface_gate_preserves_material_feature_validation(self):
+        from numilab_human.resting_anatomy_verify import audit_changed_surfaces
+        first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64))
+        points = tetra() * np.float32(-1)
+        points[0] = first.positions[0]
+        second = feature_surface((51005, 134), points, FACES[:, [0, 2, 1]],
+                                 np.array([0, 11, 12, 13], dtype=np.uint64))
+        declarations = declarations_for_actual_shared_features(first, second)
+        self.assertTrue(declarations)
+        surfaces = {first.key: first, second.key: second}
+        result = audit_changed_surfaces(
+            surfaces, [first.key], targets=[second.key], required_closed=[first.key],
+            shared_feature_interfaces={(first.key, second.key): declarations})
+        self.assertTrue(result["passed"], result)
+        second.core_weights_by_gid[0] = second.core_weights_by_gid[0].copy()
+        second.core_weights_by_gid[0][0] += 0.001
+        failed = audit_changed_surfaces(
+            surfaces, [first.key], targets=[second.key], required_closed=[first.key],
+            shared_feature_interfaces={(first.key, second.key): declarations})
+        self.assertFalse(failed["passed"], failed)
+        self.assertTrue(failed["rows"][-1]["rejected_interface_feature_contacts"])
+
+    def test_capture_sequence_passes_pose_specific_material_declarations(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+        from numilab_human.resting_anatomy_verify import audit_capture_sequence
+
+        with TemporaryDirectory() as directory:
+            manifest, manifest_sha, source, source_sha, _rows, capture, prepared, identities = self._sequence_fixture(directory)
+            declaration_map = {0: {((51011, 7), (51011, 8)): [{"test_marker": 0}]}}
+            def load(pack, receipt):
+                step = int(Path(pack).stem.split("-")[1])
+                return capture, identities[step]
+            with patch("numilab_human.resting_anatomy_verify.load_capture", side_effect=load), \
+                 patch("numilab_human.resting_anatomy_verify.audit_changed_surfaces",
+                       return_value={"passed": True, "rows": []}) as audit:
+                result = audit_capture_sequence(
+                    manifest, expected_manifest_sha256=manifest_sha,
+                    expected_source_sha256={str(source): source_sha}, changed=[(51011, 7)],
+                    prepared_surfaces_by_step=prepared,
+                    shared_feature_interfaces_by_step=declaration_map)
+            self.assertTrue(result["passed"])
+            self.assertIs(audit.call_args_list[0].kwargs["shared_feature_interfaces"], declaration_map[0])
+            self.assertIsNone(audit.call_args_list[1].kwargs["shared_feature_interfaces"])
+
     def test_capture_sequence_stops_after_first_geometry_failure(self):
         from pathlib import Path
         from tempfile import TemporaryDirectory
