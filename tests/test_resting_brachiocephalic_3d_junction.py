@@ -597,10 +597,14 @@ def _declared_source_baseline_addendum_fixture(
         "source_preflight_sha256": preflight_sha,
         "candidate_and_source_baseline_inventory": {
             "baseline_matched_collar_addendum": {
+                "typed_link": [[51011, 475], [51011, 479]],
                 "baseline_surface_lineage": {
-                    f"{role}_{key}": value
-                    for role, hashes in frozen_surface_lineage.items()
-                    for key, value in hashes.items()
+                    "parent_position_f32_sha256": "a" * 64,
+                    "parent_face_u32_sha256": "b" * 64,
+                    "parent_gids_u64_sha256": "c" * 64,
+                    "target_position_f32_sha256": "d" * 64,
+                    "target_face_u32_sha256": "e" * 64,
+                    "target_gids_u64_sha256": "f" * 64,
                 },
             },
         },
@@ -615,6 +619,34 @@ def _declared_source_baseline_addendum_fixture(
                     "source_face_pair_ancestry_sha256": source_pairs_sha,
                     "source_parent_faces_sha256": parent_faces_sha,
                     "source_child_faces_sha256": child_faces_sha,
+                },
+                "source_topology_gate": {
+                    "surfaces": {
+                        "baseline_bridge": {
+                            "identity": list(parent_key),
+                            "source_vertex_ids_sha256": frozen_surface_lineage[
+                                "parent"]["gids_u64_sha256"],
+                            "prepared_surface": {
+                                "identity": list(parent_key),
+                                "positions_sha256": frozen_surface_lineage[
+                                    "parent"]["position_f32_sha256"],
+                                "faces_sha256": frozen_surface_lineage[
+                                    "parent"]["face_u32_sha256"],
+                            },
+                        },
+                        "baseline_target": {
+                            "identity": list(child_key),
+                            "source_vertex_ids_sha256": frozen_surface_lineage[
+                                "target"]["gids_u64_sha256"],
+                            "prepared_surface": {
+                                "identity": list(child_key),
+                                "positions_sha256": frozen_surface_lineage[
+                                    "target"]["position_f32_sha256"],
+                                "faces_sha256": frozen_surface_lineage[
+                                    "target"]["face_u32_sha256"],
+                            },
+                        },
+                    },
                 },
                 "port_interfaces": {"baseline": {
                     "observed_face_pairs": [list(pair)
@@ -717,22 +749,19 @@ def test_declared_baseline_additions_require_exact_pinned_baseline_report(
     assert len(baseline_port["audit_result"]["unexpected_triangle_pairs"]) == 3
     assert baseline_port["audit_result"]["triangle_pair_count"] == 83
     assert proof["source_baseline_observation"][
-        "baseline_surface_lineage"] == {
-            role: {
-                "position_f32_sha256": proof[
-                    "source_baseline_observation"][
-                        "frozen_inventory_surface_lineage"][
-                            f"{prefix}_position_f32_sha256"],
-                "face_u32_sha256": proof[
-                    "source_baseline_observation"][
-                        "frozen_inventory_surface_lineage"][
-                            f"{prefix}_face_u32_sha256"],
-                "gids_u64_sha256": proof[
-                    "source_baseline_observation"][
-                        "frozen_inventory_surface_lineage"][
-                            f"{prefix}_gids_u64_sha256"],
-            }
-            for role, prefix in (("bridge", "parent"), ("target", "target"))
+        "baseline_surface_lineage"] == proof[
+            "source_baseline_observation"]["frozen_inventory_surface_lineage"]
+    assert proof["source_baseline_observation"][
+        "frozen_inventory_surface_lineage"]["bridge"] == {
+            "position_f32_sha256": hashlib.sha256(
+                np.ascontiguousarray(inputs["bridge"].positions, dtype="<f4").tobytes()
+            ).hexdigest(),
+            "face_u32_sha256": hashlib.sha256(
+                np.ascontiguousarray(inputs["bridge"].faces, dtype="<u4").tobytes()
+            ).hexdigest(),
+            "gids_u64_sha256": hashlib.sha256(
+                np.ascontiguousarray(inputs["bridge"].source_vertex_ids, dtype="<u8").tobytes()
+            ).hexdigest(),
         }
     assert proof["candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"]
     scope = junction.bind_network_link_source_ancestry(
@@ -825,14 +854,14 @@ def test_declared_baseline_additions_bind_frozen_baseline_position_and_gid_hashe
     inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
     report_path = inputs["baseline_report_path"]
     report = json.loads(report_path.read_text())
-    report["candidate_and_source_baseline_inventory"][
-        "baseline_matched_collar_addendum"]["baseline_surface_lineage"][
-            "parent_position_f32_sha256"] = "0" * 64
+    report["network_source_continuity"]["links"][0][
+        "source_topology_gate"]["surfaces"]["baseline_bridge"][
+            "prepared_surface"]["positions_sha256"] = "0" * 64
     report_path.write_text(json.dumps(report))
     report_sha = hashlib.sha256(report_path.read_bytes()).hexdigest()
     monkeypatch.setattr(
         junction, "SOURCE_BASELINE_OBSERVATION_REPORT_SHA256", report_sha)
-    with pytest.raises(ValueError, match="baseline bridge position/GID/face hashes changed"):
+    with pytest.raises(ValueError, match="per-link baseline_bridge position/GID/face hashes changed"):
         junction.verify_baseline_matched_collar_addendum(
             av,
             bridge_key=inputs["bridge_key"],

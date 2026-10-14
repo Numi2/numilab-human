@@ -485,23 +485,29 @@ def _read_pinned_source_baseline_observation(
         }
         for role, surface in (("bridge", bridge), ("target", target))
     }
-    inventory = report.get("candidate_and_source_baseline_inventory", {})
-    addendum = (inventory.get("baseline_matched_collar_addendum", {})
-                if isinstance(inventory, Mapping) else {})
-    frozen_lineage = (addendum.get("baseline_surface_lineage", {})
-                      if isinstance(addendum, Mapping) else {})
-    if frozen_lineage:
-        for role, prefix in (("bridge", "parent"), ("target", "target")):
-            expected_hashes = {
-                "position_f32_sha256": frozen_lineage.get(
-                    f"{prefix}_position_f32_sha256"),
-                "face_u32_sha256": frozen_lineage.get(
-                    f"{prefix}_face_u32_sha256"),
-                "gids_u64_sha256": frozen_lineage.get(
-                    f"{prefix}_gids_u64_sha256"),
-            }
-            _require(expected_hashes == surface_lineage[role],
-                     f"pinned independent baseline {role} position/GID/face hashes changed")
+    topology_surfaces = (
+        link.get("source_topology_gate", {}).get("surfaces", {})
+        if isinstance(link.get("source_topology_gate"), Mapping) else {})
+    frozen_lineage = {}
+    for role, report_role, typed_identity in (
+        ("bridge", "baseline_bridge", [51011, bridge_key[1]]),
+        ("target", "baseline_target", [51011, target_key[1]]),
+    ):
+        surface_report = topology_surfaces.get(report_role, {})
+        prepared_report = surface_report.get("prepared_surface", {})
+        _require(surface_report.get("identity") == typed_identity
+                 and prepared_report.get("identity") == typed_identity,
+                 f"023 per-link {report_role} lacks its exact typed identity")
+        expected_hashes = {
+            "position_f32_sha256": prepared_report.get("positions_sha256"),
+            "face_u32_sha256": prepared_report.get("faces_sha256"),
+            "gids_u64_sha256": surface_report.get("source_vertex_ids_sha256"),
+        }
+        _require(all(isinstance(value, str) and len(value) == 64
+                     for value in expected_hashes.values())
+                 and expected_hashes == surface_lineage[role],
+                 f"pinned 023 per-link {report_role} position/GID/face hashes changed")
+        frozen_lineage[role] = expected_hashes
     return {
         "path": str(report_path),
         "sha256": report_sha,
@@ -510,7 +516,8 @@ def _read_pinned_source_baseline_observation(
         "observed_pairs": observed,
         "unexpected_pairs": unexpected,
         "surface_lineage": surface_lineage,
-        "frozen_surface_lineage": frozen_lineage or None,
+        "frozen_surface_lineage": frozen_lineage,
+        "unrelated_global_baseline_addendum_ignored": True,
         "link": link,
     }
 
@@ -1970,6 +1977,7 @@ def _interface_gate(
     bridge_patch = sorted({first for first, _ in pairs})
     target_patch = sorted({second for _, second in pairs})
     allowed = {(first, second) for first in bridge_patch for second in target_patch}
+    addendum_pairs = set()
     if verified_collar_addendum is not None:
         addendum_pairs = _verified_collar_addendum_pairs(
             typed_port, verified_collar_addendum)
