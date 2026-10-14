@@ -1,3 +1,6 @@
+import copy
+import json
+
 import numpy as np
 import pytest
 
@@ -86,12 +89,13 @@ def _owner_composition_fixture(tmp_path):
     source_ids = sorted(set(prep.NETWORK_STABLE_IDS) | {313, 315, 317})
     source_map = {str(sid): {"stable_id": sid, "source": "same"} for sid in source_ids}
     old_maps = [
-        {"stable_id": sid, "vertices": [[0, 1.0]]}
+        {"stable_id": sid, "vertices": [[[0, 101, 0, 1.0]]]}
         for sid in (475, 477, 999)
     ]
     new_maps = [
         {"stable_id": sid,
-         "vertices": [[0, 2.0 if sid in (475, 477) else 1.0]]}
+         "vertices": ([[[0, 101, 0, 0.5], [7, 101, 0, 0.5]]]
+                      if sid in (475, 477) else [[[0, 101, 0, 1.0]]])}
         for sid in (475, 477, 999)
     ]
     common = {
@@ -233,9 +237,9 @@ def test_source0_gate_stays_blocked_until_current_native_capture_and_missing_col
     pending = ["479->487", "481->489"]
     owner_delta = {"current_capture_candidate_ready": False}
     assert prep._source0_preflight_status(pending, [], owner_delta) == (
-        "SOURCE0_SEAMOWNER_PREPARED_PENDING_NATIVE_EMISSION_AND_TWO_SOURCE_COLLARS")
+        "SOURCE0_SEAMOWNER_PREPARED_PENDING_SOURCE_COLLARS_AND_NATIVE_EMISSION")
     assert prep._source0_preflight_status([], [], owner_delta) == (
-        "SOURCE0_SEAMOWNER_PREPARED_PENDING_NATIVE_EMISSION_AND_TWO_SOURCE_COLLARS")
+        "SOURCE0_SEAMOWNER_PREPARED_PENDING_FINAL_NATIVE_EMISSION")
     owner_delta["current_capture_candidate_ready"] = True
     assert prep._source0_preflight_status([], [], owner_delta) == (
         "SOURCE0_SEAMOWNER_CAPTURE_READY_NO_GEOMETRY_PREDICATE")
@@ -262,7 +266,8 @@ def test_owner_composition_delta_rejects_an_unscoped_owner_row_change(tmp_path, 
     old, current, carrier, digest = _owner_composition_fixture(tmp_path)
     monkeypatch.setattr(prep, "OWNER_COMPOSITION_CARRIER", carrier)
     monkeypatch.setattr(prep, "OWNER_COMPOSITION_CARRIER_SHA256", digest)
-    current["passive_tissue_parent_bindings"]["anatomy_surfaces"][-1]["vertices"][0][1] = 3.0
+    current["passive_tissue_parent_bindings"]["anatomy_surfaces"][-1][
+        "vertices"][0][0][0] = 1
     with pytest.raises(ValueError, match="beyond the declared 475/477"):
         prep._owner_composition_delta(old, current)
 
@@ -306,3 +311,344 @@ def test_source_identity_crosscheck_uses_current_fma_and_member_labels():
     source_map["487"]["name"] = "left radial artery"
     with pytest.raises(ValueError, match="branch identity metadata changed"):
         prep._source_identity_crosscheck(source_map)
+
+
+def _ulnar_source_proof_fixture():
+    pairs_by_edge = {
+        (479, 487): np.asarray([[0, 0], [1, 1]], dtype="<i8"),
+        (481, 489): np.asarray([[0, 1], [1, 0]], dtype="<i8"),
+    }
+    rows = {}
+    source_map = {}
+    links = []
+    for parent, child in prep.ULNAR_SOURCE_LINKS:
+        for sid, body in ((parent, 91), (child, 92)):
+            vertices6 = np.asarray([
+                [0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                [1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                [0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+                [0.0, 0.0, 1.0, 0.0, 0.0, 1.0],
+            ], dtype="<f4")
+            faces = np.asarray([[0, 1, 2], [0, 2, 3]], dtype="<u4")
+            rows[sid] = {
+                "vertices6": vertices6,
+                "faces": faces,
+                "body_index": body,
+            }
+            source_map[str(sid)] = {
+                "source_member": f"FJ{sid}",
+                "source_sha256": f"{sid:064x}",
+                "name": f"vessel {sid}",
+                "provider": "BP3D",
+                "body_index": body,
+                "layer": 2,
+                "vascular_compartment_id": 3 if sid in (479, 487) else 4,
+                "source_owner_metadata": {"concept_id": f"FMA{sid}"},
+            }
+    for parent, child in prep.ULNAR_SOURCE_LINKS:
+        pairs = pairs_by_edge[(parent, child)]
+        face_hashes = {
+            str(sid): prep._sha_bytes(rows[sid]["faces"].tobytes())
+            for sid in (parent, child)
+        }
+        position_hashes = {str(sid): f"{sid + 1000:064x}"
+                           for sid in (parent, child)}
+        manifold_inputs = []
+        for _stage in range(2):
+            for sid in (parent, child):
+                manifold_inputs.append({
+                    "surface_identity": [51011, sid],
+                    "input_diagnostics": {
+                        "identity": [51011, sid],
+                        "source_face_sha256": face_hashes[str(sid)],
+                        "source_position_sha256": position_hashes[str(sid)],
+                    },
+                })
+        links.append({
+            "link_id": prep.ULNAR_SOURCE_LINKS[(parent, child)],
+            "parent": [51011, parent],
+            "child": [51011, child],
+            "passed": True,
+            "status": "SOURCE_RIGID_JUNCTION_CONTINUITY_SCREEN_PASSED_UNADMITTED",
+            "current_capture_used": False,
+            "source_geometry_frame": "registered NHRIGID source rest",
+            "source_interface_derivation": {
+                "source_face_pairs": pairs.tolist(),
+                "source_face_pairs_sha256": prep._sha_bytes(pairs.tobytes()),
+                "connected_contact_component_count": 1,
+                "single_connected_source_contact_required": True,
+            },
+            "unexempted_source_pair_audit": {
+                "identities": [[51011, parent], [51011, child]],
+                "triangle_pair_count": len(pairs),
+                "unexpected_triangle_pairs": pairs.tolist(),
+            },
+            "existing_per_port_owner_trace": {"manifold_inputs": manifold_inputs},
+            "port_solid_and_calibre_proof": {
+                "passed": True,
+                "source_geometry_mutated": False,
+                "calibre_gate": {"passed": True},
+            },
+        })
+    data = {
+        "schema": "numi.human.brachiocephalic-ulnar-source-proof.v1",
+        "status": "SOURCE_RIGID_ULNAR_JUNCTIONS_PASSED_UNADMITTED",
+        "passed": True,
+        "requested_link_count": 2,
+        "evaluated_link_count": 2,
+        "first_failed_link": None,
+        "source_candidate_admitted": False,
+        "native_or_gpu_work_performed": False,
+        "source_rigid_calibre_is_self_reference": True,
+        "current_capture_or_motion_admission": False,
+        "preflight_path": str(prep.ULNAR_SOURCE_PREFLIGHT.resolve()),
+        "preflight_sha256": prep.ULNAR_SOURCE_PREFLIGHT_SHA256,
+        "links": links,
+    }
+    return data, rows, source_map
+
+
+def test_ulnar_source_proof_reuses_only_exact_connected_witness_pairs():
+    data, rows, source_map = _ulnar_source_proof_fixture()
+    pair = prep._ulnar_source_witness_pairs(
+        data, 479, 487, rows, source_map, rows, source_map)
+    assert pair["pair_count"] == 2
+    assert pair["pairs"].tolist() == [[0, 0], [1, 1]]
+    assert pair["source_rigid_calibre_is_self_reference"] is True
+    assert "current capture" in pair["evidence_class"]
+
+
+def test_ulnar_source_proof_rejects_changed_source_xyz_or_owner_identity():
+    data, proof_rows, proof_map = _ulnar_source_proof_fixture()
+    current_rows = {sid: {**row, "vertices6": row["vertices6"].copy()}
+                    for sid, row in proof_rows.items()}
+    current_map = {sid: dict(row) for sid, row in proof_map.items()}
+    current_rows[487]["vertices6"][0, 0] = np.nextafter(
+        np.float32(0.0), np.float32(1.0), dtype=np.float32)
+    with pytest.raises(ValueError, match="exact local XYZ/face ancestry"):
+        prep._ulnar_source_witness_pairs(
+            data, 479, 487, proof_rows, proof_map, current_rows, current_map)
+
+    data, proof_rows, proof_map = _ulnar_source_proof_fixture()
+    current_map = {sid: dict(row) for sid, row in proof_map.items()}
+    current_map["489"]["vascular_compartment_id"] = 3
+    with pytest.raises(ValueError, match="owner identity"):
+        prep._ulnar_source_witness_pairs(
+            data, 481, 489, proof_rows, proof_map, proof_rows, current_map)
+
+
+def test_ulnar_source_proof_rejects_link_status_and_pair_hash_drift():
+    data, rows, source_map = _ulnar_source_proof_fixture()
+    data["links"][0]["passed"] = False
+    with pytest.raises(ValueError, match="unrecognized or failed edge"):
+        prep._ulnar_source_witness_pairs(
+            data, 479, 487, rows, source_map, rows, source_map)
+
+    data, rows, source_map = _ulnar_source_proof_fixture()
+    data["links"][0]["source_interface_derivation"]["source_face_pairs"][0][0] = 1
+    with pytest.raises(ValueError, match="face-pair bytes/count"):
+        prep._ulnar_source_witness_pairs(
+            data, 479, 487, rows, source_map, rows, source_map)
+
+
+
+def test_runtime_network_source_pairs_require_all_fifteen_exact_edges():
+    edge_evidence = {
+        f"{first[1]}->{second[1]}": {
+            "pairs": np.asarray([[0, 0]], dtype="<i8"),
+            "evidence_status": "PINNED_SOURCE_COLLAR",
+        }
+        for first, second in prep.NETWORK_EDGES
+    }
+    svc = {
+        f"{first[1]}->{second[1]}": {"pairs": np.asarray([[0, 0]], dtype="<i8")}
+        for first, second in prep.SVC_PORTS
+    }
+    pairs = prep._runtime_network_source_pairs(
+        edge_evidence, {"svc_bridge_ports": svc})
+    assert len(pairs) == 15
+    assert prep.POTENTIAL_NONNETWORK_OVERLAP not in pairs
+    del edge_evidence["479->487"]
+    with pytest.raises(ValueError, match="exact 13 declared links"):
+        prep._runtime_network_source_pairs(
+            edge_evidence, {"svc_bridge_ports": svc})
+
+
+def test_parent_motion_inventory_binds_native_terms_without_claiming_pose_reconstruction():
+    receipt = {"passive_tissue_parent_bindings": {
+        "source_payloads": [{"sha256": "a" * 64}, {"sha256": "b" * 64}],
+        "anatomy_surfaces": [
+            {"stable_id": 475, "vertices": [
+                [[0, 20, 3, 0.25], [1, 91, 7, 0.75]],
+                [[1, 91, 9, 1.0]],
+            ]},
+        ],
+    }}
+    result = prep._parent_motion_owner_inventory(receipt, {475, 477})
+    assert result["rows"]["475"]["mode"] == (
+        "existing_native_passive_anatomy_parent_influences")
+    assert result["rows"]["475"]["used_source_payload_indices"] == [0, 1]
+    assert result["rows"]["477"]["mode"] == "existing_native_rigid_body_binding"
+    assert result["parent_pose_reconstruction_performed"] is False
+    assert "source rigid-only" not in result["scope_limit"]
+
+
+def test_parent_motion_inventory_rejects_nonpartitioned_or_out_of_range_terms():
+    receipt = {"passive_tissue_parent_bindings": {
+        "source_payloads": [{"sha256": "a" * 64}],
+        "anatomy_surfaces": [
+            {"stable_id": 475, "vertices": [[[0, 20, 3, 0.5]]]},
+        ],
+    }}
+    with pytest.raises(ValueError, match="do not sum to one"):
+        prep._parent_motion_owner_inventory(receipt, {475})
+    receipt["passive_tissue_parent_bindings"]["anatomy_surfaces"][0]["vertices"] = [
+        [[2, 20, 3, 1.0]]
+    ]
+    with pytest.raises(ValueError, match="invalid parent motion term"):
+        prep._parent_motion_owner_inventory(receipt, {475})
+
+
+
+def test_owner_composition_remaps_source_indices_by_payload_hash(tmp_path, monkeypatch):
+    old, current, carrier, digest = _owner_composition_fixture(tmp_path)
+    monkeypatch.setattr(prep, "OWNER_COMPOSITION_CARRIER", carrier)
+    monkeypatch.setattr(prep, "OWNER_COMPOSITION_CARRIER_SHA256", digest)
+    bindings = current["passive_tissue_parent_bindings"]
+    original_hashes = [row["sha256"] for row in bindings["source_payloads"]]
+    remapped = list(reversed(bindings["source_payloads"]))
+    new_index = {row["sha256"]: index for index, row in enumerate(remapped)}
+    for row in bindings["anatomy_surfaces"]:
+        for terms in row["vertices"]:
+            for term in terms:
+                old_hash = original_hashes[term[0]]
+                term[0] = new_index[old_hash]
+    bindings["source_payloads"] = remapped
+
+    result = prep._owner_composition_delta(old, current)
+    assert result["appended_source_index"] == 0
+    assert result["source_payload_index_remap_by_sha256"]["0"] == 7
+    assert result["source_payload_identity_set_preserved_plus_one_carrier"] is True
+    assert result["prefix_source_payloads_exactly_preserved"] is False
+    assert result["owner_rows_changed_only"] == [475, 477]
+
+
+
+def test_exact_emitted_candidate_rows_and_owner_terms_are_separately_verified(tmp_path):
+    rows = {
+        475: {
+            "vertices6": np.zeros((2, 6), dtype="<f4"),
+            "faces": np.asarray([[0, 1, 0]], dtype="<u4"),
+            "record": (20, 0, 2, 0, 3, 475, 2, 0),
+        },
+    }
+    result = prep._compare_payload_rows_exact(
+        rows, {475: {**rows[475], "vertices6": rows[475]["vertices6"].copy()}},
+        [rows[475]["record"]], [rows[475]["record"]])
+    assert result["status"] == "ALL_ABI5_ROWS_BYTE_EXACT_CAPTURED_SOURCE_CANDIDATE"
+
+    _old, current, _carrier, _digest = _owner_composition_fixture(tmp_path)
+    owner = prep._captured_candidate_owner_binding_delta(current, current)
+    assert owner["status"] == "INVOKED_CAPTURE_AND_SOURCE_RECEIPT_OWNER_MAPS_EXACT"
+    altered = copy.deepcopy(current)
+    altered["provenance"]["source_id_map"]["475"]["source"] = "changed"
+    with pytest.raises(ValueError, match="source identities differ"):
+        prep._captured_candidate_owner_binding_delta(altered, current)
+
+
+def test_explicit_current_capture_bundle_uses_verified_candidate_and_restores_pins(
+    tmp_path, monkeypatch
+):
+    payload = tmp_path / "resting-thorax.nhanatomy"
+    payload.write_bytes(b"ABI5 source payload")
+    anatomy_receipt = {
+        "payload": {
+            "path": str(payload.resolve()),
+            "sha256": prep._sha_file(payload),
+        }
+    }
+    anatomy_receipt_path = tmp_path / "resting-anatomy-receipt.json"
+    anatomy_receipt_path.write_text(json.dumps(anatomy_receipt))
+    pack = tmp_path / "step-0.mrvpack"
+    pack.write_bytes(b"accepted pack")
+    capture_receipt = tmp_path / "step-0.receipt.json"
+    capture_receipt.write_text('{"physical_endpoint":"accepted"}')
+    inputs = {
+        "capture_pack_path": str(pack.resolve()),
+        "capture_pack_sha256": prep._sha_file(pack),
+        "capture_receipt_path": str(capture_receipt.resolve()),
+        "capture_receipt_sha256": prep._sha_file(capture_receipt),
+        "anatomy_receipt_path": str(anatomy_receipt_path.resolve()),
+        "anatomy_receipt_sha256": prep._sha_file(anatomy_receipt_path),
+        "anatomy_payload_sha256": prep._sha_file(payload),
+    }
+    gate = prep.capture_gate
+    names = (
+        "CAPTURE_PACK", "CAPTURE_PACK_SHA256", "CAPTURE_RECEIPT",
+        "CAPTURE_RECEIPT_SHA256", "ANATOMY_RECEIPT",
+        "ANATOMY_RECEIPT_SHA256", "PREPARED_SUCCESSOR_RECEIPT",
+        "PREPARED_SUCCESSOR_RECEIPT_SHA256", "ANATOMY_PAYLOAD_SHA256",
+    )
+    before = {name: getattr(gate, name) for name in names}
+
+    def load_exact_candidate():
+        assert gate.CAPTURE_PACK == pack.resolve()
+        assert gate.CAPTURE_PACK_SHA256 == inputs["capture_pack_sha256"]
+        assert gate.CAPTURE_RECEIPT == capture_receipt.resolve()
+        assert gate.ANATOMY_RECEIPT == anatomy_receipt_path.resolve()
+        assert gate.PREPARED_SUCCESSOR_RECEIPT == anatomy_receipt_path.resolve()
+        return {
+            "anatomy_receipt": anatomy_receipt,
+            "payload_path": payload.resolve(),
+            "capture_identity": {
+                "pack_sha256": inputs["capture_pack_sha256"],
+                "capture_receipt_sha256": inputs["capture_receipt_sha256"],
+                "accepted_step": 0,
+            },
+        }
+
+    monkeypatch.setattr(gate, "_load_current_inputs", load_exact_candidate)
+    context = prep._load_current_capture_context(inputs)
+
+    assert context["anatomy_receipt"] is anatomy_receipt
+    assert context["explicit_capture_input_bundle"]["anatomy_payload_sha256"] == (
+        inputs["anatomy_payload_sha256"])
+    assert context["capture_source_sha256"] == {
+        "capture_pack": inputs["capture_pack_sha256"],
+        "capture_receipt": inputs["capture_receipt_sha256"],
+        "anatomy_receipt": inputs["anatomy_receipt_sha256"],
+        "anatomy_payload": inputs["anatomy_payload_sha256"],
+    }
+    assert {name: getattr(gate, name) for name in names} == before
+
+
+def test_explicit_current_capture_bundle_rejects_hash_or_payload_drift(tmp_path):
+    payload = tmp_path / "resting-thorax.nhanatomy"
+    payload.write_bytes(b"source A")
+    receipt = tmp_path / "anatomy-receipt.json"
+    receipt.write_text(json.dumps({
+        "payload": {"path": str(payload.resolve()), "sha256": prep._sha_file(payload)}
+    }))
+    pack = tmp_path / "step-0.mrvpack"
+    pack.write_bytes(b"pack")
+    capture_receipt = tmp_path / "step-0.receipt.json"
+    capture_receipt.write_bytes(b"receipt")
+    bundle = {
+        "capture_pack_path": str(pack.resolve()),
+        "capture_pack_sha256": prep._sha_file(pack),
+        "capture_receipt_path": str(capture_receipt.resolve()),
+        "capture_receipt_sha256": prep._sha_file(capture_receipt),
+        "anatomy_receipt_path": str(receipt.resolve()),
+        "anatomy_receipt_sha256": prep._sha_file(receipt),
+        "anatomy_payload_sha256": prep._sha_file(payload),
+    }
+
+    altered_hash = dict(bundle)
+    altered_hash["capture_pack_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="digest mismatch"):
+        prep._validated_capture_input_bundle(altered_hash)
+
+    wrong_payload = dict(bundle)
+    wrong_payload["anatomy_payload_sha256"] = "1" * 64
+    with pytest.raises(ValueError, match="does not bind"):
+        prep._validated_capture_input_bundle(wrong_payload)

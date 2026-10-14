@@ -80,6 +80,101 @@ def _pair_rows(value: object, *, name: str, bridge_face_count: int,
     return tuple(sorted(pairs))
 
 
+def audit_network_rows_against_all_targets(
+    verifier, surfaces, network_edges, source_face_pairs,
+):
+    """Run the shared all-target collision screen for a frozen vessel graph.
+
+    Exact source collar patches are passed only for declared graph edges. The
+    central verifier still rejects every other vessel, bone, muscle, skin
+    boundary, airway, or organ contact. A passing screen is not a continuity,
+    calibre, or anatomy-admission result.
+    """
+    _require(hasattr(verifier, "audit_changed_surfaces"),
+             "the current shared resting-anatomy verifier is required")
+    _require(isinstance(surfaces, Mapping) and bool(surfaces),
+             "all-target screen requires the complete captured surface mapping")
+    _require(isinstance(network_edges, (tuple, list)) and bool(network_edges),
+             "network edge list is empty")
+    normalized_edges = []
+    network_keys = set()
+    for edge in network_edges:
+        _require(isinstance(edge, (tuple, list)) and len(edge) == 2,
+                 "network edges must contain two typed surface identities")
+        first, second = _identity(edge[0]), _identity(edge[1])
+        _require(first != second and (first, second) not in normalized_edges
+                 and (second, first) not in normalized_edges,
+                 "network edge list contains a self-link or duplicate")
+        normalized_edges.append((first, second))
+        network_keys.update((first, second))
+    _require(network_keys.issubset(surfaces),
+             "captured surface mapping is missing a declared network vessel")
+    _require(isinstance(source_face_pairs, Mapping)
+             and set(source_face_pairs) == set(normalized_edges),
+             "exact source collar ancestry must cover precisely the declared network edges")
+
+    interfaces = {}
+    interface_records = []
+    for first, second in normalized_edges:
+        first_value, second_value = surfaces[first], surfaces[second]
+        first_faces = _faces(first_value[1], name=f"network row {first[1]}",
+                             vertex_count=len(first_value[0]))
+        second_faces = _faces(second_value[1], name=f"network row {second[1]}",
+                              vertex_count=len(second_value[0]))
+        raw_pairs = source_face_pairs[(first, second)]
+        pairs = _pair_rows(raw_pairs, name=f"source collar {first[1]}->{second[1]}",
+                           bridge_face_count=len(first_faces),
+                           target_face_count=len(second_faces))
+        first_patch = sorted({pair[0] for pair in pairs})
+        second_patch = sorted({pair[1] for pair in pairs})
+        allowed = tuple((a, b) for a in first_patch for b in second_patch)
+        interfaces[(first, second)] = allowed
+        interfaces[(second, first)] = tuple((b, a) for a, b in allowed)
+        interface_records.append({
+            "parent": list(first), "child": list(second),
+            "source_pair_count": len(pairs),
+            "source_pairs_sha256": hashlib.sha256(
+                np.ascontiguousarray(pairs, dtype="<i8").tobytes()).hexdigest(),
+            "parent_patch_face_count": len(first_patch),
+            "child_patch_face_count": len(second_patch),
+            "allowed_patch_cross_product_pair_count": len(allowed),
+        })
+
+    targets = tuple(sorted(surfaces))
+    changed = tuple(sorted(network_keys))
+    skins = tuple(key for key in targets if key[0] == 51007)
+    enclosures = [(vessel, skin) for vessel in changed for skin in skins]
+    result = verifier.audit_changed_surfaces(
+        surfaces,
+        changed=changed,
+        targets=targets,
+        interfaces=interfaces,
+        required_closed=changed,
+        intended_enclosures=enclosures,
+    )
+    passed = result.get("passed") is True
+    return {
+        "schema": "numi.human.brachiocephalic.current-network-all-target-screen.v1",
+        "status": ("CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_PASSED_UNADMITTED"
+                   if passed else "CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_REJECTED"),
+        "passed": passed,
+        "network_edge_count": len(normalized_edges),
+        "network_surface_count": len(network_keys),
+        "all_capture_target_count": len(targets),
+        "all_capture_target_identity_sha256": hashlib.sha256(
+            b"".join(np.asarray(key, dtype="<u4").tobytes() for key in targets)
+        ).hexdigest(),
+        "frozen_source_interface_patches": interface_records,
+        "declared_skin_enclosures": len(enclosures),
+        "shared_verifier_result": result,
+        "scope_limit": (
+            "Collision/self/closure screen only. Frozen face patches do not prove lumen "
+            "continuity; independent 3D inside-both, connected-solid, and source-station "
+            "calibre gates remain required."),
+        "anatomical_admission": False,
+    }
+
+
 def audit_captured_pose_surface_intersections(
     verifier,
     captured_surfaces: Mapping[tuple[int, int], Sequence[object]],

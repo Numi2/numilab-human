@@ -1,6 +1,7 @@
 """Source-only preparation for the current-capture brachiocephalic network gate.
 
-This module pins the actual accepted step-0 capture, its invoked NHA receipt,
+This module pins either the historical accepted step-0 inputs or an explicitly
+supplied merged-capture bundle, then records its invoked NHA receipt,
 registered rigid-source baselines, all-target AABB inventory, and frozen
 source-collar ancestry. It deliberately runs no geometry predicates.
 """
@@ -19,6 +20,7 @@ import numpy as np
 
 from . import resting_anatomy_verify as shared_verifier
 from . import resting_brachiocephalic_current_capture_gate as capture_gate
+from . import resting_brachiocephalic_geometry_gate as geometry_gate
 from . import resting_brachiocephalic_source007 as source007
 
 REPO = Path(__file__).resolve().parents[2]
@@ -50,6 +52,27 @@ PORT089 = DATA_ROOT / "arterial-venous-route-field-089/proximal-source-port-witn
 PORT089_SHA256 = (
     "2593e0510f8ff1c97788b118725cfe0037c78de879fd9700d3a2562077ac6d7a"
 )
+
+ULNAR_SOURCE_PROOF = DATA_ROOT / (
+    "ulnar-source-junction-preparation-001/source-rigid-ulnar-junction-proof.json")
+ULNAR_SOURCE_PROOF_SHA256 = (
+    "46f2a149aa8f330c90f4335becf31a09517c2c6c4893c120923bcabd5532aef4")
+ULNAR_SOURCE_PREFLIGHT = DATA_ROOT / (
+    "ulnar-source-junction-preparation-001/source-rigid-ulnar-junction-preflight.json")
+ULNAR_SOURCE_PREFLIGHT_SHA256 = (
+    "411a4956164ef812c68f64b535185b322b706b73af957a5deebac81f2563d8fa")
+ULNAR_PROOF_BASE_DIR = DATA_ROOT / "brachiocephalic-seam-owner-composition-001"
+ULNAR_PROOF_BASE_RECEIPT = ULNAR_PROOF_BASE_DIR / "resting-anatomy-receipt.json"
+ULNAR_PROOF_BASE_RECEIPT_SHA256 = (
+    "5ed44e1cfa912f8bf291347aff19c16cf2c55c4b9a36c3ab04fb6aaf17b70474")
+ULNAR_PROOF_BASE_PAYLOAD = ULNAR_PROOF_BASE_DIR / "resting-thorax.nhanatomy"
+ULNAR_PROOF_BASE_PAYLOAD_SHA256 = (
+    "f83a541b794fe9bae699e6784fe091e147d5bad284847773c803c5309027d361")
+ULNAR_SOURCE_LINKS = {
+    (479, 487): "left-brachial-artery-to-left-ulnar-artery",
+    (481, 489): "left-medial-brachial-vein-to-left-ulnar-vein",
+}
+
 ROUTE073_REPORT = DATA_ROOT / "arterial-venous-route-field-073/network-port-station-audit-003.json"
 ROUTE073_REPORT_SHA256 = (
     "4a2d56f1ffc0f365f3c841a1ebf883197e68ce8ea7696cad37b6dd5b2c027748"
@@ -325,6 +348,231 @@ def _route100_witness_pairs(parent: int, child: int) -> dict:
     }
 
 
+
+
+def _validated_ulnar_source_proof_links(data: dict) -> dict[tuple[int, int], dict]:
+    _require(data.get("schema") == "numi.human.brachiocephalic-ulnar-source-proof.v1"
+             and data.get("status") == "SOURCE_RIGID_ULNAR_JUNCTIONS_PASSED_UNADMITTED"
+             and data.get("passed") is True
+             and data.get("requested_link_count") == 2
+             and data.get("evaluated_link_count") == 2
+             and data.get("first_failed_link") is None
+             and data.get("source_candidate_admitted") is False
+             and data.get("native_or_gpu_work_performed") is False
+             and data.get("source_rigid_calibre_is_self_reference") is True
+             and data.get("current_capture_or_motion_admission") is False,
+             "ulnar source proof is not the exact passed, unadmitted 2-link source-rest report")
+    _require(data.get("preflight_sha256") == ULNAR_SOURCE_PREFLIGHT_SHA256
+             and Path(data.get("preflight_path", "")).resolve()
+             == ULNAR_SOURCE_PREFLIGHT.resolve(),
+             "ulnar source proof was not run against its pinned preflight")
+    raw_links = data.get("links")
+    _require(isinstance(raw_links, list) and len(raw_links) == 2,
+             "ulnar source proof does not contain exactly two branch links")
+    links = {}
+    expected_ids = set(ULNAR_SOURCE_LINKS.values())
+    for row in raw_links:
+        _require(isinstance(row, dict), "ulnar source proof link is not an object")
+        parent, child = row.get("parent"), row.get("child")
+        _require(isinstance(parent, list) and len(parent) == 2
+                 and isinstance(child, list) and len(child) == 2
+                 and parent[0] == child[0] == 51011
+                 and type(parent[1]) is int and type(child[1]) is int,
+                 "ulnar source proof link identities are malformed")
+        edge = (parent[1], child[1])
+        _require(edge in ULNAR_SOURCE_LINKS and edge not in links
+                 and row.get("link_id") == ULNAR_SOURCE_LINKS[edge]
+                 and row.get("passed") is True
+                 and row.get("status") == "SOURCE_RIGID_JUNCTION_CONTINUITY_SCREEN_PASSED_UNADMITTED"
+                 and row.get("current_capture_used") is False
+                 and row.get("source_geometry_frame") == "registered NHRIGID source rest",
+                 f"ulnar source proof has an unrecognized or failed edge {edge}")
+        derivation = row.get("source_interface_derivation")
+        _require(isinstance(derivation, dict)
+                 and derivation.get("connected_contact_component_count") == 1
+                 and derivation.get("single_connected_source_contact_required") is True,
+                 f"ulnar source proof lacks one connected exact source interface for {edge}")
+        solid = row.get("port_solid_and_calibre_proof")
+        _require(isinstance(solid, dict) and solid.get("passed") is True
+                 and solid.get("source_geometry_mutated") is False
+                 and solid.get("calibre_gate", {}).get("passed") is True,
+                 f"ulnar source proof lacks its existing solid/calibre owner result for {edge}")
+        links[edge] = row
+    _require(set(links) == set(ULNAR_SOURCE_LINKS)
+             and {row["link_id"] for row in links.values()} == expected_ids,
+             "ulnar source proof branch coverage differs from the two missing route edges")
+    return links
+
+
+def _source_identity_for_witness(source_map: dict, stable_id: int) -> dict:
+    row = source_map.get(str(stable_id))
+    _require(isinstance(row, dict), f"source owner map lacks ulnar proof row {stable_id}")
+    return {key: row.get(key) for key in (
+        "source_member", "source_sha256", "name", "provider", "body_index",
+        "layer", "vascular_compartment_id", "source_owner_metadata")}
+
+
+def _ulnar_source_witness_pairs(
+    data: dict, parent: int, child: int, proof_rows: dict, proof_source_map: dict,
+    current_rows: dict, current_source_map: dict,
+) -> dict:
+    edge = (parent, child)
+    links = _validated_ulnar_source_proof_links(data)
+    _require(edge in links, f"ulnar source proof lacks edge {parent}->{child}")
+    link = links[edge]
+    derivation = link["source_interface_derivation"]
+    raw_pairs = derivation.get("source_face_pairs")
+    _require(isinstance(raw_pairs, list) and bool(raw_pairs),
+             f"ulnar source proof has no exact face pairs for {edge}")
+    pairs = np.asarray(raw_pairs, dtype="<i8")
+    _require(pairs.ndim == 2 and pairs.shape[1] == 2
+             and len(pairs) == len(raw_pairs)
+             and np.array_equal(pairs, np.asarray(sorted(set(map(tuple, pairs))), dtype="<i8"))
+             and _sha_bytes(pairs.tobytes()) == derivation.get("source_face_pairs_sha256"),
+             f"ulnar source proof face-pair bytes/count are invalid for {edge}")
+    source_audit = link.get("unexempted_source_pair_audit", {})
+    audit_pairs = np.asarray(source_audit.get("unexpected_triangle_pairs", []), dtype="<i8")
+    _require(source_audit.get("triangle_pair_count") == len(pairs)
+             and audit_pairs.shape == pairs.shape
+             and np.array_equal(audit_pairs, pairs),
+             f"ulnar source pairs differ from their exact unexempted source audit for {edge}")
+
+    source_hashes = {}
+    for item in link["existing_per_port_owner_trace"].get("manifold_inputs", []):
+        diagnostic = item.get("input_diagnostics", {})
+        identity = diagnostic.get("identity", item.get("surface_identity"))
+        _require(isinstance(identity, list) and len(identity) == 2
+                 and identity[0] == 51011 and type(identity[1]) is int,
+                 f"ulnar source owner trace identity is malformed for {edge}")
+        sid = identity[1]
+        _require(sid in edge, f"ulnar source owner trace names unrelated row {sid}")
+        observed = (diagnostic.get("source_face_sha256"),
+                    diagnostic.get("source_position_sha256"))
+        _require(all(isinstance(value, str) and len(value) == 64 for value in observed),
+                 f"ulnar source owner trace lacks source geometry hashes for {sid}")
+        if sid in source_hashes:
+            _require(source_hashes[sid] == observed,
+                     f"ulnar source owner trace changes geometry hash between stages for {sid}")
+        source_hashes[sid] = observed
+    _require(set(source_hashes) == set(edge),
+             f"ulnar source owner trace does not bind both rows for {edge}")
+
+    row_bindings = {}
+    for sid in edge:
+        proof_row, current_row = proof_rows.get(sid), current_rows.get(sid)
+        _require(isinstance(proof_row, dict) and isinstance(current_row, dict),
+                 f"ulnar proof/current source payload lacks row {sid}")
+        proof_xyz = np.ascontiguousarray(proof_row["vertices6"][:, :3], dtype="<f4")
+        current_xyz = np.ascontiguousarray(current_row["vertices6"][:, :3], dtype="<f4")
+        proof_faces = np.ascontiguousarray(proof_row["faces"], dtype="<u4")
+        current_faces = np.ascontiguousarray(current_row["faces"], dtype="<u4")
+        _require(proof_xyz.shape == current_xyz.shape
+                 and proof_xyz.tobytes() == current_xyz.tobytes()
+                 and proof_faces.shape == current_faces.shape
+                 and proof_faces.tobytes() == current_faces.tobytes(),
+                 f"current source row {sid} differs from the ulnar proof's exact local XYZ/face ancestry")
+        _require(_sha_bytes(proof_faces.tobytes()) == source_hashes[sid][0],
+                 f"ulnar proof source face hash differs from ABI5 input row {sid}")
+        _require(_source_identity_for_witness(proof_source_map, sid)
+                 == _source_identity_for_witness(current_source_map, sid),
+                 f"current source owner identity differs from ulnar proof row {sid}")
+        _require(int(proof_row["body_index"]) == int(current_row["body_index"])
+                 == int(current_source_map[str(sid)]["body_index"]),
+                 f"current ABI5 rigid owner differs from ulnar proof row {sid}")
+        row_bindings[str(sid)] = {
+            "typed_identity": [51011, sid],
+            "source_face_sha256": _sha_bytes(current_faces.tobytes()),
+            "source_local_xyz_sha256": _sha_bytes(current_xyz.tobytes()),
+            "same_exact_local_xyz_and_ordered_faces_as_proof_input": True,
+            "source_owner_identity_equal_to_proof_input": True,
+            "registered_rest_position_sha256_from_proof": source_hashes[sid][1],
+        }
+    _require((pairs[:, 0] >= 0).all()
+             and (pairs[:, 0] < len(current_rows[parent]["faces"])).all()
+             and (pairs[:, 1] >= 0).all()
+             and (pairs[:, 1] < len(current_rows[child]["faces"])).all(),
+             f"ulnar source pair face IDs are outside current source rows for {edge}")
+    return {
+        "path": str(ULNAR_SOURCE_PROOF.resolve()),
+        "sha256": ULNAR_SOURCE_PROOF_SHA256,
+        "preflight_path": str(ULNAR_SOURCE_PREFLIGHT.resolve()),
+        "preflight_sha256": ULNAR_SOURCE_PREFLIGHT_SHA256,
+        "parent_stable_id": parent,
+        "child_stable_id": child,
+        "pair_count": len(pairs),
+        "pairs_sha256": _sha_bytes(pairs.tobytes()),
+        "pairs": pairs,
+        "source_rows": row_bindings,
+        "evidence_status": link["status"],
+        "evidence_class": (
+            "exact connected source-rest interface ancestry; current capture, "
+            "motion, and anatomy admission remain separate"),
+        "source_rigid_calibre_is_self_reference": True,
+    }
+
+
+def _load_ulnar_source_witnesses(
+    current_rows: dict, current_source_map: dict,
+) -> tuple[dict[tuple[int, int], dict], dict]:
+    _resolved_pin(ULNAR_SOURCE_PROOF, ULNAR_SOURCE_PROOF_SHA256)
+    _resolved_pin(ULNAR_SOURCE_PREFLIGHT, ULNAR_SOURCE_PREFLIGHT_SHA256)
+    data = json.loads(ULNAR_SOURCE_PROOF.read_text())
+    raw_inputs = data.get("source_input_sha256")
+    _require(isinstance(raw_inputs, dict), "ulnar source proof lacks input hashes")
+    normalized_inputs = {str(Path(path).resolve()): sha for path, sha in raw_inputs.items()}
+    source_input_pins = {
+        str(ULNAR_PROOF_BASE_RECEIPT.resolve()): ULNAR_PROOF_BASE_RECEIPT_SHA256,
+        str(ULNAR_PROOF_BASE_PAYLOAD.resolve()): ULNAR_PROOF_BASE_PAYLOAD_SHA256,
+        str(source007.REGISTRATION.resolve()): source007.REGISTRATION_SHA,
+        str(source007.RIGID.resolve()): source007.RIGID_SHA,
+        **source007.MANIFOLD_SHA,
+    }
+    _require(all(normalized_inputs.get(path) == digest
+                 for path, digest in source_input_pins.items()),
+             "ulnar source proof input receipt, payload, registration, or NHRIGID identity changed")
+    code_pins = data.get("current_shared_geometry_owner_code_sha256", {})
+    transform_pins = [
+        (Path(path).resolve(), digest) for path, digest in code_pins.items()
+        if Path(path).name == TRANSFORM_OWNER.name
+    ] if isinstance(code_pins, dict) else []
+    _require(len(transform_pins) == 1
+             and transform_pins[0][1] == TRANSFORM_OWNER_SHA256
+             and transform_pins[0][0].is_file()
+             and _sha_file(transform_pins[0][0]) == TRANSFORM_OWNER_SHA256,
+             "ulnar source proof does not pin the registered rigid transform owner")
+    _resolved_pin(ULNAR_PROOF_BASE_RECEIPT, ULNAR_PROOF_BASE_RECEIPT_SHA256)
+    _resolved_pin(ULNAR_PROOF_BASE_PAYLOAD, ULNAR_PROOF_BASE_PAYLOAD_SHA256)
+    _, _, proof_rows = capture_gate.nhanat_codec._parse_payload(
+        ULNAR_PROOF_BASE_PAYLOAD.read_bytes())
+    proof_receipt = json.loads(ULNAR_PROOF_BASE_RECEIPT.read_text())
+    proof_source_map = proof_receipt.get("provenance", {}).get("source_id_map", {})
+    current_pairs = {}
+    _validated_ulnar_source_proof_links(data)
+    for parent, child in ULNAR_SOURCE_LINKS:
+        current_pairs[(parent, child)] = _ulnar_source_witness_pairs(
+            data, parent, child, proof_rows, proof_source_map,
+            current_rows, current_source_map)
+    summary = {
+        "path": str(ULNAR_SOURCE_PROOF.resolve()),
+        "sha256": ULNAR_SOURCE_PROOF_SHA256,
+        "preflight_path": str(ULNAR_SOURCE_PREFLIGHT.resolve()),
+        "preflight_sha256": ULNAR_SOURCE_PREFLIGHT_SHA256,
+        "status": data["status"],
+        "passed_unadmitted": True,
+        "source_rigid_calibre_is_self_reference": True,
+        "current_capture_or_motion_admission": False,
+        "covered_edges": [
+            {"parent": parent, "child": child,
+             "pair_count": current_pairs[(parent, child)]["pair_count"],
+             "pairs_sha256": current_pairs[(parent, child)]["pairs_sha256"]}
+            for parent, child in ULNAR_SOURCE_LINKS
+        ],
+        "source_input_sha256": source_input_pins,
+        "proof_code_pin_count": len(code_pins),
+        "proof_source_rows_match_current_candidate_exactly": True,
+    }
+    return current_pairs, summary
+
 def _bridge_witness_pairs(context: dict, bridge_id: int, target_id: int) -> dict:
     key = ((51011, bridge_id), (51011, target_id))
     pairs = np.ascontiguousarray(context["port_pairs"][key], dtype="<i8")
@@ -493,8 +741,8 @@ def _missing_source_collar_search(pending_edges: list[str]) -> dict:
         documents[path] = data
     results = {}
     pending_pairs = {"479->487": (479, 487), "481->489": (481, 489)}
-    _require(set(pending_edges) == set(pending_pairs),
-             "pending source collar edge set differs from the two known missing branches")
+    _require(set(pending_edges) <= set(pending_pairs),
+             "pending source collar edge set contains an undeclared vascular edge")
     for edge in pending_edges:
         parent, child = pending_pairs[edge]
         occurrences = {
@@ -514,6 +762,8 @@ def _missing_source_collar_search(pending_edges: list[str]) -> dict:
 
 def _edge_ancestry(context: dict) -> tuple[dict, dict]:
     evidence = {}
+    ulnar_pairs, ulnar_proof = _load_ulnar_source_witnesses(
+        context["rows"], context["source_map"])
     source_report_specs = {
         (7, 471): (PORT087, PORT087_SHA256),
         (471, 475): (PORT086, PORT086_SHA256),
@@ -534,6 +784,8 @@ def _edge_ancestry(context: dict) -> tuple[dict, dict]:
             item = _source_witness_pairs(path, sha, parent, child)
         elif (parent, child) in route100_specs:
             item = _route100_witness_pairs(parent, child)
+        elif (parent, child) in ulnar_pairs:
+            item = ulnar_pairs[(parent, child)]
         elif (parent, child) in bridge_specs:
             raise ValueError(f"bridge source ancestry API lacks expected pair {parent}->{child}")
         else:
@@ -572,7 +824,126 @@ def _edge_ancestry(context: dict) -> tuple[dict, dict]:
     return evidence, {
         "svc_bridge_ports": svc,
         "potential_469_473_source_overlap": potential,
+        "ulnar_source_proof": ulnar_proof,
         "pending_source_collar_edges": pending,
+    }
+
+
+def _runtime_network_source_pairs(edge_evidence: dict, separate_evidence: dict) -> dict:
+    """Resolve exactly the 13 graph edges plus the two SVC interfaces."""
+    _require(isinstance(edge_evidence, dict) and isinstance(separate_evidence, dict),
+             "runtime source ancestry inputs must be mappings")
+    expected_edge_names = {f"{first[1]}->{second[1]}" for first, second in NETWORK_EDGES}
+    _require(set(edge_evidence) == expected_edge_names,
+             "runtime route ancestry does not cover the exact 13 declared links")
+    pairs = {}
+    for first, second in NETWORK_EDGES:
+        edge = f"{first[1]}->{second[1]}"
+        item = edge_evidence[edge]
+        raw = item.get("pairs") if isinstance(item, dict) else None
+        _require(item.get("evidence_status") not in {
+            "SOURCE_BOUND_COLLAR_DERIVATION_REQUIRED", None
+        } and raw is not None and len(raw) > 0,
+            f"runtime source collar ancestry is missing for {edge}")
+        pairs[(first, second)] = raw
+
+    svc_rows = separate_evidence.get("svc_bridge_ports", {})
+    expected_svc_names = {f"{first[1]}->{second[1]}" for first, second in SVC_PORTS}
+    _require(isinstance(svc_rows, dict) and set(svc_rows) == expected_svc_names,
+             "runtime ancestry does not cover both explicit SVC interfaces")
+    for first, second in SVC_PORTS:
+        edge = f"{first[1]}->{second[1]}"
+        item = svc_rows[edge]
+        raw = item.get("pairs") if isinstance(item, dict) else None
+        _require(raw is not None and len(raw) > 0,
+                 f"runtime source collar ancestry is missing for {edge}")
+        pairs[(first, second)] = raw
+    _require(len(pairs) == 15,
+             "runtime source ancestry must contain exactly 15 connected-network links")
+    _require(POTENTIAL_NONNETWORK_OVERLAP not in pairs
+             and (POTENTIAL_NONNETWORK_OVERLAP[1],
+                  POTENTIAL_NONNETWORK_OVERLAP[0]) not in pairs,
+             "the separate 469/473 overlap must not become an implicit graph edge")
+    return pairs
+
+
+def run_all_target_network_screen(
+    context: dict, edge_evidence: dict, separate_evidence: dict,
+) -> dict:
+    """Run the existing central collision oracle against the full captured pack."""
+    source_pairs = _runtime_network_source_pairs(edge_evidence, separate_evidence)
+    return geometry_gate.audit_network_rows_against_all_targets(
+        shared_verifier,
+        context["surfaces"],
+        (*NETWORK_EDGES, *SVC_PORTS),
+        source_pairs,
+    )
+
+
+def _parent_motion_owner_inventory(receipt: dict, network_ids: set[int]) -> dict:
+    bindings = receipt.get("passive_tissue_parent_bindings", {})
+    sources = bindings.get("source_payloads", [])
+    rows = _stable_owner_rows(bindings)
+    source_hashes = []
+    for index, source in enumerate(sources):
+        digest = source.get("sha256") if isinstance(source, dict) else None
+        _require(isinstance(digest, str) and len(digest) == 64
+                 and all(character in "0123456789abcdef" for character in digest),
+                 f"parent source payload {index} has an invalid SHA-256 identity")
+        source_hashes.append(digest)
+    result = {}
+    for stable_id in sorted(network_ids):
+        row = rows.get(stable_id)
+        if row is None:
+            result[str(stable_id)] = {
+                "mode": "existing_native_rigid_body_binding",
+                "parent_map_present": False,
+            }
+            continue
+        terms_by_vertex = row.get("vertices")
+        _require(isinstance(terms_by_vertex, list) and bool(terms_by_vertex),
+                 f"parent motion map for vessel {stable_id} has no vertices")
+        used_sources = set()
+        for vertex_id, terms in enumerate(terms_by_vertex):
+            _require(isinstance(terms, list) and bool(terms),
+                     f"parent motion map has an empty vertex term row {stable_id}/{vertex_id}")
+            coeff_sum = 0.0
+            for term in terms:
+                _require(isinstance(term, list) and len(term) == 4
+                         and type(term[0]) is int and 0 <= term[0] < len(source_hashes)
+                         and type(term[1]) is int and term[1] >= 0
+                         and type(term[2]) is int and term[2] >= 0
+                         and type(term[3]) in (int, float)
+                         and np.isfinite(term[3]) and 0.0 < float(term[3]) <= 1.0,
+                         f"invalid parent motion term for vessel {stable_id}/{vertex_id}")
+                used_sources.add(term[0])
+                coeff_sum += float(term[3])
+            _require(abs(coeff_sum - 1.0) <= 1e-12,
+                     f"parent motion coefficients do not sum to one for {stable_id}/{vertex_id}")
+        canonical = json.dumps(
+            terms_by_vertex, sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode()
+        result[str(stable_id)] = {
+            "mode": "existing_native_passive_anatomy_parent_influences",
+            "parent_map_present": True,
+            "vertex_count": len(terms_by_vertex),
+            "parent_map_terms_sha256": _sha_bytes(canonical),
+            "used_source_payload_indices": sorted(used_sources),
+            "used_source_payload_sha256": [
+                source_hashes[index] for index in sorted(used_sources)],
+            "motion_values_are_from_existing_native_owner": True,
+            "independent_parent_pose_reconstruction_performed": False,
+        }
+    return {
+        "source_payload_count": len(source_hashes),
+        "source_payload_sha256": source_hashes,
+        "rows": result,
+        "all_parent_rows_bound_to_existing_native_map": True,
+        "parent_pose_reconstruction_performed": False,
+        "scope_limit": (
+            "Records exact parent-map ownership used by the invoked native receipt. "
+            "It does not reconstruct multi-body parent-pose positions for independent "
+            "calibre comparison."),
     }
 
 
@@ -793,19 +1164,120 @@ def _validate_source_map_cap_reinstatement(
     }
 
 
+def _compare_payload_rows_exact(
+    first_rows: dict, second_rows: dict, first_records: list, second_records: list,
+) -> dict:
+    _require(set(first_rows) == set(second_rows),
+             "emitted candidate changed the ABI5 stable-ID row inventory")
+    _require([tuple(map(int, row)) for row in first_records]
+             == [tuple(map(int, row)) for row in second_records],
+             "emitted candidate ABI5 record order or allocation differs from its receipt")
+    for stable_id in sorted(first_rows):
+        first, second = first_rows[stable_id], second_rows[stable_id]
+        first_vertices = np.ascontiguousarray(first["vertices6"], dtype="<f4")
+        second_vertices = np.ascontiguousarray(second["vertices6"], dtype="<f4")
+        first_faces = np.ascontiguousarray(first["faces"], dtype="<u4")
+        second_faces = np.ascontiguousarray(second["faces"], dtype="<u4")
+        _require(first_vertices.shape == second_vertices.shape
+                 and first_vertices.tobytes() == second_vertices.tobytes()
+                 and first_faces.shape == second_faces.shape
+                 and first_faces.tobytes() == second_faces.tobytes()
+                 and tuple(map(int, first["record"])) == tuple(map(int, second["record"])),
+                 f"emitted candidate ABI5 row {stable_id} differs byte-for-byte")
+    return {
+        "status": "ALL_ABI5_ROWS_BYTE_EXACT_CAPTURED_SOURCE_CANDIDATE",
+        "row_count": len(first_rows),
+        "position_and_normal_rows_exact": len(first_rows),
+        "face_rows_exact": len(first_rows),
+        "record_order_and_allocation_exact": True,
+    }
+
+
+def _captured_candidate_owner_binding_delta(actual_receipt: dict,
+                                            current_receipt: dict) -> dict:
+    actual_provenance = actual_receipt.get("provenance", {})
+    current_provenance = current_receipt.get("provenance", {})
+    _require(actual_provenance.get("source_id_map")
+             == current_provenance.get("source_id_map"),
+             "invoked candidate capture source identities differ from the source receipt")
+    actual_bindings = actual_receipt.get("passive_tissue_parent_bindings", {})
+    current_bindings = current_receipt.get("passive_tissue_parent_bindings", {})
+    actual_rows, actual_hashes = _semantic_parent_owner_rows(
+        actual_bindings, "invoked candidate capture")
+    current_rows, current_hashes = _semantic_parent_owner_rows(
+        current_bindings, "candidate source receipt")
+    _require(actual_hashes == current_hashes and actual_rows == current_rows,
+             "invoked candidate capture parent source order or semantic owner maps differ")
+    extension = current_provenance.get(
+        "passive_brachiocephalic_exact_coordinate_owner_composition", {})
+    _require(extension.get("final_source_payload_count") == len(current_hashes)
+             and len(current_hashes) <= 8
+             and extension.get("additional_physical_mass_kg") == 0
+             and extension.get("additional_force_or_state") is False
+             and extension.get("anatomical_admission") is False,
+             "captured candidate receipt exceeds existing owner/state/mass bounds")
+    return {
+        "schema": "numi.human.brachiocephalic.captured-candidate-owner-binding.v1",
+        "status": "INVOKED_CAPTURE_AND_SOURCE_RECEIPT_OWNER_MAPS_EXACT",
+        "source_payload_count": len(current_hashes),
+        "source_payload_sha256_in_native_order": current_hashes,
+        "parent_map_surface_count": len(current_rows),
+        "source_id_map_exact": True,
+        "parent_owner_terms_exact_after_payload_identity_resolution": True,
+        "additional_physical_mass_kg": 0,
+        "additional_force_or_state": False,
+        "current_capture_candidate_ready": True,
+        "current_capture_emitted_this_candidate_receipt": True,
+    }
+
+
 def _current_payload_row_transition(context: dict, current_receipt: dict) -> tuple[dict, dict]:
     payload = current_receipt.get("payload", {})
     path = Path(payload.get("path", "")).resolve(strict=True)
-    _require(payload.get("sha256") == OWNER_COMPOSITION_PAYLOAD_SHA256
-             and _sha_file(path) == OWNER_COMPOSITION_PAYLOAD_SHA256,
-             "current source-only NHA payload does not match its frozen composition pin")
+    candidate_hash = payload.get("sha256")
+    _require(isinstance(candidate_hash, str) and len(candidate_hash) == 64
+             and all(character in "0123456789abcdef" for character in candidate_hash)
+             and _sha_file(path) == candidate_hash,
+             "current source receipt does not bind its exact NHA payload")
+    actual_provenance = context["anatomy_receipt"].get("provenance", {})
     actual_payload = context["anatomy_receipt"].get("payload", {})
-    _require(actual_payload.get("sha256") == capture_gate.ANATOMY_PAYLOAD_SHA256,
-             "actual accepted capture receipt no longer binds the pinned A779 payload")
+    actual_payload_hash = context.get("capture_source_sha256", {}).get(
+        "anatomy_payload", capture_gate.ANATOMY_PAYLOAD_SHA256)
+    _require(actual_payload.get("sha256") == actual_payload_hash,
+             "actual accepted capture receipt no longer binds its pinned anatomy payload")
     header, records, rows = capture_gate.nhanat_codec._parse_payload(path.read_bytes())
-    _require(int(header[1]) == 5 and len(records) == int(payload.get("surface_count", -1))
+    actual_payload_path = Path(actual_payload.get("path", "")).resolve(strict=True)
+    if actual_payload.get("sha256") == candidate_hash:
+        actual_header, actual_records, actual_rows = capture_gate.nhanat_codec._parse_payload(
+            actual_payload_path.read_bytes())
+        _require(int(actual_header[1]) == 5,
+                 "invoked current candidate capture is not NHANAT ABI5")
+        exact_rows = _compare_payload_rows_exact(
+            actual_rows, rows, actual_records, records)
+        _require(actual_provenance.get("source_id_map")
+                 == current_receipt.get("provenance", {}).get("source_id_map"),
+                 "invoked capture source map differs from its candidate receipt")
+        return ({
+            "actual_capture_payload_sha256": actual_payload["sha256"],
+            "current_source_only_payload_path": str(path),
+            "current_source_only_payload_sha256": payload["sha256"],
+            "full_payload_hashes_differ_as_expected": False,
+            "rowwise_geometry_and_abi_delta": exact_rows,
+            "source_id_map_delta": {
+                "status": "SOURCE_IDENTITIES_BYTE_EXACT_CAPTURED_CANDIDATE",
+                "all_source_id_map_entries_exact": True,
+            },
+            "scope": (
+                "The accepted native pack's invoked NHA and the candidate receipt bind "
+                "the same ABI5 payload; every decoded row and record was compared byte-exactly."),
+            "not_native_emitted_or_geometry_admitted": False,
+            "native_emitted_current_candidate": True,
+        }, rows)
+    _require(candidate_hash == OWNER_COMPOSITION_PAYLOAD_SHA256
+             and int(header[1]) == 5
+             and len(records) == int(payload.get("surface_count", -1))
              and set(rows) == set(context["rows"]),
-             "source-only composition is not the exact ABI5 row inventory")
+             "unemitted source-only successor is not the pinned ABI5 source candidate")
     row_delta = _compare_payload_rows(
         context["rows"], rows, context["records"], records)
     source_map_delta = _validate_source_map_cap_reinstatement(
@@ -848,6 +1320,52 @@ def _validate_common_field_descriptor_transition(actual: dict, current: dict) ->
     }
 
 
+def _semantic_parent_owner_rows(bindings: dict, label: str) -> tuple[dict[int, dict], list[str]]:
+    sources = bindings.get("source_payloads")
+    _require(isinstance(sources, list) and 0 < len(sources) <= 8,
+             f"{label} parent payload inventory is outside the native bound")
+    hashes = []
+    for index, source in enumerate(sources):
+        digest = source.get("sha256") if isinstance(source, dict) else None
+        _require(isinstance(digest, str) and len(digest) == 64
+                 and all(character in "0123456789abcdef" for character in digest),
+                 f"{label} source payload {index} lacks a canonical SHA-256")
+        hashes.append(digest)
+    _require(len(set(hashes)) == len(hashes),
+             f"{label} repeats a source payload identity and makes indices ambiguous")
+    raw_rows = _stable_owner_rows(bindings)
+    semantic = {}
+    for stable_id, row in raw_rows.items():
+        copied = {key: value for key, value in row.items() if key != "vertices"}
+        vertices = row.get("vertices")
+        _require(isinstance(vertices, list),
+                 f"{label} parent owner row {stable_id} has no vertex terms")
+        semantic_vertices = []
+        for vertex_id, terms in enumerate(vertices):
+            _require(isinstance(terms, list) and bool(terms),
+                     f"{label} parent owner row {stable_id}/{vertex_id} is empty")
+            semantic_terms = []
+            coefficient_sum = 0.0
+            for term in terms:
+                _require(isinstance(term, list) and len(term) == 4
+                         and type(term[0]) is int and 0 <= term[0] < len(hashes)
+                         and type(term[1]) is int and term[1] >= 0
+                         and type(term[2]) is int and term[2] >= 0
+                         and type(term[3]) in (int, float)
+                         and np.isfinite(term[3]) and 0.0 < float(term[3]) <= 1.0,
+                         f"{label} parent owner term is invalid at {stable_id}/{vertex_id}")
+                coefficient = float(term[3])
+                coefficient_sum += coefficient
+                semantic_terms.append([hashes[term[0]], term[1], term[2], coefficient])
+            _require(abs(coefficient_sum - 1.0) <= 1e-12,
+                     f"{label} parent owner terms do not form a partition at "
+                     f"{stable_id}/{vertex_id}")
+            semantic_vertices.append(semantic_terms)
+        copied["vertices"] = semantic_vertices
+        semantic[stable_id] = copied
+    return semantic, hashes
+
+
 def _owner_composition_delta(actual_receipt: dict, current_receipt: dict,
                              payload_transition: dict | None = None) -> dict:
     actual_payload = actual_receipt.get("payload", {})
@@ -885,17 +1403,27 @@ def _owner_composition_delta(actual_receipt: dict, current_receipt: dict,
     current_bindings = current_receipt.get("passive_tissue_parent_bindings", {})
     actual_sources = actual_bindings.get("source_payloads")
     current_sources = current_bindings.get("source_payloads")
+    actual_maps, actual_source_hashes = _semantic_parent_owner_rows(
+        actual_bindings, "invoked capture")
+    current_maps, current_source_hashes = _semantic_parent_owner_rows(
+        current_bindings, "current composition")
     _require(isinstance(actual_sources, list) and len(actual_sources) == 7
              and isinstance(current_sources, list) and len(current_sources) == 8
-             and current_sources[:7] == actual_sources
-             and current_sources[7].get("sha256") == OWNER_COMPOSITION_CARRIER_SHA256
-             and Path(current_sources[7].get("path", "")).resolve()
-             == OWNER_COMPOSITION_CARRIER.resolve()
+             and set(actual_source_hashes).issubset(set(current_source_hashes))
+             and set(current_source_hashes) - set(actual_source_hashes)
+             == {OWNER_COMPOSITION_CARRIER_SHA256}
              and _sha_file(OWNER_COMPOSITION_CARRIER)
              == OWNER_COMPOSITION_CARRIER_SHA256,
-             "composition does not retain the exact seven-source prefix and append pinned source 7")
-    actual_maps = _stable_owner_rows(actual_bindings)
-    current_maps = _stable_owner_rows(current_bindings)
+             "composition must retain the seven source identities and add only its pinned carrier")
+    carrier_index = current_source_hashes.index(OWNER_COMPOSITION_CARRIER_SHA256)
+    carrier_entry = current_sources[carrier_index]
+    _require(Path(carrier_entry.get("path", "")).resolve()
+             == OWNER_COMPOSITION_CARRIER.resolve(),
+             "the added carrier digest resolves to a different registered path")
+    source_index_remap = {
+        str(index): current_source_hashes.index(digest)
+        for index, digest in enumerate(actual_source_hashes)
+    }
     _require(set(actual_maps) == set(current_maps),
              "owner composition changed the anatomy-surface ID inventory")
     changed_ids = sorted(stable_id for stable_id in actual_maps
@@ -947,9 +1475,15 @@ def _owner_composition_delta(actual_receipt: dict, current_receipt: dict,
         "network_and_intercostal_source_identity_equal": source_identity_equal,
         "actual_parent_payload_count": len(actual_sources),
         "current_parent_payload_count": len(current_sources),
-        "prefix_source_payloads_exactly_preserved": True,
-        "appended_source_index": 7,
-        "appended_source_sha256": current_sources[7]["sha256"],
+        "prefix_source_payloads_exactly_preserved": (
+            current_source_hashes[:len(actual_source_hashes)] == actual_source_hashes),
+        "existing_source_payload_identity_set_preserved": True,
+        "source_payload_identity_set_preserved_plus_one_carrier": True,
+        "source_payload_index_remap_by_sha256": source_index_remap,
+        "source_payload_sha256_in_current_order": current_source_hashes,
+        "appended_source_index": carrier_index,
+        "added_carrier_source_index": carrier_index,
+        "appended_source_sha256": current_source_hashes[carrier_index],
         "owner_rows_changed_only": changed_ids,
         "changed_owner_rows": changed_rows,
         "common_field_descriptor_transition": common_delta,
@@ -960,12 +1494,12 @@ def _owner_composition_delta(actual_receipt: dict, current_receipt: dict,
         "actual_capture_emitted_using_current_owner_receipt": False,
         "current_capture_candidate_ready": False,
         "reason_capture_not_current": (
-            "The available accepted step-0 pack is bound to the seven-payload A779 "
-            "receipt. This source-only successor appends payload 7, updates the 475/477 "
-            "owner terms, rebinds the common-field descriptor to the new NHA hash, and "
-            "restores only FJ2217 source face 1858. Although the all-row source comparison "
-            "is exact under that declared cap operation, no native step-0 pack has emitted "
-            "this receipt; regenerate the capture and target inventory before predicates."
+            "The available accepted step-0 pack is bound to the prior A779 receipt. "
+            "This source-only successor adds the pinned route carrier, updates the 475/477 "
+            "owner terms by source-payload identity, rebinds the common-field descriptor, "
+            "and restores FJ2217 source face 1858. The full ABI5 comparison is exact "
+            "under those declared operations, but no native step-0 pack has emitted this "
+            "receipt; regenerate the capture and all-target inventory before predicates."
         ),
     }
 
@@ -1010,12 +1544,104 @@ def _source_identity_crosscheck(source_map: dict) -> dict:
 
 
 def _source0_preflight_status(pending_edges, mismatched_faces, owner_delta: dict) -> str:
-    if pending_edges or mismatched_faces or not owner_delta.get("current_capture_candidate_ready"):
-        return "SOURCE0_SEAMOWNER_PREPARED_PENDING_NATIVE_EMISSION_AND_TWO_SOURCE_COLLARS"
+    if pending_edges:
+        return "SOURCE0_SEAMOWNER_PREPARED_PENDING_SOURCE_COLLARS_AND_NATIVE_EMISSION"
+    if mismatched_faces:
+        return "SOURCE0_SEAMOWNER_PREPARED_PENDING_SOURCE_FACE_ORDER_AND_NATIVE_EMISSION"
+    if not owner_delta.get("current_capture_candidate_ready"):
+        return "SOURCE0_SEAMOWNER_PREPARED_PENDING_FINAL_NATIVE_EMISSION"
     return "SOURCE0_SEAMOWNER_CAPTURE_READY_NO_GEOMETRY_PREDICATE"
 
 
-def build_preflight() -> dict:
+def _validated_capture_input_bundle(value: dict) -> dict:
+    """Validate an explicit current capture/source receipt bundle.
+
+    The default entrypoint retains the historical A779 preflight unchanged.
+    New native captures can supply their own exact pack, pack receipt, invoked
+    anatomy receipt, and payload hash; no old capture path is silently rebound.
+    """
+    expected = {
+        "capture_pack_path", "capture_pack_sha256",
+        "capture_receipt_path", "capture_receipt_sha256",
+        "anatomy_receipt_path", "anatomy_receipt_sha256",
+        "anatomy_payload_sha256",
+    }
+    _require(isinstance(value, dict) and set(value) == expected,
+             "explicit current-capture input bundle must contain exactly seven pinned fields")
+    normalized = {}
+    for name in ("capture_pack_path", "capture_receipt_path", "anatomy_receipt_path"):
+        raw = value.get(name)
+        _require(isinstance(raw, str) and Path(raw).is_absolute(),
+                 f"explicit capture input {name} must be an absolute path")
+        path = Path(raw).resolve(strict=True)
+        _require(path.is_file(), f"explicit capture input is not a file: {name}")
+        normalized[name] = path
+    for name in ("capture_pack_sha256", "capture_receipt_sha256", "anatomy_receipt_sha256",
+                 "anatomy_payload_sha256"):
+        digest = value.get(name)
+        _require(isinstance(digest, str) and len(digest) == 64
+                 and all(character in "0123456789abcdef" for character in digest),
+                 f"explicit capture input {name} must be lowercase SHA-256")
+        normalized[name] = digest
+    for path_key, hash_key in (
+        ("capture_pack_path", "capture_pack_sha256"),
+        ("capture_receipt_path", "capture_receipt_sha256"),
+        ("anatomy_receipt_path", "anatomy_receipt_sha256"),
+    ):
+        _require(_sha_file(normalized[path_key]) == normalized[hash_key],
+                 f"explicit current-capture input digest mismatch: {path_key}")
+    anatomy_receipt = json.loads(normalized["anatomy_receipt_path"].read_text())
+    payload = anatomy_receipt.get("payload", {})
+    payload_path = Path(payload.get("path", "")).resolve(strict=True)
+    _require(payload.get("sha256") == normalized["anatomy_payload_sha256"]
+             and _sha_file(payload_path) == normalized["anatomy_payload_sha256"],
+             "explicit current-capture source receipt does not bind the supplied NHA payload")
+    return {**normalized, "payload_path": payload_path}
+
+
+def _load_current_capture_context(inputs: dict) -> dict:
+    """Reuse the existing capture gate validator with a temporary explicit pin set."""
+    inputs = _validated_capture_input_bundle(inputs)
+    names = {
+        "CAPTURE_PACK": inputs["capture_pack_path"],
+        "CAPTURE_PACK_SHA256": inputs["capture_pack_sha256"],
+        "CAPTURE_RECEIPT": inputs["capture_receipt_path"],
+        "CAPTURE_RECEIPT_SHA256": inputs["capture_receipt_sha256"],
+        "ANATOMY_RECEIPT": inputs["anatomy_receipt_path"],
+        "ANATOMY_RECEIPT_SHA256": inputs["anatomy_receipt_sha256"],
+        # In this mode the only valid successor is the source receipt that the
+        # fresh native capture actually invoked.
+        "PREPARED_SUCCESSOR_RECEIPT": inputs["anatomy_receipt_path"],
+        "PREPARED_SUCCESSOR_RECEIPT_SHA256": inputs["anatomy_receipt_sha256"],
+        "ANATOMY_PAYLOAD_SHA256": inputs["anatomy_payload_sha256"],
+    }
+    old = {name: getattr(capture_gate, name) for name in names}
+    try:
+        for name, value in names.items():
+            setattr(capture_gate, name, value)
+        context = capture_gate._load_current_inputs()
+    finally:
+        for name, value in old.items():
+            setattr(capture_gate, name, value)
+    context["explicit_capture_input_bundle"] = {
+        key: str(value) if isinstance(value, Path) else value
+        for key, value in inputs.items()
+    }
+    context["capture_source_paths"] = {
+        key: inputs[key] for key in (
+            "capture_pack_path", "capture_receipt_path", "anatomy_receipt_path",
+            "payload_path")
+    }
+    context["capture_source_sha256"] = {
+        "capture_pack": inputs["capture_pack_sha256"],
+        "capture_receipt": inputs["capture_receipt_sha256"],
+        "anatomy_receipt": inputs["anatomy_receipt_sha256"],
+        "anatomy_payload": inputs["anatomy_payload_sha256"],
+    }
+    return context
+
+
+def build_preflight(capture_inputs: dict | None = None) -> dict:
     metadata_pin = _resolved_pin(METADATA_PREFLIGHT, METADATA_PREFLIGHT_SHA256)
     metadata = json.loads(METADATA_PREFLIGHT.read_text())
     links = metadata.get("candidate_network_links", {})
@@ -1031,22 +1657,42 @@ def build_preflight() -> dict:
              and links.get("total_link_count") == 15
              and links.get("links_are_topology_inventory_only") is True,
              "actual frozen network topology inventory differs from the declared 13+2 graph")
-    context = capture_gate._load_current_inputs()
-    _resolved_pin(OWNER_COMPOSITION_RECEIPT, OWNER_COMPOSITION_RECEIPT_SHA256)
-    _resolved_pin(OWNER_COMPOSITION_REPORT, OWNER_COMPOSITION_REPORT_SHA256)
-    _resolved_pin(OWNER_REPORT_28FC, OWNER_REPORT_28FC_SHA256)
-    _resolved_pin(OWNER_REPORT_C37, OWNER_REPORT_C37_SHA256)
-    _resolved_pin(OWNER_ERRATUM, OWNER_ERRATUM_SHA256)
-    _resolved_pin(OWNER_MODULE, OWNER_MODULE_SHA256)
-    _resolved_pin(OWNER_COMPOSER, OWNER_COMPOSER_SHA256)
-    erratum = _validate_owner_report_erratum()
-    current_receipt = json.loads(OWNER_COMPOSITION_RECEIPT.read_text())
+    explicit_capture = capture_inputs is not None
+    if explicit_capture:
+        context = _load_current_capture_context(capture_inputs)
+        current_receipt = context["anatomy_receipt"]
+        erratum = {
+            "status": "HISTORICAL_SOURCE_COMPOSITION_ERRATUM_NOT_USED",
+            "reason": "current exact-candidate mode consumes only the receipt actually invoked by this native capture",
+        }
+    else:
+        context = capture_gate._load_current_inputs()
+        for path, digest in (
+            (OWNER_COMPOSITION_RECEIPT, OWNER_COMPOSITION_RECEIPT_SHA256),
+            (OWNER_COMPOSITION_REPORT, OWNER_COMPOSITION_REPORT_SHA256),
+            (OWNER_REPORT_28FC, OWNER_REPORT_28FC_SHA256),
+            (OWNER_REPORT_C37, OWNER_REPORT_C37_SHA256),
+            (OWNER_ERRATUM, OWNER_ERRATUM_SHA256),
+            (OWNER_MODULE, OWNER_MODULE_SHA256),
+            (OWNER_COMPOSER, OWNER_COMPOSER_SHA256),
+        ):
+            _resolved_pin(path, digest)
+        erratum = _validate_owner_report_erratum()
+        current_receipt = json.loads(OWNER_COMPOSITION_RECEIPT.read_text())
     payload_transition, current_source_rows = _current_payload_row_transition(
         context, current_receipt)
-    owner_delta = _owner_composition_delta(
-        context["anatomy_receipt"], current_receipt, payload_transition)
+    if payload_transition.get("native_emitted_current_candidate") is True:
+        owner_delta = _captured_candidate_owner_binding_delta(
+            context["anatomy_receipt"], current_receipt)
+    else:
+        _require(not explicit_capture,
+                 "explicit source candidate must be the exact source receipt invoked by the accepted capture")
+        owner_delta = _owner_composition_delta(
+            context["anatomy_receipt"], current_receipt, payload_transition)
     source_baselines, baseline_records = _registered_rigid_source_surfaces(
         context, current_source_rows, current_receipt["provenance"]["source_id_map"])
+    parent_motion_inventory = _parent_motion_owner_inventory(
+        current_receipt, set(NETWORK_STABLE_IDS))
     _require(set(source_baselines) == {
         (51011, stable_id) for stable_id in NETWORK_STABLE_IDS
     }, "source-rigid baseline does not cover the exact 17 typed network rows")
@@ -1056,43 +1702,40 @@ def build_preflight() -> dict:
             == baseline_records[str(key[1])]["rigid_source_world_xyz_f32_sha256"],
             f"source-rigid position bytes differ from the recorded baseline for {key}",
         )
-    edge_evidence, separate_evidence = _edge_ancestry(context)
-    pending_source_collar_search = _missing_source_collar_search(
-        separate_evidence["pending_source_collar_edges"])
+    ancestry_context = {
+        **context,
+        "rows": current_source_rows,
+        "source_map": current_receipt["provenance"]["source_id_map"],
+    }
+    edge_evidence, separate_evidence = _edge_ancestry(ancestry_context)
+    pending_edges = separate_evidence["pending_source_collar_edges"]
+    pending_source_collar_search = (
+        _missing_source_collar_search(pending_edges) if pending_edges else {
+            "status": "ALL_NETWORK_SOURCE_COLLARS_HAVE_PINNED_ANCESTRY",
+            "searched": False,
+            "geometry_predicates_run": False,
+        })
     code_pins = capture_gate._current_package_pins()
     code_pins[str(Path(__file__).resolve())] = _sha_file(Path(__file__).resolve())
     code_pins[str(TRANSFORM_OWNER.resolve())] = TRANSFORM_OWNER_SHA256
     code_pins[str(Path(shared_verifier.__file__).resolve())] = _sha_file(
         Path(shared_verifier.__file__).resolve())
-    input_paths = (
-        capture_gate.CAPTURE_PACK, capture_gate.CAPTURE_RECEIPT,
-        capture_gate.ANATOMY_RECEIPT, capture_gate.PREPARED_SUCCESSOR_RECEIPT,
-        OWNER_COMPOSITION_RECEIPT, OWNER_COMPOSITION_REPORT, OWNER_COMPOSITION_CARRIER,
-        OWNER_COMPOSITION_PAYLOAD_PATH,
-        OWNER_REPORT_28FC, OWNER_REPORT_C37, OWNER_ERRATUM,
-        OWNER_MODULE, OWNER_COMPOSER,
-        context["payload_path"], METADATA_PREFLIGHT, ROUTE100_REPORT, PORT086,
-        PORT087, PORT088, PORT089, ROUTE073_REPORT, BRIDGE_ANCESTRY_REPORT,
-        BRIDGE_ATTRIBUTION_REPORT, BRIDGE_REPLAY_REPORT, BRIDGE_STATIONARITY_REPORT,
+    source_history_paths = (
+        ULNAR_SOURCE_PROOF, ULNAR_SOURCE_PREFLIGHT,
+        ULNAR_PROOF_BASE_RECEIPT, ULNAR_PROOF_BASE_PAYLOAD,
+        METADATA_PREFLIGHT, ROUTE100_REPORT, PORT086, PORT087, PORT088, PORT089,
+        ROUTE073_REPORT, BRIDGE_ANCESTRY_REPORT, BRIDGE_ATTRIBUTION_REPORT,
+        BRIDGE_REPLAY_REPORT, BRIDGE_STATIONARITY_REPORT,
         source007.SOURCE_ARCHIVE, source007.REGISTRATION, source007.RIGID,
         source007.MANIFOLD_SO, source007.MANIFOLD_RECORD,
         source007.MANIFOLD_METADATA, source007.MANIFOLD_WHEEL,
     )
-    input_pins = {
-        str(Path(path).resolve(strict=True)): _sha_file(Path(path).resolve(strict=True))
-        for path in input_paths
-    }
-    expected_inputs = {
-        str(OWNER_COMPOSITION_RECEIPT.resolve()): OWNER_COMPOSITION_RECEIPT_SHA256,
-        str(OWNER_COMPOSITION_REPORT.resolve()): OWNER_COMPOSITION_REPORT_SHA256,
-        str(OWNER_COMPOSITION_CARRIER.resolve()): OWNER_COMPOSITION_CARRIER_SHA256,
-        str(OWNER_COMPOSITION_PAYLOAD_PATH.resolve()): OWNER_COMPOSITION_PAYLOAD_SHA256,
-        str(OWNER_REPORT_28FC.resolve()): OWNER_REPORT_28FC_SHA256,
-        str(OWNER_REPORT_C37.resolve()): OWNER_REPORT_C37_SHA256,
-        str(OWNER_ERRATUM.resolve()): OWNER_ERRATUM_SHA256,
-        str(OWNER_MODULE.resolve()): OWNER_MODULE_SHA256,
-        str(OWNER_COMPOSER.resolve()): OWNER_COMPOSER_SHA256,
+    source_history_pins = {
         str(METADATA_PREFLIGHT.resolve()): METADATA_PREFLIGHT_SHA256,
+        str(ULNAR_SOURCE_PROOF.resolve()): ULNAR_SOURCE_PROOF_SHA256,
+        str(ULNAR_SOURCE_PREFLIGHT.resolve()): ULNAR_SOURCE_PREFLIGHT_SHA256,
+        str(ULNAR_PROOF_BASE_RECEIPT.resolve()): ULNAR_PROOF_BASE_RECEIPT_SHA256,
+        str(ULNAR_PROOF_BASE_PAYLOAD.resolve()): ULNAR_PROOF_BASE_PAYLOAD_SHA256,
         str(ROUTE100_REPORT.resolve()): ROUTE100_REPORT_SHA256,
         str(PORT086.resolve()): PORT086_SHA256,
         str(PORT087.resolve()): PORT087_SHA256,
@@ -1107,12 +1750,71 @@ def build_preflight() -> dict:
         str(source007.REGISTRATION.resolve()): source007.REGISTRATION_SHA,
         str(source007.RIGID.resolve()): source007.RIGID_SHA,
     }
+    if explicit_capture:
+        source_paths = context["capture_source_paths"]
+        source_hashes = context["capture_source_sha256"]
+        input_paths = (
+            source_paths["capture_pack"], source_paths["capture_receipt"],
+            source_paths["anatomy_receipt"], source_paths["payload_path"],
+            *source_history_paths,
+        )
+        expected_inputs = {
+            str(source_paths["capture_pack"].resolve()): source_hashes["capture_pack"],
+            str(source_paths["capture_receipt"].resolve()): source_hashes["capture_receipt"],
+            str(source_paths["anatomy_receipt"].resolve()): source_hashes["anatomy_receipt"],
+            str(source_paths["payload_path"].resolve()): source_hashes["anatomy_payload"],
+            **source_history_pins,
+        }
+    else:
+        input_paths = (
+            capture_gate.CAPTURE_PACK, capture_gate.CAPTURE_RECEIPT,
+            *source_history_paths,
+            capture_gate.ANATOMY_RECEIPT, capture_gate.PREPARED_SUCCESSOR_RECEIPT,
+            OWNER_COMPOSITION_RECEIPT, OWNER_COMPOSITION_REPORT, OWNER_COMPOSITION_CARRIER,
+            OWNER_COMPOSITION_PAYLOAD_PATH, OWNER_REPORT_28FC, OWNER_REPORT_C37,
+            OWNER_ERRATUM, OWNER_MODULE, OWNER_COMPOSER, context["payload_path"],
+        )
+        expected_inputs = {
+            str(OWNER_COMPOSITION_RECEIPT.resolve()): OWNER_COMPOSITION_RECEIPT_SHA256,
+            str(OWNER_COMPOSITION_REPORT.resolve()): OWNER_COMPOSITION_REPORT_SHA256,
+            str(OWNER_COMPOSITION_CARRIER.resolve()): OWNER_COMPOSITION_CARRIER_SHA256,
+            str(OWNER_COMPOSITION_PAYLOAD_PATH.resolve()): OWNER_COMPOSITION_PAYLOAD_SHA256,
+            str(OWNER_REPORT_28FC.resolve()): OWNER_REPORT_28FC_SHA256,
+            str(OWNER_REPORT_C37.resolve()): OWNER_REPORT_C37_SHA256,
+            str(OWNER_ERRATUM.resolve()): OWNER_ERRATUM_SHA256,
+            str(OWNER_MODULE.resolve()): OWNER_MODULE_SHA256,
+            str(OWNER_COMPOSER.resolve()): OWNER_COMPOSER_SHA256,
+            **source_history_pins,
+        }
+    input_pins = {
+        str(Path(path).resolve(strict=True)): _sha_file(Path(path).resolve(strict=True))
+        for path in input_paths
+    }
     for path, expected in expected_inputs.items():
         _require(input_pins.get(path) == expected,
                  f"pinned source/capture witness input changed: {path}")
     capture = context["capture_identity"]
-    _require(capture.get("pack_sha256") == capture_gate.CAPTURE_PACK_SHA256
-             and capture.get("capture_receipt_sha256") == capture_gate.CAPTURE_RECEIPT_SHA256
+    expected_pack_sha = (context["capture_source_sha256"]["capture_pack"]
+                         if explicit_capture else capture_gate.CAPTURE_PACK_SHA256)
+    expected_capture_receipt_sha = (
+        context["capture_source_sha256"]["capture_receipt"]
+        if explicit_capture else capture_gate.CAPTURE_RECEIPT_SHA256)
+    capture_paths = context.get("capture_source_paths", {})
+    actual_pack_path = (capture_paths.get("capture_pack", capture_gate.CAPTURE_PACK)
+                        if explicit_capture else capture_gate.CAPTURE_PACK)
+    actual_capture_receipt_path = (
+        capture_paths.get("capture_receipt", capture_gate.CAPTURE_RECEIPT)
+        if explicit_capture else capture_gate.CAPTURE_RECEIPT)
+    actual_anatomy_receipt_path = (
+        capture_paths.get("anatomy_receipt", capture_gate.ANATOMY_RECEIPT)
+        if explicit_capture else capture_gate.ANATOMY_RECEIPT)
+    actual_anatomy_receipt_sha = (
+        context["capture_source_sha256"]["anatomy_receipt"]
+        if explicit_capture else capture_gate.ANATOMY_RECEIPT_SHA256)
+    current_payload_hash = current_receipt["payload"]["sha256"]
+    current_payload_path = context["payload_path"]
+    _require(capture.get("pack_sha256") == expected_pack_sha
+             and capture.get("capture_receipt_sha256") == expected_capture_receipt_sha
              and capture.get("accepted_step") == 0,
              "actual current capture identity changed")
     mismatched_faces = [
@@ -1132,35 +1834,45 @@ def build_preflight() -> dict:
         "input_sha256": input_pins,
         "current_package_code_sha256": code_pins,
         "actual_accepted_capture": {
-            "pack_path": str(capture_gate.CAPTURE_PACK.resolve()),
+            "pack_path": str(actual_pack_path.resolve()),
             "pack_sha256": capture.get("pack_sha256"),
-            "receipt_path": str(capture_gate.CAPTURE_RECEIPT.resolve()),
+            "receipt_path": str(actual_capture_receipt_path.resolve()),
             "receipt_sha256": capture.get("capture_receipt_sha256"),
             "accepted_step": capture.get("accepted_step"),
             "accepted_time_s": capture.get("accepted_time_s"),
             "typed_surface_count": len(context["surfaces"]),
-            "capture_receipt_sha256": capture_gate.CAPTURE_RECEIPT_SHA256,
+            "capture_receipt_sha256": expected_capture_receipt_sha,
             "body_pose_count": len(context["capture_receipt"]["accepted_body_poses"]),
             "common_field_source_anatomy_payload_sha256":
                 context["capture_receipt"].get("common_field_source_anatomy_payload_sha256"),
-            "invoked_anatomy_receipt_path": str(capture_gate.ANATOMY_RECEIPT.resolve()),
-            "invoked_anatomy_receipt_sha256": capture_gate.ANATOMY_RECEIPT_SHA256,
-            "prepared_86a_receipt_is_not_capture_source": True,
+            "invoked_anatomy_receipt_path": str(actual_anatomy_receipt_path.resolve()),
+            "invoked_anatomy_receipt_sha256": actual_anatomy_receipt_sha,
+            "explicit_merged_capture_input_bundle": context.get(
+                "explicit_capture_input_bundle"),
+            "historical_a779_capture_is_current": not explicit_capture,
         },
-        "source_only_current_seamowner_composition": {
+        ("captured_candidate_source_receipt" if explicit_capture
+         else "source_only_current_seamowner_composition"): {
             **owner_delta,
             "report_version_erratum": erratum,
-            "source_only_composition_report_path": str(OWNER_COMPOSITION_REPORT.resolve()),
-            "source_only_composition_report_sha256": OWNER_COMPOSITION_REPORT_SHA256,
-            "erratum_path": str(OWNER_ERRATUM.resolve()),
-            "erratum_sha256": OWNER_ERRATUM_SHA256,
-            "recovered_28fc_report_sha256": OWNER_REPORT_28FC_SHA256,
-            "current_c37_report_sha256": OWNER_REPORT_C37_SHA256,
+            "source_only_composition_report_path": (
+                None if explicit_capture else str(OWNER_COMPOSITION_REPORT.resolve())),
+            "source_only_composition_report_sha256": (
+                None if explicit_capture else OWNER_COMPOSITION_REPORT_SHA256),
+            "erratum_path": None if explicit_capture else str(OWNER_ERRATUM.resolve()),
+            "erratum_sha256": None if explicit_capture else OWNER_ERRATUM_SHA256,
+            "recovered_28fc_report_sha256": (
+                None if explicit_capture else OWNER_REPORT_28FC_SHA256),
+            "current_c37_report_sha256": (
+                None if explicit_capture else OWNER_REPORT_C37_SHA256),
         },
         "source_bound_rigid_rest_baseline": {
-            "source_nha_payload_sha256": OWNER_COMPOSITION_PAYLOAD_SHA256,
-            "source_nha_payload_path": str(OWNER_COMPOSITION_PAYLOAD_PATH.resolve()),
-            "payload_is_current_capture_source": False,
+            "source_nha_payload_sha256": current_payload_hash,
+            "source_nha_payload_path": str(current_payload_path.resolve()),
+            "payload_is_current_capture_source": (
+                current_payload_hash
+                == context["capture_receipt"].get(
+                    "common_field_source_anatomy_payload_sha256")),
             "method": (
                 "For each required network row, apply the existing pinned transform_f32 "
                 "to exact NHA vertices6 XYZ using that row's body_index and the actual "
@@ -1173,7 +1885,16 @@ def build_preflight() -> dict:
             "rows": baseline_records,
             "rows_with_exact_capture_face_order": len(baseline_records) - len(mismatched_faces),
             "rows_with_face_order_mismatch": mismatched_faces,
-            "meaningful_calibre_baseline_ready": all_known_edges_bound and not mismatched_faces,
+            "meaningful_calibre_baseline_ready": (
+                all_known_edges_bound and not mismatched_faces
+                and not any(row["parent_map_present"]
+                            for row in parent_motion_inventory["rows"].values())),
+            "parent_motion_owner_inventory": parent_motion_inventory,
+            "parent_mapped_rows_requiring_a_parent_pose_calibre_baseline": [
+                int(stable_id) for stable_id, row
+                in parent_motion_inventory["rows"].items()
+                if row["parent_map_present"]
+            ],
             "station_transport_for_execution": (
                 "At execution, derive each candidate collar material station from exact "
                 "interface witnesses/source face ancestry, then transport that station "
@@ -1206,22 +1927,17 @@ def build_preflight() -> dict:
                     "potential_469_473_source_overlap"].items() if key != "pairs"
             },
             "pending_source_collar_edges": separate_evidence["pending_source_collar_edges"],
+            "ulnar_source_junction_proof": separate_evidence["ulnar_source_proof"],
             "pending_source_collar_search": pending_source_collar_search,
             "pending_collar_identity": {
-                "479->487": {
+                edge: {
                     "parent": _source_identity_summary(
-                        current_receipt["provenance"]["source_id_map"], 479),
+                        current_receipt["provenance"]["source_id_map"], int(edge.split("->")[0])),
                     "child": _source_identity_summary(
-                        current_receipt["provenance"]["source_id_map"], 487),
-                    "reason": "no frozen exact source-face collar ancestry was found",
-                },
-                "481->489": {
-                    "parent": _source_identity_summary(
-                        current_receipt["provenance"]["source_id_map"], 481),
-                    "child": _source_identity_summary(
-                        current_receipt["provenance"]["source_id_map"], 489),
-                    "reason": "no frozen exact source-face collar ancestry was found",
-                },
+                        current_receipt["provenance"]["source_id_map"], int(edge.split("->")[1])),
+                    "reason": "no pinned exact source-face collar ancestry is available",
+                }
+                for edge in separate_evidence["pending_source_collar_edges"]
             },
             "geometry_predicates_run": False,
             "source_junction_anatomy_admitted": False,
@@ -1238,16 +1954,33 @@ def build_preflight() -> dict:
         }},
         "all_nearby_aabb_targets_by_network_row": _all_nearby_aabb(context["surfaces"]),
         "aabb_inventory_scope": (
+            "Explicit merged-capture broadphase: each of the 17 typed vessel/network "
+            "rows is compared against every surface decoded from the exact accepted "
+            "pack and invoked receipt in the supplied input bundle."
+            if explicit_capture else
             "Historical A779 capture broadphase only: each of the 17 typed vessel/network "
-            "rows compared against every surface decoded from the actual accepted pack. "
+            "rows is compared against every surface decoded from that accepted pack. "
             "The pack predates source payload 7 and changed 475/477 parent terms, so "
-            "regenerate this exact inventory from the final merged native step-0 pack "
+            "regenerate this exact inventory from a fresh merged native step-0 pack "
             "before any geometry predicate."
         ),
         "current_verifier": {
             "path": str(Path(shared_verifier.__file__).resolve()),
             "sha256": code_pins[str(Path(shared_verifier.__file__).resolve())],
             "historical_source007_P6_imported": False,
+        },
+        "source_and_parent_motion_ownership": {
+            "status": (
+                "PARENT_MAPS_MATCH_INVOKED_RECEIPT_PARENT_POSE_CALIBRE_BASELINE_PENDING"
+                if any(row["parent_map_present"]
+                       for row in parent_motion_inventory["rows"].values())
+                else "RIGID_SOURCE_BASELINE_READY"),
+            "owner_inventory": parent_motion_inventory,
+            "source_rigid_baseline_is_independent_of_same_capture_geometry": True,
+            "parent_pose_matched_calibre_baseline_ready": not any(
+                row["parent_map_present"]
+                for row in parent_motion_inventory["rows"].values()),
+            "no_unverified_multi_body_parent_motion_is_claimed": True,
         },
         "planned_solid_and_collar_gate": {
             "gate_owner": "current shared verifier plus existing brachiocephalic 3D port-continuity owner",
@@ -1257,6 +1990,7 @@ def build_preflight() -> dict:
                 "final merged receipt retains the exact 8-source bound and is the receipt actually invoked by a fresh native step-0 capture",
                 "all 15 graph links have source-registered exact face-patch ancestry, including 479->487 and 481->489",
                 "candidate and source-rigid baseline rows bind exact ABI5 source face/vertex ancestry",
+                "every parent-mapped vessel has a parent-pose-matched independent source station baseline",
                 "the all-target inventory is regenerated from that exact fresh capture",
             ],
             "edge_count": 15,
@@ -1303,17 +2037,23 @@ def build_preflight() -> dict:
     }
 
 
-def run_preflight() -> dict:
-    _require(not OUTPUT_DIR.exists(),
+def run_preflight(capture_inputs: dict | None = None,
+                  output_dir: Path | None = None) -> dict:
+    if capture_inputs is not None:
+        _require(output_dir is not None,
+                 "explicit current-capture inputs require a fresh output directory")
+    destination = OUTPUT_DIR if output_dir is None else Path(output_dir).resolve()
+    _require(not destination.exists(),
              "preserve existing outputs; use a fresh named output directory")
     started = time.perf_counter()
-    preflight = build_preflight()
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=False)
-    _write_json(PREFLIGHT_PATH, preflight)
+    preflight = build_preflight(capture_inputs)
+    destination.mkdir(parents=True, exist_ok=False)
+    preflight_path = destination / "source0-seamowner-preflight.json"
+    _write_json(preflight_path, preflight)
     return {
         "status": preflight["status"],
-        "preflight_path": str(PREFLIGHT_PATH.resolve()),
-        "preflight_sha256": _sha_file(PREFLIGHT_PATH),
+        "preflight_path": str(preflight_path.resolve()),
+        "preflight_sha256": _sha_file(preflight_path),
         "elapsed_seconds": time.perf_counter() - started,
         "geometry_predicates_run": False,
     }
@@ -1322,8 +2062,12 @@ def run_preflight() -> dict:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--preflight", action="store_true", required=True)
-    parser.parse_args(argv)
-    print(json.dumps(run_preflight(), sort_keys=True))
+    parser.add_argument("--capture-inputs-json", type=Path)
+    parser.add_argument("--output-dir", type=Path)
+    args = parser.parse_args(argv)
+    capture_inputs = (None if args.capture_inputs_json is None
+                      else json.loads(args.capture_inputs_json.read_text()))
+    print(json.dumps(run_preflight(capture_inputs, args.output_dir), sort_keys=True))
     return 0
 
 

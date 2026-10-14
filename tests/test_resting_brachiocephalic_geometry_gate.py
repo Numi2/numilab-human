@@ -1354,3 +1354,66 @@ def test_material_station_transports_frozen_vertex_ancestry_across_a_pose():
             rotated, mismatched,
             witness_points=rotated_positions[:4],
             collar_face_ids=collar_faces)
+
+
+
+def test_network_all_target_screen_uses_only_frozen_edges_and_role_aware_skin_enclosures():
+    from types import SimpleNamespace
+
+    keys = ((51011, 479), (51011, 487), (51011, 481), (51011, 489),
+            (51007, 1), (51001, 20))
+    surfaces = {key: _pack_surface(*_tetra(1.0, float(index * 3)))
+                for index, key in enumerate(keys)}
+    edges = (((51011, 479), (51011, 487)),
+             ((51011, 481), (51011, 489)))
+    source_pairs = {edge: [[0, 0], [1, 1]] for edge in edges}
+    observed = {}
+
+    def audit_changed_surfaces(received, *, changed, targets, interfaces,
+                               required_closed, intended_enclosures):
+        observed.update({
+            "surface_keys": set(received),
+            "changed": tuple(changed),
+            "targets": tuple(targets),
+            "interfaces": interfaces,
+            "required_closed": set(required_closed),
+            "intended_enclosures": tuple(intended_enclosures),
+        })
+        return {"passed": True, "rows": []}
+
+    result = bg.audit_network_rows_against_all_targets(
+        SimpleNamespace(audit_changed_surfaces=audit_changed_surfaces),
+        surfaces, edges, source_pairs)
+
+    assert result["passed"]
+    assert result["anatomical_admission"] is False
+    assert result["network_edge_count"] == 2
+    assert result["network_surface_count"] == 4
+    assert observed["changed"] == tuple(sorted(key for edge in edges for key in edge))
+    assert observed["targets"] == tuple(sorted(surfaces))
+    assert set(observed["required_closed"]) == {key for edge in edges for key in edge}
+    assert observed["interfaces"][((51011, 479), (51011, 487))] == (
+        (0, 0), (0, 1), (1, 0), (1, 1))
+    assert observed["interfaces"][((51011, 487), (51011, 479))] == (
+        (0, 0), (1, 0), (0, 1), (1, 1))
+    assert observed["intended_enclosures"] == (
+        ((51011, 479), (51007, 1)), ((51011, 481), (51007, 1)),
+        ((51011, 487), (51007, 1)), ((51011, 489), (51007, 1)))
+    assert ((51011, 469), (51011, 473)) not in observed["interfaces"]
+
+
+def test_network_all_target_screen_rejects_missing_edge_ancestry_and_bad_face_ids():
+    keys = ((51011, 479), (51011, 487))
+    surfaces = {key: _pack_surface(*_tetra(1.0, float(index * 3)))
+                for index, key in enumerate(keys)}
+    edge = ((51011, 479), (51011, 487))
+    verifier = type("Verifier", (), {
+        "audit_changed_surfaces": staticmethod(
+            lambda *args, **kwargs: {"passed": True, "rows": []})
+    })()
+    with pytest.raises(ValueError, match="cover precisely"):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, [edge], {})
+    with pytest.raises(ValueError, match="outside current topology"):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, [edge], {edge: [[99, 0]]})
