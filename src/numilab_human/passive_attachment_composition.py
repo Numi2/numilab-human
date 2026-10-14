@@ -161,8 +161,21 @@ def _reconcile_serialized_triangle_counts(manifest: dict, records) -> list[dict]
 def compose(source: Path, output: Path, replacements: list[tuple[int, Path, Path]], *,
             biceps_source_correction: dict | None = None,
             fhl_source_seam_correction: dict | None = None,
-            reference_surface_rows: tuple[int, ...] = ()) -> dict:
+            reference_surface_rows: tuple[int, ...] = (),
+            registration_metadata_base: Path | None = None,
+            registration_path: Path | None = None) -> dict:
     import numpy as np
+    if registration_metadata_base is not None:
+        require(not replacements and biceps_source_correction is None
+                and fhl_source_seam_correction is None and not reference_surface_rows,
+                "registration metadata re-emission cannot mix row replacement operations")
+        require(registration_path is not None,
+                "registration metadata re-emission requires the exact registration source")
+        return reemit_registration_metadata(
+            source, registration_metadata_base, registration_path, output,
+        )
+    require(registration_path is None,
+            "registration source is only accepted with an owner-compiled metadata base")
     (source, output) = (Path(source).resolve(), Path(output).resolve())
     sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
     T = source
@@ -669,6 +682,241 @@ def _row_slices(data: dict, row) -> dict:
     return {"first_binding":fb,"binding_count":bc,"first_vertex":fv,"vertex_count":vc,
             "first_index":fi,"index_count":ic,"stable_id":sid,"layer":layer,
             "binding_bytes":bb,"vertex_bytes":vb,"local_faces":local.tolist()}
+
+
+def _prepare_registration_metadata_reemission(
+    accepted_payload: Path, owner_base_payload: Path, registration_path: Path,
+) -> tuple[bytes, dict, dict]:
+    """Build a metadata-only NHTISS child from an owner-compiled registration base.
+
+    The accepted payload body (records, per-row body bindings, vertex/map
+    records, and indices) is retained byte-for-byte. Only the compact ABI
+    registration discriminator and its manifest provenance come from the
+    freshly compiled base. The operation is allowed only when source archives,
+    runtime references, stable-row identities, and every overlapping target
+    binding agree exactly.
+    """
+    accepted_payload = Path(accepted_payload).resolve()
+    owner_base_payload = Path(owner_base_payload).resolve()
+    registration_path = Path(registration_path).resolve()
+    accepted_manifest_path, accepted_manifest = _payload_manifest(accepted_payload)
+    base_manifest_path, base_manifest = _payload_manifest(owner_base_payload)
+    accepted = _read_nhtiss4(accepted_payload)
+    base = _read_nhtiss4(owner_base_payload)
+    registration_sha = _surface_sha256(registration_path)
+    accepted_source = accepted_manifest.get("source")
+    base_source = base_manifest.get("source")
+    require(isinstance(accepted_source, dict) and isinstance(base_source, dict),
+            "registration metadata re-emission source identity is missing")
+    registration_record = base_source.get("registration")
+    require(isinstance(registration_record, dict)
+            and registration_record.get("sha256") == registration_sha,
+            "owner-compiled base does not name the exact registration source")
+    base_payload_record = base_manifest.get("payload", {})
+    accepted_payload_record = accepted_manifest.get("payload", {})
+    require(base_payload_record.get("registration_fingerprint32")
+            == f"{base['fingerprint']:08x}"
+            and int(registration_sha[:8], 16) == base["fingerprint"],
+            "owner-compiled base registration fingerprint is inconsistent")
+    require(accepted_payload_record.get("registration_fingerprint32")
+            == f"{accepted['fingerprint']:08x}",
+            "accepted payload registration fingerprint is inconsistent")
+    require(accepted["source_digest"] == base["source_digest"]
+            == bytes.fromhex(str(base_source.get("myosim_source_archive_sha256", ""))),
+            "metadata re-emission MyoSim source archive identity differs")
+    for key in ("bodyparts", "myosim_manifest", "surface_map"):
+        require(accepted_source.get(key) == base_source.get(key),
+                f"metadata re-emission {key} source identity differs")
+    require(accepted_source.get("myosim_source_archive_sha256")
+            == base_source.get("myosim_source_archive_sha256"),
+            "metadata re-emission MyoSim source archive identity differs")
+
+    def manifest_rows(data: dict, manifest: dict, context: str) -> dict[int, dict]:
+        surfaces = manifest.get("source", {}).get("surfaces")
+        require(isinstance(surfaces, list)
+                and len(surfaces) == data["surface_count"],
+                f"{context} stable-row inventory is incomplete")
+        ids = [int(row[6]) for row in data["records"]]
+        require(ids == [row.get("stable_id") for row in surfaces],
+                f"{context} stable-row ordering differs from its payload")
+        for field, expected in (("surface_count", data["surface_count"]),
+                                ("binding_count", data["binding_count"]),
+                                ("vertex_count", data["vertex_count"]),
+                                ("index_count", data["index_count"])):
+            require(manifest["payload"].get(field) == expected,
+                    f"{context} manifest {field} differs from its payload")
+        return {int(row["stable_id"]): row for row in surfaces}
+
+    accepted_rows = manifest_rows(accepted, accepted_manifest, "accepted payload")
+    base_rows = manifest_rows(base, base_manifest, "owner-compiled base")
+    base_by_id = {int(row[6]): row for row in base["records"]}
+    base_ids = [int(row[6]) for row in base["records"]]
+    accepted_ids = [int(row[6]) for row in accepted["records"]]
+    accepted_order = [stable_id for stable_id in accepted_ids if stable_id in base_rows]
+    require(accepted_order == base_ids,
+            "owner-compiled base stable rows do not preserve accepted row order")
+
+    def checked_bindings(
+        data: dict, row, metadata: dict, context: str,
+    ) -> tuple[list[tuple[str, int, bytes]], bytes]:
+        fields = metadata.get("body_bindings")
+        require(isinstance(fields, list) and len(fields) == int(row[1]),
+                f"{context} body-binding identity is incomplete")
+        local = _row_slices(data, row)
+        identities: list[tuple[str, int, bytes]] = []
+        for binding_index, item in enumerate(fields):
+            require(isinstance(item, dict)
+                    and isinstance(item.get("myosim_body"), str)
+                    and type(item.get("core_body_index")) is int
+                    and item["core_body_index"] >= 0,
+                    f"{context} body-binding identity is malformed")
+            actual_core = struct.unpack_from("<I", local["binding_bytes"], binding_index * 36)[0]
+            require(actual_core == item["core_body_index"],
+                    f"{context} body-binding target differs from serialized binding")
+            start = binding_index * 36
+            identities.append((item["myosim_body"], item["core_body_index"],
+                               local["binding_bytes"][start:start+36]))
+        return identities, local["binding_bytes"]
+
+    base_body_names: dict[int, str] = {}
+    base_binding_by_core: dict[int, bytes] = {}
+    for row in base["records"]:
+        stable_id = int(row[6])
+        for name, core_index, binding_bytes in checked_bindings(
+            base, row, base_rows[stable_id], f"owner-compiled row {stable_id}",
+        )[0]:
+            require(core_index not in base_body_names
+                    or base_body_names[core_index] == name,
+                    "owner-compiled base aliases one Core body index to multiple targets")
+            require(core_index not in base_binding_by_core
+                    or base_binding_by_core[core_index] == binding_bytes,
+                    "owner-compiled base has inconsistent transforms for one Core body")
+            base_body_names[core_index] = name
+            base_binding_by_core[core_index] = binding_bytes
+
+    source_by_id = {int(row[6]): row for row in accepted["records"]}
+    compared_rows = 0
+    extra_rows = []
+    for stable_id, row in source_by_id.items():
+        identity, binding_bytes = checked_bindings(
+            accepted, row, accepted_rows[stable_id], f"accepted row {stable_id}",
+        )
+        if stable_id in base_rows:
+            base_identity, base_binding_bytes = checked_bindings(
+                base, base_by_id[stable_id], base_rows[stable_id],
+                f"owner-compiled row {stable_id}",
+            )
+            require(all(accepted_rows[stable_id].get(field)
+                        == base_rows[stable_id].get(field)
+                        for field in ("member_id", "member", "member_sha256", "layer")),
+                    f"stable row {stable_id} source target identity differs")
+            require(identity == base_identity and binding_bytes == base_binding_bytes,
+                    f"stable row {stable_id} body-binding identity differs")
+            compared_rows += 1
+        else:
+            require(all(base_body_names.get(core_index) == name
+                        and base_binding_by_core.get(core_index) == binding_bytes
+                        for name, core_index, binding_bytes in identity),
+                    f"accepted-only row {stable_id} has a target or binding absent from the owner base")
+            extra_rows.append(stable_id)
+
+    new_fingerprint = base["fingerprint"]
+    header = struct.pack(
+        "<8s6I32s", b"NHTISS4\x00", 5,
+        accepted["surface_count"], accepted["binding_count"],
+        accepted["vertex_count"], accepted["index_count"],
+        new_fingerprint, accepted["source_digest"],
+    )
+    output_raw = header + accepted["raw"][64:]
+    require(output_raw[64:] == accepted["raw"][64:],
+            "metadata re-emission changed accepted row arrays or maps")
+    output_manifest = json.loads(json.dumps(accepted_manifest))
+    output_manifest["payload"].update(
+        file=accepted_payload.name,
+        sha256=hashlib.sha256(output_raw).hexdigest(),
+        bytes=len(output_raw),
+        registration_fingerprint32=f"{new_fingerprint:08x}",
+    )
+    registration_file = registration_record.get("file")
+    require(isinstance(registration_file, str) and registration_file,
+            "owner-compiled registration metadata has no local source filename")
+    registration_file_path = (Path(registration_file) if Path(registration_file).is_absolute()
+                              else base_manifest_path.parent / registration_file).resolve()
+    require(_surface_sha256(registration_file_path) == registration_sha,
+            "owner-compiled registration file does not match its source identity")
+    output_manifest["source"]["registration"] = {
+        "file": registration_file_path.name, "sha256": registration_sha,
+    }
+    operation = {
+        "schema": "numi.human.passive-registration-metadata-reemission.v1",
+        "source_payload_path": str(accepted_payload),
+        "source_payload_sha256": accepted["sha256"],
+        "source_manifest_path": str(accepted_manifest_path),
+        "source_manifest_sha256": _surface_sha256(accepted_manifest_path),
+        "owner_compiled_base_payload_path": str(owner_base_payload),
+        "owner_compiled_base_payload_sha256": base["sha256"],
+        "owner_compiled_base_manifest_path": str(base_manifest_path),
+        "owner_compiled_base_manifest_sha256": _surface_sha256(base_manifest_path),
+        "registration_path": str(registration_path),
+        "registration_sha256": registration_sha,
+        "registration_fingerprint32": f"{new_fingerprint:08x}",
+        "previous_registration_fingerprint32": f"{accepted['fingerprint']:08x}",
+        "common_stable_rows_identity_checked": compared_rows,
+        "accepted_only_rows_retained": extra_rows,
+        "accepted_only_binding_records_match_owner_base": True,
+        "accepted_payload_body_sha256": hashlib.sha256(accepted["raw"][64:]).hexdigest(),
+        "accepted_row_arrays_maps_and_binding_records_byte_exact": True,
+        "scope": "Registration compatibility metadata only; accepted NHTISS row geometry, maps, bindings, and physical ownership remain byte-identical. This is not anatomical or native-pose admission.",
+    }
+    output_manifest["source"].setdefault("registration_metadata_reemissions", []).append(operation)
+    output_manifest["evidence_boundary"] = (
+        str(output_manifest.get("evidence_boundary", ""))
+        + " Registration metadata was re-emitted from the pinned owner-compiled base; "
+          "all accepted row arrays, maps, and binding records remain byte-identical. "
+          "This operation is not anatomical or native-pose admission."
+    ).strip()
+    return output_raw, output_manifest, operation
+
+
+def reemit_registration_metadata(
+    accepted_payload: Path, owner_base_payload: Path, registration_path: Path,
+    output: Path,
+) -> dict:
+    """Re-emit only the registration discriminator after exact owner checks."""
+    accepted_payload = Path(accepted_payload).resolve()
+    owner_base_payload = Path(owner_base_payload).resolve()
+    registration_path = Path(registration_path).resolve()
+    output = Path(output).resolve()
+    output_raw, output_manifest, operation = _prepare_registration_metadata_reemission(
+        accepted_payload, owner_base_payload, registration_path,
+    )
+    output.mkdir(exist_ok=False)
+    payload_path = output / accepted_payload.name
+    payload_path.write_bytes(output_raw)
+    manifest_path = output / accepted_payload.with_suffix(".manifest.json").name
+    manifest_path.write_text(json.dumps(output_manifest, indent=2, sort_keys=True) + "\n")
+    report = {
+        "schema": "numi.human.passive-registration-metadata-reemission-report.v1",
+        "status": "source_metadata_reemitted_row_arrays_maps_and_bindings_byte_exact",
+        "operation": operation,
+        "output_payload_path": str(payload_path),
+        "output_payload_sha256": _surface_sha256(payload_path),
+        "output_manifest_path": str(manifest_path),
+        "output_manifest_sha256": _surface_sha256(manifest_path),
+        "composer_source_sha256": _surface_sha256(Path(__file__)),
+        "anatomical_and_native_admission": False,
+    }
+    registration_source = Path(operation["registration_path"]).resolve()
+    registration_destination = output / registration_source.name
+    shutil.copyfile(registration_source, registration_destination)
+    require(_surface_sha256(registration_destination) == operation["registration_sha256"],
+            "copied registration source identity changed")
+    report["copied_registration_path"] = str(registration_destination)
+    report["copied_registration_sha256"] = _surface_sha256(registration_destination)
+    (output / "registration-metadata-reemission.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n",
+    )
+    return report
 
 
 def _row_local_equal(a: dict, b: dict) -> bool:
@@ -1683,6 +1931,48 @@ def _verify_reference_surface_child(parent: Path, child: Path, manifest: dict,
             "reference-surface physical ownership changed")
 
 
+def _verify_registration_metadata_reemission(
+    parent_payload: Path, child_payload: Path, manifest: dict, operation: dict,
+) -> dict:
+    """Replay the metadata-only child against its exact owner-compiled base."""
+    parent_payload = Path(parent_payload).resolve()
+    child_payload = Path(child_payload).resolve()
+    accepted_path = Path(operation.get("source_payload_path", "")).resolve()
+    require(accepted_path == parent_payload,
+            "registration metadata child is not bound to its immediate payload parent")
+    require(_surface_sha256(parent_payload) == operation.get("source_payload_sha256"),
+            "registration metadata parent payload identity changed")
+    parent_manifest_path, _ = _payload_manifest(parent_payload)
+    require(parent_manifest_path == Path(operation.get("source_manifest_path", "")).resolve()
+            and _surface_sha256(parent_manifest_path) == operation.get("source_manifest_sha256"),
+            "registration metadata parent manifest identity changed")
+    owner_base = Path(operation.get("owner_compiled_base_payload_path", "")).resolve()
+    require(_surface_sha256(owner_base) == operation.get("owner_compiled_base_payload_sha256"),
+            "owner-compiled registration base payload identity changed")
+    owner_manifest_path, _ = _payload_manifest(owner_base)
+    require(owner_manifest_path == Path(operation.get("owner_compiled_base_manifest_path", "")).resolve()
+            and _surface_sha256(owner_manifest_path) == operation.get("owner_compiled_base_manifest_sha256"),
+            "owner-compiled registration base manifest identity changed")
+    registration_path = Path(operation.get("registration_path", "")).resolve()
+    require(_surface_sha256(registration_path) == operation.get("registration_sha256"),
+            "registration metadata source identity changed")
+    expected_raw, expected_manifest, replay = _prepare_registration_metadata_reemission(
+        parent_payload, owner_base, registration_path,
+    )
+    require(replay == operation,
+            "registration metadata operation does not match exact owner replay")
+    require(child_payload.read_bytes() == expected_raw,
+            "metadata child payload differs from owner replay")
+    require(manifest == expected_manifest,
+            "metadata child manifest differs from owner replay")
+    registration_record = manifest.get("source", {}).get("registration", {})
+    copied_registration = (child_payload.parent / str(registration_record.get("file", ""))).resolve()
+    require(copied_registration.is_file()
+            and _surface_sha256(copied_registration) == operation.get("registration_sha256"),
+            "metadata child registration sidecar is missing or changed")
+    return operation
+
+
 def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Path) -> dict:
     """Bind this composition to the existing anatomy receipt for native launch."""
     source_receipt, payload = Path(source_receipt).resolve(), Path(payload).resolve()
@@ -1704,12 +1994,31 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     reference_operations = manifest["source"].get("reference_surface_compositions", [])
     require(isinstance(reference_operations, list), "reference-surface operation history is invalid")
     reference_composition = reference_operations[-1] if reference_operations else None
+    metadata_operations = manifest["source"].get("registration_metadata_reemissions", [])
+    require(isinstance(metadata_operations, list),
+            "registration metadata operation history is invalid")
+    metadata_composition = metadata_operations[-1] if metadata_operations else None
     append_history = manifest["source"].get("passive_surface_appends", [])
     require(isinstance(append_history, list), "passive append operation history is invalid")
     append_composition = append_history[-1] if append_history else None
     require(append_composition is None or isinstance(append_composition, dict),
             "passive append operation is invalid")
-    if append_composition is not None and append_composition.get("source_payload_sha256") == owner["sha256"]:
+    if (metadata_composition is not None
+            and metadata_composition.get("source_payload_sha256") == owner["sha256"]):
+        _verify_registration_metadata_reemission(
+            old, payload, manifest, metadata_composition,
+        )
+        parent_manifest = Path(owner.get("manifest_path", old.with_suffix(".manifest.json")))
+        if not parent_manifest.is_absolute():
+            parent_manifest = source_receipt.parent / parent_manifest
+        require(parent_manifest.resolve() == Path(metadata_composition["source_manifest_path"]).resolve()
+                and sha(parent_manifest) == owner.get("manifest_sha256")
+                == metadata_composition["source_manifest_sha256"],
+                "registration metadata anatomical parent manifest identity changed")
+        composition = metadata_composition
+        changed_stable_ids = []
+        edge_composition = biceps_composition = fhl_composition = reference_composition = None
+    elif append_composition is not None and append_composition.get("source_payload_sha256") == owner["sha256"]:
         _verify_passive_surface_append(old, payload, manifest, append_composition)
         parent_manifest = Path(owner.get("manifest_path", old.with_suffix(".manifest.json")))
         if not parent_manifest.is_absolute():
@@ -1829,12 +2138,22 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         changed_stable_ids = composition["changed_stable_ids"]
         require(set(changed_stable_ids).issubset({7, 8, 23}),
                 "unsupported anatomical attachment replacements")
+    is_metadata_reemission = (
+        metadata_composition is not None
+        and metadata_composition.get("source_payload_sha256") == owner.get("sha256")
+        and composition is metadata_composition
+    )
     require(record["sha256"] == sha(payload) and record["file"] == payload.name
             and record["bytes"] == payload.stat().st_size, "composed payload identity")
     old_raw, new_raw = old.read_bytes(), payload.read_bytes()
     old_header = struct.unpack_from("<8s6I32s", old_raw)
     new_header = struct.unpack_from("<8s6I32s", new_raw)
-    if append_composition is not None and composition is append_composition:
+    if is_metadata_reemission:
+        require(old_header[:6] == new_header[:6]
+                and old_header[7:] == new_header[7:]
+                and old_raw[64:] == new_raw[64:],
+                "registration metadata re-emission changed accepted ABI row bytes")
+    elif append_composition is not None and composition is append_composition:
         require(old_header[:2] == new_header[:2] and old_header[6:] == new_header[6:],
                 "passive append physical source identity changed")
         nr, nb = old_header[2:4]
@@ -1849,12 +2168,18 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
         binding_start, binding_end = 64 + nr * 32, 64 + nr * 32 + nb * 36
         require(old_raw[binding_start:binding_end] == new_raw[binding_start:binding_end],
                 "anatomical binding table changed")
-    require(record["registration_fingerprint32"] == owner["registration_fingerprint32"],
-            "anatomical registration changed")
+    if is_metadata_reemission:
+        require(record["registration_fingerprint32"]
+                == composition["registration_fingerprint32"],
+                "metadata child fingerprint differs from its verified registration source")
+    else:
+        require(record["registration_fingerprint32"] == owner["registration_fingerprint32"],
+                "anatomical registration changed")
     owner.update(payload_path=str(payload), sha256=record["sha256"],
                  manifest_path=str(manifest_path), manifest_sha256=sha(manifest_path),
                  surface_count=record["surface_count"], body_binding_count=record["binding_count"],
-                 vertex_count=record["vertex_count"], index_count=record["index_count"])
+                 vertex_count=record["vertex_count"], index_count=record["index_count"],
+                 registration_fingerprint32=record["registration_fingerprint32"])
     # Native cardiac descriptors must stay inside their receipt directory.
     # Reuse immutable bytes locally while retaining each exact content identity.
     shared_inputs = []
@@ -1876,6 +2201,7 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
     receipt["payload"]["path"] = str(anatomical_payload.resolve())
     is_append = append_composition is not None and composition is append_composition
     binding_key = ("passive_surface_append_binding" if is_append
+                   else "registration_metadata_reemission_binding" if is_metadata_reemission
                    else "reference_surface_composition_binding" if reference_composition is not None
                    else "fhl_source_seam_correction_binding" if fhl_composition is not None
                    else "biceps_source_preserving_correction_binding" if biceps_composition is not None
@@ -1902,6 +2228,8 @@ def bind_anatomy_receipt(source_receipt: Path, payload: Path, output_receipt: Pa
                   "Explicit source-derived conforming surface refinement only; existing physical owners, "
                   "mass, forces, and tendon state are unchanged."
                   if edge_composition is not None and biceps_composition is None else
+                  "Registration metadata re-emission from the pinned owner-compiled base; accepted row arrays, maps, and bindings remain byte-identical. This is not anatomical or native-pose admission."
+                  if is_metadata_reemission else
                   "Proof-bound biceps source-geometry patch composed as a direct child of this receipt; anatomy acceptance remains separate."
                   if biceps_composition is not None else
                   "Passive attachment source binding only; physical owners and anatomical acceptance are unchanged.")
@@ -1955,10 +2283,20 @@ def main(argv: list[str] | None=None) -> int:
                         help="proof JSON for the exact pinned FHL 27/28 source-seam correction")
     parser.add_argument("--reference-surface-row", type=int, action="append", default=[],
                         help="explicit stable ID for source-derived passive surface reconstruction; repeat for every --row; no anatomical admission implied")
+    parser.add_argument("--registration-metadata-base", type=Path,
+                        help="owner-compiled base payload supplying a new registration discriminator")
+    parser.add_argument("--registration-source", type=Path,
+                        help="exact registration source used by --registration-metadata-base")
     parser.add_argument("--anatomy-receipt", type=Path,
                         help="bind the composed surface rows in a new native anatomy launch receipt")
     args = parser.parse_args(argv)
     edge_mode = args.conforming_edge_context is not None or args.conforming_edge is not None
+    metadata_mode = args.registration_metadata_base is not None or args.registration_source is not None
+    if metadata_mode:
+        if edge_mode or args.row or args.reference_surface_row or args.fhl_source_seam_correction is not None:
+            parser.error("registration metadata mode cannot be combined with row or edge composition")
+        if args.registration_metadata_base is None or args.registration_source is None:
+            parser.error("registration metadata mode requires both base payload and source")
     if edge_mode:
         if args.fhl_source_seam_correction is not None or args.reference_surface_row:
             parser.error("row correction modes cannot be combined with conforming edge mode")
@@ -1966,10 +2304,14 @@ def main(argv: list[str] | None=None) -> int:
             parser.error("conforming edge mode requires only --conforming-edge-context and --conforming-edge")
         if args.conforming_edge[0] <= 0 or min(args.conforming_edge[1:]) < 0 or args.conforming_edge[1] == args.conforming_edge[2]:
             parser.error("conforming edge IDs are invalid")
-    elif not args.row:
+    elif not args.row and not metadata_mode:
         parser.error("provide at least one --row replacement")
     try:
-        if edge_mode:
+        if metadata_mode:
+            report = compose(args.source, args.output, [],
+                             registration_metadata_base=args.registration_metadata_base,
+                             registration_path=args.registration_source)
+        elif edge_mode:
             report = compose_conforming_edge(args.source, args.output, args.conforming_edge_context,
                                              args.conforming_edge[0], tuple(args.conforming_edge[1:]))
         else:
@@ -1983,7 +2325,17 @@ def main(argv: list[str] | None=None) -> int:
                                  args.output / "resting-anatomy-receipt.json")
     except (OSError, ValueError, KeyError, struct.error) as error:
         parser.exit(2, f'{error}\n')
-    print(json.dumps({key: report[key] for key in ('payload_sha256', 'manifest_sha256', 'vertex_count', 'index_count', 'binding_table_byte_exact')}))
+    if metadata_mode:
+        summary = {key: report[key] for key in (
+            "status", "output_payload_sha256", "output_manifest_sha256",
+            "copied_registration_sha256", "anatomical_and_native_admission",
+        )}
+    else:
+        summary = {key: report[key] for key in (
+            "payload_sha256", "manifest_sha256", "vertex_count", "index_count",
+            "binding_table_byte_exact",
+        )}
+    print(json.dumps(summary))
     return 0
 if __name__ == '__main__':
     raise SystemExit(main())

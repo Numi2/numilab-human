@@ -38,7 +38,16 @@ def inputs(tmp_path):
                     "binding_count": bindings, "vertex_count": vertices,
                     "index_count": vertices, "registration_fingerprint32": "0000002a"},
         "source": {"myosim_source_archive_sha256": (b"s"*32).hex(),
+                   "bodyparts": {"file": "bodyparts.json", "sha256": "b"*64},
+                   "myosim_manifest": {"file": "myosim.json", "sha256": "m"*64},
+                   "surface_map": {"file": "surface-map.json", "sha256": "u"*64},
+                   "registration": {"file": "old-registration.json", "sha256": "o"*64},
                    "surfaces": [{"stable_id": i, "member_id": f"source-{i}",
+                                 "member": f"source/{i}.obj", "member_sha256": f"{i:064x}",
+                                 "layer": "muscle",
+                                 "body_bindings": [
+                                     {"myosim_body": f"body-{2*i}", "core_body_index": 100+2*i},
+                                     {"myosim_body": f"body-{2*i+1}", "core_body_index": 101+2*i}],
                                  "vertex_count": 3, "triangle_count": 1}
                                 for i in range(count)]},
         "coverage": {}, "runtime_binding": "original reference binding"}
@@ -184,6 +193,94 @@ def test_composed_launch_receipt_rejects_ownership_drift(inputs, tmp_path, defec
     with pytest.raises(ValueError):
         bind_anatomy_receipt(receipt, out/source.name, output)
     assert not output.exists()
+
+
+def _metadata_base(source: Path, tmp_path: Path):
+    base = tmp_path / "owner-base" / source.name
+    base.parent.mkdir()
+    registration = base.parent / "registration.json"
+    registration.write_text(json.dumps({"owner": "freshly compiled registration"}, sort_keys=True))
+    registration_sha = digest(registration)
+    fingerprint = int(registration_sha[:8], 16)
+    raw = bytearray(source.read_bytes())
+    struct.pack_into("<I", raw, 28, fingerprint)
+    base.write_bytes(raw)
+    manifest = json.loads(source.with_suffix(".manifest.json").read_text())
+    manifest["payload"].update(file=base.name, sha256=digest(base), bytes=base.stat().st_size,
+                               registration_fingerprint32=f"{fingerprint:08x}")
+    manifest["source"]["registration"] = {"file": registration.name, "sha256": registration_sha}
+    base.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    return base, registration
+
+
+def test_registration_metadata_reemission_preserves_accepted_payload_body_and_binds_receipt(inputs, tmp_path):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    receipt = anatomy_fixture(source, tmp_path)
+    out = tmp_path / "metadata-child"
+    report = compose(source, out, [], registration_metadata_base=base, registration_path=registration)
+    child = out / source.name
+    parent_raw, child_raw = source.read_bytes(), child.read_bytes()
+    _, _, nr, nb, nv, ni, old_fp, _ = struct.unpack_from("<8s6I32s", parent_raw)
+    _, _, nr2, nb2, nv2, ni2, new_fp, _ = struct.unpack_from("<8s6I32s", child_raw)
+    assert (nr2, nb2, nv2, ni2) == (nr, nb, nv, ni)
+    assert new_fp != old_fp == 42
+    assert child_raw[64:] == parent_raw[64:]
+    assert report["operation"]["accepted_payload_body_sha256"] == hashlib.sha256(parent_raw[64:]).hexdigest()
+    assert report["anatomical_and_native_admission"] is False
+    assert (out / registration.name).read_bytes() == registration.read_bytes()
+    child_manifest = json.loads(child.with_suffix(".manifest.json").read_text())
+    assert child_manifest["source"]["registration_metadata_reemissions"][-1][
+        "accepted_row_arrays_maps_and_binding_records_byte_exact"] is True
+    output_receipt = bind_anatomy_receipt(receipt, child, out / "resting-anatomy-receipt.json")
+    owner = output_receipt["provenance"]["native_muscle_surfaces"]
+    assert owner["registration_fingerprint32"] == f"{new_fp:08x}"
+    assert output_receipt["provenance"]["registration_metadata_reemission_binding"][
+        "changed_stable_ids"] == []
+    assert output_receipt["provenance"]["registration_metadata_reemission_binding"][
+        "scope"].endswith("not anatomical or native-pose admission.")
+
+
+@pytest.mark.parametrize("defect", ["registration", "target_name", "target_index", "binding_transform"])
+def test_registration_metadata_reemission_rejects_identity_drift(inputs, tmp_path, defect):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    manifest_path = base.with_suffix(".manifest.json")
+    manifest = json.loads(manifest_path.read_text())
+    if defect == "registration":
+        registration.write_text('{"owner":"changed"}')
+    elif defect == "target_name":
+        manifest["source"]["surfaces"][10]["body_bindings"][0]["myosim_body"] = "wrong-body"
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    elif defect == "target_index":
+        manifest["source"]["surfaces"][10]["body_bindings"][0]["core_body_index"] += 1000
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    else:
+        raw = bytearray(base.read_bytes())
+        _, _, row_count, _, _, _, _, _ = struct.unpack_from("<8s6I32s", raw)
+        records = np.frombuffer(raw, "<u4", row_count*8, 64).reshape(-1, 8)
+        row = next(record for record in records if int(record[6]) == 10)
+        binding_start = 64 + row_count*32
+        struct.pack_into("<f", raw, binding_start + int(row[0])*36 + 4, 0.123)
+        base.write_bytes(raw)
+        manifest["payload"]["sha256"] = digest(base)
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    with pytest.raises(ValueError):
+        compose(source, tmp_path / "bad-metadata", [],
+                registration_metadata_base=base, registration_path=registration)
+    assert not (tmp_path / "bad-metadata").exists()
+
+
+def test_registration_metadata_reemission_cli_mode(inputs, tmp_path, capsys):
+    source, _, _, _ = inputs
+    base, registration = _metadata_base(source, tmp_path)
+    out = tmp_path / "cli-metadata-child"
+    assert pac.main(["--source", str(source), "--output", str(out),
+                     "--registration-metadata-base", str(base),
+                     "--registration-source", str(registration)]) == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["anatomical_and_native_admission"] is False
+    assert (out / source.name).is_file()
 
 
 def _rewrite_payload_row_vertex(path, stable_id, local_vertex, *, position=None, normal=None):
