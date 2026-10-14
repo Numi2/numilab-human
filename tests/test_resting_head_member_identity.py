@@ -236,3 +236,25 @@ def test_metadata_rebind_rejects_header_count_drift():
         rebind_head_member_identity_metadata(
             receipt, _atlas(), _member_hashes(), payload_raw=payload_raw
         )
+
+
+@pytest.mark.parametrize("field", ["layer", "body_index"])
+def test_metadata_rebind_rejects_boolean_typed_owner(field):
+    payload_raw = _payload()
+    receipt = _receipt(payload_raw)
+    receipt["provenance"]["source_id_map"]["323"][field] = True
+    with pytest.raises(ValueError, match="receipt typed owner differs for head row 323"):
+        rebind_head_member_identity_metadata(
+            receipt, _atlas(), _member_hashes(), payload_raw=payload_raw
+        )
+
+def test_metadata_rebind_reports_actual_before_name_on_idempotent_rebind():
+    payload_raw = _payload()
+    receipt = _receipt(payload_raw)
+    receipt["provenance"]["source_id_map"]["323"]["name"] = "fourth ventricle"
+    result, audit = rebind_head_member_identity_metadata(
+        receipt, _atlas(), _member_hashes(), payload_raw=payload_raw
+    )
+    row = next(item for item in audit["rows"] if item["stable_id"] == "323")
+    assert row["before_name"] == "fourth ventricle"
+    assert result["provenance"]["source_id_map"]["323"]["name"] == "fourth ventricle"

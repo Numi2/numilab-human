@@ -184,17 +184,18 @@ def rebind_head_member_identity_metadata(
             raise ValueError(f"head source member maps to unexpected stable ID for {member_id}")
         if row.get("source_sha256") != digest:
             raise ValueError(f"receipt source member hash differs for {member_id}")
-        if row.get("layer") != 1 or row.get("body_index") != 23:
+        if type(row.get("layer")) is not int or row["layer"] != 1 or type(row.get("body_index")) is not int or row["body_index"] != 23:
             raise ValueError(f"receipt typed owner differs for head row {sid}")
         decoded = decoded_rows.get(expected["stable_id"])
         if decoded is None:
             raise ValueError(f"NHANAT payload is missing head row {sid}")
-        if decoded.get("layer") != 1 or decoded.get("body_index") != 23:
+        if type(decoded.get("layer")) is not int or decoded["layer"] != 1 or type(decoded.get("body_index")) is not int or decoded["body_index"] != 23:
             raise ValueError(f"NHANAT typed owner differs for head row {sid}")
         family = row.get("head_family")
         if family != {"concept_id": expected["family_concept_id"], "source_name": "brain", "hierarchy": "part_of"}:
             raise ValueError(f"head receipt family provenance differs for {member_id}")
-        if row.get("name") not in ("brain", identity["name"]):
+        before_name = row.get("name")
+        if before_name not in ("brain", identity["name"]):
             raise ValueError(f"unexpected head label for {member_id}")
         owner = copy.deepcopy(row.get("source_owner_metadata") or {})
         if owner.get("label") not in (None, "brain"):
@@ -205,7 +206,7 @@ def rebind_head_member_identity_metadata(
             "semantic_id_from_layer": 51010,
             "stable_id": sid,
             "source_member": member_id,
-            "before_name": "brain",
+            "before_name": before_name,
             "after_name": identity["name"],
             "source_member_sha256": digest,
             "layer": 1,
