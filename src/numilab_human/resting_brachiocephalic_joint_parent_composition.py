@@ -39,7 +39,7 @@ def _source_hash_index(records: list[dict[str, Any]], label: str) -> dict[str, i
 
 def _validated_vascular_rows(
     extension: dict[str, Any], source_count: int, label: str,
-    expected_ids: tuple[int, ...],
+    expected_ids: tuple[int, ...], *, weights_are_float32: bool = True,
 ) -> dict[int, dict[str, Any]]:
     rows = extension.get("anatomy_surfaces")
     _require(isinstance(rows, list), f"{label} anatomy surface maps are missing")
@@ -82,14 +82,31 @@ def _validated_vascular_rows(
                     stored_f32 = struct.unpack("<f", struct.pack("<f", value))[0]
                 except OverflowError:
                     stored_f32 = math.nan
-                _require(stored_f32 == value,
-                         f"{label} row {stable_id} parent weight is not exact Float32")
+                _require(math.isfinite(stored_f32) and stored_f32 > 0.0,
+                         f"{label} row {stable_id} parent weight is not representable")
+                if weights_are_float32:
+                    _require(stored_f32 == value,
+                             f"{label} row {stable_id} parent weight is not exact Float32")
                 weights.append(value)
             # These receipt weights are the exact Float32 source values. Their
             # binary64 sum may differ from one by half an ULP at 1.0.
-            _require(abs(math.fsum(weights) - 1.0) <= 2.0 ** -24,
+            tolerance = 2.0 ** -24 if weights_are_float32 else 1e-12
+            _require(abs(math.fsum(weights) - 1.0) <= tolerance,
                      f"{label} row {stable_id} parent weights do not form a Float32 unit partition")
     return by_id
+
+
+
+def _joint_vascular_ids(extension: dict[str, Any]) -> tuple[int, ...]:
+    """Accept the original row477 owner or its existing two-row successor."""
+    rows = extension.get("anatomy_surfaces")
+    _require(isinstance(rows, list) and all(isinstance(row, dict) for row in rows),
+             "joint anatomy surface maps are missing")
+    ids = [row.get("stable_id") for row in rows]
+    _require(all(type(sid) is int for sid in ids) and len(set(ids)) == len(ids)
+             and set(ids) in ({477}, {475, 477}),
+             "joint anatomy stable IDs differ from the supported vascular scopes")
+    return tuple(sorted(ids))
 
 
 def merge_vascular_parent_maps(
@@ -120,7 +137,8 @@ def merge_vascular_parent_maps(
     common_rows = _validated_vascular_rows(
         common_extension, len(common_sources), "common", _VASCULAR_IDS)
     joint_rows = _validated_vascular_rows(
-        joint_extension, len(joint_sources), "joint", (477,))
+        joint_extension, len(joint_sources), "joint", _joint_vascular_ids(joint_extension),
+        weights_are_float32=False)
     _require(joint_extension.get("child_payload_sha256") == final_child_sha256,
              "joint child hash differs from parent-binding extension")
 
@@ -226,7 +244,8 @@ def extend_joint_source_inventory(
     common_rows = _validated_vascular_rows(
         common_extension, len(common_sources), "common", _VASCULAR_IDS)
     _validated_vascular_rows(
-        joint_extension, len(joint_sources), "joint", (477,))
+        joint_extension, len(joint_sources), "joint", _joint_vascular_ids(joint_extension),
+        weights_are_float32=False)
     referenced = sorted({int(term[0]) for row in common_rows.values()
                          for terms in row["vertices"] for term in terms})
     output = deepcopy(joint_extension)

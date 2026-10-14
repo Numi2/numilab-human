@@ -492,3 +492,45 @@ def test_serialized_output_validator_rejects_appended_source_path_escape(tmp_pat
         prepare._validate_final_composition_output(
             args, frozen, back_receipt_path=back_path,
             final_receipt_path=final_path)
+
+def test_existing_two_vessel_joint_successor_preserves_muscle_inventory():
+    common, joint = _common(), _joint()
+    joint["anatomy_surfaces"].insert(0, {
+        "stable_id": 475, "vertices": [[[4, 1, 0, 1.0]]],
+        "kept": "prior-475-owner",
+    })
+    before = copy.deepcopy(joint)
+    extended, mapping, _ = extend_joint_source_inventory(
+        common, joint, append_paths_by_common_index={5: "new-source.nhtissue"})
+    merged, audit = merge_vascular_parent_maps(
+        common, extended, final_anatomy_sha256=_hash("d"),
+        final_child_sha256=_hash("c"), common_source_to_joint=mapping)
+    assert joint == before
+    assert merged["surfaces"] == before["surfaces"]
+    assert merged["source_payloads"][:6] == before["source_payloads"]
+    assert merged["anatomy_surfaces"][0]["kept"] == "prior-475-owner"
+    assert audit["input_joint_stable_ids"] == [475, 477]
+
+
+@pytest.mark.parametrize("sid", [True, 475.0, 999])
+def test_joint_scope_rejects_invalid_or_unrelated_anatomy(sid):
+    joint = _joint()
+    joint["anatomy_surfaces"].append({"stable_id": sid, "vertices": [[[4, 1, 0, 1.0]]]})
+    with pytest.raises(ValueError, match="supported vascular scopes"):
+        extend_joint_source_inventory(
+            _common(), joint, append_paths_by_common_index={5: "new-source.nhtissue"})
+
+
+def test_prior_binary64_unit_map_can_be_replaced_but_new_map_requires_exact_f32():
+    common, joint = _common(), _joint()
+    joint["anatomy_surfaces"][0]["vertices"] = [[[4, 1, 0, 0.1], [4, 2, 0, 0.9]]]
+    extended, mapping, _ = extend_joint_source_inventory(
+        common, joint, append_paths_by_common_index={5: "new-source.nhtissue"})
+    merged, _ = merge_vascular_parent_maps(
+        common, extended, final_anatomy_sha256=_hash("d"),
+        final_child_sha256=_hash("c"), common_source_to_joint=mapping)
+    assert merged["anatomy_surfaces"][1]["vertices"] == [[[6, 3, 0, 0.5], [6, 4, 0, 0.5]]]
+    common["anatomy_surfaces"][0]["vertices"] = [[[5, 1, 0, 0.1], [5, 2, 0, 0.9]]]
+    with pytest.raises(ValueError, match="not exact Float32"):
+        extend_joint_source_inventory(
+            common, joint, append_paths_by_common_index={5: "new-source.nhtissue"})
