@@ -288,6 +288,48 @@ def test_prepare_freezes_exact_bundle_without_calling_geometry(tmp_path, monkeyp
         "geometry_predicates_run"] is False
 
 
+
+
+def test_baseline_addendum_stage_freezes_only_baseline_proof(tmp_path, monkeypatch):
+    bundle = tmp_path / "capture-inputs.json"
+    bundle.write_text("{}")
+    output = tmp_path / "prepared"
+    preflight = _source_preflight_fixture()
+    runtime = {"test_runtime": True}
+
+    def build(_inputs, *, return_runtime_inputs=False):
+        return (dict(preflight), runtime) if return_runtime_inputs else dict(preflight)
+
+    monkeypatch.setattr(runner.preparation, "build_preflight", build)
+    monkeypatch.setattr(runner, "_source_binding_preflight",
+                        lambda _runtime: {"status": "SOURCE_CAPTURE_ABI5_GID_IDENTITY_BOUND_NO_GEOMETRY_PREDICATE"})
+    monkeypatch.setattr(runner.preparation, "_git_state",
+                        lambda: preflight["source_repository"])
+    monkeypatch.setattr(runner, "_runtime_code_pins", lambda: {"runner": "c" * 64})
+    proof = {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "status": "VERIFIED_INDEPENDENT_BASELINE_EXACT_ONE_FACE_COLLAR_EXTENSION",
+        "passed": True,
+        "typed_link": [[51011, 475], [51011, 479]],
+        "candidate_geometry_used": False,
+    }
+    monkeypatch.setattr(runner, "_baseline_collar_addendum", lambda *_args: proof)
+
+    runner.prepare(bundle, output)
+    result = runner.prepare_baseline_collar_addendum(bundle, output)
+    saved = json.loads((output / runner.BASELINE_ADDENDUM_NAME).read_text())
+    progress = json.loads((output / "progress.json").read_text())
+
+    assert result["status"] == (
+        "VERIFIED_BASELINE_ONLY_475_479_EXACT_P6_RAT_COLLAR_ADDENDUM")
+    assert saved["verified_addendum"] == proof
+    assert saved["baseline_exact_p6_predicate_run"] is True
+    assert saved["candidate_surface_predicates_run"] is False
+    assert progress["status"] == "BASELINE_COLLAR_ADDENDUM_VERIFIED"
+    assert progress["baseline_addendum_sha256"] == runner._sha_file(
+        output / runner.BASELINE_ADDENDUM_NAME)
+
+
 def test_run_rejects_capture_bundle_drift_before_geometry(tmp_path, monkeypatch):
     bundle = tmp_path / "capture-inputs.json"
     bundle.write_text("{}")
