@@ -81,9 +81,11 @@ def audit_captured_pose_surface_intersections(
 
     ``captured_surfaces`` values use ``load_capture`` layout:
     ``(positions, faces, normals, source_vertex_ids)``. Each declared port
-    pair is ordered ``(bridge_face_id, captured_target_face_id)`` and must be
-    observed at that accepted pose. Every other intersection rejects this
-    stage. Inputs are not reconstructed or mutated.
+    pair is ordered ``(bridge_face_id, captured_target_face_id)`` and freezes
+    the allowed source collar face patches. Pose-specific pair loci may move
+    inside each declared patch cross-product; any observed pair outside it
+    rejects this stage. Solid overlap and section continuity are checked by
+    the separate source-geometry gate. Inputs are not reconstructed or mutated.
     """
     _require(hasattr(verifier, "audit_changed_surfaces"),
              "the frozen resting-anatomy verifier API is required")
@@ -965,7 +967,7 @@ def audit_brachiocephalic_six_port_continuity(
     verifier, manifold3d, candidate_surfaces, baseline_surfaces, port_face_pairs,
     *, station_specs=None, route_anchors=None,
 ):
-    """Run all six declared SVC/IJV/subclavian bridge port continuity checks."""
+    """Run source-ordered bridge port checks and stop at the first failure."""
     station_specs = {} if station_specs is None else station_specs
     route_anchors = {} if route_anchors is None else route_anchors
     reports = []
@@ -1003,13 +1005,26 @@ def audit_brachiocephalic_six_port_continuity(
                 "source_geometry_mutated": False,
             }
         reports.append(report)
-    all_passed = all(row["passed"] for row in reports)
+        if not report.get("passed"):
+            break
+    all_passed = len(reports) == len(expected) and all(row["passed"] for row in reports)
+    first_failed = next((row for row in reports if not row.get("passed")), None)
     return {
         "schema": "numi.human.brachiocephalic-six-port-solid-continuity.v1",
         "status": ("SIX_PORT_SOLID_AND_LOCAL_CALIBRE_SCREEN_PASSED"
                    if all_passed else "SIX_PORT_SOLID_AND_LOCAL_CALIBRE_SCREEN_REJECTED"),
         "passed": all_passed,
         "port_count": len(reports),
+        "evaluated_port_count": len(reports),
+        "requested_port_count": len(expected),
+        "first_failed_port": (None if first_failed is None else {
+            "bridge": first_failed.get("bridge"),
+            "target": first_failed.get("target"),
+        }),
+        "ports_not_evaluated_after_first_failure": [
+            {"bridge": list(pair[0]), "target": list(pair[1])}
+            for pair in expected[len(reports):]
+        ],
         "ports": reports,
         "limits": {
             "native_gpu_confirmation": "required",

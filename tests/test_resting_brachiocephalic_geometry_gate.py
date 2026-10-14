@@ -2,13 +2,16 @@ import numpy as np
 import pytest
 
 from numilab_human import resting_anatomy_verify as av
+from numilab_human import resting_brachiocephalic_geometry_gate as bg
+from numilab_human import resting_brachiocephalic_source007 as source007
 from numilab_human.resting_brachiocephalic_geometry_gate import (
     BRIDGE_KEYS,
     PORT_TARGET_IDS,
-    audit_captured_pose_surface_intersections,
-    audit_brachiocephalic_port_pair_continuity,
     _manifold_mesh,
     _section_loops,
+    audit_brachiocephalic_port_pair_continuity,
+    audit_brachiocephalic_six_port_continuity,
+    audit_captured_pose_surface_intersections,
 )
 
 
@@ -300,3 +303,67 @@ def test_derived_boolean_sections_use_mesh64_without_weakening_source_float32_co
         _section_loops(
             positions, faces, np.asarray([0.0, 0.0, 0.1]),
             np.asarray([0.0, 0.0, 1.0]))
+
+
+
+def test_six_port_continuity_stops_at_first_failed_port(monkeypatch):
+    expected = [
+        (BRIDGE_KEYS[0], (51011, 10)),
+        (BRIDGE_KEYS[0], (51011, 469)),
+        (BRIDGE_KEYS[0], (51011, 473)),
+        (BRIDGE_KEYS[1], (51011, 10)),
+        (BRIDGE_KEYS[1], (51011, 468)),
+        (BRIDGE_KEYS[1], (51011, 472)),
+    ]
+    surfaces = {key: object() for pair in expected for key in pair}
+    pairs = {pair: [[0, 0]] for pair in expected}
+    visited = []
+
+    def one_port(_verifier, _manifold, *, bridge_key, target_key, **_kwargs):
+        pair = (bridge_key, target_key)
+        visited.append(pair)
+        return {
+            "schema": "numi.human.brachiocephalic-port-solid-continuity.v1",
+            "bridge": list(bridge_key),
+            "target": list(target_key),
+            "passed": pair != expected[1],
+            "failure": None if pair != expected[1] else "synthetic first failure",
+        }
+
+    monkeypatch.setattr(bg, "audit_brachiocephalic_port_pair_continuity", one_port)
+    result = audit_brachiocephalic_six_port_continuity(
+        object(), object(), surfaces, surfaces, pairs)
+
+    assert visited == expected[:2]
+    assert not result["passed"]
+    assert result["requested_port_count"] == 6
+    assert result["evaluated_port_count"] == 2
+    assert result["first_failed_port"] == {
+        "bridge": list(expected[1][0]), "target": list(expected[1][1])}
+    assert result["ports_not_evaluated_after_first_failure"] == [
+        {"bridge": list(pair[0]), "target": list(pair[1])} for pair in expected[2:]]
+
+
+
+def test_source007_pins_existing_rows_and_exact_six_port_order():
+    assert source007.BRIDGE_KEYS == ((51011, 525), (51011, 526))
+    assert source007.PORT_KEYS == (
+        ((51011, 525), (51011, 10)),
+        ((51011, 525), (51011, 469)),
+        ((51011, 525), (51011, 473)),
+        ((51011, 526), (51011, 10)),
+        ((51011, 526), (51011, 468)),
+        ((51011, 526), (51011, 472)),
+    )
+    assert source007.REQUIRED_SOURCE_TARGETS[0] == (51011, 7)
+    assert source007.REQUIRED_SKIN_KEY == (51007, 1)
+    assert source007.N27_RECEIPT_SHA == "944bc88d257137f2bedd5898404c45cefd2901d719707519771ae5f4cfce3752"
+    assert source007.N27_PAYLOAD_SHA == "cde8705a813fe56686776c9cc038cbf06f413e1de76099d2a019d5e1b748a8d4"
+
+
+def test_source007_same_source_calibre_is_not_physical_claim():
+    report = source007._decorate_same_source_calibre({
+        "ports": [{"calibre_gate": {"passed": True}}]})
+    assert "not independent" in report["calibre_interpretation"]
+    assert report["ports"][0]["calibre_gate"]["same_source_geometry_sanity_only"]
+    assert not report["ports"][0]["calibre_gate"]["independent_physical_calibration"]
