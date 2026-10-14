@@ -1752,3 +1752,66 @@ def test_registered_rest_sparse_inverse_rejects_singular_child_map():
             vertex_indices=np.asarray([0]),
         )
 
+
+
+def test_registered_rest_normal_inverse_uses_full_nonorthogonal_blend():
+    pose = np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")
+    half_sqrt = np.float32(np.sqrt(0.5))
+    bindings = [
+        {"core": 10, "translation": np.zeros(3, dtype="<f4"),
+         "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"),
+         "scale": np.float32(1)},
+        {"core": 10, "translation": np.zeros(3, dtype="<f4"),
+         "quaternion": np.asarray([0, 0, half_sqrt, half_sqrt], dtype="<f4"),
+         "scale": np.float32(1)},
+    ]
+    row = {
+        "stable_id": 132, "vertex_count": 3, "bindings": bindings,
+        "binding_indices": np.asarray([[0, 1, 0, 0]] * 3, dtype="<u4"),
+        "weights": np.asarray([[0.5, 0.5, 0, 0]] * 3, dtype="<f4"),
+        "faces": np.asarray([[0, 1, 2]], dtype="<u4"),
+    }
+    # The target face has +X normal. The weighted blend of identity and a
+    # quarter turn is nonorthogonal, so transpose is not its inverse.
+    world = np.asarray([[0, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="<f4")
+    initial_normals = np.tile(np.asarray([0, 0, 1], dtype="<f4"), (3, 1))
+    source, affected, replay = pac._recompute_rest_conforming_normals(
+        row, initial_normals, world, np.asarray([0]), {10: pose},
+    )
+    emitted = pac._native_blended_rest_normals(row, source, {10: pose})
+    direction = emitted[0].astype(np.float64)
+    direction /= np.linalg.norm(direction)
+    assert affected.tolist() == [True, True, True]
+    assert np.dot(direction, np.asarray([1, 0, 0])) > 0.999999
+    assert replay["minimum_direction_cosine"] > 0.999999
+    assert replay["maximum_direction_error"] < 1e-6
+
+
+@pytest.mark.parametrize("terms", [
+    [[0, 7, 0, True]],
+    [[0, 7, 0, "1.0"]],
+    [[0, 7, 0, 1.01]],
+    [[0, 7, 0, 0.5], [0, 7, 0, 0.5]],
+])
+def test_registered_rest_rejects_malformed_or_duplicate_parent_terms(terms):
+    with pytest.raises(ValueError):
+        pac._validated_parent_rest_terms(terms, [{7: 3}], 132, 0)
+
+
+def test_registered_rest_parent_terms_require_exact_normalized_partition():
+    parsed = pac._validated_parent_rest_terms(
+        [[0, 7, 0, 0.25], [0, 7, 1, 0.75]], [{7: 3}], 134, 11,
+    )
+    assert parsed == [(0, 7, 0, 0.25), (0, 7, 1, 0.75)]
+    with pytest.raises(ValueError, match="do not sum to one"):
+        pac._validated_parent_rest_terms(
+            [[0, 7, 0, 0.25], [0, 7, 1, 0.70]], [{7: 3}], 134, 11,
+        )
+
+
+def test_registered_rest_requires_all_carrier_fingerprints_to_match_child():
+    pac._require_matching_parent_rest_fingerprints(0x1234, [0x1234] * 8)
+    with pytest.raises(ValueError, match="fingerprints differ"):
+        pac._require_matching_parent_rest_fingerprints(
+            0x1234, [0x1234] * 7 + [0x1235],
+        )

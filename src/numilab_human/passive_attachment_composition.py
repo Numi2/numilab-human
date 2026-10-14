@@ -1605,6 +1605,39 @@ def _native_squared_rest_residual(targets, actual):
     return np.asarray(np.asarray(x2 + y2, dtype="<f4") + z2, dtype="<f4")
 
 
+def _native_blended_rest_normals(row_data, source_normals, poses):
+    """Replay the child's four sparse normal lanes in native Float32 order."""
+    import numpy as np
+    normals = np.asarray(source_normals, dtype="<f4")
+    result = np.zeros_like(normals)
+    indices = row_data["binding_indices"]
+    weights = row_data["weights"]
+    bindings = row_data["bindings"]
+    for lane in range(4):
+        active = weights[:, lane] > 0
+        if not np.any(active):
+            continue
+        active_indices = np.flatnonzero(active)
+        selected = indices[active, lane].astype(np.int64)
+        require(int(selected.max()) < len(bindings),
+                f"registered-rest row {row_data['stable_id']} normal binding is out of range")
+        rotated = np.empty((len(selected), 3), dtype="<f4")
+        for binding_index in np.unique(selected):
+            use = selected == binding_index
+            binding = bindings[int(binding_index)]
+            local = _rotate_points_f32(
+                binding["quaternion"], normals[active_indices[use]],
+            )
+            rotated[use] = _rotate_points_f32(
+                poses[binding["core"]][3:7], local,
+            )
+        contribution = np.asarray(
+            rotated * weights[active, lane, None], dtype="<f4",
+        )
+        result[active] = np.asarray(result[active] + contribution, dtype="<f4")
+    return result
+
+
 def _recompute_rest_conforming_normals(row_data, source_normals, world_positions,
                                        changed_vertices, poses):
     import numpy as np
@@ -1644,16 +1677,77 @@ def _recompute_rest_conforming_normals(row_data, source_normals, world_positions
     safe = np.where(weights > 0, indices, 0)
     blend = np.sum(weights[:, :, None, None] * binding_rotations[safe], axis=1)
     use = np.flatnonzero(affected & referenced)
-    require(len(use) > 0, "registered-rest correction has no referenced normal vertices")
-    source = np.einsum("nij,nj->ni", blend[use].transpose(0, 2, 1),
-                       world_normals[use])
+    if len(use) == 0:
+        return np.asarray(source_normals, dtype="<f4").copy(), affected, {
+            "checked_vertex_count": 0,
+            "minimum_direction_cosine": None,
+            "maximum_direction_error": None,
+        }
+    try:
+        source = np.linalg.solve(blend[use], world_normals[use, :, None])[..., 0]
+    except np.linalg.LinAlgError as error:
+        raise ValueError(
+            f"registered-rest row {row_data['stable_id']} blended normal inverse is singular"
+        ) from error
     lengths = np.linalg.norm(source, axis=1)
     require(np.isfinite(source).all() and np.all(lengths > 1e-12),
             f"registered-rest row {row_data['stable_id']} blended normal inverse is singular")
     source /= lengths[:, None]
     result = np.asarray(source_normals, dtype="<f4").copy()
     result[use] = np.asarray(source, dtype="<f4")
-    return result, affected
+    emitted = _native_blended_rest_normals(row_data, result, poses)
+    emitted_lengths = np.linalg.norm(emitted[use].astype(np.float64), axis=1)
+    require(np.isfinite(emitted[use]).all() and np.all(emitted_lengths > 1e-12),
+            f"registered-rest row {row_data['stable_id']} emitted zero or nonfinite normals")
+    emitted_direction = emitted[use].astype(np.float64) / emitted_lengths[:, None]
+    target_direction = world_normals[use].astype(np.float64)
+    direction_error = np.linalg.norm(emitted_direction - target_direction, axis=1)
+    direction_cosine = np.sum(emitted_direction * target_direction, axis=1)
+    require(np.all(direction_cosine > 0.999999),
+            f"registered-rest row {row_data['stable_id']} emitted normal direction misses the corrected face target")
+    return result, affected, {
+        "checked_vertex_count": len(use),
+        "minimum_direction_cosine": float(direction_cosine.min(initial=1.0)),
+        "maximum_direction_error": float(direction_error.max(initial=0.0)),
+    }
+
+
+def _validated_parent_rest_terms(terms, parent_vertex_counts, stable_id, vertex_index):
+    """Validate exact JSON parent-term identities before any carrier reads."""
+    import math
+    require(isinstance(terms, list) and len(terms) > 0,
+            f"parent-rest child vertex {stable_id}:{vertex_index} has no terms")
+    identities = set()
+    parsed = []
+    coefficient_sum = 0.0
+    for ordinal, term in enumerate(terms):
+        require(isinstance(term, list) and len(term) == 4
+                and all(type(value) is int for value in term[:3])
+                and type(term[3]) in (int, float),
+                f"parent-rest term {stable_id}:{vertex_index}:{ordinal} is malformed")
+        source_index, parent_sid, parent_vertex, coefficient = term
+        require(math.isfinite(coefficient) and 0.0 < coefficient <= 1.0,
+                f"parent-rest term {stable_id}:{vertex_index}:{ordinal} coefficient is out of range")
+        identity = (source_index, parent_sid, parent_vertex)
+        require(identity not in identities,
+                f"parent-rest term {stable_id}:{vertex_index} repeats a raw source identity")
+        identities.add(identity)
+        require(0 <= source_index < len(parent_vertex_counts)
+                and parent_sid in parent_vertex_counts[source_index]
+                and 0 <= parent_vertex < parent_vertex_counts[source_index][parent_sid],
+                f"parent-rest term {stable_id}:{vertex_index}:{ordinal} is out of range")
+        parsed.append((source_index, parent_sid, parent_vertex, float(coefficient)))
+        coefficient_sum += float(coefficient)
+    require(abs(coefficient_sum - 1.0) <= 1e-12,
+            f"parent-rest terms for child vertex {stable_id}:{vertex_index} do not sum to one")
+    return parsed
+
+
+def _require_matching_parent_rest_fingerprints(child_fingerprint, carrier_fingerprints):
+    require(type(child_fingerprint) is int and len(carrier_fingerprints) == 8
+            and all(type(value) is int and value == child_fingerprint
+                    for value in carrier_fingerprints),
+            "parent-rest carrier registration fingerprints differ from the child")
 
 
 def reemit_parent_rest_conformance(
@@ -1707,6 +1801,9 @@ def reemit_parent_rest_conformance(
                 f"parent-rest carrier {index} source archive differs from NHRIGID")
         source_data.append(data)
         source_paths.append(path)
+    _require_matching_parent_rest_fingerprints(
+        child["fingerprint"], [data["fingerprint"] for data in source_data],
+    )
 
     child_rows = {int(row[6]): row for row in child["records"]}
     surface_by_id = {}
@@ -1719,8 +1816,12 @@ def reemit_parent_rest_conformance(
             "parent-rest surface inventory references a missing child row")
 
     parent_rows = []
+    parent_vertex_counts = []
     for data in source_data:
         parent_rows.append({int(row[6]): row for row in data["records"]})
+        parent_vertex_counts.append({
+            int(row[6]): int(row[3]) for row in data["records"]
+        })
     parent_cache = {}
 
     def source_row(source_index, stable_id):
@@ -1770,27 +1871,14 @@ def reemit_parent_rest_conformance(
         term_vertex = np.full((n, max_terms), -1, dtype="<i4")
         term_coefficient = np.zeros((n, max_terms), dtype=np.float64)
         for vertex_index, terms in enumerate(terms_per_vertex):
-            require(isinstance(terms, list) and len(terms) > 0,
-                    f"parent-rest child vertex {stable_id}:{vertex_index} has no terms")
-            coefficient_sum = 0.0
-            for ordinal, term in enumerate(terms):
-                require(isinstance(term, list) and len(term) == 4
-                        and all(type(value) is int for value in term[:3])
-                        and isinstance(term[3], (int, float)),
-                        f"parent-rest term {stable_id}:{vertex_index}:{ordinal} is malformed")
-                source_index, parent_sid, parent_vertex, coefficient = term
-                require(0 <= source_index < len(source_data)
-                        and parent_sid in parent_rows[source_index]
-                        and 0 <= parent_vertex < int(parent_rows[source_index][parent_sid][3])
-                        and np.isfinite(coefficient) and coefficient > 0,
-                        f"parent-rest term {stable_id}:{vertex_index}:{ordinal} is out of range")
+            parsed_terms = _validated_parent_rest_terms(
+                terms, parent_vertex_counts, stable_id, vertex_index,
+            )
+            for ordinal, (source_index, parent_sid, parent_vertex, coefficient) in enumerate(parsed_terms):
                 term_source[vertex_index, ordinal] = source_index
                 term_sid[vertex_index, ordinal] = parent_sid
                 term_vertex[vertex_index, ordinal] = parent_vertex
-                term_coefficient[vertex_index, ordinal] = float(coefficient)
-                coefficient_sum += float(coefficient)
-            require(abs(coefficient_sum - 1.0) <= 1e-12,
-                    f"parent-rest terms for child vertex {stable_id}:{vertex_index} do not sum to one")
+                term_coefficient[vertex_index, ordinal] = coefficient
 
         targets = np.zeros((n, 3), dtype="<f4")
         for ordinal in range(max_terms):
@@ -1889,7 +1977,28 @@ def reemit_parent_rest_conformance(
             changed = np.flatnonzero(np.any(proposed != original_positions, axis=1))
             require(len(changed) > 0,
                     f"registered-rest row {stable_id} has no representable correction")
-            source_normals, affected = _recompute_rest_conforming_normals(
+            faces = row_data["faces"].astype(np.int64)
+            touched_faces = np.any(np.isin(faces, changed), axis=1)
+            before_triangles = actual_before[faces[touched_faces]].astype(np.float64)
+            after_triangles = actual_after[faces[touched_faces]].astype(np.float64)
+            before_face_normals = np.cross(
+                before_triangles[:, 1] - before_triangles[:, 0],
+                before_triangles[:, 2] - before_triangles[:, 0],
+            )
+            after_face_normals = np.cross(
+                after_triangles[:, 1] - after_triangles[:, 0],
+                after_triangles[:, 2] - after_triangles[:, 0],
+            )
+            after_area2 = np.einsum("ij,ij->i", after_face_normals, after_face_normals)
+            before_area2 = np.einsum("ij,ij->i", before_face_normals, before_face_normals)
+            orientation_dot = np.einsum(
+                "ij,ij->i", before_face_normals, after_face_normals,
+            )
+            require(np.isfinite(after_face_normals).all() and np.all(after_area2 > 0.0),
+                    f"registered-rest row {stable_id} has a zero or nonfinite corrected face")
+            require(np.all((before_area2 == 0.0) | (orientation_dot > 0.0)),
+                    f"registered-rest row {stable_id} has a corrected face orientation reversal")
+            source_normals, affected, normal_replay = _recompute_rest_conforming_normals(
                 row_data, row_data["normals"], actual_after, changed, poses,
             )
             position_view = np.ndarray(
@@ -1911,6 +2020,9 @@ def reemit_parent_rest_conformance(
                     - original_positions[changed].astype(np.float64), axis=1,
                 ).max(initial=0.0)),
                 "recomputed_normal_count": len(affected_indices),
+                "changed_incident_face_count": int(np.count_nonzero(touched_faces)),
+                "minimum_corrected_face_area_vector_norm_squared_m4": float(after_area2.min(initial=np.inf)),
+                "normal_replay": normal_replay,
                 "after_failing_vertex_count": 0,
                 "after_first_witness_vertex": None,
                 "after_worst_vertex": int(np.argmax(squared_after)),
