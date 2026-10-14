@@ -1,6 +1,25 @@
 # NumiLab Human completion gap ledger
 
-## Supersession notice
+## Supported resting reference adult — current delivery scope
+
+The active delivery is one mixed-source reference adult in a supported resting
+posture, with native Apple-GPU mechanical breathing, anatomical cardiac pumping,
+closed circulation, coupled gas exchange and automatic respiratory regulation.
+The retained N27 scene, back412 repair, accepted skin repair and existing owners
+are the baseline. Documented local mesh and registration corrections preserve
+anatomical identities, attachments and source provenance. The reference anatomy
+does not represent measurements of one individual.
+
+A complete measured-person dataset, standing, locomotion and the historical
+25-scenario protocol are not prerequisites for this delivery. They remain separate
+capability goals. Anatomy acceptance requires reference and retained breathing-pose
+geometry checks, joint regional checks, then complete native 16-second and
+60-second confirmations. Paired 330-second baseline and reversible respiratory-drive
+runs must retain continuous native video, accepted-state traces, exact source and
+asset identities, rollback evidence and measured timing. Regional tests or source
+preparation alone do not close this deliverable. Performance improvement is deferred.
+
+## Historical supersession notice
 
 The [state-of-the-art execution plan](SOTA_EXECUTION_PLAN.md) and the current
 54-task [execution registry](HUMAN_GAP_EXECUTION.md) are the planning authority.

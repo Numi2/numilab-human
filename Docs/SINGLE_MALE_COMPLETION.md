@@ -1,7 +1,13 @@
-# One adult male: measured whole-body completion
+# Historical measured-participant capability protocol
 
-The active release target is one source-bound adult male at one sourced age.
-Age/population generalization is outside this release. Existing atlas, MyoSim,
+This document retains the measured-participant capability protocol. It is not the
+acceptance contract for the current supported resting reference-adult delivery,
+whose scope is recorded in [the completion ledger](HUMAN_COMPLETION_GAP_LEDGER.md).
+A complete measured-person dataset, standing and locomotion are not prerequisites
+for that delivery.
+
+The historical protocol target is one source-bound adult male at one sourced age.
+Age/population generalization is outside that protocol. Existing atlas, MyoSim,
 cardiac and specimen sources remain independent sources; they are not measurements
 of one person. No complete single-participant bundle has yet been admitted.
 
