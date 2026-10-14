@@ -9,3 +9,5 @@ All nine retained breathing/settled poses pass the scoped counterfactual ventric
 The prepared integrated source004 receipt is retained at the paths and hashes in source-composition.json. All-neighbor, combined-region, fresh 16/60-second native and paired 330-second qualification remain pending; no anatomy or native admission is claimed.
 
 Failed frame, serializer, topology and capture-slot preparation attempts remain at the retained remote evidence paths. This compact package preserves the executed compiler and motion reports without copying the large source geometry or accepted packs. The typed-identity proof also corrects an earlier continuation note: current FDS/FDP rows131–134 are muscle layer1, native semantic51005.
+
+The first actual-step0 all-nearby audit stops at the Pons interface after 16.77 seconds: candidate self is zero, but face323:5034 versus Pons345:6230 has two exact contact points outside the declared floor feature. The frozen report retains this failure; whether it is inherited or introduced by C2 is under diagnosis. No interface was broadened and no further target, motion or native acceptance was attempted.

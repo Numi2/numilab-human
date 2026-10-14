@@ -1,0 +1,42 @@
+{
+  "failed_stage": "pons_floor_interface_and_containment",
+  "result": {
+    "classified_counts": {
+      "cap_parent_shared_indexed_feature": 26070,
+      "coincident_cap_parent": 1666,
+      "reciprocal_floor_point_junction": 7737,
+      "retained_ventricle_reciprocal_edge": 7536
+    },
+    "first_failure": {
+      "actual_points_m": [
+        [
+          "-21289798906904401033/955936333661382639616",
+          "-17115554739649223759/119492041707672829952",
+          "7406982869619308555/59746020853836414976"
+        ],
+        [
+          "-63812157126415374573/2865239955963964817408",
+          "-128251682645038417411/895387486238739005440",
+          "111005151865786863211/895387486238739005440"
+        ]
+      ],
+      "face_pair": [
+        5034,
+        6230
+      ],
+      "pons_source_face": 2251,
+      "reason": "actual retained-floor contact is not on a declared dual-lineage reciprocal edge"
+    },
+    "passed": false,
+    "triangle_pair_count": 85679
+  },
+  "status": "first_geometry_failure",
+  "target_identity": [
+    51010,
+    345
+  ],
+  "tested_identity": [
+    51010,
+    323
+  ]
+}
