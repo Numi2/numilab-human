@@ -140,10 +140,10 @@ def test_owner_field_composition_appends_and_remaps_without_dropping_routes():
         "anatomy_payload_sha256": "a" * 64,
         "source_payloads": prior_sources,
         "anatomy_surfaces": [
+            {"stable_id": 525, "vertices": [[[1, 4, 0, 1.0]]]},
+            {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
             {"stable_id": 7, "vertices": [[[2, 1, 0, 1.0]]]},
             {"stable_id": 475, "route_metadata": "keep", "vertices": [[[6, 1, 0, 1.0]]]},
-            {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
-            {"stable_id": 525, "vertices": [[[1, 4, 0, 1.0]]]},
         ],
     }
     updates = {
@@ -170,8 +170,12 @@ def test_owner_field_composition_appends_and_remaps_without_dropping_routes():
     assert rows[475]["vertices"] == [[[7, 1, 0, 0.75], [7, 2, 0, 0.25]]]
     assert rows[477]["vertices"] == [[[7, 3, 0, 0.4], [7, 4, 0, 0.6]]]
     assert rows[475]["route_metadata"] == "keep"
-    assert rows[7] == bindings["anatomy_surfaces"][0]
-    assert rows[525] == bindings["anatomy_surfaces"][3]
+    assert rows[7] == bindings["anatomy_surfaces"][2]
+    assert rows[525] == bindings["anatomy_surfaces"][0]
+    assert [row["stable_id"] for row in output["anatomy_surfaces"]] == [
+        row["stable_id"] for row in bindings["anatomy_surfaces"]
+    ]
+    assert proof["anatomy_surface_map_order_preserved"]
     assert proof["source_index_appended"] == 7
     assert proof["source_payload_prefix_semantics_preserved"]
     assert proof["all_non_target_anatomy_owner_rows_semantically_unchanged"]
@@ -201,6 +205,61 @@ def test_owner_field_composition_rejects_unexpected_rows_and_bad_terms():
             bindings,
             {"475": [[[4, 1, 0, 1.0]]], "477": [[[5, 3, 0, 1.0]]]},
             **common,
+        )
+
+
+def test_owner_field_composition_rejects_coercive_ids_and_hashes():
+    bindings = {
+        "anatomy_payload_sha256": "a" * 64,
+        "source_payloads": [{"path": str(i), "sha256": f"{i:064x}"} for i in range(7)],
+        "anatomy_surfaces": [
+            {"stable_id": 475, "vertices": [[[6, 1, 0, 1.0]]]},
+            {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
+        ],
+    }
+    updates = {
+        "475": [[[5, 1, 0, 1.0]]],
+        "477": [[[5, 3, 0, 1.0]]],
+    }
+    common = {
+        "source_payload_path": "new-carrier.nhtissue",
+        "source_payload_sha256": "b" * 64,
+        "prepared_source_index": 5,
+        "anatomy_payload_sha256": "a" * 64,
+    }
+
+    for position in range(3):
+        for bad_value in (5.5, True):
+            term = [5, 1, 0, 1.0]
+            term[position] = bad_value
+            malformed = {**updates, "475": [[term]]}
+            with pytest.raises(ValueError, match="owner IDs must be JSON integers"):
+                compose_owner_field_parent_bindings(bindings, malformed, **common)
+
+    malformed_surface = {
+        **bindings,
+        "anatomy_surfaces": [
+            {"stable_id": 475.0, "vertices": [[[6, 1, 0, 1.0]]]},
+            {"stable_id": 477, "vertices": [[[6, 3, 0, 1.0]]]},
+        ],
+    }
+    with pytest.raises(ValueError, match="stable IDs must be JSON integers"):
+        compose_owner_field_parent_bindings(malformed_surface, updates, **common)
+
+    with pytest.raises(ValueError, match="duplicate canonical stable IDs"):
+        compose_owner_field_parent_bindings(
+            bindings,
+            {475: updates["475"], "475": updates["475"], "477": updates["477"]},
+            **common,
+        )
+
+    with pytest.raises(ValueError, match="nonnegative JSON integers"):
+        compose_owner_field_parent_bindings(
+            bindings, updates, **{**common, "prepared_source_index": True}
+        )
+    with pytest.raises(ValueError, match="source payload identity is malformed"):
+        compose_owner_field_parent_bindings(
+            bindings, updates, **{**common, "source_payload_sha256": "g" * 64}
         )
 
 

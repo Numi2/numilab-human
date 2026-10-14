@@ -10,6 +10,7 @@ import hashlib
 import heapq
 import json
 import math
+import re
 import struct
 import tempfile
 from copy import deepcopy
@@ -34,6 +35,15 @@ def _sha(path: Path) -> str:
 def _require(ok: bool, message: str) -> None:
     if not ok:
         raise ValueError("vessel owner blend: " + message)
+
+
+def _is_json_int(value: Any) -> bool:
+    """JSON integer fields must not accept bools or lossy numeric coercions."""
+    return type(value) is int
+
+
+def _is_sha256(value: Any) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
 
 
 def _mesh_graph(vertices: np.ndarray, faces: np.ndarray):
@@ -1105,20 +1115,31 @@ def compose_owner_field_parent_bindings(
     updated = deepcopy(parent_bindings)
     sources = updated.get("source_payloads")
     _require(
+        _is_json_int(expected_source_count)
+        and _is_json_int(prepared_source_index)
+        and expected_source_count >= 0
+        and prepared_source_index >= 0,
+        "source inventory counts and indices must be nonnegative JSON integers",
+    )
+    _require(
         isinstance(sources, list)
         and len(sources) == expected_source_count
         and len(sources) < 8,
         "cap006 source inventory changed or native eight-payload bound would be exceeded",
     )
     _require(
-        all(isinstance(entry, dict) and len(entry.get("sha256", "")) == 64 for entry in sources),
+        all(
+            isinstance(entry, dict)
+            and isinstance(entry.get("path"), str)
+            and _is_sha256(entry.get("sha256"))
+            for entry in sources
+        ),
         "existing parent source inventory is malformed",
     )
     _require(
         isinstance(source_payload_path, str)
         and bool(source_payload_path)
-        and isinstance(source_payload_sha256, str)
-        and len(source_payload_sha256) == 64,
+        and _is_sha256(source_payload_sha256),
         "new parent source payload identity is malformed",
     )
     _require(
@@ -1130,16 +1151,48 @@ def compose_owner_field_parent_bindings(
         "new owner carrier is already present in the inventory",
     )
     _require(
-        isinstance(anatomy_payload_sha256, str) and len(anatomy_payload_sha256) == 64
+        _is_sha256(anatomy_payload_sha256)
         and updated.get("anatomy_payload_sha256") == anatomy_payload_sha256,
         "anatomy payload identity differs from cap006 owner bindings",
     )
     source_index = len(sources)
-    updates = {int(sid): rows for sid, rows in owner_updates.items()}
+    _require(isinstance(owner_updates, dict), "prepared owner rows are malformed")
+    updates = {}
+    for stable_key, rows in owner_updates.items():
+        if _is_json_int(stable_key):
+            stable_id = stable_key
+        elif isinstance(stable_key, str) and stable_key in {"475", "477"}:
+            stable_id = int(stable_key)
+        else:
+            raise ValueError("vessel owner blend: prepared owner keys must be canonical 475/477 IDs")
+        _require(stable_id not in updates, "prepared owner keys contain duplicate canonical stable IDs")
+        updates[stable_id] = rows
     _require(set(updates) == {475, 477}, "prepared owner rows must be exactly 475 and 477")
     maps = updated.get("anatomy_surfaces")
     _require(isinstance(maps, list), "passive anatomy surface maps are missing")
-    by_id = {int(row["stable_id"]): deepcopy(row) for row in maps}
+    by_id = {}
+    ordered_ids = []
+    for row in maps:
+        _require(isinstance(row, dict), "passive anatomy surface row is malformed")
+        stable_id = row.get("stable_id")
+        _require(_is_json_int(stable_id), "passive anatomy stable IDs must be JSON integers")
+        _require(stable_id not in by_id, "passive anatomy stable IDs are duplicated")
+        vertices = row.get("vertices")
+        _require(isinstance(vertices, list), "passive anatomy owner vertices are malformed")
+        for vertex_terms in vertices:
+            _require(isinstance(vertex_terms, list), "passive anatomy owner vertex terms are malformed")
+            for term in vertex_terms:
+                _require(
+                    isinstance(term, list)
+                    and len(term) == 4
+                    and all(_is_json_int(value) for value in term[:3])
+                    and 0 <= term[0] < len(sources)
+                    and term[1] >= 0
+                    and term[2] >= 0,
+                    "existing passive anatomy owner IDs must be JSON integers",
+                )
+        by_id[stable_id] = deepcopy(row)
+        ordered_ids.append(stable_id)
     _require(len(by_id) == len(maps) and {475, 477}.issubset(by_id),
              "cap006 475/477 passive maps are missing or duplicated")
     expected_surfaces = {475: (1, 2), 477: (3, 4)}
@@ -1173,20 +1226,26 @@ def compose_owner_field_parent_bindings(
                     f"row {sid} vertex {vertex_id} has malformed owner term",
                 )
                 old_index, surface_id, carrier_vertex, coefficient = term
+                _require(
+                    _is_json_int(old_index)
+                    and _is_json_int(surface_id)
+                    and _is_json_int(carrier_vertex),
+                    f"row {sid} vertex {vertex_id} owner IDs must be JSON integers",
+                )
                 coefficient = float(coefficient)
                 _require(
-                    int(old_index) == int(prepared_source_index)
-                    and int(surface_id) in surfaces
-                    and int(carrier_vertex) == vertex_id
+                    old_index == prepared_source_index
+                    and surface_id in surfaces
+                    and carrier_vertex == vertex_id
                     and math.isfinite(coefficient)
                     and coefficient > 0.0
-                    and int(surface_id) not in seen_surfaces,
+                    and surface_id not in seen_surfaces,
                     f"row {sid} vertex {vertex_id} owner term leaves prepared carrier contract",
                 )
-                seen_surfaces.add(int(surface_id))
+                seen_surfaces.add(surface_id)
                 positive_sum += coefficient
                 new_vertex_terms.append(
-                    [source_index, int(surface_id), int(carrier_vertex), coefficient]
+                    [source_index, surface_id, carrier_vertex, coefficient]
                 )
             _require(
                 seen_surfaces.issubset(set(surfaces))
@@ -1205,7 +1264,7 @@ def compose_owner_field_parent_bindings(
         *sources,
         {"path": source_payload_path, "sha256": source_payload_sha256},
     ]
-    updated["anatomy_surfaces"] = [by_id[sid] for sid in sorted(by_id)]
+    updated["anatomy_surfaces"] = [by_id[sid] for sid in ordered_ids]
     updated["anatomy_payload_sha256"] = anatomy_payload_sha256
     owner_map_sha256 = hashlib.sha256(
         json.dumps(
@@ -1216,13 +1275,14 @@ def compose_owner_field_parent_bindings(
     ).hexdigest()
     proof = {
         "source_index_appended": source_index,
-        "prepared_source_index_remapped_from": int(prepared_source_index),
+        "prepared_source_index_remapped_from": prepared_source_index,
         "source_payload_count_before": len(sources),
         "source_payload_count_after": len(updated["source_payloads"]),
         "source_payload_prefix_semantics_preserved": updated["source_payloads"][:len(sources)] == sources,
         "replaced_stable_ids": [475, 477],
         "map_vertex_counts": {str(sid): updated_counts[sid] for sid in (475, 477)},
         "all_non_target_anatomy_owner_rows_semantically_unchanged": True,
+        "anatomy_surface_map_order_preserved": [row["stable_id"] for row in updated["anatomy_surfaces"]] == ordered_ids,
         "owner_maps_sha256": owner_map_sha256,
         "additional_force_or_state": False,
         "additional_physical_mass_kg": 0,
