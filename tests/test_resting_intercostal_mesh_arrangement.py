@@ -111,6 +111,71 @@ def test_route110_receipt_binds_offline_only_status_and_exact_rows():
             arrangement._validate_route110_source_declaration(mutated, route_data, pins)
 
 
+def _route_reemit_pair():
+    replaced = [7, 469, 471, 473, 475, 477, 479, 481, 525]
+    aggregate = {
+        "replaced_stable_ids": replaced,
+        "row_count_preserved": 525,
+        "unmodified_rows_byte_exact": 516,
+        "stable_id_order_preserved": True,
+        "global_offsets_rebased_by_existing_abi5_encoder": True,
+        "registration_and_source_header_bytes_preserved": True,
+    }
+    scoped = {
+        "replaced_stable_ids": [477],
+        "row_count_preserved": 525,
+        "unmodified_rows_byte_exact": 524,
+        "stable_id_order_preserved": True,
+        "global_offsets_rebased_by_existing_abi5_encoder": True,
+        "registration_and_source_header_bytes_preserved": True,
+    }
+    return (
+        {"replaced_stable_ids": replaced, "abi5_reemit_proof": dict(aggregate)},
+        {
+            "abi5_retirement_reemit_proof": dict(aggregate),
+            "local_source_face_reinstatement": {"stable_id": 477},
+            "abi5_reinstatement_reemit_proof": scoped,
+        },
+        replaced,
+    )
+
+
+def test_route_reemit_and_scoped_fj2217_reemit_are_independent_proofs():
+    route, owner, replaced = _route_reemit_pair()
+    assert (
+        arrangement._validate_route110_reemit_proofs(route, owner, replaced, 525)
+        == owner["abi5_retirement_reemit_proof"]
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["missing_aggregate", "aggregate_subset", "scoped_extra_row", "scoped_count"],
+)
+def test_route_reemit_rejects_missing_or_mis_scoped_reinstatement_proofs(mutation):
+    route, owner, replaced = _route_reemit_pair()
+    if mutation == "missing_aggregate":
+        owner.pop("abi5_retirement_reemit_proof")
+    elif mutation == "aggregate_subset":
+        owner["abi5_retirement_reemit_proof"]["replaced_stable_ids"] = [477]
+    elif mutation == "scoped_extra_row":
+        owner["abi5_reinstatement_reemit_proof"]["replaced_stable_ids"] = [475, 477]
+    else:
+        owner["abi5_reinstatement_reemit_proof"]["unmodified_rows_byte_exact"] = 523
+    with pytest.raises(ValueError):
+        arrangement._validate_route110_reemit_proofs(route, owner, replaced, 525)
+
+
+def test_legacy_cap_retirement_uses_aggregate_route_reemit():
+    route, owner, replaced = _route_reemit_pair()
+    owner.pop("local_source_face_reinstatement")
+    owner.pop("abi5_reinstatement_reemit_proof")
+    assert (
+        arrangement._validate_route110_reemit_proofs(route, owner, replaced, 525)
+        == owner["abi5_retirement_reemit_proof"]
+    )
+
+
 def test_null_retirement_ledger_reclassifies_complete_slot_with_frozen_parentage():
     value, candidate = _candidate_with_null_slot()
     lineage = {"adds_physical_mass_or_state": False}

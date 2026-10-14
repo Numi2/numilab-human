@@ -2399,6 +2399,50 @@ def _historical_capture_loader_commit(path: str, expected_sha256: str) -> str:
         "local intercostal arrangement: historical capture decoder SHA is not present in Git history"
     )
 
+def _validate_route110_reemit_proofs(
+    route_decl: dict,
+    vessel_blend: dict,
+    expected_route_replaced: list[int],
+    expected_row_count: int,
+) -> dict:
+    """Validate the route-wide ABI5 replay separately from a scoped FJ2217 edit."""
+    route_reemit = route_decl.get("abi5_reemit_proof")
+    aggregate_reemit = vessel_blend.get("abi5_retirement_reemit_proof")
+    reinstatement = vessel_blend.get("local_source_face_reinstatement")
+    scoped_reemit = vessel_blend.get("abi5_reinstatement_reemit_proof")
+    _require(
+        isinstance(route_reemit, dict)
+        and isinstance(aggregate_reemit, dict)
+        and route_decl.get("replaced_stable_ids") == expected_route_replaced
+        and route_reemit.get("replaced_stable_ids") == expected_route_replaced
+        and route_reemit.get("stable_id_order_preserved") is True
+        and route_reemit.get("global_offsets_rebased_by_existing_abi5_encoder") is True
+        and route_reemit.get("registration_and_source_header_bytes_preserved") is True
+        and route_reemit.get("row_count_preserved") == expected_row_count
+        and route_reemit.get("unmodified_rows_byte_exact")
+        == expected_row_count - len(expected_route_replaced)
+        and aggregate_reemit == route_reemit,
+        "route110 ABI5 aggregate replacement set or owner proof differs",
+    )
+    if reinstatement is not None:
+        _require(
+            isinstance(scoped_reemit, dict)
+            and scoped_reemit.get("replaced_stable_ids") == [477]
+            and scoped_reemit.get("row_count_preserved") == expected_row_count
+            and scoped_reemit.get("unmodified_rows_byte_exact") == expected_row_count - 1
+            and scoped_reemit.get("stable_id_order_preserved") is True
+            and scoped_reemit.get("global_offsets_rebased_by_existing_abi5_encoder") is True
+            and scoped_reemit.get("registration_and_source_header_bytes_preserved") is True,
+            "FJ2217 reinstatement proof is not scoped to its one exact row",
+        )
+    else:
+        _require(
+            scoped_reemit is None,
+            "FJ2217 reinstatement reemit proof has no corresponding operation",
+        )
+    return route_reemit
+
+
 def validate_receipt_composition(
     *,
     base_receipt_path: Path,
@@ -2537,26 +2581,14 @@ def validate_receipt_composition(
         if record["xyz_changed"] or record["normals_changed"]
     }
     expected_route_replaced = sorted(route_changed_ids | {525})
-    route_reemit = route_decl.get("abi5_reemit_proof", {})
     reinstatement = vessel_blend.get("local_source_face_reinstatement")
     active_retirement = vessel_blend.get("local_source_face_retirement")
     historical_retirement = vessel_blend.get("historical_local_source_face_retirement")
     historical_retirement_reemit = vessel_blend.get(
         "historical_abi5_retirement_reemit_proof"
     )
-    owner_reemit = (
-        vessel_blend.get("abi5_reinstatement_reemit_proof")
-        if reinstatement is not None
-        else vessel_blend.get("abi5_retirement_reemit_proof")
-    )
-    _require(
-        route_decl.get("replaced_stable_ids") == expected_route_replaced
-        and route_reemit.get("replaced_stable_ids") == expected_route_replaced
-        and route_reemit.get("stable_id_order_preserved") is True
-        and route_reemit.get("global_offsets_rebased_by_existing_abi5_encoder") is True
-        and route_reemit.get("registration_and_source_header_bytes_preserved") is True
-        and owner_reemit == route_reemit,
-        "route110 ABI5 replacement set or scoped FJ2217 append-owner proof differs",
+    route_reemit = _validate_route110_reemit_proofs(
+        route_decl, vessel_blend, expected_route_replaced, len(candidate_rows)
     )
     bridge = route_data["bridge_rows"][525]
     _require(
