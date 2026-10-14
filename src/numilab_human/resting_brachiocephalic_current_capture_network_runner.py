@@ -547,7 +547,10 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
         progress_callback("STARTING_ALL_TARGET_COLLISION_AFTER_15_LINK_PASS")
     collision = preparation.run_all_target_network_screen(
         {**runtime["context"], "surfaces": collision_surfaces},
-        runtime["edge_evidence"], runtime["separate_evidence"])
+        runtime["edge_evidence"], runtime["separate_evidence"],
+        verified_network_continuity=continuity,
+        verified_network_source_inventory=inventory,
+        progress_callback=progress_callback)
     report["all_target_collision_gate"] = collision
     report["status"] = (
         "NETWORK_CONTINUITY_PASSED_ALL_TARGET_COLLISION_PASSED_UNADMITTED"
@@ -646,7 +649,8 @@ def _stable_preflight(value: dict) -> dict:
     return result
 
 
-def run(capture_inputs_json: Path, output_dir: Path) -> dict:
+def run(capture_inputs_json: Path, output_dir: Path, *,
+        run_all_targets: bool = False) -> dict:
     """Execute only from a fresh, unchanged source-and-capture preflight."""
     started = time.perf_counter()
     bundle_path = Path(capture_inputs_json).resolve(strict=True)
@@ -779,7 +783,7 @@ def run(capture_inputs_json: Path, output_dir: Path) -> dict:
                 ((51011, 475), (51011, 479)): replayed_addendum,
                 ((51011, 525), (51011, 469)): replayed_source_addendum,
             },
-            run_all_targets=False)
+            run_all_targets=run_all_targets)
         result.update({
             "recorded_finish_utc": datetime.now(UTC).isoformat(),
             "capture_input_bundle_path": str(bundle_path),
@@ -834,7 +838,9 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--prepare-source-baseline-addendum", action="store_true",
                       help="run only the pinned 023 source-baseline P6/Rat proof for three 525->469 collar additions")
     mode.add_argument("--run", action="store_true",
-                      help="execute 15-link continuity, then all-target only on full pass")
+                      help="execute only the fail-first 15-link continuity gate")
+    mode.add_argument("--run-all-targets-after-continuity", action="store_true",
+                      help="execute the 15-link continuity gate, then its verified all-target handoff on full pass")
     args = parser.parse_args(argv)
     if args.prepare_only:
         result = prepare(args.capture_inputs_json, args.output_dir)
@@ -844,8 +850,10 @@ def main(argv: list[str] | None = None) -> int:
     elif args.prepare_source_baseline_addendum:
         result = prepare_source_baseline_collar_addendum(
             args.capture_inputs_json, args.output_dir)
-    else:
+    elif args.run:
         result = run(args.capture_inputs_json, args.output_dir)
+    else:
+        result = run(args.capture_inputs_json, args.output_dir, run_all_targets=True)
     print(json.dumps({
         "status": result["status"],
         "report_path": result.get(

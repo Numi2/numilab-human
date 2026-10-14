@@ -214,8 +214,16 @@ def test_all_target_runs_only_after_all_fifteen_links_pass_and_reuses_candidates
         assert len(inputs) == 15
         return {"passed": True, "evaluated_link_count": 15}
 
-    def all_target(context, edge_evidence, separate_evidence):
+    def all_target(context, edge_evidence, separate_evidence, *,
+                   verified_network_continuity,
+                   verified_network_source_inventory, progress_callback):
         events.append("all_target")
+        assert verified_network_continuity == {
+            "passed": True, "evaluated_link_count": 15}
+        assert progress_callback is None
+        assert isinstance(verified_network_source_inventory, dict)
+        assert verified_network_source_inventory[
+            "candidate_gid_values_were_read_from_actual_capture_pack"]
         assert all(isinstance(context["surfaces"][key], _CachedSurface)
                    for key in runner.NETWORK_KEYS)
         return {"passed": True, "status": "CURRENT_SCREEN_PASS_UNADMITTED"}
@@ -391,7 +399,9 @@ def test_run_rejects_capture_bundle_drift_before_geometry(tmp_path, monkeypatch)
     assert not (output / "network-gate-report.json").exists()
 
 
-def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatch):
+@pytest.mark.parametrize("enable_all_targets", [False, True])
+def test_run_revalidates_preflight_then_enters_ordered_gate(
+        tmp_path, monkeypatch, enable_all_targets):
     bundle = tmp_path / "capture-inputs.json"
     bundle.write_text("{}")
     output = tmp_path / "prepared"
@@ -437,7 +447,7 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
             ((51011, 475), (51011, 479)): proof,
             ((51011, 525), (51011, 469)): source_proof,
         }
-        assert run_all_targets is False
+        assert run_all_targets is enable_all_targets
         stages.append("continuity")
         progress_callback("STARTING_FAIL_FIRST_15_LINK_CONTINUITY")
         return {
@@ -451,7 +461,8 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(tmp_path, monkeypatc
         }
 
     monkeypatch.setattr(runner, "execute_ordered_network_gates", execute)
-    result = runner.run(bundle, output)
+    result = (runner.run(bundle, output, run_all_targets=True)
+              if enable_all_targets else runner.run(bundle, output))
     assert stages == ["continuity"]
     assert result["status"] == (
         "NETWORK_CONTINUITY_PASSED_ALL_TARGET_PENDING_VERIFIED_JUNCTION_HANDOFF")

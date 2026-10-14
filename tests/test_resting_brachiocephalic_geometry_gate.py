@@ -1,3 +1,5 @@
+import hashlib
+
 import numpy as np
 import pytest
 
@@ -1417,3 +1419,618 @@ def test_network_all_target_screen_rejects_missing_edge_ancestry_and_bad_face_id
     with pytest.raises(ValueError, match="outside current topology"):
         bg.audit_network_rows_against_all_targets(
             verifier, surfaces, [edge], {edge: [[99, 0]]})
+
+
+class _HandoffPreparedSurface:
+    def __init__(self, key, positions, faces, source_vertex_ids):
+        self.key = key
+        self.positions = np.asarray(positions, dtype="<f4")
+        self.faces = np.asarray(faces, dtype="<u4")
+        self.source_vertex_ids = np.asarray(source_vertex_ids, dtype="<u8")
+
+
+class _HandoffVerifier:
+    PreparedSurface = _HandoffPreparedSurface
+
+    def __init__(self, *, nonnetwork_pass=True, failed_network_pair=None):
+        self.nonnetwork_pass = nonnetwork_pass
+        self.failed_network_pair = failed_network_pair
+        self.shared_calls = []
+        self.prepare_calls = []
+        self.pair_calls = []
+
+    def audit_changed_surfaces(self, surfaces, *, changed, targets, interfaces,
+                               required_closed, intended_enclosures):
+        self.shared_calls.append({
+            "changed": tuple(changed),
+            "targets": tuple(targets),
+            "interfaces": interfaces,
+            "required_closed": tuple(required_closed),
+            "intended_enclosures": tuple(intended_enclosures),
+        })
+        return {
+            "passed": self.nonnetwork_pass,
+            "failed_stage": None if self.nonnetwork_pass else "nearby_pair",
+            "rows": [] if self.nonnetwork_pass else [{
+                "stage": "nearby_pair",
+                "identities": [list(changed[0]), [51005, 900]],
+                "passed": False,
+                "unexpected_triangle_pairs": [[0, 0]],
+            }],
+        }
+
+    def prepare_surface(self, key, positions, faces, *, normals=None,
+                        source_vertex_ids=None):
+        self.prepare_calls.append(tuple(key))
+        return _HandoffPreparedSurface(key, positions, faces, source_vertex_ids)
+
+    def audit_surface_pair(self, first, second):
+        pair = frozenset((tuple(first.key), tuple(second.key)))
+        self.pair_calls.append(pair)
+        passed = pair != self.failed_network_pair
+        return {
+            "passed": passed,
+            "identities": [list(first.key), list(second.key)],
+            "unexpected_triangle_pairs": [] if passed else [[0, 0]],
+        }
+
+
+def _handoff_hash(value, dtype):
+    packed = np.ascontiguousarray(value, dtype=dtype)
+    return hashlib.sha256(packed.tobytes()).hexdigest()
+
+
+def _handoff_surface_row(key, surface, *, positions=None):
+    points, faces, _normals, source_ids = surface
+    if positions is not None:
+        points = np.asarray(positions, dtype="<f4")
+    return {
+        "identity": list(key),
+        "closed_self_free_single_component": True,
+        "exact_self_audit_count": 0,
+        "referenced_face_component_count": 1,
+        "source_vertex_ids_sha256": _handoff_hash(source_ids, "<u8"),
+        "prepared_surface": {
+            "identity": list(key),
+            "positions_sha256": _handoff_hash(points, "<f4"),
+            "faces_sha256": _handoff_hash(faces, "<u4"),
+            "source_vertex_ids_sha256": None,
+        },
+    }
+
+
+def _handoff_solid(edge, surfaces, *, source_kind):
+    inputs = {}
+    for role, key in (("bridge", edge[0]), ("target", edge[1])):
+        points, faces, _normals, source_ids = surfaces[key]
+        inputs[f"{role}_manifold_input"] = {
+            "source_position_sha256": _handoff_hash(points, "<f4"),
+            "source_face_sha256": _handoff_hash(faces, "<u4"),
+            "source_vertex_ancestry_sha256": _handoff_hash(source_ids, "<u8"),
+        }
+    return {
+        "passed": True,
+        "manifold_inputs_passed": True,
+        "positive_intersection_volume": True,
+        "intersection_volume_m3": 1e-8,
+        "union_connected_numerical_solid": True,
+        "union_component_count": 1,
+        "union_lineage_has_both_sources_without_generated_or_unmapped_faces": True,
+        "union_float64_mesh64_lineage": {
+            "generated_face_count": 0,
+            "unmapped_face_count": 0,
+            "run_original_ids": [edge[0][1], edge[1][1]],
+        },
+        "floating_boolean_exact_topology_proven": False,
+        "exact_inside_both_witness": {
+            "first_location": "inside",
+            "second_location": "inside",
+            "predicate": "P6 exact rational point location on original Float32 surfaces",
+        },
+        "volume_accounting": {"passed": True},
+        **inputs,
+        "test_source_kind": source_kind,
+    }
+
+
+def _handoff_interface(edge, pair_sha, *, source_kind):
+    return {
+        "passed": True,
+        "typed_port": [list(edge[0]), list(edge[1])],
+        "observed_pairs_within_frozen_face_patch_cross_product": True,
+        "unexpected_face_pairs": [],
+        "exact_interface_point_count": 3,
+        "exact_interface_points_sha256": "a" * 64,
+        "frozen_face_pairs_sha256": pair_sha,
+        "documented_vessel_junction_scope": {"passed": True},
+        "baseline_verified_declared_source_additions": {
+            "added_to_frozen_patch_cross_product": False,
+            "candidate_and_baseline_still_require_exact_points": True,
+            "pairs": [],
+            "used": False,
+        },
+        "test_source_kind": source_kind,
+    }
+
+
+def _handoff_calibre(key, role):
+    station = {
+        "transported_from_source_vertex_ancestry": True,
+        "exact_interface_witness_points_sha256": "b" * 64,
+        "frozen_collar_face_ids": [0, 1],
+    }
+    baseline_station = {
+        "transported_from_source_vertex_ancestry": True,
+        "exact_interface_witness_points_sha256": "b" * 64,
+        "frozen_collar_face_ids": [0, 1],
+    }
+    section = {
+        "passed": True,
+        "loop_count": 1,
+        "lineage_complete": True,
+        "generated_face_count": 0,
+        "unmapped_face_count": 0,
+        "area_m2": 2e-5,
+        "minimum_feret_width_m": 0.004,
+    }
+    return {
+        "passed": True,
+        "owner_id": key[1],
+        "role": role,
+        "baseline_station_witness_point_count": 3,
+        "baseline_interface_point_sha256": "b" * 64,
+        "station": station,
+        "baseline_station_transported_by_source_ancestry": baseline_station,
+        "candidate_section": dict(section),
+        "baseline_section": dict(section),
+        "candidate_to_baseline_comparison": {
+            "passed": True,
+            "wide_bounds_are_not_preservation_success": True,
+            "candidate_to_baseline_ratios": {
+                "area": 1.0, "minimum_feret_width": 1.0},
+            "declared_preservation_intervals": {
+                "area": [0.8, 1.25],
+                "minimum_feret_width": [0.9, 1.1],
+            },
+        },
+    }
+
+
+def _handoff_fixture():
+    edges = (
+        ((51011, 7), (51011, 471)),
+        ((51011, 473), (51011, 477)),
+    )
+    all_network = tuple(key for edge in edges for key in edge)
+    surfaces = {}
+    for index, key in enumerate(all_network):
+        points, faces = _tetra(1.0, float(index * 2))
+        source_ids = np.arange(len(points), dtype="<u8") + np.uint64(index * 100)
+        surfaces[key] = (points, faces, None, source_ids)
+    surfaces[(51005, 900)] = _pack_surface(*_tetra(1.0, 30.0))
+    surfaces[(51007, 1)] = _pack_surface(*_tetra(1.0, 40.0))
+
+    links = []
+    source_pairs = {}
+    for edge in edges:
+        pairs = ((0, 0), (1, 1))
+        source_pairs[edge] = pairs
+        pair_sha = _handoff_hash(pairs, "<i8")
+        identities = {}
+        for key in edge:
+            identities[str(key[1])] = {
+                "typed_identity": list(key),
+                "canonical_source_identity": {
+                    "stable_id": key[1],
+                    "receipt_identity_matches_abi5_owner": True,
+                },
+            }
+        ancestry = {
+            "typed_link": [list(edge[0]), list(edge[1])],
+            "source_local_face_indices_bound": True,
+            "clinical_or_anatomical_admission": False,
+            "source_evidence_path": "/frozen/source-witnesses.json",
+            "source_evidence_sha256": "c" * 64,
+            "source_parent_faces_sha256": _handoff_hash(
+                surfaces[edge[0]][1], "<u4"),
+            "source_child_faces_sha256": _handoff_hash(
+                surfaces[edge[1]][1], "<u4"),
+            "source_face_pair_count": len(pairs),
+            "source_face_pair_ancestry": [list(pair) for pair in pairs],
+            "source_face_pair_ancestry_sha256": pair_sha,
+            "source_identities": identities,
+        }
+        topology_surfaces = {}
+        ancestry_rows = {}
+        for role, key in (("bridge", edge[0]), ("target", edge[1])):
+            baseline_positions = np.asarray(surfaces[key][0] + np.float32(0.01),
+                                            dtype="<f4")
+            topology_surfaces[f"candidate_{role}"] = _handoff_surface_row(
+                key, surfaces[key])
+            topology_surfaces[f"baseline_{role}"] = _handoff_surface_row(
+                key, surfaces[key], positions=baseline_positions)
+            face_sha = _handoff_hash(surfaces[key][1], "<u4")
+            ids_sha = _handoff_hash(surfaces[key][3], "<u8")
+            ancestry_rows[role] = {
+                "passed": True,
+                "same_ordered_source_face_ancestry": True,
+                "same_source_vertex_ancestry": True,
+                "source_orientation_preserved": True,
+                "source_volumes_finite_and_positive": True,
+                "candidate_face_ancestry_sha256": face_sha,
+                "baseline_face_ancestry_sha256": face_sha,
+                "candidate_source_vertex_ids_sha256": ids_sha,
+                "baseline_source_vertex_ids_sha256": ids_sha,
+            }
+        baseline_surfaces = {}
+        for role, key in (("bridge", edge[0]), ("target", edge[1])):
+            baseline_surfaces[key] = (
+                np.asarray(surfaces[key][0] + np.float32(0.01), dtype="<f4"),
+                surfaces[key][1], None, surfaces[key][3])
+        links.append({
+            "bridge": list(edge[0]),
+            "target": list(edge[1]),
+            "passed": True,
+            "declared_network_link_source_ancestry": ancestry,
+            "source_topology_gate": {
+                "passed": True, "surfaces": topology_surfaces},
+            "candidate_baseline_ancestry_gate": {
+                "passed": True, "vessels": ancestry_rows},
+            "solid_gates": {
+                "candidate": _handoff_solid(edge, surfaces, source_kind="candidate"),
+                "baseline": _handoff_solid(edge, baseline_surfaces,
+                                           source_kind="baseline"),
+            },
+            "port_interfaces": {
+                kind: _handoff_interface(edge, pair_sha, source_kind=kind)
+                for kind in ("candidate", "baseline")},
+            "independent_collar_calibre": {
+                role: _handoff_calibre(key, role)
+                for role, key in (("bridge", edge[0]), ("target", edge[1]))},
+        })
+    continuity = {
+        "status": "PASS_SOURCE_NETWORK_LINK_CONTINUITY_UNADMITTED",
+        "passed": True,
+        "requested_link_count": len(edges),
+        "evaluated_link_count": len(edges),
+        "links": links,
+    }
+    return surfaces, edges, source_pairs, continuity
+
+
+def test_verified_handoff_skips_only_proven_edges_and_checks_every_other_pair():
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    verifier = _HandoffVerifier()
+    progress = []
+
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        progress_callback=progress.append)
+
+    network_keys = {key for edge in edges for key in edge}
+    expected_nonedges = {
+        frozenset((first, second))
+        for index, first in enumerate(sorted(network_keys))
+        for second in sorted(network_keys)[index + 1:]
+        if (first, second) not in edges and (second, first) not in edges
+    }
+    assert result["passed"] is True
+    assert result["anatomical_admission"] is False
+    assert verifier.shared_calls[0]["targets"] == (
+        (51005, 900), (51007, 1))
+    assert verifier.shared_calls[0]["interfaces"] == {}
+    assert set(verifier.pair_calls) == expected_nonedges
+    assert len(result["verified_junction_handoff"]["links"]) == 2
+    assert result["verified_junction_handoff"]["links"][0][
+        "continuity_report_sha256"]
+    assert "STARTING_NONNETWORK_TARGET_SCREEN" in progress
+    assert len([event for event in progress
+                if event.startswith("CHECKING_UNDECLARED_NETWORK_PAIR_")]) == len(
+                    expected_nonedges)
+
+
+def test_verified_handoff_rejects_muscle_contact_and_stops_at_first_nonedge_failure():
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    muscle_rejector = _HandoffVerifier(nonnetwork_pass=False)
+    muscle_result = bg.audit_network_rows_against_all_targets(
+        muscle_rejector, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity)
+    assert muscle_result["passed"] is False
+    assert muscle_result["failed_stage"] == "network_surface_against_nonnetwork_target"
+    assert muscle_result["shared_verifier_result"]["rows"][0]["identities"][1] == [
+        51005, 900]
+    assert muscle_rejector.pair_calls == []
+
+    network_rejector = _HandoffVerifier(
+        failed_network_pair=frozenset(((51011, 7), (51011, 473))))
+    network_result = bg.audit_network_rows_against_all_targets(
+        network_rejector, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity)
+    assert network_result["passed"] is False
+    assert network_result["failed_stage"] == "undeclared_network_pair"
+    assert len(network_result["nonedge_network_pair_checks"]) == 1
+    assert network_result["nonedge_network_pair_checks"][0]["identities"] == [
+        [51011, 7], [51011, 473]]
+
+
+def test_verified_handoff_rejects_changed_candidate_source_bytes_before_oracle():
+    import copy
+
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    tampered = copy.deepcopy(continuity)
+    tampered["links"][0]["source_topology_gate"]["surfaces"][
+        "candidate_bridge"]["prepared_surface"]["positions_sha256"] = "f" * 64
+    verifier = _HandoffVerifier()
+    with pytest.raises(ValueError, match="candidate or independent baseline bytes"):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, edges, source_pairs,
+            verified_network_continuity=tampered)
+    assert verifier.shared_calls == []
+    assert verifier.pair_calls == []
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("cross_link", "undeclared or duplicated"),
+        ("partial", "complete passing fail-first link report"),
+        ("failed", "failed or malformed link proof"),
+    ],
+)
+def test_verified_handoff_rejects_cross_linked_partial_or_failed_network_report(
+    mutation, message,
+):
+    import copy
+
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    tampered = copy.deepcopy(continuity)
+    if mutation == "cross_link":
+        tampered["links"][1]["target"] = tampered["links"][0]["target"]
+    elif mutation == "partial":
+        tampered["links"].pop()
+        tampered["requested_link_count"] -= 1
+        tampered["evaluated_link_count"] -= 1
+    else:
+        tampered["links"][0]["passed"] = False
+    verifier = _HandoffVerifier()
+
+    with pytest.raises(ValueError, match=message):
+        bg.audit_network_rows_against_all_targets(
+            verifier, surfaces, edges, source_pairs,
+            verified_network_continuity=tampered)
+    assert verifier.shared_calls == []
+    assert verifier.pair_calls == []
+
+
+def _synthetic_source_addendum_case(edge):
+    import copy
+
+    bridge_key, target_key = edge
+    bridge_points, faces = _tetra(1.0)
+    target_points, target_faces = _tetra(1.0, 2.0)
+    source_pairs = ((0, 0), (1, 1))
+    pair_sha = _handoff_hash(source_pairs, "<i8")
+    evidence_path = "/frozen/source-collar.json"
+    evidence_sha = "c" * 64
+    members = {
+        475: (91, "FJ2216"), 479: (91, "FJ2219"),
+        525: (20, "FJ3482"), 469: (22, "FJ3485"),
+    }
+    source_faces = {
+        bridge_key[1]: _handoff_hash(faces, "<u4"),
+        target_key[1]: _handoff_hash(target_faces, "<u4"),
+    }
+    source_ids = {
+        bridge_key: np.arange(len(bridge_points), dtype="<u8"),
+        target_key: np.arange(len(target_points), dtype="<u8") + np.uint64(10),
+    }
+    baseline_points = {
+        bridge_key: np.asarray(bridge_points + np.float32(0.01), dtype="<f4"),
+        target_key: np.asarray(target_points + np.float32(0.01), dtype="<f4"),
+    }
+    row_fingerprints = {}
+    ancestry_identities = {}
+    addendum_identities = {}
+    for role, key, row_faces in (
+        ("bridge", bridge_key, faces), ("target", target_key, target_faces)):
+        body, member = members[key[1]]
+        identity = {
+            "typed_identity": list(key),
+            "body_index": body,
+            "layer": 2,
+            "source_member": member,
+            "canonical_source_identity": {
+                "stable_id": key[1],
+                "receipt_identity_matches_abi5_owner": True,
+            },
+        }
+        ancestry_identities[str(key[1])] = identity
+        addendum_identities[str(key[1])] = {
+            "stable_id": key[1],
+            "abi5_body_index": body,
+            "abi5_layer": 2,
+            "canonical_source_member": member,
+            "source_face_order_preserved": True,
+            "receipt_identity_matches_abi5_owner": True,
+            "source_faces_u32_sha256": source_faces[key[1]],
+            "source_sha256": "d" * 64,
+            "source_vertices6_f32_sha256": "e" * 64,
+            "source_face_to_baseline_vertex_map_sha256": "f" * 64,
+        }
+        prefix = "parent" if role == "bridge" else "target"
+        row_fingerprints[f"{role}_independent_source_baseline"] = {
+            "identity": list(key),
+            "positions_f32_sha256": _handoff_hash(baseline_points[key], "<f4"),
+            "faces_u32_sha256": _handoff_hash(row_faces, "<u4"),
+            "source_vertex_ids_u64_sha256": _handoff_hash(source_ids[key], "<u8"),
+        }
+    ancestry = {
+        "source_face_pair_ancestry_sha256": pair_sha,
+        "source_evidence_path": evidence_path,
+        "source_evidence_sha256": evidence_sha,
+        "source_parent_faces_sha256": source_faces[bridge_key[1]],
+        "source_child_faces_sha256": source_faces[target_key[1]],
+        "source_identities": ancestry_identities,
+    }
+    if bridge_key[1] == 475:
+        additions = []
+        extra_pairs = [[1, 1]]
+        status = "VERIFIED_INDEPENDENT_BASELINE_EXACT_ONE_FACE_COLLAR_EXTENSION"
+        bounded = {
+            "no_cross_product_expansion": True,
+            "only_additional_allowed_face_pair": [1, 1],
+            "all_contact_points_and_segment_inside_parent_face_and_bounded_target_face": True,
+        }
+        exact = {
+            "coordinate_units": "exact rational metres over emitted Float32 input coordinates",
+            "source_face_pair": [1, 1],
+            "contact_topology": "one positive-length segment, exactly two unique endpoints",
+            "exact_endpoint_count": 2,
+            "endpoints": [{}, {}],
+        }
+    else:
+        extra_pairs = [[0, 0], [1, 1], [2, 2]]
+        additions = extra_pairs
+        status = "VERIFIED_INDEPENDENT_BASELINE_DECLARED_COLLAR_ADDITIONS"
+        bounded = {
+            "no_cross_product_expansion": True,
+            "additional_allowed_face_pairs": extra_pairs,
+            "pair_regions": [
+                {
+                    "face_pair": pair,
+                    "bounded_contact_connection": {"passed": True},
+                    "endpoint_rule": "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+                } for pair in extra_pairs
+            ],
+        }
+        exact = {
+            "coordinate_units": "exact rational metres over emitted Float32 input coordinates",
+            "per_pair_proofs": [
+                {
+                    "face_pair": pair,
+                    "contact_topology": "one positive-length segment",
+                    "exact_contact_point_count": 2,
+                } for pair in extra_pairs
+            ],
+        }
+    baseline_identity = {
+        "accepted_capture_receipt_sha256": "1" * 64,
+        "accepted_pack_sha256": "2" * 64,
+        "accepted_step": 0,
+        "accepted_time_s": 0.0,
+        "candidate_geometry_used": False,
+        "invoked_anatomy_receipt_sha256": "3" * 64,
+        "source_nha_payload_sha256": "4" * 64,
+    }
+    lineage = {"independent_from_actual_candidate_geometry": True}
+    for role, key in (("bridge", bridge_key), ("target", target_key)):
+        prefix = "parent" if role == "bridge" else "target"
+        row = row_fingerprints[f"{role}_independent_source_baseline"]
+        lineage[f"{prefix}_position_f32_sha256"] = row["positions_f32_sha256"]
+        lineage[f"{prefix}_face_u32_sha256"] = row["faces_u32_sha256"]
+        lineage[f"{prefix}_gids_u64_sha256"] = row["source_vertex_ids_u64_sha256"]
+    addendum = {
+        "schema": "numi.human.registered-source-collar-addendum.v1",
+        "typed_link": [list(bridge_key), list(target_key)],
+        "status": status,
+        "passed": True,
+        "candidate_geometry_used": False,
+        "clinical_or_anatomical_admission": False,
+        "source_geometry_modified": False,
+        "candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof": True,
+        "baseline_identity": baseline_identity,
+        "source_evidence": {
+            "path": evidence_path,
+            "sha256": evidence_sha,
+            "frozen_source_pairs_unchanged": True,
+            "frozen_source_pair_count": len(source_pairs),
+            "frozen_source_pairs_sha256": pair_sha,
+        },
+        "baseline_surface_lineage": lineage,
+        "source_identities": addendum_identities,
+        "native_nha_gid_base_offset": 767009,
+        "bounded_port_region": bounded,
+        "exact_p6_rat_contact": exact,
+    }
+    addition_record = {
+        "added_to_frozen_patch_cross_product": False,
+        "candidate_and_baseline_still_require_exact_points": True,
+        "pairs": additions,
+        "used": bool(additions),
+    }
+    link = {
+        "port_interfaces": {
+            role: {"baseline_verified_declared_source_additions": copy.deepcopy(addition_record)}
+            for role in ("baseline", "candidate")
+        },
+        "verified_baseline_collar_addendum": copy.deepcopy(addendum),
+    }
+    source_inventory = {
+        "native_source_slot_identity": {
+            "bound_to_validated_actual_capture_receipt": True,
+            "native_nha_gid_base_offset": 767009,
+        },
+        ("baseline_matched_collar_addendum" if bridge_key[1] == 475
+         else "source_baseline_matched_collar_addendum"): addendum,
+    }
+    return link, ancestry, row_fingerprints, {edge: source_pairs}, source_inventory
+
+
+@pytest.mark.parametrize(
+    ("edge", "expected_pairs"),
+    [
+        (((51011, 475), (51011, 479)), [[1, 1]]),
+        (((51011, 525), (51011, 469)), [[0, 0], [1, 1], [2, 2]]),
+    ],
+)
+def test_verified_handoff_binds_independent_source_collar_addenda(edge, expected_pairs):
+    link, ancestry, rows, source_pairs, inventory = _synthetic_source_addendum_case(edge)
+    proof = bg._validate_network_link_addendum(
+        edge, link, ancestry, rows, source_pairs, inventory,
+        lambda value: isinstance(value, str) and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value))
+
+    assert proof["baseline_surface_lineage_bound"]
+    assert proof["candidate_geometry_used_by_addendum"] is False
+    assert proof["independent_additional_source_face_pairs"] == expected_pairs
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("stale", "stale against the current inventory"),
+        ("cross_link", "stale against the current inventory"),
+        ("partial", "cross-linked"),
+        ("failed", "missing, failed, or cross-linked"),
+    ],
+)
+def test_verified_handoff_rejects_stale_cross_linked_partial_or_failed_addenda(
+    mutation, message,
+):
+    import copy
+
+    edge = ((51011, 525), (51011, 469))
+    link, ancestry, rows, source_pairs, inventory = _synthetic_source_addendum_case(edge)
+    if mutation in ("stale", "cross_link"):
+        if mutation == "stale":
+            link["verified_baseline_collar_addendum"]["baseline_identity"][
+                "accepted_pack_sha256"] = "9" * 64
+        else:
+            link["verified_baseline_collar_addendum"]["typed_link"] = [
+                [51011, 475], [51011, 479]]
+    else:
+        link_proof = link["verified_baseline_collar_addendum"]
+        if mutation == "partial":
+            link_proof["exact_p6_rat_contact"]["per_pair_proofs"].pop()
+            inventory["source_baseline_matched_collar_addendum"] = copy.deepcopy(
+                link_proof)
+        else:
+            link_proof["passed"] = False
+            inventory["source_baseline_matched_collar_addendum"] = copy.deepcopy(
+                link_proof)
+    with pytest.raises(ValueError, match=message):
+        bg._validate_network_link_addendum(
+            edge, link, ancestry, rows, source_pairs, inventory,
+            lambda value: isinstance(value, str) and len(value) == 64
+            and all(character in "0123456789abcdef" for character in value))

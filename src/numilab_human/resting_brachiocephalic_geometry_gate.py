@@ -8,6 +8,7 @@ local-calibre screen. It is not clinical or physiological qualification.
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Mapping, Sequence
 from fractions import Fraction
 
@@ -80,8 +81,614 @@ def _pair_rows(value: object, *, name: str, bridge_face_count: int,
     return tuple(sorted(pairs))
 
 
+
+def _continuity_surface_fingerprints(verifier, key, value):
+    prepared_type = getattr(verifier, "PreparedSurface", ())
+    if isinstance(value, prepared_type):
+        positions, faces, source_ids = (
+            value.positions, value.faces, value.source_vertex_ids)
+    else:
+        _require(isinstance(value, (tuple, list)) and len(value) >= 4,
+                 f"verified continuity handoff lacks source IDs for {key}")
+        positions, faces, source_ids = value[0], value[1], value[3]
+    positions = _float32_xyz(positions, name=f"handoff surface {key}")
+    faces = _faces(faces, name=f"handoff surface {key}",
+                   vertex_count=len(positions))
+    source_ids = np.asarray(source_ids)
+    _require(source_ids.ndim == 1 and len(source_ids) == len(positions)
+             and source_ids.dtype.kind in "iu"
+             and (source_ids.dtype.kind != "i" or int(source_ids.min()) >= 0)
+             and len(np.unique(source_ids)) == len(source_ids),
+             f"verified continuity handoff source IDs are invalid for {key}")
+    source_ids = np.ascontiguousarray(source_ids, dtype="<u8")
+    return {
+        "identity": list(key),
+        "positions_f32_sha256": hashlib.sha256(positions.tobytes()).hexdigest(),
+        "faces_u32_sha256": hashlib.sha256(faces.tobytes()).hexdigest(),
+        "source_vertex_ids_u64_sha256": hashlib.sha256(source_ids.tobytes()).hexdigest(),
+    }
+
+
+def _validate_network_link_addendum(
+    edge, link, ancestry, row_fingerprints, source_pairs, source_inventory,
+    valid_sha,
+):
+    """Validate the two frozen independent-baseline collar extensions."""
+    specs = {
+        ((51011, 475), (51011, 479)): (
+            "VERIFIED_INDEPENDENT_BASELINE_EXACT_ONE_FACE_COLLAR_EXTENSION",
+            "single_pair"),
+        ((51011, 525), (51011, 469)): (
+            "VERIFIED_INDEPENDENT_BASELINE_DECLARED_COLLAR_ADDITIONS",
+            "declared_pairs"),
+    }
+    expected = specs.get(edge)
+    addendum = link.get("verified_baseline_collar_addendum")
+    interfaces = link["port_interfaces"]
+    additions = {}
+    for role in ("baseline", "candidate"):
+        value = interfaces[role].get("baseline_verified_declared_source_additions")
+        _require(isinstance(value, Mapping)
+                 and isinstance(value.get("pairs"), list)
+                 and value.get("added_to_frozen_patch_cross_product") is False
+                 and value.get("candidate_and_baseline_still_require_exact_points") is True
+                 and type(value.get("used")) is bool,
+                 f"{role} collar-addition declaration is incomplete for {edge}")
+        pairs = []
+        for pair in value["pairs"]:
+            _require(isinstance(pair, list) and len(pair) == 2
+                     and all(type(index) is int and index >= 0 for index in pair),
+                     f"{role} collar-addition pair is malformed for {edge}")
+            pairs.append(tuple(pair))
+        additions[role] = tuple(sorted(pairs))
+        _require(value["used"] is bool(pairs),
+                 f"{role} collar-addition state is partial for {edge}")
+    _require(additions["baseline"] == additions["candidate"],
+             f"candidate and baseline collar additions disagree for {edge}")
+    if expected is None:
+        _require(addendum is None and not additions["baseline"],
+                 f"undeclared source collar addendum appeared for {edge}")
+        return None
+
+    expected_status, mode = expected
+    inventory_field = (
+        "baseline_matched_collar_addendum" if edge[0][1] == 475
+        else "source_baseline_matched_collar_addendum")
+    _require(isinstance(source_inventory, Mapping)
+             and source_inventory.get(inventory_field) == addendum,
+             f"source collar addendum is stale against the current inventory for {edge}")
+    slot_identity = source_inventory.get("native_source_slot_identity")
+    _require(isinstance(slot_identity, Mapping)
+             and slot_identity.get("bound_to_validated_actual_capture_receipt") is True
+             and type(slot_identity.get("native_nha_gid_base_offset")) is int
+             and addendum.get("native_nha_gid_base_offset")
+             == slot_identity["native_nha_gid_base_offset"],
+             f"source collar addendum uses stale native source-slot identity for {edge}")
+    _require(isinstance(addendum, Mapping)
+             and addendum.get("typed_link") == [list(edge[0]), list(edge[1])]
+             and addendum.get("schema") == "numi.human.registered-source-collar-addendum.v1"
+             and addendum.get("status") == expected_status
+             and addendum.get("passed") is True
+             and addendum.get("candidate_geometry_used") is False
+             and addendum.get("clinical_or_anatomical_admission") is False
+             and addendum.get("source_geometry_modified") is False
+             and addendum.get(
+                 "candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"
+             ) is True,
+             f"independent source collar addendum is missing, failed, or cross-linked for {edge}")
+
+    baseline_identity = addendum.get("baseline_identity")
+    evidence = addendum.get("source_evidence")
+    lineage = addendum.get("baseline_surface_lineage")
+    pair_sha = ancestry.get("source_face_pair_ancestry_sha256")
+    _require(isinstance(baseline_identity, Mapping)
+             and valid_sha(baseline_identity.get("accepted_capture_receipt_sha256"))
+             and valid_sha(baseline_identity.get("accepted_pack_sha256"))
+             and type(baseline_identity.get("accepted_step")) is int
+             and baseline_identity["accepted_step"] == 0
+             and baseline_identity.get("accepted_time_s") == 0.0
+             and baseline_identity.get("candidate_geometry_used") is False
+             and valid_sha(baseline_identity.get("invoked_anatomy_receipt_sha256"))
+             and valid_sha(baseline_identity.get("source_nha_payload_sha256"))
+             and isinstance(evidence, Mapping)
+             and evidence.get("path") == ancestry.get("source_evidence_path")
+             and evidence.get("sha256") == ancestry.get("source_evidence_sha256")
+             and valid_sha(evidence.get("sha256"))
+             and evidence.get("frozen_source_pairs_unchanged") is True
+             and evidence.get("frozen_source_pair_count") == len(source_pairs[edge])
+             and evidence.get("frozen_source_pairs_sha256") == pair_sha
+             and isinstance(lineage, Mapping)
+             and lineage.get("independent_from_actual_candidate_geometry") is True,
+             f"independent source collar baseline identity is stale for {edge}")
+
+    identities = addendum.get("source_identities")
+    _require(isinstance(identities, Mapping)
+             and set(identities) == {str(edge[0][1]), str(edge[1][1])},
+             f"independent source collar identity set is partial for {edge}")
+    for role, key in (("bridge", edge[0]), ("target", edge[1])):
+        prefix = "parent" if role == "bridge" else "target"
+        baseline = row_fingerprints[f"{role}_independent_source_baseline"]
+        source = identities[str(key[1])]
+        original = ancestry.get("source_identities", {}).get(str(key[1]))
+        source_faces_sha = ancestry.get(
+            "source_parent_faces_sha256" if role == "bridge"
+            else "source_child_faces_sha256")
+        _require(
+            lineage.get(f"{prefix}_position_f32_sha256")
+            == baseline["positions_f32_sha256"]
+            and lineage.get(f"{prefix}_face_u32_sha256")
+            == baseline["faces_u32_sha256"]
+            and lineage.get(f"{prefix}_gids_u64_sha256")
+            == baseline["source_vertex_ids_u64_sha256"]
+            and isinstance(source, Mapping)
+            and isinstance(original, Mapping)
+            and source.get("stable_id") == key[1]
+            and source.get("abi5_body_index") == original.get("body_index")
+            and source.get("abi5_layer") == original.get("layer")
+            and source.get("canonical_source_member") == original.get("source_member")
+            and source.get("receipt_identity_matches_abi5_owner") is True
+            and source.get("source_face_order_preserved") is True
+            and source.get("source_faces_u32_sha256") == source_faces_sha
+            and valid_sha(source.get("source_sha256"))
+            and valid_sha(source.get("source_vertices6_f32_sha256"))
+            and valid_sha(source.get("source_face_to_baseline_vertex_map_sha256")),
+            f"independent source collar lineage is stale or cross-linked for {key}")
+
+    bounded = addendum.get("bounded_port_region")
+    exact = addendum.get("exact_p6_rat_contact")
+    _require(isinstance(bounded, Mapping)
+             and bounded.get("no_cross_product_expansion") is True
+             and isinstance(exact, Mapping)
+             and exact.get("coordinate_units")
+             == "exact rational metres over emitted Float32 input coordinates",
+             f"source collar extension is not bounded by exact coordinates for {edge}")
+    if mode == "single_pair":
+        extra = bounded.get("only_additional_allowed_face_pair")
+        _require(isinstance(extra, list) and len(extra) == 2
+                 and all(type(index) is int and index >= 0 for index in extra)
+                 and exact.get("source_face_pair") == extra
+                 and exact.get("contact_topology")
+                 == "one positive-length segment, exactly two unique endpoints"
+                 and exact.get("exact_endpoint_count") == 2
+                 and isinstance(exact.get("endpoints"), list)
+                 and len(exact["endpoints"]) == 2
+                 and bounded.get(
+                     "all_contact_points_and_segment_inside_parent_face_and_bounded_target_face"
+                 ) is True
+                 and not additions["baseline"],
+                 f"single-pair source collar proof is partial for {edge}")
+        additional_pairs = (tuple(extra),)
+    else:
+        raw_pairs = bounded.get("additional_allowed_face_pairs")
+        _require(isinstance(raw_pairs, list) and bool(raw_pairs)
+                 and isinstance(exact.get("per_pair_proofs"), list)
+                 and isinstance(bounded.get("pair_regions"), list),
+                 f"declared source collar pair proof is partial for {edge}")
+        additional_pairs = []
+        for pair in raw_pairs:
+            _require(isinstance(pair, list) and len(pair) == 2
+                     and all(type(index) is int and index >= 0 for index in pair),
+                     f"declared source collar pair is malformed for {edge}")
+            additional_pairs.append(tuple(pair))
+        additional_pairs = tuple(sorted(additional_pairs))
+        _require(additions["baseline"] == additional_pairs,
+                 f"source interface additions differ from exact addendum for {edge}")
+        exact_pairs = []
+        for proof in exact["per_pair_proofs"]:
+            _require(isinstance(proof, Mapping)
+                     and proof.get("contact_topology") == "one positive-length segment"
+                     and proof.get("exact_contact_point_count") == 2,
+                     f"declared source collar exact contact is incomplete for {edge}")
+            exact_pairs.append(tuple(proof.get("face_pair", ())))
+        _require(tuple(sorted(exact_pairs)) == additional_pairs
+                 and len(exact_pairs) == len(additional_pairs),
+                 f"declared source collar exact contacts are cross-linked for {edge}")
+        region_pairs = []
+        for region in bounded["pair_regions"]:
+            connection = (region.get("bounded_contact_connection")
+                          if isinstance(region, Mapping) else None)
+            _require(isinstance(connection, Mapping)
+                     and connection.get("passed") is True
+                     and region.get("endpoint_rule")
+                     == "one_shared_edge_endpoint_or_exact_indexed_contact_chain",
+                     f"declared source collar region lacks an indexed connection for {edge}")
+            region_pairs.append(tuple(region.get("face_pair", ())))
+        _require(tuple(sorted(region_pairs)) == additional_pairs
+                 and len(region_pairs) == len(additional_pairs),
+                 f"declared source collar regions are partial or cross-linked for {edge}")
+
+    return {
+        "source_addendum_sha256": hashlib.sha256(
+            json.dumps(addendum, sort_keys=True, separators=(",", ":"), allow_nan=False)
+            .encode("utf-8")).hexdigest(),
+        "source_evidence_path": evidence["path"],
+        "source_evidence_sha256": evidence["sha256"],
+        "independent_additional_source_face_pairs": [
+            list(pair) for pair in additional_pairs],
+        "baseline_surface_lineage_bound": True,
+        "candidate_geometry_used_by_addendum": False,
+    }
+
+
+def _verified_network_link_handoff(
+    verifier, surfaces, edges, source_pairs, continuity, source_inventory=None,
+):
+    """Bind proven vascular joins to exact current rows before skipping duplicate pair tests."""
+    _require(isinstance(continuity, Mapping)
+             and continuity.get("status") == "PASS_SOURCE_NETWORK_LINK_CONTINUITY_UNADMITTED"
+             and continuity.get("passed") is True
+             and type(continuity.get("requested_link_count")) is int
+             and type(continuity.get("evaluated_link_count")) is int
+             and continuity["requested_link_count"] == len(edges)
+             and continuity["evaluated_link_count"] == len(edges)
+             and isinstance(continuity.get("links"), list)
+             and len(continuity["links"]) == len(edges),
+             "all-target handoff requires a complete passing fail-first link report")
+    try:
+        report_bytes = json.dumps(
+            continuity, sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            "brachiocephalic captured-pose geometry: continuity report is not canonical JSON"
+        ) from exc
+    continuity_sha = hashlib.sha256(report_bytes).hexdigest()
+
+    def valid_sha(value):
+        return (isinstance(value, str) and len(value) == 64
+                and all(character in "0123456789abcdef" for character in value))
+
+    addendum_edges = {
+        ((51011, 475), (51011, 479)),
+        ((51011, 525), (51011, 469)),
+    }
+    _require(source_inventory is None or (
+                 isinstance(source_inventory, Mapping)
+                 and source_inventory.get(
+                     "candidate_gid_values_were_read_from_actual_capture_pack") is True
+                 and source_inventory.get(
+                     "baseline_coordinates_are_independently_cpu_reconstructed") is True
+                 and source_inventory.get(
+                     "baseline_gid_values_are_transported_current_nha_source_slots") is True
+                 and source_inventory.get(
+                     "source_face_arrays_bound_by_exact_ordered_abi5_corner_ancestry") is True
+                 and isinstance(source_inventory.get("candidate_surfaces"), Mapping)
+                 and isinstance(source_inventory.get("independent_source_baselines"), Mapping)
+                 and isinstance(source_inventory.get(
+                     "candidate_baseline_gid_identity_by_typed_row"), Mapping)),
+             "all-target handoff source/baseline inventory is malformed")
+    _require(not (addendum_edges & set(edges)) or source_inventory is not None,
+             "special source-collar links require the current source/baseline inventory")
+    edge_set = set(edges)
+    links_by_edge = {}
+    for link in continuity["links"]:
+        _require(isinstance(link, Mapping) and link.get("passed") is True,
+                 "all-target handoff contains a failed or malformed link proof")
+        first = _identity(link.get("bridge"))
+        second = _identity(link.get("target"))
+        edge = (first, second)
+        _require(edge in edge_set and edge not in links_by_edge,
+                 "all-target handoff link identity is undeclared or duplicated")
+        links_by_edge[edge] = link
+    _require(set(links_by_edge) == edge_set,
+             "all-target handoff does not cover every declared network edge")
+
+    handoffs = []
+    for edge in edges:
+        link = links_by_edge[edge]
+        ancestry = link.get("declared_network_link_source_ancestry")
+        pairs = source_pairs[edge]
+        pair_sha = hashlib.sha256(
+            np.ascontiguousarray(pairs, dtype="<i8").tobytes()).hexdigest()
+        _require(isinstance(ancestry, Mapping)
+                 and ancestry.get("typed_link") == [list(edge[0]), list(edge[1])]
+                 and ancestry.get("source_local_face_indices_bound") is True
+                 and ancestry.get("clinical_or_anatomical_admission") is False
+                 and isinstance(ancestry.get("source_evidence_path"), str)
+                 and valid_sha(ancestry.get("source_evidence_sha256"))
+                 and valid_sha(ancestry.get("source_parent_faces_sha256"))
+                 and valid_sha(ancestry.get("source_child_faces_sha256"))
+                 and type(ancestry.get("source_face_pair_count")) is int
+                 and ancestry["source_face_pair_count"] == len(pairs)
+                 and ancestry.get("source_face_pair_ancestry")
+                 == [list(pair) for pair in pairs]
+                 and ancestry.get("source_face_pair_ancestry_sha256") == pair_sha,
+                 f"network link source face ancestry is not bound for {edge}")
+
+        topology = link.get("source_topology_gate")
+        ancestry_gate = link.get("candidate_baseline_ancestry_gate")
+        solid_gates = link.get("solid_gates")
+        interfaces = link.get("port_interfaces")
+        calibres = link.get("independent_collar_calibre")
+        _require(isinstance(topology, Mapping) and topology.get("passed") is True
+                 and isinstance(topology.get("surfaces"), Mapping)
+                 and isinstance(ancestry_gate, Mapping)
+                 and ancestry_gate.get("passed") is True
+                 and isinstance(ancestry_gate.get("vessels"), Mapping)
+                 and isinstance(solid_gates, Mapping)
+                 and isinstance(interfaces, Mapping)
+                 and isinstance(calibres, Mapping),
+                 f"network link lacks complete source and candidate evidence for {edge}")
+        topology_surfaces = topology["surfaces"]
+        ancestry_vessels = ancestry_gate["vessels"]
+
+        def validate_surface_row(row, key, *, name):
+            _require(isinstance(row, Mapping) and row.get("identity") == list(key)
+                     and row.get("closed_self_free_single_component") is True
+                     and row.get("exact_self_audit_count") == 0
+                     and row.get("referenced_face_component_count") == 1
+                     and isinstance(row.get("prepared_surface"), Mapping),
+                     f"{name} lacks a closed single-component proof for {key}")
+            prepared = row["prepared_surface"]
+            positions_sha = prepared.get("positions_sha256")
+            faces_sha = prepared.get("faces_sha256")
+            source_ids_sha = row.get("source_vertex_ids_sha256")
+            _require(prepared.get("identity") == list(key)
+                     and valid_sha(positions_sha) and valid_sha(faces_sha)
+                     and valid_sha(source_ids_sha),
+                     f"{name} lacks exact position, face, or source-slot hashes for {key}")
+            return {
+                "identity": list(key),
+                "positions_f32_sha256": positions_sha,
+                "faces_u32_sha256": faces_sha,
+                "source_vertex_ids_u64_sha256": source_ids_sha,
+                "closed_self_free_single_component": True,
+                "exact_self_audit_count": 0,
+                "referenced_face_component_count": 1,
+            }
+
+        def validate_solid(solid, edge, *, role):
+            _require(isinstance(solid, Mapping)
+                     and solid.get("passed") is True
+                     and solid.get("manifold_inputs_passed") is True
+                     and solid.get("positive_intersection_volume") is True
+                     and isinstance(solid.get("intersection_volume_m3"), (int, float))
+                     and np.isfinite(solid["intersection_volume_m3"])
+                     and solid["intersection_volume_m3"] > 0.0
+                     and solid.get("union_connected_numerical_solid") is True
+                     and solid.get("union_component_count") == 1
+                     and solid.get(
+                         "union_lineage_has_both_sources_without_generated_or_unmapped_faces"
+                     ) is True
+                     and isinstance(solid.get("exact_inside_both_witness"), Mapping)
+                     and solid["exact_inside_both_witness"].get("first_location") == "inside"
+                     and solid["exact_inside_both_witness"].get("second_location") == "inside"
+                     and "exact rational point location" in solid[
+                         "exact_inside_both_witness"].get("predicate", "")
+                     and isinstance(solid.get("volume_accounting"), Mapping)
+                     and solid["volume_accounting"].get("passed") is True,
+                     f"{role} link lacks positive overlap, exact inside-both, or connected-solid evidence for {edge}")
+            lineage = solid.get("union_float64_mesh64_lineage")
+            _require(isinstance(lineage, Mapping)
+                     and lineage.get("generated_face_count") == 0
+                     and lineage.get("unmapped_face_count") == 0
+                     and set(lineage.get("run_original_ids", []))
+                     == {edge[0][1], edge[1][1]}
+                     and solid.get("floating_boolean_exact_topology_proven") is False,
+                     f"{role} union lineage or numerical-topology limits are incomplete for {edge}")
+            return {
+                "intersection_volume_m3": solid["intersection_volume_m3"],
+                "exact_inside_both": [
+                    solid["exact_inside_both_witness"]["first_location"],
+                    solid["exact_inside_both_witness"]["second_location"]],
+                "numerical_union_component_count": solid["union_component_count"],
+                "numerical_boolean_topology_is_not_exact": True,
+                "volume_accounting_passed": True,
+                "union_lineage": lineage,
+            }
+
+        def validate_interface(interface, edge, pair_sha, *, role):
+            _require(isinstance(interface, Mapping)
+                     and interface.get("passed") is True
+                     and interface.get("typed_port") == [list(edge[0]), list(edge[1])]
+                     and interface.get("observed_pairs_within_frozen_face_patch_cross_product") is True
+                     and interface.get("unexpected_face_pairs") == []
+                     and type(interface.get("exact_interface_point_count")) is int
+                     and interface["exact_interface_point_count"] > 0
+                     and valid_sha(interface.get("exact_interface_points_sha256"))
+                     and interface.get("frozen_face_pairs_sha256") == pair_sha
+                     and isinstance(interface.get("documented_vessel_junction_scope"), Mapping)
+                     and interface["documented_vessel_junction_scope"].get("passed") is True,
+                     f"{role} link lacks bounded matched-collar proof for {edge}")
+            return {
+                "exact_interface_point_count": interface["exact_interface_point_count"],
+                "exact_interface_points_sha256": interface["exact_interface_points_sha256"],
+                "frozen_face_pairs_sha256": pair_sha,
+            }
+
+        def validate_calibre(calibre, key, role):
+            _require(isinstance(calibre, Mapping)
+                     and calibre.get("passed") is True
+                     and calibre.get("owner_id") == key[1]
+                     and calibre.get("role") == role
+                     and type(calibre.get("baseline_station_witness_point_count")) is int
+                     and calibre["baseline_station_witness_point_count"] > 0
+                     and valid_sha(calibre.get("baseline_interface_point_sha256")),
+                     f"{role} lacks an independent source station for {key}")
+            station = calibre.get("station")
+            baseline_station = calibre.get("baseline_station_transported_by_source_ancestry")
+            _require(isinstance(station, Mapping)
+                     and station.get("transported_from_source_vertex_ancestry") is True
+                     and isinstance(baseline_station, Mapping)
+                     and baseline_station.get("transported_from_source_vertex_ancestry") is True
+                     and baseline_station.get("exact_interface_witness_points_sha256")
+                     == calibre["baseline_interface_point_sha256"],
+                     f"{role} station is not transported from source ancestry for {key}")
+            for section_name in ("candidate_section", "baseline_section"):
+                section = calibre.get(section_name)
+                _require(isinstance(section, Mapping)
+                         and section.get("passed") is True
+                         and section.get("loop_count") == 1
+                         and section.get("lineage_complete") is True
+                         and section.get("generated_face_count") == 0
+                         and section.get("unmapped_face_count") == 0
+                         and isinstance(section.get("area_m2"), (int, float))
+                         and np.isfinite(section["area_m2"])
+                         and section["area_m2"] > 0.0
+                         and isinstance(section.get("minimum_feret_width_m"), (int, float))
+                         and np.isfinite(section["minimum_feret_width_m"])
+                         and section["minimum_feret_width_m"] > 0.0,
+                         f"{role} {section_name} is incomplete for {key}")
+            comparison = calibre.get("candidate_to_baseline_comparison")
+            _require(isinstance(comparison, Mapping)
+                     and comparison.get("passed") is True
+                     and comparison.get("wide_bounds_are_not_preservation_success") is True,
+                     f"{role} lacks independent source-calibre comparison for {key}")
+            ratios = comparison.get("candidate_to_baseline_ratios")
+            bounds = comparison.get("declared_preservation_intervals")
+            _require(isinstance(ratios, Mapping) and isinstance(bounds, Mapping)
+                     and bounds.get("area") == [0.8, 1.25]
+                     and bounds.get("minimum_feret_width") == [0.9, 1.1]
+                     and all(isinstance(ratios.get(metric), (int, float))
+                             and np.isfinite(ratios[metric])
+                             and bounds[metric][0] <= ratios[metric] <= bounds[metric][1]
+                             for metric in ("area", "minimum_feret_width")),
+                     f"{role} calibre ratios exceed the declared source bounds for {key}")
+            return {
+                "owner_id": key[1],
+                "baseline_interface_point_sha256": calibre[
+                    "baseline_interface_point_sha256"],
+                "baseline_station_witness_point_count": calibre[
+                    "baseline_station_witness_point_count"],
+                "candidate_to_baseline_ratios": dict(ratios),
+                "declared_preservation_intervals": dict(bounds),
+            }
+
+        row_fingerprints = {}
+        solid_proofs = {}
+        interface_proofs = {}
+        calibre_proofs = {}
+        for role, key in (("bridge", edge[0]), ("target", edge[1])):
+            source_identities = ancestry.get("source_identities")
+            source_identity = (
+                source_identities.get(str(key[1]))
+                if isinstance(source_identities, Mapping) else None)
+            canonical_identity = (
+                source_identity.get("canonical_source_identity")
+                if isinstance(source_identity, Mapping) else None)
+            _require(isinstance(source_identity, Mapping)
+                     and source_identity.get("typed_identity") == list(key)
+                     and isinstance(canonical_identity, Mapping)
+                     and canonical_identity.get("stable_id") == key[1]
+                     and canonical_identity.get("receipt_identity_matches_abi5_owner") is True,
+                     f"network link source metadata is not bound to {key}")
+            ancestry_row = ancestry_vessels.get(role)
+            _require(isinstance(ancestry_row, Mapping)
+                     and ancestry_row.get("passed") is True
+                     and ancestry_row.get("same_ordered_source_face_ancestry") is True
+                     and ancestry_row.get("same_source_vertex_ancestry") is True
+                     and ancestry_row.get("source_orientation_preserved") is True
+                     and ancestry_row.get("source_volumes_finite_and_positive") is True,
+                     f"{role} lacks independent source face/slot ancestry for {key}")
+
+            candidate_row = validate_surface_row(
+                topology_surfaces.get(f"candidate_{role}"), key,
+                name="candidate topology")
+            baseline_row = validate_surface_row(
+                topology_surfaces.get(f"baseline_{role}"), key,
+                name="independent source-baseline topology")
+            fingerprint = _continuity_surface_fingerprints(
+                verifier, key, surfaces[key])
+            _require(candidate_row["positions_f32_sha256"]
+                     == fingerprint["positions_f32_sha256"]
+                     and candidate_row["faces_u32_sha256"]
+                     == fingerprint["faces_u32_sha256"]
+                     and candidate_row["source_vertex_ids_u64_sha256"]
+                     == fingerprint["source_vertex_ids_u64_sha256"]
+                     and ancestry_row.get("candidate_face_ancestry_sha256")
+                     == fingerprint["faces_u32_sha256"]
+                     and ancestry.get(
+                         "source_parent_faces_sha256" if role == "bridge"
+                         else "source_child_faces_sha256")
+                     == fingerprint["faces_u32_sha256"]
+                     and ancestry_row.get("candidate_source_vertex_ids_sha256")
+                     == fingerprint["source_vertex_ids_u64_sha256"]
+                     and ancestry_row.get("baseline_face_ancestry_sha256")
+                     == baseline_row["faces_u32_sha256"]
+                     and ancestry_row.get("baseline_source_vertex_ids_sha256")
+                     == baseline_row["source_vertex_ids_u64_sha256"]
+                     and ancestry_row.get("candidate_face_ancestry_sha256")
+                     == ancestry_row.get("baseline_face_ancestry_sha256")
+                     and ancestry_row.get("candidate_source_vertex_ids_sha256")
+                     == ancestry_row.get("baseline_source_vertex_ids_sha256"),
+                     f"candidate or independent baseline bytes differ from link proof for {key}")
+            for source_kind, source_row in (
+                    ("candidate", candidate_row), ("baseline", baseline_row)):
+                solid = solid_gates.get(source_kind)
+                solid_input = (solid.get(f"{role}_manifold_input")
+                               if isinstance(solid, Mapping) else None)
+                _require(isinstance(solid_input, Mapping)
+                         and solid_input.get("source_position_sha256")
+                         == source_row["positions_f32_sha256"]
+                         and solid_input.get("source_face_sha256")
+                         == source_row["faces_u32_sha256"]
+                         and solid_input.get("source_vertex_ancestry_sha256")
+                         == source_row["source_vertex_ids_u64_sha256"],
+                         f"{source_kind} solid input hashes differ from {key}")
+                solid_proofs[f"{source_kind}_{role}"] = validate_solid(
+                    solid, edge, role=source_kind)
+            row_fingerprints[f"{role}_candidate"] = candidate_row
+            row_fingerprints[f"{role}_independent_source_baseline"] = baseline_row
+
+            for source_kind in ("candidate", "baseline"):
+                interface_proofs[f"{source_kind}_{role}"] = validate_interface(
+                    interfaces.get(source_kind), edge, pair_sha, role=source_kind)
+            calibre_proofs[role] = validate_calibre(calibres.get(role), key, role)
+
+            if source_inventory is not None:
+                inventory_key = f"{key[0]}:{key[1]}"
+                candidate_inventory = source_inventory["candidate_surfaces"].get(
+                    inventory_key)
+                baseline_inventory = source_inventory[
+                    "independent_source_baselines"].get(inventory_key)
+                gid_inventory = source_inventory[
+                    "candidate_baseline_gid_identity_by_typed_row"].get(inventory_key)
+                _require(
+                    isinstance(candidate_inventory, Mapping)
+                    and candidate_inventory.get("typed_identity") == list(key)
+                    and candidate_inventory.get("positions_f32_sha256")
+                    == candidate_row["positions_f32_sha256"]
+                    and candidate_inventory.get("faces_u32_sha256")
+                    == candidate_row["faces_u32_sha256"]
+                    and candidate_inventory.get("captured_global_vertex_ids_u64_sha256")
+                    == candidate_row["source_vertex_ids_u64_sha256"]
+                    and isinstance(baseline_inventory, Mapping)
+                    and baseline_inventory.get("typed_identity") == list(key)
+                    and baseline_inventory.get("positions_f32_sha256")
+                    == baseline_row["positions_f32_sha256"]
+                    and baseline_inventory.get("faces_u32_sha256")
+                    == baseline_row["faces_u32_sha256"]
+                    and baseline_inventory.get("captured_global_vertex_ids_u64_sha256")
+                    == baseline_row["source_vertex_ids_u64_sha256"]
+                    and isinstance(gid_inventory, Mapping)
+                    and gid_inventory.get("typed_identity") == list(key)
+                    and gid_inventory.get("numeric_gid_values_equal") is True
+                    and gid_inventory.get("candidate_gid_values_sha256")
+                    == candidate_row["source_vertex_ids_u64_sha256"]
+                    and gid_inventory.get("baseline_gid_values_sha256")
+                    == baseline_row["source_vertex_ids_u64_sha256"],
+                    f"current source/baseline inventory is stale for {key}")
+
+        addendum_proof = _validate_network_link_addendum(
+            edge, link, ancestry, row_fingerprints, source_pairs,
+            source_inventory, valid_sha)
+        handoffs.append({
+            "typed_link": [list(edge[0]), list(edge[1])],
+            "continuity_report_sha256": continuity_sha,
+            "source_face_pair_ancestry_sha256": pair_sha,
+            "independent_source_collar_addendum": addendum_proof,
+            "candidate_and_independent_source_rows": row_fingerprints,
+            "candidate_and_independent_solid_proofs": solid_proofs,
+            "candidate_and_independent_interface_proofs": interface_proofs,
+            "independent_source_calibre_proofs": calibre_proofs,
+        })
+    return handoffs
+
+
 def audit_network_rows_against_all_targets(
-    verifier, surfaces, network_edges, source_face_pairs,
+    verifier, surfaces, network_edges, source_face_pairs, *,
+    verified_network_continuity=None, verified_network_source_inventory=None,
+    progress_callback=None,
 ):
     """Run the shared all-target collision screen for a frozen vessel graph.
 
@@ -115,6 +722,7 @@ def audit_network_rows_against_all_targets(
 
     interfaces = {}
     interface_records = []
+    normalized_source_pairs = {}
     for first, second in normalized_edges:
         first_value, second_value = surfaces[first], surfaces[second]
         prepared_type = getattr(verifier, "PreparedSurface", ())
@@ -134,6 +742,7 @@ def audit_network_rows_against_all_targets(
         pairs = _pair_rows(raw_pairs, name=f"source collar {first[1]}->{second[1]}",
                            bridge_face_count=len(first_faces),
                            target_face_count=len(second_faces))
+        normalized_source_pairs[(first, second)] = pairs
         first_patch = sorted({pair[0] for pair in pairs})
         second_patch = sorted({pair[1] for pair in pairs})
         allowed = tuple((a, b) for a in first_patch for b in second_patch)
@@ -148,6 +757,139 @@ def audit_network_rows_against_all_targets(
             "child_patch_face_count": len(second_patch),
             "allowed_patch_cross_product_pair_count": len(allowed),
         })
+
+
+    if verified_network_continuity is not None:
+        handoffs = _verified_network_link_handoff(
+            verifier, surfaces, tuple(normalized_edges), normalized_source_pairs,
+            verified_network_continuity,
+            source_inventory=verified_network_source_inventory)
+        verified_edges = {frozenset(edge) for edge in normalized_edges}
+        changed = tuple(sorted(network_keys))
+        nonnetwork_targets = tuple(sorted(set(surfaces) - network_keys))
+        skin_targets = tuple(key for key in nonnetwork_targets if key[0] == 51007)
+        enclosures = [(vessel, skin) for vessel in changed for skin in skin_targets]
+        if progress_callback is not None:
+            progress_callback("STARTING_NONNETWORK_TARGET_SCREEN")
+        shared_result = verifier.audit_changed_surfaces(
+            surfaces, changed=changed, targets=nonnetwork_targets,
+            interfaces={}, required_closed=changed,
+            intended_enclosures=enclosures)
+        if progress_callback is not None:
+            progress_callback(
+                "FINISHED_NONNETWORK_TARGET_SCREEN_PASSED"
+                if shared_result.get("passed") is True
+                else "FINISHED_NONNETWORK_TARGET_SCREEN_REJECTED")
+        if shared_result.get("passed") is not True:
+            return {
+                "schema": "numi.human.brachiocephalic.current-network-all-target-screen.v1",
+                "status": "CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_REJECTED",
+                "passed": False,
+                "network_edge_count": len(normalized_edges),
+                "network_surface_count": len(network_keys),
+                "all_capture_target_count": len(surfaces),
+                "nonnetwork_target_count": len(nonnetwork_targets),
+                "verified_junction_handoff": {
+                    "status": "VERIFIED_PER_LINK_CONTINUITY_BOUND",
+                    "links": handoffs,
+                    "only_declared_neighbor_pairs_omitted_from_duplicate_pair_audit": True,
+                },
+                "shared_verifier_result": shared_result,
+                "nonedge_network_pair_checks": [],
+                "failed_stage": "network_surface_against_nonnetwork_target",
+                "anatomical_admission": False,
+            }
+
+        prepared_cache = {}
+        prepared_type = getattr(verifier, "PreparedSurface", ())
+
+        def prepared_for_pair(key):
+            value = surfaces[key]
+            if isinstance(value, prepared_type):
+                return value
+            if key not in prepared_cache:
+                prepared_cache[key] = verifier.prepare_surface(
+                    key, value[0], value[1],
+                    normals=value[2] if len(value) > 2 else None,
+                    source_vertex_ids=value[3] if len(value) > 3 else
+                    np.arange(len(value[0]), dtype=np.uint64))
+            return prepared_cache[key]
+
+        nonedge_rows = []
+        for left_index, first in enumerate(changed):
+            for second in changed[left_index + 1:]:
+                if frozenset((first, second)) in verified_edges:
+                    continue
+                if progress_callback is not None:
+                    progress_callback(
+                        f"CHECKING_UNDECLARED_NETWORK_PAIR_{first[0]}_{first[1]}__"
+                        f"{second[0]}_{second[1]}")
+                pair_result = verifier.audit_surface_pair(
+                    prepared_for_pair(first), prepared_for_pair(second))
+                pair_row = {
+                    "identities": [list(first), list(second)],
+                    "passed": pair_result.get("passed") is True,
+                    "audit": pair_result,
+                    "declared_network_edge": False,
+                }
+                nonedge_rows.append(pair_row)
+                if progress_callback is not None:
+                    progress_callback(
+                        f"FINISHED_UNDECLARED_NETWORK_PAIR_{first[0]}_{first[1]}__"
+                        f"{second[0]}_{second[1]}_"
+                        f"{'PASSED' if pair_row['passed'] else 'REJECTED'}")
+                if not pair_row["passed"]:
+                    return {
+                        "schema": "numi.human.brachiocephalic.current-network-all-target-screen.v1",
+                        "status": "CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_REJECTED",
+                        "passed": False,
+                        "network_edge_count": len(normalized_edges),
+                        "network_surface_count": len(network_keys),
+                        "all_capture_target_count": len(surfaces),
+                        "nonnetwork_target_count": len(nonnetwork_targets),
+                        "verified_junction_handoff": {
+                            "status": "VERIFIED_PER_LINK_CONTINUITY_BOUND",
+                            "links": handoffs,
+                            "only_declared_neighbor_pairs_omitted_from_duplicate_pair_audit": True,
+                        },
+                        "shared_verifier_result": shared_result,
+                        "nonedge_network_pair_checks": nonedge_rows,
+                        "failed_stage": "undeclared_network_pair",
+                        "anatomical_admission": False,
+                    }
+
+        return {
+            "schema": "numi.human.brachiocephalic.current-network-all-target-screen.v1",
+            "status": "CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_PASSED_UNADMITTED",
+            "passed": True,
+            "network_edge_count": len(normalized_edges),
+            "network_surface_count": len(network_keys),
+            "all_capture_target_count": len(surfaces),
+            "all_capture_target_identity_sha256": hashlib.sha256(
+                b"".join(np.asarray(key, dtype="<u4").tobytes()
+                         for key in sorted(surfaces))
+            ).hexdigest(),
+            "nonnetwork_target_count": len(nonnetwork_targets),
+            "verified_junction_handoff": {
+                "status": "VERIFIED_PER_LINK_CONTINUITY_BOUND",
+                "links": handoffs,
+                "only_declared_neighbor_pairs_omitted_from_duplicate_pair_audit": True,
+                "omission_reason": (
+                    "each direct neighbor pair is independently bound to current Float32 "
+                    "positions/faces/GIDs, exact collar ancestry, positive solid overlap, "
+                    "exact inside-both witness, and source-baseline calibre"),
+            },
+            "shared_verifier_result": shared_result,
+            "nonedge_network_pair_checks": nonedge_rows,
+            "declared_skin_enclosures": len(enclosures),
+            "scope_limit": (
+                "All network surfaces were checked against every nonnetwork captured surface, "
+                "and every non-edge network pair was checked with the shared exact pair oracle. "
+                "Only the exact direct-neighbor pairs with complete per-link 3D continuity "
+                "proofs were omitted from duplicate generic containment checks. This is "
+                "collision and source-calibre evidence, not all-pose/native/anatomical admission."),
+            "anatomical_admission": False,
+        }
 
     targets = tuple(sorted(surfaces))
     changed = tuple(sorted(network_keys))

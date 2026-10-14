@@ -1055,6 +1055,9 @@ def _runtime_network_source_pairs(edge_evidence: dict, separate_evidence: dict) 
 
 def run_all_target_network_screen(
     context: dict, edge_evidence: dict, separate_evidence: dict,
+    *, verified_network_continuity: dict | None = None,
+    verified_network_source_inventory: dict | None = None,
+    progress_callback=None,
 ) -> dict:
     """Run the existing central collision oracle against the full captured pack."""
     raw_pairs = _runtime_network_source_pairs(edge_evidence, separate_evidence)
@@ -1066,11 +1069,19 @@ def run_all_target_network_screen(
                  f"source collar face pairs are malformed for {edge}")
         source_pairs[edge] = [(int(parent), int(child))
                               for parent, child in pairs]
+    optional = {}
+    if verified_network_continuity is not None:
+        optional["verified_network_continuity"] = verified_network_continuity
+    if verified_network_source_inventory is not None:
+        optional["verified_network_source_inventory"] = verified_network_source_inventory
+    if progress_callback is not None:
+        optional["progress_callback"] = progress_callback
     return geometry_gate.audit_network_rows_against_all_targets(
         shared_verifier,
         context["surfaces"],
         (*NETWORK_EDGES, *SVC_PORTS),
         source_pairs,
+        **optional,
     )
 
 

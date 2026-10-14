@@ -889,3 +889,43 @@ def test_explicit_current_capture_bundle_rejects_hash_or_payload_drift(tmp_path)
     wrong_payload["anatomy_payload_sha256"] = "1" * 64
     with pytest.raises(ValueError, match="does not bind"):
         prep._validated_capture_input_bundle(wrong_payload)
+
+
+def test_network_screen_passes_verified_continuity_and_progress_callback(monkeypatch):
+    pair_map = {
+        edge: np.asarray([[2, 3]], dtype="<i8")
+        for edge in (*prep.NETWORK_EDGES, *prep.SVC_PORTS)
+    }
+    monkeypatch.setattr(
+        prep, "_runtime_network_source_pairs", lambda _edges, _separate: pair_map)
+    continuity = {"status": "PASS_SOURCE_NETWORK_LINK_CONTINUITY_UNADMITTED"}
+    progress = lambda _stage: None
+    captured = {}
+
+    source_inventory = {"candidate_surface_count": 17}
+
+    def oracle(_verifier, surfaces, edges, source_pairs, *,
+               verified_network_continuity=None,
+               verified_network_source_inventory=None, progress_callback=None):
+        captured.update({
+            "surfaces": surfaces,
+            "edges": edges,
+            "source_pairs": source_pairs,
+            "continuity": verified_network_continuity,
+            "source_inventory": verified_network_source_inventory,
+            "progress": progress_callback,
+        })
+        return {"passed": True}
+
+    monkeypatch.setattr(prep.geometry_gate,
+                        "audit_network_rows_against_all_targets", oracle)
+    result = prep.run_all_target_network_screen(
+        {"surfaces": {"bound": True}}, {}, {},
+        verified_network_continuity=continuity,
+        verified_network_source_inventory=source_inventory,
+        progress_callback=progress)
+    assert result["passed"] is True
+    assert captured["continuity"] is continuity
+    assert captured["source_inventory"] is source_inventory
+    assert captured["progress"] is progress
+    assert captured["edges"] == (*prep.NETWORK_EDGES, *prep.SVC_PORTS)
