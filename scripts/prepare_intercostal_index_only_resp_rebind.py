@@ -91,7 +91,11 @@ def main() -> None:
     for name, path in input_paths.items():
         require(path.is_file(), f"missing source-only input: {name}")
         digest = sha_file(path)
-        expected = EXPECTED[name if name != "candidate_payload_source" else "candidate_payload"]
+        expected_key = {
+            "candidate_payload_source": "candidate_payload",
+            "arrangement_descriptors_046": "descriptors_046",
+        }.get(name, name)
+        expected = EXPECTED[expected_key]
         require(digest == expected, f"source-only input hash mismatch: {name}")
         inventory[name] = {"path": str(path.resolve()), "sha256": digest, "bytes": path.stat().st_size}
 
