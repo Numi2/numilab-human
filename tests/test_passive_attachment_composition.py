@@ -1733,6 +1733,110 @@ def test_registered_rest_sparse_inverse_hits_two_micrometre_float32_gate():
     assert np.isfinite(condition).all()
 
 
+def test_registered_rest_subset_forward_matches_full_native_fp32_order():
+    pose_a = np.asarray([0.12, -0.07, 0.03, 0.0, 0.0, 0.0, 1.0], dtype="<f4")
+    pose_b = np.asarray([-0.04, 0.05, 0.01, 0.0, 0.0,
+                         np.float32(0.38268343), np.float32(0.9238795)], dtype="<f4")
+    bindings = [
+        {"core": 10, "translation": np.asarray([0.01, 0.0, -0.02], dtype="<f4"),
+         "quaternion": np.asarray([0.0, 0.0, 0.0, 1.0], dtype="<f4"),
+         "scale": np.float32(1.0)},
+        {"core": 11, "translation": np.asarray([-0.03, 0.02, 0.01], dtype="<f4"),
+         "quaternion": np.asarray([0.0, 0.0, 0.0, 1.0], dtype="<f4"),
+         "scale": np.float32(0.97)},
+    ]
+    row = {
+        "stable_id": 134, "vertex_count": 5, "bindings": bindings,
+        "binding_indices": np.asarray([
+            [0, 1, 0, 0], [1, 0, 0, 0], [0, 1, 0, 0],
+            [1, 0, 0, 0], [0, 1, 0, 0],
+        ], dtype="<u4"),
+        "weights": np.asarray([
+            [0.37, 0.63, 0.0, 0.0], [0.2, 0.8, 0.0, 0.0],
+            [0.9, 0.1, 0.0, 0.0], [0.51, 0.49, 0.0, 0.0],
+            [0.1, 0.9, 0.0, 0.0],
+        ], dtype="<f4"),
+    }
+    points = np.asarray([
+        [0.2, -0.4, 0.7], [-1.1, 0.03, 0.8], [0.0, 0.0, 0.0],
+        [1e-8, -3e-8, 7e-8], [0.33, -0.21, 0.04],
+    ], dtype="<f4")
+    poses = {10: pose_a, 11: pose_b}
+    full = pac._native_blended_rest_positions(row, points, poses)
+    subset = pac._native_blended_rest_positions_for_vertices(
+        row, points, np.asarray([4, 0, 3]), poses,
+    )
+    assert np.array_equal(subset, full[[4, 0, 3]])
+
+
+def test_registered_rest_f32_neighbor_adjustment_repairs_target_sliver():
+    pose = np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")
+    row = {
+        "stable_id": 134, "vertex_count": 3,
+        "bindings": [{
+            "core": 10, "translation": np.zeros(3, dtype="<f4"),
+            "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"),
+            "scale": np.float32(1),
+        }],
+        "binding_indices": np.zeros((3, 4), dtype="<u4"),
+        "weights": np.asarray([[1, 0, 0, 0]] * 3, dtype="<f4"),
+        "faces": np.asarray([[0, 1, 2]], dtype="<u4"),
+    }
+    target = np.asarray([
+        [0.1, 0.1, 0.0], [0.1003, 0.1, 0.0],
+        [0.10015, 0.10000003, 0.0],
+    ], dtype="<f4")
+    source = target.copy()
+    source[2, 1] = np.nextafter(np.float32(0.1), np.float32(-np.inf))
+    actual = source.copy()
+    source_after, actual_after, report = pac._repair_rest_orientation_f32_neighbors(
+        row, source, actual, target, {10: pose}, np.asarray([2]),
+    )
+    assert report["initial_reversed_face_ids"] == [0]
+    assert report["remaining_reversed_face_ids"] == []
+    assert report["candidate_evaluations"] > 0
+    assert len(report["adjustments"]) == 1
+    assert np.array_equal(actual_after, source_after)
+    residual2 = pac._native_squared_rest_residual(target, actual_after)
+    assert np.all(residual2 <= np.float32(4e-12))
+    repaired = pac._rest_face_orientation_diagnostics(
+        row, source, actual_after, target, np.asarray([2]),
+    )
+    assert repaired["minimum_corrected_target_orientation_cosine"] > 0.0
+
+
+def test_registered_rest_f32_neighbor_adjustment_does_not_waive_unreachable_sliver():
+    pose = np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")
+    row = {
+        "stable_id": 134, "vertex_count": 3,
+        "bindings": [{
+            "core": 10, "translation": np.zeros(3, dtype="<f4"),
+            "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"),
+            "scale": np.float32(1),
+        }],
+        "binding_indices": np.zeros((3, 4), dtype="<u4"),
+        "weights": np.asarray([[1, 0, 0, 0]] * 3, dtype="<f4"),
+        "faces": np.asarray([[0, 1, 2]], dtype="<u4"),
+    }
+    target = np.asarray([
+        [0.1, 0.1, 0.0], [0.1003, 0.1, 0.0],
+        [0.10015, 0.10000003, 0.0],
+    ], dtype="<f4")
+    source = target.copy()
+    source[2, 1] = np.float32(target[0, 1] - np.float32(3e-7))
+    _source_after, actual_after, report = pac._repair_rest_orientation_f32_neighbors(
+        row, source, source, target, {10: pose}, np.asarray([2]),
+    )
+    assert report["adjustments"] == []
+    assert report["remaining_reversed_face_ids"] == [0]
+    assert np.all(pac._native_squared_rest_residual(target, actual_after)
+                  <= np.float32(4e-12))
+    with pytest.raises(ValueError, match="reverses the parent-rest target"):
+        pac._rest_face_orientation_diagnostics(
+            row, source, actual_after, target, np.asarray([2]),
+        )
+
+
 def test_registered_rest_orientation_uses_authoritative_parent_target():
     row = {
         "stable_id": 131,

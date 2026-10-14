@@ -1712,6 +1712,221 @@ def _recompute_rest_conforming_normals(row_data, source_normals, world_positions
     }
 
 
+def _native_blended_rest_positions_for_vertices(row_data, positions, vertex_indices,
+                                                poses):
+    """Replay the native ordered FP32 rest blend for selected child vertices."""
+    import numpy as np
+
+    selected_vertices = np.asarray(vertex_indices, dtype=np.int64)
+    points = np.asarray(positions, dtype="<f4")[selected_vertices]
+    indices = row_data["binding_indices"][selected_vertices].astype(np.int64)
+    weights = np.asarray(row_data["weights"][selected_vertices], dtype="<f4")
+    bindings = row_data["bindings"]
+    world_by_binding = np.zeros((len(points), len(bindings), 3), dtype="<f4")
+    active_bindings = np.unique(indices[weights > 0])
+    for binding_index in active_bindings:
+        binding_index = int(binding_index)
+        require(binding_index < len(bindings),
+                f"registered-rest row {row_data['stable_id']} subset uses an absent child binding")
+        binding = bindings[binding_index]
+        core = binding["core"]
+        require(core in poses,
+                f"registered-rest binding Core {core} is absent from NHRIGID")
+        pose = poses[core]
+        use = np.any((indices == binding_index) & (weights > 0), axis=1)
+        local = np.float32(
+            binding["translation"][None, :]
+            + np.float32(_rotate_points_f32(binding["quaternion"], points[use])
+                         * binding["scale"])
+        )
+        world_by_binding[use, binding_index, :] = np.float32(
+            pose[None, :3] + _rotate_points_f32(pose[3:7], local)
+        )
+
+    result = np.zeros((len(points), 3), dtype="<f4")
+    for lane in range(4):
+        active = weights[:, lane] > 0
+        if not np.any(active):
+            continue
+        selected_bindings = indices[active, lane]
+        contribution = np.float32(
+            world_by_binding[np.flatnonzero(active), selected_bindings]
+            * weights[active, lane, None]
+        )
+        result[active] = np.float32(result[active] + contribution)
+    return result
+
+
+def _repair_rest_orientation_f32_neighbors(row_data, source_positions,
+                                           actual_positions, target_positions,
+                                           poses, changed_vertices, *,
+                                           max_passes=4, max_ulps=2,
+                                           threshold2=None, time_budget_s=120.0):
+    """Try bounded child-source FP32 neighbors for parent-target sliver faces."""
+    import time
+
+    import numpy as np
+
+    if threshold2 is None:
+        threshold2 = np.float32(4e-12)
+    started = time.monotonic()
+    deadline = started + float(time_budget_s)
+    faces = np.asarray(row_data["faces"], dtype=np.int64)
+    source = np.asarray(source_positions, dtype="<f4").copy()
+    actual = np.asarray(actual_positions, dtype="<f4").copy()
+    targets = np.asarray(target_positions, dtype="<f4")
+    changed = np.zeros(row_data["vertex_count"], dtype=bool)
+    changed[np.asarray(changed_vertices, dtype=np.int64)] = True
+    touched_faces = np.flatnonzero(np.any(changed[faces], axis=1))
+    if len(touched_faces) == 0:
+        return source, actual, {
+            "candidate_evaluations": 0, "adjustments": [],
+            "remaining_reversed_face_ids": [],
+            "elapsed_seconds": time.monotonic() - started,
+        }
+
+    target_triangles = targets[faces[touched_faces]].astype(np.float64)
+    target_normals = np.cross(
+        target_triangles[:, 1] - target_triangles[:, 0],
+        target_triangles[:, 2] - target_triangles[:, 0],
+    )
+    target_area = np.linalg.norm(target_normals, axis=1)
+    require(np.isfinite(target_normals).all() and np.all(target_area > 0.0),
+            f"registered-rest row {row_data['stable_id']} has degenerate parent-target faces")
+    touched_lookup = np.full(len(faces), -1, dtype=np.int64)
+    touched_lookup[touched_faces] = np.arange(len(touched_faces), dtype=np.int64)
+    base_source = source.copy()
+    adjustments = []
+    candidate_evaluations = 0
+
+    def current_face_state():
+        tri = actual[faces[touched_faces]].astype(np.float64)
+        normals = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
+        areas = np.linalg.norm(normals, axis=1)
+        dots = np.einsum("ij,ij->i", normals, target_normals)
+        return normals, areas, dots
+
+    _, initial_areas, initial_dots = current_face_state()
+    initial_reversed = touched_faces[
+        (initial_areas == 0.0) | (initial_dots <= 0.0)
+    ]
+    for pass_index in range(int(max_passes)):
+        if time.monotonic() >= deadline:
+            break
+        _, current_areas, current_dots = current_face_state()
+        current_bad = (current_areas == 0.0) | (current_dots <= 0.0)
+        if not np.any(current_bad):
+            break
+        bad_face_ids = touched_faces[current_bad]
+        candidate_vertices = np.unique(faces[bad_face_ids].reshape(-1))
+        best = None
+        for vertex in candidate_vertices:
+            if time.monotonic() >= deadline:
+                break
+            incident_global = np.flatnonzero(np.any(faces == int(vertex), axis=1))
+            incident_local = touched_lookup[incident_global]
+            incident_keep = incident_local >= 0
+            incident_global = incident_global[incident_keep]
+            incident_local = incident_local[incident_keep]
+            if not len(incident_global):
+                continue
+            incident_target_normals = target_normals[incident_local]
+            incident_target_area = target_area[incident_local]
+            old_triangles = actual[faces[incident_global]].astype(np.float64)
+            old_normals = np.cross(
+                old_triangles[:, 1] - old_triangles[:, 0],
+                old_triangles[:, 2] - old_triangles[:, 0],
+            )
+            old_areas = np.linalg.norm(old_normals, axis=1)
+            old_dots = np.einsum("ij,ij->i", old_normals, incident_target_normals)
+            old_bad = (old_areas == 0.0) | (old_dots <= 0.0)
+            old_bad_count = int(np.count_nonzero(old_bad))
+            if old_bad_count == 0:
+                continue
+
+            for axis in range(3):
+                base_value = np.float32(base_source[int(vertex), axis])
+                for direction in (-1.0, 1.0):
+                    neighbor = base_value
+                    toward = np.float32(-np.inf if direction < 0 else np.inf)
+                    for ulp_count in range(1, int(max_ulps) + 1):
+                        neighbor = np.nextafter(neighbor, toward)
+                        if neighbor == source[int(vertex), axis]:
+                            continue
+                        candidate_evaluations += 1
+                        trial_source = source.copy()
+                        trial_source[int(vertex), axis] = neighbor
+                        candidate_world = _native_blended_rest_positions_for_vertices(
+                            row_data, trial_source, [int(vertex)], poses,
+                        )[0]
+                        residual2 = _native_squared_rest_residual(
+                            targets[int(vertex):int(vertex)+1], candidate_world[None, :],
+                        )[0]
+                        if not np.isfinite(residual2) or residual2 > threshold2:
+                            continue
+
+                        trial_triangles = actual[faces[incident_global]].astype(np.float64)
+                        for corner in range(3):
+                            mask = faces[incident_global, corner] == int(vertex)
+                            trial_triangles[mask, corner, :] = candidate_world.astype(np.float64)
+                        trial_normals = np.cross(
+                            trial_triangles[:, 1] - trial_triangles[:, 0],
+                            trial_triangles[:, 2] - trial_triangles[:, 0],
+                        )
+                        trial_areas = np.linalg.norm(trial_normals, axis=1)
+                        trial_dots = np.einsum(
+                            "ij,ij->i", trial_normals, incident_target_normals,
+                        )
+                        trial_bad = (trial_areas == 0.0) | (trial_dots <= 0.0)
+                        if np.any((~old_bad) & trial_bad):
+                            continue
+                        trial_bad_count = int(np.count_nonzero(trial_bad))
+                        if trial_bad_count >= old_bad_count:
+                            continue
+                        cosines = trial_dots / (trial_areas * incident_target_area)
+                        score = (
+                            trial_bad_count,
+                            ulp_count,
+                            float(residual2),
+                            -float(cosines.min()),
+                        )
+                        if best is None or score < best["score"]:
+                            best = {
+                                "score": score,
+                                "vertex": int(vertex),
+                                "axis": axis,
+                                "direction": int(direction),
+                                "ulp_count": ulp_count,
+                                "source_value_before": float(source[int(vertex), axis]),
+                                "source_value_after": float(neighbor),
+                                "world_position_after": candidate_world.copy(),
+                                "residual_um": float(np.sqrt(float(residual2)) * 1e6),
+                                "bad_incident_before": old_bad_count,
+                                "bad_incident_after": trial_bad_count,
+                            }
+        if best is None:
+            break
+        vertex = best["vertex"]
+        axis = best["axis"]
+        source[vertex, axis] = np.float32(best["source_value_after"])
+        actual[vertex] = best["world_position_after"]
+        adjustments.append({key: value for key, value in best.items() if key not in {
+            "score", "world_position_after",
+        }})
+    _, final_areas, final_dots = current_face_state()
+    remaining = touched_faces[(final_areas == 0.0) | (final_dots <= 0.0)]
+    return source, actual, {
+        "candidate_evaluations": candidate_evaluations,
+        "initial_reversed_face_ids": initial_reversed.astype(int).tolist(),
+        "adjustments": adjustments,
+        "remaining_reversed_face_ids": remaining.astype(int).tolist(),
+        "elapsed_seconds": time.monotonic() - started,
+        "max_ulps_from_solved_source_per_coordinate": int(max_ulps),
+        "max_passes": int(max_passes),
+        "time_budget_s": float(time_budget_s),
+    }
+
+
 def _rest_face_orientation_diagnostics(row_data, before_positions, after_positions,
                                        target_positions, changed_vertices):
     """Compare corrected faces to the authoritative full-parent rest target.
@@ -1754,8 +1969,11 @@ def _rest_face_orientation_diagnostics(row_data, before_positions, after_positio
             f"registered-rest row {row_data['stable_id']} has a degenerate parent-rest target face")
     dot = np.einsum("ij,ij->i", after, target)
     cosine = dot / (after_area * target_area)
-    require(np.all(dot > 0.0),
-            f"registered-rest row {row_data['stable_id']} corrected face reverses the parent-rest target")
+    reversed_local = np.flatnonzero(dot <= 0.0)
+    require(len(reversed_local) == 0,
+            f"registered-rest row {row_data['stable_id']} corrected face "
+            f"{int(np.flatnonzero(touched)[int(reversed_local[0])]) if len(reversed_local) else -1} "
+            "reverses the parent-rest target")
     before_dot = np.einsum("ij,ij->i", before, target)
     return {
         "touched_face_count": int(np.count_nonzero(touched)),
@@ -2029,6 +2247,16 @@ def reemit_parent_rest_conformance(
             remaining = np.flatnonzero(squared_after > threshold2)
             require(len(remaining) == 0,
                     f"registered-rest row {stable_id} remains outside the 2 um gate at vertex {int(remaining[0]) if len(remaining) else -1}")
+            neighbor_repair = _repair_rest_orientation_f32_neighbors(
+                row_data, proposed, actual_after, targets, poses, failing,
+                max_passes=4, max_ulps=2, threshold2=threshold2,
+                time_budget_s=120.0,
+            )
+            proposed, actual_after, neighbor_diagnostics = neighbor_repair
+            squared_after = _native_squared_rest_residual(targets, actual_after)
+            remaining = np.flatnonzero(squared_after > threshold2)
+            require(len(remaining) == 0,
+                    f"registered-rest row {stable_id} neighbor adjustment exceeds the 2 um gate at vertex {int(remaining[0]) if len(remaining) else -1}")
             changed = np.flatnonzero(np.any(proposed != original_positions, axis=1))
             require(len(changed) > 0,
                     f"registered-rest row {stable_id} has no representable correction")
@@ -2067,6 +2295,7 @@ def reemit_parent_rest_conformance(
                 ),
                 "normal_replay": normal_replay,
                 "face_orientation": face_diagnostics,
+                "f32_orientation_neighbor_repair": neighbor_diagnostics,
                 "after_failing_vertex_count": 0,
                 "after_first_witness_vertex": None,
                 "after_worst_vertex": int(np.argmax(squared_after)),
