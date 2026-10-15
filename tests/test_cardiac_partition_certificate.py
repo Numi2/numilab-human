@@ -363,6 +363,47 @@ class ExactCoverageTests(unittest.TestCase):
 
 
 class EmittedInterfaceTests(unittest.TestCase):
+    def test_emitted_self_failure_retains_exact_face_pair_audit(self):
+        from unittest.mock import patch
+        _, rows = fixture()
+        regions, interface = emitted(rows, A)
+        failed = {"count": 1, "triangle_pairs": [(0, 2)],
+                  "aabb_candidate_pairs": 3, "allowed_shared_index_contacts": 2}
+        with (
+            patch.object(cert.predicates, "_audit_pair", return_value=failed),
+            self.assertRaisesRegex(HumanImportError, "emitted region self-intersects") as caught,
+        ):
+            cert.audit_shared_interface_partition(regions, interface)
+        self.assertEqual(caught.exception.diagnostic,
+                         {"stage": "emitted_self_intersection", "region": A, "audit": failed})
+
+    def test_emitted_cross_contact_failure_retains_faces_and_exact_metre_points(self):
+        from unittest.mock import patch
+        _, rows = fixture()
+        regions, interface = emitted(rows, A)
+        # Force rejection at the unchanged contact guard, after valid self checks.
+        with (
+            patch.object(cert, "_contact_on_interface", return_value=False),
+            self.assertRaisesRegex(HumanImportError, "outside their declared interface") as caught,
+        ):
+            cert.audit_shared_interface_partition(regions, interface)
+        detail = caught.exception.diagnostic
+        self.assertEqual(detail["stage"], "emitted_cross_domain_contact")
+        self.assertEqual((detail["first_region"], detail["second_region"]), (A, B))
+        self.assertIs(type(detail["first_face"]), int)
+        self.assertIs(type(detail["second_face"]), int)
+        self.assertFalse(detail["contact_on_declared_interface"])
+        first = {tuple(decode(x) for x in p) for p in detail["first_triangle_m"]}
+        second = {tuple(decode(x) for x in p) for p in detail["second_triangle_m"]}
+        self.assertEqual(first, {tuple(F.from_float(x) for x in p)
+                                 for p in regions[A][detail["first_face"]]})
+        self.assertEqual(second, {tuple(F.from_float(x) for x in p)
+                                  for p in regions[B][detail["second_face"]]})
+        self.assertTrue(detail["points_m"])
+        for point in detail["points_m"]:
+            value = tuple(decode(x) for x in point)
+            self.assertTrue(all(isinstance(x, F) for x in value))
+
     def test_both_priorities_admit_shared_interface_with_disjoint_interiors(self):
         _,rows=fixture()
         for priority in (A,B):

@@ -586,7 +586,11 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
         require(moments[name][0]>0,'emitted region winding must be outward')
         mesh=_Prepared(integer(triangles))
         audit=predicates._audit_pair(mesh.records,mesh.records,same_surface=True)
-        require(audit['count']==0,'emitted region self-intersects')
+        if audit['count']:
+            error = HumanImportError('cardiac partition certificate: emitted region self-intersects')
+            error.diagnostic = {'stage': 'emitted_self_intersection', 'region': name,
+                                'audit': audit}
+            raise error
         if topo['face_components'] > 1:
             topo['component_winding'] = _component_winding(mesh)
         prepared[name]=mesh;reports[name]={'topology':topo,'self_intersection_count':0,'moments':_moments_json(moments[name])}
@@ -610,8 +614,21 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
             containing_edges.append({_edge_key(tri[i], tri[(i+1)%3])
                 for i in range(3)
                 if all(_on_segment(p,tri[i],tri[(i+1)%3]) for p in points)})
-        require(allowed and all(containing_edges),
-                'emitted regions intersect outside their declared interface or through a face interior')
+        if not (allowed and all(containing_edges)):
+            error = HumanImportError(
+                'cardiac partition certificate: emitted regions intersect outside their declared interface or through a face interior')
+            error.diagnostic = {
+                'stage': 'emitted_cross_domain_contact',
+                'first_region': a, 'first_face': row[3],
+                'second_region': b, 'second_face': other[3],
+                'points_m': [[encode_rational(Fraction(x, scale)) for x in p] for p in points],
+                'first_triangle_m': [[encode_rational(Fraction(x, scale)) for x in p] for p in row[0]],
+                'second_triangle_m': [[encode_rational(Fraction(x, scale)) for x in p] for p in other[0]],
+                'contact_on_declared_interface': allowed,
+                'contact_on_each_triangle_edge': [bool(edges) for edges in containing_edges],
+                'completed_cross_domain_contact_count': contacts,
+            }
+            raise error
         if classify_connected_patches:
             # Vertex contact blocks both incident edges conservatively.
             blocked[a].update(containing_edges[0])
