@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -298,6 +299,34 @@ def _source_preflight_fixture():
         },
         "network_topology": {"pending_source_collar_edges": []},
     }
+
+
+def test_run150_explicit_bundle_authenticates_its_extra_payload_path(tmp_path):
+    payload = tmp_path / "resting-thorax.nhanatomy"
+    payload.write_bytes(b"pinned NHA payload")
+    digest = runner._sha_file(payload)
+    bundle = {
+        "anatomy_payload_sha256": digest,
+        "anatomy_receipt_path": str(tmp_path / "anatomy-receipt.json"),
+        "anatomy_receipt_sha256": "a" * 64,
+        "capture_pack_path": str(tmp_path / "capture.mrvpack"),
+        "capture_pack_sha256": "b" * 64,
+        "capture_receipt_path": str(tmp_path / "capture-receipt.json"),
+        "capture_receipt_sha256": "c" * 64,
+    }
+    for key in ("anatomy_receipt_path", "capture_pack_path", "capture_receipt_path"):
+        Path(bundle[key]).write_bytes(b"")
+    explicit = {**bundle, "payload_path": str(payload)}
+    runner._validate_run150_explicit_capture_bundle(bundle, explicit)
+
+    explicit["payload_path"] = str(tmp_path / "missing.nhanatomy")
+    with pytest.raises((FileNotFoundError, ValueError)):
+        runner._validate_run150_explicit_capture_bundle(bundle, explicit)
+
+    explicit["payload_path"] = str(payload)
+    explicit["unbound_path"] = str(payload)
+    with pytest.raises(ValueError, match="unexpected field set"):
+        runner._validate_run150_explicit_capture_bundle(bundle, explicit)
 
 
 def test_prepare_freezes_exact_bundle_without_calling_geometry(tmp_path, monkeypatch):

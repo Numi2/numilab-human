@@ -899,6 +899,31 @@ def _validate_cached_network_inventory(live_inventory: dict, cached_inventory: d
              "cached 15-link inventory differs from current typed source/pack rows")
 
 
+def _validate_run150_explicit_capture_bundle(
+    capture_inputs: dict, explicit_bundle: object,
+) -> None:
+    """Bind the seven-field bundle plus its separately declared payload file."""
+    _require(isinstance(capture_inputs, dict) and isinstance(explicit_bundle, dict)
+             and set(explicit_bundle) == set(capture_inputs) | {"payload_path"},
+             "run150 explicit capture bundle has an unexpected field set")
+    for key, value in capture_inputs.items():
+        observed = explicit_bundle[key]
+        if key.endswith("_path"):
+            _require(isinstance(value, str) and isinstance(observed, str)
+                     and Path(value).resolve(strict=True)
+                     == Path(observed).resolve(strict=True),
+                     f"run150 explicit capture path differs for {key}")
+        else:
+            _require(observed == value,
+                     f"run150 explicit capture field differs for {key}")
+    payload_path = explicit_bundle.get("payload_path")
+    _require(isinstance(payload_path, str)
+             and Path(payload_path).resolve(strict=True).is_file()
+             and _sha_file(Path(payload_path).resolve(strict=True))
+             == capture_inputs.get("anatomy_payload_sha256"),
+             "run150 explicit anatomy payload does not match its pinned SHA-256")
+
+
 def continue_cached_all_target_screen(
     capture_inputs_json: Path, output_dir: Path, *, cached_terminal_report: Path | None = None,
 ) -> dict:
@@ -942,13 +967,7 @@ def continue_cached_all_target_screen(
         capture_inputs = json.loads(bundle_bytes)
         explicit_bundle = terminal.get("current_capture", {}).get(
             "explicit_merged_capture_input_bundle")
-        _require(isinstance(explicit_bundle, dict)
-                 and set(explicit_bundle) == set(capture_inputs)
-                 and all((Path(capture_inputs[key]).resolve()
-                          == Path(explicit_bundle[key]).resolve())
-                         if key.endswith("_path") else capture_inputs[key] == explicit_bundle[key]
-                         for key in capture_inputs),
-                 "run150 cached report and current input bundle do not name identical files")
+        _validate_run150_explicit_capture_bundle(capture_inputs, explicit_bundle)
         live_preflight, runtime = preparation.build_preflight(
             capture_inputs, return_runtime_inputs=True)
         _require(live_preflight.get("status") == "SOURCE0_SEAMOWNER_CAPTURE_READY_NO_GEOMETRY_PREDICATE"
