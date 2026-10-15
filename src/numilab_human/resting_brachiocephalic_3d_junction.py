@@ -59,6 +59,8 @@ PAIR = (BRIDGE_KEY, TARGET_KEY)
 PARTIAL_OVERLAP_PORT = PAIR
 VOLUME_BALANCE_RELATIVE_TOLERANCE = 1e-6
 SOURCE_BASELINE_ADDITIONS_LINK = ((51011, 525), (51011, 469))
+SOURCE_BASELINE_SURFACE_REPLAY_POLICY = (
+    "EXACT_CURRENT_BASELINE_POSITION_AND_ORDERED_FACE_REPLAY")
 SOURCE_BASELINE_OBSERVATION_REPORT = (
     source007.A / "full-anatomy-delivery-audit-1378"
     / "current-capture-network-gate-023-continuity-only-001"
@@ -391,17 +393,31 @@ def _read_pinned_source_baseline_observation(
              "pinned baseline source/capture preflight bytes changed")
     preflight = json.loads(preflight_path.read_text())
     capture = preflight.get("actual_accepted_capture")
-    _require(isinstance(capture, Mapping)
-             and identity.get("accepted_pack_sha256") == capture.get("pack_sha256")
-             and identity.get("accepted_capture_receipt_sha256")
-             == capture.get("capture_receipt_sha256")
-             and identity.get("invoked_anatomy_receipt_sha256")
-             == capture.get("invoked_anatomy_receipt_sha256")
-             and identity.get("source_nha_payload_sha256")
-             == capture.get("common_field_source_anatomy_payload_sha256")
-             and identity.get("accepted_step") == capture.get("accepted_step") == 0
-             and identity.get("accepted_time_s") == capture.get("accepted_time_s") == 0,
-             "pinned source-baseline observation does not match the current exact source/capture")
+    _require(isinstance(capture, Mapping),
+             "pinned source-baseline observation lacks its historical capture identity")
+    historical_identity = {
+        "accepted_pack_sha256": capture.get("pack_sha256"),
+        "accepted_capture_receipt_sha256": capture.get("capture_receipt_sha256"),
+        "invoked_anatomy_receipt_sha256": capture.get("invoked_anatomy_receipt_sha256"),
+        "source_nha_payload_sha256": capture.get(
+            "common_field_source_anatomy_payload_sha256"),
+        "accepted_step": capture.get("accepted_step"),
+        "accepted_time_s": capture.get("accepted_time_s"),
+    }
+    current_identity = {
+        key: identity.get(key) for key in historical_identity
+    }
+    identity_matches_capture = current_identity == historical_identity
+    replay_policy = observation.get("current_source_surface_replay")
+    _require(replay_policy in (None, SOURCE_BASELINE_SURFACE_REPLAY_POLICY),
+             "source-baseline observation declares an unknown current-capture replay policy")
+    _require(identity_matches_capture
+             or replay_policy == SOURCE_BASELINE_SURFACE_REPLAY_POLICY,
+             "pinned source-baseline observation belongs to another capture; "
+             "exact current-source surface replay was not declared")
+    _require(identity.get("accepted_step") == 0
+             and float(identity.get("accepted_time_s", -1.0)) == 0.0,
+             "current source-baseline replay is restricted to the exact source-zero capture")
     network = report.get("network_source_continuity")
     _require(isinstance(network, Mapping)
              and network.get("first_failed_link")
@@ -461,10 +477,13 @@ def _read_pinned_source_baseline_observation(
         owner = ancestry.get(role, {})
         row = source_rows.get(stable_id, source_rows.get(str(stable_id)))
         record = row.get("record") if isinstance(row, Mapping) else None
+        historical_gid_offset = owner.get("native_nha_gid_base_offset")
         _require(isinstance(record, (tuple, list)) and len(record) == 8
                  and owner.get("typed_identity") == [51011, stable_id]
-                 and owner.get("native_nha_gid_base_offset")
-                 == native_nha_gid_base_offset
+                 and type(historical_gid_offset) is int
+                 and historical_gid_offset >= 0
+                 and (not identity_matches_capture
+                      or historical_gid_offset == native_nha_gid_base_offset)
                  and owner.get("nha_source_row_first_vertex") == record[1]
                  and owner.get("capture_face_count") == len(surface.faces)
                  and owner.get("capture_faces_u32_sha256")
@@ -503,11 +522,40 @@ def _read_pinned_source_baseline_observation(
             "face_u32_sha256": prepared_report.get("faces_sha256"),
             "gids_u64_sha256": surface_report.get("source_vertex_ids_sha256"),
         }
-        _require(all(isinstance(value, str) and len(value) == 64
-                     for value in expected_hashes.values())
-                 and expected_hashes == surface_lineage[role],
-                 f"pinned 023 per-link {report_role} position/GID/face hashes changed")
+        valid_hashes = all(
+            isinstance(value, str) and len(value) == 64
+            and all(character in "0123456789abcdef" for character in value)
+            for value in expected_hashes.values())
+        _require(valid_hashes,
+                 f"pinned 023 per-link {report_role} has invalid surface hashes")
+        if identity_matches_capture:
+            _require(expected_hashes == surface_lineage[role],
+                     f"pinned 023 per-link {report_role} position/GID/face hashes changed")
+        else:
+            _require(
+                expected_hashes["position_f32_sha256"]
+                == surface_lineage[role]["position_f32_sha256"]
+                and expected_hashes["face_u32_sha256"]
+                == surface_lineage[role]["face_u32_sha256"],
+                f"current independently reconstructed {report_role} positions or "
+                "ordered faces differ from the pinned source-surface observation")
         frozen_lineage[role] = expected_hashes
+    identity_replay = {
+        "applied": not identity_matches_capture,
+        "policy": replay_policy,
+        "historical_capture_identity": historical_identity,
+        "current_capture_identity": current_identity,
+        "historical_and_current_capture_identity_equal": identity_matches_capture,
+        "exact_position_and_ordered_face_hashes_replayed": all(
+            frozen_lineage[role]["position_f32_sha256"]
+            == surface_lineage[role]["position_f32_sha256"]
+            and frozen_lineage[role]["face_u32_sha256"]
+            == surface_lineage[role]["face_u32_sha256"]
+            for role in ("bridge", "target")),
+        "historical_gid_hashes_are_provenance_only_when_capture_differs": (
+            not identity_matches_capture),
+        "current_abi5_gid_slot_rebinding_required": True,
+    }
     return {
         "path": str(report_path),
         "sha256": report_sha,
@@ -517,6 +565,7 @@ def _read_pinned_source_baseline_observation(
         "unexpected_pairs": unexpected,
         "surface_lineage": surface_lineage,
         "frozen_surface_lineage": frozen_lineage,
+        "capture_identity_replay": identity_replay,
         "unrelated_global_baseline_addendum_ignored": True,
         "link": link,
     }
@@ -883,7 +932,24 @@ def _declared_baseline_collar_addendum(
             "baseline_surface_lineage": observation["surface_lineage"],
             "frozen_inventory_surface_lineage": observation[
                 "frozen_surface_lineage"],
-            "baseline_surfaces_reconstructed_from_pinned_source_and_capture": True,
+            "baseline_surfaces_reconstructed_from_current_pinned_source_and_capture": True,
+            "capture_identity_replay": observation["capture_identity_replay"],
+            "current_abi5_gid_slot_rebinding": {
+                "passed": True,
+                "typed_rows": {
+                    str(stable_id): {
+                        "source_face_to_baseline_vertex_map_sha256": identity_record[
+                            "source_face_to_baseline_vertex_map_sha256"],
+                        "source_faces_u32_sha256": identity_record[
+                            "source_faces_u32_sha256"],
+                        "source_vertices6_f32_sha256": identity_record[
+                            "source_vertices6_f32_sha256"],
+                        "native_source_slot_gid_formula": identity_record[
+                            "native_source_slot_gid_formula"],
+                    }
+                    for stable_id, identity_record in source_identities.items()
+                },
+            },
             "candidate_geometry_used": False,
         },
         "source_identities": source_identities,

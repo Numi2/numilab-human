@@ -711,6 +711,104 @@ def _declared_source_baseline_addendum_fixture(
     }
 
 
+def _rebind_source_baseline_fixture_to_current_capture(inputs, *, gid_offset=20000):
+    capture = inputs["baseline_binding"]["actual_accepted_capture"]
+    capture["pack_sha256"] = "9" * 64
+    capture["receipt_sha256"] = "8" * 64
+    capture["capture_receipt_sha256"] = "8" * 64
+    capture["invoked_anatomy_receipt_sha256"] = "7" * 64
+    capture["common_field_source_anatomy_payload_sha256"] = "6" * 64
+    baseline = inputs["baseline_binding"]["source_bound_rigid_rest_baseline"]
+    baseline["source_nha_payload_sha256"] = "6" * 64
+    for stable_id, surface in (
+        (inputs["bridge_key"][1], inputs["bridge"]),
+        (inputs["target_key"][1], inputs["target"]),
+    ):
+        record = inputs["source_rows"][stable_id]["record"]
+        surface.source_vertex_ids = np.asarray(
+            gid_offset + record[1] + np.arange(len(surface.positions)),
+            dtype="<u8")
+    inputs["gid_base_offset"] = gid_offset
+    inputs["baseline_observation"]["current_source_surface_replay"] = (
+        junction.SOURCE_BASELINE_SURFACE_REPLAY_POLICY)
+    return inputs
+
+
+def _run_declared_source_baseline_addendum(inputs):
+    return junction.verify_baseline_matched_collar_addendum(
+        av,
+        bridge_key=inputs["bridge_key"],
+        target_key=inputs["target_key"],
+        source_link_evidence=inputs["source_link_evidence"],
+        source_rows=inputs["source_rows"],
+        source_map=inputs["source_map"],
+        independent_source_baseline_bridge_surface=inputs["bridge"],
+        independent_source_baseline_target_surface=inputs["target"],
+        native_nha_gid_base_offset=inputs["gid_base_offset"],
+        baseline_binding=inputs["baseline_binding"],
+        declarations=inputs["declarations"],
+        baseline_observation=inputs["baseline_observation"],
+    )
+
+
+def test_current_capture_rebind_replays_only_exact_source_positions_and_faces(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    old_parent_gids = np.ascontiguousarray(
+        inputs["bridge"].source_vertex_ids, dtype="<u8").tobytes()
+    inputs = _rebind_source_baseline_fixture_to_current_capture(inputs)
+    assert old_parent_gids != np.ascontiguousarray(
+        inputs["bridge"].source_vertex_ids, dtype="<u8").tobytes()
+
+    proof = _run_declared_source_baseline_addendum(inputs)
+    observation = proof["source_baseline_observation"]
+    replay = observation["capture_identity_replay"]
+    assert replay["applied"] is True
+    assert replay["policy"] == junction.SOURCE_BASELINE_SURFACE_REPLAY_POLICY
+    assert replay["historical_capture_identity"]["accepted_pack_sha256"] == "1" * 64
+    assert replay["current_capture_identity"]["accepted_pack_sha256"] == "9" * 64
+    assert replay["historical_capture_identity"]["source_nha_payload_sha256"] == "4" * 64
+    assert replay["current_capture_identity"]["source_nha_payload_sha256"] == "6" * 64
+    assert replay["exact_position_and_ordered_face_hashes_replayed"] is True
+    assert replay["historical_gid_hashes_are_provenance_only_when_capture_differs"] is True
+    assert replay["current_abi5_gid_slot_rebinding_required"] is True
+    current_gid_binding = observation["current_abi5_gid_slot_rebinding"]
+    assert current_gid_binding["passed"] is True
+    assert set(current_gid_binding["typed_rows"]) == {"469", "525"}
+    assert proof["source_baseline_observation"][
+        "baseline_surfaces_reconstructed_from_current_pinned_source_and_capture"]
+    assert proof["candidate_geometry_used"] is False
+    assert proof["candidate_gate_still_requires_exact_pair_audit_and_solid_calibre_proof"]
+
+
+def test_current_capture_rebind_requires_explicit_policy_and_exact_surfaces(
+        monkeypatch, tmp_path):
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    _rebind_source_baseline_fixture_to_current_capture(inputs)
+    inputs["baseline_observation"].pop("current_source_surface_replay")
+    with pytest.raises(ValueError, match="another capture"):
+        _run_declared_source_baseline_addendum(inputs)
+
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    _rebind_source_baseline_fixture_to_current_capture(inputs)
+    inputs["bridge"].positions[0, 0] = np.nextafter(
+        inputs["bridge"].positions[0, 0], np.float32(np.inf), dtype=np.float32)
+    with pytest.raises(ValueError, match="positions or ordered faces differ"):
+        _run_declared_source_baseline_addendum(inputs)
+
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    _rebind_source_baseline_fixture_to_current_capture(inputs)
+    inputs["target"].faces[0, 0] = np.uint32(1)
+    with pytest.raises(ValueError, match="current ABI5 parent/child face arrays"):
+        _run_declared_source_baseline_addendum(inputs)
+
+    inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)
+    _rebind_source_baseline_fixture_to_current_capture(inputs)
+    inputs["bridge"].source_vertex_ids[0] += np.uint64(1)
+    with pytest.raises(ValueError, match="GIDs do not bind exact NHA source slots"):
+        _run_declared_source_baseline_addendum(inputs)
+
+
 def test_declared_baseline_additions_require_exact_pinned_baseline_report(
         monkeypatch, tmp_path):
     inputs = _declared_source_baseline_addendum_fixture(monkeypatch, tmp_path)

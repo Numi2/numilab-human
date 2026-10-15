@@ -310,6 +310,8 @@ def _source_baseline_collar_addendum(runtime: dict, preflight_report: dict) -> d
         baseline_observation={
             "report_path": str(report_path),
             "report_sha256": report_sha,
+            "current_source_surface_replay": (
+                network_owner.SOURCE_BASELINE_SURFACE_REPLAY_POLICY),
         },
     )
 

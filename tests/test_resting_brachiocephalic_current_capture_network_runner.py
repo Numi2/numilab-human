@@ -617,6 +617,8 @@ def test_source_baseline_addendum_replays_only_pinned_023_typed_link(tmp_path, m
     assert call["baseline_observation"] == {
         "report_path": str(report_path.resolve()),
         "report_sha256": report_sha,
+        "current_source_surface_replay": (
+            runner.network_owner.SOURCE_BASELINE_SURFACE_REPLAY_POLICY),
     }
 
 
