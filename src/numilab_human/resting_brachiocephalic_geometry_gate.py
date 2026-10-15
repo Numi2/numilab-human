@@ -76,6 +76,52 @@ AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
 AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256 = (
     "2bdd574e91e91c209caae11f6370113df7612a6857aaecf40310ac142cac7d8a")
 AORTIC_ARCH_DESCENDING_INTERFACE_PAIR_COUNT = 28
+AORTIC_ARCH_CAROTID_SOURCE_INTERFACE = ((51011, 7), (51011, 465))
+AORTIC_ARCH_CAROTID_INTERFACE_REPORT_SHA256 = (
+    "c59e4ff043b36c5db2fcf9499922710e784e177eb7cf0878ddaf9331cd3054ed")
+AORTIC_ARCH_CAROTID_INTERFACE_PREFLIGHT_SHA256 = (
+    "8e31c88cbe52be5a0c93ccc53bd340d1282a5748e732b32f6f909ea75740e960")
+AORTIC_ARCH_CAROTID_INTERFACE_HANDOFF_SHA256 = (
+    "b20b8ec29de9d1ae4483baa2ebc470405bc72d78a1686c0b0e3c1b267f575ab2")
+AORTIC_ARCH_CAROTID_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "3d47e3920a4cb60242d07c2e01786bfb91035e68d5bf316dfc1919e8cbacae12")
+AORTIC_ARCH_CAROTID_INTERFACE_PAIRSET_SHA256 = (
+    "f408e4ad80d0be34e95c96dcf50834b45bb7894f748335e78f8128c5d1aac90a")
+AORTIC_ARCH_CAROTID_INTERFACE_PAIR_COUNT = 30
+AORTIC_ARCH_CAROTID_SOURCE_ROWS = {
+    (51011, 7): {
+        "typed_identity": [51011, 7],
+        "source_member": "FJ3411",
+        "name": "arch of aorta",
+        "fma": "FMA3768",
+        "body_index": 20,
+        "layer": 2,
+        "record": [20, 110808, 381, 664590, 2010, 7, 2, 0],
+        "first_vertex": 110808,
+        "vertex_count": 381,
+        "face_count": 670,
+        "source_vertices_f32_sha256": (
+            "3cd9483fa2a7a17c21026f719a6f3635a865a2b5a4223d8c5068a9fd50ee614a"),
+        "source_faces_u32_sha256": (
+            "bd1b68b7ee6da377fd5b6a7d67339a2f1063b6cbef866e24149e1dad66083da8"),
+    },
+    (51011, 465): {
+        "typed_identity": [51011, 465],
+        "source_member": "FJ3483",
+        "name": "left common carotid artery",
+        "fma": "FMA4058",
+        "body_index": 22,
+        "layer": 2,
+        "record": [22, 1952328, 126, 10322379, 510, 465, 2, 0],
+        "first_vertex": 1952328,
+        "vertex_count": 126,
+        "face_count": 170,
+        "source_vertices_f32_sha256": (
+            "08a2e279435e652d2f3a9075d04ddb059bcabbb00e18702ddfc11604de31b59c"),
+        "source_faces_u32_sha256": (
+            "aaa1711508c7a41b015dffeda30d8f991b3e60853c6db9d3410ef99deda5305b"),
+    },
+}
 
 
 def _require(condition: bool, message: str) -> None:
@@ -986,6 +1032,24 @@ def _validate_aortic_arch_descending_interface_certificate(
         pair_dtype="<u4",
     )
 
+def _validate_aortic_arch_carotid_interface_certificate(certificate, surfaces, network_keys):
+    """Validate the frozen, non-flow arch/left-carotid source interface."""
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_CAROTID_SOURCE_INTERFACE,
+        schema="numi.human.verified-aortic-source-interface-handoff.v1",
+        status="VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE",
+        evidence_report_sha256=AORTIC_ARCH_CAROTID_INTERFACE_REPORT_SHA256,
+        source_preflight_sha256=AORTIC_ARCH_CAROTID_INTERFACE_PREFLIGHT_SHA256,
+        capture_input_bundle_sha256=(
+            AORTIC_ARCH_CAROTID_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        exact_pair_count=AORTIC_ARCH_CAROTID_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=AORTIC_ARCH_CAROTID_INTERFACE_PAIRSET_SHA256,
+        source_rows=AORTIC_ARCH_CAROTID_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
+
+
 def audit_network_rows_against_all_targets(
     verifier, surfaces, network_edges, source_face_pairs, *,
     verified_network_continuity=None, verified_network_source_inventory=None,
@@ -1028,6 +1092,8 @@ def audit_network_rows_against_all_targets(
                 _validate_aortic_arch_interface_certificate,
             AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE:
                 _validate_aortic_arch_descending_interface_certificate,
+            AORTIC_ARCH_CAROTID_SOURCE_INTERFACE:
+                _validate_aortic_arch_carotid_interface_certificate,
         }
         _require(isinstance(verified_nonnetwork_interface_certificates, Mapping)
                  and bool(verified_nonnetwork_interface_certificates)
