@@ -37,13 +37,18 @@ def test_native_partition_requires_exact_source_and_shared_material(tmp_path):
     assert proof["shared_interface_face_count"] == 1
     assert proof["exact_native_partition_certificate"]["interiors_disjoint"]
     assert proof["exact_native_partition_certificate"]["shared_interface_opposite_chain"]
+    offline = certify_shared_muscle_partition(captures, (51005,1), (51005,2), source, digest,
+                                              coordinate_provenance="counterfactual_owner_replay")
+    assert offline["exact_partition_certificate"]["interiors_disjoint"]
+    assert "exact_native_partition_certificate" not in offline
+    assert offline["coordinate_provenance"] == "counterfactual_owner_replay"
     assert not proof["physical_state_advanced"]
 
 
 def test_rejects_native_interface_coordinate_drift(tmp_path):
     source, digest, captures = scene(tmp_path)
     captures[(51005,2)][0][0, 0] = np.float32(1e-8)
-    with pytest.raises(Exception, match="different native Float32 positions"):
+    with pytest.raises(Exception, match="different Float32 positions"):
         certify_shared_muscle_partition(captures, (51005,1), (51005,2), source, digest)
 
 

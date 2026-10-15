@@ -32,8 +32,16 @@ def compose_reference_receipt(source_receipt: Path, output: Path,
                     "changed parent-mapped row requires material-parent reconstruction")
     pac.require(not output.exists(), "reference receipt output exists")
     output.mkdir()
-    extension = extend_reference_bindings(old, output/"supports", extensions)
-    extended = output/"supports"/old.name
+    if extensions:
+        extension = extend_reference_bindings(old, output/"supports", extensions)
+        extended = output/"supports"/old.name
+    else:
+        # Existing supports already describe both sides of a prior interface.
+        # Reuse them without constructing a duplicate payload or binding table.
+        extension = {"status": "EXISTING_REGISTERED_SUPPORTS_REUSED",
+                     "source_path": str(old), "source_sha256": owner["sha256"],
+                     "changed_binding_rows": []}
+        extended = old
     composed = pac.compose(extended, output/"composed", replacements,
                            reference_surface_rows=changed)
     payload = output/"composed"/old.name

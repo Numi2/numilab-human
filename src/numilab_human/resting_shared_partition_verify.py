@@ -12,7 +12,10 @@ from . import resting_anatomy_verify as verify
 from . import cardiac_partition_certificate as cert
 
 
-def certify_shared_muscle_partition(surfaces, first, second, source: Path, expected_sha256: str):
+def certify_shared_muscle_partition(surfaces, first, second, source: Path, expected_sha256: str,
+                                     *, coordinate_provenance="accepted_native_capture"):
+    pac.require(coordinate_provenance in ("accepted_native_capture", "counterfactual_owner_replay"),
+                "shared partition coordinate provenance invalid")
     first, second = verify.typed_key(first), verify.typed_key(second)
     pac.require(first != second and first[0] == second[0] == 51005,
                 "shared muscle certificate requires two distinct typed muscle IDs")
@@ -33,7 +36,7 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path, expec
         xyz, faces, normals, gids = captured
         sf = verify.prepare_surface(key, xyz, faces, normals=normals, source_vertex_ids=gids)
         pac.require(sf.closed and xyz.dtype == np.dtype("<f4") and normals.dtype == np.dtype("<f4"),
-                    "shared partition requires closed exact native Float32 surfaces")
+                    "shared partition requires closed exact Float32 surfaces")
         positions, source_normals = arrays["positions"], arrays["normals"]
         used = np.unique(arrays["faces"])
         pac.require(np.isfinite(source_normals).all()
@@ -84,7 +87,7 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path, expec
         a, b = prepared[first], prepared[second]
         xyz_a = {t: a.positions[int(v)].tobytes() for t, v in zip(other, a.faces[i])}
         xyz_b = {t: b.positions[int(v)].tobytes() for t, v in zip(token, b.faces[j])}
-        pac.require(xyz_a == xyz_b, "shared material owner emitted different native Float32 positions")
+        pac.require(xyz_a == xyz_b, "shared material owner emitted different Float32 positions")
         interface.append(tuple(tuple(float(x) for x in p) for p in a.positions[a.faces[i]]))
         pairs.append([i, j])
     pac.require(bool(interface), "no reciprocal source/material shared interface")
@@ -96,16 +99,21 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path, expec
                                                   expected_region_component_counts=counts)
     pac.require(audit["interiors_disjoint"] and audit["shared_interface_opposite_chain"],
                 "native shared partition certificate failed")
-    return {"identities": [list(first), list(second)],
+    proof = {"identities": [list(first), list(second)],
             "source_path": str(source), "source_sha256": expected_sha256,
             "ordered_source_bindings": {str(key): proof for key, proof in bindings.items()},
             "shared_face_pairs": pairs, "shared_interface_face_count": len(interface),
-            "exact_native_partition_certificate": audit,
+            "coordinate_provenance": coordinate_provenance,
+            "exact_partition_certificate": audit,
             "physical_state_advanced": False, "anatomical_admission": False}
+    if coordinate_provenance == "accepted_native_capture":
+        proof["exact_native_partition_certificate"] = audit
+    return proof
 
 
 def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
-                                required_closed=(), intended_enclosures=()):
+                                required_closed=(), intended_enclosures=(),
+                                coordinate_provenance="accepted_native_capture"):
     """Use existing exact certificates and existing nearby predicates in order."""
     certificates, partners, seen = [], {}, set()
     for first, second, path, digest in partitions:
@@ -113,7 +121,8 @@ def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
         pac.require(frozenset((first, second)) not in seen and first != second,
                     "duplicate shared partition declaration")
         seen.add(frozenset((first, second)))
-        proof = certify_shared_muscle_partition(surfaces, first, second, path, digest)
+        proof = certify_shared_muscle_partition(surfaces, first, second, path, digest,
+                                                coordinate_provenance=coordinate_provenance)
         certificates.append(proof)
         partners.setdefault(first, set()).add(second)
         partners.setdefault(second, set()).add(first)
@@ -132,4 +141,5 @@ def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
                         shared_partition_certificates=certificates)
     return {"passed": True, "rows": rows, "per_changed_surface": checks,
             "shared_partition_certificates": certificates,
-            "scope": "Exact native shared-solid certificates and all selected nearby surfaces; admission and motion remain separate."}
+            "scope": "Exact shared-solid certificates and all selected nearby surfaces; admission and motion remain separate.",
+            "coordinate_provenance": coordinate_provenance}

@@ -106,6 +106,14 @@ def test_receipt_rebind_preserves_parent_rows_and_mass(tmp_path):
         "first_binding": int(old["records"][2][0]),
         "first_vertex": int(old["records"][2][2]),
         "first_index": int(old["records"][2][4])}
+    # A subsequent geometry-only repair must reuse the already admitted
+    # support table while preserving the same parent-map/source ownership.
+    again = compose_reference_receipt(Path(result["receipt_path"]), tmp_path/"rebound",
+                                      [(1, patch, report)], extensions={})
+    rebound = json.loads(Path(again["receipt_path"]).read_text())
+    assert rebound["passive_tissue_parent_bindings"]["surfaces"] == receipt["passive_tissue_parent_bindings"]["surfaces"]
+    assert rebound["provenance"]["passive_reference_receipt_compositions"][-1]["binding_extension"]["status"] == "EXISTING_REGISTERED_SUPPORTS_REUSED"
+    assert not (tmp_path/"rebound"/"supports").exists()
     receipt["passive_tissue_parent_bindings"]["surfaces"][0]["stable_id"] = 1
     rp.write_text(json.dumps(receipt))
     with pytest.raises(Exception, match="material-parent reconstruction"):
