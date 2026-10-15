@@ -803,6 +803,18 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         self.assertEqual(len(result["containment"][0]["inside_component_witnesses"]), 1)
         self.assertTrue(audit_surface_pair(outer, inner, intended_enclosures=role)["passed"])
 
+    def test_disjoint_mesh_cannot_satisfy_declared_anatomical_enclosure(self):
+        outer = prepare_surface((51007, 1), tetra(), FACES)
+        escaped = prepare_surface((51005, 121), tetra(.1, 2.), FACES)
+        self.assertTrue(audit_surface_pair(escaped, outer)["passed"])
+        for first, second in ((escaped, outer), (outer, escaped)):
+            result = audit_surface_pair(first, second,
+                                        intended_enclosures=[(escaped.key, outer.key)])
+            self.assertFalse(result["passed"])
+            self.assertTrue(result["aabb_disjoint"])
+            self.assertTrue(result["declared_enclosure_outside_aabb"])
+            self.assertEqual(result["triangle_pair_count"], 0)
+
     def test_intended_enclosure_direction_is_not_symmetric(self):
         outer = prepare_surface((51007, 1), tetra(), FACES)
         inner = prepare_surface((51011, 525), tetra(.1, .1), FACES)

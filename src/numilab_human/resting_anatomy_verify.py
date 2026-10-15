@@ -1955,8 +1955,13 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         for value in intended_source_patch_complexes
     ]
     if not _overlap(first, second):
-        return {"identities": [list(first.key), list(second.key)], "passed": True,
-                "aabb_disjoint": True, "triangle_pair_count": 0}
+        # Disjoint solids are safe ordinary neighbors, but cannot satisfy a
+        # declared anatomical enclosure. Retain that distinction in the cheap
+        # path instead of bypassing the outside-enclosure rejection below.
+        return {"identities": [list(first.key), list(second.key)], "passed": not enclosures,
+                "aabb_disjoint": True, "triangle_pair_count": 0,
+                "declared_enclosure_outside_aabb": bool(enclosures),
+                "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)]}
     result = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
     pairs = result["triangle_pairs"]
     pair_set = {tuple(pair) for pair in pairs}
