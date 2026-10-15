@@ -1855,6 +1855,93 @@ def test_aortic_arch_interface_certificate_binds_exact_current_surfaces(monkeypa
             certificate, changed, {edge[0]})
 
 
+def test_generic_source_interface_certificate_binds_typed_nonflow_pair(monkeypatch):
+    edge = ((51011, 7), (51011, 8))
+    surfaces = {}
+    for index, key in enumerate(edge):
+        points, faces = _tetra(1.0, index * 2.0)
+        surfaces[key] = (
+            points, faces, np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1)),
+            np.arange(index * 10, index * 10 + 4, dtype="<u8"))
+    rows = {
+        "51011:7": {
+            "source_member": "FJ3411", "fma": "FMA3768",
+            "name": "arch of aorta", "body_index": 20, "layer": 2,
+            "first_vertex": 110808, "vertex_count": 381, "face_count": 670,
+            "faces_sha256": "1" * 64,
+        },
+        "51011:8": {
+            "source_member": "FJ3427", "fma": "FMA3784",
+            "name": "descending aorta", "body_index": 20, "layer": 2,
+            "first_vertex": 111189, "vertex_count": 2351, "face_count": 4562,
+            "faces_sha256": "2" * 64,
+        },
+    }
+    pair_sha = hashlib.sha256(
+        np.asarray(((0, 0),), dtype="<u4").tobytes()).hexdigest()
+    fingerprints = {
+        f"{key[0]}:{key[1]}": bg._aortic_arch_surface_fingerprint(
+            surfaces[key], key=key)
+        for key in edge
+    }
+    config = {
+        "schema": "numi.human.verified-aortic-source-interface-handoff.v1",
+        "status": "VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE",
+        "evidence_report_sha256": "a" * 64,
+        "source_preflight_sha256": "b" * 64,
+        "capture_input_bundle_sha256": "c" * 64,
+        "exact_face_pairs": [[0, 0]],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": fingerprints,
+        "source_rows": rows,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "passed": True,
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+    }
+    accepted = bg._validate_source_interface_certificate(
+        config, surfaces, {edge[0]}, edge=edge,
+        schema=config["schema"], status=config["status"],
+        evidence_report_sha256=config["evidence_report_sha256"],
+        source_preflight_sha256=config["source_preflight_sha256"],
+        capture_input_bundle_sha256=config["capture_input_bundle_sha256"],
+        exact_pair_count=1, exact_pairset_sha256=pair_sha,
+        source_rows={edge[0]: rows["51011:7"], edge[1]: rows["51011:8"]},
+        pair_dtype="<u4")
+    assert accepted["passed"] is True
+    assert accepted["typed_link"] == [list(edge[0]), list(edge[1])]
+    assert accepted["anatomical_admission"] is False
+
+    wrong_pair = dict(config, typed_link=[list(edge[0]), [51011, 6]])
+    with pytest.raises(ValueError, match="names another typed pair"):
+        bg._validate_source_interface_certificate(
+            wrong_pair, surfaces, {edge[0]}, edge=edge,
+            schema=config["schema"], status=config["status"],
+            evidence_report_sha256=config["evidence_report_sha256"],
+            source_preflight_sha256=config["source_preflight_sha256"],
+            capture_input_bundle_sha256=config["capture_input_bundle_sha256"],
+            exact_pair_count=1, exact_pairset_sha256=pair_sha,
+            source_rows={edge[0]: rows["51011:7"], edge[1]: rows["51011:8"]},
+            pair_dtype="<u4")
+
+    out_of_range = dict(config, exact_face_pairs=[[670, 0]])
+    with pytest.raises(ValueError, match="face-pair indices exceed their bound source rows"):
+        bg._validate_source_interface_certificate(
+            out_of_range, surfaces, {edge[0]}, edge=edge,
+            schema=config["schema"], status=config["status"],
+            evidence_report_sha256=config["evidence_report_sha256"],
+            source_preflight_sha256=config["source_preflight_sha256"],
+            capture_input_bundle_sha256=config["capture_input_bundle_sha256"],
+            exact_pair_count=1, exact_pairset_sha256=pair_sha,
+            source_rows={edge[0]: rows["51011:7"], edge[1]: rows["51011:8"]},
+            pair_dtype="<u4")
+
+
 def test_aortic_interface_handoff_skips_only_certified_pair_and_keeps_other_pairs_strict(
         monkeypatch):
     surfaces, edges, source_pairs, continuity = _handoff_fixture()

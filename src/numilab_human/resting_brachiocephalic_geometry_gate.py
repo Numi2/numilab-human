@@ -839,25 +839,27 @@ def _aortic_arch_surface_fingerprint(value, *, key):
     }
 
 
-def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_keys):
-    """Validate the sole captured non-flow interface against its exact proof and arrays."""
-    edge = AORTIC_ARCH_SOURCE_INTERFACE
+def _validate_source_interface_certificate(
+    certificate, surfaces, network_keys, *, edge, schema, status,
+    evidence_report_sha256, source_preflight_sha256, capture_input_bundle_sha256,
+    exact_pair_count, exact_pairset_sha256, source_rows, pair_dtype="<u4",
+):
+    """Validate one frozen source-bound non-flow vessel interface and live arrays."""
+    edge = (_identity(edge[0]), _identity(edge[1]))
+    label = f"source interface {edge[0]}->{edge[1]}"
     _require(isinstance(certificate, dict)
-             and certificate.get("schema")
-             == "numi.human.verified-aortic-arch-interface-handoff.v1"
-             and certificate.get("status") == "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE"
+             and certificate.get("schema") == schema
+             and certificate.get("status") == status
              and certificate.get("passed") is True
              and certificate.get("typed_link") == [list(edge[0]), list(edge[1])],
-             "aortic interface certificate is missing or names another typed pair")
-    _require(certificate.get("evidence_report_sha256")
-             == AORTIC_ARCH_INTERFACE_REPORT_SHA256
-             and certificate.get("source_preflight_sha256")
-             == AORTIC_ARCH_INTERFACE_PREFLIGHT_SHA256
+             f"{label} certificate is missing or names another typed pair")
+    _require(certificate.get("evidence_report_sha256") == evidence_report_sha256
+             and certificate.get("source_preflight_sha256") == source_preflight_sha256
              and certificate.get("capture_input_bundle_sha256")
-             == AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256,
-             "aortic interface certificate is stale or belongs to another capture")
+             == capture_input_bundle_sha256,
+             f"{label} certificate is stale or belongs to another capture")
     _require(edge[0] in network_keys and edge[1] not in network_keys,
-             "aortic interface must remain the single network-to-nonnetwork handoff")
+             f"{label} must be one exact network-to-nonnetwork handoff")
     _require(certificate.get("source_topology_passed") is True
              and certificate.get("interface_gate_passed") is True
              and certificate.get("solid_gate_passed") is True
@@ -865,38 +867,48 @@ def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_k
              and certificate.get("candidate_pairs_equal_frozen_source_pairs") is True
              and certificate.get("baseline_pairs_equal_frozen_source_pairs") is True
              and certificate.get("candidate_baseline_exact_pairsets_equal") is True,
-             "aortic source certificate lacks topology/interface/solid/calibre proof")
+             f"{label} lacks topology/interface/solid/calibre proof")
     proof_rows = certificate.get("source_rows")
-    _require(isinstance(proof_rows, dict)
-             and set(proof_rows) == {f"{edge[0][0]}:{edge[0][1]}",
-                                     f"{edge[1][0]}:{edge[1][1]}"},
-             "aortic source certificate does not bind exactly rows 7 and 6")
-    for key, expected in AORTIC_ARCH_SOURCE_ROWS.items():
-        row = proof_rows[f"{key[0]}:{key[1]}"]
-        _require(row == expected,
-                 f"aortic source identity/face ancestry differs for {key}")
+    expected_row_keys = {f"{key[0]}:{key[1]}" for key in edge}
+    _require(isinstance(proof_rows, dict) and set(proof_rows) == expected_row_keys,
+             f"{label} does not bind exactly its two source rows")
+    _require(isinstance(source_rows, Mapping)
+             and set(source_rows) == set(edge),
+             f"{label} expected source identity map does not match the typed pair")
+    for key, expected in source_rows.items():
+        observed = proof_rows[f"{key[0]}:{key[1]}"]
+        _require(observed == expected,
+                 f"{label} source identity/face ancestry differs for {key}")
     raw_pairs = certificate.get("exact_face_pairs")
-    _require(isinstance(raw_pairs, list) and len(raw_pairs) == AORTIC_ARCH_INTERFACE_PAIR_COUNT
+    _require(isinstance(raw_pairs, list) and len(raw_pairs) == exact_pair_count
              and all(isinstance(pair, list) and len(pair) == 2
                      and all(type(face) is int and face >= 0 for face in pair)
                      for pair in raw_pairs),
-             "aortic certificate exact pair set is malformed")
+             f"{label} exact face-pair set is malformed")
     pairs = tuple((pair[0], pair[1]) for pair in raw_pairs)
-    _require(pairs == tuple(sorted(set(pairs)))
-             and hashlib.sha256(np.asarray(pairs, dtype="<u4").tobytes()).hexdigest()
-             == AORTIC_ARCH_INTERFACE_PAIRSET_SHA256
+    left_row = source_rows.get(edge[0])
+    right_row = source_rows.get(edge[1])
+    _require(isinstance(left_row, Mapping) and type(left_row.get("face_count")) is int
+             and isinstance(right_row, Mapping) and type(right_row.get("face_count")) is int
+             and all(first < left_row["face_count"] and second < right_row["face_count"]
+                     for first, second in pairs),
+             f"{label} face-pair indices exceed their bound source rows")
+    _require(pair_dtype in ("<u4", "<i8")
+             and pairs == tuple(sorted(set(pairs)))
+             and hashlib.sha256(np.asarray(pairs, dtype=pair_dtype).tobytes()).hexdigest()
+             == exact_pairset_sha256
              and certificate.get("exact_face_pairset_sha256")
-             == AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
-             "aortic exact interface pairs differ from the frozen 36-pair set")
+             == exact_pairset_sha256,
+             f"{label} exact source-interface pair set differs from its frozen hash")
     fingerprints = certificate.get("candidate_surface_bindings")
-    _require(isinstance(fingerprints, dict)
-             and set(fingerprints) == {f"{key[0]}:{key[1]}" for key in edge},
-             "aortic certificate does not bind both actual capture surfaces")
+    labels = {f"{key[0]}:{key[1]}" for key in edge}
+    _require(isinstance(fingerprints, dict) and set(fingerprints) == labels,
+             f"{label} certificate does not bind both actual capture surfaces")
     for key in edge:
-        label = f"{key[0]}:{key[1]}"
+        key_label = f"{key[0]}:{key[1]}"
         observed = _aortic_arch_surface_fingerprint(surfaces.get(key), key=key)
-        _require(fingerprints[label] == observed,
-                 f"aortic source certificate is stale for actual surface {key}")
+        _require(fingerprints[key_label] == observed,
+                 f"{label} certificate is stale for actual surface {key}")
     return {
         "schema": certificate["schema"],
         "status": certificate["status"],
@@ -906,7 +918,7 @@ def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_k
         "source_preflight_sha256": certificate["source_preflight_sha256"],
         "capture_input_bundle_sha256": certificate["capture_input_bundle_sha256"],
         "exact_face_pair_count": len(pairs),
-        "exact_face_pairset_sha256": AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
+        "exact_face_pairset_sha256": exact_pairset_sha256,
         "candidate_surface_bindings": fingerprints,
         "source_rows": proof_rows,
         "closed_connected_embedded_solid_proof": True,
@@ -915,6 +927,23 @@ def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_k
         "skipped_duplicate_generic_pair_only": True,
         "anatomical_admission": False,
     }
+
+
+def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_keys):
+    """Validate the frozen arch/ascending aorta handoff."""
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_SOURCE_INTERFACE,
+        schema="numi.human.verified-aortic-arch-interface-handoff.v1",
+        status="VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE",
+        evidence_report_sha256=AORTIC_ARCH_INTERFACE_REPORT_SHA256,
+        source_preflight_sha256=AORTIC_ARCH_INTERFACE_PREFLIGHT_SHA256,
+        capture_input_bundle_sha256=AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256,
+        exact_pair_count=AORTIC_ARCH_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
+        source_rows=AORTIC_ARCH_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
 
 def audit_network_rows_against_all_targets(
     verifier, surfaces, network_edges, source_face_pairs, *,
