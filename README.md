@@ -441,7 +441,7 @@ skin, clinical anatomy, or a deformable tendon continuum.
 
 The native `NHANAT1` path adds 12 exact BodyParts3D components to the exposed
 Human: one source component from the heart group, stomach, pancreas, both
-kidneys, four named aortic segments, both caval segments, and spinal cord.
+kidneys, four named aortic segments, both caval segments, and a central-canal surface (not a full spinal-cord mesh).
 Thoracic components follow MyoSim `torso`; abdominal components follow
 `Abdomen`. The Apple-M4 2K capture applies all 416 MyoSim paths for one
 100 µs bounded update before rendering all four angles. It is a source-bound
@@ -694,7 +694,8 @@ Organ manifests distinguish source-named organ representations from selected
 organ components using exact source `is_a` membership and source structural
 types. The current 24-surface bundle includes five named organ representations,
 all three atlas chamber-wall members, nine liver components, six vessels and
-the spinal cord. The original 22 surfaces remain byte-identical. An independent
+the central-canal surface. The FJ1737 source header identifies a central canal,
+not a complete spinal cord. The original 22 surfaces remain byte-identical. An independent
 audit checks all 117,960 vertices, source topology, normals and native body
 poses at rest and during torso motion. Missing walls, wrong body ownership and
 cavity-as-tissue substitutions fail before output. The ventricular source has

@@ -12637,7 +12637,7 @@ def _bodyparts_unit_vector(value: list[float], context: str) -> list[float]:
 def bodyparts_myosim_torso_anatomy_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, myosim_artifact: Path, output: Path,
 ) -> dict[str, Any]:
-    """Package selected exact organs, vessels, and spinal cord for native posing.
+    """Package selected exact organs, vessels, and central-canal surface for native posing.
 
     Source triangles remain unchanged except for the exact source-face-owned
     exterior partition of the overlapping FJ2445/FJ2446 sibling airway proxies.
@@ -12762,6 +12762,15 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
         if not isinstance(body_index, int) or body_index < 0 or not isinstance(position, list) or not isinstance(quaternion, list):
             raise ImportError(f"BodyParts3D torso anatomy target body is malformed: {body_name}")
         archive_path, member, obj = _bodyparts_obj_member(sources, hierarchy, member_id)
+        source_obj_header = _bodyparts_validate_obj_source_header(
+            specification, obj, member,
+        )
+        identity_correction = _bodyparts_member_identity_correction(
+            stable_id, specification, obj, member,
+        )
+        if identity_correction is not None:
+            concept_id = identity_correction["concept_id"]
+            label = identity_correction["label"]
         try:
             organ_coverage = source_organ_coverage(
                 specification, source_types_by_member.get(member_id, []),
@@ -12830,6 +12839,21 @@ def bodyparts_myosim_torso_anatomy_visual_payload(
             "member_id": member_id, "member": member,
             "member_sha256": hashlib.sha256(obj).hexdigest(),
             "hierarchy": hierarchy, "layer": layer_name,
+            "source_license": source_obj_header["license"],
+            "source_obj_identity": {
+                "member_id": source_obj_header["member_id"],
+                "concept_id": source_obj_header["concept_id"],
+                "name": source_obj_header["name"],
+                "hierarchy": source_obj_header["hierarchy"],
+            },
+            "source_selection_identity": {
+                "concept_id": specification["concept_id"],
+                "label": specification["source_name"],
+                "hierarchy": hierarchy,
+            },
+            **({
+                "source_identity_correction": identity_correction["source_identity_correction"],
+            } if identity_correction is not None else {}),
             "myosim_body": body_name, "core_body_index": body_index,
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
             **organ_coverage,
@@ -15052,6 +15076,149 @@ def bodyparts_geometry_preflight(sources: Path, anatomy: dict[str, Any]) -> dict
             "frame registration, collision suitability, watertight volume meshes, "
             "material calibration, or validated physical behavior."
         ),
+    }
+
+
+
+# FJ1737 is selected by the legacy torso map as a spinal-cord component, but
+# its exact BodyParts3D OBJ header identifies the surface as the central canal.
+# Keep the stable row and owner unchanged while emitting the narrower source
+# identity. The old selection is accepted only so existing pinned maps can be
+# corrected deterministically; arbitrary identity drift remains an error.
+BODYPARTS3D_MEMBER_IDENTITY_CORRECTIONS = {
+    "FJ1737": {
+        "stable_id": 12,
+        "accepted_selection_identities": {
+            ("FMA7647", "spinal cord"),
+            ("FMA78497", "Central canal of spinal cord"),
+        },
+        "source_concept_id": "FMA78497",
+        "source_label": "Central canal of spinal cord",
+        "hierarchy": "part_of",
+        "source_member_sha256": "c86dd74640e7c820eda28783944a90998045ff42a131a7a1456a64fdff0e6471",
+        "layer": "nerve",
+        "myosim_body": "torso",
+        "core_body_index": 20,
+        "embedded_license": "CC Attribution-Share Alike 2.1 Japan",
+        "legacy_license_claim": "CC-BY-4.0",
+    },
+}
+
+
+def _bodyparts_obj_source_header(obj: bytes, source_name: str) -> dict[str, str]:
+    """Read the exact identity/license comments embedded in one OBJ member."""
+    try:
+        lines = obj.decode("utf-8").splitlines()
+    except UnicodeDecodeError as error:
+        raise ImportError(f"BodyParts3D OBJ header is not UTF-8 text: {source_name}") from error
+    fields: dict[str, list[str]] = {}
+    for raw in lines:
+        line = raw.strip()
+        if not line:
+            continue
+        if not line.startswith("#"):
+            break
+        comment = line[1:].strip()
+        for source_key, field in (
+            ("File ID :", "member_id"),
+            ("Build-up logic :", "hierarchy"),
+            ("Concept ID :", "concept_id"),
+            ("English name :", "name"),
+        ):
+            if comment.startswith(source_key):
+                fields.setdefault(field, []).append(comment[len(source_key):].strip())
+        license_match = re.search(r"licensed under (.+?)(?:[\x22\x27]|$)", comment)
+        if license_match:
+            fields.setdefault("license", []).append(license_match.group(1).strip())
+    required = ("member_id", "hierarchy", "concept_id", "name", "license")
+    result: dict[str, str] = {}
+    for field in required:
+        values = fields.get(field, [])
+        if len(values) != 1 or not values[0]:
+            raise ImportError(f"BodyParts3D OBJ header lacks one exact {field}: {source_name}")
+        result[field] = values[0]
+    result["hierarchy"] = result["hierarchy"].removeprefix("FMA 3.0 ")
+    return result
+
+
+def _bodyparts_validate_obj_source_header(
+    specification: dict[str, Any], obj: bytes, source_name: str,
+) -> dict[str, str]:
+    """Bind each selected OBJ to its embedded member, hierarchy, and license."""
+    header = _bodyparts_obj_source_header(obj, source_name)
+    if header["member_id"] != specification.get("member_id"):
+        raise ImportError(f"BodyParts3D OBJ member header differs from selected member: {source_name}")
+    if header["hierarchy"] != specification.get("hierarchy"):
+        raise ImportError(f"BodyParts3D OBJ hierarchy differs from selected archive: {source_name}")
+    return header
+
+
+def _bodyparts_member_identity_correction(
+    stable_id: int, specification: dict[str, Any], obj: bytes, source_name: str,
+) -> dict[str, Any] | None:
+    member_id = specification.get("member_id")
+    expected = BODYPARTS3D_MEMBER_IDENTITY_CORRECTIONS.get(member_id)
+    if expected is None:
+        return None
+    selected = (specification.get("concept_id"), specification.get("source_name"))
+    if selected not in expected["accepted_selection_identities"]:
+        raise ImportError(f"BodyParts3D configured identity drifted for {member_id}")
+    if type(stable_id) is not int or stable_id != expected["stable_id"]:
+        raise ImportError(f"BodyParts3D stable row drifted for {member_id}")
+    for field in ("hierarchy", "layer", "myosim_body"):
+        if specification.get(field) != expected[field]:
+            raise ImportError(f"BodyParts3D typed owner/source hierarchy drifted for {member_id}: {field}")
+    if hashlib.sha256(obj).hexdigest() != expected["source_member_sha256"]:
+        raise ImportError(f"BodyParts3D source member bytes changed for {member_id}")
+    header = _bodyparts_obj_source_header(obj, source_name)
+    actual = {
+        "member_id": member_id,
+        "hierarchy": expected["hierarchy"],
+        "concept_id": expected["source_concept_id"],
+        "name": expected["source_label"],
+        "license": expected["embedded_license"],
+    }
+    if header != actual:
+        raise ImportError(f"BodyParts3D embedded identity/license changed for {member_id}")
+    return {
+        "concept_id": expected["source_concept_id"],
+        "label": expected["source_label"],
+        "source_license": expected["embedded_license"],
+        "source_selection_identity": {
+            "concept_id": selected[0],
+            "label": selected[1],
+            "hierarchy": expected["hierarchy"],
+        },
+        "source_identity_correction": {
+            "status": "SOURCE_HEADER_AUTHENTICATED_IDENTITY_CORRECTION",
+            "source_member": member_id,
+            "source_member_sha256": expected["source_member_sha256"],
+            "stable_id_preserved": expected["stable_id"],
+            "typed_owner_preserved": {
+                "layer": expected["layer"],
+                "core_body_index": expected["core_body_index"],
+            },
+            "selected_identity_before_correction": {
+                "concept_id": selected[0],
+                "label": selected[1],
+            },
+            "embedded_obj_identity": {
+                "concept_id": header["concept_id"],
+                "name": header["name"],
+                "hierarchy": header["hierarchy"],
+            },
+            "embedded_obj_license": header["license"],
+            "source_member_sha256_verified": True,
+            "source_archive_full_sha256_independently_verified": False,
+            "legacy_importer_license_claim": expected["legacy_license_claim"],
+            "license_discrepancy": (
+                "The prior importer asserted CC-BY-4.0; this exact OBJ member "
+                "declares CC Attribution-Share Alike 2.1 Japan. This correction "
+                "is member-scoped and does not claim that the full source archive "
+                "was independently rehashed."
+            ),
+            "geometry_changed": False,
+        },
     }
 
 

@@ -226,6 +226,134 @@ def rebind_head_member_identity_metadata(
     }
 
 
+
+def rebind_central_canal_identity_metadata(
+    receipt: dict,
+    member_obj: bytes,
+    *,
+    payload_raw: bytes,
+) -> tuple[dict, dict]:
+    """Correct row 12 from its exact OBJ header without changing native bytes."""
+    expected = human.BODYPARTS3D_MEMBER_IDENTITY_CORRECTIONS["FJ1737"]
+    if not isinstance(member_obj, bytes) or not isinstance(payload_raw, bytes):
+        raise TypeError("central-canal metadata correction requires exact source and payload bytes")
+    if hashlib.sha256(member_obj).hexdigest() != expected["source_member_sha256"]:
+        raise ValueError("central-canal source member bytes differ from the pinned OBJ")
+    declared_payload = receipt.get("payload")
+    if not isinstance(declared_payload, dict):
+        raise TypeError("central-canal metadata correction requires receipt payload metadata")
+    payload_sha256 = hashlib.sha256(payload_raw).hexdigest()
+    if declared_payload.get("sha256") != payload_sha256:
+        raise ValueError("NHANAT payload bytes differ from the receipt payload hash")
+
+    from .resting_pleura_proxy import _parse_payload
+
+    header, _records, decoded_rows = _parse_payload(payload_raw)
+    header_fields = {
+        "abi": int(header[1]),
+        "surface_count": int(header[2]),
+        "vertex_count": int(header[3]),
+        "index_count": int(header[4]),
+        "registration_fingerprint32": f"{int(header[5]):08x}",
+        "source_sha256": header[6].hex(),
+    }
+    for field, value in header_fields.items():
+        if declared_payload.get(field) != value:
+            raise ValueError(f"NHANAT header {field} differs from the receipt")
+    decoded = decoded_rows.get(expected["stable_id"])
+    if decoded is None:
+        raise ValueError("NHANAT payload is missing central-canal row 12")
+    if (type(decoded.get("layer")) is not int or decoded["layer"] != 3
+            or type(decoded.get("body_index")) is not int
+            or decoded["body_index"] != expected["core_body_index"]):
+        raise ValueError("NHANAT typed owner differs for central-canal row 12")
+
+    result = copy.deepcopy(receipt)
+    source_map = result.get("provenance", {}).get("source_id_map")
+    if not isinstance(source_map, dict):
+        raise TypeError("central-canal metadata correction requires source_id_map")
+    matches = [
+        (sid, row) for sid, row in source_map.items()
+        if isinstance(row, dict) and row.get("source_member") == "FJ1737"
+    ]
+    if len(matches) != 1 or matches[0][0] != "12":
+        raise ValueError("FJ1737 must map exactly once to stable row 12")
+    sid, row = matches[0]
+    owner = row.get("source_owner_metadata")
+    if not isinstance(owner, dict):
+        raise TypeError("central-canal receipt row has no source_owner_metadata")
+    if (row.get("source_sha256") != expected["source_member_sha256"]
+            or owner.get("member_sha256") != expected["source_member_sha256"]
+            or owner.get("member_id") != "FJ1737"):
+        raise ValueError("central-canal receipt source member hash differs")
+    if (type(row.get("layer")) is not int or row["layer"] != 3
+            or type(row.get("body_index")) is not int
+            or row["body_index"] != expected["core_body_index"]
+            or type(owner.get("core_body_index")) is not int
+            or owner["core_body_index"] != expected["core_body_index"]):
+        raise ValueError("central-canal receipt typed owner differs")
+    specification = {
+        "concept_id": owner.get("concept_id"),
+        "source_name": owner.get("label"),
+        "member_id": "FJ1737",
+        "hierarchy": owner.get("hierarchy"),
+        "layer": owner.get("layer"),
+        "myosim_body": owner.get("myosim_body"),
+    }
+    correction = human._bodyparts_member_identity_correction(
+        expected["stable_id"], specification, member_obj, "FJ1737.obj",
+    )
+    if correction is None:
+        raise ValueError("central-canal source identity correction is unavailable")
+    if row.get("name") not in (
+            specification["source_name"], correction["label"]):
+        raise ValueError("central-canal receipt has an unexpected prior label")
+    if (owner.get("concept_id"), owner.get("label")) not in expected[
+            "accepted_selection_identities"]:
+        raise ValueError("central-canal receipt has an unexpected prior source identity")
+
+    source_obj_identity = {
+        "member_id": "FJ1737",
+        "concept_id": correction["concept_id"],
+        "name": correction["label"],
+        "hierarchy": expected["hierarchy"],
+    }
+    owner.update(
+        concept_id=correction["concept_id"],
+        label=correction["label"],
+        source_license=correction["source_license"],
+        source_obj_identity=source_obj_identity,
+        source_selection_identity=correction["source_selection_identity"],
+        source_identity_correction=correction["source_identity_correction"],
+    )
+    row.update(
+        name=correction["label"],
+        source_license=correction["source_license"],
+        source_obj_identity=source_obj_identity,
+        source_selection_identity=correction["source_selection_identity"],
+        source_owner_metadata=owner,
+    )
+    return result, {
+        "status": "METADATA_ONLY_SOURCE_HEADER_IDENTITY_CORRECTION_NOT_GEOMETRY_ADMISSION",
+        "stable_id": sid,
+        "source_member": "FJ1737",
+        "source_member_sha256": expected["source_member_sha256"],
+        "embedded_obj_identity": {
+            "concept_id": correction["concept_id"],
+            "name": correction["label"],
+            "hierarchy": expected["hierarchy"],
+        },
+        "embedded_obj_license": correction["source_license"],
+        "legacy_importer_license_claim": expected["legacy_license_claim"],
+        "source_archive_full_sha256_independently_verified": False,
+        "native_payload_sha256_unchanged": True,
+        "native_payload_sha256": payload_sha256,
+        "payload_typed_row_verified": True,
+        "geometry_changed": False,
+        "separate_physiological_compartment_added": False,
+    }
+
+
 def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_manifest_path: Path | None = None) -> dict:
     """Bind reference mass and skin closure diagnostics to exact NHSKIN inputs."""
     from .resting_scene import load_rigid, load_skin, source_shell_world
@@ -794,13 +922,15 @@ def _registered_passive_surfaces() -> tuple[list[dict],dict]:
             faces=(packed_indices[start_index:start_index+nindices].reshape(-1,3)-start_vertex).astype(np.int64)
             owner_metadata={k:declared[k] for k in ('concept_id','label','member_id','member_sha256',
                 'hierarchy','layer','myosim_body','core_body_index','organ_coverage',
-                'source_structure_kind') if k in declared}
+                'source_structure_kind','source_license','source_obj_identity','source_selection_identity',
+                'source_identity_correction') if k in declared}
             owners.append({'id':stable_id,'layer':layer,'name':declared['label'],
                 'source':'BodyParts3D v4.0 current registration owner',
                 'vertices':packed_vertices[start_vertex:start_vertex+nvertices,:3].astype(np.float64),
                 'normals':packed_vertices[start_vertex:start_vertex+nvertices,3:].astype(np.float64),
                 'faces':faces,'body_index':body,'source_hash':declared['member_sha256'],
-                'source_member':declared['member_id'],'source_license':'CC-BY-4.0',
+                'source_member':declared['member_id'],
+                'source_license':declared.get('source_license','CC-BY-4.0'),
                 'repair':None,'source_owner_metadata':owner_metadata})
 
     # Resolve every atlas source frame against the exact NHRIGID-derived
