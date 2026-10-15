@@ -45,6 +45,54 @@ def projected_area_gradient(triangle, normal):
     gc=np.cross(normal,e1)
     return np.array([-gb-gc,gb,gc])
 
+def ray_box(point,direction,lower,upper):
+ entry=Fraction(0);exit=None
+ for axis,component in enumerate(direction):
+  if not component:
+   if not Fraction(lower[axis])<=point[axis]<=Fraction(upper[axis]):return False
+   continue
+  first=(Fraction(lower[axis])-point[axis])/component
+  last=(Fraction(upper[axis])-point[axis])/component
+  if first>last:first,last=last,first
+  if last<0:return False
+  entry=max(entry,first);exit=last if exit is None else min(exit,last)
+  if entry>exit:return False
+ return True
+def signed_candidates(point,index,direction):
+ stack=[index.aabb_root];result=[]
+ while stack:
+  lower,upper,indices,left,right=stack.pop()
+  if not ray_box(point,direction,lower,upper):continue
+  if indices is None:stack.extend([left,right])
+  else:result.extend(indices)
+ return sorted(result)
+def exact_forward_exit(surface,index,point,direction):
+    exact_point=tuple(Fraction(x) for x in point)
+    exact_direction=tuple(Fraction(x) for x in direction)
+    def cross(a,b):
+        return (a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0])
+    def dot(a,b):
+        return sum((x*y for x,y in zip(a,b)),Fraction(0))
+    nearest_t=None
+    nearest_face=None
+    for fi in signed_candidates(exact_point,index,exact_direction):
+        a,b,c=surface.triangle_meters(int(fi))
+        u=tuple(b[j]-a[j] for j in range(3));z=tuple(c[j]-a[j] for j in range(3));n=cross(u,z)
+        den=dot(n,exact_direction)
+        if not den:continue
+        t=dot(n,tuple(a[j]-exact_point[j] for j in range(3)))/den
+        if t<=0 or (nearest_t is not None and t>=nearest_t):continue
+        hit=tuple(exact_point[j]+t*exact_direction[j] for j in range(3))
+        axis=max(range(3),key=lambda j:abs(n[j]));i,j=[j for j in range(3) if j!=axis]
+        det=u[i]*z[j]-u[j]*z[i]
+        if not det:raise ValueError("degenerate exact ray face")
+        w=tuple(hit[k]-a[k] for k in range(3))
+        wb=(w[i]*z[j]-w[j]*z[i])/det;wc=(u[i]*w[j]-u[j]*w[i])/det;wa=1-wb-wc
+        if min(wa,wb,wc)<0:continue
+        nearest_t=t;nearest_face=int(fi)
+    if nearest_t is None:raise ValueError("oriented ray has no positive target exit")
+    return float(nearest_t),nearest_face
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output"]:
@@ -54,10 +102,11 @@ def main():
     ap.add_argument("--total-bound-m", type=float, default=.006)
     ap.add_argument("--margin-m", type=float, default=.0005)
     ap.add_argument("--solid-depth", action="store_true")
+    ap.add_argument("--exit-policy",choices=["nearest","skin-normal"],default="nearest")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
-    if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .01:
-        ap.error("require 0 < margin < step <= total <= 0.01 m")
+    if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .03:
+        ap.error("require 0 < margin < step <= total <= 0.03 m")
     if not 0 <= args.orientation_ratio < 1:
         ap.error("orientation ratio must be in [0,1)")
     args.output.mkdir(exist_ok=False)
@@ -96,6 +145,10 @@ def main():
     if not np.isfinite(affine).all() or np.min(abs(np.linalg.det(affine))) < 1e-8:
         raise ValueError("invalid full-owner rest map")
     base_source = source["vertices_f"][:,:3].astype(float)
+    skin_normals=base["capture_normals"].astype(float)
+    skin_normals/=np.linalg.norm(skin_normals,axis=1)[:,None]
+    if args.exit_policy=="skin-normal" and not args.solid_depth:
+        ap.error("skin-normal exit policy requires solid-depth classification")
     base_triangles=base_points[faces].astype(float)
     base_area_vectors=np.cross(base_triangles[:,1]-base_triangles[:,0],base_triangles[:,2]-base_triangles[:,0])
     base_areas=np.linalg.norm(base_area_vectors,axis=1)
@@ -126,8 +179,9 @@ def main():
         normals*=np.sign(volume)/np.linalg.norm(normals,axis=1)[:,None]
         bones[sid]=(bone,normals,bone.meter_index() if args.solid_depth else None)
     constraints=[]
-    for sf,bary,normal in zip(cache["skin_face_ids"],cache["barycentrics"],cache["outward_normals"]):
-        constraints.append((int(sf),bary.copy(),normal.copy(),args.margin_m))
+    if args.exit_policy=="nearest":
+        for sf,bary,normal in zip(cache["skin_face_ids"],cache["barycentrics"],cache["outward_normals"]):
+            constraints.append((int(sf),bary.copy(),normal.copy(),args.margin_m))
     previous=None
     history=[]
     for iteration in range(args.iterations+1):
@@ -156,8 +210,14 @@ def main():
                 for point in surf.intersection_points_meters(bone,int(sf),int(bi)):
                     bary=barycentric(surf.triangle_meters(int(sf)),point)
                     normal=normals[bi]
+                    distance=0.
+                    if args.exit_policy=="skin-normal":
+                        normal=bary@skin_normals[faces[sf]]
+                        normal/=np.linalg.norm(normal)
+                        if normal@normals[bi]<0:
+                            distance,_=exact_forward_exit(bone,solid_index,point,normal)
                     current=float(bary@delta[faces[sf]]@normal)
-                    new_constraints.append((int(sf),bary,normal,current+args.margin_m))
+                    new_constraints.append((int(sf),bary,normal,current+distance+args.margin_m))
             if args.solid_depth and pairs:
                 point_faces={}
                 for sf,_ in pairs:
@@ -180,6 +240,9 @@ def main():
                     distance,bi,near=nearest
                     if not distance:raise ValueError("inside point has zero nearest-solid distance")
                     normal=(near-point)/distance
+                    if args.exit_policy=="skin-normal":
+                        normal=skin_normals[vi]
+                        distance,bi=exact_forward_exit(bone,solid_index,point,normal)
                     bary=np.zeros(3);bary[corner]=1
                     current=float(delta[vi]@normal)
                     new_constraints.append((sf,bary,normal,current+distance+args.margin_m))
@@ -243,10 +306,15 @@ def main():
         prior=delta[active].ravel()
         bounds=[(max(-args.total_bound_m,float(x)-args.step_bound_m),
                  min(args.total_bound_m,float(x)+args.step_bound_m)) for x in prior]
-        solved=linprog(np.concatenate([np.zeros(nd),np.ones(nd),np.ones(ne)]),
-            A_ub=coo_matrix((vv,(rr,cc)),shape=(len(rhs),nv)).tocsr(),
-            b_ub=np.array(rhs),bounds=bounds+[(0,None)]*(nd+ne),method="highs",
-            options={"time_limit":60})
+        matrix=coo_matrix((vv,(rr,cc)),shape=(len(rhs),nv)).tocsr()
+        cost=np.concatenate([np.zeros(nd),np.ones(nd),np.ones(ne)])
+        all_bounds=bounds+[(0,None)]*(nd+ne)
+        np.savez_compressed(out/"linear-program.npz",cost=cost,rhs=np.array(rhs),
+            matrix_data=matrix.data,matrix_indices=matrix.indices,matrix_indptr=matrix.indptr,
+            matrix_shape=np.array(matrix.shape),bounds=np.array([(a,np.inf if b is None else b) for a,b in all_bounds]),
+            active_vertex_ids=active,previous_displacement_m=prior)
+        solved=linprog(cost,A_ub=matrix,b_ub=np.array(rhs),bounds=all_bounds,
+            method="highs",options={"time_limit":60})
         (out/"solve.json").write_text(json.dumps(dict(success=bool(solved.success),
             message=solved.message,status=int(solved.status),constraints=len(constraints),
             active_vertices=len(active)),indent=2,allow_nan=False)+"\n")

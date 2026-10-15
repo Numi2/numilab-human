@@ -49,3 +49,11 @@ def test_projected_area_gradient_matches_each_vertex_perturbation():
             actual=float(np.cross(changed[1]-changed[0],changed[2]-changed[0])@normal)
             assert actual-original == pytest.approx(gradient[vertex,axis]*1e-5,abs=1e-21)
     np.testing.assert_allclose(gradient.sum(0),0.,atol=1e-18)
+
+@pytest.mark.parametrize("direction,expected", [([1.,0.,0.],.7),([-1.,0.,0.],.1),([0.,1.,0.],.7),([0.,0.,-1.],.1)])
+def test_exact_oriented_exit_handles_signed_and_zero_ray_components(direction,expected):
+    positions=np.array([[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]],dtype="<f4")
+    faces=np.array([[0,2,1],[0,1,3],[0,3,2],[1,2,3]],dtype=np.int64)
+    surface=tool.v.prepare_surface((51004,12),positions,faces,source_vertex_ids=np.arange(4,dtype=np.int64))
+    distance,_=tool.exact_forward_exit(surface,surface.meter_index(),np.array([.1,.1,.1]),direction)
+    assert distance == pytest.approx(expected,abs=1e-14)
