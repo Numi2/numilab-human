@@ -120,6 +120,47 @@ def self_gap_constraint(base_points,faces,first,first_bary,second,second_bary,ma
             normal,float(margin_m-length))
 
 
+
+def face_support_constraints(base_points,faces,first,second,margin_m):
+    """Preserve a complete reference triangle separator, not just witness points.
+
+    Exact rational source projections choose and verify the axis before its
+    dimensionless normalized coefficients enter the offline authoring LP.
+    """
+    triangles=[[[Fraction(float(x)) for x in point]
+                for point in base_points[faces[index]]] for index in (first,second)]
+    def sub(a,b):return [x-y for x,y in zip(a,b)]
+    def cross(a,b):return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]
+    def dot(a,b):return sum(x*y for x,y in zip(a,b))
+    a,b=triangles
+    ea=[sub(a[(i+1)%3],a[i]) for i in range(3)]
+    eb=[sub(b[(i+1)%3],b[i]) for i in range(3)]
+    na,nb=cross(ea[0],ea[1]),cross(eb[0],eb[1])
+    axes=[na,nb,*[cross(x,y) for x in ea for y in eb],
+          *[cross(x,na) for x in ea],*[cross(x,nb) for x in eb]]
+    best=None
+    for axis in axes:
+        length2=dot(axis,axis)
+        if not length2:continue
+        pa=[dot(axis,x) for x in a];pb=[dot(axis,x) for x in b]
+        for sign,gap in [(1,min(pa)-max(pb)),(-1,min(pb)-max(pa))]:
+            if gap>0 and (best is None or gap*gap/length2>best[0]):
+                best=(gap*gap/length2,[sign*x for x in axis])
+    if best is None:raise ValueError("self-contact reference triangles have no complete separating support plane")
+    axis=np.array([float(x) for x in best[1]])
+    normal=axis/np.linalg.norm(axis)
+    if not np.isfinite(normal).all():raise ValueError("nonfinite complete-face separator")
+    # Normalization rounds the axis; require the actual LP axis still separates
+    # all reference corners exactly, rather than granting a geometric tolerance.
+    rational_normal=[Fraction(float(x)) for x in normal]
+    gaps=[dot(rational_normal,sub(x,y)) for x in a for y in b]
+    if min(gaps)<=0:raise ValueError("normalized face-support axis lost exact reference separation")
+    floor=min(float(margin_m),1.e-6,float(min(gaps))/4.)
+    if not np.isfinite(floor) or floor<=0:raise ValueError("invalid face-support floor")
+    eye=np.eye(3)
+    return [(int(first),eye[i].copy(),int(second),eye[j].copy(),
+             normal.copy(),floor-float(gaps[3*i+j])) for i in range(3) for j in range(3)]
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output", "bone-artifact", "body-manifest"]:
@@ -131,6 +172,7 @@ def main():
     ap.add_argument("--solid-depth", action="store_true")
     ap.add_argument("--repair-self-contacts", action="store_true",
         help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
+    ap.add_argument("--self-contact-separator", choices=["witness","face-support"],default="witness")
     ap.add_argument("--exit-policy",choices=["nearest","skin-normal"],default="nearest")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
@@ -245,11 +287,16 @@ def main():
                 raise ValueError("self-contact repair exceeds the bounded local patch")
             witnesses=[]
             for first,second in self_result["triangle_pairs"]:
-                for point in surf.intersection_points_meters(surf,int(first),int(second)):
-                    ba=barycentric(surf.triangle_meters(int(first)),point)
-                    bb=barycentric(surf.triangle_meters(int(second)),point)
-                    constraint=self_gap_constraint(base_points,faces,first,ba,second,bb,
-                                                   min(args.margin_m,.0001))
+                if args.self_contact_separator=="face-support":
+                    derived=face_support_constraints(base_points,faces,first,second,args.margin_m)
+                else:
+                    derived=[]
+                    for point in surf.intersection_points_meters(surf,int(first),int(second)):
+                        ba=barycentric(surf.triangle_meters(int(first)),point)
+                        bb=barycentric(surf.triangle_meters(int(second)),point)
+                        derived.append(self_gap_constraint(base_points,faces,first,ba,second,bb,
+                                                           min(args.margin_m,.0001)))
+                for constraint in derived:
                     self_constraints.append(constraint)
                     a,wa,b,wb,n,bound=constraint
                     witnesses.append(dict(first_face=a,first_barycentric=wa.tolist(),

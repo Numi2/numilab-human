@@ -92,3 +92,35 @@ def test_self_contact_without_reference_gap_is_not_given_a_separator():
     with pytest.raises(ValueError,match="unambiguous separation"):
         tool.self_gap_constraint(base,faces,0,np.array([1.,0.,0.]),
                                  1,np.array([1.,0.,0.]),.0001)
+
+
+def test_complete_face_support_rejects_collision_hidden_from_vertex_witness():
+    base=np.array([[0.,0.,0.],[0.,.01,0.],[0.,0.,.01],
+                   [.02,0.,0.],[.02,.01,0.],[.02,0.,.01]],dtype="<f4")
+    faces=np.array([[0,1,2],[3,4,5]])
+    rows=tool.face_support_constraints(base,faces,0,1,.0005)
+    assert len(rows)==9
+    displacement=np.zeros_like(base);displacement[1,0]=.03
+    # A constraint at vertex0 sees no motion; the complete face constraint
+    # catches vertex1 crossing the other triangle's plane.
+    bary=np.array([1.,0.,0.])
+    _,_,_,_,n,bound=tool.self_gap_constraint(base,faces,0,bary,1,bary,.0001)
+    assert float((displacement[0]-displacement[3])@n)>=bound
+    violated=[]
+    for a,wa,b,wb,n,bound in rows:
+        assert 0.>=bound
+        violated.append(float((wa@displacement[faces[a]]-wb@displacement[faces[b]])@n)<bound)
+    assert any(violated)
+
+def test_complete_face_support_handles_coplanar_disjoint_triangles():
+    base=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.],
+                   [.02,0.,0.],[.03,0.,0.],[.02,.01,0.]],dtype="<f4")
+    rows=tool.face_support_constraints(base,np.array([[0,1,2],[3,4,5]]),0,1,.0005)
+    assert len(rows)==9
+    assert all(0.>=r[-1] for r in rows)
+    assert all(abs(r[-2][2])<1e-15 for r in rows)
+
+def test_complete_face_support_refuses_reference_intersection():
+    base=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.]],dtype="<f4")
+    with pytest.raises(ValueError,match="complete separating"):
+        tool.face_support_constraints(base,np.array([[0,1,2],[0,1,2]]),0,1,.0005)
