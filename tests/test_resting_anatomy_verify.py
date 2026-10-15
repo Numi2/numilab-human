@@ -76,6 +76,78 @@ def declarations_for_actual_shared_features(first, second):
     return declarations
 
 
+def crosswalk_point_case(*, second_owner=23, second_source_face=936,
+                         source_crosswalk=True, second_crosswalk_sha=None,
+                         transverse_segment=False):
+    from numilab_human.resting_anatomy_verify import (
+        _shared_source_crosswalk_point_contact,
+    )
+
+    feature = {
+        "source_capture_crosswalk_sha256": "a" * 64,
+        "source_row_payload_sha256": "b" * 64,
+        "source_member": "FJ1769",
+        "source_member_sha256": "c" * 64,
+        "source_face": 825,
+        "source_row_face": 936,
+        "source_corner": 0,
+    }
+    owner = {
+        "body_index": 23, "capture_receipt_sha256": "d" * 64,
+        "position_m": [0.0, 0.0, 0.0], "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    }
+    points_a = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32)
+    faces_a = np.asarray([[0, 1, 2], [0, 2, 3]], dtype=np.uint32)
+    points_b = np.asarray([[0, 0, 0], [0, 1, 0], [1, 0, 0],
+                           [0, -1, 0], [0, 0, -1]], dtype=np.float32)
+    if transverse_segment:
+        points_b[3] = [1, -1, 0]
+        points_b[4] = [-1, 2, 0.5]
+    faces_b = np.asarray([[0, 1, 2], [0, 3, 4]], dtype=np.uint32)
+    seam_b = {
+        "source_parent_face": 825, "source_member": "FJ1769",
+        "source_member_sha256": "c" * 64, "source_face": 825,
+        "source_row_face": second_source_face,
+        "source_row_payload_sha256": "b" * 64,
+    }
+    face_a = [
+        {"source_parent_face": 936, "source_member": "FJ1769",
+         "source_member_sha256": "c" * 64, "source_face": 825,
+         "source_row_face": 936, "source_row_payload_sha256": "b" * 64,
+         "corner_barycentric_exact": [[ ["1", "1"], ["0", "1"], ["0", "1"] ],
+                                       [ ["0", "1"], ["1", "1"], ["0", "1"] ],
+                                       [ ["0", "1"], ["0", "1"], ["1", "1"] ]]},
+        {"source_parent_face": 937},
+    ]
+    face_b = [seam_b, {"source_parent_face": 938}]
+    gids_a = np.asarray([100, 101, 102, 103], dtype=np.uint64)
+    gids_b = np.asarray([900, 901, 902, 903, 904], dtype=np.uint64)
+    vertex_a = {int(gid): {"source_gid": int(gid)} for gid in gids_a}
+    vertex_b = {int(gid): {"source_gid": int(gid)} for gid in gids_b}
+    if source_crosswalk:
+        vertex_a[100]["source_point_crosswalk"] = feature
+        vertex_b[900]["source_point_crosswalk"] = dict(feature)
+        if second_crosswalk_sha is not None:
+            vertex_b[900]["source_point_crosswalk"]["source_capture_crosswalk_sha256"] = second_crosswalk_sha
+    first = prepare_surface(
+        (51010, 343), points_a, faces_a, source_vertex_ids=gids_a,
+        source_face_lineage=face_a, source_vertex_lineage=vertex_a,
+        rigid_owner_proof=owner)
+    owner_b = dict(owner, body_index=second_owner)
+    second = prepare_surface(
+        (51010, 374), points_b, faces_b, source_vertex_ids=gids_b,
+        source_face_lineage=face_b, source_vertex_lineage=vertex_b,
+        rigid_owner_proof=owner_b)
+    declaration = {
+        "first_identity": list(first.key), "second_identity": list(second.key),
+        "first_face_index": 1, "second_face_index": 1,
+        "feature_gid_pairs": [[100, 900]],
+        "source_point_crosswalk": feature,
+        "source_seam_face_pair": [0, 0],
+    }
+    return first, second, declaration, _shared_source_crosswalk_point_contact
+
+
 def source_bound_overlap_case(*, altered_contact=False, open_first=False, disconnected_first=False):
     if open_first:
         first = feature_surface(
@@ -364,6 +436,55 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         self.assertIn([0, 0], result["unexpected_triangle_pairs"])
         self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
                          "declared_feature_GIDs_not_shared_by_both_faces")
+
+    def test_authenticated_crosswalk_accepts_only_exact_shared_point_with_same_rigid_owner(self):
+        first, second, declaration, checker = crosswalk_point_case()
+        passed, reason = checker(
+            first, second, 1, 1, declaration["feature_gid_pairs"],
+            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        self.assertTrue(passed, reason)
+        self.assertEqual(reason, "exact_source_face_crosswalk_point_with_same_rigid_owner_pose")
+        result = audit_surface_pair(first, second, intended_shared_feature_pairs=[declaration])
+        self.assertTrue(any(row["face_pair"] == [1, 1]
+                            for row in result["declared_interface_feature_contacts"]))
+        self.assertNotIn([1, 1], result["unexpected_triangle_pairs"])
+
+    def test_authenticated_crosswalk_rejects_coordinate_only_or_wrong_source_ancestry(self):
+        first, second, declaration, checker = crosswalk_point_case(source_crosswalk=False)
+        passed, reason = checker(
+            first, second, 1, 1, declaration["feature_gid_pairs"],
+            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "source_point_crosswalk_does_not_match_both_vertex_lineages")
+
+        first, second, declaration, checker = crosswalk_point_case(second_source_face=937)
+        passed, reason = checker(
+            first, second, 1, 1, declaration["feature_gid_pairs"],
+            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "source_seam_face_ancestry_does_not_match_crosswalk")
+
+        first, second, declaration, checker = crosswalk_point_case(second_crosswalk_sha="e" * 64)
+        passed, reason = checker(
+            first, second, 1, 1, declaration["feature_gid_pairs"],
+            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "source_point_crosswalk_does_not_match_both_vertex_lineages")
+
+    def test_authenticated_crosswalk_rejects_different_owner_and_segment_contact(self):
+        first, second, declaration, checker = crosswalk_point_case(second_owner=24)
+        passed, reason = checker(
+            first, second, 1, 1, declaration["feature_gid_pairs"],
+            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "accepted_rigid_owner_pose_proofs_differ_or_are_missing")
+
+        first, second, declaration, checker = crosswalk_point_case(transverse_segment=True)
+        passed, reason = checker(
+            first, second, 1, 1, declaration["feature_gid_pairs"],
+            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "exact_intersection_exceeds_source_crosswalk_point")
 
     def test_tangent_declared_interface_does_not_hide_solid_containment(self):
         outer_points = np.array([[0, 0, 0], [4, 0, 0], [0, 4, 0], [0, 0, 4]], dtype=np.float32)

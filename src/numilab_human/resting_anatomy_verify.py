@@ -174,6 +174,7 @@ class PreparedSurface:
     source_vertex_lineage: dict | None = field(default=None, repr=False)
     ordered_core_body_indices: tuple | None = field(default=None, repr=False)
     core_weights_by_gid: dict | None = field(default=None, repr=False)
+    rigid_owner_proof: dict | None = field(default=None, repr=False)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
     _face_records: dict | None = field(default=None, repr=False)
@@ -295,13 +296,21 @@ class PreparedSurface:
             "referenced_surface_closed": self.closed,
             "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary.",
             "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained.",
+            "rigid_owner_proof": None if self.rigid_owner_proof is None else {
+                "body_index": self.rigid_owner_proof["body_index"],
+                "capture_receipt_sha256": self.rigid_owner_proof["capture_receipt_sha256"],
+                "position_f32_sha256": hashlib.sha256(
+                    self.rigid_owner_proof["position_f32_bytes"]).hexdigest(),
+                "quaternion_f32_sha256": hashlib.sha256(
+                    self.rigid_owner_proof["quaternion_f32_bytes"]).hexdigest(),
+            },
         }
 
 
 def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=None,
                     source_face_lineage=None, source_vertex_lineage=None,
                     ordered_core_body_indices=None, core_weight_gids=None,
-                    core_weights_float64=None):
+                    core_weights_float64=None, rigid_owner_proof=None):
     key = typed_key(key)
     p = np.asarray(positions)
     f = np.asarray(faces)
@@ -326,16 +335,27 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         raise ValueError("invalid source vertex ancestry")
     if len(np.unique(source_vertex_ids)) != len(p):
         raise ValueError("duplicate source vertex ancestry")
-    metadata = (source_face_lineage, source_vertex_lineage,
-                ordered_core_body_indices, core_weight_gids, core_weights_float64)
-    has_material_proof = any(value is not None for value in metadata)
-    if has_material_proof and any(value is None for value in metadata):
-        raise ValueError("shared-interface proof requires complete source and material lineage")
+    source_metadata_present = (source_face_lineage is not None
+                               or source_vertex_lineage is not None)
+    core_metadata = (ordered_core_body_indices, core_weight_gids, core_weights_float64)
+    has_core_metadata = any(value is not None for value in core_metadata)
+    if source_metadata_present and (source_face_lineage is None or source_vertex_lineage is None):
+        raise ValueError("shared-interface proof requires both source face and vertex lineage")
+    if has_core_metadata and any(value is None for value in core_metadata):
+        raise ValueError("shared-interface proof requires complete ordered core material lineage")
+    if source_metadata_present and not has_core_metadata and rigid_owner_proof is None:
+        raise ValueError("shared-interface proof requires ordered core rows or an accepted rigid owner")
+    if rigid_owner_proof is not None and not source_metadata_present:
+        raise ValueError("rigid owner proof requires source face and vertex lineage")
+    if has_core_metadata and rigid_owner_proof is not None:
+        raise ValueError("choose ordered core material rows or a rigid owner proof")
     face_lineage = None
     vertex_lineage = None
     core_body_indices = None
     weights_by_gid = None
-    if has_material_proof:
+    normalized_rigid_owner = (None if rigid_owner_proof is None
+                              else _normalize_rigid_owner_proof(rigid_owner_proof))
+    if source_metadata_present:
         face_lineage = tuple(source_face_lineage)
         if len(face_lineage) != len(f) or any(not isinstance(row, dict) for row in face_lineage):
             raise ValueError("source face lineage must map every emitted face")
@@ -344,6 +364,7 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
             if type(gid) is not int or not isinstance(row, dict):
                 raise ValueError("source vertex lineage must use integer GIDs and records")
             vertex_lineage[gid] = row
+    if has_core_metadata:
         core_body_indices = tuple(ordered_core_body_indices)
         if (len(core_body_indices) != 21 or any(type(value) is not int for value in core_body_indices)
                 or len(set(core_body_indices)) != 21):
@@ -397,7 +418,40 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
     return PreparedSurface(key, np.array(p, copy=True, order="C"), np.array(f, dtype=np.uint32, copy=True, order="C"),
                            source_vertex_ids.copy(), normals, raw, quotient, qp, qf, mapping,
                            records, ci._prepare_surface_aabb(records), face_lineage,
-                           vertex_lineage, core_body_indices, weights_by_gid)
+                           vertex_lineage, core_body_indices, weights_by_gid,
+                           normalized_rigid_owner)
+
+
+def _normalize_rigid_owner_proof(value):
+    """Canonicalize an already-validated accepted rigid-pose owner record."""
+    if not isinstance(value, dict):
+        raise TypeError("rigid owner proof must be a mapping")
+    expected = {"body_index", "capture_receipt_sha256", "position_m", "quaternion_xyzw"}
+    if set(value) != expected:
+        raise ValueError("rigid owner proof fields differ from the accepted-pose contract")
+    body = value.get("body_index")
+    receipt_sha = value.get("capture_receipt_sha256")
+    if type(body) is not int or body < 0:
+        raise ValueError("rigid owner proof body index must be a nonnegative integer")
+    if (not isinstance(receipt_sha, str) or len(receipt_sha) != 64
+            or any(ch not in "0123456789abcdef" for ch in receipt_sha)):
+        raise ValueError("rigid owner proof capture receipt SHA-256 is invalid")
+    arrays = []
+    for key, length in (("position_m", 3), ("quaternion_xyzw", 4)):
+        raw = value.get(key)
+        if (not isinstance(raw, (list, tuple)) or len(raw) != length
+                or any(type(item) not in (int, float) or not math.isfinite(float(item))
+                       for item in raw)):
+            raise ValueError("rigid owner proof has invalid " + key)
+        array = np.asarray(raw, dtype="<f4")
+        if not np.isfinite(array).all():
+            raise ValueError("rigid owner proof has nonfinite Float32 " + key)
+        arrays.append(array)
+    if abs(float(np.linalg.norm(arrays[1].astype(np.float64))) - 1.0) > 2e-3:
+        raise ValueError("rigid owner quaternion is not normalized")
+    return {"body_index": body, "capture_receipt_sha256": receipt_sha,
+            "position_f32_bytes": arrays[0].tobytes(),
+            "quaternion_f32_bytes": arrays[1].tobytes()}
 
 
 def _overlap(first, second):
@@ -510,7 +564,151 @@ def _has_source_vertex_lineage(record):
     return (record.get("material_mapping_kind") == 3
             and record.get("material_binding") == "independent_existing_core_carrier"
             and len(record.get("core_body_indices", ())) == 21
-            and len(record.get("core_weights", ())) == 21)
+            and len(record.get("core_weights", ())) == 21
+            or _valid_source_point_crosswalk(record.get("source_point_crosswalk")))
+
+
+def _valid_source_point_crosswalk(value):
+    if not isinstance(value, dict) or set(value) != {
+            "source_capture_crosswalk_sha256", "source_row_payload_sha256",
+            "source_member", "source_member_sha256", "source_face",
+            "source_row_face", "source_corner"}:
+        return False
+    for key in ("source_capture_crosswalk_sha256", "source_row_payload_sha256",
+                "source_member_sha256"):
+        digest = value.get(key)
+        if (not isinstance(digest, str) or len(digest) != 64
+                or any(ch not in "0123456789abcdef" for ch in digest)):
+            return False
+    return (isinstance(value.get("source_member"), str) and bool(value["source_member"])
+            and type(value.get("source_face")) is int and value["source_face"] >= 0
+            and type(value.get("source_row_face")) is int and value["source_row_face"] >= 0
+            and type(value.get("source_corner")) is int and 0 <= value["source_corner"] < 3)
+
+
+def _source_face_lineage_chain(record):
+    chain, seen = [], set()
+    current = record
+    while isinstance(current, dict) and id(current) not in seen:
+        seen.add(id(current))
+        chain.append(current)
+        parent = current.get("parent_row_face_lineage")
+        if not isinstance(parent, dict):
+            parent = current.get("parent_054_face_ref")
+        current = parent
+    return chain
+
+
+def _source_face_lineage_identity(record):
+    chain = _source_face_lineage_chain(record)
+    fields = ("source_member", "source_member_sha256", "source_face",
+              "source_row_face", "source_row_payload_sha256")
+    return {key: next((row[key] for row in chain if row.get(key) is not None), None)
+            for key in fields}
+
+
+def _shared_source_crosswalk_point_contact(
+        first, second, first_face, second_face, feature_gid_pairs,
+        source_point_crosswalk, source_seam_face_pair):
+    """Authenticate one point contact through a pinned source-face corner crosswalk.
+
+    The surface GIDs belong to independent capture namespaces. The canonical
+    source-point record is derived from the ordered source/capture face binder;
+    exact same-owner rigid-pose bytes and the actual intersection point are
+    rechecked here. This path accepts one point only, never an edge or area.
+    """
+    if (not isinstance(feature_gid_pairs, (list, tuple)) or len(feature_gid_pairs) != 1
+            or not isinstance(feature_gid_pairs[0], (list, tuple))
+            or len(feature_gid_pairs[0]) != 2
+            or any(type(gid) is not int for gid in feature_gid_pairs[0])):
+        return False, "crosswalk_feature_must_be_one_typed_vertex_pair"
+    if not _valid_source_point_crosswalk(source_point_crosswalk):
+        return False, "source_point_crosswalk_is_missing_or_invalid"
+    if (first.rigid_owner_proof is None or second.rigid_owner_proof is None
+            or first.rigid_owner_proof != second.rigid_owner_proof):
+        return False, "accepted_rigid_owner_pose_proofs_differ_or_are_missing"
+    if first.source_face_lineage is None or second.source_face_lineage is None:
+        return False, "source_face_lineage_is_missing"
+    if first.source_vertex_lineage is None or second.source_vertex_lineage is None:
+        return False, "source_vertex_lineage_is_missing"
+    if (not _has_source_face_lineage(first.source_face_lineage[first_face])
+            or not _has_source_face_lineage(second.source_face_lineage[second_face])):
+        return False, "incident_face_has_no_source_lineage"
+    if (not isinstance(source_seam_face_pair, (list, tuple))
+            or len(source_seam_face_pair) != 2
+            or any(type(face) is not int for face in source_seam_face_pair)):
+        return False, "source_seam_face_pair_is_invalid"
+    seam_first, seam_second = source_seam_face_pair
+    if (not 0 <= seam_first < len(first.faces)
+            or not 0 <= seam_second < len(second.faces)):
+        return False, "source_seam_face_pair_is_out_of_range"
+    feature_first, feature_second = feature_gid_pairs[0]
+    face_first_gids = [int(first.source_vertex_ids[int(local)]) for local in first.faces[first_face]]
+    face_second_gids = [int(second.source_vertex_ids[int(local)]) for local in second.faces[second_face]]
+    if feature_first not in face_first_gids or feature_second not in face_second_gids:
+        return False, "crosswalk_vertex_pair_is_not_incident_to_both_faces"
+    if feature_first not in first.source_vertex_lineage or feature_second not in second.source_vertex_lineage:
+        return False, "crosswalk_vertex_pair_lacks_source_lineage"
+    lineage_first = first.source_vertex_lineage[feature_first]
+    lineage_second = second.source_vertex_lineage[feature_second]
+    if (not _has_source_vertex_lineage(lineage_first)
+            or not _has_source_vertex_lineage(lineage_second)):
+        return False, "crosswalk_vertex_lineage_has_no_source_support"
+    if (lineage_first.get("source_point_crosswalk") != source_point_crosswalk
+            or lineage_second.get("source_point_crosswalk") != source_point_crosswalk):
+        return False, "source_point_crosswalk_does_not_match_both_vertex_lineages"
+    if (not _has_source_face_lineage(first.source_face_lineage[seam_first])
+            or not _has_source_face_lineage(second.source_face_lineage[seam_second])):
+        return False, "source_seam_face_has_no_lineage"
+    expected_face = {key: source_point_crosswalk[key] for key in (
+        "source_member", "source_member_sha256", "source_face",
+        "source_row_face", "source_row_payload_sha256")}
+    face_identity_first = _source_face_lineage_identity(first.source_face_lineage[seam_first])
+    face_identity_second = _source_face_lineage_identity(second.source_face_lineage[seam_second])
+    if face_identity_first != expected_face or face_identity_second != expected_face:
+        return False, "source_seam_face_ancestry_does_not_match_crosswalk"
+    seam_first_tri = [int(first.source_vertex_ids[int(local)])
+                      for local in first.faces[seam_first]]
+    seam_second_tri = [int(second.source_vertex_ids[int(local)])
+                       for local in second.faces[seam_second]]
+    if feature_first not in seam_first_tri or feature_second not in seam_second_tri:
+        return False, "crosswalk_vertex_pair_is_not_on_declared_source_seam"
+    tri_a = tuple(ci.float32_point_lattice_key(first.positions[first.vertex_index(gid)].tolist())
+                  for gid in seam_first_tri)
+    tri_b = tuple(ci.float32_point_lattice_key(second.positions[second.vertex_index(gid)].tolist())
+                  for gid in seam_second_tri)
+    if (len(set(tri_a)) != 3 or set(tri_a) != set(tri_b)
+            or not any(tri_a == tuple(tri_b[(shift - lane) % 3] for lane in range(3))
+                       for shift in range(3))):
+        return False, "source_seam_faces_are_not_exact_opposite_float32_triangles"
+    first_seam_lineage = first.source_face_lineage[seam_first]
+    barycentric = first_seam_lineage.get("corner_barycentric_exact")
+    if not isinstance(barycentric, list) or len(barycentric) != 3:
+        return False, "first_source_seam_face_lacks_exact_corner_ancestry"
+    seam_corner = seam_first_tri.index(feature_first)
+    try:
+        bary = tuple(Fraction(int(pair[0]), int(pair[1]))
+                     for pair in barycentric[seam_corner])
+    except (IndexError, TypeError, ValueError, ZeroDivisionError):
+        return False, "first_source_seam_corner_ancestry_is_invalid"
+    expected_bary = tuple(Fraction(int(index == source_point_crosswalk["source_corner"]))
+                          for index in range(3))
+    if bary != expected_bary:
+        return False, "source_feature_corner_differs_from_exact_face_ancestry"
+    index_first = first.vertex_index(feature_first)
+    index_second = second.vertex_index(feature_second)
+    if index_first is None or index_second is None:
+        return False, "crosswalk_vertex_pair_is_absent_from_prepared_surface"
+    point_first, point_second = first.positions[index_first], second.positions[index_second]
+    if (ci.float32_point_lattice_key(point_first.tolist())
+            != ci.float32_point_lattice_key(point_second.tolist())):
+        return False, "crosswalk_vertex_emitted_float32_points_differ"
+    expected_point = tuple(Fraction(value, 1 << 149)
+                           for value in ci.float32_point_lattice_key(point_first.tolist()))
+    actual_points = first.intersection_points_meters(second, first_face, second_face)
+    if actual_points != (expected_point,):
+        return False, "exact_intersection_exceeds_source_crosswalk_point"
+    return True, "exact_source_face_crosswalk_point_with_same_rigid_owner_pose"
 
 
 def _shared_feature_contact(first, second, first_face, second_face, feature_gids):
@@ -850,6 +1048,7 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         first_face = row.get("first_face_index")
         second_face = row.get("second_face_index")
         feature_gids = row.get("feature_gids")
+        feature_gid_pairs = row.get("feature_gid_pairs")
         if type(first_face) is not int or type(second_face) is not int:
             raise ValueError("shared feature face indices must be integers")
         if not (0 <= first_face < len(first.faces) and 0 <= second_face < len(second.faces)):
@@ -858,12 +1057,36 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         if pair in declared:
             raise ValueError("duplicate shared feature face pair")
         declared.add(pair)
-        if not isinstance(feature_gids, (list, tuple)):
-            raise TypeError("shared feature GIDs must be a list or tuple")
+        if (feature_gids is None) == (feature_gid_pairs is None):
+            raise ValueError("shared feature declaration requires exactly one GID or crosswalk form")
         if pair not in pair_set:
-            rejected_features.append({"face_pair": list(pair), "feature_gids": list(feature_gids),
+            rejected_features.append({"face_pair": list(pair),
+                                      "feature_gids": feature_gids,
+                                      "feature_gid_pairs": feature_gid_pairs,
                                       "reason": "declared_pair_has_no_exact_intersection"})
             continue
+        if feature_gid_pairs is not None:
+            source_point_crosswalk = row.get("source_point_crosswalk")
+            source_seam_face_pair = row.get("source_seam_face_pair")
+            passed, reason = _shared_source_crosswalk_point_contact(
+                first, second, first_face, second_face, feature_gid_pairs,
+                source_point_crosswalk, source_seam_face_pair)
+            if passed:
+                accepted_features[pair] = {
+                    "identities": [list(first.key), list(second.key)],
+                    "face_pair": list(pair), "feature_gid_pairs": feature_gid_pairs,
+                    "feature_kind": "source_crosswalk_point",
+                    "source_point_crosswalk": source_point_crosswalk,
+                    "source_seam_face_pair": source_seam_face_pair,
+                    "proof": reason}
+            else:
+                rejected_features.append({"face_pair": list(pair),
+                                          "feature_gid_pairs": feature_gid_pairs,
+                                          "source_point_crosswalk": source_point_crosswalk,
+                                          "reason": reason})
+            continue
+        if not isinstance(feature_gids, (list, tuple)):
+            raise TypeError("shared feature GIDs must be a list or tuple")
         passed, reason = _shared_feature_contact(first, second, first_face, second_face, feature_gids)
         if passed:
             accepted_features[pair] = {
@@ -906,7 +1129,7 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
             "rejected_interface_feature_contacts": rejected_features,
             "containment": containment,
             "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)],
-            "boundary": "Declared enclosures permit interior placement only; every off-boundary face interior is checked and outside samples reject an intended enclosure. Shared feature contacts require exact GID, owner-map, source-lineage, and intersection proof. Declared face interfaces do not prove vessel lumen continuity."}
+            "boundary": "Declared enclosures permit interior placement only; every off-boundary face interior is checked and outside samples reject an intended enclosure. Shared feature contacts require exact GID or authenticated source-point crosswalk, owner, source-lineage, and intersection proof. Crosswalk contacts accept point contacts only. Declared face interfaces do not prove vessel lumen continuity."}
 
 
 def validate_capture_receipt(receipt, pack_sha256):
