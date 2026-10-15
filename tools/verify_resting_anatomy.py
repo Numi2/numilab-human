@@ -455,6 +455,14 @@ def main(argv=None):
             pin(source, digest)
             if (key_a in overlay_keys) != (key_b in overlay_keys):
                 raise ValueError("counterfactual shared partition requires both sides overlaid")
+        if partitions:
+            from numilab_human.resting_shared_partition_verify import preflight_shared_muscle_partition
+            report["shared_partition_preflight"] = [
+                preflight_shared_muscle_partition(
+                    surfaces, first, second, source, digest,
+                    coordinate_provenance=("counterfactual_owner_replay" if overlay_keys
+                                           else "accepted_native_capture"))
+                for first, second, source, digest in partitions]
         if args.preflight_only:
             for key in changed:
                 if key not in surfaces:

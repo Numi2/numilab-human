@@ -78,3 +78,38 @@ def test_rejects_stale_source_hash_and_ordered_facet_map(tmp_path):
     captures[(51005,2)][1][0, [1,2]] = captures[(51005,2)][1][0, [2,1]]
     with pytest.raises(Exception):
         certify_shared_muscle_partition(captures, (51005,1), (51005,2), source, digest)
+
+
+def test_shared_interface_preflight_never_runs_exact_predicates(tmp_path, monkeypatch):
+    from numilab_human import resting_shared_partition_verify as shared
+    source, digest, captures = scene(tmp_path)
+    def forbidden(*args, **kwargs):
+        raise AssertionError("exact predicate executed in cold preparation")
+    monkeypatch.setattr(shared.cert, "audit_shared_interface_partition", forbidden)
+    proof = shared.preflight_shared_muscle_partition(
+        captures, (51005, 1), (51005, 2), source, digest)
+    assert proof["shared_interface_face_count"] == 1
+    assert not proof["exact_predicates_executed"]
+    assert "exact_partition_certificate" not in proof
+    captures[(51005, 2)][0][0, 0] = np.float32(1e-8)
+    with pytest.raises(Exception, match="different Float32 positions"):
+        shared.preflight_shared_muscle_partition(
+            captures, (51005, 1), (51005, 2), source, digest)
+
+
+def test_shared_interface_preflight_rejects_absent_material_interface(tmp_path, monkeypatch):
+    from numilab_human import resting_shared_partition_verify as shared
+    source, digest, captures = scene(tmp_path)
+    data = pac._read_nhtiss4(source)
+    raw = bytearray(data["raw"])
+    row = data["records"][1]
+    slots = np.ndarray((4, 4), "<u4", buffer=raw,
+                       offset=data["vertex_start"]+int(row[2])*56+24, strides=(56, 4))
+    slots[:, 0] = 1
+    source.write_bytes(raw)
+    monkeypatch.setattr(shared.cert, "audit_shared_interface_partition",
+                        lambda *a, **k: pytest.fail("exact certificate must not run"))
+    with pytest.raises(Exception, match="no reciprocal source/material shared interface"):
+        shared.preflight_shared_muscle_partition(
+            captures, (51005, 1), (51005, 2), source,
+            hashlib.sha256(raw).hexdigest())

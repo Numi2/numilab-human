@@ -159,6 +159,42 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
                 self.assertEqual(tool.main(args+["--output", str(failed)]), 1)
         self.assertEqual(json.loads(failed.read_text())["exact_failure_witness"], error.diagnostic)
 
+    def test_absent_shared_interface_stops_before_any_exact_certificate(self):
+        from tests.test_resting_shared_partition_verify import scene
+        from numilab_human import passive_attachment_composition as pac
+        from numilab_human import resting_shared_partition_verify as shared
+        source, _, captures = scene(self.root)
+        data = pac._read_nhtiss4(source)
+        raw = bytearray(data["raw"])
+        row = data["records"][1]
+        slots = np.ndarray((4, 4), "<u4", buffer=raw,
+                           offset=data["vertex_start"]+int(row[2])*56+24,
+                           strides=(56, 4))
+        slots[:, 0] = 1
+        source.write_bytes(raw)
+        digest = hashlib.sha256(raw).hexdigest()
+        pack, receipt = self.root/"pack", self.root/"receipt"
+        pack.write_bytes(b"pack")
+        receipt.write_bytes(b"receipt")
+        args = ["--pack", str(pack), "--pack-sha256",
+                hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256",
+                hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                "--changed", "51005:1", "--shared-partition",
+                "51005:1", "51005:2", str(source), digest]
+        for only in (False, True):
+            with self.subTest(preflight_only=only):
+                output = self.root/f"absent-shared-{only}.json"
+                with patch.object(tool.verify, "load_capture",
+                                  return_value=(dict(captures), {"accepted_step": 0})):
+                    with patch.object(shared, "audit_with_shared_partitions") as exact:
+                        self.assertEqual(tool.main(args+["--output", str(output)]
+                                                   +(["--preflight-only"] if only else [])), 1)
+                        exact.assert_not_called()
+                report = json.loads(output.read_text())
+                self.assertEqual(report["failed_stage"], "preparation")
+                self.assertIn("no reciprocal source/material shared interface", report["error"])
+
     def repacked_candidate(self):
         from tests.test_resting_shared_partition_verify import scene
         from numilab_human import passive_attachment_composition as pac

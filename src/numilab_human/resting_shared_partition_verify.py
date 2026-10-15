@@ -12,8 +12,9 @@ from . import resting_anatomy_verify as verify
 from . import cardiac_partition_certificate as cert
 
 
-def certify_shared_muscle_partition(surfaces, first, second, source: Path, expected_sha256: str,
-                                     *, coordinate_provenance="accepted_native_capture"):
+def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha256: str,
+                             *, coordinate_provenance="accepted_native_capture",
+                             exact_certificate=True):
     pac.require(coordinate_provenance in ("accepted_native_capture", "counterfactual_owner_replay"),
                 "shared partition coordinate provenance invalid")
     first, second = verify.typed_key(first), verify.typed_key(second)
@@ -97,6 +98,14 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path, expec
         interface.append(tuple(tuple(float(x) for x in p) for p in a.positions[a.faces[i]]))
         pairs.append([i, j])
     pac.require(bool(interface), "no reciprocal source/material shared interface")
+    if not exact_certificate:
+        return {"identities": [list(first), list(second)],
+                "source_path": str(source), "source_sha256": expected_sha256,
+                "shared_interface_face_count": len(interface),
+                "ordered_source_bindings": {str(key): value for key, value in bindings.items()},
+                "coordinate_provenance": coordinate_provenance,
+                "exact_predicates_executed": False, "physical_state_advanced": False,
+                "anatomical_admission": False}
     regions = {str(key): [tuple(tuple(float(x) for x in p) for p in sf.positions[f])
                           for f in sf.faces] for key, sf in prepared.items()}
     # Count each independently closed source component, including nested cavities.
@@ -115,6 +124,24 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path, expec
     if coordinate_provenance == "accepted_native_capture":
         proof["exact_native_partition_certificate"] = audit
     return proof
+
+
+def preflight_shared_muscle_partition(surfaces, first, second, source: Path,
+                                     expected_sha256: str, *,
+                                     coordinate_provenance="accepted_native_capture"):
+    """Check owners, facets and reciprocal material presence without exact predicates."""
+    return _shared_muscle_partition(
+        surfaces, first, second, source, expected_sha256,
+        coordinate_provenance=coordinate_provenance, exact_certificate=False)
+
+
+def certify_shared_muscle_partition(surfaces, first, second, source: Path,
+                                   expected_sha256: str, *,
+                                   coordinate_provenance="accepted_native_capture"):
+    """Require the existing exact two-solid certificate after source preparation."""
+    return _shared_muscle_partition(
+        surfaces, first, second, source, expected_sha256,
+        coordinate_provenance=coordinate_provenance)
 
 
 def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
