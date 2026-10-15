@@ -124,3 +124,23 @@ def test_complete_face_support_refuses_reference_intersection():
     base=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.]],dtype="<f4")
     with pytest.raises(ValueError,match="complete separating"):
         tool.face_support_constraints(base,np.array([[0,1,2],[0,1,2]]),0,1,.0005)
+
+
+def test_limb_bone_exit_uses_retained_material_branch_without_dropping_owners():
+    owners=np.array([41,20,42,43],dtype=np.uint32)
+    torso=np.array([.04,.9,.03,.03])
+    arm=np.array([.35,.3,.25,.1])
+    before=torso.copy()
+    direction,record=tool.compartment_direction([-1.,0.,0.],torso,owners,20)
+    np.testing.assert_array_equal(direction,[1.,0.,0.])
+    assert record["region"]=="torso_skin_excluding_limb_bone"
+    np.testing.assert_array_equal(torso,before)
+    direction,record=tool.compartment_direction([-1.,0.,0.],arm,owners,20)
+    np.testing.assert_array_equal(direction,[-1.,0.,0.])
+    assert record["region"]=="arm_skin_enclosing_limb_bone"
+
+def test_compartment_direction_must_resolve_unique_actual_owner():
+    with pytest.raises(ValueError,match="absent"):
+        tool.compartment_direction([1.,0.,0.],[.5,.5],np.array([41,42]),20)
+    with pytest.raises(ValueError,match="invalid"):
+        tool.compartment_direction([1.,0.,0.],[.9,.9],np.array([20,41]),20)

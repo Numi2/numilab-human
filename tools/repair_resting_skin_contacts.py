@@ -161,6 +161,32 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
     return [(int(first),eye[i].copy(),int(second),eye[j].copy(),
              normal.copy(),floor-float(gaps[3*i+j])) for i in range(3) for j in range(3)]
 
+
+def compartment_direction(skin_normal,weights,binding_body_ids,torso_body_id):
+    """Offline direction proposal from full retained skin material support.
+
+    Arm skin encloses its limb bone; torso skin must leave that limb bone
+    outside the torso branch. This selects an exit, never waives a crossing.
+    """
+    weights=np.asarray(weights,dtype=float);owners=np.asarray(binding_body_ids)
+    normal=np.asarray(skin_normal,dtype=float)
+    if (weights.ndim!=1 or owners.shape!=weights.shape or owners.dtype.kind not in "iu"
+            or len(np.unique(owners))!=len(owners) or normal.shape!=(3,)
+            or not np.isfinite(weights).all() or np.any(weights<0)
+            or abs(float(weights.sum())-1.)>1e-4
+            or not np.isfinite(normal).all() or np.linalg.norm(normal)<1e-12):
+        raise ValueError("invalid full-owner compartment direction inputs")
+    match=np.flatnonzero(owners==torso_body_id)
+    if len(match)!=1:raise ValueError("torso owner is absent or duplicated")
+    torso_weight=float(weights[int(match[0])])
+    direction=normal/np.linalg.norm(normal)
+    region="arm_skin_enclosing_limb_bone"
+    if torso_weight>.5:
+        direction=-direction
+        region="torso_skin_excluding_limb_bone"
+    return direction,dict(region=region,torso_weight=torso_weight,
+                          torso_core_body_index=int(torso_body_id))
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output", "bone-artifact", "body-manifest"]:
@@ -173,7 +199,7 @@ def main():
     ap.add_argument("--repair-self-contacts", action="store_true",
         help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
     ap.add_argument("--self-contact-separator", choices=["witness","face-support"],default="witness")
-    ap.add_argument("--exit-policy",choices=["nearest","skin-normal"],default="nearest")
+    ap.add_argument("--exit-policy",choices=["nearest","skin-normal","compartment-skin-normal"],default="nearest")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
     if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .03:
@@ -195,6 +221,13 @@ def main():
     for sid in [10,12,14,16]:
         if sid not in bone_ids:
             raise ValueError(f"required compiled bone identity absent: {sid}")
+
+    torso_body_id=None
+    if args.exit_policy=="compartment-skin-normal":
+        torso_ids={row["core_body_index"] for row in bone_ids.values()
+                   if row["core_body_name"]=="torso"}
+        if len(torso_ids)!=1:raise ValueError("compiled bone owner does not uniquely identify torso")
+        torso_body_id=next(iter(torso_ids))
 
     base = np.load(args.authoring_base, allow_pickle=False)
     initial = np.load(args.initial_source_points, allow_pickle=False)
@@ -228,7 +261,7 @@ def main():
     base_source = source["vertices_f"][:,:3].astype(float)
     skin_normals=base["capture_normals"].astype(float)
     skin_normals/=np.linalg.norm(skin_normals,axis=1)[:,None]
-    if args.exit_policy=="skin-normal" and not args.solid_depth:
+    if args.exit_policy in ("skin-normal","compartment-skin-normal") and not args.solid_depth:
         ap.error("skin-normal exit policy requires solid-depth classification")
     base_triangles=base_points[faces].astype(float)
     base_area_vectors=np.cross(base_triangles[:,1]-base_triangles[:,0],base_triangles[:,2]-base_triangles[:,0])
@@ -243,7 +276,8 @@ def main():
         bounds=dict(step_m=args.step_bound_m,total_m=args.total_bound_m,margin_m=args.margin_m),
         bone_target_identities=[bone_ids[sid] for sid in [10,12,14,16]],
         compiled_bone_identity=bone_identity_proof,
-        scope="Offline authoring approximation only; no anatomical/native admission.")
+        scope="Offline authoring approximation only; no anatomical/native admission.",
+        construction_exit_policy=args.exit_policy,torso_core_body_index=torso_body_id)
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
         runner_argv=[sys.executable,*sys.argv],input_pins=pins)
     gp.verify_frozen_preparation(frozen)
@@ -308,6 +342,7 @@ def main():
         new_constraints=[]
         inventory=[]
         solid_witnesses=[]
+        compartment_witnesses=[]
         for sid,(bone,normals,solid_index) in ([] if self_failed else bones.items()):
             result=v.audit_surface_pair(surf,bone)
             (out/f"bone-{sid}.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")
@@ -318,9 +353,15 @@ def main():
                     bary=barycentric(surf.triangle_meters(int(sf)),point)
                     normal=normals[bi]
                     distance=0.
-                    if args.exit_policy=="skin-normal":
+                    if args.exit_policy in ("skin-normal","compartment-skin-normal"):
                         normal=bary@skin_normals[faces[sf]]
                         normal/=np.linalg.norm(normal)
+                        if args.exit_policy=="compartment-skin-normal" and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                            normal,region=compartment_direction(normal,
+                                bary@source["full_weights"][used[faces[sf]]],
+                                source["bindings_u"][:,0],torso_body_id)
+                            compartment_witnesses.append(dict(skin_face=int(sf),
+                                bone=sid,kind="triangle_contact",**region))
                         if normal@normals[bi]<0:
                             distance,_=contact_forward_exit(bone,solid_index,point,normal)
                     current=float(bary@delta[faces[sf]]@normal)
@@ -347,13 +388,20 @@ def main():
                     distance,bi,near=nearest
                     if not distance:raise ValueError("inside point has zero nearest-solid distance")
                     normal=(near-point)/distance
-                    if args.exit_policy=="skin-normal":
+                    if args.exit_policy in ("skin-normal","compartment-skin-normal"):
                         normal=skin_normals[vi]
+                        if args.exit_policy=="compartment-skin-normal" and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                            normal,region=compartment_direction(normal,
+                                source["full_weights"][used[vi]],
+                                source["bindings_u"][:,0],torso_body_id)
+                            compartment_witnesses.append(dict(skin_vertex=int(vi),
+                                bone=sid,kind="inside_vertex",**region))
                         distance,bi=exact_forward_exit(bone,solid_index,point,normal)
                     bary=np.zeros(3);bary[corner]=1
                     current=float(delta[vi]@normal)
                     new_constraints.append((sf,bary,normal,current+distance+args.margin_m))
                     solid_witnesses.append(dict(bone=sid,vertex=vi,face=sf,nearest_bone_face=bi,depth_m=distance,direction=normal.tolist()))
+        (out/"compartment-direction-witnesses.json").write_text(json.dumps(compartment_witnesses,indent=2,allow_nan=False)+"\n")
         (out/"solid-depth-witnesses.json").write_text(json.dumps(solid_witnesses,indent=2,allow_nan=False)+"\n")
         history.append(dict(iteration=iteration,status="SELF_CONTACT_REPAIR" if self_failed else "CONTACT_INVENTORY",targets=inventory,
             new_constraints=len(new_constraints)))
