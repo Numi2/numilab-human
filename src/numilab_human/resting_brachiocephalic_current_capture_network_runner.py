@@ -893,6 +893,44 @@ def _load_aortic_arch_interface_certificate(runtime: dict, bundle_sha256: str) -
         source_preflight_sha256=preflight_sha)
 
 
+def _validate_aortic_descending_source_identity_row(
+    key: tuple[int, int], expected: dict, row: dict, gid_base: int,
+) -> dict:
+    """Validate the real row schema: typed identity is nested in ancestry."""
+    ancestry = row.get("source_to_capture_ancestry")
+    _require(row.get("source_member") == expected["source_member"]
+             and row.get("fma") == expected["fma"]
+             and row.get("name") == expected["name"]
+             and row.get("body_index") == expected["body_index"]
+             and row.get("layer") == expected["layer"]
+             and row.get("first_vertex") == expected["first_vertex"]
+             and row.get("vertex_count") == expected["vertex_count"]
+             and row.get("face_count") == expected["face_count"]
+             and row.get("source_face_u32_sha256") == expected["faces_sha256"]
+             and row.get("actual_face_u32_sha256") == expected["faces_sha256"]
+             and isinstance(ancestry, dict)
+             and ancestry.get("status")
+             == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+             and ancestry.get("typed_identity") == list(key)
+             and ancestry.get("source_abi5_face_array_sha256")
+             == expected["faces_sha256"]
+             and ancestry.get("capture_faces_u32_sha256")
+             == expected["faces_sha256"]
+             and ancestry.get("ordered_source_face_ids_are_preserved") is True
+             and ancestry.get("capture_global_vertex_ids_are_actual_pack_values")
+             is True
+             and ancestry.get("native_source_slot_identity_is_contiguous") is True
+             and ancestry.get("native_nha_gid_base_offset") == gid_base
+             and ancestry.get(
+                 "observed_gid_minus_nha_global_vertex_index_unique_count") == 1
+             and ancestry.get(
+                 "observed_gid_minus_nha_global_vertex_index_min") == gid_base
+             and ancestry.get(
+                 "observed_gid_minus_nha_global_vertex_index_max") == gid_base,
+             f"7↔8 source row/slot ancestry changed for {key}")
+    return ancestry
+
+
 def _load_aortic_arch_descending_interface_certificate(
     runtime: dict, bundle_sha256: str,
 ) -> dict:
@@ -1049,37 +1087,8 @@ def _load_aortic_arch_descending_interface_certificate(
     for key, expected in collision_owner.AORTIC_ARCH_DESCENDING_SOURCE_ROWS.items():
         label = f"{key[0]}:{key[1]}"
         row = source_identity[label]
-        ancestry = row.get("source_to_capture_ancestry")
-        _require(row.get("source_member") == expected["source_member"]
-                 and row.get("fma") == expected["fma"]
-                 and row.get("name") == expected["name"]
-                 and row.get("body_index") == expected["body_index"]
-                 and row.get("layer") == expected["layer"]
-                 and row.get("first_vertex") == expected["first_vertex"]
-                 and row.get("vertex_count") == expected["vertex_count"]
-                 and row.get("face_count") == expected["face_count"]
-                 and row.get("source_face_u32_sha256") == expected["faces_sha256"]
-                 and row.get("actual_face_u32_sha256") == expected["faces_sha256"]
-                 and isinstance(ancestry, dict)
-                 and ancestry.get("status")
-                 == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
-                 and ancestry.get("typed_identity") == list(key)
-                 and ancestry.get("source_abi5_face_array_sha256")
-                 == expected["faces_sha256"]
-                 and ancestry.get("capture_faces_u32_sha256")
-                 == expected["faces_sha256"]
-                 and ancestry.get("ordered_source_face_ids_are_preserved") is True
-                 and ancestry.get("capture_global_vertex_ids_are_actual_pack_values")
-                 is True
-                 and ancestry.get("native_source_slot_identity_is_contiguous") is True
-                 and ancestry.get("native_nha_gid_base_offset") == gid_base
-                 and ancestry.get(
-                     "observed_gid_minus_nha_global_vertex_index_unique_count") == 1
-                 and ancestry.get(
-                     "observed_gid_minus_nha_global_vertex_index_min") == gid_base
-                 and ancestry.get(
-                     "observed_gid_minus_nha_global_vertex_index_max") == gid_base,
-                 f"7↔8 source row/slot ancestry changed for {key}")
+        _validate_aortic_descending_source_identity_row(
+            key, expected, row, gid_base)
         value = runtime["candidate_surfaces"].get(
             key, runtime["context"]["surfaces"].get(key))
         _require(value is not None, f"current runtime is missing 7↔8 surface {key}")

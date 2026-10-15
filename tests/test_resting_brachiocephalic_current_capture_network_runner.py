@@ -723,6 +723,47 @@ def test_cached_continuation_loads_only_the_two_typed_aortic_certificates(monkey
         runner._load_cached_aortic_interface_certificates({}, "bundle-sha")
 
 
+def test_descending_source_identity_uses_nested_typed_identity():
+    key = (51011, 8)
+    expected = geometry.AORTIC_ARCH_DESCENDING_SOURCE_ROWS[key]
+    gid_base = 766836
+    ancestry = {
+        "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+        "typed_identity": list(key),
+        "source_abi5_face_array_sha256": expected["faces_sha256"],
+        "capture_faces_u32_sha256": expected["faces_sha256"],
+        "ordered_source_face_ids_are_preserved": True,
+        "capture_global_vertex_ids_are_actual_pack_values": True,
+        "native_source_slot_identity_is_contiguous": True,
+        "native_nha_gid_base_offset": gid_base,
+        "observed_gid_minus_nha_global_vertex_index_unique_count": 1,
+        "observed_gid_minus_nha_global_vertex_index_min": gid_base,
+        "observed_gid_minus_nha_global_vertex_index_max": gid_base,
+    }
+    row = {
+        "source_member": expected["source_member"],
+        "fma": expected["fma"],
+        "name": expected["name"],
+        "body_index": expected["body_index"],
+        "layer": expected["layer"],
+        "first_vertex": expected["first_vertex"],
+        "vertex_count": expected["vertex_count"],
+        "face_count": expected["face_count"],
+        "source_face_u32_sha256": expected["faces_sha256"],
+        "actual_face_u32_sha256": expected["faces_sha256"],
+        "source_to_capture_ancestry": ancestry,
+    }
+    assert "typed_identity" not in row
+    assert runner._validate_aortic_descending_source_identity_row(
+        key, expected, row, gid_base) == ancestry
+
+    bad_row = {**row, "source_to_capture_ancestry": {
+        **ancestry, "typed_identity": [51011, 7]}}
+    with pytest.raises(ValueError, match="source row/slot ancestry changed"):
+        runner._validate_aortic_descending_source_identity_row(
+            key, expected, bad_row, gid_base)
+
+
 def test_descending_proof_loader_rejects_changed_frozen_report_before_runtime(
         tmp_path, monkeypatch):
     report = tmp_path / "execution-report.json"
