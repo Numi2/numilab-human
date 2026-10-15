@@ -57,6 +57,27 @@ AORTIC_ARCH_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
 AORTIC_ARCH_FIELD002_INTERFACE_PAIRSET_SHA256 = (
     "478c7ad156fddfe8166c1e49a63d74f5d2c625c4cde39a8d3ffe1fd9dda2d212")
 AORTIC_ARCH_FIELD002_INTERFACE_PAIR_COUNT = 36
+# Current 6<->7 source-bound certificate for the rigid-collar/section-support
+# candidate on accepted capture 024. This profile is tied to one immutable
+# proof/preflight and exact live Float32 fingerprints; it does not broaden the
+# generic pair policy.
+AORTIC_ARCH_REBASE026_INTERFACE_SCHEMA = (
+    "numi.human.verified-aortic-arch-rebase-026-interface-handoff.v1")
+AORTIC_ARCH_REBASE026_INTERFACE_STATUS = (
+    "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_REBASE_026_INTERFACE")
+AORTIC_ARCH_REBASE026_INTERFACE_REPORT_SHA256 = (
+    "cd4639bfb0da634acfd06178ac6b58a966212e0ff9f8f25d4ffe29741f81ddfa")
+AORTIC_ARCH_REBASE026_INTERFACE_PREFLIGHT_SHA256 = (
+    "f01059adaaa6662ba13bd2f0ae135893bac3c14a6a9d5a720975c7559abed2ae")
+AORTIC_ARCH_REBASE026_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "81102e440325e89cfd4fbf74ee3fe9a45bdbeaadee1375757a14ebf6b8ee5501")
+AORTIC_ARCH_REBASE026_INTERFACE_PACK_SHA256 = (
+    "4fd1b291d4ae54096d298cae2a1b56cdb1e0c158ad5ce215d2865fefb9110d61")
+AORTIC_ARCH_REBASE026_INTERFACE_RECEIPT_SHA256 = (
+    "f53f5f8dcafa7a809fb18570e051da330651e72bd6dc66e68342e429acb77219")
+AORTIC_ARCH_REBASE026_INTERFACE_PAIRSET_SHA256 = (
+    "478c7ad156fddfe8166c1e49a63d74f5d2c625c4cde39a8d3ffe1fd9dda2d212")
+AORTIC_ARCH_REBASE026_INTERFACE_PAIR_COUNT = 36
 AORTIC_ARCH_SOURCE_ROWS = {
     (51011, 7): {
         "source_member": "FJ3411", "fma": "FMA3768", "name": "arch of aorta",
@@ -1090,6 +1111,30 @@ def _validate_aortic_arch_field002_interface_certificate(
     )
 
 
+def _validate_aortic_arch_rebase026_interface_certificate(
+        certificate, surfaces, network_keys):
+    """Validate the exact current 6<->7 collar proof for rebase candidate 026."""
+    _require(isinstance(certificate, Mapping)
+             and certificate.get("capture_pack_sha256")
+             == AORTIC_ARCH_REBASE026_INTERFACE_PACK_SHA256
+             and certificate.get("capture_receipt_sha256")
+             == AORTIC_ARCH_REBASE026_INTERFACE_RECEIPT_SHA256,
+             "current rebase-026 certificate is bound to another accepted capture")
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_SOURCE_INTERFACE,
+        schema=AORTIC_ARCH_REBASE026_INTERFACE_SCHEMA,
+        status=AORTIC_ARCH_REBASE026_INTERFACE_STATUS,
+        evidence_report_sha256=AORTIC_ARCH_REBASE026_INTERFACE_REPORT_SHA256,
+        source_preflight_sha256=AORTIC_ARCH_REBASE026_INTERFACE_PREFLIGHT_SHA256,
+        capture_input_bundle_sha256=(
+            AORTIC_ARCH_REBASE026_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        exact_pair_count=AORTIC_ARCH_REBASE026_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=AORTIC_ARCH_REBASE026_INTERFACE_PAIRSET_SHA256,
+        source_rows=AORTIC_ARCH_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
+
 def _validate_aortic_arch_descending_interface_certificate(
     certificate, surfaces, network_keys,
 ):
@@ -1227,6 +1272,10 @@ def audit_network_rows_against_all_targets(
             validator = supported_interfaces[edge]
             if isinstance(certificate, Mapping):
                 if (edge == AORTIC_ARCH_SOURCE_INTERFACE
+                        and certificate.get("schema")
+                        == AORTIC_ARCH_REBASE026_INTERFACE_SCHEMA):
+                    validator = _validate_aortic_arch_rebase026_interface_certificate
+                elif (edge == AORTIC_ARCH_SOURCE_INTERFACE
                         and certificate.get("schema")
                         == AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA):
                     validator = _validate_aortic_arch_field002_interface_certificate

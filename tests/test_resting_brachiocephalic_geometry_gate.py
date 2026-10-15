@@ -1940,6 +1940,113 @@ def test_aortic_arch_field002_certificate_binds_its_new_full_surface(monkeypatch
             certificate, changed, {edge[0]})
 
 
+
+def test_aortic_rebase026_certificate_binds_capture_and_exact_current_surfaces(monkeypatch):
+    edge = ((51011, 7), (51011, 6))
+    pairs = ((0, 0),)
+    pair_sha = hashlib.sha256(
+        np.ascontiguousarray(pairs, dtype="<u4").tobytes()).hexdigest()
+    rows = {
+        edge[0]: {"typed_identity": list(edge[0]), "first_vertex": 110808,
+                  "face_count": 4},
+        edge[1]: {"typed_identity": list(edge[1]), "first_vertex": 110579,
+                  "face_count": 4},
+    }
+    monkeypatch.setattr(bg, "AORTIC_ARCH_SOURCE_ROWS", rows)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_PAIR_COUNT", 1)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_PAIRSET_SHA256", pair_sha)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_REPORT_SHA256", "a" * 64)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_PREFLIGHT_SHA256", "b" * 64)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_CAPTURE_BUNDLE_SHA256", "c" * 64)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_PACK_SHA256", "d" * 64)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_REBASE026_INTERFACE_RECEIPT_SHA256", "e" * 64)
+    surfaces = {}
+    for index, key in enumerate(edge):
+        points, faces = _tetra(1.0, index * 2.0)
+        surfaces[key] = (
+            points, faces, np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1)),
+            np.arange(index * 10, index * 10 + 4, dtype="<u8"))
+    fingerprints = {
+        f"{key[0]}:{key[1]}": bg._aortic_arch_surface_fingerprint(
+            surfaces[key], key=key)
+        for key in edge
+    }
+    certificate = {
+        "schema": bg.AORTIC_ARCH_REBASE026_INTERFACE_SCHEMA,
+        "status": bg.AORTIC_ARCH_REBASE026_INTERFACE_STATUS,
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": "a" * 64,
+        "source_preflight_sha256": "b" * 64,
+        "capture_input_bundle_sha256": "c" * 64,
+        "capture_pack_sha256": "d" * 64,
+        "capture_receipt_sha256": "e" * 64,
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "source_rows": {f"{key[0]}:{key[1]}": rows[key] for key in edge},
+        "exact_face_pairs": [[0, 0]],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": fingerprints,
+    }
+
+    accepted = bg._validate_aortic_arch_rebase026_interface_certificate(
+        certificate, surfaces, {edge[0]})
+    assert accepted["passed"] is True
+    assert accepted["exact_face_pair_count"] == 1
+    assert accepted["anatomical_admission"] is False
+
+    wrong_capture = dict(certificate, capture_receipt_sha256="f" * 64)
+    with pytest.raises(ValueError, match="another accepted capture"):
+        bg._validate_aortic_arch_rebase026_interface_certificate(
+            wrong_capture, surfaces, {edge[0]})
+    changed = dict(surfaces)
+    points = np.array(surfaces[edge[1]][0], copy=True)
+    points[0, 0] = np.float32(0.125)
+    changed[edge[1]] = (
+        points, surfaces[edge[1]][1], surfaces[edge[1]][2], surfaces[edge[1]][3])
+    with pytest.raises(ValueError, match="stale for actual surface"):
+        bg._validate_aortic_arch_rebase026_interface_certificate(
+            certificate, changed, {edge[0]})
+
+
+def test_rebase026_interface_handoff_keeps_other_network_pairs_strict(monkeypatch):
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    interface_key = (51011, 6)
+    points, faces = _tetra(1.0, 50.0)
+    surfaces[interface_key] = _pack_surface(points, faces)
+    certificate = {"schema": bg.AORTIC_ARCH_REBASE026_INTERFACE_SCHEMA}
+    calls = []
+
+    def validate_rebase026(supplied, _surfaces, _network):
+        assert supplied == certificate
+        calls.append("rebase026")
+        return {"status": "VERIFIED", "passed": True}
+
+    def reject_legacy(*_args):
+        raise AssertionError("rebase-026 certificate must use its exact profile")
+
+    monkeypatch.setattr(
+        bg, "_validate_aortic_arch_rebase026_interface_certificate", validate_rebase026)
+    monkeypatch.setattr(bg, "_validate_aortic_arch_interface_certificate", reject_legacy)
+    verifier = _HandoffVerifier(
+        failed_network_pair=frozenset(((51011, 473), interface_key)))
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_nonnetwork_interface_certificates={
+            bg.AORTIC_ARCH_SOURCE_INTERFACE: certificate})
+
+    assert calls == ["rebase026"]
+    assert result["passed"] is False
+    assert result["failed_stage"] == (
+        "certified_interface_target_against_other_network_surface")
+    assert result["failed_pair"] == [[51011, 473], [51011, 6]]
+
 def test_field002_arch_handoff_keeps_unrelated_network_pairs_strict(monkeypatch):
     surfaces, edges, source_pairs, continuity = _handoff_fixture()
     interface_key = (51011, 6)
