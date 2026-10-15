@@ -1,4 +1,8 @@
 import struct
+import json
+import hashlib
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 from numilab_human import composed_bone_body_frame as owner, model
 from numilab_human import resting_anatomy_verify as verify
@@ -27,6 +31,64 @@ def fixture():
     return (H.pack(b"NHBONES1",3,185,len(points),len(indices),123,b"x"*32)
             +b"".join(R.pack(*r) for r in rows)+vertices
             +struct.pack("<"+"I"*len(indices),*indices))
+
+class ProvenanceTests(unittest.TestCase):
+    def make_case(self, root):
+        source=root/"source";source.mkdir()
+        raw=fixture()
+        payload=source/"bodyparts3d-myosim-major-bones.nhbones";payload.write_bytes(raw)
+        manifest={"payload":{"file":payload.name,"sha256":hashlib.sha256(raw).hexdigest(),
+                  "bytes":len(raw),"index_count":H.unpack_from(raw)[4]},
+                  "source":{"anchors":[{"triangle_count":318,"member_id":"FJ3327"}]},
+                  "body_local_bakes":{"proof":"retained unchanged"}}
+        mp=source/"bodyparts3d-myosim-major-bones.manifest.json"
+        mp.write_text(json.dumps(manifest))
+        after,proof=owner.retire_exact_opposed_bone_source_faces(
+            raw,stable_id=93,source_face_pair=(0,4))
+        current=json.loads(json.dumps(manifest))
+        current["payload"].update(sha256=hashlib.sha256(after).hexdigest(),
+                                  bytes=len(after),index_count=H.unpack_from(after)[4])
+        current["source_face_retirement"]={
+            "input_artifact":str(source),"input_manifest_sha256":model.sha256(mp),
+            "input_payload_sha256":model.sha256(payload),"stable_id":93,
+            "source_face_pair":[0,4],"proof":proof}
+        return current,after,source,mp,payload
+
+    def test_retained_input_and_exact_owner_operation(self):
+        with TemporaryDirectory() as d:
+            root=Path(d);manifest,after,source,mp,payload=self.make_case(root)
+            got=owner.validate_exact_opposed_bone_source_retirement(root/"out",manifest,after)
+            self.assertEqual(got[0],source.resolve())
+            self.assertEqual(got[1],json.loads(mp.read_text()))
+            self.assertEqual(got[2],payload.read_bytes())
+            self.assertEqual(got[3],manifest["source_face_retirement"]["proof"])
+
+    def test_any_unrelated_manifest_change_is_rejected(self):
+        with TemporaryDirectory() as d:
+            root=Path(d);manifest,after,*_=self.make_case(root)
+            manifest["source"]["anchors"][0]["member_id"]="renamed"
+            with self.assertRaisesRegex(model.ImportError,"unrelated manifest"):
+                owner.validate_exact_opposed_bone_source_retirement(root/"out",manifest,after)
+
+    def test_drifted_source_and_output_are_rejected(self):
+        with TemporaryDirectory() as d:
+            root=Path(d);manifest,after,source,mp,payload=self.make_case(root)
+            with self.assertRaisesRegex(model.ImportError,"bytes or exact ancestry"):
+                owner.validate_exact_opposed_bone_source_retirement(root/"out",manifest,after[:-1]+b"!")
+            payload.write_bytes(payload.read_bytes()+b"!")
+            with self.assertRaisesRegex(model.ImportError,"source payload is missing or drifted"):
+                owner.validate_exact_opposed_bone_source_retirement(root/"out",manifest,after)
+
+    def test_missing_ancestry_and_self_reference_are_rejected(self):
+        with TemporaryDirectory() as d:
+            root=Path(d);manifest,after,source,*_=self.make_case(root)
+            manifest["source_face_retirement"]["input_artifact"]=str(root/"out")
+            with self.assertRaisesRegex(model.ImportError,"reference itself"):
+                owner.validate_exact_opposed_bone_source_retirement(root/"out",manifest,after)
+            del manifest["source_face_retirement"]["proof"]
+            with self.assertRaisesRegex(model.ImportError,"incomplete provenance"):
+                owner.validate_exact_opposed_bone_source_retirement(root/"out",manifest,after)
+
 
 class RetirementTests(unittest.TestCase):
     def test_exact_source_retirement_preserves_every_other_owner(self):

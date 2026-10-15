@@ -1790,6 +1790,15 @@ def _validate_source_export_partition_rebind(
 
 def validate_composed_rib_reframe(artifact: Path, manifest: dict[str, Any], output_raw: bytes) -> dict[str, Any]:
     artifact = artifact.resolve()
+    if "source_face_retirement" in manifest:
+        prior_artifact, prior_manifest, prior_raw, retirement = validate_exact_opposed_bone_source_retirement(
+            artifact, manifest, output_raw,
+        )
+        prior = validate_composed_rib_reframe(prior_artifact, prior_manifest, prior_raw)
+        result = {**prior, "source_face_retirement": retirement}
+        result["validation_sha256"] = _sha_bytes(json.dumps(
+            result, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
+        return result
     bake_manifest = manifest.get("body_local_bakes")
     if isinstance(bake_manifest, dict):
         declaration_file = bake_manifest.get("declaration_file")
@@ -1918,3 +1927,54 @@ def retire_exact_opposed_bone_source_faces(
             "Source-only zero-volume paired face retirement, not a tolerance weld. "
             "All emitted topology, geometry, attachments, motion and native gates remain.")
     }
+
+
+def validate_exact_opposed_bone_source_retirement(
+    artifact: Path, manifest: dict[str, Any], output_raw: bytes,
+) -> tuple[Path, dict[str, Any], bytes, dict[str, Any]]:
+    """Re-derive a local zero-volume face retirement from its retained input.
+
+    The original manifest and composed-rib proof stay unchanged. Their validation
+    is performed against the original bytes; the current bytes must equal the
+    exact owner operation, with no other change to any bone or manifest field.
+    """
+    repair = manifest.get("source_face_retirement")
+    required = {"input_artifact", "input_manifest_sha256", "input_payload_sha256",
+                "stable_id", "source_face_pair", "proof"}
+    if not isinstance(repair, dict) or set(repair) != required:
+        raise model.ImportError("bone face retirement has incomplete provenance")
+    source_artifact = Path(repair.get("input_artifact", "")).resolve()
+    if source_artifact == artifact.resolve():
+        raise model.ImportError("bone face retirement cannot reference itself")
+    source_manifest_path = source_artifact / "bodyparts3d-myosim-major-bones.manifest.json"
+    if (not source_manifest_path.is_file()
+            or model.sha256(source_manifest_path) != repair.get("input_manifest_sha256")):
+        raise model.ImportError("bone face retirement input manifest is missing or drifted")
+    source_manifest = model.read_json(source_manifest_path)
+    if "source_face_retirement" in source_manifest:
+        raise model.ImportError("nested bone face retirement requires explicit composition")
+    descriptor = source_manifest.get("payload", {})
+    filename = descriptor.get("file")
+    if (not isinstance(filename, str) or Path(filename).name != filename
+            or descriptor.get("sha256") != repair.get("input_payload_sha256")):
+        raise model.ImportError("bone face retirement source descriptor is invalid")
+    source_path = source_artifact / filename
+    if not source_path.is_file() or model.sha256(source_path) != repair.get("input_payload_sha256"):
+        raise model.ImportError("bone face retirement source payload is missing or drifted")
+    source_raw = source_path.read_bytes()
+    pair = repair.get("source_face_pair")
+    if not isinstance(pair, list) or len(pair) != 2:
+        raise model.ImportError("bone face retirement source face ancestry is incomplete")
+    expected_raw, proof = retire_exact_opposed_bone_source_faces(
+        source_raw, stable_id=repair.get("stable_id"), source_face_pair=tuple(pair))
+    if output_raw != expected_raw or repair.get("proof") != proof:
+        raise model.ImportError("bone face retirement bytes or exact ancestry differ")
+    expected_manifest = json.loads(json.dumps(source_manifest))
+    expected_descriptor = expected_manifest["payload"]
+    expected_descriptor["sha256"] = _sha_bytes(expected_raw)
+    expected_descriptor["bytes"] = len(expected_raw)
+    expected_descriptor["index_count"] = _BONE_HEADER.unpack_from(expected_raw)[4]
+    expected_manifest["source_face_retirement"] = repair
+    if manifest != expected_manifest:
+        raise model.ImportError("bone face retirement changed unrelated manifest or ownership")
+    return source_artifact, source_manifest, source_raw, proof

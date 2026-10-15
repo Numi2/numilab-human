@@ -9106,6 +9106,10 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
                 )
         elif stable_id in _BODYPARTS_BODY_LOCAL_BAKE_ROWS and body_local_bakes is not None:
             raise ImportError(f"Numi Human NHBONES baked row {stable_id} is missing its provenance row")
+        retirement = (composed_reframe_validation or {}).get("source_face_retirement")
+        if retirement is not None and retirement.get("typed_identity") == [51004, stable_id]:
+            surface["source_face_indices"] = retirement["retained_source_face_ids"]
+            surface["source_face_retirement"] = retirement
         by_body[body_index].append(surface)
     return dict(by_body), {
         "file": payload_path.name,
