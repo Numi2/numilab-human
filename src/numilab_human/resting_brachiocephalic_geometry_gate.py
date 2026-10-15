@@ -29,6 +29,33 @@ ULNAR_BRANCH_PORTS = frozenset({
 })
 DECLARED_VESSEL_PORTS = BRIDGE_VESSEL_PORTS | ULNAR_BRANCH_PORTS
 
+# One separately proven non-flow interface in the exact accepted capture used
+# by the 150 network screen. It is deliberately not added to the flow graph.
+AORTIC_ARCH_SOURCE_INTERFACE = ((51011, 7), (51011, 6))
+AORTIC_ARCH_INTERFACE_REPORT_SHA256 = (
+    "6c8dc412b7fc00d2140d3d9c72120c7fc2c56cd86dc5087a0296702fd01fdf38")
+AORTIC_ARCH_INTERFACE_PREFLIGHT_SHA256 = (
+    "2ecfd157b0c8f92d47409a4177a7661864f62836f90aaac094b43fbebac75078")
+AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "61f15af8dc20fc7534dc231a560649cb04e0dd60abd76d42f8e5b52a9670daa6")
+AORTIC_ARCH_INTERFACE_PAIRSET_SHA256 = (
+    "478c7ad156fddfe8166c1e49a63d74f5d2c625c4cde39a8d3ffe1fd9dda2d212")
+AORTIC_ARCH_INTERFACE_PAIR_COUNT = 36
+AORTIC_ARCH_SOURCE_ROWS = {
+    (51011, 7): {
+        "source_member": "FJ3411", "fma": "FMA3768", "name": "arch of aorta",
+        "body_index": 20, "layer": 2,
+        "first_vertex": 110808, "vertex_count": 381, "face_count": 670,
+        "faces_sha256": "bd1b68b7ee6da377fd5b6a7d67339a2f1063b6cbef866e24149e1dad66083da8",
+    },
+    (51011, 6): {
+        "source_member": "FJ3413", "fma": "FMA3736", "name": "ascending aorta",
+        "body_index": 20, "layer": 2,
+        "first_vertex": 110579, "vertex_count": 229, "face_count": 396,
+        "faces_sha256": "a6884a09ba8975813151a31d851b7f712a8e59a3299f135485f7d8822c9649af",
+    },
+}
+
 
 def _require(condition: bool, message: str) -> None:
     if not condition:
@@ -772,10 +799,127 @@ def _verified_network_link_handoff(
     return handoffs
 
 
+
+def _aortic_arch_surface_fingerprint(value, *, key):
+    """Hash one exact actual-capture surface for the source-bound 6↔7 handoff."""
+    if hasattr(value, "positions") and hasattr(value, "faces"):
+        positions, faces = value.positions, value.faces
+        normals = getattr(value, "normals", None)
+        source_ids = getattr(value, "source_vertex_ids", None)
+    else:
+        _require(isinstance(value, (tuple, list)) and len(value) >= 4,
+                 f"aortic interface surface {key} lacks packed geometry/normals/GIDs")
+        positions, faces, normals, source_ids = value[:4]
+    positions = _float32_xyz(positions, name=f"aortic interface {key}")
+    faces = _faces(faces, name=f"aortic interface {key}",
+                   vertex_count=len(positions))
+    _require(normals is not None,
+             f"aortic interface surface {key} lacks actual packed normals")
+    normals = np.asarray(normals)
+    _require(normals.dtype == np.dtype("<f4")
+             and normals.shape == positions.shape
+             and np.isfinite(normals).all(),
+             f"aortic interface surface {key} normals are not finite Float32 XYZ")
+    normals = np.ascontiguousarray(normals, dtype="<f4")
+    source_ids = np.asarray(source_ids)
+    _require(source_ids.shape == (len(positions),)
+             and source_ids.dtype.kind in "iu"
+             and (source_ids.dtype.kind != "i" or int(source_ids.min()) >= 0)
+             and len(np.unique(source_ids)) == len(source_ids),
+             f"aortic interface surface {key} has invalid actual pack GIDs")
+    source_ids = np.ascontiguousarray(source_ids, dtype="<u8")
+    return {
+        "typed_identity": list(key),
+        "positions_f32_sha256": hashlib.sha256(positions.tobytes()).hexdigest(),
+        "faces_u32_sha256": hashlib.sha256(faces.tobytes()).hexdigest(),
+        "normals_f32_sha256": hashlib.sha256(normals.tobytes()).hexdigest(),
+        "source_vertex_ids_u64_sha256": hashlib.sha256(source_ids.tobytes()).hexdigest(),
+        "vertex_count": len(positions),
+        "face_count": len(faces),
+    }
+
+
+def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_keys):
+    """Validate the sole captured non-flow interface against its exact proof and arrays."""
+    edge = AORTIC_ARCH_SOURCE_INTERFACE
+    _require(isinstance(certificate, dict)
+             and certificate.get("schema")
+             == "numi.human.verified-aortic-arch-interface-handoff.v1"
+             and certificate.get("status") == "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE"
+             and certificate.get("passed") is True
+             and certificate.get("typed_link") == [list(edge[0]), list(edge[1])],
+             "aortic interface certificate is missing or names another typed pair")
+    _require(certificate.get("evidence_report_sha256")
+             == AORTIC_ARCH_INTERFACE_REPORT_SHA256
+             and certificate.get("source_preflight_sha256")
+             == AORTIC_ARCH_INTERFACE_PREFLIGHT_SHA256
+             and certificate.get("capture_input_bundle_sha256")
+             == AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256,
+             "aortic interface certificate is stale or belongs to another capture")
+    _require(edge[0] in network_keys and edge[1] not in network_keys,
+             "aortic interface must remain the single network-to-nonnetwork handoff")
+    _require(certificate.get("source_topology_passed") is True
+             and certificate.get("interface_gate_passed") is True
+             and certificate.get("solid_gate_passed") is True
+             and certificate.get("independent_source_collar_calibre_passed") is True
+             and certificate.get("candidate_pairs_equal_frozen_source_pairs") is True
+             and certificate.get("baseline_pairs_equal_frozen_source_pairs") is True
+             and certificate.get("candidate_baseline_exact_pairsets_equal") is True,
+             "aortic source certificate lacks topology/interface/solid/calibre proof")
+    proof_rows = certificate.get("source_rows")
+    _require(isinstance(proof_rows, dict)
+             and set(proof_rows) == {f"{edge[0][0]}:{edge[0][1]}",
+                                     f"{edge[1][0]}:{edge[1][1]}"},
+             "aortic source certificate does not bind exactly rows 7 and 6")
+    for key, expected in AORTIC_ARCH_SOURCE_ROWS.items():
+        row = proof_rows[f"{key[0]}:{key[1]}"]
+        _require(row == expected,
+                 f"aortic source identity/face ancestry differs for {key}")
+    raw_pairs = certificate.get("exact_face_pairs")
+    _require(isinstance(raw_pairs, list) and len(raw_pairs) == AORTIC_ARCH_INTERFACE_PAIR_COUNT
+             and all(isinstance(pair, list) and len(pair) == 2
+                     and all(type(face) is int and face >= 0 for face in pair)
+                     for pair in raw_pairs),
+             "aortic certificate exact pair set is malformed")
+    pairs = tuple((pair[0], pair[1]) for pair in raw_pairs)
+    _require(pairs == tuple(sorted(set(pairs)))
+             and hashlib.sha256(np.asarray(pairs, dtype="<i8").tobytes()).hexdigest()
+             == AORTIC_ARCH_INTERFACE_PAIRSET_SHA256
+             and certificate.get("exact_face_pairset_sha256")
+             == AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
+             "aortic exact interface pairs differ from the frozen 36-pair set")
+    fingerprints = certificate.get("candidate_surface_bindings")
+    _require(isinstance(fingerprints, dict)
+             and set(fingerprints) == {f"{key[0]}:{key[1]}" for key in edge},
+             "aortic certificate does not bind both actual capture surfaces")
+    for key in edge:
+        label = f"{key[0]}:{key[1]}"
+        observed = _aortic_arch_surface_fingerprint(surfaces.get(key), key=key)
+        _require(fingerprints[label] == observed,
+                 f"aortic source certificate is stale for actual surface {key}")
+    return {
+        "schema": certificate["schema"],
+        "status": certificate["status"],
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": certificate["evidence_report_sha256"],
+        "source_preflight_sha256": certificate["source_preflight_sha256"],
+        "capture_input_bundle_sha256": certificate["capture_input_bundle_sha256"],
+        "exact_face_pair_count": len(pairs),
+        "exact_face_pairset_sha256": AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
+        "candidate_surface_bindings": fingerprints,
+        "source_rows": proof_rows,
+        "closed_connected_embedded_solid_proof": True,
+        "exact_inside_both_witness_and_connected_union_proof": True,
+        "independent_source_collar_calibre_proof": True,
+        "skipped_duplicate_generic_pair_only": True,
+        "anatomical_admission": False,
+    }
+
 def audit_network_rows_against_all_targets(
     verifier, surfaces, network_edges, source_face_pairs, *,
     verified_network_continuity=None, verified_network_source_inventory=None,
-    progress_callback=None,
+    verified_nonnetwork_interface_certificates=None, progress_callback=None,
 ):
     """Run the shared all-target collision screen for a frozen vessel graph.
 
@@ -806,6 +950,18 @@ def audit_network_rows_against_all_targets(
     _require(isinstance(source_face_pairs, Mapping)
              and set(source_face_pairs) == set(normalized_edges),
              "exact source collar ancestry must cover precisely the declared network edges")
+
+    nonnetwork_interface_handoffs = {}
+    if verified_nonnetwork_interface_certificates is not None:
+        _require(isinstance(verified_nonnetwork_interface_certificates, Mapping)
+                 and set(verified_nonnetwork_interface_certificates)
+                 == {AORTIC_ARCH_SOURCE_INTERFACE},
+                 "only the exact source-bound aortic arch interface certificate is supported")
+        certificate = verified_nonnetwork_interface_certificates[
+            AORTIC_ARCH_SOURCE_INTERFACE]
+        nonnetwork_interface_handoffs[AORTIC_ARCH_SOURCE_INTERFACE] = (
+            _validate_aortic_arch_interface_certificate(
+                certificate, surfaces, network_keys))
 
     interfaces = {}
     interface_records = []
@@ -854,12 +1010,17 @@ def audit_network_rows_against_all_targets(
         verified_edges = {frozenset(edge) for edge in normalized_edges}
         changed = tuple(sorted(network_keys))
         nonnetwork_targets = tuple(sorted(set(surfaces) - network_keys))
-        skin_targets = tuple(key for key in nonnetwork_targets if key[0] == 51007)
+        certified_interface_target_keys = {
+            edge[1] for edge in nonnetwork_interface_handoffs}
+        all_target_screen_targets = tuple(
+            key for key in nonnetwork_targets
+            if key not in certified_interface_target_keys)
+        skin_targets = tuple(key for key in all_target_screen_targets if key[0] == 51007)
         enclosures = [(vessel, skin) for vessel in changed for skin in skin_targets]
         if progress_callback is not None:
             progress_callback("STARTING_NONNETWORK_TARGET_SCREEN")
         shared_result = verifier.audit_changed_surfaces(
-            surfaces, changed=changed, targets=nonnetwork_targets,
+            surfaces, changed=changed, targets=all_target_screen_targets,
             interfaces={}, required_closed=changed,
             intended_enclosures=enclosures)
         if progress_callback is not None:
@@ -881,6 +1042,9 @@ def audit_network_rows_against_all_targets(
                     "links": handoffs,
                     "only_declared_neighbor_pairs_omitted_from_duplicate_pair_audit": True,
                 },
+                "verified_nonnetwork_interface_handoffs": list(
+                    nonnetwork_interface_handoffs.values()),
+                "certified_interface_target_checks": [],
                 "shared_verifier_result": shared_result,
                 "nonedge_network_pair_checks": [],
                 "failed_stage": "network_surface_against_nonnetwork_target",
@@ -901,6 +1065,57 @@ def audit_network_rows_against_all_targets(
                     source_vertex_ids=value[3] if len(value) > 3 else
                     np.arange(len(value[0]), dtype=np.uint64))
             return prepared_cache[key]
+
+        certified_target_checks = []
+        for interface_edge in nonnetwork_interface_handoffs:
+            interface_network_key, interface_target_key = interface_edge
+            for network_key in changed:
+                if network_key == interface_network_key:
+                    continue
+                if progress_callback is not None:
+                    progress_callback(
+                        f"CHECKING_CERTIFIED_INTERFACE_TARGET_PAIR_"
+                        f"{network_key[0]}_{network_key[1]}__"
+                        f"{interface_target_key[0]}_{interface_target_key[1]}")
+                pair_result = verifier.audit_surface_pair(
+                    prepared_for_pair(network_key),
+                    prepared_for_pair(interface_target_key))
+                pair_row = {
+                    "identities": [list(network_key), list(interface_target_key)],
+                    "passed": pair_result.get("passed") is True,
+                    "audit": pair_result,
+                    "strict_unrelated_network_to_interface_target_pair": True,
+                }
+                certified_target_checks.append(pair_row)
+                if progress_callback is not None:
+                    progress_callback(
+                        f"FINISHED_CERTIFIED_INTERFACE_TARGET_PAIR_"
+                        f"{network_key[0]}_{network_key[1]}__"
+                        f"{interface_target_key[0]}_{interface_target_key[1]}_"
+                        f"{'PASSED' if pair_row['passed'] else 'REJECTED'}")
+                if not pair_row["passed"]:
+                    return {
+                        "schema": "numi.human.brachiocephalic.current-network-all-target-screen.v1",
+                        "status": "CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_REJECTED",
+                        "passed": False,
+                        "network_edge_count": len(normalized_edges),
+                        "network_surface_count": len(network_keys),
+                        "all_capture_target_count": len(surfaces),
+                        "nonnetwork_target_count": len(nonnetwork_targets),
+                        "verified_junction_handoff": {
+                            "status": "VERIFIED_PER_LINK_CONTINUITY_BOUND",
+                            "links": handoffs,
+                            "only_declared_neighbor_pairs_omitted_from_duplicate_pair_audit": True,
+                        },
+                        "verified_nonnetwork_interface_handoffs": list(
+                            nonnetwork_interface_handoffs.values()),
+                        "certified_interface_target_checks": certified_target_checks,
+                        "shared_verifier_result": shared_result,
+                        "nonedge_network_pair_checks": [],
+                        "failed_stage": "certified_interface_target_against_other_network_surface",
+                        "failed_pair": pair_row["identities"],
+                        "anatomical_admission": False,
+                    }
 
         nonedge_rows = []
         for left_index, first in enumerate(changed):
@@ -939,6 +1154,9 @@ def audit_network_rows_against_all_targets(
                             "links": handoffs,
                             "only_declared_neighbor_pairs_omitted_from_duplicate_pair_audit": True,
                         },
+                        "verified_nonnetwork_interface_handoffs": list(
+                            nonnetwork_interface_handoffs.values()),
+                        "certified_interface_target_checks": certified_target_checks,
                         "shared_verifier_result": shared_result,
                         "nonedge_network_pair_checks": nonedge_rows,
                         "failed_stage": "undeclared_network_pair",
@@ -957,6 +1175,11 @@ def audit_network_rows_against_all_targets(
                          for key in sorted(surfaces))
             ).hexdigest(),
             "nonnetwork_target_count": len(nonnetwork_targets),
+            "verified_nonnetwork_interface_handoffs": list(
+                nonnetwork_interface_handoffs.values()),
+            "certified_interface_target_checks": certified_target_checks,
+            "certified_interface_target_count_omitted_from_generic_screen": len(
+                certified_interface_target_keys),
             "verified_junction_handoff": {
                 "status": "VERIFIED_PER_LINK_CONTINUITY_BOUND",
                 "links": handoffs,
@@ -970,11 +1193,15 @@ def audit_network_rows_against_all_targets(
             "nonedge_network_pair_checks": nonedge_rows,
             "declared_skin_enclosures": len(enclosures),
             "scope_limit": (
-                "All network surfaces were checked against every nonnetwork captured surface, "
-                "and every non-edge network pair was checked with the shared exact pair oracle. "
-                "Only the exact direct-neighbor pairs with complete per-link 3D continuity "
-                "proofs were omitted from duplicate generic containment checks. This is "
-                "collision and source-calibre evidence, not all-pose/native/anatomical admission."),
+                "All network surfaces were checked against every nonnetwork captured surface "
+                "except the one row-6 target paired with row 7, which was independently bound "
+                "to its exact current capture arrays and source-baseline closed-solid, exact "
+                "inside-both, connected-union, and own-station calibre proof. Row 6 was then "
+                "checked strictly against every other network surface. Every non-edge network "
+                "pair was checked with the shared exact pair oracle; only direct neighbors with "
+                "complete per-link 3D continuity proofs were omitted from duplicate checks. "
+                "This is collision and source-calibre evidence, not all-pose/native/anatomical "
+                "admission."),
             "anatomical_admission": False,
         }
 

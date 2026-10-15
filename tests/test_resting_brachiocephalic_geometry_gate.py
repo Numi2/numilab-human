@@ -1795,6 +1795,102 @@ def test_verified_handoff_skips_only_proven_edges_and_checks_every_other_pair():
                     expected_nonedges)
 
 
+def test_aortic_arch_interface_certificate_binds_exact_current_surfaces(monkeypatch):
+    edge = ((51011, 7), (51011, 6))
+    pairs = ((0, 0),)
+    pair_sha = hashlib.sha256(
+        np.ascontiguousarray(pairs, dtype="<i8").tobytes()).hexdigest()
+    rows = {
+        edge[0]: {"typed_identity": list(edge[0]), "first_vertex": 110808},
+        edge[1]: {"typed_identity": list(edge[1]), "first_vertex": 110579},
+    }
+    monkeypatch.setattr(bg, "AORTIC_ARCH_SOURCE_ROWS", rows)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_INTERFACE_PAIR_COUNT", 1)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_INTERFACE_PAIRSET_SHA256", pair_sha)
+    surfaces = {}
+    for index, key in enumerate(edge):
+        points, faces = _tetra(1.0, index * 2.0)
+        surfaces[key] = (
+            points, faces, np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1)),
+            np.arange(index * 10, index * 10 + 4, dtype="<u8"))
+    fingerprints = {
+        f"{key[0]}:{key[1]}": bg._aortic_arch_surface_fingerprint(
+            surfaces[key], key=key)
+        for key in edge
+    }
+    certificate = {
+        "schema": "numi.human.verified-aortic-arch-interface-handoff.v1",
+        "status": "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE",
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": bg.AORTIC_ARCH_INTERFACE_REPORT_SHA256,
+        "source_preflight_sha256": bg.AORTIC_ARCH_INTERFACE_PREFLIGHT_SHA256,
+        "capture_input_bundle_sha256": bg.AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256,
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "source_rows": {f"{key[0]}:{key[1]}": rows[key] for key in edge},
+        "exact_face_pairs": [[0, 0]],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": fingerprints,
+    }
+
+    accepted = bg._validate_aortic_arch_interface_certificate(
+        certificate, surfaces, {edge[0]})
+    assert accepted["passed"] is True
+    assert accepted["anatomical_admission"] is False
+
+    changed = dict(surfaces)
+    changed_points = np.array(surfaces[edge[1]][0], copy=True)
+    changed_points[0, 0] = np.float32(0.125)
+    changed[edge[1]] = (
+        changed_points, surfaces[edge[1]][1], surfaces[edge[1]][2],
+        surfaces[edge[1]][3])
+    with pytest.raises(ValueError, match="stale for actual surface"):
+        bg._validate_aortic_arch_interface_certificate(
+            certificate, changed, {edge[0]})
+
+
+def test_aortic_interface_handoff_skips_only_certified_pair_and_keeps_other_pairs_strict(
+        monkeypatch):
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    interface_key = (51011, 6)
+    points, faces = _tetra(1.0, 50.0)
+    surfaces[interface_key] = _pack_surface(points, faces)
+    certificate = {"source": "frozen"}
+    monkeypatch.setattr(
+        bg, "_validate_aortic_arch_interface_certificate",
+        lambda supplied, _surfaces, _network: (
+            {"status": "VERIFIED", "passed": True}
+            if supplied == certificate else (_ for _ in ()).throw(
+                ValueError("wrong certificate"))))
+    verifier = _HandoffVerifier(
+        failed_network_pair=frozenset(((51011, 473), interface_key)))
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_nonnetwork_interface_certificates={
+            bg.AORTIC_ARCH_SOURCE_INTERFACE: certificate})
+
+    assert result["passed"] is False
+    assert result["failed_stage"] == (
+        "certified_interface_target_against_other_network_surface")
+    assert result["failed_pair"] == [[51011, 473], [51011, 6]]
+    assert verifier.shared_calls[0]["targets"] == (
+        (51005, 900), (51007, 1))
+    interface_pairs = {
+        pair for pair in verifier.pair_calls if interface_key in pair}
+    assert interface_pairs == {
+        frozenset((interface_key, (51011, 471))),
+        frozenset((interface_key, (51011, 473))),
+    }
+    assert frozenset((interface_key, (51011, 7))) not in interface_pairs
+
+
 def test_verified_handoff_binds_repaired_faces_through_exact_source_corner_ancestry():
     import copy
 

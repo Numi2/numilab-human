@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import time
 from datetime import UTC, datetime
@@ -29,6 +30,22 @@ SOURCE_BASELINE_ADDENDUM_NAME = "source-baseline-collar-addendum.json"
 NETWORK_KEYS = tuple(sorted({
     key for edge in network_owner.declared_network_links() for key in edge
 }))
+
+AORTIC_PROOF_ROOT = Path(
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/"
+    "full-anatomy-delivery-audit-1378")
+AORTIC_PROOF_DIR = AORTIC_PROOF_ROOT / "aortic-6-7-source-interface-proof-004"
+AORTIC_PROOF_REPORT = AORTIC_PROOF_DIR / "execution-report.json"
+AORTIC_PROOF_PREFLIGHT = AORTIC_PROOF_DIR / "preflight.json"
+AORTIC_PARENT_150_DIR = (
+    AORTIC_PROOF_ROOT /
+    "current-capture-network-gate-150-actual012-source179-313candidate-all-target-001")
+AORTIC_PARENT_150_REPORT = AORTIC_PARENT_150_DIR / "terminal-report.json"
+AORTIC_PARENT_150_REPORT_SHA256 = (
+    "662c1a389ccf73c53c4b4a5594ea77e0e0842937d58b8abb7d24cfdae82bae0f")
+AORTIC_TARGET_OVERLAY_RUNNER = AORTIC_PROOF_ROOT / "prepare_current012_network150.py"
+AORTIC_TARGET_OVERLAY_RUNNER_SHA256 = (
+    "261ac70eb41f2f23e2821d406f1b388880b32cc0186f0f8f110725fd6e05f021")
 
 
 def _require(ok: bool, message: str) -> None:
@@ -466,6 +483,7 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
                                  progress_callback=None,
                                  matched_collar_addendum=None,
                                  matched_collar_addenda=None,
+                                 verified_nonnetwork_interface_certificates=None,
                                  run_all_targets=True) -> dict:
     """Run fail-first 15-link continuity; all-target is an explicit later stage."""
     candidates, _baselines, link_inputs, inventory = _bind_runtime_inputs(runtime)
@@ -552,6 +570,8 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
         runtime["edge_evidence"], runtime["separate_evidence"],
         verified_network_continuity=continuity,
         verified_network_source_inventory=inventory,
+        verified_nonnetwork_interface_certificates=(
+            verified_nonnetwork_interface_certificates),
         progress_callback=progress_callback)
     report["all_target_collision_gate"] = collision
     report["status"] = (
@@ -649,6 +669,455 @@ def _stable_preflight(value: dict) -> dict:
     result = json.loads(json.dumps(value, sort_keys=True, allow_nan=False))
     result.pop("recorded_at_utc", None)
     return result
+
+
+def _aortic_arch_certificate_from_reports(
+    runtime: dict, bundle_sha256: str, report: dict, preflight: dict, *,
+    evidence_report_sha256: str, source_preflight_sha256: str,
+) -> dict:
+    """Bind the frozen 6↔7 proof to current rows from the same accepted pack."""
+    edge = collision_owner.AORTIC_ARCH_SOURCE_INTERFACE
+    _require(bundle_sha256 == collision_owner.AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256
+             and preflight.get("capture_input_bundle_sha256") == bundle_sha256
+             and preflight.get("parent_150_terminal_report_sha256")
+             == AORTIC_PARENT_150_REPORT_SHA256,
+             "aortic proof does not belong to the exact run150 capture bundle")
+    _require(report.get("schema") == "numi.human.aortic-6-7-source-interface-proof.v1"
+             and report.get("status") == "PASS_SOURCE_BOUND_AORTA_ARCH_INTERFACE_DIAGNOSTIC"
+             and report.get("passed") is True
+             and report.get("typed_pair") == [list(edge[0]), list(edge[1])]
+             and report.get("preflight_sha256") == source_preflight_sha256
+             and report.get("all_15_flow_links_unchanged") is True
+             and report.get("source_topology_passed") is True
+             and report.get("interface_gate_passed") is True
+             and report.get("solid_gate_passed") is True
+             and report.get("independent_source_collar_calibre_passed") is True
+             and report.get("candidate_pairs_equal_frozen_source_pairs") is True
+             and report.get("baseline_pairs_equal_frozen_source_pairs") is True
+             and report.get("candidate_baseline_exact_pairsets_equal") is True,
+             "pinned aortic report no longer carries the required source-bound passes")
+
+    source_identity = preflight.get("source_identity")
+    _require(isinstance(source_identity, dict)
+             and set(source_identity) == {
+                 f"{edge[0][0]}:{edge[0][1]}",
+                 f"{edge[1][0]}:{edge[1][1]}"},
+             "aortic preflight does not bind exactly the two typed source rows")
+    source_rows = {}
+    candidate_bindings = {}
+    for key, expected in collision_owner.AORTIC_ARCH_SOURCE_ROWS.items():
+        label = f"{key[0]}:{key[1]}"
+        row = source_identity[label]
+        ancestry = row.get("source_to_capture_ancestry")
+        _require(row.get("typed_identity", list(key)) == list(key)
+                 and row.get("source_member") == expected["source_member"]
+                 and row.get("fma") == expected["fma"]
+                 and row.get("name") == expected["name"]
+                 and row.get("body_index") == expected["body_index"]
+                 and row.get("layer") == expected["layer"]
+                 and row.get("first_vertex") == expected["first_vertex"]
+                 and row.get("vertex_count") == expected["vertex_count"]
+                 and row.get("face_count") == expected["face_count"]
+                 and row.get("source_face_u32_sha256") == expected["faces_sha256"]
+                 and row.get("actual_face_u32_sha256") == expected["faces_sha256"]
+                 and isinstance(ancestry, dict)
+                 and ancestry.get("status") == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+                 and ancestry.get("typed_identity") == list(key)
+                 and ancestry.get("source_abi5_face_array_sha256") == expected["faces_sha256"]
+                 and ancestry.get("capture_faces_u32_sha256") == expected["faces_sha256"]
+                 and ancestry.get("ordered_source_face_ids_are_preserved") is True
+                 and ancestry.get("capture_global_vertex_ids_are_actual_pack_values") is True
+                 and ancestry.get("native_source_slot_identity_is_contiguous") is True
+                 and ancestry.get("native_nha_gid_base_offset") == 766836
+                 and ancestry.get("observed_gid_minus_nha_global_vertex_index_unique_count") == 1
+                 and ancestry.get("observed_gid_minus_nha_global_vertex_index_min") == 766836
+                 and ancestry.get("observed_gid_minus_nha_global_vertex_index_max") == 766836,
+                 f"aortic source row/slot ancestry changed for {key}")
+        source_rows[label] = dict(expected)
+        value = runtime["candidate_surfaces"].get(
+            key, runtime["context"]["surfaces"].get(key))
+        _require(value is not None, f"current runtime is missing aortic surface {key}")
+        fingerprint = collision_owner._aortic_arch_surface_fingerprint(value, key=key)
+        _require(fingerprint["positions_f32_sha256"]
+                 == row.get("actual_position_f32_sha256")
+                 and fingerprint["faces_u32_sha256"]
+                 == row.get("actual_face_u32_sha256")
+                 and fingerprint["normals_f32_sha256"]
+                 == row.get("actual_normal_f32_sha256")
+                 and fingerprint["source_vertex_ids_u64_sha256"]
+                 == row.get("actual_gid_u64_sha256")
+                 and fingerprint["vertex_count"] == expected["vertex_count"]
+                 and fingerprint["face_count"] == expected["face_count"],
+                 f"aortic proof arrays differ from current actual surface {key}")
+        candidate_bindings[label] = fingerprint
+
+    pairs = report.get("frozen_source_pairset")
+    _require(isinstance(pairs, list)
+             and len(pairs) == collision_owner.AORTIC_ARCH_INTERFACE_PAIR_COUNT
+             and all(isinstance(pair, list) and len(pair) == 2
+                     and all(type(face) is int and face >= 0 for face in pair)
+                     for pair in pairs)
+             and tuple(tuple(pair) for pair in pairs) == tuple(sorted({tuple(pair) for pair in pairs}))
+             and hashlib.sha256(np.asarray(pairs, dtype="<i8").tobytes()).hexdigest()
+             == collision_owner.AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
+             "aortic proof pairset is not the frozen exact 36-pair set")
+    interface_match = report.get("interface_gate_pairset_matches_frozen")
+    _require(interface_match == {
+                 "candidate": True, "independent_source_baseline": True},
+             "candidate and independent baseline interface pairs differ from source")
+    for role in ("candidate", "independent_source_baseline"):
+        interface = report["interface_gate"][role]
+        witness = interface["exact_partial_overlap_witnesses"]
+        boundary = witness["boundary_predicate"]
+        conditions = boundary["conditions"]
+        _require(interface.get("passed") is True
+                 and interface.get("observed_pair_count") == len(pairs)
+                 and interface.get("observed_pairs_within_frozen_face_patch_cross_product") is True
+                 and witness.get("passed") is True
+                 and boundary.get("passed") is True
+                 and conditions.get("exact_interface_points_nonempty") is True
+                 and conditions.get("symmetric_exact_inside_and_outside_face_witnesses") is True
+                 and conditions.get("all_observed_pairs_inside_frozen_collar_patch") is True
+                 and conditions.get("no_unexpected_pairs_outside_frozen_patch") is True
+                 and conditions.get("no_other_declared_feature_contacts") is True,
+                 f"{role} aortic exact collar interface proof is incomplete")
+        direct = report["direct_pair_audits"][(
+            "candidate_actual" if role == "candidate" else "independent_source_baseline")]
+        _require(direct.get("ordered_pairset_sha256")
+                 == collision_owner.AORTIC_ARCH_INTERFACE_PAIRSET_SHA256
+                 and direct.get("unexpected_pair_count") == len(pairs)
+                 and direct.get("unexpected_pairs") == pairs,
+                 f"{role} direct current/source pair witness differs from the frozen collar")
+    for role in ("candidate", "independent_source_baseline"):
+        solid = report["solid_gate"][role]
+        accounting = solid["volume_accounting"]
+        _require(solid.get("passed") is True
+                 and solid.get("manifold_inputs_passed") is True
+                 and solid.get("positive_intersection_volume") is True
+                 and solid.get("intersection_volume_m3", 0.0) > 0.0
+                 and solid.get("union_component_count") == 1
+                 and solid.get("union_connected_numerical_solid") is True
+                 and solid.get("union_lineage_has_both_sources_without_generated_or_unmapped_faces")
+                 is True
+                 and solid.get("floating_boolean_exact_topology_proven") is False
+                 and accounting.get("union_volume_not_less_than_either_source") is True,
+                 f"{role} aortic solid/inside-both/connected-union proof is incomplete")
+    topology = report["source_topology"]
+    for name in ("candidate_arch", "candidate_ascending",
+                 "baseline_arch", "baseline_ascending"):
+        surface = topology[name]
+        quotient = surface["prepared_surface"]["exact_coordinate_quotient_topology"]
+        _require(surface.get("closed_self_free_single_component") is True
+                 and surface.get("exact_self_audit_count") == 0
+                 and surface.get("signed_volume_m3", 0.0) > 0.0
+                 and surface.get("referenced_face_component_count") == 1
+                 and surface["prepared_surface"].get("referenced_surface_closed") is True
+                 and quotient.get("closed_oriented_manifold_candidate") is True
+                 and quotient.get("face_component_count") == 1
+                 and quotient.get("boundary_edge_count") == 0
+                 and quotient.get("orientation_defect_edges_count") == 0,
+                 f"{name} source/candidate closed-solid topology proof is incomplete")
+    for role, owner_id in (("arch", 7), ("ascending", 6)):
+        calibre = report["independent_source_collar_calibre"][role]
+        station = calibre["station"]
+        comparison = calibre["candidate_to_baseline_comparison"]
+        ratios = comparison["candidate_to_baseline_ratios"]
+        _require(calibre.get("passed") is True and calibre.get("owner_id") == owner_id
+                 and calibre.get("clinical_calibre_claim") is False
+                 and station.get("inferred") is True
+                 and station.get("transported_from_source_vertex_ancestry") is True
+                 and station.get("mesh_coordinates_modified") is False
+                 and comparison.get("passed") is True
+                 and comparison.get("wide_bounds_are_not_preservation_success") is True
+                 and 0.8 <= ratios["area"] <= 1.25
+                 and 0.9 <= ratios["minimum_feret_width"] <= 1.1,
+                 f"{role} lacks independent source-station calibre preservation")
+    return {
+        "schema": "numi.human.verified-aortic-arch-interface-handoff.v1",
+        "status": "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE",
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": evidence_report_sha256,
+        "source_preflight_sha256": source_preflight_sha256,
+        "capture_input_bundle_sha256": bundle_sha256,
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "exact_face_pairs": pairs,
+        "exact_face_pairset_sha256": collision_owner.AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
+        "candidate_surface_bindings": candidate_bindings,
+        "source_rows": source_rows,
+        "numerical_boolean_topology_is_diagnostic_only": True,
+        "anatomical_admission": False,
+    }
+
+
+def _load_aortic_arch_interface_certificate(runtime: dict, bundle_sha256: str) -> dict:
+    report_path = AORTIC_PROOF_REPORT.resolve(strict=True)
+    preflight_path = AORTIC_PROOF_PREFLIGHT.resolve(strict=True)
+    report_sha = _sha_file(report_path)
+    preflight_sha = _sha_file(preflight_path)
+    _require(report_sha == collision_owner.AORTIC_ARCH_INTERFACE_REPORT_SHA256
+             and preflight_sha == collision_owner.AORTIC_ARCH_INTERFACE_PREFLIGHT_SHA256,
+             "pinned aortic source-interface evidence changed")
+    preflight = json.loads(preflight_path.read_text())
+    report = json.loads(report_path.read_text())
+    _require(preflight.get("schema") == "numi.human.aortic-6-7-source-interface-preflight.v1"
+             and preflight.get("status") == "PREFLIGHT_READY_NO_EXACT_INTERSECTION_OR_SOLID_PREDICATE"
+             and preflight.get("capture_input_bundle_sha256") == bundle_sha256
+             and preflight.get("parent_150_terminal_report_sha256")
+             == AORTIC_PARENT_150_REPORT_SHA256
+             and Path(report.get("preflight_path", "")).resolve() == preflight_path
+             and report.get("preflight_sha256") == preflight_sha,
+             "aortic proof preflight is not bound to its exact parent capture and report")
+    return _aortic_arch_certificate_from_reports(
+        runtime, bundle_sha256, report, preflight,
+        evidence_report_sha256=report_sha,
+        source_preflight_sha256=preflight_sha)
+
+
+def _validate_cached_network_inventory(live_inventory: dict, cached_inventory: dict) -> None:
+    fields = (
+        "candidate_surface_count", "independent_source_baseline_surface_count",
+        "candidate_surfaces", "independent_source_baselines",
+        "source_face_arrays_bound_by_exact_ordered_abi5_corner_ancestry",
+        "native_source_slot_identity", "source_face_ancestry_by_typed_row",
+        "candidate_and_baseline_global_gid_arrays_identical_per_row",
+        "candidate_baseline_gid_identity_by_typed_row",
+        "candidate_baseline_gid_comparison_dtype",
+        "candidate_gid_values_were_read_from_actual_capture_pack",
+        "baseline_coordinates_are_independently_cpu_reconstructed",
+        "baseline_gid_values_are_transported_current_nha_source_slots",
+    )
+    _require(isinstance(cached_inventory, dict)
+             and all(cached_inventory.get(key) == live_inventory.get(key)
+                     for key in fields),
+             "cached 15-link inventory differs from current typed source/pack rows")
+
+
+def continue_cached_all_target_screen(
+    capture_inputs_json: Path, output_dir: Path, *, cached_terminal_report: Path | None = None,
+) -> dict:
+    """Continue only the all-target stage from the exact cached 150 link pass."""
+    started = time.perf_counter()
+    bundle_path = Path(capture_inputs_json).resolve(strict=True)
+    destination = Path(output_dir).resolve()
+    terminal_path = Path(
+        AORTIC_PARENT_150_REPORT if cached_terminal_report is None
+        else cached_terminal_report).resolve(strict=True)
+    _require(not destination.exists(),
+             "continuation output directory already exists; use an immutable new path")
+    bundle_bytes = bundle_path.read_bytes()
+    bundle_sha = _sha_bytes(bundle_bytes)
+    terminal_sha = _sha_file(terminal_path)
+    report_path = destination / "all-target-continuation-report.json"
+    progress_path = destination / "progress.json"
+    preflight_path = destination / "continuation-preflight.json"
+    start = {
+        "schema": "numi.human.current012-cached-all-target-continuation.v1",
+        "status": "RUNNING_CACHED_ALL_TARGET_CONTINUATION_PREFLIGHT",
+        "recorded_start_utc": datetime.now(UTC).isoformat(),
+        "capture_input_bundle_path": str(bundle_path),
+        "capture_input_bundle_sha256": bundle_sha,
+        "cached_terminal_report_path": str(terminal_path),
+        "cached_terminal_report_sha256": terminal_sha,
+        "geometry_predicates_run": False,
+        "continuity_predicates_rerun": False,
+        "native_or_gpu_work_performed": False,
+        "anatomical_admission": False,
+    }
+    destination.mkdir(parents=True)
+    _write_json(progress_path, start)
+    geometry_started = False
+    try:
+        _require(bundle_sha == collision_owner.AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256
+                 and terminal_path == AORTIC_PARENT_150_REPORT.resolve()
+                 and terminal_sha == AORTIC_PARENT_150_REPORT_SHA256,
+                 "cached continuation is not the exact immutable run150 capture/result")
+        terminal = json.loads(terminal_path.read_text())
+        capture_inputs = json.loads(bundle_bytes)
+        explicit_bundle = terminal.get("current_capture", {}).get(
+            "explicit_merged_capture_input_bundle")
+        _require(isinstance(explicit_bundle, dict)
+                 and set(explicit_bundle) == set(capture_inputs)
+                 and all((Path(capture_inputs[key]).resolve()
+                          == Path(explicit_bundle[key]).resolve())
+                         if key.endswith("_path") else capture_inputs[key] == explicit_bundle[key]
+                         for key in capture_inputs),
+                 "run150 cached report and current input bundle do not name identical files")
+        live_preflight, runtime = preparation.build_preflight(
+            capture_inputs, return_runtime_inputs=True)
+        _require(live_preflight.get("status") == "SOURCE0_SEAMOWNER_CAPTURE_READY_NO_GEOMETRY_PREDICATE"
+                 and live_preflight.get("actual_accepted_capture")
+                 == terminal.get("current_capture"),
+                 "live source/capture preparation differs from cached run150 accepted capture")
+        continuity = terminal.get("current012_network_continuity")
+        _require(terminal.get("schema")
+                 == "numi.human.current012-vascular-network-all-target-screen.v1"
+                 and terminal.get("status")
+                 == "CURRENT_NETWORK_ALL_TARGET_COLLISION_SCREEN_REJECTED"
+                 and terminal.get("failed_stage")
+                 == "network_surface_against_nonnetwork_target"
+                 and terminal.get("passed") is False
+                 and isinstance(continuity, dict)
+                 and continuity.get("status")
+                 == "PASS_SOURCE_NETWORK_LINK_CONTINUITY_UNADMITTED"
+                 and continuity.get("passed") is True
+                 and continuity.get("evaluated_link_count") == 15
+                 and continuity.get("requested_link_count") == 15
+                 and len(continuity.get("links", [])) == 15
+                 and all(link.get("passed") is True for link in continuity["links"]),
+                 "cached run150 did not pass all 15 continuity links before all-target")
+        old_gate = terminal.get("all_target_screen", {})
+        old_shared = old_gate.get("shared_verifier_result", {})
+        old_rows = old_shared.get("rows", [])
+        first_failure = next((row for row in old_rows if row.get("passed") is False), None)
+        _require(old_gate.get("failed_stage") == "network_surface_against_nonnetwork_target"
+                 and isinstance(first_failure, dict)
+                 and first_failure.get("identities") == [[51011, 7], [51011, 6]],
+                 "cached all-target failure is not the exact aortic arch/ascending interface")
+        candidates, _baselines, _link_inputs, live_inventory = _bind_runtime_inputs(runtime)
+        cached_inventory = terminal.get("network_inventory")
+        _validate_cached_network_inventory(live_inventory, cached_inventory)
+        aortic_certificate = _load_aortic_arch_interface_certificate(runtime, bundle_sha)
+        _require(first_failure.get("triangle_pair_count")
+                 == collision_owner.AORTIC_ARCH_INTERFACE_PAIR_COUNT
+                 and first_failure.get("unexpected_triangle_pairs")
+                 == aortic_certificate["exact_face_pairs"],
+                 "cached first-failure contacts differ from the certified exact aortic pairset")
+
+        overlay_pin_map = terminal.get("runner_code_pins", {})
+        _require(isinstance(overlay_pin_map, dict)
+                 and overlay_pin_map.get(str(AORTIC_TARGET_OVERLAY_RUNNER.resolve()))
+                 == AORTIC_TARGET_OVERLAY_RUNNER_SHA256
+                 and _sha_file(AORTIC_TARGET_OVERLAY_RUNNER.resolve(strict=True))
+                 == AORTIC_TARGET_OVERLAY_RUNNER_SHA256,
+                 "run150 target-overlay preparation source changed")
+        spec = importlib.util.spec_from_file_location(
+            "numi_current012_network150_pinned_overlay",
+            AORTIC_TARGET_OVERLAY_RUNNER.resolve())
+        _require(spec is not None and spec.loader is not None,
+                 "cannot load the pinned run150 target-overlay preparation")
+        overlay_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(overlay_module)
+        collision_surfaces, target_overlay = overlay_module.prepare_target_overlays(runtime)
+        frozen_overlay = terminal.get("counterfactual_target_overlay")
+        _require(_stable_preflight(target_overlay) == _stable_preflight(frozen_overlay),
+                 "replayed run150 rest/313 counterfactual target overlays changed")
+        collision_surfaces.update(candidates)
+        certificate_map = {
+            collision_owner.AORTIC_ARCH_SOURCE_INTERFACE: aortic_certificate}
+        preflight = {
+            **start,
+            "status": "PREFLIGHT_READY_EXACT_CACHED_CONTINUITY_AND_AORTIC_HANDOFF",
+            "runner_code_pins": _runtime_code_pins(),
+            "captured_source_rows": live_preflight["actual_accepted_capture"],
+            "continuity_report_sha256": terminal_sha,
+            "continuity_report_status": continuity["status"],
+            "continuity_link_count": 15,
+            "cached_network_inventory_typed_row_count": len(
+                cached_inventory["candidate_surfaces"]),
+            "aortic_interface_certificate": {
+                key: value for key, value in aortic_certificate.items()
+                if key not in ("exact_face_pairs", "candidate_surface_bindings")
+            },
+            "aortic_interface_exact_face_pair_count": len(
+                aortic_certificate["exact_face_pairs"]),
+            "aortic_interface_candidate_surface_bindings":
+                aortic_certificate["candidate_surface_bindings"],
+            "counterfactual_target_overlay_summary": {
+                "typed_identity": target_overlay["typed_identity"],
+                "candidate_nha_sha256": target_overlay["candidate_nha_sha256"],
+                "candidate_overlay_sha256": target_overlay["candidate_overlay_sha256"],
+                "changed_actual012_face_slots": target_overlay["changed_actual012_face_slots"],
+                "rest_source_rows": target_overlay["rest_source_rows"],
+                "rest_source_nhtiss_sha256": target_overlay["rest_source_nhtiss_sha256"],
+                "rest_source_rows_count": target_overlay["rest_source_rows_count"],
+                "full_replay_sha256": _sha_bytes(json.dumps(
+                    target_overlay, sort_keys=True, separators=(",", ":"),
+                    allow_nan=False).encode()),
+            },
+            "geometry_predicates_run": False,
+            "continuity_predicates_rerun": False,
+            "native_or_gpu_work_performed": False,
+            "anatomical_admission": False,
+        }
+        _write_json(preflight_path, preflight)
+        _write_json(progress_path, {
+            **start,
+            "status": "STARTING_ALL_TARGET_AFTER_CACHED_15_LINK_PASS",
+            "continuation_preflight_path": str(preflight_path.resolve()),
+            "continuation_preflight_sha256": _sha_file(preflight_path),
+            "geometry_predicates_run": True,
+            "continuity_predicates_rerun": False,
+            "native_or_gpu_work_performed": False,
+            "anatomical_admission": False,
+        })
+
+        def progress_callback(stage):
+            _write_json(progress_path, {
+                **start,
+                "status": stage,
+                "continuation_preflight_path": str(preflight_path.resolve()),
+                "continuation_preflight_sha256": _sha_file(preflight_path),
+                "geometry_predicates_run": True,
+                "continuity_predicates_rerun": False,
+                "native_or_gpu_work_performed": False,
+                "anatomical_admission": False,
+            })
+
+        geometry_started = True
+        collision = preparation.run_all_target_network_screen(
+            {**runtime["context"], "surfaces": collision_surfaces},
+            runtime["edge_evidence"], runtime["separate_evidence"],
+            verified_network_continuity=continuity,
+            verified_network_source_inventory=cached_inventory,
+            verified_nonnetwork_interface_certificates=certificate_map,
+            progress_callback=progress_callback)
+        passed = collision.get("passed") is True
+        result = {
+            **preflight,
+            "status": ("CACHED_ALL_TARGET_SCREEN_PASSED_UNADMITTED"
+                       if passed else "CACHED_ALL_TARGET_SCREEN_REJECTED"),
+            "passed": passed,
+            "cached_continuity_predicates_rerun": False,
+            "all_target_collision_gate": collision,
+            "counterfactual_target_overlay": preflight[
+                "counterfactual_target_overlay_summary"],
+            "recorded_finish_utc": datetime.now(UTC).isoformat(),
+            "elapsed_seconds": time.perf_counter() - started,
+            "geometry_predicates_run": True,
+            "native_or_gpu_work_performed": False,
+            "anatomical_admission": False,
+        }
+        _write_json(report_path, result)
+        result["report_path"] = str(report_path.resolve())
+        result["report_sha256"] = _sha_file(report_path)
+        _write_json(progress_path, result)
+        return result
+    except Exception as error:
+        failure = {
+            **start,
+            "status": "CACHED_ALL_TARGET_CONTINUATION_ABORTED_OR_REJECTED",
+            "recorded_finish_utc": datetime.now(UTC).isoformat(),
+            "elapsed_seconds": time.perf_counter() - started,
+            "error": {"type": type(error).__name__, "message": str(error)},
+            "continuation_preflight_path": (
+                str(preflight_path.resolve()) if preflight_path.exists() else None),
+            "continuation_preflight_sha256": (
+                _sha_file(preflight_path) if preflight_path.exists() else None),
+            "geometry_predicates_run": geometry_started,
+            "continuity_predicates_rerun": False,
+            "native_or_gpu_work_performed": False,
+            "anatomical_admission": False,
+        }
+        _write_json(destination / "continuation-error.json", failure)
+        _write_json(progress_path, failure)
+        raise
 
 
 def run(capture_inputs_json: Path, output_dir: Path, *,
@@ -843,6 +1312,10 @@ def main(argv: list[str] | None = None) -> int:
                       help="execute only the fail-first 15-link continuity gate")
     mode.add_argument("--run-all-targets-after-continuity", action="store_true",
                       help="execute the 15-link continuity gate, then its verified all-target handoff on full pass")
+    mode.add_argument("--continue-cached-all-targets", action="store_true",
+                      help="continue only the exact run150 all-target stage using its cached 15-link pass")
+    parser.add_argument("--cached-terminal-report", type=Path,
+                        help="exact immutable run150 report (defaults to the pinned report)")
     args = parser.parse_args(argv)
     if args.prepare_only:
         result = prepare(args.capture_inputs_json, args.output_dir)
@@ -854,6 +1327,10 @@ def main(argv: list[str] | None = None) -> int:
             args.capture_inputs_json, args.output_dir)
     elif args.run:
         result = run(args.capture_inputs_json, args.output_dir)
+    elif args.continue_cached_all_targets:
+        result = continue_cached_all_target_screen(
+            args.capture_inputs_json, args.output_dir,
+            cached_terminal_report=args.cached_terminal_report)
     else:
         result = run(args.capture_inputs_json, args.output_dir, run_all_targets=True)
     print(json.dumps({
@@ -863,6 +1340,8 @@ def main(argv: list[str] | None = None) -> int:
         "report_sha256": result.get(
             "report_sha256", result.get("sha256", result.get("source_preflight_sha256"))),
     }, sort_keys=True))
+    if args.continue_cached_all_targets:
+        return 0 if result.get("passed") is True else 2
     return 0 if result["status"].startswith((
         "SOURCE0_SEAMOWNER_", "STOPPED_AT_FIRST_FAILED_NETWORK_LINK",
         "NETWORK_CONTINUITY_PASSED_",

@@ -1057,6 +1057,7 @@ def run_all_target_network_screen(
     context: dict, edge_evidence: dict, separate_evidence: dict,
     *, verified_network_continuity: dict | None = None,
     verified_network_source_inventory: dict | None = None,
+    verified_nonnetwork_interface_certificates: dict | None = None,
     progress_callback=None,
 ) -> dict:
     """Run the existing central collision oracle against the full captured pack."""
@@ -1074,6 +1075,9 @@ def run_all_target_network_screen(
         optional["verified_network_continuity"] = verified_network_continuity
     if verified_network_source_inventory is not None:
         optional["verified_network_source_inventory"] = verified_network_source_inventory
+    if verified_nonnetwork_interface_certificates is not None:
+        optional["verified_nonnetwork_interface_certificates"] = (
+            verified_nonnetwork_interface_certificates)
     if progress_callback is not None:
         optional["progress_callback"] = progress_callback
     return geometry_gate.audit_network_rows_against_all_targets(

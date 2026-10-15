@@ -216,11 +216,14 @@ def test_all_target_runs_only_after_all_fifteen_links_pass_and_reuses_candidates
 
     def all_target(context, edge_evidence, separate_evidence, *,
                    verified_network_continuity,
-                   verified_network_source_inventory, progress_callback):
+                   verified_network_source_inventory,
+                   verified_nonnetwork_interface_certificates,
+                   progress_callback):
         events.append("all_target")
         assert verified_network_continuity == {
             "passed": True, "evaluated_link_count": 15}
         assert progress_callback is None
+        assert verified_nonnetwork_interface_certificates is None
         assert isinstance(verified_network_source_inventory, dict)
         assert verified_network_source_inventory[
             "candidate_gid_values_were_read_from_actual_capture_pack"]
