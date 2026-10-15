@@ -31,6 +31,105 @@ def _percentiles(values: np.ndarray) -> dict[str, float]:
     return {"p50": float(p50), "p90": float(p90), "p95": float(p95), "p99": float(p99), "maximum": float(values.max())}
 
 
+
+def regularize_registered_skin_positions(
+    reference_world_positions, target_world_positions, faces, free_vertex_ids,
+    *, target_fit_weight=0.02, maximum_iterations=32,
+):
+    """Offline ARAP regularization of an inferred skin registration.
+
+    This prepares asset coordinates, never simulation state or forces. Fixed
+    vertices retain their supplied targets exactly. Positive inverse edge-length
+    weights use the existing mesh without changing identities or topology.
+    Sorkine and Alexa, SGP 2007, doi:10.2312/SGP/SGP07/109-116.
+    A lower editing energy is not an intersection or anatomical acceptance test.
+    """
+    from scipy.sparse import coo_matrix, diags
+    from scipy.sparse.linalg import splu
+
+    reference = np.asarray(reference_world_positions, dtype=np.float64)
+    target = np.asarray(target_world_positions, dtype=np.float64)
+    triangles = np.asarray(faces)
+    free_raw = np.asarray(free_vertex_ids)
+    if (reference.ndim != 2 or reference.shape[1:] != (3,)
+            or target.shape != reference.shape or not len(reference)
+            or not np.isfinite(reference).all() or not np.isfinite(target).all()
+            or triangles.ndim != 2 or triangles.shape[1:] != (3,)
+            or triangles.dtype.kind not in "iu" or not len(triangles)
+            or triangles.min() < 0 or triangles.max() >= len(reference)
+            or free_raw.ndim != 1 or free_raw.dtype.kind not in "iu"
+            or not len(free_raw) or len(np.unique(free_raw)) != len(free_raw)
+            or free_raw.min() < 0 or free_raw.max() >= len(reference)
+            or not np.isfinite(target_fit_weight) or target_fit_weight <= 0
+            or type(maximum_iterations) is not int or not 1 <= maximum_iterations <= 96):
+        raise human.ImportError("skin registration regularization has malformed inputs")
+    triangles = triangles.astype(np.int64, copy=False)
+    free = np.sort(free_raw.astype(np.int64))
+    edges = np.unique(np.sort(np.vstack([
+        triangles[:, [0, 1]], triangles[:, [1, 2]], triangles[:, [2, 0]],
+    ]), axis=1), axis=0)
+    rest = reference[edges[:, 0]] - reference[edges[:, 1]]
+    lengths = np.linalg.norm(rest, axis=1)
+    if np.any(lengths <= 0) or not np.isfinite(lengths).all():
+        raise human.ImportError("skin registration has a zero or invalid source edge")
+    weight = 1.0 / lengths
+    row = np.r_[edges[:, 0], edges[:, 1]]
+    col = np.r_[edges[:, 1], edges[:, 0]]
+    directed_weight = np.r_[weight, weight]
+    directed_rest = np.vstack([rest, -rest])
+    graph = coo_matrix((directed_weight, (row, col)),
+                       shape=(len(reference), len(reference))).tocsr()
+    degree = np.asarray(graph.sum(axis=1)).ravel()
+    if np.any(degree[free] <= 0):
+        raise human.ImportError("skin registration free vertex is unreferenced")
+    fixed = np.setdiff1d(np.arange(len(reference)), free)
+    laplacian = diags(degree) - graph
+    penalty = target_fit_weight * degree[free]
+    factor = splu((laplacian[free][:, free] + diags(penalty)).tocsc())
+    fixed_rhs = laplacian[free][:, fixed] @ target[fixed]
+    current = target.copy()
+    history = []
+    for iteration in range(maximum_iterations):
+        deformed = current[row] - current[col]
+        covariance = np.zeros((len(reference), 3, 3))
+        np.add.at(covariance, row, directed_weight[:, None, None]
+                  * deformed[:, :, None] * directed_rest[:, None, :])
+        left, _, right = np.linalg.svd(covariance)
+        correction = np.ones((len(reference), 3))
+        correction[:, 2] = np.where(np.linalg.det(left @ right) < 0, -1.0, 1.0)
+        rotation = (left * correction[:, None, :]) @ right
+        rotated = np.einsum("vij,vj->vi", rotation[row], directed_rest)
+        average = 0.5 * np.einsum(
+            "vij,vj->vi", rotation[row] + rotation[col], directed_rest)
+        rhs = np.zeros_like(current)
+        np.add.at(rhs, row, directed_weight[:, None] * average)
+        update = current.copy()
+        update[free] = factor.solve(
+            rhs[free] - fixed_rhs + penalty[:, None] * target[free])
+        if not np.isfinite(update).all() or not np.array_equal(update[fixed], target[fixed]):
+            raise human.ImportError("skin registration lost a fixed target or finite coordinate")
+        difference = update[row] - update[col] - rotated
+        energy = (0.5 * float(np.sum(directed_weight[:, None] * difference**2))
+                  + float(np.sum(penalty[:, None] * (update[free] - target[free])**2)))
+        increment = float(np.linalg.norm(update[free] - current[free], axis=1).max())
+        if history and energy > history[-1]["energy"] + 1e-10 * max(1.0, history[-1]["energy"]):
+            raise human.ImportError("skin registration local/global energy increased")
+        history.append({"iteration": iteration + 1, "energy": energy,
+                        "maximum_increment_m": increment})
+        current = update
+        if increment < 1e-8:
+            break
+    return current, {
+        "method": "offline positive-weight ARAP source-surface registration",
+        "reference": "https://doi.org/10.2312/SGP/SGP07/109-116",
+        "free_vertex_count": len(free), "fixed_vertex_count": len(fixed),
+        "fixed_targets_bitwise_preserved": True,
+        "target_fit_weight": float(target_fit_weight),
+        "iterations": history, "source_topology_unchanged": True,
+        "anatomical_admission": False, "native_admission": False,
+    }
+
+
 def _transform(matrix: Any, context: str):
     translation, quaternion, scale = human._bodyparts_visual_local_pose(matrix, context)
     rotation = np.asarray(human._myosim_matrix_from_quaternion_xyzw(quaternion), dtype=np.float64)
