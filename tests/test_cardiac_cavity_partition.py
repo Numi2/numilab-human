@@ -1,15 +1,15 @@
 """Exact Boolean authoring regressions; no physical stepping."""
-from fractions import Fraction as F
-from pathlib import Path
 import sys
 import tempfile
 import unittest
+from fractions import Fraction as F
+from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from numilab_human import cardiac_cavity_partition as partition
 from numilab_human import cardiac_cavity_intersections as predicates
+from numilab_human import cardiac_cavity_partition as partition
 from numilab_human.cardiac_cavity_geometry import extract_cavity_surfaces
 from numilab_human.model import ImportError as HumanImportError
 
@@ -36,6 +36,12 @@ class AuthoringTests(unittest.TestCase):
         sources = dict(zip(names, (first, second)))
         children, report = partition.construct_arrangement(sources, source_names=names)
         self.assertGreater(report["supported_point_contact_count"], 0)
+        self.assertTrue(all(type(value) is F
+                            for row in children for point in row["vertices"] for value in point))
+        self.assertTrue(all(type(value) is F
+                            for row in report["intersection_segments_m"]
+                            for point in row["endpoints"] for value in point))
+        self.assertTrue(certificate.build_triangle_sets(children, source_names=names))
         proof = certificate.certify_partition(
             sources, children, source_names=names,
             expected_geometry_sha256={n:certificate.source_geometry_sha256(sources[n])
@@ -122,6 +128,38 @@ class AuthoringTests(unittest.TestCase):
         for b in (a, surface([tuple(p[k]+(1 if k==0 else 0) for k in range(3)) for p in vertices])):
             with self.assertRaisesRegex(HumanImportError, "unsupported"):
                 partition.construct_arrangement(dict(zip(partition.NAMES, (a,b))))
+
+    def test_declared_opposed_full_face_is_retained_but_not_cut_or_ray_classified(self):
+        triangle = ((F(0), F(0), F(0)), (F(1), F(0), F(0)), (F(0), F(1), F(0)))
+        first = {"vertices": triangle, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        second = {"vertices": triangle, "triangles": [(0,2,1)], "source_sha256": "b"*64}
+        children, report = partition.construct_arrangement(
+            {"first": first, "second": second}, source_names=("first", "second"),
+            declared_feature_pairs={(0,0): "opposed_full_face"})
+        self.assertEqual(report["declared_boundary_feature_counts"], {"opposed_full_face": 1})
+        self.assertEqual(report["declared_boundary_feature_pair_count"], 1)
+        self.assertEqual({(row["source"], row["source_face"], row["other_location"])
+                          for row in children},
+                         {("first",0,"outside"), ("second",0,"outside")})
+        self.assertEqual(len(children), 2)
+
+    def test_declared_shared_feature_does_not_hide_an_unlisted_coplanar_pair(self):
+        triangle = ((F(0), F(0), F(0)), (F(1), F(0), F(0)), (F(0), F(1), F(0)))
+        first = {"vertices": triangle, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        second = {"vertices": triangle, "triangles": [(0,2,1), (0,2,1)], "source_sha256": "b"*64}
+        with self.assertRaisesRegex(HumanImportError, "coplanar or tangent face intersection is unsupported"):
+            partition.construct_arrangement(
+                {"first": first, "second": second}, source_names=("first", "second"),
+                declared_feature_pairs={(0,0): "opposed_full_face"})
+
+    def test_declared_full_face_requires_opposed_full_geometry(self):
+        triangle = ((F(0), F(0), F(0)), (F(1), F(0), F(0)), (F(0), F(1), F(0)))
+        first = {"vertices": triangle, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        same_winding = {"vertices": triangle, "triangles": [(0,1,2)], "source_sha256": "b"*64}
+        with self.assertRaisesRegex(HumanImportError, "not oppositely oriented"):
+            partition.construct_arrangement(
+                {"first": first, "second": same_winding}, source_names=("first", "second"),
+                declared_feature_pairs={(0,0): "opposed_full_face"})
 
 
 class NonzeroWindingSelfUnionTests(unittest.TestCase):

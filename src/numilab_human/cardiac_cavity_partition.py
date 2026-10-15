@@ -7,14 +7,14 @@ not an anatomical valve selection, mass attribution, or physical stepping.
 """
 from __future__ import annotations
 
-from collections import defaultdict
-from fractions import Fraction
 import argparse
 import hashlib
 import json
 import math
-from pathlib import Path
 import sys
+from collections import Counter, defaultdict
+from fractions import Fraction
+from pathlib import Path
 
 from . import cardiac_cavity_intersections as predicates
 from . import cardiac_partition_certificate as certificate
@@ -63,14 +63,42 @@ def _on_edge(point, a, b):
             and all(min(a[k], b[k]) <= point[k] <= max(a[k], b[k]) for k in range(3)))
 
 
-def construct_arrangement(source_surfaces, *, source_names=NAMES):
+def _validate_declared_feature_pair(first, second, kind):
+    """Validate that a caller-declared shared feature is the entire exact contact."""
+    common = set(first) & set(second)
+    points = set(predicates.triangle_intersection_points(first, second))
+    if kind == "shared_vertex":
+        require(len(common) == 1 and points == common,
+                "declared shared vertex has additional or missing exact contact")
+        return
+    if kind == "shared_edge":
+        require(len(common) == 2 and points == common,
+                "declared shared edge has additional or missing exact contact")
+        return
+    if kind == "opposed_full_face":
+        require(len(common) == 3 and set(first) == set(second),
+                "declared opposed full face is not an identical full triangle")
+        n_first, n_second = _exact_triangle_normal(first), _exact_triangle_normal(second)
+        require(not any(predicates._cross(n_first, n_second))
+                and predicates._dot(n_first, n_second) < 0,
+                "declared full-face pair is not oppositely oriented")
+        require(points == common,
+                "declared opposed full face has additional or missing exact contact")
+        return
+    require(False, "unsupported declared shared feature kind")
+
+
+def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_feature_pairs=None):
     """Return source-parented exact subtriangles and intersection provenance.
 
     This bounded authoring path supports transverse intersections with segment
     endpoints, including point pairs supported by nonzero incident-star cuts.
-    Coplanar patches, isolated tangencies and unsupported planar cell topology
-    are rejected, not repaired by a tolerance or a guessed anatomical plane.
-    Input surfaces must subsequently pass the independent certificate.
+    Callers may provide exact shared-feature face pairs; each declaration is
+    checked against the full exact contact before it is excluded from cutting.
+    Opposed full faces are retained unchanged as outside boundary faces on both
+    sources. Any undeclared coplanar patch, isolated tangency, or unsupported
+    planar cell topology still fails closed. Input surfaces must subsequently
+    pass the independent certificate.
     """
     source_names = tuple(source_names)
     require(len(source_names) == 2 and all(isinstance(name, str) and name for name in source_names)
@@ -81,12 +109,29 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
     vertices = {name: [tuple(Fraction(x).numerator*(denominator//Fraction(x).denominator) for x in point)
                        for point in source_surfaces[name]["vertices"]] for name in source_names}
     records = {name: predicates._records(vertices[name], source_surfaces[name]["triangles"]) for name in source_names}
+    if declared_feature_pairs is None:
+        declared_feature_pairs = {}
+    require(isinstance(declared_feature_pairs, dict),
+            "declared shared features must be a face-pair mapping")
+    normalized_declarations = {}
+    for raw_pair, kind in declared_feature_pairs.items():
+        require(isinstance(raw_pair, tuple) and len(raw_pair) == 2
+                and all(isinstance(face, int) and not isinstance(face, bool) and face >= 0
+                        for face in raw_pair),
+                "declared shared feature has an invalid face pair")
+        require(raw_pair not in normalized_declarations
+                and kind in ("shared_vertex", "shared_edge", "opposed_full_face"),
+                "declared shared feature has a duplicate pair or invalid kind")
+        normalized_declarations[raw_pair] = kind
     pair_audit = predicates._audit_pair(records[source_names[0]], records[source_names[1]], same_surface=False)
     segments = {name: defaultdict(list) for name in source_names}
     boundary_points = {name: defaultdict(set) for name in source_names}
     edge_faces = {name: defaultdict(list) for name in source_names}
     vertex_faces = {name: defaultdict(set) for name in source_names}
     point_contacts = []
+    declared_seen = set()
+    declared_full_faces = {name: set() for name in source_names}
+    declared_rows = []
     for name in source_names:
         for face_id, face in enumerate(source_surfaces[name]["triangles"]):
             for vertex in face:
@@ -95,7 +140,19 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
                 edge_faces[name][tuple(sorted((face[i], face[(i+1) % 3])))].append(face_id)
     intersection_segments = []
     for pair in pair_audit["triangle_pairs"]:
+        pair_key = tuple(map(int, pair))
         first, second = (records[name][face_id][0] for name, face_id in zip(source_names, pair))
+        declared_kind = normalized_declarations.get(pair_key)
+        if declared_kind is not None:
+            _validate_declared_feature_pair(first, second, declared_kind)
+            declared_seen.add(pair_key)
+            declared_rows.append({"source_faces": list(pair_key), "feature": declared_kind})
+            if declared_kind == "opposed_full_face":
+                for name, face_id in zip(source_names, pair_key):
+                    require(face_id not in declared_full_faces[name],
+                            "a source full face is declared against multiple shared faces")
+                    declared_full_faces[name].add(face_id)
+            continue
         normals = [predicates._cross(predicates._sub(tri[1], tri[0]), predicates._sub(tri[2], tri[0]))
                    for tri in (first, second)]
         require(any(predicates._cross(*normals)), "coplanar or tangent face intersection is unsupported")
@@ -116,6 +173,8 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
                     if _on_edge(point, vertices[name][edge[0]], vertices[name][edge[1]]):
                         for neighbor in edge_faces[name][edge]:
                             boundary_points[name][neighbor].add(point)
+    require(declared_seen == set(normalized_declarations),
+            "a declared shared feature is absent from the exact intersurface contact set")
     # Refinement can split a transverse cut exactly at a source vertex.
     # A pair meeting only at that vertex needs no zero-length cut. It must,
     # however, be supported by a nonzero segment in each incident source star.
@@ -150,19 +209,33 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
     result = []
     for name, other in (source_names, tuple(reversed(source_names))):
         for face_id, row in enumerate(records[name]):
+            if face_id in declared_full_faces[name]:
+                result.append({"vertices": tuple(tuple(Fraction(x, denominator) for x in point)
+                                                  for point in row[0]),
+                               "source": name, "source_face": face_id,
+                               "other_location": "outside"})
+                continue
             children = subdivide_triangle(row[0], segments[name][face_id], boundary_points[name][face_id])
             for triangle in children:
                 centroid = tuple(sum(p[k] for p in triangle)/3 for k in range(3))
                 location = classifiers[other].location(centroid)
                 require(location in ("inside", "outside"), f"boundary child interior {name}:{face_id}")
-                result.append({"vertices": tuple(tuple(x/denominator for x in p) for p in triangle),
+                result.append({"vertices": tuple(tuple(Fraction(x, denominator) for x in p) for p in triangle),
                                "source": name, "source_face": face_id, "other_location": location})
+    declared_rows.sort(key=lambda row: (row["source_faces"], row["feature"]))
+    declaration_bytes = json.dumps(declared_rows, sort_keys=True,
+                                   separators=(",", ":")).encode("utf-8")
+    declared_counts = Counter(row["feature"] for row in declared_rows)
     return result, {"source_intersecting_triangle_pairs": pair_audit["triangle_pairs"],
                     "source_intersecting_triangle_pair_count": pair_audit["count"],
+                    "declared_boundary_feature_pairs": declared_rows,
+                    "declared_boundary_feature_pair_count": len(declared_rows),
+                    "declared_boundary_feature_counts": dict(sorted(declared_counts.items())),
+                    "declared_boundary_feature_pairs_sha256": hashlib.sha256(declaration_bytes).hexdigest(),
                     "supported_point_contact_count": len(point_contacts),
                     "common_integer_scale_per_metre": denominator,
                     "intersection_segments_m": [{"source_faces": row["source_faces"],
-                        "endpoints": tuple(tuple(x/denominator for x in point) for point in row["endpoints"])}
+                        "endpoints": tuple(tuple(Fraction(x, denominator) for x in point) for point in row["endpoints"])}
                         for row in intersection_segments],
                     "source_face_count": sum(len(source_surfaces[n]["triangles"]) for n in source_names),
                     "subtriangle_count": len(result)}
