@@ -242,6 +242,53 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         self.assertTrue(report["overlays"][0]["repacked_source_owner"]["cpu_rest_owner_emission_byte_exact"])
         self.assertFalse(report["native_admission"])
 
+
+    def repair_manifest(self, source, digest, key):
+        candidate, report = self.root/"patch.npz", self.root/"source-report.json"
+        candidate.write_bytes(b"frozen existing repair")
+        report.write_text('{"status":"source preparation only"}')
+        sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+        manifest = source.with_suffix(".manifest.json")
+        manifest.write_text(json.dumps({"payload": {"sha256": digest},
+            "source": {"surfaces": [{"stable_id": key[1],
+                "reference_surface_reconstruction": {
+                    "stable_id": key[1], "candidate": str(candidate),
+                    "candidate_sha256": sha(candidate), "report": str(report),
+                    "report_sha256": sha(report)}}]}}))
+        return candidate, report, manifest
+
+    def test_nested_repair_inputs_are_pinned_before_geometry(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        _, report, _ = self.repair_manifest(source, digest, key)
+        report.write_text('{"status":"mutated after compiler froze it"}')
+        with patch.object(tool.verify, "prepare_surface", side_effect=AssertionError("no predicates")):
+            with self.assertRaisesRegex(ValueError, "source SHA256 mismatch"):
+                tool.apply_rest_source(native, key, source, digest, poses, {})
+
+    def test_nested_candidate_and_manifest_payload_are_checked(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        candidate, _, manifest = self.repair_manifest(source, digest, key)
+        candidate.write_bytes(b"stale patch bytes")
+        with self.assertRaisesRegex(ValueError, "source SHA256 mismatch"):
+            tool.apply_rest_source(native, key, source, digest, poses, {})
+        value = json.loads(manifest.read_text())
+        value["payload"]["sha256"] = "0"*64
+        manifest.write_text(json.dumps(value))
+        with self.assertRaisesRegex(ValueError, "manifest payload SHA256 differs"):
+            tool.apply_rest_source(native, key, source, digest, poses, {})
+
+    def test_valid_repair_references_share_source_cache_without_ancestry_claim(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        self.repair_manifest(source, digest, key)
+        cache = {}
+        proof = tool.apply_rest_source(native, key, source, digest, poses, cache)
+        refs = proof["repacked_source_owner"]["source_reconstruction_references"]
+        self.assertEqual(set(refs["declared_reconstruction_inputs"]), {"candidate", "report"})
+        self.assertFalse(refs["source_ancestry_admission"])
+        self.assertEqual(len(cache), 1)
+        with patch.object(tool.json, "loads", side_effect=AssertionError("must reuse manifest proof")):
+            tool.apply_rest_source(native, key, source, digest, poses, cache)
+
     def test_bad_capture_pin_stops_before_capture_loader(self):
         pack, receipt = self.root / "p", self.root / "r"
         pack.write_bytes(b"pack")

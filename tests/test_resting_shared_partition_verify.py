@@ -1,5 +1,6 @@
 from pathlib import Path
 import hashlib
+import json
 import numpy as np
 import pytest
 from tests.test_passive_reference_binding_extension import fixture
@@ -22,6 +23,10 @@ def scene(tmp_path):
     faces[:, [1, 2]] = faces[:, [2, 1]]
     source.write_bytes(raw)
     data = pac._read_nhtiss4(source)
+    manifest = source.with_suffix(".manifest.json")
+    metadata = json.loads(manifest.read_text())
+    metadata["payload"]["sha256"] = hashlib.sha256(raw).hexdigest()
+    manifest.write_text(json.dumps(metadata))
     captures = {}
     for row in data["records"][:2]:
         a = pac._nhtiss_row_arrays(data, row)

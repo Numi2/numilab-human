@@ -29,6 +29,42 @@ def pin(path, digest):
     return {"path": str(path.resolve()), "sha256": actual}
 
 
+
+def reconstruction_references(path, digest, stable_id, table):
+    """Check declared existing repair ancestry before preparing geometry.
+
+    Raw compiler fixtures may omit the optional sidecar. When a sidecar is
+    present, its payload and selected row's declared repair inputs must match.
+    Results share the immutable source-table lifetime, just like source bytes.
+    """
+    cache = table.setdefault("_verified_reconstruction_references", {})
+    if stable_id in cache:
+        return cache[stable_id]
+    manifest_path = Path(path).with_suffix(".manifest.json")
+    if not manifest_path.exists():
+        cache[stable_id] = None
+        return None
+    document = json.loads(manifest_path.read_text())
+    if document["payload"]["sha256"] != digest:
+        raise ValueError("source manifest payload SHA256 differs")
+    rows = [row for row in document["source"]["surfaces"]
+            if row["stable_id"] == stable_id]
+    if len(rows) != 1:
+        raise ValueError("source manifest requires one selected typed surface")
+    repair = rows[0].get("reference_surface_reconstruction")
+    references = {}
+    if repair is not None:
+        if repair["stable_id"] != stable_id:
+            raise ValueError("source reconstruction stable identity differs")
+        for name in ("candidate", "report"):
+            references[name] = pin(repair[name], repair[name+"_sha256"])
+    proof = {"manifest": pin(manifest_path, hashlib.sha256(manifest_path.read_bytes()).hexdigest()),
+             "declared_reconstruction_inputs": references,
+             "source_ancestry_admission": False}
+    cache[stable_id] = proof
+    return proof
+
+
 def identity(text):
     return verify.typed_key(tuple(int(x) for x in text.split(":")))
 
@@ -126,6 +162,7 @@ def source_owned_repacked_overlay(arrays, key, source, poses, cache):
     if token not in cache:
         cache[token] = (pin(path, digest), pac._read_nhtiss4(Path(path)))
     source_pin, table = cache[token]
+    reconstruction = reconstruction_references(path, digest, key[1], table)
     rows = [r for r in table["records"] if int(r[6]) == key[1]]
     if len(rows) != 1:
         raise ValueError("repacked source has no unique typed muscle row")
@@ -170,7 +207,8 @@ def source_owned_repacked_overlay(arrays, key, source, poses, cache):
     emitted = pac._native_blended_rest_positions(row, row["positions"], checked)
     if emitted.dtype != positions.dtype or emitted.tobytes() != positions.tobytes():
         raise ValueError("repacked world coordinates differ from exact Float32 CPU rest-owner replay")
-    return {"source": source_pin, "ordered_compiled_source_binding": binding,
+    return {"source": source_pin, "source_reconstruction_references": reconstruction,
+            "ordered_compiled_source_binding": binding,
             "all_compiled_source_fields_exact": True, "cpu_rest_owner_emission_byte_exact": True,
             "coordinate_provenance": "counterfactual_owner_replay",
             "actual_native_emission_verified": False}
@@ -247,6 +285,7 @@ def apply_rest_source(surfaces, key, path, digest, accepted_poses, source_cache)
     if token not in source_cache:
         source_cache[token] = (pin(path, digest), pac._read_nhtiss4(Path(path)))
     source_pin, table = source_cache[token]
+    reconstruction_references(path, digest, key[1], table)
     records = [r for r in table["records"] if int(r[6]) == key[1]]
     if len(records) != 1 or int(records[0][7]) != 1:
         raise ValueError("rest-source requires one compiled muscle surface row")
