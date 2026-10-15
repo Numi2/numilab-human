@@ -893,6 +893,80 @@ class CaptureDecoderTests(unittest.TestCase):
             audit.assert_not_called()
 
 
+
+
+class IncrementalSelfAuditTests(unittest.TestCase):
+    def prepare(self, positions, faces, *, key=(51005, 134), gids=None):
+        return prepare_surface(key, np.asarray(positions, dtype=np.float32),
+                               np.asarray(faces, dtype=np.uint32),
+                               source_vertex_ids=gids)
+
+    def test_unchanged_geometry_reuses_zero_parent_without_narrow_phase(self):
+        from unittest.mock import patch
+        parent = self.prepare(tetra(), FACES)
+        parent.self_audit()
+        current = self.prepare(tetra(), FACES)
+        with patch.object(ci, "triangle_intersection_points",
+                          side_effect=AssertionError("unchanged pair retested")):
+            result = current.self_audit_since(parent)
+        self.assertEqual(result["count"], 0)
+        self.assertEqual(result["aabb_candidate_pairs"], 0)
+        self.assertEqual(result["incremental_proof"]["changed_face_ids"], [])
+        self.assertIs(current.self_audit(), result)
+
+    def test_moved_vertex_checks_all_incident_faces_against_entire_mesh(self):
+        positions = np.concatenate((tetra(), tetra(offset=3.0)))
+        faces = np.concatenate((FACES, FACES + 4))
+        parent = self.prepare(positions, faces)
+        changed = positions.copy()
+        changed[4] = [.2, .2, .2]
+        current = self.prepare(changed, faces)
+        result = current.self_audit_since(parent)
+        exhaustive = self.prepare(changed, faces).self_audit()
+        self.assertGreater(result["count"], 0)
+        self.assertEqual(result["triangle_pairs"], exhaustive["triangle_pairs"])
+        self.assertEqual(result["incremental_proof"]["changed_face_ids"], [4, 5, 6])
+
+    def test_changed_connectivity_and_reversed_selected_id_direction(self):
+        positions = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0],
+                              [3, 0, 0], [3, 1, 0], [4, 0, 0],
+                              [.25, .25, -1], [.25, .25, 1], [.75, .25, 0]],
+                             dtype=np.float32)
+        parent = self.prepare(positions, [[3, 4, 5], [6, 7, 8]])
+        current = self.prepare(positions, [[0, 1, 2], [6, 7, 8]])
+        result = current.self_audit_since(parent)
+        self.assertEqual(result["triangle_pairs"], [[0, 1]])
+        self.assertEqual(result["incremental_proof"]["changed_face_ids"], [0])
+
+    def test_exact_coordinate_quotient_renumbering_preserves_proof(self):
+        # An unused earlier slot merges with a referenced point. Every later
+        # quotient ID changes, but the ordered triangles remain exactly equal.
+        positions = np.concatenate((np.array([[-3, -3, -3]], dtype=np.float32),
+                                    tetra(), tetra(offset=3.0)))
+        faces = np.concatenate((FACES + 1, FACES + 5))
+        parent = self.prepare(positions, faces)
+        changed = positions.copy()
+        changed[0] = changed[1]
+        current = self.prepare(changed, faces)
+        self.assertFalse(np.array_equal(parent.quotient_faces, current.quotient_faces))
+        result = current.self_audit_since(parent)
+        exhaustive = self.prepare(changed, faces).self_audit()
+        self.assertEqual(result["triangle_pairs"], exhaustive["triangle_pairs"])
+        self.assertEqual(result["incremental_proof"]["changed_face_ids"], [])
+
+    def test_nonzero_parent_and_namespace_drift_rejected(self):
+        positions = np.concatenate((tetra(), tetra(offset=.1)))
+        faces = np.concatenate((FACES, FACES + 4))
+        bad = self.prepare(positions, faces)
+        with self.assertRaisesRegex(ValueError, "zero-self"):
+            self.prepare(positions, faces).self_audit_since(bad)
+        parent = self.prepare(tetra(), FACES)
+        with self.assertRaisesRegex(ValueError, "typed parent"):
+            self.prepare(tetra(), FACES, key=(51005, 133)).self_audit_since(parent)
+        with self.assertRaisesRegex(ValueError, "vertex identities"):
+            self.prepare(tetra(), FACES, gids=np.arange(4, 8)).self_audit_since(parent)
+
+
 if __name__ == "__main__":
     unittest.main()
 

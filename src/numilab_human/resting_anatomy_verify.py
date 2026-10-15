@@ -229,6 +229,43 @@ class PreparedSurface:
                 self.index, self.records, same_surface=True)
         return self._self_result
 
+    def self_audit_since(self, parent):
+        """Check every changed face against this complete surface exactly.
+
+        The parent must have an exact zero-self result from the same oracle.
+        Unchanged ordered triangles retain the parent's pair proof; quotient
+        vertex numbers may differ, because shared-point identity is geometric.
+        This reuses an in-memory proof, never an unverified imported result.
+        Source ancestry, material bindings and cross-surface gates remain
+        separate requirements.
+        """
+        if not isinstance(parent, PreparedSurface) or parent.key != self.key:
+            raise ValueError("incremental self audit requires the same typed parent surface")
+        if not np.array_equal(parent.source_vertex_ids, self.source_vertex_ids):
+            raise ValueError("incremental self audit requires unchanged ordered vertex identities")
+        parent_result = parent.self_audit()
+        if parent_result["count"]:
+            raise ValueError("incremental self audit requires a zero-self parent")
+        if self._self_result is not None:
+            return self._self_result
+        parent_faces = {record[3]: record[0] for record in parent.records}
+        changed = [int(record[3]) for record in self.records
+                   if parent_faces.get(record[3]) != record[0]]
+        result = ci._audit_self_pairs_touching_faces(self.records, changed)
+        parent_diagnostics = parent.diagnostics()
+        result["incremental_proof"] = {
+            "parent_positions_sha256": parent_diagnostics["positions_sha256"],
+            "parent_faces_sha256": parent_diagnostics["faces_sha256"],
+            "parent_self_result_sha256": _canonical_json_sha256(parent_result),
+            "changed_face_ids": changed,
+            "retained_unchanged_face_count": len(self.records) - len(changed),
+            "rule": ("Unchanged exact ordered triangles reuse the zero-self parent; "
+                     "all pairs incident on changed faces use the complete current "
+                     "record set and the existing exact predicate."),
+        }
+        self._self_result = result
+        return result
+
     @property
     def closed(self):
         # Unreferenced source slots carry ancestry, not a boundary of the
