@@ -1,3 +1,4 @@
+import pytest
 import hashlib
 import json
 from pathlib import Path
@@ -358,3 +359,26 @@ def test_step0_clearance_owner_hook_changes_only_referenced_positions_and_recomp
     assert not np.array_equal(before["vertices_f"][0, 3:6], after["vertices_f"][0, 3:6])
     assert manifest["step0_inferred_clearance"]["selected_margin_mm"] == 0.25
     assert manifest["qualification"]["step0_witnessed_all_surface_clearance"] == "passed_842_nonocular_surfaces_eyes_monitored_unchanged"
+
+
+def test_regional_registration_does_not_move_competing_owner_tails():
+    from numilab_human.common_atlas_skin_geometry_registration import regional_registration_support
+    weights = np.array([[.001,.799,.2], [.8,.001,.199], [0.,0.,1.], [.075,.425,.5]])
+    original = weights.copy()
+    result = regional_registration_support(weights, np.array([41,131,20]), {41}, {131})
+    np.testing.assert_array_equal(result[:3], [0.,1.,0.])
+    assert result[3] == pytest.approx(.5)
+    np.testing.assert_array_equal(weights, original)
+
+
+@pytest.mark.parametrize("owners,region,competing,weights", [
+    ([41,41],{41},{131},[[.5,.5]]),
+    ([41,131],{41},{41},[[.5,.5]]),
+    ([41,131],{42},{131},[[.5,.5]]),
+    ([41,131],{41},{131},[[1.,-.1]]),
+    ([41,131],{41},{131},[[.5,.4]]),
+])
+def test_regional_registration_rejects_ambiguous_or_nonmaterial_support(owners,region,competing,weights):
+    from numilab_human.common_atlas_skin_geometry_registration import regional_registration_support
+    with pytest.raises(model.ImportError, match="regional registration"):
+        regional_registration_support(weights,np.array(owners),region,competing)

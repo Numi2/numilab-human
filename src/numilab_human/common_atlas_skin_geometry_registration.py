@@ -32,6 +32,39 @@ def _percentiles(values: np.ndarray) -> dict[str, float]:
 
 
 
+def regional_registration_support(
+    full_weights, binding_body_ids, region_body_ids, competing_body_ids,
+    *, inactive_ratio=0.05, full_ratio=0.25,
+):
+    """Offline coordinate-edit support from existing canonical anatomical owners.
+
+    Small positive skinning tails must not move a nearby anatomical compartment.
+    This mask scales an inferred asset correction; it never changes material
+    weights, bindings, runtime state or forces. Ratios are construction choices,
+    and exact surrounding-structure and motion checks remain mandatory.
+    """
+    weights = np.asarray(full_weights, dtype=np.float64)
+    bodies = np.asarray(binding_body_ids)
+    region, competing = set(region_body_ids), set(competing_body_ids)
+    if (bodies.ndim != 1 or bodies.dtype.kind not in "iu"
+            or len(np.unique(bodies)) != len(bodies)
+            or weights.ndim != 2 or weights.shape[1] != len(bodies)
+            or not np.isfinite(weights).all() or np.any(weights < 0)
+            or np.any(np.abs(weights.sum(axis=1)-1.) >= 1e-5)
+            or not region or not competing or region.intersection(competing)
+            or any(type(x) is not int or x < 0 for x in region | competing)
+            or not (region | competing) <= set(map(int, bodies))
+            or not np.isfinite([inactive_ratio, full_ratio]).all()
+            or not 0 <= inactive_ratio < full_ratio <= 1):
+        raise human.ImportError("regional registration requires normalized full weights and distinct typed owner sets")
+    selected = weights[:, np.isin(bodies, list(region))].sum(axis=1)
+    other = weights[:, np.isin(bodies, list(competing))].sum(axis=1)
+    total = selected + other
+    ratio = np.divide(selected, total, out=np.zeros_like(selected), where=total > 0)
+    ramp = np.clip((ratio-inactive_ratio)/(full_ratio-inactive_ratio), 0., 1.)
+    return ramp*ramp*(3.-2.*ramp)
+
+
 def regularize_registered_skin_positions(
     reference_world_positions, target_world_positions, faces, free_vertex_ids,
     *, target_fit_weight=0.02, maximum_iterations=32,
