@@ -2079,6 +2079,135 @@ def _port_station_spec(surface, witness_points, collar_face_ids, *, route_anchor
 
 
 
+def _source_geometry_binding(surface):
+    return {
+        "identity": list(surface.key),
+        "positions_sha256": hashlib.sha256(
+            np.ascontiguousarray(surface.positions, dtype="<f4").tobytes()).hexdigest(),
+        "faces_sha256": hashlib.sha256(
+            np.ascontiguousarray(surface.faces, dtype="<u4").tobytes()).hexdigest(),
+        "source_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(surface.source_vertex_ids, dtype="<u8").tobytes()).hexdigest(),
+    }
+
+
+def _canonical_record_sha256(value):
+    return hashlib.sha256(json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")).hexdigest()
+
+
+def _source_interface_points_sha256(points):
+    rows = np.asarray(points, dtype="<f8")
+    if rows.size == 0:
+        rows = rows.reshape((0, 3))
+    _require(rows.ndim == 2 and rows.shape[1] == 3 and np.isfinite(rows).all(),
+             "source interface points must be finite XYZ rows")
+    return hashlib.sha256(np.ascontiguousarray(rows).tobytes()).hexdigest()
+
+
+def build_source_junction_station_declaration(
+    verifier, *, bridge_key, target_key, baseline_bridge_surface,
+    baseline_target_surface, frozen_face_pairs, declared_vessel_ports,
+    anchor_role="bridge",
+):
+    """Freeze a junction station from baseline source evidence only.
+
+    This function has no candidate-surface argument. It binds the selected
+    source station to the independent baseline surfaces, exact baseline face
+    contacts, and the frozen collar ancestry. Candidate stations are created
+    later by transporting this source material station through unchanged
+    source-vertex ancestry.
+    """
+    bridge_key, target_key = _identity(bridge_key), _identity(target_key)
+    _require(anchor_role in ("bridge", "target"),
+             "source station anchor role must be bridge or target")
+    _require(
+        isinstance(declared_vessel_ports, (set, frozenset, tuple, list))
+        and len(declared_vessel_ports) == 1,
+        "source station needs one independently declared typed vessel edge")
+    edges = tuple(declared_vessel_ports)
+    _require(all(isinstance(edge, (tuple, list)) and len(edge) == 2 for edge in edges),
+             "source station typed edge is malformed")
+    normalized_edges = tuple((_identity(edge[0]), _identity(edge[1])) for edge in edges)
+    _require(normalized_edges == ((bridge_key, target_key),),
+             "source station typed edge must exactly match the audited link")
+    bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
+    target = _prepare_vessel(verifier, target_key, baseline_target_surface)
+    pairs = _pair_rows(
+        frozen_face_pairs, name="frozen source station face-pair ancestry",
+        bridge_face_count=len(bridge.faces), target_face_count=len(target.faces))
+    bridge_patch = sorted({first for first, _ in pairs})
+    target_patch = sorted({second for _, second in pairs})
+    allowed = tuple((first, second)
+                    for first in bridge_patch for second in target_patch)
+    audit = verifier.audit_surface_pair(bridge, target, intended_face_pairs=allowed)
+    observed = tuple(tuple(map(int, pair))
+                     for pair in audit.get("declared_interface_triangle_pairs", []))
+    exact_points = _exact_interface_points(verifier, bridge, target, observed)
+    boundary = _declared_partial_vessel_port_overlap(
+        bridge_key, target_key, audit, observed,
+        audit.get("unexpected_triangle_pairs", ()), exact_points, allowed,
+        declared_vessel_ports=normalized_edges)
+    _require(bool(exact_points) and (
+        bool(audit.get("passed")) or boundary.get("passed") is True),
+        "independent source baseline does not prove the frozen typed interface")
+    anchor_key = bridge_key if anchor_role == "bridge" else target_key
+    anchor = bridge if anchor_role == "bridge" else target
+    anchor_patch = bridge_patch if anchor_role == "bridge" else target_patch
+    source_station = _port_station_spec(anchor, exact_points, anchor_patch)
+    source_ancestry = {
+        key: source_station[key] for key in (
+            "material_anchor_source_vertex_ids",
+            "tangent_support_source_vertex_ids",
+            "frozen_collar_face_ids",
+        )
+    }
+    pair_record = [list(pair) for pair in pairs]
+    observed_record = [list(pair) for pair in observed]
+    source_evidence = {
+        "schema": "numi.human.source-baseline-vessel-junction-station.v1",
+        "independent_source_baseline_only": True,
+        "typed_link": [list(bridge_key), list(target_key)],
+        "anchor_role": anchor_role,
+        "anchor_identity": list(anchor_key),
+        "baseline_source_surface_bindings": {
+            "bridge": _source_geometry_binding(bridge),
+            "target": _source_geometry_binding(target),
+        },
+        "frozen_face_pairs_sha256": _canonical_record_sha256(pair_record),
+        "frozen_face_pair_count": len(pair_record),
+        "baseline_observed_face_pairs_sha256": _canonical_record_sha256(observed_record),
+        "baseline_observed_face_pair_count": len(observed_record),
+        "baseline_exact_interface_points_sha256": _source_interface_points_sha256(exact_points),
+        "baseline_exact_interface_point_count": len(exact_points),
+        "baseline_port_audit_passed": bool(audit.get("passed")),
+        "baseline_port_pair_passed": bool(exact_points) and (
+            bool(audit.get("passed")) or boundary.get("passed") is True),
+        "baseline_declared_partial_overlap_boundary": boundary,
+        "source_station_provenance": source_station.get("provenance"),
+        "source_station_spec_sha256": _canonical_record_sha256(source_station),
+        "source_station_is_candidate_independent": True,
+    }
+    declaration_id = "source-baseline-junction-station-v1:" + _canonical_record_sha256({
+        "evidence": source_evidence,
+        "station": source_station,
+    })
+    return {
+        "schema": "numi.human.source-baseline-junction-station-declaration.v1",
+        "declaration_id": declaration_id,
+        "typed_link": [list(bridge_key), list(target_key)],
+        "station_role": anchor_role,
+        "expected_owner_ids": sorted((bridge_key[1], target_key[1])),
+        "bridge_owner_id": bridge_key[1],
+        "target_owner_id": target_key[1],
+        "anchor_owner_id": anchor_key[1],
+        "source_ancestry": source_ancestry,
+        "source_station_spec": source_station,
+        "source_evidence": source_evidence,
+    }
+
+
 TARGET_COLLAR_STATION_FRACTIONS = (0.2, 0.4, 0.6, 0.8)
 
 
@@ -2959,7 +3088,8 @@ def _same_section_plane(first, second):
 
 def _junction_station_evidence(declaration, expected_owner_ids,
                                candidate_union_section, baseline_union_section,
-                               candidate_branch_sections, baseline_branch_sections):
+                               candidate_branch_sections, baseline_branch_sections,
+                               solid_evidence):
     issues = []
     if not isinstance(declaration, Mapping):
         return {
@@ -3047,6 +3177,54 @@ def _junction_station_evidence(declaration, expected_owner_ids,
                 np.ascontiguousarray(tangent, dtype="<f8").tobytes()).hexdigest()
                 if tangent.shape == (3,) else None,
         }
+    source_evidence = declaration.get("source_evidence")
+    boundary_fallback_required = any(
+        solid_evidence.get(key) is not True
+        for key in ("candidate_port_audit_passed", "baseline_port_audit_passed"))
+    if boundary_fallback_required:
+        if not isinstance(source_evidence, Mapping):
+            issues.append(
+                "partial-overlap two-loop station needs independent source-baseline evidence")
+        else:
+            expected_link = solid_evidence.get("typed_vessel_link")
+            if (source_evidence.get("schema")
+                    != "numi.human.source-baseline-vessel-junction-station.v1"
+                    or source_evidence.get("independent_source_baseline_only") is not True
+                    or source_evidence.get("source_station_is_candidate_independent") is not True
+                    or source_evidence.get("typed_link") != expected_link):
+                issues.append(
+                    "source station evidence is not independently bound to the audited typed link")
+            if source_evidence.get("baseline_source_surface_bindings") != (
+                    solid_evidence.get("baseline_source_surface_bindings")):
+                issues.append(
+                    "source station evidence is not bound to the current independent baseline surfaces")
+            for source_key, evidence_key in (
+                ("frozen_face_pairs_sha256", "baseline_frozen_face_pairs_sha256"),
+                ("baseline_observed_face_pairs_sha256",
+                 "baseline_observed_face_pairs_sha256"),
+                ("baseline_exact_interface_points_sha256",
+                 "baseline_exact_interface_points_sha256"),
+            ):
+                if source_evidence.get(source_key) != solid_evidence.get(evidence_key):
+                    issues.append(
+                        f"source station evidence {source_key} differs from current baseline")
+            if source_evidence.get("baseline_exact_interface_point_count") != (
+                    solid_evidence.get("baseline_port_exact_interface_point_count")):
+                issues.append(
+                    "source station evidence exact source-interface point count differs")
+            if source_evidence.get("source_station_spec_sha256") != (
+                    _canonical_record_sha256(declaration.get("source_station_spec", {}))):
+                issues.append("source station specification hash does not match its declaration")
+            if source_evidence.get("baseline_declared_partial_overlap_boundary") != (
+                    solid_evidence.get("baseline_port_boundary")):
+                issues.append(
+                    "source station declaration differs from the recomputed baseline port proof")
+            if source_evidence.get("baseline_port_audit_passed") is not (
+                    solid_evidence.get("baseline_port_audit_passed")):
+                issues.append("source station baseline P6 status differs from current source")
+            if source_evidence.get("baseline_port_pair_passed") is not (
+                    solid_evidence.get("baseline_port_pair_passed")):
+                issues.append("source station baseline exact port status differs from current source")
     return {
         "declared": not issues,
         "status": ("EXPLICIT_MATERIAL_JUNCTION_STATION_BOUND"
@@ -3058,6 +3236,7 @@ def _junction_station_evidence(declaration, expected_owner_ids,
         "target_owner_id": target_owner,
         "anchor_owner_id": anchor_owner,
         "source_ancestry": normalized_ancestry,
+        "source_evidence": dict(source_evidence) if isinstance(source_evidence, Mapping) else None,
         "candidate_station": station_evidence.get("candidate"),
         "baseline_station": station_evidence.get("baseline"),
         "rejections": issues,
@@ -3088,7 +3267,7 @@ def _junction_aware_two_loop_section_proof(
     station_evidence = _junction_station_evidence(
         station_declaration, expected_owner_ids,
         candidate_union_section, baseline_union_section,
-        candidate_branch_sections, baseline_branch_sections)
+        candidate_branch_sections, baseline_branch_sections, solid_evidence)
     if not station_evidence["declared"]:
         issues.extend(station_evidence["rejections"])
     if len(expected_owner_ids) != 2 or any(owner <= 0 for owner in expected_owner_ids):
@@ -3162,9 +3341,29 @@ def _junction_aware_two_loop_section_proof(
     for key in ("candidate_union_component_count", "baseline_union_component_count"):
         if solid_evidence.get(key) != 1:
             issues.append(f"{key} must equal one")
-    for key in ("candidate_port_audit_passed", "baseline_port_audit_passed"):
-        if solid_evidence.get(key) is not True:
-            issues.append(f"{key} must preserve the frozen exact face-patch interface")
+    for side in ("candidate", "baseline"):
+        audit_key = f"{side}_port_audit_passed"
+        boundary = solid_evidence.get(f"{side}_port_boundary")
+        typed_link = solid_evidence.get("typed_vessel_link")
+        conditions = boundary.get("conditions") if isinstance(boundary, Mapping) else None
+        boundary_passed = bool(
+            isinstance(boundary, Mapping)
+            and boundary.get("passed") is True
+            and boundary.get("classification")
+                == "DECLARED_VESSEL_PORT_PARTIAL_OVERLAP_BOUNDARY_ONLY"
+            and boundary.get("typed_port") == typed_link
+            and boundary.get("requires_separate_solid_and_calibre_proofs") is True
+            and type(boundary.get("observed_pair_count")) is int
+            and boundary["observed_pair_count"] > 0
+            and type(boundary.get("exact_interface_point_count")) is int
+            and boundary["exact_interface_point_count"]
+                == solid_evidence.get(f"{side}_port_exact_interface_point_count")
+            and isinstance(conditions, Mapping)
+            and bool(conditions)
+            and all(value is True for value in conditions.values()))
+        if solid_evidence.get(audit_key) is not True and not boundary_passed:
+            issues.append(
+                f"{audit_key} must pass or have a complete source-scoped exact boundary proof")
     for key in ("candidate_union_status", "baseline_union_status",
                 "candidate_intersection_status", "baseline_intersection_status",
                 "candidate_bridge_status", "candidate_target_status",
@@ -3253,6 +3452,7 @@ def audit_brachiocephalic_port_pair_continuity(
     bridge_station=None, target_station=None, bridge_route_anchor_world_m=None,
     target_route_anchor_world_m=None,
     junction_station_declarations=None,
+    source_station_declarations=None,
     target_station_candidate_fractions=None,
     declared_vessel_ports=None,
 ):
@@ -3286,6 +3486,11 @@ def audit_brachiocephalic_port_pair_continuity(
         junction_station_declarations = {}
     _require(isinstance(junction_station_declarations, Mapping),
              "junction station declarations must be a source-bound mapping")
+    if source_station_declarations is None:
+        source_station_declarations = {}
+    _require(isinstance(source_station_declarations, Mapping)
+             and set(source_station_declarations) <= {"bridge", "target"},
+             "source station declarations must be keyed by branch role")
     bridge = _prepare_vessel(verifier, bridge_key, bridge_surface)
     target = _prepare_vessel(verifier, target_key, target_surface)
     base_bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
@@ -3338,6 +3543,128 @@ def audit_brachiocephalic_port_pair_continuity(
         declared_vessel_ports=declared_vessel_ports)
     port_pair_passed = bool(exact_points) and (
         bool(port_audit.get("passed")) or partial_overlap_boundary["passed"])
+    baseline_port_audit = verifier.audit_surface_pair(
+        base_bridge, base_target, intended_face_pairs=allowed)
+    baseline_observed = tuple(tuple(map(int, pair))
+                              for pair in baseline_port_audit.get(
+                                  "declared_interface_triangle_pairs", []))
+    baseline_exact_points = _exact_interface_points(
+        verifier, base_bridge, base_target, baseline_observed)
+    baseline_partial_overlap_boundary = _declared_partial_vessel_port_overlap(
+        bridge_key, target_key, baseline_port_audit, baseline_observed,
+        baseline_port_audit.get("unexpected_triangle_pairs", ()),
+        baseline_exact_points, allowed,
+        declared_vessel_ports=declared_vessel_ports)
+    baseline_port_pair_passed = bool(baseline_exact_points) and (
+        bool(baseline_port_audit.get("passed"))
+        or baseline_partial_overlap_boundary["passed"])
+
+    def surface_binding(surface):
+        return _source_geometry_binding(surface)
+
+    source_pair_record = [list(pair) for pair in pairs]
+    baseline_observed_record = [list(pair) for pair in baseline_observed]
+    source_baseline_bindings = {
+        "bridge": surface_binding(base_bridge),
+        "target": surface_binding(base_target),
+    }
+    source_baseline_evidence_fields = {
+        "typed_vessel_link": [list(bridge_key), list(target_key)],
+        "baseline_source_surface_bindings": source_baseline_bindings,
+        "baseline_frozen_face_pairs_sha256": _canonical_record_sha256(source_pair_record),
+        "baseline_observed_face_pairs_sha256": _canonical_record_sha256(
+            baseline_observed_record),
+        "baseline_exact_interface_points_sha256": _source_interface_points_sha256(
+            baseline_exact_points),
+        "baseline_port_exact_interface_point_count": len(baseline_exact_points),
+        "baseline_port_audit_passed": bool(baseline_port_audit.get("passed")),
+        "baseline_port_pair_passed": baseline_port_pair_passed,
+        "baseline_port_boundary": baseline_partial_overlap_boundary,
+    }
+    runtime_source_station_declarations = {}
+    for role, surface, base_surface, patch_faces in (
+        ("bridge", bridge, base_bridge, bridge_patch),
+        ("target", target, base_target, target_patch),
+    ):
+        declaration = source_station_declarations.get(role)
+        if declaration is None:
+            continue
+        _require(isinstance(declaration, Mapping)
+                 and declaration.get("schema")
+                     == "numi.human.source-baseline-junction-station-declaration.v1",
+                 f"{role} source station declaration has an unknown schema")
+        source_evidence = declaration.get("source_evidence")
+        source_spec = declaration.get("source_station_spec")
+        _require(isinstance(source_evidence, Mapping)
+                 and source_evidence.get("independent_source_baseline_only") is True
+                 and source_evidence.get("source_station_is_candidate_independent") is True,
+                 f"{role} source station is not independent baseline evidence")
+        _require(declaration.get("typed_link")
+                 == [list(bridge_key), list(target_key)]
+                 and declaration.get("station_role") == role
+                 and declaration.get("anchor_owner_id")
+                     == (bridge_key[1] if role == "bridge" else target_key[1]),
+                 f"{role} source station declaration has the wrong typed owner")
+        _require(source_evidence.get("typed_link")
+                 == source_baseline_evidence_fields["typed_vessel_link"],
+                 f"{role} source station typed link differs from this audit")
+        for key in ("baseline_source_surface_bindings",
+                    "frozen_face_pairs_sha256",
+                    "baseline_observed_face_pairs_sha256",
+                    "baseline_exact_interface_points_sha256",
+                    "baseline_exact_interface_point_count",
+                    "baseline_port_audit_passed",
+                    "baseline_port_pair_passed",
+                    "baseline_declared_partial_overlap_boundary"):
+            evidence_key = {
+                "frozen_face_pairs_sha256": "baseline_frozen_face_pairs_sha256",
+                "baseline_exact_interface_point_count":
+                    "baseline_port_exact_interface_point_count",
+                "baseline_declared_partial_overlap_boundary": "baseline_port_boundary",
+            }.get(key, key)
+            _require(
+                source_evidence.get(key) == source_baseline_evidence_fields.get(evidence_key),
+                f"{role} source station {key} differs from current independent baseline")
+        _require(isinstance(source_spec, Mapping)
+                 and source_evidence.get("source_station_spec_sha256")
+                     == _canonical_record_sha256(source_spec),
+                 f"{role} source station specification hash does not match")
+        expected_declaration_id = (
+            "source-baseline-junction-station-v1:"
+            + _canonical_record_sha256({
+                "evidence": source_evidence, "station": source_spec}))
+        _require(declaration.get("declaration_id") == expected_declaration_id,
+                 f"{role} source station declaration ID does not match its source evidence")
+        expected_station_ancestry = {
+            key: source_spec.get(key) for key in (
+                "material_anchor_source_vertex_ids",
+                "tangent_support_source_vertex_ids",
+                "frozen_collar_face_ids",
+            )
+        }
+        _require(declaration.get("source_ancestry") == expected_station_ancestry
+                 and source_evidence.get("anchor_role") == role,
+                 f"{role} source station ancestry or role differs")
+        _require(
+            source_evidence.get("baseline_source_surface_bindings")
+            == source_baseline_bindings,
+            f"{role} source station baseline surfaces differ")
+        _explicit_material_vertex_ancestry(base_surface, source_spec, patch_faces)
+        baseline_spec = _transport_material_station(base_surface, source_spec)
+        candidate_spec = _transport_material_station(surface, source_spec)
+        runtime_source_station_declarations[role] = {
+            "declaration_id": declaration.get("declaration_id"),
+            "station_role": role,
+            "expected_owner_ids": sorted((bridge_key[1], target_key[1])),
+            "bridge_owner_id": bridge_key[1],
+            "target_owner_id": target_key[1],
+            "anchor_owner_id": bridge_key[1] if role == "bridge" else target_key[1],
+            "source_ancestry": expected_station_ancestry,
+            "source_station_spec": dict(source_spec),
+            "candidate_station": candidate_spec,
+            "baseline_station": baseline_spec,
+            "source_evidence": dict(source_evidence),
+        }
 
     first, first_info = _make_manifold(bridge, manifold3d)
     second, second_info = _make_manifold(target, manifold3d)
@@ -3402,23 +3729,45 @@ def audit_brachiocephalic_port_pair_continuity(
     _require(solid_passed,
              f"port {bridge_key}/{target_key} fails overlap, exact inside witness, or closed connected union")
 
-    bridge_station = _validated_station_spec(
-        bridge, bridge_station, witness_points=exact_points, collar_face_ids=bridge_patch,
-        route_anchor=bridge_route_anchor_world_m)
-    target_station = _validated_station_spec(
-        target, target_station, witness_points=exact_points, collar_face_ids=target_patch,
-        route_anchor=target_route_anchor_world_m)
-    station_results = {}
-    for role, surface, base_surface, spec in (
-        ("bridge", bridge, base_bridge, bridge_station),
-        ("target", target, base_target, target_station),
+    station_specs_by_role = {}
+    for role, surface, base_surface, supplied_station, collar_faces, route_anchor in (
+        ("bridge", bridge, base_bridge, bridge_station, bridge_patch,
+         bridge_route_anchor_world_m),
+        ("target", target, base_target, target_station, target_patch,
+         target_route_anchor_world_m),
     ):
+        source_declaration = runtime_source_station_declarations.get(role)
+        if source_declaration is not None:
+            candidate_spec = source_declaration["candidate_station"]
+            baseline_spec = source_declaration["baseline_station"]
+        else:
+            candidate_spec = _validated_station_spec(
+                surface, supplied_station, witness_points=exact_points,
+                collar_face_ids=collar_faces, route_anchor=route_anchor)
+            baseline_spec = _transport_material_station(base_surface, candidate_spec)
+        station_specs_by_role[role] = {
+            "candidate": candidate_spec,
+            "baseline": baseline_spec,
+            "source_declaration": source_declaration,
+        }
+    bridge_station = station_specs_by_role["bridge"]["candidate"]
+    base_bridge_station = station_specs_by_role["bridge"]["baseline"]
+    target_station = station_specs_by_role["target"]["candidate"]
+    base_target_station = station_specs_by_role["target"]["baseline"]
+    station_results = {}
+    for role, surface, base_surface in (
+        ("bridge", bridge, base_bridge),
+        ("target", target, base_target),
+    ):
+        spec = station_specs_by_role[role]["candidate"]
+        baseline_spec = station_specs_by_role[role]["baseline"]
         candidate_section = _source_surface_section(surface, spec)
-        baseline_spec = _transport_material_station(base_surface, spec)
         baseline_section = _source_surface_section(base_surface, baseline_spec)
         station_results[role] = {
             "station": spec,
             "baseline_station_transported_by_ancestry": baseline_spec,
+            "source_station_declaration": (
+                station_specs_by_role[role]["source_declaration"]),
             "candidate": candidate_section,
             "baseline": baseline_section,
             "candidate_vs_baseline": _section_comparison(
@@ -3452,8 +3801,6 @@ def audit_brachiocephalic_port_pair_continuity(
             bridge_key[1]: len(base_bridge.quotient_faces),
             target_key[1]: len(base_target.quotient_faces),
         })
-    base_bridge_station = _transport_material_station(base_bridge, bridge_station)
-    base_target_station = _transport_material_station(base_target, target_station)
     baseline_union_bridge_section = _section_loops(
         base_union_positions, base_union_faces,
         base_bridge_station["section_center_world_m"],
@@ -3497,12 +3844,8 @@ def audit_brachiocephalic_port_pair_continuity(
         base_intersection_witness = (
             _exact_inside_witness(verifier, base_bridge, base_target, base_intersection)
             if base_intersection_volume > 0.0 else None)
-        base_port_audit = verifier.audit_surface_pair(
-            base_bridge, base_target, intended_face_pairs=allowed)
-        base_observed = tuple(tuple(map(int, pair)) for pair in
-                              base_port_audit.get("declared_interface_triangle_pairs", []))
-        base_exact_points = _exact_interface_points(
-            verifier, base_bridge, base_target, base_observed)
+        base_observed = baseline_observed
+        base_exact_points = baseline_exact_points
         junction_evidence_cache = {
             "candidate_bridge_status": first_status,
             "candidate_target_status": second_status,
@@ -3524,10 +3867,21 @@ def audit_brachiocephalic_port_pair_continuity(
             "baseline_intersection_volume_m3": base_intersection_volume,
             "candidate_exact_inside_both_witness": intersection_witness,
             "baseline_exact_inside_both_witness": base_intersection_witness,
+            "typed_vessel_link": [list(bridge_key), list(target_key)],
             "candidate_port_audit_passed": bool(port_audit.get("passed")),
-            "baseline_port_audit_passed": bool(base_port_audit.get("passed")),
+            "baseline_port_audit_passed": bool(baseline_port_audit.get("passed")),
+            "baseline_port_pair_passed": baseline_port_pair_passed,
+            "candidate_port_boundary": partial_overlap_boundary,
+            "baseline_port_boundary": baseline_partial_overlap_boundary,
             "candidate_port_exact_interface_point_count": len(exact_points),
             "baseline_port_exact_interface_point_count": len(base_exact_points),
+            "baseline_source_surface_bindings": source_baseline_bindings,
+            "baseline_frozen_face_pairs_sha256": _canonical_record_sha256(
+                source_pair_record),
+            "baseline_observed_face_pairs_sha256": _canonical_record_sha256(
+                baseline_observed_record),
+            "baseline_exact_interface_points_sha256": _source_interface_points_sha256(
+                base_exact_points),
             "baseline_observed_port_face_pairs": [list(pair) for pair in base_observed],
             "baseline_exact_interface_points_world_m": base_exact_points,
         }
@@ -3555,6 +3909,17 @@ def audit_brachiocephalic_port_pair_continuity(
             bridge_key[1]: _source_surface_section(base_bridge, baseline_station),
             target_key[1]: _source_surface_section(base_target, baseline_station),
         }
+        source_station_declaration = runtime_source_station_declarations.get(station_role)
+        if source_station_declaration is not None:
+            station_declaration = source_station_declaration
+        elif isinstance(junction_station_declarations.get(station_role), Mapping):
+            station_declaration = {
+                **dict(junction_station_declarations[station_role]),
+                "candidate_station": candidate_station,
+                "baseline_station": baseline_station,
+            }
+        else:
+            station_declaration = None
         proof = _junction_aware_two_loop_section_proof(
             expected_owner_ids=(bridge_key[1], target_key[1]),
             candidate_union_section=candidate_section,
@@ -3562,12 +3927,7 @@ def audit_brachiocephalic_port_pair_continuity(
             candidate_branch_sections=candidate_branch_sections,
             baseline_branch_sections=baseline_branch_sections,
             solid_evidence=junction_solid_evidence(),
-            station_declaration={
-                **dict(junction_station_declarations[station_role]),
-                "candidate_station": candidate_station,
-                "baseline_station": baseline_station,
-            } if isinstance(junction_station_declarations.get(station_role), Mapping)
-            else None,
+            station_declaration=station_declaration,
         )
         _require(proof["passed"],
                  f"{label} junction-aware section proof rejected: "

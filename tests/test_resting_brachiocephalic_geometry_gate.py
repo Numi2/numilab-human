@@ -376,6 +376,73 @@ def test_partial_overlap_cannot_use_unrelated_typed_surfaces_or_unmatched_pairs(
         (51011, 525), (51011, 10), audit, observed, (), (), allowed)["passed"]
 
 
+def test_nonflow_station_is_baseline_bound_and_candidate_independent():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _profiled_closed_cylinder(
+        ((0.8, 0.18), (1.0, 0.2), (1.05, 0.2), (2.0, 0.18)))
+    edge = ((51011, 7), (51011, 6))
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+    declarations = {
+        role: bg.build_source_junction_station_declaration(
+            av, bridge_key=edge[0], target_key=edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=pairs, declared_vessel_ports={edge},
+            anchor_role=role)
+        for role in ("bridge", "target")
+    }
+    for role, declaration in declarations.items():
+        assert declaration["schema"] == (
+            "numi.human.source-baseline-junction-station-declaration.v1")
+        assert declaration["typed_link"] == [list(edge[0]), list(edge[1])]
+        evidence = declaration["source_evidence"]
+        assert evidence["independent_source_baseline_only"] is True
+        assert evidence["source_station_is_candidate_independent"] is True
+        assert evidence["anchor_role"] == role
+        assert evidence["baseline_exact_interface_point_count"] > 0
+        assert evidence["baseline_declared_partial_overlap_boundary"]["passed"]
+        assert "candidate_station" not in declaration
+
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, _manifold3d(),
+        bridge_key=edge[0], bridge_surface=(bridge, bridge_faces),
+        target_key=edge[1], target_surface=(target, target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces),
+        declared_vessel_ports={edge},
+        source_station_declarations=declarations)
+    assert report["passed"]
+    for role in ("bridge", "target"):
+        recorded = report["calibre_gate"]["station_results"][role][
+            "source_station_declaration"]
+        assert recorded["source_evidence"]["independent_source_baseline_only"] is True
+        assert recorded["declaration_id"] == declarations[role]["declaration_id"]
+
+    forged = {role: dict(value) for role, value in declarations.items()}
+    forged["target"]["source_evidence"] = dict(
+        declarations["target"]["source_evidence"])
+    forged["target"]["source_evidence"]["baseline_source_surface_bindings"] = dict(
+        forged["target"]["source_evidence"]["baseline_source_surface_bindings"])
+    forged["target"]["source_evidence"]["baseline_source_surface_bindings"][
+        "bridge"] = dict(
+            forged["target"]["source_evidence"]["baseline_source_surface_bindings"][
+                "bridge"])
+    forged["target"]["source_evidence"]["baseline_source_surface_bindings"][
+        "bridge"]["positions_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="source station baseline_source_surface_bindings differs"):
+        audit_brachiocephalic_port_pair_continuity(
+            av, _manifold3d(),
+            bridge_key=edge[0], bridge_surface=(bridge, bridge_faces),
+            target_key=edge[1], target_surface=(target, target_faces),
+            frozen_face_pairs=pairs,
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            declared_vessel_ports={edge},
+            source_station_declarations=forged)
+
+
 def test_tangent_closed_cylinders_reject_zero_volume_contact():
     manifold3d = _manifold3d()
     bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
@@ -930,6 +997,34 @@ def test_recording_wrappers_forward_lineage_into_real_junction_section():
     assert junction_record["passed"] is True
     assert junction_record["proof"]["status"] == (
         "PASS_EXPLICIT_TWO_VESSEL_JUNCTION_SECTION")
+
+
+def test_partial_overlap_cannot_reuse_two_loop_exception_without_independent_station_source():
+    _proof, section, evidence, internal = _synthetic_two_branch_section_proof(
+        include_internal=True)
+    assert section["loop_count"] == 2
+    scoped = dict(evidence)
+    scoped["typed_vessel_link"] = [[51011, 526], [51011, 472]]
+    scoped["candidate_port_audit_passed"] = False
+    scoped["baseline_port_audit_passed"] = False
+    boundary = {
+        "passed": True,
+        "classification": "DECLARED_VESSEL_PORT_PARTIAL_OVERLAP_BOUNDARY_ONLY",
+        "typed_port": [[51011, 526], [51011, 472]],
+        "requires_separate_solid_and_calibre_proofs": True,
+        "observed_pair_count": 3,
+        "exact_interface_point_count": 3,
+        "conditions": {"all_frozen_source_boundary_checks": True},
+    }
+    scoped["candidate_port_boundary"] = boundary
+    scoped["baseline_port_boundary"] = boundary
+    scoped["candidate_port_exact_interface_point_count"] = 3
+    scoped["baseline_port_exact_interface_point_count"] = 3
+    call = dict(internal["junction_call"], solid_evidence=scoped)
+    rejected = bg._junction_aware_two_loop_section_proof(**call)
+    assert not rejected["passed"]
+    assert any("independent source-baseline evidence" in item
+               for item in rejected["rejections"])
 
 
 def test_nearby_disconnected_section_loops_do_not_pass_as_a_junction():
