@@ -36,3 +36,16 @@ def test_exact_degenerate_face_is_rejected():
     triangle = [(F(0),F(0),F(0)), (F(1),F(0),F(0)), (F(2),F(0),F(0))]
     with pytest.raises(ValueError, match="degenerate"):
         tool.barycentric(triangle,(F(1),F(0),F(0)))
+
+def test_projected_area_gradient_matches_each_vertex_perturbation():
+    triangle=np.array([[0.,0.,0.],[.001,0.,0.],[0.,.002,0.]])
+    normal=np.array([0.,0.,1.])
+    gradient=tool.projected_area_gradient(triangle,normal)
+    original=float(np.cross(triangle[1]-triangle[0],triangle[2]-triangle[0])@normal)
+    for vertex in range(3):
+        for axis in range(3):
+            changed=triangle.copy()
+            changed[vertex,axis]+=1e-5
+            actual=float(np.cross(changed[1]-changed[0],changed[2]-changed[0])@normal)
+            assert actual-original == pytest.approx(gradient[vertex,axis]*1e-5,abs=1e-21)
+    np.testing.assert_allclose(gradient.sum(0),0.,atol=1e-18)

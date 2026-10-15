@@ -38,6 +38,13 @@ def barycentric(triangle, point):
         raise ValueError("exact witness outside its source face")
     return np.array([float(x) for x in result])
 
+def projected_area_gradient(triangle, normal):
+    e1=triangle[1]-triangle[0]
+    e2=triangle[2]-triangle[0]
+    gb=np.cross(e2,normal)
+    gc=np.cross(normal,e1)
+    return np.array([-gb-gc,gb,gc])
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output"]:
@@ -46,9 +53,13 @@ def main():
     ap.add_argument("--step-bound-m", type=float, default=.003)
     ap.add_argument("--total-bound-m", type=float, default=.006)
     ap.add_argument("--margin-m", type=float, default=.0005)
+    ap.add_argument("--solid-depth", action="store_true")
+    ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
     if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .01:
         ap.error("require 0 < margin < step <= total <= 0.01 m")
+    if not 0 <= args.orientation_ratio < 1:
+        ap.error("orientation ratio must be in [0,1)")
     args.output.mkdir(exist_ok=False)
     started = time.monotonic()
     pins = {str(p): sha(p) for p in [Path(__file__), args.source, args.authoring_base,
@@ -85,6 +96,11 @@ def main():
     if not np.isfinite(affine).all() or np.min(abs(np.linalg.det(affine))) < 1e-8:
         raise ValueError("invalid full-owner rest map")
     base_source = source["vertices_f"][:,:3].astype(float)
+    base_triangles=base_points[faces].astype(float)
+    base_area_vectors=np.cross(base_triangles[:,1]-base_triangles[:,0],base_triangles[:,2]-base_triangles[:,0])
+    base_areas=np.linalg.norm(base_area_vectors,axis=1)
+    if not np.all(base_areas>0):raise ValueError("source has degenerate faces")
+    reference_normals=base_area_vectors/base_areas[:,None]
     edges = np.unique(np.sort(np.concatenate([faces[:,[0,1]],faces[:,[1,2]],faces[:,[2,0]]]),axis=1),axis=0)
     proof = dict(status="PASS_COMPLETE_AUTHORING_PREPARATION", predicate_phase_started=False,
         argv=sys.argv, source_vertex_count=len(base_source), referenced_vertex_count=len(used),
@@ -108,7 +124,7 @@ def main():
             raise ValueError("zero target signed volume")
         normals=np.cross(tri[:,1]-tri[:,0],tri[:,2]-tri[:,0])
         normals*=np.sign(volume)/np.linalg.norm(normals,axis=1)[:,None]
-        bones[sid]=(bone,normals)
+        bones[sid]=(bone,normals,bone.meter_index() if args.solid_depth else None)
     constraints=[]
     for sf,bary,normal in zip(cache["skin_face_ids"],cache["barycentrics"],cache["outward_normals"]):
         constraints.append((int(sf),bary.copy(),normal.copy(),args.margin_m))
@@ -130,7 +146,8 @@ def main():
         previous=surf
         new_constraints=[]
         inventory=[]
-        for sid,(bone,normals) in bones.items():
+        solid_witnesses=[]
+        for sid,(bone,normals,solid_index) in bones.items():
             result=v.audit_surface_pair(surf,bone)
             (out/f"bone-{sid}.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")
             pairs=result.get("unexpected_triangle_pairs",[])
@@ -141,6 +158,33 @@ def main():
                     normal=normals[bi]
                     current=float(bary@delta[faces[sf]]@normal)
                     new_constraints.append((int(sf),bary,normal,current+args.margin_m))
+            if args.solid_depth and pairs:
+                point_faces={}
+                for sf,_ in pairs:
+                    for corner,vi in enumerate(faces[sf]):
+                        point_faces.setdefault(int(vi),(int(sf),corner))
+                tri=bone.positions[bone.faces].astype(float)
+                lower=tri.min(1);upper=tri.max(1)
+                for vi,(sf,corner) in point_faces.items():
+                    point=world[vi].astype(float)
+                    exact_point=tuple(Fraction.from_float(float(x)) for x in point)
+                    location=v.ci.point_location_prepared_indexed(exact_point,solid_index)["location"]
+                    if location!="inside":continue
+                    nearest=None
+                    lower_distance=np.linalg.norm(np.maximum(np.maximum(lower-point,point-upper),0),axis=1)
+                    for bi in np.argsort(lower_distance):
+                        if nearest is not None and lower_distance[bi]>nearest[0]:break
+                        near=np.array(h._tendon_closest_point_on_triangle(point.tolist(),tri[bi].tolist())[0])
+                        distance=float(np.linalg.norm(near-point))
+                        if nearest is None or distance<nearest[0]:nearest=(distance,int(bi),near)
+                    distance,bi,near=nearest
+                    if not distance:raise ValueError("inside point has zero nearest-solid distance")
+                    normal=(near-point)/distance
+                    bary=np.zeros(3);bary[corner]=1
+                    current=float(delta[vi]@normal)
+                    new_constraints.append((sf,bary,normal,current+distance+args.margin_m))
+                    solid_witnesses.append(dict(bone=sid,vertex=vi,face=sf,nearest_bone_face=bi,depth_m=distance,direction=normal.tolist()))
+        (out/"solid-depth-witnesses.json").write_text(json.dumps(solid_witnesses,indent=2,allow_nan=False)+"\n")
         history.append(dict(iteration=iteration,status="CONTACT_INVENTORY",targets=inventory,
             new_constraints=len(new_constraints)))
         print(json.dumps(history[-1]),flush=True)
@@ -171,6 +215,22 @@ def main():
                     terms.extend((lookup[int(g)]*3+a,-bary[corner]*normal[a]) for a in range(3))
             if not terms:raise ValueError("unowned movable contact")
             add(terms,-bound)
+        if args.orientation_ratio:
+            affected=np.flatnonzero(np.any(np.isin(faces,active),axis=1))
+            for fi in affected:
+                ids=faces[fi];t=world[ids].astype(float);normal=reference_normals[fi]
+                e1=t[1]-t[0];e2=t[2]-t[0]
+                gradient=projected_area_gradient(t,normal)
+                scale=float(np.linalg.norm(gradient,axis=1).max())
+                if not scale:raise ValueError("orientation gradient degenerate")
+                current_area=float(np.cross(e1,e2)@normal)
+                bound=(args.orientation_ratio*base_areas[fi]-current_area+
+                       float(np.sum(gradient*delta[ids])))/scale
+                terms=[]
+                for corner,g in enumerate(ids):
+                    if int(g) in lookup:
+                        terms.extend((lookup[int(g)]*3+a,-gradient[corner,a]/scale) for a in range(3))
+                add(terms,-bound)
         for j in range(nd):
             add([(j,1),(nd+j,-1)],0);add([(j,-1),(nd+j,-1)],0)
         for ei,(a,b) in enumerate(local_edges):
@@ -194,9 +254,23 @@ def main():
             status="FAIL_LINEAR_CONSTRUCTION"
             break
         requested=solved.x[:nd].reshape(-1,3)
-        points_source=source["vertices_f"][:,:3].copy()
-        points_source[used[active]]=(base_source[used[active]]+
-            np.linalg.solve(affine[active],requested[:,:,None])[...,0]).astype("<f4")
+        accepted=False
+        for backtrack in range(11):
+            fraction=2.**(-backtrack)
+            trial=delta[active]+fraction*(requested-delta[active])
+            candidate_source=source["vertices_f"][:,:3].copy()
+            candidate_source[used[active]]=(base_source[used[active]]+
+                np.linalg.solve(affine[active],trial[:,:,None])[...,0]).astype("<f4")
+            actual_delta=np.einsum("nij,nj->ni",affine,(candidate_source.astype(float)-base_source)[used])
+            trial_world=(base_points.astype(float)+actual_delta).astype("<f4")
+            t=trial_world[faces].astype(float)
+            areas=np.einsum("ij,ij->i",np.cross(t[:,1]-t[:,0],t[:,2]-t[:,0]),reference_normals)
+            if not args.orientation_ratio or np.all(areas>=args.orientation_ratio*base_areas):
+                points_source=candidate_source;accepted=True;break
+        (out/"orientation-line-search.json").write_text(json.dumps(dict(accepted=accepted,fraction=fraction,minimum_ratio=float(np.min(areas/base_areas)),required_ratio=args.orientation_ratio),indent=2,allow_nan=False)+"\n")
+        if not accepted:
+            status="FAIL_ORIENTATION_CONSTRUCTION"
+            break
     report=dict(status=status,source_pins=pins,capture_identity=identity,history=history,
         elapsed_seconds=time.monotonic()-started,anatomical_admission=False,native_admission=False,
         next_change="Existing-owner export and all-near/native gates if authoring passes; otherwise retire this bounded contact construction and repair the specific retained witness.")
