@@ -108,7 +108,7 @@ def contact_forward_exit(surface,index,point,direction):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output"]:
+    for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output", "bone-artifact", "body-manifest"]:
         ap.add_argument("--"+flag, type=Path, required=True)
     ap.add_argument("--iterations", type=int, default=4, choices=range(1,5))
     ap.add_argument("--step-bound-m", type=float, default=.003)
@@ -128,6 +128,16 @@ def main():
         args.initial_source_points, args.contact_cache, args.capture, args.receipt,
         *[Path(m.__file__) for m in [h,v,sp,gp]]]}
     source = sp.decode_payload(args.source.read_bytes())
+    bone_ids, bone_identity_proof = v.load_compiled_bone_identities(args.bone_artifact, args.body_manifest, capture=args.capture)
+    if bone_identity_proof["source_archive_sha256"] != source["source_archive_sha256"]:
+        raise ValueError("bone and skin source archives differ")
+    for item in ("bone_payload", "bone_manifest", "runtime_manifest", "native_invocation"):
+        entry=bone_identity_proof[item]
+        pins[entry["path"]]=entry["sha256"]
+    for sid in [10,12,14,16]:
+        if sid not in bone_ids:
+            raise ValueError(f"required compiled bone identity absent: {sid}")
+
     base = np.load(args.authoring_base, allow_pickle=False)
     initial = np.load(args.initial_source_points, allow_pickle=False)
     cache = np.load(args.contact_cache, allow_pickle=False)
@@ -173,6 +183,8 @@ def main():
         face_count=len(faces), positive_material_support_unchanged=True,
         units="m; linear coefficients dimensionless", exact_emission=False,
         bounds=dict(step_m=args.step_bound_m,total_m=args.total_bound_m,margin_m=args.margin_m),
+        bone_target_identities=[bone_ids[sid] for sid in [10,12,14,16]],
+        compiled_bone_identity=bone_identity_proof,
         scope="Offline authoring approximation only; no anatomical/native admission.")
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
         runner_argv=[sys.executable,*sys.argv],input_pins=pins)

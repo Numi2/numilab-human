@@ -358,6 +358,8 @@ def main(argv=None):
                    help="source-bound reciprocal muscle or supported rigid head partition; strict exact certificate required")
     p.add_argument("--head-source-patch-report", action="append", default=[],
                    help="existing reciprocal head-patch report PATH=SHA256; current capture only")
+    p.add_argument("--bone-artifact", type=Path, help="existing compiled NHBONES artifact directory")
+    p.add_argument("--body-manifest", type=Path, help="exact runtime manifest bound by NHBONES")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
@@ -461,6 +463,15 @@ def main(argv=None):
         enclosures = [tuple(identity(x) for x in item.split(",")) for item in args.intended_enclosure]
         if any(len(pair) != 2 for pair in enclosures):
             raise ValueError("enclosure requires exactly two typed identities")
+        if bool(args.bone_artifact) != bool(args.body_manifest):
+            raise ValueError("bone identity preparation requires both artifact and runtime manifest")
+        if args.bone_artifact:
+            bone_ids, bone_proof = verify.load_compiled_bone_identities(args.bone_artifact, args.body_manifest, capture=args.pack)
+            for key in changed + (targets or []):
+                if key[0] == 51004 and key[1] not in bone_ids:
+                    raise ValueError(f"typed bone identity absent from compiled source: {key}")
+            report["compiled_bone_identities"] = list(bone_ids.values())
+            report["compiled_bone_identity_inputs"] = bone_proof
         # Resolve every declared identity before source certificates or predicates.
         # A stale target must fail in cold preparation, not after certifying partners.
         declared = {

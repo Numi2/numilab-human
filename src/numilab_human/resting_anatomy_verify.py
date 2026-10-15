@@ -29,6 +29,62 @@ ANATOMY_SEMANTICS = frozenset((51004, 51005, 51006, 51007, 51009,
                               *NHA_LAYER_SEMANTICS))
 
 
+def compiled_bone_identity_map(by_body, body_order):
+    """Join source-decoded bone IDs to actual Core owners, never numeric guesses."""
+    if (not isinstance(body_order, list) or not body_order
+            or any(not isinstance(name, str) or not name for name in body_order)
+            or len(set(body_order)) != len(body_order)):
+        raise ValueError("bone identity requires unique runtime body names")
+    result = {}
+    for body, rows in by_body.items():
+        if type(body) is not int or not 0 <= body < len(body_order):
+            raise ValueError("bone identity has an invalid Core body index")
+        name = body_order[body]
+        laterality = "right" if name.endswith("_r") else "left" if name.endswith("_l") else None
+        for row in rows:
+            sid = row.get("stable_id")
+            member = row.get("member_id")
+            if type(sid) is not int or sid <= 0 or sid in result:
+                raise ValueError("bone identity has a duplicate or invalid stable ID")
+            if not isinstance(member, str) or not member:
+                raise ValueError("bone identity lacks its source member")
+            result[sid] = dict(typed_identity=[51004, sid], core_body_index=body,
+                              core_body_name=name, laterality=laterality,
+                              source_member_id=member)
+    if not result:
+        raise ValueError("bone identity table is empty")
+    return result
+
+
+def load_compiled_bone_identities(bone_artifact, body_manifest, *, capture=None):
+    """Use the existing NHBONES owner reader and its bound runtime manifest."""
+    from . import model
+    artifact, runtime_path = Path(bone_artifact), Path(body_manifest)
+    manifest_path = artifact / "bodyparts3d-myosim-major-bones.manifest.json"
+    bone_manifest = model.read_json(manifest_path)
+    runtime = model.read_json(runtime_path)
+    expected = bone_manifest["source"]["runtime_reference"]["manifest"]["sha256"]
+    if model.sha256(runtime_path) != expected:
+        raise ValueError("bone identity runtime manifest hash differs from compiled source")
+    source_sha = runtime["source"]["archive_sha256"]
+    by_body, descriptor, payload = model._numi_human_bone_envelope_surfaces(artifact, source_sha)
+    identities = compiled_bone_identity_map(by_body, runtime["core_tree"]["body_order"])
+    proof = dict(
+        bone_payload=dict(path=str(payload.resolve()), sha256=descriptor["sha256"]),
+        bone_manifest=dict(path=str(manifest_path.resolve()), sha256=model.sha256(manifest_path)),
+        runtime_manifest=dict(path=str(runtime_path.resolve()), sha256=expected),
+        source_archive_sha256=source_sha)
+    if capture is not None:
+        invocation_path = Path(capture).parent.parent / "invocation.json"
+        invocation = model.read_json(invocation_path)
+        actual_bones = Path(invocation["argv"][3])
+        if model.sha256(actual_bones) != descriptor["sha256"]:
+            raise ValueError("compiled bone artifact differs from native capture input")
+        proof["native_invocation"] = dict(
+            path=str(invocation_path.resolve()), sha256=model.sha256(invocation_path))
+    return identities, proof
+
+
 class SurfaceTopologyError(ValueError):
     """A source surface failed indexed or exact-coordinate topology checks."""
 
