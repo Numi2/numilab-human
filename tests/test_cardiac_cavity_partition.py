@@ -114,6 +114,31 @@ class AuthoringTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "collapsed"):
             partition.indexed_mesh([((F(1),F(0),F(0)), (F(1)+F(1,2**100),F(0),F(0)), (F(0),F(1),F(0)))])
 
+    def test_directly_copied_reversed_face_keeps_corner_payload_aligned(self):
+        # This models an inherited source face whose vertices and corner maps
+        # were copied from an existing row before the owner reverses its winding.
+        inherited_face = (17, 29, 41)
+        inherited_corner_bary = (
+            (1.0, 0.0, 0.0),
+            (0.0, 1.0, 0.0),
+            (0.0, 0.0, 1.0),
+        )
+        emitted_face, emitted_bary = partition.orient_triangle_corner_payload(
+            inherited_face, inherited_corner_bary, reverse=True)
+        self.assertEqual(emitted_face, (17, 41, 29))
+        self.assertEqual(emitted_bary,
+                         (inherited_corner_bary[0], inherited_corner_bary[2],
+                          inherited_corner_bary[1]))
+        self.assertEqual(tuple(zip(emitted_face, emitted_bary)),
+                         tuple((inherited_face[i], inherited_corner_bary[i])
+                               for i in (0, 2, 1)))
+
+    def test_triangle_corner_payload_is_unchanged_without_reversal(self):
+        face = (3, 5, 7)
+        payload = (("a0",), ("a1",), ("a2",))
+        self.assertEqual(partition.orient_triangle_corner_payload(
+            face, payload), (face, payload))
+
     def test_global_conversion_is_identical_for_reversed_shared_faces(self):
         tri = ((F(1,3),F(0),F(0)),(F(0),F(1,7),F(0)),(F(0),F(0),F(1,11)))
         a, b = partition.indexed_mesh([tri]), partition.indexed_mesh([tri[::-1]])

@@ -33,6 +33,23 @@ def require(ok, message):
         raise HumanImportError("cardiac cavity partition: " + message)
 
 
+def orient_triangle_corner_payload(vertices, corner_payload, *, reverse=False):
+    """Reorder a triangle and every per-corner payload as one operation.
+
+    ``corner_payload[i]`` must describe ``vertices[i]``. Reversing a triangle
+    changes its winding with permutation ``(0, 2, 1)``; applying that same
+    permutation to barycentrics, normals, or other corner-owned records keeps
+    their source correspondence intact, including when the triangle was copied
+    directly from an existing mesh.
+    """
+    require(len(vertices) == 3 and len(corner_payload) == 3,
+            "triangle and corner payload must both have three entries")
+    require(type(reverse) is bool, "triangle orientation flag must be boolean")
+    order = (0, 2, 1) if reverse else (0, 1, 2)
+    return (tuple(vertices[index] for index in order),
+            tuple(corner_payload[index] for index in order))
+
+
 def rational_source_surfaces(cavities):
     """Take exact rational values of the published, verified quotient vertices."""
     selected = {row["source_id"]: row for row in cavities["chambers"] if row["source_id"] in NAMES}
