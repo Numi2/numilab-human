@@ -99,6 +99,64 @@ def _proof(bridge, bridge_faces, target, target_faces, *,
     )
 
 
+
+
+def test_transverse_interface_witnesses_recover_asymmetric_centroid_miss():
+    faces = np.asarray(
+        [[0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3]], dtype="<u4")
+    bridge = np.asarray(
+        [[0, 0, 0], [12, 0, 0], [0, 12, 0], [0, 0, 12]], dtype="<f4")
+    target = np.asarray(
+        [[3, 3, 3], [6, 4, 5], [5, 6, 4], [4, 5, 6]], dtype="<f4")
+    pairs = _frozen_pairs(bridge, faces, target, faces)
+
+    result = _interface_result(
+        (51011, 526), bridge, faces, (51011, 472), target, faces, pairs)
+
+    assert not result["p6_audit_passed"]
+    legacy_boundary = result["exact_partial_overlap_witnesses"]["boundary_predicate"]
+    assert not legacy_boundary["passed"]
+    centroid_checks = result["audit_result"]["containment"]
+    assert [row["component_checks"][0]["has_inside_face_interior"]
+            for row in centroid_checks] == [True, False]
+    witnesses = result["exact_partial_overlap_witnesses"][
+        "exact_transverse_overlap_side_witnesses"]
+    assert witnesses["passed"]
+    assert witnesses["requires_all_four_witnesses_from_same_face_pair"]
+    assert witnesses["passing_face_pair"] in result["observed_face_pairs"]
+    assert result["passed"]
+    face_pairs = {
+        tuple(witness["face_pair"])
+        for direction in witnesses["directional_surface_witnesses"].values()
+        for witness in direction.values()
+    }
+    assert face_pairs == {tuple(witnesses["passing_face_pair"])}
+    for direction in witnesses["directional_surface_witnesses"].values():
+        assert set(direction) == {"inside", "outside"}
+        for witness in direction.values():
+            assert witness["location_in_opposite_surface"] in {"inside", "outside"}
+            assert all(int(numerator) > 0
+                       for numerator, _denominator
+                       in witness["face_barycentric_rational"])
+
+
+def test_transverse_interface_witnesses_reject_coplanar_contact():
+    bridge = np.asarray(
+        [[0, 0, 0], [2, 0, 0], [0, 2, 0]], dtype="<f4")
+    target = np.asarray(
+        [[0.5, 0.5, 0], [2, 0.5, 0], [0.5, 2, 0]], dtype="<f4")
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    first = av.prepare_surface((51011, 526), bridge, faces)
+    second = av.prepare_surface((51011, 472), target, faces)
+
+    witnesses = junction._exact_transverse_overlap_side_witnesses(
+        av, first, second, [[0, 0]])
+
+    assert not witnesses["passed"]
+    assert witnesses["transverse_contact_face_pair_count_examined"] == 0
+    assert witnesses["passing_face_pair"] is None
+
+
 def test_new_junction_gate_uses_current_package_verifier(monkeypatch):
     def historical_loader_must_not_run():
         raise AssertionError("new gate must not reload historical HP98 verifier")

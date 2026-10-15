@@ -2055,6 +2055,157 @@ def _verify_declared_source_baseline_addendum_replay(
     return pairs
 
 
+def _rational_xyz_json(point):
+    return [[str(Fraction(value).numerator), str(Fraction(value).denominator)]
+            for value in point]
+
+
+def _vector_subtract(first, second):
+    return tuple(Fraction(first[i]) - Fraction(second[i]) for i in range(3))
+
+
+def _vector_cross(first, second):
+    return (
+        first[1] * second[2] - first[2] * second[1],
+        first[2] * second[0] - first[0] * second[2],
+        first[0] * second[1] - first[1] * second[0],
+    )
+
+
+def _exact_transverse_overlap_side_witnesses(
+    verifier, first, second, face_pairs,
+) -> dict:
+    """Find exact inside/outside samples on both surfaces near one transverse seam.
+
+    Component-centroid sampling can miss a small but real part of one surface
+    that crosses the other. This uses exact P6 intersection segments and samples
+    within the incident triangle interiors toward their corners. All four
+    witnesses must come from the same face pair, and each point is classified
+    exactly against the opposite closed solid.
+    """
+    empty_directions = {
+        "first_surface_against_second": {"inside": None, "outside": None},
+        "second_surface_against_first": {"inside": None, "outside": None},
+    }
+    scales = tuple(Fraction(1, 2 ** exponent) for exponent in range(32, 0, -1))
+    transverse_pair_count = 0
+    exact_location_calls = 0
+    examined_pairs = []
+    pair_witness_summaries = []
+    best_directions = empty_directions
+    best_witness_count = 0
+    passing_pair = None
+    for raw_pair in sorted({tuple(map(int, pair)) for pair in face_pairs}):
+        first_face, second_face = raw_pair
+        first_triangle = first.triangle_meters(first_face)
+        second_triangle = second.triangle_meters(second_face)
+        first_normal = _vector_cross(
+            _vector_subtract(first_triangle[1], first_triangle[0]),
+            _vector_subtract(first_triangle[2], first_triangle[0]))
+        second_normal = _vector_cross(
+            _vector_subtract(second_triangle[1], second_triangle[0]),
+            _vector_subtract(second_triangle[2], second_triangle[0]))
+        if (first_normal == (0, 0, 0) or second_normal == (0, 0, 0)
+                or _vector_cross(first_normal, second_normal) == (0, 0, 0)):
+            continue
+        points = first.intersection_points_meters(
+            second, first_face, second_face)
+        if len(points) < 2:
+            continue
+        endpoints = max(
+            ((a, b) for index, a in enumerate(points) for b in points[index + 1:]),
+            key=lambda pair: sum(
+                ((pair[0][axis] - pair[1][axis]) ** 2 for axis in range(3)),
+                Fraction(0)))
+        if endpoints[0] == endpoints[1]:
+            continue
+        midpoint = tuple((endpoints[0][axis] + endpoints[1][axis]) / 2
+                         for axis in range(3))
+        first_mid_barycentric = _exact_barycentric(midpoint, first_triangle)
+        second_mid_barycentric = _exact_barycentric(midpoint, second_triangle)
+        if not (all(value >= 0 for value in first_mid_barycentric)
+                and all(value >= 0 for value in second_mid_barycentric)):
+            continue
+        transverse_pair_count += 1
+        examined_pairs.append(list(raw_pair))
+        pair_directions = {
+            "first_surface_against_second": {"inside": None, "outside": None},
+            "second_surface_against_first": {"inside": None, "outside": None},
+        }
+        for label, triangle, target in (
+                ("first_surface_against_second", first_triangle, second),
+                ("second_surface_against_first", second_triangle, first)):
+            for corner_index, corner in enumerate(triangle):
+                for scale in scales:
+                    sample = tuple(
+                        midpoint[axis] + scale * (corner[axis] - midpoint[axis])
+                        for axis in range(3))
+                    barycentric = _exact_barycentric(sample, triangle)
+                    if not all(value > 0 for value in barycentric):
+                        continue
+                    exact_location_calls += 1
+                    location_result = verifier.ci.point_location_prepared_indexed(
+                        sample, target.meter_index())
+                    location = location_result.get("location")
+                    if location not in ("inside", "outside"):
+                        continue
+                    witness = {
+                        "face_pair": list(raw_pair),
+                        "corner_index": corner_index,
+                        "scale_numerator": str(scale.numerator),
+                        "scale_denominator": str(scale.denominator),
+                        "point_world_m_rational": _rational_xyz_json(sample),
+                        "face_barycentric_rational": [
+                            [str(value.numerator), str(value.denominator)]
+                            for value in barycentric],
+                        "location_in_opposite_surface": location,
+                    }
+                    if pair_directions[label][location] is None:
+                        pair_directions[label][location] = witness
+                    if all(pair_directions[name][side] is not None
+                           for name in pair_directions for side in ("inside", "outside")):
+                        break
+                if all(pair_directions[name][side] is not None
+                       for name in pair_directions for side in ("inside", "outside")):
+                    break
+            if all(pair_directions[name][side] is not None
+                   for name in pair_directions for side in ("inside", "outside")):
+                break
+        witness_count = sum(
+            pair_directions[name][side] is not None
+            for name in pair_directions for side in ("inside", "outside"))
+        pair_witness_summaries.append({
+            "face_pair": list(raw_pair),
+            "witness_count": witness_count,
+            "required_witness_count": 4,
+            "locations_by_surface": {
+                name: [side for side in ("inside", "outside")
+                       if pair_directions[name][side] is not None]
+                for name in pair_directions
+            },
+        })
+        if witness_count > best_witness_count:
+            best_directions = pair_directions
+            best_witness_count = witness_count
+        if witness_count == 4:
+            passing_pair = list(raw_pair)
+            best_directions = pair_directions
+            break
+    return {
+        "passed": passing_pair is not None,
+        "method": "exact P6 transverse-segment midpoint samples toward incident triangle corners",
+        "requires_strict_positive_exact_barycentric_coordinates": True,
+        "requires_all_four_witnesses_from_same_face_pair": True,
+        "uses_exact_rational_point_location_in_opposite_closed_surface": True,
+        "transverse_contact_face_pair_count_examined": transverse_pair_count,
+        "examined_face_pairs": examined_pairs,
+        "passing_face_pair": passing_pair,
+        "pair_witness_summaries": pair_witness_summaries,
+        "exact_point_location_call_count": exact_location_calls,
+        "directional_surface_witnesses": best_directions,
+        "claim_limit": "Exact local inside/outside witnesses only; source interface, solid, and calibre gates remain separate.",
+    }
+
 def _interface_gate(
     verifier, bridge, target, frozen_pairs, *, declared_vessel_ports=None,
     verified_collar_addendum=None,
@@ -2090,8 +2241,16 @@ def _interface_gate(
     partial_overlap_boundary = gate._declared_partial_vessel_port_overlap(
         bridge.key, target.key, audit, observed, unexpected, exact_points, allowed,
         declared_vessel_ports=declared_ports)
+    transverse_witnesses = _exact_transverse_overlap_side_witnesses(
+        verifier, bridge, target, observed)
+    exact_transverse_overlap = bool(
+        port_scope_passed and not unexpected and within_patch and bool(exact_points)
+        and not audit.get("intended_enclosures")
+        and not audit.get("rejected_interface_feature_contacts")
+        and transverse_witnesses.get("passed") is True)
     exact_partial_overlap = bool(
-        port_scope_passed and partial_overlap_boundary.get("passed"))
+        port_scope_passed and (
+            partial_overlap_boundary.get("passed") or exact_transverse_overlap))
     pair_patch_and_collar_passed = bool(
         port_scope_passed and not unexpected and within_patch and bool(exact_points)
         and (bool(audit.get("passed")) or exact_partial_overlap)
@@ -2120,9 +2279,13 @@ def _interface_gate(
             "passed": exact_partial_overlap,
             "requires_separate_closed_solid_confirmation": exact_partial_overlap,
             "classification": (
-                "symmetric_exact_partial_volumetric_overlap"
-                if exact_partial_overlap else "not_classified_as_expected_partial_overlap"),
+                "symmetric_exact_centroid_partial_overlap"
+                if partial_overlap_boundary.get("passed") else
+                "symmetric_exact_transverse_inside_outside_overlap"
+                if exact_transverse_overlap else
+                "not_classified_as_expected_partial_overlap"),
             "boundary_predicate": partial_overlap_boundary,
+            "exact_transverse_overlap_side_witnesses": transverse_witnesses,
             "containment": containment,
         },
         "observed_pair_count": len(observed),
