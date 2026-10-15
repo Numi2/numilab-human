@@ -356,6 +356,8 @@ def main(argv=None):
     p.add_argument("--shared-partition", nargs=4, action="append", default=[],
                    metavar=("FIRST", "SECOND", "NHTISS", "SHA256"),
                    help="source-bound reciprocal passive muscle partition; strict exact certificate required")
+    p.add_argument("--head-source-patch-report", action="append", default=[],
+                   help="existing reciprocal head-patch report PATH=SHA256; current capture only")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
@@ -431,7 +433,29 @@ def main(argv=None):
         if not set(faces_keys) <= npz_overlay_keys:
             raise ValueError("faces-key without matching overlay")
         report["overlays"] = overlays
+        patch_interfaces, patch_bindings = {}, []
+        if args.head_source_patch_report:
+            from numilab_human.resting_head_patch_binding import bind_head_source_patch_report
+            if len(args.head_source_patch_report) != 1:
+                raise ValueError("duplicate head source patch report")
+            path, digest = args.head_source_patch_report[0].rsplit("=", 1)
+            patch_keys = {(51010, 343), (51010, 374)}
+            if patch_keys.intersection(overlay_keys):
+                raise ValueError("head source patch cannot bind counterfactual overlaid rows")
+            bound, declaration, proof = bind_head_source_patch_report(
+                surfaces, report["capture_identity"], path, digest)
+            surfaces.update(bound)
+            patch_interfaces[((51010, 343), (51010, 374))] = [declaration]
+            patch_bindings.append(proof)
+        report["head_source_patch_bindings"] = patch_bindings
+
         changed = [identity(x) for x in args.changed]
+        if patch_interfaces:
+            if (51010, 343) not in changed:
+                raise ValueError("head source patch requires medulla343 as changed surface")
+            if ((51010, 374) in changed and
+                    changed.index((51010, 374)) < changed.index((51010, 343))):
+                raise ValueError("head source patch requires ordered343 then374 audit")
         targets = [identity(x) for x in args.target] if args.target else None
         closed = [identity(x) for x in args.required_closed]
         enclosures = [tuple(identity(x) for x in item.split(",")) for item in args.intended_enclosure]
@@ -474,12 +498,14 @@ def main(argv=None):
                 result = audit_with_shared_partitions(
                     surfaces, changed, partitions=partitions, targets=targets,
                     required_closed=closed, intended_enclosures=enclosures,
+                    source_patch_complex_interfaces=patch_interfaces,
                     coordinate_provenance=("counterfactual_owner_replay" if args.overlay or args.rest_source
                                            else "accepted_native_capture"))
             else:
                 result = verify.audit_changed_surfaces(
                     surfaces, changed, targets=targets,
-                    required_closed=closed, intended_enclosures=enclosures)
+                    required_closed=closed, intended_enclosures=enclosures,
+                    source_patch_complex_interfaces=patch_interfaces)
             report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
     except (ValueError, TypeError, KeyError, OSError, verify.HumanImportError) as error:

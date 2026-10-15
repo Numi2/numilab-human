@@ -146,6 +146,7 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path,
 
 def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
                                 required_closed=(), intended_enclosures=(),
+                                source_patch_complex_interfaces=None,
                                 coordinate_provenance="accepted_native_capture"):
     """Use existing exact certificates and existing nearby predicates in order."""
     certificates, partners, seen = [], {}, set()
@@ -166,7 +167,8 @@ def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
         selected = [t for t in targets if t not in partners.get(key, ())]
         result = verify.audit_changed_surfaces(surfaces, [key], targets=selected,
                     required_closed=[key] if key in required_closed else [],
-                    intended_enclosures=intended_enclosures)
+                    intended_enclosures=intended_enclosures,
+                    source_patch_complex_interfaces=source_patch_complex_interfaces)
         rows.extend(result.get("rows", []))
         checks.append({"typed_identity": list(key), "audit": result})
         if not result["passed"]:
