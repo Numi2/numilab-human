@@ -540,14 +540,18 @@ def _contact_on_interface(points, vertices, edge_index):
 
 
 def audit_shared_interface_partition(regions,shared_interface, *, classify_connected_patches=False,
-                                     expected_region_component_counts=None):
+                                     expected_region_component_counts=None, diagnostic_contact_limit=1):
     """Audit final binary64 geometry independently of the rational construction.
 
     `regions` maps two IDs to triangle lists of float metre points. Interface
     triangles use the same globally converted coordinates. Contacts away from
-    that declared interface complex are rejected, including nesting.
+    that declared interface complex are rejected, including nesting. A diagnostic
+    contact limit above one collects bounded witnesses before the same rejection;
+    it never converts failed geometry into a passing certificate.
     """
     require(type(classify_connected_patches) is bool, 'classification mode must be Boolean')
+    require(type(diagnostic_contact_limit) is int and 1 <= diagnostic_contact_limit <= 10000,
+            'diagnostic contact limit must be an integer in [1, 10000]')
     require(isinstance(regions,dict) and len(regions)==2,'two emitted regions required')
     region_counts = {name: 1 for name in regions}
     if expected_region_component_counts is not None:
@@ -600,6 +604,21 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
     interface_edges={_edge_key(a,b) for t in shared for a,b in zip(t,t[1:]+t[:1])}
     edge_index = _prepare_interface_edges(interface_edges)
     a,b=list(prepared);contacts=0
+    unexpected_contacts = []
+
+    def reject_contacts(scan_complete):
+        error = HumanImportError(
+            'cardiac partition certificate: emitted regions intersect outside their declared interface or through a face interior')
+        error.diagnostic = dict(unexpected_contacts[0])
+        if diagnostic_contact_limit > 1:
+            error.diagnostic.update({
+                'unexpected_contacts': unexpected_contacts,
+                'diagnostic_contact_limit': diagnostic_contact_limit,
+                'cross_domain_contact_scan_complete': scan_complete,
+                'completed_cross_domain_contact_count': contacts,
+            })
+        raise error
+
     blocked = {name: set(interface_edges) for name in prepared}
     for row, other in predicates._aabb_candidate_pairs(
             prepared[a].records, prepared[b].records, same_surface=False):
@@ -615,9 +634,7 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
                 for i in range(3)
                 if all(_on_segment(p,tri[i],tri[(i+1)%3]) for p in points)})
         if not (allowed and all(containing_edges)):
-            error = HumanImportError(
-                'cardiac partition certificate: emitted regions intersect outside their declared interface or through a face interior')
-            error.diagnostic = {
+            unexpected_contacts.append({
                 'stage': 'emitted_cross_domain_contact',
                 'first_region': a, 'first_face': row[3],
                 'second_region': b, 'second_face': other[3],
@@ -627,12 +644,16 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
                 'contact_on_declared_interface': allowed,
                 'contact_on_each_triangle_edge': [bool(edges) for edges in containing_edges],
                 'completed_cross_domain_contact_count': contacts,
-            }
-            raise error
+            })
+            if len(unexpected_contacts) >= diagnostic_contact_limit:
+                reject_contacts(False)
+            continue
         if classify_connected_patches:
             # Vertex contact blocks both incident edges conservatively.
             blocked[a].update(containing_edges[0])
             blocked[b].update(containing_edges[1])
+    if unexpected_contacts:
+        reject_contacts(True)
     # Opposite normals alone do not justify crossings or nesting. Patch mode
     # uses only the uncut topology established above and reports its witnesses.
     for name,mesh in prepared.items():

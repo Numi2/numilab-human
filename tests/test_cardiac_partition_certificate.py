@@ -404,6 +404,58 @@ class EmittedInterfaceTests(unittest.TestCase):
             value = tuple(decode(x) for x in point)
             self.assertTrue(all(isinstance(x, F) for x in value))
 
+    def test_bounded_contact_collection_stops_at_limit_without_admission(self):
+        from unittest.mock import patch
+        _, rows = fixture()
+        regions, interface = emitted(rows, A)
+        with (
+            patch.object(cert, "_contact_on_interface", return_value=False),
+            self.assertRaises(HumanImportError) as caught,
+        ):
+            cert.audit_shared_interface_partition(
+                regions, interface, diagnostic_contact_limit=2)
+        detail = caught.exception.diagnostic
+        self.assertEqual(detail["diagnostic_contact_limit"], 2)
+        self.assertFalse(detail["cross_domain_contact_scan_complete"])
+        witnesses = detail["unexpected_contacts"]
+        self.assertEqual(len(witnesses), 2)
+        self.assertEqual(len({(x["first_face"], x["second_face"]) for x in witnesses}), 2)
+        for key, value in witnesses[0].items():
+            if key != "completed_cross_domain_contact_count":
+                self.assertEqual(detail[key], value)
+
+    def test_bounded_contact_collection_reports_complete_failed_scan(self):
+        from unittest.mock import patch
+        _, rows = fixture()
+        regions, interface = emitted(rows, A)
+        with (
+            patch.object(cert, "_contact_on_interface", return_value=False),
+            self.assertRaises(HumanImportError) as caught,
+        ):
+            cert.audit_shared_interface_partition(
+                regions, interface, diagnostic_contact_limit=10000,
+                classify_connected_patches=True)
+        detail = caught.exception.diagnostic
+        self.assertTrue(detail["cross_domain_contact_scan_complete"])
+        self.assertGreater(len(detail["unexpected_contacts"]), 2)
+        self.assertGreaterEqual(detail["completed_cross_domain_contact_count"],
+                                detail["unexpected_contacts"][-1]["completed_cross_domain_contact_count"])
+
+    def test_diagnostic_limit_preserves_valid_certificate(self):
+        _, rows = fixture()
+        regions, interface = emitted(rows, A)
+        self.assertEqual(
+            cert.audit_shared_interface_partition(regions, interface),
+            cert.audit_shared_interface_partition(
+                regions, interface, diagnostic_contact_limit=10000))
+
+    def test_invalid_diagnostic_limit_is_rejected_before_geometry(self):
+        for value in (0, -1, True, 1.5, 10001):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(HumanImportError, "diagnostic contact limit"):
+                    cert.audit_shared_interface_partition(
+                        {}, [], diagnostic_contact_limit=value)
+
     def test_both_priorities_admit_shared_interface_with_disjoint_interiors(self):
         _,rows=fixture()
         for priority in (A,B):
