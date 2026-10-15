@@ -76,77 +76,163 @@ def declarations_for_actual_shared_features(first, second):
     return declarations
 
 
-def crosswalk_point_case(*, second_owner=23, second_source_face=936,
-                         source_crosswalk=True, second_crosswalk_sha=None,
-                         transverse_segment=False):
+def seal_source_point_crosswalk(value):
+    payload = {key: item for key, item in value.items()
+               if key != "source_capture_crosswalk_sha256"}
+    value["source_capture_crosswalk_sha256"] = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"),
+                   ensure_ascii=True).encode("ascii")).hexdigest()
+    return value
+
+
+def crosswalk_point_case(*, second_owner=23, source_crosswalk=True,
+                         second_endpoint=409, selected_endpoint=409,
+                         transverse_segment=False, omit_second_seam_face=False):
     from numilab_human.resting_anatomy_verify import (
         _shared_source_crosswalk_point_contact,
     )
 
-    feature = {
-        "source_capture_crosswalk_sha256": "a" * 64,
-        "source_row_payload_sha256": "b" * 64,
-        "source_member": "FJ1769",
-        "source_member_sha256": "c" * 64,
-        "source_face": 825,
-        "source_row_face": 936,
-        "source_corner": 0,
-    }
+    member_sha, row_sha = "c" * 64, "b" * 64
+    source_faces = [
+        {"source_face": 825, "source_vertex_ids": [409, 416, 415]},
+        {"source_face": 826, "source_vertex_ids": [409, 412, 416]},
+    ]
+    endpoints = [409, 416]
+    first_rows = [
+        {"face_index": 0, "source_face": 825, "source_row_face": 936,
+         "source_row_payload_sha256": row_sha, "ordered_source_vertex_ids": [409, 416, 415],
+         "ordered_capture_gids": [100, 101, 102]},
+        {"face_index": 1, "source_face": 826, "source_row_face": 937,
+         "source_row_payload_sha256": row_sha, "ordered_source_vertex_ids": [409, 412, 416],
+         "ordered_capture_gids": [100, 103, 101]},
+    ]
+    second_rows = [
+        {"face_index": 0, "source_face": 825, "source_row_face": 936,
+         "source_row_payload_sha256": row_sha, "ordered_source_vertex_ids": [409, 415, 416],
+         "ordered_capture_gids": [900, 901, 902]},
+        {"face_index": 1, "source_face": 826, "source_row_face": 937,
+         "source_row_payload_sha256": row_sha, "ordered_source_vertex_ids": [409, 416, 412],
+         "ordered_capture_gids": [900, 902, 903]},
+    ]
+    if omit_second_seam_face:
+        second_rows = second_rows[:1]
+    crosswalk = seal_source_point_crosswalk({
+        "schema": "numi.human.shared-source-seam-endpoint-crosswalk.v4",
+        "seam": {
+            "source_member": "FJ1769", "source_member_sha256": member_sha,
+            "source_faces": source_faces, "endpoint_source_vertex_ids": endpoints,
+        },
+        "first": {
+            "identity": [51010, 343], "source_row_payload_sha256": row_sha,
+            "seam_faces": first_rows,
+            "vertex_bindings": [
+                {"capture_gid": 100, "source_vertex_id": 409},
+                {"capture_gid": 101, "source_vertex_id": 416},
+            ],
+        },
+        "second": {
+            "identity": [51010, 374], "source_row_payload_sha256": row_sha,
+            "seam_faces": second_rows,
+            "vertex_bindings": [
+                {"capture_gid": 900, "source_vertex_id": second_endpoint},
+                {"capture_gid": 902, "source_vertex_id": 416 if second_endpoint == 409 else 409},
+            ],
+        },
+    })
     owner = {
-        "body_index": 23, "capture_receipt_sha256": "d" * 64,
+        "body_index": 23, "capture_receipt_sha256": "e" * 64,
         "position_m": [0.0, 0.0, 0.0], "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
     }
-    points_a = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32)
-    faces_a = np.asarray([[0, 1, 2], [0, 2, 3]], dtype=np.uint32)
-    points_b = np.asarray([[0, 0, 0], [0, 1, 0], [1, 0, 0],
-                           [0, -1, 0], [0, 0, -1]], dtype=np.float32)
+    points_a = np.asarray([
+        [0, 0, 0], [1, 0, 0], [0, 1, 0], [1, -1, 0], [0, 0, 1],
+    ], dtype=np.float32)
+    faces_a = np.asarray([[0, 1, 2], [0, 3, 1], [0, 2, 4]], dtype=np.uint32)
+    points_b = np.asarray([
+        [0, 0, 0], [0, 1, 0], [1, 0, 0], [1, -1, 0],
+        [0, -1, 0], [0, 0, -1],
+    ], dtype=np.float32)
     if transverse_segment:
-        points_b[3] = [1, -1, 0]
-        points_b[4] = [-1, 2, 0.5]
-    faces_b = np.asarray([[0, 1, 2], [0, 3, 4]], dtype=np.uint32)
-    seam_b = {
-        "source_parent_face": 825, "source_member": "FJ1769",
-        "source_member_sha256": "c" * 64, "source_face": 825,
-        "source_row_face": second_source_face,
-        "source_row_payload_sha256": "b" * 64,
-    }
-    face_a = [
-        {"source_parent_face": 936, "source_member": "FJ1769",
-         "source_member_sha256": "c" * 64, "source_face": 825,
-         "source_row_face": 936, "source_row_payload_sha256": "b" * 64,
-         "corner_barycentric_exact": [[ ["1", "1"], ["0", "1"], ["0", "1"] ],
-                                       [ ["0", "1"], ["1", "1"], ["0", "1"] ],
-                                       [ ["0", "1"], ["0", "1"], ["1", "1"] ]]},
-        {"source_parent_face": 937},
-    ]
-    face_b = [seam_b, {"source_parent_face": 938}]
-    gids_a = np.asarray([100, 101, 102, 103], dtype=np.uint64)
-    gids_b = np.asarray([900, 901, 902, 903, 904], dtype=np.uint64)
-    vertex_a = {int(gid): {"source_gid": int(gid)} for gid in gids_a}
-    vertex_b = {int(gid): {"source_gid": int(gid)} for gid in gids_b}
+        points_b[4] = [1, -1, 0]
+        points_b[5] = [-1, 2, 0.5]
+    faces_b = np.asarray([[0, 1, 2], [0, 2, 3], [0, 4, 5]], dtype=np.uint32)
+
+    def exact_unit_barycentric():
+        return [
+            [["1", "1"], ["0", "1"], ["0", "1"]],
+            [["0", "1"], ["1", "1"], ["0", "1"]],
+            [["0", "1"], ["0", "1"], ["1", "1"]],
+        ]
+
+    face_a = []
+    for source_face, row_face, corners in ((825, 936, [409, 416, 415]),
+                                           (826, 937, [409, 412, 416])):
+        face_a.append({
+            "operation": "retained_source_fragment", "owner_stable_id": 343,
+            "source_member": "FJ1769", "source_member_sha256": member_sha,
+            "source_face": source_face, "source_row_face": row_face,
+            "source_row_payload_sha256": row_sha,
+            "corner_barycentric_exact": exact_unit_barycentric(),
+        })
+    face_a.append({
+        "operation": "retained_source_fragment", "owner_stable_id": 343,
+        "source_member": "FJ1769", "source_member_sha256": member_sha,
+        "source_face": 825, "source_row_face": 936, "source_row_payload_sha256": row_sha,
+    })
+    face_b = []
+    for source_face, row_face in ((825, 936), (826, 937)):
+        face_b.append({
+            "operation": "reversed_medulla343_priority_interface", "owner_stable_id": 374,
+            "source_member": "FJ1769", "source_member_sha256": member_sha,
+            "source_face": source_face, "source_row_face": row_face,
+            "source_row_payload_sha256": row_sha,
+        })
+    face_b.append({
+        "operation": "retained_source_fragment", "owner_stable_id": 374,
+        "source_member": "FJ1831", "source_member_sha256": "d" * 64,
+        "source_face": 6057, "source_row_face": 6057, "source_row_payload_sha256": "f" * 64,
+    })
+
+    gids_a = np.asarray([100, 101, 102, 103, 104], dtype=np.uint64)
+    gids_b = np.asarray([900, 901, 902, 903, 904, 905], dtype=np.uint64)
+    crosswalk_sha = crosswalk["source_capture_crosswalk_sha256"]
+    vertex_a = {int(g): {"source_gid": int(g)} for g in gids_a}
+    vertex_b = {int(g): {"source_gid": int(g)} for g in gids_b}
     if source_crosswalk:
-        vertex_a[100]["source_point_crosswalk"] = feature
-        vertex_b[900]["source_point_crosswalk"] = dict(feature)
-        if second_crosswalk_sha is not None:
-            vertex_b[900]["source_point_crosswalk"]["source_capture_crosswalk_sha256"] = second_crosswalk_sha
+        for gid, endpoint in ((100, 409), (101, 416)):
+            vertex_a[gid].update({
+                "source_point_crosswalk_sha256": crosswalk_sha,
+                "source_seam_endpoint_source_vertex_id": endpoint,
+                "source_seam_member": "FJ1769",
+                "source_seam_member_sha256": member_sha,
+            })
+        for gid, endpoint in ((900, second_endpoint),
+                              (902, 416 if second_endpoint == 409 else 409)):
+            vertex_b[gid].update({
+                "source_point_crosswalk_sha256": crosswalk_sha,
+                "source_seam_endpoint_source_vertex_id": endpoint,
+                "source_seam_member": "FJ1769",
+                "source_seam_member_sha256": member_sha,
+            })
     first = prepare_surface(
         (51010, 343), points_a, faces_a, source_vertex_ids=gids_a,
         source_face_lineage=face_a, source_vertex_lineage=vertex_a,
         rigid_owner_proof=owner)
-    owner_b = dict(owner, body_index=second_owner)
     second = prepare_surface(
         (51010, 374), points_b, faces_b, source_vertex_ids=gids_b,
         source_face_lineage=face_b, source_vertex_lineage=vertex_b,
-        rigid_owner_proof=owner_b)
+        rigid_owner_proof=dict(owner, body_index=second_owner))
+    gid_by_endpoint_a = {409: 100, 416: 101}
+    gid_by_endpoint_b = {409: 900, 416: 902}
     declaration = {
         "first_identity": list(first.key), "second_identity": list(second.key),
-        "first_face_index": 1, "second_face_index": 1,
-        "feature_gid_pairs": [[100, 900]],
-        "source_point_crosswalk": feature,
-        "source_seam_face_pair": [0, 0],
+        "first_face_index": 2, "second_face_index": 2,
+        "feature_gid_pairs": [[gid_by_endpoint_a[selected_endpoint],
+                               gid_by_endpoint_b[selected_endpoint]]],
+        "source_point_crosswalk": crosswalk,
+        "source_seam_face_pairs": [[0, 0], [1, 1]],
+        "source_seam_endpoint_source_vertex_id": selected_endpoint,
     }
     return first, second, declaration, _shared_source_crosswalk_point_contact
-
 
 def source_bound_overlap_case(*, altered_contact=False, open_first=False, disconnected_first=False):
     if open_first:
@@ -208,7 +294,382 @@ def source_bound_overlap_case(*, altered_contact=False, open_first=False, discon
     return first, second, proof, proof_bytes, proof_sha, source_map_sha, binding
 
 
+def seal_source_patch_complex(value):
+    payload = {key: item for key, item in value.items()
+               if key != "source_patch_complex_sha256"}
+    value["source_patch_complex_sha256"] = av._canonical_json_sha256(payload)
+    return value
+
+
+def source_patch_complex_case(*, off_edge=False, support_edge=False):
+    source_faces = [
+        {"source_face": 825, "source_vertex_ids": [10, 11, 12]},
+        {"source_face": 826, "source_vertex_ids": [10, 12, 13]},
+    ]
+    patch_ids = [10, 11, 12, 13]
+    member_sha = "a" * 64
+    owner = {
+        "body_index": 23, "capture_receipt_sha256": "e" * 64,
+        "position_m": [0.0, 0.0, 0.0], "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    }
+    row_sha = ["b" * 64, "c" * 64]
+    base_points = np.asarray(
+        [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]], dtype=np.float32)
+    base_faces = [
+        np.asarray([[0, 1, 2], [0, 2, 3]], dtype=np.uint32),
+        np.asarray([[0, 2, 1], [0, 3, 2]], dtype=np.uint32),
+    ]
+    gids = [[100, 101, 102, 103], [900, 901, 902, 903]]
+    if not off_edge:
+        base_points = [base_points.copy(), base_points.copy()]
+    if off_edge:
+        extra_a = np.asarray([[2, 0, 0], [2, 0, 1]], dtype=np.float32)
+        extra_b = np.asarray([[2, 0, 0], [2, -1, 0]], dtype=np.float32)
+        base_points = [np.concatenate((base_points, extra_a)),
+                       np.concatenate((base_points, extra_b))]
+        base_faces = [
+            np.concatenate((base_faces[0], np.asarray([[0, 4, 5]], dtype=np.uint32))),
+            np.concatenate((base_faces[1], np.asarray([[0, 4, 5]], dtype=np.uint32))),
+        ]
+        gids = [gids[0] + [104, 105], gids[1] + [904, 905]]
+    elif support_edge:
+        extra_a = np.asarray([[0, 0, -1]], dtype=np.float32)
+        extra_b = np.asarray([[0, 0, 1]], dtype=np.float32)
+        base_points = [np.concatenate((base_points[0].copy(), extra_a)),
+                       np.concatenate((base_points[1].copy(), extra_b))]
+        base_faces = [
+            np.concatenate((base_faces[0], np.asarray([[1, 0, 4]], dtype=np.uint32))),
+            np.concatenate((base_faces[1], np.asarray([[0, 1, 4]], dtype=np.uint32))),
+        ]
+        gids = [gids[0] + [104], gids[1] + [904]]
+
+    surfaces = []
+    side_payloads = []
+    for side_index, (identity, points, faces, face_gids) in enumerate(zip(
+            ((51010, 343), (51010, 374)), base_points, base_faces, gids)):
+        ordered = ([ [10, 11, 12], [10, 12, 13] ] if side_index == 0 else
+                   [ [10, 12, 11], [10, 13, 12] ])
+        lineage = []
+        support = []
+        patch_bindings = []
+        for face_index, face in enumerate(faces):
+            if face_index < 2:
+                source_face = source_faces[face_index]
+                source_member = "FJ1769"
+                source_member_sha = member_sha
+                ordered_source_ids = ordered[face_index]
+                face_id = source_face["source_face"]
+                row_face = 930 + side_index * 10 + face_index
+                bary = []
+                for source_id in ordered_source_ids:
+                    basis = [0, 0, 0]
+                    basis[source_face["source_vertex_ids"].index(source_id)] = 1
+                    bary.append([[str(value), "1"] for value in basis])
+                record = {
+                    "source_member": source_member,
+                    "source_member_sha256": source_member_sha,
+                    "source_face": face_id,
+                    "source_row_face": row_face,
+                    "source_row_payload_sha256": row_sha[side_index],
+                    "owner_stable_id": identity[1],
+                    "source_parent_face": face_id,
+                }
+                if side_index == 0:
+                    record["corner_barycentric_exact"] = bary
+                patch_bindings.append({
+                    "face_index": face_index,
+                    "source_face": face_id,
+                    "source_row_face": row_face,
+                    "source_row_payload_sha256": row_sha[side_index],
+                    "ordered_source_vertex_ids": ordered_source_ids,
+                    "ordered_capture_gids": [face_gids[i] for i in face],
+                })
+            else:
+                source_member = "FJ9000"
+                source_member_sha = "d" * 64
+                face_id = 9000 + face_index
+                row_face = face_id
+                record = {
+                    "source_member": source_member,
+                    "source_member_sha256": source_member_sha,
+                    "source_face": face_id,
+                    "source_row_face": row_face,
+                    "source_row_payload_sha256": row_sha[side_index],
+                    "owner_stable_id": identity[1],
+                    "source_parent_face": face_id,
+                }
+            lineage.append(record)
+            support.append({
+                "face_index": face_index,
+                "source_member": source_member,
+                "source_member_sha256": source_member_sha,
+                "source_face": face_id,
+                "source_row_face": row_face,
+                "source_row_payload_sha256": row_sha[side_index],
+                "ordered_capture_gids": [face_gids[i] for i in face],
+            })
+        vertex_lineage = {}
+        for index, gid in enumerate(face_gids):
+            vertex_lineage[gid] = {
+                "source_gid": gid,
+                "source_vertex_id": patch_ids[index] if index < 4 else 900 + index,
+                "source_member": "FJ1769" if index < 4 else "FJ9000",
+                "source_member_sha256": member_sha if index < 4 else "d" * 64,
+            }
+        surface = prepare_surface(
+            identity, points, faces, source_vertex_ids=face_gids,
+            source_face_lineage=lineage, source_vertex_lineage=vertex_lineage,
+            rigid_owner_proof=owner)
+        surfaces.append(surface)
+        bindings = [
+            {"source_vertex_id": patch_ids[i], "capture_gid": face_gids[i]}
+            for i in range(4)
+        ]
+        side_payloads.append({
+            "identity": list(identity),
+            "source_row_payload_sha256": row_sha[side_index],
+            "surface_hashes": av._source_patch_surface_hashes(surface),
+            "vertex_bindings": bindings,
+            "patch_faces": patch_bindings,
+            "support_faces": support,
+        })
+    declaration = seal_source_patch_complex({
+        "schema": "numi.human.reciprocal-source-patch-complex.v1",
+        "identities": [list(surface.key) for surface in surfaces],
+        "source_member": "FJ1769",
+        "source_member_sha256": member_sha,
+        "source_faces": source_faces,
+        "patch_vertex_source_ids": patch_ids,
+        "first": side_payloads[0],
+        "second": side_payloads[1],
+    })
+    return surfaces[0], surfaces[1], declaration
+
+
+
+
+def seal_source_patch_fragment_complex(value):
+    payload = {key: item for key, item in value.items()
+               if key != "source_patch_complex_sha256"}
+    value["source_patch_complex_sha256"] = av._canonical_json_sha256(payload)
+    return value
+
+
+def source_patch_fragment_case(*, corrupt_barycentric=False):
+    def pair(value):
+        value = Fraction(value)
+        return [str(value.numerator), str(value.denominator)]
+
+    def hex_pair(value):
+        value = Fraction(value)
+        return [hex(value.numerator), hex(value.denominator)]
+
+    point_xyz = {
+        "A": (Fraction(3, 4), Fraction(1, 4), Fraction(0)),
+        "B": (Fraction(1, 4), Fraction(3, 4), Fraction(0)),
+        "C": (Fraction(1, 4), Fraction(1, 4), Fraction(0)),
+        "D": (Fraction(3, 4), Fraction(3, 4), Fraction(0)),
+    }
+    points = [{
+        "point_id": point_id,
+        "local_xyz_exact": [pair(value) for value in point_xyz[point_id]],
+        "local_float32_bits": av._patch_float32_bits(
+            [float(value) for value in point_xyz[point_id]]),
+    } for point_id in ("A", "B", "C", "D")]
+    member_sha, parent_sha, current_sha = "a" * 64, "b" * 64, "c" * 64
+    input_pins = {
+        "current_payload_sha256": current_sha,
+        "parent_payload_sha256": parent_sha,
+        "intermediate_payload_sha256": "d" * 64,
+        "arrangement_sha256": "e" * 64,
+        "arrangement_certificate_sha256": "f" * 64,
+        "ancestry_first_sha256": "1" * 64,
+        "ancestry_second_sha256": "2" * 64,
+        "capture_pack_sha256": "3" * 64,
+        "capture_receipt_sha256": "4" * 64,
+        "source_obj_sha256": "5" * 64,
+    }
+    rows = [
+        {
+            "source_face": 825,
+            "source_vertex_ids": [408, 411, 415],
+            "source_row_face": 936,
+            "parent_ordered_source_vertex_ids": [411, 415, 408],
+            "parent_vertices_exact": [
+                [[*pair(1)], [*pair(0)], [*pair(0)]],
+                [[*pair(0)], [*pair(1)], [*pair(0)]],
+                [[*pair(0)], [*pair(0)], [*pair(0)]],
+            ],
+            "arrangement_record_index": 940,
+            "arrangement_point_ids": ["A", "B", "C"],
+            "barycentric_exact": [
+                [pair(Fraction(3, 4)), pair(Fraction(1, 4)), pair(0)],
+                [pair(Fraction(1, 4)), pair(Fraction(3, 4)), pair(0)],
+                [pair(Fraction(1, 4)), pair(Fraction(1, 4)), pair(Fraction(1, 2))],
+            ],
+        },
+        {
+            "source_face": 826,
+            "source_vertex_ids": [411, 398, 415],
+            "source_row_face": 937,
+            "parent_ordered_source_vertex_ids": [398, 415, 411],
+            "parent_vertices_exact": [
+                [[*pair(1)], [*pair(1)], [*pair(0)]],
+                [[*pair(0)], [*pair(1)], [*pair(0)]],
+                [[*pair(1)], [*pair(0)], [*pair(0)]],
+            ],
+            "arrangement_record_index": 945,
+            "arrangement_point_ids": ["D", "B", "A"],
+            "barycentric_exact": [
+                [pair(Fraction(1, 2)), pair(Fraction(1, 4)), pair(Fraction(1, 4))],
+                [pair(0), pair(Fraction(3, 4)), pair(Fraction(1, 4))],
+                [pair(0), pair(Fraction(1, 4)), pair(Fraction(3, 4))],
+            ],
+        },
+    ]
+    for row in rows:
+        face_xyz = [point_xyz[point_id] for point_id in row["arrangement_point_ids"]]
+        record = {
+            "source": "medulla343",
+            "source_face": row["source_row_face"],
+            "other_location": "inside",
+            "vertices": [[hex_pair(value) for value in point] for point in face_xyz],
+        }
+        row["source_row_payload_sha256"] = parent_sha
+        row["arrangement_record"] = record
+        row["arrangement_record_sha256"] = av._canonical_json_sha256(record)
+    if corrupt_barycentric:
+        rows[0]["barycentric_exact"][0][0] = pair(Fraction(1, 2))
+
+    owner = {
+        "body_index": 23, "capture_receipt_sha256": "9" * 64,
+        "position_m": [0.0, 0.0, 0.0], "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    }
+    xyz = np.asarray([[float(value) for value in point_xyz[key]]
+                      for key in ("A", "B", "C", "D")], dtype=np.float32)
+    face_sets = [
+        np.asarray([[0, 1, 2], [3, 1, 0]], dtype=np.uint32),
+        np.asarray([[0, 2, 1], [3, 0, 1]], dtype=np.uint32),
+    ]
+    keys = ((51010, 343), (51010, 374))
+    gids_by_side = ([100, 101, 102, 103], [900, 901, 902, 903])
+    surfaces, side_records = [], []
+    identity_bary = [
+        [["1", "1"], ["0", "1"], ["0", "1"]],
+        [["0", "1"], ["1", "1"], ["0", "1"]],
+        [["0", "1"], ["0", "1"], ["1", "1"]],
+    ]
+    for side_index, key in enumerate(keys):
+        gids = gids_by_side[side_index]
+        faces = face_sets[side_index]
+        lineages = []
+        for face_index, source in enumerate(rows):
+            raw_face, row_face = source["source_face"], source["source_row_face"]
+            if side_index == 0:
+                lineage = {
+                    "operation": "exact_arrangement_medulla_fragment_outside_csf",
+                    "source_member": "FJ1769", "source_member_sha256": member_sha,
+                    "source_face": 13398 + face_index, "owner_stable_id": key[1],
+                    "corner_barycentric_exact": copy.deepcopy(identity_bary),
+                    "parent_row_face_lineage": {
+                        "source_member": "FJ1769", "source_member_sha256": member_sha,
+                        "source_face": raw_face, "source_row_face": row_face,
+                        "source_row_payload_sha256": parent_sha, "owner_stable_id": key[1],
+                    },
+                }
+            else:
+                lineage = {
+                    "operation": "reversed_medulla343_priority_interface",
+                    "source_member": "FJ1769", "source_member_sha256": member_sha,
+                    "source_face": raw_face, "source_row_face": row_face,
+                    "source_row_payload_sha256": parent_sha, "owner_stable_id": key[1],
+                }
+            lineages.append(lineage)
+        surface = prepare_surface(
+            key, xyz, faces, source_vertex_ids=np.asarray(gids, dtype=np.uint64),
+            source_face_lineage=lineages, source_vertex_lineage={}, rigid_owner_proof=owner)
+        surfaces.append(surface)
+        point_bindings = [{
+            "point_id": point_id, "capture_gids": [gids[point_index]],
+            "world_float32_bits": av._patch_float32_bits(xyz[point_index]),
+        } for point_index, point_id in enumerate(("A", "B", "C", "D"))]
+        patch_rows = []
+        support_rows = []
+        for face_index, source in enumerate(rows):
+            ordered_points = (
+                [["A", "B", "C"], ["D", "B", "A"]][face_index] if side_index == 0 else
+                [["A", "C", "B"], ["D", "A", "B"]][face_index])
+            face_gids = [gids[index] for index in faces[face_index]]
+            patch_rows.append({
+                "face_index": face_index, "source_face": source["source_face"],
+                "source_row_face": source["source_row_face"],
+                "lineage_face_id": 13398 + face_index if side_index == 0 else source["source_face"],
+                "ordered_point_ids": ordered_points, "ordered_capture_gids": face_gids,
+            })
+            support_rows.append({
+                "face_index": face_index, "source_member": "FJ1769",
+                "source_member_sha256": member_sha,
+                "source_face": source["source_face"], "source_row_face": source["source_row_face"],
+                "source_row_payload_sha256": parent_sha, "ordered_capture_gids": face_gids,
+            })
+        side_records.append({
+            "identity": list(key), "source_row_payload_sha256": current_sha,
+            "surface_hashes": av._source_patch_surface_hashes(surface),
+            "point_bindings": point_bindings, "patch_faces": patch_rows,
+            "support_faces": support_rows,
+        })
+    declaration = seal_source_patch_fragment_complex({
+        "schema": "numi.human.reciprocal-source-patch-fragment-complex.v1",
+        "identities": [list(key) for key in keys],
+        "source_member": "FJ1769", "source_member_sha256": member_sha,
+        "input_pins": input_pins, "points": points, "source_faces": rows,
+        "first": side_records[0], "second": side_records[1],
+    })
+    return surfaces[0], surfaces[1], declaration
+
+
 class RestingAnatomyVerifierTests(unittest.TestCase):
+    def test_source_patch_fragment_complex_accepts_nested_barycentric_reciprocal_patch(self):
+        first, second, declaration = source_patch_fragment_case()
+        result = audit_surface_pair(
+            first, second, intended_source_patch_complexes=[declaration])
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["unexpected_triangle_pairs"], [])
+        self.assertGreater(len(result["declared_source_patch_complex_contacts"]), 0)
+
+    def test_source_patch_fragment_complex_rejects_resealed_wrong_barycentric_map(self):
+        first, second, declaration = source_patch_fragment_case(corrupt_barycentric=True)
+        with self.assertRaisesRegex(ValueError, "barycentric"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+
+
+    def test_source_patch_fragment_complex_rejects_stale_arrangement_record(self):
+        first, second, declaration = source_patch_fragment_case()
+        declaration["source_faces"][0]["arrangement_record"]["vertices"][0][0][0] = "0x1"
+        seal_source_patch_fragment_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "arrangement record is stale"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_source_patch_fragment_complex_rejects_missing_coordinate_alias(self):
+        first, second, declaration = source_patch_fragment_case()
+        positions = np.vstack((first.positions, first.positions[0]))
+        faces = first.faces.copy()
+        faces[0, 0] = len(first.positions)
+        gids = np.append(first.source_vertex_ids, 104).astype(np.uint64)
+        first = prepare_surface(
+            first.key, positions, faces, source_vertex_ids=gids,
+            source_face_lineage=first.source_face_lineage,
+            source_vertex_lineage={100: {"source_gid": 100}, 104: {"source_gid": 104}},
+            rigid_owner_proof={
+                "body_index": 23, "capture_receipt_sha256": "9" * 64,
+                "position_m": [0.0, 0.0, 0.0],
+                "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+            })
+        declaration["first"]["surface_hashes"] = av._source_patch_surface_hashes(first)
+        seal_source_patch_fragment_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "omits or invents exact-coordinate alias"):
+            av._prepare_source_patch_complex(first, second, declaration)
 
     def test_bound_source_facet_projection_requires_full_namespace_correspondence(self):
         from numilab_human.resting_anatomy_verify import retain_bound_source_faces
@@ -370,6 +831,90 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         result = audit_surface_pair(inner, outer)
         self.assertEqual(result["containment"][0]["status"], "not_checked_open_target")
 
+    def test_source_patch_complex_accepts_only_reciprocal_faces_and_supported_patch_contacts(self):
+        first, second, declaration = source_patch_complex_case()
+        result = audit_surface_pair(
+            first, second, intended_source_patch_complexes=[declaration])
+        self.assertTrue(result["passed"], result["unexpected_triangle_pairs"])
+        self.assertEqual(result["unexpected_triangle_pairs"], [])
+        contacts = result["declared_source_patch_complex_contacts"]
+        self.assertTrue(contacts)
+        self.assertTrue(all(row["proof"] in {
+            "exact_reciprocal_source_patch_face",
+            "exact_contact_contained_in_supported_source_patch_corner_or_edge",
+        } for row in contacts))
+        changed_result = av.audit_changed_surfaces(
+            {first.key: first, second.key: second}, [first.key], targets=[second.key],
+            source_patch_complex_interfaces={(first.key, second.key): [declaration]})
+        self.assertTrue(changed_result["passed"], changed_result["rows"])
+
+    def test_source_patch_complex_requires_ancestried_incident_edge_support(self):
+        first, second, declaration = source_patch_complex_case(support_edge=True)
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        points = first.intersection_points_meters(second, 2, 2)
+        self.assertEqual(len(points), 2)
+        accepted, reason = av._source_patch_complex_contact(first, second, 2, 2, context)
+        self.assertTrue(accepted, reason)
+        self.assertEqual(
+            reason, "exact_contact_contained_in_supported_source_patch_corner_or_edge")
+
+        declaration["first"]["support_faces"] = declaration["first"]["support_faces"][:2]
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "incident face support"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_source_patch_complex_rejects_off_edge_segment(self):
+        first, second, declaration = source_patch_complex_case(off_edge=True)
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        points = first.intersection_points_meters(second, 2, 2)
+        self.assertEqual(len(points), 2)
+        accepted, reason = av._source_patch_complex_contact(first, second, 2, 2, context)
+        self.assertFalse(accepted)
+        self.assertEqual(reason, "contact_point_is_not_on_one_authenticated_patch_edge")
+
+    def test_source_patch_complex_rejects_wrong_face_ancestry_even_when_resealed(self):
+        first, second, declaration = source_patch_complex_case()
+        first.source_face_lineage[0]["source_member_sha256"] = "f" * 64
+        declaration["first"]["surface_hashes"] = av._source_patch_surface_hashes(first)
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "ancestry does not match"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_source_patch_complex_rejects_mismatched_corner_vertex_lineage(self):
+        first, second, declaration = source_patch_complex_case()
+        first.source_vertex_lineage[100]["source_vertex_id"] = 99
+        declaration["first"]["surface_hashes"] = av._source_patch_surface_hashes(first)
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "corner vertex ancestry"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_source_patch_complex_barycentric_frame_must_link_to_authenticated_face(self):
+        first, second, declaration = source_patch_complex_case()
+        lineage = first.source_face_lineage[0]
+        lineage["source_face"] = 7777
+        lineage["parent_row_face_lineage"] = {
+            "output_face": 930, "source_member": "FJ1769",
+            "source_face": 825, "source_row_face": 930,
+            "source_row_payload_sha256": "b" * 64,
+            "owner_stable_id": 343,
+        }
+        declaration["first"]["surface_hashes"] = av._source_patch_surface_hashes(first)
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "corner ancestry"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_source_patch_complex_rejects_stale_surface_and_malformed_patch(self):
+        first, second, declaration = source_patch_complex_case()
+        first.positions[0, 0] = np.float32(-0.125)
+        with self.assertRaisesRegex(ValueError, "hashes are stale"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+        first, second, declaration = source_patch_complex_case()
+        declaration["source_faces"][1]["source_vertex_ids"][2] = 99
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "four-corner complex"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
     def test_declared_shared_edge_requires_exact_identity_lineage_and_owner_map(self):
         a = feature_surface(
             (51006, 132),
@@ -437,54 +982,93 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
                          "declared_feature_GIDs_not_shared_by_both_faces")
 
+    def _run_crosswalk_contact(self, first, second, declaration, checker):
+        return checker(
+            first, second, declaration["first_face_index"], declaration["second_face_index"],
+            declaration["feature_gid_pairs"], declaration["source_point_crosswalk"],
+            declaration["source_seam_face_pairs"],
+            declaration["source_seam_endpoint_source_vertex_id"])
+
     def test_authenticated_crosswalk_accepts_only_exact_shared_point_with_same_rigid_owner(self):
         first, second, declaration, checker = crosswalk_point_case()
-        passed, reason = checker(
-            first, second, 1, 1, declaration["feature_gid_pairs"],
-            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
         self.assertTrue(passed, reason)
-        self.assertEqual(reason, "exact_source_face_crosswalk_point_with_same_rigid_owner_pose")
+        self.assertEqual(reason, "exact_singleton_at_authenticated_two_face_source_seam_endpoint")
+        proof = declaration["source_point_crosswalk"]
+        self.assertEqual(proof["seam"]["source_member"], "FJ1769")
+        self.assertEqual([row["source_face"] for row in proof["seam"]["source_faces"]], [825, 826])
+        self.assertEqual(len(declaration["source_seam_face_pairs"]), 2)
         result = audit_surface_pair(first, second, intended_shared_feature_pairs=[declaration])
-        self.assertTrue(any(row["face_pair"] == [1, 1]
+        self.assertTrue(any(row["face_pair"] == [2, 2]
                             for row in result["declared_interface_feature_contacts"]))
-        self.assertNotIn([1, 1], result["unexpected_triangle_pairs"])
+        self.assertNotIn([2, 2], result["unexpected_triangle_pairs"])
+
+        first, second, declaration, checker = crosswalk_point_case()
+        # Both canonical endpoints are independently bound and incident to both
+        # reversed source faces, even though this contact exercises endpoint 409.
+        self.assertEqual(len(declaration["source_point_crosswalk"]["first"]["vertex_bindings"]), 2)
+        self.assertEqual(len(declaration["source_point_crosswalk"]["second"]["vertex_bindings"]), 2)
 
     def test_authenticated_crosswalk_rejects_coordinate_only_or_wrong_source_ancestry(self):
         first, second, declaration, checker = crosswalk_point_case(source_crosswalk=False)
-        passed, reason = checker(
-            first, second, 1, 1, declaration["feature_gid_pairs"],
-            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        declaration["source_point_crosswalk"] = None
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
         self.assertFalse(passed)
-        self.assertEqual(reason, "source_point_crosswalk_does_not_match_both_vertex_lineages")
+        self.assertEqual(reason, "source_point_crosswalk_is_missing_or_invalid")
 
-        first, second, declaration, checker = crosswalk_point_case(second_source_face=937)
-        passed, reason = checker(
-            first, second, 1, 1, declaration["feature_gid_pairs"],
-            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        first, second, declaration, checker = crosswalk_point_case()
+        second.source_face_lineage[2]["source_face"] = 937
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
+        self.assertTrue(passed, reason)  # Incident-face ancestry is allowed to differ from the seam member.
+        second.source_face_lineage[0]["source_face"] = 937
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
         self.assertFalse(passed)
-        self.assertEqual(reason, "source_seam_face_ancestry_does_not_match_crosswalk")
+        self.assertEqual(reason, "seam_face_ancestry_does_not_match_authenticated_source")
 
-        first, second, declaration, checker = crosswalk_point_case(second_crosswalk_sha="e" * 64)
-        passed, reason = checker(
-            first, second, 1, 1, declaration["feature_gid_pairs"],
-            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        first, second, declaration, checker = crosswalk_point_case(second_endpoint=416)
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
         self.assertFalse(passed)
-        self.assertEqual(reason, "source_point_crosswalk_does_not_match_both_vertex_lineages")
+        self.assertEqual(reason, "source_point_crosswalk_is_missing_or_invalid")
+
+    def test_authenticated_crosswalk_uses_exact_endpoint_without_requiring_bitwise_other_corners(self):
+        first, second, declaration, checker = crosswalk_point_case()
+        # GPU/CPU owner emission can differ at other source-face corners while
+        # the declared endpoint itself remains an exact shared Float32 point.
+        second.positions[second.vertex_index(902), 1] += np.float32(2e-7)
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
+        self.assertTrue(passed, reason)
+        self.assertEqual(reason, "exact_singleton_at_authenticated_two_face_source_seam_endpoint")
+
+    def test_authenticated_crosswalk_rejects_wrong_or_incomplete_two_face_seam(self):
+        first, second, declaration, checker = crosswalk_point_case()
+        declaration["source_point_crosswalk"]["seam"]["source_faces"][0]["source_vertex_ids"][0] = 412
+        self.assertFalse(av._valid_source_point_crosswalk(declaration["source_point_crosswalk"]))
+
+        first, second, declaration, checker = crosswalk_point_case()
+        declaration["source_seam_face_pairs"] = [[0, 0]]
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
+        self.assertFalse(passed)
+        self.assertEqual(reason, "both_reciprocal_source_seam_face_pairs_are_required")
+
+        first, second, declaration, checker = crosswalk_point_case(omit_second_seam_face=True)
+        self.assertFalse(av._valid_source_point_crosswalk(declaration["source_point_crosswalk"]))
+
+        first, second, declaration, checker = crosswalk_point_case()
+        declaration["source_seam_face_pairs"] = [[0, 0], [0, 0]]
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
+        self.assertFalse(passed)
+        self.assertEqual(reason, "duplicate_source_seam_face_pair")
 
     def test_authenticated_crosswalk_rejects_different_owner_and_segment_contact(self):
         first, second, declaration, checker = crosswalk_point_case(second_owner=24)
-        passed, reason = checker(
-            first, second, 1, 1, declaration["feature_gid_pairs"],
-            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
         self.assertFalse(passed)
         self.assertEqual(reason, "accepted_rigid_owner_pose_proofs_differ_or_are_missing")
 
         first, second, declaration, checker = crosswalk_point_case(transverse_segment=True)
-        passed, reason = checker(
-            first, second, 1, 1, declaration["feature_gid_pairs"],
-            declaration["source_point_crosswalk"], declaration["source_seam_face_pair"])
+        passed, reason = self._run_crosswalk_contact(first, second, declaration, checker)
         self.assertFalse(passed)
-        self.assertEqual(reason, "exact_intersection_exceeds_source_crosswalk_point")
+        self.assertEqual(reason, "exact_intersection_exceeds_authenticated_source_seam_endpoint")
 
     def test_tangent_declared_interface_does_not_hide_solid_containment(self):
         outer_points = np.array([[0, 0, 0], [4, 0, 0], [0, 4, 0], [0, 0, 4]], dtype=np.float32)

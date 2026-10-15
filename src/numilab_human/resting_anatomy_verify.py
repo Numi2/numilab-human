@@ -549,8 +549,16 @@ def _has_source_face_lineage(record):
             "source_face_support", "source_face_support_provenance")):
         return True
     parent = record.get("parent_054_face_ref")
-    return isinstance(parent, dict) and any(_lineage_value_present(parent.get(key)) for key in (
-        "parent_original_source_face_index", "parent_candidate_face_index", "row_local_face_index"))
+    if isinstance(parent, dict) and any(_lineage_value_present(parent.get(key)) for key in (
+            "parent_original_source_face_index", "parent_candidate_face_index", "row_local_face_index")):
+        return True
+    return any(
+        type(row.get("source_face")) is int and row["source_face"] >= 0
+        and isinstance(row.get("source_member"), str) and bool(row["source_member"])
+        and isinstance(row.get("source_member_sha256"), str)
+        and len(row["source_member_sha256"]) == 64
+        and all(ch in "0123456789abcdef" for ch in row["source_member_sha256"])
+        for row in _source_face_lineage_chain(record))
 
 
 def _has_source_vertex_lineage(record):
@@ -568,23 +576,123 @@ def _has_source_vertex_lineage(record):
             or _valid_source_point_crosswalk(record.get("source_point_crosswalk")))
 
 
+def _source_point_crosswalk_digest(value):
+    payload = {key: item for key, item in value.items()
+               if key != "source_capture_crosswalk_sha256"}
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"),
+                         ensure_ascii=True).encode("ascii")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _cyclic_source_face_orientation(actual, canonical, *, reversed_order=False):
+    expected = list(canonical)
+    if reversed_order:
+        expected = [expected[0], expected[2], expected[1]]
+    return any(actual == expected[shift:] + expected[:shift] for shift in range(3))
+
+
 def _valid_source_point_crosswalk(value):
     if not isinstance(value, dict) or set(value) != {
-            "source_capture_crosswalk_sha256", "source_row_payload_sha256",
-            "source_member", "source_member_sha256", "source_face",
-            "source_row_face", "source_corner"}:
+            "schema", "source_capture_crosswalk_sha256", "seam", "first", "second"}:
         return False
-    for key in ("source_capture_crosswalk_sha256", "source_row_payload_sha256",
-                "source_member_sha256"):
-        digest = value.get(key)
-        if (not isinstance(digest, str) or len(digest) != 64
-                or any(ch not in "0123456789abcdef" for ch in digest)):
-            return False
-    return (isinstance(value.get("source_member"), str) and bool(value["source_member"])
-            and type(value.get("source_face")) is int and value["source_face"] >= 0
-            and type(value.get("source_row_face")) is int and value["source_row_face"] >= 0
-            and type(value.get("source_corner")) is int and 0 <= value["source_corner"] < 3)
+    if value.get("schema") != "numi.human.shared-source-seam-endpoint-crosswalk.v4":
+        return False
+    digest = value.get("source_capture_crosswalk_sha256")
+    if (not isinstance(digest, str) or len(digest) != 64
+            or any(ch not in "0123456789abcdef" for ch in digest)
+            or digest != _source_point_crosswalk_digest(value)):
+        return False
 
+    def valid_sha(item):
+        return (isinstance(item, str) and len(item) == 64
+                and all(ch in "0123456789abcdef" for ch in item))
+
+    seam = value.get("seam")
+    if not isinstance(seam, dict) or set(seam) != {
+            "source_member", "source_member_sha256", "source_faces",
+            "endpoint_source_vertex_ids"}:
+        return False
+    if (not isinstance(seam.get("source_member"), str) or not seam["source_member"]
+            or not valid_sha(seam.get("source_member_sha256"))):
+        return False
+    faces = seam.get("source_faces")
+    endpoints = seam.get("endpoint_source_vertex_ids")
+    if (not isinstance(faces, list) or len(faces) != 2
+            or not isinstance(endpoints, list) or not endpoints
+            or any(type(v) is not int or v < 0 for v in endpoints)
+            or len(set(endpoints)) != len(endpoints)):
+        return False
+    face_ids = []
+    for row in faces:
+        if not isinstance(row, dict) or set(row) != {"source_face", "source_vertex_ids"}:
+            return False
+        face_id, ids = row.get("source_face"), row.get("source_vertex_ids")
+        if (type(face_id) is not int or face_id < 0 or not isinstance(ids, list) or len(ids) != 3
+                or any(type(v) is not int or v < 0 for v in ids) or len(set(ids)) != 3):
+            return False
+        face_ids.append(face_id)
+    if (face_ids[0] == face_ids[1]
+            or not set(endpoints) <= (set(faces[0]["source_vertex_ids"])
+                                      & set(faces[1]["source_vertex_ids"]))):
+        return False
+
+    side_fields = {"identity", "source_row_payload_sha256", "seam_faces", "vertex_bindings"}
+    for side_name in ("first", "second"):
+        side = value.get(side_name)
+        if not isinstance(side, dict) or set(side) != side_fields:
+            return False
+        identity = side.get("identity")
+        if (not isinstance(identity, list) or len(identity) != 2
+                or any(type(v) is not int for v in identity)
+                or not valid_sha(side.get("source_row_payload_sha256"))):
+            return False
+        seam_rows = side.get("seam_faces")
+        if not isinstance(seam_rows, list) or len(seam_rows) != 2:
+            return False
+        expected_bindings = set()
+        for source, row in zip(faces, seam_rows):
+            if not isinstance(row, dict) or set(row) != {
+                    "face_index", "source_face", "source_row_face",
+                    "source_row_payload_sha256", "ordered_source_vertex_ids",
+                    "ordered_capture_gids"}:
+                return False
+            ids = row.get("ordered_source_vertex_ids")
+            gids = row.get("ordered_capture_gids")
+            canonical = source["source_vertex_ids"]
+            if (type(row.get("face_index")) is not int or row["face_index"] < 0
+                    or row.get("source_face") != source["source_face"]
+                    or type(row.get("source_face")) is not int
+                    or type(row.get("source_row_face")) is not int or row["source_row_face"] < 0
+                    or not valid_sha(row.get("source_row_payload_sha256"))
+                    or row["source_row_payload_sha256"] != side["source_row_payload_sha256"]
+                    or not isinstance(ids, list) or len(ids) != 3
+                    or any(type(v) is not int for v in ids) or set(ids) != set(canonical)
+                    or not _cyclic_source_face_orientation(
+                        ids, canonical, reversed_order=(side_name == "second"))
+                    or not isinstance(gids, list) or len(gids) != 3
+                    or any(type(v) is not int or v < 0 for v in gids)
+                    or len(set(gids)) != 3):
+                return False
+            expected_bindings.update((source_id, gid)
+                                     for source_id, gid in zip(ids, gids)
+                                     if source_id in endpoints)
+        bindings = side.get("vertex_bindings")
+        if not isinstance(bindings, list):
+            return False
+        observed = set()
+        for binding in bindings:
+            if (not isinstance(binding, dict) or set(binding) != {"capture_gid", "source_vertex_id"}
+                    or type(binding.get("capture_gid")) is not int or binding["capture_gid"] < 0
+                    or type(binding.get("source_vertex_id")) is not int
+                    or binding["source_vertex_id"] not in endpoints):
+                return False
+            pair = (binding["source_vertex_id"], binding["capture_gid"])
+            if pair in observed:
+                return False
+            observed.add(pair)
+        if observed != expected_bindings:
+            return False
+    return value["first"]["identity"] != value["second"]["identity"]
 
 def _source_face_lineage_chain(record):
     chain, seen = [], set()
@@ -599,117 +707,217 @@ def _source_face_lineage_chain(record):
     return chain
 
 
-def _source_face_lineage_identity(record):
+def _source_face_lineage_matches(record, expected):
+    return any(all(row.get(key) == value for key, value in expected.items())
+               for row in _source_face_lineage_chain(record))
+
+
+def _source_patch_ancestry_matches(record, expected):
+    """Match a source patch frame through a linked generated-face ancestry chain."""
     chain = _source_face_lineage_chain(record)
-    fields = ("source_member", "source_member_sha256", "source_face",
-              "source_row_face", "source_row_payload_sha256")
-    return {key: next((row[key] for row in chain if row.get(key) is not None), None)
-            for key in fields}
+    if not chain:
+        return False
+    member = expected.get("source_member")
+    member_sha = expected.get("source_member_sha256")
+    if (not any(row.get("source_member") == member for row in chain)
+            or not any(row.get("source_member") == member
+                       and row.get("source_member_sha256") == member_sha for row in chain)):
+        return False
+    required_frame = {key: value for key, value in expected.items()
+                      if key not in {"source_member_sha256", "owner_stable_id"}}
+    frame_found = False
+    for row in chain:
+        if all(row.get(key) == value for key, value in required_frame.items()):
+            frame_found = True
+            break
+    if not frame_found:
+        return False
+    owner = expected.get("owner_stable_id")
+    return owner is None or any(row.get("owner_stable_id") == owner for row in chain)
+
+
+def _exact_source_corner_ids_from_lineage(
+        record, source_vertex_ids, *, expected_source_face=None,
+        expected_source_member=None, expected_source_member_sha256=None,
+        expected_source_row_face=None, expected_source_row_payload_sha256=None):
+    chain = _source_face_lineage_chain(record)
+    expected = None
+    if expected_source_face is not None:
+        expected = {
+            "source_member": expected_source_member,
+            "source_member_sha256": expected_source_member_sha256,
+            "source_face": expected_source_face,
+        }
+        if expected_source_row_face is not None:
+            expected["source_row_face"] = expected_source_row_face
+        if expected_source_row_payload_sha256 is not None:
+            expected["source_row_payload_sha256"] = expected_source_row_payload_sha256
+        if not _source_patch_ancestry_matches(record, expected):
+            return None
+    for row_index, row in enumerate(chain):
+        bary = row.get("corner_barycentric_exact")
+        if not isinstance(bary, list) or len(bary) != 3:
+            continue
+        if expected is not None:
+            linked_expected_frame = any(
+                all(candidate.get(key) == value for key, value in expected.items()
+                    if key != "source_member_sha256")
+                and (candidate is row or row.get("source_face") == candidate.get("output_face"))
+                for candidate in chain[row_index:])
+            if not linked_expected_frame:
+                continue
+        result = []
+        valid = True
+        for weights in bary:
+            if not isinstance(weights, list) or len(weights) != 3:
+                valid = False
+                break
+            values = []
+            for pair in weights:
+                if (not isinstance(pair, list) or len(pair) != 2
+                        or not all(isinstance(part, str) for part in pair)):
+                    valid = False
+                    break
+                try:
+                    values.append(Fraction(int(pair[0]), int(pair[1])))
+                except (ValueError, ZeroDivisionError):
+                    valid = False
+                    break
+            if not valid or sum(values, Fraction(0)) != 1:
+                valid = False
+                break
+            ones = [index for index, value in enumerate(values) if value == 1]
+            if len(ones) != 1 or any(value not in (0, 1) for value in values):
+                valid = False
+                break
+            result.append(int(source_vertex_ids[ones[0]]))
+        if valid and len(set(result)) == 3:
+            return result
+    return None
 
 
 def _shared_source_crosswalk_point_contact(
         first, second, first_face, second_face, feature_gid_pairs,
-        source_point_crosswalk, source_seam_face_pair):
-    """Authenticate one point contact through a pinned source-face corner crosswalk.
-
-    The surface GIDs belong to independent capture namespaces. The canonical
-    source-point record is derived from the ordered source/capture face binder;
-    exact same-owner rigid-pose bytes and the actual intersection point are
-    rechecked here. This path accepts one point only, never an edge or area.
-    """
+        source_point_crosswalk, source_seam_face_pairs,
+        source_seam_endpoint_source_vertex_id):
+    """Authenticate one exact point at a pinned reciprocal source-seam endpoint."""
     if (not isinstance(feature_gid_pairs, (list, tuple)) or len(feature_gid_pairs) != 1
             or not isinstance(feature_gid_pairs[0], (list, tuple))
             or len(feature_gid_pairs[0]) != 2
             or any(type(gid) is not int for gid in feature_gid_pairs[0])):
         return False, "crosswalk_feature_must_be_one_typed_vertex_pair"
+    if type(source_seam_endpoint_source_vertex_id) is not int:
+        return False, "source_seam_endpoint_id_must_be_a_typed_integer"
     if not _valid_source_point_crosswalk(source_point_crosswalk):
         return False, "source_point_crosswalk_is_missing_or_invalid"
     if (first.rigid_owner_proof is None or second.rigid_owner_proof is None
             or first.rigid_owner_proof != second.rigid_owner_proof):
         return False, "accepted_rigid_owner_pose_proofs_differ_or_are_missing"
-    if first.source_face_lineage is None or second.source_face_lineage is None:
-        return False, "source_face_lineage_is_missing"
-    if first.source_vertex_lineage is None or second.source_vertex_lineage is None:
-        return False, "source_vertex_lineage_is_missing"
-    if (not _has_source_face_lineage(first.source_face_lineage[first_face])
-            or not _has_source_face_lineage(second.source_face_lineage[second_face])):
-        return False, "incident_face_has_no_source_lineage"
-    if (not isinstance(source_seam_face_pair, (list, tuple))
-            or len(source_seam_face_pair) != 2
-            or any(type(face) is not int for face in source_seam_face_pair)):
-        return False, "source_seam_face_pair_is_invalid"
-    seam_first, seam_second = source_seam_face_pair
-    if (not 0 <= seam_first < len(first.faces)
-            or not 0 <= seam_second < len(second.faces)):
-        return False, "source_seam_face_pair_is_out_of_range"
-    feature_first, feature_second = feature_gid_pairs[0]
-    face_first_gids = [int(first.source_vertex_ids[int(local)]) for local in first.faces[first_face]]
-    face_second_gids = [int(second.source_vertex_ids[int(local)]) for local in second.faces[second_face]]
-    if feature_first not in face_first_gids or feature_second not in face_second_gids:
-        return False, "crosswalk_vertex_pair_is_not_incident_to_both_faces"
-    if feature_first not in first.source_vertex_lineage or feature_second not in second.source_vertex_lineage:
-        return False, "crosswalk_vertex_pair_lacks_source_lineage"
-    lineage_first = first.source_vertex_lineage[feature_first]
-    lineage_second = second.source_vertex_lineage[feature_second]
-    if (not _has_source_vertex_lineage(lineage_first)
-            or not _has_source_vertex_lineage(lineage_second)):
-        return False, "crosswalk_vertex_lineage_has_no_source_support"
-    if (lineage_first.get("source_point_crosswalk") != source_point_crosswalk
-            or lineage_second.get("source_point_crosswalk") != source_point_crosswalk):
-        return False, "source_point_crosswalk_does_not_match_both_vertex_lineages"
-    if (not _has_source_face_lineage(first.source_face_lineage[seam_first])
-            or not _has_source_face_lineage(second.source_face_lineage[seam_second])):
-        return False, "source_seam_face_has_no_lineage"
-    expected_face = {key: source_point_crosswalk[key] for key in (
-        "source_member", "source_member_sha256", "source_face",
-        "source_row_face", "source_row_payload_sha256")}
-    face_identity_first = _source_face_lineage_identity(first.source_face_lineage[seam_first])
-    face_identity_second = _source_face_lineage_identity(second.source_face_lineage[seam_second])
-    if face_identity_first != expected_face or face_identity_second != expected_face:
-        return False, "source_seam_face_ancestry_does_not_match_crosswalk"
-    seam_first_tri = [int(first.source_vertex_ids[int(local)])
-                      for local in first.faces[seam_first]]
-    seam_second_tri = [int(second.source_vertex_ids[int(local)])
-                       for local in second.faces[seam_second]]
-    if feature_first not in seam_first_tri or feature_second not in seam_second_tri:
-        return False, "crosswalk_vertex_pair_is_not_on_declared_source_seam"
-    tri_a = tuple(ci.float32_point_lattice_key(first.positions[first.vertex_index(gid)].tolist())
-                  for gid in seam_first_tri)
-    tri_b = tuple(ci.float32_point_lattice_key(second.positions[second.vertex_index(gid)].tolist())
-                  for gid in seam_second_tri)
-    if (len(set(tri_a)) != 3 or set(tri_a) != set(tri_b)
-            or not any(tri_a == tuple(tri_b[(shift - lane) % 3] for lane in range(3))
-                       for shift in range(3))):
-        return False, "source_seam_faces_are_not_exact_opposite_float32_triangles"
-    first_seam_lineage = first.source_face_lineage[seam_first]
-    barycentric = first_seam_lineage.get("corner_barycentric_exact")
-    if not isinstance(barycentric, list) or len(barycentric) != 3:
-        return False, "first_source_seam_face_lacks_exact_corner_ancestry"
-    seam_corner = seam_first_tri.index(feature_first)
-    try:
-        bary = tuple(Fraction(int(pair[0]), int(pair[1]))
-                     for pair in barycentric[seam_corner])
-    except (IndexError, TypeError, ValueError, ZeroDivisionError):
-        return False, "first_source_seam_corner_ancestry_is_invalid"
-    expected_bary = tuple(Fraction(int(index == source_point_crosswalk["source_corner"]))
-                          for index in range(3))
-    if bary != expected_bary:
-        return False, "source_feature_corner_differs_from_exact_face_ancestry"
-    index_first = first.vertex_index(feature_first)
-    index_second = second.vertex_index(feature_second)
-    if index_first is None or index_second is None:
-        return False, "crosswalk_vertex_pair_is_absent_from_prepared_surface"
-    point_first, point_second = first.positions[index_first], second.positions[index_second]
-    if (ci.float32_point_lattice_key(point_first.tolist())
-            != ci.float32_point_lattice_key(point_second.tolist())):
+    if (first.source_face_lineage is None or second.source_face_lineage is None
+            or first.source_vertex_lineage is None or second.source_vertex_lineage is None):
+        return False, "source_lineage_is_missing"
+    if (not isinstance(first_face, int) or isinstance(first_face, bool)
+            or not isinstance(second_face, int) or isinstance(second_face, bool)
+            or not 0 <= first_face < len(first.faces)
+            or not 0 <= second_face < len(second.faces)):
+        return False, "incident_face_is_out_of_range"
+    if not isinstance(source_seam_face_pairs, (list, tuple)) or len(source_seam_face_pairs) != 2:
+        return False, "both_reciprocal_source_seam_face_pairs_are_required"
+
+    seam = source_point_crosswalk["seam"]
+    endpoint = source_seam_endpoint_source_vertex_id
+    if endpoint not in seam["endpoint_source_vertex_ids"]:
+        return False, "source_seam_endpoint_is_not_in_authenticated_face_pair"
+    sides = (source_point_crosswalk["first"], source_point_crosswalk["second"])
+    surfaces = (first, second)
+    incident_faces = (first_face, second_face)
+    feature_gids = tuple(feature_gid_pairs[0])
+    if (sides[0]["identity"] != list(first.key)
+            or sides[1]["identity"] != list(second.key)):
+        return False, "crosswalk_surface_identity_differs"
+
+    pairs = []
+    for pair in source_seam_face_pairs:
+        if (not isinstance(pair, (list, tuple)) or len(pair) != 2
+                or any(type(face) is not int for face in pair)):
+            return False, "source_seam_face_pair_is_invalid"
+        if (not 0 <= pair[0] < len(first.faces) or not 0 <= pair[1] < len(second.faces)):
+            return False, "source_seam_face_pair_is_out_of_range"
+        pairs.append(tuple(pair))
+    if len(set(pairs)) != 2:
+        return False, "duplicate_source_seam_face_pair"
+
+    for pair_index, (source_face, pair) in enumerate(zip(seam["source_faces"], pairs)):
+        rows = (sides[0]["seam_faces"][pair_index], sides[1]["seam_faces"][pair_index])
+        if (rows[0]["face_index"], rows[1]["face_index"]) != pair:
+            return False, "declared_face_pairs_do_not_match_ordered_seam_rows"
+        for side, surface, row, face_index in zip(sides, surfaces, rows, pair):
+            lineage = surface.source_face_lineage[face_index]
+            if not _has_source_face_lineage(lineage):
+                return False, "seam_face_has_no_source_lineage"
+            expected = {
+                "source_member": seam["source_member"],
+                "source_member_sha256": seam["source_member_sha256"],
+                "source_face": source_face["source_face"],
+                "source_row_face": row["source_row_face"],
+                "source_row_payload_sha256": row["source_row_payload_sha256"],
+            }
+            if not _source_face_lineage_matches(lineage, expected):
+                return False, "seam_face_ancestry_does_not_match_authenticated_source"
+            actual_gids = [int(surface.source_vertex_ids[int(local)])
+                           for local in surface.faces[face_index]]
+            if actual_gids != row["ordered_capture_gids"]:
+                return False, "ordered_capture_GIDs_do_not_match_the_authenticated_source_face_map"
+
+    for surface, side, face_index, gid in zip(surfaces, sides, incident_faces, feature_gids):
+        if surface.vertex_index(gid) is None:
+            return False, "crosswalk_vertex_is_absent_from_prepared_surface"
+        incident_gids = [int(surface.source_vertex_ids[int(local)])
+                         for local in surface.faces[face_index]]
+        if gid not in incident_gids:
+            return False, "feature_vertex_is_not_incident_to_contact_face"
+        bindings = {(row["source_vertex_id"], row["capture_gid"])
+                    for row in side["vertex_bindings"]}
+        if (endpoint, gid) not in bindings:
+            return False, "feature_GID_lacks_authenticated_endpoint_binding"
+
+        incident_source_corner = None
+        for source_face, row in zip(seam["source_faces"], side["seam_faces"]):
+            if row["face_index"] == face_index:
+                incident_source_corner = dict(zip(
+                    row["ordered_capture_gids"], row["ordered_source_vertex_ids"]))
+                break
+        if incident_source_corner is None:
+            lineage = surface.source_face_lineage[face_index]
+            for source_face in seam["source_faces"]:
+                expected = {
+                    "source_member": seam["source_member"],
+                    "source_member_sha256": seam["source_member_sha256"],
+                    "source_face": source_face["source_face"],
+                }
+                if _source_face_lineage_matches(lineage, expected):
+                    recovered = _exact_source_corner_ids_from_lineage(
+                        lineage, source_face["source_vertex_ids"])
+                    if recovered is not None:
+                        incident_source_corner = dict(zip(incident_gids, recovered))
+                        break
+        if (incident_source_corner is not None
+                and incident_source_corner.get(gid) != endpoint):
+            return False, "incident_face_corner_does_not_map_to_authenticated_source_endpoint"
+        if (incident_source_corner is None
+                and {source_id for source_id, bound_gid in bindings if bound_gid == gid}
+                    != {endpoint}):
+            return False, "ambiguous_endpoint_GID_lacks_incident_source_corner_ancestry"
+
+    p0 = first.positions[first.vertex_index(feature_gids[0])]
+    p1 = second.positions[second.vertex_index(feature_gids[1])]
+    if ci.float32_point_lattice_key(p0.tolist()) != ci.float32_point_lattice_key(p1.tolist()):
         return False, "crosswalk_vertex_emitted_float32_points_differ"
     expected_point = tuple(Fraction(value, 1 << 149)
-                           for value in ci.float32_point_lattice_key(point_first.tolist()))
-    actual_points = first.intersection_points_meters(second, first_face, second_face)
-    if actual_points != (expected_point,):
-        return False, "exact_intersection_exceeds_source_crosswalk_point"
-    return True, "exact_source_face_crosswalk_point_with_same_rigid_owner_pose"
-
+                           for value in ci.float32_point_lattice_key(p0.tolist()))
+    if first.intersection_points_meters(second, first_face, second_face) != (expected_point,):
+        return False, "exact_intersection_exceeds_authenticated_source_seam_endpoint"
+    return True, "exact_singleton_at_authenticated_two_face_source_seam_endpoint"
 
 def _shared_feature_contact(first, second, first_face, second_face, feature_gids):
     """Fail-closed proof that a cross-surface hit is only a supported shared GID feature."""
@@ -1020,12 +1228,732 @@ def audit_source_bound_connected_overlap(
         "claim_limit": "No CSF flow, caliber, pressure, clinical, or native-motion claim.",
     }
 
+
+_SOURCE_PATCH_COMPLEX_SCHEMA = "numi.human.reciprocal-source-patch-complex.v1"
+_SOURCE_PATCH_FRAGMENT_COMPLEX_SCHEMA = "numi.human.reciprocal-source-patch-fragment-complex.v1"
+
+
+def _source_patch_lineage_hashes(surface):
+    if surface.source_face_lineage is None or surface.source_vertex_lineage is None:
+        raise ValueError("source patch complex requires complete face and vertex ancestry")
+    face_sha = _canonical_json_sha256(list(surface.source_face_lineage))
+    vertices = [[int(gid), lineage]
+                for gid, lineage in sorted(surface.source_vertex_lineage.items(),
+                                           key=lambda item: int(item[0]))]
+    vertex_sha = _canonical_json_sha256(vertices)
+    return {"source_face_lineage_sha256": face_sha,
+            "source_vertex_lineage_sha256": vertex_sha}
+
+
+def _source_patch_surface_hashes(surface):
+    return {**_surface_source_hashes(surface), **_source_patch_lineage_hashes(surface)}
+
+
+def _source_patch_edges(source_faces):
+    edges = set()
+    for row in source_faces:
+        ids = row["source_vertex_ids"]
+        for index in range(3):
+            edges.add(tuple(sorted((ids[index], ids[(index + 1) % 3]))))
+    return edges
+
+
+
+
+def _patch_fraction(value, *, hexadecimal=False):
+    if (not isinstance(value, list) or len(value) != 2
+            or not all(isinstance(item, str) for item in value)):
+        raise ValueError("source patch rational must be a numerator/denominator pair")
+    def integer(text):
+        return int(text, 16) if hexadecimal or text.startswith(("0x", "-0x")) else int(text, 10)
+    numerator, denominator = integer(value[0]), integer(value[1])
+    if denominator <= 0:
+        raise ValueError("source patch rational denominator must be positive")
+    return Fraction(numerator, denominator)
+
+
+def _patch_float32_bits(point):
+    return [int(value) for value in np.asarray(point, dtype=np.float32).view(np.uint32)]
+
+
+def _patch_barycentric(triangle, point):
+    origin = triangle[0]
+    first = tuple(triangle[1][i] - origin[i] for i in range(3))
+    second = tuple(triangle[2][i] - origin[i] for i in range(3))
+    delta = tuple(point[i] - origin[i] for i in range(3))
+    for axis_a, axis_b in ((0, 1), (0, 2), (1, 2)):
+        determinant = first[axis_a] * second[axis_b] - first[axis_b] * second[axis_a]
+        if determinant:
+            weight_b = (delta[axis_a] * second[axis_b] - delta[axis_b] * second[axis_a]) / determinant
+            weight_c = (first[axis_a] * delta[axis_b] - first[axis_b] * delta[axis_a]) / determinant
+            return (Fraction(1) - weight_b - weight_c, weight_b, weight_c)
+    raise ValueError("source patch parent triangle is degenerate")
+
+
+def _prepare_source_patch_fragment_complex(first, second, value):
+    """Validate a subdivided reciprocal patch through exact parent-face barycentrics."""
+    fields = {"schema", "source_patch_complex_sha256", "identities", "source_member",
+              "source_member_sha256", "input_pins", "points", "source_faces", "first", "second"}
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError("source patch fragment-complex fields are malformed")
+    digest = value.get("source_patch_complex_sha256")
+    payload = {key: item for key, item in value.items() if key != "source_patch_complex_sha256"}
+    if (value.get("schema") != _SOURCE_PATCH_FRAGMENT_COMPLEX_SCHEMA
+            or not isinstance(digest, str) or len(digest) != 64
+            or any(ch not in "0123456789abcdef" for ch in digest)
+            or digest != _canonical_json_sha256(payload)):
+        raise ValueError("source patch fragment-complex seal is invalid")
+    if value.get("identities") != [list(first.key), list(second.key)]:
+        raise ValueError("source patch fragment-complex ordered identities differ")
+    member, member_sha = value.get("source_member"), value.get("source_member_sha256")
+    if (not isinstance(member, str) or not member or not isinstance(member_sha, str)
+            or len(member_sha) != 64 or any(ch not in "0123456789abcdef" for ch in member_sha)):
+        raise ValueError("source patch fragment-complex source member pin is invalid")
+    pins = value.get("input_pins")
+    pin_names = {"current_payload_sha256", "parent_payload_sha256", "intermediate_payload_sha256",
+                 "arrangement_sha256", "arrangement_certificate_sha256", "ancestry_first_sha256",
+                 "ancestry_second_sha256", "capture_pack_sha256", "capture_receipt_sha256",
+                 "source_obj_sha256"}
+    if not isinstance(pins, dict) or set(pins) != pin_names:
+        raise ValueError("source patch fragment-complex input pin fields differ")
+    for item in pins.values():
+        if (not isinstance(item, str) or len(item) != 64
+                or any(ch not in "0123456789abcdef" for ch in item)):
+            raise ValueError("source patch fragment-complex input SHA is invalid")
+    if (first.rigid_owner_proof is None or second.rigid_owner_proof is None
+            or first.rigid_owner_proof != second.rigid_owner_proof):
+        raise ValueError("source patch fragments do not share the accepted rigid-owner proof")
+
+    point_rows = value.get("points")
+    if not isinstance(point_rows, list) or len(point_rows) != 4:
+        raise ValueError("source patch fragment-complex must bind four generated points")
+    point_exact, local_bits = {}, {}
+    for row in point_rows:
+        if not isinstance(row, dict) or set(row) != {"point_id", "local_xyz_exact", "local_float32_bits"}:
+            raise ValueError("source patch generated point record is malformed")
+        point_id, xyz, bits = row.get("point_id"), row.get("local_xyz_exact"), row.get("local_float32_bits")
+        if (not isinstance(point_id, str) or not point_id or point_id in point_exact
+                or not isinstance(xyz, list) or len(xyz) != 3
+                or not isinstance(bits, list) or len(bits) != 3
+                or any(type(bit) is not int or not 0 <= bit <= 0xffffffff for bit in bits)):
+            raise ValueError("source patch generated point values are malformed")
+        exact = tuple(_patch_fraction(pair) for pair in xyz)
+        if _patch_float32_bits([float(component) for component in exact]) != bits:
+            raise ValueError("source patch exact point does not quantize to pinned local Float32")
+        point_exact[point_id] = exact
+        local_bits[point_id] = tuple(bits)
+    if len(set(local_bits.values())) != 4:
+        raise ValueError("source patch generated local points collapse after Float32 quantization")
+
+    source_faces = value.get("source_faces")
+    if not isinstance(source_faces, list) or len(source_faces) != 2:
+        raise ValueError("source patch must bind two authenticated parent faces")
+    source_face_ids, parsed_sources, source_point_ids = [], [], set()
+    for face in source_faces:
+        required = {"source_face", "source_vertex_ids", "source_row_face",
+                    "source_row_payload_sha256", "parent_ordered_source_vertex_ids",
+                    "parent_vertices_exact", "arrangement_record_index",
+                    "arrangement_record_sha256", "arrangement_record",
+                    "arrangement_point_ids", "barycentric_exact"}
+        if not isinstance(face, dict) or set(face) != required:
+            raise ValueError("source patch authenticated parent face fields are malformed")
+        face_id, source_ids = face.get("source_face"), face.get("source_vertex_ids")
+        row_face, parent_ids = face.get("source_row_face"), face.get("parent_ordered_source_vertex_ids")
+        if (type(face_id) is not int or face_id < 0 or type(row_face) is not int or row_face < 0
+                or not isinstance(source_ids, list) or len(source_ids) != 3
+                or any(type(item) is not int or item < 0 for item in source_ids)
+                or len(set(source_ids)) != 3 or not isinstance(parent_ids, list) or len(parent_ids) != 3
+                or any(type(item) is not int or item < 0 for item in parent_ids)
+                or set(parent_ids) != set(source_ids)
+                or not _cyclic_source_face_orientation(parent_ids, source_ids)):
+            raise ValueError("source patch parent face identity or corner order is invalid")
+        if face.get("source_row_payload_sha256") != pins["parent_payload_sha256"]:
+            raise ValueError("source patch parent row payload differs from pinned source")
+        parent_coords = face.get("parent_vertices_exact")
+        if not isinstance(parent_coords, list) or len(parent_coords) != 3:
+            raise ValueError("source patch parent source coordinates are malformed")
+        parent_triangle = []
+        for point in parent_coords:
+            if not isinstance(point, list) or len(point) != 3:
+                raise ValueError("source patch parent source point is malformed")
+            parent_triangle.append(tuple(_patch_fraction(pair) for pair in point))
+        record, record_index = face.get("arrangement_record"), face.get("arrangement_record_index")
+        record_sha = face.get("arrangement_record_sha256")
+        if (type(record_index) is not int or record_index < 0
+                or not isinstance(record_sha, str) or len(record_sha) != 64
+                or not isinstance(record, dict)
+                or record_sha != _canonical_json_sha256(record)
+                or record.get("source") != "medulla343"
+                or record.get("source_face") != row_face
+                or record.get("other_location") != "inside"):
+            raise ValueError("source patch exact arrangement record is stale or misidentified")
+        arrangement_vertices = record.get("vertices")
+        point_ids, bary_rows = face.get("arrangement_point_ids"), face.get("barycentric_exact")
+        if (not isinstance(arrangement_vertices, list) or len(arrangement_vertices) != 3
+                or not isinstance(point_ids, list) or len(point_ids) != 3
+                or not isinstance(bary_rows, list) or len(bary_rows) != 3):
+            raise ValueError("source patch arrangement triangle is malformed")
+        for point_id, encoded_xyz, encoded_bary in zip(point_ids, arrangement_vertices, bary_rows):
+            if point_id not in point_exact:
+                raise ValueError("source patch arrangement references an unknown point")
+            if not isinstance(encoded_xyz, list) or len(encoded_xyz) != 3:
+                raise ValueError("source patch arrangement vertex coordinates are malformed")
+            xyz = tuple(_patch_fraction(pair, hexadecimal=True) for pair in encoded_xyz)
+            if xyz != point_exact[point_id]:
+                raise ValueError("source patch point differs from its exact arrangement coordinate")
+            if not isinstance(encoded_bary, list) or len(encoded_bary) != 3:
+                raise ValueError("source patch barycentric map is malformed")
+            declared = tuple(_patch_fraction(pair) for pair in encoded_bary)
+            calculated = _patch_barycentric(parent_triangle, xyz)
+            if (declared != calculated or sum(declared, Fraction(0)) != 1
+                    or any(weight < 0 for weight in declared)):
+                raise ValueError("source patch nested exact barycentric map is invalid")
+            rebuilt = tuple(sum((declared[i] * parent_triangle[i][axis]
+                                 for i in range(3)), Fraction(0)) for axis in range(3))
+            if rebuilt != xyz:
+                raise ValueError("source patch barycentrics do not reconstruct exact source point")
+            if point_id in source_point_ids and point_exact[point_id] != xyz:
+                raise ValueError("shared source patch point differs between parent-face frames")
+            source_point_ids.add(point_id)
+        source_face_ids.append(face_id)
+        parsed_sources.append((face, tuple(parent_triangle), tuple(point_ids)))
+    if (source_face_ids[0] == source_face_ids[1]
+            or len(set(source_faces[0]["source_vertex_ids"])
+                   & set(source_faces[1]["source_vertex_ids"])) != 2
+            or source_point_ids != set(point_exact)):
+        raise ValueError("source patch parents or generated point coverage are not a two-face disk")
+
+    sides = (value.get("first"), value.get("second"))
+    surfaces = (first, second)
+    side_fields = {"identity", "source_row_payload_sha256", "surface_hashes",
+                   "point_bindings", "patch_faces", "support_faces"}
+    hash_fields = {"positions_sha256", "faces_sha256", "gids_sha256",
+                   "source_face_lineage_sha256", "source_vertex_lineage_sha256"}
+    support_maps, point_maps, coordinate_maps, patch_face_maps = [], [], [], []
+    for side_index, (side, surface) in enumerate(zip(sides, surfaces)):
+        if not isinstance(side, dict) or set(side) != side_fields or side.get("identity") != list(surface.key):
+            raise ValueError("source patch fragment side identity or fields differ")
+        if side.get("source_row_payload_sha256") != pins["current_payload_sha256"]:
+            raise ValueError("source patch side is not bound to pinned current payload")
+        if surface.source_face_lineage is None or surface.source_vertex_lineage is None:
+            raise ValueError("source patch fragments require face and vertex lineage arrays")
+        hashes = side.get("surface_hashes")
+        if not isinstance(hashes, dict) or set(hashes) != hash_fields:
+            raise ValueError("source patch fragment surface hashes are malformed")
+        if hashes != _source_patch_surface_hashes(surface):
+            raise ValueError("source patch fragment surface or ancestry hash is stale")
+
+        bindings = side.get("point_bindings")
+        if not isinstance(bindings, list) or len(bindings) != 4:
+            raise ValueError("source patch world point binding coverage is incomplete")
+        point_map, coordinate_map = {}, {}
+        for binding in bindings:
+            if not isinstance(binding, dict) or set(binding) != {
+                    "point_id", "capture_gids", "world_float32_bits"}:
+                raise ValueError("source patch world point binding fields are malformed")
+            point_id, gids, bits = binding.get("point_id"), binding.get("capture_gids"), binding.get("world_float32_bits")
+            if (point_id not in point_exact or point_id in point_map
+                    or not isinstance(gids, list) or not gids
+                    or any(type(gid) is not int or gid < 0 for gid in gids)
+                    or len(set(gids)) != len(gids)
+                    or not isinstance(bits, list) or len(bits) != 3
+                    or any(type(bit) is not int or not 0 <= bit <= 0xffffffff for bit in bits)):
+                raise ValueError("source patch world point binding values are invalid")
+            coords = set()
+            for gid in gids:
+                vi = surface.vertex_index(gid)
+                if vi is None or _patch_float32_bits(surface.positions[vi]) != bits:
+                    raise ValueError("source patch Float32 point differs from actual captured GID")
+                coords.add(tuple(Fraction(item, 1 << 149)
+                                 for item in ci.float32_point_lattice_key(surface.positions[vi].tolist())))
+            if len(coords) != 1:
+                raise ValueError("source patch coordinate alias GIDs disagree")
+            point_map[point_id] = set(gids)
+            coordinate_map[point_id] = next(iter(coords))
+        if set(point_map) != set(point_exact) or len(set(coordinate_map.values())) != 4:
+            raise ValueError("source patch world map does not uniquely cover four generated points")
+        for point_id, point_gids in point_map.items():
+            point_key = tuple(ci.float32_point_lattice_key(
+                surface.positions[surface.vertex_index(gid)].tolist())
+                for gid in sorted(point_gids))
+            if len(set(point_key)) != 1:
+                raise ValueError("source patch coordinate alias GIDs disagree")
+            expected_aliases = {
+                int(surface.source_vertex_ids[index])
+                for index, position in enumerate(surface.positions)
+                if tuple(ci.float32_point_lattice_key(position.tolist())) == point_key[0]
+            }
+            if point_gids != expected_aliases:
+                raise ValueError("source patch world map omits or invents exact-coordinate alias GIDs")
+
+        support_rows = side.get("support_faces")
+        if not isinstance(support_rows, list) or not support_rows:
+            raise ValueError("source patch incident support faces are missing")
+        support_map = {}
+        for support in support_rows:
+            required = {"face_index", "source_member", "source_member_sha256", "source_face",
+                        "source_row_face", "source_row_payload_sha256", "ordered_capture_gids"}
+            if not isinstance(support, dict) or set(support) != required:
+                raise ValueError("source patch support-face fields are malformed")
+            fi, gids = support.get("face_index"), support.get("ordered_capture_gids")
+            if (type(fi) is not int or not 0 <= fi < len(surface.faces) or fi in support_map
+                    or not isinstance(support.get("source_member"), str) or not support["source_member"]
+                    or not isinstance(support.get("source_member_sha256"), str)
+                    or len(support["source_member_sha256"]) != 64
+                    or any(ch not in "0123456789abcdef" for ch in support["source_member_sha256"])
+                    or type(support.get("source_face")) is not int or support["source_face"] < 0
+                    or type(support.get("source_row_face")) is not int or support["source_row_face"] < 0
+                    or support.get("source_row_payload_sha256") != pins["parent_payload_sha256"]
+                    or not isinstance(gids, list) or len(gids) != 3
+                    or any(type(gid) is not int or gid < 0 for gid in gids) or len(set(gids)) != 3):
+                raise ValueError("source patch support-face values are invalid")
+            actual = [int(surface.source_vertex_ids[int(local)]) for local in surface.faces[fi]]
+            if actual != gids:
+                raise ValueError("source patch support GIDs differ from actual face")
+            expected = {key: support[key] for key in (
+                "source_member", "source_member_sha256", "source_face", "source_row_face",
+                "source_row_payload_sha256")}
+            expected["owner_stable_id"] = surface.key[1]
+            if not _source_patch_ancestry_matches(surface.source_face_lineage[fi], expected):
+                raise ValueError("source patch support ancestry differs from pinned parent frame")
+            support_map[fi] = support
+        lattice = {tuple(ci.float32_point_lattice_key(
+            surface.positions[surface.vertex_index(gid)].tolist()))
+                   for gids in point_map.values() for gid in gids}
+        actual_support = {fi for fi, face in enumerate(surface.faces)
+                          if any(tuple(ci.float32_point_lattice_key(
+                              surface.positions[int(local)].tolist())) in lattice for local in face)}
+        if set(support_map) != actual_support:
+            raise ValueError("source patch support does not cover exact coordinate-alias incident stars")
+
+        patch_rows = side.get("patch_faces")
+        if not isinstance(patch_rows, list) or len(patch_rows) != 2:
+            raise ValueError("source patch side must bind both generated face fragments")
+        patch_map = {}
+        for source, patch in zip(parsed_sources, patch_rows):
+            source_face, row_face, arrangement_point_ids = (
+                source[0]["source_face"], source[0]["source_row_face"], source[2])
+            required = {"face_index", "source_face", "source_row_face", "lineage_face_id",
+                        "ordered_point_ids", "ordered_capture_gids"}
+            if not isinstance(patch, dict) or set(patch) != required:
+                raise ValueError("source patch generated-face fields are malformed")
+            fi, point_ids, gids = patch.get("face_index"), patch.get("ordered_point_ids"), patch.get("ordered_capture_gids")
+            if (type(fi) is not int or fi not in support_map or fi in patch_map
+                    or patch.get("source_face") != source_face or patch.get("source_row_face") != row_face
+                    or type(patch.get("lineage_face_id")) is not int or patch["lineage_face_id"] < 0
+                    or not isinstance(point_ids, list) or len(point_ids) != 3
+                    or set(point_ids) != set(arrangement_point_ids)
+                    or not isinstance(gids, list) or len(gids) != 3
+                    or any(type(gid) is not int for gid in gids)):
+                raise ValueError("source patch generated-face mapping is invalid")
+            if not _cyclic_source_face_orientation(
+                    point_ids, arrangement_point_ids, reversed_order=(side_index == 1)):
+                raise ValueError("source patch generated-face winding is not reciprocal")
+            actual = [int(surface.source_vertex_ids[int(local)]) for local in surface.faces[fi]]
+            if actual != gids or any(gid not in point_map[pid] for gid, pid in zip(gids, point_ids)):
+                raise ValueError("source patch generated-face point/GID mapping differs")
+            expected = {"source_member": member, "source_member_sha256": member_sha,
+                        "source_face": source_face, "source_row_face": row_face,
+                        "source_row_payload_sha256": pins["parent_payload_sha256"],
+                        "owner_stable_id": surface.key[1]}
+            lineage = surface.source_face_lineage[fi]
+            if not _source_patch_ancestry_matches(lineage, expected):
+                raise ValueError("source patch generated face lacks authenticated source-face ancestry")
+            if side_index == 0:
+                identity = [[["1", "1"], ["0", "1"], ["0", "1"]],
+                            [["0", "1"], ["1", "1"], ["0", "1"]],
+                            [["0", "1"], ["0", "1"], ["1", "1"]]]
+                if (lineage.get("operation") != "exact_arrangement_medulla_fragment_outside_csf"
+                        or lineage.get("source_face") != patch["lineage_face_id"]
+                        or lineage.get("corner_barycentric_exact") != identity):
+                    raise ValueError("medulla fragment does not map exactly to its pinned intermediate face")
+            elif (lineage.get("operation") != "reversed_medulla343_priority_interface"
+                  or lineage.get("source_face") != source_face):
+                raise ValueError("reciprocal pons fragment is not source-bound")
+            patch_map[fi] = patch
+        support_maps.append(support_map)
+        point_maps.append(point_map)
+        coordinate_maps.append(coordinate_map)
+        patch_face_maps.append(patch_map)
+
+    patch_face_pairs, patch_edges = [], set()
+    for source in parsed_sources:
+        source_face = source[0]["source_face"]
+        rows = [next((item for item in face_map.values() if item["source_face"] == source_face), None)
+                for face_map in patch_face_maps]
+        if any(row is None for row in rows):
+            raise ValueError("reciprocal source face is missing from one emitted region")
+        ids_a, ids_b = rows[0]["ordered_point_ids"], rows[1]["ordered_point_ids"]
+        if (set(ids_a) != set(ids_b)
+                or not _cyclic_source_face_orientation(ids_a, ids_b, reversed_order=True)
+                or any(coordinate_maps[0][pid] != coordinate_maps[1][pid] for pid in ids_a)):
+            raise ValueError("reciprocal source patch fragments differ in actual-capture coordinates")
+        patch_face_pairs.append((rows[0]["face_index"], rows[1]["face_index"], source_face))
+        for i in range(3):
+            patch_edges.add(tuple(sorted((ids_a[i], ids_a[(i + 1) % 3]))))
+    return {"source_patch_complex_sha256": digest, "source_member": member,
+            "source_member_sha256": member_sha,
+            "source_faces": [{"source_face": row[0]["source_face"], "source_vertex_ids": row[2]}
+                             for row in parsed_sources],
+            "patch_vertices": tuple(point_exact), "patch_edges": patch_edges,
+            "support_faces": (set(support_maps[0]), set(support_maps[1])),
+            "vertex_maps": point_maps, "coordinate_maps": coordinate_maps,
+            "patch_face_pairs": tuple(patch_face_pairs), "fragment_complex": True}
+
+
+def _prepare_source_patch_complex(first, second, value):
+    """Validate a source-bound reciprocal patch and its incident stars."""
+    if isinstance(value, dict) and value.get("schema") == _SOURCE_PATCH_FRAGMENT_COMPLEX_SCHEMA:
+        return _prepare_source_patch_fragment_complex(first, second, value)
+    fields = {"schema", "source_patch_complex_sha256", "identities",
+              "source_member", "source_member_sha256", "source_faces",
+              "patch_vertex_source_ids", "first", "second"}
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError("source patch complex fields are malformed")
+    if value.get("schema") != _SOURCE_PATCH_COMPLEX_SCHEMA:
+        raise ValueError("source patch complex schema is unsupported")
+    proof_sha = value.get("source_patch_complex_sha256")
+    payload = {key: item for key, item in value.items()
+               if key != "source_patch_complex_sha256"}
+    if (not isinstance(proof_sha, str) or len(proof_sha) != 64
+            or any(ch not in "0123456789abcdef" for ch in proof_sha)
+            or proof_sha != _canonical_json_sha256(payload)):
+        raise ValueError("source patch complex digest is stale or malformed")
+    identities = value.get("identities")
+    if (not isinstance(identities, list) or len(identities) != 2
+            or identities != [list(first.key), list(second.key)]):
+        raise ValueError("source patch complex ordered identities differ")
+    member, member_sha = value.get("source_member"), value.get("source_member_sha256")
+    if (not isinstance(member, str) or not member
+            or not isinstance(member_sha, str) or len(member_sha) != 64
+            or any(ch not in "0123456789abcdef" for ch in member_sha)):
+        raise ValueError("source patch complex member identity is invalid")
+    source_faces = value.get("source_faces")
+    if not isinstance(source_faces, list) or len(source_faces) != 2:
+        raise ValueError("source patch complex must contain exactly two reciprocal source faces")
+    source_face_ids = []
+    for row in source_faces:
+        if not isinstance(row, dict) or set(row) != {"source_face", "source_vertex_ids"}:
+            raise ValueError("source patch source-face record is malformed")
+        face_id, ids = row.get("source_face"), row.get("source_vertex_ids")
+        if (type(face_id) is not int or face_id < 0 or not isinstance(ids, list) or len(ids) != 3
+                or any(type(item) is not int or item < 0 for item in ids)
+                or len(set(ids)) != 3):
+            raise ValueError("source patch source-face IDs are invalid")
+        source_face_ids.append(face_id)
+    if source_face_ids[0] == source_face_ids[1]:
+        raise ValueError("source patch repeats a source face")
+    common = set(source_faces[0]["source_vertex_ids"]) & set(source_faces[1]["source_vertex_ids"])
+    patch_vertices = value.get("patch_vertex_source_ids")
+    if (len(common) != 2 or not isinstance(patch_vertices, list)
+            or any(type(item) is not int or item < 0 for item in patch_vertices)
+            or len(set(patch_vertices)) != len(patch_vertices)
+            or set(patch_vertices) != set().union(
+                *(set(row["source_vertex_ids"]) for row in source_faces))):
+        raise ValueError("source patch must be the four-corner complex of two faces sharing one edge")
+    # The two source triangles must form a consistently oriented disk.
+    shared_orientations = []
+    for row in source_faces:
+        ids = row["source_vertex_ids"]
+        shared_orientations.append(next(
+            (ids[index], ids[(index + 1) % 3])
+            for index in range(3)
+            if {ids[index], ids[(index + 1) % 3]} == common))
+    if shared_orientations[0] != tuple(reversed(shared_orientations[1])):
+        raise ValueError("source patch faces do not have reciprocal orientation")
+
+    sides = (value.get("first"), value.get("second"))
+    surfaces = (first, second)
+    support_maps, vertex_maps, coordinate_maps = [], [], []
+    side_fields = {"identity", "source_row_payload_sha256", "surface_hashes",
+                   "vertex_bindings", "patch_faces", "support_faces"}
+    surface_hash_fields = {"positions_sha256", "faces_sha256", "gids_sha256",
+                           "source_face_lineage_sha256", "source_vertex_lineage_sha256"}
+    for side_index, (side, surface) in enumerate(zip(sides, surfaces)):
+        if not isinstance(side, dict) or set(side) != side_fields:
+            raise ValueError("source patch side record is malformed")
+        if side.get("identity") != list(surface.key):
+            raise ValueError("source patch side identity differs from prepared surface")
+        row_sha = side.get("source_row_payload_sha256")
+        if (not isinstance(row_sha, str) or len(row_sha) != 64
+                or any(ch not in "0123456789abcdef" for ch in row_sha)):
+            raise ValueError("source patch row payload SHA-256 is invalid")
+        hashes = side.get("surface_hashes")
+        if not isinstance(hashes, dict) or set(hashes) != surface_hash_fields:
+            raise ValueError("source patch surface hash record is malformed")
+        if hashes != _source_patch_surface_hashes(surface):
+            raise ValueError("source patch surface or ancestry hashes are stale")
+        bindings = side.get("vertex_bindings")
+        if not isinstance(bindings, list) or len(bindings) != len(patch_vertices):
+            raise ValueError("source patch vertex binding coverage is incomplete")
+        vertex_map = {}
+        for binding in bindings:
+            if (not isinstance(binding, dict) or set(binding) != {
+                    "source_vertex_id", "capture_gid"}):
+                raise ValueError("source patch vertex binding is malformed")
+            source_id, gid = binding.get("source_vertex_id"), binding.get("capture_gid")
+            if (type(source_id) is not int or type(gid) is not int or source_id < 0 or gid < 0
+                    or source_id in vertex_map or surface.vertex_index(gid) is None):
+                raise ValueError("source patch vertex binding is invalid or duplicated")
+            lineage = surface.source_vertex_lineage.get(gid)
+            if (not _has_source_vertex_lineage(lineage)
+                    or lineage.get("source_vertex_id") != source_id
+                    or lineage.get("source_member") != member
+                    or lineage.get("source_member_sha256") != member_sha):
+                raise ValueError("source patch corner vertex ancestry does not match its authenticated binding")
+            vertex_map[source_id] = gid
+        if set(vertex_map) != set(patch_vertices):
+            raise ValueError("source patch vertex bindings do not cover its exact corners")
+
+        patch_rows = side.get("patch_faces")
+        support_rows = side.get("support_faces")
+        if not isinstance(patch_rows, list) or len(patch_rows) != 2:
+            raise ValueError("each source patch side must bind both reciprocal faces")
+        if not isinstance(support_rows, list) or len(support_rows) < 2:
+            raise ValueError("source patch incident face support is missing")
+        support_map = {}
+        for support in support_rows:
+            required = {"face_index", "source_member", "source_member_sha256",
+                        "source_face", "source_row_face", "source_row_payload_sha256",
+                        "ordered_capture_gids"}
+            if not isinstance(support, dict) or set(support) != required:
+                raise ValueError("source patch incident face support record is malformed")
+            face_index = support.get("face_index")
+            gids = support.get("ordered_capture_gids")
+            if (type(face_index) is not int or not 0 <= face_index < len(surface.faces)
+                    or face_index in support_map
+                    or type(support.get("source_face")) is not int or support["source_face"] < 0
+                    or type(support.get("source_row_face")) is not int or support["source_row_face"] < 0
+                    or not isinstance(support.get("source_member"), str)
+                    or not support["source_member"]
+                    or not isinstance(support.get("source_member_sha256"), str)
+                    or len(support["source_member_sha256"]) != 64
+                    or any(ch not in "0123456789abcdef"
+                           for ch in support["source_member_sha256"])
+                    or support.get("source_row_payload_sha256") != row_sha
+                    or not isinstance(gids, list) or len(gids) != 3
+                    or any(type(gid) is not int or gid < 0 for gid in gids)
+                    or len(set(gids)) != 3):
+                raise ValueError("source patch incident face support values are invalid")
+            actual_gids = [int(surface.source_vertex_ids[int(local)])
+                           for local in surface.faces[face_index]]
+            if actual_gids != gids:
+                raise ValueError("source patch incident face GIDs differ from prepared face")
+            lineage = surface.source_face_lineage[face_index]
+            expected = {
+                "source_member": support["source_member"],
+                "source_member_sha256": support["source_member_sha256"],
+                "source_face": support["source_face"],
+                "source_row_face": support["source_row_face"],
+                "source_row_payload_sha256": row_sha,
+                "owner_stable_id": surface.key[1],
+            }
+            if (not _has_source_face_lineage(lineage)
+                    or not _source_patch_ancestry_matches(lineage, expected)):
+                raise ValueError("source patch incident face ancestry does not match its binding")
+            bound_patch_gids = set(vertex_map.values())
+            if not (set(gids) & bound_patch_gids):
+                raise ValueError("source patch support face lacks an indexed authenticated patch corner")
+            support_patch_ids = {source_id for source_id, gid in vertex_map.items()
+                                 if gid in gids}
+            for source_id in support_patch_ids:
+                vertex_record = surface.source_vertex_lineage.get(vertex_map[source_id])
+                if (not _has_source_vertex_lineage(vertex_record)
+                        or vertex_record.get("source_vertex_id") != source_id
+                        or vertex_record.get("source_member") != member
+                        or vertex_record.get("source_member_sha256") != member_sha):
+                    raise ValueError("source patch support corner lineage differs from its exact binding")
+            support_map[face_index] = support
+        patch_points = {
+            ci.float32_point_lattice_key(
+                surface.positions[surface.vertex_index(gid)].tolist())
+            for gid in vertex_map.values()
+        }
+        actual_support = {
+            face_index for face_index, face in enumerate(surface.faces)
+            if any(ci.float32_point_lattice_key(surface.positions[int(local)].tolist())
+                   in patch_points for local in face)
+        }
+        if set(support_map) != actual_support:
+            raise ValueError("source patch incident face support does not cover the exact corner and alias stars")
+
+        patch_indices = set()
+        for source_face, patch_row in zip(source_faces, patch_rows):
+            required = {"face_index", "source_face", "source_row_face",
+                        "source_row_payload_sha256", "ordered_source_vertex_ids",
+                        "ordered_capture_gids"}
+            if not isinstance(patch_row, dict) or set(patch_row) != required:
+                raise ValueError("source patch face binding is malformed")
+            face_index = patch_row.get("face_index")
+            source_ids = patch_row.get("ordered_source_vertex_ids")
+            gids = patch_row.get("ordered_capture_gids")
+            if (type(face_index) is not int or face_index not in support_map
+                    or face_index in patch_indices
+                    or patch_row.get("source_face") != source_face["source_face"]
+                    or type(patch_row.get("source_row_face")) is not int
+                    or patch_row["source_row_face"] < 0
+                    or patch_row.get("source_row_payload_sha256") != row_sha
+                    or not isinstance(source_ids, list) or len(source_ids) != 3
+                    or any(type(item) is not int for item in source_ids)
+                    or set(source_ids) != set(source_face["source_vertex_ids"])
+                    or not _cyclic_source_face_orientation(
+                        source_ids, source_face["source_vertex_ids"],
+                        reversed_order=(side_index == 1))
+                    or not isinstance(gids, list) or len(gids) != 3
+                    or any(type(gid) is not int for gid in gids)
+                    or gids != [vertex_map[item] for item in source_ids]):
+                raise ValueError("source patch face mapping or orientation is invalid")
+            support = support_map[face_index]
+            if (support["source_face"] != patch_row["source_face"]
+                    or support["source_row_face"] != patch_row["source_row_face"]
+                    or support["source_member"] != member
+                    or support["source_member_sha256"] != member_sha):
+                raise ValueError("source patch face ancestry differs from authenticated member")
+            lineage = surface.source_face_lineage[face_index]
+            expected = {
+                "source_member": member,
+                "source_member_sha256": member_sha,
+                "source_face": source_face["source_face"],
+                "source_row_face": patch_row["source_row_face"],
+                "source_row_payload_sha256": row_sha,
+                "owner_stable_id": surface.key[1],
+            }
+            if not _source_patch_ancestry_matches(lineage, expected):
+                raise ValueError("source patch face ancestry does not match its authenticated source frame")
+            recovered = _exact_source_corner_ids_from_lineage(
+                lineage, source_face["source_vertex_ids"],
+                expected_source_face=source_face["source_face"],
+                expected_source_member=member,
+                expected_source_member_sha256=member_sha,
+                expected_source_row_face=patch_row["source_row_face"],
+                expected_source_row_payload_sha256=row_sha)
+            if recovered is not None and recovered != source_ids:
+                raise ValueError("source patch face corner ancestry is not exact")
+            if (recovered is None and any(
+                    isinstance(row.get("corner_barycentric_exact"), list)
+                    for row in _source_face_lineage_chain(lineage))):
+                raise ValueError("source patch face corner ancestry is not linked to its authenticated frame")
+            patch_indices.add(face_index)
+        coordinate_map = {}
+        for source_id, gid in vertex_map.items():
+            position = surface.positions[surface.vertex_index(gid)]
+            coordinate_map[source_id] = tuple(
+                Fraction(value, 1 << 149)
+                for value in ci.float32_point_lattice_key(position.tolist()))
+        support_maps.append(support_map)
+        vertex_maps.append(vertex_map)
+        coordinate_maps.append(coordinate_map)
+
+    if (first.rigid_owner_proof is None or second.rigid_owner_proof is None
+            or first.rigid_owner_proof != second.rigid_owner_proof):
+        raise ValueError("source patch surfaces do not share the same accepted rigid-owner proof")
+    for source_id in patch_vertices:
+        if coordinate_maps[0][source_id] != coordinate_maps[1][source_id]:
+            raise ValueError("reciprocal source patch corner coordinates differ")
+    patch_face_indices = []
+    for source_face in source_faces:
+        face_indices = []
+        for side in sides:
+            row = next((item for item in side["patch_faces"]
+                        if item["source_face"] == source_face["source_face"]), None)
+            if row is None:
+                raise ValueError("source patch face is missing from one side")
+            face_indices.append(row["face_index"])
+        patch_face_indices.append((face_indices[0], face_indices[1],
+                                   source_face["source_face"]))
+    return {
+        "source_patch_complex_sha256": proof_sha,
+        "source_member": member,
+        "source_member_sha256": member_sha,
+        "source_faces": source_faces,
+        "patch_vertices": tuple(patch_vertices),
+        "patch_edges": _source_patch_edges(source_faces),
+        "support_faces": (set(support_maps[0]), set(support_maps[1])),
+        "vertex_maps": vertex_maps,
+        "coordinate_maps": coordinate_maps,
+        "patch_face_pairs": tuple(patch_face_indices),
+    }
+
+
+def _exact_point_on_source_patch_edge(point, start, end):
+    direction = tuple(end[index] - start[index] for index in range(3))
+    offset = tuple(point[index] - start[index] for index in range(3))
+    cross = (direction[1] * offset[2] - direction[2] * offset[1],
+             direction[2] * offset[0] - direction[0] * offset[2],
+             direction[0] * offset[1] - direction[1] * offset[0])
+    return (cross == (0, 0, 0)
+            and all(min(start[index], end[index]) <= point[index] <=
+                    max(start[index], end[index]) for index in range(3)))
+
+
+def _source_patch_complex_contact(first, second, first_face, second_face, patch):
+    if (first_face not in patch["support_faces"][0]
+            or second_face not in patch["support_faces"][1]):
+        return False, "contact_faces_are_outside_authenticated_incident_support"
+    points = first.intersection_points_meters(second, first_face, second_face)
+    direct_source_face = next((source_face for first_index, second_index, source_face
+                               in patch["patch_face_pairs"]
+                               if first_index == first_face and second_index == second_face), None)
+    if direct_source_face is not None:
+        source_face = next(row for row in patch["source_faces"]
+                           if row["source_face"] == direct_source_face)
+        triangle_points = {patch["coordinate_maps"][0][source_id]
+                           for source_id in source_face["source_vertex_ids"]}
+        if set(points) == triangle_points and len(points) == 3:
+            return True, "exact_reciprocal_source_patch_face"
+        return False, "reciprocal_source_patch_face_intersection_is_not_the_exact_triangle"
+
+    if len(points) not in (1, 2):
+        return False, "contact_is_not_an_exact_patch_corner_or_edge"
+    gids_a = {int(first.source_vertex_ids[int(local)])
+              for local in first.faces[first_face]}
+    gids_b = {int(second.source_vertex_ids[int(local)])
+              for local in second.faces[second_face]}
+    source_to_gid_a, source_to_gid_b = patch["vertex_maps"]
+    for point in points:
+        matching_vertices = [source_id for source_id, xyz in patch["coordinate_maps"][0].items()
+                             if point == xyz]
+        if len(matching_vertices) == 1:
+            source_id = matching_vertices[0]
+            mapped_a, mapped_b = source_to_gid_a[source_id], source_to_gid_b[source_id]
+            incident_a = bool(mapped_a & gids_a) if isinstance(mapped_a, set) else mapped_a in gids_a
+            incident_b = bool(mapped_b & gids_b) if isinstance(mapped_b, set) else mapped_b in gids_b
+            if incident_a and incident_b:
+                continue
+            return False, "patch_corner_is_not_incident_to_both_contact_faces"
+        matching_edges = [edge for edge in patch["patch_edges"]
+                          if _exact_point_on_source_patch_edge(
+                              point, patch["coordinate_maps"][0][edge[0]],
+                              patch["coordinate_maps"][0][edge[1]])]
+        if len(matching_edges) != 1:
+            return False, "contact_point_is_not_on_one_authenticated_patch_edge"
+        edge = matching_edges[0]
+        def incident(source_map, source_id, gids):
+            mapped = source_map[source_id]
+            return bool(mapped & gids) if isinstance(mapped, set) else mapped in gids
+        if not all((incident(source_to_gid_a, source_id, gids_a)
+                    and incident(source_to_gid_b, source_id, gids_b)) for source_id in edge):
+            return False, "patch_edge_is_not_incident_to_both_contact_faces"
+    if len(points) == 2:
+        common_edges = [edge for edge in patch["patch_edges"]
+                        if all(_exact_point_on_source_patch_edge(
+                            point, patch["coordinate_maps"][0][edge[0]],
+                            patch["coordinate_maps"][0][edge[1]]) for point in points)]
+        if len(common_edges) != 1:
+            return False, "segment_is_not_contained_in_one_authenticated_patch_edge"
+    return True, "exact_contact_contained_in_supported_source_patch_corner_or_edge"
+
+
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
-                       intended_shared_feature_pairs=()):
+                       intended_shared_feature_pairs=(), intended_source_patch_complexes=()):
     allowed = {tuple(pair) for pair in intended_face_pairs}
     enclosures = _intended_enclosures(intended_enclosures)
     if any(set(pair) != {first.key, second.key} for pair in enclosures):
         raise ValueError("intended enclosure must identify this surface pair")
+    patch_contexts = [
+        _prepare_source_patch_complex(first, second, value)
+        for value in intended_source_patch_complexes
+    ]
     if not _overlap(first, second):
         return {"identities": [list(first.key), list(second.key)], "passed": True,
                 "aabb_disjoint": True, "triangle_pair_count": 0}
@@ -1067,17 +1995,19 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
             continue
         if feature_gid_pairs is not None:
             source_point_crosswalk = row.get("source_point_crosswalk")
-            source_seam_face_pair = row.get("source_seam_face_pair")
+            source_seam_face_pairs = row.get("source_seam_face_pairs")
+            endpoint_source_vertex_id = row.get("source_seam_endpoint_source_vertex_id")
             passed, reason = _shared_source_crosswalk_point_contact(
                 first, second, first_face, second_face, feature_gid_pairs,
-                source_point_crosswalk, source_seam_face_pair)
+                source_point_crosswalk, source_seam_face_pairs, endpoint_source_vertex_id)
             if passed:
                 accepted_features[pair] = {
                     "identities": [list(first.key), list(second.key)],
                     "face_pair": list(pair), "feature_gid_pairs": feature_gid_pairs,
                     "feature_kind": "source_crosswalk_point",
                     "source_point_crosswalk": source_point_crosswalk,
-                    "source_seam_face_pair": source_seam_face_pair,
+                    "source_seam_face_pairs": source_seam_face_pairs,
+                    "source_seam_endpoint_source_vertex_id": endpoint_source_vertex_id,
                     "proof": reason}
             else:
                 rejected_features.append({"face_pair": list(pair),
@@ -1097,8 +2027,36 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         else:
             rejected_features.append({"face_pair": list(pair), "feature_gids": list(feature_gids),
                                       "reason": reason})
+    accepted_patches = {}
+    rejected_patches = []
+    for raw_pair in pairs:
+        pair = tuple(raw_pair)
+        if pair in allowed or pair in accepted_features:
+            continue
+        matching_contexts = [
+            context for context in patch_contexts
+            if (pair[0] in context["support_faces"][0]
+                and pair[1] in context["support_faces"][1])
+        ]
+        if len(matching_contexts) > 1:
+            raise ValueError("one contact pair is covered by multiple source patch complexes")
+        if not matching_contexts:
+            continue
+        passed, reason = _source_patch_complex_contact(
+            first, second, pair[0], pair[1], matching_contexts[0])
+        if passed:
+            accepted_patches[pair] = {
+                "identities": [list(first.key), list(second.key)],
+                "face_pair": list(pair),
+                "source_patch_complex_sha256":
+                    matching_contexts[0]["source_patch_complex_sha256"],
+                "proof": reason,
+            }
+        else:
+            rejected_patches.append({"face_pair": list(pair), "reason": reason})
     unexpected = [pair for pair in pairs
-                  if tuple(pair) not in allowed and tuple(pair) not in accepted_features]
+                  if tuple(pair) not in allowed and tuple(pair) not in accepted_features
+                  and tuple(pair) not in accepted_patches]
     # Shared boundary features can divide a connected surface component into
     # regions on opposite sides. Check every triangle interior centroid rather
     # than assuming one sample represents the whole connected component.
@@ -1127,6 +2085,9 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
             "declared_interface_triangle_pairs": [p for p in pairs if tuple(p) in allowed],
             "declared_interface_feature_contacts": [accepted_features[p] for p in sorted(accepted_features)],
             "rejected_interface_feature_contacts": rejected_features,
+            "declared_source_patch_complex_contacts": [accepted_patches[p]
+                                                       for p in sorted(accepted_patches)],
+            "rejected_source_patch_complex_contacts": rejected_patches,
             "containment": containment,
             "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)],
             "boundary": "Declared enclosures permit interior placement only; every off-boundary face interior is checked and outside samples reject an intended enclosure. Shared feature contacts require exact GID or authenticated source-point crosswalk, owner, source-lineage, and intersection proof. Crosswalk contacts accept point contacts only. Declared face interfaces do not prove vessel lumen continuity."}
@@ -1217,11 +2178,13 @@ def load_capture(pack, receipt_path):
 
 
 def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=(),
-                           intended_enclosures=(), shared_feature_interfaces=None):
+                           intended_enclosures=(), shared_feature_interfaces=None,
+                           source_patch_complex_interfaces=None):
     changed = [typed_key(key) for key in changed]
     targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
     interfaces = interfaces or {}
     shared_feature_interfaces = shared_feature_interfaces or {}
+    source_patch_complex_interfaces = source_patch_complex_interfaces or {}
     enclosures = _intended_enclosures(intended_enclosures)
     if any(a not in surfaces or b not in surfaces for a, b in enclosures):
         raise ValueError("intended enclosure identity absent from capture")
@@ -1276,6 +2239,8 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
             pair = audit_surface_pair(surface, other,
                                       intended_face_pairs=interfaces.get((key, target), ()),
                                       intended_shared_feature_pairs=shared_feature_interfaces.get((key, target), ()),
+                                      intended_source_patch_complexes=source_patch_complex_interfaces.get(
+                                          (key, target), ()),
                                       intended_enclosures=[pair for pair in enclosures
                                                            if set(pair) == {key, target}])
             rows.append({"stage": "nearby_pair", **pair})
