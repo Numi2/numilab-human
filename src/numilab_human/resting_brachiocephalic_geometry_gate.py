@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from collections.abc import Mapping, Sequence
 from fractions import Fraction
 
@@ -2106,10 +2107,77 @@ def _source_interface_points_sha256(points):
     return hashlib.sha256(np.ascontiguousarray(rows).tobytes()).hexdigest()
 
 
+def _transverse_overlap_proof_passed(proof, observed_pairs):
+    if not isinstance(proof, Mapping) or proof.get("passed") is not True:
+        return False
+    if (proof.get("requires_strict_positive_exact_barycentric_coordinates") is not True
+            or proof.get("requires_all_four_witnesses_from_same_face_pair") is not True
+            or proof.get("uses_exact_rational_point_location_in_opposite_closed_surface")
+                is not True):
+        return False
+    pair = proof.get("passing_face_pair")
+    if (not isinstance(pair, (tuple, list)) or len(pair) != 2
+            or any(type(index) is not int or index < 0 for index in pair)):
+        return False
+    if not isinstance(observed_pairs, (tuple, list)):
+        return False
+    observed = set()
+    for raw_pair in observed_pairs:
+        if (not isinstance(raw_pair, (tuple, list)) or len(raw_pair) != 2
+                or any(type(index) is not int or index < 0 for index in raw_pair)):
+            return False
+        observed.add(tuple(raw_pair))
+    if tuple(map(int, pair)) not in observed:
+        return False
+    directions = proof.get("directional_surface_witnesses")
+    if not isinstance(directions, Mapping):
+        return False
+    for role in ("first_surface_against_second", "second_surface_against_first"):
+        samples = directions.get(role)
+        if not isinstance(samples, Mapping):
+            return False
+        for side in ("inside", "outside"):
+            witness = samples.get(side)
+            if (not isinstance(witness, Mapping)
+                    or witness.get("location_in_opposite_surface") != side
+                    or witness.get("face_pair") != list(pair)
+                    or not isinstance(witness.get("face_barycentric_rational"), list)):
+                return False
+            barycentric = witness["face_barycentric_rational"]
+            if len(barycentric) != 3:
+                return False
+            exact_barycentric = []
+            for rational in barycentric:
+                if (not isinstance(rational, list) or len(rational) != 2
+                        or not all(isinstance(value, str) and value.isdecimal()
+                                   for value in rational)
+                        or int(rational[0]) <= 0 or int(rational[1]) <= 0):
+                    return False
+                exact_barycentric.append(Fraction(
+                    int(rational[0]), int(rational[1])))
+            if sum(exact_barycentric, Fraction(0)) != 1:
+                return False
+    return True
+
+
+def _make_transverse_overlap_witnesses(provider, verifier, bridge, target, observed_pairs):
+    if provider is None:
+        return None
+    owner_module = sys.modules.get(getattr(provider, "__module__", ""))
+    exact_owner = getattr(
+        owner_module, "_exact_transverse_overlap_side_witnesses", None)
+    _require(callable(provider) and provider is exact_owner,
+             "transverse overlap witness provider must be the pinned exact owner")
+    proof = exact_owner(verifier, bridge, target, observed_pairs)
+    _require(isinstance(proof, Mapping),
+             "exact transverse overlap owner returned a malformed proof")
+    return dict(proof)
+
+
 def build_source_junction_station_declaration(
     verifier, *, bridge_key, target_key, baseline_bridge_surface,
     baseline_target_surface, frozen_face_pairs, declared_vessel_ports,
-    anchor_role="bridge",
+    anchor_role="bridge", transverse_witness_provider=None,
 ):
     """Freeze a junction station from baseline source evidence only.
 
@@ -2149,9 +2217,14 @@ def build_source_junction_station_declaration(
         bridge_key, target_key, audit, observed,
         audit.get("unexpected_triangle_pairs", ()), exact_points, allowed,
         declared_vessel_ports=normalized_edges)
-    _require(bool(exact_points) and (
-        bool(audit.get("passed")) or boundary.get("passed") is True),
-        "independent source baseline does not prove the frozen typed interface")
+    transverse = _make_transverse_overlap_witnesses(
+        transverse_witness_provider, verifier, bridge, target, observed)
+    transverse_passed = _transverse_overlap_proof_passed(transverse, observed)
+    source_pair_passed = bool(exact_points) and (
+        bool(audit.get("passed")) or boundary.get("passed") is True
+        or transverse_passed)
+    _require(source_pair_passed,
+             "independent source baseline does not prove the frozen typed interface")
     anchor_key = bridge_key if anchor_role == "bridge" else target_key
     anchor = bridge if anchor_role == "bridge" else target
     anchor_patch = bridge_patch if anchor_role == "bridge" else target_patch
@@ -2182,9 +2255,13 @@ def build_source_junction_station_declaration(
         "baseline_exact_interface_points_sha256": _source_interface_points_sha256(exact_points),
         "baseline_exact_interface_point_count": len(exact_points),
         "baseline_port_audit_passed": bool(audit.get("passed")),
-        "baseline_port_pair_passed": bool(exact_points) and (
-            bool(audit.get("passed")) or boundary.get("passed") is True),
+        "baseline_port_pair_passed": source_pair_passed,
+        "baseline_port_pair_witness_kind": (
+            "central_p6" if audit.get("passed") is True else
+            "coarse_exact_boundary" if boundary.get("passed") is True else
+            "exact_transverse_inside_outside"),
         "baseline_declared_partial_overlap_boundary": boundary,
+        "baseline_exact_transverse_overlap_side_witnesses": transverse,
         "source_station_provenance": source_station.get("provenance"),
         "source_station_spec_sha256": _canonical_record_sha256(source_station),
         "source_station_is_candidate_independent": True,
@@ -3219,6 +3296,10 @@ def _junction_station_evidence(declaration, expected_owner_ids,
                     solid_evidence.get("baseline_port_boundary")):
                 issues.append(
                     "source station declaration differs from the recomputed baseline port proof")
+            if source_evidence.get("baseline_exact_transverse_overlap_side_witnesses") != (
+                    solid_evidence.get("baseline_exact_transverse_overlap_side_witnesses")):
+                issues.append(
+                    "source station exact transverse witnesses differ from current baseline")
             if source_evidence.get("baseline_port_audit_passed") is not (
                     solid_evidence.get("baseline_port_audit_passed")):
                 issues.append("source station baseline P6 status differs from current source")
@@ -3361,9 +3442,15 @@ def _junction_aware_two_loop_section_proof(
             and isinstance(conditions, Mapping)
             and bool(conditions)
             and all(value is True for value in conditions.values()))
-        if solid_evidence.get(audit_key) is not True and not boundary_passed:
+        transverse_passed = _transverse_overlap_proof_passed(
+            solid_evidence.get(
+                f"{side}_exact_transverse_overlap_side_witnesses"),
+            solid_evidence.get(
+                f"{side}_observed_port_face_pairs", ()))
+        if solid_evidence.get(audit_key) is not True and not (
+                boundary_passed or transverse_passed):
             issues.append(
-                f"{audit_key} must pass or have a complete source-scoped exact boundary proof")
+                f"{audit_key} must pass or have a complete source-scoped exact boundary or transverse proof")
     for key in ("candidate_union_status", "baseline_union_status",
                 "candidate_intersection_status", "baseline_intersection_status",
                 "candidate_bridge_status", "candidate_target_status",
@@ -3453,6 +3540,7 @@ def audit_brachiocephalic_port_pair_continuity(
     target_route_anchor_world_m=None,
     junction_station_declarations=None,
     source_station_declarations=None,
+    transverse_witness_provider=None,
     target_station_candidate_fractions=None,
     declared_vessel_ports=None,
 ):
@@ -3541,8 +3629,13 @@ def audit_brachiocephalic_port_pair_continuity(
         port_audit.get("unexpected_triangle_pairs", ()),
         exact_points, allowed,
         declared_vessel_ports=declared_vessel_ports)
+    candidate_transverse_witnesses = _make_transverse_overlap_witnesses(
+        transverse_witness_provider, verifier, bridge, target, observed)
+    candidate_transverse_passed = _transverse_overlap_proof_passed(
+        candidate_transverse_witnesses, observed)
     port_pair_passed = bool(exact_points) and (
-        bool(port_audit.get("passed")) or partial_overlap_boundary["passed"])
+        bool(port_audit.get("passed")) or partial_overlap_boundary["passed"]
+        or candidate_transverse_passed)
     baseline_port_audit = verifier.audit_surface_pair(
         base_bridge, base_target, intended_face_pairs=allowed)
     baseline_observed = tuple(tuple(map(int, pair))
@@ -3555,9 +3648,14 @@ def audit_brachiocephalic_port_pair_continuity(
         baseline_port_audit.get("unexpected_triangle_pairs", ()),
         baseline_exact_points, allowed,
         declared_vessel_ports=declared_vessel_ports)
+    baseline_transverse_witnesses = _make_transverse_overlap_witnesses(
+        transverse_witness_provider, verifier, base_bridge, base_target, baseline_observed)
+    baseline_transverse_passed = _transverse_overlap_proof_passed(
+        baseline_transverse_witnesses, baseline_observed)
     baseline_port_pair_passed = bool(baseline_exact_points) and (
         bool(baseline_port_audit.get("passed"))
-        or baseline_partial_overlap_boundary["passed"])
+        or baseline_partial_overlap_boundary["passed"]
+        or baseline_transverse_passed)
 
     def surface_binding(surface):
         return _source_geometry_binding(surface)
@@ -3579,6 +3677,11 @@ def audit_brachiocephalic_port_pair_continuity(
         "baseline_port_exact_interface_point_count": len(baseline_exact_points),
         "baseline_port_audit_passed": bool(baseline_port_audit.get("passed")),
         "baseline_port_pair_passed": baseline_port_pair_passed,
+        "baseline_port_pair_witness_kind": (
+            "central_p6" if baseline_port_audit.get("passed") is True else
+            "coarse_exact_boundary" if baseline_partial_overlap_boundary.get("passed") is True else
+            "exact_transverse_inside_outside"),
+        "baseline_exact_transverse_overlap_side_witnesses": baseline_transverse_witnesses,
         "baseline_port_boundary": baseline_partial_overlap_boundary,
     }
     runtime_source_station_declarations = {}
@@ -3615,6 +3718,8 @@ def audit_brachiocephalic_port_pair_continuity(
                     "baseline_exact_interface_point_count",
                     "baseline_port_audit_passed",
                     "baseline_port_pair_passed",
+                    "baseline_port_pair_witness_kind",
+                    "baseline_exact_transverse_overlap_side_witnesses",
                     "baseline_declared_partial_overlap_boundary"):
             evidence_key = {
                 "frozen_face_pairs_sha256": "baseline_frozen_face_pairs_sha256",
@@ -3873,6 +3978,11 @@ def audit_brachiocephalic_port_pair_continuity(
             "baseline_port_pair_passed": baseline_port_pair_passed,
             "candidate_port_boundary": partial_overlap_boundary,
             "baseline_port_boundary": baseline_partial_overlap_boundary,
+            "candidate_observed_port_face_pairs": [list(pair) for pair in observed],
+            "candidate_exact_transverse_overlap_side_witnesses":
+                candidate_transverse_witnesses,
+            "baseline_exact_transverse_overlap_side_witnesses":
+                baseline_transverse_witnesses,
             "candidate_port_exact_interface_point_count": len(exact_points),
             "baseline_port_exact_interface_point_count": len(base_exact_points),
             "baseline_source_surface_bindings": source_baseline_bindings,

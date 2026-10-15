@@ -443,6 +443,72 @@ def test_nonflow_station_is_baseline_bound_and_candidate_independent():
             source_station_declarations=forged)
 
 
+def test_nonflow_station_uses_exact_transverse_witnesses_for_centroid_miss(monkeypatch):
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _source_y_target()
+    edge = ((51011, 7), (51011, 6))
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+    original_audit = av.audit_surface_pair
+
+    def centroid_sampling_false_negative(*args, **kwargs):
+        result = original_audit(*args, **kwargs)
+        for row in result.get("containment", []):
+            if row.get("source_identity") == list(edge[0]):
+                row["inside_component_witnesses"] = []
+                for check in row.get("component_checks", []):
+                    check["has_inside_face_interior"] = False
+        return result
+
+    monkeypatch.setattr(av, "audit_surface_pair", centroid_sampling_false_negative)
+    provider = junction3d._exact_transverse_overlap_side_witnesses
+    declarations = {
+        role: bg.build_source_junction_station_declaration(
+            av, bridge_key=edge[0], target_key=edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=pairs, declared_vessel_ports={edge},
+            anchor_role=role, transverse_witness_provider=provider)
+        for role in ("bridge", "target")
+    }
+    for declaration in declarations.values():
+        evidence = declaration["source_evidence"]
+        assert evidence["baseline_declared_partial_overlap_boundary"]["passed"] is False
+        transverse = evidence["baseline_exact_transverse_overlap_side_witnesses"]
+        assert transverse["passed"] is True
+        assert transverse["passing_face_pair"] in [
+            pair for pair in evidence["baseline_declared_partial_overlap_boundary"].get(
+                "observed_face_pairs", [])
+        ] or transverse["passing_face_pair"] in pairs
+        for direction in ("first_surface_against_second", "second_surface_against_first"):
+            assert transverse["directional_surface_witnesses"][direction]["inside"] is not None
+            assert transverse["directional_surface_witnesses"][direction]["outside"] is not None
+
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, _manifold3d(),
+        bridge_key=edge[0], bridge_surface=(bridge, bridge_faces),
+        target_key=edge[1], target_surface=(target, target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces),
+        declared_vessel_ports={edge},
+        source_station_declarations=declarations,
+        transverse_witness_provider=provider)
+    assert report["passed"]
+    assert report["port_pair_gate"]["passed"] is True
+    assert report["solid_gate"]["passed"] is True
+    assert report["calibre_gate"]["passed"] is True
+
+    with pytest.raises(ValueError, match="must be the pinned exact owner"):
+        bg.build_source_junction_station_declaration(
+            av, bridge_key=edge[0], target_key=edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=pairs, declared_vessel_ports={edge},
+            anchor_role="bridge",
+            transverse_witness_provider=lambda *_args: {"passed": True})
+
+
 def test_tangent_closed_cylinders_reject_zero_volume_contact():
     manifold3d = _manifold3d()
     bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
