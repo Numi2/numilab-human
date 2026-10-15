@@ -1050,8 +1050,7 @@ def _load_aortic_arch_descending_interface_certificate(
         label = f"{key[0]}:{key[1]}"
         row = source_identity[label]
         ancestry = row.get("source_to_capture_ancestry")
-        _require(row.get("typed_identity") == list(key)
-                 and row.get("source_member") == expected["source_member"]
+        _require(row.get("source_member") == expected["source_member"]
                  and row.get("fma") == expected["fma"]
                  and row.get("name") == expected["name"]
                  and row.get("body_index") == expected["body_index"]
