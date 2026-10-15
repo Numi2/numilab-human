@@ -154,6 +154,9 @@ def main(argv=None):
     p.add_argument("--target", action="append", help="SEM:ID; default all captured anatomy")
     p.add_argument("--required-closed", action="append", default=[])
     p.add_argument("--intended-enclosure", action="append", default=[], help="SEM:ID,SEM:ID; containment only")
+    p.add_argument("--shared-partition", nargs=4, action="append", default=[],
+                   metavar=("FIRST", "SECOND", "NHTISS", "SHA256"),
+                   help="source-bound reciprocal passive muscle partition; strict native certificate required")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
@@ -202,14 +205,29 @@ def main(argv=None):
         enclosures = [tuple(identity(x) for x in item.split(",")) for item in args.intended_enclosure]
         if any(len(pair) != 2 for pair in enclosures):
             raise ValueError("enclosure requires exactly two typed identities")
+        partitions = []
+        for first, second, source, digest in args.shared_partition:
+            key_a, key_b = identity(first), identity(second)
+            pin(source, digest)
+            if key_a in overlay_keys or key_b in overlay_keys:
+                raise ValueError("shared partition requires actual native capture, not counterfactual overlays")
+            partitions.append((key_a, key_b, Path(source), digest))
         if args.preflight_only:
             for key in changed:
                 if key not in surfaces:
                     raise ValueError(f"changed identity absent: {key}")
             report.update(passed=True, status="PASS_PREPARATION_ONLY_NO_PAIR_PREDICATES")
         else:
-            report.update(verify.audit_changed_surfaces(
-                surfaces, changed, targets=targets, required_closed=closed, intended_enclosures=enclosures))
+            if partitions:
+                from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
+                result = audit_with_shared_partitions(
+                    surfaces, changed, partitions=partitions, targets=targets,
+                    required_closed=closed, intended_enclosures=enclosures)
+            else:
+                result = verify.audit_changed_surfaces(
+                    surfaces, changed, targets=targets,
+                    required_closed=closed, intended_enclosures=enclosures)
+            report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
     except (ValueError, TypeError, KeyError, OSError, verify.HumanImportError) as error:
         report.update(passed=False, failed_stage="preparation", error=str(error))
