@@ -2149,7 +2149,7 @@ def parser() -> argparse.ArgumentParser:
     )
     myosim_torso_anatomy_payload_parser = commands.add_parser(
         "myosim-bodyparts-torso-anatomy-payload",
-        help="prepare selected exact BodyParts3D organ, vessel, and spinal-cord surfaces for native torso inspection",
+        help="prepare selected exact BodyParts3D organ, vessel, and central-canal surfaces for native torso inspection",
     )
     myosim_torso_anatomy_payload_parser.add_argument("--sources", type=Path, required=True)
     myosim_torso_anatomy_payload_parser.add_argument(

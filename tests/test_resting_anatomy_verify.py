@@ -971,7 +971,7 @@ if __name__ == "__main__":
     unittest.main()
 
 class NativeSourceIdentityTests(unittest.TestCase):
-    def test_source_layer_resolves_spinal_cord_as_native_nerve(self):
+    def test_source_layer_resolves_central_canal_row_as_native_nerve_layer(self):
         self.assertEqual(source_surface_key(12, 3, payload_kind="nhanatomy"),
                          (51012, 12))
         self.assertEqual(source_surface_key(323, 1, payload_kind="nhanatomy"),

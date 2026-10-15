@@ -312,3 +312,11 @@ def test_metadata_rebind_rejects_source_member_or_payload_drift(monkeypatch):
     receipt["payload"]["index_count"] += 3
     with pytest.raises(ValueError, match="header index_count"):
         rebind_central_canal_identity_metadata(receipt, OBJ_HEADER, payload_raw=payload_raw)
+
+
+def test_torso_anatomy_cli_describes_the_selected_central_canal():
+    from numilab_human.cli import parser
+
+    help_text = parser().format_help()
+    assert "central-canal surfaces" in help_text
+    assert "spinal-cord surfaces" not in help_text
