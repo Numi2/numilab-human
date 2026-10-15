@@ -37,6 +37,13 @@ AORTIC_PROOF_ROOT = Path(
 AORTIC_PROOF_DIR = AORTIC_PROOF_ROOT / "aortic-6-7-source-interface-proof-004"
 AORTIC_PROOF_REPORT = AORTIC_PROOF_DIR / "execution-report.json"
 AORTIC_PROOF_PREFLIGHT = AORTIC_PROOF_DIR / "preflight.json"
+AORTIC_DESCENDING_PROOF_DIR = (
+    AORTIC_PROOF_ROOT / "aortic-7-8-source-interface-proof-004")
+AORTIC_DESCENDING_PROOF_REPORT = (
+    AORTIC_DESCENDING_PROOF_DIR / "execution-report.json")
+AORTIC_DESCENDING_PROOF_PREFLIGHT = AORTIC_DESCENDING_PROOF_DIR / "preflight.json"
+AORTIC_DESCENDING_PROOF_HANDOFF = (
+    AORTIC_DESCENDING_PROOF_DIR / "handoff-certificate.json")
 AORTIC_PARENT_150_DIR = (
     AORTIC_PROOF_ROOT /
     "current-capture-network-gate-150-actual012-source179-313candidate-all-target-001")
@@ -46,6 +53,12 @@ AORTIC_PARENT_150_REPORT_SHA256 = (
 AORTIC_TARGET_OVERLAY_RUNNER = AORTIC_PROOF_ROOT / "prepare_current012_network150.py"
 AORTIC_TARGET_OVERLAY_RUNNER_SHA256 = (
     "261ac70eb41f2f23e2821d406f1b388880b32cc0186f0f8f110725fd6e05f021")
+AORTIC_DESCENDING_PROOF_REPORT_SHA256 = (
+    "d4905ba93f1e11829ad38d076056fa434fa70d37b9269eb9f1ef231e10aefcdf")
+AORTIC_DESCENDING_PROOF_PREFLIGHT_SHA256 = (
+    "e00854e2883508e92ae0234353ec94e9df82649834ad7b4169ffd83b98fd8d0c")
+AORTIC_DESCENDING_PROOF_HANDOFF_SHA256 = (
+    "56922c77b63edcdc2ac8164f70cb47485312d558055cad95547754e183985ae5")
 
 
 def _require(ok: bool, message: str) -> None:
@@ -880,6 +893,232 @@ def _load_aortic_arch_interface_certificate(runtime: dict, bundle_sha256: str) -
         source_preflight_sha256=preflight_sha)
 
 
+def _load_aortic_arch_descending_interface_certificate(
+    runtime: dict, bundle_sha256: str,
+) -> dict:
+    """Load the frozen 7↔8 report, its preflight, and the compact handoff."""
+    _require(bundle_sha256
+             == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256,
+             "7↔8 source-interface evidence belongs to another capture bundle")
+    report_path = AORTIC_DESCENDING_PROOF_REPORT.resolve(strict=True)
+    preflight_path = AORTIC_DESCENDING_PROOF_PREFLIGHT.resolve(strict=True)
+    handoff_path = AORTIC_DESCENDING_PROOF_HANDOFF.resolve(strict=True)
+    report_sha = _sha_file(report_path)
+    preflight_sha = _sha_file(preflight_path)
+    handoff_sha = _sha_file(handoff_path)
+    _require(report_sha == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_REPORT_SHA256
+             == AORTIC_DESCENDING_PROOF_REPORT_SHA256
+             and preflight_sha
+             == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_PREFLIGHT_SHA256
+             == AORTIC_DESCENDING_PROOF_PREFLIGHT_SHA256
+             and handoff_sha
+             == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_HANDOFF_SHA256
+             == AORTIC_DESCENDING_PROOF_HANDOFF_SHA256,
+             "pinned 7↔8 source-interface evidence changed")
+    report = json.loads(report_path.read_text())
+    preflight = json.loads(preflight_path.read_text())
+    certificate = json.loads(handoff_path.read_text())
+    edge = collision_owner.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+    expected_pair = [list(edge[0]), list(edge[1])]
+    _require(preflight.get("schema")
+             == "numi.human.aortic-7-8-source-interface-preflight.v1"
+             and preflight.get("status")
+             == "PREFLIGHT_READY_NO_EXACT_INTERSECTION_OR_SOLID_PREDICATE"
+             and preflight.get("typed_pair") == expected_pair
+             and preflight.get("capture_input_bundle_sha256") == bundle_sha256
+             and preflight.get("parent_150_terminal_report_sha256")
+             == AORTIC_PARENT_150_REPORT_SHA256
+             and preflight.get("captured_step") == 0
+             and preflight.get("captured_time_s") == 0,
+             "7↔8 preflight is not bound to the cached actual012 step-0 capture")
+    _require(report.get("schema") == "numi.human.aortic-7-8-source-interface-proof.v1"
+             and report.get("status")
+             == "PASS_SOURCE_BOUND_AORTA_ARCH_DESCENDING_INTERFACE_DIAGNOSTIC"
+             and report.get("passed") is True
+             and report.get("typed_pair") == expected_pair
+             and report.get("preflight_sha256") == preflight_sha
+             and Path(report.get("preflight_path", "")).resolve() == preflight_path
+             and report.get("all_15_flow_links_unchanged") is True
+             and report.get("source_topology_passed") is True
+             and report.get("interface_gate_passed") is True
+             and report.get("solid_gate_passed") is True
+             and report.get("independent_source_collar_calibre_passed") is True
+             and report.get("candidate_pairs_equal_frozen_source_pairs") is True
+             and report.get("baseline_pairs_equal_frozen_source_pairs") is True
+             and report.get("candidate_baseline_exact_pairsets_equal") is True,
+             "pinned 7↔8 report does not carry its required source-bound passes")
+    pairs = report.get("frozen_source_pairset")
+    _require(isinstance(pairs, list)
+             and pairs == report.get("independent_source_baseline_pairset")
+             and pairs == certificate.get("exact_face_pairs")
+             and len(pairs) == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_PAIR_COUNT
+             and report.get("independent_source_baseline_pairset_sha256")
+             == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256
+             and report.get("interface_gate_pairset_matches_frozen")
+             == {"candidate": True, "independent_source_baseline": True},
+             "7↔8 candidate/source exact face-pair sets are not identical")
+    for role in ("candidate", "independent_source_baseline"):
+        interface = report["interface_gate"][role]
+        witnesses = interface["exact_partial_overlap_witnesses"]
+        transverse = witnesses["exact_transverse_overlap_side_witnesses"]
+        _require(interface.get("passed") is True
+                 and interface.get("observed_face_pairs") == pairs
+                 and witnesses.get("passed") is True
+                 and transverse.get("passed") is True
+                 and transverse.get("requires_all_four_witnesses_from_same_face_pair")
+                 is True
+                 and transverse.get("requires_strict_positive_exact_barycentric_coordinates")
+                 is True
+                 and transverse.get("uses_exact_rational_point_location_in_opposite_closed_surface")
+                 is True,
+                 f"7↔8 {role} exact transverse interface witnesses are incomplete")
+        direct = report["direct_pair_audits"][
+            "candidate_actual" if role == "candidate" else "independent_source_baseline"]
+        _require(direct.get("unexpected_pairs") == pairs
+                 and direct.get("ordered_pairset_sha256")
+                 == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256,
+                 f"7↔8 {role} direct exact pairset differs from the certificate")
+        solid = report["solid_gate"][role]
+        inside = solid.get("exact_inside_both_witness")
+        _require(solid.get("passed") is True
+                 and solid.get("positive_intersection_volume") is True
+                 and solid.get("intersection_volume_m3", 0.0) > 0.0
+                 and inside.get("first_location") == "inside"
+                 and inside.get("second_location") == "inside"
+                 and solid.get("union_component_count") == 1
+                 and solid.get("union_lineage_has_both_sources_without_generated_or_unmapped_faces")
+                 is True,
+                 f"7↔8 {role} exact inside-both/solid proof is incomplete")
+        topology_names = (
+            ("candidate_arch", "candidate_descending") if role == "candidate" else
+            ("baseline_arch", "baseline_descending"))
+        for topology_name in topology_names:
+            topology = report["source_topology"][topology_name]
+            prepared = topology.get("prepared_surface", {})
+            quotient = prepared.get("exact_coordinate_quotient_topology", {})
+            _require(topology.get("closed_self_free_single_component") is True
+                     and topology.get("exact_self_audit_count") == 0
+                     and topology.get("signed_volume_m3", 0.0) > 0.0
+                     and topology.get("referenced_face_component_count") == 1
+                     and prepared.get("referenced_surface_closed") is True
+                     and quotient.get("closed_oriented_manifold_candidate") is True
+                     and quotient.get("face_component_count") == 1
+                     and quotient.get("boundary_edge_count") == 0
+                     and quotient.get("orientation_defect_edges_count") == 0,
+                     f"7↔8 {topology_name} is not a closed self-free solid")
+    for role, owner_id in (("arch", 7), ("descending", 8)):
+        calibre = report["independent_source_collar_calibre"][role]
+        station = calibre["station"]
+        comparison = calibre["candidate_to_baseline_comparison"]
+        ratios = comparison["candidate_to_baseline_ratios"]
+        _require(calibre.get("passed") is True
+                 and calibre.get("owner_id") == owner_id
+                 and calibre.get("clinical_calibre_claim") is False
+                 and station.get("inferred") is True
+                 and station.get("transported_from_source_vertex_ancestry") is True
+                 and station.get("mesh_coordinates_modified") is False
+                 and comparison.get("passed") is True
+                 and 0.8 <= ratios["area"] <= 1.25
+                 and 0.9 <= ratios["minimum_feret_width"] <= 1.1,
+                 f"7↔8 {role} independent source-station calibre proof is incomplete")
+    _require(certificate.get("schema")
+             == "numi.human.verified-aortic-source-interface-handoff.v1"
+             and certificate.get("status") == "VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE"
+             and certificate.get("passed") is True
+             and certificate.get("typed_link") == expected_pair
+             and certificate.get("evidence_report_sha256") == report_sha
+             and certificate.get("source_preflight_sha256") == preflight_sha
+             and certificate.get("capture_input_bundle_sha256") == bundle_sha256
+             and certificate.get("source_rows")
+             == {f"{key[0]}:{key[1]}": value
+                 for key, value in collision_owner.AORTIC_ARCH_DESCENDING_SOURCE_ROWS.items()}
+             and certificate.get("exact_face_pairset_sha256")
+             == collision_owner.AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256
+             and certificate.get("source_topology_passed") is True
+             and certificate.get("interface_gate_passed") is True
+             and certificate.get("solid_gate_passed") is True
+             and certificate.get("independent_source_collar_calibre_passed") is True,
+             "7↔8 compact handoff does not bind the exact passing report/preflight")
+    source_identity = preflight.get("source_identity")
+    labels = {f"{key[0]}:{key[1]}" for key in edge}
+    _require(isinstance(source_identity, dict) and set(source_identity) == labels,
+             "7↔8 preflight source identities differ from its exact typed link")
+    gid_base = _native_nha_gid_base_offset(runtime["context"])[
+        "native_nha_gid_base_offset"]
+    live_surfaces = {}
+    for key, expected in collision_owner.AORTIC_ARCH_DESCENDING_SOURCE_ROWS.items():
+        label = f"{key[0]}:{key[1]}"
+        row = source_identity[label]
+        ancestry = row.get("source_to_capture_ancestry")
+        _require(row.get("typed_identity") == list(key)
+                 and row.get("source_member") == expected["source_member"]
+                 and row.get("fma") == expected["fma"]
+                 and row.get("name") == expected["name"]
+                 and row.get("body_index") == expected["body_index"]
+                 and row.get("layer") == expected["layer"]
+                 and row.get("first_vertex") == expected["first_vertex"]
+                 and row.get("vertex_count") == expected["vertex_count"]
+                 and row.get("face_count") == expected["face_count"]
+                 and row.get("source_face_u32_sha256") == expected["faces_sha256"]
+                 and row.get("actual_face_u32_sha256") == expected["faces_sha256"]
+                 and isinstance(ancestry, dict)
+                 and ancestry.get("status")
+                 == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+                 and ancestry.get("typed_identity") == list(key)
+                 and ancestry.get("source_abi5_face_array_sha256")
+                 == expected["faces_sha256"]
+                 and ancestry.get("capture_faces_u32_sha256")
+                 == expected["faces_sha256"]
+                 and ancestry.get("ordered_source_face_ids_are_preserved") is True
+                 and ancestry.get("capture_global_vertex_ids_are_actual_pack_values")
+                 is True
+                 and ancestry.get("native_source_slot_identity_is_contiguous") is True
+                 and ancestry.get("native_nha_gid_base_offset") == gid_base
+                 and ancestry.get(
+                     "observed_gid_minus_nha_global_vertex_index_unique_count") == 1
+                 and ancestry.get(
+                     "observed_gid_minus_nha_global_vertex_index_min") == gid_base
+                 and ancestry.get(
+                     "observed_gid_minus_nha_global_vertex_index_max") == gid_base,
+                 f"7↔8 source row/slot ancestry changed for {key}")
+        value = runtime["candidate_surfaces"].get(
+            key, runtime["context"]["surfaces"].get(key))
+        _require(value is not None, f"current runtime is missing 7↔8 surface {key}")
+        live_fingerprint = collision_owner._aortic_arch_surface_fingerprint(
+            value, key=key)
+        _require(certificate["candidate_surface_bindings"].get(label)
+                 == live_fingerprint
+                 and live_fingerprint["positions_f32_sha256"]
+                 == row.get("actual_position_f32_sha256")
+                 and live_fingerprint["faces_u32_sha256"]
+                 == row.get("actual_face_u32_sha256")
+                 and live_fingerprint["normals_f32_sha256"]
+                 == row.get("actual_normal_f32_sha256")
+                 and live_fingerprint["source_vertex_ids_u64_sha256"]
+                 == row.get("actual_gid_u64_sha256"),
+                 f"7↔8 proof arrays differ from current actual surface {key}")
+        live_surfaces[key] = value
+    collision_owner._validate_aortic_arch_descending_interface_certificate(
+        certificate, live_surfaces, set(NETWORK_KEYS))
+    return certificate
+
+
+def _load_cached_aortic_interface_certificates(
+    runtime: dict, bundle_sha256: str,
+) -> dict:
+    """Load only the two separately pinned aortic interfaces in this capture."""
+    certificates = {
+        collision_owner.AORTIC_ARCH_SOURCE_INTERFACE:
+            _load_aortic_arch_interface_certificate(runtime, bundle_sha256),
+        collision_owner.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE:
+            _load_aortic_arch_descending_interface_certificate(runtime, bundle_sha256),
+    }
+    for edge, certificate in certificates.items():
+        _require(certificate.get("typed_link") == [list(edge[0]), list(edge[1])],
+                 f"aortic source-interface loader returned the wrong typed link {edge}")
+    return certificates
+
+
 def _validate_cached_network_inventory(live_inventory: dict, cached_inventory: dict) -> None:
     fields = (
         "candidate_surface_count", "independent_source_baseline_surface_count",
@@ -1002,7 +1241,11 @@ def continue_cached_all_target_screen(
         candidates, _baselines, _link_inputs, live_inventory = _bind_runtime_inputs(runtime)
         cached_inventory = terminal.get("network_inventory")
         _validate_cached_network_inventory(live_inventory, cached_inventory)
-        aortic_certificate = _load_aortic_arch_interface_certificate(runtime, bundle_sha)
+        certificate_map = _load_cached_aortic_interface_certificates(runtime, bundle_sha)
+        aortic_certificate = certificate_map[
+            collision_owner.AORTIC_ARCH_SOURCE_INTERFACE]
+        descending_certificate = certificate_map[
+            collision_owner.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE]
         _require(first_failure.get("triangle_pair_count")
                  == collision_owner.AORTIC_ARCH_INTERFACE_PAIR_COUNT
                  and first_failure.get("unexpected_triangle_pairs")
@@ -1028,11 +1271,9 @@ def continue_cached_all_target_screen(
         _require(_stable_preflight(target_overlay) == _stable_preflight(frozen_overlay),
                  "replayed run150 rest/313 counterfactual target overlays changed")
         collision_surfaces.update(candidates)
-        certificate_map = {
-            collision_owner.AORTIC_ARCH_SOURCE_INTERFACE: aortic_certificate}
         preflight = {
             **start,
-            "status": "PREFLIGHT_READY_EXACT_CACHED_CONTINUITY_AND_AORTIC_HANDOFF",
+            "status": "PREFLIGHT_READY_EXACT_CACHED_CONTINUITY_AND_AORTIC_HANDOFFS",
             "runner_code_pins": _runtime_code_pins(),
             "captured_source_rows": live_preflight["actual_accepted_capture"],
             "continuity_report_sha256": terminal_sha,
@@ -1048,6 +1289,14 @@ def continue_cached_all_target_screen(
                 aortic_certificate["exact_face_pairs"]),
             "aortic_interface_candidate_surface_bindings":
                 aortic_certificate["candidate_surface_bindings"],
+            "aortic_arch_descending_interface_certificate": {
+                key: value for key, value in descending_certificate.items()
+                if key not in ("exact_face_pairs", "candidate_surface_bindings")
+            },
+            "aortic_arch_descending_interface_exact_face_pair_count": len(
+                descending_certificate["exact_face_pairs"]),
+            "aortic_arch_descending_interface_candidate_surface_bindings":
+                descending_certificate["candidate_surface_bindings"],
             "counterfactual_target_overlay_summary": {
                 "typed_identity": target_overlay["typed_identity"],
                 "candidate_nha_sha256": target_overlay["candidate_nha_sha256"],

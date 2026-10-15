@@ -65,6 +65,17 @@ AORTIC_ARCH_DESCENDING_SOURCE_ROWS = {
         "faces_sha256": "ec5cd5366cd434c0b167740d5276f84ac35045de56968c10aa7f2931758115c2",
     },
 }
+AORTIC_ARCH_DESCENDING_INTERFACE_REPORT_SHA256 = (
+    "d4905ba93f1e11829ad38d076056fa434fa70d37b9269eb9f1ef231e10aefcdf")
+AORTIC_ARCH_DESCENDING_INTERFACE_PREFLIGHT_SHA256 = (
+    "e00854e2883508e92ae0234353ec94e9df82649834ad7b4169ffd83b98fd8d0c")
+AORTIC_ARCH_DESCENDING_INTERFACE_HANDOFF_SHA256 = (
+    "56922c77b63edcdc2ac8164f70cb47485312d558055cad95547754e183985ae5")
+AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "61f15af8dc20fc7534dc231a560649cb04e0dd60abd76d42f8e5b52a9670daa6")
+AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256 = (
+    "2bdd574e91e91c209caae11f6370113df7612a6857aaecf40310ac142cac7d8a")
+AORTIC_ARCH_DESCENDING_INTERFACE_PAIR_COUNT = 28
 
 
 def _require(condition: bool, message: str) -> None:
@@ -955,6 +966,26 @@ def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_k
         pair_dtype="<u4",
     )
 
+
+def _validate_aortic_arch_descending_interface_certificate(
+    certificate, surfaces, network_keys,
+):
+    """Validate the exact, separately proven 7↔8 source interface."""
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE,
+        schema="numi.human.verified-aortic-source-interface-handoff.v1",
+        status="VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE",
+        evidence_report_sha256=AORTIC_ARCH_DESCENDING_INTERFACE_REPORT_SHA256,
+        source_preflight_sha256=AORTIC_ARCH_DESCENDING_INTERFACE_PREFLIGHT_SHA256,
+        capture_input_bundle_sha256=(
+            AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        exact_pair_count=AORTIC_ARCH_DESCENDING_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256,
+        source_rows=AORTIC_ARCH_DESCENDING_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
+
 def audit_network_rows_against_all_targets(
     verifier, surfaces, network_edges, source_face_pairs, *,
     verified_network_continuity=None, verified_network_source_inventory=None,
@@ -992,15 +1023,20 @@ def audit_network_rows_against_all_targets(
 
     nonnetwork_interface_handoffs = {}
     if verified_nonnetwork_interface_certificates is not None:
+        supported_interfaces = {
+            AORTIC_ARCH_SOURCE_INTERFACE:
+                _validate_aortic_arch_interface_certificate,
+            AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE:
+                _validate_aortic_arch_descending_interface_certificate,
+        }
         _require(isinstance(verified_nonnetwork_interface_certificates, Mapping)
+                 and bool(verified_nonnetwork_interface_certificates)
                  and set(verified_nonnetwork_interface_certificates)
-                 == {AORTIC_ARCH_SOURCE_INTERFACE},
-                 "only the exact source-bound aortic arch interface certificate is supported")
-        certificate = verified_nonnetwork_interface_certificates[
-            AORTIC_ARCH_SOURCE_INTERFACE]
-        nonnetwork_interface_handoffs[AORTIC_ARCH_SOURCE_INTERFACE] = (
-            _validate_aortic_arch_interface_certificate(
-                certificate, surfaces, network_keys))
+                 .issubset(supported_interfaces),
+                 "only the exact source-bound aortic interface certificates are supported")
+        for edge, certificate in verified_nonnetwork_interface_certificates.items():
+            nonnetwork_interface_handoffs[edge] = supported_interfaces[edge](
+                certificate, surfaces, network_keys)
 
     interfaces = {}
     interface_records = []

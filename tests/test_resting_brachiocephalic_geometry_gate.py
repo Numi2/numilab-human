@@ -2371,3 +2371,137 @@ def test_verified_handoff_rejects_stale_cross_linked_partial_or_failed_addenda(
             edge, link, ancestry, rows, source_pairs, inventory,
             lambda value: isinstance(value, str) and len(value) == 64
             and all(character in "0123456789abcdef" for character in value))
+
+
+def test_aortic_arch_descending_certificate_binds_live_surfaces_and_exact_scope(monkeypatch):
+    edge = bg.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+    rows = {
+        edge[0]: {
+            "source_member": "test-arch", "fma": "FMA3768", "name": "arch",
+            "body_index": 20, "layer": 2, "first_vertex": 100,
+            "vertex_count": 4, "face_count": 4, "faces_sha256": "a" * 64,
+        },
+        edge[1]: {
+            "source_member": "test-descending", "fma": "FMA3784",
+            "name": "descending", "body_index": 20, "layer": 2,
+            "first_vertex": 104, "vertex_count": 4, "face_count": 4,
+            "faces_sha256": "b" * 64,
+        },
+    }
+    monkeypatch.setattr(bg, "AORTIC_ARCH_DESCENDING_SOURCE_ROWS", rows)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_DESCENDING_INTERFACE_PAIR_COUNT", 1)
+    pair_sha = hashlib.sha256(
+        np.asarray(((0, 0),), dtype="<u4").tobytes()).hexdigest()
+    monkeypatch.setattr(bg, "AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256", pair_sha)
+    surfaces = {}
+    for index, key in enumerate(edge):
+        points, faces = _tetra(1.0, index * 2.0)
+        surfaces[key] = (
+            points, faces,
+            np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1)),
+            np.arange(index * 10, index * 10 + 4, dtype="<u8"))
+    certificate = {
+        "schema": "numi.human.verified-aortic-source-interface-handoff.v1",
+        "status": "VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE",
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": bg.AORTIC_ARCH_DESCENDING_INTERFACE_REPORT_SHA256,
+        "source_preflight_sha256": bg.AORTIC_ARCH_DESCENDING_INTERFACE_PREFLIGHT_SHA256,
+        "capture_input_bundle_sha256": (
+            bg.AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "source_rows": {f"{key[0]}:{key[1]}": rows[key] for key in edge},
+        "exact_face_pairs": [[0, 0]],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": {
+            f"{key[0]}:{key[1]}": bg._aortic_arch_surface_fingerprint(
+                surfaces[key], key=key)
+            for key in edge
+        },
+    }
+    accepted = bg._validate_aortic_arch_descending_interface_certificate(
+        certificate, surfaces, {edge[0]})
+    assert accepted["passed"] is True
+    assert accepted["typed_link"] == [list(edge[0]), list(edge[1])]
+    assert accepted["exact_face_pair_count"] == 1
+    assert accepted["anatomical_admission"] is False
+
+    wrong_link = dict(certificate, typed_link=[list(edge[0]), [51011, 6]])
+    with pytest.raises(ValueError, match="names another typed pair"):
+        bg._validate_aortic_arch_descending_interface_certificate(
+            wrong_link, surfaces, {edge[0]})
+    wrong_scope = dict(certificate, source_rows={
+        **certificate["source_rows"], "51011:6": rows[edge[1]]})
+    with pytest.raises(ValueError, match="does not bind exactly its two source rows"):
+        bg._validate_aortic_arch_descending_interface_certificate(
+            wrong_scope, surfaces, {edge[0]})
+
+
+def test_two_aortic_handoffs_skip_only_their_typed_direct_pairs(monkeypatch):
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    arch = bg.AORTIC_ARCH_SOURCE_INTERFACE
+    descending = bg.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+    for index, key in enumerate((arch[1], descending[1])):
+        surfaces[key] = _pack_surface(*_tetra(1.0, 50.0 + index * 2.0))
+    certificates = {arch: {"id": "arch"}, descending: {"id": "descending"}}
+
+    def certify(expected, supplied, _surfaces, _network):
+        assert supplied == certificates[expected]
+        return {"status": "VERIFIED", "passed": True,
+                "typed_link": [list(expected[0]), list(expected[1])]}
+
+    monkeypatch.setattr(
+        bg, "_validate_aortic_arch_interface_certificate",
+        lambda supplied, current, network: certify(arch, supplied, current, network))
+    monkeypatch.setattr(
+        bg, "_validate_aortic_arch_descending_interface_certificate",
+        lambda supplied, current, network: certify(
+            descending, supplied, current, network))
+
+    verifier = _HandoffVerifier()
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_nonnetwork_interface_certificates=certificates)
+    assert result["passed"] is True
+    assert len(result["verified_nonnetwork_interface_handoffs"]) == 2
+    assert result["certified_interface_target_count_omitted_from_generic_screen"] == 2
+    assert verifier.shared_calls[0]["targets"] == ((51005, 900), (51007, 1))
+    direct_pairs = {
+        frozenset(pair) for pair in verifier.pair_calls
+        if arch[1] in pair or descending[1] in pair
+    }
+    assert frozenset(arch) not in direct_pairs
+    assert frozenset(descending) not in direct_pairs
+    expected_strict_pairs = {
+        frozenset((network_key, target_key))
+        for network_key in {(51011, 7), (51011, 471), (51011, 473), (51011, 477)}
+        if network_key != arch[0]
+        for target_key in (arch[1], descending[1])
+    }
+    assert direct_pairs == expected_strict_pairs
+
+    strict_verifier = _HandoffVerifier(
+        failed_network_pair=frozenset(((51011, 473), descending[1])))
+    rejected = bg.audit_network_rows_against_all_targets(
+        strict_verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_nonnetwork_interface_certificates=certificates)
+    assert rejected["passed"] is False
+    assert rejected["failed_stage"] == (
+        "certified_interface_target_against_other_network_surface")
+    assert rejected["failed_pair"] == [[51011, 473], [51011, 8]]
+
+    invalid_certificates = dict(certificates)
+    invalid_certificates[((51011, 7), (51011, 9))] = {"id": "unknown"}
+    with pytest.raises(ValueError, match="only the exact source-bound aortic interface"):
+        bg.audit_network_rows_against_all_targets(
+            _HandoffVerifier(), surfaces, edges, source_pairs,
+            verified_network_continuity=continuity,
+            verified_nonnetwork_interface_certificates=invalid_certificates)

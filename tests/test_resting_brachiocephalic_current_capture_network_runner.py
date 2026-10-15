@@ -696,3 +696,45 @@ def test_execute_ordered_network_gates_binds_addenda_by_exact_typed_link(monkeyp
     assert inventory["baseline_matched_collar_addendum"] == proof_475_479
     assert inventory["source_baseline_matched_collar_addendum"] == proof_525_469
     assert len(report["baseline_matched_collar_addenda"]) == 2
+
+
+def test_cached_continuation_loads_only_the_two_typed_aortic_certificates(monkeypatch):
+    arch = geometry.AORTIC_ARCH_SOURCE_INTERFACE
+    descending = geometry.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+    certificates = {
+        arch: {"typed_link": [list(arch[0]), list(arch[1])]},
+        descending: {"typed_link": [list(descending[0]), list(descending[1])]},
+    }
+    monkeypatch.setattr(
+        runner, "_load_aortic_arch_interface_certificate",
+        lambda runtime, bundle_sha: certificates[arch])
+    monkeypatch.setattr(
+        runner, "_load_aortic_arch_descending_interface_certificate",
+        lambda runtime, bundle_sha: certificates[descending])
+    loaded = runner._load_cached_aortic_interface_certificates(
+        {"runtime": "unused-by-mocked-loaders"}, "bundle-sha")
+    assert set(loaded) == {arch, descending}
+    assert loaded == certificates
+
+    monkeypatch.setattr(
+        runner, "_load_aortic_arch_descending_interface_certificate",
+        lambda runtime, bundle_sha: {"typed_link": [list(arch[0]), [51011, 6]]})
+    with pytest.raises(ValueError, match="wrong typed link"):
+        runner._load_cached_aortic_interface_certificates({}, "bundle-sha")
+
+
+def test_descending_proof_loader_rejects_changed_frozen_report_before_runtime(
+        tmp_path, monkeypatch):
+    report = tmp_path / "execution-report.json"
+    preflight = tmp_path / "preflight.json"
+    handoff = tmp_path / "handoff-certificate.json"
+    report.write_text("{}\n")
+    preflight.write_text("{}\n")
+    handoff.write_text("{}\n")
+    monkeypatch.setattr(runner, "AORTIC_DESCENDING_PROOF_REPORT", report)
+    monkeypatch.setattr(runner, "AORTIC_DESCENDING_PROOF_PREFLIGHT", preflight)
+    monkeypatch.setattr(runner, "AORTIC_DESCENDING_PROOF_HANDOFF", handoff)
+    monkeypatch.setattr(runner, "AORTIC_DESCENDING_PROOF_REPORT_SHA256", "0" * 64)
+    with pytest.raises(ValueError, match="pinned 7↔8 source-interface evidence changed"):
+        runner._load_aortic_arch_descending_interface_certificate(
+            {}, geometry.AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256)
