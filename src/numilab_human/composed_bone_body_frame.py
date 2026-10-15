@@ -32,6 +32,208 @@ def _sha_bytes(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
+def _runtime_attachment_expected_values(
+    nha_row: dict[str, Any],
+    interface_maps: dict[int, list[list[int]]],
+    *,
+    nha_stable_id: int,
+) -> tuple[int, dict[int, tuple[list[int], int, str]]]:
+    """Validate typed NHA/rib maps and derive the counts used by the native hook."""
+    if (
+        not isinstance(nha_row, dict)
+        or type(nha_stable_id) is not int or nha_stable_id != 313
+        or type(nha_row.get("body_index")) is not int or nha_row.get("body_index") != 20
+        or type(nha_row.get("layer")) is not int or nha_row.get("layer") != 1
+        or type(nha_row.get("flags")) is not int or nha_row.get("flags") != 0
+        or not isinstance(nha_row.get("vertices6"), (list, np.ndarray))
+    ):
+        raise model.ImportError("runtime rib attachment requires the exact typed NHA 51010:313 body20 layer1 row")
+    vertices6 = np.asarray(nha_row["vertices6"])
+    if vertices6.ndim != 2 or vertices6.shape[1] != 6 or not np.isfinite(vertices6).all():
+        raise model.ImportError("runtime rib attachment NHA row allocation is malformed")
+    local_vertex_count = len(vertices6)
+    if local_vertex_count <= 0 or set(interface_maps) != set(_RIBS):
+        raise model.ImportError("runtime rib attachment map inventory or NHA row allocation is invalid")
+    expected: dict[int, tuple[list[int], int, str]] = {}
+    for stable_id in _RIBS:
+        pairs = interface_maps.get(stable_id)
+        if not isinstance(pairs, list) or not pairs:
+            raise model.ImportError(f"runtime rib{stable_id} attachment map is missing")
+        rib_ids: set[int] = set()
+        nha_ids: set[int] = set()
+        for pair in pairs:
+            if (
+                not isinstance(pair, (list, tuple)) or len(pair) != 2
+                or type(pair[0]) is not int or type(pair[1]) is not int
+                or pair[0] < 0 or pair[1] < 0 or pair[1] >= local_vertex_count
+                or pair[0] in rib_ids or pair[1] in nha_ids
+            ):
+                raise model.ImportError(f"runtime rib{stable_id} attachment map has invalid or duplicate typed slots")
+            rib_ids.add(pair[0])
+            nha_ids.add(pair[1])
+        ordered = sorted(nha_ids)
+        ids_sha = _sha_bytes(b"".join(struct.pack("<I", value) for value in ordered))
+        expected[stable_id] = (ordered, len(ordered), ids_sha)
+    return local_vertex_count, expected
+
+
+def bind_intercostal_runtime_attachment_metadata(
+    receipt: dict[str, Any],
+    nha_row: dict[str, Any],
+    interface_maps: dict[int, list[list[int]]],
+    *,
+    nha_stable_id: int,
+    nha_payload_sha256: str,
+    bones_payload_sha256: str,
+) -> None:
+    """Emit exact runtime attachment allocation metadata from parsed owner rows."""
+    local_vertex_count, expected = _runtime_attachment_expected_values(
+        nha_row, interface_maps, nha_stable_id=nha_stable_id,
+    )
+    for value in (nha_payload_sha256, bones_payload_sha256):
+        if not isinstance(value, str) or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
+            raise model.ImportError("runtime rib attachment payload hash is malformed")
+    bindings = receipt.get("functional_bindings") if isinstance(receipt, dict) else None
+    payload = receipt.get("payload") if isinstance(receipt, dict) else None
+    provenance = receipt.get("provenance") if isinstance(receipt, dict) else None
+    if not isinstance(bindings, dict) or not isinstance(payload, dict) or not isinstance(provenance, dict):
+        raise model.ImportError("runtime rib attachment receipt lacks payload, provenance, or functional bindings")
+    payload["sha256"] = nha_payload_sha256
+    provenance["bones_payload_sha256"] = bones_payload_sha256
+    bindings["bones_payload_sha256"] = bones_payload_sha256
+    for stable_id, (member, member_sha, channel, _) in _RIBS.items():
+        key = f"intercostal_313_rib{stable_id}_motion_attachment"
+        attachment = bindings.get(key)
+        surface = attachment.get("surface") if isinstance(attachment, dict) else None
+        rib_channel = attachment.get("existing_rib_channel") if isinstance(attachment, dict) else None
+        source_partition = attachment.get("source_partition") if isinstance(attachment, dict) else None
+        ids, count, ids_sha = expected[stable_id]
+        if (
+            not isinstance(surface, dict)
+            or type(surface.get("semantic")) is not int or surface.get("semantic") != 51010
+            or type(surface.get("stable_id")) is not int or surface.get("stable_id") != 313
+            or type(surface.get("body_index")) is not int or surface.get("body_index") != 20
+            or type(surface.get("layer")) is not int or surface.get("layer") != 1
+            or not isinstance(surface.get("interface_local_vertex_ids"), list)
+            or surface.get("interface_local_vertex_ids") != ids
+            or surface.get("interface_local_vertex_ids_sha256") != ids_sha
+            or not isinstance(rib_channel, dict)
+            or type(rib_channel.get("stable_id")) is not int or rib_channel.get("stable_id") != stable_id
+            or type(rib_channel.get("semantic")) is not int or rib_channel.get("semantic") != 51004
+            or type(rib_channel.get("body_index")) is not int or rib_channel.get("body_index") != 20
+            or type(rib_channel.get("channel_kind")) is not int or rib_channel.get("channel_kind") != 5
+            or type(rib_channel.get("channel_index")) is not int or rib_channel.get("channel_index") != channel
+            or rib_channel.get("source_member_id") != member
+            or rib_channel.get("source_member_sha256") != member_sha
+            or not isinstance(source_partition, dict)
+        ):
+            raise model.ImportError(f"runtime rib{stable_id} attachment identity or exact interface slots are invalid")
+        surface["local_vertex_count"] = local_vertex_count
+        source_partition["interface_vertex_count"] = count
+        attachment["anatomy_payload_sha256"] = nha_payload_sha256
+        attachment["bones_payload_sha256"] = bones_payload_sha256
+
+
+def validate_intercostal_runtime_attachment_metadata(
+    receipt: dict[str, Any],
+    nha_row: dict[str, Any],
+    interface_maps: dict[int, list[list[int]]],
+    *,
+    nha_stable_id: int,
+    nha_payload_sha256: str,
+    bones_payload_sha256: str,
+) -> None:
+    """Fail closed unless receipt counts and hashes match the decoded owner rows."""
+    local_vertex_count, expected = _runtime_attachment_expected_values(
+        nha_row, interface_maps, nha_stable_id=nha_stable_id,
+    )
+    bindings = receipt.get("functional_bindings") if isinstance(receipt, dict) else None
+    payload = receipt.get("payload") if isinstance(receipt, dict) else None
+    provenance = receipt.get("provenance") if isinstance(receipt, dict) else None
+    if (
+        not isinstance(bindings, dict) or not isinstance(payload, dict) or not isinstance(provenance, dict)
+        or payload.get("sha256") != nha_payload_sha256
+        or provenance.get("bones_payload_sha256") != bones_payload_sha256
+        or bindings.get("bones_payload_sha256") != bones_payload_sha256
+    ):
+        raise model.ImportError("runtime rib attachment receipt payload hashes differ from exact owner rows")
+    for stable_id in _RIBS:
+        attachment = bindings.get(f"intercostal_313_rib{stable_id}_motion_attachment")
+        surface = attachment.get("surface") if isinstance(attachment, dict) else None
+        source_partition = attachment.get("source_partition") if isinstance(attachment, dict) else None
+        ids, count, ids_sha = expected[stable_id]
+        if (
+            not isinstance(attachment, dict)
+            or attachment.get("anatomy_payload_sha256") != nha_payload_sha256
+            or attachment.get("bones_payload_sha256") != bones_payload_sha256
+            or not isinstance(surface, dict)
+            or type(surface.get("local_vertex_count")) is not int
+            or surface.get("local_vertex_count") != local_vertex_count
+            or surface.get("interface_local_vertex_ids") != ids
+            or surface.get("interface_local_vertex_ids_sha256") != ids_sha
+            or not isinstance(source_partition, dict)
+            or type(source_partition.get("interface_vertex_count")) is not int
+            or source_partition.get("interface_vertex_count") != count
+        ):
+            raise model.ImportError(f"runtime rib{stable_id} attachment counts differ from decoded typed rows")
+    copied = json.loads(json.dumps(receipt))
+    bind_intercostal_runtime_attachment_metadata(
+        copied, nha_row, interface_maps,
+        nha_stable_id=nha_stable_id,
+        nha_payload_sha256=nha_payload_sha256,
+        bones_payload_sha256=bones_payload_sha256,
+    )
+
+
+def _preserve_receipt_common_field_sidecars(
+    receipt: dict[str, Any],
+    source_directory: Path,
+    output_directory: Path,
+) -> dict[str, dict[str, Any]]:
+    """Copy and hash-check the three relative cardiac field sidecars used by receipts."""
+    provenance = receipt.get("provenance") if isinstance(receipt, dict) else None
+    cardiac = provenance.get("cardiac_geometry_binding") if isinstance(provenance, dict) else None
+    common = cardiac.get("common_field") if isinstance(cardiac, dict) else None
+    if not isinstance(common, dict):
+        raise model.ImportError("rib receipt lacks the existing common cardiac field binding")
+    source_root = source_directory.resolve()
+    output_root = output_directory.resolve()
+    preserved: dict[str, dict[str, Any]] = {}
+    for key in ("map", "domain_boxes", "polynomials"):
+        entry = common.get(key)
+        if not isinstance(entry, dict):
+            raise model.ImportError(f"rib receipt common field omits {key}")
+        relative = entry.get("path")
+        expected_sha = entry.get("sha256")
+        if (
+            not isinstance(relative, str) or not relative
+            or Path(relative).is_absolute()
+            or any(part in ("", ".", "..") for part in Path(relative).parts)
+            or not isinstance(expected_sha, str) or len(expected_sha) != 64
+            or any(c not in "0123456789abcdef" for c in expected_sha)
+        ):
+            raise model.ImportError(f"rib receipt common field {key} path or hash is malformed")
+        source = (source_root / relative).resolve()
+        destination = output_root / relative
+        try:
+            source.relative_to(source_root)
+            destination.resolve(strict=False).relative_to(output_root)
+        except ValueError as error:
+            raise model.ImportError(f"rib receipt common field {key} escapes its artifact directory") from error
+        if not source.is_file() or model.sha256(source) != expected_sha:
+            raise model.ImportError(f"rib receipt common field {key} source sidecar is missing or changed")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if destination.is_file():
+            if model.sha256(destination) != expected_sha:
+                raise model.ImportError(f"rib receipt common field {key} copied sidecar has changed")
+        else:
+            shutil.copy2(source, destination)
+        if model.sha256(destination) != expected_sha:
+            raise model.ImportError(f"rib receipt common field {key} output sidecar failed verification")
+        preserved[key] = {"path": relative, "sha256": expected_sha, "bytes": destination.stat().st_size}
+    return preserved
+
+
 def _float32(value: float) -> float:
     try:
         result = struct.unpack("<f", struct.pack("<f", float(value)))[0]
@@ -933,6 +1135,9 @@ def reframe_composed_rib_payload(
     for source_file in receipt_path.parent.iterdir():
         if source_file.is_file():
             shutil.copy2(source_file, output_path / source_file.name)
+    preserved_common_field_sidecars = _preserve_receipt_common_field_sidecars(
+        receipt, receipt_path.parent, output_path,
+    )
     output_nha_path = output_path / nha_path.name
     output_bones_path = output_path / bones_path.name
     output_manifest_path = output_path / manifest_path.name
@@ -1046,7 +1251,22 @@ def reframe_composed_rib_payload(
         binding = receipt_out["functional_bindings"].get(key)
         if not isinstance(binding, dict) or binding.get("bones_payload_sha256") != _sha_bytes(bones_raw):
             raise model.ImportError(f"source003 receipt rib{stable_id} attachment does not bind the input NHBONES")
-        binding["bones_payload_sha256"] = output_sha
+    bind_intercostal_runtime_attachment_metadata(
+        receipt_out,
+        nha_row,
+        interface_maps,
+        nha_stable_id=313,
+        nha_payload_sha256=model.sha256(output_nha_path),
+        bones_payload_sha256=output_sha,
+    )
+    validate_intercostal_runtime_attachment_metadata(
+        receipt_out,
+        nha_row,
+        interface_maps,
+        nha_stable_id=313,
+        nha_payload_sha256=model.sha256(output_nha_path),
+        bones_payload_sha256=output_sha,
+    )
     report = {
         "schema": "numi.human.composed-rib-body-local-frame-rebase-report.v1",
         "status": "PASS_SOURCE_REFRAME_NATIVE_EMISSION_AND_MOTION_NOT_ADMITTED",
@@ -1060,7 +1280,10 @@ def reframe_composed_rib_payload(
         },
         "rows": rows_report,
         "residuals": declaration["residuals"],
-        "preservation": declaration["preservation"],
+        "preservation": {
+            **declaration["preservation"],
+            "common_field_sidecars": preserved_common_field_sidecars,
+        },
         "native_emission": False,
         "retained_motion_admission": False,
     }

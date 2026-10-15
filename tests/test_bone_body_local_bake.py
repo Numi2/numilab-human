@@ -222,6 +222,139 @@ class BodyLocalBakeTests(unittest.TestCase):
         (artifact / "bodyparts3d-myosim-major-bones.manifest.json").write_text(json.dumps(manifest))
         return artifact, manifest
 
+    def _runtime_attachment_fixture(self):
+        from numilab_human import composed_bone_body_frame as frame
+        row = {
+            "body_index": 20, "layer": 1, "flags": 0,
+            "vertices6": np.zeros((7, 6), dtype=np.float32),
+        }
+        maps = {48: [[3, 2], [5, 4]], 49: [[2, 1], [7, 5]]}
+        receipt = {
+            "payload": {"sha256": "11" * 32},
+            "provenance": {"bones_payload_sha256": "00" * 32},
+            "functional_bindings": {"bones_payload_sha256": "00" * 32},
+        }
+        for stable_id, (member, member_sha, channel, _) in frame._RIBS.items():
+            ids = sorted(pair[1] for pair in maps[stable_id])
+            id_sha = frame._sha_bytes(b"".join(struct.pack("<I", value) for value in ids))
+            receipt["functional_bindings"][f"intercostal_313_rib{stable_id}_motion_attachment"] = {
+                "anatomy_payload_sha256": "11" * 32,
+                "bones_payload_sha256": "00" * 32,
+                "existing_rib_channel": {
+                    "stable_id": stable_id, "semantic": 51004, "body_index": 20,
+                    "channel_kind": 5, "channel_index": channel,
+                    "source_member_id": member, "source_member_sha256": member_sha,
+                },
+                "surface": {
+                    "semantic": 51010, "stable_id": 313, "body_index": 20, "layer": 1,
+                    "local_vertex_count": 112561, "interface_local_vertex_ids": ids,
+                    "interface_local_vertex_ids_sha256": id_sha,
+                },
+                "source_partition": {},
+            }
+        return frame, row, maps, receipt
+
+    def test_runtime_attachment_generator_derives_typed_row_and_interface_counts(self):
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        frame.bind_intercostal_runtime_attachment_metadata(
+            receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+        )
+        for stable_id, count in ((48, 2), (49, 2)):
+            attachment = receipt["functional_bindings"][f"intercostal_313_rib{stable_id}_motion_attachment"]
+            self.assertEqual(attachment["surface"]["local_vertex_count"], 7)
+            self.assertEqual(attachment["source_partition"]["interface_vertex_count"], count)
+            self.assertEqual(attachment["anatomy_payload_sha256"], "22" * 32)
+            self.assertEqual(attachment["bones_payload_sha256"], "33" * 32)
+
+    def test_runtime_attachment_generator_rejects_wrong_typed_surface_identity(self):
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        wrong_nha_stable_id = True
+        with self.assertRaisesRegex(model.ImportError, "typed NHA"):
+            frame.bind_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=wrong_nha_stable_id,
+                nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+            )
+
+    def test_runtime_attachment_generator_rejects_wrong_typed_surface_semantic(self):
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        receipt["functional_bindings"]["intercostal_313_rib48_motion_attachment"]["surface"]["semantic"] = True
+        with self.assertRaisesRegex(model.ImportError, "identity or exact interface"):
+            frame.bind_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=313,
+                nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+            )
+
+    def test_runtime_attachment_generator_rejects_interface_slot_outside_decoded_row(self):
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        maps[49][0][1] = 7
+        with self.assertRaisesRegex(model.ImportError, "invalid or duplicate typed slots"):
+            frame.bind_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+            )
+
+    def test_runtime_attachment_reader_rejects_missing_interface_vertex_count(self):
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        frame.bind_intercostal_runtime_attachment_metadata(
+            receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+        )
+        del receipt["functional_bindings"]["intercostal_313_rib49_motion_attachment"]["source_partition"]["interface_vertex_count"]
+        with self.assertRaisesRegex(model.ImportError, "counts differ from decoded typed rows"):
+            frame.validate_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+            )
+
+    def test_runtime_attachment_reader_rejects_stale_surface_allocation(self):
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        frame.bind_intercostal_runtime_attachment_metadata(
+            receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+        )
+        receipt["functional_bindings"]["intercostal_313_rib48_motion_attachment"]["surface"]["local_vertex_count"] = 112561
+        with self.assertRaisesRegex(model.ImportError, "counts differ from decoded typed rows"):
+            frame.validate_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
+            )
+
+    def test_receipt_generator_preserves_and_hash_checks_relative_cardiac_sidecars(self):
+        from numilab_human import composed_bone_body_frame as frame
+        source = self.root / "source"
+        output = self.root / "output"
+        source.mkdir()
+        contents = {
+            "map": b"map-bytes",
+            "domain_boxes": b"domain-bytes",
+            "polynomials": b"volume-bytes",
+        }
+        common = {}
+        for key, raw in contents.items():
+            name = f"{key}.bin"
+            (source / name).write_bytes(raw)
+            common[key] = {"path": name, "sha256": hashlib.sha256(raw).hexdigest()}
+        receipt = {"provenance": {"cardiac_geometry_binding": {"common_field": common}}}
+        output.mkdir()
+        preserved = frame._preserve_receipt_common_field_sidecars(receipt, source, output)
+        self.assertEqual(set(preserved), set(contents))
+        for key, raw in contents.items():
+            self.assertEqual((output / f"{key}.bin").read_bytes(), raw)
+            self.assertEqual(preserved[key]["sha256"], hashlib.sha256(raw).hexdigest())
+
+    def test_receipt_generator_rejects_missing_or_changed_relative_cardiac_sidecar(self):
+        from numilab_human import composed_bone_body_frame as frame
+        source = self.root / "source"
+        output = self.root / "output"
+        source.mkdir()
+        output.mkdir()
+        common = {}
+        for key, raw in {
+            "map": b"map", "domain_boxes": b"domains", "polynomials": b"volumes",
+        }.items():
+            name = f"{key}.bin"
+            (source / name).write_bytes(raw)
+            common[key] = {"path": name, "sha256": hashlib.sha256(raw).hexdigest()}
+        receipt = {"provenance": {"cardiac_geometry_binding": {"common_field": common}}}
+        (source / "map.bin").write_bytes(b"tampered")
+        with self.assertRaisesRegex(model.ImportError, "source sidecar is missing or changed"):
+            frame._preserve_receipt_common_field_sidecars(receipt, source, output)
+
     def test_source_export_rebind_mode_uses_strict_verifier_dispatch(self):
         artifact, manifest = self._source_export_rebind_fixture()
         from numilab_human import composed_bone_body_frame
