@@ -470,6 +470,8 @@ def _read_pinned_source_baseline_observation(
              and audit.get("passed") is False,
              "pinned baseline unexpected pairs differ from the exact three declared collar additions")
     ancestry = link.get("abi5_face_corner_ancestry", {})
+    historical_first_vertices = {}
+    current_first_vertices = {}
     for role, surface, stable_id, label in (
         ("baseline_parent", bridge, bridge_key[1], "bridge"),
         ("baseline_child", target, target_key[1], "target"),
@@ -478,13 +480,32 @@ def _read_pinned_source_baseline_observation(
         row = source_rows.get(stable_id, source_rows.get(str(stable_id)))
         record = row.get("record") if isinstance(row, Mapping) else None
         historical_gid_offset = owner.get("native_nha_gid_base_offset")
+        historical_first_vertex = owner.get("nha_source_row_first_vertex")
+        historical_first_used_local = owner.get(
+            "first_used_source_vertex_local_index")
+        historical_first_used_gid = owner.get("first_used_source_vertex_capture_gid")
         _require(isinstance(record, (tuple, list)) and len(record) == 8
                  and owner.get("typed_identity") == [51011, stable_id]
                  and type(historical_gid_offset) is int
                  and historical_gid_offset >= 0
+                 and type(historical_first_vertex) is int
+                 and historical_first_vertex >= 0
                  and (not identity_matches_capture
                       or historical_gid_offset == native_nha_gid_base_offset)
-                 and owner.get("nha_source_row_first_vertex") == record[1]
+                 and (not identity_matches_capture
+                      or historical_first_vertex == record[1])
+                 and owner.get("capture_gid_formula")
+                 == "native NHA base offset + ABI5 record firstVertex + source-local vertex index"
+                 and owner.get("native_source_slot_identity_is_contiguous") is True
+                 and owner.get("observed_gid_minus_nha_global_vertex_index_min")
+                 == historical_gid_offset
+                 and owner.get("observed_gid_minus_nha_global_vertex_index_max")
+                 == historical_gid_offset
+                 and type(historical_first_used_local) is int
+                 and historical_first_used_local >= 0
+                 and historical_first_used_gid == (
+                     historical_gid_offset + historical_first_vertex
+                     + historical_first_used_local)
                  and owner.get("capture_face_count") == len(surface.faces)
                  and owner.get("capture_faces_u32_sha256")
                  == _sha_bytes(np.ascontiguousarray(surface.faces, dtype="<u4").tobytes())
@@ -493,6 +514,8 @@ def _read_pinned_source_baseline_observation(
                      "source_parent_faces_sha256" if label == "bridge"
                      else "source_child_faces_sha256")],
                  f"pinned baseline {label} face/GID ancestry differs from current ABI5 slots")
+        historical_first_vertices[label] = historical_first_vertex
+        current_first_vertices[label] = record[1]
     surface_lineage = {
         role: {
             "position_f32_sha256": _sha_bytes(
@@ -546,6 +569,8 @@ def _read_pinned_source_baseline_observation(
         "historical_capture_identity": historical_identity,
         "current_capture_identity": current_identity,
         "historical_and_current_capture_identity_equal": identity_matches_capture,
+        "historical_nha_source_row_first_vertices": historical_first_vertices,
+        "current_nha_source_row_first_vertices": current_first_vertices,
         "exact_position_and_ordered_face_hashes_replayed": all(
             frozen_lineage[role]["position_f32_sha256"]
             == surface_lineage[role]["position_f32_sha256"]
@@ -946,6 +971,9 @@ def _declared_baseline_collar_addendum(
                             "source_vertices6_f32_sha256"],
                         "native_source_slot_gid_formula": identity_record[
                             "native_source_slot_gid_formula"],
+                        "current_nha_source_row_first_vertex": source_rows.get(
+                            int(stable_id), source_rows.get(str(stable_id)))[
+                                "record"][1],
                     }
                     for stable_id, identity_record in source_identities.items()
                 },

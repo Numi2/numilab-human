@@ -669,6 +669,13 @@ def _declared_source_baseline_addendum_fixture(
                         "typed_identity": [51011, stable_id],
                         "native_nha_gid_base_offset": 10000,
                         "nha_source_row_first_vertex": first_vertex,
+                        "capture_gid_formula": (
+                            "native NHA base offset + ABI5 record firstVertex + source-local vertex index"),
+                        "native_source_slot_identity_is_contiguous": True,
+                        "observed_gid_minus_nha_global_vertex_index_min": 10000,
+                        "observed_gid_minus_nha_global_vertex_index_max": 10000,
+                        "first_used_source_vertex_local_index": 0,
+                        "first_used_source_vertex_capture_gid": 10000 + first_vertex,
                         "capture_face_count": len(row["faces"]),
                         "capture_faces_u32_sha256": hashlib.sha256(
                             row["faces"].tobytes()).hexdigest(),
@@ -724,9 +731,14 @@ def _rebind_source_baseline_fixture_to_current_capture(inputs, *, gid_offset=200
         (inputs["bridge_key"][1], inputs["bridge"]),
         (inputs["target_key"][1], inputs["target"]),
     ):
-        record = inputs["source_rows"][stable_id]["record"]
+        row = inputs["source_rows"][stable_id]
+        record = row["record"]
+        current_first_vertex = record[1] + 8961
+        row["record"] = (
+            record[0], current_first_vertex, *record[2:])
         surface.source_vertex_ids = np.asarray(
-            gid_offset + record[1] + np.arange(len(surface.positions)),
+            gid_offset + current_first_vertex
+            + np.arange(len(surface.positions)),
             dtype="<u8")
     inputs["gid_base_offset"] = gid_offset
     inputs["baseline_observation"]["current_source_surface_replay"] = (
@@ -769,12 +781,20 @@ def test_current_capture_rebind_replays_only_exact_source_positions_and_faces(
     assert replay["current_capture_identity"]["accepted_pack_sha256"] == "9" * 64
     assert replay["historical_capture_identity"]["source_nha_payload_sha256"] == "4" * 64
     assert replay["current_capture_identity"]["source_nha_payload_sha256"] == "6" * 64
+    assert replay["historical_nha_source_row_first_vertices"] == {
+        "bridge": 100, "target": 200}
+    assert replay["current_nha_source_row_first_vertices"] == {
+        "bridge": 9061, "target": 9161}
     assert replay["exact_position_and_ordered_face_hashes_replayed"] is True
     assert replay["historical_gid_hashes_are_provenance_only_when_capture_differs"] is True
     assert replay["current_abi5_gid_slot_rebinding_required"] is True
     current_gid_binding = observation["current_abi5_gid_slot_rebinding"]
     assert current_gid_binding["passed"] is True
     assert set(current_gid_binding["typed_rows"]) == {"469", "525"}
+    assert current_gid_binding["typed_rows"]["525"][
+        "current_nha_source_row_first_vertex"] == 9061
+    assert current_gid_binding["typed_rows"]["469"][
+        "current_nha_source_row_first_vertex"] == 9161
     assert proof["source_baseline_observation"][
         "baseline_surfaces_reconstructed_from_current_pinned_source_and_capture"]
     assert proof["candidate_geometry_used"] is False
