@@ -190,3 +190,17 @@ def refine_skin_patch(raw: bytes, face_ids, *, global_source_matrix):
         "native_admission": False,
     }
     return bytes(final), proof
+
+
+def appended_material_vertex_ids(existing_ids, count):
+    """Retain integer material IDs and append fresh IDs across refinements."""
+    ids = np.asarray(existing_ids)
+    if (ids.ndim != 1 or not len(ids) or ids.dtype.kind not in "iu"
+            or np.any(ids < 0) or len(np.unique(ids)) != len(ids)
+            or type(count) is not int or count <= 0):
+        raise human.ImportError("invalid material vertex identity allocation")
+    maximum = int(ids.max())
+    if maximum + count > np.iinfo(np.int64).max:
+        raise human.ImportError("material vertex identity overflow")
+    return np.concatenate([ids.astype(np.int64),
+        np.arange(1, count + 1, dtype=np.int64) + maximum])

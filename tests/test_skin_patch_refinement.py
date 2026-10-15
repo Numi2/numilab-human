@@ -88,3 +88,22 @@ def test_birth_weights_retain_every_positive_parent_support_and_existing_rows():
 def test_invalid_source_face_selection_fails_closed(selection):
     with pytest.raises(model.ImportError):
         refine_skin_patch(fixture(), selection, global_source_matrix=M)
+
+
+def test_repeated_refinement_keeps_large_integer_material_ids_exact():
+    from numilab_human.skin_patch_refinement import appended_material_vertex_ids
+    ids=np.array([2**53+17,2**53+21],dtype=np.int64)
+    first=appended_material_vertex_ids(ids,2)
+    second=appended_material_vertex_ids(first,3)
+    np.testing.assert_array_equal(second,
+        [2**53+17,2**53+21,2**53+22,2**53+23,2**53+24,2**53+25,2**53+26])
+
+def test_material_vertex_identity_allocation_rejects_overflow_and_aliases():
+    from numilab_human.skin_patch_refinement import appended_material_vertex_ids
+    for ids,count in [(np.array([np.iinfo(np.int64).max]),1),
+                      (np.array([1,1],dtype=np.int64),1),
+                      (np.array([1.]),1),
+                      (np.array([-1],dtype=np.int64),1),
+                      (np.array([1],dtype=np.int64),True)]:
+        with pytest.raises(model.ImportError):
+            appended_material_vertex_ids(ids,count)
