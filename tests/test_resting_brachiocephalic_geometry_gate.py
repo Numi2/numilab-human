@@ -2657,6 +2657,116 @@ def test_aortic_arch_descending_certificate_binds_live_surfaces_and_exact_scope(
             wrong_scope, surfaces, {edge[0]})
 
 
+def test_field002_aortic_descending_certificate_binds_current_surfaces(monkeypatch):
+    edge = bg.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+    rows = {
+        edge[0]: {
+            "source_member": "FJ3411", "fma": "FMA3768", "name": "arch of aorta",
+            "body_index": 20, "layer": 2, "first_vertex": 100,
+            "vertex_count": 4, "face_count": 4, "faces_sha256": "a" * 64,
+        },
+        edge[1]: {
+            "source_member": "FJ3427", "fma": "FMA3784",
+            "name": "descending aorta", "body_index": 20, "layer": 2,
+            "first_vertex": 104, "vertex_count": 4, "face_count": 4,
+            "faces_sha256": "b" * 64,
+        },
+    }
+    monkeypatch.setattr(bg, "AORTIC_ARCH_DESCENDING_SOURCE_ROWS", rows)
+    report_sha, preflight_sha, bundle_sha = "1" * 64, "2" * 64, "3" * 64
+    pair_sha = hashlib.sha256(np.asarray(((0, 0),), dtype="<u4").tobytes()).hexdigest()
+    monkeypatch.setattr(
+        bg, "AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_REPORT_SHA256", report_sha)
+    monkeypatch.setattr(
+        bg, "AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PREFLIGHT_SHA256", preflight_sha)
+    monkeypatch.setattr(
+        bg, "AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256", bundle_sha)
+    monkeypatch.setattr(
+        bg, "AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PAIRSET_SHA256", pair_sha)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PAIR_COUNT", 1)
+
+    surfaces = {}
+    for index, key in enumerate(edge):
+        points, faces = _tetra(1.0, index * 2.0)
+        normals = np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1))
+        gids = np.arange(index * 10, index * 10 + 4, dtype="<u8")
+        surfaces[key] = (points, faces, normals, gids)
+    certificate = {
+        "schema": bg.AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA,
+        "status": bg.AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_STATUS,
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": report_sha,
+        "source_preflight_sha256": preflight_sha,
+        "capture_input_bundle_sha256": bundle_sha,
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "source_rows": {f"{key[0]}:{key[1]}": rows[key] for key in edge},
+        "exact_face_pairs": [[0, 0]],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": {
+            f"{key[0]}:{key[1]}": bg._aortic_arch_surface_fingerprint(
+                surfaces[key], key=key)
+            for key in edge
+        },
+    }
+    accepted = bg._validate_aortic_arch_descending_field002_interface_certificate(
+        certificate, surfaces, {edge[0]})
+    assert accepted["passed"] is True
+    assert accepted["exact_face_pair_count"] == 1
+    assert accepted["schema"] == bg.AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA
+    assert accepted["anatomical_admission"] is False
+
+    stale = dict(certificate, evidence_report_sha256="4" * 64)
+    with pytest.raises(ValueError, match="stale or belongs to another capture"):
+        bg._validate_aortic_arch_descending_field002_interface_certificate(
+            stale, surfaces, {edge[0]})
+    stale_surface = list(surfaces[edge[1]])
+    stale_surface[3] = stale_surface[3] + np.uint64(1)
+    with pytest.raises(ValueError, match="stale for actual surface"):
+        bg._validate_aortic_arch_descending_field002_interface_certificate(
+            certificate, {**surfaces, edge[1]: stale_surface}, {edge[0]})
+    wrong_typed_link = dict(certificate, typed_link=[list(edge[0]), [51011, 465]])
+    with pytest.raises(ValueError, match="names another typed pair"):
+        bg._validate_aortic_arch_descending_field002_interface_certificate(
+            wrong_typed_link, surfaces, {edge[0]})
+
+
+def test_field002_descending_certificate_dispatch_is_schema_scoped(monkeypatch):
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    edge = bg.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+    surfaces[edge[1]] = _pack_surface(*_tetra(1.0, 60.0))
+    certificate = {"schema": bg.AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA}
+
+    def historical_must_not_run(*_args):
+        raise AssertionError("field-002 certificate fell through to historical validator")
+
+    def current_validator(supplied, _surfaces, network_keys):
+        assert supplied == certificate
+        assert edge[0] in network_keys and edge[1] not in network_keys
+        return {"status": "VERIFIED", "passed": True,
+                "typed_link": [list(edge[0]), list(edge[1])]}
+
+    monkeypatch.setattr(
+        bg, "_validate_aortic_arch_descending_interface_certificate",
+        historical_must_not_run)
+    monkeypatch.setattr(
+        bg, "_validate_aortic_arch_descending_field002_interface_certificate",
+        current_validator)
+    result = bg.audit_network_rows_against_all_targets(
+        _HandoffVerifier(), surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_nonnetwork_interface_certificates={edge: certificate})
+    assert result["passed"] is True
+    assert result["verified_nonnetwork_interface_handoffs"][0]["typed_link"] == [
+        list(edge[0]), list(edge[1])]
+
+
 def test_two_aortic_handoffs_skip_only_their_typed_direct_pairs(monkeypatch):
     surfaces, edges, source_pairs, continuity = _handoff_fixture()
     arch = bg.AORTIC_ARCH_SOURCE_INTERFACE

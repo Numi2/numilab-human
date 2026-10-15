@@ -92,6 +92,25 @@ AORTIC_ARCH_DESCENDING_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
 AORTIC_ARCH_DESCENDING_INTERFACE_PAIRSET_SHA256 = (
     "2bdd574e91e91c209caae11f6370113df7612a6857aaecf40310ac142cac7d8a")
 AORTIC_ARCH_DESCENDING_INTERFACE_PAIR_COUNT = 28
+
+# Fresh 7↔8 source-interface proof for the field-002 arch geometry. The older
+# constants above remain bound to the earlier source/capture and are retained
+# for historical replay only.
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA = (
+    "numi.human.verified-aortic-source-interface-field-002-handoff.v1")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_STATUS = (
+    "VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE_FIELD_002")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_REPORT_SHA256 = (
+    "8e7dbe300a93f4cf458b1286f31e9ae130044c857cf1e377356b43afbd6ce42c")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PREFLIGHT_SHA256 = (
+    "8fef3b0134c745129089694ce0a29ccab425aef1cf7b2c7e08adc44c357975c3")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_HANDOFF_SHA256 = (
+    "e7b2a0a3b10023e1eca75627d523b662b97903205ca5f50bda027b26d345e91d")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "81102e440325e89cfd4fbf74ee3fe9a45bdbeaadee1375757a14ebf6b8ee5501")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PAIRSET_SHA256 = (
+    "2bdd574e91e91c209caae11f6370113df7612a6857aaecf40310ac142cac7d8a")
+AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PAIR_COUNT = 28
 AORTIC_ARCH_CAROTID_SOURCE_INTERFACE = ((51011, 7), (51011, 465))
 AORTIC_ARCH_CAROTID_INTERFACE_REPORT_SHA256 = (
     "c59e4ff043b36c5db2fcf9499922710e784e177eb7cf0878ddaf9331cd3054ed")
@@ -1066,6 +1085,29 @@ def _validate_aortic_arch_descending_interface_certificate(
         pair_dtype="<u4",
     )
 
+def _validate_aortic_arch_descending_field002_interface_certificate(
+    certificate, surfaces, network_keys,
+):
+    """Validate the fresh 7↔8 interface proof bound to the field-002 arch."""
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE,
+        schema=AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA,
+        status=AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_STATUS,
+        evidence_report_sha256=(
+            AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_REPORT_SHA256),
+        source_preflight_sha256=(
+            AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PREFLIGHT_SHA256),
+        capture_input_bundle_sha256=(
+            AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        exact_pair_count=AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=(
+            AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_PAIRSET_SHA256),
+        source_rows=AORTIC_ARCH_DESCENDING_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
+
+
 def _validate_aortic_arch_carotid_interface_certificate(certificate, surfaces, network_keys):
     """Validate the frozen, non-flow arch/left-carotid source interface."""
     return _validate_source_interface_certificate(
@@ -1136,10 +1178,16 @@ def audit_network_rows_against_all_targets(
                  "only the exact source-bound aortic interface certificates are supported")
         for edge, certificate in verified_nonnetwork_interface_certificates.items():
             validator = supported_interfaces[edge]
-            if (edge == AORTIC_ARCH_SOURCE_INTERFACE
-                    and isinstance(certificate, Mapping)
-                    and certificate.get("schema") == AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA):
-                validator = _validate_aortic_arch_field002_interface_certificate
+            if isinstance(certificate, Mapping):
+                if (edge == AORTIC_ARCH_SOURCE_INTERFACE
+                        and certificate.get("schema")
+                        == AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA):
+                    validator = _validate_aortic_arch_field002_interface_certificate
+                elif (edge == AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE
+                      and certificate.get("schema")
+                      == AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA):
+                    validator = (
+                        _validate_aortic_arch_descending_field002_interface_certificate)
             nonnetwork_interface_handoffs[edge] = validator(
                 certificate, surfaces, network_keys)
 
