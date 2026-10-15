@@ -216,6 +216,34 @@ def compartment_direction(skin_normal,weights,binding_body_ids,torso_body_id):
     return direction,dict(region=region,torso_weight=torso_weight,
                           torso_core_body_index=int(torso_body_id))
 
+def update_contact_constraints(previous,current,*,self_failed,policy):
+    """Refresh actual bone witnesses only after a complete current inventory.
+
+    Self repair has no new bone census, so it must retain the last constraints.
+    The legacy accumulation policy remains available for comparative evidence.
+    """
+    if policy not in {"accumulate","current"}:
+        raise ValueError("unknown contact constraint policy")
+    if self_failed:
+        if current:raise ValueError("self-only stage cannot replace bone inventory")
+        return list(previous)
+    return list(current) if policy=="current" else [*previous,*current]
+
+
+def source_points_with_local_displacement(points_source,base_source,used,active,affine,requested):
+    """Retain every inactive/source-unused slot when updating a local patch."""
+    candidate=np.array(points_source,copy=True)
+    candidate[used[active]]=(base_source[used[active]]+
+        np.linalg.solve(affine[active],requested[:,:,None])[...,0]).astype("<f4")
+    return candidate
+
+
+def fixed_edge_difference(delta,lookup,a,b):
+    """Constant part of delta[a]-delta[b] outside the local variable block."""
+    return ((delta[a] if int(a) not in lookup else np.zeros(3))-
+            (delta[b] if int(b) not in lookup else np.zeros(3)))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output", "bone-artifact", "body-manifest"]:
@@ -229,6 +257,8 @@ def main():
         help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
     ap.add_argument("--self-contact-separator", choices=["witness","face-support"],default="witness")
     ap.add_argument("--exit-policy",choices=["nearest","skin-normal","compartment-skin-normal"],default="nearest")
+    ap.add_argument("--contact-constraint-policy",choices=["accumulate","current"],default="accumulate",
+        help="current replaces obsolete bone separators after each complete exact inventory")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
     if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .03:
@@ -306,7 +336,9 @@ def main():
         bone_target_identities=[bone_ids[sid] for sid in [10,12,14,16]],
         compiled_bone_identity=bone_identity_proof,
         scope="Offline authoring approximation only; no anatomical/native admission.",
-        construction_exit_policy=args.exit_policy,torso_core_body_index=torso_body_id)
+        construction_exit_policy=args.exit_policy,torso_core_body_index=torso_body_id,
+        contact_constraint_policy=args.contact_constraint_policy,
+        inactive_source_coordinates_preserved=True)
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
         runner_argv=[sys.executable,*sys.argv],input_pins=pins)
     gp.verify_frozen_preparation(frozen)
@@ -325,7 +357,7 @@ def main():
         normals*=np.sign(volume)/np.linalg.norm(normals,axis=1)[:,None]
         bones[sid]=(bone,normals,bone.meter_index() if args.solid_depth else None)
     constraints=[]
-    if args.exit_policy=="nearest":
+    if args.exit_policy=="nearest" and args.contact_constraint_policy=="accumulate":
         for sf,bary,normal in zip(cache["skin_face_ids"],cache["barycentrics"],cache["outward_normals"]):
             constraints.append((int(sf),bary.copy(),normal.copy(),args.margin_m))
     previous=None
@@ -441,7 +473,8 @@ def main():
         if iteration==args.iterations or time.monotonic()-started>1200:
             status="FAIL_BOUNDED_METHOD_EXHAUSTED"
             break
-        constraints.extend(new_constraints)
+        constraints=update_contact_constraints(constraints,new_constraints,
+            self_failed=self_failed,policy=args.contact_constraint_policy)
         seed_faces=[x[0] for x in constraints]+[f for a,_,b,_,_,_ in self_constraints for f in (a,b)]
         seed=np.unique(faces[np.unique(seed_faces)])
         active=seed
@@ -495,7 +528,9 @@ def main():
                 if int(a) in lookup:terms.append((lookup[int(a)]*3+axis,1))
                 if int(b) in lookup:terms.append((lookup[int(b)]*3+axis,-1))
                 aux=nd*2+ei*3+axis
-                add(terms+[(aux,-1)],0);add([(j,-z) for j,z in terms]+[(aux,-1)],0)
+                constant=fixed_edge_difference(delta,lookup,int(a),int(b))[axis]
+                add(terms+[(aux,-1)],-constant)
+                add([(j,-z) for j,z in terms]+[(aux,-1)],constant)
         prior=delta[active].ravel()
         bounds=[(max(-args.total_bound_m,float(x)-args.step_bound_m),
                  min(args.total_bound_m,float(x)+args.step_bound_m)) for x in prior]
@@ -519,9 +554,8 @@ def main():
         for backtrack in range(11):
             fraction=2.**(-backtrack)
             trial=delta[active]+fraction*(requested-delta[active])
-            candidate_source=source["vertices_f"][:,:3].copy()
-            candidate_source[used[active]]=(base_source[used[active]]+
-                np.linalg.solve(affine[active],trial[:,:,None])[...,0]).astype("<f4")
+            candidate_source=source_points_with_local_displacement(
+                points_source,base_source,used,active,affine,trial)
             actual_delta=np.einsum("nij,nj->ni",affine,(candidate_source.astype(float)-base_source)[used])
             trial_world=(base_points.astype(float)+actual_delta).astype("<f4")
             t=trial_world[faces].astype(float)

@@ -187,3 +187,36 @@ def test_complete_face_support_preserves_non_axis_aligned_shared_edge_exactly():
         # geometric tolerance cannot stand in for that exact incidence.
         if int(np.argmax(wa))<2 and int(np.argmax(wb))<2:
             assert bound==0.
+
+
+def test_current_contact_inventory_retires_old_separators_but_self_stage_keeps_them():
+    old=[("old",)];new=[("current",)]
+    assert tool.update_contact_constraints(old,new,self_failed=False,policy="current")==new
+    assert tool.update_contact_constraints(old,[],self_failed=True,policy="current")==old
+    assert tool.update_contact_constraints(old,new,self_failed=False,policy="accumulate")==old+new
+    assert tool.update_contact_constraints(old,[],self_failed=False,policy="current")==[]
+    with pytest.raises(ValueError,match="self-only"):
+        tool.update_contact_constraints(old,new,self_failed=True,policy="current")
+
+
+def test_local_source_update_retains_prior_repairs_and_unused_allocation():
+    source=np.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.],[10.,11.,12.]],dtype="<f4")
+    prior=source.copy();prior[1]+=.25;prior[3]-=.5
+    used=np.array([0,1,2]);active=np.array([2])
+    affine=np.tile(np.eye(3),(3,1,1))
+    request=np.array([[.125,.25,.5]])
+    candidate=tool.source_points_with_local_displacement(prior,source,used,active,affine,request)
+    np.testing.assert_array_equal(candidate[[0,1,3]],prior[[0,1,3]])
+    np.testing.assert_array_equal(candidate[2],source[2]+request[0])
+
+
+def test_edge_variation_retains_fixed_neighbor_displacement_offset():
+    delta=np.array([[.001,.002,.003],[.004,.005,.006]])
+    np.testing.assert_array_equal(tool.fixed_edge_difference(delta,{0:0},0,1),-delta[1])
+    np.testing.assert_array_equal(tool.fixed_edge_difference(delta,{1:0},0,1),delta[0])
+    np.testing.assert_array_equal(tool.fixed_edge_difference(delta,{0:0,1:1},0,1),np.zeros(3))
+    # With vertex0 variable and vertex1 fixed at .004 m, absolute edge
+    # variation is zero at variable=.004, not at variable=0.
+    constant=tool.fixed_edge_difference(delta,{0:0},0,1)[0]
+    assert abs(.004+constant)==0.
+    assert abs(0.+constant)==.004
