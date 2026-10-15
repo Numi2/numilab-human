@@ -23,6 +23,38 @@ class AuthoringTests(unittest.TestCase):
                                 ((1, "other"), {1: surface, "other": surface})):
             with self.assertRaisesRegex(HumanImportError, "distinct named source surfaces"):
                 partition.construct_arrangement(surfaces, source_names=names)
+    def test_refined_transverse_vertex_contact_retains_full_certificate(self):
+        from numilab_human import cardiac_partition_certificate as certificate
+        faces = [(0,2,1),(0,1,3),(0,3,2),(1,2,3)]
+        vertices = [(0,0,0),(4,0,0),(0,4,0),(0,0,4)]
+        first = {"vertices": vertices + [(1,1,2)],
+                 "triangles": faces[:3] + [(1,2,4),(2,3,4),(3,1,4)],
+                 "source_sha256": "a"*64}
+        second = {"vertices": [tuple(x+1 for x in p) for p in vertices],
+                  "triangles": faces, "source_sha256": "b"*64}
+        names = ("first", "second")
+        sources = dict(zip(names, (first, second)))
+        children, report = partition.construct_arrangement(sources, source_names=names)
+        self.assertGreater(report["supported_point_contact_count"], 0)
+        proof = certificate.certify_partition(
+            sources, children, source_names=names,
+            expected_geometry_sha256={n:certificate.source_geometry_sha256(sources[n])
+                                      for n in names},
+            expected_source_component_counts={n:1 for n in names})
+        self.assertTrue(proof)
+        self.assertEqual({(r["source"], r["source_face"]) for r in children},
+                         {(n,i) for n in names for i in range(len(sources[n]["triangles"]))})
+
+    def test_isolated_nonparallel_point_contact_still_fails_closed(self):
+        names = ("first", "second")
+        surfaces = dict(zip(names, (
+            {"vertices": [(0,0,0),(1,0,0),(0,1,0)],
+             "triangles": [(0,1,2)], "source_sha256": "a"*64},
+            {"vertices": [(0,0,0),(0,-1,1),(0,1,1)],
+             "triangles": [(0,1,2)], "source_sha256": "b"*64})))
+        with self.assertRaisesRegex(HumanImportError, "point-only face contact is unsupported"):
+            partition.construct_arrangement(surfaces, source_names=names)
+
     def test_command_preserves_existing_output_and_rejects_redirection(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "artifact.json"

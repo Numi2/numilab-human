@@ -67,7 +67,8 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
     """Return source-parented exact subtriangles and intersection provenance.
 
     This bounded authoring path supports transverse intersections with segment
-    endpoints. Coplanar patches, tangencies and unsupported planar cell topology
+    endpoints, including point pairs supported by nonzero incident-star cuts.
+    Coplanar patches, isolated tangencies and unsupported planar cell topology
     are rejected, not repaired by a tolerance or a guessed anatomical plane.
     Input surfaces must subsequently pass the independent certificate.
     """
@@ -84,8 +85,12 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
     segments = {name: defaultdict(list) for name in source_names}
     boundary_points = {name: defaultdict(set) for name in source_names}
     edge_faces = {name: defaultdict(list) for name in source_names}
+    vertex_faces = {name: defaultdict(set) for name in source_names}
+    point_contacts = []
     for name in source_names:
         for face_id, face in enumerate(source_surfaces[name]["triangles"]):
+            for vertex in face:
+                vertex_faces[name][vertices[name][vertex]].add(face_id)
             for i in range(3):
                 edge_faces[name][tuple(sorted((face[i], face[(i+1) % 3])))].append(face_id)
     intersection_segments = []
@@ -95,7 +100,10 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
                    for tri in (first, second)]
         require(any(predicates._cross(*normals)), "coplanar or tangent face intersection is unsupported")
         points = sorted(set(predicates.triangle_intersection_points(first, second)))
-        require(len(points) >= 2, "point-only face contact is unsupported")
+        if len(points) == 1:
+            point_contacts.append((tuple(pair), points[0]))
+            continue
+        require(len(points) >= 2, "empty face contact is unsupported")
         a, b = points[0], points[-1]
         require(a != b and all(_on_edge(p, a, b) for p in points), "intersection is not one exact segment")
         intersection_segments.append({"source_faces": list(pair), "endpoints": (a, b)})
@@ -108,6 +116,36 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
                     if _on_edge(point, vertices[name][edge[0]], vertices[name][edge[1]]):
                         for neighbor in edge_faces[name][edge]:
                             boundary_points[name][neighbor].add(point)
+    # Refinement can split a transverse cut exactly at a source vertex.
+    # A pair meeting only at that vertex needs no zero-length cut. It must,
+    # however, be supported by a nonzero segment in each incident source star.
+    # An isolated point/tangent never supplies this evidence.
+    for pair, point in point_contacts:
+        for name, face_id in zip(source_names, pair):
+            triangle = records[name][face_id][0]
+            star = {face_id}
+            on_boundary = False
+            face = source_surfaces[name]["triangles"][face_id]
+            for i in range(3):
+                a, b = face[i], face[(i+1) % 3]
+                if _on_edge(point, vertices[name][a], vertices[name][b]):
+                    on_boundary = True
+                    star.update(edge_faces[name][tuple(sorted((a, b)))])
+            if point in vertex_faces[name]:
+                star.update(vertex_faces[name][point])
+            own_cut = any(_on_edge(point, a, b)
+                          for a, b in segments[name][face_id])
+            supported = own_cut or (on_boundary and any(
+                _on_edge(point, a, b) for neighbor in star
+                for a, b in segments[name][neighbor]))
+            require(supported,
+                    f"point-only face contact is unsupported: {pair} {name}:{face_id}")
+            # Propagate any edge point to both incident faces exactly.
+            for i in range(3):
+                a, b = face[i], face[(i+1) % 3]
+                if _on_edge(point, vertices[name][a], vertices[name][b]):
+                    for neighbor in edge_faces[name][tuple(sorted((a, b)))]:
+                        boundary_points[name][neighbor].add(point)
     classifiers = {name: IntegerRayClassifier(records[name]) for name in source_names}
     result = []
     for name, other in (source_names, tuple(reversed(source_names))):
@@ -121,6 +159,7 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES):
                                "source": name, "source_face": face_id, "other_location": location})
     return result, {"source_intersecting_triangle_pairs": pair_audit["triangle_pairs"],
                     "source_intersecting_triangle_pair_count": pair_audit["count"],
+                    "supported_point_contact_count": len(point_contacts),
                     "common_integer_scale_per_metre": denominator,
                     "intersection_segments_m": [{"source_faces": row["source_faces"],
                         "endpoints": tuple(tuple(x/denominator for x in point) for point in row["endpoints"])}
