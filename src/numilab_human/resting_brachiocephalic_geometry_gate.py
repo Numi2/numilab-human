@@ -1961,7 +1961,9 @@ def _exact_inside_witness(verifier, first, second, intersection):
     return None
 
 
-def _material_vertex_ancestry(surface, tangent, collar_face_ids):
+def _material_vertex_ancestry(
+    surface, tangent, collar_face_ids, *, tangent_support_vertex_ids=None,
+):
     faces = surface.faces
     collar_face_ids = np.asarray(collar_face_ids, dtype=np.int64)
     collar_vertex_ids = np.unique(faces[collar_face_ids].reshape(-1))
@@ -1969,8 +1971,18 @@ def _material_vertex_ancestry(surface, tangent, collar_face_ids):
     anchor_ids = collar_vertex_ids.astype(np.int64)
     anchor_weights = np.full(len(anchor_ids), 1.0 / len(anchor_ids), dtype=np.float64)
     positions = surface.positions.astype(np.float64)
-    projections = positions @ tangent
-    low_id, high_id = int(np.argmin(projections)), int(np.argmax(projections))
+    if tangent_support_vertex_ids is None:
+        tangent_support = np.arange(len(positions), dtype=np.int64)
+    else:
+        tangent_support = np.asarray(tangent_support_vertex_ids, dtype=np.int64)
+        _require(tangent_support.ndim == 1 and len(tangent_support) >= 2
+                 and len(np.unique(tangent_support)) == len(tangent_support)
+                 and int(tangent_support.min()) >= 0
+                 and int(tangent_support.max()) < len(positions),
+                 "local tangent support must name distinct source vertices")
+    projections = positions[tangent_support] @ tangent
+    low_id = int(tangent_support[int(np.argmin(projections))])
+    high_id = int(tangent_support[int(np.argmax(projections))])
     _require(low_id != high_id, "source segment has no tangent extent")
     return {
         "material_anchor_local_vertex_ids": anchor_ids.tolist(),
@@ -2031,37 +2043,196 @@ def _transport_material_station(surface, spec):
     }
 
 
-def _port_station_spec(surface, witness_points, collar_face_ids, *, route_anchor=None):
+def _source_route_anchor_from_evidence(surface, evidence):
+    _require(isinstance(evidence, Mapping),
+             "local source station requires frozen neighbor-route evidence")
+    typed_link_raw = evidence.get("typed_link")
+    _require(isinstance(typed_link_raw, (tuple, list)) and len(typed_link_raw) == 2,
+             "neighbor-route evidence needs one typed source link")
+    typed_link = tuple(_identity(value) for value in typed_link_raw)
+    _require(typed_link[0] != typed_link[1],
+             "neighbor-route evidence must join distinct typed surfaces")
+    anchor_identity = _identity(surface.key)
+    _require(anchor_identity in typed_link,
+             "neighbor-route link must share the station's source surface")
+    anchor_position = typed_link.index(anchor_identity)
+    peer = evidence.get("peer_surface")
+    _require(hasattr(peer, "key") and hasattr(peer, "faces")
+             and hasattr(peer, "positions") and hasattr(peer, "source_vertex_ids")
+             and _identity(peer.key) == typed_link[1 - anchor_position],
+             "neighbor-route peer must be the other typed source surface")
+    raw_pairs = evidence.get("frozen_face_pairs")
+    first_surface, second_surface = (
+        (surface, peer) if anchor_position == 0 else (peer, surface))
+    pairs = _pair_rows(
+        raw_pairs, name="frozen neighbor-route collar pairset",
+        bridge_face_count=len(first_surface.faces),
+        target_face_count=len(second_surface.faces))
+    pair_bytes = np.ascontiguousarray(raw_pairs, dtype="<u4").tobytes()
+    pairset_sha256 = hashlib.sha256(pair_bytes).hexdigest()
+    report_sha256 = evidence.get("source_report_sha256")
+    for label, digest in (("neighbor-route source report", report_sha256),
+                          ("neighbor-route source pairset",
+                           evidence.get("source_pairset_sha256"))):
+        _require(isinstance(digest, str) and len(digest) == 64
+                 and all(character in "0123456789abcdef" for character in digest),
+                 label + " must be a lowercase SHA-256")
+    _require(pairset_sha256 == evidence["source_pairset_sha256"],
+             "neighbor-route frozen pairset differs from its source pin")
+    report_path = evidence.get("source_report_path")
+    _require(isinstance(report_path, str) and report_path.startswith("/"),
+             "neighbor-route source report path must be absolute")
+    pair_field = evidence.get("source_pair_field")
+    typed_field = evidence.get("source_typed_link_field")
+    _require(isinstance(pair_field, str) and pair_field
+             and isinstance(typed_field, str) and typed_field,
+             "neighbor-route evidence must name its report pair and typed-link fields")
+    try:
+        with open(report_path, "rb") as report_file:
+            report_bytes = report_file.read()
+        report = json.loads(report_bytes)
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(
+            "brachiocephalic captured-pose geometry: cannot read frozen neighbor-route report"
+        ) from error
+    _require(hashlib.sha256(report_bytes).hexdigest() == report_sha256,
+             "neighbor-route report bytes differ from their frozen SHA-256")
+    _require(isinstance(report, Mapping)
+             and report.get("passed") is True
+             and report.get("source_topology_passed") is True
+             and report.get("interface_gate_passed") is True
+             and report.get("solid_gate_passed") is True
+             and report.get("independent_source_collar_calibre_passed") is True,
+             "neighbor-route report lacks its complete source-interface proof")
+    report_link_raw = report.get(typed_field)
+    _require(isinstance(report_link_raw, (tuple, list))
+             and len(report_link_raw) == 2
+             and tuple(_identity(value) for value in report_link_raw) == typed_link,
+             "neighbor-route report has a different typed source link")
+    report_pairs_raw = report.get(pair_field)
+    _require(isinstance(report_pairs_raw, (tuple, list))
+             and [list(pair) if isinstance(pair, (tuple, list)) else pair
+                  for pair in report_pairs_raw]
+             == [list(pair) for pair in raw_pairs],
+             "neighbor-route report face pairs differ from the frozen source pairset")
+    report_pairs = _pair_rows(
+        report_pairs_raw, name="neighbor-route report face pairset",
+        bridge_face_count=len(first_surface.faces),
+        target_face_count=len(second_surface.faces))
+    _require(report_pairs == pairs,
+             "neighbor-route report pairset differs from its typed source surfaces")
+    if "source_pair_count" in evidence:
+        _require(type(evidence["source_pair_count"]) is int
+                 and evidence["source_pair_count"] == len(pairs),
+                 "neighbor-route source pair count differs from its frozen pairset")
+    anchor_face_ids = sorted({pair[anchor_position] for pair in pairs})
+    anchor_vertices = np.unique(
+        np.asarray(surface.faces, dtype=np.int64)[anchor_face_ids].reshape(-1))
+    _require(len(anchor_vertices) > 0,
+             "neighbor-route collar has no source vertices")
+    positions = np.asarray(surface.positions, dtype=np.float64)
+    source_vertex_ids = np.asarray(surface.source_vertex_ids)
+    anchor_world = positions[anchor_vertices].mean(axis=0)
+    return anchor_world, {
+        "schema": "numi.human.frozen-source-neighbor-route-anchor.v1",
+        "typed_link": [list(key) for key in typed_link],
+        "station_surface_identity": list(anchor_identity),
+        "peer_surface_identity": list(typed_link[1 - anchor_position]),
+        "source_report_path": report_path,
+        "source_report_sha256": report_sha256,
+        "source_pair_field": pair_field,
+        "source_typed_link_field": typed_field,
+        "source_pairset_sha256": pairset_sha256,
+        "source_pair_count": len(pairs),
+        "anchor_face_ids": anchor_face_ids,
+        "anchor_face_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(anchor_face_ids, dtype="<u4").tobytes()).hexdigest(),
+        "anchor_source_vertex_ids": [
+            int(value) for value in source_vertex_ids[anchor_vertices]],
+        "anchor_source_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(
+                source_vertex_ids[anchor_vertices], dtype="<u8").tobytes()).hexdigest(),
+        "anchor_world_m": [float(value) for value in anchor_world],
+        "station_surface_binding": _source_geometry_binding(surface),
+        "peer_surface_binding": _source_geometry_binding(peer),
+    }
+
+
+def _port_station_spec(
+    surface, witness_points, collar_face_ids, *, route_anchor=None,
+    station_policy="GLOBAL_SOURCE_PCA_V1",
+):
     positions = surface.positions.astype(np.float64)
     faces = surface.faces
     witness = np.asarray(witness_points, dtype=np.float64)
     _require(witness.ndim == 2 and witness.shape[1] == 3 and len(witness) > 0,
              "station inference requires exact interface witness points")
+    _require(station_policy in (
+        "GLOBAL_SOURCE_PCA_V1", "COLLAR_LOCAL_PCA_V1"),
+        "unknown source station selection policy")
     junction = witness.mean(axis=0)
-    if route_anchor is not None:
-        anchor = np.asarray(route_anchor, dtype=np.float64)
-        _require(anchor.shape == (3,) and np.isfinite(anchor).all(),
-                 "route anchor must be finite XYZ")
-        direction = anchor - junction
-        method = "source-graph route anchor from frozen neighbor/port station"
-    else:
-        center = positions.mean(axis=0)
-        cloud = positions - center
-        covariance = cloud.T @ cloud / max(1, len(cloud))
-        values, vectors = np.linalg.eigh(covariance)
-        direction = vectors[:, int(np.argmax(values))]
-        method = "inferred PCA axis oriented toward source-surface interior centroid"
-        if float(np.dot(direction, center - junction)) < 0.0:
+    local_tangent_support = None
+    local_pca_eigenvalues = None
+    if station_policy == "COLLAR_LOCAL_PCA_V1":
+        _require(route_anchor is not None,
+                 "collar-local source station needs a frozen neighbor-route anchor")
+        collar = np.asarray(collar_face_ids, dtype=np.int64)
+        _require(collar.ndim == 1 and len(collar) > 0
+                 and int(collar.min()) >= 0 and int(collar.max()) < len(faces),
+                 "collar-local station needs valid frozen source collar faces")
+        local_tangent_support = np.unique(faces[collar].reshape(-1))
+        cloud = positions[local_tangent_support]
+        local_center = cloud.mean(axis=0)
+        centered = cloud - local_center
+        covariance = centered.T @ centered / max(1, len(cloud))
+        local_pca_eigenvalues, vectors = np.linalg.eigh(covariance)
+        _require(np.isfinite(local_pca_eigenvalues).all()
+                 and local_pca_eigenvalues[-1] - local_pca_eigenvalues[-2]
+                 > max(1e-24, abs(float(local_pca_eigenvalues[-1])) * 1e-6),
+                 "frozen collar does not define a unique local source tangent")
+        direction = vectors[:, -1]
+        route_direction = np.asarray(route_anchor, dtype=np.float64) - junction
+        route_norm = float(np.linalg.norm(route_direction))
+        _require(route_direction.shape == (3,) and np.isfinite(route_direction).all()
+                 and route_norm > 1e-15,
+                 "frozen neighbor-route anchor does not orient the local source tangent")
+        alignment = float(np.dot(direction, route_direction / route_norm))
+        _require(abs(alignment) > 1e-8,
+                 "local source tangent is orthogonal to its frozen route anchor")
+        if alignment < 0.0:
             direction = -direction
-        if abs(float(np.dot(direction, center - junction))) <= 1e-15:
-            component = int(np.argmax(np.abs(direction)))
-            if direction[component] < 0.0:
+        method = (
+            "PCA of frozen source collar-face vertices oriented toward the "
+            "independently pinned neighboring route collar")
+        tangent = direction / float(np.linalg.norm(direction))
+        ancestry = _material_vertex_ancestry(
+            surface, tangent, collar_face_ids,
+            tangent_support_vertex_ids=local_tangent_support)
+    else:
+        if route_anchor is not None:
+            anchor = np.asarray(route_anchor, dtype=np.float64)
+            _require(anchor.shape == (3,) and np.isfinite(anchor).all(),
+                     "route anchor must be finite XYZ")
+            direction = anchor - junction
+            method = "source-graph route anchor from frozen neighbor/port station"
+        else:
+            center = positions.mean(axis=0)
+            cloud = positions - center
+            covariance = cloud.T @ cloud / max(1, len(cloud))
+            values, vectors = np.linalg.eigh(covariance)
+            direction = vectors[:, int(np.argmax(values))]
+            method = "inferred PCA axis oriented toward source-surface interior centroid"
+            if float(np.dot(direction, center - junction)) < 0.0:
                 direction = -direction
-            method += " with deterministic positive dominant coordinate fallback"
-    norm = float(np.linalg.norm(direction))
-    _require(norm > 1e-15, "cannot infer a stable port tangent")
-    tangent = direction / norm
-    ancestry = _material_vertex_ancestry(surface, tangent, collar_face_ids)
+            if abs(float(np.dot(direction, center - junction))) <= 1e-15:
+                component = int(np.argmax(np.abs(direction)))
+                if direction[component] < 0.0:
+                    direction = -direction
+                method += " with deterministic positive dominant coordinate fallback"
+        norm = float(np.linalg.norm(direction))
+        _require(norm > 1e-15, "cannot infer a stable port tangent")
+        tangent = direction / norm
+        ancestry = _material_vertex_ancestry(surface, tangent, collar_face_ids)
     anchor_ids = np.asarray(ancestry["material_anchor_local_vertex_ids"], dtype=np.int64)
     weights = np.asarray(ancestry["material_anchor_weights"], dtype=np.float64)
     material_anchor = np.sum(positions[anchor_ids] * weights[:, None], axis=0)
@@ -2074,10 +2245,16 @@ def _port_station_spec(surface, witness_points, collar_face_ids, *, route_anchor
         "provenance": method,
         "inferred": True,
         "station_offset_from_anchor_m": patch_extent + margin,
+        "station_selection_policy": station_policy,
+        **({"local_pca_eigenvalues_m2": local_pca_eigenvalues.tolist(),
+            "local_tangent_support_local_vertex_ids": local_tangent_support.tolist(),
+            "local_tangent_support_source_vertex_ids": [
+                int(surface.source_vertex_ids[index])
+                for index in local_tangent_support]}
+           if local_pca_eigenvalues is not None else {}),
         **ancestry,
     }
     return _transport_material_station(surface, spec)
-
 
 
 def _source_geometry_binding(surface):
@@ -2178,6 +2355,7 @@ def build_source_junction_station_declaration(
     verifier, *, bridge_key, target_key, baseline_bridge_surface,
     baseline_target_surface, frozen_face_pairs, declared_vessel_ports,
     anchor_role="bridge", transverse_witness_provider=None,
+    station_policy="GLOBAL_SOURCE_PCA_V1", route_anchor_evidence=None,
 ):
     """Freeze a junction station from baseline source evidence only.
 
@@ -2228,7 +2406,24 @@ def build_source_junction_station_declaration(
     anchor_key = bridge_key if anchor_role == "bridge" else target_key
     anchor = bridge if anchor_role == "bridge" else target
     anchor_patch = bridge_patch if anchor_role == "bridge" else target_patch
-    source_station = _port_station_spec(anchor, exact_points, anchor_patch)
+    route_anchor = None
+    route_anchor_record = None
+    if station_policy == "COLLAR_LOCAL_PCA_V1":
+        route_anchor, route_anchor_record = _source_route_anchor_from_evidence(
+            anchor, route_anchor_evidence)
+    else:
+        _require(route_anchor_evidence is None,
+                 "neighbor-route evidence is only valid for collar-local stations")
+    source_station = _port_station_spec(
+        anchor, exact_points, anchor_patch, route_anchor=route_anchor,
+        station_policy=station_policy)
+    baseline_source_station_section = None
+    if station_policy == "COLLAR_LOCAL_PCA_V1":
+        baseline_source_station_section = _source_surface_section(
+            anchor, source_station)
+        _require(baseline_source_station_section.get("passed") is True
+                 and baseline_source_station_section.get("loop_count") == 1,
+                 "source collar-local station must yield one closed baseline loop")
     source_ancestry = {
         key: source_station[key] for key in (
             "material_anchor_source_vertex_ids",
@@ -2262,6 +2457,18 @@ def build_source_junction_station_declaration(
             "exact_transverse_inside_outside"),
         "baseline_declared_partial_overlap_boundary": boundary,
         "baseline_exact_transverse_overlap_side_witnesses": transverse,
+        "station_selection_policy": station_policy,
+        "neighbor_route_anchor_evidence": route_anchor_record,
+        "baseline_source_station_section": (
+            None if baseline_source_station_section is None else {
+                "passed": baseline_source_station_section.get("passed"),
+                "loop_count": baseline_source_station_section.get("loop_count"),
+                "area_m2": baseline_source_station_section.get("area_m2"),
+                "minimum_feret_width_m": baseline_source_station_section.get(
+                    "minimum_feret_width_m"),
+                "source_face_ancestor_ids": baseline_source_station_section.get(
+                    "source_face_ancestor_ids"),
+            }),
         "source_station_provenance": source_station.get("provenance"),
         "source_station_spec_sha256": _canonical_record_sha256(source_station),
         "source_station_is_candidate_independent": True,

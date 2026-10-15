@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 import numpy as np
 import pytest
@@ -3235,3 +3236,173 @@ def test_two_aortic_handoffs_skip_only_their_typed_direct_pairs(monkeypatch):
             _HandoffVerifier(), surfaces, edges, source_pairs,
             verified_network_continuity=continuity,
             verified_nonnetwork_interface_certificates=invalid_certificates)
+
+
+def _curved_tube_with_remote_limb(remote_x=100.0):
+    path = [[0.0, 0.0, z] for z in np.linspace(-5.0, 0.0, 21)]
+    path += [[4.0 + 4.0 * np.cos(angle), 0.0, 4.0 * np.sin(angle)]
+             for angle in np.linspace(np.pi, np.pi / 2.0, 17)[1:]]
+    path += [[x, 0.0, 4.0] for x in np.linspace(4.0, remote_x, 121)[1:]]
+    path = np.asarray(path, dtype=np.float64)
+    sides = 16
+    radius = 0.2
+    rings = []
+    for index, center in enumerate(path):
+        tangent = path[min(index + 1, len(path) - 1)] - path[max(index - 1, 0)]
+        tangent /= np.linalg.norm(tangent)
+        first = np.cross(tangent, [0.0, 1.0, 0.0])
+        first /= np.linalg.norm(first)
+        second = np.cross(tangent, first)
+        second /= np.linalg.norm(second)
+        for side in range(sides):
+            angle = 2.0 * np.pi * side / sides
+            rings.append(center + radius * (
+                np.cos(angle) * first + np.sin(angle) * second))
+    faces = []
+    for level in range(len(path) - 1):
+        for side in range(sides):
+            following = (side + 1) % sides
+            a = level * sides + side
+            b = level * sides + following
+            c = (level + 1) * sides + following
+            d = (level + 1) * sides + side
+            faces.extend(([a, b, c], [a, c, d]))
+    start_center = len(rings)
+    rings.append(path[0])
+    end_center = len(rings)
+    rings.append(path[-1])
+    for side in range(sides):
+        following = (side + 1) % sides
+        faces.extend((
+            [start_center, following, side],
+            [end_center, (len(path) - 1) * sides + side,
+             (len(path) - 1) * sides + following],
+        ))
+    return (np.asarray(rings, dtype="<f4"),
+            np.asarray(faces, dtype="<u4"), len(path))
+
+
+def test_collar_local_station_avoids_remote_limb_global_pca_section():
+    points, faces, _ = _curved_tube_with_remote_limb()
+    surface = type("SourceSurface", (), {})()
+    surface.key = (51011, 7)
+    surface.positions = points
+    surface.faces = faces
+    surface.source_vertex_ids = np.arange(len(points), dtype="<u8")
+    collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
+    witness_points = np.asarray([[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]])
+
+    global_station = bg._port_station_spec(
+        surface, witness_points, collar_faces)
+    local_station = bg._port_station_spec(
+        surface, witness_points, collar_faces,
+        route_anchor=np.asarray([0.0, 0.0, -4.5]),
+        station_policy="COLLAR_LOCAL_PCA_V1")
+    global_section = bg._source_surface_section(surface, global_station)
+    local_section = bg._source_surface_section(surface, local_station)
+
+    assert abs(float(np.dot(global_station["tangent_world_unit"],
+                            [0.0, 0.0, 1.0]))) < 0.2
+    assert np.allclose(local_station["tangent_world_unit"],
+                       [0.0, 0.0, -1.0], rtol=0.0, atol=1e-12)
+    assert set(local_station["local_tangent_support_local_vertex_ids"]) == set(
+        np.unique(faces[collar_faces].reshape(-1)))
+    assert local_section["passed"] and local_section["loop_count"] == 1
+    assert global_section["passed"] and global_section["loop_count"] == 1
+    assert global_section["area_m2"] > local_section["area_m2"] * 4.0
+
+
+def test_collar_local_declaration_binds_source_report_and_stays_candidate_independent(tmp_path):
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _source_y_target()
+    route_peer, route_faces = _source_y_target()
+    route_peer = np.ascontiguousarray(
+        route_peer + np.asarray([0.0, 0.0, 0.5], dtype="<f4"), dtype="<f4")
+    station_edge = ((51011, 7), (51011, 6))
+    route_edge = ((51011, 7), (51011, 8))
+    station_bridge = av.prepare_surface(
+        station_edge[0], bridge, bridge_faces,
+        source_vertex_ids=np.arange(len(bridge), dtype="<u8"))
+    station_target = av.prepare_surface(
+        station_edge[1], target, target_faces,
+        source_vertex_ids=np.arange(len(target), dtype="<u8"))
+    route_bridge = av.prepare_surface(
+        route_edge[0], bridge, bridge_faces,
+        source_vertex_ids=np.arange(len(bridge), dtype="<u8"))
+    route_surface = av.prepare_surface(
+        route_edge[1], route_peer, route_faces,
+        source_vertex_ids=np.arange(len(route_peer), dtype="<u8"))
+    station_pairs = av.audit_surface_pair(
+        station_bridge, station_target)["unexpected_triangle_pairs"]
+    route_pairs = av.audit_surface_pair(
+        route_bridge, route_surface)["unexpected_triangle_pairs"]
+    assert station_pairs and route_pairs
+    report = {
+        "passed": True,
+        "typed_pair": [list(route_edge[0]), list(route_edge[1])],
+        "frozen_source_pairset": [list(pair) for pair in route_pairs],
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+    }
+    report_path = tmp_path / "source-7-8.json"
+    report_bytes = (json.dumps(report, sort_keys=True, separators=(",", ":"))
+                    + "\n").encode()
+    report_path.write_bytes(report_bytes)
+    route_evidence = {
+        "typed_link": route_edge,
+        "peer_surface": route_surface,
+        "frozen_face_pairs": [list(pair) for pair in route_pairs],
+        "source_pairset_sha256": hashlib.sha256(
+            np.asarray(route_pairs, dtype="<u4").tobytes()).hexdigest(),
+        "source_report_path": str(report_path.resolve()),
+        "source_report_sha256": hashlib.sha256(report_bytes).hexdigest(),
+        "source_pair_field": "frozen_source_pairset",
+        "source_typed_link_field": "typed_pair",
+        "source_pair_count": len(route_pairs),
+    }
+    declaration = bg.build_source_junction_station_declaration(
+        av, bridge_key=station_edge[0], target_key=station_edge[1],
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces),
+        frozen_face_pairs=station_pairs, declared_vessel_ports={station_edge},
+        anchor_role="bridge", station_policy="COLLAR_LOCAL_PCA_V1",
+        route_anchor_evidence=route_evidence)
+    evidence = declaration["source_evidence"]
+    assert evidence["independent_source_baseline_only"] is True
+    assert evidence["source_station_is_candidate_independent"] is True
+    assert evidence["station_selection_policy"] == "COLLAR_LOCAL_PCA_V1"
+    assert evidence["neighbor_route_anchor_evidence"]["source_report_sha256"] == (
+        route_evidence["source_report_sha256"])
+    assert evidence["baseline_source_station_section"]["passed"] is True
+    assert evidence["baseline_source_station_section"]["loop_count"] == 1
+    assert "candidate_station" not in declaration
+
+    report_path.write_text(report_path.read_text() + " ")
+    with pytest.raises(ValueError, match="report bytes differ from their frozen SHA-256"):
+        bg.build_source_junction_station_declaration(
+            av, bridge_key=station_edge[0], target_key=station_edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=station_pairs, declared_vessel_ports={station_edge},
+            anchor_role="bridge", station_policy="COLLAR_LOCAL_PCA_V1",
+            route_anchor_evidence=route_evidence)
+
+    wrong_link = dict(report)
+    wrong_link["typed_pair"] = [list(route_edge[0]), [51011, 9]]
+    wrong_bytes = (json.dumps(wrong_link, sort_keys=True, separators=(",", ":"))
+                   + "\n").encode()
+    report_path.write_bytes(wrong_bytes)
+    wrong_route_evidence = dict(route_evidence)
+    wrong_route_evidence["source_report_sha256"] = hashlib.sha256(
+        wrong_bytes).hexdigest()
+    with pytest.raises(ValueError, match="different typed source link"):
+        bg.build_source_junction_station_declaration(
+            av, bridge_key=station_edge[0], target_key=station_edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=station_pairs, declared_vessel_ports={station_edge},
+            anchor_role="bridge", station_policy="COLLAR_LOCAL_PCA_V1",
+            route_anchor_evidence=wrong_route_evidence)
