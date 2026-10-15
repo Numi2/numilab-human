@@ -23,6 +23,7 @@ class FrozenPreparation:
     proof_sha256: str
     runner_argv: tuple[str, ...]
     input_pins: tuple[tuple[str, str], ...]
+    input_path_bindings: tuple[tuple[str, str], ...]
 
 
 def _sha256_file(path: Path) -> str:
@@ -33,10 +34,13 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _canonical_pins(input_pins: dict[str, str]) -> dict[str, str]:
+def _canonical_pins(
+    input_pins: dict[str, str],
+) -> tuple[dict[str, str], tuple[tuple[str, str], ...]]:
     if not isinstance(input_pins, dict) or not input_pins:
         raise ValueError("preparation requires a nonempty input pin map")
     canonical: dict[str, str] = {}
+    path_bindings: list[tuple[str, str]] = []
     for raw_path, expected_sha in input_pins.items():
         if (
             not isinstance(raw_path, str)
@@ -53,7 +57,8 @@ def _canonical_pins(input_pins: dict[str, str]) -> dict[str, str]:
         if _sha256_file(path) != expected_sha:
             raise ValueError(f"preparation input hash changed: {key}")
         canonical[key] = expected_sha
-    return dict(sorted(canonical.items()))
+        path_bindings.append((raw_path, key))
+    return dict(sorted(canonical.items())), tuple(sorted(path_bindings))
 
 
 def freeze_preparation(
@@ -76,7 +81,7 @@ def freeze_preparation(
     ):
         raise ValueError("exact nonempty runner argv is required")
 
-    canonical_pins = _canonical_pins(input_pins)
+    canonical_pins, path_bindings = _canonical_pins(input_pins)
     path = Path(proof_path).resolve()
     if path.exists():
         raise FileExistsError(f"refusing to overwrite frozen preparation: {path}")
@@ -84,6 +89,7 @@ def freeze_preparation(
     bound_proof["execution_boundary"] = {
         "runner_argv": list(runner_argv),
         "input_pins": canonical_pins,
+        "input_path_bindings": dict(path_bindings),
     }
     encoded = json.dumps(bound_proof, sort_keys=True, indent=2, allow_nan=False) + "\n"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -91,7 +97,11 @@ def freeze_preparation(
         stream.write(encoded)
         stream.flush()
     return FrozenPreparation(
-        path, _sha256_file(path), tuple(runner_argv), tuple(canonical_pins.items())
+        path,
+        _sha256_file(path),
+        tuple(runner_argv),
+        tuple(canonical_pins.items()),
+        path_bindings,
     )
 
 
@@ -112,6 +122,15 @@ def verify_frozen_preparation(preparation: FrozenPreparation) -> dict[str, Any]:
         or tuple(sorted(pins.items())) != preparation.input_pins
     ):
         raise ValueError("frozen input pin binding differs")
+    path_bindings = boundary.get("input_path_bindings")
+    if (
+        not isinstance(path_bindings, dict)
+        or tuple(sorted(path_bindings.items())) != preparation.input_path_bindings
+    ):
+        raise ValueError("frozen raw-to-canonical path bindings differ")
+    for raw_path, canonical_path in preparation.input_path_bindings:
+        if str(Path(raw_path).resolve(strict=True)) != canonical_path:
+            raise ValueError(f"pinned input path resolution changed: {raw_path}")
     if proof.get("predicate_phase_started") is not False or not str(
         proof.get("status", "")
     ).startswith("PASS_"):

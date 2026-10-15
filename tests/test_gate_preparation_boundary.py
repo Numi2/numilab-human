@@ -73,12 +73,41 @@ class PreparationBoundaryTests(unittest.TestCase):
             freeze_preparation(path, self.proof, runner_argv=[], input_pins=self.pin)
         self.assertFalse(path.exists())
 
-    def test_modified_proof_or_input_fails_before_geometry(self):
+    def test_modified_proof_fails_before_geometry(self):
         path = self.root / "proof.json"
         frozen = freeze_preparation(
             path, self.proof, runner_argv=self.argv, input_pins=self.pin
         )
         path.write_text(path.read_text() + " ", encoding="utf-8")
+        called = []
+        with self.assertRaises(ValueError):
+            execute_after_preparation(frozen, lambda current: called.append(current))
+        self.assertEqual(called, [])
+
+    def test_changed_input_bytes_after_freeze_fail_before_geometry(self):
+        frozen = freeze_preparation(
+            self.root / "proof.json",
+            self.proof,
+            runner_argv=self.argv,
+            input_pins=self.pin,
+        )
+        self.asset.write_bytes(b"changed after freeze")
+        called = []
+        with self.assertRaises(ValueError):
+            execute_after_preparation(frozen, lambda current: called.append(current))
+        self.assertEqual(called, [])
+
+    def test_retargeted_symlink_after_freeze_fails_before_geometry(self):
+        other = self.root / "other.bin"
+        other.write_bytes(b"different input")
+        alias = self.root / "alias.bin"
+        alias.symlink_to(self.asset)
+        pin = {str(alias): hashlib.sha256(self.asset.read_bytes()).hexdigest()}
+        frozen = freeze_preparation(
+            self.root / "proof.json", self.proof, runner_argv=self.argv, input_pins=pin
+        )
+        alias.unlink()
+        alias.symlink_to(other)
         called = []
         with self.assertRaises(ValueError):
             execute_after_preparation(frozen, lambda current: called.append(current))
