@@ -382,8 +382,13 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         normals = np.asarray(normals)
         if normals.dtype != np.dtype("float32") or normals.shape != p.shape or not np.isfinite(normals).all():
             raise ValueError("invalid emitted Float32 normals")
-        if np.any(np.abs(np.linalg.norm(normals.astype(float), axis=1) - 1) > 2e-3):
-            raise ValueError("emitted normals are not unit")
+        # Only vertices referenced by the emitted triangle surface need a
+        # display normal. Allocated but unused source slots retain their
+        # original finite normal bytes, which may be zero.
+        referenced_vertices = np.unique(f.reshape(-1))
+        referenced_normals = normals[referenced_vertices].astype(float)
+        if np.any(np.abs(np.linalg.norm(referenced_normals, axis=1) - 1) > 2e-3):
+            raise ValueError("referenced emitted normals are not unit")
     if source_vertex_ids is None:
         source_vertex_ids = np.arange(len(p), dtype=np.uint64)
     source_vertex_ids = np.asarray(source_vertex_ids)

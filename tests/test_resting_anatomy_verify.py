@@ -629,6 +629,20 @@ def source_patch_fragment_case(*, corrupt_barycentric=False):
 
 
 class RestingAnatomyVerifierTests(unittest.TestCase):
+    def test_unused_source_slot_may_retain_zero_normal(self):
+        positions = np.vstack((tetra(), np.asarray([[9, 9, 9]], dtype=np.float32)))
+        normals = np.vstack((np.tile(np.asarray([[1, 0, 0]], dtype=np.float32), (4, 1)),
+                             np.zeros((1, 3), dtype=np.float32)))
+        surface = prepare_surface((51011, 701), positions, FACES, normals=normals)
+        np.testing.assert_array_equal(surface.normals, normals)
+        self.assertFalse(np.any(np.isfinite(surface.normals[4]) & (surface.normals[4] != 0)))
+
+    def test_referenced_zero_normal_is_rejected(self):
+        normals = np.tile(np.asarray([[1, 0, 0]], dtype=np.float32), (4, 1))
+        normals[0] = 0
+        with self.assertRaisesRegex(ValueError, "referenced emitted normals are not unit"):
+            prepare_surface((51011, 702), tetra(), FACES, normals=normals)
+
     def test_source_patch_fragment_complex_accepts_nested_barycentric_reciprocal_patch(self):
         first, second, declaration = source_patch_fragment_case()
         result = audit_surface_pair(
