@@ -215,6 +215,23 @@ def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces", *,
     }
 
 
+def rest_world_normals(world, faces):
+    """Offline shading normals; unused slots have an inert unit placeholder."""
+    tri = world[faces].astype(np.float64)
+    crosses = np.cross(tri[:, 1]-tri[:, 0], tri[:, 2]-tri[:, 0])
+    normals = np.zeros_like(world, dtype=np.float64)
+    for lane in range(3):
+        np.add.at(normals, faces[:, lane], crosses)
+    used = np.unique(faces)
+    lengths = np.linalg.norm(normals[used], axis=1)
+    if np.any(lengths == 0) or not np.isfinite(lengths).all():
+        raise ValueError("rest-source has invalid referenced world normals")
+    normals[used] /= lengths[:, None]
+    unused = np.setdiff1d(np.arange(len(world)), used)
+    normals[unused] = (1., 0., 0.)
+    return normals.astype("<f4"), len(unused)
+
+
 def apply_rest_source(surfaces, key, path, digest, accepted_poses, source_cache):
     """Prepare a pinned ABI5 row through its existing rigid rest owner.
 
@@ -238,20 +255,11 @@ def apply_rest_source(surfaces, key, path, digest, accepted_poses, source_cache)
         raise ValueError("rest-source requires pinned accepted rigid poses")
     world = pac._native_blended_rest_positions(row, row["positions"], accepted_poses)
     faces = row["faces"].copy()
-    tri = world[faces].astype(np.float64)
-    crosses = np.cross(tri[:, 1]-tri[:, 0], tri[:, 2]-tri[:, 0])
-    normals = np.zeros_like(world, dtype=np.float64)
-    for lane in range(3):
-        np.add.at(normals, faces[:, lane], crosses)
-    used = np.unique(faces)
-    lengths = np.linalg.norm(normals[used], axis=1)
-    if np.any(lengths == 0) or not np.isfinite(lengths).all():
-        raise ValueError("rest-source has invalid referenced world normals")
-    normals[used] /= lengths[:, None]
+    normals, unused_normal_count = rest_world_normals(world, faces)
     arrays = dict(source_positions=row["positions"], source_normals=row["normals"],
                   source_faces=faces, binding_indices=row["binding_indices"],
                   weights=row["weights"], capture_positions_m=world,
-                  capture_faces=faces, capture_normals=normals.astype("<f4"),
+                  capture_faces=faces, capture_normals=normals,
                   capture_global_vertex_ids=np.arange(row["vertex_count"], dtype="<u8")
                   + row["first_vertex"])
     fields = source_field_preflight(arrays)
@@ -262,6 +270,8 @@ def apply_rest_source(surfaces, key, path, digest, accepted_poses, source_cache)
         source_vertex_ids=arrays["capture_global_vertex_ids"])
     surfaces[key] = prepared
     return {"typed_identity": list(key), "source": source_pin,
+            "unreferenced_world_normal_placeholder_count": unused_normal_count,
+            "unreferenced_world_normal_policy": "inert unit X; no emitted face references these slots",
             "repacked_source_owner": proof, "source_field_preflight": fields,
             "geometry_preparation": prepared.diagnostics(),
             "world_positions_are_counterfactual": True,

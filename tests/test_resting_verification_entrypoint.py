@@ -258,6 +258,19 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         self.assertFalse(report["anatomical_admission"])
 
 
+    def test_rest_world_normals_preserve_unused_slots_without_invalid_normals(self):
+        points = np.vstack([POINTS, [[2, 2, 2]]]).astype("<f4")
+        normals, count = tool.rest_world_normals(points, FACES)
+        self.assertEqual(count, 1)
+        np.testing.assert_array_equal(normals[4], [1, 0, 0])
+        self.assertTrue(tool.verify.prepare_surface(KEY, points, FACES, normals=normals).closed)
+        np.testing.assert_array_equal(points[:4], POINTS)
+
+    def test_rest_world_normals_still_reject_zero_referenced_stars(self):
+        points = np.array([[0, 0, 0], [1, 0, 0], [2, 0, 0]], dtype="<f4")
+        with self.assertRaisesRegex(ValueError, "invalid referenced world normals"):
+            tool.rest_world_normals(points, np.array([[0, 1, 2]], dtype="<u4"))
+
     def test_rest_source_replays_compiled_owner_without_an_npz(self):
         source, digest, arrays, poses, native, key = self.repacked_candidate()
         cache = {}
