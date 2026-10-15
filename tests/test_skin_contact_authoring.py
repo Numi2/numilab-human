@@ -251,3 +251,13 @@ def test_bone_face_support_is_translation_invariant_and_dimensionally_meters():
 def test_bone_face_support_rejects_invalid_construction(direction,margin):
     with pytest.raises(ValueError,match="invalid bone face-support"):
         tool.bone_face_support_constraints(np.eye(3),[[0,1,2]],0,np.eye(3),direction,margin)
+
+def test_explicit_bone_targets_preserve_retained_default_and_declared_order():
+    assert tool.selected_bone_targets(None) == (10,12,14,16)
+    assert tool.selected_bone_targets([3,11,13,15,17]) == (3,11,13,15,17)
+
+
+@pytest.mark.parametrize("values", [[],[13,13],[0],[-1],[True],[2**32],[13.0]])
+def test_explicit_bone_targets_reject_ambiguous_or_invalid_identity(values):
+    with pytest.raises(ValueError,match="distinct positive UInt32"):
+        tool.selected_bone_targets(values)

@@ -266,6 +266,16 @@ def fixed_edge_difference(delta,lookup,a,b):
             (delta[b] if int(b) not in lookup else np.zeros(3)))
 
 
+def selected_bone_targets(values):
+    """Explicit compiled stable IDs; the retained right-arm default is unchanged."""
+    if values is None:
+        return (10, 12, 14, 16)
+    if (not values or any(type(x) is not int or not 0 < x < 2**32 for x in values)
+            or len(set(values)) != len(values)):
+        raise ValueError("bone targets require distinct positive UInt32 stable IDs")
+    return tuple(values)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output", "bone-artifact", "body-manifest"]:
@@ -284,7 +294,13 @@ def main():
     ap.add_argument("--bone-contact-separator",choices=["witness","face-support"],default="witness",
         help="face-support proposes complete crossed-facet separation from skin compartment normals")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
+    ap.add_argument("--bone-id", action="append", type=int,
+        help="compiled anatomical stable ID; repeat in audit order; default retained right-arm four")
     args = ap.parse_args()
+    try:
+        bone_targets = selected_bone_targets(args.bone_id)
+    except ValueError as error:
+        ap.error(str(error))
     if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .03:
         ap.error("require 0 < margin < step <= total <= 0.03 m")
     if not 0 <= args.orientation_ratio < 1:
@@ -301,7 +317,7 @@ def main():
     for item in ("bone_payload", "bone_manifest", "runtime_manifest", "native_invocation"):
         entry=bone_identity_proof[item]
         pins[entry["path"]]=entry["sha256"]
-    for sid in [10,12,14,16]:
+    for sid in bone_targets:
         if sid not in bone_ids:
             raise ValueError(f"required compiled bone identity absent: {sid}")
 
@@ -357,7 +373,7 @@ def main():
         face_count=len(faces), positive_material_support_unchanged=True,
         units="m; linear coefficients dimensionless", exact_emission=False,
         bounds=dict(step_m=args.step_bound_m,total_m=args.total_bound_m,margin_m=args.margin_m),
-        bone_target_identities=[bone_ids[sid] for sid in [10,12,14,16]],
+        bone_target_identities=[bone_ids[sid] for sid in bone_targets],
         compiled_bone_identity=bone_identity_proof,
         scope="Offline authoring approximation only; no anatomical/native admission.",
         construction_exit_policy=args.exit_policy,torso_core_body_index=torso_body_id,
@@ -369,7 +385,7 @@ def main():
     gp.verify_frozen_preparation(frozen)
     cap, identity = v.load_capture(args.capture,args.receipt)
     bones = {}
-    for sid in [10,12,14,16]:
+    for sid in bone_targets:
         key=(51004,sid); bp,bf,bn,bg=cap[key]
         bone=v.prepare_surface(key,bp,bf,normals=bn,source_vertex_ids=bg)
         if not bone.closed:
@@ -438,7 +454,7 @@ def main():
                 if args.bone_contact_separator=="face-support":
                     normal=skin_normals[faces[sf]].mean(axis=0)
                     region={"region":"skin_enclosing_bone"}
-                    if bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                    if bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r","humerus_l","ulna_l","radius_l"}:
                         normal,region=compartment_direction(normal,
                             source["full_weights"][used[faces[sf]]].mean(axis=0),
                             source["bindings_u"][:,0],torso_body_id)
@@ -454,7 +470,7 @@ def main():
                     if args.exit_policy in ("skin-normal","compartment-skin-normal"):
                         normal=bary@skin_normals[faces[sf]]
                         normal/=np.linalg.norm(normal)
-                        if (args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support") and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                        if (args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support") and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r","humerus_l","ulna_l","radius_l"}:
                             normal,region=compartment_direction(normal,
                                 bary@source["full_weights"][used[faces[sf]]],
                                 source["bindings_u"][:,0],torso_body_id)
@@ -488,7 +504,7 @@ def main():
                     normal=(near-point)/distance
                     if args.exit_policy in ("skin-normal","compartment-skin-normal") or args.bone_contact_separator=="face-support":
                         normal=skin_normals[vi]
-                        if (args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support") and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                        if (args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support") and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r","humerus_l","ulna_l","radius_l"}:
                             normal,region=compartment_direction(normal,
                                 source["full_weights"][used[vi]],
                                 source["bindings_u"][:,0],torso_body_id)
@@ -505,7 +521,8 @@ def main():
             new_constraints=len(new_constraints)))
         print(json.dumps(history[-1]),flush=True)
         if not new_constraints and not self_failed:
-            status="PASS_AUTHORING_FOUR_BONES_ONLY"
+            status=("PASS_AUTHORING_FOUR_BONES_ONLY" if bone_targets==(10,12,14,16)
+                    else "PASS_AUTHORING_SELECTED_BONES_ONLY")
             break
         if iteration==args.iterations or time.monotonic()-started>1200:
             status="FAIL_BOUNDED_METHOD_EXHAUSTED"
