@@ -88,13 +88,73 @@ def _validate_declared_feature_pair(first, second, kind):
     require(False, "unsupported declared shared feature kind")
 
 
-def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_feature_pairs=None):
+def _coplanar_overlap_polygon(first, second, normal):
+    """Return the exact convex boundary of a positive-area coplanar overlap."""
+    points = set(predicates._coplanar_points(first, second, normal))
+    if len(points) < 3:
+        return ()
+    dropped = max(range(3), key=lambda axis: abs(normal[axis]))
+    axes = tuple(axis for axis in range(3) if axis != dropped)
+    by_projection = {tuple(point[axis] for axis in axes): tuple(point) for point in points}
+    projected = sorted(by_projection)
+
+    def orient(a, b, c):
+        return ((b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0]))
+
+    lower = []
+    for point in projected:
+        while len(lower) >= 2 and orient(lower[-2], lower[-1], point) <= 0:
+            lower.pop()
+        lower.append(point)
+    upper = []
+    for point in reversed(projected):
+        while len(upper) >= 2 and orient(upper[-2], upper[-1], point) <= 0:
+            upper.pop()
+        upper.append(point)
+    corners = lower[:-1] + upper[:-1]
+    if len(corners) < 3:
+        return ()
+
+    # Preserve any exact collinear boundary vertices. They are constraints in
+    # the source mesh and must not disappear from the local subdivision.
+    polygon = []
+    for start, end in zip(corners, corners[1:] + corners[:1]):
+        axis = 0 if start[0] != end[0] else 1
+        on_edge = [point for point in projected
+                   if orient(start, end, point) == 0
+                   and all(min(a, b) <= value <= max(a, b)
+                           for value, a, b in zip(point, start, end))]
+        on_edge.sort(key=lambda point: (point[axis]-start[axis])/(end[axis]-start[axis]))
+        polygon.extend(on_edge[:-1])
+    area2 = sum(a[0]*b[1]-a[1]*b[0]
+                for a, b in zip(polygon, polygon[1:]+polygon[:1]))
+    if area2 == 0:
+        return ()
+    return tuple(by_projection[point] for point in polygon)
+
+
+def _point_in_convex_polygon(point, polygon, normal):
+    dropped = max(range(3), key=lambda axis: abs(normal[axis]))
+    axes = tuple(axis for axis in range(3) if axis != dropped)
+    p = tuple(point[axis] for axis in axes)
+    projected = [tuple(vertex[axis] for axis in axes) for vertex in polygon]
+    signs = [((b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]))
+             for a, b in zip(projected, projected[1:]+projected[:1])]
+    return min(signs) >= 0 or max(signs) <= 0
+
+
+def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_feature_pairs=None,
+                          coplanar_priority_pairs=()):
     """Return source-parented exact subtriangles and intersection provenance.
 
     This bounded authoring path supports transverse intersections with segment
     endpoints, including point pairs supported by nonzero incident-star cuts.
     Callers may provide exact shared-feature face pairs; each declaration is
     checked against the full exact contact before it is excluded from cutting.
+    Explicit ``coplanar_priority_pairs`` opt a face pair into an exact local
+    subdivision of its positive-area, oppositely oriented overlap. Both copies
+    of that overlap are classified as the shared inside interface; all other
+    undeclared coplanar or tangent contacts still fail closed.
     Opposed full faces are retained unchanged as outside boundary faces on both
     sources. Any undeclared coplanar patch, isolated tangency, or unsupported
     planar cell topology still fails closed. Input surfaces must subsequently
@@ -123,6 +183,18 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_featu
                 and kind in ("shared_vertex", "shared_edge", "opposed_full_face"),
                 "declared shared feature has a duplicate pair or invalid kind")
         normalized_declarations[raw_pair] = kind
+    normalized_coplanar = set()
+    require(isinstance(coplanar_priority_pairs, (tuple, list, set, frozenset)),
+            "coplanar priority faces must be a finite face-pair collection")
+    for raw_pair in coplanar_priority_pairs:
+        require(isinstance(raw_pair, (tuple, list)) and len(raw_pair) == 2
+                and all(isinstance(face, int) and not isinstance(face, bool) and face >= 0
+                        for face in raw_pair),
+                "coplanar priority face pair is invalid")
+        pair = tuple(raw_pair)
+        require(pair not in normalized_coplanar and pair not in normalized_declarations,
+                "coplanar priority pair is duplicated or already declared as a shared feature")
+        normalized_coplanar.add(pair)
     pair_audit = predicates._audit_pair(records[source_names[0]], records[source_names[1]], same_surface=False)
     segments = {name: defaultdict(list) for name in source_names}
     boundary_points = {name: defaultdict(set) for name in source_names}
@@ -130,6 +202,8 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_featu
     vertex_faces = {name: defaultdict(set) for name in source_names}
     point_contacts = []
     declared_seen = set()
+    coplanar_seen = set()
+    coplanar_patches = {name: {} for name in source_names}
     declared_full_faces = {name: set() for name in source_names}
     declared_rows = []
     for name in source_names:
@@ -155,7 +229,33 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_featu
             continue
         normals = [predicates._cross(predicates._sub(tri[1], tri[0]), predicates._sub(tri[2], tri[0]))
                    for tri in (first, second)]
-        require(any(predicates._cross(*normals)), "coplanar or tangent face intersection is unsupported")
+        if not any(predicates._cross(*normals)):
+            require(pair_key in normalized_coplanar,
+                    "coplanar or tangent face intersection is unsupported")
+            require(predicates._dot(normals[0], normals[1]) < 0,
+                    "coplanar priority overlap faces must have opposite winding")
+            polygon = _coplanar_overlap_polygon(first, second, normals[0])
+            require(len(polygon) >= 3,
+                    "coplanar priority pair has no positive-area overlap polygon")
+            for name, face_id in zip(source_names, pair_key):
+                require(face_id not in coplanar_patches[name],
+                        "a source face participates in multiple coplanar priority patches")
+                coplanar_patches[name][face_id] = (polygon, normals[0])
+                face = source_surfaces[name]["triangles"][face_id]
+                for a, b in zip(polygon, polygon[1:]+polygon[:1]):
+                    segments[name][face_id].append((a, b))
+                for point in polygon:
+                    for i in range(3):
+                        a, b = face[i], face[(i+1) % 3]
+                        if _on_edge(point, vertices[name][a], vertices[name][b]):
+                            for neighbor in edge_faces[name][tuple(sorted((a, b)))]:
+                                boundary_points[name][neighbor].add(point)
+            for a, b in zip(polygon, polygon[1:]+polygon[:1]):
+                intersection_segments.append({"source_faces": list(pair), "endpoints": (a, b)})
+            coplanar_seen.add(pair_key)
+            continue
+        require(pair_key not in normalized_coplanar,
+                "declared coplanar priority pair is not coplanar")
         points = sorted(set(predicates.triangle_intersection_points(first, second)))
         if len(points) == 1:
             point_contacts.append((tuple(pair), points[0]))
@@ -175,6 +275,8 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_featu
                             boundary_points[name][neighbor].add(point)
     require(declared_seen == set(normalized_declarations),
             "a declared shared feature is absent from the exact intersurface contact set")
+    require(coplanar_seen == normalized_coplanar,
+            "a declared coplanar priority pair is absent from the exact intersurface contact set")
     # Refinement can split a transverse cut exactly at a source vertex.
     # A pair meeting only at that vertex needs no zero-length cut. It must,
     # however, be supported by a nonzero segment in each incident source star.
@@ -218,7 +320,11 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_featu
             children = subdivide_triangle(row[0], segments[name][face_id], boundary_points[name][face_id])
             for triangle in children:
                 centroid = tuple(sum(p[k] for p in triangle)/3 for k in range(3))
-                location = classifiers[other].location(centroid)
+                patch = coplanar_patches[name].get(face_id)
+                if patch is not None and _point_in_convex_polygon(centroid, patch[0], patch[1]):
+                    location = "inside"
+                else:
+                    location = classifiers[other].location(centroid)
                 require(location in ("inside", "outside"), f"boundary child interior {name}:{face_id}")
                 result.append({"vertices": tuple(tuple(Fraction(x, denominator) for x in p) for p in triangle),
                                "source": name, "source_face": face_id, "other_location": location})
@@ -232,6 +338,11 @@ def construct_arrangement(source_surfaces, *, source_names=NAMES, declared_featu
                     "declared_boundary_feature_pair_count": len(declared_rows),
                     "declared_boundary_feature_counts": dict(sorted(declared_counts.items())),
                     "declared_boundary_feature_pairs_sha256": hashlib.sha256(declaration_bytes).hexdigest(),
+                    "coplanar_priority_overlap_pairs": [{"source_faces": list(pair),
+                        "overlap_polygon_m": [tuple(Fraction(x, denominator) for x in point)
+                                              for point in coplanar_patches[source_names[0]][pair[0]][0]]}
+                        for pair in sorted(coplanar_seen)],
+                    "coplanar_priority_overlap_pair_count": len(coplanar_seen),
                     "supported_point_contact_count": len(point_contacts),
                     "common_integer_scale_per_metre": denominator,
                     "intersection_segments_m": [{"source_faces": row["source_faces"],

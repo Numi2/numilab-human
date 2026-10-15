@@ -143,6 +143,112 @@ class AuthoringTests(unittest.TestCase):
                          {("first",0,"outside"), ("second",0,"outside")})
         self.assertEqual(len(children), 2)
 
+    def test_explicit_partial_opposed_coplanar_overlap_is_split_as_common_inside_patch(self):
+        first_vertices = ((F(0),F(0),F(0)), (F(4),F(0),F(0)), (F(0),F(4),F(0)))
+        second_vertices = ((F(4),F(0),F(0)), (F(2),F(1),F(0)), (F(0),F(4),F(0)))
+        first = {"vertices": first_vertices, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        second = {"vertices": second_vertices, "triangles": [(0,1,2)], "source_sha256": "b"*64}
+        first_exact = tuple(tuple(F(x) for x in point) for point in first_vertices)
+        second_exact = tuple(tuple(F(x) for x in point) for point in second_vertices)
+        normal = predicates._cross(predicates._sub(first_exact[1], first_exact[0]),
+                                   predicates._sub(first_exact[2], first_exact[0]))
+        polygon = partition._coplanar_overlap_polygon(first_exact, second_exact, normal)
+        self.assertEqual(set(polygon), set(second_exact))
+
+        def boundary_aware_location(point):
+            return ("boundary" if partition._point_in_convex_polygon(point, polygon, normal)
+                    else "outside")
+
+        with patch.object(partition.IntegerRayClassifier, "location",
+                          side_effect=boundary_aware_location):
+            children, report = partition.construct_arrangement(
+                {"first": first, "second": second}, source_names=("first", "second"),
+                coplanar_priority_pairs={(0,0)})
+
+        self.assertEqual(report["coplanar_priority_overlap_pair_count"], 1)
+        self.assertEqual(len(report["intersection_segments_m"]), 3)
+        self.assertEqual(len([row for row in children if row["source"] == "first"]), 3)
+        self.assertEqual(len([row for row in children if row["source"] == "second"]), 1)
+        inside = {name: [row["vertices"] for row in children
+                         if row["source"] == name and row["other_location"] == "inside"]
+                  for name in ("first", "second")}
+        self.assertEqual(len(inside["first"]), 1)
+        self.assertEqual(len(inside["second"]), 1)
+        self.assertEqual(set(inside["first"][0]), set(inside["second"][0]))
+        n_first = predicates._cross(predicates._sub(*inside["first"][0][1:]),
+                                    predicates._sub(inside["first"][0][2], inside["first"][0][0]))
+        n_second = predicates._cross(predicates._sub(*inside["second"][0][1:]),
+                                     predicates._sub(inside["second"][0][2], inside["second"][0][0]))
+        self.assertLess(predicates._dot(n_first, n_second), 0)
+        self.assertTrue(all(row["other_location"] != "boundary" for row in children))
+
+        def area_vector(rows):
+            total = (F(0), F(0), F(0))
+            for row in rows:
+                a, b, c = row["vertices"]
+                normal = predicates._cross(predicates._sub(b,a), predicates._sub(c,a))
+                total = tuple(total[axis] + normal[axis] for axis in range(3))
+            return total
+        self.assertEqual(area_vector([row for row in children if row["source"] == "first"]), normal)
+        second_normal = predicates._cross(predicates._sub(second_exact[1], second_exact[0]),
+                                          predicates._sub(second_exact[2], second_exact[0]))
+        self.assertEqual(area_vector([row for row in children if row["source"] == "second"]),
+                         second_normal)
+
+    def test_coplanar_priority_rejects_same_winding_or_missing_pairs(self):
+        first_vertices = ((F(0),F(0),F(0)), (F(4),F(0),F(0)), (F(0),F(4),F(0)))
+        same_winding = {"vertices": first_vertices, "triangles": [(0,1,2)], "source_sha256": "b"*64}
+        first = {"vertices": first_vertices, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        with self.assertRaisesRegex(HumanImportError, "opposite winding"):
+            partition.construct_arrangement(
+                {"first": first, "second": same_winding}, source_names=("first", "second"),
+                coplanar_priority_pairs={(0,0)})
+        second_vertices = ((F(5),F(0),F(0)), (F(6),F(0),F(0)), (F(5),F(1),F(0)))
+        second = {"vertices": second_vertices, "triangles": [(0,1,2)], "source_sha256": "c"*64}
+        with self.assertRaisesRegex(HumanImportError, "absent from the exact intersurface contact set"):
+            partition.construct_arrangement(
+                {"first": first, "second": second}, source_names=("first", "second"),
+                coplanar_priority_pairs={(0,0)})
+
+    def test_actual_forearm_coplanar_witness_subdivides_both_edge_supported_faces(self):
+        first_vertices = (
+            (F(23691324), F(-125515960), F(15897056)),
+            (F(23691326), F(-125515984), F(15897049)),
+            (F(23691324), F(-125515968), F(15897048)),
+        )
+        second_vertices = (
+            first_vertices[1],
+            (F(23691320), F(-125515928), F(15897054)),
+            first_vertices[2],
+        )
+        normal = predicates._cross(predicates._sub(first_vertices[1], first_vertices[0]),
+                                   predicates._sub(first_vertices[2], first_vertices[0]))
+        polygon = partition._coplanar_overlap_polygon(first_vertices, second_vertices, normal)
+        self.assertEqual(set(polygon), {
+            first_vertices[1], first_vertices[2],
+            (F(23691324), F(-376547896, 3), F(47691152, 3)),
+        })
+
+        first = {"vertices": first_vertices, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        second = {"vertices": second_vertices, "triangles": [(0,1,2)], "source_sha256": "b"*64}
+
+        def source_region(point):
+            return ("inside" if partition._point_in_convex_polygon(point, polygon, normal)
+                    else "outside")
+
+        with patch.object(partition.IntegerRayClassifier, "location", side_effect=source_region):
+            rows, report = partition.construct_arrangement(
+                {"FDS": first, "FDP": second}, source_names=("FDS", "FDP"),
+                coplanar_priority_pairs={(0,0)})
+
+        self.assertEqual(report["coplanar_priority_overlap_pair_count"], 1)
+        self.assertEqual(len(report["intersection_segments_m"]), 3)
+        for source_name in ("FDS", "FDP"):
+            children = [row for row in rows if row["source"] == source_name]
+            inside = [row for row in children if row["other_location"] == "inside"]
+            self.assertEqual((len(children), len(inside)), (2, 1))
+            self.assertEqual(set(inside[0]["vertices"]), set(polygon))
+
     def test_declared_shared_feature_does_not_hide_an_unlisted_coplanar_pair(self):
         triangle = ((F(0), F(0), F(0)), (F(1), F(0), F(0)), (F(0), F(1), F(0)))
         first = {"vertices": triangle, "triangles": [(0,1,2)], "source_sha256": "a"*64}
