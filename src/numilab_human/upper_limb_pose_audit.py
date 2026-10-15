@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import struct
 import sys
 from collections import Counter
@@ -256,6 +257,55 @@ def _compiled_bone_members(
     registered = {
         anchor["source"]["member_id"]: anchor for anchor in registration["anchors"]
     }
+    body_local_bakes = manifest.get("body_local_bakes")
+    bake_rows: dict[int, dict[str, Any]] = {}
+    if body_local_bakes is not None:
+        if (
+            not isinstance(body_local_bakes, dict)
+            or body_local_bakes.get("schema")
+            != human_model._BODYPARTS_BODY_LOCAL_BAKE_SCHEMA
+            or body_local_bakes.get("status")
+            != "explicit_visual_owner_frame_bake_not_physics_or_native_admission"
+            or body_local_bakes.get("registration_sha256") != registration_sha
+            or body_local_bakes.get("native_admission") is not False
+            or body_local_bakes.get("physics_or_mass_change") is not False
+            or body_local_bakes.get("myosim_source_archive_sha256")
+            != runtime_reference["source_archive_sha256"]
+            or not isinstance(body_local_bakes.get("rows"), list)
+            or len(body_local_bakes["rows"]) != 2
+        ):
+            raise RuntimeError("compiled bone body-local bake manifest identity drifted; " + identity)
+        for bake_row in body_local_bakes["rows"]:
+            if not isinstance(bake_row, dict) or type(bake_row.get("stable_id")) is not int:
+                raise RuntimeError("compiled bone body-local bake row identity is malformed; " + identity)
+            stable_id = bake_row["stable_id"]
+            if stable_id not in human_model._BODYPARTS_BODY_LOCAL_BAKE_ROWS or stable_id in bake_rows:
+                raise RuntimeError("compiled bone body-local bake row set is invalid; " + identity)
+            member_id, expected_member_sha = human_model._BODYPARTS_BODY_LOCAL_BAKE_ROWS[stable_id]
+            anchor = registered.get(member_id)
+            if anchor is None or registration["anchors"][stable_id - 1] is not anchor:
+                raise RuntimeError("compiled bone body-local bake registration row drifted; " + identity)
+            anchor_source, target, fitted = anchor["source"], anchor["target"], anchor["registration"]
+            matrix = fitted.get("source_obj_mm_to_core_inertial_body_m")
+            if (
+                bake_row.get("member_id") != member_id
+                or bake_row.get("member_sha256") != expected_member_sha
+                or bake_row.get("bodyparts_archive_sha256") != anchor_source.get("archive_sha256")
+                or bake_row.get("source_obj_mm_to_core_inertial_body_m") != matrix
+                or bake_row.get("source_transform_sha256")
+                != human_model._bodyparts_transform_matrix_sha256(matrix)
+                or bake_row.get("core_body_index") != 20
+                or bake_row.get("semantic") != 51004
+                or bake_row.get("myosim_body") != "torso"
+                or type(bake_row.get("source_record_index")) is not int
+                or bake_row.get("source_record_index")
+                != runtime_bodies["torso"][1]["source_record_index"]
+                or target.get("core_body_index") != 20 or target.get("name") != "torso"
+            ):
+                raise RuntimeError(f"compiled bone body-local bake row {stable_id} is not source-bound; " + identity)
+            bake_rows[stable_id] = bake_row
+        if set(bake_rows) != set(human_model._BODYPARTS_BODY_LOCAL_BAKE_ROWS):
+            raise RuntimeError("compiled bone body-local bake must bind both typed rib rows; " + identity)
     members: dict[str, dict[str, Any]] = {}
     for core_body_index, surfaces in by_body.items():
         for surface in surfaces:
@@ -280,6 +330,18 @@ def _compiled_bone_members(
                     f"NHRIGID requires Core={expected_core}, source_record={body['source_record_index']}; "
                     + identity
                 )
+            stable_id = surface["stable_id"]
+            if type(stable_id) is int:
+                expected_bake = bake_rows.get(stable_id)
+                actual_bake = surface.get("body_local_bake")
+                if expected_bake != actual_bake:
+                    raise RuntimeError(
+                        f"compiled bone member={member_id} body-local bake metadata drifted; " + identity
+                    )
+                if (expected_bake is None) != (actual_bake is None):
+                    raise RuntimeError(
+                        f"compiled bone member={member_id} has an undeclared body-local bake; " + identity
+                    )
             members[member_id] = surface
     if members.keys() != registered.keys():
         raise RuntimeError("compiled bone geometry member coverage drifted; " + identity)
@@ -317,6 +379,138 @@ def _compiled_member_geometry_check(
         if shape_matches and finite else None
     )
     topology_matches = surface["triangles"] == [tuple(t) for t in raw_triangles]
+    bake = surface.get("body_local_bake")
+    if (
+        isinstance(bake, dict)
+        and bake.get("reframe_mode") == "source003_composed_partition_row_to_body20_local"
+    ):
+        stored_values = surface.get("stored_vertex_attributes_f32")
+        stored_bytes = (
+            b"".join(struct.pack("<6f", *vertex) for vertex in stored_values)
+            if isinstance(stored_values, list) else b""
+        )
+        actual_positions = np.asarray(surface["vertices"], dtype=np.float64)
+        stored = np.asarray(stored_values, dtype=np.float32) if stored_values is not None else np.empty((0, 6), dtype=np.float32)
+        face_bytes = b"".join(struct.pack("<3I", *triangle) for triangle in surface["triangles"])
+        source_validation_sha = surface.get("body_local_bake_source_validation_sha256")
+        output_pose = surface.get("record_pose_f32")
+        exact_attributes = hashlib.sha256(stored_bytes).hexdigest() == bake.get(
+            "stored_vertex_attributes_f32_sha256"
+        )
+        exact_partition_faces = hashlib.sha256(face_bytes).hexdigest() == bake.get(
+            "partition_row_face_indices_sha256"
+        )
+        exact_surface_positions = (
+            stored.shape == (len(surface["vertices"]), 6)
+            and actual_positions.shape == (len(surface["vertices"]), 3)
+            and np.array_equal(actual_positions, stored[:, :3].astype(np.float64))
+        )
+        source_bound_identity = (
+            type(bake.get("stable_id")) is int
+            and bake.get("stable_id") == surface.get("stable_id")
+            and bake.get("semantic") == 51004
+            and bake.get("member_id") == anchor["source"]["member_id"]
+            and bake.get("member_sha256") == anchor["source"]["member_sha256"]
+            and bake.get("core_body_index") == anchor["target"]["core_body_index"] == 20
+            and bake.get("myosim_body") == anchor["target"]["name"] == "torso"
+            and bake.get("source_triangle_count") == len(raw_triangles)
+            and bake.get("compiled_triangle_count") == len(surface["triangles"])
+        )
+        pose_is_identity = output_pose == [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0]
+        source_rederived = (
+            isinstance(source_validation_sha, str)
+            and re.fullmatch(r"[0-9a-f]{64}", source_validation_sha) is not None
+        )
+        result = {
+            "source_member_id": anchor["source"]["member_id"],
+            "myosim_body": anchor["target"]["name"],
+            "core_body_index": anchor["target"]["core_body_index"],
+            "source_vertex_count": len(raw_vertices),
+            "compiled_vertex_count": len(actual_positions),
+            "source_triangle_count": len(raw_triangles),
+            "compiled_triangle_count": len(surface["triangles"]),
+            "maximum_vertex_residual_m": 0.0 if exact_attributes and exact_surface_positions else None,
+            "maximum_allowed_vertex_residual_m": 0.0,
+            "tolerance_basis": "exact source003 partition re-derivation and body20 FP32 reframe",
+            "source_topology_matches": False,
+            "partition_face_ancestry_matches": exact_partition_faces,
+            "source003_partition_rederived": source_rederived,
+            "body_local_bake_identity_matches": source_bound_identity,
+            "stored_fp32_attributes_exact": exact_attributes,
+            "identity_record_pose": pose_is_identity,
+            "compiled_vertices_match_stored_fp32": exact_surface_positions,
+            "passed": (
+                finite and source_bound_identity and source_rederived
+                and exact_attributes and exact_surface_positions and exact_partition_faces
+                and pose_is_identity
+            ),
+        }
+        return result
+    if bake is not None:
+        source_normals = human_model._bodyparts_vertex_normals(
+            raw_vertices, raw_triangles, anchor["source"]["member_id"],
+        )
+        baked = human_model._bodyparts_bake_vertices_to_core_body(
+            raw_vertices, source_normals,
+            anchor["registration"]["source_obj_mm_to_core_inertial_body_m"],
+            f"compiled baked bone geometry {anchor['source']['member_id']}",
+        )
+        expected_bytes = b"".join(struct.pack("<6f", *vertex) for vertex in baked)
+        stored_values = surface.get("stored_vertex_attributes_f32")
+        stored_bytes = (
+            b"".join(struct.pack("<6f", *vertex) for vertex in stored_values)
+            if isinstance(stored_values, list) else b""
+        )
+        record_pose = surface.get("record_pose_f32")
+        baked_actual = np.asarray(stored_values, dtype=np.float32) if stored_values is not None else np.empty((0, 6))
+        actual_positions = np.asarray(surface["vertices"], dtype=np.float64)
+        exact_attributes = stored_bytes == expected_bytes
+        pose_is_identity = record_pose == [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0]
+        source_transform = anchor["registration"]["source_obj_mm_to_core_inertial_body_m"]
+        provenance_matches = (
+            type(bake.get("stable_id")) is int
+            and bake.get("stable_id") == surface.get("stable_id")
+            and bake.get("semantic") == 51004
+            and bake.get("member_id") == anchor["source"]["member_id"]
+            and bake.get("member_sha256") == anchor["source"]["member_sha256"]
+            and bake.get("bodyparts_archive_sha256") == anchor["source"].get("archive_sha256")
+            and bake.get("core_body_index") == anchor["target"]["core_body_index"] == 20
+            and bake.get("myosim_body") == anchor["target"]["name"] == "torso"
+            and bake.get("source_obj_mm_to_core_inertial_body_m") == source_transform
+            and bake.get("source_transform_sha256")
+            == human_model._bodyparts_transform_matrix_sha256(source_transform)
+            and type(bake.get("source_record_index")) is int
+            and bake.get("output_record_pose_f32") == [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0]
+        )
+        shape_matches = (
+            baked_actual.shape == np.asarray(baked, dtype=np.float32).shape
+            and actual_positions.shape == (len(baked), 3)
+        )
+        actual_matches_stored = (
+            shape_matches and np.array_equal(actual_positions, baked_actual[:, :3].astype(np.float64))
+        )
+        result = {
+            "source_member_id": anchor["source"]["member_id"],
+            "myosim_body": anchor["target"]["name"],
+            "core_body_index": anchor["target"]["core_body_index"],
+            "source_vertex_count": len(raw_vertices),
+            "compiled_vertex_count": len(actual_positions),
+            "source_triangle_count": len(raw_triangles),
+            "compiled_triangle_count": len(surface["triangles"]),
+            "maximum_vertex_residual_m": 0.0 if exact_attributes and actual_matches_stored else None,
+            "maximum_allowed_vertex_residual_m": 0.0,
+            "tolerance_basis": "exact_registered_body_local_FP32_bake_and_identity_record_pose",
+            "source_topology_matches": topology_matches,
+            "body_local_bake_identity_matches": provenance_matches,
+            "stored_fp32_attributes_exact": exact_attributes,
+            "identity_record_pose": pose_is_identity,
+            "compiled_vertices_match_stored_fp32": actual_matches_stored,
+            "passed": (
+                shape_matches and finite and exact_attributes and pose_is_identity
+                and provenance_matches and actual_matches_stored and topology_matches
+            ),
+        }
+        return result
     return {
         "source_member_id": anchor["source"]["member_id"],
         "myosim_body": anchor["target"]["name"],

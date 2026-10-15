@@ -6594,6 +6594,62 @@ def _bodyparts_runtime_bindings(
     }, body_by_name
 
 
+_BODYPARTS_BODY_LOCAL_BAKE_SCHEMA = "numi.human.bodyparts3d-myosim-bone-body-local-bake.v1"
+_BODYPARTS_BODY_LOCAL_BAKE_ROWS = {
+    48: ("FJ3228", "803a7134c1e69f640b87f9c6c4a846c869379446e771a1a7c9d18914c331a603"),
+    49: ("FJ3229", "631b4f63625fa6cc89ad83961b2156abe5878d1baf4a8cb2b2acbaa06bc97f58"),
+}
+
+
+def _bodyparts_float32(value: float) -> float:
+    """Round one declared scalar through the NHBONES little-endian FP32 format."""
+    try:
+        result = struct.unpack("<f", struct.pack("<f", float(value)))[0]
+    except (OverflowError, struct.error, TypeError, ValueError) as error:
+        raise ImportError("BodyParts3D body-local bake contains an invalid FP32 value") from error
+    if not math.isfinite(result):
+        raise ImportError("BodyParts3D body-local bake contains a non-finite FP32 value")
+    return result
+
+
+def _bodyparts_transform_matrix_sha256(matrix: Any) -> str:
+    if (
+        not isinstance(matrix, list) or len(matrix) != 4
+        or any(not isinstance(row, list) or len(row) != 4 for row in matrix)
+        or any(type(value) not in (int, float) for row in matrix for value in row)
+    ):
+        raise ImportError("BodyParts3D body-local bake transform is not a typed 4x4 matrix")
+    try:
+        packed = struct.pack("<16d", *(float(value) for row in matrix for value in row))
+    except (OverflowError, struct.error, ValueError) as error:
+        raise ImportError("BodyParts3D body-local bake transform cannot be pinned") from error
+    if any(not math.isfinite(value) for row in matrix for value in row):
+        raise ImportError("BodyParts3D body-local bake transform is non-finite")
+    return hashlib.sha256(packed).hexdigest()
+
+
+def _bodyparts_bake_vertices_to_core_body(
+    vertices_mm: list[Any], normals: list[Any], transform: Any, context: str,
+) -> list[tuple[float, float, float, float, float, float]]:
+    """Apply the exact declared visual transform and serialize its FP32 body-local result."""
+    if len(vertices_mm) != len(normals):
+        raise ImportError(f"{context} bake vertex/normal cardinalities differ")
+    translation, quaternion, scale = _bodyparts_visual_local_pose(transform, context)
+    pose = [_bodyparts_float32(value) for value in (*translation, *quaternion, scale)]
+    rotation = _myosim_matrix_from_quaternion_xyzw(pose[3:7])
+    result = []
+    for vertex_mm, normal in zip(vertices_mm, normals, strict=True):
+        source_m = [_bodyparts_float32(float(value) * 0.001) for value in vertex_mm]
+        position = _myosim_add(
+            pose[:3], _myosim_matrix_vector(rotation, [pose[7] * value for value in source_m]),
+        )
+        source_normal = [_bodyparts_float32(float(value)) for value in normal]
+        baked_normal = _myosim_matrix_vector(rotation, source_normal)
+        row = tuple(_bodyparts_float32(value) for value in (*position, *baked_normal))
+        result.append(row)
+    return result
+
+
 def bodyparts_myosim_bone_visual_payload(
     sources: Path, anatomy: dict[str, Any], registration_path: Path, output: Path,
     *, artifact: Path,
@@ -6790,12 +6846,13 @@ def bodyparts_myosim_bone_visual_payload(
             len(triangles) * 3, stable_id, *translation, *quaternion, scale,
             runtime_bodies[target_record["name"]][1]["source_record_index"],
         ))
-        provenance_anchors.append({
+        provenance_anchor = {
             "member_id": specification["member_id"], "member_sha256": source_record["member_sha256"],
             "core_body_index": core_body_index, "myosim_body": specification["myosim_body"],
             "source_record_index": runtime_bodies[target_record["name"]][1]["source_record_index"],
             "vertex_count": len(vertices_mm), "triangle_count": len(triangles),
-        })
+        }
+        provenance_anchors.append(provenance_anchor)
     axial_transitions: list[dict[str, Any]] = []
     for name, first_member_id, second_member_id in _NUMI_HUMAN_AXIAL_CONTINUITY_TRANSITIONS:
         first = axial_world_vertices.get(first_member_id)
@@ -8746,6 +8803,153 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     anchors = source.get("anchors")
     if not isinstance(anchors, list):
         raise ImportError("Numi Human tendon envelope bone member identities are absent")
+    body_local_bakes = manifest.get("body_local_bakes")
+    body_local_bake_rows: dict[int, dict[str, Any]] = {}
+    if body_local_bakes is not None:
+        registration = source.get("registration")
+        if (
+            not isinstance(body_local_bakes, dict)
+            or body_local_bakes.get("schema") != _BODYPARTS_BODY_LOCAL_BAKE_SCHEMA
+            or body_local_bakes.get("status")
+            != "explicit_visual_owner_frame_bake_not_physics_or_native_admission"
+            or body_local_bakes.get("mode") not in (None, "reframe_existing_composed_partitioned_rows")
+            or body_local_bakes.get("native_admission") is not False
+            or body_local_bakes.get("physics_or_mass_change") is not False
+            or not isinstance(registration, dict)
+            or body_local_bakes.get("registration_sha256") != registration.get("sha256")
+            or body_local_bakes.get("myosim_source_archive_sha256")
+            != source.get("myosim_source_archive_sha256")
+            or not isinstance(body_local_bakes.get("declaration_file"), str)
+            or Path(body_local_bakes["declaration_file"]).name != body_local_bakes["declaration_file"]
+            or not isinstance(body_local_bakes.get("declaration_sha256"), str)
+            or re.fullmatch(r"[0-9a-f]{64}", body_local_bakes["declaration_sha256"]) is None
+            or not isinstance(body_local_bakes.get("registration_sha256"), str)
+            or re.fullmatch(r"[0-9a-f]{64}", body_local_bakes["registration_sha256"]) is None
+        ):
+            raise ImportError("Numi Human NHBONES body-local bake manifest is invalid")
+        declared_rows = body_local_bakes.get("rows")
+        if not isinstance(declared_rows, list) or len(declared_rows) != 2:
+            raise ImportError("Numi Human NHBONES body-local bake rows are incomplete")
+        for declared in declared_rows:
+            if not isinstance(declared, dict) or type(declared.get("stable_id")) is not int:
+                raise ImportError("Numi Human NHBONES body-local bake row identity is malformed")
+            stable_id = declared["stable_id"]
+            if stable_id not in _BODYPARTS_BODY_LOCAL_BAKE_ROWS or stable_id in body_local_bake_rows:
+                raise ImportError("Numi Human NHBONES body-local bake has an unexpected or duplicate row")
+            expected_member, expected_member_sha = _BODYPARTS_BODY_LOCAL_BAKE_ROWS[stable_id]
+            source_anchor = anchors[stable_id - 1] if stable_id <= len(anchors) else None
+            composed_reframe = body_local_bakes.get("mode") == "reframe_existing_composed_partitioned_rows"
+            derived_partition = source_anchor.get("derived_visual_partition") if isinstance(source_anchor, dict) else None
+            if (
+                declared.get("member_id") != expected_member
+                or declared.get("member_sha256") != expected_member_sha
+                or declared.get("declaration_file") != body_local_bakes.get("declaration_file")
+                or declared.get("declaration_sha256") != body_local_bakes.get("declaration_sha256")
+                or not isinstance(declared.get("bodyparts_archive_sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", declared["bodyparts_archive_sha256"]) is None
+                or type(declared.get("source_vertex_count")) is not int
+                or type(declared.get("source_triangle_count")) is not int
+                or type(declared.get("semantic")) is not int or declared["semantic"] != 51004
+                or type(declared.get("core_body_index")) is not int or declared["core_body_index"] != 20
+                or declared.get("myosim_body") != "torso"
+                or type(declared.get("source_record_index")) is not int
+                or declared.get("output_record_pose_f32") != [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0]
+                or not isinstance(declared.get("source_transform_sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", declared["source_transform_sha256"]) is None
+                or not isinstance(declared.get("source_obj_mm_to_core_inertial_body_m"), list)
+                or declared.get("source_transform_sha256")
+                != _bodyparts_transform_matrix_sha256(
+                    declared.get("source_obj_mm_to_core_inertial_body_m")
+                )
+                or not isinstance(declared.get("stored_vertex_attributes_f32_sha256"), str)
+                or re.fullmatch(r"[0-9a-f]{64}", declared["stored_vertex_attributes_f32_sha256"]) is None
+                or not isinstance(source_anchor, dict)
+                or source_anchor.get("member_id") != expected_member
+                or source_anchor.get("member_sha256") != expected_member_sha
+                or source_anchor.get("archive_sha256") != declared.get("bodyparts_archive_sha256")
+                or source_anchor.get("core_body_index") != 20
+                or source_anchor.get("myosim_body") != "torso"
+                or source_anchor.get("source_record_index") != declared.get("source_record_index")
+                or source_anchor.get("vertex_count") != declared.get("source_vertex_count")
+                or source_anchor.get("triangle_count") != declared.get("source_triangle_count")
+                or (composed_reframe and (
+                    not isinstance(derived_partition, dict)
+                    or derived_partition.get("schema") != "numi.human.intercostal313-rib48-rib49-joint-priority-partition-face-ancestry.v1"
+                    or derived_partition.get("partition_ancestry_sha256") != body_local_bakes.get("partition_ancestry_sha256")
+                    or derived_partition.get("new_compiled_vertex_count") != declared.get("compiled_vertex_count")
+                    or derived_partition.get("new_compiled_triangle_count") != declared.get("compiled_triangle_count")
+                    or derived_partition.get("original_compiled_vertex_count") != declared.get("raw_source_vertex_count")
+                    or derived_partition.get("original_compiled_triangle_count") != declared.get("raw_source_triangle_count")
+                    or declared.get("reframe_mode") != "source003_composed_partition_row_to_body20_local"
+                    or type(declared.get("compiled_vertex_count")) is not int
+                    or type(declared.get("compiled_triangle_count")) is not int
+                    or type(declared.get("raw_source_vertex_count")) is not int
+                    or type(declared.get("raw_source_triangle_count")) is not int
+                    or type(declared.get("interface_vertex_count")) is not int
+                    or not isinstance(declared.get("interface_vertex_pairs"), list)
+                    or len(declared.get("interface_vertex_pairs")) != declared.get("interface_vertex_count")
+                    or not isinstance(declared.get("partition_row_face_indices_sha256"), str)
+                    or re.fullmatch(r"[0-9a-f]{64}", declared["partition_row_face_indices_sha256"]) is None
+                ))
+                or source_anchor.get("body_local_bake") != declared
+            ):
+                raise ImportError(f"Numi Human NHBONES baked row {stable_id} provenance is invalid")
+            body_local_bake_rows[stable_id] = declared
+        if set(body_local_bake_rows) != set(_BODYPARTS_BODY_LOCAL_BAKE_ROWS):
+            raise ImportError("Numi Human NHBONES body-local bake must include rows 48 and 49")
+        if body_local_bakes.get("mode") == "reframe_existing_composed_partitioned_rows":
+            declaration_path = artifact / body_local_bakes["declaration_file"]
+            if not declaration_path.is_file() or sha256(declaration_path) != body_local_bakes["declaration_sha256"]:
+                raise ImportError("Numi Human composed rib reframe declaration is absent or drifted")
+            declaration = read_json(declaration_path)
+            if (
+                declaration.get("schema") != "numi.human.composed-rib-body-local-frame-rebase.v1"
+                or declaration.get("status") != "source_pinned_composed_visual_rows_reframed_to_existing_core_body20_no_native_admission"
+                or declaration.get("input_source003", {}).get("nhbones_payload_sha256") != body_local_bakes.get("source003_nhbones_payload_sha256")
+                or declaration.get("input_source003", {}).get("nha_payload_sha256") != body_local_bakes.get("source003_nha_payload_sha256")
+                or declaration.get("partition_proof", {}).get("partition_ancestry_sha256") != body_local_bakes.get("partition_ancestry_sha256")
+                or declaration.get("shared_interface_map_sha256") != body_local_bakes.get("shared_interface_map_sha256")
+                or declaration.get("preservation", {}).get("physics_or_mass_change") is not False
+                or declaration.get("preservation", {}).get("native_admission") is not False
+            ):
+                raise ImportError("Numi Human composed rib reframe declaration does not bind the output manifest")
+            declaration_rows = declaration.get("rows")
+            if not isinstance(declaration_rows, list) or len(declaration_rows) != 2:
+                raise ImportError("Numi Human composed rib reframe declaration omits one typed row")
+            declaration_by_id = {row.get("stable_id"): row for row in declaration_rows if isinstance(row, dict)}
+            if set(declaration_by_id) != {48, 49}:
+                raise ImportError("Numi Human composed rib reframe declaration has invalid row identities")
+            global_map_bytes = bytearray()
+            for stable_id in (48, 49):
+                declared = body_local_bake_rows[stable_id]
+                sidecar_row = declaration_by_id[stable_id]
+                if (
+                    sidecar_row.get("interface_vertex_pairs") != declared.get("interface_vertex_pairs")
+                    or sidecar_row.get("interface_vertex_map_sha256") != declared.get("interface_vertex_map_sha256")
+                    or sidecar_row.get("compiled_vertex_count") != declared.get("compiled_vertex_count")
+                    or sidecar_row.get("compiled_triangle_count") != declared.get("compiled_triangle_count")
+                    or sidecar_row.get("source_record_pose_f32") != declared.get("source_record_pose_f32")
+                    or sidecar_row.get("output_record_pose_f32") != declared.get("output_record_pose_f32")
+                ):
+                    raise ImportError(f"Numi Human composed rib reframe row {stable_id} differs from its declaration")
+                seen_bone: set[int] = set()
+                seen_nha: set[int] = set()
+                row_map = bytearray()
+                for pair in declared["interface_vertex_pairs"]:
+                    if (
+                        not isinstance(pair, list) or len(pair) != 2
+                        or type(pair[0]) is not int or type(pair[1]) is not int
+                        or not 0 <= pair[0] < declared["compiled_vertex_count"]
+                        or pair[0] in seen_bone or pair[1] in seen_nha
+                    ):
+                        raise ImportError(f"Numi Human composed rib reframe row {stable_id} has an invalid local interface map")
+                    seen_bone.add(pair[0]); seen_nha.add(pair[1])
+                    row_map.extend(struct.pack("<III", stable_id, pair[0], pair[1]))
+                    global_map_bytes.extend(struct.pack("<III", stable_id, pair[0], pair[1]))
+                if hashlib.sha256(row_map).hexdigest() != declared.get("interface_vertex_map_sha256"):
+                    raise ImportError(f"Numi Human composed rib reframe row {stable_id} interface map hash drifted")
+            if hashlib.sha256(global_map_bytes).hexdigest() != declaration.get("shared_interface_map_sha256"):
+                raise ImportError("Numi Human composed rib reframe shared-interface map hash drifted")
     member_body_indices = {
         str(anchor.get("member_id")): int(anchor.get("core_body_index", -1))
         for anchor in anchors if isinstance(anchor, dict)
@@ -8756,12 +8960,26 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
         source_sha,
     )
     raw = payload_path.read_bytes()
+    composed_reframe_validation = None
+    if (
+        isinstance(body_local_bakes, dict)
+        and body_local_bakes.get("mode") == "reframe_existing_composed_partitioned_rows"
+    ):
+        from .composed_bone_body_frame import validate_composed_rib_reframe
+
+        composed_reframe_validation = validate_composed_rib_reframe(
+            artifact, manifest, raw,
+        )
     header_size = struct.calcsize("<8s5I32s")
     if len(raw) < header_size:
         raise ImportError("Numi Human tendon envelope bone payload is truncated")
     magic, abi, bone_count, vertex_count, index_count, fingerprint, embedded_source = struct.unpack_from(
         "<8s5I32s", raw,
     )
+    if (
+        body_local_bakes is not None and abi != _BODYPARTS_MYOSIM_BONE_VISUAL_ABI
+    ):
+        raise ImportError("Numi Human body-local baked ribs require NHBONES ABI 3 source owners")
     if (
         magic != _BODYPARTS_MYOSIM_BONE_VISUAL_MAGIC
         or abi not in (2, _BODYPARTS_MYOSIM_BONE_VISUAL_ABI)
@@ -8784,8 +9002,9 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     indices = struct.unpack_from(f"<{index_count}I", raw, offset)
     by_body: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for stable_id, (record, anchor) in enumerate(zip(records, anchors, strict=True), start=1):
+        source_record_index = record[-1] if abi == 3 else None
         if abi == 3:
-            if not isinstance(anchor, dict) or anchor.get("source_record_index") != record[-1]:
+            if not isinstance(anchor, dict) or anchor.get("source_record_index") != source_record_index:
                 raise ImportError("Numi Human tendon envelope bone source owner identity drifted")
             record = record[:-1]
         body_index, first_vertex, count, first_index, count_indices, record_stable_id, *pose = record
@@ -8804,8 +9023,9 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
         scale = pose[7]
         if not math.isfinite(scale) or scale <= 0.0:
             raise ImportError("Numi Human tendon envelope bone scale is invalid")
+        stored_vertices = vertices[first_vertex:first_vertex + count]
         local_vertices = []
-        for vertex in vertices[first_vertex:first_vertex + count]:
+        for vertex in stored_vertices:
             if not all(math.isfinite(value) for value in vertex):
                 raise ImportError(
                     f"Numi Human tendon envelope bone {anchor.get('member_id')} vertex is non-finite"
@@ -8819,12 +9039,44 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
             tuple(local_indices[index + axis] - first_vertex for axis in range(3))
             for index in range(0, count_indices, 3)
         ]
-        by_body[body_index].append({
+        surface = {
             "stable_id": stable_id,
             "member_id": anchor.get("member_id"),
             "vertices": local_vertices,
             "triangles": triangles,
-        })
+            "record_pose_f32": [float(value) for value in pose],
+        }
+        bake_row = body_local_bake_rows.get(stable_id)
+        if bake_row is not None:
+            if (
+                bake_row.get("member_id") != anchor.get("member_id")
+                or bake_row.get("member_sha256") != anchor.get("member_sha256")
+                or bake_row.get("core_body_index") != body_index
+                or bake_row.get("source_record_index") != anchor.get("source_record_index")
+                or bake_row.get("source_record_index") != source_record_index
+                or bake_row.get("compiled_vertex_count", bake_row.get("source_vertex_count")) != count
+                or bake_row.get("compiled_triangle_count", bake_row.get("source_triangle_count")) != count_indices // 3
+            ):
+                raise ImportError(f"Numi Human NHBONES baked row {stable_id} disagrees with its record")
+            if bake_row.get("reframe_mode") == "source003_composed_partition_row_to_body20_local":
+                face_bytes = b"".join(struct.pack("<3I", *triangle) for triangle in triangles)
+                if hashlib.sha256(face_bytes).hexdigest() != bake_row.get("partition_row_face_indices_sha256"):
+                    raise ImportError(f"Numi Human NHBONES baked row {stable_id} partition face ancestry drifted")
+            attributes = b"".join(struct.pack("<6f", *vertex) for vertex in stored_vertices)
+            if hashlib.sha256(attributes).hexdigest() != bake_row["stored_vertex_attributes_f32_sha256"]:
+                raise ImportError(f"Numi Human NHBONES baked row {stable_id} stored FP32 attributes drifted")
+            surface["stored_vertex_attributes_f32"] = stored_vertices
+            surface["stored_vertex_attributes_f32_sha256"] = hashlib.sha256(attributes).hexdigest()
+            surface["body_local_bake"] = bake_row
+            if bake_row.get("reframe_mode") == "source003_composed_partition_row_to_body20_local":
+                if not isinstance(composed_reframe_validation, dict):
+                    raise ImportError("Numi Human composed rib source re-derivation was not performed")
+                surface["body_local_bake_source_validation_sha256"] = (
+                    composed_reframe_validation["validation_sha256"]
+                )
+        elif stable_id in _BODYPARTS_BODY_LOCAL_BAKE_ROWS and body_local_bakes is not None:
+            raise ImportError(f"Numi Human NHBONES baked row {stable_id} is missing its provenance row")
+        by_body[body_index].append(surface)
     return dict(by_body), {
         "file": payload_path.name,
         "sha256": expected_sha,
