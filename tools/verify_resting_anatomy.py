@@ -156,7 +156,7 @@ def main(argv=None):
     p.add_argument("--intended-enclosure", action="append", default=[], help="SEM:ID,SEM:ID; containment only")
     p.add_argument("--shared-partition", nargs=4, action="append", default=[],
                    metavar=("FIRST", "SECOND", "NHTISS", "SHA256"),
-                   help="source-bound reciprocal passive muscle partition; strict native certificate required")
+                   help="source-bound reciprocal passive muscle partition; strict exact certificate required")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
@@ -209,8 +209,8 @@ def main(argv=None):
         for first, second, source, digest in args.shared_partition:
             key_a, key_b = identity(first), identity(second)
             pin(source, digest)
-            if key_a in overlay_keys or key_b in overlay_keys:
-                raise ValueError("shared partition requires actual native capture, not counterfactual overlays")
+            if (key_a in overlay_keys) != (key_b in overlay_keys):
+                raise ValueError("counterfactual shared partition requires both sides overlaid")
             partitions.append((key_a, key_b, Path(source), digest))
         if args.preflight_only:
             for key in changed:
@@ -222,7 +222,9 @@ def main(argv=None):
                 from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
                 result = audit_with_shared_partitions(
                     surfaces, changed, partitions=partitions, targets=targets,
-                    required_closed=closed, intended_enclosures=enclosures)
+                    required_closed=closed, intended_enclosures=enclosures,
+                    coordinate_provenance=("counterfactual_owner_replay" if args.overlay
+                                           else "accepted_native_capture"))
             else:
                 result = verify.audit_changed_surfaces(
                     surfaces, changed, targets=targets,
@@ -230,7 +232,11 @@ def main(argv=None):
             report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
     except (ValueError, TypeError, KeyError, OSError, verify.HumanImportError) as error:
-        report.update(passed=False, failed_stage="preparation", error=str(error))
+        diagnostic = getattr(error, "diagnostic", None)
+        report.update(passed=False, failed_stage=(diagnostic.get("stage", "exact_certificate")
+                      if isinstance(diagnostic, dict) else "preparation"), error=str(error))
+        if diagnostic is not None:
+            report["exact_failure_witness"] = diagnostic
     report.update(elapsed_seconds=time.perf_counter()-start, caller_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                   scope="Selected geometry only. Source ancestry, actual rest-owner emission, motion, continuity and physiology require their existing separate proofs.")
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -123,6 +123,42 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "exact Float32"):
             tool.apply_overlay(self.surfaces(), KEY, path, digest)
 
+    def test_shared_counterfactual_uses_same_verifier_without_native_claim(self):
+        from tests.test_resting_shared_partition_verify import scene
+        from numilab_human import resting_shared_partition_verify as shared
+        source, digest, captures = scene(self.root)
+        pack, receipt = self.root/"pack", self.root/"receipt"
+        pack.write_bytes(b"pack")
+        receipt.write_bytes(b"receipt")
+        args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                "--source-pin", str(source)+"="+digest,
+                "--shared-partition", "51005:1", "51005:2", str(source), digest]
+        for key, (x,f,n,g) in captures.items():
+            candidate = self.root/f"candidate-{key[1]}.npz"
+            np.savez(candidate, capture_positions_m=x, capture_faces=f,
+                     capture_normals=n, capture_global_vertex_ids=g)
+            args += ["--overlay", f"51005:{key[1]}={candidate}="+hashlib.sha256(candidate.read_bytes()).hexdigest(),
+                     "--changed", f"51005:{key[1]}"]
+        output = self.root/"shared.json"
+        with patch.object(tool.verify, "load_capture", return_value=(dict(captures), {"accepted_step": 0})):
+            result = tool.main(args+["--output", str(output)])
+        report = json.loads(output.read_text())
+        self.assertEqual(result, 0)
+        self.assertTrue(report["counterfactual_candidates"])
+        proof = report["shared_partition_certificates"][0]
+        self.assertEqual(proof["coordinate_provenance"], "counterfactual_owner_replay")
+        self.assertNotIn("exact_native_partition_certificate", proof)
+        self.assertFalse(report["native_admission"])
+        error = ValueError("retained exact witness")
+        error.diagnostic = {"stage": "emitted_cross_domain_contact", "first_face": 7, "second_face": 9}
+        failed = self.root/"shared-failed.json"
+        # scene() arrays were not changed by the first invocation.
+        with patch.object(tool.verify, "load_capture", return_value=(dict(captures), {"accepted_step": 0})):
+            with patch.object(shared, "audit_with_shared_partitions", side_effect=error):
+                self.assertEqual(tool.main(args+["--output", str(failed)]), 1)
+        self.assertEqual(json.loads(failed.read_text())["exact_failure_witness"], error.diagnostic)
+
     def test_bad_capture_pin_stops_before_capture_loader(self):
         pack, receipt = self.root / "p", self.root / "r"
         pack.write_bytes(b"pack")

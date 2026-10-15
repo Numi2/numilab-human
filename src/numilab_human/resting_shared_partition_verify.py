@@ -29,8 +29,14 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path, expec
         row = rows[0]
         arrays = pac._nhtiss_row_arrays(data, row)
         local = pac._row_slices(data, row)
+        observed = surfaces[key]
+        if isinstance(observed, verify.PreparedSurface):
+            observed = (observed.positions, observed.faces, observed.normals,
+                        observed.source_vertex_ids)
+        pac.require(observed[2] is not None,
+                    "shared partition requires explicit Float32 coordinate-frame normals")
         captured, proof = verify.retain_bound_source_faces(
-            key, surfaces[key], arrays["faces"], arrays["first_vertex"],
+            key, observed, arrays["faces"], arrays["first_vertex"],
             np.arange(len(arrays["faces"]), dtype=np.int64))
         pac.require(proof["all_ordered_source_facets_match"], "shared partition ordered source facets differ")
         xyz, faces, normals, gids = captured
