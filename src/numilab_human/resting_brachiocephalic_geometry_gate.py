@@ -55,6 +55,16 @@ AORTIC_ARCH_SOURCE_ROWS = {
         "faces_sha256": "a6884a09ba8975813151a31d851b7f712a8e59a3299f135485f7d8822c9649af",
     },
 }
+AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE = ((51011, 7), (51011, 8))
+AORTIC_ARCH_DESCENDING_SOURCE_ROWS = {
+    (51011, 7): AORTIC_ARCH_SOURCE_ROWS[(51011, 7)],
+    (51011, 8): {
+        "source_member": "FJ3427", "fma": "FMA3784",
+        "name": "descending aorta", "body_index": 20, "layer": 2,
+        "first_vertex": 111189, "vertex_count": 2351, "face_count": 4562,
+        "faces_sha256": "ec5cd5366cd434c0b167740d5276f84ac35045de56968c10aa7f2931758115c2",
+    },
+}
 
 
 def _require(condition: bool, message: str) -> None:
