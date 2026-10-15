@@ -758,7 +758,7 @@ def _aortic_arch_certificate_from_reports(
                      and all(type(face) is int and face >= 0 for face in pair)
                      for pair in pairs)
              and tuple(tuple(pair) for pair in pairs) == tuple(sorted({tuple(pair) for pair in pairs}))
-             and hashlib.sha256(np.asarray(pairs, dtype="<i8").tobytes()).hexdigest()
+             and hashlib.sha256(np.asarray(pairs, dtype="<u4").tobytes()).hexdigest()
              == collision_owner.AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,
              "aortic proof pairset is not the frozen exact 36-pair set")
     interface_match = report.get("interface_gate_pairset_matches_frozen")

@@ -883,7 +883,7 @@ def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_k
              "aortic certificate exact pair set is malformed")
     pairs = tuple((pair[0], pair[1]) for pair in raw_pairs)
     _require(pairs == tuple(sorted(set(pairs)))
-             and hashlib.sha256(np.asarray(pairs, dtype="<i8").tobytes()).hexdigest()
+             and hashlib.sha256(np.asarray(pairs, dtype="<u4").tobytes()).hexdigest()
              == AORTIC_ARCH_INTERFACE_PAIRSET_SHA256
              and certificate.get("exact_face_pairset_sha256")
              == AORTIC_ARCH_INTERFACE_PAIRSET_SHA256,

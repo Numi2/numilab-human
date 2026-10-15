@@ -1799,7 +1799,7 @@ def test_aortic_arch_interface_certificate_binds_exact_current_surfaces(monkeypa
     edge = ((51011, 7), (51011, 6))
     pairs = ((0, 0),)
     pair_sha = hashlib.sha256(
-        np.ascontiguousarray(pairs, dtype="<i8").tobytes()).hexdigest()
+        np.ascontiguousarray(pairs, dtype="<u4").tobytes()).hexdigest()
     rows = {
         edge[0]: {"typed_identity": list(edge[0]), "first_vertex": 110808},
         edge[1]: {"typed_identity": list(edge[1]), "first_vertex": 110579},
