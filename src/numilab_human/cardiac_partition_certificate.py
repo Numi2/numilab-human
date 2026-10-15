@@ -518,6 +518,27 @@ def _outside_connected_boundary_patches(mesh, other, shared_keys, blocked_edges)
     return face_count, witnesses
 
 
+def _prepare_interface_edges(edges):
+    """Reuse the exact closed-box owner for declared interface segments."""
+    records = []
+    for index, edge in enumerate(sorted(edges)):
+        records.append((edge,
+                        tuple(min(p[k] for p in edge) for k in range(3)),
+                        tuple(max(p[k] for p in edge) for k in range(3)), index))
+    return predicates._prepare_surface_aabb(records)
+
+
+def _contact_on_interface(points, vertices, edge_index):
+    """Apply the original contact predicate after conservative exact pruning."""
+    if len(set(points)) == 1 and all(p in vertices for p in points):
+        return True
+    lo = tuple(min(p[k] for p in points) for k in range(3))
+    hi = tuple(max(p[k] for p in points) for k in range(3))
+    query = (None, lo, hi, 0)
+    return any(all(_on_segment(p, *edge[0]) for p in points)
+               for _, edge in predicates._query_surface_aabb((query,), edge_index))
+
+
 def audit_shared_interface_partition(regions,shared_interface, *, classify_connected_patches=False,
                                      expected_region_component_counts=None):
     """Audit final binary64 geometry independently of the rational construction.
@@ -573,6 +594,7 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
     shared_keys={tuple(sorted(t)) for t in shared}
     interface_vertices={p for t in shared for p in t}
     interface_edges={_edge_key(a,b) for t in shared for a,b in zip(t,t[1:]+t[:1])}
+    edge_index = _prepare_interface_edges(interface_edges)
     a,b=list(prepared);contacts=0
     blocked = {name: set(interface_edges) for name in prepared}
     for row, other in predicates._aabb_candidate_pairs(
@@ -582,8 +604,7 @@ def audit_shared_interface_partition(regions,shared_interface, *, classify_conne
         contacts+=1
         if tuple(sorted(row[0]))==tuple(sorted(other[0])) and tuple(sorted(row[0])) in shared_keys:
             continue
-        allowed=(all(p in interface_vertices for p in points) and len(set(points))==1) or any(
-            all(_on_segment(p,x,y) for p in points) for x,y in interface_edges)
+        allowed = _contact_on_interface(points, interface_vertices, edge_index)
         containing_edges = []
         for tri in (row[0], other[0]):
             containing_edges.append({_edge_key(tri[i], tri[(i+1)%3])

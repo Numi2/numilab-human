@@ -164,6 +164,46 @@ class PositiveRayUpperOrthantTests(unittest.TestCase):
         self.assertEqual(prepared.location(point), legacy_prepared_location(prepared, point)[0])
 
 
+class InterfaceEdgeIndexTests(unittest.TestCase):
+    def test_pruned_contacts_match_exhaustive_exact_segment_predicate(self):
+        edges = {((F(0), F(0), F(0)), (F(4), F(2), F(0))),
+                 ((F(-3), F(1), F(-2)), (F(-3), F(1), F(5))),
+                 ((F(7), F(-4), F(2)), (F(9), F(-4), F(2)))}
+        vertices = {p for edge in edges for p in edge}
+        index = cert._prepare_interface_edges(edges)
+        contacts = [
+            [(F(1), F(1, 2), F(0)), (F(3), F(3, 2), F(0))],
+            [(F(-3), F(1), F(0)), (F(-3), F(1), F(4))],
+            [(F(1), F(3, 4), F(0)), (F(3), F(3, 2), F(0))],
+            [(F(0), F(0), F(0))] * 2,
+            [(F(4), F(2), F(0)), (F(7), F(-4), F(2))],
+            [(F(8), F(-4), F(2))],
+            [(F(4), F(2), F(0)), (F(4), F(2), F(1))],
+        ]
+        for points in contacts:
+            expected = ((len(set(points)) == 1 and all(p in vertices for p in points))
+                        or any(all(cert._on_segment(p, *edge) for p in points)
+                               for edge in edges))
+            with self.subTest(points=points):
+                self.assertEqual(cert._contact_on_interface(points, vertices, index), expected)
+
+    def test_exact_box_index_discards_remote_segments_before_predicates(self):
+        from unittest.mock import patch
+        edges = {((i, 0, 0), (i, 1, 0)) for i in range(1024)}
+        points = [(F(500), F(1, 4), F(0)), (F(500), F(3, 4), F(0))]
+        index = cert._prepare_interface_edges(edges)
+        original = cert._on_segment
+        with patch.object(cert, "_on_segment", wraps=original) as tested:
+            self.assertTrue(cert._contact_on_interface(points, set(), index))
+            self.assertEqual(tested.call_count, 2)
+
+    def test_off_segment_contact_in_overlapping_box_still_fails(self):
+        edge = ((0, 0, 0), (2, 2, 2))
+        index = cert._prepare_interface_edges({edge})
+        self.assertFalse(cert._contact_on_interface([(F(1), F(1), F(1, 2))],
+                                                   set(edge), index))
+
+
 class ExactCoverageTests(unittest.TestCase):
     def test_custom_source_names_must_be_two_distinct_nonempty_strings(self):
         for names in (("same","same"), ("", "other"), (1, "other")):
