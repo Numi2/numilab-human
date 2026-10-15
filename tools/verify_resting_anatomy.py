@@ -44,7 +44,8 @@ def reconstruction_references(path, digest, stable_id, table):
     if not manifest_path.exists():
         cache[stable_id] = None
         return None
-    document = json.loads(manifest_path.read_text())
+    manifest_bytes = manifest_path.read_bytes()
+    document = json.loads(manifest_bytes)
     if document["payload"]["sha256"] != digest:
         raise ValueError("source manifest payload SHA256 differs")
     rows = [row for row in document["source"]["surfaces"]
@@ -58,7 +59,7 @@ def reconstruction_references(path, digest, stable_id, table):
             raise ValueError("source reconstruction stable identity differs")
         for name in ("candidate", "report"):
             references[name] = pin(repair[name], repair[name+"_sha256"])
-    proof = {"manifest": pin(manifest_path, hashlib.sha256(manifest_path.read_bytes()).hexdigest()),
+    proof = {"manifest": pin(manifest_path, hashlib.sha256(manifest_bytes).hexdigest()),
              "declared_reconstruction_inputs": references,
              "source_ancestry_admission": False}
     cache[stable_id] = proof
