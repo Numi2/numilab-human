@@ -17,6 +17,7 @@ KEY = (51005, 73)
 POINTS = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="<f4")
 FACES = np.array([[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype="<u4")
 GIDS = np.arange(4, dtype="<u4") + 100
+NORMALS = np.tile(np.array([[0, 0, 1]], dtype="<f4"), (4, 1))
 
 
 class RestingVerificationEntrypointTests(unittest.TestCase):
@@ -26,7 +27,8 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
 
     def candidate(self, **changes):
-        arrays = dict(capture_positions_m=POINTS, capture_faces=FACES, capture_global_vertex_ids=GIDS)
+        arrays = dict(capture_positions_m=POINTS, capture_faces=FACES, capture_global_vertex_ids=GIDS,
+                      source_positions=POINTS, source_normals=NORMALS, source_faces=FACES)
         arrays.update(changes)
         path = self.root / "candidate.npz"
         np.savez(path, **arrays)
@@ -65,7 +67,8 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
 
     def test_no_guessing_faces_key_and_no_native_admission(self):
         path = self.root / "candidate.npz"
-        np.savez(path, capture_positions_m=POINTS, capture_faces_candidate=FACES, capture_global_vertex_ids=GIDS)
+        np.savez(path, capture_positions_m=POINTS, capture_faces_candidate=FACES, capture_global_vertex_ids=GIDS,
+                 source_positions=POINTS, source_normals=NORMALS, source_faces=FACES)
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         with self.assertRaises(KeyError):
             tool.apply_overlay(self.surfaces(), KEY, path, digest)
@@ -75,6 +78,50 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         self.assertTrue(report["all_ordered_capture_gids_exact"])
         self.assertFalse(report["candidate_normals_present"])
         self.assertIsInstance(surfaces[KEY], tool.verify.PreparedSurface)
+
+    def test_missing_normals_stop_before_exact_geometry(self):
+        path = self.root / "candidate.npz"
+        np.savez(path, capture_positions_m=POINTS, capture_faces=FACES, capture_global_vertex_ids=GIDS)
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        with patch.object(tool.verify, "prepare_surface", side_effect=AssertionError("no predicates")):
+            with self.assertRaisesRegex(ValueError, "requires capture normals or validated source normals"):
+                tool.apply_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_stale_duplicate_source_fields_are_rejected(self):
+        vertices = np.c_[POINTS, NORMALS].astype("<f4")
+        vertices[0, 0] += 0.001
+        path, digest = self.candidate(vertices6=vertices)
+        with self.assertRaisesRegex(ValueError, "duplicate source positions disagree"):
+            tool.apply_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_raw_vertex_records_must_match_declared_source_fields(self):
+        vertices = np.c_[POINTS, NORMALS].astype("<f4")
+        raw = np.zeros((4, 56), dtype=np.uint8)
+        raw[:, :24] = vertices.view(np.uint8).reshape(4, 24)
+        raw[0, 0] ^= 1
+        path, digest = self.candidate(vertices6=vertices, vertex_records_raw=raw)
+        with self.assertRaisesRegex(ValueError, "raw ABI5 vertex records disagree"):
+            tool.apply_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_unused_source_normal_slots_do_not_invalidate_closed_surface(self):
+        positions = np.vstack([POINTS, np.zeros((1, 3), dtype="<f4")])
+        normals = np.vstack([NORMALS, np.zeros((1, 3), dtype="<f4")])
+        path, digest = self.candidate(source_positions=positions, source_normals=normals)
+        report = tool.apply_overlay(self.surfaces(), KEY, path, digest)
+        self.assertEqual(report["source_field_preflight"]["referenced_source_normal_count"], 4)
+
+    def test_invalid_rigid_rest_transform_is_rejected(self):
+        raw = np.zeros((1, 36), dtype=np.uint8)
+        rest = np.array([[0, 0, 0, 0, 0, 0, 2, 1]], dtype="<f4")
+        raw[:, 4:] = rest.view(np.uint8).reshape(1, 32)
+        path, digest = self.candidate(binding_records_raw=raw)
+        with self.assertRaisesRegex(ValueError, "rigid rest transforms"):
+            tool.apply_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_source_normals_are_not_implicitly_rounded(self):
+        path, digest = self.candidate(source_normals=NORMALS.astype("<f8"))
+        with self.assertRaisesRegex(ValueError, "exact Float32"):
+            tool.apply_overlay(self.surfaces(), KEY, path, digest)
 
     def test_bad_capture_pin_stops_before_capture_loader(self):
         pack, receipt = self.root / "p", self.root / "r"

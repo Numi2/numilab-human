@@ -33,6 +33,84 @@ def identity(text):
     return verify.typed_key(tuple(int(x) for x in text.split(":")))
 
 
+def source_field_preflight(arrays):
+    """Check existing NPZ source lanes before any exact geometry predicate.
+
+    These are preparation checks. Native owner emission and source ancestry
+    still require their separately pinned compiler and capture proofs.
+    """
+    evidence = {}
+    source_positions = arrays["source_positions"] if "source_positions" in arrays else None
+    source_normals = arrays["source_normals"] if "source_normals" in arrays else None
+    vertices6 = arrays["vertices6"] if "vertices6" in arrays else None
+    source_faces = arrays["source_faces"] if "source_faces" in arrays else None
+    faces = arrays["faces"] if "faces" in arrays else None
+    if vertices6 is not None:
+        if (vertices6.dtype != np.dtype("<f4") or vertices6.ndim != 2
+                or vertices6.shape[1] != 6 or not np.isfinite(vertices6).all()):
+            raise ValueError("source vertices6 must contain finite exact Float32 positions/normals")
+        for label, declared, observed in (
+                ("positions", source_positions, vertices6[:, :3]),
+                ("normals", source_normals, vertices6[:, 3:])):
+            if declared is not None:
+                if declared.dtype != np.dtype("<f4"):
+                    raise ValueError(f"duplicate source {label} must be exact Float32")
+                if not np.array_equal(declared, observed):
+                    raise ValueError(f"duplicate source {label} disagree with vertices6")
+        source_positions, source_normals = vertices6[:, :3], vertices6[:, 3:]
+    if source_faces is not None and faces is not None and not np.array_equal(source_faces, faces):
+        raise ValueError("duplicate source face arrays disagree")
+    source_faces = source_faces if source_faces is not None else faces
+    if source_positions is not None or source_normals is not None:
+        if (source_positions is None or source_normals is None or source_faces is None
+                or source_positions.dtype != np.dtype("<f4")
+                or source_normals.dtype != np.dtype("<f4")
+                or source_positions.ndim != 2 or source_positions.shape[1] != 3
+                or source_normals.shape != source_positions.shape
+                or not np.isfinite(source_positions).all()
+                or not np.isfinite(source_normals).all()):
+            raise ValueError("source positions/normals require finite matching exact Float32 lanes and source faces")
+        if (source_faces.ndim != 2 or source_faces.shape[1] != 3 or not len(source_faces)
+                or source_faces.dtype.kind not in "iu" or source_faces.min() < 0
+                or source_faces.max() >= len(source_positions)):
+            raise ValueError("source face indices do not address declared source lanes")
+        used = np.unique(source_faces)
+        lengths = np.linalg.norm(source_normals[used].astype(np.float64), axis=1)
+        if np.any(np.abs(lengths - 1.0) > 2e-3):
+            raise ValueError("referenced source normals must be unit length")
+        evidence.update(source_vertex_count=len(source_positions),
+                        referenced_source_normal_count=len(used), source_normals_valid=True)
+    if "vertex_records_raw" in arrays:
+        raw = arrays["vertex_records_raw"]
+        if (raw.dtype != np.dtype("uint8") or raw.ndim != 2 or raw.shape[1] != 56
+                or vertices6 is None or len(raw) != len(vertices6)):
+            raise ValueError("raw ABI5 vertex records require matching vertices6")
+        emitted = np.ascontiguousarray(raw[:, :24]).view("<f4").reshape(-1, 6)
+        if not np.array_equal(emitted, vertices6):
+            raise ValueError("raw ABI5 vertex records disagree with source vertices6")
+        weights = np.ascontiguousarray(raw[:, 40:56]).view("<f4").reshape(-1, 4)
+        if (not np.isfinite(weights).all() or np.any(weights < 0)
+                or np.any(np.abs(weights.sum(axis=1, dtype=np.float64) - 1) >= 1e-5)):
+            raise ValueError("raw ABI5 vertex material weights must be finite, nonnegative and normalized")
+        if "binding_records_raw" in arrays:
+            indices = np.ascontiguousarray(raw[:, 24:40]).view("<u4").reshape(-1, 4)
+            if np.any(indices[weights > 0] >= len(arrays["binding_records_raw"])):
+                raise ValueError("raw ABI5 vertex material index exceeds source binding inventory")
+        evidence["raw_vertex_records_match_source"] = True
+    if "binding_records_raw" in arrays:
+        raw = arrays["binding_records_raw"]
+        if raw.dtype != np.dtype("uint8") or raw.ndim != 2 or raw.shape[1] != 36 or not len(raw):
+            raise ValueError("raw ABI5 binding records have invalid byte layout")
+        rest = np.ascontiguousarray(raw[:, 4:]).view("<f4").reshape(-1, 8)
+        if (not np.isfinite(rest).all() or np.any(rest[:, 7] <= 0)
+                or np.any(np.abs(np.sum(rest[:, 3:7].astype(np.float64) ** 2, axis=1) - 1) > 2e-5)):
+            raise ValueError("raw ABI5 rigid rest transforms require finite positions, unit quaternions and positive scale")
+        evidence["raw_binding_rest_transforms_valid"] = True
+    if "capture_normals" not in arrays and source_normals is None:
+        raise ValueError("candidate requires capture normals or validated source normals")
+    return evidence
+
+
 def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces"):
     """Bind a fixed-allocation candidate to all ordered captured source GIDs."""
     key = verify.typed_key(key)
@@ -44,6 +122,9 @@ def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces"):
         faces = arrays[faces_key].copy()
         gids = arrays["capture_global_vertex_ids"].copy()
         normals = arrays["capture_normals"].copy() if "capture_normals" in arrays else None
+        source_fields = source_field_preflight(arrays)
+    if normals is not None and normals.dtype != np.dtype("<f4"):
+        raise ValueError("capture normals must already be exact Float32")
     if not np.array_equal(gids, surfaces[key][3]) or gids.dtype.kind not in "iu":
         raise ValueError("candidate must preserve every ordered captured source GID")
     if positions.dtype != np.dtype("<f4"):
@@ -54,6 +135,7 @@ def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces"):
         "typed_identity": list(key), "candidate": source_pin, "faces_key": faces_key,
         "all_ordered_capture_gids_exact": True, "geometry_preparation": prepared.diagnostics(),
         "candidate_normals_present": normals is not None,
+        "source_field_preflight": source_fields,
         "world_positions_are_counterfactual": True,
         "source_ancestry_and_rest_owner_validation": "separately pinned compiler evidence required",
     }
