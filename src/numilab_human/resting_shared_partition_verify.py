@@ -1,4 +1,4 @@
-"""Source-bound shared muscle interfaces for the existing resting verifier.
+"""Source-bound reciprocal interfaces for the existing resting verifier.
 
 A full exact two-solid certificate precedes any omission of that pair from
 the ordinary nearby audit. Source row IDs, every ordered source facet, sparse
@@ -73,6 +73,15 @@ def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha
         tokens[key] = [material[int(i)] for i in slot]
         prepared[key], bindings[key], local_arrays[key] = sf, proof, arrays
 
+    return _finish_shared_partition(prepared, tokens, bindings, first, second, source,
+                                    expected_sha256, coordinate_provenance, exact_certificate)
+
+
+def _finish_shared_partition(prepared, tokens, bindings, first, second, source,
+                             expected_sha256, coordinate_provenance, exact_certificate,
+                             *, classify_connected_patches=False):
+    pac.require(coordinate_provenance in ("accepted_native_capture", "counterfactual_owner_replay"),
+                "shared partition coordinate provenance invalid")
     def triangle_tokens(key, face):
         return tuple(tokens[key][int(i)] for i in prepared[key].faces[face])
     first_faces = {}
@@ -111,7 +120,8 @@ def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha
     # Count each independently closed source component, including nested cavities.
     counts = {str(key): sf.quotient_topology["face_component_count"] for key, sf in prepared.items()}
     audit = cert.audit_shared_interface_partition(regions, interface,
-                                                  expected_region_component_counts=counts)
+                                                  expected_region_component_counts=counts,
+                                                  classify_connected_patches=classify_connected_patches)
     pac.require(audit["interiors_disjoint"] and audit["shared_interface_opposite_chain"],
                 "native shared partition certificate failed")
     proof = {"identities": [list(first), list(second)],
@@ -126,27 +136,102 @@ def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha
     return proof
 
 
+def _shared_rigid_head_partition(surfaces, first, second, source, expected_sha256,
+                                 *, capture_receipt, capture_receipt_sha256,
+                                 coordinate_provenance="accepted_native_capture",
+                                 exact_certificate=True):
+    from .resting_pleura_proxy import _parse_payload
+    first, second = verify.typed_key(first), verify.typed_key(second)
+    allowed = {frozenset(((51012 if a == 12 else 51010, a), (51010, b)))
+               for a, b in ((12, 323), (12, 343), (323, 343), (323, 345), (343, 345))}
+    pac.require(frozenset((first, second)) in allowed,
+                "rigid head partition typed interface is unsupported")
+    pac.require(isinstance(capture_receipt, dict) and
+                capture_receipt.get("common_field_source_anatomy_payload_sha256") == expected_sha256,
+                "rigid head partition source differs from accepted capture")
+    poses = [r for r in capture_receipt.get("accepted_body_poses", [])
+             if r.get("body_index") == 23]
+    pac.require(len(poses) == 1, "rigid head partition requires unique accepted head pose")
+    owner = {"body_index": 23, "capture_receipt_sha256": capture_receipt_sha256,
+             "position_m": poses[0]["position_m"],
+             "quaternion_xyzw": poses[0]["quaternion_xyzw"]}
+    verify._normalize_rigid_owner_proof(owner)
+    source = Path(source).resolve()
+    pac.require(pac._surface_sha256(source) == expected_sha256,
+                "shared partition source hash differs")
+    _, _, rows = _parse_payload(source.read_bytes())
+    prepared, tokens, bindings = {}, {}, {}
+    for key in (first, second):
+        row = rows[key[1]]
+        pac.require(row["body_index"] == 23 and row["layer"] == (3 if key == (51012, 12) else 1),
+                    "rigid head partition source owner or layer differs")
+        observed = surfaces[key]
+        if isinstance(observed, verify.PreparedSurface):
+            observed = (observed.positions, observed.faces, observed.normals,
+                        observed.source_vertex_ids)
+        pac.require(observed[2] is not None,
+                    "shared partition requires explicit Float32 coordinate-frame normals")
+        captured, proof = verify.retain_bound_source_faces(
+            key, observed, row["faces"], int(row["record"][1]),
+            np.arange(len(row["faces"]), dtype=np.int64))
+        pac.require(proof["all_ordered_source_facets_match"],
+                    "shared partition ordered source facets differ")
+        xyz, faces, normals, gids = captured
+        sf = verify.prepare_surface(key, xyz, faces, normals=normals, source_vertex_ids=gids)
+        pac.require(sf.closed and xyz.dtype == np.dtype("<f4")
+                    and normals.dtype == np.dtype("<f4"),
+                    "shared partition requires closed exact Float32 surfaces")
+        local = row["vertices6"]
+        used = np.unique(row["faces"])
+        pac.require(np.isfinite(local).all()
+                    and np.max(np.abs(np.linalg.norm(local[used, 3:].astype(float), axis=1)-1)) < 1e-4,
+                    "shared partition source normals invalid")
+        slot = gids.astype(np.int64)-proof["source_capture_vertex_namespace_offset"]-int(row["record"][1])
+        pac.require((slot >= 0).all() and (slot < len(local)).all(), "source slot map invalid")
+        # Same authenticated payload and rigid owner; local point bytes identify
+        # reciprocal material boundaries. Current world equality is checked below.
+        tokens[key] = [(local[int(i), :3].tobytes(), 23) for i in slot]
+        prepared[key] = sf
+        bindings[key] = dict(proof, accepted_rigid_owner=owner,
+                             accepted_anatomy_payload_sha256=expected_sha256)
+    # Existing exact mode: after all crossings are excluded, each uncut
+    # boundary patch has one parity classification. No geometric tolerance.
+    return _finish_shared_partition(prepared, tokens, bindings, first, second, source,
+                                    expected_sha256, coordinate_provenance, exact_certificate,
+                                    classify_connected_patches=True)
+
+
+def _partition_dispatch(surfaces, first, second, source, expected_sha256,
+                        *, capture_context=None, **kwargs):
+    first, second = verify.typed_key(first), verify.typed_key(second)
+    if first[0] != 51005 or second[0] != 51005:
+        pac.require(capture_context is not None, "rigid head partition requires accepted capture context")
+        return _shared_rigid_head_partition(
+            surfaces, first, second, source, expected_sha256, **capture_context, **kwargs)
+    return _shared_muscle_partition(surfaces, first, second, source, expected_sha256, **kwargs)
+
+
 def preflight_shared_muscle_partition(surfaces, first, second, source: Path,
                                      expected_sha256: str, *,
-                                     coordinate_provenance="accepted_native_capture"):
+                                     coordinate_provenance="accepted_native_capture", capture_context=None):
     """Check owners, facets and reciprocal material presence without exact predicates."""
-    return _shared_muscle_partition(
-        surfaces, first, second, source, expected_sha256,
+    return _partition_dispatch(
+        surfaces, first, second, source, expected_sha256, capture_context=capture_context,
         coordinate_provenance=coordinate_provenance, exact_certificate=False)
 
 
 def certify_shared_muscle_partition(surfaces, first, second, source: Path,
                                    expected_sha256: str, *,
-                                   coordinate_provenance="accepted_native_capture"):
+                                   coordinate_provenance="accepted_native_capture", capture_context=None):
     """Require the existing exact two-solid certificate after source preparation."""
-    return _shared_muscle_partition(
-        surfaces, first, second, source, expected_sha256,
+    return _partition_dispatch(
+        surfaces, first, second, source, expected_sha256, capture_context=capture_context,
         coordinate_provenance=coordinate_provenance)
 
 
 def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
                                 required_closed=(), intended_enclosures=(),
-                                source_patch_complex_interfaces=None,
+                                source_patch_complex_interfaces=None, capture_context=None,
                                 coordinate_provenance="accepted_native_capture"):
     """Use existing exact certificates and existing nearby predicates in order."""
     certificates, partners, seen = [], {}, set()
@@ -156,7 +241,8 @@ def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
                     "duplicate shared partition declaration")
         seen.add(frozenset((first, second)))
         proof = certify_shared_muscle_partition(surfaces, first, second, path, digest,
-                                                coordinate_provenance=coordinate_provenance)
+                                                coordinate_provenance=coordinate_provenance,
+                                                capture_context=capture_context)
         certificates.append(proof)
         partners.setdefault(first, set()).add(second)
         partners.setdefault(second, set()).add(first)

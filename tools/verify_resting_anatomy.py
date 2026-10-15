@@ -354,8 +354,8 @@ def main(argv=None):
     p.add_argument("--required-closed", action="append", default=[])
     p.add_argument("--intended-enclosure", action="append", default=[], help="SEM:ID,SEM:ID; containment only")
     p.add_argument("--shared-partition", nargs=4, action="append", default=[],
-                   metavar=("FIRST", "SECOND", "NHTISS", "SHA256"),
-                   help="source-bound reciprocal passive muscle partition; strict exact certificate required")
+                   metavar=("FIRST", "SECOND", "SOURCE", "SHA256"),
+                   help="source-bound reciprocal muscle or supported rigid head partition; strict exact certificate required")
     p.add_argument("--head-source-patch-report", action="append", default=[],
                    help="existing reciprocal head-patch report PATH=SHA256; current capture only")
     p.add_argument("--preflight-only", action="store_true")
@@ -479,11 +479,17 @@ def main(argv=None):
             pin(source, digest)
             if (key_a in overlay_keys) != (key_b in overlay_keys):
                 raise ValueError("counterfactual shared partition requires both sides overlaid")
+        capture_context = ({"capture_receipt": json.loads(args.capture_receipt.read_text()),
+                            "capture_receipt_sha256": args.receipt_sha256}
+                           if any(first[0] != 51005 or second[0] != 51005 for first, second, _, _ in partitions) else None)
+        if any((first[0] != 51005 or second[0] != 51005) and (first in overlay_keys or second in overlay_keys)
+               for first, second, _, _ in partitions):
+            raise ValueError("rigid head partitions require unchanged accepted-capture surfaces")
         if partitions:
             from numilab_human.resting_shared_partition_verify import preflight_shared_muscle_partition
             report["shared_partition_preflight"] = [
                 preflight_shared_muscle_partition(
-                    surfaces, first, second, source, digest,
+                    surfaces, first, second, source, digest, capture_context=capture_context,
                     coordinate_provenance=("counterfactual_owner_replay" if overlay_keys
                                            else "accepted_native_capture"))
                 for first, second, source, digest in partitions]
@@ -498,7 +504,7 @@ def main(argv=None):
                 result = audit_with_shared_partitions(
                     surfaces, changed, partitions=partitions, targets=targets,
                     required_closed=closed, intended_enclosures=enclosures,
-                    source_patch_complex_interfaces=patch_interfaces,
+                    source_patch_complex_interfaces=patch_interfaces, capture_context=capture_context,
                     coordinate_provenance=("counterfactual_owner_replay" if args.overlay or args.rest_source
                                            else "accepted_native_capture"))
             else:
