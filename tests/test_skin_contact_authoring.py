@@ -315,3 +315,34 @@ def test_separate_self_reference_preserves_shared_simplex_zero_bound():
         tool.face_support_constraints(reference,faces,0,1,.0005),reference,base,faces)
     shared_rows=[r for r in rows if faces[r[0],int(np.argmax(r[1]))]==faces[r[2],int(np.argmax(r[3]))]]
     assert shared_rows and all(row[-1]==0. for row in shared_rows)
+
+def test_adaptive_support_clears_actual_crossing_without_returning_to_old_axis():
+    reference=np.array([[0,0,0],[.01,0,0],[0,.01,0],
+                        [.02,0,.02],[.03,0,.02],[.02,.01,.02]],dtype="<f4")
+    faces=np.array([[0,1,2],[3,4,5]],dtype=np.int64)
+    current=reference.copy()
+    current[3:]=np.array([[.009,0,-.01],[.019,0,.01],[.009,.01,.01]],dtype="<f4")
+    old=tool.face_support_constraints(reference,faces,0,1,.0005)
+    new=tool.face_support_constraints(reference,faces,0,1,.0005,current_points=current)
+    old=tool.rebase_self_contact_constraints(old,reference,current,faces)
+    new=tool.rebase_self_contact_constraints(new,reference,current,faces)
+    old_need=max(r[-1]/np.linalg.norm(r[-2]) for r in old)
+    new_need=max(r[-1]/np.linalg.norm(r[-2]) for r in new)
+    assert new_need < old_need and new_need < .002
+    # A 1.1 mm lateral separation resolves the actual crossing along the
+    # source-consistent side; it does not reverse the reference ordering.
+    delta=np.zeros_like(current);delta[3:,0]=.0011
+    assert all(float((wa@delta[faces[a]]-wb@delta[faces[b]])@n)>=bound
+               for a,wa,b,wb,n,bound in new)
+    assert any(float((wa@delta[faces[a]]-wb@delta[faces[b]])@n)<bound
+               for a,wa,b,wb,n,bound in old)
+
+
+def test_adaptive_support_does_not_waive_invalid_reference():
+    ref=np.array([[0,0,0],[1,0,0],[0,1,0]],dtype="<f4")
+    faces=np.array([[0,1,2],[0,1,2]],dtype=np.int64)
+    with pytest.raises(ValueError,match="separating"):
+        tool.face_support_constraints(ref,faces,0,1,.0005,current_points=ref)
+    with pytest.raises(ValueError,match="current"):
+        tool.face_support_constraints(ref,np.array([[0,1,2],[0,2,1]]),0,1,.0005,
+                                      current_points=np.array([[np.nan,0,0]]))

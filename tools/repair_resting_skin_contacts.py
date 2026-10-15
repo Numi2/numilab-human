@@ -121,7 +121,7 @@ def self_gap_constraint(base_points,faces,first,first_bary,second,second_bary,ma
 
 
 
-def face_support_constraints(base_points,faces,first,second,margin_m):
+def face_support_constraints(base_points,faces,first,second,margin_m,*,current_points=None):
     """Preserve a complete reference triangle separator, not just witness points.
 
     Exact rational source projections choose and verify the axis before its
@@ -129,6 +129,13 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
     """
     triangles=[[[Fraction(float(x)) for x in point]
                 for point in base_points[faces[index]]] for index in (first,second)]
+    current_triangles=None
+    if current_points is not None:
+        current=np.asarray(current_points)
+        if current.shape!=np.asarray(base_points).shape or not np.isfinite(current).all():
+            raise ValueError("invalid current self-contact construction coordinates")
+        current_triangles=[[[Fraction(float(x)) for x in point]
+                            for point in current[faces[index]]] for index in (first,second)]
     def sub(a,b):return [x-y for x,y in zip(a,b)]
     def cross(a,b):return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]
     def dot(a,b):return sum(x*y for x,y in zip(a,b))
@@ -143,6 +150,13 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
     for x,y,z in [*ea,*eb]:
         axes.extend(([y,-x,Fraction(0)],[z,Fraction(0),-x],
                      [Fraction(0),z,-y]))
+    if current_triangles is not None:
+        ca,cb=current_triangles
+        cea=[sub(ca[(i+1)%3],ca[i]) for i in range(3)]
+        ceb=[sub(cb[(i+1)%3],cb[i]) for i in range(3)]
+        cna,cnb=cross(cea[0],cea[1]),cross(ceb[0],ceb[1])
+        axes.extend([cna,cnb,*[cross(x,y) for x in cea for y in ceb],
+                     *[cross(x,cna) for x in cea],*[cross(x,cnb) for x in ceb]])
     shared=set(map(int,faces[first]))&set(map(int,faces[second]))
     if len(shared)==3:
         raise ValueError("self-contact reference triangles have no complete separating support plane")
@@ -159,10 +173,19 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
             if gap<0 or (gap==0 and not shared):continue
             positive=[x for x in exact_gaps if x>0]
             if not positive:continue
-            candidates.append((gap>0,min(positive)**2/length2,oriented))
-    candidates.sort(key=lambda row:(row[0],row[1]),reverse=True)
+            penetration=Fraction(0)
+            if current_triangles is not None:
+                current_gap=min(dot(oriented,sub(x,y)) for x in ca for y in cb)
+                penetration=max(Fraction(0),-current_gap)**2/length2
+            candidates.append((gap>0,min(positive)**2/length2,oriented,penetration))
+    if current_triangles is None:
+        candidates.sort(key=lambda row:(row[0],row[1]),reverse=True)
+    else:
+        # Keep the independently clear reference side, but choose the least
+        # penetrating support axis for the actual current witness triangles.
+        candidates.sort(key=lambda row:(row[3],not row[0],-row[1]))
     normal=None
-    for _,_,axis in candidates:
+    for _,_,axis,_ in candidates:
         axis=np.array([float(x) for x in axis])
         length=float(np.linalg.norm(axis))
         if not np.isfinite(length) or length==0:continue
@@ -317,6 +340,8 @@ def main():
     ap.add_argument("--solid-depth", action="store_true")
     ap.add_argument("--repair-self-contacts", action="store_true",
         help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
+    ap.add_argument("--adaptive-self-contact-support",action="store_true",
+        help="select reference-valid facet axes from the actual witnessed current geometry")
     ap.add_argument("--self-contact-reference", type=Path,
         help="same-topology Float32 authoring NPZ with verified clear self-contact reference")
     ap.add_argument("--self-contact-separator", choices=["witness","face-support"],default="witness")
@@ -335,6 +360,8 @@ def main():
         ap.error(str(error))
     if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .03:
         ap.error("require 0 < margin < step <= total <= 0.03 m")
+    if args.adaptive_self_contact_support and args.self_contact_separator!="face-support":
+        ap.error("adaptive self-contact support requires face-support separator")
     if not 0 <= args.orientation_ratio < 1:
         ap.error("orientation ratio must be in [0,1)")
     args.output.mkdir(exist_ok=False)
@@ -419,6 +446,7 @@ def main():
         contact_constraint_policy=args.contact_constraint_policy,
         inactive_source_coordinates_preserved=True,
         self_contact_reference=(str(args.self_contact_reference) if args.self_contact_reference else None),
+        adaptive_self_contact_support=args.adaptive_self_contact_support,
         self_contact_reference_identity=("ordered_vertices_and_faces_exact" if args.self_contact_reference else "authoring_base"))
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
         runner_argv=[sys.executable,*sys.argv],input_pins=pins)
@@ -470,7 +498,8 @@ def main():
             witnesses=[]
             for first,second in self_result["triangle_pairs"]:
                 if args.self_contact_separator=="face-support":
-                    derived=face_support_constraints(self_reference_points,faces,first,second,args.margin_m)
+                    derived=face_support_constraints(self_reference_points,faces,first,second,args.margin_m,
+                        current_points=world if args.adaptive_self_contact_support else None)
                 else:
                     derived=[]
                     for point in surf.intersection_points_meters(surf,int(first),int(second)):
