@@ -258,5 +258,83 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         self.assertFalse(report["anatomical_admission"])
 
 
+    def test_rest_source_replays_compiled_owner_without_an_npz(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        cache = {}
+        proof = tool.apply_rest_source(native, key, source, digest, poses, cache)
+        np.testing.assert_array_equal(native[key].positions, arrays["capture_positions_m"])
+        self.assertEqual(len(cache), 1)
+        self.assertTrue(proof["repacked_source_owner"]["cpu_rest_owner_emission_byte_exact"])
+        self.assertFalse(proof["repacked_source_owner"]["actual_native_emission_verified"])
+        self.assertTrue(proof["world_positions_are_counterfactual"])
+        self.assertIn("not_parent_tissue_deformation", proof["preparation"])
+        # The same pinned compiled source is loaded once across a pose replay.
+        with patch("numilab_human.passive_attachment_composition._read_nhtiss4",
+                   side_effect=AssertionError("source must be cached")):
+            tool.apply_rest_source(native, key, source, digest, poses, cache)
+
+    def test_rest_source_rejects_stale_hash_and_invalid_poses_before_geometry(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        badposes = {k: v.copy() for k, v in poses.items()}
+        badposes[41][3:] = [0, 0, 0, 2]
+        with patch.object(tool.verify, "prepare_surface", side_effect=AssertionError("no geometry")):
+            with self.assertRaisesRegex(ValueError, "SHA256 mismatch"):
+                tool.apply_rest_source(native, key, source, "0"*64, poses, {})
+            with self.assertRaisesRegex(ValueError, "rigid rest pose"):
+                tool.apply_rest_source(native, key, source, digest, badposes, {})
+
+    def test_rest_source_cli_preflight_preserves_counterfactual_boundary(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        pack, receipt = self.root/"pack", self.root/"receipt"
+        pack.write_bytes(b"native-pack")
+        receipt.write_text(json.dumps({"accepted_body_poses": [
+            {"body_index": k, "position_m": list(map(float, v[:3])),
+             "quaternion_xyzw": list(map(float, v[3:]))} for k, v in poses.items()]}))
+        output = self.root/"rest-source.json"
+        args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                "--source-pin", str(source)+"="+digest,
+                "--rest-source", f"51005:1={source}="+digest,
+                "--changed", "51005:1", "--preflight-only", "--output", str(output)]
+        with patch.object(tool.verify, "load_capture", return_value=(native, {"accepted_step": 0})):
+            self.assertEqual(tool.main(args), 0)
+        report = json.loads(output.read_text())
+        self.assertTrue(report["counterfactual_candidates"])
+        self.assertFalse(report["native_admission"])
+        self.assertEqual(report["status"], "PASS_PREPARATION_ONLY_NO_PAIR_PREDICATES")
+        self.assertEqual(len(report["overlays"]), 1)
+        self.assertFalse(list(self.root.glob("*.npz")))
+        failed = self.root/"rest-source-duplicate.json"
+        duplicate = args[:-2]+["--rest-source", f"51005:1={source}="+digest, "--output", str(failed)]
+        with patch.object(tool.verify, "load_capture", return_value=(native, {"accepted_step": 0})):
+            self.assertEqual(tool.main(duplicate), 1)
+        self.assertIn("duplicate candidate typed identity", json.loads(failed.read_text())["error"])
+
+
+    def test_rest_source_shared_certificate_remains_counterfactual(self):
+        from tests.test_resting_shared_partition_verify import scene
+        source, digest, captures = scene(self.root)
+        pack, receipt = self.root/"pack", self.root/"receipt"
+        pack.write_bytes(b"native-pack")
+        receipt.write_text(json.dumps({"accepted_body_poses": [
+            {"body_index": k, "position_m": [0,0,0], "quaternion_xyzw": [0,0,0,1]}
+            for k in (41,25,29,20)]}))
+        output = self.root/"rest-source-shared.json"
+        args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                "--source-pin", str(source)+"="+digest,
+                "--shared-partition", "51005:1", "51005:2", str(source), digest]
+        for sid in (1,2):
+            args += ["--rest-source", f"51005:{sid}={source}="+digest, "--changed", f"51005:{sid}"]
+        with patch.object(tool.verify, "load_capture", return_value=(captures, {"accepted_step": 0})):
+            self.assertEqual(tool.main(args+["--output", str(output)]), 0)
+        report = json.loads(output.read_text())
+        self.assertFalse(report["native_admission"])
+        proof = report["shared_partition_certificates"][0]
+        self.assertTrue(proof["exact_partition_certificate"]["interiors_disjoint"])
+        self.assertNotIn("exact_native_partition_certificate", proof)
+        self.assertEqual(proof["coordinate_provenance"], "counterfactual_owner_replay")
+
+
 if __name__ == "__main__":
     unittest.main()
