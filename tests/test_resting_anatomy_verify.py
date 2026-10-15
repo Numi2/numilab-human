@@ -815,6 +815,23 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             self.assertTrue(result["declared_enclosure_outside_aabb"])
             self.assertEqual(result["triangle_pair_count"], 0)
 
+    def test_changed_surface_dispatch_rejects_disjoint_declared_enclosure(self):
+        outer = prepare_surface((51007, 1), tetra(), FACES)
+        escaped = prepare_surface((51005, 121), tetra(.1, 2.), FACES)
+        surfaces = {outer.key: outer, escaped.key: escaped}
+        for changed, target in ((escaped, outer), (outer, escaped)):
+            ordinary = av.audit_changed_surfaces(
+                surfaces, [changed.key], targets=[target.key])
+            self.assertTrue(ordinary["passed"])
+            result = av.audit_changed_surfaces(
+                surfaces, [changed.key], targets=[target.key],
+                intended_enclosures=[(escaped.key, outer.key)])
+            self.assertFalse(result["passed"])
+            self.assertEqual(result["failed_stage"], "nearby_pair")
+            self.assertTrue(result["rows"][-1]["declared_enclosure_outside_aabb"])
+            self.assertEqual(result["rows"][-1]["intended_enclosures"],
+                             [[list(escaped.key), list(outer.key)]])
+
     def test_intended_enclosure_direction_is_not_symmetric(self):
         outer = prepare_surface((51007, 1), tetra(), FACES)
         inner = prepare_surface((51011, 525), tetra(.1, .1), FACES)

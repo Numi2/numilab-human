@@ -2221,8 +2221,16 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
             positions = value.positions if isinstance(value, PreparedSurface) else value[0]
             if (np.any(surface.positions.min(axis=0) > positions.max(axis=0)) or
                     np.any(positions.min(axis=0) > surface.positions.max(axis=0))):
+                declared_enclosures = [pair for pair in enclosures
+                                       if set(pair) == {key, target}]
                 rows.append({"stage": "nearby_pair", "identities": [list(key), list(target)],
-                             "passed": True, "aabb_disjoint": True, "triangle_pair_count": 0})
+                             "passed": not declared_enclosures, "aabb_disjoint": True,
+                             "triangle_pair_count": 0,
+                             "declared_enclosure_outside_aabb": bool(declared_enclosures),
+                             "intended_enclosures": [[list(a), list(b)]
+                                                     for a, b in declared_enclosures]})
+                if declared_enclosures:
+                    return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
                 continue
             try:
                 other = prepared(target)
