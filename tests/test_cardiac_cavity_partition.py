@@ -221,6 +221,8 @@ class AuthoringTests(unittest.TestCase):
             (F(23691320), F(-125515928), F(15897054)),
             first_vertices[2],
         )
+        edge_neighbor = (first_vertices[0][0], first_vertices[0][1],
+                         first_vertices[0][2] + 100)
         normal = predicates._cross(predicates._sub(first_vertices[1], first_vertices[0]),
                                    predicates._sub(first_vertices[2], first_vertices[0]))
         polygon = partition._coplanar_overlap_polygon(first_vertices, second_vertices, normal)
@@ -229,25 +231,27 @@ class AuthoringTests(unittest.TestCase):
             (F(23691324), F(-376547896, 3), F(47691152, 3)),
         })
 
-        first = {"vertices": first_vertices, "triangles": [(0,1,2)], "source_sha256": "a"*64}
+        first = {"vertices": first_vertices + (edge_neighbor,),
+                 "triangles": [(0,1,2), (0,2,3)], "source_sha256": "a"*64}
         second = {"vertices": second_vertices, "triangles": [(0,1,2)], "source_sha256": "b"*64}
-
-        def source_region(point):
-            return ("inside" if partition._point_in_convex_polygon(point, polygon, normal)
-                    else "outside")
-
-        with patch.object(partition.IntegerRayClassifier, "location", side_effect=source_region):
+        with patch.object(partition.IntegerRayClassifier, "location", return_value="outside"):
             rows, report = partition.construct_arrangement(
                 {"FDS": first, "FDP": second}, source_names=("FDS", "FDP"),
                 coplanar_priority_pairs={(0,0)})
 
         self.assertEqual(report["coplanar_priority_overlap_pair_count"], 1)
-        self.assertEqual(len(report["intersection_segments_m"]), 3)
-        for source_name in ("FDS", "FDP"):
-            children = [row for row in rows if row["source"] == source_name]
-            inside = [row for row in children if row["other_location"] == "inside"]
-            self.assertEqual((len(children), len(inside)), (2, 1))
-            self.assertEqual(set(inside[0]["vertices"]), set(polygon))
+        self.assertEqual(len(report["intersection_segments_m"]), 4)
+        fds_target = [row for row in rows if row["source"] == "FDS" and row["source_face"] == 0]
+        fds_neighbor = [row for row in rows if row["source"] == "FDS" and row["source_face"] == 1]
+        fdp_target = [row for row in rows if row["source"] == "FDP"]
+        self.assertEqual((len(fds_target), len(fds_neighbor), len(fdp_target)), (2, 2, 2))
+        inside_fds = [row for row in fds_target if row["other_location"] == "inside"]
+        inside_fdp = [row for row in fdp_target if row["other_location"] == "inside"]
+        self.assertEqual((len(inside_fds), len(inside_fdp)), (1, 1))
+        self.assertEqual(set(inside_fds[0]["vertices"]), set(polygon))
+        self.assertEqual(set(inside_fdp[0]["vertices"]), set(polygon))
+        point = (F(23691324), F(-376547896, 3), F(47691152, 3))
+        self.assertTrue(all(point in row["vertices"] for row in fds_neighbor))
 
     def test_declared_shared_feature_does_not_hide_an_unlisted_coplanar_pair(self):
         triangle = ((F(0), F(0), F(0)), (F(1), F(0), F(0)), (F(0), F(1), F(0)))
