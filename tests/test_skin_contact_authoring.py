@@ -172,3 +172,18 @@ def test_unrelated_reference_touch_does_not_get_shared_simplex_permission():
                    [0.,0.,0.],[-.01,0.,0.],[0.,-.01,0.]],dtype="<f4")
     with pytest.raises(ValueError,match="complete separating"):
         tool.face_support_constraints(base,np.array([[0,1,2],[3,4,5]]),0,1,.0005)
+
+
+def test_complete_face_support_preserves_non_axis_aligned_shared_edge_exactly():
+    a=np.array([.1234567,.2345678,.3456789],dtype="<f4")
+    b=(a.astype(float)+[.0037456,.0012345,.0065432]).astype("<f4")
+    c=(a.astype(float)+[.00765,.00432,.00987]).astype("<f4")
+    d=(a.astype(float)-[.00765,.00432,.00987]).astype("<f4")
+    base=np.array([a,b,c,d],dtype="<f4")
+    rows=tool.face_support_constraints(base,np.array([[0,1,2],[1,0,3]]),0,1,.0005)
+    assert len(rows)==9 and all(row[-1]<=0 for row in rows)
+    for _,wa,_,wb,axis,bound in rows:
+        # Shared edge endpoints must remain exactly on a supporting plane;
+        # geometric tolerance cannot stand in for that exact incidence.
+        if int(np.argmax(wa))<2 and int(np.argmax(wb))<2:
+            assert bound==0.

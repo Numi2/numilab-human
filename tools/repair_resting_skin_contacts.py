@@ -138,6 +138,11 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
     na,nb=cross(ea[0],ea[1]),cross(eb[0],eb[1])
     axes=[na,nb,*[cross(x,y) for x in ea for y in eb],
           *[cross(x,na) for x in ea],*[cross(x,nb) for x in eb]]
+    # Dyadic perpendicular bases retain exact shared-edge incidence without
+    # rounding the higher-degree edge-cross-face-normal SAT coefficient.
+    for x,y,z in [*ea,*eb]:
+        axes.extend(([y,-x,Fraction(0)],[z,Fraction(0),-x],
+                     [Fraction(0),z,-y]))
     shared=set(map(int,faces[first]))&set(map(int,faces[second]))
     if len(shared)==3:
         raise ValueError("self-contact reference triangles have no complete separating support plane")
@@ -159,18 +164,25 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
     normal=None
     for _,_,axis in candidates:
         axis=np.array([float(x) for x in axis])
-        trial=axis/np.linalg.norm(axis)
-        if not np.isfinite(trial).all():continue
-        # The rounded LP axis itself must have exact, nonnegative source
-        # projections. Zero is allowed only for shared topological simplices.
-        rational=[Fraction(float(x)) for x in trial]
-        trial_gaps=[dot(rational,sub(x,y)) for x in a for y in b]
-        if min(trial_gaps)<0 or (min(trial_gaps)==0 and not shared):continue
-        if not any(x>0 for x in trial_gaps):continue
-        normal=trial;gaps=trial_gaps;break
+        length=float(np.linalg.norm(axis))
+        if not np.isfinite(length) or length==0:continue
+        # Unit normalization can destroy exact perpendicularity at a shared
+        # edge. A power-of-two rescale preserves representable coefficients;
+        # the physical clearance floor is scaled by its resulting norm.
+        _,exponent=np.frexp(length)
+        trials=[axis/length,np.ldexp(axis,-int(exponent))]
+        for trial in trials:
+            if not np.isfinite(trial).all():continue
+            rational=[Fraction(float(x)) for x in trial]
+            trial_gaps=[dot(rational,sub(x,y)) for x in a for y in b]
+            if min(trial_gaps)<0 or (min(trial_gaps)==0 and not shared):continue
+            if not any(x>0 for x in trial_gaps):continue
+            normal=trial;gaps=trial_gaps;break
+        if normal is not None:break
     if normal is None:
         raise ValueError("self-contact reference triangles have no complete separating support plane")
-    floors=[min(float(margin_m),1.e-6,float(gap)/4.) for gap in gaps]
+    axis_norm=float(np.linalg.norm(normal))
+    floors=[min(float(margin_m)*axis_norm,1.e-6*axis_norm,float(gap)/4.) for gap in gaps]
     if not all(np.isfinite(x) and x>=0 for x in floors):
         raise ValueError("invalid face-support floor")
     eye=np.eye(3)
