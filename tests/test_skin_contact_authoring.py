@@ -261,3 +261,57 @@ def test_explicit_bone_targets_preserve_retained_default_and_declared_order():
 def test_explicit_bone_targets_reject_ambiguous_or_invalid_identity(values):
     with pytest.raises(ValueError,match="distinct positive UInt32"):
         tool.selected_bone_targets(values)
+
+def test_separate_clear_reference_recovers_crossed_authoring_base():
+    reference=np.array([[0,0,0],[0,.01,0],[0,0,.01],
+                        [.02,0,0],[.02,.01,0],[.02,0,.01]],dtype="<f4")
+    faces=np.array([[0,1,2],[3,4,5]],dtype=np.int64)
+    base=reference.copy()
+    base[1,0]=.03
+    rows=tool.rebase_self_contact_constraints(
+        tool.face_support_constraints(reference,faces,0,1,.0005),reference,base,faces)
+    assert any(0.<bound for *_,bound in rows)
+    # Returning to the clear reference satisfies all rebased inequalities.
+    recovery=reference.astype(float)-base.astype(float)
+    assert all(float((wa@recovery[faces[a]]-wb@recovery[faces[b]])@n)>=bound-1e-15
+               for a,wa,b,wb,n,bound in rows)
+    # Collapsing both faces onto x=.01 remains disallowed.
+    collapsed=reference.astype(float).copy();collapsed[:,0]=.01
+    delta=collapsed-base
+    assert any(float((wa@delta[faces[a]]-wb@delta[faces[b]])@n)<bound
+               for a,wa,b,wb,n,bound in rows)
+
+
+def test_reference_rebase_is_invariant_to_common_base_translation():
+    reference=np.array([[0,0,0],[0,1,0],[0,0,1],[2,0,0],[2,1,0],[2,0,1]],dtype="<f4")
+    faces=np.array([[0,1,2],[3,4,5]],dtype=np.int64)
+    rows=tool.face_support_constraints(reference,faces,0,1,.0005)
+    base=reference.astype(float);base[1,0]=3.
+    first=tool.rebase_self_contact_constraints(rows,reference,base,faces)
+    translated=tool.rebase_self_contact_constraints(rows,reference,base+[8.,-4.,2.],faces)
+    np.testing.assert_allclose([r[-1] for r in first],[r[-1] for r in translated],atol=1e-15)
+
+
+@pytest.mark.parametrize("mutation",["faces","gids","float64","nonfinite"])
+def test_separate_self_reference_rejects_identity_or_emission_drift(mutation):
+    points=np.array([[0,0,0],[0,1,0],[0,0,1]],dtype="<f4")
+    faces=np.array([[0,1,2]],dtype=np.int64)
+    gids=np.array([10,20,30],dtype=np.uint64)
+    reference=dict(capture_positions_m=points.copy(),capture_faces=faces.copy(),
+                   capture_global_vertex_ids=gids.copy())
+    if mutation=="faces":reference["capture_faces"][0]=[1,0,2]
+    if mutation=="gids":reference["capture_global_vertex_ids"][0]=11
+    if mutation=="float64":reference["capture_positions_m"]=points.astype(float)
+    if mutation=="nonfinite":reference["capture_positions_m"][0,0]=np.nan
+    with pytest.raises(ValueError,match="reference"):
+        tool.validated_self_contact_reference(reference,points,faces,gids)
+
+
+def test_separate_self_reference_preserves_shared_simplex_zero_bound():
+    reference=np.array([[0,0,0],[1,0,0],[0,1,0],[-1,0,0],[0,-1,0]],dtype="<f4")
+    faces=np.array([[0,1,2],[0,3,4]],dtype=np.int64)
+    base=reference.copy();base[2,1]=-1.
+    rows=tool.rebase_self_contact_constraints(
+        tool.face_support_constraints(reference,faces,0,1,.0005),reference,base,faces)
+    shared_rows=[r for r in rows if faces[r[0],int(np.argmax(r[1]))]==faces[r[2],int(np.argmax(r[3]))]]
+    assert shared_rows and all(row[-1]==0. for row in shared_rows)

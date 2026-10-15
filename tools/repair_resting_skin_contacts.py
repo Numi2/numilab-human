@@ -191,6 +191,36 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
             for i in range(3) for j in range(3)]
 
 
+
+def validated_self_contact_reference(reference, base_points, faces, gids):
+    """Bind a separate source pose to the exact authoring vertex/face identity."""
+    points=np.asarray(reference["capture_positions_m"])
+    reference_faces=np.asarray(reference["capture_faces"])
+    reference_gids=np.asarray(reference["capture_global_vertex_ids"])
+    if (points.dtype.kind!="f" or points.dtype.itemsize!=4
+            or points.shape!=np.asarray(base_points).shape
+            or points.ndim!=2 or points.shape[1]!=3 or not np.isfinite(points).all()):
+        raise ValueError("self-contact reference requires finite exact Float32 coordinates")
+    if (reference_faces.dtype.kind not in "iu"
+            or reference_gids.dtype.kind not in "iu"
+            or reference_faces.shape!=np.asarray(faces).shape
+            or reference_gids.shape!=np.asarray(gids).shape
+            or not np.array_equal(reference_faces,faces)
+            or not np.array_equal(reference_gids,gids)):
+        raise ValueError("self-contact reference face or ordered vertex identity differs")
+    return points.copy()
+
+
+def rebase_self_contact_constraints(rows, reference_points, base_points, faces):
+    """Express reference support planes as displacements from the current base."""
+    difference=np.asarray(reference_points,dtype=float)-np.asarray(base_points,dtype=float)
+    result=[]
+    for a,wa,b,wb,normal,bound in rows:
+        offset=float((wa@difference[faces[a]]-wb@difference[faces[b]])@normal)
+        result.append((a,wa,b,wb,normal,float(bound)+offset))
+    return result
+
+
 def bone_face_support_constraints(base_points,faces,skin_face,bone_triangle,direction,margin_m):
     """Move the complete affected skin face beyond a crossed bone facet.
 
@@ -287,6 +317,8 @@ def main():
     ap.add_argument("--solid-depth", action="store_true")
     ap.add_argument("--repair-self-contacts", action="store_true",
         help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
+    ap.add_argument("--self-contact-reference", type=Path,
+        help="same-topology Float32 authoring NPZ with verified clear self-contact reference")
     ap.add_argument("--self-contact-separator", choices=["witness","face-support"],default="witness")
     ap.add_argument("--exit-policy",choices=["nearest","skin-normal","compartment-skin-normal"],default="nearest")
     ap.add_argument("--contact-constraint-policy",choices=["accumulate","current"],default="accumulate",
@@ -310,6 +342,8 @@ def main():
     pins = {str(p): sha(p) for p in [Path(__file__), args.source, args.authoring_base,
         args.initial_source_points, args.contact_cache, args.capture, args.receipt,
         *[Path(m.__file__) for m in [h,v,sp,gp]]]}
+    if args.self_contact_reference:
+        pins[str(args.self_contact_reference)]=sha(args.self_contact_reference)
     source = sp.decode_payload(args.source.read_bytes())
     bone_ids, bone_identity_proof = v.load_compiled_bone_identities(args.bone_artifact, args.body_manifest, capture=args.capture)
     if bone_identity_proof["source_archive_sha256"] != source["source_archive_sha256"]:
@@ -336,6 +370,10 @@ def main():
     faces = np.asarray(base["capture_faces"], dtype=np.int64)
     gids = base["capture_global_vertex_ids"]
     base_points = base["capture_positions_m"]
+    self_reference_points=base_points
+    if args.self_contact_reference:
+        with np.load(args.self_contact_reference,allow_pickle=False) as reference:
+            self_reference_points=validated_self_contact_reference(reference,base_points,faces,gids)
     if not np.array_equal(faces, np.searchsorted(used, full_faces)):
         raise ValueError("source and authoring face ancestry differ")
     if gids.dtype.kind not in "iu" or len(np.unique(gids)) != len(gids):
@@ -379,10 +417,18 @@ def main():
         construction_exit_policy=args.exit_policy,torso_core_body_index=torso_body_id,
         construction_bone_contact_separator=args.bone_contact_separator,
         contact_constraint_policy=args.contact_constraint_policy,
-        inactive_source_coordinates_preserved=True)
+        inactive_source_coordinates_preserved=True,
+        self_contact_reference=(str(args.self_contact_reference) if args.self_contact_reference else None),
+        self_contact_reference_identity=("ordered_vertices_and_faces_exact" if args.self_contact_reference else "authoring_base"))
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
         runner_argv=[sys.executable,*sys.argv],input_pins=pins)
     gp.verify_frozen_preparation(frozen)
+    if args.self_contact_reference:
+        reference_surface=v.prepare_surface((51007,1),self_reference_points,faces,source_vertex_ids=gids)
+        reference_audit=reference_surface.self_audit()
+        (args.output/"self-contact-reference-audit.json").write_text(json.dumps(reference_audit,indent=2,allow_nan=False)+"\n")
+        if reference_audit["count"]:
+            raise ValueError("separate self-contact reference has erroneous self intersections")
     cap, identity = v.load_capture(args.capture,args.receipt)
     bones = {}
     for sid in bone_targets:
@@ -424,14 +470,16 @@ def main():
             witnesses=[]
             for first,second in self_result["triangle_pairs"]:
                 if args.self_contact_separator=="face-support":
-                    derived=face_support_constraints(base_points,faces,first,second,args.margin_m)
+                    derived=face_support_constraints(self_reference_points,faces,first,second,args.margin_m)
                 else:
                     derived=[]
                     for point in surf.intersection_points_meters(surf,int(first),int(second)):
                         ba=barycentric(surf.triangle_meters(int(first)),point)
                         bb=barycentric(surf.triangle_meters(int(second)),point)
-                        derived.append(self_gap_constraint(base_points,faces,first,ba,second,bb,
+                        derived.append(self_gap_constraint(self_reference_points,faces,first,ba,second,bb,
                                                            min(args.margin_m,.0001)))
+                if args.self_contact_reference:
+                    derived=rebase_self_contact_constraints(derived,self_reference_points,base_points,faces)
                 for constraint in derived:
                     self_constraints.append(constraint)
                     a,wa,b,wb,n,bound=constraint
