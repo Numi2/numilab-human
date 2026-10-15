@@ -1802,3 +1802,119 @@ def validate_composed_rib_reframe(artifact: Path, manifest: dict[str, Any], outp
                         artifact, manifest, output_raw, bake_manifest, declaration,
                     )
     return _validate_composed_rib_reframe_source003(artifact, manifest, output_raw)
+
+
+def retire_exact_opposed_bone_source_faces(
+    raw: bytes, *, stable_id: int, source_face_pair: tuple[int, int]
+) -> tuple[bytes, dict[str, Any]]:
+    """Retire one proven zero-volume internal face pair in the existing ABI.
+
+    Every source vertex, normal, rigid owner and rest transform stays byte exact.
+    This is source preparation; exact emitted topology, neighboring structures,
+    retained poses and native admission remain separate requirements.
+    """
+    header, records, vertex_offset, index_offset = _decode_bones(raw)
+    if type(stable_id) is not int or stable_id <= 0:
+        raise model.ImportError("opposed face retirement needs a typed bone stable ID")
+    selected = [i for i, row in enumerate(records) if row[5] == stable_id]
+    if len(selected) != 1:
+        raise model.ImportError("opposed face retirement needs one source bone row")
+    if (not isinstance(source_face_pair, tuple) or len(source_face_pair) != 2
+            or any(type(x) is not int or x < 0 for x in source_face_pair)
+            or source_face_pair[0] >= source_face_pair[1]):
+        raise model.ImportError("opposed source face IDs must be two increasing integers")
+    row_index = selected[0]
+    row = records[row_index]
+    if row[4] % 3 or source_face_pair[1] >= row[4] // 3:
+        raise model.ImportError("opposed source face ID is outside the selected bone")
+    # Source rows partition the index stream. No shared/overlapping index owner
+    # may be silently shifted by this local repair.
+    next_index = 0
+    for record in records:
+        if record[3] != next_index or record[4] % 3:
+            raise model.ImportError("bone source index ranges do not partition the stream")
+        next_index += record[4]
+    if next_index != header[4]:
+        raise model.ImportError("bone source index stream is not fully owned")
+    triangle = struct.Struct("<3I")
+    pair_indices = [
+        triangle.unpack_from(raw, index_offset + 4 * (row[3] + 3 * face))
+        for face in source_face_pair
+    ]
+    if any(not row[1] <= i < row[1] + row[2]
+           for face in pair_indices for i in face):
+        raise model.ImportError("opposed source face references a different bone allocation")
+    points = [
+        tuple(struct.unpack_from("<3f", raw, vertex_offset + 24 * i)
+              for i in face)
+        for face in pair_indices
+    ]
+    if any(not all(math.isfinite(x) for x in point)
+           for face in points for point in face):
+        raise model.ImportError("opposed source coordinates are nonfinite")
+    if len(set(points[0])) != 3:
+        raise model.ImportError("opposed source face is degenerate")
+    # Exact binary32 coordinate equality, including normal numeric zero identity.
+    # No source or emitted distance tolerance is admitted.
+    reverse = (points[1][0], points[1][2], points[1][1])
+    rotations = [reverse[k:] + reverse[:k] for k in range(3)]
+    if points[0] not in rotations:
+        raise model.ImportError("source faces are not exactly coincident and oppositely wound")
+    from fractions import Fraction
+    exact = [tuple(Fraction.from_float(x) for x in point) for point in points[0]]
+    u = tuple(exact[1][i] - exact[0][i] for i in range(3))
+    w = tuple(exact[2][i] - exact[0][i] for i in range(3))
+    cross = (u[1]*w[2] - u[2]*w[1], u[2]*w[0] - u[0]*w[2],
+             u[0]*w[1] - u[1]*w[0])
+    if not any(cross):
+        raise model.ImportError("opposed source face has zero area")
+    retired = {row[3] + 3 * face for face in source_face_pair}
+    kept_global = [i for i in range(0, header[4], 3) if i not in retired]
+    new_header = list(header)
+    new_header[4] -= 6
+    new_records = []
+    for i, record in enumerate(records):
+        changed = list(record)
+        if i == row_index:
+            changed[4] -= 6
+        elif i > row_index:
+            changed[3] -= 6
+        new_records.append(tuple(changed))
+    packed = bytearray(_BONE_HEADER.pack(*new_header))
+    packed.extend(b"".join(_BONE_RECORD.pack(*record) for record in new_records))
+    packed.extend(raw[vertex_offset:index_offset])
+    packed.extend(b"".join(raw[index_offset + 4*i:index_offset + 4*i + 12]
+                           for i in kept_global))
+    result = bytes(packed)
+    after_header, after_rows, after_vertex, after_index = _decode_bones(result)
+    if result[after_vertex:after_index] != raw[vertex_offset:index_offset]:
+        raise model.ImportError("opposed face retirement changed source vertex records")
+    for i, (old, new) in enumerate(zip(records, after_rows, strict=True)):
+        unchanged = list(new)
+        unchanged[3] = old[3]
+        unchanged[4] = old[4]
+        if tuple(unchanged) != old:
+            raise model.ImportError("opposed face retirement changed rigid owner/rest metadata")
+        if i != row_index:
+            old_faces = raw[index_offset + old[3]*4:index_offset + (old[3]+old[4])*4]
+            new_faces = result[after_index + new[3]*4:after_index + (new[3]+new[4])*4]
+            if old_faces != new_faces:
+                raise model.ImportError("opposed face retirement changed another bone")
+    return result, {
+        "status": "PASS_EXACT_OPPOSED_SOURCE_FACE_RETIREMENT_ONLY",
+        "typed_identity": [51004, stable_id],
+        "source_face_ids_retired": list(source_face_pair),
+        "retained_source_face_ids": [
+            i for i in range(row[4] // 3) if i not in source_face_pair],
+        "exact_source_float32_coincidence": True,
+        "opposite_winding": True,
+        "retired_pair_oriented_volume_sum_exact_zero": True,
+        "all_vertex_normal_owner_rest_bytes_unchanged": True,
+        "all_other_bone_face_bytes_unchanged": True,
+        "physical_mass_or_state_changed": False,
+        "anatomical_admission": False,
+        "native_admission": False,
+        "evidence_boundary": (
+            "Source-only zero-volume paired face retirement, not a tolerance weld. "
+            "All emitted topology, geometry, attachments, motion and native gates remain.")
+    }
