@@ -2378,6 +2378,16 @@ def build_source_junction_station_declaration(
     normalized_edges = tuple((_identity(edge[0]), _identity(edge[1])) for edge in edges)
     _require(normalized_edges == ((bridge_key, target_key),),
              "source station typed edge must exactly match the audited link")
+    if station_policy == "COLLAR_LOCAL_PCA_V1":
+        _require(isinstance(route_anchor_evidence, Mapping),
+                 "collar-local station needs an independent typed source route")
+        route_link_raw = route_anchor_evidence.get("typed_link")
+        _require(isinstance(route_link_raw, (tuple, list))
+                 and len(route_link_raw) == 2,
+                 "collar-local route anchor needs one typed source link")
+        route_link = tuple(_identity(value) for value in route_link_raw)
+        _require(set(route_link) != {bridge_key, target_key},
+                 "collar-local tangent route must be an independent port, not the measured link")
     bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
     target = _prepare_vessel(verifier, target_key, baseline_target_surface)
     pairs = _pair_rows(

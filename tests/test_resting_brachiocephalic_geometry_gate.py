@@ -3380,6 +3380,15 @@ def test_collar_local_declaration_binds_source_report_and_stays_candidate_indepe
     assert evidence["baseline_source_station_section"]["loop_count"] == 1
     assert "candidate_station" not in declaration
 
+    with pytest.raises(ValueError, match="independent port"):
+        bg.build_source_junction_station_declaration(
+            av, bridge_key=route_edge[0], target_key=route_edge[1],
+            baseline_bridge_surface=(route_bridge, route_faces),
+            baseline_target_surface=(route_surface, route_faces),
+            frozen_face_pairs=route_pairs, declared_vessel_ports={route_edge},
+            anchor_role="bridge", station_policy="COLLAR_LOCAL_PCA_V1",
+            route_anchor_evidence=route_evidence)
+
     report_path.write_text(report_path.read_text() + " ")
     with pytest.raises(ValueError, match="report bytes differ from their frozen SHA-256"):
         bg.build_source_junction_station_declaration(
