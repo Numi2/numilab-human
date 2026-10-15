@@ -494,7 +494,10 @@ def main():
     if args.exit_policy=="nearest" and args.contact_constraint_policy=="accumulate":
         for sf,bary,normal in zip(cache["skin_face_ids"],cache["barycentrics"],cache["outward_normals"]):
             constraints.append((int(sf),bary.copy(),normal.copy(),args.margin_m))
-    previous=None
+    # This same-topology reference has already passed the exact oracle above.
+    # Reuse its unchanged triangles from the first trial onward; every changed
+    # face is still tested against the complete current surface.
+    previous=reference_surface if args.self_contact_reference else None
     self_constraints=[]
     history=[]
     for iteration in range(args.iterations+1):
