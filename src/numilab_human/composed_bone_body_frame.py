@@ -21,6 +21,7 @@ _BONE_RECORD = struct.Struct("<6I8fI")
 _BONE_VERTEX = struct.Struct("<6f")
 _FRAME_REBASE_SCHEMA = "numi.human.composed-rib-body-local-frame-rebase.v1"
 _PARTITION_SCHEMA = "numi.human.intercostal313-rib48-rib49-joint-priority-partition-face-ancestry.v1"
+_SOURCE_EXPORT_PARTITION_SCHEMA = "numi.human.intercostal313-rib48-rib49-current467-local-remesh-face-ancestry.v1"
 _RIBS = {
     48: ("FJ3228", "803a7134c1e69f640b87f9c6c4a846c869379446e771a1a7c9d18914c331a603", 12, 868),
     49: ("FJ3229", "631b4f63625fa6cc89ad83961b2156abe5878d1baf4a8cb2b2acbaa06bc97f58", 13, 1769),
@@ -381,7 +382,7 @@ def _source_partition_interface_maps(
 
 
 
-def validate_composed_rib_reframe(
+def _validate_composed_rib_reframe_source003(
     artifact: Path,
     manifest: dict[str, Any],
     output_raw: bytes,
@@ -1080,3 +1081,501 @@ def reframe_composed_rib_payload(
     model.write_json(output_receipt_path, receipt_out)
     report["output"]["receipt_sha256"] = model.sha256(output_receipt_path)
     return report
+
+
+
+
+def exact_interface_vertex_pairs(
+    bone_vertices6: np.ndarray,
+    nha_vertices6: np.ndarray,
+    nha_vertex_ids: list[int],
+    stable_id: int,
+) -> list[list[int]]:
+    """Bind listed NHA interface slots to unique, byte-identical bone points."""
+    if type(stable_id) is not int or stable_id not in _RIBS:
+        raise model.ImportError("rib interface map has an unexpected typed stable ID")
+    bone = np.asarray(bone_vertices6, dtype="<f4")
+    nha = np.asarray(nha_vertices6, dtype="<f4")
+    if bone.ndim != 2 or bone.shape[1] != 6 or nha.ndim != 2 or nha.shape[1] != 6:
+        raise model.ImportError("rib interface map requires six-float vertex rows")
+    if not np.isfinite(bone).all() or not np.isfinite(nha).all():
+        raise model.ImportError("rib interface map contains non-finite vertices")
+    if any(type(index) is not int or not 0 <= index < len(nha) for index in nha_vertex_ids):
+        raise model.ImportError("rib interface map has an out-of-range or untyped NHA slot")
+    if len(nha_vertex_ids) != len(set(nha_vertex_ids)):
+        raise model.ImportError("rib interface map repeats an NHA slot")
+    bone_by_position: dict[bytes, list[int]] = {}
+    for index, vertex in enumerate(bone):
+        bone_by_position.setdefault(_point_key(vertex[:3]), []).append(index)
+    pairs: list[list[int]] = []
+    used_bone: set[int] = set()
+    for nha_index in nha_vertex_ids:
+        matches = bone_by_position.get(_point_key(nha[nha_index, :3]), [])
+        if len(matches) != 1 or matches[0] in used_bone:
+            raise model.ImportError("rib interface point is absent, duplicated, or not one-to-one")
+        bone_index = matches[0]
+        if not np.array_equal(bone[bone_index, :3], nha[nha_index, :3]):
+            raise model.ImportError("rib interface point is not an exact FP32 coordinate match")
+        used_bone.add(bone_index)
+        pairs.append([bone_index, nha_index])
+    pairs.sort()
+    return pairs
+
+
+def _validate_source_export_partition_rebind(
+    artifact: Path,
+    manifest: dict[str, Any],
+    output_raw: bytes,
+    bake_manifest: dict[str, Any],
+    declaration: dict[str, Any],
+) -> dict[str, Any]:
+    """Re-derive source-export 005's current partition rows without rewriting payloads."""
+    inputs = declaration.get("input_paths")
+    pins = declaration.get("input_hashes")
+    proof = declaration.get("partition_proof")
+    if not isinstance(inputs, dict) or not isinstance(pins, dict) or not isinstance(proof, dict):
+        raise model.ImportError("source-export partition rebind lacks complete input bindings")
+    required = {
+        "source_export_report", "source_export_receipt", "source_export_manifest", "source_face_crosswalk",
+        "partition_ancestry", "partition_meshes", "partition_report", "strict_float32_audit",
+        "base_receipt", "base_nha", "base_nhbones", "base_manifest", "registration",
+        "actual_capture_pack", "actual_capture_receipt",
+    }
+    if set(inputs) != required or set(pins) != required:
+        raise model.ImportError("source-export partition rebind input inventory is incomplete")
+    resolved: dict[str, Path] = {}
+    for key in sorted(required):
+        value = inputs.get(key)
+        expected = pins.get(key)
+        if not isinstance(value, str) or not isinstance(expected, str) or len(expected) != 64:
+            raise model.ImportError(f"source-export partition rebind pin {key} is malformed")
+        path = Path(value).resolve()
+        if not path.is_file() or model.sha256(path) != expected:
+            raise model.ImportError(f"source-export partition rebind input {key} is missing or changed")
+        resolved[key] = path
+
+    source_report = model.read_json(resolved["source_export_report"])
+    source_receipt = model.read_json(resolved["source_export_receipt"])
+    source_manifest = model.read_json(resolved["source_export_manifest"])
+    def manifest_without_rebound_metadata(value: dict[str, Any]) -> dict[str, Any]:
+        normalized = json.loads(json.dumps(value))
+        normalized.pop("body_local_bakes", None)
+        anchors = normalized.get("source", {}).get("anchors", [])
+        for stable_id in (48, 49):
+            index = stable_id - 1
+            if not isinstance(anchors, list) or index >= len(anchors) or not isinstance(anchors[index], dict):
+                raise model.ImportError("source-export partition manifest lacks the typed rib anchor")
+            anchors[index].pop("body_local_bake", None)
+            anchors[index].pop("derived_visual_partition", None)
+        return normalized
+    if manifest_without_rebound_metadata(source_manifest) != manifest_without_rebound_metadata(manifest):
+        raise model.ImportError("source-export partition rebind changed manifest data outside the two verified row declarations")
+    crosswalk_path = resolved["source_face_crosswalk"]
+    crosswalk = model.read_json(crosswalk_path)
+    if (
+        declaration.get("verification_kind") != "source_export005_partition_metadata_rebind.v1"
+        or source_report.get("status") != "SOURCE_EXPORT_COMPLETE_NATIVE_AND_MOTION_NOT_ADMITTED"
+        or source_report.get("native_admission") is not False
+        or source_report.get("retained_motion_admission") is not False
+        or crosswalk.get("schema") != "numi.human.intercostal313-rib48-rib49-output-face-crosswalk.v1"
+        or source_report.get("source_face_output_crosswalk", {}).get("sha256") != model.sha256(crosswalk_path)
+        or source_report.get("source_face_output_crosswalk", {}).get("path") != crosswalk_path.name
+    ):
+        raise model.ImportError("source-export partition rebind does not identify the pinned 005 export")
+    report_inputs = source_report.get("input_pins")
+    if not isinstance(report_inputs, dict):
+        raise model.ImportError("source-export report lacks its immutable input pin inventory")
+    for key in ("base_receipt", "base_nha", "base_nhbones", "base_manifest", "actual_capture_pack", "actual_capture_receipt"):
+        if report_inputs.get(str(resolved[key])) != pins[key]:
+            raise model.ImportError(f"source-export report does not bind the declared {key} input")
+    base_manifest = model.read_json(resolved["base_manifest"])
+    registration = base_manifest.get("source", {}).get("registration")
+    if (
+        not isinstance(registration, dict)
+        or registration.get("file") != resolved["registration"].name
+        or registration.get("sha256") != pins["registration"]
+        or model.sha256(resolved["registration"]) != pins["registration"]
+    ):
+        raise model.ImportError("source-export registration is not bound by the exact base manifest")
+    if (
+        source_report.get("base_nha_sha256") != pins["base_nha"]
+        or source_report.get("base_nhbones_sha256") != pins["base_nhbones"]
+        or source_report.get("base_receipt_sha256") != pins["base_receipt"]
+        or source_report.get("actual_capture_pack_sha256") != pins["actual_capture_pack"]
+        or source_report.get("actual_capture_receipt_sha256") != pins["actual_capture_receipt"]
+    ):
+        raise model.ImportError("source-export report base or native-capture lineage changed")
+    output_hashes = source_report.get("output_sha256")
+    if (
+        not isinstance(output_hashes, dict)
+        or output_hashes.get("nha") != model.sha256(artifact / "resting-thorax.nhanatomy")
+        or output_hashes.get("nhbones") != _sha_bytes(output_raw)
+        or output_hashes.get("bone_manifest") != model.sha256(resolved["source_export_manifest"])
+    ):
+        raise model.ImportError("source-export partition rebind payload or manifest differs from the exact 005 export")
+    if (
+        source_receipt.get("payload", {}).get("sha256") != output_hashes.get("nha")
+        or source_receipt.get("provenance", {}).get("bones_payload_sha256") != output_hashes.get("nhbones")
+        or source_report.get("output_sha256", {}).get("receipt") != pins["source_export_receipt"]
+        or source_receipt.get("payload", {}).get("input_payload_sha256")
+        != model.read_json(resolved["base_receipt"]).get("payload", {}).get("input_payload_sha256")
+        or Path(str(source_receipt.get("payload", {}).get("path", ""))).resolve()
+        != (resolved["source_export_receipt"].parent / "resting-thorax.nhanatomy").resolve()
+        or Path(str(source_receipt.get("provenance", {}).get("bones_payload", ""))).resolve()
+        != (resolved["source_export_receipt"].parent / "bodyparts3d-myosim-major-bones.nhbones").resolve()
+    ):
+        raise model.ImportError("source-export partition rebind receipt does not bind the pinned source and outputs")
+
+    partition = resolved["partition_ancestry"].parent
+    if (
+        proof.get("schema") != _SOURCE_EXPORT_PARTITION_SCHEMA
+        or proof.get("partition_ancestry_sha256") != model.sha256(resolved["partition_ancestry"])
+        or proof.get("partition_meshes_sha256") != model.sha256(resolved["partition_meshes"])
+        or proof.get("strict_float32_audit_sha256") != model.sha256(resolved["strict_float32_audit"])
+        or proof.get("partition_report_sha256") != model.sha256(resolved["partition_report"])
+        or proof.get("partition_directory") != str(partition.resolve())
+    ):
+        raise model.ImportError("source-export partition proof identity changed")
+    ancestry = model.read_json(resolved["partition_ancestry"])
+    strict = model.read_json(resolved["strict_float32_audit"])
+    partition_report = model.read_json(resolved["partition_report"])
+    if (
+        ancestry.get("schema") != _SOURCE_EXPORT_PARTITION_SCHEMA
+        or ancestry.get("declared_interface_face_pairs") != 2914
+        or strict.get("interiors_disjoint") is not True
+        or strict.get("shared_interface_opposite_chain") is not True
+        or strict.get("shared_interface_face_count") != 2932
+        or partition_report.get("status") != "PASS_LOCAL_EXACT_FACE_COVERAGE_AND_STRICT_FLOAT32_PARTITION_SOURCE_CANDIDATE"
+        or partition_report.get("anatomical_admission") is not False
+        or partition_report.get("native_emission") is not False
+        or partition_report.get("retained_motion_admission") is not False
+        or partition_report.get("ancestry_sha256") != proof.get("partition_ancestry_sha256")
+        or partition_report.get("strict_float32_audit_sha256") != proof.get("strict_float32_audit_sha256")
+    ):
+        raise model.ImportError("source-export partition strict source proof is not a complete pass")
+
+    with np.load(resolved["partition_meshes"], allow_pickle=False) as archive:
+        meshes = {name: np.asarray(archive[name]).copy() for name in archive.files}
+    muscle_positions = np.asarray(meshes.get("intercostal313_positions_m"), dtype="<f4")
+    muscle_faces = np.asarray(meshes.get("intercostal313_faces"), dtype=np.int64)
+    union_positions = np.asarray(meshes.get("rib_union_positions_m"), dtype="<f4")
+    union_faces = np.asarray(meshes.get("rib_union_faces"), dtype=np.int64)
+    if (
+        muscle_positions.shape != (8886, 3) or muscle_faces.shape != (17796, 3)
+        or union_positions.shape != (6777, 3) or union_faces.shape != (13546, 3)
+        or not np.isfinite(muscle_positions).all() or not np.isfinite(union_positions).all()
+        or len(crosswalk.get("interface_decomposition", {}).get("pairs", [])) != 2932
+    ):
+        raise model.ImportError("source-export partition mesh or interface dimensions changed")
+
+    crosswalk_regions = crosswalk.get("regions")
+    if not isinstance(crosswalk_regions, dict):
+        raise model.ImportError("source-export partition face crosswalk lacks ordered regions")
+    muscle_region = crosswalk_regions.get("intercostal313")
+    union_region = crosswalk_regions.get("rib_union")
+    if not isinstance(muscle_region, list) or not isinstance(union_region, list):
+        raise model.ImportError("source-export partition face crosswalk region tables are absent")
+    def ordered_region_faces(rows: list[Any], count: int, region_name: str) -> list[dict[str, Any]]:
+        if len(rows) != count:
+            raise model.ImportError(f"source-export {region_name} face crosswalk cardinality changed")
+        out: list[dict[str, Any] | None] = [None] * count
+        for item in rows:
+            if not isinstance(item, dict):
+                raise model.ImportError(f"source-export {region_name} face ancestry is malformed")
+            face_id = item.get("output_face_id")
+            if type(face_id) is not int or not 0 <= face_id < count or out[face_id] is not None:
+                raise model.ImportError(f"source-export {region_name} output face IDs are not a bijection")
+            if item.get("output_region") != region_name:
+                raise model.ImportError(f"source-export {region_name} ancestry names another region")
+            out[face_id] = item
+        if any(item is None for item in out):
+            raise model.ImportError(f"source-export {region_name} face crosswalk has a gap")
+        return [item for item in out if item is not None]
+    ordered_muscle = ordered_region_faces(muscle_region, len(muscle_faces), "intercostal313")
+    ordered_union = ordered_region_faces(union_region, len(union_faces), "rib_union")
+    typed_union: dict[int, list[int]] = {48: [], 49: []}
+    for face_id, item in enumerate(ordered_union):
+        parent = item.get("typed_source_parent")
+        typed = parent.get("typed_row") if isinstance(parent, dict) else None
+        if (
+            not isinstance(typed, list) or len(typed) != 2
+            or type(typed[0]) is not int or typed[0] != 51004
+            or type(typed[1]) is not int or typed[1] not in typed_union
+        ):
+            raise model.ImportError("source-export rib face ancestry has an invalid typed source row")
+        if typed[1] not in typed_union:
+            raise model.ImportError("source-export rib face ancestry names an unexpected stable ID")
+        typed_union[typed[1]].append(face_id)
+
+    base_receipt = model.read_json(resolved["base_receipt"])
+    if (
+        base_receipt.get("payload", {}).get("sha256") != pins["base_nha"]
+        or base_receipt.get("provenance", {}).get("bones_payload_sha256") != pins["base_nhbones"]
+    ):
+        raise model.ImportError("source-export partition base receipt does not bind the exact base payloads")
+    base_nha_header, base_nha_rows = parse_nha_payload(resolved["base_nha"])
+    output_nha_path = artifact / "resting-thorax.nhanatomy"
+    output_nha_header, output_nha_rows = parse_nha_payload(output_nha_path)
+    base_bones_raw = resolved["base_nhbones"].read_bytes()
+    base_header, base_records, base_vertex_offset, base_index_offset = _decode_bones(base_bones_raw)
+    output_header, output_records, output_vertex_offset, output_index_offset = _decode_bones(output_raw)
+    if (
+        base_nha_header[:2] != output_nha_header[:2]
+        or base_nha_header[2] != output_nha_header[2]
+        or base_header[:2] != output_header[:2]
+        or base_header[2] != output_header[2]
+    ):
+        raise model.ImportError("source-export partition rebind changed a payload ABI or typed row count")
+    base_bones_by_id = {int(row[5]): row for row in base_records}
+    output_bones_by_id = {int(row[5]): row for row in output_records}
+    if set(base_bones_by_id) != set(output_bones_by_id) or set(base_nha_rows) != set(output_nha_rows):
+        raise model.ImportError("source-export partition rebind changed the surface or bone identity inventory")
+    for stable_id in sorted(base_nha_rows):
+        if stable_id == 313:
+            continue
+        before, after = base_nha_rows[stable_id], output_nha_rows[stable_id]
+        if (
+            before["body_index"] != after["body_index"] or before["layer"] != after["layer"]
+            or before["flags"] != after["flags"]
+            or not np.array_equal(before["vertices6"], after["vertices6"])
+            or not np.array_equal(before["faces"], after["faces"])
+        ):
+            raise model.ImportError(f"source-export partition rebind changed unrelated NHA row {stable_id}")
+    for stable_id in sorted(base_bones_by_id):
+        if stable_id in _RIBS:
+            continue
+        before_rec, after_rec = base_bones_by_id[stable_id], output_bones_by_id[stable_id]
+        before_vertices = np.ndarray((before_rec[2], 6), dtype="<f4", buffer=base_bones_raw,
+            offset=base_vertex_offset + before_rec[1] * 24)
+        after_vertices = np.ndarray((after_rec[2], 6), dtype="<f4", buffer=output_raw,
+            offset=output_vertex_offset + after_rec[1] * 24)
+        before_faces = np.ndarray((before_rec[4] // 3, 3), dtype="<u4", buffer=base_bones_raw,
+            offset=base_index_offset + before_rec[3] * 4).astype(np.int64) - before_rec[1]
+        after_faces = np.ndarray((after_rec[4] // 3, 3), dtype="<u4", buffer=output_raw,
+            offset=output_index_offset + after_rec[3] * 4).astype(np.int64) - after_rec[1]
+        if (
+            before_rec[0] != after_rec[0] or before_rec[5] != after_rec[5]
+            or before_rec[14] != after_rec[14]
+            or not np.array_equal(before_vertices, after_vertices)
+            or not np.array_equal(before_faces, after_faces)
+        ):
+            raise model.ImportError(f"source-export partition rebind changed unrelated NHBONES row {stable_id}")
+
+    body_pose = source_report.get("actual_body20_pose")
+    if not isinstance(body_pose, dict) or body_pose.get("body_index") != 20:
+        raise model.ImportError("source-export partition rebind lacks the actual typed body20 pose")
+    body_position = np.asarray(body_pose.get("position_m"), dtype=np.float32)
+    body_quaternion = np.asarray(body_pose.get("quaternion_xyzw"), dtype=np.float32)
+    if body_position.shape != (3,) or body_quaternion.shape != (4,) or not np.isfinite(body_position).all() or not np.isfinite(body_quaternion).all():
+        raise model.ImportError("source-export partition rebind body20 pose is malformed")
+    owner = _load_source003_partition_owner(source_report)
+
+    row_bone_points: dict[int, np.ndarray] = {}
+    row_bone_faces: dict[int, np.ndarray] = {}
+    row_union_vertex_ids: dict[int, np.ndarray] = {}
+    row_union_to_local: dict[int, dict[int, int]] = {}
+    row_bone_body_native: dict[int, np.ndarray] = {}
+    for stable_id in (48, 49):
+        base_rec = base_bones_by_id[stable_id]
+        out_rec = output_bones_by_id[stable_id]
+        anchor = manifest.get("source", {}).get("anchors", [])[stable_id - 1]
+        derived = anchor.get("derived_visual_partition") if isinstance(anchor, dict) else None
+        selected_faces = typed_union[stable_id]
+        used_union = np.unique(union_faces[np.asarray(selected_faces, dtype=np.int64)].reshape(-1))
+        union_to_local = {int(vertex): index for index, vertex in enumerate(used_union.tolist())}
+        expected_local_faces = np.asarray([
+            [union_to_local[int(vertex)] for vertex in union_faces[face_id]] for face_id in selected_faces
+        ], dtype=np.int64)
+        actual_global_faces = np.ndarray((out_rec[4] // 3, 3), dtype="<u4", buffer=output_raw,
+            offset=output_index_offset + out_rec[3] * 4)
+        actual_local_faces = actual_global_faces.astype(np.int64) - out_rec[1]
+        expected_row_faces = expected_local_faces + base_rec[2]
+        if not np.array_equal(actual_local_faces, expected_row_faces):
+            raise model.ImportError(f"source-export rib{stable_id} face order differs from exact typed partition crosswalk")
+        if (
+            not isinstance(derived, dict)
+            or derived.get("stable_id") != stable_id
+            or derived.get("partition_ancestry_sha256") != proof.get("partition_ancestry_sha256")
+            or derived.get("strict_float32_audit_sha256") != proof.get("strict_float32_audit_sha256")
+            or derived.get("source_preparation_report_sha256") != proof.get("partition_report_sha256")
+            or derived.get("source_export_report_sha256") != pins["source_export_report"]
+            or derived.get("new_compiled_vertex_count") != out_rec[2]
+            or derived.get("new_compiled_triangle_count") != out_rec[4] // 3
+            or derived.get("original_compiled_vertex_count") != base_rec[2]
+            or derived.get("original_compiled_triangle_count") != base_rec[4] // 3
+        ):
+            raise model.ImportError(f"source-export rib{stable_id} manifest partition ancestry changed")
+        expected_appended_vertices = len(used_union)
+        if out_rec[2] != base_rec[2] + expected_appended_vertices:
+            raise model.ImportError(f"source-export rib{stable_id} partition vertex allocation changed")
+        before_prefix = np.ndarray((base_rec[2], 6), dtype="<f4", buffer=base_bones_raw,
+            offset=base_vertex_offset + base_rec[1] * 24)
+        actual_row = np.ndarray((out_rec[2], 6), dtype="<f4", buffer=output_raw,
+            offset=output_vertex_offset + out_rec[1] * 24)
+        if not np.array_equal(actual_row[:base_rec[2]], before_prefix):
+            raise model.ImportError(f"source-export rib{stable_id} changed its pre-existing vertex prefix")
+        world_points = union_positions[used_union].astype(np.float32, copy=True)
+        body_local64 = owner.inverse_body64(world_points, body_position, body_quaternion)
+        bone_local = owner.inverse_bone64(body_local64, base_rec).astype(np.float32)
+        body_native = owner.bone_to_body_f32(bone_local, base_rec)
+        expected_normals = owner.mesh_normals(bone_local, expected_local_faces, f"source-export rib{stable_id}")
+        expected_attributes = np.column_stack((bone_local, expected_normals)).astype("<f4")
+        if not np.array_equal(actual_row[base_rec[2]:], expected_attributes):
+            raise model.ImportError(f"source-export rib{stable_id} appended FP32 geometry differs from its partition source")
+        row_bone_points[stable_id] = bone_local
+        row_bone_faces[stable_id] = expected_local_faces
+        row_union_vertex_ids[stable_id] = used_union
+        row_union_to_local[stable_id] = union_to_local
+        row_bone_body_native[stable_id] = body_native
+
+    output_pairs = crosswalk.get("interface_decomposition", {}).get("pairs")
+    decomposition = source_report.get("interface_face_decomposition")
+    if (
+        not isinstance(output_pairs, list) or len(output_pairs) != 2932
+        or decomposition != {"preserved_prior_faces": 2914, "new_reversed_caps": 18, "total_exact_opposed_faces": 2932}
+    ):
+        raise model.ImportError("source-export reciprocal interface decomposition changed")
+    muscle_to_union_by_rib: dict[int, dict[int, int]] = {48: {}, 49: {}}
+    mapped_pair_faces: set[tuple[int, int]] = set()
+    mapped_union_faces: set[int] = set()
+    mapped_muscle_faces: set[int] = set()
+    for pair in output_pairs:
+        if not isinstance(pair, dict):
+            raise model.ImportError("source-export interface pair is malformed")
+        typed = pair.get("bone_typed_row")
+        sid = typed[1] if isinstance(typed, list) and len(typed) == 2 and typed[0] == 51004 and type(typed[1]) is int else None
+        uf, mf = pair.get("rib_union_output_face_id"), pair.get("intercostal313_output_face_id")
+        if sid not in (48, 49) or type(uf) is not int or type(mf) is not int or not (0 <= uf < len(union_faces) and 0 <= mf < len(muscle_faces)):
+            raise model.ImportError("source-export interface pair has invalid typed face IDs")
+        if (uf, mf) in mapped_pair_faces:
+            raise model.ImportError("source-export interface face pair is duplicated")
+        mapped_pair_faces.add((uf, mf))
+        if uf in mapped_union_faces or mf in mapped_muscle_faces:
+            raise model.ImportError("source-export interface face is paired more than once")
+        mapped_union_faces.add(uf)
+        mapped_muscle_faces.add(mf)
+        utri, mtri = union_faces[uf], muscle_faces[mf]
+        ukeys = [_point_key(union_positions[int(index)]) for index in utri]
+        mkeys = [_point_key(muscle_positions[int(index)]) for index in mtri]
+        # Exact reversed cyclic order, no coordinate tolerance.
+        if len(set(ukeys)) != 3 or len(set(mkeys)) != 3 or not any(
+            mkeys == [ukeys[(shift - i) % 3] for i in range(3)] for shift in range(3)
+        ):
+            raise model.ImportError("source-export interface pair is not an exact reversed FP32 triangle")
+        for mvid, mkey in zip(mtri.tolist(), mkeys, strict=True):
+            matches = [int(uvid) for uvid, ukey in zip(utri.tolist(), ukeys, strict=True) if ukey == mkey]
+            if len(matches) != 1:
+                raise model.ImportError("source-export interface triangle corner mapping is ambiguous")
+            prior = muscle_to_union_by_rib[sid].get(int(mvid))
+            if prior is not None and prior != matches[0]:
+                raise model.ImportError("source-export interface NHA corner maps to multiple rib points")
+            muscle_to_union_by_rib[sid][int(mvid)] = matches[0]
+
+    if len(mapped_union_faces) != 2932 or len(mapped_muscle_faces) != 2932:
+        raise model.ImportError("source-export interface does not cover each face exactly once on both regions")
+    base_nha_row = base_nha_rows.get(313)
+    out_nha_row = output_nha_rows.get(313)
+    if base_nha_row is None or out_nha_row is None:
+        raise model.ImportError("source-export partition rebind lacks typed NHA313")
+    replace = source_report.get("current_partition_replacement", {})
+    retained_count = source_report.get("nha_composition", {}).get("retained_original_faces")
+    retired_count = source_report.get("nha_composition", {}).get("retired_original_faces")
+    if (
+        replace.get("base_nha_row") != [51010, 313]
+        or type(retained_count) is not int or type(retired_count) is not int
+        or retained_count + retired_count != len(base_nha_row["faces"])
+        or replace.get("replaced_current_face_count") != retired_count
+        or out_nha_row["body_index"] != 20 or out_nha_row["layer"] != 1 or out_nha_row["flags"] != 0
+        or len(out_nha_row["vertices6"]) != len(base_nha_row["vertices6"]) + len(muscle_positions)
+        or not np.array_equal(out_nha_row["vertices6"][:len(base_nha_row["vertices6"])], base_nha_row["vertices6"])
+        or not np.array_equal(out_nha_row["faces"][:retained_count], base_nha_row["faces"][:retained_count])
+    ):
+        raise model.ImportError("source-export NHA313 retained source prefix or replacement inventory changed")
+    expected_muscle_faces = muscle_faces + len(base_nha_row["vertices6"])
+    if not np.array_equal(out_nha_row["faces"][retained_count:], expected_muscle_faces):
+        raise model.ImportError("source-export NHA313 appended face order differs from the partition source")
+    muscle_body = owner.inverse_body64(muscle_positions, body_position, body_quaternion).astype(np.float32)
+    expected_maps: dict[int, list[list[int]]] = {}
+    for sid in (48, 49):
+        pairs: list[list[int]] = []
+        for mvid, union_vid in muscle_to_union_by_rib[sid].items():
+            bone_local_index = row_union_to_local[sid].get(union_vid)
+            if bone_local_index is None:
+                raise model.ImportError("source-export interface point is absent from its typed rib row")
+            muscle_body[mvid] = row_bone_body_native[sid][bone_local_index]
+            pairs.append([base_bones_by_id[sid][2] + bone_local_index, len(base_nha_row["vertices6"]) + mvid])
+        pairs.sort()
+        expected_maps[sid] = pairs
+    expected_muscle_normals = owner.mesh_normals(muscle_body, muscle_faces, "source-export NHA313 partition")
+    expected_muscle_attributes = np.column_stack((muscle_body, expected_muscle_normals)).astype("<f4")
+    if not np.array_equal(out_nha_row["vertices6"][len(base_nha_row["vertices6"]):], expected_muscle_attributes):
+        raise model.ImportError("source-export NHA313 appended FP32 geometry differs from the exact partition source")
+
+    attachment_maps = declaration.get("shared_interface_local_vertex_pairs")
+    if not isinstance(attachment_maps, dict):
+        raise model.ImportError("source-export rebind declaration omits its typed interface map")
+    combined = bytearray()
+    for sid in (48, 49):
+        row = next((item for item in bake_manifest.get("rows", []) if isinstance(item, dict) and item.get("stable_id") == sid), None)
+        pairs = expected_maps[sid]
+        if (
+            row is None or row.get("interface_vertex_pairs") != pairs
+            or attachment_maps.get(str(sid)) != pairs
+            or row.get("interface_vertex_count") != len(pairs)
+            or len({pair[0] for pair in pairs}) != len(pairs)
+            or len({pair[1] for pair in pairs}) != len(pairs)
+        ):
+            raise model.ImportError(f"source-export rib{sid} interface local map differs from exact output geometry")
+        map_bytes = b"".join(struct.pack("<III", sid, bone_id, nha_id) for bone_id, nha_id in pairs)
+        if row.get("interface_vertex_map_sha256") != _sha_bytes(map_bytes):
+            raise model.ImportError(f"source-export rib{sid} interface map digest changed")
+        combined.extend(map_bytes)
+        if row.get("compiled_vertex_count") != output_bones_by_id[sid][2] or row.get("compiled_triangle_count") != output_bones_by_id[sid][4] // 3:
+            raise model.ImportError(f"source-export rib{sid} declared row counts differ from payload")
+        vertices = np.ndarray((output_bones_by_id[sid][2], 6), dtype="<f4", buffer=output_raw,
+            offset=output_vertex_offset + output_bones_by_id[sid][1] * 24)
+        faces = np.ndarray((output_bones_by_id[sid][4] // 3, 3), dtype="<u4", buffer=output_raw,
+            offset=output_index_offset + output_bones_by_id[sid][3] * 4).astype(np.int64) - output_bones_by_id[sid][1]
+        face_sha = _sha_bytes(np.asarray(faces, dtype="<u4").reshape(-1).tobytes())
+        if row.get("partition_row_face_indices_sha256") != face_sha or row.get("stored_vertex_attributes_f32_sha256") != _sha_bytes(np.asarray(vertices, dtype="<f4").tobytes()):
+            raise model.ImportError(f"source-export rib{sid} stored geometry digest differs from payload")
+        if manifest.get("source", {}).get("anchors", [])[sid - 1].get("body_local_bake") != row:
+            raise model.ImportError(f"source-export rib{sid} source anchor does not repeat its body-local declaration")
+    expected_map_sha = _sha_bytes(bytes(combined))
+    if (
+        declaration.get("shared_interface_map_sha256") != expected_map_sha
+        or bake_manifest.get("shared_interface_map_sha256") != expected_map_sha
+        or bake_manifest.get("partition_ancestry_sha256") != proof.get("partition_ancestry_sha256")
+        or bake_manifest.get("payload_sha256") != _sha_bytes(output_raw)
+    ):
+        raise model.ImportError("source-export partition rebind shared map or payload binding changed")
+    return {
+        "status": "PASS_SOURCE_EXPORT005_PARTITION_AND_BODY20_ROWS_REREAD",
+        "checked_untouched_nha_rows": len(base_nha_rows) - 1,
+        "checked_untouched_nhbones_rows": len(base_bones_by_id) - 2,
+        "checked_partition_rows": [48, 49],
+        "checked_partition_faces": {"rib48": int(len(row_bone_faces[48])), "rib49": int(len(row_bone_faces[49])), "NHA313": int(len(muscle_faces))},
+        "checked_reciprocal_interface_faces": len(output_pairs),
+        "checked_interface_vertices": {"48": len(expected_maps[48]), "49": len(expected_maps[49])},
+        "source_export_report_sha256": pins["source_export_report"],
+        "partition_ancestry_sha256": proof["partition_ancestry_sha256"],
+        "output_nha_sha256": output_hashes["nha"],
+        "output_nhbones_sha256": output_hashes["nhbones"],
+        "native_emission": False,
+        "retained_motion_admission": False,
+    }
+
+def validate_composed_rib_reframe(artifact: Path, manifest: dict[str, Any], output_raw: bytes) -> dict[str, Any]:
+    artifact = artifact.resolve()
+    bake_manifest = manifest.get("body_local_bakes")
+    if isinstance(bake_manifest, dict):
+        declaration_file = bake_manifest.get("declaration_file")
+        if isinstance(declaration_file, str) and Path(declaration_file).name == declaration_file:
+            declaration_path = artifact / declaration_file
+            if declaration_path.is_file() and model.sha256(declaration_path) == bake_manifest.get("declaration_sha256"):
+                declaration = model.read_json(declaration_path)
+                if declaration.get("verification_kind") == "source_export005_partition_metadata_rebind.v1":
+                    return _validate_source_export_partition_rebind(
+                        artifact, manifest, output_raw, bake_manifest, declaration,
+                    )
+    return _validate_composed_rib_reframe_source003(artifact, manifest, output_raw)

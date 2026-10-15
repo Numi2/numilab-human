@@ -6595,6 +6595,7 @@ def _bodyparts_runtime_bindings(
 
 
 _BODYPARTS_BODY_LOCAL_BAKE_SCHEMA = "numi.human.bodyparts3d-myosim-bone-body-local-bake.v1"
+_BODYPARTS_SOURCE_EXPORT_REBIND_MODE = "rebind_source_export005_partition_rows"
 _BODYPARTS_BODY_LOCAL_BAKE_ROWS = {
     48: ("FJ3228", "803a7134c1e69f640b87f9c6c4a846c869379446e771a1a7c9d18914c331a603"),
     49: ("FJ3229", "631b4f63625fa6cc89ad83961b2156abe5878d1baf4a8cb2b2acbaa06bc97f58"),
@@ -8812,7 +8813,9 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
             or body_local_bakes.get("schema") != _BODYPARTS_BODY_LOCAL_BAKE_SCHEMA
             or body_local_bakes.get("status")
             != "explicit_visual_owner_frame_bake_not_physics_or_native_admission"
-            or body_local_bakes.get("mode") not in (None, "reframe_existing_composed_partitioned_rows")
+            or body_local_bakes.get("mode") not in (
+                None, "reframe_existing_composed_partitioned_rows", _BODYPARTS_SOURCE_EXPORT_REBIND_MODE,
+            )
             or body_local_bakes.get("native_admission") is not False
             or body_local_bakes.get("physics_or_mass_change") is not False
             or not isinstance(registration, dict)
@@ -8839,6 +8842,7 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
             expected_member, expected_member_sha = _BODYPARTS_BODY_LOCAL_BAKE_ROWS[stable_id]
             source_anchor = anchors[stable_id - 1] if stable_id <= len(anchors) else None
             composed_reframe = body_local_bakes.get("mode") == "reframe_existing_composed_partitioned_rows"
+            source_export_rebind = body_local_bakes.get("mode") == _BODYPARTS_SOURCE_EXPORT_REBIND_MODE
             derived_partition = source_anchor.get("derived_visual_partition") if isinstance(source_anchor, dict) else None
             if (
                 declared.get("member_id") != expected_member
@@ -8881,6 +8885,27 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
                     or derived_partition.get("original_compiled_vertex_count") != declared.get("raw_source_vertex_count")
                     or derived_partition.get("original_compiled_triangle_count") != declared.get("raw_source_triangle_count")
                     or declared.get("reframe_mode") != "source003_composed_partition_row_to_body20_local"
+                    or type(declared.get("compiled_vertex_count")) is not int
+                    or type(declared.get("compiled_triangle_count")) is not int
+                    or type(declared.get("raw_source_vertex_count")) is not int
+                    or type(declared.get("raw_source_triangle_count")) is not int
+                    or type(declared.get("interface_vertex_count")) is not int
+                    or not isinstance(declared.get("interface_vertex_pairs"), list)
+                    or len(declared.get("interface_vertex_pairs")) != declared.get("interface_vertex_count")
+                    or not isinstance(declared.get("partition_row_face_indices_sha256"), str)
+                    or re.fullmatch(r"[0-9a-f]{64}", declared["partition_row_face_indices_sha256"]) is None
+                ))
+                or (source_export_rebind and (
+                    not isinstance(derived_partition, dict)
+                    or derived_partition.get("schema") != "numi.human.intercostal313-rib48-rib49-current467-local-remesh-face-ancestry.v1"
+                    or derived_partition.get("partition_ancestry_sha256") != body_local_bakes.get("partition_ancestry_sha256")
+                    or derived_partition.get("strict_float32_audit_sha256") != body_local_bakes.get("strict_float32_audit_sha256")
+                    or derived_partition.get("source_export_report_sha256") != body_local_bakes.get("source_export_report_sha256")
+                    or derived_partition.get("new_compiled_vertex_count") != declared.get("compiled_vertex_count")
+                    or derived_partition.get("new_compiled_triangle_count") != declared.get("compiled_triangle_count")
+                    or derived_partition.get("original_compiled_vertex_count") != declared.get("raw_source_vertex_count")
+                    or derived_partition.get("original_compiled_triangle_count") != declared.get("raw_source_triangle_count")
+                    or declared.get("reframe_mode") != "source_export005_partition_rows_to_body20_local"
                     or type(declared.get("compiled_vertex_count")) is not int
                     or type(declared.get("compiled_triangle_count")) is not int
                     or type(declared.get("raw_source_vertex_count")) is not int
@@ -8963,7 +8988,9 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     composed_reframe_validation = None
     if (
         isinstance(body_local_bakes, dict)
-        and body_local_bakes.get("mode") == "reframe_existing_composed_partitioned_rows"
+        and body_local_bakes.get("mode") in (
+            "reframe_existing_composed_partitioned_rows", _BODYPARTS_SOURCE_EXPORT_REBIND_MODE,
+        )
     ):
         from .composed_bone_body_frame import validate_composed_rib_reframe
 
@@ -9058,7 +9085,10 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
                 or bake_row.get("compiled_triangle_count", bake_row.get("source_triangle_count")) != count_indices // 3
             ):
                 raise ImportError(f"Numi Human NHBONES baked row {stable_id} disagrees with its record")
-            if bake_row.get("reframe_mode") == "source003_composed_partition_row_to_body20_local":
+            if bake_row.get("reframe_mode") in (
+                "source003_composed_partition_row_to_body20_local",
+                "source_export005_partition_rows_to_body20_local",
+            ):
                 face_bytes = b"".join(struct.pack("<3I", *triangle) for triangle in triangles)
                 if hashlib.sha256(face_bytes).hexdigest() != bake_row.get("partition_row_face_indices_sha256"):
                     raise ImportError(f"Numi Human NHBONES baked row {stable_id} partition face ancestry drifted")

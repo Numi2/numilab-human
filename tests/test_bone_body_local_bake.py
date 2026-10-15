@@ -8,6 +8,7 @@ import struct
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -176,6 +177,71 @@ class BodyLocalBakeTests(unittest.TestCase):
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         with self.assertRaisesRegex(model.ImportError, "stored FP32 attributes drifted"):
             model._numi_human_bone_envelope_surfaces(artifact, MYOSIM_ARCHIVE_SHA)
+
+    def _source_export_rebind_fixture(self):
+        artifact, manifest = parser_fixture(self.root)
+        manifest = json.loads((artifact / "bodyparts3d-myosim-major-bones.manifest.json").read_text())
+        bake = manifest["body_local_bakes"]
+        bake.update({
+            "mode": model._BODYPARTS_SOURCE_EXPORT_REBIND_MODE,
+            "declaration_file": "source-export-rebind.json",
+            "declaration_sha256": "65" * 32,
+            "partition_ancestry_sha256": "76" * 32,
+            "strict_float32_audit_sha256": "87" * 32,
+            "source_export_report_sha256": "98" * 32,
+            "native_admission": False,
+            "physics_or_mass_change": False,
+        })
+        for row in bake["rows"]:
+            stable_id = row["stable_id"]
+            row.update({
+                "declaration_file": bake["declaration_file"],
+                "declaration_sha256": bake["declaration_sha256"],
+                "reframe_mode": "source_export005_partition_rows_to_body20_local",
+                "raw_source_vertex_count": 3,
+                "raw_source_triangle_count": 1,
+                "compiled_vertex_count": 3,
+                "compiled_triangle_count": 1,
+                "interface_vertex_count": 1,
+                "interface_vertex_pairs": [[0, 0]],
+                "partition_row_face_indices_sha256": hashlib.sha256(struct.pack("<3I", 0, 1, 2)).hexdigest(),
+            })
+            anchor = manifest["source"]["anchors"][stable_id - 1]
+            anchor["body_local_bake"] = row
+            anchor["derived_visual_partition"] = {
+                "schema": "numi.human.intercostal313-rib48-rib49-current467-local-remesh-face-ancestry.v1",
+                "stable_id": stable_id,
+                "partition_ancestry_sha256": bake["partition_ancestry_sha256"],
+                "strict_float32_audit_sha256": bake["strict_float32_audit_sha256"],
+                "source_export_report_sha256": bake["source_export_report_sha256"],
+                "new_compiled_vertex_count": 3,
+                "new_compiled_triangle_count": 1,
+                "original_compiled_vertex_count": 3,
+                "original_compiled_triangle_count": 1,
+            }
+        (artifact / "bodyparts3d-myosim-major-bones.manifest.json").write_text(json.dumps(manifest))
+        return artifact, manifest
+
+    def test_source_export_rebind_mode_uses_strict_verifier_dispatch(self):
+        artifact, manifest = self._source_export_rebind_fixture()
+        from numilab_human import composed_bone_body_frame
+        with patch.object(composed_bone_body_frame, "validate_composed_rib_reframe", return_value={"status": "fixture"}) as validate:
+            surfaces, _, _ = model._numi_human_bone_envelope_surfaces(artifact, MYOSIM_ARCHIVE_SHA)
+        validate.assert_called_once()
+        ribs = [row for row in surfaces[20] if row["stable_id"] in MEMBER_ROWS]
+        self.assertEqual({row["stable_id"] for row in ribs}, {48, 49})
+        self.assertTrue(all(row["body_local_bake"]["reframe_mode"] == "source_export005_partition_rows_to_body20_local" for row in ribs))
+        self.assertEqual(manifest["body_local_bakes"]["mode"], model._BODYPARTS_SOURCE_EXPORT_REBIND_MODE)
+
+    def test_source_export_rebind_rejects_stale_partition_anchor_before_reader_dispatch(self):
+        artifact, manifest = self._source_export_rebind_fixture()
+        manifest["source"]["anchors"][47]["derived_visual_partition"]["partition_ancestry_sha256"] = "ab" * 32
+        (artifact / "bodyparts3d-myosim-major-bones.manifest.json").write_text(json.dumps(manifest))
+        from numilab_human import composed_bone_body_frame
+        with patch.object(composed_bone_body_frame, "validate_composed_rib_reframe") as validate:
+            with self.assertRaisesRegex(model.ImportError, "baked row 48 provenance is invalid"):
+                model._numi_human_bone_envelope_surfaces(artifact, MYOSIM_ARCHIVE_SHA)
+        validate.assert_not_called()
 
     def test_composed_partition_reframe_requires_source_rederivation_and_face_ancestry(self):
         anchor = {
