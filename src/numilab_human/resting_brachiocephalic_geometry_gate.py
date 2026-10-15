@@ -123,6 +123,20 @@ AORTIC_ARCH_CAROTID_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
 AORTIC_ARCH_CAROTID_INTERFACE_PAIRSET_SHA256 = (
     "f408e4ad80d0be34e95c96dcf50834b45bb7894f748335e78f8128c5d1aac90a")
 AORTIC_ARCH_CAROTID_INTERFACE_PAIR_COUNT = 30
+# Fresh 7↔465 source-bound certificate for capture 024 and the current
+# field-002 arch. The preceding certificate remains available for its original
+# capture only.
+AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_REPORT_SHA256 = (
+    "025c7d12e652232bec8a4e4587f6d747ba7cdd332cd681974dc74b12c1c889ad")
+AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PREFLIGHT_SHA256 = (
+    "64bc6e1208924354b0782fecd83995e59c32885186efee64c5ec371522bb7b93")
+AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_HANDOFF_SHA256 = (
+    "b4dbc76123412e4114a8475c36ed3a559c520c5aed4cc0defe3be837bfaf8c94")
+AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "81102e440325e89cfd4fbf74ee3fe9a45bdbeaadee1375757a14ebf6b8ee5501")
+AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PAIRSET_SHA256 = (
+    "f408e4ad80d0be34e95c96dcf50834b45bb7894f748335e78f8128c5d1aac90a")
+AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PAIR_COUNT = 30
 AORTIC_ARCH_CAROTID_SOURCE_ROWS = {
     (51011, 7): {
         "typed_identity": [51011, 7],
@@ -1136,6 +1150,29 @@ def _validate_aortic_arch_carotid_interface_certificate(certificate, surfaces, n
     )
 
 
+def _validate_aortic_arch_carotid_current_interface_certificate(
+    certificate, surfaces, network_keys,
+):
+    """Validate the fresh source-bound 7↔465 proof for capture 024."""
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_CAROTID_SOURCE_INTERFACE,
+        schema="numi.human.verified-aortic-source-interface-handoff.v1",
+        status="VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE",
+        evidence_report_sha256=(
+            AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_REPORT_SHA256),
+        source_preflight_sha256=(
+            AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PREFLIGHT_SHA256),
+        capture_input_bundle_sha256=(
+            AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        exact_pair_count=AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=(
+            AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PAIRSET_SHA256),
+        source_rows=AORTIC_ARCH_CAROTID_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
+
+
 def audit_network_rows_against_all_targets(
     verifier, surfaces, network_edges, source_face_pairs, *,
     verified_network_continuity=None, verified_network_source_inventory=None,
@@ -1198,6 +1235,11 @@ def audit_network_rows_against_all_targets(
                       == AORTIC_ARCH_DESCENDING_FIELD002_INTERFACE_SCHEMA):
                     validator = (
                         _validate_aortic_arch_descending_field002_interface_certificate)
+                elif (edge == AORTIC_ARCH_CAROTID_SOURCE_INTERFACE
+                      and certificate.get("capture_input_bundle_sha256")
+                      == AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_CAPTURE_BUNDLE_SHA256):
+                    validator = (
+                        _validate_aortic_arch_carotid_current_interface_certificate)
             nonnetwork_interface_handoffs[edge] = validator(
                 certificate, surfaces, network_keys)
 

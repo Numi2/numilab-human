@@ -2568,6 +2568,96 @@ def test_aortic_arch_carotid_certificate_binds_current_surfaces_and_source_rows(
             wrong_row, surfaces, {edge[0]})
 
 
+def test_aortic_arch_carotid_current_certificate_dispatches_and_stays_strict(monkeypatch):
+    edge = bg.AORTIC_ARCH_CAROTID_SOURCE_INTERFACE
+    rows = {
+        edge[0]: {
+            "source_member": "test-arch", "fma": "FMA3768", "name": "arch",
+            "body_index": 20, "layer": 2, "record": [20, 0, 4, 12, 12, 7, 2, 0],
+            "typed_identity": [51011, 7], "first_vertex": 0,
+            "vertex_count": 4, "face_count": 4,
+            "source_vertices_f32_sha256": "a" * 64,
+            "source_faces_u32_sha256": "b" * 64,
+        },
+        edge[1]: {
+            "source_member": "test-carotid", "fma": "FMA4058",
+            "name": "left common carotid artery", "body_index": 22, "layer": 2,
+            "record": [22, 100, 4, 24, 12, 465, 2, 0],
+            "typed_identity": [51011, 465], "first_vertex": 100,
+            "vertex_count": 4, "face_count": 4,
+            "source_vertices_f32_sha256": "c" * 64,
+            "source_faces_u32_sha256": "d" * 64,
+        },
+    }
+    monkeypatch.setattr(bg, "AORTIC_ARCH_CAROTID_SOURCE_ROWS", rows)
+    monkeypatch.setattr(bg, "AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PAIR_COUNT", 1)
+    pair_sha = hashlib.sha256(
+        np.asarray(((0, 0),), dtype="<u4").tobytes()).hexdigest()
+    monkeypatch.setattr(
+        bg, "AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PAIRSET_SHA256", pair_sha)
+
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    for key in edge:
+        if key in surfaces:
+            points, faces, _normals, source_ids = surfaces[key]
+        else:
+            points, faces = _tetra(1.0, 60.0)
+            source_ids = np.arange(100, 104, dtype="<u8")
+        normals = np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (len(points), 1))
+        surfaces[key] = (points, faces, normals, source_ids)
+
+    certificate = {
+        "schema": "numi.human.verified-aortic-source-interface-handoff.v1",
+        "status": "VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE",
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": (
+            bg.AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_REPORT_SHA256),
+        "source_preflight_sha256": (
+            bg.AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_PREFLIGHT_SHA256),
+        "capture_input_bundle_sha256": (
+            bg.AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_CAPTURE_BUNDLE_SHA256),
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "source_rows": {f"{key[0]}:{key[1]}": rows[key] for key in edge},
+        "exact_face_pairs": [[0, 0]],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": {
+            f"{key[0]}:{key[1]}": bg._aortic_arch_surface_fingerprint(
+                surfaces[key], key=key)
+            for key in edge
+        },
+    }
+
+    verifier = _HandoffVerifier()
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity,
+        verified_nonnetwork_interface_certificates={edge: certificate})
+    handoff = next(
+        row for row in result["verified_nonnetwork_interface_handoffs"]
+        if row["typed_link"] == [list(edge[0]), list(edge[1])])
+    assert handoff["passed"] is True
+    assert handoff["evidence_report_sha256"] == (
+        bg.AORTIC_ARCH_CAROTID_CURRENT_INTERFACE_REPORT_SHA256)
+    assert handoff["anatomical_admission"] is False
+    direct_pairs = {frozenset(pair) for pair in verifier.pair_calls}
+    assert frozenset(edge) not in direct_pairs
+    assert frozenset((edge[1], (51011, 473))) in direct_pairs
+
+    stale = dict(certificate, evidence_report_sha256="e" * 64)
+    with pytest.raises(ValueError, match="stale or belongs to another capture"):
+        bg.audit_network_rows_against_all_targets(
+            _HandoffVerifier(), surfaces, edges, source_pairs,
+            verified_network_continuity=continuity,
+            verified_nonnetwork_interface_certificates={edge: stale})
+
+
 def test_aortic_arch_carotid_handoff_skips_only_certified_direct_pair(monkeypatch):
     surfaces, edges, source_pairs, continuity = _handoff_fixture()
     edge = bg.AORTIC_ARCH_CAROTID_SOURCE_INTERFACE
