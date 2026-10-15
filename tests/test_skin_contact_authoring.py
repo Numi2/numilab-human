@@ -220,3 +220,34 @@ def test_edge_variation_retains_fixed_neighbor_displacement_offset():
     constant=tool.fixed_edge_difference(delta,{0:0},0,1)[0]
     assert abs(.004+constant)==0.
     assert abs(0.+constant)==.004
+
+
+def test_complete_skin_face_support_clears_every_corner_past_crossed_bone():
+    # A face straddles a facet at z=0. A contact-point-only displacement can
+    # leave its low corner behind. The complete support must clear that corner.
+    base=np.array([[0.,0.,-.004],[.01,0.,.002],[0.,.01,.003]])
+    faces=np.array([[0,1,2]])
+    bone=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.]])
+    constraints=tool.bone_face_support_constraints(base,faces,0,bone,[0.,0.,7.],.001)
+    moved=base.copy()
+    for face,bary,normal,bound in constraints:
+        corner=int(np.argmax(bary));moved[corner]+=max(0.,bound)*normal
+    assert np.min(moved[:,2]) == pytest.approx(.001)
+    assert np.min(moved[:,2])-np.max(bone[:,2]) >= .001-1.e-15
+    assert len(constraints)==3
+
+
+def test_bone_face_support_is_translation_invariant_and_dimensionally_meters():
+    base=np.array([[0.,0.,-.004],[.01,0.,.002],[0.,.01,.003]])
+    bone=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.]])
+    first=tool.bone_face_support_constraints(base,[[0,1,2]],0,bone,[0.,0.,1.],.0005)
+    shift=np.array([.17,-.4,.08])
+    second=tool.bone_face_support_constraints(base+shift,[[0,1,2]],0,bone+shift,[0.,0.,1.],.0005)
+    np.testing.assert_allclose([r[3] for r in first],[.0045,-.0015,-.0025],atol=1.e-17)
+    np.testing.assert_allclose([r[3] for r in first],[r[3] for r in second],atol=1.e-17)
+
+
+@pytest.mark.parametrize("direction,margin",[([0.,0.,0.],.001),([0.,0.,float('nan')],.001),([0.,0.,1.],0.),([0.,0.,1.],float('inf'))])
+def test_bone_face_support_rejects_invalid_construction(direction,margin):
+    with pytest.raises(ValueError,match="invalid bone face-support"):
+        tool.bone_face_support_constraints(np.eye(3),[[0,1,2]],0,np.eye(3),direction,margin)

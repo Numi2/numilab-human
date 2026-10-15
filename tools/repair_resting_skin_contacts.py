@@ -191,6 +191,28 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
             for i in range(3) for j in range(3)]
 
 
+def bone_face_support_constraints(base_points,faces,skin_face,bone_triangle,direction,margin_m):
+    """Move the complete affected skin face beyond a crossed bone facet.
+
+    This is an offline construction inequality, not a collision predicate.
+    Bounds are displacements in metres relative to the pinned authoring base.
+    Final geometry must still pass exact self, bone and neighborhood checks.
+    """
+    triangle=np.asarray(base_points)[np.asarray(faces)[int(skin_face)]].astype(float)
+    bone=np.asarray(bone_triangle,dtype=float)
+    normal=np.asarray(direction,dtype=float)
+    if (triangle.shape!=(3,3) or bone.shape!=(3,3) or normal.shape!=(3,)
+            or not np.isfinite(triangle).all() or not np.isfinite(bone).all()
+            or not np.isfinite(normal).all() or np.linalg.norm(normal)<1.e-12
+            or not np.isfinite(margin_m) or margin_m<=0):
+        raise ValueError("invalid bone face-support construction inputs")
+    normal=normal/np.linalg.norm(normal)
+    support=float(np.max(bone@normal))+float(margin_m)
+    eye=np.eye(3)
+    return [(int(skin_face),eye[i].copy(),normal.copy(),
+             support-float(triangle[i]@normal)) for i in range(3)]
+
+
 def compartment_direction(skin_normal,weights,binding_body_ids,torso_body_id):
     """Offline direction proposal from full retained skin material support.
 
@@ -259,6 +281,8 @@ def main():
     ap.add_argument("--exit-policy",choices=["nearest","skin-normal","compartment-skin-normal"],default="nearest")
     ap.add_argument("--contact-constraint-policy",choices=["accumulate","current"],default="accumulate",
         help="current replaces obsolete bone separators after each complete exact inventory")
+    ap.add_argument("--bone-contact-separator",choices=["witness","face-support"],default="witness",
+        help="face-support proposes complete crossed-facet separation from skin compartment normals")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
     if not 0 < args.margin_m < args.step_bound_m <= args.total_bound_m <= .03:
@@ -282,7 +306,7 @@ def main():
             raise ValueError(f"required compiled bone identity absent: {sid}")
 
     torso_body_id=None
-    if args.exit_policy=="compartment-skin-normal":
+    if args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support":
         torso_ids={row["core_body_index"] for row in bone_ids.values()
                    if row["core_body_name"]=="torso"}
         if len(torso_ids)!=1:raise ValueError("compiled bone owner does not uniquely identify torso")
@@ -337,6 +361,7 @@ def main():
         compiled_bone_identity=bone_identity_proof,
         scope="Offline authoring approximation only; no anatomical/native admission.",
         construction_exit_policy=args.exit_policy,torso_core_body_index=torso_body_id,
+        construction_bone_contact_separator=args.bone_contact_separator,
         contact_constraint_policy=args.contact_constraint_policy,
         inactive_source_coordinates_preserved=True)
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
@@ -410,6 +435,18 @@ def main():
             pairs=result.get("unexpected_triangle_pairs",[])
             inventory.append(dict(bone=sid,triangle_pair_count=len(pairs)))
             for sf,bi in pairs:
+                if args.bone_contact_separator=="face-support":
+                    normal=skin_normals[faces[sf]].mean(axis=0)
+                    region={"region":"skin_enclosing_bone"}
+                    if bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                        normal,region=compartment_direction(normal,
+                            source["full_weights"][used[faces[sf]]].mean(axis=0),
+                            source["bindings_u"][:,0],torso_body_id)
+                    new_constraints.extend(bone_face_support_constraints(base_points,faces,
+                        sf,bone.positions[bone.faces[bi]],normal,args.margin_m))
+                    compartment_witnesses.append(dict(skin_face=int(sf),bone=sid,
+                        bone_face=int(bi),kind="complete_skin_face_support",**region))
+                    continue
                 for point in surf.intersection_points_meters(bone,int(sf),int(bi)):
                     bary=barycentric(surf.triangle_meters(int(sf)),point)
                     normal=normals[bi]
@@ -417,7 +454,7 @@ def main():
                     if args.exit_policy in ("skin-normal","compartment-skin-normal"):
                         normal=bary@skin_normals[faces[sf]]
                         normal/=np.linalg.norm(normal)
-                        if args.exit_policy=="compartment-skin-normal" and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                        if (args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support") and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
                             normal,region=compartment_direction(normal,
                                 bary@source["full_weights"][used[faces[sf]]],
                                 source["bindings_u"][:,0],torso_body_id)
@@ -449,9 +486,9 @@ def main():
                     distance,bi,near=nearest
                     if not distance:raise ValueError("inside point has zero nearest-solid distance")
                     normal=(near-point)/distance
-                    if args.exit_policy in ("skin-normal","compartment-skin-normal"):
+                    if args.exit_policy in ("skin-normal","compartment-skin-normal") or args.bone_contact_separator=="face-support":
                         normal=skin_normals[vi]
-                        if args.exit_policy=="compartment-skin-normal" and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
+                        if (args.exit_policy=="compartment-skin-normal" or args.bone_contact_separator=="face-support") and bone_ids[sid]["core_body_name"] in {"humerus_r","ulna_r","radius_r"}:
                             normal,region=compartment_direction(normal,
                                 source["full_weights"][used[vi]],
                                 source["bindings_u"][:,0],torso_body_id)
