@@ -41,6 +41,22 @@ AORTIC_ARCH_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
 AORTIC_ARCH_INTERFACE_PAIRSET_SHA256 = (
     "478c7ad156fddfe8166c1e49a63d74f5d2c625c4cde39a8d3ffe1fd9dda2d212")
 AORTIC_ARCH_INTERFACE_PAIR_COUNT = 36
+# Field-002 is a separately re-audited rest-source candidate. Its full row-7
+# fingerprint changed, so it has an independent evidence profile; the original
+# proof004 profile above remains frozen for its original capture.
+AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA = (
+    "numi.human.verified-aortic-arch-field-002-interface-handoff.v1")
+AORTIC_ARCH_FIELD002_INTERFACE_STATUS = (
+    "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_FIELD_002_INTERFACE")
+AORTIC_ARCH_FIELD002_INTERFACE_REPORT_SHA256 = (
+    "4bfb2ffa7d7267ea6f971e32becddc103f908795d74884fc8279ba4f35d8a584")
+AORTIC_ARCH_FIELD002_INTERFACE_PREFLIGHT_SHA256 = (
+    "a1d886fdb2f0ebea25d881dd04777a7065c1538624d943979dd5689a005c69dc")
+AORTIC_ARCH_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256 = (
+    "81102e440325e89cfd4fbf74ee3fe9a45bdbeaadee1375757a14ebf6b8ee5501")
+AORTIC_ARCH_FIELD002_INTERFACE_PAIRSET_SHA256 = (
+    "478c7ad156fddfe8166c1e49a63d74f5d2c625c4cde39a8d3ffe1fd9dda2d212")
+AORTIC_ARCH_FIELD002_INTERFACE_PAIR_COUNT = 36
 AORTIC_ARCH_SOURCE_ROWS = {
     (51011, 7): {
         "source_member": "FJ3411", "fma": "FMA3768", "name": "arch of aorta",
@@ -1013,6 +1029,24 @@ def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_k
     )
 
 
+def _validate_aortic_arch_field002_interface_certificate(
+        certificate, surfaces, network_keys):
+    """Validate the separately re-audited field-002 arch source surface."""
+    return _validate_source_interface_certificate(
+        certificate, surfaces, network_keys,
+        edge=AORTIC_ARCH_SOURCE_INTERFACE,
+        schema=AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA,
+        status=AORTIC_ARCH_FIELD002_INTERFACE_STATUS,
+        evidence_report_sha256=AORTIC_ARCH_FIELD002_INTERFACE_REPORT_SHA256,
+        source_preflight_sha256=AORTIC_ARCH_FIELD002_INTERFACE_PREFLIGHT_SHA256,
+        capture_input_bundle_sha256=AORTIC_ARCH_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256,
+        exact_pair_count=AORTIC_ARCH_FIELD002_INTERFACE_PAIR_COUNT,
+        exact_pairset_sha256=AORTIC_ARCH_FIELD002_INTERFACE_PAIRSET_SHA256,
+        source_rows=AORTIC_ARCH_SOURCE_ROWS,
+        pair_dtype="<u4",
+    )
+
+
 def _validate_aortic_arch_descending_interface_certificate(
     certificate, surfaces, network_keys,
 ):
@@ -1101,7 +1135,12 @@ def audit_network_rows_against_all_targets(
                  .issubset(supported_interfaces),
                  "only the exact source-bound aortic interface certificates are supported")
         for edge, certificate in verified_nonnetwork_interface_certificates.items():
-            nonnetwork_interface_handoffs[edge] = supported_interfaces[edge](
+            validator = supported_interfaces[edge]
+            if (edge == AORTIC_ARCH_SOURCE_INTERFACE
+                    and isinstance(certificate, Mapping)
+                    and certificate.get("schema") == AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA):
+                validator = _validate_aortic_arch_field002_interface_certificate
+            nonnetwork_interface_handoffs[edge] = validator(
                 certificate, surfaces, network_keys)
 
     interfaces = {}

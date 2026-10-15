@@ -698,6 +698,82 @@ def test_execute_ordered_network_gates_binds_addenda_by_exact_typed_link(monkeyp
     assert len(report["baseline_matched_collar_addenda"]) == 2
 
 
+def test_field002_candidate_binding_is_explicit_and_fail_closed():
+    binding = runner.aortic_arch_field002_candidate_binding()
+    assert binding["schema"] == (
+        "numi.human.aortic-arch-field-002-candidate-binding.v1")
+    assert binding["capture_input_bundle_sha256"] == (
+        geometry.AORTIC_ARCH_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256)
+    assert binding["candidate_npz_sha256"] == (
+        runner.AORTIC_ARCH_FIELD002_CANDIDATE_NPZ_SHA256)
+    assert binding["interface_handoff_sha256"] == (
+        runner.AORTIC_ARCH_FIELD002_PROOF_HANDOFF_SHA256)
+
+    stale = dict(binding, candidate_npz_sha256="0" * 64)
+    with pytest.raises(ValueError, match="differs from the frozen pin set"):
+        runner._bind_aortic_arch_field002_candidate({}, stale)
+
+    incomplete = dict(binding)
+    incomplete.pop("interface_handoff_sha256")
+    with pytest.raises(ValueError, match="differs from the frozen pin set"):
+        runner._bind_aortic_arch_field002_candidate({}, incomplete)
+
+
+def test_execute_ordered_network_gates_consumes_explicit_field002_binding(
+        monkeypatch):
+    _patch_input_owner(monkeypatch)
+    binding = runner.aortic_arch_field002_candidate_binding()
+    edge = geometry.AORTIC_ARCH_SOURCE_INTERFACE
+    certificate = {
+        "schema": geometry.AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "passed": True,
+    }
+    summary = {
+        "schema": binding["schema"],
+        "candidate_npz_sha256": binding["candidate_npz_sha256"],
+        "typed_identity": list(edge[0]),
+        "anatomical_admission": False,
+    }
+    runtime = _runtime_fixture()
+    monkeypatch.setattr(
+        runner, "_bind_aortic_arch_field002_candidate",
+        lambda value, supplied: (value, certificate, summary)
+        if supplied == binding else (_ for _ in ()).throw(
+            AssertionError("candidate binding changed")))
+    monkeypatch.setattr(
+        runner.network_owner, "audit_brachiocephalic_network_links_3d",
+        lambda *_args, **_kwargs: {
+            "passed": True, "evaluated_link_count": 15,
+        })
+    observed = {}
+
+    def all_target(_context, _edge, _separate, **kwargs):
+        observed.update(kwargs["verified_nonnetwork_interface_certificates"])
+        return {"passed": False, "failed_stage": "fixture"}
+
+    monkeypatch.setattr(
+        runner.preparation, "run_all_target_network_screen", all_target)
+    with pytest.raises(ValueError, match="exact capture-bundle SHA-256"):
+        runner.execute_ordered_network_gates(
+            runtime, manifold3d=object(),
+            aortic_arch_field002_source_binding=binding)
+    result = runner.execute_ordered_network_gates(
+        runtime, manifold3d=object(),
+        aortic_arch_field002_source_binding=binding,
+        capture_input_bundle_sha256=binding["capture_input_bundle_sha256"])
+    assert observed == {edge: certificate}
+    assert result["aortic_arch_field002_source_candidate_binding"] == summary
+    assert result["all_target_collision_gate"]["failed_stage"] == "fixture"
+
+    with pytest.raises(ValueError, match="cannot be combined"):
+        runner.execute_ordered_network_gates(
+            runtime, manifold3d=object(),
+            verified_nonnetwork_interface_certificates={edge: {"old": True}},
+            aortic_arch_field002_source_binding=binding,
+            capture_input_bundle_sha256=binding["capture_input_bundle_sha256"])
+
+
 def test_cached_continuation_loads_only_the_two_typed_aortic_certificates(monkeypatch):
     arch = geometry.AORTIC_ARCH_SOURCE_INTERFACE
     descending = geometry.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE

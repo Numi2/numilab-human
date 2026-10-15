@@ -60,6 +60,78 @@ AORTIC_DESCENDING_PROOF_PREFLIGHT_SHA256 = (
 AORTIC_DESCENDING_PROOF_HANDOFF_SHA256 = (
     "56922c77b63edcdc2ac8164f70cb47485312d558055cad95547754e183985ae5")
 
+# The field-002 caller is opt-in and pinned as one complete source/certificate
+# bundle. The frozen run150 defaults and proof004 artifacts above remain intact.
+AORTIC_ARCH_FIELD002_SOURCE_DIR = (
+    AORTIC_PROOF_ROOT / "aortic7-lung305-local-field-002")
+AORTIC_ARCH_FIELD002_PROOF_DIR = (
+    AORTIC_PROOF_ROOT /
+    "aortic7-lung305-local-field-002-aorta67-source-interface-proof-002")
+AORTIC_ARCH_FIELD002_INPUT_DIR = (
+    AORTIC_PROOF_ROOT /
+    "aortic7-lung305-local-field-002-aorta67-source-interface-inputs-001")
+AORTIC_ARCH_FIELD002_NETWORK_REPORT = (
+    AORTIC_ARCH_FIELD002_INPUT_DIR / "network-gate-report.json")
+AORTIC_ARCH_FIELD002_NETWORK_PREFLIGHT = (
+    AORTIC_ARCH_FIELD002_INPUT_DIR / "source-preflight-and-collar-rebind.json")
+AORTIC_ARCH_FIELD002_CANDIDATE_NHA = (
+    AORTIC_ARCH_FIELD002_SOURCE_DIR / "candidate-resting-thorax.nhanatomy")
+AORTIC_ARCH_FIELD002_CANDIDATE_NPZ = (
+    AORTIC_ARCH_FIELD002_SOURCE_DIR / "candidate.npz")
+AORTIC_ARCH_FIELD002_SOURCE_REPORT = (
+    AORTIC_ARCH_FIELD002_SOURCE_DIR / "source-preparation-report.json")
+AORTIC_ARCH_FIELD002_PROOF_REPORT = (
+    AORTIC_ARCH_FIELD002_PROOF_DIR / "execution-report.json")
+AORTIC_ARCH_FIELD002_PROOF_PREFLIGHT = (
+    AORTIC_ARCH_FIELD002_PROOF_DIR / "preflight.json")
+AORTIC_ARCH_FIELD002_PROOF_HANDOFF = (
+    AORTIC_ARCH_FIELD002_PROOF_DIR / "handoff-7-6.json")
+AORTIC_ARCH_FIELD002_CAPTURE_INPUT_BUNDLE = (
+    AORTIC_PROOF_ROOT /
+    "aortic7-lung305-local-field-002-aorta67-source-interface-inputs-001/"
+    "capture-inputs.json")
+AORTIC_ARCH_FIELD002_CANDIDATE_NHA_SHA256 = (
+    "a75b152825b20742ef56e50e12b7a40036a7ee5b188511136137ab4f093281f6")
+AORTIC_ARCH_FIELD002_CANDIDATE_NPZ_SHA256 = (
+    "eec49a7b5579465b023304484bda16a68087410cdf4373d999882bdc354e8c67")
+AORTIC_ARCH_FIELD002_SOURCE_REPORT_SHA256 = (
+    "6c6cfa8d86e79cd9d04068ec4abbf1be83a16ec3da9f6a1fa87827ab8e2a7786")
+AORTIC_ARCH_FIELD002_PROOF_HANDOFF_SHA256 = (
+    "42ca57b9f5ab6018a4d286dec2c6d8106ba1f36f66c80a1bc52cf33749faecf8")
+AORTIC_ARCH_FIELD002_NETWORK_REPORT_SHA256 = (
+    "c9cfbd4dee8c4d948fbf3dc75a7ff56f96ce9f883f90c798e3cf2b8e74c66d09")
+AORTIC_ARCH_FIELD002_NETWORK_PREFLIGHT_SHA256 = (
+    "c19ad1c53fd07625f3b8daef8c436ebbaf2efdf62eb4f7abd890fbfb25d57c51")
+
+
+def aortic_arch_field002_candidate_binding() -> dict:
+    """Return the explicit, frozen pins required to consume field-002 row 7."""
+    return {
+        "schema": "numi.human.aortic-arch-field-002-candidate-binding.v1",
+        "capture_input_bundle_path":
+            str(AORTIC_ARCH_FIELD002_CAPTURE_INPUT_BUNDLE),
+        "capture_input_bundle_sha256":
+            collision_owner.AORTIC_ARCH_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256,
+        "candidate_nha_path": str(AORTIC_ARCH_FIELD002_CANDIDATE_NHA),
+        "candidate_nha_sha256": AORTIC_ARCH_FIELD002_CANDIDATE_NHA_SHA256,
+        "candidate_npz_path": str(AORTIC_ARCH_FIELD002_CANDIDATE_NPZ),
+        "candidate_npz_sha256": AORTIC_ARCH_FIELD002_CANDIDATE_NPZ_SHA256,
+        "source_preparation_report_path": str(AORTIC_ARCH_FIELD002_SOURCE_REPORT),
+        "source_preparation_report_sha256": AORTIC_ARCH_FIELD002_SOURCE_REPORT_SHA256,
+        "interface_report_path": str(AORTIC_ARCH_FIELD002_PROOF_REPORT),
+        "interface_report_sha256":
+            collision_owner.AORTIC_ARCH_FIELD002_INTERFACE_REPORT_SHA256,
+        "interface_preflight_path": str(AORTIC_ARCH_FIELD002_PROOF_PREFLIGHT),
+        "interface_preflight_sha256":
+            collision_owner.AORTIC_ARCH_FIELD002_INTERFACE_PREFLIGHT_SHA256,
+        "interface_handoff_path": str(AORTIC_ARCH_FIELD002_PROOF_HANDOFF),
+        "interface_handoff_sha256": AORTIC_ARCH_FIELD002_PROOF_HANDOFF_SHA256,
+        "network_report_path": str(AORTIC_ARCH_FIELD002_NETWORK_REPORT),
+        "network_report_sha256": AORTIC_ARCH_FIELD002_NETWORK_REPORT_SHA256,
+        "network_preflight_path": str(AORTIC_ARCH_FIELD002_NETWORK_PREFLIGHT),
+        "network_preflight_sha256": AORTIC_ARCH_FIELD002_NETWORK_PREFLIGHT_SHA256,
+    }
+
 
 def _require(ok: bool, message: str) -> None:
     if not ok:
@@ -497,8 +569,31 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
                                  matched_collar_addendum=None,
                                  matched_collar_addenda=None,
                                  verified_nonnetwork_interface_certificates=None,
+                                 aortic_arch_field002_source_binding=None,
+                                 capture_input_bundle_sha256: str | None = None,
                                  run_all_targets=True) -> dict:
-    """Run fail-first 15-link continuity; all-target is an explicit later stage."""
+    """Run fail-first continuity, with an opt-in exact field-002 row-7 binding.
+
+    The field-002 path requires its explicit capture-bundle SHA and candidate
+    pin map. Calls omitting that binding retain the original run150/proof004
+    defaults.
+    """
+    field002_binding_summary = None
+    if aortic_arch_field002_source_binding is not None:
+        _require(isinstance(capture_input_bundle_sha256, str)
+                 and capture_input_bundle_sha256
+                 == aortic_arch_field002_source_binding.get(
+                     "capture_input_bundle_sha256"),
+                 "field-002 row-7 caller must provide its exact capture-bundle SHA-256")
+        edge = collision_owner.AORTIC_ARCH_SOURCE_INTERFACE
+        supplied = dict(verified_nonnetwork_interface_certificates or {})
+        _require(edge not in supplied,
+                 "field-002 row-7 binding cannot be combined with a different cached 7↔6 certificate")
+        runtime, field002_certificate, field002_binding_summary = (
+            _bind_aortic_arch_field002_candidate(
+                runtime, aortic_arch_field002_source_binding))
+        supplied[edge] = field002_certificate
+        verified_nonnetwork_interface_certificates = supplied
     candidates, _baselines, link_inputs, inventory = _bind_runtime_inputs(runtime)
     if matched_collar_addenda is None:
         collar_addenda = {}
@@ -551,6 +646,7 @@ def execute_ordered_network_gates(runtime: dict, *, manifold3d=None,
         ],
         "network_source_continuity": continuity,
         "candidate_and_source_baseline_inventory": inventory,
+        "aortic_arch_field002_source_candidate_binding": field002_binding_summary,
         "all_target_collision_gate": {
             "status": ("NOT_RUN_NETWORK_CONTINUITY_FAILED"
                        if continuity.get("passed") is not True
@@ -891,6 +987,283 @@ def _load_aortic_arch_interface_certificate(runtime: dict, bundle_sha256: str) -
         runtime, bundle_sha256, report, preflight,
         evidence_report_sha256=report_sha,
         source_preflight_sha256=preflight_sha)
+
+
+def _field002_surface_arrays(value, *, label: str):
+    if hasattr(value, "positions") and hasattr(value, "faces"):
+        return (
+            np.asarray(value.positions), np.asarray(value.faces),
+            None if getattr(value, "normals", None) is None
+            else np.asarray(value.normals),
+            None if getattr(value, "source_vertex_ids", None) is None
+            else np.asarray(value.source_vertex_ids),
+        )
+    _require(isinstance(value, (tuple, list)) and len(value) >= 4,
+             f"{label} lacks positions, faces, normals, or source IDs")
+    return tuple(None if item is None else np.asarray(item) for item in value[:4])
+
+
+def _bind_aortic_arch_field002_candidate(
+    runtime: dict, binding: dict,
+) -> tuple[dict, dict, dict]:
+    """Bind one explicit field-002 row-7 candidate and its exact 7↔6 proof."""
+    expected_binding = aortic_arch_field002_candidate_binding()
+    _require(isinstance(binding, dict) and binding == expected_binding,
+             "field-002 row-7 candidate binding is absent or differs from the frozen pin set")
+    bundle_sha = binding["capture_input_bundle_sha256"]
+    _require(bundle_sha
+             == collision_owner.AORTIC_ARCH_FIELD002_INTERFACE_CAPTURE_BUNDLE_SHA256,
+             "field-002 candidate belongs to another accepted capture bundle")
+
+    path_fields = (
+        ("capture_input_bundle_path", "capture_input_bundle_sha256"),
+        ("candidate_nha_path", "candidate_nha_sha256"),
+        ("candidate_npz_path", "candidate_npz_sha256"),
+        ("source_preparation_report_path", "source_preparation_report_sha256"),
+        ("interface_report_path", "interface_report_sha256"),
+        ("interface_preflight_path", "interface_preflight_sha256"),
+        ("interface_handoff_path", "interface_handoff_sha256"),
+        ("network_report_path", "network_report_sha256"),
+        ("network_preflight_path", "network_preflight_sha256"),
+    )
+    resolved = {}
+    for path_field, digest_field in path_fields:
+        supplied_path = Path(binding[path_field]).resolve(strict=True)
+        expected_path = Path(expected_binding[path_field]).resolve(strict=True)
+        _require(supplied_path == expected_path and supplied_path.is_file(),
+                 f"field-002 source binding path changed for {path_field}")
+        observed_sha = _sha_file(supplied_path)
+        _require(observed_sha == binding[digest_field],
+                 f"field-002 source binding digest changed for {path_field}")
+        resolved[path_field] = supplied_path
+
+    source_report = json.loads(
+        resolved["source_preparation_report_path"].read_text())
+    _require(source_report.get("schema")
+             == "numi.human.aortic7-local-lung305-source-preparation.v1"
+             and source_report.get("status")
+             == "COUNTERFACTUAL_SOURCE_LOCAL_FIELD_CONSTRUCTED"
+             and source_report.get("anatomical_admission") is False
+             and source_report.get("native_or_gpu_work_performed") is False
+             and source_report.get("typed_source_identity") == {
+                 "body_index": 20, "concept_id": "FMA3768", "flags": 0,
+                 "label": "arch of aorta", "layer": 2, "semantic": 51011,
+                 "source_member": "FJ3411", "stable_id": 7},
+             "field-002 preparation report has the wrong source row or scope")
+    serialization = source_report.get("serialization", {})
+    reemit = serialization.get("abi5_reemit_proof", {})
+    _require(
+        serialization.get("candidate_nha_sha256")
+        == binding["candidate_nha_sha256"]
+        and Path(serialization.get("candidate_nha_path", "")).resolve(strict=True)
+        == resolved["candidate_nha_path"]
+        and serialization.get("candidate_npz_sha256")
+        == binding["candidate_npz_sha256"]
+        and Path(serialization.get("candidate_npz_path", "")).resolve(strict=True)
+        == resolved["candidate_npz_path"]
+        and serialization.get("other_524_rows_byte_exact") is True
+        and reemit.get("replaced_stable_ids") == [7]
+        and reemit.get("row_count_preserved") == 525
+        and reemit.get("stable_id_order_preserved") is True
+        and reemit.get("unmodified_rows_byte_exact") == 524
+        and reemit.get("registration_and_source_header_bytes_preserved") is True,
+        "field-002 preparation report no longer binds its exact ABI5 row edit")
+
+    preflight = json.loads(
+        resolved["interface_preflight_path"].read_text())
+    report = json.loads(resolved["interface_report_path"].read_text())
+    handoff = json.loads(resolved["interface_handoff_path"].read_text())
+    candidate_identity = preflight.get("source_candidate_002", {})
+    network_report = json.loads(resolved["network_report_path"].read_text())
+    network_preflight = json.loads(resolved["network_preflight_path"].read_text())
+    network_continuity = network_report.get("network_source_continuity", {})
+    network_row7 = network_report.get(
+        "candidate_and_source_baseline_inventory", {}
+    ).get("candidate_surfaces", {}).get("51011:7", {})
+    network_preflight_row7 = network_preflight.get("candidate_row7", {})
+    _require(
+        network_report.get("status")
+        == "NETWORK_CONTINUITY_PASSED_ALL_TARGET_COLLISION_REJECTED"
+        and network_report.get("anatomical_admission") is False
+        and network_report.get("native_or_gpu_work_performed") is False
+        and network_continuity.get("passed") is True
+        and network_continuity.get("evaluated_link_count") == 15
+        and network_continuity.get("requested_link_count") == 15
+        and len(network_continuity.get("links", [])) == 15
+        and all(link.get("passed") is True
+                for link in network_continuity.get("links", []))
+        and network_row7.get("typed_identity") == [51011, 7]
+        and network_preflight.get("status")
+        == "PASS_CURRENT_CAPTURE_SOURCE_BINDINGS_AND_ADDENDUM_REPLAY"
+        and network_preflight_row7.get("typed_identity") == [51011, 7]
+        and network_preflight_row7.get("candidate_nha_sha256")
+        == binding["candidate_nha_sha256"]
+        and network_preflight_row7.get("candidate_npz_sha256")
+        == binding["candidate_npz_sha256"]
+        and network_preflight_row7.get("candidate_source_preparation_sha256")
+        == binding["source_preparation_report_sha256"],
+        "field-002 15-link candidate evidence is stale or failed")
+    _require(
+        preflight.get("schema")
+        == "numi.human.aortic-6-7-source-interface-preflight.v1"
+        and preflight.get("status")
+        == "PREFLIGHT_READY_NO_EXACT_INTERSECTION_OR_SOLID_PREDICATE"
+        and preflight.get("capture_input_bundle_sha256") == bundle_sha
+        and candidate_identity.get("candidate_nha_sha256")
+        == binding["candidate_nha_sha256"]
+        and candidate_identity.get("candidate_npz_sha256")
+        == binding["candidate_npz_sha256"]
+        and candidate_identity.get("source_preparation_report_sha256")
+        == binding["source_preparation_report_sha256"]
+        and preflight.get("source_candidate_network_report_sha256")
+        == binding["network_report_sha256"]
+        and preflight.get("source_candidate_network_preflight_sha256")
+        == binding["network_preflight_sha256"],
+        "field-002 interface preflight no longer binds candidate and 15-link evidence")
+    _require(
+        report.get("schema") == "numi.human.aortic-6-7-source-interface-proof.v1"
+        and report.get("status")
+        == "PASS_SOURCE_BOUND_AORTA_ARCH_INTERFACE_DIAGNOSTIC"
+        and report.get("passed") is True
+        and report.get("typed_pair") == [[51011, 7], [51011, 6]]
+        and report.get("preflight_sha256")
+        == binding["interface_preflight_sha256"]
+        and report.get("all_15_flow_links_unchanged") is True
+        and report.get("source_topology_passed") is True
+        and report.get("interface_gate_passed") is True
+        and report.get("solid_gate_passed") is True
+        and report.get("independent_source_collar_calibre_passed") is True
+        and report.get("candidate_baseline_exact_pairsets_equal") is True,
+        "field-002 interface report is not the pinned passing source proof")
+    _require(
+        handoff.get("schema") == collision_owner.AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA
+        and handoff.get("status")
+        == collision_owner.AORTIC_ARCH_FIELD002_INTERFACE_STATUS
+        and handoff.get("passed") is True
+        and handoff.get("typed_link") == [[51011, 7], [51011, 6]]
+        and handoff.get("evidence_report_sha256")
+        == binding["interface_report_sha256"]
+        and handoff.get("source_preflight_sha256")
+        == binding["interface_preflight_sha256"]
+        and handoff.get("capture_input_bundle_sha256") == bundle_sha,
+        "field-002 7↔6 certificate does not bind its exact report/preflight/bundle")
+
+    with np.load(resolved["candidate_npz_path"], allow_pickle=False) as archive:
+        required = {
+            "capture_positions_m", "capture_normals", "capture_faces",
+            "capture_global_vertex_ids", "source_faces", "input_faces", "faces",
+        }
+        _require(required.issubset(archive.files),
+                 "field-002 candidate NPZ lacks required row-7 capture/source arrays")
+        positions = np.asarray(archive["capture_positions_m"])
+        normals = np.asarray(archive["capture_normals"])
+        faces = np.asarray(archive["capture_faces"])
+        gids = np.asarray(archive["capture_global_vertex_ids"])
+        source_faces = np.asarray(archive["source_faces"])
+        input_faces = np.asarray(archive["input_faces"])
+        candidate_faces = np.asarray(archive["faces"])
+    _require(
+        positions.dtype == np.dtype("<f4") and positions.shape == (381, 3)
+        and np.isfinite(positions).all()
+        and normals.dtype == np.dtype("<f4") and normals.shape == positions.shape
+        and np.isfinite(normals).all()
+        and faces.dtype == np.dtype("<u4") and faces.shape == (670, 3)
+        and source_faces.dtype == np.dtype("<u4")
+        and input_faces.dtype == np.dtype("<u4")
+        and candidate_faces.dtype == np.dtype("<u4")
+        and source_faces.shape == faces.shape
+        and input_faces.shape == faces.shape
+        and candidate_faces.shape == faces.shape
+        and faces.tobytes() == source_faces.tobytes()
+        == input_faces.tobytes() == candidate_faces.tobytes()
+        and gids.dtype.kind in "iu" and gids.shape == (len(positions),)
+        and int(gids.min()) >= 0 and len(np.unique(gids)) == len(gids),
+        "field-002 candidate row-7 arrays have changed type, shape, or ABI5 face order")
+    candidate_position_sha = _sha_bytes(
+        np.ascontiguousarray(positions, dtype="<f4").tobytes())
+    candidate_normal_sha = _sha_bytes(
+        np.ascontiguousarray(normals, dtype="<f4").tobytes())
+    candidate_face_sha = _sha_bytes(
+        np.ascontiguousarray(faces, dtype="<u4").tobytes())
+    _require(
+        candidate_position_sha
+        == candidate_identity.get("candidate_positions_f32_sha256")
+        == handoff.get("candidate_surface_bindings", {}).get("51011:7", {}).get(
+            "positions_f32_sha256")
+        and candidate_normal_sha
+        == candidate_identity.get("candidate_normals_f32_sha256")
+        == handoff.get("candidate_surface_bindings", {}).get("51011:7", {}).get(
+            "normals_f32_sha256")
+        and candidate_face_sha
+        == candidate_identity.get("candidate_faces_u32_sha256")
+        == handoff.get("candidate_surface_bindings", {}).get("51011:7", {}).get(
+            "faces_u32_sha256")
+        and source_report["source_and_capture_binding"].get(
+            "candidate_capture_positions_sha256") == candidate_position_sha
+        and network_row7.get("positions_f32_sha256") == candidate_position_sha
+        and network_row7.get("faces_u32_sha256") == candidate_face_sha
+        and network_row7.get("captured_global_vertex_ids_u64_sha256")
+        == _sha_bytes(np.ascontiguousarray(gids, dtype="<u8").tobytes())
+        and network_preflight_row7.get("positions_sha256") == candidate_position_sha
+        and network_preflight_row7.get("faces_sha256") == candidate_face_sha
+        and network_preflight_row7.get("GIDs_sha256")
+        == _sha_bytes(np.ascontiguousarray(gids, dtype="<u8").tobytes()),
+        "field-002 candidate arrays differ from their pinned source/network proofs")
+
+    key = collision_owner.AORTIC_ARCH_SOURCE_INTERFACE[0]
+    captured = runtime.get("context", {}).get("surfaces", {}).get(key)
+    _require(captured is not None,
+             "field-002 source candidate has no actual-capture row-7 slot to bind")
+    _captured_positions, captured_faces, _captured_normals, captured_gids = (
+        _field002_surface_arrays(captured, label="actual row 7"))
+    _require(
+        captured_faces is not None and captured_gids is not None
+        and np.ascontiguousarray(captured_faces, dtype="<u4").tobytes()
+        == faces.tobytes()
+        and np.ascontiguousarray(captured_gids, dtype="<u8").tobytes()
+        == np.ascontiguousarray(gids, dtype="<u8").tobytes(),
+        "field-002 candidate row-7 slots/GIDs do not match the actual captured source row")
+    source_row = runtime.get("source_rows", {}).get(7)
+    _require(isinstance(source_row, dict)
+             and source_row.get("body_index") == 20
+             and source_row.get("layer") == 2
+             and np.ascontiguousarray(source_row.get("faces"), dtype="<u4").tobytes()
+             == faces.tobytes(),
+             "field-002 candidate row 7 is not the current ABI5 FJ3411 source row")
+
+    candidate_surface = (
+        np.ascontiguousarray(positions, dtype="<f4"),
+        np.ascontiguousarray(faces, dtype="<u4"),
+        np.ascontiguousarray(normals, dtype="<f4"),
+        np.ascontiguousarray(gids, dtype="<u8"),
+    )
+    bound_runtime = dict(runtime)
+    candidate_surfaces = dict(runtime.get("candidate_surfaces", {}))
+    candidate_surfaces[key] = candidate_surface
+    bound_runtime["candidate_surfaces"] = candidate_surfaces
+    ascending_key = collision_owner.AORTIC_ARCH_SOURCE_INTERFACE[1]
+    ascending = candidate_surfaces.get(
+        ascending_key, runtime["context"]["surfaces"].get(ascending_key))
+    source_interface = {key: candidate_surface, ascending_key: ascending}
+    validated_certificate = (
+        collision_owner._validate_aortic_arch_field002_interface_certificate(
+            handoff, source_interface, set(NETWORK_KEYS)))
+    summary = {
+        "schema": binding["schema"],
+        "capture_input_bundle_sha256": bundle_sha,
+        "candidate_nha_sha256": binding["candidate_nha_sha256"],
+        "candidate_npz_sha256": binding["candidate_npz_sha256"],
+        "source_preparation_report_sha256":
+            binding["source_preparation_report_sha256"],
+        "network_report_sha256": binding["network_report_sha256"],
+        "network_preflight_sha256": binding["network_preflight_sha256"],
+        "interface_handoff_sha256": binding["interface_handoff_sha256"],
+        "typed_identity": list(key),
+        "candidate_surface_binding": handoff["candidate_surface_bindings"]["51011:7"],
+        "validated_interface_typed_link": validated_certificate["typed_link"],
+        "anatomical_admission": False,
+    }
+    return bound_runtime, validated_certificate, summary
 
 
 def _validate_aortic_descending_source_identity_row(
