@@ -57,3 +57,14 @@ def test_exact_oriented_exit_handles_signed_and_zero_ray_components(direction,ex
     surface=tool.v.prepare_surface((51004,12),positions,faces,source_vertex_ids=np.arange(4,dtype=np.int64))
     distance,_=tool.exact_forward_exit(surface,surface.meter_index(),np.array([.1,.1,.1]),direction)
     assert distance == pytest.approx(expected,abs=1e-14)
+
+def test_contact_corner_ray_can_leave_without_positive_hit():
+    positions=np.array([[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]],dtype="<f4")
+    faces=np.array([[0,2,1],[0,1,3],[0,3,2],[1,2,3]],dtype=np.int64)
+    surface=tool.v.prepare_surface((51004,12),positions,faces,source_vertex_ids=np.arange(4,dtype=np.int64))
+    index=surface.meter_index()
+    point=[F(0),F(1,4),F(3,4)]
+    # Enters the x=0 half-space, immediately exits through x+y+z=1.
+    assert tool.contact_forward_exit(surface,index,point,[1.,0.,1.]) == (0.,None)
+    with pytest.raises(ValueError,match="non-boundary"):
+        tool.contact_forward_exit(surface,index,[2.,2.,2.],[1.,0.,0.])

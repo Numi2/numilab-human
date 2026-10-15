@@ -93,6 +93,19 @@ def exact_forward_exit(surface,index,point,direction):
     if nearest_t is None:raise ValueError("oriented ray has no positive target exit")
     return float(nearest_t),nearest_face
 
+def contact_forward_exit(surface,index,point,direction):
+    try:
+        return exact_forward_exit(surface,index,point,direction)
+    except ValueError as error:
+        if str(error)!="oriented ray has no positive target exit":
+            raise
+        location=v.ci.point_location_prepared_indexed(tuple(Fraction(x) for x in point),index)["location"]
+        if location!="boundary":
+            raise ValueError(f"no forward exit from non-boundary contact: {location}; point={point}") from error
+        # A ray from an edge/corner may immediately leave through its other
+        # incident face even when its dot with this witness face is negative.
+        return 0.,None
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output"]:
@@ -215,7 +228,7 @@ def main():
                         normal=bary@skin_normals[faces[sf]]
                         normal/=np.linalg.norm(normal)
                         if normal@normals[bi]<0:
-                            distance,_=exact_forward_exit(bone,solid_index,point,normal)
+                            distance,_=contact_forward_exit(bone,solid_index,point,normal)
                     current=float(bary@delta[faces[sf]]@normal)
                     new_constraints.append((int(sf),bary,normal,current+distance+args.margin_m))
             if args.solid_depth and pairs:
@@ -347,4 +360,17 @@ def main():
     return 0 if status.startswith("PASS_") else 1
 
 if __name__=="__main__":
-    raise SystemExit(main())
+    try:
+        result=main()
+    except Exception as error:
+        import traceback
+        if "--output" in sys.argv:
+            failure_dir=Path(sys.argv[sys.argv.index("--output")+1])
+            if failure_dir.is_dir():
+                failure=dict(status="FAILED_EXECUTION",error=repr(error),traceback=traceback.format_exc(),
+                    runner_argv=[sys.executable,*sys.argv],script_sha256=sha(Path(__file__)),
+                    anatomical_admission=False,native_admission=False)
+                with (failure_dir/"failed-execution.json").open("x") as stream:
+                    stream.write(json.dumps(failure,indent=2,allow_nan=False)+"\n")
+        raise
+    raise SystemExit(result)
