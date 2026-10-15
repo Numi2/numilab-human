@@ -138,28 +138,45 @@ def face_support_constraints(base_points,faces,first,second,margin_m):
     na,nb=cross(ea[0],ea[1]),cross(eb[0],eb[1])
     axes=[na,nb,*[cross(x,y) for x in ea for y in eb],
           *[cross(x,na) for x in ea],*[cross(x,nb) for x in eb]]
-    best=None
+    shared=set(map(int,faces[first]))&set(map(int,faces[second]))
+    if len(shared)==3:
+        raise ValueError("self-contact reference triangles have no complete separating support plane")
+    candidates=[]
     for axis in axes:
         length2=dot(axis,axis)
         if not length2:continue
-        pa=[dot(axis,x) for x in a];pb=[dot(axis,x) for x in b]
-        for sign,gap in [(1,min(pa)-max(pb)),(-1,min(pb)-max(pa))]:
-            if gap>0 and (best is None or gap*gap/length2>best[0]):
-                best=(gap*gap/length2,[sign*x for x in axis])
-    if best is None:raise ValueError("self-contact reference triangles have no complete separating support plane")
-    axis=np.array([float(x) for x in best[1]])
-    normal=axis/np.linalg.norm(axis)
-    if not np.isfinite(normal).all():raise ValueError("nonfinite complete-face separator")
-    # Normalization rounds the axis; require the actual LP axis still separates
-    # all reference corners exactly, rather than granting a geometric tolerance.
-    rational_normal=[Fraction(float(x)) for x in normal]
-    gaps=[dot(rational_normal,sub(x,y)) for x in a for y in b]
-    if min(gaps)<=0:raise ValueError("normalized face-support axis lost exact reference separation")
-    floor=min(float(margin_m),1.e-6,float(min(gaps))/4.)
-    if not np.isfinite(floor) or floor<=0:raise ValueError("invalid face-support floor")
+        for sign in (1,-1):
+            oriented=[sign*x for x in axis]
+            exact_gaps=[dot(oriented,sub(x,y)) for x in a for y in b]
+            gap=min(exact_gaps)
+            # A shared vertex/edge is an intended zero gap. Keep all nine
+            # corner inequalities, including zero bounds at that simplex.
+            if gap<0 or (gap==0 and not shared):continue
+            positive=[x for x in exact_gaps if x>0]
+            if not positive:continue
+            candidates.append((gap>0,min(positive)**2/length2,oriented))
+    candidates.sort(key=lambda row:(row[0],row[1]),reverse=True)
+    normal=None
+    for _,_,axis in candidates:
+        axis=np.array([float(x) for x in axis])
+        trial=axis/np.linalg.norm(axis)
+        if not np.isfinite(trial).all():continue
+        # The rounded LP axis itself must have exact, nonnegative source
+        # projections. Zero is allowed only for shared topological simplices.
+        rational=[Fraction(float(x)) for x in trial]
+        trial_gaps=[dot(rational,sub(x,y)) for x in a for y in b]
+        if min(trial_gaps)<0 or (min(trial_gaps)==0 and not shared):continue
+        if not any(x>0 for x in trial_gaps):continue
+        normal=trial;gaps=trial_gaps;break
+    if normal is None:
+        raise ValueError("self-contact reference triangles have no complete separating support plane")
+    floors=[min(float(margin_m),1.e-6,float(gap)/4.) for gap in gaps]
+    if not all(np.isfinite(x) and x>=0 for x in floors):
+        raise ValueError("invalid face-support floor")
     eye=np.eye(3)
     return [(int(first),eye[i].copy(),int(second),eye[j].copy(),
-             normal.copy(),floor-float(gaps[3*i+j])) for i in range(3) for j in range(3)]
+             normal.copy(),floors[3*i+j]-float(gaps[3*i+j]))
+            for i in range(3) for j in range(3)]
 
 
 def compartment_direction(skin_normal,weights,binding_body_ids,torso_body_id):

@@ -144,3 +144,31 @@ def test_compartment_direction_must_resolve_unique_actual_owner():
         tool.compartment_direction([1.,0.,0.],[.5,.5],np.array([41,42]),20)
     with pytest.raises(ValueError,match="invalid"):
         tool.compartment_direction([1.,0.,0.],[.9,.9],np.array([20,41]),20)
+
+
+@pytest.mark.parametrize("faces",[
+    np.array([[0,1,2],[0,3,4]]),
+    np.array([[0,1,2],[0,2,3]])])
+def test_complete_face_support_keeps_shared_simplex_without_positive_gap(faces):
+    base=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.],
+                   [-.01,0.,0.],[0.,-.01,0.]],dtype="<f4")
+    rows=tool.face_support_constraints(base,faces,0,1,.0005)
+    assert len(rows)==9
+    assert all(0.>=row[-1] for row in rows)
+    assert any(row[-1]==0. for row in rows)
+    shared=set(faces[0])&set(faces[1])
+    for _,wa,_,wb,normal,bound in rows:
+        i,j=int(np.argmax(wa)),int(np.argmax(wb))
+        if faces[0,i]==faces[1,j]:
+            assert faces[0,i] in shared and bound==0.
+    # Folding an unshared first corner over the second face violates support.
+    delta=np.zeros_like(base)
+    delta[faces[0,1]]=-.1*rows[0][-2]
+    assert any(float((wa@delta[faces[a]]-wb@delta[faces[b]])@normal)<bound
+               for a,wa,b,wb,normal,bound in rows)
+
+def test_unrelated_reference_touch_does_not_get_shared_simplex_permission():
+    base=np.array([[0.,0.,0.],[.01,0.,0.],[0.,.01,0.],
+                   [0.,0.,0.],[-.01,0.,0.],[0.,-.01,0.]],dtype="<f4")
+    with pytest.raises(ValueError,match="complete separating"):
+        tool.face_support_constraints(base,np.array([[0,1,2],[3,4,5]]),0,1,.0005)
