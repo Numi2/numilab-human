@@ -111,13 +111,80 @@ def source_field_preflight(arrays):
     return evidence
 
 
-def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces"):
-    """Bind a fixed-allocation candidate to all ordered captured source GIDs."""
+def source_owned_repacked_overlay(arrays, key, source, poses, cache):
+    """Bind an explicitly repacked ABI5 row and replay its registered rest owner.
+
+    This is offline counterfactual preparation. It does not establish native
+    emission, source-face ancestry, accepted motion, or anatomical admission.
+    """
+    from numilab_human import passive_attachment_composition as pac
+
+    if key[0] != 51005:
+        raise ValueError("repacked source overlay requires a typed muscle identity")
+    path, digest = source
+    token = (str(Path(path).resolve()), digest)
+    if token not in cache:
+        cache[token] = (pin(path, digest), pac._read_nhtiss4(Path(path)))
+    source_pin, table = cache[token]
+    rows = [r for r in table["records"] if int(r[6]) == key[1]]
+    if len(rows) != 1:
+        raise ValueError("repacked source has no unique typed muscle row")
+    row = pac._nhtiss_row_arrays(table, rows[0])
+    for name, field in (("source_positions", "positions"), ("source_normals", "normals"),
+                        ("source_faces", "faces"), ("binding_indices", "binding_indices"),
+                        ("weights", "weights")):
+        if (name not in arrays or not np.array_equal(arrays[name], row[field])
+                or (arrays[name].dtype.kind not in "iu" if field == "faces"
+                    else arrays[name].dtype != row[field].dtype)):
+            raise ValueError(f"repacked overlay differs from compiled source row: {name}")
+    if (np.any(np.abs(row["weights"].sum(axis=1, dtype=float) - 1.) >= 1e-5)
+            or np.any(row["binding_indices"][row["weights"] > 0] >= len(row["bindings"]))):
+        raise ValueError("invalid compiled material weights or binding indices")
+    if poses is None:
+        raise ValueError("repacked source requires accepted rigid rest poses")
+    checked = {}
+    for core, pose in poses.items():
+        pose = np.asarray(pose)
+        if (type(core) is not int or core < 0 or pose.dtype != np.dtype("<f4")
+                or pose.shape != (7,) or not np.isfinite(pose).all()
+                or abs(float(np.linalg.norm(pose[3:].astype(float))) - 1.) > 2e-5):
+            raise ValueError("invalid accepted rigid rest pose")
+        checked[core] = pose
+    for b in row["bindings"]:
+        rest = np.asarray([*b["translation"], *b["quaternion"], b["scale"]], float)
+        if (b["core"] not in checked or not np.isfinite(rest).all()
+                or b["scale"] <= 0 or abs(float(np.linalg.norm(rest[3:7])) - 1.) > 2e-5):
+            raise ValueError("invalid or missing compiled rigid rest transform")
+    positions, faces, gids = (arrays[k] for k in (
+        "capture_positions_m", "capture_faces", "capture_global_vertex_ids"))
+    if (positions.shape != row["positions"].shape or not np.array_equal(faces, row["faces"])
+            or gids.dtype.kind not in "iu"):
+        raise ValueError("repacked overlay allocation or ordered source faces differ")
+    _, binding = verify.retain_bound_source_faces(
+        key, (positions, faces, None, gids), row["faces"], row["first_vertex"],
+        np.arange(len(row["faces"]), dtype=np.int64))
+    offset = binding["source_capture_vertex_namespace_offset"]
+    expected = np.arange(row["vertex_count"], dtype=np.int64) + row["first_vertex"] + offset
+    if not np.array_equal(gids, expected):
+        raise ValueError("repacked overlay must preserve every ordered compiled source GID")
+    emitted = pac._native_blended_rest_positions(row, row["positions"], checked)
+    if emitted.dtype != positions.dtype or emitted.tobytes() != positions.tobytes():
+        raise ValueError("repacked world coordinates differ from exact Float32 CPU rest-owner replay")
+    return {"source": source_pin, "ordered_compiled_source_binding": binding,
+            "all_compiled_source_fields_exact": True, "cpu_rest_owner_emission_byte_exact": True,
+            "coordinate_provenance": "counterfactual_owner_replay",
+            "actual_native_emission_verified": False}
+
+
+def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces", *,
+                  repacked_source=None, accepted_poses=None, source_cache=None):
+    """Bind a fixed-allocation candidate or an explicitly source-owned repack."""
     key = verify.typed_key(key)
     source_pin = pin(path, digest)
     if key not in surfaces:
         raise ValueError(f"candidate typed identity absent from native capture: {key}")
-    with np.load(path, allow_pickle=False) as arrays:
+    with np.load(path, allow_pickle=False) as archive:
+        arrays = {name: archive[name].copy() for name in archive.files}
         positions = arrays["capture_positions_m"].copy()
         faces = arrays[faces_key].copy()
         gids = arrays["capture_global_vertex_ids"].copy()
@@ -125,7 +192,13 @@ def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces"):
         source_fields = source_field_preflight(arrays)
     if normals is not None and normals.dtype != np.dtype("<f4"):
         raise ValueError("capture normals must already be exact Float32")
-    if not np.array_equal(gids, surfaces[key][3]) or gids.dtype.kind not in "iu":
+    captured_gids_exact = np.array_equal(gids, surfaces[key][3]) and gids.dtype.kind in "iu"
+    repacked_proof = None
+    if repacked_source is not None:
+        repacked_proof = source_owned_repacked_overlay(
+            arrays, key, repacked_source, accepted_poses,
+            source_cache if source_cache is not None else {})
+    elif not captured_gids_exact:
         raise ValueError("candidate must preserve every ordered captured source GID")
     if positions.dtype != np.dtype("<f4"):
         raise ValueError("candidate world coordinates must already be exact Float32")
@@ -133,7 +206,8 @@ def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces"):
     surfaces[key] = prepared
     return {
         "typed_identity": list(key), "candidate": source_pin, "faces_key": faces_key,
-        "all_ordered_capture_gids_exact": True, "geometry_preparation": prepared.diagnostics(),
+        "all_ordered_capture_gids_exact": bool(captured_gids_exact),
+        "repacked_source_owner": repacked_proof, "geometry_preparation": prepared.diagnostics(),
         "candidate_normals_present": normals is not None,
         "source_field_preflight": source_fields,
         "world_positions_are_counterfactual": True,
@@ -149,6 +223,8 @@ def main(argv=None):
     p.add_argument("--receipt-sha256", required=True)
     p.add_argument("--source-pin", action="append", default=[], help="PATH=SHA256; compiler/ancestry/owner evidence")
     p.add_argument("--overlay", action="append", default=[], help="SEM:ID=existing.npz=SHA256; counterfactual only")
+    p.add_argument("--overlay-source", action="append", default=[],
+                   help="SEM:ID=NHTISS=SHA256; explicit repack with byte-exact CPU rest-owner replay")
     p.add_argument("--faces-key", action="append", default=[], help="SEM:ID=NPZ_KEY; default capture_faces")
     p.add_argument("--changed", action="append", required=True)
     p.add_argument("--target", action="append", help="SEM:ID; default all captured anatomy")
@@ -188,6 +264,23 @@ def main(argv=None):
             if key in faces_keys:
                 raise ValueError("duplicate candidate faces-key identity")
             faces_keys[key] = name
+        source_overlays, source_cache = {}, {}
+        accepted_poses = None
+        for item in args.overlay_source:
+            text, path, digest = item.split("=", 2)
+            key = identity(text)
+            if key in source_overlays:
+                raise ValueError("duplicate repacked source overlay identity")
+            source_overlays[key] = (Path(path), digest)
+        if source_overlays:
+            raw = json.loads(args.capture_receipt.read_text())
+            accepted_poses = {}
+            for row in raw["accepted_body_poses"]:
+                core = row["body_index"]
+                if type(core) is not int or core in accepted_poses:
+                    raise ValueError("duplicate or invalid accepted rigid rest identity")
+                accepted_poses[core] = np.asarray(
+                    [*row["position_m"], *row["quaternion_xyzw"]], dtype="<f4")
         overlay_keys, overlays = set(), []
         for item in args.overlay:
             text, path, digest = item.split("=", 2)
@@ -195,7 +288,12 @@ def main(argv=None):
             if key in overlay_keys:
                 raise ValueError("duplicate candidate typed identity")
             overlay_keys.add(key)
-            overlays.append(apply_overlay(surfaces, key, path, digest, faces_keys.get(key, "capture_faces")))
+            overlays.append(apply_overlay(
+                surfaces, key, path, digest, faces_keys.get(key, "capture_faces"),
+                repacked_source=source_overlays.get(key), accepted_poses=accepted_poses,
+                source_cache=source_cache))
+        if not set(source_overlays) <= overlay_keys:
+            raise ValueError("repacked source without matching overlay")
         if not set(faces_keys) <= overlay_keys:
             raise ValueError("faces-key without matching overlay")
         report["overlays"] = overlays

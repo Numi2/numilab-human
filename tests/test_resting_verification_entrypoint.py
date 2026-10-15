@@ -159,6 +159,89 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
                 self.assertEqual(tool.main(args+["--output", str(failed)]), 1)
         self.assertEqual(json.loads(failed.read_text())["exact_failure_witness"], error.diagnostic)
 
+    def repacked_candidate(self):
+        from tests.test_resting_shared_partition_verify import scene
+        from numilab_human import passive_attachment_composition as pac
+        source, digest, _ = scene(self.root)
+        table = pac._read_nhtiss4(source)
+        row = pac._nhtiss_row_arrays(table, table["records"][0])
+        poses = {core: np.array([.125 if core == 41 else 0., 0, 0, 0, 0, 0, 1], "<f4")
+                 for core in (41, 25, 29, 20)}
+        world = pac._native_blended_rest_positions(row, row["positions"], poses)
+        arrays = dict(capture_positions_m=world, capture_faces=row["faces"].astype("<u4"),
+                      capture_global_vertex_ids=np.arange(row["vertex_count"], dtype="<u8")+9000,
+                      capture_normals=row["normals"], source_positions=row["positions"],
+                      source_normals=row["normals"], source_faces=row["faces"].astype("<u4"),
+                      binding_indices=row["binding_indices"], weights=row["weights"])
+        # Original native allocation includes an additional unused source slot.
+        key = (51005, 1)
+        native = {key: (np.vstack([POINTS, [[2, 2, 2]]]).astype("<f4"), FACES.copy(),
+                        None, np.arange(5, dtype="<u4")+100)}
+        return source, digest, arrays, poses, native, key
+
+    def test_repacked_overlay_binds_compiled_row_and_exact_rest_owner(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        path = self.root/"repacked.npz"
+        np.savez(path, **arrays)
+        proof = tool.apply_overlay(native, key, path, hashlib.sha256(path.read_bytes()).hexdigest(),
+                                   repacked_source=(source, digest), accepted_poses=poses)
+        self.assertFalse(proof["all_ordered_capture_gids_exact"])
+        self.assertTrue(proof["repacked_source_owner"]["all_compiled_source_fields_exact"])
+        self.assertTrue(proof["repacked_source_owner"]["cpu_rest_owner_emission_byte_exact"])
+        self.assertFalse(proof["repacked_source_owner"]["actual_native_emission_verified"])
+
+    def test_repacked_source_rejects_world_material_and_rest_drift_before_geometry(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        for field, index in (("capture_positions_m", (0, 0)), ("weights", (0, 0)),
+                             ("source_positions", (0, 0))):
+            changed = {k: v.copy() for k, v in arrays.items()}
+            changed[field][index] = np.nextafter(changed[field][index], np.float32(2.))
+            path = self.root/f"drift-{field}.npz"
+            np.savez(path, **changed)
+            with patch.object(tool.verify, "prepare_surface", side_effect=AssertionError("no geometry")):
+                with self.assertRaises(ValueError):
+                    tool.apply_overlay(dict(native), key, path, hashlib.sha256(path.read_bytes()).hexdigest(),
+                                       repacked_source=(source, digest), accepted_poses=poses)
+        path = self.root/"rest-drift.npz"
+        np.savez(path, **arrays)
+        badposes = {k: v.copy() for k, v in poses.items()}
+        badposes[41][3:] = [0, 0, 0, 2]
+        with self.assertRaisesRegex(ValueError, "rigid rest pose"):
+            tool.apply_overlay(native, key, path, hashlib.sha256(path.read_bytes()).hexdigest(),
+                               repacked_source=(source, digest), accepted_poses=badposes)
+
+    def test_repacked_overlay_rejects_reordered_gids_and_stale_source_hash(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        arrays["capture_global_vertex_ids"] = arrays["capture_global_vertex_ids"][::-1]
+        path = self.root/"gid-drift.npz"
+        np.savez(path, **arrays)
+        for sha in (digest, "0"*64):
+            with self.assertRaises((ValueError, tool.verify.HumanImportError)):
+                tool.apply_overlay(dict(native), key, path, hashlib.sha256(path.read_bytes()).hexdigest(),
+                                   repacked_source=(source, sha), accepted_poses=poses)
+
+    def test_repacked_cli_preflight_uses_pinned_accepted_poses(self):
+        source, digest, arrays, poses, native, key = self.repacked_candidate()
+        candidate, pack, receipt = (self.root/n for n in ("repacked.npz", "pack", "receipt"))
+        np.savez(candidate, **arrays)
+        pack.write_bytes(b"native-pack")
+        receipt.write_text(json.dumps({"accepted_body_poses": [
+            {"body_index": k, "position_m": list(map(float, v[:3])),
+             "quaternion_xyzw": list(map(float, v[3:]))} for k, v in poses.items()]}))
+        output = self.root/"preflight.json"
+        args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                "--source-pin", str(source)+"="+digest,
+                "--overlay", f"51005:1={candidate}="+hashlib.sha256(candidate.read_bytes()).hexdigest(),
+                "--overlay-source", f"51005:1={source}="+digest, "--changed", "51005:1",
+                "--preflight-only", "--output", str(output)]
+        with patch.object(tool.verify, "load_capture", return_value=(native, {"accepted_step": 0})):
+            self.assertEqual(tool.main(args), 0)
+        report = json.loads(output.read_text())
+        self.assertEqual(report["status"], "PASS_PREPARATION_ONLY_NO_PAIR_PREDICATES")
+        self.assertTrue(report["overlays"][0]["repacked_source_owner"]["cpu_rest_owner_emission_byte_exact"])
+        self.assertFalse(report["native_admission"])
+
     def test_bad_capture_pin_stops_before_capture_loader(self):
         pack, receipt = self.root / "p", self.root / "r"
         pack.write_bytes(b"pack")
