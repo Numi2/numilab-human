@@ -1019,6 +1019,16 @@ def _validate_source_interface_certificate(
         "evidence_report_sha256": certificate["evidence_report_sha256"],
         "source_preflight_sha256": certificate["source_preflight_sha256"],
         "capture_input_bundle_sha256": certificate["capture_input_bundle_sha256"],
+        # Preserve the proof fields so this validated handoff can be replayed
+        # by the same generic validator at the final all-target boundary.
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "exact_face_pairs": [list(pair) for pair in pairs],
         "exact_face_pair_count": len(pairs),
         "exact_face_pairset_sha256": exact_pairset_sha256,
         "candidate_surface_bindings": fingerprints,

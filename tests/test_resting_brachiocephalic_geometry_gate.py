@@ -1910,6 +1910,21 @@ def test_aortic_arch_field002_certificate_binds_its_new_full_surface(monkeypatch
         certificate, surfaces, {edge[0]})
     assert accepted["passed"] is True
     assert accepted["anatomical_admission"] is False
+    # Match the fresh field-002 7-6 handoff and replay its normalized proof
+    # through the final generic source-interface validator.
+    replayed = bg._validate_source_interface_certificate(
+        accepted, surfaces, {edge[0]}, edge=edge,
+        schema=bg.AORTIC_ARCH_FIELD002_INTERFACE_SCHEMA,
+        status=bg.AORTIC_ARCH_FIELD002_INTERFACE_STATUS,
+        evidence_report_sha256="a" * 64,
+        source_preflight_sha256="b" * 64,
+        capture_input_bundle_sha256="c" * 64,
+        exact_pair_count=1, exact_pairset_sha256=pair_sha,
+        source_rows=rows, pair_dtype="<u4")
+    assert replayed["passed"] is True
+    assert replayed["exact_face_pairs"] == [[0, 0]]
+    assert replayed["source_topology_passed"] is True
+    assert replayed["independent_source_collar_calibre_passed"] is True
 
     stale_report = dict(certificate, evidence_report_sha256="d" * 64)
     with pytest.raises(ValueError, match="stale or belongs to another capture"):
