@@ -82,7 +82,7 @@ LUNG_306_EXPECTED_SELF_PAIRS = (
 )
 
 
-# Two brain-family source meshes carry narrower anatomical identities in the
+# Brain-family source meshes carry narrower anatomical identities in the
 # pinned BodyParts3D part_of table. Keep the broad family for existing owner
 # grouping while exposing each exact source-member identity in the receipt.
 HEAD_MEMBER_COMPONENTS = {
@@ -99,6 +99,16 @@ HEAD_MEMBER_COMPONENTS = {
         "name": "cerebral aqueduct",
         "family_concept_id": "FMA50801",
         "source_member_sha256": "089159be9815563e0645e5a28e7302fbc0bc842af760ac886bf3d0542f34a8f3",
+    },
+    "FJ1769": {
+        "stable_id": 343,
+        "concept_id": "FMA62004",
+        "name": "Medulla oblongata",
+        "family_concept_id": "FMA50801",
+        "source_member_sha256": "ab318e2ca0b27656d06edb4a3d3315669c70d7625989a3573fa66a0e586c6afc",
+        "source_license": "CC Attribution-Share Alike 2.1 Japan",
+        "legacy_source_license_claim": "CC-BY-4.0",
+        "geometry_role": "passive brainstem tissue surface",
     },
 }
 HEAD_MEMBERSHIP_TABLE_SHA256 = "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea"
@@ -128,7 +138,10 @@ def _head_member_identity(bodyparts3d: dict, member_id: str, member_sha256: str)
         "source_member_sha256": member_sha256,
         "membership_table_sha256": HEAD_MEMBERSHIP_TABLE_SHA256,
         "family_concept_id": expected["family_concept_id"],
-        "geometry_role": "passive intracranial cavity surface",
+        **({"source_license": expected["source_license"]} if "source_license" in expected else {}),
+        **({"legacy_source_license_claim": expected["legacy_source_license_claim"]}
+           if "legacy_source_license_claim" in expected else {}),
+        "geometry_role": expected.get("geometry_role", "passive intracranial cavity surface"),
         "separate_physiological_compartment": False,
     }
 
@@ -200,8 +213,30 @@ def rebind_head_member_identity_metadata(
         owner = copy.deepcopy(row.get("source_owner_metadata") or {})
         if owner.get("label") not in (None, "brain"):
             raise ValueError(f"unexpected head owner label for {member_id}")
+        previous_license = row.get("source_license")
+        if "source_license" in identity and previous_license not in (
+            None, identity.get("legacy_source_license_claim"), identity["source_license"],
+        ):
+            raise ValueError(f"unexpected prior source license for {member_id}")
+        previous_owner_license = owner.get("source_license")
+        if ("source_license" in identity and previous_owner_license is not None
+                and previous_owner_license not in (
+                    identity.get("legacy_source_license_claim"), identity["source_license"],
+                )):
+            raise ValueError(f"unexpected prior owner source license for {member_id}")
+        before_license = previous_license
         owner.update(label="brain", anatomical_component=identity)
+        if "source_license" in identity:
+            owner["source_license"] = identity["source_license"]
+            owner["source_obj_identity"] = {
+                "member_id": member_id,
+                "concept_id": identity["concept_id"],
+                "name": identity["name"],
+                "hierarchy": identity["hierarchy"],
+            }
         row.update(name=identity["name"], source_owner_metadata=owner)
+        if "source_license" in identity:
+            row["source_license"] = identity["source_license"]
         migrated.append({
             "semantic_id_from_layer": 51010,
             "stable_id": sid,
@@ -212,6 +247,9 @@ def rebind_head_member_identity_metadata(
             "layer": 1,
             "body_index": 23,
             "payload_record": list(decoded["record"]),
+            **({"before_source_license": before_license,
+                "after_source_license": identity["source_license"]}
+               if "source_license" in identity else {}),
         })
     return result, {
         "status": "METADATA_ONLY_SOURCE_IDENTITY_REBIND_NOT_GEOMETRY_ADMISSION",
@@ -352,6 +390,171 @@ def rebind_central_canal_identity_metadata(
         "geometry_changed": False,
         "separate_physiological_compartment_added": False,
     }
+
+
+
+def _rebind_central_canal_owner_frame(
+    owner: dict,
+    member_obj: bytes,
+    member_path: str,
+    vertices_mm: list[list[float]],
+    faces: list[list[int]],
+    *,
+    global_matrix: list[list[float]],
+    torso_body_index: int,
+    torso_position: list[float],
+    torso_quaternion: list[float],
+    head_body_index: int,
+    head_position: list[float],
+    head_quaternion: list[float],
+    registration_path: Path,
+    rigid_manifest_path: Path,
+) -> dict:
+    """Recompile authenticated FJ1737 in the existing head rest frame.
+
+    Identity metadata is normalized while the legacy torso owner is still
+    present. This separate operation changes only the passive row's articulated
+    visual owner; it does not create a cord body or physiological state.
+    """
+    expected = human.BODYPARTS3D_MEMBER_IDENTITY_CORRECTIONS["FJ1737"]
+    if not isinstance(owner, dict) or not isinstance(member_obj, bytes):
+        raise TypeError("central-canal owner correction requires an owner record and exact OBJ bytes")
+    if (type(owner.get("id")) is not int or owner["id"] != 12
+            or type(owner.get("layer")) is not int or owner["layer"] != 3
+            or type(owner.get("body_index")) is not int
+            or owner["body_index"] != expected["core_body_index"]
+            or owner.get("source_member") != "FJ1737"
+            or owner.get("source_hash") != expected["source_member_sha256"]):
+        raise ValueError("central-canal owner correction requires the exact legacy row 12/body 20 input")
+    metadata = owner.get("source_owner_metadata")
+    if not isinstance(metadata, dict):
+        raise TypeError("central-canal owner correction requires source identity metadata")
+    if (metadata.get("member_id") != "FJ1737"
+            or metadata.get("member_sha256") != expected["source_member_sha256"]
+            or type(metadata.get("core_body_index")) is not int
+            or metadata["core_body_index"] != expected["core_body_index"]
+            or metadata.get("myosim_body") != "torso"):
+        raise ValueError("central-canal source metadata is not the legacy authenticated torso binding")
+    identity_specification = {
+        "concept_id": metadata.get("concept_id"),
+        "source_name": metadata.get("label"),
+        "member_id": metadata.get("member_id"),
+        "hierarchy": metadata.get("hierarchy"),
+        "layer": metadata.get("layer"),
+        "myosim_body": metadata.get("myosim_body"),
+    }
+    identity = human._bodyparts_member_identity_correction(
+        12, identity_specification, member_obj, member_path,
+    )
+    if identity is None or identity["concept_id"] != "FMA78497":
+        raise ValueError("central-canal source identity must be authenticated before owner migration")
+    if type(torso_body_index) is not int or torso_body_index != 20:
+        raise ValueError("central-canal legacy source owner is not the pinned torso body 20")
+    if type(head_body_index) is not int or head_body_index != 23:
+        raise ValueError("central-canal destination is not the pinned head body 23")
+    if (len(vertices_mm) == 0 or not faces
+            or not all(len(face) == 3 for face in faces)):
+        raise ValueError("central-canal source geometry is empty or malformed")
+
+    source_faces = np.asarray(faces, dtype=np.int64)
+    owner_faces = np.asarray(owner.get("faces"), dtype=np.int64)
+    if owner_faces.shape != source_faces.shape or not np.array_equal(owner_faces, source_faces):
+        raise ValueError("legacy central-canal row 12 faces differ from exact FJ1737 source order")
+    source_normals = human._bodyparts_vertex_normals(vertices_mm, faces, member_path)
+    global_translation, global_quaternion, global_scale = human._bodyparts_visual_local_pose(
+        global_matrix, "central-canal global source registration",
+    )
+    global_rotation = human._myosim_matrix_from_quaternion_xyzw(global_quaternion)
+    world_vertices = human._bodyparts_source_mm_to_body_world(
+        vertices_mm, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0],
+        global_translation, global_quaternion, global_scale,
+    )
+
+    def local_vertices(position, quaternion, context):
+        return human._bodyparts_world_to_body_stored_m(
+            world_vertices, position, quaternion, [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0], 1.0, context,
+        )
+
+    def local_normals(quaternion, context):
+        inverse = human._matrix_transpose(human._myosim_matrix_from_quaternion_xyzw(quaternion))
+        result = []
+        for normal in source_normals:
+            world_normal = human._bodyparts_unit_vector(
+                human._myosim_matrix_vector(global_rotation, list(normal)), context + " world normal",
+            )
+            result.append(human._bodyparts_unit_vector(
+                human._myosim_matrix_vector(inverse, world_normal), context + " local normal",
+            ))
+        return result
+
+    legacy_vertices = np.asarray(
+        local_vertices(torso_position, torso_quaternion, "central-canal legacy torso frame"), dtype="<f4",
+    )
+    legacy_normals = np.asarray(local_normals(torso_quaternion, "central-canal legacy torso frame"), dtype="<f4")
+    if (not np.array_equal(np.asarray(owner.get("vertices"), dtype="<f4"), legacy_vertices)
+            or not np.array_equal(np.asarray(owner.get("normals"), dtype="<f4"), legacy_normals)):
+        raise ValueError("legacy central-canal row 12 does not match the pinned source/torso compiler transform")
+
+    head_vertices = np.asarray(
+        local_vertices(head_position, head_quaternion, "central-canal head owner frame"), dtype="<f4",
+    )
+    head_normals = np.asarray(local_normals(head_quaternion, "central-canal head owner frame"), dtype="<f4")
+    if (head_vertices.shape != (len(vertices_mm), 3) or head_normals.shape != head_vertices.shape
+            or not np.isfinite(head_vertices).all() or not np.isfinite(head_normals).all()):
+        raise ValueError("recompiled central-canal head owner geometry is malformed")
+    if source_faces.min() < 0 or source_faces.max() >= len(head_vertices):
+        raise ValueError("central-canal source faces exceed recompiled vertex slots")
+
+    def default_world(local, position, quaternion):
+        source_like_mm = (np.asarray(local, dtype=np.float64) * 1000.0).tolist()
+        return np.asarray(human._bodyparts_source_mm_to_body_world(
+            source_like_mm, position, quaternion, [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0], 1.0,
+        ), dtype=np.float64)
+
+    old_default_world = default_world(legacy_vertices, torso_position, torso_quaternion)
+    new_default_world = default_world(head_vertices, head_position, head_quaternion)
+    exact_registered_world = np.asarray(world_vertices, dtype=np.float64)
+    old_world_error = float(np.max(np.abs(old_default_world - exact_registered_world)))
+    new_world_error = float(np.max(np.abs(new_default_world - exact_registered_world)))
+    default_pose_world_delta = float(np.max(np.abs(new_default_world - old_default_world)))
+    if default_pose_world_delta > old_world_error + new_world_error:
+        raise ValueError("central-canal default-pose owner rebind exceeds its measured F32 quantization errors")
+
+    prior_owner = owner["body_index"]
+    owner["vertices"] = head_vertices.astype(np.float64)
+    owner["normals"] = head_normals.astype(np.float64)
+    owner["body_index"] = head_body_index
+    owner["source"] = "BodyParts3D exact global registration; inferred passive owner correction to head"
+    metadata.update(myosim_body="head", core_body_index=head_body_index)
+    owner_migration = {
+        "status": "INFERRED_PASSIVE_VISUAL_OWNER_CORRECTION_SOURCE_FRAME_PRESERVED",
+        "stable_id": 12,
+        "source_member": "FJ1737",
+        "source_member_sha256": expected["source_member_sha256"],
+        "from": {"myosim_body": "torso", "core_body_index": prior_owner},
+        "to": {"myosim_body": "head", "core_body_index": head_body_index},
+        "basis": "The authenticated FJ1737 central-canal source vertices are compiled through the retained global BodyParts3D registration directly into the existing NHRIGID head inertial rest frame; no fit or independent cord body is introduced.",
+        "registration_path": str(registration_path.resolve()),
+        "registration_sha256": hashlib.sha256(registration_path.read_bytes()).hexdigest(),
+        "rigid_reference_manifest_path": str(rigid_manifest_path.resolve()),
+        "rigid_reference_manifest_sha256": hashlib.sha256(rigid_manifest_path.read_bytes()).hexdigest(),
+        "source_face_order_unchanged": True,
+        "vertex_slot_order_unchanged": True,
+        "layer_unchanged": True,
+        "source_identity_correction_applied_before_owner_migration": True,
+        "default_pose_world_max_abs_delta_m": default_pose_world_delta,
+        "legacy_default_pose_world_max_abs_error_m": old_world_error,
+        "head_default_pose_world_max_abs_error_m": new_world_error,
+        "inferred_from_reference_registration_not_subject_measurement": True,
+        "physical_mass_changed": False,
+        "physiological_state_or_controller_changed": False,
+        "native_motion_admission": False,
+    }
+    metadata["inferred_passive_owner_correction"] = owner_migration
+    owner["source_owner_metadata"] = metadata
+    return owner_migration
 
 
 def _mass_and_skin_volume_audit(*, skin_path: Path = SKIN_PATH, skin_rebind_manifest_path: Path | None = None) -> dict:
@@ -935,17 +1138,23 @@ def _registered_passive_surfaces() -> tuple[list[dict],dict]:
 
     # Resolve every atlas source frame against the exact NHRIGID-derived
     # reference manifest before adding head structures.
-    _,bodies=human._bodyparts_runtime_bindings(registration,RIGID_PATH.parent)
+    runtime_binding,bodies=human._bodyparts_runtime_bindings(registration,RIGID_PATH.parent)
     head=bodies.get('head')
-    if head is None:
-        raise ValueError('registered source reference has no head body for brain/eye surfaces')
+    torso=bodies.get('torso')
+    if head is None or torso is None:
+        raise ValueError('registered source reference has no exact head/torso body bindings')
     head_body_index,head_binding=head
-    reference=human.read_json(RIGID_PATH.parent/'myosim-fullbody-reference.manifest.json')
-    head_record=next((row for row in reference['core_tree']['source_body_records']
-        if row['name']=='head'),None)
+    torso_body_index,torso_binding=torso
+    reference_path=RIGID_PATH.parent/'myosim-fullbody-reference.manifest.json'
+    reference=human.read_json(reference_path)
+    source_body_records=reference['core_tree']['source_body_records']
+    head_record=next((row for row in source_body_records if row['name']=='head'),None)
+    torso_record=next((row for row in source_body_records if row['name']=='torso'),None)
     if (head_record is None or head_record['core_body_index']!=head_body_index
-            or head_record['source_body_id']!=head_binding['source_body_id']):
-        raise ValueError('registered head body binding differs from exact rigid reference')
+            or head_record['source_body_id']!=head_binding['source_body_id']
+            or torso_record is None or torso_record['core_body_index']!=torso_body_index
+            or torso_record['source_body_id']!=torso_binding['source_body_id']):
+        raise ValueError('registered head/torso body bindings differ from exact rigid reference')
     coordinate=registration.get('coordinate_system',{})
     global_matrix=coordinate.get('global_source_mm_to_myosim_world_m')
     global_translation,global_quaternion,global_scale=human._bodyparts_visual_local_pose(
@@ -953,7 +1162,25 @@ def _registered_passive_surfaces() -> tuple[list[dict],dict]:
     global_rotation=human._myosim_matrix_from_quaternion_xyzw(global_quaternion)
     head_position=head_record['default_com_position_world_m']
     head_quaternion=head_record['default_inertial_quaternion_world_xyzw']
+    torso_position=torso_record['default_com_position_world_m']
+    torso_quaternion=torso_record['default_inertial_quaternion_world_xyzw']
     head_inverse=human._matrix_transpose(human._myosim_matrix_from_quaternion_xyzw(head_quaternion))
+
+    canal_rows=[row for row in owners if row.get('id')==12 or row.get('source_member')=='FJ1737']
+    if (len(canal_rows)!=1 or canal_rows[0].get('id')!=12
+            or canal_rows[0].get('source_member')!='FJ1737'):
+        raise ValueError('legacy anatomy owner must contain exactly one FJ1737 central-canal row 12')
+    _,canal_member_path,canal_obj=human._bodyparts_obj_member(SOURCES,'part_of','FJ1737')
+    canal_vertices_mm,canal_faces=human._bodyparts_obj_triangles(canal_obj,canal_member_path)
+    canal_owner_rebind=_rebind_central_canal_owner_frame(
+        canal_rows[0],canal_obj,canal_member_path,canal_vertices_mm,canal_faces,
+        global_matrix=global_matrix,
+        torso_body_index=torso_body_index,torso_position=torso_position,
+        torso_quaternion=torso_quaternion,
+        head_body_index=head_body_index,head_position=head_position,
+        head_quaternion=head_quaternion,
+        registration_path=REGISTRATION_PATH,rigid_manifest_path=reference_path,
+    )
     head_specs=(('FMA50801','brain'),('FMA12514','right eyeball'),('FMA12515','left eyeball'))
     head_members=[];seen=set()
     for concept,label in head_specs:
@@ -966,6 +1193,8 @@ def _registered_passive_surfaces() -> tuple[list[dict],dict]:
             seen.add(member_id)
             _,member,obj=human._bodyparts_obj_member(SOURCES,'part_of',member_id)
             vertices_mm,faces=human._bodyparts_obj_triangles(obj,member)
+            source_header=human._bodyparts_validate_obj_source_header(
+                {"member_id":member_id,"hierarchy":"part_of"},obj,member)
             source_normals=human._bodyparts_vertex_normals(vertices_mm,faces,member)
             world=human._bodyparts_source_mm_to_body_world(
                 vertices_mm,[0.,0.,0.],[0.,0.,0.,1.],global_translation,global_quaternion,global_scale)
@@ -987,17 +1216,28 @@ def _registered_passive_surfaces() -> tuple[list[dict],dict]:
             if component_identity is not None:
                 display_name=component_identity['name']
                 owner_metadata={'label':label,'anatomical_component':component_identity}
+            source_obj_identity={
+                'member_id':source_header['member_id'],
+                'concept_id':source_header['concept_id'],
+                'name':source_header['name'],
+                'hierarchy':source_header['hierarchy'],
+            }
+            if owner_metadata is None:
+                owner_metadata={'label':label}
+            owner_metadata.update(source_license=source_header['license'],source_obj_identity=source_obj_identity)
             head_members.append({'id':322+len(head_members),'layer':1,'name':display_name,
                 'source':'BodyParts3D v4.0 current head registration','vertices':np.asarray(local,dtype=np.float64),
                 'normals':np.asarray(normals,dtype=np.float64),'faces':np.asarray(faces,dtype=np.int64),
                 'body_index':head_body_index,'source_hash':member_sha256,
-                'source_member':member_id,'source_license':'CC-BY-4.0','repair':None,
+                'source_member':member_id,'source_license':source_header['license'],'repair':None,
                 'source_owner_metadata':owner_metadata,
                 'head_family':{'concept_id':concept,'source_name':label,'hierarchy':'part_of'},
                 'source_member_path':member})
     extra={'owner_payload':owner_manifest['payload'],
         'owner_source_map_sha256':human.sha256(human.REPOSITORY_ROOT/'config/bodyparts3d-myosim-torso-anatomy-map.v1.json'),
         'owner_surfaces':len(owners),'head_body_index':head_body_index,
+        'central_canal_owner_rebind':canal_owner_rebind,
+        'bodyparts_runtime_binding':runtime_binding,
         'head_source_families':[{'concept_id':concept,'source_name':label,'hierarchy':'part_of',
             'stable_ids':[row['id'] for row in head_members if row['head_family']['concept_id']==concept],
             'source_member_ids':sorted(bodyparts3d['tables']['part_of'][(concept,label)])}
@@ -1094,6 +1334,8 @@ def compile_anatomy(output: Path) -> dict:
         'sternum_bone_stable_ids':[bone_ids[x] for x in STERNUM_MEMBERS],
         'head_body_index':passive_source['head_body_index'],
         'head_structure_stable_ids':[row['id'] for row in surfaces if 'head_family' in row],
+        'central_canal_stable_id':12,
+        'central_canal_passive_owner_body_index':23,
         'bones_payload_sha256':bones_manifest['payload']['sha256'],
     }
     receipt={'schema':'numi.human.resting-anatomy-receipt.v1','functional_bindings':functional,
@@ -1129,6 +1371,7 @@ def compile_anatomy(output: Path) -> dict:
                 'vertex_count':muscle_header[4],'index_count':muscle_header[5],
                 'registration_fingerprint32':f'{registration_fp:08x}'},
             'head_body_index':passive_source['head_body_index'],
+            'central_canal_owner_rebind':passive_source['central_canal_owner_rebind'],
             'zanatomy_export_sha256':lung.configuration()['export']['sha256'],
             'zanatomy_config_sha256':human.sha256(lung.CONFIG),
             'bodyparts_registration_sha256':human.sha256(REGISTRATION_PATH),

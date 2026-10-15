@@ -4,8 +4,7 @@ import hashlib
 
 import pytest
 
-from numilab_human import model
-from numilab_human import resting_pleura_proxy
+from numilab_human import model, resting_pleura_proxy
 from numilab_human.resting_anatomy import rebind_central_canal_identity_metadata
 from numilab_human.resting_anatomy_interface_patch import encode_payload
 
@@ -320,3 +319,130 @@ def test_torso_anatomy_cli_describes_the_selected_central_canal():
     help_text = parser().format_help()
     assert "central-canal surfaces" in help_text
     assert "spinal-cord surfaces" not in help_text
+
+
+def test_central_canal_owner_rebind_uses_authenticated_source_and_head_rest_frame(
+    monkeypatch, tmp_path,
+):
+    import numpy as np
+
+    from numilab_human.resting_anatomy import _rebind_central_canal_owner_frame
+
+    expected = _expected_for_fixture()
+    monkeypatch.setitem(model.BODYPARTS3D_MEMBER_IDENTITY_CORRECTIONS, "FJ1737", expected)
+    vertices_mm, faces = model._bodyparts_obj_triangles(OBJ_HEADER, "FJ1737.obj")
+    identity = [0.0, 0.0, 0.0, 1.0]
+    global_matrix = [
+        [0.001, 0.0, 0.0, 0.01],
+        [0.0, 0.001, 0.0, 0.02],
+        [0.0, 0.0, 0.001, 0.03],
+        [0.0, 0.0, 0.0, 1.0],
+    ]
+    global_translation, global_quaternion, global_scale = model._bodyparts_visual_local_pose(
+        global_matrix, "test global transform",
+    )
+    world = model._bodyparts_source_mm_to_body_world(
+        vertices_mm, [0.0] * 3, identity, global_translation, global_quaternion, global_scale,
+    )
+    torso_position = [0.0, 0.0, 0.0]
+    head_position = [0.2, -0.1, 0.4]
+    torso_vertices = np.asarray(model._bodyparts_world_to_body_stored_m(
+        world, torso_position, identity, [0.0] * 3, identity, 1.0, "test torso",
+    ), dtype="<f4")
+    source_normals = model._bodyparts_vertex_normals(vertices_mm, faces, "FJ1737.obj")
+    torso_normals = np.asarray(source_normals, dtype="<f4")
+    owner = {
+        "id": 12,
+        "layer": 3,
+        "body_index": 20,
+        "source_member": "FJ1737",
+        "source_hash": expected["source_member_sha256"],
+        "vertices": torso_vertices.astype(np.float64),
+        "normals": torso_normals.astype(np.float64),
+        "faces": np.asarray(faces, dtype=np.int64),
+        "source_owner_metadata": {
+            "concept_id": "FMA78497",
+            "label": "Central canal of spinal cord",
+            "member_id": "FJ1737",
+            "member_sha256": expected["source_member_sha256"],
+            "hierarchy": "part_of",
+            "layer": "nerve",
+            "myosim_body": "torso",
+            "core_body_index": 20,
+        },
+    }
+    registration_path = tmp_path / "registration.json"
+    rigid_manifest_path = tmp_path / "reference.json"
+    registration_path.write_text('{"registration":"pinned"}')
+    rigid_manifest_path.write_text('{"reference":"pinned"}')
+
+    audit = _rebind_central_canal_owner_frame(
+        owner, OBJ_HEADER, "FJ1737.obj", vertices_mm, faces,
+        global_matrix=global_matrix,
+        torso_body_index=20, torso_position=torso_position, torso_quaternion=identity,
+        head_body_index=23, head_position=head_position, head_quaternion=identity,
+        registration_path=registration_path, rigid_manifest_path=rigid_manifest_path,
+    )
+
+    assert owner["body_index"] == 23
+    assert owner["layer"] == 3 and owner["id"] == 12
+    assert np.array_equal(owner["faces"], np.asarray(faces, dtype=np.int64))
+    assert owner["source_owner_metadata"]["myosim_body"] == "head"
+    assert owner["source_owner_metadata"]["core_body_index"] == 23
+    assert audit["from"] == {"myosim_body": "torso", "core_body_index": 20}
+    assert audit["to"] == {"myosim_body": "head", "core_body_index": 23}
+    assert audit["physical_mass_changed"] is False
+    assert audit["physiological_state_or_controller_changed"] is False
+    assert audit["default_pose_world_max_abs_delta_m"] <= (
+        audit["legacy_default_pose_world_max_abs_error_m"]
+        + audit["head_default_pose_world_max_abs_error_m"]
+    )
+
+
+@pytest.mark.parametrize("damage", ["owner", "faces", "member"])
+def test_central_canal_owner_rebind_rejects_wrong_input_identity(monkeypatch, tmp_path, damage):
+    import numpy as np
+
+    from numilab_human.resting_anatomy import _rebind_central_canal_owner_frame
+
+    expected = _expected_for_fixture()
+    monkeypatch.setitem(model.BODYPARTS3D_MEMBER_IDENTITY_CORRECTIONS, "FJ1737", expected)
+    vertices_mm, faces = model._bodyparts_obj_triangles(OBJ_HEADER, "FJ1737.obj")
+    identity = [0.0, 0.0, 0.0, 1.0]
+    global_matrix = [
+        [0.001, 0.0, 0.0, 0.0], [0.0, 0.001, 0.0, 0.0],
+        [0.0, 0.0, 0.001, 0.0], [0.0, 0.0, 0.0, 1.0],
+    ]
+    world = model._bodyparts_source_mm_to_body_world(
+        vertices_mm, [0.0] * 3, identity, [0.0] * 3, identity, 1.0,
+    )
+    vertices = np.asarray(world, dtype="<f4")
+    owner = {
+        "id": 12, "layer": 3, "body_index": 20, "source_member": "FJ1737",
+        "source_hash": expected["source_member_sha256"], "vertices": vertices.astype(np.float64),
+        "normals": np.asarray(model._bodyparts_vertex_normals(vertices_mm, faces, "FJ1737.obj")),
+        "faces": np.asarray(faces, dtype=np.int64),
+        "source_owner_metadata": {
+            "concept_id": "FMA78497", "label": "Central canal of spinal cord",
+            "member_id": "FJ1737", "member_sha256": expected["source_member_sha256"],
+            "hierarchy": "part_of", "layer": "nerve", "myosim_body": "torso",
+            "core_body_index": 20,
+        },
+    }
+    if damage == "owner":
+        owner["body_index"] = 21
+    elif damage == "faces":
+        owner["faces"] = np.asarray([[0, 2, 1]], dtype=np.int64)
+    registration_path = tmp_path / "registration.json"
+    rigid_manifest_path = tmp_path / "reference.json"
+    registration_path.write_text("{}")
+    rigid_manifest_path.write_text("{}")
+    member = OBJ_HEADER.replace(b"FMA78497", b"FMA7647") if damage == "member" else OBJ_HEADER
+    with pytest.raises((ValueError, model.ImportError)):
+        _rebind_central_canal_owner_frame(
+            owner, member, "FJ1737.obj", vertices_mm, faces,
+            global_matrix=global_matrix,
+            torso_body_index=20, torso_position=[0.0] * 3, torso_quaternion=identity,
+            head_body_index=23, head_position=[0.0] * 3, head_quaternion=identity,
+            registration_path=registration_path, rigid_manifest_path=rigid_manifest_path,
+        )
