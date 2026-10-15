@@ -297,6 +297,39 @@ def test_declared_partial_collar_continues_only_after_solid_and_calibre_proofs()
     assert report["calibre_gate"]["passed"]
 
 
+def test_nonflow_partial_port_requires_exact_singleton_declaration_and_solid_proof():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _profiled_closed_cylinder(
+        ((0.8, 0.18), (1.0, 0.2), (1.05, 0.2), (2.0, 0.18)))
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+    kwargs = {
+        "bridge_key": (51011, 7),
+        "bridge_surface": (bridge, bridge_faces),
+        "target_key": (51011, 6),
+        "target_surface": (target, target_faces),
+        "frozen_face_pairs": pairs,
+        "baseline_bridge_surface": (bridge, bridge_faces),
+        "baseline_target_surface": (target, target_faces),
+    }
+
+    with pytest.raises(ValueError, match="lacks a frozen-patch exact interface witness"):
+        audit_brachiocephalic_port_pair_continuity(av, _manifold3d(), **kwargs)
+    with pytest.raises(ValueError, match="must exactly match the audited typed edge"):
+        audit_brachiocephalic_port_pair_continuity(
+            av, _manifold3d(), **kwargs,
+            declared_vessel_ports={((51011, 7), (51011, 8))})
+
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, _manifold3d(), **kwargs,
+        declared_vessel_ports={((51011, 7), (51011, 6))})
+    assert report["passed"]
+    assert report["port_pair_gate"]["declared_partial_overlap_boundary_only"]["passed"]
+    assert report["solid_gate"]["exact_inside_both_witness"] is not None
+    assert report["solid_gate"]["union_component_count"] == 1
+    assert report["calibre_gate"]["passed"]
+
+
 def test_partial_overlap_cannot_use_unrelated_typed_surfaces_or_unmatched_pairs():
     bridge, bridge_faces = _closed_cylinder(
         -1.0, 1.0, radius=0.2, sectors=12, axial=8)

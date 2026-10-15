@@ -3254,13 +3254,31 @@ def audit_brachiocephalic_port_pair_continuity(
     target_route_anchor_world_m=None,
     junction_station_declarations=None,
     target_station_candidate_fractions=None,
+    declared_vessel_ports=None,
 ):
     """Check one declared bridge port as closed solids and local section loops.
+
+    declared_vessel_ports may carry one separately source-validated typed edge
+    for a non-flow anatomical interface. It only scopes the partial-overlap
+    boundary classification; the exact collar, solid, and calibre proofs below
+    remain mandatory. The default registry is unchanged.
 
     This is a numerical geometry gate only. It does not establish measured
     physiology, native acceptance, or clinical calibre.
     """
     bridge_key, target_key = _identity(bridge_key), _identity(target_key)
+    if declared_vessel_ports is not None:
+        _require(
+            isinstance(declared_vessel_ports, (set, frozenset, tuple, list))
+            and len(declared_vessel_ports) == 1,
+            "a per-port declaration must contain exactly one typed edge")
+        edge = next(iter(declared_vessel_ports))
+        _require(isinstance(edge, (tuple, list)) and len(edge) == 2,
+                 "a per-port declaration must be an edge of two surface keys")
+        declared_edge = (_identity(edge[0]), _identity(edge[1]))
+        _require(declared_edge == (bridge_key, target_key),
+                 "a per-port declaration must exactly match the audited typed edge")
+        declared_vessel_ports = (declared_edge,)
     if target_station_candidate_fractions is not None:
         _require((bridge_key, target_key) == ((51011, 526), (51011, 472)),
                  "target-collar station search is restricted to bridge 526 / target 472")
@@ -3316,7 +3334,8 @@ def audit_brachiocephalic_port_pair_continuity(
     partial_overlap_boundary = _declared_partial_vessel_port_overlap(
         bridge_key, target_key, port_audit, observed,
         port_audit.get("unexpected_triangle_pairs", ()),
-        exact_points, allowed)
+        exact_points, allowed,
+        declared_vessel_ports=declared_vessel_ports)
     port_pair_passed = bool(exact_points) and (
         bool(port_audit.get("passed")) or partial_overlap_boundary["passed"])
 
