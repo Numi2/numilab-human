@@ -320,6 +320,22 @@ def apply_rest_source(surfaces, key, path, digest, accepted_poses, source_cache)
                 "separately pinned compiler evidence required"}
 
 
+def shared_partition_declarations(raw):
+    """Reject ambiguous pair declarations before loading capture or source bytes."""
+    partitions = []
+    seen = set()
+    for first, second, source, digest in raw:
+        key_a, key_b = identity(first), identity(second)
+        if key_a == key_b:
+            raise ValueError("shared partition requires two distinct typed identities")
+        pair = tuple(sorted((key_a, key_b)))
+        if pair in seen:
+            raise ValueError("duplicate shared partition declaration")
+        seen.add(pair)
+        partitions.append((key_a, key_b, Path(source), digest))
+    return partitions
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--pack", type=Path, required=True)
@@ -349,6 +365,7 @@ def main(argv=None):
     report = {"passed": False, "anatomical_admission": False, "native_admission": False,
               "counterfactual_candidates": bool(args.overlay or args.rest_source)}
     try:
+        partitions = shared_partition_declarations(args.shared_partition)
         report["pack_pin"] = pin(args.pack, args.pack_sha256)
         report["receipt_pin"] = pin(args.capture_receipt, args.receipt_sha256)
         pins = []
@@ -420,13 +437,10 @@ def main(argv=None):
         enclosures = [tuple(identity(x) for x in item.split(",")) for item in args.intended_enclosure]
         if any(len(pair) != 2 for pair in enclosures):
             raise ValueError("enclosure requires exactly two typed identities")
-        partitions = []
-        for first, second, source, digest in args.shared_partition:
-            key_a, key_b = identity(first), identity(second)
+        for key_a, key_b, source, digest in partitions:
             pin(source, digest)
             if (key_a in overlay_keys) != (key_b in overlay_keys):
                 raise ValueError("counterfactual shared partition requires both sides overlaid")
-            partitions.append((key_a, key_b, Path(source), digest))
         if args.preflight_only:
             for key in changed:
                 if key not in surfaces:
