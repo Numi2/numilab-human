@@ -106,6 +106,20 @@ def contact_forward_exit(surface,index,point,direction):
         # incident face even when its dot with this witness face is negative.
         return 0.,None
 
+
+def self_gap_constraint(base_points,faces,first,first_bary,second,second_bary,margin_m):
+    """Preserve the reference side at an actual self-contact witness only."""
+    reference_first=first_bary@base_points[faces[first]].astype(float)
+    reference_second=second_bary@base_points[faces[second]].astype(float)
+    gap=reference_first-reference_second
+    length=float(np.linalg.norm(gap))
+    if not np.isfinite(length) or length<=margin_m:
+        raise ValueError("self-contact reference has no unambiguous separation margin")
+    normal=gap/length
+    return (int(first),first_bary.copy(),int(second),second_bary.copy(),
+            normal,float(margin_m-length))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for flag in ["source", "authoring-base", "initial-source-points", "contact-cache", "capture", "receipt", "output", "bone-artifact", "body-manifest"]:
@@ -115,6 +129,8 @@ def main():
     ap.add_argument("--total-bound-m", type=float, default=.006)
     ap.add_argument("--margin-m", type=float, default=.0005)
     ap.add_argument("--solid-depth", action="store_true")
+    ap.add_argument("--repair-self-contacts", action="store_true",
+        help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
     ap.add_argument("--exit-policy",choices=["nearest","skin-normal"],default="nearest")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
     args = ap.parse_args()
@@ -208,6 +224,7 @@ def main():
         for sf,bary,normal in zip(cache["skin_face_ids"],cache["barycentrics"],cache["outward_normals"]):
             constraints.append((int(sf),bary.copy(),normal.copy(),args.margin_m))
     previous=None
+    self_constraints=[]
     history=[]
     for iteration in range(args.iterations+1):
         out=args.output/f"iteration-{iteration:02d}";out.mkdir()
@@ -218,15 +235,33 @@ def main():
         (out/"self.json").write_text(json.dumps(self_result,indent=2,allow_nan=False)+"\n")
         np.savez_compressed(out/"diagnostic.npz",source_positions_m=points_source,full_weights=source["full_weights"])
         np.savez_compressed(out/"authoring-overlay.npz",capture_positions_m=world,capture_faces=faces,capture_global_vertex_ids=gids)
-        if self_result["count"]:
+        self_failed=bool(self_result["count"])
+        if self_failed and not args.repair_self_contacts:
             status="FAIL_SELF"
             history.append(dict(iteration=iteration,status=status,pair_count=self_result["count"]))
             break
-        previous=surf
+        if self_failed:
+            if self_result["count"]>256:
+                raise ValueError("self-contact repair exceeds the bounded local patch")
+            witnesses=[]
+            for first,second in self_result["triangle_pairs"]:
+                for point in surf.intersection_points_meters(surf,int(first),int(second)):
+                    ba=barycentric(surf.triangle_meters(int(first)),point)
+                    bb=barycentric(surf.triangle_meters(int(second)),point)
+                    constraint=self_gap_constraint(base_points,faces,first,ba,second,bb,
+                                                   min(args.margin_m,.0001))
+                    self_constraints.append(constraint)
+                    a,wa,b,wb,n,bound=constraint
+                    witnesses.append(dict(first_face=a,first_barycentric=wa.tolist(),
+                        second_face=b,second_barycentric=wb.tolist(),normal=n.tolist(),
+                        relative_displacement_lower_bound_m=bound))
+            (out/"self-gap-constraints.json").write_text(json.dumps(witnesses,indent=2,allow_nan=False)+"\n")
+        else:
+            previous=surf
         new_constraints=[]
         inventory=[]
         solid_witnesses=[]
-        for sid,(bone,normals,solid_index) in bones.items():
+        for sid,(bone,normals,solid_index) in ([] if self_failed else bones.items()):
             result=v.audit_surface_pair(surf,bone)
             (out/f"bone-{sid}.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")
             pairs=result.get("unexpected_triangle_pairs",[])
@@ -273,17 +308,18 @@ def main():
                     new_constraints.append((sf,bary,normal,current+distance+args.margin_m))
                     solid_witnesses.append(dict(bone=sid,vertex=vi,face=sf,nearest_bone_face=bi,depth_m=distance,direction=normal.tolist()))
         (out/"solid-depth-witnesses.json").write_text(json.dumps(solid_witnesses,indent=2,allow_nan=False)+"\n")
-        history.append(dict(iteration=iteration,status="CONTACT_INVENTORY",targets=inventory,
+        history.append(dict(iteration=iteration,status="SELF_CONTACT_REPAIR" if self_failed else "CONTACT_INVENTORY",targets=inventory,
             new_constraints=len(new_constraints)))
         print(json.dumps(history[-1]),flush=True)
-        if not new_constraints:
+        if not new_constraints and not self_failed:
             status="PASS_AUTHORING_FOUR_BONES_ONLY"
             break
         if iteration==args.iterations or time.monotonic()-started>1200:
             status="FAIL_BOUNDED_METHOD_EXHAUSTED"
             break
         constraints.extend(new_constraints)
-        seed=np.unique(faces[np.unique([x[0] for x in constraints])])
+        seed_faces=[x[0] for x in constraints]+[f for a,_,b,_,_,_ in self_constraints for f in (a,b)]
+        seed=np.unique(faces[np.unique(seed_faces)])
         active=seed
         for _ in range(2):
             active=np.unique(faces[np.any(np.isin(faces,active),axis=1)])
@@ -302,6 +338,14 @@ def main():
                 if int(g) in lookup:
                     terms.extend((lookup[int(g)]*3+a,-bary[corner]*normal[a]) for a in range(3))
             if not terms:raise ValueError("unowned movable contact")
+            add(terms,-bound)
+        for first,wa,second,wb,normal,bound in self_constraints:
+            terms=[]
+            for fi,bary,sign in [(first,wa,-1),(second,wb,1)]:
+                for corner,g in enumerate(faces[fi]):
+                    if int(g) in lookup:
+                        terms.extend((lookup[int(g)]*3+a,sign*bary[corner]*normal[a]) for a in range(3))
+            if not terms:raise ValueError("unowned movable self-contact witness")
             add(terms,-bound)
         if args.orientation_ratio:
             affected=np.flatnonzero(np.any(np.isin(faces,active),axis=1))

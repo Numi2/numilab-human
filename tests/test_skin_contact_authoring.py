@@ -68,3 +68,27 @@ def test_contact_corner_ray_can_leave_without_positive_hit():
     assert tool.contact_forward_exit(surface,index,point,[1.,0.,1.]) == (0.,None)
     with pytest.raises(ValueError,match="non-boundary"):
         tool.contact_forward_exit(surface,index,[2.,2.,2.],[1.,0.,0.])
+
+def test_self_contact_constraint_preserves_reference_side_in_meters():
+    base=np.array([[0.,0.,0.],[0.,.01,0.],[0.,0.,.01],
+                   [.02,0.,0.],[.02,.01,0.],[.02,0.,.01]])
+    faces=np.array([[0,1,2],[3,4,5]])
+    bary=np.array([.5,.25,.25])
+    a,wa,b,wb,normal,bound=tool.self_gap_constraint(base,faces,0,bary,1,bary,.0001)
+    np.testing.assert_array_equal(normal,[-1.,0.,0.])
+    assert bound == pytest.approx(-.0199)
+    # Initially separated reference faces satisfy the inequality; moving both
+    # witness points to x=.01 produces the exact witnessed collision and fails.
+    assert 0. >= bound
+    da=np.array([.01,0.,0.]);db=np.array([-.01,0.,0.])
+    assert (da-db)@normal < bound
+    assert a==0 and b==1
+    np.testing.assert_array_equal(wa,bary)
+    np.testing.assert_array_equal(wb,bary)
+
+def test_self_contact_without_reference_gap_is_not_given_a_separator():
+    base=np.array([[0.,0.,0.],[0.,.01,0.],[0.,0.,.01]])
+    faces=np.array([[0,1,2],[0,1,2]])
+    with pytest.raises(ValueError,match="unambiguous separation"):
+        tool.self_gap_constraint(base,faces,0,np.array([1.,0.,0.]),
+                                 1,np.array([1.,0.,0.]),.0001)
