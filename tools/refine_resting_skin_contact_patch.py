@@ -20,24 +20,48 @@ from numilab_human import skin_patch_refinement as refinement
 from numilab_human import common_atlas_skin_geometry_registration as geometry
 from numilab_human import gate_preparation_boundary as gp
 # Reuse the tested exact meter-coordinate witness conversion.
-from repair_resting_skin_contacts import barycentric
+from repair_resting_skin_contacts import barycentric, selected_bone_targets, validated_self_contact_reference
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+def self_contact_refinement_faces(result,face_count):
+    """Select only the complete, finite current self-contact witness inventory."""
+    rows=result.get("triangle_pairs")
+    if (not isinstance(rows,list) or type(result.get("count")) is not int
+            or result["count"]!=len(rows) or not rows):
+        raise ValueError("complete nonempty self-contact inventory required")
+    pairs=np.asarray(rows)
+    if (pairs.ndim!=2 or pairs.shape[1]!=2 or pairs.dtype.kind not in "iu"
+            or np.any(pairs<0) or np.any(pairs>=face_count)
+            or np.any(pairs[:,0]==pairs[:,1])):
+        raise ValueError("invalid current self-contact face identity")
+    return np.unique(pairs.reshape(-1)).astype(np.int64)
+
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     for key in ("source","authoring-base","source-points","authoring-overlay",
                 "witness-dir","registration","capture","receipt","bone-artifact","body-manifest","output"):
         ap.add_argument("--"+key,type=Path,required=True)
+    ap.add_argument("--bone-id",action="append",type=int,
+        help="compiled stable anatomical bone ID; repeat; default retained right-arm four")
+    ap.add_argument("--self-witness",type=Path,
+        help="complete exact self audit selects faces instead of bone witness files")
+    ap.add_argument("--self-contact-reference",type=Path,
+        help="same-topology clear Float32 reference; emit its matching refinement for future construction")
     args=ap.parse_args()
+    try:bone_targets=selected_bone_targets(args.bone_id)
+    except ValueError as error:ap.error(str(error))
     out=args.output
     out.mkdir(exist_ok=False)
     started=time.monotonic()
     paths=[Path(__file__),Path(__file__).with_name("repair_resting_skin_contacts.py"),
            args.source,args.authoring_base,args.source_points,args.authoring_overlay,
            args.registration,args.capture,args.receipt,
-           *[args.witness_dir/f"bone-{sid}.json" for sid in (10,12,14,16)],
+           *([args.self_witness] if args.self_witness else
+             [args.witness_dir/f"bone-{sid}.json" for sid in bone_targets]),
+           *([args.self_contact_reference] if args.self_contact_reference else []),
            *[Path(m.__file__) for m in (h,v,sp,refinement,geometry,gp)]]
     pins={str(p):sha(p) for p in paths}
     raw=args.source.read_bytes()
@@ -48,7 +72,7 @@ def main():
     for name in ("bone_payload","bone_manifest","runtime_manifest","native_invocation"):
         entry=bone_proof[name]
         pins[entry["path"]]=entry["sha256"]
-    for sid in (10,12,14,16):
+    for sid in bone_targets:
         if sid not in bone_ids:raise ValueError("typed compiled bone identity absent")
     base=np.load(args.authoring_base,allow_pickle=False)
     points=np.load(args.source_points,allow_pickle=False)
@@ -69,13 +93,20 @@ def main():
         raise ValueError("invalid authoring frame positions")
     if gids.dtype.kind not in "iu" or not np.array_equal(gids,base["capture_global_vertex_ids"]) or len(np.unique(gids))!=len(gids):
         raise ValueError("ordered vertex identity differs")
-    selected=[]
-    for sid in (10,12,14,16):
-        witness=json.loads((args.witness_dir/f"bone-{sid}.json").read_text())
-        selected.extend(int(a) for a,_ in witness.get("unexpected_triangle_pairs",[]))
-    selected=np.unique(np.asarray(selected,dtype=np.int64))
-    if not len(selected) or selected.min()<0 or selected.max()>=len(faces):
-        raise ValueError("no valid current contact faces")
+    if args.self_witness:
+        selected=self_contact_refinement_faces(json.loads(args.self_witness.read_text()),len(faces))
+    else:
+        selected=[]
+        for sid in bone_targets:
+            witness=json.loads((args.witness_dir/f"bone-{sid}.json").read_text())
+            selected.extend(int(a) for a,_ in witness.get("unexpected_triangle_pairs",[]))
+        selected=np.unique(np.asarray(selected,dtype=np.int64))
+        if not len(selected) or selected.min()<0 or selected.max()>=len(faces):
+            raise ValueError("no valid current contact faces")
+    reference_world=None
+    if args.self_contact_reference:
+        with np.load(args.self_contact_reference,allow_pickle=False) as reference:
+            reference_world=validated_self_contact_reference(reference,world,compact_faces,gids)
     receipt=json.loads(args.receipt.read_text())
     poses={r["body_index"]:(np.array(r["position_m"]),np.array(h._myosim_matrix_from_quaternion_xyzw(r["quaternion_xyzw"]))) for r in receipt["accepted_body_poses"]}
     old_affine=np.zeros((len(used),3,3))
@@ -97,6 +128,7 @@ def main():
     candidate,normal_proof=geometry.compose_disjoint_skin_position_corrections(
         raw,[bytes(trial)],global_source_matrix=matrix)
     refined,proof=refinement.refine_skin_patch(candidate,selected,global_source_matrix=matrix)
+    pre_rebind_refined_sha256=hashlib.sha256(refined).hexdigest()
     new=sp.decode_payload(refined)
     nv=int(source["vertex_count"])
     births=proof["appended_vertex_births"]
@@ -132,14 +164,17 @@ def main():
     if np.any(lengths==0):
         raise ValueError("refined authoring frame has undefined vertex normal")
     normals=(normals/lengths[:,None]).astype("<f4")
-    proof.update(source_pins=pins,source_position_override_sha256=sha(args.source_points),
+    proof.update(pre_rebind_refined_source_sha256=pre_rebind_refined_sha256,
+        exact_parent_area_proof_phase="source midpoint refinement before inferred full-owner birth coordinate rebind",
+        final_birth_coordinate_scope="inferred registration to Float32 world midpoints; not exact final source-face coverage",
+        source_pins=pins,source_position_override_sha256=sha(args.source_points),
         current_authoring_normal_owner=normal_proof,midpoint_normal_owner=midpoint_normal_proof,
         source_face_parent_domain="immediate input NHSKIN face ordinals, hash-bound",
         maximum_midpoint_reconstruction_error_m=float(np.linalg.norm(new_world[-count:].astype(float)-desired,axis=1).max()),
         exact_emission=False,native_admission=False)
     prep=dict(status="PASS_CONTACT_PATCH_PREPARATION",predicate_phase_started=False,
               source_pins=pins,compiled_bone_identity=bone_proof,
-              bone_target_identities=[bone_ids[sid] for sid in (10,12,14,16)],
+              bone_target_identities=[bone_ids[sid] for sid in bone_targets],
               selected_faces=len(selected),birth_count=count,
               units="metres",exact_emission=False,anatomical_admission=False,
               scope="Offline common-atlas authoring approximation; native replay pending.")
@@ -151,6 +186,14 @@ def main():
     np.savez_compressed(out/"refined-authoring-base.npz",capture_positions_m=new_world,
         capture_faces=new_faces,capture_normals=normals,capture_global_vertex_ids=new_gids)
     np.savez_compressed(out/"diagnostic.npz",source_positions_m=new["vertices_f"][:,:3],full_weights=new["full_weights"])
+    if reference_world is not None:
+        reference_births=np.array([(reference_world[np.searchsorted(used,b["parent_edge_vertex_ids"][0])].astype(float)+
+                                   reference_world[np.searchsorted(used,b["parent_edge_vertex_ids"][1])].astype(float))*.5
+                                  for b in births],dtype="<f4")
+        refined_reference=np.concatenate([reference_world,reference_births])
+        np.savez_compressed(out/"refined-self-contact-reference.npz",
+            capture_positions_m=refined_reference,capture_faces=new_faces,
+            capture_global_vertex_ids=new_gids)
     skin=v.prepare_surface((51007,1),new_world,new_faces,normals=normals,source_vertex_ids=new_gids)
     self_result=skin.self_audit()
     (out/"self.json").write_text(json.dumps(self_result,indent=2)+"\n")
@@ -159,7 +202,7 @@ def main():
     cap,identity=v.load_capture(args.capture,args.receipt)
     contacts=[]
     inventory=[]
-    for sid in (10,12,14,16):
+    for sid in bone_targets:
         pos,bf,bn,bg=cap[(51004,sid)]
         bone=v.prepare_surface((51004,sid),pos,bf,normals=bn,source_vertex_ids=bg)
         if not bone.closed:
