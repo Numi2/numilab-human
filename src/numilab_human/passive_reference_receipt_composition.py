@@ -107,3 +107,70 @@ def compose_reference_receipt(source_receipt: Path, output: Path,
     (output/"report.json").write_text(json.dumps(proof, indent=2, sort_keys=True)+"\n")
     return {"receipt_path": str(result), "receipt_sha256": pac._surface_sha256(result),
             "payload_path": str(payload), "payload_sha256": pac._surface_sha256(payload)}
+
+
+def main(argv=None):
+    """Pin local inputs before invoking the existing passive composition owner.
+
+    This command prepares anatomy sources. It neither runs geometry predicates
+    nor grants motion/native admission; the shared resting verifier owns those
+    checks.
+    """
+    import argparse
+    import re
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument("--receipt-sha256", required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--replacement", nargs=5, action="append", required=True,
+                        metavar=("ID", "NPZ", "NPZ_SHA256", "REPORT", "REPORT_SHA256"))
+    parser.add_argument("--extend", nargs=2, type=int, action="append", default=[],
+                        metavar=("TARGET_ID", "SUPPORT_SOURCE_ID"))
+    parser.add_argument("--source-pin", nargs=2, action="append", default=[],
+                        metavar=("PATH", "SHA256"))
+    parser.add_argument("--preflight-only", action="store_true")
+    args = parser.parse_args(argv)
+
+    pins = {}
+    def pin(path, digest):
+        path = Path(path).resolve()
+        pac.require(re.fullmatch(r"[0-9a-f]{64}", digest) is not None,
+                    "reference composition SHA256 must be lowercase hex")
+        pac.require(path not in pins or pins[path] == digest,
+                    "conflicting reference composition source pins")
+        pac.require(path.is_file() and pac._surface_sha256(path) == digest,
+                    f"reference composition source hash differs: {path}")
+        pins[path] = digest
+        return path
+
+    receipt = pin(args.receipt, args.receipt_sha256)
+    replacements = []
+    for stable_id, npz, npz_sha, report, report_sha in args.replacement:
+        pac.require(stable_id.isascii() and stable_id.isdecimal()
+                    and int(stable_id) > 0, "invalid passive stable ID")
+        replacements.append((int(stable_id), pin(npz, npz_sha), pin(report, report_sha)))
+    changed = [row[0] for row in replacements]
+    pac.require(len(set(changed)) == len(changed), "duplicate passive replacement ID")
+    extensions = {}
+    for target, source in args.extend:
+        pac.require(target in changed and source > 0 and target not in extensions,
+                    "invalid or duplicate passive binding extension")
+        extensions[target] = source
+    for path, digest in args.source_pin:
+        pin(path, digest)
+    pac.require(not args.output.exists(), "reference receipt output exists")
+    if args.preflight_only:
+        print(json.dumps({"status": "PASS_PINNED_REFERENCE_COMPOSITION_INPUTS_ONLY",
+                          "changed_stable_ids": changed,
+                          "geometry_predicates_executed": False,
+                          "native_admission": False}))
+        return 0
+    result = compose_reference_receipt(receipt, args.output, replacements,
+                                       extensions=extensions)
+    print(json.dumps(result, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,80 @@
+{
+  "all_nearby_report": {
+    "first_failure": {
+      "identities": [
+        [
+          51005,
+          103
+        ],
+        [
+          51005,
+          109
+        ]
+      ],
+      "triangle_pair_count": 78
+    },
+    "passed": false,
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis-biceps-source314-joint-all-nearby-cli-gate-321/report.json",
+    "sha256": "4e2958df61a8a9cbe86f4656bf2ac0a033176583c96f3ff68463269402a76883",
+    "shared_certificates_passed": 16
+  },
+  "anatomical_admission": false,
+  "argv": [
+    "/Users/n/numi-human-prep-venv-20261005/bin/python3",
+    "-m",
+    "numilab_human.passive_reference_receipt_composition",
+    "--receipt",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/supinator101-biceps103-105-skin-native-source-300/prepared/resting-anatomy-receipt.json",
+    "--receipt-sha256",
+    "fdf92c0283af479aef0d31b2a36e5b3e09a1d65f4dc0cb5eeb6c52d505ef07ac",
+    "--output",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis-biceps-cli-preflight-331-never-created",
+    "--replacement",
+    "103",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/row103-reference-patch.npz",
+    "c0900c8673703b43b07a388bfec2965067a16b65e22c11127c80a55089d8fe03",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/source-preparation-report.json",
+    "df3c7f0e7a3039845160e56e5e41fd6fafef90a3896d8b7e30012bbfd895855a",
+    "--replacement",
+    "105",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/row105-reference-patch.npz",
+    "c01891cd7aaa5a4367eeba2bd948a6be7a9fd8643acd2d16375748c586939bca",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/source-preparation-report.json",
+    "df3c7f0e7a3039845160e56e5e41fd6fafef90a3896d8b7e30012bbfd895855a",
+    "--replacement",
+    "107",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/row107-reference-patch.npz",
+    "1a9fe15e0abf4cfeea3f8fec52dbe6d1f810e856c67f49529624bc29395c5637",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/source-preparation-report.json",
+    "df3c7f0e7a3039845160e56e5e41fd6fafef90a3896d8b7e30012bbfd895855a",
+    "--extend",
+    "103",
+    "107",
+    "--extend",
+    "105",
+    "107",
+    "--source-pin",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/source-face-ancestry.json",
+    "61488e226a38c4122da525ab3fcd121f0960a20dbf8e989200c863175531eb70",
+    "--source-pin",
+    "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/trial-000/audit.json",
+    "c9dcc3b2562f4557908acc3f6cf4a89ac96afe2bc00e27c41afc52897f710654",
+    "--preflight-only"
+  ],
+  "native_admission": false,
+  "owner_preservation_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis-biceps-source-increment-owner-preservation-320/report.json",
+    "sha256": "59a66817945f93f470c718e411c76d48d1f0ccb819045d8414753d19aa594af9"
+  },
+  "regional_exact_audit": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/trial-000/audit.json",
+    "sha256": "c9dcc3b2562f4557908acc3f6cf4a89ac96afe2bc00e27c41afc52897f710654"
+  },
+  "returncode": 0,
+  "source314_receipt_sha256": "7922a38d4d041e5955d815b0d01f75dd60c606303b28c9e076b677229ef060a0",
+  "source_preparation_report": {
+    "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/brachialis107-biceps-thin-cut-cell-remesh-327/source-preparation-report.json",
+    "sha256": "df3c7f0e7a3039845160e56e5e41fd6fafef90a3896d8b7e30012bbfd895855a"
+  },
+  "stdout": "{\"status\": \"PASS_PINNED_REFERENCE_COMPOSITION_INPUTS_ONLY\", \"changed_stable_ids\": [103, 105, 107], \"geometry_predicates_executed\": false, \"native_admission\": false}\n"
+}
