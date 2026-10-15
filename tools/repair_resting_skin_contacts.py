@@ -215,6 +215,18 @@ def face_support_constraints(base_points,faces,first,second,margin_m,*,current_p
 
 
 
+def orientation_construction_ratio(required_ratio, reserve):
+    """Aim inside the strict area bound before source/world Float32 emission.
+
+    This tightens only the authoring LP. The exact emitted-area check continues
+    to use required_ratio, including its existing nonlinear line search.
+    """
+    if not (np.isfinite(required_ratio) and 0 <= required_ratio < 1
+            and np.isfinite(reserve) and 0 <= reserve < 1):
+        raise ValueError("invalid orientation construction reserve")
+    return required_ratio + (1. - required_ratio)*reserve if required_ratio else 0.
+
+
 def validated_self_contact_reference(reference, base_points, faces, gids):
     """Bind a separate source pose to the exact authoring vertex/face identity."""
     points=np.asarray(reference["capture_positions_m"])
@@ -351,6 +363,8 @@ def main():
     ap.add_argument("--bone-contact-separator",choices=["witness","face-support"],default="witness",
         help="face-support proposes complete crossed-facet separation from skin compartment normals")
     ap.add_argument("--orientation-ratio", type=float, default=0.)
+    ap.add_argument("--orientation-construction-reserve", type=float, default=0.,
+        help="fraction of remaining area ratio reserved inside the LP; strict emitted-area gate is unchanged")
     ap.add_argument("--bone-id", action="append", type=int,
         help="compiled anatomical stable ID; repeat in audit order; default retained right-arm four")
     args = ap.parse_args()
@@ -364,6 +378,11 @@ def main():
         ap.error("adaptive self-contact support requires face-support separator")
     if not 0 <= args.orientation_ratio < 1:
         ap.error("orientation ratio must be in [0,1)")
+    try:
+        construction_orientation_ratio=orientation_construction_ratio(
+            args.orientation_ratio,args.orientation_construction_reserve)
+    except ValueError as error:
+        ap.error(str(error))
     args.output.mkdir(exist_ok=False)
     started = time.monotonic()
     pins = {str(p): sha(p) for p in [Path(__file__), args.source, args.authoring_base,
@@ -644,7 +663,7 @@ def main():
                 scale=float(np.linalg.norm(gradient,axis=1).max())
                 if not scale:raise ValueError("orientation gradient degenerate")
                 current_area=float(np.cross(e1,e2)@normal)
-                bound=(args.orientation_ratio*base_areas[fi]-current_area+
+                bound=(construction_orientation_ratio*base_areas[fi]-current_area+
                        float(np.sum(gradient*delta[ids])))/scale
                 terms=[]
                 for corner,g in enumerate(ids):
@@ -693,7 +712,7 @@ def main():
             areas=np.einsum("ij,ij->i",np.cross(t[:,1]-t[:,0],t[:,2]-t[:,0]),reference_normals)
             if not args.orientation_ratio or np.all(areas>=args.orientation_ratio*base_areas):
                 points_source=candidate_source;accepted=True;break
-        (out/"orientation-line-search.json").write_text(json.dumps(dict(accepted=accepted,fraction=fraction,minimum_ratio=float(np.min(areas/base_areas)),required_ratio=args.orientation_ratio),indent=2,allow_nan=False)+"\n")
+        (out/"orientation-line-search.json").write_text(json.dumps(dict(accepted=accepted,fraction=fraction,minimum_ratio=float(np.min(areas/base_areas)),required_ratio=args.orientation_ratio,construction_ratio=construction_orientation_ratio),indent=2,allow_nan=False)+"\n")
         if not accepted:
             status="FAIL_ORIENTATION_CONSTRUCTION"
             break

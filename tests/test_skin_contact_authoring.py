@@ -346,3 +346,30 @@ def test_adaptive_support_does_not_waive_invalid_reference():
     with pytest.raises(ValueError,match="current"):
         tool.face_support_constraints(ref,np.array([[0,1,2],[0,2,1]]),0,1,.0005,
                                       current_points=np.array([[np.nan,0,0]]))
+
+
+def test_interior_area_target_survives_float32_world_emission():
+    # Shrinking this valid world-space triangle to exactly the strict LP area
+    # bound rounds below it in Float32; an interior construction target passes.
+    triangle=np.array([[.1,-.6,.1],[.101,-.6,.1],[.1,-.5981,.1]],dtype="<f4")
+    normal=np.array([0.,0.,1.])
+    area=lambda x: float(np.cross(x[1].astype(float)-x[0],x[2].astype(float)-x[0])@normal)
+    original=area(triangle)
+    def emitted(ratio):
+        candidate=triangle.astype(float)
+        candidate[2]=candidate[0]+ratio*(candidate[2]-candidate[0])
+        return candidate.astype("<f4")
+    strict=.2
+    assert area(emitted(strict)) < strict*original
+    target=tool.orientation_construction_ratio(strict,.01)
+    assert area(emitted(target)) >= strict*original
+    # No reserve preserves the old construction; disabling the area constraint
+    # does not implicitly enable one.
+    assert tool.orientation_construction_ratio(strict,0.) == strict
+    assert tool.orientation_construction_ratio(0.,.01) == 0.
+
+
+@pytest.mark.parametrize("ratio,reserve",[(.2,-.1),(.2,1.),(.2,float("nan")),(1.,.01)])
+def test_invalid_orientation_reserve_is_rejected(ratio,reserve):
+    with pytest.raises(ValueError,match="orientation"):
+        tool.orientation_construction_ratio(ratio,reserve)
