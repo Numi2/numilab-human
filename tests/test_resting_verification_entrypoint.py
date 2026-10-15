@@ -396,5 +396,51 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         self.assertEqual(proof["coordinate_provenance"], "counterfactual_owner_replay")
 
 
+    def test_all_declared_capture_identities_resolve_in_cold_preflight(self):
+        pack, receipt = self.root/"pack", self.root/"receipt"
+        pack.write_bytes(b"native-pack")
+        receipt.write_bytes(b"native-receipt")
+        base = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256",
+                hashlib.sha256(receipt.read_bytes()).hexdigest(), "--changed", "51005:73"]
+        declarations = [
+            ("target", ["--target", "51005:999"]),
+            ("required-closed", ["--required-closed", "51005:999"]),
+            ("enclosure", ["--intended-enclosure", "51005:73,51005:999"]),
+            ("shared-partition", ["--shared-partition", "51005:73", "51005:999",
+                                  str(self.root/"must-not-be-read.nhtissue"), "0"*64]),
+        ]
+        for name, declaration in declarations:
+            with self.subTest(declaration=name):
+                output = self.root/(name+"-absent.json")
+                with patch.object(tool.verify, "load_capture", return_value=(self.surfaces(), {})):
+                    with patch.object(tool.verify, "audit_changed_surfaces",
+                                      side_effect=AssertionError("must stop before predicates")):
+                        result = tool.main(base+declaration+[
+                            "--preflight-only", "--output", str(output)])
+                report = json.loads(output.read_text())
+                self.assertEqual(result, 1)
+                self.assertEqual(report["failed_stage"], "preparation")
+                self.assertIn(name+" identities absent from capture", report["error"])
+
+    def test_missing_target_stops_before_expensive_shared_source_certificate(self):
+        from numilab_human import resting_shared_partition_verify as shared
+        pack, receipt = self.root/"pack", self.root/"receipt"
+        pack.write_bytes(b"native-pack")
+        receipt.write_bytes(b"native-receipt")
+        output = self.root/"absent-before-cert.json"
+        args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256",
+                hashlib.sha256(receipt.read_bytes()).hexdigest(), "--changed", "51005:73",
+                "--target", "51005:999", "--shared-partition", "51005:73", "51005:74",
+                str(self.root/"must-not-be-read.nhtissue"), "0"*64, "--output", str(output)]
+        with patch.object(tool.verify, "load_capture", return_value=(self.surfaces(), {})):
+            with patch.object(shared, "audit_with_shared_partitions") as audit:
+                self.assertEqual(tool.main(args), 1)
+        audit.assert_not_called()
+        self.assertIn("target identities absent from capture",
+                      json.loads(output.read_text())["error"])
+
+
 if __name__ == "__main__":
     unittest.main()

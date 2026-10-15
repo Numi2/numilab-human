@@ -437,6 +437,20 @@ def main(argv=None):
         enclosures = [tuple(identity(x) for x in item.split(",")) for item in args.intended_enclosure]
         if any(len(pair) != 2 for pair in enclosures):
             raise ValueError("enclosure requires exactly two typed identities")
+        # Resolve every declared identity before source certificates or predicates.
+        # A stale target must fail in cold preparation, not after certifying partners.
+        declared = {
+            "changed": changed,
+            "target": targets or [],
+            "required-closed": closed,
+            "enclosure": [key for pair in enclosures for key in pair],
+            "shared-partition": [key for first, second, _, _ in partitions
+                                 for key in (first, second)],
+        }
+        for declaration, keys in declared.items():
+            absent = sorted(set(keys) - surfaces.keys())
+            if absent:
+                raise ValueError(f"{declaration} identities absent from capture: {absent}")
         for key_a, key_b, source, digest in partitions:
             pin(source, digest)
             if (key_a in overlay_keys) != (key_b in overlay_keys):
