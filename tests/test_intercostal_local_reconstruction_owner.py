@@ -66,11 +66,13 @@ def _face_npz(faces: np.ndarray) -> bytes:
     return buffer.getvalue()
 
 
-def _owner_report(parent_payload: bytes, ancestry: bytes, faces: np.ndarray) -> bytes:
+def _owner_report(
+    parent_payload: bytes, ancestry: bytes, faces: np.ndarray, *, stable_id: int = 313,
+) -> bytes:
     faces = np.ascontiguousarray(faces, dtype="<u4")
     report = {
         "schema": LOCAL_RECONSTRUCTION_ANCESTRY_SCHEMA,
-        "stable_id": 313,
+        "stable_id": stable_id,
         "parent_payload_sha256": _sha(parent_payload),
         "operation_ancestry_sha256": _sha(ancestry),
         "parent_faces_sha256": _sha(faces.tobytes()),
@@ -788,6 +790,305 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
             expected_source_payload_sha256="f" * 64,
             accepted_receipt_raw=receipt_raw,
             accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
+
+
+def test_local_reconstruction_partial_retention_authenticates_1176_map_and_inverts_only_changed_slots(
+    tmp_path: Path, monkeypatch,
+):
+    import io
+    import numilab_human.resting_intercostal_mesh_arrangement as owner
+
+    # Row 315 has one source allocation slot that is unused by its source faces.
+    # The candidate keeps three source vertices, changes one vertex, and keeps
+    # the old unused slot at a new candidate index. The crosswalk's zero at the
+    # changed point is a sentinel and must never become emitted local geometry.
+    source_vertices = np.asarray([
+        [0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [0, 1, 0, 0, 0, 1],
+        [9, 8, 7, 0, 1, 0],
+    ], dtype="<f4")
+    source_faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    unrelated_vertices = np.asarray([
+        [0, 0, 1, 0, 0, 1], [1, 0, 1, 0, 0, 1], [0, 1, 1, 0, 0, 1],
+    ], dtype="<f4")
+    source = encode_payload(
+        (b"NHANAT1\0", 5, 2, 6, 6, 0x12345678, b"s" * 32),
+        {
+            315: {"body_index": 20, "layer": 1, "flags": 0,
+                  "vertices6": source_vertices, "faces": source_faces},
+            900: {"body_index": 10, "layer": 1, "flags": 0,
+                  "vertices6": unrelated_vertices, "faces": source_faces},
+        },
+    )
+    source_sha = _sha(source)
+    _header, _records, source_rows = _parse_payload(source)
+    source_row = source_rows[315]
+    t = np.asarray([0.1, 0.2, 0.3], dtype="<f4")
+    source_world = np.ascontiguousarray(source_vertices[:, :3] + t, dtype="<f4")
+    candidate_positions = np.asarray([
+        source_world[0], source_world[1], source_world[2],
+        [0.6, 0.7, 0.3], source_world[3],
+    ], dtype="<f4")
+    candidate_faces = np.asarray([[0, 1, 2], [0, 2, 3]], dtype="<u4")
+    candidate_buffer = io.BytesIO()
+    # These operation-local hints are intentionally not treated as source IDs
+    # or ancestry by the 1176 crosswalk consumer.
+    np.savez(
+        candidate_buffer,
+        positions_world_f32=candidate_positions,
+        faces=candidate_faces,
+        source_original_id=np.full(len(candidate_positions), 990_000_000, dtype="<i8"),
+        source_face_id=np.arange(len(candidate_positions), dtype="<i8"),
+    )
+    candidate_raw = candidate_buffer.getvalue()
+    candidate_sha = _sha(candidate_raw)
+
+    # Build the authenticated native source-allocation map using the exact
+    # existing extraction ABI fields and typed 315 row identity.
+    source_base = 1000
+    captured_records = np.zeros((4, 20), dtype="<f4")
+    captured_records[:, :3] = source_world
+    captured_records[:, 4:7] = source_vertices[:, 3:]
+    captured_faces_global = np.ascontiguousarray(source_base + source_faces, dtype="<u4")
+    _used_global, compact_inverse = np.unique(captured_faces_global.reshape(-1), return_inverse=True)
+    captured_faces_compact = np.ascontiguousarray(
+        compact_inverse.reshape(captured_faces_global.shape), dtype="<u4")
+    primitive = np.arange(16, dtype="<u4")
+    source_record = np.asarray(source_row["record"], dtype="<u4")
+    source_map = np.asarray([0, 1, 2, -1], dtype="<i8")
+    source_map_buffer = io.BytesIO()
+    np.savez(
+        source_map_buffer,
+        positions_world_f32=source_world,
+        faces_u32=source_faces,
+        normals_f32=captured_records[:, 4:7],
+        captured_vertex_records_f32=captured_records,
+        capture_global_vertex_ids_u32=np.arange(source_base, source_base + 4, dtype="<u4"),
+        source_to_capture_vertex_map_i64=source_map,
+        capture_faces_global_u32=captured_faces_global,
+        capture_faces_compact_u32=captured_faces_compact,
+        primitive_record_u32=primitive,
+        source_record_u32=source_record,
+    )
+    source_map_raw = source_map_buffer.getvalue()
+    source_map_sha = _sha(source_map_raw)
+
+    crosswalk_source_indices = np.asarray([0, 1, 2, -1, 3], dtype="<i8")
+    retained_mask = crosswalk_source_indices >= 0
+    crosswalk_local = np.zeros((5, 3), dtype="<f4")
+    crosswalk_local[retained_mask] = source_vertices[
+        crosswalk_source_indices[retained_mask], :3]
+    crosswalk_buffer = io.BytesIO()
+    np.savez(
+        crosswalk_buffer,
+        candidate_to_source_vertex_i64=crosswalk_source_indices,
+        retained_source_local_positions_f32=crosswalk_local,
+        retained_mask=retained_mask,
+    )
+    crosswalk_raw = crosswalk_buffer.getvalue()
+    crosswalk_sha = _sha(crosswalk_raw)
+
+    face_sha = _sha(source_faces.tobytes())
+    source_row_report = {
+        "typed_identity": [51010, 315], "body_index": 20, "layer": 1, "flags": 0,
+        "source_payload_sha256": source_sha,
+        "source_record": source_record.tolist(), "source_vertex_count": 4,
+        "index_count": 3, "native_source_allocation_base": source_base,
+        "captured_primitive_record": primitive.tolist(),
+        "ordered_face_corner_crosswalk": {
+            "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+            "source_face_count": 1, "capture_face_count": 1,
+            "source_faces_u32_sha256": face_sha,
+        },
+        "captured_positions_world_f32_file_sha256": source_map_sha,
+        "captured_positions_world_f32_sha256": _sha(source_world.tobytes()),
+        "captured_normals_f32_sha256": _sha(captured_records[:, 4:7].tobytes()),
+        "captured_full_vertex_records_f32_sha256": _sha(captured_records.tobytes()),
+        "source_faces_u32_sha256": face_sha,
+        "captured_faces_global_u32_sha256": _sha(captured_faces_global.tobytes()),
+    }
+    source_capture_report = json.dumps({
+        "status": "PASS_NATIVE_REJECTED_FRAME_ARRAYS_EXTRACTED_DIAGNOSTIC_ONLY",
+        "source_capture_kind": "rejected_surface_audit_step0_not_accepted_capture",
+        "anatomical_admission": False, "native_scene_admission": False,
+        "motion_admission": False, "source_payload_sha256": source_sha,
+        "input_sha256": {"/fixture/compiled-emission-attempt.nhanatomy": source_sha},
+        "rows": {"315": source_row_report},
+    }, sort_keys=True, separators=(",", ":")).encode()
+    source_capture_report_sha = _sha(source_capture_report)
+
+    crosswalk_report = json.dumps({
+        "status": "PASS_EXACT_RETAINED_SOURCE_POSITION_CROSSWALK_ONLY",
+        "candidate_vertex_count": 5,
+        "authenticated_source_slot_count": 4,
+        "retained_exact_world_and_unambiguous_local_count": 4,
+        "generated_or_changed_point_count": 1,
+        "ambiguous_local_alias_count": 0,
+        "retained_duplicate_world_alias_count": 0,
+        "inputs": {
+            "/fixture/row-315-candidate.npz": candidate_sha,
+            "/fixture/compiled-emission-attempt.nhanatomy": source_sha,
+            "/fixture/row-315-native-source-step0.npz": source_map_sha,
+        },
+        "output_path": "/fixture/retained-source-vertex-crosswalk.npz",
+        "output_sha256": crosswalk_sha,
+        "anatomical_admission": False, "native_admission": False,
+    }, sort_keys=True, separators=(",", ":")).encode()
+    crosswalk_report_sha = _sha(crosswalk_report)
+
+    monkeypatch.setattr(owner, "LOCAL_315_RETAINED_CROSSWALK_NPZ_SHA256", crosswalk_sha)
+    monkeypatch.setattr(owner, "LOCAL_315_RETAINED_CROSSWALK_REPORT_SHA256", crosswalk_report_sha)
+    monkeypatch.setattr(owner, "LOCAL_315_RETAINED_CANDIDATE_NPZ_SHA256", candidate_sha)
+    monkeypatch.setattr(owner, "LOCAL_315_SOURCE_CAPTURE_NPZ_SHA256", source_map_sha)
+    monkeypatch.setattr(owner, "LOCAL_315_SOURCE_CAPTURE_REPORT_SHA256", source_capture_report_sha)
+    monkeypatch.setattr(owner, "LOCAL_315_SOURCE_PAYLOAD_SHA256", source_sha)
+
+    parent_buffer = io.BytesIO()
+    np.savez(parent_buffer, faces=source_faces)
+    parent_raw = parent_buffer.getvalue()
+    ancestry = _source_face_report()
+    tool_report = _source_tool_report()
+    owner_raw = _owner_report(parent_raw, ancestry, source_faces, stable_id=315)
+    pack = tmp_path / "step-0.mrvpack"
+    pack.write_bytes(b"accepted capture pack fixture")
+    receipt_path = tmp_path / "step-0.receipt.json"
+    receipt_raw = json.dumps(_accepted_receipt(_sha(pack.read_bytes()), source_sha)).encode()
+    receipt_path.write_bytes(receipt_raw)
+
+    partial_spec = {
+        "crosswalk_npz_raw": crosswalk_raw,
+        "crosswalk_npz_sha256": crosswalk_sha,
+        "crosswalk_report_raw": crosswalk_report,
+        "crosswalk_report_sha256": crosswalk_report_sha,
+        "reference_candidate_npz_raw": candidate_raw,
+        "reference_candidate_npz_sha256": candidate_sha,
+        "source_capture_npz_raw": source_map_raw,
+        "source_capture_npz_sha256": source_map_sha,
+        "source_capture_report_raw": source_capture_report,
+        "source_capture_report_sha256": source_capture_report_sha,
+        "source_row_local_positions_sha256": _sha(
+            np.ascontiguousarray(source_vertices[:, :3], dtype="<f4").tobytes()),
+    }
+    spec = {
+        "candidate_npz_raw": candidate_raw, "candidate_npz_sha256": candidate_sha,
+        "world_positions_f32": candidate_positions, "faces": candidate_faces,
+        "face_parent_ids": [[0], [0]],
+        "interface_face_mask": np.asarray([True, True], dtype=np.bool_),
+        "parent_faces": source_faces, "parent_payload_raw": parent_raw,
+        "operation_ancestry_raw": ancestry,
+        "authenticated_source_report_raws": [ancestry, tool_report],
+        "authenticated_source_report_sha256s": [_sha(ancestry), _sha(tool_report)],
+        "parent_face_owner_report_raw": owner_raw,
+        "parent_face_owner_report_sha256": _sha(owner_raw),
+        "required_rib_ids": [48],
+        "partial_source_position_retention": partial_spec,
+    }
+    output, report = compile_local_reconstruction_intercostal_payload(
+        source, {315: spec}, expected_source_payload_sha256=source_sha,
+        accepted_receipt_raw=receipt_raw, accepted_receipt_path=receipt_path,
+        accepted_capture_pack_path=pack,
+    )
+    _before_header, _before_records, before_rows = _parse_payload(source)
+    _after_header, _after_records, after_rows = _parse_payload(output)
+    assert report["unmodified_rows_byte_exact"] == 1
+    np.testing.assert_array_equal(after_rows[900]["vertices6"], before_rows[900]["vertices6"])
+    np.testing.assert_array_equal(after_rows[900]["faces"], before_rows[900]["faces"])
+    emitted_local = after_rows[315]["vertices6"][:, :3]
+    np.testing.assert_array_equal(emitted_local[:3], source_vertices[:3, :3])
+    np.testing.assert_array_equal(emitted_local[4], source_vertices[3, :3])
+    assert emitted_local[3].tobytes() != np.zeros(3, dtype="<f4").tobytes()
+    np.testing.assert_array_equal(after_rows[315]["vertices6"][4, 3:], source_vertices[3, 3:])
+    assert report["source_local_positions_partially_preserved_stable_ids"] == [315]
+    binding = report["row_reports"]["315"]["body20_source_position_binding"]
+    assert binding["source_position_retained_vertex_count"] == 4
+    assert binding["source_position_inverse_applied_vertex_count"] == 1
+    assert binding["generated_position_placeholders_consumed"] is False
+    assert report["runtime_attachment_maps"]["315"][48] == [0, 1, 2, 3]
+    assert report["anatomical_admission"] is False
+    assert report["native_admission"] is False
+
+    # The source-emission diagnostic can use the same authenticated partial
+    # crosswalk while keeping attachment ownership explicitly unresolved.
+    diagnostic_spec = {
+        "candidate_npz_raw": candidate_raw,
+        "candidate_npz_sha256": candidate_sha,
+        "world_positions_f32": candidate_positions,
+        "faces": candidate_faces,
+        "source_emission_diagnostic_only": True,
+        "partial_source_position_retention": partial_spec,
+    }
+    diagnostic_output, diagnostic_report = compile_local_reconstruction_intercostal_payload(
+        source, {315: diagnostic_spec}, expected_source_payload_sha256=source_sha,
+        accepted_receipt_raw=receipt_raw, accepted_receipt_path=receipt_path,
+        accepted_capture_pack_path=pack,
+    )
+    _diagnostic_header, _diagnostic_records, diagnostic_rows = _parse_payload(diagnostic_output)
+    diagnostic_local = diagnostic_rows[315]["vertices6"][:, :3]
+    np.testing.assert_array_equal(diagnostic_local[:3], source_vertices[:3, :3])
+    np.testing.assert_array_equal(diagnostic_local[4], source_vertices[3, :3])
+    assert diagnostic_local[3].tobytes() != np.zeros(3, dtype="<f4").tobytes()
+    np.testing.assert_array_equal(
+        diagnostic_rows[315]["vertices6"][4, 3:], source_vertices[3, 3:])
+    diagnostic_binding = diagnostic_report["row_reports"]["315"]["body20_source_position_binding"]
+    assert diagnostic_binding["source_position_retained_vertex_count"] == 4
+    assert diagnostic_binding["source_position_inverse_applied_vertex_count"] == 1
+    assert diagnostic_binding["generated_position_placeholders_consumed"] is False
+    assert diagnostic_report["status"] == "PASS_ABI5_SOURCE_EMISSION_DIAGNOSTIC_ONLY"
+    assert diagnostic_report["source_local_positions_partially_preserved_stable_ids"] == [315]
+    assert diagnostic_report["attachment_ownership_unresolved_stable_ids"] == [315]
+    assert diagnostic_report["runtime_attachment_maps"] == {"315": {}}
+    assert diagnostic_report["runtime_attachment_map_sidecars"] == {"315": {}}
+    assert diagnostic_report["anatomical_admission"] is False
+    assert diagnostic_report["native_admission"] is False
+
+    # Changed candidate, source-map, and source-payload evidence fail closed.
+    changed_candidate_positions = candidate_positions.copy()
+    changed_candidate_positions[0, 0] += np.float32(0.01)
+    changed_candidate_buffer = io.BytesIO()
+    np.savez(changed_candidate_buffer, positions_world_f32=changed_candidate_positions,
+             faces=candidate_faces)
+    changed_candidate_raw = changed_candidate_buffer.getvalue()
+    changed_candidate_spec = {
+        **spec,
+        "candidate_npz_raw": changed_candidate_raw,
+        "candidate_npz_sha256": _sha(changed_candidate_raw),
+        "world_positions_f32": changed_candidate_positions,
+    }
+    with pytest.raises(ValueError, match="reference candidate positions differ"):
+        compile_local_reconstruction_intercostal_payload(
+            source, {315: changed_candidate_spec}, expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw, accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
+
+    changed_map = dict(np.load(io.BytesIO(source_map_raw), allow_pickle=False))
+    changed_map["positions_world_f32"] = changed_map["positions_world_f32"].copy()
+    changed_map["positions_world_f32"][0, 0] += np.float32(0.01)
+    changed_map_buffer = io.BytesIO()
+    np.savez(changed_map_buffer, **changed_map)
+    changed_map_raw = changed_map_buffer.getvalue()
+    changed_map_spec = {
+        **spec,
+        "partial_source_position_retention": {
+            **partial_spec,
+            "source_capture_npz_raw": changed_map_raw,
+            "source_capture_npz_sha256": _sha(changed_map_raw),
+        },
+    }
+    with pytest.raises(ValueError, match="pinned 1176/005 owner bundle"):
+        compile_local_reconstruction_intercostal_payload(
+            source, {315: changed_map_spec}, expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw, accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
+
+    with pytest.raises(ValueError, match="source ABI5 payload bytes differ"):
+        compile_local_reconstruction_intercostal_payload(
+            source + b"drift", {315: spec}, expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw, accepted_receipt_path=receipt_path,
             accepted_capture_pack_path=pack,
         )
 
