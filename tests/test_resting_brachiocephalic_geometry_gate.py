@@ -3052,6 +3052,106 @@ def test_generic_source_interface_certificate_binds_typed_nonflow_pair(monkeypat
             pair_dtype="<u4")
 
 
+def test_frozen_937_source_interface_report_fixture_matches_consumed_schema_types():
+    from pathlib import Path
+    fixture = (Path(__file__).parent / "fixtures" /
+               "current_source_interface_937")
+    report_path = fixture / "execution-report.json"
+    preflight_path = fixture / "preflight.json"
+    assert hashlib.sha256(report_path.read_bytes()).hexdigest() == (
+        "60accd6920c7362da342b9eaf32d1c2d4c3e45496ab64f79e39a6fb426d3a781")
+    assert hashlib.sha256(preflight_path.read_bytes()).hexdigest() == (
+        "9dc4b373a989b568f4cc65c148079f00d661efa51f0ff18da17a2e0afe0c1b2b")
+    report = json.loads(report_path.read_text())
+    preflight = json.loads(preflight_path.read_text())
+
+    def assert_path(value, path, expected_type):
+        for key in path.split("."):
+            value = value[key]
+        assert isinstance(value, expected_type), path
+        return value
+
+    def assert_pin_map(value, path):
+        pins = assert_path(value, path, dict)
+        assert pins
+        assert all(isinstance(name, str) and isinstance(digest, str)
+                   and len(digest) == 64
+                   and all(c in "0123456789abcdef" for c in digest)
+                   for name, digest in pins.items()), path
+        return pins
+
+    # These paths are read by the current source-interface report adapter.
+    assert isinstance(report["typed_interface"], list)
+    assert report["typed_interface"] == [[51011, 7], [51011, 6]]
+    assert_pin_map(report, "input_pins")
+    assert_pin_map(report, "code_pins")
+    assert_pin_map(preflight, "capture_pins")
+    assert_pin_map(preflight, "code_pins")
+    assert isinstance(report["manifold3d"], dict)
+    assert isinstance(report["source_collar_ancestry"], dict)
+    ancestry = report["source_collar_ancestry"]
+    assert ancestry["typed_link"] == [[51011, 7], [51011, 6]]
+    assert type(ancestry["current_face_hashes_match"]) is bool
+    assert type(ancestry["old_candidate_geometry_reused"]) is bool
+    assert type(ancestry["exact_pair_count"]) is int
+    assert isinstance(ancestry["face_pairs"], list)
+    assert all(isinstance(pair, list) and len(pair) == 2
+               and all(type(face) is int for face in pair)
+               for pair in ancestry["face_pairs"])
+    assert isinstance(report["candidate_pairset"], list)
+    assert isinstance(report["baseline_pairset"], list)
+    assert isinstance(report["candidate_unexpected_pairs"], list)
+    assert isinstance(report["baseline_unexpected_pairs"], list)
+
+    assert isinstance(report["row_inventory"], dict)
+    assert report["row_inventory"] == preflight["row_inventory"]
+    for row_id in ("6", "7"):
+        row = report["row_inventory"][row_id]
+        assert isinstance(row, dict)
+        assert isinstance(row["typed_identity"], list)
+        assert isinstance(row["face_corner_ancestry"], dict)
+        assert isinstance(row["owner_record"], dict)
+        assert isinstance(row["owner_record"]["typed_identity"], list)
+        assert isinstance(row["owner_record"]["capture_face_vertex_ancestry"], dict)
+    assert isinstance(report["source_topology"], dict)
+    for role in ("candidate", "independent_source_rigid_baseline"):
+        for row_id in ("6", "7"):
+            topology = report["source_topology"][f"{role}:{row_id}"]
+            assert isinstance(topology, dict)
+            assert isinstance(topology["prepared_surface"], dict)
+            assert isinstance(topology["prepared_surface"]["raw_topology"], dict)
+            assert isinstance(
+                topology["prepared_surface"]["exact_coordinate_quotient_topology"],
+                dict)
+
+    assert isinstance(report["interface_gates"], dict)
+    for role in ("candidate", "independent_source_rigid_baseline"):
+        gate = report["interface_gates"][role]
+        assert isinstance(gate["observed_face_pairs"], list)
+        assert isinstance(gate["documented_vessel_junction_scope"], dict)
+        assert isinstance(gate["audit_result"], dict)
+    assert isinstance(report["solid_gates"], dict)
+    for role in ("candidate", "independent_source_rigid_baseline"):
+        solid = report["solid_gates"][role]
+        assert isinstance(solid["exact_inside_both_witness"], dict)
+        assert isinstance(solid["union_float64_mesh64_lineage"], dict)
+        assert isinstance(solid["volume_accounting"], dict)
+    assert isinstance(report["independent_source_station_calibre"], dict)
+    for role in ("arch", "ascending"):
+        calibre = report["independent_source_station_calibre"][role]
+        assert isinstance(calibre["candidate_to_baseline_comparison"], dict)
+        assert isinstance(calibre["station"], dict)
+        assert isinstance(calibre["baseline_station_transported_by_source_ancestry"],
+                          dict)
+        assert isinstance(calibre["candidate_section"], dict)
+        assert isinstance(calibre["baseline_section"], dict)
+        assert isinstance(calibre["candidate_section"]["loop_metrics"], list)
+    assert isinstance(report["limitations"], dict)
+    assert type(report["anatomical_admission"]) is bool
+    assert type(report["native_or_gpu_work_performed"]) is bool
+    assert type(preflight["geometry_predicates_run"]) is bool
+
+
 def test_current_source_interface_report_reference_rebinds_live_capture_and_source_pins(
         tmp_path, monkeypatch):
     edge = bg.AORTIC_ARCH_SOURCE_INTERFACE
