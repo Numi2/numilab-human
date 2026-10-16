@@ -3516,7 +3516,7 @@ def test_material_station_transport_uses_local_proper_rigid_fit():
     baseline.key = (51011, 7)
     baseline.positions = np.asarray(points, dtype="<f4")
     baseline.faces = np.asarray(faces, dtype="<u4")
-    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8")
+    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8") + 4096
     collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
     witness_points = np.asarray(
         [[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]], dtype=np.float64)
@@ -3559,7 +3559,63 @@ def test_material_station_transport_uses_local_proper_rigid_fit():
     assert proof["passed"] is True
     assert proof["rotation_determinant"] > 0.999999
     assert proof["maximum_fit_residual_m"] <= proof["maximum_fit_residual_bound_m"]
+    assert proof["source_section_fit_point_count"] >= 3
+    assert proof["source_section_source_vertex_point_count"] == 0
+    assert proof["source_section_edge_intersection_point_count"] > 0
+    assert proof["edge_intersection_points_are_fit_observations"] is True
+    assert proof["off_plane_edge_endpoints_are_fit_observations"] is False
+    assert proof["all_source_material_points_on_baseline_station_plane"] is True
+    assert (proof["maximum_baseline_station_plane_residual_m"]
+            <= proof["baseline_station_plane_residual_bound_m"])
+    assert proof["source_section_material_point_records_sha256"]
+    assert proof["source_section_material_point_binding_sha256"]
     assert proof["all_exact_coordinate_aliases_preserved"] is True
+    material_section = bg._collar_local_source_section(
+        baseline, baseline_station, source_topology_surface=baseline,
+        collar_face_ids=baseline_station["frozen_collar_face_ids"],
+        label="test transported material points",
+        include_material_point_records=True)
+    material_metric, issue = bg._section_metric_for_owner(
+        material_section, baseline.key[1], label="test transported material points")
+    assert issue is None
+    edge_records = [
+        record for record in material_metric["material_point_records"]
+        if record["kind"] == "source_edge_intersection"]
+    assert edge_records
+    edge_endpoint_local_ids = {
+        local_id for record in edge_records
+        for endpoint in record["endpoint_alias_local_vertex_ids"]
+        for local_id in endpoint
+    }
+    baseline_tangent = np.asarray(baseline_station["tangent_world_unit"])
+    baseline_center = np.asarray(baseline_station["section_center_world_m"])
+    assert any(
+        abs(float(np.dot(
+            baseline.positions[local_id].astype(np.float64) - baseline_center,
+            baseline_tangent))) > material_metric["coordinate_ulp_tolerance_m"]
+        for local_id in edge_endpoint_local_ids
+    )
+    edge_endpoint_gids = {
+        int(baseline.source_vertex_ids[local_id])
+        for local_id in edge_endpoint_local_ids
+    }
+    assert edge_endpoint_gids.isdisjoint(
+        set(proof["source_section_plane_vertex_source_vertex_ids"]))
+    for record in edge_records:
+        first, second = record["endpoint_local_vertex_ids"]
+        fraction = record["interpolation_fraction_from_first_endpoint"]
+        baseline_point = (
+            (1.0 - fraction) * baseline.positions[first].astype(np.float64)
+            + fraction * baseline.positions[second].astype(np.float64))
+        candidate_point = (
+            (1.0 - fraction) * candidate.positions[first].astype(np.float64)
+            + fraction * candidate.positions[second].astype(np.float64))
+        assert abs(np.dot(
+            baseline_point - baseline_station["section_center_world_m"],
+            baseline_station["tangent_world_unit"])) < 2.0e-6
+        assert np.linalg.norm(
+            candidate_point - (baseline_point @ rotation + translation)
+        ) < 1.0e-6
     assert np.allclose(candidate_station["section_center_world_m"],
                        expected_center, rtol=0.0, atol=5.0e-7)
     assert np.allclose(candidate_station["tangent_world_unit"],
@@ -3595,14 +3651,161 @@ def test_material_station_transport_rejects_nonrigid_local_shape_change():
     candidate.positions = baseline.positions.copy()
     candidate.faces = baseline.faces.copy()
     candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
-    moved_vertex = int(np.unique(
-        candidate.faces[np.asarray(baseline_station["frozen_collar_face_ids"],
-                                   dtype=np.int64)].reshape(-1))[0])
-    candidate.positions[moved_vertex, 0] += np.float32(0.001)
+    baseline_section = bg._collar_local_source_section(
+        baseline, baseline_station, source_topology_surface=baseline,
+        collar_face_ids=baseline_station["frozen_collar_face_ids"],
+        label="test material section", include_material_point_records=True)
+    section_metric, issue = bg._section_metric_for_owner(
+        baseline_section, baseline.key[1], label="test material section")
+    assert issue is None
+    material_vertices = set()
+    for material_record in section_metric["material_point_records"]:
+        if material_record["kind"] == "source_vertex":
+            material_vertices.update(
+                material_record["coordinate_alias_local_vertex_ids"])
+        else:
+            for aliases in material_record["endpoint_alias_local_vertex_ids"]:
+                material_vertices.update(aliases)
+    material_vertices = np.asarray(sorted(material_vertices), dtype=np.int64)
+    center = candidate.positions[material_vertices].astype(np.float64).mean(axis=0)
+    candidate.positions[material_vertices] = np.asarray(
+        center + 1.01 * (candidate.positions[material_vertices] - center),
+        dtype="<f4")
 
     with pytest.raises(ValueError, match="not one local proper rigid motion"):
         bg._transport_material_station_by_local_proper_rigid_fit(
             baseline, candidate, baseline_station)
+
+
+
+
+def test_material_station_fit_uses_section_intersections_not_off_plane_endpoints():
+    points, faces, _ = _curved_tube_with_remote_limb()
+    baseline = type("SourceSurface", (), {})()
+    baseline.key = (51011, 7)
+    baseline.positions = np.asarray(points, dtype="<f4")
+    baseline.faces = np.asarray(faces, dtype="<u4")
+    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8") + 4096
+    collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
+    witness_points = np.asarray(
+        [[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]], dtype=np.float64)
+    station = bg._port_station_spec(
+        baseline, witness_points, collar_faces,
+        route_anchor=np.asarray([0.0, 0.0, -4.5]),
+        station_policy="COLLAR_LOCAL_PCA_V1")
+    section = bg._collar_local_source_section(
+        baseline, station, source_topology_surface=baseline,
+        collar_face_ids=station["frozen_collar_face_ids"],
+        label="off-plane endpoint exclusion",
+        include_material_point_records=True)
+    metric, issue = bg._section_metric_for_owner(
+        section, baseline.key[1], label="off-plane endpoint exclusion")
+    assert issue is None
+    records = [
+        record for record in metric["material_point_records"]
+        if record["kind"] == "source_edge_intersection"]
+    assert len(records) >= 3
+
+    endpoint_classes = {}
+    for record in records:
+        for aliases in record["endpoint_alias_local_vertex_ids"]:
+            endpoint_classes.setdefault(tuple(aliases), len(endpoint_classes))
+    coefficients = np.zeros((len(records), len(endpoint_classes)), dtype=np.float64)
+    for row, record in enumerate(records):
+        fraction = record["interpolation_fraction_from_first_endpoint"]
+        first, second = record["endpoint_alias_local_vertex_ids"]
+        coefficients[row, endpoint_classes[tuple(first)]] = 1.0 - fraction
+        coefficients[row, endpoint_classes[tuple(second)]] = fraction
+    _left, _singular_values, right = np.linalg.svd(
+        coefficients, full_matrices=True)
+    endpoint_motion = right[-1]
+    endpoint_motion /= np.max(np.abs(endpoint_motion))
+    assert np.max(np.abs(coefficients @ endpoint_motion)) < 1e-10
+
+    candidate = type("CandidateSurface", (), {})()
+    candidate.key = baseline.key
+    candidate.positions = baseline.positions.copy()
+    candidate.faces = baseline.faces.copy()
+    candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
+    for aliases, class_index in endpoint_classes.items():
+        shift = np.asarray([1e-3 * endpoint_motion[class_index], 0.0, 0.0])
+        candidate.positions[np.asarray(aliases, dtype=np.int64)] = np.asarray(
+            candidate.positions[np.asarray(aliases, dtype=np.int64)].astype(np.float64)
+            + shift, dtype="<f4")
+    moved = np.max(np.abs(
+        candidate.positions.astype(np.float64) - baseline.positions.astype(np.float64)))
+    assert moved > 1e-4
+    _candidate_station, proof = (
+        bg._transport_material_station_by_local_proper_rigid_fit(
+            baseline, candidate, station))
+    assert proof["passed"] is True
+    assert proof["fit_support_scope"] == (
+        "BASELINE_IN_PLANE_MATERIAL_SECTION_NODES_V1")
+    assert proof["off_plane_edge_endpoints_are_fit_observations"] is False
+    assert proof["maximum_fit_residual_m"] < 5e-7
+
+
+
+def test_material_station_fit_excludes_indexed_one_ring_beyond_section_support():
+    points, faces, _ = _curved_tube_with_remote_limb()
+    baseline = type("SourceSurface", (), {})()
+    baseline.key = (51011, 7)
+    baseline.positions = np.asarray(points, dtype="<f4")
+    baseline.faces = np.asarray(faces, dtype="<u4")
+    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8")
+    collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
+    witness_points = np.asarray(
+        [[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]], dtype=np.float64)
+    baseline_station = bg._port_station_spec(
+        baseline, witness_points, collar_faces,
+        route_anchor=np.asarray([0.0, 0.0, -4.5]),
+        station_policy="COLLAR_LOCAL_PCA_V1")
+    section = bg._collar_local_source_section(
+        baseline, baseline_station, source_topology_surface=baseline,
+        collar_face_ids=baseline_station["frozen_collar_face_ids"],
+        label="test material section")
+    metric, issue = bg._section_metric_for_owner(
+        section, baseline.key[1], label="test material section")
+    assert issue is None
+    section_faces = np.asarray(metric["section_face_ids"], dtype=np.int64)
+    section_vertices = set(map(
+        int, np.unique(baseline.faces[section_faces].reshape(-1))))
+    seed_vertices = np.unique(
+        baseline.faces[np.asarray(
+            baseline_station["frozen_collar_face_ids"], dtype=np.int64)].reshape(-1))
+    ring_faces = np.flatnonzero(
+        np.any(np.isin(baseline.faces, seed_vertices), axis=1))
+    ring_vertices = set(map(int, np.unique(
+        baseline.faces[ring_faces].reshape(-1))))
+    outside_section = sorted(ring_vertices - section_vertices)
+    assert outside_section
+    candidate = type("CandidateSurface", (), {})()
+    candidate.key = baseline.key
+    candidate.positions = baseline.positions.copy()
+    candidate.faces = baseline.faces.copy()
+    candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
+    candidate.positions[outside_section[0], 0] += np.float32(0.001)
+
+    _station, proof = bg._transport_material_station_by_local_proper_rigid_fit(
+        baseline, candidate, baseline_station)
+    assert proof["passed"] is True
+    assert proof["fit_support_scope"] == (
+        "BASELINE_IN_PLANE_MATERIAL_SECTION_NODES_V1")
+    assert proof["baseline_selected_loop_face_ids"] == metric["section_face_ids"]
+    assert proof["baseline_selected_loop_face_count"] == len(metric["section_face_ids"])
+    assert proof["source_section_fit_point_count"] == (
+        proof["source_section_source_vertex_point_count"]
+        + proof["source_section_edge_intersection_point_count"])
+    assert proof["source_section_plane_vertex_alias_count"] == len(
+        proof["source_section_plane_vertex_source_vertex_ids"])
+    assert proof["source_section_interpolation_endpoint_vertex_count"] == len(
+        proof["source_section_interpolation_endpoint_source_vertex_ids"])
+    assert proof["source_section_alias_vertex_count"] == len(
+        proof["source_section_alias_source_vertex_ids"])
+    assert proof["source_section_alias_unique_coordinate_class_count"] <= (
+        proof["source_section_alias_vertex_count"])
+    assert set(proof["source_section_plane_vertex_source_vertex_ids"]).isdisjoint(
+        proof["source_section_interpolation_endpoint_source_vertex_ids"])
 
 
 def test_candidate_station_rigid_transport_is_opt_in():
@@ -4004,3 +4207,114 @@ def test_collar_local_declaration_binds_source_report_and_stays_candidate_indepe
             frozen_face_pairs=station_pairs, declared_vessel_ports={station_edge},
             anchor_role="bridge", station_policy="COLLAR_LOCAL_PCA_V1",
             route_anchor_evidence=wrong_route_evidence)
+
+def _material_station_fixture():
+    points, faces, _ = _curved_tube_with_remote_limb()
+    baseline = type("SourceSurface", (), {})()
+    baseline.key = (51011, 7)
+    baseline.positions = np.asarray(points, dtype="<f4")
+    baseline.faces = np.asarray(faces, dtype="<u4")
+    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8") + 4096
+    collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
+    witnesses = np.asarray(
+        [[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]], dtype=np.float64)
+    station = bg._port_station_spec(
+        baseline, witnesses, collar_faces,
+        route_anchor=np.asarray([0.0, 0.0, -4.5]),
+        station_policy="COLLAR_LOCAL_PCA_V1")
+    raw = bg._collar_local_source_section(
+        baseline, station, source_topology_surface=baseline,
+        collar_face_ids=station["frozen_collar_face_ids"],
+        label="material section metric fixture",
+        include_material_point_records=True)
+    metric, issue = bg._section_metric_for_owner(
+        raw, baseline.key[1], label="material section metric fixture")
+    assert issue is None and metric is not None
+    material_ids = set()
+    for record in metric["material_point_records"]:
+        if record["kind"] == "source_vertex":
+            material_ids.update(record["coordinate_alias_local_vertex_ids"])
+        else:
+            for aliases in record["endpoint_alias_local_vertex_ids"]:
+                material_ids.update(aliases)
+    return baseline, station, metric, np.asarray(sorted(material_ids), dtype=np.int64)
+
+
+def test_material_section_transport_accepts_small_warp_with_caliber_bounds():
+    baseline, station, _metric, material_ids = _material_station_fixture()
+    candidate = type("CandidateSurface", (), {})()
+    candidate.key = baseline.key
+    candidate.positions = baseline.positions.copy()
+    candidate.faces = baseline.faces.copy()
+    candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
+    tangent = np.asarray(station["tangent_world_unit"], dtype=np.float64)
+    helper = np.eye(3)[int(np.argmin(np.abs(tangent)))]
+    first_axis = np.cross(tangent, helper)
+    first_axis /= np.linalg.norm(first_axis)
+    second_axis = np.cross(tangent, first_axis)
+    center = np.asarray(station["section_center_world_m"], dtype=np.float64)
+    relative = candidate.positions[material_ids].astype(np.float64) - center
+    x = relative @ first_axis
+    y = relative @ second_axis
+    radius = float(np.max(np.hypot(x, y)))
+    normal_warp = 3.0e-4 * (x * y) / (radius * radius)
+    candidate.positions[material_ids] = np.asarray(
+        candidate.positions[material_ids].astype(np.float64)
+        + normal_warp[:, None] * tangent,
+        dtype="<f4")
+
+    with pytest.raises(ValueError, match="not one local proper rigid motion"):
+        bg._transport_material_station_by_local_proper_rigid_fit(
+            baseline, candidate, station)
+    _candidate_station, proof = (
+        bg._transport_material_station_by_material_section(
+            baseline, candidate, station))
+    calibre = proof["material_section_calibre"]
+    assert proof["schema"] == "numi.human.source-material-section-transport.v1"
+    assert proof["passed"] is True
+    assert proof["proper_rigid_applicability_passed"] is False
+    assert proof["maximum_fit_residual_bound_m"] is None
+    assert calibre["candidate_material_ring_is_simple_closed"] is True
+    assert calibre["candidate_centroid_fan_stays_inside_or_on_ring"] is True
+    assert calibre["maximum_warp_to_source_minimum_feret_ratio"] <= 0.01
+    assert 0.8 <= calibre["projected_area_ratio"] <= 1.25
+    assert 0.8 <= calibre["centroid_fan_area_ratio"] <= 1.25
+    low, high = calibre["minimum_feret_width_ratio_interval"]
+    assert 0.9 <= low <= high <= 1.1
+    assert calibre["projection_area_error_m2"] >= 0.0
+
+
+def test_material_section_transport_rejects_actual_caliber_change():
+    baseline, station, _metric, material_ids = _material_station_fixture()
+    candidate = type("CandidateSurface", (), {})()
+    candidate.key = baseline.key
+    candidate.positions = baseline.positions.copy()
+    candidate.faces = baseline.faces.copy()
+    candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
+    tangent = np.asarray(station["tangent_world_unit"], dtype=np.float64)
+    center = np.asarray(station["section_center_world_m"], dtype=np.float64)
+    points = candidate.positions[material_ids].astype(np.float64)
+    radial = points - center
+    radial -= (radial @ tangent)[:, None] * tangent
+    candidate.positions[material_ids] = np.asarray(
+        points + 0.2 * radial, dtype="<f4")
+
+    _candidate_station, proof = (
+        bg._transport_material_station_by_material_section(
+            baseline, candidate, station))
+    calibre = proof["material_section_calibre"]
+    assert proof["passed"] is False
+    assert (calibre["projected_area_ratio"] > 1.25
+            or calibre["centroid_fan_area_ratio"] > 1.25
+            or calibre["minimum_feret_width_ratio_interval"][1] > 1.1)
+
+
+def test_material_section_projected_ring_rejects_crossing_edges():
+    bow_tie = np.asarray(
+        [[0.0, 0.0], [1.0, 1.0], [0.0, 1.0], [1.0, 0.0]],
+        dtype=np.float64)
+    square = np.asarray(
+        [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0]],
+        dtype=np.float64)
+    assert bg._simple_closed_polygon2d_exact(square) is True
+    assert bg._simple_closed_polygon2d_exact(bow_tie) is False

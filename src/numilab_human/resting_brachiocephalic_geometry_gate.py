@@ -2117,18 +2117,21 @@ def _transport_material_station_by_local_proper_rigid_fit(
     baseline_surface, candidate_surface, baseline_station, *,
     maximum_fit_residual_m=5.0e-7,
 ):
-    """Transport a source material plane by a bounded proper fit on its source one-ring.
+    """Transport a source material plane by fitting its authenticated section.
 
-    The support is derived only from the frozen baseline station collar faces,
-    exact-coordinate aliases, and their indexed incident-face one-ring. Candidate
-    geometry is used only to estimate a local proper rigid transform. A residual
-    above the small Float32 fit bound rejects the transport rather than masking
-    non-rigid shape change with a moving section plane.
+    Fit observations are the in-plane material-section nodes on the independent
+    baseline: vertices lying on the station plane and edge crossings reconstructed
+    from their exact source endpoints and recorded fractions. Off-plane endpoints
+    only reconstruct those crossings; they are not fit observations. The indexed
+    one-ring is excluded because it can cross a nonrigid taper. Candidate geometry
+    estimates a local proper rigid transform, and the strict Float32 residual bound
+    still rejects nonrigid change on the measured section.
     """
     _require(_identity(baseline_surface.key) == _identity(candidate_surface.key),
              "station rigid transport requires the same typed source surface")
-    _require(np.isfinite(maximum_fit_residual_m)
-             and maximum_fit_residual_m > 0.0,
+    _require(maximum_fit_residual_m is None
+             or (np.isfinite(maximum_fit_residual_m)
+                 and maximum_fit_residual_m > 0.0),
              "station rigid transport residual bound must be positive and finite")
     baseline_positions = np.asarray(baseline_surface.positions)
     candidate_positions = np.asarray(candidate_surface.positions)
@@ -2170,87 +2173,156 @@ def _transport_material_station_by_local_proper_rigid_fit(
              and len(set(collar)) == len(collar),
              "station rigid transport requires unique frozen source collar faces")
     collar_ids = np.asarray(collar, dtype=np.int64)
-    seed_vertices = np.unique(baseline_faces[collar_ids].reshape(-1))
-
-    def coordinate_key(point):
-        return tuple(0.0 if float(value) == 0.0 else float(value)
-                     for value in point)
-
-    aliases_by_coordinate = {}
-    for local_id, point in enumerate(baseline_positions):
-        aliases_by_coordinate.setdefault(coordinate_key(point), []).append(local_id)
-    seed_keys = {coordinate_key(baseline_positions[int(local_id)])
-                 for local_id in seed_vertices}
-    seed_aliases = sorted({
-        local_id for key in seed_keys
-        for local_id in aliases_by_coordinate[key]})
-    ring_face_mask = np.any(np.isin(baseline_faces, seed_aliases), axis=1)
-    ring_face_ids = np.flatnonzero(ring_face_mask).astype(np.int64)
-    _require(len(ring_face_ids) >= len(collar_ids)
-             and np.all(np.isin(collar_ids, ring_face_ids)),
-             "station source one-ring omits a frozen collar face")
-    ring_vertices = np.unique(baseline_faces[ring_face_ids].reshape(-1))
-    support_keys = {coordinate_key(baseline_positions[int(local_id)])
-                    for local_id in ring_vertices}
-    support_ids = sorted({
-        local_id for key in support_keys
-        for local_id in aliases_by_coordinate[key]})
-    support_key_by_gid = {}
-    for local_id in support_ids:
-        support_key_by_gid[int(baseline_gids[local_id])] = coordinate_key(
-            baseline_positions[local_id])
-    representatives = []
-    for key in sorted(support_keys):
-        local_ids = aliases_by_coordinate[key]
-        representative = min(local_ids, key=lambda local_id: (
-            int(baseline_gids[local_id]), local_id))
-        representatives.append(representative)
-    _require(len(representatives) >= 3,
-             "station rigid-fit source one-ring has fewer than three coordinate classes")
-
+    baseline_section = _collar_local_source_section(
+        baseline_surface, baseline_station,
+        source_topology_surface=baseline_surface,
+        collar_face_ids=collar,
+        label="baseline material-section rigid-fit support",
+        include_material_point_records=True)
+    section_metric, section_issue = _section_metric_for_owner(
+        baseline_section, baseline_surface.key[1],
+        label="baseline material-section rigid-fit support")
+    _require(section_issue is None and isinstance(section_metric, Mapping),
+             "station rigid transport requires one authenticated baseline material section")
+    section_face_ids_raw = section_metric.get("section_face_ids")
+    section_ancestors = section_metric.get("source_face_ancestor_ids")
+    _require(isinstance(section_face_ids_raw, list) and bool(section_face_ids_raw)
+             and all(type(value) is int and 0 <= value < len(baseline_faces)
+                     for value in section_face_ids_raw)
+             and len(set(section_face_ids_raw)) == len(section_face_ids_raw)
+             and section_ancestors == section_face_ids_raw,
+             "baseline material-section faces lack exact local source-face ancestry")
+    section_face_ids = np.asarray(section_face_ids_raw, dtype=np.int64)
+    material_records = section_metric.get("material_point_records")
+    _require(isinstance(material_records, list) and len(material_records) >= 3
+             and section_metric.get("material_point_records_sha256")
+             == _canonical_record_sha256(material_records),
+             "baseline material section lacks authenticated intersection records")
     candidate_by_gid = {
         int(gid): local_id for local_id, gid in enumerate(candidate_gids)}
-    candidate_aliases = {}
-    for local_id in support_ids:
-        key = support_key_by_gid[int(baseline_gids[local_id])]
-        candidate_aliases.setdefault(key, []).append(
-            candidate_positions[candidate_by_gid[int(baseline_gids[local_id])]])
-    for key, points in candidate_aliases.items():
-        _require(all(np.array_equal(points[0], point) for point in points[1:]),
-                 "candidate station one-ring exact-coordinate aliases diverged")
-    source_points = np.asarray(
-        baseline_positions[representatives], dtype=np.float64)
-    candidate_local_ids = np.asarray([
-        candidate_by_gid[int(baseline_gids[local_id])]
-        for local_id in representatives], dtype=np.int64)
-    candidate_points = np.asarray(
-        candidate_positions[candidate_local_ids], dtype=np.float64)
-    source_center = source_points.mean(axis=0)
-    candidate_center = candidate_points.mean(axis=0)
-    source_centered = source_points - source_center
-    singular_values = np.linalg.svd(source_centered, compute_uv=False)
-    _require(len(singular_values) >= 2
-             and singular_values[1] > max(singular_values[0], 1e-30) * 1e-10,
-             "station rigid-fit source one-ring is geometrically underdetermined")
-    covariance = source_centered.T @ (candidate_points - candidate_center)
-    left, _values, right_t = np.linalg.svd(covariance)
-    orientation = 1.0 if np.linalg.det(left @ right_t) >= 0.0 else -1.0
-    rotation = left @ np.diag([1.0, 1.0, orientation]) @ right_t
-    _require(float(np.linalg.det(rotation)) > 0.999999,
-             "station rigid-fit transform is not a proper rotation")
-    translation = candidate_center - source_center @ rotation
-    all_source = np.asarray(baseline_positions[support_ids], dtype=np.float64)
-    all_candidate_ids = np.asarray([
-        candidate_by_gid[int(baseline_gids[local_id])]
-        for local_id in support_ids], dtype=np.int64)
-    all_candidate = np.asarray(candidate_positions[all_candidate_ids], dtype=np.float64)
-    residuals = np.linalg.norm(all_source @ rotation + translation - all_candidate, axis=1)
-    maximum_residual = float(residuals.max(initial=0.0))
-    rms_residual = float(np.sqrt(np.mean(residuals * residuals)))
-    _require(maximum_residual <= maximum_fit_residual_m,
-             "candidate station source one-ring is not one local proper rigid motion "
-             f"(maximum residual {maximum_residual:.9g} m exceeds "
-             f"{maximum_fit_residual_m:.9g} m)")
+    alias_local_ids = set()
+    alias_coordinate_classes = set()
+    plane_vertex_local_ids = set()
+    plane_vertex_coordinate_classes = set()
+    interpolation_endpoint_local_ids = set()
+    source_points_list = []
+    candidate_points_list = []
+    normalized_records = []
+
+    def _class_points(local_ids, source_ids, label, *, plane_vertex=False,
+                      interpolation_endpoint=False):
+        _require(isinstance(local_ids, list) and bool(local_ids)
+                 and all(type(value) is int and 0 <= value < len(baseline_positions)
+                         for value in local_ids)
+                 and isinstance(source_ids, list) and len(source_ids) == len(local_ids)
+                 and all(type(value) is int for value in source_ids),
+                 f"{label} has invalid source aliases")
+        _require(all(local == source_id
+                     for local, source_id in zip(local_ids, source_ids)),
+                 f"{label} section-local vertex IDs are inconsistent")
+        source = baseline_positions[local_ids[0]]
+        _require(all(np.array_equal(source, baseline_positions[local])
+                     for local in local_ids[1:]),
+                 f"{label} source aliases are not coordinate-equal")
+        candidate_locals = [
+            candidate_by_gid[int(baseline_gids[local])] for local in local_ids]
+        candidate = candidate_positions[candidate_locals[0]]
+        _require(all(np.array_equal(candidate, candidate_positions[local])
+                     for local in candidate_locals[1:]),
+                 "candidate material-point endpoint aliases diverged")
+        alias_local_ids.update(local_ids)
+        coordinate_class = tuple(
+            0.0 if float(value) == 0.0 else float(value) for value in source)
+        alias_coordinate_classes.add(coordinate_class)
+        if plane_vertex:
+            plane_vertex_local_ids.update(local_ids)
+            plane_vertex_coordinate_classes.add(coordinate_class)
+        if interpolation_endpoint:
+            interpolation_endpoint_local_ids.update(local_ids)
+        return source.astype(np.float64), candidate.astype(np.float64)
+
+    for record_index, record in enumerate(material_records):
+        _require(isinstance(record, Mapping),
+                 "material-section point record is not an object")
+        kind = record.get("kind")
+        if kind == "source_vertex":
+            local_ids = record.get("coordinate_alias_local_vertex_ids")
+            source_ids = record.get("coordinate_alias_source_vertex_ids")
+            source, candidate = _class_points(
+                local_ids, source_ids, f"material section vertex {record_index}",
+                plane_vertex=True)
+            source_points_list.append(source)
+            candidate_points_list.append(candidate)
+            normalized_records.append({
+                "kind": kind,
+                "source_vertex_ids": [
+                    int(baseline_gids[value]) for value in local_ids],
+            })
+        elif kind == "source_edge_intersection":
+            local_endpoints = record.get("endpoint_local_vertex_ids")
+            local_aliases = record.get("endpoint_alias_local_vertex_ids")
+            fraction = record.get("interpolation_fraction_from_first_endpoint")
+            _require(isinstance(local_endpoints, list) and len(local_endpoints) == 2
+                     and isinstance(local_aliases, list) and len(local_aliases) == 2
+                     and isinstance(record.get("endpoint_alias_source_vertex_ids"), list)
+                     and len(record["endpoint_alias_source_vertex_ids"]) == 2
+                     and type(local_endpoints[0]) is int
+                     and type(local_endpoints[1]) is int
+                     and 0 <= local_endpoints[0] < len(baseline_positions)
+                     and 0 <= local_endpoints[1] < len(baseline_positions)
+                     and isinstance(fraction, (int, float))
+                     and not isinstance(fraction, bool)
+                     and np.isfinite(float(fraction))
+                     and 0.0 < float(fraction) < 1.0,
+                     f"material edge point {record_index} has invalid endpoints or fraction")
+            endpoint_pairs = [
+                _class_points(
+                    local_aliases[i], local_aliases[i],
+                    f"material edge point {record_index} endpoint {i}",
+                    interpolation_endpoint=True)
+                for i in range(2)]
+            class_ids = record.get("canonical_endpoint_coordinate_class_ids")
+            _require(isinstance(class_ids, list) and len(class_ids) == 2
+                     and all(type(value) is int for value in class_ids)
+                     and class_ids[0] < class_ids[1]
+                     and all(type(value) is int for value in local_endpoints)
+                     and all(local_endpoints[i] == min(local_aliases[i])
+                             for i in range(2))
+                     and all(isinstance(values, list)
+                             and values == local_aliases[i]
+                             for i, values in enumerate(
+                                 record["endpoint_alias_source_vertex_ids"])),
+                     f"material edge point {record_index} endpoint order/binding changed")
+            endpoint_gids = [int(baseline_gids[local])
+                             for local in local_endpoints]
+            fraction = float(fraction)
+            source_points_list.append(
+                (1.0 - fraction) * endpoint_pairs[0][0]
+                + fraction * endpoint_pairs[1][0])
+            candidate_points_list.append(
+                (1.0 - fraction) * endpoint_pairs[0][1]
+                + fraction * endpoint_pairs[1][1])
+            normalized_records.append({
+                "kind": kind,
+                "endpoint_source_vertex_ids": endpoint_gids,
+                "interpolation_fraction_from_first_endpoint": fraction,
+            })
+        else:
+            raise ValueError(
+                f"material-section point {record_index} has unknown kind {kind!r}")
+
+    alias_local_ids = sorted(alias_local_ids)
+    plane_vertex_local_ids = sorted(plane_vertex_local_ids)
+    interpolation_endpoint_local_ids = sorted(interpolation_endpoint_local_ids)
+    _require(bool(alias_local_ids),
+             "material-section point records have no bound source aliases")
+    source_points = np.asarray(source_points_list, dtype=np.float64)
+    candidate_points = np.asarray(candidate_points_list, dtype=np.float64)
+    _require(source_points.shape == candidate_points.shape
+             and source_points.ndim == 2 and source_points.shape[1] == 3
+             and np.isfinite(source_points).all()
+             and np.isfinite(candidate_points).all(),
+             "material-section points are malformed")
     baseline_center = np.asarray(
         baseline_station.get("section_center_world_m"), dtype=np.float64)
     baseline_tangent = np.asarray(
@@ -2260,22 +2332,67 @@ def _transport_material_station_by_local_proper_rigid_fit(
              and np.isfinite(baseline_tangent).all()
              and float(np.linalg.norm(baseline_tangent)) > 0.0,
              "baseline material station has invalid plane coordinates")
+    baseline_tangent /= float(np.linalg.norm(baseline_tangent))
+    section_plane_tolerance = section_metric.get("coordinate_ulp_tolerance_m")
+    _require(isinstance(section_plane_tolerance, (int, float))
+             and not isinstance(section_plane_tolerance, bool)
+             and np.isfinite(float(section_plane_tolerance))
+             and float(section_plane_tolerance) > 0.0,
+             "baseline section has no finite coordinate-ULP plane tolerance")
+    baseline_plane_residuals = np.abs(
+        (source_points - baseline_center) @ baseline_tangent)
+    maximum_baseline_plane_residual = float(
+        baseline_plane_residuals.max(initial=0.0))
+    _require(maximum_baseline_plane_residual
+             <= float(section_plane_tolerance),
+             "material-section support contains a point outside its baseline station plane")
+
+    source_vertex_point_count = sum(
+        record.get("kind") == "source_vertex" for record in material_records)
+    source_edge_intersection_point_count = sum(
+        record.get("kind") == "source_edge_intersection"
+        for record in material_records)
+
+    source_center = source_points.mean(axis=0)
+    candidate_center = candidate_points.mean(axis=0)
+    source_centered = source_points - source_center
+    singular_values = np.linalg.svd(source_centered, compute_uv=False)
+    _require(len(singular_values) >= 2
+             and singular_values[1] > max(singular_values[0], 1e-30) * 1e-10,
+             "station rigid-fit material section is geometrically underdetermined")
+    covariance = source_centered.T @ (candidate_points - candidate_center)
+    left, _values, right_t = np.linalg.svd(covariance)
+    orientation = 1.0 if np.linalg.det(left @ right_t) >= 0.0 else -1.0
+    rotation = left @ np.diag([1.0, 1.0, orientation]) @ right_t
+    _require(float(np.linalg.det(rotation)) > 0.999999,
+             "station rigid-fit transform is not a proper rotation")
+    translation = candidate_center - source_center @ rotation
+    residuals = np.linalg.norm(
+        source_points @ rotation + translation - candidate_points, axis=1)
+    maximum_residual = float(residuals.max(initial=0.0))
+    rms_residual = float(np.sqrt(np.mean(residuals * residuals)))
+    if maximum_fit_residual_m is not None:
+        _require(maximum_residual <= maximum_fit_residual_m,
+                 "candidate material-section support is not one local proper rigid motion "
+                 f"(maximum residual {maximum_residual:.9g} m exceeds "
+                 f"{maximum_fit_residual_m:.9g} m)")
     candidate_center_world = baseline_center @ rotation + translation
     candidate_tangent = baseline_tangent @ rotation
     candidate_tangent /= float(np.linalg.norm(candidate_tangent))
     source_binding = _source_geometry_binding(baseline_surface)
     candidate_binding = _source_geometry_binding(candidate_surface)
-    support_gids = np.asarray(
-        baseline_gids[support_ids], dtype="<u8")
-    ring_faces_u32 = np.asarray(ring_face_ids, dtype="<u4")
+    alias_gids = np.asarray(baseline_gids[alias_local_ids], dtype="<u8")
+    plane_vertex_gids = np.asarray(
+        baseline_gids[plane_vertex_local_ids], dtype="<u8")
+    interpolation_endpoint_gids = np.asarray(
+        baseline_gids[interpolation_endpoint_local_ids], dtype="<u8")
     proof = {
         "schema": "numi.human.source-local-proper-rigid-station-transport.v1",
         "passed": True,
         "typed_identity": list(_identity(baseline_surface.key)),
         "method": (
-            "proper Kabsch fit from independent baseline to candidate on the "
-            "frozen material-station collar and its exact-coordinate alias-closed "
-            "indexed one-ring"),
+            "proper Kabsch fit on exact source section vertices and edge-intersection "
+            "points transported with their recorded interpolation fractions"),
         "candidate_geometry_used_only_for_local_motion_fit": True,
         "source_station_ancestry_sha256": _canonical_record_sha256({
             key: baseline_station.get(key) for key in (
@@ -2285,15 +2402,56 @@ def _transport_material_station_by_local_proper_rigid_fit(
         "frozen_collar_face_ids": [int(value) for value in collar_ids],
         "frozen_collar_face_ids_sha256": hashlib.sha256(
             np.ascontiguousarray(collar_ids, dtype="<u4").tobytes()).hexdigest(),
-        "source_one_ring_face_ids": [int(value) for value in ring_face_ids],
-        "source_one_ring_face_ids_sha256": hashlib.sha256(
-            ring_faces_u32.tobytes()).hexdigest(),
-        "source_one_ring_support_local_vertex_ids_sha256": hashlib.sha256(
-            np.ascontiguousarray(support_ids, dtype="<u4").tobytes()).hexdigest(),
-        "source_one_ring_support_vertex_count": len(support_ids),
-        "source_one_ring_unique_coordinate_class_count": len(representatives),
-        "source_one_ring_support_source_vertex_ids_sha256": hashlib.sha256(
-            np.ascontiguousarray(support_gids, dtype="<u8").tobytes()).hexdigest(),
+        "fit_support_scope": "BASELINE_IN_PLANE_MATERIAL_SECTION_NODES_V1",
+        "baseline_selected_loop_face_ids": [int(value) for value in section_face_ids],
+        "baseline_selected_loop_face_count": len(section_face_ids),
+        "baseline_selected_loop_face_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(section_face_ids, dtype="<u4").tobytes()).hexdigest(),
+        "baseline_selected_loop_ancestry_sha256": section_metric[
+            "source_face_ancestor_ids_sha256"],
+        "source_section_fit_point_count": len(material_records),
+        "edge_intersection_points_are_fit_observations": True,
+        "off_plane_edge_endpoints_are_fit_observations": False,
+        "source_section_plane_vertex_local_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(plane_vertex_local_ids, dtype="<u4").tobytes()).hexdigest(),
+        "source_section_plane_vertex_alias_count": len(plane_vertex_local_ids),
+        "source_section_plane_vertex_coordinate_class_count": len(
+            plane_vertex_coordinate_classes),
+        "source_section_interpolation_endpoint_local_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(interpolation_endpoint_local_ids,
+                                 dtype="<u4").tobytes()).hexdigest(),
+        "source_section_interpolation_endpoint_vertex_count": len(
+            interpolation_endpoint_local_ids),
+        "source_section_alias_local_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(alias_local_ids, dtype="<u4").tobytes()).hexdigest(),
+        "source_section_alias_vertex_count": len(alias_local_ids),
+        "source_section_alias_unique_coordinate_class_count": len(
+            alias_coordinate_classes),
+        "source_section_source_vertex_point_count": source_vertex_point_count,
+        "source_section_edge_intersection_point_count": source_edge_intersection_point_count,
+        "all_source_material_points_on_baseline_station_plane": True,
+        "maximum_baseline_station_plane_residual_m": maximum_baseline_plane_residual,
+        "baseline_station_plane_residual_bound_m": float(section_plane_tolerance),
+        "source_section_material_point_records_sha256": section_metric[
+            "material_point_records_sha256"],
+        "source_section_material_point_binding_sha256": _canonical_record_sha256(
+            normalized_records),
+        "baseline_material_points_sha256": hashlib.sha256(
+            np.ascontiguousarray(source_points, dtype="<f8").tobytes()).hexdigest(),
+        "candidate_material_points_sha256": hashlib.sha256(
+            np.ascontiguousarray(candidate_points, dtype="<f8").tobytes()).hexdigest(),
+        "source_section_plane_vertex_source_vertex_ids": [
+            int(value) for value in plane_vertex_gids],
+        "source_section_plane_vertex_source_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(plane_vertex_gids, dtype="<u8").tobytes()).hexdigest(),
+        "source_section_interpolation_endpoint_source_vertex_ids": [
+            int(value) for value in interpolation_endpoint_gids],
+        "source_section_interpolation_endpoint_source_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(interpolation_endpoint_gids, dtype="<u8").tobytes()).hexdigest(),
+        "source_section_alias_source_vertex_ids": [
+            int(value) for value in alias_gids],
+        "source_section_alias_source_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(alias_gids, dtype="<u8").tobytes()).hexdigest(),
         "baseline_surface_binding": source_binding,
         "candidate_surface_binding": candidate_binding,
         "rotation_row_vector": rotation.tolist(),
@@ -2301,11 +2459,27 @@ def _transport_material_station_by_local_proper_rigid_fit(
         "rotation_determinant": float(np.linalg.det(rotation)),
         "maximum_fit_residual_m": maximum_residual,
         "rms_fit_residual_m": rms_residual,
-        "maximum_fit_residual_bound_m": float(maximum_fit_residual_m),
+        "maximum_fit_residual_bound_m": (
+            None if maximum_fit_residual_m is None
+            else float(maximum_fit_residual_m)),
         "all_exact_coordinate_aliases_preserved": True,
         "anatomical_admission": False,
         "native_admission": False,
     }
+    if maximum_fit_residual_m is None:
+        material_calibre = _material_section_ring_calibre(
+            source_points, candidate_points, baseline_station, rotation,
+            section_metric)
+        proof.update({
+            "schema": "numi.human.source-material-section-transport.v1",
+            "method": (
+                "same authenticated edge-fraction material ring in the "
+                "best-fit transported frame; no rigid-fit admission"),
+            "passed": material_calibre["passed"],
+            "proper_rigid_applicability_bound_m": 5.0e-7,
+            "proper_rigid_applicability_passed": maximum_residual <= 5.0e-7,
+            "material_section_calibre": material_calibre,
+        })
     candidate_station = {
         **dict(baseline_station),
         "section_center_world_m": candidate_center_world.tolist(),
@@ -2313,9 +2487,32 @@ def _transport_material_station_by_local_proper_rigid_fit(
         "material_anchor_world_m": (
             np.asarray(baseline_station["material_anchor_world_m"], dtype=np.float64)
             @ rotation + translation).tolist(),
-        "station_transport_method": "SOURCE_LOCAL_PROPER_RIGID_FIT_V1",
+        "station_transport_method": (
+            "SOURCE_LOCAL_PROPER_RIGID_FIT_V1"
+            if maximum_fit_residual_m is not None
+            else "SOURCE_MATERIAL_SECTION_FRAME_V1"),
         "transported_from_source_vertex_ancestry": True,
     }
+    return candidate_station, proof
+
+
+def _transport_material_station_by_material_section(
+    baseline_surface, candidate_surface, baseline_station,
+):
+    """Transport an authenticated section by its material ring, not rigid fit."""
+    candidate_station, proof = (
+        _transport_material_station_by_local_proper_rigid_fit(
+            baseline_surface, candidate_surface, baseline_station,
+            maximum_fit_residual_m=None))
+    calibre = proof.get("material_section_calibre")
+    _require(isinstance(calibre, Mapping)
+             and proof.get("schema")
+                 == "numi.human.source-material-section-transport.v1"
+             and calibre.get("declared_maximum_warp_to_feret_ratio") == 0.01,
+             "material-section transport did not produce its pinned calibre proof")
+    proof["passed"] = calibre.get("passed") is True
+    candidate_station["station_transport_method"] = (
+        "SOURCE_MATERIAL_SECTION_FRAME_V1")
     return candidate_station, proof
 
 
@@ -3095,6 +3292,243 @@ def _minimum_feret_width(hull):
     return min(widths, default=0.0)
 
 
+def _orient2d_exact(first, second, third):
+    ax, ay = (Fraction.from_float(float(value)) for value in first)
+    bx, by = (Fraction.from_float(float(value)) for value in second)
+    cx, cy = (Fraction.from_float(float(value)) for value in third)
+    return (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)
+
+
+def _point_on_segment2d_exact(point, first, second):
+    return all(
+        min(Fraction.from_float(float(first[axis])),
+            Fraction.from_float(float(second[axis])))
+        <= Fraction.from_float(float(point[axis]))
+        <= max(Fraction.from_float(float(first[axis])),
+               Fraction.from_float(float(second[axis])))
+        for axis in range(2)
+    )
+
+
+def _segments_intersect2d_exact(first_a, first_b, second_a, second_b):
+    orientations = (
+        _orient2d_exact(first_a, first_b, second_a),
+        _orient2d_exact(first_a, first_b, second_b),
+        _orient2d_exact(second_a, second_b, first_a),
+        _orient2d_exact(second_a, second_b, first_b),
+    )
+    if orientations[0] == 0 and _point_on_segment2d_exact(
+            second_a, first_a, first_b):
+        return True
+    if orientations[1] == 0 and _point_on_segment2d_exact(
+            second_b, first_a, first_b):
+        return True
+    if orientations[2] == 0 and _point_on_segment2d_exact(
+            first_a, second_a, second_b):
+        return True
+    if orientations[3] == 0 and _point_on_segment2d_exact(
+            first_b, second_a, second_b):
+        return True
+    return (
+        ((orientations[0] < 0 < orientations[1])
+         or (orientations[1] < 0 < orientations[0]))
+        and
+        ((orientations[2] < 0 < orientations[3])
+         or (orientations[3] < 0 < orientations[2]))
+    )
+
+
+def _simple_closed_polygon2d_exact(points):
+    polygon = np.asarray(points, dtype=np.float64)
+    if (polygon.ndim != 2 or polygon.shape[1] != 2 or len(polygon) < 3
+            or not np.isfinite(polygon).all()):
+        return False
+    if any(np.array_equal(polygon[index], polygon[(index + 1) % len(polygon)])
+           for index in range(len(polygon))):
+        return False
+    for first_edge in range(len(polygon)):
+        first_next = (first_edge + 1) % len(polygon)
+        for second_edge in range(first_edge + 1, len(polygon)):
+            second_next = (second_edge + 1) % len(polygon)
+            if first_next == second_edge or second_next == first_edge:
+                continue
+            if _segments_intersect2d_exact(
+                    polygon[first_edge], polygon[first_next],
+                    polygon[second_edge], polygon[second_next]):
+                return False
+    return True
+
+
+def _signed_polygon_area2d_exact(points):
+    polygon = np.asarray(points, dtype=np.float64)
+    total = Fraction(0)
+    for index, first in enumerate(polygon):
+        second = polygon[(index + 1) % len(polygon)]
+        ax, ay = (Fraction.from_float(float(value)) for value in first)
+        bx, by = (Fraction.from_float(float(value)) for value in second)
+        total += ax * by - ay * bx
+    return float(total / 2)
+
+
+def _material_section_ring_calibre(
+    source_points, candidate_points, baseline_station, rotation,
+    baseline_section_metric, *, maximum_warp_to_feret_ratio=0.01,
+):
+    """Measure one transported source ring without requiring a rigid fit."""
+    source = np.asarray(source_points, dtype=np.float64)
+    candidate = np.asarray(candidate_points, dtype=np.float64)
+    _require(source.shape == candidate.shape and source.ndim == 2
+             and source.shape[1] == 3 and len(source) >= 3
+             and np.isfinite(source).all() and np.isfinite(candidate).all(),
+             "material-section ring arrays are invalid")
+    _require(np.isfinite(maximum_warp_to_feret_ratio)
+             and maximum_warp_to_feret_ratio > 0.0,
+             "material-section planarity ratio must be positive and finite")
+    tangent = np.asarray(
+        baseline_station.get("tangent_world_unit"), dtype=np.float64)
+    _require(tangent.shape == (3,) and np.isfinite(tangent).all()
+             and float(np.linalg.norm(tangent)) > 0.0,
+             "material-section baseline tangent is invalid")
+    tangent /= float(np.linalg.norm(tangent))
+    helper = np.eye(3)[int(np.argmin(np.abs(tangent)))]
+    first_axis = np.cross(tangent, helper)
+    first_axis /= float(np.linalg.norm(first_axis))
+    second_axis = np.cross(tangent, first_axis)
+    candidate_first_axis = first_axis @ rotation
+    candidate_second_axis = second_axis @ rotation
+    candidate_normal = tangent @ rotation
+    candidate_normal /= float(np.linalg.norm(candidate_normal))
+
+    source_center = source.mean(axis=0)
+    candidate_center = candidate.mean(axis=0)
+    source_projected = np.column_stack((
+        (source - source_center) @ first_axis,
+        (source - source_center) @ second_axis,
+    ))
+    candidate_projected = np.column_stack((
+        (candidate - candidate_center) @ candidate_first_axis,
+        (candidate - candidate_center) @ candidate_second_axis,
+    ))
+    source_signed_area = _signed_polygon_area2d_exact(source_projected)
+    candidate_signed_area = _signed_polygon_area2d_exact(candidate_projected)
+    source_area = abs(source_signed_area)
+    candidate_projected_area = abs(candidate_signed_area)
+    source_width = _minimum_feret_width(_convex_hull_2d(source_projected))
+    candidate_width = _minimum_feret_width(_convex_hull_2d(candidate_projected))
+    source_simple = _simple_closed_polygon2d_exact(source_projected)
+    candidate_simple = _simple_closed_polygon2d_exact(candidate_projected)
+
+    source_center2 = source_projected.mean(axis=0)
+    candidate_center2 = candidate_projected.mean(axis=0)
+    source_orientation = 1 if source_signed_area > 0.0 else -1
+    candidate_orientation = 1 if candidate_signed_area > 0.0 else -1
+    source_fan_oriented = all(
+        source_orientation * _orient2d_exact(
+            source_center2, source_projected[index],
+            source_projected[(index + 1) % len(source_projected)]) >= 0
+        for index in range(len(source_projected)))
+    candidate_fan_oriented = all(
+        candidate_orientation * _orient2d_exact(
+            candidate_center2, candidate_projected[index],
+            candidate_projected[(index + 1) % len(candidate_projected)]) >= 0
+        for index in range(len(candidate_projected)))
+
+    source_fan_center = source.mean(axis=0)
+    candidate_fan_center = candidate.mean(axis=0)
+    source_fan_area = sum(
+        0.5 * float(np.linalg.norm(np.cross(
+            source[index] - source_fan_center,
+            source[(index + 1) % len(source)] - source_fan_center)))
+        for index in range(len(source)))
+    candidate_fan_area = sum(
+        0.5 * float(np.linalg.norm(np.cross(
+            candidate[index] - candidate_fan_center,
+            candidate[(index + 1) % len(candidate)] - candidate_fan_center)))
+        for index in range(len(candidate)))
+    source_warp = float(np.max(np.abs((source - source_center) @ tangent)))
+    candidate_warp = float(np.max(np.abs(
+        (candidate - candidate_center) @ candidate_normal)))
+    source_perimeter = float(np.linalg.norm(
+        np.roll(source, -1, axis=0) - source, axis=1).sum())
+    candidate_perimeter = float(np.linalg.norm(
+        np.roll(candidate, -1, axis=0) - candidate, axis=1).sum())
+    _require(source_fan_area > 0.0 and candidate_fan_area > 0.0
+             and source_perimeter > 0.0,
+             "material-section ring has zero 3-D area or perimeter")
+
+    baseline_area = float(baseline_section_metric.get("area_m2"))
+    baseline_width = float(baseline_section_metric.get("minimum_feret_width_m"))
+    _require(np.isfinite(baseline_area) and baseline_area > 0.0
+             and np.isfinite(baseline_width) and baseline_width > 0.0,
+             "material-section baseline calibre is invalid")
+    _require(abs(source_area - baseline_area)
+             <= max(baseline_area * 1.0e-7, 1.0e-18)
+             and abs(source_width - baseline_width)
+             <= max(baseline_width * 1.0e-7, 1.0e-12),
+             "material ring does not reproduce the independent source section")
+    area_bounds = (0.8, 1.25)
+    width_bounds = (0.9, 1.1)
+    projected_area_ratio = candidate_projected_area / baseline_area
+    fan_area_ratio = candidate_fan_area / source_fan_area
+    width_ratio = candidate_width / baseline_width
+    width_ratio_bounds = (
+        (candidate_width - 2.0 * candidate_warp) / baseline_width,
+        (candidate_width + 2.0 * candidate_warp) / baseline_width,
+    )
+    warp_ratio = candidate_warp / baseline_width
+    projection_error = abs(candidate_fan_area - candidate_projected_area)
+    perimeter_ratio = candidate_perimeter / source_perimeter
+    passed = bool(
+        source_simple and candidate_simple
+        and source_fan_oriented and candidate_fan_oriented
+        and source_orientation == candidate_orientation
+        and warp_ratio <= maximum_warp_to_feret_ratio
+        and area_bounds[0] <= projected_area_ratio <= area_bounds[1]
+        and area_bounds[0] <= fan_area_ratio <= area_bounds[1]
+        and width_bounds[0] <= width_ratio_bounds[0]
+        and width_ratio_bounds[1] <= width_bounds[1]
+    )
+    return {
+        "passed": passed,
+        "method": (
+            "same-source-edge-fraction material ring, best-fit transported "
+            "frame, projected polygon plus 3D centroid-fan area"),
+        "source_material_ring_is_simple_closed": source_simple,
+        "candidate_material_ring_is_simple_closed": candidate_simple,
+        "source_centroid_fan_stays_inside_or_on_ring": source_fan_oriented,
+        "candidate_centroid_fan_stays_inside_or_on_ring": candidate_fan_oriented,
+        "source_and_candidate_ring_orientation_match": (
+            source_orientation == candidate_orientation),
+        "source_projected_area_m2": source_area,
+        "candidate_projected_area_m2": candidate_projected_area,
+        "source_centroid_fan_area_m2": source_fan_area,
+        "candidate_centroid_fan_area_m2": candidate_fan_area,
+        "projected_area_ratio": projected_area_ratio,
+        "centroid_fan_area_ratio": fan_area_ratio,
+        "source_minimum_feret_width_m": source_width,
+        "candidate_projected_minimum_feret_width_m": candidate_width,
+        "projected_minimum_feret_width_ratio": width_ratio,
+        "minimum_feret_width_ratio_interval": list(width_ratio_bounds),
+        "source_maximum_out_of_plane_warp_m": source_warp,
+        "candidate_maximum_out_of_plane_warp_m": candidate_warp,
+        "maximum_warp_to_source_minimum_feret_ratio": warp_ratio,
+        "declared_maximum_warp_to_feret_ratio": maximum_warp_to_feret_ratio,
+        "projection_area_error_m2": projection_error,
+        "projection_area_error_fraction_of_3d_fan": (
+            projection_error / candidate_fan_area
+            if candidate_fan_area > 0.0 else None),
+        "source_perimeter_m": source_perimeter,
+        "candidate_3d_perimeter_m": candidate_perimeter,
+        "perimeter_ratio_diagnostic_only": perimeter_ratio,
+        "declared_preservation_intervals": {
+            "area": list(area_bounds),
+            "minimum_feret_width": list(width_bounds),
+        },
+        "clinical_calibre_claim": False,
+    }
+
+
+
 def _exact_interface_points(verifier, first, second, face_pairs):
     points = []
     for first_face, second_face in face_pairs:
@@ -3234,7 +3668,7 @@ def _section_loop_lineage(face_indices, face_owner_ids, face_source_ids,
 
 def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
                    face_owner_ids=None, face_source_ids=None,
-                   face_generated_mask=None):
+                   face_generated_mask=None, include_material_point_records=False):
     points = np.asarray(positions)
     expected_dtype = np.dtype("<f8") if derived_csg else np.dtype("<f4")
     precision_label = "derived Manifold Mesh64" if derived_csg else "emitted Float32"
@@ -3374,6 +3808,15 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
         return key
 
     edge_intersections = {}
+    canonical_local_ids = {}
+    for local_id, canonical_id in enumerate(canonical_source_ids):
+        canonical_local_ids.setdefault(int(canonical_id), []).append(local_id)
+    source_vertex_ids = np.arange(len(points), dtype="<u8")
+
+    def representative_local_id(canonical_id):
+        local_ids = canonical_local_ids[int(canonical_id)]
+        return min(local_ids, key=lambda local_id: (
+            int(source_vertex_ids[local_id]), local_id))
 
     def crossing_edge_node(first_id, second_id):
         edge = tuple(sorted((int(first_id), int(second_id))))
@@ -3390,7 +3833,8 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
         point = canonical_points[first] + fraction * (
             canonical_points[second] - canonical_points[first])
         key = ("e", edge[0], edge[1])
-        edge_intersections[edge] = (key, np.asarray(point, dtype=np.float64))
+        edge_intersections[edge] = (
+            key, np.asarray(point, dtype=np.float64), float(fraction))
         node_positions.setdefault(key, edge_intersections[edge][1])
         return key
 
@@ -3524,7 +3968,7 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
         if len(loop) >= 3 and len(set(loop)) == len(loop):
             loops.append(np.asarray([projected_points[key] for key in loop],
                                     dtype=np.float64))
-            loop_records.append((loops[-1], tuple(loop_edges)))
+            loop_records.append((loops[-1], tuple(loop_edges), tuple(loop)))
         else:
             return {
                 "passed": False, "loop_count": len(loops),
@@ -3533,7 +3977,7 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
             }
     positive_floor = tolerance * 64.0
     loop_metrics = []
-    for loop, loop_edges in loop_records:
+    for loop, loop_edges, loop_node_keys in loop_records:
         area = abs(float(np.dot(loop[:, 0], np.roll(loop[:, 1], -1))
                          - np.dot(loop[:, 1], np.roll(loop[:, 0], -1)))) / 2.0
         hull = _convex_hull_2d(loop)
@@ -3545,7 +3989,7 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
         lineage = _section_loop_lineage(
             face_ids, face_owner_ids, face_source_ids, face_generated_mask,
             lineage_available=lineage_available)
-        loop_metrics.append({
+        metric = {
             "passed": loop_passed,
             "vertex_count": len(loop),
             "area_m2": area,
@@ -3558,7 +4002,50 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
             "reason": None if loop_passed
                 else "cross-section area or minimum Feret width collapsed",
             **lineage,
-        })
+        }
+        if include_material_point_records:
+            material_records = []
+            for node_key in loop_node_keys:
+                if node_key[0] == "v":
+                    canonical_id = int(node_key[1])
+                    local_id = representative_local_id(canonical_id)
+                    aliases = canonical_local_ids[canonical_id]
+                    material_records.append({
+                        "kind": "source_vertex",
+                        "canonical_coordinate_class_id": canonical_id,
+                        "local_vertex_id": int(local_id),
+                        "coordinate_alias_local_vertex_ids": [
+                            int(value) for value in aliases],
+                        "coordinate_alias_source_vertex_ids": [
+                            int(source_vertex_ids[value]) for value in aliases],
+                    })
+                else:
+                    first_canonical, second_canonical = (
+                        int(node_key[1]), int(node_key[2]))
+                    edge = tuple(sorted((first_canonical, second_canonical)))
+                    fraction = edge_intersections[edge][2]
+                    first_local = representative_local_id(edge[0])
+                    second_local = representative_local_id(edge[1])
+                    first_aliases = canonical_local_ids[edge[0]]
+                    second_aliases = canonical_local_ids[edge[1]]
+                    material_records.append({
+                        "kind": "source_edge_intersection",
+                        "canonical_endpoint_coordinate_class_ids": [
+                            int(edge[0]), int(edge[1])],
+                        "endpoint_local_vertex_ids": [
+                            int(first_local), int(second_local)],
+                        "endpoint_alias_local_vertex_ids": [
+                            [int(value) for value in first_aliases],
+                            [int(value) for value in second_aliases]],
+                        "endpoint_alias_source_vertex_ids": [
+                            [int(source_vertex_ids[value]) for value in first_aliases],
+                            [int(source_vertex_ids[value]) for value in second_aliases]],
+                        "interpolation_fraction_from_first_endpoint": fraction,
+                    })
+            metric["material_point_records"] = material_records
+            metric["material_point_records_sha256"] = _canonical_record_sha256(
+                material_records)
+        loop_metrics.append(metric)
     if len(loops) != 1:
         return {
             "passed": False, "loop_count": len(loops),
@@ -3679,6 +4166,7 @@ def _source_face_graph_distances(surface, collar_face_ids):
 
 def _collar_local_source_section(
     section_surface, station, *, source_topology_surface, collar_face_ids, label,
+    include_material_point_records=False,
 ):
     """Select one collar-local section loop; preserve all other loop diagnostics.
 
@@ -3695,7 +4183,9 @@ def _collar_local_source_section(
     _require(measured_faces.shape == source_faces.shape
              and measured_faces.tobytes() == source_faces.tobytes(),
              f"{label} ordered faces differ from independent source topology")
-    raw = _source_surface_section(section_surface, station)
+    raw = _source_surface_section(
+        section_surface, station,
+        include_material_point_records=include_material_point_records)
     _require(isinstance(raw.get("loop_metrics"), list)
              and bool(raw["loop_metrics"])
              and len(raw["loop_metrics"]) == raw.get("loop_count"),
@@ -3885,10 +4375,11 @@ def _collar_local_union_section(
     }
 
 
-def _source_surface_section(surface, station):
+def _source_surface_section(surface, station, *, include_material_point_records=False):
     return _section_loops(
         surface.positions, surface.faces,
         station["section_center_world_m"], station["tangent_world_unit"],
+        include_material_point_records=include_material_point_records,
         **_source_section_lineage(surface))
 
 
@@ -4406,11 +4897,12 @@ def audit_brachiocephalic_port_pair_continuity(
              and set(source_station_declarations) <= {"bridge", "target"},
              "source station declarations must be keyed by branch role")
     _require(candidate_station_transport_policy in (
-                 None, "SOURCE_LOCAL_PROPER_RIGID_FIT_V1"),
+                 None, "SOURCE_LOCAL_PROPER_RIGID_FIT_V1",
+                 "SOURCE_MATERIAL_SECTION_FRAME_V1"),
              "unknown candidate source-station transport policy")
     if candidate_station_transport_policy is not None:
         _require(set(source_station_declarations) == {"bridge", "target"},
-                 "local rigid station transport needs both independent source station declarations")
+                 "source-station transport needs both independent source station declarations")
     bridge = _prepare_vessel(verifier, bridge_key, bridge_surface)
     target = _prepare_vessel(verifier, target_key, target_surface)
     base_bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
@@ -4625,6 +5117,12 @@ def audit_brachiocephalic_port_pair_continuity(
             candidate_station_transport_proof[
                 "candidate_ancestry_station_tangent_world_unit"] = (
                     candidate_ancestry_station["tangent_world_unit"])
+        elif candidate_station_transport_policy == "SOURCE_MATERIAL_SECTION_FRAME_V1":
+            candidate_spec, candidate_station_transport_proof = (
+                _transport_material_station_by_material_section(
+                    base_surface, surface, baseline_spec))
+            _require(candidate_station_transport_proof.get("passed") is True,
+                     f"{role} same-material section calibre/planarity proof failed")
         else:
             candidate_spec = _transport_material_station(surface, source_spec)
         runtime_source_station_declarations[role] = {
