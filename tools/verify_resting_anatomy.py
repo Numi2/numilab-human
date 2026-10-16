@@ -405,6 +405,8 @@ def main(argv=None):
     p.add_argument("--shared-partition", nargs=4, action="append", default=[],
                    metavar=("FIRST", "SECOND", "SOURCE", "SHA256"),
                    help="source-bound reciprocal muscle or supported rigid head partition; strict exact certificate required")
+    p.add_argument("--parent-bindings-receipt",
+                   help="existing source receipt PATH=SHA256; complete one-body parent-carrier terms for shared muscle partitions")
     p.add_argument("--head-source-patch-report", action="append", default=[],
                    help="existing reciprocal head-patch report PATH=SHA256; current capture only")
     p.add_argument("--bone-artifact", type=Path, help="existing compiled NHBONES artifact directory")
@@ -555,6 +557,16 @@ def main(argv=None):
         capture_context = ({"capture_receipt": json.loads(args.capture_receipt.read_text()),
                             "capture_receipt_sha256": args.receipt_sha256}
                            if any(first[0] != 51005 or second[0] != 51005 for first, second, _, _ in partitions) else None)
+        if args.parent_bindings_receipt:
+            if not partitions or overlay_keys:
+                raise ValueError("parent bindings require accepted native shared partitions without overlays")
+            parent_path, parent_sha = args.parent_bindings_receipt.rsplit("=", 1)
+            parent_pin = pin(parent_path, parent_sha)
+            report["parent_bindings_receipt"] = parent_pin
+            if capture_context is None:
+                capture_context = {}
+            capture_context["parent_bindings_context"] = {
+                "path": parent_path, "sha256": parent_sha}
         if any((first[0] != 51005 or second[0] != 51005) and (first in overlay_keys or second in overlay_keys)
                for first, second, _, _ in partitions):
             raise ValueError("rigid head partitions require unchanged accepted-capture surfaces")

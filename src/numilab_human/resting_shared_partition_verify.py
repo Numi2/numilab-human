@@ -6,15 +6,106 @@ material supports, and exact native Float32 interface coordinates are checked.
 """
 from pathlib import Path
 import struct
+import json
 import numpy as np
 from . import passive_attachment_composition as pac
 from . import resting_anatomy_verify as verify
 from . import cardiac_partition_certificate as cert
 
 
+
+def _parent_carrier_material(key, child_sha256, context, vertex_count):
+    """Authenticate every existing one-body carrier term; retain full doubles/order."""
+    path = Path(context["path"]).resolve()
+    digest = context["sha256"]
+    pac.require(pac._surface_sha256(path) == digest, "parent receipt hash differs")
+    receipt = json.loads(path.read_text())
+    extension = receipt["passive_tissue_parent_bindings"]
+    pac.require(extension["child_payload_sha256"] == child_sha256,
+                "parent receipt child payload differs")
+    rows = [row for row in extension["surfaces"] if row["stable_id"] == key[1]]
+    pac.require(len(rows) == 1 and len(rows[0]["vertices"]) == vertex_count,
+                "parent child surface allocation differs")
+    sources = extension["source_payloads"]
+    pac.require(0 < len(sources) <= 8, "parent source inventory invalid")
+    cache, source_pins, result = {}, {}, []
+    for terms in rows[0]["vertices"]:
+        pac.require(bool(terms), "parent child material has no terms")
+        position = binding_table = None
+        active = []
+        seen = set()
+        total = 0.
+        for term in terms:
+            pac.require(isinstance(term, list) and len(term) == 4, "invalid parent term")
+            source_index, stable_id, slot, coefficient = term
+            pac.require(all(type(value) is int and value >= 0
+                            for value in (source_index, stable_id, slot))
+                        and source_index < len(sources)
+                        and type(coefficient) in (int, float)
+                        and np.isfinite(coefficient) and coefficient > 0,
+                        "invalid parent term identity or coefficient")
+            if source_index not in cache:
+                source = sources[source_index]
+                source_path = Path(source["path"]).resolve()
+                pac.require(pac._surface_sha256(source_path) == source["sha256"],
+                            "parent carrier source hash differs")
+                data = pac._read_nhtiss4(source_path)
+                cache[source_index] = {
+                    int(row[6]): pac._row_slices(data, row) for row in data["records"]}
+                source_pins[source_index] = dict(path=str(source_path), sha256=source["sha256"])
+            table = cache[source_index]
+            pac.require(stable_id in table, "parent carrier stable ID absent")
+            row = table[stable_id]
+            pac.require(slot < row["vertex_count"], "parent carrier vertex absent")
+            values = np.frombuffer(row["vertex_bytes"], dtype="<f4").reshape(-1, 14)[slot]
+            integers = values.view("<u4")
+            weights = values[10:14]
+            lanes = np.flatnonzero(weights > 0)
+            pac.require(np.isfinite(values[:6]).all() and np.isfinite(weights).all()
+                        and (weights >= 0).all() and len(lanes) == 1
+                        and weights[lanes[0]] == 1,
+                        "parent partition requires an existing one-body unit carrier")
+            ordinal = int(integers[6+lanes[0]])
+            records = row["binding_bytes"]
+            pac.require(ordinal*36+36 <= len(records), "parent carrier support absent")
+            record = records[ordinal*36:ordinal*36+36]
+            body, *rest = struct.unpack("<I8f", record)
+            pac.require(0 <= body < 192 and np.isfinite(rest).all() and rest[-1] > 0
+                        and abs(sum(x*x for x in rest[3:7])-1) < 1e-4,
+                        "parent carrier rigid rest transform invalid")
+            point = values[:3].tobytes()
+            if position is None:
+                pac.require(len(records) % 36 == 0 and 0 < len(records)//36 <= 24,
+                            "parent carrier complete support inventory invalid")
+                bodies = []
+                for offset in range(0, len(records), 36):
+                    core, *transform = struct.unpack_from("<I8f", records, offset)
+                    pac.require(0 <= core < 192 and np.isfinite(transform).all()
+                                and transform[-1] > 0
+                                and abs(sum(x*x for x in transform[3:7])-1) < 1e-4,
+                                "parent carrier complete rest inventory invalid")
+                    bodies.append(core)
+                pac.require(len(bodies) == len(set(bodies)),
+                            "parent carrier complete core inventory has duplicates")
+                position, binding_table = point, records
+            pac.require(point == position and records == binding_table,
+                        "parent carrier source replicas or ordered rest inventories differ")
+            pac.require(ordinal not in seen, "duplicate parent material support")
+            seen.add(ordinal)
+            active.append((ordinal, struct.pack("<d", coefficient)))
+            total += coefficient
+        pac.require(abs(total-1.) <= 1e-12, "full parent material partition invalid")
+        # Sparse omissions are structural zeros. Never normalize or truncate.
+        result.append((position, binding_table, tuple(active)))
+    return result, dict(parent_receipt_path=str(path), parent_receipt_sha256=digest,
+                        parent_sources=source_pins, complete_positive_terms_retained=True,
+                        coefficient_normalization_or_truncation=False,
+                        existing_one_body_carriers_only=True)
+
+
 def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha256: str,
                              *, coordinate_provenance="accepted_native_capture",
-                             exact_certificate=True):
+                             exact_certificate=True, parent_bindings_context=None):
     pac.require(coordinate_provenance in ("accepted_native_capture", "counterfactual_owner_replay"),
                 "shared partition coordinate provenance invalid")
     first, second = verify.typed_key(first), verify.typed_key(second)
@@ -24,6 +115,7 @@ def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha
     pac.require(pac._surface_sha256(source) == expected_sha256, "shared partition source hash differs")
     data = pac._read_nhtiss4(source)
     prepared, tokens, bindings, local_arrays = {}, {}, {}, {}
+    parent_proofs = {}
     for key in (first, second):
         rows = [r for r in data["records"] if int(r[6]) == key[1]]
         pac.require(len(rows) == 1 and int(rows[0][7]) == 1, "shared partition source ID/layer differs")
@@ -68,9 +160,14 @@ def _shared_muscle_partition(surfaces, first, second, source: Path, expected_sha
             # Preserve arithmetic lane order. Equivalent unordered supports
             # are insufficient to prove byte-identical native emission.
             material.append((positions[i].tobytes(), tuple(support)))
+        if parent_bindings_context is not None:
+            material, parent_proofs[key] = _parent_carrier_material(
+                key, expected_sha256, parent_bindings_context, len(positions))
         slot = gids.astype(np.int64)-proof["source_capture_vertex_namespace_offset"]-arrays["first_vertex"]
         pac.require((slot >= 0).all() and (slot < len(material)).all(), "source slot map invalid")
         tokens[key] = [material[int(i)] for i in slot]
+        if key in parent_proofs:
+            proof = dict(proof, full_parent_carrier_material=parent_proofs[key])
         prepared[key], bindings[key], local_arrays[key] = sf, proof, arrays
 
     return _finish_shared_partition(prepared, tokens, bindings, first, second, source,
@@ -208,7 +305,9 @@ def _partition_dispatch(surfaces, first, second, source, expected_sha256,
         pac.require(capture_context is not None, "rigid head partition requires accepted capture context")
         return _shared_rigid_head_partition(
             surfaces, first, second, source, expected_sha256, **capture_context, **kwargs)
-    return _shared_muscle_partition(surfaces, first, second, source, expected_sha256, **kwargs)
+    return _shared_muscle_partition(
+        surfaces, first, second, source, expected_sha256,
+        parent_bindings_context=(capture_context or {}).get("parent_bindings_context"), **kwargs)
 
 
 def preflight_shared_muscle_partition(surfaces, first, second, source: Path,
