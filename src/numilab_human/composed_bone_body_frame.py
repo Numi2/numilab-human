@@ -1796,6 +1796,14 @@ def validate_composed_rib_reframe(
     if artifact in _lineage or len(_lineage) >= 16:
         raise model.ImportError("bone source operation lineage is cyclic or exceeds 16 retained inputs")
     lineage = (*_lineage, artifact)
+    if "source_precision_retriangulation" in manifest:
+        source, prior_manifest, prior_raw, precision = validate_bone_source_precision_retriangulation(
+            artifact, manifest, output_raw)
+        prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw, _lineage=lineage)
+        result = {**prior, "source_precision_retriangulation": precision}
+        result["validation_sha256"] = _sha_bytes(json.dumps(
+            result, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
+        return result
     retirement_outer = "source_face_retirement" in manifest
     if retirement_outer and "thumb_reference_surface" in manifest:
         # Both declarations remain in the existing manifest. The outer
@@ -2158,3 +2166,139 @@ def validate_thumb_reference_surface(
     if manifest != wanted:
         raise model.ImportError("thumb reference patch changed unrelated manifest or ownership")
     return source, prior, path.read_bytes(), proof
+
+
+def repair_bone_source_precision_edges(
+    raw: bytes, *, stable_id: int, keep_vertex: int, remove_vertex: int,
+    flip_edges: list[list[int]], max_endpoint_displacement_m: float,
+    minimum_altitude_m: float, max_abs_volume_delta_m3: float = 1e-12,
+) -> tuple[bytes, dict[str, Any]]:
+    """Replay bounded source topology repairs through the existing constructors.
+
+    Keep all vertex/normal allocations and rigid/rest records byte exact.
+    Changes are confined to the selected bone's face stream, with complete
+    original face ancestry. Geometry, reciprocal interfaces and motion still
+    require separate acceptance.
+    """
+    from .surface_precision_retriangulation import (
+        collapse_closed_component_edge_preserving_allocations,
+        flip_closed_surface_edge_preserving_allocations,
+    )
+    header, records, vo, io = _decode_bones(raw)
+    if type(stable_id) is not int or stable_id <= 0:
+        raise model.ImportError("precision repair requires a typed positive bone ID")
+    matches = [i for i, r in enumerate(records) if r[5] == stable_id]
+    if len(matches) != 1:
+        raise model.ImportError("precision repair requires one selected bone")
+    if (not isinstance(flip_edges, list)
+            or any(not isinstance(e, list) or len(e) != 2
+                   or any(type(x) is not int for x in e) for e in flip_edges)):
+        raise model.ImportError("precision repair flip ancestry is invalid")
+    cursor = 0
+    for r in records:
+        if r[3] != cursor or r[4] % 3:
+            raise model.ImportError("bone index owners do not partition the stream")
+        cursor += r[4]
+    if cursor != header[4]:
+        raise model.ImportError("bone index stream is not completely owned")
+    selected = matches[0]
+    row = records[selected]
+    vertices = np.frombuffer(raw, dtype="<f4", count=row[2]*6,
+                             offset=vo+row[1]*24).reshape(-1, 6)
+    old_faces = np.frombuffer(raw, dtype="<u4", count=row[4],
+                             offset=io+row[3]*4).reshape(-1, 3).astype(np.int64)-row[1]
+    faces, collapse = collapse_closed_component_edge_preserving_allocations(
+        vertices[:, :3], old_faces, identity=(51004, stable_id),
+        keep_vertex=keep_vertex, remove_vertex=remove_vertex,
+        max_endpoint_displacement_m=max_endpoint_displacement_m,
+        max_abs_volume_delta_m3=max_abs_volume_delta_m3,
+    )
+    ancestry = [[i] for i in collapse["kept_parent_face_origins"]]
+    flips = []
+    for edge in flip_edges:
+        faces, operation = flip_closed_surface_edge_preserving_allocations(
+            vertices[:, :3], faces, identity=(51004, stable_id),
+            edge=tuple(edge), minimum_altitude_m=minimum_altitude_m,
+            repair_folded_source=True,
+        )
+        pair = operation["changed_parent_face_indices"]
+        parents = sorted({parent for i in pair for parent in ancestry[i]})
+        for i in pair:
+            ancestry[i] = parents.copy()
+        flips.append(operation)
+    streams = []
+    new_records = []
+    cursor = 0
+    for i, r in enumerate(records):
+        stream = ((faces + r[1]).astype("<u4").tobytes() if i == selected
+                  else raw[io+r[3]*4:io+(r[3]+r[4])*4])
+        changed = list(r)
+        changed[3], changed[4] = cursor, len(stream)//4
+        cursor += changed[4]
+        new_records.append(tuple(changed))
+        streams.append(stream)
+    new_header = list(header)
+    new_header[4] = cursor
+    result = (_BONE_HEADER.pack(*new_header)
+              + b"".join(_BONE_RECORD.pack(*r) for r in new_records)
+              + raw[vo:io] + b"".join(streams))
+    _, after_rows, av, ai = _decode_bones(result)
+    if result[av:ai] != raw[vo:io]:
+        raise model.ImportError("precision repair changed source attributes")
+    for old, new in zip(records, after_rows, strict=True):
+        if old[:3] != new[:3] or old[5:] != new[5:]:
+            raise model.ImportError("precision repair changed rigid ownership or rest pose")
+    return result, {
+        "status": "PASS_EXISTING_SOURCE_PRECISION_CONSTRUCTORS_ONLY",
+        "typed_identity": [51004, stable_id],
+        "collapse": collapse, "flips": flips,
+        "output_face_parent_origins": ancestry,
+        "all_source_attributes_allocations_and_rigid_records_exact": True,
+        "all_other_bone_face_bytes_exact": True,
+        "physical_mass_or_state_changed": False,
+        "anatomical_admission": False, "native_admission": False,
+    }
+
+
+def validate_bone_source_precision_retriangulation(
+    artifact: Path, manifest: dict[str, Any], output_raw: bytes,
+) -> tuple[Path, dict[str, Any], bytes, dict[str, Any]]:
+    """Authenticate retained inputs, replay, and reject unrelated mutations."""
+    repair = manifest.get("source_precision_retriangulation")
+    required = {"input_artifact", "input_manifest_sha256", "input_payload_sha256",
+                "parameters", "proof"}
+    if not isinstance(repair, dict) or set(repair) != required:
+        raise model.ImportError("bone precision repair has incomplete provenance")
+    source = Path(repair["input_artifact"]).resolve()
+    if source == artifact.resolve():
+        raise model.ImportError("bone precision repair cannot reference itself")
+    mp = source / "bodyparts3d-myosim-major-bones.manifest.json"
+    if not mp.is_file() or model.sha256(mp) != repair["input_manifest_sha256"]:
+        raise model.ImportError("bone precision input manifest is missing or drifted")
+    prior = model.read_json(mp)
+    descriptor = prior.get("payload", {})
+    filename = descriptor.get("file")
+    if (not isinstance(filename, str) or Path(filename).name != filename
+            or descriptor.get("sha256") != repair["input_payload_sha256"]):
+        raise model.ImportError("bone precision source descriptor is invalid")
+    payload = source / filename
+    if not payload.is_file() or model.sha256(payload) != repair["input_payload_sha256"]:
+        raise model.ImportError("bone precision source payload is missing or drifted")
+    parameters = repair["parameters"]
+    names = {"stable_id", "keep_vertex", "remove_vertex", "flip_edges",
+             "max_endpoint_displacement_m", "minimum_altitude_m",
+             "max_abs_volume_delta_m3"}
+    if not isinstance(parameters, dict) or set(parameters) != names:
+        raise model.ImportError("bone precision constructor parameters are incomplete")
+    source_raw = payload.read_bytes()
+    expected, proof = repair_bone_source_precision_edges(source_raw, **parameters)
+    if expected != output_raw or proof != repair["proof"]:
+        raise model.ImportError("bone precision bytes or source ancestry differ")
+    expected_manifest = json.loads(json.dumps(prior))
+    expected_manifest["payload"].update(
+        sha256=_sha_bytes(expected), bytes=len(expected),
+        index_count=_BONE_HEADER.unpack_from(expected)[4])
+    expected_manifest["source_precision_retriangulation"] = repair
+    if manifest != expected_manifest:
+        raise model.ImportError("bone precision repair changed unrelated manifest or ownership")
+    return source, prior, source_raw, proof

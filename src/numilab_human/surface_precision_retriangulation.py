@@ -508,3 +508,66 @@ def collapse_closed_component_edge_preserving_allocations(
         "anatomical_admission": False,
         "native_admission": False,
     }
+
+
+def flip_closed_surface_edge_preserving_allocations(
+    positions: np.ndarray, faces: np.ndarray, *,
+    identity: tuple[int, int], edge: tuple[int, int],
+    minimum_altitude_m: float, repair_folded_source: bool = False,
+) -> tuple[np.ndarray, dict[str, object]]:
+    """Apply the existing exact-seam flip without changing source allocations.
+
+    Raw seam slots remain distinct. Only the selected two face rows change;
+    both retain explicit two-parent ancestry. This source constructor grants
+    no emitted-geometry, attachment, material, or anatomical admission.
+    """
+    from .resting_anatomy_verify import prepare_surface, typed_key
+
+    identity = typed_key(identity)
+    p = np.asarray(positions)
+    f = _face_array(faces)
+    if p.dtype != np.dtype("float32"):
+        raise ValueError("source positions must be Float32 metres")
+    _positions(p)
+    _check_face_bounds(p, f)
+    if (not isinstance(edge, tuple) or len(edge) != 2
+            or any(type(x) is not int or not 0 <= x < len(p) for x in edge)
+            or edge[0] == edge[1]):
+        raise ValueError("source flip needs two distinct integer source slots")
+    used = np.unique(f)
+    local = np.full(len(p), -1, dtype=np.int64)
+    local[used] = np.arange(len(used))
+    if any(local[x] < 0 for x in edge):
+        raise ValueError("source flip endpoint is not referenced")
+    source = prepare_surface(identity, p[used].copy(), local[f].astype(np.uint32))
+    if not source.closed:
+        raise ValueError("source flip requires closed oriented components")
+    classes = source.source_vertex_to_quotient
+    selected = tuple(sorted(int(classes[local[x]]) for x in edge))
+    adjacency = build_surface_adjacency(source.quotient_faces)
+    pair = adjacency.edge_faces.get(selected, ())
+    flipped, operation = flip_interior_edge(
+        source.quotient_positions, source.quotient_faces,
+        edge=selected, face_indices=pair, minimum_altitude_m=minimum_altitude_m,
+        adjacency=adjacency, repair_folded_source=repair_folded_source,
+    )
+    class_to_slot = {}
+    for fi in pair:
+        for slot, qid in zip(f[fi], source.quotient_faces[fi], strict=True):
+            class_to_slot.setdefault(int(qid), int(slot))
+    output = f.copy()
+    for fi in pair:
+        output[fi] = [class_to_slot[int(q)] for q in flipped[fi]]
+    after = prepare_surface(identity, p[used].copy(), local[output].astype(np.uint32))
+    if (not after.closed or after.quotient_topology["face_component_count"]
+            != source.quotient_topology["face_component_count"]):
+        raise ValueError("source flip changed closed-component inventory")
+    return output, {
+        "typed_identity": list(identity),
+        "source_edge_slots": list(edge),
+        "changed_parent_face_indices": list(map(int, pair)),
+        "all_source_allocations_and_positions_unchanged": True,
+        "operation": operation,
+        "material_attachment_and_reciprocal_owner_admission": False,
+        "anatomical_admission": False, "native_admission": False,
+    }
