@@ -136,6 +136,7 @@ def flip_interior_edge(
     adjacency: SurfaceAdjacency,
     face_origins: Sequence[int] | np.ndarray | None = None,
     in_place: bool = False,
+    repair_folded_source: bool = False,
 ) -> tuple[np.ndarray, dict[str, object]]:
     """Replace one interior diagonal while retaining all source vertices.
 
@@ -147,10 +148,19 @@ def flip_interior_edge(
     copied face array. Validate the full source and final surface once per
     batch with :func:`validate_closed_oriented_surface`.
 
+    ``repair_folded_source=True`` permits reconstruction of an already folded
+    passive source pair. Candidate faces must still align with the preserved
+    oriented boundary and exceed the altitude bound. The old quality metric
+    is not an improvement target when its input is folded. This constructor
+    option does not change final topology, exact intersection, source ancestry,
+    material support, surrounding anatomy, or native acceptance checks.
+
     Both output faces retain their input row slots. Each is explicitly mapped
     to the exact two source parent face indices in the report; no one-to-one
     source face origin is implied for the retriangulated cells.
     """
+    if type(repair_folded_source) is not bool:
+        raise ValueError("repair_folded_source must be a Boolean")
     v = _positions(vertices)
     f = _face_array(faces)
     _check_face_bounds(v, f)
@@ -211,12 +221,17 @@ def flip_interior_edge(
     for _, _, normal in (*old_metrics, *new_metrics):
         cosine = float(np.dot(normal, reference_normal) / (float(np.linalg.norm(normal)) * reference_norm))
         alignment_cosines.append(cosine)
-    if any(not math.isfinite(value) or value <= 0.0 for value in alignment_cosines):
+    if any(not math.isfinite(value) for value in alignment_cosines):
+        raise ValueError("source or replacement orientation is nonfinite")
+    source_folded = any(value <= 0.0 for value in alignment_cosines[:2])
+    if any(value <= 0.0 for value in alignment_cosines[2:]):
+        raise ValueError("replacement faces fold across the local oriented reference")
+    if source_folded and not repair_folded_source:
         raise ValueError("source or replacement faces fold across the local oriented reference")
 
     old_min_altitude = min(metric[1] for metric in old_metrics)
     new_min_altitude = min(metric[1] for metric in new_metrics)
-    if new_min_altitude <= old_min_altitude:
+    if not (source_folded and repair_folded_source) and new_min_altitude <= old_min_altitude:
         raise ValueError("replacement does not improve the selected pair minimum altitude")
     if new_min_altitude < float(minimum_altitude_m):
         raise ValueError("replacement pair is below the caller's minimum altitude bound")
@@ -288,6 +303,9 @@ def flip_interior_edge(
         "source_pair_signed_volume_contribution_m3": old_volume,
         "candidate_pair_signed_volume_contribution_m3": new_volume,
         "signed_volume_delta_m3": new_volume - old_volume,
+        "source_fold_repair_requested": repair_folded_source,
+        "source_fold_detected": source_folded,
+        "quality_improvement_required": not (source_folded and repair_folded_source),
         "vertices_modified": False,
         "face_count_preserved": True,
     }

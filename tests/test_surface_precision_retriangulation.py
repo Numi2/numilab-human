@@ -1,6 +1,7 @@
 import unittest
 
 import numpy as np
+import pytest
 
 from numilab_human.resting_anatomy_interface_patch import signed_volume
 from numilab_human.surface_precision_retriangulation import (
@@ -217,3 +218,37 @@ class SurfacePrecisionRetriangulationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_folded_passive_pair_requires_explicit_reconstruction():
+    vertices = np.array([[0., 0., 0.], [2., 0., 0.], [.5, .2, 0.], [0., 2., 0.]])
+    faces = np.array([[0, 1, 3], [1, 2, 3]], dtype=np.int64)
+    adjacency = build_surface_adjacency(faces)
+    with pytest.raises(ValueError, match="fold"):
+        flip_interior_edge(vertices, faces, edge=(1, 3), face_indices=(0, 1),
+                           minimum_altitude_m=.1, adjacency=adjacency)
+    actual, proof = flip_interior_edge(
+        vertices, faces, edge=(1, 3), face_indices=(0, 1),
+        minimum_altitude_m=.1, adjacency=adjacency, repair_folded_source=True)
+    assert np.array_equal(faces, [[0, 1, 3], [1, 2, 3]])
+    assert np.array_equal(vertices, [[0., 0., 0.], [2., 0., 0.], [.5, .2, 0.], [0., 2., 0.]])
+    assert proof["source_fold_detected"] and proof["source_fold_repair_requested"]
+    assert not proof["quality_improvement_required"]
+    assert min(proof["local_orientation_alignment_cosines"]["candidate_faces"]) > 0
+    assert proof["oriented_area_vector_delta_norm_m2"] == 0
+    assert sorted(map(tuple, np.sort(actual, axis=1))) == [(0, 1, 2), (0, 2, 3)]
+    with pytest.raises(ValueError, match="minimum altitude"):
+        flip_interior_edge(vertices, faces, edge=(1, 3), face_indices=(0, 1),
+                           minimum_altitude_m=1., adjacency=adjacency, repair_folded_source=True)
+
+
+def test_folded_source_flag_is_strict_and_does_not_allow_folded_output():
+    vertices = np.array([[0., 0., 0.], [2., 0., 0.], [.5, .2, 0.], [0., 2., 0.]])
+    faces = np.array([[0, 1, 2], [0, 2, 3]], dtype=np.int64)
+    adjacency = build_surface_adjacency(faces)
+    with pytest.raises(ValueError, match="replacement faces fold"):
+        flip_interior_edge(vertices, faces, edge=(0, 2), face_indices=(0, 1),
+                           minimum_altitude_m=.01, adjacency=adjacency, repair_folded_source=True)
+    with pytest.raises(ValueError, match="Boolean"):
+        flip_interior_edge(vertices, faces, edge=(0, 2), face_indices=(0, 1),
+                           minimum_altitude_m=.01, adjacency=adjacency, repair_folded_source=1)
