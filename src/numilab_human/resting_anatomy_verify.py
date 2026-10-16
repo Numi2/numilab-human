@@ -231,6 +231,7 @@ class PreparedSurface:
     ordered_core_body_indices: tuple | None = field(default=None, repr=False)
     core_weights_by_gid: dict | None = field(default=None, repr=False)
     rigid_owner_proof: dict | None = field(default=None, repr=False)
+    declared_core_body_indices: tuple | None = field(default=None, repr=False, kw_only=True)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
     _face_records: dict | None = field(default=None, repr=False)
@@ -350,6 +351,8 @@ class PreparedSurface:
             "raw_topology": _compact_topology(self.raw_topology),
             "exact_coordinate_quotient_topology": _compact_topology(self.quotient_topology),
             "referenced_surface_closed": self.closed,
+            "declared_material_owner_order": (None if self.declared_core_body_indices is None
+                                               else list(self.declared_core_body_indices)),
             "unused_slot_policy": "Unreferenced slots retain source ancestry; they do not create a surface boundary.",
             "seam_policy": "Exact packed coordinate identity for predicates only; source faces and mesh bytes retained.",
             "rigid_owner_proof": None if self.rigid_owner_proof is None else {
@@ -366,7 +369,8 @@ class PreparedSurface:
 def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=None,
                     source_face_lineage=None, source_vertex_lineage=None,
                     ordered_core_body_indices=None, core_weight_gids=None,
-                    core_weights_float64=None, rigid_owner_proof=None):
+                    core_weights_float64=None, rigid_owner_proof=None,
+                    expected_ordered_core_body_indices=None):
     key = typed_key(key)
     p = np.asarray(positions)
     f = np.asarray(faces)
@@ -410,6 +414,14 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         raise ValueError("rigid owner proof requires source face and vertex lineage")
     if has_core_metadata and rigid_owner_proof is not None:
         raise ValueError("choose ordered core material rows or a rigid owner proof")
+    # The historical forearm contract remains strictly positive with 21 owners.
+    # Other existing native parent rows must explicitly pin their complete support
+    # inventory; structural zero coefficients are retained, never replaced by floors.
+    declared_cores = None
+    if expected_ordered_core_body_indices is not None:
+        declared_cores = _declared_material_inventory(expected_ordered_core_body_indices)
+        if not has_core_metadata or not source_metadata_present:
+            raise ValueError("declared material inventory requires complete source and actual owner rows")
     face_lineage = None
     vertex_lineage = None
     core_body_indices = None
@@ -427,13 +439,16 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
             vertex_lineage[gid] = row
     if has_core_metadata:
         core_body_indices = tuple(ordered_core_body_indices)
-        if (len(core_body_indices) != 21 or any(type(value) is not int for value in core_body_indices)
-                or len(set(core_body_indices)) != 21):
-            raise ValueError("material owner order must contain 21 unique integer body indices")
+        if declared_cores is None:
+            if (len(core_body_indices) != 21 or any(type(value) is not int for value in core_body_indices)
+                    or len(set(core_body_indices)) != 21):
+                raise ValueError("material owner order must contain 21 unique integer body indices")
+        elif core_body_indices != declared_cores:
+            raise ValueError("actual material owner order differs from the complete declared inventory")
         weight_gids = np.asarray(core_weight_gids)
         weights = np.asarray(core_weights_float64)
         if (weight_gids.ndim != 1 or weight_gids.dtype.kind not in "iu"
-                or weights.shape != (len(weight_gids), 21)
+                or weights.shape != (len(weight_gids), len(core_body_indices))
                 or weights.dtype != np.dtype("float64") or not np.isfinite(weights).all()):
             raise ValueError("material weights must be finite Float64 rows keyed by GID")
         weight_index = gid_index_map(weight_gids)
@@ -444,10 +459,12 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         if missing:
             raise ValueError("missing ordered material rows for referenced GIDs: " + str(missing[:8]))
         bad = [gid for gid in referenced_gids
-               if np.any(weights_by_gid[gid] <= 0)
+               if np.any(weights_by_gid[gid] < 0 if declared_cores is not None
+                         else weights_by_gid[gid] <= 0)
                or abs(float(weights_by_gid[gid].sum()) - 1.0) > 1e-12]
         if bad:
-            raise ValueError("referenced material rows must be strictly positive and normalized: " + str(bad[:8]))
+            policy = "nonnegative" if declared_cores is not None else "strictly positive"
+            raise ValueError("referenced material rows must be " + policy + " and normalized: " + str(bad[:8]))
     # Numeric coordinate identity treats +0 and -0 as the same exact point.
     keys = [ci.float32_point_lattice_key(row) for row in p.tolist()]
     identities = {}
@@ -480,7 +497,16 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                            source_vertex_ids.copy(), normals, raw, quotient, qp, qf, mapping,
                            records, ci._prepare_surface_aabb(records), face_lineage,
                            vertex_lineage, core_body_indices, weights_by_gid,
-                           normalized_rigid_owner)
+                           normalized_rigid_owner, declared_core_body_indices=declared_cores)
+
+
+def _declared_material_inventory(value):
+    if not isinstance(value, (tuple, list)) or not 1 <= len(value) <= 192:
+        raise ValueError("declared material inventory must contain 1..192 ordered owners")
+    if (any(type(core) is not int or not 0 <= core < 192 for core in value)
+            or len(set(value)) != len(value)):
+        raise ValueError("declared material inventory requires unique nonnegative integer owners")
+    return tuple(value)
 
 
 def _normalize_rigid_owner_proof(value):
@@ -632,8 +658,8 @@ def _has_source_vertex_lineage(record):
         return True
     return (record.get("material_mapping_kind") == 3
             and record.get("material_binding") == "independent_existing_core_carrier"
-            and len(record.get("core_body_indices", ())) == 21
-            and len(record.get("core_weights", ())) == 21
+            and 1 <= len(record.get("core_body_indices", ())) <= 192
+            and len(record.get("core_weights", ())) == len(record.get("core_body_indices", ()))
             or _valid_source_point_crosswalk(record.get("source_point_crosswalk")))
 
 
@@ -992,6 +1018,8 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
             or first.core_weights_by_gid is None or second.core_weights_by_gid is None
             or first.ordered_core_body_indices is None or second.ordered_core_body_indices is None):
         return False, "missing_source_or_actual_owner_material_proof"
+    if first.declared_core_body_indices != second.declared_core_body_indices:
+        return False, "material_inventory_policies_differ"
     if first.ordered_core_body_indices != second.ordered_core_body_indices:
         return False, "ordered_core_owner_lists_differ"
     if not _has_source_face_lineage(first.source_face_lineage[first_face]):
@@ -1022,7 +1050,11 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
         wb = second.core_weights_by_gid.get(gid)
         if wa is None or wb is None:
             return False, "feature_GID_has_no_actual_ordered_21_core_row"
-        if (not np.array_equal(wa, wb) or np.any(wa <= 0)
+        invalid_support = np.any(wa < 0) if first.declared_core_body_indices is not None else np.any(wa <= 0)
+        if (wa.dtype != np.dtype("float64") or wb.dtype != np.dtype("float64")
+                or wa.shape != (len(first.ordered_core_body_indices),)
+                or wb.shape != wa.shape or not np.isfinite(wa).all() or not np.isfinite(wb).all()
+                or not np.array_equal(wa, wb) or invalid_support
                 or abs(float(wa.sum()) - 1.0) > 1e-12):
             return False, "feature_GID_ordered_21_core_rows_differ_or_are_invalid"
         for lineage, owner_weights in ((lineage_a, wa), (lineage_b, wb)):
@@ -1034,7 +1066,7 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
                     return False, "kind3_feature_lineage_lacks_ordered_owner_rows"
                 if (lineage.get("material_binding") != "independent_existing_core_carrier"
                         or lineage_bodies != first.ordered_core_body_indices
-                        or lineage_weights.shape != (21,)
+                        or lineage_weights.shape != (len(first.ordered_core_body_indices),)
                         or not np.array_equal(lineage_weights, owner_weights)):
                     return False, "kind3_feature_lineage_differs_from_actual_owner_row"
         expected.add(tuple(Fraction(int(value)) for value in ci.float32_point_lattice_key(pa.tolist())))
@@ -2845,13 +2877,26 @@ def _validate_sequence_prepared_surface(key, surface):
             raise ValueError("prepared source and material lineage is incomplete")
         if len(surface.source_face_lineage) != len(faces):
             raise ValueError("prepared face lineage is not aligned with face order")
-        if len(surface.ordered_core_body_indices) != 21:
-            raise ValueError("prepared ordered material owners are not the existing 21-owner format")
+        declared = surface.declared_core_body_indices
+        if declared is None:
+            if len(surface.ordered_core_body_indices) != 21:
+                raise ValueError("prepared ordered material owners are not the existing 21-owner format")
+        elif (_declared_material_inventory(declared) != declared
+              or surface.ordered_core_body_indices != declared):
+            raise ValueError("prepared material inventory differs from its declared owner order")
         referenced = {int(source_ids[int(local)]) for face in faces for local in face}
         if referenced - surface.source_vertex_lineage.keys():
             raise ValueError("prepared vertex lineage does not cover referenced source IDs")
         if referenced - surface.core_weights_by_gid.keys():
             raise ValueError("prepared material weights do not cover referenced source IDs")
+        for gid in referenced:
+            weights = np.asarray(surface.core_weights_by_gid[gid])
+            if (weights.dtype != np.dtype("float64")
+                    or weights.shape != (len(surface.ordered_core_body_indices),)
+                    or not np.isfinite(weights).all()
+                    or np.any(weights < 0 if declared is not None else weights <= 0)
+                    or abs(float(weights.sum()) - 1.0) > 1e-12):
+                raise ValueError("prepared material weights changed or are invalid")
         if any(not _has_source_face_lineage(row) for row in surface.source_face_lineage):
             raise ValueError("prepared source face lineage is incomplete")
     return {"typed_identity": list(key),
@@ -2861,7 +2906,9 @@ def _validate_sequence_prepared_surface(key, surface):
             "prepared_face_count": len(faces),
             "source_face_lineage_count": None if surface.source_face_lineage is None
                                       else len(surface.source_face_lineage),
-            "material_lineage_present": surface.core_weights_by_gid is not None}
+            "material_lineage_present": surface.core_weights_by_gid is not None,
+            "declared_material_owner_order": (None if surface.declared_core_body_indices is None
+                                               else list(surface.declared_core_body_indices))}
 
 
 def _bind_prepared_surface_to_capture(key, surface, captured):
