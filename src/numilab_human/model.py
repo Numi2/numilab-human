@@ -9106,10 +9106,24 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
                 )
         elif stable_id in _BODYPARTS_BODY_LOCAL_BAKE_ROWS and body_local_bakes is not None:
             raise ImportError(f"Numi Human NHBONES baked row {stable_id} is missing its provenance row")
-        retirement = (composed_reframe_validation or {}).get("source_face_retirement")
-        if retirement is not None and retirement.get("typed_identity") == [51004, stable_id]:
-            surface["source_face_indices"] = retirement["retained_source_face_ids"]
-            surface["source_face_retirement"] = retirement
+        validation = composed_reframe_validation or {}
+        retirements = validation.get("source_face_retirements")
+        if retirements is None:
+            legacy = validation.get("source_face_retirement")
+            retirements = [] if legacy is None else [legacy]
+        retained_source_faces = None
+        applied_retirements = []
+        for retirement in retirements:
+            if retirement.get("typed_identity") != [51004, stable_id]:
+                continue
+            kept = retirement["retained_source_face_ids"]
+            retained_source_faces = (kept if retained_source_faces is None
+                                     else [retained_source_faces[i] for i in kept])
+            applied_retirements.append(retirement)
+        if retained_source_faces is not None:
+            surface["source_face_indices"] = retained_source_faces
+            surface["source_face_retirement"] = applied_retirements[-1]
+            surface["source_face_retirements"] = applied_retirements
         thumb_patch = (composed_reframe_validation or {}).get("thumb_reference_surface")
         if thumb_patch is not None and thumb_patch.get("typed_identity") == [51004, stable_id]:
             surface["inferred_reference_surface_patch"] = thumb_patch
@@ -9117,6 +9131,7 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
             # expose the prior retirement's one-to-one face map as current.
             surface.pop("source_face_indices", None)
             surface.pop("source_face_retirement", None)
+            surface.pop("source_face_retirements", None)
         by_body[body_index].append(surface)
     return dict(by_body), {
         "file": payload_path.name,

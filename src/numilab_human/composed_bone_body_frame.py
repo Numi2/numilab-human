@@ -1788,22 +1788,42 @@ def _validate_source_export_partition_rebind(
         "retained_motion_admission": False,
     }
 
-def validate_composed_rib_reframe(artifact: Path, manifest: dict[str, Any], output_raw: bytes) -> dict[str, Any]:
+def validate_composed_rib_reframe(
+    artifact: Path, manifest: dict[str, Any], output_raw: bytes,
+    *, _lineage: tuple[Path, ...] = (),
+) -> dict[str, Any]:
     artifact = artifact.resolve()
-    if "thumb_reference_surface" in manifest:
-        source, prior_manifest, prior_raw, patch = validate_thumb_reference_surface(
+    if artifact in _lineage or len(_lineage) >= 16:
+        raise model.ImportError("bone source operation lineage is cyclic or exceeds 16 retained inputs")
+    lineage = (*_lineage, artifact)
+    retirement_outer = "source_face_retirement" in manifest
+    if retirement_outer and "thumb_reference_surface" in manifest:
+        # Both declarations remain in the existing manifest. The outer
+        # operation must retain the other declaration exactly in its pinned
+        # input. This permits hash-authenticated composition in either order.
+        repair = manifest["source_face_retirement"]
+        if not isinstance(repair, dict):
+            raise model.ImportError("bone face retirement has incomplete provenance")
+        source = Path(repair.get("input_artifact", "")).resolve()
+        path = source / "bodyparts3d-myosim-major-bones.manifest.json"
+        if not path.is_file() or model.sha256(path) != repair.get("input_manifest_sha256"):
+            raise model.ImportError("bone face retirement input manifest is missing or drifted")
+        retirement_outer = model.read_json(path).get("thumb_reference_surface") == manifest["thumb_reference_surface"]
+    if retirement_outer:
+        source, prior_manifest, prior_raw, retirement = validate_exact_opposed_bone_source_retirement(
             artifact, manifest, output_raw)
-        prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw)
-        result = {**prior, "thumb_reference_surface": patch}
+        prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw, _lineage=lineage)
+        retirements = [*prior.get("source_face_retirements", []), retirement]
+        result = {**prior, "source_face_retirement": retirement,
+                  "source_face_retirements": retirements}
         result["validation_sha256"] = _sha_bytes(json.dumps(
             result, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
         return result
-    if "source_face_retirement" in manifest:
-        prior_artifact, prior_manifest, prior_raw, retirement = validate_exact_opposed_bone_source_retirement(
-            artifact, manifest, output_raw,
-        )
-        prior = validate_composed_rib_reframe(prior_artifact, prior_manifest, prior_raw)
-        result = {**prior, "source_face_retirement": retirement}
+    if "thumb_reference_surface" in manifest:
+        source, prior_manifest, prior_raw, patch = validate_thumb_reference_surface(
+            artifact, manifest, output_raw)
+        prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw, _lineage=lineage)
+        result = {**prior, "thumb_reference_surface": patch}
         result["validation_sha256"] = _sha_bytes(json.dumps(
             result, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
         return result
@@ -1959,8 +1979,6 @@ def validate_exact_opposed_bone_source_retirement(
             or model.sha256(source_manifest_path) != repair.get("input_manifest_sha256")):
         raise model.ImportError("bone face retirement input manifest is missing or drifted")
     source_manifest = model.read_json(source_manifest_path)
-    if "source_face_retirement" in source_manifest:
-        raise model.ImportError("nested bone face retirement requires explicit composition")
     descriptor = source_manifest.get("payload", {})
     filename = descriptor.get("file")
     if (not isinstance(filename, str) or Path(filename).name != filename
