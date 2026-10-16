@@ -1653,3 +1653,367 @@ def test_material_branch_scope_names_one_frozen_branch_and_limits_coverage():
     assert scope["existing_cvsim_compartment_id"] == 4
     assert scope["added_physical_mass_kg"] == 0
     assert not scope["added_blood_state_or_force"]
+
+
+def test_source_indexed_one_ring_is_derived_from_oriented_source_edges():
+    faces = np.asarray([
+        [0, 2, 1],
+        [0, 1, 3],
+        [1, 2, 3],
+        [2, 0, 3],
+    ], dtype="<u4")
+
+    ring = junction._source_indexed_one_ring(faces, (0,))
+
+    assert ring["frozen_faces"] == [0]
+    assert ring["one_ring_faces"] == [1, 2, 3]
+    assert ring["all_frozen_boundary_edges_have_two_oppositely_oriented_source_faces"]
+    assert all(item["frozen_neighbors"] == [0]
+               for item in ring["oriented_indexed_edge_adjacency"])
+
+    open_faces = faces[:3]
+    with pytest.raises(ValueError, match="incident faces, expected two"):
+        junction._source_indexed_one_ring(open_faces, (0,))
+
+    same_winding = faces.copy()
+    same_winding[1] = [0, 3, 1]
+    with pytest.raises(ValueError, match="inconsistent oriented face winding"):
+        junction._source_indexed_one_ring(same_winding, (0,))
+
+
+def test_source_one_ring_addendum_is_typed_and_rejects_unbounded_pair_expansion(monkeypatch):
+    faces = np.asarray([
+        [0, 2, 1],
+        [0, 1, 3],
+        [1, 2, 3],
+        [2, 0, 3],
+    ], dtype="<u4")
+    rows = {
+        7: {"faces": faces.copy(),  "vertices6": np.asarray(
+            [[0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+             [0, 1, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0]], dtype="<f4"),
+          "record": (51011, 100, 4, 4, 20, 2, 0, 0)},
+        471: {"faces": faces.copy(),  "vertices6": np.asarray(
+            [[0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+             [0, 1, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0]], dtype="<f4"),
+          "record": (51011, 100, 4, 4, 20, 2, 0, 0)},
+    }
+    scope = {
+        "typed_link": [[51011, 7], [51011, 471]],
+        "source_evidence_path": "/registered/source-link.json",
+        "source_evidence_sha256": "a" * 64,
+        "source_evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+        "source_identities": {
+            "7": {"typed_identity": [51011, 7], "source_member": "FJ3411"},
+            "471": {"typed_identity": [51011, 471], "source_member": "FJ3479"},
+        },
+        "source_face_pair_ancestry": [[0, 0]],
+        "source_face_pair_ancestry_sha256": hashlib.sha256(
+            np.asarray([[0, 0]], dtype="<i8").tobytes()).hexdigest(),
+    }
+    monkeypatch.setattr(
+        junction, "bind_network_link_source_ancestry",
+        lambda *_args, **_kwargs: scope)
+
+    baseline_bridge = av.prepare_surface(
+        (51011, 7), rows[7]["vertices6"][:, :3], faces,
+        source_vertex_ids=np.arange(100, 104, dtype=np.uint64))
+    baseline_target = av.prepare_surface(
+        (51011, 471), rows[471]["vertices6"][:, :3], faces,
+        source_vertex_ids=np.arange(200, 204, dtype=np.uint64))
+    addendum = junction.build_aortic_one_ring_collar_addendum(
+        bridge_key=(51011, 7), target_key=(51011, 471),
+        source_link_evidence={}, source_rows=rows, source_map={},
+        baseline_bridge_surface=baseline_bridge,
+        baseline_target_surface=baseline_target)
+
+    assert junction._verified_collar_addendum_pairs(
+        junction.AORTIC_ONE_RING_COLLAR_LINK, addendum) == {
+            (1, 0), (2, 0), (3, 0)}
+    assert addendum["candidate_geometry_used"] is False
+    assert addendum["bounded_source_region"]["no_target_patch_expansion"]
+    assert addendum["baseline_surface_lineage"][
+        "independent_from_actual_candidate_geometry"] is True
+    assert addendum["baseline_surface_lineage"]["parent_gids_u64_sha256"] == (
+        hashlib.sha256(np.arange(100, 104, dtype="<u8").tobytes()).hexdigest())
+
+    malformed_lineage = json.loads(json.dumps(addendum))
+    malformed_lineage["baseline_surface_lineage"]["parent_gids_u64_sha256"] = "not-a-sha"
+    with pytest.raises(ValueError, match="independent baseline surface lineage is malformed"):
+        junction._verified_collar_addendum_pairs(
+            junction.AORTIC_ONE_RING_COLLAR_LINK, malformed_lineage)
+
+    changed_baseline = av.prepare_surface(
+        (51011, 7), np.asarray(rows[7]["vertices6"][:, :3], dtype="<f4")
+        + np.asarray([0, 0, 0.25], dtype="<f4"), faces,
+        source_vertex_ids=np.arange(100, 104, dtype=np.uint64))
+    changed = junction.build_aortic_one_ring_collar_addendum(
+        bridge_key=(51011, 7), target_key=(51011, 471),
+        source_link_evidence={}, source_rows=rows, source_map={},
+        baseline_bridge_surface=changed_baseline,
+        baseline_target_surface=baseline_target)
+    assert (changed["baseline_surface_lineage"]["parent_position_f32_sha256"]
+            != addendum["baseline_surface_lineage"]["parent_position_f32_sha256"])
+
+    forged = json.loads(json.dumps(addendum))
+    forged["bounded_source_region"]["additional_allowed_face_pairs"].append([99, 0])
+    with pytest.raises(ValueError, match="bounded source-only product"):
+        junction._verified_collar_addendum_pairs(
+            junction.AORTIC_ONE_RING_COLLAR_LINK, forged)
+
+    with pytest.raises(ValueError, match="restricted to typed link 7->471"):
+        junction.build_aortic_one_ring_collar_addendum(
+            bridge_key=(51011, 7), target_key=(51011, 465),
+            source_link_evidence={}, source_rows=rows, source_map={})
+
+
+def test_network_indexed_one_ring_addendum_is_source_derived_and_never_ring_by_ring(
+        monkeypatch):
+    faces = np.asarray([
+        [0, 2, 1],
+        [0, 1, 3],
+        [1, 2, 3],
+        [2, 0, 3],
+    ], dtype="<u4")
+    vertices6 = np.asarray([
+        [0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0],
+    ], dtype="<f4")
+    rows = {
+        stable_id: {
+            "record": (20, 100, 4, 200, 12, stable_id, 2, 0),
+            "faces": faces.copy(), "vertices6": vertices6.copy(),
+            "body_index": 20, "layer": 2,
+        }
+        for stable_id in (471, 475)
+    }
+    pairs = np.asarray([[0, 0]], dtype="<i8")
+    scope = {
+        "typed_link": [[51011, 471], [51011, 475]],
+        "source_evidence_path": "/registered/471-475-source.json",
+        "source_evidence_sha256": "a" * 64,
+        "source_evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+        "source_identities": {
+            "471": {"typed_identity": [51011, 471], "source_member": "FJ3479"},
+            "475": {"typed_identity": [51011, 475], "source_member": "FJ2216"},
+        },
+        "source_face_pair_ancestry": [[0, 0]],
+        "source_face_pair_ancestry_sha256": hashlib.sha256(pairs.tobytes()).hexdigest(),
+    }
+    monkeypatch.setattr(
+        junction, "bind_network_link_source_ancestry",
+        lambda *_args, **_kwargs: scope)
+    baseline_bridge = av.prepare_surface(
+        (51011, 471), vertices6[:, :3], faces,
+        source_vertex_ids=np.arange(100, 104, dtype=np.uint64))
+    baseline_target = av.prepare_surface(
+        (51011, 475), vertices6[:, :3], faces,
+        source_vertex_ids=np.arange(200, 204, dtype=np.uint64))
+
+    addendum = junction.build_network_indexed_one_ring_collar_addendum(
+        bridge_key=(51011, 471), target_key=(51011, 475),
+        source_link_evidence={}, source_rows=rows, source_map={},
+        baseline_bridge_surface=baseline_bridge,
+        baseline_target_surface=baseline_target)
+    bounded = addendum["bounded_source_region"]
+    assert bounded["frozen_bridge_collar_faces"] == [0]
+    assert bounded["frozen_target_collar_faces"] == [0]
+    assert bounded["additional_bridge_one_ring_faces"] == [1, 2, 3]
+    assert bounded["additional_target_one_ring_faces"] == [1, 2, 3]
+    assert junction._verified_collar_addendum_pairs(
+        ((51011, 471), (51011, 475)), addendum) == {
+            (1, 0), (2, 0), (3, 0), (0, 1), (0, 2), (0, 3)}
+    assert (1, 1) not in {
+        tuple(pair) for pair in bounded["additional_allowed_face_pairs"]}
+    assert bounded["frozen_face_patches_unchanged"]
+    assert addendum["candidate_geometry_used"] is False
+    assert addendum["baseline_surface_lineage"][
+        "independent_from_actual_candidate_geometry"] is True
+
+    forged = json.loads(json.dumps(addendum))
+    forged["bounded_source_region"]["additional_allowed_face_pairs"].append([1, 1])
+    forged["bounded_source_region"]["additional_allowed_face_pairs"].sort()
+    with pytest.raises(ValueError, match="ring×frozen-patch products"):
+        junction._verified_collar_addendum_pairs(
+            ((51011, 471), (51011, 475)), forged)
+    with pytest.raises(ValueError, match="frozen network inventory"):
+        junction.build_network_indexed_one_ring_collar_addendum(
+            bridge_key=(51011, 7), target_key=(51011, 465),
+            source_link_evidence={}, source_rows=rows, source_map={})
+
+
+def test_network_indexed_one_ring_only_expands_closed_oriented_sides(monkeypatch):
+    open_faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    closed_faces = np.asarray([
+        [0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3],
+    ], dtype="<u4")
+    open_vertices6 = np.asarray([
+        [0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0],
+    ], dtype="<f4")
+    closed_vertices6 = np.asarray([
+        [0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0],
+    ], dtype="<f4")
+    rows = {
+        471: {
+            "record": (20, 100, 3, 200, 3, 471, 2, 0),
+            "faces": open_faces, "vertices6": open_vertices6,
+        },
+        475: {
+            "record": (20, 300, 4, 400, 12, 475, 2, 0),
+            "faces": closed_faces, "vertices6": closed_vertices6,
+        },
+    }
+    pairs = np.asarray([[0, 0]], dtype="<i8")
+    scope = {
+        "typed_link": [[51011, 471], [51011, 475]],
+        "source_evidence_path": "/registered/471-475-source.json",
+        "source_evidence_sha256": "a" * 64,
+        "source_evidence_status": "FROZEN_SOURCE_ANCESTRY_ONLY_NOT_ADMISSION",
+        "source_identities": {},
+        "source_face_pair_ancestry": [[0, 0]],
+        "source_face_pair_ancestry_sha256": hashlib.sha256(pairs.tobytes()).hexdigest(),
+    }
+    monkeypatch.setattr(
+        junction, "bind_network_link_source_ancestry",
+        lambda *_args, **_kwargs: scope)
+    baseline_bridge = av.prepare_surface(
+        (51011, 471), open_vertices6[:, :3], open_faces,
+        source_vertex_ids=np.arange(100, 103, dtype=np.uint64))
+    baseline_target = av.prepare_surface(
+        (51011, 475), closed_vertices6[:, :3], closed_faces,
+        source_vertex_ids=np.arange(300, 304, dtype=np.uint64))
+    addendum = junction.build_network_indexed_one_ring_collar_addendum(
+        bridge_key=(51011, 471), target_key=(51011, 475),
+        source_link_evidence={}, source_rows=rows, source_map={},
+        baseline_bridge_surface=baseline_bridge,
+        baseline_target_surface=baseline_target)
+    bounded = addendum["bounded_source_region"]
+    assert not bounded["additional_bridge_one_ring_faces"]
+    assert bounded["bridge_one_ring_source_derivation"]["eligible"] is False
+    assert bounded["bridge_one_ring_source_derivation"]["invalid_frozen_edges"]
+    assert bounded["additional_target_one_ring_faces"] == [1, 2, 3]
+    assert bounded["additional_allowed_face_pairs"] == [[0, 1], [0, 2], [0, 3]]
+    assert junction._verified_collar_addendum_pairs(
+        ((51011, 471), (51011, 475)), addendum) == {
+            (0, 1), (0, 2), (0, 3)}
+
+
+def test_network_link_without_addendum_preserves_strict_legacy_scope(monkeypatch):
+    link = junction.AORTIC_ONE_RING_COLLAR_LINK
+    scope = {
+        "typed_link": [list(link[0]), list(link[1])],
+        "source_parent_faces_sha256": "a" * 64,
+        "source_child_faces_sha256": "b" * 64,
+        "source_face_pair_ancestry": [[0, 0]],
+    }
+    seen = {}
+    monkeypatch.setattr(
+        junction, "bind_network_link_source_ancestry",
+        lambda *_args, **_kwargs: scope)
+    monkeypatch.setattr(
+        junction, "_source_face_capture_ancestry",
+        lambda _row, _surface, stable_id, _label, **_kwargs: (
+            {}, {"source_abi5_face_array_sha256": "a" * 64 if stable_id == 7 else "b" * 64}))
+    monkeypatch.setattr(
+        junction, "build_network_indexed_one_ring_collar_addendum",
+        lambda **_kwargs: pytest.fail("None must not derive a one-ring addendum"))
+    monkeypatch.setattr(
+        junction, "build_aortic_one_ring_collar_addendum",
+        lambda **_kwargs: pytest.fail("None must retain the original strict scope"))
+    def strict_audit(*_args, **kwargs):
+        seen["addendum"] = kwargs["matched_collar_addendum"]
+        seen["frozen_face_pairs"] = kwargs["frozen_face_pairs"]
+        return {"passed": True}
+
+    monkeypatch.setattr(
+        junction, "audit_brachiocephalic_3d_junction", strict_audit)
+    monkeypatch.setattr(
+        junction, "_network_continuity_metric",
+        lambda _result, _scope: {"passed": True})
+
+    result = junction.audit_brachiocephalic_network_link_3d(
+        av, _manifold3d(),
+        bridge_key=link[0], bridge_surface=object(),
+        target_key=link[1], target_surface=object(),
+        source_link_evidence={}, source_rows={7: {}, 471: {}}, source_map={},
+        baseline_bridge_surface=object(), baseline_target_surface=object(),
+        expected_nha_gid_base_offset=0, matched_collar_addendum=None)
+    assert result["passed"]
+    assert "addendum" in seen and seen["addendum"] is None
+    assert seen["frozen_face_pairs"] == scope["source_face_pair_ancestry"]
+
+
+def test_one_ring_interface_scope_does_not_expand_the_target_or_remote_faces(monkeypatch):
+    bridge_positions = np.asarray([
+        [0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1],
+    ], dtype="<f4")
+    target_positions = bridge_positions.copy()
+    faces = np.asarray([
+        [0, 2, 1],
+        [0, 1, 3],
+        [1, 2, 3],
+        [2, 0, 3],
+    ], dtype="<u4")
+    bridge = av.prepare_surface(
+        (51011, 7), bridge_positions, faces,
+        source_vertex_ids=np.arange(4, dtype=np.uint64))
+    target = av.prepare_surface(
+        (51011, 471), target_positions, faces,
+        source_vertex_ids=np.arange(4, dtype=np.uint64))
+    addendum = {
+        "schema": "numi.human.registered-source-one-ring-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [[51011, 7], [51011, 471]],
+        "source_evidence": {"path": "/registered/source-link.json",
+                            "sha256": "a" * 64},
+        "source_arrays": {
+            key: "b" * 64 for key in (
+                "bridge_face_u32_sha256", "target_face_u32_sha256",
+                "bridge_vertices6_f32_sha256", "target_vertices6_f32_sha256",
+                "frozen_face_pair_ancestry_sha256")},
+        "bounded_source_region": {
+            "frozen_bridge_collar_faces": [0],
+            "additional_bridge_one_ring_faces": [1, 2, 3],
+            "frozen_target_collar_faces": [0],
+            "additional_allowed_face_pairs": [[1, 0], [2, 0], [3, 0]],
+            "oriented_indexed_edge_adjacency": [
+                {"one_ring_face": face, "frozen_neighbors": [0],
+                 "shared_indexed_edges": [[face, face + 1]]}
+                for face in (1, 2, 3)],
+            "all_frozen_boundary_edges_have_two_oppositely_oriented_source_faces": True,
+            "expansion_rule": (
+                "one indexed edge-adjacent bridge face ring; target remains the "
+                "exact frozen source collar patch"),
+            "no_candidate_geometry_used": True,
+            "no_target_patch_expansion": True,
+        },
+        "source_geometry_modified": False,
+        "candidate_geometry_used": False,
+        "anatomical_or_native_admission": False,
+    }
+    captured = {}
+
+    class PairVerifier:
+        PreparedSurface = av.PreparedSurface
+
+        @staticmethod
+        def audit_surface_pair(_bridge, _target, *, intended_face_pairs):
+            captured["allowed"] = set(map(tuple, intended_face_pairs))
+            return {
+                "passed": True,
+                "declared_interface_triangle_pairs": [],
+                "unexpected_triangle_pairs": [],
+                "containment": [],
+            }
+
+    result = junction._interface_gate(
+        PairVerifier, bridge, target, [[0, 0]],
+        declared_vessel_ports={junction.AORTIC_ONE_RING_COLLAR_LINK},
+        verified_collar_addendum=addendum)
+
+    assert captured["allowed"] == {(0, 0), (1, 0), (2, 0), (3, 0)}
+    assert (4, 0) not in captured["allowed"]
+    assert result["observed_pairs_within_source_declared_region"]
+    assert result["source_one_ring_collar_expansion"]["used"]

@@ -59,6 +59,7 @@ PAIR = (BRIDGE_KEY, TARGET_KEY)
 PARTIAL_OVERLAP_PORT = PAIR
 VOLUME_BALANCE_RELATIVE_TOLERANCE = 1e-6
 SOURCE_BASELINE_ADDITIONS_LINK = ((51011, 525), (51011, 469))
+AORTIC_ONE_RING_COLLAR_LINK = ((51011, 7), (51011, 471))
 SOURCE_BASELINE_SURFACE_REPLAY_POLICY = (
     "EXACT_CURRENT_BASELINE_POSITION_AND_ORDERED_FACE_REPLAY")
 SOURCE_BASELINE_OBSERVATION_REPORT = (
@@ -601,6 +602,444 @@ def _indexed_face_shared_edge(faces, first_face: int, second_face: int):
     second = set(map(int, faces[second_face]))
     shared = tuple(sorted(first & second))
     return shared if len(shared) == 2 else None
+
+
+def _source_indexed_one_ring(faces, frozen_faces):
+    """Derive edge-adjacent source faces, requiring a locally oriented 2-manifold."""
+    source_faces = np.asarray(faces)
+    _require(source_faces.ndim == 2 and source_faces.shape[1] == 3
+             and source_faces.dtype.kind in "iu" and len(source_faces) > 0
+             and int(source_faces.min()) >= 0,
+             "source one-ring requires a nonempty indexed triangle array")
+    source_faces = np.ascontiguousarray(source_faces, dtype="<u4")
+    frozen = tuple(frozen_faces)
+    _require(frozen and all(type(face) is int and 0 <= face < len(source_faces)
+                             for face in frozen)
+             and len(set(frozen)) == len(frozen),
+             "source one-ring collar faces must be unique in-range integer indices")
+
+    edge_uses = {}
+    for face_index, triangle in enumerate(source_faces):
+        a, b, c = map(int, triangle)
+        for directed in ((a, b), (b, c), (c, a)):
+            edge = tuple(sorted(directed))
+            edge_uses.setdefault(edge, []).append((face_index, directed))
+    frozen_set = set(frozen)
+    adjacent = {}
+    checked_edges = set()
+    for face_index in frozen:
+        a, b, c = map(int, source_faces[face_index])
+        for directed in ((a, b), (b, c), (c, a)):
+            edge = tuple(sorted(directed))
+            uses = edge_uses.get(edge, [])
+            _require(len(uses) == 2,
+                     f"source collar edge {edge} has {len(uses)} incident faces, expected two")
+            _require(uses[0][1] == tuple(reversed(uses[1][1])),
+                     f"source collar edge {edge} has inconsistent oriented face winding")
+            checked_edges.add(edge)
+            neighbors = [used_face for used_face, _ in uses
+                         if used_face != face_index]
+            _require(len(neighbors) == 1,
+                     f"source collar edge {edge} has ambiguous indexed adjacency")
+            neighbor = neighbors[0]
+            if neighbor not in frozen_set:
+                adjacent.setdefault(neighbor, set()).add(edge)
+    ring_faces = tuple(sorted(adjacent))
+    _require(ring_faces,
+             "source collar has no edge-adjacent one-ring faces")
+    adjacency = [
+        {
+            "one_ring_face": face,
+            "frozen_neighbors": sorted(
+                frozen_face for frozen_face in frozen
+                if _indexed_face_shared_edge(
+                    source_faces, face, frozen_face) is not None),
+            "shared_indexed_edges": [list(edge) for edge in sorted(adjacent[face])],
+        }
+        for face in ring_faces
+    ]
+    _require(all(item["frozen_neighbors"] and item["shared_indexed_edges"]
+                 for item in adjacency),
+             "one-ring contains a face without direct frozen-collar edge support")
+    return {
+        "frozen_faces": list(frozen),
+        "one_ring_faces": list(ring_faces),
+        "oriented_indexed_edge_adjacency": adjacency,
+        "checked_frozen_edge_count": len(checked_edges),
+        "all_frozen_boundary_edges_have_two_oppositely_oriented_source_faces": True,
+    }
+
+
+def _source_indexed_one_ring_side(faces, frozen_faces):
+    """Return a source-indexed one-ring only when the entire collar edge is oriented."""
+    source_faces = np.asarray(faces)
+    _require(source_faces.ndim == 2 and source_faces.shape[1] == 3
+             and source_faces.dtype.kind in "iu" and len(source_faces) > 0
+             and int(source_faces.min()) >= 0,
+             "source one-ring requires a nonempty indexed triangle array")
+    source_faces = np.ascontiguousarray(source_faces, dtype="<u4")
+    frozen = tuple(frozen_faces)
+    _require(frozen and all(type(face) is int and 0 <= face < len(source_faces)
+                             for face in frozen)
+             and len(set(frozen)) == len(frozen),
+             "source one-ring collar faces must be unique in-range integer indices")
+
+    edge_uses = {}
+    for face_index, triangle in enumerate(source_faces):
+        a, b, c = map(int, triangle)
+        for directed in ((a, b), (b, c), (c, a)):
+            edge_uses.setdefault(tuple(sorted(directed)), []).append(
+                (face_index, directed))
+
+    invalid = []
+    checked_edges = set()
+    for face_index in frozen:
+        a, b, c = map(int, source_faces[face_index])
+        for directed in ((a, b), (b, c), (c, a)):
+            edge = tuple(sorted(directed))
+            if edge in checked_edges:
+                continue
+            checked_edges.add(edge)
+            uses = edge_uses.get(edge, [])
+            if len(uses) != 2:
+                invalid.append({
+                    "source_face": face_index,
+                    "indexed_edge": list(edge),
+                    "incident_face_count": len(uses),
+                    "reason": "indexed_edge_does_not_have_exactly_two_source_faces",
+                })
+            elif uses[0][1] != tuple(reversed(uses[1][1])):
+                invalid.append({
+                    "source_face": face_index,
+                    "indexed_edge": list(edge),
+                    "incident_faces": sorted(use[0] for use in uses),
+                    "directed_uses": [list(use[1]) for use in uses],
+                    "reason": "indexed_edge_source_face_winding_is_not_opposite",
+                })
+    if invalid:
+        return {
+            "eligible": False,
+            "frozen_faces": list(frozen),
+            "one_ring_faces": [],
+            "oriented_indexed_edge_adjacency": [],
+            "checked_frozen_edge_count": len(checked_edges),
+            "invalid_frozen_edges": invalid,
+            "all_frozen_edges_have_two_oppositely_oriented_source_faces": False,
+        }
+
+    frozen_set = set(frozen)
+    adjacent = {}
+    for face_index in frozen:
+        a, b, c = map(int, source_faces[face_index])
+        for directed in ((a, b), (b, c), (c, a)):
+            edge = tuple(sorted(directed))
+            neighbor = next(
+                use[0] for use in edge_uses[edge] if use[0] != face_index)
+            if neighbor not in frozen_set:
+                adjacent.setdefault(neighbor, set()).add(edge)
+    ring_faces = tuple(sorted(adjacent))
+    adjacency = [
+        {
+            "one_ring_face": face,
+            "frozen_neighbors": sorted(
+                frozen_face for frozen_face in frozen
+                if _indexed_face_shared_edge(
+                    source_faces, face, frozen_face) is not None),
+            "shared_indexed_edges": [list(edge) for edge in sorted(adjacent[face])],
+        }
+        for face in ring_faces
+    ]
+    _require(all(item["frozen_neighbors"] and item["shared_indexed_edges"]
+                 for item in adjacency),
+             "source one-ring contains a face without direct frozen-collar edge support")
+    return {
+        "eligible": True,
+        "frozen_faces": list(frozen),
+        "one_ring_faces": list(ring_faces),
+        "oriented_indexed_edge_adjacency": adjacency,
+        "checked_frozen_edge_count": len(checked_edges),
+        "invalid_frozen_edges": [],
+        "all_frozen_edges_have_two_oppositely_oriented_source_faces": True,
+    }
+
+
+def build_network_indexed_one_ring_collar_addendum(
+    *, bridge_key, target_key, source_link_evidence: dict,
+    source_rows: Mapping, source_map: Mapping,
+    baseline_bridge_surface=None, baseline_target_surface=None,
+) -> dict:
+    """Derive at most one source-indexed collar ring per eligible surface side.
+
+    The original face patches remain unchanged. Only ring×opposite-frozen-patch
+    products are eligible; ring×ring pairs are never added. The two links with
+    stronger, separately registered collar addenda keep using those owners.
+    """
+    bridge_key, target_key = gate._identity(bridge_key), gate._identity(target_key)
+    typed_link = (bridge_key, target_key)
+    _require(typed_link in set(declared_network_links()),
+             "source one-ring declaration is restricted to the frozen network inventory")
+    _require(typed_link not in {
+        BASELINE_COLLAR_ADDENDUM_LINK, SOURCE_BASELINE_ADDITIONS_LINK,
+    }, "typed link has a separately registered source-collar proof owner")
+    scope = bind_network_link_source_ancestry(
+        bridge_key, target_key, source_link_evidence=source_link_evidence,
+        source_rows=source_rows, source_map=source_map)
+    bridge_faces = _source_face_array(source_rows, bridge_key[1])
+    target_faces = _source_face_array(source_rows, target_key[1])
+    pairs = tuple(tuple(pair) for pair in scope["source_face_pair_ancestry"])
+    bridge_patch = tuple(sorted({first for first, _ in pairs}))
+    target_patch = tuple(sorted({second for _, second in pairs}))
+    bridge_ring = _source_indexed_one_ring_side(bridge_faces, bridge_patch)
+    target_ring = _source_indexed_one_ring_side(target_faces, target_patch)
+    _require(bridge_ring["one_ring_faces"] or target_ring["one_ring_faces"],
+             "no eligible source-indexed one-ring exists for this network link")
+    additional_pairs = sorted({
+        *((face, target_face)
+          for face in bridge_ring["one_ring_faces"]
+          for target_face in target_patch),
+        *((bridge_face, face)
+          for bridge_face in bridge_patch
+          for face in target_ring["one_ring_faces"]),
+    })
+    _require(additional_pairs
+             and len(additional_pairs) == len(set(additional_pairs))
+             and not any(first in bridge_ring["one_ring_faces"]
+                         and second in target_ring["one_ring_faces"]
+                         for first, second in additional_pairs),
+             "one-ring source expansion is empty, duplicated, or includes ring×ring")
+
+    baseline_lineage = None
+    if baseline_bridge_surface is not None or baseline_target_surface is not None:
+        _require(baseline_bridge_surface is not None
+                 and baseline_target_surface is not None,
+                 "independent baseline lineage requires both typed port surfaces")
+
+        def bind_baseline_surface(surface, expected_key, label):
+            _require(gate._identity(surface.key) == expected_key,
+                     f"independent {label} baseline surface has the wrong typed identity")
+            positions = np.asarray(surface.positions)
+            faces = np.asarray(surface.faces)
+            gids = np.asarray(surface.source_vertex_ids)
+            _require(positions.ndim == 2 and positions.shape[1] == 3
+                     and positions.dtype.kind == "f"
+                     and faces.ndim == 2 and faces.shape[1] == 3
+                     and faces.dtype.kind in "iu"
+                     and gids.ndim == 1 and gids.dtype.kind in "iu"
+                     and len(gids) == len(positions) and len(faces) > 0,
+                     f"independent {label} baseline surface arrays are malformed")
+            return {
+                f"{label}_position_f32_sha256": _sha_bytes(
+                    np.ascontiguousarray(positions, dtype="<f4").tobytes()),
+                f"{label}_face_u32_sha256": _sha_bytes(
+                    np.ascontiguousarray(faces, dtype="<u4").tobytes()),
+                f"{label}_gids_u64_sha256": _sha_bytes(
+                    np.ascontiguousarray(gids, dtype="<u8").tobytes()),
+            }
+
+        baseline_lineage = {
+            "provenance": (
+                "independently reconstructed current source baseline; candidate "
+                "surface is not an input to the source region declaration"),
+            **bind_baseline_surface(
+                baseline_bridge_surface, bridge_key, "parent"),
+            **bind_baseline_surface(
+                baseline_target_surface, target_key, "target"),
+            "independent_from_actual_candidate_geometry": True,
+        }
+
+    bridge_row = source_rows.get(bridge_key[1], source_rows.get(str(bridge_key[1])))
+    target_row = source_rows.get(target_key[1], source_rows.get(str(target_key[1])))
+    bridge_vertices = np.asarray(bridge_row.get("vertices6"))
+    target_vertices = np.asarray(target_row.get("vertices6"))
+    bridge_record = bridge_row.get("record")
+    target_record = target_row.get("record")
+    _require(bridge_vertices.ndim == 2 and bridge_vertices.shape[1] == 6
+             and bridge_vertices.dtype.kind == "f"
+             and target_vertices.ndim == 2 and target_vertices.shape[1] == 6
+             and target_vertices.dtype.kind == "f"
+             and isinstance(bridge_record, (tuple, list)) and len(bridge_record) == 8
+             and isinstance(target_record, (tuple, list)) and len(target_record) == 8
+             and all(type(value) is int for value in bridge_record)
+             and all(type(value) is int for value in target_record)
+             and bridge_record[2] == len(bridge_vertices)
+             and target_record[2] == len(target_vertices),
+             "source one-ring declaration requires valid ABI5 six-lane rows and records")
+
+    return {
+        "schema": "numi.human.registered-source-network-one-ring-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [list(bridge_key), list(target_key)],
+        "source_evidence": {
+            "path": scope["source_evidence_path"],
+            "sha256": scope["source_evidence_sha256"],
+            "status": scope["source_evidence_status"],
+        },
+        "source_identity": scope["source_identities"],
+        "source_arrays": {
+            "bridge_face_u32_sha256": _sha_bytes(bridge_faces.tobytes()),
+            "target_face_u32_sha256": _sha_bytes(target_faces.tobytes()),
+            "bridge_nha_first_vertex": bridge_record[1],
+            "bridge_nha_vertex_count": bridge_record[2],
+            "target_nha_first_vertex": target_record[1],
+            "target_nha_vertex_count": target_record[2],
+            "bridge_vertices6_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(bridge_vertices, dtype="<f4").tobytes()),
+            "target_vertices6_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(target_vertices, dtype="<f4").tobytes()),
+            "frozen_face_pair_ancestry_sha256": scope[
+                "source_face_pair_ancestry_sha256"],
+        },
+        "bounded_source_region": {
+            "frozen_bridge_collar_faces": list(bridge_patch),
+            "additional_bridge_one_ring_faces": bridge_ring["one_ring_faces"],
+            "frozen_target_collar_faces": list(target_patch),
+            "additional_target_one_ring_faces": target_ring["one_ring_faces"],
+            "additional_allowed_face_pairs": [
+                list(pair) for pair in additional_pairs],
+            "bridge_one_ring_source_derivation": bridge_ring,
+            "target_one_ring_source_derivation": target_ring,
+            "frozen_face_patches_unchanged": True,
+            "no_candidate_geometry_used": True,
+            "no_ring_by_ring_pairs": True,
+            "maximum_expansion": "one indexed edge-adjacent face ring per eligible source side",
+            "expansion_rule": (
+                "source-derived bridge-ring×frozen-target-patch and "
+                "frozen-bridge-patch×target-ring products only"),
+        },
+        "baseline_surface_lineage": baseline_lineage,
+        "source_geometry_modified": False,
+        "candidate_geometry_used": False,
+        "anatomical_or_native_admission": False,
+    }
+
+
+def build_aortic_one_ring_collar_addendum(
+    *, bridge_key, target_key, source_link_evidence: dict,
+    source_rows: Mapping, source_map: Mapping,
+    baseline_bridge_surface=None, baseline_target_surface=None,
+) -> dict:
+    """Build a source-only one-ring collar declaration for the 7->471 port."""
+    bridge_key, target_key = gate._identity(bridge_key), gate._identity(target_key)
+    _require((bridge_key, target_key) == AORTIC_ONE_RING_COLLAR_LINK,
+             "source one-ring collar declaration is restricted to typed link 7->471")
+    scope = bind_network_link_source_ancestry(
+        bridge_key, target_key, source_link_evidence=source_link_evidence,
+        source_rows=source_rows, source_map=source_map)
+    parent_faces = _source_face_array(source_rows, bridge_key[1])
+    child_faces = _source_face_array(source_rows, target_key[1])
+    baseline_surface_lineage = None
+    if baseline_bridge_surface is not None or baseline_target_surface is not None:
+        _require(baseline_bridge_surface is not None
+                 and baseline_target_surface is not None,
+                 "independent baseline lineage requires both typed port surfaces")
+
+        def bind_baseline_surface(surface, expected_key, label):
+            _require(gate._identity(surface.key) == expected_key,
+                     f"independent {label} baseline surface has the wrong typed identity")
+            positions = np.asarray(surface.positions)
+            faces = np.asarray(surface.faces)
+            gids = np.asarray(surface.source_vertex_ids)
+            _require(positions.ndim == 2 and positions.shape[1] == 3
+                     and positions.dtype.kind == "f"
+                     and faces.ndim == 2 and faces.shape[1] == 3
+                     and faces.dtype.kind in "iu"
+                     and gids.ndim == 1 and gids.dtype.kind in "iu"
+                     and len(gids) == len(positions)
+                     and len(faces) > 0,
+                     f"independent {label} baseline surface arrays are malformed")
+            return {
+                f"{label}_position_f32_sha256": _sha_bytes(
+                    np.ascontiguousarray(positions, dtype="<f4").tobytes()),
+                f"{label}_face_u32_sha256": _sha_bytes(
+                    np.ascontiguousarray(faces, dtype="<u4").tobytes()),
+                f"{label}_gids_u64_sha256": _sha_bytes(
+                    np.ascontiguousarray(gids, dtype="<u8").tobytes()),
+            }
+
+        baseline_surface_lineage = {
+            "provenance": (
+                "independently reconstructed current source baseline; candidate "
+                "surface is not an input to this source-region declaration"),
+            **bind_baseline_surface(
+                baseline_bridge_surface, bridge_key, "parent"),
+            **bind_baseline_surface(
+                baseline_target_surface, target_key, "target"),
+            "independent_from_actual_candidate_geometry": True,
+        }
+    pairs = tuple(tuple(pair) for pair in scope["source_face_pair_ancestry"])
+    bridge_patch = tuple(sorted({first for first, _ in pairs}))
+    target_patch = tuple(sorted({second for _, second in pairs}))
+    ring = _source_indexed_one_ring(parent_faces, bridge_patch)
+    additional_pairs = tuple(
+        (face, target_face)
+        for face in ring["one_ring_faces"]
+        for target_face in target_patch)
+    _require(additional_pairs
+             and len(set(additional_pairs)) == len(additional_pairs),
+             "source one-ring expansion is empty or repeats face pairs")
+    parent_row = source_rows.get(bridge_key[1], source_rows.get(str(bridge_key[1])))
+    child_row = source_rows.get(target_key[1], source_rows.get(str(target_key[1])))
+    parent_vertices = np.asarray(parent_row.get("vertices6"))
+    child_vertices = np.asarray(child_row.get("vertices6"))
+    parent_record = parent_row.get("record")
+    child_record = child_row.get("record")
+    _require(parent_vertices.ndim == 2 and parent_vertices.shape[1] == 6
+             and parent_vertices.dtype.kind == "f"
+             and child_vertices.ndim == 2 and child_vertices.shape[1] == 6
+             and child_vertices.dtype.kind == "f"
+             and isinstance(parent_record, (tuple, list)) and len(parent_record) == 8
+             and isinstance(child_record, (tuple, list)) and len(child_record) == 8
+             and all(type(value) is int for value in parent_record)
+             and all(type(value) is int for value in child_record)
+             and parent_record[2] == len(parent_vertices)
+             and child_record[2] == len(child_vertices),
+             "source one-ring declaration requires valid ABI5 six-lane vertex arrays and records")
+    parent_faces_sha = _sha_bytes(parent_faces.tobytes())
+    child_faces_sha = _sha_bytes(child_faces.tobytes())
+    return {
+        "schema": "numi.human.registered-source-one-ring-collar-addendum.v1",
+        "passed": True,
+        "typed_link": [list(bridge_key), list(target_key)],
+        "source_evidence": {
+            "path": scope["source_evidence_path"],
+            "sha256": scope["source_evidence_sha256"],
+            "status": scope["source_evidence_status"],
+        },
+        "source_identity": scope["source_identities"],
+        "source_arrays": {
+            "bridge_face_u32_sha256": parent_faces_sha,
+            "target_face_u32_sha256": child_faces_sha,
+            "bridge_nha_first_vertex": parent_record[1],
+            "bridge_nha_vertex_count": parent_record[2],
+            "target_nha_first_vertex": child_record[1],
+            "target_nha_vertex_count": child_record[2],
+            "bridge_vertices6_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(parent_vertices, dtype="<f4").tobytes()),
+            "target_vertices6_f32_sha256": _sha_bytes(
+                np.ascontiguousarray(child_vertices, dtype="<f4").tobytes()),
+            "frozen_face_pair_ancestry_sha256": scope[
+                "source_face_pair_ancestry_sha256"],
+        },
+        "bounded_source_region": {
+            "frozen_bridge_collar_faces": list(bridge_patch),
+            "additional_bridge_one_ring_faces": ring["one_ring_faces"],
+            "frozen_target_collar_faces": list(target_patch),
+            "additional_allowed_face_pairs": [
+                list(pair) for pair in additional_pairs],
+            "oriented_indexed_edge_adjacency": ring[
+                "oriented_indexed_edge_adjacency"],
+            "all_frozen_boundary_edges_have_two_oppositely_oriented_source_faces": True,
+            "expansion_rule": (
+                "one indexed edge-adjacent bridge face ring; target remains the "
+                "exact frozen source collar patch"),
+            "no_candidate_geometry_used": True,
+            "no_target_patch_expansion": True,
+        },
+        "baseline_surface_lineage": baseline_surface_lineage,
+        "source_geometry_modified": False,
+        "candidate_geometry_used": False,
+        "anatomical_or_native_admission": False,
+    }
 
 
 def _declared_baseline_collar_addendum(
@@ -1944,6 +2383,224 @@ def _station_calibre(surface, baseline_surface, witness_points, collar_faces, *,
 
 
 def _verified_collar_addendum_pairs(typed_port, addendum):
+    if (isinstance(addendum, Mapping)
+            and addendum.get("schema")
+            == "numi.human.registered-source-network-one-ring-collar-addendum.v1"):
+        _require(typed_port in set(declared_network_links())
+                 and typed_port not in {
+                     BASELINE_COLLAR_ADDENDUM_LINK, SOURCE_BASELINE_ADDITIONS_LINK,
+                 }
+                 and addendum.get("passed") is True
+                 and addendum.get("typed_link")
+                 == [list(typed_port[0]), list(typed_port[1])]
+                 and addendum.get("candidate_geometry_used") is False
+                 and addendum.get("source_geometry_modified") is False
+                 and addendum.get("anatomical_or_native_admission") is False,
+                 "source network one-ring declaration is invalid or outside its typed inventory")
+        bounded = addendum.get("bounded_source_region")
+        _require(isinstance(bounded, Mapping)
+                 and bounded.get("frozen_face_patches_unchanged") is True
+                 and bounded.get("no_candidate_geometry_used") is True
+                 and bounded.get("no_ring_by_ring_pairs") is True
+                 and bounded.get("maximum_expansion")
+                 == "one indexed edge-adjacent face ring per eligible source side"
+                 and bounded.get("expansion_rule")
+                 == ("source-derived bridge-ring×frozen-target-patch and "
+                     "frozen-bridge-patch×target-ring products only"),
+                 "source network one-ring declaration is not bounded to one indexed ring")
+        bridge_patch = bounded.get("frozen_bridge_collar_faces")
+        target_patch = bounded.get("frozen_target_collar_faces")
+        bridge_ring = bounded.get("additional_bridge_one_ring_faces")
+        target_ring = bounded.get("additional_target_one_ring_faces")
+        for name, values in (
+            ("bridge patch", bridge_patch), ("target patch", target_patch),
+            ("bridge one-ring", bridge_ring), ("target one-ring", target_ring),
+        ):
+            _require(isinstance(values, list)
+                     and all(type(value) is int and value >= 0 for value in values)
+                     and values == sorted(set(values))
+                     and (name.endswith("patch") or bool(values)
+                          or name in ("bridge one-ring", "target one-ring")),
+                     f"source network one-ring {name} must be sorted unique indices")
+        _require(bridge_patch and target_patch
+                 and set(bridge_patch).isdisjoint(bridge_ring)
+                 and set(target_patch).isdisjoint(target_ring),
+                 "source network one-ring overlaps or lacks a frozen face patch")
+        for role, patch, ring in (
+            ("bridge", bridge_patch, bridge_ring),
+            ("target", target_patch, target_ring),
+        ):
+            detail = bounded.get(f"{role}_one_ring_source_derivation")
+            _require(isinstance(detail, Mapping)
+                     and detail.get("frozen_faces") == patch
+                     and detail.get("one_ring_faces") == ring
+                     and type(detail.get("eligible")) is bool,
+                     f"{role} source one-ring derivation is not bound to its frozen patch")
+            adjacency = detail.get("oriented_indexed_edge_adjacency")
+            invalid = detail.get("invalid_frozen_edges")
+            if detail["eligible"]:
+                _require(not invalid
+                         and detail.get(
+                             "all_frozen_edges_have_two_oppositely_oriented_source_faces")
+                         is True
+                         and isinstance(adjacency, list)
+                         and [item.get("one_ring_face") for item in adjacency] == ring
+                         and all(isinstance(item, Mapping)
+                                 and item.get("frozen_neighbors")
+                                 and item.get("shared_indexed_edges")
+                                 and all(type(face) is int and face in patch
+                                         for face in item["frozen_neighbors"])
+                                 and all(isinstance(edge, list) and len(edge) == 2
+                                         and all(type(vertex) is int and vertex >= 0
+                                                 for vertex in edge)
+                                         and edge == sorted(set(edge))
+                                         for edge in item["shared_indexed_edges"])
+                                 for item in adjacency),
+                         f"{role} one-ring lacks exact oriented source adjacency")
+            else:
+                _require(not ring and not adjacency and isinstance(invalid, list)
+                         and invalid
+                         and detail.get(
+                             "all_frozen_edges_have_two_oppositely_oriented_source_faces")
+                         is False,
+                         f"ineligible {role} source patch does not fail closed")
+        expected_pairs = sorted({
+            *((face, target_face)
+              for face in bridge_ring for target_face in target_patch),
+            *((bridge_face, face)
+              for bridge_face in bridge_patch for face in target_ring),
+        })
+        declared_pairs = bounded.get("additional_allowed_face_pairs")
+        _require(declared_pairs == [list(pair) for pair in expected_pairs]
+                 and expected_pairs,
+                 "source network one-ring pairs exceed ring×frozen-patch products")
+        source_arrays = addendum.get("source_arrays")
+        source_evidence = addendum.get("source_evidence")
+        required_hashes = (
+            "bridge_face_u32_sha256", "target_face_u32_sha256",
+            "bridge_vertices6_f32_sha256", "target_vertices6_f32_sha256",
+            "frozen_face_pair_ancestry_sha256",
+        )
+        _require(isinstance(source_arrays, Mapping)
+                 and all(isinstance(source_arrays.get(name), str)
+                         and len(source_arrays[name]) == 64
+                         and all(character in "0123456789abcdef"
+                                 for character in source_arrays[name])
+                         for name in required_hashes)
+                 and isinstance(source_evidence, Mapping)
+                 and isinstance(source_evidence.get("path"), str)
+                 and isinstance(source_evidence.get("sha256"), str)
+                 and len(source_evidence["sha256"]) == 64
+                 and all(character in "0123456789abcdef"
+                         for character in source_evidence["sha256"]),
+                 "source network one-ring lacks exact source array/report pins")
+        baseline_lineage = addendum.get("baseline_surface_lineage")
+        lineage_hashes = (
+            "parent_position_f32_sha256", "parent_face_u32_sha256",
+            "parent_gids_u64_sha256", "target_position_f32_sha256",
+            "target_face_u32_sha256", "target_gids_u64_sha256")
+        _require(isinstance(baseline_lineage, Mapping)
+                 and baseline_lineage.get(
+                     "independent_from_actual_candidate_geometry") is True
+                 and isinstance(baseline_lineage.get("provenance"), str)
+                 and all(isinstance(baseline_lineage.get(name), str)
+                         and len(baseline_lineage[name]) == 64
+                         and all(character in "0123456789abcdef"
+                                 for character in baseline_lineage[name])
+                         for name in lineage_hashes),
+                 "source network one-ring baseline lineage is missing or malformed")
+        return {tuple(pair) for pair in declared_pairs}
+    if typed_port == AORTIC_ONE_RING_COLLAR_LINK:
+        _require(isinstance(addendum, Mapping)
+                 and addendum.get("passed") is True
+                 and addendum.get("schema")
+                 == "numi.human.registered-source-one-ring-collar-addendum.v1"
+                 and addendum.get("typed_link")
+                 == [list(typed_port[0]), list(typed_port[1])]
+                 and addendum.get("candidate_geometry_used") is False
+                 and addendum.get("source_geometry_modified") is False
+                 and addendum.get("anatomical_or_native_admission") is False,
+                 "source one-ring declaration is invalid or belongs to another typed link")
+        bounded = addendum.get("bounded_source_region")
+        _require(isinstance(bounded, Mapping)
+                 and bounded.get("no_candidate_geometry_used") is True
+                 and bounded.get("no_target_patch_expansion") is True
+                 and bounded.get("expansion_rule")
+                 == ("one indexed edge-adjacent bridge face ring; target remains the "
+                     "exact frozen source collar patch")
+                 and bounded.get(
+                     "all_frozen_boundary_edges_have_two_oppositely_oriented_source_faces")
+                 is True,
+                 "source one-ring declaration is not bounded to oriented indexed adjacency")
+        bridge_patch = bounded.get("frozen_bridge_collar_faces")
+        ring = bounded.get("additional_bridge_one_ring_faces")
+        target_patch = bounded.get("frozen_target_collar_faces")
+        declared_pairs = bounded.get("additional_allowed_face_pairs")
+        for name, values in (("bridge patch", bridge_patch),
+                             ("bridge one-ring", ring),
+                             ("target patch", target_patch)):
+            _require(isinstance(values, list) and values
+                     and all(type(value) is int and value >= 0 for value in values)
+                     and values == sorted(set(values)),
+                     f"source one-ring {name} must be sorted unique face indices")
+        _require(set(bridge_patch).isdisjoint(ring),
+                 "source one-ring faces overlap the frozen bridge patch")
+        expected_pairs = [
+            [face, target_face] for face in ring for target_face in target_patch]
+        _require(declared_pairs == expected_pairs
+                 and len({tuple(pair) for pair in declared_pairs}) == len(declared_pairs),
+                 "source one-ring allowed pairs differ from its bounded source-only product")
+        adjacency = bounded.get("oriented_indexed_edge_adjacency")
+        _require(isinstance(adjacency, list)
+                 and [item.get("one_ring_face") for item in adjacency] == ring
+                 and all(isinstance(item, Mapping)
+                         and item.get("frozen_neighbors")
+                         and item.get("shared_indexed_edges")
+                         and all(type(face) is int and face in bridge_patch
+                                 for face in item["frozen_neighbors"])
+                         and all(isinstance(edge, list) and len(edge) == 2
+                                 and all(type(vertex) is int and vertex >= 0
+                                         for vertex in edge)
+                                 and edge == sorted(set(edge))
+                                 for edge in item["shared_indexed_edges"])
+                         for item in adjacency),
+                 "source one-ring indexed adjacency is malformed or unbounded")
+        source_arrays = addendum.get("source_arrays")
+        source_evidence = addendum.get("source_evidence")
+        _require(isinstance(source_arrays, Mapping)
+                 and isinstance(source_evidence, Mapping)
+                 and all(isinstance(source_arrays.get(name), str)
+                         and len(source_arrays[name]) == 64
+                         and all(character in "0123456789abcdef"
+                                 for character in source_arrays[name])
+                         for name in (
+                             "bridge_face_u32_sha256", "target_face_u32_sha256",
+                             "bridge_vertices6_f32_sha256",
+                             "target_vertices6_f32_sha256",
+                             "frozen_face_pair_ancestry_sha256"))
+                 and isinstance(source_evidence.get("path"), str)
+                 and isinstance(source_evidence.get("sha256"), str)
+                 and len(source_evidence["sha256"]) == 64
+                 and all(character in "0123456789abcdef"
+                         for character in source_evidence["sha256"]),
+                 "source one-ring declaration lacks exact source array/report pins")
+        baseline_lineage = addendum.get("baseline_surface_lineage")
+        if baseline_lineage is not None:
+            lineage_hashes = (
+                "parent_position_f32_sha256", "parent_face_u32_sha256",
+                "parent_gids_u64_sha256", "target_position_f32_sha256",
+                "target_face_u32_sha256", "target_gids_u64_sha256")
+            _require(isinstance(baseline_lineage, Mapping)
+                     and baseline_lineage.get(
+                         "independent_from_actual_candidate_geometry") is True
+                     and isinstance(baseline_lineage.get("provenance"), str)
+                     and all(isinstance(baseline_lineage.get(name), str)
+                             and len(baseline_lineage[name]) == 64
+                             and all(character in "0123456789abcdef"
+                                     for character in baseline_lineage[name])
+                             for name in lineage_hashes),
+                     "source one-ring independent baseline surface lineage is malformed")
+        return {tuple(pair) for pair in declared_pairs}
     if typed_port == BASELINE_COLLAR_ADDENDUM_LINK:
         _require(addendum.get("passed") is True
                  and addendum.get("schema")
@@ -2221,7 +2878,9 @@ def _interface_gate(
         bridge_face_count=len(bridge.faces), target_face_count=len(target.faces))
     bridge_patch = sorted({first for first, _ in pairs})
     target_patch = sorted({second for _, second in pairs})
-    allowed = {(first, second) for first in bridge_patch for second in target_patch}
+    frozen_cross_product = {
+        (first, second) for first in bridge_patch for second in target_patch}
+    allowed = set(frozen_cross_product)
     addendum_pairs = set()
     if verified_collar_addendum is not None:
         addendum_pairs = _verified_collar_addendum_pairs(
@@ -2236,7 +2895,8 @@ def _interface_gate(
     unexpected = tuple(tuple(map(int, pair)) for pair in
                        audit.get("unexpected_triangle_pairs", []))
     exact_points = gate._exact_interface_points(verifier, bridge, target, observed)
-    within_patch = all(pair in allowed for pair in observed)
+    within_frozen_patch = all(pair in frozen_cross_product for pair in observed)
+    within_declared_region = all(pair in allowed for pair in observed)
     containment = audit.get("containment", [])
     partial_overlap_boundary = gate._declared_partial_vessel_port_overlap(
         bridge.key, target.key, audit, observed, unexpected, exact_points, allowed,
@@ -2244,7 +2904,7 @@ def _interface_gate(
     transverse_witnesses = _exact_transverse_overlap_side_witnesses(
         verifier, bridge, target, observed)
     exact_transverse_overlap = bool(
-        port_scope_passed and not unexpected and within_patch and bool(exact_points)
+        port_scope_passed and not unexpected and within_declared_region and bool(exact_points)
         and not audit.get("intended_enclosures")
         and not audit.get("rejected_interface_feature_contacts")
         and transverse_witnesses.get("passed") is True)
@@ -2252,7 +2912,7 @@ def _interface_gate(
         port_scope_passed and (
             partial_overlap_boundary.get("passed") or exact_transverse_overlap))
     pair_patch_and_collar_passed = bool(
-        port_scope_passed and not unexpected and within_patch and bool(exact_points)
+        port_scope_passed and not unexpected and within_declared_region and bool(exact_points)
         and (bool(audit.get("passed")) or exact_partial_overlap)
     )
     return {
@@ -2305,8 +2965,34 @@ def _interface_gate(
             "added_to_frozen_patch_cross_product": False,
             "candidate_and_baseline_still_require_exact_points": True,
         },
+        "source_one_ring_collar_expansion": {
+            "used": typed_port == AORTIC_ONE_RING_COLLAR_LINK
+                    and bool(addendum_pairs),
+            "additional_allowed_face_pairs": [
+                list(pair) for pair in sorted(addendum_pairs)]
+                if typed_port == AORTIC_ONE_RING_COLLAR_LINK else [],
+            "added_to_frozen_patch_cross_product": False,
+            "candidate_and_baseline_still_require_exact_points": True,
+            "inside_both_connected_lumen_and_station_calibre_remain_required": True,
+        },
+        "source_indexed_network_one_ring_expansion": {
+            "used": bool(
+                isinstance(verified_collar_addendum, Mapping)
+                and verified_collar_addendum.get("schema")
+                == "numi.human.registered-source-network-one-ring-collar-addendum.v1"),
+            "additional_allowed_face_pairs": [
+                list(pair) for pair in sorted(addendum_pairs)]
+                if isinstance(verified_collar_addendum, Mapping)
+                and verified_collar_addendum.get("schema")
+                == "numi.human.registered-source-network-one-ring-collar-addendum.v1"
+                else [],
+            "frozen_face_patches_unchanged": True,
+            "ring_by_ring_pairs_added": False,
+            "inside_both_connected_lumen_and_station_calibre_remain_required": True,
+        },
         "unexpected_face_pairs": [list(pair) for pair in unexpected],
-        "observed_pairs_within_frozen_face_patch_cross_product": within_patch,
+        "observed_pairs_within_frozen_face_patch_cross_product": within_frozen_patch,
+        "observed_pairs_within_source_declared_region": within_declared_region,
         "frozen_face_pairs": [list(pair) for pair in pairs],
         "frozen_face_pairs_sha256": _sha_bytes(
             np.ascontiguousarray(pairs, dtype="<i8").tobytes()),
@@ -2826,7 +3512,23 @@ def audit_brachiocephalic_3d_junction(
             == baseline_lineage.get("target_position_f32_sha256")
             and _sha_bytes(np.ascontiguousarray(
                 surfaces["baseline_target"].faces, dtype="<u4").tobytes())
-            == baseline_lineage.get("target_face_u32_sha256"),
+            == baseline_lineage.get("target_face_u32_sha256")
+            and (
+                matched_collar_addendum.get("schema")
+                != "numi.human.registered-source-network-one-ring-collar-addendum.v1"
+                and typed_link != AORTIC_ONE_RING_COLLAR_LINK
+                or (
+                    baseline_lineage.get(
+                        "independent_from_actual_candidate_geometry") is True
+                    and _sha_bytes(np.ascontiguousarray(
+                        surfaces["baseline_bridge"].source_vertex_ids,
+                        dtype="<u8").tobytes())
+                    == baseline_lineage.get("parent_gids_u64_sha256")
+                    and _sha_bytes(np.ascontiguousarray(
+                        surfaces["baseline_target"].source_vertex_ids,
+                        dtype="<u8").tobytes())
+                    == baseline_lineage.get("target_gids_u64_sha256")
+                )),
             "baseline-matched collar proof is not bound to the supplied independent baseline surfaces")
         recorded_endpoints = matched_collar_addendum.get(
             "exact_p6_rat_contact", {}).get("endpoints", [])
@@ -3147,6 +3849,26 @@ def audit_brachiocephalic_network_link_3d(
         bridge_key, target_key, source_link_evidence=source_link_evidence,
         source_rows=source_rows, source_map=source_map)
     parent, child = gate._identity(bridge_key), gate._identity(target_key)
+    if matched_collar_addendum is not None:
+        if (matched_collar_addendum.get("schema")
+                == "numi.human.registered-source-network-one-ring-collar-addendum.v1"):
+            derived_addendum = build_network_indexed_one_ring_collar_addendum(
+                bridge_key=parent, target_key=child,
+                source_link_evidence=source_link_evidence,
+                source_rows=source_rows, source_map=source_map,
+                baseline_bridge_surface=baseline_bridge_surface,
+                baseline_target_surface=baseline_target_surface)
+            _require(dict(matched_collar_addendum) == derived_addendum,
+                     "network one-ring collar does not replay from current frozen ABI5 source")
+        elif (parent, child) == AORTIC_ONE_RING_COLLAR_LINK:
+            derived_addendum = build_aortic_one_ring_collar_addendum(
+                bridge_key=parent, target_key=child,
+                source_link_evidence=source_link_evidence,
+                source_rows=source_rows, source_map=source_map,
+                baseline_bridge_surface=baseline_bridge_surface,
+                baseline_target_surface=baseline_target_surface)
+            _require(dict(matched_collar_addendum) == derived_addendum,
+                     "one-ring collar declaration does not replay from current frozen ABI5 source")
     ancestry = {}
     for label, surface, stable_id, expected_sha in (
         ("candidate_parent", bridge_surface, parent[1],
