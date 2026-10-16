@@ -307,7 +307,7 @@ def _shared_rib_intercostal_partition(
     from . import composed_bone_body_frame as bones
     first, second = verify.typed_key(first), verify.typed_key(second)
     keys = {first, second}
-    allowed = ({(51004, 48), (51010, 313)}, {(51004, 49), (51010, 313)})
+    allowed = tuple({(51004, sid), (51010, 313)} for sid in (48, 49, 50))
     pac.require(keys in allowed, "rib partition typed interface is unsupported")
     pac.require(coordinate_provenance == "accepted_native_capture",
                 "rib partition requires an unchanged accepted native capture")
@@ -345,6 +345,19 @@ def _shared_rib_intercostal_partition(
     manifest = json.loads(bone_manifest.read_text())
     maps = {row["stable_id"]: row["interface_vertex_pairs"]
             for row in manifest["body_local_bakes"]["rows"]}
+    if "source_partition_retriangulation" in manifest:
+        pairs_path = Path(report["rib50_interface_vertex_pairs_path"])
+        pac.require(pac._surface_sha256(pairs_path)
+                    == report["rib50_interface_vertex_pairs_sha256"],
+                    "rib50 source attachment map drifted")
+        pac.require(50 not in maps, "rib50 source attachment map is duplicated")
+        pairs = json.loads(pairs_path.read_text())
+        pac.require(isinstance(pairs, list) and bool(pairs)
+                    and all(isinstance(pair, list) and len(pair) == 2
+                            and all(type(slot) is int and slot >= 0 for slot in pair)
+                            for pair in pairs),
+                    "rib50 source attachment map is malformed")
+        maps[50] = pairs
     _, _, rows = _parse_payload(nha.read_bytes())
     nr = rows[313]
     bones._runtime_attachment_expected_values(nr, maps, nha_stable_id=313)
@@ -407,7 +420,7 @@ def _shared_rib_intercostal_partition(
 def _partition_dispatch(surfaces, first, second, source, expected_sha256,
                         *, capture_context=None, **kwargs):
     first, second = verify.typed_key(first), verify.typed_key(second)
-    if {first, second} in ({(51004, 48), (51010, 313)}, {(51004, 49), (51010, 313)}):
+    if {first, second} in tuple({(51004, sid), (51010, 313)} for sid in (48, 49, 50)):
         pac.require(capture_context is not None
                     and "compiled_bone_identity_inputs" in capture_context,
                     "rib partition requires native-bound compiled bone identities")

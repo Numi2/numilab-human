@@ -120,3 +120,62 @@ def test_rib_rejects_world_coordinate_and_ordered_facet_drift(tmp_path, monkeypa
     with pytest.raises(Exception):
         preflight(source, digest, surfaces, context)
 
+
+
+def rib50_case(tmp_path, monkeypatch):
+    source, _, surfaces, context = case(tmp_path, monkeypatch)
+    report = json.loads(source.read_text())
+    mp = Path(report["output_bones_path"]).with_suffix(".manifest.json")
+    manifest = json.loads(mp.read_text())
+    manifest["source_partition_retriangulation"] = {"fixture": True}
+    mp.write_text(json.dumps(manifest))
+    pairs = tmp_path/"rib50-interface-vertex-pairs.json"
+    # Put the third interface on a third disjoint intercostal component.
+    old = surfaces[(51010, 313)]
+    lower = old[0][:4].copy()
+    lower[:, 0] += 4
+    xyz = np.concatenate((old[0], lower))
+    fs = np.concatenate((old[1], old[1][:4]+8))
+    nr = dict(body_index=20, layer=1, flags=0,
+              vertices6=np.column_stack((xyz, np.tile([0,0,1], (12,1)))).astype("<f4"),
+              faces=fs, record=[0,8])
+    monkeypatch.setattr(resting_pleura_proxy, "_parse_payload",
+                        lambda raw: (None,None,{313:nr}))
+    surfaces[(51010,313)] = (xyz, fs, np.tile([0,0,1],(12,1)).astype("<f4"),
+                             np.arange(12,dtype="<u4")+8+20000)
+    # Bone50 uses its original allocation in this fixture.
+    bone = Path(report["output_bones_path"])
+    raw = bytearray(bone.read_bytes())
+    _, records, vo, _ = bones._decode_bones(raw)
+    br = records[49]
+    attrs = np.frombuffer(raw,"<f4",count=24,offset=vo+br[1]*24).reshape(4,6).copy()
+    attrs[:,0] += 4
+    raw[vo+br[1]*24:vo+(br[1]+4)*24] = attrs.tobytes()
+    bone.write_bytes(raw)
+    surfaces[(51004,50)] = (attrs[:,:3].copy(), surfaces[(51004,48)][1].copy(),
+                            attrs[:,3:].copy(), np.arange(4,dtype="<u4")+br[1]+10000)
+    pairs.write_text(json.dumps([[0,8],[1,9],[2,10]]))
+    digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    report.update(output_bones_sha256=digest(bone),output_bones_manifest_sha256=digest(mp),
+                  rib50_interface_vertex_pairs_path=str(pairs),
+                  rib50_interface_vertex_pairs_sha256=digest(pairs))
+    source.write_text(json.dumps(report))
+    for k,p in (("bone_payload",bone),("bone_manifest",mp)):
+        context["compiled_bone_identity_inputs"][k]["sha256"] = digest(p)
+    return source,digest(source),surfaces,context,pairs
+
+
+def test_rib50_uses_pinned_source_partition_map_and_exact_oracle(tmp_path,monkeypatch):
+    source,digest,surfaces,context,_ = rib50_case(tmp_path,monkeypatch)
+    exact = shared.certify_shared_muscle_partition(
+        surfaces,(51004,50),(51010,313),source,digest,capture_context=context)
+    assert exact["shared_interface_face_count"] == 1
+    assert exact["exact_native_partition_certificate"]["interiors_disjoint"]
+
+
+def test_rib50_rejects_drifted_source_partition_map(tmp_path,monkeypatch):
+    source,digest,surfaces,context,pairs = rib50_case(tmp_path,monkeypatch)
+    pairs.write_text("[]")
+    with pytest.raises(Exception,match="attachment map drifted"):
+        shared.preflight_shared_muscle_partition(
+            surfaces,(51004,50),(51010,313),source,digest,capture_context=context)
