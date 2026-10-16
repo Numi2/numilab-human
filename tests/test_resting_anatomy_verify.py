@@ -25,15 +25,16 @@ def tetra(scale=1., offset=0.):
     return np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32) * np.float32(scale) + np.float32(offset)
 
 
-def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overrides=None):
+def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overrides=None,
+                    normals=None, core_body_indices=None):
     positions = np.asarray(positions, dtype=np.float32)
     faces = np.asarray(faces, dtype=np.uint32)
     gids = np.asarray(gids, dtype=np.uint64)
-    weights = np.full((len(gids), 21), 1.0 / 21.0, dtype=np.float64)
+    ordered = list(range(21)) if core_body_indices is None else list(core_body_indices)
+    weights = np.full((len(gids), len(ordered)), 1.0 / len(ordered), dtype=np.float64)
     for row, gid in enumerate(gids):
         if weight_overrides and int(gid) in weight_overrides:
             weights[row] = np.asarray(weight_overrides[int(gid)], dtype=np.float64)
-    ordered = list(range(21))
     vertex_lineage = {}
     for gid in gids:
         record = {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
@@ -46,7 +47,7 @@ def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overri
             })
         vertex_lineage[int(gid)] = record
     return prepare_surface(
-        key, positions, faces, source_vertex_ids=gids,
+        key, positions, faces, normals=normals, source_vertex_ids=gids,
         source_face_lineage=[{"source_parent_face": i} for i in range(len(faces))],
         source_vertex_lineage=vertex_lineage,
         ordered_core_body_indices=ordered,
@@ -1722,6 +1723,55 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         self.assertFalse(rejected["passed"])
         self.assertTrue(rejected["rejected_interface_feature_contacts"])
         self.assertIn([0, 0], rejected["unexpected_triangle_pairs"])
+
+    def test_shared_feature_uses_position_and_material_owner_not_surface_normal(self):
+        positions_a = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32)
+        positions_b = np.asarray([[0, 0, 0], [1, 0, 0], [0, -1, 0]], dtype=np.float32)
+        faces = [[0, 1, 2]]
+        gids_a = [100, 101, 102]
+        gids_b = [100, 101, 103]
+        normals_a = np.tile(np.asarray([[0, 0, 1]], dtype=np.float32), (3, 1))
+        normals_b = -normals_a
+        a = feature_surface((51006, 132), positions_a, faces, gids_a, normals=normals_a)
+        b = feature_surface((51006, 134), positions_b, faces, gids_b, normals=normals_b)
+        declaration = feature_declaration(a, b, 0, 0, [100, 101])
+        accepted = audit_surface_pair(a, b, intended_shared_feature_pairs=[declaration])
+        self.assertTrue(accepted["passed"], accepted["rejected_interface_feature_contacts"])
+        self.assertEqual(accepted["declared_interface_feature_contacts"][0]["feature_kind"], "edge")
+
+        displaced = positions_b.copy()
+        displaced[1, 2] = np.float32(0.125)
+        position_mismatch = feature_surface(
+            (51006, 135), displaced, faces, gids_b, normals=normals_b)
+        result = audit_surface_pair(
+            a, position_mismatch, intended_shared_feature_pairs=[
+                feature_declaration(a, position_mismatch, 0, 0, [100, 101])])
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
+                         "feature_GID_emitted_Float32_positions_differ")
+
+        different_bodies = feature_surface(
+            (51006, 136), positions_b, faces, gids_b, normals=normals_b,
+            core_body_indices=list(range(1, 22)))
+        result = audit_surface_pair(
+            a, different_bodies, intended_shared_feature_pairs=[
+                feature_declaration(a, different_bodies, 0, 0, [100, 101])])
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
+                         "ordered_core_owner_lists_differ")
+
+        wrong_row = np.full(21, 1.0 / 21.0, dtype=np.float64)
+        wrong_row[0] += 0.01
+        wrong_row[1] -= 0.01
+        different_weights = feature_surface(
+            (51006, 137), positions_b, faces, gids_b, normals=normals_b,
+            weight_overrides={100: wrong_row})
+        result = audit_surface_pair(
+            a, different_weights, intended_shared_feature_pairs=[
+                feature_declaration(a, different_weights, 0, 0, [100, 101])])
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["rejected_interface_feature_contacts"][0]["reason"],
+                         "feature_GID_ordered_21_core_rows_differ_or_are_invalid")
 
     def test_declared_shared_vertex_does_not_hide_a_transversal_segment(self):
         a = feature_surface(
