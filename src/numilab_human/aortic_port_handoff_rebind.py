@@ -129,7 +129,8 @@ def rebind_aortic_source_handoff_to_current_capture(
         ancestry = owner.get("capture_face_vertex_ancestry") if isinstance(owner, dict) else None
         pin_sha = {
             name: _valid_sha256(owner_pin.get(name), "authenticated " + name)
-            for name in ("source_member_sha256", "source_nha_row_sha256")
+            for name in ("source_member_sha256", "source_nha_row_sha256",
+                         "rigid_source_world_xyz_f32_sha256")
         }
         if not (
                 owner_pin.get("typed_identity") == list(key)
@@ -156,6 +157,8 @@ def rebind_aortic_source_handoff_to_current_capture(
                 and owner.get("source_concept_id") == row.get("fma")
                 and owner.get("source_member_sha256") == pin_sha["source_member_sha256"]
                 and owner.get("source_nha_row_sha256") == pin_sha["source_nha_row_sha256"]
+                and owner.get("rigid_source_world_xyz_f32_sha256")
+                == pin_sha["rigid_source_world_xyz_f32_sha256"]
                 and owner.get("capture_face_order_equals_nha") is True
                 and isinstance(ancestry, dict)
                 and ancestry.get("status") == _ANCESTRY_STATUS
@@ -210,8 +213,9 @@ def rebind_aortic_source_handoff_to_current_capture(
             "source_nha_first_vertex": first, "row_local_gid_offset": offset,
             "source_nha_row_sha256": pin_sha["source_nha_row_sha256"],
             "source_member_sha256": pin_sha["source_member_sha256"],
+            "rigid_source_world_xyz_f32_sha256": pin_sha[
+                "rigid_source_world_xyz_f32_sha256"],
             "source_face_corner_ancestry": ancestry,
-            "rigid_source_world_xyz_f32_sha256": owner["rigid_source_world_xyz_f32_sha256"],
         }
         bindings[row_key] = {
             "typed_identity": list(key), "vertex_count": len(positions), "face_count": len(faces),
@@ -278,7 +282,8 @@ def seal_current_aortic_source_handoff_from_port_report(
         pending_handoff_bytes, *, expected_pending_handoff_sha256,
         current_port_report_bytes, expected_current_port_report_sha256,
         current_source_preflight_bytes, expected_capture_input_bundle_sha256,
-        capture_array_mapping, current_port_report_path=None):
+        capture_array_mapping, independent_source_rigid_baseline_array_mapping,
+        current_port_report_path=None):
     """Seal a pending handoff only against fresh geometry on those exact arrays.
 
     The source map is marked verified only after the current native port report
@@ -360,13 +365,21 @@ def seal_current_aortic_source_handoff_from_port_report(
     if (not isinstance(capture_array_mapping, Mapping)
             or set(capture_array_mapping) != set(identities)):
         raise ValueError("current arrays do not exactly cover the typed link")
+    if (not isinstance(independent_source_rigid_baseline_array_mapping, Mapping)
+            or set(independent_source_rigid_baseline_array_mapping) != set(identities)):
+        raise ValueError("independent rigid-source baseline arrays do not exactly cover the typed link")
+    independent_baseline_hashes = {}
     for key in identities:
         row_key = f"{key[0]}:{key[1]}"
         row = source_rows.get(row_key)
         binding = bindings.get(row_key)
         arrays = capture_array_mapping[key]
+        baseline_arrays = independent_source_rigid_baseline_array_mapping[key]
         if not isinstance(row, dict) or not isinstance(binding, dict) or not isinstance(arrays, Mapping):
             raise ValueError("current source row or array binding is incomplete: " + row_key)
+        if not isinstance(baseline_arrays, Mapping) or any(
+                name not in baseline_arrays for name in ("positions", "faces", "source_vertex_ids")):
+            raise ValueError("independent rigid-source baseline arrays are incomplete: " + row_key)
         positions = np.asarray(arrays.get("positions"), dtype="<f4")
         faces = np.asarray(arrays.get("faces"), dtype="<u4")
         normals = np.asarray(arrays.get("normals"), dtype="<f4")
@@ -385,8 +398,36 @@ def seal_current_aortic_source_handoff_from_port_report(
                 or len(gids) != len(positions)
                 or not np.array_equal(gids, np.arange(
                     int(row["first_vertex"]), int(row["first_vertex"]) + len(gids), dtype="<u8"))
-                or any(max(pair[i] for pair in pairs) >= len(faces) for i in range(2))):
+                or any(pair[identities.index(key)] >= len(faces) for pair in pairs)):
             raise ValueError("pending source row arrays or GID allocation changed: " + row_key)
+
+        baseline_positions = np.asarray(baseline_arrays["positions"], dtype="<f4")
+        baseline_faces = np.asarray(baseline_arrays["faces"], dtype="<u4")
+        baseline_gids = np.asarray(baseline_arrays["source_vertex_ids"], dtype="<u8")
+        if (baseline_positions.ndim != 2 or baseline_positions.shape[1] != 3
+                or baseline_faces.ndim != 2 or baseline_faces.shape[1] != 3
+                or baseline_gids.ndim != 1 or len(baseline_gids) != len(baseline_positions)
+                or len(baseline_positions) != len(positions)
+                or len(baseline_faces) != len(faces)
+                or not np.isfinite(baseline_positions).all()
+                or (len(baseline_faces) and int(baseline_faces.max()) >= len(baseline_positions))):
+            raise ValueError("independent rigid-source baseline array shapes or values are invalid: "
+                             + row_key)
+        baseline_hashes = {
+            "positions_sha256": _array_sha(baseline_positions, "<f4"),
+            "faces_sha256": _array_sha(baseline_faces, "<u4"),
+            "source_vertex_ids_sha256": _array_sha(baseline_gids, "<u8"),
+        }
+        independent_baseline_hashes[key] = baseline_hashes
+        if (baseline_hashes["positions_sha256"] != row.get(
+                    "rigid_source_world_xyz_f32_sha256")
+                or baseline_hashes["faces_sha256"] != binding.get("faces_u32_sha256")
+                or baseline_hashes["source_vertex_ids_sha256"] != binding.get(
+                    "source_vertex_ids_u64_sha256")
+                or not np.array_equal(baseline_faces, faces)
+                or not np.array_equal(baseline_gids, gids)):
+            raise ValueError("independent rigid-source baseline arrays differ from pinned source or "
+                             "current face/GID ancestry: " + row_key)
 
     topology = report.get("source_topology")
     if not isinstance(topology, dict):
@@ -396,6 +437,7 @@ def seal_current_aortic_source_handoff_from_port_report(
         binding = bindings[row_key]
         candidate = topology.get("candidate:" + str(key[1]))
         baseline = topology.get("independent_source_rigid_baseline:" + str(key[1]))
+        baseline_hashes = independent_baseline_hashes[key]
         if (not isinstance(candidate, dict) or candidate.get("identity") != list(key)
                 or candidate.get("source_vertex_ids_sha256") != binding["source_vertex_ids_u64_sha256"]
                 or candidate.get("closed_self_free_single_component") is not True
@@ -409,8 +451,17 @@ def seal_current_aortic_source_handoff_from_port_report(
                 or not isinstance(baseline, dict) or baseline.get("identity") != list(key)
                 or baseline.get("closed_self_free_single_component") is not True
                 or baseline.get("exact_self_audit_count") != 0
-                or baseline.get("referenced_face_component_count") != 1):
-            raise ValueError("fresh current report topology does not match exact candidate arrays")
+                or baseline.get("referenced_face_component_count") != 1
+                or baseline.get("source_vertex_ids_sha256")
+                != baseline_hashes["source_vertex_ids_sha256"]
+                or not isinstance(baseline.get("prepared_surface"), dict)
+                or baseline["prepared_surface"].get("identity") != list(key)
+                or baseline["prepared_surface"].get("positions_sha256")
+                != baseline_hashes["positions_sha256"]
+                or baseline["prepared_surface"].get("faces_sha256")
+                != baseline_hashes["faces_sha256"]
+                or baseline["prepared_surface"].get("referenced_surface_closed") is not True):
+            raise ValueError("fresh current report topology does not match exact candidate or rigid-source baseline arrays")
 
     interfaces, solids = report.get("interface_gates"), report.get("solid_gates")
     if not isinstance(interfaces, dict) or not isinstance(solids, dict):
@@ -507,6 +558,11 @@ def seal_current_aortic_source_handoff_from_port_report(
             "exact_pairset_sha256": pair_sha,
             "exact_pair_count": len(pairs),
             "candidate_array_hashes_rechecked": True,
+            "independent_rigid_baseline_array_hashes_rechecked": True,
+            "independent_rigid_baseline_array_hashes": {
+                f"{key[0]}:{key[1]}": independent_baseline_hashes[key]
+                for key in identities
+            },
             "candidate_and_source_pairsets_recomputed": True,
             "candidate_and_source_closed_solid_gates_passed": True,
             "independent_source_station_calibre_passed": True,

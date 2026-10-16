@@ -1121,9 +1121,438 @@ def _proof_surface_descriptor(proof, key):
     return descriptor
 
 
+
+def _aortic_port_sha256(value):
+    return (isinstance(value, str) and len(value) == 64
+            and all(character in "0123456789abcdef" for character in value))
+
+
+def _aortic_port_pair_rows(value, label):
+    if not isinstance(value, list):
+        raise ValueError(label + " must be a list")
+    result = []
+    for pair in value:
+        if (not isinstance(pair, list) or len(pair) != 2
+                or any(type(index) is not int or index < 0 for index in pair)):
+            raise ValueError(label + " contains a malformed face pair")
+        result.append((pair[0], pair[1]))
+    if len(set(result)) != len(result):
+        raise ValueError(label + " contains duplicate face pairs")
+    return tuple(sorted(result))
+
+
+def _audit_source_bound_aortic_port_overlap(
+        first, second, proof, *, proof_sha256, source_binding, source_map_sha256,
+        source_map_bytes):
+    """Recheck a typed current aortic-port overlap against exact prepared surfaces."""
+    first_key, second_key = typed_key(first.key), typed_key(second.key)
+    identities = [list(first_key), list(second_key)]
+
+    def require(condition, message):
+        if condition is not True:
+            raise ValueError(message)
+
+    require(first_key[0] == 51011 and second_key[0] == 51011
+            and first_key[1] != second_key[1],
+            "current aortic-port proof requires two distinct typed vascular surfaces")
+    require(proof.get("schema") == "numi.human.current-native-aortic-port-result.v1"
+            and proof.get("status") == "PASS_CURRENT_NATIVE_PORT_DIAGNOSTIC",
+            "source proof is not a passing current-native aortic-port report")
+    require(proof.get("typed_link") == identities,
+            "aortic-port proof typed link differs from audit arguments")
+    require(proof.get("anatomical_admission") is False
+            and proof.get("geometry_predicates_run") is True
+            and proof.get("current_port_passed") is True
+            and proof.get("current_candidate_and_current_source_intersection_recomputed") is True
+            and proof.get("current_candidate_and_source_pairsets_equal") is True
+            and proof.get("current_candidate_pairs_equal_source_ancestry_pairs") is True
+            and proof.get("current_source_baseline_pairs_equal_source_ancestry_pairs") is True
+            and proof.get("source_pairset_used_only_as_ancestry") is True,
+            "aortic-port proof lacks its current geometry and source-ancestry gates")
+    limitations = proof.get("limitations")
+    require(isinstance(limitations, dict)
+            and limitations.get("no_blood_mass_or_physical_state_modified") is True
+            and limitations.get("no_motion_or_duration_qualification") is True
+            and limitations.get("no_whole_anatomy_admission") is True
+            and limitations.get("source_capture_is_actual_native_one_step") is True
+            and limitations.get("source_station_calibre_is_not_clinical") is True,
+            "aortic-port proof has missing or contradictory scope limitations")
+
+    handoff_sha = proof.get("source_ancestry_handoff_sha256")
+    pairset_sha = proof.get("source_ancestry_pairset_sha256")
+    pair_count = proof.get("source_ancestry_pair_count")
+    require(_aortic_port_sha256(handoff_sha) and _aortic_port_sha256(pairset_sha)
+            and type(pair_count) is int and pair_count > 0
+            and isinstance(proof.get("source_ancestry_handoff_path"), str)
+            and bool(proof["source_ancestry_handoff_path"]),
+            "aortic-port source handoff identity is incomplete")
+    if not isinstance(source_map_bytes, bytes):
+        raise TypeError("aortic-port source map must be frozen handoff bytes")
+    if hashlib.sha256(source_map_bytes).hexdigest() != source_map_sha256:
+        raise ValueError("aortic-port handoff bytes do not match their independent SHA-256 pin")
+    try:
+        source_map = json.loads(source_map_bytes)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("aortic-port source map is not valid UTF-8 JSON") from exc
+    require(isinstance(source_map, dict)
+            and source_map.get("schema") == "numi.human.verified-aortic-arch-interface-handoff.v1"
+            and source_map.get("status") == "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE"
+            and source_map.get("passed") is True
+            and source_map.get("typed_link") == identities
+            and source_map.get("source_topology_passed") is True
+            and source_map.get("interface_gate_passed") is True
+            and source_map.get("solid_gate_passed") is True
+            and source_map.get("independent_source_collar_calibre_passed") is True
+            and source_map.get("candidate_pairs_equal_frozen_source_pairs") is True
+            and source_map.get("baseline_pairs_equal_frozen_source_pairs") is True
+            and source_map.get("candidate_baseline_exact_pairsets_equal") is True,
+            "independent aortic source handoff identity or gates do not pass")
+    current_evidence = source_map.get("current_port_geometry_evidence")
+    baseline_hashes = (current_evidence.get("independent_rigid_baseline_array_hashes")
+                       if isinstance(current_evidence, dict) else None)
+    expected_row_keys = {f"{key[0]}:{key[1]}" for key in (first_key, second_key)}
+    require(source_map.get("parent_source_handoff_sha256") == handoff_sha
+            and source_map.get("evidence_report_sha256") == proof_sha256
+            and isinstance(current_evidence, dict)
+            and current_evidence.get("status")
+            == "PASS_FRESH_CURRENT_PORT_REPORT_BOUND_TO_CAPTURE_ARRAYS"
+            and current_evidence.get("report_sha256") == proof_sha256
+            and _aortic_port_sha256(current_evidence.get("source_preflight_sha256"))
+            and _aortic_port_sha256(current_evidence.get("capture_input_bundle_sha256"))
+            and current_evidence.get("candidate_array_hashes_rechecked") is True
+            and current_evidence.get("independent_rigid_baseline_array_hashes_rechecked") is True
+            and current_evidence.get("candidate_and_source_pairsets_recomputed") is True
+            and current_evidence.get("candidate_and_source_closed_solid_gates_passed") is True
+            and current_evidence.get("independent_source_station_calibre_passed") is True
+            and isinstance(baseline_hashes, dict)
+            and set(baseline_hashes) == expected_row_keys
+            and source_map.get("source_preflight_sha256")
+            == current_evidence.get("source_preflight_sha256")
+            and source_map.get("capture_input_bundle_sha256")
+            == current_evidence.get("capture_input_bundle_sha256"),
+            "aortic source handoff is not sealed to this exact current port report")
+    for row_key in expected_row_keys:
+        item = baseline_hashes.get(row_key)
+        require(isinstance(item, dict)
+                and all(_aortic_port_sha256(item.get(name)) for name in (
+                    "positions_sha256", "faces_sha256", "source_vertex_ids_sha256")),
+                "sealed aortic handoff lacks independent rigid-source array hashes: " + row_key)
+    handoff_pairs = _aortic_port_pair_rows(source_map.get("exact_face_pairs"),
+                                          "independent source handoff pairs")
+    handoff_pair_sha = hashlib.sha256(
+        np.ascontiguousarray(np.asarray(handoff_pairs, dtype="<u4")).tobytes()).hexdigest()
+    require(source_map.get("exact_face_pairset_sha256") == handoff_pair_sha
+            and len(handoff_pairs) == pair_count
+            and handoff_pair_sha == pairset_sha,
+            "independent source handoff pairset differs from the current port report")
+    require(source_binding.get("surface_identities") == identities
+            and source_binding.get("source_ancestry_handoff_sha256") == handoff_sha
+            and source_binding.get("source_ancestry_pairset_sha256") == pairset_sha
+            and source_binding.get("source_map_sha256") == source_map_sha256,
+            "aortic-port source binding does not match its typed link, map, and handoff")
+
+    by_key = {first_key: first, second_key: second}
+    source_rows = source_map.get("source_rows")
+    candidate_bindings = source_map.get("candidate_surface_bindings")
+    require(isinstance(source_rows, dict) and isinstance(candidate_bindings, dict),
+            "independent aortic source handoff lacks typed source/candidate rows")
+    for key, surface in by_key.items():
+        row_key = f"{key[0]}:{key[1]}"
+        source_row = source_rows.get(row_key)
+        candidate_row = candidate_bindings.get(row_key)
+        require(isinstance(source_row, dict) and isinstance(candidate_row, dict),
+                "independent aortic handoff omits a linked source or candidate row")
+        require(candidate_row.get("typed_identity") == list(key)
+                and candidate_row.get("vertex_count") == len(surface.positions)
+                and candidate_row.get("face_count") == len(surface.faces)
+                and candidate_row.get("positions_f32_sha256") == hashlib.sha256(
+                    np.ascontiguousarray(surface.positions, dtype="<f4").tobytes()).hexdigest()
+                and candidate_row.get("faces_u32_sha256") == hashlib.sha256(
+                    np.ascontiguousarray(surface.faces, dtype="<u4").tobytes()).hexdigest()
+                and surface.normals is not None
+                and candidate_row.get("normals_f32_sha256") == hashlib.sha256(
+                    np.ascontiguousarray(surface.normals, dtype="<f4").tobytes()).hexdigest()
+                and candidate_row.get("source_vertex_ids_u64_sha256") == hashlib.sha256(
+                    np.ascontiguousarray(surface.source_vertex_ids, dtype="<u8").tobytes()).hexdigest(),
+                "independent aortic handoff candidate arrays differ from the live surface")
+        rigid_baseline = baseline_hashes[row_key]
+        require(source_row.get("face_count") == len(surface.faces)
+                and source_row.get("vertex_count") == len(surface.positions)
+                and source_row.get("faces_sha256") == candidate_row.get("faces_u32_sha256")
+                and source_row.get("rigid_source_world_xyz_f32_sha256")
+                == rigid_baseline.get("positions_sha256")
+                and rigid_baseline.get("faces_sha256") == candidate_row.get("faces_u32_sha256")
+                and rigid_baseline.get("source_vertex_ids_sha256")
+                == candidate_row.get("source_vertex_ids_u64_sha256")
+                and type(source_row.get("first_vertex")) is int
+                and np.array_equal(
+                    np.asarray(surface.source_vertex_ids, dtype="<u8"),
+                    np.arange(source_row["first_vertex"],
+                              source_row["first_vertex"] + len(surface.positions), dtype="<u8")),
+                "independent aortic handoff source row does not map the live GID allocation")
+        member = source_row.get("source_member")
+        require(isinstance(member, str) and bool(member)
+                and isinstance(source_row.get("fma"), str)
+                and source_row.get("layer") == 2 and source_row.get("body_index") == 20,
+                "independent aortic handoff source member or owner identity is malformed")
+        actual = _surface_source_hashes(surface)
+        require(actual["positions_sha256"] == candidate_row["positions_f32_sha256"]
+                and actual["faces_sha256"] == candidate_row["faces_u32_sha256"]
+                and actual["gids_sha256"] == candidate_row["source_vertex_ids_u64_sha256"],
+                "aortic-port exact current arrays differ from independent source handoff")
+
+    source_topology = proof.get("source_topology")
+    require(isinstance(source_topology, dict),
+            "aortic-port proof lacks candidate and baseline topology records")
+    for surface in (first, second):
+        key = typed_key(surface.key)
+        actual = _surface_source_hashes(surface)
+        descriptor = source_topology.get("candidate:" + str(key[1]))
+        if not isinstance(descriptor, dict) or descriptor.get("identity") != list(key):
+            raise ValueError("aortic-port candidate topology identity is missing or stale")
+        prepared = descriptor.get("prepared_surface")
+        if not isinstance(prepared, dict) or prepared.get("identity") != list(key):
+            raise ValueError("aortic-port candidate prepared-surface record is malformed")
+        for name, expected in (("positions_sha256", actual["positions_sha256"]),
+                               ("faces_sha256", actual["faces_sha256"])):
+            if prepared.get(name) != expected:
+                raise ValueError("aortic-port candidate geometry differs from prepared surface " + name)
+        if descriptor.get("source_vertex_ids_sha256") != actual["gids_sha256"]:
+            raise ValueError("aortic-port candidate GIDs differ from prepared surface")
+        if (descriptor.get("closed_self_free_single_component") is not True
+                or descriptor.get("exact_self_audit_count") != 0
+                or descriptor.get("referenced_face_component_count") != 1
+                or prepared.get("referenced_surface_closed") is not True):
+            raise ValueError("aortic-port candidate topology is not closed, self-free, and connected")
+        if not surface.closed or surface.self_audit().get("count") != 0:
+            return {"passed": False, "reason": "current_surface_not_closed_and_self_free",
+                    "identity": list(key)}
+        if surface.quotient_topology.get("face_component_count") != 1:
+            return {"passed": False, "reason": "current_surface_not_single_component",
+                    "identity": list(key),
+                    "face_component_count": surface.quotient_topology.get("face_component_count")}
+        baseline = source_topology.get("independent_source_rigid_baseline:" + str(key[1]))
+        baseline_hash = baseline_hashes[f"{key[0]}:{key[1]}"]
+        baseline_surface = baseline.get("prepared_surface") if isinstance(baseline, dict) else None
+        if (not isinstance(baseline, dict) or baseline.get("identity") != list(key)
+                or baseline.get("source_vertex_ids_sha256")
+                != baseline_hash["source_vertex_ids_sha256"]
+                or not isinstance(baseline_surface, dict)
+                or baseline_surface.get("identity") != list(key)
+                or baseline_surface.get("positions_sha256") != baseline_hash["positions_sha256"]
+                or baseline_surface.get("faces_sha256") != baseline_hash["faces_sha256"]
+                or baseline_surface.get("referenced_surface_closed") is not True
+                or baseline.get("closed_self_free_single_component") is not True
+                or baseline.get("exact_self_audit_count") != 0
+                or baseline.get("referenced_face_component_count") != 1):
+            raise ValueError("aortic-port independent source baseline topology hashes or gates did not pass")
+
+    interfaces = proof.get("interface_gates")
+    require(isinstance(interfaces, dict), "aortic-port proof lacks interface gates")
+    interface_reports = []
+    candidate_interface = interfaces.get("candidate")
+    for role in ("candidate", "independent_source_rigid_baseline"):
+        gate = interfaces.get(role)
+        if (not isinstance(gate, dict) or gate.get("passed") is not True
+                or gate.get("typed_port") != identities):
+            raise ValueError("aortic-port " + role + " matched-collar gate did not pass")
+        scope = gate.get("documented_vessel_junction_scope")
+        if (not isinstance(scope, dict) or scope.get("passed") is not True
+                or scope.get("typed_port") != identities
+                or scope.get("allowed_typed_port") != identities
+                or scope.get("scope_kind") != "declared_source_network_link"
+                or scope.get("frozen_matched_face_patch_required") is not True
+                or scope.get("downstream_closed_solid_confirmation_required") is not True):
+            raise ValueError("aortic-port " + role + " lacks a typed source-matched collar scope")
+        pairs = _aortic_port_pair_rows(gate.get("observed_face_pairs"), role + " observed pairs")
+        frozen_pairs = _aortic_port_pair_rows(gate.get("frozen_face_pairs"), role + " frozen pairs")
+        if (not pairs or pairs != frozen_pairs
+                or gate.get("observed_pair_count") != len(pairs)
+                or gate.get("unexpected_face_pairs") != []
+                or gate.get("observed_pairs_within_frozen_face_patch_cross_product") is not True
+                or gate.get("observed_pairs_within_source_declared_region") is not True):
+            raise ValueError("aortic-port " + role + " pair set escapes or differs from source collar")
+        frozen_hash = hashlib.sha256(
+            np.ascontiguousarray(np.asarray(frozen_pairs, dtype="<i8")).tobytes()).hexdigest()
+        if gate.get("frozen_face_pairs_sha256") != frozen_hash:
+            raise ValueError("aortic-port " + role + " frozen pair-set hash is invalid")
+        bridge_faces = gate.get("bridge_frozen_collar_faces")
+        target_faces = gate.get("target_frozen_collar_faces")
+        for values, label in ((bridge_faces, "bridge"), (target_faces, "target")):
+            if (not isinstance(values, list) or not values
+                    or any(type(face) is not int or face < 0 for face in values)
+                    or len(set(values)) != len(values)):
+                raise ValueError("aortic-port " + role + " " + label + " collar faces are malformed")
+        if (hashlib.sha256(np.ascontiguousarray(np.asarray(bridge_faces, dtype="<i8")).tobytes()).hexdigest()
+                != gate.get("bridge_frozen_collar_faces_sha256")
+                or hashlib.sha256(np.ascontiguousarray(np.asarray(target_faces, dtype="<i8")).tobytes()).hexdigest()
+                != gate.get("target_frozen_collar_faces_sha256")):
+            raise ValueError("aortic-port " + role + " collar face-set hash is invalid")
+        if any(face >= len(first.faces) for face in bridge_faces) or any(
+                face >= len(second.faces) for face in target_faces):
+            raise ValueError("aortic-port collar face index is outside current topology")
+        if any(a not in set(bridge_faces) or b not in set(target_faces) for a, b in pairs):
+            raise ValueError("aortic-port exact contacts escape matched collar faces")
+        partial = gate.get("exact_partial_overlap_witnesses")
+        if (not isinstance(partial, dict) or partial.get("passed") is not True
+                or partial.get("requires_separate_closed_solid_confirmation") is not True):
+            raise ValueError("aortic-port " + role + " partial-overlap witness did not pass")
+        boundary = partial.get("boundary_predicate")
+        transverse = partial.get("exact_transverse_overlap_side_witnesses")
+        if (not isinstance(boundary, dict) or boundary.get("passed") is not True
+                or boundary.get("typed_port") != identities
+                or boundary.get("unexpected_pair_count") != 0
+                or boundary.get("observed_pair_count") != len(pairs)
+                or not isinstance(transverse, dict) or transverse.get("passed") is not True
+                or transverse.get("requires_all_four_witnesses_from_same_face_pair") is not True
+                or transverse.get("requires_strict_positive_exact_barycentric_coordinates") is not True
+                or transverse.get("uses_exact_rational_point_location_in_opposite_closed_surface") is not True):
+            raise ValueError("aortic-port " + role + " exact bounded junction witnesses are incomplete")
+        interface_points = gate.get("exact_interface_points_world_m")
+        point_count = gate.get("exact_interface_point_count")
+        if (not isinstance(interface_points, list) or not interface_points
+                or type(point_count) is not int or point_count != len(interface_points)
+                or any(not isinstance(point, list) or len(point) != 3
+                       or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                              or not math.isfinite(value) for value in point)
+                       for point in interface_points)):
+            raise ValueError("aortic-port " + role + " exact interface points are malformed")
+        point_array = np.ascontiguousarray(np.asarray(interface_points, dtype="<f8"))
+        if hashlib.sha256(point_array.tobytes()).hexdigest() != gate.get(
+                "exact_interface_points_sha256"):
+            raise ValueError("aortic-port " + role + " exact interface point hash is invalid")
+        interface_reports.append((role, gate, pairs, interface_points))
+
+    if candidate_interface is None:
+        raise ValueError("aortic-port candidate interface gate is missing")
+    candidate_pairs = _aortic_port_pair_rows(
+        candidate_interface.get("observed_face_pairs"), "candidate observed pairs")
+    exact = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
+    observed_pairs = tuple(sorted(tuple(pair) for pair in exact["triangle_pairs"]))
+    if observed_pairs != candidate_pairs:
+        return {"passed": False, "reason": "current_exact_face_pairs_differ_from_port_certificate",
+                "expected_pair_count": len(candidate_pairs), "observed_pair_count": len(observed_pairs),
+                "unexpected_pairs": [list(pair) for pair in sorted(set(observed_pairs) - set(candidate_pairs))],
+                "missing_pairs": [list(pair) for pair in sorted(set(candidate_pairs) - set(observed_pairs))]}
+    exact_points = set()
+    for first_face, second_face in observed_pairs:
+        first_triangle = [[Fraction.from_float(float(component)) for component in point]
+                          for point in first.quotient_positions[
+                              first.quotient_faces[first_face]].tolist()]
+        second_triangle = [[Fraction.from_float(float(component)) for component in point]
+                           for point in second.quotient_positions[
+                               second.quotient_faces[second_face]].tolist()]
+        exact_points.update(tuple(float(component) for component in point)
+                            for point in ci.triangle_intersection_points(
+                                first_triangle, second_triangle))
+    current_points = [list(point) for point in sorted(exact_points)]
+    expected_points = candidate_interface.get("exact_interface_points_world_m")
+    if current_points != expected_points:
+        return {"passed": False, "reason": "current_exact_interface_points_differ_from_port_certificate",
+                "expected_count": len(expected_points), "observed_count": len(current_points)}
+    point_hash = hashlib.sha256(
+        np.ascontiguousarray(np.asarray(current_points, dtype="<f8")).tobytes()).hexdigest()
+    if point_hash != candidate_interface.get("exact_interface_points_sha256"):
+        raise ValueError("current exact interface points do not match their port certificate hash")
+
+    solids = proof.get("solid_gates")
+    if not isinstance(solids, dict):
+        raise ValueError("aortic-port proof lacks solid gates")
+    candidate_solid = solids.get("candidate")
+    baseline_solid = solids.get("independent_source_rigid_baseline")
+    for role, gate in (("candidate", candidate_solid), ("independent source baseline", baseline_solid)):
+        if not isinstance(gate, dict) or gate.get("passed") is not True:
+            raise ValueError("aortic-port " + role + " closed-solid gate did not pass")
+        if (gate.get("manifold_inputs_passed") is not True
+                or gate.get("positive_intersection_volume") is not True
+                or gate.get("union_connected_numerical_solid") is not True
+                or gate.get("union_component_count") != 1
+                or gate.get("union_lineage_has_both_sources_without_generated_or_unmapped_faces") is not True):
+            raise ValueError("aortic-port " + role + " lacks a connected two-source solid certificate")
+        lineage = gate.get("union_float64_mesh64_lineage")
+        if (not isinstance(lineage, dict) or lineage.get("generated_face_count") != 0
+                or lineage.get("unmapped_face_count") != 0
+                or set(lineage.get("run_original_ids", [])) != {first_key[1], second_key[1]}):
+            raise ValueError("aortic-port " + role + " connected solid lineage is incomplete")
+        inside = gate.get("exact_inside_both_witness")
+        point = inside.get("point_world_m") if isinstance(inside, dict) else None
+        if (not isinstance(inside, dict)
+                or inside.get("method") != "intersection_volume_centroid"
+                or inside.get("first_location") != "inside"
+                or inside.get("second_location") != "inside"
+                or not isinstance(point, list) or len(point) != 3
+                or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                       or not math.isfinite(value) for value in point)):
+            raise ValueError("aortic-port " + role + " lacks a bounded inside-both witness")
+        exact_inside = tuple(Fraction.from_float(float(value)) for value in point)
+        location_first = ci.point_location_prepared_indexed(exact_inside, first.meter_index())
+        location_second = ci.point_location_prepared_indexed(exact_inside, second.meter_index())
+        if (location_first.get("location") != "inside"
+                or location_second.get("location") != "inside"):
+            return {"passed": False, "reason": "port_inside_both_witness_not_inside_current_surfaces",
+                    "role": role,
+                    "first_location": location_first.get("location"),
+                    "second_location": location_second.get("location")}
+        accounting = gate.get("volume_accounting")
+        if not isinstance(accounting, dict) or accounting.get("passed") is not True:
+            raise ValueError("aortic-port " + role + " volume-accounting check did not pass")
+
+    calibre = proof.get("independent_source_station_calibre")
+    if not isinstance(calibre, dict) or len(calibre) != 2:
+        raise ValueError("aortic-port proof must measure both material stations")
+    owners = set()
+    for station in calibre.values():
+        if not isinstance(station, dict) or station.get("passed") is not True:
+            raise ValueError("aortic-port material-station caliber gate did not pass")
+        owner_id = station.get("owner_id")
+        if type(owner_id) is not int or owner_id not in (first_key[1], second_key[1]):
+            raise ValueError("aortic-port caliber station owner differs from the typed link")
+        owners.add(owner_id)
+        if (station.get("baseline_metric_error") is not None
+                or station.get("candidate_metric_error") is not None
+                or station.get("comparison_error") is not None
+                or station.get("declared_area_ratio") != [0.8, 1.25]
+                or station.get("declared_minimum_feret_ratio") != [0.9, 1.1]):
+            raise ValueError("aortic-port material-station metric or original bounds are invalid")
+        for name in ("baseline_section", "candidate_section"):
+            section = station.get(name)
+            if not isinstance(section, dict) or section.get("passed") is not True:
+                raise ValueError("aortic-port " + name + " failed")
+    if owners != {first_key[1], second_key[1]}:
+        raise ValueError("aortic-port caliber proof does not cover both linked vessel owners")
+
+    return {
+        "passed": True,
+        "scope": "source-bound current typed vessel-port connected overlap only",
+        "identities": identities,
+        "source_proof_sha256": proof_sha256,
+        "source_map_sha256": source_map_sha256,
+        "source_ancestry_handoff_sha256": handoff_sha,
+        "source_ancestry_pairset_sha256": pairset_sha,
+        "source_binding_sha256": _canonical_json_sha256(source_binding),
+        "surface_checks": [
+            {"identity": list(surface.key), "closed": True, "self_intersections": 0,
+             "connected_face_components": 1}
+            for surface in (first, second)],
+        "exact_face_pair_count": len(observed_pairs),
+        "exact_face_pairs": [list(pair) for pair in observed_pairs],
+        "exact_pair_set_matches_current_surfaces": True,
+        "exact_interface_point_count": len(current_points),
+        "exact_interface_points_match_current_surfaces": True,
+        "matched_source_collar_and_region_passed": True,
+        "exact_inside_both_witnesses_rechecked": True,
+        "both_material_station_calibers_passed": True,
+        "independent_rigid_baseline_report_hashes_rechecked": True,
+        "current_port_report_bound_to_sealed_handoff": True,
+        "claim_limit": (
+            "No blood flow, mass, pressure, clinical caliber, duration, motion, or whole-anatomy admission claim."),
+    }
+
+
 def audit_source_bound_connected_overlap(
         first, second, *, source_proof_bytes, expected_source_proof_sha256,
-        source_binding, expected_source_binding_sha256, expected_source_map_sha256):
+        source_binding, expected_source_binding_sha256, expected_source_map_sha256,
+        source_map_bytes=None):
     """Verify one source-proven passive overlap without waiving generic containment.
 
     ``source_proof_bytes`` is the frozen pair report. ``source_binding`` is the
@@ -1165,6 +1594,12 @@ def audit_source_bound_connected_overlap(
         proof = json.loads(source_proof_bytes)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError("source proof is not valid UTF-8 JSON") from exc
+    if (isinstance(proof, dict)
+            and proof.get("schema") == "numi.human.current-native-aortic-port-result.v1"):
+        return _audit_source_bound_aortic_port_overlap(
+            first, second, proof, proof_sha256=proof_sha256,
+            source_binding=source_binding, source_map_sha256=expected_source_map_sha256,
+            source_map_bytes=source_map_bytes)
     if (not isinstance(proof, dict)
             or proof.get("schema") != "numi.human.head-csf-pair-continuity.v1"
             or proof.get("status") != "complete"
@@ -2630,7 +3065,8 @@ def _prepare_source_patch_carrier_complex(first, second, value):
 
 
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
-                       intended_shared_feature_pairs=(), intended_source_patch_complexes=()):
+                       intended_shared_feature_pairs=(), intended_source_patch_complexes=(),
+                       source_bound_connected_overlaps=()):
     allowed = {tuple(pair) for pair in intended_face_pairs}
     enclosures = _intended_enclosures(intended_enclosures)
     if any(set(pair) != {first.key, second.key} for pair in enclosures):
@@ -2639,16 +3075,57 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         _prepare_source_patch_complex(first, second, value)
         for value in intended_source_patch_complexes
     ]
+    if not isinstance(source_bound_connected_overlaps, (list, tuple)):
+        raise TypeError("source-bound connected-overlap proofs must be a list or tuple")
+    if len(source_bound_connected_overlaps) > 1:
+        raise ValueError("one exact source-bound connected-overlap proof is allowed per pair")
+    source_overlap_result = None
+    source_overlap_pairs = set()
+    if source_bound_connected_overlaps:
+        if enclosures:
+            raise ValueError("a connected-overlap proof cannot be combined with an enclosure declaration")
+        context = source_bound_connected_overlaps[0]
+        required_context = {
+            "source_proof_bytes", "expected_source_proof_sha256", "source_binding",
+            "expected_source_binding_sha256", "expected_source_map_sha256",
+        }
+        if not isinstance(context, dict) or not required_context.issubset(context):
+            raise ValueError("source-bound connected-overlap proof context is incomplete")
+        try:
+            source_overlap_result = audit_source_bound_connected_overlap(
+                first, second,
+                source_proof_bytes=context["source_proof_bytes"],
+                expected_source_proof_sha256=context["expected_source_proof_sha256"],
+                source_binding=context["source_binding"],
+                expected_source_binding_sha256=context["expected_source_binding_sha256"],
+                expected_source_map_sha256=context["expected_source_map_sha256"],
+                source_map_bytes=context.get("source_map_bytes"))
+        except (TypeError, ValueError) as exc:
+            source_overlap_result = {
+                "passed": False, "reason": "invalid_source_bound_connected_overlap_proof",
+                "error_type": type(exc).__name__, "error": str(exc),
+            }
+        if source_overlap_result.get("passed") is True:
+            verified_pairs = source_overlap_result.get("exact_face_pairs")
+            if not isinstance(verified_pairs, list):
+                raise ValueError("verified source-bound overlap omitted its exact current face pairs")
+            source_overlap_pairs = {tuple(pair) for pair in verified_pairs}
+            allowed.update(source_overlap_pairs)
     if not _overlap(first, second):
         # Disjoint solids are safe ordinary neighbors, but cannot satisfy a
         # declared anatomical enclosure. Retain that distinction in the cheap
         # path instead of bypassing the outside-enclosure rejection below.
         requires_carrier_contact = any(context.get("carrier_complex") for context in patch_contexts)
+        source_overlap_outside_aabb = source_overlap_result is not None
         return {"identities": [list(first.key), list(second.key)],
-                "passed": not enclosures and not requires_carrier_contact,
+                "passed": (not enclosures and not requires_carrier_contact
+                           and not source_overlap_outside_aabb),
                 "aabb_disjoint": True, "triangle_pair_count": 0,
                 "declared_enclosure_outside_aabb": bool(enclosures),
                 "declared_carrier_outside_aabb": requires_carrier_contact,
+                "source_bound_connected_overlap": (
+                    source_overlap_result if source_overlap_result is not None else None),
+                "source_bound_overlap_outside_aabb": source_overlap_outside_aabb,
                 "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)]}
     result = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
     pairs = result["triangle_pairs"]
@@ -2786,12 +3263,19 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         not requires_carrier_solids or
         (first.closed and second.closed and len(containment) == 2
          and all(row["status"] == "checked_exact_rational_metres" for row in containment)))
+    source_overlap_passed = (
+        source_overlap_result is not None and source_overlap_result.get("passed") is True)
     return {"identities": [list(first.key), list(second.key)],
-            "passed": (not unexpected and not inside and not outside_declared_enclosure
-                       and not unresolved and not missing_carrier_pairs
-                       and carrier_solid_interior_checked),
+            "passed": (not unexpected and (not inside or source_overlap_passed)
+                       and not outside_declared_enclosure and not unresolved
+                       and not missing_carrier_pairs and carrier_solid_interior_checked
+                       and (source_overlap_result is None or source_overlap_passed)),
             "triangle_pair_count": len(pairs), "unexpected_triangle_pairs": unexpected,
+            "source_bound_connected_overlap": (
+                source_overlap_result if source_overlap_result is not None else None),
             "declared_interface_triangle_pairs": [p for p in pairs if tuple(p) in allowed],
+            "source_bound_interface_triangle_pairs": [
+                p for p in pairs if tuple(p) in source_overlap_pairs],
             "declared_interface_feature_contacts": [accepted_features[p] for p in sorted(accepted_features)],
             "rejected_interface_feature_contacts": rejected_features,
             "declared_source_patch_complex_contacts": [accepted_patches[p]
@@ -2890,12 +3374,16 @@ def load_capture(pack, receipt_path):
 
 def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=(),
                            intended_enclosures=(), shared_feature_interfaces=None,
-                           source_patch_complex_interfaces=None, progress=None):
+                           source_patch_complex_interfaces=None,
+                           source_bound_connected_overlap_interfaces=None, progress=None):
     changed = [typed_key(key) for key in changed]
     targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
     interfaces = interfaces or {}
     shared_feature_interfaces = shared_feature_interfaces or {}
     source_patch_complex_interfaces = source_patch_complex_interfaces or {}
+    source_bound_connected_overlap_interfaces = source_bound_connected_overlap_interfaces or {}
+    if not isinstance(source_bound_connected_overlap_interfaces, dict):
+        raise TypeError("source-bound connected-overlap interfaces must be a mapping")
     enclosures = _intended_enclosures(intended_enclosures)
     if any(a not in surfaces or b not in surfaces for a, b in enclosures):
         raise ValueError("intended enclosure identity absent from capture")
@@ -2935,13 +3423,17 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                     np.any(positions.min(axis=0) > surface.positions.max(axis=0))):
                 declared_enclosures = [pair for pair in enclosures
                                        if set(pair) == {key, target}]
-                record({"stage": "nearby_pair", "identities": [list(key), list(target)],
-                             "passed": not declared_enclosures, "aabb_disjoint": True,
-                             "triangle_pair_count": 0,
-                             "declared_enclosure_outside_aabb": bool(declared_enclosures),
-                             "intended_enclosures": [[list(a), list(b)]
-                                                     for a, b in declared_enclosures]})
-                if declared_enclosures:
+                source_overlap = source_bound_connected_overlap_interfaces.get((key, target), ())
+                source_overlap_declared = bool(source_overlap)
+                row = {"stage": "nearby_pair", "identities": [list(key), list(target)],
+                       "passed": not declared_enclosures and not source_overlap_declared,
+                       "aabb_disjoint": True, "triangle_pair_count": 0,
+                       "declared_enclosure_outside_aabb": bool(declared_enclosures),
+                       "source_bound_overlap_outside_aabb": source_overlap_declared,
+                       "intended_enclosures": [[list(a), list(b)]
+                                               for a, b in declared_enclosures]}
+                record(row)
+                if declared_enclosures or source_overlap_declared:
                     return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
                 continue
             try:
@@ -2966,6 +3458,8 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                                       intended_shared_feature_pairs=shared_feature_interfaces.get((key, target), ()),
                                       intended_source_patch_complexes=source_patch_complex_interfaces.get(
                                           (key, target), ()),
+                                      source_bound_connected_overlaps=(
+                                          source_bound_connected_overlap_interfaces.get((key, target), ())),
                                       intended_enclosures=[pair for pair in enclosures
                                                            if set(pair) == {key, target}])
             record({"stage": "nearby_pair", **pair})

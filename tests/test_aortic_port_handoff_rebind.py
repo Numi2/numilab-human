@@ -19,16 +19,17 @@ def digest(array, dtype):
     return hashlib.sha256(np.ascontiguousarray(array, dtype=dtype).tobytes()).hexdigest()
 
 
-def source_rebind_case():
+def source_rebind_case(*, unequal_face_counts=False):
     keys = ((51011, 7), (51011, 6))
     metadata = {
         (51011, 7): ("FJ3411", "FMA3768", "arch of aorta", 700, 900),
         (51011, 6): ("FJ3413", "FMA3736", "ascending aorta", 800, 950),
     }
-    parent_rows, parent_bindings, current_rows, arrays, owner_pins = {}, {}, {}, {}, {}
-    pairs = [[0, 0], [1, 1]]
+    parent_rows, parent_bindings, current_rows, arrays, owner_pins, baseline_arrays = {}, {}, {}, {}, {}, {}
+    pairs = [[2, 0]] if unequal_face_counts else [[0, 0], [1, 1]]
     pair_sha = digest(pairs, "<u4")
     for key in keys:
+        faces = (FACES[:2].copy() if unequal_face_counts and key[1] == 6 else FACES.copy())
         row_key = f"{key[0]}:{key[1]}"
         member, fma, name, old_gid, current_gid = metadata[key]
         positions = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
@@ -37,48 +38,53 @@ def source_rebind_case():
             positions += np.float32(.1)
         normals = np.full_like(positions, np.float32(1.0 / np.sqrt(3.0)))
         gids = np.arange(current_gid, current_gid + len(positions), dtype=np.uint64)
-        face_sha = digest(FACES, "<u4")
+        face_sha = digest(faces, "<u4")
         position_sha = digest(positions, "<f4")
         normal_sha = digest(normals, "<f4")
         gid_sha = digest(gids, "<u8")
+        rigid_baseline_positions = positions.copy()
+        if key[1] == 6:
+            rigid_baseline_positions -= np.float32(.1)
+        rigid_baseline_sha = digest(rigid_baseline_positions, "<f4")
         parent_rows[row_key] = {
             "typed_identity": list(key), "body_index": 20, "layer": 2,
-            "first_vertex": old_gid, "vertex_count": len(positions), "face_count": len(FACES),
+            "first_vertex": old_gid, "vertex_count": len(positions), "face_count": len(faces),
             "faces_sha256": face_sha, "source_member": member, "fma": fma, "name": name,
         }
         parent_bindings[row_key] = {
-            "typed_identity": list(key), "vertex_count": len(positions), "face_count": len(FACES),
+            "typed_identity": list(key), "vertex_count": len(positions), "face_count": len(faces),
             "positions_f32_sha256": position_sha, "faces_u32_sha256": face_sha,
             "normals_f32_sha256": normal_sha, "source_vertex_ids_u64_sha256": digest(
                 np.arange(old_gid, old_gid + len(positions), dtype=np.uint64), "<u8"),
         }
         ancestry = {
             "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
-            "capture_face_count": len(FACES), "source_face_count": len(FACES),
+            "capture_face_count": len(faces), "source_face_count": len(faces),
             "capture_faces_u32_sha256": face_sha, "source_faces_u32_sha256": face_sha,
         }
         owner = {
             "typed_identity": list(key), "source_member": member, "source_concept_id": fma,
             "capture_face_order_equals_nha": True, "capture_face_vertex_ancestry": ancestry,
-            "source_face_count": len(FACES), "source_vertex_count": len(positions),
+            "source_face_count": len(faces), "source_vertex_count": len(positions),
             "captured_positions_world_f32_sha256": position_sha,
             "captured_faces_u32_sha256": face_sha,
             "captured_global_vertex_ids_sha256": gid_sha,
             "nha_faces_u32_sha256": face_sha,
             "source_nha_row_sha256": "c" * 64, "source_member_sha256": "d" * 64,
-            "rigid_source_world_xyz_f32_sha256": "e" * 64,
+            "rigid_source_world_xyz_f32_sha256": rigid_baseline_sha,
         }
         owner_pins[key] = {
             "typed_identity": list(key), "source_member": member, "fma": fma,
-            "body_index": 20, "layer": 2, "face_count": len(FACES),
+            "body_index": 20, "layer": 2, "face_count": len(faces),
             "vertex_count": len(positions), "faces_sha256": face_sha,
             "source_member_sha256": "d" * 64, "source_nha_row_sha256": "c" * 64,
+            "rigid_source_world_xyz_f32_sha256": rigid_baseline_sha,
         }
         current_rows[row_key] = {
             "typed_identity": list(key), "body_index": 20, "layer": 2,
             "source_member": member, "fma": fma, "name": name,
             "first_vertex": current_gid - 800, "row_local_gid_offset": 800,
-            "source_faces_count": len(FACES), "source_vertices_count": len(positions),
+            "source_faces_count": len(faces), "source_vertices_count": len(positions),
             "source_faces_sha256": face_sha,
             "capture_positions_f32_sha256": position_sha,
             "capture_faces_u32_sha256": face_sha,
@@ -86,8 +92,12 @@ def source_rebind_case():
             "capture_gids_u64_sha256": gid_sha, "owner": owner,
         }
         arrays[key] = {
-            "positions": positions, "faces": FACES.copy(), "normals": normals,
+            "positions": positions, "faces": faces.copy(), "normals": normals,
             "source_vertex_ids": gids,
+        }
+        baseline_arrays[key] = {
+            "positions": rigid_baseline_positions, "faces": faces.copy(),
+            "source_vertex_ids": gids.copy(),
         }
 
     parent = {
@@ -107,10 +117,11 @@ def source_rebind_case():
         "capture_input_bundle_sha256": CAPTURE_SHA,
         "source_rows": current_rows,
     }
-    return canonical_handoff_bytes(parent), canonical_handoff_bytes(preflight), arrays, owner_pins
+    return (canonical_handoff_bytes(parent), canonical_handoff_bytes(preflight),
+            arrays, owner_pins, baseline_arrays)
 
 
-def passing_current_port_report(pending):
+def passing_current_port_report(pending, baseline_arrays):
     link = pending["typed_link"]
     pairs = pending["exact_face_pairs"]
     rows, bindings = pending["source_rows"], pending["candidate_surface_bindings"]
@@ -132,7 +143,17 @@ def passing_current_port_report(pending):
                 "referenced_surface_closed": True,
             },
         }
-        topology["independent_source_rigid_baseline:" + str(key[1])] = common
+        baseline = baseline_arrays[tuple(key)]
+        topology["independent_source_rigid_baseline:" + str(key[1])] = {
+            **common,
+            "source_vertex_ids_sha256": digest(baseline["source_vertex_ids"], "<u8"),
+            "prepared_surface": {
+                "identity": key,
+                "positions_sha256": digest(baseline["positions"], "<f4"),
+                "faces_sha256": digest(baseline["faces"], "<u4"),
+                "referenced_surface_closed": True,
+            },
+        }
     for role in ("candidate", "independent_source_rigid_baseline"):
         interfaces[role] = {
             "passed": True, "typed_port": link, "observed_face_pairs": pairs,
@@ -223,8 +244,19 @@ class AorticPortHandoffRebindTests(unittest.TestCase):
             parent_source_handoff_path="/evidence/parent-handoff.json",
         )
 
+    def seal(self, pending_bytes, report_bytes, preflight_bytes, arrays, baseline_arrays):
+        return av.seal_current_aortic_source_handoff_from_port_report(
+            pending_bytes,
+            expected_pending_handoff_sha256=hashlib.sha256(pending_bytes).hexdigest(),
+            current_port_report_bytes=report_bytes,
+            expected_current_port_report_sha256=hashlib.sha256(report_bytes).hexdigest(),
+            current_source_preflight_bytes=preflight_bytes,
+            expected_capture_input_bundle_sha256=CAPTURE_SHA,
+            capture_array_mapping=arrays,
+            independent_source_rigid_baseline_array_mapping=baseline_arrays)
+
     def test_rebinds_current_arrays_and_global_gid_allocation_with_ancestry(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         result = self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
         self.assertEqual(result["status"], "PENDING_CURRENT_AORTIC_PORT_GEOMETRY")
         self.assertFalse(result["passed"])
@@ -243,20 +275,20 @@ class AorticPortHandoffRebindTests(unittest.TestCase):
         self.assertFalse(result["current_capture_owner_rebind"]["anatomical_admission"])
 
     def test_rejects_current_array_drift_from_source_preflight(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         arrays[(51011, 7)]["positions"][0, 0] += np.float32(.001)
         with self.assertRaisesRegex(ValueError, "differ from their pinned preflight"):
             self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
 
     def test_rejects_gid_offset_that_does_not_match_current_capture(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         changed = json.loads(preflight_bytes)
         changed["source_rows"]["51011:7"]["row_local_gid_offset"] += 1
         with self.assertRaisesRegex(ValueError, "GIDs do not follow"):
             self.build(parent_bytes, canonical_handoff_bytes(changed), arrays, owner_pins)
 
     def test_changed_xyz_with_matching_preflight_stays_pending(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         changed = json.loads(preflight_bytes)
         positions = arrays[(51011, 7)]["positions"]
         positions[0, 0] += np.float32(.001)
@@ -271,16 +303,43 @@ class AorticPortHandoffRebindTests(unittest.TestCase):
         self.assertFalse(result["solid_gate_passed"])
 
     def test_rejects_source_owner_hashes_without_independent_pins(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         owner_pins[(51011, 7)]["source_nha_row_sha256"] = "f" * 64
         with self.assertRaisesRegex(ValueError, "owner or ordered-face ancestry"):
             self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
 
-    def test_fresh_report_seals_only_its_exact_current_arrays(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
+        owner_pins[(51011, 7)]["rigid_source_world_xyz_f32_sha256"] = "e" * 64
+        with self.assertRaisesRegex(ValueError, "owner or ordered-face ancestry"):
+            self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
+
+    def test_rejects_report_baseline_hash_not_bound_to_independent_rigid_source(self):
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         pending = self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
         pending_bytes = canonical_handoff_bytes(pending)
-        report_bytes = canonical_handoff_bytes(passing_current_port_report(pending))
+        report = passing_current_port_report(pending, baseline_arrays)
+        report["source_topology"]["independent_source_rigid_baseline:6"][
+            "prepared_surface"]["positions_sha256"] = "f" * 64
+        report_bytes = canonical_handoff_bytes(report)
+        with self.assertRaisesRegex(ValueError, "topology does not match"):
+            self.seal(pending_bytes, report_bytes, preflight_bytes, arrays, baseline_arrays)
+
+    def test_rejects_independent_baseline_arrays_that_differ_from_owner_pin(self):
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
+        pending = self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
+        pending_bytes = canonical_handoff_bytes(pending)
+        report_bytes = canonical_handoff_bytes(
+            passing_current_port_report(pending, baseline_arrays))
+        baseline_arrays[(51011, 6)]["positions"][0, 0] += np.float32(.01)
+        with self.assertRaisesRegex(ValueError, "differ from pinned source"):
+            self.seal(pending_bytes, report_bytes, preflight_bytes, arrays, baseline_arrays)
+
+    def test_fresh_report_seals_only_its_exact_current_arrays(self):
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
+        pending = self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
+        pending_bytes = canonical_handoff_bytes(pending)
+        report_bytes = canonical_handoff_bytes(
+            passing_current_port_report(pending, baseline_arrays))
         sealed = av.seal_current_aortic_source_handoff_from_port_report(
             pending_bytes,
             expected_pending_handoff_sha256=hashlib.sha256(pending_bytes).hexdigest(),
@@ -288,14 +347,32 @@ class AorticPortHandoffRebindTests(unittest.TestCase):
             expected_current_port_report_sha256=hashlib.sha256(report_bytes).hexdigest(),
             current_source_preflight_bytes=preflight_bytes,
             expected_capture_input_bundle_sha256=CAPTURE_SHA,
-            capture_array_mapping=arrays)
+            capture_array_mapping=arrays,
+            independent_source_rigid_baseline_array_mapping=baseline_arrays)
         self.assertTrue(sealed["passed"])
         self.assertEqual(sealed["status"], "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE")
         self.assertEqual(sealed["evidence_report_sha256"], hashlib.sha256(report_bytes).hexdigest())
         self.assertTrue(sealed["current_port_geometry_evidence"]["candidate_array_hashes_rechecked"])
+        self.assertTrue(sealed["current_port_geometry_evidence"][
+            "independent_rigid_baseline_array_hashes_rechecked"])
+        self.assertEqual(
+            sealed["current_port_geometry_evidence"]["independent_rigid_baseline_array_hashes"][
+                "51011:6"]["positions_sha256"],
+            digest(baseline_arrays[(51011, 6)]["positions"], "<f4"))
+
+    def test_sealer_checks_each_face_pair_column_against_its_own_row(self):
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case(
+            unequal_face_counts=True)
+        pending = self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
+        pending_bytes = canonical_handoff_bytes(pending)
+        report_bytes = canonical_handoff_bytes(
+            passing_current_port_report(pending, baseline_arrays))
+        sealed = self.seal(pending_bytes, report_bytes, preflight_bytes, arrays, baseline_arrays)
+        self.assertTrue(sealed["passed"])
+        self.assertEqual(sealed["typed_link"], [[51011, 7], [51011, 6]])
 
     def test_sealer_requires_a_fresh_current_port_report(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         pending = self.build(parent_bytes, preflight_bytes, arrays, owner_pins)
         pending_bytes = canonical_handoff_bytes(pending)
         bad_report = canonical_handoff_bytes({"schema": "numi.human.current-native-aortic-port-result.v1"})
@@ -307,10 +384,11 @@ class AorticPortHandoffRebindTests(unittest.TestCase):
                 expected_current_port_report_sha256=hashlib.sha256(bad_report).hexdigest(),
                 current_source_preflight_bytes=preflight_bytes,
                 expected_capture_input_bundle_sha256=CAPTURE_SHA,
-                capture_array_mapping=arrays)
+                capture_array_mapping=arrays,
+                independent_source_rigid_baseline_array_mapping=baseline_arrays)
 
     def test_rejects_changed_source_member_or_face_corner_ancestry(self):
-        parent_bytes, preflight_bytes, arrays, owner_pins = source_rebind_case()
+        parent_bytes, preflight_bytes, arrays, owner_pins, baseline_arrays = source_rebind_case()
         changed = json.loads(preflight_bytes)
         changed["source_rows"]["51011:7"]["owner"]["source_member"] = "unrelated"
         with self.assertRaisesRegex(ValueError, "owner or ordered-face ancestry"):
