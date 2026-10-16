@@ -2074,24 +2074,34 @@ def _transport_material_station(surface, spec):
     tangent_ids = np.asarray(spec["tangent_support_local_vertex_ids"], dtype=np.int64)
     collar_face_ids = np.asarray(spec["frozen_collar_face_ids"], dtype=np.int64)
     anchor = np.sum(positions[anchor_ids] * weights[:, None], axis=0)
-    tangent = positions[int(tangent_ids[1])] - positions[int(tangent_ids[0])]
-    norm = float(np.linalg.norm(tangent))
-    _require(norm > 1e-15, "transported source tangent collapsed")
-    tangent /= norm
-    reference = np.asarray(spec["tangent_world_unit"], dtype=np.float64)
-    if float(np.dot(tangent, reference)) < 0.0:
-        tangent = -tangent
+    station_scope = spec.get("station_scope")
+    if station_scope == "SOURCE_INTERFACE_PLANE_V1":
+        tangent = np.asarray(spec.get("tangent_world_unit"), dtype=np.float64)
+        norm = float(np.linalg.norm(tangent))
+        _require(tangent.shape == (3,) and np.isfinite(tangent).all()
+                 and abs(norm - 1.0) <= 1e-12,
+                 "source-interface station normal must be finite and unit length")
+        tangent = tangent / norm
+    else:
+        tangent = positions[int(tangent_ids[1])] - positions[int(tangent_ids[0])]
+        norm = float(np.linalg.norm(tangent))
+        _require(norm > 1e-15, "transported source tangent collapsed")
+        tangent /= norm
+        reference = np.asarray(spec["tangent_world_unit"], dtype=np.float64)
+        if float(np.dot(tangent, reference)) < 0.0:
+            tangent = -tangent
     patch = positions[surface.faces[collar_face_ids]].reshape(-1, 3)
     patch_extent = float(np.max((patch - anchor) @ tangent))
     margin = max(float(np.max(np.abs(np.spacing(surface.positions)))) * 8.0,
                  float(np.finfo(np.float32).tiny))
     requested_offset = float(spec["station_offset_from_anchor_m"])
     station_scope = spec.get("station_scope")
-    if station_scope == "TARGET_COLLAR_LOCAL_SWEEP_V1":
+    if station_scope in (
+            "TARGET_COLLAR_LOCAL_SWEEP_V1", "SOURCE_INTERFACE_PLANE_V1"):
         _require(np.isfinite(requested_offset)
                  and requested_offset >= 0.0
                  and requested_offset <= patch_extent + margin,
-                 "target-local station must remain inside its frozen collar extent")
+                 "local source station must remain inside its frozen collar extent")
         offset = requested_offset
     else:
         _require(station_scope is None,
@@ -2641,12 +2651,76 @@ def _port_station_spec(
     _require(witness.ndim == 2 and witness.shape[1] == 3 and len(witness) > 0,
              "station inference requires exact interface witness points")
     _require(station_policy in (
-        "GLOBAL_SOURCE_PCA_V1", "COLLAR_LOCAL_PCA_V1"),
+        "GLOBAL_SOURCE_PCA_V1", "COLLAR_LOCAL_PCA_V1",
+        "SOURCE_INTERFACE_PCA_PLANE_V1"),
         "unknown source station selection policy")
     junction = witness.mean(axis=0)
     local_tangent_support = None
     local_pca_eigenvalues = None
-    if station_policy == "COLLAR_LOCAL_PCA_V1":
+    source_interface_pca = None
+    if station_policy == "SOURCE_INTERFACE_PCA_PLANE_V1":
+        _require(route_anchor is None,
+                 "source-interface station orientation is fixed by its witness plane")
+        centered = witness - junction
+        covariance = centered.T @ centered / max(1, len(witness))
+        eigenvalues, eigenvectors = np.linalg.eigh(covariance)
+        separation = float(eigenvalues[1] - eigenvalues[0])
+        _require(np.isfinite(eigenvalues).all()
+                 and separation > max(1e-24, abs(float(eigenvalues[-1])) * 1e-6),
+                 "exact source interface points do not define a unique plane normal")
+        direction = eigenvectors[:, 0]
+        dominant = int(np.argmax(np.abs(direction)))
+        if direction[dominant] < 0.0:
+            direction = -direction
+        tangent = direction / float(np.linalg.norm(direction))
+        collar = np.asarray(collar_face_ids, dtype=np.int64)
+        _require(collar.ndim == 1 and len(collar) > 0
+                 and int(collar.min()) >= 0 and int(collar.max()) < len(faces),
+                 "source-interface station needs valid frozen source collar faces")
+        local_tangent_support = np.unique(faces[collar].reshape(-1))
+        ancestry = _material_vertex_ancestry(
+            surface, tangent, collar_face_ids,
+            tangent_support_vertex_ids=local_tangent_support)
+        anchor_ids = np.asarray(
+            ancestry["material_anchor_local_vertex_ids"], dtype=np.int64)
+        anchor_weights = np.asarray(
+            ancestry["material_anchor_weights"], dtype=np.float64)
+        material_anchor = np.sum(positions[anchor_ids] * anchor_weights[:, None], axis=0)
+        offset = float(np.dot(junction - material_anchor, tangent))
+        if offset < 0.0:
+            tangent = -tangent
+            offset = -offset
+            ancestry = _material_vertex_ancestry(
+                surface, tangent, collar_face_ids,
+                tangent_support_vertex_ids=local_tangent_support)
+            anchor_ids = np.asarray(
+                ancestry["material_anchor_local_vertex_ids"], dtype=np.int64)
+            anchor_weights = np.asarray(
+                ancestry["material_anchor_weights"], dtype=np.float64)
+            material_anchor = np.sum(
+                positions[anchor_ids] * anchor_weights[:, None], axis=0)
+            offset = float(np.dot(junction - material_anchor, tangent))
+        collar_points = positions[faces[collar]].reshape(-1, 3)
+        patch_extent = float(np.max((collar_points - material_anchor) @ tangent))
+        margin = max(float(np.max(np.abs(np.spacing(surface.positions)))) * 8.0,
+                     float(np.finfo(np.float32).tiny))
+        _require(offset >= 0.0 and offset <= patch_extent + margin,
+                 "source interface plane lies outside its anchored collar extent")
+        source_interface_pca = {
+            "method": "least-variance eigenvector of the frozen exact source-interface point cloud",
+            "covariance_eigenvalues_m2": eigenvalues.tolist(),
+            "least_variance_eigenvalue_gap_m2": separation,
+            "normal_uniqueness_relative_gap": separation / max(
+                abs(float(eigenvalues[-1])), 1e-300),
+            "witness_points_sha256": _source_interface_points_sha256(witness),
+            "witness_point_count": len(witness),
+            "witness_centroid_world_m": junction.tolist(),
+            "plane_normal_world_unit": tangent.tolist(),
+            "candidate_geometry_used_for_selection": False,
+        }
+        local_pca_eigenvalues = eigenvalues
+        method = "least-variance PCA normal of exact source interface points"
+    elif station_policy == "COLLAR_LOCAL_PCA_V1":
         _require(route_anchor is not None,
                  "collar-local source station needs a frozen neighbor-route anchor")
         collar = np.asarray(collar_face_ids, dtype=np.int64)
@@ -2717,8 +2791,13 @@ def _port_station_spec(
         "tangent_world_unit": tangent.tolist(),
         "provenance": method,
         "inferred": True,
-        "station_offset_from_anchor_m": patch_extent + margin,
+        "station_offset_from_anchor_m": (
+            offset if station_policy == "SOURCE_INTERFACE_PCA_PLANE_V1"
+            else patch_extent + margin),
         "station_selection_policy": station_policy,
+        **({"station_scope": "SOURCE_INTERFACE_PLANE_V1",
+            "source_interface_plane": source_interface_pca}
+           if source_interface_pca is not None else {}),
         **({"local_pca_eigenvalues_m2": local_pca_eigenvalues.tolist(),
             "local_tangent_support_local_vertex_ids": local_tangent_support.tolist(),
             "local_tangent_support_source_vertex_ids": [
@@ -2827,7 +2906,7 @@ def _make_transverse_overlap_witnesses(provider, verifier, bridge, target, obser
 def build_source_junction_station_declaration(
     verifier, *, bridge_key, target_key, baseline_bridge_surface,
     baseline_target_surface, frozen_face_pairs, declared_vessel_ports,
-    anchor_role="bridge", transverse_witness_provider=None,
+    anchor_role="bridge", station_role=None, transverse_witness_provider=None,
     station_policy="GLOBAL_SOURCE_PCA_V1", route_anchor_evidence=None,
 ):
     """Freeze a junction station from baseline source evidence only.
@@ -2841,6 +2920,11 @@ def build_source_junction_station_declaration(
     bridge_key, target_key = _identity(bridge_key), _identity(target_key)
     _require(anchor_role in ("bridge", "target"),
              "source station anchor role must be bridge or target")
+    station_role = anchor_role if station_role is None else station_role
+    _require(station_role in ("bridge", "target", "junction"),
+             "source station role must be bridge, target, or junction")
+    _require(station_role != "junction" or anchor_role in ("bridge", "target"),
+             "junction station needs one explicit branch material anchor")
     _require(
         isinstance(declared_vessel_ports, (set, frozenset, tuple, list))
         and len(declared_vessel_ports) == 1,
@@ -2901,6 +2985,22 @@ def build_source_junction_station_declaration(
         anchor, exact_points, anchor_patch, route_anchor=route_anchor,
         station_policy=station_policy)
     baseline_source_station_section = None
+    baseline_shared_source_station_sections = None
+    if station_policy == "SOURCE_INTERFACE_PCA_PLANE_V1":
+        baseline_shared_source_station_sections = {}
+        for branch_role, branch_surface, owner_id in (
+            ("bridge", bridge, bridge_key[1]),
+            ("target", target, target_key[1]),
+        ):
+            section = _source_surface_section(branch_surface, source_station)
+            _require(section.get("passed") is True
+                     and section.get("loop_count") == 1
+                     and len(section.get("loop_metrics", [])) == 1
+                     and section["loop_metrics"][0].get("lineage_complete") is True
+                     and section["loop_metrics"][0].get("owner_ids") == [owner_id],
+                     f"source interface plane lacks one complete lineage-bearing section "
+                     f"for {branch_role} owner {owner_id}")
+            baseline_shared_source_station_sections[str(owner_id)] = section
     if station_policy == "COLLAR_LOCAL_PCA_V1":
         baseline_source_station_section = _collar_local_source_section(
             anchor, source_station, source_topology_surface=anchor,
@@ -2944,7 +3044,10 @@ def build_source_junction_station_declaration(
         "baseline_declared_partial_overlap_boundary": boundary,
         "baseline_exact_transverse_overlap_side_witnesses": transverse,
         "station_selection_policy": station_policy,
+        "station_role": station_role,
         "neighbor_route_anchor_evidence": route_anchor_record,
+        "baseline_shared_source_station_sections": (
+            baseline_shared_source_station_sections),
         "baseline_source_station_section": (
             None if baseline_source_station_section is None else {
                 "passed": baseline_source_station_section.get("passed"),
@@ -2973,7 +3076,8 @@ def build_source_junction_station_declaration(
         "schema": "numi.human.source-baseline-junction-station-declaration.v1",
         "declaration_id": declaration_id,
         "typed_link": [list(bridge_key), list(target_key)],
-        "station_role": anchor_role,
+        "station_role": station_role,
+        "anchor_role": anchor_role,
         "expected_owner_ids": sorted((bridge_key[1], target_key[1])),
         "bridge_owner_id": bridge_key[1],
         "target_owner_id": target_key[1],
@@ -3902,9 +4006,40 @@ def _section_loop_lineage(face_indices, face_owner_ids, face_source_ids,
     }
 
 
+def _section_vertex_classes(points_for_distance, precision_points, center, tangent):
+    """Apply the exact section zero-class rule shared by source and CSG paths."""
+    points_for_distance = np.asarray(points_for_distance, dtype=np.float64)
+    precision_points = np.asarray(precision_points)
+    _require(points_for_distance.ndim == 2 and points_for_distance.shape[1] == 3
+             and precision_points.ndim == 2 and precision_points.shape[1] == 3
+             and precision_points.dtype.kind == "f"
+             and np.isfinite(points_for_distance).all()
+             and np.isfinite(precision_points).all(),
+             "section vertex classification arrays must be finite XYZ coordinates")
+    center = np.asarray(center, dtype=np.float64)
+    tangent = np.asarray(tangent, dtype=np.float64)
+    _require(center.shape == (3,) and np.isfinite(center).all()
+             and tangent.shape == (3,) and np.isfinite(tangent).all()
+             and float(np.linalg.norm(tangent)) > 0.0,
+             "section vertex classification needs a finite plane")
+    tangent = tangent / np.linalg.norm(tangent)
+    world_scale = max(1.0, float(np.max(np.abs(precision_points))))
+    coordinate_precision = np.finfo(precision_points.dtype)
+    ulp = max(float(np.max(np.abs(np.spacing(precision_points)))),
+              float(coordinate_precision.eps) * world_scale)
+    tolerance = max(ulp * 2.0, float(coordinate_precision.tiny))
+    signed_distances = (points_for_distance - center) @ tangent
+    signs = np.zeros(len(points_for_distance), dtype=np.int8)
+    signs[signed_distances > tolerance] = 1
+    signs[signed_distances < -tolerance] = -1
+    return signed_distances, signs, tolerance
+
+
 def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
                    face_owner_ids=None, face_source_ids=None,
-                   face_generated_mask=None, include_material_point_records=False):
+                   face_generated_mask=None, include_material_point_records=False,
+                   include_projected_loop_vertices=False,
+                   include_face_segment_records=False):
     points = np.asarray(positions)
     expected_dtype = np.dtype("<f8") if derived_csg else np.dtype("<f4")
     precision_label = "derived Manifold Mesh64" if derived_csg else "emitted Float32"
@@ -3977,15 +4112,8 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
         | (canonical_triangles[:, 2] == canonical_triangles[:, 0])),
         "section surface has a triangle degenerate after exact-coordinate quotient")
 
-    world_scale = max(1.0, float(np.max(np.abs(points))))
-    coordinate_precision = np.finfo(points.dtype)
-    ulp = max(float(np.max(np.abs(np.spacing(points)))),
-              float(coordinate_precision.eps) * world_scale)
-    tolerance = max(ulp * 2.0, float(coordinate_precision.tiny))
-    signed_distances = (canonical_points - center) @ tangent
-    signs = np.zeros(len(canonical_points), dtype=np.int8)
-    signs[signed_distances > tolerance] = 1
-    signs[signed_distances < -tolerance] = -1
+    signed_distances, signs, tolerance = _section_vertex_classes(
+        canonical_points, points, center, tangent)
 
     segments = set()
     segment_faces = {}
@@ -4239,6 +4367,67 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
                 else "cross-section area or minimum Feret width collapsed",
             **lineage,
         }
+        if include_face_segment_records:
+            # Retain the ordered per-segment face ancestry and exact Mesh64
+            # section endpoints for source-tangent canonicalization. Normalize
+            # loop direction to CCW and rotate by lineage tokens, so edge start
+            # node allocation cannot change the ordered chain proof.
+            ordered_nodes = list(loop_node_keys)
+            signed_area_twice = float(
+                np.dot(loop[:, 0], np.roll(loop[:, 1], -1))
+                - np.dot(loop[:, 1], np.roll(loop[:, 0], -1)))
+            if signed_area_twice < 0.0:
+                ordered_nodes = [ordered_nodes[0], *reversed(ordered_nodes[1:])]
+            edge_records = []
+            for edge_index, first_node in enumerate(ordered_nodes):
+                second_node = ordered_nodes[(edge_index + 1) % len(ordered_nodes)]
+                edge_key = tuple(sorted((first_node, second_node)))
+                incident_faces = sorted(segment_faces[edge_key])
+                face_records = []
+                for source_face_index in incident_faces:
+                    face_record = {
+                        "owner_id": (
+                            int(face_owner_ids[source_face_index])
+                            if lineage_available else None),
+                        "source_face_id": (
+                            int(face_source_ids[source_face_index])
+                            if lineage_available else None),
+                        "generated": bool(face_generated_mask[source_face_index]),
+                        "triangle_corner_positions_world_m": points[
+                            triangles[source_face_index], :3].astype(
+                                np.float64).tolist(),
+                    }
+                    face_records.append(face_record)
+                edge_records.append({
+                    "section_edge_index": edge_index,
+                    "segment_endpoints_world_m": [
+                        np.asarray(node_positions[first_node], dtype=np.float64).tolist(),
+                        np.asarray(node_positions[second_node], dtype=np.float64).tolist()],
+                    "face_lineage": face_records,
+                })
+            edge_tokens = [tuple(
+                (item["owner_id"], item["source_face_id"], item["generated"])
+                for item in edge_record["face_lineage"])
+                for edge_record in edge_records]
+            if edge_tokens:
+                rotation = min(
+                    range(len(edge_tokens)),
+                    key=lambda offset: tuple(
+                        edge_tokens[offset:] + edge_tokens[:offset]))
+                edge_records = edge_records[rotation:] + edge_records[:rotation]
+            metric["ordered_face_segment_records"] = edge_records
+            if all(len(record["face_lineage"]) == 1
+                   and record["face_lineage"][0]["owner_id"] is not None
+                   and record["face_lineage"][0]["source_face_id"] is not None
+                   and not record["face_lineage"][0]["generated"]
+                   for record in edge_records):
+                metric["ordered_source_face_ancestor_cycle"] = [
+                    record["face_lineage"][0]["source_face_id"]
+                    for record in edge_records]
+            else:
+                metric["ordered_source_face_ancestor_cycle"] = None
+        if include_projected_loop_vertices:
+            metric["projected_loop_vertices"] = loop.tolist()
         if include_material_point_records:
             material_records = []
             for node_key in loop_node_keys:
@@ -4611,12 +4800,716 @@ def _collar_local_union_section(
     }
 
 
-def _source_surface_section(surface, station, *, include_material_point_records=False):
+def _source_surface_section(
+    surface, station, *, include_material_point_records=False,
+    include_projected_loop_vertices=False,
+    include_face_segment_records=False,
+):
     return _section_loops(
         surface.positions, surface.faces,
         station["section_center_world_m"], station["tangent_world_unit"],
         include_material_point_records=include_material_point_records,
+        include_projected_loop_vertices=include_projected_loop_vertices,
+        include_face_segment_records=include_face_segment_records,
         **_source_section_lineage(surface))
+
+
+def _source_station_plane_side(surface, station):
+    """Prove a closed source mesh misses a plane by strict one-sided vertices."""
+    positions = _float32_xyz(surface.positions, name="source station applicability")
+    center = np.asarray(station.get("section_center_world_m"), dtype=np.float64)
+    tangent = np.asarray(station.get("tangent_world_unit"), dtype=np.float64)
+    _require(center.shape == (3,) and np.isfinite(center).all()
+             and tangent.shape == (3,) and np.isfinite(tangent).all()
+             and float(np.linalg.norm(tangent)) > 0.0,
+             "source station applicability has an invalid plane")
+    tangent /= np.linalg.norm(tangent)
+    distances = (positions.astype(np.float64) - center) @ tangent
+    world_scale = max(1.0, float(np.max(np.abs(positions))))
+    ulp = max(float(np.max(np.abs(np.spacing(positions)))),
+              float(np.finfo(positions.dtype).eps) * world_scale)
+    tolerance = max(2.0 * ulp, float(np.finfo(positions.dtype).tiny))
+    if float(np.min(distances)) > tolerance:
+        side = "STRICTLY_POSITIVE"
+    elif float(np.max(distances)) < -tolerance:
+        side = "STRICTLY_NEGATIVE"
+    else:
+        side = "NOT_PROVEN_ABSENT"
+    return {
+        "status": side,
+        "minimum_signed_vertex_distance_m": float(np.min(distances)),
+        "maximum_signed_vertex_distance_m": float(np.max(distances)),
+        "strict_side_tolerance_m": tolerance,
+        "source_vertex_count": len(positions),
+        "source_positions_sha256": hashlib.sha256(positions.tobytes()).hexdigest(),
+        "plane_station_sha256": _canonical_record_sha256(dict(station)),
+    }
+
+
+def _source_station_owner_section(surface, station, owner_id, *, label):
+    """Classify one source owner as a complete cut or a strictly absent side."""
+    section = _source_surface_section(surface, station)
+    loops = section.get("loop_metrics")
+    if (type(section.get("loop_count")) is int
+            and section["loop_count"] > 0
+            and isinstance(loops, list)
+            and len(loops) == section["loop_count"]):
+        records = []
+        for loop_index, metric in enumerate(loops):
+            ancestors = metric.get("source_face_ancestor_ids")
+            _require(metric.get("passed") is True
+                     and metric.get("lineage_available") is True
+                     and metric.get("lineage_complete") is True
+                     and metric.get("owner_ids") == [owner_id]
+                     and isinstance(ancestors, list) and bool(ancestors)
+                     and all(type(face_id) is int and face_id >= 0 for face_id in ancestors)
+                     and len(set(ancestors)) == len(ancestors)
+                     and metric.get("generated_face_count") == 0
+                     and metric.get("unmapped_face_count") == 0
+                     and isinstance(metric.get("area_m2"), (int, float))
+                     and np.isfinite(metric["area_m2"]) and metric["area_m2"] > 0.0
+                     and isinstance(metric.get("minimum_feret_width_m"), (int, float))
+                     and np.isfinite(metric["minimum_feret_width_m"])
+                     and metric["minimum_feret_width_m"] > 0.0,
+                     f"{label} loop {loop_index} lacks complete positive source lineage")
+            records.append({
+                "loop_index": loop_index,
+                "source_face_ancestor_ids": list(ancestors),
+                "source_face_ancestor_ids_sha256": metric.get(
+                    "source_face_ancestor_ids_sha256"),
+                "area_m2": float(metric["area_m2"]),
+                "minimum_feret_width_m": float(metric["minimum_feret_width_m"]),
+            })
+        return {
+            "status": "PRESENT_COMPLETE_SOURCE_LOOPS",
+            "typed_identity": list(surface.key),
+            "section_plane_sha256": _canonical_record_sha256({
+                "center": section.get("section_center_world_m"),
+                "tangent": section.get("section_tangent_world_unit")}),
+            "loop_count": len(records),
+            "loops": records,
+            "section_passed_as_single_loop": section.get("passed") is True,
+        }
+    side = _source_station_plane_side(surface, station)
+    _require(side["status"] in ("STRICTLY_POSITIVE", "STRICTLY_NEGATIVE"),
+             f"{label} is neither a complete section nor proven absent on one plane side")
+    _require(section.get("loop_count") == 0,
+             f"{label} has malformed section loops despite one-sided absence")
+    return {
+        "status": "ABSENT_STRICTLY_ON_ONE_SIDE",
+        "typed_identity": list(surface.key),
+        "section_plane_sha256": _canonical_record_sha256({
+            "center": station.get("section_center_world_m"),
+            "tangent": station.get("tangent_world_unit")}),
+        "loop_count": 0,
+        "one_sided_absence": side,
+        "section_reason": section.get("reason"),
+    }
+
+
+def _source_station_applicability_body(
+    bridge_surface, target_surface, *, bridge_key, target_key,
+    station_role, anchor_owner_id, station,
+):
+    owner_records = {}
+    for surface, key in ((bridge_surface, bridge_key), (target_surface, target_key)):
+        _require(surface.key == key,
+                 "source station applicability surface identity changed")
+        owner_records[str(key[1])] = _source_station_owner_section(
+            surface, station, key[1], label=f"source baseline owner {key[1]}")
+    present = sorted(int(owner) for owner, item in owner_records.items()
+                     if item["status"] == "PRESENT_COMPLETE_SOURCE_LOOPS")
+    absent = sorted(int(owner) for owner, item in owner_records.items()
+                    if item["status"] == "ABSENT_STRICTLY_ON_ONE_SIDE")
+    expected_owners = sorted((bridge_key[1], target_key[1]))
+    _require(sorted(present + absent) == expected_owners,
+             "source station applicability does not partition both typed owners")
+    if present == expected_owners and not absent:
+        mode = "SHARED_TWO_OWNER_CUT"
+    elif present == [anchor_owner_id] and len(absent) == 1:
+        mode = "ANCHOR_ONLY_CUT"
+    else:
+        raise ValueError(
+            "source station is neither a shared two-owner cut nor an anchor-only cut")
+    return {
+        "schema": "numi.human.source-baseline-station-applicability.v1",
+        "typed_link": [list(bridge_key), list(target_key)],
+        "station_role": station_role,
+        "anchor_owner_id": anchor_owner_id,
+        "source_station_sha256": _canonical_record_sha256(dict(station)),
+        "baseline_source_surface_bindings": {
+            "bridge": _source_geometry_binding(bridge_surface),
+            "target": _source_geometry_binding(target_surface),
+        },
+        "owner_status_by_id": owner_records,
+        "present_owner_ids": present,
+        "absent_owner_ids": absent,
+        "applicability_mode": mode,
+        "independent_source_baseline_only": True,
+        "candidate_geometry_used_for_declaration": False,
+    }
+
+
+def declare_source_baseline_station_applicability(
+    verifier, *, bridge_key, baseline_bridge_surface, target_key,
+    baseline_target_surface, station_role, anchor_owner_id, source_station,
+):
+    """Create an explicit, reproducible source-only cut-applicability declaration."""
+    bridge_key, target_key = _identity(bridge_key), _identity(target_key)
+    _require(station_role in ("bridge", "target", "junction")
+             and anchor_owner_id in (bridge_key[1], target_key[1]),
+             "source station applicability has the wrong anchor role")
+    bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
+    target = _prepare_vessel(verifier, target_key, baseline_target_surface)
+    body = _source_station_applicability_body(
+        bridge, target, bridge_key=bridge_key, target_key=target_key,
+        station_role=station_role, anchor_owner_id=anchor_owner_id,
+        station=source_station)
+    return {**body, "declaration_sha256": _canonical_record_sha256(body)}
+
+
+def _validated_source_station_applicability_modes(records):
+    _require(isinstance(records, Mapping)
+             and {"bridge", "target"} <= set(records)
+             and set(records) <= {"bridge", "target", "junction"},
+             "source applicability must declare bridge/target and optional junction stations")
+    modes = {}
+    for role, record in records.items():
+        _require(isinstance(record, Mapping)
+                 and record.get("station_role") == role
+                 and record.get("applicability_mode") in (
+                     "ANCHOR_ONLY_CUT", "SHARED_TWO_OWNER_CUT"),
+                 f"{role} source station applicability is malformed")
+        modes[role] = record["applicability_mode"]
+    _require("SHARED_TWO_OWNER_CUT" in modes.values(),
+             "a source-applicability opt-in needs at least one declared shared two-owner cut")
+    return modes
+
+
+def _complete_station_loop_metrics(section, owner_id, *, label):
+    loops = section.get("loop_metrics")
+    _require(type(section.get("loop_count")) is int and section["loop_count"] > 0
+             and isinstance(loops, list) and len(loops) == section["loop_count"],
+             f"{label} must retain every closed section loop")
+    records = []
+    for index, metric in enumerate(loops):
+        ancestors = metric.get("source_face_ancestor_ids")
+        _require(metric.get("passed") is True
+                 and metric.get("lineage_available") is True
+                 and metric.get("lineage_complete") is True
+                 and metric.get("owner_ids") == [owner_id]
+                 and isinstance(ancestors, list) and bool(ancestors)
+                 and all(type(face_id) is int and face_id >= 0 for face_id in ancestors)
+                 and len(set(ancestors)) == len(ancestors)
+                 and metric.get("generated_face_count") == 0
+                 and metric.get("unmapped_face_count") == 0,
+                 f"{label} loop {index} has mixed, incomplete, or generated lineage")
+        records.append(metric)
+    return sorted(records, key=lambda item: (
+        -float(item["area_m2"]), -float(item["minimum_feret_width_m"]),
+        str(item["source_face_ancestor_ids_sha256"])))
+
+
+def _compare_complete_anchor_only_loop_sets(
+    candidate, baseline, *, owner_id, label, exact_ancestry=False,
+    tangent_canonicalization=None,
+):
+    candidate_loops = _complete_station_loop_metrics(
+        candidate, owner_id, label=f"{label} candidate")
+    baseline_loops = _complete_station_loop_metrics(
+        baseline, owner_id, label=f"{label} baseline")
+    _require(len(candidate_loops) == len(baseline_loops),
+             f"{label} loop count differs across the source-baseline comparison")
+    tangent_proofs_by_loop = {}
+    if tangent_canonicalization is not None:
+        _require(tangent_canonicalization.get("passed") is True
+                 and isinstance(tangent_canonicalization.get("loop_proofs"), list),
+                 f"{label} source-tangent canonicalization proof is malformed")
+        tangent_proofs_by_loop = {
+            int(item["loop_index"]): item
+            for item in tangent_canonicalization["loop_proofs"]}
+    comparisons = []
+    for index, (current, prior) in enumerate(zip(candidate_loops, baseline_loops)):
+        current_ancestors = set(current["source_face_ancestor_ids"])
+        prior_ancestors = set(prior["source_face_ancestor_ids"])
+        tangent_proof = tangent_proofs_by_loop.get(index)
+        if exact_ancestry:
+            if current_ancestors == prior_ancestors:
+                _require(tangent_proof is None or tangent_proof.get("passed") is True,
+                         f"{label} exact source ancestry proof is invalid")
+            else:
+                _require(tangent_proof is not None
+                         and tangent_proof.get("passed") is True
+                         and set(tangent_proof.get("source_section_ancestor_cycle", []))
+                             == prior_ancestors
+                         and set(tangent_proof.get("union_section_ancestor_cycle", []))
+                             == current_ancestors
+                         and set(tangent_proof.get("tangent_face_ids_canonicalized", []))
+                             == current_ancestors - prior_ancestors
+                         and prior_ancestors <= current_ancestors,
+                         f"{label} same-state union loop ancestry differs outside the source-F32 tangent proof")
+        comparison = _section_comparison(current, prior)
+        _require(comparison["passed"],
+                 f"{label} loop {index} area/width is outside the declared bounds")
+        comparisons.append({
+            "loop_rank_by_area_then_width": index,
+            "candidate_source_face_ancestor_ids_sha256": current.get(
+                "source_face_ancestor_ids_sha256"),
+            "baseline_source_face_ancestor_ids_sha256": prior.get(
+                "source_face_ancestor_ids_sha256"),
+            "candidate_source_face_ancestor_count": len(current_ancestors),
+            "baseline_source_face_ancestor_count": len(prior_ancestors),
+            "source_f32_tangent_face_canonicalization": tangent_proof,
+            **comparison,
+        })
+    return comparisons
+
+
+def _canonical_oriented_ancestor_cycle(face_ids, *, label):
+    _require(isinstance(face_ids, list) and len(face_ids) >= 3
+             and all(type(face_id) is int and face_id >= 0 for face_id in face_ids)
+             and len(set(face_ids)) == len(face_ids),
+             f"{label} ordered face cycle is missing, repeated, or malformed")
+    rotations = [tuple(face_ids[offset:] + face_ids[:offset])
+                 for offset in range(len(face_ids))]
+    return list(min(rotations))
+
+
+def _source_tangent_face_classification(surface, station):
+    positions = _float32_xyz(surface.positions, name="tangent-face source")
+    faces = _faces(surface.faces, name="tangent-face source", vertex_count=len(positions))
+    _require(surface.key[0] == 51011 and surface.key[1] > 0,
+             "tangent-face proof requires a typed native vessel source")
+    source_ids = np.asarray(surface.source_vertex_ids)
+    _require(source_ids.shape == (len(positions),) and source_ids.dtype.kind in "iu",
+             "tangent-face source vertex IDs are malformed")
+    if hasattr(surface, "source_vertex_to_quotient"):
+        source_to_quotient = np.asarray(surface.source_vertex_to_quotient)
+        quotient_faces = np.asarray(surface.quotient_faces)
+        _require(source_to_quotient.shape == (len(positions),)
+                 and quotient_faces.shape == faces.shape
+                 and np.array_equal(source_to_quotient[faces], quotient_faces),
+                 "tangent-face source row mapping is not exact and ordered")
+    center = np.asarray(station.get("section_center_world_m"), dtype=np.float64)
+    tangent = np.asarray(station.get("tangent_world_unit"), dtype=np.float64)
+    _require(center.shape == (3,) and np.isfinite(center).all()
+             and tangent.shape == (3,) and np.isfinite(tangent).all()
+             and float(np.linalg.norm(tangent)) > 0.0,
+             "tangent-face station is malformed")
+    tangent /= float(np.linalg.norm(tangent))
+    signed_distances, signs, tolerance = _section_vertex_classes(
+        positions.astype(np.float64), positions, center, tangent)
+    face_signs = signs[faces]
+    records = {}
+    for face_id, (face, signs_for_face) in enumerate(zip(faces, face_signs)):
+        zero = np.flatnonzero(signs_for_face == 0)
+        if len(zero) != 1:
+            continue
+        nonzero = [int(signs_for_face[index]) for index in range(3) if index not in zero]
+        if len(nonzero) != 2 or nonzero[0] == 0 or nonzero[0] != nonzero[1]:
+            continue
+        zero_index = int(zero[0])
+        records[face_id] = {
+            "face_id": face_id,
+            "source_vertex_ids": [int(source_ids[index]) for index in face],
+            "local_vertex_ids": [int(index) for index in face],
+            "f32_vertex_signs": [int(value) for value in signs_for_face],
+            "signed_plane_distances_m": [float(signed_distances[index]) for index in face],
+            "zero_class_local_vertex_id": int(face[zero_index]),
+            "zero_class_source_vertex_id": int(source_ids[int(face[zero_index])]),
+            "zero_class_signed_distance_m": float(signed_distances[int(face[zero_index])]),
+            "nonzero_side_sign": nonzero[0],
+            "source_f32_zero_tolerance_m": tolerance,
+        }
+    return {
+        "typed_identity": list(surface.key),
+        "surface_binding": _source_geometry_binding(surface),
+        "station_sha256": _canonical_record_sha256(dict(station)),
+        "section_precision_contract": "shared _section_vertex_classes with source Float32 precision",
+        "source_f32_zero_tolerance_m": tolerance,
+        "source_tangent_face_records": records,
+    }
+
+
+def _exact_triangle_point_record(point, triangle, station):
+    point = np.asarray(point, dtype=np.float64)
+    triangle = np.asarray(triangle, dtype=np.float64)
+    center = np.asarray(station["section_center_world_m"], dtype=np.float64)
+    tangent = np.asarray(station["tangent_world_unit"], dtype=np.float64)
+    tangent = tangent / float(np.linalg.norm(tangent))
+    normal = np.cross(triangle[1] - triangle[0], triangle[2] - triangle[0])
+    drop_axis = int(np.argmax(np.abs(normal)))
+    triangle_2d = np.delete(triangle, drop_axis, axis=1)
+    point_2d = np.delete(point, drop_axis)
+    denominator = _orient2d_exact(triangle_2d[0], triangle_2d[1], triangle_2d[2])
+    _require(denominator != 0, "source-face barycentric proof found a degenerate triangle")
+    weights = (
+        _orient2d_exact(triangle_2d[1], triangle_2d[2], point_2d) / denominator,
+        _orient2d_exact(triangle_2d[2], triangle_2d[0], point_2d) / denominator,
+        _orient2d_exact(triangle_2d[0], triangle_2d[1], point_2d) / denominator,
+    )
+    inside_projection = all(weight >= 0 for weight in weights) and sum(weights) == 1
+    f = Fraction.from_float
+    tri_q = [[f(float(component)) for component in row] for row in triangle]
+    point_q = [f(float(component)) for component in point]
+    center_q = [f(float(component)) for component in center]
+    tangent_q = [f(float(component)) for component in tangent]
+    first_edge = [tri_q[1][axis] - tri_q[0][axis] for axis in range(3)]
+    second_edge = [tri_q[2][axis] - tri_q[0][axis] for axis in range(3)]
+    face_normal = (
+        first_edge[1] * second_edge[2] - first_edge[2] * second_edge[1],
+        first_edge[2] * second_edge[0] - first_edge[0] * second_edge[2],
+        first_edge[0] * second_edge[1] - first_edge[1] * second_edge[0],
+    )
+    residual_numerator = sum(
+        (point_q[axis] - tri_q[0][axis]) * face_normal[axis]
+        for axis in range(3))
+    normal_squared = sum(value * value for value in face_normal)
+    source_face_plane_residual_m = (
+        float(abs(residual_numerator)) / float(normal_squared) ** 0.5)
+    station_distance = sum(
+        (point_q[axis] - center_q[axis]) * tangent_q[axis]
+        for axis in range(3))
+    station_plane_residual_m = abs(float(station_distance))
+    # Reconstruct the exact same section-edge interpolation on this source
+    # triangle. Its nonnegative barycentrics, not a spatial epsilon, establish
+    # that the point belongs to the triangle face.
+    signed_distances, _, _ = _section_vertex_classes(
+        triangle, triangle.astype("<f4"), center, tangent)
+    crossing_edges = [
+        (index, (index + 1) % 3)
+        for index in range(3)
+        if signed_distances[index] * signed_distances[(index + 1) % 3] < 0.0
+    ]
+    interpolation_matches = []
+    for first, second in crossing_edges:
+        fraction = float(signed_distances[first] / (
+            signed_distances[first] - signed_distances[second]))
+        expected = triangle[first] + fraction * (triangle[second] - triangle[first])
+        weights_from_edge = [0.0, 0.0, 0.0]
+        weights_from_edge[first] = 1.0 - fraction
+        weights_from_edge[second] = fraction
+        interpolation_matches.append({
+            "edge_corner_indices": [first, second],
+            "edge_fraction": fraction,
+            "source_face_barycentric_weights": weights_from_edge,
+            "barycentric_is_inside_closed_face": bool(
+                0.0 <= fraction <= 1.0 and sum(weights_from_edge) == 1.0),
+            "reconstructed_section_point_world_m": expected.tolist(),
+            "point_reconstruction_residual_inf_m": float(
+                np.max(np.abs(point - expected))),
+        })
+    unit_roundoff = np.finfo(np.float64).eps / 2.0
+    gamma_16 = (16.0 * unit_roundoff) / (1.0 - 16.0 * unit_roundoff)
+    operation_scale_m = max(
+        1.0, float(np.max(np.abs(triangle))), float(np.max(np.abs(point))),
+        float(np.max(np.abs(center))))
+    arithmetic_bound_m = float(np.sqrt(3.0) * gamma_16 * operation_scale_m)
+    best_interpolation = min(
+        interpolation_matches,
+        key=lambda record: record["point_reconstruction_residual_inf_m"],
+        default=None)
+    construction_barycentric_inside = bool(
+        len(crossing_edges) == 2 and best_interpolation is not None
+        and best_interpolation["barycentric_is_inside_closed_face"]
+        and best_interpolation["point_reconstruction_residual_inf_m"]
+            <= arithmetic_bound_m)
+    return {
+        "barycentric_weights_exact_binary_rational": [str(value) for value in weights],
+        "inside_source_triangle_projection_exact": bool(inside_projection),
+        "source_face_plane_residual_m": source_face_plane_residual_m,
+        "station_plane_residual_m": station_plane_residual_m,
+        "source_edge_interpolation_candidates": interpolation_matches,
+        "source_edge_barycentric_inclusion_within_binary64_construction_bound":
+            construction_barycentric_inside,
+        "binary64_edge_intersection_operation_bound_m": arithmetic_bound_m,
+        "both_residuals_within_binary64_operation_bound": bool(
+            source_face_plane_residual_m <= arithmetic_bound_m
+            and station_plane_residual_m <= arithmetic_bound_m
+            and construction_barycentric_inside),
+    }
+
+
+def _source_tangent_face_loop_proof(
+    *, surface, station, source_loop_metric, union_loop_metric, owner_id, loop_index,
+    expected_source_binding=None,
+):
+    classification = _source_tangent_face_classification(surface, station)
+    if expected_source_binding is not None:
+        _require(classification["surface_binding"] == expected_source_binding,
+                 "tangent-face source surface differs from its independently pinned binding")
+    source_cycle_raw = source_loop_metric.get("ordered_source_face_ancestor_cycle")
+    union_cycle_raw = union_loop_metric.get("ordered_source_face_ancestor_cycle")
+    source_cycle = _canonical_oriented_ancestor_cycle(
+        source_cycle_raw, label="source section")
+    union_cycle = _canonical_oriented_ancestor_cycle(
+        union_cycle_raw, label="union section")
+    source_ancestors = set(source_loop_metric.get("source_face_ancestor_ids", []))
+    union_ancestors = set(union_loop_metric.get("source_face_ancestor_ids", []))
+    _require(set(source_cycle) == source_ancestors
+             and set(union_cycle) == union_ancestors,
+             "ordered source-face cycles do not cover their complete loop ancestry")
+    missing = sorted(source_ancestors - union_ancestors)
+    extra = sorted(union_ancestors - source_ancestors)
+    _require(not missing,
+             "union section dropped a source face from its ordered branch loop")
+    tangent_records = classification["source_tangent_face_records"]
+    _require(set(extra) <= set(tangent_records),
+             "union-only source ancestry contains a non-tangent source face")
+    source_faces = np.asarray(surface.faces, dtype=np.int64)
+    source_loop_vertices = set(map(int, np.unique(
+        source_faces[np.asarray(sorted(source_ancestors), dtype=np.int64)].reshape(-1))))
+    union_segments = union_loop_metric.get("ordered_face_segment_records")
+    _require(isinstance(union_segments, list)
+             and len(union_segments) == len(union_cycle),
+             "union ordered section segment records are incomplete")
+    segment_records_by_face = {}
+    for segment in union_segments:
+        lineages = segment.get("face_lineage")
+        _require(isinstance(lineages, list) and bool(lineages),
+                 "union segment has no source-face lineage")
+        for lineage in lineages:
+            _require(lineage.get("owner_id") == owner_id
+                     and lineage.get("source_face_id") is not None
+                     and lineage.get("generated") is False,
+                     "union segment contains foreign, generated, or unmapped ownership")
+            segment_records_by_face.setdefault(
+                int(lineage["source_face_id"]), []).append((segment, lineage))
+    loop_proofs = []
+    for face_id in extra:
+        source_face_record = tangent_records[face_id]
+        local_face_ids = source_face_record["local_vertex_ids"]
+        _require(bool(set(local_face_ids) & source_loop_vertices),
+                 "source-tangent ancestor is disconnected from this source section loop")
+        edge_records = segment_records_by_face.get(face_id, [])
+        _require(len(edge_records) == 1,
+                 "source-tangent ancestor does not map to exactly one union section edge")
+        segment, lineage = edge_records[0]
+        source_triangle = np.asarray(surface.positions, dtype=np.float64)[
+            np.asarray(surface.faces[face_id], dtype=np.int64)]
+        csg_triangle = np.asarray(
+            lineage.get("triangle_corner_positions_world_m"), dtype=np.float64)
+        _require(csg_triangle.shape == (3, 3) and np.isfinite(csg_triangle).all(),
+                 "union tangent-face triangle coordinates are malformed")
+        source_corner_tokens = sorted(tuple(float(value) for value in row)
+                                      for row in source_triangle)
+        csg_corner_tokens = sorted(tuple(float(value) for value in row)
+                                   for row in csg_triangle)
+        _require(csg_corner_tokens == source_corner_tokens,
+                 "Mesh64 union face moved or quantized away from its exact source triangle")
+        endpoints = segment.get("segment_endpoints_world_m")
+        _require(isinstance(endpoints, list) and len(endpoints) == 2,
+                 "union tangent-face section edge needs two endpoints")
+        barycentric_records = [
+            _exact_triangle_point_record(point, source_triangle, station)
+            for point in endpoints]
+        _require(all(record[
+                         "source_edge_barycentric_inclusion_within_binary64_construction_bound"]
+                     and record["both_residuals_within_binary64_operation_bound"]
+                     for record in barycentric_records),
+                 "Mesh64 tangent-face section edge is outside its exact source-face envelope")
+        loop_proofs.append({
+            "source_face_id": face_id,
+            "source_vertex_ids": source_face_record["source_vertex_ids"],
+            "source_f32_signs": source_face_record["f32_vertex_signs"],
+            "source_zero_class_vertex_id": source_face_record["zero_class_source_vertex_id"],
+            "source_zero_class_signed_distance_m": source_face_record[
+                "zero_class_signed_distance_m"],
+            "source_f32_zero_tolerance_m": source_face_record[
+                "source_f32_zero_tolerance_m"],
+            "source_triangle_positions_f32": source_triangle.tolist(),
+            "mesh64_triangle_positions_exactly_match_source_f32_corners": True,
+            "mesh64_section_edge_endpoints_world_m": endpoints,
+            "endpoint_source_triangle_barycentric_proofs": barycentric_records,
+        })
+    filtered_union_cycle = [face_id for face_id in union_cycle if face_id not in set(extra)]
+    filtered_union_canonical = _canonical_oriented_ancestor_cycle(
+        filtered_union_cycle, label="union cycle after source-tangent canonicalization")
+    _require(filtered_union_canonical == source_cycle,
+             "source-tangent canonicalization changed ordered branch chain or direction")
+    return {
+        "passed": True,
+        "schema": "numi.human.source-f32-tangent-face-canonicalization.v1",
+        "typed_identity": list(surface.key),
+        "surface_binding": classification["surface_binding"],
+        "station_sha256": classification["station_sha256"],
+        "loop_index": int(loop_index),
+        "source_f32_zero_tolerance_m": classification["source_f32_zero_tolerance_m"],
+        "source_section_ancestor_cycle": source_cycle,
+        "union_section_ancestor_cycle": union_cycle,
+        "canonicalized_union_section_ancestor_cycle": filtered_union_canonical,
+        "tangent_face_ids_canonicalized": extra,
+        "missing_source_face_ids": missing,
+        "foreign_owner_or_generated_segment_count": 0,
+        "source_tangent_face_proofs": loop_proofs,
+        "all_face_geometry_is_exactly_source_bound": True,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+
+
+def _anchor_only_tangent_canonicalization(
+    *, surface, station, source_section, union_section, owner_id,
+    expected_source_binding=None, label,
+):
+    source_loops = _complete_station_loop_metrics(
+        source_section, owner_id, label=f"{label} source branch")
+    union_loops = _complete_station_loop_metrics(
+        union_section, owner_id, label=f"{label} union boundary")
+    _require(len(source_loops) == len(union_loops),
+             f"{label} source-tangent proof changed the number of section lobes")
+    loop_proofs = [
+        _source_tangent_face_loop_proof(
+            surface=surface, station=station,
+            source_loop_metric=source_loop, union_loop_metric=union_loop,
+            owner_id=owner_id, loop_index=index,
+            expected_source_binding=expected_source_binding)
+        for index, (source_loop, union_loop)
+        in enumerate(zip(source_loops, union_loops))
+    ]
+    return {
+        "passed": True,
+        "typed_identity": list(surface.key),
+        "surface_binding": _source_geometry_binding(surface),
+        "station_sha256": _canonical_record_sha256(dict(station)),
+        "source_loop_count": len(source_loops),
+        "union_loop_count": len(union_loops),
+        "source_loop_face_counts": [
+            len(item["source_face_ancestor_ids"]) for item in source_loops],
+        "union_loop_face_counts": [
+            len(item["source_face_ancestor_ids"]) for item in union_loops],
+        "loop_proofs": loop_proofs,
+    }
+
+
+def _anchor_only_union_station_proof(
+    *, applicability, candidate_applicability, candidate_union, baseline_union,
+    candidate_owner_sections, baseline_owner_sections, expected_owner_ids,
+    candidate_anchor_surface=None, baseline_anchor_surface=None,
+    candidate_station=None, baseline_station=None, anchor_role=None,
+    solid_evidence=None,
+):
+    """Compare every loop at a source-declared anchor-only cut, with no owner omission."""
+    _require(applicability.get("applicability_mode") == "ANCHOR_ONLY_CUT"
+             and applicability.get("independent_source_baseline_only") is True
+             and applicability.get("candidate_geometry_used_for_declaration") is False,
+             "anchor-only section needs an explicit source-baseline applicability proof")
+    anchor = applicability.get("anchor_owner_id")
+    expected = tuple(sorted(expected_owner_ids))
+    _require(anchor in expected and set(candidate_owner_sections) == set(expected)
+             and set(baseline_owner_sections) == set(expected),
+             "anchor-only comparison does not bind both branch sources")
+    _require(candidate_applicability.get("applicability_mode") == "ANCHOR_ONLY_CUT"
+             and candidate_applicability.get("present_owner_ids") == [anchor]
+             and candidate_applicability.get("absent_owner_ids")
+                 == [owner for owner in expected if owner != anchor],
+             "candidate station no longer has the declared anchor-only applicability")
+    _require(applicability.get("present_owner_ids") == [anchor]
+             and applicability.get("absent_owner_ids")
+                 == [owner for owner in expected if owner != anchor],
+             "baseline station does not prove exactly the declared anchor-only cut")
+    absent_owner = next(owner for owner in expected if owner != anchor)
+    _require(candidate_applicability["owner_status_by_id"][str(absent_owner)]["status"]
+             == "ABSENT_STRICTLY_ON_ONE_SIDE"
+             and applicability["owner_status_by_id"][str(absent_owner)]["status"]
+                 == "ABSENT_STRICTLY_ON_ONE_SIDE",
+             "the non-anchor vessel is not proven absent on one strict plane side")
+
+    candidate_anchor = candidate_owner_sections[anchor]
+    baseline_anchor = baseline_owner_sections[anchor]
+    _require(_same_section_plane(candidate_union, candidate_anchor)
+             and _same_section_plane(baseline_union, baseline_anchor),
+             "anchor-only union and source branch sections are on different planes")
+    _require(candidate_union.get("loop_count")
+             == candidate_anchor.get("loop_count")
+             and baseline_union.get("loop_count")
+             == baseline_anchor.get("loop_count"),
+             "anchor-only union omitted or added a source section loop")
+    candidate_union_anchor = _complete_station_loop_metrics(
+        candidate_union, anchor, label="candidate anchor-only union")
+    baseline_union_anchor = _complete_station_loop_metrics(
+        baseline_union, anchor, label="baseline anchor-only union")
+    candidate_source_anchor = _complete_station_loop_metrics(
+        candidate_anchor, anchor, label="candidate anchor-only source branch")
+    baseline_source_anchor = _complete_station_loop_metrics(
+        baseline_anchor, anchor, label="baseline anchor-only source branch")
+    candidate_tangent_canonicalization = None
+    baseline_tangent_canonicalization = None
+    if any(value is not None for value in (
+            candidate_anchor_surface, baseline_anchor_surface,
+            candidate_station, baseline_station, anchor_role)):
+        _require(candidate_anchor_surface is not None
+                 and baseline_anchor_surface is not None
+                 and candidate_station is not None and baseline_station is not None
+                 and anchor_role in ("bridge", "target")
+                 and candidate_anchor_surface.key == (51011, anchor)
+                 and baseline_anchor_surface.key == (51011, anchor),
+                 "source-tangent canonicalization requires both typed anchor surfaces and stations")
+        baseline_binding = applicability.get(
+            "baseline_source_surface_bindings", {}).get(anchor_role)
+        _require(isinstance(baseline_binding, Mapping),
+                 "source-tangent proof lacks the independent baseline surface binding")
+        candidate_tangent_canonicalization = _anchor_only_tangent_canonicalization(
+            surface=candidate_anchor_surface, station=candidate_station,
+            source_section=candidate_anchor, union_section=candidate_union,
+            owner_id=anchor, label="candidate anchor-only source-face ancestry")
+        baseline_tangent_canonicalization = _anchor_only_tangent_canonicalization(
+            surface=baseline_anchor_surface, station=baseline_station,
+            source_section=baseline_anchor, union_section=baseline_union,
+            owner_id=anchor, expected_source_binding=baseline_binding,
+            label="baseline anchor-only source-face ancestry")
+    if solid_evidence is not None:
+        for side in ("candidate", "baseline"):
+            witness = solid_evidence.get(f"{side}_exact_inside_both_witness")
+            _require(solid_evidence.get(f"{side}_union_component_count") == 1
+                     and str(solid_evidence.get(f"{side}_union_status", "")).endswith("NoError")
+                     and isinstance(solid_evidence.get(f"{side}_union_volume_m3"), (int, float))
+                     and solid_evidence[f"{side}_union_volume_m3"] > 0.0
+                     and isinstance(solid_evidence.get(f"{side}_intersection_volume_m3"), (int, float))
+                     and solid_evidence[f"{side}_intersection_volume_m3"] > 0.0
+                     and isinstance(witness, Mapping)
+                     and witness.get("first_location") == "inside"
+                     and witness.get("second_location") == "inside",
+                     f"{side} anchor-only source section lacks a connected inside-both solid union")
+    candidate_union_vs_source = _compare_complete_anchor_only_loop_sets(
+        candidate_union, candidate_anchor, owner_id=anchor,
+        label="candidate anchor-only union/source", exact_ancestry=True,
+        tangent_canonicalization=candidate_tangent_canonicalization)
+    baseline_union_vs_source = _compare_complete_anchor_only_loop_sets(
+        baseline_union, baseline_anchor, owner_id=anchor,
+        label="baseline anchor-only union/source", exact_ancestry=True,
+        tangent_canonicalization=baseline_tangent_canonicalization)
+    union_cross_time = _compare_complete_anchor_only_loop_sets(
+        candidate_union, baseline_union, owner_id=anchor,
+        label="anchor-only union candidate/baseline")
+    source_cross_time = _compare_complete_anchor_only_loop_sets(
+        candidate_anchor, baseline_anchor, owner_id=anchor,
+        label="anchor-only source candidate/baseline")
+    return {
+        "passed": True,
+        "station_applicability_mode": "ANCHOR_ONLY_CUT",
+        "method": "all-loop source-lineaged union and branch comparison with strict one-sided absence of the other owner",
+        "source_baseline_applicability": applicability,
+        "candidate_station_applicability": candidate_applicability,
+        "anchor_owner_id": anchor,
+        "absent_owner_id": absent_owner,
+        "candidate_union_loop_count": len(candidate_union_anchor),
+        "baseline_union_loop_count": len(baseline_union_anchor),
+        "candidate_source_loop_count": len(candidate_source_anchor),
+        "baseline_source_loop_count": len(baseline_source_anchor),
+        "candidate_union_vs_source_loop_comparisons": candidate_union_vs_source,
+        "baseline_union_vs_source_loop_comparisons": baseline_union_vs_source,
+        "union_candidate_vs_baseline_loop_comparisons": union_cross_time,
+        "source_candidate_vs_baseline_loop_comparisons": source_cross_time,
+        "candidate_source_f32_tangent_canonicalization":
+            candidate_tangent_canonicalization,
+        "baseline_source_f32_tangent_canonicalization":
+            baseline_tangent_canonicalization,
+        "connected_inside_both_solid_evidence": (
+            dict(solid_evidence) if solid_evidence is not None else None),
+        "other_owner_remains_absent": True,
+        "all_loops_have_complete_source_lineage": True,
+    }
 
 
 def _section_comparison(candidate, baseline):
@@ -4730,11 +5623,14 @@ def _junction_station_evidence(declaration, expected_owner_ids,
     role = declaration.get("station_role")
     declared_owners = declaration.get("expected_owner_ids")
     anchor_owner = declaration.get("anchor_owner_id")
+    anchor_role = declaration.get("anchor_role", role)
     ancestry = declaration.get("source_ancestry")
     if not isinstance(declaration_id, str) or not declaration_id.strip():
         issues.append("junction station declaration_id must be a nonempty string")
-    if role not in ("bridge", "target"):
-        issues.append("junction station role must be bridge or target")
+    if role not in ("bridge", "target", "junction"):
+        issues.append("junction station role must be bridge, target, or junction")
+    if anchor_role not in ("bridge", "target"):
+        issues.append("junction station material anchor role must be bridge or target")
     if (not isinstance(declared_owners, (list, tuple))
             or not all(type(value) is int for value in declared_owners)
             or tuple(sorted(declared_owners)) != tuple(expected_owner_ids)
@@ -4746,9 +5642,9 @@ def _junction_station_evidence(declaration, expected_owner_ids,
             or bridge_owner == target_owner
             or {bridge_owner, target_owner} != set(expected_owner_ids)):
         issues.append("junction station declaration must identify both branch roles")
-    if anchor_owner not in expected_owner_ids or anchor_owner != (
-            bridge_owner if role == "bridge" else
-            target_owner if role == "target" else None):
+    expected_anchor_owner = (bridge_owner if anchor_role == "bridge"
+                             else target_owner if anchor_role == "target" else None)
+    if anchor_owner not in expected_owner_ids or anchor_owner != expected_anchor_owner:
         issues.append("junction station anchor must identify its declared source branch")
     ancestry_keys = (
         "material_anchor_source_vertex_ids",
@@ -4820,7 +5716,9 @@ def _junction_station_evidence(declaration, expected_owner_ids,
                     != "numi.human.source-baseline-vessel-junction-station.v1"
                     or source_evidence.get("independent_source_baseline_only") is not True
                     or source_evidence.get("source_station_is_candidate_independent") is not True
-                    or source_evidence.get("typed_link") != expected_link):
+                    or source_evidence.get("typed_link") != expected_link
+                    or source_evidence.get("anchor_role", role) != anchor_role
+                    or source_evidence.get("station_role", anchor_role) != role):
                 issues.append(
                     "source station evidence is not independently bound to the audited typed link")
             if source_evidence.get("baseline_source_surface_bindings") != (
@@ -4876,6 +5774,287 @@ def _junction_station_evidence(declaration, expected_owner_ids,
     }
 
 
+def _shared_cut_mixed_union_loop_proof(
+    *,
+    expected_owner_ids,
+    candidate_union_section,
+    baseline_union_section,
+    candidate_branch_sections,
+    baseline_branch_sections,
+    solid_evidence,
+    station_declaration,
+):
+    """Prove a shared source cut whose connected union has one mixed-owner loop.
+
+    A single mixed-owner loop is not split into fabricated per-vessel boundary
+    loops. Both complete source branch sections, the exact positive-volume and
+    inside-both witnesses, the connected closed union, and same-station calibre
+    comparisons remain mandatory. A one-owner union boundary is a distinct
+    nested-section state and is rejected until a separate containment proof exists.
+    """
+    expected = tuple(sorted(set(map(int, expected_owner_ids))))
+    issues = []
+    station_evidence = _junction_station_evidence(
+        station_declaration, expected,
+        candidate_union_section, baseline_union_section,
+        candidate_branch_sections, baseline_branch_sections, solid_evidence)
+    if not station_evidence.get("declared"):
+        issues.extend(station_evidence.get("rejections", []))
+    if len(expected) != 2:
+        issues.append("shared-cut mixed-loop proof needs exactly two stable owners")
+
+    def one_loop(section, *, label, owner_ids):
+        loops = section.get("loop_metrics")
+        if (section.get("passed") is not True
+                or section.get("loop_count") != 1
+                or not isinstance(loops, list) or len(loops) != 1):
+            issues.append(f"{label} must retain exactly one closed loop")
+            return None
+        metric = loops[0]
+        if (metric.get("passed") is not True
+                or metric.get("lineage_available") is not True
+                or metric.get("lineage_complete") is not True
+                or metric.get("owner_ids") != list(owner_ids)
+                or not metric.get("source_face_ancestor_ids")
+                or metric.get("generated_face_count") != 0
+                or metric.get("unmapped_face_count") != 0
+                or not isinstance(metric.get("area_m2"), (int, float))
+                or not np.isfinite(metric["area_m2"]) or metric["area_m2"] <= 0.0
+                or not isinstance(metric.get("minimum_feret_width_m"), (int, float))
+                or not np.isfinite(metric["minimum_feret_width_m"])
+                or metric["minimum_feret_width_m"] <= 0.0):
+            issues.append(
+                f"{label} loop must have complete positive lineage from both source owners")
+            return None
+        return metric
+
+    candidate_union = one_loop(
+        candidate_union_section, label="candidate shared union",
+        owner_ids=expected)
+    baseline_union = one_loop(
+        baseline_union_section, label="baseline shared union",
+        owner_ids=expected)
+    candidate_branches = {}
+    baseline_branches = {}
+    for owner_id in expected:
+        candidate_branch = candidate_branch_sections.get(owner_id)
+        baseline_branch = baseline_branch_sections.get(owner_id)
+        if not isinstance(candidate_branch, Mapping):
+            issues.append(f"candidate source section is missing for owner {owner_id}")
+            continue
+        if not isinstance(baseline_branch, Mapping):
+            issues.append(f"baseline source section is missing for owner {owner_id}")
+            continue
+        candidate_metric = _section_metric_for_owner(
+            candidate_branch, owner_id, label=f"candidate source section {owner_id}")[0]
+        baseline_metric = _section_metric_for_owner(
+            baseline_branch, owner_id, label=f"baseline source section {owner_id}")[0]
+        if candidate_metric is None or baseline_metric is None:
+            issues.append(f"owner {owner_id} lacks a complete single source section")
+            continue
+        candidate_branches[owner_id] = candidate_metric
+        baseline_branches[owner_id] = baseline_metric
+
+    for side in ("candidate", "baseline"):
+        intersection_volume = solid_evidence.get(f"{side}_intersection_volume_m3")
+        union_volume = solid_evidence.get(f"{side}_union_volume_m3")
+        union_count = solid_evidence.get(f"{side}_union_component_count")
+        witness = solid_evidence.get(f"{side}_exact_inside_both_witness")
+        if (not isinstance(intersection_volume, (int, float))
+                or not np.isfinite(intersection_volume) or intersection_volume <= 0.0
+                or not isinstance(union_volume, (int, float))
+                or not np.isfinite(union_volume) or union_volume <= 0.0
+                or union_count != 1
+                or not isinstance(witness, Mapping)
+                or witness.get("first_location") != "inside"
+                or witness.get("second_location") != "inside"):
+            issues.append(
+                f"{side} shared junction needs positive overlap, exact inside-both witness, and one connected union")
+    if candidate_union is not None and baseline_union is not None:
+        union_comparison = _section_comparison(candidate_union, baseline_union)
+        if not union_comparison["passed"]:
+            issues.append("shared mixed-owner union calibre changed across the source state")
+    else:
+        union_comparison = None
+    branch_comparisons = {}
+    for owner_id in expected:
+        if owner_id not in candidate_branches or owner_id not in baseline_branches:
+            continue
+        comparison = _section_comparison(
+            candidate_branches[owner_id], baseline_branches[owner_id])
+        branch_comparisons[str(owner_id)] = comparison
+        if not comparison["passed"]:
+            issues.append(
+                f"owner {owner_id} shared-station section calibre changed across the source state")
+
+    return {
+        "passed": not issues,
+        "status": ("PASS_SHARED_TWO_OWNER_MIXED_UNION_LOOP"
+                   if not issues else "REJECT_SHARED_TWO_OWNER_MIXED_UNION_LOOP"),
+        "method": (
+            "one closed mixed-owner union loop, complete source section for each branch, "
+            "positive intersection, exact inside-both witnesses, connected union, "
+            "and unchanged same-station area/minimum-Feret bounds"),
+        "scope": (
+            "only the independently source-declared shared station; no owner loop is "
+            "fabricated and no nested one-owner union boundary is accepted"),
+        "station_applicability_mode": "SHARED_TWO_OWNER_CUT",
+        "junction_station": station_evidence,
+        "candidate_union_loop": candidate_union,
+        "baseline_union_loop": baseline_union,
+        "candidate_source_sections_by_owner": {
+            str(owner): metric for owner, metric in sorted(candidate_branches.items())},
+        "baseline_source_sections_by_owner": {
+            str(owner): metric for owner, metric in sorted(baseline_branches.items())},
+        "shared_union_calibre_comparison": union_comparison,
+        "source_branch_calibre_comparisons": branch_comparisons,
+        "source_pair_and_solid_evidence": dict(solid_evidence),
+        "rejections": issues,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+
+
+def _validated_same_material_station_calibre_by_owner(
+    value, *, expected_owner_ids, station_declaration, solid_evidence,
+):
+    """Validate owner-bound intrinsic calibre proofs for cross-time comparison."""
+    issues = []
+    expected = tuple(sorted(expected_owner_ids))
+    if not isinstance(value, Mapping) or set(value) != set(expected):
+        return {}, [
+            "same-material-station calibre evidence must cover exactly both vessel owners"]
+    bridge_owner = station_declaration.get("bridge_owner_id")
+    target_owner = station_declaration.get("target_owner_id")
+    role_owner = {"bridge": bridge_owner, "target": target_owner}
+    if set(role_owner.values()) != set(expected):
+        issues.append("station declaration does not map both material-section roles")
+    ancestry_keys = (
+        "material_anchor_source_vertex_ids",
+        "tangent_support_source_vertex_ids",
+        "frozen_collar_face_ids",
+    )
+    expected_bounds = {"area": [0.8, 1.25], "minimum_feret_width": [0.9, 1.1]}
+    baseline_bindings = solid_evidence.get("baseline_source_surface_bindings")
+    normalized = {}
+    for owner_id in expected:
+        entry = value.get(owner_id)
+        if not isinstance(entry, Mapping):
+            issues.append(f"same-material-station proof for owner {owner_id} is missing")
+            continue
+        role = entry.get("station_role")
+        if role not in ("bridge", "target") or role_owner.get(role) != owner_id:
+            issues.append(f"same-material-station proof has a wrong role for owner {owner_id}")
+        declaration_id = entry.get("source_station_declaration_id")
+        if not isinstance(declaration_id, str) or not declaration_id.strip():
+            issues.append(f"same-material-station proof has no declaration id for owner {owner_id}")
+        ancestry = entry.get("source_station_ancestry")
+        if not isinstance(ancestry, Mapping):
+            issues.append(f"same-material-station proof has no source ancestry for owner {owner_id}")
+            ancestry = {}
+        normalized_ancestry = {}
+        for key in ancestry_keys:
+            ids = ancestry.get(key)
+            if (not isinstance(ids, (list, tuple)) or not ids
+                    or any(type(item) is not int or item < 0 for item in ids)):
+                issues.append(
+                    f"same-material-station source ancestry {key} is invalid for owner {owner_id}")
+                normalized_ancestry[key] = []
+            else:
+                normalized_ancestry[key] = list(ids)
+
+        proof = entry.get("transport_proof")
+        if not isinstance(proof, Mapping):
+            issues.append(f"same-material-station transport proof is missing for owner {owner_id}")
+            continue
+        if (proof.get("schema") != "numi.human.source-material-section-transport.v1"
+                or proof.get("passed") is not True
+                or proof.get("typed_identity") != [51011, owner_id]
+                or proof.get("source_station_ancestry_sha256")
+                    != _canonical_record_sha256(normalized_ancestry)
+                or proof.get("candidate_geometry_used_only_for_local_motion_fit") is not True
+                or proof.get("all_exact_coordinate_aliases_preserved") is not True
+                or proof.get("anatomical_admission") is not False
+                or proof.get("native_admission") is not False):
+            issues.append(f"same-material-station transport binding failed for owner {owner_id}")
+
+        baseline_binding = proof.get("baseline_surface_binding")
+        candidate_binding = proof.get("candidate_surface_binding")
+        declared_baseline = entry.get("baseline_surface_binding")
+        declared_candidate = entry.get("candidate_surface_binding")
+        for label, binding in (("baseline", baseline_binding), ("candidate", candidate_binding)):
+            if (not isinstance(binding, Mapping)
+                    or binding.get("identity") != [51011, owner_id]
+                    or any(not isinstance(binding.get(name), str)
+                           or len(binding[name]) != 64
+                           or any(ch not in "0123456789abcdef" for ch in binding[name])
+                           for name in ("positions_sha256", "faces_sha256",
+                                        "source_vertex_ids_sha256"))):
+                issues.append(
+                    f"same-material-station {label} surface binding is invalid for owner {owner_id}")
+        if baseline_binding != declared_baseline or candidate_binding != declared_candidate:
+            issues.append(f"same-material-station surfaces differ from current owner {owner_id}")
+        if (baseline_binding is not None and isinstance(baseline_bindings, Mapping)
+                and baseline_binding != baseline_bindings.get(role)):
+            issues.append(f"same-material-station baseline differs from junction source {owner_id}")
+        if (isinstance(baseline_binding, Mapping)
+                and isinstance(candidate_binding, Mapping)
+                and (baseline_binding.get("faces_sha256")
+                     != candidate_binding.get("faces_sha256")
+                     or baseline_binding.get("source_vertex_ids_sha256")
+                     != candidate_binding.get("source_vertex_ids_sha256"))):
+            issues.append(f"same-material-station ancestry changed for owner {owner_id}")
+
+        calibre = proof.get("material_section_calibre")
+        if not isinstance(calibre, Mapping):
+            issues.append(f"same-material-station calibre record is missing for owner {owner_id}")
+            continue
+        if (calibre.get("passed") is not True
+                or calibre.get("declared_preservation_intervals") != expected_bounds
+                or calibre.get("declared_maximum_warp_to_feret_ratio") != 0.01
+                or calibre.get("source_material_ring_is_simple_closed") is not True
+                or calibre.get("candidate_material_ring_is_simple_closed") is not True
+                or calibre.get("source_primary_simple_polygon_triangulation_passed") is not True
+                or calibre.get("source_alternate_simple_polygon_triangulation_passed") is not True
+                or calibre.get("candidate_primary_simple_polygon_triangulation_passed") is not True
+                or calibre.get("candidate_alternate_simple_polygon_triangulation_passed") is not True
+                or calibre.get("candidate_triangulations_preserve_candidate_ring_orientation") is not True
+                or calibre.get("source_and_candidate_ring_orientation_match") is not True
+                or calibre.get("candidate_area_triangulations_are_measurement_only") is not True
+                or calibre.get("virtual_disk_area_not_physical_tissue_area") is not True
+                or calibre.get("clinical_calibre_claim") is not False):
+            issues.append(f"same-material-station calibre invariants failed for owner {owner_id}")
+        ratio_fields = (
+            "source_primary_virtual_disk_area_ratio",
+            "source_alternate_virtual_disk_area_ratio",
+            "candidate_projected_area_ratio",
+            "candidate_primary_virtual_disk_area_ratio",
+            "candidate_alternate_virtual_disk_area_ratio",
+        )
+        for key in ratio_fields:
+            ratio = calibre.get(key)
+            if (not isinstance(ratio, (int, float)) or isinstance(ratio, bool)
+                    or not np.isfinite(ratio) or not 0.8 <= ratio <= 1.25):
+                issues.append(f"same-material-station {key} is outside bounds for owner {owner_id}")
+        width_interval = calibre.get("minimum_feret_width_ratio_interval")
+        if (not isinstance(width_interval, (list, tuple)) or len(width_interval) != 2
+                or any(not isinstance(item, (int, float)) or isinstance(item, bool)
+                       or not np.isfinite(item) for item in width_interval)
+                or width_interval[0] < 0.9 or width_interval[1] > 1.1):
+            issues.append(f"same-material-station width interval is outside bounds for owner {owner_id}")
+        warp = calibre.get("maximum_warp_to_source_minimum_feret_ratio")
+        if (not isinstance(warp, (int, float)) or isinstance(warp, bool)
+                or not np.isfinite(warp) or warp > 0.01):
+            issues.append(f"same-material-station warp exceeds its method bound for owner {owner_id}")
+        normalized[owner_id] = {
+            "station_role": role,
+            "source_station_declaration_id": declaration_id,
+            "source_station_ancestry": normalized_ancestry,
+            "transport_proof": dict(proof),
+        }
+    return normalized, issues
+
+
 def _junction_aware_two_loop_section_proof(
     *,
     expected_owner_ids,
@@ -4885,6 +6064,8 @@ def _junction_aware_two_loop_section_proof(
     baseline_branch_sections,
     solid_evidence,
     station_declaration=None,
+    same_material_station_calibre_by_owner=None,
+    cross_time_calibre_policy=None,
 ):
     """Verify one explicit two-vessel Y-junction section without generalizing it.
 
@@ -4903,6 +6084,24 @@ def _junction_aware_two_loop_section_proof(
         candidate_branch_sections, baseline_branch_sections, solid_evidence)
     if not station_evidence["declared"]:
         issues.extend(station_evidence["rejections"])
+    material_policy_active = (
+        cross_time_calibre_policy == "SOURCE_MATERIAL_SECTION_FRAME_V1")
+    same_material_calibre = {}
+    if material_policy_active:
+        if not isinstance(station_declaration, Mapping):
+            issues.append("same-material-station calibre needs an explicit station declaration")
+        else:
+            same_material_calibre, material_issues = (
+                _validated_same_material_station_calibre_by_owner(
+                    same_material_station_calibre_by_owner,
+                    expected_owner_ids=expected_owner_ids,
+                    station_declaration=station_declaration,
+                    solid_evidence=solid_evidence))
+            issues.extend(material_issues)
+    elif cross_time_calibre_policy is not None:
+        issues.append("unsupported cross-time calibre measurement policy")
+    elif same_material_station_calibre_by_owner is not None:
+        issues.append("same-material-station proofs require their explicit measurement policy")
     if len(expected_owner_ids) != 2 or any(owner <= 0 for owner in expected_owner_ids):
         issues.append("junction proof requires exactly two distinct positive stable owners")
 
@@ -5043,9 +6242,19 @@ def _junction_aware_two_loop_section_proof(
         for owner_id in expected_owner_ids:
             comparison = _section_comparison(
                 candidate_lobes[owner_id], baseline_lobes[owner_id])
+            if material_policy_active:
+                comparison = {
+                    **comparison,
+                    "measurement_scope": "CROSS_OWNER_PLANE_RESLICE_DIAGNOSTIC_ONLY",
+                    "accepted_as_intrinsic_material_calibre": False,
+                    "reason": (
+                        "the shared junction plane belongs to one source vessel; "
+                        "cross-time lobe change is evaluated at each owner's "
+                        "authenticated material station instead"),
+                }
             comparisons.setdefault(str(owner_id), {})[
                 "candidate_union_lobe_vs_baseline_union_lobe"] = comparison
-            if not comparison["passed"]:
+            if not comparison["passed"] and not material_policy_active:
                 issues.append(
                     f"candidate union lobe calibre changed for vessel {owner_id}")
     if set(candidate_branches) == set(expected_owner_ids) and \
@@ -5053,11 +6262,45 @@ def _junction_aware_two_loop_section_proof(
         for owner_id in expected_owner_ids:
             comparison = _section_comparison(
                 candidate_branches[owner_id], baseline_branches[owner_id])
+            if material_policy_active:
+                comparison = {
+                    **comparison,
+                    "measurement_scope": "CROSS_OWNER_PLANE_RESLICE_DIAGNOSTIC_ONLY",
+                    "accepted_as_intrinsic_material_calibre": False,
+                    "reason": (
+                        "this branch section is measured on the other vessel's "
+                        "junction plane; intrinsic change is checked at its own "
+                        "authenticated material station"),
+                }
             comparisons.setdefault(str(owner_id), {})[
                 "candidate_source_section_vs_baseline_source_section"] = comparison
-            if not comparison["passed"]:
+            if not comparison["passed"] and not material_policy_active:
                 issues.append(
                     f"candidate source-section calibre changed for vessel {owner_id}")
+    if same_material_calibre:
+        for owner_id, record in same_material_calibre.items():
+            proof = record["transport_proof"]
+            calibre = proof["material_section_calibre"]
+            comparisons.setdefault(str(owner_id), {})[
+                "candidate_vs_baseline_at_owner_material_station"] = {
+                    "passed": proof.get("passed") is True
+                    and calibre.get("passed") is True,
+                    "measurement_scope": "AUTHENTICATED_SAME_MATERIAL_STATION",
+                    "station_role": record["station_role"],
+                    "source_station_declaration_id": record[
+                        "source_station_declaration_id"],
+                    "typed_identity": proof.get("typed_identity"),
+                    "source_station_ancestry_sha256": proof.get(
+                        "source_station_ancestry_sha256"),
+                    "candidate_to_baseline_ratios": {
+                        "projected_area": calibre.get(
+                            "candidate_projected_area_ratio"),
+                        "minimum_feret_width_interval": calibre.get(
+                            "minimum_feret_width_ratio_interval"),
+                    },
+                    "declared_preservation_intervals": calibre.get(
+                        "declared_preservation_intervals"),
+                }
 
     return {
         "passed": not issues,
@@ -5079,9 +6322,217 @@ def _junction_aware_two_loop_section_proof(
             str(owner): metric for owner, metric in sorted(baseline_branches.items())},
         "solid_evidence": dict(solid_evidence),
         "per_vessel_section_comparisons": comparisons,
+        "cross_time_calibre_policy": cross_time_calibre_policy,
+        "same_material_station_calibre_by_owner": {
+            str(owner): {
+                "station_role": record["station_role"],
+                "source_station_declaration_id": record[
+                    "source_station_declaration_id"],
+                "transport_proof": record["transport_proof"],
+            } for owner, record in sorted(same_material_calibre.items())},
         "rejections": issues,
         "floating_csg_topology_limit": "Manifold NoError and decompose() are numerical CSG diagnostics, not exact Boolean topology proof",
         "calibre_scope": "source-geometry consistency against the same compiled branch lineage, not measured or clinical calibre",
+    }
+
+
+def _strict_polygon_containment2d(inner_points, outer_points):
+    """Classify one simple polygon strictly inside another with exact predicates."""
+    inner = np.asarray(inner_points, dtype=np.float64)
+    outer = np.asarray(outer_points, dtype=np.float64)
+    if not (_simple_closed_polygon2d_exact(inner)
+            and _simple_closed_polygon2d_exact(outer)):
+        return {"passed": False, "reason": "both section loops must be simple closed polygons"}
+    crossings = []
+    for first in range(len(inner)):
+        first_next = (first + 1) % len(inner)
+        for second in range(len(outer)):
+            second_next = (second + 1) % len(outer)
+            if _segments_intersect2d_exact(
+                    inner[first], inner[first_next], outer[second], outer[second_next]):
+                crossings.append([first, second])
+    if crossings:
+        return {
+            "passed": False,
+            "reason": "nested section boundaries touch or cross",
+            "boundary_contact_or_crossing_edge_pairs": crossings,
+        }
+
+    def inside(point, polygon):
+        px, py = (Fraction.from_float(float(value)) for value in point)
+        is_inside = False
+        for index, first in enumerate(polygon):
+            second = polygon[(index + 1) % len(polygon)]
+            ax, ay = (Fraction.from_float(float(value)) for value in first)
+            bx, by = (Fraction.from_float(float(value)) for value in second)
+            orientation = _orient2d_exact(first, second, point)
+            if orientation == 0 and _point_on_segment2d_exact(point, first, second):
+                return False
+            if (ay > py) != (by > py):
+                x_cross = ax + (py - ay) * (bx - ax) / (by - ay)
+                if x_cross == px:
+                    return False
+                if x_cross > px:
+                    is_inside = not is_inside
+        return is_inside
+
+    point_results = [inside(point, outer) for point in inner]
+    return {
+        "passed": bool(point_results) and all(point_results),
+        "reason": None if point_results and all(point_results)
+            else "not every nested owner section vertex is strictly inside the union boundary",
+        "inner_vertex_count": len(inner),
+        "strictly_inside_vertex_count": sum(point_results),
+        "boundary_contact_or_crossing_edge_pairs": [],
+        "uses_exact_float64_rational_orientation_predicates": True,
+    }
+
+
+def _shared_cut_nested_union_loop_proof(
+    *, expected_owner_ids, candidate_union_section, baseline_union_section,
+    candidate_branch_sections, baseline_branch_sections, solid_evidence,
+    station_declaration,
+):
+    """Prove nested sections without inventing an owner loop on the union boundary."""
+    expected = tuple(sorted(set(map(int, expected_owner_ids))))
+    issues = []
+    station_evidence = _junction_station_evidence(
+        station_declaration, expected, candidate_union_section,
+        baseline_union_section, candidate_branch_sections,
+        baseline_branch_sections, solid_evidence)
+    if not station_evidence.get("declared"):
+        issues.extend(station_evidence.get("rejections", []))
+    if len(expected) != 2:
+        issues.append("nested shared-cut proof needs exactly two stable owners")
+
+    def one_loop(section, label):
+        loops = section.get("loop_metrics")
+        if (section.get("passed") is not True or section.get("loop_count") != 1
+                or not isinstance(loops, list) or len(loops) != 1):
+            issues.append(f"{label} must retain one closed union/owner loop")
+            return None
+        metric = loops[0]
+        owners = metric.get("owner_ids")
+        points = metric.get("projected_loop_vertices")
+        if (metric.get("passed") is not True
+                or metric.get("lineage_available") is not True
+                or metric.get("lineage_complete") is not True
+                or not isinstance(owners, list) or len(owners) != 1
+                or owners[0] not in expected
+                or not metric.get("source_face_ancestor_ids")
+                or metric.get("generated_face_count") != 0
+                or metric.get("unmapped_face_count") != 0
+                or not isinstance(points, list) or len(points) < 3):
+            issues.append(f"{label} lacks one complete single-owner source loop")
+            return None
+        return metric
+
+    candidate_union = one_loop(candidate_union_section, "candidate union boundary")
+    baseline_union = one_loop(baseline_union_section, "baseline union boundary")
+    if candidate_union is None or baseline_union is None:
+        union_owner = None
+    elif candidate_union["owner_ids"] != baseline_union["owner_ids"]:
+        issues.append("candidate and baseline nested union boundary owners differ")
+        union_owner = None
+    else:
+        union_owner = int(candidate_union["owner_ids"][0])
+
+    branch_metrics = {"candidate": {}, "baseline": {}}
+    for state, sections in (("candidate", candidate_branch_sections),
+                            ("baseline", baseline_branch_sections)):
+        for owner_id in expected:
+            section = sections.get(owner_id)
+            if not isinstance(section, Mapping):
+                issues.append(f"{state} complete owner section is missing for {owner_id}")
+                continue
+            metric, reason = _section_metric_for_owner(
+                section, owner_id, label=f"{state} nested owner section {owner_id}")
+            if metric is None:
+                issues.append(reason or f"{state} owner section {owner_id} is invalid")
+                continue
+            points = metric.get("projected_loop_vertices")
+            if not isinstance(points, list) or len(points) < 3:
+                issues.append(f"{state} owner section {owner_id} lacks ordered boundary points")
+                continue
+            branch_metrics[state][owner_id] = metric
+
+    containment = {}
+    branch_comparisons = {}
+    union_comparison = None
+    outer_correspondence = {}
+    if (union_owner is not None
+            and set(branch_metrics["candidate"]) == set(expected)
+            and set(branch_metrics["baseline"]) == set(expected)):
+        nested_owner = next(owner for owner in expected if owner != union_owner)
+        for state, union_metric, metrics in (
+            ("candidate", candidate_union, branch_metrics["candidate"]),
+            ("baseline", baseline_union, branch_metrics["baseline"]),
+        ):
+            containment[state] = _strict_polygon_containment2d(
+                metrics[nested_owner]["projected_loop_vertices"],
+                union_metric["projected_loop_vertices"])
+            if not containment[state]["passed"]:
+                issues.append(f"{state} nested owner section is not strictly inside the union boundary")
+            outer_correspondence[state] = _section_comparison(
+                metrics[union_owner], union_metric)
+            if not outer_correspondence[state]["passed"]:
+                issues.append(f"{state} union boundary does not match outer owner section calibre")
+            outer_ancestors = set(metrics[union_owner].get("source_face_ancestor_ids", []))
+            union_ancestors = set(union_metric.get("source_face_ancestor_ids", []))
+            if not union_ancestors or not union_ancestors <= outer_ancestors:
+                issues.append(f"{state} union boundary ancestry is not contained in outer owner section ancestry")
+        for owner_id in expected:
+            branch_comparisons[str(owner_id)] = _section_comparison(
+                branch_metrics["candidate"][owner_id],
+                branch_metrics["baseline"][owner_id])
+            if not branch_comparisons[str(owner_id)]["passed"]:
+                issues.append(f"owner {owner_id} nested section calibre changed")
+        union_comparison = _section_comparison(candidate_union, baseline_union)
+        if not union_comparison["passed"]:
+            issues.append("nested union boundary calibre changed")
+    else:
+        nested_owner = None
+        issues.append("candidate and baseline need complete single sections for both owners")
+
+    for side in ("candidate", "baseline"):
+        intersection_volume = solid_evidence.get(f"{side}_intersection_volume_m3")
+        union_volume = solid_evidence.get(f"{side}_union_volume_m3")
+        witness = solid_evidence.get(f"{side}_exact_inside_both_witness")
+        if (not isinstance(intersection_volume, (int, float))
+                or not np.isfinite(intersection_volume) or intersection_volume <= 0.0
+                or not isinstance(union_volume, (int, float))
+                or not np.isfinite(union_volume) or union_volume <= 0.0
+                or solid_evidence.get(f"{side}_union_component_count") != 1
+                or not isinstance(witness, Mapping)
+                or witness.get("first_location") != "inside"
+                or witness.get("second_location") != "inside"):
+            issues.append(
+                f"{side} nested port needs positive overlap, exact inside-both witness, and one connected union")
+
+    return {
+        "passed": not issues,
+        "status": (
+            "PASS_NESTED_SINGLE_OWNER_UNION_WITH_COMPLETE_INNER_SECTION"
+            if not issues else "REJECT_NESTED_SINGLE_OWNER_UNION_SECTION"),
+        "method": (
+            "one source-lineaged union boundary, complete source sections for both owners, "
+            "strict exact 2D containment, positive overlap, inside-both witness, "
+            "connected union, and unchanged section calibre bounds"),
+        "station_applicability_mode": "SHARED_TWO_OWNER_CUT",
+        "union_boundary_owner_id": union_owner,
+        "nested_owner_id": nested_owner,
+        "junction_station": station_evidence,
+        "candidate_union_loop": candidate_union,
+        "baseline_union_loop": baseline_union,
+        "nested_section_containment": containment,
+        "outer_owner_union_calibre_correspondence": outer_correspondence,
+        "source_branch_calibre_comparisons": branch_comparisons,
+        "shared_union_calibre_comparison": union_comparison,
+        "source_pair_and_solid_evidence": dict(solid_evidence),
+        "rejections": issues,
+        "fabricated_owner_loops": False,
+        "anatomical_admission": False,
+        "native_admission": False,
     }
 
 
@@ -5092,6 +6543,7 @@ def audit_brachiocephalic_port_pair_continuity(
     target_route_anchor_world_m=None,
     junction_station_declarations=None,
     source_station_declarations=None,
+    source_station_applicability_by_role=None,
     candidate_station_transport_policy=None,
     transverse_witness_provider=None,
     target_station_candidate_fractions=None,
@@ -5130,15 +6582,32 @@ def audit_brachiocephalic_port_pair_continuity(
     if source_station_declarations is None:
         source_station_declarations = {}
     _require(isinstance(source_station_declarations, Mapping)
-             and set(source_station_declarations) <= {"bridge", "target"},
-             "source station declarations must be keyed by branch role")
+             and set(source_station_declarations) <= {"bridge", "target", "junction"},
+             "source station declarations must be keyed by branch role or junction")
+    if source_station_applicability_by_role is None:
+        source_station_applicability_by_role = {}
+    _require(isinstance(source_station_applicability_by_role, Mapping)
+             and set(source_station_applicability_by_role)
+                 <= {"bridge", "target", "junction"},
+             "source station applicability must be keyed by branch role or junction")
     _require(candidate_station_transport_policy in (
                  None, "SOURCE_LOCAL_PROPER_RIGID_FIT_V1",
                  "SOURCE_MATERIAL_SECTION_FRAME_V1"),
              "unknown candidate source-station transport policy")
+    required_station_roles = {"bridge", "target"}
+    if "junction" in source_station_declarations:
+        required_station_roles.add("junction")
     if candidate_station_transport_policy is not None:
-        _require(set(source_station_declarations) == {"bridge", "target"},
-                 "source-station transport needs both independent source station declarations")
+        _require(set(source_station_declarations) == required_station_roles,
+                 "source-station transport needs every declared branch and junction station")
+    if candidate_station_transport_policy == "SOURCE_MATERIAL_SECTION_FRAME_V1":
+        _require(set(source_station_applicability_by_role) == required_station_roles,
+                 "material-section transport needs explicit source-baseline applicability for every station")
+    elif source_station_applicability_by_role:
+        _require(set(source_station_declarations) >= required_station_roles
+                 and set(source_station_applicability_by_role)
+                     <= set(source_station_declarations),
+                 "source-baseline station applicability needs matching declared stations")
     bridge = _prepare_vessel(verifier, bridge_key, bridge_surface)
     target = _prepare_vessel(verifier, target_key, target_surface)
     base_bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
@@ -5245,13 +6714,21 @@ def audit_brachiocephalic_port_pair_continuity(
         "baseline_port_boundary": baseline_partial_overlap_boundary,
     }
     runtime_source_station_declarations = {}
-    for role, surface, base_surface, patch_faces in (
-        ("bridge", bridge, base_bridge, bridge_patch),
-        ("target", target, base_target, target_patch),
-    ):
+    for role in ("bridge", "target", "junction"):
         declaration = source_station_declarations.get(role)
         if declaration is None:
             continue
+        _require(isinstance(declaration, Mapping),
+                 f"{role} source station declaration must be an object")
+        anchor_role = declaration.get("anchor_role", role)
+        _require(role in ("bridge", "target", "junction")
+                 and anchor_role in ("bridge", "target")
+                 and (role != "junction" or declaration.get("station_role") == "junction"),
+                 f"{role} source station has an invalid material anchor role")
+        surface, base_surface, patch_faces = (
+            (bridge, base_bridge, bridge_patch)
+            if anchor_role == "bridge"
+            else (target, base_target, target_patch))
         _require(isinstance(declaration, Mapping)
                  and declaration.get("schema")
                      == "numi.human.source-baseline-junction-station-declaration.v1",
@@ -5265,8 +6742,9 @@ def audit_brachiocephalic_port_pair_continuity(
         _require(declaration.get("typed_link")
                  == [list(bridge_key), list(target_key)]
                  and declaration.get("station_role") == role
+                 and declaration.get("anchor_role", role) == anchor_role
                  and declaration.get("anchor_owner_id")
-                     == (bridge_key[1] if role == "bridge" else target_key[1]),
+                     == (bridge_key[1] if anchor_role == "bridge" else target_key[1]),
                  f"{role} source station declaration has the wrong typed owner")
         _require(source_evidence.get("typed_link")
                  == source_baseline_evidence_fields["typed_vessel_link"],
@@ -5296,7 +6774,8 @@ def audit_brachiocephalic_port_pair_continuity(
                  and source_evidence.get("station_selection_policy")
                      == source_spec.get("station_selection_policy")
                  and source_spec.get("station_selection_policy") in (
-                     "GLOBAL_SOURCE_PCA_V1", "COLLAR_LOCAL_PCA_V1"),
+                     "GLOBAL_SOURCE_PCA_V1", "COLLAR_LOCAL_PCA_V1",
+                     "SOURCE_INTERFACE_PCA_PLANE_V1"),
                  f"{role} source station specification hash or policy does not match")
         expected_declaration_id = (
             "source-baseline-junction-station-v1:"
@@ -5312,7 +6791,8 @@ def audit_brachiocephalic_port_pair_continuity(
             )
         }
         _require(declaration.get("source_ancestry") == expected_station_ancestry
-                 and source_evidence.get("anchor_role") == role,
+                 and source_evidence.get("anchor_role", role) == anchor_role
+                 and source_evidence.get("station_role", anchor_role) == role,
                  f"{role} source station ancestry or role differs")
         _require(
             source_evidence.get("baseline_source_surface_bindings")
@@ -5339,6 +6819,23 @@ def audit_brachiocephalic_port_pair_continuity(
                      and declared_section.get("source_face_ancestor_ids")
                          == actual_section.get("source_face_ancestor_ids"),
                      f"{role} source-local section is not reproduced from the current independent baseline")
+        if source_evidence.get("station_selection_policy") == "SOURCE_INTERFACE_PCA_PLANE_V1":
+            declared_sections = source_evidence.get(
+                "baseline_shared_source_station_sections")
+            _require(isinstance(declared_sections, Mapping)
+                     and set(declared_sections) == {
+                         str(bridge_key[1]), str(target_key[1])},
+                     f"{role} source-interface declaration must retain both owner sections")
+            for branch_surface, owner_id in (
+                (base_bridge, bridge_key[1]), (base_target, target_key[1])):
+                actual_section = _source_surface_section(branch_surface, source_spec)
+                _require(actual_section.get("passed") is True
+                         and actual_section.get("loop_count") == 1
+                         and len(actual_section.get("loop_metrics", [])) == 1
+                         and actual_section["loop_metrics"][0].get("lineage_complete") is True
+                         and actual_section["loop_metrics"][0].get("owner_ids") == [owner_id]
+                         and declared_sections.get(str(owner_id)) == actual_section,
+                         f"{role} baseline source-interface section differs for owner {owner_id}")
         baseline_spec = _transport_material_station(base_surface, source_spec)
         candidate_station_transport_proof = None
         if candidate_station_transport_policy == "SOURCE_LOCAL_PROPER_RIGID_FIT_V1":
@@ -5364,10 +6861,12 @@ def audit_brachiocephalic_port_pair_continuity(
         runtime_source_station_declarations[role] = {
             "declaration_id": declaration.get("declaration_id"),
             "station_role": role,
+            "anchor_role": anchor_role,
             "expected_owner_ids": sorted((bridge_key[1], target_key[1])),
             "bridge_owner_id": bridge_key[1],
             "target_owner_id": target_key[1],
-            "anchor_owner_id": bridge_key[1] if role == "bridge" else target_key[1],
+            "anchor_owner_id": bridge_key[1] if anchor_role == "bridge" else target_key[1],
+            "candidate_station_transport_policy": candidate_station_transport_policy,
             "source_ancestry": expected_station_ancestry,
             "source_station_spec": dict(source_spec),
             "candidate_station": candidate_spec,
@@ -5375,6 +6874,25 @@ def audit_brachiocephalic_port_pair_continuity(
             "candidate_station_transport_proof": candidate_station_transport_proof,
             "source_evidence": dict(source_evidence),
         }
+
+    runtime_source_station_applicability = {}
+    for role, declaration in source_station_applicability_by_role.items():
+        source_declaration = runtime_source_station_declarations.get(role)
+        _require(isinstance(source_declaration, Mapping),
+                 f"{role} station applicability lacks its source station declaration")
+        anchor_owner = source_declaration["anchor_owner_id"]
+        recomputed_applicability = declare_source_baseline_station_applicability(
+            verifier,
+            bridge_key=bridge_key,
+            baseline_bridge_surface=base_bridge,
+            target_key=target_key,
+            baseline_target_surface=base_target,
+            station_role=role,
+            anchor_owner_id=anchor_owner,
+            source_station=source_declaration["source_station_spec"])
+        _require(declaration == recomputed_applicability,
+                 f"{role} station applicability differs from the current source baseline")
+        runtime_source_station_applicability[role] = recomputed_applicability
 
     first, first_info = _make_manifold(bridge, manifold3d)
     second, second_info = _make_manifold(target, manifold3d)
@@ -5440,12 +6958,23 @@ def audit_brachiocephalic_port_pair_continuity(
              f"port {bridge_key}/{target_key} fails overlap, exact inside witness, or closed connected union")
 
     station_specs_by_role = {}
-    for role, surface, base_surface, supplied_station, collar_faces, route_anchor in (
+    station_inputs = [
         ("bridge", bridge, base_bridge, bridge_station, bridge_patch,
          bridge_route_anchor_world_m),
         ("target", target, base_target, target_station, target_patch,
          target_route_anchor_world_m),
-    ):
+    ]
+    if "junction" in runtime_source_station_declarations:
+        junction_anchor_role = runtime_source_station_declarations[
+            "junction"]["anchor_role"]
+        station_inputs.append((
+            "junction",
+            bridge if junction_anchor_role == "bridge" else target,
+            base_bridge if junction_anchor_role == "bridge" else base_target,
+            None,
+            bridge_patch if junction_anchor_role == "bridge" else target_patch,
+            None))
+    for role, surface, base_surface, supplied_station, collar_faces, route_anchor in station_inputs:
         source_declaration = runtime_source_station_declarations.get(role)
         if source_declaration is not None:
             candidate_spec = source_declaration["candidate_station"]
@@ -5465,10 +6994,7 @@ def audit_brachiocephalic_port_pair_continuity(
     target_station = station_specs_by_role["target"]["candidate"]
     base_target_station = station_specs_by_role["target"]["baseline"]
     station_results = {}
-    for role, surface, base_surface in (
-        ("bridge", bridge, base_bridge),
-        ("target", target, base_target),
-    ):
+    for role, surface, base_surface, *_rest in station_inputs:
         spec = station_specs_by_role[role]["candidate"]
         baseline_spec = station_specs_by_role[role]["baseline"]
         source_declaration = station_specs_by_role[role]["source_declaration"]
@@ -5485,18 +7011,21 @@ def audit_brachiocephalic_port_pair_continuity(
                 collar_face_ids=collar_faces,
                 label=f"{role} baseline local station")
         else:
-            candidate_section = _source_surface_section(surface, spec)
-            baseline_section = _source_surface_section(base_surface, baseline_spec)
+            candidate_section = _source_surface_section(
+                surface, spec,
+                include_projected_loop_vertices=(role == "junction"),
+                include_face_segment_records=True)
+            baseline_section = _source_surface_section(
+                base_surface, baseline_spec,
+                include_projected_loop_vertices=(role == "junction"),
+                include_face_segment_records=True)
         station_results[role] = {
             "station": spec,
             "baseline_station_transported_by_ancestry": baseline_spec,
-            "source_station_declaration": (
-                station_specs_by_role[role]["source_declaration"]),
+            "source_station_declaration": source_declaration,
             "candidate_station_transport_proof": (
-                station_specs_by_role[role]["source_declaration"].get(
-                    "candidate_station_transport_proof")
-                if station_specs_by_role[role]["source_declaration"] is not None
-                else None),
+                source_declaration.get("candidate_station_transport_proof")
+                if source_declaration is not None else None),
             "candidate": candidate_section,
             "baseline": baseline_section,
             "candidate_vs_baseline": _section_comparison(
@@ -5515,7 +7044,8 @@ def audit_brachiocephalic_port_pair_continuity(
         derived_csg=True,
         face_owner_ids=union_lineage["face_owner_ids"],
         face_source_ids=union_lineage["source_face_ids"],
-        face_generated_mask=union_lineage["generated_face_mask"])
+        face_generated_mask=union_lineage["generated_face_mask"],
+        include_face_segment_records=True)
     base_first, _ = _make_manifold(base_bridge, manifold3d)
     base_second, _ = _make_manifold(base_target, manifold3d)
     base_first_status, base_second_status = str(base_first.status()), str(base_second.status())
@@ -5536,21 +7066,46 @@ def audit_brachiocephalic_port_pair_continuity(
         base_bridge_station["tangent_world_unit"], derived_csg=True,
         face_owner_ids=base_union_lineage["face_owner_ids"],
         face_source_ids=base_union_lineage["source_face_ids"],
-        face_generated_mask=base_union_lineage["generated_face_mask"])
+        face_generated_mask=base_union_lineage["generated_face_mask"],
+        include_face_segment_records=True)
     union_target_section = _section_loops(
         union_positions, union_faces,
         target_station["section_center_world_m"], target_station["tangent_world_unit"],
         derived_csg=True,
         face_owner_ids=union_lineage["face_owner_ids"],
         face_source_ids=union_lineage["source_face_ids"],
-        face_generated_mask=union_lineage["generated_face_mask"])
+        face_generated_mask=union_lineage["generated_face_mask"],
+        include_face_segment_records=True)
     baseline_union_target_section = _section_loops(
         base_union_positions, base_union_faces,
         base_target_station["section_center_world_m"],
         base_target_station["tangent_world_unit"], derived_csg=True,
         face_owner_ids=base_union_lineage["face_owner_ids"],
         face_source_ids=base_union_lineage["source_face_ids"],
-        face_generated_mask=base_union_lineage["generated_face_mask"])
+        face_generated_mask=base_union_lineage["generated_face_mask"],
+        include_face_segment_records=True)
+    if "junction" in station_specs_by_role:
+        junction_station = station_specs_by_role["junction"]["candidate"]
+        base_junction_station = station_specs_by_role["junction"]["baseline"]
+        union_junction_section = _section_loops(
+            union_positions, union_faces,
+            junction_station["section_center_world_m"],
+            junction_station["tangent_world_unit"], derived_csg=True,
+            face_owner_ids=union_lineage["face_owner_ids"],
+            face_source_ids=union_lineage["source_face_ids"],
+            face_generated_mask=union_lineage["generated_face_mask"],
+            include_projected_loop_vertices=True)
+        baseline_union_junction_section = _section_loops(
+            base_union_positions, base_union_faces,
+            base_junction_station["section_center_world_m"],
+            base_junction_station["tangent_world_unit"], derived_csg=True,
+            face_owner_ids=base_union_lineage["face_owner_ids"],
+            face_source_ids=base_union_lineage["source_face_ids"],
+            face_generated_mask=base_union_lineage["generated_face_mask"],
+            include_projected_loop_vertices=True)
+    else:
+        junction_station = base_junction_station = None
+        union_junction_section = baseline_union_junction_section = None
 
     candidate_branch_components = {
         bridge_key[1]: len(first.decompose()),
@@ -5621,9 +7176,119 @@ def audit_brachiocephalic_port_pair_continuity(
         }
         return junction_evidence_cache
 
+    def same_material_station_calibre_by_owner():
+        if candidate_station_transport_policy != "SOURCE_MATERIAL_SECTION_FRAME_V1":
+            return None
+        result = {}
+        for role, owner_id, current_surface, baseline_surface in (
+            ("bridge", bridge_key[1], bridge, base_bridge),
+            ("target", target_key[1], target, base_target),
+        ):
+            declaration = runtime_source_station_declarations.get(role)
+            _require(isinstance(declaration, Mapping),
+                     f"{role} same-material station declaration is missing")
+            proof = declaration.get("candidate_station_transport_proof")
+            _require(isinstance(proof, Mapping),
+                     f"{role} same-material station transport proof is missing")
+            result[owner_id] = {
+                "station_role": role,
+                "source_station_declaration_id": declaration.get("declaration_id"),
+                "source_station_ancestry": declaration.get("source_ancestry"),
+                "transport_proof": proof,
+                "baseline_surface_binding": _source_geometry_binding(baseline_surface),
+                "candidate_surface_binding": _source_geometry_binding(current_surface),
+            }
+        return result
+
+    def observe_candidate_station_applicability(station_role, station):
+        source_declaration = runtime_source_station_declarations.get(station_role)
+        anchor_owner = (
+            source_declaration["anchor_owner_id"]
+            if isinstance(source_declaration, Mapping)
+            else bridge_key[1] if station_role == "bridge" else target_key[1])
+        records = {
+            str(bridge_key[1]): _source_station_owner_section(
+                bridge, station, bridge_key[1],
+                label=f"candidate bridge owner {bridge_key[1]}"),
+            str(target_key[1]): _source_station_owner_section(
+                target, station, target_key[1],
+                label=f"candidate target owner {target_key[1]}"),
+        }
+        present = sorted(int(owner) for owner, item in records.items()
+                         if item["status"] == "PRESENT_COMPLETE_SOURCE_LOOPS")
+        absent = sorted(int(owner) for owner, item in records.items()
+                        if item["status"] == "ABSENT_STRICTLY_ON_ONE_SIDE")
+        if present == sorted((bridge_key[1], target_key[1])) and not absent:
+            mode = "SHARED_TWO_OWNER_CUT"
+        elif present == [anchor_owner] and len(absent) == 1:
+            mode = "ANCHOR_ONLY_CUT"
+        else:
+            raise ValueError(
+                f"{station_role} candidate station is neither a complete shared cut "
+                "nor a strictly absent anchor-only cut")
+        return {
+            "applicability_mode": mode,
+            "station_role": station_role,
+            "anchor_owner_id": anchor_owner,
+            "candidate_station_sha256": _canonical_record_sha256(dict(station)),
+            "owner_status_by_id": records,
+            "present_owner_ids": present,
+            "absent_owner_ids": absent,
+            "candidate_geometry_used_for_observation": True,
+            "candidate_geometry_used_for_source_declaration": False,
+        }
+
     def compare_union_station(label, station_role, candidate_section, baseline_section,
                               candidate_station, baseline_station):
         source_declaration = runtime_source_station_declarations.get(station_role)
+        station_applicability = runtime_source_station_applicability.get(station_role)
+        if station_applicability is not None:
+            candidate_applicability = observe_candidate_station_applicability(
+                station_role, candidate_station)
+            _require(candidate_applicability["applicability_mode"]
+                     == station_applicability["applicability_mode"],
+                     f"{label} candidate cut applicability differs from its source declaration")
+            if station_applicability["applicability_mode"] == "ANCHOR_ONLY_CUT":
+                candidate_owner_sections = {
+                    bridge_key[1]: _source_surface_section(
+                        bridge, candidate_station, include_face_segment_records=True),
+                    target_key[1]: _source_surface_section(
+                        target, candidate_station, include_face_segment_records=True),
+                }
+                baseline_owner_sections = {
+                    bridge_key[1]: _source_surface_section(
+                        base_bridge, baseline_station, include_face_segment_records=True),
+                    target_key[1]: _source_surface_section(
+                        base_target, baseline_station, include_face_segment_records=True),
+                }
+                anchor_role = (
+                    "bridge" if station_applicability["anchor_owner_id"] == bridge_key[1]
+                    else "target")
+                candidate_anchor_surface = (
+                    bridge if anchor_role == "bridge" else target)
+                baseline_anchor_surface = (
+                    base_bridge if anchor_role == "bridge" else base_target)
+                owner_only = _anchor_only_union_station_proof(
+                    applicability=station_applicability,
+                    candidate_applicability=candidate_applicability,
+                    candidate_union=candidate_section,
+                    baseline_union=baseline_section,
+                    candidate_owner_sections=candidate_owner_sections,
+                    baseline_owner_sections=baseline_owner_sections,
+                    expected_owner_ids=(bridge_key[1], target_key[1]),
+                    candidate_anchor_surface=candidate_anchor_surface,
+                    baseline_anchor_surface=baseline_anchor_surface,
+                    candidate_station=candidate_station,
+                    baseline_station=baseline_station,
+                    anchor_role=anchor_role,
+                    solid_evidence=junction_solid_evidence())
+                return {
+                    **owner_only,
+                    "station_role": station_role,
+                    "source_station_declaration": source_declaration,
+                    "candidate_station": candidate_station,
+                    "baseline_station": baseline_station,
+                }
         collar_faces = _validated_source_collar_faces_by_owner(
             runtime_source_station_declarations,
             {"bridge": bridge_key[1], "target": target_key[1]})
@@ -5649,7 +7314,10 @@ def audit_brachiocephalic_port_pair_continuity(
         if (candidate_union_view.get("loop_count") == 1
                 and baseline_union_view.get("loop_count") == 1
                 and candidate_union_view.get("passed") is True
-                and baseline_union_view.get("passed") is True):
+                and baseline_union_view.get("passed") is True
+                and (station_applicability is None
+                     or station_applicability["applicability_mode"]
+                        != "SHARED_TWO_OWNER_CUT")):
             comparison = _section_comparison(
                 candidate_union_view, baseline_union_view)
             _require(comparison["passed"],
@@ -5660,6 +7328,61 @@ def audit_brachiocephalic_port_pair_continuity(
                     candidate_union_view.get("source_local_union_selection"),
                 "baseline_source_local_union_selection":
                     baseline_union_view.get("source_local_union_selection"),
+            }
+        if (candidate_union_view.get("loop_count") == 1
+                and baseline_union_view.get("loop_count") == 1
+                and station_applicability is not None
+                and station_applicability["applicability_mode"]
+                    == "SHARED_TWO_OWNER_CUT"):
+            candidate_branch_sections = {
+                bridge_key[1]: _source_surface_section(
+                    bridge, candidate_station, include_projected_loop_vertices=True),
+                target_key[1]: _source_surface_section(
+                    target, candidate_station, include_projected_loop_vertices=True),
+            }
+            baseline_branch_sections = {
+                bridge_key[1]: _source_surface_section(
+                    base_bridge, baseline_station, include_projected_loop_vertices=True),
+                target_key[1]: _source_surface_section(
+                    base_target, baseline_station, include_projected_loop_vertices=True),
+            }
+            union_metrics = candidate_union_view.get("loop_metrics", [])
+            union_owners = (union_metrics[0].get("owner_ids", [])
+                            if len(union_metrics) == 1 else [])
+            if union_owners == sorted((bridge_key[1], target_key[1])):
+                proof = _shared_cut_mixed_union_loop_proof(
+                expected_owner_ids=(bridge_key[1], target_key[1]),
+                candidate_union_section=candidate_union_view,
+                baseline_union_section=baseline_union_view,
+                candidate_branch_sections=candidate_branch_sections,
+                baseline_branch_sections=baseline_branch_sections,
+                solid_evidence=junction_solid_evidence(),
+                station_declaration=source_declaration)
+            elif len(union_owners) == 1 and union_owners[0] in (bridge_key[1], target_key[1]):
+                proof = _shared_cut_nested_union_loop_proof(
+                    expected_owner_ids=(bridge_key[1], target_key[1]),
+                    candidate_union_section=candidate_union_view,
+                    baseline_union_section=baseline_union_view,
+                    candidate_branch_sections=candidate_branch_sections,
+                    baseline_branch_sections=baseline_branch_sections,
+                    solid_evidence=junction_solid_evidence(),
+                    station_declaration=source_declaration)
+            else:
+                proof = {"passed": False,
+                         "rejections": ["shared union section has neither mixed-owner nor nested single-owner lineage"]}
+            _require(proof["passed"],
+                     f"{label} shared mixed-owner loop proof rejected: "
+                     + "; ".join(proof["rejections"][:5]))
+            return {
+                "passed": True,
+                "station_applicability_mode": "SHARED_TWO_OWNER_CUT",
+                "method": "explicit complete shared-cut source sections and one mixed-owner connected-union loop",
+                "source_baseline_applicability": station_applicability,
+                "candidate_station_applicability": candidate_applicability,
+                "source_station_declaration": source_declaration,
+                "candidate_station": candidate_station,
+                "baseline_station": baseline_station,
+                "junction_aware_proof": proof,
             }
         if (candidate_union_view.get("loop_count") != 2
                 or baseline_union_view.get("loop_count") != 2):
@@ -5712,6 +7435,9 @@ def audit_brachiocephalic_port_pair_continuity(
             baseline_branch_sections=baseline_branch_sections,
             solid_evidence=junction_solid_evidence(),
             station_declaration=station_declaration,
+            same_material_station_calibre_by_owner=(
+                same_material_station_calibre_by_owner()),
+            cross_time_calibre_policy=candidate_station_transport_policy,
         )
         _require(proof["passed"],
                  f"{label} junction-aware section proof rejected: "
@@ -5719,6 +7445,12 @@ def audit_brachiocephalic_port_pair_continuity(
         return {
             "passed": True,
             "method": "explicit one-loop-per-vessel source-collar-local junction proof",
+            "station_applicability_mode": (
+                None if station_applicability is None else
+                station_applicability["applicability_mode"]),
+            "source_baseline_applicability": station_applicability,
+            "candidate_station_applicability": (
+                None if station_applicability is None else candidate_applicability),
             "junction_aware_proof": proof,
             "candidate_source_local_union_selection":
                 candidate_union_view.get("source_local_union_selection"),
@@ -5804,6 +7536,9 @@ def audit_brachiocephalic_port_pair_continuity(
                 baseline_branch_sections=baseline_branch_sections,
                 solid_evidence=junction_solid_evidence(),
                 station_declaration=declaration,
+                same_material_station_calibre_by_owner=(
+                    same_material_station_calibre_by_owner()),
+                cross_time_calibre_policy=candidate_station_transport_policy,
             )
             try:
                 bridge_section_comparison = _section_comparison(
@@ -5938,6 +7673,34 @@ def audit_brachiocephalic_port_pair_continuity(
                 "union section at target station", "target", union_target_section,
                 baseline_union_target_section, target_station, base_target_station),
         }
+        if junction_station is not None:
+            station_results["union_at_junction_station"] = {
+                "station": junction_station,
+                "baseline_station_transported_by_ancestry": base_junction_station,
+                "candidate": union_junction_section,
+                "baseline": baseline_union_junction_section,
+                "candidate_vs_baseline": compare_union_station(
+                    "union section at source-derived shared junction station",
+                    "junction", union_junction_section,
+                    baseline_union_junction_section,
+                    junction_station, base_junction_station),
+            }
+    if runtime_source_station_applicability:
+        declared_modes = _validated_source_station_applicability_modes(
+            runtime_source_station_applicability)
+        station_output_by_role = {
+            "bridge": "union_at_bridge_station",
+            "target": "union_at_target_station",
+            "junction": "union_at_junction_station",
+        }
+        observed_modes = {
+            role: station_results[station_output_by_role[role]][
+                "candidate_vs_baseline"].get("station_applicability_mode")
+            for role in declared_modes
+        }
+        _require(observed_modes == declared_modes,
+                 "candidate station results do not preserve every source-declared applicability mode")
+
     return {
         "schema": "numi.human.brachiocephalic-port-solid-continuity.v1",
         "bridge": list(bridge_key),
@@ -6000,6 +7763,9 @@ def audit_brachiocephalic_port_pair_continuity(
             "declared_preservation_intervals": {
                 "area": [0.8, 1.25], "minimum_feret_width": [0.9, 1.1]},
             "station_results": station_results,
+        "source_baseline_station_applicability": {
+            role: record for role, record
+            in sorted(runtime_source_station_applicability.items())},
             "sensitivity_is_diagnostic_only": True,
             "clinical_calibre_claim": False,
         },

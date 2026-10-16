@@ -1,5 +1,6 @@
 import hashlib
 import json
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -152,6 +153,272 @@ def _closed_cylinder(z_min, z_max, radius=0.2, *, center_x=0.0, sectors=12, axia
                        axial * sectors + following]))
     return (np.asarray(rings, dtype="<f4"),
             np.asarray(faces, dtype="<u4"))
+
+
+def _joined_closed_cylinders(*cylinders):
+    points = []
+    faces = []
+    offset = 0
+    for current_points, current_faces in cylinders:
+        points.append(current_points)
+        faces.append(current_faces + np.uint32(offset))
+        offset += len(current_points)
+    return (np.ascontiguousarray(np.concatenate(points), dtype="<f4"),
+            np.ascontiguousarray(np.concatenate(faces), dtype="<u4"))
+
+
+def _synthetic_tangent_face_canonicalization_inputs():
+    positions = np.asarray([
+        [0.0, 0.0, -1.0e-7], [1.0, 0.0, 1.0], [0.0, 1.0, 1.0],
+        [2.0, 0.0, -1.0], [2.0, 1.0, -1.0], [3.0, 1.0, -1.0],
+    ], dtype="<f4")
+    faces = np.asarray([[0, 1, 2], [0, 3, 4], [0, 4, 5], [0, 5, 3]], dtype="<u4")
+    surface = SimpleNamespace(
+        key=(51011, 7), positions=positions, faces=faces,
+        source_vertex_ids=np.arange(len(positions), dtype="<u8"),
+        source_vertex_to_quotient=np.arange(len(positions), dtype="<u4"),
+        quotient_faces=faces.copy())
+    station = {
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    distances, _, tolerance = bg._section_vertex_classes(
+        positions.astype(np.float64), positions, [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])
+    triangle = positions[faces[0]].astype(np.float64)
+    endpoints = []
+    for first, second in ((0, 1), (0, 2)):
+        fraction = distances[int(faces[0, first])] / (
+            distances[int(faces[0, first])] - distances[int(faces[0, second])])
+        endpoints.append((triangle[first] + fraction * (
+            triangle[second] - triangle[first])).tolist())
+
+    def metric(face_cycle, segments=None):
+        return {
+            "passed": True, "lineage_available": True, "lineage_complete": True,
+            "owner_ids": [7], "source_face_ancestor_ids": sorted(face_cycle),
+            "generated_face_count": 0, "unmapped_face_count": 0,
+            "coordinate_ulp_tolerance_m": tolerance,
+            "ordered_source_face_ancestor_cycle": list(face_cycle),
+            "ordered_face_segment_records": segments,
+            "area_m2": 1.0, "minimum_feret_width_m": 1.0,
+            "area_mm2": 1.0e6, "minimum_feret_width_mm": 1.0e3,
+        }
+
+    segments = []
+    for edge_index, face_id in enumerate((0, 1, 2, 3)):
+        segments.append({
+            "section_edge_index": edge_index,
+            "segment_endpoints_world_m": endpoints if face_id == 0
+                else [[0.1, 0.1, 0.0], [0.2, 0.1, 0.0]],
+            "face_lineage": [{
+                "owner_id": 7, "source_face_id": face_id, "generated": False,
+                "triangle_corner_positions_world_m":
+                    positions[faces[face_id]].astype(np.float64).tolist(),
+            }],
+        })
+    return surface, station, metric([1, 2, 3]), metric([0, 1, 2, 3], segments)
+
+
+def test_source_f32_tangent_face_canonicalization_proves_order_and_barycentric_owner():
+    surface, station, source_loop, union_loop = (
+        _synthetic_tangent_face_canonicalization_inputs())
+    proof = bg._source_tangent_face_loop_proof(
+        surface=surface, station=station, source_loop_metric=source_loop,
+        union_loop_metric=union_loop, owner_id=7, loop_index=0)
+    assert proof["passed"]
+    assert proof["source_f32_zero_tolerance_m"] == source_loop["coordinate_ulp_tolerance_m"]
+    assert proof["tangent_face_ids_canonicalized"] == [0]
+    tangent = proof["source_tangent_face_proofs"][0]
+    assert tangent["source_f32_signs"] == [0, 1, 1]
+    assert tangent["mesh64_triangle_positions_exactly_match_source_f32_corners"]
+    assert all(item[
+                   "source_edge_barycentric_inclusion_within_binary64_construction_bound"]
+               and item["both_residuals_within_binary64_operation_bound"]
+               for item in tangent["endpoint_source_triangle_barycentric_proofs"])
+
+
+def test_source_f32_tangent_canonicalization_rejects_moved_or_nontangent_ancestor():
+    surface, station, source_loop, union_loop = (
+        _synthetic_tangent_face_canonicalization_inputs())
+    moved = json.loads(json.dumps(union_loop))
+    moved["ordered_face_segment_records"][0]["face_lineage"][0][
+        "triangle_corner_positions_world_m"][1][0] += 1.0e-6
+    with pytest.raises(ValueError, match="moved or quantized"):
+        bg._source_tangent_face_loop_proof(
+            surface=surface, station=station, source_loop_metric=source_loop,
+            union_loop_metric=moved, owner_id=7, loop_index=0)
+    surface.positions[0, 2] = np.float32(-1.0e-3)
+    with pytest.raises(ValueError, match="non-tangent source face"):
+        bg._source_tangent_face_loop_proof(
+            surface=surface, station=station, source_loop_metric=source_loop,
+            union_loop_metric=union_loop, owner_id=7, loop_index=0)
+
+
+def test_source_f32_tangent_canonicalization_rejects_reordered_backtracked_and_foreign_cycles():
+    surface, station, source_loop, union_loop = (
+        _synthetic_tangent_face_canonicalization_inputs())
+    reordered = json.loads(json.dumps(union_loop))
+    reordered["ordered_source_face_ancestor_cycle"] = [0, 2, 1, 3]
+    with pytest.raises(ValueError, match="ordered branch chain or direction"):
+        bg._source_tangent_face_loop_proof(
+            surface=surface, station=station, source_loop_metric=source_loop,
+            union_loop_metric=reordered, owner_id=7, loop_index=0)
+    backtracked = json.loads(json.dumps(union_loop))
+    backtracked["ordered_source_face_ancestor_cycle"] = [0, 1, 2, 1, 3]
+    with pytest.raises(ValueError, match="repeated"):
+        bg._source_tangent_face_loop_proof(
+            surface=surface, station=station, source_loop_metric=source_loop,
+            union_loop_metric=backtracked, owner_id=7, loop_index=0)
+    foreign = json.loads(json.dumps(union_loop))
+    foreign["ordered_face_segment_records"][0]["face_lineage"][0]["owner_id"] = 8
+    with pytest.raises(ValueError, match="foreign, generated, or unmapped"):
+        bg._source_tangent_face_loop_proof(
+            surface=surface, station=station, source_loop_metric=source_loop,
+            union_loop_metric=foreign, owner_id=7, loop_index=0)
+
+
+def test_source_baseline_declares_anchor_only_station_and_compares_every_loop():
+    anchor_points, anchor_faces = _joined_closed_cylinders(
+        _closed_cylinder(-1.0, 1.0, radius=0.2, center_x=-0.5, sectors=12, axial=4),
+        _closed_cylinder(-1.0, 1.0, radius=0.08, center_x=0.5, sectors=12, axial=4),
+    )
+    absent_points, absent_faces = _closed_cylinder(
+        -3.0, -2.0, radius=0.1, sectors=12, axial=4)
+    anchor = av.prepare_surface(
+        (51011, 7), anchor_points, anchor_faces,
+        source_vertex_ids=np.arange(len(anchor_points), dtype=np.uint64))
+    absent = av.prepare_surface(
+        (51011, 8), absent_points, absent_faces,
+        source_vertex_ids=np.arange(len(absent_points), dtype=np.uint64))
+    station = {
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+
+    declaration = bg.declare_source_baseline_station_applicability(
+        av, bridge_key=(51011, 7), baseline_bridge_surface=anchor,
+        target_key=(51011, 8), baseline_target_surface=absent,
+        station_role="bridge", anchor_owner_id=7, source_station=station)
+
+    assert declaration["applicability_mode"] == "ANCHOR_ONLY_CUT"
+    assert declaration["present_owner_ids"] == [7]
+    assert declaration["absent_owner_ids"] == [8]
+    assert declaration["owner_status_by_id"]["7"]["loop_count"] == 2
+    assert declaration["owner_status_by_id"]["8"]["one_sided_absence"]["status"] == (
+        "STRICTLY_NEGATIVE")
+
+    anchor_section = bg._source_surface_section(anchor, station)
+    absent_section = bg._source_surface_section(absent, station)
+    candidate_observation = {
+        "applicability_mode": declaration["applicability_mode"],
+        "present_owner_ids": declaration["present_owner_ids"],
+        "absent_owner_ids": declaration["absent_owner_ids"],
+        "owner_status_by_id": declaration["owner_status_by_id"],
+    }
+    proof = bg._anchor_only_union_station_proof(
+        applicability=declaration,
+        candidate_applicability=candidate_observation,
+        candidate_union=anchor_section,
+        baseline_union=anchor_section,
+        candidate_owner_sections={7: anchor_section, 8: absent_section},
+        baseline_owner_sections={7: anchor_section, 8: absent_section},
+        expected_owner_ids=(7, 8))
+
+    assert proof["passed"]
+    assert proof["candidate_union_loop_count"] == 2
+    assert proof["baseline_union_loop_count"] == 2
+    assert len(proof["candidate_union_vs_source_loop_comparisons"]) == 2
+    assert len(proof["union_candidate_vs_baseline_loop_comparisons"]) == 2
+    assert proof["other_owner_remains_absent"]
+
+
+def test_source_applicability_requires_a_shared_two_owner_cut_per_link():
+    bridge_points, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, center_x=-0.5, sectors=12, axial=4)
+    target_points, target_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.1, center_x=0.5, sectors=12, axial=4)
+    bridge = av.prepare_surface((51011, 7), bridge_points, bridge_faces)
+    target = av.prepare_surface((51011, 8), target_points, target_faces)
+    station = {
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    bridge_declaration = bg.declare_source_baseline_station_applicability(
+        av, bridge_key=(51011, 7), baseline_bridge_surface=bridge,
+        target_key=(51011, 8), baseline_target_surface=target,
+        station_role="bridge", anchor_owner_id=7, source_station=station)
+    target_declaration = bg.declare_source_baseline_station_applicability(
+        av, bridge_key=(51011, 7), baseline_bridge_surface=bridge,
+        target_key=(51011, 8), baseline_target_surface=target,
+        station_role="target", anchor_owner_id=8, source_station=station)
+
+    assert bridge_declaration["applicability_mode"] == "SHARED_TWO_OWNER_CUT"
+    assert target_declaration["applicability_mode"] == "SHARED_TWO_OWNER_CUT"
+    assert bg._validated_source_station_applicability_modes({
+        "bridge": bridge_declaration, "target": target_declaration,
+    }) == {"bridge": "SHARED_TWO_OWNER_CUT", "target": "SHARED_TWO_OWNER_CUT"}
+    anchor_only = dict(bridge_declaration, applicability_mode="ANCHOR_ONLY_CUT")
+    with pytest.raises(ValueError, match="at least one declared shared two-owner cut"):
+        bg._validated_source_station_applicability_modes({
+            "bridge": anchor_only,
+            "target": dict(target_declaration, applicability_mode="ANCHOR_ONLY_CUT"),
+        })
+
+
+def test_anchor_only_station_rejects_omitted_loop_or_new_other_owner_cut():
+    anchor_points, anchor_faces = _joined_closed_cylinders(
+        _closed_cylinder(-1.0, 1.0, radius=0.2, center_x=-0.5, sectors=12, axial=4),
+        _closed_cylinder(-1.0, 1.0, radius=0.08, center_x=0.5, sectors=12, axial=4),
+    )
+    below_points, below_faces = _closed_cylinder(
+        -3.0, -2.0, radius=0.1, sectors=12, axial=4)
+    crossing_points, crossing_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.1, center_x=2.0, sectors=12, axial=4)
+    anchor = av.prepare_surface((51011, 7), anchor_points, anchor_faces)
+    absent = av.prepare_surface((51011, 8), below_points, below_faces)
+    crossing = av.prepare_surface((51011, 8), crossing_points, crossing_faces)
+    station = {
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    declaration = bg.declare_source_baseline_station_applicability(
+        av, bridge_key=(51011, 7), baseline_bridge_surface=anchor,
+        target_key=(51011, 8), baseline_target_surface=absent,
+        station_role="bridge", anchor_owner_id=7, source_station=station)
+    anchor_section = bg._source_surface_section(anchor, station)
+    absent_section = bg._source_surface_section(absent, station)
+    candidate_observation = bg._source_station_applicability_body(
+        anchor, absent, bridge_key=(51011, 7), target_key=(51011, 8),
+        station_role="bridge", anchor_owner_id=7, station=station)
+    candidate_observation["candidate_geometry_used_for_observation"] = True
+
+    omitted = dict(anchor_section)
+    omitted["loop_count"] = 1
+    omitted["loop_metrics"] = [anchor_section["loop_metrics"][0]]
+    with pytest.raises(ValueError, match="omitted or added a source section loop"):
+        bg._anchor_only_union_station_proof(
+            applicability=declaration,
+            candidate_applicability=candidate_observation,
+            candidate_union=omitted,
+            baseline_union=anchor_section,
+            candidate_owner_sections={7: anchor_section, 8: absent_section},
+            baseline_owner_sections={7: anchor_section, 8: absent_section},
+            expected_owner_ids=(7, 8))
+
+    shared_source = crossing
+    shared_observation = bg._source_station_applicability_body(
+        anchor, shared_source, bridge_key=(51011, 7), target_key=(51011, 8),
+        station_role="bridge", anchor_owner_id=7, station=station)
+    shared_observation["candidate_geometry_used_for_observation"] = True
+    with pytest.raises(ValueError, match="candidate station no longer has the declared anchor-only"):
+        bg._anchor_only_union_station_proof(
+            applicability=declaration,
+            candidate_applicability=shared_observation,
+            candidate_union=anchor_section,
+            baseline_union=anchor_section,
+            candidate_owner_sections={7: anchor_section, 8: anchor_section},
+            baseline_owner_sections={7: anchor_section, 8: absent_section},
+            expected_owner_ids=(7, 8))
 
 
 def _profiled_closed_cylinder(stations, *, sectors=12):
@@ -442,6 +709,182 @@ def test_nonflow_station_is_baseline_bound_and_candidate_independent():
             baseline_target_surface=(target, target_faces),
             declared_vessel_ports={edge},
             source_station_declarations=forged)
+
+
+def test_shared_cut_nested_owner_section_requires_strict_containment_without_fake_loop():
+    outer = [[-2.0, -2.0], [2.0, -2.0], [2.0, 2.0], [-2.0, 2.0]]
+    inner = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]
+    crossed = [[-3.0, -0.5], [0.5, -0.5], [0.5, 0.5], [-3.0, 0.5]]
+
+    def metric(owner, points, area, width, ancestor):
+        return {
+            "passed": True,
+            "lineage_available": True,
+            "lineage_complete": True,
+            "owner_ids": [owner],
+            "source_face_ancestor_ids": [ancestor],
+            "generated_face_count": 0,
+            "unmapped_face_count": 0,
+            "area_m2": area,
+            "minimum_feret_width_m": width,
+            "projected_loop_vertices": points,
+        }
+
+    def section(owner, points, area, width, ancestor):
+        return {
+            "passed": True,
+            "loop_count": 1,
+            "section_center_world_m": [0.0, 0.0, 0.0],
+            "section_tangent_world_unit": [0.0, 0.0, 1.0],
+            "loop_metrics": [metric(owner, points, area, width, ancestor)],
+        }
+
+    ancestry = {
+        "material_anchor_source_vertex_ids": [10],
+        "tangent_support_source_vertex_ids": [11],
+        "frozen_collar_face_ids": [12],
+    }
+    station = {
+        **ancestry,
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    declaration = {
+        "declaration_id": "source-bound-junction-test",
+        "station_role": "junction",
+        "anchor_role": "bridge",
+        "anchor_owner_id": 7,
+        "expected_owner_ids": [6, 7],
+        "bridge_owner_id": 7,
+        "target_owner_id": 6,
+        "source_ancestry": ancestry,
+        "candidate_station": station,
+        "baseline_station": station,
+    }
+    candidate_branches = {
+        6: section(6, inner, 1.0, 1.0, 60),
+        7: section(7, outer, 16.0, 4.0, 70),
+    }
+    baseline_branches = {
+        6: section(6, inner, 1.0, 1.0, 60),
+        7: section(7, outer, 16.0, 4.0, 70),
+    }
+    solid = {
+        "typed_vessel_link": [[51011, 7], [51011, 6]],
+        "candidate_port_audit_passed": True,
+        "baseline_port_audit_passed": True,
+        "candidate_intersection_volume_m3": 1.0,
+        "baseline_intersection_volume_m3": 1.0,
+        "candidate_union_volume_m3": 10.0,
+        "baseline_union_volume_m3": 10.0,
+        "candidate_union_component_count": 1,
+        "baseline_union_component_count": 1,
+        "candidate_exact_inside_both_witness": {
+            "first_location": "inside", "second_location": "inside"},
+        "baseline_exact_inside_both_witness": {
+            "first_location": "inside", "second_location": "inside"},
+    }
+    proof = bg._shared_cut_nested_union_loop_proof(
+        expected_owner_ids=(6, 7),
+        candidate_union_section=section(7, outer, 16.0, 4.0, 70),
+        baseline_union_section=section(7, outer, 16.0, 4.0, 70),
+        candidate_branch_sections=candidate_branches,
+        baseline_branch_sections=baseline_branches,
+        solid_evidence=solid,
+        station_declaration=declaration)
+    assert proof["passed"]
+    assert proof["status"] == "PASS_NESTED_SINGLE_OWNER_UNION_WITH_COMPLETE_INNER_SECTION"
+    assert proof["nested_owner_id"] == 6
+    assert proof["fabricated_owner_loops"] is False
+    assert proof["nested_section_containment"]["candidate"]["strictly_inside_vertex_count"] == 4
+
+    candidate_branches[6] = section(6, crossed, 7.0, 1.0, 60)
+    rejected = bg._shared_cut_nested_union_loop_proof(
+        expected_owner_ids=(6, 7),
+        candidate_union_section=section(7, outer, 16.0, 4.0, 70),
+        baseline_union_section=section(7, outer, 16.0, 4.0, 70),
+        candidate_branch_sections=candidate_branches,
+        baseline_branch_sections=baseline_branches,
+        solid_evidence=solid,
+        station_declaration=declaration)
+    assert not rejected["passed"]
+    assert not rejected["nested_section_containment"]["candidate"]["passed"]
+
+
+def test_source_interface_pca_station_adds_a_third_strict_shared_cut():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _source_y_target()
+    edge = ((51011, 7), (51011, 6))
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+    declarations = {
+        role: bg.build_source_junction_station_declaration(
+            av, bridge_key=edge[0], target_key=edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=pairs, declared_vessel_ports={edge},
+            anchor_role=role)
+        for role in ("bridge", "target")
+    }
+    declarations["junction"] = bg.build_source_junction_station_declaration(
+        av, bridge_key=edge[0], target_key=edge[1],
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces),
+        frozen_face_pairs=pairs, declared_vessel_ports={edge},
+        anchor_role="bridge", station_role="junction",
+        station_policy="SOURCE_INTERFACE_PCA_PLANE_V1")
+    applicability = {
+        role: bg.declare_source_baseline_station_applicability(
+            av, bridge_key=edge[0], baseline_bridge_surface=(bridge, bridge_faces),
+            target_key=edge[1], baseline_target_surface=(target, target_faces),
+            station_role=role, anchor_owner_id=declaration["anchor_owner_id"],
+            source_station=declaration["source_station_spec"])
+        for role, declaration in declarations.items()
+    }
+
+    junction_evidence = declarations["junction"]["source_evidence"]
+    assert junction_evidence["station_role"] == "junction"
+    assert junction_evidence["anchor_role"] == "bridge"
+    assert junction_evidence["independent_source_baseline_only"] is True
+    assert junction_evidence["source_station_is_candidate_independent"] is True
+    assert junction_evidence["station_selection_policy"] == (
+        "SOURCE_INTERFACE_PCA_PLANE_V1")
+    assert junction_evidence["baseline_shared_source_station_sections"].keys() == {
+        str(edge[0][1]), str(edge[1][1])}
+    assert applicability["junction"]["applicability_mode"] == "SHARED_TWO_OWNER_CUT"
+    assert applicability["junction"]["candidate_geometry_used_for_declaration"] is False
+
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, _manifold3d(),
+        bridge_key=edge[0], bridge_surface=(bridge, bridge_faces),
+        target_key=edge[1], target_surface=(target, target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces),
+        declared_vessel_ports={edge},
+        source_station_declarations=declarations,
+        source_station_applicability_by_role=applicability)
+    assert report["passed"]
+    stations = report["calibre_gate"]["station_results"]
+    assert "bridge" in stations and "target" in stations
+    assert "union_at_bridge_station" in stations
+    assert "union_at_target_station" in stations
+    assert stations["union_at_junction_station"]["candidate_vs_baseline"]["passed"]
+    assert stations["union_at_junction_station"]["candidate_vs_baseline"][
+        "station_applicability_mode"] == "SHARED_TWO_OWNER_CUT"
+    assert stations["union_at_junction_station"]["candidate_vs_baseline"][
+        "junction_aware_proof"]["passed"]
+
+
+def test_source_interface_pca_station_rejects_unoriented_contact_line():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    witness = np.asarray([[0.0, 0.0, 0.0], [0.1, 0.0, 0.0],
+                          [0.2, 0.0, 0.0]], dtype=np.float64)
+    with pytest.raises(ValueError, match="do not define a unique plane normal"):
+        bg._port_station_spec(
+            bg._prepare_vessel(av, (51011, 7), (bridge, bridge_faces)),
+            witness, list(range(4)), station_policy="SOURCE_INTERFACE_PCA_PLANE_V1")
 
 
 def test_nonflow_station_uses_exact_transverse_witnesses_for_centroid_miss(monkeypatch):
@@ -1030,6 +1473,157 @@ def test_y_junction_two_contours_pass_only_with_per_vessel_lineage_and_solid_wit
     assert proof["passed"]
     assert proof["status"] == "PASS_EXPLICIT_TWO_VESSEL_JUNCTION_SECTION"
     assert set(proof["per_vessel_section_comparisons"]) == {"472", "526"}
+
+
+
+def test_material_station_ownership_separates_foreign_plane_reslicing_from_calibre():
+    proof, _section, evidence, internal = _synthetic_two_branch_section_proof(
+        include_internal=True)
+    assert proof["passed"]
+
+    call = dict(internal["junction_call"])
+
+    def rescale_owner_loop(section, owner_id, *, area_scale, width_scale):
+        result = dict(section)
+        loops = []
+        for source_loop in section["loop_metrics"]:
+            loop = dict(source_loop)
+            if loop["owner_ids"] == [owner_id]:
+                loop["area_m2"] *= area_scale
+                loop["minimum_feret_width_m"] *= width_scale
+                if "area_mm2" in loop:
+                    loop["area_mm2"] *= area_scale
+                if "minimum_feret_width_mm" in loop:
+                    loop["minimum_feret_width_mm"] *= width_scale
+            loops.append(loop)
+        result["loop_metrics"] = loops
+        return result
+
+    # The row-7-like tiny lobe changes on row 6's foreign plane by more than
+    # the unchanged calibre interval. Keep each state's union lobe and source
+    # branch section identical so same-plane material partitioning stays strict.
+    owner_id = 472
+    candidate_union = rescale_owner_loop(
+        call["candidate_union_section"], owner_id,
+        area_scale=1.30, width_scale=1.15)
+    candidate_branches = dict(call["candidate_branch_sections"])
+    candidate_branches[owner_id] = rescale_owner_loop(
+        candidate_branches[owner_id], owner_id,
+        area_scale=1.30, width_scale=1.15)
+    call["candidate_union_section"] = candidate_union
+    call["candidate_branch_sections"] = candidate_branches
+
+    declaration = dict(call["station_declaration"])
+    declaration["candidate_station_transport_policy"] = (
+        "SOURCE_MATERIAL_SECTION_FRAME_V1")
+    call["station_declaration"] = declaration
+    source_ancestry = {
+        "material_anchor_source_vertex_ids": [0, 1, 2],
+        "tangent_support_source_vertex_ids": [3, 4],
+        "frozen_collar_face_ids": [0, 1, 2],
+    }
+
+    def material_record(owner, role):
+        binding = {
+            "identity": [51011, owner],
+            "positions_sha256": ("1" if role == "bridge" else "2") * 64,
+            "faces_sha256": ("3" if role == "bridge" else "4") * 64,
+            "source_vertex_ids_sha256": ("5" if role == "bridge" else "6") * 64,
+        }
+        candidate_binding = dict(binding)
+        candidate_binding["positions_sha256"] = (
+            "7" if role == "bridge" else "8") * 64
+        calibre = {
+            "passed": True,
+            "declared_preservation_intervals": {
+                "area": [0.8, 1.25],
+                "minimum_feret_width": [0.9, 1.1],
+            },
+            "declared_maximum_warp_to_feret_ratio": 0.01,
+            "source_material_ring_is_simple_closed": True,
+            "candidate_material_ring_is_simple_closed": True,
+            "source_primary_simple_polygon_triangulation_passed": True,
+            "source_alternate_simple_polygon_triangulation_passed": True,
+            "candidate_primary_simple_polygon_triangulation_passed": True,
+            "candidate_alternate_simple_polygon_triangulation_passed": True,
+            "candidate_triangulations_preserve_candidate_ring_orientation": True,
+            "source_and_candidate_ring_orientation_match": True,
+            "candidate_area_triangulations_are_measurement_only": True,
+            "virtual_disk_area_not_physical_tissue_area": True,
+            "clinical_calibre_claim": False,
+            "source_primary_virtual_disk_area_ratio": 1.0,
+            "source_alternate_virtual_disk_area_ratio": 1.0,
+            "candidate_projected_area_ratio": 1.0,
+            "candidate_primary_virtual_disk_area_ratio": 1.0,
+            "candidate_alternate_virtual_disk_area_ratio": 1.0,
+            "minimum_feret_width_ratio_interval": [0.999, 1.001],
+            "maximum_warp_to_source_minimum_feret_ratio": 0.002,
+        }
+        transport = {
+            "schema": "numi.human.source-material-section-transport.v1",
+            "passed": True,
+            "typed_identity": [51011, owner],
+            "source_station_ancestry_sha256": bg._canonical_record_sha256(
+                source_ancestry),
+            "candidate_geometry_used_only_for_local_motion_fit": True,
+            "all_exact_coordinate_aliases_preserved": True,
+            "anatomical_admission": False,
+            "native_admission": False,
+            "baseline_surface_binding": binding,
+            "candidate_surface_binding": candidate_binding,
+            "material_section_calibre": calibre,
+        }
+        return {
+            "station_role": role,
+            "source_station_declaration_id": f"station-{role}-{owner}",
+            "source_station_ancestry": source_ancestry,
+            "transport_proof": transport,
+            "baseline_surface_binding": binding,
+            "candidate_surface_binding": candidate_binding,
+        }
+
+    call["solid_evidence"] = dict(call["solid_evidence"])
+    call["solid_evidence"]["baseline_source_surface_bindings"] = {
+        "bridge": material_record(526, "bridge")["baseline_surface_binding"],
+        "target": material_record(472, "target")["baseline_surface_binding"],
+    }
+    call["same_material_station_calibre_by_owner"] = {
+        526: material_record(526, "bridge"),
+        472: material_record(472, "target"),
+    }
+    call["cross_time_calibre_policy"] = "SOURCE_MATERIAL_SECTION_FRAME_V1"
+
+    result = bg._junction_aware_two_loop_section_proof(**call)
+
+    assert result["passed"]
+    assert result["solid_evidence"]["candidate_union_component_count"] == 1
+    by_owner = result["per_vessel_section_comparisons"]
+    tiny = by_owner["472"]
+    assert tiny["candidate_union_lobe_vs_candidate_source_section"]["passed"]
+    assert tiny["baseline_union_lobe_vs_baseline_source_section"]["passed"]
+    assert not tiny["candidate_union_lobe_vs_baseline_union_lobe"]["passed"]
+    assert tiny["candidate_union_lobe_vs_baseline_union_lobe"][
+        "measurement_scope"] == "CROSS_OWNER_PLANE_RESLICE_DIAGNOSTIC_ONLY"
+    assert tiny["candidate_union_lobe_vs_baseline_union_lobe"][
+        "accepted_as_intrinsic_material_calibre"] is False
+    assert tiny["candidate_source_section_vs_baseline_source_section"][
+        "measurement_scope"] == "CROSS_OWNER_PLANE_RESLICE_DIAGNOSTIC_ONLY"
+    assert tiny["candidate_vs_baseline_at_owner_material_station"]["passed"]
+    assert tiny["candidate_vs_baseline_at_owner_material_station"][
+        "measurement_scope"] == "AUTHENTICATED_SAME_MATERIAL_STATION"
+
+    forged = dict(call)
+    forged_records = dict(call["same_material_station_calibre_by_owner"])
+    forged_target = dict(forged_records[472])
+    forged_transport = dict(forged_target["transport_proof"])
+    forged_transport["typed_identity"] = [51011, 526]
+    forged_target["transport_proof"] = forged_transport
+    forged_records[472] = forged_target
+    forged["same_material_station_calibre_by_owner"] = forged_records
+    rejected = bg._junction_aware_two_loop_section_proof(**forged)
+    assert not rejected["passed"]
+    assert any("same-material-station transport binding failed for owner 472" in item
+               for item in rejected["rejections"])
 
 
 def test_recording_wrappers_forward_lineage_into_real_junction_section():
