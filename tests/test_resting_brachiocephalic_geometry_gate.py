@@ -4275,13 +4275,23 @@ def test_material_section_transport_accepts_small_warp_with_caliber_bounds():
     assert proof["proper_rigid_applicability_passed"] is False
     assert proof["maximum_fit_residual_bound_m"] is None
     assert calibre["candidate_material_ring_is_simple_closed"] is True
-    assert calibre["source_simple_polygon_triangulation_passed"] is True
-    assert calibre["candidate_source_triangulation_preserves_triangle_orientation"] is True
-    assert calibre["candidate_area_uses_same_source_triangulation_indices"] is True
+    assert calibre["source_primary_simple_polygon_triangulation_passed"] is True
+    assert calibre["source_alternate_simple_polygon_triangulation_passed"] is True
+    assert calibre["candidate_primary_simple_polygon_triangulation_passed"] is True
+    assert calibre["candidate_alternate_simple_polygon_triangulation_passed"] is True
+    assert calibre["candidate_triangulations_preserve_candidate_ring_orientation"] is True
+    assert calibre["candidate_area_triangulations_are_measurement_only"] is True
+    assert calibre["virtual_disk_area_not_physical_tissue_area"] is True
     assert calibre["maximum_warp_to_source_minimum_feret_ratio"] <= 0.01
-    assert 0.8 <= calibre["projected_area_ratio"] <= 1.25
-    assert 0.8 <= calibre["source_triangulation_3d_area_ratio"] <= 1.25
-    assert 0.8 <= calibre["alternate_triangulation_3d_area_ratio"] <= 1.25
+    assert 0.8 <= calibre["candidate_projected_area_ratio"] <= 1.25
+    for key in (
+            "source_primary_virtual_disk_area_ratio",
+            "source_alternate_virtual_disk_area_ratio",
+            "candidate_primary_virtual_disk_area_ratio",
+            "candidate_alternate_virtual_disk_area_ratio"):
+        assert 0.8 <= calibre[key] <= 1.25
+    assert calibre["source_virtual_disk_triangulation_sensitivity_m2"] >= 0.0
+    assert calibre["candidate_virtual_disk_triangulation_sensitivity_m2"] >= 0.0
     low, high = calibre["minimum_feret_width_ratio_interval"]
     assert 0.9 <= low <= high <= 1.1
     assert calibre["projection_area_error_m2"] >= 0.0
@@ -4306,6 +4316,51 @@ def test_exact_ear_clipping_preserves_concave_polygon_area():
         for a, b, c in alternate) == 5.0
 
 
+def test_material_section_calibre_uses_independent_candidate_triangulation():
+    angles = np.arange(5, dtype=np.float64) * (2.0 * np.pi / 5.0)
+    source_2d = np.column_stack((np.cos(angles), np.sin(angles)))
+    source_2d[2] *= 0.1
+    candidate_2d = np.column_stack((np.cos(angles), np.sin(angles)))
+    candidate_2d[1] *= 0.1
+    source_area = abs(bg._signed_polygon_area2d_exact(source_2d))
+    source_width = bg._minimum_feret_width(
+        bg._convex_hull_2d(source_2d))
+    source_triangles = bg._triangulate_simple_polygon2d_exact(
+        source_2d, quality_priority=True)
+    assert source_triangles is not None
+    assert bg._simple_closed_polygon2d_exact(candidate_2d) is True
+    assert any(
+        bg._orient2d_exact(candidate_2d[first], candidate_2d[second],
+                           candidate_2d[third]) <= 0
+        for first, second, third in source_triangles)
+
+    proof = bg._material_section_ring_calibre(
+        np.column_stack((source_2d, np.zeros(len(source_2d)))),
+        np.column_stack((candidate_2d, np.zeros(len(candidate_2d)))),
+        {"tangent_world_unit": [0.0, 0.0, 1.0]},
+        np.eye(3),
+        {"area_m2": source_area, "minimum_feret_width_m": source_width})
+    assert proof["passed"] is True
+    assert proof["source_index_triangulation_transfer_failure_count_diagnostic_only"] > 0
+    assert proof["candidate_orientation_failure_count"] == 0
+    assert proof["candidate_triangulations_preserve_candidate_ring_orientation"] is True
+    assert (
+        proof["source_primary_triangulation_indices_sha256"]
+        != proof["candidate_primary_triangulation_indices_sha256"])
+    assert (
+        proof["source_primary_triangulation_indices_sha256"]
+        != proof["source_alternate_triangulation_indices_sha256"])
+    assert (
+        proof["candidate_primary_triangulation_indices_sha256"]
+        != proof["candidate_alternate_triangulation_indices_sha256"])
+    for key in (
+            "source_primary_virtual_disk_area_ratio",
+            "source_alternate_virtual_disk_area_ratio",
+            "candidate_primary_virtual_disk_area_ratio",
+            "candidate_alternate_virtual_disk_area_ratio"):
+        assert 0.8 <= proof[key] <= 1.25
+
+
 def test_material_section_transport_rejects_actual_caliber_change():
     baseline, station, _metric, material_ids = _material_station_fixture()
     candidate = type("CandidateSurface", (), {})()
@@ -4326,10 +4381,11 @@ def test_material_section_transport_rejects_actual_caliber_change():
             baseline, candidate, station))
     calibre = proof["material_section_calibre"]
     assert proof["passed"] is False
-    assert (calibre["projected_area_ratio"] > 1.25
-            or calibre["source_triangulation_3d_area_ratio"] > 1.25
-            or calibre["alternate_triangulation_3d_area_ratio"] > 1.25
-            or calibre["minimum_feret_width_ratio_interval"][1] > 1.1)
+    assert (
+        calibre["candidate_projected_area_ratio"] > 1.25
+        or calibre["candidate_primary_virtual_disk_area_ratio"] > 1.25
+        or calibre["candidate_alternate_virtual_disk_area_ratio"] > 1.25
+        or calibre["minimum_feret_width_ratio_interval"][1] > 1.1)
 
 
 def test_material_section_projected_ring_rejects_crossing_edges():

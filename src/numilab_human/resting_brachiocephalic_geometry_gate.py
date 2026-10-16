@@ -3379,6 +3379,7 @@ def _point_in_or_on_triangle2d_exact(point, first, second, third, orientation):
 
 def _triangulate_simple_polygon2d_exact(
     points, *, start_offset=0, prefer_last_ear=False,
+    quality_priority=False,
 ):
     """Ear-clip a simple polygon using exact orientation predicates."""
     polygon = np.asarray(points, dtype=np.float64)
@@ -3393,7 +3394,7 @@ def _triangulate_simple_polygon2d_exact(
     remaining = remaining[offset:] + remaining[:offset]
     triangles = []
     while len(remaining) > 3:
-        found = False
+        ears = []
         scan = range(len(remaining) - 1, -1, -1) if prefer_last_ear else range(len(remaining))
         for current_index in scan:
             previous_index = (current_index - 1) % len(remaining)
@@ -3401,8 +3402,9 @@ def _triangulate_simple_polygon2d_exact(
             previous = remaining[previous_index]
             current = remaining[current_index]
             following = remaining[next_index]
-            if orientation * _orient2d_exact(
-                    polygon[previous], polygon[current], polygon[following]) <= 0:
+            signed_double_area = orientation * _orient2d_exact(
+                polygon[previous], polygon[current], polygon[following])
+            if signed_double_area <= 0:
                 continue
             if any(
                 _point_in_or_on_triangle2d_exact(
@@ -3412,12 +3414,27 @@ def _triangulate_simple_polygon2d_exact(
                 if other not in (previous, current, following)
             ):
                 continue
-            triangles.append((previous, current, following))
-            del remaining[current_index]
-            found = True
-            break
-        if not found:
+            if quality_priority:
+                edge_lengths_squared = (
+                    float(np.dot(polygon[previous] - polygon[current],
+                                 polygon[previous] - polygon[current])),
+                    float(np.dot(polygon[current] - polygon[following],
+                                 polygon[current] - polygon[following])),
+                    float(np.dot(polygon[following] - polygon[previous],
+                                 polygon[following] - polygon[previous])),
+                )
+                score = float(signed_double_area) / max(edge_lengths_squared)
+            else:
+                score = 0.0
+            stable_tie_break = (
+                current_index if prefer_last_ear else -current_index)
+            ears.append((score, stable_tie_break, current_index,
+                         (previous, current, following)))
+        if not ears:
             return None
+        _score, _stable_tie_break, current_index, ear = max(ears)
+        triangles.append(ear)
+        del remaining[current_index]
     final_triangle = tuple(remaining)
     if orientation * _orient2d_exact(
             polygon[final_triangle[0]], polygon[final_triangle[1]],
@@ -3487,24 +3504,68 @@ def _material_section_ring_calibre(
 
     source_orientation = 1 if source_signed_area > 0.0 else -1
     candidate_orientation = 1 if candidate_signed_area > 0.0 else -1
-    source_triangles = _triangulate_simple_polygon2d_exact(source_projected)
+    source_triangles = _triangulate_simple_polygon2d_exact(
+        source_projected, quality_priority=True)
+    source_alternate_triangles = _triangulate_simple_polygon2d_exact(
+        source_projected, start_offset=1, prefer_last_ear=True)
+    candidate_primary_triangles = _triangulate_simple_polygon2d_exact(
+        candidate_projected, quality_priority=True)
     candidate_alternate_triangles = _triangulate_simple_polygon2d_exact(
         candidate_projected, start_offset=1, prefer_last_ear=True)
     source_triangulation_passed = source_triangles is not None
-    candidate_triangulation_passed = (
+    source_alternate_triangulation_passed = (
+        source_alternate_triangles is not None)
+    candidate_primary_triangulation_passed = (
+        candidate_primary_triangles is not None)
+    candidate_alternate_triangulation_passed = (
         candidate_alternate_triangles is not None)
-    candidate_source_triangles_oriented = bool(
-        source_triangles is not None
-        and all(candidate_orientation * _orient2d_exact(
-            candidate_projected[first], candidate_projected[second],
-            candidate_projected[third]) > 0
-            for first, second, third in source_triangles))
-    source_fan_area = (
+    source_index_transfer_failures = []
+    if source_triangles is not None:
+        for triangle in source_triangles:
+            source_double_area = source_orientation * _orient2d_exact(
+                source_projected[triangle[0]], source_projected[triangle[1]],
+                source_projected[triangle[2]])
+            candidate_double_area = source_orientation * _orient2d_exact(
+                candidate_projected[triangle[0]],
+                candidate_projected[triangle[1]],
+                candidate_projected[triangle[2]])
+            if candidate_double_area <= 0:
+                source_index_transfer_failures.append({
+                    "material_ring_vertex_indices": list(triangle),
+                    "source_projected_double_area_m2": float(source_double_area),
+                    "candidate_projected_double_area_m2": float(candidate_double_area),
+                })
+    def candidate_orientation_failures(triangles):
+        return [
+            {"material_ring_vertex_indices": list(triangle),
+             "candidate_projected_double_area_m2": float(
+                 _orient2d_exact(candidate_projected[triangle[0]],
+                                 candidate_projected[triangle[1]],
+                                 candidate_projected[triangle[2]]))}
+            for triangle in triangles or ()
+            if candidate_orientation * _orient2d_exact(
+                candidate_projected[triangle[0]],
+                candidate_projected[triangle[1]],
+                candidate_projected[triangle[2]]) <= 0
+        ]
+    candidate_primary_orientation_failures = candidate_orientation_failures(
+        candidate_primary_triangles)
+    candidate_alternate_orientation_failures = candidate_orientation_failures(
+        candidate_alternate_triangles)
+    candidate_triangulations_oriented = bool(
+        candidate_primary_triangulation_passed
+        and candidate_alternate_triangulation_passed
+        and not candidate_primary_orientation_failures
+        and not candidate_alternate_orientation_failures)
+    source_primary_virtual_disk_area = (
         _triangulated_polygon_area3d(source, source_triangles)
         if source_triangles is not None else 0.0)
-    candidate_fan_area = (
-        _triangulated_polygon_area3d(candidate, source_triangles)
-        if source_triangles is not None else 0.0)
+    source_alternate_virtual_disk_area = (
+        _triangulated_polygon_area3d(source, source_alternate_triangles)
+        if source_alternate_triangles is not None else 0.0)
+    candidate_primary_virtual_disk_area = (
+        _triangulated_polygon_area3d(candidate, candidate_primary_triangles)
+        if candidate_primary_triangles is not None else 0.0)
     candidate_alternate_area = (
         _triangulated_polygon_area3d(candidate, candidate_alternate_triangles)
         if candidate_alternate_triangles is not None else 0.0)
@@ -3515,8 +3576,13 @@ def _material_section_ring_calibre(
         np.roll(source, -1, axis=0) - source, axis=1).sum())
     candidate_perimeter = float(np.linalg.norm(
         np.roll(candidate, -1, axis=0) - candidate, axis=1).sum())
-    _require(source_triangulation_passed and candidate_triangulation_passed
-             and source_fan_area > 0.0 and candidate_fan_area > 0.0
+    _require(source_triangulation_passed
+             and source_alternate_triangulation_passed
+             and candidate_primary_triangulation_passed
+             and candidate_alternate_triangulation_passed
+             and source_primary_virtual_disk_area > 0.0
+             and source_alternate_virtual_disk_area > 0.0
+             and candidate_primary_virtual_disk_area > 0.0
              and candidate_alternate_area > 0.0 and source_perimeter > 0.0,
              "material-section ring has no valid simple-polygon triangulation or 3-D area")
 
@@ -3532,26 +3598,41 @@ def _material_section_ring_calibre(
              "material ring does not reproduce the independent source section")
     area_bounds = (0.8, 1.25)
     width_bounds = (0.9, 1.1)
+    source_primary_virtual_disk_area_ratio = (
+        source_primary_virtual_disk_area / baseline_area)
+    source_alternate_virtual_disk_area_ratio = (
+        source_alternate_virtual_disk_area / baseline_area)
+    candidate_primary_virtual_disk_area_ratio = (
+        candidate_primary_virtual_disk_area / baseline_area)
+    candidate_alternate_virtual_disk_area_ratio = (
+        candidate_alternate_area / baseline_area)
     projected_area_ratio = candidate_projected_area / baseline_area
-    fan_area_ratio = candidate_fan_area / source_fan_area
-    alternate_fan_area_ratio = candidate_alternate_area / source_fan_area
     width_ratio = candidate_width / baseline_width
     width_ratio_bounds = (
         (candidate_width - 2.0 * candidate_warp) / baseline_width,
         (candidate_width + 2.0 * candidate_warp) / baseline_width,
     )
     warp_ratio = candidate_warp / baseline_width
-    projection_error = abs(candidate_fan_area - candidate_projected_area)
+    projection_error = abs(
+        candidate_primary_virtual_disk_area - candidate_projected_area)
     perimeter_ratio = candidate_perimeter / source_perimeter
     passed = bool(
         source_simple and candidate_simple
-        and source_triangulation_passed and candidate_triangulation_passed
-        and candidate_source_triangles_oriented
+        and source_triangulation_passed
+        and candidate_primary_triangulation_passed
+        and candidate_alternate_triangulation_passed
+        and candidate_triangulations_oriented
         and source_orientation == candidate_orientation
         and warp_ratio <= maximum_warp_to_feret_ratio
         and area_bounds[0] <= projected_area_ratio <= area_bounds[1]
-        and area_bounds[0] <= fan_area_ratio <= area_bounds[1]
-        and area_bounds[0] <= alternate_fan_area_ratio <= area_bounds[1]
+        and area_bounds[0] <= source_primary_virtual_disk_area_ratio
+        <= area_bounds[1]
+        and area_bounds[0] <= source_alternate_virtual_disk_area_ratio
+        <= area_bounds[1]
+        and area_bounds[0] <= candidate_primary_virtual_disk_area_ratio
+        <= area_bounds[1]
+        and area_bounds[0] <= candidate_alternate_virtual_disk_area_ratio
+        <= area_bounds[1]
         and width_bounds[0] <= width_ratio_bounds[0]
         and width_ratio_bounds[1] <= width_bounds[1]
     )
@@ -3559,33 +3640,106 @@ def _material_section_ring_calibre(
         "passed": passed,
         "method": (
             "same-source-edge-fraction material ring, best-fit transported "
-            "source-ear-clipped polygon triangulation reused on candidate "
-            "plus alternate-ear-order 3D area sensitivity"),
+            "independently ear-clipped source and candidate simple polygons; "
+            "two candidate triangulations report virtual-disk area sensitivity"),
         "source_material_ring_is_simple_closed": source_simple,
         "candidate_material_ring_is_simple_closed": candidate_simple,
-        "source_simple_polygon_triangulation_passed": source_triangulation_passed,
+        "source_primary_simple_polygon_triangulation_passed": (
+            source_triangulation_passed),
+        "source_alternate_simple_polygon_triangulation_passed": (
+            source_alternate_triangulation_passed),
+        "candidate_primary_simple_polygon_triangulation_passed": (
+            candidate_primary_triangulation_passed),
         "candidate_alternate_simple_polygon_triangulation_passed": (
-            candidate_triangulation_passed),
-        "candidate_source_triangulation_preserves_triangle_orientation": (
-            candidate_source_triangles_oriented),
-        "source_triangulation_triangle_count": (
+            candidate_alternate_triangulation_passed),
+        "candidate_triangulations_preserve_candidate_ring_orientation": (
+            candidate_triangulations_oriented),
+        "source_index_triangulation_transfer_failure_count_diagnostic_only": (
+            len(source_index_transfer_failures)),
+        "source_index_triangulation_transfer_failure_witnesses_diagnostic_only": (
+            source_index_transfer_failures[:12]),
+        "source_primary_triangulation_triangle_count": (
             len(source_triangles) if source_triangles is not None else 0),
-        "source_triangulation_indices_sha256": hashlib.sha256(
+        "source_alternate_triangulation_triangle_count": (
+            len(source_alternate_triangles)
+            if source_alternate_triangles is not None else 0),
+        "candidate_primary_triangulation_triangle_count": (
+            len(candidate_primary_triangles)
+            if candidate_primary_triangles is not None else 0),
+        "candidate_alternate_triangulation_triangle_count": (
+            len(candidate_alternate_triangles)
+            if candidate_alternate_triangles is not None else 0),
+        "source_primary_triangulation_selection_policy": (
+            "exact ear clipping from the independently declared source ring; "
+            "eligible ears maximize baseline projected double-area divided by "
+            "longest-edge squared, with source-index tie break"),
+        "source_alternate_triangulation_selection_policy": (
+            "same simple source ring, with traversal offset one and reverse "
+            "ear scan to expose virtual-disk triangulation sensitivity"),
+        "candidate_triangulation_selection_policy": (
+            "the same deterministic ear rule applied independently to each "
+            "candidate projected ring; these are virtual-disk measurement "
+            "triangulations, not tissue elements"),
+        "source_primary_triangulation_vertex_index_triples": (
+            [list(triangle) for triangle in source_triangles]
+            if source_triangles is not None else []),
+        "source_alternate_triangulation_vertex_index_triples": (
+            [list(triangle) for triangle in source_alternate_triangles]
+            if source_alternate_triangles is not None else []),
+        "candidate_primary_triangulation_vertex_index_triples": (
+            [list(triangle) for triangle in candidate_primary_triangles]
+            if candidate_primary_triangles is not None else []),
+        "candidate_alternate_triangulation_vertex_index_triples": (
+            [list(triangle) for triangle in candidate_alternate_triangles]
+            if candidate_alternate_triangles is not None else []),
+        "candidate_orientation_failure_count": (
+            len(candidate_primary_orientation_failures)
+            + len(candidate_alternate_orientation_failures)),
+        "candidate_orientation_failure_witnesses": (
+            (candidate_primary_orientation_failures
+             + candidate_alternate_orientation_failures)[:12]),
+        "source_primary_triangulation_indices_sha256": hashlib.sha256(
+            np.ascontiguousarray(source_triangles or (), dtype="<u4").tobytes()
+        ).hexdigest(),
+        "source_alternate_triangulation_indices_sha256": hashlib.sha256(
             np.ascontiguousarray(
-                source_triangles or (), dtype="<u4").tobytes()).hexdigest(),
-        "candidate_area_uses_same_source_triangulation_indices": True,
+                source_alternate_triangles or (), dtype="<u4").tobytes()
+        ).hexdigest(),
+        "candidate_primary_triangulation_indices_sha256": hashlib.sha256(
+            np.ascontiguousarray(
+                candidate_primary_triangles or (), dtype="<u4").tobytes()
+        ).hexdigest(),
+        "candidate_alternate_triangulation_indices_sha256": hashlib.sha256(
+            np.ascontiguousarray(
+                candidate_alternate_triangles or (), dtype="<u4").tobytes()
+        ).hexdigest(),
+        "candidate_area_triangulations_are_measurement_only": True,
         "source_and_candidate_ring_orientation_match": (
             source_orientation == candidate_orientation),
         "source_projected_area_m2": source_area,
         "candidate_projected_area_m2": candidate_projected_area,
-        "source_centroid_fan_area_m2": source_fan_area,
-        "candidate_source_triangulation_area_m2": candidate_fan_area,
-        "candidate_alternate_triangulation_area_m2": candidate_alternate_area,
-        "projected_area_ratio": projected_area_ratio,
-        "source_triangulation_3d_area_ratio": fan_area_ratio,
-        "alternate_triangulation_3d_area_ratio": alternate_fan_area_ratio,
-        "alternate_triangulation_area_sensitivity_m2": abs(
-            candidate_alternate_area - candidate_fan_area),
+        "source_primary_virtual_disk_area_m2": (
+            source_primary_virtual_disk_area),
+        "source_alternate_virtual_disk_area_m2": (
+            source_alternate_virtual_disk_area),
+        "candidate_primary_virtual_disk_area_m2": (
+            candidate_primary_virtual_disk_area),
+        "candidate_alternate_virtual_disk_area_m2": (
+            candidate_alternate_area),
+        "source_primary_virtual_disk_area_ratio": (
+            source_primary_virtual_disk_area_ratio),
+        "source_alternate_virtual_disk_area_ratio": (
+            source_alternate_virtual_disk_area_ratio),
+        "candidate_projected_area_ratio": projected_area_ratio,
+        "candidate_primary_virtual_disk_area_ratio": (
+            candidate_primary_virtual_disk_area_ratio),
+        "candidate_alternate_virtual_disk_area_ratio": (
+            candidate_alternate_virtual_disk_area_ratio),
+        "source_virtual_disk_triangulation_sensitivity_m2": abs(
+            source_alternate_virtual_disk_area
+            - source_primary_virtual_disk_area),
+        "candidate_virtual_disk_triangulation_sensitivity_m2": abs(
+            candidate_alternate_area - candidate_primary_virtual_disk_area),
         "source_minimum_feret_width_m": source_width,
         "candidate_projected_minimum_feret_width_m": candidate_width,
         "projected_minimum_feret_width_ratio": width_ratio,
@@ -3595,9 +3749,9 @@ def _material_section_ring_calibre(
         "maximum_warp_to_source_minimum_feret_ratio": warp_ratio,
         "declared_maximum_warp_to_feret_ratio": maximum_warp_to_feret_ratio,
         "projection_area_error_m2": projection_error,
-        "projection_area_error_fraction_of_3d_fan": (
-            projection_error / candidate_fan_area
-            if candidate_fan_area > 0.0 else None),
+        "projection_area_error_fraction_of_candidate_primary_virtual_disk": (
+            projection_error / candidate_primary_virtual_disk_area
+            if candidate_primary_virtual_disk_area > 0.0 else None),
         "source_perimeter_m": source_perimeter,
         "candidate_3d_perimeter_m": candidate_perimeter,
         "perimeter_ratio_diagnostic_only": perimeter_ratio,
@@ -3605,6 +3759,7 @@ def _material_section_ring_calibre(
             "area": list(area_bounds),
             "minimum_feret_width": list(width_bounds),
         },
+        "virtual_disk_area_not_physical_tissue_area": True,
         "clinical_calibre_claim": False,
     }
 
