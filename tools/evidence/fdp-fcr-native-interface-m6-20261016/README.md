@@ -1,0 +1,9 @@
+# Right FDP/FCR native interface increment
+
+The existing integrated Metal scene emitted the inferred right FDP133/FCR117 reference partition with zero self-intersections. All 1,517 common interface points match bit for bit; the other 873 rendered surfaces, accepted body/respiratory state, poses, motion, step and time match the source capture exactly. The complete existing parent-carrier field, source allocation and ownership remain in use. Two position-preserving edge flips repair six Float32 folds without changing points or material fields. A source-bound exact partition certificate establishes disjoint interiors and the reciprocal common interface across 47,137 cross-domain contacts.
+
+This increment is not admitted as finished anatomy. The next ordered nearby check rejects 119 FCR117/humerus12 triangle pairs. Those genuine cortical attachment-region crossings require a local boundary repair before motion checks and 16/60-second confirmation. Both passing regional evidence and the failed surrounding-anatomy result are retained here. The native run is one-step source emission; its 9.33-second launch duration is not a real-time-factor measurement or sustained physiology qualification.
+
+The source is an inferred mixed-source reference assembly, not measurements of one individual. These passive anatomical edits add no physical mass, blood state, forces, controller or physiological state. The retained scripts reproduce the exact source preparation, launch and existing unified verification on SSH Numi using the pinned external assets. Paths, exact source revisions, hashes and invocation are retained in the existing evidence-bundle layout. No clinical claim is made.
+
+The large exact reports and original launch script use standard gzip storage. Their decoded bytes and SHA-256 digests are preserved in compressed_local_files; compression does not change the source or evidence.
