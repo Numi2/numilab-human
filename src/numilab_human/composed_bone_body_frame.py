@@ -1790,6 +1790,14 @@ def _validate_source_export_partition_rebind(
 
 def validate_composed_rib_reframe(artifact: Path, manifest: dict[str, Any], output_raw: bytes) -> dict[str, Any]:
     artifact = artifact.resolve()
+    if "thumb_reference_surface" in manifest:
+        source, prior_manifest, prior_raw, patch = validate_thumb_reference_surface(
+            artifact, manifest, output_raw)
+        prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw)
+        result = {**prior, "thumb_reference_surface": patch}
+        result["validation_sha256"] = _sha_bytes(json.dumps(
+            result, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
+        return result
     if "source_face_retirement" in manifest:
         prior_artifact, prior_manifest, prior_raw, retirement = validate_exact_opposed_bone_source_retirement(
             artifact, manifest, output_raw,
@@ -1978,3 +1986,157 @@ def validate_exact_opposed_bone_source_retirement(
     if manifest != expected_manifest:
         raise model.ImportError("bone face retirement changed unrelated manifest or ownership")
     return source_artifact, source_manifest, source_raw, proof
+
+
+def replace_thumb_reference_surface(
+    raw: bytes, *, vertices6: Any, faces: Any,
+    face_ancestry: list[dict[str, Any]], protected_source_slots: tuple[int, ...],
+) -> tuple[bytes, dict[str, Any]]:
+    """Repack the inferred thumb-93 inspection surface in the existing ABI.
+
+    Retain original slots, source identity, rigid frame, and every other local
+    bone allocation. This operation grants no geometry or native admission.
+    Face ancestry may reference the original thumb or its two joint neighbors;
+    borrowed joint faces must be declared as inferred reciprocal caps.
+    """
+    header, rows, vertex_offset, index_offset = _decode_bones(raw)
+    row_index = next((i for i, r in enumerate(rows) if r[5] == 93), None)
+    if row_index is None:
+        raise model.ImportError("thumb reference patch needs typed bone 93")
+    row = rows[row_index]
+    verts = np.asarray(vertices6)
+    triangles = np.asarray(faces)
+    if (verts.ndim != 2 or verts.shape[1] != 6 or len(verts) < row[2]
+            or verts.dtype.kind not in "fiu" or not np.isfinite(verts).all()):
+        raise model.ImportError("thumb reference patch must retain finite original vertex slots")
+    verts = np.asarray(verts, dtype="<f4")
+    if (not np.isfinite(verts).all() or triangles.ndim != 2
+            or triangles.shape[1] != 3 or not len(triangles)
+            or triangles.dtype.kind not in "iu" or triangles.min() < 0
+            or triangles.max() >= len(verts)):
+        raise model.ImportError("thumb reference patch has invalid Float32 attributes or indices")
+    triangles = np.asarray(triangles, dtype="<u4")
+    if (not isinstance(protected_source_slots, tuple) or not protected_source_slots
+            or any(type(i) is not int or not 0 <= i < row[2] for i in protected_source_slots)
+            or len(set(protected_source_slots)) != len(protected_source_slots)):
+        raise model.ImportError("thumb reference patch needs distinct protected original attachment slots")
+    old = np.frombuffer(raw, dtype="<f4", count=header[3]*6, offset=vertex_offset).reshape(-1, 6)
+    original = old[row[1]:row[1]+row[2]]
+    slots = list(protected_source_slots)
+    if not np.array_equal(verts[slots, :3].view("<u4"), original[slots, :3].view("<u4")):
+        raise model.ImportError("thumb reference patch moved a protected attachment")
+    if not isinstance(face_ancestry, list) or len(face_ancestry) != len(triangles):
+        raise model.ImportError("thumb reference patch needs ancestry for every face")
+    source_rows = {int(r[5]): r for r in rows}
+    for record in face_ancestry:
+        if (not isinstance(record, dict) or type(record.get("source_stable_id")) is not int
+                or record["source_stable_id"] not in (88, 93, 94)
+                or type(record.get("source_face_index")) is not int
+                or not 0 <= record["source_face_index"] < source_rows[record["source_stable_id"]][4]//3
+                or type(record.get("orientation")) is not int
+                or record["orientation"] not in (-1, 1)):
+            raise model.ImportError("thumb reference patch has invalid typed source-face ancestry")
+        if record["source_stable_id"] != 93 and (
+                record.get("inferred_articular_cap") is not True or record["orientation"] != -1):
+            raise model.ImportError("borrowed joint faces require explicit inferred reciprocal caps")
+    from .resting_anatomy_verify import prepare_surface
+    surface = prepare_surface((51004, 93), verts[:, :3], triangles)
+    if not surface.closed or surface.quotient_topology["face_component_count"] != 1:
+        raise model.ImportError("thumb reference patch must be one closed oriented manifold")
+    if surface.self_audit()["count"]:
+        raise model.ImportError("thumb reference patch source Float32 self-intersects")
+    vertices = []
+    indices = []
+    new_rows = []
+    vertex_cursor = index_cursor = 0
+    for i, current in enumerate(rows):
+        if current[1] != sum(r[2] for r in rows[:i]) or current[3] != sum(r[4] for r in rows[:i]):
+            raise model.ImportError("bone reference source ranges do not partition the allocation")
+        source_vertices = raw[vertex_offset+current[1]*24:vertex_offset+(current[1]+current[2])*24]
+        source_indices = np.frombuffer(raw, "<u4", count=current[4], offset=index_offset+current[3]*4)
+        if len(source_indices) and (source_indices.min() < current[1]
+                                   or source_indices.max() >= current[1]+current[2]):
+            raise model.ImportError("bone reference source face escapes its local allocation")
+        vertex_bytes = verts.tobytes() if i == row_index else source_vertices
+        local_indices = triangles.reshape(-1) if i == row_index else source_indices-current[1]
+        updated = list(current)
+        updated[1:5] = [vertex_cursor, len(vertex_bytes)//24, index_cursor, len(local_indices)]
+        new_rows.append(tuple(updated))
+        vertices.append(vertex_bytes)
+        indices.append((local_indices+vertex_cursor).astype("<u4").tobytes())
+        vertex_cursor += updated[2]
+        index_cursor += updated[4]
+    if sum(r[2] for r in rows) != header[3] or sum(r[4] for r in rows) != header[4]:
+        raise model.ImportError("bone reference source allocation has unowned records")
+    new_header = list(header)
+    new_header[3:5] = [vertex_cursor, index_cursor]
+    output = (_BONE_HEADER.pack(*new_header)
+              + b"".join(_BONE_RECORD.pack(*r) for r in new_rows)
+              + b"".join(vertices) + b"".join(indices))
+    ancestry_bytes = json.dumps(face_ancestry, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    return output, {
+        "status": "PASS_INFERRED_THUMB_REFERENCE_SOURCE_PREPARATION_ONLY",
+        "typed_identity": [51004, 93], "original_source_slots_retained": row[2],
+        "appended_vertex_count": len(verts)-row[2], "compiled_face_count": len(triangles),
+        "protected_source_slots": slots, "face_ancestry_sha256": _sha_bytes(ancestry_bytes),
+        "rigid_owner_source_identity_and_rest_transform_unchanged": True,
+        "all_other_local_bone_vertex_and_face_bytes_unchanged": True,
+        "source_float32_closed_single_component_self_clear": True,
+        "inferred_not_measured": True, "physical_mass_or_state_changed": False,
+        "anatomical_admission": False, "native_admission": False,
+    }
+
+
+def validate_thumb_reference_surface(
+    artifact: Path, manifest: dict[str, Any], output_raw: bytes,
+) -> tuple[Path, dict[str, Any], bytes, dict[str, Any]]:
+    """Replay the pinned local patch while validating the original rib owner."""
+    repair = manifest.get("thumb_reference_surface")
+    keys = {"input_artifact", "input_manifest_sha256", "input_payload_sha256",
+            "patch_path", "patch_sha256", "ancestry_path", "ancestry_sha256",
+            "protected_source_slots", "proof"}
+    if not isinstance(repair, dict) or set(repair) != keys:
+        raise model.ImportError("thumb reference patch has incomplete provenance")
+    source = Path(repair["input_artifact"]).resolve()
+    if source == artifact.resolve():
+        raise model.ImportError("thumb reference patch cannot reference itself")
+    mp = source/"bodyparts3d-myosim-major-bones.manifest.json"
+    if not mp.is_file() or model.sha256(mp) != repair["input_manifest_sha256"]:
+        raise model.ImportError("thumb reference patch input manifest drifted")
+    prior = model.read_json(mp)
+    if "thumb_reference_surface" in prior:
+        raise model.ImportError("nested thumb reference patches require explicit composition")
+    payload = prior.get("payload", {})
+    name = payload.get("file")
+    if (not isinstance(name, str) or Path(name).name != name
+            or payload.get("sha256") != repair["input_payload_sha256"]):
+        raise model.ImportError("thumb reference patch source descriptor drifted")
+    path = source/name
+    if not path.is_file() or model.sha256(path) != repair["input_payload_sha256"]:
+        raise model.ImportError("thumb reference patch source payload drifted")
+    pinned = []
+    for key in ("patch", "ancestry"):
+        p = Path(repair[key+"_path"])
+        if not p.is_absolute():
+            p = artifact/p
+        if not p.is_file() or model.sha256(p) != repair[key+"_sha256"]:
+            raise model.ImportError("thumb reference patch input asset drifted")
+        pinned.append(p)
+    ancestry = model.read_json(pinned[1])
+    with np.load(pinned[0], allow_pickle=False) as patch:
+        if set(patch.files) != {"vertices6", "faces"}:
+            raise model.ImportError("thumb reference patch NPZ arrays differ")
+        expected, proof = replace_thumb_reference_surface(
+            path.read_bytes(), vertices6=patch["vertices6"], faces=patch["faces"],
+            face_ancestry=ancestry["face_ancestry"],
+            protected_source_slots=tuple(repair["protected_source_slots"]))
+    if expected != output_raw or proof != repair["proof"]:
+        raise model.ImportError("thumb reference patch bytes or ancestry differ")
+    wanted = json.loads(json.dumps(prior))
+    h = _BONE_HEADER.unpack_from(expected)
+    wanted["payload"].update(sha256=_sha_bytes(expected), bytes=len(expected),
+                              vertex_count=h[3], index_count=h[4])
+    wanted["thumb_reference_surface"] = repair
+    if manifest != wanted:
+        raise model.ImportError("thumb reference patch changed unrelated manifest or ownership")
+    return source, prior, path.read_bytes(), proof

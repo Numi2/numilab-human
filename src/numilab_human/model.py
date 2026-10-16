@@ -9110,6 +9110,13 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
         if retirement is not None and retirement.get("typed_identity") == [51004, stable_id]:
             surface["source_face_indices"] = retirement["retained_source_face_ids"]
             surface["source_face_retirement"] = retirement
+        thumb_patch = (composed_reframe_validation or {}).get("thumb_reference_surface")
+        if thumb_patch is not None and thumb_patch.get("typed_identity") == [51004, stable_id]:
+            surface["inferred_reference_surface_patch"] = thumb_patch
+            # Replaced triangles have explicit mixed joint ancestry; do not
+            # expose the prior retirement's one-to-one face map as current.
+            surface.pop("source_face_indices", None)
+            surface.pop("source_face_retirement", None)
         by_body[body_index].append(surface)
     return dict(by_body), {
         "file": payload_path.name,
