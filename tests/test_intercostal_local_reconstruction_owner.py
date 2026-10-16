@@ -14,6 +14,8 @@ from numilab_human.resting_intercostal_mesh_arrangement import (
     _localize_body20_normals_f32,
     derive_local_reconstruction_attachment_maps,
     derive_local_reconstruction_face_rib_owners,
+    derive_local_reconstruction_source_face_lineage,
+    derive_local_reconstruction_973_runtime_face_owners,
     compile_local_reconstruction_intercostal_payload,
 )
 
@@ -56,6 +58,14 @@ def _source_face_report(source_id: int = 900000048, source_face_id: int = 17) ->
     }, sort_keys=True, separators=(",", ":")).encode()
 
 
+def _face_npz(faces: np.ndarray) -> bytes:
+    import io
+
+    buffer = io.BytesIO()
+    np.savez(buffer, faces=np.asarray(faces, dtype="<u4"))
+    return buffer.getvalue()
+
+
 def _owner_report(parent_payload: bytes, ancestry: bytes, faces: np.ndarray) -> bytes:
     faces = np.ascontiguousarray(faces, dtype="<u4")
     report = {
@@ -94,6 +104,213 @@ def _accepted_receipt(pack_sha: str, source_sha: str) -> dict:
         "accepted_registered_body_poses": registered,
         "common_field_source_anatomy_payload_sha256": source_sha,
     }
+
+
+
+def test_authenticated_1091_source_lineage_keeps_mixed_and_nonrib_faces_unowned(monkeypatch):
+    import numilab_human.resting_intercostal_mesh_arrangement as owner
+
+    stable_id = 313
+    source_parent = _face_npz(np.asarray([[0, 1, 2], [1, 2, 3]], dtype="<u4"))
+    floating = _face_npz(np.asarray([[0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5]], dtype="<u4"))
+    candidate = _face_npz(np.asarray([
+        [0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5],
+    ], dtype="<u4"))
+    eo_tool = _face_npz(np.asarray([[0, 1, 2]], dtype="<u4"))
+    tool_report = _source_tool_report(48, face_count=1)
+    script = (
+        b"run_original_id=np.asarray([oid]\n"
+        b"face_id=np.arange(len(f),dtype=np.uint64)\n"
+        b"51010000+sid\n"
+    )
+    script_sha = _sha(script)
+    pins = json.dumps({
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/"
+        "full-anatomy-delivery-audit-1378/"
+        "construct_intercostal_all_three_external_oblique68_gap_1091.py": script_sha,
+        "pinned_parent_candidate": _sha(source_parent),
+        "pinned_eo68_source": "d" * 64,
+    }, sort_keys=True, separators=(",", ":")).encode()
+    monkeypatch.setattr(owner, "LOCAL_1091_SOURCE_ASSIGNMENT_SCRIPT_SHA256", script_sha)
+    monkeypatch.setattr(
+        owner, "LOCAL_1091_SOURCE_ASSIGNMENT_INPUT_PINS_SHA256", _sha(pins))
+    operation = json.dumps({
+        "identity": [51010, stable_id],
+        "parent_candidate_sha256": _sha(source_parent),
+        "derived_original_id": 900020068,
+        "target_identity": [51005, 68],
+        "target_source_sha256": "d" * 64,
+        "derived_tool_sha256": _sha(eo_tool),
+    }, sort_keys=True, separators=(",", ":")).encode()
+    ancestry = json.dumps({
+        "parent_candidate_sha256": _sha(floating),
+        "faces": [
+            {"output_face": 0, "classification": "unchanged_parent_face",
+             "source_rows": [[51010313, 0]], "exact_source_face_claim": True},
+            {"output_face": 1, "classification": "derived_nonrib_tool",
+             "source_rows": [[900020068, 0]], "exact_source_face_claim": False},
+            {"output_face": 2, "classification": "mixed_source",
+             "source_rows": [[51010313, 1], [900020068, 0]],
+             "exact_source_face_claim": False},
+            {"output_face": 3, "classification": "derived_typed_rib_tool",
+             "source_rows": [[900000048, 0]], "exact_source_face_claim": True},
+        ],
+    }, sort_keys=True, separators=(",", ":")).encode()
+    current_operation = json.dumps({
+        "parent_candidate_sha256": _sha(floating),
+        "candidate_sha256": _sha(candidate),
+    }, sort_keys=True, separators=(",", ":")).encode()
+    face_parents, direct_owners, summary = derive_local_reconstruction_source_face_lineage(
+        ancestry, _sha(ancestry), stable_id=stable_id,
+        candidate_npz_raw=candidate, expected_candidate_npz_sha256=_sha(candidate),
+        current_operation_ancestry_raw=current_operation,
+        current_parent_candidate_raw=floating,
+        source_face_ancestry_parent_candidate_raw=floating,
+        source_operation_ancestry_raw=operation,
+        source_operation_parent_candidate_raw=source_parent,
+        source_assignment_script_raw=script,
+        source_assignment_input_pins_raw=pins,
+        derived_nonrib_tool_raw=eo_tool,
+        authenticated_source_report_raws=[tool_report],
+        authenticated_source_report_sha256s=[_sha(tool_report)],
+    )
+    assert face_parents == [[0], [], [], []]
+    assert direct_owners == [None, None, None, 48]
+    assert summary["single_parent_face_count"] == 1
+    assert summary["direct_typed_rib_face_count"] == 1
+    assert summary["unowned_face_count"] == 2
+    assert summary["anatomical_admission"] is False
+
+    with pytest.raises(ValueError, match="tool bytes differ"):
+        derive_local_reconstruction_source_face_lineage(
+            ancestry, _sha(ancestry), stable_id=stable_id,
+            candidate_npz_raw=candidate, expected_candidate_npz_sha256=_sha(candidate),
+            current_operation_ancestry_raw=current_operation,
+            current_parent_candidate_raw=floating,
+            source_face_ancestry_parent_candidate_raw=floating,
+            source_operation_ancestry_raw=operation,
+            source_operation_parent_candidate_raw=source_parent,
+            source_assignment_script_raw=script,
+            source_assignment_input_pins_raw=pins,
+            derived_nonrib_tool_raw=_face_npz(np.asarray([[0, 2, 1]], dtype="<u4")),
+            authenticated_source_report_raws=[tool_report],
+            authenticated_source_report_sha256s=[_sha(tool_report)],
+        )
+
+
+def test_authenticated_slot_preserving_face_ancestry_binds_exact_parent_slots():
+    parent = _face_npz(np.asarray([[0, 1, 2], [1, 2, 3]], dtype="<u4"))
+    candidate = _face_npz(np.asarray([[0, 1, 2], [1, 2, 3]], dtype="<u4"))
+    ancestry = json.dumps({
+        "parent_candidate_sha256": _sha(parent),
+        "faces": [
+            {"output_face": i, "source_rows": [[51010313, i]]}
+            for i in range(2)
+        ],
+    }, sort_keys=True, separators=(",", ":")).encode()
+    operation = json.dumps({
+        "parent_candidate_sha256": _sha(parent),
+        "parent_face_ancestry_sha256": _sha(ancestry),
+        "candidate_sha256": _sha(candidate),
+        "faces_retain_parent_slots": True,
+        "source_face_ancestry_unchanged": True,
+    }, sort_keys=True, separators=(",", ":")).encode()
+    parents, owners, summary = derive_local_reconstruction_source_face_lineage(
+        ancestry, _sha(ancestry), stable_id=313,
+        candidate_npz_raw=candidate, expected_candidate_npz_sha256=_sha(candidate),
+        current_operation_ancestry_raw=operation,
+        current_parent_candidate_raw=parent,
+        source_face_ancestry_parent_candidate_raw=parent,
+    )
+    assert parents == [[0], [1]]
+    assert owners == [None, None]
+    assert summary["preserved_face_slot_count"] == 2
+    assert summary["native_admission"] is False
+
+    changed = _face_npz(np.asarray([[0, 1, 2], [1, 3, 2]], dtype="<u4"))
+    changed_operation = json.dumps({
+        "parent_candidate_sha256": _sha(parent),
+        "parent_face_ancestry_sha256": _sha(ancestry),
+        "candidate_sha256": _sha(changed),
+        "faces_retain_parent_slots": True,
+        "source_face_ancestry_unchanged": True,
+    }, sort_keys=True, separators=(",", ":")).encode()
+    with pytest.raises(ValueError, match="changed the parent face slots"):
+        derive_local_reconstruction_source_face_lineage(
+            ancestry, _sha(ancestry), stable_id=313,
+            candidate_npz_raw=changed, expected_candidate_npz_sha256=_sha(changed),
+            current_operation_ancestry_raw=changed_operation,
+            current_parent_candidate_raw=parent,
+            source_face_ancestry_parent_candidate_raw=parent,
+        )
+
+
+def test_973_runtime_maps_project_only_exact_source_faces_and_reject_drift(monkeypatch):
+    import numilab_human.resting_intercostal_mesh_arrangement as owner
+    from numilab_human.composed_bone_body_frame import _RUNTIME_ATTACHMENT_RIBS
+
+    vertices = np.asarray([
+        [0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [0, 1, 0, 0, 0, 1],
+        [1, 1, 0, 0, 0, 1],
+    ], dtype="<f4")
+    faces = np.asarray([[0, 1, 2], [1, 2, 3], [0, 2, 3]], dtype="<u4")
+    source = encode_payload(
+        (b"NHANAT1\0", 5, 1, 4, 9, 0x12345678, b"s" * 32),
+        {313: {"body_index": 20, "layer": 1, "flags": 0,
+               "vertices6": vertices, "faces": faces}},
+    )
+    source_sha = _sha(source)
+    bindings = {}
+    for rib_id, ids in ((48, [0, 1, 2]), (49, [0, 2, 3])):
+        member, member_sha, channel_index, _ = _RUNTIME_ATTACHMENT_RIBS[rib_id]
+        bindings[f"intercostal_313_rib{rib_id}_motion_attachment"] = {
+            "schema": f"numi.human.intercostal313-rib{rib_id}-interface-motion-attachment.v1",
+            "anatomy_payload_sha256": source_sha,
+            "surface": {
+                "semantic": 51010, "stable_id": 313, "body_index": 20, "layer": 1,
+                "local_vertex_count": len(vertices),
+                "interface_local_vertex_ids": ids,
+                "interface_local_vertex_ids_sha256": _sha(
+                    np.asarray(ids, dtype="<u4").tobytes()),
+            },
+            "existing_rib_channel": {
+                "stable_id": rib_id, "semantic": 51004, "body_index": 20,
+                "channel_kind": 5, "channel_index": channel_index,
+                "source_member_id": member, "source_member_sha256": member_sha,
+            },
+            "source_partition": {"native_admission": False},
+        }
+    receipt = json.dumps({
+        "schema": "numi.human.resting-anatomy-receipt.v1",
+        "payload": {"sha256": source_sha},
+        "functional_bindings": bindings,
+    }, sort_keys=True, separators=(",", ":")).encode()
+    receipt_sha = _sha(receipt)
+    monkeypatch.setattr(owner, "LOCAL_RECONSTRUCTION_973_RECEIPT_SHA256", receipt_sha)
+    monkeypatch.setattr(owner, "LOCAL_RECONSTRUCTION_973_PAYLOAD_SHA256", source_sha)
+
+    face_owners, report = derive_local_reconstruction_973_runtime_face_owners(
+        receipt, receipt_sha, source, source_sha, stable_id=313,
+    )
+    assert face_owners == {0: 48, 1: None, 2: 49}
+    assert report["authenticated_runtime_map_rib_ids"] == [48, 49]
+    assert report["geometric_proximity_used_for_ownership"] is False
+    assert report["anatomical_admission"] is False
+
+    bad_bindings = json.loads(receipt)
+    bad_bindings["functional_bindings"][
+        "intercostal_313_rib48_motion_attachment"
+    ]["surface"]["interface_local_vertex_ids_sha256"] = "f" * 64
+    bad_receipt = json.dumps(
+        bad_bindings, sort_keys=True, separators=(",", ":")
+    ).encode()
+    monkeypatch.setattr(owner, "LOCAL_RECONSTRUCTION_973_RECEIPT_SHA256", _sha(bad_receipt))
+    with pytest.raises(ValueError, match="source vertex map differs"):
+        derive_local_reconstruction_973_runtime_face_owners(
+            bad_receipt, _sha(bad_receipt), source, source_sha, stable_id=313,
+        )
 
 
 def test_mixed_bone_tool_registry_keeps_only_ribs_and_rejects_ambiguous_ids():
@@ -427,6 +644,43 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
     np.testing.assert_array_equal(after_rows[313]["vertices6"][3, 3:], np.zeros(3, dtype="<f4"))
     assert report["anatomical_admission"] is False
     assert report["native_admission"] is False
+
+    diagnostic_spec = {
+        "candidate_npz_raw": candidate_raw,
+        "candidate_npz_sha256": _sha(candidate_raw),
+        "world_positions_f32": candidate_positions,
+        "faces": faces,
+        "source_emission_diagnostic_only": True,
+    }
+    diagnostic_output, diagnostic_report = compile_local_reconstruction_intercostal_payload(
+        source, {313: diagnostic_spec},
+        expected_source_payload_sha256=source_sha,
+        accepted_receipt_raw=receipt_raw,
+        accepted_receipt_path=receipt_path,
+        accepted_capture_pack_path=pack,
+    )
+    _header, _records, diagnostic_rows = _parse_payload(diagnostic_output)
+    assert diagnostic_rows[313]["vertices6"].shape == (4, 6)
+    assert diagnostic_report["status"] == "PASS_ABI5_SOURCE_EMISSION_DIAGNOSTIC_ONLY"
+    assert diagnostic_report["attachment_ownership_unresolved_stable_ids"] == [313]
+    assert diagnostic_report["runtime_attachment_maps"] == {"313": {}}
+    assert diagnostic_report["runtime_attachment_map_sidecars"] == {"313": {}}
+    assert diagnostic_report["row_reports"]["313"]["unowned_child_face_count"] == 1
+    assert diagnostic_report["native_admission"] is False
+
+    mismatched_diagnostic_spec = {
+        **diagnostic_spec,
+        "world_positions_f32": candidate_positions.copy(),
+    }
+    mismatched_diagnostic_spec["world_positions_f32"][0, 0] += 1.0
+    with pytest.raises(ValueError, match="diagnostic arrays differ from the exact NPZ"):
+        compile_local_reconstruction_intercostal_payload(
+            source, {313: mismatched_diagnostic_spec},
+            expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw,
+            accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
 
     float64_npz_buffer = __import__("io").BytesIO()
     np.savez(
