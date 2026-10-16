@@ -76,6 +76,8 @@ class RestingRunAdmissionTests(unittest.TestCase):
         skin, contact, bones, organs = map(asset, ("skin.nhskin", "support.nhcnt", "bones.nhbones", "organs.nhanatomy"))
         surface = asset("bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue")
         tendon = asset("tendon.nhtendon")
+        Path(tendon["path"]).write_bytes(
+            b"NHTEND3\0"+struct.pack("<I", 3)+bytes(100)+bytes.fromhex(bones["sha256"]))
         for name in ("bin/numi-human-native", "lib/libmetalrobo.dylib", "shaders/MetalRobo.metallib",
                      "shaders/MetalRoboHyperPolicy.metallib", "shaders/NumiNeuron.metallib",
                      "matter/shaders/HumanRespiration.metallib", "matter/shaders/NumiMatter.metallib",
@@ -115,6 +117,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
         child = self.root / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
         self.anatomy["passive_tissue_parent_bindings"] = {
             "child_payload_sha256": hashlib.sha256(child.read_bytes()).hexdigest(),
+            "anatomy_payload_sha256": self.anatomy["payload"]["sha256"],
             "source_payloads": [{"path": parent.name,
                                 "sha256": hashlib.sha256(parent.read_bytes()).hexdigest()}],
             "surfaces": [{"stable_id": 163, "vertices": [[[0, 163, 0, 1.0]]]}],
@@ -134,6 +137,7 @@ class RestingRunAdmissionTests(unittest.TestCase):
         weights = [struct.unpack("<f", struct.pack("<f", v))[0] for v in (.1, .9)]
         bindings = {
             "child_payload_sha256": hashlib.sha256(child.read_bytes()).hexdigest(),
+            "anatomy_payload_sha256": self.anatomy["payload"]["sha256"],
             "source_payloads": [{"path": parent.name,
                                 "sha256": hashlib.sha256(parent.read_bytes()).hexdigest()}],
             "surfaces": [{"stable_id": 163, "vertices": [[[0, 163, 0, 1.0]]]}],
@@ -152,6 +156,46 @@ class RestingRunAdmissionTests(unittest.TestCase):
                     term[3] /= total
                 self.write_receipts()
                 command(self.args)
+
+    def test_passive_vessel_parent_rows_require_current_anatomy_identity(self):
+        parent = self.root / "raw-parent.nhtissue"
+        parent.write_bytes(b"source-parent-fixture")
+        child = self.root / "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue"
+        bindings = {
+            "child_payload_sha256": hashlib.sha256(child.read_bytes()).hexdigest(),
+            "anatomy_payload_sha256": self.anatomy["payload"]["sha256"],
+            "source_payloads": [{"path": str(parent),
+                                "sha256": hashlib.sha256(parent.read_bytes()).hexdigest()}],
+            "surfaces": [{"stable_id": 163, "vertices": [[[0, 163, 0, 1.0]]]}],
+            "anatomy_surfaces": [{"stable_id": 475, "vertices": [[[0, 163, 0, 1.0]]]}],
+        }
+        self.anatomy["passive_tissue_parent_bindings"] = bindings
+        self.write_receipts()
+        command(self.args)
+        bindings["anatomy_payload_sha256"] = "0"*64
+        self.write_receipts()
+        with self.assertRaisesRegex(HumanImportError, "vessel parent anatomy identity differs"):
+            command(self.args)
+
+    def test_functional_and_common_cardiac_anatomy_hashes_are_checked(self):
+        self.anatomy["functional_bindings"]["anatomy_payload_sha256"] = "0"*64
+        self.write_receipts()
+        with self.assertRaisesRegex(HumanImportError, "functional anatomy identity differs"):
+            command(self.args)
+        self.anatomy["functional_bindings"]["anatomy_payload_sha256"] = self.anatomy["payload"]["sha256"]
+        common = self.add_common_field()
+        command(self.args)
+        common["anatomy_payload_sha256"] = "0"*64
+        self.write_receipts()
+        with self.assertRaisesRegex(HumanImportError, "common cardiac field anatomy identity differs"):
+            command(self.args)
+
+    def test_tendon_bone_hash_is_checked_before_native_launch(self):
+        header = bytearray(self.args.tendon.read_bytes())
+        header[112] ^= 1
+        self.args.tendon.write_bytes(header)
+        with self.assertRaisesRegex(HumanImportError, "tendon bone identity differs"):
+            command(self.args)
 
     def test_passive_parent_map_cannot_be_reused_for_another_child(self):
         self.anatomy["passive_tissue_parent_bindings"] = {
@@ -230,7 +274,8 @@ class RestingRunAdmissionTests(unittest.TestCase):
             command(self.args)
 
     def add_common_field(self, absolute=False):
-        binding = {"schema": "numi.human.cardiac_common_field.v1"}
+        binding = {"schema": "numi.human.cardiac_common_field.v1",
+                   "anatomy_payload_sha256": self.anatomy["payload"]["sha256"]}
         for name in ("map", "polynomials", "domain_boxes"):
             path = self.root / "cardiac" / (name + ".bin")
             path.parent.mkdir(exist_ok=True)

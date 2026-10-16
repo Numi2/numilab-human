@@ -190,11 +190,17 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
     bones = checked(anatomy["provenance"]["bones_payload"],
                     anatomy["functional_bindings"]["bones_payload_sha256"])
     organs = checked(anatomy["payload"]["path"], anatomy["payload"]["sha256"])
+    functional_sha = anatomy["functional_bindings"].get("anatomy_payload_sha256")
+    if functional_sha is not None:
+        _require(functional_sha == assets[str(organs)],
+                 "functional anatomy identity differs")
     common = anatomy["provenance"].get("cardiac_geometry_binding", {}).get("common_field")
     if common is not None:
         _require(isinstance(common, dict) and
                  common.get("schema") == "numi.human.cardiac_common_field.v1",
                  "unsupported common cardiac field receipt")
+        _require(common.get("anatomy_payload_sha256") == assets[str(organs)],
+                 "common cardiac field anatomy identity differs")
         for owner in ("map", "polynomials", "domain_boxes"):
             record = common.get(owner)
             _require(isinstance(record, dict) and
@@ -237,9 +243,19 @@ def command(args: argparse.Namespace) -> tuple[list[str], dict[str, str]]:
                  0 < len(parents["surfaces"]) <= 192,
                  "passive tissue parent surface inventory is invalid")
         _validate_parent_partitions(parents)
+        if "anatomy_surfaces" in parents:
+            _require(parents.get("anatomy_payload_sha256") == assets[str(organs)],
+                     "passive vessel parent anatomy identity differs")
     if "manifest_path" in muscle_surfaces:
         checked(muscle_surfaces["manifest_path"], muscle_surfaces["manifest_sha256"])
     tendon = checked(args.tendon)
+    with tendon.open("rb") as stream:
+        tendon_header = stream.read(144)
+    _require(len(tendon_header) == 144 and tendon_header[:8] == b"NHTEND3\0"
+             and int.from_bytes(tendon_header[8:12], "little") == 3,
+             "tendon header does not name the native NHTENDON3 owner")
+    _require(tendon_header[112:144].hex() == assets[str(bones)],
+             "tendon bone identity differs")
     binary = checked(args.build / "bin" / "numi-human-native")
     for relative in ("lib/libmetalrobo.dylib", "shaders/MetalRobo.metallib",
                      "shaders/MetalRoboHyperPolicy.metallib", "shaders/NumiNeuron.metallib",
