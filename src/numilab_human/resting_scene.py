@@ -284,6 +284,78 @@ def _local_witnesses(rigid: dict[str, Any], skin: dict[str, Any],
     return rows
 
 
+
+def refit_native_skin_witnesses(
+    selected: list[dict[str, Any]],
+    native_points_by_source_vertex: dict[int, Any],
+    accepted_body_poses: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Prepare existing contact lever arms from authenticated native skin points.
+
+    The caller must first bind the capture to the NHSKIN source topology and
+    accepted initialization state. This function never substitutes a nearest
+    vertex or changes a body/source identity. It does not run contact dynamics:
+    the resulting NHCNT1 needs fresh settling and dynamic skin-fit checks.
+    """
+    _require(0 < len(selected) <= 32, "invalid native skin witness count")
+    poses = {}
+    for pose in accepted_body_poses:
+        body = pose["body_index"]
+        _require(isinstance(body, int) and not isinstance(body, bool) and body >= 0,
+                 "invalid accepted contact body identity")
+        _require(body not in poses, "duplicate accepted contact body identity")
+        poses[body] = pose
+    rows, diagnostics, used = [], [], set()
+    for old in selected:
+        body, vertex = old["core_body_index"], old["vertex_index"]
+        _require(all(isinstance(x, int) and not isinstance(x, bool) and x >= 0
+                     for x in (body, vertex)), "invalid contact body/source identity")
+        _require(vertex not in used, "duplicate contact source vertex identity")
+        used.add(vertex)
+        _require(body in poses, "contact body absent from accepted poses")
+        _require(vertex in native_points_by_source_vertex,
+                 "contact source vertex absent from authenticated native skin")
+        point = np.asarray(native_points_by_source_vertex[vertex], dtype=np.float64)
+        pose = poses[body]
+        position = np.asarray(pose["position_m"], dtype=np.float64)
+        quaternion = np.asarray(pose["quaternion_xyzw"], dtype=np.float32)
+        oldlocal = np.asarray(old["local_point_m"], dtype=np.float32)
+        _require(point.shape == position.shape == oldlocal.shape == (3,) and
+                 quaternion.shape == (4,), "invalid contact point/body pose shape")
+        _require(all(np.isfinite(x).all() for x in
+                     (point, position, quaternion, oldlocal)),
+                 "nonfinite contact point/body pose")
+        _require(abs(float(np.dot(quaternion.astype(float),
+                                  quaternion.astype(float))) - 1.0) <= 2e-5,
+                 "accepted contact body quaternion is not unit length")
+        # Match the existing Float32 quaternion owner without renormalizing it.
+        rotation = _rotation_xyzw(quaternion)
+        oldworld = position + rotation @ oldlocal.astype(float)
+        old_error = float(np.linalg.norm(oldworld - point))
+        local = oldlocal.copy() if old_error <= 2e-6 else np.asarray(
+            np.linalg.solve(rotation, point - position), dtype=np.float32)
+        actual = position + rotation @ local.astype(float)
+        error = float(np.linalg.norm(actual - point))
+        _require(np.isfinite(local).all() and error <= 2e-6,
+                 "Float32 contact witness fails native skin initialization fit")
+        rows.append({**old, "local_point_m": local.astype(float).tolist(),
+                     "world_witness_m": [float(point[0]), float(point[1]), 0.0],
+                     "plane_gap_m": float(point[2]),
+                     "rest_frame_witness_fit_error_m": error,
+                     "dominant_binding_error_m": error})
+        diagnostics.append({
+            "core_body_index": body, "source_vertex_index": vertex,
+            "old_local_point_m": oldlocal.astype(float).tolist(),
+            "new_local_point_m": local.astype(float).tolist(),
+            "old_actual_skin_fit_error_m": old_error,
+            "new_actual_skin_fit_error_m": error,
+            "changed_local_point": oldlocal.tobytes() != local.tobytes(),
+            "lever_arm_change_m": float(np.linalg.norm(
+                local.astype(float) - oldlocal.astype(float))),
+            "actual_skin_point_m": point.tolist(),
+        })
+    return rows, diagnostics
+
 def encode_nhcnt1(rigid: dict[str, Any], rows: list[dict[str, Any]], *, friction: float = 0.55) -> bytes:
     _require(len(rows) <= 32 and len(rows) > 0 and math.isfinite(friction) and friction >= 0,
              "invalid NHCNT1 support rows/friction")
