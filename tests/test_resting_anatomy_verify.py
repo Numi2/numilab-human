@@ -1092,6 +1092,49 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         self.assertEqual(topology["component_face_counts"], [6, 6, 10])
         self.assertEqual(topology["boundary_edge_count"], 28)
 
+    def test_carrier_query_cache_matches_uncached_exact_queries(self):
+        first, second, declaration = source_patch_carrier_case()
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        triangles = context["carrier_triangles"]
+
+        points = (
+            (Fraction(1), Fraction(0), Fraction(0)),
+            (Fraction(1), Fraction(0), Fraction(1)),
+            (Fraction(5), Fraction(0), Fraction(0)),
+        )
+        for point in points:
+            self.assertEqual(
+                av._cached_exact_point_on_carrier(point, context),
+                av._exact_point_on_carrier(point, triangles))
+        point_cache = context["_carrier_query_cache"]["point"]
+        self.assertEqual(len(point_cache), len(points))
+        for point in points:
+            self.assertEqual(av._cached_exact_point_on_carrier(point, context),
+                             av._exact_point_on_carrier(point, triangles))
+        self.assertEqual(len(point_cache), len(points))
+
+        segments = (
+            ((Fraction(0), Fraction(0), Fraction(0)),
+             (Fraction(3), Fraction(0), Fraction(0))),
+            ((Fraction(0), Fraction(0), Fraction(0)),
+             (Fraction(21), Fraction(0), Fraction(0))),
+            ((Fraction(1), Fraction(0), Fraction(-1)),
+             (Fraction(1), Fraction(0), Fraction(1))),
+        )
+        expected = (True, False, False)
+        for (start, end), expected_result in zip(segments, expected):
+            uncached = av._exact_segment_on_carrier(start, end, triangles)
+            self.assertEqual(uncached, expected_result)
+            self.assertEqual(av._cached_exact_segment_on_carrier(start, end, context), uncached)
+            self.assertEqual(av._cached_exact_segment_on_carrier(end, start, context), uncached)
+        segment_cache = context["_carrier_query_cache"]["segment"]
+        self.assertEqual(len(segment_cache), len(segments))
+
+        direct_lookup = {}
+        for first_face, second_face, carrier_id, triangle in context["patch_face_pairs"]:
+            direct_lookup.setdefault((first_face, second_face), (carrier_id, triangle))
+        self.assertEqual(context["carrier_face_pair_lookup"], direct_lookup)
+
     def test_multiface_carrier_rejects_gap_even_when_endpoints_and_midpoint_lie_on_it(self):
         first, second, declaration = source_patch_carrier_case()
         context = av._prepare_source_patch_complex(first, second, declaration)

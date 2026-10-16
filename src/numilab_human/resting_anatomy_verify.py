@@ -1988,17 +1988,15 @@ def _source_patch_complex_contact(first, second, first_face, second_face, patch)
         return False, "contact_faces_are_outside_authenticated_incident_support"
     points = first.intersection_points_meters(second, first_face, second_face)
     if patch.get("carrier_complex"):
-        direct = next(((carrier_id, triangle) for a, b, carrier_id, triangle
-                       in patch["patch_face_pairs"]
-                       if a == first_face and b == second_face), None)
+        direct = patch["carrier_face_pair_lookup"].get((first_face, second_face))
         if direct is not None:
             if len(points) == 3 and set(points) == set(direct[1]):
                 return True, "exact_reciprocal_source_carrier_face"
             return False, "reciprocal_source_carrier_face_intersection_is_not_exact"
-        if len(points) == 1 and _exact_point_on_carrier(points[0], patch["carrier_triangles"]):
+        if len(points) == 1 and _cached_exact_point_on_carrier(points[0], patch):
             return True, "exact_point_contact_on_authenticated_carrier"
-        if len(points) == 2 and _exact_segment_on_carrier(
-                points[0], points[1], patch["carrier_triangles"]):
+        if len(points) == 2 and _cached_exact_segment_on_carrier(
+                points[0], points[1], patch):
             return True, "exact_segment_contact_fully_covered_by_authenticated_carrier"
         return False, "contact_is_not_fully_covered_by_authenticated_carrier"
     direct_source_face = next((source_face for first_index, second_index, source_face
@@ -2133,6 +2131,62 @@ def _exact_segment_on_carrier(start, end, triangles):
         if covered >= 1:
             return True
     return covered >= 1
+
+
+_CARRIER_QUERY_CACHE_LIMIT = 65536
+
+
+def _exact_triangle_aabb(triangle):
+    return (
+        tuple(min(point[axis] for point in triangle) for axis in range(3)),
+        tuple(max(point[axis] for point in triangle) for axis in range(3)),
+    )
+
+
+def _aabb_overlaps(first, second):
+    return all(first[0][axis] <= second[1][axis]
+               and second[0][axis] <= first[1][axis] for axis in range(3))
+
+
+def _cached_exact_point_on_carrier(point, patch):
+    """Exact carrier membership with conservative exact-AABB pruning and bounded memoization."""
+    point = tuple(point)
+    cache = patch["_carrier_query_cache"]["point"]
+    if point in cache:
+        return cache[point]
+    candidates = [
+        triangle for triangle, (lower, upper) in zip(
+            patch["carrier_triangles"], patch["carrier_triangle_aabbs"])
+        if all(lower[axis] <= point[axis] <= upper[axis] for axis in range(3))
+    ]
+    result = _exact_point_on_carrier(point, candidates)
+    if len(cache) < _CARRIER_QUERY_CACHE_LIMIT:
+        cache[point] = result
+    return result
+
+
+def _cached_exact_segment_on_carrier(start, end, patch):
+    """Exact full-segment coverage with conservative AABB pruning and canonical cache keys."""
+    endpoints = tuple(sorted((tuple(start), tuple(end))))
+    if len(endpoints) != 2:
+        raise ValueError("carrier segment must have exactly two endpoints")
+    cache = patch["_carrier_query_cache"]["segment"]
+    if endpoints in cache:
+        return cache[endpoints]
+    first, last = endpoints
+    segment_bounds = (
+        tuple(min(first[axis], last[axis]) for axis in range(3)),
+        tuple(max(first[axis], last[axis]) for axis in range(3)),
+    )
+    candidates = [
+        triangle for triangle, triangle_bounds in zip(
+            patch["carrier_triangles"], patch["carrier_triangle_aabbs"])
+        if _aabb_overlaps(segment_bounds, triangle_bounds)
+    ]
+    result = _exact_segment_on_carrier(first, last, candidates)
+    if len(cache) < _CARRIER_QUERY_CACHE_LIMIT:
+        cache[endpoints] = result
+    return result
 
 
 def _carrier_topology(point_ids, carrier_faces, expected_components):
@@ -2485,6 +2539,7 @@ def _prepare_source_patch_carrier_complex(first, second, value):
         patch_maps.append(patch_map)
 
     patch_pairs = []
+    patch_face_pair_lookup = {}
     for index, carrier_id in enumerate(carrier_ids):
         a, b = patch_maps[0][carrier_id], patch_maps[1][carrier_id]
         different_points = [(point_id, coordinate_maps[0].get(point_id),
@@ -2493,13 +2548,20 @@ def _prepare_source_patch_carrier_complex(first, second, value):
         if (set(a[1]) != set(b[1]) or not _cyclic_source_face_orientation(
                 a[1], b[1], reversed_order=True) or different_points):
             raise ValueError("source patch carrier reciprocal faces differ in owner-frame coordinates")
-        patch_pairs.append((a[0], b[0], carrier_id,
-                            tuple(capture_points[point_id] for point_id in carrier_faces[index])))
+        carrier_triangle = tuple(capture_points[point_id] for point_id in carrier_faces[index])
+        patch_pairs.append((a[0], b[0], carrier_id, carrier_triangle))
+        patch_face_pair_lookup.setdefault((a[0], b[0]), (carrier_id, carrier_triangle))
+    carrier_triangles = tuple(carrier_capture_triangles)
     return {"source_patch_complex_sha256": digest, "source_member": member,
             "source_member_sha256": member_sha, "support_faces": tuple(map(set, support_maps)),
             "vertex_maps": point_maps, "coordinate_maps": coordinate_maps,
-            "patch_face_pairs": tuple(patch_pairs), "carrier_complex": True,
-            "carrier_triangles": tuple(carrier_capture_triangles), "carrier_topology": topology}
+            "patch_face_pairs": tuple(patch_pairs),
+            "carrier_face_pair_lookup": patch_face_pair_lookup, "carrier_complex": True,
+            "carrier_triangles": carrier_triangles,
+            "carrier_triangle_aabbs": tuple(_exact_triangle_aabb(triangle)
+                                            for triangle in carrier_triangles),
+            "_carrier_query_cache": {"point": {}, "segment": {}},
+            "carrier_topology": topology}
 
 
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
