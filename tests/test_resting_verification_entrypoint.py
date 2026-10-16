@@ -37,6 +37,54 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
     def surfaces(self):
         return {KEY: (POINTS.copy(), FACES.copy(), None, GIDS.copy())}
 
+    def construction(self, **changes):
+        arrays = dict(capture_positions_m=POINTS, capture_faces=FACES,
+                      capture_global_vertex_ids=GIDS)
+        arrays.update(changes)
+        path = self.root / "construction.npz"
+        np.savez(path, **arrays)
+        return path, hashlib.sha256(path.read_bytes()).hexdigest()
+
+    def test_explicit_construction_is_never_source_or_native_admission(self):
+        path, digest = self.construction()
+        surfaces = self.surfaces()
+        report = tool.apply_construction_overlay(surfaces, KEY, path, digest)
+        self.assertFalse(report["source_ancestry_admission"])
+        self.assertFalse(report["actual_native_emission_verified"])
+        self.assertFalse(report["material_fields_and_rest_owner_verified"])
+        self.assertFalse(report["anatomical_admission"])
+        self.assertEqual(report["coordinate_provenance"], "inferred_reference_construction_only")
+        self.assertTrue(np.array_equal(surfaces[KEY][0], POINTS))
+        self.assertTrue(np.allclose(np.linalg.norm(surfaces[KEY][2], axis=1), 1))
+
+    def test_construction_float64_is_rejected_before_predicates(self):
+        path, digest = self.construction(capture_positions_m=POINTS.astype("<f8"))
+        with patch.object(tool.verify, "prepare_surface", side_effect=AssertionError("no predicate")):
+            with self.assertRaisesRegex(ValueError, "Float32 metres"):
+                tool.apply_construction_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_construction_cannot_replace_a_missing_anatomical_identity(self):
+        path, digest = self.construction()
+        with self.assertRaisesRegex(ValueError, "existing typed"):
+            tool.apply_construction_overlay({}, KEY, path, digest)
+
+    def test_construction_duplicate_global_ids_are_rejected(self):
+        path, digest = self.construction(capture_global_vertex_ids=np.array([1, 1, 2, 3]))
+        with self.assertRaises(ValueError):
+            tool.apply_construction_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_construction_does_not_silently_ignore_source_fields(self):
+        path, digest = self.construction(source_positions=POINTS)
+        with self.assertRaisesRegex(ValueError, "exactly"):
+            tool.apply_construction_overlay(self.surfaces(), KEY, path, digest)
+
+    def test_degenerate_float32_construction_is_rejected(self):
+        bad = POINTS.copy()
+        bad[2] = (bad[0] + bad[1])/2
+        path, digest = self.construction(capture_positions_m=bad)
+        with self.assertRaisesRegex(ValueError, "degenerate emitted"):
+            tool.apply_construction_overlay(self.surfaces(), KEY, path, digest)
+
     def test_wrong_hash_rejected_without_loading_archive(self):
         path, _ = self.candidate()
         with patch.object(tool.np, "load", side_effect=AssertionError("must not load")):

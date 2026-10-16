@@ -219,6 +219,7 @@ def apply_overlay(surfaces, key, path, digest, faces_key="capture_faces", *,
                   repacked_source=None, accepted_poses=None, source_cache=None):
     """Bind a fixed-allocation candidate or an explicitly source-owned repack."""
     key = verify.typed_key(key)
+    key = verify.typed_key(key)
     source_pin = pin(path, digest)
     if key not in surfaces:
         raise ValueError(f"candidate typed identity absent from native capture: {key}")
@@ -336,6 +337,52 @@ def shared_partition_declarations(raw):
     return partitions
 
 
+def apply_construction_overlay(surfaces, key, path, digest):
+    """Check an inferred reference construction before source-owner emission.
+
+    This deliberately cannot establish source ancestry, rest-owner emission or
+    admission. It consolidates the former regional world-only predicate callers.
+    Existing strict --overlay and --overlay-source behavior is unchanged.
+    """
+    key = verify.typed_key(key)
+    source_pin = pin(path, digest)
+    if key not in surfaces:
+        raise ValueError("construction requires an existing typed anatomical identity")
+    with np.load(path, allow_pickle=False) as arrays:
+        required = {"capture_positions_m", "capture_faces", "capture_global_vertex_ids"}
+        if set(arrays.files) != required:
+            raise ValueError("construction requires exactly the existing three world-geometry arrays")
+        points, faces, gids = (arrays[name].copy() for name in (
+            "capture_positions_m", "capture_faces", "capture_global_vertex_ids"))
+    if (points.dtype != np.dtype("<f4") or points.ndim != 2
+            or points.shape[1] != 3 or not len(points) or not np.isfinite(points).all()
+            or faces.dtype.kind not in "iu" or faces.ndim != 2 or faces.shape[1] != 3
+            or not len(faces) or faces.min() < 0 or faces.max() >= len(points)
+            or gids.dtype.kind not in "iu" or gids.shape != (len(points),)):
+        raise ValueError("construction requires finite Float32 metres, valid triangle indices and integral source IDs")
+    verify.keyed_row_indices(gids, gids)
+    q = points.astype(np.float64)
+    area = np.cross(q[faces[:, 1]]-q[faces[:, 0]], q[faces[:, 2]]-q[faces[:, 0]])
+    if np.any(np.linalg.norm(area, axis=1) == 0):
+        raise ValueError("construction contains a degenerate emitted Float32 face")
+    normals = np.zeros_like(q)
+    for corner in range(3):
+        np.add.at(normals, faces[:, corner], area)
+    lengths = np.linalg.norm(normals, axis=1)
+    used = np.unique(faces)
+    if np.any(lengths[used] == 0):
+        raise ValueError("construction has undefined referenced normals")
+    normals[lengths > 0] /= lengths[lengths > 0, None]
+    normals[lengths == 0] = [0, 0, 1]
+    surfaces[key] = (points, faces, normals.astype("<f4"), gids)
+    return {"identity": list(key), "source": source_pin,
+            "coordinate_provenance": "inferred_reference_construction_only",
+            "normals_provenance": "area_weighted_construction_face_normals",
+            "source_ancestry_admission": False, "actual_native_emission_verified": False,
+            "material_fields_and_rest_owner_verified": False,
+            "anatomical_admission": False, "native_admission": False}
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--pack", type=Path, required=True)
@@ -344,6 +391,8 @@ def main(argv=None):
     p.add_argument("--receipt-sha256", required=True)
     p.add_argument("--source-pin", action="append", default=[], help="PATH=SHA256; compiler/ancestry/owner evidence")
     p.add_argument("--overlay", action="append", default=[], help="SEM:ID=existing.npz=SHA256; counterfactual only")
+    p.add_argument("--construction-overlay", action="append", default=[],
+                   help="SEM:ID=existing.npz=SHA256; inferred world construction only, no source/native admission")
     p.add_argument("--overlay-source", action="append", default=[],
                    help="SEM:ID=NHTISS=SHA256; explicit repack with byte-exact CPU rest-owner replay")
     p.add_argument("--rest-source", action="append", default=[],
@@ -370,7 +419,7 @@ def main(argv=None):
         p.error("refusing to overwrite retained verification progress")
     start = time.perf_counter()
     report = {"passed": False, "anatomical_admission": False, "native_admission": False,
-              "counterfactual_candidates": bool(args.overlay or args.rest_source)}
+              "counterfactual_candidates": bool(args.overlay or args.rest_source or args.construction_overlay)}
     try:
         partitions = shared_partition_declarations(args.shared_partition)
         report["pack_pin"] = pin(args.pack, args.pack_sha256)
@@ -384,7 +433,7 @@ def main(argv=None):
                 raise ValueError("duplicate source pin")
             seen.add(resolved)
             pins.append(pin(path, digest))
-        if (args.overlay or args.rest_source) and not pins:
+        if (args.overlay or args.rest_source or args.construction_overlay) and not pins:
             raise ValueError("counterfactual candidates require pinned compiler/ancestry evidence")
         report["source_pins"] = pins
         surfaces, report["capture_identity"] = verify.load_capture(args.pack, args.capture_receipt)
@@ -425,6 +474,15 @@ def main(argv=None):
                 surfaces, key, path, digest, faces_keys.get(key, "capture_faces"),
                 repacked_source=source_overlays.get(key), accepted_poses=accepted_poses,
                 source_cache=source_cache))
+        if args.construction_overlay and (partitions or args.head_source_patch_report):
+            raise ValueError("construction cannot bind admitted source-interface declarations")
+        for item in args.construction_overlay:
+            text, path, digest = item.split("=", 2)
+            key = identity(text)
+            if key in overlay_keys:
+                raise ValueError("duplicate candidate typed identity")
+            overlay_keys.add(key)
+            overlays.append(apply_construction_overlay(surfaces, key, path, digest))
         for item in args.rest_source:
             text, path, digest = item.split("=", 2)
             key = identity(text)
@@ -438,6 +496,7 @@ def main(argv=None):
         if not set(faces_keys) <= npz_overlay_keys:
             raise ValueError("faces-key without matching overlay")
         report["overlays"] = overlays
+        report["inferred_construction_only"] = bool(args.construction_overlay)
         patch_interfaces, patch_bindings = {}, []
         if args.head_source_patch_report:
             from numilab_human.resting_head_patch_binding import bind_head_source_patch_report
