@@ -1,5 +1,6 @@
 import copy
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -231,6 +232,150 @@ def test_source0_network_inventory_is_exactly_13_plus_two_and_keeps_469_473_sepa
         7, 10, 468, 469, 471, 472, 473, 475, 477, 479, 481, 483, 485,
         487, 489, 525, 526,
     }
+
+
+def test_parent_source_rebase_optional_capture_bundle_is_all_or_none(tmp_path):
+    payload = tmp_path / "payload.nhanatomy"
+    payload.write_bytes(b"payload")
+    anatomy_receipt = tmp_path / "anatomy-receipt.json"
+    anatomy_receipt.write_text(json.dumps({
+        "payload": {"path": str(payload.resolve()), "sha256": prep._sha_file(payload)}
+    }))
+    pack = tmp_path / "step-0.mrvpack"
+    pack.write_bytes(b"pack")
+    capture_receipt = tmp_path / "step-0.receipt.json"
+    capture_receipt.write_bytes(b"receipt")
+    report = tmp_path / "source-rebase.json"
+    report.write_bytes(b"source-only proof")
+    bundle = {
+        "capture_pack_path": str(pack.resolve()),
+        "capture_pack_sha256": prep._sha_file(pack),
+        "capture_receipt_path": str(capture_receipt.resolve()),
+        "capture_receipt_sha256": prep._sha_file(capture_receipt),
+        "anatomy_receipt_path": str(anatomy_receipt.resolve()),
+        "anatomy_receipt_sha256": prep._sha_file(anatomy_receipt),
+        "anatomy_payload_sha256": prep._sha_file(payload),
+    }
+
+    with pytest.raises(ValueError, match="seven pinned fields"):
+        prep._validated_capture_input_bundle({
+            **bundle, "parent_source_rebase_report_path": str(report.resolve())
+        })
+
+    normalized = prep._validated_capture_input_bundle({
+        **bundle,
+        "parent_source_rebase_report_path": str(report.resolve()),
+        "parent_source_rebase_report_sha256": prep._sha_file(report),
+    })
+    assert normalized["parent_source_rebase_report_path"] == report.resolve()
+    assert normalized["parent_source_rebase_report_sha256"] == prep._sha_file(report)
+
+
+@pytest.fixture(scope="module")
+def retained_parent_source_rebase_case():
+    report_path = prep.DATA_ROOT / (
+        "aortic7-connected-network036-deltoid868b-parent7-rest-registration-bundle-003/"
+        "source-rest-registration-report.json")
+    current_receipt_path = prep.DATA_ROOT / (
+        "rib50-existing-native-owner-bindings-954/resting-anatomy-receipt.json")
+    if not report_path.is_file() or not current_receipt_path.is_file():
+        pytest.skip("retained 956 source-rebase evidence is not installed in this environment")
+    report = json.loads(report_path.read_text())
+    current_receipt = json.loads(current_receipt_path.read_text())
+    base_receipt_path = Path(report["base_receipt"]["path"])
+    output_payload_path = Path(report["anatomy_payload"]["path"])
+    current_payload_path = Path(current_receipt["payload"]["path"])
+    required = (base_receipt_path, output_payload_path, current_payload_path)
+    if not all(path.is_file() for path in required):
+        pytest.skip("retained source-rebase payload lineage is not installed")
+    base_receipt = json.loads(base_receipt_path.read_text())
+    _, _, output_rows_all = prep.capture_gate.nhanat_codec._parse_payload(
+        output_payload_path.read_bytes())
+    _, _, current_rows_all = prep.capture_gate.nhanat_codec._parse_payload(
+        current_payload_path.read_bytes())
+    row_ids = (475, 477)
+    return {
+        "path": report_path.resolve(),
+        "sha256": prep._sha_file(report_path),
+        "report": report,
+        "current_receipt": current_receipt,
+        "base_receipt": base_receipt,
+        "output_rows": {stable_id: output_rows_all[stable_id] for stable_id in row_ids},
+        "current_rows": {stable_id: current_rows_all[stable_id] for stable_id in row_ids},
+    }
+
+
+def _validate_retained_parent_source_rebase(case, *, report=None, current_receipt=None):
+    return prep._validate_parent_source_rebase_evidence(
+        proof_path=case["path"],
+        proof_sha256=case["sha256"],
+        report=case["report"] if report is None else report,
+        current_receipt=(
+            case["current_receipt"] if current_receipt is None else current_receipt),
+        base_receipt=case["base_receipt"],
+        reemitted_rows=case["output_rows"],
+        current_source_rows=case["current_rows"],
+    )
+
+
+def test_parent_source_rebase_accepts_retained_actual_proof(retained_parent_source_rebase_case):
+    case = retained_parent_source_rebase_case
+    proof = prep._load_parent_source_rebase_proof(
+        {"path": case["path"], "sha256": case["sha256"]},
+        case["current_receipt"], case["current_rows"],
+    )
+    assert proof["status"] == "AUTHENTICATED_SOURCE_ONLY_PARENT_REEMISSION"
+    assert proof["typed_rows"] == [[51011, 475], [51011, 477]]
+    assert proof["parent_maps_byte_exact_to_immediate_base"] is True
+    assert proof["source_slots_0_through_6_byte_exact_to_immediate_base"] is True
+    assert proof["anatomical_admission"] is False
+    assert proof["native_admission"] is False
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("wrong_report_rows", "does not prove the declared 475/477 slot-7 operation"),
+        ("wrong_owner_identity", "changed typed source ownership"),
+        ("changed_positive_parent_map", "full positive parent terms changed"),
+        ("failed_forward_residual", "does not have a passing registered rest residual"),
+    ],
+)
+def test_parent_source_rebase_rejects_stale_owner_or_map_mutations(
+    retained_parent_source_rebase_case, mutation, message,
+):
+    case = retained_parent_source_rebase_case
+    report = copy.deepcopy(case["report"])
+    current_receipt = copy.deepcopy(case["current_receipt"])
+    if mutation == "wrong_report_rows":
+        report["current_nha_rows_used"] = [475, 476]
+    elif mutation == "wrong_owner_identity":
+        current_receipt["provenance"]["source_id_map"]["475"]["body_index"] = 20
+    elif mutation == "changed_positive_parent_map":
+        row = next(
+            item for item in current_receipt["passive_tissue_parent_bindings"][
+                "anatomy_surfaces"] if item["stable_id"] == 475
+        )
+        row["vertices"][0][0][3] *= 0.5
+    elif mutation == "failed_forward_residual":
+        report["rows"]["475"]["re_emitted_carrier_residual"][
+            "max_euclidean_residual_m"] = 3e-6
+        current_receipt["provenance"][
+            prep.PARENT_SOURCE_REBASE_RECEIPT_FIELD][
+                "max_reemitted_parent_rest_residual_m"] = 3e-6
+
+    with pytest.raises(ValueError, match=message):
+        _validate_retained_parent_source_rebase(
+            case, report=report, current_receipt=current_receipt)
+
+
+def test_parent_source_rebase_rejects_stale_report_digest(retained_parent_source_rebase_case):
+    case = retained_parent_source_rebase_case
+    with pytest.raises(ValueError, match="frozen input changed"):
+        prep._load_parent_source_rebase_proof(
+            {"path": case["path"], "sha256": "0" * 64},
+            case["current_receipt"], case["current_rows"],
+        )
 
 
 def test_parent_pose_baseline_selects_current_receipt_carrier_not_legacy_index():

@@ -186,6 +186,11 @@ PARENT_POSE_FORWARD_OWNER = DATA_ROOT.parent / (
 PARENT_POSE_FORWARD_OWNER_SHA256 = (
     "ee755eabac267563862c95552524c715bc8dd9897a2bcac7e29e483f5b4a57c5")
 LEGACY_PARENT_POSE_SOURCE_INDEX = 6  # historical 1b32/f77 owner only
+PARENT_SOURCE_REBASE_RECEIPT_FIELD = (
+    "aortic7_existing_passive_parent_slot7_rest_registration_reemission")
+PARENT_SOURCE_REBASE_SCHEMA = (
+    "numi.human.passive-vessel-parent-rest-registration-reemission.v1")
+PARENT_SOURCE_REBASE_MAX_RESIDUAL_M = 2e-6
 PARENT_POSE_ROWS = {475: (1, 2), 477: (3, 4)}
 PARENT_POSE_BODY_BY_SOURCE_ROW = {1: 20, 2: 91, 3: 20, 4: 91}
 COMMON_FIELD_BASELINE_ROWS = {7: 381, 10: 318, 471: 362, 525: 376, 526: 275}
@@ -1554,8 +1559,303 @@ def _current_parent_pose_owner_inputs(
     return source_index, source_payload, selected_terms, map_hashes
 
 
+def _validate_parent_source_rebase_evidence(
+    *, proof_path: Path, proof_sha256: str, report: dict,
+    current_receipt: dict, base_receipt: dict,
+    reemitted_rows: dict, current_source_rows: dict,
+) -> dict:
+    """Validate a receipt-bound source-only re-emission for exact rows 475/477."""
+    proof_path = Path(proof_path).resolve()
+    provenance = current_receipt.get("provenance", {})
+    receipt_proof = provenance.get(PARENT_SOURCE_REBASE_RECEIPT_FIELD)
+    _require(isinstance(receipt_proof, dict),
+             "current receipt does not bind the optional parent-source rebase proof")
+    _require(
+        report.get("schema") == PARENT_SOURCE_REBASE_SCHEMA
+        and report.get("status")
+        == "PASS_SOURCE_ONLY_EXISTING_PARENT_REST_REGISTRATION_REEMIT_NOT_ANATOMY_OR_NATIVE_ADMISSION",
+        "parent-source rebase report is not the retained source-only proof",
+    )
+    _require(
+        report.get("geometry_predicates_run") is False
+        and report.get("native_gpu_emission") is False
+        and report.get("native_admission") is False
+        and report.get("anatomical_admission") is False
+        and report.get("native_confirmation_required") is True
+        and report.get("physical_state_mass_forces_or_blood_modified") is False,
+        "parent-source rebase report crosses its source-only evidence boundary",
+    )
+    _require(
+        report.get("current_nha_rows_used") == [475, 477]
+        and report.get("replaced_source_slot") == 7
+        and report.get("source_payload_count_before_after") == [8, 8]
+        and report.get("source_payload_slots_0_through_6_unchanged") is True
+        and report.get("parent_map_terms_and_coefficients_byte_semantics_unchanged") is True
+        and report.get("passive_child_surface_maps_byte_semantics_unchanged") is True
+        and report.get("source_slot_7_geometry_reemitted_from_current_036_nha_rows") is True,
+        "parent-source rebase report does not prove the declared 475/477 slot-7 operation",
+    )
+    slot_proof = report.get("source_slot_7_faces_normals_weights_and_binding_identity")
+    _require(
+        isinstance(slot_proof, dict)
+        and slot_proof.get("body20_body91_binding_table_byte_exact") is True
+        and slot_proof.get("body20_local_vertices_from_existing_proper_rigid_transfer_owner") is True
+        and slot_proof.get("body91_source_vertices_exact_current_nha_rows") is True
+        and slot_proof.get("compiled_positive_weights_unchanged") is True
+        and slot_proof.get("ordered_faces_unchanged") is True,
+        "parent-source rebase report lacks the complete carrier ownership proof",
+    )
+    receipt_report_path = receipt_proof.get("report_path")
+    _require(
+        isinstance(receipt_report_path, str) and Path(receipt_report_path).is_absolute()
+        and receipt_proof.get("report_sha256") == proof_sha256,
+        "current receipt does not bind the supplied parent-source rebase report bytes",
+    )
+    receipt_binding = {
+        "schema": report["schema"],
+        "status": report["status"],
+        "report_sha256": proof_sha256,
+        "base_receipt_sha256": report.get("base_receipt", {}).get("sha256"),
+        "nha_payload_sha256": report.get("anatomy_payload", {}).get("sha256"),
+        "old_carrier_sha256": report.get("old_parent_carrier", {}).get("sha256"),
+        "new_carrier_sha256": report.get("new_parent_carrier", {}).get("sha256"),
+        "source_payload_index": report.get("replaced_source_slot"),
+        "changed_anatomy_parent_rows": report.get("current_nha_rows_used"),
+        "existing_native_rest_guard_threshold_m": PARENT_SOURCE_REBASE_MAX_RESIDUAL_M,
+        "parent_map_terms_and_coefficients_unchanged": True,
+        "physical_state_mass_forces_or_blood_modified": False,
+        "geometry_predicates_run": False,
+        "native_confirmation_required": True,
+        "max_reemitted_parent_rest_residual_m": max(
+            float(report.get("rows", {}).get(str(stable_id), {}).get(
+                "re_emitted_carrier_residual", {}).get("max_euclidean_residual_m", float("inf")))
+            for stable_id in PARENT_POSE_ROWS
+        ),
+    }
+    _require(
+        all(receipt_proof.get(key) == value
+            for key, value in receipt_binding.items()),
+        "current receipt's parent-source rebase binding differs from the supplied proof",
+    )
+    _resolved_pin(Path(receipt_report_path), proof_sha256)
+    base_descriptor = report.get("base_receipt")
+    payload_descriptor = report.get("anatomy_payload")
+    _require(
+        isinstance(base_descriptor, dict)
+        and isinstance(base_descriptor.get("path"), str)
+        and Path(base_descriptor["path"]).is_absolute()
+        and isinstance(base_descriptor.get("sha256"), str)
+        and isinstance(payload_descriptor, dict)
+        and isinstance(payload_descriptor.get("path"), str)
+        and Path(payload_descriptor["path"]).is_absolute()
+        and isinstance(payload_descriptor.get("sha256"), str),
+        "parent-source rebase report has malformed base or output payload descriptors",
+    )
+    _require(
+        base_receipt.get("payload", {}).get("sha256") == payload_descriptor["sha256"]
+        and Path(base_receipt.get("payload", {}).get("path", "")).resolve()
+        == Path(payload_descriptor["path"]).resolve(),
+        "parent-source rebase output is not the payload bound by its immediate base receipt",
+    )
+    _require(
+        current_receipt.get("passive_tissue_parent_bindings", {}).get(
+            "anatomy_payload_sha256")
+        == current_receipt.get("payload", {}).get("sha256"),
+        "current parent bindings are stale relative to the invoked current NHA payload",
+    )
+    source_inventory = report.get("source_payload_count_before_after")
+    _require(source_inventory == [8, 8],
+             "parent-source rebase changed the registered parent source inventory size")
+    base_bindings = base_receipt.get("passive_tissue_parent_bindings", {})
+    current_bindings = current_receipt.get("passive_tissue_parent_bindings", {})
+    base_sources = base_bindings.get("source_payloads")
+    current_sources = current_bindings.get("source_payloads")
+    _require(
+        isinstance(base_sources, list) and isinstance(current_sources, list)
+        and len(base_sources) == len(current_sources) == 8
+        and base_sources[:7] == current_sources[:7],
+        "current parent source slots 0 through 6 differ from the authenticated base",
+    )
+    old_carrier = report.get("old_parent_carrier", {})
+    new_carrier = report.get("new_parent_carrier", {})
+    _require(
+        isinstance(old_carrier, dict) and isinstance(new_carrier, dict)
+        and base_sources[7].get("sha256") == old_carrier.get("sha256")
+        and Path(base_sources[7].get("path", "")).resolve()
+        == Path(old_carrier.get("path", "")).resolve()
+        and current_sources[7].get("sha256") == new_carrier.get("sha256")
+        and current_sources[7].get("sha256") == report.get("output_carrier_sha256")
+        and Path(current_sources[7].get("path", "")).resolve()
+        == Path(report.get("output_carrier_path", "")).resolve()
+        == Path(new_carrier.get("output_path", "")).resolve(),
+        "slot-7 source carrier does not match the source-rebase report",
+    )
+    base_owner_rows = _stable_owner_rows(base_bindings)
+    current_owner_rows = _stable_owner_rows(current_bindings)
+    for stable_id in PARENT_POSE_ROWS:
+        base_owner = base_owner_rows.get(stable_id)
+        current_owner = current_owner_rows.get(stable_id)
+        _require(
+            isinstance(base_owner, dict) and isinstance(current_owner, dict)
+            and base_owner.get("vertices") == current_owner.get("vertices"),
+            f"full positive parent terms changed for row {stable_id}",
+        )
+    _require(
+        base_bindings.get("surfaces") == current_bindings.get("surfaces"),
+        "passive child surface parent maps changed during parent-source rebase",
+    )
+    base_source_map = base_receipt.get("provenance", {}).get("source_id_map", {})
+    current_source_map = provenance.get("source_id_map", {})
+    identity_fields = (
+        "name", "body_index", "layer", "source_member",
+        "source_member_sha256", "vascular_compartment_id",
+    )
+    row_proofs = report.get("rows")
+    _require(isinstance(row_proofs, dict) and set(row_proofs) == {"475", "477"},
+             "parent-source rebase report does not cover exactly rows 475 and 477")
+    for stable_id in PARENT_POSE_ROWS:
+        key = str(stable_id)
+        old_map = base_source_map.get(key, {})
+        new_map = current_source_map.get(key, {})
+        _require(
+            all(old_map.get(field) == new_map.get(field) for field in identity_fields)
+            and all(
+                old_map.get("source_owner_metadata", {}).get(field)
+                == new_map.get("source_owner_metadata", {}).get(field)
+                for field in ("label", "concept_id")
+            ),
+            f"parent-source rebase changed typed source ownership for row {stable_id}",
+        )
+        old_route = old_map.get("repair", {}).get("route110_reference_field")
+        new_route = new_map.get("repair", {}).get("route110_reference_field")
+        _require(
+            isinstance(old_route, dict) and old_route == new_route
+            and old_route.get("stable_id") == stable_id
+            and old_route.get("source_member") == SOURCE_MEMBER_BY_STABLE_ID[stable_id]
+            and old_route.get("xyz_changed") is True
+            and old_route.get("normals_changed") is True,
+            f"row {stable_id} lacks the same authenticated source-local registration ancestry",
+        )
+        residual = row_proofs[key]
+        expected_source_ids = list(PARENT_POSE_ROWS[stable_id])
+        reemitted = residual.get("re_emitted_carrier_residual", {})
+        _require(
+            residual.get("guard_passes") is True
+            and residual.get("existing_native_rest_guard_threshold_m")
+            == PARENT_SOURCE_REBASE_MAX_RESIDUAL_M
+            and residual.get("parent_map_terms_source_index") == 7
+            and residual.get("parent_carrier_surface_ids") == (
+                [1, 2] if stable_id == 475 else [3, 4])
+            and residual.get("referenced_parent_source_ids") == expected_source_ids
+            and reemitted.get("vertex_count") == len(
+                current_source_rows[stable_id]["vertices6"])
+            and reemitted.get("count_over_2um") == 0
+            and isinstance(reemitted.get("max_euclidean_residual_m"), (int, float))
+            and 0.0 <= reemitted["max_euclidean_residual_m"]
+            <= PARENT_SOURCE_REBASE_MAX_RESIDUAL_M,
+            f"row {stable_id} does not have a passing registered rest residual",
+        )
+        output_row = reemitted_rows.get(stable_id)
+        current_row = current_source_rows.get(stable_id)
+        _require(
+            isinstance(output_row, dict) and isinstance(current_row, dict),
+            f"parent-source rebase output/current payload lacks row {stable_id}",
+        )
+        for field in ("vertices6", "faces"):
+            expected = np.ascontiguousarray(output_row[field])
+            actual = np.ascontiguousarray(current_row[field])
+            _require(
+                expected.shape == actual.shape and expected.tobytes() == actual.tobytes(),
+                f"current row {stable_id} {field} differs from authenticated re-emission payload",
+            )
+    return {
+        "status": "AUTHENTICATED_SOURCE_ONLY_PARENT_REEMISSION",
+        "report_path": str(proof_path),
+        "report_sha256": proof_sha256,
+        "base_receipt_sha256": base_descriptor["sha256"],
+        "re_emitted_payload_sha256": payload_descriptor["sha256"],
+        "current_invoked_payload_sha256": current_receipt.get("payload", {}).get("sha256"),
+        "typed_rows": [[51011, 475], [51011, 477]],
+        "source_payload_slot": 7,
+        "parent_maps_byte_exact_to_immediate_base": True,
+        "source_slots_0_through_6_byte_exact_to_immediate_base": True,
+        "carrier_forward_residual_limit_m": PARENT_SOURCE_REBASE_MAX_RESIDUAL_M,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+
+
+def _load_parent_source_rebase_proof(
+    proof: dict, current_receipt: dict, current_source_rows: dict,
+) -> dict:
+    _require(
+        isinstance(proof, dict) and set(proof) == {"path", "sha256"},
+        "parent-source rebase proof input must contain exactly path and SHA-256",
+    )
+    path = Path(proof["path"]).resolve(strict=True)
+    digest = proof["sha256"]
+    _require(path.is_absolute() and isinstance(digest, str) and len(digest) == 64
+             and all(character in "0123456789abcdef" for character in digest),
+             "parent-source rebase proof input has an invalid path or digest")
+    _resolved_pin(path, digest)
+    report = json.loads(path.read_text())
+    owner_pins = report.get("owner_source_pins")
+    _require(isinstance(owner_pins, dict) and bool(owner_pins),
+             "parent-source rebase report has no owner source pins")
+    for pinned_path, pinned_sha in owner_pins.items():
+        _require(
+            isinstance(pinned_path, str) and Path(pinned_path).is_absolute()
+            and isinstance(pinned_sha, str) and len(pinned_sha) == 64
+            and all(character in "0123456789abcdef" for character in pinned_sha),
+            "parent-source rebase report contains a malformed owner pin",
+        )
+        _resolved_pin(Path(pinned_path), pinned_sha)
+    base_descriptor = report.get("base_receipt", {})
+    _require(isinstance(base_descriptor, dict)
+             and isinstance(base_descriptor.get("path"), str)
+             and Path(base_descriptor["path"]).is_absolute()
+             and isinstance(base_descriptor.get("sha256"), str),
+             "parent-source rebase report has a malformed base receipt pin")
+    _resolved_pin(Path(base_descriptor["path"]), base_descriptor["sha256"])
+    base_receipt = json.loads(Path(base_descriptor["path"]).read_text())
+    old_carrier = report.get("old_parent_carrier", {})
+    new_carrier = report.get("new_parent_carrier", {})
+    _require(
+        isinstance(old_carrier, dict)
+        and isinstance(old_carrier.get("path"), str)
+        and Path(old_carrier["path"]).is_absolute()
+        and isinstance(old_carrier.get("sha256"), str)
+        and isinstance(new_carrier, dict)
+        and isinstance(new_carrier.get("output_path"), str)
+        and Path(new_carrier["output_path"]).is_absolute()
+        and isinstance(new_carrier.get("sha256"), str),
+        "parent-source rebase report has malformed old/new carrier pins",
+    )
+    _resolved_pin(Path(old_carrier["path"]), old_carrier["sha256"])
+    _resolved_pin(Path(new_carrier["output_path"]), new_carrier["sha256"])
+    payload_descriptor = report.get("anatomy_payload", {})
+    _require(isinstance(payload_descriptor, dict)
+             and isinstance(payload_descriptor.get("path"), str)
+             and Path(payload_descriptor["path"]).is_absolute()
+             and isinstance(payload_descriptor.get("sha256"), str),
+             "parent-source rebase report has a malformed output payload pin")
+    _resolved_pin(Path(payload_descriptor["path"]), payload_descriptor["sha256"])
+    _, _, reemitted_rows = capture_gate.nhanat_codec._parse_payload(
+        Path(payload_descriptor["path"]).read_bytes())
+    return _validate_parent_source_rebase_evidence(
+        proof_path=path,
+        proof_sha256=digest,
+        report=report,
+        current_receipt=current_receipt,
+        base_receipt=base_receipt,
+        reemitted_rows=reemitted_rows,
+        current_source_rows=current_source_rows,
+    )
+
+
 def _parent_pose_source_surfaces(
     context: dict, current_source_rows: dict, current_receipt: dict,
+    source_rebase_proof: dict | None = None,
 ) -> tuple[dict, dict]:
     """Build separate 475/477 source baselines from their registered tissue parents."""
     for path, digest in (
@@ -1577,6 +1877,10 @@ def _parent_pose_source_surfaces(
     _require(set(PARENT_POSE_ROWS).issubset(baseline_rows)
              and set(PARENT_POSE_ROWS).issubset(current_source_rows),
              "parent-pose baseline is missing source vessel rows")
+    source_rebase_report = None
+    if source_rebase_proof is not None:
+        source_rebase_report = _load_parent_source_rebase_proof(
+            source_rebase_proof, current_receipt, current_source_rows)
     for stable_id in PARENT_POSE_ROWS:
         old_map = baseline_receipt.get("provenance", {}).get(
             "source_id_map", {}).get(str(stable_id), {})
@@ -1600,16 +1904,22 @@ def _parent_pose_source_surfaces(
             baseline_rows[stable_id]["faces"], dtype="<u4")
         new_faces = np.ascontiguousarray(
             current_source_rows[stable_id]["faces"], dtype="<u4")
-        _require(old_vertices.shape == new_vertices.shape
-                 and old_vertices.tobytes() == new_vertices.tobytes(),
-                 f"source material vertices changed for parent-mapped row {stable_id}")
+        _require(old_vertices.shape == new_vertices.shape,
+                 f"source material vertex shape changed for parent-mapped row {stable_id}")
+        if source_rebase_report is None:
+            _require(
+                old_vertices.tobytes() == new_vertices.tobytes(),
+                f"source material vertices changed for parent-mapped row {stable_id}",
+            )
         if stable_id == 475:
             _require(old_faces.shape == new_faces.shape
                      and old_faces.tobytes() == new_faces.tobytes(),
                      "row 475 source face ancestry changed")
         elif old_faces.tobytes() != new_faces.tobytes():
             cap = _validate_reinstated_cap_face_transition(
-                old_faces, new_faces, old_vertices, new_vertices)
+                old_faces, new_faces, old_vertices, new_vertices,
+                allow_source_registered_vertex_rebase=source_rebase_report is not None,
+            )
             _require(cap["source_face_id_zero_based"] == 1858,
                      "row 477 face delta is not the frozen source cap reinstatement")
 
@@ -1706,6 +2016,26 @@ def _parent_pose_source_surfaces(
             stable_id=stable_id,
         )
         current = current_source_rows[stable_id]
+        source_rest_residual = None
+        if source_rebase_report is not None:
+            current_xyz = np.ascontiguousarray(current["vertices6"][:, :3], dtype="<f4")
+            _require(positions.shape == current_xyz.shape,
+                     f"re-emitted parent carrier shape differs from row {stable_id}")
+            residuals = np.linalg.norm(
+                positions.astype(np.float64) - current_xyz.astype(np.float64), axis=1)
+            max_residual = float(residuals.max()) if len(residuals) else float("inf")
+            source_rest_residual = {
+                "vertex_count": int(len(residuals)),
+                "max_euclidean_residual_m": max_residual,
+                "mean_euclidean_residual_m": float(residuals.mean()),
+                "count_over_2um": int(np.count_nonzero(
+                    residuals > PARENT_SOURCE_REBASE_MAX_RESIDUAL_M)),
+            }
+            _require(
+                max_residual <= PARENT_SOURCE_REBASE_MAX_RESIDUAL_M
+                and source_rest_residual["count_over_2um"] == 0,
+                f"independent current carrier rest residual exceeds 2um for row {stable_id}",
+            )
         faces = np.ascontiguousarray(current["faces"], dtype="<u4")
         capture_surface = context["surfaces"].get((51011, stable_id))
         _require(capture_surface is not None
@@ -1757,6 +2087,7 @@ def _parent_pose_source_surfaces(
             "accepted_capture_xyz_f32_sha256": _sha_bytes(captured.tobytes()),
             "same_capture_position_delta_diagnostic_m": delta_report,
             "same_capture_delta_is_not_a_physiology_or_native_error_bound": True,
+            "independent_current_source_rest_residual": source_rest_residual,
             **blend_report,
         }
     source_paths = context.get("capture_source_paths", {})
@@ -1789,6 +2120,7 @@ def _parent_pose_source_surfaces(
         "historical_legacy_owner_maps_are_not_used_for_baseline": True,
         "historical_legacy_source_payload_index": LEGACY_PARENT_POSE_SOURCE_INDEX,
         "input_sha256": current_input_pins,
+        "source_rebase_proof": source_rebase_report,
         "accepted_body_pose_count": len(accepted),
         "parent_source_rows": parent_reports,
         "vessels": vessel_reports,
@@ -1931,6 +2263,8 @@ def _validate_reinstated_cap_face_transition(
     current_faces: np.ndarray,
     actual_vertices6: np.ndarray,
     current_vertices6: np.ndarray,
+    *,
+    allow_source_registered_vertex_rebase: bool = False,
 ) -> dict:
     old_faces = np.ascontiguousarray(actual_faces, dtype="<u4")
     new_faces = np.ascontiguousarray(current_faces, dtype="<u4")
@@ -1938,9 +2272,11 @@ def _validate_reinstated_cap_face_transition(
     new_vertices = np.ascontiguousarray(current_vertices6, dtype="<f4")
     _require(old_faces.shape == (2109, 3) and new_faces.shape == (2110, 3),
              "FJ2217 face transition is not the one-face 2109-to-2110 reinstatement")
-    _require(old_vertices.shape == new_vertices.shape == (1089, 6)
-             and old_vertices.tobytes() == new_vertices.tobytes(),
-             "FJ2217 cap transition changed vertex position or normal bytes")
+    _require(old_vertices.shape == new_vertices.shape == (1089, 6),
+             "FJ2217 cap transition changed the vertex array shape")
+    if not allow_source_registered_vertex_rebase:
+        _require(old_vertices.tobytes() == new_vertices.tobytes(),
+                 "FJ2217 cap transition changed vertex position or normal bytes")
     face_id = 1858
     aliases = np.asarray([1068, 1065, 926], dtype="<u4")
     source_vertices = (930, 1066, 1063)
@@ -1952,7 +2288,11 @@ def _validate_reinstated_cap_face_transition(
     for source_vertex, alias_vertex in zip(source_vertices, alias_vertices):
         _require(old_vertices[source_vertex, :3].tobytes()
                  == old_vertices[alias_vertex, :3].tobytes(),
-                 f"FJ2217 source/alias Float32 coordinates differ at "
+                 f"FJ2217 source/alias baseline Float32 coordinates differ at "
+                 f"{source_vertex}/{alias_vertex}")
+        _require(new_vertices[source_vertex, :3].tobytes()
+                 == new_vertices[alias_vertex, :3].tobytes(),
+                 f"FJ2217 source/alias current Float32 coordinates differ at "
                  f"{source_vertex}/{alias_vertex}")
     return {
         "typed_identity": [51011, 477],
@@ -1965,7 +2305,9 @@ def _validate_reinstated_cap_face_transition(
         "input_face_count": len(old_faces),
         "output_face_count": len(new_faces),
         "all_other_face_bytes_and_order_exact": True,
-        "all_vertex_position_and_normal_bytes_unchanged": True,
+        "all_vertex_position_and_normal_bytes_unchanged": (
+            old_vertices.tobytes() == new_vertices.tobytes()),
+        "source_registered_vertex_rebase_used": allow_source_registered_vertex_rebase,
         "coordinate_aliases_exact_xyz_only": True,
         "physical_mass_or_blood_state_added": False,
     }
@@ -2490,8 +2832,15 @@ def _validated_capture_input_bundle(value: dict) -> dict:
         "anatomy_receipt_path", "anatomy_receipt_sha256",
         "anatomy_payload_sha256",
     }
-    _require(isinstance(value, dict) and set(value) == expected,
-             "explicit current-capture input bundle must contain exactly seven pinned fields")
+    optional_rebase = {
+        "parent_source_rebase_report_path", "parent_source_rebase_report_sha256",
+    }
+    _require(
+        isinstance(value, dict)
+        and (set(value) == expected or set(value) == expected | optional_rebase),
+        "explicit current-capture input bundle must contain seven pinned fields "
+        "and may include the complete optional parent-source rebase report pin",
+    )
     normalized = {}
     for name in ("capture_pack_path", "capture_receipt_path", "anatomy_receipt_path"):
         raw = value.get(name)
@@ -2500,8 +2849,20 @@ def _validated_capture_input_bundle(value: dict) -> dict:
         path = Path(raw).resolve(strict=True)
         _require(path.is_file(), f"explicit capture input is not a file: {name}")
         normalized[name] = path
-    for name in ("capture_pack_sha256", "capture_receipt_sha256", "anatomy_receipt_sha256",
-                 "anatomy_payload_sha256"):
+    if optional_rebase.issubset(value):
+        raw = value["parent_source_rebase_report_path"]
+        _require(isinstance(raw, str) and Path(raw).is_absolute(),
+                 "parent-source rebase report path must be absolute")
+        path = Path(raw).resolve(strict=True)
+        _require(path.is_file(), "parent-source rebase report is not a file")
+        normalized["parent_source_rebase_report_path"] = path
+    digest_names = (
+        "capture_pack_sha256", "capture_receipt_sha256",
+        "anatomy_receipt_sha256", "anatomy_payload_sha256",
+    )
+    if optional_rebase.issubset(value):
+        digest_names += ("parent_source_rebase_report_sha256",)
+    for name in digest_names:
         digest = value.get(name)
         _require(isinstance(digest, str) and len(digest) == 64
                  and all(character in "0123456789abcdef" for character in digest),
@@ -2520,6 +2881,12 @@ def _validated_capture_input_bundle(value: dict) -> dict:
     _require(payload.get("sha256") == normalized["anatomy_payload_sha256"]
              and _sha_file(payload_path) == normalized["anatomy_payload_sha256"],
              "explicit current-capture source receipt does not bind the supplied NHA payload")
+    if optional_rebase.issubset(value):
+        _require(
+            _sha_file(normalized["parent_source_rebase_report_path"])
+            == normalized["parent_source_rebase_report_sha256"],
+            "explicit parent-source rebase report digest mismatch",
+        )
     return {**normalized, "payload_path": payload_path}
 
 
@@ -2562,6 +2929,15 @@ def _load_current_capture_context(inputs: dict) -> dict:
         "anatomy_receipt": inputs["anatomy_receipt_sha256"],
         "anatomy_payload": inputs["anatomy_payload_sha256"],
     }
+    if "parent_source_rebase_report_path" in inputs:
+        context["parent_source_rebase_proof"] = {
+            "path": inputs["parent_source_rebase_report_path"],
+            "sha256": inputs["parent_source_rebase_report_sha256"],
+        }
+        context["capture_source_paths"]["parent_source_rebase_report"] = (
+            inputs["parent_source_rebase_report_path"])
+        context["capture_source_sha256"]["parent_source_rebase_report"] = (
+            inputs["parent_source_rebase_report_sha256"])
     return context
 
 
@@ -2619,7 +2995,9 @@ def build_preflight(capture_inputs: dict | None = None, *,
     parent_motion_inventory = _parent_motion_owner_inventory(
         current_receipt, set(NETWORK_STABLE_IDS))
     parent_pose_surfaces, parent_pose_report = _parent_pose_source_surfaces(
-        context, current_source_rows, current_receipt)
+        context, current_source_rows, current_receipt,
+        context.get("parent_source_rebase_proof"),
+    )
     _require(set(parent_pose_surfaces) == {
         (51011, stable_id) for stable_id in PARENT_POSE_ROWS
     }, "independent parent-pose baseline does not cover rows 475 and 477")
