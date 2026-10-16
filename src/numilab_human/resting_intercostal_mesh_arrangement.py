@@ -2307,6 +2307,1151 @@ def compose_intercostal_arrangement_row(
 
 
 
+LOCAL_RECONSTRUCTION_ANCESTRY_SCHEMA = (
+    "numi.human.intercostal-local-reconstruction-parent-face-owners.v1"
+)
+LOCAL_BODY20_TRANSFORM_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "scripts/predict_brachiocephalic_captured_svc_poses.py"
+)
+LOCAL_BODY20_TRANSFORM_SHA256 = (
+    "017a90ed6c9eadbdfda9c4d4b31a4966ca10c8dd1c79577686635a296145f7d2"
+)
+LOCAL_RECONSTRUCTION_RIB_IDS = tuple(range(48, 60))
+
+
+def _local_reconstruction_sha256(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()
+
+
+def _local_reconstruction_hex_sha(value, label: str) -> str:
+    _require(
+        isinstance(value, str) and len(value) == 64
+        and all(char in "0123456789abcdef" for char in value),
+        f"{label} is not a lowercase SHA-256",
+    )
+    return value
+
+
+def _load_local_body20_transform():
+    """Load the pinned production Float32 transform used for captured Body20 rows."""
+    import importlib.util
+
+    _require(
+        LOCAL_BODY20_TRANSFORM_PATH.is_file()
+        and sha_file(LOCAL_BODY20_TRANSFORM_PATH) == LOCAL_BODY20_TRANSFORM_SHA256,
+        "captured Body20 Float32 transform bytes differ from the pinned source",
+    )
+    spec = importlib.util.spec_from_file_location(
+        "_numi_pinned_local_body20_transform",
+        LOCAL_BODY20_TRANSFORM_PATH,
+    )
+    _require(spec is not None and spec.loader is not None,
+             "pinned captured Body20 transform cannot be loaded")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    _require(callable(getattr(module, "transform_f32", None)),
+             "pinned captured Body20 transform has no transform_f32 owner")
+    return module.transform_f32
+
+
+def _body20_rotation64(q_xyzw) -> np.ndarray:
+    q = np.asarray(q_xyzw, dtype="<f4")
+    _require(q.shape == (4,) and np.isfinite(q).all(),
+             "captured Body20 quaternion is malformed")
+    x, y, z, w = map(float, q)
+    matrix = np.asarray([
+        [1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y - z * w), 2.0 * (x * z + y * w)],
+        [2.0 * (x * y + z * w), 1.0 - 2.0 * (x * x + z * z), 2.0 * (y * z - x * w)],
+        [2.0 * (x * z - y * w), 2.0 * (y * z + x * w), 1.0 - 2.0 * (x * x + y * y)],
+    ], dtype=np.float64)
+    _require(np.isfinite(matrix).all() and abs(float(np.linalg.det(matrix))) > 1e-12,
+             "captured Body20 quaternion produces a singular inverse")
+    return matrix
+
+
+def _surface_normals_allow_unused_slots(vertices, faces):
+    """Use the existing surface-normal owner while retaining unreferenced slots."""
+    positions = np.asarray(vertices)
+    triangles = np.asarray(faces)
+    _require(
+        positions.ndim == 2 and positions.shape[1] == 3
+        and np.isfinite(positions).all()
+        and triangles.ndim == 2 and triangles.shape[1] == 3
+        and np.issubdtype(triangles.dtype, np.integer)
+        and np.all(triangles >= 0)
+        and int(triangles.max(initial=0)) < len(positions)
+        and len(triangles) > 0,
+        "local reconstruction normal inputs are malformed",
+    )
+    triangles_i64 = np.asarray(triangles, dtype=np.int64)
+    referenced = np.unique(triangles_i64)
+    _require(len(referenced) > 0, "local reconstruction has no referenced vertices")
+    compact_faces = np.ascontiguousarray(
+        np.searchsorted(referenced, triangles_i64), dtype="<u4",
+    )
+    from .resting_anatomy_interface_patch import normals as surface_normals
+    compact_normals = surface_normals(
+        np.ascontiguousarray(positions[referenced]),
+        compact_faces,
+    )
+    normals = np.zeros(positions.shape, dtype=np.float64)
+    normals[referenced] = compact_normals
+    return normals
+
+
+def _localize_body20_normals_f32(world_normals_f32, faces, quaternion_xyzw):
+    """Rotate and normalize used Body20 normals; preserve finite zero unused slots."""
+    normals = np.ascontiguousarray(world_normals_f32, dtype="<f4")
+    triangles = np.asarray(faces)
+    _require(
+        normals.ndim == 2 and normals.shape[1] == 3 and len(normals) > 0
+        and np.isfinite(normals).all()
+        and triangles.ndim == 2 and triangles.shape[1] == 3
+        and np.issubdtype(triangles.dtype, np.integer)
+        and np.all(triangles >= 0) and int(triangles.max(initial=0)) < len(normals),
+        "Body20 normal localization inputs are malformed",
+    )
+    referenced = np.zeros(len(normals), dtype=np.bool_)
+    referenced[np.asarray(triangles, dtype=np.int64).reshape(-1)] = True
+    rotation = _body20_rotation64(quaternion_xyzw)
+    local = normals.astype(np.float64) @ rotation
+    lengths = np.linalg.norm(local, axis=1)
+    _require(np.isfinite(lengths).all() and np.all(lengths[referenced] > 1e-20),
+             "referenced Body20 normal is zero or invalid")
+    nonzero = lengths > 1e-20
+    local[nonzero] /= lengths[nonzero, None]
+    # A finite zero normal is valid only for an unreferenced allocation slot.
+    _require(not np.any(referenced & ~nonzero),
+             "referenced Body20 normal is zero")
+    return np.ascontiguousarray(local.astype("<f4"), dtype="<f4")
+
+
+def _inverse_body20_positions_f32(world_positions_f32, quaternion_xyzw, position_m):
+    """Invert the pinned Body20 transform, then report its actual Float32 replay.
+
+    The inverse is a Float64 solve rounded to the local ABI5 Float32 format. A
+    Float32 forward transform is many-to-one, so exact recovery of every input
+    world bit is not assumed. The returned replay and its delta are the inputs
+    to the subsequent geometry audit and native one-step confirmation.
+    """
+    world = np.ascontiguousarray(world_positions_f32, dtype="<f4")
+    q = np.asarray(quaternion_xyzw, dtype="<f4")
+    t = np.asarray(position_m, dtype="<f4")
+    _require(
+        world.ndim == 2 and world.shape[1] == 3 and len(world) > 0
+        and np.isfinite(world).all() and q.shape == (4,) and t.shape == (3,)
+        and np.isfinite(q).all() and np.isfinite(t).all(),
+        "captured Body20 inverse inputs are malformed",
+    )
+    rotation = _body20_rotation64(q)
+    local = np.linalg.solve(rotation, (world.astype(np.float64) - t.astype(np.float64)).T).T
+    base_f32 = np.ascontiguousarray(local, dtype="<f4")
+    transform_f32 = _load_local_body20_transform()
+    base_replay = np.ascontiguousarray(transform_f32(q, t, base_f32), dtype="<f4")
+    world_bits = world.view("<u4")
+    base_exact = np.all(base_replay.view("<u4") == world_bits, axis=1)
+    base_delta = base_replay.astype(np.float64) - world.astype(np.float64)
+    best_local = base_f32.copy()
+    best_replay = base_replay.copy()
+    best_exact = base_exact.copy()
+    best_distance2 = np.einsum("ij,ij->i", base_delta, base_delta)
+    best_offsets = np.zeros((len(world), 3), dtype=np.int8)
+    below = np.nextafter(base_f32, np.full_like(base_f32, -np.inf))
+    above = np.nextafter(base_f32, np.full_like(base_f32, np.inf))
+    offsets = [(0, 0, 0)]
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            for dz in (-1, 0, 1):
+                if (dx, dy, dz) != (0, 0, 0):
+                    offsets.append((dx, dy, dz))
+    for offset in offsets[1:]:
+        candidate = base_f32.copy()
+        for axis, step in enumerate(offset):
+            if step < 0:
+                candidate[:, axis] = below[:, axis]
+            elif step > 0:
+                candidate[:, axis] = above[:, axis]
+        candidate_replay = np.ascontiguousarray(
+            transform_f32(q, t, candidate), dtype="<f4",
+        )
+        candidate_exact = np.all(candidate_replay.view("<u4") == world_bits, axis=1)
+        candidate_delta = candidate_replay.astype(np.float64) - world.astype(np.float64)
+        candidate_distance2 = np.einsum("ij,ij->i", candidate_delta, candidate_delta)
+        take_exact = candidate_exact & ~best_exact
+        take_closer = (
+            ~candidate_exact & ~best_exact & (candidate_distance2 < best_distance2)
+        )
+        take = take_exact | take_closer
+        if np.any(take):
+            best_local[take] = candidate[take]
+            best_replay[take] = candidate_replay[take]
+            best_exact[take] = candidate_exact[take]
+            best_distance2[take] = candidate_distance2[take]
+            best_offsets[take] = offset
+    delta = best_replay.astype(np.float64) - world.astype(np.float64)
+    offset_counts = {
+        ",".join(map(str, offset)): int(np.count_nonzero(np.all(best_offsets == offset, axis=1)))
+        for offset in offsets
+        if np.any(np.all(best_offsets == offset, axis=1))
+    }
+    changed_bits = np.any(best_replay.view("<u4") != world_bits, axis=1)
+    report = {
+        "input_world_positions_sha256": _local_reconstruction_sha256(world.tobytes()),
+        "local_inverse_base_f32_sha256": _local_reconstruction_sha256(base_f32.tobytes()),
+        "local_positions_f32_sha256": _local_reconstruction_sha256(best_local.tobytes()),
+        "replayed_world_positions_sha256": _local_reconstruction_sha256(best_replay.tobytes()),
+        "world_roundtrip_exact": best_replay.tobytes() == world.tobytes(),
+        "world_roundtrip_changed_vertex_count": int(np.count_nonzero(changed_bits)),
+        "world_roundtrip_max_abs_delta_m": float(np.max(np.abs(delta), initial=0.0)),
+        "world_roundtrip_rms_delta_m": float(np.sqrt(np.mean(delta * delta))),
+        "neighbor_search": {
+            "method": "vectorized per-coordinate adjacent Float32 ULP offsets",
+            "offsets_per_vertex": len(offsets),
+            "exact_replay_vertex_count_from_base": int(np.count_nonzero(base_exact)),
+            "exact_replay_vertex_count_after_search": int(np.count_nonzero(best_exact)),
+            "selected_nonzero_ulp_offset_vertex_count": int(np.count_nonzero(
+                np.any(best_offsets != 0, axis=1))),
+            "selected_offset_vertex_counts": offset_counts,
+            "selection": "prefer exact world Float32 bits; otherwise minimize squared world-space replay error; ties retain first candidate",
+        },
+        "forward_transform_owner_sha256": LOCAL_BODY20_TRANSFORM_SHA256,
+        "pose_replay_requires_native_one_step_confirmation": True,
+    }
+    return best_local, best_replay, report
+
+
+def _require_sha_list(values, label: str) -> list[str]:
+    _require(isinstance(values, (list, tuple)) and values,
+             f"{label} are missing")
+    result = [_local_reconstruction_hex_sha(value, label) for value in values]
+    _require(len(result) == len(set(result)), f"{label} contain duplicate hashes")
+    return result
+
+
+def _parse_local_reconstruction_source_reports(raw_reports):
+    """Read the retained faces/source_rows ancestry and typed tool.json registry."""
+    parsed = []
+    for raw in raw_reports:
+        try:
+            value = json.loads(raw)
+        except (TypeError, json.JSONDecodeError) as error:
+            raise ValueError(
+                "local intercostal reconstruction: authenticated source report is invalid JSON"
+            ) from error
+        _require(isinstance(value, dict), "authenticated source report root is not an object")
+        parsed.append(value)
+
+    tools: dict[int, dict] = {}
+    for report in parsed:
+        rows = report.get("rows")
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if not isinstance(row, dict) or "source_bone" not in row:
+                continue
+            source_bone = row.get("source_bone")
+            rib_id = source_bone[1] if (
+                isinstance(source_bone, list) and len(source_bone) == 2
+                and type(source_bone[0]) is int and source_bone[0] == 51004
+                and type(source_bone[1]) is int
+            ) else None
+            derived_id = row.get("derived_source_id")
+            faces = row.get("faces")
+            tool_sha = row.get("tool_sha256")
+            _require(
+                rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
+                and type(derived_id) is int and derived_id == 900000000 + rib_id
+                and type(faces) is int and faces > 0
+                and isinstance(tool_sha, str) and len(tool_sha) == 64
+                and all(char in "0123456789abcdef" for char in tool_sha),
+                "typed derived rib tool registry record is malformed",
+            )
+            _require(derived_id not in tools,
+                     "authenticated source reports repeat a derived rib tool ID")
+            tools[derived_id] = {
+                "rib_stable_id": rib_id,
+                "face_count": faces,
+                "tool_sha256": tool_sha,
+            }
+
+    face_claims: dict[str, dict[int, list[tuple[int, int, str, bool]]]] = {}
+    for raw, report in zip(raw_reports, parsed, strict=True):
+        faces = report.get("faces")
+        if not isinstance(faces, list):
+            continue
+        report_sha = _local_reconstruction_sha256(raw)
+        claims: dict[int, list[tuple[int, int, str, bool]]] = {}
+        seen_output_faces: set[int] = set()
+        for face in faces:
+            _require(
+                isinstance(face, dict)
+                and type(face.get("output_face")) is int
+                and face["output_face"] >= 0,
+                "source-face ancestry contains an invalid output face ID",
+            )
+            _require(face["output_face"] not in seen_output_faces,
+                     "source-face ancestry repeats an output face ID")
+            seen_output_faces.add(face["output_face"])
+            source_rows = face.get("source_rows")
+            _require(isinstance(source_rows, list),
+                     "source-face ancestry row lacks source_rows")
+            exact = face.get("exact_source_face_claim") is True
+            for pair in source_rows:
+                _require(
+                    isinstance(pair, (list, tuple)) and len(pair) == 2
+                    and type(pair[0]) is int and pair[0] >= 0
+                    and type(pair[1]) is int and pair[1] >= 0,
+                    "source-face ancestry contains a malformed source_rows pair",
+                )
+                claims.setdefault(pair[1], []).append(
+                    (face["output_face"], pair[0], str(face.get("classification", "")), exact)
+                )
+        face_claims[report_sha] = claims
+    return tools, face_claims
+
+
+def _source_face_evidence_matches_typed_rib(
+    *,
+    source_report_sha: str,
+    parent_face_id: int,
+    source_face_ids: list[int],
+    rib_stable_id: int,
+    method: str,
+    source_face_claims: dict[str, dict[int, list[tuple[int, int, str, bool]]]],
+    typed_tool_rows: dict[int, dict],
+) -> bool:
+    claims = source_face_claims.get(source_report_sha)
+    if not claims:
+        return False
+    for source_face_id in source_face_ids:
+        matching = [
+            item for item in claims.get(source_face_id, [])
+            if item[0] == parent_face_id
+        ]
+        if not matching:
+            return False
+        valid = False
+        for _output_face, source_row_id, classification, exact in matching:
+            tool = typed_tool_rows.get(source_row_id)
+            if (
+                tool is not None
+                and tool["rib_stable_id"] == rib_stable_id
+                and source_face_id < tool["face_count"]
+                and exact
+                and (method != "inherited_authenticated_parent_patch"
+                     or classification == "unchanged_parent_face")
+            ):
+                valid = True
+                break
+        if not valid:
+            return False
+    return True
+
+
+def _normalize_local_reconstruction_parent_face_owners(
+    owner_report_raw: bytes,
+    expected_owner_report_sha256: str,
+    *,
+    stable_id: int,
+    parent_faces,
+    parent_payload_raw: bytes,
+    operation_ancestry_raw: bytes,
+    authenticated_source_report_raws,
+    authenticated_source_report_sha256s,
+) -> tuple[dict[int, int | None], dict]:
+    """Authenticate explicit parent-face rib ownership, including inherited caps."""
+    expected_sha = _local_reconstruction_hex_sha(
+        expected_owner_report_sha256, "parent face-owner report pin")
+    _require(_local_reconstruction_sha256(owner_report_raw) == expected_sha,
+             "parent face-owner report bytes differ from their declared pin")
+    try:
+        report = json.loads(owner_report_raw)
+    except (TypeError, json.JSONDecodeError) as error:
+        raise ValueError("local intercostal reconstruction: parent face-owner report is invalid JSON") from error
+    _require(
+        isinstance(report, dict)
+        and report.get("schema") == LOCAL_RECONSTRUCTION_ANCESTRY_SCHEMA
+        and type(report.get("stable_id")) is int and report["stable_id"] == stable_id,
+        "parent face-owner report schema or typed surface identity differs",
+    )
+    _require(isinstance(parent_payload_raw, bytes) and parent_payload_raw,
+             "pinned local-repair parent payload bytes are missing")
+    _require(isinstance(operation_ancestry_raw, bytes) and operation_ancestry_raw,
+             "pinned local-repair ancestry bytes are missing")
+    _require(
+        isinstance(authenticated_source_report_raws, (list, tuple))
+        and authenticated_source_report_raws
+        and all(isinstance(raw, bytes) and raw for raw in authenticated_source_report_raws),
+        "authenticated source report bytes are missing",
+    )
+    expected_source_report_shas = _require_sha_list(
+        authenticated_source_report_sha256s,
+        "independently pinned source report hashes",
+    )
+    parent_payload_sha = _local_reconstruction_sha256(parent_payload_raw)
+    operation_chain_sha = _local_reconstruction_sha256(operation_ancestry_raw)
+    authenticated_source_report_shas = [
+        _local_reconstruction_sha256(raw) for raw in authenticated_source_report_raws
+    ]
+    _require(
+        len(authenticated_source_report_shas) == len(expected_source_report_shas)
+        and authenticated_source_report_shas == expected_source_report_shas,
+        "authenticated source report bytes differ from their independent pins",
+    )
+    typed_tool_rows, source_face_claims = _parse_local_reconstruction_source_reports(
+        authenticated_source_report_raws,
+    )
+    _require(report.get("parent_payload_sha256") == parent_payload_sha,
+             "owner report parent payload hash does not authenticate supplied bytes")
+    _require(report.get("operation_ancestry_sha256") == operation_chain_sha,
+             "owner report operation ancestry hash does not authenticate supplied bytes")
+    raw_faces = np.asarray(parent_faces)
+    _require(raw_faces.ndim == 2 and raw_faces.shape[1] == 3
+             and np.issubdtype(raw_faces.dtype, np.integer)
+             and np.all(raw_faces >= 0)
+             and np.all(raw_faces <= np.iinfo(np.uint32).max),
+             "authenticated parent face indices exceed the ABI5 uint32 range")
+    faces = np.ascontiguousarray(raw_faces, dtype="<u4")
+    _require(len(faces) > 0, "authenticated parent faces are empty")
+    faces_sha = _local_reconstruction_sha256(faces.tobytes())
+    _require(
+        report.get("parent_faces_sha256") == faces_sha
+        and type(report.get("parent_face_count")) is int
+        and report["parent_face_count"] == len(faces),
+        "parent face-owner report is not bound to the exact parent face array",
+    )
+    entries = report.get("parent_face_owners")
+    _require(isinstance(entries, list), "parent face-owner inventory is missing")
+    owners: dict[int, int | None] = {}
+    methods: dict[int, str] = {}
+    for entry in entries:
+        _require(isinstance(entry, dict)
+                 and type(entry.get("parent_face_id")) is int
+                 and 0 <= entry["parent_face_id"] < len(faces),
+                 "parent face-owner row has an invalid face ID")
+        face_id = int(entry["parent_face_id"])
+        _require(face_id not in owners, "parent face-owner inventory repeats a face ID")
+        rib_ids = entry.get("rib_stable_ids")
+        _require(
+            isinstance(rib_ids, list)
+            and all(type(rib_id) is int and rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
+                    for rib_id in rib_ids)
+            and len(rib_ids) == len(set(rib_ids)),
+            "parent face-owner row has malformed typed rib IDs",
+        )
+        evidence = entry.get("evidence")
+        _require(isinstance(evidence, list), "parent face-owner row lacks explicit evidence")
+        evidenced_ribs = set()
+        for item in evidence:
+            _require(
+                isinstance(item, dict)
+                and type(item.get("rib_stable_id")) is int
+                and item["rib_stable_id"] in LOCAL_RECONSTRUCTION_RIB_IDS
+                and item.get("method") in (
+                    "direct_typed_rib_source",
+                    "inherited_authenticated_parent_patch",
+                ),
+                "parent face-owner evidence has an invalid typed rib or method",
+            )
+            source_report_sha = _local_reconstruction_hex_sha(
+                item.get("source_report_sha256"), "parent ownership evidence report hash")
+            _require(
+                source_report_sha in authenticated_source_report_shas,
+                "parent ownership evidence report hash does not match supplied source report bytes",
+            )
+            source_faces = item.get("source_face_ids")
+            _require(
+                isinstance(source_faces, list) and source_faces
+                and all(type(value) is int and value >= 0 for value in source_faces)
+                and len(source_faces) == len(set(source_faces)),
+                "parent ownership evidence lacks source face lineage",
+            )
+            rib_id = int(item["rib_stable_id"])
+            _require(rib_id not in evidenced_ribs,
+                     "parent face-owner evidence repeats a typed rib")
+            _require(
+                _source_face_evidence_matches_typed_rib(
+                    source_report_sha=source_report_sha,
+                    parent_face_id=face_id,
+                    source_face_ids=source_faces,
+                    rib_stable_id=rib_id,
+                    method=item["method"],
+                    source_face_claims=source_face_claims,
+                    typed_tool_rows=typed_tool_rows,
+                ),
+                "parent rib label is not proven by the pinned typed source-face ancestry and tool registry",
+            )
+            evidenced_ribs.add(rib_id)
+            methods[face_id] = item["method"]
+        _require(
+            evidenced_ribs == set(rib_ids)
+            and len(rib_ids) <= 1,
+            "parent face has missing or ambiguous rib attribution",
+        )
+        owners[face_id] = rib_ids[0] if rib_ids else None
+    _require(len(owners) == len(faces),
+             "parent face-owner report does not cover every parent face")
+    return owners, {
+        "parent_owner_report_sha256": expected_sha,
+        "parent_payload_sha256": parent_payload_sha,
+        "operation_ancestry_sha256": operation_chain_sha,
+        "authenticated_source_report_sha256s": sorted(authenticated_source_report_shas),
+        "parent_faces_sha256": faces_sha,
+        "parent_face_count": len(faces),
+        "explicit_parent_face_owner_count": len(owners),
+        "inherited_parent_face_owner_count": sum(
+            methods.get(face_id) == "inherited_authenticated_parent_patch"
+            for face_id in methods),
+        "direct_typed_source_face_owner_count": sum(
+            methods.get(face_id) == "direct_typed_rib_source"
+            for face_id in methods),
+        "unowned_parent_face_count": sum(owner is None for owner in owners.values()),
+    }
+
+
+def derive_local_reconstruction_face_rib_owners(
+    face_parent_ids,
+    parent_face_owners: dict[int, int | None],
+    *,
+    parent_face_count: int,
+) -> list[int | None]:
+    """Resolve child-face owners from explicit authenticated parent-face lineage."""
+    _require(isinstance(parent_face_owners, dict) and parent_face_owners,
+             "authenticated parent face-owner map is missing")
+    _require(type(parent_face_count) is int and parent_face_count > 0,
+             "parent face count is invalid")
+    resolved: list[int | None] = []
+    for child_face_id, parent_ids in enumerate(face_parent_ids):
+        if type(parent_ids) is int:
+            parent_ids = [parent_ids]
+        _require(
+            isinstance(parent_ids, (list, tuple)) and parent_ids
+            and all(type(value) is int and 0 <= value < parent_face_count for value in parent_ids)
+            and len(parent_ids) == len(set(parent_ids)),
+            f"child face {child_face_id} has missing or invalid parent ancestry",
+        )
+        _require(
+            all(parent_id in parent_face_owners for parent_id in parent_ids),
+            f"child face {child_face_id} references an unauthenticated parent face",
+        )
+        rib_ids = {parent_face_owners[parent_id] for parent_id in parent_ids}
+        # A reconstruction can inherit support from more than one typed source
+        # patch. Preserve that face in the ABI5 geometry, but do not assign its
+        # vertices to a runtime rib channel unless all authenticated parents
+        # agree on one owner. The caller reports these unresolved faces.
+        resolved.append(next(iter(rib_ids)) if len(rib_ids) == 1 else None)
+    return resolved
+
+
+def derive_local_reconstruction_attachment_maps(
+    faces,
+    face_rib_owners: list[int | None],
+    interface_face_mask,
+    *,
+    vertex_count: int,
+    required_rib_ids=None,
+    return_diagnostics: bool = False,
+) -> dict[int, list[int]] | tuple[dict[int, list[int]], dict]:
+    """Build fresh maps; leave vertices with conflicting interface owners unmapped."""
+    raw_triangles = np.asarray(faces)
+    uint32_max = int(np.iinfo(np.uint32).max)
+    _require(
+        raw_triangles.ndim == 2 and raw_triangles.shape[1] == 3
+        and np.issubdtype(raw_triangles.dtype, np.integer)
+        and np.all(raw_triangles >= 0)
+        and np.all(raw_triangles <= uint32_max),
+        "interface face indices exceed the ABI5 uint32 range",
+    )
+    _require(type(vertex_count) is int and 0 < vertex_count <= uint32_max + 1
+             and np.all(raw_triangles < vertex_count),
+             "interface face indices exceed the local vertex allocation")
+    triangles = np.ascontiguousarray(raw_triangles, dtype="<u4")
+    raw_interface = np.asarray(interface_face_mask)
+    _require(raw_interface.dtype == np.dtype(np.bool_) and raw_interface.ndim == 1,
+             "interface face mask is not an exact one-dimensional boolean array")
+    interface = raw_interface
+    _require(len(triangles) == len(face_rib_owners) == len(interface),
+             "interface faces or local vertex allocation are malformed")
+    required = set(required_rib_ids or ())
+    _require(all(type(rib_id) is int and rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
+                 for rib_id in required),
+             "required attachment inventory contains a non-typed rib")
+    vertex_ribs: dict[int, set[int]] = {}
+    observed_rib_ids: set[int] = set()
+    for face_id, (triangle, rib_id, is_interface) in enumerate(
+        zip(triangles, face_rib_owners, interface, strict=True)
+    ):
+        if not is_interface or rib_id is None:
+            continue
+        _require(type(rib_id) is int and rib_id in LOCAL_RECONSTRUCTION_RIB_IDS,
+                 f"interface face {face_id} has a non-typed rib owner")
+        observed_rib_ids.add(rib_id)
+        vertices = {int(value) for value in triangle}
+        _require(len(vertices) == 3, f"interface face {face_id} is degenerate")
+        for vertex_id in vertices:
+            vertex_ribs.setdefault(vertex_id, set()).add(rib_id)
+    _require(bool(observed_rib_ids),
+             "no authenticated rib-channel owners are observed on interface faces")
+    ambiguous = {
+        vertex_id: sorted(rib_ids)
+        for vertex_id, rib_ids in sorted(vertex_ribs.items())
+        if len(rib_ids) > 1
+    }
+    local_by_rib = {rib_id: set() for rib_id in observed_rib_ids}
+    for vertex_id, rib_ids in vertex_ribs.items():
+        if len(rib_ids) == 1:
+            local_by_rib[next(iter(rib_ids))].add(vertex_id)
+    _require(
+        all(local_by_rib[rib_id] for rib_id in observed_rib_ids),
+        "an observed rib has no unambiguous interface vertices",
+    )
+    _require(required == observed_rib_ids,
+             "required attachment inventory differs from observed authenticated rib owners")
+    maps = {
+        rib_id: sorted(vertex_ids)
+        for rib_id, vertex_ids in sorted(local_by_rib.items())
+    }
+    diagnostics = {
+        "ambiguous_shared_interface_vertex_count": len(ambiguous),
+        "ambiguous_shared_interface_vertices": [
+            {"local_vertex_id": vertex_id, "rib_stable_ids": rib_ids}
+            for vertex_id, rib_ids in ambiguous.items()
+        ],
+    }
+    if return_diagnostics:
+        return maps, diagnostics
+    return maps
+
+
+def _authenticated_local_reconstruction_body20_pose(
+    accepted_receipt_raw: bytes,
+    *,
+    expected_source_payload_sha256: str,
+    accepted_receipt_path: str | Path,
+    accepted_capture_pack_path: str | Path,
+) -> tuple[np.ndarray, np.ndarray, str, str]:
+    """Read Body20 only from the exact accepted step-0 receipt and pack."""
+    expected_source_payload_sha256 = _local_reconstruction_hex_sha(
+        expected_source_payload_sha256, "source ABI5 payload pin")
+    _require(isinstance(accepted_receipt_raw, bytes) and accepted_receipt_raw,
+             "accepted capture receipt bytes are missing")
+    receipt_path, pack_path = Path(accepted_receipt_path), Path(accepted_capture_pack_path)
+    _require(receipt_path.is_file() and receipt_path.read_bytes() == accepted_receipt_raw,
+             "accepted receipt bytes differ from the pinned receipt path")
+    _require(pack_path.is_file(), "accepted capture pack path is missing")
+    pack_sha256 = sha_file(pack_path)
+    _local_reconstruction_hex_sha(pack_sha256, "accepted capture pack hash")
+    try:
+        receipt = json.loads(accepted_receipt_raw)
+        from .resting_anatomy_verify import validate_capture_receipt
+        validate_capture_receipt(receipt, pack_sha256)
+    except (TypeError, json.JSONDecodeError, ValueError) as error:
+        raise ValueError(
+            "local intercostal reconstruction: accepted receipt does not authenticate the pinned capture"
+        ) from error
+    _require(type(receipt.get("accepted_step")) is int and receipt["accepted_step"] == 0,
+             "local intercostal reconstruction requires the exact accepted step-0 receipt")
+    _require(receipt.get("common_field_source_anatomy_payload_sha256")
+             == expected_source_payload_sha256,
+             "accepted step-0 receipt does not bind the exact source anatomy payload")
+    accepted_rows = [row for row in receipt["accepted_body_poses"]
+                     if row.get("body_index") == 20]
+    registered_rows = [row for row in receipt.get("accepted_registered_body_poses", [])
+                       if row.get("body_index") == 20]
+    _require(len(accepted_rows) == 1 and len(registered_rows) == 1
+             and accepted_rows[0].get("position_m") == registered_rows[0].get("position_m")
+             and accepted_rows[0].get("quaternion_xyzw") == registered_rows[0].get("quaternion_xyzw"),
+             "accepted and registered receipt do not bind one exact Body20 pose")
+    registered = registered_rows[0]
+    q = np.asarray(registered["quaternion_xyzw"], dtype="<f4")
+    t = np.asarray(registered["position_m"], dtype="<f4")
+    _require(q.shape == (4,) and t.shape == (3,) and np.isfinite(q).all()
+             and np.isfinite(t).all(), "accepted registered Body20 pose is malformed")
+    return q, t, _local_reconstruction_sha256(accepted_receipt_raw), pack_sha256
+
+
+def _local_reconstruction_runtime_attachment_map_sidecars(
+    *,
+    nha_stable_id: int,
+    interface_maps: dict[int, list[int]],
+    vertex_count: int,
+    face_rib_owners: list[int | None],
+    interface_face_mask,
+    source_payload_sha256: str,
+    compiled_payload_sha256: str,
+    candidate_npz_sha256: str,
+    candidate_faces_sha256: str,
+    face_parent_lineage_sha256: str,
+    accepted_receipt_sha256: str,
+    accepted_capture_pack_sha256: str,
+    parent_owner_report: dict,
+) -> dict[str, dict]:
+    """Emit current maps as the runtime receipt ABI, pinned to this source owner."""
+    from .composed_bone_body_frame import _RUNTIME_ATTACHMENT_RIBS
+
+    mask = np.asarray(interface_face_mask)
+    _require(
+        type(nha_stable_id) is int and nha_stable_id in (313, 315, 317)
+        and mask.dtype == np.dtype(np.bool_)
+        and mask.ndim == 1 and len(mask) == len(face_rib_owners)
+        and len(interface_maps) > 0,
+        "local reconstruction runtime map sidecar identity or interface mask is malformed",
+    )
+    output: dict[str, dict] = {}
+    uint32_max = int(np.iinfo(np.uint32).max)
+    for rib_id, raw_ids in sorted(interface_maps.items()):
+        _require(
+            type(rib_id) is int and rib_id in _RUNTIME_ATTACHMENT_RIBS
+            and isinstance(raw_ids, list) and raw_ids
+            and all(type(value) is int and 0 <= value <= uint32_max
+                    and value < vertex_count for value in raw_ids)
+            and len(raw_ids) == len(set(raw_ids)),
+            "local reconstruction runtime map sidecar has invalid typed rib slots",
+        )
+        ids = sorted(raw_ids)
+        ids_sha = _local_reconstruction_sha256(
+            np.ascontiguousarray(ids, dtype="<u4").tobytes())
+        interface_face_ids = [
+            index for index, (owner, marked) in enumerate(
+                zip(face_rib_owners, mask.tolist(), strict=True))
+            if marked and owner == rib_id
+        ]
+        _require(interface_face_ids,
+                 f"rib{rib_id} attachment map has no authenticated interface faces")
+        face_ids_sha = _local_reconstruction_sha256(
+            np.ascontiguousarray(interface_face_ids, dtype="<u4").tobytes())
+        member, member_sha, channel, _source_range_count = _RUNTIME_ATTACHMENT_RIBS[rib_id]
+        source_partition = {
+            "schema": "numi.human.intercostal-local-reconstruction-interface-source.v1",
+            "actual_capture_pack_sha256": accepted_capture_pack_sha256,
+            "actual_capture_receipt_sha256": accepted_receipt_sha256,
+            "base_anatomy_payload_sha256": source_payload_sha256,
+            "candidate_npz_sha256": candidate_npz_sha256,
+            "candidate_faces_sha256": candidate_faces_sha256,
+            "face_parent_lineage_sha256": face_parent_lineage_sha256,
+            "parent_owner_report_sha256": parent_owner_report["parent_owner_report_sha256"],
+            "parent_payload_sha256": parent_owner_report["parent_payload_sha256"],
+            "operation_ancestry_sha256": parent_owner_report["operation_ancestry_sha256"],
+            "authenticated_source_report_sha256s": parent_owner_report[
+                "authenticated_source_report_sha256s"],
+            "typed_source_rib_member": {
+                "stable_id": rib_id,
+                "member_id": member,
+                "member_sha256": member_sha,
+                "channel_index": channel,
+            },
+            "interface_face_ids_sha256": face_ids_sha,
+            "interface_face_count": len(interface_face_ids),
+            "interface_vertex_count": len(ids),
+            "anatomical_admission": False,
+            "native_admission": False,
+            "retained_motion_admission": False,
+        }
+        output[str(rib_id)] = {
+            "schema": f"numi.human.intercostal{nha_stable_id}-rib{rib_id}-interface-motion-attachment.v1",
+            "status": "inferred_passive_visual_attachment_source_preparation_only",
+            "runtime_claim_boundary": (
+                "The existing typed rib-kind deformation is reused only for this exact "
+                "source-owned interface vertex subset; no force, mass, tissue model, or "
+                "collision claim is added."
+            ),
+            "anatomy_payload_sha256": compiled_payload_sha256,
+            "source_partition": source_partition,
+            "surface": {
+                "semantic": 51010,
+                "stable_id": nha_stable_id,
+                "body_index": 20,
+                "layer": 1,
+                "interface_local_vertex_ids": ids,
+                "interface_local_vertex_ids_sha256": ids_sha,
+                "local_vertex_count": vertex_count,
+            },
+            "existing_rib_channel": {
+                "stable_id": rib_id,
+                "semantic": 51004,
+                "body_index": 20,
+                "channel_kind": 5,
+                "channel_index": channel,
+                "source_member_id": member,
+                "source_member_sha256": member_sha,
+            },
+        }
+    return output
+
+
+def compile_local_reconstruction_intercostal_payload(
+    raw_payload: bytes,
+    replacements: dict[int, dict],
+    *,
+    expected_source_payload_sha256: str,
+    accepted_receipt_raw: bytes,
+    accepted_receipt_path: str | Path,
+    accepted_capture_pack_path: str | Path,
+) -> tuple[bytes, dict]:
+    """Re-emit selected Body20 rows from local reconstruction inputs via ABI5.
+
+    Each replacement supplies pinned captured-world Float32 positions, child
+    faces, explicit face-parent lineage, an interface-face mask, the exact
+    parent face array, and its hash-pinned owner report. Normals are regenerated
+    from the pinned Float32 candidate geometry. Rib maps are limited to typed
+    owners observed in authenticated parent lineage; unobserved channels remain
+    absent. The result is source compilation evidence only; admission stays false.
+    """
+    _require(isinstance(replacements, dict) and replacements
+             and set(replacements) <= {313, 315, 317},
+             "local reconstruction replacement IDs are outside typed intercostal rows")
+    expected_source_payload_sha256 = _local_reconstruction_hex_sha(
+        expected_source_payload_sha256, "source ABI5 payload pin")
+    _require(isinstance(raw_payload, bytes)
+             and _local_reconstruction_sha256(raw_payload) == expected_source_payload_sha256,
+             "source ABI5 payload bytes differ from their independent pin")
+    q, t, accepted_receipt_sha256, accepted_capture_pack_sha256 = (
+        _authenticated_local_reconstruction_body20_pose(
+            accepted_receipt_raw,
+            expected_source_payload_sha256=expected_source_payload_sha256,
+            accepted_receipt_path=accepted_receipt_path,
+            accepted_capture_pack_path=accepted_capture_pack_path,
+        )
+    )
+    pose_sha = accepted_receipt_sha256
+    from .resting_pleura_proxy import _parse_payload
+
+    _header, _records, source_rows = _parse_payload(raw_payload)
+    composed_rows: dict[int, dict] = {}
+    row_reports: dict[str, dict] = {}
+    attachment_maps: dict[str, dict[int, list[int]]] = {}
+    attachment_sidecar_inputs: dict[int, dict] = {}
+    for stable_id, spec in sorted(replacements.items()):
+        _require(type(stable_id) is int and isinstance(spec, dict),
+                 "replacement stable ID or specification is malformed")
+        source_row = source_rows.get(stable_id)
+        _require(
+            isinstance(source_row, dict)
+            and source_row.get("body_index") == 20
+            and source_row.get("layer") == 1 and source_row.get("flags") == 0,
+            f"stable ID {stable_id} is not the typed Body20/layer1/flags0 row",
+        )
+        candidate_npz_raw = spec.get("candidate_npz_raw")
+        candidate_npz_sha256 = _local_reconstruction_hex_sha(
+            spec.get("candidate_npz_sha256"), f"stable ID {stable_id} candidate NPZ hash")
+        _require(isinstance(candidate_npz_raw, bytes)
+                 and _local_reconstruction_sha256(candidate_npz_raw) == candidate_npz_sha256,
+                 f"stable ID {stable_id} candidate NPZ bytes differ from their pin")
+        import io
+        try:
+            with np.load(io.BytesIO(candidate_npz_raw), allow_pickle=False) as candidate_npz:
+                candidate_positions_raw = np.asarray(candidate_npz["positions_world_f32"])
+                candidate_faces_raw = np.asarray(candidate_npz["faces"])
+        except (KeyError, ValueError, OSError) as error:
+            raise ValueError(f"local intercostal reconstruction: stable ID {stable_id} candidate NPZ is invalid") from error
+        _require(
+            candidate_positions_raw.dtype.kind == "f"
+            and candidate_positions_raw.dtype.itemsize == 4
+            and candidate_positions_raw.ndim == 2
+            and candidate_positions_raw.shape[1] == 3
+            and len(candidate_positions_raw) > 0
+            and np.isfinite(candidate_positions_raw).all(),
+            f"stable ID {stable_id} candidate NPZ positions must be finite typed Float32",
+        )
+        candidate_positions = np.ascontiguousarray(candidate_positions_raw, dtype="<f4")
+        _require(
+            np.issubdtype(candidate_faces_raw.dtype, np.integer)
+            and np.all(candidate_faces_raw >= 0)
+            and np.all(candidate_faces_raw <= np.iinfo(np.uint32).max),
+            f"stable ID {stable_id} candidate NPZ face indices exceed the ABI5 uint32 range",
+        )
+        candidate_faces = np.ascontiguousarray(candidate_faces_raw, dtype="<u4")
+        raw_vertices = np.asarray(spec.get("world_positions_f32"))
+        raw_faces = np.asarray(spec.get("faces"))
+        raw_parent_faces = np.asarray(spec.get("parent_faces"))
+        _require(
+            raw_vertices.dtype.kind == "f" and raw_vertices.dtype.itemsize == 4
+            and np.issubdtype(raw_faces.dtype, np.integer)
+            and np.all(raw_faces >= 0)
+            and np.all(raw_faces <= np.iinfo(np.uint32).max)
+            and np.issubdtype(raw_parent_faces.dtype, np.integer)
+            and np.all(raw_parent_faces >= 0)
+            and np.all(raw_parent_faces <= np.iinfo(np.uint32).max),
+            f"stable ID {stable_id} candidate arrays do not preserve typed Float32/face inputs",
+        )
+        world_positions = np.ascontiguousarray(raw_vertices, dtype="<f4")
+        faces = np.ascontiguousarray(raw_faces, dtype="<u4")
+        _require(world_positions.tobytes() == candidate_positions.tobytes()
+                 and faces.tobytes() == candidate_faces.tobytes(),
+                 f"stable ID {stable_id} emitted geometry differs from the pinned candidate NPZ")
+        world_normals_f32 = np.ascontiguousarray(
+            _surface_normals_allow_unused_slots(world_positions, faces), dtype="<f4",
+        )
+        world_vertices6 = np.ascontiguousarray(
+            np.concatenate((world_positions, world_normals_f32), axis=1), dtype="<f4")
+        parent_faces = np.ascontiguousarray(raw_parent_faces, dtype="<u4")
+        face_parent_ids = spec.get("face_parent_ids")
+        interface_mask = spec.get("interface_face_mask")
+        raw_interface = np.asarray(interface_mask)
+        _require(raw_interface.dtype == np.dtype(np.bool_),
+                 f"stable ID {stable_id} interface face mask is not boolean")
+        _require(
+            world_positions.ndim == 2 and world_positions.shape[1] == 3
+            and len(world_positions) > 0 and np.isfinite(world_vertices6).all()
+            and faces.ndim == 2 and faces.shape[1] == 3 and len(faces) > 0
+            and int(faces.max(initial=0)) < len(world_vertices6)
+            and np.all(faces[:, 0] != faces[:, 1])
+            and np.all(faces[:, 1] != faces[:, 2])
+            and np.all(faces[:, 2] != faces[:, 0])
+            and isinstance(face_parent_ids, list) and len(face_parent_ids) == len(faces),
+            f"stable ID {stable_id} candidate arrays or face lineage are malformed",
+        )
+        owner_report_raw = spec.get("parent_face_owner_report_raw")
+        _require(isinstance(owner_report_raw, bytes),
+                 f"stable ID {stable_id} authenticated parent owner report is missing")
+        parent_payload_raw = spec.get("parent_payload_raw")
+        operation_ancestry_raw = spec.get("operation_ancestry_raw")
+        _require(isinstance(parent_payload_raw, bytes),
+                 f"stable ID {stable_id} parent candidate bytes are missing")
+        try:
+            with np.load(io.BytesIO(parent_payload_raw), allow_pickle=False) as parent_npz:
+                parent_key = spec.get("parent_faces_key", "faces")
+                pinned_parent_faces_raw = np.asarray(parent_npz[parent_key])
+        except (KeyError, ValueError, OSError) as error:
+            raise ValueError(f"local intercostal reconstruction: stable ID {stable_id} parent NPZ is invalid") from error
+        _require(
+            np.issubdtype(pinned_parent_faces_raw.dtype, np.integer)
+            and np.all(pinned_parent_faces_raw >= 0)
+            and np.all(pinned_parent_faces_raw <= np.iinfo(np.uint32).max),
+            f"stable ID {stable_id} parent NPZ face indices exceed the ABI5 uint32 range",
+        )
+        pinned_parent_faces = np.ascontiguousarray(
+            pinned_parent_faces_raw, dtype="<u4")
+        _require(pinned_parent_faces.tobytes() == parent_faces.tobytes(),
+                 f"stable ID {stable_id} parent face array differs from pinned parent NPZ")
+        parent_owners, owner_report = _normalize_local_reconstruction_parent_face_owners(
+            owner_report_raw,
+            spec.get("parent_face_owner_report_sha256"),
+            stable_id=stable_id,
+            parent_faces=parent_faces,
+            parent_payload_raw=parent_payload_raw,
+            operation_ancestry_raw=operation_ancestry_raw,
+            authenticated_source_report_raws=spec.get("authenticated_source_report_raws"),
+            authenticated_source_report_sha256s=spec.get(
+                "authenticated_source_report_sha256s"),
+        )
+        face_rib_owners = derive_local_reconstruction_face_rib_owners(
+            face_parent_ids, parent_owners, parent_face_count=len(parent_faces),
+        )
+        required_rib_ids = spec.get("required_rib_ids", ())
+        _require(
+            isinstance(required_rib_ids, (list, tuple, set))
+            and all(type(rib_id) is int and rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
+                    for rib_id in required_rib_ids),
+            f"stable ID {stable_id} required attachment IDs are not typed existing ribs",
+        )
+        interface_maps, attachment_diagnostics = derive_local_reconstruction_attachment_maps(
+            faces, face_rib_owners, interface_mask,
+            vertex_count=len(world_vertices6),
+            required_rib_ids=required_rib_ids,
+            return_diagnostics=True,
+        )
+        local_positions, _replayed_world, inverse_report = _inverse_body20_positions_f32(
+            world_vertices6[:, :3], q, t,
+        )
+        local_normals = _localize_body20_normals_f32(
+            world_normals_f32, faces, q)
+        vertices6 = np.ascontiguousarray(
+            np.concatenate((local_positions, local_normals), axis=1), dtype="<f4")
+        _require(np.isfinite(vertices6).all(), f"stable ID {stable_id} emitted non-finite ABI5 vertices")
+        row = {
+            **source_row,
+            "vertices6": vertices6,
+            "faces": np.ascontiguousarray(faces, dtype=np.int64),
+            "record": (
+                int(source_row["record"][0]),
+                int(source_row["record"][1]),
+                len(vertices6),
+                int(source_row["record"][3]),
+                len(faces) * 3,
+                stable_id,
+                int(source_row["record"][6]),
+                int(source_row["record"][7]),
+            ),
+        }
+        composed_rows[stable_id] = row
+        attachment_maps[str(stable_id)] = interface_maps
+        attachment_sidecar_inputs[stable_id] = {
+            "face_rib_owners": face_rib_owners,
+            "interface_face_mask": raw_interface,
+            "owner_report": owner_report,
+            "candidate_npz_sha256": candidate_npz_sha256,
+            "candidate_faces_sha256": _local_reconstruction_sha256(faces.tobytes()),
+            "face_parent_lineage_sha256": _local_reconstruction_sha256(
+                json.dumps(face_parent_ids, separators=(",", ":")).encode()),
+        }
+        row_reports[str(stable_id)] = {
+            "stable_id": stable_id,
+            "source_parent_row_sha256": _local_reconstruction_sha256(
+                _normalized_row_bytes(source_row)),
+            "compiled_row_sha256": _local_reconstruction_sha256(
+                _normalized_row_bytes(row)),
+            "candidate_npz_sha256": candidate_npz_sha256,
+            "candidate_world_positions_f32_sha256": _local_reconstruction_sha256(
+                world_positions.tobytes()),
+            "derived_world_normals_f32_sha256": _local_reconstruction_sha256(
+                world_normals_f32.tobytes()),
+            "observed_rib_channel_ids": sorted(interface_maps),
+            "unobserved_existing_rib_channel_ids": sorted(
+                set(LOCAL_RECONSTRUCTION_RIB_IDS) - set(interface_maps)),
+            "candidate_faces_sha256": _local_reconstruction_sha256(
+                faces.tobytes()),
+            "face_parent_lineage_sha256": _local_reconstruction_sha256(
+                json.dumps(face_parent_ids, separators=(",", ":")).encode()),
+            "face_rib_owner_counts": {
+                str(rib_id): face_rib_owners.count(rib_id)
+                for rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
+                if rib_id in face_rib_owners
+            },
+            "unowned_child_face_count": face_rib_owners.count(None),
+            "unowned_interface_face_count": sum(
+                bool(is_interface) and rib_id is None
+                for is_interface, rib_id in zip(raw_interface, face_rib_owners, strict=True)),
+            "interface_map_vertex_counts": {
+                str(rib_id): len(vertex_ids) for rib_id, vertex_ids in interface_maps.items()
+            },
+            "ambiguous_shared_interface_vertex_count": (
+                attachment_diagnostics["ambiguous_shared_interface_vertex_count"]),
+            "ambiguous_shared_interface_vertices": (
+                attachment_diagnostics["ambiguous_shared_interface_vertices"]),
+            "parent_owner_report": owner_report,
+            "body20_inverse_and_replay": inverse_report,
+            "authenticated_parent_patch_inference_used": (
+                owner_report["inherited_parent_face_owner_count"] > 0),
+            "actual_source_bone_proximity_crosscheck_required": True,
+            "runtime_attachment_owner_rebind_required": True,
+            "native_step0_confirmation_required": True,
+            "anatomical_admission": False,
+            "native_admission": False,
+            "mass_or_physical_owner_changed": False,
+        }
+    output, abi_report = encode_payload_with_row_replacements(raw_payload, composed_rows)
+    compiled_payload_sha256 = _local_reconstruction_sha256(output)
+    runtime_attachment_map_sidecars: dict[str, dict[str, dict]] = {}
+    for stable_id, maps in sorted(
+        (int(key), value) for key, value in attachment_maps.items()
+    ):
+        sidecar_inputs = attachment_sidecar_inputs[stable_id]
+        runtime_attachment_map_sidecars[str(stable_id)] = (
+            _local_reconstruction_runtime_attachment_map_sidecars(
+                nha_stable_id=stable_id,
+                interface_maps=maps,
+                vertex_count=len(composed_rows[stable_id]["vertices6"]),
+                face_rib_owners=sidecar_inputs["face_rib_owners"],
+                interface_face_mask=sidecar_inputs["interface_face_mask"],
+                source_payload_sha256=expected_source_payload_sha256,
+                compiled_payload_sha256=compiled_payload_sha256,
+                candidate_npz_sha256=sidecar_inputs["candidate_npz_sha256"],
+                candidate_faces_sha256=sidecar_inputs["candidate_faces_sha256"],
+                face_parent_lineage_sha256=sidecar_inputs["face_parent_lineage_sha256"],
+                accepted_receipt_sha256=accepted_receipt_sha256,
+                accepted_capture_pack_sha256=accepted_capture_pack_sha256,
+                parent_owner_report=sidecar_inputs["owner_report"],
+            )
+        )
+    report = {
+        "schema": "numi.human.intercostal-local-reconstruction-source-compile.v1",
+        "status": "PASS_ABI5_LOCAL_RECONSTRUCTION_ROWS_COMPILED",
+        "source_payload_sha256": expected_source_payload_sha256,
+        "compiled_payload_sha256": compiled_payload_sha256,
+        "accepted_receipt_sha256": pose_sha,
+        "accepted_capture_pack_sha256": accepted_capture_pack_sha256,
+        "accepted_body20_pose": {
+            "quaternion_xyzw_f32_sha256": _local_reconstruction_sha256(q.tobytes()),
+            "position_m_f32_sha256": _local_reconstruction_sha256(t.tobytes()),
+            "transform_owner_sha256": LOCAL_BODY20_TRANSFORM_SHA256,
+        },
+        "abi5_owner_report": abi_report,
+        "row_reports": row_reports,
+        "runtime_attachment_maps": attachment_maps,
+        "runtime_attachment_map_sidecars": runtime_attachment_map_sidecars,
+        "unmodified_rows_byte_exact": abi_report["unmodified_rows_byte_exact"],
+        "mass_or_physical_owners_changed": False,
+        "native_or_gpu_work_performed": False,
+        "native_step0_confirmation_required": True,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+    return output, report
+
+
+
+
+def bind_local_reconstruction_runtime_attachment_receipt(
+    receipt: dict,
+    compiled_payload: bytes,
+    interface_maps: dict[int, list[int]],
+    *,
+    nha_stable_id: int,
+    bones_payload_sha256: str,
+    runtime_attachment_map_sidecars: dict[str, dict] | None = None,
+) -> dict:
+    """Rebind and revalidate maps through the retained runtime attachment owner."""
+    from .composed_bone_body_frame import (
+        bind_intercostal_runtime_attachment_metadata,
+        validate_intercostal_runtime_attachment_metadata,
+    )
+    from .resting_pleura_proxy import _parse_payload
+
+    payload_sha = _local_reconstruction_sha256(compiled_payload)
+    _header, _records, rows = _parse_payload(compiled_payload)
+    row = rows.get(nha_stable_id)
+    _require(isinstance(row, dict), "compiled ABI5 row is missing for attachment rebind")
+    if runtime_attachment_map_sidecars is not None:
+        _require(
+            isinstance(runtime_attachment_map_sidecars, dict)
+            and set(runtime_attachment_map_sidecars) == {str(rib_id) for rib_id in interface_maps},
+            "runtime attachment map sidecars differ from exact observed maps",
+        )
+        bindings = receipt.get("functional_bindings") if isinstance(receipt, dict) else None
+        _require(isinstance(bindings, dict),
+                 "runtime attachment receipt lacks functional_bindings")
+        for rib_id, ids in sorted(interface_maps.items()):
+            sidecar = runtime_attachment_map_sidecars[str(rib_id)]
+            _require(isinstance(sidecar, dict)
+                     and sidecar.get("anatomy_payload_sha256") == payload_sha
+                     and sidecar.get("surface", {}).get("stable_id") == nha_stable_id,
+                     "runtime map sidecar is not bound to this compiled NHA row")
+            key = f"intercostal_{nha_stable_id}_rib{rib_id}_motion_attachment"
+            previous = bindings.get(key)
+            if isinstance(previous, dict) and isinstance(previous.get("source_partition"), dict):
+                sidecar = deepcopy(sidecar)
+                sidecar["source_partition"]["retained_prior_source_partition"] = deepcopy(
+                    previous["source_partition"])
+            bindings[key] = deepcopy(sidecar)
+    bind_intercostal_runtime_attachment_metadata(
+        receipt,
+        row,
+        interface_maps,
+        nha_stable_id=nha_stable_id,
+        nha_payload_sha256=payload_sha,
+        bones_payload_sha256=bones_payload_sha256,
+    )
+    validate_intercostal_runtime_attachment_metadata(
+        receipt,
+        row,
+        interface_maps,
+        nha_stable_id=nha_stable_id,
+        nha_payload_sha256=payload_sha,
+        bones_payload_sha256=bones_payload_sha256,
+    )
+    receipt["functional_bindings"]["anatomy_payload_sha256"] = payload_sha
+    return {
+        "nha_stable_id": nha_stable_id,
+        "compiled_payload_sha256": payload_sha,
+        "bones_payload_sha256": bones_payload_sha256,
+        "interface_maps_validated_by_existing_runtime_owner": True,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+
+
 def encode_payload_with_row_replacements(raw: bytes, replacements: dict[int, dict]) -> tuple[bytes, dict]:
     """Re-emit ABI5 with only selected local rows replaced and offsets rebased."""
     from .resting_anatomy_interface_patch import encode_payload
