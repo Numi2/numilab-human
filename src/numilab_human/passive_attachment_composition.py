@@ -2028,11 +2028,32 @@ def _require_matching_parent_rest_fingerprints(child_fingerprint, carrier_finger
             "parent-rest carrier registration fingerprints differ from the child")
 
 
+def _validate_parent_rest_inventory(surfaces, sources, expected_surface_ids=None):
+    """Keep legacy scope, or require a caller-pinned complete typed inventory."""
+    require(isinstance(surfaces, list) and isinstance(sources, list) and len(sources) == 8,
+            "parent-rest extension requires eight existing carriers")
+    if expected_surface_ids is None:
+        require(len(surfaces) == 10,
+                "parent-rest extension does not contain the reviewed ten surfaces")
+        return
+    require(isinstance(expected_surface_ids, tuple) and 0 < len(expected_surface_ids) <= 192
+            and all(type(sid) is int and sid > 0 for sid in expected_surface_ids)
+            and len(set(expected_surface_ids)) == len(expected_surface_ids),
+            "parent-rest declared surface inventory is invalid")
+    require(all(isinstance(row, dict) and type(row.get("stable_id")) is int for row in surfaces),
+            "parent-rest surface has malformed typed identity")
+    actual = [row["stable_id"] for row in surfaces]
+    require(len(actual) == len(set(actual))
+            and set(actual) == set(expected_surface_ids),
+            "parent-rest actual surfaces differ from caller-pinned complete inventory")
+
+
 def reemit_parent_rest_conformance(
     child_payload: Path,
     parent_bindings_path: Path,
     rigid_path: Path,
     output: Path,
+    *, expected_surface_ids: tuple[int, ...] | None = None,
 ) -> dict:
     """Conform child reference vertices to existing full-parent rest interpolation.
 
@@ -2055,9 +2076,7 @@ def reemit_parent_rest_conformance(
             "parent-rest extension does not bind the exact child payload")
     surfaces = parent_extension.get("surfaces")
     sources = parent_extension.get("source_payloads")
-    require(isinstance(surfaces, list) and isinstance(sources, list)
-            and len(surfaces) == 10 and len(sources) == 8,
-            "parent-rest extension does not contain the reviewed ten surfaces and eight carriers")
+    _validate_parent_rest_inventory(surfaces, sources, expected_surface_ids)
     rigid, poses = _rest_body_poses_f32(rigid_path)
     require(child["source_digest"].hex() == rigid["source_sha256"],
             "child and NHRIGID source archives differ")
@@ -2348,6 +2367,8 @@ def reemit_parent_rest_conformance(
         "changed_stable_ids": modified_ids,
         "row_checks": row_reports,
         "all_ten_surface_rows_rechecked": len(row_reports) == 10,
+        "declared_surface_ids": list(expected_surface_ids) if expected_surface_ids is not None else None,
+        "all_declared_surface_rows_rechecked": len(row_reports) == len(surface_by_id),
         "faces_sparse_bindings_and_weights_preserved": True,
         "normal_policy": "affected child-row neighborhoods regenerated from actual sparse child rest geometry and inverse blended normal map",
         "anatomical_self_pose_and_native_cycle_admission": False,
