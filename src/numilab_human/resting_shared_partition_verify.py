@@ -458,35 +458,55 @@ def certify_shared_muscle_partition(surfaces, first, second, source: Path,
 def audit_with_shared_partitions(surfaces, changed, *, partitions, targets=None,
                                 required_closed=(), intended_enclosures=(),
                                 source_patch_complex_interfaces=None, capture_context=None,
-                                coordinate_provenance="accepted_native_capture", progress=None):
+                                coordinate_provenance="accepted_native_capture", progress=None,
+                                collect_failures=False):
     """Use existing exact certificates and existing nearby predicates in order."""
+    if type(collect_failures) is not bool:
+        raise TypeError("collect_failures must be a boolean")
     certificates, partners, seen = [], {}, set()
+    certificate_failures = []
+    collection_options = {"collect_failures": True} if collect_failures else {}
     for first, second, path, digest in partitions:
         first, second = verify.typed_key(first), verify.typed_key(second)
         pac.require(frozenset((first, second)) not in seen and first != second,
                     "duplicate shared partition declaration")
         seen.add(frozenset((first, second)))
-        proof = certify_shared_muscle_partition(surfaces, first, second, path, digest,
-                                                coordinate_provenance=coordinate_provenance,
-                                                capture_context=capture_context)
+        try:
+            proof = certify_shared_muscle_partition(surfaces, first, second, path, digest,
+                                                    coordinate_provenance=coordinate_provenance,
+                                                    capture_context=capture_context)
+        except (ValueError, TypeError) as exc:
+            if not collect_failures:
+                raise
+            failure = {"stage": "shared_partition", "identities": [list(first), list(second)],
+                       "passed": False, "error_type": type(exc).__name__, "error": str(exc)}
+            certificate_failures.append(failure)
+            if progress is not None:
+                progress(failure)
+            continue
         certificates.append(proof)
         partners.setdefault(first, set()).add(second)
         partners.setdefault(second, set()).add(first)
     targets = list(surfaces) if targets is None else list(targets)
-    rows, checks = [], []
+    rows, checks = list(certificate_failures), []
     for key in changed:
         key = verify.typed_key(key)
         selected = [t for t in targets if t not in partners.get(key, ())]
         result = verify.audit_changed_surfaces(surfaces, [key], targets=selected,
                     required_closed=[key] if key in required_closed else [],
                     intended_enclosures=intended_enclosures,
-                    source_patch_complex_interfaces=source_patch_complex_interfaces, progress=progress)
+                    source_patch_complex_interfaces=source_patch_complex_interfaces, progress=progress,
+                    **collection_options)
         rows.extend(result.get("rows", []))
         checks.append({"typed_identity": list(key), "audit": result})
-        if not result["passed"]:
+        if not result["passed"] and not collect_failures:
             return dict(result, rows=rows, per_changed_surface=checks,
                         shared_partition_certificates=certificates)
-    return {"passed": True, "rows": rows, "per_changed_surface": checks,
+    return {"passed": not certificate_failures and all(c["audit"]["passed"] for c in checks),
+            "rows": rows, "per_changed_surface": checks,
             "shared_partition_certificates": certificates,
             "scope": "Exact shared-solid certificates and all selected nearby surfaces; admission and motion remain separate.",
-            "coordinate_provenance": coordinate_provenance}
+            "coordinate_provenance": coordinate_provenance,
+            **({"collection_complete": True,
+                "failure_count": sum(row.get("passed") is False for row in rows)}
+               if collect_failures else {})}

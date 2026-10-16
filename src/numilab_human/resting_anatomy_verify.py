@@ -3571,7 +3571,15 @@ def load_capture(pack, receipt_path):
 def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=(),
                            intended_enclosures=(), shared_feature_interfaces=None,
                            source_patch_complex_interfaces=None,
-                           source_bound_connected_overlap_interfaces=None, progress=None):
+                           source_bound_connected_overlap_interfaces=None, progress=None,
+                           collect_failures=False):
+    """Audit selected geometry; optionally retain every failed gate in one pass.
+
+    Collection changes scheduling only. Every original exact predicate and
+    declaration remains in force, and any failed row keeps the result rejected.
+    """
+    if type(collect_failures) is not bool:
+        raise TypeError("collect_failures must be a boolean")
     changed = [typed_key(key) for key in changed]
     targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
     interfaces = interfaces or {}
@@ -3584,11 +3592,13 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
     if any(a not in surfaces or b not in surfaces for a, b in enclosures):
         raise ValueError("intended enclosure identity absent from capture")
     required_closed = {typed_key(key) for key in required_closed} | {key for key in changed if key[0] == 51011}
-    cache, rows = {}, []
+    cache, rows, failures = {}, [], []
     if progress is not None and not callable(progress):
         raise TypeError("audit progress observer must be callable")
     def record(row):
         rows.append(row)
+        if row.get("passed") is False:
+            failures.append(len(rows)-1)
         if progress is not None:
             progress(row)
     def prepared(key):
@@ -3597,17 +3607,38 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
             cache[key] = value if isinstance(value, PreparedSurface) else prepare_surface(
                 key, value[0], value[1], normals=value[2], source_vertex_ids=value[3])
         return cache[key]
+    def failed_preparation(key, exc, *, source=None):
+        row = {
+            "stage": "preparation" if source is None else "target_preparation",
+            "failed_identity": list(key), "passed": False,
+            "reason": "surface preparation failed before pair predicates",
+            "preparation_error_type": type(exc).__name__,
+            "preparation_error": str(exc),
+        }
+        row["identity" if source is None else "identities"] = (
+            list(key) if source is None else [list(source), list(key)])
+        diagnostic = getattr(exc, "diagnostic", None)
+        if diagnostic is not None:
+            row["topology_witness"] = diagnostic
+        return row
     seen = set()
     for key in changed:
-        surface = prepared(key)
+        try:
+            surface = prepared(key)
+        except ValueError as exc:
+            if not collect_failures:
+                raise
+            record(failed_preparation(key, exc))
+            continue
         if key in required_closed and not surface.closed:
             record({"stage": "preparation", **surface.diagnostics(),
                          "passed": False, "reason": "required closed surface is open"})
-            return {"passed": False, "failed_stage": "preparation", "rows": rows}
+            if not collect_failures:
+                return {"passed": False, "failed_stage": "preparation", "rows": rows}
         result = surface.self_audit()
         record({"stage": "self", **surface.diagnostics(), **result,
                      "passed": result["count"] == 0})
-        if result["count"]:
+        if result["count"] and not collect_failures:
             return {"passed": False, "failed_stage": "self", "rows": rows}
         for target in targets:
             if target == key or frozenset((key, target)) in seen:
@@ -3629,7 +3660,7 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                        "intended_enclosures": [[list(a), list(b)]
                                                for a, b in declared_enclosures]}
                 record(row)
-                if declared_enclosures or source_overlap_declared:
+                if (declared_enclosures or source_overlap_declared) and not collect_failures:
                     return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
                 continue
             try:
@@ -3648,19 +3679,35 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                 if diagnostic is not None:
                     row["target_topology_witness"] = diagnostic
                 record(row)
-                return {"passed": False, "failed_stage": "target_preparation", "rows": rows}
-            pair = audit_surface_pair(surface, other,
-                                      intended_face_pairs=interfaces.get((key, target), ()),
-                                      intended_shared_feature_pairs=shared_feature_interfaces.get((key, target), ()),
-                                      intended_source_patch_complexes=source_patch_complex_interfaces.get(
-                                          (key, target), ()),
-                                      source_bound_connected_overlaps=(
-                                          source_bound_connected_overlap_interfaces.get((key, target), ())),
-                                      intended_enclosures=[pair for pair in enclosures
-                                                           if set(pair) == {key, target}])
+                if not collect_failures:
+                    return {"passed": False, "failed_stage": "target_preparation", "rows": rows}
+                continue
+            try:
+                pair = audit_surface_pair(surface, other,
+                                          intended_face_pairs=interfaces.get((key, target), ()),
+                                          intended_shared_feature_pairs=shared_feature_interfaces.get((key, target), ()),
+                                          intended_source_patch_complexes=source_patch_complex_interfaces.get(
+                                              (key, target), ()),
+                                          source_bound_connected_overlaps=(
+                                              source_bound_connected_overlap_interfaces.get((key, target), ())),
+                                          intended_enclosures=[pair for pair in enclosures
+                                                               if set(pair) == {key, target}])
+            except (ValueError, TypeError) as exc:
+                if not collect_failures:
+                    raise
+                record({"stage": "pair_validation",
+                        "identities": [list(key), list(target)], "passed": False,
+                        "error_type": type(exc).__name__, "error": str(exc)})
+                continue
             record({"stage": "nearby_pair", **pair})
-            if not pair["passed"]:
+            if not pair["passed"] and not collect_failures:
                 return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
+    if collect_failures:
+        return {"passed": not failures, "rows": rows,
+                "failed_stage": rows[failures[0]]["stage"] if failures else None,
+                "failure_count": len(failures), "failure_row_indices": failures,
+                "collection_complete": True,
+                "scope": "All selected gates attempted; every failure retained. Preparation failures block dependent predicates. No vessel continuity or full anatomy admission."}
     return {"passed": True, "rows": rows,
             "scope": "Selected changed surfaces against declared targets; no vessel continuity or full anatomy admission."}
 

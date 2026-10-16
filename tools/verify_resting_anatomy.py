@@ -411,6 +411,8 @@ def main(argv=None):
                    help="existing reciprocal head-patch report PATH=SHA256; current capture only")
     p.add_argument("--bone-artifact", type=Path, help="existing compiled NHBONES artifact directory")
     p.add_argument("--body-manifest", type=Path, help="exact runtime manifest bound by NHBONES")
+    p.add_argument("--collect-failures", action="store_true",
+                   help="retain all selected failures in one pass; any failure still rejects")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
@@ -582,7 +584,7 @@ def main(argv=None):
         if any((first[0] != 51005 or second[0] != 51005) and (first in overlay_keys or second in overlay_keys)
                for first, second, _, _ in partitions):
             raise ValueError("anatomy partitions require unchanged accepted-capture surfaces")
-        if partitions:
+        if partitions and not args.collect_failures:
             from numilab_human.resting_shared_partition_verify import preflight_shared_muscle_partition
             report["shared_partition_preflight"] = [
                 preflight_shared_muscle_partition(
@@ -590,6 +592,8 @@ def main(argv=None):
                     coordinate_provenance=("counterfactual_owner_replay" if overlay_keys
                                            else "accepted_native_capture"))
                 for first, second, source, digest in partitions]
+        if args.preflight_only and args.collect_failures:
+            raise ValueError("failure collection requires geometry predicates")
         if args.preflight_only:
             for key in changed:
                 if key not in surfaces:
@@ -613,6 +617,7 @@ def main(argv=None):
                     "scope": "Latest completed gate; final output retains every ordered result.",
                 }, sort_keys=True, indent=2)+"\n")
                 temporary.replace(progress_path)
+            collection_options = {"collect_failures": True} if args.collect_failures else {}
             if partitions:
                 from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
                 result = audit_with_shared_partitions(
@@ -621,12 +626,13 @@ def main(argv=None):
                     source_patch_complex_interfaces=patch_interfaces, capture_context=capture_context,
                     progress=record_progress,
                     coordinate_provenance=("counterfactual_owner_replay" if args.overlay or args.rest_source
-                                           else "accepted_native_capture"))
+                                           else "accepted_native_capture"), **collection_options)
             else:
                 result = verify.audit_changed_surfaces(
                     surfaces, changed, targets=targets,
                     required_closed=closed, intended_enclosures=enclosures,
-                    source_patch_complex_interfaces=patch_interfaces, progress=record_progress)
+                    source_patch_complex_interfaces=patch_interfaces, progress=record_progress,
+                    **collection_options)
             report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
     except (ValueError, TypeError, KeyError, OSError, verify.HumanImportError) as error:
