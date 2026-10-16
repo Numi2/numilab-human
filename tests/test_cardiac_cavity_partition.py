@@ -475,5 +475,52 @@ class PinnedArrangementTests(unittest.TestCase):
         self.assertEqual(len(result_points-source_points), 42)
 
 
+
+
+class CoveredPointUnionTests(unittest.TestCase):
+    @staticmethod
+    def source():
+        outward = [(0,2,1),(0,1,3),(0,3,2),(1,2,3)]
+        vertices = [(0,0,0),(-2,0,0),(0,-2,0),(0,0,-2),
+                    (0,0,0),(2,0,0),(0,2,0),(0,0,2),
+                    (-10,-11,-12),(30,-9,-8),(-7,31,-10),(-8,-6,32)]
+        faces = [(a,c,b) for a,b,c in outward]
+        faces += [tuple(i+4 for i in face) for face in outward]
+        faces += [tuple(i+8 for i in face) for face in outward]
+        return dict(vertices=vertices,triangles=faces,source_sha256="f"*64)
+
+    def test_explicit_internal_fill_resolves_point_pinch_and_keeps_exact_boundary(self):
+        result = partition.construct_positive_winding_self_union(
+            self.source(), point_contact_cover_face_indices=[8,9,10,11])
+        self.assertGreater(len(result["covered_point_contacts"]), 0)
+        self.assertEqual(result["output_self_intersection_audit"]["count"], 0)
+        self.assertEqual(result["output_topology"]["component_count"], 1)
+        self.assertEqual(len(result["output_mesh"]["triangles"]), 4)
+        self.assertEqual({row["source_face"] for row in result["output_face_ancestry"]},
+                         {8,9,10,11})
+        self.assertTrue(all(row["point"] == (F(0),)*3
+                            for row in result["covered_point_contacts"]))
+
+    def test_default_strict_point_contact_rejection_is_unchanged(self):
+        with self.assertRaisesRegex(HumanImportError,"point-only self-contact is unsupported"):
+            partition.construct_positive_winding_self_union(self.source())
+
+    def test_a_cover_boundary_is_not_a_strict_interior_waiver(self):
+        with self.assertRaisesRegex(HumanImportError,"not strictly inside"):
+            partition.construct_positive_winding_self_union(
+                self.source(),point_contact_cover_face_indices=[0,1,2,3])
+
+    def test_invalid_open_and_reversed_covers_fail_before_construction(self):
+        for selected in ([],[True],[8,8],[-1],[12],[8,9,10]):
+            with self.subTest(selected=selected), self.assertRaises(HumanImportError):
+                partition.construct_positive_winding_self_union(
+                    self.source(),point_contact_cover_face_indices=selected)
+        source=self.source()
+        source["triangles"][8:]=[(a,c,b) for a,b,c in source["triangles"][8:]]
+        with self.assertRaisesRegex(HumanImportError,"outward"):
+            partition.construct_positive_winding_self_union(
+                source,point_contact_cover_face_indices=[8,9,10,11])
+
+
 if __name__ == "__main__":
     unittest.main()

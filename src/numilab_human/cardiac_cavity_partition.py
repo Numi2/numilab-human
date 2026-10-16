@@ -422,7 +422,7 @@ def construct_nonzero_winding_self_union(source_surface):
     return _construct_winding_self_union(source_surface, positive_only=False)
 
 
-def construct_positive_winding_self_union(source_surface):
+def construct_positive_winding_self_union(source_surface, *, point_contact_cover_face_indices=None):
     """Extract the boundary of the strictly positive signed-winding material.
 
     This is an explicit inference for an outward-oriented reference shell with
@@ -431,11 +431,21 @@ def construct_positive_winding_self_union(source_surface):
     positive material remain cavities. A globally reversed shell is rejected.
     Exact arrangement, manifold, self-intersection and side-probe checks remain
     mandatory. Attribute ancestry and Float32 conversion need separate audits.
+
+    The optional cover names one closed, outward, self-clear input component.
+    A point-only source contact may be internal to this explicitly inferred
+    repair solid. Exact strict containment is required at every such point;
+    boundary/external contacts still fail. This only enables construction of
+    the regularized material boundary: the emitted surface must still pass all
+    exact self, manifold and winding checks. Default behavior remains strict.
     """
-    return _construct_winding_self_union(source_surface, positive_only=True)
+    return _construct_winding_self_union(
+        source_surface, positive_only=True,
+        point_contact_cover_face_indices=point_contact_cover_face_indices)
 
 
-def _construct_winding_self_union(source_surface, *, positive_only):
+def _construct_winding_self_union(source_surface, *, positive_only,
+                                  point_contact_cover_face_indices=None):
     require(isinstance(source_surface, dict), "expected one named source surface")
     vertices = source_surface.get("vertices")
     faces = source_surface.get("triangles")
@@ -457,6 +467,24 @@ def _construct_winding_self_union(source_surface, *, positive_only):
 
     records = predicates._records(exact_vertices, faces)
     prepared = predicates.prepare_signed_winding(records)
+    point_cover = None
+    covered_point_contacts = []
+    if point_contact_cover_face_indices is not None:
+        selected = point_contact_cover_face_indices
+        require(isinstance(selected, (list, tuple)) and bool(selected) and
+                all(type(index) is int and 0 <= index < len(faces) for index in selected)
+                and len(set(selected)) == len(selected),
+                "point-contact cover requires distinct valid input face indices")
+        cover_records = [records[index] for index in selected]
+        point_cover = predicates.prepare_signed_winding(cover_records)
+        require(point_cover.face_component_count == 1,
+                "point-contact cover must be one closed component")
+        require(predicates._audit_pair(cover_records, cover_records, same_surface=True)["count"] == 0,
+                "point-contact cover must be self-clear")
+        cover_volume6 = sum(predicates._dot(triangle[0],
+                               predicates._cross(triangle[1], triangle[2]))
+                            for triangle, *_ in cover_records)
+        require(cover_volume6 > 0, "point-contact cover must be outward oriented")
     intersection_audit = predicates._audit_pair(records, records, same_surface=True)
     segments_by_face = defaultdict(set)
     boundary_points_by_face = defaultdict(set)
@@ -471,6 +499,17 @@ def _construct_winding_self_union(source_surface, *, positive_only):
         first_normal, second_normal = (_exact_triangle_normal(first),
                                        _exact_triangle_normal(second))
         points = sorted(set(predicates.triangle_intersection_points(first, second)))
+        if len(points) == 1 and point_cover is not None:
+            location = predicates.signed_winding_number(points[0], point_cover)
+            require(location["status"] == "resolved" and location["winding_number"] == 1,
+                    "point-only contact is not strictly inside the declared cover")
+            covered_point_contacts.append({"face_pair": [first_id, second_id],
+                                           "point": points[0],
+                                           "cover_winding_number": 1})
+            # No cut is required inside a positive open neighborhood of fill
+            # material. Its transverse boundary cuts still partition the source
+            # patches; all emitted-boundary predicates below remain mandatory.
+            continue
         require(len(points) >= 2,
                 "point-only self-contact is unsupported")
         require(any(predicates._cross(first_normal, second_normal)),
@@ -629,7 +668,7 @@ def _construct_winding_self_union(source_surface, *, positive_only):
                 inside["winding_number"] == 1 and outside["winding_number"] == 0,
                 "emitted patch does not bound exactly the selected winding material")
 
-    return {
+    result = {
         "source_sha256": source_sha,
         "material_rule": "strictly_positive" if positive_only else "nonzero",
         "input_face_count": len(faces),
@@ -648,6 +687,10 @@ def _construct_winding_self_union(source_surface, *, positive_only):
         "output_self_intersection_audit": output_self_audit,
         "float32_conversion_audited": False,
     }
+    if point_cover is not None:
+        result["point_contact_cover_face_indices"] = list(point_contact_cover_face_indices)
+        result["covered_point_contacts"] = covered_point_contacts
+    return result
 
 
 def _validate_output_topology(records):
