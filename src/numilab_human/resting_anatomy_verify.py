@@ -646,6 +646,7 @@ def _source_point_crosswalk_digest(value):
 
 
 def _cyclic_source_face_orientation(actual, canonical, *, reversed_order=False):
+    actual = list(actual)
     expected = list(canonical)
     if reversed_order:
         expected = [expected[0], expected[2], expected[1]]
@@ -1664,6 +1665,8 @@ def _prepare_source_patch_fragment_complex(first, second, value):
 
 def _prepare_source_patch_complex(first, second, value):
     """Validate a source-bound reciprocal patch and its incident stars."""
+    if isinstance(value, dict) and "carrier_faces" in value:
+        return _prepare_source_patch_carrier_complex(first, second, value)
     if isinstance(value, dict) and value.get("schema") == _SOURCE_PATCH_FRAGMENT_COMPLEX_SCHEMA:
         return _prepare_source_patch_fragment_complex(first, second, value)
     fields = {"schema", "source_patch_complex_sha256", "identities",
@@ -1952,6 +1955,20 @@ def _source_patch_complex_contact(first, second, first_face, second_face, patch)
             or second_face not in patch["support_faces"][1]):
         return False, "contact_faces_are_outside_authenticated_incident_support"
     points = first.intersection_points_meters(second, first_face, second_face)
+    if patch.get("carrier_complex"):
+        direct = next(((carrier_id, triangle) for a, b, carrier_id, triangle
+                       in patch["patch_face_pairs"]
+                       if a == first_face and b == second_face), None)
+        if direct is not None:
+            if len(points) == 3 and set(points) == set(direct[1]):
+                return True, "exact_reciprocal_source_carrier_face"
+            return False, "reciprocal_source_carrier_face_intersection_is_not_exact"
+        if len(points) == 1 and _exact_point_on_carrier(points[0], patch["carrier_triangles"]):
+            return True, "exact_point_contact_on_authenticated_carrier"
+        if len(points) == 2 and _exact_segment_on_carrier(
+                points[0], points[1], patch["carrier_triangles"]):
+            return True, "exact_segment_contact_fully_covered_by_authenticated_carrier"
+        return False, "contact_is_not_fully_covered_by_authenticated_carrier"
     direct_source_face = next((source_face for first_index, second_index, source_face
                                in patch["patch_face_pairs"]
                                if first_index == first_face and second_index == second_face), None)
@@ -2005,6 +2022,454 @@ def _source_patch_complex_contact(first, second, first_face, second_face, patch)
     return True, "exact_contact_contained_in_supported_source_patch_corner_or_edge"
 
 
+def _exact_triangle_normal(triangle):
+    first = tuple(triangle[1][i] - triangle[0][i] for i in range(3))
+    second = tuple(triangle[2][i] - triangle[0][i] for i in range(3))
+    return (first[1] * second[2] - first[2] * second[1],
+            first[2] * second[0] - first[0] * second[2],
+            first[0] * second[1] - first[1] * second[0])
+
+
+def _exact_point_on_carrier(point, triangles):
+    for triangle in triangles:
+        normal = _exact_triangle_normal(triangle)
+        if normal == (0, 0, 0):
+            continue
+        delta = tuple(point[i] - triangle[0][i] for i in range(3))
+        if sum((normal[i] * delta[i] for i in range(3)), Fraction(0)) != 0:
+            continue
+        try:
+            if all(weight >= 0 for weight in _patch_barycentric(triangle, point)):
+                return True
+        except ValueError:
+            continue
+    return False
+
+
+def _exact_segment_triangle_interval(start, end, triangle):
+    """Return the exact closed parameter interval where a segment meets a triangle."""
+    normal = _exact_triangle_normal(triangle)
+    if normal == (0, 0, 0):
+        return None
+    d0 = sum((normal[i] * (start[i] - triangle[0][i]) for i in range(3)), Fraction(0))
+    d1 = sum((normal[i] * (end[i] - triangle[0][i]) for i in range(3)), Fraction(0))
+    if d0 == 0 and d1 == 0:
+        try:
+            first = _patch_barycentric(triangle, start)
+            last = _patch_barycentric(triangle, end)
+        except ValueError:
+            return None
+        lower, upper = Fraction(0), Fraction(1)
+        for a, b in zip(first, last):
+            slope = b - a
+            if slope == 0:
+                if a < 0:
+                    return None
+                continue
+            crossing = -a / slope
+            if slope > 0:
+                lower = max(lower, crossing)
+            else:
+                upper = min(upper, crossing)
+        if lower > upper or upper < 0 or lower > 1:
+            return None
+        return max(Fraction(0), lower), min(Fraction(1), upper)
+    denominator = d0 - d1
+    if denominator == 0:
+        return None
+    parameter = d0 / denominator
+    if not 0 <= parameter <= 1:
+        return None
+    point = tuple(start[i] + parameter * (end[i] - start[i]) for i in range(3))
+    return (parameter, parameter) if _exact_point_on_carrier(point, (triangle,)) else None
+
+
+def _exact_segment_on_carrier(start, end, triangles):
+    """Require the full segment, not samples, to lie in the carrier triangle union."""
+    intervals = [interval for triangle in triangles
+                 if (interval := _exact_segment_triangle_interval(start, end, triangle)) is not None]
+    if not intervals:
+        return False
+    intervals.sort()
+    if intervals[0][0] > 0:
+        return False
+    covered = intervals[0][1]
+    for lower, upper in intervals[1:]:
+        if lower > covered:
+            return False
+        covered = max(covered, upper)
+        if covered >= 1:
+            return True
+    return covered >= 1
+
+
+def _carrier_topology(point_ids, carrier_faces, expected_components):
+    """Validate the carrier as an oriented, manifold triangular 2-complex."""
+    edge_rows, adjacency, incident = {}, [set() for _ in carrier_faces], {}
+    seen_faces = set()
+    for face_index, face in enumerate(carrier_faces):
+        ids = tuple(face)
+        if len(set(ids)) != 3 or any(point_id not in point_ids for point_id in ids):
+            raise ValueError("source patch carrier face has invalid point references")
+        face_key = tuple(sorted(ids))
+        if face_key in seen_faces:
+            raise ValueError("source patch carrier repeats a triangle")
+        seen_faces.add(face_key)
+        if _exact_triangle_normal([point_ids[item] for item in ids]) == (0, 0, 0):
+            raise ValueError("source patch carrier contains a degenerate triangle")
+        for point_id in ids:
+            incident.setdefault(point_id, []).append(face_index)
+        for index in range(3):
+            start, end = ids[index], ids[(index + 1) % 3]
+            edge_rows.setdefault(tuple(sorted((start, end))), []).append((face_index, start, end))
+    for uses in edge_rows.values():
+        if len(uses) > 2:
+            raise ValueError("source patch carrier has a nonmanifold edge")
+        if len(uses) == 2:
+            (a, a0, a1), (b, b0, b1) = uses
+            if (a0, a1) != (b1, b0):
+                raise ValueError("source patch carrier internal edge winding is inconsistent")
+            adjacency[a].add(b)
+            adjacency[b].add(a)
+    components, unseen = [], set(range(len(carrier_faces)))
+    while unseen:
+        seed = min(unseen)
+        stack, component = [seed], set()
+        while stack:
+            face_index = stack.pop()
+            if face_index in component:
+                continue
+            component.add(face_index)
+            unseen.discard(face_index)
+            stack.extend(adjacency[face_index] - component)
+        components.append(component)
+    if len(components) != expected_components:
+        raise ValueError("source patch carrier component count differs from declared source topology")
+    for point_id, faces in incident.items():
+        link = {}
+        for face_index in faces:
+            opposite = [item for item in carrier_faces[face_index] if item != point_id]
+            if len(opposite) != 2:
+                raise ValueError("source patch carrier vertex link is malformed")
+            a, b = opposite
+            link.setdefault(a, set()).add(b)
+            link.setdefault(b, set()).add(a)
+        if not link or any(len(neighbors) > 2 for neighbors in link.values()):
+            raise ValueError("source patch carrier has a nonmanifold vertex link")
+        reached, stack = set(), [next(iter(link))]
+        while stack:
+            item = stack.pop()
+            if item in reached:
+                continue
+            reached.add(item)
+            stack.extend(link[item] - reached)
+        degrees = [len(neighbors) for neighbors in link.values()]
+        if (reached != set(link) or degrees.count(1) not in (0, 2)
+                or any(degree not in (1, 2) for degree in degrees)):
+            raise ValueError("source patch carrier has an invalid boundary vertex link")
+    return {"component_count": len(components),
+            "component_face_counts": sorted(len(component) for component in components),
+            "edge_count": len(edge_rows),
+            "boundary_edge_count": sum(len(uses) == 1 for uses in edge_rows.values())}
+
+
+def _prepare_source_patch_carrier_complex(first, second, value):
+    """Validate a sealed multi-face carrier using the existing source-patch owner."""
+    fields = {"schema", "source_patch_complex_sha256", "identities", "source_member",
+              "source_member_sha256", "input_pins", "expected_component_count", "points",
+              "source_faces", "carrier_faces", "first", "second"}
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError("source patch carrier fields are malformed")
+    payload = {key: item for key, item in value.items() if key != "source_patch_complex_sha256"}
+    digest = value.get("source_patch_complex_sha256")
+    if (value.get("schema") != _SOURCE_PATCH_COMPLEX_SCHEMA
+            or not isinstance(digest, str) or len(digest) != 64
+            or any(ch not in "0123456789abcdef" for ch in digest)
+            or digest != _canonical_json_sha256(payload)):
+        raise ValueError("source patch carrier seal is invalid")
+    if value.get("identities") != [list(first.key), list(second.key)]:
+        raise ValueError("source patch carrier ordered identities differ")
+    member, member_sha = value.get("source_member"), value.get("source_member_sha256")
+    if (not isinstance(member, str) or not member
+            or not isinstance(member_sha, str) or len(member_sha) != 64
+            or any(ch not in "0123456789abcdef" for ch in member_sha)):
+        raise ValueError("source patch carrier source identity is invalid")
+    pins = value.get("input_pins")
+    pin_fields = {"source_obj_sha256", "arrangement_sha256", "arrangement_certificate_sha256",
+                  "first_payload_sha256", "second_payload_sha256", "capture_pack_sha256",
+                  "capture_receipt_sha256"}
+    if (not isinstance(pins, dict) or set(pins) != pin_fields
+            or any(not isinstance(item, str) or len(item) != 64
+                   or any(ch not in "0123456789abcdef" for ch in item)
+                   for item in pins.values())):
+        raise ValueError("source patch carrier input pins are malformed")
+    expected_components = value.get("expected_component_count")
+    if type(expected_components) is not int or expected_components < 1:
+        raise ValueError("source patch carrier expected component count is invalid")
+    if (first.rigid_owner_proof is None or second.rigid_owner_proof is None
+            or first.rigid_owner_proof != second.rigid_owner_proof):
+        raise ValueError("source patch carrier surfaces do not share accepted owner/rest-frame proof")
+
+    point_rows = value.get("points")
+    if not isinstance(point_rows, list) or len(point_rows) < 3:
+        raise ValueError("source patch carrier point inventory is incomplete")
+    local_points, capture_points, local_bits, capture_bits = {}, {}, {}, {}
+    for row in point_rows:
+        required = {"point_id", "local_xyz_exact", "capture_xyz_exact",
+                    "local_float32_bits", "capture_float32_bits"}
+        if not isinstance(row, dict) or set(row) != required:
+            raise ValueError("source patch carrier point record is malformed")
+        point_id = row["point_id"]
+        if not isinstance(point_id, str) or not point_id or point_id in local_points:
+            raise ValueError("source patch carrier point identity is invalid or duplicated")
+        local = tuple(_patch_fraction(pair) for pair in row["local_xyz_exact"])
+        captured = tuple(_patch_fraction(pair) for pair in row["capture_xyz_exact"])
+        if len(local) != 3 or len(captured) != 3:
+            raise ValueError("source patch carrier point coordinates are malformed")
+        for name, xyz, bits_map in (("local", local, local_bits), ("capture", captured, capture_bits)):
+            raw = row[name + "_float32_bits"]
+            lattice = tuple(Fraction(item, 1 << 149) for item in ci.float32_point_lattice_key(
+                [float(item) for item in xyz]))
+            if (not isinstance(raw, list) or len(raw) != 3
+                    or any(type(bit) is not int or not 0 <= bit <= 0xffffffff for bit in raw)
+                    or _patch_float32_bits([float(item) for item in xyz]) != raw
+                    or (name == "capture" and lattice != xyz)):
+                raise ValueError("source patch carrier point is not its exact Float32 lattice value")
+            bits_map[point_id] = tuple(raw)
+        local_points[point_id], capture_points[point_id] = local, captured
+    if (len(set(local_bits.values())) != len(local_points)
+            or len(set(capture_bits.values())) != len(local_points)):
+        raise ValueError("source patch carrier points collapse after Float32 quantization")
+
+    parent_rows = value.get("source_faces")
+    if not isinstance(parent_rows, list) or not parent_rows:
+        raise ValueError("source patch carrier has no authenticated source faces")
+    parents = {}
+    for row in parent_rows:
+        if not isinstance(row, dict) or set(row) != {
+                "source_face", "source_vertex_ids", "source_vertices_exact"}:
+            raise ValueError("source patch carrier parent face is malformed")
+        face_id, vertex_ids, xyz_rows = row["source_face"], row["source_vertex_ids"], row["source_vertices_exact"]
+        if (type(face_id) is not int or face_id < 0 or face_id in parents
+                or not isinstance(vertex_ids, list) or len(vertex_ids) != 3
+                or any(type(item) is not int or item < 0 for item in vertex_ids)
+                or len(set(vertex_ids)) != 3 or not isinstance(xyz_rows, list) or len(xyz_rows) != 3):
+            raise ValueError("source patch carrier parent face IDs are invalid")
+        triangle = tuple(tuple(_patch_fraction(pair) for pair in point) for point in xyz_rows)
+        if any(len(point) != 3 for point in triangle) or _exact_triangle_normal(triangle) == (0, 0, 0):
+            raise ValueError("source patch carrier parent triangle is malformed or degenerate")
+        parents[face_id] = (tuple(vertex_ids), triangle)
+
+    carrier_rows = value.get("carrier_faces")
+    if not isinstance(carrier_rows, list) or not carrier_rows:
+        raise ValueError("source patch carrier has no faces")
+    carrier_ids, carrier_faces, carrier_capture_triangles = [], [], []
+    for row in carrier_rows:
+        required = {"carrier_face_id", "source_face", "arrangement_record_index",
+                    "arrangement_record_sha256", "arrangement_record", "point_ids",
+                    "barycentric_exact"}
+        if not isinstance(row, dict) or set(row) != required:
+            raise ValueError("source patch carrier face record is malformed")
+        carrier_id, source_face = row["carrier_face_id"], row["source_face"]
+        point_ids, bary_rows = row["point_ids"], row["barycentric_exact"]
+        record, record_sha = row["arrangement_record"], row["arrangement_record_sha256"]
+        record_index = row["arrangement_record_index"]
+        if (not isinstance(carrier_id, str) or not carrier_id or carrier_id in carrier_ids
+                or type(source_face) is not int or source_face not in parents
+                or type(record_index) is not int or record_index < 0
+                or not isinstance(record, dict) or not isinstance(record_sha, str)
+                or len(record_sha) != 64 or record_sha != _canonical_json_sha256(record)
+                or not isinstance(point_ids, list) or len(point_ids) != 3
+                or any(point_id not in local_points for point_id in point_ids)
+                or len(set(point_ids)) != 3 or not isinstance(bary_rows, list) or len(bary_rows) != 3):
+            raise ValueError("source patch carrier face values are invalid")
+        if (record.get("carrier_face_id") != carrier_id or record.get("source_member") != member
+                or record.get("source_member_sha256") != member_sha
+                or record.get("source_face") != source_face or record.get("point_ids") != point_ids
+                or record.get("barycentric_exact") != bary_rows):
+            raise ValueError("source patch carrier arrangement record is stale or misidentified")
+        parent_triangle = parents[source_face][1]
+        for point_id, encoded_bary in zip(point_ids, bary_rows):
+            if not isinstance(encoded_bary, list) or len(encoded_bary) != 3:
+                raise ValueError("source patch carrier barycentric map is malformed")
+            bary = tuple(_patch_fraction(pair) for pair in encoded_bary)
+            if sum(bary, Fraction(0)) != 1 or any(weight < 0 for weight in bary):
+                raise ValueError("source patch carrier barycentric weights are invalid")
+            rebuilt = tuple(sum((bary[index] * parent_triangle[index][axis]
+                                 for index in range(3)), Fraction(0)) for axis in range(3))
+            if rebuilt != local_points[point_id]:
+                raise ValueError("source patch carrier ancestry does not reconstruct its point")
+        expected_xyz = [[[str(value.numerator), str(value.denominator)] for value in local_points[pid]]
+                        for pid in point_ids]
+        if record.get("local_xyz_exact") != expected_xyz:
+            raise ValueError("source patch carrier record coordinates differ from barycentric points")
+        carrier_ids.append(carrier_id)
+        carrier_faces.append(tuple(point_ids))
+        carrier_capture_triangles.append(tuple(capture_points[pid] for pid in point_ids))
+    if set(pid for face in carrier_faces for pid in face) != set(local_points):
+        raise ValueError("source patch carrier point inventory has unused or missing points")
+    topology = _carrier_topology(local_points, carrier_faces, expected_components)
+
+    sides = (value.get("first"), value.get("second"))
+    surfaces = (first, second)
+    side_fields = {"identity", "source_row_payload_sha256", "surface_hashes",
+                   "point_bindings", "patch_faces", "support_faces"}
+    support_maps, point_maps, coordinate_maps, patch_maps = [], [], [], []
+    for side_index, (side, surface, pin_name) in enumerate(zip(
+            sides, surfaces, ("first_payload_sha256", "second_payload_sha256"))):
+        if not isinstance(side, dict) or set(side) != side_fields or side.get("identity") != list(surface.key):
+            raise ValueError("source patch carrier side identity or fields differ")
+        row_sha = side.get("source_row_payload_sha256")
+        if row_sha != pins[pin_name]:
+            raise ValueError("source patch carrier side payload differs from pinned row")
+        if surface.source_face_lineage is None or surface.source_vertex_lineage is None:
+            raise ValueError("source patch carrier requires complete face and vertex lineage")
+        if side.get("surface_hashes") != _source_patch_surface_hashes(surface):
+            raise ValueError("source patch carrier surface or ancestry hash is stale")
+        bindings = side.get("point_bindings")
+        if not isinstance(bindings, list) or len(bindings) != len(local_points):
+            raise ValueError("source patch carrier point binding coverage is incomplete")
+        point_map, coordinate_map = {}, {}
+        for binding in bindings:
+            if not isinstance(binding, dict) or set(binding) != {
+                    "point_id", "capture_gids", "world_float32_bits"}:
+                raise ValueError("source patch carrier point binding is malformed")
+            point_id, gids, bits = binding["point_id"], binding["capture_gids"], binding["world_float32_bits"]
+            if (point_id not in local_points or point_id in point_map or not isinstance(gids, list) or not gids
+                    or any(type(gid) is not int or gid < 0 for gid in gids)
+                    or len(set(gids)) != len(gids) or bits != list(capture_bits[point_id])):
+                raise ValueError("source patch carrier point binding values are invalid")
+            coords = set()
+            for gid in gids:
+                vertex = surface.vertex_index(gid)
+                if vertex is None or _patch_float32_bits(surface.positions[vertex]) != bits:
+                    raise ValueError("source patch carrier point differs from captured GID")
+                coords.add(tuple(Fraction(item, 1 << 149) for item in
+                                 ci.float32_point_lattice_key(surface.positions[vertex].tolist())))
+            if len(coords) != 1 or next(iter(coords)) != capture_points[point_id]:
+                raise ValueError("source patch carrier coordinate aliases disagree with exact point")
+            vertex = surface.vertex_index(gids[0])
+            point_key = tuple(ci.float32_point_lattice_key(surface.positions[vertex].tolist()))
+            expected_aliases = {
+                int(surface.source_vertex_ids[index]) for index, position in enumerate(surface.positions)
+                if tuple(ci.float32_point_lattice_key(position.tolist())) == point_key}
+            if set(gids) != expected_aliases:
+                raise ValueError("source patch carrier omits or invents exact-coordinate alias GIDs")
+            point_map[point_id], coordinate_map[point_id] = set(gids), next(iter(coords))
+        if set(point_map) != set(local_points) or len(set(coordinate_map.values())) != len(local_points):
+            raise ValueError("source patch carrier point map is incomplete or nonunique")
+
+        support_rows = side.get("support_faces")
+        if not isinstance(support_rows, list) or not support_rows:
+            raise ValueError("source patch carrier incident face support is missing")
+        support_map = {}
+        for support in support_rows:
+            required = {"face_index", "source_member", "source_member_sha256", "source_face",
+                        "source_row_face", "source_row_payload_sha256", "ordered_capture_gids"}
+            if not isinstance(support, dict) or set(support) != required:
+                raise ValueError("source patch carrier support-face record is malformed")
+            fi, gids = support["face_index"], support["ordered_capture_gids"]
+            if (type(fi) is not int or not 0 <= fi < len(surface.faces) or fi in support_map
+                    or type(support["source_face"]) is not int or support["source_face"] < 0
+                    or type(support["source_row_face"]) is not int or support["source_row_face"] < 0
+                    or support["source_row_payload_sha256"] != row_sha
+                    or not isinstance(support["source_member"], str) or not support["source_member"]
+                    or not isinstance(support["source_member_sha256"], str)
+                    or len(support["source_member_sha256"]) != 64
+                    or any(ch not in "0123456789abcdef" for ch in support["source_member_sha256"])
+                    or not isinstance(gids, list) or len(gids) != 3
+                    or any(type(gid) is not int for gid in gids) or len(set(gids)) != 3):
+                raise ValueError("source patch carrier support-face values are invalid")
+            actual_gids = [int(surface.source_vertex_ids[int(local)]) for local in surface.faces[fi]]
+            if actual_gids != gids:
+                raise ValueError("source patch carrier support GIDs differ from actual face")
+            expected = {key: support[key] for key in (
+                "source_member", "source_member_sha256", "source_face", "source_row_face",
+                "source_row_payload_sha256")}
+            expected["owner_stable_id"] = surface.key[1]
+            if not _source_patch_ancestry_matches(surface.source_face_lineage[fi], expected):
+                raise ValueError("source patch carrier support ancestry differs from bound face")
+            support_map[fi] = support
+        point_lattice = {tuple(ci.float32_point_lattice_key(
+            surface.positions[surface.vertex_index(gid)].tolist()))
+                         for gids in point_map.values() for gid in gids}
+        actual_support = {fi for fi, face in enumerate(surface.faces)
+                          if any(tuple(ci.float32_point_lattice_key(surface.positions[int(local)].tolist()))
+                                 in point_lattice for local in face)}
+        if set(support_map) != actual_support:
+            raise ValueError("source patch carrier support omits or invents exact incident stars")
+
+        patch_rows = side.get("patch_faces")
+        if not isinstance(patch_rows, list) or len(patch_rows) != len(carrier_faces):
+            raise ValueError("source patch carrier face mapping is incomplete")
+        patch_map = {}
+        used_face_indices = set()
+        for row in patch_rows:
+            required = {"carrier_face_id", "face_index", "source_member", "source_member_sha256",
+                        "source_face", "source_row_face", "lineage_face_id", "ordered_point_ids",
+                        "ordered_capture_gids"}
+            if not isinstance(row, dict) or set(row) != required:
+                raise ValueError("source patch carrier emitted-face record is malformed")
+            cid, fi = row["carrier_face_id"], row["face_index"]
+            point_ids, gids = row["ordered_point_ids"], row["ordered_capture_gids"]
+            if (cid not in carrier_ids or cid in patch_map or type(fi) is not int
+                    or fi in used_face_indices
+                    or fi not in support_map or type(row["source_face"]) is not int
+                    or type(row["source_row_face"]) is not int or type(row["lineage_face_id"]) is not int
+                    or row["lineage_face_id"] < 0 or not isinstance(point_ids, list) or len(point_ids) != 3
+                    or not isinstance(gids, list) or len(gids) != 3):
+                raise ValueError("source patch carrier emitted-face values are invalid")
+            carrier_index = carrier_ids.index(cid)
+            carrier_row = carrier_rows[carrier_index]
+            if (set(point_ids) != set(carrier_row["point_ids"])
+                    or not _cyclic_source_face_orientation(
+                        point_ids, carrier_row["point_ids"], reversed_order=(side_index == 1))):
+                raise ValueError("source patch carrier face does not preserve reciprocal winding")
+            actual_gids = [int(surface.source_vertex_ids[int(local)]) for local in surface.faces[fi]]
+            if actual_gids != gids or any(gid not in point_map[pid] for gid, pid in zip(gids, point_ids)):
+                raise ValueError("source patch carrier face GIDs differ from point crosswalk")
+            support = support_map[fi]
+            if any(row[key] != support[key] for key in (
+                    "source_member", "source_member_sha256", "source_face", "source_row_face")):
+                raise ValueError("source patch carrier emitted-face ancestry differs from support")
+            lineage = surface.source_face_lineage[fi]
+            if not _source_patch_ancestry_matches(lineage, {
+                    "source_member": row["source_member"],
+                    "source_member_sha256": row["source_member_sha256"],
+                    "source_face": row["source_face"], "source_row_face": row["source_row_face"],
+                    "source_row_payload_sha256": row_sha, "owner_stable_id": surface.key[1]}):
+                raise ValueError("source patch carrier direct source ancestry is invalid")
+            if not _source_patch_ancestry_matches(lineage, {
+                    "source_member": member, "source_member_sha256": member_sha,
+                    "source_face": carrier_row["source_face"], "owner_stable_id": surface.key[1]}):
+                raise ValueError("source patch carrier common-parent ancestry is invalid")
+            patch_map[cid] = (fi, tuple(point_ids), tuple(gids))
+            used_face_indices.add(fi)
+        if set(patch_map) != set(carrier_ids):
+            raise ValueError("source patch carrier emitted-face IDs do not exactly cover carrier")
+        support_maps.append(support_map)
+        point_maps.append(point_map)
+        coordinate_maps.append(coordinate_map)
+        patch_maps.append(patch_map)
+
+    patch_pairs = []
+    for index, carrier_id in enumerate(carrier_ids):
+        a, b = patch_maps[0][carrier_id], patch_maps[1][carrier_id]
+        different_points = [(point_id, coordinate_maps[0].get(point_id),
+                             coordinate_maps[1].get(point_id)) for point_id in a[1]
+                            if coordinate_maps[0].get(point_id) != coordinate_maps[1].get(point_id)]
+        if (set(a[1]) != set(b[1]) or not _cyclic_source_face_orientation(
+                a[1], b[1], reversed_order=True) or different_points):
+            raise ValueError("source patch carrier reciprocal faces differ in owner-frame coordinates")
+        patch_pairs.append((a[0], b[0], carrier_id,
+                            tuple(capture_points[point_id] for point_id in carrier_faces[index])))
+    return {"source_patch_complex_sha256": digest, "source_member": member,
+            "source_member_sha256": member_sha, "support_faces": tuple(map(set, support_maps)),
+            "vertex_maps": point_maps, "coordinate_maps": coordinate_maps,
+            "patch_face_pairs": tuple(patch_pairs), "carrier_complex": True,
+            "carrier_triangles": tuple(carrier_capture_triangles), "carrier_topology": topology}
+
+
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
                        intended_shared_feature_pairs=(), intended_source_patch_complexes=()):
     allowed = {tuple(pair) for pair in intended_face_pairs}
@@ -2019,9 +2484,12 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         # Disjoint solids are safe ordinary neighbors, but cannot satisfy a
         # declared anatomical enclosure. Retain that distinction in the cheap
         # path instead of bypassing the outside-enclosure rejection below.
-        return {"identities": [list(first.key), list(second.key)], "passed": not enclosures,
+        requires_carrier_contact = any(context.get("carrier_complex") for context in patch_contexts)
+        return {"identities": [list(first.key), list(second.key)],
+                "passed": not enclosures and not requires_carrier_contact,
                 "aabb_disjoint": True, "triangle_pair_count": 0,
                 "declared_enclosure_outside_aabb": bool(enclosures),
+                "declared_carrier_outside_aabb": requires_carrier_contact,
                 "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)]}
     result = ci._audit_pair_prepared_first(first.index, second.records, same_surface=False)
     pairs = result["triangle_pairs"]
@@ -2095,6 +2563,10 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
                                       "reason": reason})
     accepted_patches = {}
     rejected_patches = []
+    expected_carrier_pairs = {
+        (row[0], row[1]) for context in patch_contexts if context.get("carrier_complex")
+        for row in context["patch_face_pairs"]
+    }
     for raw_pair in pairs:
         pair = tuple(raw_pair)
         if pair in allowed or pair in accepted_features:
@@ -2123,6 +2595,11 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
     unexpected = [pair for pair in pairs
                   if tuple(pair) not in allowed and tuple(pair) not in accepted_features
                   and tuple(pair) not in accepted_patches]
+    observed_pairs = {tuple(pair) for pair in pairs}
+    missing_carrier_pairs = sorted(expected_carrier_pairs - observed_pairs)
+    for pair in missing_carrier_pairs:
+        rejected_patches.append({"face_pair": list(pair),
+                                 "reason": "declared_carrier_face_pair_not_observed"})
     # Shared boundary features can divide a connected surface component into
     # regions on opposite sides. Check every triangle interior centroid rather
     # than assuming one sample represents the whole connected component.
@@ -2145,8 +2622,15 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
     unresolved = any(row["status"] in ("not_checked_nonembedded_target",
                                      "unresolved_exact_point_location",
                                      "unresolved_all_component_samples_on_boundary") for row in containment)
+    requires_carrier_solids = any(context.get("carrier_complex") for context in patch_contexts)
+    carrier_solid_interior_checked = (
+        not requires_carrier_solids or
+        (first.closed and second.closed and len(containment) == 2
+         and all(row["status"] == "checked_exact_rational_metres" for row in containment)))
     return {"identities": [list(first.key), list(second.key)],
-            "passed": not unexpected and not inside and not outside_declared_enclosure and not unresolved,
+            "passed": (not unexpected and not inside and not outside_declared_enclosure
+                       and not unresolved and not missing_carrier_pairs
+                       and carrier_solid_interior_checked),
             "triangle_pair_count": len(pairs), "unexpected_triangle_pairs": unexpected,
             "declared_interface_triangle_pairs": [p for p in pairs if tuple(p) in allowed],
             "declared_interface_feature_contacts": [accepted_features[p] for p in sorted(accepted_features)],
@@ -2154,6 +2638,8 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
             "declared_source_patch_complex_contacts": [accepted_patches[p]
                                                        for p in sorted(accepted_patches)],
             "rejected_source_patch_complex_contacts": rejected_patches,
+            "missing_source_patch_carrier_face_pairs": [list(pair) for pair in missing_carrier_pairs],
+            "source_patch_carrier_solid_interior_checked": carrier_solid_interior_checked,
             "containment": containment,
             "intended_enclosures": [[list(a), list(b)] for a, b in sorted(enclosures)],
             "boundary": "Declared enclosures permit interior placement only; every off-boundary face interior is checked and outside samples reject an intended enclosure. Shared feature contacts require exact GID or authenticated source-point crosswalk, owner, source-lineage, and intersection proof. Crosswalk contacts accept point contacts only. Declared face interfaces do not prove vessel lumen continuity."}

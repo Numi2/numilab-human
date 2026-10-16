@@ -446,6 +446,162 @@ def source_patch_complex_case(*, off_edge=False, support_edge=False):
     return surfaces[0], surfaces[1], declaration
 
 
+def source_patch_carrier_case(*, offcarrier=False, malformed_ancestry=False, closed=False):
+    member, member_sha = "FJ1737", "a" * 64
+    raw_triangles = [
+        [[0, 0, 0], [3, 0, 0], [0, 1, 0]],
+        [[10, 0, 0], [11, 0, 0], [10, 1, 0]],
+        [[20, 0, 0], [21, 0, 0], [20, 1, 0]],
+    ]
+    coordinates = np.asarray(raw_triangles, dtype=np.float32).reshape((-1, 3))
+    point_ids = [f"p{index}" for index in range(len(coordinates))]
+
+    def pair(value):
+        exact = Fraction.from_float(float(np.float32(value)))
+        return [str(exact.numerator), str(exact.denominator)]
+
+    def exact(point):
+        return [pair(value) for value in point]
+
+    points = [{
+        "point_id": point_id,
+        "local_xyz_exact": exact(point),
+        "capture_xyz_exact": exact(point),
+        "local_float32_bits": av._patch_float32_bits(point),
+        "capture_float32_bits": av._patch_float32_bits(point),
+    } for point_id, point in zip(point_ids, coordinates)]
+    source_faces, carrier_faces = [], []
+    for index, triangle in enumerate(raw_triangles):
+        source_face = 100 + index
+        ids = [1000 + index * 3 + corner for corner in range(3)]
+        source_faces.append({"source_face": source_face, "source_vertex_ids": ids,
+                             "source_vertices_exact": [exact(point) for point in triangle]})
+        face_point_ids = point_ids[index * 3:index * 3 + 3]
+        barycentric = [[["1", "1"], ["0", "1"], ["0", "1"]],
+                       [["0", "1"], ["1", "1"], ["0", "1"]],
+                       [["0", "1"], ["0", "1"], ["1", "1"]]]
+        record = {"carrier_face_id": f"c{index}", "source_member": member,
+                  "source_member_sha256": member_sha, "source_face": source_face,
+                  "point_ids": face_point_ids, "barycentric_exact": barycentric,
+                  "local_xyz_exact": [exact(point) for point in coordinates[index * 3:index * 3 + 3]]}
+        carrier_faces.append({"carrier_face_id": f"c{index}", "source_face": source_face,
+                              "arrangement_record_index": index,
+                              "arrangement_record_sha256": av._canonical_json_sha256(record),
+                              "arrangement_record": record, "point_ids": face_point_ids,
+                              "barycentric_exact": barycentric})
+
+    owner = {"body_index": 23, "capture_receipt_sha256": "e" * 64,
+             "position_m": [0.0, 0.0, 0.0],
+             "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0]}
+    surfaces, sides = [], []
+    for side_index, key in enumerate(((51012, 12), (51010, 323))):
+        gids = np.arange((100 if side_index == 0 else 900),
+                         (100 if side_index == 0 else 900) + len(coordinates), dtype=np.uint64)
+        carrier_local_faces = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+        if closed:
+            apexes = []
+            for component in range(3):
+                base = coordinates[component * 3:component * 3 + 3]
+                apex = np.mean(base, axis=0)
+                apex[2] += -2 if side_index == 0 else 2
+                apexes.append(apex)
+            all_positions = np.concatenate((coordinates.copy(), np.asarray(apexes, dtype=np.float32)), axis=0)
+            gids = np.concatenate((gids, np.asarray([1200 + side_index * 10 + i
+                                                    for i in range(3)], dtype=np.uint64)))
+            faces = []
+            carrier_face_indices = {}
+            for component in range(3):
+                a, b, c, d = component * 3, component * 3 + 1, component * 3 + 2, 9 + component
+                carrier_face_indices[len(faces)] = component
+                faces.extend([[a, c, b], [a, b, d], [a, d, c], [b, c, d]])
+            faces = np.asarray(faces, dtype=np.uint32)
+            if side_index == 0:
+                faces[:, [1, 2]] = faces[:, [2, 1]].copy()
+        else:
+            extra_points = (np.asarray([[1, 0, 2 if side_index == 0 else -2]], dtype=np.float32)
+                            if not offcarrier else
+                            np.asarray([[1, 2, 0], [1, 2, 2 if side_index == 0 else -2]], dtype=np.float32))
+            all_positions = np.concatenate((coordinates.copy(), extra_points), axis=0)
+            if offcarrier:
+                extra_face = [0, 9, 10] if side_index == 0 else [9, 0, 10]
+                gids = np.concatenate((gids, np.asarray([1200 + side_index * 10,
+                                                        1201 + side_index * 10], dtype=np.uint64)))
+            else:
+                # Attach the extra test triangle with opposite orientation along
+                # the carrier boundary edge on each reciprocal side.
+                extra_face = [1, 0, 9] if side_index == 0 else [0, 1, 9]
+                gids = np.concatenate((gids, np.asarray([1200 + side_index * 10], dtype=np.uint64)))
+            faces = np.asarray([[0, 1, 2], [3, 4, 5], [6, 7, 8], extra_face], dtype=np.uint32)
+            if side_index == 1:
+                faces[:3, [1, 2]] = faces[:3, [2, 1]].copy()
+            carrier_face_indices = {0: 0, 1: 1, 2: 2}
+        row_sha = "b" * 64 if side_index == 0 else "c" * 64
+        face_lineage, support_rows, patch_rows = [], [], []
+        for face_index, face in enumerate(faces):
+            face_gids = [int(gids[int(local)]) for local in face]
+            carrier_index = carrier_face_indices.get(face_index)
+            if carrier_index is not None:
+                member_i, member_sha_i = member, member_sha
+                source_face, row_face = 100 + carrier_index, 500 + side_index * 10 + carrier_index
+                lineage = {"source_member": member_i, "source_member_sha256": member_sha_i,
+                           "source_face": source_face, "source_row_face": row_face,
+                           "source_row_payload_sha256": row_sha,
+                           "owner_stable_id": key[1], "source_parent_face": source_face}
+                if malformed_ancestry and side_index == 1 and face_index == 1:
+                    lineage["source_face"] = 999
+            else:
+                member_i, member_sha_i = "FJ9000", "d" * 64
+                source_face, row_face = 900 + side_index, 700 + side_index
+                lineage = {"source_member": member_i, "source_member_sha256": member_sha_i,
+                           "source_face": source_face, "source_row_face": row_face,
+                           "source_row_payload_sha256": row_sha,
+                           "owner_stable_id": key[1], "source_parent_face": source_face}
+            face_lineage.append(lineage)
+            if any(gid in set(int(value) for value in gids[:9]) for gid in face_gids):
+                support_rows.append({"face_index": face_index, "source_member": member_i,
+                                     "source_member_sha256": member_sha_i,
+                                     "source_face": source_face, "source_row_face": row_face,
+                                     "source_row_payload_sha256": row_sha,
+                                     "ordered_capture_gids": face_gids})
+            if carrier_index is not None:
+                ids = point_ids[carrier_index * 3:carrier_index * 3 + 3]
+                if side_index == 1:
+                    ids = [ids[0], ids[2], ids[1]]
+                patch_rows.append({"carrier_face_id": f"c{carrier_index}",
+                                   "face_index": face_index, "source_member": member_i,
+                                   "source_member_sha256": member_sha_i,
+                                   "source_face": source_face, "source_row_face": row_face,
+                                   "lineage_face_id": row_face, "ordered_point_ids": ids,
+                                   "ordered_capture_gids": face_gids})
+        vertex_lineage = {int(gid): {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
+                          for gid in gids}
+        surface = prepare_surface(key, all_positions, faces, source_vertex_ids=gids,
+                                  source_face_lineage=face_lineage,
+                                  source_vertex_lineage=vertex_lineage,
+                                  rigid_owner_proof=owner)
+        surfaces.append(surface)
+        sides.append({"identity": list(key), "source_row_payload_sha256": row_sha,
+                      "surface_hashes": av._source_patch_surface_hashes(surface),
+                      "point_bindings": [{"point_id": point_id,
+                                          "capture_gids": [int(gids[index])],
+                                          "world_float32_bits": av._patch_float32_bits(coordinates[index])}
+                                         for index, point_id in enumerate(point_ids)],
+                      "patch_faces": patch_rows, "support_faces": support_rows})
+    pins = {"source_obj_sha256": "f" * 64, "arrangement_sha256": "1" * 64,
+            "arrangement_certificate_sha256": "2" * 64,
+            "first_payload_sha256": "b" * 64, "second_payload_sha256": "c" * 64,
+            "capture_pack_sha256": "3" * 64, "capture_receipt_sha256": "4" * 64}
+    declaration = seal_source_patch_complex({
+        "schema": "numi.human.reciprocal-source-patch-complex.v1",
+        "identities": [list(surface.key) for surface in surfaces],
+        "source_member": member, "source_member_sha256": member_sha,
+        "input_pins": pins, "expected_component_count": 3,
+        "points": points, "source_faces": source_faces, "carrier_faces": carrier_faces,
+        "first": sides[0], "second": sides[1],
+    })
+    return surfaces[0], surfaces[1], declaration
+
+
 
 
 def seal_source_patch_fragment_complex(value):
@@ -890,6 +1046,83 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             {first.key: first, second.key: second}, [first.key], targets=[second.key],
             source_patch_complex_interfaces={(first.key, second.key): [declaration]})
         self.assertTrue(changed_result["passed"], changed_result["rows"])
+
+    def test_multiface_source_patch_carrier_accepts_full_segment_and_requires_closed_solids(self):
+        first, second, declaration = source_patch_carrier_case()
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        points = first.intersection_points_meters(second, 3, 3)
+        self.assertEqual(len(points), 2)
+        accepted, reason = av._source_patch_complex_contact(first, second, 3, 3, context)
+        self.assertTrue(accepted, reason)
+        self.assertEqual(reason, "exact_segment_contact_fully_covered_by_authenticated_carrier")
+        self.assertEqual(context["carrier_topology"]["component_count"], 3)
+        self.assertEqual(context["carrier_topology"]["component_face_counts"], [1, 1, 1])
+        result = audit_surface_pair(first, second, intended_source_patch_complexes=[declaration])
+        self.assertFalse(result["passed"], "an open carrier fixture cannot pass the solid gate")
+        self.assertFalse(result["source_patch_carrier_solid_interior_checked"])
+
+    def test_multiface_carrier_closed_solids_pass_exact_interior_gate(self):
+        first, second, declaration = source_patch_carrier_case(closed=True)
+        result = audit_surface_pair(
+            first, second, intended_source_patch_complexes=[declaration])
+        self.assertTrue(result["passed"], result["unexpected_triangle_pairs"])
+        self.assertTrue(result["source_patch_carrier_solid_interior_checked"])
+        self.assertTrue(all(row["status"] == "checked_exact_rational_metres"
+                            for row in result["containment"]))
+
+    def test_carrier_topology_accepts_22_faces_in_three_declared_components(self):
+        point_xyz, faces = {}, []
+        circle = [(10, 0), (9, 5), (5, 9), (0, 10), (-5, 9), (-9, 5),
+                  (-10, 0), (-9, -5), (-5, -9), (0, -10), (5, -9), (9, -5)]
+        components = (list(range(12)), [0, 1, 3, 4, 6, 7, 9, 10],
+                      [0, 2, 3, 5, 6, 8, 9, 11])
+        for component_index, polygon_indices in enumerate(components):
+            ids = []
+            for polygon_index in polygon_indices:
+                point_id = f"c{component_index}-p{polygon_index}"
+                x, y = circle[polygon_index]
+                point_xyz[point_id] = (Fraction(x + 100 * component_index),
+                                       Fraction(y), Fraction(0))
+                ids.append(point_id)
+            for index in range(1, len(ids) - 1):
+                faces.append((ids[0], ids[index], ids[index + 1]))
+        topology = av._carrier_topology(point_xyz, faces, expected_components=3)
+        self.assertEqual(len(faces), 22)
+        self.assertEqual(topology["component_count"], 3)
+        self.assertEqual(topology["component_face_counts"], [6, 6, 10])
+        self.assertEqual(topology["boundary_edge_count"], 28)
+
+    def test_multiface_carrier_rejects_gap_even_when_endpoints_and_midpoint_lie_on_it(self):
+        first, second, declaration = source_patch_carrier_case()
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        start = (Fraction(0), Fraction(0), Fraction(0))
+        middle = (Fraction(21, 2), Fraction(0), Fraction(0))
+        end = (Fraction(21), Fraction(0), Fraction(0))
+        triangles = context["carrier_triangles"]
+        self.assertTrue(av._exact_point_on_carrier(start, triangles))
+        self.assertTrue(av._exact_point_on_carrier(middle, triangles))
+        self.assertTrue(av._exact_point_on_carrier(end, triangles))
+        self.assertFalse(av._exact_segment_on_carrier(start, end, triangles))
+
+    def test_multiface_carrier_rejects_off_carrier_crossing(self):
+        first, second, declaration = source_patch_carrier_case(offcarrier=True)
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        points = first.intersection_points_meters(second, 3, 3)
+        self.assertEqual(len(points), 2)
+        accepted, reason = av._source_patch_complex_contact(first, second, 3, 3, context)
+        self.assertFalse(accepted)
+        self.assertEqual(reason, "contact_is_not_fully_covered_by_authenticated_carrier")
+
+    def test_multiface_carrier_rejects_wrong_component_count_and_malformed_parent_ancestry(self):
+        first, second, declaration = source_patch_carrier_case()
+        declaration["expected_component_count"] = 2
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "component count"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+        first, second, declaration = source_patch_carrier_case(malformed_ancestry=True)
+        with self.assertRaisesRegex(ValueError, "support ancestry"):
+            av._prepare_source_patch_complex(first, second, declaration)
 
     def test_source_patch_complex_requires_ancestried_incident_edge_support(self):
         first, second, declaration = source_patch_complex_case(support_edge=True)
