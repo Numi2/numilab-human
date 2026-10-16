@@ -3370,6 +3370,73 @@ def _signed_polygon_area2d_exact(points):
     return float(total / 2)
 
 
+def _point_in_or_on_triangle2d_exact(point, first, second, third, orientation):
+    return all(
+        orientation * _orient2d_exact(a, b, point) >= 0
+        for a, b in ((first, second), (second, third), (third, first))
+    )
+
+
+def _triangulate_simple_polygon2d_exact(
+    points, *, start_offset=0, prefer_last_ear=False,
+):
+    """Ear-clip a simple polygon using exact orientation predicates."""
+    polygon = np.asarray(points, dtype=np.float64)
+    if not _simple_closed_polygon2d_exact(polygon):
+        return None
+    signed_area = _signed_polygon_area2d_exact(polygon)
+    if signed_area == 0.0:
+        return None
+    orientation = 1 if signed_area > 0.0 else -1
+    remaining = list(range(len(polygon)))
+    offset = int(start_offset) % len(remaining)
+    remaining = remaining[offset:] + remaining[:offset]
+    triangles = []
+    while len(remaining) > 3:
+        found = False
+        scan = range(len(remaining) - 1, -1, -1) if prefer_last_ear else range(len(remaining))
+        for current_index in scan:
+            previous_index = (current_index - 1) % len(remaining)
+            next_index = (current_index + 1) % len(remaining)
+            previous = remaining[previous_index]
+            current = remaining[current_index]
+            following = remaining[next_index]
+            if orientation * _orient2d_exact(
+                    polygon[previous], polygon[current], polygon[following]) <= 0:
+                continue
+            if any(
+                _point_in_or_on_triangle2d_exact(
+                    polygon[other], polygon[previous], polygon[current],
+                    polygon[following], orientation)
+                for other in remaining
+                if other not in (previous, current, following)
+            ):
+                continue
+            triangles.append((previous, current, following))
+            del remaining[current_index]
+            found = True
+            break
+        if not found:
+            return None
+    final_triangle = tuple(remaining)
+    if orientation * _orient2d_exact(
+            polygon[final_triangle[0]], polygon[final_triangle[1]],
+            polygon[final_triangle[2]]) <= 0:
+        return None
+    triangles.append(final_triangle)
+    return tuple(triangles)
+
+
+def _triangulated_polygon_area3d(points, triangles):
+    polygon = np.asarray(points, dtype=np.float64)
+    return sum(
+        0.5 * float(np.linalg.norm(np.cross(
+            polygon[first] - polygon[third],
+            polygon[second] - polygon[third])))
+        for first, second, third in triangles
+    )
+
+
 def _material_section_ring_calibre(
     source_points, candidate_points, baseline_station, rotation,
     baseline_section_metric, *, maximum_warp_to_feret_ratio=0.01,
@@ -3418,33 +3485,29 @@ def _material_section_ring_calibre(
     source_simple = _simple_closed_polygon2d_exact(source_projected)
     candidate_simple = _simple_closed_polygon2d_exact(candidate_projected)
 
-    source_center2 = source_projected.mean(axis=0)
-    candidate_center2 = candidate_projected.mean(axis=0)
     source_orientation = 1 if source_signed_area > 0.0 else -1
     candidate_orientation = 1 if candidate_signed_area > 0.0 else -1
-    source_fan_oriented = all(
-        source_orientation * _orient2d_exact(
-            source_center2, source_projected[index],
-            source_projected[(index + 1) % len(source_projected)]) >= 0
-        for index in range(len(source_projected)))
-    candidate_fan_oriented = all(
-        candidate_orientation * _orient2d_exact(
-            candidate_center2, candidate_projected[index],
-            candidate_projected[(index + 1) % len(candidate_projected)]) >= 0
-        for index in range(len(candidate_projected)))
-
-    source_fan_center = source.mean(axis=0)
-    candidate_fan_center = candidate.mean(axis=0)
-    source_fan_area = sum(
-        0.5 * float(np.linalg.norm(np.cross(
-            source[index] - source_fan_center,
-            source[(index + 1) % len(source)] - source_fan_center)))
-        for index in range(len(source)))
-    candidate_fan_area = sum(
-        0.5 * float(np.linalg.norm(np.cross(
-            candidate[index] - candidate_fan_center,
-            candidate[(index + 1) % len(candidate)] - candidate_fan_center)))
-        for index in range(len(candidate)))
+    source_triangles = _triangulate_simple_polygon2d_exact(source_projected)
+    candidate_alternate_triangles = _triangulate_simple_polygon2d_exact(
+        candidate_projected, start_offset=1, prefer_last_ear=True)
+    source_triangulation_passed = source_triangles is not None
+    candidate_triangulation_passed = (
+        candidate_alternate_triangles is not None)
+    candidate_source_triangles_oriented = bool(
+        source_triangles is not None
+        and all(candidate_orientation * _orient2d_exact(
+            candidate_projected[first], candidate_projected[second],
+            candidate_projected[third]) > 0
+            for first, second, third in source_triangles))
+    source_fan_area = (
+        _triangulated_polygon_area3d(source, source_triangles)
+        if source_triangles is not None else 0.0)
+    candidate_fan_area = (
+        _triangulated_polygon_area3d(candidate, source_triangles)
+        if source_triangles is not None else 0.0)
+    candidate_alternate_area = (
+        _triangulated_polygon_area3d(candidate, candidate_alternate_triangles)
+        if candidate_alternate_triangles is not None else 0.0)
     source_warp = float(np.max(np.abs((source - source_center) @ tangent)))
     candidate_warp = float(np.max(np.abs(
         (candidate - candidate_center) @ candidate_normal)))
@@ -3452,9 +3515,10 @@ def _material_section_ring_calibre(
         np.roll(source, -1, axis=0) - source, axis=1).sum())
     candidate_perimeter = float(np.linalg.norm(
         np.roll(candidate, -1, axis=0) - candidate, axis=1).sum())
-    _require(source_fan_area > 0.0 and candidate_fan_area > 0.0
-             and source_perimeter > 0.0,
-             "material-section ring has zero 3-D area or perimeter")
+    _require(source_triangulation_passed and candidate_triangulation_passed
+             and source_fan_area > 0.0 and candidate_fan_area > 0.0
+             and candidate_alternate_area > 0.0 and source_perimeter > 0.0,
+             "material-section ring has no valid simple-polygon triangulation or 3-D area")
 
     baseline_area = float(baseline_section_metric.get("area_m2"))
     baseline_width = float(baseline_section_metric.get("minimum_feret_width_m"))
@@ -3470,6 +3534,7 @@ def _material_section_ring_calibre(
     width_bounds = (0.9, 1.1)
     projected_area_ratio = candidate_projected_area / baseline_area
     fan_area_ratio = candidate_fan_area / source_fan_area
+    alternate_fan_area_ratio = candidate_alternate_area / source_fan_area
     width_ratio = candidate_width / baseline_width
     width_ratio_bounds = (
         (candidate_width - 2.0 * candidate_warp) / baseline_width,
@@ -3480,11 +3545,13 @@ def _material_section_ring_calibre(
     perimeter_ratio = candidate_perimeter / source_perimeter
     passed = bool(
         source_simple and candidate_simple
-        and source_fan_oriented and candidate_fan_oriented
+        and source_triangulation_passed and candidate_triangulation_passed
+        and candidate_source_triangles_oriented
         and source_orientation == candidate_orientation
         and warp_ratio <= maximum_warp_to_feret_ratio
         and area_bounds[0] <= projected_area_ratio <= area_bounds[1]
         and area_bounds[0] <= fan_area_ratio <= area_bounds[1]
+        and area_bounds[0] <= alternate_fan_area_ratio <= area_bounds[1]
         and width_bounds[0] <= width_ratio_bounds[0]
         and width_ratio_bounds[1] <= width_bounds[1]
     )
@@ -3492,19 +3559,33 @@ def _material_section_ring_calibre(
         "passed": passed,
         "method": (
             "same-source-edge-fraction material ring, best-fit transported "
-            "frame, projected polygon plus 3D centroid-fan area"),
+            "source-ear-clipped polygon triangulation reused on candidate "
+            "plus alternate-ear-order 3D area sensitivity"),
         "source_material_ring_is_simple_closed": source_simple,
         "candidate_material_ring_is_simple_closed": candidate_simple,
-        "source_centroid_fan_stays_inside_or_on_ring": source_fan_oriented,
-        "candidate_centroid_fan_stays_inside_or_on_ring": candidate_fan_oriented,
+        "source_simple_polygon_triangulation_passed": source_triangulation_passed,
+        "candidate_alternate_simple_polygon_triangulation_passed": (
+            candidate_triangulation_passed),
+        "candidate_source_triangulation_preserves_triangle_orientation": (
+            candidate_source_triangles_oriented),
+        "source_triangulation_triangle_count": (
+            len(source_triangles) if source_triangles is not None else 0),
+        "source_triangulation_indices_sha256": hashlib.sha256(
+            np.ascontiguousarray(
+                source_triangles or (), dtype="<u4").tobytes()).hexdigest(),
+        "candidate_area_uses_same_source_triangulation_indices": True,
         "source_and_candidate_ring_orientation_match": (
             source_orientation == candidate_orientation),
         "source_projected_area_m2": source_area,
         "candidate_projected_area_m2": candidate_projected_area,
         "source_centroid_fan_area_m2": source_fan_area,
-        "candidate_centroid_fan_area_m2": candidate_fan_area,
+        "candidate_source_triangulation_area_m2": candidate_fan_area,
+        "candidate_alternate_triangulation_area_m2": candidate_alternate_area,
         "projected_area_ratio": projected_area_ratio,
-        "centroid_fan_area_ratio": fan_area_ratio,
+        "source_triangulation_3d_area_ratio": fan_area_ratio,
+        "alternate_triangulation_3d_area_ratio": alternate_fan_area_ratio,
+        "alternate_triangulation_area_sensitivity_m2": abs(
+            candidate_alternate_area - candidate_fan_area),
         "source_minimum_feret_width_m": source_width,
         "candidate_projected_minimum_feret_width_m": candidate_width,
         "projected_minimum_feret_width_ratio": width_ratio,

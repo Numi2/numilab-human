@@ -4275,13 +4275,35 @@ def test_material_section_transport_accepts_small_warp_with_caliber_bounds():
     assert proof["proper_rigid_applicability_passed"] is False
     assert proof["maximum_fit_residual_bound_m"] is None
     assert calibre["candidate_material_ring_is_simple_closed"] is True
-    assert calibre["candidate_centroid_fan_stays_inside_or_on_ring"] is True
+    assert calibre["source_simple_polygon_triangulation_passed"] is True
+    assert calibre["candidate_source_triangulation_preserves_triangle_orientation"] is True
+    assert calibre["candidate_area_uses_same_source_triangulation_indices"] is True
     assert calibre["maximum_warp_to_source_minimum_feret_ratio"] <= 0.01
     assert 0.8 <= calibre["projected_area_ratio"] <= 1.25
-    assert 0.8 <= calibre["centroid_fan_area_ratio"] <= 1.25
+    assert 0.8 <= calibre["source_triangulation_3d_area_ratio"] <= 1.25
+    assert 0.8 <= calibre["alternate_triangulation_3d_area_ratio"] <= 1.25
     low, high = calibre["minimum_feret_width_ratio_interval"]
     assert 0.9 <= low <= high <= 1.1
     assert calibre["projection_area_error_m2"] >= 0.0
+
+
+def test_exact_ear_clipping_preserves_concave_polygon_area():
+    ring = np.asarray(
+        [[0.0, 0.0], [3.0, 0.0], [3.0, 1.0],
+         [1.0, 1.0], [1.0, 3.0], [0.0, 3.0]],
+        dtype=np.float64)
+    assert bg._simple_closed_polygon2d_exact(ring) is True
+    triangles = bg._triangulate_simple_polygon2d_exact(ring)
+    alternate = bg._triangulate_simple_polygon2d_exact(
+        ring, start_offset=2, prefer_last_ear=True)
+    assert triangles is not None and len(triangles) == len(ring) - 2
+    assert alternate is not None and len(alternate) == len(ring) - 2
+    assert sum(
+        abs(bg._orient2d_exact(ring[a], ring[b], ring[c])) / 2
+        for a, b, c in triangles) == 5.0
+    assert sum(
+        abs(bg._orient2d_exact(ring[a], ring[b], ring[c])) / 2
+        for a, b, c in alternate) == 5.0
 
 
 def test_material_section_transport_rejects_actual_caliber_change():
@@ -4305,7 +4327,8 @@ def test_material_section_transport_rejects_actual_caliber_change():
     calibre = proof["material_section_calibre"]
     assert proof["passed"] is False
     assert (calibre["projected_area_ratio"] > 1.25
-            or calibre["centroid_fan_area_ratio"] > 1.25
+            or calibre["source_triangulation_3d_area_ratio"] > 1.25
+            or calibre["alternate_triangulation_3d_area_ratio"] > 1.25
             or calibre["minimum_feret_width_ratio_interval"][1] > 1.1)
 
 
