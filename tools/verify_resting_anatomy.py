@@ -563,8 +563,8 @@ def main(argv=None):
         capture_context = ({"capture_receipt": json.loads(args.capture_receipt.read_text()),
                             "capture_receipt_sha256": args.receipt_sha256}
                            if any(first[0] != 51005 or second[0] != 51005 for first, second, _, _ in partitions) else None)
-        if any({first, second} in ({(51004, 48), (51010, 313)},
-                                     {(51004, 49), (51010, 313)})
+        if any({first, second} in tuple({(51004, sid), (51010, 313)}
+                                          for sid in (48, 49, 50))
                for first, second, _, _ in partitions):
             if not args.bone_artifact:
                 raise ValueError("rib partitions require native-bound compiled bone identities")

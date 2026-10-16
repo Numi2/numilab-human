@@ -179,3 +179,32 @@ def test_rib50_rejects_drifted_source_partition_map(tmp_path,monkeypatch):
     with pytest.raises(Exception,match="attachment map drifted"):
         shared.preflight_shared_muscle_partition(
             surfaces,(51004,50),(51010,313),source,digest,capture_context=context)
+
+
+def test_entrypoint_binds_rib50_without_other_rib_declarations(tmp_path,monkeypatch):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "rib50_verify_entrypoint",Path(__file__).resolve().parents[1]/"tools/verify_resting_anatomy.py")
+    tool=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tool)
+    source,digest,surfaces,context,_ = rib50_case(tmp_path,monkeypatch)
+    pack=tmp_path/"pack"
+    pack.write_bytes(b"unit capture")
+    receipt=tmp_path/"capture-receipt.json"
+    receipt.write_text(json.dumps(context["capture_receipt"]))
+    sha=lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    monkeypatch.setattr(tool.verify,"load_capture",lambda *a,**kw:(surfaces,{}))
+    monkeypatch.setattr(tool.verify,"load_compiled_bone_identities",
+                        lambda *a,**kw:({50:{"stable_id":50}},context["compiled_bone_identity_inputs"]))
+    output=tmp_path/"entrypoint-report.json"
+    args=["--pack",str(pack),"--pack-sha256",sha(pack),
+          "--capture-receipt",str(receipt),"--receipt-sha256",sha(receipt),
+          "--changed","51004:50","--shared-partition","51004:50","51010:313",
+          str(source),digest,"--preflight-only","--output",str(output)]
+    assert tool.main(args+["--bone-artifact",str(tmp_path),
+                          "--body-manifest",str(tmp_path/"body-manifest")])==0
+    assert json.loads(output.read_text())["shared_partition_preflight"][0]["shared_interface_face_count"]==1
+    output=tmp_path/"missing-bone-input-report.json"
+    args[-1]=str(output)
+    assert tool.main(args)==1
+    assert "rib partitions require native-bound" in json.loads(output.read_text())["error"]
