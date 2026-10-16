@@ -10,9 +10,10 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 _HEX_SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
@@ -113,7 +114,7 @@ def verify_frozen_preparation(preparation: FrozenPreparation) -> dict[str, Any]:
     proof = json.loads(path.read_text(encoding="utf-8"))
     boundary = proof.get("execution_boundary")
     if not isinstance(boundary, dict):
-        raise ValueError("frozen preparation lacks its execution boundary")
+        raise TypeError("frozen preparation lacks its execution boundary")
     if tuple(boundary.get("runner_argv", ())) != preparation.runner_argv:
         raise ValueError("frozen runner argv binding differs")
     pins = boundary.get("input_pins")
@@ -137,6 +138,95 @@ def verify_frozen_preparation(preparation: FrozenPreparation) -> dict[str, Any]:
         raise ValueError("frozen preparation is not a successful pre-predicate proof")
     _canonical_pins(dict(preparation.input_pins))
     return proof
+
+
+def load_frozen_preparation(
+    proof_path: str | Path,
+    expected_sha256: str,
+) -> FrozenPreparation:
+    """Load a preparation proof in another process using an external hash pin.
+
+    The caller must obtain expected_sha256 from retained, immutable evidence.
+    This function never derives its trust anchor from the proof file itself: it
+    reads the exact bytes once, checks that external digest, constructs the
+    frozen binding from the validated execution boundary, then verifies that
+    proof and every input are still unchanged.
+    """
+    if not isinstance(expected_sha256, str) or not _HEX_SHA256.fullmatch(expected_sha256):
+        raise ValueError("expected frozen preparation SHA-256 is malformed")
+    path = Path(proof_path).resolve(strict=True)
+    if not path.is_file():
+        raise ValueError("frozen preparation proof is not a file")
+    encoded = path.read_bytes()
+    observed_sha256 = hashlib.sha256(encoded).hexdigest()
+    if observed_sha256 != expected_sha256:
+        raise ValueError("frozen preparation proof differs from external SHA-256 pin")
+    try:
+        proof = json.loads(encoded.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("frozen preparation proof is not valid UTF-8 JSON") from exc
+    if not isinstance(proof, dict):
+        raise TypeError("frozen preparation proof must be a JSON object")
+    if proof.get("predicate_phase_started") is not False or not str(
+        proof.get("status", "")
+    ).startswith("PASS_"):
+        raise ValueError("frozen preparation is not a successful pre-predicate proof")
+    boundary = proof.get("execution_boundary")
+    if not isinstance(boundary, dict) or set(boundary) != {
+        "runner_argv", "input_pins", "input_path_bindings"
+    }:
+        raise ValueError("frozen preparation execution boundary is malformed")
+
+    runner_argv = boundary["runner_argv"]
+    if (
+        not isinstance(runner_argv, list)
+        or not runner_argv
+        or any(not isinstance(arg, str) or not arg for arg in runner_argv)
+    ):
+        raise ValueError("frozen preparation runner argv is malformed")
+
+    pins = boundary["input_pins"]
+    if not isinstance(pins, dict) or not pins:
+        raise ValueError("frozen preparation input pins are malformed")
+    for canonical_path, digest in pins.items():
+        if (
+            not isinstance(canonical_path, str)
+            or not Path(canonical_path).is_absolute()
+            or not isinstance(digest, str)
+            or not _HEX_SHA256.fullmatch(digest)
+        ):
+            raise ValueError("frozen preparation input pin entry is malformed")
+
+    raw_bindings = boundary["input_path_bindings"]
+    if (
+        not isinstance(raw_bindings, dict)
+        or not raw_bindings
+        or any(
+            not isinstance(raw_path, str)
+            or not raw_path
+            or not isinstance(canonical_path, str)
+            or not Path(canonical_path).is_absolute()
+            for raw_path, canonical_path in raw_bindings.items()
+        )
+    ):
+        raise ValueError("frozen preparation raw-to-canonical path bindings are malformed")
+    if (
+        len(raw_bindings) != len(pins)
+        or len(set(raw_bindings)) != len(raw_bindings)
+        or len(set(raw_bindings.values())) != len(raw_bindings)
+        or set(raw_bindings.values()) != set(pins)
+    ):
+        raise ValueError("frozen preparation path bindings do not exactly cover pinned inputs")
+
+    preparation = FrozenPreparation(
+        proof_path=path,
+        proof_sha256=expected_sha256,
+        runner_argv=tuple(runner_argv),
+        input_pins=tuple(sorted(pins.items())),
+        input_path_bindings=tuple(sorted(raw_bindings.items())),
+    )
+    verify_frozen_preparation(preparation)
+    return preparation
 
 
 def execute_after_preparation(

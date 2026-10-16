@@ -6,6 +6,7 @@ from pathlib import Path
 from numilab_human.gate_preparation_boundary import (
     execute_after_preparation,
     freeze_preparation,
+    load_frozen_preparation,
     verify_frozen_preparation,
 )
 
@@ -112,6 +113,70 @@ class PreparationBoundaryTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             execute_after_preparation(frozen, lambda current: called.append(current))
         self.assertEqual(called, [])
+
+    def test_loads_cross_process_proof_from_external_hash_and_rechecks_inputs(self):
+        path = self.root / "proof.json"
+        frozen = freeze_preparation(
+            path, self.proof, runner_argv=self.argv, input_pins=self.pin
+        )
+        loaded = load_frozen_preparation(path, frozen.proof_sha256)
+        self.assertEqual(loaded.proof_path, path.resolve())
+        self.assertEqual(loaded.proof_sha256, frozen.proof_sha256)
+        self.assertEqual(verify_frozen_preparation(loaded)["status"], "PASS_INPUT_PREFLIGHT")
+        called = []
+        self.assertEqual(
+            execute_after_preparation(loaded, lambda current: called.append(current) or "ran"),
+            "ran",
+        )
+        self.assertEqual(len(called), 1)
+
+    def test_loader_rejects_changed_proof_before_geometry(self):
+        path = self.root / "proof.json"
+        frozen = freeze_preparation(
+            path, self.proof, runner_argv=self.argv, input_pins=self.pin
+        )
+        path.write_bytes(path.read_bytes() + b" ")
+        called = []
+        with self.assertRaisesRegex(ValueError, "external SHA-256 pin"):
+            loaded = load_frozen_preparation(path, frozen.proof_sha256)
+            execute_after_preparation(loaded, lambda current: called.append(current))
+        self.assertEqual(called, [])
+
+    def test_loader_rejects_changed_input_before_geometry(self):
+        path = self.root / "proof.json"
+        frozen = freeze_preparation(
+            path, self.proof, runner_argv=self.argv, input_pins=self.pin
+        )
+        self.asset.write_bytes(b"changed after freeze")
+        called = []
+        with self.assertRaisesRegex(ValueError, "input hash changed"):
+            loaded = load_frozen_preparation(path, frozen.proof_sha256)
+            execute_after_preparation(loaded, lambda current: called.append(current))
+        self.assertEqual(called, [])
+
+    def test_loaded_binding_rejects_alias_retarget_before_geometry(self):
+        other = self.root / "other.bin"
+        other.write_bytes(b"different input")
+        alias = self.root / "alias.bin"
+        alias.symlink_to(self.asset)
+        path = self.root / "proof.json"
+        pin = {str(alias): hashlib.sha256(self.asset.read_bytes()).hexdigest()}
+        frozen = freeze_preparation(
+            path, self.proof, runner_argv=self.argv, input_pins=pin
+        )
+        loaded = load_frozen_preparation(path, frozen.proof_sha256)
+        alias.unlink()
+        alias.symlink_to(other)
+        called = []
+        with self.assertRaisesRegex(ValueError, "path resolution changed"):
+            execute_after_preparation(loaded, lambda current: called.append(current))
+        self.assertEqual(called, [])
+
+    def test_loader_rejects_malformed_external_digest(self):
+        path = self.root / "proof.json"
+        freeze_preparation(path, self.proof, runner_argv=self.argv, input_pins=self.pin)
+        with self.assertRaisesRegex(ValueError, "SHA-256 is malformed"):
+            load_frozen_preparation(path, "not-a-digest")
 
     def test_rejects_duplicate_canonical_path_and_stale_input_hash(self):
         alias = self.root / "alias.bin"
