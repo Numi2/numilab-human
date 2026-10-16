@@ -3155,10 +3155,11 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
         str(handoff_path): handoff_sha, str(rowbinding_path): rowbinding_sha,
     }
     code_pins = {str(proof_code): proof_code_sha}
-    data_paths = sorted([
-        str(pack), str(capture_receipt), str(anatomy_receipt), str(payload),
-        str(handoff_path), str(rowbinding_path),
-    ])
+    data_pins = {
+        str(pack): pack_sha, str(capture_receipt): capture_receipt_sha,
+        str(anatomy_receipt): anatomy_receipt_sha, str(payload): payload_sha,
+        str(handoff_path): handoff_sha, str(rowbinding_path): rowbinding_sha,
+    }
     pairset_sha = hashlib.sha256(
         np.asarray(((0, 0),), dtype="<u4").tobytes()).hexdigest()
     interface_gates = {}
@@ -3166,7 +3167,15 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
         interface_gates[role] = {
             "passed": True, "typed_port": [list(edge[0]), list(edge[1])],
             "observed_face_pairs": [[0, 0]], "unexpected_face_pairs": [],
+            "observed_pairs_within_frozen_face_patch_cross_product": True,
             "exact_interface_point_count": 1,
+            "documented_vessel_junction_scope": {
+                "passed": True, "scope_kind": "declared_source_network_link",
+                "typed_port": [list(edge[0]), list(edge[1])],
+                "allowed_typed_port": [list(edge[0]), list(edge[1])],
+                "frozen_matched_face_patch_required": True,
+                "downstream_closed_solid_confirmation_required": True,
+            },
             "audit_result": {
                 "unexpected_triangle_pairs": [],
                 "rejected_interface_feature_contacts": [],
@@ -3174,14 +3183,22 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
             },
         }
     solid = {
-        "passed": True, "bridge_status": "Error.NoError",
-        "target_status": "Error.NoError", "positive_intersection_volume": True,
-        "intersection_volume_m3": 1.0, "union_status": "Error.NoError",
+        "passed": True, "manifold_inputs_passed": True,
+        "bridge_status": "Error.NoError", "target_status": "Error.NoError",
+        "positive_intersection_volume": True, "intersection_volume_m3": 1.0,
+        "intersection_component_count": 1, "union_status": "Error.NoError",
         "union_component_count": 1, "union_connected_numerical_solid": True,
         "union_lineage_has_both_sources_without_generated_or_unmapped_faces": True,
         "exact_inside_both_witness": {
             "first_location": "inside", "second_location": "inside",
+            "predicate": "P6 exact rational point location for Float32 inputs",
         },
+        "union_float64_mesh64_lineage": {
+            "generated_face_count": 0, "unmapped_face_count": 0,
+            "run_original_ids": [6, 7],
+        },
+        "floating_boolean_exact_topology_proven": False,
+        "volume_accounting": {"passed": True},
     }
     solid_gates = {role: dict(solid) for role in (
         "candidate", "independent_source_rigid_baseline")}
@@ -3221,11 +3238,11 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
         "rowbinding_sha256": rowbinding_sha,
         "rowbinding_path": str(rowbinding_path),
     }
-    code_paths = [str(proof_code)]
+    code_pins = {str(proof_code): proof_code_sha}
     preflight = {
         "passed": True, "anatomical_admission": False,
         "native_or_gpu_work_performed": False, "geometry_predicates_run": False,
-        "capture_pins": data_paths, "code_pins": code_paths,
+        "capture_pins": data_pins, "code_pins": code_pins,
         "row_inventory": row_inventory,
     }
     preflight_path = tmp_path / "preflight.json"
@@ -3238,7 +3255,7 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
         "native_or_gpu_work_performed": False,
         "typed_interface": [list(edge[0]), list(edge[1])],
         "preflight_sha256": preflight_sha,
-        "input_pins": data_paths, "code_pins": code_paths,
+        "input_pins": data_pins, "code_pins": code_pins,
         "manifold3d": {
             "module_path": str(runtime_module), "sha256": runtime_sha,
             "version": "test-runtime",

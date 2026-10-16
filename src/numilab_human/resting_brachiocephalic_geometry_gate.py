@@ -1260,14 +1260,23 @@ def _validate_current_source_interface_report_reference(
                  "source provenance pins repeat a resolved path")
         normalized_source_pins[str(path)] = actual
     expected_data_pins = {**capture_pins, **normalized_source_pins}
-    report_data_paths = report.get("input_pins")
-    preflight_data_paths = preflight.get("capture_pins")
-    _require(isinstance(report_data_paths, list)
-             and isinstance(preflight_data_paths, list)
-             and {str(Path(path).resolve(strict=True)) for path in report_data_paths}
-             == set(expected_data_pins)
-             and {str(Path(path).resolve(strict=True)) for path in preflight_data_paths}
-             == set(expected_data_pins),
+    def normalized_report_pins(raw, label):
+        _require(isinstance(raw, Mapping) and bool(raw),
+                 f"{label} must be a nonempty path-to-digest mapping")
+        result = {}
+        for raw_path, digest in raw.items():
+            path, actual = resolved_pin(raw_path, digest, label)
+            _require(str(path) not in result,
+                     f"{label} repeat a resolved path")
+            result[str(path)] = actual
+        return result
+
+    report_data_pins = normalized_report_pins(
+        report.get("input_pins"), "proof report data input")
+    preflight_data_pins = normalized_report_pins(
+        preflight.get("capture_pins"), "proof preflight data input")
+    _require(report_data_pins == expected_data_pins
+             and preflight_data_pins == expected_data_pins,
              "proof report data inputs differ from explicit current/source pins")
 
     code_pins = reference["proof_code_pins"]
@@ -1279,14 +1288,12 @@ def _validate_current_source_interface_report_reference(
         _require(str(path) not in normalized_code_pins,
                  "proof code pins repeat a resolved path")
         normalized_code_pins[str(path)] = actual
-    report_code_paths = report.get("code_pins")
-    preflight_code_paths = preflight.get("code_pins")
-    _require(isinstance(report_code_paths, list)
-             and isinstance(preflight_code_paths, list)
-             and {str(Path(path).resolve(strict=True)) for path in report_code_paths}
-             == set(normalized_code_pins)
-             and {str(Path(path).resolve(strict=True)) for path in preflight_code_paths}
-             == set(normalized_code_pins),
+    report_code_pins = normalized_report_pins(
+        report.get("code_pins"), "proof report executable dependency")
+    preflight_code_pins = normalized_report_pins(
+        preflight.get("code_pins"), "proof preflight executable dependency")
+    _require(report_code_pins == normalized_code_pins
+             and preflight_code_pins == normalized_code_pins,
              "proof report executable dependencies differ from explicit code pins")
     runtime_pin = reference["runtime_pin"]
     runtime_report = report.get("manifold3d")
@@ -1471,11 +1478,19 @@ def _validate_current_source_interface_report_reference(
              "source topology/interface gates did not pass in both roles")
     for role, gate in interface_gates.items():
         audit = gate.get("audit_result") if isinstance(gate, Mapping) else None
+        scope = gate.get("documented_vessel_junction_scope")
         _require(gate.get("passed") is True
                  and gate.get("typed_port") == [list(edge[0]), list(edge[1])]
                  and gate.get("observed_face_pairs") == [list(pair) for pair in pairs]
                  and gate.get("unexpected_face_pairs") == []
+                 and gate.get("observed_pairs_within_frozen_face_patch_cross_product") is True
                  and gate.get("exact_interface_point_count", 0) > 0
+                 and isinstance(scope, Mapping) and scope.get("passed") is True
+                 and scope.get("scope_kind") == "declared_source_network_link"
+                 and scope.get("typed_port") == [list(edge[0]), list(edge[1])]
+                 and scope.get("allowed_typed_port") == [list(edge[0]), list(edge[1])]
+                 and scope.get("frozen_matched_face_patch_required") is True
+                 and scope.get("downstream_closed_solid_confirmation_required") is True
                  and isinstance(audit, Mapping)
                  and audit.get("unexpected_triangle_pairs") == []
                  and audit.get("rejected_interface_feature_contacts") == []
@@ -1490,18 +1505,35 @@ def _validate_current_source_interface_report_reference(
              "closed-solid gates did not pass in both roles")
     for role, solid in solid_gates.items():
         witness = solid.get("exact_inside_both_witness") if isinstance(solid, Mapping) else None
+        lineage = (solid.get("union_float64_mesh64_lineage")
+                   if isinstance(solid, Mapping) else None)
+        volume_accounting = (solid.get("volume_accounting")
+                             if isinstance(solid, Mapping) else None)
         _require(solid.get("passed") is True
+                 and solid.get("manifold_inputs_passed") is True
                  and solid.get("bridge_status") == "Error.NoError"
                  and solid.get("target_status") == "Error.NoError"
                  and solid.get("positive_intersection_volume") is True
-                 and solid.get("intersection_volume_m3", 0) > 0.0
+                 and isinstance(solid.get("intersection_volume_m3"), (int, float))
+                 and np.isfinite(solid["intersection_volume_m3"])
+                 and solid["intersection_volume_m3"] > 0.0
+                 and solid.get("intersection_component_count") == 1
                  and solid.get("union_status") == "Error.NoError"
                  and solid.get("union_component_count") == 1
                  and solid.get("union_connected_numerical_solid") is True
                  and solid.get("union_lineage_has_both_sources_without_generated_or_unmapped_faces") is True
+                 and isinstance(lineage, Mapping)
+                 and lineage.get("generated_face_count") == 0
+                 and lineage.get("unmapped_face_count") == 0
+                 and set(lineage.get("run_original_ids", []))
+                 == {edge[0][1], edge[1][1]}
+                 and solid.get("floating_boolean_exact_topology_proven") is False
+                 and isinstance(volume_accounting, Mapping)
+                 and volume_accounting.get("passed") is True
                  and isinstance(witness, Mapping)
                  and witness.get("first_location") == "inside"
-                 and witness.get("second_location") == "inside",
+                 and witness.get("second_location") == "inside"
+                 and "exact rational point location" in witness.get("predicate", ""),
                  f"{role} solid/inside/connected-union proof failed")
 
     calibres = report.get("independent_source_station_calibre")
