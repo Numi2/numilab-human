@@ -8787,6 +8787,42 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     artifact = bone_artifact.resolve()
     manifest_path = artifact / "bodyparts3d-myosim-major-bones.manifest.json"
     manifest = read_json(manifest_path)
+    if "source_precision_retriangulation" in manifest:
+        # Authenticate the entire retained lineage before using the prior
+        # body's decoded attributes and rest transforms. Historical bake
+        # counts/hashes remain historical, rather than being silently edited.
+        from . import composed_bone_body_frame as precision_owner
+        descriptor = manifest.get("payload", {})
+        filename = descriptor.get("file")
+        if not isinstance(filename, str) or Path(filename).name != filename:
+            raise ImportError("Numi Human precision bone payload filename is invalid")
+        current_path = artifact / filename
+        current_raw = current_path.read_bytes()
+        validation = precision_owner.validate_composed_rib_reframe(
+            artifact, manifest, current_raw)
+        prior_artifact, _, _, proof = precision_owner.validate_bone_source_precision_retriangulation(
+            artifact, manifest, current_raw)
+        surfaces, metadata, _ = _numi_human_bone_envelope_surfaces(prior_artifact, source_sha)
+        identity = proof["typed_identity"]
+        _, records, _, index_offset = precision_owner._decode_bones(current_raw)
+        record = next(row for row in records if row[5] == identity[1])
+        triangles = [list(struct.unpack_from("<3I", current_raw, index_offset+4*i))
+                     for i in range(record[3], record[3]+record[4], 3)]
+        triangles = [[i-record[1] for i in tri] for tri in triangles]
+        matches = [surface for rows in surfaces.values() for surface in rows
+                   if surface["stable_id"] == identity[1]]
+        if len(matches) != 1:
+            raise ImportError("Numi Human precision bone owner is absent from decoded source")
+        surface = matches[0]
+        surface["triangles"] = triangles
+        surface["source_precision_retriangulation"] = proof
+        surface["body_local_bake_source_validation_sha256"] = validation["validation_sha256"]
+        surface.pop("source_face_indices", None)
+        metadata = {**metadata, "file": filename, "sha256": sha256(current_path),
+                    "bytes": len(current_raw),
+                    "manifest": {"file": manifest_path.name, "sha256": sha256(manifest_path)},
+                    "source_precision_retriangulation": proof}
+        return surfaces, metadata, current_path
     if manifest.get("schema") != "numi.human.bodyparts3d-myosim-major-bone-visual-payload.v1":
         raise ImportError("Numi Human tendon envelopes require an NHBONES1 manifest")
     descriptor = manifest.get("payload")
