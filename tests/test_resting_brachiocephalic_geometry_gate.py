@@ -3052,6 +3052,260 @@ def test_generic_source_interface_certificate_binds_typed_nonflow_pair(monkeypat
             pair_dtype="<u4")
 
 
+def test_current_source_interface_report_reference_rebinds_live_capture_and_source_pins(
+        tmp_path, monkeypatch):
+    edge = bg.AORTIC_ARCH_SOURCE_INTERFACE
+    surfaces = {}
+    source_rows = {}
+    row_inventory = {}
+    topology = {}
+    candidate_records = {}
+    source_face_ancestry = {}
+    base_gid = 100
+    source_labels = {
+        7: ("test-arch", "FMA3768", "arch"),
+        6: ("test-ascending", "FMA3736", "ascending"),
+    }
+    for index, key in enumerate(edge):
+        positions, faces = _tetra(1.0, float(index * 2))
+        normals = np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1))
+        first_vertex = 10 + index * 4
+        gids = np.arange(base_gid + first_vertex,
+                         base_gid + first_vertex + 4, dtype="<u8")
+        surfaces[key] = (positions, faces, normals, gids)
+        labels = source_labels[key[1]]
+        face_sha = hashlib.sha256(faces.tobytes()).hexdigest()
+        source_rows[key] = {
+            "source_member": labels[0], "fma": labels[1], "name": labels[2],
+            "body_index": 20, "layer": 2, "first_vertex": first_vertex,
+            "vertex_count": 4, "face_count": 4, "faces_sha256": face_sha,
+        }
+        fingerprint = bg._aortic_arch_surface_fingerprint(surfaces[key], key=key)
+        row_inventory[str(key[1])] = {
+            "typed_identity": list(key), "source_member": labels[0],
+            "fma": labels[1], "name": labels[2], "body": 20, "layer": 2,
+            "first_vertex": first_vertex, "gid_offset": base_gid,
+            "source_faces_sha256": face_sha,
+            "candidate_positions_sha256": fingerprint["positions_f32_sha256"],
+            "candidate_faces_sha256": fingerprint["faces_u32_sha256"],
+            "candidate_normals_sha256": fingerprint["normals_f32_sha256"],
+            "candidate_gids_sha256": fingerprint["source_vertex_ids_u64_sha256"],
+            "baseline_positions_sha256": fingerprint["positions_f32_sha256"],
+            "face_corner_ancestry": {
+                "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+                "source_face_count": 4, "capture_face_count": 4,
+                "source_faces_u32_sha256": face_sha,
+                "capture_faces_u32_sha256": face_sha,
+            },
+        }
+        for role in ("candidate", "independent_source_rigid_baseline"):
+            topology[f"{role}:{key[1]}"] = {
+                "identity": list(key), "closed_self_free_single_component": True,
+                "exact_self_audit_count": 0, "referenced_face_component_count": 1,
+                "source_vertex_ids_sha256": fingerprint[
+                    "source_vertex_ids_u64_sha256"],
+                "prepared_surface": {
+                    "positions_sha256": fingerprint["positions_f32_sha256"],
+                    "faces_sha256": fingerprint["faces_u32_sha256"],
+                    "exact_coordinate_quotient_topology": {
+                        "closed_oriented_manifold_candidate": True,
+                        "boundary_edge_count": 0, "nonmanifold_edges_count": 0,
+                        "orientation_defect_edges_count": 0,
+                        "face_component_count": 1,
+                    },
+                },
+            }
+        candidate_records[f"51011:{key[1]}"] = {
+            "typed_identity": list(key),
+            "positions_f32_sha256": fingerprint["positions_f32_sha256"],
+            "faces_u32_sha256": fingerprint["faces_u32_sha256"],
+            "captured_global_vertex_ids_u64_sha256":
+                fingerprint["source_vertex_ids_u64_sha256"],
+        }
+        source_face_ancestry[f"51011:{key[1]}"] = {
+            "typed_identity": list(key),
+            "status": "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED",
+            "capture_faces_u32_sha256": face_sha,
+            "source_faces_u32_sha256": face_sha,
+        }
+    monkeypatch.setattr(bg, "AORTIC_ARCH_SOURCE_ROWS", source_rows)
+
+    def write_pin(name, contents):
+        path = tmp_path / name
+        path.write_bytes(contents)
+        return path.resolve(), hashlib.sha256(contents).hexdigest()
+
+    pack, pack_sha = write_pin("capture.pack", b"pack")
+    capture_receipt, capture_receipt_sha = write_pin("capture.receipt", b"receipt")
+    anatomy_receipt, anatomy_receipt_sha = write_pin("anatomy.receipt", b"anatomy")
+    payload, payload_sha = write_pin("anatomy.nha", b"payload")
+    handoff_path, handoff_sha = write_pin("handoff-7-6.json", b"handoff")
+    rowbinding_path, rowbinding_sha = write_pin("rowbinding.json", b"rowbinding")
+    proof_code, proof_code_sha = write_pin("proof.py", b"proof code")
+    runtime_module, runtime_sha = write_pin("manifold3d.py", b"runtime")
+    bundle = {
+        "capture_pack_path": str(pack), "capture_pack_sha256": pack_sha,
+        "capture_receipt_path": str(capture_receipt),
+        "capture_receipt_sha256": capture_receipt_sha,
+        "anatomy_receipt_path": str(anatomy_receipt),
+        "anatomy_receipt_sha256": anatomy_receipt_sha,
+        "anatomy_payload_sha256": payload_sha, "payload_path": str(payload),
+    }
+    source_input_pins = {
+        str(handoff_path): handoff_sha, str(rowbinding_path): rowbinding_sha,
+    }
+    code_pins = {str(proof_code): proof_code_sha}
+    data_paths = sorted([
+        str(pack), str(capture_receipt), str(anatomy_receipt), str(payload),
+        str(handoff_path), str(rowbinding_path),
+    ])
+    pairset_sha = hashlib.sha256(
+        np.asarray(((0, 0),), dtype="<u4").tobytes()).hexdigest()
+    interface_gates = {}
+    for role in ("candidate", "independent_source_rigid_baseline"):
+        interface_gates[role] = {
+            "passed": True, "typed_port": [list(edge[0]), list(edge[1])],
+            "observed_face_pairs": [[0, 0]], "unexpected_face_pairs": [],
+            "exact_interface_point_count": 1,
+            "audit_result": {
+                "unexpected_triangle_pairs": [],
+                "rejected_interface_feature_contacts": [],
+                "rejected_source_patch_complex_contacts": [],
+            },
+        }
+    solid = {
+        "passed": True, "bridge_status": "Error.NoError",
+        "target_status": "Error.NoError", "positive_intersection_volume": True,
+        "intersection_volume_m3": 1.0, "union_status": "Error.NoError",
+        "union_component_count": 1, "union_connected_numerical_solid": True,
+        "union_lineage_has_both_sources_without_generated_or_unmapped_faces": True,
+        "exact_inside_both_witness": {
+            "first_location": "inside", "second_location": "inside",
+        },
+    }
+    solid_gates = {role: dict(solid) for role in (
+        "candidate", "independent_source_rigid_baseline")}
+    calibres = {}
+    for role, key in (("arch", edge[0]), ("ascending", edge[1])):
+        section = {
+            "passed": True, "lineage_complete": True,
+            "generated_face_count": 0, "unmapped_face_count": 0,
+            "loop_count": 1,
+        }
+        station = {
+            "transported_from_source_vertex_ancestry": True,
+            "frozen_collar_face_ids": [0],
+        }
+        calibres[role] = {
+            "passed": True, "owner_id": key[1], "role": role,
+            "candidate_to_baseline_comparison": {
+                "passed": True,
+                "candidate_to_baseline_ratios": {
+                    "area": 1.0, "minimum_feret_width": 1.0,
+                },
+                "declared_preservation_intervals": {
+                    "area": [0.8, 1.25],
+                    "minimum_feret_width": [0.9, 1.1],
+                },
+            },
+            "station": dict(station),
+            "baseline_station_transported_by_source_ancestry": dict(station),
+            "candidate_section": dict(section), "baseline_section": dict(section),
+        }
+    pair_rows = [[0, 0]]
+    source_ancestry = {
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "current_face_hashes_match": True, "old_candidate_geometry_reused": False,
+        "face_pairs": pair_rows, "exact_pair_count": 1,
+        "pairset_sha256": pairset_sha, "handoff_sha256": handoff_sha,
+        "rowbinding_sha256": rowbinding_sha,
+        "rowbinding_path": str(rowbinding_path),
+    }
+    code_paths = [str(proof_code)]
+    preflight = {
+        "passed": True, "anatomical_admission": False,
+        "native_or_gpu_work_performed": False, "geometry_predicates_run": False,
+        "capture_pins": data_paths, "code_pins": code_paths,
+        "row_inventory": row_inventory,
+    }
+    preflight_path = tmp_path / "preflight.json"
+    preflight_path.write_text(json.dumps(preflight, sort_keys=True))
+    preflight_sha = hashlib.sha256(preflight_path.read_bytes()).hexdigest()
+    report = {
+        "schema": "numi.human.current-aortic-6-7-collar-proof.v1",
+        "status": "PASS_SOURCE_BOUND_CURRENT_TEST", "passed": True,
+        "stage": "complete", "anatomical_admission": False,
+        "native_or_gpu_work_performed": False,
+        "typed_interface": [list(edge[0]), list(edge[1])],
+        "preflight_sha256": preflight_sha,
+        "input_pins": data_paths, "code_pins": code_paths,
+        "manifold3d": {
+            "module_path": str(runtime_module), "sha256": runtime_sha,
+            "version": "test-runtime",
+        },
+        "source_collar_ancestry": source_ancestry,
+        "row_inventory": row_inventory,
+        "source_topology": topology, "source_topology_passed": True,
+        "interface_gates": interface_gates, "interface_gates_passed": True,
+        "candidate_pairset": pair_rows, "baseline_pairset": pair_rows,
+        "candidate_baseline_pairsets_equal": True,
+        "candidate_unexpected_pairs": [], "baseline_unexpected_pairs": [],
+        "solid_gates": solid_gates, "solid_gates_passed": True,
+        "independent_source_station_calibre": calibres, "calibre_passed": True,
+        "limitations": {
+            "all_nearby_admission_not_established": True,
+            "clinical_calibre_not_established": True,
+        },
+    }
+    report_path = tmp_path / "execution-report.json"
+    report_path.write_text(json.dumps(report, sort_keys=True))
+    report_sha = hashlib.sha256(report_path.read_bytes()).hexdigest()
+    reference = {
+        "schema": bg.CURRENT_SOURCE_INTERFACE_REPORT_REFERENCE_SCHEMA,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "report_path": str(report_path), "report_sha256": report_sha,
+        "preflight_path": str(preflight_path), "preflight_sha256": preflight_sha,
+        "source_input_pins": source_input_pins, "proof_code_pins": code_pins,
+        "runtime_pin": report["manifold3d"],
+    }
+    inventory = {
+        "native_source_slot_identity": {"native_nha_gid_base_offset": base_gid},
+        "candidate_surfaces": candidate_records,
+        "source_face_ancestry_by_typed_row": source_face_ancestry,
+    }
+    accepted = bg._validate_current_source_interface_report_reference(
+        reference, surfaces, {edge[0]}, current_capture_input_bundle=bundle,
+        source_inventory=inventory)
+    assert accepted["passed"] is True
+    assert accepted["anatomical_admission"] is False
+    assert accepted["exact_face_pairs"] == pair_rows
+
+    changed_surface = dict(surfaces)
+    changed_positions = np.array(surfaces[edge[0]][0], copy=True)
+    changed_positions[0, 0] = np.float32(0.25)
+    changed_surface[edge[0]] = (
+        changed_positions, surfaces[edge[0]][1], surfaces[edge[0]][2],
+        surfaces[edge[0]][3])
+    with pytest.raises(ValueError, match="stale for current candidate surface"):
+        bg._validate_current_source_interface_report_reference(
+            reference, changed_surface, {edge[0]},
+            current_capture_input_bundle=bundle, source_inventory=inventory)
+
+    changed_bundle = dict(bundle)
+    changed_pack, changed_pack_sha = write_pin("other-capture.pack", b"other pack")
+    changed_bundle["capture_pack_path"] = str(changed_pack)
+    changed_bundle["capture_pack_sha256"] = changed_pack_sha
+    with pytest.raises(ValueError, match="proof report data inputs differ"):
+        bg._validate_current_source_interface_report_reference(
+            reference, surfaces, {edge[0]},
+            current_capture_input_bundle=changed_bundle, source_inventory=inventory)
+
+    stale_reference = dict(reference, report_sha256="d" * 64)
+    with pytest.raises(ValueError, match="proof report pin digest differs"):
+        bg._validate_current_source_interface_report_reference(
+            stale_reference, surfaces, {edge[0]},
+            current_capture_input_bundle=bundle, source_inventory=inventory)
+
 def test_aortic_interface_handoff_skips_only_certified_pair_and_keeps_other_pairs_strict(
         monkeypatch):
     surfaces, edges, source_pairs, continuity = _handoff_fixture()

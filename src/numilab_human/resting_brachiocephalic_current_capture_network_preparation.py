@@ -1078,6 +1078,9 @@ def run_all_target_network_screen(
     if verified_nonnetwork_interface_certificates is not None:
         optional["verified_nonnetwork_interface_certificates"] = (
             verified_nonnetwork_interface_certificates)
+    current_bundle = context.get("explicit_capture_input_bundle")
+    if current_bundle is not None:
+        optional["current_capture_input_bundle"] = current_bundle
     if progress_callback is not None:
         optional["progress_callback"] = progress_callback
     return geometry_gate.audit_network_rows_against_all_targets(

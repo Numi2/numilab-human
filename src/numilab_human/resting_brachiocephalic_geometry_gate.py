@@ -12,6 +12,7 @@ import json
 import sys
 from collections.abc import Mapping, Sequence
 from fractions import Fraction
+from pathlib import Path
 
 import numpy as np
 
@@ -1147,6 +1148,452 @@ def _validate_source_interface_certificate(
     }
 
 
+
+
+CURRENT_SOURCE_INTERFACE_REPORT_REFERENCE_SCHEMA = (
+    "numi.human.current-source-interface-report-reference.v1")
+_CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA = (
+    "numi.human.current-aortic-6-7-collar-proof.v1")
+
+
+def _certificate_file_sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(4 * 1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _canonical_capture_bundle_sha256(bundle):
+    encoded = json.dumps(bundle, sort_keys=True, separators=(",", ":"),
+                         allow_nan=False).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _validate_current_source_interface_report_reference(
+    reference, surfaces, network_keys, *, current_capture_input_bundle,
+    source_inventory,
+):
+    """Replay a caller-pinned current-capture proof report as a narrow handoff.
+
+    The reference names immutable report, preflight, source, and code inputs.
+    Its evidence is checked against the current explicit capture bundle, the
+    live candidate arrays, and the ABI5 row identity before it is normalized
+    into the existing source-interface handoff contract.
+    """
+    _require(isinstance(reference, Mapping)
+             and reference.get("schema")
+             == CURRENT_SOURCE_INTERFACE_REPORT_REFERENCE_SCHEMA,
+             "current source-interface report reference schema is invalid")
+    required = {
+        "schema", "typed_link", "report_path", "report_sha256",
+        "preflight_path", "preflight_sha256", "source_input_pins",
+        "proof_code_pins", "runtime_pin",
+    }
+    _require(set(reference) == required,
+             "current source-interface report reference has missing/extra fields")
+    raw_edge = reference.get("typed_link")
+    _require(isinstance(raw_edge, (tuple, list)) and len(raw_edge) == 2,
+             "current source-interface report reference lacks a typed link")
+    edge = (_identity(raw_edge[0]), _identity(raw_edge[1]))
+    _require(edge == AORTIC_ARCH_SOURCE_INTERFACE
+             and edge[0] in network_keys and edge[1] not in network_keys,
+             "current source-interface report must bind the exact aortic 7->6 pair")
+    _require(isinstance(current_capture_input_bundle, Mapping)
+             and isinstance(source_inventory, Mapping),
+             "current source-interface report requires live capture and source inventories")
+
+    def resolved_pin(path_value, digest, label):
+        _require(isinstance(path_value, str) and Path(path_value).is_absolute()
+                 and isinstance(digest, str) and len(digest) == 64
+                 and all(character in "0123456789abcdef" for character in digest),
+                 f"{label} pin is malformed")
+        path = Path(path_value).resolve(strict=True)
+        _require(path.is_file() and _certificate_file_sha256(path) == digest,
+                 f"{label} pin digest differs from its file")
+        return path, digest
+
+    report_path, report_sha = resolved_pin(
+        reference["report_path"], reference["report_sha256"], "proof report")
+    preflight_path, preflight_sha = resolved_pin(
+        reference["preflight_path"], reference["preflight_sha256"],
+        "proof preflight")
+    report = json.loads(report_path.read_text())
+    preflight = json.loads(preflight_path.read_text())
+    _require(report.get("schema") == _CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA
+             and report.get("status", "").startswith("PASS_SOURCE_BOUND_CURRENT_")
+             and report.get("passed") is True
+             and report.get("stage") == "complete"
+             and report.get("typed_interface") == [list(edge[0]), list(edge[1])]
+             and report.get("preflight_sha256") == preflight_sha,
+             "current source-interface report identity/status/preflight binding is invalid")
+    _require(preflight.get("passed") is True
+             and preflight.get("anatomical_admission") is False
+             and preflight.get("native_or_gpu_work_performed") is False
+             and preflight.get("geometry_predicates_run") is False,
+             "current source-interface preflight is not a source-only bound input")
+
+    bundle = dict(current_capture_input_bundle)
+    bundle_required = {
+        "capture_pack_path", "capture_pack_sha256", "capture_receipt_path",
+        "capture_receipt_sha256", "anatomy_receipt_path",
+        "anatomy_receipt_sha256", "anatomy_payload_sha256", "payload_path",
+    }
+    _require(set(bundle) == bundle_required,
+             "live explicit capture bundle has missing/extra fields")
+    capture_pins = {}
+    for path_key, sha_key in (
+        ("capture_pack_path", "capture_pack_sha256"),
+        ("capture_receipt_path", "capture_receipt_sha256"),
+        ("anatomy_receipt_path", "anatomy_receipt_sha256"),
+        ("payload_path", "anatomy_payload_sha256"),
+    ):
+        path, digest = resolved_pin(bundle[path_key], bundle[sha_key], path_key)
+        capture_pins[str(path)] = digest
+    source_pins = reference["source_input_pins"]
+    _require(isinstance(source_pins, Mapping) and bool(source_pins),
+             "current source-interface report needs explicit source provenance pins")
+    normalized_source_pins = {}
+    for raw_path, digest in source_pins.items():
+        path, actual = resolved_pin(raw_path, digest, "source provenance")
+        _require(str(path) not in normalized_source_pins,
+                 "source provenance pins repeat a resolved path")
+        normalized_source_pins[str(path)] = actual
+    expected_data_pins = {**capture_pins, **normalized_source_pins}
+    report_data_paths = report.get("input_pins")
+    preflight_data_paths = preflight.get("capture_pins")
+    _require(isinstance(report_data_paths, list)
+             and isinstance(preflight_data_paths, list)
+             and {str(Path(path).resolve(strict=True)) for path in report_data_paths}
+             == set(expected_data_pins)
+             and {str(Path(path).resolve(strict=True)) for path in preflight_data_paths}
+             == set(expected_data_pins),
+             "proof report data inputs differ from explicit current/source pins")
+
+    code_pins = reference["proof_code_pins"]
+    _require(isinstance(code_pins, Mapping) and bool(code_pins),
+             "current source-interface report needs explicit executable code pins")
+    normalized_code_pins = {}
+    for raw_path, digest in code_pins.items():
+        path, actual = resolved_pin(raw_path, digest, "proof code")
+        _require(str(path) not in normalized_code_pins,
+                 "proof code pins repeat a resolved path")
+        normalized_code_pins[str(path)] = actual
+    report_code_paths = report.get("code_pins")
+    preflight_code_paths = preflight.get("code_pins")
+    _require(isinstance(report_code_paths, list)
+             and isinstance(preflight_code_paths, list)
+             and {str(Path(path).resolve(strict=True)) for path in report_code_paths}
+             == set(normalized_code_pins)
+             and {str(Path(path).resolve(strict=True)) for path in preflight_code_paths}
+             == set(normalized_code_pins),
+             "proof report executable dependencies differ from explicit code pins")
+    runtime_pin = reference["runtime_pin"]
+    runtime_report = report.get("manifold3d")
+    _require(isinstance(runtime_pin, Mapping)
+             and set(runtime_pin) == {"module_path", "sha256", "version"}
+             and isinstance(runtime_report, Mapping)
+             and runtime_report == dict(runtime_pin),
+             "proof runtime dependency identity differs from its explicit pin")
+    resolved_pin(runtime_pin["module_path"], runtime_pin["sha256"],
+                 "proof runtime module")
+
+    source_ancestry = report.get("source_collar_ancestry")
+    _require(isinstance(source_ancestry, Mapping)
+             and source_ancestry.get("typed_link")
+             == [list(edge[0]), list(edge[1])]
+             and source_ancestry.get("current_face_hashes_match") is True
+             and source_ancestry.get("old_candidate_geometry_reused") is False,
+             "current source-collar proof lacks live ordered-face ancestry")
+    rowbinding_path = source_ancestry.get("rowbinding_path")
+    _require(isinstance(rowbinding_path, str) and Path(rowbinding_path).is_absolute(),
+             "current source-collar proof lacks its bound rowbinding path")
+    rowbinding_path = str(Path(rowbinding_path).resolve(strict=True))
+    _require(normalized_source_pins.get(rowbinding_path)
+             == source_ancestry.get("rowbinding_sha256"),
+             "current rowbinding path/digest differs from its explicit source pin")
+    handoff_digest = source_ancestry.get("handoff_sha256")
+    handoff_paths = [
+        path for path, digest in normalized_source_pins.items()
+        if digest == handoff_digest and path != rowbinding_path
+    ]
+    _require(isinstance(handoff_digest, str) and len(handoff_digest) == 64
+             and len(handoff_paths) == 1
+             and set(normalized_source_pins) == {rowbinding_path, handoff_paths[0]},
+             "current handoff/rowbinding source pins are incomplete or ambiguous")
+    raw_pairs = source_ancestry.get("face_pairs")
+    _require(isinstance(raw_pairs, list) and bool(raw_pairs)
+             and all(isinstance(pair, list) and len(pair) == 2
+                     and all(type(face) is int and face >= 0 for face in pair)
+                     for pair in raw_pairs),
+             "current source-collar pair ancestry is malformed")
+    pairs = tuple((pair[0], pair[1]) for pair in raw_pairs)
+    pair_sha = hashlib.sha256(
+        np.asarray(pairs, dtype="<u4").tobytes()).hexdigest()
+    _require(pairs == tuple(sorted(set(pairs)))
+             and len(pairs) == source_ancestry.get("exact_pair_count")
+             and pair_sha == source_ancestry.get("pairset_sha256")
+             and report.get("candidate_pairset") == [list(pair) for pair in pairs]
+             and report.get("baseline_pairset") == [list(pair) for pair in pairs]
+             and report.get("candidate_baseline_pairsets_equal") is True
+             and report.get("candidate_unexpected_pairs") == []
+             and report.get("baseline_unexpected_pairs") == [],
+             "candidate, baseline, and source pairsets are not the same exact set")
+
+    row_inventory = report.get("row_inventory")
+    topology = report.get("source_topology")
+    _require(isinstance(row_inventory, Mapping) and isinstance(topology, Mapping)
+             and set(row_inventory) == {"6", "7"}
+             and report.get("row_inventory") == preflight.get("row_inventory"),
+             "current source-interface report row inventory is incomplete")
+    fingerprints = {}
+    source_rows = {}
+    gid_details = source_inventory.get("native_source_slot_identity")
+    _require(isinstance(gid_details, Mapping)
+             and type(gid_details.get("native_nha_gid_base_offset")) is int
+             and gid_details["native_nha_gid_base_offset"] >= 0,
+             "current capture lacks the native NHA GID base identity")
+    base_offset = gid_details["native_nha_gid_base_offset"]
+    for key in edge:
+        static = AORTIC_ARCH_SOURCE_ROWS[key]
+        row = row_inventory[str(key[1])]
+        expected_identity = {
+            "typed_identity": list(key), "source_member": static["source_member"],
+            "fma": static["fma"], "name": static["name"],
+            "body": static["body_index"], "layer": static["layer"],
+            "first_vertex": static["first_vertex"],
+            "source_faces_sha256": static["faces_sha256"],
+        }
+        _require(all(row.get(field) == expected for field, expected
+                     in expected_identity.items())
+                 and row.get("gid_offset") == base_offset,
+                 f"proof row identity or ABI5 source ancestry differs for {key}")
+        observed = _aortic_arch_surface_fingerprint(surfaces.get(key), key=key)
+        expected_candidate = {
+            "candidate_positions_sha256": observed["positions_f32_sha256"],
+            "candidate_faces_sha256": observed["faces_u32_sha256"],
+            "candidate_normals_sha256": observed["normals_f32_sha256"],
+            "candidate_gids_sha256": observed["source_vertex_ids_u64_sha256"],
+        }
+        _require(all(row.get(field) == expected for field, expected
+                     in expected_candidate.items()),
+                 f"proof report is stale for current candidate surface {key}")
+        candidate_value = surfaces[key]
+        gids_value = (candidate_value.source_vertex_ids
+                      if hasattr(candidate_value, "source_vertex_ids")
+                      else candidate_value[3])
+        gids = np.ascontiguousarray(gids_value, dtype="<u8")
+        expected_gids = (np.uint64(base_offset + static["first_vertex"])
+                         + np.arange(static["vertex_count"], dtype="<u8"))
+        _require(gids.shape == expected_gids.shape
+                 and np.array_equal(gids, expected_gids),
+                 f"current capture GIDs do not bind native source slots for {key}")
+        inventory_key = f"{key[0]}:{key[1]}"
+        candidate_inventory = source_inventory.get("candidate_surfaces", {}).get(
+            inventory_key)
+        if candidate_inventory is not None:
+            _require(candidate_inventory.get("typed_identity") == list(key)
+                     and candidate_inventory.get("positions_f32_sha256")
+                     == observed["positions_f32_sha256"]
+                     and candidate_inventory.get("faces_u32_sha256")
+                     == observed["faces_u32_sha256"]
+                     and candidate_inventory.get(
+                         "captured_global_vertex_ids_u64_sha256")
+                     == observed["source_vertex_ids_u64_sha256"],
+                     f"live source inventory differs from proof candidate {key}")
+        source_face_inventory = source_inventory.get(
+            "source_face_ancestry_by_typed_row", {}).get(inventory_key)
+        if source_face_inventory is not None:
+            _require(source_face_inventory.get("typed_identity") == list(key)
+                     and source_face_inventory.get("status")
+                     == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+                     and source_face_inventory.get("capture_faces_u32_sha256")
+                     == observed["faces_u32_sha256"]
+                     and source_face_inventory.get("source_faces_u32_sha256")
+                     == static["faces_sha256"],
+                     f"live face ancestry differs from proof source row {key}")
+        face_map = row.get("face_corner_ancestry")
+        _require(isinstance(face_map, Mapping)
+                 and face_map.get("status")
+                 == "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+                 and face_map.get("source_face_count") == static["face_count"]
+                 and face_map.get("capture_face_count") == static["face_count"]
+                 and face_map.get("source_faces_u32_sha256") == static["faces_sha256"]
+                 and face_map.get("capture_faces_u32_sha256") == observed["faces_u32_sha256"],
+                 f"proof face-corner map is not exact for {key}")
+        for role in ("candidate", "independent_source_rigid_baseline"):
+            item = topology.get(f"{role}:{key[1]}")
+            _require(isinstance(item, Mapping)
+                     and item.get("identity") == list(key)
+                     and item.get("closed_self_free_single_component") is True
+                     and item.get("exact_self_audit_count") == 0
+                     and item.get("referenced_face_component_count") == 1,
+                     f"{role} source topology failed for {key}")
+            prepared = item.get("prepared_surface")
+            quotient = (prepared.get("exact_coordinate_quotient_topology")
+                        if isinstance(prepared, Mapping) else None)
+            _require(isinstance(prepared, Mapping)
+                     and isinstance(quotient, Mapping)
+                     and quotient.get("closed_oriented_manifold_candidate") is True
+                     and quotient.get("boundary_edge_count") == 0
+                     and quotient.get("nonmanifold_edges_count") == 0
+                     and quotient.get("orientation_defect_edges_count") == 0
+                     and quotient.get("face_component_count") == 1,
+                     f"{role} exact-coordinate topology is not closed for {key}")
+            if role == "candidate":
+                _require(prepared.get("positions_sha256")
+                         == observed["positions_f32_sha256"]
+                         and prepared.get("faces_sha256") == observed["faces_u32_sha256"]
+                         and item.get("source_vertex_ids_sha256")
+                         == observed["source_vertex_ids_u64_sha256"],
+                         f"candidate topology bytes differ for {key}")
+            else:
+                _require(prepared.get("positions_sha256")
+                         == row.get("baseline_positions_sha256")
+                         and prepared.get("faces_sha256") == observed["faces_u32_sha256"]
+                         and item.get("source_vertex_ids_sha256")
+                         == observed["source_vertex_ids_u64_sha256"],
+                         f"independent source baseline bytes differ for {key}")
+        row_fingerprint = {
+            **static,
+            "vertex_count": observed["vertex_count"],
+            "face_count": observed["face_count"],
+        }
+        source_rows[key] = row_fingerprint
+        fingerprints[f"{key[0]}:{key[1]}"] = observed
+
+    interface_gates = report.get("interface_gates")
+    _require(report.get("source_topology_passed") is True
+             and report.get("interface_gates_passed") is True
+             and isinstance(interface_gates, Mapping)
+             and set(interface_gates) == {
+                 "candidate", "independent_source_rigid_baseline"},
+             "source topology/interface gates did not pass in both roles")
+    for role, gate in interface_gates.items():
+        audit = gate.get("audit_result") if isinstance(gate, Mapping) else None
+        _require(gate.get("passed") is True
+                 and gate.get("typed_port") == [list(edge[0]), list(edge[1])]
+                 and gate.get("observed_face_pairs") == [list(pair) for pair in pairs]
+                 and gate.get("unexpected_face_pairs") == []
+                 and gate.get("exact_interface_point_count", 0) > 0
+                 and isinstance(audit, Mapping)
+                 and audit.get("unexpected_triangle_pairs") == []
+                 and audit.get("rejected_interface_feature_contacts") == []
+                 and audit.get("rejected_source_patch_complex_contacts") == [],
+                 f"{role} exact source-interface gate failed")
+
+    solid_gates = report.get("solid_gates")
+    _require(report.get("solid_gates_passed") is True
+             and isinstance(solid_gates, Mapping)
+             and set(solid_gates) == {
+                 "candidate", "independent_source_rigid_baseline"},
+             "closed-solid gates did not pass in both roles")
+    for role, solid in solid_gates.items():
+        witness = solid.get("exact_inside_both_witness") if isinstance(solid, Mapping) else None
+        _require(solid.get("passed") is True
+                 and solid.get("bridge_status") == "Error.NoError"
+                 and solid.get("target_status") == "Error.NoError"
+                 and solid.get("positive_intersection_volume") is True
+                 and solid.get("intersection_volume_m3", 0) > 0.0
+                 and solid.get("union_status") == "Error.NoError"
+                 and solid.get("union_component_count") == 1
+                 and solid.get("union_connected_numerical_solid") is True
+                 and solid.get("union_lineage_has_both_sources_without_generated_or_unmapped_faces") is True
+                 and isinstance(witness, Mapping)
+                 and witness.get("first_location") == "inside"
+                 and witness.get("second_location") == "inside",
+                 f"{role} solid/inside/connected-union proof failed")
+
+    calibres = report.get("independent_source_station_calibre")
+    _require(report.get("calibre_passed") is True
+             and isinstance(calibres, Mapping)
+             and set(calibres) == {"arch", "ascending"},
+             "independent source station calibre did not pass for both rows")
+    for role, key in (("arch", edge[0]), ("ascending", edge[1])):
+        calibre = calibres[role]
+        comparison = calibre.get("candidate_to_baseline_comparison")
+        ratios = comparison.get("candidate_to_baseline_ratios", {})
+        bounds = comparison.get("declared_preservation_intervals", {})
+        station = calibre.get("station")
+        baseline_station = calibre.get("baseline_station_transported_by_source_ancestry")
+        _require(calibre.get("passed") is True and calibre.get("owner_id") == key[1]
+                 and calibre.get("role") == role
+                 and isinstance(comparison, Mapping)
+                 and comparison.get("passed") is True
+                 and bounds == {"area": [0.8, 1.25],
+                                "minimum_feret_width": [0.9, 1.1]}
+                 and all(isinstance(ratios.get(metric), (int, float))
+                         and bounds[metric][0] <= ratios[metric] <= bounds[metric][1]
+                         for metric in ("area", "minimum_feret_width"))
+                 and isinstance(station, Mapping)
+                 and isinstance(baseline_station, Mapping)
+                 and station.get("transported_from_source_vertex_ancestry") is True
+                 and baseline_station.get("transported_from_source_vertex_ancestry") is True
+                 and station.get("frozen_collar_face_ids")
+                 == baseline_station.get("frozen_collar_face_ids"),
+                 f"{role} source-calibre/station proof failed for {key}")
+        for section_name in ("candidate_section", "baseline_section"):
+            section = calibre.get(section_name)
+            _require(isinstance(section, Mapping)
+                     and section.get("passed") is True
+                     and section.get("lineage_complete") is True
+                     and section.get("generated_face_count") == 0
+                     and section.get("unmapped_face_count") == 0
+                     and type(section.get("loop_count")) is int
+                     and section["loop_count"] >= 1,
+                     f"{role} {section_name} lacks source lineage/calibre")
+
+    descriptor_limits = report.get("limitations")
+    _require(report.get("anatomical_admission") is False
+             and report.get("native_or_gpu_work_performed") is False
+             and isinstance(descriptor_limits, Mapping)
+             and descriptor_limits.get("all_nearby_admission_not_established") is True
+             and descriptor_limits.get("clinical_calibre_not_established") is True,
+             "source interface evidence was mislabeled as anatomy/native admission")
+
+    pair_sha = source_ancestry["pairset_sha256"]
+    bundle_sha = _canonical_capture_bundle_sha256(bundle)
+    canonical = {
+        "schema": "numi.human.verified-current-source-interface-report.v1",
+        "status": "VERIFIED_SOURCE_BOUND_CURRENT_INTERFACE_REPORT",
+        "passed": True,
+        "typed_link": [list(edge[0]), list(edge[1])],
+        "evidence_report_sha256": report_sha,
+        "source_preflight_sha256": preflight_sha,
+        "capture_input_bundle_sha256": bundle_sha,
+        "source_topology_passed": True,
+        "interface_gate_passed": True,
+        "solid_gate_passed": True,
+        "independent_source_collar_calibre_passed": True,
+        "candidate_pairs_equal_frozen_source_pairs": True,
+        "baseline_pairs_equal_frozen_source_pairs": True,
+        "candidate_baseline_exact_pairsets_equal": True,
+        "source_rows": {f"{key[0]}:{key[1]}": AORTIC_ARCH_SOURCE_ROWS[key]
+                        for key in edge},
+        "exact_face_pairs": [list(pair) for pair in pairs],
+        "exact_face_pairset_sha256": pair_sha,
+        "candidate_surface_bindings": fingerprints,
+    }
+    handoff = _validate_source_interface_certificate(
+        canonical, surfaces, network_keys, edge=edge,
+        schema=canonical["schema"], status=canonical["status"],
+        evidence_report_sha256=report_sha,
+        source_preflight_sha256=preflight_sha,
+        capture_input_bundle_sha256=bundle_sha,
+        exact_pair_count=len(pairs), exact_pairset_sha256=pair_sha,
+        source_rows=source_rows, pair_dtype="<u4")
+    handoff.update({
+        "report_reference_schema": CURRENT_SOURCE_INTERFACE_REPORT_REFERENCE_SCHEMA,
+        "report_path": str(report_path),
+        "preflight_path": str(preflight_path),
+        "source_input_pins": normalized_source_pins,
+        "proof_code_pins": normalized_code_pins,
+        "runtime_pin": dict(runtime_pin),
+        "current_capture_bundle": bundle,
+        "anatomical_admission": False,
+    })
+    return handoff
+
 def _validate_aortic_arch_interface_certificate(certificate, surfaces, network_keys):
     """Validate the frozen arch/ascending aorta handoff."""
     return _validate_source_interface_certificate(
@@ -1292,7 +1739,8 @@ def _validate_aortic_arch_carotid_current_interface_certificate(
 def audit_network_rows_against_all_targets(
     verifier, surfaces, network_edges, source_face_pairs, *,
     verified_network_continuity=None, verified_network_source_inventory=None,
-    verified_nonnetwork_interface_certificates=None, progress_callback=None,
+    verified_nonnetwork_interface_certificates=None,
+    current_capture_input_bundle=None, progress_callback=None,
 ):
     """Run the shared all-target collision screen for a frozen vessel graph.
 
@@ -1335,11 +1783,20 @@ def audit_network_rows_against_all_targets(
                 _validate_aortic_arch_carotid_interface_certificate,
         }
         _require(isinstance(verified_nonnetwork_interface_certificates, Mapping)
-                 and bool(verified_nonnetwork_interface_certificates)
-                 and set(verified_nonnetwork_interface_certificates)
-                 .issubset(supported_interfaces),
-                 "only the exact source-bound aortic interface certificates are supported")
+                 and bool(verified_nonnetwork_interface_certificates),
+                 "source-bound nonnetwork interface certificates must be a nonempty map")
         for edge, certificate in verified_nonnetwork_interface_certificates.items():
+            _require(edge in supported_interfaces,
+                     "only the exact source-bound aortic interfaces or current report references are supported")
+            if (isinstance(certificate, Mapping)
+                    and certificate.get("schema")
+                    == CURRENT_SOURCE_INTERFACE_REPORT_REFERENCE_SCHEMA):
+                nonnetwork_interface_handoffs[edge] = (
+                    _validate_current_source_interface_report_reference(
+                        certificate, surfaces, network_keys,
+                        current_capture_input_bundle=current_capture_input_bundle,
+                        source_inventory=verified_network_source_inventory))
+                continue
             validator = supported_interfaces[edge]
             if isinstance(certificate, Mapping):
                 if (edge == AORTIC_ARCH_SOURCE_INTERFACE
