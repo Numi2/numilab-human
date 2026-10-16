@@ -394,3 +394,117 @@ def validate_closed_oriented_surface(vertices: np.ndarray, faces: np.ndarray) ->
         "euler_characteristic": vertex_count - edge_count + len(f),
         "zero_area_face_count": 0,
     }
+
+
+def collapse_closed_component_edge_preserving_allocations(
+    positions: np.ndarray,
+    faces: np.ndarray,
+    *,
+    identity: tuple[int, int],
+    keep_vertex: int,
+    remove_vertex: int,
+    max_endpoint_displacement_m: float,
+    max_abs_volume_delta_m3: float = 1e-12,
+) -> tuple[np.ndarray, dict[str, object]]:
+    """Reuse the closed-surface collapse owner without compacting source slots.
+
+    Exact coordinate seams are identified by the existing verifier. Only the
+    connected component containing the selected edge enters the existing
+    closed-surface constructor. Every source allocation and position remains
+    untouched; output faces retire the removed coordinate class. Attribute,
+    attachment, material-field and reciprocal-owner proofs remain the caller's
+    responsibility, as do emitted geometry and surrounding-anatomy acceptance.
+    """
+    from .resting_anatomy_verify import prepare_surface, typed_key
+    from .resting_lung_edge_repair import collapse_midpoint_edge
+
+    identity = typed_key(identity)
+    if (not isinstance(max_endpoint_displacement_m, (int, float))
+            or isinstance(max_endpoint_displacement_m, bool)
+            or not math.isfinite(max_endpoint_displacement_m)
+            or max_endpoint_displacement_m <= 0):
+        raise ValueError("source collapse needs an explicit positive finite displacement bound")
+    p = np.asarray(positions)
+    f = _face_array(faces)
+    if p.dtype != np.dtype("float32"):
+        raise ValueError("source positions must be Float32 metres")
+    _positions(p)
+    _check_face_bounds(p, f)
+    if (type(keep_vertex) is not int or type(remove_vertex) is not int
+            or min(keep_vertex, remove_vertex) < 0
+            or max(keep_vertex, remove_vertex) >= len(p)
+            or keep_vertex == remove_vertex):
+        raise ValueError("source collapse endpoints must be distinct valid integer slots")
+    used = np.unique(f)
+    local = np.full(len(p), -1, dtype=np.int64)
+    local[used] = np.arange(len(used))
+    if min(local[keep_vertex], local[remove_vertex]) < 0:
+        raise ValueError("source collapse endpoint is not referenced")
+    source = prepare_surface(identity, p[used].copy(), local[f].astype(np.uint32))
+    if not source.closed:
+        raise ValueError("source collapse requires closed oriented components")
+    qf, qv = source.quotient_faces, source.quotient_positions
+    classes = source.source_vertex_to_quotient
+    keep_class = int(classes[local[keep_vertex]])
+    remove_class = int(classes[local[remove_vertex]])
+    if keep_class == remove_class:
+        raise ValueError("source collapse endpoints already share an exact coordinate class")
+    adjacency = build_surface_adjacency(qf)
+    edge = tuple(sorted((keep_class, remove_class)))
+    seeds = adjacency.edge_faces.get(edge, ())
+    if len(seeds) != 2:
+        raise ValueError("source collapse edge needs exactly two incident faces")
+    component: set[int] = set()
+    todo = list(seeds)
+    while todo:
+        face_id = int(todo.pop())
+        if face_id in component:
+            continue
+        component.add(face_id)
+        for pair, _ in _edges(qf[face_id]):
+            todo.extend(i for i in adjacency.edge_faces[pair] if i not in component)
+    component_faces = np.asarray(sorted(component), dtype=np.int64)
+    component_used = np.unique(qf[component_faces])
+    compact = np.full(len(qv), -1, dtype=np.int64)
+    compact[component_used] = np.arange(len(component_used))
+    # The lower owner recomputes temporary normals; no attribute is exported.
+    temporary = np.column_stack((
+        qv[component_used], np.tile([0.0, 0.0, 1.0], (len(component_used), 1))
+    )).astype(np.float32)
+    _, _, _, operation = collapse_midpoint_edge(
+        temporary, compact[qf[component_faces]], component_faces,
+        remove_vertex=int(compact[remove_class]),
+        keep_vertex=int(compact[keep_class]), position_policy="keep",
+        max_endpoint_displacement_m=max_endpoint_displacement_m,
+        max_abs_volume_delta_m3=max_abs_volume_delta_m3,
+    )
+    removed_slots = used[classes == remove_class]
+    retained_slots = used[classes == keep_class]
+    replaced = f.copy()
+    replaced[np.isin(replaced, removed_slots)] = keep_vertex
+    live = np.ones(len(f), dtype=bool)
+    live[operation["deleted_face_origins"]] = False
+    candidate = replaced[live]
+    after = prepare_surface(identity, p[used].copy(), local[candidate].astype(np.uint32))
+    if (not after.closed or after.quotient_topology["face_component_count"]
+            != source.quotient_topology["face_component_count"]):
+        raise ValueError("source collapse changed closed-component inventory")
+    changed = np.flatnonzero(np.any(replaced != f, axis=1))
+    return candidate, {
+        "typed_identity": list(identity),
+        "keep_source_slot": keep_vertex,
+        "retired_active_source_slots": removed_slots.astype(int).tolist(),
+        "retained_coordinate_alias_slots": retained_slots.astype(int).tolist(),
+        "all_source_allocations_and_positions_unchanged": True,
+        "kept_parent_face_origins": np.flatnonzero(live).astype(int).tolist(),
+        "changed_parent_face_origins": changed.astype(int).tolist(),
+        "changed_star_parent_face_origins": component_faces[
+            operation["source_face_indices_in_changed_one_ring"]
+        ].astype(int).tolist(),
+        "source_component_count": source.quotient_topology["face_component_count"],
+        "candidate_component_count": after.quotient_topology["face_component_count"],
+        "collapse": operation,
+        "material_attachment_and_reciprocal_owner_admission": False,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
