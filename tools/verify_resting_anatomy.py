@@ -272,6 +272,76 @@ def rest_world_normals(world, faces):
     return normals.astype("<f4"), len(unused)
 
 
+
+def apply_index_source(surfaces, key, base_path, base_digest, candidate_path,
+                       candidate_digest, source_cache):
+    """Inspect changed indices on exact captured positions, without CPU skinning.
+
+    A complete ordered base-source/capture join and unchanged material inputs
+    are required. This is a counterfactual index patch, never fresh GPU evidence.
+    """
+    from numilab_human import passive_attachment_composition as pac
+    key = verify.typed_key(key)
+    if key[0] != 51005 or key not in surfaces:
+        raise ValueError("index-source requires a captured typed muscle identity")
+    rows, pins, tables = [], [], []
+    for path, digest in ((base_path, base_digest), (candidate_path, candidate_digest)):
+        token = (str(Path(path).resolve()), digest)
+        if token not in source_cache:
+            source_cache[token] = (pin(path, digest), pac._read_nhtiss4(Path(path)))
+        source_pin, table = source_cache[token]
+        records = [r for r in table["records"] if int(r[6]) == key[1]]
+        if len(records) != 1 or int(records[0][7]) != 1:
+            raise ValueError("index-source requires one compiled muscle row")
+        rows.append(pac._nhtiss_row_arrays(table, records[0]))
+        pins.append(source_pin); tables.append(table)
+    base, candidate = rows
+    for field in ("positions", "binding_indices", "weights"):
+        a, b = map(np.ascontiguousarray, (base[field], candidate[field]))
+        if a.dtype != b.dtype or a.shape != b.shape or a.tobytes() != b.tobytes():
+            raise ValueError("index-source changes material input: " + field)
+    binding_bytes = []
+    for table, row in zip(tables, rows):
+        first = table["binding_start"] + row["first_binding"] * 36
+        binding_bytes.append(table["raw"][first:first + row["binding_count"] * 36])
+    if binding_bytes[0] != binding_bytes[1]:
+        raise ValueError("index-source changes registered binding records")
+    source_field_preflight(dict(source_positions=candidate["positions"],
+                                source_normals=candidate["normals"],
+                                source_faces=candidate["faces"]))
+    captured = surfaces[key]
+    if isinstance(captured, verify.PreparedSurface):
+        raise ValueError("index-source requires the unchanged captured surface")
+    positions, faces, normals, gids = captured
+    _, join = verify.retain_bound_source_faces(
+        key, captured, base["faces"], base["first_vertex"],
+        np.arange(len(base["faces"]), dtype=np.int64))
+    offset = join["source_capture_vertex_namespace_offset"] + base["first_vertex"]
+    slots = np.asarray(gids).astype(np.int64) - offset
+    if (np.any(slots < 0) or np.any(slots >= base["vertex_count"])
+            or len(np.unique(slots)) != len(slots)):
+        raise ValueError("index-source capture/source vertex intervals disagree")
+    lookup = np.full(base["vertex_count"], -1, dtype=np.int64)
+    lookup[slots] = np.arange(len(slots))
+    new_faces = lookup[candidate["faces"]]
+    if np.any(new_faces < 0):
+        raise ValueError("index-source references a source slot absent from accepted capture")
+    new_faces = new_faces.astype("<u4")
+    world_normals, _ = rest_world_normals(positions, new_faces)
+    surfaces[key] = (positions.copy(), new_faces, world_normals, gids.copy())
+    return {
+        "typed_identity": list(key), "base_source": pins[0], "candidate_source": pins[1],
+        "all_ordered_base_source_facets_match_capture": True,
+        "source_positions_bindings_and_weights_byte_exact": True,
+        "captured_positions_and_gids_byte_exact": True,
+        "source_capture_vertex_namespace_offset": offset,
+        "coordinate_provenance": "counterfactual_indices_on_exact_accepted_coordinates",
+        "normals_provenance": "offline_area_weighted_changed_topology",
+        "actual_native_emission_verified": False,
+        "source_ancestry_admission": False, "anatomical_admission": False,
+        "native_admission": False,
+    }
+
 def apply_rest_source(surfaces, key, path, digest, accepted_poses, source_cache):
     """Prepare a pinned ABI5 row through its existing rigid rest owner.
 
@@ -397,6 +467,9 @@ def main(argv=None):
                    help="SEM:ID=NHTISS=SHA256; explicit repack with byte-exact CPU rest-owner replay")
     p.add_argument("--rest-source", action="append", default=[],
                    help="SEM:ID=NHTISS=SHA256; offline rigid rest-owner replay, without NPZ; does not reproduce parent-tissue deformation")
+    p.add_argument("--index-source", nargs=5, action="append", default=[],
+                   metavar=("IDENTITY", "BASE", "BASE_SHA256", "CANDIDATE", "CANDIDATE_SHA256"),
+                   help="index-only compiled muscle patch on exact accepted coordinates; source/owner bytes must match")
     p.add_argument("--faces-key", action="append", default=[], help="SEM:ID=NPZ_KEY; default capture_faces")
     p.add_argument("--changed", action="append", required=True)
     p.add_argument("--target", action="append", help="SEM:ID; default all captured anatomy")
@@ -427,7 +500,7 @@ def main(argv=None):
         p.error("refusing to overwrite retained verification progress")
     start = time.perf_counter()
     report = {"passed": False, "anatomical_admission": False, "native_admission": False,
-              "counterfactual_candidates": bool(args.overlay or args.rest_source or args.construction_overlay)}
+              "counterfactual_candidates": bool(args.overlay or args.rest_source or args.construction_overlay or args.index_source)}
     try:
         partitions = shared_partition_declarations(args.shared_partition)
         report["pack_pin"] = pin(args.pack, args.pack_sha256)
@@ -441,7 +514,7 @@ def main(argv=None):
                 raise ValueError("duplicate source pin")
             seen.add(resolved)
             pins.append(pin(path, digest))
-        if (args.overlay or args.rest_source or args.construction_overlay) and not pins:
+        if (args.overlay or args.rest_source or args.construction_overlay or args.index_source) and not pins:
             raise ValueError("counterfactual candidates require pinned compiler/ancestry evidence")
         report["source_pins"] = pins
         surfaces, report["capture_identity"] = verify.load_capture(args.pack, args.capture_receipt)
@@ -505,6 +578,13 @@ def main(argv=None):
             overlay_keys.add(key)
             overlays.append(apply_rest_source(
                 surfaces, key, Path(path), digest, accepted_poses, source_cache))
+        for text, base, base_sha, candidate, candidate_sha in args.index_source:
+            key = identity(text)
+            if key in overlay_keys:
+                raise ValueError("duplicate candidate typed identity")
+            overlay_keys.add(key)
+            overlays.append(apply_index_source(
+                surfaces, key, Path(base), base_sha, Path(candidate), candidate_sha, source_cache))
         if not set(source_overlays) <= npz_overlay_keys:
             raise ValueError("repacked source without matching overlay")
         if not set(faces_keys) <= npz_overlay_keys:
@@ -614,6 +694,8 @@ def main(argv=None):
         if any((first[0] != 51005 or second[0] != 51005) and (first in overlay_keys or second in overlay_keys)
                for first, second, _, _ in partitions):
             raise ValueError("anatomy partitions require unchanged accepted-capture surfaces")
+        if args.index_source and partitions:
+            raise ValueError("index-source cannot grant source partition exemptions; use fresh owner-bound emission")
         if partitions and not args.collect_failures:
             from numilab_human.resting_shared_partition_verify import preflight_shared_muscle_partition
             report["shared_partition_preflight"] = [
