@@ -19,6 +19,7 @@ from .physiology import canonical
 
 SOURCES = ('right_atrium', 'right_ventricle')
 SCHEMA = 'HumanPack.cardiac-partition-certificate.v1'
+MAX_CERTIFIED_SUBTRIANGLES = 50_000
 
 
 def require(ok, message):
@@ -361,7 +362,7 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,so
                         for count in expected_source_component_counts.values()),
                 'invalid expected source component counts')
         component_counts = dict(expected_source_component_counts)
-    require(isinstance(subtriangles,list) and 1<=len(subtriangles)<=40000,'invalid arrangement size')
+    require(isinstance(subtriangles,list) and 1<=len(subtriangles)<=MAX_CERTIFIED_SUBTRIANGLES,'invalid arrangement size')
     originals,source_ids,scale={}, {}, 1
     for name in source_names:
         surface=source_surfaces[name]

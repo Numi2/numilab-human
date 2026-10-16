@@ -279,6 +279,13 @@ class ExactCoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError,'source self-intersection'):
             check(sources,rows,expected_source_component_counts={A:2,B:1})
 
+    def test_arrangement_over_explicit_50000_resource_ceiling_is_rejected(self):
+        sources, rows = fixture()
+        oversized = [rows[0]] * (cert.MAX_CERTIFIED_SUBTRIANGLES + 1)
+        expected = {s: cert.source_geometry_sha256(v) for s, v in sources.items()}
+        with self.assertRaisesRegex(HumanImportError, 'invalid arrangement size'):
+            cert.certify_partition(sources, oversized, expected_geometry_sha256=expected)
+
     def test_hand_authored_arrangement_has_exact_known_volume_and_raw_moments(self):
         sources,rows=fixture();proof=check(sources,rows)
         self.assertTrue(proof['source_face_coverage_exact'])
