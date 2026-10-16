@@ -563,6 +563,12 @@ def main(argv=None):
         capture_context = ({"capture_receipt": json.loads(args.capture_receipt.read_text()),
                             "capture_receipt_sha256": args.receipt_sha256}
                            if any(first[0] != 51005 or second[0] != 51005 for first, second, _, _ in partitions) else None)
+        if any({first, second} in ({(51004, 48), (51010, 313)},
+                                     {(51004, 49), (51010, 313)})
+               for first, second, _, _ in partitions):
+            if not args.bone_artifact:
+                raise ValueError("rib partitions require native-bound compiled bone identities")
+            capture_context["compiled_bone_identity_inputs"] = bone_proof
         if args.parent_bindings_receipt:
             if not partitions or overlay_keys:
                 raise ValueError("parent bindings require accepted native shared partitions without overlays")
@@ -575,7 +581,7 @@ def main(argv=None):
                 "path": parent_path, "sha256": parent_sha}
         if any((first[0] != 51005 or second[0] != 51005) and (first in overlay_keys or second in overlay_keys)
                for first, second, _, _ in partitions):
-            raise ValueError("rigid head partitions require unchanged accepted-capture surfaces")
+            raise ValueError("anatomy partitions require unchanged accepted-capture surfaces")
         if partitions:
             from numilab_human.resting_shared_partition_verify import preflight_shared_muscle_partition
             report["shared_partition_preflight"] = [

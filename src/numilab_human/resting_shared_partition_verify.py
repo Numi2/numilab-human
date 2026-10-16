@@ -298,13 +298,127 @@ def _shared_rigid_head_partition(surfaces, first, second, source, expected_sha25
                                     classify_connected_patches=True)
 
 
+def _shared_rib_intercostal_partition(
+        surfaces, first, second, source, expected_sha256, *,
+        capture_receipt, compiled_bone_identity_inputs,
+        coordinate_provenance="accepted_native_capture", exact_certificate=True, **_context):
+    """Bind existing source attachment maps, then use the common exact oracle."""
+    from .resting_pleura_proxy import _parse_payload
+    from . import composed_bone_body_frame as bones
+    first, second = verify.typed_key(first), verify.typed_key(second)
+    keys = {first, second}
+    allowed = ({(51004, 48), (51010, 313)}, {(51004, 49), (51010, 313)})
+    pac.require(keys in allowed, "rib partition typed interface is unsupported")
+    pac.require(coordinate_provenance == "accepted_native_capture",
+                "rib partition requires an unchanged accepted native capture")
+    source = Path(source).resolve()
+    pac.require(pac._surface_sha256(source) == expected_sha256,
+                "rib preparation report hash differs")
+    report = json.loads(source.read_text())
+    pac.require(report.get("status") == "PASS_EXISTING_SOURCE_OWNER_EXPORT_ONLY"
+                and report.get("source_xyz_normals_allocations_and_attachment_maps_exact") is True
+                and report.get("full_existing_185_bone_envelope_loader_passed") is True,
+                "rib preparation report lacks complete source replay")
+    nha = Path(report["output_nha_path"])
+    bone_path = Path(report["output_bones_path"])
+    bone_manifest = bone_path.with_suffix(".manifest.json")
+    nha_sha = report["output_nha_sha256"]
+    pac.require(pac._surface_sha256(nha) == nha_sha
+                and capture_receipt.get("common_field_source_anatomy_payload_sha256") == nha_sha,
+                "rib NHA differs from accepted capture")
+    context = compiled_bone_identity_inputs
+    pac.require(isinstance(context, dict) and "native_invocation" in context,
+                "rib partition requires native-bound compiled bone identities")
+    for key, path, expected in (
+            ("bone_payload", bone_path, report["output_bones_sha256"]),
+            ("bone_manifest", bone_manifest, report["output_bones_manifest_sha256"])):
+        pac.require(Path(context[key]["path"]).resolve() == path.resolve()
+                    and context[key]["sha256"] == expected
+                    and pac._surface_sha256(path) == expected,
+                    "rib compiled bone source pin differs")
+    invocation = context["native_invocation"]
+    pac.require(pac._surface_sha256(Path(invocation["path"])) == invocation["sha256"],
+                "rib native invocation drifted")
+    argv = json.loads(Path(invocation["path"]).read_text())["argv"]
+    pac.require(pac._surface_sha256(Path(argv[3])) == report["output_bones_sha256"],
+                "rib bone source differs from accepted native invocation")
+    manifest = json.loads(bone_manifest.read_text())
+    maps = {row["stable_id"]: row["interface_vertex_pairs"]
+            for row in manifest["body_local_bakes"]["rows"]}
+    _, _, rows = _parse_payload(nha.read_bytes())
+    nr = rows[313]
+    bones._runtime_attachment_expected_values(nr, maps, nha_stable_id=313)
+    bone_raw = bone_path.read_bytes()
+    _, records, vertex_start, index_start = bones._decode_bones(bone_raw)
+    bone_key = next(key for key in keys if key[0] == 51004)
+    sid = bone_key[1]
+    br = next(row for row in records if row[5] == sid)
+    pac.require(br[0] == 20, "rib compiled Core owner differs")
+    positions = np.frombuffer(bone_raw, "<f4", count=br[2]*6,
+                              offset=vertex_start+br[1]*24).reshape(-1, 6)
+    faces = np.frombuffer(bone_raw, "<u4", count=br[4],
+                         offset=index_start+br[3]*4).reshape(-1, 3).astype(np.int64)-br[1]
+    local = {bone_key: positions, (51010, 313): np.asarray(nr["vertices6"], dtype="<f4")}
+    source_faces = {bone_key: faces, (51010, 313): np.asarray(nr["faces"])}
+    first_vertex = {bone_key: br[1], (51010, 313): int(nr["record"][1])}
+    pair_map = dict(maps[sid])
+    inverse_map = {value: key for key, value in maps[sid]}
+    for a, b in maps[sid]:
+        pac.require(0 <= a < len(positions)
+                    and positions[a, :3].tobytes() == local[(51010, 313)][b, :3].tobytes(),
+                    "rib source attachment coordinates differ")
+    prepared, tokens, bindings = {}, {}, {}
+    for key in (first, second):
+        observed = surfaces[key]
+        if isinstance(observed, verify.PreparedSurface):
+            observed = (observed.positions, observed.faces, observed.normals,
+                        observed.source_vertex_ids)
+        pac.require(observed[2] is not None, "rib partition requires explicit native normals")
+        captured, proof = verify.retain_bound_source_faces(
+            key, observed, source_faces[key], first_vertex[key],
+            np.arange(len(source_faces[key]), dtype=np.int64))
+        xyz, fs, normals, gids = captured
+        sf = verify.prepare_surface(key, xyz, fs, normals=normals, source_vertex_ids=gids)
+        pac.require(sf.closed and xyz.dtype == np.dtype("<f4")
+                    and normals.dtype == np.dtype("<f4"), "rib partition requires closed Float32 surfaces")
+        slots = gids.astype(np.int64)-proof["source_capture_vertex_namespace_offset"]-first_vertex[key]
+        pac.require((slots >= 0).all() and (slots < len(local[key])).all(),
+                    "rib captured source slot is invalid")
+        used = np.unique(source_faces[key])
+        pac.require(np.isfinite(local[key]).all()
+                    and np.max(np.abs(np.linalg.norm(
+                        local[key][used, 3:].astype(float), axis=1)-1)) < 1e-4,
+                    "rib source normals invalid")
+        if key == bone_key:
+            tokens[key] = [("shared", sid, int(i)) if int(i) in pair_map
+                           else ("bone", sid, int(i)) for i in slots]
+        else:
+            tokens[key] = [("shared", sid, inverse_map[int(i)]) if int(i) in inverse_map
+                           else ("intercostal", sid, int(i)) for i in slots]
+        prepared[key] = sf
+        bindings[key] = dict(proof, source_payload_sha256=(
+            report["output_bones_sha256"] if key == bone_key else nha_sha),
+            native_bound_bone_inputs=context)
+    return _finish_shared_partition(
+        prepared, tokens, bindings, first, second, source, expected_sha256,
+        coordinate_provenance, exact_certificate, classify_connected_patches=True)
+
+
 def _partition_dispatch(surfaces, first, second, source, expected_sha256,
                         *, capture_context=None, **kwargs):
     first, second = verify.typed_key(first), verify.typed_key(second)
+    if {first, second} in ({(51004, 48), (51010, 313)}, {(51004, 49), (51010, 313)}):
+        pac.require(capture_context is not None
+                    and "compiled_bone_identity_inputs" in capture_context,
+                    "rib partition requires native-bound compiled bone identities")
+        return _shared_rib_intercostal_partition(
+            surfaces, first, second, source, expected_sha256, **capture_context, **kwargs)
     if first[0] != 51005 or second[0] != 51005:
         pac.require(capture_context is not None, "rigid head partition requires accepted capture context")
         return _shared_rigid_head_partition(
-            surfaces, first, second, source, expected_sha256, **capture_context, **kwargs)
+            surfaces, first, second, source, expected_sha256,
+            capture_receipt=capture_context["capture_receipt"],
+            capture_receipt_sha256=capture_context["capture_receipt_sha256"], **kwargs)
     return _shared_muscle_partition(
         surfaces, first, second, source, expected_sha256,
         parent_bindings_context=(capture_context or {}).get("parent_bindings_context"), **kwargs)
