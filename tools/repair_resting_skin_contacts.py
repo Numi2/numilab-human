@@ -8,8 +8,8 @@ import json
 import sys
 import time
 import numpy as np
-from scipy.optimize import linprog
-from scipy.sparse import coo_matrix
+from scipy.optimize import linprog, milp, Bounds, LinearConstraint
+from scipy.sparse import coo_matrix, hstack
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from numilab_human import model as h
@@ -121,7 +121,7 @@ def self_gap_constraint(base_points,faces,first,first_bary,second,second_bary,ma
 
 
 
-def face_support_constraints(base_points,faces,first,second,margin_m,*,current_points=None):
+def face_support_constraints(base_points,faces,first,second,margin_m,*,current_points=None,axis_choices=1):
     """Preserve a complete reference triangle separator, not just witness points.
 
     Exact rational source projections choose and verify the axis before its
@@ -184,34 +184,93 @@ def face_support_constraints(base_points,faces,first,second,margin_m,*,current_p
         # Keep the independently clear reference side, but choose the least
         # penetrating support axis for the actual current witness triangles.
         candidates.sort(key=lambda row:(row[3],not row[0],-row[1]))
-    normal=None
+    if type(axis_choices) is not int or not 1 <= axis_choices <= 8:
+        raise ValueError("axis choices must be an integer in [1,8]")
+    choices=[]
+    directions=[]
     for _,_,axis,_ in candidates:
         axis=np.array([float(x) for x in axis])
         length=float(np.linalg.norm(axis))
         if not np.isfinite(length) or length==0:continue
-        # Unit normalization can destroy exact perpendicularity at a shared
-        # edge. A power-of-two rescale preserves representable coefficients;
-        # the physical clearance floor is scaled by its resulting norm.
         _,exponent=np.frexp(length)
         trials=[axis/length,np.ldexp(axis,-int(exponent))]
-        for trial in trials:
-            if not np.isfinite(trial).all():continue
-            rational=[Fraction(float(x)) for x in trial]
-            trial_gaps=[dot(rational,sub(x,y)) for x in a for y in b]
-            if min(trial_gaps)<0 or (min(trial_gaps)==0 and not shared):continue
-            if not any(x>0 for x in trial_gaps):continue
-            normal=trial;gaps=trial_gaps;break
-        if normal is not None:break
-    if normal is None:
+        for normal in trials:
+            if not np.isfinite(normal).all():continue
+            rational=[Fraction(float(x)) for x in normal]
+            gaps=[dot(rational,sub(x,y)) for x in a for y in b]
+            if min(gaps)<0 or (min(gaps)==0 and not shared):continue
+            if not any(x>0 for x in gaps):continue
+            direction=normal/np.linalg.norm(normal)
+            # Angular pruning bounds offline construction complexity only.
+            # Every retained axis independently passes the exact reference test.
+            if any(float(direction@old) > 1.-1.e-8 for old in directions):break
+            axis_norm=float(np.linalg.norm(normal))
+            floors=[min(float(margin_m)*axis_norm,1.e-6*axis_norm,float(gap)/4.) for gap in gaps]
+            if not all(np.isfinite(x) and x>=0 for x in floors):
+                raise ValueError("invalid face-support floor")
+            eye=np.eye(3)
+            choices.append([(int(first),eye[i].copy(),int(second),eye[j].copy(),
+                             normal.copy(),floors[3*i+j]-float(gaps[3*i+j]))
+                            for i in range(3) for j in range(3)])
+            directions.append(direction)
+            break
+        if len(choices)==axis_choices:break
+    if not choices:
         raise ValueError("self-contact reference triangles have no complete separating support plane")
-    axis_norm=float(np.linalg.norm(normal))
-    floors=[min(float(margin_m)*axis_norm,1.e-6*axis_norm,float(gap)/4.) for gap in gaps]
-    if not all(np.isfinite(x) and x>=0 for x in floors):
-        raise ValueError("invalid face-support floor")
-    eye=np.eye(3)
-    return [(int(first),eye[i].copy(),int(second),eye[j].copy(),
-             normal.copy(),floors[3*i+j]-float(gaps[3*i+j]))
-            for i in range(3) for j in range(3)]
+    return choices[0] if axis_choices==1 else choices
+
+
+def disjunctive_contact_program(matrix,rhs,cost,bounds,groups):
+    """One source-valid whole-face separator per group, with bounded big-M.
+
+    Each group is a list of alternatives, each a list of (terms, upper_bound)
+    inequalities. An inactive alternative is relaxed using only the declared
+    finite displacement bounds, never an arbitrary distance.
+    """
+    matrix=matrix.tocsr()
+    n=len(cost)
+    if matrix.shape != (len(rhs),n) or len(bounds)!=n:
+        raise ValueError("inconsistent base program")
+    if not groups or any(not group for group in groups):
+        raise ValueError("empty disjunctive group")
+    count=sum(map(len,groups))
+    rr=[];cc=[];vv=[];limits=[];cursor=0
+    def add(terms,bound):
+        row=len(limits)
+        for column,value in terms:
+            if value:rr.append(row);cc.append(column);vv.append(float(value))
+        limits.append(float(bound))
+    for group in groups:
+        binary=[]
+        for option in group:
+            if not option:raise ValueError("empty separator alternative")
+            z=n+cursor;cursor+=1;binary.append(z)
+            for terms,limit in option:
+                coefficients={}
+                for column,value in terms:
+                    if not 0<=column<n or not np.isfinite(value):
+                        raise ValueError("invalid separator coefficient")
+                    coefficients[column]=coefficients.get(column,0.)+float(value)
+                maximum=0.
+                for column,value in coefficients.items():
+                    if not value:continue
+                    low,high=bounds[column]
+                    if low is None or high is None or not np.isfinite([low,high]).all() or low>high:
+                        raise ValueError("separator requires finite ordered displacement bounds")
+                    maximum+=value*(high if value>0 else low)
+                if not np.isfinite(limit):raise ValueError("invalid separator limit")
+                big_m=max(0.,maximum-float(limit))
+                big_m=np.nextafter(big_m+1.e-12*(1.+abs(maximum)+abs(limit)),np.inf)
+                add([*coefficients.items(),(z,big_m)],float(limit)+big_m)
+        add([(z,1.) for z in binary],1.)
+        add([(z,-1.) for z in binary],-1.)
+    base=hstack([matrix,coo_matrix((matrix.shape[0],count))],format="csr")
+    extra=coo_matrix((vv,(rr,cc)),shape=(len(limits),n+count)).tocsr()
+    from scipy.sparse import vstack
+    return (vstack([base,extra],format="csr"),np.r_[rhs,limits],
+            np.r_[cost,np.zeros(count)],bounds+[(0.,1.)]*count,
+            np.r_[np.zeros(n,dtype=np.uint8),np.ones(count,dtype=np.uint8)])
+
 
 
 
@@ -354,6 +413,8 @@ def main():
         help="bounded joint solve from actual self-contact witnesses; never a clearance waiver")
     ap.add_argument("--adaptive-self-contact-support",action="store_true",
         help="select reference-valid facet axes from the actual witnessed current geometry")
+    ap.add_argument("--disjunctive-self-contact",action="store_true",
+        help="bounded offline MILP chooses among up to eight exact reference-valid separators")
     ap.add_argument("--self-contact-reference", type=Path,
         help="same-topology Float32 authoring NPZ with verified clear self-contact reference")
     ap.add_argument("--self-contact-separator", choices=["witness","face-support"],default="witness")
@@ -376,6 +437,8 @@ def main():
         ap.error("require 0 < margin < step <= total <= 0.03 m")
     if args.adaptive_self_contact_support and args.self_contact_separator!="face-support":
         ap.error("adaptive self-contact support requires face-support separator")
+    if args.disjunctive_self_contact and args.self_contact_separator!="face-support":
+        ap.error("disjunctive construction requires face-support separator")
     if not 0 <= args.orientation_ratio < 1:
         ap.error("orientation ratio must be in [0,1)")
     try:
@@ -466,6 +529,7 @@ def main():
         inactive_source_coordinates_preserved=True,
         self_contact_reference=(str(args.self_contact_reference) if args.self_contact_reference else None),
         adaptive_self_contact_support=args.adaptive_self_contact_support,
+        disjunctive_self_contact=args.disjunctive_self_contact,
         self_contact_reference_identity=("ordered_vertices_and_faces_exact" if args.self_contact_reference else "authoring_base"))
     frozen = gp.freeze_preparation(args.output/"preparation.json", proof,
         runner_argv=[sys.executable,*sys.argv],input_pins=pins)
@@ -499,6 +563,7 @@ def main():
     # face is still tested against the complete current surface.
     previous=reference_surface if args.self_contact_reference else None
     self_constraints=[]
+    self_choices={}
     history=[]
     for iteration in range(args.iterations+1):
         out=args.output/f"iteration-{iteration:02d}";out.mkdir()
@@ -520,8 +585,21 @@ def main():
             witnesses=[]
             for first,second in self_result["triangle_pairs"]:
                 if args.self_contact_separator=="face-support":
-                    derived=face_support_constraints(self_reference_points,faces,first,second,args.margin_m,
-                        current_points=world if args.adaptive_self_contact_support else None)
+                    options=face_support_constraints(self_reference_points,faces,first,second,args.margin_m,
+                        current_points=world if args.adaptive_self_contact_support else None,
+                        axis_choices=8 if args.disjunctive_self_contact else 1)
+                    if args.disjunctive_self_contact:
+                        if args.self_contact_reference:
+                            options=[rebase_self_contact_constraints(option,self_reference_points,base_points,faces)
+                                     for option in options]
+                        self_choices[(int(first),int(second))]=options
+                        for oi,option in enumerate(options):
+                            for a,wa,b,wb,n,bound in option:
+                                witnesses.append(dict(first_face=a,second_face=b,alternative=oi,
+                                    first_barycentric=wa.tolist(),second_barycentric=wb.tolist(),
+                                    normal=n.tolist(),relative_displacement_lower_bound_m=bound))
+                        continue
+                    derived=options
                 else:
                     derived=[]
                     for point in surf.intersection_points_meters(surf,int(first),int(second)):
@@ -628,7 +706,8 @@ def main():
             break
         constraints=update_contact_constraints(constraints,new_constraints,
             self_failed=self_failed,policy=args.contact_constraint_policy)
-        seed_faces=[x[0] for x in constraints]+[f for a,_,b,_,_,_ in self_constraints for f in (a,b)]
+        seed_faces=([x[0] for x in constraints]+[f for a,_,b,_,_,_ in self_constraints for f in (a,b)]
+                    +[f for pair in self_choices for f in pair])
         seed=np.unique(faces[np.unique(seed_faces)])
         active=seed
         for _ in range(2):
@@ -690,15 +769,41 @@ def main():
         matrix=coo_matrix((vv,(rr,cc)),shape=(len(rhs),nv)).tocsr()
         cost=np.concatenate([np.zeros(nd),np.ones(nd),np.ones(ne)])
         all_bounds=bounds+[(0,None)]*(nd+ne)
-        np.savez_compressed(out/"linear-program.npz",cost=cost,rhs=np.array(rhs),
+        integrality=np.zeros(nv,dtype=np.uint8)
+        if self_choices:
+            groups=[]
+            for options in self_choices.values():
+                group=[]
+                for option in options:
+                    rows=[]
+                    for first,wa,second,wb,normal,bound in option:
+                        terms=[]
+                        for fi,bary,sign in [(first,wa,-1),(second,wb,1)]:
+                            for corner,g in enumerate(faces[fi]):
+                                if int(g) in lookup:
+                                    terms.extend((lookup[int(g)]*3+a,sign*bary[corner]*normal[a]) for a in range(3))
+                        rows.append((terms,-bound))
+                    group.append(rows)
+                groups.append(group)
+            matrix,rhs,cost,all_bounds,integrality=disjunctive_contact_program(
+                matrix,np.array(rhs),cost,all_bounds,groups)
+        np.savez_compressed(out/"linear-program.npz",cost=cost,rhs=np.array(rhs),integrality=integrality,
             matrix_data=matrix.data,matrix_indices=matrix.indices,matrix_indptr=matrix.indptr,
             matrix_shape=np.array(matrix.shape),bounds=np.array([(a,np.inf if b is None else b) for a,b in all_bounds]),
             active_vertex_ids=active,previous_displacement_m=prior)
-        solved=linprog(cost,A_ub=matrix,b_ub=np.array(rhs),bounds=all_bounds,
-            method="highs",options={"time_limit":60})
+        if self_choices:
+            numeric_bounds=np.array([(a,np.inf if b is None else b) for a,b in all_bounds])
+            solved=milp(cost,integrality=integrality,
+                bounds=Bounds(numeric_bounds[:,0],numeric_bounds[:,1]),
+                constraints=LinearConstraint(matrix,-np.inf,np.array(rhs)),
+                options={"time_limit":60,"mip_rel_gap":0.})
+        else:
+            solved=linprog(cost,A_ub=matrix,b_ub=np.array(rhs),bounds=all_bounds,
+                method="highs",options={"time_limit":60})
         (out/"solve.json").write_text(json.dumps(dict(success=bool(solved.success),
             message=solved.message,status=int(solved.status),constraints=len(constraints),
-            active_vertices=len(active)),indent=2,allow_nan=False)+"\n")
+            active_vertices=len(active),separator_groups=len(self_choices),
+            binary_variables=int(integrality.sum())),indent=2,allow_nan=False)+"\n")
         if not solved.success:
             status="FAIL_LINEAR_CONSTRUCTION"
             break

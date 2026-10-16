@@ -373,3 +373,74 @@ def test_interior_area_target_survives_float32_world_emission():
 def test_invalid_orientation_reserve_is_rejected(ratio,reserve):
     with pytest.raises(ValueError,match="orientation"):
         tool.orientation_construction_ratio(ratio,reserve)
+
+
+def test_disjunction_can_retain_clearance_when_first_axis_is_blocked():
+    # The body constraint fixes x negative, so x>=1 is impossible. Keeping
+    # y>=1 is a separate valid source-side separator and must remain available.
+    from scipy.optimize import milp, Bounds, LinearConstraint, linprog
+    from scipy.sparse import csr_matrix
+    matrix=csr_matrix([[1.,0.]])
+    rhs=np.array([-1.])
+    bounds=[(-2.,2.),(-2.,2.)]
+    assert not linprog([0.,0.],A_ub=csr_matrix([[1.,0.],[-1.,0.]]),
+                       b_ub=[-1.,-1.],bounds=bounds,method="highs").success
+    alternatives=[[[([(0,-1.)],-1.)],[([(1,-1.)],-1.)]]]
+    a,b,c,bb,integer=tool.disjunctive_contact_program(
+        matrix,rhs,np.zeros(2),bounds,alternatives)
+    bb=np.array(bb)
+    solved=milp(c,integrality=integer,bounds=Bounds(bb[:,0],bb[:,1]),
+                constraints=LinearConstraint(a,-np.inf,b))
+    assert solved.success
+    assert solved.x[0]<=-1.+1.e-8 and solved.x[1]>=1.-1.e-8
+    np.testing.assert_allclose(solved.x[2:],[0.,1.],atol=1.e-8)
+    assert np.max(a@solved.x-b)<1.e-8
+
+
+def test_disjunction_requires_one_complete_separator_not_a_mix_of_corner_rows():
+    from scipy.optimize import milp, Bounds, LinearConstraint
+    from scipy.sparse import csr_matrix
+    # Each option contains one satisfiable and one impossible corner. Taking
+    # the satisfiable corner from each option would conceal an intersection.
+    groups=[[[([(0,1.)],0.), ([(0,-1.)],-2.)],
+             [([(0,-1.)],0.), ([(0,1.)],-2.)]]]
+    a,b,c,bb,integer=tool.disjunctive_contact_program(
+        csr_matrix((0,1)),np.array([]),np.zeros(1),[(-1.,1.)],groups)
+    bb=np.array(bb)
+    solved=milp(c,integrality=integer,bounds=Bounds(bb[:,0],bb[:,1]),
+                constraints=LinearConstraint(a,-np.inf,b))
+    assert not solved.success
+
+
+def test_disjunction_big_m_preserves_duplicate_vertex_cancellation():
+    from scipy.sparse import csr_matrix
+    a,b,c,bounds,integer=tool.disjunctive_contact_program(
+        csr_matrix((0,1)),np.array([]),np.zeros(1),[(-.01,.01)],
+        [[[[([(0,100.),(0,-100.)],0.)][0]]]])
+    # Shared vertices cancel exactly. The inactive row must not receive an
+    # artificial two-metre relaxation from separately bounding both terms.
+    assert a[0,0]==0.
+    assert 0.<a[0,1]<1.e-10
+    assert integer.tolist()==[0,1]
+
+
+@pytest.mark.parametrize("bounds", [[(None,1.)],[(-1.,None)],[(2.,1.)],[(0.,np.inf)]])
+def test_disjunction_rejects_unbounded_or_invalid_displacement(bounds):
+    from scipy.sparse import csr_matrix
+    with pytest.raises(ValueError,match="finite ordered"):
+        tool.disjunctive_contact_program(csr_matrix((0,1)),np.array([]),
+            np.zeros(1),bounds,[[[([(0,1.)],0.)]]])
+
+
+def test_multiple_separator_axes_each_preserve_all_reference_corners():
+    p=np.array([[0.,0.,0.],[0.,.01,0.],[0.,0.,.01],
+                [.02,.02,0.],[.02,.03,0.],[.02,.02,.01]],dtype="<f4")
+    faces=np.array([[0,1,2],[3,4,5]])
+    options=tool.face_support_constraints(p,faces,0,1,.0001,axis_choices=8)
+    assert len(options)>=2
+    for option in options:
+        assert len(option)==9
+        for a,wa,b,wb,normal,bound in option:
+            # Zero displacement must satisfy each complete reference option.
+            assert 0.>=bound
+            assert np.isfinite(normal).all()
