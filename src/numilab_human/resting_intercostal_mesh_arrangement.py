@@ -2415,8 +2415,10 @@ def _surface_normals_allow_unused_slots(vertices, faces):
     return normals
 
 
-def _localize_body20_normals_f32(world_normals_f32, faces, quaternion_xyzw):
-    """Rotate and normalize used Body20 normals; preserve finite zero unused slots."""
+def _localize_body20_normals_f32(
+    world_normals_f32, faces, quaternion_xyzw, *, unused_normal_fallback_f32=None,
+):
+    """Localize referenced normals and keep unused allocations loader-valid."""
     normals = np.ascontiguousarray(world_normals_f32, dtype="<f4")
     triangles = np.asarray(faces)
     _require(
@@ -2436,10 +2438,40 @@ def _localize_body20_normals_f32(world_normals_f32, faces, quaternion_xyzw):
              "referenced Body20 normal is zero or invalid")
     nonzero = lengths > 1e-20
     local[nonzero] /= lengths[nonzero, None]
-    # A finite zero normal is valid only for an unreferenced allocation slot.
     _require(not np.any(referenced & ~nonzero),
              "referenced Body20 normal is zero")
-    return np.ascontiguousarray(local.astype("<f4"), dtype="<f4")
+
+    unused = np.flatnonzero(~referenced)
+    if len(unused):
+        # The native loader validates every allocated vertex, including slots
+        # absent from the face index buffer. Keep an authenticated unit source
+        # normal byte-exact where the local slot namespace is proven; new or
+        # invalid unused slots receive a deterministic unit placeholder.
+        local[unused] = np.asarray([0.0, 0.0, 1.0], dtype=np.float64)
+        if unused_normal_fallback_f32 is not None:
+            fallback = np.asarray(unused_normal_fallback_f32)
+            _require(
+                fallback.ndim == 2 and fallback.shape[1] == 3
+                and len(fallback) <= len(normals)
+                and fallback.dtype.kind == "f" and fallback.dtype.itemsize == 4
+                and np.isfinite(fallback).all(),
+                "unused Body20 normal fallback is malformed",
+            )
+            fallback64 = fallback.astype(np.float64)
+            fallback_lengths = np.linalg.norm(fallback64, axis=1)
+            valid_fallback = np.isfinite(fallback_lengths) & (
+                np.abs(fallback_lengths - 1.0) <= 2.0e-3)
+            fallback_slots = unused[unused < len(fallback)]
+            valid_slots = fallback_slots[valid_fallback[fallback_slots]]
+            if len(valid_slots):
+                # Preserve authenticated source Float32 bits exactly.
+                local[valid_slots] = fallback[valid_slots].astype(np.float64)
+    localized = np.ascontiguousarray(local.astype("<f4"), dtype="<f4")
+    all_lengths = np.linalg.norm(localized.astype(np.float64), axis=1)
+    _require(np.isfinite(localized).all()
+             and np.all(np.abs(all_lengths - 1.0) <= 2.0e-3),
+             "localized Body20 normals violate the all-allocation unit-normal loader invariant")
+    return localized
 
 
 def _inverse_body20_positions_f32(world_positions_f32, quaternion_xyzw, position_m):
@@ -3986,7 +4018,12 @@ def compile_local_reconstruction_intercostal_payload(
                 world_vertices6[:, :3], q, t,
             )
         local_normals = _localize_body20_normals_f32(
-            world_normals_f32, faces, q)
+            world_normals_f32, faces, q,
+            unused_normal_fallback_f32=(
+                source_row["vertices6"][:, 3:]
+                if preserve_source_row_local_positions else None
+            ),
+        )
         vertices6 = np.ascontiguousarray(
             np.concatenate((local_positions, local_normals), axis=1), dtype="<f4")
         _require(np.isfinite(vertices6).all(), f"stable ID {stable_id} emitted non-finite ABI5 vertices")

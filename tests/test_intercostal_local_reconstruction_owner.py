@@ -538,14 +538,22 @@ def test_shared_interface_vertices_with_conflicting_rib_owners_stay_unmapped():
     }
 
 
-def test_finite_zero_normal_is_allowed_only_for_unused_vertex_slot():
+def test_unused_body20_normal_gets_unit_fallback_and_keeps_valid_source_bits():
     normals = np.asarray([[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 0]], dtype="<f4")
     faces = np.asarray([[0, 1, 2]], dtype="<u4")
     localized = _localize_body20_normals_f32(
         normals, faces, np.asarray([0, 0, 0, 1], dtype="<f4"),
     )
     assert np.all(np.isfinite(localized))
-    assert np.array_equal(localized[3], np.zeros(3, dtype="<f4"))
+    np.testing.assert_array_equal(localized[3], np.asarray([0, 0, 1], dtype="<f4"))
+    source_normals = normals.copy()
+    source_normals[3] = np.asarray([0, 1, 0], dtype="<f4")
+    preserved = _localize_body20_normals_f32(
+        normals, faces, np.asarray([0, 0, 0, 1], dtype="<f4"),
+        unused_normal_fallback_f32=source_normals,
+    )
+    assert preserved[3].tobytes() == source_normals[3].tobytes()
+    assert np.all(np.abs(np.linalg.norm(preserved.astype(np.float64), axis=1) - 1.0) <= 2e-3)
     faces_with_unused_zero = np.asarray([[0, 1, 3]], dtype="<u4")
     with pytest.raises(ValueError, match="referenced Body20 normal is zero"):
         _localize_body20_normals_f32(
@@ -558,12 +566,11 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
         [0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 1],
         [0, 1, 0, 0, 0, 1],
+        [9, 8, 7, 0, 1, 0],
     ], dtype="<f4")
     faces = np.asarray([[0, 1, 2]], dtype="<u4")
-    candidate_positions = np.vstack((
-        vertices[:, :3],
-        np.asarray([[2, 2, 2]], dtype="<f4"),
-    ))
+    candidate_positions = vertices[:, :3].copy()
+    candidate_positions[3] = np.asarray([2, 2, 2], dtype="<f4")
     unrelated_vertices = np.asarray([
         [0, 0, 1, 0, 0, 1],
         [1, 0, 1, 0, 0, 1],
@@ -613,6 +620,9 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
         "parent_face_owner_report_raw": owner_raw,
         "parent_face_owner_report_sha256": _sha(owner_raw),
         "required_rib_ids": [48],
+        "preserve_source_row_local_positions": True,
+        "source_row_local_positions_sha256": _sha(
+            np.ascontiguousarray(vertices[:, :3], dtype="<f4").tobytes()),
     }
     output, report = compile_local_reconstruction_intercostal_payload(
         source, {313: spec},
@@ -641,7 +651,10 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
     assert sidecar["source_partition"]["parent_owner_report_sha256"] == _sha(owner_raw)
     assert sidecar["source_partition"]["native_admission"] is False
     assert after_rows[313]["vertices6"].shape == (4, 6)
-    np.testing.assert_array_equal(after_rows[313]["vertices6"][3, 3:], np.zeros(3, dtype="<f4"))
+    np.testing.assert_array_equal(after_rows[313]["vertices6"][3, 3:], np.asarray([0, 1, 0], dtype="<f4"))
+    output_normal_lengths = np.linalg.norm(after_rows[313]["vertices6"][:, 3:].astype(np.float64), axis=1)
+    assert np.all(np.isfinite(output_normal_lengths))
+    assert np.all(np.abs(output_normal_lengths - 1.0) <= 2e-3)
     assert report["anatomical_admission"] is False
     assert report["native_admission"] is False
 
@@ -661,6 +674,10 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
     )
     _header, _records, diagnostic_rows = _parse_payload(diagnostic_output)
     assert diagnostic_rows[313]["vertices6"].shape == (4, 6)
+    np.testing.assert_array_equal(diagnostic_rows[313]["vertices6"][3, 3:], np.asarray([0, 0, 1], dtype="<f4"))
+    assert np.all(np.abs(
+        np.linalg.norm(diagnostic_rows[313]["vertices6"][:, 3:].astype(np.float64), axis=1)
+        - 1.0) <= 2e-3)
     assert diagnostic_report["status"] == "PASS_ABI5_SOURCE_EMISSION_DIAGNOSTIC_ONLY"
     assert diagnostic_report["attachment_ownership_unresolved_stable_ids"] == [313]
     assert diagnostic_report["runtime_attachment_maps"] == {"313": {}}
