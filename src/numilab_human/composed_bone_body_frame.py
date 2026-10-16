@@ -1813,6 +1813,15 @@ def validate_composed_rib_reframe(
     if artifact in _lineage or len(_lineage) >= 16:
         raise model.ImportError("bone source operation lineage is cyclic or exceeds 16 retained inputs")
     lineage = (*_lineage, artifact)
+    if "source_partition_retriangulation" in manifest:
+        source, prior_manifest, prior_raw, partition = validate_bone_source_partition(
+            artifact, manifest, output_raw)
+        prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw, _lineage=lineage)
+        result = {**prior, "source_partition_retriangulation": partition,
+                  "output_nhbones_sha256": _sha_bytes(output_raw)}
+        result["validation_sha256"] = _sha_bytes(json.dumps(
+            result, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
+        return result
     if "source_precision_retriangulation" in manifest:
         source, prior_manifest, prior_raw, precision = validate_bone_source_precision_retriangulation(
             artifact, manifest, output_raw)
@@ -2318,4 +2327,158 @@ def validate_bone_source_precision_retriangulation(
     expected_manifest["source_precision_retriangulation"] = repair
     if manifest != expected_manifest:
         raise model.ImportError("bone precision repair changed unrelated manifest or ownership")
+    return source, prior, source_raw, proof
+
+def replace_bone_source_partition(
+    raw: bytes, *, stable_id: int, vertices6: Any, faces: Any,
+) -> tuple[bytes, dict[str, Any]]:
+    """Encode a source-parented local partition in the existing NHBONES ABI.
+
+    Keep every original slot in its explicitly baked body frame; appended
+    partition vertices and replacement facets remain passive source geometry.
+    Complete geometry and motion acceptance are separate.
+    """
+    if type(stable_id) is not int or stable_id != 50:
+        raise model.ImportError("source partition requires the typed resting rib50 owner")
+    header, records, vo, io = _decode_bones(raw)
+    row = next(r for r in records if r[5] == stable_id)
+    if row[0] != 20:
+        raise model.ImportError("source partition requires rib50 on body20")
+    attrs = np.asarray(vertices6)
+    fs = np.asarray(faces)
+    if (attrs.dtype != np.dtype("<f4") or attrs.ndim != 2 or attrs.shape[1] != 6
+            or len(attrs) < row[2] or not np.isfinite(attrs).all()
+            or fs.dtype != np.dtype("<u4") or fs.ndim != 2 or fs.shape[1] != 3
+            or not len(fs) or int(fs.max()) >= len(attrs)
+            or np.any(np.diff(np.sort(fs, axis=1), axis=1) == 0)):
+        raise model.ImportError("source partition arrays or vertex allocation are invalid")
+    source = np.frombuffer(raw, "<f4", count=row[2]*6,
+                           offset=vo+row[1]*24).reshape(-1, 6)
+    baked = np.asarray([_row_body_local(tuple(a), tuple(row[6:14]))
+                        for a in source], dtype="<f4")
+    if not np.array_equal(attrs[:len(source)], baked):
+        raise model.ImportError("source partition changed retained source slots or normals")
+    used = np.unique(fs)
+    if np.max(np.abs(np.linalg.norm(attrs[used, 3:].astype(float), axis=1)-1)) > 1e-4:
+        raise model.ImportError("source partition normals are not unit vectors")
+    xyz = attrs[fs, :3].astype(float)
+    if not np.all(np.any(np.cross(xyz[:, 1]-xyz[:, 0], xyz[:, 2]-xyz[:, 0]) != 0, axis=1)):
+        raise model.ImportError("source partition has zero-area Float32 facets")
+    new_records, vertices, indices = [], [], []
+    vc = ic = 0
+    for old in records:
+        old_attrs = raw[vo+old[1]*24:vo+(old[1]+old[2])*24]
+        old_faces = np.frombuffer(raw, "<u4", count=old[4],
+                                  offset=io+old[3]*4).reshape(-1, 3)
+        if np.any(old_faces < old[1]) or np.any(old_faces >= old[1]+old[2]):
+            raise model.ImportError("source bone faces escape their declared allocation")
+        local_faces = old_faces.astype(np.int64)-old[1]
+        new = list(old)
+        if old[5] == stable_id:
+            attribute_bytes, local_faces = attrs.tobytes(), fs
+            new[2] = len(attrs)
+            new[6:14] = [0., 0., 0., 0., 0., 0., 1., 1.]
+        else:
+            attribute_bytes = old_attrs
+        new[1], new[3], new[4] = vc, ic, int(local_faces.size)
+        stream = (local_faces+vc).astype("<u4").tobytes()
+        new_records.append(new);vertices.append(attribute_bytes);indices.append(stream)
+        vc += new[2];ic += new[4]
+    nh = list(header);nh[3], nh[4] = vc, ic
+    output = (_BONE_HEADER.pack(*nh)
+              + b"".join(_BONE_RECORD.pack(*r) for r in new_records)
+              + b"".join(vertices)+b"".join(indices))
+    proof = dict(
+        status="PASS_EXISTING_NHBONES_LOCAL_PARTITION_EMISSION_ONLY",
+        typed_identity=[51004, stable_id], body_index=20,
+        member_id="FJ3230",
+        member_sha256=_RUNTIME_ATTACHMENT_RIBS[50][1],
+        original_allocated_vertices=int(row[2]), output_allocated_vertices=len(attrs),
+        original_source_slots_body_bake_exact=True, output_triangles=len(fs),
+        unchanged_other_bone_geometries=184,
+        rigid_owner_and_source_record_identity_preserved=True,
+        physical_mass_or_state_changed=False, native_admission=False,
+        anatomical_admission=False)
+    return output, proof
+
+
+def validate_bone_source_partition(
+    artifact: Path, manifest: dict[str, Any], output_raw: bytes,
+) -> tuple[Path, dict[str, Any], bytes, dict[str, Any]]:
+    """Replay a pinned local source partition without revising historical bakes."""
+    repair = manifest.get("source_partition_retriangulation")
+    fields = {"input_artifact", "input_manifest_sha256", "input_payload_sha256",
+              "candidate", "source_ancestry", "preparation", "strict_audit", "proof"}
+    if not isinstance(repair, dict) or set(repair) != fields:
+        raise model.ImportError("bone source partition provenance is incomplete")
+    source = Path(repair["input_artifact"]).resolve()
+    if source == artifact.resolve():
+        raise model.ImportError("bone source partition cannot reference itself")
+    mp = source/"bodyparts3d-myosim-major-bones.manifest.json"
+    if not mp.is_file() or model.sha256(mp) != repair["input_manifest_sha256"]:
+        raise model.ImportError("bone partition input manifest is missing or drifted")
+    prior = model.read_json(mp)
+    descriptor = prior.get("payload", {})
+    filename = descriptor.get("file")
+    if (not isinstance(filename, str) or Path(filename).name != filename
+            or descriptor.get("sha256") != repair["input_payload_sha256"]):
+        raise model.ImportError("bone partition source descriptor is invalid")
+    payload = source/filename
+    if not payload.is_file() or model.sha256(payload) != repair["input_payload_sha256"]:
+        raise model.ImportError("bone partition source payload is missing or drifted")
+    paths = {}
+    for key in ("candidate", "source_ancestry", "preparation", "strict_audit"):
+        value = repair[key]
+        if not isinstance(value, dict) or set(value) != {"path", "sha256"}:
+            raise model.ImportError("bone partition source pin is malformed")
+        path = Path(value["path"])
+        if not path.is_file() or model.sha256(path) != value["sha256"]:
+            raise model.ImportError("bone partition source pin is missing or drifted")
+        paths[key] = path
+    prep = model.read_json(paths["preparation"])
+    audit = model.read_json(paths["strict_audit"])
+    if (prep.get("candidate_sha256") != repair["candidate"]["sha256"]
+            or audit.get("candidate_sha256") != repair["candidate"]["sha256"]
+            or audit.get("status") != "PASS_BODY20_FLOAT32_PARTITION_NATIVE_EXPORT_AND_ALL_NEAR_UNCHECKED"
+            or audit.get("native_admission") is not False
+            or audit.get("anatomical_admission") is not False
+            or audit.get("audit", {}).get("interiors_disjoint") is not True
+            or audit.get("audit", {}).get("shared_interface_opposite_chain") is not True
+            or set(audit.get("audit", {}).get("per_region", {})) != {"rib50", "intercostal313"}
+            or any(region.get("self_intersection_count") != 0
+                   or region.get("topology", {}).get("closed") is not True
+                   for region in audit.get("audit", {}).get("per_region", {}).values())
+            or prep.get("source_face_ancestry_sha256") != repair["source_ancestry"]["sha256"]):
+        raise model.ImportError("bone partition preparation or exact Float32 audit differs")
+    source_raw = payload.read_bytes()
+    with np.load(paths["candidate"], allow_pickle=False) as data:
+        attrs = data["rib50_source_vertices6"].copy()
+        faces = data["rib50_faces"].copy()
+    ancestry = model.read_json(paths["source_ancestry"]).get("regions", {}).get("rib50")
+    old_count = next(r for r in _decode_bones(source_raw)[1] if r[5] == 50)[4]//3
+    if (not isinstance(ancestry, list) or len(ancestry) != len(faces)
+            or any(not isinstance(a, dict) or a.get("source") != "rib50"
+                   or type(a.get("source_face")) is not int
+                   or not 0 <= a["source_face"] < old_count
+                   or a.get("reversed") is not False
+                   or a.get("location") not in ("inside", "outside") for a in ancestry)):
+        raise model.ImportError("bone partition facet source ancestry is invalid")
+    anchors = prior.get("source", {}).get("anchors", [])
+    anchor = anchors[49] if len(anchors) == 185 else {}
+    if (anchor.get("member_id") != "FJ3230"
+            or anchor.get("member_sha256") != _RUNTIME_ATTACHMENT_RIBS[50][1]
+            or anchor.get("core_body_index") != 20):
+        raise model.ImportError("bone partition anatomical source owner differs")
+    expected, proof = replace_bone_source_partition(
+        source_raw, stable_id=50, vertices6=attrs, faces=faces)
+    if expected != output_raw or proof != repair["proof"]:
+        raise model.ImportError("bone partition emitted bytes or replay proof differ")
+    expected_manifest = json.loads(json.dumps(prior))
+    header = _BONE_HEADER.unpack_from(expected)
+    expected_manifest["payload"].update(
+        sha256=_sha_bytes(expected), bytes=len(expected),
+        vertex_count=header[3], index_count=header[4])
+    expected_manifest["source_partition_retriangulation"] = repair
+    if manifest != expected_manifest:
+        raise model.ImportError("bone partition changed unrelated manifest or ownership")
     return source, prior, source_raw, proof
