@@ -3510,6 +3510,169 @@ def test_collar_local_station_avoids_remote_limb_global_pca_section():
     assert global_section["area_m2"] > local_section["area_m2"] * 4.0
 
 
+def test_material_station_transport_uses_local_proper_rigid_fit():
+    points, faces, _ = _curved_tube_with_remote_limb()
+    baseline = type("SourceSurface", (), {})()
+    baseline.key = (51011, 7)
+    baseline.positions = np.asarray(points, dtype="<f4")
+    baseline.faces = np.asarray(faces, dtype="<u4")
+    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8")
+    collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
+    witness_points = np.asarray(
+        [[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]], dtype=np.float64)
+    baseline_station = bg._port_station_spec(
+        baseline, witness_points, collar_faces,
+        route_anchor=np.asarray([0.0, 0.0, -4.5]),
+        station_policy="COLLAR_LOCAL_PCA_V1")
+
+    angle_x = 0.31
+    angle_z = -0.27
+    rotation_x = np.asarray([
+        [1.0, 0.0, 0.0],
+        [0.0, np.cos(angle_x), -np.sin(angle_x)],
+        [0.0, np.sin(angle_x), np.cos(angle_x)],
+    ])
+    rotation_z = np.asarray([
+        [np.cos(angle_z), -np.sin(angle_z), 0.0],
+        [np.sin(angle_z), np.cos(angle_z), 0.0],
+        [0.0, 0.0, 1.0],
+    ])
+    rotation = rotation_x @ rotation_z
+    translation = np.asarray([0.021, -0.034, 0.017])
+    candidate = type("CandidateSurface", (), {})()
+    candidate.key = baseline.key
+    candidate.positions = np.asarray(
+        baseline.positions.astype(np.float64) @ rotation + translation,
+        dtype="<f4")
+    candidate.faces = baseline.faces.copy()
+    candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
+
+    candidate_station, proof = (
+        bg._transport_material_station_by_local_proper_rigid_fit(
+            baseline, candidate, baseline_station))
+    expected_center = (
+        np.asarray(baseline_station["section_center_world_m"]) @ rotation
+        + translation)
+    expected_tangent = (
+        np.asarray(baseline_station["tangent_world_unit"]) @ rotation)
+    expected_tangent /= np.linalg.norm(expected_tangent)
+    assert proof["passed"] is True
+    assert proof["rotation_determinant"] > 0.999999
+    assert proof["maximum_fit_residual_m"] <= proof["maximum_fit_residual_bound_m"]
+    assert proof["all_exact_coordinate_aliases_preserved"] is True
+    assert np.allclose(candidate_station["section_center_world_m"],
+                       expected_center, rtol=0.0, atol=5.0e-7)
+    assert np.allclose(candidate_station["tangent_world_unit"],
+                       expected_tangent, rtol=0.0, atol=2.0e-6)
+
+    baseline_section = bg._source_surface_section(baseline, baseline_station)
+    candidate_section = bg._source_surface_section(candidate, candidate_station)
+    comparison = bg._section_comparison(candidate_section, baseline_section)
+    assert comparison["passed"] is True
+    assert np.isclose(comparison["candidate_to_baseline_ratios"]["area"],
+                      1.0, rtol=0.0, atol=1.0e-4)
+    assert np.isclose(
+        comparison["candidate_to_baseline_ratios"]["minimum_feret_width"],
+        1.0, rtol=0.0, atol=1.0e-4)
+
+
+def test_material_station_transport_rejects_nonrigid_local_shape_change():
+    points, faces, _ = _curved_tube_with_remote_limb()
+    baseline = type("SourceSurface", (), {})()
+    baseline.key = (51011, 7)
+    baseline.positions = np.asarray(points, dtype="<f4")
+    baseline.faces = np.asarray(faces, dtype="<u4")
+    baseline.source_vertex_ids = np.arange(len(points), dtype="<u8")
+    collar_faces = np.arange(8 * 32, 10 * 32, dtype=np.int64)
+    witness_points = np.asarray(
+        [[0.0, 0.2, -2.6], [0.0, -0.2, -2.6]], dtype=np.float64)
+    baseline_station = bg._port_station_spec(
+        baseline, witness_points, collar_faces,
+        route_anchor=np.asarray([0.0, 0.0, -4.5]),
+        station_policy="COLLAR_LOCAL_PCA_V1")
+    candidate = type("CandidateSurface", (), {})()
+    candidate.key = baseline.key
+    candidate.positions = baseline.positions.copy()
+    candidate.faces = baseline.faces.copy()
+    candidate.source_vertex_ids = baseline.source_vertex_ids.copy()
+    moved_vertex = int(np.unique(
+        candidate.faces[np.asarray(baseline_station["frozen_collar_face_ids"],
+                                   dtype=np.int64)].reshape(-1))[0])
+    candidate.positions[moved_vertex, 0] += np.float32(0.001)
+
+    with pytest.raises(ValueError, match="not one local proper rigid motion"):
+        bg._transport_material_station_by_local_proper_rigid_fit(
+            baseline, candidate, baseline_station)
+
+
+def test_candidate_station_rigid_transport_is_opt_in():
+    import inspect
+
+    parameter = inspect.signature(
+        audit_brachiocephalic_port_pair_continuity).parameters[
+            "candidate_station_transport_policy"]
+    assert parameter.default is None
+
+
+
+def test_port_audit_transports_independent_material_station_under_rigid_motion():
+    bridge, bridge_faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.2, sectors=12, axial=8)
+    target, target_faces = _profiled_closed_cylinder(
+        ((0.8, 0.18), (1.0, 0.2), (1.05, 0.2), (2.0, 0.18)))
+    edge = ((51011, 7), (51011, 6))
+    pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+    declarations = {
+        role: bg.build_source_junction_station_declaration(
+            av, bridge_key=edge[0], target_key=edge[1],
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(target, target_faces),
+            frozen_face_pairs=pairs, declared_vessel_ports={edge},
+            anchor_role=role)
+        for role in ("bridge", "target")
+    }
+
+    rotation = np.asarray([
+        [0.0, 1.0, 0.0],
+        [-1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0],
+    ])
+    translation = np.asarray([3.0, -2.0, 1.0])
+
+    def moved_surface(points, faces):
+        return (
+            np.asarray(np.asarray(points, dtype=np.float64) @ rotation + translation,
+                       dtype="<f4"),
+            np.asarray(faces, dtype="<u4"),
+        )
+
+    moved_bridge, moved_bridge_faces = moved_surface(bridge, bridge_faces)
+    moved_target, moved_target_faces = moved_surface(target, target_faces)
+    report = audit_brachiocephalic_port_pair_continuity(
+        av, _manifold3d(),
+        bridge_key=edge[0], bridge_surface=(moved_bridge, moved_bridge_faces),
+        target_key=edge[1], target_surface=(moved_target, moved_target_faces),
+        frozen_face_pairs=pairs,
+        baseline_bridge_surface=(bridge, bridge_faces),
+        baseline_target_surface=(target, target_faces),
+        declared_vessel_ports={edge},
+        source_station_declarations=declarations,
+        candidate_station_transport_policy="SOURCE_LOCAL_PROPER_RIGID_FIT_V1")
+
+    assert report["passed"] is True
+    for role in ("bridge", "target"):
+        station = report["calibre_gate"]["station_results"][role]
+        proof = station["candidate_station_transport_proof"]
+        assert proof["passed"] is True
+        assert proof["method"].startswith("proper Kabsch fit")
+        assert np.isclose(
+            station["candidate_vs_baseline"]["candidate_to_baseline_ratios"]["area"],
+            1.0, rtol=0.0, atol=1.0e-4)
+        assert np.isclose(
+            station["candidate_vs_baseline"]["candidate_to_baseline_ratios"][
+                "minimum_feret_width"],
+            1.0, rtol=0.0, atol=1.0e-4)
+
 def _connected_u_tube_with_two_midplane_loops():
     """Closed U-shaped tube: z=0 cuts both legs, with one connected source graph."""
     path = []

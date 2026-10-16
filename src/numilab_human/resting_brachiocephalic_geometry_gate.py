@@ -2113,6 +2113,212 @@ def _transport_material_station(surface, spec):
     }
 
 
+def _transport_material_station_by_local_proper_rigid_fit(
+    baseline_surface, candidate_surface, baseline_station, *,
+    maximum_fit_residual_m=5.0e-7,
+):
+    """Transport a source material plane by a bounded proper fit on its source one-ring.
+
+    The support is derived only from the frozen baseline station collar faces,
+    exact-coordinate aliases, and their indexed incident-face one-ring. Candidate
+    geometry is used only to estimate a local proper rigid transform. A residual
+    above the small Float32 fit bound rejects the transport rather than masking
+    non-rigid shape change with a moving section plane.
+    """
+    _require(_identity(baseline_surface.key) == _identity(candidate_surface.key),
+             "station rigid transport requires the same typed source surface")
+    _require(np.isfinite(maximum_fit_residual_m)
+             and maximum_fit_residual_m > 0.0,
+             "station rigid transport residual bound must be positive and finite")
+    baseline_positions = np.asarray(baseline_surface.positions)
+    candidate_positions = np.asarray(candidate_surface.positions)
+    _require(baseline_positions.dtype == np.dtype("<f4")
+             and candidate_positions.dtype == np.dtype("<f4")
+             and baseline_positions.ndim == 2 and baseline_positions.shape[1] == 3
+             and candidate_positions.shape == baseline_positions.shape
+             and np.isfinite(baseline_positions).all()
+             and np.isfinite(candidate_positions).all(),
+             "station rigid transport requires matching finite Float32 positions")
+    baseline_faces = _faces(
+        baseline_surface.faces, name="baseline station rigid-fit faces",
+        vertex_count=len(baseline_positions))
+    candidate_faces = _faces(
+        candidate_surface.faces, name="candidate station rigid-fit faces",
+        vertex_count=len(candidate_positions))
+    _require(baseline_faces.dtype == np.dtype("<u4")
+             and candidate_faces.dtype == np.dtype("<u4")
+             and baseline_faces.shape == candidate_faces.shape
+             and baseline_faces.tobytes() == candidate_faces.tobytes(),
+             "station rigid transport requires exact ordered source-face ancestry")
+    baseline_gids = np.asarray(baseline_surface.source_vertex_ids)
+    candidate_gids = np.asarray(candidate_surface.source_vertex_ids)
+    _require(baseline_gids.shape == (len(baseline_positions),)
+             and candidate_gids.shape == baseline_gids.shape
+             and baseline_gids.dtype.kind in "iu"
+             and candidate_gids.dtype.kind in "iu"
+             and len(np.unique(baseline_gids)) == len(baseline_gids)
+             and len(np.unique(candidate_gids)) == len(candidate_gids)
+             and np.array_equal(baseline_gids, candidate_gids),
+             "station rigid transport requires unchanged unique source vertex IDs")
+    _require(isinstance(baseline_station, Mapping)
+             and baseline_station.get("transported_from_source_vertex_ancestry") is True,
+             "station rigid transport requires a baseline material station")
+    collar = baseline_station.get("frozen_collar_face_ids")
+    _require(isinstance(collar, (list, tuple)) and bool(collar)
+             and all(type(value) is int and 0 <= value < len(baseline_faces)
+                     for value in collar)
+             and len(set(collar)) == len(collar),
+             "station rigid transport requires unique frozen source collar faces")
+    collar_ids = np.asarray(collar, dtype=np.int64)
+    seed_vertices = np.unique(baseline_faces[collar_ids].reshape(-1))
+
+    def coordinate_key(point):
+        return tuple(0.0 if float(value) == 0.0 else float(value)
+                     for value in point)
+
+    aliases_by_coordinate = {}
+    for local_id, point in enumerate(baseline_positions):
+        aliases_by_coordinate.setdefault(coordinate_key(point), []).append(local_id)
+    seed_keys = {coordinate_key(baseline_positions[int(local_id)])
+                 for local_id in seed_vertices}
+    seed_aliases = sorted({
+        local_id for key in seed_keys
+        for local_id in aliases_by_coordinate[key]})
+    ring_face_mask = np.any(np.isin(baseline_faces, seed_aliases), axis=1)
+    ring_face_ids = np.flatnonzero(ring_face_mask).astype(np.int64)
+    _require(len(ring_face_ids) >= len(collar_ids)
+             and np.all(np.isin(collar_ids, ring_face_ids)),
+             "station source one-ring omits a frozen collar face")
+    ring_vertices = np.unique(baseline_faces[ring_face_ids].reshape(-1))
+    support_keys = {coordinate_key(baseline_positions[int(local_id)])
+                    for local_id in ring_vertices}
+    support_ids = sorted({
+        local_id for key in support_keys
+        for local_id in aliases_by_coordinate[key]})
+    support_key_by_gid = {}
+    for local_id in support_ids:
+        support_key_by_gid[int(baseline_gids[local_id])] = coordinate_key(
+            baseline_positions[local_id])
+    representatives = []
+    for key in sorted(support_keys):
+        local_ids = aliases_by_coordinate[key]
+        representative = min(local_ids, key=lambda local_id: (
+            int(baseline_gids[local_id]), local_id))
+        representatives.append(representative)
+    _require(len(representatives) >= 3,
+             "station rigid-fit source one-ring has fewer than three coordinate classes")
+
+    candidate_by_gid = {
+        int(gid): local_id for local_id, gid in enumerate(candidate_gids)}
+    candidate_aliases = {}
+    for local_id in support_ids:
+        key = support_key_by_gid[int(baseline_gids[local_id])]
+        candidate_aliases.setdefault(key, []).append(
+            candidate_positions[candidate_by_gid[int(baseline_gids[local_id])]])
+    for key, points in candidate_aliases.items():
+        _require(all(np.array_equal(points[0], point) for point in points[1:]),
+                 "candidate station one-ring exact-coordinate aliases diverged")
+    source_points = np.asarray(
+        baseline_positions[representatives], dtype=np.float64)
+    candidate_local_ids = np.asarray([
+        candidate_by_gid[int(baseline_gids[local_id])]
+        for local_id in representatives], dtype=np.int64)
+    candidate_points = np.asarray(
+        candidate_positions[candidate_local_ids], dtype=np.float64)
+    source_center = source_points.mean(axis=0)
+    candidate_center = candidate_points.mean(axis=0)
+    source_centered = source_points - source_center
+    singular_values = np.linalg.svd(source_centered, compute_uv=False)
+    _require(len(singular_values) >= 2
+             and singular_values[1] > max(singular_values[0], 1e-30) * 1e-10,
+             "station rigid-fit source one-ring is geometrically underdetermined")
+    covariance = source_centered.T @ (candidate_points - candidate_center)
+    left, _values, right_t = np.linalg.svd(covariance)
+    orientation = 1.0 if np.linalg.det(left @ right_t) >= 0.0 else -1.0
+    rotation = left @ np.diag([1.0, 1.0, orientation]) @ right_t
+    _require(float(np.linalg.det(rotation)) > 0.999999,
+             "station rigid-fit transform is not a proper rotation")
+    translation = candidate_center - source_center @ rotation
+    all_source = np.asarray(baseline_positions[support_ids], dtype=np.float64)
+    all_candidate_ids = np.asarray([
+        candidate_by_gid[int(baseline_gids[local_id])]
+        for local_id in support_ids], dtype=np.int64)
+    all_candidate = np.asarray(candidate_positions[all_candidate_ids], dtype=np.float64)
+    residuals = np.linalg.norm(all_source @ rotation + translation - all_candidate, axis=1)
+    maximum_residual = float(residuals.max(initial=0.0))
+    rms_residual = float(np.sqrt(np.mean(residuals * residuals)))
+    _require(maximum_residual <= maximum_fit_residual_m,
+             "candidate station source one-ring is not one local proper rigid motion "
+             f"(maximum residual {maximum_residual:.9g} m exceeds "
+             f"{maximum_fit_residual_m:.9g} m)")
+    baseline_center = np.asarray(
+        baseline_station.get("section_center_world_m"), dtype=np.float64)
+    baseline_tangent = np.asarray(
+        baseline_station.get("tangent_world_unit"), dtype=np.float64)
+    _require(baseline_center.shape == (3,) and baseline_tangent.shape == (3,)
+             and np.isfinite(baseline_center).all()
+             and np.isfinite(baseline_tangent).all()
+             and float(np.linalg.norm(baseline_tangent)) > 0.0,
+             "baseline material station has invalid plane coordinates")
+    candidate_center_world = baseline_center @ rotation + translation
+    candidate_tangent = baseline_tangent @ rotation
+    candidate_tangent /= float(np.linalg.norm(candidate_tangent))
+    source_binding = _source_geometry_binding(baseline_surface)
+    candidate_binding = _source_geometry_binding(candidate_surface)
+    support_gids = np.asarray(
+        baseline_gids[support_ids], dtype="<u8")
+    ring_faces_u32 = np.asarray(ring_face_ids, dtype="<u4")
+    proof = {
+        "schema": "numi.human.source-local-proper-rigid-station-transport.v1",
+        "passed": True,
+        "typed_identity": list(_identity(baseline_surface.key)),
+        "method": (
+            "proper Kabsch fit from independent baseline to candidate on the "
+            "frozen material-station collar and its exact-coordinate alias-closed "
+            "indexed one-ring"),
+        "candidate_geometry_used_only_for_local_motion_fit": True,
+        "source_station_ancestry_sha256": _canonical_record_sha256({
+            key: baseline_station.get(key) for key in (
+                "material_anchor_source_vertex_ids",
+                "tangent_support_source_vertex_ids",
+                "frozen_collar_face_ids")}),
+        "frozen_collar_face_ids": [int(value) for value in collar_ids],
+        "frozen_collar_face_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(collar_ids, dtype="<u4").tobytes()).hexdigest(),
+        "source_one_ring_face_ids": [int(value) for value in ring_face_ids],
+        "source_one_ring_face_ids_sha256": hashlib.sha256(
+            ring_faces_u32.tobytes()).hexdigest(),
+        "source_one_ring_support_local_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(support_ids, dtype="<u4").tobytes()).hexdigest(),
+        "source_one_ring_support_vertex_count": len(support_ids),
+        "source_one_ring_unique_coordinate_class_count": len(representatives),
+        "source_one_ring_support_source_vertex_ids_sha256": hashlib.sha256(
+            np.ascontiguousarray(support_gids, dtype="<u8").tobytes()).hexdigest(),
+        "baseline_surface_binding": source_binding,
+        "candidate_surface_binding": candidate_binding,
+        "rotation_row_vector": rotation.tolist(),
+        "translation_m": translation.tolist(),
+        "rotation_determinant": float(np.linalg.det(rotation)),
+        "maximum_fit_residual_m": maximum_residual,
+        "rms_fit_residual_m": rms_residual,
+        "maximum_fit_residual_bound_m": float(maximum_fit_residual_m),
+        "all_exact_coordinate_aliases_preserved": True,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+    candidate_station = {
+        **dict(baseline_station),
+        "section_center_world_m": candidate_center_world.tolist(),
+        "tangent_world_unit": candidate_tangent.tolist(),
+        "material_anchor_world_m": (
+            np.asarray(baseline_station["material_anchor_world_m"], dtype=np.float64)
+            @ rotation + translation).tolist(),
+        "station_transport_method": "SOURCE_LOCAL_PROPER_RIGID_FIT_V1",
+        "transported_from_source_vertex_ancestry": True,
+    }
+    return candidate_station, proof
+
+
 def _source_route_anchor_from_evidence(surface, evidence):
     _require(isinstance(evidence, Mapping),
              "local source station requires frozen neighbor-route evidence")
@@ -4159,6 +4365,7 @@ def audit_brachiocephalic_port_pair_continuity(
     target_route_anchor_world_m=None,
     junction_station_declarations=None,
     source_station_declarations=None,
+    candidate_station_transport_policy=None,
     transverse_witness_provider=None,
     target_station_candidate_fractions=None,
     declared_vessel_ports=None,
@@ -4198,6 +4405,12 @@ def audit_brachiocephalic_port_pair_continuity(
     _require(isinstance(source_station_declarations, Mapping)
              and set(source_station_declarations) <= {"bridge", "target"},
              "source station declarations must be keyed by branch role")
+    _require(candidate_station_transport_policy in (
+                 None, "SOURCE_LOCAL_PROPER_RIGID_FIT_V1"),
+             "unknown candidate source-station transport policy")
+    if candidate_station_transport_policy is not None:
+        _require(set(source_station_declarations) == {"bridge", "target"},
+                 "local rigid station transport needs both independent source station declarations")
     bridge = _prepare_vessel(verifier, bridge_key, bridge_surface)
     target = _prepare_vessel(verifier, target_key, target_surface)
     base_bridge = _prepare_vessel(verifier, bridge_key, baseline_bridge_surface)
@@ -4399,7 +4612,21 @@ def audit_brachiocephalic_port_pair_continuity(
                          == actual_section.get("source_face_ancestor_ids"),
                      f"{role} source-local section is not reproduced from the current independent baseline")
         baseline_spec = _transport_material_station(base_surface, source_spec)
-        candidate_spec = _transport_material_station(surface, source_spec)
+        candidate_station_transport_proof = None
+        if candidate_station_transport_policy == "SOURCE_LOCAL_PROPER_RIGID_FIT_V1":
+            candidate_ancestry_station = _transport_material_station(
+                surface, source_spec)
+            candidate_spec, candidate_station_transport_proof = (
+                _transport_material_station_by_local_proper_rigid_fit(
+                    base_surface, surface, baseline_spec))
+            candidate_station_transport_proof[
+                "candidate_ancestry_station_center_world_m"] = (
+                    candidate_ancestry_station["section_center_world_m"])
+            candidate_station_transport_proof[
+                "candidate_ancestry_station_tangent_world_unit"] = (
+                    candidate_ancestry_station["tangent_world_unit"])
+        else:
+            candidate_spec = _transport_material_station(surface, source_spec)
         runtime_source_station_declarations[role] = {
             "declaration_id": declaration.get("declaration_id"),
             "station_role": role,
@@ -4411,6 +4638,7 @@ def audit_brachiocephalic_port_pair_continuity(
             "source_station_spec": dict(source_spec),
             "candidate_station": candidate_spec,
             "baseline_station": baseline_spec,
+            "candidate_station_transport_proof": candidate_station_transport_proof,
             "source_evidence": dict(source_evidence),
         }
 
@@ -4530,6 +4758,11 @@ def audit_brachiocephalic_port_pair_continuity(
             "baseline_station_transported_by_ancestry": baseline_spec,
             "source_station_declaration": (
                 station_specs_by_role[role]["source_declaration"]),
+            "candidate_station_transport_proof": (
+                station_specs_by_role[role]["source_declaration"].get(
+                    "candidate_station_transport_proof")
+                if station_specs_by_role[role]["source_declaration"] is not None
+                else None),
             "candidate": candidate_section,
             "baseline": baseline_section,
             "candidate_vs_baseline": _section_comparison(
