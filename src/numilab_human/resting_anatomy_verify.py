@@ -235,6 +235,7 @@ class PreparedSurface:
     declared_core_body_indices: tuple | None = field(default=None, repr=False, kw_only=True)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
+    _meter_component_indices: tuple | None = field(default=None, repr=False)
     _face_records: dict | None = field(default=None, repr=False)
     _vertex_indices: dict | None = field(default=None, repr=False)
 
@@ -342,6 +343,55 @@ class PreparedSurface:
             self._meter_index = ci.prepare_float32_point_location_meters(
                 self.quotient_positions.tolist(), self.quotient_faces.tolist())
         return self._meter_index
+
+    def point_location_meters(self, point):
+        """Use exact closed-component parity without enlarging predicate bounds.
+
+        The predicate owner permits at most 200,000 faces per prepared index.
+        A larger surface may contain many individually closed components. Their
+        inside parities combine by XOR, including nested cavity boundaries.
+        Boundary on any component remains boundary. No component is truncated,
+        and an oversized individual component still fails closed.
+        """
+        face_limit = _POINT_LOCATION_COMPONENT_FACE_LIMIT
+        if len(self.quotient_faces) <= face_limit:
+            return ci.point_location_prepared_indexed(point, self.meter_index())
+        if not self.closed or self.self_audit()["count"]:
+            raise ValueError("containment requires a closed embedded target")
+        if self._meter_component_indices is None:
+            components = self.quotient_topology["face_components"]
+            coverage = [int(fid) for component in components for fid in component]
+            if sorted(coverage) != list(range(len(self.quotient_faces))):
+                raise ValueError("point-location components do not partition every target face")
+            if any(not component or len(component) > face_limit for component in components):
+                raise ValueError("individual closed component exceeds bounded point-location face count")
+            snapshots = []
+            for component in components:
+                faces = self.quotient_faces[np.asarray(component, dtype=np.int64)]
+                used, inverse = np.unique(faces, return_inverse=True)
+                positions = self.quotient_positions[used]
+                prepared = ci.prepare_float32_point_location_meters(
+                    positions.tolist(), inverse.reshape(-1, 3).tolist())
+                lower = tuple(Fraction.from_float(float(x)) for x in positions.min(axis=0))
+                upper = tuple(Fraction.from_float(float(x)) for x in positions.max(axis=0))
+                snapshots.append((prepared, lower, upper))
+            self._meter_component_indices = tuple(snapshots)
+        exact_point = ci._exact_rational_xyz(point, "component point-location query")
+        parity = 0
+        for prepared, lower, upper in self._meter_component_indices:
+            # A closed solid cannot contain a point outside its exact bounds.
+            if any(exact_point[axis] < lower[axis] or exact_point[axis] > upper[axis]
+                   for axis in range(3)):
+                continue
+            result = ci.point_location_prepared_indexed(exact_point, prepared)
+            location = result["location"]
+            if location == "boundary" or location not in ("inside", "outside"):
+                return result
+            parity ^= int(location == "inside")
+        return {"location": "inside" if parity else "outside",
+                "ray": None, "crossings": None,
+                "method": "exact_closed_component_parity",
+                "component_count": len(self._meter_component_indices)}
 
     def diagnostics(self):
         return {
@@ -547,6 +597,9 @@ def _overlap(first, second):
                 np.all(second.positions.min(axis=0) <= first.positions.max(axis=0)))
 
 
+_POINT_LOCATION_COMPONENT_FACE_LIMIT = 200_000
+
+
 def _contained_components(source, target, *, inspect_all_faces=False):
     if not target.closed:
         return {"status": "not_checked_open_target", "inside_component_witnesses": [],
@@ -556,7 +609,6 @@ def _contained_components(source, target, *, inspect_all_faces=False):
         return {"status": "not_checked_nonembedded_target", "inside_component_witnesses": [],
                 "outside_component_witnesses": [], "target_self_audit": self_result,
                 "target_preparation": target.diagnostics()}
-    prepared = target.meter_index()
     inside_witnesses, outside_witnesses = [], []
     component_rows = []
     for component_index, component in enumerate(source.quotient_topology["face_components"]):
@@ -567,7 +619,7 @@ def _contained_components(source, target, *, inspect_all_faces=False):
             triangle = source.quotient_positions[source.quotient_faces[int(face_id)]]
             point = tuple(sum((Fraction.from_float(float(row[axis])) for row in triangle),
                               Fraction(0)) / 3 for axis in range(3))
-            result = ci.point_location_prepared_indexed(point, prepared)
+            result = target.point_location_meters(point)
             location = result["location"]
             if location == "boundary":
                 boundary_count += 1
