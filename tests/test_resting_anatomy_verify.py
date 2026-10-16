@@ -3,6 +3,7 @@ import hashlib
 import json
 import unittest
 from fractions import Fraction
+from unittest.mock import patch
 
 import numpy as np
 
@@ -294,9 +295,9 @@ def source_bound_overlap_case(*, altered_contact=False, open_first=False, discon
     return first, second, proof, proof_bytes, proof_sha, source_map_sha, binding
 
 
-def source_bound_vessel_port_case():
-    first = feature_surface((51011, 7), tetra(), FACES, [700, 701, 702, 703])
-    second = feature_surface((51011, 6), tetra(offset=.1), FACES, [800, 801, 802, 803])
+def source_bound_vessel_port_case(edge=((51011, 7), (51011, 6))):
+    first = feature_surface(edge[0], tetra(), FACES, [700, 701, 702, 703])
+    second = feature_surface(edge[1], tetra(offset=.1), FACES, [800, 801, 802, 803])
     for surface in (first, second):
         surface.normals = np.full_like(surface.positions, np.float32(1.0 / np.sqrt(3.0)))
     keys = [list(first.key), list(second.key)]
@@ -398,13 +399,15 @@ def source_bound_vessel_port_case():
             "union_float64_mesh64_lineage": {
                 "generated_face_count": 0,
                 "unmapped_face_count": 0,
-                "run_original_ids": [6, 7],
+                "run_original_ids": [first.key[1], second.key[1]],
             },
             "exact_inside_both_witness": {
                 "method": "intersection_volume_centroid",
                 "point_world_m": [.2, .2, .2],
                 "first_location": "inside",
                 "second_location": "inside",
+                "predicate": "P6 exact rational point location for the exact binary64 candidate on the original Float32 source surfaces",
+                "candidate_source": "derived floating Manifold Boolean Mesh64; candidate construction is not an exact CSG witness",
             },
             "volume_accounting": {"passed": True},
         }
@@ -453,24 +456,24 @@ def source_bound_vessel_port_case():
         "exact_face_pairs": [list(pair) for pair in pairs],
         "exact_face_pairset_sha256": source_pair_sha,
         "source_rows": {
-            "51011:7": {
+            f"{first.key[0]}:{first.key[1]}": {
                 "body_index": 20, "layer": 2, "first_vertex": 700,
                 "vertex_count": 4, "face_count": 4,
                 "faces_sha256": hashlib.sha256(
                     np.ascontiguousarray(first.faces, dtype="<u4").tobytes()).hexdigest(),
                 "source_member": "FJ-A", "fma": "FMA-A",
             },
-            "51011:6": {
-                "body_index": 20, "layer": 2, "first_vertex": 800,
-                "vertex_count": 4, "face_count": 4,
+            f"{second.key[0]}:{second.key[1]}": {
+                "body_index": 22 if second.key[1] == 465 else 20, "layer": 2,
+                "first_vertex": 800, "vertex_count": 4, "face_count": 4,
                 "faces_sha256": hashlib.sha256(
                     np.ascontiguousarray(second.faces, dtype="<u4").tobytes()).hexdigest(),
                 "source_member": "FJ-B", "fma": "FMA-B",
             },
         },
         "candidate_surface_bindings": {
-            "51011:7": handoff_surface(first),
-            "51011:6": handoff_surface(second),
+            f"{first.key[0]}:{first.key[1]}": handoff_surface(first),
+            f"{second.key[0]}:{second.key[1]}": handoff_surface(second),
         },
         "evidence_report_sha256": "d" * 64,
         "source_preflight_sha256": "e" * 64,
@@ -494,10 +497,12 @@ def source_bound_vessel_port_case():
         "source_ancestry_pair_count": len(pairs),
         "source_ancestry_pairset_sha256": source_pair_sha,
         "source_topology": {
-            "candidate:7": topology(first, "candidate"),
-            "candidate:6": topology(second, "candidate"),
-            "independent_source_rigid_baseline:7": topology(first, "independent_source_rigid_baseline"),
-            "independent_source_rigid_baseline:6": topology(second, "independent_source_rigid_baseline"),
+            "candidate:" + str(first.key[1]): topology(first, "candidate"),
+            "candidate:" + str(second.key[1]): topology(second, "candidate"),
+            "independent_source_rigid_baseline:" + str(first.key[1]): topology(
+                first, "independent_source_rigid_baseline"),
+            "independent_source_rigid_baseline:" + str(second.key[1]): topology(
+                second, "independent_source_rigid_baseline"),
         },
         "interface_gates": {
             "candidate": interface_gate(),
@@ -567,8 +572,97 @@ def source_bound_vessel_port_case():
         "expected_source_binding_sha256": av._canonical_json_sha256(binding),
         "expected_source_map_sha256": source_map_sha,
         "source_map_bytes": source_map_bytes,
+        "independent_source_rigid_baseline_array_mapping": {
+            surface.key: {
+                "positions": np.array(surface.positions, dtype="<f4", copy=True),
+                "faces": np.array(surface.faces, dtype="<u4", copy=True),
+                "source_vertex_ids": np.array(surface.source_vertex_ids, dtype="<u8", copy=True),
+            }
+            for surface in (first, second)
+        },
     }
     return first, second, proof, context, pairs
+
+
+def source_bound_fallback_case():
+    first, second, proof, context, pairs = source_bound_vessel_port_case()
+    link = proof["typed_link"]
+    face_pair = list(pairs[0])
+    bary = [["1", "3"], ["1", "3"], ["1", "3"]]
+    directions = {
+        role: {
+            side: {"face_pair": face_pair, "location_in_opposite_surface": side,
+                   "face_barycentric_rational": bary}
+            for side in ("inside", "outside")
+        }
+        for role in ("first_surface_against_second", "second_surface_against_first")
+    }
+    transverse = {
+        "passed": True,
+        "requires_all_four_witnesses_from_same_face_pair": True,
+        "requires_strict_positive_exact_barycentric_coordinates": True,
+        "uses_exact_rational_point_location_in_opposite_closed_surface": True,
+        "passing_face_pair": face_pair,
+        "directional_surface_witnesses": directions,
+        "pair_witness_summaries": [{
+            "face_pair": face_pair, "witness_count": 4, "required_witness_count": 4,
+            "locations_by_surface": {
+                "first_surface_against_second": ["inside", "outside"],
+                "second_surface_against_first": ["inside", "outside"],
+            },
+        }],
+        "exact_point_location_call_count": 4,
+    }
+    from numilab_human.aortic_port_handoff_rebind import (
+        validate_recomputed_exact_transverse_fallback,
+    )
+    for role in ("candidate", "independent_source_rigid_baseline"):
+        gate = proof["interface_gates"][role]
+        partial = gate["exact_partial_overlap_witnesses"]
+        partial["classification"] = "symmetric_exact_transverse_inside_outside_overlap"
+        partial["boundary_predicate"] = {
+            "passed": False, "classification": "NOT_A_DECLARED_PARTIAL_VESSEL_PORT",
+            "typed_port": link, "unexpected_pair_count": 0,
+            "observed_pair_count": len(pairs),
+            "conditions": {"symmetric_exact_inside_and_outside_face_witnesses": False},
+        }
+        partial["exact_transverse_overlap_side_witnesses"] = transverse
+    fresh = proof["interface_gates"]["candidate"]
+    fallback_roles = {
+        role: validate_recomputed_exact_transverse_fallback(
+            proof["interface_gates"][role], fresh, link, pairs)
+        for role in ("candidate", "independent_source_rigid_baseline")
+    }
+    proof_bytes = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    proof_sha = hashlib.sha256(proof_bytes).hexdigest()
+    source_map = json.loads(context["source_map_bytes"])
+    source_map["evidence_report_sha256"] = proof_sha
+    evidence = source_map["current_port_geometry_evidence"]
+    evidence["report_sha256"] = proof_sha
+    evidence["exact_transverse_fallback_recomputation"] = {
+        "status": "PASS_RECOMPUTED_ON_CURRENT_CANDIDATE_AND_SOURCE_BASELINE",
+        "roles": fallback_roles,
+    }
+    source_map_bytes = json.dumps(source_map, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    source_map_sha = hashlib.sha256(source_map_bytes).hexdigest()
+    binding = dict(context["source_binding"])
+    binding["source_proof_sha256"] = proof_sha
+    binding["source_map_sha256"] = source_map_sha
+    updated = {
+        **context,
+        "source_proof_bytes": proof_bytes,
+        "expected_source_proof_sha256": proof_sha,
+        "source_binding": binding,
+        "expected_source_binding_sha256": av._canonical_json_sha256(binding),
+        "expected_source_map_sha256": source_map_sha,
+        "source_map_bytes": source_map_bytes,
+    }
+    baseline = {
+        surface.key: {"positions": surface.positions, "faces": surface.faces,
+                      "source_vertex_ids": surface.source_vertex_ids}
+        for surface in (first, second)
+    }
+    return first, second, updated, baseline, fresh, pairs
 
 
 def seal_source_patch_complex(value):
@@ -1801,7 +1895,8 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             source_binding=context["source_binding"],
             expected_source_binding_sha256=context["expected_source_binding_sha256"],
             expected_source_map_sha256=context["expected_source_map_sha256"],
-            source_map_bytes=context["source_map_bytes"])
+            source_map_bytes=context["source_map_bytes"],
+            independent_source_rigid_baseline_array_mapping=context["independent_source_rigid_baseline_array_mapping"])
         self.assertTrue(result["passed"])
         self.assertEqual(result["exact_face_pair_count"], len(pairs))
         self.assertTrue(result["matched_source_collar_and_region_passed"])
@@ -1830,6 +1925,114 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
             source_bound_connected_overlap_interfaces={(first.key, second.key): [context]})
         self.assertTrue(combined["passed"])
         self.assertTrue(combined["rows"][-1]["source_bound_connected_overlap"]["passed"])
+
+    def test_current_native_vessel_port_overlap_routes_directed_proof_for_sorted_surface_arguments(self):
+        first, second, _, context, pairs = source_bound_vessel_port_case()
+        result = audit_source_bound_connected_overlap(
+            second, first, source_proof_bytes=context["source_proof_bytes"],
+            expected_source_proof_sha256=context["expected_source_proof_sha256"],
+            source_binding=context["source_binding"],
+            expected_source_binding_sha256=context["expected_source_binding_sha256"],
+            expected_source_map_sha256=context["expected_source_map_sha256"],
+            source_map_bytes=context["source_map_bytes"],
+            independent_source_rigid_baseline_array_mapping=context["independent_source_rigid_baseline_array_mapping"])
+        self.assertTrue(result["passed"])
+        self.assertTrue(result["proof_link_order_reversed_for_surface_audit"])
+        self.assertEqual(result["surface_argument_order"], [[51011, 6], [51011, 7]])
+        self.assertEqual(result["exact_face_pairs"], [[right, left] for left, right in pairs])
+
+    def test_current_native_vessel_port_overlap_accepts_source_bound_body_22_carotid(self):
+        first, second, _, context, pairs = source_bound_vessel_port_case(
+            ((51011, 7), (51011, 465)))
+        result = audit_source_bound_connected_overlap(
+            first, second, source_proof_bytes=context["source_proof_bytes"],
+            expected_source_proof_sha256=context["expected_source_proof_sha256"],
+            source_binding=context["source_binding"],
+            expected_source_binding_sha256=context["expected_source_binding_sha256"],
+            expected_source_map_sha256=context["expected_source_map_sha256"],
+            source_map_bytes=context["source_map_bytes"],
+            independent_source_rigid_baseline_array_mapping=context["independent_source_rigid_baseline_array_mapping"])
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["exact_face_pair_count"], len(pairs))
+        self.assertEqual(first.key, (51011, 7))
+        self.assertEqual(second.key, (51011, 465))
+
+    def test_current_native_vessel_port_overlap_recomputes_exact_transverse_fallback(self):
+        first, second, context, baseline, fresh, pairs = source_bound_fallback_case()
+        with patch("numilab_human.aortic_port_handoff_rebind.recompute_current_aortic_interface_gate",
+                   return_value=fresh) as recompute:
+            result = audit_source_bound_connected_overlap(
+                first, second, source_proof_bytes=context["source_proof_bytes"],
+                expected_source_proof_sha256=context["expected_source_proof_sha256"],
+                source_binding=context["source_binding"],
+                expected_source_binding_sha256=context["expected_source_binding_sha256"],
+                expected_source_map_sha256=context["expected_source_map_sha256"],
+                source_map_bytes=context["source_map_bytes"],
+                independent_source_rigid_baseline_array_mapping=baseline)
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["exact_face_pair_count"], len(pairs))
+        self.assertEqual(recompute.call_count, 2)
+
+    def test_current_native_vessel_port_overlap_rejects_fallback_witness_and_mesh_drift(self):
+        first, second, context, baseline, fresh, pairs = source_bound_fallback_case()
+        proof = json.loads(context["source_proof_bytes"])
+        proof["interface_gates"]["candidate"]["exact_partial_overlap_witnesses"][
+            "exact_transverse_overlap_side_witnesses"]["passing_face_pair"] = [1, 2]
+        proof_bytes = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        proof_sha = hashlib.sha256(proof_bytes).hexdigest()
+        source_map = json.loads(context["source_map_bytes"])
+        source_map["evidence_report_sha256"] = proof_sha
+        source_map["current_port_geometry_evidence"]["report_sha256"] = proof_sha
+        source_map_bytes = json.dumps(source_map, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        source_map_sha = hashlib.sha256(source_map_bytes).hexdigest()
+        binding = dict(context["source_binding"])
+        binding.update({"source_proof_sha256": proof_sha, "source_map_sha256": source_map_sha})
+        changed = {**context, "source_proof_bytes": proof_bytes,
+                   "expected_source_proof_sha256": proof_sha,
+                   "source_map_bytes": source_map_bytes,
+                   "expected_source_map_sha256": source_map_sha,
+                   "source_binding": binding,
+                   "expected_source_binding_sha256": av._canonical_json_sha256(binding)}
+        with patch("numilab_human.aortic_port_handoff_rebind.recompute_current_aortic_interface_gate",
+                   return_value=fresh):
+            with self.assertRaisesRegex(ValueError, "exact transverse fallback"):
+                audit_source_bound_connected_overlap(
+                    first, second, source_proof_bytes=changed["source_proof_bytes"],
+                    expected_source_proof_sha256=changed["expected_source_proof_sha256"],
+                    source_binding=changed["source_binding"],
+                    expected_source_binding_sha256=changed["expected_source_binding_sha256"],
+                    expected_source_map_sha256=changed["expected_source_map_sha256"],
+                    source_map_bytes=changed["source_map_bytes"],
+                    independent_source_rigid_baseline_array_mapping=baseline)
+
+        changed_second = feature_surface(
+            second.key, tetra(offset=.1) + np.asarray([.01, 0, 0], dtype=np.float32),
+            FACES, [800, 801, 802, 803])
+        with patch("numilab_human.aortic_port_handoff_rebind.recompute_current_aortic_interface_gate",
+                   return_value=fresh):
+            with self.assertRaisesRegex(ValueError, "candidate arrays differ from the live surface"):
+                audit_source_bound_connected_overlap(
+                    first, changed_second, source_proof_bytes=context["source_proof_bytes"],
+                    expected_source_proof_sha256=context["expected_source_proof_sha256"],
+                    source_binding=context["source_binding"],
+                    expected_source_binding_sha256=context["expected_source_binding_sha256"],
+                    expected_source_map_sha256=context["expected_source_map_sha256"],
+                    source_map_bytes=context["source_map_bytes"],
+                    independent_source_rigid_baseline_array_mapping=baseline)
+
+        baseline[first.key]["positions"] = baseline[first.key]["positions"].copy()
+        baseline[first.key]["positions"][0, 0] += np.float32(.01)
+        with patch("numilab_human.aortic_port_handoff_rebind.recompute_current_aortic_interface_gate",
+                   return_value=fresh):
+            with self.assertRaisesRegex(ValueError, "source baseline arrays differ from sealed source pins"):
+                audit_source_bound_connected_overlap(
+                    first, second, source_proof_bytes=context["source_proof_bytes"],
+                    expected_source_proof_sha256=context["expected_source_proof_sha256"],
+                    source_binding=context["source_binding"],
+                    expected_source_binding_sha256=context["expected_source_binding_sha256"],
+                    expected_source_map_sha256=context["expected_source_map_sha256"],
+                    source_map_bytes=context["source_map_bytes"],
+                    independent_source_rigid_baseline_array_mapping=baseline)
 
     def test_current_native_vessel_port_overlap_requires_sealed_current_handoff(self):
         first, second, _, context, _ = source_bound_vessel_port_case()

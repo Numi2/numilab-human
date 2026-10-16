@@ -14,7 +14,25 @@ import numpy as np
 
 _HANDOFF_SCHEMA = "numi.human.verified-aortic-arch-interface-handoff.v1"
 _HANDOFF_STATUS = "VERIFIED_SOURCE_BOUND_AORTIC_ARCH_INTERFACE"
+_SOURCE_INTERFACE_SCHEMA = "numi.human.verified-aortic-source-interface-handoff.v1"
+_SOURCE_INTERFACE_STATUS = "VERIFIED_SOURCE_BOUND_AORTIC_INTERFACE"
+_ALLOWED_CURRENT_LINKS = {
+    ((51011, 7), (51011, 6)),
+    ((51011, 7), (51011, 8)),
+    ((51011, 7), (51011, 465)),
+}
+_ROW_BODY_INDEX = {6: 20, 7: 20, 8: 20, 465: 22}
 _ANCESTRY_STATUS = "EXACT_ORDERED_FACE_CORNER_ANCESTRY_MAPPED"
+_EXACT_INSIDE_PREDICATE = (
+    "P6 exact rational point location for the exact binary64 candidate on the original Float32 source surfaces"
+)
+_EXACT_INSIDE_CANDIDATE_SOURCE = (
+    "derived floating Manifold Boolean Mesh64; candidate construction is not an exact CSG witness"
+)
+_EXACT_INSIDE_METHODS = frozenset({
+    "intersection_volume_centroid", "intersection_vertex_centroid",
+    *(f"intersection_face_inward_{power}" for power in range(5, 10)),
+})
 
 
 def _sha256(value, label):
@@ -32,6 +50,261 @@ def _valid_sha256(value, label):
 
 def _array_sha(array, dtype):
     return hashlib.sha256(np.ascontiguousarray(array, dtype=dtype).tobytes()).hexdigest()
+
+
+def _validate_exact_inside_witness_record(witness, label):
+    if (not isinstance(witness, dict)
+            or witness.get("method") not in _EXACT_INSIDE_METHODS
+            or witness.get("predicate") != _EXACT_INSIDE_PREDICATE
+            or witness.get("candidate_source") != _EXACT_INSIDE_CANDIDATE_SOURCE
+            or witness.get("first_location") != "inside"
+            or witness.get("second_location") != "inside"):
+        raise ValueError(label + " is not an exact producer P6 inside-both witness")
+    point = witness.get("point_world_m")
+    if (not isinstance(point, list) or len(point) != 3
+            or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                   or not np.isfinite(value) for value in point)):
+        raise ValueError(label + " must contain a finite binary64 point")
+    return tuple(float(value) for value in point)
+
+
+def recompute_exact_inside_witness_roles(typed_link, solid_gates, candidate_array_mapping,
+                                        independent_source_rigid_baseline_array_mapping):
+    """P6-recheck each reported solid witness against its own pinned F32 role arrays."""
+    from fractions import Fraction
+    verifier, junction = _runtime_verifier_and_junction()
+    identities = [tuple(map(int, key)) for key in typed_link]
+    if (len(identities) != 2 or not isinstance(solid_gates, Mapping)
+            or not isinstance(candidate_array_mapping, Mapping)
+            or set(candidate_array_mapping) != set(identities)
+            or not isinstance(independent_source_rigid_baseline_array_mapping, Mapping)
+            or set(independent_source_rigid_baseline_array_mapping) != set(identities)):
+        raise ValueError("solid-witness recheck arrays must exactly cover the typed link")
+    roles = {}
+    for role, arrays_by_key in (
+            ("candidate", candidate_array_mapping),
+            ("independent_source_rigid_baseline", independent_source_rigid_baseline_array_mapping)):
+        witness_record = solid_gates.get(role)
+        point = _validate_exact_inside_witness_record(
+            witness_record.get("exact_inside_both_witness") if isinstance(witness_record, dict) else None,
+            role + " closed-solid witness")
+        exact_point = tuple(Fraction.from_float(value) for value in point)
+        role_surfaces = []
+        for key in identities:
+            value = arrays_by_key[key]
+            if (not isinstance(value, Mapping)
+                    or any(name not in value for name in ("positions", "faces"))):
+                raise ValueError(role + " arrays are incomplete for " + str(key))
+            prepared, detail = junction._source_surface(
+                verifier, key,
+                (value["positions"], value["faces"], value.get("normals"),
+                 value.get("source_vertex_ids")),
+                "solid-witness-recheck:" + role + ":" + str(key[0]) + ":" + str(key[1]))
+            if prepared is None or detail.get("closed_self_free_single_component") is not True:
+                raise ValueError(role + " solid-witness surface is not exact closed source geometry: "
+                                 + str(key))
+            location = verifier.ci.point_location_prepared_indexed(exact_point, prepared.meter_index())
+            if location.get("location") != "inside":
+                raise ValueError(role + " P6 inside witness is outside a pinned typed surface: "
+                                 + str(key))
+            role_surfaces.append({
+                "identity": list(key),
+                "positions_f32_sha256": _array_sha(value["positions"], "<f4"),
+                "faces_u32_sha256": _array_sha(value["faces"], "<u4"),
+                "location": location.get("location"),
+            })
+        roles[role] = {
+            "method": witness_record["exact_inside_both_witness"]["method"],
+            "point_world_m": list(point),
+            "predicate": "P6 exact rational point location recomputed on both role-specific source surfaces",
+            "surface_checks": role_surfaces,
+        }
+    return roles
+
+
+def _runtime_verifier_and_junction():
+    if __package__:
+        from . import resting_anatomy_verify as verifier
+        from . import resting_brachiocephalic_3d_junction as junction
+    else:
+        from importlib import import_module
+        verifier = import_module("numilab_human.resting_anatomy_verify")
+        junction = import_module("numilab_human.resting_brachiocephalic_3d_junction")
+    return verifier, junction
+
+
+def _canonical_json_bytes(value):
+    _, junction = _runtime_verifier_and_junction()
+    return json.dumps(junction._jsonable(value), sort_keys=True, separators=(",", ":"),
+                      ensure_ascii=False, allow_nan=False).encode("utf-8")
+
+
+def _strict_transverse_witness_shape(witness, typed_link):
+    if (not isinstance(witness, dict) or witness.get("passed") is not True
+            or witness.get("requires_all_four_witnesses_from_same_face_pair") is not True
+            or witness.get("requires_strict_positive_exact_barycentric_coordinates") is not True
+            or witness.get("uses_exact_rational_point_location_in_opposite_closed_surface") is not True):
+        return False
+    face_pair = witness.get("passing_face_pair")
+    if (not isinstance(face_pair, list) or len(face_pair) != 2
+            or any(type(face) is not int or face < 0 for face in face_pair)):
+        return False
+    directions = witness.get("directional_surface_witnesses")
+    if not isinstance(directions, dict) or set(directions) != {
+            "first_surface_against_second", "second_surface_against_first"}:
+        return False
+    from fractions import Fraction
+    for direction in directions.values():
+        if not isinstance(direction, dict) or set(direction) != {"inside", "outside"}:
+            return False
+        for side, item in direction.items():
+            if (not isinstance(item, dict) or item.get("face_pair") != face_pair
+                    or item.get("location_in_opposite_surface") != side):
+                return False
+            bary = item.get("face_barycentric_rational")
+            if not isinstance(bary, list) or len(bary) != 3:
+                return False
+            if any(not isinstance(pair, list) or len(pair) != 2
+                   or any(type(value) is not str for value in pair) for pair in bary):
+                return False
+            try:
+                weights = [Fraction(int(pair[0]), int(pair[1])) for pair in bary]
+            except (ValueError, ZeroDivisionError, TypeError):
+                return False
+            if (len(weights) != 3 or any(weight <= 0 for weight in weights)
+                    or sum(weights) != 1
+                    or any(pair != [str(weight.numerator), str(weight.denominator)]
+                           for pair, weight in zip(bary, weights))):
+                return False
+    summary = witness.get("pair_witness_summaries")
+    return (isinstance(summary, list)
+            and any(item.get("face_pair") == face_pair
+                    and item.get("witness_count") == 4
+                    and item.get("required_witness_count") == 4
+                    and item.get("locations_by_surface") == {
+                        "first_surface_against_second": ["inside", "outside"],
+                        "second_surface_against_first": ["inside", "outside"],
+                    } for item in summary if isinstance(item, dict)))
+
+
+def recompute_current_aortic_interface_gate(typed_link, source_surfaces, exact_face_pairs):
+    """Recompute the existing exact interface classifier on supplied current arrays."""
+    verifier, junction = _runtime_verifier_and_junction()
+    identities = [tuple(map(int, key)) for key in typed_link]
+    edge = tuple(identities)
+    if edge not in _ALLOWED_CURRENT_LINKS:
+        raise ValueError("cannot recompute an unsupported current aortic link")
+    if not isinstance(source_surfaces, Mapping) or set(source_surfaces) != set(identities):
+        raise ValueError("interface recomputation arrays must exactly cover the typed link")
+    prepared = []
+    for key in identities:
+        value = source_surfaces[key]
+        if isinstance(value, Mapping):
+            if any(name not in value for name in ("positions", "faces")):
+                raise ValueError("interface recomputation mapping lacks positions or faces")
+            value = (value["positions"], value["faces"], value.get("normals"),
+                     value.get("source_vertex_ids"))
+        surface, detail = junction._source_surface(
+            verifier, key, value, f"current-interface-recheck:{key[0]}:{key[1]}")
+        if surface is None or detail.get("closed_self_free_single_component") is not True:
+            raise ValueError("current interface recheck surface is not closed and connected: "
+                             + f"{key}: {detail.get('error')}")
+        prepared.append(surface)
+    return junction._interface_gate(
+        verifier, prepared[0], prepared[1], exact_face_pairs,
+        declared_vessel_ports=frozenset({edge}))
+
+
+def _current_exact_interface_evidence(interface):
+    """Select stable, independently checked geometry evidence from an interface gate.
+
+    The nested generic audit report is diagnostic output whose schema can evolve
+    independently (for example, when the consumer adds source-bound audit fields).
+    The typed port, exact pairset, exact points, scope, boundary predicate, and
+    four-way transverse witnesses are the geometry evidence validated here.
+    """
+    partial = (interface.get("exact_partial_overlap_witnesses")
+               if isinstance(interface, dict) else None)
+    if not isinstance(partial, dict):
+        raise ValueError("exact interface evidence lacks partial-overlap predicates")
+    return {
+        "schema": "numi.human.current-exact-interface-evidence.v1",
+        "passed": interface.get("passed"),
+        "typed_port": interface.get("typed_port"),
+        "documented_vessel_junction_scope": interface.get("documented_vessel_junction_scope"),
+        "observed_pair_count": interface.get("observed_pair_count"),
+        "observed_face_pairs": interface.get("observed_face_pairs"),
+        "frozen_face_pairs": interface.get("frozen_face_pairs"),
+        "frozen_face_pairs_sha256": interface.get("frozen_face_pairs_sha256"),
+        "unexpected_face_pairs": interface.get("unexpected_face_pairs"),
+        "observed_pairs_within_frozen_face_patch_cross_product":
+            interface.get("observed_pairs_within_frozen_face_patch_cross_product"),
+        "observed_pairs_within_source_declared_region":
+            interface.get("observed_pairs_within_source_declared_region"),
+        "exact_interface_point_count": interface.get("exact_interface_point_count"),
+        "exact_interface_points_world_m": interface.get("exact_interface_points_world_m"),
+        "exact_interface_points_sha256": interface.get("exact_interface_points_sha256"),
+        "partial_overlap": {
+            "passed": partial.get("passed"),
+            "classification": partial.get("classification"),
+            "requires_separate_closed_solid_confirmation":
+                partial.get("requires_separate_closed_solid_confirmation"),
+            "boundary_predicate": partial.get("boundary_predicate"),
+            "exact_transverse_overlap_side_witnesses":
+                partial.get("exact_transverse_overlap_side_witnesses"),
+        },
+    }
+
+
+def validate_recomputed_exact_transverse_fallback(reported_interface, recomputed_interface,
+                                                   typed_link, exact_face_pairs):
+    """Require byte-equivalent exact fallback witnesses rederived from current surfaces."""
+    _, junction = _runtime_verifier_and_junction()
+    identities = [list(map(int, key)) for key in typed_link]
+    pairs = [list(map(int, pair)) for pair in exact_face_pairs]
+    partial = (reported_interface.get("exact_partial_overlap_witnesses")
+               if isinstance(reported_interface, dict) else None)
+    fresh_partial = recomputed_interface.get("exact_partial_overlap_witnesses")
+    boundary = partial.get("boundary_predicate") if isinstance(partial, dict) else None
+    fresh_boundary = (fresh_partial.get("boundary_predicate")
+                      if isinstance(fresh_partial, dict) else None)
+    transverse = (partial.get("exact_transverse_overlap_side_witnesses")
+                  if isinstance(partial, dict) else None)
+    fresh_transverse = (fresh_partial.get("exact_transverse_overlap_side_witnesses")
+                        if isinstance(fresh_partial, dict) else None)
+    if (recomputed_interface.get("passed") is not True
+            or recomputed_interface.get("typed_port") != identities
+            or recomputed_interface.get("observed_face_pairs") != pairs
+            or recomputed_interface.get("frozen_face_pairs") != pairs
+            or recomputed_interface.get("unexpected_face_pairs") != []
+            or recomputed_interface.get("exact_interface_points_world_m")
+            != reported_interface.get("exact_interface_points_world_m")
+            or recomputed_interface.get("exact_interface_points_sha256")
+            != reported_interface.get("exact_interface_points_sha256")
+            or not isinstance(boundary, dict) or boundary.get("passed") is not False
+            or boundary.get("typed_port") != identities
+            or boundary.get("unexpected_pair_count") != 0
+            or boundary.get("observed_pair_count") != len(pairs)
+            or _canonical_json_bytes(boundary) != _canonical_json_bytes(fresh_boundary)
+            or not isinstance(partial, dict) or partial.get("passed") is not True
+            or partial.get("classification") != "symmetric_exact_transverse_inside_outside_overlap"
+            or _canonical_json_bytes(transverse) != _canonical_json_bytes(fresh_transverse)
+            or not _strict_transverse_witness_shape(fresh_transverse, identities)
+            or _canonical_json_bytes(_current_exact_interface_evidence(reported_interface))
+            != _canonical_json_bytes(_current_exact_interface_evidence(recomputed_interface))):
+        raise ValueError("exact transverse fallback does not recompute on current typed surfaces")
+    return {
+        "passed": True,
+        "typed_link": identities,
+        "exact_face_pair_count": len(pairs),
+        "passing_face_pair": fresh_transverse["passing_face_pair"],
+        "exact_point_location_call_count": fresh_transverse["exact_point_location_call_count"],
+        "witness_sha256": hashlib.sha256(_canonical_json_bytes(fresh_transverse)).hexdigest(),
+        "exact_interface_evidence_sha256": hashlib.sha256(
+            _canonical_json_bytes(_current_exact_interface_evidence(recomputed_interface))).hexdigest(),
+        "recomputed_from_current_arrays": True,
+        "anatomical_admission": False,
+    }
 
 
 def rebind_aortic_source_handoff_to_current_capture(
@@ -63,8 +336,7 @@ def rebind_aortic_source_handoff_to_current_capture(
         preflight = json.loads(current_source_preflight_bytes)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError("handoff or preflight is not UTF-8 JSON") from exc
-    if (not isinstance(parent, dict) or parent.get("schema") != _HANDOFF_SCHEMA
-            or parent.get("status") != _HANDOFF_STATUS or parent.get("passed") is not True):
+    if not isinstance(parent, dict) or parent.get("passed") is not True:
         raise ValueError("pinned source handoff is not an authenticated passing handoff")
     if (not isinstance(preflight, dict)
             or preflight.get("capture_input_bundle_sha256") != capture_sha
@@ -78,6 +350,13 @@ def rebind_aortic_source_handoff_to_current_capture(
             or any(k[0] != 51011 for k in link) or link[0][1] == link[1][1]):
         raise ValueError("pinned handoff must name two distinct typed aortic rows")
     identities = [tuple(k) for k in link]
+    edge = tuple(identities)
+    if edge not in _ALLOWED_CURRENT_LINKS:
+        raise ValueError("pinned source handoff is outside the current aortic port scope")
+    expected_parent = ((_HANDOFF_SCHEMA, _HANDOFF_STATUS) if edge == ((51011, 7), (51011, 6))
+                       else (_SOURCE_INTERFACE_SCHEMA, _SOURCE_INTERFACE_STATUS))
+    if (parent.get("schema"), parent.get("status")) != expected_parent:
+        raise ValueError("pinned source handoff schema/status does not match its typed link")
     row_keys = [f"{k[0]}:{k[1]}" for k in identities]
     if (not isinstance(parent.get("source_rows"), dict)
             or set(parent["source_rows"]) != set(row_keys)
@@ -132,24 +411,27 @@ def rebind_aortic_source_handoff_to_current_capture(
             for name in ("source_member_sha256", "source_nha_row_sha256",
                          "rigid_source_world_xyz_f32_sha256")
         }
+        expected_body = _ROW_BODY_INDEX.get(key[1])
+        parent_faces_sha = source.get("faces_sha256", source.get("source_faces_u32_sha256"))
         if not (
-                owner_pin.get("typed_identity") == list(key)
+                expected_body is not None
+                and owner_pin.get("typed_identity") == list(key)
                 and owner_pin.get("source_member") == source.get("source_member")
                 and owner_pin.get("fma") == source.get("fma")
-                and owner_pin.get("body_index") == source.get("body_index") == 20
+                and owner_pin.get("body_index") == source.get("body_index") == expected_body
                 and owner_pin.get("layer") == source.get("layer") == 2
                 and owner_pin.get("face_count") == source.get("face_count")
                 and owner_pin.get("vertex_count") == source.get("vertex_count")
-                and owner_pin.get("faces_sha256") == source.get("faces_sha256")
+                and owner_pin.get("faces_sha256") == parent_faces_sha
                 and row.get("typed_identity") == list(key)
-                and row.get("body_index") == source.get("body_index") == 20
+                and row.get("body_index") == source.get("body_index") == expected_body
                 and row.get("layer") == source.get("layer") == 2
                 and row.get("source_member") == source.get("source_member")
                 and row.get("fma") == source.get("fma")
                 and row.get("name") == source.get("name")
                 and row.get("source_faces_count") == source.get("face_count")
                 and row.get("source_vertices_count") == source.get("vertex_count")
-                and row.get("source_faces_sha256") == source.get("faces_sha256")
+                and row.get("source_faces_sha256") == parent_faces_sha
                 and row.get("capture_faces_u32_sha256") == row.get("source_faces_sha256")
                 and isinstance(owner, dict)
                 and owner.get("typed_identity") == list(key)
@@ -224,6 +506,9 @@ def rebind_aortic_source_handoff_to_current_capture(
         }
 
     parent_gate_evidence = {
+        "parent_source_handoff_schema": parent.get("schema"),
+        "parent_source_handoff_status": parent.get("status"),
+        "parent_source_handoff_typed_link": [list(key) for key in identities],
         "parent_source_handoff_sha256": parent_sha,
         "source_gate_results": {
             gate: parent[gate] for gate in (
@@ -238,6 +523,7 @@ def rebind_aortic_source_handoff_to_current_capture(
     }
     output = json.loads(json.dumps(parent))
     output.update({
+        "schema": _HANDOFF_SCHEMA,
         "status": "PENDING_CURRENT_AORTIC_PORT_GEOMETRY",
         "passed": False,
         "source_topology_passed": False,
@@ -466,6 +752,7 @@ def seal_current_aortic_source_handoff_from_port_report(
     interfaces, solids = report.get("interface_gates"), report.get("solid_gates")
     if not isinstance(interfaces, dict) or not isinstance(solids, dict):
         raise ValueError("fresh current report lacks interface or solid gates")
+    transverse_fallbacks = {}
     for role in ("candidate", "independent_source_rigid_baseline"):
         interface = interfaces.get(role)
         scope = interface.get("documented_vessel_junction_scope") if isinstance(interface, dict) else None
@@ -491,7 +778,7 @@ def seal_current_aortic_source_handoff_from_port_report(
                 or scope.get("downstream_closed_solid_confirmation_required") is not True
                 or not isinstance(partial, dict) or partial.get("passed") is not True
                 or partial.get("requires_separate_closed_solid_confirmation") is not True
-                or not isinstance(boundary, dict) or boundary.get("passed") is not True
+                or not isinstance(boundary, dict)
                 or boundary.get("typed_port") != identity_rows
                 or boundary.get("unexpected_pair_count") != 0
                 or boundary.get("observed_pair_count") != len(pairs)
@@ -500,6 +787,19 @@ def seal_current_aortic_source_handoff_from_port_report(
                 or transverse.get("requires_strict_positive_exact_barycentric_coordinates") is not True
                 or transverse.get("uses_exact_rational_point_location_in_opposite_closed_surface") is not True):
             raise ValueError("fresh current report interface pairset or witness failed: " + role)
+        if boundary.get("passed") is False:
+            try:
+                source_surfaces = (capture_array_mapping if role == "candidate"
+                                   else independent_source_rigid_baseline_array_mapping)
+                fresh_interface = recompute_current_aortic_interface_gate(
+                    identities, source_surfaces, pairs)
+                transverse_fallbacks[role] = validate_recomputed_exact_transverse_fallback(
+                    interface, fresh_interface, identities, pairs)
+            except (TypeError, ValueError, KeyError, IndexError) as exc:
+                raise ValueError("fresh current report exact transverse fallback failed: " + role
+                                 + ": " + str(exc)) from exc
+        elif boundary.get("passed") is not True:
+            raise ValueError("fresh current report boundary predicate has invalid pass state: " + role)
         solid = solids.get(role)
         lineage = solid.get("union_float64_mesh64_lineage") if isinstance(solid, dict) else None
         if (not isinstance(solid, dict) or solid.get("passed") is not True
@@ -509,13 +809,21 @@ def seal_current_aortic_source_handoff_from_port_report(
                 or solid.get("union_component_count") != 1
                 or solid.get("union_lineage_has_both_sources_without_generated_or_unmapped_faces") is not True
                 or not isinstance(solid.get("exact_inside_both_witness"), dict)
-                or solid["exact_inside_both_witness"].get("method") != "intersection_volume_centroid"
+                or solid["exact_inside_both_witness"].get("method") not in _EXACT_INSIDE_METHODS
+                or solid["exact_inside_both_witness"].get("predicate") != _EXACT_INSIDE_PREDICATE
+                or solid["exact_inside_both_witness"].get("candidate_source") != _EXACT_INSIDE_CANDIDATE_SOURCE
                 or solid["exact_inside_both_witness"].get("first_location") != "inside"
                 or solid["exact_inside_both_witness"].get("second_location") != "inside"
                 or not isinstance(lineage, dict) or lineage.get("generated_face_count") != 0
                 or lineage.get("unmapped_face_count") != 0
                 or set(lineage.get("run_original_ids", [])) != {key[1] for key in identities}):
             raise ValueError("fresh current report closed-solid gate failed: " + role)
+    if transverse_fallbacks and set(transverse_fallbacks) != {
+            "candidate", "independent_source_rigid_baseline"}:
+        raise ValueError("exact transverse fallback must independently pass candidate and source baseline")
+    exact_inside_witness_recomputation = recompute_exact_inside_witness_roles(
+        identities, solids, capture_array_mapping,
+        independent_source_rigid_baseline_array_mapping)
 
     calibre = report.get("independent_source_station_calibre")
     if not isinstance(calibre, dict) or len(calibre) != 2:
@@ -566,6 +874,15 @@ def seal_current_aortic_source_handoff_from_port_report(
             "candidate_and_source_pairsets_recomputed": True,
             "candidate_and_source_closed_solid_gates_passed": True,
             "independent_source_station_calibre_passed": True,
+            "solid_inside_witness_recomputation": {
+                "status": "PASS_P6_RECOMPUTED_ON_CANDIDATE_AND_PINNED_SOURCE_BASELINE",
+                "roles": exact_inside_witness_recomputation,
+            },
+            "exact_transverse_fallback_recomputation": {
+                "status": ("PASS_RECOMPUTED_ON_CURRENT_CANDIDATE_AND_SOURCE_BASELINE"
+                           if transverse_fallbacks else "NOT_REQUIRED"),
+                "roles": transverse_fallbacks,
+            },
             "geometry_predicates_run": True,
             "anatomical_admission": False,
             "native_combined_scene_admission": False,
