@@ -20,7 +20,10 @@ def case(tmp_path, monkeypatch):
     for sid in range(1, 186):
         records.append((20, 4*(sid-1), 4, 12*(sid-1), 12, sid,
                         0., 0., 0., 0., 0., 0., 1., 1., 0))
-        vertices.append(attributes.tobytes())
+        bone_attributes = attributes.copy()
+        if sid == 49:
+            bone_attributes[:, 0] += 2
+        vertices.append(bone_attributes.tobytes())
         indices.append((faces+4*(sid-1)).astype("<u4").tobytes())
     raw = (bones._BONE_HEADER.pack(b"NHBONES1", 3, 185, 740, 2220, 123, b"x"*32)
            + b"".join(bones._BONE_RECORD.pack(*row) for row in records)
@@ -29,13 +32,20 @@ def case(tmp_path, monkeypatch):
     bone.write_bytes(raw)
     mp = bone.with_suffix(".manifest.json")
     mp.write_text(json.dumps({"body_local_bakes": {"rows": [
-        {"stable_id": sid, "interface_vertex_pairs": [[0, 0], [1, 1], [2, 2]]}
+        {"stable_id": sid, "interface_vertex_pairs":
+         [[0, 0], [1, 1], [2, 2]] if sid == 48 else [[0, 4], [1, 5], [2, 6]]}
         for sid in (48, 49)]}}))
     nha = tmp_path/"resting-thorax.nhanatomy"
     nha.write_bytes(b"unit fixture")
     lower = attributes.copy()
     lower[3, 2] = -1
     lower_faces = faces[:, [0, 2, 1]].copy()
+    # Two distinct anatomical attachment patches cannot own the same source
+    # vertex. Model the second rib's distant closed intercostal component.
+    second = lower.copy()
+    second[:, 0] += 2
+    lower = np.concatenate((lower, second))
+    lower_faces = np.concatenate((lower_faces, lower_faces + 4))
     row = dict(body_index=20, layer=1, flags=0, vertices6=lower, faces=lower_faces,
                record=[0, 8])
     monkeypatch.setattr(resting_pleura_proxy, "_parse_payload", lambda raw: (None, None, {313: row}))
@@ -60,8 +70,8 @@ def case(tmp_path, monkeypatch):
     surfaces = {
         (51004, 48): (points.copy(), faces.copy(), normal.copy(),
                        np.arange(4, dtype="<u4")+4*47+10000),
-        (51010, 313): (lower[:, :3].copy(), lower_faces.copy(), normal.copy(),
-                       np.arange(4, dtype="<u4")+8+20000)}
+        (51010, 313): (lower[:, :3].copy(), lower_faces.copy(), np.tile(normal, (2, 1)),
+                       np.arange(8, dtype="<u4")+8+20000)}
     return source, digest(source), surfaces, context
 
 

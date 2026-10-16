@@ -27,6 +27,14 @@ _RIBS = {
     49: ("FJ3229", "631b4f63625fa6cc89ad83961b2156abe5878d1baf4a8cb2b2acbaa06bc97f58", 13, 1769),
 }
 
+# Historical partition constructors above remain bound to rows 48/49. Runtime
+# attachment emission may opt in the next anatomically identified rib without
+# rewriting that retained source lineage.
+_RUNTIME_ATTACHMENT_RIBS = {
+    **_RIBS,
+    50: ("FJ3230", "8c097e93d79c610bed49d6c027d25c8439447c20bfb94fa64009b9c4db4d8f5b", 14, 0),
+}
+
 
 def _sha_bytes(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
@@ -52,10 +60,12 @@ def _runtime_attachment_expected_values(
     if vertices6.ndim != 2 or vertices6.shape[1] != 6 or not np.isfinite(vertices6).all():
         raise model.ImportError("runtime rib attachment NHA row allocation is malformed")
     local_vertex_count = len(vertices6)
-    if local_vertex_count <= 0 or set(interface_maps) != set(_RIBS):
+    if (local_vertex_count <= 0 or not isinstance(interface_maps, dict)
+            or not set(_RIBS) <= set(interface_maps) <= set(_RUNTIME_ATTACHMENT_RIBS)):
         raise model.ImportError("runtime rib attachment map inventory or NHA row allocation is invalid")
     expected: dict[int, tuple[list[int], int, str]] = {}
-    for stable_id in _RIBS:
+    assigned_nha_ids: set[int] = set()
+    for stable_id in sorted(interface_maps):
         pairs = interface_maps.get(stable_id)
         if not isinstance(pairs, list) or not pairs:
             raise model.ImportError(f"runtime rib{stable_id} attachment map is missing")
@@ -67,10 +77,12 @@ def _runtime_attachment_expected_values(
                 or type(pair[0]) is not int or type(pair[1]) is not int
                 or pair[0] < 0 or pair[1] < 0 or pair[1] >= local_vertex_count
                 or pair[0] in rib_ids or pair[1] in nha_ids
+                or pair[1] in assigned_nha_ids
             ):
                 raise model.ImportError(f"runtime rib{stable_id} attachment map has invalid or duplicate typed slots")
             rib_ids.add(pair[0])
             nha_ids.add(pair[1])
+        assigned_nha_ids.update(nha_ids)
         ordered = sorted(nha_ids)
         ids_sha = _sha_bytes(b"".join(struct.pack("<I", value) for value in ordered))
         expected[stable_id] = (ordered, len(ordered), ids_sha)
@@ -101,7 +113,12 @@ def bind_intercostal_runtime_attachment_metadata(
     payload["sha256"] = nha_payload_sha256
     provenance["bones_payload_sha256"] = bones_payload_sha256
     bindings["bones_payload_sha256"] = bones_payload_sha256
-    for stable_id, (member, member_sha, channel, _) in _RIBS.items():
+    declared = {key for key in bindings if isinstance(key, str) and key.startswith("intercostal_313_rib")}
+    required = {f"intercostal_313_rib{sid}_motion_attachment" for sid in expected}
+    if declared != required:
+        raise model.ImportError("runtime rib attachment declarations differ from exact interface maps")
+    for stable_id in expected:
+        member, member_sha, channel, _ = _RUNTIME_ATTACHMENT_RIBS[stable_id]
         key = f"intercostal_313_rib{stable_id}_motion_attachment"
         attachment = bindings.get(key)
         surface = attachment.get("surface") if isinstance(attachment, dict) else None
@@ -157,7 +174,7 @@ def validate_intercostal_runtime_attachment_metadata(
         or bindings.get("bones_payload_sha256") != bones_payload_sha256
     ):
         raise model.ImportError("runtime rib attachment receipt payload hashes differ from exact owner rows")
-    for stable_id in _RIBS:
+    for stable_id in expected:
         attachment = bindings.get(f"intercostal_313_rib{stable_id}_motion_attachment")
         surface = attachment.get("surface") if isinstance(attachment, dict) else None
         source_partition = attachment.get("source_partition") if isinstance(attachment, dict) else None

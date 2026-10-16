@@ -314,6 +314,58 @@ class BodyLocalBakeTests(unittest.TestCase):
                 receipt, row, maps, nha_stable_id=313, nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32,
             )
 
+    def _runtime_rib50_fixture(self):
+        import copy
+        frame, row, maps, receipt = self._runtime_attachment_fixture()
+        maps[50] = [[0, 0], [1, 6]]
+        item = copy.deepcopy(receipt["functional_bindings"]["intercostal_313_rib49_motion_attachment"])
+        member, member_sha, channel, _ = frame._RUNTIME_ATTACHMENT_RIBS[50]
+        item["existing_rib_channel"].update(
+            stable_id=50, channel_index=channel, source_member_id=member,
+            source_member_sha256=member_sha)
+        item["surface"]["interface_local_vertex_ids"] = [0, 6]
+        item["surface"]["interface_local_vertex_ids_sha256"] = frame._sha_bytes(struct.pack("<2I", 0, 6))
+        receipt["functional_bindings"]["intercostal_313_rib50_motion_attachment"] = item
+        return frame, row, maps, receipt
+
+    def test_runtime_attachment_opt_in_rib50_uses_existing_source_and_channel(self):
+        frame, row, maps, receipt = self._runtime_rib50_fixture()
+        frame.bind_intercostal_runtime_attachment_metadata(
+            receipt, row, maps, nha_stable_id=313,
+            nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+        frame.validate_intercostal_runtime_attachment_metadata(
+            receipt, row, maps, nha_stable_id=313,
+            nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+        item = receipt["functional_bindings"]["intercostal_313_rib50_motion_attachment"]
+        self.assertEqual(item["existing_rib_channel"]["channel_index"], 14)
+        self.assertEqual(item["surface"]["local_vertex_count"], 7)
+
+    def test_runtime_attachment_rejects_cross_rib_vertex_double_ownership(self):
+        frame, row, maps, receipt = self._runtime_rib50_fixture()
+        maps[50][0][1] = maps[49][0][1]
+        with self.assertRaisesRegex(model.ImportError, "invalid or duplicate typed slots"):
+            frame.bind_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=313,
+                nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+
+    def test_runtime_attachment_rib50_rejects_wrong_source_or_channel(self):
+        for field, value in (("channel_index", 13), ("source_member_sha256", "00" * 32)):
+            with self.subTest(field=field):
+                frame, row, maps, receipt = self._runtime_rib50_fixture()
+                receipt["functional_bindings"]["intercostal_313_rib50_motion_attachment"]["existing_rib_channel"][field] = value
+                with self.assertRaisesRegex(model.ImportError, "identity or exact interface"):
+                    frame.bind_intercostal_runtime_attachment_metadata(
+                        receipt, row, maps, nha_stable_id=313,
+                        nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+
+    def test_runtime_attachment_rejects_undeclared_channel_map(self):
+        frame, row, maps, receipt = self._runtime_rib50_fixture()
+        del maps[50]
+        with self.assertRaisesRegex(model.ImportError, "declarations differ"):
+            frame.bind_intercostal_runtime_attachment_metadata(
+                receipt, row, maps, nha_stable_id=313,
+                nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+
     def test_receipt_generator_preserves_and_hash_checks_relative_cardiac_sidecars(self):
         from numilab_human import composed_bone_body_frame as frame
         source = self.root / "source"
