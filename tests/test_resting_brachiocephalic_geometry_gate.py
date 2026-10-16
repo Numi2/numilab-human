@@ -1535,6 +1535,11 @@ def test_material_station_transports_frozen_vertex_ancestry_across_a_pose():
     assert np.allclose(
         transported["tangent_world_unit"], expected_tangent,
         rtol=0.0, atol=2e-7)
+    expected_center = (
+        np.asarray(original_station["section_center_world_m"]) @ rotation.T)
+    assert np.allclose(
+        transported["section_center_world_m"], expected_center,
+        rtol=0.0, atol=3e-7)
 
     with pytest.raises(ValueError, match="leave the frozen interface patch"):
         bg._validated_station_spec(
@@ -1552,6 +1557,108 @@ def test_material_station_transports_frozen_vertex_ancestry_across_a_pose():
             witness_points=rotated_positions[:4],
             collar_face_ids=collar_faces)
 
+
+
+def test_material_station_transport_is_rigid_motion_covariant():
+    positions, faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.25, sectors=12, axial=8)
+    source_ids = np.arange(len(positions), dtype=np.uint64)
+    surface = av.prepare_surface(
+        (51011, 526), np.ascontiguousarray(positions, dtype="<f4"),
+        faces, source_vertex_ids=source_ids)
+    original = bg._validated_station_spec(
+        surface, None, witness_points=positions[:4],
+        collar_face_ids=[0, 1, 2, 3])
+
+    translation = np.asarray([0.037, -0.021, 0.014], dtype=np.float64)
+    translated_positions = np.ascontiguousarray(
+        positions.astype(np.float64) + translation, dtype="<f4")
+    translated = av.prepare_surface(
+        (51011, 526), translated_positions, faces,
+        source_vertex_ids=source_ids)
+    moved = bg._validated_station_spec(
+        translated, original, witness_points=translated_positions[:4],
+        collar_face_ids=[0, 1, 2, 3])
+
+    assert moved["material_anchor_source_vertex_ids"] == (
+        original["material_anchor_source_vertex_ids"])
+    assert moved["tangent_support_source_vertex_ids"] == (
+        original["tangent_support_source_vertex_ids"])
+    assert np.allclose(
+        moved["section_center_world_m"],
+        np.asarray(original["section_center_world_m"]) + translation,
+        rtol=0.0, atol=2e-7)
+    assert np.allclose(
+        moved["tangent_world_unit"], original["tangent_world_unit"],
+        rtol=0.0, atol=2e-7)
+
+
+def test_material_station_uses_frozen_local_map_under_localized_bending():
+    positions, faces = _closed_cylinder(
+        -1.0, 1.0, radius=0.25, sectors=12, axial=8)
+    source_ids = np.arange(len(positions), dtype=np.uint64)
+    surface = av.prepare_surface(
+        (51011, 526), np.ascontiguousarray(positions, dtype="<f4"),
+        faces, source_vertex_ids=source_ids)
+    source_station = bg._validated_station_spec(
+        surface, None, witness_points=positions[:4],
+        collar_face_ids=[0, 1, 2, 3])
+
+    bent_positions = positions.astype(np.float64).copy()
+    z = bent_positions[:, 2]
+    transition = np.clip((z - 0.2) / 0.8, 0.0, 1.0)
+    smoothstep = transition * transition * (3.0 - 2.0 * transition)
+    bent_positions[:, 0] += 0.35 * smoothstep
+    bent_positions = np.ascontiguousarray(bent_positions, dtype="<f4")
+    bent_surface = av.prepare_surface(
+        (51011, 526), bent_positions, faces, source_vertex_ids=source_ids)
+
+    transported = bg._validated_station_spec(
+        bent_surface, source_station, witness_points=bent_positions[:4],
+        collar_face_ids=[0, 1, 2, 3])
+    anchor_ids = np.asarray(
+        source_station["material_anchor_local_vertex_ids"], dtype=np.int64)
+    anchor_weights = np.asarray(
+        source_station["material_anchor_weights"], dtype=np.float64)
+    tangent_ids = np.asarray(
+        source_station["tangent_support_local_vertex_ids"], dtype=np.int64)
+    expected_anchor = np.sum(
+        bent_positions[anchor_ids].astype(np.float64)
+        * anchor_weights[:, None], axis=0)
+    expected_tangent = (
+        bent_positions[int(tangent_ids[1])].astype(np.float64)
+        - bent_positions[int(tangent_ids[0])].astype(np.float64))
+    expected_tangent /= np.linalg.norm(expected_tangent)
+    if np.dot(expected_tangent, source_station["tangent_world_unit"]) < 0.0:
+        expected_tangent = -expected_tangent
+
+    assert transported["material_anchor_source_vertex_ids"] == (
+        source_station["material_anchor_source_vertex_ids"])
+    assert transported["tangent_support_source_vertex_ids"] == (
+        source_station["tangent_support_source_vertex_ids"])
+    assert np.allclose(
+        transported["material_anchor_world_m"], expected_anchor,
+        rtol=0.0, atol=1e-8)
+    assert np.allclose(
+        transported["tangent_world_unit"], expected_tangent,
+        rtol=0.0, atol=1e-8)
+    expected_center = (
+        expected_anchor
+        + expected_tangent * transported["station_offset_from_anchor_m"])
+    assert np.allclose(
+        transported["section_center_world_m"], expected_center,
+        rtol=0.0, atol=1e-8)
+
+    # Diagnostic only: reselecting a whole-surface PCA axis after bending
+    # measures a different slice and must not replace the frozen material
+    # station used for candidate-versus-source calibre comparison.
+    pca_reselected = bg._validated_station_spec(
+        bent_surface, None, witness_points=bent_positions[:4],
+        collar_face_ids=[0, 1, 2, 3])
+    alignment = abs(float(np.dot(
+        transported["tangent_world_unit"],
+        pca_reselected["tangent_world_unit"])))
+    assert alignment < 0.99
 
 
 def test_network_all_target_screen_uses_only_frozen_edges_and_role_aware_skin_enclosures():
