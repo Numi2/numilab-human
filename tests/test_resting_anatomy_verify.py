@@ -446,7 +446,7 @@ def source_patch_complex_case(*, off_edge=False, support_edge=False):
     return surfaces[0], surfaces[1], declaration
 
 
-def source_patch_carrier_case(*, offcarrier=False, malformed_ancestry=False, closed=False):
+def source_patch_carrier_case(*, offcarrier=False, malformed_ancestry=False, closed=False, rational_local=False):
     member, member_sha = "FJ1737", "a" * 64
     raw_triangles = [
         [[0, 0, 0], [3, 0, 0], [0, 1, 0]],
@@ -460,16 +460,29 @@ def source_patch_carrier_case(*, offcarrier=False, malformed_ancestry=False, clo
         exact = Fraction.from_float(float(np.float32(value)))
         return [str(exact.numerator), str(exact.denominator)]
 
+    def rational_pair(value):
+        exact = Fraction(value)
+        return [str(exact.numerator), str(exact.denominator)]
+
     def exact(point):
         return [pair(value) for value in point]
 
+    local_exact = [exact(point) for point in coordinates]
+    if rational_local:
+        # Parent face 100 has vertices (0,0,0), (3,0,0), (0,1,0).
+        # Barycentrics (1/2,1/6,1/3) give the exact non-Float32 point (1/2,1/3,0).
+        local_exact[0] = [rational_pair(Fraction(1, 2)), rational_pair(Fraction(1, 3)),
+                          rational_pair(Fraction(0))]
+        coordinates[0] = np.asarray([0.5, np.float32(1 / 3), 0.0], dtype=np.float32)
+
     points = [{
         "point_id": point_id,
-        "local_xyz_exact": exact(point),
+        "local_xyz_exact": local_exact[index],
         "capture_xyz_exact": exact(point),
-        "local_float32_bits": av._patch_float32_bits(point),
+        "local_float32_bits": av._patch_rational_float32_bits(
+            [Fraction(int(value[0]), int(value[1])) for value in local_exact[index]]),
         "capture_float32_bits": av._patch_float32_bits(point),
-    } for point_id, point in zip(point_ids, coordinates)]
+    } for index, (point_id, point) in enumerate(zip(point_ids, coordinates))]
     source_faces, carrier_faces = [], []
     for index, triangle in enumerate(raw_triangles):
         source_face = 100 + index
@@ -480,10 +493,12 @@ def source_patch_carrier_case(*, offcarrier=False, malformed_ancestry=False, clo
         barycentric = [[["1", "1"], ["0", "1"], ["0", "1"]],
                        [["0", "1"], ["1", "1"], ["0", "1"]],
                        [["0", "1"], ["0", "1"], ["1", "1"]]]
+        if rational_local and index == 0:
+            barycentric[0] = [["1", "2"], ["1", "6"], ["1", "3"]]
         record = {"carrier_face_id": f"c{index}", "source_member": member,
                   "source_member_sha256": member_sha, "source_face": source_face,
                   "point_ids": face_point_ids, "barycentric_exact": barycentric,
-                  "local_xyz_exact": [exact(point) for point in coordinates[index * 3:index * 3 + 3]]}
+                  "local_xyz_exact": local_exact[index * 3:index * 3 + 3]}
         carrier_faces.append({"carrier_face_id": f"c{index}", "source_face": source_face,
                               "arrangement_record_index": index,
                               "arrangement_record_sha256": av._canonical_json_sha256(record),
@@ -1155,6 +1170,72 @@ class RestingAnatomyVerifierTests(unittest.TestCase):
         accepted, reason = av._source_patch_complex_contact(first, second, 3, 3, context)
         self.assertFalse(accepted)
         self.assertEqual(reason, "contact_is_not_fully_covered_by_authenticated_carrier")
+
+    def test_multiface_carrier_accepts_exact_non_float32_local_barycentric_point(self):
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        local = tuple(Fraction(int(pair[0]), int(pair[1]))
+                      for pair in declaration["points"][0]["local_xyz_exact"])
+        capture = tuple(Fraction(int(pair[0]), int(pair[1]))
+                        for pair in declaration["points"][0]["capture_xyz_exact"])
+        self.assertEqual(local, (Fraction(1, 2), Fraction(1, 3), Fraction(0)))
+        self.assertNotEqual(local, capture)
+        self.assertEqual(
+            declaration["points"][0]["local_float32_bits"],
+            [0x3f000000, 0x3eaaaaab, 0x00000000])
+        context = av._prepare_source_patch_complex(first, second, declaration)
+        self.assertEqual(context["carrier_topology"]["component_count"], 3)
+
+    def test_multiface_carrier_rational_float32_rounding_is_exact_ties_to_even(self):
+        self.assertEqual(av._patch_round_fraction_float32_bits(
+            Fraction(1) + Fraction(1, 1 << 24)), 0x3f800000)
+        self.assertEqual(av._patch_round_fraction_float32_bits(
+            Fraction(1) + Fraction(3, 1 << 24)), 0x3f800002)
+        self.assertEqual(av._patch_round_fraction_float32_bits(
+            Fraction(-1) - Fraction(1, 1 << 24)), 0xbf800000)
+
+    def test_multiface_carrier_rejects_changed_parent_or_barycentric_reconstruction(self):
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        declaration["source_faces"][0]["source_vertices_exact"][1][0] = ["4", "1"]
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "ancestry does not reconstruct"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        carrier = declaration["carrier_faces"][0]
+        carrier["barycentric_exact"][0] = [["1", "2"], ["1", "3"], ["1", "6"]]
+        carrier["arrangement_record"]["barycentric_exact"] = carrier["barycentric_exact"]
+        carrier["arrangement_record_sha256"] = av._canonical_json_sha256(
+            carrier["arrangement_record"])
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "ancestry does not reconstruct"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_multiface_carrier_rejects_changed_declared_and_current_float32_bits(self):
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        declaration["points"][0]["local_float32_bits"][0] ^= 1
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "exact rational Float32 rounding"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        declaration["points"][0]["capture_float32_bits"][0] ^= 1
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "exact rational Float32 rounding"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        first.positions[0, 0] = np.nextafter(np.float32(0.5), np.float32(2.0))
+        declaration["first"]["surface_hashes"] = av._source_patch_surface_hashes(first)
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "point differs from captured GID"):
+            av._prepare_source_patch_complex(first, second, declaration)
+
+    def test_multiface_carrier_capture_coordinate_must_remain_on_float32_lattice(self):
+        first, second, declaration = source_patch_carrier_case(rational_local=True)
+        declaration["points"][0]["capture_xyz_exact"][1] = ["1", "3"]
+        seal_source_patch_complex(declaration)
+        with self.assertRaisesRegex(ValueError, "capture point is not its exact Float32 lattice"):
+            av._prepare_source_patch_complex(first, second, declaration)
 
     def test_multiface_carrier_rejects_wrong_component_count_and_malformed_parent_ancestry(self):
         first, second, declaration = source_patch_carrier_case()

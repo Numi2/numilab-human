@@ -1370,6 +1370,71 @@ def _patch_float32_bits(point):
     return [int(value) for value in np.asarray(point, dtype=np.float32).view(np.uint32)]
 
 
+def _patch_round_fraction_float32_bits(value):
+    """Return IEEE-754 binary32 round-to-nearest-even bits for an exact rational."""
+    value = Fraction(value)
+    sign = 0x80000000 if value < 0 else 0
+    numerator, denominator = abs(value.numerator), value.denominator
+    if numerator == 0:
+        return sign
+
+    exponent = numerator.bit_length() - denominator.bit_length()
+    if exponent >= 0:
+        if numerator < (denominator << exponent):
+            exponent -= 1
+    elif (numerator << -exponent) < denominator:
+        exponent -= 1
+
+    def rounded_quotient(top, bottom):
+        quotient, remainder = divmod(top, bottom)
+        twice = remainder << 1
+        if twice > bottom or (twice == bottom and quotient & 1):
+            quotient += 1
+        return quotient
+
+    if exponent < -126:
+        significand = rounded_quotient(numerator << 149, denominator)
+        if significand == 0:
+            return sign
+        if significand >= (1 << 23):
+            return sign | (1 << 23)
+        return sign | significand
+
+    shift = 23 - exponent
+    if shift >= 0:
+        significand = rounded_quotient(numerator << shift, denominator)
+    else:
+        significand = rounded_quotient(numerator, denominator << -shift)
+    if significand == (1 << 24):
+        significand >>= 1
+        exponent += 1
+    if exponent > 127:
+        raise ValueError("source patch rational rounds outside finite Float32 range")
+    return sign | ((exponent + 127) << 23) | (significand - (1 << 23))
+
+
+def _patch_float32_exact_fraction(bits):
+    """Decode finite IEEE-754 binary32 bits as an exact Fraction."""
+    if type(bits) is not int or not 0 <= bits <= 0xffffffff:
+        raise ValueError("source patch Float32 bits are malformed")
+    sign = -1 if bits & 0x80000000 else 1
+    exponent = (bits >> 23) & 0xff
+    significand = bits & 0x7fffff
+    if exponent == 0xff:
+        raise ValueError("source patch Float32 bits are not finite")
+    if exponent == 0:
+        power = -149
+    else:
+        significand |= 1 << 23
+        power = exponent - 127 - 23
+    value = Fraction(sign * significand, 1)
+    return value * (1 << power) if power >= 0 else value / (1 << -power)
+
+
+def _patch_rational_float32_bits(point):
+    return [_patch_round_fraction_float32_bits(value) for value in point]
+
+
 def _patch_barycentric(triangle, point):
     origin = triangle[0]
     first = tuple(triangle[1][i] - origin[i] for i in range(3))
@@ -2314,13 +2379,13 @@ def _prepare_source_patch_carrier_complex(first, second, value):
             raise ValueError("source patch carrier point coordinates are malformed")
         for name, xyz, bits_map in (("local", local, local_bits), ("capture", captured, capture_bits)):
             raw = row[name + "_float32_bits"]
-            lattice = tuple(Fraction(item, 1 << 149) for item in ci.float32_point_lattice_key(
-                [float(item) for item in xyz]))
             if (not isinstance(raw, list) or len(raw) != 3
                     or any(type(bit) is not int or not 0 <= bit <= 0xffffffff for bit in raw)
-                    or _patch_float32_bits([float(item) for item in xyz]) != raw
-                    or (name == "capture" and lattice != xyz)):
-                raise ValueError("source patch carrier point is not its exact Float32 lattice value")
+                    or _patch_rational_float32_bits(xyz) != raw):
+                raise ValueError("source patch carrier point bits differ from exact rational Float32 rounding")
+            if name == "capture" and tuple(
+                    _patch_float32_exact_fraction(bit) for bit in raw) != xyz:
+                raise ValueError("source patch carrier capture point is not its exact Float32 lattice value")
             bits_map[point_id] = tuple(raw)
         local_points[point_id], capture_points[point_id] = local, captured
     if (len(set(local_bits.values())) != len(local_points)
