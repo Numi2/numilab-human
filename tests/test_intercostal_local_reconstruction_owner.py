@@ -33,6 +33,18 @@ def _source_tool_report(rib_id: int = 48, *, face_count: int = 20) -> bytes:
     }, sort_keys=True, separators=(",", ":")).encode()
 
 
+def _mixed_source_tool_report() -> bytes:
+    return json.dumps({
+        "source_arrays_sha256": "a" * 64,
+        "rows": [{
+            "source_bone": [51004, bone_id],
+            "derived_source_id": 900000000 + bone_id,
+            "tool_sha256": f"{bone_id:064x}",
+            "faces": 20,
+        } for bone_id in (26, *range(48, 60), 178)],
+    }, sort_keys=True, separators=(",", ":")).encode()
+
+
 def _source_face_report(source_id: int = 900000048, source_face_id: int = 17) -> bytes:
     return json.dumps({
         "faces": [{
@@ -84,10 +96,33 @@ def _accepted_receipt(pack_sha: str, source_sha: str) -> dict:
     }
 
 
+def test_mixed_bone_tool_registry_keeps_only_ribs_and_rejects_ambiguous_ids():
+    from numilab_human.resting_intercostal_mesh_arrangement import (
+        _parse_local_reconstruction_source_reports,
+    )
+
+    source_face = _source_face_report()
+    registry = _mixed_source_tool_report()
+    tools, claims = _parse_local_reconstruction_source_reports([source_face, registry])
+    assert set(tools) == {900000000 + rib_id for rib_id in range(48, 60)}
+    assert tools[900000048]["rib_stable_id"] == 48
+    assert tools[900000048]["face_count"] == 20
+    assert _sha(source_face) in claims
+    malformed = json.loads(registry)
+    malformed["rows"][0]["source_bone"] = [51004, 27]
+    with pytest.raises(ValueError, match="identity is malformed or unsupported"):
+        _parse_local_reconstruction_source_reports([
+            source_face,
+            json.dumps(malformed, sort_keys=True, separators=(",", ":")).encode(),
+        ])
+    with pytest.raises(ValueError, match="ambiguous across authenticated operation reports"):
+        _parse_local_reconstruction_source_reports([registry, registry])
+
+
 def test_parent_face_owners_bind_parent_operations_and_typed_source_ancestry():
     parent = b"pinned parent candidate bytes"
     ancestry = _source_face_report()
-    tool = _source_tool_report()
+    tool = _mixed_source_tool_report()
     reports = [ancestry, tool]
     report_pins = [_sha(value) for value in reports]
     faces = np.asarray([[0, 1, 2]], dtype="<u4")

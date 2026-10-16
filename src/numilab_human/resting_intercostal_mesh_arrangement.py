@@ -2318,6 +2318,7 @@ LOCAL_BODY20_TRANSFORM_SHA256 = (
     "017a90ed6c9eadbdfda9c4d4b31a4966ca10c8dd1c79577686635a296145f7d2"
 )
 LOCAL_RECONSTRUCTION_RIB_IDS = tuple(range(48, 60))
+LOCAL_RECONSTRUCTION_SOURCE_BONE_IDS = (26, *LOCAL_RECONSTRUCTION_RIB_IDS, 178)
 
 
 def _local_reconstruction_sha256(raw: bytes) -> str:
@@ -2543,36 +2544,48 @@ def _parse_local_reconstruction_source_reports(raw_reports):
         parsed.append(value)
 
     tools: dict[int, dict] = {}
-    for report in parsed:
+    source_tool_report_by_id: dict[int, str] = {}
+    for raw, report in zip(raw_reports, parsed, strict=True):
         rows = report.get("rows")
         if not isinstance(rows, list):
             continue
+        report_sha = _local_reconstruction_sha256(raw)
         for row in rows:
             if not isinstance(row, dict) or "source_bone" not in row:
                 continue
             source_bone = row.get("source_bone")
-            rib_id = source_bone[1] if (
+            _require(
                 isinstance(source_bone, list) and len(source_bone) == 2
                 and type(source_bone[0]) is int and source_bone[0] == 51004
                 and type(source_bone[1]) is int
-            ) else None
+                and source_bone[1] in LOCAL_RECONSTRUCTION_SOURCE_BONE_IDS,
+                "typed source-bone tool registry identity is malformed or unsupported",
+            )
+            bone_id = source_bone[1]
             derived_id = row.get("derived_source_id")
             faces = row.get("faces")
             tool_sha = row.get("tool_sha256")
             _require(
-                rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
-                and type(derived_id) is int and derived_id == 900000000 + rib_id
+                type(derived_id) is int and derived_id == 900000000 + bone_id
                 and type(faces) is int and faces > 0
                 and isinstance(tool_sha, str) and len(tool_sha) == 64
                 and all(char in "0123456789abcdef" for char in tool_sha),
-                "typed derived rib tool registry record is malformed",
+                "typed source-bone tool registry record is malformed",
             )
-            _require(derived_id not in tools,
-                     "authenticated source reports repeat a derived rib tool ID")
+            _require(
+                derived_id not in source_tool_report_by_id,
+                "derived source ID is ambiguous across authenticated operation reports",
+            )
+            source_tool_report_by_id[derived_id] = report_sha
+            if bone_id not in LOCAL_RECONSTRUCTION_RIB_IDS:
+                # Sternum and costal-cartilage tools are valid typed sources,
+                # but they do not identify a runtime rib channel.
+                continue
             tools[derived_id] = {
-                "rib_stable_id": rib_id,
+                "rib_stable_id": bone_id,
                 "face_count": faces,
                 "tool_sha256": tool_sha,
+                "source_report_sha256": report_sha,
             }
 
     face_claims: dict[str, dict[int, list[tuple[int, int, str, bool]]]] = {}
