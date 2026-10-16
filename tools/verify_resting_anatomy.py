@@ -476,8 +476,14 @@ def main(argv=None):
                 surfaces, key, path, digest, faces_keys.get(key, "capture_faces"),
                 repacked_source=source_overlays.get(key), accepted_poses=accepted_poses,
                 source_cache=source_cache))
-        if args.construction_overlay and (partitions or args.head_source_patch_report):
-            raise ValueError("construction cannot bind admitted source-interface declarations")
+        construction_keys = {
+            identity(item.split("=", 1)[0]) for item in args.construction_overlay}
+        partition_keys = {key for first, second, _, _ in partitions
+                          for key in (first, second)}
+        if construction_keys & partition_keys:
+            raise ValueError("construction cannot replace a source-interface participant")
+        if construction_keys and args.head_source_patch_report:
+            raise ValueError("construction cannot bind admitted head source-patch declarations")
         for item in args.construction_overlay:
             text, path, digest = item.split("=", 2)
             key = identity(text)

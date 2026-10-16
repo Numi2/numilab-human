@@ -207,6 +207,64 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
                 self.assertEqual(tool.main(args+["--output", str(failed)]), 1)
         self.assertEqual(json.loads(failed.read_text())["exact_failure_witness"], error.diagnostic)
 
+    def test_disjoint_typed_construction_keeps_exact_shared_partition(self):
+        from tests.test_resting_shared_partition_verify import scene
+        from numilab_human import resting_shared_partition_verify as shared
+        source, digest, captures = scene(self.root)
+        # Same numeric ID, different semantic identity: the skin construction
+        # must not replace or excuse either participant of the muscle proof.
+        skin = (51007, 1)
+        captures[skin] = (POINTS + np.float32(10), FACES.copy(),
+                          NORMALS.copy(), GIDS.copy() + 1000)
+        candidate = self.root / "skin-construction.npz"
+        np.savez(candidate, capture_positions_m=captures[skin][0],
+                 capture_faces=FACES, capture_global_vertex_ids=captures[skin][3])
+        pack, receipt = self.root / "pack", self.root / "receipt"
+        pack.write_bytes(b"pack")
+        receipt.write_bytes(b"receipt")
+        output = self.root / "disjoint-shared.json"
+        args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                "--capture-receipt", str(receipt), "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                "--source-pin", str(source) + "=" + digest,
+                "--shared-partition", "51005:1", "51005:2", str(source), digest,
+                "--construction-overlay", "51007:1=" + str(candidate) + "=" + hashlib.sha256(candidate.read_bytes()).hexdigest(),
+                "--changed", "51005:1", "--target", "51005:2", "--target", "51007:1",
+                "--output", str(output)]
+        with patch.object(tool.verify, "load_capture", return_value=(dict(captures), {"accepted_step": 0})):
+            with patch.object(shared, "audit_with_shared_partitions",
+                              wraps=shared.audit_with_shared_partitions) as exact:
+                self.assertEqual(tool.main(args), 0)
+                exact.assert_called_once()
+        report = json.loads(output.read_text())
+        self.assertTrue(report["passed"])
+        self.assertEqual(report["shared_partition_certificates"][0]["shared_interface_face_count"], 1)
+        self.assertTrue(report["counterfactual_candidates"])
+        self.assertFalse(report["native_admission"])
+        self.assertFalse(report["overlays"][0]["material_fields_and_rest_owner_verified"])
+
+    def test_construction_cannot_replace_either_partition_participant(self):
+        from tests.test_resting_shared_partition_verify import scene
+        from numilab_human import resting_shared_partition_verify as shared
+        source, digest, captures = scene(self.root)
+        path, candidate_digest = self.construction()
+        pack, receipt = self.root / "pack", self.root / "receipt"
+        pack.write_bytes(b"pack")
+        receipt.write_bytes(b"receipt")
+        for sid in (1, 2):
+            with self.subTest(participant=sid):
+                output = self.root / f"participant-{sid}.json"
+                args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                        "--capture-receipt", str(receipt), "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                        "--source-pin", str(source) + "=" + digest,
+                        "--shared-partition", "51005:1", "51005:2", str(source), digest,
+                        "--construction-overlay", f"51005:{sid}={path}={candidate_digest}",
+                        "--changed", "51005:1", "--output", str(output)]
+                with patch.object(tool.verify, "load_capture", return_value=(dict(captures), {"accepted_step": 0})):
+                    with patch.object(shared, "audit_with_shared_partitions") as exact:
+                        self.assertEqual(tool.main(args), 1)
+                        exact.assert_not_called()
+                self.assertIn("source-interface participant", json.loads(output.read_text())["error"])
+
     def test_absent_shared_interface_stops_before_any_exact_certificate(self):
         from tests.test_resting_shared_partition_verify import scene
         from numilab_human import passive_attachment_composition as pac
