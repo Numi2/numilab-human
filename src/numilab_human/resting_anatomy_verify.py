@@ -2731,7 +2731,7 @@ def load_capture(pack, receipt_path):
 
 def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, required_closed=(),
                            intended_enclosures=(), shared_feature_interfaces=None,
-                           source_patch_complex_interfaces=None):
+                           source_patch_complex_interfaces=None, progress=None):
     changed = [typed_key(key) for key in changed]
     targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
     interfaces = interfaces or {}
@@ -2742,6 +2742,12 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
         raise ValueError("intended enclosure identity absent from capture")
     required_closed = {typed_key(key) for key in required_closed} | {key for key in changed if key[0] == 51011}
     cache, rows = {}, []
+    if progress is not None and not callable(progress):
+        raise TypeError("audit progress observer must be callable")
+    def record(row):
+        rows.append(row)
+        if progress is not None:
+            progress(row)
     def prepared(key):
         if key not in cache:
             value = surfaces[key]
@@ -2752,11 +2758,11 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
     for key in changed:
         surface = prepared(key)
         if key in required_closed and not surface.closed:
-            rows.append({"stage": "preparation", **surface.diagnostics(),
+            record({"stage": "preparation", **surface.diagnostics(),
                          "passed": False, "reason": "required closed surface is open"})
             return {"passed": False, "failed_stage": "preparation", "rows": rows}
         result = surface.self_audit()
-        rows.append({"stage": "self", **surface.diagnostics(), **result,
+        record({"stage": "self", **surface.diagnostics(), **result,
                      "passed": result["count"] == 0})
         if result["count"]:
             return {"passed": False, "failed_stage": "self", "rows": rows}
@@ -2770,7 +2776,7 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                     np.any(positions.min(axis=0) > surface.positions.max(axis=0))):
                 declared_enclosures = [pair for pair in enclosures
                                        if set(pair) == {key, target}]
-                rows.append({"stage": "nearby_pair", "identities": [list(key), list(target)],
+                record({"stage": "nearby_pair", "identities": [list(key), list(target)],
                              "passed": not declared_enclosures, "aabb_disjoint": True,
                              "triangle_pair_count": 0,
                              "declared_enclosure_outside_aabb": bool(declared_enclosures),
@@ -2794,7 +2800,7 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                 diagnostic = getattr(exc, "diagnostic", None)
                 if diagnostic is not None:
                     row["target_topology_witness"] = diagnostic
-                rows.append(row)
+                record(row)
                 return {"passed": False, "failed_stage": "target_preparation", "rows": rows}
             pair = audit_surface_pair(surface, other,
                                       intended_face_pairs=interfaces.get((key, target), ()),
@@ -2803,7 +2809,7 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                                           (key, target), ()),
                                       intended_enclosures=[pair for pair in enclosures
                                                            if set(pair) == {key, target}])
-            rows.append({"stage": "nearby_pair", **pair})
+            record({"stage": "nearby_pair", **pair})
             if not pair["passed"]:
                 return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
     return {"passed": True, "rows": rows,

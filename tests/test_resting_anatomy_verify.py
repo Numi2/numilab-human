@@ -1969,3 +1969,25 @@ class NativeSourceIdentityTests(unittest.TestCase):
                                    (12, 3, "unknown")):
             with self.subTest(stable=stable, layer=layer, kind=kind), self.assertRaises(ValueError):
                 source_surface_key(stable, layer, payload_kind=kind)
+
+
+def test_geometry_progress_preserves_results_and_stops_with_first_failure():
+    from numilab_human.resting_anatomy_verify import audit_changed_surfaces
+    first = prepare_surface((51011, 7), tetra(), FACES)
+    second = prepare_surface((51011, 8), tetra()+np.float32(5), FACES)
+    bad_points = np.concatenate((tetra()[:3], tetra()[:3]), axis=0)
+    bad_faces = np.array([[0, 1, 2], [3, 4, 5]], dtype=np.uint32)
+    surfaces = {first.key: first, second.key: second,
+                (51010, 313): (bad_points, bad_faces, None, np.arange(6))}
+    for targets in ([second.key], [(51010, 313), second.key]):
+        expected = audit_changed_surfaces(surfaces, [first.key], targets=targets)
+        rows = []
+        observed = audit_changed_surfaces(surfaces, [first.key], targets=targets,
+                                          progress=rows.append)
+        assert observed == expected
+        assert rows == expected["rows"]
+    assert observed["failed_stage"] == "target_preparation"
+    assert len(rows) == 2
+    import pytest
+    with pytest.raises(TypeError, match="progress observer"):
+        audit_changed_surfaces(surfaces, [first.key], progress=True)

@@ -365,6 +365,9 @@ def main(argv=None):
     args = p.parse_args(argv)
     if args.output.exists():
         p.error("refusing to overwrite retained verification evidence")
+    progress_path = args.output.with_suffix(".progress.json")
+    if progress_path.exists():
+        p.error("refusing to overwrite retained verification progress")
     start = time.perf_counter()
     report = {"passed": False, "anatomical_admission": False, "native_admission": False,
               "counterfactual_candidates": bool(args.overlay or args.rest_source)}
@@ -510,19 +513,37 @@ def main(argv=None):
                     raise ValueError(f"changed identity absent: {key}")
             report.update(passed=True, status="PASS_PREPARATION_ONLY_NO_PAIR_PREDICATES")
         else:
+            completed_count = 0
+            def record_progress(row):
+                nonlocal completed_count
+                completed_count += 1
+                progress_path.parent.mkdir(parents=True, exist_ok=True)
+                temporary = progress_path.with_suffix(".tmp")
+                temporary.write_text(json.dumps({
+                    "status": "RUNNING_SELECTED_GEOMETRY_NOT_ADMITTED",
+                    "anatomical_admission": False, "native_admission": False,
+                    "elapsed_seconds": time.perf_counter()-start,
+                    "counterfactual_candidates": report["counterfactual_candidates"],
+                    "pack_pin": report["pack_pin"], "receipt_pin": report["receipt_pin"],
+                    "completed_row_count": completed_count,
+                    "rows": [row],
+                    "scope": "Latest completed gate; final output retains every ordered result.",
+                }, sort_keys=True, indent=2)+"\n")
+                temporary.replace(progress_path)
             if partitions:
                 from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
                 result = audit_with_shared_partitions(
                     surfaces, changed, partitions=partitions, targets=targets,
                     required_closed=closed, intended_enclosures=enclosures,
                     source_patch_complex_interfaces=patch_interfaces, capture_context=capture_context,
+                    progress=record_progress,
                     coordinate_provenance=("counterfactual_owner_replay" if args.overlay or args.rest_source
                                            else "accepted_native_capture"))
             else:
                 result = verify.audit_changed_surfaces(
                     surfaces, changed, targets=targets,
                     required_closed=closed, intended_enclosures=enclosures,
-                    source_patch_complex_interfaces=patch_interfaces)
+                    source_patch_complex_interfaces=patch_interfaces, progress=record_progress)
             report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
     except (ValueError, TypeError, KeyError, OSError, verify.HumanImportError) as error:
@@ -535,6 +556,10 @@ def main(argv=None):
                   scope="Selected geometry only. Source ancestry, actual rest-owner emission, motion, continuity and physiology require their existing separate proofs.")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, sort_keys=True, indent=2)+"\n")
+    if progress_path.exists():
+        temporary = progress_path.with_suffix(".tmp")
+        temporary.write_bytes(args.output.read_bytes())
+        temporary.replace(progress_path)
     print(json.dumps({k: report.get(k) for k in ("passed", "status", "failed_stage", "elapsed_seconds", "error")}), flush=True)
     return 0 if report["passed"] else 1
 
