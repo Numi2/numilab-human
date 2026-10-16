@@ -373,6 +373,8 @@ def _section_summary(section: dict) -> dict:
             "exact_coordinate_duplicate_vertex_count", "coplanar_edge_count",
             "isolated_tangent_vertex_ids", "coplanar_face_count",
             "loop_metrics", "lineage_available", "lineage_complete",
+            "selected_local_loop_count", "selected_local_loop_index",
+            "local_loop_selection", "observed_section_reason",
             "section_center_world_m", "section_tangent_world_unit",
             "owner_ids", "source_face_ancestor_ids",
             "source_face_ancestor_ids_sha256", "generated_face_count",

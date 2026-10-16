@@ -735,11 +735,13 @@ def _verified_network_link_handoff(
                 and isinstance(tangent_source, list) and len(tangent_source) == 2
                 and all(type(value) is int and value >= 0 for value in tangent_source),
                 f"{role} source station ancestry is incomplete for {key}")
+            section_records = {}
             for section_name in ("candidate_section", "baseline_section"):
                 section = calibre.get(section_name)
                 _require(isinstance(section, Mapping)
                          and section.get("passed") is True
-                         and section.get("loop_count") == 1
+                         and type(section.get("loop_count")) is int
+                         and section.get("loop_count") >= 1
                          and section.get("lineage_complete") is True
                          and section.get("generated_face_count") == 0
                          and section.get("unmapped_face_count") == 0
@@ -750,6 +752,74 @@ def _verified_network_link_handoff(
                          and np.isfinite(section["minimum_feret_width_m"])
                          and section["minimum_feret_width_m"] > 0.0,
                          f"{role} {section_name} is incomplete for {key}")
+                selection = section.get("local_loop_selection")
+                if selection is None:
+                    _require(section.get("loop_count") == 1,
+                             f"{role} {section_name} has unselected extra loops for {key}")
+                else:
+                    loops = section.get("loop_metrics")
+                    distances = selection.get("all_loop_source_distance_diagnostics")
+                    _require(
+                        selection.get("schema")
+                            == "numi.human.exact-source-face-collar-distance.v1"
+                        and selection.get("passed") is True
+                        and selection.get("candidate_geometry_used_for_selection") is False
+                        and selection.get("source_typed_identity") == list(key)
+                        and selection.get("source_face_graph_component_count") == 1
+                        and valid_sha(selection.get("source_face_u32_sha256"))
+                        and valid_sha(selection.get("source_face_graph_sha256"))
+                        and valid_sha(selection.get("frozen_collar_face_ids_sha256"))
+                        and section.get("selected_local_loop_count") == 1
+                        and type(section.get("selected_local_loop_index")) is int
+                        and isinstance(loops, list)
+                        and len(loops) == section.get("loop_count")
+                        and isinstance(distances, list)
+                        and len(distances) == len(loops)
+                        and all(metric.get("passed") is True
+                                and metric.get("lineage_complete") is True
+                                and metric.get("owner_ids") == [key[1]]
+                                and metric.get("generated_face_count") == 0
+                                and metric.get("unmapped_face_count") == 0
+                                for metric in loops)
+                        and [item.get("loop_index") for item in distances]
+                            == list(range(len(loops)))
+                        and all(type(item.get("minimum_source_face_graph_distance")) is int
+                                and item["minimum_source_face_graph_distance"] >= 0
+                                for item in distances),
+                        f"{role} {section_name} has invalid source-local loop selection for {key}")
+                    minima = [item["minimum_source_face_graph_distance"]
+                              for item in distances]
+                    winner = int(np.argmin(minima))
+                    _require(minima.count(min(minima)) == 1
+                             and winner == section.get("selected_local_loop_index")
+                             and selection.get("selected_local_loop_index") == winner
+                             and selection.get("selected_local_loop_count") == 1
+                             and selection.get("selected_local_loop_source_face_ancestor_ids_sha256")
+                                 == loops[winner].get("source_face_ancestor_ids_sha256")
+                             and selection.get("remote_loops_retained_as_diagnostics")
+                                 == [index for index in range(len(loops)) if index != winner]
+                             and section.get("area_m2") == loops[winner].get("area_m2")
+                             and section.get("minimum_feret_width_m")
+                                 == loops[winner].get("minimum_feret_width_m")
+                             and section.get("source_face_ancestor_ids")
+                                 == loops[winner].get("source_face_ancestor_ids"),
+                             f"{role} {section_name} did not select the unique nearest source loop for {key}")
+                section_records[section_name] = section
+            candidate_selection = section_records["candidate_section"].get(
+                "local_loop_selection")
+            baseline_selection = section_records["baseline_section"].get(
+                "local_loop_selection")
+            _require((candidate_selection is None) == (baseline_selection is None)
+                     and (candidate_selection is None or (
+                         candidate_selection.get("source_face_graph_sha256")
+                             == baseline_selection.get("source_face_graph_sha256")
+                         and candidate_selection.get("source_face_u32_sha256")
+                             == baseline_selection.get("source_face_u32_sha256")
+                         and candidate_selection.get("frozen_collar_face_ids")
+                             == baseline_selection.get("frozen_collar_face_ids")
+                         and candidate_selection.get("frozen_collar_face_ids_sha256")
+                             == baseline_selection.get("frozen_collar_face_ids_sha256"))),
+                     f"{role} candidate and baseline local selectors differ for {key}")
             comparison = calibre.get("candidate_to_baseline_comparison")
             _require(isinstance(comparison, Mapping)
                      and comparison.get("passed") is True
@@ -2429,11 +2499,14 @@ def build_source_junction_station_declaration(
         station_policy=station_policy)
     baseline_source_station_section = None
     if station_policy == "COLLAR_LOCAL_PCA_V1":
-        baseline_source_station_section = _source_surface_section(
-            anchor, source_station)
+        baseline_source_station_section = _collar_local_source_section(
+            anchor, source_station, source_topology_surface=anchor,
+            collar_face_ids=source_station["frozen_collar_face_ids"],
+            label="baseline source collar-local station")
         _require(baseline_source_station_section.get("passed") is True
-                 and baseline_source_station_section.get("loop_count") == 1,
-                 "source collar-local station must yield one closed baseline loop")
+                 and baseline_source_station_section.get(
+                     "selected_local_loop_count") == 1,
+                 "source collar-local station must select one closed baseline loop")
     source_ancestry = {
         key: source_station[key] for key in (
             "material_anchor_source_vertex_ids",
@@ -2473,6 +2546,12 @@ def build_source_junction_station_declaration(
             None if baseline_source_station_section is None else {
                 "passed": baseline_source_station_section.get("passed"),
                 "loop_count": baseline_source_station_section.get("loop_count"),
+                "selected_local_loop_count": baseline_source_station_section.get(
+                    "selected_local_loop_count"),
+                "selected_local_loop_index": baseline_source_station_section.get(
+                    "selected_local_loop_index"),
+                "local_loop_selection": baseline_source_station_section.get(
+                    "local_loop_selection"),
                 "area_m2": baseline_source_station_section.get("area_m2"),
                 "minimum_feret_width_m": baseline_source_station_section.get(
                     "minimum_feret_width_m"),
@@ -3291,6 +3370,315 @@ def _section_loops(positions, faces, center, tangent, *, derived_csg=False,
     }
 
 
+def _source_face_graph_distances(surface, collar_face_ids):
+    """Build exact-coordinate-quotient face distances from a frozen source collar."""
+    positions = _float32_xyz(surface.positions, name="source station topology")
+    faces = _faces(surface.faces, name="source station topology",
+                   vertex_count=len(positions))
+    _require(isinstance(collar_face_ids, (list, tuple, np.ndarray))
+             and len(collar_face_ids) > 0
+             and all(type(value) is int and value >= 0 for value in collar_face_ids),
+             "frozen source collar face IDs must be nonempty nonnegative integers")
+    seeds = tuple(sorted(set(collar_face_ids)))
+    _require(len(seeds) == len(collar_face_ids)
+             and all(value < len(faces) for value in seeds),
+             "frozen source collar faces are duplicated or out of range")
+
+    coordinate_to_vertex = {}
+    canonical = np.empty(len(positions), dtype="<i8")
+    for vertex_id, point in enumerate(positions):
+        coordinate = tuple(0.0 if float(value) == 0.0 else float(value)
+                           for value in point)
+        canonical_id = coordinate_to_vertex.get(coordinate)
+        if canonical_id is None:
+            canonical_id = len(coordinate_to_vertex)
+            coordinate_to_vertex[coordinate] = canonical_id
+        canonical[vertex_id] = canonical_id
+    quotient_faces = canonical[faces]
+    _require(not np.any(
+        (quotient_faces[:, 0] == quotient_faces[:, 1])
+        | (quotient_faces[:, 1] == quotient_faces[:, 2])
+        | (quotient_faces[:, 2] == quotient_faces[:, 0])),
+        "source station topology has a degenerate face after exact-coordinate quotient")
+
+    edge_faces = {}
+    for face_id, face in enumerate(quotient_faces):
+        for first, second in ((face[0], face[1]), (face[1], face[2]),
+                              (face[2], face[0])):
+            edge = tuple(sorted((int(first), int(second))))
+            edge_faces.setdefault(edge, []).append(face_id)
+    _require(all(len(incident) == 2 for incident in edge_faces.values()),
+             "source station topology is not a closed two-face edge graph")
+    adjacency = [set() for _ in range(len(faces))]
+    for incident in edge_faces.values():
+        first, second = incident
+        adjacency[first].add(second)
+        adjacency[second].add(first)
+
+    component_ids = np.full(len(faces), -1, dtype="<i8")
+    component_count = 0
+    for start in range(len(faces)):
+        if component_ids[start] >= 0:
+            continue
+        component_ids[start] = component_count
+        pending = [start]
+        while pending:
+            current = pending.pop()
+            for following in adjacency[current]:
+                if component_ids[following] < 0:
+                    component_ids[following] = component_count
+                    pending.append(following)
+        component_count += 1
+    _require(component_count == 1,
+             "source station face graph must have one connected source component")
+
+    distances = np.full(len(faces), -1, dtype="<i8")
+    pending = []
+    for seed in seeds:
+        distances[seed] = 0
+        pending.append(seed)
+    cursor = 0
+    while cursor < len(pending):
+        current = pending[cursor]
+        cursor += 1
+        next_distance = int(distances[current]) + 1
+        for following in sorted(adjacency[current]):
+            if distances[following] < 0:
+                distances[following] = next_distance
+                pending.append(following)
+
+    graph_edges = sorted(
+        (min(first, second), max(first, second))
+        for first, neighbors in enumerate(adjacency) for second in neighbors
+        if first < second)
+    return distances, {
+        "schema": "numi.human.exact-source-face-collar-distance.v1",
+        "selection_basis": "minimum exact-source-face-graph distance from frozen collar faces",
+        "source_typed_identity": list(surface.key),
+        "source_face_count": len(faces),
+        "source_face_u32_sha256": hashlib.sha256(
+            np.ascontiguousarray(faces, dtype="<u4").tobytes()).hexdigest(),
+        "exact_coordinate_quotient_vertex_count": len(coordinate_to_vertex),
+        "exact_coordinate_duplicate_vertex_count": int(len(positions) - len(coordinate_to_vertex)),
+        "signed_zero_canonicalization": "numeric zero maps to positive zero for topology only",
+        "source_face_graph_edge_count": len(graph_edges),
+        "source_face_graph_sha256": _canonical_record_sha256(
+            [list(edge) for edge in graph_edges]),
+        "source_face_graph_component_count": component_count,
+        "frozen_collar_face_ids": list(seeds),
+        "frozen_collar_face_ids_sha256": hashlib.sha256(
+            np.asarray(seeds, dtype="<u8").tobytes()).hexdigest(),
+    }
+
+
+def _collar_local_source_section(
+    section_surface, station, *, source_topology_surface, collar_face_ids, label,
+):
+    """Select one collar-local section loop; preserve all other loop diagnostics.
+
+    Selection is based only on the independent source face graph and frozen
+    collar IDs. Candidate coordinates can change section geometry, but cannot
+    change the ancestry graph or the local-versus-remote selection rule.
+    """
+    source_faces = _faces(
+        source_topology_surface.faces, name=f"{label} source topology",
+        vertex_count=len(source_topology_surface.positions))
+    measured_faces = _faces(
+        section_surface.faces, name=f"{label} measured surface",
+        vertex_count=len(section_surface.positions))
+    _require(measured_faces.shape == source_faces.shape
+             and measured_faces.tobytes() == source_faces.tobytes(),
+             f"{label} ordered faces differ from independent source topology")
+    raw = _source_surface_section(section_surface, station)
+    _require(isinstance(raw.get("loop_metrics"), list)
+             and bool(raw["loop_metrics"])
+             and len(raw["loop_metrics"]) == raw.get("loop_count"),
+             f"{label} section does not provide complete closed-loop diagnostics")
+    distances, graph_record = _source_face_graph_distances(
+        source_topology_surface, collar_face_ids)
+    loop_distances = []
+    for loop_index, metric in enumerate(raw["loop_metrics"]):
+        ancestors = metric.get("source_face_ancestor_ids")
+        _require(metric.get("passed") is True
+                 and metric.get("lineage_available") is True
+                 and metric.get("lineage_complete") is True
+                 and metric.get("owner_ids") == [section_surface.key[1]]
+                 and metric.get("generated_face_count") == 0
+                 and metric.get("unmapped_face_count") == 0
+                 and isinstance(ancestors, list) and bool(ancestors)
+                 and all(type(value) is int and 0 <= value < len(distances)
+                         for value in ancestors),
+                 f"{label} loop {loop_index} has incomplete source-face ancestry")
+        values = [int(distances[value]) for value in ancestors]
+        _require(all(value >= 0 for value in values),
+                 f"{label} loop {loop_index} is disconnected from source face graph")
+        loop_distances.append({
+            "loop_index": loop_index,
+            "source_face_ancestor_count": len(ancestors),
+            "source_face_ancestor_ids_sha256": metric.get(
+                "source_face_ancestor_ids_sha256"),
+            "minimum_source_face_graph_distance": min(values),
+            "median_source_face_graph_distance": float(np.median(values)),
+            "maximum_source_face_graph_distance": max(values),
+        })
+    minimum = min(item["minimum_source_face_graph_distance"]
+                  for item in loop_distances)
+    winners = [item["loop_index"] for item in loop_distances
+               if item["minimum_source_face_graph_distance"] == minimum]
+    _require(len(winners) == 1,
+             f"{label} source collar does not select a unique nearest section loop")
+    selected_index = winners[0]
+    selected = raw["loop_metrics"][selected_index]
+    selection = {
+        **graph_record,
+        "passed": True,
+        "selected_local_loop_count": 1,
+        "selected_local_loop_index": selected_index,
+        "selected_local_loop_source_face_ancestor_ids_sha256": selected.get(
+            "source_face_ancestor_ids_sha256"),
+        "all_loop_source_distance_diagnostics": loop_distances,
+        "remote_loops_retained_as_diagnostics": [
+            item["loop_index"] for item in loop_distances
+            if item["loop_index"] != selected_index],
+        "candidate_geometry_used_for_selection": False,
+    }
+    return {
+        **selected,
+        "passed": True,
+        "loop_count": raw["loop_count"],
+        "selected_local_loop_count": 1,
+        "selected_local_loop_index": selected_index,
+        "loop_metrics": raw["loop_metrics"],
+        "local_loop_selection": selection,
+        "observed_section_reason": raw.get("reason"),
+        "section_center_world_m": raw.get("section_center_world_m"),
+        "section_tangent_world_unit": raw.get("section_tangent_world_unit"),
+        "segment_count": raw.get("segment_count"),
+        "section_node_count": raw.get("section_node_count"),
+        "coordinate_dtype": raw.get("coordinate_dtype"),
+        "coordinate_ulp_tolerance_m": raw.get("coordinate_ulp_tolerance_m"),
+    }
+
+
+def _validated_source_collar_faces_by_owner(source_declarations, owner_by_role):
+    """Return collars from already-validated independent source declarations."""
+    if set(source_declarations) < set(owner_by_role):
+        return None
+    result = {}
+    for role, owner_id in owner_by_role.items():
+        declaration = source_declarations.get(role)
+        spec = (declaration.get("source_station_spec")
+                if isinstance(declaration, Mapping) else None)
+        collar_faces = spec.get("frozen_collar_face_ids") if isinstance(spec, Mapping) else None
+        if (not isinstance(collar_faces, (list, tuple))
+                or not collar_faces
+                or not all(type(value) is int and value >= 0 for value in collar_faces)):
+            return None
+        result[owner_id] = list(collar_faces)
+    return result
+
+
+def _collar_local_union_section(
+    raw_section, *, source_surfaces, collar_face_ids_by_owner,
+    expected_owner_ids, label,
+):
+    """Select one source-collar-local loop per vessel; keep remote loops visible."""
+    expected = tuple(sorted(set(map(int, expected_owner_ids))))
+    _require(len(expected) == 2 and set(source_surfaces) == set(expected)
+             and set(collar_face_ids_by_owner) == set(expected),
+             f"{label} requires one source topology and frozen collar per vessel")
+    loops = raw_section.get("loop_metrics")
+    _require(isinstance(loops, list) and len(loops) == raw_section.get("loop_count")
+             and len(loops) > 1,
+             f"{label} must provide every multi-loop section diagnostic")
+    source_graphs = {}
+    for owner_id in expected:
+        surface = source_surfaces[owner_id]
+        _require(tuple(surface.key) == (51011, owner_id),
+                 f"{label} source topology identity does not match its vessel owner")
+        distances, graph_record = _source_face_graph_distances(
+            surface, collar_face_ids_by_owner[owner_id])
+        source_graphs[owner_id] = (distances, graph_record)
+    local_by_owner = {owner_id: [] for owner_id in expected}
+    diagnostics = []
+    for loop_index, metric in enumerate(loops):
+        owners = metric.get("owner_ids")
+        ancestors = metric.get("source_face_ancestor_ids")
+        _require(metric.get("passed") is True
+                 and metric.get("lineage_available") is True
+                 and metric.get("lineage_complete") is True
+                 and isinstance(owners, list) and len(owners) == 1
+                 and type(owners[0]) is int and owners[0] in local_by_owner
+                 and isinstance(ancestors, list) and bool(ancestors)
+                 and all(type(face_id) is int and face_id >= 0
+                         for face_id in ancestors)
+                 and metric.get("generated_face_count") == 0
+                 and metric.get("unmapped_face_count") == 0,
+                 f"{label} loop {loop_index} has mixed, generated, or incomplete source lineage")
+        owner_id = owners[0]
+        distances, graph_record = source_graphs[owner_id]
+        _require(all(face_id < len(distances) for face_id in ancestors),
+                 f"{label} loop {loop_index} ancestry is outside owner {owner_id}")
+        values = [int(distances[face_id]) for face_id in ancestors]
+        _require(all(value >= 0 for value in values),
+                 f"{label} loop {loop_index} is disconnected from owner source graph")
+        record = {
+            "loop_index": loop_index,
+            "owner_id": owner_id,
+            "source_face_ancestor_count": len(ancestors),
+            "source_face_ancestor_ids_sha256": metric.get(
+                "source_face_ancestor_ids_sha256"),
+            "minimum_source_face_graph_distance": min(values),
+            "median_source_face_graph_distance": float(np.median(values)),
+            "maximum_source_face_graph_distance": max(values),
+            "source_face_graph_sha256": graph_record["source_face_graph_sha256"],
+        }
+        diagnostics.append(record)
+        local_by_owner[owner_id].append(record)
+    selected = []
+    for owner_id in expected:
+        candidates = local_by_owner[owner_id]
+        _require(bool(candidates),
+                 f"{label} has no source-lineaged loop for owner {owner_id}")
+        nearest = min(item["minimum_source_face_graph_distance"]
+                      for item in candidates)
+        winners = [item for item in candidates
+                   if item["minimum_source_face_graph_distance"] == nearest]
+        _require(len(winners) == 1,
+                 f"{label} source collar does not select a unique nearest loop for owner {owner_id}")
+        selected.append(winners[0])
+    selected_indices = [item["loop_index"] for item in selected]
+    selected_metrics = [loops[index] for index in selected_indices]
+    selection = {
+        "schema": "numi.human.exact-source-collar-local-union-loops.v1",
+        "passed": True,
+        "selection_basis": "minimum exact source face graph distance to each owner's frozen collar",
+        "expected_owner_ids": list(expected),
+        "selected_loop_indices_by_owner": {
+            str(item["owner_id"]): item["loop_index"] for item in selected},
+        "selected_source_face_ancestor_ids_sha256_by_owner": {
+            str(item["owner_id"]): item["source_face_ancestor_ids_sha256"]
+            for item in selected},
+        "all_loop_source_distance_diagnostics": diagnostics,
+        "remote_loops_retained_as_diagnostics": [
+            item for item in diagnostics if item["loop_index"] not in selected_indices],
+        "source_face_graphs_by_owner": {
+            str(owner_id): record for owner_id, (_distances, record)
+            in source_graphs.items()},
+        "candidate_geometry_used_for_selection": False,
+    }
+    return {
+        **dict(raw_section),
+        "passed": all(metric.get("passed") is True for metric in selected_metrics),
+        "loop_count": len(selected_metrics),
+        "loop_metrics": selected_metrics,
+        "reason": "section must have exactly one closed loop",
+        "raw_observed_loop_count": len(loops),
+        "raw_loop_metrics": loops,
+        "source_local_union_selection": selection,
+    }
+
+
 def _source_surface_section(surface, station):
     return _section_loops(
         surface.positions, surface.faces,
@@ -3327,10 +3715,24 @@ def _section_comparison(candidate, baseline):
 
 
 def _section_metric_for_owner(section, owner_id, *, label):
-    if (section.get("loop_count") != 1 or section.get("passed") is not True
-            or len(section.get("loop_metrics", [])) != 1):
+    loop_metrics = section.get("loop_metrics", [])
+    if section.get("selected_local_loop_count") == 1:
+        selection = section.get("local_loop_selection")
+        selected_index = section.get("selected_local_loop_index")
+        if (not isinstance(selection, Mapping)
+                or selection.get("passed") is not True
+                or selection.get("candidate_geometry_used_for_selection") is not False
+                or type(selected_index) is not int
+                or not isinstance(loop_metrics, list)
+                or selected_index < 0 or selected_index >= len(loop_metrics)
+                or section.get("loop_count") != len(loop_metrics)):
+            return None, f"{label} has an invalid frozen source-local loop selection"
+        metric = loop_metrics[selected_index]
+    elif (section.get("loop_count") == 1 and section.get("passed") is True
+          and isinstance(loop_metrics, list) and len(loop_metrics) == 1):
+        metric = loop_metrics[0]
+    else:
         return None, f"{label} must have one positive closed section loop"
-    metric = section["loop_metrics"][0]
     if (metric.get("passed") is not True
             or metric.get("lineage_available") is not True
             or metric.get("lineage_complete") is not True
@@ -3949,8 +4351,12 @@ def audit_brachiocephalic_port_pair_continuity(
                 f"{role} source station {key} differs from current independent baseline")
         _require(isinstance(source_spec, Mapping)
                  and source_evidence.get("source_station_spec_sha256")
-                     == _canonical_record_sha256(source_spec),
-                 f"{role} source station specification hash does not match")
+                     == _canonical_record_sha256(source_spec)
+                 and source_evidence.get("station_selection_policy")
+                     == source_spec.get("station_selection_policy")
+                 and source_spec.get("station_selection_policy") in (
+                     "GLOBAL_SOURCE_PCA_V1", "COLLAR_LOCAL_PCA_V1"),
+                 f"{role} source station specification hash or policy does not match")
         expected_declaration_id = (
             "source-baseline-junction-station-v1:"
             + _canonical_record_sha256({
@@ -3972,6 +4378,26 @@ def audit_brachiocephalic_port_pair_continuity(
             == source_baseline_bindings,
             f"{role} source station baseline surfaces differ")
         _explicit_material_vertex_ancestry(base_surface, source_spec, patch_faces)
+        if source_evidence.get("station_selection_policy") == "COLLAR_LOCAL_PCA_V1":
+            declared_section = source_evidence.get("baseline_source_station_section")
+            actual_section = _collar_local_source_section(
+                base_surface, source_spec, source_topology_surface=base_surface,
+                collar_face_ids=source_spec.get("frozen_collar_face_ids", []),
+                label=f"{role} independent baseline local station")
+            _require(isinstance(declared_section, Mapping)
+                     and declared_section.get("passed") is True
+                     and declared_section.get("loop_count") == actual_section.get("loop_count")
+                     and declared_section.get("selected_local_loop_count") == 1
+                     and declared_section.get("selected_local_loop_index")
+                         == actual_section.get("selected_local_loop_index")
+                     and declared_section.get("local_loop_selection")
+                         == actual_section.get("local_loop_selection")
+                     and declared_section.get("area_m2") == actual_section.get("area_m2")
+                     and declared_section.get("minimum_feret_width_m")
+                         == actual_section.get("minimum_feret_width_m")
+                     and declared_section.get("source_face_ancestor_ids")
+                         == actual_section.get("source_face_ancestor_ids"),
+                     f"{role} source-local section is not reproduced from the current independent baseline")
         baseline_spec = _transport_material_station(base_surface, source_spec)
         candidate_spec = _transport_material_station(surface, source_spec)
         runtime_source_station_declarations[role] = {
@@ -4083,8 +4509,22 @@ def audit_brachiocephalic_port_pair_continuity(
     ):
         spec = station_specs_by_role[role]["candidate"]
         baseline_spec = station_specs_by_role[role]["baseline"]
-        candidate_section = _source_surface_section(surface, spec)
-        baseline_section = _source_surface_section(base_surface, baseline_spec)
+        source_declaration = station_specs_by_role[role]["source_declaration"]
+        if (isinstance(source_declaration, Mapping)
+                and source_declaration.get("source_evidence", {}).get(
+                    "station_selection_policy") == "COLLAR_LOCAL_PCA_V1"):
+            collar_faces = spec.get("frozen_collar_face_ids", [])
+            candidate_section = _collar_local_source_section(
+                surface, spec, source_topology_surface=base_surface,
+                collar_face_ids=collar_faces,
+                label=f"{role} candidate local station")
+            baseline_section = _collar_local_source_section(
+                base_surface, baseline_spec, source_topology_surface=base_surface,
+                collar_face_ids=collar_faces,
+                label=f"{role} baseline local station")
+        else:
+            candidate_section = _source_surface_section(surface, spec)
+            baseline_section = _source_surface_section(base_surface, baseline_spec)
         station_results[role] = {
             "station": spec,
             "baseline_station_transported_by_ancestry": baseline_spec,
@@ -4216,29 +4656,79 @@ def audit_brachiocephalic_port_pair_continuity(
 
     def compare_union_station(label, station_role, candidate_section, baseline_section,
                               candidate_station, baseline_station):
-        if (candidate_section.get("loop_count") == 1
-                and baseline_section.get("loop_count") == 1
-                and candidate_section.get("passed") is True
-                and baseline_section.get("passed") is True):
-            comparison = _section_comparison(candidate_section, baseline_section)
+        source_declaration = runtime_source_station_declarations.get(station_role)
+        collar_faces = _validated_source_collar_faces_by_owner(
+            runtime_source_station_declarations,
+            {"bridge": bridge_key[1], "target": target_key[1]})
+        use_local_union = collar_faces is not None
+        candidate_union_view = candidate_section
+        baseline_union_view = baseline_section
+        if use_local_union:
+            source_surfaces = {
+                bridge_key[1]: base_bridge, target_key[1]: base_target}
+            if candidate_section.get("loop_count", 0) > 1:
+                candidate_union_view = _collar_local_union_section(
+                    candidate_section, source_surfaces=source_surfaces,
+                    collar_face_ids_by_owner=collar_faces,
+                    expected_owner_ids=(bridge_key[1], target_key[1]),
+                    label=f"{label} candidate union")
+            if baseline_section.get("loop_count", 0) > 1:
+                baseline_union_view = _collar_local_union_section(
+                    baseline_section, source_surfaces=source_surfaces,
+                    collar_face_ids_by_owner=collar_faces,
+                    expected_owner_ids=(bridge_key[1], target_key[1]),
+                    label=f"{label} baseline union")
+
+        if (candidate_union_view.get("loop_count") == 1
+                and baseline_union_view.get("loop_count") == 1
+                and candidate_union_view.get("passed") is True
+                and baseline_union_view.get("passed") is True):
+            comparison = _section_comparison(
+                candidate_union_view, baseline_union_view)
             _require(comparison["passed"],
                      f"{label} calibre ratio is outside the declared local screen")
-            return comparison
-        if (candidate_section.get("loop_count") != 2
-                or baseline_section.get("loop_count") != 2):
+            return {
+                **comparison,
+                "candidate_source_local_union_selection":
+                    candidate_union_view.get("source_local_union_selection"),
+                "baseline_source_local_union_selection":
+                    baseline_union_view.get("source_local_union_selection"),
+            }
+        if (candidate_union_view.get("loop_count") != 2
+                or baseline_union_view.get("loop_count") != 2):
             _require(False,
                      f"{label} requires matching single loops or the explicit two-vessel junction proof")
-        candidate_branch_sections = {
-            bridge_key[1]: _source_surface_section(bridge, candidate_station),
-            target_key[1]: _source_surface_section(target, candidate_station),
-        }
-        baseline_branch_sections = {
-            bridge_key[1]: _source_surface_section(base_bridge, baseline_station),
-            target_key[1]: _source_surface_section(base_target, baseline_station),
-        }
-        source_station_declaration = runtime_source_station_declarations.get(station_role)
-        if source_station_declaration is not None:
-            station_declaration = source_station_declaration
+
+        candidate_branch_sections = {}
+        baseline_branch_sections = {}
+        for role, candidate_surface, baseline_surface, owner_id in (
+            ("bridge", bridge, base_bridge, bridge_key[1]),
+            ("target", target, base_target, target_key[1]),
+        ):
+            candidate_raw = _source_surface_section(candidate_surface, candidate_station)
+            baseline_raw = _source_surface_section(baseline_surface, baseline_station)
+            declaration = runtime_source_station_declarations.get(role)
+            spec = declaration.get("source_station_spec") if isinstance(
+                declaration, Mapping) else None
+            if (use_local_union and isinstance(spec, Mapping)
+                    and candidate_raw.get("loop_count", 0) > 1):
+                candidate_raw = _collar_local_source_section(
+                    candidate_surface, candidate_station,
+                    source_topology_surface=baseline_surface,
+                    collar_face_ids=spec["frozen_collar_face_ids"],
+                    label=f"{label} candidate branch {role}")
+            if (use_local_union and isinstance(spec, Mapping)
+                    and baseline_raw.get("loop_count", 0) > 1):
+                baseline_raw = _collar_local_source_section(
+                    baseline_surface, baseline_station,
+                    source_topology_surface=baseline_surface,
+                    collar_face_ids=spec["frozen_collar_face_ids"],
+                    label=f"{label} baseline branch {role}")
+            candidate_branch_sections[owner_id] = candidate_raw
+            baseline_branch_sections[owner_id] = baseline_raw
+
+        if source_declaration is not None:
+            station_declaration = source_declaration
         elif isinstance(junction_station_declarations.get(station_role), Mapping):
             station_declaration = {
                 **dict(junction_station_declarations[station_role]),
@@ -4249,8 +4739,8 @@ def audit_brachiocephalic_port_pair_continuity(
             station_declaration = None
         proof = _junction_aware_two_loop_section_proof(
             expected_owner_ids=(bridge_key[1], target_key[1]),
-            candidate_union_section=candidate_section,
-            baseline_union_section=baseline_section,
+            candidate_union_section=candidate_union_view,
+            baseline_union_section=baseline_union_view,
             candidate_branch_sections=candidate_branch_sections,
             baseline_branch_sections=baseline_branch_sections,
             solid_evidence=junction_solid_evidence(),
@@ -4261,8 +4751,14 @@ def audit_brachiocephalic_port_pair_continuity(
                  + "; ".join(proof["rejections"][:5]))
         return {
             "passed": True,
-            "method": "explicit one-loop-per-vessel Y-junction proof",
+            "method": "explicit one-loop-per-vessel source-collar-local junction proof",
             "junction_aware_proof": proof,
+            "candidate_source_local_union_selection":
+                candidate_union_view.get("source_local_union_selection"),
+            "baseline_source_local_union_selection":
+                baseline_union_view.get("source_local_union_selection"),
+            "candidate_branch_sections": candidate_branch_sections,
+            "baseline_branch_sections": baseline_branch_sections,
         }
 
     if target_station_candidate_fractions is not None:

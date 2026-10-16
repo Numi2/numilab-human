@@ -2486,6 +2486,97 @@ def test_verified_handoff_rejects_cross_bound_calibre_station_hashes(mutation):
     assert verifier.pair_calls == []
 
 
+def _add_valid_two_loop_local_selector(section, typed_key, source_faces):
+    first_ancestors = [0, 1]
+    remote_ancestors = [2, 3]
+    def metric(ancestors, area, width):
+        packed = np.asarray(ancestors, dtype="<u8").tobytes()
+        return {
+            "passed": True,
+            "lineage_available": True,
+            "lineage_complete": True,
+            "owner_ids": [typed_key[1]],
+            "source_face_ancestor_ids": ancestors,
+            "source_face_ancestor_ids_sha256": hashlib.sha256(packed).hexdigest(),
+            "generated_face_count": 0,
+            "unmapped_face_count": 0,
+            "area_m2": area,
+            "minimum_feret_width_m": width,
+        }
+    loops = [metric(first_ancestors, 2e-5, 0.004),
+             metric(remote_ancestors, 1e-5, 0.002)]
+    selection = {
+        "schema": "numi.human.exact-source-face-collar-distance.v1",
+        "passed": True,
+        "candidate_geometry_used_for_selection": False,
+        "source_typed_identity": list(typed_key),
+        "source_face_graph_component_count": 1,
+        "source_face_u32_sha256": _handoff_hash(source_faces, "<u4"),
+        "source_face_graph_sha256": "d" * 64,
+        "frozen_collar_face_ids": [0, 1],
+        "frozen_collar_face_ids_sha256": _handoff_hash([0, 1], "<u8"),
+        "selected_local_loop_count": 1,
+        "selected_local_loop_index": 0,
+        "selected_local_loop_source_face_ancestor_ids_sha256": loops[0][
+            "source_face_ancestor_ids_sha256"],
+        "all_loop_source_distance_diagnostics": [
+            {"loop_index": 0, "minimum_source_face_graph_distance": 0},
+            {"loop_index": 1, "minimum_source_face_graph_distance": 4},
+        ],
+        "remote_loops_retained_as_diagnostics": [1],
+    }
+    section.update(loops[0])
+    section.update({
+        "passed": True,
+        "loop_count": 2,
+        "selected_local_loop_count": 1,
+        "selected_local_loop_index": 0,
+        "loop_metrics": loops,
+        "local_loop_selection": selection,
+    })
+
+
+def test_network_handoff_accepts_explicit_source_local_loop_and_retains_remote_diagnostic():
+    surfaces, edges, source_pairs, continuity = _handoff_fixture()
+    link = continuity["links"][0]
+    source_faces = surfaces[tuple(link["bridge"])][1]
+    calibre = link["independent_collar_calibre"]["bridge"]
+    _add_valid_two_loop_local_selector(
+        calibre["candidate_section"], tuple(link["bridge"]), source_faces)
+    _add_valid_two_loop_local_selector(
+        calibre["baseline_section"], tuple(link["bridge"]), source_faces)
+
+    verifier = _HandoffVerifier()
+    result = bg.audit_network_rows_against_all_targets(
+        verifier, surfaces, edges, source_pairs,
+        verified_network_continuity=continuity)
+    assert result["passed"] is True
+    assert calibre["candidate_section"]["loop_count"] == 2
+    assert calibre["candidate_section"]["local_loop_selection"][
+        "remote_loops_retained_as_diagnostics"] == [1]
+
+    import copy
+    tied = copy.deepcopy(continuity)
+    tied_section = tied["links"][0]["independent_collar_calibre"]["bridge"][
+        "candidate_section"]
+    tied_section["local_loop_selection"][
+        "all_loop_source_distance_diagnostics"][1][
+            "minimum_source_face_graph_distance"] = 0
+    with pytest.raises(ValueError, match="unique nearest source loop"):
+        bg.audit_network_rows_against_all_targets(
+            _HandoffVerifier(), surfaces, edges, source_pairs,
+            verified_network_continuity=tied)
+
+    incomplete = copy.deepcopy(continuity)
+    incomplete_section = incomplete["links"][0]["independent_collar_calibre"][
+        "bridge"]["candidate_section"]
+    incomplete_section["loop_metrics"] = incomplete_section["loop_metrics"][:1]
+    with pytest.raises(ValueError, match="invalid source-local loop selection"):
+        bg.audit_network_rows_against_all_targets(
+            _HandoffVerifier(), surfaces, edges, source_pairs,
+            verified_network_continuity=incomplete)
+
+
 def test_verified_handoff_rejects_muscle_contact_and_stops_at_first_nonedge_failure():
     surfaces, edges, source_pairs, continuity = _handoff_fixture()
     muscle_rejector = _HandoffVerifier(nonnetwork_pass=False)
@@ -3310,6 +3401,234 @@ def test_collar_local_station_avoids_remote_limb_global_pca_section():
     assert local_section["passed"] and local_section["loop_count"] == 1
     assert global_section["passed"] and global_section["loop_count"] == 1
     assert global_section["area_m2"] > local_section["area_m2"] * 4.0
+
+
+def _connected_u_tube_with_two_midplane_loops():
+    """Closed U-shaped tube: z=0 cuts both legs, with one connected source graph."""
+    path = []
+    path.extend([[0.0, 0.0, z] for z in np.linspace(-2.0, 4.0, 25)])
+    path.extend([[1.5 - 1.5 * np.cos(angle), 0.0,
+                  4.0 + 1.5 * np.sin(angle)]
+                 for angle in np.linspace(0.0, np.pi, 25)[1:]])
+    path.extend([[3.0, 0.0, z] for z in np.linspace(4.0, -2.0, 25)[1:]])
+    path = np.asarray(path, dtype=np.float64)
+    sides = 12
+    rings = []
+    for index, center in enumerate(path):
+        tangent = path[min(index + 1, len(path) - 1)] - path[max(index - 1, 0)]
+        tangent /= np.linalg.norm(tangent)
+        helper = np.eye(3)[int(np.argmin(np.abs(tangent)))]
+        first = np.cross(tangent, helper)
+        first /= np.linalg.norm(first)
+        second = np.cross(tangent, first)
+        second /= np.linalg.norm(second)
+        for side in range(sides):
+            angle = 2.0 * np.pi * side / sides
+            rings.append(center + 0.15 * (
+                np.cos(angle) * first + np.sin(angle) * second))
+    faces = []
+    for level in range(len(path) - 1):
+        for side in range(sides):
+            following = (side + 1) % sides
+            a = level * sides + side
+            b = level * sides + following
+            c = (level + 1) * sides + following
+            d = (level + 1) * sides + side
+            faces.extend(([a, b, c], [a, c, d]))
+    for end, ring_start, reverse in (
+        (path[0], 0, True), (path[-1], (len(path) - 1) * sides, False)):
+        center_id = len(rings)
+        rings.append(end)
+        for side in range(sides):
+            following = (side + 1) % sides
+            tri = [center_id, ring_start + side, ring_start + following]
+            faces.append(tri[::-1] if reverse else tri)
+    return np.asarray(rings, dtype="<f4"), np.asarray(faces, dtype="<u4")
+
+
+def test_union_locality_uses_authenticated_collar_even_with_global_station_policy():
+    declarations = {
+        "bridge": {
+            "source_station_spec": {
+                "station_selection_policy": "GLOBAL_SOURCE_PCA_V1",
+                "frozen_collar_face_ids": [7, 9],
+            },
+        },
+        "target": {
+            "source_station_spec": {
+                "station_selection_policy": "GLOBAL_SOURCE_PCA_V1",
+                "frozen_collar_face_ids": [3, 5],
+            },
+        },
+    }
+    selected = bg._validated_source_collar_faces_by_owner(
+        declarations, {"bridge": 6, "target": 7})
+    assert selected == {6: [7, 9], 7: [3, 5]}
+    assert bg._validated_source_collar_faces_by_owner(
+        {"bridge": declarations["bridge"]}, {"bridge": 6, "target": 7}) is None
+    invalid = dict(declarations)
+    invalid["target"] = {
+        "source_station_spec": {
+            "station_selection_policy": "GLOBAL_SOURCE_PCA_V1",
+            "frozen_collar_face_ids": [],
+        },
+    }
+    assert bg._validated_source_collar_faces_by_owner(
+        invalid, {"bridge": 6, "target": 7}) is None
+
+
+def test_union_section_selects_one_frozen_local_loop_per_owner_and_retains_remote():
+    surfaces = {}
+    for index, owner in enumerate((6, 7)):
+        points, faces = _tetra(1.0, float(index * 2))
+        surface = type("SourceSurface", (), {})()
+        surface.key = (51011, owner)
+        surface.positions = points
+        surface.faces = faces
+        surface.source_vertex_ids = np.arange(len(points), dtype="<u8")
+        surfaces[owner] = surface
+
+    def loop(owner, ancestors, area):
+        return {
+            "passed": True,
+            "lineage_available": True,
+            "lineage_complete": True,
+            "owner_ids": [owner],
+            "source_face_ancestor_ids": ancestors,
+            "source_face_ancestor_ids_sha256": "a" * 64,
+            "generated_face_count": 0,
+            "unmapped_face_count": 0,
+            "area_m2": area,
+            "minimum_feret_width_m": 0.002,
+        }
+
+    raw = {
+        "passed": False,
+        "loop_count": 3,
+        "reason": "section must have exactly one closed loop",
+        "loop_metrics": [
+            loop(6, [0], 1.0e-5),
+            loop(7, [0], 2.0e-5),
+            loop(7, [2], 0.5e-5),
+        ],
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "section_tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    selected = bg._collar_local_union_section(
+        raw, source_surfaces=surfaces,
+        collar_face_ids_by_owner={6: [0], 7: [0]},
+        expected_owner_ids=(6, 7), label="fixture union")
+    assert selected["passed"] is True
+    assert selected["raw_observed_loop_count"] == 3
+    assert [row["owner_ids"][0] for row in selected["loop_metrics"]] == [6, 7]
+    selection = selected["source_local_union_selection"]
+    assert selection["candidate_geometry_used_for_selection"] is False
+    assert len(selection["remote_loops_retained_as_diagnostics"]) == 1
+    assert selection["remote_loops_retained_as_diagnostics"][0]["loop_index"] == 2
+    by_owner, error = bg._two_loop_metrics_by_owner(
+        selected, (6, 7), label="fixture selected union")
+    assert error is None
+    assert set(by_owner) == {6, 7}
+
+    tied = dict(raw)
+    tied["loop_metrics"] = [
+        loop(6, [0], 1.0e-5),
+        loop(7, [0], 2.0e-5),
+        loop(7, [1], 0.5e-5),
+    ]
+    with pytest.raises(ValueError, match="unique nearest loop for owner 7"):
+        bg._collar_local_union_section(
+            tied, source_surfaces=surfaces,
+            collar_face_ids_by_owner={6: [0], 7: [0, 1]},
+            expected_owner_ids=(6, 7), label="tied fixture")
+
+    mixed = dict(raw)
+    mixed["loop_metrics"] = list(raw["loop_metrics"])
+    mixed["loop_metrics"][2] = loop(7, [2], 0.5e-5)
+    mixed["loop_metrics"][2]["owner_ids"] = [7, 6]
+    with pytest.raises(ValueError, match="mixed, generated, or incomplete"):
+        bg._collar_local_union_section(
+            mixed, source_surfaces=surfaces,
+            collar_face_ids_by_owner={6: [0], 7: [0]},
+            expected_owner_ids=(6, 7), label="mixed fixture")
+
+
+def test_collar_local_section_selects_nearest_source_loop_and_keeps_remote_loop():
+    positions, faces = _connected_u_tube_with_two_midplane_loops()
+    surface = type("SourceSurface", (), {})()
+    surface.key = (51011, 7)
+    surface.positions = positions
+    surface.faces = faces
+    surface.source_vertex_ids = np.arange(len(positions), dtype="<u8")
+    # Faces on the left leg at z=0 are the independently frozen source collar.
+    level = 8
+    collar_faces = list(range(level * 12 * 2, (level + 1) * 12 * 2))
+    station = {
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    raw = bg._source_surface_section(surface, station)
+    assert raw["passed"] is False
+    assert raw["loop_count"] == 2
+    assert all(loop["lineage_complete"] for loop in raw["loop_metrics"])
+
+    selected = bg._collar_local_source_section(
+        surface, station, source_topology_surface=surface,
+        collar_face_ids=collar_faces, label="fixture source section")
+
+    selection = selected["local_loop_selection"]
+    distances = selection["all_loop_source_distance_diagnostics"]
+    assert selected["passed"] is True
+    assert selected["loop_count"] == 2
+    assert selected["selected_local_loop_count"] == 1
+    assert distances[selection["selected_local_loop_index"]][
+        "minimum_source_face_graph_distance"] == 0
+    assert selection["remote_loops_retained_as_diagnostics"] == [
+        1 - selection["selected_local_loop_index"]]
+    assert distances[selection["selected_local_loop_index"]][
+        "minimum_source_face_graph_distance"] < distances[
+            selection["remote_loops_retained_as_diagnostics"][0]][
+                "minimum_source_face_graph_distance"]
+
+    candidate = type("SourceSurface", (), {})()
+    candidate.key = surface.key
+    candidate.positions = np.ascontiguousarray(
+        positions + np.asarray([0.0, 0.0, 0.125], dtype="<f4"), dtype="<f4")
+    candidate.faces = faces
+    candidate.source_vertex_ids = surface.source_vertex_ids
+    candidate_station = dict(station, section_center_world_m=[0.0, 0.0, 0.125])
+    candidate_selected = bg._collar_local_source_section(
+        candidate, candidate_station, source_topology_surface=surface,
+        collar_face_ids=collar_faces, label="fixture candidate section")
+    assert candidate_selected["local_loop_selection"][
+        "selected_local_loop_index"] == selection["selected_local_loop_index"]
+    assert candidate_selected["local_loop_selection"][
+        "source_face_graph_sha256"] == selection["source_face_graph_sha256"]
+
+
+def test_collar_local_section_rejects_equal_distance_loops_and_bad_seed():
+    positions, faces = _connected_u_tube_with_two_midplane_loops()
+    surface = type("SourceSurface", (), {})()
+    surface.key = (51011, 7)
+    surface.positions = positions
+    surface.faces = faces
+    station = {
+        "section_center_world_m": [0.0, 0.0, 0.0],
+        "tangent_world_unit": [0.0, 0.0, 1.0],
+    }
+    raw = bg._source_surface_section(surface, station)
+    left_loop, right_loop = raw["loop_metrics"]
+    # Seed faces from both symmetric limbs; their closest graph distances tie.
+    tied_seeds = (left_loop["source_face_ancestor_ids"][:1]
+                  + right_loop["source_face_ancestor_ids"][:1])
+    with pytest.raises(ValueError, match="does not select a unique nearest section loop"):
+        bg._collar_local_source_section(
+            surface, station, source_topology_surface=surface,
+            collar_face_ids=tied_seeds, label="tied fixture")
+    with pytest.raises(ValueError, match="duplicated or out of range"):
+        bg._collar_local_source_section(
+            surface, station, source_topology_surface=surface,
+            collar_face_ids=[len(faces)], label="bad seed fixture")
 
 
 def test_collar_local_declaration_binds_source_report_and_stays_candidate_independent(tmp_path):
