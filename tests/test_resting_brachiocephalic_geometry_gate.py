@@ -3152,9 +3152,46 @@ def test_frozen_937_source_interface_report_fixture_matches_consumed_schema_type
     assert type(preflight["geometry_predicates_run"]) is bool
 
 
+def test_current_source_interface_static_rows_normalize_abi5_face_hash_aliases():
+    for edge in (bg.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE,
+                 bg.AORTIC_ARCH_CAROTID_SOURCE_INTERFACE):
+        for key in edge:
+            row = bg._current_source_interface_row_static(edge, key)
+            expected_hash = (
+                bg._CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE[edge][key].get(
+                    "faces_sha256")
+                or bg._CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE[edge][key].get(
+                    "source_faces_u32_sha256"))
+            assert row["faces_sha256"] == expected_hash
+            assert row["face_count"] > 0
+            assert row["vertex_count"] > 0
+
+
+@pytest.mark.parametrize(
+    "edge,source_labels,report_schema",
+    [
+        pytest.param(
+            bg.AORTIC_ARCH_SOURCE_INTERFACE,
+            {7: ("test-arch", "FMA3768", "arch"),
+             6: ("test-ascending", "FMA3736", "ascending")},
+            "numi.human.current-aortic-6-7-collar-proof.v1",
+            id="current-7-6"),
+        pytest.param(
+            bg.AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE,
+            {7: ("test-arch", "FMA3768", "arch"),
+             8: ("test-descending", "FMA3784", "descending")},
+            bg._GENERIC_CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA,
+            id="current-7-8"),
+        pytest.param(
+            bg.AORTIC_ARCH_CAROTID_SOURCE_INTERFACE,
+            {7: ("test-arch", "FMA3768", "arch"),
+             465: ("test-carotid", "FMA4058", "carotid")},
+            bg._GENERIC_CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA,
+            id="current-7-465"),
+    ],
+)
 def test_current_source_interface_report_reference_rebinds_live_capture_and_source_pins(
-        tmp_path, monkeypatch):
-    edge = bg.AORTIC_ARCH_SOURCE_INTERFACE
+        tmp_path, monkeypatch, edge, source_labels, report_schema):
     surfaces = {}
     source_rows = {}
     row_inventory = {}
@@ -3162,10 +3199,6 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
     candidate_records = {}
     source_face_ancestry = {}
     base_gid = 100
-    source_labels = {
-        7: ("test-arch", "FMA3768", "arch"),
-        6: ("test-ascending", "FMA3736", "ascending"),
-    }
     for index, key in enumerate(edge):
         positions, faces = _tetra(1.0, float(index * 2))
         normals = np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (4, 1))
@@ -3175,15 +3208,16 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
         surfaces[key] = (positions, faces, normals, gids)
         labels = source_labels[key[1]]
         face_sha = hashlib.sha256(faces.tobytes()).hexdigest()
+        body_index = 22 if key[1] == 465 else 20
         source_rows[key] = {
             "source_member": labels[0], "fma": labels[1], "name": labels[2],
-            "body_index": 20, "layer": 2, "first_vertex": first_vertex,
+            "body_index": body_index, "layer": 2, "first_vertex": first_vertex,
             "vertex_count": 4, "face_count": 4, "faces_sha256": face_sha,
         }
         fingerprint = bg._aortic_arch_surface_fingerprint(surfaces[key], key=key)
         row_inventory[str(key[1])] = {
             "typed_identity": list(key), "source_member": labels[0],
-            "fma": labels[1], "name": labels[2], "body": 20, "layer": 2,
+            "fma": labels[1], "name": labels[2], "body": body_index, "layer": 2,
             "first_vertex": first_vertex, "gid_offset": base_gid,
             "source_faces_sha256": face_sha,
             "candidate_positions_sha256": fingerprint["positions_f32_sha256"],
@@ -3228,7 +3262,10 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
             "capture_faces_u32_sha256": face_sha,
             "source_faces_u32_sha256": face_sha,
         }
-    monkeypatch.setattr(bg, "AORTIC_ARCH_SOURCE_ROWS", source_rows)
+    source_rows_by_edge = dict(bg._CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE)
+    source_rows_by_edge[edge] = source_rows
+    monkeypatch.setattr(
+        bg, "_CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE", source_rows_by_edge)
 
     def write_pin(name, contents):
         path = tmp_path / name
@@ -3295,7 +3332,7 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
         },
         "union_float64_mesh64_lineage": {
             "generated_face_count": 0, "unmapped_face_count": 0,
-            "run_original_ids": [6, 7],
+            "run_original_ids": [key[1] for key in edge],
         },
         "floating_boolean_exact_topology_proven": False,
         "volume_accounting": {"passed": True},
@@ -3303,7 +3340,8 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
     solid_gates = {role: dict(solid) for role in (
         "candidate", "independent_source_rigid_baseline")}
     calibres = {}
-    for role, key in (("arch", edge[0]), ("ascending", edge[1])):
+    for key in edge:
+        role = bg._CURRENT_SOURCE_INTERFACE_ROLE_BY_STABLE_ID[key[1]]
         section = {
             "passed": True, "lineage_complete": True,
             "generated_face_count": 0, "unmapped_face_count": 0,
@@ -3349,7 +3387,7 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
     preflight_path.write_text(json.dumps(preflight, sort_keys=True))
     preflight_sha = hashlib.sha256(preflight_path.read_bytes()).hexdigest()
     report = {
-        "schema": "numi.human.current-aortic-6-7-collar-proof.v1",
+        "schema": report_schema,
         "status": "PASS_SOURCE_BOUND_CURRENT_TEST", "passed": True,
         "stage": "complete", "anatomical_admission": False,
         "native_or_gpu_work_performed": False,
@@ -3396,6 +3434,12 @@ def test_current_source_interface_report_reference_rebinds_live_capture_and_sour
     assert accepted["passed"] is True
     assert accepted["anatomical_admission"] is False
     assert accepted["exact_face_pairs"] == pair_rows
+
+    wrong_edge = dict(reference, typed_link=[[51011, 7], [51011, 999]])
+    with pytest.raises(ValueError, match="exact declared aortic non-flow pair"):
+        bg._validate_current_source_interface_report_reference(
+            wrong_edge, surfaces, {edge[0]},
+            current_capture_input_bundle=bundle, source_inventory=inventory)
 
     changed_surface = dict(surfaces)
     changed_positions = np.array(surfaces[edge[0]][0], copy=True)

@@ -471,15 +471,23 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(
     monkeypatch.setattr(runner, "_source_baseline_collar_addendum",
                         lambda *_args: source_proof)
     stages = []
+    interface_references = {
+        ((51011, 7), (51011, 8)): {
+            "schema": "numi.human.current-source-interface-report-reference.v1",
+            "typed_link": [[51011, 7], [51011, 8]],
+        },
+    }
 
     def execute(_runtime, *, progress_callback=None, matched_collar_addendum=None,
-                matched_collar_addenda=None, run_all_targets=True):
+                matched_collar_addenda=None, run_all_targets=True,
+                verified_nonnetwork_interface_certificates=None):
         assert matched_collar_addendum is None
         assert matched_collar_addenda == {
             ((51011, 475), (51011, 479)): proof,
             ((51011, 525), (51011, 469)): source_proof,
         }
         assert run_all_targets is enable_all_targets
+        assert verified_nonnetwork_interface_certificates == interface_references
         stages.append("continuity")
         progress_callback("STARTING_FAIL_FIRST_15_LINK_CONTINUITY")
         return {
@@ -493,8 +501,9 @@ def test_run_revalidates_preflight_then_enters_ordered_gate(
         }
 
     monkeypatch.setattr(runner, "execute_ordered_network_gates", execute)
-    result = (runner.run(bundle, output, run_all_targets=True)
-              if enable_all_targets else runner.run(bundle, output))
+    result = runner.run(
+        bundle, output, run_all_targets=enable_all_targets,
+        verified_nonnetwork_interface_certificates=interface_references)
     assert stages == ["continuity"]
     assert result["status"] == (
         "NETWORK_CONTINUITY_PASSED_ALL_TARGET_PENDING_VERIFIED_JUNCTION_HANDOFF")

@@ -1154,6 +1154,26 @@ CURRENT_SOURCE_INTERFACE_REPORT_REFERENCE_SCHEMA = (
     "numi.human.current-source-interface-report-reference.v1")
 _CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA = (
     "numi.human.current-aortic-6-7-collar-proof.v1")
+_GENERIC_CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA = (
+    "numi.human.current-aortic-source-interface-collar-proof.v1")
+_CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE = {
+    AORTIC_ARCH_SOURCE_INTERFACE: AORTIC_ARCH_SOURCE_ROWS,
+    AORTIC_ARCH_DESCENDING_SOURCE_INTERFACE: AORTIC_ARCH_DESCENDING_SOURCE_ROWS,
+    AORTIC_ARCH_CAROTID_SOURCE_INTERFACE: AORTIC_ARCH_CAROTID_SOURCE_ROWS,
+}
+_CURRENT_SOURCE_INTERFACE_ROLE_BY_STABLE_ID = {
+    6: "ascending", 7: "arch", 8: "descending", 465: "carotid",
+}
+
+
+def _current_source_interface_row_static(edge, key):
+    row = _CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE[edge][key]
+    face_sha = row.get("faces_sha256", row.get("source_faces_u32_sha256"))
+    _require(isinstance(face_sha, str) and len(face_sha) == 64,
+             f"current source row {key} lacks its ABI5 face-array digest")
+    normalized = dict(row)
+    normalized["faces_sha256"] = face_sha
+    return normalized
 
 
 def _certificate_file_sha256(path):
@@ -1196,9 +1216,9 @@ def _validate_current_source_interface_report_reference(
     _require(isinstance(raw_edge, (tuple, list)) and len(raw_edge) == 2,
              "current source-interface report reference lacks a typed link")
     edge = (_identity(raw_edge[0]), _identity(raw_edge[1]))
-    _require(edge == AORTIC_ARCH_SOURCE_INTERFACE
+    _require(edge in _CURRENT_SOURCE_INTERFACE_SOURCE_ROWS_BY_EDGE
              and edge[0] in network_keys and edge[1] not in network_keys,
-             "current source-interface report must bind the exact aortic 7->6 pair")
+             "current source-interface report must bind one exact declared aortic non-flow pair")
     _require(isinstance(current_capture_input_bundle, Mapping)
              and isinstance(source_inventory, Mapping),
              "current source-interface report requires live capture and source inventories")
@@ -1220,7 +1240,12 @@ def _validate_current_source_interface_report_reference(
         "proof preflight")
     report = json.loads(report_path.read_text())
     preflight = json.loads(preflight_path.read_text())
-    _require(report.get("schema") == _CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA
+    expected_report_schemas = {
+        _GENERIC_CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA,
+    }
+    if edge == AORTIC_ARCH_SOURCE_INTERFACE:
+        expected_report_schemas.add(_CURRENT_SOURCE_INTERFACE_REPORT_SCHEMA)
+    _require(report.get("schema") in expected_report_schemas
              and report.get("status", "").startswith("PASS_SOURCE_BOUND_CURRENT_")
              and report.get("passed") is True
              and report.get("stage") == "complete"
@@ -1349,10 +1374,14 @@ def _validate_current_source_interface_report_reference(
 
     row_inventory = report.get("row_inventory")
     topology = report.get("source_topology")
+    expected_row_ids = {str(key[1]) for key in edge}
     _require(isinstance(row_inventory, Mapping) and isinstance(topology, Mapping)
-             and set(row_inventory) == {"6", "7"}
+             and set(row_inventory) == expected_row_ids
              and report.get("row_inventory") == preflight.get("row_inventory"),
              "current source-interface report row inventory is incomplete")
+    expected_source_rows = {
+        key: _current_source_interface_row_static(edge, key) for key in edge
+    }
     fingerprints = {}
     source_rows = {}
     gid_details = source_inventory.get("native_source_slot_identity")
@@ -1362,7 +1391,7 @@ def _validate_current_source_interface_report_reference(
              "current capture lacks the native NHA GID base identity")
     base_offset = gid_details["native_nha_gid_base_offset"]
     for key in edge:
-        static = AORTIC_ARCH_SOURCE_ROWS[key]
+        static = expected_source_rows[key]
         row = row_inventory[str(key[1])]
         expected_identity = {
             "typed_identity": list(key), "source_member": static["source_member"],
@@ -1470,11 +1499,11 @@ def _validate_current_source_interface_report_reference(
         fingerprints[f"{key[0]}:{key[1]}"] = observed
 
     interface_gates = report.get("interface_gates")
+    interface_roles = {"candidate", "independent_source_rigid_baseline"}
     _require(report.get("source_topology_passed") is True
              and report.get("interface_gates_passed") is True
              and isinstance(interface_gates, Mapping)
-             and set(interface_gates) == {
-                 "candidate", "independent_source_rigid_baseline"},
+             and set(interface_gates) == interface_roles,
              "source topology/interface gates did not pass in both roles")
     for role, gate in interface_gates.items():
         audit = gate.get("audit_result") if isinstance(gate, Mapping) else None
@@ -1538,10 +1567,16 @@ def _validate_current_source_interface_report_reference(
 
     calibres = report.get("independent_source_station_calibre")
     _require(report.get("calibre_passed") is True
-             and isinstance(calibres, Mapping)
-             and set(calibres) == {"arch", "ascending"},
+             and isinstance(calibres, Mapping),
              "independent source station calibre did not pass for both rows")
-    for role, key in (("arch", edge[0]), ("ascending", edge[1])):
+    calibre_roles = {
+        _CURRENT_SOURCE_INTERFACE_ROLE_BY_STABLE_ID[key[1]]: key
+        for key in edge
+    }
+    _require(isinstance(calibres, Mapping)
+             and set(calibres) == set(calibre_roles),
+             "independent source station calibre roles differ from the exact typed link")
+    for role, key in calibre_roles.items():
         calibre = calibres[role]
         comparison = calibre.get("candidate_to_baseline_comparison")
         ratios = comparison.get("candidate_to_baseline_ratios", {})
@@ -1600,7 +1635,7 @@ def _validate_current_source_interface_report_reference(
         "candidate_pairs_equal_frozen_source_pairs": True,
         "baseline_pairs_equal_frozen_source_pairs": True,
         "candidate_baseline_exact_pairsets_equal": True,
-        "source_rows": {f"{key[0]}:{key[1]}": AORTIC_ARCH_SOURCE_ROWS[key]
+        "source_rows": {f"{key[0]}:{key[1]}": expected_source_rows[key]
                         for key in edge},
         "exact_face_pairs": [list(pair) for pair in pairs],
         "exact_face_pairset_sha256": pair_sha,

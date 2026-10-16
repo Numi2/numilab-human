@@ -1770,7 +1770,8 @@ def continue_cached_all_target_screen(
 
 
 def run(capture_inputs_json: Path, output_dir: Path, *,
-        run_all_targets: bool = False) -> dict:
+        run_all_targets: bool = False,
+        verified_nonnetwork_interface_certificates=None) -> dict:
     """Execute only from a fresh, unchanged source-and-capture preflight."""
     started = time.perf_counter()
     bundle_path = Path(capture_inputs_json).resolve(strict=True)
@@ -1897,13 +1898,18 @@ def run(capture_inputs_json: Path, output_dir: Path, *,
         _require(_stable_preflight(replayed_source_addendum) == _stable_preflight(
                      frozen_source_addendum.get("verified_addendum", {})),
                  "frozen source-baseline collar addendum does not replay against current source inputs")
-        result = execute_ordered_network_gates(
-            runtime, progress_callback=mark_geometry_stage,
-            matched_collar_addenda={
+        gate_kwargs = {
+            "progress_callback": mark_geometry_stage,
+            "matched_collar_addenda": {
                 ((51011, 475), (51011, 479)): replayed_addendum,
                 ((51011, 525), (51011, 469)): replayed_source_addendum,
             },
-            run_all_targets=run_all_targets)
+            "run_all_targets": run_all_targets,
+        }
+        if verified_nonnetwork_interface_certificates is not None:
+            gate_kwargs["verified_nonnetwork_interface_certificates"] = (
+                verified_nonnetwork_interface_certificates)
+        result = execute_ordered_network_gates(runtime, **gate_kwargs)
         result.update({
             "recorded_finish_utc": datetime.now(UTC).isoformat(),
             "capture_input_bundle_path": str(bundle_path),
