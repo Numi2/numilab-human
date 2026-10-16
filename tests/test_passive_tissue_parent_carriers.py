@@ -15,6 +15,7 @@ from numilab_human.passive_attachment_composition import (
 from numilab_human.passive_tissue_parent_carriers import (
     CarrierRow,
     encode_carriers,
+    merge_carrier_payloads,
     validate_compiled_core_weights,
 )
 
@@ -85,6 +86,62 @@ class CarrierTests(unittest.TestCase):
                 compiled.append(field)
             self.assertEqual(compiled[0], compiled[1])
             self.assertEqual(proof["compiled_positive_influences"], 36)
+
+    def test_merge_preserves_shared_source_rows_and_local_parent_addresses(self):
+        base, base_terms, _ = self.encode([self.row(131), self.row(133)])
+        extra, extra_terms, _ = self.encode([self.row(109), self.row(135)])
+        merged, proof = merge_carrier_payloads(base, extra)
+        with tempfile.TemporaryDirectory() as directory:
+            decoded = []
+            for name, payload in (("base", base), ("extra", extra), ("merged", merged)):
+                path = Path(directory)/(name+".nhtissue")
+                path.write_bytes(payload)
+                data = _read_nhtiss4(path)
+                decoded.append({int(r[6]): _row_slices(data, r) for r in data["records"]})
+            for original in decoded[:2]:
+                for sid, row in original.items():
+                    for field in ("binding_bytes", "vertex_bytes", "local_faces"):
+                        self.assertEqual(row[field], decoded[2][sid][field])
+            for terms in base_terms+extra_terms:
+                actual = _biceps_row_arrays(decoded[2][terms["stable_id"]])
+                for vertex_terms in terms["vertices"]:
+                    for _, sid, local, _ in vertex_terms:
+                        self.assertEqual(sid, terms["stable_id"])
+                        self.assertLess(local, len(actual["vertices6"]))
+        self.assertEqual(proof["retained_stable_ids"], [131, 133])
+        self.assertEqual(proof["appended_stable_ids"], [109, 135])
+        self.assertFalse(proof["physical_state_added"])
+
+    def test_merge_replacement_requires_exact_explicit_scope(self):
+        base, _, _ = self.encode([self.row(131), self.row(133)])
+        addition, _, _ = self.encode([self.row(133, -1)])
+        with self.assertRaisesRegex(ValueError, "explicit replacement"):
+            merge_carrier_payloads(base, addition)
+        with self.assertRaisesRegex(ValueError, "explicit replacement"):
+            merge_carrier_payloads(base, addition, replace_stable_ids=(131, 133))
+        merged, proof = merge_carrier_payloads(base, addition, replace_stable_ids=(133,))
+        self.assertNotEqual(merged, base)
+        self.assertEqual(proof["retained_stable_ids"], [131])
+        self.assertEqual(proof["replaced_stable_ids"], [133])
+
+    def test_merge_rejects_source_mismatch_and_corrupt_allocations(self):
+        base, _, _ = self.encode([self.row(131)])
+        addition, _, _ = self.encode([self.row(109)])
+        for offset, message in ((28, "registration"), (32, "source")):
+            bad = bytearray(addition)
+            bad[offset] ^= 1
+            with self.assertRaisesRegex(ValueError, message):
+                merge_carrier_payloads(base, bytes(bad))
+        with self.assertRaisesRegex(ValueError, "byte ranges"):
+            merge_carrier_payloads(base, addition[:-1])
+        bad = bytearray(addition)
+        struct.pack_into("<I", bad, 64, 1)
+        with self.assertRaisesRegex(ValueError, "allocation"):
+            merge_carrier_payloads(base, bytes(bad))
+        bad = bytearray(addition)
+        struct.pack_into("<I", bad, len(bad)-4, 2**32-1)
+        with self.assertRaisesRegex(ValueError, "index outside"):
+            merge_carrier_payloads(base, bytes(bad))
 
     def test_reject_triangle_collapsed_by_storage_rounding(self):
         row = self.row()

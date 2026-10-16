@@ -330,3 +330,92 @@ def reemit_registered_carrier(
         owner_source_sha256=sha(Path(__file__)),
         anatomical_and_native_admission=False)
     return report
+
+
+def merge_carrier_payloads(base: bytes, addition: bytes, *, replace_stable_ids=()) -> tuple[bytes, dict]:
+    """Compose load-only rows without changing any retained local source bytes.
+
+    Parent terms address a stable row and its local vertex, so they survive row
+    relocation. Callers retain their authenticated terms and replace the source
+    payload hash explicitly; this function creates no terms or physical state.
+    """
+    import hashlib
+
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+
+    def decode(raw):
+        require(isinstance(raw, bytes) and len(raw) >= 64, "truncated carrier payload")
+        magic, abi, nr, nb, nv, ni, fp, digest = struct.unpack_from("<8s6I32s", raw)
+        require(magic == b"NHTISS4\0" and abi == 5 and 0 < nr <= 192,
+                "invalid carrier ABI or row count")
+        vo = 64+nr*32+nb*36
+        io = vo+nv*56
+        require(len(raw) == io+ni*4 and nv <= 4_194_304 and ni <= 6_000_000,
+                "invalid carrier byte ranges")
+        result = []
+        seen = set()
+        cursor = (0, 0, 0)
+        for j in range(nr):
+            fb, bc, fv, vc, fi, ic, sid, layer = struct.unpack_from("<8I", raw, 64+j*32)
+            require(sid > 0 and sid not in seen and layer in (1, 2, 3)
+                    and 0 < bc <= 24 and 0 < vc and 0 < ic and ic % 3 == 0
+                    and fb+bc <= nb and fv+vc <= nv and fi+ic <= ni,
+                    "invalid carrier row identity or allocation")
+            require((fb, fv, fi) == cursor, "carrier rows must cover packed allocations exactly")
+            cursor = (fb+bc, fv+vc, fi+ic)
+            seen.add(sid)
+            binding = raw[64+nr*32+fb*36:64+nr*32+(fb+bc)*36]
+            vertex = raw[vo+fv*56:vo+(fv+vc)*56]
+            faces = np.frombuffer(raw, dtype="<u4", count=ic, offset=io+fi*4)
+            require(int(faces.min()) >= fv and int(faces.max()) < fv+vc,
+                    "carrier index outside its own row")
+            result.append((sid, layer, bc, vc, binding, vertex,
+                           (faces-fv).astype("<u4")))
+        require(cursor == (nb, nv, ni), "carrier has unowned allocation bytes")
+        return fp, digest, result
+
+    fp, digest, old = decode(base)
+    new_fp, new_digest, added = decode(addition)
+    require((fp, digest) == (new_fp, new_digest), "carrier registration or source differs")
+    replacements = tuple(replace_stable_ids)
+    require(all(type(sid) is int and sid > 0 for sid in replacements)
+            and len(set(replacements)) == len(replacements), "invalid replacement IDs")
+    old_ids, added_ids = {r[0] for r in old}, {r[0] for r in added}
+    require(set(replacements) == old_ids & added_ids,
+            "overlapping carrier IDs require exact explicit replacement scope")
+    by_id = {r[0]: r for r in added}
+    rows = [by_id[r[0]] if r[0] in replacements else r for r in old]
+    rows += [r for r in added if r[0] not in old_ids]
+    require(len(rows) <= 192, "merged carrier row limit")
+    records, bindings, vertices, indices = [], [], [], []
+    nb = nv = ni = 0
+    for sid, layer, bc, vc, binding, vertex, faces in rows:
+        records.append(struct.pack("<8I", nb, bc, nv, vc, ni, len(faces), sid, layer))
+        bindings.append(binding)
+        vertices.append(vertex)
+        indices.append((faces.astype(np.uint64)+nv).astype("<u4").tobytes())
+        nb += bc
+        nv += vc
+        ni += len(faces)
+    require(nv <= 4_194_304 and ni <= 6_000_000, "merged carrier allocation limit")
+    payload = (struct.pack("<8s6I32s", b"NHTISS4\0", 5, len(rows), nb, nv, ni, fp, digest)
+               + b"".join(records+bindings+vertices+indices))
+    require(len(payload) <= 128*1024*1024, "merged carrier payload limit")
+    _, _, reread = decode(payload)
+    require(all(a[:4] == b[:4] and a[4:6] == b[4:6]
+                and a[6].tobytes() == b[6].tobytes() for a, b in zip(rows, reread)),
+            "merged carrier local bytes differ")
+    return payload, {
+        "base_sha256": hashlib.sha256(base).hexdigest(),
+        "addition_sha256": hashlib.sha256(addition).hexdigest(),
+        "payload_sha256": hashlib.sha256(payload).hexdigest(),
+        "retained_stable_ids": [r[0] for r in old if r[0] not in replacements],
+        "replaced_stable_ids": list(replacements),
+        "appended_stable_ids": [r[0] for r in added if r[0] not in old_ids],
+        "retained_binding_vertex_and_local_face_bytes_exact": True,
+        "parent_local_vertex_addresses_unchanged": True,
+        "physical_state_added": False,
+        "anatomical_admission": False, "native_admission": False,
+    }
