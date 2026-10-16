@@ -3668,10 +3668,14 @@ def compile_local_reconstruction_intercostal_payload(
 
     Each replacement supplies pinned captured-world Float32 positions, child
     faces, explicit face-parent lineage, an interface-face mask, the exact
-    parent face array, and its hash-pinned owner report. Normals are regenerated
-    from the pinned Float32 candidate geometry. Rib maps are limited to typed
-    owners observed in authenticated parent lineage; unobserved channels remain
-    absent. The result is source compilation evidence only; admission stays false.
+    parent face array, and its hash-pinned owner report. By default, source-local
+    positions are obtained with the authenticated Body20 inverse. A caller may
+    explicitly request preserve_source_row_local_positions when faces/maps are
+    being rebound to a source row whose local positions are already
+    authenticated; that path pins and retains those source bytes and performs no
+    position inverse. Normals are regenerated from the candidate geometry.
+    Rib maps are limited to typed owners observed in authenticated parent
+    lineage; unobserved channels remain absent. Admission stays false.
     """
     _require(isinstance(replacements, dict) and replacements
              and set(replacements) <= {313, 315, 317},
@@ -3706,6 +3710,15 @@ def compile_local_reconstruction_intercostal_payload(
             and source_row.get("body_index") == 20
             and source_row.get("layer") == 1 and source_row.get("flags") == 0,
             f"stable ID {stable_id} is not the typed Body20/layer1/flags0 row",
+        )
+        preserve_source_row_local_positions = spec.get(
+            "preserve_source_row_local_positions", False)
+        _require(type(preserve_source_row_local_positions) is bool,
+                 f"stable ID {stable_id} source-local-position mode is malformed")
+        _require(
+            not (preserve_source_row_local_positions
+                 and spec.get("source_emission_diagnostic_only") is True),
+            f"stable ID {stable_id} diagnostic emission cannot use source-local map mode",
         )
         if spec.get("source_emission_diagnostic_only") is True:
             import io
@@ -3941,9 +3954,37 @@ def compile_local_reconstruction_intercostal_payload(
             required_rib_ids=required_rib_ids,
             return_diagnostics=True,
         )
-        local_positions, _replayed_world, inverse_report = _inverse_body20_positions_f32(
-            world_vertices6[:, :3], q, t,
-        )
+        if preserve_source_row_local_positions:
+            source_local_positions_raw = np.asarray(source_row["vertices6"][:, :3])
+            source_local_positions_sha256 = _local_reconstruction_hex_sha(
+                spec.get("source_row_local_positions_sha256"),
+                f"stable ID {stable_id} source-row local position hash")
+            _require(
+                source_local_positions_raw.dtype == np.dtype("<f4")
+                and source_local_positions_raw.ndim == 2
+                and source_local_positions_raw.shape == world_positions.shape
+                and np.isfinite(source_local_positions_raw).all()
+                and _local_reconstruction_sha256(
+                    np.ascontiguousarray(source_local_positions_raw, dtype="<f4").tobytes())
+                    == source_local_positions_sha256,
+                f"stable ID {stable_id} source-row local positions differ from independent pin or allocation",
+            )
+            local_positions = np.ascontiguousarray(
+                source_local_positions_raw, dtype="<f4")
+            inverse_report = {
+                "mode": "authenticated_source_row_local_positions_retained",
+                "source_position_inverse_performed": False,
+                "source_row_payload_sha256": expected_source_payload_sha256,
+                "source_row_local_positions_sha256": source_local_positions_sha256,
+                "candidate_world_positions_f32_sha256": (
+                    _local_reconstruction_sha256(world_positions.tobytes())),
+                "source_local_positions_byte_exact": True,
+                "native_replay_required_for_emitted_world_geometry": True,
+            }
+        else:
+            local_positions, _replayed_world, inverse_report = _inverse_body20_positions_f32(
+                world_vertices6[:, :3], q, t,
+            )
         local_normals = _localize_body20_normals_f32(
             world_normals_f32, faces, q)
         vertices6 = np.ascontiguousarray(
@@ -4010,7 +4051,13 @@ def compile_local_reconstruction_intercostal_payload(
             "ambiguous_shared_interface_vertices": (
                 attachment_diagnostics["ambiguous_shared_interface_vertices"]),
             "parent_owner_report": owner_report,
-            "body20_inverse_and_replay": inverse_report,
+            "body20_inverse_and_replay": (
+                None if preserve_source_row_local_positions else inverse_report),
+            "body20_source_position_binding": inverse_report,
+            "source_row_local_positions_preserved": preserve_source_row_local_positions,
+            "source_row_local_positions_sha256": (
+                inverse_report.get("source_row_local_positions_sha256")
+                if preserve_source_row_local_positions else None),
             "authenticated_parent_patch_inference_used": (
                 owner_report["inherited_parent_face_owner_count"] > 0),
             "actual_source_bone_proximity_crosscheck_required": True,
@@ -4068,6 +4115,9 @@ def compile_local_reconstruction_intercostal_payload(
         "row_reports": row_reports,
         "runtime_attachment_maps": attachment_maps,
         "runtime_attachment_map_sidecars": runtime_attachment_map_sidecars,
+        "source_local_positions_preserved_stable_ids": sorted(
+            int(stable_id) for stable_id, row in row_reports.items()
+            if row.get("source_row_local_positions_preserved") is True),
         "attachment_ownership_unresolved_stable_ids": sorted(
             int(stable_id) for stable_id, row in row_reports.items()
             if row.get("source_emission_diagnostic_only") is True),

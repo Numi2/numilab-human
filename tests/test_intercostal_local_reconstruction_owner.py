@@ -775,6 +775,101 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
         )
 
 
+def test_local_reconstruction_rebind_preserves_authenticated_source_row_positions(tmp_path: Path):
+    local_vertices = np.asarray([
+        [0.1234567, 0.2, 0.3, 0, 0, 1],
+        [1.234567, 0.2, 0.3, 0, 0, 1],
+        [0.1234567, 1.2, 0.3, 0, 0, 1],
+        [2.345678, 2.2, 2.3, 0, 0, 0],
+    ], dtype="<f4")
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    unrelated_vertices = np.asarray([
+        [0, 0, 1, 0, 0, 1],
+        [1, 0, 1, 0, 0, 1],
+        [0, 1, 1, 0, 0, 1],
+    ], dtype="<f4")
+    rows = {
+        313: {"body_index": 20, "layer": 1, "flags": 0,
+              "vertices6": local_vertices, "faces": faces},
+        900: {"body_index": 10, "layer": 1, "flags": 0,
+              "vertices6": unrelated_vertices, "faces": faces},
+    }
+    source = encode_payload(
+        (b"NHANAT1\0", 5, 2, 7, 6, 0x12345678, b"s" * 32), rows,
+    )
+    source_sha = _sha(source)
+    local_xyz = np.ascontiguousarray(local_vertices[:, :3], dtype="<f4")
+    translation = np.asarray([0.1, 0.2, 0.3], dtype="<f4")
+    candidate_positions = np.ascontiguousarray(local_xyz + translation, dtype="<f4")
+    candidate_buffer = __import__("io").BytesIO()
+    np.savez(candidate_buffer, positions_world_f32=candidate_positions, faces=faces)
+    candidate_raw = candidate_buffer.getvalue()
+    parent_buffer = __import__("io").BytesIO()
+    np.savez(parent_buffer, faces=faces)
+    parent_raw = parent_buffer.getvalue()
+    ancestry = _source_face_report()
+    tool_report = _source_tool_report()
+    owner_raw = _owner_report(parent_raw, ancestry, faces)
+    pack = tmp_path / "step-0.mrvpack"
+    pack.write_bytes(b"fixture accepted capture pack")
+    receipt_path = tmp_path / "step-0.receipt.json"
+    receipt_raw = json.dumps(
+        _accepted_receipt(_sha(pack.read_bytes()), source_sha)
+    ).encode()
+    receipt_path.write_bytes(receipt_raw)
+
+    spec = {
+        "candidate_npz_raw": candidate_raw,
+        "candidate_npz_sha256": _sha(candidate_raw),
+        "world_positions_f32": candidate_positions,
+        "faces": faces,
+        "face_parent_ids": [[0]],
+        "interface_face_mask": np.asarray([True], dtype=np.bool_),
+        "parent_faces": faces,
+        "parent_faces_key": "faces",
+        "parent_payload_raw": parent_raw,
+        "operation_ancestry_raw": ancestry,
+        "authenticated_source_report_raws": [ancestry, tool_report],
+        "authenticated_source_report_sha256s": [_sha(ancestry), _sha(tool_report)],
+        "parent_face_owner_report_raw": owner_raw,
+        "parent_face_owner_report_sha256": _sha(owner_raw),
+        "required_rib_ids": [48],
+        "preserve_source_row_local_positions": True,
+        "source_row_local_positions_sha256": _sha(local_xyz.tobytes()),
+    }
+    output, report = compile_local_reconstruction_intercostal_payload(
+        source, {313: spec},
+        expected_source_payload_sha256=source_sha,
+        accepted_receipt_raw=receipt_raw,
+        accepted_receipt_path=receipt_path,
+        accepted_capture_pack_path=pack,
+    )
+    _header, _records, before_rows = _parse_payload(source)
+    _header, _records, after_rows = _parse_payload(output)
+    assert after_rows[313]["vertices6"][:, :3].tobytes() == before_rows[313][
+        "vertices6"][:, :3].tobytes()
+    assert report["source_local_positions_preserved_stable_ids"] == [313]
+    binding = report["row_reports"]["313"]["body20_source_position_binding"]
+    assert binding["mode"] == "authenticated_source_row_local_positions_retained"
+    assert binding["source_position_inverse_performed"] is False
+    assert binding["source_local_positions_byte_exact"] is True
+    assert report["row_reports"]["313"]["source_row_local_positions_sha256"] == _sha(
+        local_xyz.tobytes())
+    np.testing.assert_array_equal(after_rows[900]["vertices6"], before_rows[900]["vertices6"])
+    assert report["anatomical_admission"] is False
+    assert report["native_admission"] is False
+
+    bad_spec = {**spec, "source_row_local_positions_sha256": "f" * 64}
+    with pytest.raises(ValueError, match="source-row local positions differ from independent pin"):
+        compile_local_reconstruction_intercostal_payload(
+            source, {313: bad_spec},
+            expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw,
+            accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
+
+
 def test_body20_inverse_searches_adjacent_float32_ulps():
     from numilab_human.resting_intercostal_mesh_arrangement import (
         _body20_rotation64,
