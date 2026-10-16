@@ -328,6 +328,66 @@ class BodyLocalBakeTests(unittest.TestCase):
         receipt["functional_bindings"]["intercostal_313_rib50_motion_attachment"] = item
         return frame, row, maps, receipt
 
+    def _runtime_source_cap_fixture(self, muscle_id, rib_id):
+        import copy
+        frame, row, _, receipt = self._runtime_attachment_fixture()
+        item = copy.deepcopy(next(iter(
+            value for key, value in receipt["functional_bindings"].items()
+            if key.endswith("_motion_attachment"))))
+        member, source_sha, channel, _ = frame._RUNTIME_ATTACHMENT_RIBS[rib_id]
+        item["existing_rib_channel"].update(
+            stable_id=rib_id, channel_index=channel,
+            source_member_id=member, source_member_sha256=source_sha)
+        item["surface"].update(stable_id=muscle_id,
+            interface_local_vertex_ids=[2, 4],
+            interface_local_vertex_ids_sha256=frame._sha_bytes(struct.pack("<2I", 2, 4)))
+        receipt["functional_bindings"] = {
+            "bones_payload_sha256": "00" * 32,
+            f"intercostal_{muscle_id}_rib{rib_id}_motion_attachment": item,
+        }
+        return frame, row, {rib_id: [2, 4]}, receipt
+
+    def test_runtime_source_caps_use_existing_rib_channels_on_internal_layers(self):
+        for muscle, rib in ((315, 51), (317, 59)):
+            with self.subTest(muscle=muscle, rib=rib):
+                frame, row, maps, receipt = self._runtime_source_cap_fixture(muscle, rib)
+                frame.bind_intercostal_runtime_attachment_metadata(
+                    receipt, row, maps, nha_stable_id=muscle,
+                    nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+                frame.validate_intercostal_runtime_attachment_metadata(
+                    receipt, row, maps, nha_stable_id=muscle,
+                    nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+                item = receipt["functional_bindings"][
+                    f"intercostal_{muscle}_rib{rib}_motion_attachment"]
+                self.assertEqual(item["surface"]["local_vertex_count"], 7)
+                self.assertEqual(item["source_partition"]["interface_vertex_count"], 2)
+                self.assertEqual(item["existing_rib_channel"]["channel_index"], rib - 36)
+
+    def test_runtime_source_caps_reject_duplicate_out_of_range_or_shared_slots(self):
+        for bad in ([2, 2], [2, 7], [2, True]):
+            with self.subTest(slots=bad):
+                frame, row, maps, receipt = self._runtime_source_cap_fixture(315, 51)
+                maps[51] = bad
+                with self.assertRaisesRegex(model.ImportError, "invalid or duplicate typed slots"):
+                    frame.bind_intercostal_runtime_attachment_metadata(
+                        receipt, row, maps, nha_stable_id=315,
+                        nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+        frame, row, maps, receipt = self._runtime_source_cap_fixture(315, 51)
+        maps[52] = [4]
+        with self.assertRaisesRegex(model.ImportError, "invalid or duplicate typed slots"):
+            frame._runtime_attachment_expected_values(row, maps, nha_stable_id=315)
+
+    def test_runtime_source_caps_reject_wrong_source_or_channel(self):
+        for field, value in (("source_member_id", "FJ3230"), ("channel_index", 14)):
+            with self.subTest(field=field):
+                frame, row, maps, receipt = self._runtime_source_cap_fixture(317, 59)
+                item = receipt["functional_bindings"]["intercostal_317_rib59_motion_attachment"]
+                item["existing_rib_channel"][field] = value
+                with self.assertRaisesRegex(model.ImportError, "identity or exact interface"):
+                    frame.bind_intercostal_runtime_attachment_metadata(
+                        receipt, row, maps, nha_stable_id=317,
+                        nha_payload_sha256="22" * 32, bones_payload_sha256="33" * 32)
+
     def test_runtime_attachment_opt_in_rib50_uses_existing_source_and_channel(self):
         frame, row, maps, receipt = self._runtime_rib50_fixture()
         frame.bind_intercostal_runtime_attachment_metadata(
