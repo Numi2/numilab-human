@@ -57,6 +57,89 @@ def boundary_loops(faces: np.ndarray) -> tuple[list[list[int]], int]:
     return loops, count
 
 
+
+def audit_retained_capture_boundaries(source_faces, source_vertex_count,
+                                     captured_surface, pack_first_vertex,
+                                     retained_interfaces) -> dict:
+    """Classify declared skin apertures after a complete source/capture ID join.
+
+    The caller authenticates the payload, accepted capture, and original boundary
+    receipt. This function proves that their *directed* source rings survive
+    unchanged; counts, nearby coordinates, or a guessed ID offset do not suffice.
+    It neither caps the apertures nor grants self/solid/enclosure admission.
+    """
+    from . import resting_anatomy_verify as verify
+
+    _require(type(source_vertex_count) is int and source_vertex_count > 0,
+             "invalid source skin vertex count")
+    _require(type(pack_first_vertex) is int and pack_first_vertex >= 0,
+             "invalid explicit skin capture offset")
+    faces = np.asarray(source_faces)
+    _require(faces.ndim == 2 and faces.shape[1] == 3 and len(faces) > 0
+             and faces.dtype.kind in "iu" and np.all(faces >= 0)
+             and np.all(faces < source_vertex_count), "invalid source skin faces")
+    _require(isinstance(retained_interfaces, list) and len(retained_interfaces) == 2,
+             "expected the two declared source ocular interfaces")
+
+    def cycle(values):
+        _require(isinstance(values, list) and len(values) >= 3
+                 and all(type(x) is int and 0 <= x < source_vertex_count
+                         for x in values) and len(set(values)) == len(values),
+                 "invalid directed source boundary ring")
+        start = values.index(min(values))
+        return tuple(values[start:] + values[:start])
+
+    declared = []
+    for row in retained_interfaces:
+        _require(isinstance(row, dict) and row.get("interface") ==
+                 "ocular surface opening; passive eyeball interface",
+                 "unrecognized retained skin interface")
+        declared.append(cycle(row.get("source_vertex_ids")))
+    _require(len(set(declared)) == len(declared), "duplicate source boundary declaration")
+    source_loops, source_edges = boundary_loops(faces)
+    _require(sorted(map(cycle, source_loops)) == sorted(declared),
+             "current source boundaries differ from declared directed ocular rings")
+
+    positions, capture_faces, normals, gids = captured_surface
+    positions, capture_faces, gids = map(np.asarray, (positions, capture_faces, gids))
+    _require(positions.dtype == np.dtype("float32") and positions.ndim == 2
+             and positions.shape[1] == 3 and np.isfinite(positions).all(),
+             "invalid captured skin coordinates")
+    _require(gids.ndim == 1 and len(gids) == len(positions)
+             and gids.dtype.kind in "iu" and len(np.unique(gids)) == len(gids),
+             "invalid captured skin source identities")
+    _require(capture_faces.ndim == 2 and capture_faces.shape[1] == 3
+             and capture_faces.dtype.kind in "iu" and np.all(capture_faces >= 0)
+             and np.all(capture_faces < len(positions)), "invalid captured skin faces")
+    _require(np.all(gids >= pack_first_vertex)
+             and np.all(gids - pack_first_vertex < source_vertex_count),
+             "captured skin identities are outside the explicit source interval")
+    _, join = verify.retain_bound_source_faces(
+        (51007, 1), captured_surface, faces, 0,
+        np.arange(len(faces), dtype=np.int64))
+    _require(join["source_capture_vertex_namespace_offset"] == pack_first_vertex,
+             "captured skin offset differs from the accepted source mapping")
+    capture_loops, capture_edges = boundary_loops(capture_faces)
+    source_ids = (gids - pack_first_vertex).astype(np.int64)
+    actual = [source_ids[loop].tolist() for loop in capture_loops]
+    _require(sorted(map(cycle, actual)) == sorted(declared)
+             and capture_edges == source_edges,
+             "accepted capture boundaries differ from declared directed ocular rings")
+    return {
+        "identity": [51007, 1], "passed": True,
+        "boundary_edge_count": capture_edges, "boundary_loop_count": len(actual),
+        "all_ordered_source_facets_match": True,
+        "source_capture_vertex_namespace_offset": pack_first_vertex,
+        "directed_source_boundary_rings_unchanged": True,
+        "retained_anatomical_interfaces": retained_interfaces,
+        "unexplained_boundary_edge_count": 0,
+        "self_intersection_checked": False,
+        "closed_volume_or_enclosure_admitted": False,
+        "geometry_bytes_changed": False,
+        "qualification": "Source-bound ocular aperture classification only; "
+                         "self-intersections, eye interfaces, and other anatomy gates remain required.",
+    }
+
 def repair(rigid_path: Path, skin_path: Path, output: Path) -> dict:
     rigid = load_rigid(rigid_path)
     skin = load_skin(skin_path, rigid)
