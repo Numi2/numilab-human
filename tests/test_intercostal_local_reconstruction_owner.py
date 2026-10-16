@@ -433,6 +433,24 @@ def test_conflicting_parent_rib_owners_remain_unowned():
     assert owners == [None]
 
 
+def test_authenticated_same_rib_parent_consensus_is_explicitly_inferred():
+    owners, diagnostics = derive_local_reconstruction_face_rib_owners(
+        [[0, 1], [0, 2], [1], []],
+        {0: 48, 1: 48, 2: None, 3: 49},
+        parent_face_count=4,
+        return_diagnostics=True,
+    )
+    assert owners == [48, None, 48, None]
+    assert diagnostics == {
+        "single_authenticated_parent_face_count": 1,
+        "same_typed_rib_parent_consensus_face_count": 1,
+        "unowned_or_ambiguous_parent_face_count": 2,
+        "same_typed_rib_parent_consensus_child_face_ids_sha256": _sha(
+            np.asarray([0], dtype="<u8").tobytes()),
+        "same_typed_rib_parent_consensus_is_inferred": True,
+    }
+
+
 def test_body20_pose_comes_from_receipt_bound_to_source_and_pack(tmp_path: Path):
     source_sha = "a" * 64
     pack = tmp_path / "step-0.mrvpack"

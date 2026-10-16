@@ -3423,13 +3423,20 @@ def derive_local_reconstruction_face_rib_owners(
     parent_face_owners: dict[int, int | None],
     *,
     parent_face_count: int,
-) -> list[int | None]:
-    """Resolve child-face owners from explicit authenticated parent-face lineage."""
+    return_diagnostics: bool = False,
+) -> list[int | None] | tuple[list[int | None], dict]:
+    """Resolve child owners from authenticated parents, including unique rib consensus."""
     _require(isinstance(parent_face_owners, dict) and parent_face_owners,
              "authenticated parent face-owner map is missing")
     _require(type(parent_face_count) is int and parent_face_count > 0,
              "parent face count is invalid")
+    _require(type(return_diagnostics) is bool,
+             "face-owner diagnostics mode is malformed")
     resolved: list[int | None] = []
+    direct_count = 0
+    consensus_count = 0
+    unowned_count = 0
+    consensus_face_ids: list[int] = []
     for child_face_id, parent_ids in enumerate(face_parent_ids):
         if type(parent_ids) is int:
             parent_ids = [parent_ids]
@@ -3443,18 +3450,48 @@ def derive_local_reconstruction_face_rib_owners(
             # A derived non-rib tool face or an unresolved mixed-source face is
             # retained geometrically and explicitly has no runtime rib owner.
             resolved.append(None)
+            unowned_count += 1
             continue
         _require(
             all(parent_id in parent_face_owners for parent_id in parent_ids),
             f"child face {child_face_id} references an unauthenticated parent face",
         )
-        if len(parent_ids) != 1:
-            # The local reconstruction policy leaves every inferred multi-
-            # parent face unmapped, even when its parents happen to share a rib.
-            resolved.append(None)
+        parent_ribs = [parent_face_owners[parent_id] for parent_id in parent_ids]
+        _require(
+            all(rib_id is None or (type(rib_id) is int and rib_id in LOCAL_RECONSTRUCTION_RIB_IDS)
+                for rib_id in parent_ribs),
+            f"child face {child_face_id} has a non-typed authenticated parent rib owner",
+        )
+        if len(parent_ids) == 1:
+            owner = parent_ribs[0]
+            resolved.append(owner)
+            if owner is None:
+                unowned_count += 1
+            else:
+                direct_count += 1
             continue
-        resolved.append(parent_face_owners[parent_ids[0]])
-    return resolved
+        unique_parent_ribs = set(parent_ribs)
+        if len(unique_parent_ribs) == 1 and None not in unique_parent_ribs:
+            # This is a narrow consensus inheritance: every authenticated
+            # parent names the same existing typed channel. Mixed or missing
+            # ancestry remains unmapped; geometry alone never assigns an owner.
+            resolved.append(parent_ribs[0])
+            consensus_count += 1
+            consensus_face_ids.append(child_face_id)
+        else:
+            resolved.append(None)
+            unowned_count += 1
+    if not return_diagnostics:
+        return resolved
+    consensus_ids = np.asarray(consensus_face_ids, dtype="<u8")
+    return resolved, {
+        "single_authenticated_parent_face_count": direct_count,
+        "same_typed_rib_parent_consensus_face_count": consensus_count,
+        "unowned_or_ambiguous_parent_face_count": unowned_count,
+        "same_typed_rib_parent_consensus_child_face_ids_sha256": (
+            _local_reconstruction_sha256(consensus_ids.tobytes())),
+        "same_typed_rib_parent_consensus_is_inferred": consensus_count > 0,
+    }
 
 
 def derive_local_reconstruction_attachment_maps(
@@ -4314,8 +4351,9 @@ def compile_local_reconstruction_intercostal_payload(
             authenticated_source_report_sha256s=spec.get(
                 "authenticated_source_report_sha256s"),
         )
-        face_rib_owners = derive_local_reconstruction_face_rib_owners(
+        face_rib_owners, child_owner_resolution = derive_local_reconstruction_face_rib_owners(
             face_parent_ids, parent_owners, parent_face_count=len(parent_faces),
+            return_diagnostics=True,
         )
         required_rib_ids = spec.get("required_rib_ids", ())
         _require(
@@ -4430,6 +4468,7 @@ def compile_local_reconstruction_intercostal_payload(
                 for rib_id in LOCAL_RECONSTRUCTION_RIB_IDS
                 if rib_id in face_rib_owners
             },
+            "child_face_rib_owner_resolution": child_owner_resolution,
             "unowned_child_face_count": face_rib_owners.count(None),
             "unowned_interface_face_count": sum(
                 bool(is_interface) and rib_id is None
