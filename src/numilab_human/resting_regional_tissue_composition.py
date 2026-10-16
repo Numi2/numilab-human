@@ -1,4 +1,4 @@
-"""Merge disjoint passive muscle repairs in the existing NHTISS ABI.
+"""Merge disjoint passive muscle and anatomy repairs in their existing binary ABIs.
 
 This composes already prepared source rows. It does not establish anatomical
 clearance, accepted-motion validity, or native admission.
@@ -103,4 +103,84 @@ def merge_fixed_allocation_tissue_rows(
              "unrelated_row_geometry_unchanged": True,
              "scope": "Source row composition only; regional manifests and ancestry must be retained by the caller. "
                       "Not anatomical, accepted-motion, or native admission."}
+    return raw, proof
+
+
+def merge_anatomy_rows(
+    base_payload: Path,
+    replacements: Sequence[tuple[Path, Path, Sequence[int]]],
+    *,
+    expected_sha256: Mapping[str, str],
+) -> tuple[bytes, dict]:
+    """Three-way merge disjoint NHANAT repairs using their pinned source parents.
+
+    A regional candidate must change only declared rows relative to its own
+    parent. Its parent may be older than the integration base; a selected row
+    already changed on the integration base is a conflict unless byte-identical
+    to the candidate. No anatomical or deformation admission follows from merging.
+    """
+    from . import resting_anatomy_interface_patch as anatomy
+
+    cache = {}
+
+    def read_pinned(path):
+        path = Path(path)
+        if path not in cache:
+            digest = anatomy.sha(path)
+            require(expected_sha256.get(str(path)) == digest,
+                    "reviewed anatomy input SHA256 changed or is missing")
+            header, rows = anatomy.parse_payload(path)
+            require(anatomy.sha(path) == digest, "anatomy input changed during preparation")
+            cache[path] = (header, rows, digest)
+        return cache[path]
+
+    def same_geometry(first, second):
+        return all(first[field].shape == second[field].shape and
+                   first[field].dtype == second[field].dtype and
+                   first[field].tobytes() == second[field].tobytes()
+                   for field in ("vertices6", "faces"))
+
+    header, rows, base_sha = read_pinned(base_payload)
+    merged, selected, inputs = dict(rows), set(), []
+    for parent_path, candidate_path, stable_ids in replacements:
+        ids = list(stable_ids)
+        require(ids and all(type(sid) is int and sid in rows for sid in ids),
+                "regional anatomy rows must be existing anatomical integers")
+        require(len(set(ids)) == len(ids) and not selected.intersection(ids),
+                "regional anatomy replacement rows overlap or repeat")
+        ph, parent, parent_sha = read_pinned(parent_path)
+        ch, candidate, candidate_sha = read_pinned(candidate_path)
+        for current_header, current in ((ph, parent), (ch, candidate)):
+            require(current_header[:2] == header[:2] and current_header[5:] == header[5:],
+                    "anatomy registration or source archive identity changed")
+            require(list(current) == list(rows), "ordered anatomical identities changed")
+            for sid, original in rows.items():
+                require(all(current[sid][field] == original[field]
+                            for field in ("body_index", "layer", "flags")),
+                        "anatomy deformation body, layer or flags changed")
+        changed = {sid for sid in rows if not same_geometry(parent[sid], candidate[sid])}
+        require(changed == set(ids), "candidate anatomy has undeclared changes or missing repairs")
+        for sid in ids:
+            require(same_geometry(rows[sid], parent[sid]) or
+                    same_geometry(rows[sid], candidate[sid]),
+                    f"regional anatomy source-parent conflict for stable ID {sid}")
+            merged[sid] = candidate[sid]
+        selected.update(ids)
+        inputs.append({"parent_path": str(parent_path), "parent_sha256": parent_sha,
+                       "candidate_path": str(candidate_path), "candidate_sha256": candidate_sha,
+                       "changed_stable_ids": ids})
+    require(selected, "no regional anatomy repairs supplied")
+    raw = anatomy.encode_payload(header, merged)
+    proof = {"base_path": str(base_payload), "base_sha256": base_sha,
+             "regional_inputs": inputs, "selected_stable_ids": sorted(selected),
+             "changed_stable_ids": sorted(sid for sid in selected
+                                           if not same_geometry(rows[sid], merged[sid])),
+             "output_sha256": hashlib.sha256(raw).hexdigest(),
+             "ordered_anatomical_identities_unchanged": True,
+             "deformation_bodies_layers_and_flags_unchanged": True,
+             "unrelated_row_geometry_unchanged": True,
+             "source_parent_conflicts": 0, "anatomical_admission": False,
+             "native_admission": False,
+             "scope": "Existing NHANAT ABI5 source composition only. Retain each regional ancestry "
+                      "and parent-binding receipt; joint geometry, motion and native checks remain required."}
     return raw, proof
