@@ -409,6 +409,10 @@ def main(argv=None):
                    help="existing source receipt PATH=SHA256; complete one-body parent-carrier terms for shared muscle partitions")
     p.add_argument("--head-source-patch-report", action="append", default=[],
                    help="existing reciprocal head-patch report PATH=SHA256; current capture only")
+    p.add_argument("--skin-source",
+                   help="existing NHSKIN payload PATH=SHA256; classify source-declared ocular apertures only")
+    p.add_argument("--skin-boundary-provenance",
+                   help="existing boundary-repair receipt PATH=SHA256; requires --skin-source")
     p.add_argument("--bone-artifact", type=Path, help="existing compiled NHBONES artifact directory")
     p.add_argument("--body-manifest", type=Path, help="exact runtime manifest bound by NHBONES")
     p.add_argument("--collect-failures", action="store_true",
@@ -522,6 +526,32 @@ def main(argv=None):
             patch_interfaces[((51010, 343), (51010, 374))] = [declaration]
             patch_bindings.append(proof)
         report["head_source_patch_bindings"] = patch_bindings
+
+        if bool(args.skin_source) != bool(args.skin_boundary_provenance):
+            raise ValueError("skin boundary classification requires both source and provenance pins")
+        if args.skin_source:
+            if (51007, 1) in overlay_keys:
+                raise ValueError("skin boundary classification requires unchanged accepted capture")
+            from numilab_human import resting_skin_boundaries as skin_boundaries
+            from numilab_human.skin_source_payload_preflight import decode_payload
+            skin_path, skin_sha = args.skin_source.rsplit("=", 1)
+            provenance_path, provenance_sha = args.skin_boundary_provenance.rsplit("=", 1)
+            source_pin = pin(skin_path, skin_sha)
+            provenance_pin = pin(provenance_path, provenance_sha)
+            skin = decode_payload(Path(skin_path).read_bytes())
+            provenance = json.loads(Path(provenance_path).read_bytes())
+            capture_receipt = json.loads(args.capture_receipt.read_bytes())
+            mapping = capture_receipt["skin_source_mapping"]
+            if mapping["source_vertex_count"] != skin["vertex_count"]:
+                raise ValueError("skin boundary source/capture vertex inventory differs")
+            classification = skin_boundaries.audit_retained_capture_boundaries(
+                skin["indices"].reshape(-1, 3), skin["vertex_count"], surfaces[(51007, 1)],
+                mapping["pack_first_vertex"], provenance["retained_anatomical_interfaces"])
+            report["skin_boundary_classification"] = {
+                "source_pin": source_pin, "provenance_pin": provenance_pin,
+                "verification": classification,
+                "predicate_exemptions_granted": False,
+            }
 
         changed = [identity(x) for x in args.changed]
         if patch_interfaces:
