@@ -682,6 +682,34 @@ def test_local_reconstruction_compiler_pins_source_and_preserves_unselected_rows
             accepted_capture_pack_path=pack,
         )
 
+    reshaped_diagnostic_spec = {
+        **diagnostic_spec,
+        "world_positions_f32": candidate_positions.reshape(-1),
+    }
+    with pytest.raises(ValueError, match="diagnostic arrays differ from the exact NPZ"):
+        compile_local_reconstruction_intercostal_payload(
+            source, {313: reshaped_diagnostic_spec},
+            expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw,
+            accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
+
+    wrapped_diagnostic_faces = np.asarray(faces, dtype=np.uint64).copy()
+    wrapped_diagnostic_faces[0, 0] += 2**32
+    wrapped_diagnostic_spec = {
+        **diagnostic_spec,
+        "faces": wrapped_diagnostic_faces,
+    }
+    with pytest.raises(ValueError, match="diagnostic arrays differ from the exact NPZ"):
+        compile_local_reconstruction_intercostal_payload(
+            source, {313: wrapped_diagnostic_spec},
+            expected_source_payload_sha256=source_sha,
+            accepted_receipt_raw=receipt_raw,
+            accepted_receipt_path=receipt_path,
+            accepted_capture_pack_path=pack,
+        )
+
     float64_npz_buffer = __import__("io").BytesIO()
     np.savez(
         float64_npz_buffer,

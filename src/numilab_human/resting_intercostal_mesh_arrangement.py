@@ -3743,9 +3743,16 @@ def compile_local_reconstruction_intercostal_payload(
             supplied_faces = np.asarray(spec.get("faces"))
             _require(
                 supplied_positions.dtype.kind == "f" and supplied_positions.dtype.itemsize == 4
+                and supplied_positions.shape == world_positions.shape
+                and np.isfinite(supplied_positions).all()
                 and supplied_faces.dtype.kind in "iu"
-                and supplied_positions.tobytes() == world_positions.tobytes()
-                and np.ascontiguousarray(supplied_faces, dtype="<u4").tobytes() == faces.tobytes(),
+                and supplied_faces.shape == faces.shape
+                and np.all(supplied_faces >= 0)
+                and np.all(supplied_faces <= np.iinfo(np.uint32).max)
+                and np.ascontiguousarray(supplied_positions, dtype="<f4").tobytes()
+                    == world_positions.tobytes()
+                and np.ascontiguousarray(supplied_faces, dtype="<u4").tobytes()
+                    == faces.tobytes(),
                 f"stable ID {stable_id} diagnostic arrays differ from the exact NPZ",
             )
             _require(
