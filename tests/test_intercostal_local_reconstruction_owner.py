@@ -1433,3 +1433,120 @@ def test_pinned_repair_source_positions_reject_unbound_or_inexact_arrays(mutatio
     with pytest.raises(ValueError):
         owner._authenticated_candidate_source_local_positions(
             raw, world, q_f32=q, t_f32=t, spec=spec)
+
+
+def _row_preserving_payload_fixture():
+    from copy import deepcopy
+    bind, receipt, payload, maps, sidecars = _runtime_attachment_fixture()
+    header, _, rows = _parse_payload(payload)
+    other = deepcopy(rows[315])
+    other["record"] = (*other["record"][:5], 310, *other["record"][6:])
+    source = encode_payload(header, {310: other, 315: rows[315]})
+    changed = deepcopy(other)
+    changed["vertices6"] = np.vstack([
+        changed["vertices6"], np.asarray([[2, 2, 2, 0, 0, 1]], dtype="<f4")])
+    final = encode_payload(header, {310: changed, 315: rows[315]})
+    receipt["payload"]["sha256"] = _sha(final)
+    receipt["functional_bindings"]["anatomy_payload_sha256"] = _sha(final)
+    for sidecar in sidecars.values():
+        sidecar["anatomy_payload_sha256"] = _sha(source)
+    return bind, receipt, source, final, maps, sidecars
+
+
+def test_attachment_composition_preserves_maps_and_prior_geometry_evidence():
+    from copy import deepcopy
+    bind, receipt, source, final, maps, sidecars = _row_preserving_payload_fixture()
+    original = deepcopy(sidecars)
+    _, source_records, _ = _parse_payload(source)
+    _, final_records, _ = _parse_payload(final)
+    assert source_records[1][1] != final_records[1][1]
+    result = bind(
+        receipt, final, maps, nha_stable_id=315, bones_payload_sha256="4" * 64,
+        runtime_attachment_map_sidecars=sidecars,
+        attachment_source_payload_raw=source,
+        expected_attachment_source_payload_sha256=_sha(source))
+    assert sidecars == original
+    attachment = receipt["functional_bindings"]["intercostal_315_rib58_motion_attachment"]
+    assert attachment["anatomy_payload_sha256"] == _sha(final)
+    partition = attachment["source_partition"]
+    assert partition["base_anatomy_payload_sha256"] == "a" * 64
+    assert partition["parent_owner_report_sha256"] == "f" * 64
+    proof = partition["row_preserving_payload_rebindings"][-1]
+    assert proof["source_payload_sha256"] == _sha(source)
+    assert proof["final_payload_sha256"] == _sha(final)
+    assert proof["typed_row_geometry_byte_exact"] is True
+    assert proof["native_admission"] is False
+    assert result["row_preserving_payload_rebind"] == proof
+    assert receipt["functional_bindings"]["anatomy_payload_sha256"] == _sha(final)
+
+
+@pytest.mark.parametrize("mutation", [
+    "position", "normal", "winding", "body", "layer", "flags",
+    "registration", "source_identity", "extra_row", "source_pin",
+    "source_sidecar_payload", "source_sidecar_row",
+])
+def test_attachment_composition_rejects_source_or_row_drift_before_mutation(mutation):
+    from copy import deepcopy
+    bind, receipt, source, final, maps, sidecars = _row_preserving_payload_fixture()
+    header, _, rows = _parse_payload(final)
+    row = rows[315]
+    pin = _sha(source)
+    if mutation in ("position", "normal"):
+        component = 0 if mutation == "position" else 3
+        row["vertices6"] = row["vertices6"].copy()
+        row["vertices6"][0, component] = np.nextafter(
+            row["vertices6"][0, component], np.float32(np.inf))
+    elif mutation == "winding":
+        row["faces"] = row["faces"][:, [0, 2, 1]]
+    elif mutation in ("body", "layer", "flags"):
+        key = {"body": "body_index", "layer": "layer", "flags": "flags"}[mutation]
+        row[key] += 1
+    elif mutation == "registration":
+        header = (*header[:5], header[5] + 1, header[6])
+    elif mutation == "source_identity":
+        header = (*header[:6], b"x" * 32)
+    elif mutation == "extra_row":
+        rows[999] = deepcopy(rows[310])
+        rows[999]["record"] = (*rows[999]["record"][:5], 999, *rows[999]["record"][6:])
+    elif mutation == "source_pin":
+        pin = "0" * 64
+    elif mutation == "source_sidecar_payload":
+        sidecars["58"]["anatomy_payload_sha256"] = "0" * 64
+    elif mutation == "source_sidecar_row":
+        sidecars["58"]["surface"]["stable_id"] = 313
+    final = encode_payload(header, rows)
+    receipt_before, sidecars_before = deepcopy(receipt), deepcopy(sidecars)
+    with pytest.raises(ValueError):
+        bind(
+            receipt, final, maps, nha_stable_id=315, bones_payload_sha256="4" * 64,
+            runtime_attachment_map_sidecars=sidecars,
+            attachment_source_payload_raw=source,
+            expected_attachment_source_payload_sha256=pin)
+    assert receipt == receipt_before
+    assert sidecars == sidecars_before
+
+
+def test_attachment_composition_requires_both_independent_pin_and_bytes():
+    bind, receipt, source, final, maps, sidecars = _row_preserving_payload_fixture()
+    for args in (
+        {"attachment_source_payload_raw": source},
+        {"expected_attachment_source_payload_sha256": _sha(source)},
+        {"attachment_source_payload_raw": source,
+         "expected_attachment_source_payload_sha256": _sha(source),
+         "runtime_attachment_map_sidecars": None},
+    ):
+        inputs = {"runtime_attachment_map_sidecars": sidecars, **args}
+        with pytest.raises(ValueError):
+            bind(receipt, final, maps, nha_stable_id=315,
+                 bones_payload_sha256="4" * 64, **inputs)
+
+
+def test_composed_sidecars_still_require_existing_runtime_identity_checks():
+    bind, receipt, source, final, maps, sidecars = _row_preserving_payload_fixture()
+    sidecars["58"]["existing_rib_channel"]["channel_index"] = 59
+    with pytest.raises(ValueError, match="runtime rib58 attachment identity"):
+        bind(
+            receipt, final, maps, nha_stable_id=315, bones_payload_sha256="4" * 64,
+            runtime_attachment_map_sidecars=sidecars,
+            attachment_source_payload_raw=source,
+            expected_attachment_source_payload_sha256=_sha(source))

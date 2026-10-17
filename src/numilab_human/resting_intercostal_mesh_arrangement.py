@@ -4912,8 +4912,17 @@ def bind_local_reconstruction_runtime_attachment_receipt(
     nha_stable_id: int,
     bones_payload_sha256: str,
     runtime_attachment_map_sidecars: dict[str, dict] | None = None,
+    attachment_source_payload_raw: bytes | None = None,
+    expected_attachment_source_payload_sha256: str | None = None,
 ) -> dict:
-    """Rebind and revalidate maps through the retained runtime attachment owner."""
+    """Rebind and revalidate maps through the retained runtime attachment owner.
+
+    A caller composing regional repairs into a different full payload may
+    supply the independently pinned source payload used for these sidecars.
+    Only byte-identical typed row geometry may cross that composition boundary;
+    other row changes still require their own existing deformation owners.
+    The default path requires sidecars already bound to the final payload.
+    """
     from .composed_bone_body_frame import (
         bind_intercostal_runtime_attachment_metadata,
         validate_intercostal_runtime_attachment_metadata,
@@ -4924,6 +4933,54 @@ def bind_local_reconstruction_runtime_attachment_receipt(
     _header, _records, rows = _parse_payload(compiled_payload)
     row = rows.get(nha_stable_id)
     _require(isinstance(row, dict), "compiled ABI5 row is missing for attachment rebind")
+    composition_proof = None
+    if attachment_source_payload_raw is None:
+        _require(expected_attachment_source_payload_sha256 is None,
+                 "attachment source payload pin supplied without source bytes")
+    else:
+        expected_source_sha = _local_reconstruction_hex_sha(
+            expected_attachment_source_payload_sha256, "attachment source payload pin")
+        _require(isinstance(attachment_source_payload_raw, bytes)
+                 and _local_reconstruction_sha256(attachment_source_payload_raw)
+                     == expected_source_sha,
+                 "attachment source payload bytes differ from their independent pin")
+        _require(isinstance(runtime_attachment_map_sidecars, dict),
+                 "row-preserving attachment composition requires source sidecars")
+        source_header, _source_records, source_rows = _parse_payload(
+            attachment_source_payload_raw)
+        _require(tuple(source_header[:3]) == tuple(_header[:3])
+                 and tuple(source_header[5:]) == tuple(_header[5:])
+                 and list(source_rows) == list(rows),
+                 "attachment composition changed registration or ordered identities")
+        source_row = source_rows.get(nha_stable_id)
+        _require(isinstance(source_row, dict)
+                 and _normalized_row_bytes(source_row) == _normalized_row_bytes(row),
+                 "attachment composition changed its typed row geometry")
+        composition_proof = {
+            "source_payload_sha256": expected_source_sha,
+            "final_payload_sha256": payload_sha,
+            "stable_id": nha_stable_id,
+            "normalized_typed_row_sha256": _local_reconstruction_sha256(
+                _normalized_row_bytes(row)),
+            "typed_row_geometry_byte_exact": True,
+            "physical_state_mass_or_force_added": False,
+            "anatomical_admission": False,
+            "native_admission": False,
+        }
+        rebound = deepcopy(runtime_attachment_map_sidecars)
+        for sidecar in rebound.values():
+            _require(isinstance(sidecar, dict)
+                     and sidecar.get("anatomy_payload_sha256") == expected_source_sha
+                     and sidecar.get("surface", {}).get("stable_id") == nha_stable_id
+                     and isinstance(sidecar.get("source_partition"), dict),
+                     "source attachment sidecar differs from its pinned payload or row")
+            history = sidecar["source_partition"].setdefault(
+                "row_preserving_payload_rebindings", [])
+            _require(isinstance(history, list),
+                     "attachment payload composition history is malformed")
+            history.append(deepcopy(composition_proof))
+            sidecar["anatomy_payload_sha256"] = payload_sha
+        runtime_attachment_map_sidecars = rebound
     if runtime_attachment_map_sidecars is not None:
         _require(
             isinstance(runtime_attachment_map_sidecars, dict)
@@ -4968,6 +5025,8 @@ def bind_local_reconstruction_runtime_attachment_receipt(
         "compiled_payload_sha256": payload_sha,
         "bones_payload_sha256": bones_payload_sha256,
         "interface_maps_validated_by_existing_runtime_owner": True,
+        **({"row_preserving_payload_rebind": composition_proof}
+           if composition_proof is not None else {}),
         "anatomical_admission": False,
         "native_admission": False,
     }
