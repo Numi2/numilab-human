@@ -499,6 +499,7 @@ def main(argv=None):
     if progress_path.exists():
         p.error("refusing to overwrite retained verification progress")
     start = time.perf_counter()
+    caller_sha256_at_start = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     report = {"passed": False, "anatomical_admission": False, "native_admission": False,
               "counterfactual_candidates": bool(args.overlay or args.rest_source or args.construction_overlay or args.index_source)}
     try:
@@ -753,7 +754,28 @@ def main(argv=None):
                       if isinstance(diagnostic, dict) else "preparation"), error=str(error))
         if diagnostic is not None:
             report["exact_failure_witness"] = diagnostic
-    report.update(elapsed_seconds=time.perf_counter()-start, caller_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+    # Source files can change while an exact predicate runs for minutes.
+    # A geometry pass must remain bound to the same explicit inputs and caller.
+    integrity_pins = [report[key] for key in ("pack_pin", "receipt_pin") if key in report]
+    integrity_pins.extend(report.get("source_pins", []))
+    try:
+        for item in integrity_pins:
+            pin(item["path"], item["sha256"])
+        caller_sha256_at_end = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+        if caller_sha256_at_end != caller_sha256_at_start:
+            raise ValueError("verification caller changed during audit")
+        report["input_integrity_after_audit"] = {
+            "passed": True, "revalidated_input_count": len(integrity_pins),
+            "caller_unchanged": True,
+        }
+    except (ValueError, OSError) as error:
+        report["input_integrity_after_audit"] = {
+            "passed": False, "error": str(error),
+            "geometry_passed_before_recheck": bool(report.get("passed")),
+        }
+        report.update(passed=False, status="REJECTED_INPUT_CHANGED_DURING_AUDIT",
+                      failed_stage="source_integrity")
+    report.update(elapsed_seconds=time.perf_counter()-start, caller_sha256=caller_sha256_at_start,
                   scope="Selected geometry only. Source ancestry, actual rest-owner emission, motion, continuity and physiology require their existing separate proofs.")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, sort_keys=True, indent=2)+"\n")
