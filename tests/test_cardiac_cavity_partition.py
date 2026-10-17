@@ -446,6 +446,57 @@ class PositiveWindingSelfUnionTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, "selected winding material has no boundary"):
             partition.construct_positive_winding_self_union(self.surface(vertices, faces))
 
+    @staticmethod
+    def point_touching_tetra_pair(*, external):
+        base_faces = NonzeroWindingSelfUnionTests.faces
+        outer_vertices = [(F(0),F(0),F(0)),(F(10),F(0),F(0)),
+                          (F(0),F(10),F(0)),(F(0),F(0),F(-10))]
+        # The negative-z apex reverses the standard tetra orientation.
+        outer_faces = [(a,c,b) for a,b,c in base_faces]
+        point = (F(1),F(1),F(0))
+        if external:
+            # A disjoint outward tetra touches the interior of the outer
+            # base face at its vertex, so that singular contact must remain
+            # rejected after the arrangement has been conformed.
+            other_vertices = [point,(F(2),F(1),F(1)),
+                              (F(1),F(2),F(1)),(F(1),F(1),F(2))]
+            other_faces = list(base_faces)
+        else:
+            # This outward tetra is wholly inside the outer tetra and touches
+            # its base at one vertex. Its faces are internal to positive
+            # material, so the union boundary is the unchanged outer shell.
+            other_vertices = [point,(F(2),F(1),F(-1)),
+                              (F(1),F(2),F(-1)),(F(1),F(1),F(-2))]
+            other_faces = [(a,c,b) for a,b,c in base_faces]
+        return NonzeroWindingSelfUnionTests.combine(
+            ((outer_vertices,outer_faces),(other_vertices,other_faces)))
+
+    def test_interior_to_edge_point_contact_is_spoked_and_internal_shell_removed(self):
+        vertices, faces = self.point_touching_tetra_pair(external=False)
+        result = partition.construct_positive_winding_self_union(
+            self.surface(vertices, faces), allow_coplanar_overlap=True)
+        self.assertEqual(result["output_self_intersection_audit"]["count"], 0)
+        self.assertTrue(result["output_topology"]["closed_oriented_2_manifold"])
+        self.assertEqual(result["output_topology"]["component_count"], 1)
+        self.assertEqual(self.signed_volume(result["output_mesh"]), F(500,3))
+        self.assertEqual({row["source_face"] for row in result["output_face_ancestry"]},
+                         {0,1,2,3})
+        arrangements = result["point_contact_arrangements"]
+        self.assertTrue(arrangements)
+        self.assertTrue(all(row["arrangement"] ==
+                            "three_interior_face_spokes_plus_boundary_propagation"
+                            for row in arrangements))
+        self.assertTrue(all(len(row["interior_spokes"]) == 3 for row in arrangements))
+        self.assertTrue(all(row["interior_face_ids"] and row["boundary_face_ids"]
+                            for row in arrangements))
+
+    def test_external_interior_to_edge_point_contact_remains_singular_and_rejected(self):
+        vertices, faces = self.point_touching_tetra_pair(external=True)
+        with self.assertRaisesRegex(HumanImportError,
+                                    "multiple cycles|selected winding boundary still has exact self-intersections"):
+            partition.construct_positive_winding_self_union(
+                self.surface(vertices, faces), allow_coplanar_overlap=True)
+
 
 class PinnedArrangementTests(unittest.TestCase):
     @classmethod

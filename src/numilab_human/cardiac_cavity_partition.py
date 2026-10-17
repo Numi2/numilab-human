@@ -513,6 +513,7 @@ def _construct_winding_self_union(source_surface, *, positive_only,
     prepared = predicates.prepare_signed_winding(records)
     point_cover = None
     covered_point_contacts = []
+    point_contact_arrangements = []
     if point_contact_cover_face_indices is not None:
         selected = point_contact_cover_face_indices
         require(isinstance(selected, (list, tuple)) and bool(selected) and
@@ -556,19 +557,53 @@ def _construct_winding_self_union(source_surface, *, positive_only,
             continue
         if len(points) == 1 and allow_coplanar_overlap:
             point = points[0]
-            # Conform a boundary-only point contact in the joint arrangement.
-            # This is not an admission: singular retained contacts must fail
-            # the unchanged emitted manifold/self-intersection gates.
+            # Conform point contacts in the joint arrangement. A valid exact
+            # triangle intersection may be interior to one face and on an edge
+            # of the other; the boundary-side point must propagate to adjacent
+            # source faces, while the interior face is split by three spokes.
+            # This is arrangement support only: retained singular contacts
+            # still fail the unchanged emitted self-intersection/topology gates.
+            boundary_faces = []
+            interior_faces = []
             for face_id, triangle in ((first_id, first), (second_id, second)):
-                require(any(_point_on_segment(point, edge)
-                            for edge in zip(triangle, triangle[1:] + triangle[:1])),
-                        "interior point-only self-contact is unsupported")
-                boundary_points_by_face[face_id].add(point)
-                face = faces[face_id]
-                for a, b in zip(face, face[1:] + face[:1]):
-                    if _point_on_segment(point, (exact_vertices[a], exact_vertices[b])):
-                        for neighbor in edge_faces[tuple(sorted((a, b)))]:
-                            boundary_points_by_face[neighbor].add(point)
+                edges = tuple(zip(triangle, triangle[1:] + triangle[:1]))
+                if any(_point_on_segment(point, edge) for edge in edges):
+                    boundary_faces.append(face_id)
+                    boundary_points_by_face[face_id].add(point)
+                    face = faces[face_id]
+                    for a, b in zip(face, face[1:] + face[:1]):
+                        if _point_on_segment(point, (exact_vertices[a], exact_vertices[b])):
+                            for neighbor in edge_faces[tuple(sorted((a, b)))]:
+                                boundary_points_by_face[neighbor].add(point)
+                else:
+                    normal = _exact_triangle_normal(triangle)
+                    offset = sum(normal[axis] * (point[axis] - triangle[0][axis])
+                                 for axis in range(3))
+                    require(any(normal) and offset == 0,
+                            "point-only contact is not on an exact nondegenerate face")
+                    interior_faces.append((face_id, triangle))
+            require(not interior_faces or (len(interior_faces) == 1 and len(boundary_faces) == 1),
+                    "point-only contact must meet one face interior and one source boundary")
+            contact_record = {
+                "face_pair": [first_id, second_id],
+                "point": point,
+                "boundary_face_ids": sorted(boundary_faces),
+                "interior_face_ids": sorted(face_id for face_id, _triangle in interior_faces),
+            }
+            if interior_faces:
+                face_id, triangle = interior_faces[0]
+                spokes = []
+                for vertex in triangle:
+                    require(point != vertex, "interior point-contact spoke has zero length")
+                    spoke = (point, vertex)
+                    segments_by_face[face_id].add(spoke)
+                    spokes.append(spoke)
+                contact_record["arrangement"] = "three_interior_face_spokes_plus_boundary_propagation"
+                contact_record["interior_spokes"] = spokes
+            else:
+                contact_record["arrangement"] = "existing_boundary_point_propagation"
+                contact_record["interior_spokes"] = []
+            point_contact_arrangements.append(contact_record)
             continue
         require(len(points) >= 2,
                 "point-only self-contact is unsupported")
@@ -786,6 +821,7 @@ def _construct_winding_self_union(source_surface, *, positive_only,
         "input_self_intersection_pairs": intersection_audit["triangle_pairs"],
         "input_self_intersection_count": intersection_audit["count"],
         "exact_intersection_segments": segments,
+        "point_contact_arrangements": point_contact_arrangements,
         "subdivided_face_count": len(child_triangles),
         "arrangement_patch_count": len(patches),
         "retained_patch_count": sum(patch["kept"] for patch in patches),
