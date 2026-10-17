@@ -19,6 +19,55 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Lung collapse ownership and composed pleura — 2026-10-17
+
+The existing pleura compiler now accepts an optional authenticated edge-collapse
+lineage proof. Its default source-subdivision contract remains strict. The
+optional path verifies the immediate source geometry, every ordered face and
+retained vertex, the exact Float32 midpoint operation, two retired faces, link
+condition, component topology, orientation and complete parent ancestry. A
+nested subdivision proof is checked against its actual intermediate parent;
+the collapsed child is not misrepresented as an unchanged subdivision. Unrelated
+open source boundaries remain unchanged. Geometry acceptance remains separate.
+
+On SSH Numi, the final owner and verifier selection passes 145 tests plus 51
+subtests with zero skips at source 2d275119. The retained command includes
+resting_pleura_proxy, resting_anatomy_verify and resting_pleura_lineage.
+Result: pleura-2d275-regression-002/result.json, SHA256
+28fbae4bcaa4b48d24b673b3109f6038c31e0a85f38f50f07d48f62d08c9f99c.
+These tests cover the ownership contract; they do not establish whole-body
+geometry or native motion acceptance.
+
+Actual run039g compiles the retained lung038 repair and rederives pleura310
+through this owner. ABI5 readback contains all 525 typed rows, with only 305 and
+its derived 310 changed from parent025; identities, body/layer flags and the
+other rows remain exact. Candidate payload SHA256:
+88a6028148bfe8dd8869371a0943a8eb7ae0867f31ffda0f8e8fbc3f54771ee2.
+The original039g report compared candidate-derived volume/area metrics to
+themselves. The independent parent025-to-emitted039g correction is retained
+without editing that report: lung-volume-parent-vs-emitted-recheck-001.json,
+SHA256 c1f27071d76eecfae5db9ae0c4e65f4a3479e5b5d1d48491efec0a690aec8d93.
+Five-lobe volume changes by +9.020562075079397e-17 m3 and the effective respiratory
+area by +1.6653345369377348e-15 m2; neither is claimed exactly unchanged. Source
+and posed row305 self-clearance is bound to the unchanged038 geometry. Final
+surrounding anatomy, breathing poses, native capture and full qualification
+remain open;039g is not admitted anatomy.
+
+The broader joint repair continues against complete surrounding geometry.
+Intercostal317 run145 has zero full source self pairs but 13 in its full posed
+geometry, so it remains rejected. A vessel junction-only motion cleared its
+initial muscle witnesses but created new crossings and was retired. The next
+complete-context search retains bone, lung, skin, muscle and neighboring-vessel
+constraints together. No failed regional repair has been substituted into the
+accepted native baseline. Back412, accepted skin, support contact, mass and
+simulation owners remain preserved.
+
+Storage cleanup044 replaces two rejected vessel payload allocations with
+byte-identical APFS clones of their common parent plus their exact changed
+blocks. SHA256 and metadata are checked before and after; measured free-space
+recovery is 191,430,656 bytes. No source or retained evidence is deleted. The
+12 GiB qualification free-space requirement remains in force.
+
 ## Authenticated shared material faces — 2026-10-17
 
 The existing explicit shared-feature verifier now supports one complete material
