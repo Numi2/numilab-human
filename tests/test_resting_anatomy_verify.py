@@ -2613,6 +2613,14 @@ class CaptureDecoderTests(unittest.TestCase):
         declarations = declarations_for_actual_shared_features(first, second)
         self.assertTrue(av.audit_surface_pair(
             first, second, intended_shared_feature_pairs=declarations)["passed"])
+        proof = first.diagnostics()["full21_lane_owner_proof"]
+        self.assertEqual(proof["parent_extension_sha256"], "b" * 64)
+        self.assertEqual(proof["displayed_world_points_sha256"],
+                         first.core_lane_world_proof["displayed_world_points_sha256"])
+        self.assertEqual(
+            proof["displayed_world_owner_relation"],
+            "predicted_cpu_full21_float32_blend_at_accepted_poses")
+        self.assertEqual(proof["displayed_world_owner_residual_m"], 0.0)
 
     def test_full21_lane_proof_rejects_different_capture_step_receipt_or_source(self):
         first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64),

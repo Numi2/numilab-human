@@ -442,8 +442,10 @@ class PreparedSurface:
             "full21_lane_owner_proof": None if self.core_lane_world_proof is None else {
                 key: self.core_lane_world_proof[key] for key in (
                     "accepted_step", "capture_receipt_sha256", "source_payload_sha256",
-                    "parent_payload_sha256", "ordered_core_body_indices", "world_frame",
-                    "source_points_sha256", "weights_sha256", "lane_world_points_sha256",
+                    "parent_payload_sha256", "parent_extension_sha256",
+                    "ordered_core_body_indices", "world_frame", "source_points_sha256",
+                    "weights_sha256", "lane_world_points_sha256", "displayed_world_points_sha256",
+                    "displayed_world_owner_relation", "displayed_world_owner_residual_m",
                     "source_face_lineage_sha256", "source_vertex_lineage_sha256")
             },
         }
