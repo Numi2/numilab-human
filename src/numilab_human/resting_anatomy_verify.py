@@ -3983,6 +3983,45 @@ def _prepare_source_patch_carrier_complex(first, second, value):
             "carrier_topology": topology}
 
 
+def _surface_pair_geometry_binding(surface):
+    return {"identity": list(surface.key),
+            "vertex_count": len(surface.positions), "face_count": len(surface.faces),
+            **_surface_source_hashes(surface)}
+
+
+def bound_unexpected_triangle_pairs(report, first, second):
+    """Read retained witnesses only against their exact ordered geometry.
+
+    This binds face indices, positions and source identities; it does not establish
+    anatomy acceptance or replace the report's owner and containment checks.
+    Reports predating the binding must be authenticated at their original producer
+    rather than silently applied to a remeshed candidate.
+    """
+    expected = [_surface_pair_geometry_binding(first),
+                _surface_pair_geometry_binding(second)]
+    if (not isinstance(report, dict)
+            or report.get("identities") != [list(first.key), list(second.key)]
+            or report.get("surface_geometry_bindings") != expected):
+        raise ValueError("retained triangle witnesses do not bind this ordered surface pair")
+    pairs = report.get("unexpected_triangle_pairs")
+    if not isinstance(pairs, list):
+        raise ValueError("retained unexpected triangle witnesses must be a list")
+    result = []
+    seen = set()
+    for pair in pairs:
+        if (not isinstance(pair, (list, tuple)) or len(pair) != 2
+                or any(type(index) is not int for index in pair)
+                or not 0 <= pair[0] < len(first.faces)
+                or not 0 <= pair[1] < len(second.faces)):
+            raise ValueError("retained triangle witness has an invalid face index")
+        value = tuple(pair)
+        if value in seen:
+            raise ValueError("retained triangle witness is duplicated")
+        seen.add(value)
+        result.append(value)
+    return result
+
+
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
                        intended_shared_feature_pairs=(), intended_source_patch_complexes=(),
                        source_bound_connected_overlaps=()):
@@ -4187,6 +4226,8 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
     source_overlap_passed = (
         source_overlap_result is not None and source_overlap_result.get("passed") is True)
     return {"identities": [list(first.key), list(second.key)],
+            "surface_geometry_bindings": [_surface_pair_geometry_binding(first),
+                                          _surface_pair_geometry_binding(second)],
             "passed": (not unexpected and (not inside or source_overlap_passed)
                        and not outside_declared_enclosure and not unresolved
                        and not missing_carrier_pairs and carrier_solid_interior_checked

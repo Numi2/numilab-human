@@ -19,6 +19,75 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Reconstructed forearm ownership and joint repair checks — 2026-10-17
+
+Commit 12e56fa7 extends the existing mixed full21 candidate proof to append-only
+inferred vertices. Captured GID/source-slot ordering and all original coefficients
+remain byte-exact. Each new vertex requires source-slot -1, explicit existing
+21-lane binding, captured-prefix parent GIDs, source coordinates, predicted
+Float32 replay, and complete file-bound face and vertex lineage. Unsigned face
+corners use UINT32_MAX only for those declared inferred slots. These vertices
+are never described as accepted captured vertices or unchanged source samples.
+The default captured-topology path remains strict.
+
+On SSH Numi, 136 tests plus 28 subtests pass, with diff, lint and immutable commit
+binding checks. Evidence: forearm-append-only-owner-regression-20261017-001/result.json,
+SHA256 b73c230af825c3ee2b7de8bb1b12eef3ea868c3d87a8afcf95146f473a9a78a1.
+This proves the owner contract, not anatomical or native acceptance.
+
+Forearm1333 retains 32,351 original candidate entries and appends 17 explicitly
+inferred vertices. Its 64,648-face posed Float32 surface has zero exact self pairs;
+surrounding-target, retained-motion and fresh native checks remain pending.
+Diagnostics1337 and1338 respectively find 79 pairs in the auxiliary full21
+carrier-coordinate field and 48,728 pairs in the auxiliary NHTISS child-rest
+serialization. Neither array is the physical surface: the existing compiled
+parent extension derives displayed vertices from the complete21 ordered parent
+influences. These diagnostics remain retained without being promoted to physical
+geometry failures or used to excuse crossings in the actual emitted surface.
+Candidate archive SHA256:
+44b594f55c94ed83502dd771bc34e18f2e5b0f6b03d1434c29d449728173fbd3.
+
+Intercostal317 candidate005 passes preparation and closure but fails its actual
+source self gate with105 pairs; its world gate did not run. Candidate145 remains
+the source-clear,13-world-pair base. Bounded local flip search146 examined207
+trials, accepted none and left all13 world pairs unchanged. Its report SHA256 is
+1b372e73c2b039bfc1a0e18332c9279b8476b2f757c5778933c6825ffea86d1f.
+The next construction changes generated cap coordinates within the existing owner
+instead of repeating larger retessellations.
+
+The vessel search158 identifies proximal arch contacts that downstream translation
+cannot resolve. Expanded joint search160 includes arch7, carotid465, subclavian471
+and axillary475, preserving coupled collars and fixed distant ports. Four trials
+reduce the summed SAT penetration heuristic but increase contact pairs from2795
+to2915; this is rejected. Actual elapsed time225.985 seconds exceeded the soft180
+second budget because a full iteration finished after the deadline. Report SHA256:
+fec1cae4d6be40f0c1a8624228cd2e80ce128b7959e223b68af90fddf4261715.
+The construction context still used accepted002 lungs, rather than the newer039g
+composed lungs. Comparison161 reconstructs all five039g lobes and their derived
+pleura together with the authenticated accepted002 Body20 transform. At the
+floating SAT construction stage, arch7 and carotid465 have zero contacts with the
+current lungs/pleura; the old context instead had60/332/378 arch contacts against
+305/308/310 and179 carotid contacts against each of308/310. Subclavian471 has277
+contacts against each of308/310; axillary475 has194 against each. These results
+prevent unnecessary arch/carotid movement but do not establish exact clearance,
+closed-solid containment or dynamic admission. Report SHA256:
+c754b05a6e9e6d9643b9340a5adf50d6e0eabfc0b56027c6ece56ccad8408172.
+Current six-row overlay SHA256:
+48b37331b9a710d76e0cfcf279e9c8ca84129c3eddabbb91875e0cd29b1dfdc9.
+Actual elapsed time55.037 seconds; no solver or GPU state advanced.
+No contact waivers or rejected geometry have entered the accepted native scene.
+
+The shared pair verifier now emits ordered geometry bindings for both surfaces.
+Its checked retained-witness reader requires exact typed roles, ordered face and
+position hashes, source-GID hashes and in-range unique indices. This prevents the
+observed misuse of009 face indices against1333 remeshed row134. It does not
+convert old reports into new evidence. The relevant owner/verifier regression
+suite passes138 tests and35 subtests; source lint and diff checks pass. Evidence:
+retained-witness-binding-regression-20261017-002/result.json, SHA256
+610522e300d47f34f746aa62185ca93f4bc7d6c8ee1422a21d5e280104f03c87.
+Attempt001 is retained: test-file F841 reported an unchanged existing unused
+variable; the scoped002 checks preserve that unrelated test code.
+
 ## Lung collapse ownership and composed pleura — 2026-10-17
 
 The existing pleura compiler now accepts an optional authenticated edge-collapse

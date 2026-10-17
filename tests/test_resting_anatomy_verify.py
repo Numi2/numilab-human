@@ -3276,3 +3276,41 @@ def test_geometry_progress_preserves_results_and_stops_with_first_failure():
     import pytest
     with pytest.raises(TypeError, match="progress observer"):
         audit_changed_surfaces(surfaces, [first.key], progress=True)
+
+
+class RetainedTriangleWitnessBindingTests(unittest.TestCase):
+    def setUp(self):
+        self.first = prepare_surface((51005, 132), tetra(), FACES)
+        self.second = prepare_surface((51005, 134), tetra(offset=.25), FACES)
+        self.report = audit_surface_pair(self.first, self.second)
+        self.assertTrue(self.report["unexpected_triangle_pairs"])
+
+    def test_witnesses_require_the_exact_ordered_geometry(self):
+        self.assertEqual(av.bound_unexpected_triangle_pairs(
+            self.report, self.first, self.second),
+            [tuple(pair) for pair in self.report["unexpected_triangle_pairs"]])
+        altered = [
+            prepare_surface(self.second.key, tetra(offset=.25001), FACES),
+            prepare_surface(self.second.key, tetra(offset=.25), FACES[::-1]),
+            prepare_surface(self.second.key, tetra(offset=.25), FACES,
+                            source_vertex_ids=np.arange(10, 14, dtype=np.uint64)),
+        ]
+        for surface in altered:
+            with self.subTest(geometry=surface.diagnostics()["positions_sha256"],
+                              faces=surface.diagnostics()["faces_sha256"]):
+                with self.assertRaisesRegex(ValueError, "do not bind"):
+                    av.bound_unexpected_triangle_pairs(self.report, self.first, surface)
+        with self.assertRaisesRegex(ValueError, "do not bind"):
+            av.bound_unexpected_triangle_pairs(self.report, self.second, self.first)
+
+    def test_legacy_or_malformed_witnesses_fail_before_indexing(self):
+        legacy = copy.deepcopy(self.report)
+        del legacy["surface_geometry_bindings"]
+        with self.assertRaisesRegex(ValueError, "do not bind"):
+            av.bound_unexpected_triangle_pairs(legacy, self.first, self.second)
+        for pairs in ([[0, 4]], [[True, 0]], [[0, 0], [0, 0]], None):
+            invalid = copy.deepcopy(self.report)
+            invalid["unexpected_triangle_pairs"] = pairs
+            with self.subTest(pairs=pairs):
+                with self.assertRaises(ValueError):
+                    av.bound_unexpected_triangle_pairs(invalid, self.first, self.second)
