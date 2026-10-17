@@ -436,12 +436,38 @@ def point_location(point, records):
 
 
 def _prepare_exact_aabb_index(lower_bounds, upper_bounds, *, leaf_size=12):
-    """Build the deterministic exact-box tree used by repeated point queries."""
+    """Build an exact box tree, scaling dyadic bounds to integers internally.
+
+    Packed Float32 metre coordinates are dyadic. A single positive common
+    denominator preserves every bound, split-axis span, centre ordering and
+    tie while avoiding Fraction comparisons throughout the recursive build.
+    Node bounds return to exact metres before any containment query. Other
+    numeric bounds retain the original unscaled construction.
+    """
     require(len(lower_bounds) == len(upper_bounds) and bool(lower_bounds),
             "point-location AABB index requires non-empty bounds")
     require(type(leaf_size) is int and leaf_size > 0, "invalid point-location AABB leaf size")
     rows = tuple((tuple(lower), tuple(upper))
                  for lower, upper in zip(lower_bounds, upper_bounds))
+    denominator = 1
+    dyadic = True
+    for lower, upper in rows:
+        for value in (*lower, *upper):
+            if not isinstance(value, (int, Fraction)):
+                dyadic = False
+                break
+            divisor = value.denominator
+            if divisor & (divisor - 1):
+                dyadic = False
+                break
+            denominator = max(denominator, divisor)
+        if not dyadic:
+            break
+    scaled = dyadic and denominator > 1
+    if scaled:
+        rows = tuple(tuple(tuple(value.numerator * (denominator // value.denominator)
+                                 for value in corner) for corner in row)
+                     for row in rows)
     node_count = 0
 
     def build(indices):
@@ -449,6 +475,9 @@ def _prepare_exact_aabb_index(lower_bounds, upper_bounds, *, leaf_size=12):
         node_count += 1
         lower = tuple(min(rows[index][0][axis] for index in indices) for axis in range(3))
         upper = tuple(max(rows[index][1][axis] for index in indices) for axis in range(3))
+        if scaled:
+            lower = tuple(Fraction(value, denominator) for value in lower)
+            upper = tuple(Fraction(value, denominator) for value in upper)
         if len(indices) <= leaf_size:
             return (lower, upper, tuple(sorted(indices)), None, None)
         centers = {axis: [rows[index][0][axis] + rows[index][1][axis]

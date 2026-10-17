@@ -70,5 +70,47 @@ class Float32PointLocationMetersTests(unittest.TestCase):
             ci.prepare_float32_point_location_meters(self.points, ())
 
 
+
+class ExactAabbScalingTests(unittest.TestCase):
+    def test_extreme_dyadic_metres_preserve_bounds_and_stable_ties(self):
+        tiny = F(1, 1 << 149)
+        huge = F(1 << 128)
+        lower = ((-huge, -tiny, F(0)), (F(0), -tiny, F(0)),
+                 (F(0), -tiny, F(0)), (huge, -tiny, F(0)))
+        upper = tuple((x, tiny, z) for x, _, z in lower)
+        root, nodes = ci._prepare_exact_aabb_index(lower, upper, leaf_size=1)
+        self.assertEqual(nodes, 7)
+        self.assertEqual(root[:2], ((-huge, -tiny, F(0)),
+                                   (huge, tiny, F(0))))
+        def leaves(node):
+            lo, hi, indices, left, right = node
+            if indices is not None:
+                self.assertEqual(len(indices), 1)
+                index = indices[0]
+                self.assertEqual((lo, hi), (lower[index], upper[index]))
+                return list(indices)
+            return leaves(left) + leaves(right)
+        self.assertEqual(leaves(root), [0, 1, 2, 3])
+
+    def test_nondyadic_and_float_bounds_retain_exact_values(self):
+        for offset in (F(1, 3), 0.25):
+            lower = ((offset, offset, offset),
+                     (offset + 2, offset, offset))
+            upper = tuple(tuple(value + 1 for value in row) for row in lower)
+            root, nodes = ci._prepare_exact_aabb_index(lower, upper, leaf_size=1)
+            self.assertEqual(nodes, 3)
+            self.assertEqual(root[:2], (lower[0], upper[1]))
+            self.assertEqual(root[3][:3], (lower[0], upper[0], (0,)))
+            self.assertEqual(root[4][:3], (lower[1], upper[1], (1,)))
+            self.assertIs(type(root[0][0]), type(offset))
+
+    def test_identical_dyadic_centres_remain_one_sorted_leaf(self):
+        lower = tuple((F(-i, 32),) * 3 for i in (1, 2, 3, 4))
+        upper = tuple(tuple(-value for value in row) for row in lower)
+        root, nodes = ci._prepare_exact_aabb_index(lower, upper, leaf_size=1)
+        self.assertEqual(nodes, 1)
+        self.assertEqual(root, ((F(-1, 8),) * 3, (F(1, 8),) * 3,
+                                (0, 1, 2, 3), None, None))
+
 if __name__ == "__main__":
     unittest.main()
