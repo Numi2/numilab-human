@@ -171,11 +171,25 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         normalized_maps = []
         for name, mapping in (("face", source_face_ancestry), ("vertex", source_vertex_ancestry)):
             try:
-                normalized = {int(stable_id): value for stable_id, value in mapping.items()}
-            except (AttributeError, TypeError, ValueError) as exc:
+                items = list(mapping.items())
+            except (AttributeError, TypeError) as exc:
                 raise ValueError(f"explicit source pleura {name} ancestry must be keyed by stable lobe ID") from exc
-            if (len(normalized) != len(mapping)
-                    or set(normalized) != set(LOBE_IDS)):
+            normalized = {}
+            for stable_id, value in items:
+                if isinstance(stable_id, (bool, np.bool_)):
+                    raise ValueError(f"explicit source pleura {name} ancestry rejects boolean stable lobe IDs")
+                if isinstance(stable_id, (int, np.integer)):
+                    normalized_id = int(stable_id)
+                elif isinstance(stable_id, str) and stable_id.isdecimal():
+                    normalized_id = int(stable_id)
+                    if str(normalized_id) != stable_id:
+                        raise ValueError(f"explicit source pleura {name} ancestry requires canonical decimal stable lobe IDs")
+                else:
+                    raise ValueError(f"explicit source pleura {name} ancestry requires integer or canonical decimal stable lobe IDs")
+                if normalized_id in normalized:
+                    raise ValueError(f"explicit source pleura {name} ancestry contains duplicate normalized stable lobe IDs")
+                normalized[normalized_id] = value
+            if set(normalized) != set(LOBE_IDS):
                 raise ValueError(f"explicit source pleura {name} ancestry requires all five unique stable lobe IDs")
             normalized_maps.append(normalized)
         source_face_ancestry, source_vertex_ancestry = normalized_maps
@@ -191,10 +205,16 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         for stable_id in LOBE_IDS:
             candidate_vertices6, candidate_faces = lobes[stable_id]
             source_vertices6, source_faces = source_lineage_lobes[stable_id]
+            candidate_faces = np.asarray(candidate_faces)
+            source_faces = np.asarray(source_faces)
+            if has_explicit_ancestry and (
+                    candidate_faces.dtype.kind not in "iu"
+                    or source_faces.dtype.kind not in "iu"):
+                raise ValueError(f"explicit source pleura lineage requires integer candidate and source face indices for row {stable_id}")
             candidate_vertices6 = np.asarray(candidate_vertices6, dtype=np.float32)
-            candidate_faces = np.asarray(candidate_faces, dtype=np.int64)
+            candidate_faces = candidate_faces.astype(np.int64, copy=False)
             source_vertices6 = np.asarray(source_vertices6, dtype=np.float32)
-            source_faces = np.asarray(source_faces, dtype=np.int64)
+            source_faces = source_faces.astype(np.int64, copy=False)
             if (candidate_vertices6.ndim != 2 or candidate_vertices6.shape[1] != 6
                     or source_vertices6.ndim != 2 or source_vertices6.shape[1] != 6
                     or candidate_faces.ndim != 2 or candidate_faces.shape[1] != 3

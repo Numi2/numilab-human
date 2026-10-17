@@ -231,6 +231,45 @@ class RestingPleuraProxyTests(unittest.TestCase):
                 source_vertex_ancestry={sid: [] for sid in (305, 306, 307, 308, 309)},
             )
 
+    def test_explicit_ancestry_rejects_fractional_stable_ids_and_face_indices(self):
+        source, _, _ = self._append_source_microfragment(self._two_lung_fixture())
+        face_map = {sid: [[i] for i in range(len(source[sid][1]))]
+                    for sid in (305, 306, 307, 308, 309)}
+        vertex_map = {sid: [[i] for i in range(len(source[sid][0]))]
+                      for sid in (305, 306, 307, 308, 309)}
+
+        fractional_face_keys = dict(face_map)
+        fractional_face_keys[305.1] = fractional_face_keys.pop(305)
+        with self.assertRaisesRegex(ValueError, "integer or canonical decimal stable lobe IDs"):
+            derive_lung_union_exterior(
+                source, source_lineage_lobes=source,
+                source_face_ancestry=fractional_face_keys,
+                source_vertex_ancestry=vertex_map,
+            )
+
+        for changed_side in ("candidate", "source"):
+            with self.subTest(changed_side=changed_side):
+                candidate = self._copy_lobes(source)
+                lineage = self._copy_lobes(source)
+                target = candidate if changed_side == "candidate" else lineage
+                vertices6, faces = target[305]
+                target[305] = (vertices6, faces.astype(np.float64))
+                with self.assertRaisesRegex(ValueError, "requires integer candidate and source face indices"):
+                    derive_lung_union_exterior(
+                        candidate, source_lineage_lobes=lineage,
+                        source_face_ancestry=face_map,
+                        source_vertex_ancestry=vertex_map,
+                    )
+
+        canonical_face_keys = {str(sid): value for sid, value in face_map.items()}
+        canonical_vertex_keys = {str(sid): value for sid, value in vertex_map.items()}
+        _, _, detail = derive_lung_union_exterior(
+            source, source_lineage_lobes=source,
+            source_face_ancestry=canonical_face_keys,
+            source_vertex_ancestry=canonical_vertex_keys,
+        )
+        self.assertEqual(len(detail["excluded_source_microfragments"]), 1)
+
     def test_source_lineage_still_rejects_collapsed_fragment_geometry(self):
         source, vertices_by_row, _ = self._append_source_microfragment(self._two_lung_fixture())
         candidate = self._copy_lobes(source)
