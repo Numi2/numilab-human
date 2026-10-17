@@ -440,6 +440,141 @@ def audit(output_dir: Path) -> dict[str, Any]:
     return result
 
 
+def transport_tissue_layer(
+    outer_reference: np.ndarray, outer_deformed: np.ndarray,
+    parent_triangles: np.ndarray, barycentric: np.ndarray,
+    reference_offsets: np.ndarray,
+) -> np.ndarray:
+    """Carry a hidden skin sheet with its outer material surface.
+
+    Offsets are expressed in the parent's orthonormal tangent/bitangent/normal
+    frame, in metres. Keeping this vector in the moving frame avoids letting an
+    independently skinned inner sheet pass through the outer skin during bending.
+    This is geometric transport, not a constitutive skin law or a new mass owner.
+    A collapsed parent is rejected; there is no silent fallback.
+    """
+    reference = np.asarray(outer_reference, dtype=np.float64)
+    deformed = np.asarray(outer_deformed, dtype=np.float64)
+    parents = np.asarray(parent_triangles)
+    bary = np.asarray(barycentric, dtype=np.float64)
+    offsets = np.asarray(reference_offsets, dtype=np.float64)
+    require(reference.ndim == 2 and reference.shape[1] == 3
+            and deformed.shape == reference.shape
+            and parents.ndim == 2 and parents.shape[1] == 3
+            and parents.dtype.kind in "iu"
+            and bary.shape == parents.shape and offsets.shape == parents.shape
+            and len(parents) > 0 and np.all(parents >= 0)
+            and np.all(parents < len(reference)),
+            "skin layer transport shapes and parent indices")
+    require(all(np.isfinite(x).all() for x in
+                (reference, deformed, bary, offsets))
+            and np.all(bary >= 0)
+            and np.max(np.abs(bary.sum(axis=1)-1)) <= 1e-12,
+            "skin layer transport requires finite normalized material parents")
+
+    def frames(points):
+        tri = points[parents]
+        edge = tri[:, 1]-tri[:, 0]
+        second = tri[:, 2]-tri[:, 0]
+        lengths = np.linalg.norm(edge, axis=1)
+        cross = np.cross(edge, second)
+        areas = np.linalg.norm(cross, axis=1)
+        require(np.all(lengths > 0) and np.all(areas > 0)
+                and np.isfinite(lengths).all() and np.isfinite(areas).all(),
+                "skin layer parent collapsed")
+        tangent = edge/lengths[:, None]
+        normal = cross/areas[:, None]
+        bitangent = np.cross(normal, tangent)
+        return tri, np.stack((tangent, bitangent, normal), axis=2)
+
+    _, reference_frame = frames(reference)
+    triangles, moving_frame = frames(deformed)
+    # The caller binds the source point to the reference frame once. Returning
+    # exact Float64 transport here allows the existing emitter to own F32 rounding.
+    result = np.einsum("ni,nij->nj", bary, triangles)
+    result += np.einsum("nij,nj->ni", moving_frame, offsets)
+    require(np.isfinite(result).all(), "skin layer transport produced invalid points")
+    # Reference frames are evaluated even for zero offsets: degenerate source
+    # parents must never become an apparently valid deformed skin binding.
+    require(np.isfinite(reference_frame).all(), "invalid source skin layer frame")
+    return result
+
+
+def bind_tissue_layer_offsets(
+    outer_reference: np.ndarray, tissue_reference: np.ndarray,
+    parent_triangles: np.ndarray, barycentric: np.ndarray,
+) -> np.ndarray:
+    """Bind existing source thickness without inventing a uniform offset.
+
+    Parent identities/barycentrics come from the source correspondence owner.
+    This function does not infer a nearest anatomical surface or calibrate tissue.
+    """
+    outer = np.asarray(outer_reference, dtype=np.float64)
+    tissue = np.asarray(tissue_reference, dtype=np.float64)
+    parents = np.asarray(parent_triangles)
+    bary = np.asarray(barycentric, dtype=np.float64)
+    zeros = np.zeros_like(tissue)
+    anchor = transport_tissue_layer(outer, outer, parents, bary, zeros)
+    require(tissue.shape == anchor.shape and np.isfinite(tissue).all(),
+            "skin tissue reference positions differ from parent count")
+    tri = outer[parents]
+    tangent = tri[:, 1]-tri[:, 0]
+    tangent /= np.linalg.norm(tangent, axis=1)[:, None]
+    normal = np.cross(tri[:, 1]-tri[:, 0], tri[:, 2]-tri[:, 0])
+    normal /= np.linalg.norm(normal, axis=1)[:, None]
+    frame = np.stack((tangent, np.cross(normal, tangent), normal), axis=2)
+    return np.einsum("nji,nj->ni", frame, tissue-anchor)
+
+
+def tissue_layer_gpu_records(parent_triangles, output_vertices, barycentric,
+                             reference_offsets, local_normals, *, vertex_count):
+    """Emit the existing native owner's 64-byte skin-layer GPU records.
+
+    This preparation-only function authenticates index ownership/race freedom.
+    The runtime consumes the resulting immutable map on GPU; it does not retain
+    another copy of physiology or advance an independent skin clock.
+    """
+    parents = np.asarray(parent_triangles)
+    outputs = np.asarray(output_vertices)
+    bary = np.asarray(barycentric, dtype=np.float64)
+    offsets = np.asarray(reference_offsets, dtype=np.float64)
+    normals = np.asarray(local_normals, dtype=np.float64)
+    require(type(vertex_count) is int and 0 < vertex_count < 2**32
+            and parents.ndim == 2 and parents.shape[1] == 3 and len(parents) > 0
+            and parents.dtype.kind in "iu" and outputs.dtype.kind in "iu"
+            and outputs.shape == (len(parents),)
+            and np.all(parents >= 0) and np.all(parents < vertex_count)
+            and np.all(outputs >= 0) and np.all(outputs < vertex_count),
+            "skin layer GPU vertex identity is invalid")
+    require(len(np.unique(outputs)) == len(outputs)
+            and not np.intersect1d(parents.ravel(), outputs).size
+            and np.all(parents[:, 0] != parents[:, 1])
+            and np.all(parents[:, 1] != parents[:, 2])
+            and np.all(parents[:, 0] != parents[:, 2]),
+            "skin layer GPU map aliases an output or parent")
+    require(bary.shape == parents.shape and offsets.shape == parents.shape
+            and normals.shape == parents.shape
+            and all(np.isfinite(x).all() for x in (bary, offsets, normals))
+            and np.all(bary >= 0)
+            and np.max(np.abs(bary.sum(axis=1)-1)) <= 1e-12
+            and np.max(np.abs(np.linalg.norm(normals, axis=1)-1)) <= 1e-6,
+            "skin layer GPU material field is invalid")
+    dtype = np.dtype([("parent_and_output", "<u4", (4,)),
+                      ("barycentric", "<f4", (4,)),
+                      ("offset", "<f4", (4,)),
+                      ("normal", "<f4", (4,))])
+    records = np.zeros(len(parents), dtype=dtype)
+    records["parent_and_output"][:, :3] = parents
+    records["parent_and_output"][:, 3] = outputs
+    for key, values in (("barycentric", bary), ("offset", offsets), ("normal", normals)):
+        require(np.max(np.abs(values)) <= np.finfo(np.float32).max,
+                "skin layer field exceeds native Float32 range")
+        records[key][:, :3] = values
+    require(records.dtype.itemsize == 64
+            and np.max(np.abs(records["barycentric"][:, :3].sum(axis=1)-1)) <= 1e-6,
+            "skin layer GPU emission differs from native ABI")
+    return records
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
