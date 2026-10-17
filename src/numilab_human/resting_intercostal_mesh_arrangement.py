@@ -3386,6 +3386,100 @@ def _source_face_evidence_matches_typed_rib(
     return True
 
 
+
+def _exact_geometry_parent_patch_evidence(
+    *, parent_payload_raw, parent_faces, parent_face_id, item,
+    source_report_raw, source_parent_npz_raws_by_sha, cache,
+):
+    """Prove reindexed ownership from the original typed floating triangle.
+
+    No proximity tolerance, synthetic source report, or inferred face support
+    can establish this relation. Only an unchanged single-source claim whose
+    exact emitted oriented triangle is still present may inherit the channel.
+    """
+    import io
+
+    # The normalizer has already joined these immutable bytes by their
+    # independently checked hash; avoid hashing a full report for every face.
+    report_sha = item["source_report_sha256"]
+    if report_sha not in cache:
+        report = json.loads(source_report_raw)
+        parent_sha = report.get("parent_candidate_sha256")
+        _require(parent_sha in source_parent_npz_raws_by_sha,
+                 "exact geometry evidence lacks its pinned source parent NPZ")
+        try:
+            with np.load(io.BytesIO(source_parent_npz_raws_by_sha[parent_sha]),
+                         allow_pickle=False) as z:
+                arrays = {k: z[k].copy() for k in (
+                    "positions_world_f64", "faces", "source_original_id", "source_face_id")}
+        except (KeyError, ValueError, OSError) as error:
+            raise ValueError("exact geometry source parent NPZ is invalid") from error
+        points, faces = arrays["positions_world_f64"], arrays["faces"]
+        _require(points.dtype == np.dtype("<f8") and points.ndim == 2
+                 and points.shape[1] == 3 and np.isfinite(points).all()
+                 and faces.ndim == 2 and faces.shape[1] == 3
+                 and np.issubdtype(faces.dtype, np.integer)
+                 and np.all(faces >= 0) and np.all(faces < len(points))
+                 and arrays["source_original_id"].shape == (len(faces),)
+                 and arrays["source_face_id"].shape == (len(faces),)
+                 and np.issubdtype(arrays["source_original_id"].dtype, np.integer)
+                 and np.issubdtype(arrays["source_face_id"].dtype, np.integer)
+                 and np.all(arrays["source_original_id"] >= 0)
+                 and np.all(arrays["source_face_id"] >= 0),
+                 "exact geometry source parent arrays are malformed")
+        by_id = {row["output_face"]: row for row in report["faces"]}
+        _require(len(by_id) == len(report["faces"]),
+                 "exact geometry source face inventory repeats an output face")
+        cache[report_sha] = (arrays, by_id)
+    arrays, by_id = cache[report_sha]
+    if "current_parent_world" not in cache:
+        try:
+            with np.load(io.BytesIO(parent_payload_raw), allow_pickle=False) as z:
+                current_points = z["positions_world_f32"].copy()
+                current_faces = z["faces"].copy()
+        except (KeyError, ValueError, OSError) as error:
+            raise ValueError("exact geometry current parent NPZ is invalid") from error
+        _require(current_points.dtype == np.dtype("<f4")
+                 and current_points.ndim == 2 and current_points.shape[1] == 3
+                 and np.isfinite(current_points).all()
+                 and current_faces.shape == parent_faces.shape
+                 and np.array_equal(current_faces, parent_faces)
+                 and np.all(parent_faces < len(current_points)),
+                 "exact geometry current parent arrays differ from pinned faces")
+        cache["current_parent_world"] = current_points
+    source_output_id = item.get("source_output_face_id")
+    _require(type(source_output_id) is int and source_output_id in by_id,
+             "exact geometry evidence has an invalid historical output face")
+    row = by_id[source_output_id]
+    support = row.get("parent_output_face_ids")
+    _require(row.get("classification") == "unchanged_parent_face"
+             and row.get("exact_source_face_claim") is True
+             and isinstance(support, list) and len(support) == 1
+             and type(support[0]) is int
+             and 0 <= support[0] < len(arrays["faces"]),
+             "exact geometry evidence is not one unchanged source triangle")
+    source_id = support[0]
+    pair = [int(arrays["source_original_id"][source_id]),
+            int(arrays["source_face_id"][source_id])]
+    _require(row.get("source_rows") == [pair]
+             and item.get("source_face_ids") == [pair[1]],
+             "exact geometry source row differs from original floating ancestry")
+    historical = np.ascontiguousarray(
+        arrays["positions_world_f64"][arrays["faces"][source_id]], dtype="<f4")
+    current = cache["current_parent_world"][parent_faces[parent_face_id]]
+    _require(np.isfinite(historical).all(),
+             "exact geometry source triangle is not finite after Float32 emission")
+    def oriented_key(triangle):
+        rows = [tuple(row.view("<u4").tolist()) for row in triangle]
+        return min(tuple(rows[k:] + rows[:k]) for k in range(3))
+    _require(oriented_key(current) == oriented_key(historical),
+             "exact geometry parent triangle differs from its historical typed source")
+    _require(np.any(np.cross(current[1].astype(np.float64)-current[0],
+                             current[2].astype(np.float64)-current[0]) != 0),
+             "exact geometry parent triangle is degenerate")
+    return source_output_id
+
+
 def _normalize_local_reconstruction_parent_face_owners(
     owner_report_raw: bytes,
     expected_owner_report_sha256: str,
@@ -3396,6 +3490,8 @@ def _normalize_local_reconstruction_parent_face_owners(
     operation_ancestry_raw: bytes,
     authenticated_source_report_raws,
     authenticated_source_report_sha256s,
+    authenticated_source_parent_npz_raws=(),
+    authenticated_source_parent_npz_sha256s=(),
 ) -> tuple[dict[int, int | None], dict]:
     """Authenticate explicit parent-face rib ownership, including inherited caps."""
     expected_sha = _local_reconstruction_hex_sha(
@@ -3439,6 +3535,18 @@ def _normalize_local_reconstruction_parent_face_owners(
     typed_tool_rows, source_face_claims = _parse_local_reconstruction_source_reports(
         authenticated_source_report_raws,
     )
+    source_parent_raws = list(authenticated_source_parent_npz_raws)
+    source_parent_shas = list(authenticated_source_parent_npz_sha256s)
+    _require(len(source_parent_raws) == len(source_parent_shas)
+             and len(source_parent_shas) == len(set(source_parent_shas))
+             and all(isinstance(raw, bytes) and raw for raw in source_parent_raws)
+             and all(_local_reconstruction_sha256(raw) == expected
+                     for raw, expected in zip(source_parent_raws, source_parent_shas)),
+             "exact geometry source parent NPZs differ from their independent pins")
+    source_parent_npz_raws_by_sha = dict(zip(source_parent_shas, source_parent_raws))
+    source_raws_by_sha = dict(zip(authenticated_source_report_shas,
+                                 authenticated_source_report_raws))
+    exact_geometry_cache = {}
     _require(report.get("parent_payload_sha256") == parent_payload_sha,
              "owner report parent payload hash does not authenticate supplied bytes")
     _require(report.get("operation_ancestry_sha256") == operation_chain_sha,
@@ -3488,6 +3596,7 @@ def _normalize_local_reconstruction_parent_face_owners(
                 and item.get("method") in (
                     "direct_typed_rib_source",
                     "inherited_authenticated_parent_patch",
+                    "exact_geometry_authenticated_parent_patch",
                 ),
                 "parent face-owner evidence has an invalid typed rib or method",
             )
@@ -3507,13 +3616,24 @@ def _normalize_local_reconstruction_parent_face_owners(
             rib_id = int(item["rib_stable_id"])
             _require(rib_id not in evidenced_ribs,
                      "parent face-owner evidence repeats a typed rib")
+            evidence_face_id = face_id
+            evidence_method = item["method"]
+            if evidence_method == "exact_geometry_authenticated_parent_patch":
+                evidence_face_id = _exact_geometry_parent_patch_evidence(
+                    parent_payload_raw=parent_payload_raw,
+                    parent_faces=faces, parent_face_id=face_id, item=item,
+                    source_report_raw=source_raws_by_sha[source_report_sha],
+                    source_parent_npz_raws_by_sha=source_parent_npz_raws_by_sha,
+                    cache=exact_geometry_cache,
+                )
+                evidence_method = "inherited_authenticated_parent_patch"
             _require(
                 _source_face_evidence_matches_typed_rib(
                     source_report_sha=source_report_sha,
-                    parent_face_id=face_id,
+                    parent_face_id=evidence_face_id,
                     source_face_ids=source_faces,
                     rib_stable_id=rib_id,
-                    method=item["method"],
+                    method=evidence_method,
                     source_face_claims=source_face_claims,
                     typed_tool_rows=typed_tool_rows,
                 ),
@@ -3543,6 +3663,10 @@ def _normalize_local_reconstruction_parent_face_owners(
         "direct_typed_source_face_owner_count": sum(
             methods.get(face_id) == "direct_typed_rib_source"
             for face_id in methods),
+        "exact_geometry_inherited_parent_face_owner_count": sum(
+            method == "exact_geometry_authenticated_parent_patch"
+            for method in methods.values()),
+        "authenticated_source_parent_npz_sha256s": source_parent_shas,
         "unowned_parent_face_count": sum(owner is None for owner in owners.values()),
     }
 
@@ -4547,6 +4671,10 @@ def compile_local_reconstruction_intercostal_payload(
             authenticated_source_report_raws=spec.get("authenticated_source_report_raws"),
             authenticated_source_report_sha256s=spec.get(
                 "authenticated_source_report_sha256s"),
+            authenticated_source_parent_npz_raws=spec.get(
+                "authenticated_source_parent_npz_raws", ()),
+            authenticated_source_parent_npz_sha256s=spec.get(
+                "authenticated_source_parent_npz_sha256s", ()),
         )
         face_rib_owners, child_owner_resolution = derive_local_reconstruction_face_rib_owners(
             face_parent_ids, parent_owners, parent_face_count=len(parent_faces),
