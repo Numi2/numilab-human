@@ -796,6 +796,214 @@ def build_actual_capture_owner_proof(
     }
 
 
+
+def build_mixed_full21_candidate_owner_record(
+    *,
+    actual_capture_row,
+    candidate_positions_f32,
+    candidate_faces_u32,
+    candidate_gids_u64,
+    candidate_source_slots_i64,
+    candidate_weights_f64,
+    candidate_source_points_f32,
+    predicted_gids_u64,
+    predicted_source_points_f32,
+    predicted_lane_world_points_f32,
+    candidate_parent_payload_sha256,
+    candidate_parent_extension_sha256,
+    candidate_child_payload_sha256,
+    candidate_archive_sha256,
+    source_face_lineage,
+    source_vertex_lineage,
+):
+    """Bind candidate vertices to captured or independently recomputed full21 bases.
+
+    The accepted capture proof is reused only for GIDs whose displayed positions
+    remain byte-identical. Every changed GID must have a complete predicted lane
+    record whose ordered Float32 blend exactly reproduces its candidate position.
+    This is a proof-construction helper; it does not perform native capture.
+    """
+    from . import resting_anatomy_verify as verify
+
+    _require(isinstance(actual_capture_row, dict),
+             "mixed candidate needs one file-backed actual-capture row")
+    actual_proof = actual_capture_row.get("full21_actual_capture_owner_proof")
+    _require(isinstance(actual_proof, dict)
+             and actual_proof.get("displayed_world_owner_relation")
+                 == "accepted_native_capture_byte_exact",
+             "mixed candidate lacks the exact accepted capture owner proof")
+    positions = np.ascontiguousarray(candidate_positions_f32, dtype="<f4")
+    faces = np.ascontiguousarray(candidate_faces_u32, dtype="<u4")
+    gids = np.asarray(candidate_gids_u64)
+    slots = np.asarray(candidate_source_slots_i64)
+    weights = np.asarray(candidate_weights_f64)
+    source_points = np.ascontiguousarray(candidate_source_points_f32, dtype="<f4")
+    changed = np.asarray(predicted_gids_u64)
+    changed_source = np.ascontiguousarray(predicted_source_points_f32, dtype="<f4")
+    lanes = np.ascontiguousarray(predicted_lane_world_points_f32, dtype="<f4")
+    _require(positions.ndim == 2 and positions.shape[1] == 3
+             and np.isfinite(positions).all(),
+             "candidate positions must be finite Float32 XYZ")
+    _require(faces.ndim == 2 and faces.shape[1] == 3,
+             "candidate faces must be ordered local triangles")
+    _require(gids.dtype == np.dtype("<u8") and gids.shape == (len(positions),)
+             and len(np.unique(gids)) == len(gids),
+             "candidate canonical GIDs must uniquely cover displayed positions")
+    _require(slots.dtype == np.dtype("<i8") and slots.shape == gids.shape
+             and np.all(slots >= 0),
+             "candidate source slots must retain the complete original slot map")
+    _require(weights.dtype == np.dtype("<f8") and weights.shape == (len(gids), 21)
+             and np.isfinite(weights).all() and np.all(weights > 0)
+             and np.max(np.abs(weights.sum(axis=1)-1.0)) <= 1e-12,
+             "candidate must retain all 21 positive normalized source weights")
+    _require(source_points.shape == positions.shape and np.isfinite(source_points).all(),
+             "candidate full21 source points must cover every GID")
+    _require(changed.dtype.kind in "iu" and changed.ndim == 1
+             and len(np.unique(changed)) == len(changed),
+             "predicted GIDs must be a unique integer subset")
+    changed = np.ascontiguousarray(changed.astype("<u8", copy=False))
+    _require(changed_source.shape == (len(changed), 3)
+             and lanes.shape == (len(changed), 21, 3)
+             and np.isfinite(changed_source).all() and np.isfinite(lanes).all(),
+             "each changed GID needs a source point and all 21 emitted lane points")
+    gid_index = {int(g): i for i, g in enumerate(gids)}
+    _require(set(map(int, changed)) <= set(gid_index),
+             "predicted GID is absent from candidate")
+    actual_gids = np.asarray(actual_capture_row["canonical_gids_u64"])
+    actual_positions = np.ascontiguousarray(
+        actual_capture_row["actual_capture_positions_f32"], dtype="<f4")
+    actual_slots = np.asarray(actual_capture_row["capture_to_source_slot_i64"])
+    actual_weights = np.asarray(actual_capture_row["full21_weights_f64"])
+    actual_source_points = np.ascontiguousarray(
+        actual_capture_row["full21_source_points_f32"], dtype="<f4")
+    _require(actual_gids.dtype == np.dtype("<u8")
+             and actual_positions.shape == positions.shape
+             and actual_gids.shape == gids.shape
+             and actual_slots.dtype == np.dtype("<i8")
+             and actual_slots.shape == slots.shape
+             and actual_weights.dtype == np.dtype("<f8")
+             and actual_weights.shape == weights.shape
+             and actual_source_points.shape == positions.shape,
+             "actual capture row arrays are incomplete or mis-shaped")
+    _require(actual_gids.tobytes() == gids.tobytes()
+             and actual_slots.tobytes() == slots.tobytes(),
+             "candidate changed canonical GID or source-slot membership/order")
+    actual_index_faces = np.ascontiguousarray(
+        actual_capture_row["index_patch_faces_capture_u32"], dtype="<u4")
+    _require(faces.tobytes() == actual_index_faces.tobytes(),
+             "candidate faces differ from the authenticated 1274 index candidate")
+    _require(weights.tobytes() == actual_weights.tobytes(),
+             "candidate changed a full21 owner coefficient or lane order")
+    changed_set = set(map(int, changed))
+    basis = {}
+    lane_by_gid = {}
+    predicted_source_by_gid = {}
+    actual_position_by_gid = {}
+    actual_source_by_gid = {}
+    weight_by_gid = {}
+    for i, raw_gid in enumerate(gids):
+        gid = int(raw_gid)
+        actual_position_by_gid[gid] = actual_positions[i].copy()
+        actual_source_by_gid[gid] = actual_source_points[i].copy()
+        weight_by_gid[gid] = actual_weights[i].copy()
+        if gid not in changed_set:
+            _require(positions[i].tobytes() == actual_positions[i].tobytes(),
+                     f"unchanged GID {gid} differs from accepted native capture")
+            _require(source_points[i].tobytes() == actual_source_points[i].tobytes(),
+                     f"unchanged GID {gid} changed its captured parent source point")
+            basis[str(gid)] = {
+                "basis": "accepted_native_capture",
+                "position_f32": positions[i].tolist(),
+            }
+    for j, raw_gid in enumerate(changed):
+        gid = int(raw_gid)
+        i = gid_index[gid]
+        _require(source_points[i].tobytes() == changed_source[j].tobytes(),
+                 f"predicted GID {gid} candidate source point differs")
+        lane_weights = weights[i].astype("<f4")
+        expected = np.zeros(3, dtype="<f4")
+        for lane in range(21):
+            contribution = np.asarray(lanes[j, lane] * lane_weights[lane], dtype="<f4")
+            expected = np.asarray(expected + contribution, dtype="<f4")
+        _require(expected.tobytes() == positions[i].tobytes(),
+                 f"predicted GID {gid} does not match its exact ordered full21 Float32 replay")
+        lane_by_gid[gid] = lanes[j].copy()
+        predicted_source_by_gid[gid] = changed_source[j].copy()
+        basis[str(gid)] = {
+            "basis": "predicted_cpu_full21_float32_blend_at_accepted_poses",
+            "position_f32": positions[i].tolist(),
+            "source_point_f32": changed_source[j].tolist(),
+            "lane_world_points_sha256": _full21_rows_sha256(
+                np.asarray([gid], dtype="<u8"), lanes[j:j+1]),
+            "candidate_parent_payload_sha256": candidate_parent_payload_sha256,
+            "candidate_parent_extension_sha256": candidate_parent_extension_sha256,
+            "candidate_child_payload_sha256": candidate_child_payload_sha256,
+        }
+    _require(set(basis) == set(map(str, map(int, gids))),
+             "mixed per-GID basis does not exactly cover candidate membership")
+    _require(all(isinstance(value, str) and len(value) == 64
+                 and all(ch in "0123456789abcdef" for ch in value)
+                 for value in (candidate_parent_payload_sha256,
+                               candidate_parent_extension_sha256,
+                               candidate_child_payload_sha256,
+                               candidate_archive_sha256)),
+             "candidate source/emission archive SHA pin is malformed")
+    face_rows = tuple(source_face_lineage)
+    _require(len(face_rows) == len(faces) and all(isinstance(x, dict) for x in face_rows),
+             "candidate face ancestry must classify every displayed face")
+    _require(isinstance(source_vertex_lineage, dict)
+             and set(map(int, source_vertex_lineage)) == set(map(int, gids)),
+             "candidate vertex ancestry must cover exactly all canonical GIDs")
+    vertex_rows = [[int(gid), source_vertex_lineage[gid]
+                    if gid in source_vertex_lineage else source_vertex_lineage[str(gid)]]
+                   for gid in sorted(map(int, gids))]
+    owner = actual_proof
+    proof = {
+        "schema": "numi.human.full21-mixed-candidate-row-owner.v1",
+        "typed_identity": list(actual_capture_row["typed_identity"]),
+        "accepted_step": int(owner["accepted_step"]),
+        "accepted_pack_sha256": owner["accepted_pack_sha256"],
+        "capture_receipt_sha256": owner["capture_receipt_sha256"],
+        "source_payload_sha256": owner["source_payload_sha256"],
+        "accepted_row_parent_payload_sha256": owner["row_parent_payload_sha256"],
+        "accepted_parent_extension_sha256": owner["parent_extension_sha256"],
+        "candidate_parent_payload_sha256": candidate_parent_payload_sha256,
+        "candidate_parent_extension_sha256": candidate_parent_extension_sha256,
+        "candidate_child_payload_sha256": candidate_child_payload_sha256,
+        "candidate_archive_sha256": candidate_archive_sha256,
+        "source_map_candidate_sha256": owner["source_map_candidate_sha256"],
+        "prepared_owner_arrays_sha256": owner["prepared_owner_arrays_sha256"],
+        "index_candidate_sha256": owner["index_candidate_sha256"],
+        "ordered_core_body_indices": list(owner["ordered_core_body_indices"]),
+        "world_frame": owner["world_frame"],
+        "displayed_world_owner_relation": "per_GID_accepted_capture_or_predicted_full21",
+        "candidate_positions_sha256": _full21_rows_sha256(gids, positions),
+        "candidate_faces_sha256": hashlib.sha256(faces.tobytes()).hexdigest(),
+        "candidate_gids_sha256": hashlib.sha256(gids.tobytes()).hexdigest(),
+        "candidate_source_slots_sha256": _full21_rows_sha256(gids, slots),
+        "candidate_source_points_sha256": _full21_rows_sha256(gids, source_points),
+        "candidate_weights_sha256": _full21_rows_sha256(gids, weights),
+        "source_face_lineage_sha256": _canonical_json_sha256(list(face_rows)),
+        "source_vertex_lineage_sha256": _canonical_json_sha256(vertex_rows),
+        "actual_capture_owner_proof": owner,
+        "position_basis_by_gid": basis,
+        "predicted_gids_u64": changed,
+        "predicted_source_points_f32": changed_source.copy(),
+        "predicted_lane_world_points_f32": lanes.copy(),
+        "actual_capture_positions_f32": actual_positions.copy(),
+        "actual_capture_source_points_f32": actual_source_points.copy(),
+        "actual_capture_weights_f64": actual_weights.copy(),
+        "actual_capture_source_slots_i64": actual_slots.copy(),
+        "actual_capture_faces_u32": np.ascontiguousarray(
+            actual_capture_row["actual_capture_faces_u32"], dtype="<u4"),
+        "candidate_arrays": {
+            "positions_f32": positions.copy(), "faces_u32": faces.copy(),
+            "gids_u64": gids.copy(), "source_slots_i64": slots.copy(),
+            "weights_f64": weights.copy(), "source_points_f32": source_points.copy(),
+        },
+    }
+    return proof
+
 def actual_capture_owner_json_summary(proof):
     """Return the complete compact, JSON-safe audit record for a builder result."""
     top_level = (

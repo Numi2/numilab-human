@@ -237,6 +237,7 @@ class PreparedSurface:
     core_lane_world_proof: dict | None = field(default=None, repr=False, kw_only=True)
     core_capture_source_slots_by_gid: dict | None = field(default=None, repr=False, kw_only=True)
     core_actual_capture_proof: dict | None = field(default=None, repr=False, kw_only=True)
+    core_mixed_candidate_owner_proof: dict | None = field(default=None, repr=False, kw_only=True)
     declared_core_body_indices: tuple | None = field(default=None, repr=False, kw_only=True)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
@@ -459,6 +460,17 @@ class PreparedSurface:
                     "index_candidate_sha256", "ordered_core_body_indices", "world_frame",
                     "displayed_world_owner_relation", "source_face_ancestry_status")
             },
+            "full21_mixed_candidate_owner_proof": None if self.core_mixed_candidate_owner_proof is None else {
+                key: self.core_mixed_candidate_owner_proof[key] for key in (
+                    "accepted_step", "accepted_pack_sha256", "capture_receipt_sha256",
+                    "source_payload_sha256", "candidate_child_payload_sha256",
+                    "candidate_parent_extension_sha256", "candidate_archive_sha256",
+                    "source_map_candidate_sha256", "prepared_owner_arrays_sha256",
+                    "index_candidate_sha256", "ordered_core_body_indices", "world_frame",
+                    "displayed_world_owner_relation", "candidate_positions_sha256",
+                    "candidate_faces_sha256", "candidate_gids_sha256",
+                    "source_face_lineage_sha256", "source_vertex_lineage_sha256")
+            },
         }
 
 
@@ -646,6 +658,214 @@ def _validate_full21_actual_capture_owner_proof(
     return dict(proof)
 
 
+def _validate_full21_mixed_candidate_owner_proof(
+    proof, *, key, ordered_core_body_indices, source_points_by_gid,
+    weights_by_gid, displayed_points_by_gid, source_vertex_ids, faces,
+    source_face_lineage, source_vertex_lineage, capture_source_slots_by_gid,
+):
+    """Validate exact captured/predicted position ownership per canonical GID."""
+    expected = {
+        "schema", "typed_identity", "accepted_step", "accepted_pack_sha256",
+        "capture_receipt_sha256", "source_payload_sha256",
+        "accepted_row_parent_payload_sha256", "accepted_parent_extension_sha256",
+        "candidate_parent_payload_sha256", "candidate_parent_extension_sha256",
+        "candidate_child_payload_sha256", "candidate_archive_sha256",
+        "source_map_candidate_sha256", "prepared_owner_arrays_sha256",
+        "index_candidate_sha256", "ordered_core_body_indices", "world_frame",
+        "displayed_world_owner_relation", "candidate_positions_sha256",
+        "candidate_faces_sha256", "candidate_gids_sha256",
+        "candidate_source_slots_sha256", "candidate_source_points_sha256",
+        "candidate_weights_sha256", "source_face_lineage_sha256",
+        "source_vertex_lineage_sha256", "actual_capture_owner_proof",
+        "position_basis_by_gid", "predicted_gids_u64",
+        "predicted_source_points_f32", "predicted_lane_world_points_f32",
+        "actual_capture_positions_f32", "actual_capture_source_points_f32",
+        "actual_capture_weights_f64", "actual_capture_source_slots_i64",
+        "actual_capture_faces_u32", "candidate_arrays",
+    }
+    if not isinstance(proof, dict) or set(proof) != expected:
+        raise ValueError("mixed full21 candidate proof fields differ from the pinned schema")
+    if proof.get("schema") != "numi.human.full21-mixed-candidate-row-owner.v1":
+        raise ValueError("unsupported mixed full21 candidate proof schema")
+    if proof.get("typed_identity") != list(key):
+        raise ValueError("mixed full21 proof names a different typed surface")
+    if type(proof.get("accepted_step")) is not int or proof["accepted_step"] < 0:
+        raise ValueError("mixed full21 proof must name a nonnegative accepted step")
+    digest_fields = (
+        "accepted_pack_sha256", "capture_receipt_sha256", "source_payload_sha256",
+        "accepted_row_parent_payload_sha256", "accepted_parent_extension_sha256",
+        "candidate_parent_payload_sha256", "candidate_parent_extension_sha256",
+        "candidate_child_payload_sha256", "candidate_archive_sha256",
+        "source_map_candidate_sha256", "prepared_owner_arrays_sha256",
+        "index_candidate_sha256", "candidate_positions_sha256",
+        "candidate_faces_sha256", "candidate_gids_sha256",
+        "candidate_source_slots_sha256", "candidate_source_points_sha256",
+        "candidate_weights_sha256", "source_face_lineage_sha256",
+        "source_vertex_lineage_sha256",
+    )
+    for name in digest_fields:
+        value = proof.get(name)
+        if (not isinstance(value, str) or len(value) != 64
+                or any(ch not in "0123456789abcdef" for ch in value)):
+            raise ValueError("mixed full21 candidate proof has invalid " + name)
+    if (proof.get("ordered_core_body_indices") != list(ordered_core_body_indices)
+            or len(ordered_core_body_indices) != 21
+            or proof.get("world_frame") != "accepted_body_poses_from_capture_receipt"
+            or proof.get("displayed_world_owner_relation")
+               != "per_GID_accepted_capture_or_predicted_full21"):
+        raise ValueError("mixed full21 proof lacks the complete accepted-frame owner declaration")
+    actual_owner = proof.get("actual_capture_owner_proof")
+    actual_positions = np.ascontiguousarray(proof.get("actual_capture_positions_f32"), dtype="<f4")
+    actual_sources = np.ascontiguousarray(proof.get("actual_capture_source_points_f32"), dtype="<f4")
+    actual_weights = np.asarray(proof.get("actual_capture_weights_f64"))
+    actual_slots = np.asarray(proof.get("actual_capture_source_slots_i64"))
+    actual_faces = np.ascontiguousarray(proof.get("actual_capture_faces_u32"), dtype="<u4")
+    gids = np.asarray(source_vertex_ids)
+    face_bytes = np.ascontiguousarray(faces, dtype="<u4")
+    if (gids.dtype != np.dtype("<u8") or gids.ndim != 1
+            or len(np.unique(gids)) != len(gids)
+            or actual_positions.shape != (len(gids), 3)
+            or actual_sources.shape != actual_positions.shape
+            or actual_weights.shape != (len(gids), 21)
+            or actual_weights.dtype != np.dtype("<f8")
+            or actual_slots.dtype != np.dtype("<i8") or actual_slots.shape != gids.shape
+            or actual_faces.ndim != 2 or actual_faces.shape[1] != 3):
+        raise ValueError("mixed full21 proof captured owner arrays are malformed")
+    if (np.any(actual_faces < 0) or np.any(actual_faces >= len(gids))
+            or actual_owner.get("typed_identity") != list(key)):
+        raise ValueError("mixed full21 proof captured face/GID rows are invalid")
+    gids_sorted = np.asarray(sorted(displayed_points_by_gid), dtype="<u8")
+    displayed = np.stack([displayed_points_by_gid[int(g)] for g in gids_sorted]).astype("<f4")
+    if proof["candidate_positions_sha256"] != _full21_owner_array_sha256(gids_sorted, displayed):
+        raise ValueError("mixed full21 proof does not bind candidate positions by GID")
+    if proof["candidate_faces_sha256"] != hashlib.sha256(face_bytes.tobytes()).hexdigest():
+        raise ValueError("mixed full21 proof does not bind candidate faces")
+    if proof["candidate_gids_sha256"] != hashlib.sha256(np.ascontiguousarray(gids).tobytes()).hexdigest():
+        raise ValueError("mixed full21 proof does not bind candidate GID ordering")
+    candidate_arrays = proof.get("candidate_arrays")
+    if not isinstance(candidate_arrays, dict) or set(candidate_arrays) != {
+            "positions_f32", "faces_u32", "gids_u64", "source_slots_i64",
+            "weights_f64", "source_points_f32"}:
+        raise ValueError("mixed full21 proof candidate array set is incomplete")
+    cpos = np.asarray(candidate_arrays["positions_f32"])
+    cfaces = np.asarray(candidate_arrays["faces_u32"])
+    cgids = np.asarray(candidate_arrays["gids_u64"])
+    cslots = np.asarray(candidate_arrays["source_slots_i64"])
+    cweights = np.asarray(candidate_arrays["weights_f64"])
+    csource = np.asarray(candidate_arrays["source_points_f32"])
+    if (cpos.dtype != np.dtype("<f4") or cpos.shape != displayed_points_by_gid_shape(displayed_points_by_gid)
+            or cfaces.dtype != np.dtype("<u4") or cfaces.tobytes() != face_bytes.tobytes()
+            or cgids.dtype != np.dtype("<u8") or cgids.tobytes() != np.ascontiguousarray(gids).tobytes()
+            or cslots.dtype != np.dtype("<i8") or cslots.shape != gids.shape
+            or cweights.dtype != np.dtype("<f8") or cweights.shape != (len(gids), 21)
+            or csource.dtype != np.dtype("<f4") or csource.shape != (len(gids), 3)):
+        raise ValueError("mixed full21 proof candidate arrays differ from displayed geometry")
+    if proof["candidate_positions_sha256"] != _full21_owner_array_sha256(gids, cpos):
+        raise ValueError("mixed full21 candidate position hash is not reproducible")
+    if proof["candidate_source_slots_sha256"] != _full21_owner_array_sha256(gids, cslots):
+        raise ValueError("mixed full21 candidate source slot hash is not reproducible")
+    if proof["candidate_weights_sha256"] != _full21_owner_array_sha256(gids, cweights):
+        raise ValueError("mixed full21 candidate weight hash is not reproducible")
+    if proof["candidate_source_points_sha256"] != _full21_owner_array_sha256(gids, csource):
+        raise ValueError("mixed full21 candidate source-point hash is not reproducible")
+    if not np.array_equal(cslots, actual_slots) or not np.array_equal(cweights, actual_weights):
+        raise ValueError("mixed full21 candidate changed source slots or any of the 21 ordered weights")
+    if csource.tobytes() != np.asarray(
+            [source_points_by_gid[int(g)] for g in gids], dtype="<f4").tobytes():
+        raise ValueError("mixed full21 candidate source points differ from the prepared owner rows")
+    if np.ascontiguousarray(cpos).tobytes() != np.asarray(
+            [displayed_points_by_gid[int(g)] for g in gids], dtype="<f4").tobytes():
+        raise ValueError("mixed full21 candidate positions differ from the prepared surface")
+    if hashlib.sha256(np.ascontiguousarray(cfaces, dtype="<u4").tobytes()).hexdigest() != proof["candidate_faces_sha256"]:
+        raise ValueError("mixed full21 candidate face hash is not reproducible")
+    if proof["source_face_lineage_sha256"] != _canonical_json_sha256(list(source_face_lineage)):
+        raise ValueError("mixed full21 proof does not bind complete candidate face lineage")
+    vertex_rows = [[int(gid), source_vertex_lineage[int(gid)]]
+                   for gid in sorted(source_vertex_lineage)]
+    if proof["source_vertex_lineage_sha256"] != _canonical_json_sha256(vertex_rows):
+        raise ValueError("mixed full21 proof does not bind candidate GID ancestry")
+    if len(source_face_lineage) != len(face_bytes) or len(vertex_rows) != len(gids):
+        raise ValueError("mixed full21 lineage does not cover every candidate face and GID")
+
+    actual_by_gid = {int(g): i for i, g in enumerate(gids)}
+    captured_source_by_gid = {int(g): actual_sources[i] for i, g in enumerate(gids)}
+    captured_weight_by_gid = {int(g): actual_weights[i] for i, g in enumerate(gids)}
+    captured_position_by_gid = {int(g): actual_positions[i] for i, g in enumerate(gids)}
+    captured_slots_by_gid = {int(g): int(actual_slots[i]) for i, g in enumerate(gids)}
+    _validate_full21_actual_capture_owner_proof(
+        actual_owner, key=key, ordered_core_body_indices=ordered_core_body_indices,
+        source_points_by_gid=captured_source_by_gid,
+        weights_by_gid=captured_weight_by_gid,
+        displayed_points_by_gid=captured_position_by_gid,
+        source_vertex_ids=gids, faces=face_bytes,
+        capture_source_slots_by_gid=captured_slots_by_gid,
+    )
+    basis = proof.get("position_basis_by_gid")
+    if not isinstance(basis, dict) or set(basis) != {str(int(g)) for g in gids}:
+        raise ValueError("mixed full21 position basis must exactly cover every canonical GID")
+    predicted_gids = np.asarray(proof.get("predicted_gids_u64"))
+    predicted_sources = np.asarray(proof.get("predicted_source_points_f32"))
+    predicted_lanes = np.asarray(proof.get("predicted_lane_world_points_f32"))
+    if (predicted_gids.dtype != np.dtype("<u8") or predicted_gids.ndim != 1
+            or len(np.unique(predicted_gids)) != len(predicted_gids)
+            or predicted_sources.dtype != np.dtype("<f4")
+            or predicted_sources.shape != (len(predicted_gids), 3)
+            or predicted_lanes.dtype != np.dtype("<f4")
+            or predicted_lanes.shape != (len(predicted_gids), 21, 3)):
+        raise ValueError("mixed full21 predicted owner rows are malformed")
+    predicted_set = set(map(int, predicted_gids))
+    if not predicted_set <= set(actual_by_gid):
+        raise ValueError("mixed full21 predicted GID is absent from the captured source row")
+    lane_by_gid = {int(g): predicted_lanes[i] for i, g in enumerate(predicted_gids)}
+    predicted_source_by_gid = {int(g): predicted_sources[i] for i, g in enumerate(predicted_gids)}
+    for i, raw_gid in enumerate(gids):
+        gid = int(raw_gid)
+        row = basis[str(gid)]
+        if not isinstance(row, dict) or row.get("position_f32") != cpos[i].tolist():
+            raise ValueError("mixed full21 per-GID basis does not bind the displayed point")
+        if gid in predicted_set:
+            if row.get("basis") != "predicted_cpu_full21_float32_blend_at_accepted_poses":
+                raise ValueError("changed GID is not explicitly declared predicted")
+            if (source_points_by_gid[gid].tobytes() != predicted_source_by_gid[gid].tobytes()
+                    or source_points_by_gid[gid].tobytes() == captured_source_by_gid[gid].tobytes()):
+                raise ValueError("predicted GID source point is absent or unchanged")
+            if (row.get("candidate_parent_payload_sha256") != proof["candidate_parent_payload_sha256"]
+                    or row.get("candidate_parent_extension_sha256") != proof["candidate_parent_extension_sha256"]
+                    or row.get("candidate_child_payload_sha256") != proof["candidate_child_payload_sha256"]
+                    or row.get("lane_world_points_sha256") != _full21_owner_array_sha256(
+                        np.asarray([gid], dtype="<u8"), lane_by_gid[gid][None, ...])):
+                raise ValueError("predicted GID full21 candidate owner metadata differs")
+            expected_world = np.zeros(3, dtype="<f4")
+            coeff = cweights[i].astype("<f4")
+            for lane in range(21):
+                term = np.asarray(lane_by_gid[gid][lane] * coeff[lane], dtype="<f4")
+                expected_world = np.asarray(expected_world + term, dtype="<f4")
+            if expected_world.tobytes() != cpos[i].tobytes():
+                raise ValueError("predicted GID position differs from exact 21-lane Float32 emission")
+        else:
+            if row.get("basis") != "accepted_native_capture":
+                raise ValueError("unchanged GID is not explicitly bound to the accepted capture")
+            if (cpos[i].tobytes() != captured_position_by_gid[gid].tobytes()
+                    or source_points_by_gid[gid].tobytes()
+                       != captured_source_by_gid[gid].tobytes()):
+                raise ValueError("unchanged GID differs from accepted capture position or source point")
+    if (proof["source_map_candidate_sha256"] != actual_owner["source_map_candidate_sha256"]
+            or proof["prepared_owner_arrays_sha256"] != actual_owner["prepared_owner_arrays_sha256"]
+            or proof["index_candidate_sha256"] != actual_owner["index_candidate_sha256"]
+            or proof["accepted_pack_sha256"] != actual_owner["accepted_pack_sha256"]
+            or proof["capture_receipt_sha256"] != actual_owner["capture_receipt_sha256"]
+            or proof["accepted_step"] != actual_owner["accepted_step"]
+            or proof["source_payload_sha256"] != actual_owner["source_payload_sha256"]):
+        raise ValueError("mixed full21 candidate does not retain the exact accepted source/capture chain")
+    return dict(proof)
+
+
+def displayed_points_by_gid_shape(points_by_gid):
+    if not isinstance(points_by_gid, dict) or not points_by_gid:
+        raise ValueError("displayed GID position map is empty")
+    return (len(points_by_gid), 3)
+
+
 def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=None,
                     source_face_lineage=None, source_vertex_lineage=None,
                     ordered_core_body_indices=None, core_weight_gids=None,
@@ -654,6 +874,7 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                     core_lane_world_gids=None, core_lane_world_positions_float32=None,
                     core_lane_world_proof=None, core_capture_source_slots_i64=None,
                     core_actual_capture_proof=None,
+                    core_mixed_candidate_owner_proof=None,
                     expected_ordered_core_body_indices=None):
     key = typed_key(key)
     p = np.asarray(positions)
@@ -699,18 +920,23 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                      core_lane_world_proof)
     has_lane_metadata = any(value is not None for value in lane_metadata)
     has_actual_capture_proof = core_actual_capture_proof is not None
+    has_mixed_candidate_proof = core_mixed_candidate_owner_proof is not None
+    if has_actual_capture_proof and has_mixed_candidate_proof:
+        raise ValueError("choose either actual-capture or mixed-candidate full21 proof")
     if has_lane_metadata and (not has_complete_source_points
                               or any(value is None for value in lane_metadata)):
         raise ValueError("full21 lane owner proof requires source points, lane points, GIDs, and provenance")
     if has_source_point_metadata and not has_complete_source_points:
         raise ValueError("full21 source point owner requires both GIDs and Float32 points")
-    if has_complete_source_points and not (has_lane_metadata or has_actual_capture_proof):
-        raise ValueError("full21 source points require predicted lane or actual capture owner proof")
-    if has_actual_capture_proof and (
+    if has_complete_source_points and not (
+            has_lane_metadata or has_actual_capture_proof or has_mixed_candidate_proof):
+        raise ValueError("full21 source points require predicted lane, actual capture, or mixed owner proof")
+    if (has_actual_capture_proof or has_mixed_candidate_proof) and (
             not has_complete_source_points or core_capture_source_slots_i64 is None):
-        raise ValueError("actual-capture full21 proof requires source points and capture source slots")
-    if core_capture_source_slots_i64 is not None and not has_actual_capture_proof:
-        raise ValueError("capture source slots require an actual-capture full21 proof")
+        raise ValueError("capture or mixed full21 proof requires source points and capture source slots")
+    if core_capture_source_slots_i64 is not None and not (
+            has_actual_capture_proof or has_mixed_candidate_proof):
+        raise ValueError("capture source slots require actual or mixed full21 proof")
     if source_metadata_present and not has_core_metadata and rigid_owner_proof is None:
         raise ValueError("shared-interface proof requires ordered core rows or an accepted rigid owner")
     if rigid_owner_proof is not None and not source_metadata_present:
@@ -734,6 +960,7 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
     capture_source_slots_by_gid = None
     normalized_lane_proof = None
     normalized_actual_capture_proof = None
+    normalized_mixed_candidate_proof = None
     normalized_rigid_owner = (None if rigid_owner_proof is None
                               else _normalize_rigid_owner_proof(rigid_owner_proof))
     if source_metadata_present:
@@ -813,27 +1040,41 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
             displayed_points_by_gid={int(source_vertex_ids[i]): np.array(p[i], dtype=np.float32, copy=True)
                                      for i in range(len(p))},
             source_face_lineage=face_lineage, source_vertex_lineage=vertex_lineage)
-    if has_actual_capture_proof:
+    if has_actual_capture_proof or has_mixed_candidate_proof:
         if (not source_metadata_present or not has_core_metadata
                 or len(core_body_indices) != 21):
-            raise ValueError("actual-capture full21 proof requires source lineage and all 21 owners")
+            raise ValueError("capture or mixed full21 proof requires source lineage and all 21 owners")
         slots = np.asarray(core_capture_source_slots_i64)
         if (slots.dtype.kind not in "iu" or slots.shape != (len(p),)
                 or np.any(slots < 0) or len(np.unique(slots)) != len(slots)):
-            raise ValueError("actual-capture source slots must be unique nonnegative vertex rows")
+            raise ValueError("capture source slots must be unique nonnegative vertex rows")
         capture_source_slots_by_gid = {
             int(source_vertex_ids[i]): int(slots[i]) for i in range(len(p))
         }
-        normalized_actual_capture_proof = _validate_full21_actual_capture_owner_proof(
-            core_actual_capture_proof, key=key,
-            ordered_core_body_indices=core_body_indices,
-            source_points_by_gid=source_points_by_gid, weights_by_gid=weights_by_gid,
-            displayed_points_by_gid={
-                int(source_vertex_ids[i]): np.array(p[i], dtype=np.float32, copy=True)
-                for i in range(len(p))
-            },
-            source_vertex_ids=source_vertex_ids, faces=f,
-            capture_source_slots_by_gid=capture_source_slots_by_gid)
+        if has_actual_capture_proof:
+            normalized_actual_capture_proof = _validate_full21_actual_capture_owner_proof(
+                core_actual_capture_proof, key=key,
+                ordered_core_body_indices=core_body_indices,
+                source_points_by_gid=source_points_by_gid, weights_by_gid=weights_by_gid,
+                displayed_points_by_gid={
+                    int(source_vertex_ids[i]): np.array(p[i], dtype=np.float32, copy=True)
+                    for i in range(len(p))
+                },
+                source_vertex_ids=source_vertex_ids, faces=f,
+                capture_source_slots_by_gid=capture_source_slots_by_gid)
+        else:
+            normalized_mixed_candidate_proof = _validate_full21_mixed_candidate_owner_proof(
+                core_mixed_candidate_owner_proof, key=key,
+                ordered_core_body_indices=core_body_indices,
+                source_points_by_gid=source_points_by_gid, weights_by_gid=weights_by_gid,
+                displayed_points_by_gid={
+                    int(source_vertex_ids[i]): np.array(p[i], dtype=np.float32, copy=True)
+                    for i in range(len(p))
+                },
+                source_vertex_ids=np.ascontiguousarray(source_vertex_ids, dtype="<u8"),
+                faces=f, source_face_lineage=face_lineage,
+                source_vertex_lineage=vertex_lineage,
+                capture_source_slots_by_gid=capture_source_slots_by_gid)
     # Numeric coordinate identity treats +0 and -0 as the same exact point.
     keys = [ci.float32_point_lattice_key(row) for row in p.tolist()]
     identities = {}
@@ -871,7 +1112,8 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                            core_lane_world_points_by_gid=lane_world_points_by_gid,
                            core_lane_world_proof=normalized_lane_proof,
                            core_capture_source_slots_by_gid=capture_source_slots_by_gid,
-                           core_actual_capture_proof=normalized_actual_capture_proof)
+                           core_actual_capture_proof=normalized_actual_capture_proof,
+                           core_mixed_candidate_owner_proof=normalized_mixed_candidate_proof)
 
 
 def _declared_material_inventory(value):
@@ -1456,11 +1698,56 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
                     or source_a.tobytes() != source_b.tobytes()):
                 return False, "canonical_GID_full21_source_points_differ"
 
+            mixed_a = first.core_mixed_candidate_owner_proof
+            mixed_b = second.core_mixed_candidate_owner_proof
             actual_a = first.core_actual_capture_proof
             actual_b = second.core_actual_capture_proof
             predicted_a = first.core_lane_world_proof
             predicted_b = second.core_lane_world_proof
-            if actual_a is not None or actual_b is not None:
+            if mixed_a is not None or mixed_b is not None:
+                if mixed_a is None or mixed_b is None:
+                    return False, "full21_owner_provenance_or_accepted_frame_differs"
+                mixed_fields = (
+                    "accepted_step", "accepted_pack_sha256", "capture_receipt_sha256",
+                    "source_payload_sha256", "candidate_child_payload_sha256",
+                    "candidate_parent_extension_sha256", "candidate_archive_sha256",
+                    "source_map_candidate_sha256", "prepared_owner_arrays_sha256",
+                    "index_candidate_sha256", "ordered_core_body_indices", "world_frame",
+                    "displayed_world_owner_relation",
+                )
+                if any(mixed_a[field] != mixed_b[field] for field in mixed_fields):
+                    return False, "full21_owner_provenance_or_accepted_frame_differs"
+                basis_a = mixed_a["position_basis_by_gid"].get(str(gid))
+                basis_b = mixed_b["position_basis_by_gid"].get(str(gid))
+                if not isinstance(basis_a, dict) or not isinstance(basis_b, dict):
+                    return False, "mixed_full21_owner_proof_lacks_canonical_GID_basis"
+                if basis_a.get("basis") != basis_b.get("basis"):
+                    return False, "canonical_GID_position_basis_differs"
+                if basis_a["basis"] == "accepted_native_capture":
+                    if (mixed_a["actual_capture_positions_f32"][
+                            first.vertex_index(gid)].tobytes()
+                            != mixed_b["actual_capture_positions_f32"][
+                                second.vertex_index(gid)].tobytes()):
+                        return False, "canonical_GID_actual_capture_positions_differ"
+                elif basis_a["basis"] == "predicted_cpu_full21_float32_blend_at_accepted_poses":
+                    if (basis_a.get("candidate_parent_extension_sha256")
+                            != basis_b.get("candidate_parent_extension_sha256")
+                            or basis_a.get("candidate_child_payload_sha256")
+                            != basis_b.get("candidate_child_payload_sha256")):
+                        return False, "canonical_GID_predicted_parent_owner_differs"
+                    pred_a = {int(g): i for i, g in enumerate(mixed_a["predicted_gids_u64"])}
+                    pred_b = {int(g): i for i, g in enumerate(mixed_b["predicted_gids_u64"])}
+                    ia, ib = pred_a.get(gid), pred_b.get(gid)
+                    if ia is None or ib is None:
+                        return False, "mixed_full21_owner_proof_lacks_predicted_GID_rows"
+                    if (mixed_a["predicted_source_points_f32"][ia].tobytes()
+                            != mixed_b["predicted_source_points_f32"][ib].tobytes()
+                            or mixed_a["predicted_lane_world_points_f32"][ia].tobytes()
+                               != mixed_b["predicted_lane_world_points_f32"][ib].tobytes()):
+                        return False, "canonical_GID_predicted_full21_owner_rows_differ"
+                else:
+                    return False, "mixed_full21_owner_proof_has_unknown_position_basis"
+            elif actual_a is not None or actual_b is not None:
                 if actual_a is None or actual_b is None:
                     return False, "full21_owner_provenance_or_accepted_frame_differs"
                 provenance_fields = (

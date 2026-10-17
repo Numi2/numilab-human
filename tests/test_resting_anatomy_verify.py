@@ -9,6 +9,7 @@ import numpy as np
 
 from numilab_human import cardiac_cavity_intersections as ci
 from numilab_human import resting_anatomy_verify as av
+from numilab_human.forearm_actual_capture_owner import build_mixed_full21_candidate_owner_record
 from numilab_human.resting_anatomy_verify import (
     audit_source_bound_connected_overlap,
     audit_surface_pair,
@@ -154,6 +155,87 @@ def actual_capture_feature_surface(key, positions, faces, gids, slots, *,
         core_source_points_float32=source_points,
         core_capture_source_slots_i64=slots,
         core_actual_capture_proof=proof,
+    )
+
+
+def mixed_candidate_feature_surface(key, positions, faces, gids, slots, *,
+                                    changed_gid=None, changed_world=None,
+                                    parent_extension_sha="b" * 64,
+                                    child_sha="a" * 64, archive_sha="d" * 64):
+    """Synthetic contract fixture; production builder supplies file-derived owner rows."""
+    actual = actual_capture_feature_surface(key, positions, faces, gids, slots)
+    base_positions = actual.positions.copy()
+    candidate_positions = base_positions.copy()
+    source_points = np.stack([
+        actual.core_source_points_by_gid[int(gid)] for gid in gids
+    ]).astype("<f4")
+    weights = np.stack([
+        actual.core_weights_by_gid[int(gid)] for gid in gids
+    ]).astype("<f8")
+    gids = np.ascontiguousarray(gids, dtype="<u8")
+    slots = np.ascontiguousarray(slots, dtype="<i8")
+    predicted_gids = np.empty(0, dtype="<u8")
+    predicted_source = np.empty((0, 3), dtype="<f4")
+    lane_points = np.empty((0, 21, 3), dtype="<f4")
+    if changed_gid is not None:
+        index = int(np.flatnonzero(gids == int(changed_gid))[0])
+        predicted_gids = np.asarray([int(changed_gid)], dtype="<u8")
+        predicted_source = np.asarray(
+            [source_points[index] + np.float32([0.0, 0.0, 0.125])], dtype="<f4")
+        lane = np.repeat(
+            np.asarray(changed_world, dtype="<f4").reshape((1, 1, 3)), 21, axis=1)
+        lane_points = np.ascontiguousarray(lane, dtype="<f4")
+        coeff = weights[index].astype("<f4")
+        emitted = np.zeros(3, dtype="<f4")
+        for i in range(21):
+            emitted = np.asarray(
+                emitted + np.asarray(lane_points[0, i] * coeff[i], dtype="<f4"),
+                dtype="<f4")
+        candidate_positions[index] = emitted
+        source_points[index] = predicted_source[0]
+    row = {
+        "typed_identity": list(key),
+        "actual_capture_positions_f32": actual.positions.copy(),
+        "actual_capture_faces_u32": actual.faces.copy(),
+        "canonical_gids_u64": gids.copy(),
+        "capture_to_source_slot_i64": slots.copy(),
+        "full21_weights_f64": weights.copy(),
+        "full21_source_points_f32": np.stack([
+            actual.core_source_points_by_gid[int(gid)] for gid in gids
+        ]).astype("<f4"),
+        "index_patch_faces_capture_u32": actual.faces.copy(),
+        "full21_actual_capture_owner_proof": actual.core_actual_capture_proof,
+    }
+    proof = build_mixed_full21_candidate_owner_record(
+        actual_capture_row=row,
+        candidate_positions_f32=candidate_positions,
+        candidate_faces_u32=actual.faces,
+        candidate_gids_u64=gids,
+        candidate_source_slots_i64=slots,
+        candidate_weights_f64=weights,
+        candidate_source_points_f32=source_points,
+        predicted_gids_u64=predicted_gids,
+        predicted_source_points_f32=predicted_source,
+        predicted_lane_world_points_f32=lane_points,
+        candidate_parent_payload_sha256="c" * 64,
+        candidate_parent_extension_sha256=parent_extension_sha,
+        candidate_child_payload_sha256=child_sha,
+        candidate_archive_sha256=archive_sha,
+        source_face_lineage=actual.source_face_lineage,
+        source_vertex_lineage=actual.source_vertex_lineage,
+    )
+    return prepare_surface(
+        key, candidate_positions, actual.faces,
+        source_vertex_ids=gids,
+        source_face_lineage=actual.source_face_lineage,
+        source_vertex_lineage=actual.source_vertex_lineage,
+        ordered_core_body_indices=list(range(21)),
+        core_weight_gids=gids,
+        core_weights_float64=weights,
+        core_source_point_gids=gids,
+        core_source_points_float32=source_points,
+        core_capture_source_slots_i64=slots,
+        core_mixed_candidate_owner_proof=proof,
     )
 
 
@@ -2697,6 +2779,78 @@ class CaptureDecoderTests(unittest.TestCase):
                 (51005, 136), shifted, [[0, 1, 2]],
                 [2338, 2358, 12], [40, 41, 42],
                 proof_overrides={"displayed_world_points_sha256": "0" * 64})
+
+    def test_mixed_actual_and_predicted_full21_basis_accepts_exact_shared_edge(self):
+        first = mixed_candidate_feature_surface(
+            (51005, 132),
+            [[0, 0, 0], [1, 0, 0], [0, 1, 0]],
+            [[0, 1, 2]], [2338, 2358, 2], [10, 11, 12],
+            changed_gid=2, changed_world=[0, 1, 0.125])
+        second = mixed_candidate_feature_surface(
+            (51005, 134),
+            [[0, 0, 0], [1, 0, 0], [0, -1, 0]],
+            [[0, 1, 2]], [2338, 2358, 12], [20, 21, 22],
+            changed_gid=12, changed_world=[0, -1, 0.125])
+        result = audit_surface_pair(
+            first, second,
+            intended_shared_feature_pairs=[
+                feature_declaration(first, second, 0, 0, [2338, 2358])])
+        self.assertTrue(result["passed"], result)
+        proof = first.diagnostics()["full21_mixed_candidate_owner_proof"]
+        self.assertEqual(
+            proof["displayed_world_owner_relation"],
+            "per_GID_accepted_capture_or_predicted_full21")
+        self.assertEqual(
+            first.core_mixed_candidate_owner_proof["position_basis_by_gid"]["2"]["basis"],
+            "predicted_cpu_full21_float32_blend_at_accepted_poses")
+        self.assertEqual(
+            first.core_mixed_candidate_owner_proof["position_basis_by_gid"]["2338"]["basis"],
+            "accepted_native_capture")
+
+    def test_mixed_candidate_proof_rejects_one_ulp_position_edit(self):
+        positions = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32)
+        first = mixed_candidate_feature_surface(
+            (51005, 132), positions, [[0, 1, 2]], [2338, 2358, 2], [10, 11, 12],
+            changed_gid=2, changed_world=[0, 1, 0.125])
+        proof = first.core_mixed_candidate_owner_proof
+        shifted = first.positions.copy()
+        shifted[2, 0] = np.nextafter(shifted[2, 0], np.float32(1), dtype=np.float32)
+        with self.assertRaisesRegex(ValueError, "candidate positions"):
+            prepare_surface(
+                first.key, shifted, first.faces, source_vertex_ids=first.source_vertex_ids,
+                source_face_lineage=first.source_face_lineage,
+                source_vertex_lineage=first.source_vertex_lineage,
+                ordered_core_body_indices=list(range(21)),
+                core_weight_gids=first.source_vertex_ids,
+                core_weights_float64=np.stack([
+                    first.core_weights_by_gid[int(g)] for g in first.source_vertex_ids
+                ]).astype("<f8"),
+                core_source_point_gids=first.source_vertex_ids,
+                core_source_points_float32=np.stack([
+                    first.core_source_points_by_gid[int(g)] for g in first.source_vertex_ids
+                ]).astype("<f4"),
+                core_capture_source_slots_i64=np.asarray([10, 11, 12], dtype="<i8"),
+                core_mixed_candidate_owner_proof=proof)
+
+    def test_mixed_owner_does_not_waive_off_feature_crossing(self):
+        first = mixed_candidate_feature_surface(
+            (51005, 132),
+            [[0, 0, 0], [1, 0, 0], [0, 1, 0]],
+            [[0, 1, 2]], [2338, 90, 91], [10, 11, 12],
+            changed_gid=90, changed_world=[1, 0, 0.125])
+        second = mixed_candidate_feature_surface(
+            (51005, 134),
+            [[0, 0, 0], [0.5, 0, 0], [0, 0, 1]],
+            [[0, 1, 2]], [2338, 44, 45], [20, 21, 22],
+            changed_gid=45, changed_world=[0, 0, 1.125])
+        result = audit_surface_pair(
+            first, second,
+            intended_shared_feature_pairs=[
+                feature_declaration(first, second, 0, 0, [2338])])
+        self.assertFalse(result["passed"], result)
+        self.assertTrue(any(
+            row.get("reason") == "exact_intersection_exceeds_declared_shared_feature"
+            for row in result["rejected_interface_feature_contacts"]))
 
     def test_full21_lane_proof_is_required_for_shared_features(self):
         first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64),
