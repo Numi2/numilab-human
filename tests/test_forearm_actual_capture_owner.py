@@ -199,6 +199,7 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
         from numilab_human import passive_attachment_composition as pc
         from numilab_human import resting_anatomy_verify as verify
         from numilab_human.forearm_actual_capture_owner import (
+            actual_capture_owner_json_summary,
             build_actual_capture_owner_proof,
         )
 
@@ -436,6 +437,15 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
                             paths["producer_module_recovery"]},
                 )
 
+            summary = actual_capture_owner_json_summary(proof)
+            round_trip = json.loads(json.dumps(summary, allow_nan=False))
+            self.assertEqual(round_trip["producer_input_pin_count_verified"],
+                             proof["producer_input_pin_count_verified"])
+            self.assertEqual(round_trip["parent_extension_sha256_by_row"]["132"],
+                             proof["rows"]["132"]["full21_actual_capture_owner_proof"][
+                                 "parent_extension_sha256"])
+            self.assertEqual(round_trip["shared_actual_capture_gid_points"],
+                             proof["shared_actual_capture_gid_points"])
             shared = proof["shared_actual_capture_gid_points"]
             self.assertEqual(shared["shared_canonical_gid_count"], 1)
             self.assertEqual(shared["exact_shared_actual_point_count"], 1)

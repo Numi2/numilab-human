@@ -794,3 +794,51 @@ def build_actual_capture_owner_proof(
             "ancestry does not become an anatomy or native admission"
         ),
     }
+
+
+def actual_capture_owner_json_summary(proof):
+    """Return the complete compact, JSON-safe audit record for a builder result."""
+    top_level = (
+        "schema", "accepted_step", "accepted_pack_sha256",
+        "accepted_step_receipt_sha256", "source_child_sha256",
+        "source_map_candidate_sha256", "index_candidate_sha256",
+        "prepared_owner_arrays_sha256", "prepared_owner_metadata_sha256",
+        "index_ancestry_sha256", "witness_batch_report_sha256",
+        "witness_batch_checkpoint_sha256", "producer_input_pin_count_verified",
+        "producer_input_recoveries", "shared_actual_capture_gid_points",
+        "face_topology_provenance", "not_admission", "evidence_boundary",
+    )
+    _require(isinstance(proof, dict) and all(key in proof for key in top_level),
+             "actual capture proof is missing required summary fields")
+    raw_rows = proof.get("rows")
+    _require(isinstance(raw_rows, dict) and raw_rows,
+             "actual capture proof has no authenticated rows")
+    row_fields = (
+        "typed_identity", "ordered_core_body_indices",
+        "full21_actual_capture_owner_proof", "report",
+    )
+    rows = {}
+    parent_extensions = {}
+    for stable_id, row in raw_rows.items():
+        _require(isinstance(row, dict) and all(key in row for key in row_fields),
+                 f"actual capture row {stable_id} lacks summary provenance")
+        owner = row["full21_actual_capture_owner_proof"]
+        _require(isinstance(owner, dict) and owner.get("displayed_world_owner_relation")
+                 == "accepted_native_capture_byte_exact",
+                 f"actual capture row {stable_id} has an unsupported owner basis")
+        parent_extensions[stable_id] = owner["parent_extension_sha256"]
+        row_summary = {key: row[key] for key in row_fields}
+        report = row["report"]
+        row_summary["ordered_face_corner_source_slots_sha256"] = report[
+            "ordered_face_corner_source_slots_sha256"]
+        row_summary["ordered_face_corner_canonical_gids_sha256"] = report[
+            "ordered_face_corner_canonical_gids_sha256"]
+        rows[stable_id] = row_summary
+    summary = {key: proof[key] for key in top_level}
+    summary["rows"] = rows
+    summary["parent_extension_sha256_by_row"] = parent_extensions
+    try:
+        json.dumps(summary, sort_keys=True, allow_nan=False)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("actual capture proof summary is not strict JSON") from exc
+    return summary
