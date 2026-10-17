@@ -138,13 +138,51 @@ def _is_known_source_microfragment(vertices, detail, coordinate_quantization_m=N
     return bool(np.all(nearest <= anchor_tolerance))
 
 
+def _normalize_source_face_ancestry(raw_face_map, source_face_count, stable_id, *, allow_two_parent_flip):
+    """Validate exact source-face ancestry for unchanged faces and one local edge flip."""
+    face_map = []
+    single_parent_sources = set()
+    paired_flip_uses = collections.Counter()
+    for output_face, parents in enumerate(raw_face_map):
+        values = np.asarray(parents)
+        if values.dtype.kind not in "iu":
+            raise ValueError(f"source face ancestry must use integer source IDs in row {stable_id}")
+        values = values.astype(np.int64, copy=False).reshape(-1)
+        if (len(values) == 0 or len(values) > (2 if allow_two_parent_flip else 1)
+                or np.any(values < 0) or np.any(values >= source_face_count)
+                or len(np.unique(values)) != len(values)):
+            if not allow_two_parent_flip and len(values) != 1:
+                raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
+            raise ValueError(f"source face ancestry is invalid for output face {output_face} in row {stable_id}")
+        parent_ids = tuple(sorted(map(int, values)))
+        if len(parent_ids) == 1:
+            if parent_ids[0] in single_parent_sources:
+                raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
+            single_parent_sources.add(parent_ids[0])
+        else:
+            if not allow_two_parent_flip:
+                raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
+            paired_flip_uses[parent_ids] += 1
+        face_map.append(parent_ids)
+    if any(count != 2 for count in paired_flip_uses.values()):
+        raise ValueError(f"a local 2-to-2 flip must map exactly two output faces to the same source-face pair in row {stable_id}")
+    paired_sources = [source for pair in paired_flip_uses for source in pair]
+    if (len(set(paired_sources)) != len(paired_sources)
+            or set(paired_sources) & single_parent_sources):
+        raise ValueError(f"a flipped source-face pair must be retired only by its two mapped output faces in row {stable_id}")
+    return tuple(face_map)
+
+
 def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                                coordinate_quantization_m=None, source_lineage_lobes=None,
-                               source_face_ancestry=None, source_vertex_ancestry=None):
+                               source_face_ancestry=None, source_vertex_ancestry=None,
+                               allow_multi_parent_source_face_ancestry=()):
     """Build the external union surface from five registered lobe meshes.
 
     `lobes` maps stable IDs 305..309 to `(vertices6, local_faces)` arrays.
-    Exact reciprocal triangles are canceled from the exterior.  By default,
+    Exact reciprocal triangles are canceled from the exterior. Explicit
+    multi-parent face ancestry is disabled by default; an authenticated caller
+    may opt named rows into one exact local 2-to-2 flip pair. By default,
     any detached component is a hard error.  A source-specific microfragment
     may be omitted only when it matches the exact registered 305/308 source
     anchor coordinates, sub-millimeter-scale bounds, owner identities, and
@@ -165,6 +203,25 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
     if (source_face_ancestry is None) != (source_vertex_ancestry is None):
         raise ValueError("source pleura face and vertex ancestry must be supplied together")
     has_explicit_ancestry = source_face_ancestry is not None
+    try:
+        raw_multi_parent_rows = list(allow_multi_parent_source_face_ancestry)
+    except TypeError as exc:
+        raise ValueError("multi-parent source-face ancestry opt-in must be an iterable of stable lobe IDs") from exc
+    multi_parent_rows = set()
+    for stable_id in raw_multi_parent_rows:
+        if isinstance(stable_id, (bool, np.bool_)):
+            raise ValueError("multi-parent source-face ancestry opt-in rejects boolean stable lobe IDs")
+        if isinstance(stable_id, (int, np.integer)):
+            normalized_id = int(stable_id)
+        elif isinstance(stable_id, str) and stable_id.isdecimal() and str(int(stable_id)) == stable_id:
+            normalized_id = int(stable_id)
+        else:
+            raise ValueError("multi-parent source-face ancestry opt-in requires integer or canonical decimal stable lobe IDs")
+        if normalized_id not in LOBE_IDS or normalized_id in multi_parent_rows:
+            raise ValueError("multi-parent source-face ancestry opt-in contains an invalid or duplicate stable lobe ID")
+        multi_parent_rows.add(normalized_id)
+    if multi_parent_rows and not has_explicit_ancestry:
+        raise ValueError("multi-parent source-face ancestry opt-in requires explicit source ancestry")
     if has_explicit_ancestry and source_lineage_lobes is None:
         raise ValueError("explicit source pleura ancestry requires authenticated source lineage rows")
     if has_explicit_ancestry:
@@ -202,6 +259,7 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         candidate_vertex_ancestry = {}
         face_ancestry_digest = hashlib.sha256()
         vertex_ancestry_digest = hashlib.sha256()
+        multi_parent_face_counts = {}
         for stable_id in LOBE_IDS:
             candidate_vertices6, candidate_faces = lobes[stable_id]
             source_vertices6, source_faces = source_lineage_lobes[stable_id]
@@ -234,18 +292,11 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                     raise ValueError(f"explicit source pleura ancestry must contain per-element rows for row {stable_id}") from exc
                 if face_map_length != len(candidate_faces) or vertex_map_length != len(candidate_vertices6):
                     raise ValueError(f"explicit source pleura ancestry length differs for row {stable_id}")
-                face_map = []
-                used_source_faces = set()
-                for output_face, parents in enumerate(raw_face_map):
-                    values = np.asarray(parents)
-                    if values.dtype.kind not in "iu":
-                        raise ValueError(f"source face ancestry must use integer source IDs in row {stable_id}")
-                    values = values.astype(np.int64, copy=False).reshape(-1)
-                    if (len(values) != 1 or int(values[0]) < 0 or int(values[0]) >= len(source_faces)
-                            or int(values[0]) in used_source_faces):
-                        raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
-                    used_source_faces.add(int(values[0]))
-                    face_map.append((int(values[0]),))
+                face_map = _normalize_source_face_ancestry(
+                    raw_face_map, len(source_faces), stable_id,
+                    allow_two_parent_flip=stable_id in multi_parent_rows,
+                )
+                multi_parent_face_counts[stable_id] = sum(len(parents) > 1 for parents in face_map)
                 vertex_map = []
                 for output_vertex, parents in enumerate(raw_vertex_map):
                     values = np.asarray(parents)
@@ -257,16 +308,19 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                             or len(np.unique(values)) != len(values)):
                         raise ValueError(f"source vertex ancestry is invalid for output vertex {output_vertex} in row {stable_id}")
                     vertex_map.append(tuple(map(int, values)))
-                face_offsets = np.arange(len(face_map) + 1, dtype="<u8")
-                face_values = np.asarray([parents[0] for parents in face_map], dtype="<u8")
+                face_offsets = [0]
+                face_values = []
+                for parents in face_map:
+                    face_values.extend(parents)
+                    face_offsets.append(len(face_values))
                 vertex_offsets = [0]
                 vertex_values = []
                 for parents in vertex_map:
                     vertex_values.extend(parents)
                     vertex_offsets.append(len(vertex_values))
                 face_ancestry_digest.update(int(stable_id).to_bytes(4, "little", signed=False))
-                face_ancestry_digest.update(face_offsets.tobytes())
-                face_ancestry_digest.update(face_values.tobytes())
+                face_ancestry_digest.update(np.asarray(face_offsets, dtype="<u8").tobytes())
+                face_ancestry_digest.update(np.asarray(face_values, dtype="<u8").tobytes())
                 vertex_ancestry_digest.update(int(stable_id).to_bytes(4, "little", signed=False))
                 vertex_ancestry_digest.update(np.asarray(vertex_offsets, dtype="<u8").tobytes())
                 vertex_ancestry_digest.update(np.asarray(vertex_values, dtype="<u8").tobytes())
@@ -303,6 +357,7 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
             "reference_lobes": reference,
             "candidate_face_ancestry": candidate_face_ancestry,
             "candidate_vertex_ancestry": candidate_vertex_ancestry,
+            "multi_parent_face_counts": multi_parent_face_counts,
             "explicit_ancestry": has_explicit_ancestry,
             "face_ancestry_sha256": face_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
             "vertex_ancestry_sha256": vertex_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
@@ -504,6 +559,9 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 "explicit_candidate_face_ancestry": lineage["explicit_ancestry"],
                 "candidate_face_ancestry_sha256": lineage["face_ancestry_sha256"],
                 "candidate_vertex_ancestry_sha256": lineage["vertex_ancestry_sha256"],
+                "multi_parent_candidate_face_count_by_stable_id": {
+                    str(sid): int(count) for sid, count in lineage["multi_parent_face_counts"].items()
+                },
                 "source_face_connectivity_verified": True,
                 "source_face_connectivity_mode": (
                     "explicit_ordered_source_vertex_ancestry" if lineage["explicit_ancestry"]
