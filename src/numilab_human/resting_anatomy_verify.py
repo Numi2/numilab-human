@@ -351,8 +351,30 @@ class PreparedSurface:
         A larger surface may contain many individually closed components. Their
         inside parities combine by XOR, including nested cavity boundaries.
         Boundary on any component remains boundary. No component is truncated,
-        and an oversized individual component still fails closed.
+        and an oversized individual component still fails closed. Finite binary
+        Float32/Float64 query coordinates are converted to exact metre Fractions
+        without rounding or changing the predicate's bounds.
         """
+        # This public boundary accepts captured binary coordinates in metres.
+        # Preserve their exact value; neither quantize a Float64 query to
+        # Float32 nor pass a floating value into the rational predicate owner.
+        try:
+            coordinates = tuple(point)
+        except TypeError as error:
+            raise ValueError("point-location query must have three exact metre coordinates") from error
+        if len(coordinates) != 3:
+            raise ValueError("point-location query must have three exact metre coordinates")
+        exact = []
+        for value in coordinates:
+            if isinstance(value, Fraction):
+                exact.append(value)
+            elif isinstance(value, (int, np.integer)) and not isinstance(value, (bool, np.bool_)):
+                exact.append(Fraction(int(value)))
+            elif isinstance(value, (float, np.float32, np.float64)) and math.isfinite(value):
+                exact.append(Fraction.from_float(float(value)))
+            else:
+                raise ValueError("point-location query coordinates must be finite binary floats, integers or Fractions in metres")
+        point = tuple(exact)
         face_limit = _POINT_LOCATION_COMPONENT_FACE_LIMIT
         if len(self.quotient_faces) <= face_limit:
             return ci.point_location_prepared_indexed(point, self.meter_index())

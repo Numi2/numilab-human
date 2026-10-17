@@ -59,3 +59,33 @@ def test_component_containment_keeps_enclosed_solid_failure():
     assert not report["passed"]
     assert not report["unexpected_triangle_pairs"]
     assert any(row["inside_component_witnesses"] for row in report["containment"])
+
+
+@pytest.mark.parametrize("face_limit", [4, 200_000])
+@pytest.mark.parametrize("dtype", [np.float32, np.float64])
+@pytest.mark.parametrize("direction,expected", [
+    (0, "boundary"), (-1, "inside"), (1, "outside"),
+])
+def test_binary_meter_queries_preserve_boundary_neighbors(face_limit, dtype, direction, expected):
+    surface = target()
+    point = np.asarray([.25, .25, 3.5], dtype=dtype)
+    if direction:
+        point[2] = np.nextafter(point[2], dtype(np.inf if direction > 0 else -np.inf))
+    exact = tuple(Fraction.from_float(float(value)) for value in point)
+    with patch.object(av, "_POINT_LOCATION_COMPONENT_FACE_LIMIT", face_limit):
+        result = surface.point_location_meters(point)
+        assert result == surface.point_location_meters(exact)
+    assert result["location"] == expected
+
+
+@pytest.mark.parametrize("point", [
+    [0., 0., float("nan")], [0., 0., float("inf")],
+    [0., 0., -float("inf")], [0., 0.], [0., 0., 0., 0.],
+    [True, 0, 0], ["0", 0, 0], None,
+])
+def test_invalid_meter_queries_fail_before_preparing_containment_index(point):
+    surface = target()
+    with pytest.raises(ValueError, match="query"):
+        surface.point_location_meters(point)
+    assert surface._meter_index is None
+    assert surface._meter_component_indices is None
