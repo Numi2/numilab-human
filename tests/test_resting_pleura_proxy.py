@@ -1,9 +1,15 @@
+import copy
+import hashlib
+import json
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
 from numilab_human.resting_anatomy_interface_patch import signed_volume, topology_report
+from numilab_human import resting_anatomy_interface_patch as anatomy
 from numilab_human.resting_pleura_proxy import derive_lung_union_exterior
+from numilab_human import resting_pleura_proxy as pleura
 
 
 def _tetra(vertices, faces):
@@ -378,6 +384,218 @@ class RestingPleuraProxyTests(unittest.TestCase):
         lobes[305] = (np.vstack((old_v, tetra_v)), np.vstack((old_f, tetra_f + len(old_v))))
         with self.assertRaisesRegex(ValueError, "detached lung-union component"):
             derive_lung_union_exterior(lobes)
+
+
+
+
+class ImmediateSubdivisionParentTests(unittest.TestCase):
+    def setUp(self):
+        xyz = np.asarray([
+            [0, 0, 0], [4, 0, 0], [0, 4, 0], [0, 0, 4], [2, 2, 0],
+        ], dtype=np.float32)
+        self.parent_vertices6 = np.column_stack((xyz[:4], np.zeros((4, 3), dtype=np.float32)))
+        self.parent_faces = np.asarray(
+            [[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype=np.uint32)
+        self.candidate_vertices6 = np.column_stack((xyz, np.zeros((5, 3), dtype=np.float32)))
+        self.candidate_faces = np.asarray(
+            [[0, 2, 4], [0, 4, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype=np.uint32)
+        self.candidate_face_to_parent = [(0,), (0,), (1,), (2,), (3,)]
+        self.candidate_vertex_to_parent = [(0,), (1,), (2,), (3,), (1, 2)]
+        self.parent_face_to_source = [(1,), (2,), (3,), (4,)]
+        self.parent_vertex_to_source = [(0,), (1,), (2,), (3,)]
+        # Original 015 is intentionally in another registered frame. It remains
+        # the lineage reference but cannot serve as the immediate patch parent.
+        self.original_vertices6 = self.parent_vertices6.copy()
+        self.original_vertices6[:, :3] += np.float32(0.25)
+        self.original_faces = np.vstack((self.parent_faces[0], self.parent_faces + 0))
+        self.parent_payload = anatomy.encode_payload(
+            (b"NHANAT1\0", 5, 1, 0, 0, 0, b"s" * 32),
+            {305: {"body_index": 20, "layer": 1, "flags": 0,
+                   "vertices6": self.parent_vertices6, "faces": self.parent_faces}},
+        )
+        self.ultimate_face_map = [(1,), (1,), (2,), (3,), (4,)]
+        self.ultimate_vertex_map = [(0,), (1,), (2,), (3,), (1, 2)]
+
+    def evidence(self):
+        return {
+            "parent_vertices6": self.parent_vertices6.copy(),
+            "parent_faces": self.parent_faces.copy(),
+            "parent_payload_bytes": self.parent_payload,
+            "parent_payload_sha256": hashlib.sha256(self.parent_payload).hexdigest(),
+            "parent_surface_sha256": pleura._parent_surface_sha256(
+                305, self.parent_vertices6, self.parent_faces),
+            "candidate_face_ancestry": copy.deepcopy(self.candidate_face_to_parent),
+            "candidate_vertex_ancestry": copy.deepcopy(self.candidate_vertex_to_parent),
+            "parent_face_ancestry": copy.deepcopy(self.parent_face_to_source),
+            "parent_vertex_ancestry": copy.deepcopy(self.parent_vertex_to_source),
+            "immediate_subdivision_face_ids": [0],
+            "candidate_face_ancestry_sha256": pleura._lineage_map_sha256(
+                305, self.candidate_face_to_parent, kind="candidate-face-to-parent-face"),
+            "candidate_vertex_ancestry_sha256": pleura._lineage_map_sha256(
+                305, self.candidate_vertex_to_parent, kind="candidate-vertex-to-parent-vertex"),
+            "parent_face_ancestry_sha256": pleura._lineage_map_sha256(
+                305, self.parent_face_to_source, kind="parent-face-to-source-face"),
+            "parent_vertex_ancestry_sha256": pleura._lineage_map_sha256(
+                305, self.parent_vertex_to_source, kind="parent-vertex-to-source-vertex"),
+        }
+
+    def patch_geometry(self):
+        nums = self.candidate_vertices6[:, :3].astype(np.int64)
+        return {
+            "support_source_face_ids": [1],
+            "raw_vertex_lattice_numerators": nums,
+            "raw_vertex_lattice_denominators": np.ones_like(nums),
+            "lattice_scale": 1,
+        }
+
+    def validate_chain(self, evidence=None, face_map=None, vertex_map=None, support_ids=None):
+        return pleura._validate_source_face_subdivision_parent_chain(
+            305, self.candidate_faces, self.candidate_vertices6,
+            self.ultimate_face_map if face_map is None else face_map,
+            self.ultimate_vertex_map if vertex_map is None else vertex_map,
+            len(self.original_faces), len(self.original_vertices6),
+            self.evidence() if evidence is None else evidence, [1],
+            self.patch_geometry()["support_source_face_ids"] if support_ids is None else support_ids)
+
+    def test_exact_patch_uses_authenticated_immediate_parent_and_composes_to_original(self):
+        chain = self.validate_chain()
+        self.assertTrue(chain["passed"])
+        self.assertEqual(chain["immediate_subdivision_face_ids"], [0])
+        self.assertEqual(chain["original_source_subdivision_face_ids"], [1])
+        self.assertEqual(chain["immediate_patch_support_face_ids"], [0])
+        self.assertEqual(chain["ultimate_patch_support_face_ids"], [1])
+        self.assertEqual(chain["parent_payload_sha256"], hashlib.sha256(self.parent_payload).hexdigest())
+        self.assertEqual(chain["face_ancestry_composition_checked"], len(self.candidate_faces))
+        self.assertEqual(chain["vertex_ancestry_composition_checked"], len(self.candidate_vertices6))
+
+        proof = pleura._source_face_subdivision_patch_report(
+            self.candidate_vertices6, self.candidate_faces,
+            chain["parent_vertices6"], chain["parent_faces"],
+            chain["candidate_face_to_parent"],
+            {**self.patch_geometry(), "support_source_face_ids": chain["immediate_patch_support_face_ids"]},
+            chain["immediate_subdivision_face_ids"])
+        self.assertTrue(proof["passed"])
+        self.assertEqual(proof["output_child_count_by_source_face"], {"0": 2})
+        with self.assertRaisesRegex(ValueError, "outside its exact parent triangle"):
+            pleura._source_face_subdivision_patch_report(
+                self.candidate_vertices6, self.candidate_faces,
+                self.original_vertices6, self.original_faces,
+                self.ultimate_face_map, self.patch_geometry(), [1])
+
+    def test_parent_geometry_and_ancestry_pins_reject_drift(self):
+        evidence = self.evidence()
+        evidence["parent_vertices6"][0, 0] += np.float32(0.125)
+        with self.assertRaisesRegex(ValueError, "arrays differ from the independently pinned payload row"):
+            self.validate_chain(evidence)
+
+        evidence = self.evidence()
+        evidence["parent_payload_bytes"] = evidence["parent_payload_bytes"] + b"tampered"
+        with self.assertRaisesRegex(ValueError, "payload bytes differ from their independent SHA-256 pin"):
+            self.validate_chain(evidence)
+
+        evidence = self.evidence()
+        evidence["parent_face_ancestry"][0] = (2,)
+        evidence["parent_face_ancestry_sha256"] = pleura._lineage_map_sha256(
+            305, evidence["parent_face_ancestry"], kind="parent-face-to-source-face")
+        with self.assertRaisesRegex(ValueError, "face ancestry differs from the complete source face ancestry"):
+            self.validate_chain(evidence)
+
+        evidence = self.evidence()
+        evidence["parent_payload_sha256"] = "not-a-sha"
+        with self.assertRaisesRegex(ValueError, "parent_payload_sha256 must be a lowercase SHA-256 pin"):
+            self.validate_chain(evidence)
+
+    def test_candidate_to_parent_ancestry_must_compose_to_complete_original_map(self):
+        bad_faces = copy.deepcopy(self.ultimate_face_map)
+        bad_faces[0] = (3,)
+        with self.assertRaisesRegex(ValueError, "face ancestry differs from the complete source face ancestry"):
+            self.validate_chain(face_map=bad_faces)
+
+        bad_vertices = copy.deepcopy(self.ultimate_vertex_map)
+        bad_vertices[-1] = (0, 1)
+        with self.assertRaisesRegex(ValueError, "vertex ancestry differs from the complete source vertex ancestry"):
+            self.validate_chain(vertex_map=bad_vertices)
+
+    def test_parent_patch_support_must_compose_exactly_to_source_support(self):
+        evidence = self.evidence()
+        with self.assertRaisesRegex(ValueError, "complete original-source patch support"):
+            self.validate_chain(support_ids=[0, 1])
+
+    def test_parent_face_cannot_straddle_the_declared_patch_boundary(self):
+        evidence = self.evidence()
+        evidence["parent_face_ancestry"][1] = (2, 3)
+        evidence["parent_face_ancestry_sha256"] = pleura._lineage_map_sha256(
+            305, evidence["parent_face_ancestry"], kind="parent-face-to-source-face")
+        ultimate_faces = copy.deepcopy(self.ultimate_face_map)
+        ultimate_faces[2] = (2, 3)
+        with self.assertRaisesRegex(ValueError, "crosses the declared subdivision patch boundary"):
+            self.validate_chain(evidence, face_map=ultimate_faces, support_ids=[2])
+
+    def test_owner_routes_opt_in_patch_to_intermediate_geometry_and_keeps_default_path(self):
+        tetra_faces = np.asarray(
+            [[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]], dtype=np.uint32)
+        candidate_lobes = {sid: (self.candidate_vertices6.copy(), self.candidate_faces.copy())
+                            for sid in pleura.LOBE_IDS}
+        source_lobes = {sid: (self.original_vertices6.copy(), self.original_faces.copy())
+                        for sid in pleura.LOBE_IDS}
+        # Only row 305 is subdivided; the other rows are identity maps. The
+        # sentinel stops after the owner has validated ancestry and selected
+        # its exact parent geometry, before any regional topology audit.
+        face_maps = {sid: (self.ultimate_face_map if sid == 305
+                           else [(i,) for i in range(len(tetra_faces))])
+                     for sid in pleura.LOBE_IDS}
+        vertex_maps = {sid: (self.ultimate_vertex_map if sid == 305
+                             else [(i,) for i in range(4)])
+                       for sid in pleura.LOBE_IDS}
+        candidate_lobes[305] = (self.candidate_vertices6.copy(), self.candidate_faces.copy())
+        source_lobes[305] = (self.original_vertices6.copy(), self.original_faces.copy())
+        parent_evidence = self.evidence()
+        parent_evidence.update({
+            "parent_vertices6": self.parent_vertices6.copy(),
+            "parent_faces": self.parent_faces.copy(),
+            "parent_payload_bytes": self.parent_payload,
+            "parent_payload_sha256": hashlib.sha256(self.parent_payload).hexdigest(),
+        })
+
+        class StopAfterPatchParent(Exception):
+            pass
+
+        observed = []
+        def stop(candidate_vertices6, candidate_faces, parent_vertices6,
+                 parent_faces, parent_map, patch_evidence, repeated):
+            observed.append((parent_vertices6.copy(), parent_faces.copy(), tuple(parent_map),
+                             dict(patch_evidence), tuple(repeated)))
+            raise StopAfterPatchParent
+
+        arguments = dict(
+            allow_source_microfragment=True,
+            source_lineage_lobes=source_lobes,
+            source_face_ancestry=face_maps,
+            source_vertex_ancestry=vertex_maps,
+            allow_source_face_subdivisions={305: [1]},
+            source_face_subdivision_patch_geometry={305: self.patch_geometry()},
+        )
+        with patch.object(pleura, "_source_face_subdivision_patch_report", side_effect=stop):
+            with self.assertRaises(StopAfterPatchParent):
+                pleura.derive_lung_union_exterior(
+                    candidate_lobes, **arguments,
+                    source_face_subdivision_parent_evidence={305: parent_evidence})
+        self.assertTrue(np.array_equal(observed[0][0], self.parent_vertices6))
+        self.assertTrue(np.array_equal(observed[0][1], self.parent_faces))
+        self.assertEqual(observed[0][2], tuple(self.candidate_face_to_parent))
+        self.assertEqual(observed[0][3]["support_source_face_ids"], [0])
+
+        observed.clear()
+        with patch.object(pleura, "_source_face_subdivision_patch_report", side_effect=stop):
+            with self.assertRaises(StopAfterPatchParent):
+                pleura.derive_lung_union_exterior(candidate_lobes, **arguments)
+        self.assertTrue(np.array_equal(observed[0][0], self.original_vertices6))
+        self.assertTrue(np.array_equal(observed[0][1], self.original_faces))
+        report = self.validate_chain()
+        serializable_report = {key: value for key, value in report.items()
+                              if key not in ("parent_vertices6", "parent_faces",
+                                             "candidate_face_to_parent")}
+        json.dumps(serializable_report, sort_keys=True, allow_nan=False)
 
 
 if __name__ == "__main__":

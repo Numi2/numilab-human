@@ -445,12 +445,233 @@ def _normalize_source_face_ancestry(raw_face_map, source_face_count, stable_id, 
     return tuple(face_map)
 
 
+def _normalize_pinned_parent_map(raw_map, row_count, parent_count, label, *, max_support):
+    try:
+        rows = list(raw_map)
+    except TypeError as exc:
+        raise ValueError(f"{label} must contain one support row per element") from exc
+    if len(rows) != row_count:
+        raise ValueError(f"{label} length differs from its parent geometry")
+    normalized = []
+    for output_id, raw_support in enumerate(rows):
+        values = np.asarray(raw_support)
+        if values.dtype.kind not in "iu":
+            raise ValueError(f"{label} requires integer parent IDs")
+        values = values.astype(np.int64, copy=False).reshape(-1)
+        if (len(values) == 0 or len(values) > max_support
+                or np.any(values < 0) or np.any(values >= parent_count)
+                or len(np.unique(values)) != len(values)):
+            raise ValueError(f"{label} has invalid support for output {output_id}")
+        normalized.append(tuple(sorted(map(int, values))))
+    return tuple(normalized)
+
+
+def _lineage_map_sha256(stable_id, rows, *, kind):
+    digest = hashlib.sha256()
+    digest.update(b"numi.human.pleura.parent-lineage-map.v1\0")
+    encoded_kind = kind.encode("ascii")
+    digest.update(len(encoded_kind).to_bytes(2, "little", signed=False))
+    digest.update(encoded_kind)
+    digest.update(int(stable_id).to_bytes(4, "little", signed=False))
+    offsets = [0]
+    values = []
+    for row in rows:
+        values.extend(sorted(map(int, row)))
+        offsets.append(len(values))
+    digest.update(np.asarray(offsets, dtype="<u8").tobytes())
+    digest.update(np.asarray(values, dtype="<u8").tobytes())
+    return digest.hexdigest()
+
+
+def _parent_surface_sha256(stable_id, vertices6, faces):
+    """Hash canonical ABI5 row geometry separately from its whole-payload pin."""
+    vertices = np.asarray(vertices6)
+    triangles = np.asarray(faces)
+    if (vertices.dtype.kind != "f" or vertices.dtype.itemsize != 4
+            or triangles.dtype.kind not in "iu"
+            or vertices.ndim != 2 or vertices.shape[1] != 6
+            or triangles.ndim != 2 or triangles.shape[1] != 3
+            or not np.isfinite(vertices).all()
+            or (triangles.size and (np.any(triangles < 0)
+                                    or int(triangles.max()) >= len(vertices)))):
+        raise ValueError("immediate subdivision parent must be finite ABI5 Float32 geometry with integer local faces")
+    canonical_vertices = np.ascontiguousarray(vertices, dtype="<f4")
+    canonical_faces = np.ascontiguousarray(triangles, dtype="<u8")
+    digest = hashlib.sha256()
+    digest.update(b"numi.human.pleura.immediate-parent-surface.v1\0")
+    digest.update(int(stable_id).to_bytes(4, "little", signed=False))
+    digest.update(np.asarray(canonical_vertices.shape, dtype="<u8").tobytes())
+    digest.update(canonical_vertices.tobytes())
+    digest.update(np.asarray(canonical_faces.shape, dtype="<u8").tobytes())
+    digest.update(canonical_faces.tobytes())
+    return digest.hexdigest()
+
+
+def _validate_source_face_subdivision_parent_chain(
+        stable_id, candidate_faces, candidate_vertices6, ultimate_face_map,
+        ultimate_vertex_map, source_face_count, source_vertex_count,
+        evidence, ultimate_subdivision_ids, ultimate_patch_support_ids):
+    """Authenticate candidate -> immediate parent -> source ancestry composition."""
+    required = {
+        "parent_vertices6", "parent_faces", "parent_payload_bytes", "parent_payload_sha256",
+        "parent_surface_sha256", "candidate_face_ancestry",
+        "candidate_vertex_ancestry", "parent_face_ancestry",
+        "parent_vertex_ancestry", "immediate_subdivision_face_ids",
+        "candidate_face_ancestry_sha256", "candidate_vertex_ancestry_sha256",
+        "parent_face_ancestry_sha256", "parent_vertex_ancestry_sha256",
+    }
+    if not isinstance(evidence, dict) or not required.issubset(evidence):
+        raise ValueError("immediate subdivision parent requires independently pinned geometry and complete ancestry evidence")
+    for name in ("parent_payload_sha256", "parent_surface_sha256",
+                 "candidate_face_ancestry_sha256", "candidate_vertex_ancestry_sha256",
+                 "parent_face_ancestry_sha256", "parent_vertex_ancestry_sha256"):
+        value = evidence[name]
+        if (not isinstance(value, str) or len(value) != 64
+                or any(character not in "0123456789abcdef" for character in value)):
+            raise ValueError(f"immediate subdivision parent {name} must be a lowercase SHA-256 pin")
+
+    parent_vertices6 = np.asarray(evidence["parent_vertices6"])
+    parent_faces_raw = np.asarray(evidence["parent_faces"])
+    parent_payload_bytes = evidence["parent_payload_bytes"]
+    if not isinstance(parent_payload_bytes, (bytes, bytearray, memoryview)):
+        raise ValueError("immediate subdivision parent requires the authenticated parent payload bytes")
+    parent_payload_bytes = bytes(parent_payload_bytes)
+    actual_payload_sha = hashlib.sha256(parent_payload_bytes).hexdigest()
+    if actual_payload_sha != evidence["parent_payload_sha256"]:
+        raise ValueError("immediate subdivision parent payload bytes differ from their independent SHA-256 pin")
+    try:
+        _, _, parent_rows = _parse_payload(parent_payload_bytes)
+    except (ValueError, struct.error) as exc:
+        raise ValueError("immediate subdivision parent payload is not a valid ABI5 anatomy payload") from exc
+    if stable_id not in parent_rows:
+        raise ValueError("immediate subdivision parent payload lacks the selected stable lobe row")
+    payload_vertices6 = parent_rows[stable_id]["vertices6"]
+    payload_faces = parent_rows[stable_id]["faces"]
+    if (parent_faces_raw.dtype.kind not in "iu"
+            or parent_faces_raw.ndim != 2 or parent_faces_raw.shape[1] != 3
+            or not np.array_equal(parent_vertices6, payload_vertices6)
+            or not np.array_equal(parent_faces_raw, payload_faces)):
+        raise ValueError("immediate subdivision parent arrays differ from the independently pinned payload row")
+    parent_faces = np.ascontiguousarray(parent_faces_raw, dtype="<u8")
+    actual_surface_sha = _parent_surface_sha256(stable_id, parent_vertices6, parent_faces_raw)
+    if actual_surface_sha != evidence["parent_surface_sha256"]:
+        raise ValueError("immediate subdivision parent row geometry differs from its independent SHA-256 pin")
+
+    candidate_face_to_parent = _normalize_pinned_parent_map(
+        evidence["candidate_face_ancestry"], len(candidate_faces), len(parent_faces),
+        f"candidate-to-immediate-parent face ancestry row {stable_id}", max_support=1)
+    candidate_vertex_to_parent = _normalize_pinned_parent_map(
+        evidence["candidate_vertex_ancestry"], len(candidate_vertices6), len(parent_vertices6),
+        f"candidate-to-immediate-parent vertex ancestry row {stable_id}",
+        max_support=len(parent_vertices6))
+    parent_face_to_source = _normalize_pinned_parent_map(
+        evidence["parent_face_ancestry"], len(parent_faces), source_face_count,
+        f"immediate-parent-to-source face ancestry row {stable_id}", max_support=2)
+    parent_vertex_to_source = _normalize_pinned_parent_map(
+        evidence["parent_vertex_ancestry"], len(parent_vertices6), source_vertex_count,
+        f"immediate-parent-to-source vertex ancestry row {stable_id}",
+        max_support=source_vertex_count)
+
+    actual_map_hashes = {
+        "candidate_face_ancestry_sha256": _lineage_map_sha256(
+            stable_id, candidate_face_to_parent, kind="candidate-face-to-parent-face"),
+        "candidate_vertex_ancestry_sha256": _lineage_map_sha256(
+            stable_id, candidate_vertex_to_parent, kind="candidate-vertex-to-parent-vertex"),
+        "parent_face_ancestry_sha256": _lineage_map_sha256(
+            stable_id, parent_face_to_source, kind="parent-face-to-source-face"),
+        "parent_vertex_ancestry_sha256": _lineage_map_sha256(
+            stable_id, parent_vertex_to_source, kind="parent-vertex-to-source-vertex"),
+    }
+    for name, actual in actual_map_hashes.items():
+        if actual != evidence[name]:
+            raise ValueError(f"immediate subdivision parent {name} differs from its independent SHA-256 pin")
+
+    composed_faces = []
+    for parent_ids in candidate_face_to_parent:
+        composed_faces.append(tuple(sorted({source_id for parent_id in parent_ids
+                                            for source_id in parent_face_to_source[parent_id]})))
+    composed_vertices = []
+    for parent_ids in candidate_vertex_to_parent:
+        composed_vertices.append(tuple(sorted({source_id for parent_id in parent_ids
+                                               for source_id in parent_vertex_to_source[parent_id]})))
+    if tuple(composed_faces) != tuple(tuple(sorted(row)) for row in ultimate_face_map):
+        raise ValueError("candidate-to-immediate-to-source face ancestry differs from the complete source face ancestry")
+    if tuple(composed_vertices) != tuple(tuple(sorted(row)) for row in ultimate_vertex_map):
+        raise ValueError("candidate-to-immediate-to-source vertex ancestry differs from the complete source vertex ancestry")
+
+    parent_use_counts = collections.Counter(row[0] for row in candidate_face_to_parent)
+    repeated_parent_ids = tuple(sorted(face_id for face_id, count in parent_use_counts.items() if count > 1))
+    declared_repeated = evidence["immediate_subdivision_face_ids"]
+    if (not isinstance(declared_repeated, (list, tuple))
+            or any(isinstance(value, (bool, np.bool_))
+                   or not isinstance(value, (int, np.integer)) for value in declared_repeated)):
+        raise ValueError("immediate subdivision parent repeated-face inventory must contain integer IDs")
+    declared_repeated = tuple(sorted(map(int, declared_repeated)))
+    if len(set(declared_repeated)) != len(declared_repeated) or repeated_parent_ids != declared_repeated:
+        raise ValueError("immediate subdivision parent repeated-face inventory differs from candidate ancestry")
+    repeated_source_ids = tuple(sorted({parent_face_to_source[parent_id][0]
+                                        for parent_id in repeated_parent_ids
+                                        if len(parent_face_to_source[parent_id]) == 1}))
+    if len(repeated_source_ids) != len(repeated_parent_ids):
+        raise ValueError("repeated immediate subdivision faces do not each have one original source face")
+    if repeated_source_ids != tuple(sorted(map(int, ultimate_subdivision_ids))):
+        raise ValueError("immediate and original-source subdivision declarations do not compose")
+
+    raw_patch_support = list(ultimate_patch_support_ids)
+    if (not raw_patch_support
+            or any(isinstance(value, (bool, np.bool_))
+                   or not isinstance(value, (int, np.integer)) for value in raw_patch_support)):
+        raise ValueError("immediate subdivision parent requires the complete ultimate patch-support face inventory")
+    ultimate_patch_support = tuple(sorted(map(int, raw_patch_support)))
+    if (len(set(ultimate_patch_support)) != len(ultimate_patch_support)
+            or any(face_id < 0 or face_id >= source_face_count
+                   for face_id in ultimate_patch_support)):
+        raise ValueError("immediate subdivision parent ultimate patch support is duplicate or out of range")
+    used_parent_ids = {row[0] for row in candidate_face_to_parent}
+    ultimate_support_set = set(ultimate_patch_support)
+    immediate_patch_support = []
+    composed_patch_support = set()
+    for parent_id, source_ids in enumerate(parent_face_to_source):
+        source_support = set(source_ids) & ultimate_support_set
+        if not source_support:
+            continue
+        if not set(source_ids).issubset(ultimate_support_set):
+            raise ValueError("immediate parent face ancestry crosses the declared subdivision patch boundary")
+        if parent_id not in used_parent_ids:
+            raise ValueError("immediate parent subdivision support face has no candidate child")
+        immediate_patch_support.append(parent_id)
+        composed_patch_support.update(source_ids)
+    if composed_patch_support != ultimate_support_set:
+        raise ValueError("immediate parent patch support does not compose to the complete original-source patch support")
+    if not set(repeated_parent_ids).issubset(immediate_patch_support):
+        raise ValueError("repeated immediate subdivision faces are outside the authenticated patch support")
+
+    return {
+        "passed": True,
+        "parent_payload_sha256": evidence["parent_payload_sha256"],
+        "parent_surface_sha256": actual_surface_sha,
+        "candidate_face_ancestry_sha256": actual_map_hashes["candidate_face_ancestry_sha256"],
+        "candidate_vertex_ancestry_sha256": actual_map_hashes["candidate_vertex_ancestry_sha256"],
+        "parent_face_ancestry_sha256": actual_map_hashes["parent_face_ancestry_sha256"],
+        "parent_vertex_ancestry_sha256": actual_map_hashes["parent_vertex_ancestry_sha256"],
+        "immediate_subdivision_face_ids": list(repeated_parent_ids),
+        "original_source_subdivision_face_ids": list(repeated_source_ids),
+        "immediate_patch_support_face_ids": list(immediate_patch_support),
+        "ultimate_patch_support_face_ids": list(ultimate_patch_support),
+        "face_ancestry_composition_checked": len(composed_faces),
+        "vertex_ancestry_composition_checked": len(composed_vertices),
+        "parent_vertices6": parent_vertices6,
+        "parent_faces": parent_faces.astype(np.int64, copy=False),
+        "candidate_face_to_parent": candidate_face_to_parent,
+    }
+
 def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                                coordinate_quantization_m=None, source_lineage_lobes=None,
                                source_face_ancestry=None, source_vertex_ancestry=None,
                                allow_multi_parent_source_face_ancestry=(),
                                allow_source_face_subdivisions=None,
-                               source_face_subdivision_patch_geometry=None):
+                               source_face_subdivision_patch_geometry=None,
+                               source_face_subdivision_parent_evidence=None):
     """Build the external union surface from five registered lobe meshes.
 
     `lobes` maps stable IDs 305..309 to `(vertices6, local_faces)` arrays.
@@ -459,8 +680,14 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
     may opt named rows into one exact local 2-to-2 flip pair. A separate
     source-face subdivision opt-in names repeated parents and requires exact
     child containment/orientation, non-overlap, and whole-support boundary
-    conservation evidence; per-face counts alone never authorize a subdivision. By default,
-    any detached component is a hard error.  A source-specific microfragment
+    conservation evidence; per-face counts alone never authorize a subdivision. The
+    optional `source_face_subdivision_parent_evidence` separates the immediate
+    registered parent geometry from the ultimate source-lineage rows. It requires
+    independent whole-payload and row-geometry SHA-256 pins plus pinned candidate-to-
+    parent and parent-to-source ancestry maps; the composed maps must equal the
+    existing candidate-to-source maps. Subdivision geometry is checked against the
+    immediate parent, while omitted-fragment identity remains checked against
+    `source_lineage_lobes`. By default, any detached component is a hard error. A source-specific microfragment
     may be omitted only when it matches the exact registered 305/308 source
     anchor coordinates, sub-millimeter-scale bounds, owner identities, and
     bounded area/volume recorded below. With explicit ancestry from an
@@ -551,6 +778,29 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         patch_geometry_by_row[normalized_id] = evidence
     if set(patch_geometry_by_row) != set(subdivision_sources_by_row):
         raise ValueError("every source-face subdivision opt-in requires matching exact patch geometry evidence")
+    raw_parent_evidence = ({} if source_face_subdivision_parent_evidence is None
+                           else source_face_subdivision_parent_evidence)
+    try:
+        parent_evidence_items = list(raw_parent_evidence.items())
+    except (AttributeError, TypeError) as exc:
+        raise ValueError("immediate subdivision parent evidence must map stable lobe IDs to pinned lineage") from exc
+    parent_evidence_by_row = {}
+    for stable_id, evidence in parent_evidence_items:
+        if isinstance(stable_id, (bool, np.bool_)):
+            raise ValueError("immediate subdivision parent evidence rejects boolean stable lobe IDs")
+        if isinstance(stable_id, (int, np.integer)):
+            normalized_id = int(stable_id)
+        elif isinstance(stable_id, str) and stable_id.isdecimal() and str(int(stable_id)) == stable_id:
+            normalized_id = int(stable_id)
+        else:
+            raise ValueError("immediate subdivision parent evidence requires integer or canonical decimal stable lobe IDs")
+        if normalized_id not in LOBE_IDS or normalized_id in parent_evidence_by_row:
+            raise ValueError("immediate subdivision parent evidence contains invalid or duplicate stable lobe IDs")
+        parent_evidence_by_row[normalized_id] = evidence
+    if parent_evidence_by_row and set(parent_evidence_by_row) != set(subdivision_sources_by_row):
+        raise ValueError("immediate subdivision parent evidence must cover exactly the subdivided lobe rows")
+    if parent_evidence_by_row and not has_explicit_ancestry:
+        raise ValueError("immediate subdivision parent evidence requires explicit source lineage ancestry")
     if has_explicit_ancestry and source_lineage_lobes is None:
         raise ValueError("explicit source pleura ancestry requires authenticated source lineage rows")
     if has_explicit_ancestry:
@@ -640,11 +890,36 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                         raise ValueError(f"source vertex ancestry is invalid for output vertex {output_vertex} in row {stable_id}")
                     vertex_map.append(tuple(map(int, values)))
                 if stable_id in subdivision_sources_by_row:
-                    subdivision_patch_reports[stable_id] = _source_face_subdivision_patch_report(
-                        candidate_vertices6, candidate_faces, source_vertices6, source_faces,
-                        face_map, patch_geometry_by_row[stable_id],
-                        subdivision_sources_by_row[stable_id],
-                    )
+                    if stable_id in parent_evidence_by_row:
+                        parent_chain = _validate_source_face_subdivision_parent_chain(
+                            stable_id, candidate_faces, candidate_vertices6,
+                            face_map, vertex_map, len(source_faces),
+                            len(source_vertices6), parent_evidence_by_row[stable_id],
+                            subdivision_sources_by_row[stable_id],
+                            patch_geometry_by_row[stable_id].get("support_source_face_ids", ()),
+                        )
+                        immediate_patch_geometry = dict(patch_geometry_by_row[stable_id])
+                        immediate_patch_geometry["support_source_face_ids"] = list(
+                            parent_chain["immediate_patch_support_face_ids"])
+                        patch_report = _source_face_subdivision_patch_report(
+                            candidate_vertices6, candidate_faces,
+                            parent_chain["parent_vertices6"], parent_chain["parent_faces"],
+                            parent_chain["candidate_face_to_parent"], immediate_patch_geometry,
+                            parent_chain["immediate_subdivision_face_ids"],
+                        )
+                        subdivision_patch_reports[stable_id] = {
+                            "immediate_parent_chain": {
+                                key: value for key, value in parent_chain.items()
+                                if key not in ("parent_vertices6", "parent_faces", "candidate_face_to_parent")
+                            },
+                            "patch_geometry": patch_report,
+                        }
+                    else:
+                        subdivision_patch_reports[stable_id] = _source_face_subdivision_patch_report(
+                            candidate_vertices6, candidate_faces, source_vertices6, source_faces,
+                            face_map, patch_geometry_by_row[stable_id],
+                            subdivision_sources_by_row[stable_id],
+                        )
                 face_offsets = [0]
                 face_values = []
                 for parents in face_map:
