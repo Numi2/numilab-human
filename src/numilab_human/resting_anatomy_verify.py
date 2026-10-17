@@ -4086,7 +4086,10 @@ def bound_unexpected_triangle_pairs(report, first, second):
 
 def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclosures=(),
                        intended_shared_feature_pairs=(), intended_source_patch_complexes=(),
-                       source_bound_connected_overlaps=()):
+                       source_bound_connected_overlaps=(), boundary_only=False):
+    """Optionally inventory exact boundary contacts without solid admission."""
+    if type(boundary_only) is not bool:
+        raise TypeError("boundary_only must be a boolean")
     allowed = {tuple(pair) for pair in intended_face_pairs}
     enclosures = _intended_enclosures(intended_enclosures)
     if any(set(pair) != {first.key, second.key} for pair in enclosures):
@@ -4139,9 +4142,12 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
         # path instead of bypassing the outside-enclosure rejection below.
         requires_carrier_contact = any(context.get("carrier_complex") for context in patch_contexts)
         source_overlap_outside_aabb = source_overlap_result is not None
+        boundary_passed = (not enclosures and not requires_carrier_contact
+                           and not source_overlap_outside_aabb)
         return {"identities": [list(first.key), list(second.key)],
-                "passed": (not enclosures and not requires_carrier_contact
-                           and not source_overlap_outside_aabb),
+                **({"boundary_passed": boundary_passed, "containment_deferred": True}
+                   if boundary_only else {}),
+                "passed": boundary_passed and not boundary_only,
                 "aabb_disjoint": True, "triangle_pair_count": 0,
                 "declared_enclosure_outside_aabb": bool(enclosures),
                 "declared_carrier_outside_aabb": requires_carrier_contact,
@@ -4262,7 +4268,7 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
     # regions on opposite sides. Check every triangle interior centroid rather
     # than assuming one sample represents the whole connected component.
     containment = []
-    if not unexpected:
+    if not unexpected and not boundary_only:
         inspect_all_faces = bool(pairs)
         containment = [
             _contained_components(first, second, inspect_all_faces=inspect_all_faces),
@@ -4287,10 +4293,14 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
          and all(row["status"] == "checked_exact_rational_metres" for row in containment)))
     source_overlap_passed = (
         source_overlap_result is not None and source_overlap_result.get("passed") is True)
+    boundary_passed = (not unexpected and not missing_carrier_pairs
+                       and (source_overlap_result is None or source_overlap_passed))
     return {"identities": [list(first.key), list(second.key)],
+            **({"boundary_passed": boundary_passed, "containment_deferred": True}
+               if boundary_only else {}),
             "surface_geometry_bindings": [_surface_pair_geometry_binding(first),
                                           _surface_pair_geometry_binding(second)],
-            "passed": (not unexpected and (not inside or source_overlap_passed)
+            "passed": (not boundary_only and not unexpected and (not inside or source_overlap_passed)
                        and not outside_declared_enclosure and not unresolved
                        and not missing_carrier_pairs and carrier_solid_interior_checked
                        and (source_overlap_result is None or source_overlap_passed)),
@@ -4400,14 +4410,20 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                            intended_enclosures=(), shared_feature_interfaces=None,
                            source_patch_complex_interfaces=None,
                            source_bound_connected_overlap_interfaces=None, progress=None,
-                           collect_failures=False):
+                           collect_failures=False, boundary_inventory_only=False):
     """Audit selected geometry; optionally retain every failed gate in one pass.
 
     Collection changes scheduling only. Every original exact predicate and
     declaration remains in force, and any failed row keeps the result rejected.
+    Boundary inventory collects all contacts before expensive solid checks; it
+    always returns passed=False and requires a subsequent ordinary full audit.
     """
+    if type(boundary_inventory_only) is not bool:
+        raise TypeError("boundary_inventory_only must be a boolean")
     if type(collect_failures) is not bool:
         raise TypeError("collect_failures must be a boolean")
+    if boundary_inventory_only:
+        collect_failures = True
     if not isinstance(surfaces, Mapping):
         raise TypeError("audit surfaces must be a mapping of typed identities")
     changed = [typed_key(key) for key in changed]
@@ -4436,7 +4452,7 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
         raise TypeError("audit progress observer must be callable")
     def record(row):
         rows.append(row)
-        if row.get("passed") is False:
+        if row.get("boundary_passed", row.get("passed")) is False:
             failures.append(len(rows)-1)
         if progress is not None:
             progress(row)
@@ -4498,6 +4514,9 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                        "source_bound_overlap_outside_aabb": source_overlap_declared,
                        "intended_enclosures": [[list(a), list(b)]
                                                for a, b in declared_enclosures]}
+                if boundary_inventory_only:
+                    row.update(stage="boundary_pair", boundary_passed=row["passed"],
+                               passed=False, containment_deferred=True)
                 record(row)
                 if (declared_enclosures or source_overlap_declared) and not collect_failures:
                     return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
@@ -4530,7 +4549,8 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                                           source_bound_connected_overlaps=(
                                               source_bound_connected_overlap_interfaces.get((key, target), ())),
                                           intended_enclosures=[pair for pair in enclosures
-                                                               if set(pair) == {key, target}])
+                                                               if set(pair) == {key, target}],
+                                          boundary_only=boundary_inventory_only)
             except (ValueError, TypeError) as exc:
                 if not collect_failures:
                     raise
@@ -4538,11 +4558,13 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
                         "identities": [list(key), list(target)], "passed": False,
                         "error_type": type(exc).__name__, "error": str(exc)})
                 continue
-            record({"stage": "nearby_pair", **pair})
+            record({"stage": "boundary_pair" if boundary_inventory_only else "nearby_pair", **pair})
             if not pair["passed"] and not collect_failures:
                 return {"passed": False, "failed_stage": "nearby_pair", "rows": rows}
     if collect_failures:
-        return {"passed": not failures, "rows": rows,
+        return {"passed": not failures and not boundary_inventory_only, "rows": rows,
+                **({"boundary_stage_passed": not failures, "containment_pending": True,
+                    "boundary_inventory_only": True} if boundary_inventory_only else {}),
                 "failed_stage": rows[failures[0]]["stage"] if failures else None,
                 "failure_count": len(failures), "failure_row_indices": failures,
                 "collection_complete": True,
