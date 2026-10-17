@@ -141,6 +141,133 @@ def collapse_exact_duplicate_edge(
     }
 
 
+
+def collapse_short_edge_in_two_frames(
+    faces_local_u32,
+    positions_source_f32,
+    positions_world_f32,
+    keep_vertex: int,
+    retire_vertex: int,
+    *,
+    modifiable_vertex_mask,
+    maximum_edge_length_m: float,
+    require_zero_face_reduction: bool = True,
+) -> tuple[np.ndarray, dict]:
+    """Retire a short inferred edge without changing any allocated source point.
+
+    This construction requires a strict simplicial link and closed oriented
+    output links. By default it requires a strict reduction in the combined
+    source/world zero-face count; collision-driven callers may disable only
+    that strict reduction, while retaining both per-frame nonincrease checks.
+    Every previously nonzero surviving face must remain nonzero and retain its
+    orientation in both frames. Only callers with authenticated source ancestry
+    may mark endpoints modifiable. The returned complete input star is ancestry
+    for rewritten faces, including the two retired incident faces.
+
+    This does not check exact self intersections, neighboring anatomy, material
+    ownership, or breathing poses, and cannot admit an anatomical candidate.
+    """
+    if type(require_zero_face_reduction) is not bool:
+        raise ValueError("zero-face reduction policy must be boolean")
+    faces = np.asarray(faces_local_u32)
+    source = np.asarray(positions_source_f32)
+    world = np.asarray(positions_world_f32)
+    mask = np.asarray(modifiable_vertex_mask)
+    if faces.dtype != np.dtype("<u4") or faces.ndim != 2 or faces.shape[1] != 3:
+        raise ValueError("faces must be ordered UInt32 triangles")
+    if (source.dtype != np.dtype("<f4") or source.ndim != 2 or source.shape[1] != 3
+            or world.dtype != np.dtype("<f4") or world.shape != source.shape
+            or not np.isfinite(source).all() or not np.isfinite(world).all()):
+        raise ValueError("source and world positions must be aligned finite Float32 triples")
+    if mask.dtype != np.dtype(np.bool_) or mask.shape != (len(source),):
+        raise ValueError("modifiable mask must contain one boolean per allocated vertex")
+    if type(keep_vertex) is not int or type(retire_vertex) is not int:
+        raise ValueError("edge endpoints must be integer source slots")
+    keep, retire = keep_vertex, retire_vertex
+    if keep == retire or min(keep, retire) < 0 or max(keep, retire) >= len(source):
+        raise ValueError("edge endpoints must be distinct valid source slots")
+    if not mask[keep] or not mask[retire]:
+        raise ValueError("both endpoints must be explicitly modifiable inferred slots")
+    if (isinstance(maximum_edge_length_m, (bool, np.bool_))
+            or not np.isfinite(maximum_edge_length_m) or maximum_edge_length_m <= 0):
+        raise ValueError("maximum edge length must be finite and positive in metres")
+    if not len(faces) or int(faces.max()) >= len(source):
+        raise ValueError("empty faces or face index exceeds source allocation")
+    # This also rejects duplicate/repeated faces and malformed input links. It
+    # uses index topology because a construction input may have geometric zeros.
+    before_topology = check_closed_oriented_vertex_links(faces, len(source))
+    if not before_topology["closed_oriented_indexed_manifold"]:
+        raise ValueError("input must have closed oriented indexed manifold links")
+
+    lengths = tuple(float(np.linalg.norm(points[keep].astype(np.float64)
+                                         - points[retire].astype(np.float64)))
+                    for points in (source, world))
+    if max(lengths) > maximum_edge_length_m:
+        raise ValueError("edge exceeds declared source/world metre bound")
+    keep_use = np.any(faces == keep, axis=1)
+    retire_use = np.any(faces == retire, axis=1)
+    incident = np.flatnonzero(keep_use & retire_use)
+    if len(incident) != 2:
+        raise ValueError("edge must have exactly two incident faces")
+    left = set(map(int, faces[keep_use].ravel())) - {keep, retire}
+    right = set(map(int, faces[retire_use].ravel())) - {keep, retire}
+    opposites = set(map(int, faces[incident].ravel())) - {keep, retire}
+    if len(opposites) != 2 or left & right != opposites:
+        raise ValueError("edge fails the strict simplicial link condition")
+    star = np.flatnonzero(keep_use | retire_use)
+    rewritten = faces.copy()
+    rewritten[rewritten == retire] = np.uint32(keep)
+    live = ((rewritten[:, 0] != rewritten[:, 1])
+            & (rewritten[:, 1] != rewritten[:, 2])
+            & (rewritten[:, 2] != rewritten[:, 0]))
+    if not np.array_equal(np.flatnonzero(~live), incident):
+        raise ValueError("collapse retires faces beyond the incident pair")
+    changed = np.flatnonzero(live & retire_use)
+    candidate = rewritten[live]
+
+    def vectors(points, triangles):
+        xyz = points[triangles].astype(np.float64)
+        return np.cross(xyz[:, 1] - xyz[:, 0], xyz[:, 2] - xyz[:, 0])
+
+    before_zeros, after_zeros = [], []
+    for label, points in (("source", source), ("world", world)):
+        before = vectors(points, faces)
+        after = vectors(points, candidate)
+        old_star = before[star[live[star]]]
+        new_star = vectors(points, rewritten[star[live[star]]])
+        nonzero = np.any(old_star != 0, axis=1)
+        if np.any(nonzero & np.all(new_star == 0, axis=1)):
+            raise ValueError(label + " collapse creates a new surviving zero face")
+        if np.any(nonzero & (np.einsum("ij,ij->i", old_star, new_star) <= 0)):
+            raise ValueError(label + " collapse reverses a surviving face")
+        before_zeros.append(int(np.count_nonzero(np.all(before == 0, axis=1))))
+        after_zeros.append(int(np.count_nonzero(np.all(after == 0, axis=1))))
+    if (any(new > old for old, new in zip(before_zeros, after_zeros))
+            or (require_zero_face_reduction and sum(after_zeros) >= sum(before_zeros))):
+        raise ValueError("combined zero-face inventory must strictly improve without frame regression")
+    topology = check_closed_oriented_vertex_links(candidate, len(source))
+    if not topology["closed_oriented_indexed_manifold"]:
+        raise ValueError("collapse output fails closed oriented indexed manifold links")
+    return np.ascontiguousarray(candidate, dtype="<u4"), {
+        "method": "strict_link_bounded_inferred_edge_retirement_in_two_frames",
+        "kept_vertex_local_index": keep,
+        "retired_vertex_local_index_still_allocated": retire,
+        "source_world_edge_lengths_m": list(lengths),
+        "maximum_edge_length_m": float(maximum_edge_length_m),
+        "incident_face_indices_removed": incident.astype(int).tolist(),
+        "input_star_face_ids": star.astype(int).tolist(),
+        "rewritten_input_face_ids": changed.astype(int).tolist(),
+        "source_world_zero_face_counts_before": before_zeros,
+        "source_world_zero_face_counts_after": after_zeros,
+        "closed_oriented_indexed_topology": topology,
+        "source_and_world_position_arrays_unchanged": True,
+        "complete_input_star_required_as_rewritten_face_ancestry": True,
+        "strict_zero_face_reduction_required": require_zero_face_reduction,
+        "exact_self_and_neighbor_checks_required": True,
+        "anatomical_admission": False,
+        "native_admission": False,
+    }
+
 def _cyclic_equal(a, b):
     a = tuple(map(int, a))
     b = tuple(map(int, b))
