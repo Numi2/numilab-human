@@ -50,6 +50,110 @@ class RestingPleuraProxyTests(unittest.TestCase):
             309: right_side,
         }
 
+    def _append_source_microfragment(self, lobes):
+        anchors = np.asarray([
+            [0.009118776768445969, 0.036569900810718536, -0.056037694215774536],
+            [0.008264528587460518, 0.037101924419403076, -0.05697183683514595],
+            [0.00812491588294506, 0.03752134367823601, -0.05630656704337071],
+            [0.00816801656037569, 0.03760587051510811, -0.05599856749176979],
+        ], dtype=np.float32)
+        fragment_faces = [
+            ((0, 1, 2), 305), ((0, 2, 3), 305),
+            ((1, 3, 2), 308), ((0, 3, 1), 308),
+        ]
+        vertex_indices = {}
+        face_indices = {}
+        for stable_id in (305, 308):
+            old_v, old_f = lobes[stable_id]
+            first = len(old_v)
+            extra = np.column_stack((anchors, np.tile([0, 1, 0], (4, 1)))).astype(np.float32)
+            new_v = np.vstack((old_v, extra))
+            local_faces = [tuple(first + index for index in tri)
+                           for tri, owner in fragment_faces if owner == stable_id]
+            face_indices[stable_id] = list(range(len(old_f), len(old_f) + len(local_faces)))
+            vertex_indices[stable_id] = list(range(first, first + len(anchors)))
+            lobes[stable_id] = (new_v, np.vstack((old_f, np.asarray(local_faces, dtype=np.int64))))
+        return lobes, vertex_indices, face_indices
+
+    @staticmethod
+    def _copy_lobes(lobes):
+        return {sid: (vertices.copy(), faces.copy()) for sid, (vertices, faces) in lobes.items()}
+
+    def test_source_lineage_allows_only_same_registered_microfragment_faces_after_deformation(self):
+        source, vertices_by_row, _ = self._append_source_microfragment(self._two_lung_fixture())
+        for transform in ("translation", "deformation"):
+            with self.subTest(transform=transform):
+                candidate = self._copy_lobes(source)
+                all_anchor_points = np.asarray(source[305][0][vertices_by_row[305], :3], dtype=np.float64)
+                center = all_anchor_points.mean(axis=0)
+                for stable_id in (305, 308):
+                    vertices6, faces = candidate[stable_id]
+                    indices = vertices_by_row[stable_id]
+                    points = vertices6[indices, :3].astype(np.float64)
+                    if transform == "translation":
+                        points += np.asarray([0.02, -0.01, 0.005])
+                    else:
+                        points = center + (points - center) * np.asarray([1.01, 0.99, 1.02])
+                    vertices6[indices, :3] = points.astype(np.float32)
+                    candidate[stable_id] = (vertices6, faces)
+                _, _, detail = derive_lung_union_exterior(
+                    candidate, source_lineage_lobes=source,
+                )
+                self.assertEqual(len(detail["excluded_source_microfragments"]), 1)
+                lineage = detail["excluded_source_microfragments"][0]["source_lineage"]
+                self.assertEqual(lineage["recognition_mode"], "exact_source_face_and_vertex_inventory")
+                self.assertEqual(lineage["source_faces"], [[305, 4], [305, 5], [308, 4], [308, 5]])
+                self.assertGreater(lineage["minimum_candidate_to_reference_face_area_ratio"], 0.05)
+                self.assertEqual(len(detail["components"]), 2)
+
+    def test_source_lineage_does_not_relax_default_anchor_recognition(self):
+        source, vertices_by_row, _ = self._append_source_microfragment(self._two_lung_fixture())
+        candidate = self._copy_lobes(source)
+        for stable_id in (305, 308):
+            vertices6, faces = candidate[stable_id]
+            vertices6[vertices_by_row[stable_id], :3] += np.asarray([0.02, -0.01, 0.005], dtype=np.float32)
+            candidate[stable_id] = (vertices6, faces)
+        with self.assertRaisesRegex(ValueError, "detached lung-union component"):
+            derive_lung_union_exterior(candidate)
+        # The same displaced component is accepted only when its exact source rows are supplied.
+        _, _, detail = derive_lung_union_exterior(candidate, source_lineage_lobes=source)
+        self.assertEqual(len(detail["excluded_source_microfragments"]), 1)
+
+    def test_source_lineage_rejects_unrecognized_reference_and_changed_face_inventory(self):
+        source, vertices_by_row, _ = self._append_source_microfragment(self._two_lung_fixture())
+        unrecognized = self._copy_lobes(source)
+        for stable_id in (305, 308):
+            vertices6, faces = unrecognized[stable_id]
+            vertices6[vertices_by_row[stable_id], :3] += np.asarray([0.2, 0.1, -0.1], dtype=np.float32)
+            unrecognized[stable_id] = (vertices6, faces)
+        with self.assertRaisesRegex(ValueError, "detached lung-union component"):
+            derive_lung_union_exterior(source, source_lineage_lobes=unrecognized)
+
+        for mutation in ("face_id", "connectivity"):
+            with self.subTest(mutation=mutation):
+                candidate = self._copy_lobes(source)
+                vertices6, faces = candidate[305]
+                if mutation == "face_id":
+                    faces[[0, -1]] = faces[[-1, 0]]
+                else:
+                    faces[-1, 0] = faces[-1, 1]
+                candidate[305] = (vertices6, faces)
+                with self.assertRaisesRegex(ValueError, "face/index inventory"):
+                    derive_lung_union_exterior(candidate, source_lineage_lobes=source)
+
+    def test_source_lineage_still_rejects_collapsed_fragment_geometry(self):
+        source, vertices_by_row, _ = self._append_source_microfragment(self._two_lung_fixture())
+        candidate = self._copy_lobes(source)
+        points = candidate[305][0][vertices_by_row[305], :3].astype(np.float64)
+        # Collapse one source-fragment triangle while keeping its indexed faces unchanged.
+        points[2] = (points[0] + points[1]) * 0.5
+        for stable_id in (305, 308):
+            vertices6, faces = candidate[stable_id]
+            vertices6[vertices_by_row[stable_id], :3] = points.astype(np.float32)
+            candidate[stable_id] = (vertices6, faces)
+        with self.assertRaisesRegex(ValueError, "zero-area candidate face|5 percent source bound|signed-volume bound"):
+            derive_lung_union_exterior(candidate, source_lineage_lobes=source)
+
     def test_external_union_cancels_only_reciprocal_faces(self):
         vertices6, faces, detail = derive_lung_union_exterior(self._two_lung_fixture())
         self.assertEqual(detail["exact_reciprocal_face_group_count"], 3)

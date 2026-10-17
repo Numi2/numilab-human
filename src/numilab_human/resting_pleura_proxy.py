@@ -139,7 +139,7 @@ def _is_known_source_microfragment(vertices, detail, coordinate_quantization_m=N
 
 
 def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
-                               coordinate_quantization_m=None):
+                               coordinate_quantization_m=None, source_lineage_lobes=None):
     """Build the external union surface from five registered lobe meshes.
 
     `lobes` maps stable IDs 305..309 to `(vertices6, local_faces)` arrays.
@@ -156,6 +156,55 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         coordinate_quantization_m = None
     if set(map(int, lobes)) != set(LOBE_IDS):
         raise ValueError("the pleura proxy requires exactly the five stable lung lobe IDs")
+
+    lineage = None
+    if source_lineage_lobes is not None:
+        if set(map(int, source_lineage_lobes)) != set(LOBE_IDS):
+            raise ValueError("source pleura lineage requires exactly the five stable lung lobe IDs")
+        reference = {}
+        for stable_id in LOBE_IDS:
+            candidate_vertices6, candidate_faces = lobes[stable_id]
+            source_vertices6, source_faces = source_lineage_lobes[stable_id]
+            candidate_vertices6 = np.asarray(candidate_vertices6, dtype=np.float32)
+            candidate_faces = np.asarray(candidate_faces, dtype=np.int64)
+            source_vertices6 = np.asarray(source_vertices6, dtype=np.float32)
+            source_faces = np.asarray(source_faces, dtype=np.int64)
+            if (candidate_vertices6.ndim != 2 or candidate_vertices6.shape[1] != 6
+                    or source_vertices6.ndim != 2 or source_vertices6.shape[1] != 6
+                    or candidate_vertices6.shape != source_vertices6.shape
+                    or candidate_faces.shape != source_faces.shape
+                    or not np.array_equal(candidate_faces, source_faces)):
+                raise ValueError(
+                    f"candidate lobe face/index inventory differs from source lineage for row {stable_id}"
+                )
+            reference[stable_id] = (source_vertices6, source_faces)
+        _, _, reference_report = derive_lung_union_exterior(
+            reference, allow_source_microfragment=True,
+            coordinate_quantization_m=coordinate_quantization_m,
+        )
+        reference_fragments = reference_report["excluded_source_microfragments"]
+        if len(reference_fragments) != 1:
+            raise ValueError("source lineage does not contain one unique declared microfragment")
+        source_fragment = reference_fragments[0]
+        source_pairs = tuple(sorted((int(owner[0]), int(owner[1]))
+                                    for owner in source_fragment["source_faces"]))
+        source_vertex_inventory = {}
+        for stable_id in LOBE_IDS:
+            face_ids = sorted(face_id for owner, face_id in source_pairs if owner == stable_id)
+            if face_ids:
+                source_vertex_inventory[stable_id] = sorted(set(map(
+                    int, reference[stable_id][1][np.asarray(face_ids, dtype=np.int64)].reshape(-1)
+                )))
+        lineage = {
+            "reference_lobes": reference,
+            "source_pairs": source_pairs,
+            "source_pair_set": set(source_pairs),
+            "source_vertex_inventory": source_vertex_inventory,
+            "source_face_count": int(source_fragment["face_count"]),
+            "source_vertex_count": int(source_fragment["vertex_count"]),
+            "source_surface_area_m2": float(source_fragment["surface_area_m2"]),
+            "reference_report": reference_report,
+        }
 
     face_groups = collections.defaultdict(list)
     lobe_positions = {}
@@ -224,7 +273,24 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
     if len(components) > 2:
         candidates = []
         for comp, detail in zip(components, component_rows, strict=True):
-            if _is_known_source_microfragment(vertices, detail, coordinate_quantization_m):
+            if lineage is None:
+                matches = _is_known_source_microfragment(vertices, detail, coordinate_quantization_m)
+            else:
+                candidate_pairs = tuple(sorted((int(owner[0]), int(owner[1]))
+                                               for owner in detail["_source_faces"]))
+                matches = (candidate_pairs == lineage["source_pairs"]
+                           and detail["face_count"] == lineage["source_face_count"]
+                           and detail["vertex_count"] == lineage["source_vertex_count"])
+                if matches:
+                    candidate_inventory = {}
+                    for stable_id in LOBE_IDS:
+                        face_ids = sorted(face_id for owner, face_id in candidate_pairs if owner == stable_id)
+                        if face_ids:
+                            candidate_inventory[stable_id] = sorted(set(map(
+                                int, lobe_positions[stable_id][1][np.asarray(face_ids, dtype=np.int64)].reshape(-1)
+                            )))
+                    matches = candidate_inventory == lineage["source_vertex_inventory"]
+            if matches:
                 candidates.append((comp, detail))
         if not allow_source_microfragment or len(components) != 3 or len(candidates) != 1:
             raise ValueError("detached lung-union component lacks the exact declared source lineage")
@@ -232,8 +298,49 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         orphan_topology = topology_report(faces[np.asarray(orphan_component, dtype=np.int64)])
         if orphan_topology["boundary_edge_count"] or orphan_topology["nonmanifold_edge_count"] or orphan_topology["orientation_error_edge_count"]:
             raise ValueError("source microfragment is not a closed oriented shell")
+        lineage_report = None
+        if lineage is not None:
+            if not np.isfinite(orphan["signed_volume_m3"]) or abs(orphan["signed_volume_m3"]) > 1e-12:
+                raise ValueError("source-lineage microfragment exceeds the candidate signed-volume bound")
+            if not np.isfinite(orphan["surface_area_m2"]) or orphan["surface_area_m2"] <= 0:
+                raise ValueError("source-lineage microfragment has zero or non-finite candidate area")
+            face_area_ratios = []
+            for stable_id, face_id in lineage["source_pairs"]:
+                source_vertices6, source_faces = lineage["reference_lobes"][stable_id]
+                candidate_vertices6, candidate_faces = lobe_positions[stable_id]
+                source_tri = source_vertices6[source_faces[face_id], :3].astype(np.float64)
+                candidate_tri = candidate_vertices6[candidate_faces[face_id], :3].astype(np.float64)
+                source_cross = np.cross(source_tri[1] - source_tri[0], source_tri[2] - source_tri[0])
+                candidate_cross = np.cross(candidate_tri[1] - candidate_tri[0], candidate_tri[2] - candidate_tri[0])
+                source_area2 = float(np.linalg.norm(source_cross))
+                candidate_area2 = float(np.linalg.norm(candidate_cross))
+                if not np.isfinite(source_area2) or not np.isfinite(candidate_area2) or source_area2 <= 0 or candidate_area2 <= 0:
+                    raise ValueError("source-lineage microfragment contains a zero-area candidate face")
+                face_area_ratios.append(candidate_area2 / source_area2)
+            if not face_area_ratios or min(face_area_ratios) <= 0.05:
+                raise ValueError("source-lineage microfragment candidate face area falls below the 5 percent source bound")
+            lineage_report = {
+                "recognition_mode": "exact_source_face_and_vertex_inventory",
+                "source_faces": [list(pair) for pair in lineage["source_pairs"]],
+                "source_vertex_indices_by_stable_id": {
+                    str(sid): values for sid, values in lineage["source_vertex_inventory"].items()
+                },
+                "reference_surface_area_m2": lineage["source_surface_area_m2"],
+                "candidate_surface_area_m2": orphan["surface_area_m2"],
+                "candidate_to_reference_surface_area_ratio": (
+                    orphan["surface_area_m2"] / lineage["source_surface_area_m2"]
+                ),
+                "minimum_candidate_to_reference_face_area_ratio": float(min(face_area_ratios)),
+                "maximum_candidate_to_reference_face_area_ratio": float(max(face_area_ratios)),
+                "candidate_signed_volume_m3": orphan["signed_volume_m3"],
+                "candidate_topology": {
+                    "boundary_edge_count": orphan_topology["boundary_edge_count"],
+                    "nonmanifold_edge_count": orphan_topology["nonmanifold_edge_count"],
+                    "orientation_error_edge_count": orphan_topology["orientation_error_edge_count"],
+                },
+            }
         omit_ids = set(orphan["_face_ids"])
-        omitted = [{
+        omitted_row = {
             "source_faces": orphan["_source_faces"],
             "face_count": orphan["face_count"],
             "vertex_count": orphan["vertex_count"],
@@ -241,7 +348,10 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
             "surface_area_m2": orphan["surface_area_m2"],
             "bounds_min_m": orphan["bounds_min_m"],
             "bounds_max_m": orphan["bounds_max_m"],
-        }]
+        }
+        if lineage_report is not None:
+            omitted_row["source_lineage"] = lineage_report
+        omitted = [omitted_row]
         keep = [i for i in range(len(faces)) if i not in omit_ids]
         faces = faces[np.asarray(keep, dtype=np.int64)]
         exterior_owners = [exterior_owners[i] for i in keep]
