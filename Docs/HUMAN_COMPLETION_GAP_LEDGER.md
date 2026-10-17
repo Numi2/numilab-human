@@ -19,6 +19,56 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Authenticated shared material faces — 2026-10-17
+
+The existing explicit shared-feature verifier now supports one complete material
+face as well as a material vertex or edge. A face declaration requires closed
+oriented boundaries, exactly the same three canonical GIDs in opposite triangle
+orientation, and the unchanged source-lineage, emitted Float32, ordered weight,
+accepted-frame and full21 ownership proofs for every corner. Coincident positions
+alone, open sheets, same-facing duplicate boundaries and missing owner evidence
+remain rejected. The existing pair audit still checks every off-boundary face
+interior for forbidden solid containment. No anatomical interface is inferred
+merely from a shared GID or a triangle-pair count; declarations remain explicit.
+
+On SSH Numi, 138 verifier and component-containment tests plus 28 subtests pass,
+including complete touching solids, duplicate same-facing solids, open sheets and
+missing lineage/incorrect weights. Report:
+shared-material-face-owner-regressions-20261017-144/report.json.
+This is a verifier capability, not clearance of the actual forearm repair.
+
+The actual primary forearm census 009 completed in 388.919 seconds against the
+875-target current scene, with both repaired rows and six current index-patch
+target overlays. It retains 70 failing typed pair gates, including 25 self pairs
+in row134. Zero-triangle gate failures require separate interpretation of their
+containment status; they are not evidence of triangle crossings. A stratified
+1,000-pair sample of the 154,553 row132/134 contact witnesses contains 791 shared
+points, 173 shared edges and 36 full shared faces; all 36 sampled faces have
+opposite canonical orientation. This sample does not authorize the remaining
+pairs or establish complete solid separation. The full original census remains
+unchanged and unadmitted:
+forearm-native007-full21-paired-local-registration-1324-primary-132-134-009/all-neighbor-gates.json,
+SHA256 d8669b49657c6d5efc7755a2b31e343e3c65a86f4f982cf9ac4e2f41eee93314.
+
+## Complete source regressions and retained repair failures — 2026-10-17
+
+After staging hash-verified retained BodyParts3D sources and the exact tracked
+certificate fixture, combined run142 passes all 290 tests plus 391 subtests with
+no deselection. It binds source 0653a470 and the actual owner/dependency hashes;
+the earlier missing-input and missing-sparse-fixture failures remain retained.
+Report SHA256:
+b87c11be1af5be5a8b05ec68e542b5fc3cea57b44fa0c3cd1bc755045d2bc381.
+
+Actual intercostal317 run133 passes its exact rational boundary construction but
+is rejected after Float32 emission: six source self pairs remain in generated cap
+patches. World self and later stages were not reached. This is not an admitted
+mesh. Actual colon458 run143 reaches final output topology and rejects an edge
+whose incidence is not two; it emits no candidate. Report SHA256:
+29ba73518101a1ab6220276b53d8787b6dc8623979a3c858703aad3df202094b.
+These failures require local topology/patch correction, not a waiver of exact
+closure, ownership or anatomical acceptance. Evidence is retained under the same
+full-anatomy-delivery-audit-1378 directory as the preparation checkpoint below.
+
 ## Shared joint repair for nonzero material — 2026-10-17
 
 The same opt-in joint coplanar/transverse arrangement is exposed through the

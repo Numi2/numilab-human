@@ -3172,6 +3172,67 @@ class IncrementalSelfAuditTests(unittest.TestCase):
             self.prepare(tetra(), FACES, gids=np.arange(4, 8)).self_audit_since(parent)
 
 
+
+
+class SharedMaterialFaceTests(unittest.TestCase):
+    def pair(self, *, opposite=True):
+        a = feature_surface((51005, 132), tetra(), FACES, [100, 101, 102, 103])
+        points = tetra()
+        faces = FACES.copy()
+        if opposite:
+            points[3, 2] *= np.float32(-1)
+            faces = faces[:, [0, 2, 1]]
+        b = feature_surface((51005, 134), points, faces, [100, 101, 102, 104])
+        return a, b
+
+    def test_opposite_material_face_is_explicit_and_solid_checked(self):
+        a, b = self.pair()
+        baseline = audit_surface_pair(a, b)
+        self.assertFalse(baseline["passed"])
+        declarations = []
+        for fa, fb in baseline["unexpected_triangle_pairs"]:
+            ga = {int(a.source_vertex_ids[i]) for i in a.faces[fa]}
+            gb = {int(b.source_vertex_ids[i]) for i in b.faces[fb]}
+            declarations.append(feature_declaration(a, b, fa, fb, sorted(ga & gb)))
+        result = audit_surface_pair(a, b, intended_shared_feature_pairs=declarations)
+        self.assertTrue(result["passed"], result)
+        self.assertEqual(result["unexpected_triangle_pairs"], [])
+        self.assertEqual(sum(r["feature_kind"] == "face"
+                             for r in result["declared_interface_feature_contacts"]), 1)
+        self.assertEqual(len(result["containment"]), 2)
+        for row in result["containment"]:
+            self.assertEqual(row["status"], "checked_exact_rational_metres")
+            self.assertEqual(row["inside_component_witnesses"], [])
+            self.assertEqual(sum(c["sampled_face_count"] for c in row["component_checks"]), 4)
+
+    def test_same_facing_duplicate_material_face_is_rejected(self):
+        a, b = self.pair(opposite=False)
+        passed, reason = av._shared_feature_contact(a, b, 0, 0, [100, 101, 102])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "shared_face_requires_opposite_canonical_orientation")
+
+    def test_open_sheets_cannot_claim_material_face(self):
+        a = feature_surface((51005, 132), tetra()[:3], [[0, 2, 1]], [100, 101, 102])
+        b = feature_surface((51005, 134), tetra()[:3], [[0, 1, 2]], [100, 101, 102])
+        passed, reason = av._shared_feature_contact(a, b, 0, 0, [100, 101, 102])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "shared_face_requires_closed_oriented_boundaries")
+
+    def test_shared_face_retains_actual_owner_and_lineage_requirements(self):
+        a, b = self.pair()
+        b.source_vertex_lineage = None
+        passed, reason = av._shared_feature_contact(a, b, 0, 0, [100, 101, 102])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "missing_source_or_actual_owner_material_proof")
+        a, b = self.pair()
+        b.core_weights_by_gid[100] = b.core_weights_by_gid[100].copy()
+        b.core_weights_by_gid[100][0] += .01
+        b.core_weights_by_gid[100][1] -= .01
+        passed, reason = av._shared_feature_contact(a, b, 0, 0, [100, 101, 102])
+        self.assertFalse(passed)
+        self.assertEqual(reason, "feature_GID_ordered_21_core_rows_differ_or_are_invalid")
+
+
 if __name__ == "__main__":
     unittest.main()
 

@@ -1661,8 +1661,8 @@ def _shared_source_crosswalk_point_contact(
 
 def _shared_feature_contact(first, second, first_face, second_face, feature_gids):
     """Fail-closed proof that a cross-surface hit is only a supported shared GID feature."""
-    if len(feature_gids) not in (1, 2) or len(set(feature_gids)) != len(feature_gids):
-        return False, "feature_must_be_one_vertex_or_one_edge"
+    if len(feature_gids) not in (1, 2, 3) or len(set(feature_gids)) != len(feature_gids):
+        return False, "feature_must_be_one_vertex_one_edge_or_one_face"
     if any(type(gid) is not int for gid in feature_gids):
         return False, "feature_GIDs_must_be_integers"
     if (first.source_face_lineage is None or second.source_face_lineage is None
@@ -1682,6 +1682,15 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
     face_b = [int(second.source_vertex_ids[int(i)]) for i in second.faces[second_face]]
     if not set(feature_gids).issubset(face_a) or not set(feature_gids).issubset(face_b):
         return False, "declared_feature_GIDs_not_shared_by_both_faces"
+    if len(feature_gids) == 3:
+        # A material face is a shared boundary, not permission for coincident
+        # open sheets or duplicate same-facing solids. Render normals are not
+        # evidence: compare the ordered canonical material corners instead.
+        if not first.closed or not second.closed:
+            return False, "shared_face_requires_closed_oriented_boundaries"
+        if not any(tuple(face_b) == tuple(face_a[(shift - i) % 3] for i in range(3))
+                   for shift in range(3)):
+            return False, "shared_face_requires_opposite_canonical_orientation"
     expected = set()
     for gid in feature_gids:
         if gid not in first.source_vertex_lineage or gid not in second.source_vertex_lineage:
@@ -4090,7 +4099,7 @@ def audit_surface_pair(first, second, *, intended_face_pairs=(), intended_enclos
             accepted_features[pair] = {
                 "identities": [list(first.key), list(second.key)],
                 "face_pair": list(pair), "feature_gids": list(feature_gids),
-                "feature_kind": "vertex" if len(feature_gids) == 1 else "edge",
+                "feature_kind": {1: "vertex", 2: "edge", 3: "face"}[len(feature_gids)],
                 "proof": reason}
         else:
             rejected_features.append({"face_pair": list(pair), "feature_gids": list(feature_gids),
