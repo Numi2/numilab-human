@@ -27,6 +27,25 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _canonical_json_sha256(value) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(payload.encode("ascii")).hexdigest()
+
+
+def _full21_rows_sha256(gids, values) -> str:
+    ids = np.asarray(gids)
+    array = np.asarray(values)
+    _require(ids.ndim == 1 and ids.dtype.kind in "iu" and len(np.unique(ids)) == len(ids),
+             "full21 proof GIDs must be unique integer keys")
+    _require(array.ndim >= 1 and array.shape[0] == len(ids),
+             "full21 proof rows do not align with canonical GIDs")
+    order = np.argsort(ids, kind="stable")
+    digest = hashlib.sha256()
+    digest.update(np.ascontiguousarray(ids[order].astype("<u8", copy=False)).tobytes())
+    digest.update(np.ascontiguousarray(array[order]).tobytes())
+    return digest.hexdigest()
+
+
 def _canonical_file(path) -> Path:
     return Path(path).resolve(strict=True)
 
@@ -69,6 +88,36 @@ def _source_slot_owner_map(source_slots, canonical_gids, weights, source_vertex_
                      f"006 has conflicting material owners for source slot {slot}")
     return owners
 
+
+
+def _validate_full21_parent_lane_routes(binding_indices, binding_weights, local_ids,
+                                         core_body_indices, *, stable_id, source_slot):
+    """Prove every extension term selects its exact one-hot ordered parent lane."""
+    indices = np.asarray(binding_indices)
+    weights = np.asarray(binding_weights)
+    local_ids = np.asarray(local_ids)
+    _require(indices.dtype == np.dtype("uint32") and indices.ndim == 2
+             and indices.shape[1] == 4
+             and weights.dtype == np.dtype("float32") and weights.shape == indices.shape
+             and np.isfinite(weights).all(),
+             f"row {stable_id} active parent carrier lacks exact four-lane route arrays")
+    _require(local_ids.ndim == 1 and local_ids.dtype.kind in "iu"
+             and len(local_ids) == 21 and np.all(local_ids >= 0)
+             and np.all(local_ids < len(indices)),
+             f"row {stable_id} source slot {source_slot} has invalid parent lane indices")
+    _require(len(set(int(value) for value in local_ids)) == 21,
+             f"row {stable_id} source slot {source_slot} repeats a parent lane vertex")
+    _require(len(core_body_indices) == 21 and len(set(core_body_indices)) == 21,
+             f"row {stable_id} active parent carrier does not have 21 ordered bodies")
+    expected_route_weights = np.asarray([1, 0, 0, 0], dtype="<f4")
+    for lane, local_id_value in enumerate(local_ids):
+        local_id = int(local_id_value)
+        expected_route_indices = np.zeros(4, dtype="<u4")
+        expected_route_indices[0] = lane
+        _require(indices[local_id].tobytes() == expected_route_indices.tobytes()
+                 and weights[local_id].tobytes() == expected_route_weights.tobytes(),
+                 f"row {stable_id} source slot {source_slot} term {lane} "
+                 "does not reference its exact one-hot owner lane")
 
 def authenticate_shared_actual_capture_gid_points(rows, *, first_row=132, second_row=134):
     """Compare canonical shared-GID points in two authenticated actual captures.
@@ -302,6 +351,7 @@ def authenticate_actual_capture_row(
         "ordered_face_corner_canonical_gids_u64": ordered_face_canonical_gids.copy(),
         "full21_weights_f64": capture_weights.copy(),
         "index_patch_faces_capture_u32": patch_capture_faces.copy(),
+        "index_patch_faces_source_slots_u32": patch_source_faces.copy(),
         "position_basis_by_gid": basis,
         "report": {
             "source_capture_crosswalk": map_report,
@@ -447,6 +497,29 @@ def build_actual_capture_owner_proof(
              and capture_identity.get("accepted_step") == 0,
              "existing capture owner returned different accepted pack/receipt identity")
 
+    actual_receipt_candidates = [
+        Path(path) for path in verified_inputs
+        if Path(path).name == "resting-anatomy-receipt.json"
+    ]
+    _require(len(actual_receipt_candidates) == 1,
+             "prepared input pins must identify one exact resting-anatomy receipt")
+    actual_receipt_path = _canonical_file(actual_receipt_candidates[0])
+    actual_rest_receipt = json.loads(actual_receipt_path.read_text())
+    parent_extension = actual_rest_receipt.get("passive_tissue_parent_bindings")
+    _require(isinstance(parent_extension, dict)
+             and parent_extension.get("child_payload_sha256") == expect_pin("source_child"),
+             "accepted capture parent extension is not bound to the exact source child")
+    parent_extension_sha256 = _canonical_json_sha256(parent_extension)
+    parent_surfaces = {int(item["stable_id"]): item
+                       for item in parent_extension.get("surfaces", [])
+                       if isinstance(item, dict) and type(item.get("stable_id")) is int}
+    parent_sources = parent_extension.get("source_payloads")
+    _require(isinstance(parent_sources, list) and parent_surfaces,
+             "accepted capture parent extension lacks its typed full21 source table")
+    parent_data_by_source_and_row = {}
+    parent_sha_by_source_and_row = {}
+    parent_core_bodies_by_source_and_row = {}
+
     with np.load(paths["source_map_candidate"], allow_pickle=False) as source_map:
         with np.load(paths["index_candidate"], allow_pickle=False) as index_candidate:
             rows = {}
@@ -474,6 +547,134 @@ def build_actual_capture_owner_proof(
                     index_candidate_faces_source_slots_u32=index_candidate[prefix + "faces_source_slots_u32"],
                     index_candidate_faces_capture_u32=index_candidate[prefix + "faces_capture_u32"],
                 )
+                source_points = np.ascontiguousarray(
+                    arrays[prefix + "full21_source_points_f32"], dtype="<f4")
+                parent_source_indices = np.asarray(
+                    arrays[prefix + "full21_parent_source_indices_u32"], dtype="<u4")
+                parent_vertex_locals = np.asarray(
+                    arrays[prefix + "full21_parent_vertex_locals_i64"], dtype="<i8")
+                capture_slots = np.asarray(result["capture_to_source_slot_i64"], dtype="<i8")
+                owner_weights = np.asarray(result["full21_weights_f64"], dtype="<f8")
+                _require(source_points.shape == result["actual_capture_positions_f32"].shape
+                         and parent_source_indices.shape == capture_slots.shape
+                         and parent_vertex_locals.shape == (len(capture_slots), 21),
+                         f"row {stable_id} full21 source-owner arrays are malformed")
+                source_ids = np.unique(parent_source_indices)
+                _require(source_ids.shape == (1,),
+                         f"row {stable_id} full21 parent source identity is not unique")
+                source_index = int(source_ids[0])
+                _require(0 <= source_index < len(parent_sources),
+                         f"row {stable_id} full21 parent source index is outside the receipt")
+                parent_meta = parent_sources[source_index]
+                _require(isinstance(parent_meta, dict)
+                         and type(parent_meta.get("path")) is str
+                         and type(parent_meta.get("sha256")) is str,
+                         f"row {stable_id} full21 parent payload metadata is malformed")
+                parent_path = _canonical_file(parent_meta["path"])
+                _require(verified_inputs.get(str(parent_path)) == parent_meta["sha256"],
+                         f"row {stable_id} active full21 parent payload is not byte-pinned")
+                parent_sha = _sha256(parent_path)
+                _require(parent_sha == parent_meta["sha256"],
+                         f"row {stable_id} active full21 parent payload SHA changed")
+                cache_key = (source_index, stable_id)
+                if cache_key not in parent_data_by_source_and_row:
+                    parent_file = pc._read_nhtiss4(parent_path)
+                    parent_record = next(
+                        item for item in parent_file["records"]
+                        if int(item[6]) == stable_id
+                    )
+                    parent_data_by_source_and_row[cache_key] = (
+                        parent_path, parent_record,
+                        pc._nhtiss_row_arrays(parent_file, parent_record)
+                    )
+                    parent_sha_by_source_and_row[cache_key] = parent_sha
+                    parent_core_bodies_by_source_and_row[cache_key] = [
+                        int(binding["core"])
+                        for binding in parent_data_by_source_and_row[cache_key][2]["bindings"]
+                    ]
+                cached_path, parent_record, parent_data = parent_data_by_source_and_row[cache_key]
+                _require(cached_path == parent_path
+                         and parent_sha_by_source_and_row[cache_key] == parent_sha,
+                         f"row {stable_id} full21 parent cache identity changed")
+                parent_surface = parent_surfaces.get(stable_id)
+                _require(isinstance(parent_surface, dict)
+                         and isinstance(parent_surface.get("vertices"), list)
+                         and len(parent_surface["vertices"]) == int(source_row["vertex_count"]),
+                         f"row {stable_id} actual parent extension lacks source-slot terms")
+                core_body_indices = parent_core_bodies_by_source_and_row[cache_key]
+                _require(len(core_body_indices) == 21 and len(set(core_body_indices)) == 21,
+                         f"row {stable_id} active parent carrier does not have 21 ordered bodies")
+                parent_positions = np.asarray(parent_data["positions"], dtype="<f4")
+                parent_binding_indices = np.asarray(parent_data["binding_indices"])
+                parent_binding_weights = np.asarray(parent_data["weights"])
+                _require(parent_binding_indices.shape == (len(parent_positions), 4)
+                         and parent_binding_weights.shape == (len(parent_positions), 4),
+                         f"row {stable_id} active parent carrier route arrays do not cover its vertices")
+                parent_first_vertex = int(parent_record[2])
+                for capture_index, source_slot_value in enumerate(capture_slots):
+                    source_slot = int(source_slot_value)
+                    _require(0 <= source_slot < len(parent_surface["vertices"]),
+                             f"row {stable_id} capture vertex has no original source slot")
+                    terms = parent_surface["vertices"][source_slot]
+                    _require(isinstance(terms, list) and len(terms) == 21,
+                             f"row {stable_id} source slot {source_slot} lacks 21 parent terms")
+                    local_ids = np.asarray(
+                        [int(term[2]) - parent_first_vertex for term in terms], dtype="<i8")
+                    _require(np.array_equal(local_ids, parent_vertex_locals[capture_index]),
+                             f"row {stable_id} source slot {source_slot} parent locals differ")
+                    _require(all(int(term[0]) == source_index and int(term[1]) == stable_id
+                                 for term in terms),
+                             f"row {stable_id} source slot {source_slot} parent terms change typed owner")
+                    term_weights = np.asarray([float(term[3]) for term in terms], dtype="<f8")
+                    _require(term_weights.tobytes() == owner_weights[capture_index].tobytes(),
+                             f"row {stable_id} source slot {source_slot} parent weights differ")
+                    _require(np.all(local_ids >= 0)
+                             and np.all(local_ids < len(parent_positions)),
+                             f"row {stable_id} source slot {source_slot} parent vertex is out of range")
+                    lane_points = parent_positions[local_ids, :3]
+                    _validate_full21_parent_lane_routes(
+                        parent_binding_indices, parent_binding_weights, local_ids,
+                        core_body_indices, stable_id=stable_id, source_slot=source_slot)
+                    _require(np.array_equal(lane_points, np.repeat(lane_points[:1], 21, axis=0))
+                             and lane_points[0].tobytes() == source_points[capture_index].tobytes(),
+                             f"row {stable_id} source slot {source_slot} source point differs from pinned parent")
+                patch_faces = np.ascontiguousarray(
+                    result["index_patch_faces_capture_u32"], dtype="<u4")
+                patch_source_faces = np.ascontiguousarray(
+                    result["index_patch_faces_source_slots_u32"], dtype="<u4")
+                patch_gids = np.ascontiguousarray(
+                    result["canonical_gids_u64"][patch_faces], dtype="<u8")
+                patch_slots = np.ascontiguousarray(patch_source_faces, dtype="<i8")
+                row_proof = {
+                    "schema": "numi.human.full21-actual-capture-row-owner.v1",
+                    "typed_identity": list(identity),
+                    "accepted_step": int(capture_identity["accepted_step"]),
+                    "accepted_pack_sha256": expect_pin("accepted_pack"),
+                    "capture_receipt_sha256": expect_pin("accepted_step_receipt"),
+                    "source_payload_sha256": expect_pin("source_child"),
+                    "row_parent_payload_sha256": parent_sha,
+                    "parent_extension_sha256": parent_extension_sha256,
+                    "source_map_candidate_sha256": expect_pin("source_map_candidate"),
+                    "prepared_owner_arrays_sha256": metadata["sha256"],
+                    "index_candidate_sha256": expect_pin("index_candidate"),
+                    "ordered_core_body_indices": core_body_indices,
+                    "world_frame": "accepted_body_poses_from_capture_receipt",
+                    "source_points_sha256": _full21_rows_sha256(
+                        result["canonical_gids_u64"], source_points),
+                    "weights_sha256": _full21_rows_sha256(
+                        result["canonical_gids_u64"], owner_weights),
+                    "displayed_world_points_sha256": _full21_rows_sha256(
+                        result["canonical_gids_u64"], result["actual_capture_positions_f32"]),
+                    "capture_source_slots_sha256": _full21_rows_sha256(
+                        result["canonical_gids_u64"], capture_slots),
+                    "index_patch_faces_sha256": hashlib.sha256(patch_faces.tobytes()).hexdigest(),
+                    "index_patch_face_corner_source_slots_sha256": hashlib.sha256(
+                        patch_slots.tobytes()).hexdigest(),
+                    "index_patch_face_corner_canonical_gids_sha256": hashlib.sha256(
+                        patch_gids.tobytes()).hexdigest(),
+                    "displayed_world_owner_relation": "accepted_native_capture_byte_exact",
+                    "source_face_ancestry_status": "separately_reported_not_proven_by_capture_owner",
+                }
                 rows[str(stable_id)] = {
                     "typed_identity": list(identity),
                     "canonical_gids_u64": result["canonical_gids_u64"],
@@ -483,7 +684,11 @@ def build_actual_capture_owner_proof(
                     "actual_capture_positions_f32": result["actual_capture_positions_f32"],
                     "actual_capture_faces_u32": result["actual_capture_faces_u32"],
                     "full21_weights_f64": result["full21_weights_f64"],
+                    "full21_source_points_f32": source_points,
+                    "ordered_core_body_indices": core_body_indices,
                     "index_patch_faces_capture_u32": result["index_patch_faces_capture_u32"],
+                    "index_patch_faces_source_slots_u32": result["index_patch_faces_source_slots_u32"],
+                    "full21_actual_capture_owner_proof": row_proof,
                     "position_basis_by_gid": result["position_basis_by_gid"],
                     "report": result["report"],
                 }

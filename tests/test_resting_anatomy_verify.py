@@ -104,6 +104,59 @@ def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overri
     )
 
 
+def actual_capture_feature_surface(key, positions, faces, gids, slots, *,
+                                   parent_payload_sha=None, proof_overrides=None):
+    """File-backed actual-capture proof shape for verifier integration tests."""
+    positions = np.ascontiguousarray(positions, dtype="<f4")
+    faces = np.ascontiguousarray(faces, dtype="<u4")
+    gids = np.ascontiguousarray(gids, dtype="<u8")
+    slots = np.ascontiguousarray(slots, dtype="<i8")
+    source_points = np.ascontiguousarray(positions + np.float32([0.0, 0.0, 0.25]), dtype="<f4")
+    weights = np.full((len(gids), 21), 1.0 / 21.0, dtype="<f8")
+    lineages = {
+        int(gid): {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
+        for gid in gids
+    }
+    face_lineage = [{"source_parent_face": index} for index in range(len(faces))]
+    proof = {
+        "schema": "numi.human.full21-actual-capture-row-owner.v1",
+        "typed_identity": list(key),
+        "accepted_step": 0,
+        "accepted_pack_sha256": "1" * 64,
+        "capture_receipt_sha256": "2" * 64,
+        "source_payload_sha256": "3" * 64,
+        "row_parent_payload_sha256": parent_payload_sha or ("4" if key[1] == 132 else "5") * 64,
+        "parent_extension_sha256": "6" * 64,
+        "source_map_candidate_sha256": "7" * 64,
+        "prepared_owner_arrays_sha256": "8" * 64,
+        "index_candidate_sha256": "9" * 64,
+        "ordered_core_body_indices": list(range(21)),
+        "world_frame": "accepted_body_poses_from_capture_receipt",
+        "source_points_sha256": av._full21_owner_array_sha256(gids, source_points),
+        "weights_sha256": av._full21_owner_array_sha256(gids, weights),
+        "displayed_world_points_sha256": av._full21_owner_array_sha256(gids, positions),
+        "capture_source_slots_sha256": av._full21_owner_array_sha256(gids, slots),
+        "index_patch_faces_sha256": hashlib.sha256(faces.tobytes()).hexdigest(),
+        "index_patch_face_corner_source_slots_sha256": hashlib.sha256(
+            np.ascontiguousarray(slots[faces], dtype="<i8").tobytes()).hexdigest(),
+        "index_patch_face_corner_canonical_gids_sha256": hashlib.sha256(
+            np.ascontiguousarray(gids[faces], dtype="<u8").tobytes()).hexdigest(),
+        "displayed_world_owner_relation": "accepted_native_capture_byte_exact",
+        "source_face_ancestry_status": "separately_reported_not_proven_by_capture_owner",
+    }
+    if proof_overrides:
+        proof.update(proof_overrides)
+    return prepare_surface(
+        key, positions, faces, source_vertex_ids=gids,
+        source_face_lineage=face_lineage, source_vertex_lineage=lineages,
+        ordered_core_body_indices=list(range(21)), core_weight_gids=gids,
+        core_weights_float64=weights, core_source_point_gids=gids,
+        core_source_points_float32=source_points,
+        core_capture_source_slots_i64=slots,
+        core_actual_capture_proof=proof,
+    )
+
+
 def feature_declaration(first, second, first_face, second_face, gids):
     return {
         "first_identity": list(first.key),
@@ -2586,6 +2639,64 @@ class CaptureDecoderTests(unittest.TestCase):
         self.assertTrue(any(len(row["feature_gids"]) == 2 for row in declarations))
         result = av.audit_surface_pair(first, second, intended_shared_feature_pairs=declarations)
         self.assertTrue(result["passed"], result)
+
+    def test_actual_capture_owner_proof_accepts_exact_feature_but_not_off_feature_contact(self):
+        positions_a = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32)
+        positions_b = np.asarray([[0, 0, 0], [1, 0, 0], [0, -1, 0]], dtype=np.float32)
+        a = actual_capture_feature_surface(
+            (51005, 132), positions_a, [[0, 1, 2]], [2338, 2358, 2], [10, 11, 12])
+        b = actual_capture_feature_surface(
+            (51005, 134), positions_b, [[0, 1, 2]], [2338, 2358, 12], [20, 21, 22])
+        declarations = [feature_declaration(a, b, 0, 0, [2338, 2358])]
+        accepted = audit_surface_pair(a, b, intended_shared_feature_pairs=declarations)
+        self.assertTrue(accepted["passed"], accepted)
+
+        for changed_provenance in (
+                {"accepted_step": 1},
+                {"capture_receipt_sha256": "f" * 64}):
+            changed = actual_capture_feature_surface(
+                (51005, 137), positions_b, [[0, 1, 2]],
+                [2338, 2358, 12], [20, 21, 22],
+                proof_overrides=changed_provenance)
+            rejected = audit_surface_pair(
+                a, changed,
+                intended_shared_feature_pairs=[
+                    feature_declaration(a, changed, 0, 0, [2338, 2358])])
+            self.assertFalse(rejected["passed"], rejected)
+            self.assertEqual(
+                rejected["rejected_interface_feature_contacts"][0]["reason"],
+                "full21_owner_provenance_or_accepted_frame_differs")
+
+        self.assertEqual(
+            a.core_actual_capture_proof["displayed_world_owner_relation"],
+            "accepted_native_capture_byte_exact")
+        self.assertNotEqual(
+            a.positions[0].tobytes(),
+            np.asarray(a.core_source_points_by_gid[2338], dtype="<f4").tobytes())
+
+        # A shared canonical point does not authorize the rest of a transversal
+        # segment; exact triangle intersection must remain confined to that point.
+        penetrating = actual_capture_feature_surface(
+            (51005, 135),
+            [[0, 0, 0], [0.5, 0, 0], [0, 0, 1]],
+            [[0, 1, 2]], [2338, 44, 45], [30, 31, 32])
+        failed = audit_surface_pair(
+            a, penetrating,
+            intended_shared_feature_pairs=[
+                feature_declaration(a, penetrating, 0, 0, [2338])])
+        self.assertFalse(failed["passed"], failed)
+        self.assertTrue(any(
+            row.get("reason") == "exact_intersection_exceeds_declared_shared_feature"
+            for row in failed["rejected_interface_feature_contacts"]))
+
+        # Even a proof for the accepted pack cannot excuse a one-ULP display edit.
+        shifted = positions_b.copy()
+        shifted[0, 0] = np.nextafter(shifted[0, 0], np.float32(1), dtype=np.float32)
+        with self.assertRaisesRegex(ValueError, "displayed Float32 positions"):
+            actual_capture_feature_surface(
+                (51005, 136), shifted, [[0, 1, 2]],
+                [2338, 2358, 12], [40, 41, 42],
+                proof_overrides={"displayed_world_points_sha256": "0" * 64})
 
     def test_full21_lane_proof_is_required_for_shared_features(self):
         first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64),
