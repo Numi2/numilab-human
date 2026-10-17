@@ -544,6 +544,7 @@ def test_declared_partial_collar_continues_only_after_solid_and_calibre_proofs()
     target, target_faces = _profiled_closed_cylinder(
         ((0.8, 0.18), (1.0, 0.2), (1.05, 0.2), (2.0, 0.18)))
     pairs = _port_pairs(bridge, bridge_faces, target, target_faces)
+    snapshots = []
 
     report = audit_brachiocephalic_port_pair_continuity(
         av, _manifold3d(),
@@ -551,9 +552,15 @@ def test_declared_partial_collar_continues_only_after_solid_and_calibre_proofs()
         target_key=(51011, 10), target_surface=(target, target_faces),
         frozen_face_pairs=pairs,
         baseline_bridge_surface=(bridge, bridge_faces),
-        baseline_target_surface=(target, target_faces))
+        baseline_target_surface=(target, target_faces),
+        diagnostic_callback=snapshots.append)
 
     assert report["passed"]
+    assert len(snapshots) == 1
+    assert snapshots[0]["port_gate"]["passed"] is True
+    assert snapshots[0]["solid_gate"]["passed"] is True
+    assert snapshots[0]["solid_gate"]["intersection_volume_m3"] > 0.0
+    assert snapshots[0]["solid_gate"]["union_component_count"] == 1
     boundary = report["port_pair_gate"]["declared_partial_overlap_boundary_only"]
     assert report["port_pair_gate"]["central_p6_audit_passed"] is False
     assert boundary["passed"]
@@ -984,6 +991,38 @@ def test_disconnected_closed_cylinders_reject_missing_port_contact():
             frozen_face_pairs=pairs,
             baseline_bridge_surface=(bridge, bridge_faces),
             baseline_target_surface=(target, target_faces))
+
+
+def test_port_failure_callback_receives_solid_evidence_before_unchanged_require():
+    manifold3d = _manifold3d()
+    bridge, bridge_faces = _closed_cylinder(-1.0, 1.0)
+    target, target_faces = _closed_cylinder(1.1, 2.1)
+    tangent_target, tangent_faces = _closed_cylinder(1.0, 2.0)
+    pairs = _port_pairs(bridge, bridge_faces, tangent_target, tangent_faces)
+    snapshots = []
+
+    with pytest.raises(ValueError, match="lacks a frozen-patch exact interface witness"):
+        audit_brachiocephalic_port_pair_continuity(
+            av, manifold3d,
+            bridge_key=(51011, 525), bridge_surface=(bridge, bridge_faces),
+            target_key=(51011, 10), target_surface=(target, target_faces),
+            frozen_face_pairs=pairs,
+            baseline_bridge_surface=(bridge, bridge_faces),
+            baseline_target_surface=(bridge, bridge_faces),
+            diagnostic_callback=snapshots.append)
+
+    assert len(snapshots) == 1
+    diagnostic = snapshots[0]
+    assert diagnostic["stage"] == "immediately_before_unchanged_port_and_solid_requirements"
+    assert diagnostic["port_gate"]["passed"] is False
+    solid = diagnostic["solid_gate"]
+    assert solid["manifold_inputs_passed"] is True
+    assert solid["intersection_volume_m3"] == 0.0
+    assert solid["intersection_component_count"] == 0
+    assert solid["positive_intersection_volume"] is False
+    assert solid["exact_inside_both_witness"] is None
+    assert solid["union_component_count"] == 2
+    assert solid["passed"] is False
 
 
 def test_pinch_beyond_declared_local_calibre_range_rejects():

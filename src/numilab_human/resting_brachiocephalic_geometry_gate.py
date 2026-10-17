@@ -7,6 +7,7 @@ local-calibre screen. It is not clinical or physiological qualification.
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import sys
@@ -7072,6 +7073,7 @@ def audit_brachiocephalic_port_pair_continuity(
     transverse_witness_provider=None,
     target_station_candidate_fractions=None,
     declared_vessel_ports=None,
+    diagnostic_callback=None,
 ):
     """Check one declared bridge port as closed solids and local section loops.
 
@@ -7081,8 +7083,13 @@ def audit_brachiocephalic_port_pair_continuity(
     remain mandatory. The default registry is unchanged.
 
     This is a numerical geometry gate only. It does not establish measured
-    physiology, native acceptance, or clinical calibre.
+    physiology, native acceptance, or clinical calibre. When supplied,
+    diagnostic_callback receives a detached snapshot of the computed port and
+    solid evidence immediately before the unchanged strict requirements.
+    Callback exceptions propagate; the callback cannot modify the gate inputs.
     """
+    _require(diagnostic_callback is None or callable(diagnostic_callback),
+             "diagnostic callback must be callable or None")
     bridge_key, target_key = _identity(bridge_key), _identity(target_key)
     if declared_vessel_ports is not None:
         _require(
@@ -7476,6 +7483,50 @@ def audit_brachiocephalic_port_pair_continuity(
     )
     solid_passed = bool(positive_volume and intersection_witness is not None
                         and union_passed)
+    if diagnostic_callback is not None:
+        diagnostic_callback(copy.deepcopy({
+            "schema": "numi.human.brachiocephalic-port-pre-require-diagnostic.v1",
+            "typed_vessel_link": [list(bridge_key), list(target_key)],
+            "source_preservation": source_preservation,
+            "port_gate": {
+                "passed": port_pair_passed,
+                "candidate_pair_audit": port_audit,
+                "observed_triangle_pairs": [list(pair) for pair in observed],
+                "exact_interface_points_world_m": [list(point) for point in exact_points],
+                "partial_overlap_boundary": partial_overlap_boundary,
+                "candidate_transverse_witnesses": candidate_transverse_witnesses,
+                "baseline_pair_audit": baseline_port_audit,
+                "baseline_observed_triangle_pairs": [
+                    list(pair) for pair in baseline_observed],
+                "baseline_exact_interface_points_world_m": [
+                    list(point) for point in baseline_exact_points],
+                "baseline_partial_overlap_boundary": baseline_partial_overlap_boundary,
+                "baseline_transverse_witnesses": baseline_transverse_witnesses,
+                "baseline_port_pair_passed": baseline_port_pair_passed,
+            },
+            "solid_gate": {
+                "manifold_inputs_passed": manifold_inputs_passed,
+                "bridge_manifold_status": first_status,
+                "target_manifold_status": second_status,
+                "bridge_manifold_input": first_info,
+                "target_manifold_input": second_info,
+                "intersection_status": intersection_status,
+                "intersection_volume_m3": intersection_volume,
+                "intersection_component_count": intersection_components,
+                "positive_intersection_volume": positive_volume,
+                "exact_inside_both_witness": intersection_witness,
+                "union_status": union_status,
+                "union_volume_m3": union_volume,
+                "union_component_count": union_components,
+                "union_topology": union_topology,
+                "union_passed": union_passed,
+                "passed": solid_passed,
+                "overlap_sensitivity": overlap_sensitivity,
+                "boolean_precision_limit": (
+                    "Manifold Boolean diagnostics are floating CSG evidence, not exact Boolean topology proof"),
+            },
+            "stage": "immediately_before_unchanged_port_and_solid_requirements",
+        }))
     _require(port_pair_passed,
              f"port {bridge_key}/{target_key} lacks a frozen-patch exact interface witness")
     _require(solid_passed,
