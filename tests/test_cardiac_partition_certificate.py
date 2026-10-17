@@ -321,6 +321,33 @@ class ExactCoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(HumanImportError, 'invalid arrangement size'):
             cert.certify_partition(sources, oversized, expected_geometry_sha256=expected)
 
+    def test_explicit_bounded_arrangement_limit_preserves_certificate_semantics(self):
+        sources, rows = fixture()
+        baseline = check(sources, rows)
+        explicit = check(sources, rows, max_certified_subtriangles=100_000)
+        self.assertEqual(explicit, baseline)
+
+    def test_explicit_limit_allows_above_default_size_before_geometric_validation(self):
+        from unittest.mock import patch
+        sources, rows = fixture()
+        oversized = [rows[0]] * (cert.MAX_CERTIFIED_SUBTRIANGLES + 1)
+        expected = {s: cert.source_geometry_sha256(v) for s, v in sources.items()}
+        class ReachedSourceTopology(Exception):
+            pass
+        with patch.object(cert, "_topology", side_effect=ReachedSourceTopology), \
+                self.assertRaises(ReachedSourceTopology):
+            cert.certify_partition(sources, oversized, expected_geometry_sha256=expected,
+                max_certified_subtriangles=60_000)
+
+    def test_explicit_arrangement_limit_is_positive_and_hard_bounded(self):
+        sources, rows = fixture()
+        expected = {s: cert.source_geometry_sha256(v) for s, v in sources.items()}
+        for limit in (0, -1, True, cert.MAX_CERTIFIED_SUBTRIANGLES_HARD_LIMIT + 1):
+            with self.subTest(limit=limit), \
+                    self.assertRaisesRegex(HumanImportError, "invalid certified subtriangle limit"):
+                cert.certify_partition(sources, rows, expected_geometry_sha256=expected,
+                    max_certified_subtriangles=limit)
+
     def test_hand_authored_arrangement_has_exact_known_volume_and_raw_moments(self):
         sources,rows=fixture();proof=check(sources,rows)
         self.assertTrue(proof['source_face_coverage_exact'])

@@ -20,6 +20,7 @@ from .physiology import canonical
 SOURCES = ('right_atrium', 'right_ventricle')
 SCHEMA = 'HumanPack.cardiac-partition-certificate.v1'
 MAX_CERTIFIED_SUBTRIANGLES = 50_000
+MAX_CERTIFIED_SUBTRIANGLES_HARD_LIMIT = 200_000
 
 
 def require(ok, message):
@@ -349,12 +350,14 @@ def _component_winding(prepared):
 
 
 def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,source_names=SOURCES,
-                      expected_source_component_counts=None):
+                      expected_source_component_counts=None,
+                      max_certified_subtriangles=MAX_CERTIFIED_SUBTRIANGLES):
     """Certify all source faces, including explicitly inventoried disconnected shells.
 
-    The default retains the original single-boundary admission. A declared count
-    only binds source topology; it does not bypass embedding, exact membership,
-    coverage, winding, moments, or shared-interface checks.
+    The default retains the original 50,000-subtriangle resource ceiling and
+    single-boundary admission. A bounded explicit ceiling may be supplied by a
+    scoped constructor. It changes only the resource limit: no embedding, exact
+    membership, coverage, winding, moments, or shared-interface check is skipped.
     """
     source_names = tuple(source_names)
     require(len(source_names) == 2 and all(isinstance(name, str) and name for name in source_names)
@@ -369,7 +372,10 @@ def certify_partition(source_surfaces,subtriangles,*,expected_geometry_sha256,so
                         for count in expected_source_component_counts.values()),
                 'invalid expected source component counts')
         component_counts = dict(expected_source_component_counts)
-    require(isinstance(subtriangles,list) and 1<=len(subtriangles)<=MAX_CERTIFIED_SUBTRIANGLES,'invalid arrangement size')
+    require(type(max_certified_subtriangles) is int
+            and 1 <= max_certified_subtriangles <= MAX_CERTIFIED_SUBTRIANGLES_HARD_LIMIT,
+            'invalid certified subtriangle limit')
+    require(isinstance(subtriangles,list) and 1<=len(subtriangles)<=max_certified_subtriangles,'invalid arrangement size')
     originals,source_ids,scale={}, {}, 1
     for name in source_names:
         surface=source_surfaces[name]
