@@ -36,7 +36,7 @@ from numilab_human import resting_anatomy_verify as v
 from numilab_human.forearm_parent_carrier_bridge import (
     accepted_poses_from_receipt, append_full21_carrier_points,
     derive_child_four_lane_birth, derive_full21_birth_source_point,
-    full21_parent_world_positions, solve_full21_parent_source_points,
+    full21_parent_world_positions, solve_full21_source_points_at_accepted_pose,
     remap_child_four_lane_route_by_binding_identity,
     emit_child_with_inferred_four_lane_route,
     remap_full21_terms_by_source_slot, replace_parent_surface_terms,
@@ -892,8 +892,8 @@ try:
                         dtype="<f4",
                     )
                     smoke_weights = np.asarray(smoke_item["core_weights"], dtype=np.float64)
-                    smoke_point_batch, _ = solve_full21_parent_source_points(
-                        carrier, poses, smoke_target[None, :], smoke_weights[None, :],
+                    smoke_point_batch, _ = solve_full21_source_points_at_accepted_pose(
+                        carrier, (poses, pose_report), smoke_target[None, :], smoke_weights[None, :],
                     )
                     smoke_point = smoke_point_batch[0]
                 elif (smoke_item.get("source_point_f32") is not None
@@ -990,8 +990,8 @@ try:
                 body_ids = item.get("core_body_indices")
                 if body_ids != list(core_ids):
                     raise ValueError(f"row {sid} edge birth GID {gid} full21 body order differs from active carrier")
-                parent_point_batch, inverse_report = solve_full21_parent_source_points(
-                    carrier, poses, target_world[None, :], lineage_weights[None, :],
+                parent_point_batch, inverse_report = solve_full21_source_points_at_accepted_pose(
+                    carrier, (poses, pose_report), target_world[None, :], lineage_weights[None, :],
                 )
                 parent_point = parent_point_batch[0]
                 birth_weights = lineage_weights

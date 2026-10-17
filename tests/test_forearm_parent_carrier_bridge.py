@@ -932,6 +932,113 @@ def test_mixed_candidate_face_lineage_requires_exact_slot_gid_crosswalk():
         )
 
 
+def test_builder_uses_output_face_ordinals_for_generated_normal_seeds():
+    import hashlib
+    from tools.build_forearm_mixed_candidate import (
+        materialize_full21_candidate_with_output_lineage,
+    )
+    from numilab_human.forearm_parent_carrier_bridge import (
+        materialize_full21_source_emission_positions,
+        plan_full21_source_emission_updates,
+    )
+
+    source_faces = np.asarray([[0, 1, 2], [0, 2, 3]], dtype="<u4")
+    actual_faces = np.asarray([
+        [0, 1, 2], [0, 2, 3], [0, 1, 2], [0, 2, 3],
+        [0, 1, 2], [0, 2, 3], [0, 1, 2], [0, 2, 3],
+        [0, 1, 3], [0, 2, 3], [1, 2, 3],
+    ], dtype="<u4")
+    gids = np.asarray([500, 501, 502, 503], dtype="<u8")
+    support_sha = hashlib.sha256(np.asarray([0, 1], dtype="<u8").tobytes()).hexdigest()
+    generated_records = [{
+        "typed_identity": [51005, 134],
+        "parent_nhtiss_sha256": "a" * 64,
+        "inferred_local_retriangulation": True,
+        "support_source_face_ordinals": [0, 1],
+        "support_face_ordinal_sha256": support_sha,
+        # This is a component index, not an output-face ordinal.
+        "component": 0,
+        "new_face_corner_gids": [[500, 501, 503], [501, 502, 503]],
+    }]
+
+    accepted = np.zeros((4, 3), dtype="<f4")
+    requested = accepted.copy()
+    requested[0, 0] = np.float32(1e-4)
+    slots = np.arange(4, dtype="<i8")
+    requested_plan = plan_full21_source_emission_updates(
+        accepted, requested, gids, slots, actual_faces,
+    )
+    emitted = requested[requested_plan["predicted_position_indices"]].copy()
+    (positions, _, final_plan, lineage, coverage, changed_faces, normal_seeds) = (
+        materialize_full21_candidate_with_output_lineage(
+            materialize_positions=materialize_full21_source_emission_positions,
+            accepted_positions=accepted,
+            requested_positions=requested,
+            emitted_predicted_positions=emitted,
+            canonical_gids=gids,
+            source_slots=slots,
+            actual_faces=actual_faces,
+            requested_plan=requested_plan,
+            stable_id=134,
+            source_path="fixture.nhtiss",
+            source_sha="a" * 64,
+            original_source_faces=source_faces,
+            candidate_face_source_slots=actual_faces,
+            candidate_face_gids=gids[actual_faces],
+            generated_records=generated_records,
+            gids_by_source_slot={i: int(gid) for i, gid in enumerate(gids)},
+        )
+    )
+
+    assert coverage["complete_candidate_face_coverage"] is True
+    assert len(lineage) == len(actual_faces)
+    assert [i for i, row in enumerate(lineage) if "source_face" not in row] == [8, 10]
+    np.testing.assert_array_equal(changed_faces, np.asarray([8, 10], dtype=np.int64))
+    np.testing.assert_array_equal(normal_seeds, np.asarray([0, 1, 3, 1, 2, 3], dtype=np.int64))
+    np.testing.assert_array_equal(final_plan["normal_update_indices"], np.asarray([0, 1, 2, 3]))
+    np.testing.assert_array_equal(positions[0], emitted[0])
+
+    permuted_faces = actual_faces[::-1].copy()
+    with pytest.raises(ValueError, match="candidate face GIDs differ from canonical GIDs indexed by actual faces"):
+        materialize_full21_candidate_with_output_lineage(
+            materialize_positions=materialize_full21_source_emission_positions,
+            accepted_positions=accepted,
+            requested_positions=requested,
+            emitted_predicted_positions=emitted,
+            canonical_gids=gids,
+            source_slots=slots,
+            actual_faces=permuted_faces,
+            requested_plan=requested_plan,
+            stable_id=134,
+            source_path="fixture.nhtiss",
+            source_sha="a" * 64,
+            original_source_faces=source_faces,
+            candidate_face_source_slots=slots[permuted_faces],
+            candidate_face_gids=gids[actual_faces],
+            generated_records=generated_records,
+            gids_by_source_slot={i: int(gid) for i, gid in enumerate(gids)},
+        )
+    with pytest.raises(ValueError, match="candidate face source slots differ from source slots indexed by actual faces"):
+        materialize_full21_candidate_with_output_lineage(
+            materialize_positions=materialize_full21_source_emission_positions,
+            accepted_positions=accepted,
+            requested_positions=requested,
+            emitted_predicted_positions=emitted,
+            canonical_gids=gids,
+            source_slots=slots,
+            actual_faces=permuted_faces,
+            requested_plan=requested_plan,
+            stable_id=134,
+            source_path="fixture.nhtiss",
+            source_sha="a" * 64,
+            original_source_faces=source_faces,
+            candidate_face_source_slots=actual_faces,
+            candidate_face_gids=gids[permuted_faces],
+            generated_records=generated_records,
+            gids_by_source_slot={i: int(gid) for i, gid in enumerate(gids)},
+        )
+
+
 def test_inferred_child_birth_replays_a_blended_rotating_route():
     from numilab_human.forearm_parent_carrier_bridge import derive_inferred_child_carrier_birth
     from numilab_human import passive_attachment_composition as pc
@@ -988,6 +1095,152 @@ def normal_carrier_fixture():
         poses[i] = np.asarray([i/3, -i/4, i/5, np.sin(angle/3), 0, 0,
                                np.cos(angle/3)], dtype="<f4")
     return row, poses
+
+
+def test_vertex_lineage_normalizes_json_and_integer_gid_keys_without_aliases():
+    from numilab_human.forearm_parent_carrier_bridge import normalize_vertex_lineage_by_gid
+
+    gids = np.asarray([9001, 9009], dtype="<u8")
+    left = {"9001": {"source_vertex_id": 12}, "9009": {"source_vertex_id": 19}}
+    right = {9001: {"source_vertex_id": 12}, np.int64(9009): {"source_vertex_id": 19}}
+    assert normalize_vertex_lineage_by_gid(left, gids) == normalize_vertex_lineage_by_gid(right, gids)
+    assert set(normalize_vertex_lineage_by_gid(left, gids)) == {9001, 9009}
+    with pytest.raises(ValueError, match="duplicate key representations"):
+        normalize_vertex_lineage_by_gid({"9001": {}, 9001: {}, "9009": {}}, gids)
+    with pytest.raises(ValueError, match="exact canonical GID inventory"):
+        normalize_vertex_lineage_by_gid({"9001": {}}, gids)
+    with pytest.raises(ValueError, match="not canonical decimal"):
+        normalize_vertex_lineage_by_gid({"09001": {}, "9009": {}}, gids)
+
+
+def test_full21_emission_plan_separates_predicted_normal_only_and_unreferenced():
+    from numilab_human.forearm_parent_carrier_bridge import plan_full21_source_emission_updates
+
+    accepted = np.zeros((8, 3), dtype="<f4")
+    candidate = accepted.copy()
+    candidate[0, 0] = np.float32(1e-4)
+    candidate[5, 1] = np.float32(2e-4)  # changed but not used by any face
+    gids = np.arange(7000, 7008, dtype="<u8")
+    slots = np.asarray([20, 21, 22, 23, 24, 25, 26, -1], dtype="<i8")
+    faces = np.asarray([[0, 1, 2], [2, 3, 4], [4, 6, 7]], dtype="<u4")
+    plan = plan_full21_source_emission_updates(
+        accepted, candidate, gids, slots, faces, normal_seed_indices=np.asarray([1, 5]),
+    )
+    np.testing.assert_array_equal(plan["predicted_position_indices"], [0, 7])
+    np.testing.assert_array_equal(plan["predicted_position_gids_u64"], [7000, 7007])
+    np.testing.assert_array_equal(plan["unreferenced_changed_indices"], [5])
+    np.testing.assert_array_equal(plan["unreferenced_changed_gids_u64"], [7005])
+    np.testing.assert_array_equal(plan["normal_update_indices"], [0, 1, 2, 4, 6, 7])
+    np.testing.assert_array_equal(plan["normal_only_indices"], [1, 2, 4, 6])
+    np.testing.assert_array_equal(plan["unreferenced_normal_seed_indices"], [5])
+    assert plan["counts"] == {
+        "candidate_vertex_count": 8,
+        "referenced_vertex_count": 7,
+        "changed_position_count": 2,
+        "predicted_position_count": 2,
+        "predicted_birth_count": 1,
+        "unreferenced_changed_original_count": 1,
+        "normal_update_count": 6,
+        "normal_only_count": 4,
+    }
+    assert "no source/native/anatomical admission" in plan["evidence_boundary"]
+    with pytest.raises(ValueError, match="append-only birth has no candidate face reference"):
+        plan_full21_source_emission_updates(
+            accepted, candidate, gids, slots,
+            np.asarray([[0, 1, 2], [2, 3, 4]], dtype="<u4"),
+        )
+
+
+
+def test_full21_source_emission_materializer_drops_unused_requested_moves():
+    from numilab_human.forearm_parent_carrier_bridge import (
+        materialize_full21_source_emission_positions,
+        plan_full21_source_emission_updates,
+    )
+
+    accepted = np.zeros((8, 3), dtype="<f4")
+    requested = accepted.copy()
+    requested[0, 0] = np.float32(1e-4)  # referenced position prediction
+    requested[5, 1] = np.float32(2e-4)  # requested change, but not a face corner
+    requested[7, 2] = np.float32(3e-4)  # referenced appended birth
+    gids = np.arange(8000, 8008, dtype="<u8")
+    slots = np.asarray([20, 21, 22, 23, 24, 25, 26, -1], dtype="<i8")
+    faces = np.asarray([[0, 1, 2], [2, 3, 4], [4, 6, 7]], dtype="<u4")
+    requested_plan = plan_full21_source_emission_updates(
+        accepted, requested, gids, slots, faces,
+    )
+    np.testing.assert_array_equal(requested_plan["predicted_position_indices"], [0, 7])
+    np.testing.assert_array_equal(requested_plan["unreferenced_changed_indices"], [5])
+
+    emitted = requested[requested_plan["predicted_position_indices"]].copy()
+    result, requested_plan, final_plan = materialize_full21_source_emission_positions(
+        accepted, requested, emitted, gids, slots, faces,
+        requested_plan=requested_plan, normal_seed_indices=np.asarray([1]),
+    )
+    np.testing.assert_array_equal(result[[0, 7]], emitted)
+    np.testing.assert_array_equal(result[5], accepted[5])
+    np.testing.assert_array_equal(requested_plan["unreferenced_changed_indices"], [5])
+    np.testing.assert_array_equal(final_plan["predicted_position_indices"], [0, 7])
+    assert len(final_plan["unreferenced_changed_indices"]) == 0
+    np.testing.assert_array_equal(final_plan["normal_only_indices"], [1, 2, 4, 6])
+    forged_plan = dict(requested_plan)
+    forged_plan["predicted_position_indices"] = np.asarray([0, 5, 7], dtype=np.int64)
+    forged_plan["predicted_position_gids_u64"] = gids[[0, 5, 7]]
+    with pytest.raises(ValueError, match="supplied requested plan differs from recomputed predicted_position_indices"):
+        materialize_full21_source_emission_positions(
+            accepted, requested, requested[[0, 5, 7]], gids, slots, faces,
+            requested_plan=forged_plan,
+        )
+
+def test_full21_source_point_wrapper_consumes_pose_tuple_and_separate_parent_fields(tmp_path):
+    from numilab_human.forearm_parent_carrier_bridge import (
+        accepted_poses_from_receipt,
+        full21_parent_world_positions,
+        solve_full21_source_points_at_accepted_pose,
+    )
+
+    row, expected_poses = normal_carrier_fixture()
+    body_poses = []
+    for index in range(157):
+        pose = expected_poses.get(index, np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4"))
+        body_poses.append({
+            "body_index": index,
+            "position_m": pose[:3].astype(float).tolist(),
+            "quaternion_xyzw": pose[3:7].astype(float).tolist(),
+        })
+    receipt_path = tmp_path / "accepted-step.receipt.json"
+    receipt_path.write_text(json.dumps({
+        "schema": "numi.human.accepted-render-geometry.v1",
+        "accepted_step": 4,
+        "accepted_body_pose_count": 157,
+        "accepted_body_poses": body_poses,
+    }))
+    accepted_pose_result = accepted_poses_from_receipt(receipt_path)
+    source_points = np.asarray([[0.1, 0.2, -0.3]], dtype="<f4")
+    weights = normalized_weights(1)
+    target = full21_parent_world_positions(row, accepted_pose_result[0], source_points, weights)
+    row["stable_id"] = 901
+    row["positions"] = np.zeros((21, 3), dtype="<f4")
+    row["normals"] = np.tile(np.asarray([[0, 0, 1]], dtype="<f4"), (21, 1))
+    row["vertices6"] = np.full((21, 6), 123, dtype="<f4")  # must not be used as a packed parent field
+
+    source, report = solve_full21_source_points_at_accepted_pose(
+        row, accepted_pose_result, target, weights,
+    )
+    emitted = full21_parent_world_positions(row, accepted_pose_result[0], source, weights)
+    np.testing.assert_allclose(emitted, target, atol=2e-7, rtol=0)
+    assert report["accepted_pose_owner"]["accepted_step"] == 4
+    assert report["parent_positions_shape"] == [21, 3]
+    assert report["parent_normals_shape"] == [21, 3]
+    assert report["parent_positions_and_normals_are_separate_fields"]
+    assert report["forward_replay_within_bound"]
+    json.loads(json.dumps(report, sort_keys=True))
+
+    malformed = dict(row, positions=np.zeros((21, 6), dtype="<f4"))
+    with pytest.raises(ValueError, match="separate finite Float32 Nx3 arrays"):
+        solve_full21_source_points_at_accepted_pose(
+            malformed, accepted_pose_result, target, weights,
+        )
 
 
 def test_full21_normal_inverse_matches_physical_directions_and_ignores_scale_translation():

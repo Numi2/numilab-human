@@ -237,6 +237,69 @@ def build_face_lineage(
     }
 
 
+def materialize_full21_candidate_with_output_lineage(
+    *, materialize_positions, accepted_positions, requested_positions,
+    emitted_predicted_positions, canonical_gids, source_slots, actual_faces,
+    requested_plan, stable_id, source_path, source_sha, original_source_faces,
+    candidate_face_source_slots, candidate_face_gids, generated_records,
+    gids_by_source_slot,
+):
+    """Run the builder's lineage-to-normal-seed-to-position materialization path."""
+    faces = np.asarray(actual_faces)
+    gids = np.asarray(canonical_gids)
+    slots = np.asarray(source_slots)
+    face_slots = np.asarray(candidate_face_source_slots)
+    face_gids = np.asarray(candidate_face_gids)
+    require(faces.ndim == 2 and faces.shape[1:] == (3,)
+            and np.issubdtype(faces.dtype, np.integer)
+            and not np.issubdtype(faces.dtype, np.bool_),
+            f"row {stable_id} actual output faces are not integer Fx3")
+    require(gids.ndim == 1 and np.issubdtype(gids.dtype, np.integer)
+            and not np.issubdtype(gids.dtype, np.bool_)
+            and slots.shape == gids.shape and np.issubdtype(slots.dtype, np.integer)
+            and not np.issubdtype(slots.dtype, np.bool_),
+            f"row {stable_id} canonical GIDs/source slots are not aligned integer vectors")
+    require(faces.size == 0 or (np.all(faces >= 0) and np.all(faces < len(gids))),
+            f"row {stable_id} output face index is outside canonical GID/source-slot arrays")
+    require(face_slots.shape == faces.shape and np.issubdtype(face_slots.dtype, np.integer)
+            and not np.issubdtype(face_slots.dtype, np.bool_),
+            f"row {stable_id} candidate face source slots do not align with actual faces")
+    require(np.array_equal(face_slots, slots[faces]),
+            f"row {stable_id} candidate face source slots differ from source slots indexed by actual faces")
+    require(face_gids.shape == faces.shape and np.issubdtype(face_gids.dtype, np.integer)
+            and not np.issubdtype(face_gids.dtype, np.bool_),
+            f"row {stable_id} candidate face GIDs do not align with actual faces")
+    require(np.array_equal(face_gids, gids[faces]),
+            f"row {stable_id} candidate face GIDs differ from canonical GIDs indexed by actual faces")
+    face_lineage, face_coverage = build_face_lineage(
+        stable_id=stable_id, source_path=source_path, source_sha=source_sha,
+        original_source_faces=original_source_faces,
+        candidate_face_source_slots=candidate_face_source_slots,
+        candidate_face_gids=candidate_face_gids,
+        generated_records=generated_records,
+        gids_by_source_slot=gids_by_source_slot,
+    )
+    require(len(face_lineage) == len(faces),
+            f"row {stable_id} output face ancestry does not align with actual face ordinals")
+    # Direct inherited faces have an exact source_face ordinal. Duplicate-support
+    # and inferred faces are refreshed conservatively from their actual output corners.
+    changed_face_indices = np.asarray(
+        [ordinal for ordinal, record in enumerate(face_lineage) if "source_face" not in record],
+        dtype=np.int64,
+    )
+    normal_seed_indices = (
+        faces[changed_face_indices].reshape(-1).astype(np.int64, copy=False)
+        if len(changed_face_indices) else np.empty(0, dtype=np.int64)
+    )
+    positions, verified_request_plan, final_plan = materialize_positions(
+        accepted_positions, requested_positions, emitted_predicted_positions,
+        canonical_gids, source_slots, faces, requested_plan=requested_plan,
+        normal_seed_indices=normal_seed_indices,
+    )
+    return (positions, verified_request_plan, final_plan, face_lineage,
+            face_coverage, changed_face_indices, normal_seed_indices)
+
+
 def exact_fraction_rows(points):
     return [[f"{x.numerator}/{x.denominator}" for x in point] for point in points]
 
@@ -273,6 +336,9 @@ def main():
         )
         from numilab_human.forearm_parent_carrier_bridge import (
             build_authenticated_full21_lane_world_subset,
+            materialize_full21_source_emission_positions,
+            normalize_vertex_lineage_by_gid,
+            plan_full21_source_emission_updates,
             validate_source_gid_slot_lineage,
         )
         from numilab_human import resting_anatomy_verify as verify
@@ -519,38 +585,54 @@ def main():
                     f"row {sid} changed source slots disagree with ancestry records")
             slot_to_capture = {int(slot): i for i, slot in enumerate(slots)}
             require(len(slot_to_capture) == len(slots), f"row {sid} has duplicate source slots")
-            changed_indices = np.asarray([slot_to_capture[int(slot)] for slot in changed_slots],
-                                         dtype=np.int64)
-            changed_gids = np.ascontiguousarray(ids[changed_indices], dtype="<u8")
+            changed_indices_all = np.asarray([slot_to_capture[int(slot)] for slot in changed_slots],
+                                             dtype=np.int64)
             ancestry_by_slot = {int(item["source_slot"]): item for item in changed_records}
             require(len(ancestry_by_slot) == len(changed_records),
                     f"row {sid} full21 ancestry duplicates a changed source slot")
-            for slot, index in zip(changed_slots, changed_indices, strict=True):
+            requested_positions = actual_positions.copy()
+            for slot, index in zip(changed_slots, changed_indices_all, strict=True):
                 item = ancestry_by_slot[int(slot)]
                 require(int(item["canonical_gid"]) == int(ids[index])
                         and int(item["capture_index"]) == int(index),
                         f"row {sid} full21 ancestry GID/capture crosswalk differs at slot {slot}")
                 before_world = np.asarray(item["actual_run002_world_before_f32"], dtype="<f4")
                 source_after = np.asarray(item["source_point_after_f32"], dtype="<f4")
+                target_after = np.asarray(item["actual_full21_world_after_f32"], dtype="<f4")
                 recorded_weights = np.asarray(item["full21_weights_float64"], dtype="<f8")
                 require(before_world.shape == (3,) and before_world.tobytes()
                         == actual_positions[index].tobytes(),
                         f"row {sid} ancestry baseline world differs from accepted capture at GID {int(ids[index])}")
                 require(source_after.shape == (3,) and np.isfinite(source_after).all()
+                        and target_after.shape == (3,) and np.isfinite(target_after).all()
                         and recorded_weights.shape == (21,)
                         and recorded_weights.tobytes() == weights[index].tobytes()
                         and item.get("full21_weights_sha256")
                         == hashlib.sha256(recorded_weights.tobytes()).hexdigest(),
                         f"row {sid} ancestry parent source point/weights are malformed at GID {int(ids[index])}")
-                candidate_source_points[index] = source_after
+                requested_positions[index] = target_after
+            initial_emission_plan = plan_full21_source_emission_updates(
+                actual_positions, requested_positions, ids, slots, actual_faces,
+            )
+            changed_indices = initial_emission_plan["predicted_position_indices"]
+            changed_gids = np.ascontiguousarray(ids[changed_indices], dtype="<u8")
+            changed_index_set = set(map(int, changed_indices))
+            unreferenced_changed_indices = initial_emission_plan["unreferenced_changed_indices"]
+            require(set(map(int, changed_indices_all))
+                    == changed_index_set | set(map(int, unreferenced_changed_indices)),
+                    f"row {sid} source update plan lost changed source slots")
+            for index in changed_indices:
+                candidate_source_points[index] = np.asarray(
+                    ancestry_by_slot[int(slots[index])]["source_point_after_f32"], dtype="<f4")
+            changed_slots = [int(slots[index]) for index in changed_indices]
             changed_source = np.ascontiguousarray(candidate_source_points[changed_indices], dtype="<f4")
             require(np.any(np.any(changed_source != captured_source_points[changed_indices], axis=1)),
-                    f"row {sid} changed source points unexpectedly remain byte-identical")
+                    f"row {sid} referenced changed source points unexpectedly remain byte-identical")
             unchanged = np.ones(len(ids), dtype=bool)
             unchanged[changed_indices] = False
             require(candidate_source_points[unchanged].tobytes()
                     == captured_source_points[unchanged].tobytes(),
-                    f"row {sid} candidate changed an unselected source point")
+                    f"row {sid} candidate changed an unselected or unreferenced source point")
             expected_core = tuple(int(x) for x in actual["ordered_core_body_indices"])
             source_table = extension["source_payloads"]
             row_surface = [x for x in extension["surfaces"]
@@ -598,8 +680,31 @@ def main():
             for lane in range(21):
                 term = np.asarray(lane_worlds[:, lane, :] * coeff[:, lane, None], dtype="<f4")
                 changed_world = np.asarray(changed_world + term, dtype="<f4")
-            positions = actual_positions.copy()
-            positions[changed_indices] = changed_world
+            source_gids_by_slot = {int(slot): int(gid) for slot, gid in zip(slots, ids, strict=True)}
+            (positions, _, emission_plan, face_lineage, face_coverage,
+             changed_face_indices, topology_normal_seeds) = (
+                materialize_full21_candidate_with_output_lineage(
+                    materialize_positions=materialize_full21_source_emission_positions,
+                    accepted_positions=actual_positions,
+                    requested_positions=requested_positions,
+                    emitted_predicted_positions=changed_world,
+                    canonical_gids=ids,
+                    source_slots=slots,
+                    actual_faces=actual_faces,
+                    requested_plan=initial_emission_plan,
+                    stable_id=sid,
+                    source_path=str(original_child_path),
+                    source_sha=source_child_sha,
+                    original_source_faces=original_row_data[sid]["faces"],
+                    candidate_face_source_slots=face_slots,
+                    candidate_face_gids=ids[actual_faces],
+                    generated_records=[
+                        record for record in ancestry["rows"][str(sid)]
+                        if record.get("inferred_local_retriangulation") is True
+                    ],
+                    gids_by_source_slot=source_gids_by_slot,
+                )
+            )
             retained_targets = np.asarray(
                 [ancestry_by_slot[int(slot)]["actual_full21_world_after_f32"]
                  for slot in changed_slots], dtype="<f4")
@@ -614,25 +719,14 @@ def main():
                     f"row {sid} 1284 full21 ancestry changed during candidate replay")
             require(not np.array_equal(positions[changed_indices], actual_positions[changed_indices]),
                     f"row {sid} selected predicted positions did not change")
-            source_gids_by_slot = {int(slot): int(gid) for slot, gid in zip(slots, ids, strict=True)}
-            face_lineage, face_coverage = build_face_lineage(
-                stable_id=sid, source_path=str(original_child_path), source_sha=source_child_sha,
-                original_source_faces=original_row_data[sid]["faces"],
-                candidate_face_source_slots=face_slots,
-                candidate_face_gids=ids[actual_faces],
-                generated_records=[
-                    record for record in ancestry["rows"][str(sid)]
-                    if record.get("inferred_local_retriangulation") is True
-                ],
-                gids_by_source_slot=source_gids_by_slot,
-            )
-            vertex_map = source_map_arrays[sid]["vertex_lineage"]
+            vertex_map = normalize_vertex_lineage_by_gid(
+                source_map_arrays[sid]["vertex_lineage"], ids)
             lineage_check = validate_source_gid_slot_lineage(
-                slots, ids, vertex_map)
+                slots, ids, {str(gid): record for gid, record in vertex_map.items()})
             for i in changed_indices:
                 gid = int(ids[i])
                 slot = int(slots[i])
-                vertex_map[str(gid)]["inferred_local_full21_repair"] = {
+                vertex_map[gid]["inferred_local_full21_repair"] = {
                     "kind": "predicted_cpu_full21_source_point_rebase",
                     "source_slot": slot,
                     "source_point_before_f32": captured_source_points[i].tolist(),
@@ -650,9 +744,12 @@ def main():
                     "1291_actual_parent_extension_canonical_sha256": actual_parent_extension_sha,
                     "measured": False,
                 }
+            require(np.array_equal(emission_plan["predicted_position_indices"], changed_indices),
+                    f"row {sid} final source plan differs from the selected full21 replay GIDs")
+            require(len(emission_plan["unreferenced_changed_indices"]) == 0,
+                    f"row {sid} final emitted geometry changed an unreferenced original slot")
             face_lineages[sid] = face_lineage
-            vertex_lineages[sid] = {int(k): v for k, v in vertex_map.items()
-                                    if int(k) in set(map(int, ids))}
+            vertex_lineages[sid] = vertex_map
             require(set(vertex_lineages[sid]) == set(map(int, ids)),
                     f"row {sid} vertex lineage does not cover all displayed canonical GIDs")
             candidate_numeric.update({
@@ -689,6 +786,16 @@ def main():
                 "face_coverage": face_coverage,
                 "source_gid_slot_lineage": lineage_check,
                 "predicted_owner_replay": lane_report,
+                "source_emission_update_plan": {
+                    "counts": emission_plan["counts"],
+                    "predicted_position_gids_u64": emission_plan["predicted_position_gids_u64"].astype(int).tolist(),
+                    "normal_only_gids_u64": emission_plan["normal_only_gids_u64"].astype(int).tolist(),
+                    "requested_unreferenced_position_gids_not_emitted_u64": initial_emission_plan["unreferenced_changed_gids_u64"].astype(int).tolist(),
+                    "final_emitted_unreferenced_changed_gids_u64": emission_plan["unreferenced_changed_gids_u64"].astype(int).tolist(),
+                    "normal_owner_reemission_performed_by_this_builder": False,
+                    "unreferenced_slots_are_not_geometry_or_source_equality_claims": True,
+                    "evidence_boundary": emission_plan["evidence_boundary"],
+                },
                 "candidate_positions_sha256": hashlib.sha256(positions.tobytes()).hexdigest(),
                 "candidate_faces_sha256": hashlib.sha256(actual_faces.tobytes()).hexdigest(),
                 "candidate_source_points_sha256": hashlib.sha256(candidate_source_points.tobytes()).hexdigest(),

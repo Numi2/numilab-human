@@ -68,6 +68,213 @@ def validate_source_gid_slot_lineage(source_slots_i64, canonical_gids_u64,
     }
 
 
+def normalize_vertex_lineage_by_gid(vertex_lineage: dict, canonical_gids_u64) -> dict:
+    """Normalize complete vertex lineage to integer canonical GID keys.
+
+    JSON object keys arrive as decimal strings, while in-memory owner APIs use
+    integer GIDs. Either representation is accepted, but aliases such as ``7``
+    and ``"7"`` in one map, noncanonical decimal strings, missing GIDs, and
+    non-object records are rejected.
+    """
+    gids = np.asarray(canonical_gids_u64)
+    _require(gids.ndim == 1 and np.issubdtype(gids.dtype, np.integer)
+             and not np.issubdtype(gids.dtype, np.bool_),
+             "canonical GIDs must be a one-dimensional integer array")
+    _require(np.all(gids >= 0), "canonical GIDs must be nonnegative")
+    gid_values = [int(gid) for gid in gids]
+    _require(len(set(gid_values)) == len(gid_values),
+             "canonical GID inventory contains duplicates")
+    _require(isinstance(vertex_lineage, dict),
+             "vertex lineage must be a keyed object")
+
+    normalized = {}
+    for key, record in vertex_lineage.items():
+        if isinstance(key, (int, np.integer)) and not isinstance(key, (bool, np.bool_)):
+            gid = int(key)
+        elif isinstance(key, str) and key.isdecimal():
+            gid = int(key)
+            _require(str(gid) == key,
+                     f"vertex lineage key {key!r} is not canonical decimal")
+        else:
+            raise ValueError("forearm parent carrier bridge: vertex lineage key is not a canonical GID")
+        _require(gid >= 0, "vertex lineage GID must be nonnegative")
+        _require(gid not in normalized,
+                 f"vertex lineage contains duplicate key representations for GID {gid}")
+        _require(isinstance(record, dict),
+                 f"vertex lineage for GID {gid} must be an object")
+        normalized[gid] = record
+
+    _require(set(normalized) == set(gid_values),
+             "vertex lineage does not cover the exact canonical GID inventory")
+    return normalized
+
+
+def plan_full21_source_emission_updates(
+    accepted_positions_f32, candidate_positions_f32, canonical_gids_u64,
+    source_slots_i64, faces_u32, *, normal_seed_indices=(),
+) -> dict:
+    """Classify position-predicted, normal-only, and unreferenced owner rows.
+
+    This is an emission plan only. It identifies referenced vertices whose
+    displayed Float32 position changes (or which are appended births), then
+    expands changed-face seeds to the one-ring that needs normal-owner refresh.
+    It does not authenticate ancestry, emit sidecars, or qualify geometry.
+    """
+    accepted = np.asarray(accepted_positions_f32)
+    candidate = np.asarray(candidate_positions_f32)
+    gids = np.asarray(canonical_gids_u64)
+    slots = np.asarray(source_slots_i64)
+    faces = np.asarray(faces_u32)
+    _require(accepted.dtype == np.dtype("<f4") and candidate.dtype == np.dtype("<f4")
+             and accepted.ndim == 2 and accepted.shape[1:] == (3,)
+             and candidate.shape == accepted.shape and np.isfinite(accepted).all()
+             and np.isfinite(candidate).all(),
+             "accepted/candidate displayed positions must be aligned finite Float32 Nx3 arrays")
+    count = len(accepted)
+    _require(gids.ndim == 1 and np.issubdtype(gids.dtype, np.integer)
+             and not np.issubdtype(gids.dtype, np.bool_) and gids.shape == (count,)
+             and np.all(gids >= 0) and len(np.unique(gids)) == count,
+             "canonical GIDs must uniquely align with displayed vertices")
+    _require(slots.ndim == 1 and np.issubdtype(slots.dtype, np.integer)
+             and not np.issubdtype(slots.dtype, np.bool_) and slots.shape == (count,)
+             and np.all(slots >= -1),
+             "source slots must be integer, aligned, and either nonnegative or -1 for births")
+    original_slots = slots[slots >= 0]
+    _require(len(np.unique(original_slots)) == len(original_slots),
+             "nonnegative source slots are not unique")
+    _require(faces.ndim == 2 and faces.shape[1:] == (3,)
+             and np.issubdtype(faces.dtype, np.integer)
+             and not np.issubdtype(faces.dtype, np.bool_),
+             "faces must be an integer Fx3 array")
+    _require(faces.size == 0 or (np.all(faces >= 0) and np.all(faces < count)),
+             "face corner is outside the displayed vertex inventory")
+
+    referenced = np.zeros(count, dtype=bool)
+    if faces.size:
+        referenced[faces.reshape(-1).astype(np.int64, copy=False)] = True
+    accepted_bits = np.ascontiguousarray(accepted).view("<u4")
+    candidate_bits = np.ascontiguousarray(candidate).view("<u4")
+    changed = np.any(accepted_bits != candidate_bits, axis=1)
+    birth = slots == -1
+    unreferenced_births = np.flatnonzero(birth & ~referenced)
+    _require(len(unreferenced_births) == 0,
+             "append-only birth has no candidate face reference")
+    predicted = np.flatnonzero(referenced & (changed | birth)).astype(np.int64)
+    unreferenced_changed = np.flatnonzero(~referenced & changed & ~birth).astype(np.int64)
+
+    extra = np.asarray(normal_seed_indices)
+    if extra.size == 0:
+        extra = np.empty(0, dtype=np.int64)
+    _require(extra.ndim == 1 and np.issubdtype(extra.dtype, np.integer)
+             and not np.issubdtype(extra.dtype, np.bool_),
+             "additional normal seeds must be a one-dimensional integer array")
+    extra = extra.astype(np.int64, copy=False)
+    _require(extra.size == 0 or (np.all(extra >= 0) and np.all(extra < count)),
+             "additional normal seed is outside the candidate vertices")
+    extra_unique = np.unique(extra)
+    unreferenced_seeds = extra_unique[~referenced[extra_unique]]
+    seeds = np.unique(np.concatenate((predicted, extra_unique[referenced[extra_unique]])))
+    if len(seeds) and len(faces):
+        touched_faces = np.any(np.isin(faces, seeds), axis=1)
+        normal_update = np.unique(np.concatenate(
+            (seeds, faces[touched_faces].reshape(-1).astype(np.int64))))
+    else:
+        normal_update = seeds.astype(np.int64, copy=False)
+    normal_only = normal_update[~np.isin(normal_update, predicted)].astype(np.int64, copy=False)
+    return {
+        "referenced_vertex_mask": referenced,
+        "changed_position_indices": np.flatnonzero(changed).astype(np.int64),
+        "predicted_position_indices": predicted,
+        "predicted_position_gids_u64": np.ascontiguousarray(gids[predicted], dtype="<u8"),
+        "unreferenced_changed_indices": unreferenced_changed,
+        "unreferenced_changed_gids_u64": np.ascontiguousarray(gids[unreferenced_changed], dtype="<u8"),
+        "normal_update_indices": normal_update,
+        "normal_update_gids_u64": np.ascontiguousarray(gids[normal_update], dtype="<u8"),
+        "normal_only_indices": normal_only,
+        "normal_only_gids_u64": np.ascontiguousarray(gids[normal_only], dtype="<u8"),
+        "unreferenced_normal_seed_indices": unreferenced_seeds.astype(np.int64, copy=False),
+        "counts": {
+            "candidate_vertex_count": int(count),
+            "referenced_vertex_count": int(np.count_nonzero(referenced)),
+            "changed_position_count": int(np.count_nonzero(changed)),
+            "predicted_position_count": int(len(predicted)),
+            "predicted_birth_count": int(np.count_nonzero(birth[predicted])),
+            "unreferenced_changed_original_count": int(len(unreferenced_changed)),
+            "normal_update_count": int(len(normal_update)),
+            "normal_only_count": int(len(normal_only)),
+        },
+        "evidence_boundary": "selection plan only; no source/native/anatomical admission",
+    }
+
+
+
+def materialize_full21_source_emission_positions(
+    accepted_positions_f32, requested_positions_f32, emitted_predicted_positions_f32,
+    canonical_gids_u64, source_slots_i64, faces_u32, *, requested_plan=None,
+    normal_seed_indices=(),
+) -> tuple[np.ndarray, dict, dict]:
+    """Apply only referenced predicted-position rows and validate the final plan.
+
+    Requested moves on unused original slots remain source/provenance diagnostics;
+    they are not emitted into geometry. Appended births must be face referenced.
+    The returned pair of plans distinguishes requested-but-unemitted changes from
+    actual emitted changes and the final normal-star refresh.
+    """
+    accepted = np.asarray(accepted_positions_f32)
+    requested = np.asarray(requested_positions_f32)
+    _require(accepted.dtype == np.dtype("<f4") and requested.dtype == np.dtype("<f4")
+             and accepted.shape == requested.shape and accepted.ndim == 2
+             and accepted.shape[1:] == (3,) and np.isfinite(accepted).all()
+             and np.isfinite(requested).all(),
+             "accepted/requested positions must be aligned finite Float32 Nx3 arrays")
+    verified_requested_plan = plan_full21_source_emission_updates(
+        accepted, requested, canonical_gids_u64, source_slots_i64, faces_u32,
+    )
+    if requested_plan is not None:
+        for key in (
+            "predicted_position_indices",
+            "predicted_position_gids_u64",
+            "unreferenced_changed_indices",
+            "unreferenced_changed_gids_u64",
+        ):
+            _require(np.array_equal(
+                np.asarray(requested_plan.get(key)),
+                np.asarray(verified_requested_plan[key]),
+            ), f"supplied requested plan differs from recomputed {key}")
+    requested_plan = verified_requested_plan
+    predicted = np.asarray(requested_plan.get("predicted_position_indices"))
+    _require(predicted.ndim == 1 and np.issubdtype(predicted.dtype, np.integer)
+             and not np.issubdtype(predicted.dtype, np.bool_)
+             and (predicted.size == 0 or (np.all(predicted >= 0)
+                                         and np.all(predicted < len(accepted)))),
+             "requested plan has invalid predicted-position indices")
+    predicted = predicted.astype(np.int64, copy=False)
+    _require(len(np.unique(predicted)) == len(predicted),
+             "requested plan repeats predicted-position indices")
+    gids = np.asarray(canonical_gids_u64)
+    slots = np.asarray(source_slots_i64)
+    _require(gids.shape == (len(accepted),) and slots.shape == (len(accepted),),
+             "requested plan owner arrays do not match accepted vertices")
+    _require(np.array_equal(
+        np.ascontiguousarray(requested_plan.get("predicted_position_gids_u64"), dtype="<u8"),
+        np.ascontiguousarray(gids[predicted], dtype="<u8"),
+    ), "requested plan GIDs differ from the candidate canonical-GID order")
+    emitted = np.asarray(emitted_predicted_positions_f32)
+    _require(emitted.dtype == np.dtype("<f4") and emitted.shape == (len(predicted), 3)
+             and np.isfinite(emitted).all(),
+             "emitted predicted positions must be finite Float32 rows aligned with the plan")
+    positions = accepted.copy()
+    positions[predicted] = emitted
+    final_plan = plan_full21_source_emission_updates(
+        accepted, positions, gids, slots, faces_u32,
+        normal_seed_indices=normal_seed_indices,
+    )
+    _require(np.array_equal(final_plan["predicted_position_indices"], predicted),
+             "final position plan differs from requested referenced positions")
+    _require(len(final_plan["unreferenced_changed_indices"]) == 0,
+             "final emitted positions changed an unreferenced original vertex")
+    return positions, requested_plan, final_plan
+
 def resolve_birth_source_parent_slots(parent_gids, canonical_gids_u64,
                                       source_slots_i64) -> np.ndarray:
     """Resolve an inferred edge's canonical parent GIDs to original source slots."""
@@ -1355,6 +1562,59 @@ def derive_inferred_child_carrier_birth(
         "source_point_inferred": True,
         "four_lane_route_combined_or_truncated": False,
     }
+
+def solve_full21_source_points_at_accepted_pose(
+    row_data, accepted_pose_owner_result, target_world_f32, core_weights_float64, *,
+    max_replay_residual_m: float = 2e-7,
+) -> tuple[np.ndarray, dict]:
+    """Use the accepted-pose tuple with separate parent position/normal arrays.
+
+    ``accepted_pose_owner_result`` is the complete ``(poses, report)`` tuple
+    returned by :func:`accepted_poses_from_receipt`. The parent row must expose
+    distinct ``positions`` and ``normals`` Nx3 arrays; neither array is
+    interpreted as a packed vertices6 field. This wrapper performs the same
+    bounded inverse and Float32 position replay as the underlying owner.
+    """
+    _require(isinstance(accepted_pose_owner_result, tuple)
+             and len(accepted_pose_owner_result) == 2,
+             "accepted pose owner must be the (poses, report) tuple")
+    poses, pose_report = accepted_pose_owner_result
+    _require(isinstance(poses, dict) and isinstance(pose_report, dict)
+             and type(pose_report.get("accepted_step")) is int
+             and pose_report["accepted_step"] >= 0
+             and isinstance(pose_report.get("accepted_receipt_sha256"), str)
+             and len(pose_report["accepted_receipt_sha256"]) == 64,
+             "accepted pose tuple does not contain a typed step and receipt pin")
+    _require(isinstance(row_data, dict) and "positions" in row_data and "normals" in row_data,
+             "parent row must provide separate positions and normals arrays")
+    parent_positions = np.asarray(row_data["positions"])
+    parent_normals = np.asarray(row_data["normals"])
+    _require(parent_positions.dtype == np.dtype("<f4")
+             and parent_normals.dtype == np.dtype("<f4")
+             and parent_positions.ndim == 2 and parent_positions.shape[1:] == (3,)
+             and parent_normals.shape == parent_positions.shape
+             and np.isfinite(parent_positions).all() and np.isfinite(parent_normals).all(),
+             "parent positions and normals must be separate finite Float32 Nx3 arrays")
+    source, inverse_report = solve_full21_parent_source_points(
+        row_data, poses, target_world_f32, core_weights_float64,
+        max_replay_residual_m=max_replay_residual_m,
+    )
+    emitted = full21_parent_world_positions(
+        row_data, poses, source, core_weights_float64,
+    )
+    target = np.asarray(target_world_f32)
+    residual = np.max(np.abs(emitted.astype(np.float64) - target.astype(np.float64)), axis=1)
+    return source, {
+        "accepted_pose_owner": pose_report,
+        "parent_positions_shape": list(parent_positions.shape),
+        "parent_normals_shape": list(parent_normals.shape),
+        "parent_positions_and_normals_are_separate_fields": True,
+        "source_point_inverse": inverse_report,
+        "forward_replay_max_axis_residual_m": float(residual.max(initial=0.0)),
+        "forward_replay_within_bound": bool(float(residual.max(initial=0.0)) <= max_replay_residual_m),
+        "evidence_boundary": "accepted-pose CPU full21 inverse/replay only; native capture and anatomy admission are separate",
+    }
+
 
 def build_authenticated_full21_lane_world_subset(
     *, source_payload_path, parent_extension_path, parent_payload_path,
