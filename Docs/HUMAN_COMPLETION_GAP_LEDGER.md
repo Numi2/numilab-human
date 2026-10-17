@@ -19,6 +19,51 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Integrated anatomy preparation checkpoint — 2026-10-17
+
+Execution remains on SSH Numi. This checkpoint is **not anatomy acceptance or
+native qualification**. N27/back412, accepted skin, original flat support,
+physical mass and existing simulation owners remain the delivery baseline.
+
+Human d6ba047b preserves exact intercostal attachment maps across final payload
+composition. Actual compiler runs 135/136 compile complete rows 315097 and
+313126+315097, merge them onto current015, and validate attachment maps against
+the accepted002 receipt. In run136 the other 523 normalized typed rows are
+byte-exact current015. Report SHA256:
+4226b26e378d764bf4639b951ed0189f28f94d6e84d705e47665be0ca7b33311.
+This does not clear retained row313 crossings with vessels471/475.
+
+Human b862fc71 authenticates repaired forearm topology separately from accepted
+capture indices. The existing candidate NPZ and complete lineage JSON are pinned;
+all 21 ordered weights, GID/source-slot membership and per-GID captured versus
+predicted position ownership remain enforced. Focused contracts pass 123 tests
+plus 28 subtests; the combined anatomy regression selection passed 285 tests plus
+51 subtests. Actual run137 rebuilds the accepted002/1284 owner chain and prepares
+both 1324 candidate rows successfully: row132 has 29,420 faces/14,706 vertices and
+20 predicted GIDs; row134 has 64,626 faces/32,351 vertices and 34 predicted GIDs.
+Both are closed. This is owner/preparation evidence, not self/neighbor or motion
+clearance. Run137 report SHA256:
+1b7d2300a398dfb512d869d8bd32130804d274135d23308e870c51bf18d9af6f;
+driver SHA256:
+ec1c7f57a46d8b0f4429ead779b6623a245f810e39affe35a3440eda2830da95.
+
+Lung038 passes the full row305 self gate in source and authenticated Body20
+predicted-world frames: closed oriented genus0, 84,744 faces, 42,374 vertices, zero
+self intersections and no degenerate, duplicate, nonmanifold or orientation
+defects. Report SHA256:
+21245f7d94cabbb1c2b3f028dd28458ae17142ed1ef7d7552a4597d9109095bb.
+Pleural rederivation, surrounding structures, composition and native confirmation
+remain pending. Intercostal317 remains unadmitted while generated cap overlaps are
+repaired; failed orientation and unsupported coplanar-union attempts remain retained.
+
+Evidence resides under
+/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378
+in intercostal313315-real-compiler-composed-payload-20261017-136,
+forearm1324-real-mixed-owner-preparation-20261017-137 and
+aortic7-leftlung-combined-038-short-witness-edge-collapse/artifacts.
+Full-body and retained breathing-pose clearance, 16/60-second native confirmation,
+and paired 330-second baseline/intervention qualification are still open.
+
 ## Historical supersession notice
 
 The [state-of-the-art execution plan](SOTA_EXECUTION_PLAN.md) and the current
