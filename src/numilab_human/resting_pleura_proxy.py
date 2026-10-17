@@ -665,13 +665,415 @@ def _validate_source_face_subdivision_parent_chain(
         "candidate_face_to_parent": candidate_face_to_parent,
     }
 
+def _closed_oriented_collapse_surface_summary(vertices6, faces, label):
+    vertices, triangles = np.asarray(vertices6), np.asarray(faces)
+    if (vertices.dtype.kind != "f" or vertices.dtype.itemsize != 4
+            or vertices.ndim != 2 or vertices.shape[1] != 6
+            or triangles.dtype.kind not in "iu" or triangles.ndim != 2
+            or triangles.shape[1] != 3 or not len(triangles) or not np.isfinite(vertices).all()
+            or np.any(triangles < 0) or int(triangles.max()) >= len(vertices)):
+        raise ValueError(f"{label} edge-collapse surface arrays are malformed")
+    triangles = np.asarray(triangles, dtype=np.int64)
+    if (len(np.unique(np.sort(triangles, axis=1), axis=0)) != len(triangles)
+            or not np.array_equal(np.unique(triangles.reshape(-1)), np.arange(len(vertices)))):
+        raise ValueError(f"{label} edge-collapse surface has duplicate faces or unused vertex slots")
+    topology = topology_report(triangles)
+    components, _ = _edge_components(triangles)
+    if topology["nonmanifold_edge_count"] or topology["orientation_error_edge_count"]:
+        raise ValueError(f"{label} edge-collapse surface has nonmanifold or inconsistently oriented edges")
+    component_by_face = {
+        int(face_id): component_id
+        for component_id, component in enumerate(components)
+        for face_id in component
+    }
+    edge_owners = collections.defaultdict(list)
+    for face_id, triangle in enumerate(triangles):
+        a, b, c = map(int, triangle)
+        for start, end in ((a, b), (b, c), (c, a)):
+            edge_owners[(min(start, end), max(start, end))].append((face_id, start, end))
+    boundary_edges_directed = []
+    boundary_edges_by_component = collections.Counter()
+    for edge, owners in edge_owners.items():
+        if len(owners) == 1:
+            face_id, start, end = owners[0]
+            boundary_edges_directed.append((start, end))
+            boundary_edges_by_component[component_by_face[face_id]] += 1
+    boundary_edges_directed.sort()
+    xyz = vertices[:, :3].astype(np.float64)
+    points = xyz[triangles]
+    areas2 = np.linalg.norm(np.cross(points[:, 1] - points[:, 0],
+                                     points[:, 2] - points[:, 0]), axis=1)
+    if not np.isfinite(areas2).all() or np.any(areas2 <= 0):
+        raise ValueError(f"{label} edge-collapse surface has degenerate faces")
+    edges = np.concatenate((triangles[:, [0, 1]], triangles[:, [1, 2]],
+                            triangles[:, [2, 0]]), axis=0)
+    edge_count = len(np.unique(np.sort(edges, axis=1), axis=0))
+    component_rows = []
+    for component in components:
+        component_face_ids = np.asarray(component, dtype=np.int64)
+        component_triangles = triangles[component_face_ids]
+        component_vertex_ids = np.unique(component_triangles.reshape(-1))
+        remap = np.full(len(vertices), -1, dtype=np.int64)
+        remap[component_vertex_ids] = np.arange(len(component_vertex_ids), dtype=np.int64)
+        local_faces = remap[component_triangles]
+        local_edges = np.concatenate((local_faces[:, [0, 1]], local_faces[:, [1, 2]],
+                                      local_faces[:, [2, 0]]), axis=0)
+        local_edge_count = len(np.unique(np.sort(local_edges, axis=1), axis=0))
+        local_volume = float(signed_volume(xyz[component_vertex_ids], local_faces))
+        if not np.isfinite(local_volume):
+            raise ValueError(f"{label} edge-collapse component has non-finite signed volume")
+        component_rows.append({
+            "face_count": int(len(component_face_ids)),
+            "vertex_count": int(len(component_vertex_ids)),
+            "edge_count": int(local_edge_count),
+            "euler_characteristic": int(len(component_vertex_ids) - local_edge_count + len(component_face_ids)),
+            "boundary_edge_count": int(boundary_edges_by_component[len(component_rows)]),
+            "signed_volume_m3": local_volume,
+        })
+    volume = float(sum(row["signed_volume_m3"] for row in component_rows))
+    return {
+        "vertex_count": int(len(vertices)), "face_count": int(len(triangles)),
+        "edge_count": int(edge_count), "euler_characteristic": int(len(vertices) - edge_count + len(triangles)),
+        "connected_face_components": int(len(components)),
+        "component_topology_and_volume": component_rows,
+        "boundary_edge_count": int(topology["boundary_edge_count"]),
+        "boundary_edges_directed": [list(edge) for edge in boundary_edges_directed],
+        "nonmanifold_edge_count": int(topology["nonmanifold_edge_count"]),
+        "orientation_error_edge_count": int(topology["orientation_error_edge_count"]),
+        "minimum_triangle_area_m2": float(areas2.min() * 0.5), "signed_volume_m3": volume,
+    }
+
+
+def _edge_collapse_repeated_source_face_ids(stable_id, evidence, source_face_count):
+    if not isinstance(evidence, dict) or "parent_face_ancestry" not in evidence:
+        raise ValueError("source-face edge-collapse evidence lacks parent face ancestry")
+    parent_faces = np.asarray(evidence.get("parent_faces"))
+    if parent_faces.dtype.kind not in "iu" or parent_faces.ndim != 2 or parent_faces.shape[1] != 3:
+        raise ValueError("source-face edge-collapse evidence lacks integer immediate-parent faces")
+    parent_map = _normalize_pinned_parent_map(
+        evidence["parent_face_ancestry"], len(parent_faces), source_face_count,
+        f"collapse parent-to-source face ancestry row {stable_id}", max_support=2,
+    )
+    counts = collections.Counter(source_id for row in parent_map if len(row) == 1 for source_id in row)
+    return tuple(sorted(source_id for source_id, count in counts.items() if count > 1))
+
+
+def _validate_source_face_edge_collapse_parent_chain(
+        stable_id, candidate_faces, candidate_vertices6, ultimate_face_map,
+        ultimate_vertex_map, source_face_count, source_vertex_count, evidence):
+    # This opt-in proves operation identity and ancestry, never anatomical admission.
+    required = {
+        "parent_vertices6", "parent_faces", "parent_payload_bytes", "parent_payload_sha256",
+        "parent_surface_sha256", "candidate_face_ancestry", "candidate_vertex_ancestry",
+        "parent_face_ancestry", "parent_vertex_ancestry",
+        "candidate_face_ancestry_sha256", "candidate_vertex_ancestry_sha256",
+        "parent_face_ancestry_sha256", "parent_vertex_ancestry_sha256",
+        "edge_endpoint_parent_vertex_ids", "retired_parent_face_ids",
+        "retained_position_policy", "collapse_position_f32_m",
+        "maximum_endpoint_displacement_bound_m", "maximum_metric_deviation_bound_m",
+    }
+    if not isinstance(evidence, dict) or not required.issubset(evidence):
+        raise ValueError("source-face edge collapse requires pinned parent geometry, full ancestry, and operation evidence")
+    hash_fields = ("parent_payload_sha256", "parent_surface_sha256",
+                   "candidate_face_ancestry_sha256", "candidate_vertex_ancestry_sha256",
+                   "parent_face_ancestry_sha256", "parent_vertex_ancestry_sha256")
+    for name in hash_fields:
+        value = evidence[name]
+        if (not isinstance(value, str) or len(value) != 64
+                or any(ch not in "0123456789abcdef" for ch in value)):
+            raise ValueError(f"source-face edge collapse {name} must be a lowercase SHA-256 pin")
+    parent_vertices6, parent_faces_raw = np.asarray(evidence["parent_vertices6"]), np.asarray(evidence["parent_faces"])
+    raw_payload = evidence["parent_payload_bytes"]
+    if not isinstance(raw_payload, (bytes, bytearray, memoryview)):
+        raise ValueError("source-face edge collapse requires exact immediate-parent payload bytes")
+    raw_payload = bytes(raw_payload)
+    if hashlib.sha256(raw_payload).hexdigest() != evidence["parent_payload_sha256"]:
+        raise ValueError("source-face edge-collapse parent payload differs from its independent SHA-256 pin")
+    try:
+        _, _, parent_rows = _parse_payload(raw_payload)
+    except (ValueError, struct.error) as exc:
+        raise ValueError("source-face edge-collapse parent is not a valid ABI5 payload") from exc
+    if stable_id not in parent_rows:
+        raise ValueError("source-face edge-collapse parent payload lacks the selected lobe row")
+    payload_row = parent_rows[stable_id]
+    if (parent_vertices6.dtype.kind != "f" or parent_vertices6.dtype.itemsize != 4
+            or parent_faces_raw.dtype.kind not in "iu" or parent_faces_raw.ndim != 2
+            or parent_faces_raw.shape[1] != 3
+            or not np.array_equal(parent_vertices6, payload_row["vertices6"])
+            or not np.array_equal(parent_faces_raw, payload_row["faces"])):
+        raise ValueError("source-face edge-collapse parent arrays differ from their pinned ABI5 row")
+    parent_faces = np.asarray(parent_faces_raw, dtype=np.int64)
+    parent_surface_sha = _parent_surface_sha256(stable_id, parent_vertices6, parent_faces_raw)
+    if parent_surface_sha != evidence["parent_surface_sha256"]:
+        raise ValueError("source-face edge-collapse parent row differs from its independent geometry pin")
+
+    candidate_faces, candidate_vertices6 = np.asarray(candidate_faces), np.asarray(candidate_vertices6)
+    if (candidate_faces.dtype.kind not in "iu" or candidate_faces.ndim != 2
+            or candidate_faces.shape[1] != 3 or candidate_vertices6.dtype.kind != "f"
+            or candidate_vertices6.dtype.itemsize != 4):
+        raise ValueError("source-face edge-collapse candidate must use Float32 vertices and integer faces")
+    candidate_faces = np.asarray(candidate_faces, dtype=np.int64)
+    cfp = _normalize_pinned_parent_map(
+        evidence["candidate_face_ancestry"], len(candidate_faces), len(parent_faces),
+        f"collapse candidate-to-parent face ancestry row {stable_id}", max_support=1)
+    cvp = _normalize_pinned_parent_map(
+        evidence["candidate_vertex_ancestry"], len(candidate_vertices6), len(parent_vertices6),
+        f"collapse candidate-to-parent vertex ancestry row {stable_id}", max_support=2)
+    pfs = _normalize_pinned_parent_map(
+        evidence["parent_face_ancestry"], len(parent_faces), source_face_count,
+        f"collapse parent-to-source face ancestry row {stable_id}", max_support=2)
+    pvs = _normalize_pinned_parent_map(
+        evidence["parent_vertex_ancestry"], len(parent_vertices6), source_vertex_count,
+        f"collapse parent-to-source vertex ancestry row {stable_id}", max_support=source_vertex_count)
+    map_hashes = {
+        "candidate_face_ancestry_sha256": _lineage_map_sha256(stable_id, cfp, kind="candidate-face-to-parent-face"),
+        "candidate_vertex_ancestry_sha256": _lineage_map_sha256(stable_id, cvp, kind="candidate-vertex-to-parent-vertex"),
+        "parent_face_ancestry_sha256": _lineage_map_sha256(stable_id, pfs, kind="parent-face-to-source-face"),
+        "parent_vertex_ancestry_sha256": _lineage_map_sha256(stable_id, pvs, kind="parent-vertex-to-source-vertex"),
+    }
+    for name, actual in map_hashes.items():
+        if actual != evidence[name]:
+            raise ValueError(f"source-face edge-collapse {name} differs from its independent pin")
+    repeated_source_ids = _edge_collapse_repeated_source_face_ids(stable_id, evidence, source_face_count)
+    parent_subdivision_report = None
+    nested_subdivision = evidence.get("parent_source_subdivision_evidence")
+    if repeated_source_ids:
+        required_nested = {
+            "subdivided_source_face_ids", "source_patch_support_face_ids",
+            "patch_geometry", "subdivision_parent_evidence",
+        }
+        if not isinstance(nested_subdivision, dict) or not required_nested.issubset(nested_subdivision):
+            raise ValueError("edge-collapse parent has repeated source faces without its independently checked exact subdivision chain")
+        declared_repeated = nested_subdivision["subdivided_source_face_ids"]
+        if (not isinstance(declared_repeated, (list, tuple))
+                or any(isinstance(value, (bool, np.bool_))
+                       or not isinstance(value, (int, np.integer)) for value in declared_repeated)
+                or tuple(sorted(map(int, declared_repeated))) != repeated_source_ids
+                or len(set(map(int, declared_repeated))) != len(declared_repeated)):
+            raise ValueError("edge-collapse parent exact subdivision declaration differs from repeated source ancestry")
+        subdivision_parent = _validate_source_face_subdivision_parent_chain(
+            stable_id, parent_faces, parent_vertices6, pfs, pvs,
+            source_face_count, source_vertex_count,
+            nested_subdivision["subdivision_parent_evidence"], repeated_source_ids,
+            nested_subdivision["source_patch_support_face_ids"],
+        )
+        parent_patch_report = _source_face_subdivision_patch_report(
+            parent_vertices6, parent_faces,
+            subdivision_parent["parent_vertices6"], subdivision_parent["parent_faces"],
+            subdivision_parent["candidate_face_to_parent"],
+            nested_subdivision["patch_geometry"],
+            subdivision_parent["immediate_subdivision_face_ids"],
+        )
+        parent_subdivision_report = {
+            "parent_exact_subdivision_chain": {
+                key: value for key, value in subdivision_parent.items()
+                if key not in ("parent_vertices6", "parent_faces", "candidate_face_to_parent")
+            },
+            "parent_exact_subdivision_patch_geometry": parent_patch_report,
+        }
+    elif nested_subdivision is not None:
+        raise ValueError("edge-collapse parent declares an exact subdivision chain that has no repeated source face")
+
+    composed_faces = tuple(tuple(sorted({source for p in row for source in pfs[p]})) for row in cfp)
+    composed_vertices = tuple(tuple(sorted({source for p in row for source in pvs[p]})) for row in cvp)
+    if composed_faces != tuple(tuple(sorted(map(int, row))) for row in ultimate_face_map):
+        raise ValueError("edge-collapse candidate-to-parent-to-source face ancestry differs from the complete source map")
+    if composed_vertices != tuple(tuple(sorted(map(int, row))) for row in ultimate_vertex_map):
+        raise ValueError("edge-collapse candidate-to-parent-to-source vertex ancestry differs from the complete source map")
+
+    endpoints = evidence["edge_endpoint_parent_vertex_ids"]
+    if (not isinstance(endpoints, (tuple, list)) or len(endpoints) != 2
+            or any(isinstance(x, (bool, np.bool_)) or not isinstance(x, (int, np.integer)) for x in endpoints)):
+        raise ValueError("edge-collapse endpoint evidence requires two integer immediate-parent vertex IDs")
+    removed, retained = map(int, endpoints)
+    if removed == retained or min(removed, retained) < 0 or max(removed, retained) >= len(parent_vertices6):
+        raise ValueError("edge-collapse endpoint evidence is duplicate or out of range")
+    raw_retired = evidence["retired_parent_face_ids"]
+    if (not isinstance(raw_retired, (tuple, list))
+            or any(isinstance(x, (bool, np.bool_)) or not isinstance(x, (int, np.integer)) for x in raw_retired)):
+        raise ValueError("edge-collapse retired-face evidence requires integer immediate-parent face IDs")
+    retired = tuple(sorted(map(int, raw_retired)))
+    if len(set(retired)) != len(retired):
+        raise ValueError("edge-collapse retired-face evidence contains duplicate IDs")
+    parent_topology = _closed_oriented_collapse_surface_summary(parent_vertices6, parent_faces, "immediate parent")
+    candidate_topology = _closed_oriented_collapse_surface_summary(candidate_vertices6, candidate_faces, "candidate")
+    edge_faces = np.flatnonzero(np.sum(np.isin(parent_faces, (removed, retained)), axis=1) == 2)
+    if len(edge_faces) != 2 or retired != tuple(map(int, edge_faces)):
+        raise ValueError("edge-collapse retired faces are not exactly the two incident immediate-parent faces")
+
+    def neighbors(vertex):
+        incident = parent_faces[np.any(parent_faces == vertex, axis=1)]
+        return set(map(int, incident.reshape(-1))) - {vertex}
+    common = neighbors(removed) & neighbors(retained)
+    opposite = set()
+    for face_id in edge_faces:
+        opposite.update(map(int, parent_faces[face_id][~np.isin(parent_faces[face_id], (removed, retained))]))
+    if len(common) != 2 or common != opposite:
+        raise ValueError("edge-collapse immediate-parent edge fails the closed two-manifold link condition")
+
+    collapsed_ids = [i for i, parents in enumerate(cvp) if parents == tuple(sorted((removed, retained)))]
+    if len(collapsed_ids) != 1:
+        raise ValueError("edge-collapse candidate requires exactly one output vertex supported by both endpoints")
+    collapsed = collapsed_ids[0]
+    singleton_ids = [row[0] for row in cvp if len(row) == 1]
+    expected_singletons = set(range(len(parent_vertices6))) - {removed, retained}
+    if (len(singleton_ids) != len(expected_singletons) or set(singleton_ids) != expected_singletons
+            or len(candidate_vertices6) != len(parent_vertices6) - 1):
+        raise ValueError("edge-collapse candidate vertex support omits or duplicates an uncollapsed parent vertex")
+    parent_to_candidate = {parent: out for out, row in enumerate(cvp) if len(row) == 1 for parent in row}
+    parent_to_candidate[removed] = collapsed
+    parent_to_candidate[retained] = collapsed
+    parent_boundary = parent_topology["boundary_edges_directed"]
+    candidate_boundary = candidate_topology["boundary_edges_directed"]
+    parent_boundary_vertices = {vertex for edge in parent_boundary for vertex in edge}
+    if {removed, retained} & parent_boundary_vertices:
+        raise ValueError("edge-collapse operation touches a registered open source-boundary feature")
+    remapped_parent_boundary = sorted(
+        (parent_to_candidate[start], parent_to_candidate[end]) for start, end in parent_boundary
+    )
+    if remapped_parent_boundary != [tuple(edge) for edge in candidate_boundary]:
+        raise ValueError("edge-collapse changes an immediate-parent open-boundary identity or orientation")
+
+    policy = evidence["retained_position_policy"]
+    if policy not in ("midpoint", "keep"):
+        raise ValueError("edge-collapse retained-position policy must be midpoint or keep")
+    if policy == "midpoint":
+        position = ((parent_vertices6[removed, :3].astype(np.float64)
+                     + parent_vertices6[retained, :3].astype(np.float64)) * 0.5).astype(np.float32)
+    else:
+        position = parent_vertices6[retained, :3].copy()
+    raw_position = np.asarray(evidence["collapse_position_f32_m"])
+    if (raw_position.shape != (3,) or raw_position.dtype.kind != "f"
+            or not np.isfinite(raw_position).all()
+            or not np.array_equal(np.asarray(raw_position, dtype=np.float32), position)
+            or not np.array_equal(candidate_vertices6[collapsed, :3], position)):
+        raise ValueError("edge-collapse position differs from the exact declared Float32 operation")
+    for out, row in enumerate(cvp):
+        if len(row) == 1 and not np.array_equal(candidate_vertices6[out, :3], parent_vertices6[row[0], :3]):
+            raise ValueError("edge-collapse changed vertex geometry outside its two-endpoint support")
+
+    parent_to_face = {}
+    for out, row in enumerate(cfp):
+        if row[0] in parent_to_face:
+            raise ValueError("edge-collapse maps multiple output faces to one immediate-parent face")
+        parent_to_face[row[0]] = out
+    if set(parent_to_face) != set(range(len(parent_faces))) - set(retired):
+        raise ValueError("edge-collapse face ancestry omits or invents non-retired parent faces")
+    for parent_face, out_face in parent_to_face.items():
+        expected = tuple(parent_to_candidate[int(v)] for v in parent_faces[parent_face])
+        if tuple(map(int, candidate_faces[out_face])) != expected:
+            raise ValueError("edge-collapse candidate face is not the exact oriented remap of its parent face")
+
+    edge_length = float(np.linalg.norm(parent_vertices6[removed, :3].astype(float)
+                                       - parent_vertices6[retained, :3].astype(float)))
+    endpoint_delta = max(float(np.linalg.norm(position.astype(float)
+                                               - parent_vertices6[v, :3].astype(float)))
+                         for v in (removed, retained))
+    endpoint_bound, metric_bound = (evidence["maximum_endpoint_displacement_bound_m"],
+                                    evidence["maximum_metric_deviation_bound_m"])
+    for name, value in (("maximum_endpoint_displacement_bound_m", endpoint_bound),
+                        ("maximum_metric_deviation_bound_m", metric_bound)):
+        if (isinstance(value, (bool, np.bool_))
+                or not isinstance(value, (int, float, np.integer, np.floating))
+                or not np.isfinite(value) or value < 0):
+            raise ValueError(f"edge-collapse {name} must be finite and non-negative")
+    if endpoint_bound > edge_length or endpoint_delta > endpoint_bound:
+        raise ValueError("edge-collapse endpoint displacement exceeds its local edge-length bound")
+
+    star_faces = np.flatnonzero(np.any(np.isin(parent_faces, (removed, retained)), axis=1))
+    max_metric_delta = 0.0
+    for parent_face in star_faces:
+        if int(parent_face) in retired:
+            continue
+        out_face = parent_to_face[int(parent_face)]
+        old_points = parent_vertices6[parent_faces[parent_face], :3].astype(np.float64)
+        new_points = candidate_vertices6[candidate_faces[out_face], :3].astype(np.float64)
+        for edge in range(3):
+            old_len = float(np.linalg.norm(old_points[(edge + 1) % 3] - old_points[edge]))
+            new_len = float(np.linalg.norm(new_points[(edge + 1) % 3] - new_points[edge]))
+            max_metric_delta = max(max_metric_delta, abs(new_len - old_len))
+    star_ids = np.unique(parent_faces[star_faces].reshape(-1))
+    star_xyz = parent_vertices6[star_ids, :3].astype(np.float64)
+    star_diameter = float(np.linalg.norm(star_xyz[:, None, :] - star_xyz[None, :, :], axis=2).max())
+    if metric_bound > star_diameter or max_metric_delta > metric_bound:
+        raise ValueError("edge-collapse surviving local metric deviation exceeds its support bound")
+    parent_components, _ = _edge_components(parent_faces)
+    candidate_components, _ = _edge_components(candidate_faces)
+    if len(parent_components) != len(candidate_components):
+        raise ValueError("edge-collapse changed the closed-surface component count")
+    parent_component_by_face = {
+        int(face_id): component_id
+        for component_id, component in enumerate(parent_components)
+        for face_id in component
+    }
+    component_map = {}
+    for candidate_component_id, component in enumerate(candidate_components):
+        parent_component_ids = {
+            parent_component_by_face[cfp[int(candidate_face_id)][0]]
+            for candidate_face_id in component
+        }
+        if len(parent_component_ids) != 1:
+            raise ValueError("edge-collapse merges distinct closed-surface components")
+        parent_component_id = next(iter(parent_component_ids))
+        if parent_component_id in component_map:
+            raise ValueError("edge-collapse splits an immediate-parent closed-surface component")
+        component_map[parent_component_id] = candidate_component_id
+    if set(component_map) != set(range(len(parent_components))):
+        raise ValueError("edge-collapse loses an immediate-parent closed-surface component")
+    for parent_component_id, candidate_component_id in component_map.items():
+        parent_metrics = parent_topology["component_topology_and_volume"][parent_component_id]
+        candidate_metrics = candidate_topology["component_topology_and_volume"][candidate_component_id]
+        if parent_metrics["euler_characteristic"] != candidate_metrics["euler_characteristic"]:
+            raise ValueError("edge-collapse changed a component Euler characteristic")
+        parent_component_vertices = set(map(
+            int, parent_faces[np.asarray(parent_components[parent_component_id], dtype=np.int64)].reshape(-1)
+        ))
+        changed_component = bool(parent_component_vertices & {removed, retained})
+        if changed_component and (parent_metrics["boundary_edge_count"]
+                                  or candidate_metrics["boundary_edge_count"]):
+            raise ValueError("edge-collapse operation is not confined to a closed parent component")
+        if changed_component and (parent_metrics["signed_volume_m3"] * candidate_metrics["signed_volume_m3"] <= 0):
+            raise ValueError("edge-collapse reversed or collapsed the signed volume of its source component")
+    for parent_face in star_faces:
+        if int(parent_face) in retired:
+            continue
+        out_face = parent_to_face[int(parent_face)]
+        old = parent_vertices6[parent_faces[parent_face], :3].astype(np.float64)
+        new = candidate_vertices6[candidate_faces[out_face], :3].astype(np.float64)
+        if float(np.dot(np.cross(old[1] - old[0], old[2] - old[0]),
+                        np.cross(new[1] - new[0], new[2] - new[0]))) <= 0:
+            raise ValueError("edge-collapse reverses a surviving face in the changed local star")
+    return {
+        "passed": True, "operation": "one authenticated local manifold edge collapse",
+        "parent_payload_sha256": hashlib.sha256(raw_payload).hexdigest(),
+        "parent_surface_sha256": parent_surface_sha,
+        "candidate_surface_sha256": _parent_surface_sha256(stable_id, candidate_vertices6, candidate_faces),
+        **map_hashes,
+        "edge_endpoint_parent_vertex_ids": [removed, retained],
+        "retired_parent_face_ids": list(retired),
+        "collapsed_candidate_vertex_id": int(collapsed),
+        "collapse_position_policy": policy, "collapse_position_f32_m": position.astype(float).tolist(),
+        "maximum_endpoint_displacement_m": endpoint_delta,
+        "maximum_endpoint_displacement_bound_m": float(endpoint_bound),
+        "maximum_surviving_edge_length_deviation_m": max_metric_delta,
+        "maximum_metric_deviation_bound_m": float(metric_bound),
+        "parent_topology": parent_topology, "candidate_topology": candidate_topology,
+        "signed_volume_delta_m3": candidate_topology["signed_volume_m3"] - parent_topology["signed_volume_m3"],
+        "source_face_ancestry_composition_checked": len(composed_faces),
+        "source_vertex_ancestry_composition_checked": len(composed_vertices),
+        "parent_source_subdivision_evidence": parent_subdivision_report,
+        "exact_source_and_world_self_intersection_rechecks_required": True,
+    }
+
+
 def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                                coordinate_quantization_m=None, source_lineage_lobes=None,
                                source_face_ancestry=None, source_vertex_ancestry=None,
                                allow_multi_parent_source_face_ancestry=(),
                                allow_source_face_subdivisions=None,
                                source_face_subdivision_patch_geometry=None,
-                               source_face_subdivision_parent_evidence=None):
+                               source_face_subdivision_parent_evidence=None,
+                               source_face_edge_collapse_parent_evidence=None):
     """Build the external union surface from five registered lobe meshes.
 
     `lobes` maps stable IDs 305..309 to `(vertices6, local_faces)` arrays.
@@ -694,7 +1096,11 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
     authenticated caller, unrelated candidate inventory changes are allowed
     while the omitted component must map to the same source faces, ordered
     source connectivity, and source vertex inventory. Any other detached
-    component fails.
+    component fails. The separate `source_face_edge_collapse_parent_evidence`
+    opt-in authenticates one local closed-surface edge collapse against its
+    exact immediate ABI5 parent and composes that parent lineage to the
+    original source maps. It does not relax the external-union, source/world
+    self-intersection, or anatomical-neighbor gates.
     """
     # The respiratory preparation receipt explicitly uses zero for the
     # unquantized alternative. It has the same source anchors as an omitted
@@ -776,8 +1182,6 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         if normalized_id not in LOBE_IDS or normalized_id in patch_geometry_by_row:
             raise ValueError("source-face subdivision patch geometry contains invalid or duplicate stable lobe IDs")
         patch_geometry_by_row[normalized_id] = evidence
-    if set(patch_geometry_by_row) != set(subdivision_sources_by_row):
-        raise ValueError("every source-face subdivision opt-in requires matching exact patch geometry evidence")
     raw_parent_evidence = ({} if source_face_subdivision_parent_evidence is None
                            else source_face_subdivision_parent_evidence)
     try:
@@ -801,6 +1205,46 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         raise ValueError("immediate subdivision parent evidence must cover exactly the subdivided lobe rows")
     if parent_evidence_by_row and not has_explicit_ancestry:
         raise ValueError("immediate subdivision parent evidence requires explicit source lineage ancestry")
+    raw_edge_collapse_evidence = ({} if source_face_edge_collapse_parent_evidence is None
+                                  else source_face_edge_collapse_parent_evidence)
+    try:
+        edge_collapse_items = list(raw_edge_collapse_evidence.items())
+    except (AttributeError, TypeError) as exc:
+        raise ValueError("source-face edge-collapse evidence must map stable lobe IDs to pinned parent lineage") from exc
+    edge_collapse_evidence_by_row = {}
+    for stable_id, evidence in edge_collapse_items:
+        if isinstance(stable_id, (bool, np.bool_)):
+            raise ValueError("source-face edge-collapse evidence rejects boolean stable lobe IDs")
+        if isinstance(stable_id, (int, np.integer)):
+            normalized_id = int(stable_id)
+        elif isinstance(stable_id, str) and stable_id.isdecimal() and str(int(stable_id)) == stable_id:
+            normalized_id = int(stable_id)
+        else:
+            raise ValueError("source-face edge-collapse evidence requires integer or canonical decimal stable lobe IDs")
+        if normalized_id not in LOBE_IDS or normalized_id in edge_collapse_evidence_by_row:
+            raise ValueError("source-face edge-collapse evidence contains invalid or duplicate stable lobe IDs")
+        edge_collapse_evidence_by_row[normalized_id] = evidence
+    if edge_collapse_evidence_by_row and not has_explicit_ancestry:
+        raise ValueError("source-face edge-collapse evidence requires explicit source lineage ancestry")
+    if edge_collapse_evidence_by_row and source_lineage_lobes is None:
+        raise ValueError("source-face edge-collapse evidence requires authenticated source lineage rows")
+    if set(edge_collapse_evidence_by_row) & set(parent_evidence_by_row):
+        raise ValueError("one candidate row cannot reuse subdivision and edge-collapse immediate-parent evidence")
+    if source_lineage_lobes is not None:
+        for stable_id, evidence in edge_collapse_evidence_by_row.items():
+            source_faces = np.asarray(source_lineage_lobes[stable_id][1])
+            if source_faces.dtype.kind not in "iu" or source_faces.ndim != 2 or source_faces.shape[1] != 3:
+                raise ValueError(f"edge-collapse source lineage faces are malformed for row {stable_id}")
+            repeated = _edge_collapse_repeated_source_face_ids(
+                stable_id, evidence, len(source_faces),
+            )
+            if repeated:
+                declared = subdivision_sources_by_row.get(stable_id)
+                if declared is not None and tuple(sorted(declared)) != repeated:
+                    raise ValueError("edge-collapse parent repeated source faces differ from the declared source subdivision")
+                subdivision_sources_by_row[stable_id] = repeated
+    if set(patch_geometry_by_row) != set(subdivision_sources_by_row):
+        raise ValueError("every source-face subdivision opt-in requires matching exact patch geometry evidence")
     if has_explicit_ancestry and source_lineage_lobes is None:
         raise ValueError("explicit source pleura ancestry requires authenticated source lineage rows")
     if has_explicit_ancestry:
@@ -840,6 +1284,7 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         vertex_ancestry_digest = hashlib.sha256()
         multi_parent_face_counts = {}
         subdivision_patch_reports = {}
+        edge_collapse_reports = {}
         for stable_id in LOBE_IDS:
             candidate_vertices6, candidate_faces = lobes[stable_id]
             source_vertices6, source_faces = source_lineage_lobes[stable_id]
@@ -849,6 +1294,12 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                     candidate_faces.dtype.kind not in "iu"
                     or source_faces.dtype.kind not in "iu"):
                 raise ValueError(f"explicit source pleura lineage requires integer candidate and source face indices for row {stable_id}")
+            if stable_id in edge_collapse_evidence_by_row:
+                raw_candidate_vertices6 = np.asarray(candidate_vertices6)
+                raw_source_vertices6 = np.asarray(source_vertices6)
+                if (raw_candidate_vertices6.dtype.kind != "f" or raw_candidate_vertices6.dtype.itemsize != 4
+                        or raw_source_vertices6.dtype.kind != "f" or raw_source_vertices6.dtype.itemsize != 4):
+                    raise ValueError(f"edge-collapse candidate and source rows must preserve ABI5 Float32 vertex arrays for row {stable_id}")
             candidate_vertices6 = np.asarray(candidate_vertices6, dtype=np.float32)
             candidate_faces = candidate_faces.astype(np.int64, copy=False)
             source_vertices6 = np.asarray(source_vertices6, dtype=np.float32)
@@ -889,6 +1340,12 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                             or len(np.unique(values)) != len(values)):
                         raise ValueError(f"source vertex ancestry is invalid for output vertex {output_vertex} in row {stable_id}")
                     vertex_map.append(tuple(map(int, values)))
+                if stable_id in edge_collapse_evidence_by_row:
+                    edge_collapse_reports[stable_id] = _validate_source_face_edge_collapse_parent_chain(
+                        stable_id, candidate_faces, candidate_vertices6,
+                        face_map, vertex_map, len(source_faces), len(source_vertices6),
+                        edge_collapse_evidence_by_row[stable_id],
+                    )
                 if stable_id in subdivision_sources_by_row:
                     if stable_id in parent_evidence_by_row:
                         parent_chain = _validate_source_face_subdivision_parent_chain(
@@ -975,6 +1432,7 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 for stable_id, source_ids in subdivision_sources_by_row.items()
             },
             "source_face_subdivision_patch_reports": subdivision_patch_reports,
+            "source_face_edge_collapse_reports": edge_collapse_reports,
             "explicit_ancestry": has_explicit_ancestry,
             "face_ancestry_sha256": face_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
             "vertex_ancestry_sha256": vertex_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
@@ -1288,6 +1746,11 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         "parietal_pleura_included": False,
         "pleural_fluid_or_mechanics": False,
     }
+    if lineage is not None and lineage["source_face_edge_collapse_reports"]:
+        detail["source_face_edge_collapse_reports_by_stable_id"] = {
+            str(stable_id): report
+            for stable_id, report in sorted(lineage["source_face_edge_collapse_reports"].items())
+        }
     return vertices6, faces, detail
 
 

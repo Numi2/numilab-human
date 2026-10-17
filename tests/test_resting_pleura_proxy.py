@@ -1,5 +1,6 @@
 import copy
 import hashlib
+from fractions import Fraction
 import json
 import unittest
 from unittest.mock import patch
@@ -386,6 +387,183 @@ class RestingPleuraProxyTests(unittest.TestCase):
             derive_lung_union_exterior(lobes)
 
 
+
+
+    def test_owner_authenticates_subdivided_parent_then_local_edge_collapse(self):
+        # Affinely transformed octahedron: face [4, 0, 2] matches the left-lung
+        # reciprocal face, and a separate detached source fragment is preserved.
+        lobes = self._two_lung_fixture()
+        xyz = np.asarray([
+            [1, 0, 0], [-1, 0, -1], [0, 1, 0], [0, -1, -1],
+            [0, 0, 0], [0, 0, -1],
+        ], dtype=np.float32)
+        octa_faces = np.asarray([
+            [4, 0, 2], [4, 2, 1], [4, 1, 3], [4, 3, 0],
+            [5, 2, 0], [5, 1, 2], [5, 3, 1], [5, 0, 3],
+        ], dtype=np.int64)
+        lobes[305] = (np.column_stack((xyz, np.zeros_like(xyz))).astype(np.float32), octa_faces)
+        source, _, _ = self._append_source_microfragment(lobes)
+        source_vertices6, source_faces = source[305]
+
+        # Parent row first subdivides a non-interface source face exactly.
+        source_patch_face = 1
+        center = source_vertices6[source_faces[source_patch_face], :3].astype(np.float64).mean(axis=0).astype(np.float32)
+        parent_vertices6 = np.vstack((source_vertices6, np.r_[center, np.zeros(3, dtype=np.float32)]))
+        parent_faces = np.vstack((
+            source_faces[:source_patch_face],
+            np.asarray([[4, 2, 10], [2, 1, 10], [1, 4, 10]], dtype=np.int64),
+            source_faces[source_patch_face + 1:],
+        ))
+        parent_face_to_source = ([(i,) for i in range(source_patch_face)]
+                                 + [(source_patch_face,)] * 3
+                                 + [(i,) for i in range(source_patch_face + 1, len(source_faces))])
+        parent_vertex_to_source = [(i,) for i in range(len(source_vertices6))] + [(1, 2, 4)]
+
+        # Then collapse edge (3, 5), away from both the shared lobe face and
+        # the registered detached microfragment.
+        removed, retained = 3, 5
+        retired = tuple(map(int, np.flatnonzero(
+            np.sum(np.isin(parent_faces, (removed, retained)), axis=1) == 2)))
+        old_to_new = {}
+        candidate_vertices6 = []
+        candidate_vertex_to_parent = []
+        for parent_id, vertex in enumerate(parent_vertices6):
+            if parent_id == removed:
+                continue
+            output_id = len(candidate_vertices6)
+            old_to_new[parent_id] = output_id
+            if parent_id == retained:
+                collapsed_xyz = ((parent_vertices6[removed, :3].astype(np.float64)
+                                  + parent_vertices6[retained, :3].astype(np.float64)) * 0.5).astype(np.float32)
+                candidate_vertices6.append(np.r_[collapsed_xyz, parent_vertices6[parent_id, 3:]])
+                candidate_vertex_to_parent.append((removed, retained))
+            else:
+                candidate_vertices6.append(vertex.copy())
+                candidate_vertex_to_parent.append((parent_id,))
+        old_to_new[removed] = old_to_new[retained]
+        candidate_faces = []
+        candidate_face_to_parent = []
+        for parent_face_id, face in enumerate(parent_faces):
+            if parent_face_id in retired:
+                continue
+            candidate_faces.append([old_to_new[int(vertex)] for vertex in face])
+            candidate_face_to_parent.append((parent_face_id,))
+        candidate_vertices6 = np.asarray(candidate_vertices6, dtype=np.float32)
+        candidate_faces = np.asarray(candidate_faces, dtype=np.int64)
+
+        candidate_lobes = self._copy_lobes(source)
+        candidate_lobes[305] = (candidate_vertices6, candidate_faces)
+        candidate_face_maps = {}
+        candidate_vertex_maps = {}
+        for stable_id in (305, 306, 307, 308, 309):
+            if stable_id == 305:
+                candidate_face_maps[stable_id] = [
+                    tuple(sorted({source_id for parent_id in row for source_id in parent_face_to_source[parent_id]}))
+                    for row in candidate_face_to_parent
+                ]
+                candidate_vertex_maps[stable_id] = [
+                    tuple(sorted({source_id for parent_id in row for source_id in parent_vertex_to_source[parent_id]}))
+                    for row in candidate_vertex_to_parent
+                ]
+            else:
+                candidate_face_maps[stable_id] = [(i,) for i in range(len(source[stable_id][1]))]
+                candidate_vertex_maps[stable_id] = [(i,) for i in range(len(source[stable_id][0]))]
+
+        def payload_for(vertices6, faces):
+            return anatomy.encode_payload(
+                (b"NHANAT1\0", 5, 1, len(vertices6), faces.size, 0, bytes(32)),
+                {305: {"body_index": 20, "layer": 8, "flags": 0,
+                       "vertices6": vertices6, "faces": faces}},
+            )
+
+        def map_hash(rows, kind):
+            return pleura._lineage_map_sha256(305, rows, kind=kind)
+
+        identity_faces = [(i,) for i in range(len(source_faces))]
+        identity_vertices = [(i,) for i in range(len(source_vertices6))]
+        nested_payload = payload_for(source_vertices6, source_faces)
+        nested_evidence = {
+            "parent_vertices6": source_vertices6,
+            "parent_faces": source_faces,
+            "parent_payload_bytes": nested_payload,
+            "parent_payload_sha256": hashlib.sha256(nested_payload).hexdigest(),
+            "parent_surface_sha256": pleura._parent_surface_sha256(305, source_vertices6, source_faces),
+            "candidate_face_ancestry": parent_face_to_source,
+            "candidate_vertex_ancestry": parent_vertex_to_source,
+            "parent_face_ancestry": identity_faces,
+            "parent_vertex_ancestry": identity_vertices,
+            "immediate_subdivision_face_ids": (source_patch_face,),
+        }
+        nested_evidence.update({
+            "candidate_face_ancestry_sha256": map_hash(parent_face_to_source, "candidate-face-to-parent-face"),
+            "candidate_vertex_ancestry_sha256": map_hash(parent_vertex_to_source, "candidate-vertex-to-parent-vertex"),
+            "parent_face_ancestry_sha256": map_hash(identity_faces, "parent-face-to-source-face"),
+            "parent_vertex_ancestry_sha256": map_hash(identity_vertices, "parent-vertex-to-source-vertex"),
+        })
+        lattice_scale = 1 << 149
+
+        def exact_patch_geometry(vertices6):
+            numerators = np.asarray([
+                [str(int(Fraction.from_float(float(value)) * lattice_scale))
+                 for value in point]
+                for point in vertices6[:, :3]
+            ], dtype="U256")
+            return {
+                "support_source_face_ids": (source_patch_face,),
+                "raw_vertex_lattice_numerators": numerators,
+                "raw_vertex_lattice_denominators": np.ones(numerators.shape, dtype=np.int64),
+                "lattice_scale": lattice_scale,
+            }
+
+        parent_payload = payload_for(parent_vertices6, parent_faces)
+        edge_evidence = {
+            "parent_vertices6": parent_vertices6,
+            "parent_faces": parent_faces,
+            "parent_payload_bytes": parent_payload,
+            "parent_payload_sha256": hashlib.sha256(parent_payload).hexdigest(),
+            "parent_surface_sha256": pleura._parent_surface_sha256(305, parent_vertices6, parent_faces),
+            "candidate_face_ancestry": candidate_face_to_parent,
+            "candidate_vertex_ancestry": candidate_vertex_to_parent,
+            "parent_face_ancestry": parent_face_to_source,
+            "parent_vertex_ancestry": parent_vertex_to_source,
+            "edge_endpoint_parent_vertex_ids": (removed, retained),
+            "retired_parent_face_ids": retired,
+            "retained_position_policy": "midpoint",
+            "collapse_position_f32_m": candidate_vertices6[
+                next(i for i, row in enumerate(candidate_vertex_to_parent) if row == (removed, retained)), :3
+            ].copy(),
+            "maximum_endpoint_displacement_bound_m": 0.6,
+            "maximum_metric_deviation_bound_m": 1.0,
+            "parent_source_subdivision_evidence": {
+                "subdivided_source_face_ids": (source_patch_face,),
+                "source_patch_support_face_ids": (source_patch_face,),
+                "patch_geometry": exact_patch_geometry(parent_vertices6),
+                "subdivision_parent_evidence": nested_evidence,
+            },
+        }
+        for field, rows, kind in (
+            ("candidate_face_ancestry_sha256", candidate_face_to_parent, "candidate-face-to-parent-face"),
+            ("candidate_vertex_ancestry_sha256", candidate_vertex_to_parent, "candidate-vertex-to-parent-vertex"),
+            ("parent_face_ancestry_sha256", parent_face_to_source, "parent-face-to-source-face"),
+            ("parent_vertex_ancestry_sha256", parent_vertex_to_source, "parent-vertex-to-source-vertex"),
+        ):
+            edge_evidence[field] = map_hash(rows, kind)
+
+        _, _, detail = pleura.derive_lung_union_exterior(
+            candidate_lobes,
+            source_lineage_lobes=source,
+            source_face_ancestry=candidate_face_maps,
+            source_vertex_ancestry=candidate_vertex_maps,
+            allow_source_face_subdivisions={305: (source_patch_face,)},
+            source_face_subdivision_patch_geometry={305: exact_patch_geometry(candidate_vertices6)},
+            source_face_edge_collapse_parent_evidence={305: edge_evidence},
+        )
+        collapse_report = detail["source_face_edge_collapse_reports_by_stable_id"]["305"]
+        self.assertTrue(collapse_report["passed"])
+        self.assertTrue(collapse_report["parent_source_subdivision_evidence"][
+            "parent_exact_subdivision_patch_geometry"]["exact_raw_and_float32_patch_boundary_conserved"])
+        self.assertTrue(collapse_report["exact_source_and_world_self_intersection_rechecks_required"])
+        self.assertEqual(len(detail["components"]), 2)
 
 
 class ImmediateSubdivisionParentTests(unittest.TestCase):
