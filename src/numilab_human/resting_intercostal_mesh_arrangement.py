@@ -2313,6 +2313,135 @@ def compose_intercostal_arrangement_row(
 
 
 
+
+def compose_local_reconstruction_component_patch(
+    parent: dict,
+    patch: dict,
+    *,
+    stable_id: int,
+    replaced_parent_face_ids,
+    patch_parent_face_ids,
+) -> tuple[dict, dict]:
+    """Insert a local repair into a complete row without losing its other components.
+
+    This only composes exact Float32 arrays and explicit parent-face ancestry.
+    The caller must still authenticate the source, rest transform, attachments,
+    closed solids, nearby structures, and native motion through existing gates.
+    Original allocation slots remain present, including unused source slots.
+    """
+    _require(type(stable_id) is int and stable_id in (313, 315, 317),
+             "component patch has an unsupported typed intercostal identity")
+
+    def geometry(value, label):
+        _require(isinstance(value, dict), f"{label} geometry is not an object")
+        p = np.asarray(value.get("positions_source_local_f32"))
+        w = np.asarray(value.get("positions_world_f32"))
+        f = np.asarray(value.get("faces"))
+        _require(
+            p.dtype == w.dtype == np.dtype("<f4")
+            and p.ndim == 2 and p.shape[1] == 3 and p.shape == w.shape
+            and len(p) > 0 and np.isfinite(p).all() and np.isfinite(w).all(),
+            f"{label} positions are not finite paired Float32 arrays",
+        )
+        _require(
+            f.dtype == np.dtype("<u4") and f.ndim == 2 and f.shape[1] == 3
+            and len(f) > 0 and int(f.max()) < len(p),
+            f"{label} faces are not valid uint32 triangles",
+        )
+        for positions in (p, w):
+            triangles = positions[f].astype(np.float64)
+            cross = np.cross(triangles[:, 1] - triangles[:, 0],
+                             triangles[:, 2] - triangles[:, 0])
+            _require(np.any(cross != 0, axis=1).all(),
+                     f"{label} has a degenerate emitted triangle")
+        return (np.ascontiguousarray(p), np.ascontiguousarray(w),
+                np.ascontiguousarray(f))
+
+    p, w, faces = geometry(parent, "complete parent")
+    pp, pw, pf = geometry(patch, "local patch")
+    raw_ids = list(replaced_parent_face_ids)
+    _require(raw_ids and all(
+        isinstance(value, (int, np.integer)) and not isinstance(value, (bool, np.bool_))
+        and 0 <= int(value) < len(faces) for value in raw_ids),
+        "replaced parent face slots are malformed or out of range")
+    selected = {int(value) for value in raw_ids}
+    _require(len(selected) == len(raw_ids), "replaced parent face slots repeat")
+    raw_parents = list(patch_parent_face_ids)
+    _require(len(raw_parents) == len(pf), "local patch ancestry does not cover every face")
+    patch_parents = []
+    for row in raw_parents:
+        values = list(row)
+        _require(values and all(
+            isinstance(value, (int, np.integer))
+            and not isinstance(value, (bool, np.bool_))
+            and int(value) in selected for value in values),
+            "local patch ancestry leaves the replaced parent region")
+        patch_parents.append(sorted({int(value) for value in values}))
+
+    lookup = {}
+    for slot, (local, world) in enumerate(zip(p, w, strict=True)):
+        key = local.tobytes()
+        if key in lookup:
+            _require(w[lookup[key]].tobytes() == world.tobytes(),
+                     "parent aliases disagree in the world frame")
+        else:
+            lookup[key] = slot
+    out_p = [value.copy() for value in p]
+    out_w = [value.copy() for value in w]
+    patch_slots = []
+    for local, world in zip(pp, pw, strict=True):
+        key = local.tobytes()
+        slot = lookup.get(key)
+        if slot is None:
+            slot = len(out_p)
+            lookup[key] = slot
+            out_p.append(local.copy())
+            out_w.append(world.copy())
+        else:
+            _require(out_w[slot].tobytes() == world.tobytes(),
+                     "patch source-coordinate alias disagrees in the world frame")
+        patch_slots.append(slot)
+    _require(len(out_p) <= np.iinfo(np.uint32).max,
+             "composed component allocation exceeds ABI5 uint32 capacity")
+    patch_slots = np.asarray(patch_slots, dtype="<u4")
+    retained = np.asarray(
+        [i for i in range(len(faces)) if i not in selected], dtype="<u4")
+    emitted_faces = np.concatenate((faces[retained], patch_slots[pf]), axis=0)
+    parents = [[int(i)] for i in retained] + patch_parents
+    offsets = np.zeros(len(parents) + 1, dtype="<u8")
+    for i, row in enumerate(parents):
+        offsets[i + 1] = offsets[i] + len(row)
+    flat = np.asarray([i for row in parents for i in row], dtype="<u4")
+    result = {
+        "positions_source_local_f32": np.asarray(out_p, dtype="<f4"),
+        "positions_world_f32": np.asarray(out_w, dtype="<f4"),
+        "faces": np.ascontiguousarray(emitted_faces, dtype="<u4"),
+        "face_parent_offsets_u64": offsets,
+        "face_parent_ids_u32": flat,
+        "retained_parent_face_ids_u32": retained,
+        "replaced_parent_face_ids_u32": np.asarray(sorted(selected), dtype="<u4"),
+        "patch_to_output_vertex_slots_u32": patch_slots,
+        "inferred_or_reconstructed_face_mask": np.concatenate((
+            np.zeros(len(retained), dtype=bool), np.ones(len(pf), dtype=bool))),
+    }
+    geometry(result, "composed row")
+    return result, {
+        "stable_id": stable_id,
+        "status": "COMPOSED_COMPLETE_ROW_UNVERIFIED_GEOMETRY",
+        "parent_allocated_vertex_count": len(p),
+        "candidate_allocated_vertex_count": len(result["positions_source_local_f32"]),
+        "parent_face_count": len(faces),
+        "retained_parent_face_count": len(retained),
+        "replaced_parent_face_count": len(selected),
+        "patch_face_count": len(pf),
+        "candidate_face_count": len(emitted_faces),
+        "original_allocations_preserved": True,
+        "untouched_faces_preserved_in_parent_order": True,
+        "anatomical_admission": False,
+        "native_admission": False,
+        "attachment_map_admission": False,
+    }
+
 LOCAL_RECONSTRUCTION_ANCESTRY_SCHEMA = (
     "numi.human.intercostal-local-reconstruction-parent-face-owners.v1"
 )
