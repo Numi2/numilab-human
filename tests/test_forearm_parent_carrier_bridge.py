@@ -759,6 +759,60 @@ def test_file_backed_lane_subset_authenticates_candidate_terms_and_emits_only_se
     assert proof["vertex_count"] == 1
     assert proof["not_native_capture"] and proof["not_anatomy_admission"]
 
+    # The child's registered-rest coordinates can differ from the exact
+    # full21 parent-carrier source points. Keep that distinction explicit.
+    parent_source_points = np.asarray(points[::21], dtype="<f4")
+    parent_carrier_points = np.asarray(
+        parent_source_points + np.asarray([0.01, 0.0, 0.0], dtype="<f4"), dtype="<f4")
+    shifted_parent = bytearray(parent_bytes)
+    for source_group in range(len(parent_source_points)):
+        for lane in range(21):
+            offset = parent_row["vertex_offset"] + (source_group * 21 + lane) * 56
+            struct.pack_into("<3f", shifted_parent, offset,
+                             *parent_carrier_points[source_group].tolist())
+    parent_carrier_bytes = bytes(shifted_parent)
+    parent_carrier_path = tmp_path / "candidate-parent-carrier-frame.nhtissue"
+    extension_carrier_path = tmp_path / "candidate-parent-carrier-frame.json"
+    parent_carrier_path.write_bytes(parent_carrier_bytes)
+    extension_carrier_path.write_text(json.dumps({
+        "child_payload_sha256": hashlib.sha256(child_bytes).hexdigest(),
+        "source_payloads": [{
+            "path": str(parent_carrier_path.resolve()),
+            "sha256": hashlib.sha256(parent_carrier_bytes).hexdigest(),
+        }],
+        "surfaces": [{"stable_id": 132, "vertices": terms}],
+    }, sort_keys=True))
+    carrier_lanes, carrier_proof = build_authenticated_full21_lane_world_subset(
+        source_payload_path=child_path,
+        parent_extension_path=extension_carrier_path,
+        parent_payload_path=parent_carrier_path,
+        accepted_step_receipt_path=receipt_path,
+        stable_id=132,
+        source_slots_i64=np.asarray([1], dtype="<i8"),
+        canonical_gids_u64=np.asarray([987654], dtype="<u8"),
+        source_points_float32=parent_carrier_points[0:1].copy(),
+        core_weights_float64=weights[1:2].copy(),
+        expected_ordered_core_body_indices=core_ids,
+        source_point_basis="full21_parent_carrier",
+    )
+    assert np.array_equal(
+        carrier_lanes[0], np.repeat(parent_carrier_points[0:1], 21, axis=0))
+    assert carrier_proof["source_point_basis"] == "full21_parent_carrier"
+    assert carrier_proof["source_points_equal_child_payload_positions"] is False
+    with pytest.raises(ValueError, match="selected source points differ from exact candidate child row"):
+        build_authenticated_full21_lane_world_subset(
+            source_payload_path=child_path,
+            parent_extension_path=extension_carrier_path,
+            parent_payload_path=parent_carrier_path,
+            accepted_step_receipt_path=receipt_path,
+            stable_id=132,
+            source_slots_i64=np.asarray([1], dtype="<i8"),
+            canonical_gids_u64=np.asarray([987654], dtype="<u8"),
+            source_points_float32=parent_carrier_points[0:1].copy(),
+            core_weights_float64=weights[1:2].copy(),
+            expected_ordered_core_body_indices=core_ids,
+        )
+
     # Re-reading the NHTISS owners and replaying transforms must not admit a
     # file which changed after the initial hash/read.
     extension_bytes = extension_path.read_bytes()
@@ -805,3 +859,41 @@ def test_file_backed_lane_subset_authenticates_candidate_terms_and_emits_only_se
             expected_ordered_core_body_indices=core_ids,
         )
 
+
+
+def test_mixed_candidate_face_lineage_requires_exact_slot_gid_crosswalk():
+    import hashlib
+    from tools.build_forearm_mixed_candidate import build_face_lineage
+
+    source_faces = np.asarray([[0, 1, 2], [1, 2, 3]], dtype="<u4")
+    gids_by_slot = {0: 500, 1: 501, 2: 502, 3: 503}
+    support_hash = hashlib.sha256(np.asarray([0, 1], dtype="<u8").tobytes()).hexdigest()
+    generated = [{
+        "typed_identity": [51005, 134],
+        "parent_nhtiss_sha256": "a" * 64,
+        "inferred_local_retriangulation": True,
+        "support_source_face_ordinals": [0, 1],
+        "support_face_ordinal_sha256": support_hash,
+        "component": "fixture-component",
+        "new_face_corner_gids": [[500, 501, 503]],
+    }]
+    lineage, counts = build_face_lineage(
+        stable_id=134, source_path="fixture.nhtiss", source_sha="a" * 64,
+        original_source_faces=source_faces,
+        candidate_face_source_slots=np.asarray([[0, 1, 2], [0, 1, 3]], dtype="<u4"),
+        candidate_face_gids=np.asarray([[500, 501, 502], [500, 501, 503]], dtype="<u8"),
+        generated_records=generated, gids_by_source_slot=gids_by_slot,
+    )
+    assert counts["complete_candidate_face_coverage"] is True
+    assert counts["direct_exact_source_face_count"] == 1
+    assert counts["inferred_retriangulated_face_count"] == 1
+    assert len(lineage) == 2
+
+    with pytest.raises(ValueError, match="GIDs do not match authenticated source-slot crosswalk"):
+        build_face_lineage(
+            stable_id=134, source_path="fixture.nhtiss", source_sha="a" * 64,
+            original_source_faces=source_faces,
+            candidate_face_source_slots=np.asarray([[0, 1, 2]], dtype="<u4"),
+            candidate_face_gids=np.asarray([[500, 501, 999]], dtype="<u8"),
+            generated_records=[], gids_by_source_slot=gids_by_slot,
+        )

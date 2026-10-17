@@ -1186,7 +1186,7 @@ def build_authenticated_full21_lane_world_subset(
     *, source_payload_path, parent_extension_path, parent_payload_path,
     accepted_step_receipt_path, stable_id, source_slots_i64,
     canonical_gids_u64, source_points_float32, core_weights_float64,
-    expected_ordered_core_body_indices=None,
+    expected_ordered_core_body_indices=None, source_point_basis="child_payload",
 ):
     """Read exact source/parent/receipt bytes and emit selected full21 lane worlds.
 
@@ -1259,8 +1259,16 @@ def build_authenticated_full21_lane_world_subset(
              and np.max(np.abs(weights.sum(axis=1) - 1.0)) <= 1e-12,
              "selected material weights must be positive normalized Float64 full21")
     child_points = np.asarray(child_row["positions"], dtype="<f4")[slots, :3]
-    _require(child_points.tobytes() == points.tobytes(),
-             "selected source points differ from exact candidate child row")
+    _require(source_point_basis in ("child_payload", "full21_parent_carrier"),
+             "source point basis must be explicitly child_payload or full21_parent_carrier")
+    child_points_equal = child_points.tobytes() == points.tobytes()
+    if source_point_basis == "child_payload":
+        _require(child_points_equal,
+                 "selected source points differ from exact candidate child row")
+    # Registered child coordinates and the independently owned full21 parent
+    # source points may live in distinct rest frames. In that mode the supplied
+    # points are still authenticated below against all 21 exact parent terms;
+    # do not compare them to child-local XYZ.
 
     surface_matches = [surface for surface in extension.get("surfaces", [])
                        if isinstance(surface, dict)
@@ -1356,6 +1364,8 @@ def build_authenticated_full21_lane_world_subset(
         "source_slots_sha256": hashlib.sha256(slots.tobytes()).hexdigest(),
         "canonical_gids_sha256": hashlib.sha256(gids.tobytes()).hexdigest(),
         "source_points_sha256": hashlib.sha256(points.tobytes()).hexdigest(),
+        "source_point_basis": source_point_basis,
+        "source_points_equal_child_payload_positions": child_points_equal,
         "weights_sha256": hashlib.sha256(weights.tobytes()).hexdigest(),
         "lane_world_points_sha256": hashlib.sha256(lane_world.tobytes()).hexdigest(),
         "ordered_core_body_indices": list(body_indices),
