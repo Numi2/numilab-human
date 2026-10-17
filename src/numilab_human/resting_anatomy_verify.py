@@ -242,6 +242,7 @@ class PreparedSurface:
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
     _meter_component_indices: tuple | None = field(default=None, repr=False)
+    _meter_face_chunks: tuple | None = field(default=None, repr=False)
     _face_records: dict | None = field(default=None, repr=False)
     _vertex_indices: dict | None = field(default=None, repr=False)
 
@@ -357,7 +358,8 @@ class PreparedSurface:
         A larger surface may contain many individually closed components. Their
         inside parities combine by XOR, including nested cavity boundaries.
         Boundary on any component remains boundary. No component is truncated,
-        and an oversized individual component still fails closed. Finite binary
+        and an oversized individual component uses bounded face chunks sharing
+        one exact ray across every chunk. Finite binary
         Float32/Float64 query coordinates are converted to exact metre Fractions
         without rounding or changing the predicate's bounds.
         """
@@ -386,13 +388,34 @@ class PreparedSurface:
             return ci.point_location_prepared_indexed(point, self.meter_index())
         if not self.closed or self.self_audit()["count"]:
             raise ValueError("containment requires a closed embedded target")
+        if self._meter_face_chunks is not None:
+            result = ci.point_location_prepared_indexed_chunks(point, self._meter_face_chunks)
+            return {**result, "method": "exact_shared_ray_face_chunks",
+                    "chunk_count": len(self._meter_face_chunks)}
         if self._meter_component_indices is None:
             components = self.quotient_topology["face_components"]
             coverage = [int(fid) for component in components for fid in component]
             if sorted(coverage) != list(range(len(self.quotient_faces))):
                 raise ValueError("point-location components do not partition every target face")
-            if any(not component or len(component) > face_limit for component in components):
-                raise ValueError("individual closed component exceeds bounded point-location face count")
+            if any(not component for component in components):
+                raise ValueError("point-location has an empty closed component")
+            if any(len(component) > face_limit for component in components):
+                chunk_count = (len(self.quotient_faces) + face_limit - 1) // face_limit
+                if chunk_count > ci.MAX_POINT_LOCATION_CHUNKS:
+                    raise ValueError("surface exceeds bounded point-location chunk count")
+                if self._meter_face_chunks is None:
+                    chunks = []
+                    for start in range(0, len(self.quotient_faces), face_limit):
+                        faces = self.quotient_faces[start:start + face_limit]
+                        used, inverse = np.unique(faces, return_inverse=True)
+                        chunks.append(ci.prepare_float32_point_location_meters(
+                            self.quotient_positions[used].tolist(),
+                            inverse.reshape(-1, 3).tolist()))
+                    self._meter_face_chunks = tuple(chunks)
+                result = ci.point_location_prepared_indexed_chunks(
+                    point, self._meter_face_chunks)
+                return {**result, "method": "exact_shared_ray_face_chunks",
+                        "chunk_count": len(self._meter_face_chunks)}
             snapshots = []
             for component in components:
                 faces = self.quotient_faces[np.asarray(component, dtype=np.int64)]

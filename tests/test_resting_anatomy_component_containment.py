@@ -42,12 +42,29 @@ def test_component_queries_match_complete_exact_index_including_nested_voids(nes
     assert sum(len(part.records) for part, _lo, _hi in surface._meter_component_indices) == 8
 
 
-def test_individual_oversized_component_is_rejected_without_truncation():
-    surface = target()
+@pytest.mark.parametrize("nested", [False, True])
+def test_oversized_component_uses_complete_shared_ray_chunks(nested):
+    surface = target(nested=nested)
+    full = surface.meter_index()
+    points = [(Fraction(1,4),)*3, (Fraction(5,8),)*3,
+              (Fraction(-1),)*3, (Fraction(6),)*3, (Fraction(0),)*3]
     with patch.object(av, "_POINT_LOCATION_COMPONENT_FACE_LIMIT", 3):
-        with pytest.raises(ValueError, match="individual closed component"):
-            surface.point_location_meters((Fraction(1, 4),) * 3)
+        for point in points:
+            actual = surface.point_location_meters(point)
+            expected = ci.point_location_prepared_indexed(point, full)
+            assert {k:actual[k] for k in expected} == expected
+            assert actual["method"] == "exact_shared_ray_face_chunks"
     assert surface._meter_component_indices is None
+    assert sum(len(part.records) for part in surface._meter_face_chunks) == 8
+    assert all(len(part.records) <= 3 for part in surface._meter_face_chunks)
+
+
+def test_chunk_capacity_still_fails_without_truncation():
+    surface = target()
+    with patch.object(av, "_POINT_LOCATION_COMPONENT_FACE_LIMIT", 1), patch.object(ci, "MAX_POINT_LOCATION_CHUNKS", 2):
+        with pytest.raises(ValueError, match="chunk count"):
+            surface.point_location_meters((Fraction(1,4),)*3)
+    assert surface._meter_face_chunks is None
 
 
 def test_component_containment_keeps_enclosed_solid_failure():
@@ -61,7 +78,7 @@ def test_component_containment_keeps_enclosed_solid_failure():
     assert any(row["inside_component_witnesses"] for row in report["containment"])
 
 
-@pytest.mark.parametrize("face_limit", [4, ci.MAX_PREPARED_POINT_LOCATION_FACES])
+@pytest.mark.parametrize("face_limit", [3, 4, ci.MAX_PREPARED_POINT_LOCATION_FACES])
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
 @pytest.mark.parametrize("direction,expected", [
     (0, "boundary"), (-1, "inside"), (1, "outside"),

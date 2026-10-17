@@ -19,6 +19,31 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Complete-target bounded containment — 2026-10-17
+
+The actual forearm all-neighbor audit reached a fail-closed capacity limit for
+[51010,23]: one closed component exceeds 262,144 prepared faces. This is an
+unevaluated containment query, separate from its reported geometric crossings.
+The existing predicate now supports at most 64 snapshots, each retaining its
+262,144-face bound. Every snapshot uses the same ray at each of the 64 exact
+retry attempts; boundary or ambiguity in any snapshot governs the whole query.
+No face truncation, increased per-index limit, or independently selected open-
+patch parity is permitted.
+
+The existing anatomy verifier applies this path only after complete closed and
+self-clear target checks and complete face-component coverage. It partitions
+all faces and caches the snapshots. Smaller closed components retain the
+existing component-parity path. Geometry, material state and native dynamics
+are unchanged. Target-specific and full native admission remain unverified.
+
+On SSH Numi, focused predicate, containment and verifier regressions pass. The
+adversarial regression proves that independently selected rays on four open
+face chunks incorrectly classify an outside point as inside; the shared-ray
+query matches the complete exact index, including retry and crossing counts.
+Tests also cover arbitrary face partitions, nested voids, exact boundary
+neighbors, snapshot bounds and invalid queries. The source-asset regression
+remains a separate serialized execution.
+
 ## Joint coplanar and transverse repair owner — 2026-10-17
 
 The existing offline positive-winding owner now has an explicit

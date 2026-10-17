@@ -735,72 +735,88 @@ def prepare_point_location(records):
 
 
 def point_location_prepared_indexed(point, prepared):
-    """Classify exactly using AABB candidates and normalized triangle arithmetic.
-
-    The AABB test is inclusive for boundary candidates. Forward-ray candidates
-    are conservative because every deterministic ray component is positive.
-    All final plane and triangle-side tests use the same exact normalized
-    predicates as point_location_prepared.
-    """
+    """Classify exactly through the existing bounded AABB predicate snapshot."""
     require(isinstance(prepared, PreparedPointLocation),
             "indexed point-location requires a PreparedPointLocation snapshot")
+    return point_location_prepared_indexed_chunks(point, (prepared,))
+
+
+MAX_POINT_LOCATION_CHUNKS = 64
+
+
+def point_location_prepared_indexed_chunks(point, prepared_chunks):
+    """Classify one surface partition with a common exact ray across chunks.
+
+    Each snapshot retains its existing face bound. Chunks need not be closed,
+    so their independently chosen ray parities must never be combined. Every
+    retry instead uses the same deterministic ray for every chunk, and accepts
+    only when every chunk resolves that ray. Closure, complete face coverage
+    and embeddedness remain the caller's separate solid prerequisites.
+    """
+    require(isinstance(prepared_chunks, (list, tuple)) and
+            0 < len(prepared_chunks) <= MAX_POINT_LOCATION_CHUNKS and
+            all(isinstance(item, PreparedPointLocation) for item in prepared_chunks),
+            "chunked point-location requires bounded prepared snapshots")
     point = _exact_rational_xyz(point, "indexed point-location query")
-    boundary_indices, _ = _point_aabb_candidate_indices(
-        point, prepared, include_forward=False)
-    local_cache = {}
+    contexts = [(prepared, {}) for prepared in prepared_chunks]
 
-    def local_query(index):
-        if index not in local_cache:
-            local_cache[index] = _normalized_query_lattice(
+    def local_query(prepared, cache, index):
+        if index not in cache:
+            cache[index] = _normalized_query_lattice(
                 point, prepared.normalization_transforms[index])
-        return local_cache[index]
+        return cache[index]
 
-    for index in boundary_indices:
-        numerator, denominator = local_query(index)
-        triangle = prepared.triangles[index]
-        normal = prepared.normals[index]
-        plane = _plane_numerator_at_local_query(numerator, denominator, triangle, normal)
-        if plane == 0 and _inside(_signs(numerator, denominator, triangle, normal)):
-            return {"location": "boundary", "ray": None, "crossings": None}
+    for prepared, cache in contexts:
+        boundary_indices, _ = _point_aabb_candidate_indices(
+            point, prepared, include_forward=False)
+        for index in boundary_indices:
+            numerator, denominator = local_query(prepared, cache, index)
+            triangle = prepared.triangles[index]
+            normal = prepared.normals[index]
+            plane = _plane_numerator_at_local_query(numerator, denominator, triangle, normal)
+            if plane == 0 and _inside(_signs(numerator, denominator, triangle, normal)):
+                return {"location": "boundary", "ray": None, "crossings": None}
 
     for attempt in range(1, 65):
         direction = (1, attempt, attempt * attempt)
-        divisors, parallel_indices = _prepared_ray_data(prepared, attempt)
-        # Preserve the established retry rule: any surface plane containing
-        # this ray makes the attempt ambiguous, even when that triangle's AABB
-        # lies behind or away from the positive ray segment.
-        if any(_plane_numerator_at_local_query(
-                *local_query(index), prepared.triangles[index], prepared.normals[index]) == 0
-               for index in parallel_indices):
-            continue
         crossings, ambiguous = 0, False
-        ray_indices = _ray_aabb_candidate_indices(point, prepared, direction)
-        for index in ray_indices:
-            numerator, query_denominator = local_query(index)
-            triangle = prepared.triangles[index]
-            normal = prepared.normals[index]
-            plane = _plane_numerator_at_local_query(
-                numerator, query_denominator, triangle, normal)
-            divisor = _dot(normal, direction)
-            if divisor == 0:
-                if plane == 0:
-                    ambiguous = True
-                    break
-                continue
-            if plane * divisor <= 0:
-                continue
-            hit = tuple(numerator[axis] * divisor + plane * direction[axis]
-                        for axis in range(3))
-            hit_denominator = query_denominator * divisor
-            if hit_denominator < 0:
-                hit_denominator = -hit_denominator
-                hit = tuple(-coordinate for coordinate in hit)
-            signs = _signs(hit, hit_denominator, triangle, normal)
-            if _inside(signs):
-                if 0 in signs:
-                    ambiguous = True
-                    break
-                crossings += 1
+        for prepared, cache in contexts:
+            divisors, parallel_indices = _prepared_ray_data(prepared, attempt)
+            # Preserve the established retry rule even for source planes
+            # whose finite triangles lie away from the forward ray.
+            if any(_plane_numerator_at_local_query(
+                    *local_query(prepared, cache, index), prepared.triangles[index],
+                    prepared.normals[index]) == 0 for index in parallel_indices):
+                ambiguous = True
+                break
+            for index in _ray_aabb_candidate_indices(point, prepared, direction):
+                numerator, query_denominator = local_query(prepared, cache, index)
+                triangle = prepared.triangles[index]
+                normal = prepared.normals[index]
+                plane = _plane_numerator_at_local_query(
+                    numerator, query_denominator, triangle, normal)
+                divisor = divisors[index]
+                if divisor == 0:
+                    if plane == 0:
+                        ambiguous = True
+                        break
+                    continue
+                if plane * divisor <= 0:
+                    continue
+                hit = tuple(numerator[axis] * divisor + plane * direction[axis]
+                            for axis in range(3))
+                hit_denominator = query_denominator * divisor
+                if hit_denominator < 0:
+                    hit_denominator = -hit_denominator
+                    hit = tuple(-coordinate for coordinate in hit)
+                signs = _signs(hit, hit_denominator, triangle, normal)
+                if _inside(signs):
+                    if 0 in signs:
+                        ambiguous = True
+                        break
+                    crossings += 1
+            if ambiguous:
+                break
         if not ambiguous:
             return {"location": "inside" if crossings % 2 else "outside",
                     "ray": list(direction), "crossings": crossings, "attempts": attempt}
