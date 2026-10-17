@@ -1,4 +1,6 @@
 """Tests for the narrow full21 forearm parent-carrier bridge."""
+import hashlib
+import json
 import struct
 
 import numpy as np
@@ -8,6 +10,8 @@ from numilab_human.forearm_parent_carrier_bridge import (
     append_full21_carrier_points,
     append_parent_surface_terms,
     full21_parent_terms,
+    build_authenticated_full21_lane_owner_proof,
+    accepted_poses_from_receipt,
 )
 
 
@@ -417,3 +421,176 @@ def test_duplicate_birth_edge_collapse_rejects_nonlink_neighbor():
     with pytest.raises(ValueError, match="link condition"):
         collapse_exact_duplicate_edge(faces, points, gids, 0, 1)
 
+
+
+def test_authenticated_full21_lane_proof_hashes_files_and_replays_nonzero_step(tmp_path):
+    from numilab_human import passive_attachment_composition as pc
+
+    child_bytes, core_ids = make_carrier(stable_id=132, source_count=3)
+    parent_bytes, _ = make_carrier(stable_id=132, source_count=3)
+    child_path = tmp_path / "child.nhtissue"
+    parent_path = tmp_path / "parent.nhtissue"
+    extension_path = tmp_path / "parents.json"
+    receipt_path = tmp_path / "step-4.receipt.json"
+    child_path.write_bytes(child_bytes)
+    parent_path.write_bytes(parent_bytes)
+
+    parent_file = pc._read_nhtiss4(parent_path)
+    parent_record = next(row for row in parent_file["records"] if int(row[6]) == 132)
+    parent_row = pc._nhtiss_row_arrays(parent_file, parent_record)
+    child_file = pc._read_nhtiss4(child_path)
+    child_record = next(row for row in child_file["records"] if int(row[6]) == 132)
+    child_row = pc._nhtiss_row_arrays(child_file, child_record)
+    source_points = parent_row["positions"].copy()
+    weights = normalized_weights(len(source_points))
+    vertices = [
+        [[0, 132, (vertex // 21) * 21 + lane, float(weights[vertex, lane])]
+         for lane in range(21)]
+        for vertex in range(len(source_points))
+    ]
+    extension = {
+        "child_payload_sha256": hashlib.sha256(child_bytes).hexdigest(),
+        "source_payloads": [{
+            "path": str(parent_path.resolve()),
+            "sha256": hashlib.sha256(parent_bytes).hexdigest(),
+        }],
+        "surfaces": [{"stable_id": 132, "vertices": vertices}],
+    }
+    extension_path.write_text(json.dumps(extension, sort_keys=True))
+    body_poses = [{
+        "body_index": index,
+        "position_m": [index * 1.0e-6, -index * 2.0e-6, index * 3.0e-6],
+        "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    } for index in range(157)]
+    receipt = {
+        "schema": "numi.human.accepted-render-geometry.v1",
+        "accepted_step": 4,
+        "accepted_body_pose_count": len(body_poses),
+        "accepted_body_poses": body_poses,
+    }
+    receipt_path.write_text(json.dumps(receipt, sort_keys=True))
+    poses, pose_report = accepted_poses_from_receipt(receipt_path)
+    lane_world = pc._binding_world_positions(parent_row, source_points, poses)[:, :21, :]
+    emitted = np.zeros_like(source_points, dtype=np.float32)
+    weight_f32 = weights.astype("<f4")
+    for lane in range(21):
+        emitted = np.asarray(
+            emitted + np.asarray(lane_world[:, lane, :] * weight_f32[:, lane, None],
+                                 dtype=np.float32),
+            dtype=np.float32)
+    gids = np.arange(1001, 1001 + len(source_points), dtype=np.uint64)
+    slots = np.arange(len(source_points), dtype=np.int64)
+    faces = child_row["faces"].astype(np.uint32)
+    face_lineage = [{"source_parent_face": int(index)} for index in range(len(faces))]
+    vertex_lineage = {
+        int(gid): {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
+        for gid in gids
+    }
+    proof_inputs = {
+        "source_payload_path": child_path,
+        "parent_extension_path": extension_path,
+        "parent_payload_path": parent_path,
+        "accepted_step_receipt_path": receipt_path,
+        "stable_id": 132, "source_slots_i64": slots,
+        "canonical_gids_u64": gids, "source_points_float32": source_points,
+        "core_weights_float64": weights, "displayed_positions_float32": emitted,
+        "faces_local_u32": faces, "source_face_lineage": face_lineage,
+        "source_vertex_lineage": vertex_lineage,
+        "expected_ordered_core_body_indices": core_ids,
+    }
+    lanes, proof, report = build_authenticated_full21_lane_owner_proof(**proof_inputs)
+    assert proof["accepted_step"] == 4 == pose_report["accepted_step"]
+    assert proof["capture_receipt_sha256"] == hashlib.sha256(receipt_path.read_bytes()).hexdigest()
+    assert proof["source_payload_sha256"] == hashlib.sha256(child_path.read_bytes()).hexdigest()
+    assert proof["parent_payload_sha256"] == hashlib.sha256(parent_path.read_bytes()).hexdigest()
+    assert proof["parent_extension_sha256"] == hashlib.sha256(extension_path.read_bytes()).hexdigest()
+    assert lanes.shape == (len(source_points), 21, 3)
+    assert report["displayed_positions_exact_owner_blend"] is True
+
+    # A well-formed digest-shaped string in the sidecar cannot authenticate
+    # changed parent bytes; the builder reads and checks the actual files.
+    parent_path.write_bytes(parent_bytes + b"tampered")
+    with pytest.raises(ValueError, match="exact parent bytes"):
+        build_authenticated_full21_lane_owner_proof(**proof_inputs)
+
+
+def test_authenticated_full21_lane_proof_rejects_detached_display_positions(tmp_path):
+    from numilab_human import passive_attachment_composition as pc
+
+    child_bytes, core_ids = make_carrier(stable_id=132, source_count=3)
+    parent_bytes, _ = make_carrier(stable_id=132, source_count=3)
+    child_path = tmp_path / "child.nhtissue"
+    parent_path = tmp_path / "parent.nhtissue"
+    extension_path = tmp_path / "parents.json"
+    receipt_path = tmp_path / "step-4.receipt.json"
+    child_path.write_bytes(child_bytes)
+    parent_path.write_bytes(parent_bytes)
+    parent_file = pc._read_nhtiss4(parent_path)
+    parent_record = next(row for row in parent_file["records"] if int(row[6]) == 132)
+    parent_row = pc._nhtiss_row_arrays(parent_file, parent_record)
+    child_file = pc._read_nhtiss4(child_path)
+    child_record = next(row for row in child_file["records"] if int(row[6]) == 132)
+    child_row = pc._nhtiss_row_arrays(child_file, child_record)
+    source_points = parent_row["positions"].copy()
+    weights = normalized_weights(len(source_points))
+    extension = {
+        "child_payload_sha256": hashlib.sha256(child_bytes).hexdigest(),
+        "source_payloads": [{
+            "path": str(parent_path.resolve()),
+            "sha256": hashlib.sha256(parent_bytes).hexdigest(),
+        }],
+        "surfaces": [{"stable_id": 132, "vertices": [
+            [[0, 132, (vertex // 21) * 21 + lane, float(weights[vertex, lane])]
+             for lane in range(21)]
+            for vertex in range(len(source_points))
+        ]}],
+    }
+    extension_path.write_text(json.dumps(extension, sort_keys=True))
+    body_poses = [{
+        "body_index": index, "position_m": [0.0, 0.0, 0.0],
+        "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    } for index in range(157)]
+    receipt_path.write_text(json.dumps({
+        "schema": "numi.human.accepted-render-geometry.v1", "accepted_step": 4,
+        "accepted_body_pose_count": len(body_poses), "accepted_body_poses": body_poses,
+    }, sort_keys=True))
+    emitted = np.zeros_like(source_points, dtype=np.float32)
+    for lane in range(21):
+        emitted = np.asarray(
+            emitted + np.asarray(source_points * weights[:, lane, None].astype("<f4"),
+                                 dtype=np.float32),
+            dtype=np.float32)
+    emitted[0, 0] = np.nextafter(emitted[0, 0], np.float32(np.inf))
+    with pytest.raises(ValueError, match="exact accepted-pose full21 owner blend"):
+        build_authenticated_full21_lane_owner_proof(
+            source_payload_path=child_path,
+            parent_extension_path=extension_path,
+            parent_payload_path=parent_path,
+            accepted_step_receipt_path=receipt_path,
+            stable_id=132, source_slots_i64=np.arange(len(source_points), dtype=np.int64),
+            canonical_gids_u64=np.arange(1001, 1001 + len(source_points), dtype=np.uint64),
+            source_points_float32=source_points, core_weights_float64=weights,
+            displayed_positions_float32=emitted,
+            faces_local_u32=child_row["faces"].astype(np.uint32),
+            source_face_lineage=[{"source_parent_face": int(index)}
+                                 for index in range(len(child_row["faces"]))],
+            source_vertex_lineage={
+                gid: {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
+                for gid in range(1001, 1001 + len(source_points))
+            },
+            expected_ordered_core_body_indices=core_ids,
+        )
+
+
+def test_accepted_pose_reader_rejects_boolean_step(tmp_path):
+    receipt_path = tmp_path / "bad-step.receipt.json"
+    body_poses = [{
+        "body_index": index, "position_m": [0.0, 0.0, 0.0],
+        "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    } for index in range(157)]
+    receipt_path.write_text(json.dumps({
+        "schema": "numi.human.accepted-render-geometry.v1", "accepted_step": True,
+        "accepted_body_pose_count": len(body_poses), "accepted_body_poses": body_poses,
+    }))
+    with pytest.raises(ValueError, match="nonnegative accepted render-geometry step"):
+        accepted_poses_from_receipt(receipt_path)

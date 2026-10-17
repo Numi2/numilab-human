@@ -468,20 +468,23 @@ def _full21_owner_array_sha256(gids, values):
 
 def _validate_full21_lane_owner_proof(proof, ordered_core_body_indices, *,
                                       source_points_by_gid, weights_by_gid,
-                                      lane_world_points_by_gid, source_face_lineage,
-                                      source_vertex_lineage):
+                                      lane_world_points_by_gid, displayed_points_by_gid,
+                                      source_face_lineage, source_vertex_lineage):
     expected = {"schema", "accepted_step", "capture_receipt_sha256",
                 "source_payload_sha256", "parent_payload_sha256",
-                "ordered_core_body_indices", "world_frame", "source_points_sha256",
-                "weights_sha256", "lane_world_points_sha256",
-                "source_face_lineage_sha256", "source_vertex_lineage_sha256"}
+                "parent_extension_sha256", "ordered_core_body_indices", "world_frame",
+                "source_points_sha256", "weights_sha256", "lane_world_points_sha256",
+                "displayed_world_points_sha256", "displayed_world_owner_relation",
+                "displayed_world_owner_residual_m", "source_face_lineage_sha256",
+                "source_vertex_lineage_sha256"}
     if not isinstance(proof, dict) or set(proof) != expected:
         raise ValueError("full21 lane owner proof fields differ from the pinned schema")
     if proof.get("schema") != "numi.human.full21-per-lane-world-equivalence.v1":
         raise ValueError("unsupported full21 lane owner proof schema")
     if type(proof.get("accepted_step")) is not int or proof["accepted_step"] < 0:
         raise ValueError("full21 lane owner proof must name a nonnegative accepted step")
-    for key in ("capture_receipt_sha256", "source_payload_sha256", "parent_payload_sha256"):
+    for key in ("capture_receipt_sha256", "source_payload_sha256", "parent_payload_sha256",
+                "parent_extension_sha256"):
         value = proof.get(key)
         if (not isinstance(value, str) or len(value) != 64
                 or any(ch not in "0123456789abcdef" for ch in value)):
@@ -491,7 +494,8 @@ def _validate_full21_lane_owner_proof(proof, ordered_core_body_indices, *,
         raise ValueError("full21 lane proof does not name all 21 ordered owners")
     if proof.get("world_frame") != "accepted_body_poses_from_capture_receipt":
         raise ValueError("full21 lane points are not pinned to accepted capture poses")
-    for key in ("source_points_sha256", "weights_sha256", "lane_world_points_sha256"):
+    for key in ("source_points_sha256", "weights_sha256", "lane_world_points_sha256",
+                "displayed_world_points_sha256"):
         value = proof.get(key)
         if (not isinstance(value, str) or len(value) != 64
                 or any(ch not in "0123456789abcdef" for ch in value)):
@@ -508,6 +512,32 @@ def _validate_full21_lane_owner_proof(proof, ordered_core_body_indices, *,
     if proof["lane_world_points_sha256"] != _full21_owner_array_sha256(
             lane_gids, np.stack([lane_world_points_by_gid[int(g)] for g in lane_gids])):
         raise ValueError("full21 lane world points do not match their provenance digest")
+    displayed_gids = np.asarray(sorted(displayed_points_by_gid), dtype="<u8")
+    if proof["displayed_world_points_sha256"] != _full21_owner_array_sha256(
+            displayed_gids, np.stack([displayed_points_by_gid[int(g)] for g in displayed_gids])):
+        raise ValueError("displayed world positions do not match their provenance digest")
+    if proof["displayed_world_owner_relation"] != "predicted_cpu_full21_float32_blend_at_accepted_poses":
+        raise ValueError("displayed world positions lack an exact full21 owner blend relation")
+    if (type(proof["displayed_world_owner_residual_m"]) not in (int, float)
+            or not math.isfinite(float(proof["displayed_world_owner_residual_m"]))
+            or float(proof["displayed_world_owner_residual_m"]) != 0.0):
+        raise ValueError("displayed world owner residual must be exact zero")
+    for gid in displayed_gids:
+        gid = int(gid)
+        lanes = lane_world_points_by_gid.get(gid)
+        weights = weights_by_gid.get(gid)
+        if (lanes is None or weights is None or np.asarray(lanes).shape != (21, 3)
+                or np.asarray(weights).shape != (21,)):
+            raise ValueError("displayed world owner blend lacks a complete full21 GID row")
+        expected_world = np.zeros(3, dtype=np.float32)
+        coefficients = np.asarray(weights, dtype="<f4")
+        for lane in range(21):
+            contribution = np.asarray(
+                np.asarray(lanes[lane], dtype=np.float32) * coefficients[lane],
+                dtype=np.float32)
+            expected_world = np.asarray(expected_world + contribution, dtype=np.float32)
+        if expected_world.tobytes() != np.asarray(displayed_points_by_gid[gid], dtype=np.float32).tobytes():
+            raise ValueError("displayed world position differs from exact full21 owner blend")
     if proof["source_face_lineage_sha256"] != _canonical_json_sha256(
             list(source_face_lineage)):
         raise ValueError("full21 proof does not bind the ordered source face lineage")
@@ -666,6 +696,8 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
             core_lane_world_proof, core_body_indices,
             source_points_by_gid=source_points_by_gid, weights_by_gid=weights_by_gid,
             lane_world_points_by_gid=lane_world_points_by_gid,
+            displayed_points_by_gid={int(source_vertex_ids[i]): np.array(p[i], dtype=np.float32, copy=True)
+                                     for i in range(len(p))},
             source_face_lineage=face_lineage, source_vertex_lineage=vertex_lineage)
     # Numeric coordinate identity treats +0 and -0 as the same exact point.
     keys = [ci.float32_point_lattice_key(row) for row in p.tolist()]
@@ -1286,6 +1318,7 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
             if (proof_a["accepted_step"] != proof_b["accepted_step"]
                     or proof_a["capture_receipt_sha256"] != proof_b["capture_receipt_sha256"]
                     or proof_a["source_payload_sha256"] != proof_b["source_payload_sha256"]
+                    or proof_a["parent_extension_sha256"] != proof_b["parent_extension_sha256"]
                     or proof_a["ordered_core_body_indices"] != proof_b["ordered_core_body_indices"]
                     or proof_a["world_frame"] != proof_b["world_frame"]):
                 return False, "full21_owner_provenance_or_accepted_frame_differs"

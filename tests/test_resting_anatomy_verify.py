@@ -27,18 +27,24 @@ def tetra(scale=1., offset=0.):
 
 def _full21_lane_owner_proof(gids, source_points, weights, lane_world, cores, *,
                              parent_sha, face_lineage, vertex_lineage, accepted_step=0,
-                             receipt_sha="e" * 64, source_sha="c" * 64):
+                             receipt_sha="e" * 64, source_sha="c" * 64,
+                             displayed_points=None):
     return {
         "schema": "numi.human.full21-per-lane-world-equivalence.v1",
         "accepted_step": accepted_step,
         "capture_receipt_sha256": receipt_sha,
         "source_payload_sha256": source_sha,
         "parent_payload_sha256": parent_sha,
+        "parent_extension_sha256": "b" * 64,
         "ordered_core_body_indices": list(cores),
         "world_frame": "accepted_body_poses_from_capture_receipt",
         "source_points_sha256": av._full21_owner_array_sha256(gids, source_points),
         "weights_sha256": av._full21_owner_array_sha256(gids, weights),
         "lane_world_points_sha256": av._full21_owner_array_sha256(gids, lane_world),
+        "displayed_world_points_sha256": av._full21_owner_array_sha256(
+            gids, source_points if displayed_points is None else displayed_points),
+        "displayed_world_owner_relation": "predicted_cpu_full21_float32_blend_at_accepted_poses",
+        "displayed_world_owner_residual_m": 0.0,
         "source_face_lineage_sha256": av._canonical_json_sha256(face_lineage),
         "source_vertex_lineage_sha256": av._canonical_json_sha256(
             [[int(gid), lineage] for gid, lineage in sorted(vertex_lineage.items())]),
@@ -69,14 +75,22 @@ def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overri
         vertex_lineage[int(gid)] = record
     face_lineage = [{"source_parent_face": i} for i in range(len(faces))]
     lane_world = np.repeat(positions[:, None, :], len(ordered), axis=1).astype(np.float32)
+    displayed = np.zeros_like(positions, dtype=np.float32)
+    weight_f32 = weights.astype("<f4")
+    for lane in range(len(ordered)):
+        displayed = np.asarray(
+            displayed + np.asarray(lane_world[:, lane, :] * weight_f32[:, lane, None],
+                                   dtype=np.float32),
+            dtype=np.float32)
     proof = (_full21_lane_owner_proof(
         gids, positions, weights, lane_world, ordered,
         parent_sha=("a" if key[1] == 132 else "b") * 64,
         face_lineage=face_lineage, vertex_lineage=vertex_lineage,
-        accepted_step=accepted_step, receipt_sha=receipt_sha, source_sha=source_sha)
+        accepted_step=accepted_step, receipt_sha=receipt_sha, source_sha=source_sha,
+        displayed_points=displayed)
         if len(ordered) == 21 and include_lane_proof else None)
     return prepare_surface(
-        key, positions, faces, normals=normals, source_vertex_ids=gids,
+        key, displayed, faces, normals=normals, source_vertex_ids=gids,
         source_face_lineage=face_lineage,
         source_vertex_lineage=vertex_lineage,
         ordered_core_body_indices=ordered,

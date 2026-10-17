@@ -337,9 +337,10 @@ def accepted_poses_from_receipt(receipt_path):
     path = Path(receipt_path).resolve()
     raw = path.read_bytes()
     receipt = json.loads(raw)
+    accepted_step = receipt.get("accepted_step")
     _require(receipt.get("schema") == "numi.human.accepted-render-geometry.v1"
-             and receipt.get("accepted_step") == 0,
-             "expected an accepted step-zero render-geometry receipt")
+             and type(accepted_step) is int and accepted_step >= 0,
+             "expected a nonnegative accepted render-geometry step")
     records = receipt.get("accepted_body_poses")
     _require(isinstance(records, list)
              and len(records) == receipt.get("accepted_body_pose_count"),
@@ -361,9 +362,199 @@ def accepted_poses_from_receipt(receipt_path):
     return poses, {
         "accepted_receipt_path": str(path),
         "accepted_receipt_sha256": hashlib.sha256(raw).hexdigest(),
-        "accepted_step": 0,
+        "accepted_step": accepted_step,
         "accepted_body_pose_count": len(poses),
         "pose_owner": "accepted_body_poses from exact accepted step receipt; not NHRIGID static poses",
+    }
+
+
+def build_authenticated_full21_lane_owner_proof(
+    *, source_payload_path, parent_extension_path, parent_payload_path,
+    accepted_step_receipt_path, stable_id, source_slots_i64,
+    canonical_gids_u64, source_points_float32, core_weights_float64,
+    displayed_positions_float32, faces_local_u32, source_face_lineage,
+    source_vertex_lineage, expected_ordered_core_body_indices=None,
+):
+    """Read pinned full21 inputs, derive per-lane worlds, and bind displayed XYZ.
+
+    The helper authenticates file bytes itself. It verifies the child/extension/
+    parent term chain, recomputes source points and weights from all 21 parent
+    terms, reads accepted dynamic poses from the receipt, derives all 21 lane
+    worlds, and requires displayed positions to be the exact Float32 owner blend.
+    This is source-owner evidence, not native capture or anatomy admission.
+    """
+    import hashlib
+    import json
+    from pathlib import Path
+
+    from . import passive_attachment_composition as pc
+    from . import resting_anatomy_verify as verify
+
+    source_path = Path(source_payload_path).resolve()
+    extension_path = Path(parent_extension_path).resolve()
+    parent_path = Path(parent_payload_path).resolve()
+    receipt_path = Path(accepted_step_receipt_path).resolve()
+    raw = {
+        "source": source_path.read_bytes(),
+        "extension": extension_path.read_bytes(),
+        "parent": parent_path.read_bytes(),
+        "receipt": receipt_path.read_bytes(),
+    }
+    digests = {key: hashlib.sha256(value).hexdigest() for key, value in raw.items()}
+    extension = json.loads(raw["extension"])
+    _require(extension.get("child_payload_sha256") == digests["source"],
+             "parent extension is not bound to the exact child payload bytes")
+    parent_matches = [
+        index for index, meta in enumerate(extension.get("source_payloads", []))
+        if isinstance(meta, dict) and meta.get("path")
+        and Path(meta["path"]).resolve() == parent_path
+        and meta.get("sha256") == digests["parent"]
+    ]
+    _require(len(parent_matches) == 1,
+             "exact parent bytes are absent or ambiguous in the child extension")
+    parent_source_index = parent_matches[0]
+    child_data = pc._read_nhtiss4(source_path)
+    parent_data = pc._read_nhtiss4(parent_path)
+    child_record = next((row for row in child_data["records"]
+                         if int(row[6]) == int(stable_id)), None)
+    parent_record = next((row for row in parent_data["records"]
+                          if int(row[6]) == int(stable_id)), None)
+    _require(child_record is not None and parent_record is not None,
+             "typed child or parent NHTISS row is absent")
+    child_row = pc._nhtiss_row_arrays(child_data, child_record)
+    parent_row = pc._nhtiss_row_arrays(parent_data, parent_record)
+
+    slots = np.asarray(source_slots_i64)
+    gids = np.asarray(canonical_gids_u64)
+    points = np.asarray(source_points_float32)
+    weights = np.asarray(core_weights_float64)
+    displayed = np.asarray(displayed_positions_float32)
+    faces = np.asarray(faces_local_u32)
+    _require(type(stable_id) is int and stable_id > 0,
+             "typed stable row identity is invalid")
+    _require(slots.dtype == np.dtype("int64") and slots.ndim == 1
+             and len(slots) == child_row["vertex_count"] and np.all(slots >= -1),
+             "source-slot ancestry does not align with the exact child row")
+    _require(gids.dtype == np.dtype("uint64") and gids.shape == slots.shape
+             and len(np.unique(gids)) == len(gids),
+             "canonical material GIDs are not unique and aligned")
+    _require(points.dtype == np.dtype("float32") and points.shape == (len(gids), 3)
+             and np.isfinite(points).all(),
+             "source points must be finite Float32 GID-aligned XYZ")
+    _require(weights.dtype == np.dtype("float64") and weights.shape == (len(gids), 21)
+             and np.isfinite(weights).all() and np.all(weights > 0)
+             and np.max(np.abs(weights.sum(axis=1) - 1.0)) <= 1e-12,
+             "source material field must be positive normalized Float64 full21")
+    _require(displayed.dtype == np.dtype("float32") and displayed.shape == points.shape
+             and np.isfinite(displayed).all(),
+             "displayed positions must be finite aligned Float32 XYZ")
+    _require(faces.dtype.kind in "iu" and faces.ndim == 2 and faces.shape[1] == 3
+             and np.array_equal(faces.astype("<u4"), child_row["faces"]),
+             "displayed faces differ from the exact child payload row")
+    _require(isinstance(source_face_lineage, list)
+             and len(source_face_lineage) == len(faces)
+             and all(isinstance(record, dict) for record in source_face_lineage),
+             "ordered source face lineage does not cover the emitted faces")
+    _require(isinstance(source_vertex_lineage, dict)
+             and set(source_vertex_lineage) == set(map(int, gids))
+             and all(isinstance(record, dict) for record in source_vertex_lineage.values()),
+             "source vertex lineage does not cover the exact canonical GID inventory")
+
+    surfaces = extension.get("surfaces")
+    _require(isinstance(surfaces, list), "parent extension lacks typed surfaces")
+    surface_matches = [surface for surface in surfaces
+                       if isinstance(surface, dict)
+                       and surface.get("stable_id") == stable_id]
+    _require(len(surface_matches) == 1, "typed parent extension surface is absent or ambiguous")
+    terms_by_vertex = surface_matches[0].get("vertices")
+    _require(isinstance(terms_by_vertex, list) and len(terms_by_vertex) == len(gids),
+             "full21 extension terms do not align with canonical GIDs")
+    _require(parent_row["vertex_count"] % 21 == 0,
+             "parent carrier row lacks complete 21-lane source groups")
+    owner_ids = tuple(int(binding["core"]) for binding in parent_row["bindings"])
+    _require(len(owner_ids) == 21 and len(set(owner_ids)) == 21,
+             "parent carrier binding order is not 21 unique Core owners")
+    if expected_ordered_core_body_indices is not None:
+        _require(owner_ids == tuple(expected_ordered_core_body_indices),
+                 "actual parent binding order differs from the pinned 21-owner order")
+
+    point_source_by_gid = {}
+    weight_by_gid = {}
+    for vertex, (gid_u64, terms) in enumerate(zip(gids, terms_by_vertex, strict=True)):
+        gid = int(gid_u64)
+        _require(isinstance(terms, list) and len(terms) == 21,
+                 f"canonical GID {gid} lacks exactly 21 source terms")
+        term_points = []
+        term_weights = []
+        for lane, term in enumerate(terms):
+            _require(isinstance(term, list) and len(term) == 4
+                     and type(term[0]) is int and term[0] == parent_source_index
+                     and type(term[1]) is int and term[1] == stable_id
+                     and type(term[2]) is int and 0 <= term[2] < parent_row["vertex_count"]
+                     and type(term[3]) in (int, float) and math.isfinite(float(term[3]))
+                     and float(term[3]) > 0,
+                     f"canonical GID {gid} full21 term {lane} has invalid typed ownership")
+            term_points.append(parent_row["positions"][term[2]])
+            term_weights.append(float(term[3]))
+        term_points = np.asarray(term_points, dtype="<f4")
+        term_weights = np.asarray(term_weights, dtype=np.float64)
+        _require(np.all(term_points == points[vertex][None, :]),
+                 f"canonical GID {gid} source point differs from its authenticated 21 parent terms")
+        _require(term_weights.tobytes() == weights[vertex].tobytes()
+                 and abs(float(term_weights.sum()) - 1.0) <= 1e-12,
+                 f"canonical GID {gid} full21 coefficients differ from its authenticated parent terms")
+        point_source_by_gid[gid] = points[vertex]
+        weight_by_gid[gid] = weights[vertex]
+
+    poses, pose_report = accepted_poses_from_receipt(receipt_path)
+    receipt = json.loads(raw["receipt"])
+    _require(pose_report["accepted_receipt_sha256"] == digests["receipt"]
+             and pose_report["accepted_step"] == receipt.get("accepted_step"),
+             "accepted pose reader does not match exact receipt bytes and step")
+    from . import passive_attachment_composition as pc
+    lane_world = np.asarray(
+        pc._binding_world_positions(parent_row, points, poses)[:, :21, :],
+        dtype=np.float32,
+    )
+    owner_blend = np.zeros_like(displayed, dtype=np.float32)
+    weight_f32 = weights.astype("<f4")
+    for lane in range(21):
+        contribution = np.asarray(
+            lane_world[:, lane, :] * weight_f32[:, lane, None], dtype=np.float32)
+        owner_blend = np.asarray(owner_blend + contribution, dtype=np.float32)
+    _require(owner_blend.tobytes() == displayed.tobytes(),
+             "displayed Float32 positions are not the exact accepted-pose full21 owner blend")
+
+    proof = {
+        "schema": "numi.human.full21-per-lane-world-equivalence.v1",
+        "accepted_step": pose_report["accepted_step"],
+        "capture_receipt_sha256": digests["receipt"],
+        "source_payload_sha256": digests["source"],
+        "parent_payload_sha256": digests["parent"],
+        "parent_extension_sha256": digests["extension"],
+        "ordered_core_body_indices": list(owner_ids),
+        "world_frame": "accepted_body_poses_from_capture_receipt",
+        "source_points_sha256": verify._full21_owner_array_sha256(gids, points),
+        "weights_sha256": verify._full21_owner_array_sha256(gids, weights),
+        "lane_world_points_sha256": verify._full21_owner_array_sha256(gids, lane_world),
+        "displayed_world_points_sha256": verify._full21_owner_array_sha256(gids, displayed),
+        "source_face_lineage_sha256": verify._canonical_json_sha256(source_face_lineage),
+        "source_vertex_lineage_sha256": verify._canonical_json_sha256(
+            [[int(gid), source_vertex_lineage[int(gid)]]
+             for gid in sorted(map(int, gids))]),
+        "displayed_world_owner_relation": "predicted_cpu_full21_float32_blend_at_accepted_poses",
+        "displayed_world_owner_residual_m": 0.0,
+    }
+    return lane_world, proof, {
+        "accepted_step": pose_report["accepted_step"],
+        "input_sha256": digests,
+        "ordered_core_body_indices": list(owner_ids),
+        "full21_lane_count": 21,
+        "vertex_count": len(gids),
+        "face_count": len(faces),
+        "displayed_positions_exact_owner_blend": True,
+        "displayed_owner_blend_max_abs_residual_m": 0.0,
+        "evidence_boundary": "byte-hashed source/parent/extension/receipt inputs and CPU accepted-pose full21 replay; native capture and anatomy admission remain separate",
     }
 
 
