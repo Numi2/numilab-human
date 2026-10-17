@@ -797,6 +797,62 @@ def build_actual_capture_owner_proof(
 
 
 
+def _validate_candidate_topology_file_binding(binding, arrays, face_lineage):
+    """Authenticate reconstructed indices without calling them captured topology.
+
+    These are the existing candidate NPZ and complete lineage JSON, not a new
+    geometry format. This binds provenance only; geometry/motion gates remain
+    independently required.
+    """
+    _require(isinstance(binding, dict) and set(binding) == {
+        "archive_path", "archive_sha256", "array_prefix",
+        "lineage_path", "lineage_sha256", "typed_identity",
+    }, "candidate topology file binding fields differ")
+    archive = _canonical_file(binding["archive_path"])
+    lineage_path = _canonical_file(binding["lineage_path"])
+    _require(_sha256(archive) == binding["archive_sha256"],
+             "candidate topology archive SHA changed")
+    _require(_sha256(lineage_path) == binding["lineage_sha256"],
+             "candidate topology lineage SHA changed")
+    prefix = binding["array_prefix"]
+    _require(isinstance(prefix, str) and prefix,
+             "candidate topology array prefix is missing")
+    names = {
+        "positions_f32": ("positions_f32", "<f4"),
+        "faces_u32": ("faces_u32", "<u4"),
+        "gids_u64": ("canonical_gids_u64", "<u8"),
+        "source_slots_i64": ("source_slots_i64", "<i8"),
+        "weights_f64": ("weights_f64", "<f8"),
+        "source_points_f32": ("source_points_f32", "<f4"),
+    }
+    with np.load(archive, allow_pickle=False) as saved:
+        for name, (suffix, dtype) in names.items():
+            value = np.asarray(saved[prefix + suffix])
+            expected = np.asarray(arrays[name])
+            _require(value.dtype == np.dtype(dtype)
+                     and value.shape == expected.shape
+                     and value.tobytes() == expected.tobytes(),
+                     "candidate topology archive differs in " + name)
+        corners = np.asarray(saved[prefix + "source_face_slots_u32"])
+        faces = arrays["faces_u32"]
+        slots = arrays["source_slots_i64"]
+        _require(corners.dtype == np.dtype("<u4")
+                 and corners.shape == faces.shape
+                 and np.array_equal(corners, slots[faces]),
+                 "candidate topology face corners differ from authenticated source slots")
+    identity = binding["typed_identity"]
+    _require(isinstance(identity, list) and len(identity) == 2
+             and all(type(x) is int for x in identity),
+             "candidate topology typed identity is malformed")
+    document = json.loads(lineage_path.read_text())
+    saved_lineage = document["rows"][str(identity[1])]["source_face_lineage"]
+    _require(_canonical_json_sha256(saved_lineage)
+             == _canonical_json_sha256(list(face_lineage)),
+             "candidate topology complete face lineage differs from pinned file")
+    _require(len(face_lineage) == len(arrays["faces_u32"]),
+             "candidate topology lineage omits displayed faces")
+
+
 def build_mixed_full21_candidate_owner_record(
     *,
     actual_capture_row,
@@ -815,12 +871,16 @@ def build_mixed_full21_candidate_owner_record(
     candidate_archive_sha256,
     source_face_lineage,
     source_vertex_lineage,
+    candidate_topology_file_binding=None,
 ):
     """Bind candidate vertices to captured or independently recomputed full21 bases.
 
     The accepted capture proof is reused only for GIDs whose displayed positions
     remain byte-identical. Every changed GID must have a complete predicted lane
     record whose ordered Float32 blend exactly reproduces its candidate position.
+    An optional file binding authenticates reconstructed candidate indices and
+    complete declared ancestry separately from the retained accepted index array.
+    It provides no intersection, source-equivalence, or native-motion admission.
     This is a proof-construction helper; it does not perform native capture.
     """
     from . import resting_anatomy_verify as verify
@@ -890,8 +950,11 @@ def build_mixed_full21_candidate_owner_record(
              "candidate changed canonical GID or source-slot membership/order")
     actual_index_faces = np.ascontiguousarray(
         actual_capture_row["index_patch_faces_capture_u32"], dtype="<u4")
-    _require(faces.tobytes() == actual_index_faces.tobytes(),
-             "candidate faces differ from the authenticated 1274 index candidate")
+    _require(not len(faces) or np.max(faces) < len(positions),
+             "candidate face index is outside canonical vertex membership")
+    if candidate_topology_file_binding is None:
+        _require(faces.tobytes() == actual_index_faces.tobytes(),
+                 "candidate faces differ from the authenticated 1274 index candidate")
     _require(weights.tobytes() == actual_weights.tobytes(),
              "candidate changed a full21 owner coefficient or lane order")
     changed_set = set(map(int, changed))
@@ -1002,6 +1065,19 @@ def build_mixed_full21_candidate_owner_record(
             "weights_f64": weights.copy(), "source_points_f32": source_points.copy(),
         },
     }
+    if candidate_topology_file_binding is not None:
+        _require(isinstance(candidate_topology_file_binding, dict),
+                 "candidate topology file binding must be a mapping")
+        _require(candidate_topology_file_binding.get("archive_sha256")
+                 == candidate_archive_sha256,
+                 "candidate topology archive differs from candidate owner archive")
+        _require(candidate_topology_file_binding.get("typed_identity")
+                 == proof["typed_identity"],
+                 "candidate topology identity differs from candidate owner")
+        _validate_candidate_topology_file_binding(
+            candidate_topology_file_binding, proof["candidate_arrays"], face_rows)
+        proof["accepted_index_faces_u32"] = actual_index_faces.copy()
+        proof["candidate_topology_file_binding"] = dict(candidate_topology_file_binding)
     return proof
 
 def actual_capture_owner_json_summary(proof):

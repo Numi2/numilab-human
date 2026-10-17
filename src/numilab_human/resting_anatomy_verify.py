@@ -683,7 +683,9 @@ def _validate_full21_mixed_candidate_owner_proof(
         "actual_capture_weights_f64", "actual_capture_source_slots_i64",
         "actual_capture_faces_u32", "candidate_arrays",
     }
-    if not isinstance(proof, dict) or set(proof) != expected:
+    topology_fields = {"accepted_index_faces_u32", "candidate_topology_file_binding"}
+    if (not isinstance(proof, dict)
+            or set(proof) not in (expected, expected | topology_fields)):
         raise ValueError("mixed full21 candidate proof fields differ from the pinned schema")
     if proof.get("schema") != "numi.human.full21-mixed-candidate-row-owner.v1":
         raise ValueError("unsupported mixed full21 candidate proof schema")
@@ -797,9 +799,18 @@ def _validate_full21_mixed_candidate_owner_proof(
         source_points_by_gid=captured_source_by_gid,
         weights_by_gid=captured_weight_by_gid,
         displayed_points_by_gid=captured_position_by_gid,
-        source_vertex_ids=gids, faces=face_bytes,
+        source_vertex_ids=gids,
+        faces=proof.get("accepted_index_faces_u32", face_bytes),
         capture_source_slots_by_gid=captured_slots_by_gid,
     )
+    if "candidate_topology_file_binding" in proof:
+        from .forearm_actual_capture_owner import _validate_candidate_topology_file_binding
+        binding = proof["candidate_topology_file_binding"]
+        if (not isinstance(binding, dict)
+                or binding.get("archive_sha256") != proof["candidate_archive_sha256"]
+                or binding.get("typed_identity") != list(key)):
+            raise ValueError("mixed full21 candidate topology archive or identity differs")
+        _validate_candidate_topology_file_binding(binding, candidate_arrays, source_face_lineage)
     basis = proof.get("position_basis_by_gid")
     if not isinstance(basis, dict) or set(basis) != {str(int(g)) for g in gids}:
         raise ValueError("mixed full21 position basis must exactly cover every canonical GID")
