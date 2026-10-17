@@ -7,6 +7,9 @@ explicitly counterfactual and cannot establish native or anatomical admission.
 """
 from pathlib import Path
 import argparse
+from contextlib import contextmanager
+import math
+import signal
 import hashlib
 import json
 import sys
@@ -16,6 +19,30 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from numilab_human import resting_anatomy_verify as verify
+
+
+
+class GeometryBudgetExceeded(TimeoutError):
+    """Selected geometry did not finish; retained gates never imply admission."""
+
+
+@contextmanager
+def geometry_budget(seconds):
+    if seconds is None:
+        yield
+        return
+    if signal.getitimer(signal.ITIMER_REAL)[0] > 0:
+        raise ValueError("another owner already has the process wall-clock timer")
+    previous = signal.getsignal(signal.SIGALRM)
+    def expired(*_):
+        raise GeometryBudgetExceeded("selected geometry exceeded its wall-clock budget")
+    signal.signal(signal.SIGALRM, expired)
+    try:
+        signal.setitimer(signal.ITIMER_REAL, seconds)
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
 
 
 def pin(path, digest):
@@ -490,17 +517,29 @@ def main(argv=None):
     p.add_argument("--body-manifest", type=Path, help="exact runtime manifest bound by NHBONES")
     p.add_argument("--collect-failures", action="store_true",
                    help="retain all selected failures in one pass; any failure still rejects")
+    p.add_argument("--maximum-seconds", type=float,
+                   help="positive finite wall-clock budget for geometry predicates; timeout rejects and retains completed gates")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
+    if args.maximum_seconds is not None:
+        if not math.isfinite(args.maximum_seconds) or args.maximum_seconds <= 0:
+            p.error("--maximum-seconds must be positive and finite")
+        if args.preflight_only:
+            p.error("--maximum-seconds requires geometry predicates")
     if args.output.exists():
         p.error("refusing to overwrite retained verification evidence")
     progress_path = args.output.with_suffix(".progress.json")
     if progress_path.exists():
         p.error("refusing to overwrite retained verification progress")
+    gates_path = args.output.with_suffix(".gates.jsonl")
+    if gates_path.exists():
+        p.error("refusing to overwrite retained completed geometry gates")
+    completed_count = 0
     start = time.perf_counter()
     caller_sha256_at_start = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     report = {"passed": False, "anatomical_admission": False, "native_admission": False,
+              "maximum_geometry_seconds": args.maximum_seconds,
               "counterfactual_candidates": bool(args.overlay or args.rest_source or args.construction_overlay or args.index_source)}
     try:
         partitions = shared_partition_declarations(args.shared_partition)
@@ -713,41 +752,58 @@ def main(argv=None):
                     raise ValueError(f"changed identity absent: {key}")
             report.update(passed=True, status="PASS_PREPARATION_ONLY_NO_PAIR_PREDICATES")
         else:
-            completed_count = 0
+            gates_path.parent.mkdir(parents=True, exist_ok=True)
+            gates_path.touch(exist_ok=False)
             def record_progress(row):
                 nonlocal completed_count
-                completed_count += 1
-                progress_path.parent.mkdir(parents=True, exist_ok=True)
-                temporary = progress_path.with_suffix(".tmp")
-                temporary.write_text(json.dumps({
-                    "status": "RUNNING_SELECTED_GEOMETRY_NOT_ADMITTED",
-                    "anatomical_admission": False, "native_admission": False,
-                    "elapsed_seconds": time.perf_counter()-start,
-                    "counterfactual_candidates": report["counterfactual_candidates"],
-                    "pack_pin": report["pack_pin"], "receipt_pin": report["receipt_pin"],
-                    "completed_row_count": completed_count,
-                    "rows": [row],
-                    "scope": "Latest completed gate; final output retains every ordered result.",
-                }, sort_keys=True, indent=2)+"\n")
-                temporary.replace(progress_path)
+                previous_mask = (signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGALRM})
+                                 if args.maximum_seconds is not None else None)
+                try:
+                    # Each row uses the existing audit result shape. Closing the
+                    # append preserves earlier witnesses if a later predicate fails.
+                    with gates_path.open("a") as stream:
+                        stream.write(json.dumps(row, sort_keys=True, allow_nan=False)+"\n")
+                    completed_count += 1
+                    progress_path.parent.mkdir(parents=True, exist_ok=True)
+                    temporary = progress_path.with_suffix(".tmp")
+                    temporary.write_text(json.dumps({
+                        "status": "RUNNING_SELECTED_GEOMETRY_NOT_ADMITTED",
+                        "anatomical_admission": False, "native_admission": False,
+                        "elapsed_seconds": time.perf_counter()-start,
+                        "counterfactual_candidates": report["counterfactual_candidates"],
+                        "pack_pin": report["pack_pin"], "receipt_pin": report["receipt_pin"],
+                        "completed_row_count": completed_count,
+                        "rows": [row],
+                        "scope": "Latest gate; completed ordered rows are retained in the companion gate log.",
+                    }, sort_keys=True, indent=2)+"\n")
+                    temporary.replace(progress_path)
+                finally:
+                    if previous_mask is not None:
+                        signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             collection_options = {"collect_failures": True} if args.collect_failures else {}
-            if partitions:
-                from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
-                result = audit_with_shared_partitions(
-                    surfaces, changed, partitions=partitions, targets=targets,
-                    required_closed=closed, intended_enclosures=enclosures,
-                    source_patch_complex_interfaces=patch_interfaces, capture_context=capture_context,
-                    progress=record_progress,
-                    coordinate_provenance=("counterfactual_owner_replay" if args.overlay or args.rest_source
-                                           else "accepted_native_capture"), **collection_options)
-            else:
-                result = verify.audit_changed_surfaces(
-                    surfaces, changed, targets=targets,
-                    required_closed=closed, intended_enclosures=enclosures,
-                    source_patch_complex_interfaces=patch_interfaces, progress=record_progress,
-                    **collection_options)
+            with geometry_budget(args.maximum_seconds):
+                if partitions:
+                    from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
+                    result = audit_with_shared_partitions(
+                        surfaces, changed, partitions=partitions, targets=targets,
+                        required_closed=closed, intended_enclosures=enclosures,
+                        source_patch_complex_interfaces=patch_interfaces, capture_context=capture_context,
+                        progress=record_progress,
+                        coordinate_provenance=("counterfactual_owner_replay" if args.overlay or args.rest_source
+                                               else "accepted_native_capture"), **collection_options)
+                else:
+                    result = verify.audit_changed_surfaces(
+                        surfaces, changed, targets=targets,
+                        required_closed=closed, intended_enclosures=enclosures,
+                        source_patch_complex_interfaces=patch_interfaces, progress=record_progress,
+                        **collection_options)
             report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
+    except GeometryBudgetExceeded as error:
+        report.update(passed=False, status="REJECTED_GEOMETRY_BUDGET_EXHAUSTED",
+                      failed_stage="geometry_budget", collection_complete=False,
+                      completed_row_count=completed_count, error=str(error),
+                      maximum_geometry_seconds=args.maximum_seconds)
     except (ValueError, TypeError, KeyError, OSError, verify.HumanImportError) as error:
         diagnostic = getattr(error, "diagnostic", None)
         report.update(passed=False, failed_stage=(diagnostic.get("stage", "exact_certificate")
@@ -775,6 +831,14 @@ def main(argv=None):
         }
         report.update(passed=False, status="REJECTED_INPUT_CHANGED_DURING_AUDIT",
                       failed_stage="source_integrity")
+    if gates_path.exists():
+        with gates_path.open("rb") as stream:
+            gate_sha = hashlib.file_digest(stream, "sha256").hexdigest()
+        report["completed_gate_log"] = {
+            "path": str(gates_path.resolve()), "sha256": gate_sha,
+            "completed_row_count": completed_count,
+            "scope": "Ordered completed existing audit rows only; no skipped or unfinished gate is a pass.",
+        }
     report.update(elapsed_seconds=time.perf_counter()-start, caller_sha256=caller_sha256_at_start,
                   scope="Selected geometry only. Source ancestry, actual rest-owner emission, motion, continuity and physiology require their existing separate proofs.")
     args.output.parent.mkdir(parents=True, exist_ok=True)
