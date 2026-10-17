@@ -4346,8 +4346,19 @@ def audit_changed_surfaces(surfaces, changed, *, targets=None, interfaces=None, 
     """
     if type(collect_failures) is not bool:
         raise TypeError("collect_failures must be a boolean")
+    if not isinstance(surfaces, Mapping):
+        raise TypeError("audit surfaces must be a mapping of typed identities")
     changed = [typed_key(key) for key in changed]
-    targets = list(surfaces) if targets is None else [typed_key(key) for key in targets]
+    targets = [typed_key(key) for key in (surfaces if targets is None else targets)]
+    # Check the entire selected inventory before self tests or AABB shortcuts.
+    # A cached PreparedSurface already carries its own identity; a dictionary
+    # label cannot replace that identity or silently reassign an interface.
+    for key in dict.fromkeys([*changed, *targets]):
+        if key not in surfaces:
+            raise ValueError(f"selected anatomy identity absent from context: {key}")
+        value = surfaces[key]
+        if isinstance(value, PreparedSurface) and typed_key(value.key) != key:
+            raise ValueError("prepared surface typed identity differs from its audit context key")
     interfaces = interfaces or {}
     shared_feature_interfaces = shared_feature_interfaces or {}
     source_patch_complex_interfaces = source_patch_complex_interfaces or {}

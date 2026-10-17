@@ -3314,3 +3314,36 @@ class RetainedTriangleWitnessBindingTests(unittest.TestCase):
             with self.subTest(pairs=pairs):
                 with self.assertRaises(ValueError):
                     av.bound_unexpected_triangle_pairs(invalid, self.first, self.second)
+
+
+class AuditContextIdentityTests(unittest.TestCase):
+    def setUp(self):
+        self.first = prepare_surface((51005, 132), tetra(), FACES)
+        self.far = prepare_surface((51004, 108), tetra()+np.float32(5), FACES)
+
+    def assert_rejected_before_geometry(self, surfaces, changed, targets=None):
+        with patch.object(av.PreparedSurface, "self_audit",
+                          side_effect=AssertionError("geometry ran before identity validation")):
+            with self.assertRaisesRegex(ValueError, "identity"):
+                av.audit_changed_surfaces(surfaces, changed, targets=targets)
+
+    def test_changed_prepared_mesh_cannot_be_relabelled(self):
+        self.assert_rejected_before_geometry(
+            {(51005, 134): self.first}, [(51005, 134)], [])
+
+    def test_disjoint_target_cannot_bypass_its_prepared_identity(self):
+        surfaces = {self.first.key: self.first, (51004, 110): self.far}
+        for targets in (None, [(51004, 110)]):
+            with self.subTest(targets=targets):
+                self.assert_rejected_before_geometry(surfaces, [self.first.key], targets)
+
+    def test_missing_selected_identity_fails_before_self_audit(self):
+        self.assert_rejected_before_geometry(
+            {self.first.key: self.first}, [self.first.key], [(51004, 108)])
+
+    def test_unselected_surface_does_not_expand_the_audit_scope(self):
+        result = av.audit_changed_surfaces(
+            {self.first.key: self.first, (51004, 110): self.far},
+            [self.first.key], targets=[])
+        self.assertTrue(result["passed"])
+        self.assertEqual([row["stage"] for row in result["rows"]], ["self"])
