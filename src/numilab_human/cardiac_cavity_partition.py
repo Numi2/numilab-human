@@ -374,6 +374,10 @@ def _exact_triangle_normal(triangle):
                              predicates._sub(triangle[2], triangle[0]))
 
 
+class _NormalProbeInSourcePlane(HumanImportError):
+    """An otherwise valid normal line needs a different face-interior origin."""
+
+
 def _bounded_normal_probe(point, normal, records):
     """Choose a rational normal offset before the next nonzero source-plane crossing."""
     nearest = None
@@ -382,8 +386,9 @@ def _bounded_normal_probe(point, normal, records):
         denominator = predicates._dot(other_normal, normal)
         numerator = predicates._dot(other_normal, predicates._sub(triangle[0], point))
         if denominator == 0:
-            require(numerator != 0,
-                    "normal probe line lies in another source face plane")
+            if numerator == 0:
+                raise _NormalProbeInSourcePlane(
+                    "cardiac cavity partition: normal probe line lies in another source face plane")
             continue
         crossing = Fraction(numerator, denominator)
         if crossing == 0:
@@ -393,6 +398,32 @@ def _bounded_normal_probe(point, normal, records):
     require(nearest is not None and nearest > 0,
             "no bounded nonzero source-plane crossing for normal probes")
     return nearest / 2
+
+
+def _triangle_normal_probe(triangle, records):
+    """Choose an exact interior origin whose normal line avoids source planes.
+
+    A child-face centroid can lie on an unrelated perpendicular source plane.
+    Positive barycentric weights (1,t,t*t) give a rational interior curve. Each
+    forbidden plane excludes at most two integer parameters: otherwise that
+    plane contains this nondegenerate triangle, contradicting perpendicular
+    normals. Thus 2*N+1 candidates suffice; no geometric tolerance is changed.
+    """
+    normal = _exact_triangle_normal(triangle)
+    require(any(normal), "normal probe requires a nondegenerate triangle")
+    for parameter in range(1, 2 * len(records) + 2):
+        weights = (1, parameter, parameter * parameter)
+        total = sum(weights)
+        point = tuple(sum((weight * vertex[axis]
+                           for weight, vertex in zip(weights, triangle)), Fraction(0)) / total
+                      for axis in range(3))
+        try:
+            step = _bounded_normal_probe(point, normal, records)
+        except _NormalProbeInSourcePlane:
+            continue
+        return point, normal, step, parameter
+    raise HumanImportError(
+        "cardiac cavity partition: no source-plane-safe rational interior probe")
 
 
 def _point_on_segment(point, segment):
@@ -637,11 +668,9 @@ def _construct_winding_self_union(source_surface, *, positive_only,
             pending.extend(adjacency[child_id] & unseen)
         representative_id = min(component)
         triangle = child_triangles[representative_id]
-        point = tuple(sum(vertex[axis] for vertex in triangle) / 3 for axis in range(3))
+        point, normal, step, probe_parameter = _triangle_normal_probe(triangle, records)
         require(not any(_point_on_segment(point, segment["endpoints"]) for segment in segments),
                 "arrangement patch representative lies on an intersection segment")
-        normal = _exact_triangle_normal(triangle)
-        step = _bounded_normal_probe(point, normal, records)
         minus_point = tuple(point[axis] - step * normal[axis] for axis in range(3))
         plus_point = tuple(point[axis] + step * normal[axis] for axis in range(3))
         minus = predicates.signed_winding_number(minus_point, prepared)
@@ -676,6 +705,8 @@ def _construct_winding_self_union(source_surface, *, positive_only,
             "source_face_ids": sorted({child_parent[index] for index in component}),
             "representative_child_face": representative_id,
             "probe_step": step,
+            "probe_point": point,
+            "probe_candidate_parameter": probe_parameter,
             "winding_minus": winding_minus,
             "winding_plus": winding_plus,
             **({"sheet_multiplicity": multiplicity} if allow_coplanar_overlap else {}),

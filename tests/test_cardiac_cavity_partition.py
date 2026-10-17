@@ -522,5 +522,77 @@ class CoveredPointUnionTests(unittest.TestCase):
                 source,point_contact_cover_face_indices=[8,9,10,11])
 
 
+class NormalProbePlaneTests(unittest.TestCase):
+    triangle = ((F(0), F(0), F(0)), (F(1), F(0), F(0)), (F(0), F(1), F(0)))
+
+    @staticmethod
+    def records(parameters=()):
+        # The vertical triangles are distant from the child face. Their
+        # infinite planes still contain the centroid's normal line.
+        triangles = [
+            ((F(0), F(0), F(1)), (F(1), F(0), F(1)), (F(0), F(1), F(1)))
+        ]
+        for t in parameters:
+            x = F(t, 1 + t + t*t)
+            triangles.append(((x, F(10), F(-1)), (x, F(11), F(-1)), (x, F(10), F(1))))
+        return predicates._records(
+            [point for triangle in triangles for point in triangle],
+            [tuple(range(3*i, 3*i+3)) for i in range(len(triangles))])
+
+    def test_safe_centroid_is_retained(self):
+        point, normal, step, parameter = partition._triangle_normal_probe(self.triangle, self.records())
+        self.assertEqual(point, (F(1, 3), F(1, 3), F(0)))
+        self.assertEqual(normal, (F(0), F(0), F(1)))
+        self.assertEqual(step, F(1, 2))
+        self.assertEqual(parameter, 1)
+
+    def test_distant_perpendicular_plane_does_not_reject_valid_patch(self):
+        records = self.records([1])
+        with self.assertRaisesRegex(HumanImportError, "line lies in another source face plane"):
+            partition._bounded_normal_probe((F(1, 3), F(1, 3), F(0)), (F(0), F(0), F(1)), records)
+        point, normal, step, parameter = partition._triangle_normal_probe(self.triangle, records)
+        self.assertEqual(parameter, 2)
+        self.assertEqual(point, (F(2, 7), F(4, 7), F(0)))
+        self.assertEqual(step, F(1, 2))
+        self.assertEqual(partition._bounded_normal_probe(point, normal, records), step)
+
+    def test_multiple_forbidden_plane_parameters_are_skipped_exactly(self):
+        records = self.records([1, 2, 3, 4])
+        point, _normal, step, parameter = partition._triangle_normal_probe(self.triangle, records)
+        self.assertEqual(parameter, 5)
+        self.assertEqual(point, (F(5, 31), F(25, 31), F(0)))
+        self.assertEqual(step, F(1, 2))
+        self.assertLessEqual(parameter, 2 * len(records) + 1)
+
+    def test_integer_child_coordinates_remain_exact_rationals(self):
+        point, _normal, step, parameter = partition._triangle_normal_probe(
+            ((0,0,0),(1,0,0),(0,1,0)), self.records([1]))
+        self.assertEqual(point, (F(2,7), F(4,7), F(0)))
+        self.assertTrue(all(isinstance(value, F) for value in point))
+        self.assertEqual((step, parameter), (F(1,2), 2))
+
+    def test_degenerate_child_cannot_be_probed(self):
+        with self.assertRaisesRegex(HumanImportError, "nondegenerate triangle"):
+            partition._triangle_normal_probe((self.triangle[0],)*3, self.records())
+
+    def test_subtractive_box_retains_exact_volume_and_closed_surface(self):
+        def box(lo, hi, reverse=False):
+            x0,y0,z0 = map(F, lo)
+            x1,y1,z1 = map(F, hi)
+            vertices = [(x0,y0,z0),(x1,y0,z0),(x1,y1,z0),(x0,y1,z0),
+                        (x0,y0,z1),(x1,y0,z1),(x1,y1,z1),(x0,y1,z1)]
+            faces = [(0,2,1),(0,3,2),(4,5,6),(4,6,7),(0,1,5),(0,5,4),
+                     (3,7,6),(3,6,2),(0,4,7),(0,7,3),(1,2,6),(1,6,5)]
+            return vertices, [(a,c,b) for a,b,c in faces] if reverse else faces
+        vertices, faces = box((0,0,0), (1,1,1))
+        cutter, inner = box((F(3,10),F(7,20),F(2,5)), (F(3,5),F(13,20),F(11,10)), True)
+        result = partition.construct_positive_winding_self_union(
+            dict(vertices=vertices+cutter, triangles=faces+[tuple(i+8 for i in f) for f in inner],
+                 source_sha256="e"*64), allow_coplanar_overlap=True)
+        self.assertEqual(NonzeroWindingSelfUnionTests.signed_volume(result["output_mesh"]), F(473,500))
+        self.assertEqual(result["output_self_intersection_audit"]["count"], 0)
+        self.assertTrue(result["output_topology"]["closed_oriented_2_manifold"])
+
+
 if __name__ == "__main__":
     unittest.main()
