@@ -648,6 +648,85 @@ def full21_parent_world_positions(row_data, poses, source_points_f32,
     return result
 
 
+def full21_parent_world_normals(row_data, poses, source_normals_f32,
+                                core_weights_float64):
+    """Replay existing parent normal rotations and 21 Float32 weighted lanes.
+
+    Native normal emission omits binding translations and uniform scale. These
+    are direction vectors; normalization belongs to the final rendering stage.
+    """
+    from . import passive_attachment_composition as pc
+
+    normals = np.asarray(source_normals_f32)
+    weights = np.asarray(core_weights_float64)
+    # Reuse the carrier/field validation, without treating positions as normals.
+    full21_parent_world_positions(row_data, poses, normals, weights)
+    result = np.zeros_like(normals)
+    coefficients = weights.astype("<f4")
+    for lane, binding in enumerate(row_data["bindings"]):
+        local = pc._rotate_points_f32(binding["quaternion"], normals)
+        rotated = pc._rotate_points_f32(poses[binding["core"]][3:7], local)
+        result = np.asarray(
+            result + np.asarray(rotated * coefficients[:, lane, None], dtype="<f4"),
+            dtype="<f4",
+        )
+    _require(np.isfinite(result).all(), "full21 normal replay is nonfinite")
+    return result
+
+
+def solve_full21_parent_source_normals(
+    row_data, poses, target_world_normals_f32, core_weights_float64, *,
+    min_direction_cosine: float = 0.999999,
+) -> tuple[np.ndarray, dict]:
+    """Pull physical world normal directions back through the existing carrier.
+
+    This is a CPU authoring inverse, not a second runtime normal owner. Verify
+    its Float32 forward replay independently from geometry/native admission.
+    """
+    from . import passive_attachment_composition as pc
+
+    target = np.asarray(target_world_normals_f32)
+    weights = np.asarray(core_weights_float64)
+    full21_parent_world_normals(row_data, poses, target, weights)
+    _require(math.isfinite(min_direction_cosine)
+             and 0 < min_direction_cosine <= 1, "invalid normal direction bound")
+    lengths = np.linalg.norm(target.astype(np.float64), axis=1)
+    _require(np.all(lengths > 0), "target world normals contain a zero direction")
+    unit = target.astype(np.float64) / lengths[:, None]
+    rotations = np.asarray([
+        pc._rotation_matrix_xyzw_f64(poses[binding["core"]][3:7])
+        @ pc._rotation_matrix_xyzw_f64(binding["quaternion"])
+        for binding in row_data["bindings"]
+    ])
+    # Coefficients are compiled to Float32 before native accumulation.
+    matrix = np.einsum("nl,lij->nij", weights.astype("<f4").astype(np.float64), rotations)
+    singular = np.linalg.svd(matrix, compute_uv=False)
+    _require(np.isfinite(singular).all() and np.all(singular[:, -1] > 0),
+             "full21 normal inverse is singular")
+    condition = singular[:, 0] / singular[:, -1]
+    _require(np.isfinite(condition).all(), "full21 normal condition is nonfinite")
+    solved = np.linalg.solve(matrix, unit[..., None])[..., 0]
+    solved /= np.linalg.norm(solved, axis=1)[:, None]
+    source = solved.astype("<f4")
+    emitted = full21_parent_world_normals(row_data, poses, source, weights).astype(np.float64)
+    emitted_lengths = np.linalg.norm(emitted, axis=1)
+    _require(np.all(emitted_lengths > 0), "full21 emitted normals contain a zero direction")
+    emitted /= emitted_lengths[:, None]
+    cosine = np.einsum("ni,ni->n", emitted, unit)
+    _require(np.all(cosine >= min_direction_cosine),
+             "full21 Float32 normal replay fails direction bound")
+    return source, {
+        "normal_count": len(source),
+        "ordered_parent_lanes": 21,
+        "min_replay_direction_cosine": float(cosine.min()),
+        "max_unit_direction_residual": float(np.linalg.norm(emitted - unit, axis=1).max()),
+        "max_normal_inverse_condition_number": float(condition.max()),
+        "normal_owner_omits_translation_and_uniform_scale": True,
+        "source_owner": "existing native parent rotation and full21 coefficient emission",
+        "evidence_boundary": "CPU normal authoring inverse/replay only; native/anatomical admission remains separate",
+    }
+
+
 def solve_full21_parent_source_points(
     row_data, poses, target_world_f32, core_weights_float64, *,
     max_replay_residual_m: float = 2e-7,

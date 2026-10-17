@@ -966,3 +966,78 @@ def test_inferred_child_birth_replays_a_blended_rotating_route():
     poses[1] = np.asarray([0, 0, 0, 0, 0, 1, 0], dtype="<f4")
     with pytest.raises(ValueError, match="singular child affine"):
         derive_inferred_child_carrier_birth(row, poses, 0, target)
+
+
+def normal_carrier_fixture():
+    row = {
+        "vertex_count": 21,
+        "binding_indices": np.zeros((21, 4), dtype="<u4"),
+        "weights": np.zeros((21, 4), dtype="<f4"),
+        "bindings": [],
+    }
+    row["binding_indices"][:, 0] = np.arange(21)
+    row["weights"][:, 0] = 1
+    poses = {}
+    for i in range(21):
+        angle = (i - 10) * 0.035
+        row["bindings"].append({
+            "core": i, "translation": np.asarray([i, -i, i/2], dtype="<f4"),
+            "scale": np.float32(0.4 + i/10),
+            "quaternion": np.asarray([0, np.sin(angle/2), 0, np.cos(angle/2)], dtype="<f4"),
+        })
+        poses[i] = np.asarray([i/3, -i/4, i/5, np.sin(angle/3), 0, 0,
+                               np.cos(angle/3)], dtype="<f4")
+    return row, poses
+
+
+def test_full21_normal_inverse_matches_physical_directions_and_ignores_scale_translation():
+    from numilab_human.forearm_parent_carrier_bridge import (
+        full21_parent_world_normals, solve_full21_parent_source_normals,
+    )
+    row, poses = normal_carrier_fixture()
+    weights = normalized_weights(3)
+    target = np.asarray([[1, 2, -3], [-2, 0, 1], [0, 0, 1]], dtype="<f4")
+    source, report = solve_full21_parent_source_normals(row, poses, target, weights)
+    emitted = full21_parent_world_normals(row, poses, source, weights)
+    np.testing.assert_allclose(
+        emitted / np.linalg.norm(emitted, axis=1)[:, None],
+        target / np.linalg.norm(target, axis=1)[:, None], atol=2e-7, rtol=0,
+    )
+    assert report["min_replay_direction_cosine"] > 0.999999
+    assert report["normal_owner_omits_translation_and_uniform_scale"]
+    for binding in row["bindings"]:
+        binding["scale"] *= np.float32(5)
+        binding["translation"] += np.float32(50)
+    for pose in poses.values():
+        pose[:3] += np.float32(100)
+    np.testing.assert_array_equal(
+        full21_parent_world_normals(row, poses, source, weights), emitted,
+    )
+    # Late lanes contribute: this must not silently use the four-lane child path.
+    row["bindings"][20]["quaternion"] = np.asarray([0, 0, 1, 0], dtype="<f4")
+    assert not np.array_equal(full21_parent_world_normals(row, poses, source, weights), emitted)
+
+
+@pytest.mark.parametrize("defect", ["zero", "nan", "bad_weight", "float64_target", "singular"])
+def test_full21_normal_inverse_rejects_invalid_fields(defect):
+    from numilab_human.forearm_parent_carrier_bridge import solve_full21_parent_source_normals
+    row, poses = normal_carrier_fixture()
+    target = np.asarray([[0, 0, 1]], dtype="<f4")
+    weights = normalized_weights(1)
+    if defect == "zero":
+        target[:] = 0
+    elif defect == "nan":
+        target[0, 0] = np.nan
+    elif defect == "bad_weight":
+        weights[0, 0] = 0
+    elif defect == "float64_target":
+        target = target.astype(np.float64)
+    else:
+        # Positive normalized coefficients exactly cancel two axes.
+        weights[:] = 1/32
+        weights[0, 0] = 12/32
+        for i, binding in enumerate(row["bindings"]):
+            binding["quaternion"] = np.asarray([0, 0, int(i > 4), int(i <= 4)], dtype="<f4")
+            poses[i][3:] = np.asarray([0, 0, 0, 1], dtype="<f4")
+    with pytest.raises(ValueError):
+        solve_full21_parent_source_normals(row, poses, target, weights)
