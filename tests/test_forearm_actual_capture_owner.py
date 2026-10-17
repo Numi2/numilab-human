@@ -7,6 +7,7 @@ import numpy as np
 
 from numilab_human.forearm_actual_capture_owner import (
     _validate_full21_parent_lane_routes,
+    _verify_producer_input_pins,
     authenticate_shared_actual_capture_gid_points,
 )
 
@@ -31,6 +32,43 @@ def row(positions, gids, slots, faces):
                 ordered_gids.tobytes()).hexdigest(),
         },
     }
+
+
+class ProducerInputRecoveryTests(unittest.TestCase):
+    def test_recovery_requires_explicit_original_path_and_exact_pinned_bytes(self):
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            original = root / "producer.py"
+            recovered = root / "recovery" / "producer.py"
+            recovered.parent.mkdir()
+            recovered.write_bytes(b"pinned producer bytes")
+            original.write_bytes(b"current changed producer bytes")
+            expected = hashlib.sha256(b"pinned producer bytes").hexdigest()
+            pins = {str(original.resolve()): expected}
+            mapping = {str(original.resolve()): recovered}
+
+            verified, records = _verify_producer_input_pins(pins, mapping)
+            self.assertEqual(verified[str(original.resolve())], expected)
+            self.assertEqual(records[0]["original_pinned_path"], str(original.resolve()))
+            self.assertEqual(records[0]["recovered_blob_sha256"], expected)
+            self.assertEqual(records[0]["original_path_current_sha256"],
+                             hashlib.sha256(original.read_bytes()).hexdigest())
+
+            with self.assertRaisesRegex(ValueError, "producer input pin changed"):
+                _verify_producer_input_pins(pins)
+            recovered.write_bytes(b"wrong recovered bytes")
+            with self.assertRaisesRegex(ValueError, "recovered producer blob"):
+                _verify_producer_input_pins(pins, mapping)
+            matching = root / "matching.py"
+            matching.write_bytes(b"already pinned")
+            matching_sha = hashlib.sha256(matching.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(ValueError, "unused or unpinned path"):
+                _verify_producer_input_pins(
+                    {str(matching.resolve()): matching_sha},
+                    {str(root / "other.py"): recovered})
 
 
 class SharedActualCapturePointTests(unittest.TestCase):
@@ -184,11 +222,17 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
                 "ancestry": root / "ancestry.json",
                 "batch_report": root / "batch-report.json",
                 "checkpoint": root / "checkpoint.json",
+                "producer_module": root / "producer.py",
+                "producer_module_recovery": root / "recovery" / "producer.py",
             }
             paths["pack"].write_bytes(b"accepted pack fixture")
             paths["receipt"].write_bytes(b"accepted receipt fixture")
             paths["child"].write_bytes(b"source child fixture")
             paths["parent"].write_bytes(b"active parent fixture")
+            paths["producer_module"].write_bytes(b"historical producer source bytes")
+            paths["producer_module_recovery"].parent.mkdir()
+            paths["producer_module_recovery"].write_bytes(
+                b"historical producer source bytes")
 
             positions_by_row = {
                 132: np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="<f4"),
@@ -294,6 +338,7 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
                 paths["child"], paths["parent"], paths["source_map"],
                 paths["source_map_report"], paths["index"], paths["index_report"],
                 paths["ancestry"], paths["batch_report"], paths["checkpoint"],
+                paths["producer_module"],
             ]
             arrays_sha = digest(paths["prepared"])
             pack_sha = digest(paths["pack"])
@@ -345,6 +390,7 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
                 "source_map_candidate_sha256": source_map_sha,
                 "input_sha256": pins,
             }))
+            paths["producer_module"].write_bytes(b"newer source at original path")
 
             source_records = []
             for stable_id in (132, 134):
@@ -385,6 +431,9 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
                     index_ancestry_path=paths["ancestry"],
                     witness_batch_report_path=paths["batch_report"],
                     witness_batch_checkpoint_path=paths["checkpoint"],
+                    producer_input_recovery_paths={
+                        str(paths["producer_module"].resolve()):
+                            paths["producer_module_recovery"]},
                 )
 
             shared = proof["shared_actual_capture_gid_points"]
@@ -396,6 +445,13 @@ class ActualCaptureProofBuilderTests(unittest.TestCase):
                 "complete_source_face_ancestry"])
             self.assertEqual(proof["rows"]["132"]["report"][
                 "ordered_face_corner_mapping_verified"], True)
+            self.assertEqual(len(proof["producer_input_recoveries"]), 1)
+            self.assertEqual(
+                proof["producer_input_recoveries"][0]["original_pinned_path"],
+                str(paths["producer_module"].resolve()))
+            self.assertEqual(
+                proof["producer_input_recoveries"][0]["recovered_blob_sha256"],
+                digest(paths["producer_module_recovery"]))
 
             prepared_surfaces = {}
             for stable_id in (132, 134):

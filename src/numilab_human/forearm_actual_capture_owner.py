@@ -374,6 +374,64 @@ def authenticate_actual_capture_row(
     }
 
 
+def _verify_producer_input_pins(pins, producer_input_recovery_paths=None):
+    """Verify producer pins, optionally from explicit SHA-exact recovered blobs.
+
+    The metadata's original lexical paths remain the provenance keys. Recovery is
+    allowed only when a caller names that exact pinned path and the recovery file
+    hashes to the metadata SHA; it never substitutes current, changed bytes.
+    """
+    _require(isinstance(pins, dict) and pins,
+             "prepared-owner metadata lacks its producer input pins")
+    requested = ({} if producer_input_recovery_paths is None
+                 else producer_input_recovery_paths)
+    _require(isinstance(requested, dict), "producer recovery mapping must be a mapping")
+    recoveries = {}
+    for original, recovered in requested.items():
+        _require(isinstance(original, str) and original,
+                 "producer recovery mapping keys must be original pinned paths")
+        key = str(Path(original).expanduser().resolve(strict=False))
+        _require(key not in recoveries,
+                 f"duplicate producer recovery mapping for {original}")
+        recoveries[key] = _canonical_file(recovered)
+
+    verified_inputs = {}
+    recovery_records = []
+    used_recoveries = set()
+    for pinned_path, expected in pins.items():
+        _require(isinstance(pinned_path, str) and pinned_path,
+                 "producer input pin path must be a nonempty string")
+        _require(isinstance(expected, str) and len(expected) == 64,
+                 f"malformed input digest in prepared-owner metadata: {pinned_path}")
+        original = Path(pinned_path).expanduser().resolve(strict=False)
+        key = str(original)
+        actual_original = _sha256(original) if original.is_file() else None
+        if actual_original == expected:
+            _require(key not in recoveries,
+                     f"unneeded recovery supplied for matching producer input: {pinned_path}")
+            verified_inputs[key] = expected
+            continue
+        recovery_path = recoveries.get(key)
+        _require(recovery_path is not None,
+                 f"1284 producer input pin changed: {pinned_path}")
+        actual_recovery = _sha256(recovery_path)
+        _require(actual_recovery == expected,
+                 f"recovered producer blob does not match pinned SHA: {pinned_path}")
+        verified_inputs[key] = expected
+        used_recoveries.add(key)
+        recovery_records.append({
+            "original_pinned_path": pinned_path,
+            "original_path_current_sha256": actual_original,
+            "expected_sha256": expected,
+            "recovered_blob_path": str(recovery_path),
+            "recovered_blob_sha256": actual_recovery,
+            "recovery_basis": "exact-content-recovery-from-authenticated-producer-git-blob",
+        })
+    _require(used_recoveries == set(recoveries),
+             "producer recovery mapping contains an unused or unpinned path")
+    return verified_inputs, recovery_records
+
+
 def build_actual_capture_owner_proof(
     *,
     prepared_owner_arrays_path,
@@ -388,6 +446,7 @@ def build_actual_capture_owner_proof(
     index_ancestry_path,
     witness_batch_report_path,
     witness_batch_checkpoint_path,
+    producer_input_recovery_paths=None,
 ):
     """Authenticate the retained 1284 carrier against its pinned source/capture chain."""
     from . import passive_attachment_composition as pc
@@ -416,18 +475,10 @@ def build_actual_capture_owner_proof(
                  "prepared-owner NPZ does not match its metadata digest")
         arrays = {key: np.asarray(archive[key]).copy() for key in archive.files}
     pins = metadata.get("input_sha256")
-    _require(isinstance(pins, dict) and pins,
-             "prepared-owner metadata lacks its producer input pins")
-    # Verify each existing producer input once, rather than rehashing large parent
-    # files in the per-vertex loop.
-    verified_inputs = {}
-    for pinned_path, expected in pins.items():
-        path = _canonical_file(pinned_path)
-        _require(isinstance(expected, str) and len(expected) == 64,
-                 f"malformed input digest in prepared-owner metadata: {pinned_path}")
-        actual = _sha256(path)
-        _require(actual == expected, f"1284 producer input pin changed: {path}")
-        verified_inputs[str(path)] = actual
+    # Each input is hashed once, and any historical producer-source recovery must
+    # be explicitly mapped to the original pinned path and match its exact SHA.
+    verified_inputs, producer_input_recoveries = _verify_producer_input_pins(
+        pins, producer_input_recovery_paths)
     def expect_pin(name):
         path = paths[name]
         actual = verified_inputs.get(str(path))
@@ -731,6 +782,7 @@ def build_actual_capture_owner_proof(
         "witness_batch_report_sha256": _sha256(paths["witness_batch_report"]),
         "witness_batch_checkpoint_sha256": _sha256(paths["witness_batch_checkpoint"]),
         "producer_input_pin_count_verified": len(verified_inputs),
+        "producer_input_recoveries": producer_input_recoveries,
         "rows": rows,
         "shared_actual_capture_gid_points": cross_row_shared_points,
         "face_topology_provenance": face_lineage,
