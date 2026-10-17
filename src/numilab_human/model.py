@@ -8787,7 +8787,25 @@ def _numi_human_bone_envelope_surfaces(bone_artifact: Path, source_sha: str) -> 
     artifact = bone_artifact.resolve()
     manifest_path = artifact / "bodyparts3d-myosim-major-bones.manifest.json"
     manifest = read_json(manifest_path)
-    if "source_partition_retriangulation" in manifest:
+    partition_outer = "source_partition_retriangulation" in manifest
+    if partition_outer and "source_precision_retriangulation" in manifest:
+        # Select the outer operation by inspecting the authenticated partition
+        # input. If that parent already carries this precision declaration, the
+        # partition is outer; otherwise this precision repair wraps the partition.
+        repair = manifest["source_partition_retriangulation"]
+        if not isinstance(repair, dict):
+            raise ImportError("Numi Human partition bone provenance is incomplete")
+        partition_source = Path(repair.get("input_artifact", "")).resolve()
+        partition_manifest_path = partition_source / "bodyparts3d-myosim-major-bones.manifest.json"
+        if (not partition_manifest_path.is_file()
+                or sha256(partition_manifest_path) != repair.get("input_manifest_sha256")):
+            raise ImportError("Numi Human partition input manifest is missing or drifted")
+        partition_parent_manifest = read_json(partition_manifest_path)
+        partition_outer = (
+            partition_parent_manifest.get("source_precision_retriangulation")
+            == manifest["source_precision_retriangulation"]
+        )
+    if partition_outer:
         from . import composed_bone_body_frame as partition_owner
         filename = manifest.get("payload", {}).get("file")
         if not isinstance(filename, str) or Path(filename).name != filename:

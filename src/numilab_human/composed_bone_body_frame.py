@@ -1837,7 +1837,21 @@ def validate_composed_rib_reframe(
     if artifact in _lineage or len(_lineage) >= 16:
         raise model.ImportError("bone source operation lineage is cyclic or exceeds 16 retained inputs")
     lineage = (*_lineage, artifact)
-    if "source_partition_retriangulation" in manifest:
+    partition_outer = "source_partition_retriangulation" in manifest
+    if partition_outer and "source_precision_retriangulation" in manifest:
+        # An outer operation retains the other declaration in its authenticated
+        # parent. Precision repair may follow a partition, just as a partition
+        # may follow precision repair; validate each against its own bytes.
+        repair = manifest["source_partition_retriangulation"]
+        if not isinstance(repair, dict):
+            raise model.ImportError("bone source partition provenance is incomplete")
+        source = Path(repair.get("input_artifact", "")).resolve()
+        path = source / "bodyparts3d-myosim-major-bones.manifest.json"
+        if not path.is_file() or model.sha256(path) != repair.get("input_manifest_sha256"):
+            raise model.ImportError("bone partition input manifest is missing or drifted")
+        partition_outer = (model.read_json(path).get("source_precision_retriangulation")
+                           == manifest["source_precision_retriangulation"])
+    if partition_outer:
         source, prior_manifest, prior_raw, partition = validate_bone_source_partition(
             artifact, manifest, output_raw)
         prior = validate_composed_rib_reframe(source, prior_manifest, prior_raw, _lineage=lineage)
