@@ -689,3 +689,98 @@ def test_authenticated_full21_proof_checks_every_parent_lane_route(
             },
             expected_ordered_core_body_indices=core_ids,
         )
+
+
+def test_file_backed_lane_subset_authenticates_candidate_terms_and_emits_only_selected_gid(tmp_path):
+    from numilab_human import passive_attachment_composition as pc
+    from numilab_human.forearm_parent_carrier_bridge import (
+        build_authenticated_full21_lane_world_subset,
+    )
+
+    child_bytes, core_ids = make_carrier(stable_id=132, source_count=2)
+    parent_bytes, _ = make_carrier(stable_id=132, source_count=2)
+    child_path = tmp_path / "candidate-child.nhtissue"
+    parent_path = tmp_path / "candidate-parent.nhtissue"
+    extension_path = tmp_path / "candidate-parents.json"
+    receipt_path = tmp_path / "accepted.receipt.json"
+    child_path.write_bytes(child_bytes)
+    parent_path.write_bytes(parent_bytes)
+    child_file = pc._read_nhtiss4(child_path)
+    child_record = next(row for row in child_file["records"] if int(row[6]) == 132)
+    child_row = pc._nhtiss_row_arrays(child_file, child_record)
+    parent_file = pc._read_nhtiss4(parent_path)
+    parent_record = next(row for row in parent_file["records"] if int(row[6]) == 132)
+    parent_row = pc._nhtiss_row_arrays(parent_file, parent_record)
+    points = np.asarray(child_row["positions"][:, :3], dtype="<f4")
+    weights = normalized_weights(child_row["vertex_count"])
+    terms = []
+    for slot in range(child_row["vertex_count"]):
+        first_parent_vertex = (slot // 21) * 21
+        terms.append([
+            [0, 132, first_parent_vertex + lane, float(weights[slot, lane])]
+            for lane in range(21)
+        ])
+    extension_path.write_text(json.dumps({
+        "child_payload_sha256": hashlib.sha256(child_bytes).hexdigest(),
+        "source_payloads": [{
+            "path": str(parent_path.resolve()),
+            "sha256": hashlib.sha256(parent_bytes).hexdigest(),
+        }],
+        "surfaces": [{"stable_id": 132, "vertices": terms}],
+    }, sort_keys=True))
+    poses = [{
+        "body_index": index,
+        "position_m": [0.0, 0.0, 0.0],
+        "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    } for index in range(157)]
+    receipt_path.write_text(json.dumps({
+        "schema": "numi.human.accepted-render-geometry.v1",
+        "accepted_step": 4,
+        "accepted_body_pose_count": len(poses),
+        "accepted_body_poses": poses,
+    }, sort_keys=True))
+
+    lanes, proof = build_authenticated_full21_lane_world_subset(
+        source_payload_path=child_path,
+        parent_extension_path=extension_path,
+        parent_payload_path=parent_path,
+        accepted_step_receipt_path=receipt_path,
+        stable_id=132,
+        source_slots_i64=np.asarray([1], dtype="<i8"),
+        canonical_gids_u64=np.asarray([987654], dtype="<u8"),
+        source_points_float32=points[1:2].copy(),
+        core_weights_float64=weights[1:2].copy(),
+        expected_ordered_core_body_indices=core_ids,
+    )
+    assert lanes.shape == (1, 21, 3)
+    assert np.array_equal(lanes[0], np.repeat(points[1:2], 21, axis=0))
+    assert proof["typed_identity"] == [51005, 132]
+    assert proof["accepted_step"] == 4
+    assert proof["vertex_count"] == 1
+    assert proof["not_native_capture"] and proof["not_anatomy_admission"]
+
+    bad_terms = [list(row) for row in terms]
+    bad_terms[1] = [list(term) for term in bad_terms[1]]
+    bad_terms[1][20][2] = bad_terms[1][19][2]
+    extension_path.write_text(json.dumps({
+        "child_payload_sha256": hashlib.sha256(child_bytes).hexdigest(),
+        "source_payloads": [{
+            "path": str(parent_path.resolve()),
+            "sha256": hashlib.sha256(parent_bytes).hexdigest(),
+        }],
+        "surfaces": [{"stable_id": 132, "vertices": bad_terms}],
+    }, sort_keys=True))
+    with pytest.raises(ValueError, match="exact one-hot owner lane|repeat a parent lane"):
+        build_authenticated_full21_lane_world_subset(
+            source_payload_path=child_path,
+            parent_extension_path=extension_path,
+            parent_payload_path=parent_path,
+            accepted_step_receipt_path=receipt_path,
+            stable_id=132,
+            source_slots_i64=np.asarray([1], dtype="<i8"),
+            canonical_gids_u64=np.asarray([987654], dtype="<u8"),
+            source_points_float32=points[1:2].copy(),
+            core_weights_float64=weights[1:2].copy(),
+            expected_ordered_core_body_indices=core_ids,
+        )
+
