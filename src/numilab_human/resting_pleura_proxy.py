@@ -1230,6 +1230,8 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         raise ValueError("source-face edge-collapse evidence requires authenticated source lineage rows")
     if set(edge_collapse_evidence_by_row) & set(parent_evidence_by_row):
         raise ValueError("one candidate row cannot reuse subdivision and edge-collapse immediate-parent evidence")
+    if set(patch_geometry_by_row) & set(edge_collapse_evidence_by_row):
+        raise ValueError("edge-collapse subdivision geometry must be nested under its authenticated immediate parent")
     if source_lineage_lobes is not None:
         for stable_id, evidence in edge_collapse_evidence_by_row.items():
             source_faces = np.asarray(source_lineage_lobes[stable_id][1])
@@ -1243,8 +1245,9 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 if declared is not None and tuple(sorted(declared)) != repeated:
                     raise ValueError("edge-collapse parent repeated source faces differ from the declared source subdivision")
                 subdivision_sources_by_row[stable_id] = repeated
-    if set(patch_geometry_by_row) != set(subdivision_sources_by_row):
-        raise ValueError("every source-face subdivision opt-in requires matching exact patch geometry evidence")
+    expected_patch_geometry_rows = set(subdivision_sources_by_row) - set(edge_collapse_evidence_by_row)
+    if set(patch_geometry_by_row) != expected_patch_geometry_rows:
+        raise ValueError("source-face subdivision requires matching exact patch geometry evidence except when nested under an edge-collapse parent proof")
     if has_explicit_ancestry and source_lineage_lobes is None:
         raise ValueError("explicit source pleura ancestry requires authenticated source lineage rows")
     if has_explicit_ancestry:
@@ -1347,7 +1350,18 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                         edge_collapse_evidence_by_row[stable_id],
                     )
                 if stable_id in subdivision_sources_by_row:
-                    if stable_id in parent_evidence_by_row:
+                    if stable_id in edge_collapse_evidence_by_row:
+                        collapse_parent_proof = edge_collapse_reports[stable_id][
+                            "parent_source_subdivision_evidence"]
+                        if collapse_parent_proof is None:
+                            raise ValueError("edge-collapse repeated source faces lack their nested immediate-parent subdivision proof")
+                        subdivision_patch_reports[stable_id] = {
+                            "proof_scope": "authenticated_immediate_edge_collapse_parent",
+                            "candidate_is_post_subdivision_edge_collapse": True,
+                            "source_subdivision_face_ids": list(subdivision_sources_by_row[stable_id]),
+                            "nested_parent_subdivision_proof": collapse_parent_proof,
+                        }
+                    elif stable_id in parent_evidence_by_row:
                         parent_chain = _validate_source_face_subdivision_parent_chain(
                             stable_id, candidate_faces, candidate_vertices6,
                             face_map, vertex_map, len(source_faces),

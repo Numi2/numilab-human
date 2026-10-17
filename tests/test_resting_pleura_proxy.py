@@ -450,6 +450,19 @@ class RestingPleuraProxyTests(unittest.TestCase):
             candidate_face_to_parent.append((parent_face_id,))
         candidate_vertices6 = np.asarray(candidate_vertices6, dtype=np.float32)
         candidate_faces = np.asarray(candidate_faces, dtype=np.int64)
+        noncoplanar_survivors = []
+        for output_face_id, parent_face_id in enumerate(candidate_face_to_parent):
+            parent_face_id = parent_face_id[0]
+            parent_triangle = parent_faces[parent_face_id]
+            if np.sum(np.isin(parent_triangle, (removed, retained))) != 1:
+                continue
+            old_points = parent_vertices6[parent_triangle, :3].astype(np.float64)
+            new_points = candidate_vertices6[candidate_faces[output_face_id], :3].astype(np.float64)
+            old_normal = np.cross(old_points[1] - old_points[0], old_points[2] - old_points[0])
+            signed_offsets = (new_points - old_points[0]) @ old_normal
+            if np.any(signed_offsets != 0):
+                noncoplanar_survivors.append(output_face_id)
+        self.assertTrue(noncoplanar_survivors, "fixture must exercise a non-coplanar surviving face after collapse")
 
         candidate_lobes = self._copy_lobes(source)
         candidate_lobes[305] = (candidate_vertices6, candidate_faces)
@@ -555,13 +568,16 @@ class RestingPleuraProxyTests(unittest.TestCase):
             source_face_ancestry=candidate_face_maps,
             source_vertex_ancestry=candidate_vertex_maps,
             allow_source_face_subdivisions={305: (source_patch_face,)},
-            source_face_subdivision_patch_geometry={305: exact_patch_geometry(candidate_vertices6)},
             source_face_edge_collapse_parent_evidence={305: edge_evidence},
         )
         collapse_report = detail["source_face_edge_collapse_reports_by_stable_id"]["305"]
         self.assertTrue(collapse_report["passed"])
         self.assertTrue(collapse_report["parent_source_subdivision_evidence"][
             "parent_exact_subdivision_patch_geometry"]["exact_raw_and_float32_patch_boundary_conserved"])
+        self.assertEqual(
+            collapse_report["candidate_surface_sha256"],
+            pleura._parent_surface_sha256(305, candidate_vertices6, candidate_faces),
+        )
         self.assertTrue(collapse_report["exact_source_and_world_self_intersection_rechecks_required"])
         self.assertEqual(len(detail["components"]), 2)
 
