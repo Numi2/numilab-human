@@ -408,18 +408,22 @@ def _oriented_surface_topology(records):
     return edge_uses
 
 
-def construct_nonzero_winding_self_union(source_surface):
+def construct_nonzero_winding_self_union(source_surface, *, allow_coplanar_overlap=False):
     """Extract the exact boundary of the nonzero signed-winding set of one shell.
 
-    Only transverse, segment-valued self-intersections are supported. The
-    arrangement splits every incident source face, classifies each connected
+    The strict default supports transverse segment-valued self-intersections.
+    The opt-in coplanar overlap option uses the joint arrangement and complete
+    parent support described by construct_positive_winding_self_union, while
+    retaining the nonzero material rule. The arrangement splits every incident
+    source face, classifies each connected
     ordinary-face patch using exact probes before the next source-plane
     crossing, and retains patches separating zero from nonzero winding.
-    Coplanar, point-only, unresolved, or nonmanifold arrangements fail closed.
+    Unsupported point-only, unresolved, or nonmanifold arrangements fail closed.
     This is a rational source-space result; Float32 conversion requires a
     separate audit and is not implied here.
     """
-    return _construct_winding_self_union(source_surface, positive_only=False)
+    return _construct_winding_self_union(source_surface, positive_only=False,
+                                         allow_coplanar_overlap=allow_coplanar_overlap)
 
 
 def construct_positive_winding_self_union(source_surface, *, point_contact_cover_face_indices=None,

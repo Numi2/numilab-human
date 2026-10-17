@@ -110,3 +110,25 @@ def test_mixed_oriented_layers_retain_all_support_and_reversal_flags():
     assert volume(result) == F(4,3)
     assert all(len(row["source_faces"]) == 3 and row["reversed_from_sources"] == [False,False,True]
                for row in result["output_face_ancestry"])
+
+
+@pytest.mark.parametrize("offset", [(0,0,0),(1,0,0)])
+def test_nonzero_owner_reuses_joint_arrangement_with_unchanged_material_rule(offset):
+    result = p.construct_nonzero_winding_self_union(source(offset), allow_coplanar_overlap=True)
+    assert result["material_rule"] == "nonzero"
+    assert volume(result) == (F(4,3) if offset == (0,0,0) else F(5,2))
+    assert result["output_self_intersection_audit"]["count"] == 0
+
+
+def test_nonzero_reversed_coincident_source_is_reoriented_with_complete_support():
+    original = source()
+    original["triangles"] = [(a,c,b) for a,b,c in original["triangles"]]
+    result = p.construct_nonzero_winding_self_union(original, allow_coplanar_overlap=True)
+    assert volume(result) == F(4,3)
+    assert all(row["reversed_from_sources"] == [True,True]
+               for row in result["output_face_ancestry"])
+
+
+def test_nonzero_default_remains_strict():
+    with pytest.raises(HumanImportError, match="coplanar self-intersection"):
+        p.construct_nonzero_winding_self_union(source())

@@ -19,6 +19,16 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Shared joint repair for nonzero material — 2026-10-17
+
+The same opt-in joint coplanar/transverse arrangement is exposed through the
+existing nonzero-winding owner. Its material rule and strict default are
+unchanged. This addresses the algorithmic refusal retained by colon458 run113
+without replacing it with the positive-only material inference used for
+intercostal317. Exact coincident, partial-overlap and globally reversed fixtures
+verify complete parent orientation support. Actual colon458 reconstruction,
+Float32 emission, surroundings and motion are not admitted by these fixtures.
+
 ## Complete-target bounded containment — 2026-10-17
 
 The actual forearm all-neighbor audit reached a fail-closed capacity limit for
