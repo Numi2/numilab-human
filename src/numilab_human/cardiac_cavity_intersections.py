@@ -185,11 +185,17 @@ def _segment_triangle(p, q, triangle, normal):
 
 def _integer_lattice_normalization(points):
     """Map exact rational points to a small integer lattice, retaining its inverse."""
-    denominator = math.lcm(*(Fraction(value).denominator
-                             for point in points for value in point))
-    integer_points = tuple(tuple(Fraction(value).numerator *
-                                 (denominator // Fraction(value).denominator)
-                                 for value in point) for point in points)
+    # Predicate callers already supply exact built-in ints or Fractions.
+    # Keep those immutable values; canonicalize other numeric representations
+    # once rather than reconstructing every coordinate three times.
+    exact_points = tuple(tuple(value if type(value) in (int, Fraction)
+                               else Fraction(value) for value in point)
+                         for point in points)
+    denominator = math.lcm(*(value.denominator
+                             for point in exact_points for value in point))
+    integer_points = tuple(tuple(value.numerator *
+                                 (denominator // value.denominator)
+                                 for value in point) for point in exact_points)
     origin = integer_points[0]
     scale = 0
     for point in integer_points:
@@ -608,6 +614,8 @@ class PreparedPointLocation:
 
 
 def _exact_rational_coordinate(value, context):
+    if type(value) in (int, Fraction):
+        return value
     if isinstance(value, bool):
         require(False, f"{context} must use exact integer or Fraction coordinates")
     if isinstance(value, Integral):
