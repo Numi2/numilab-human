@@ -88,6 +88,77 @@ retained-witness-binding-regression-20261017-002/result.json, SHA256
 Attempt001 is retained: test-file F841 reported an unchanged existing unused
 variable; the scoped002 checks preserve that unrelated test code.
 
+## Joint repair integration checkpoint — 2026-10-17
+
+Commit f5792929 adds a normal authoring inverse to the existing full21 parent
+carrier bridge. Target directions come from the physical emitted mesh. The
+forward check uses all21 registered binding rotations, body rotations and
+Float32 coefficients; uniform binding scale and translation do not affect
+normals. Auxiliary carrier-coordinate meshes do not supply anatomical normals.
+The authoring inverse changes no runtime physics owner. Relevant bridge/verifier
+checks pass143 tests and35 subtests; existing passive attachment/carrier checks
+pass127 tests and14 subtests. Evidence:
+full21-normal-owner-regression-20261017-001/result.json, SHA256
+ a49be1fb0af77762dc589b684b4c03877e6db87152576dd2d1fd218db89ab3d6;
+parent-owner-regression.json in the same directory, SHA256
+ e1401cf8bcafd63777d358937fee0d83371e4de2a51d8a920909ebc6f910b9a8.
+Commit binding verifies the committed diff equals the tested diff.
+
+Intercostal317 candidate149 corrects17 inferred generated vertices, with a
+maximum emitted displacement of4.77436 micrometres. Complete exact source and
+predicted emitted-Body20-world self checks each find zero unexpected pairs,
+replacing the13-pair world failure of145. Face topology and source ancestry
+arrays are unchanged, and normals outside the affected face support are
+byte-exact. Candidate SHA256:
+8812b078ff47112a9d8df68a83a3f321b9478c73bf1df17b47f3a28f145324c3.
+Report SHA256:
+55f9083cc1e824b900f66d7ab6846904012b414798e03e8ad1810a2504938bd0.
+Local registration ancestry SHA256:
+142b69851378b70a0da5e890c0a00d40551676b5497c5a9404c97a0c307eb10a.
+The existing compiler source-emission check153 also passes: candidate local
+positions/faces and all other rows are byte-exact on ABI5 readback, with global
+counts validated against the changed row. Its report SHA256 is
+2ce910e5afe4ea44172663e5cfac6642752362569d778d33633d405bfd77b156.
+The diagnostic payload is not a final runtime receipt or native capture.
+Elapsed time121.176 seconds. This passes local self geometry only; nearby
+structures, closed-solid checks, attachments, retained motion and native
+confirmation remain separate and are not claimed.
+
+Fresh forearm007d checks use18 exact geometry-bound reports for132 and current
+1333 against five bones, skin and three nearby muscles. A shared-GID hard SAT
+construction with5,580 GIDs and20,815 inequalities is infeasible and emits no
+candidate. Saved-matrix diagnosis007g finds4,392 nonzero bone constraints and
+zero empty Jacobian rows; the combined bone constraints remain infeasible even
+without the3mm displacement cap. Its feasibility report SHA256 is
+fbf9b169b4b7b598251aa2f734dcec20d73e9b504e298957cb6ecf1072d5e51a.
+Per-target unbounded checks also reject all five row132 target systems and
+row134 targets108/110/111; only row134 versus120/123 are feasible. Report SHA256:
+c6ef4b98512f81cc66c06bdf27d9f77a3d49c7d3afc9568bc3004397fa9289ed.
+This rejects the chosen fixed separators; it does not establish that no coherent
+anatomical repair exists. Source-emission trial1340 failed before materialization
+because its driver passed the receipt helper's `(poses, report)` tuple as a pose
+map. The failure is retained; no geometry or native state was accepted.
+
+Vessel162 uses the current039g lung/pleura context and five shared section
+translation controls across471/475. Its first solve finds an optimum, but all
+four orientation-valid line-search trials increase contacts from2257 to at least
+2265. No step is accepted; the original geometry remains unchanged. Report
+SHA256: 3dcca880a84d4d0c5cd31e5dddb96b8e61e867f8893f363f38308f207e6537d0.
+This is another rejected construction, not a registered or continuous route.
+
+Storage050 transparently compresses two closed diagnostic JSON files while
+preserving their decoded hashes, paths and ordinary metadata. It deletes no
+source or evidence. Measured free-space gain is134,828,032 bytes; the earlier
+clone attempt049 had a negative16,384-byte result and is not counted as recovery.
+The050 manifest SHA256 is
+5d0ca4b33c521ab7f973d8a191c76a77240282767bc935a45ea26651801671b5.
+Storage051 transparently compresses one closed historical1324 carrier payload,
+with actual free-space gain42,160,128 bytes and decoded SHA256 unchanged. Its
+manifest SHA256 is
+bddbd506764cd04e29388939f4b3764f772fb4be6a39555b65a3c1ab9594357a.
+Active1284 inputs are untouched. No new native confirmation or long qualification
+has run at this checkpoint.
+
 ## Lung collapse ownership and composed pleura — 2026-10-17
 
 The existing pleura compiler now accepts an optional authenticated edge-collapse
