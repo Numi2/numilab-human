@@ -517,11 +517,17 @@ def main(argv=None):
     p.add_argument("--body-manifest", type=Path, help="exact runtime manifest bound by NHBONES")
     p.add_argument("--collect-failures", action="store_true",
                    help="retain all selected failures in one pass; any failure still rejects")
+    p.add_argument("--boundary-inventory-only", action="store_true",
+                   help="collect every boundary crossing before containment; always diagnostic, never an admission pass")
     p.add_argument("--maximum-seconds", type=float,
                    help="positive finite wall-clock budget for geometry predicates; timeout rejects and retains completed gates")
     p.add_argument("--preflight-only", action="store_true")
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args(argv)
+    if args.boundary_inventory_only and args.preflight_only:
+        p.error("--boundary-inventory-only requires geometry predicates")
+    if args.boundary_inventory_only and args.shared_partition:
+        p.error("--boundary-inventory-only does not support shared partition admission; run the strict partition gate separately")
     if args.maximum_seconds is not None:
         if not math.isfinite(args.maximum_seconds) or args.maximum_seconds <= 0:
             p.error("--maximum-seconds must be positive and finite")
@@ -781,6 +787,8 @@ def main(argv=None):
                     if previous_mask is not None:
                         signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
             collection_options = {"collect_failures": True} if args.collect_failures else {}
+            if args.boundary_inventory_only:
+                collection_options["boundary_inventory_only"] = True
             with geometry_budget(args.maximum_seconds):
                 if partitions:
                     from numilab_human.resting_shared_partition_verify import audit_with_shared_partitions
@@ -799,6 +807,12 @@ def main(argv=None):
                         **collection_options)
             report.update(result)
             report["status"] = "PASS_SELECTED_GEOMETRY_ONLY" if report["passed"] else "REJECTED_SELECTED_GEOMETRY"
+            if args.boundary_inventory_only:
+                report["status"] = (
+                    "BOUNDARY_INVENTORY_CLEAR_CONTAINMENT_PENDING"
+                    if report.get("boundary_stage_passed") else
+                    "BOUNDARY_INVENTORY_WITH_FAILURES")
+
     except GeometryBudgetExceeded as error:
         report.update(passed=False, status="REJECTED_GEOMETRY_BUDGET_EXHAUSTED",
                       failed_stage="geometry_budget", collection_complete=False,

@@ -431,6 +431,53 @@ class RestingVerificationEntrypointTests(unittest.TestCase):
         with patch.object(tool.json, "loads", side_effect=AssertionError("must reuse manifest proof")):
             tool.apply_rest_source(native, key, source, digest, poses, cache)
 
+    def test_boundary_inventory_cli_retains_all_failures_and_never_admits(self):
+        for nested in (True, False):
+            with self.subTest(nested=nested):
+                pack, receipt = self.root / "pack", self.root / "receipt"
+                pack.write_bytes(b"native-pack")
+                receipt.write_bytes(b"receipt")
+                output = self.root / ("nested.json" if nested else "crossed.json")
+                other = (51005, 74)
+                third = (51005, 75)
+                target = POINTS * np.float32(.2) + np.float32(.1) if nested else POINTS + np.float32(.1)
+                surfaces = self.surfaces()
+                surfaces[other] = (target, FACES.copy(), None, GIDS.copy() + 10)
+                surfaces[third] = (POINTS + np.float32(.2), FACES.copy(), None, GIDS.copy() + 20)
+                args = ["--pack", str(pack), "--pack-sha256", hashlib.sha256(pack.read_bytes()).hexdigest(),
+                        "--capture-receipt", str(receipt),
+                        "--receipt-sha256", hashlib.sha256(receipt.read_bytes()).hexdigest(),
+                        "--changed", "51005:73", "--target", "51005:74",
+                        "--boundary-inventory-only", "--output", str(output)]
+                if not nested:
+                    args.extend(["--target", "51005:75"])
+                with patch.object(tool.verify, "load_capture", return_value=(surfaces, {"accepted_step": 0})):
+                    with patch.object(tool.verify, "_contained_components", side_effect=AssertionError("deferred")):
+                        self.assertEqual(tool.main(args), 1)
+                result = json.loads(output.read_text())
+                self.assertFalse(result["passed"])
+                self.assertFalse(result["anatomical_admission"])
+                self.assertFalse(result["native_admission"])
+                self.assertTrue(result["containment_pending"])
+                self.assertTrue(result["collection_complete"])
+                self.assertEqual(result["boundary_stage_passed"], nested)
+                self.assertEqual(result["failure_count"], 0 if nested else 2)
+                self.assertTrue(result["input_integrity_after_audit"]["passed"])
+                gates = [json.loads(line) for line in output.with_suffix(".gates.jsonl").read_text().splitlines()]
+                self.assertEqual(gates, result["rows"])
+
+    def test_boundary_inventory_rejects_incompatible_modes_before_loading(self):
+        args = ["--pack", "missing", "--pack-sha256", "0"*64,
+                "--capture-receipt", "missing-receipt", "--receipt-sha256", "0"*64,
+                "--changed", "51005:73", "--boundary-inventory-only",
+                "--output", str(self.root / "report.json")]
+        for extra in (["--preflight-only"],
+                      ["--shared-partition", "51005:73", "51005:74", "missing", "0"*64]):
+            with self.subTest(extra=extra), patch.object(tool.verify, "load_capture", side_effect=AssertionError("cold rejection")):
+                with self.assertRaises(SystemExit) as failure:
+                    tool.main(args + extra)
+                self.assertEqual(failure.exception.code, 2)
+
     def test_bad_capture_pin_stops_before_capture_loader(self):
         pack, receipt = self.root / "p", self.root / "r"
         pack.write_bytes(b"pack")
