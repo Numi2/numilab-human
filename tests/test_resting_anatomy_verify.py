@@ -26,12 +26,13 @@ def tetra(scale=1., offset=0.):
 
 
 def _full21_lane_owner_proof(gids, source_points, weights, lane_world, cores, *,
-                             parent_sha, face_lineage, vertex_lineage):
+                             parent_sha, face_lineage, vertex_lineage, accepted_step=0,
+                             receipt_sha="e" * 64, source_sha="c" * 64):
     return {
         "schema": "numi.human.full21-per-lane-world-equivalence.v1",
-        "accepted_step": 0,
-        "capture_receipt_sha256": "e" * 64,
-        "source_payload_sha256": "c" * 64,
+        "accepted_step": accepted_step,
+        "capture_receipt_sha256": receipt_sha,
+        "source_payload_sha256": source_sha,
         "parent_payload_sha256": parent_sha,
         "ordered_core_body_indices": list(cores),
         "world_frame": "accepted_body_poses_from_capture_receipt",
@@ -45,7 +46,8 @@ def _full21_lane_owner_proof(gids, source_points, weights, lane_world, cores, *,
 
 
 def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overrides=None,
-                    normals=None, core_body_indices=None):
+                    normals=None, core_body_indices=None, include_lane_proof=True,
+                    accepted_step=0, receipt_sha="e" * 64, source_sha="c" * 64):
     positions = np.asarray(positions, dtype=np.float32)
     faces = np.asarray(faces, dtype=np.uint32)
     gids = np.asarray(gids, dtype=np.uint64)
@@ -70,8 +72,9 @@ def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overri
     proof = (_full21_lane_owner_proof(
         gids, positions, weights, lane_world, ordered,
         parent_sha=("a" if key[1] == 132 else "b") * 64,
-        face_lineage=face_lineage, vertex_lineage=vertex_lineage)
-        if len(ordered) == 21 else None)
+        face_lineage=face_lineage, vertex_lineage=vertex_lineage,
+        accepted_step=accepted_step, receipt_sha=receipt_sha, source_sha=source_sha)
+        if len(ordered) == 21 and include_lane_proof else None)
     return prepare_surface(
         key, positions, faces, normals=normals, source_vertex_ids=gids,
         source_face_lineage=face_lineage,
@@ -2569,6 +2572,50 @@ class CaptureDecoderTests(unittest.TestCase):
         self.assertTrue(any(len(row["feature_gids"]) == 2 for row in declarations))
         result = av.audit_surface_pair(first, second, intended_shared_feature_pairs=declarations)
         self.assertTrue(result["passed"], result)
+
+    def test_full21_lane_proof_is_required_for_shared_features(self):
+        first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64),
+                                include_lane_proof=False)
+        points = tetra() * np.float32(-1)
+        points[0] = first.positions[0]
+        second = feature_surface((51005, 134), points, FACES[:, [0, 2, 1]],
+                                 np.array([0, 11, 12, 13], dtype=np.uint64),
+                                 include_lane_proof=False)
+        declarations = declarations_for_actual_shared_features(first, second)
+        result = av.audit_surface_pair(
+            first, second, intended_shared_feature_pairs=declarations)
+        self.assertFalse(result["passed"], result)
+        self.assertTrue(any(row.get("reason") == "missing_pinned_full21_source_or_per_lane_world_owner_proof"
+                            for row in result["rejected_interface_feature_contacts"]))
+
+    def test_full21_lane_proof_accepts_matching_nonzero_accepted_step(self):
+        first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64),
+                                accepted_step=5, receipt_sha="e" * 64, source_sha="c" * 64)
+        points = tetra() * np.float32(-1)
+        points[0] = first.positions[0]
+        second = feature_surface((51005, 134), points, FACES[:, [0, 2, 1]],
+                                 np.array([0, 11, 12, 13], dtype=np.uint64),
+                                 accepted_step=5, receipt_sha="e" * 64, source_sha="c" * 64)
+        declarations = declarations_for_actual_shared_features(first, second)
+        self.assertTrue(av.audit_surface_pair(
+            first, second, intended_shared_feature_pairs=declarations)["passed"])
+
+    def test_full21_lane_proof_rejects_different_capture_step_receipt_or_source(self):
+        first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64),
+                                accepted_step=5)
+        points = tetra() * np.float32(-1)
+        points[0] = first.positions[0]
+        for kwargs in ({"accepted_step": 6}, {"receipt_sha": "f" * 64},
+                       {"source_sha": "d" * 64}):
+            with self.subTest(kwargs=kwargs):
+                second = feature_surface((51005, 134), points, FACES[:, [0, 2, 1]],
+                                         np.array([0, 11, 12, 13], dtype=np.uint64), **kwargs)
+                declarations = declarations_for_actual_shared_features(first, second)
+                result = av.audit_surface_pair(
+                    first, second, intended_shared_feature_pairs=declarations)
+                self.assertFalse(result["passed"], result)
+                self.assertTrue(any(row.get("reason") == "full21_owner_provenance_or_accepted_frame_differs"
+                                    for row in result["rejected_interface_feature_contacts"]))
 
     def test_full21_lane_proof_rejects_missing_or_malformed_owner_rows(self):
         positions = tetra()

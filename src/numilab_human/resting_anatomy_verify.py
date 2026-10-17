@@ -479,8 +479,8 @@ def _validate_full21_lane_owner_proof(proof, ordered_core_body_indices, *,
         raise ValueError("full21 lane owner proof fields differ from the pinned schema")
     if proof.get("schema") != "numi.human.full21-per-lane-world-equivalence.v1":
         raise ValueError("unsupported full21 lane owner proof schema")
-    if type(proof.get("accepted_step")) is not int or proof["accepted_step"] != 0:
-        raise ValueError("full21 lane owner proof must name accepted step zero")
+    if type(proof.get("accepted_step")) is not int or proof["accepted_step"] < 0:
+        raise ValueError("full21 lane owner proof must name a nonnegative accepted step")
     for key in ("capture_receipt_sha256", "source_payload_sha256", "parent_payload_sha256"):
         value = proof.get(key)
         if (not isinstance(value, str) or len(value) != 64
