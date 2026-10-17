@@ -4041,6 +4041,64 @@ def _authenticated_local_reconstruction_partial_source_positions(
     return local_positions, binding_report, unused_normal_fallback
 
 
+def _authenticated_candidate_source_local_positions(
+    candidate_npz_raw, world_positions_f32, *, q_f32, t_f32, spec,
+):
+    """Retain pinned repair coordinates only after exact existing-owner replay.
+
+    These coordinates are inferred repairs, not measurements. Candidate hashing
+    and Float32 replay establish emission identity; geometry and attachments
+    still require their existing independent gates.
+    """
+    import io
+
+    key = spec.get("candidate_source_local_positions_key")
+    _require(isinstance(key, str) and bool(key),
+             "candidate source-local position key is malformed")
+    candidate_sha = _local_reconstruction_hex_sha(
+        spec.get("candidate_npz_sha256"), "candidate NPZ pin")
+    _require(isinstance(candidate_npz_raw, bytes)
+             and _local_reconstruction_sha256(candidate_npz_raw) == candidate_sha,
+             "candidate source-local NPZ differs from its independent pin")
+    local_sha = _local_reconstruction_hex_sha(
+        spec.get("candidate_source_local_positions_sha256"),
+        "candidate source-local position pin")
+    try:
+        with np.load(io.BytesIO(candidate_npz_raw), allow_pickle=False) as archive:
+            local = archive[key].copy()
+    except (KeyError, TypeError, ValueError, OSError) as error:
+        raise ValueError("candidate source-local positions are missing or malformed") from error
+    world = np.asarray(world_positions_f32)
+    _require(local.dtype == np.dtype("<f4")
+             and world.dtype == np.dtype("<f4")
+             and local.ndim == 2 and local.shape[1] == 3
+             and len(local) > 0 and local.shape == world.shape
+             and np.isfinite(local).all() and np.isfinite(world).all(),
+             "candidate source-local positions must match finite Float32 world allocation")
+    local = np.ascontiguousarray(local, dtype="<f4")
+    world = np.ascontiguousarray(world, dtype="<f4")
+    _require(_local_reconstruction_sha256(local.tobytes()) == local_sha,
+             "candidate source-local position bytes differ from their independent pin")
+    replay = np.asarray(_load_local_body20_transform()(q_f32, t_f32, local))
+    _require(replay.dtype == np.dtype("<f4")
+             and replay.shape == world.shape
+             and np.ascontiguousarray(replay).tobytes() == world.tobytes(),
+             "candidate source-local positions do not exactly replay through authenticated Body20")
+    return local, {
+        "mode": "pinned_repair_source_local_positions_exact_forward_replay",
+        "source_position_inverse_performed": False,
+        "candidate_npz_sha256": candidate_sha,
+        "candidate_source_local_positions_key": key,
+        "source_row_local_positions_sha256": local_sha,
+        "candidate_world_positions_f32_sha256": _local_reconstruction_sha256(world.tobytes()),
+        "replayed_world_positions_f32_sha256": _local_reconstruction_sha256(replay.tobytes()),
+        "source_local_positions_byte_exact": True,
+        "source_measurement_claim": False,
+        "anatomical_admission": False,
+        "native_replay_required_for_emitted_world_geometry": True,
+    }
+
+
 def compile_local_reconstruction_intercostal_payload(
     raw_payload: bytes,
     replacements: dict[int, dict],
@@ -4060,8 +4118,11 @@ def compile_local_reconstruction_intercostal_payload(
     being rebound to a source row whose entire local position allocation is
     authenticated. Row 315 may instead carry an authenticated partial source
     position crosswalk: exact source slots are retained and only generated or
-    changed points pass through the existing Body20 inverse. Normals are
-    regenerated from the candidate geometry.
+    changed points pass through the existing Body20 inverse. A pinned candidate
+    source-local array may instead be preserved when its forward Float32 replay
+    through that same authenticated Body20 pose exactly equals the candidate
+    world array. This does not confer anatomical or attachment admission.
+    Normals are regenerated from the candidate geometry.
     Rib maps are limited to typed owners observed in authenticated parent
     lineage; unobserved channels remain absent. Admission stays false.
     """
@@ -4106,8 +4167,11 @@ def compile_local_reconstruction_intercostal_payload(
         partial_source_position_spec = spec.get("partial_source_position_retention")
         _require(partial_source_position_spec is None or isinstance(partial_source_position_spec, dict),
                  f"stable ID {stable_id} partial source-position crosswalk is malformed")
-        _require(not (preserve_source_row_local_positions and partial_source_position_spec is not None),
-                 f"stable ID {stable_id} cannot use full and partial source-position retention together")
+        candidate_source_local_mode = spec.get("candidate_source_local_positions_key") is not None
+        _require(sum((preserve_source_row_local_positions,
+                      partial_source_position_spec is not None,
+                      candidate_source_local_mode)) <= 1,
+                 f"stable ID {stable_id} cannot combine source-position retention modes")
         _require(
             not (preserve_source_row_local_positions
                  and spec.get("source_emission_diagnostic_only") is True),
@@ -4175,7 +4239,10 @@ def compile_local_reconstruction_intercostal_payload(
             world_vertices6 = np.ascontiguousarray(
                 np.concatenate((world_positions, world_normals_f32), axis=1), dtype="<f4")
             partial_unused_normal_fallback = None
-            if partial_source_position_spec is not None:
+            if candidate_source_local_mode:
+                local_positions, inverse_report = _authenticated_candidate_source_local_positions(
+                    candidate_npz_raw, world_positions, q_f32=q, t_f32=t, spec=spec)
+            elif partial_source_position_spec is not None:
                 local_positions, inverse_report, partial_unused_normal_fallback = (
                     _authenticated_local_reconstruction_partial_source_positions(
                         world_positions, source_row, stable_id=stable_id,
@@ -4227,11 +4294,12 @@ def compile_local_reconstruction_intercostal_payload(
                 "candidate_faces_sha256": _local_reconstruction_sha256(faces.tobytes()),
                 "body20_inverse_and_replay": inverse_report,
                 "body20_source_position_binding": inverse_report,
+                "candidate_source_local_positions_preserved": candidate_source_local_mode,
                 "source_row_local_positions_partially_preserved": (
                     partial_source_position_spec is not None),
                 "source_row_local_positions_sha256": (
                     inverse_report.get("source_row_local_positions_sha256")
-                    if partial_source_position_spec is not None else None),
+                    if partial_source_position_spec is not None or candidate_source_local_mode else None),
                 "native_replay_required_for_emitted_world_geometry": True,
                 "attachment_ownership_status": "unresolved_and_unmapped",
                 "unowned_child_face_count": len(faces),
@@ -4396,6 +4464,9 @@ def compile_local_reconstruction_intercostal_payload(
                 "source_local_positions_byte_exact": True,
                 "native_replay_required_for_emitted_world_geometry": True,
             }
+        elif candidate_source_local_mode:
+            local_positions, inverse_report = _authenticated_candidate_source_local_positions(
+                candidate_npz_raw, world_positions, q_f32=q, t_f32=t, spec=spec)
         elif partial_source_position_spec is not None:
             local_positions, inverse_report, partial_unused_normal_fallback = (
                 _authenticated_local_reconstruction_partial_source_positions(
@@ -4485,12 +4556,13 @@ def compile_local_reconstruction_intercostal_payload(
                 None if preserve_source_row_local_positions else inverse_report),
             "body20_source_position_binding": inverse_report,
             "source_row_local_positions_preserved": preserve_source_row_local_positions,
+            "candidate_source_local_positions_preserved": candidate_source_local_mode,
             "source_row_local_positions_partially_preserved": (
                 partial_source_position_spec is not None),
             "source_row_local_positions_sha256": (
                 inverse_report.get("source_row_local_positions_sha256")
                 if preserve_source_row_local_positions or partial_source_position_spec is not None
-                else None),
+                or candidate_source_local_mode else None),
             "authenticated_parent_patch_inference_used": (
                 owner_report["inherited_parent_face_owner_count"] > 0),
             "actual_source_bone_proximity_crosscheck_required": True,
@@ -4554,6 +4626,9 @@ def compile_local_reconstruction_intercostal_payload(
         "source_local_positions_partially_preserved_stable_ids": sorted(
             int(stable_id) for stable_id, row in row_reports.items()
             if row.get("source_row_local_positions_partially_preserved") is True),
+        "candidate_source_local_positions_preserved_stable_ids": sorted(
+            int(stable_id) for stable_id, row in row_reports.items()
+            if row.get("candidate_source_local_positions_preserved") is True),
         "attachment_ownership_unresolved_stable_ids": sorted(
             int(stable_id) for stable_id, row in row_reports.items()
             if row.get("source_emission_diagnostic_only") is True),

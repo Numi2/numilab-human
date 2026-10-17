@@ -1322,3 +1322,114 @@ def test_runtime_attachment_sidecar_rejects_typed_identity_or_slot_hash_drift(mu
             bones_payload_sha256="4" * 64,
             runtime_attachment_map_sidecars=altered,
         )
+
+
+@pytest.mark.parametrize("diagnostic", [False, True])
+@pytest.mark.parametrize("rotated", [False, True])
+def test_pinned_repair_source_positions_survive_exact_emission(tmp_path, monkeypatch, diagnostic, rotated):
+    from numilab_human import resting_intercostal_mesh_arrangement as owner
+    import io
+
+    vertices = np.asarray([
+        [0, 0, 0, 0, 0, 1], [.1, 0, 0, 0, 0, 1],
+        [0, .1, 0, 0, 0, 1], [1e-12, 0, 0, 0, 1, 0],
+    ], dtype="<f4")
+    faces = np.asarray([[0, 1, 2]], dtype="<u4")
+    source = encode_payload((b"NHANAT1\0", 5, 2, 6, 6, 0x12345678, b"s" * 32), {
+        313: {"body_index": 20, "layer": 1, "flags": 0, "vertices6": vertices, "faces": faces},
+        900: {"body_index": 10, "layer": 1, "flags": 0, "vertices6": vertices, "faces": faces},
+    })
+    # Include an appended birth and an unused sub-ULP source coordinate that
+    # cannot be recovered uniquely by inverting the translated world array.
+    local = np.ascontiguousarray(np.vstack((vertices[:, :3], [[0, 1e-12, 0]])), dtype="<f4")
+    q = np.asarray([0, 0, .38268343, .9238795] if rotated else [0, 0, 0, 1], dtype="<f4")
+    t = np.asarray([.1, .2, .3], dtype="<f4")
+    world = owner._load_local_body20_transform()(q, t, local)
+    buf = io.BytesIO()
+    np.savez(buf, positions_world_f32=world, positions_source_local_f32=local, faces=faces)
+    raw = buf.getvalue()
+    pack = tmp_path / "step-0.mrvpack"
+    pack.write_bytes(b"accepted fixture pack")
+    receipt_data = _accepted_receipt(_sha(pack.read_bytes()), _sha(source))
+    receipt_data["accepted_body_poses"][20]["quaternion_xyzw"] = q.astype(float).tolist()
+    receipt_data["accepted_registered_body_poses"][0]["quaternion_xyzw"] = q.astype(float).tolist()
+    receipt = json.dumps(receipt_data).encode()
+    receipt_path = tmp_path / "step-0.receipt.json"
+    receipt_path.write_bytes(receipt)
+    parent = _face_npz(faces)
+    ancestry = _source_face_report()
+    tools = _source_tool_report()
+    owners = _owner_report(parent, ancestry, faces)
+    spec = {
+        "candidate_npz_raw": raw, "candidate_npz_sha256": _sha(raw),
+        "candidate_source_local_positions_key": "positions_source_local_f32",
+        "candidate_source_local_positions_sha256": _sha(local.tobytes()),
+        "world_positions_f32": world, "faces": faces,
+    }
+    if diagnostic:
+        spec["source_emission_diagnostic_only"] = True
+    else:
+        spec.update({
+            "face_parent_ids": [[0]], "interface_face_mask": np.asarray([True]),
+            "parent_faces": faces, "parent_faces_key": "faces", "parent_payload_raw": parent,
+            "operation_ancestry_raw": ancestry, "authenticated_source_report_raws": [ancestry, tools],
+            "authenticated_source_report_sha256s": [_sha(ancestry), _sha(tools)],
+            "parent_face_owner_report_raw": owners, "parent_face_owner_report_sha256": _sha(owners),
+            "required_rib_ids": [48],
+        })
+    monkeypatch.setattr(owner, "_inverse_body20_positions_f32",
+                        lambda *_: pytest.fail("pinned exact source positions must not be inverted"))
+    output, report = owner.compile_local_reconstruction_intercostal_payload(
+        source, {313: spec}, expected_source_payload_sha256=_sha(source),
+        accepted_receipt_raw=receipt, accepted_receipt_path=receipt_path,
+        accepted_capture_pack_path=pack)
+    _h, _r, rows = _parse_payload(output)
+    assert np.ascontiguousarray(rows[313]["vertices6"][:, :3]).tobytes() == local.tobytes()
+    assert rows[900]["vertices6"].tobytes() == vertices.tobytes()
+    assert report["unmodified_rows_byte_exact"] == 1
+    assert report["candidate_source_local_positions_preserved_stable_ids"] == [313]
+    binding = report["row_reports"]["313"]["body20_source_position_binding"]
+    assert binding["source_position_inverse_performed"] is False
+    assert binding["source_measurement_claim"] is False
+    assert report["anatomical_admission"] is report["native_admission"] is False
+    if not diagnostic:
+        assert report["row_reports"]["313"]["observed_rib_channel_ids"] == [48]
+        assert report["runtime_attachment_map_sidecars"]["313"]["48"]["source_partition"]["native_admission"] is False
+
+    for conflict in ("preserve_source_row_local_positions", "partial_source_position_retention"):
+        bad = {**spec, conflict: True if conflict.startswith("preserve") else {}}
+        with pytest.raises(ValueError, match="cannot combine"):
+            owner.compile_local_reconstruction_intercostal_payload(
+                source, {313: bad}, expected_source_payload_sha256=_sha(source),
+                accepted_receipt_raw=receipt, accepted_receipt_path=receipt_path,
+                accepted_capture_pack_path=pack)
+
+
+@pytest.mark.parametrize("mutation", [
+    "float64", "shape", "nonfinite", "source_hash", "npz_hash", "world_ulp",
+    "missing_key", "empty_key",
+])
+def test_pinned_repair_source_positions_reject_unbound_or_inexact_arrays(mutation):
+    from numilab_human import resting_intercostal_mesh_arrangement as owner
+    import io
+
+    q = np.asarray([0, 0, 0, 1], dtype="<f4")
+    t = np.asarray([.1, .2, .3], dtype="<f4")
+    local = np.asarray([[.01, .02, .03], [.04, .05, .06]], dtype="<f4")
+    world = owner._load_local_body20_transform()(q, t, local)
+    if mutation == "float64": local = local.astype("<f8")
+    if mutation == "shape": local = local[:1]
+    if mutation == "nonfinite": local[0, 0] = np.nan
+    buf = io.BytesIO()
+    np.savez(buf, local=local)
+    raw = buf.getvalue()
+    spec = {"candidate_npz_sha256": _sha(raw), "candidate_source_local_positions_key": "local",
+            "candidate_source_local_positions_sha256": _sha(local.tobytes())}
+    if mutation == "source_hash": spec["candidate_source_local_positions_sha256"] = "0" * 64
+    if mutation == "npz_hash": spec["candidate_npz_sha256"] = "0" * 64
+    if mutation == "world_ulp": world[0, 0] = np.nextafter(world[0, 0], np.float32(np.inf))
+    if mutation == "missing_key": spec["candidate_source_local_positions_key"] = "absent"
+    if mutation == "empty_key": spec["candidate_source_local_positions_key"] = ""
+    with pytest.raises(ValueError):
+        owner._authenticated_candidate_source_local_positions(
+            raw, world, q_f32=q, t_f32=t, spec=spec)
