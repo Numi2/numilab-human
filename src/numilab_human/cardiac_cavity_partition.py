@@ -422,13 +422,19 @@ def construct_nonzero_winding_self_union(source_surface):
     return _construct_winding_self_union(source_surface, positive_only=False)
 
 
-def construct_positive_winding_self_union(source_surface, *, point_contact_cover_face_indices=None):
+def construct_positive_winding_self_union(source_surface, *, point_contact_cover_face_indices=None,
+                                          allow_coplanar_overlap=False):
     """Extract the boundary of the strictly positive signed-winding material.
 
     This is an explicit inference for an outward-oriented reference shell with
     inverted exterior folds, not a substitute for the nonzero material rule.
     Negative exterior lobes are excluded; opposite-oriented cavities inside
     positive material remain cavities. A globally reversed shell is rejected.
+    With allow_coplanar_overlap=True, coincident source cells are arranged in
+    the same pass as transverse cuts and classified against the original closed
+    source. Their exact signed sheet multiplicity determines the winding jump;
+    the emitted boundary retains every supporting source face. Boundary-only
+    point contacts may be subdivided, but singular output contacts still fail.
     Exact arrangement, manifold, self-intersection and side-probe checks remain
     mandatory. Attribute ancestry and Float32 conversion need separate audits.
 
@@ -441,11 +447,14 @@ def construct_positive_winding_self_union(source_surface, *, point_contact_cover
     """
     return _construct_winding_self_union(
         source_surface, positive_only=True,
-        point_contact_cover_face_indices=point_contact_cover_face_indices)
+        point_contact_cover_face_indices=point_contact_cover_face_indices,
+        allow_coplanar_overlap=allow_coplanar_overlap)
 
 
 def _construct_winding_self_union(source_surface, *, positive_only,
-                                  point_contact_cover_face_indices=None):
+                                  point_contact_cover_face_indices=None,
+                                  allow_coplanar_overlap=False):
+    require(type(allow_coplanar_overlap) is bool, "coplanar overlap option must be boolean")
     require(isinstance(source_surface, dict), "expected one named source surface")
     vertices = source_surface.get("vertices")
     faces = source_surface.get("triangles")
@@ -510,21 +519,43 @@ def _construct_winding_self_union(source_surface, *, positive_only,
             # material. Its transverse boundary cuts still partition the source
             # patches; all emitted-boundary predicates below remain mandatory.
             continue
+        if len(points) == 1 and allow_coplanar_overlap:
+            point = points[0]
+            # Conform a boundary-only point contact in the joint arrangement.
+            # This is not an admission: singular retained contacts must fail
+            # the unchanged emitted manifold/self-intersection gates.
+            for face_id, triangle in ((first_id, first), (second_id, second)):
+                require(any(_point_on_segment(point, edge)
+                            for edge in zip(triangle, triangle[1:] + triangle[:1])),
+                        "interior point-only self-contact is unsupported")
+                boundary_points_by_face[face_id].add(point)
+                face = faces[face_id]
+                for a, b in zip(face, face[1:] + face[:1]):
+                    if _point_on_segment(point, (exact_vertices[a], exact_vertices[b])):
+                        for neighbor in edge_faces[tuple(sorted((a, b)))]:
+                            boundary_points_by_face[neighbor].add(point)
+            continue
         require(len(points) >= 2,
                 "point-only self-contact is unsupported")
-        require(any(predicates._cross(first_normal, second_normal)),
-                "coplanar self-intersection is unsupported")
-        start, end = points[0], points[-1]
-        require(start != end and all(_point_on_segment(point, (start, end)) for point in points),
-                "self-intersection is not one exact transverse segment")
-        segments.append({"face_pair": [first_id, second_id], "endpoints": (start, end)})
-        segments_by_face[first_id].add((start, end))
-        segments_by_face[second_id].add((start, end))
-        for face_id in (first_id, second_id):
-            face = faces[face_id]
-            for a, b in zip(face, face[1:] + face[:1]):
-                if any(_point_on_segment(point, (exact_vertices[a], exact_vertices[b]))
-                       for point in (start, end)):
+        transverse = any(predicates._cross(first_normal, second_normal))
+        if transverse:
+            start, end = points[0], points[-1]
+            require(start != end and all(_point_on_segment(point, (start, end)) for point in points),
+                    "self-intersection is not one exact transverse segment")
+            cuts = [(start, end)]
+        else:
+            require(allow_coplanar_overlap, "coplanar self-intersection is unsupported")
+            polygon = _coplanar_overlap_polygon(first, second, first_normal)
+            # Edge-only contacts still need conforming subdivisions.
+            cuts = list(zip(polygon, polygon[1:] + polygon[:1])) if polygon else [(points[0], points[-1])]
+        for start, end in cuts:
+            require(start != end, "degenerate self-intersection constraint")
+            segments.append({"face_pair": [first_id, second_id], "endpoints": (start, end)})
+            segments_by_face[first_id].add((start, end))
+            segments_by_face[second_id].add((start, end))
+            for face_id in (first_id, second_id):
+                face = faces[face_id]
+                for a, b in zip(face, face[1:] + face[:1]):
                     for neighbor in edge_faces[tuple(sorted((a, b)))]:
                         for point in (start, end):
                             if _point_on_segment(point, (exact_vertices[a], exact_vertices[b])):
@@ -558,11 +589,16 @@ def _construct_winding_self_union(source_surface, *, positive_only,
                    for segment in parent_segments):
                 cut_edges.add(tuple(sorted((child_vertex_id[a], child_vertex_id[b]))))
 
+    if allow_coplanar_overlap:
+        # Coincident sheet boundaries can have any balanced even incidence.
+        # Do not demand a closed deduplicated intermediate surface: transverse
+        # cuts and winding classification must be resolved in this same pass.
+        cut_edges.update(edge for edge, uses in edge_uses.items() if len(uses) != 2)
     for edge, uses in edge_uses.items():
         if edge in cut_edges:
             forward = sum(first < second for _child, first, second in uses)
             reverse = len(uses) - forward
-            require(len(uses) >= 4 and len(uses) % 2 == 0 and forward == reverse,
+            require(len(uses) >= (2 if allow_coplanar_overlap else 4) and len(uses) % 2 == 0 and forward == reverse,
                     "intersection arrangement edge has unbalanced oriented incidence")
         else:
             require(len(uses) == 2, "subdivision did not produce a closed two-face ordinary edge")
@@ -578,6 +614,10 @@ def _construct_winding_self_union(source_surface, *, positive_only,
         adjacency[first[0]].add(second[0])
         adjacency[second[0]].add(first[0])
 
+    coincident_children = defaultdict(list)
+    if allow_coplanar_overlap:
+        for child_id, triangle in enumerate(child_triangles):
+            coincident_children[tuple(sorted(triangle))].append(child_id)
     patches = []
     unseen = set(range(len(child_triangles)))
     while unseen:
@@ -605,8 +645,19 @@ def _construct_winding_self_union(source_surface, *, positive_only,
         require(minus["status"] == plus["status"] == "resolved",
                 "self-union side winding is boundary or indeterminate")
         winding_minus, winding_plus = minus["winding_number"], plus["winding_number"]
-        require(winding_minus == winding_plus + 1,
-                "oriented patch does not separate adjacent winding levels by +1")
+        multiplicity = 1
+        if allow_coplanar_overlap:
+            multiplicity = sum(
+                1 if predicates._dot(normal, _exact_triangle_normal(child_triangles[index])) > 0 else -1
+                for index in coincident_children[tuple(sorted(triangle))])
+            for child_id in component:
+                child_normal = _exact_triangle_normal(child_triangles[child_id])
+                require(sum(
+                    1 if predicates._dot(child_normal, _exact_triangle_normal(child_triangles[index])) > 0 else -1
+                    for index in coincident_children[tuple(sorted(child_triangles[child_id]))]) == multiplicity,
+                    "ordinary patch crosses a signed sheet multiplicity change")
+        require(winding_minus == winding_plus + multiplicity,
+                "oriented patch does not separate winding levels by its exact sheet multiplicity")
         inside_minus = winding_minus > 0 if positive_only else winding_minus != 0
         inside_plus = winding_plus > 0 if positive_only else winding_plus != 0
         if inside_minus and not inside_plus:
@@ -623,6 +674,7 @@ def _construct_winding_self_union(source_surface, *, positive_only,
             "probe_step": step,
             "winding_minus": winding_minus,
             "winding_plus": winding_plus,
+            **({"sheet_multiplicity": multiplicity} if allow_coplanar_overlap else {}),
             "kept": keep,
             "reversed": reverse,
         })
@@ -653,6 +705,29 @@ def _construct_winding_self_union(source_surface, *, positive_only,
             tuple(point[axis] + step * normal[axis] for axis in range(3)),
         ))
 
+    if allow_coplanar_overlap:
+        grouped_output = {}
+        for triangle, ancestry in zip(output_triangles, output_ancestry, strict=True):
+            key = tuple(sorted(triangle))
+            if key in grouped_output:
+                existing, parents = grouped_output[key]
+                require(predicates._dot(_exact_triangle_normal(existing),
+                                        _exact_triangle_normal(triangle)) > 0,
+                        "selected coincident output cells disagree in orientation")
+                parents.append(ancestry)
+            else:
+                grouped_output[key] = (triangle, [ancestry])
+        output_triangles, output_ancestry = [], []
+        for triangle, origins in grouped_output.values():
+            source_faces = sorted({origin["source_face"] for origin in origins})
+            ancestry = dict(origins[0])
+            ancestry["source_faces"] = source_faces
+            ancestry["reversed_from_sources"] = [
+                predicates._dot(_exact_triangle_normal(triangle),
+                                _exact_triangle_normal(records[index][0])) < 0
+                for index in source_faces]
+            output_triangles.append(triangle)
+            output_ancestry.append(ancestry)
     require(output_triangles, "selected winding material has no boundary")
     output_mesh = indexed_mesh(output_triangles, convert=lambda value: value)
     output_records = predicates._records(output_mesh["vertices_m"], output_mesh["triangles"])

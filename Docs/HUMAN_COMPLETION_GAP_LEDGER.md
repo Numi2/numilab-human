@@ -19,6 +19,26 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Joint coplanar and transverse repair owner — 2026-10-17
+
+The existing offline positive-winding owner now has an explicit
+`allow_coplanar_overlap=True` option. It arranges coplanar overlap boundaries
+and transverse cuts together, measures signed sheet multiplicity against the
+original closed source, and emits a single boundary with complete source-face
+support and per-parent orientation flags. Default strict behavior is retained.
+No intermediate coplanar-only surface is asserted closed. The existing exact
+output closure, orientation, self-intersection and inside/outside probes remain
+mandatory; Float32 emission and anatomical/native admission remain separate.
+
+Validation on SSH Numi: 97 fixture/regression tests plus 296 subtests pass in
+0.94 seconds, covering partial coplanar/transverse unions, exact volumes,
+coincident and opposed layers, complete parent support, ordering invariance,
+and singular-contact rejection. Five asset-dependent tests were deselected
+because this sparse worktree lacks the pinned source assets; the initial
+unfiltered attempt records those missing-input failures. This checkpoint does
+not establish that row317, other remaining anatomy, or native qualification
+passes. The option is being applied to the retained actual row317 input next.
+
 ## Integrated anatomy preparation checkpoint — 2026-10-17
 
 Execution remains on SSH Numi. This checkpoint is **not anatomy acceptance or
