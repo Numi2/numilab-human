@@ -25,6 +25,25 @@ def tetra(scale=1., offset=0.):
     return np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32) * np.float32(scale) + np.float32(offset)
 
 
+def _full21_lane_owner_proof(gids, source_points, weights, lane_world, cores, *,
+                             parent_sha, face_lineage, vertex_lineage):
+    return {
+        "schema": "numi.human.full21-per-lane-world-equivalence.v1",
+        "accepted_step": 0,
+        "capture_receipt_sha256": "e" * 64,
+        "source_payload_sha256": "c" * 64,
+        "parent_payload_sha256": parent_sha,
+        "ordered_core_body_indices": list(cores),
+        "world_frame": "accepted_body_poses_from_capture_receipt",
+        "source_points_sha256": av._full21_owner_array_sha256(gids, source_points),
+        "weights_sha256": av._full21_owner_array_sha256(gids, weights),
+        "lane_world_points_sha256": av._full21_owner_array_sha256(gids, lane_world),
+        "source_face_lineage_sha256": av._canonical_json_sha256(face_lineage),
+        "source_vertex_lineage_sha256": av._canonical_json_sha256(
+            [[int(gid), lineage] for gid, lineage in sorted(vertex_lineage.items())]),
+    }
+
+
 def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overrides=None,
                     normals=None, core_body_indices=None):
     positions = np.asarray(positions, dtype=np.float32)
@@ -46,13 +65,25 @@ def feature_surface(key, positions, faces, gids, *, kind3_gids=(), weight_overri
                 "core_weights": weights[np.flatnonzero(gids == gid)[0]].tolist(),
             })
         vertex_lineage[int(gid)] = record
+    face_lineage = [{"source_parent_face": i} for i in range(len(faces))]
+    lane_world = np.repeat(positions[:, None, :], len(ordered), axis=1).astype(np.float32)
+    proof = (_full21_lane_owner_proof(
+        gids, positions, weights, lane_world, ordered,
+        parent_sha=("a" if key[1] == 132 else "b") * 64,
+        face_lineage=face_lineage, vertex_lineage=vertex_lineage)
+        if len(ordered) == 21 else None)
     return prepare_surface(
         key, positions, faces, normals=normals, source_vertex_ids=gids,
-        source_face_lineage=[{"source_parent_face": i} for i in range(len(faces))],
+        source_face_lineage=face_lineage,
         source_vertex_lineage=vertex_lineage,
         ordered_core_body_indices=ordered,
         core_weight_gids=gids,
         core_weights_float64=weights,
+        core_source_point_gids=gids if proof is not None else None,
+        core_source_points_float32=positions if proof is not None else None,
+        core_lane_world_gids=gids if proof is not None else None,
+        core_lane_world_positions_float32=lane_world if proof is not None else None,
+        core_lane_world_proof=proof,
     )
 
 
@@ -2480,6 +2511,11 @@ class CaptureDecoderTests(unittest.TestCase):
             surfaces, [first.key], targets=[second.key], required_closed=[first.key],
             shared_feature_interfaces={(first.key, second.key): declarations})
         self.assertTrue(result["passed"], result)
+        self.assertNotEqual(first.core_lane_world_proof["parent_payload_sha256"],
+                            second.core_lane_world_proof["parent_payload_sha256"])
+        # Parent-local point ordinals are intentionally absent from this contract;
+        # distinct carrier payloads pass only because their canonical-GID full21
+        # source, weights and each accepted-pose lane point agree exactly.
         second.core_weights_by_gid[0] = second.core_weights_by_gid[0].copy()
         second.core_weights_by_gid[0][0] += 0.001
         failed = audit_changed_surfaces(
@@ -2487,6 +2523,80 @@ class CaptureDecoderTests(unittest.TestCase):
             shared_feature_interfaces={(first.key, second.key): declarations})
         self.assertFalse(failed["passed"], failed)
         self.assertTrue(failed["rows"][-1]["rejected_interface_feature_contacts"])
+
+    def test_full21_feature_requires_source_point_and_each_lane_not_only_blend(self):
+        first = feature_surface((51005, 132), tetra(), FACES, np.arange(4, dtype=np.uint64))
+        points = tetra() * np.float32(-1)
+        points[0] = first.positions[0]
+        second = feature_surface((51005, 134), points, FACES[:, [0, 2, 1]],
+                                 np.array([0, 11, 12, 13], dtype=np.uint64))
+        declarations = declarations_for_actual_shared_features(first, second)
+        self.assertTrue(declarations)
+
+        # Preserve the same weighted world position while changing two owner-lane
+        # points in opposite directions. The exact shared feature must reject it.
+        lanes = second.core_lane_world_points_by_gid[0].copy()
+        lanes[0, 0] += np.float32(0.125)
+        lanes[1, 0] -= np.float32(0.125)
+        second.core_lane_world_points_by_gid[0] = lanes
+        lane_failure = av.audit_surface_pair(
+            first, second, intended_shared_feature_pairs=declarations)
+        self.assertFalse(lane_failure["passed"], lane_failure)
+        self.assertTrue(any(row.get("reason") == "canonical_GID_full21_per_lane_world_points_differ"
+                            for row in lane_failure["rejected_interface_feature_contacts"]))
+
+        # Restore lane equality and change only the canonical source point.
+        second = feature_surface((51005, 134), points, FACES[:, [0, 2, 1]],
+                                 np.array([0, 11, 12, 13], dtype=np.uint64))
+        second.core_source_points_by_gid[0] = np.asarray([0.0, 0.0, 0.25], dtype=np.float32)
+        source_failure = av.audit_surface_pair(
+            first, second, intended_shared_feature_pairs=declarations)
+        self.assertFalse(source_failure["passed"], source_failure)
+        self.assertTrue(any(row.get("reason") == "canonical_GID_full21_source_points_differ"
+                            for row in source_failure["rejected_interface_feature_contacts"]))
+
+    def test_full21_shared_edge_accepts_distinct_parent_payloads_with_exact_lanes(self):
+        first_points = np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
+                                  dtype=np.float32)
+        second_points = np.asarray([[0, 0, 0], [1, 0, 0], [0, -1, 0], [0, 0, -1]],
+                                   dtype=np.float32)
+        first = feature_surface((51005, 132), first_points, FACES,
+                                np.asarray([2338, 2358, 2, 3], dtype=np.uint64))
+        second = feature_surface((51005, 134), second_points, FACES[:, [0, 2, 1]],
+                                 np.asarray([2338, 2358, 12, 13], dtype=np.uint64))
+        declarations = declarations_for_actual_shared_features(first, second)
+        self.assertTrue(declarations)
+        self.assertTrue(any(len(row["feature_gids"]) == 2 for row in declarations))
+        result = av.audit_surface_pair(first, second, intended_shared_feature_pairs=declarations)
+        self.assertTrue(result["passed"], result)
+
+    def test_full21_lane_proof_rejects_missing_or_malformed_owner_rows(self):
+        positions = tetra()
+        gids = np.arange(4, dtype=np.uint64)
+        ordered = list(range(21))
+        weights = np.full((4, 21), 1.0 / 21.0, dtype=np.float64)
+        lanes = np.repeat(positions[:, None, :], 21, axis=1)
+        faces = [{"source_parent_face": i} for i in range(len(FACES))]
+        lineage = {int(g): {"source_gid": int(g), "source_parent_gids": [int(g)]}
+                   for g in gids}
+        proof = _full21_lane_owner_proof(gids, positions, weights, lanes, ordered,
+                                         parent_sha="a" * 64, face_lineage=faces,
+                                         vertex_lineage=lineage)
+        base = dict(
+            source_vertex_ids=gids,
+            source_face_lineage=faces,
+            source_vertex_lineage=lineage,
+            ordered_core_body_indices=ordered, core_weight_gids=gids,
+            core_weights_float64=weights, core_source_point_gids=gids,
+            core_source_points_float32=positions, core_lane_world_gids=gids,
+            core_lane_world_positions_float32=lanes, core_lane_world_proof=proof)
+        with self.assertRaisesRegex(ValueError, "Float32 GID"):
+            prepare_surface((51005, 132), positions, FACES, **(base | {
+                "core_lane_world_positions_float32": lanes[:, :20, :]}))
+        bad_proof = dict(proof, capture_receipt_sha256="bad")
+        with self.assertRaisesRegex(ValueError, "capture_receipt_sha256"):
+            prepare_surface((51005, 132), positions, FACES, **(base | {
+                "core_lane_world_proof": bad_proof}))
 
     def test_target_preparation_failure_reports_identity_and_exact_face_sources(self):
         from numilab_human.resting_anatomy_verify import audit_changed_surfaces

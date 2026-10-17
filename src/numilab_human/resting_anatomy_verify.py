@@ -232,6 +232,9 @@ class PreparedSurface:
     ordered_core_body_indices: tuple | None = field(default=None, repr=False)
     core_weights_by_gid: dict | None = field(default=None, repr=False)
     rigid_owner_proof: dict | None = field(default=None, repr=False)
+    core_source_points_by_gid: dict | None = field(default=None, repr=False, kw_only=True)
+    core_lane_world_points_by_gid: dict | None = field(default=None, repr=False, kw_only=True)
+    core_lane_world_proof: dict | None = field(default=None, repr=False, kw_only=True)
     declared_core_body_indices: tuple | None = field(default=None, repr=False, kw_only=True)
     _self_result: dict | None = field(default=None, repr=False)
     _meter_index: object | None = field(default=None, repr=False)
@@ -436,13 +439,98 @@ class PreparedSurface:
                 "quaternion_f32_sha256": hashlib.sha256(
                     self.rigid_owner_proof["quaternion_f32_bytes"]).hexdigest(),
             },
+            "full21_lane_owner_proof": None if self.core_lane_world_proof is None else {
+                key: self.core_lane_world_proof[key] for key in (
+                    "accepted_step", "capture_receipt_sha256", "source_payload_sha256",
+                    "parent_payload_sha256", "ordered_core_body_indices", "world_frame",
+                    "source_points_sha256", "weights_sha256", "lane_world_points_sha256",
+                    "source_face_lineage_sha256", "source_vertex_lineage_sha256")
+            },
         }
+
+
+def _full21_owner_array_sha256(gids, values):
+    """Hash complete owner rows after canonical-GID sorting, never by local slot."""
+    ids = np.asarray(gids)
+    array = np.asarray(values)
+    if ids.ndim != 1 or ids.dtype.kind not in "iu" or len(np.unique(ids)) != len(ids):
+        raise ValueError("full21 owner proof GIDs must be unique integer keys")
+    if array.ndim < 1 or array.shape[0] != len(ids):
+        raise ValueError("full21 owner proof rows do not align with GIDs")
+    order = np.argsort(ids, kind="stable")
+    canonical_ids = np.ascontiguousarray(ids[order].astype("<u8", copy=False))
+    canonical_values = np.ascontiguousarray(array[order])
+    digest = hashlib.sha256()
+    digest.update(canonical_ids.tobytes())
+    digest.update(canonical_values.tobytes())
+    return digest.hexdigest()
+
+
+def _validate_full21_lane_owner_proof(proof, ordered_core_body_indices, *,
+                                      source_points_by_gid, weights_by_gid,
+                                      lane_world_points_by_gid, source_face_lineage,
+                                      source_vertex_lineage):
+    expected = {"schema", "accepted_step", "capture_receipt_sha256",
+                "source_payload_sha256", "parent_payload_sha256",
+                "ordered_core_body_indices", "world_frame", "source_points_sha256",
+                "weights_sha256", "lane_world_points_sha256",
+                "source_face_lineage_sha256", "source_vertex_lineage_sha256"}
+    if not isinstance(proof, dict) or set(proof) != expected:
+        raise ValueError("full21 lane owner proof fields differ from the pinned schema")
+    if proof.get("schema") != "numi.human.full21-per-lane-world-equivalence.v1":
+        raise ValueError("unsupported full21 lane owner proof schema")
+    if type(proof.get("accepted_step")) is not int or proof["accepted_step"] != 0:
+        raise ValueError("full21 lane owner proof must name accepted step zero")
+    for key in ("capture_receipt_sha256", "source_payload_sha256", "parent_payload_sha256"):
+        value = proof.get(key)
+        if (not isinstance(value, str) or len(value) != 64
+                or any(ch not in "0123456789abcdef" for ch in value)):
+            raise ValueError("full21 lane owner proof has invalid " + key)
+    if (proof.get("ordered_core_body_indices") != list(ordered_core_body_indices)
+            or len(ordered_core_body_indices) != 21):
+        raise ValueError("full21 lane proof does not name all 21 ordered owners")
+    if proof.get("world_frame") != "accepted_body_poses_from_capture_receipt":
+        raise ValueError("full21 lane points are not pinned to accepted capture poses")
+    for key in ("source_points_sha256", "weights_sha256", "lane_world_points_sha256"):
+        value = proof.get(key)
+        if (not isinstance(value, str) or len(value) != 64
+                or any(ch not in "0123456789abcdef" for ch in value)):
+            raise ValueError("full21 lane owner proof has invalid " + key)
+    source_gids = np.asarray(sorted(source_points_by_gid), dtype="<u8")
+    weight_gids = np.asarray(sorted(weights_by_gid), dtype="<u8")
+    lane_gids = np.asarray(sorted(lane_world_points_by_gid), dtype="<u8")
+    if proof["source_points_sha256"] != _full21_owner_array_sha256(
+            source_gids, np.stack([source_points_by_gid[int(g)] for g in source_gids])):
+        raise ValueError("full21 source point rows do not match their provenance digest")
+    if proof["weights_sha256"] != _full21_owner_array_sha256(
+            weight_gids, np.stack([weights_by_gid[int(g)] for g in weight_gids])):
+        raise ValueError("full21 ordered weight rows do not match their provenance digest")
+    if proof["lane_world_points_sha256"] != _full21_owner_array_sha256(
+            lane_gids, np.stack([lane_world_points_by_gid[int(g)] for g in lane_gids])):
+        raise ValueError("full21 lane world points do not match their provenance digest")
+    if proof["source_face_lineage_sha256"] != _canonical_json_sha256(
+            list(source_face_lineage)):
+        raise ValueError("full21 proof does not bind the ordered source face lineage")
+    vertex_rows = [[int(gid), lineage]
+                   for gid, lineage in sorted(source_vertex_lineage.items(),
+                                              key=lambda item: int(item[0]))]
+    if proof["source_vertex_lineage_sha256"] != _canonical_json_sha256(vertex_rows):
+        raise ValueError("full21 proof does not bind the canonical-GID source vertex lineage")
+    for key in ("source_face_lineage_sha256", "source_vertex_lineage_sha256"):
+        value = proof.get(key)
+        if (not isinstance(value, str) or len(value) != 64
+                or any(ch not in "0123456789abcdef" for ch in value)):
+            raise ValueError("full21 lane owner proof has invalid " + key)
+    return dict(proof)
 
 
 def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=None,
                     source_face_lineage=None, source_vertex_lineage=None,
                     ordered_core_body_indices=None, core_weight_gids=None,
                     core_weights_float64=None, rigid_owner_proof=None,
+                    core_source_point_gids=None, core_source_points_float32=None,
+                    core_lane_world_gids=None, core_lane_world_positions_float32=None,
+                    core_lane_world_proof=None,
                     expected_ordered_core_body_indices=None):
     key = typed_key(key)
     p = np.asarray(positions)
@@ -481,6 +569,12 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         raise ValueError("shared-interface proof requires both source face and vertex lineage")
     if has_core_metadata and any(value is None for value in core_metadata):
         raise ValueError("shared-interface proof requires complete ordered core material lineage")
+    lane_metadata = (core_source_point_gids, core_source_points_float32,
+                     core_lane_world_gids, core_lane_world_positions_float32,
+                     core_lane_world_proof)
+    has_lane_metadata = any(value is not None for value in lane_metadata)
+    if has_lane_metadata and any(value is None for value in lane_metadata):
+        raise ValueError("full21 lane owner proof requires source points, lane points, GIDs, and provenance")
     if source_metadata_present and not has_core_metadata and rigid_owner_proof is None:
         raise ValueError("shared-interface proof requires ordered core rows or an accepted rigid owner")
     if rigid_owner_proof is not None and not source_metadata_present:
@@ -499,6 +593,9 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
     vertex_lineage = None
     core_body_indices = None
     weights_by_gid = None
+    source_points_by_gid = None
+    lane_world_points_by_gid = None
+    normalized_lane_proof = None
     normalized_rigid_owner = (None if rigid_owner_proof is None
                               else _normalize_rigid_owner_proof(rigid_owner_proof))
     if source_metadata_present:
@@ -538,6 +635,38 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
         if bad:
             policy = "nonnegative" if declared_cores is not None else "strictly positive"
             raise ValueError("referenced material rows must be " + policy + " and normalized: " + str(bad[:8]))
+    if has_lane_metadata:
+        if not has_core_metadata or len(core_body_indices) != 21 or not source_metadata_present:
+            raise ValueError("per-lane world proof requires complete source lineage and 21 owners")
+        source_gids = np.asarray(core_source_point_gids)
+        source_points = np.asarray(core_source_points_float32)
+        lane_gids = np.asarray(core_lane_world_gids)
+        lane_points = np.asarray(core_lane_world_positions_float32)
+        for label, gids in (("source point", source_gids), ("lane world", lane_gids)):
+            if (gids.ndim != 1 or gids.dtype.kind not in "iu"
+                    or len(np.unique(gids)) != len(gids) or np.any(gids < 0)):
+                raise ValueError("full21 " + label + " GIDs must be unique nonnegative integers")
+        if (source_points.dtype != np.dtype("float32")
+                or source_points.shape != (len(source_gids), 3)
+                or not np.isfinite(source_points).all()):
+            raise ValueError("full21 source points must be finite Float32 XYZ rows")
+        if (lane_points.dtype != np.dtype("float32")
+                or lane_points.shape != (len(lane_gids), 21, 3)
+                or not np.isfinite(lane_points).all()):
+            raise ValueError("full21 lane world points must be finite Float32 GID×21×XYZ rows")
+        source_points_by_gid = {int(g): np.array(source_points[i], dtype=np.float32, copy=True)
+                                for i, g in enumerate(source_gids)}
+        lane_world_points_by_gid = {int(g): np.array(lane_points[i], dtype=np.float32, copy=True)
+                                    for i, g in enumerate(lane_gids)}
+        referenced_gids = {int(source_vertex_ids[int(local)]) for face in f for local in face}
+        if (referenced_gids - source_points_by_gid.keys()
+                or referenced_gids - lane_world_points_by_gid.keys()):
+            raise ValueError("full21 source and lane point rows do not cover every referenced canonical GID")
+        normalized_lane_proof = _validate_full21_lane_owner_proof(
+            core_lane_world_proof, core_body_indices,
+            source_points_by_gid=source_points_by_gid, weights_by_gid=weights_by_gid,
+            lane_world_points_by_gid=lane_world_points_by_gid,
+            source_face_lineage=face_lineage, source_vertex_lineage=vertex_lineage)
     # Numeric coordinate identity treats +0 and -0 as the same exact point.
     keys = [ci.float32_point_lattice_key(row) for row in p.tolist()]
     identities = {}
@@ -570,7 +699,10 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                            source_vertex_ids.copy(), normals, raw, quotient, qp, qf, mapping,
                            records, ci._prepare_surface_aabb(records), face_lineage,
                            vertex_lineage, core_body_indices, weights_by_gid,
-                           normalized_rigid_owner, declared_core_body_indices=declared_cores)
+                           normalized_rigid_owner, declared_core_body_indices=declared_cores,
+                           core_source_points_by_gid=source_points_by_gid,
+                           core_lane_world_points_by_gid=lane_world_points_by_gid,
+                           core_lane_world_proof=normalized_lane_proof)
 
 
 def _declared_material_inventory(value):
@@ -1144,6 +1276,32 @@ def _shared_feature_contact(first, second, first_face, second_face, feature_gids
                         or lineage_weights.shape != (len(first.ordered_core_body_indices),)
                         or not np.array_equal(lineage_weights, owner_weights)):
                     return False, "kind3_feature_lineage_differs_from_actual_owner_row"
+        if len(first.ordered_core_body_indices) == 21:
+            if (first.core_source_points_by_gid is None or second.core_source_points_by_gid is None
+                    or first.core_lane_world_points_by_gid is None
+                    or second.core_lane_world_points_by_gid is None
+                    or first.core_lane_world_proof is None or second.core_lane_world_proof is None):
+                return False, "missing_pinned_full21_source_or_per_lane_world_owner_proof"
+            proof_a, proof_b = first.core_lane_world_proof, second.core_lane_world_proof
+            if (proof_a["accepted_step"] != proof_b["accepted_step"]
+                    or proof_a["capture_receipt_sha256"] != proof_b["capture_receipt_sha256"]
+                    or proof_a["source_payload_sha256"] != proof_b["source_payload_sha256"]
+                    or proof_a["ordered_core_body_indices"] != proof_b["ordered_core_body_indices"]
+                    or proof_a["world_frame"] != proof_b["world_frame"]):
+                return False, "full21_owner_provenance_or_accepted_frame_differs"
+            source_a = first.core_source_points_by_gid.get(gid)
+            source_b = second.core_source_points_by_gid.get(gid)
+            lanes_a = first.core_lane_world_points_by_gid.get(gid)
+            lanes_b = second.core_lane_world_points_by_gid.get(gid)
+            if source_a is None or source_b is None or lanes_a is None or lanes_b is None:
+                return False, "full21_owner_proof_lacks_canonical_GID_rows"
+            if (source_a.dtype != np.dtype("float32") or source_b.dtype != np.dtype("float32")
+                    or source_a.tobytes() != source_b.tobytes()):
+                return False, "canonical_GID_full21_source_points_differ"
+            if (lanes_a.dtype != np.dtype("float32") or lanes_b.dtype != np.dtype("float32")
+                    or lanes_a.shape != (21, 3) or lanes_b.shape != (21, 3)
+                    or lanes_a.tobytes() != lanes_b.tobytes()):
+                return False, "canonical_GID_full21_per_lane_world_points_differ"
         expected.add(tuple(Fraction(int(value)) for value in ci.float32_point_lattice_key(pa.tolist())))
     record_a = first.face_record(first_face)
     record_b = second.face_record(second_face)
