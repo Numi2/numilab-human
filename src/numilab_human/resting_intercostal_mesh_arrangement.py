@@ -2550,6 +2550,98 @@ def _surface_normals_allow_unused_slots(vertices, faces):
     return normals
 
 
+
+def replace_row_source_positions(
+    row: dict, positions_f32, *, changed_source_vertex_slots,
+) -> tuple[dict, dict]:
+    """Repair source positions while restricting normal updates to incident faces.
+
+    This is an asset-time operation. The caller still owns ancestry, attachment,
+    complete self/neighbor audits, and native motion admission.
+    """
+    original = np.asarray(row["vertices6"])
+    positions = np.asarray(positions_f32)
+    faces = np.asarray(row["faces"])
+    _require(
+        original.dtype == np.dtype("<f4") and original.ndim == 2
+        and original.shape[1] == 6 and np.isfinite(original).all()
+        and positions.dtype == np.dtype("<f4")
+        and positions.shape == original[:, :3].shape
+        and np.isfinite(positions).all()
+        and np.issubdtype(faces.dtype, np.integer) and faces.ndim == 2
+        and faces.shape[1] == 3 and len(faces) > 0
+        and int(faces.min()) >= 0 and int(faces.max()) < len(positions),
+        "source-position repair requires finite exact Float32 rows and valid integer faces",
+    )
+    declared = list(changed_source_vertex_slots)
+    _require(
+        all(isinstance(slot, (int, np.integer)) and not isinstance(slot, (bool, np.bool_))
+            for slot in declared)
+        and len(declared) == len(set(map(int, declared)))
+        and all(0 <= int(slot) < len(positions) for slot in declared),
+        "source-position repair changed-slot declaration is invalid",
+    )
+    changed = np.flatnonzero(np.any(
+        np.ascontiguousarray(positions).view("<u4")
+        != np.ascontiguousarray(original[:, :3]).view("<u4"), axis=1,
+    ))
+    _require(
+        len(changed) > 0 and sorted(map(int, declared)) == changed.tolist(),
+        "source-position repair must declare exactly every changed source slot",
+    )
+    referenced = np.unique(faces)
+    _require(
+        np.isin(changed, referenced).all(),
+        "source-position repair cannot move unreferenced allocations",
+    )
+    # Original seams may have separate normal/material slots at one exact point.
+    # A local repair must preserve that point identity for every alias.
+    _, aliases = np.unique(original[:, :3], axis=0, return_inverse=True)
+    for group in np.unique(aliases[changed]):
+        slots = np.flatnonzero(aliases == group)
+        _require(
+            np.all(positions[slots] == positions[slots[0]]),
+            "source-position repair split an exact source-coordinate seam",
+        )
+    incident_faces = np.flatnonzero(np.isin(faces, changed).any(axis=1))
+    normal_slots = np.unique(faces[incident_faces])
+    triangles = positions[faces[incident_faces]].astype(np.float64)
+    _require(
+        np.all(np.linalg.norm(np.cross(
+            triangles[:, 1] - triangles[:, 0],
+            triangles[:, 2] - triangles[:, 0],
+        ), axis=1) > 0),
+        "source-position repair creates a degenerate incident face",
+    )
+    regenerated = np.asarray(
+        _surface_normals_allow_unused_slots(positions, faces), dtype="<f4",
+    )
+    _require(
+        np.isfinite(regenerated[normal_slots]).all()
+        and np.all(np.linalg.norm(regenerated[normal_slots], axis=1) > .99),
+        "source-position repair has invalid local normals",
+    )
+    vertices6 = np.array(original, copy=True)
+    vertices6[:, :3] = positions
+    vertices6[normal_slots, 3:6] = regenerated[normal_slots]
+    updated = dict(row)
+    updated["vertices6"] = vertices6
+    outside = np.setdiff1d(np.arange(len(positions)), normal_slots)
+    _require(
+        vertices6[outside].tobytes() == original[outside].tobytes(),
+        "source-position repair changed an unrelated vertex record",
+    )
+    return updated, {
+        "changed_source_vertex_slots": changed.tolist(),
+        "incident_source_face_ids": incident_faces.tolist(),
+        "regenerated_normal_source_slots": normal_slots.tolist(),
+        "source_faces_unchanged": True,
+        "exact_coordinate_seams_preserved": True,
+        "unaffected_vertex_records_byte_exact": True,
+        "complete_geometry_and_native_motion_admission_required": True,
+    }
+
+
 def _localize_body20_normals_f32(
     world_normals_f32, faces, quaternion_xyzw, *, unused_normal_fallback_f32=None,
 ):
