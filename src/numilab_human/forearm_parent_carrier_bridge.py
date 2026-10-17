@@ -381,7 +381,12 @@ def build_authenticated_full21_lane_owner_proof(
     parent term chain, recomputes source points and weights from all 21 parent
     terms, reads accepted dynamic poses from the receipt, derives all 21 lane
     worlds, and requires displayed positions to be the exact Float32 owner blend.
-    This is source-owner evidence, not native capture or anatomy admission.
+    This proves the supplied GID-keyed owner rows against exact child/parent
+    bytes and validates direct GID/source identity records through the existing
+    source-slot lineage owner. It does not authenticate source-face ancestry or
+    inferred-birth ancestry; those still require their separate source owners.
+    This is predicted CPU replay evidence, not native capture
+    or anatomy admission.
     """
     import hashlib
     import json
@@ -434,9 +439,9 @@ def build_authenticated_full21_lane_owner_proof(
              "typed stable row identity is invalid")
     _require(slots.dtype == np.dtype("int64") and slots.ndim == 1
              and len(slots) == child_row["vertex_count"] and np.all(slots >= -1),
-             "source-slot ancestry does not align with the exact child row")
-    _require(gids.dtype == np.dtype("uint64") and gids.shape == slots.shape
-             and len(np.unique(gids)) == len(gids),
+             "source slots must align with the exact child row and use -1 only for inferred births")
+    _require(gids.dtype == np.dtype("uint64") and gids.ndim == 1
+             and gids.shape == slots.shape and len(np.unique(gids)) == len(gids),
              "canonical material GIDs are not unique and aligned")
     _require(points.dtype == np.dtype("float32") and points.shape == (len(gids), 3)
              and np.isfinite(points).all(),
@@ -459,6 +464,17 @@ def build_authenticated_full21_lane_owner_proof(
              and set(source_vertex_lineage) == set(map(int, gids))
              and all(isinstance(record, dict) for record in source_vertex_lineage.values()),
              "source vertex lineage does not cover the exact canonical GID inventory")
+    lineage_by_string = {
+        str(int(gid)): source_vertex_lineage[int(gid)] for gid in gids
+    }
+    direct_lineage_report = validate_source_gid_slot_lineage(
+        slots, gids, lineage_by_string,
+    )
+    birth_count = int(np.count_nonzero(slots == -1))
+    if birth_count:
+        _require(all(verify._has_source_vertex_lineage(source_vertex_lineage[int(gid)])
+                     for gid, slot in zip(gids, slots, strict=True) if int(slot) == -1),
+                 "inferred source-slot births lack a typed lineage record")
 
     surfaces = extension.get("surfaces")
     _require(isinstance(surfaces, list), "parent extension lacks typed surfaces")
@@ -478,6 +494,14 @@ def build_authenticated_full21_lane_owner_proof(
         _require(owner_ids == tuple(expected_ordered_core_body_indices),
                  "actual parent binding order differs from the pinned 21-owner order")
 
+    parent_binding_indices = np.asarray(parent_row["binding_indices"])
+    parent_binding_weights = np.asarray(parent_row["weights"])
+    _require(parent_binding_indices.dtype == np.dtype("uint32")
+             and parent_binding_indices.shape == (parent_row["vertex_count"], 4)
+             and parent_binding_weights.dtype == np.dtype("float32")
+             and parent_binding_weights.shape == (parent_row["vertex_count"], 4),
+             "parent carrier lacks its exact four-lane auxiliary routing arrays")
+    expected_route_weights = np.asarray([1.0, 0.0, 0.0, 0.0], dtype="<f4")
     point_source_by_gid = {}
     weight_by_gid = {}
     for vertex, (gid_u64, terms) in enumerate(zip(gids, terms_by_vertex, strict=True)):
@@ -486,6 +510,7 @@ def build_authenticated_full21_lane_owner_proof(
                  f"canonical GID {gid} lacks exactly 21 source terms")
         term_points = []
         term_weights = []
+        parent_vertices = []
         for lane, term in enumerate(terms):
             _require(isinstance(term, list) and len(term) == 4
                      and type(term[0]) is int and term[0] == parent_source_index
@@ -494,8 +519,20 @@ def build_authenticated_full21_lane_owner_proof(
                      and type(term[3]) in (int, float) and math.isfinite(float(term[3]))
                      and float(term[3]) > 0,
                      f"canonical GID {gid} full21 term {lane} has invalid typed ownership")
-            term_points.append(parent_row["positions"][term[2]])
+            parent_vertex = term[2]
+            parent_vertices.append(parent_vertex)
+            term_points.append(parent_row["positions"][parent_vertex])
             term_weights.append(float(term[3]))
+        _require(len(set(parent_vertices)) == 21,
+                 f"canonical GID {gid} repeats a parent lane vertex")
+        for lane, parent_vertex in enumerate(parent_vertices):
+            expected_route_indices = np.zeros(4, dtype="<u4")
+            expected_route_indices[0] = lane
+            _require(parent_binding_indices[parent_vertex].tobytes()
+                     == expected_route_indices.tobytes()
+                     and parent_binding_weights[parent_vertex].tobytes()
+                     == expected_route_weights.tobytes(),
+                     f"canonical GID {gid} term {lane} does not reference its exact one-hot owner lane")
         term_points = np.asarray(term_points, dtype="<f4")
         term_weights = np.asarray(term_weights, dtype=np.float64)
         _require(np.all(term_points == points[vertex][None, :]),
@@ -507,6 +544,8 @@ def build_authenticated_full21_lane_owner_proof(
         weight_by_gid[gid] = weights[vertex]
 
     poses, pose_report = accepted_poses_from_receipt(receipt_path)
+    _require(set(owner_ids).issubset(poses),
+             "accepted receipt lacks one or more full21 parent body poses")
     receipt = json.loads(raw["receipt"])
     _require(pose_report["accepted_receipt_sha256"] == digests["receipt"]
              and pose_report["accepted_step"] == receipt.get("accepted_step"),
@@ -554,7 +593,17 @@ def build_authenticated_full21_lane_owner_proof(
         "face_count": len(faces),
         "displayed_positions_exact_owner_blend": True,
         "displayed_owner_blend_max_abs_residual_m": 0.0,
-        "evidence_boundary": "byte-hashed source/parent/extension/receipt inputs and CPU accepted-pose full21 replay; native capture and anatomy admission remain separate",
+        "evidence_boundary": (
+            "byte-hashed child/parent/extension/receipt inputs and predicted CPU "
+            "accepted-pose full21 replay; native capture and anatomy admission remain separate"
+        ),
+        "source_slot_lineage": direct_lineage_report,
+        "inferred_birth_vertex_count": birth_count,
+        "lineage_boundary": (
+            "direct canonical GID/source identity is validated by the existing source-slot "
+            "owner; face ancestry and inferred-birth ancestry are digest-bound caller inputs "
+            "and still require their separate source owners"
+        ),
     }
 
 

@@ -483,8 +483,12 @@ def test_authenticated_full21_lane_proof_hashes_files_and_replays_nonzero_step(t
     faces = child_row["faces"].astype(np.uint32)
     face_lineage = [{"source_parent_face": int(index)} for index in range(len(faces))]
     vertex_lineage = {
-        int(gid): {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
-        for gid in gids
+        int(gid): {
+            "source_face_support_provenance": "original-keyed-material-handoff-GID",
+            "source_gid": int(gid), "source_vertex_id": int(index),
+            "source_parent_gids": [int(gid)],
+        }
+        for index, gid in enumerate(gids)
     }
     proof_inputs = {
         "source_payload_path": child_path,
@@ -575,7 +579,11 @@ def test_authenticated_full21_lane_proof_rejects_detached_display_positions(tmp_
             source_face_lineage=[{"source_parent_face": int(index)}
                                  for index in range(len(child_row["faces"]))],
             source_vertex_lineage={
-                gid: {"source_gid": int(gid), "source_parent_gids": [int(gid)]}
+                gid: {
+                    "source_face_support_provenance": "original-keyed-material-handoff-GID",
+                    "source_gid": int(gid), "source_vertex_id": int(gid - 1001),
+                    "source_parent_gids": [int(gid)],
+                }
                 for gid in range(1001, 1001 + len(source_points))
             },
             expected_ordered_core_body_indices=core_ids,
@@ -594,3 +602,90 @@ def test_accepted_pose_reader_rejects_boolean_step(tmp_path):
     }))
     with pytest.raises(ValueError, match="nonnegative accepted render-geometry step"):
         accepted_poses_from_receipt(receipt_path)
+
+
+@pytest.mark.parametrize("defect, expected_error", [
+    ("wrong_lane", "exact one-hot owner lane"),
+    ("duplicate_parent_lane", "repeats a parent lane vertex"),
+    ("non_one_hot_later_group", "exact one-hot owner lane"),
+])
+def test_authenticated_full21_proof_checks_every_parent_lane_route(
+        tmp_path, defect, expected_error):
+    from numilab_human import passive_attachment_composition as pc
+
+    child_bytes, core_ids = make_carrier(stable_id=132, source_count=3)
+    parent_bytes = bytearray(make_carrier(stable_id=132, source_count=3)[0])
+    if defect == "non_one_hot_later_group":
+        vertex_offset = 64 + 32 + 21 * 36
+        vertex = 2 * 21 + 17
+        struct.pack_into("<4I", parent_bytes, vertex_offset + vertex * 56 + 24,
+                         17, 1, 0, 0)
+        struct.pack_into("<4f", parent_bytes, vertex_offset + vertex * 56 + 40,
+                         0.5, 0.5, 0.0, 0.0)
+
+    child_path = tmp_path / "child.nhtissue"
+    parent_path = tmp_path / "parent.nhtissue"
+    extension_path = tmp_path / "parents.json"
+    receipt_path = tmp_path / "step-4.receipt.json"
+    child_path.write_bytes(child_bytes)
+    parent_path.write_bytes(parent_bytes)
+
+    parent_file = pc._read_nhtiss4(parent_path)
+    parent_record = next(row for row in parent_file["records"] if int(row[6]) == 132)
+    parent_row = pc._nhtiss_row_arrays(parent_file, parent_record)
+    child_file = pc._read_nhtiss4(child_path)
+    child_record = next(row for row in child_file["records"] if int(row[6]) == 132)
+    child_row = pc._nhtiss_row_arrays(child_file, child_record)
+    source_points = parent_row["positions"].copy()
+    weights = normalized_weights(len(source_points))
+    terms = [
+        [[0, 132, (vertex // 21) * 21 + lane, float(weights[vertex, lane])]
+         for lane in range(21)]
+        for vertex in range(len(source_points))
+    ]
+    if defect == "wrong_lane":
+        terms[0][1][2] = 23
+    elif defect == "duplicate_parent_lane":
+        terms[0][1][2] = terms[0][0][2]
+    extension = {
+        "child_payload_sha256": hashlib.sha256(child_bytes).hexdigest(),
+        "source_payloads": [{
+            "path": str(parent_path.resolve()),
+            "sha256": hashlib.sha256(parent_bytes).hexdigest(),
+        }],
+        "surfaces": [{"stable_id": 132, "vertices": terms}],
+    }
+    extension_path.write_text(json.dumps(extension, sort_keys=True))
+    body_poses = [{
+        "body_index": index, "position_m": [0.0, 0.0, 0.0],
+        "quaternion_xyzw": [0.0, 0.0, 0.0, 1.0],
+    } for index in range(157)]
+    receipt_path.write_text(json.dumps({
+        "schema": "numi.human.accepted-render-geometry.v1", "accepted_step": 4,
+        "accepted_body_pose_count": len(body_poses), "accepted_body_poses": body_poses,
+    }, sort_keys=True))
+
+    with pytest.raises(ValueError, match=expected_error):
+        build_authenticated_full21_lane_owner_proof(
+            source_payload_path=child_path,
+            parent_extension_path=extension_path,
+            parent_payload_path=parent_path,
+            accepted_step_receipt_path=receipt_path,
+            stable_id=132, source_slots_i64=np.arange(len(source_points), dtype=np.int64),
+            canonical_gids_u64=np.arange(
+                1001, 1001 + len(source_points), dtype=np.uint64),
+            source_points_float32=source_points, core_weights_float64=weights,
+            displayed_positions_float32=np.zeros_like(source_points),
+            faces_local_u32=child_row["faces"].astype(np.uint32),
+            source_face_lineage=[{"source_parent_face": i}
+                                 for i in range(len(child_row["faces"]))],
+            source_vertex_lineage={
+                gid: {
+                    "source_face_support_provenance": "original-keyed-material-handoff-GID",
+                    "source_gid": int(gid), "source_vertex_id": int(gid - 1001),
+                    "source_parent_gids": [int(gid)],
+                }
+                for gid in range(1001, 1001 + len(source_points))
+            },
+            expected_ordered_core_body_indices=core_ids,
+        )
