@@ -123,6 +123,118 @@ def _nearest_surface_point(
     return best_distance, best_point
 
 
+class _PreparedNearestSurfaceIndex:
+    """Reusable floating authoring query; never a solid/anatomy admission oracle."""
+
+    def __init__(self, vertices, triangles):
+        import numpy as np
+        from scipy.spatial import cKDTree
+
+        points = np.asarray(vertices, dtype=np.float64)
+        faces = np.asarray(triangles)
+        if (points.ndim != 2 or points.shape[1] != 3 or not len(points)
+                or not np.isfinite(points).all() or faces.ndim != 2
+                or faces.shape[1] != 3 or not len(faces)
+                or not np.issubdtype(faces.dtype, np.integer)
+                or faces.min() < 0 or faces.max() >= len(points)):
+            raise ImportError("nearest authoring surface has invalid coordinates/indices")
+        self.triangles = points[faces].copy()
+        self.centers = self.triangles.mean(axis=1)
+        self.radii = np.linalg.norm(self.triangles - self.centers[:, None], axis=2).max(axis=1)
+        edges = self.triangles[:, 1:] - self.triangles[:, :1]
+        scale = np.linalg.norm(edges, axis=2).max(axis=1)
+        if np.any(scale == 0):
+            raise ImportError("nearest authoring surface has degenerate triangles")
+        normalized = edges / scale[:, None, None]
+        normal = np.cross(normalized[:, 0], normalized[:, 1])
+        if np.any(np.linalg.norm(normal, axis=1) == 0):
+            raise ImportError("nearest authoring surface has degenerate triangles")
+        self.scales = scale
+        self.tree = cKDTree(self.centers)
+        self.max_radius = float(self.radii.max())
+        self.coordinate_extent = float(np.abs(self.triangles).max())
+
+    def _triangle_point(self, point, face_id):
+        import numpy as np
+
+        triangle = self.triangles[face_id]
+        origin = triangle[0]
+        scale = self.scales[face_id]
+        tri = (triangle - origin) / scale
+        p = (point - origin) / scale
+        normal = np.cross(tri[1], tri[2])
+        normal2 = float(normal @ normal)
+        if normal2 > 1e-16:
+            q = _closest_point_on_triangle(tuple(p), tuple(tri[0]), tuple(tri[1]), tuple(tri[2]))
+            return origin + np.asarray(q) * scale
+        # Thin valid triangles need a plane/edge query without a small fixed
+        # determinant cutoff. Project to the most stable coordinate plane.
+        projected = p - normal * float(p @ normal) / normal2
+        axes = np.delete(np.arange(3), int(np.argmax(np.abs(normal))))
+        v = tri[:, axes]
+        q = projected[axes]
+        def cross2(a, b):
+            return float(a[0]*b[1] - a[1]*b[0])
+        area = cross2(v[1], v[2])
+        bary = np.asarray([cross2(v[1]-q, v[2]-q),
+                           cross2(v[2]-q, v[0]-q),
+                           cross2(v[0]-q, v[1]-q)]) / area
+        if np.all(bary >= 0):
+            return origin + projected * scale
+        candidates = []
+        for a, b in ((tri[0], tri[1]), (tri[1], tri[2]), (tri[2], tri[0])):
+            edge = b - a
+            t = float(np.clip((p-a) @ edge / (edge @ edge), 0, 1))
+            candidates.append(a + t*edge)
+        q = min(candidates, key=lambda value: float((value-p) @ (value-p)))
+        return origin + q * scale
+
+    def closest(self, point):
+        """Return distance, world point, source face ordinal; same units as input.
+
+        A nearest-centroid shortlist alone can miss long triangles. Bounding
+        spheres conservatively include every triangle that could beat the seed;
+        Euclidean triangle queries decide the result. Float64 results are for
+        construction; exact intersection/solid gates remain mandatory.
+        """
+        import numpy as np
+
+        point = np.asarray(point, dtype=np.float64)
+        if point.shape != (3,) or not np.isfinite(point).all():
+            raise ImportError("nearest authoring query must be a finite XYZ point")
+        _, seed = self.tree.query(point)
+        seed = int(seed)
+        best = self._triangle_point(point, seed)
+        distance = float(np.linalg.norm(best-point))
+        best_id = seed
+        padding = 64*np.finfo(np.float64).eps * max(
+            self.coordinate_extent, float(np.abs(point).max()), distance+self.max_radius,
+            np.finfo(np.float64).tiny,
+        )
+        candidates = np.asarray(self.tree.query_ball_point(
+            point, np.nextafter(distance+self.max_radius+padding, np.inf),
+        ), dtype=np.int64)
+        lower = np.linalg.norm(self.centers[candidates]-point, axis=1) - self.radii[candidates]
+        for offset in np.lexsort((candidates, lower)):
+            if lower[offset] > distance+padding:
+                break
+            face_id = int(candidates[offset])
+            q = self._triangle_point(point, face_id)
+            d = float(np.linalg.norm(q-point))
+            if d < distance or (d == distance and face_id < best_id):
+                distance, best, best_id = d, q, face_id
+        return distance, tuple(float(value) for value in best), best_id
+
+
+def prepare_nearest_surface_index(vertices, triangles):
+    """Prepare one reusable nearest-triangle index for offline registration.
+
+    Requires the existing anatomy-registration NumPy/SciPy extra. This does not
+    classify inside/outside, change anatomy, or create runtime simulation state.
+    """
+    return _PreparedNearestSurfaceIndex(vertices, triangles)
+
+
 def _centroid(points: Iterable[tuple[float, float, float]]) -> tuple[float, float, float]:
     points = list(points)
     if not points:
