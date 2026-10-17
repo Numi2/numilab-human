@@ -19,6 +19,62 @@ runs must retain continuous native video, accepted-state traces, exact source an
 asset identities, rollback evidence and measured timing. Regional tests or source
 preparation alone do not close this deliverable. Performance improvement is deferred.
 
+## Joint construction and exact early rejection — 2026-10-17
+
+Commit e258a226 adds a reusable bounded nearest-surface index to the existing
+anatomical registration owner. Its conservative triangle bounds include long,
+thin and distant-centroid triangles. Twelve registration/query checks pass,
+including scale and brute-force comparisons. Committed source diff matches the
+retained tested patch (SHA256
+6ffcb415e37db6773a7241070fce34dd1edf9e52738795415472e30ad0cd0d83).
+This floating authoring query does not replace exact intersection, closed-solid,
+source-emission or native gates. Evidence:
+prepared-nearest-surface-owner-regression-20261017-001/commit-binding.json.
+
+Forearm1346 emits the existing candidate through the full21 source owner with
+22 referenced original position updates, 17 inferred births and 381 normal-only
+updates. Its actual selected emitted world surface is closed and has zero exact
+self pairs. Child payload SHA256:
+f3398e7106c52c49b461c5eeccfd60a17b325e88ba70e4f2427ba636a2ea447c.
+Report SHA256:
+05877d82d8f87a3ae98e0e3679888499e0882f8deeca55b3f53cf30bf950e384.
+Nearby, retained-motion and native admission remain pending.
+
+The twelve unreferenced retired source slots keep their captured XYZ, source
+points and coefficients; they are not physical candidate faces. Their current
+parent-carrier source coordinates differ by 1.52 to 48.99 micrometres. The
+independent true-lane audit records this difference rather than claiming equality:
+forearm-native007-row134-full21-source-emission-1346/
+unreferenced-slot-provenance-audit-001.json, SHA256
+19e4f5de377709bc8403ba3c0b55a05f8ad65503582473861cf0b02ea19d83cc.
+
+Source-owner decoding authenticates forearm bone IDs108/110/111 as left second,
+fourth and fifth metacarpals, and120/123 as left fourth/fifth proximal phalanges.
+They must not be labeled radius/ulna from their numeric IDs. The eight authored
+FDS/FDP mechanical routes and all16 endpoint sites are retained with accepted002
+poses in forearm-source-mechanical-endpoints-20261017-001/report.json, SHA256
+8a5308aa9f55b00aa8052557a0d0af659dba2c836712d6388d94a3501cbfac92.
+Those route sites do not declare anatomical mesh attachment GID membership.
+
+Intercostal317 candidate149 passes all46 changed-star pair gates in157. Full-row
+checks then stop at five exact contacts with bone54, authenticated FJ3234, left
+seventh rib. All five candidate triangles are unchanged from145 and outside149's
+repair star. Their source ancestry is inferred local precision patch/cap support;
+no intended rib interface is declared. The strict failure is retained. Witness
+archive SHA256:
+061bdcf8315c2ecc82dded9345b727abd24cb3d38369519b145f9bb26d1a8825.
+No regional or native admission follows from the passing changed-star screen.
+
+Storage052 preserves decoded bytes but stops after one historical tissue carrier
+because measured free space decreases by21,004,288 bytes. The independently
+written closed-JSON category053 preserves hashes, paths and ordinary metadata
+for seven failed/superseded diagnostic outputs and recovers993,173,504 bytes.
+Its measured final free space is11,753,119,744 bytes, below the12GiB native floor.
+Manifest SHA256:
+2e0883bc73a52cd1362662a83ef0c2d2518a0fdd307b358c195810725291ed12.
+These are transparent compression operations, with declared compression
+attributes/inode/ctime changes; no source or evidence file is deleted.
+
 ## Reconstructed forearm ownership and joint repair checks — 2026-10-17
 
 Commit 12e56fa7 extends the existing mixed full21 candidate proof to append-only
