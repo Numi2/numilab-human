@@ -198,7 +198,6 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         lineage = {
             "reference_lobes": reference,
             "source_pairs": source_pairs,
-            "source_pair_set": set(source_pairs),
             "source_vertex_inventory": source_vertex_inventory,
             "source_face_count": int(source_fragment["face_count"]),
             "source_vertex_count": int(source_fragment["vertex_count"]),
@@ -319,8 +318,20 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 face_area_ratios.append(candidate_area2 / source_area2)
             if not face_area_ratios or min(face_area_ratios) <= 0.05:
                 raise ValueError("source-lineage microfragment candidate face area falls below the 5 percent source bound")
+            reference_row_hashes = {}
+            for stable_id in LOBE_IDS:
+                reference_vertices6, reference_faces = lineage["reference_lobes"][stable_id]
+                normalized_vertices6 = np.ascontiguousarray(reference_vertices6, dtype="<f4")
+                normalized_faces = np.ascontiguousarray(reference_faces, dtype="<i8")
+                reference_row_hashes[str(stable_id)] = {
+                    "vertex_count": int(len(normalized_vertices6)),
+                    "face_count": int(len(normalized_faces)),
+                    "vertices6_f32_sha256": hashlib.sha256(normalized_vertices6.tobytes()).hexdigest(),
+                    "faces_i64_sha256": hashlib.sha256(normalized_faces.tobytes()).hexdigest(),
+                }
             lineage_report = {
                 "recognition_mode": "exact_source_face_and_vertex_inventory",
+                "reference_lobe_row_arrays": reference_row_hashes,
                 "source_faces": [list(pair) for pair in lineage["source_pairs"]],
                 "source_vertex_indices_by_stable_id": {
                     str(sid): values for sid, values in lineage["source_vertex_inventory"].items()
@@ -404,6 +415,8 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         "excluded_source_microfragments": omitted,
         "source_coordinate_quantization_m": coordinate_quantization_m,
         "source_microfragment_anchor_rule": (
+            "exact per-lobe face/index arrays and source-face/vertex inventory inherited from caller-authenticated ancestral lobe rows"
+            if lineage is not None else
             "original source anchors rounded to the receipt-declared coordinate quantum"
             if coordinate_quantization_m is not None else "exact registered float32 source anchors"
         ),

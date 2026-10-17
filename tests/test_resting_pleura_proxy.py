@@ -102,8 +102,12 @@ class RestingPleuraProxyTests(unittest.TestCase):
                 self.assertEqual(len(detail["excluded_source_microfragments"]), 1)
                 lineage = detail["excluded_source_microfragments"][0]["source_lineage"]
                 self.assertEqual(lineage["recognition_mode"], "exact_source_face_and_vertex_inventory")
+                self.assertEqual(set(lineage["reference_lobe_row_arrays"]), {"305", "306", "307", "308", "309"})
+                self.assertTrue(all(len(row["vertices6_f32_sha256"]) == 64 and len(row["faces_i64_sha256"]) == 64
+                                    for row in lineage["reference_lobe_row_arrays"].values()))
                 self.assertEqual(lineage["source_faces"], [[305, 4], [305, 5], [308, 4], [308, 5]])
                 self.assertGreater(lineage["minimum_candidate_to_reference_face_area_ratio"], 0.05)
+                self.assertIn("source-face/vertex inventory", detail["source_microfragment_anchor_rule"])
                 self.assertEqual(len(detail["components"]), 2)
 
     def test_source_lineage_does_not_relax_default_anchor_recognition(self):
