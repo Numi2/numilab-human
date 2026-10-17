@@ -691,7 +691,7 @@ def test_authenticated_full21_proof_checks_every_parent_lane_route(
         )
 
 
-def test_file_backed_lane_subset_authenticates_candidate_terms_and_emits_only_selected_gid(tmp_path):
+def test_file_backed_lane_subset_authenticates_candidate_terms_and_emits_only_selected_gid(tmp_path, monkeypatch):
     from numilab_human import passive_attachment_composition as pc
     from numilab_human.forearm_parent_carrier_bridge import (
         build_authenticated_full21_lane_world_subset,
@@ -758,6 +758,27 @@ def test_file_backed_lane_subset_authenticates_candidate_terms_and_emits_only_se
     assert proof["accepted_step"] == 4
     assert proof["vertex_count"] == 1
     assert proof["not_native_capture"] and proof["not_anatomy_admission"]
+
+    # Re-reading the NHTISS owners and replaying transforms must not admit a
+    # file which changed after the initial hash/read.
+    extension_bytes = extension_path.read_bytes()
+    original_emitter = pc._binding_world_positions
+    def mutate_after_replay(*args, **kwargs):
+        result = original_emitter(*args, **kwargs)
+        extension_path.write_bytes(extension_bytes + b" ")
+        return result
+    with monkeypatch.context() as patch:
+        patch.setattr(pc, "_binding_world_positions", mutate_after_replay)
+        with pytest.raises(ValueError, match="extension bytes changed during lane replay"):
+            build_authenticated_full21_lane_world_subset(
+                source_payload_path=child_path, parent_extension_path=extension_path,
+                parent_payload_path=parent_path, accepted_step_receipt_path=receipt_path,
+                stable_id=132, source_slots_i64=np.asarray([1], dtype="<i8"),
+                canonical_gids_u64=np.asarray([987654], dtype="<u8"),
+                source_points_float32=points[1:2].copy(),
+                core_weights_float64=weights[1:2].copy(),
+                expected_ordered_core_body_indices=core_ids)
+    extension_path.write_bytes(extension_bytes)
 
     bad_terms = [list(row) for row in terms]
     bad_terms[1] = [list(term) for term in bad_terms[1]]

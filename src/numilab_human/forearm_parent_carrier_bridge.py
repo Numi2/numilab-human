@@ -1337,6 +1337,10 @@ def build_authenticated_full21_lane_world_subset(
     _require(lane_world.shape == (len(slots), 21, 3)
              and np.isfinite(lane_world).all(),
              "accepted-pose parent replay returned malformed lane worlds")
+    for name, path in (("source", source_path), ("extension", extension_path),
+                       ("parent", parent_path), ("receipt", receipt_path)):
+        _require(hashlib.sha256(path.read_bytes()).hexdigest() == digests[name],
+                 f"candidate full21 {name} bytes changed during lane replay")
     return lane_world, {
         "schema": "numi.human.full21-file-backed-lane-world-subset.v1",
         "typed_identity": [51005, stable_id],
