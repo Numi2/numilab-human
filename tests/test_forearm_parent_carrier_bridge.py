@@ -216,6 +216,39 @@ def test_child_birth_preserves_complete_four_lane_support_and_actual_pose():
     assert report["four_lane_support_truncated"] is False
 
 
+
+def test_inferred_child_birth_copies_one_authenticated_route_without_truncation():
+    from numilab_human.forearm_parent_carrier_bridge import derive_inferred_child_carrier_birth
+
+    row = {
+        "stable_id": 132,
+        "vertex_count": 2,
+        "positions": np.asarray([[0.1, 0.2, 0.3], [0.3, 0.4, 0.5]], dtype="<f4"),
+        "normals": np.asarray([[0, 0, 1], [0, 0, 1]], dtype="<f4"),
+        "binding_indices": np.asarray([[0, 0, 0, 0], [0, 0, 0, 0]], dtype="<u4"),
+        "weights": np.asarray([[1, 0, 0, 0], [1, 0, 0, 0]], dtype="<f4"),
+        "bindings": [
+            {"core": 0, "translation": np.zeros(3, dtype="<f4"),
+             "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"),
+             "scale": np.float32(1)}
+        ],
+    }
+    poses = {0: np.asarray([0, 0, 0, 0, 0, 0, 1], dtype="<f4")}
+    target = np.asarray([0.15, 0.25, 0.35], dtype="<f4")
+    vertex, binding_ids, lane_weights, report = derive_inferred_child_carrier_birth(
+        row, poses, 0, target,
+    )
+    np.testing.assert_array_equal(vertex[:3], target)
+    np.testing.assert_array_equal(binding_ids, row["binding_indices"][0])
+    np.testing.assert_array_equal(lane_weights, row["weights"][0])
+    assert report["route_bytes_unchanged_from_input_row"] is True
+    assert report["caller_must_bind_input_arrays_to_pinned_source_payload"] is True
+    assert report["authoritative_full21_parent_owner_replaced"] is False
+    assert report["source_point_inferred"] is True
+    assert report["four_lane_route_combined_or_truncated"] is False
+    assert report["max_replay_residual_m"] <= 2e-7
+
+
 def test_child_birth_refuses_more_than_four_route_supports():
     from numilab_human.forearm_parent_carrier_bridge import derive_child_four_lane_birth
 

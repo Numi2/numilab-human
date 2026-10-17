@@ -1182,6 +1182,101 @@ def derive_child_four_lane_birth(
         },
     )
 
+
+
+def derive_inferred_child_carrier_birth(
+    row_data, poses, ancestor_source_slot, target_world_f32,
+    *, max_replay_residual_m: float = 2e-7,
+):
+    """Copy one caller-pinned ABI5 route and solve a new source point.
+
+    This is an inferred auxiliary carrier for a new local-remesh vertex. It
+    copies exactly one source-slot route; it neither merges nor truncates
+    endpoint routes and does not replace the authoritative full21 parent
+    material field. The caller must authenticate the row data against its
+    pinned source payload, preserve this lineage, and append all full21 terms.
+    """
+    from . import passive_attachment_composition as pc
+
+    slot = int(ancestor_source_slot)
+    _require(type(ancestor_source_slot) is int and ancestor_source_slot >= 0
+             and slot < row_data["vertex_count"],
+             "inferred child route requires one valid authenticated ancestor slot")
+    target = np.asarray(target_world_f32)
+    _require(target.dtype in (np.dtype("<f4"), np.dtype("float32"))
+             and target.shape == (3,) and np.isfinite(target).all(),
+             "inferred child route target must be one finite Float32 world point")
+    _require(math.isfinite(max_replay_residual_m) and max_replay_residual_m > 0,
+             "inferred child route replay bound is invalid")
+
+    bindings = np.asarray(row_data["binding_indices"])
+    route_weights = np.asarray(row_data["weights"])
+    source_positions = np.asarray(row_data["positions"])
+    normals = np.asarray(row_data["normals"])
+    _require(bindings.dtype == np.dtype("uint32")
+             and bindings.shape == (row_data["vertex_count"], 4)
+             and route_weights.dtype == np.dtype("float32")
+             and route_weights.shape == bindings.shape,
+             "authenticated child route arrays must be N by four ABI5 fields")
+    _require(source_positions.dtype in (np.dtype("<f4"), np.dtype("float32"))
+             and source_positions.ndim == 2
+             and source_positions.shape[0] == row_data["vertex_count"]
+             and source_positions.shape[1] >= 3,
+             "authenticated child source points are malformed")
+    _require(normals.dtype in (np.dtype("<f4"), np.dtype("float32"))
+             and normals.shape == (row_data["vertex_count"], 3),
+             "authenticated child normals are malformed")
+
+    copied_bindings = bindings[slot].copy()
+    copied_weights = route_weights[slot].copy()
+    active = copied_weights > np.float32(0.0)
+    _require(np.isfinite(copied_weights).all() and np.any(active)
+             and np.all(copied_weights[active] > 0.0)
+             and np.all(copied_weights[~active] == 0.0)
+             and abs(float(copied_weights.astype(np.float64).sum()) - 1.0) <= 2e-7,
+             "authenticated ancestor route is not a positive normalized four-lane partition")
+    _require(np.all(copied_bindings[active] < len(row_data["bindings"])),
+             "authenticated ancestor route references an absent binding")
+
+    temp = dict(row_data)
+    temp["binding_indices"] = copied_bindings[None, :]
+    temp["weights"] = copied_weights[None, :]
+    temp["vertex_count"] = 1
+    initial = np.asarray(source_positions[slot, :3], dtype="<f4")[None, :]
+    point, condition = pc._solve_sparse_rest_positions(
+        temp, target[None, :], initial, poses, vertex_indices=np.asarray([0]),
+    )
+    replay = pc._native_blended_rest_positions(temp, point, poses)
+    residual = float(np.max(np.abs(
+        replay.astype(np.float64) - target.astype(np.float64),
+    )))
+    _require(np.isfinite(point).all() and math.isfinite(residual)
+             and residual <= max_replay_residual_m,
+             "inferred child route fails accepted-pose forward replay")
+
+    normal = np.asarray(normals[slot], dtype="<f4").copy()
+    normal_length = float(np.linalg.norm(normal.astype(np.float64)))
+    _require(math.isfinite(normal_length) and abs(normal_length - 1.0) <= 2e-3,
+             "authenticated ancestor normal is not finite and unit length")
+    vertex = np.concatenate((point[0], normal)).astype("<f4")
+    return vertex, copied_bindings, copied_weights, {
+        "kind": "inferred_single_ancestor_child_carrier_route",
+        "ancestor_source_slot": slot,
+        "copied_binding_indices_u32": copied_bindings.astype(int).tolist(),
+        "copied_route_weights_f32": copied_weights.astype(float).tolist(),
+        "route_bytes_unchanged_from_input_row": (
+            copied_bindings.tobytes() == bindings[slot].tobytes()
+            and copied_weights.tobytes() == route_weights[slot].tobytes()),
+        "target_world_f32": target.astype(float).tolist(),
+        "reemitted_world_f32": replay[0].astype(float).tolist(),
+        "max_replay_residual_m": residual,
+        "max_affine_condition_number": float(np.max(condition)),
+        "authoritative_full21_parent_owner_replaced": False,
+        "caller_must_bind_input_arrays_to_pinned_source_payload": True,
+        "source_point_inferred": True,
+        "four_lane_route_combined_or_truncated": False,
+    }
+
 def build_authenticated_full21_lane_world_subset(
     *, source_payload_path, parent_extension_path, parent_payload_path,
     accepted_step_receipt_path, stable_id, source_slots_i64,
