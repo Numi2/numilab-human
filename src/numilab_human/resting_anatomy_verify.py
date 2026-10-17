@@ -3989,6 +3989,68 @@ def _surface_pair_geometry_binding(surface):
             **_surface_source_hashes(surface)}
 
 
+
+def compare_reference_surface_continuity(reference, candidate):
+    """Screen a local repair before expensive embeddedness and neighborhood gates.
+
+    Exact coordinate seams use the existing prepared topology. Component counts
+    and exact oriented mesh-volume integrals can expose a disconnected cut even
+    when every resulting shell is closed. This screen does not prove component
+    correspondence, attachment preservation, embeddedness, anatomical volume,
+    physical mass, or native-cycle acceptance.
+    """
+    if (not isinstance(reference, PreparedSurface)
+            or not isinstance(candidate, PreparedSurface)
+            or reference.key != candidate.key):
+        raise ValueError("continuity comparison requires the same typed prepared surface")
+    if not reference.closed or not candidate.closed:
+        raise ValueError("continuity comparison requires closed oriented surfaces")
+
+    def inventory(surface):
+        records = {int(record[3]): record[0] for record in surface.records}
+        rows = []
+        for component_id, face_ids in enumerate(surface.quotient_topology["face_components"]):
+            # Records use the exact common Float32 lattice, in 2**-149 metres.
+            origin = records[int(face_ids[0])][0]
+            volume_six = 0
+            for face_id in face_ids:
+                triangle = records[int(face_id)]
+                a, b, c = (ci._sub(point, origin) for point in triangle)
+                volume_six += ci._dot(a, ci._cross(b, c))
+            rows.append({
+                "component_index": component_id,
+                "face_count": len(face_ids),
+                "orientation": (volume_six > 0) - (volume_six < 0),
+                "signed_volume_m3": float(Fraction(volume_six, 6 * (1 << 447))),
+            })
+        return rows
+
+    before, after = inventory(reference), inventory(candidate)
+    total_before = sum(abs(row["signed_volume_m3"]) for row in before)
+    total_after = sum(abs(row["signed_volume_m3"]) for row in after)
+    same_count = len(before) == len(after)
+    same_orientation = sorted(row["orientation"] for row in before) == sorted(
+        row["orientation"] for row in after)
+    nonzero = all(row["orientation"] for row in [*before, *after])
+    return {
+        "identity": list(reference.key),
+        "reference_geometry_binding": _surface_pair_geometry_binding(reference),
+        "candidate_geometry_binding": _surface_pair_geometry_binding(candidate),
+        "reference_components": before, "candidate_components": after,
+        "component_count_unchanged": same_count,
+        "orientation_inventory_unchanged": same_orientation,
+        "nonzero_component_volumes": bool(nonzero),
+        "absolute_oriented_volume_ratio": (
+            total_after / total_before if total_before else None),
+        "passed": bool(same_count and same_orientation and nonzero),
+        "volume_method": "exact oriented triangle integral on the Float32 lattice",
+        "scope": ("Cheap continuity screen only. A passing count does not prove "
+                  "component correspondence, attachments, embeddedness, anatomical "
+                  "volume, physical mass, or native-cycle admission."),
+        "anatomical_admission": False, "native_admission": False,
+    }
+
+
 def bound_unexpected_triangle_pairs(report, first, second):
     """Read retained witnesses only against their exact ordered geometry.
 
