@@ -152,3 +152,110 @@ def test_rejects_changed_complete_lineage_with_updated_pin(tmp_path):
     with pytest.raises(ValueError, match="complete face lineage"):
         build_mixed_full21_candidate_owner_record(**kwargs)
 
+
+def inferred_fixture(tmp_path):
+    surface, kwargs, arrays, _ = fixture(tmp_path)
+    old_count = len(arrays["gids_u64"])
+    face = arrays["faces_u32"][0].copy()
+    gid = 1000
+    weights = np.full(21, 1.0 / 21, dtype="<f8")
+    requested = arrays["positions_f32"][face].mean(axis=0).astype("<f4")
+    lanes = np.repeat(requested[None, :], 21, axis=0).astype("<f4")
+    emitted = np.zeros(3, dtype="<f4")
+    for lane in range(21):
+        emitted = np.asarray(emitted + np.asarray(lanes[lane] * np.float32(weights[lane]), dtype="<f4"), dtype="<f4")
+    source = arrays["source_points_f32"][face].mean(axis=0).astype("<f4")
+    arrays["positions_f32"] = np.vstack((arrays["positions_f32"], emitted)).astype("<f4")
+    arrays["source_points_f32"] = np.vstack((arrays["source_points_f32"], source)).astype("<f4")
+    arrays["weights_f64"] = np.vstack((arrays["weights_f64"], weights)).astype("<f8")
+    arrays["gids_u64"] = np.r_[arrays["gids_u64"], np.asarray([gid], dtype="<u8")]
+    arrays["source_slots_i64"] = np.r_[arrays["source_slots_i64"], np.asarray([-1], dtype="<i8")]
+    replacement = [[int(face[0]), int(face[1]), old_count],
+                   [int(face[1]), int(face[2]), old_count],
+                   [int(face[2]), int(face[0]), old_count]]
+    arrays["faces_u32"] = np.asarray(replacement + arrays["faces_u32"][1:].tolist(), dtype="<u4")
+    lineage = kwargs["source_face_lineage"]
+    kwargs["source_face_lineage"] = [copy.deepcopy(lineage[0]) for _ in range(3)] + lineage[1:]
+    kwargs["source_vertex_lineage"] = copy.deepcopy(kwargs["source_vertex_lineage"])
+    kwargs["source_vertex_lineage"][gid] = {
+        "source_gid": gid, "material_mapping_kind": 3,
+        "material_binding": "independent_existing_core_carrier",
+        "source_parent_gids": [int(x) for x in arrays["gids_u64"][face]],
+        "core_body_indices": kwargs["actual_capture_row"]["full21_actual_capture_owner_proof"]["ordered_core_body_indices"],
+        "core_weights": weights.tolist(), "source_point_f32": source.tolist(),
+    }
+    for name, value in arrays.items():
+        argument = {"positions_f32": "candidate_positions_f32", "faces_u32": "candidate_faces_u32",
+                    "gids_u64": "candidate_gids_u64", "source_slots_i64": "candidate_source_slots_i64",
+                    "weights_f64": "candidate_weights_f64", "source_points_f32": "candidate_source_points_f32"}[name]
+        kwargs[argument] = value
+    kwargs["predicted_gids_u64"] = np.asarray([gid], dtype="<u8")
+    kwargs["predicted_source_points_f32"] = source[None].copy()
+    kwargs["predicted_lane_world_points_f32"] = lanes[None].copy()
+    saved = {"row134_" + {"gids_u64": "canonical_gids_u64"}.get(k, k): v for k, v in arrays.items()}
+    saved["row134_source_face_slots_u32"] = arrays["source_slots_i64"][arrays["faces_u32"]].astype("<u4")
+    binding = kwargs["candidate_topology_file_binding"]
+    np.savez(binding["archive_path"], **saved)
+    digest = hashlib.sha256(open(binding["archive_path"], "rb").read()).hexdigest()
+    binding["archive_sha256"] = kwargs["candidate_archive_sha256"] = digest
+    document = {"rows": {"134": {"source_face_lineage": kwargs["source_face_lineage"],
+                                 "source_vertex_lineage": kwargs["source_vertex_lineage"]}}}
+    with open(binding["lineage_path"], "w") as stream:
+        json.dump(document, stream)
+    binding["lineage_sha256"] = hashlib.sha256(open(binding["lineage_path"], "rb").read()).hexdigest()
+    return surface, kwargs, arrays
+
+
+def test_append_only_birth_retains_captured_prefix_and_exact_lane_replay(tmp_path):
+    surface, kwargs, arrays = inferred_fixture(tmp_path)
+    proof = build_mixed_full21_candidate_owner_record(**kwargs)
+    assert len(proof["actual_capture_positions_f32"]) == 4
+    assert len(proof["candidate_arrays"]["positions_f32"]) == 5
+    assert proof["candidate_arrays"]["source_slots_i64"][-1] == -1
+    result = prepare(surface, proof, kwargs)
+    assert result.closed
+    assert result.self_audit()["count"] == 0
+    assert proof["position_basis_by_gid"]["1000"]["basis"] == "predicted_cpu_full21_float32_blend_at_accepted_poses"
+
+
+@pytest.mark.parametrize("tamper", ["unpredicted", "parent_gid", "source_point", "weights", "prefix_gid", "negative_slot", "no_file_binding"])
+def test_inferred_birth_cannot_forge_capture_or_material_membership(tmp_path, tamper):
+    _, kwargs, arrays = inferred_fixture(tmp_path)
+    if tamper == "unpredicted":
+        kwargs["predicted_gids_u64"] = np.empty(0, dtype="<u8")
+        kwargs["predicted_source_points_f32"] = np.empty((0, 3), dtype="<f4")
+        kwargs["predicted_lane_world_points_f32"] = np.empty((0, 21, 3), dtype="<f4")
+    elif tamper == "parent_gid":
+        kwargs["source_vertex_lineage"][1000]["source_parent_gids"] = [999999]
+    elif tamper == "source_point":
+        kwargs["source_vertex_lineage"][1000]["source_point_f32"][0] += .1
+    elif tamper == "weights":
+        arrays["weights_f64"][0, 0] += .001
+        arrays["weights_f64"][0, 1] -= .001
+    elif tamper == "prefix_gid":
+        arrays["gids_u64"][[0, 1]] = arrays["gids_u64"][[1, 0]]
+    elif tamper == "negative_slot":
+        arrays["source_slots_i64"][-1] = -2
+    else:
+        kwargs["candidate_topology_file_binding"] = None
+    with pytest.raises(ValueError):
+        build_mixed_full21_candidate_owner_record(**kwargs)
+
+
+def test_preparation_rechecks_inferred_vertex_file_and_predicted_lane_bytes(tmp_path):
+    surface, kwargs, _ = inferred_fixture(tmp_path)
+    proof = build_mixed_full21_candidate_owner_record(**kwargs)
+    bad = copy.deepcopy(proof)
+    bad["predicted_lane_world_points_f32"][0, 0, 0] += .01
+    with pytest.raises(ValueError, match="metadata|Float32"):
+        prepare(surface, bad, kwargs)
+    binding = proof["candidate_topology_file_binding"]
+    path = binding["lineage_path"]
+    with open(path) as stream:
+        document = json.load(stream)
+    document["rows"]["134"]["source_vertex_lineage"]["1000"]["source_parent_gids"] = [999999]
+    with open(path, "w") as stream:
+        json.dump(document, stream)
+    binding["lineage_sha256"] = hashlib.sha256(open(path, "rb").read()).hexdigest()
+    with pytest.raises(ValueError, match="inferred vertex lineage"):
+        prepare(surface, proof, kwargs)

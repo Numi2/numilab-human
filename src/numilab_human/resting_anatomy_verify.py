@@ -749,14 +749,16 @@ def _validate_full21_mixed_candidate_owner_proof(
     face_bytes = np.ascontiguousarray(faces, dtype="<u4")
     if (gids.dtype != np.dtype("<u8") or gids.ndim != 1
             or len(np.unique(gids)) != len(gids)
-            or actual_positions.shape != (len(gids), 3)
+            or actual_positions.ndim != 2 or actual_positions.shape[1] != 3
+            or not 0 < len(actual_positions) <= len(gids)
             or actual_sources.shape != actual_positions.shape
-            or actual_weights.shape != (len(gids), 21)
+            or actual_weights.shape != (len(actual_positions), 21)
             or actual_weights.dtype != np.dtype("<f8")
-            or actual_slots.dtype != np.dtype("<i8") or actual_slots.shape != gids.shape
+            or actual_slots.dtype != np.dtype("<i8")
+            or actual_slots.shape != (len(actual_positions),)
             or actual_faces.ndim != 2 or actual_faces.shape[1] != 3):
         raise ValueError("mixed full21 proof captured owner arrays are malformed")
-    if (np.any(actual_faces < 0) or np.any(actual_faces >= len(gids))
+    if (np.any(actual_faces < 0) or np.any(actual_faces >= len(actual_positions))
             or actual_owner.get("typed_identity") != list(key)):
         raise ValueError("mixed full21 proof captured face/GID rows are invalid")
     gids_sorted = np.asarray(sorted(displayed_points_by_gid), dtype="<u8")
@@ -793,8 +795,16 @@ def _validate_full21_mixed_candidate_owner_proof(
         raise ValueError("mixed full21 candidate weight hash is not reproducible")
     if proof["candidate_source_points_sha256"] != _full21_owner_array_sha256(gids, csource):
         raise ValueError("mixed full21 candidate source-point hash is not reproducible")
-    if not np.array_equal(cslots, actual_slots) or not np.array_equal(cweights, actual_weights):
-        raise ValueError("mixed full21 candidate changed source slots or any of the 21 ordered weights")
+    from .forearm_actual_capture_owner import _validate_append_only_inferred_vertices
+    captured_gids = gids[:len(actual_positions)]
+    _validate_append_only_inferred_vertices(
+        gids=gids, slots=cslots, weights=cweights, source_points=csource,
+        actual_gids=captured_gids, actual_slots=actual_slots,
+        actual_weights=actual_weights, source_vertex_lineage=source_vertex_lineage,
+        predicted_gids=proof.get("predicted_gids_u64", []),
+        topology_binding=proof.get("candidate_topology_file_binding"),
+        ordered_core_body_indices=ordered_core_body_indices,
+    )
     if csource.tobytes() != np.asarray(
             [source_points_by_gid[int(g)] for g in gids], dtype="<f4").tobytes():
         raise ValueError("mixed full21 candidate source points differ from the prepared owner rows")
@@ -812,17 +822,16 @@ def _validate_full21_mixed_candidate_owner_proof(
     if len(source_face_lineage) != len(face_bytes) or len(vertex_rows) != len(gids):
         raise ValueError("mixed full21 lineage does not cover every candidate face and GID")
 
-    actual_by_gid = {int(g): i for i, g in enumerate(gids)}
-    captured_source_by_gid = {int(g): actual_sources[i] for i, g in enumerate(gids)}
-    captured_weight_by_gid = {int(g): actual_weights[i] for i, g in enumerate(gids)}
-    captured_position_by_gid = {int(g): actual_positions[i] for i, g in enumerate(gids)}
-    captured_slots_by_gid = {int(g): int(actual_slots[i]) for i, g in enumerate(gids)}
+    captured_source_by_gid = {int(g): actual_sources[i] for i, g in enumerate(captured_gids)}
+    captured_weight_by_gid = {int(g): actual_weights[i] for i, g in enumerate(captured_gids)}
+    captured_position_by_gid = {int(g): actual_positions[i] for i, g in enumerate(captured_gids)}
+    captured_slots_by_gid = {int(g): int(actual_slots[i]) for i, g in enumerate(captured_gids)}
     _validate_full21_actual_capture_owner_proof(
         actual_owner, key=key, ordered_core_body_indices=ordered_core_body_indices,
         source_points_by_gid=captured_source_by_gid,
         weights_by_gid=captured_weight_by_gid,
         displayed_points_by_gid=captured_position_by_gid,
-        source_vertex_ids=gids,
+        source_vertex_ids=captured_gids,
         faces=proof.get("accepted_index_faces_u32", face_bytes),
         capture_source_slots_by_gid=captured_slots_by_gid,
     )
@@ -833,7 +842,8 @@ def _validate_full21_mixed_candidate_owner_proof(
                 or binding.get("archive_sha256") != proof["candidate_archive_sha256"]
                 or binding.get("typed_identity") != list(key)):
             raise ValueError("mixed full21 candidate topology archive or identity differs")
-        _validate_candidate_topology_file_binding(binding, candidate_arrays, source_face_lineage)
+        _validate_candidate_topology_file_binding(
+            binding, candidate_arrays, source_face_lineage, source_vertex_lineage)
     basis = proof.get("position_basis_by_gid")
     if not isinstance(basis, dict) or set(basis) != {str(int(g)) for g in gids}:
         raise ValueError("mixed full21 position basis must exactly cover every canonical GID")
@@ -848,8 +858,8 @@ def _validate_full21_mixed_candidate_owner_proof(
             or predicted_lanes.shape != (len(predicted_gids), 21, 3)):
         raise ValueError("mixed full21 predicted owner rows are malformed")
     predicted_set = set(map(int, predicted_gids))
-    if not predicted_set <= set(actual_by_gid):
-        raise ValueError("mixed full21 predicted GID is absent from the captured source row")
+    if not predicted_set <= set(map(int, gids)):
+        raise ValueError("mixed full21 predicted GID is absent from the candidate source row")
     lane_by_gid = {int(g): predicted_lanes[i] for i, g in enumerate(predicted_gids)}
     predicted_source_by_gid = {int(g): predicted_sources[i] for i, g in enumerate(predicted_gids)}
     for i, raw_gid in enumerate(gids):
@@ -861,7 +871,8 @@ def _validate_full21_mixed_candidate_owner_proof(
             if row.get("basis") != "predicted_cpu_full21_float32_blend_at_accepted_poses":
                 raise ValueError("changed GID is not explicitly declared predicted")
             if (source_points_by_gid[gid].tobytes() != predicted_source_by_gid[gid].tobytes()
-                    or source_points_by_gid[gid].tobytes() == captured_source_by_gid[gid].tobytes()):
+                    or (gid in captured_source_by_gid and source_points_by_gid[gid].tobytes()
+                        == captured_source_by_gid[gid].tobytes())):
                 raise ValueError("predicted GID source point is absent or unchanged")
             if (row.get("candidate_parent_payload_sha256") != proof["candidate_parent_payload_sha256"]
                     or row.get("candidate_parent_extension_sha256") != proof["candidate_parent_extension_sha256"]
@@ -1079,9 +1090,12 @@ def prepare_surface(key, positions, faces, *, normals=None, source_vertex_ids=No
                 or len(core_body_indices) != 21):
             raise ValueError("capture or mixed full21 proof requires source lineage and all 21 owners")
         slots = np.asarray(core_capture_source_slots_i64)
+        inferred = has_mixed_candidate_proof and "candidate_topology_file_binding" in core_mixed_candidate_owner_proof
+        nonnegative = slots[slots >= 0]
         if (slots.dtype.kind not in "iu" or slots.shape != (len(p),)
-                or np.any(slots < 0) or len(np.unique(slots)) != len(slots)):
-            raise ValueError("capture source slots must be unique nonnegative vertex rows")
+                or np.any(slots < (-1 if inferred else 0))
+                or len(np.unique(nonnegative)) != len(nonnegative)):
+            raise ValueError("capture source slots must be unique source rows with only file-bound inferred -1")
         capture_source_slots_by_gid = {
             int(source_vertex_ids[i]): int(slots[i]) for i in range(len(p))
         }

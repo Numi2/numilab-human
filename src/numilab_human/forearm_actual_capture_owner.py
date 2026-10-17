@@ -797,7 +797,56 @@ def build_actual_capture_owner_proof(
 
 
 
-def _validate_candidate_topology_file_binding(binding, arrays, face_lineage):
+def _validate_append_only_inferred_vertices(
+    *, gids, slots, weights, source_points, actual_gids, actual_slots,
+    actual_weights, source_vertex_lineage, predicted_gids, topology_binding,
+    ordered_core_body_indices,
+):
+    """Keep captured allocations exact and declare every appended material birth.
+
+    This authenticates membership and declared mapping only. The complete file
+    binding and exact Float32 lane replay remain independently mandatory.
+    """
+    _require(isinstance(source_vertex_lineage, dict),
+             "candidate needs complete vertex lineage")
+    count = len(actual_gids)
+    _require(0 < count <= len(gids)
+             and np.asarray(actual_gids).tobytes() == gids[:count].tobytes()
+             and np.asarray(actual_slots).tobytes() == slots[:count].tobytes(),
+             "candidate changed captured GID/source-slot prefix membership or order")
+    _require(np.asarray(actual_weights).tobytes() == weights[:count].tobytes(),
+             "candidate changed a captured full21 owner coefficient or lane order")
+    if count == len(gids):
+        _require(np.all(slots >= 0), "captured source slots cannot use inferred sentinels")
+        return
+    _require(topology_binding is not None and np.all(slots[count:] == -1),
+             "appended inferred vertices require file-bound topology and source-slot -1")
+    captured = set(map(int, actual_gids))
+    born = set(map(int, gids[count:]))
+    _require(born <= set(map(int, predicted_gids)),
+             "every inferred birth must use explicitly predicted full21 lanes")
+    for index in range(count, len(gids)):
+        gid = int(gids[index])
+        row = source_vertex_lineage.get(gid, source_vertex_lineage.get(str(gid)))
+        _require(isinstance(row, dict)
+                 and row.get("source_gid") == gid
+                 and row.get("material_mapping_kind") == 3
+                 and row.get("material_binding") == "independent_existing_core_carrier"
+                 and row.get("core_body_indices") == list(ordered_core_body_indices),
+                 "inferred birth lacks its declared existing full21 carrier mapping")
+        parents = row.get("source_parent_gids")
+        _require(isinstance(parents, list) and parents
+                 and all(type(x) is int for x in parents)
+                 and set(parents) <= captured,
+                 "inferred birth parent GIDs must resolve to the captured source prefix")
+        _require(np.asarray(row.get("core_weights"), dtype="<f8").tobytes()
+                 == weights[index].tobytes()
+                 and np.asarray(row.get("source_point_f32"), dtype="<f4").tobytes()
+                 == source_points[index].tobytes(),
+                 "inferred birth lineage differs from its full21 source/weight rows")
+
+
+def _validate_candidate_topology_file_binding(binding, arrays, face_lineage, vertex_lineage=None):
     """Authenticate reconstructed indices without calling them captured topology.
 
     These are the existing candidate NPZ and complete lineage JSON, not a new
@@ -838,7 +887,9 @@ def _validate_candidate_topology_file_binding(binding, arrays, face_lineage):
         slots = arrays["source_slots_i64"]
         _require(corners.dtype == np.dtype("<u4")
                  and corners.shape == faces.shape
-                 and np.array_equal(corners, slots[faces]),
+                 and np.all(slots >= -1)
+                 and np.all(slots < np.iinfo(np.uint32).max)
+                 and np.array_equal(corners, slots[faces].astype("<u4")),
                  "candidate topology face corners differ from authenticated source slots")
     identity = binding["typed_identity"]
     _require(isinstance(identity, list) and len(identity) == 2
@@ -851,6 +902,12 @@ def _validate_candidate_topology_file_binding(binding, arrays, face_lineage):
              "candidate topology complete face lineage differs from pinned file")
     _require(len(face_lineage) == len(arrays["faces_u32"]),
              "candidate topology lineage omits displayed faces")
+    if np.any(slots == -1):
+        saved_vertices = document["rows"][str(identity[1])].get("source_vertex_lineage")
+        _require(isinstance(vertex_lineage, dict) and isinstance(saved_vertices, dict)
+                 and _canonical_json_sha256(saved_vertices)
+                 == _canonical_json_sha256({str(k): v for k, v in vertex_lineage.items()}),
+                 "candidate topology inferred vertex lineage differs from pinned file")
 
 
 def build_mixed_full21_candidate_owner_record(
@@ -880,6 +937,9 @@ def build_mixed_full21_candidate_owner_record(
     record whose ordered Float32 blend exactly reproduces its candidate position.
     An optional file binding authenticates reconstructed candidate indices and
     complete declared ancestry separately from the retained accepted index array.
+    Append-only inferred vertices require source-slot -1, captured-prefix parents,
+    file-bound complete vertex lineage, and explicit predicted lanes. Captured
+    membership and all original owner coefficients remain byte-exact.
     It provides no intersection, source-equivalence, or native-motion admission.
     This is a proof-construction helper; it does not perform native capture.
     """
@@ -910,8 +970,8 @@ def build_mixed_full21_candidate_owner_record(
              and len(np.unique(gids)) == len(gids),
              "candidate canonical GIDs must uniquely cover displayed positions")
     _require(slots.dtype == np.dtype("<i8") and slots.shape == gids.shape
-             and np.all(slots >= 0),
-             "candidate source slots must retain the complete original slot map")
+             and np.all(slots >= -1),
+             "candidate source slots must retain original slots or explicit inferred -1")
     _require(weights.dtype == np.dtype("<f8") and weights.shape == (len(gids), 21)
              and np.isfinite(weights).all() and np.all(weights > 0)
              and np.max(np.abs(weights.sum(axis=1)-1.0)) <= 1e-12,
@@ -936,18 +996,22 @@ def build_mixed_full21_candidate_owner_record(
     actual_weights = np.asarray(actual_capture_row["full21_weights_f64"])
     actual_source_points = np.ascontiguousarray(
         actual_capture_row["full21_source_points_f32"], dtype="<f4")
-    _require(actual_gids.dtype == np.dtype("<u8")
-             and actual_positions.shape == positions.shape
-             and actual_gids.shape == gids.shape
+    captured_count = len(actual_gids)
+    _require(actual_gids.dtype == np.dtype("<u8") and actual_gids.ndim == 1
+             and actual_positions.shape == (captured_count, 3)
              and actual_slots.dtype == np.dtype("<i8")
-             and actual_slots.shape == slots.shape
+             and actual_slots.shape == actual_gids.shape
              and actual_weights.dtype == np.dtype("<f8")
-             and actual_weights.shape == weights.shape
-             and actual_source_points.shape == positions.shape,
+             and actual_weights.shape == (captured_count, 21)
+             and actual_source_points.shape == (captured_count, 3),
              "actual capture row arrays are incomplete or mis-shaped")
-    _require(actual_gids.tobytes() == gids.tobytes()
-             and actual_slots.tobytes() == slots.tobytes(),
-             "candidate changed canonical GID or source-slot membership/order")
+    _validate_append_only_inferred_vertices(
+        gids=gids, slots=slots, weights=weights, source_points=source_points,
+        actual_gids=actual_gids, actual_slots=actual_slots,
+        actual_weights=actual_weights, source_vertex_lineage=source_vertex_lineage,
+        predicted_gids=changed, topology_binding=candidate_topology_file_binding,
+        ordered_core_body_indices=actual_proof["ordered_core_body_indices"],
+    )
     actual_index_faces = np.ascontiguousarray(
         actual_capture_row["index_patch_faces_capture_u32"], dtype="<u4")
     _require(not len(faces) or np.max(faces) < len(positions),
@@ -955,8 +1019,7 @@ def build_mixed_full21_candidate_owner_record(
     if candidate_topology_file_binding is None:
         _require(faces.tobytes() == actual_index_faces.tobytes(),
                  "candidate faces differ from the authenticated 1274 index candidate")
-    _require(weights.tobytes() == actual_weights.tobytes(),
-             "candidate changed a full21 owner coefficient or lane order")
+
     changed_set = set(map(int, changed))
     basis = {}
     lane_by_gid = {}
@@ -966,9 +1029,10 @@ def build_mixed_full21_candidate_owner_record(
     weight_by_gid = {}
     for i, raw_gid in enumerate(gids):
         gid = int(raw_gid)
-        actual_position_by_gid[gid] = actual_positions[i].copy()
-        actual_source_by_gid[gid] = actual_source_points[i].copy()
-        weight_by_gid[gid] = actual_weights[i].copy()
+        if i < captured_count:
+            actual_position_by_gid[gid] = actual_positions[i].copy()
+            actual_source_by_gid[gid] = actual_source_points[i].copy()
+        weight_by_gid[gid] = weights[i].copy()
         if gid not in changed_set:
             _require(positions[i].tobytes() == actual_positions[i].tobytes(),
                      f"unchanged GID {gid} differs from accepted native capture")
@@ -1075,7 +1139,8 @@ def build_mixed_full21_candidate_owner_record(
                  == proof["typed_identity"],
                  "candidate topology identity differs from candidate owner")
         _validate_candidate_topology_file_binding(
-            candidate_topology_file_binding, proof["candidate_arrays"], face_rows)
+            candidate_topology_file_binding, proof["candidate_arrays"], face_rows,
+            source_vertex_lineage)
         proof["accepted_index_faces_u32"] = actual_index_faces.copy()
         proof["candidate_topology_file_binding"] = dict(candidate_topology_file_binding)
     return proof
