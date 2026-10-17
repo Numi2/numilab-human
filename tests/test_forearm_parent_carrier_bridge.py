@@ -930,3 +930,39 @@ def test_mixed_candidate_face_lineage_requires_exact_slot_gid_crosswalk():
             candidate_face_gids=np.asarray([[500, 501, 999]], dtype="<u8"),
             generated_records=[], gids_by_source_slot=gids_by_slot,
         )
+
+
+def test_inferred_child_birth_replays_a_blended_rotating_route():
+    from numilab_human.forearm_parent_carrier_bridge import derive_inferred_child_carrier_birth
+    from numilab_human import passive_attachment_composition as pc
+
+    row = {
+        "stable_id": 132, "vertex_count": 1,
+        "positions": np.asarray([[0.1, 0.2, 0.3]], dtype="<f4"),
+        "normals": np.asarray([[0, 0, 1]], dtype="<f4"),
+        "binding_indices": np.asarray([[0, 1, 0, 0]], dtype="<u4"),
+        "weights": np.asarray([[0.75, 0.25, 0, 0]], dtype="<f4"),
+        "bindings": [
+            {"core": core, "translation": np.zeros(3, dtype="<f4"),
+             "quaternion": np.asarray([0, 0, 0, 1], dtype="<f4"),
+             "scale": np.float32(1)} for core in range(2)
+        ],
+    }
+    poses = {
+        0: np.asarray([0.02, -0.04, 0.01, 0, 0, 0, 1], dtype="<f4"),
+        1: np.asarray([-0.03, 0.01, 0.02, 0, 0, np.sqrt(0.5), np.sqrt(0.5)], dtype="<f4"),
+    }
+    source = np.asarray([[0.15, 0.25, 0.35]], dtype="<f4")
+    target = pc._native_blended_rest_positions(row, source, poses)[0]
+    vertex, ids, weights, report = derive_inferred_child_carrier_birth(row, poses, 0, target)
+    np.testing.assert_allclose(vertex[:3], source[0], atol=2e-7, rtol=0)
+    np.testing.assert_array_equal(ids, row["binding_indices"][0])
+    np.testing.assert_array_equal(weights, row["weights"][0])
+    assert not np.array_equal(vertex[:3], target)
+    assert report["max_replay_residual_m"] <= 2e-7
+
+    # An equal blend of opposed rotations has no inverse in the XY plane.
+    row["weights"][0, :2] = 0.5
+    poses[1] = np.asarray([0, 0, 0, 0, 0, 1, 0], dtype="<f4")
+    with pytest.raises(ValueError, match="singular child affine"):
+        derive_inferred_child_carrier_birth(row, poses, 0, target)
