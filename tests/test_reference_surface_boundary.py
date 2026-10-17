@@ -134,3 +134,81 @@ def test_inferred_cover_must_bind_existing_source_and_declared_size(cover, match
     row, poses = fixture()
     with pytest.raises(ValueError, match=match):
         emit_source_face_boundary(row, poses, boundary(row, poses), inferred_covers=[cover])
+
+
+def test_complete_parent_mode_preserves_support_beyond_four_auxiliary_lanes():
+    row, poses = fixture()
+    row["bindings"] = [dict(core=k, translation=np.zeros(3, dtype="<f4"),
+                           quaternion=np.array([0, 0, 0, 1], dtype="<f4"), scale=np.float32(1))
+                       for k in range(5)]
+    row["binding_count"] = 5
+    row["binding_indices"][:] = [0, 1, 2, 3]
+    row["binding_indices"][2] = [1, 2, 3, 4]
+    row["weights"][:] = np.float32(.25)
+    poses = {k: np.array([0, 0, 0, 0, 0, 0, 1], dtype="<f4") for k in range(5)}
+    result = emit_source_face_boundary(row, poses, boundary(row, poses),
+                                      use_complete_source_face_parents=True)
+    parents = result["complete_source_parent_vertices"]
+    assert parents == [[[0, 1.0]], [[1, 1.0]], [[2, 1.0]], [[3, 1.0]], [[0, .5], [2, .5]]]
+    # The complete native parent terms carry all five body influences.
+    support = {}
+    for vertex, coefficient in parents[4]:
+        for body, weight in zip(row["binding_indices"][vertex], row["weights"][vertex]):
+            if weight:
+                support[int(body)] = support.get(int(body), 0) + coefficient * float(weight)
+    assert support == {0: .125, 1: .25, 2: .25, 3: .25, 4: .125}
+    np.testing.assert_array_equal(result["parent_source_patch_arrays"]["vertices6"][:, :3], row["positions"])
+    np.testing.assert_array_equal(result["patch_arrays"]["weights"][:4], row["weights"])
+    assert result["ancestry"]["native_complete_source_parent_binding_required"]
+    assert result["world_positions_are_auxiliary_child_replay"]
+    assert not result["ancestry"]["source_parent_term_support_truncated"]
+
+
+def test_complete_parent_mode_reconstructs_declared_cover_source_coordinates():
+    row, poses = fixture()
+    poses[1] = poses[0].copy()
+    world = pc._native_blended_rest_positions(row, row["positions"], poses)
+    points = [tuple(Q.from_float(float(x)) for x in p) for p in world]
+    center, radius = points[0], Q(1, 20000)
+    extra = [tuple(center[a]+radius*signs[a] for a in range(3))
+             for signs in ((1,1,1),(1,-1,-1),(-1,1,-1),(-1,-1,1))]
+    value = dict(output_mesh=dict(vertices_m=points+extra,
+                                  triangles=[[4,5,6],[4,7,5],[4,6,7],[5,7,6]]),
+                 output_face_ancestry=[dict(source_face=i) for i in range(4,8)])
+    result = emit_source_face_boundary(row, poses, value,
+        inferred_covers=[dict(exact_center=center, coordinate_radius_m=.00005)],
+        use_complete_source_face_parents=True)
+    a = result["parent_source_patch_arrays"]
+    source = row | dict(positions=a["vertices6"][:, :3], binding_indices=a["binding_indices"],
+                        weights=a["weights"], vertex_count=8)
+    actual = pc._native_blended_rest_positions(source, source["positions"], poses)
+    np.testing.assert_allclose(actual[4:], np.array(extra, dtype="<f4"), rtol=0, atol=2e-7)
+    np.testing.assert_array_equal(a["vertices6"][:4, :3], row["positions"])
+    assert all(all(0 <= slot < 8 and coefficient > 0 for slot, coefficient in terms)
+               and abs(sum(x[1] for x in terms)-1) < 1e-12
+               for terms in result["complete_source_parent_vertices"])
+
+
+def test_complete_parent_mode_requires_boolean():
+    row, poses = fixture()
+    with pytest.raises(ValueError, match="mode must be boolean"):
+        emit_source_face_boundary(row, poses, boundary(row, poses),
+                                  use_complete_source_face_parents=1)
+
+
+def test_parent_evidence_replay_uses_existing_registered_transform_and_all_lanes():
+    from numilab_human.reference_surface_boundary import replay_complete_source_face_parents
+    row, poses = fixture()
+    terms = [[[i,1.0]] for i in range(4)] + [[[0,.5],[2,.5]]]
+    actual = replay_complete_source_face_parents(row, poses, terms)
+    raw = pc._native_blended_rest_positions(row, row["positions"], poses)
+    np.testing.assert_array_equal(actual[:4], raw)
+    np.testing.assert_array_equal(actual[4], np.asarray(raw[0]*np.float32(.5)+raw[2]*np.float32(.5), dtype="<f4"))
+
+
+@pytest.mark.parametrize("terms", [[[[True, 1.0]]], [[[0,.5],[0,.5]]], [[[0,.9]]], [[[0,float("nan")]]]])
+def test_parent_evidence_replay_rejects_invalid_native_terms(terms):
+    from numilab_human.reference_surface_boundary import replay_complete_source_face_parents
+    row, poses = fixture()
+    with pytest.raises(ValueError, match="identity or partition"):
+        replay_complete_source_face_parents(row, poses, terms)
