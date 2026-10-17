@@ -202,11 +202,18 @@ class _Prepared:
         self.normals={r[3]:_normal(r[0]) for r in self.records}
         self.lo=tuple(min(p[k] for p in self.vertices) for k in range(3))
         self.hi=tuple(max(p[k] for p in self.vertices) for k in range(3))
+        # One existing exact tree serves triangle, boundary and ray broadphases.
+        # All narrow predicates and the configured retry directions stay intact.
+        self.spatial = predicates.prepare_point_location(self.records)
+        self.surface_aabb = predicates._PreparedSurfaceAABB(
+            tuple(self.records), self.spatial.aabb_root)
+        self.candidate_order = {row[3]: rank for rank, row in enumerate(self.ordered)}
 
     def candidates(self,tri):
         lo=tuple(min(p[k] for p in tri) for k in range(3));hi=tuple(max(p[k] for p in tri) for k in range(3))
-        return [row for row in self.ordered[:bisect_right(self.starts,hi[0])]
-                if all(lo[k]<=row[2][k] and row[1][k]<=hi[k] for k in range(3))]
+        query = (tri, lo, hi, 0, (0, 1, 2))
+        return sorted((row for _, row in predicates._query_surface_aabb(
+            (query,), self.surface_aabb)), key=lambda row: self.candidate_order[row[3]])
 
     def certify_uncut(self,tri):
         for row in self.candidates(tri):
@@ -218,17 +225,17 @@ class _Prepared:
     def location(self,point):
         if any(point[k]<self.lo[k] or point[k]>self.hi[k] for k in range(3)):
             return 'outside'
-        for row in self.records:
-            if all(row[1][k]<=point[k]<=row[2][k] for k in range(3)):
-                normal=self.normals[row[3]]
-                if _dot(normal,_sub(point,row[0][0]))==0 and predicates._inside(predicates._signs(point,1,row[0],normal)):
-                    return 'boundary'
-        ray_candidates = _positive_ray_upper_orthant_candidates(self.records, point)
-        if not ray_candidates:
-            return "outside"
+        boundary, _ = predicates._point_aabb_candidate_indices(
+            point, self.spatial, include_forward=False)
+        for index in boundary:
+            row = self.records[index]
+            normal=self.normals[row[3]]
+            if _dot(normal,_sub(point,row[0][0]))==0 and predicates._inside(predicates._signs(point,1,row[0],normal)):
+                return 'boundary'
         for direction in _RAY_DIRECTIONS:
             crossings=0;ambiguous=False
-            for row in ray_candidates:
+            for index in predicates._ray_aabb_candidate_indices(point, self.spatial, direction):
+                row = self.records[index]
                 # Positive-direction slab intersection avoids most exact plane
                 # predicates. Fraction ratios keep this broadphase conservative.
                 lo=max(Fraction(row[1][k]-point[k],direction[k]) for k in range(3))

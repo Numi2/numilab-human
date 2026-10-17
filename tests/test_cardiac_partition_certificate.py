@@ -164,6 +164,41 @@ class PositiveRayUpperOrthantTests(unittest.TestCase):
         self.assertEqual(prepared.location(point), legacy_prepared_location(prepared, point)[0])
 
 
+class PreparedCertificateSpatialIndexTests(unittest.TestCase):
+    def test_triangle_candidates_match_legacy_closed_box_scan(self):
+        base = ((F(0), F(0), F(0)), (F(2), F(0), F(0)),
+                (F(0), F(2), F(0)), (F(0), F(0), F(2)))
+        triangles = [tuple((base[v][0]+shift, base[v][1], base[v][2]) for v in face)
+                     for shift in (F(-8), F(0), F(9)) for face in FACES]
+        prepared = cert._Prepared(triangles)
+        queries = triangles + [
+            ((F(-1, 7), F(0), F(0)), (F(0), F(1, 3), F(0)),
+             (F(1, 5), F(0), F(2))),
+            ((F(2), F(0), F(0)), (F(2), F(1), F(0)), (F(2), F(0), F(1)))]
+        for tri in queries:
+            lo=tuple(min(p[k] for p in tri) for k in range(3))
+            hi=tuple(max(p[k] for p in tri) for k in range(3))
+            expected=[row for row in prepared.ordered
+                      if all(lo[k]<=row[2][k] and row[1][k]<=hi[k] for k in range(3))]
+            with self.subTest(triangle=tri):
+                self.assertEqual(prepared.candidates(tri), expected)
+
+    def test_disconnected_shells_and_thin_rational_queries_match_full_ray_loop(self):
+        triangles=[]
+        for shift, width in ((F(-7), F(1, 2**18)), (F(0), F(2)), (F(8), F(3, 7))):
+            vertices=((shift, F(0), F(0)), (shift+width, F(0), F(0)),
+                      (shift, width, F(0)), (shift, F(0), width))
+            triangles.extend(tuple(vertices[i] for i in face) for face in FACES)
+        prepared=cert._Prepared(triangles)
+        for tri in triangles:
+            center=tuple(sum(p[k] for p in tri)/3 for k in range(3))
+            for offset in (F(0), F(1, 2**24), F(-1, 2**24)):
+                point=tuple(x+offset for x in center)
+                with self.subTest(point=point):
+                    self.assertEqual(prepared.location(point),
+                                     legacy_prepared_location(prepared,point)[0])
+
+
 class InterfaceEdgeIndexTests(unittest.TestCase):
     def test_pruned_contacts_match_exhaustive_exact_segment_predicate(self):
         edges = {((F(0), F(0), F(0)), (F(4), F(2), F(0))),
