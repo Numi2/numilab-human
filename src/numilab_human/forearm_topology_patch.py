@@ -153,7 +153,7 @@ def collapse_short_edge_in_two_frames(
     maximum_edge_length_m: float,
     require_zero_face_reduction: bool = True,
 ) -> tuple[np.ndarray, dict]:
-    """Retire a short inferred edge without changing any allocated source point.
+    """Infer a short-edge topology repair without changing any allocated source point.
 
     This construction requires a strict simplicial link and closed oriented
     output links. By default it requires a strict reduction in the combined
@@ -161,7 +161,10 @@ def collapse_short_edge_in_two_frames(
     that strict reduction, while retaining both per-frame nonincrease checks.
     Every previously nonzero surviving face must remain nonzero and retain its
     orientation in both frames. Only callers with authenticated source ancestry
-    may mark endpoints modifiable. The returned complete input star is ancestry
+    and authorization for local remeshing may mark endpoints modifiable. Retained
+    source slots may participate: the inference concerns face topology, while
+    every allocated source coordinate and identity stays intact. This never
+    relabels a source point as a generated point. The complete input star is ancestry
     for rewritten faces, including the two retired incident faces.
 
     This does not check exact self intersections, neighboring anatomy, material
@@ -187,7 +190,7 @@ def collapse_short_edge_in_two_frames(
     if keep == retire or min(keep, retire) < 0 or max(keep, retire) >= len(source):
         raise ValueError("edge endpoints must be distinct valid source slots")
     if not mask[keep] or not mask[retire]:
-        raise ValueError("both endpoints must be explicitly modifiable inferred slots")
+        raise ValueError("both endpoints must be explicitly modifiable source slots")
     if (isinstance(maximum_edge_length_m, (bool, np.bool_))
             or not np.isfinite(maximum_edge_length_m) or maximum_edge_length_m <= 0):
         raise ValueError("maximum edge length must be finite and positive in metres")
