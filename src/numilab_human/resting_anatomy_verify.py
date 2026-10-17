@@ -351,9 +351,9 @@ class PreparedSurface:
         return self._meter_index
 
     def point_location_meters(self, point):
-        """Use exact closed-component parity without enlarging predicate bounds.
+        """Use exact closed-component parity within the shared index capacity.
 
-        The predicate owner permits at most 200,000 faces per prepared index.
+        The predicate owner permits at most 262,144 faces per prepared index.
         A larger surface may contain many individually closed components. Their
         inside parities combine by XOR, including nested cavity boundaries.
         Boundary on any component remains boundary. No component is truncated,
@@ -1162,7 +1162,7 @@ def _overlap(first, second):
                 np.all(second.positions.min(axis=0) <= first.positions.max(axis=0)))
 
 
-_POINT_LOCATION_COMPONENT_FACE_LIMIT = 200_000
+_POINT_LOCATION_COMPONENT_FACE_LIMIT = ci.MAX_PREPARED_POINT_LOCATION_FACES
 
 
 def _contained_components(source, target, *, inspect_all_faces=False):

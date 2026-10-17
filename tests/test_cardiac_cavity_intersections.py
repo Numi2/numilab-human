@@ -27,6 +27,18 @@ def run(*chambers):
 
 
 class PredicateTests(unittest.TestCase):
+    def test_prepared_point_location_enforces_resource_bound_before_indexing(self):
+        records = audit._records([(0,0,0),(1,0,0),(0,1,0),(0,0,1)],
+                                 [(0,2,1),(0,1,3),(0,3,2),(1,2,3)])
+        with patch.object(audit, "MAX_PREPARED_POINT_LOCATION_FACES", 4):
+            prepared = audit.prepare_point_location(records)
+            self.assertEqual(audit.point_location_prepared_indexed(
+                (Fraction(1,8),)*3, prepared)["location"], "inside")
+            with self.assertRaisesRegex(HumanImportError, "bounded face count"):
+                audit.prepare_point_location(records + [None])
+        self.assertGreaterEqual(audit.MAX_PREPARED_POINT_LOCATION_FACES, 220_672)
+        self.assertEqual(audit.MAX_PREPARED_POINT_LOCATION_FACES, 262_144)
+
     def test_missing_prepared_records_cannot_pass_as_empty_geometry(self):
         for first, second in ((None, None), (None, []), ([], None)):
             with self.subTest(first=first, second=second):

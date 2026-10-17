@@ -33,7 +33,7 @@ def test_component_queries_match_complete_exact_index_including_nested_voids(nes
     full = surface.meter_index()
     expected = [ci.point_location_prepared_indexed(p, full)["location"] for p in points]
     # Four faces is the fixture bound; the production predicate keeps its
-    # existing 200,000 face guard and is never enlarged or monkeypatched.
+    # bounded face guard and is never enlarged or monkeypatched.
     with patch.object(av, "_POINT_LOCATION_COMPONENT_FACE_LIMIT", 4):
         actual = [surface.point_location_meters(p)["location"] for p in points]
     assert actual == expected
@@ -61,7 +61,7 @@ def test_component_containment_keeps_enclosed_solid_failure():
     assert any(row["inside_component_witnesses"] for row in report["containment"])
 
 
-@pytest.mark.parametrize("face_limit", [4, 200_000])
+@pytest.mark.parametrize("face_limit", [4, ci.MAX_PREPARED_POINT_LOCATION_FACES])
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
 @pytest.mark.parametrize("direction,expected", [
     (0, "boundary"), (-1, "inside"), (1, "outside"),
@@ -89,3 +89,7 @@ def test_invalid_meter_queries_fail_before_preparing_containment_index(point):
         surface.point_location_meters(point)
     assert surface._meter_index is None
     assert surface._meter_component_indices is None
+
+
+def test_surface_and_predicate_share_the_production_resource_bound():
+    assert av._POINT_LOCATION_COMPONENT_FACE_LIMIT == ci.MAX_PREPARED_POINT_LOCATION_FACES

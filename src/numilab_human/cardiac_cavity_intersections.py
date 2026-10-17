@@ -656,11 +656,17 @@ def _point_location_records_identity_sha256(records):
 
 
 
+# The registered diaphragm has 220,672 faces in one closed component.
+# Keep exact indexing bounded while admitting that complete reference surface;
+# this is a resource limit, independent of every geometric predicate.
+MAX_PREPARED_POINT_LOCATION_FACES = 262_144
+
+
 def prepare_point_location(records):
     """Snapshot exact records and prepare per-triangle normalized queries."""
     require(isinstance(records, (list, tuple)) and bool(records),
             "prepared point-location requires non-empty records")
-    require(len(records) <= 200_000, "prepared point-location surface exceeds the bounded face count")
+    require(len(records) <= MAX_PREPARED_POINT_LOCATION_FACES, "prepared point-location surface exceeds the bounded face count")
     snapshots, triangles, normals = [], [], []
     plane_constants, lower_bounds, upper_bounds = [], [], []
     normalization_transforms = []
