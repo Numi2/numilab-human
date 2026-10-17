@@ -13,6 +13,7 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+from fractions import Fraction
 
 import numpy as np
 
@@ -138,10 +139,274 @@ def _is_known_source_microfragment(vertices, detail, coordinate_quantization_m=N
     return bool(np.all(nearest <= anchor_tolerance))
 
 
-def _normalize_source_face_ancestry(raw_face_map, source_face_count, stable_id, *, allow_two_parent_flip):
-    """Validate exact source-face ancestry for unchanged faces and one local edge flip."""
+def _fraction_cross2(a, b, c):
+    return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+
+
+def _fraction_polygon_area2(points):
+    if len(points) < 3:
+        return Fraction(0)
+    return sum(points[i][0] * points[(i + 1) % len(points)][1]
+               - points[(i + 1) % len(points)][0] * points[i][1]
+               for i in range(len(points)))
+
+
+def _fraction_clip_convex(subject, clip):
+    output = list(subject)
+    for index, a in enumerate(clip):
+        b = clip[(index + 1) % len(clip)]
+        source = output
+        output = []
+        if not source:
+            break
+        previous = source[-1]
+        previous_side = _fraction_cross2(a, b, previous)
+        for current in source:
+            current_side = _fraction_cross2(a, b, current)
+            previous_inside = previous_side >= 0
+            current_inside = current_side >= 0
+            if previous_inside != current_inside:
+                denominator = previous_side - current_side
+                if denominator:
+                    t = previous_side / denominator
+                    output.append((previous[0] + t * (current[0] - previous[0]),
+                                   previous[1] + t * (current[1] - previous[1])))
+            if current_inside:
+                output.append(current)
+            previous, previous_side = current, current_side
+    return output
+
+
+def _fraction_point_on_segment(point, start, end):
+    direction = tuple(end[i] - start[i] for i in range(3))
+    offset = tuple(point[i] - start[i] for i in range(3))
+    cross = (direction[1] * offset[2] - direction[2] * offset[1],
+             direction[2] * offset[0] - direction[0] * offset[2],
+             direction[0] * offset[1] - direction[1] * offset[0])
+    if any(cross):
+        return False
+    axis = next((i for i, value in enumerate(direction) if value), None)
+    if axis is None:
+        return point == start
+    parameter = offset[axis] / direction[axis]
+    return 0 <= parameter <= 1
+
+
+def _oriented_patch_boundary(triangles, split_points=()):
+    universe = {point for triangle in triangles for point in triangle}
+    universe.update(split_points)
+    boundary = {}
+    for triangle in triangles:
+        for start, end in ((triangle[0], triangle[1]),
+                           (triangle[1], triangle[2]),
+                           (triangle[2], triangle[0])):
+            axis = next(i for i, value in enumerate(tuple(end[j] - start[j] for j in range(3))) if value)
+            direction = end[axis] - start[axis]
+            points = [point for point in universe
+                      if _fraction_point_on_segment(point, start, end)]
+            points.sort(key=lambda point: (point[axis] - start[axis]) / direction)
+            for left, right in zip(points, points[1:]):
+                if left == right:
+                    continue
+                key = (left, right) if left < right else (right, left)
+                sign = 1 if left < right else -1
+                boundary[key] = boundary.get(key, 0) + sign
+    return {key: value for key, value in boundary.items() if value}
+
+
+def _exact_parent_barycentric(point, triangle):
+    a, b, c = triangle
+    edge_a = tuple(b[i] - a[i] for i in range(3))
+    edge_b = tuple(c[i] - a[i] for i in range(3))
+    offset = tuple(point[i] - a[i] for i in range(3))
+    axes = ((0, 1), (0, 2), (1, 2))
+    selected = max(axes, key=lambda pair: abs(edge_a[pair[0]] * edge_b[pair[1]]
+                                              - edge_a[pair[1]] * edge_b[pair[0]]))
+    i, j = selected
+    determinant = edge_a[i] * edge_b[j] - edge_a[j] * edge_b[i]
+    if not determinant:
+        return None
+    weight_b = (offset[i] * edge_b[j] - offset[j] * edge_b[i]) / determinant
+    weight_c = (edge_a[i] * offset[j] - edge_a[j] * offset[i]) / determinant
+    weight_a = Fraction(1) - weight_b - weight_c
+    if any(weight_a * a[k] + weight_b * b[k] + weight_c * c[k] != point[k]
+           for k in range(3)):
+        return None
+    return (weight_a, weight_b, weight_c)
+
+
+def _source_face_subdivision_patch_report(candidate_vertices6, candidate_faces,
+                                           source_vertices6, source_faces, face_map,
+                                           evidence, repeated_source_face_ids):
+    required = {"support_source_face_ids", "raw_vertex_lattice_numerators",
+                "raw_vertex_lattice_denominators", "lattice_scale"}
+    if not isinstance(evidence, dict) or not required.issubset(evidence):
+        raise ValueError("source-face subdivision requires exact local patch geometry evidence")
+    raw_support = list(evidence["support_source_face_ids"])
+    if (not raw_support or any(isinstance(value, (bool, np.bool_))
+                               or not isinstance(value, (int, np.integer)) for value in raw_support)):
+        raise ValueError("source-face subdivision patch support requires integer source face IDs")
+    support = tuple(map(int, raw_support))
+    if (len(set(support)) != len(support)
+            or any(value < 0 or value >= len(source_faces) for value in support)):
+        raise ValueError("source-face subdivision patch support contains duplicate or out-of-range IDs")
+    repeated = set(map(int, repeated_source_face_ids))
+    if not repeated or not repeated.issubset(support):
+        raise ValueError("source-face subdivision repeated parents are outside the declared patch support")
+
+    scale = evidence["lattice_scale"]
+    if isinstance(scale, (bool, np.bool_)) or not isinstance(scale, (int, np.integer)) or int(scale) <= 0:
+        raise ValueError("source-face subdivision exact lattice scale is invalid")
+    scale = int(scale)
+    numerators = np.asarray(evidence["raw_vertex_lattice_numerators"])
+    denominators = np.asarray(evidence["raw_vertex_lattice_denominators"])
+    if (numerators.shape != (len(candidate_vertices6), 3)
+            or denominators.shape != numerators.shape
+            or numerators.dtype.kind not in "iuUS"
+            or denominators.dtype.kind not in "iuUS"):
+        raise ValueError("source-face subdivision exact lattice arrays have invalid shape or dtype")
+
+    raw_points = []
+    emitted_points = []
+    for vertex_id in range(len(candidate_vertices6)):
+        point = []
+        emitted = []
+        for axis in range(3):
+            try:
+                numerator = int(numerators[vertex_id, axis])
+                denominator = int(denominators[vertex_id, axis])
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ValueError("source-face subdivision exact lattice value is not an integer") from exc
+            if denominator <= 0:
+                raise ValueError("source-face subdivision exact lattice denominator must be positive")
+            coordinate = Fraction(numerator, denominator) / scale
+            f32 = np.float32(float(coordinate))
+            if not np.isfinite(f32) or f32 != candidate_vertices6[vertex_id, axis]:
+                raise ValueError("source-face subdivision raw geometry does not roundtrip to candidate Float32")
+            point.append(Fraction(numerator, denominator))
+            emitted.append(Fraction.from_float(float(f32)) * scale)
+        raw_points.append(tuple(point))
+        emitted_points.append(tuple(emitted))
+
+    support_set = set(support)
+    child_ids = []
+    child_parent_counts = collections.Counter()
+    for face_id, parents in enumerate(face_map):
+        if any(parent in support_set for parent in parents):
+            if len(parents) != 1 or parents[0] not in support_set:
+                raise ValueError("source-face subdivision patch has a child with ambiguous parent support")
+            child_ids.append(face_id)
+            child_parent_counts[parents[0]] += 1
+    if set(child_parent_counts) != support_set:
+        raise ValueError("source-face subdivision patch omits a declared source parent")
+    actual_repeated = {face_id for face_id, count in child_parent_counts.items() if count > 1}
+    if actual_repeated != repeated:
+        raise ValueError("source-face subdivision patch repeated-parent inventory differs")
+
+    source_points_by_id = {}
+    for face_id in support:
+        for vertex_id in source_faces[face_id]:
+            vertex_id = int(vertex_id)
+            if vertex_id not in source_points_by_id:
+                source_points_by_id[vertex_id] = tuple(
+                    Fraction.from_float(float(np.float32(value))) * scale
+                    for value in source_vertices6[vertex_id, :3]
+                )
+    source_triangles = [tuple(source_points_by_id[int(vertex)]
+                              for vertex in source_faces[face_id])
+                        for face_id in support]
+    child_triangles_raw = []
+    child_triangles_emitted = []
+    coverage_by_parent = {face_id: Fraction(0) for face_id in support}
+    child_polygons_by_parent = collections.defaultdict(list)
+    for face_id in child_ids:
+        parent_id = int(face_map[face_id][0])
+        source_triangle = tuple(source_points_by_id[int(vertex)]
+                                for vertex in source_faces[parent_id])
+        child_face = tuple(map(int, candidate_faces[face_id]))
+        raw_triangle = tuple(raw_points[vertex] for vertex in child_face)
+        barycentric = [_exact_parent_barycentric(point, source_triangle)
+                       for point in raw_triangle]
+        if any(weights is None or min(weights) < 0 for weights in barycentric):
+            raise ValueError(f"source-face subdivision child {face_id} is outside its exact parent triangle")
+        parent_normal = tuple(source_triangle[1][i] - source_triangle[0][i] for i in range(3))
+        parent_edge = tuple(source_triangle[2][i] - source_triangle[0][i] for i in range(3))
+        parent_cross = (parent_normal[1] * parent_edge[2] - parent_normal[2] * parent_edge[1],
+                        parent_normal[2] * parent_edge[0] - parent_normal[0] * parent_edge[2],
+                        parent_normal[0] * parent_edge[1] - parent_normal[1] * parent_edge[0])
+        child_edge_a = tuple(raw_triangle[1][i] - raw_triangle[0][i] for i in range(3))
+        child_edge_b = tuple(raw_triangle[2][i] - raw_triangle[0][i] for i in range(3))
+        child_cross = (child_edge_a[1] * child_edge_b[2] - child_edge_a[2] * child_edge_b[1],
+                       child_edge_a[2] * child_edge_b[0] - child_edge_a[0] * child_edge_b[2],
+                       child_edge_a[0] * child_edge_b[1] - child_edge_a[1] * child_edge_b[0])
+        signed_area = sum(parent_cross[i] * child_cross[i] for i in range(3))
+        parent_area = sum(value * value for value in parent_cross)
+        if signed_area <= 0 or parent_area <= 0:
+            raise ValueError(f"source-face subdivision child {face_id} has degenerate or reversed parent orientation")
+        coverage_by_parent[parent_id] += signed_area / parent_area
+        polygon = [(weights[1], weights[2]) for weights in barycentric]
+        if _fraction_polygon_area2(polygon) <= 0:
+            raise ValueError(f"source-face subdivision child {face_id} has degenerate projected area")
+        child_polygons_by_parent[parent_id].append((face_id, polygon))
+        child_triangles_raw.append(raw_triangle)
+        child_triangles_emitted.append(tuple(emitted_points[vertex] for vertex in child_face))
+
+    for parent_id, children in child_polygons_by_parent.items():
+        for index, (left_id, left) in enumerate(children):
+            for right_id, right in children[index + 1:]:
+                overlap = _fraction_clip_convex(left, right)
+                if abs(_fraction_polygon_area2(overlap)) > 0:
+                    raise ValueError(f"source-face subdivision children {left_id} and {right_id} overlap in parent {parent_id}")
+
+    raw_split_points = {point for triangle in source_triangles + child_triangles_raw for point in triangle}
+    raw_source_boundary = _oriented_patch_boundary(source_triangles, raw_split_points)
+    raw_child_boundary = _oriented_patch_boundary(child_triangles_raw, raw_split_points)
+    if raw_source_boundary != raw_child_boundary:
+        raise ValueError("source-face subdivision exact patch boundary differs from source support")
+    emitted_source_triangles = [
+        tuple(tuple(Fraction.from_float(float(np.float32(source_vertices6[int(vertex), axis]))) * scale
+                    for axis in range(3)) for vertex in source_faces[face_id])
+        for face_id in support
+    ]
+    emitted_split_points = {point for triangle in emitted_source_triangles + child_triangles_emitted for point in triangle}
+    emitted_child_boundary = _oriented_patch_boundary(child_triangles_emitted, emitted_split_points)
+    emitted_source_boundary = _oriented_patch_boundary(emitted_source_triangles, emitted_split_points)
+    if emitted_source_boundary != emitted_child_boundary:
+        raise ValueError("source-face subdivision Float32 patch boundary differs from source support")
+
+    return {
+        "passed": True,
+        "support_source_face_ids": list(support),
+        "repeated_source_face_ids": sorted(repeated),
+        "output_child_face_count": int(len(child_ids)),
+        "output_child_count_by_source_face": {str(face_id): int(child_parent_counts[face_id])
+                                               for face_id in support},
+        "exact_child_orientation_and_containment_checked": int(len(child_ids)),
+        "exact_child_nonoverlap_parent_groups_checked": int(len(child_polygons_by_parent)),
+        "source_parent_area_coverage_fraction_by_face": {
+            str(face_id): float(coverage_by_parent[face_id]) for face_id in support
+        },
+        "exact_raw_patch_boundary_segment_count": int(len(raw_source_boundary)),
+        "float32_patch_boundary_segment_count": int(len(emitted_source_boundary)),
+        "exact_raw_and_float32_patch_boundary_conserved": True,
+    }
+
+
+def _normalize_source_face_ancestry(raw_face_map, source_face_count, stable_id, *,
+                                    allow_two_parent_flip,
+                                    allowed_subdivision_sources=()):
+    """Validate unchanged faces, local flips, and explicitly named 1-to-N remesh ancestry."""
+    allowed_values = list(allowed_subdivision_sources)
+    if any(isinstance(value, (bool, np.bool_))
+           or not isinstance(value, (int, np.integer)) for value in allowed_values):
+        raise ValueError("source-face subdivision opt-in requires integer source face IDs")
+    allowed = set(map(int, allowed_values))
+    if (len(allowed) != len(allowed_values)
+            or any(value < 0 or value >= source_face_count for value in allowed)):
+        raise ValueError("source-face subdivision opt-in contains duplicate or out-of-range source face IDs")
     face_map = []
     single_parent_sources = set()
+    single_parent_uses = collections.Counter()
     paired_flip_uses = collections.Counter()
     for output_face, parents in enumerate(raw_face_map):
         values = np.asarray(parents)
@@ -156,14 +421,21 @@ def _normalize_source_face_ancestry(raw_face_map, source_face_count, stable_id, 
             raise ValueError(f"source face ancestry is invalid for output face {output_face} in row {stable_id}")
         parent_ids = tuple(sorted(map(int, values)))
         if len(parent_ids) == 1:
-            if parent_ids[0] in single_parent_sources:
+            source_id = parent_ids[0]
+            single_parent_uses[source_id] += 1
+            single_parent_sources.add(source_id)
+            if single_parent_uses[source_id] > 1 and source_id not in allowed:
+                if allowed:
+                    raise ValueError(f"source-face subdivision declaration differs from repeated ancestry in row {stable_id}")
                 raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
-            single_parent_sources.add(parent_ids[0])
         else:
             if not allow_two_parent_flip:
                 raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
             paired_flip_uses[parent_ids] += 1
         face_map.append(parent_ids)
+    repeated = {source_id for source_id, count in single_parent_uses.items() if count > 1}
+    if repeated != allowed:
+        raise ValueError(f"source-face subdivision declaration differs from repeated ancestry in row {stable_id}")
     if any(count != 2 for count in paired_flip_uses.values()):
         raise ValueError(f"a local 2-to-2 flip must map exactly two output faces to the same source-face pair in row {stable_id}")
     paired_sources = [source for pair in paired_flip_uses for source in pair]
@@ -176,13 +448,18 @@ def _normalize_source_face_ancestry(raw_face_map, source_face_count, stable_id, 
 def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                                coordinate_quantization_m=None, source_lineage_lobes=None,
                                source_face_ancestry=None, source_vertex_ancestry=None,
-                               allow_multi_parent_source_face_ancestry=()):
+                               allow_multi_parent_source_face_ancestry=(),
+                               allow_source_face_subdivisions=None,
+                               source_face_subdivision_patch_geometry=None):
     """Build the external union surface from five registered lobe meshes.
 
     `lobes` maps stable IDs 305..309 to `(vertices6, local_faces)` arrays.
     Exact reciprocal triangles are canceled from the exterior. Explicit
     multi-parent face ancestry is disabled by default; an authenticated caller
-    may opt named rows into one exact local 2-to-2 flip pair. By default,
+    may opt named rows into one exact local 2-to-2 flip pair. A separate
+    source-face subdivision opt-in names repeated parents and requires exact
+    child containment/orientation, non-overlap, and whole-support boundary
+    conservation evidence; per-face counts alone never authorize a subdivision. By default,
     any detached component is a hard error.  A source-specific microfragment
     may be omitted only when it matches the exact registered 305/308 source
     anchor coordinates, sub-millimeter-scale bounds, owner identities, and
@@ -222,6 +499,58 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         multi_parent_rows.add(normalized_id)
     if multi_parent_rows and not has_explicit_ancestry:
         raise ValueError("multi-parent source-face ancestry opt-in requires explicit source ancestry")
+    raw_subdivisions = {} if allow_source_face_subdivisions is None else allow_source_face_subdivisions
+    try:
+        subdivision_items = list(raw_subdivisions.items())
+    except (AttributeError, TypeError) as exc:
+        raise ValueError("source-face subdivision opt-in must map stable lobe IDs to source face IDs") from exc
+    subdivision_sources_by_row = {}
+    for stable_id, raw_source_ids in subdivision_items:
+        if isinstance(stable_id, (bool, np.bool_)):
+            raise ValueError("source-face subdivision opt-in rejects boolean stable lobe IDs")
+        if isinstance(stable_id, (int, np.integer)):
+            normalized_id = int(stable_id)
+        elif isinstance(stable_id, str) and stable_id.isdecimal() and str(int(stable_id)) == stable_id:
+            normalized_id = int(stable_id)
+        else:
+            raise ValueError("source-face subdivision opt-in requires integer or canonical decimal stable lobe IDs")
+        if normalized_id not in LOBE_IDS or normalized_id in subdivision_sources_by_row:
+            raise ValueError("source-face subdivision opt-in contains an invalid or duplicate stable lobe ID")
+        try:
+            source_ids = list(raw_source_ids)
+        except TypeError as exc:
+            raise ValueError("source-face subdivision opt-in requires iterable source face IDs") from exc
+        if not source_ids:
+            raise ValueError("source-face subdivision opt-in cannot declare an empty source face set")
+        if any(isinstance(value, (bool, np.bool_))
+               or not isinstance(value, (int, np.integer)) for value in source_ids):
+            raise ValueError("source-face subdivision opt-in requires integer source face IDs")
+        source_values = tuple(map(int, source_ids))
+        if len(set(source_values)) != len(source_values):
+            raise ValueError("source-face subdivision opt-in contains duplicate source face IDs")
+        subdivision_sources_by_row[normalized_id] = source_values
+    if subdivision_sources_by_row and not has_explicit_ancestry:
+        raise ValueError("source-face subdivision opt-in requires explicit source ancestry")
+    raw_patch_geometry = {} if source_face_subdivision_patch_geometry is None else source_face_subdivision_patch_geometry
+    try:
+        patch_geometry_items = list(raw_patch_geometry.items())
+    except (AttributeError, TypeError) as exc:
+        raise ValueError("source-face subdivision patch geometry must map stable lobe IDs to evidence") from exc
+    patch_geometry_by_row = {}
+    for stable_id, evidence in patch_geometry_items:
+        if isinstance(stable_id, (bool, np.bool_)):
+            raise ValueError("source-face subdivision patch geometry rejects boolean stable lobe IDs")
+        if isinstance(stable_id, (int, np.integer)):
+            normalized_id = int(stable_id)
+        elif isinstance(stable_id, str) and stable_id.isdecimal() and str(int(stable_id)) == stable_id:
+            normalized_id = int(stable_id)
+        else:
+            raise ValueError("source-face subdivision patch geometry requires integer or canonical decimal stable lobe IDs")
+        if normalized_id not in LOBE_IDS or normalized_id in patch_geometry_by_row:
+            raise ValueError("source-face subdivision patch geometry contains invalid or duplicate stable lobe IDs")
+        patch_geometry_by_row[normalized_id] = evidence
+    if set(patch_geometry_by_row) != set(subdivision_sources_by_row):
+        raise ValueError("every source-face subdivision opt-in requires matching exact patch geometry evidence")
     if has_explicit_ancestry and source_lineage_lobes is None:
         raise ValueError("explicit source pleura ancestry requires authenticated source lineage rows")
     if has_explicit_ancestry:
@@ -260,6 +589,7 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         face_ancestry_digest = hashlib.sha256()
         vertex_ancestry_digest = hashlib.sha256()
         multi_parent_face_counts = {}
+        subdivision_patch_reports = {}
         for stable_id in LOBE_IDS:
             candidate_vertices6, candidate_faces = lobes[stable_id]
             source_vertices6, source_faces = source_lineage_lobes[stable_id]
@@ -295,6 +625,7 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 face_map = _normalize_source_face_ancestry(
                     raw_face_map, len(source_faces), stable_id,
                     allow_two_parent_flip=stable_id in multi_parent_rows,
+                    allowed_subdivision_sources=subdivision_sources_by_row.get(stable_id, ()),
                 )
                 multi_parent_face_counts[stable_id] = sum(len(parents) > 1 for parents in face_map)
                 vertex_map = []
@@ -308,6 +639,12 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                             or len(np.unique(values)) != len(values)):
                         raise ValueError(f"source vertex ancestry is invalid for output vertex {output_vertex} in row {stable_id}")
                     vertex_map.append(tuple(map(int, values)))
+                if stable_id in subdivision_sources_by_row:
+                    subdivision_patch_reports[stable_id] = _source_face_subdivision_patch_report(
+                        candidate_vertices6, candidate_faces, source_vertices6, source_faces,
+                        face_map, patch_geometry_by_row[stable_id],
+                        subdivision_sources_by_row[stable_id],
+                    )
                 face_offsets = [0]
                 face_values = []
                 for parents in face_map:
@@ -358,6 +695,11 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
             "candidate_face_ancestry": candidate_face_ancestry,
             "candidate_vertex_ancestry": candidate_vertex_ancestry,
             "multi_parent_face_counts": multi_parent_face_counts,
+            "subdivided_source_face_ids": {
+                stable_id: tuple(source_ids)
+                for stable_id, source_ids in subdivision_sources_by_row.items()
+            },
+            "source_face_subdivision_patch_reports": subdivision_patch_reports,
             "explicit_ancestry": has_explicit_ancestry,
             "face_ancestry_sha256": face_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
             "vertex_ancestry_sha256": vertex_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
@@ -561,6 +903,13 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 "candidate_vertex_ancestry_sha256": lineage["vertex_ancestry_sha256"],
                 "multi_parent_candidate_face_count_by_stable_id": {
                     str(sid): int(count) for sid, count in lineage["multi_parent_face_counts"].items()
+                },
+                "subdivided_source_face_ids_by_stable_id": {
+                    str(sid): list(map(int, ids))
+                    for sid, ids in lineage["subdivided_source_face_ids"].items()
+                },
+                "source_face_subdivision_patch_reports_by_stable_id": {
+                    str(sid): report for sid, report in lineage["source_face_subdivision_patch_reports"].items()
                 },
                 "source_face_connectivity_verified": True,
                 "source_face_connectivity_mode": (
