@@ -145,6 +145,92 @@ class RestingPleuraProxyTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "face/index inventory"):
                     derive_lung_union_exterior(candidate, source_lineage_lobes=source)
 
+    def test_explicit_ancestry_allows_unrelated_face_inventory_change(self):
+        source, _, _ = self._append_source_microfragment(self._two_lung_fixture())
+        candidate = self._copy_lobes(source)
+        # Remove both reciprocal faces of an ordinary internal interface
+        # outside the declared fragment. Their removal leaves the emitted
+        # exterior unchanged and gives each candidate row a different face
+        # inventory without compromising the actual shell.
+        # This owner is classifying fragment lineage; the downstream topology
+        # gate remains responsible for rejecting an incomplete external shell.
+        for stable_id in (305, 308):
+            vertices6, faces = candidate[stable_id]
+            candidate[stable_id] = (vertices6, np.delete(faces, 0, axis=0))
+        face_ancestry = {}
+        vertex_ancestry = {}
+        for stable_id in (305, 306, 307, 308, 309):
+            source_face_count = len(source[stable_id][1])
+            if stable_id in (305, 308):
+                face_ancestry[stable_id] = [[i] for i in range(source_face_count) if i != 0]
+            else:
+                face_ancestry[stable_id] = [[i] for i in range(source_face_count)]
+            vertex_ancestry[stable_id] = [[i] for i in range(len(source[stable_id][0]))]
+
+        expected_vertices, expected_faces, _ = derive_lung_union_exterior(source)
+        vertices6, faces, detail = derive_lung_union_exterior(
+            candidate,
+            source_lineage_lobes=source,
+            source_face_ancestry=face_ancestry,
+            source_vertex_ancestry=vertex_ancestry,
+        )
+        np.testing.assert_array_equal(vertices6, expected_vertices)
+        np.testing.assert_array_equal(faces, expected_faces)
+        lineage = detail["excluded_source_microfragments"][0]["source_lineage"]
+        self.assertEqual(lineage["recognition_mode"], "exact_source_face_and_vertex_ancestry")
+        self.assertTrue(lineage["source_face_connectivity_verified"])
+        self.assertEqual(lineage["source_faces"], [[305, 4], [305, 5], [308, 4], [308, 5]])
+        self.assertNotEqual(len(candidate[305][1]), len(source[305][1]))
+        self.assertNotEqual(len(candidate[308][1]), len(source[308][1]))
+
+    def test_explicit_ancestry_rejects_tampered_face_and_vertex_identity(self):
+        source, _, fragment_faces = self._append_source_microfragment(self._two_lung_fixture())
+        for mutation in ("face_identity", "vertex_identity", "connectivity", "fractional_identity"):
+            with self.subTest(mutation=mutation):
+                candidate = self._copy_lobes(source)
+                face_ancestry = {
+                    sid: [[i] for i in range(len(source[sid][1]))]
+                    for sid in (305, 306, 307, 308, 309)
+                }
+                vertex_ancestry = {
+                    sid: [[i] for i in range(len(source[sid][0]))]
+                    for sid in (305, 306, 307, 308, 309)
+                }
+                if mutation == "face_identity":
+                    # Swap one source fragment face identity with an unrelated
+                    # source face while retaining a unique ancestry map.
+                    face_ancestry[305][0], face_ancestry[305][fragment_faces[305][0]] = (
+                        face_ancestry[305][fragment_faces[305][0]], face_ancestry[305][0]
+                    )
+                elif mutation == "vertex_identity":
+                    # The vertex map is per vertex; target an actual
+                    # source-fragment vertex.
+                    fragment_vertex = len(source[305][0]) - 4
+                    vertex_ancestry[305][fragment_vertex] = [0]
+                elif mutation == "fractional_identity":
+                    face_ancestry[305][fragment_faces[305][0]] = [4.5]
+                else:
+                    vertices6, faces = candidate[305]
+                    face_id = fragment_faces[305][0]
+                    faces[face_id, 2] = 0
+                    candidate[305] = (vertices6, faces)
+                with self.assertRaises(ValueError):
+                    derive_lung_union_exterior(
+                        candidate,
+                        source_lineage_lobes=source,
+                        source_face_ancestry=face_ancestry,
+                        source_vertex_ancestry=vertex_ancestry,
+                    )
+
+    def test_explicit_ancestry_requires_source_and_both_ancestry_maps(self):
+        source, _, _ = self._append_source_microfragment(self._two_lung_fixture())
+        with self.assertRaisesRegex(ValueError, "authenticated source lineage"):
+            derive_lung_union_exterior(
+                source,
+                source_face_ancestry={sid: [] for sid in (305, 306, 307, 308, 309)},
+                source_vertex_ancestry={sid: [] for sid in (305, 306, 307, 308, 309)},
+            )
+
     def test_source_lineage_still_rejects_collapsed_fragment_geometry(self):
         source, vertices_by_row, _ = self._append_source_microfragment(self._two_lung_fixture())
         candidate = self._copy_lobes(source)

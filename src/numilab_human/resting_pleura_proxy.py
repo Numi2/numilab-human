@@ -139,7 +139,8 @@ def _is_known_source_microfragment(vertices, detail, coordinate_quantization_m=N
 
 
 def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
-                               coordinate_quantization_m=None, source_lineage_lobes=None):
+                               coordinate_quantization_m=None, source_lineage_lobes=None,
+                               source_face_ancestry=None, source_vertex_ancestry=None):
     """Build the external union surface from five registered lobe meshes.
 
     `lobes` maps stable IDs 305..309 to `(vertices6, local_faces)` arrays.
@@ -147,7 +148,11 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
     any detached component is a hard error.  A source-specific microfragment
     may be omitted only when it matches the exact registered 305/308 source
     anchor coordinates, sub-millimeter-scale bounds, owner identities, and
-    bounded area/volume recorded below. Any other detached component fails.
+    bounded area/volume recorded below. With explicit ancestry from an
+    authenticated caller, unrelated candidate inventory changes are allowed
+    while the omitted component must map to the same source faces, ordered
+    source connectivity, and source vertex inventory. Any other detached
+    component fails.
     """
     # The respiratory preparation receipt explicitly uses zero for the
     # unquantized alternative. It has the same source anchors as an omitted
@@ -157,11 +162,32 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
     if set(map(int, lobes)) != set(LOBE_IDS):
         raise ValueError("the pleura proxy requires exactly the five stable lung lobe IDs")
 
+    if (source_face_ancestry is None) != (source_vertex_ancestry is None):
+        raise ValueError("source pleura face and vertex ancestry must be supplied together")
+    has_explicit_ancestry = source_face_ancestry is not None
+    if has_explicit_ancestry and source_lineage_lobes is None:
+        raise ValueError("explicit source pleura ancestry requires authenticated source lineage rows")
+    if has_explicit_ancestry:
+        normalized_maps = []
+        for name, mapping in (("face", source_face_ancestry), ("vertex", source_vertex_ancestry)):
+            try:
+                normalized = {int(stable_id): value for stable_id, value in mapping.items()}
+            except (AttributeError, TypeError, ValueError) as exc:
+                raise ValueError(f"explicit source pleura {name} ancestry must be keyed by stable lobe ID") from exc
+            if (len(normalized) != len(mapping)
+                    or set(normalized) != set(LOBE_IDS)):
+                raise ValueError(f"explicit source pleura {name} ancestry requires all five unique stable lobe IDs")
+            normalized_maps.append(normalized)
+        source_face_ancestry, source_vertex_ancestry = normalized_maps
     lineage = None
     if source_lineage_lobes is not None:
         if set(map(int, source_lineage_lobes)) != set(LOBE_IDS):
             raise ValueError("source pleura lineage requires exactly the five stable lung lobe IDs")
         reference = {}
+        candidate_face_ancestry = {}
+        candidate_vertex_ancestry = {}
+        face_ancestry_digest = hashlib.sha256()
+        vertex_ancestry_digest = hashlib.sha256()
         for stable_id in LOBE_IDS:
             candidate_vertices6, candidate_faces = lobes[stable_id]
             source_vertices6, source_faces = source_lineage_lobes[stable_id]
@@ -171,12 +197,70 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
             source_faces = np.asarray(source_faces, dtype=np.int64)
             if (candidate_vertices6.ndim != 2 or candidate_vertices6.shape[1] != 6
                     or source_vertices6.ndim != 2 or source_vertices6.shape[1] != 6
-                    or candidate_vertices6.shape != source_vertices6.shape
-                    or candidate_faces.shape != source_faces.shape
-                    or not np.array_equal(candidate_faces, source_faces)):
-                raise ValueError(
-                    f"candidate lobe face/index inventory differs from source lineage for row {stable_id}"
-                )
+                    or candidate_faces.ndim != 2 or candidate_faces.shape[1] != 3
+                    or source_faces.ndim != 2 or source_faces.shape[1] != 3
+                    or (len(candidate_faces) and (candidate_faces.min() < 0
+                                                   or candidate_faces.max() >= len(candidate_vertices6)))
+                    or (len(source_faces) and (source_faces.min() < 0
+                                               or source_faces.max() >= len(source_vertices6)))):
+                raise ValueError(f"malformed candidate or source pleura lineage arrays for row {stable_id}")
+            if has_explicit_ancestry:
+                raw_face_map = source_face_ancestry[stable_id]
+                raw_vertex_map = source_vertex_ancestry[stable_id]
+                try:
+                    face_map_length = len(raw_face_map)
+                    vertex_map_length = len(raw_vertex_map)
+                except TypeError as exc:
+                    raise ValueError(f"explicit source pleura ancestry must contain per-element rows for row {stable_id}") from exc
+                if face_map_length != len(candidate_faces) or vertex_map_length != len(candidate_vertices6):
+                    raise ValueError(f"explicit source pleura ancestry length differs for row {stable_id}")
+                face_map = []
+                used_source_faces = set()
+                for output_face, parents in enumerate(raw_face_map):
+                    values = np.asarray(parents)
+                    if values.dtype.kind not in "iu":
+                        raise ValueError(f"source face ancestry must use integer source IDs in row {stable_id}")
+                    values = values.astype(np.int64, copy=False).reshape(-1)
+                    if (len(values) != 1 or int(values[0]) < 0 or int(values[0]) >= len(source_faces)
+                            or int(values[0]) in used_source_faces):
+                        raise ValueError(f"source face ancestry must map each output face to one unique source face in row {stable_id}")
+                    used_source_faces.add(int(values[0]))
+                    face_map.append((int(values[0]),))
+                vertex_map = []
+                for output_vertex, parents in enumerate(raw_vertex_map):
+                    values = np.asarray(parents)
+                    if values.dtype.kind not in "iu":
+                        raise ValueError(f"source vertex ancestry must use integer source IDs in row {stable_id}")
+                    values = values.astype(np.int64, copy=False).reshape(-1)
+                    if (len(values) == 0 or np.any(values < 0)
+                            or np.any(values >= len(source_vertices6))
+                            or len(np.unique(values)) != len(values)):
+                        raise ValueError(f"source vertex ancestry is invalid for output vertex {output_vertex} in row {stable_id}")
+                    vertex_map.append(tuple(map(int, values)))
+                face_offsets = np.arange(len(face_map) + 1, dtype="<u8")
+                face_values = np.asarray([parents[0] for parents in face_map], dtype="<u8")
+                vertex_offsets = [0]
+                vertex_values = []
+                for parents in vertex_map:
+                    vertex_values.extend(parents)
+                    vertex_offsets.append(len(vertex_values))
+                face_ancestry_digest.update(int(stable_id).to_bytes(4, "little", signed=False))
+                face_ancestry_digest.update(face_offsets.tobytes())
+                face_ancestry_digest.update(face_values.tobytes())
+                vertex_ancestry_digest.update(int(stable_id).to_bytes(4, "little", signed=False))
+                vertex_ancestry_digest.update(np.asarray(vertex_offsets, dtype="<u8").tobytes())
+                vertex_ancestry_digest.update(np.asarray(vertex_values, dtype="<u8").tobytes())
+            else:
+                if (candidate_vertices6.shape != source_vertices6.shape
+                        or candidate_faces.shape != source_faces.shape
+                        or not np.array_equal(candidate_faces, source_faces)):
+                    raise ValueError(
+                        f"candidate lobe face/index inventory differs from source lineage for row {stable_id}"
+                    )
+                face_map = [(int(index),) for index in range(len(candidate_faces))]
+                vertex_map = [(int(index),) for index in range(len(candidate_vertices6))]
+            candidate_face_ancestry[stable_id] = tuple(face_map)
+            candidate_vertex_ancestry[stable_id] = tuple(vertex_map)
             reference[stable_id] = (source_vertices6, source_faces)
         _, _, reference_report = derive_lung_union_exterior(
             reference, allow_source_microfragment=True,
@@ -197,6 +281,11 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                 )))
         lineage = {
             "reference_lobes": reference,
+            "candidate_face_ancestry": candidate_face_ancestry,
+            "candidate_vertex_ancestry": candidate_vertex_ancestry,
+            "explicit_ancestry": has_explicit_ancestry,
+            "face_ancestry_sha256": face_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
+            "vertex_ancestry_sha256": vertex_ancestry_digest.hexdigest() if has_explicit_ancestry else None,
             "source_pairs": source_pairs,
             "source_vertex_inventory": source_vertex_inventory,
             "source_face_count": int(source_fragment["face_count"]),
@@ -275,20 +364,75 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
             if lineage is None:
                 matches = _is_known_source_microfragment(vertices, detail, coordinate_quantization_m)
             else:
-                candidate_pairs = tuple(sorted((int(owner[0]), int(owner[1]))
-                                               for owner in detail["_source_faces"]))
-                matches = (candidate_pairs == lineage["source_pairs"]
+                candidate_pairs = []
+                candidate_face_by_source = {}
+                unique_ancestry = True
+                for owner, candidate_face_id in detail["_source_faces"]:
+                    owner = int(owner)
+                    candidate_face_id = int(candidate_face_id)
+                    parents = lineage["candidate_face_ancestry"][owner][candidate_face_id]
+                    if len(parents) != 1:
+                        unique_ancestry = False
+                        continue
+                    source_pair = (owner, int(parents[0]))
+                    if source_pair in candidate_face_by_source:
+                        unique_ancestry = False
+                    candidate_face_by_source[source_pair] = candidate_face_id
+                    candidate_pairs.append(source_pair)
+                candidate_pairs = tuple(sorted(candidate_pairs))
+                candidate_inventory = {}
+                unique_vertex_ancestry = True
+                source_connectivity_matches = True
+                for stable_id in LOBE_IDS:
+                    component_face_ids = sorted(
+                        int(face_id) for owner, face_id in detail["_source_faces"]
+                        if int(owner) == stable_id
+                    )
+                    if not component_face_ids:
+                        continue
+                    candidate_faces_for_owner = lobe_positions[stable_id][1]
+                    candidate_vertex_ids = sorted(set(map(
+                        int, candidate_faces_for_owner[np.asarray(component_face_ids, dtype=np.int64)].reshape(-1)
+                    )))
+                    source_vertex_ids = []
+                    for candidate_vertex_id in candidate_vertex_ids:
+                        parents = lineage["candidate_vertex_ancestry"][stable_id][candidate_vertex_id]
+                        if not parents:
+                            unique_vertex_ancestry = False
+                        source_vertex_ids.extend(map(int, parents))
+                    candidate_inventory[stable_id] = sorted(set(source_vertex_ids))
+                # Face IDs alone are insufficient if a stale ancestry table
+                # is supplied after rewiring a triangle. Check the ordered
+                # source vertices for every face in the omitted component;
+                # cyclic rotations preserve winding, reversed order does not.
+                for owner, candidate_face_id in detail["_source_faces"]:
+                    owner = int(owner)
+                    candidate_face_id = int(candidate_face_id)
+                    parents = lineage["candidate_face_ancestry"][owner][candidate_face_id]
+                    candidate_face = lobe_positions[owner][1][candidate_face_id]
+                    candidate_vertex_parents = [
+                        lineage["candidate_vertex_ancestry"][owner][int(vertex)]
+                        for vertex in candidate_face
+                    ]
+                    if len(parents) != 1 or any(len(vertex_parents) != 1
+                                                 for vertex_parents in candidate_vertex_parents):
+                        source_connectivity_matches = False
+                        continue
+                    source_face = tuple(map(
+                        int, lineage["reference_lobes"][owner][1][parents[0]]
+                    ))
+                    mapped_face = tuple(int(vertex_parents[0])
+                                        for vertex_parents in candidate_vertex_parents)
+                    source_cycles = (source_face, source_face[1:] + source_face[:1],
+                                     source_face[2:] + source_face[:2])
+                    if mapped_face not in source_cycles:
+                        source_connectivity_matches = False
+                matches = (unique_ancestry and unique_vertex_ancestry
+                           and source_connectivity_matches
+                           and candidate_pairs == lineage["source_pairs"]
                            and detail["face_count"] == lineage["source_face_count"]
-                           and detail["vertex_count"] == lineage["source_vertex_count"])
-                if matches:
-                    candidate_inventory = {}
-                    for stable_id in LOBE_IDS:
-                        face_ids = sorted(face_id for owner, face_id in candidate_pairs if owner == stable_id)
-                        if face_ids:
-                            candidate_inventory[stable_id] = sorted(set(map(
-                                int, lobe_positions[stable_id][1][np.asarray(face_ids, dtype=np.int64)].reshape(-1)
-                            )))
-                    matches = candidate_inventory == lineage["source_vertex_inventory"]
+                           and detail["vertex_count"] == lineage["source_vertex_count"]
+                           and candidate_inventory == lineage["source_vertex_inventory"])
             if matches:
                 candidates.append((comp, detail))
         if not allow_source_microfragment or len(components) != 3 or len(candidates) != 1:
@@ -307,8 +451,13 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
             for stable_id, face_id in lineage["source_pairs"]:
                 source_vertices6, source_faces = lineage["reference_lobes"][stable_id]
                 candidate_vertices6, candidate_faces = lobe_positions[stable_id]
+                candidate_face_id = next(
+                    int(candidate_id) for candidate_owner, candidate_id in orphan["_source_faces"]
+                    if int(candidate_owner) == stable_id
+                    and lineage["candidate_face_ancestry"][stable_id][int(candidate_id)] == (face_id,)
+                )
                 source_tri = source_vertices6[source_faces[face_id], :3].astype(np.float64)
-                candidate_tri = candidate_vertices6[candidate_faces[face_id], :3].astype(np.float64)
+                candidate_tri = candidate_vertices6[candidate_faces[candidate_face_id], :3].astype(np.float64)
                 source_cross = np.cross(source_tri[1] - source_tri[0], source_tri[2] - source_tri[0])
                 candidate_cross = np.cross(candidate_tri[1] - candidate_tri[0], candidate_tri[2] - candidate_tri[0])
                 source_area2 = float(np.linalg.norm(source_cross))
@@ -330,7 +479,16 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
                     "faces_i64_sha256": hashlib.sha256(normalized_faces.tobytes()).hexdigest(),
                 }
             lineage_report = {
-                "recognition_mode": "exact_source_face_and_vertex_inventory",
+                "recognition_mode": ("exact_source_face_and_vertex_ancestry" if lineage["explicit_ancestry"]
+                                     else "exact_source_face_and_vertex_inventory"),
+                "explicit_candidate_face_ancestry": lineage["explicit_ancestry"],
+                "candidate_face_ancestry_sha256": lineage["face_ancestry_sha256"],
+                "candidate_vertex_ancestry_sha256": lineage["vertex_ancestry_sha256"],
+                "source_face_connectivity_verified": True,
+                "source_face_connectivity_mode": (
+                    "explicit_ordered_source_vertex_ancestry" if lineage["explicit_ancestry"]
+                    else "identical_candidate_and_source_face_arrays"
+                ),
                 "reference_lobe_row_arrays": reference_row_hashes,
                 "source_faces": [list(pair) for pair in lineage["source_pairs"]],
                 "source_vertex_indices_by_stable_id": {
@@ -415,6 +573,8 @@ def derive_lung_union_exterior(lobes, *, allow_source_microfragment=True,
         "excluded_source_microfragments": omitted,
         "source_coordinate_quantization_m": coordinate_quantization_m,
         "source_microfragment_anchor_rule": (
+            "exact source-face and source-vertex ancestry inherited from caller-authenticated ancestral lobe rows; unrelated face/index inventory changes require explicit ancestry maps"
+            if lineage is not None and lineage["explicit_ancestry"] else
             "exact per-lobe face/index arrays and source-face/vertex inventory inherited from caller-authenticated ancestral lobe rows"
             if lineage is not None else
             "original source anchors rounded to the receipt-declared coordinate quantum"
