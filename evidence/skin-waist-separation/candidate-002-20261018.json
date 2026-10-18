@@ -1,0 +1,393 @@
+{
+  "schema": "numi.human.waist-separated-skin-experimental-evidence.v1",
+  "status": "visual_skin_candidate_prepared_contact_id_remap_ready_native_retest_required",
+  "preparation": {
+    "schema": "numi.human.waist-owner-field-visual-skin-candidate.v1",
+    "status": "experimental_same_abi_visual_skin_candidate_prepared",
+    "inputs": {
+      "skin_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/bilateral-hand-skin-repair-20261018-001/source-hand-wrist-preserved-025/bodyparts3d-myosim-skinned-shell.nhskin",
+      "skin_sha256": "2d6b0870d1ba0dd6b0944b6a0175ca0304f0392d9ec4458521938a3a5766ad68",
+      "rigid_path": "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "rigid_sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+      "partition_path": "/Users/n/numi-human-separation-20261018/NumiHumanSeparationInventory.json",
+      "existing_boundary_path": "/Users/n/numi-human-separation-20261018/skin_boundary_index_set.json"
+    },
+    "partition": {
+      "parent_body_count": 47,
+      "child_body_count": 110,
+      "parent_binding_count": 18,
+      "child_binding_count": 68,
+      "scalar": "sum(child-side full NHSKIN weights) - sum(parent-side full NHSKIN weights)"
+    },
+    "interface": {
+      "anchor_world_m": [
+        -0.0250000003725,
+        0.206499997526,
+        1.20020000078
+      ],
+      "max_seam_radius_m": 0.21573253900755304,
+      "seam_vertex_count": 206,
+      "cap_loop_projection_residuals_m": [
+        0.022350937901035428
+      ],
+      "max_cap_projection_residual_m": 0.022350937901035428,
+      "cap_validation": "deterministic best-fit projection; simple loops, nonoverlapping projected caps, consistent winding, nonmanifold and retained-boundary checks"
+    },
+    "output": {
+      "path": "/Users/n/numi-human-separation-20261018/owner-cli-separated-002.nhskin",
+      "sha256": "dea7daf88b643c6c3dd8c33e5798599c9f6f26bddadcd8247be22855fe0c733f",
+      "bytes": 23306040,
+      "abi": 5,
+      "binding_count": 86,
+      "vertex_count": 54963,
+      "triangle_count": 109807,
+      "cap_triangle_count": 408,
+      "connected_component_count": 2,
+      "component_triangle_counts": [
+        60525,
+        49282
+      ],
+      "retained_boundary_edge_count": 115,
+      "source_face_descendant_triangle_count": 109399,
+      "source_face_ancestry_unique_count": 108987,
+      "rest_world_max_error_m": 6.061214598258262e-08,
+      "full_weight_row_sum_max_error": 4.73664840683341e-08,
+      "binding_table_byte_identical": true,
+      "lineage_path": "/Users/n/numi-human-separation-20261018/owner-cli-separated-002-lineage.npz",
+      "lineage_sha256": "1821e647ff1edb09c0147cdd16a3440f15f6dce300b2d34895aa9536d936bbba"
+    },
+    "support_contact_remap": {
+      "schema": "numi.human.nhcnt-source-geometry-ancestry-remap.v1",
+      "status": "exact_source_vertex_ancestry_remap",
+      "source_payload": {
+        "path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt",
+        "sha256": "4c31ce250a63bd730c066f6f92571295c761ddb51215a3eeb09275bc42d6992d",
+        "bytes": 1620
+      },
+      "candidate_payload": {
+        "path": "/Users/n/numi-human-separation-20261018/myosim-fullbody-resting-bed-support-waist-remapped-002.nhcnt",
+        "sha256": "20a073e425f092141e1a34d6d2142192e3e250a4382393d33ae912bdd2fac36e",
+        "bytes": 1620
+      },
+      "candidate_skin_sha256": "dea7daf88b643c6c3dd8c33e5798599c9f6f26bddadcd8247be22855fe0c733f",
+      "record_count": 32,
+      "record_size_bytes": 48,
+      "source_geometry_index_semantics": "1-based NHSKIN source vertex index",
+      "source_geometry_ids_remapped": 23,
+      "all_non_geometry_id_bytes_identical": true,
+      "records": [
+        {
+          "row": 0,
+          "body_index": 23,
+          "source_geometry_id_1based": 25848,
+          "source_vertex_index_0based": 25847,
+          "candidate_geometry_id_1based": 14288,
+          "candidate_vertex_index_0based": 14287
+        },
+        {
+          "row": 1,
+          "body_index": 20,
+          "source_geometry_id_1based": 17765,
+          "source_vertex_index_0based": 17764,
+          "candidate_geometry_id_1based": 10451,
+          "candidate_vertex_index_0based": 10450
+        },
+        {
+          "row": 2,
+          "body_index": 20,
+          "source_geometry_id_1based": 37608,
+          "source_vertex_index_0based": 37607,
+          "candidate_geometry_id_1based": 19732,
+          "candidate_vertex_index_0based": 19731
+        },
+        {
+          "row": 3,
+          "body_index": 20,
+          "source_geometry_id_1based": 15824,
+          "source_vertex_index_0based": 15823,
+          "candidate_geometry_id_1based": 9867,
+          "candidate_vertex_index_0based": 9866
+        },
+        {
+          "row": 4,
+          "body_index": 128,
+          "source_geometry_id_1based": 34319,
+          "source_vertex_index_0based": 34318,
+          "candidate_geometry_id_1based": 46315,
+          "candidate_vertex_index_0based": 46314
+        },
+        {
+          "row": 5,
+          "body_index": 128,
+          "source_geometry_id_1based": 21162,
+          "source_vertex_index_0based": 21161,
+          "candidate_geometry_id_1based": 39141,
+          "candidate_vertex_index_0based": 39140
+        },
+        {
+          "row": 6,
+          "body_index": 1,
+          "source_geometry_id_1based": 33529,
+          "source_vertex_index_0based": 33528,
+          "candidate_geometry_id_1based": 45855,
+          "candidate_vertex_index_0based": 45854
+        },
+        {
+          "row": 7,
+          "body_index": 128,
+          "source_geometry_id_1based": 20347,
+          "source_vertex_index_0based": 20346,
+          "candidate_geometry_id_1based": 38698,
+          "candidate_vertex_index_0based": 38697
+        },
+        {
+          "row": 8,
+          "body_index": 42,
+          "source_geometry_id_1based": 7241,
+          "source_vertex_index_0based": 7240,
+          "candidate_geometry_id_1based": 7241,
+          "candidate_vertex_index_0based": 7240
+        },
+        {
+          "row": 9,
+          "body_index": 92,
+          "source_geometry_id_1based": 47753,
+          "source_vertex_index_0based": 47752,
+          "candidate_geometry_id_1based": 22865,
+          "candidate_vertex_index_0based": 22864
+        },
+        {
+          "row": 10,
+          "body_index": 136,
+          "source_geometry_id_1based": 18300,
+          "source_vertex_index_0based": 18299,
+          "candidate_geometry_id_1based": 37719,
+          "candidate_vertex_index_0based": 37718
+        },
+        {
+          "row": 11,
+          "body_index": 150,
+          "source_geometry_id_1based": 36234,
+          "source_vertex_index_0based": 36233,
+          "candidate_geometry_id_1based": 47213,
+          "candidate_vertex_index_0based": 47212
+        },
+        {
+          "row": 12,
+          "body_index": 42,
+          "source_geometry_id_1based": 6890,
+          "source_vertex_index_0based": 6889,
+          "candidate_geometry_id_1based": 6890,
+          "candidate_vertex_index_0based": 6889
+        },
+        {
+          "row": 13,
+          "body_index": 62,
+          "source_geometry_id_1based": 3413,
+          "source_vertex_index_0based": 3412,
+          "candidate_geometry_id_1based": 3413,
+          "candidate_vertex_index_0based": 3412
+        },
+        {
+          "row": 14,
+          "body_index": 72,
+          "source_geometry_id_1based": 5299,
+          "source_vertex_index_0based": 5298,
+          "candidate_geometry_id_1based": 5299,
+          "candidate_vertex_index_0based": 5298
+        },
+        {
+          "row": 15,
+          "body_index": 54,
+          "source_geometry_id_1based": 520,
+          "source_vertex_index_0based": 519,
+          "candidate_geometry_id_1based": 520,
+          "candidate_vertex_index_0based": 519
+        },
+        {
+          "row": 16,
+          "body_index": 61,
+          "source_geometry_id_1based": 754,
+          "source_vertex_index_0based": 753,
+          "candidate_geometry_id_1based": 754,
+          "candidate_vertex_index_0based": 753
+        },
+        {
+          "row": 17,
+          "body_index": 66,
+          "source_geometry_id_1based": 2759,
+          "source_vertex_index_0based": 2758,
+          "candidate_geometry_id_1based": 2759,
+          "candidate_vertex_index_0based": 2758
+        },
+        {
+          "row": 18,
+          "body_index": 71,
+          "source_geometry_id_1based": 4379,
+          "source_vertex_index_0based": 4378,
+          "candidate_geometry_id_1based": 4379,
+          "candidate_vertex_index_0based": 4378
+        },
+        {
+          "row": 19,
+          "body_index": 76,
+          "source_geometry_id_1based": 6105,
+          "source_vertex_index_0based": 6104,
+          "candidate_geometry_id_1based": 6105,
+          "candidate_vertex_index_0based": 6104
+        },
+        {
+          "row": 20,
+          "body_index": 138,
+          "source_geometry_id_1based": 20234,
+          "source_vertex_index_0based": 20233,
+          "candidate_geometry_id_1based": 38631,
+          "candidate_vertex_index_0based": 38630
+        },
+        {
+          "row": 21,
+          "body_index": 136,
+          "source_geometry_id_1based": 18301,
+          "source_vertex_index_0based": 18300,
+          "candidate_geometry_id_1based": 37720,
+          "candidate_vertex_index_0based": 37719
+        },
+        {
+          "row": 22,
+          "body_index": 92,
+          "source_geometry_id_1based": 47596,
+          "source_vertex_index_0based": 47595,
+          "candidate_geometry_id_1based": 22708,
+          "candidate_vertex_index_0based": 22707
+        },
+        {
+          "row": 23,
+          "body_index": 112,
+          "source_geometry_id_1based": 51583,
+          "source_vertex_index_0based": 51582,
+          "candidate_geometry_id_1based": 26695,
+          "candidate_vertex_index_0based": 26694
+        },
+        {
+          "row": 24,
+          "body_index": 122,
+          "source_geometry_id_1based": 49892,
+          "source_vertex_index_0based": 49891,
+          "candidate_geometry_id_1based": 25004,
+          "candidate_vertex_index_0based": 25003
+        },
+        {
+          "row": 25,
+          "body_index": 104,
+          "source_geometry_id_1based": 54177,
+          "source_vertex_index_0based": 54176,
+          "candidate_geometry_id_1based": 29289,
+          "candidate_vertex_index_0based": 29288
+        },
+        {
+          "row": 26,
+          "body_index": 111,
+          "source_geometry_id_1based": 52655,
+          "source_vertex_index_0based": 52654,
+          "candidate_geometry_id_1based": 27767,
+          "candidate_vertex_index_0based": 27766
+        },
+        {
+          "row": 27,
+          "body_index": 116,
+          "source_geometry_id_1based": 51774,
+          "source_vertex_index_0based": 51773,
+          "candidate_geometry_id_1based": 26886,
+          "candidate_vertex_index_0based": 26885
+        },
+        {
+          "row": 28,
+          "body_index": 121,
+          "source_geometry_id_1based": 50655,
+          "source_vertex_index_0based": 50654,
+          "candidate_geometry_id_1based": 25767,
+          "candidate_vertex_index_0based": 25766
+        },
+        {
+          "row": 29,
+          "body_index": 126,
+          "source_geometry_id_1based": 47936,
+          "source_vertex_index_0based": 47935,
+          "candidate_geometry_id_1based": 23048,
+          "candidate_vertex_index_0based": 23047
+        },
+        {
+          "row": 30,
+          "body_index": 152,
+          "source_geometry_id_1based": 34831,
+          "source_vertex_index_0based": 34830,
+          "candidate_geometry_id_1based": 46585,
+          "candidate_vertex_index_0based": 46584
+        },
+        {
+          "row": 31,
+          "body_index": 150,
+          "source_geometry_id_1based": 36891,
+          "source_vertex_index_0based": 36890,
+          "candidate_geometry_id_1based": 47572,
+          "candidate_vertex_index_0based": 47571
+        }
+      ],
+      "evidence_boundary": "Preserves the existing NHCNT contact seed identities through NHSKIN vertex compaction; does not qualify contact coverage or mechanical fracture."
+    },
+    "preserved_existing_boundaries": {
+      "edge_count": 115,
+      "loop_edge_counts": [
+        60,
+        55
+      ],
+      "exact_output_edge_set": true
+    },
+    "native_validation": "Not run by this preparation command; validate the exact output skin and remapped NHCNT hashes in the native owner before making runtime claims.",
+    "evidence_boundary": "Visual mesh preparation and contact-seed ID remapping only; neither establishes physical tissue fracture nor anatomical qualification."
+  },
+  "native_trial_002": {
+    "launcher_log_path": "/Users/n/numi-human-separation-20261018/native-separated-skin-002/launcher.log",
+    "launcher_log_sha256": "af2e1276c49df2194ba1ec1fdcbbab9adccaec5e8361822d00baa0143fd4befd",
+    "invocation_path": "/Users/n/numi-human-separation-20261018/invocation-separated-skin-002.json",
+    "invocation_sha256": "dcb92ce63bc848c61514ef51797c73fe1c5bd517222a64266d21c854800983ff",
+    "skin_payload_sha256": "dea7daf88b643c6c3dd8c33e5798599c9f6f26bddadcd8247be22855fe0c733f",
+    "support_contact_payload_path": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt",
+    "support_contact_payload_sha256": "4c31ce250a63bd730c066f6f92571295c761ddb51215a3eeb09275bc42d6992d",
+    "observation": "The native executable loaded the candidate skin and completed a 1.0 second body run; the NHCNT sourceGeometryIndex values remained in original NHSKIN vertex order, so they do not identify the intended vertices after skin compaction. Treat this run as loader/execution evidence only, not valid support-contact behavior or separation qualification.",
+    "log_completion_line": "resting_integrated_body=completed simulated_s=1.0000000474974513 ... root_assistance=false presentation_qualification=pending"
+  },
+  "corrected_support_payload": {
+    "path": "/Users/n/numi-human-separation-20261018/myosim-fullbody-resting-bed-support-waist-remapped-002.nhcnt",
+    "sha256": "20a073e425f092141e1a34d6d2142192e3e250a4382393d33ae912bdd2fac36e",
+    "receipt_path": "/Users/n/numi-human-separation-20261018/owner-cli-support-remap-002.json",
+    "receipt_sha256": "09dc969451eabc864f2713777edd850b1668adb31f16ed817d3ae11b9b292f29",
+    "source_payload_sha256": "4c31ce250a63bd730c066f6f92571295c761ddb51215a3eeb09275bc42d6992d",
+    "skin_sha256": "dea7daf88b643c6c3dd8c33e5798599c9f6f26bddadcd8247be22855fe0c733f",
+    "record_count": 32,
+    "source_geometry_ids_remapped": 23,
+    "all_non_geometry_id_bytes_identical": true,
+    "native_retest": "pending"
+  },
+  "scope_limit": "The mesh is an experimental capped visual NHSKIN shell. NHCNT remapping preserves source seed identity through compaction. Neither proves contact coverage, full tissue fracture, anatomy, nor production qualification.",
+  "preparation_inputs": {
+    "partition_inventory": {
+      "path": "/Users/n/numi-human-separation-20261018/NumiHumanSeparationInventory.json",
+      "sha256": "eda2a3e7e3a912f475402c12a9cffcf3e30f8c118bcd6484895ac9ce89ceba9d"
+    },
+    "existing_boundary_declaration": {
+      "path": "/Users/n/numi-human-separation-20261018/skin_boundary_index_set.json",
+      "sha256": "5621b71f372f916aec32568356fbc685e3c1459d54f1168fea73ddfb251a54ed"
+    },
+    "waist_anchor_world_m": [
+      -0.0250000003725,
+      0.206499997526,
+      1.20020000078
+    ],
+    "waist_plane_normal_world": [
+      0.0,
+      0.0,
+      1.0
+    ]
+  }
+}
