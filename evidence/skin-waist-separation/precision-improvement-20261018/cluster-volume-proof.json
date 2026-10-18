@@ -1,0 +1,143 @@
+{
+  "schema": "numi.human.cardiac-source-topology-volume-bound.v2",
+  "scope": "Per-row bounds on signed source-volume integral changes under the existing seven-coordinate common field. Changed rows must exactly equal the declared stable IDs, and each row's oriented source and candidate surface boundaries must match. This numerical geometry proof does not admit candidates to native runtime use.",
+  "sha256": {
+    "/Users/numi/numi-human-separation-20261018/C/improve-wall23-map-retired-004/resting-thorax.nhanatomy": "3b8c52b6b8f712ce2370aa7561bac5bef2e7e852eac2c9a9ffcd270dbc1f608a",
+    "/Users/numi/numi-human-separation-20261018/C/improve-wall23-cluster-006/resting-thorax.nhanatomy": "4233b628fbc38592fd46d25dcca8579a37a7bf17b2d018800123da783c337b07",
+    "/Users/numi/numi-human-separation-20261018/C/improve-wall23-map-retired-004/resting-anatomy-receipt.json": "bafc6c8f4f2e1058bf3c393a689e36fe5d38895f05f1c8fd520e7ded9e686727",
+    "/Users/numi/numi-human-separation-20261018/C/improve-wall23-map-retired-004/common-cardiac-map-f32.bin": "7858a9f2e9e030511d5c6b966dd2086acb41c863bde9c0356ba96ae76973ae48"
+  },
+  "declared_stable_ids": [
+    23
+  ],
+  "observed_changed_stable_ids": [
+    23
+  ],
+  "all_changed_rows_declared_and_all_declared_rows_changed": true,
+  "all_vertex_attributes_bindings_and_allocations_byte_exact": true,
+  "coordinate_cube": [
+    -1.0,
+    1.0
+  ],
+  "existing_solver_relative_tolerance": 2e-05,
+  "preparation_budget": 1e-09,
+  "rows": [
+    {
+      "stable_id": 23,
+      "source_face_count": 459740,
+      "candidate_face_count": 459736,
+      "removed_oriented_source_triangles": [
+        {
+          "source_triangle": [
+            227779,
+            227812,
+            227813
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227779,
+            227816,
+            227812
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227812,
+            227814,
+            227813
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227812,
+            227816,
+            227814
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227813,
+            227814,
+            227893
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227814,
+            227816,
+            227835
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227814,
+            227835,
+            227848
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227814,
+            227848,
+            227893
+          ],
+          "multiplicity": 1
+        }
+      ],
+      "added_oriented_candidate_triangles": [
+        {
+          "source_triangle": [
+            227779,
+            227816,
+            227813
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227813,
+            227816,
+            227835
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227813,
+            227835,
+            227848
+          ],
+          "multiplicity": 1
+        },
+        {
+          "source_triangle": [
+            227813,
+            227848,
+            227893
+          ],
+          "multiplicity": 1
+        }
+      ],
+      "oriented_surface_boundary_byte_index_signature_preserved": true,
+      "source_reference_volume_m3": 0.0001640042997176584,
+      "relative_volume_delta_uniform_upper_bound": 8.040917770317634e-11,
+      "relative_volume_derivative_delta_upper_bound": 2.4122753310952905e-10,
+      "rounding_allowance_m3": 3.5168383201571023e-16,
+      "preparation_budget": 1e-09,
+      "passed": true
+    }
+  ],
+  "aggregate_relative_volume_delta_uniform_upper_bound_max": 8.040917770317634e-11,
+  "aggregate_relative_volume_derivative_delta_upper_bound_max": 2.4122753310952905e-10,
+  "aggregate_passed": true,
+  "passed": true,
+  "native_admission": false
+}

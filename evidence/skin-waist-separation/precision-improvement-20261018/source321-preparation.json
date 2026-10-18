@@ -1,0 +1,222 @@
+{
+  "base": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy",
+  "base_sha256": "3b0acb6146358f3302f2b85e2214bafa9f2fae7b0e51af70fd0838d6609da4a4",
+  "candidate": "/Users/n/numi-human-separation-20261018/C/improve-cardiac321-001/resting-thorax.nhanatomy",
+  "candidate_sha256": "7c919ee29c0a4872bfabe888f2f5d167cad6eca3a2dc2fbee3b2aacdaca22139",
+  "operation": {
+    "typed_identity": [
+      51010,
+      321
+    ],
+    "source_edge_slots": [
+      34401,
+      34404
+    ],
+    "changed_parent_face_indices": [
+      37515,
+      37532
+    ],
+    "all_source_allocations_and_positions_unchanged": true,
+    "operation": {
+      "operation": "position-preserving interior 2-to-2 edge flip",
+      "replacement_edge": [
+        34402,
+        34405
+      ],
+      "selected_edge_directed_in_first_parent": [
+        34401,
+        34404
+      ],
+      "extra_common_neighbors_not_used_by_selected_faces": [],
+      "output_face_lineage": [
+        {
+          "output_face_index": 37515,
+          "source_parent_face_indices": [
+            37515,
+            37532
+          ]
+        },
+        {
+          "output_face_index": 37532,
+          "source_parent_face_indices": [
+            37515,
+            37532
+          ]
+        }
+      ],
+      "edge_incidence_updates": [
+        {
+          "edge": [
+            34401,
+            34402
+          ],
+          "before_face_indices": [
+            37511,
+            37515
+          ],
+          "after_face_indices": [
+            37511,
+            37515
+          ]
+        },
+        {
+          "edge": [
+            34401,
+            34404
+          ],
+          "before_face_indices": [
+            37515,
+            37532
+          ],
+          "after_face_indices": []
+        },
+        {
+          "edge": [
+            34401,
+            34405
+          ],
+          "before_face_indices": [
+            37530,
+            37532
+          ],
+          "after_face_indices": [
+            37515,
+            37530
+          ]
+        },
+        {
+          "edge": [
+            34402,
+            34404
+          ],
+          "before_face_indices": [
+            37515,
+            37516
+          ],
+          "after_face_indices": [
+            37516,
+            37532
+          ]
+        },
+        {
+          "edge": [
+            34402,
+            34405
+          ],
+          "before_face_indices": [],
+          "after_face_indices": [
+            37515,
+            37532
+          ]
+        },
+        {
+          "edge": [
+            34404,
+            34405
+          ],
+          "before_face_indices": [
+            37532,
+            37533
+          ],
+          "after_face_indices": [
+            37532,
+            37533
+          ]
+        }
+      ],
+      "vertex_neighbor_updates": {
+        "remove": [
+          [
+            34401,
+            34404
+          ],
+          [
+            34404,
+            34401
+          ]
+        ],
+        "add": [
+          [
+            34402,
+            34405
+          ],
+          [
+            34405,
+            34402
+          ]
+        ]
+      },
+      "source_pair_area_m2": [
+        2.8435583831733384e-14,
+        7.048287073736928e-11
+      ],
+      "candidate_pair_area_m2": [
+        3.511575490480691e-11,
+        3.555906738561843e-11
+      ],
+      "source_pair_minimum_altitude_m": 1.0528690267308497e-07,
+      "candidate_pair_minimum_altitude_m": 2.385505480550006e-07,
+      "required_minimum_altitude_m": 1.1e-07,
+      "source_pair_oriented_area_vector_m2": [
+        -7.30437932361383e-12,
+        9.663381206337363e-12,
+        -6.94626578479074e-11
+      ],
+      "candidate_pair_oriented_area_vector_m2": [
+        -7.30437932361383e-12,
+        9.663381206337363e-12,
+        -6.94626578479074e-11
+      ],
+      "oriented_area_vector_delta_norm_m2": 0.0,
+      "local_orientation_alignment_cosines": {
+        "source_faces": [
+          0.9878877566342339,
+          0.9999999980405075
+        ],
+        "candidate_faces": [
+          0.9976521828875808,
+          0.9977104248859325
+        ],
+        "reference": "sum of the two source oriented face area vectors"
+      },
+      "source_pair_signed_volume_contribution_m3": 1.4035865681702741e-12,
+      "candidate_pair_signed_volume_contribution_m3": 1.4035861841820048e-12,
+      "signed_volume_delta_m3": -3.8398826935463336e-19,
+      "source_fold_repair_requested": false,
+      "source_fold_detected": false,
+      "quality_improvement_required": true,
+      "vertices_modified": false,
+      "face_count_preserved": true
+    },
+    "material_attachment_and_reciprocal_owner_admission": false,
+    "anatomical_admission": false,
+    "native_admission": false
+  },
+  "abi": {
+    "stable_id_order_preserved": true,
+    "row_count_preserved": 525,
+    "replaced_stable_ids": [
+      321
+    ],
+    "unmodified_rows_byte_exact": 524,
+    "global_offsets_rebased_by_existing_abi5_encoder": true,
+    "registration_and_source_header_bytes_preserved": true
+  },
+  "failed_edge_attempts": [
+    {
+      "edge": [
+        34402,
+        34401
+      ],
+      "error": "replacement diagonal creates a zero-area face"
+    },
+    {
+      "edge": [
+        34402,
+        34404
+      ],
+      "error": "replacement faces fold across the local oriented reference"
+    }
+  ],
+  "native_admission": false
+}

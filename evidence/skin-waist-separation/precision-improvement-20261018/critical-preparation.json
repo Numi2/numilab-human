@@ -1,0 +1,70 @@
+{
+  "base": "/Users/n/numi-human-separation-20261018/C/improve-wall23-map-retired-004/resting-thorax.nhanatomy",
+  "base_sha256": "3b8c52b6b8f712ce2370aa7561bac5bef2e7e852eac2c9a9ffcd270dbc1f608a",
+  "candidate": "/Users/n/numi-human-separation-20261018/C/improve-wall23-critical-005/resting-thorax.nhanatomy",
+  "candidate_sha256": "895fd50090245c49ae9ec8525fee552eec7f460eff7339f6839fc5103f94bd24",
+  "stable_id": 23,
+  "concept_id": "FMA13884",
+  "operation": {
+    "method": "directed_interior_vertex_collapse_onto_existing_shared_seam",
+    "keep_point": [
+      0.13016295433044434,
+      -0.0015389174222946167,
+      -0.011964157223701477
+    ],
+    "drop_point": [
+      0.13016295433044434,
+      -0.0015391558408737183,
+      -0.011964157223701477
+    ],
+    "edge_length_m": 2.384185791015625e-07,
+    "cumulative_source_displacement_m": 2.384185791015625e-07,
+    "keep_point_owners": [
+      23
+    ],
+    "drop_point_owners": [
+      23
+    ],
+    "owner_set_relation": "equal",
+    "changed_surface_ids": [
+      23
+    ],
+    "unchanged_seam_owners": [],
+    "combined_local_sliver_objective_before": 0.17964086577774904,
+    "combined_local_sliver_objective_after": 0.006589905236329312,
+    "combined_local_minimum_altitude_before_m": 1.6601584360384638e-07,
+    "combined_local_minimum_altitude_after_m": 2.3391227149739483e-07,
+    "per_surface_signed_volume_delta_m3": {
+      "23": 2.463397796358855e-17
+    },
+    "cumulative_volume_change_m3": {
+      "23": 2.463397796358855e-17
+    },
+    "signed_volume_delta_by_group_m3": {},
+    "cumulative_volume_group_change_m3": {},
+    "seam_checks": [],
+    "qualification": "one bounded local source-conditioning operation; final topology, full interface, self-intersection and native accepted-cycle audits are separate"
+  },
+  "abi": {
+    "stable_id_order_preserved": true,
+    "row_count_preserved": 525,
+    "replaced_stable_ids": [
+      23
+    ],
+    "unmodified_rows_byte_exact": 524,
+    "global_offsets_rebased_by_existing_abi5_encoder": true,
+    "registration_and_source_header_bytes_preserved": true
+  },
+  "keep_source_vertex": 227813,
+  "drop_source_vertex": 227812,
+  "original_vertex_allocations_attributes_unchanged": true,
+  "affected_source_faces": [
+    240053,
+    240054,
+    240560,
+    240561
+  ],
+  "source_face_ancestry": "/Users/n/numi-human-separation-20261018/C/improve-wall23-critical-005/source-face-ancestry.json",
+  "failed_attempts": [],
+  "native_admission": false
+}
