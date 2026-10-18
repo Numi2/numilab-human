@@ -5,6 +5,21 @@ from . import passive_attachment_composition as pac
 from .passive_reference_binding_extension import extend_reference_bindings
 
 
+def _validate_parent_vertex_fields(before: dict, after: dict,
+                                   stable_ids: tuple[int, ...]) -> None:
+    """Allow index edits only when every existing material allocation is exact."""
+    old = {int(row[6]): row for row in before["records"]}
+    new = {int(row[6]): row for row in after["records"]}
+    for sid in stable_ids:
+        pac.require(sid in old and sid in new,
+                    "parent-mapped row identity is missing")
+        a, b = pac._row_slices(before, old[sid]), pac._row_slices(after, new[sid])
+        pac.require(all(a[key] == b[key] for key in
+                        ("vertex_bytes", "binding_bytes", "vertex_count",
+                         "binding_count", "stable_id", "layer")),
+                    "changed parent-mapped row requires material-parent reconstruction")
+
+
 def compose_reference_receipt(source_receipt: Path, output: Path,
                               replacements: list[tuple[int, Path, Path]], *,
                               extensions: dict[int, int]) -> dict:
@@ -28,8 +43,8 @@ def compose_reference_receipt(source_receipt: Path, output: Path,
         pac.require(parents["child_payload_sha256"] == owner["sha256"],
                     "prior parent-map child identity differs")
         mapped = {r["stable_id"] for r in parents["surfaces"]}
-        pac.require(not mapped.intersection(changed),
-                    "changed parent-mapped row requires material-parent reconstruction")
+    else:
+        mapped = set()
     pac.require(not output.exists(), "reference receipt output exists")
     output.mkdir()
     if extensions:
@@ -50,6 +65,11 @@ def compose_reference_receipt(source_receipt: Path, output: Path,
                 and before["source_digest"] == after["source_digest"]
                 and before["fingerprint"] == after["fingerprint"],
                 "reference composition changed source or registration")
+    # An index-only repair retains every material vertex and its exact field.
+    # Positions, normals, binding indices, weights and body frames must all
+    # match; allocation or field edits still require parent reconstruction.
+    index_only_mapped = tuple(sorted(mapped.intersection(changed)))
+    _validate_parent_vertex_fields(before, after, index_only_mapped)
     unchanged = []
     for a, b in zip(before["records"], after["records"]):
         pac.require(int(a[6]) == int(b[6]) and int(a[7]) == int(b[7]),
@@ -99,6 +119,7 @@ def compose_reference_receipt(source_receipt: Path, output: Path,
              "unchanged_row_local_vertex_binding_and_face_bytes": unchanged,
              "binding_extension": extension, "geometry_composition": composed,
              "parent_mapped_rows_source_carriers_and_terms_unchanged": True,
+             "parent_mapped_index_only_rows": list(index_only_mapped),
              "physical_routes_mass_tendon_activation_and_cardiac_state_unchanged": True,
              "native_admission": False, "anatomical_admission": False}
     receipt["provenance"].setdefault("passive_reference_receipt_compositions", []).append(proof)
