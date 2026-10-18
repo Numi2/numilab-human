@@ -1,6 +1,6 @@
 {
   "schema": "numi.human.waist-separated-skin-experimental-evidence.v1",
-  "status": "visual_skin_candidate_prepared_contact_id_remap_ready_native_retest_required",
+  "status": "experimental_matched_1s_native_release_passed_2s_surface_audit_failure_retained",
   "preparation": {
     "schema": "numi.human.waist-owner-field-visual-skin-candidate.v1",
     "status": "experimental_same_abi_visual_skin_candidate_prepared",
@@ -367,9 +367,9 @@
     "record_count": 32,
     "source_geometry_ids_remapped": 23,
     "all_non_geometry_id_bytes_identical": true,
-    "native_retest": "pending"
+    "native_retest": "passed_in_native_combined_trial_002_for_the_declared_55_to_100_contact_window; later_external_contacts_are_recorded_in_native_combined_trial_002"
   },
-  "scope_limit": "The mesh is an experimental capped visual NHSKIN shell. NHCNT remapping preserves source seed identity through compaction. Neither proves contact coverage, full tissue fracture, anatomy, nor production qualification.",
+  "scope_limit": "The experimental capped NHSKIN shell and split NHTISS surfaces passed one matched 1-second native trial with ancestry-remapped support seeds. The lower-body free-fall/contact gate applies only to accepted steps 55\u2013100; later lower external contact occurs. A prior requested 2-second extension failed its surface audit at 1.664 seconds on stable_id 321 (exact zero area). This does not establish completed continuum fracture, full anatomy, production qualification, or injury physiology.",
   "preparation_inputs": {
     "partition_inventory": {
       "path": "/Users/n/numi-human-separation-20261018/NumiHumanSeparationInventory.json",
@@ -389,5 +389,393 @@
       0.0,
       1.0
     ]
+  },
+  "native_combined_trial_002": {
+    "status": "passed_matched_1s_native_trial_with_waist_release_and_remapped_support_contact",
+    "requested_and_completed_duration_s": 1.0,
+    "accepted_step_count_each_trace": 500,
+    "release_step": 50,
+    "held_run": {
+      "directory": "/Users/n/numi-human-separation-20261018/native-combined-held-002",
+      "invocation_path": "/Users/n/numi-human-separation-20261018/native-combined-held-002/invocation.json",
+      "invocation_sha256": "3a9badffc8df4aa5b570566a1c79fd116089fca391e328293713d94376616ab4",
+      "launcher_log_path": "/Users/n/numi-human-separation-20261018/native-combined-held-002/launcher.log",
+      "launcher_log_sha256": "6418bd21d8bbbeee299d86b48b57723ec00ed81ae55a44c3b365e9c0f6a80250",
+      "body_motion_sha256": "2dbd9e0a20e1e492ad3393d82eee773c57cb39a0cff121b3bcc77ba4f5b4c43f",
+      "completion_line": "resting_integrated_body=completed simulated_s=1.0000000474974513 wall_s=7.5799362080000003 real_time_factor=0.13192723791554253 physiology_body_clock=matched root_assistance=false presentation_qualification=pending"
+    },
+    "released_run": {
+      "directory": "/Users/n/numi-human-separation-20261018/native-combined-released-002",
+      "invocation_path": "/Users/n/numi-human-separation-20261018/native-combined-released-002/invocation.json",
+      "invocation_sha256": "3d906ce866843d6d5f927f59a52a2855101207bb98bb5fc28923d4d4239f8772",
+      "launcher_log_path": "/Users/n/numi-human-separation-20261018/native-combined-released-002/launcher.log",
+      "launcher_log_sha256": "2a37da3ff09e4fc262724a82b7f47b8298fdceab11781967048632ca65c67421",
+      "body_motion_sha256": "db7d16a714cb3557a00e6409614f8220acace525e4073f098a39004f894ce89c",
+      "support_impulses_sha256": "1c6124fabdb0da732f048557f0dcea5c398189506c84b68bb2a3b762d8fa5c20",
+      "completion_line": "resting_integrated_body=completed simulated_s=1.0000000474974513 wall_s=9.5225462919999995 real_time_factor=0.10501393396612446 physiology_body_clock=matched root_assistance=false presentation_qualification=pending"
+    },
+    "loaded_candidate_assets": {
+      "skin": {
+        "path": "/Users/n/numi-human-separation-20261018/bodyparts3d-myosim-skinned-shell-waist-separated-candidate.nhskin",
+        "sha256": "dea7daf88b643c6c3dd8c33e5798599c9f6f26bddadcd8247be22855fe0c733f"
+      },
+      "soft_tissue": {
+        "path": "/Users/n/numi-human-separation-20261018/bodyparts3d-myosim-fullbody-muscle-surfaces-waist-separated-candidate.nhtissue",
+        "sha256": "d20026982e13addc2fe30486e2941487f439cde32d22733aedf3b9b2e432ce79"
+      },
+      "support_contact": {
+        "path": "/Users/n/numi-human-separation-20261018/myosim-fullbody-resting-bed-support-waist-remapped-002.nhcnt",
+        "sha256": "20a073e425f092141e1a34d6d2142192e3e250a4382393d33ae912bdd2fac36e"
+      }
+    },
+    "motion_analysis": {
+      "path": "/Users/n/numi-human-separation-20261018/combined-motion-comparison-002.json",
+      "sha256": "65125cbbfbd96526ffaca166a8ddb8ec31be5c65bc46a276d43d55bb6710e29b",
+      "result": {
+        "inputs": {
+          "/Users/n/numi-human-separation-20261018/native-combined-held-002/resting-body-motion-partition.csv": "2dbd9e0a20e1e492ad3393d82eee773c57cb39a0cff121b3bcc77ba4f5b4c43f",
+          "/Users/n/numi-human-separation-20261018/native-combined-released-002/resting-body-motion-partition.csv": "db7d16a714cb3557a00e6409614f8220acace525e4073f098a39004f894ce89c",
+          "/Users/n/numi-human-separation-20261018/native-combined-released-002/resting-com-support-impulses.csv": "1c6124fabdb0da732f048557f0dcea5c398189506c84b68bb2a3b762d8fa5c20",
+          "/Users/n/numi-human-separation-20261018/C/source_mass_partition_map.json": "9a6bf31c9670223485f46ffac93c8aa0dd756c993b06d73612343b8e24c380b4"
+        },
+        "runtime_body_count": 160,
+        "complete_body_set_per_accepted_step": true,
+        "matched_pre_event_accepted_steps_identical": true,
+        "release_step": 50,
+        "fit_step_interval": [
+          55,
+          100
+        ],
+        "fit_accepted_steps": [
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100
+        ],
+        "pre_event_max_delta": 0.0,
+        "lower_mass_kg": 52.3006865400821,
+        "lower_com_acceleration_m_s2": [
+          -7.463034137774763e-05,
+          0.01813124492077843,
+          -9.645974622026051
+        ],
+        "vertical_gravity_error_m_s2": 0.16402537797394956,
+        "lateral_acceleration_m_s2": 0.018131398513769086,
+        "lower_external_contact": {
+          "accepted_step_interval": [
+            55,
+            100
+          ],
+          "excluded_internal_contact_indices": [
+            0,
+            2,
+            3,
+            8,
+            9,
+            12
+          ],
+          "lower_runtime_body_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159
+          ],
+          "positive_normal_impulse_tolerance_ns": 0.0,
+          "active_lower_external_contact_samples": 0,
+          "first_active_step": null,
+          "maximum_lower_external_normal_impulse_ns": null,
+          "lower_external_contact_body_indices": [],
+          "free_fall_contact_gate_passed": true
+        },
+        "criteria": {
+          "pre_event_max_delta_limit": 1e-07,
+          "vertical_gravity_error_limit_m_s2": 0.2,
+          "lateral_acceleration_limit_m_s2": 0.2,
+          "lower_external_contact_samples_must_be_zero": true
+        },
+        "scope": "short articulated release; not continuum fracture or injury physiology",
+        "passed": true
+      }
+    },
+    "native_capture_finite_audit": {
+      "native-combined-held-002": {
+        "resting-surface-audit.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-held-002/resting-surface-audit.csv",
+          "sha256": "315620923876eff564c88dc0f9e479fc465dfdd021024b7fd67f67c3b31243d1",
+          "rows": 17,
+          "columns": 43,
+          "max_nonfinite_skin_vertices": 0,
+          "max_mesh_zero_area_triangles": 0,
+          "max_mesh_nonfinite_area_triangles": 0,
+          "nan_diagnostic_columns": [
+            "q_ra",
+            "q_rv",
+            "q_la",
+            "q_lv",
+            "ventricular_closure_mm"
+          ],
+          "all_other_numeric_cells_finite": true,
+          "legacy_diagnostic_note": "The five listed fields are NaN in this common_seven_coordinate_v1 output; ventricular_closure_mm_applicable is 0. Native skin/mesh guard fields are finite and report zero defective skin vertices, zero zero-area triangles, and zero non-finite-area triangles.",
+          "nan_numeric_cells": 85,
+          "nonfinite_diagnostic_columns": [
+            "q_ra",
+            "q_rv",
+            "q_la",
+            "q_lv",
+            "ventricular_closure_mm"
+          ],
+          "nonfinite_diagnostic_fields": {
+            "q_ra": {
+              "nan_rows": 17,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "q_rv": {
+              "nan_rows": 17,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "q_la": {
+              "nan_rows": 17,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "q_lv": {
+              "nan_rows": 17,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "ventricular_closure_mm": {
+              "nan_rows": 17,
+              "applicability_note": "ventricular_closure_mm_applicable=0"
+            }
+          },
+          "diagnostic_note": "Five listed diagnostics are NaN in the native surface audit. Their meaning is not interpreted here; ventricular closure applicability is explicitly 0. All other numeric fields are finite. Native skin/mesh guard fields report zero defective skin vertices, zero zero-area triangles, and zero non-finite-area triangles."
+        },
+        "resting-coupled.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-held-002/resting-coupled.csv",
+          "sha256": "c69cb2235504b46c94c2582609cfa0de20b4df14738622d09d842361c8793720",
+          "rows": 500,
+          "columns": 60,
+          "all_numeric_cells_finite": true,
+          "nan_numeric_cells": 0
+        },
+        "resting-support-point-motion.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-held-002/resting-support-point-motion.csv",
+          "sha256": "81a922a7e5f9fe26ea737f87a6fd2f81523197af838b01c8a8fde65cd471f275",
+          "rows": 16000,
+          "columns": 19,
+          "all_numeric_cells_finite": true,
+          "nan_numeric_cells": 0
+        },
+        "resting-support-selected-skin-witness.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-held-002/resting-support-selected-skin-witness.csv",
+          "sha256": "2ebc112a13c121390bda894b773ca6f3d8bc2737215c7b09c17ff8c276d5da1c",
+          "rows": 16000,
+          "columns": 16,
+          "all_numeric_cells_finite": true,
+          "nan_numeric_cells": 0
+        }
+      },
+      "native-combined-released-002": {
+        "resting-surface-audit.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-released-002/resting-surface-audit.csv",
+          "sha256": "dda8115b3433a0d31c6758d22b4f63f33670054b7277f26bdd00c8f4acdeaddd",
+          "rows": 18,
+          "columns": 43,
+          "max_nonfinite_skin_vertices": 0,
+          "max_mesh_zero_area_triangles": 0,
+          "max_mesh_nonfinite_area_triangles": 0,
+          "nan_diagnostic_columns": [
+            "q_ra",
+            "q_rv",
+            "q_la",
+            "q_lv",
+            "ventricular_closure_mm"
+          ],
+          "all_other_numeric_cells_finite": true,
+          "legacy_diagnostic_note": "The five listed fields are NaN in this common_seven_coordinate_v1 output; ventricular_closure_mm_applicable is 0. Native skin/mesh guard fields are finite and report zero defective skin vertices, zero zero-area triangles, and zero non-finite-area triangles.",
+          "nan_numeric_cells": 90,
+          "nonfinite_diagnostic_columns": [
+            "q_ra",
+            "q_rv",
+            "q_la",
+            "q_lv",
+            "ventricular_closure_mm"
+          ],
+          "nonfinite_diagnostic_fields": {
+            "q_ra": {
+              "nan_rows": 18,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "q_rv": {
+              "nan_rows": 18,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "q_la": {
+              "nan_rows": 18,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "q_lv": {
+              "nan_rows": 18,
+              "applicability_note": "common_seven_coordinate_v1 diagnostic; meaning not interpreted"
+            },
+            "ventricular_closure_mm": {
+              "nan_rows": 18,
+              "applicability_note": "ventricular_closure_mm_applicable=0"
+            }
+          },
+          "diagnostic_note": "Five listed diagnostics are NaN in the native surface audit. Their meaning is not interpreted here; ventricular closure applicability is explicitly 0. All other numeric fields are finite. Native skin/mesh guard fields report zero defective skin vertices, zero zero-area triangles, and zero non-finite-area triangles."
+        },
+        "resting-coupled.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-released-002/resting-coupled.csv",
+          "sha256": "2d778c203602c4e333c958f8fed760152c575b34e5303f4a0366d14ad528dee8",
+          "rows": 500,
+          "columns": 60,
+          "all_numeric_cells_finite": true,
+          "nan_numeric_cells": 0
+        },
+        "resting-support-point-motion.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-released-002/resting-support-point-motion.csv",
+          "sha256": "95966b86d9748a0a95f1f7b8f60a5768c645558b9c12862171651edcac86b63c",
+          "rows": 16000,
+          "columns": 19,
+          "all_numeric_cells_finite": true,
+          "nan_numeric_cells": 0
+        },
+        "resting-support-selected-skin-witness.csv": {
+          "path": "/Users/n/numi-human-separation-20261018/native-combined-released-002/resting-support-selected-skin-witness.csv",
+          "sha256": "c8577cc252340bf9af2b1a2dbc77b3e947500fabf03a772c720e6ef8ccf0afaa",
+          "rows": 16000,
+          "columns": 16,
+          "all_numeric_cells_finite": true,
+          "nan_numeric_cells": 0
+        }
+      }
+    },
+    "contact_scope_and_later_motion": {
+      "internal_contact_indices": [
+        0,
+        2,
+        3,
+        8,
+        9,
+        12
+      ],
+      "internal_rows_after_release_step50": 2700,
+      "internal_rows_max_normal_impulse_ns": 0.0,
+      "internal_rows_max_abs_tangent_impulse_ns": 0.0,
+      "lower_external_contact_rows_in_steps55_to100": 0,
+      "later_lower_external_contact_rows_after_step50": 456,
+      "first_later_external_lower_contact_step": 197,
+      "largest_later_external_lower_normal_impulse": {
+        "step": 198,
+        "contact_index": 20,
+        "runtime_body_index": 141,
+        "normal_impulse_ns": 34.56499481201172
+      },
+      "interpretation": "The declared 55\u2013100 free-fall/contact window has no lower external impulses. Later external contacts occur in this 1-second run, so the free-fall result is limited to the predeclared window and does not establish longer-horizon free fall or realistic contact."
+    },
+    "qualification_limit": "Native loader and a matched 1-second articulated release trial passed with the corrected contact-index map and separated soft-tissue candidate. This is not a completed 2-second continuation, continuum fracture qualification, full-anatomy completion, production qualification, or injury physiology."
+  },
+  "prior_two_second_extension_failure": {
+    "status": "failed_surface_audit_retained",
+    "requested_duration_s": 2.0,
+    "launcher_log_path": "/Users/n/numi-human-separation-20261018/native-combined-held-001/launcher.log",
+    "launcher_log_sha256": "0dbcd67db3e3f4fe664d820de7811c4cf1956d1e776735800655da59ac20d8e9",
+    "invocation_path": "/Users/n/numi-human-separation-20261018/invocation-combined-held-001.json",
+    "invocation_sha256": "1059cf85b51b5a8b6583e221dcf4d33bfcb38aa3bd5f06157f032924f41e6116",
+    "last_accepted_motion_step": 832,
+    "last_accepted_motion_time_s": 1.664000079,
+    "surface_failure": {
+      "stable_id": 321,
+      "audit_index": 11,
+      "failure": "exact_zero_area",
+      "surface_endpoint": "rejected",
+      "physical_endpoint": "accepted",
+      "source_pack_content_sha256": "f744480289111fd3811b7ca4a8bd417a6a928cd05358458fb305818a34b83e29"
+    },
+    "interpretation": "This prior 2-second extension stopped at 1.664 seconds after an exact-zero-area surface audit failure; it remains a failure and does not qualify the 2-second horizon."
   }
 }
