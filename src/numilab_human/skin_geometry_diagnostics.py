@@ -187,3 +187,89 @@ def _skin_layer_reference_diagnostics(outer_m, inner_m, deep_m,
             'identity_tolerance_m': float(identity_tolerance_m), 'layers': layers,
             'physical_admission': False,
             'boundary': 'Reference-width consistency only; no topology, tetrahedron, contact, mass, motion or physical admission.'}
+
+def _skin_source_embedding_diagnostics(source_world_m, source_faces, outer_m,
+                                       source_vertex_ids, embedding_faces,
+                                       barycentric, residual_m,
+                                       reconstruction_tolerance_m=2e-6,
+                                       displacement_caps_m=None):
+    """Validate prepared direct/projected ancestry against emitted source points.
+
+    Derived points may share a one-hot source sample, but must use the projected
+    identity sentinel. A direct identity remains unique. Residuals always mean
+    outer minus the sampled registered source in metres; raw atlas coordinates
+    and previous mechanical-delta fields are not interchangeable.
+    """
+    import numpy as np
+    xyz = [np.asarray(a, dtype=float) for a in (source_world_m, outer_m)]
+    if any(a.ndim != 2 or a.shape[1] != 3 or not len(a) or
+           not np.isfinite(a).all() for a in xyz):
+        raise ValueError('source and outer coordinates must be finite nonempty Nx3 metres')
+    source, outer = [a.astype(np.float32).astype(float) for a in xyz]
+    if any(not np.isfinite(a).all() for a in (source, outer)):
+        raise ValueError('source coordinates overflow Float32 metre emission')
+    n = len(outer)
+    integer_inputs = [np.asarray(a) for a in
+                      (source_faces, source_vertex_ids, embedding_faces)]
+    if any(not np.issubdtype(a.dtype, np.integer) for a in integer_inputs):
+        raise ValueError('source topology and identities must have integer types')
+    faces, ids, ef = [a.astype(np.int64) for a in integer_inputs]
+    if (faces.ndim != 2 or faces.shape[1] != 3 or not len(faces) or
+            np.any(faces < 0) or np.any(faces >= len(source)) or
+            np.any(np.diff(np.sort(faces, axis=1), axis=1) == 0)):
+        raise ValueError('source faces must be nonempty valid distinct index triples')
+    if ids.shape != (n,) or ef.shape != (n,):
+        raise ValueError('source identity rows must align with outer geometry')
+    ids = np.where(ids == 0xffffffff, -1, ids)
+    ef = np.where(ef == 0xffffffff, -1, ef)
+    if np.any(ids < -1) or np.any(ids >= len(source)) or np.any(ef < -1) or np.any(ef >= len(faces)):
+        raise ValueError('source identity or embedding face is outside source topology')
+    beta = np.asarray(barycentric, dtype=float)
+    residual = np.asarray(residual_m, dtype=float)
+    if (beta.shape != (n, 3) or residual.shape != (n, 3) or
+            not np.isfinite(beta).all() or not np.isfinite(residual).all()):
+        raise ValueError('barycentric and residual rows must be finite aligned Nx3')
+    if not np.isfinite(reconstruction_tolerance_m) or reconstruction_tolerance_m < 0:
+        raise ValueError('reconstruction tolerance must be finite and nonnegative')
+    direct, embedded = ids >= 0, ef >= 0
+    unique, counts = np.unique(ids[direct], return_counts=True)
+    duplicate_ids = unique[counts > 1]
+    duplicates = np.flatnonzero(direct & np.isin(ids, duplicate_ids))
+    missing = np.flatnonzero(~direct & ~embedded)
+    invalid_beta = embedded & ((np.abs(beta.sum(1)-1.) > 1e-8) |
+                               np.any(beta < -1e-12, axis=1) |
+                               np.any(beta > 1.+1e-12, axis=1))
+    sampled = np.zeros_like(outer)
+    sampled[direct] = source[ids[direct]]
+    valid_embedded = embedded & ~invalid_beta
+    sampled[valid_embedded] = np.einsum(
+        'ni,nij->nj', beta[valid_embedded], source[faces[ef[valid_embedded]]])
+    both = direct & embedded & ~invalid_beta
+    one_hot_identity_bad = np.zeros(n, dtype=bool)
+    for row in np.flatnonzero(both):
+        exact = (faces[ef[row]] == ids[row]) & (np.abs(beta[row]-1.) <= 1e-8)
+        one_hot_identity_bad[row] = not np.any(exact)
+    valid = (direct | embedded) & ~invalid_beta & ~one_hot_identity_bad
+    error = np.linalg.norm(outer - sampled - residual, axis=1)
+    mismatch = np.flatnonzero(valid & (error > reconstruction_tolerance_m))
+    cap_bad = np.array([], dtype=int)
+    if displacement_caps_m is not None:
+        caps = np.asarray(displacement_caps_m, dtype=float)
+        if caps.shape != (n,) or not np.isfinite(caps).all() or np.any(caps <= 0):
+            raise ValueError('displacement caps must be finite positive aligned metres')
+        cap_bad = np.flatnonzero(valid & (np.linalg.norm(outer-sampled, axis=1) > caps+1e-7))
+    violations = {
+        'duplicate_direct_identity_rows': duplicates.tolist(),
+        'duplicate_direct_source_ids': duplicate_ids.tolist(),
+        'missing_source_identity_rows': missing.tolist(),
+        'invalid_barycentric_rows': np.flatnonzero(invalid_beta).tolist(),
+        'direct_embedding_identity_mismatch_rows': np.flatnonzero(one_hot_identity_bad).tolist(),
+        'registered_residual_mismatch_rows': mismatch.tolist(),
+        'outside_declared_displacement_cap_rows': cap_bad.tolist(),
+    }
+    return {'source_embedding_checks_pass': not any(violations.values()),
+            'row_count': n, 'direct_rows': int(direct.sum()),
+            'projected_rows': int((~direct & embedded).sum()), **violations,
+            'maximum_registered_residual_error_m': float(error[valid].max()) if valid.any() else None,
+            'physical_admission': False,
+            'boundary': 'Source ancestry and registered residual consistency only; no cells, contact, mass or motion admission.'}
