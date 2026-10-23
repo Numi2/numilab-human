@@ -126,3 +126,64 @@ def surface_face_diagnostics(world, faces, native, rendered_normals):
              'area_ratio': float(ratio[i])} for i in worst],
         'boundary': 'All-face geometric area and tangent-map diagnostics; 0.1x/10x counts are descriptive, not physiological thresholds. Normal opposition is a presentation diagnostic, not an inversion/strain certificate. No skin-quality, material or clinical admission.',
     }
+
+
+def _skin_layer_reference_diagnostics(outer_m, inner_m, deep_m,
+                                      skin_thickness_m, fat_thickness_m,
+                                      skin_lower_m, skin_upper_m,
+                                      fat_lower_m, fat_upper_m,
+                                      identity_tolerance_m=2e-5):
+    """Check one exact Float32 emission of prepared layer geometry in metres.
+
+    This shares the native constructor's 20-micrometre reference-width identity
+    check. Authored per-row bounds remain exact: this helper never substitutes
+    global bounds, accepts unknown intervals, or promotes physical admission.
+    Self/cross intersections, tetrahedra, mass and pose motion remain separate.
+    """
+    import numpy as np
+    if not np.isfinite(identity_tolerance_m) or identity_tolerance_m < 0:
+        raise ValueError('layer identity tolerance must be finite and nonnegative')
+    coordinates = [np.asarray(a, dtype=float) for a in (outer_m, inner_m, deep_m)]
+    n = len(coordinates[0])
+    if n == 0 or any(a.shape != (n, 3) or not np.isfinite(a).all()
+                     for a in coordinates):
+        raise ValueError('layer coordinates must be finite aligned nonempty Nx3 metres')
+    # The native payload emits metres. Casting millimetres and scaling back
+    # changes the emitted geometry, especially in thin layers far from origin.
+    emitted = [a.astype(np.float32).astype(float) for a in coordinates]
+    if any(not np.isfinite(a).all() for a in emitted):
+        raise ValueError('layer coordinates overflow Float32 metre emission')
+    declarations = [np.asarray(a, dtype=float) for a in
+                    (skin_thickness_m, fat_thickness_m)]
+    if any(a.shape != (n,) or not np.isfinite(a).all() or np.any(a <= 0)
+           for a in declarations):
+        raise ValueError('declared layer widths must be finite positive aligned metres')
+    intervals = [np.asarray(a, dtype=float) for a in
+                 (skin_lower_m, skin_upper_m, fat_lower_m, fat_upper_m)]
+    if any(a.shape != (n,) or np.isnan(a).any() for a in intervals):
+        raise ValueError('layer intervals must be aligned and not NaN')
+    layers = {}
+    for name, a, b, declared, lo, hi in zip(
+            ('skin', 'fat'), emitted[:2], emitted[1:], declarations,
+            intervals[::2], intervals[1::2]):
+        width = np.linalg.norm(a - b, axis=1)
+        error = np.abs(width - declared)
+        unknown = ~np.isfinite(lo) | ~np.isfinite(hi) | (lo <= 0) | (hi < lo)
+        mismatch = np.flatnonzero(error > identity_tolerance_m)
+        outside = np.flatnonzero(~unknown & ((width < lo) | (width > hi)))
+        layers[name] = {
+            'declared_width_mismatch_rows': mismatch.tolist(),
+            'maximum_declared_width_error_m': float(error.max()),
+            'outside_authored_interval_rows': outside.tolist(),
+            'unknown_or_invalid_interval_rows': np.flatnonzero(unknown).tolist(),
+            'minimum_emitted_width_m': float(width.min()),
+            'maximum_emitted_width_m': float(width.max()),
+        }
+    passed = all(not v[k] for v in layers.values() for k in
+                 ('declared_width_mismatch_rows', 'outside_authored_interval_rows',
+                  'unknown_or_invalid_interval_rows'))
+    return {'reference_width_checks_pass': passed, 'row_count': n,
+            'emission': 'coordinates cast once to Float32 metres; differences measured in Float64',
+            'identity_tolerance_m': float(identity_tolerance_m), 'layers': layers,
+            'physical_admission': False,
+            'boundary': 'Reference-width consistency only; no topology, tetrahedron, contact, mass, motion or physical admission.'}
