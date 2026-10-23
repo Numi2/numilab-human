@@ -111,7 +111,9 @@ class JointEqualityPayloadTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             args = argparse.Namespace(sources=root, output=root / "output", python=Path(sys.executable))
-            with patch("numilab_human.cli.subprocess.run", side_effect=fake_export), patch(
+            with patch("numilab_human.cli.apply_myo_sim_source_overlays", return_value={}), patch(
+                "numilab_human.cli.subprocess.run", side_effect=fake_export
+            ), patch(
                 "numilab_human.cli.myosim_fullbody_reference_artifacts",
                 return_value=(manifest, b"rigid", b"muscle", b"support", legacy, b"hood", compliant),
             ), patch("numilab_human.support_primitives.compile_support_primitives",
