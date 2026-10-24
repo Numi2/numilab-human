@@ -491,14 +491,63 @@ def _update_complete_self_pair_baseline(baseline, records):
 
 def _audit_record_pairs(candidate_pairs, *, same_surface):
     candidates, allowed, pairs = 0, 0, []
+    exact_normals = {}
+
+    def exact_normal(triangle):
+        # Floating inputs retain the original rational conversion path. Only
+        # exact integer/Fraction records may take this algebraic early-out.
+        if len(triangle) != 3 or any(len(p) != 3 for p in triangle):
+            return None
+        if not all(type(v) is int or isinstance(v, Fraction)
+                   for point in triangle for v in point):
+            return None
+        key = tuple(tuple(point) for point in triangle)
+        if key not in exact_normals:
+            normal = _cross(_sub(triangle[1], triangle[0]),
+                            _sub(triangle[2], triangle[0]))
+            require(any(normal), "degenerate triangle")
+            exact_normals[key] = normal
+        return exact_normals[key]
+
+    def strict_same_side(values):
+        return min(values) > 0 or max(values) < 0
+
     for (tri, lo, hi, i, ids), (other, lower, upper, j, other_ids) in candidate_pairs:
         candidates += 1
+        shared_ids = set(ids) & set(other_ids) if same_surface else set()
+        na, nb = exact_normal(tri), exact_normal(other)
+        if na is not None and nb is not None:
+            sa = [_dot(na, _sub(p, tri[0])) for p in other]
+            sb = [_dot(nb, _sub(p, other[0])) for p in tri]
+            if strict_same_side(sa) or strict_same_side(sb):
+                continue
+            coincident_shared = all(tri[ids.index(k)] == other[other_ids.index(k)]
+                                    for k in shared_ids)
+            if same_surface and coincident_shared and len(shared_ids) == 2:
+                if any(sa) or any(sb):
+                    # Distinct planes meet only on the common indexed edge.
+                    allowed += 1
+                    continue
+                a,b = (tri[ids.index(k)] for k in sorted(shared_ids))
+                c = tri[next(k for k in range(3) if ids[k] not in shared_ids)]
+                d = other[next(k for k in range(3) if other_ids[k] not in shared_ids)]
+                edge = _sub(b,a)
+                if _dot(_cross(edge,_sub(c,a)),_cross(edge,_sub(d,a))) < 0:
+                    # Coplanar triangles occupy opposite sides of that edge.
+                    allowed += 1
+                    continue
+            elif same_surface and coincident_shared and len(shared_ids) == 1:
+                va = [sa[k] for k in range(3) if other_ids[k] not in shared_ids]
+                vb = [sb[k] for k in range(3) if ids[k] not in shared_ids]
+                if strict_same_side(va) or strict_same_side(vb):
+                    # One triangle meets the other's plane only at the shared
+                    # vertex, so no nonlocal intersection can be concealed.
+                    allowed += 1
+                    continue
         points = triangle_intersection_points(tri, other)
         if not points:
             continue
-        # Use shared *indices*, not coincident but topologically unrelated
-        # coordinates. Duplicate triangles are defects even when coincident.
-        shared_ids = set(ids) & set(other_ids) if same_surface else set()
+        # Shared IDs alone never authorize coincident duplicates or overlaps.
         common = {tri[ids.index(index)] for index in shared_ids}
         if same_surface and len(shared_ids) in (1, 2) and all(_allowed_shared_point(p, common) for p in points):
             allowed += 1
