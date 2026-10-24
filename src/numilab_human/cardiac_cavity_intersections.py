@@ -405,6 +405,90 @@ def _audit_self_pairs_touching_faces(records, face_ids, *, required_witness_pair
     return result
 
 
+@dataclass(frozen=True)
+class _CompleteSelfPairBaseline:
+    records: tuple
+    triangle_pairs: tuple
+
+
+def _immutable_self_pair_records(records):
+    """Freeze and validate exact geometry before reusing an untouched pair."""
+    require(records is not None, 'missing complete self-pair geometry')
+    snapshot, face_ids, points_by_id = [], set(), {}
+    for row in records:
+        require(len(row) == 5, 'invalid complete self-pair record')
+        tri, lower, upper, face_id, ids = row
+        require(isinstance(face_id, Integral) and not isinstance(face_id, bool)
+                and face_id >= 0 and face_id not in face_ids,
+                'duplicate or invalid complete self-pair face ID')
+        ids = tuple(ids)
+        require(len(tri) == len(ids) == 3 and all(isinstance(v, Integral)
+                and not isinstance(v, bool) and v >= 0 for v in ids),
+                'invalid complete self-pair source IDs')
+        tri = tuple(_exact_rational_xyz(p, 'complete self-pair point') for p in tri)
+        require(any(_cross(_sub(tri[1], tri[0]), _sub(tri[2], tri[0]))),
+                'degenerate complete self-pair triangle')
+        lo = tuple(min(p[k] for p in tri) for k in range(3))
+        hi = tuple(max(p[k] for p in tri) for k in range(3))
+        require(tuple(lower) == lo and tuple(upper) == hi,
+                'stale complete self-pair bounds')
+        for vertex_id, point in zip(ids, tri):
+            require(vertex_id not in points_by_id or points_by_id[vertex_id] == point,
+                    'one complete self-pair source ID has different coordinates')
+            points_by_id[vertex_id] = point
+        face_ids.add(int(face_id))
+        snapshot.append((tri, lo, hi, int(face_id), tuple(map(int, ids))))
+    return tuple(sorted(snapshot, key=lambda r: r[3]))
+
+
+def _prepare_complete_self_pair_baseline(records):
+    """Run one full exact audit and retain an immutable baseline for updates."""
+    snapshot = _immutable_self_pair_records(records)
+    report = _audit_self_pairs_touching_faces(snapshot, {r[3] for r in snapshot})
+    baseline = _CompleteSelfPairBaseline(snapshot,
+                                        tuple(map(tuple, report['triangle_pairs'])))
+    return baseline, report
+
+
+def _update_complete_self_pair_baseline(baseline, records):
+    """Certify a complete surface by checking every changed face vs all faces.
+
+    A pair is reused only when BOTH exact triangle records (including source
+    IDs) are unchanged. Added/deleted faces and adjacency changes invalidate
+    their incident pairs. This is exact locality reuse, not an anatomical ROI
+    approximation. Narrow-phase counters describe only work actually repeated.
+    """
+    require(isinstance(baseline, _CompleteSelfPairBaseline),
+            'complete self-pair update requires a prepared baseline')
+    snapshot = _immutable_self_pair_records(records)
+    old = {r[3]: r for r in baseline.records}
+    new = {r[3]: r for r in snapshot}
+    changed = {i for i in new if i not in old or old[i] != new[i]}
+    unchanged = {i for i in new if i in old and old[i] == new[i]}
+    retained = {pair for pair in baseline.triangle_pairs
+                if pair[0] in unchanged and pair[1] in unchanged}
+    if changed:
+        witnesses = [p for p in baseline.triangle_pairs
+                     if p[0] in new and p[1] in new
+                     and (p[0] in changed or p[1] in changed)]
+        repeated = _audit_self_pairs_touching_faces(
+            snapshot, changed, required_witness_pairs=witnesses)
+    else:
+        repeated = dict(triangle_pairs=[], count=0, aabb_candidate_pairs=0,
+                        allowed_shared_vertex_or_edge_pairs=0)
+    pairs = sorted(retained | set(map(tuple, repeated['triangle_pairs'])))
+    report = dict(repeated)
+    report.update(triangle_pairs=[list(p) for p in pairs], count=len(pairs),
+                  complete_surface_audit=True,
+                  complete_surface_face_count=len(snapshot),
+                  selected_face_count=len(changed),
+                  exact_incremental_reuse=True,
+                  reused_unchanged_crossing_pairs=len(retained),
+                  unchanged_face_count=len(unchanged),
+                  removed_face_count=len(set(old)-set(new)))
+    return _CompleteSelfPairBaseline(snapshot, tuple(pairs)), report
+
+
 def _audit_record_pairs(candidate_pairs, *, same_surface):
     candidates, allowed, pairs = 0, 0, []
     for (tri, lo, hi, i, ids), (other, lower, upper, j, other_ids) in candidate_pairs:
