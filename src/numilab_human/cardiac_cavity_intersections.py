@@ -265,6 +265,54 @@ def _records(vertices, faces):
     return records
 
 
+def float32_surface_records(vertices, faces, *, source_seam_groups=()):
+    """Build exact posed records without changing any triangle coordinate.
+
+    Seam groups must already have been justified by source topology/ancestry;
+    coincidence alone is not that proof. A proven source group is shared in a
+    pose only when all its packed Float32 coordinates still agree exactly.
+    Diverged groups retain distinct original identities. Synthetic identities
+    start after the complete vertex domain, so no group ordinal can alias an
+    unrelated vertex. No epsilon welding, geometry repair or exemption of
+    overlapping shared-edge triangles is performed.
+
+    Return (records, effective_vertex_ids). Records retain original face rows.
+    """
+    vertices = tuple(tuple(point) for point in vertices)
+    points = tuple(float32_point_lattice_key(point) for point in vertices)
+    packed = tuple(struct.pack("<3f", *(float(x) for x in point))
+                   for point in vertices)
+    count = len(points)
+    effective = list(range(count))
+    seen = set()
+    for ordinal, group in enumerate(source_seam_groups):
+        members = tuple(group)
+        require(len(members) >= 2, "source seam group must contain at least two vertices")
+        require(all(isinstance(v, Integral) and not isinstance(v, bool)
+                    and 0 <= v < count for v in members),
+                "source seam group index outside vertex domain")
+        members = tuple(int(v) for v in members)
+        require(len(set(members)) == len(members), "duplicate source seam group member")
+        require(not seen.intersection(members), "overlapping source seam groups")
+        seen.update(members)
+        if all(packed[v] == packed[members[0]] for v in members[1:]):
+            for v in members:
+                effective[v] = count + ordinal
+    validated_faces = []
+    for face in faces:
+        ids = tuple(face)
+        require(len(ids) == 3, "surface face must have three indices")
+        require(all(isinstance(v, Integral) and not isinstance(v, bool)
+                    and 0 <= v < count for v in ids),
+                "surface face index outside vertex domain")
+        validated_faces.append(tuple(int(v) for v in ids))
+    # Geometry is indexed only by original rows. Quotient identities affect
+    # shared-feature classification, never coordinate lookup.
+    records = [(tri, lo, hi, row, tuple(effective[v] for v in ids))
+               for tri, lo, hi, row, ids in _records(points, validated_faces)]
+    return records, tuple(effective)
+
+
 def _allowed_shared_point(point, common):
     if point in common:
         return True
