@@ -351,14 +351,15 @@ def _audit_pair(first, second, *, same_surface):
         same_surface=same_surface)
 
 
-def _audit_self_pairs_touching_faces(records, face_ids):
+def _audit_self_pairs_touching_faces(records, face_ids, *, required_witness_pairs=()):
     """Audit all self-pairs incident on selected faces in one complete record set.
 
     Face IDs need not be contiguous or sorted. Keep the original vertex IDs
     for shared-edge classification; never compact a patch independently from
     its complement. Canonicalize candidate order instead of filtering one
     direction, which can silently omit a crossing when a selected face has
-    the lower ID.
+    the lower ID. Required historical witnesses must touch this explicit
+    scope; an undersized anatomical ROI fails before indexing geometry.
     """
     if records is None:
         raise HumanImportError("missing triangle records: geometry preparation did not complete")
@@ -367,6 +368,21 @@ def _audit_self_pairs_touching_faces(records, face_ids):
     require(len(by_id) == len(snapshot), "duplicate face IDs in selected-face audit")
     selected_ids = set(face_ids)
     require(selected_ids <= set(by_id), "selected face ID missing from complete record set")
+    required = set()
+    for pair in required_witness_pairs:
+        try:
+            values = tuple(pair)
+        except TypeError as exc:
+            raise HumanImportError("required witness must contain two face IDs") from exc
+        require(len(values) == 2 and all(isinstance(v, Integral) and not isinstance(v, bool)
+                                         for v in values) and values[0] != values[1],
+                "required witness must contain two distinct integer face IDs")
+        a, b = map(int, values)
+        require(a in by_id and b in by_id,
+                "required witness face ID missing from complete record set")
+        require(a in selected_ids or b in selected_ids,
+                "required witness omitted by selected-face audit scope: " + str((a, b)))
+        required.add((min(a, b), max(a, b)))
     selected = tuple(row for row in snapshot if row[3] in selected_ids)
 
     def candidates():
@@ -381,7 +397,12 @@ def _audit_self_pairs_touching_faces(records, face_ids):
             seen.add(key)
             yield (first, other) if i < j else (other, first)
 
-    return _audit_record_pairs(candidates(), same_surface=True)
+    result = _audit_record_pairs(candidates(), same_surface=True)
+    result.update(selected_face_count=len(selected_ids),
+                  complete_surface_face_count=len(snapshot),
+                  complete_surface_audit=len(selected_ids) == len(snapshot),
+                  covered_required_witness_pairs=len(required))
+    return result
 
 
 def _audit_record_pairs(candidate_pairs, *, same_surface):

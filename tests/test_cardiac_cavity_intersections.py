@@ -92,6 +92,40 @@ class PredicateTests(unittest.TestCase):
             audit._audit_self_pairs_touching_faces(records + records, {0})
         self.assertEqual(audit._audit_self_pairs_touching_faces([], set())["count"], 0)
 
+    def test_selected_scope_must_cover_required_witnesses_before_indexing(self):
+        records = audit._records([(0,0,0),(4,0,0),(0,4,0),
+                                  (1,1,-1),(1,1,1),(2,1,0),
+                                  (20,0,0),(21,0,0),(20,1,0)],
+                                 [(0,1,2),(3,4,5),(6,7,8)])
+        with patch.object(audit, "_prepare_surface_aabb", side_effect=AssertionError):
+            with self.assertRaisesRegex(HumanImportError, "witness omitted"):
+                audit._audit_self_pairs_touching_faces(
+                    records, {2}, required_witness_pairs=[(0,1)])
+        for selected in ({0}, {1}):
+            r = audit._audit_self_pairs_touching_faces(
+                records, selected, required_witness_pairs=[(0,1),(1,0)])
+            self.assertEqual(r["triangle_pairs"], [[0,1]])
+            self.assertFalse(r["complete_surface_audit"])
+            self.assertEqual(r["selected_face_count"], 1)
+            self.assertEqual(r["complete_surface_face_count"], 3)
+            self.assertEqual(r["covered_required_witness_pairs"], 1)
+        self.assertTrue(audit._audit_self_pairs_touching_faces(
+            records, {0,1,2})["complete_surface_audit"])
+
+    def test_required_witness_ids_must_be_valid_even_for_clear_geometry(self):
+        records = audit._records([(0,0,0),(1,0,0),(0,1,0),
+                                  (10,0,0),(11,0,0),(10,1,0)],
+                                 [(0,1,2),(3,4,5)])
+        # A repaired witness may now be clear: coverage never forces a hit.
+        result = audit._audit_self_pairs_touching_faces(
+            records, {0}, required_witness_pairs=[(0,1)])
+        self.assertEqual(result["count"], 0)
+        for bad in ([(0,3)], [(0,0)], [(0,)], [(0,1,2)], [(False,1)],
+                    [(0.,1)], [None]):
+            with self.subTest(bad=bad), self.assertRaises(HumanImportError):
+                audit._audit_self_pairs_touching_faces(
+                    records, {0}, required_witness_pairs=bad)
+
     def test_shared_edge_contact_allowed_but_same_side_overlap_rejected(self):
         vertices = [(0,0,0),(2,0,0),(0,2,0),(0,-2,0),(1,1,0)]
         self.assertEqual(self.pair(vertices, [(0,1,2),(1,0,3)])['count'], 0)
