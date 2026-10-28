@@ -76,7 +76,25 @@ def _optional_face_array(z: Any, key: str, count: int, dtype: Any, fill: int) ->
 def load_surface(path: Path, layer: str, collar: Any | None = None) -> dict[str, Any]:
     z = np.load(path, allow_pickle=False)
     points = np.asarray(_npz_array(z, "points_world_m"), dtype=np.float32)
-    if layer == "O":
+    if "face_source_identity_schema_by_original_id_json" in z.files:
+        # Reuse the current typed authoring contract. These are source-face IDs
+        # within pinned source namespaces, never NHSKIN vertex/face indices.
+        from export_authoring_registered_surface_sidecars_230 import validate_candidate
+        validate_candidate(path, layer, require_f32=True)
+        faces = np.asarray(z["faces"], dtype=np.int64)
+        rows = np.arange(len(faces), dtype=np.int64)
+        exact = np.full(len(faces), INVALID, dtype=np.int64)
+        original = np.asarray(z["face_source_original_id"], dtype=np.int64)
+        face_ids = np.asarray(z["face_source_face_id"], dtype=np.int64)
+        layers = np.asarray(z["face_source_layer"], dtype=np.int8)
+        bodies = np.asarray(z["face_source_body"], dtype=np.int32)
+        bones = np.asarray(z["face_source_bone"], dtype=np.int32)
+        run_ids = original.copy()
+        ancestry = [[int(v)] for v in face_ids]
+        ancestry_ids = [[int(v)] for v in original]
+        ancestry_parents = [[int(v)] for v in rows]
+        ancestry_kind = np.full(len(faces), 7, dtype=np.int8)
+    elif layer == "O":
         faces = np.asarray(_npz_array(z, "source_O_faces", "faces"), dtype=np.int64)
         rows = np.asarray(_npz_array(z, "envelope_source_face_row", "face_source_row"),
                           dtype=np.int64)
@@ -141,6 +159,10 @@ def load_surface(path: Path, layer: str, collar: Any | None = None) -> dict[str,
               np.all(tri[:, 1] == tri[:, 2], axis=1) |
               np.all(tri[:, 2] == tri[:, 0], axis=1)):
         raise ValueError(f"{layer} has Float32-collapsed triangles")
+    cross = np.cross(tri[:,1].astype(np.float64)-tri[:,0],
+                     tri[:,2].astype(np.float64)-tri[:,0])
+    if np.any(np.all(cross == 0.0, axis=1)):
+        raise ValueError(f"{layer} has zero-area emitted triangles")
     if len(exact) != len(faces) or len(original) != len(faces):
         raise ValueError(f"{layer} source ancestry row counts are incomplete")
     return {"path": str(path), "points": points, "faces": faces,
@@ -304,6 +326,57 @@ def _merge_face_records(parts: list[list[dict[str, Any]]]) -> dict[str, np.ndarr
     merged["face_ancestry_source_original_ids"]=np.asarray(ancestry_ids,np.int64)
     merged["face_ancestry_parent_face_rows"]=np.asarray(ancestry_parents,np.int64)
     return merged
+
+
+def place_verified_donor_collar(collar: Any, placement: Path) -> dict[str,np.ndarray]:
+    """Apply the already-declared native source registration to donor annuli."""
+    packet = np.load(placement,allow_pickle=False)
+    rotation = np.asarray(packet["native_placement_rotation_row_major"],np.float64)
+    translation = np.asarray(packet["native_placement_translation_m"],np.float64)
+    if rotation.shape!=(9,) or translation.shape!=(3,) or not np.isfinite(rotation).all() or not np.isfinite(translation).all():
+        raise ValueError("donor collar native placement is not a finite 3D transform")
+    rotation = rotation.reshape(3,3)
+    if np.max(np.abs(rotation.T@rotation-np.eye(3)))>1e-6 or abs(np.linalg.det(rotation)-1.0)>1e-6:
+        raise ValueError("donor collar native placement must be a proper rigid transform")
+    result = {k: np.array(collar[k],copy=True) for k in collar.files}
+    result["points_world_m"] = (np.asarray(result["points_world_m"],np.float64)@rotation.T+translation).astype(np.float32)
+    return result
+
+
+def rebind_typed_collar_outer(collar: Any, outer: dict[str, Any]) -> dict[str, np.ndarray]:
+    """Keep the verified donor annuli, remapping only their exact outer rows.
+
+    Call read_wall_provenance on the original packet first. The returned packet
+    uses the current O domain; I/D donor ring coordinates and parent IDs stay exact.
+    """
+    old = {k: np.array(collar[k], copy=True) for k in (collar.files if hasattr(collar,"files") else collar)}
+    ni, nd = len(old["donor_I_parent_node_rows"]), len(old["donor_D_parent_node_rows"])
+    old_no = len(old["points_world_m"]) - ni - nd
+    old_outer_rows = np.asarray(old["donor_O_to_candidate_vertex"], dtype=np.int64)
+    if ni != nd or len(old_outer_rows) != ni:
+        raise ValueError("typed collar donor ring counts differ")
+    old_points = np.asarray(old["points_world_m"], dtype=np.float32)
+    points = np.asarray(outer["points"], dtype=np.float32)
+    new_no = len(points)
+    new_outer_rows = np.asarray([
+        _unique_coordinate_index(points, old_points[row], "O")
+        for row in old_outer_rows], dtype=np.int64)
+    if len(set(map(int,new_outer_rows))) != ni:
+        raise ValueError("typed collar outer ring reuses a candidate row")
+    remap = dict(zip(map(int,old_outer_rows),map(int,new_outer_rows)))
+    for row in range(ni+nd):
+        remap[old_no+row] = new_no+row
+    for key in ("skin_sidewall_faces","fat_sidewall_faces"):
+        source = np.asarray(old[key], dtype=np.int64)
+        if any(int(v) not in remap for v in source.flat):
+            raise ValueError("typed collar wall references a non-ring vertex")
+        old[key] = np.asarray([[remap[int(v)] for v in face] for face in source],
+                              dtype=np.int64)
+    old["points_world_m"] = np.vstack((points,old_points[old_no:])).astype(np.float32)
+    old["outer_faces"] = np.asarray(outer["faces"],dtype=np.int64).copy()
+    old["donor_O_to_candidate_vertex"] = new_outer_rows
+    old["exact_candidate_face_source_rows"] = np.full(len(outer["faces"]),INVALID,np.int64)
+    return old
 
 
 def _map_collar_faces(outer: dict[str, Any], inner: dict[str, Any],
@@ -1429,6 +1502,8 @@ def main() -> int:
     parser.add_argument("--deep", type=Path, required=True)
     parser.add_argument("--collar", type=Path, default=PROPOSAL)
     parser.add_argument("--wall-csv", type=Path, default=WALL_CSV)
+    parser.add_argument("--collar-native-placement",type=Path,
+                        help="existing native-placement NPZ; original wall ancestry is validated before placement")
     parser.add_argument("--parent-cells", type=Path, default=PARENT_CELLS)
     parser.add_argument("--parent-nodes", type=Path, default=PARENT_NODES)
     parser.add_argument("--inner-hole-core", type=Path, action="append", default=[])
@@ -1446,6 +1521,14 @@ def main() -> int:
     deep = load_surface(args.deep, "D")
     wall_rows = read_wall_provenance(collar, args.wall_csv, args.parent_cells,
                                      args.parent_nodes)
+    if "face_source_identity_schema_by_original_id_json" in outer["raw_npz_keys"]:
+        # Parent wall provenance is checked against its untouched original packet
+        # above. Rebinding changes only role-local indices, never donor geometry.
+        if args.collar_native_placement is not None:
+            collar = place_verified_donor_collar(collar,args.collar_native_placement)
+        collar = rebind_typed_collar_outer(collar, outer)
+    elif args.collar_native_placement is not None:
+        raise ValueError("native collar placement requires the typed authoring domain")
     skin, fat, assembly = assemble_shells(outer, inner, deep, collar, wall_rows)
     skin_holes: list[np.ndarray] = []
     fat_holes: list[np.ndarray] = []
@@ -1496,6 +1579,9 @@ def main() -> int:
                                "reason": str(error), "physical_admission": False}
     report = {
         "classification": "existing-format native domain adapter; no physical admission",
+        "collar_native_placement": None if args.collar_native_placement is None else {
+            "path":str(args.collar_native_placement),"sha256":sha256(args.collar_native_placement),
+            "original_wall_provenance_checked_before_placement":True},
         "inputs": {str(p): sha256(p) for p in (
             args.outer, args.inner, args.deep, args.collar, args.wall_csv,
             args.parent_cells, args.parent_nodes)},
