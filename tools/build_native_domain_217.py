@@ -1024,6 +1024,30 @@ def combine_tetgen_children(skin_node_path: Path, skin_ele_path: Path,
                                                           for i in range(len(inner["points"]))], dtype=np.int64),
                                          "D": np.empty(0, dtype=np.int64)}
 
+    if require_registered_surface_maps:
+        # Preserve physical coordinates and source IDs while giving the existing
+        # direct accepted-FEM skin renderer a compact outer-node prefix. Do not
+        # rely on TetGen file row ordering, even when input points usually lead.
+        outer_rows = registered_surface_joint_rows["O"]
+        retained = np.ones(len(joint_points_array), dtype=bool)
+        retained[outer_rows] = False
+        new_to_old = np.concatenate((outer_rows, np.flatnonzero(retained)))
+        if len(new_to_old) != len(joint_points_array) or \
+           len(np.unique(new_to_old)) != len(joint_points_array):
+            raise ValueError("registered O prefix permutation is not bijective")
+        old_to_new = np.empty(len(new_to_old), dtype=np.int64)
+        old_to_new[new_to_old] = np.arange(len(new_to_old), dtype=np.int64)
+        joint_points_array = joint_points_array[new_to_old]
+        skin_joint = old_to_new[skin_joint]
+        fat_joint = old_to_new[fat_joint]
+        source_vertex_to_joint = {source: int(old_to_new[node])
+                                  for source, node in source_vertex_to_joint.items()}
+        registered_surface_joint_rows = {layer: old_to_new[rows]
+                                         for layer, rows in registered_surface_joint_rows.items()}
+        if not np.array_equal(registered_surface_joint_rows["O"],
+                              np.arange(len(outer_rows), dtype=np.int64)):
+            raise ValueError("registered O nodes lost their exact mechanical prefix")
+
     joint_tetrahedra: list[list[int]] = []
     joint_materials: list[int] = []
     cell_map_rows: list[list[Any]] = []
@@ -1188,6 +1212,9 @@ def combine_tetgen_children(skin_node_path: Path, skin_ele_path: Path,
         "registered_I_source_vertices": len(skin_i),
         "registered_I_source_faces": len(i_interface_rows),
         "registered_surface_node_map_complete": bool(require_registered_surface_maps),
+        "registered_outer_nodes_are_mechanical_prefix": bool(require_registered_surface_maps),
+        "combined_node_order": ("registered_O_source_rows_then_remaining_TetGen_rows"
+                                if require_registered_surface_maps else "legacy_fixture_TetGen_rows"),
         "registered_surface_node_rows": {key: int(len(value))
                                          for key, value in registered_surface_joint_rows.items()},
         "positive_float32_cells": total_cells,

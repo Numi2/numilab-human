@@ -173,6 +173,45 @@ def main():
         assert [int(row["source_tetgen_node_id"]) for row in rows
                 if row["source_partition"] == "fat"] == node_ids
 
+        # IDs alone are insufficient: actual TetGen file rows can be reordered.
+        # Reorder both partitions independently, then verify physical cells and
+        # exact shared-interface ownership survive the canonical O permutation.
+        sp = np.asarray([4, 0, 5, 2, 3, 1], dtype=np.int64)
+        fp = np.asarray([5, 3, 1, 4, 0, 2], dtype=np.int64)
+        si = np.argsort(sp); fi = np.argsort(fp)
+        reordered_skin = root / "reordered-skin.node", root / "reordered-skin.ele"
+        reordered_fat = root / "reordered-fat.node", root / "reordered-fat.ele"
+        write_mesh(*reordered_skin, skin_points[sp], np.asarray(node_ids)[sp],
+                   [901, 703, 845], si[tets], 15)
+        write_mesh(*reordered_fat, fat_points[fp], np.asarray(node_ids)[fp],
+                   [509, 407, 601], fi[tets], 16)
+        reordered_out = root / "reordered-combined"; reordered_out.mkdir()
+        reordered_receipt = module.combine_tetgen_children(
+            *reordered_skin, *reordered_fat, skin, fat, inner, reordered_out)
+        assert reordered_receipt["registered_outer_nodes_are_mechanical_prefix"]
+        a = module.read_tetgen_mesh(out / "skin-fat-combined.node",
+                                   out / "skin-fat-combined.ele", None)
+        b = module.read_tetgen_mesh(reordered_out / "skin-fat-combined.node",
+                                   reordered_out / "skin-fat-combined.ele", None)
+        assert np.array_equal(b["points"][:3], outer_points)
+        assert np.array_equal(a["points"][a["tetrahedra"]],
+                              b["points"][b["tetrahedra"]])
+        assert np.array_equal(a["material_indices"], b["material_indices"])
+        with gzip.open(reordered_out / "skin-fat-combined-node-map.csv.gz", "rt", newline="") as stream:
+            permuted_rows = list(csv.DictReader(stream))
+        assert {int(row["registered_surface_vertex_row"]): int(row["joint_node_id"])
+                for row in permuted_rows if row["registered_surface_layer"] == "O"} == {0: 1, 1: 2, 2: 3}
+        shared = {}
+        for row in permuted_rows:
+            if row["registered_surface_layer"] == "I":
+                shared.setdefault(row["source_partition"], {})[
+                    int(row["registered_surface_vertex_row"])] = int(row["joint_node_id"])
+        assert shared["skin"] == shared["fat"]
+        assert [int(row["source_tetgen_node_id"]) for row in permuted_rows
+                if row["source_partition"] == "skin"] == np.asarray(node_ids)[sp].tolist()
+        assert [int(row["source_tetgen_node_id"]) for row in permuted_rows
+                if row["source_partition"] == "fat"] == np.asarray(node_ids)[fp].tolist()
+
         def rejects(change, name, reason):
             bad_skin = {**skin, "face_ancestry": {**skin["face_ancestry"],
                 "face_source_role": skin["face_ancestry"]["face_source_role"].copy()}}
@@ -213,7 +252,7 @@ def main():
                 "missing-D-role", "face markers/roles are missing")
 
         print("PASS synthetic prism O/I/D node-row maps; 9 combined nodes, 6 positive F32 cells; "
-              "reordered TetGen IDs; exact shared I; 8 fail-closed O/D mapping cases; no physical admission")
+              "reordered TetGen IDs and rows; exact O prefix and shared I; 8 fail-closed O/D mapping cases; no physical admission")
 
 
 if __name__ == "__main__":
