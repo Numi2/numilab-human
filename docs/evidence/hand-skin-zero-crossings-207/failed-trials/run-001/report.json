@@ -1,0 +1,178 @@
+{
+  "baseline_sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756",
+  "script_sha256": "8fb3bd29111c263eee67d6591bbb55eb619736467a3024b926ba5c60147b1a4b",
+  "host": "numi.local",
+  "support_nodes": 7179,
+  "affected_faces": 16148,
+  "sampling_rows": 209924,
+  "construction": "Full signed exit-depth targets; connected quadratic displacement regularization; fixed outside and exact anchors. Offline geometry preparation only.",
+  "native_admission": false,
+  "iterations": [
+    {
+      "iteration": 0,
+      "inside_samples": 4591,
+      "maximum_depth_mm": 3.7122301148022636,
+      "median_depth_mm": 0.604099009288815,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.09389641892200636,
+          "min_normal_cosine": -0.8555418734108085
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.37115229501720276,
+          "min_normal_cosine": -0.4004462369387478
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": true,
+          "min_area_ratio": 0.45923624317837886,
+          "min_normal_cosine": 0.5938144156844419
+        }
+      ],
+      "alpha": 0.25
+    },
+    {
+      "iteration": 1,
+      "inside_samples": 4538,
+      "maximum_depth_mm": 3.6874495319118017,
+      "median_depth_mm": 0.5805994017233358,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.033181344588512754,
+          "min_normal_cosine": -0.9414218678221699
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.22770049469000164,
+          "min_normal_cosine": -0.7797410571829868
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3703793188216284,
+          "min_normal_cosine": -0.3917639128308934
+        },
+        {
+          "alpha": 0.125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3275856071296394,
+          "min_normal_cosine": 0.04397294500871672
+        },
+        {
+          "alpha": 0.0625,
+          "pass_orientation": true,
+          "min_area_ratio": 0.3673675912938642,
+          "min_normal_cosine": 0.30030403074312556
+        }
+      ],
+      "alpha": 0.0625
+    },
+    {
+      "iteration": 2,
+      "inside_samples": 4533,
+      "maximum_depth_mm": 3.6809945970599243,
+      "median_depth_mm": 0.5734279462961569,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.09360884217140585,
+          "min_normal_cosine": -0.872368447853349
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.24186766183302721,
+          "min_normal_cosine": -0.7571012084176082
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3733195088668565,
+          "min_normal_cosine": -0.4353460887943731
+        },
+        {
+          "alpha": 0.125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.33641770555835054,
+          "min_normal_cosine": -0.06877823485002965
+        },
+        {
+          "alpha": 0.0625,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3299712639212544,
+          "min_normal_cosine": 0.09374622722838365
+        },
+        {
+          "alpha": 0.03125,
+          "pass_orientation": true,
+          "min_area_ratio": 0.3434715123578704,
+          "min_normal_cosine": 0.19186173655804642
+        }
+      ],
+      "alpha": 0.03125
+    },
+    {
+      "iteration": 3,
+      "inside_samples": 4532,
+      "maximum_depth_mm": 3.678404706897756,
+      "median_depth_mm": 0.5709179904759316,
+      "max_increment_mm": 0.7999999999999999,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.07198971284131285,
+          "min_normal_cosine": -0.8839576982866736
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.23141082008716568,
+          "min_normal_cosine": -0.7731198381840116
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3831492367210678,
+          "min_normal_cosine": -0.5117947202196333
+        },
+        {
+          "alpha": 0.125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3556647724556717,
+          "min_normal_cosine": -0.13414375171703904
+        },
+        {
+          "alpha": 0.0625,
+          "pass_orientation": false,
+          "min_area_ratio": 0.326945432289638,
+          "min_normal_cosine": 0.00647069799385542
+        },
+        {
+          "alpha": 0.03125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3293173874522835,
+          "min_normal_cosine": 0.09368556805816783
+        }
+      ],
+      "status": "SOURCE_ORIENTATION_LIMIT"
+    }
+  ],
+  "candidate_sha256": "882ecc5caeba0e8ff1202074df5656f507fafb58e251bc0a5dcc13b66e71415d",
+  "changed_nodes": 7160,
+  "max_displacement_mm": 0.27024058553094166,
+  "outside_bitwise_unchanged": true,
+  "anchors_bitwise_unchanged": true,
+  "elapsed_s": 15.50724033289589
+}

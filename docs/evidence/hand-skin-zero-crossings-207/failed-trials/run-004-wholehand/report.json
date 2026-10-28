@@ -1,0 +1,139 @@
+{
+  "baseline_sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756",
+  "script_sha256": "a8e0c72a462e68ef716be23d914e2b58d9837f9069a9680cb6c5b3ed5268c638",
+  "host": "numi.local",
+  "spline_controls": 2311,
+  "support_nodes": 12987,
+  "affected_faces": 26340,
+  "sampling_rows": 184380,
+  "construction": "Ambient C2 cubic B-spline full-depth targets; connected quadratic displacement regularization; fixed outside and exact anchors. Offline geometry preparation only.",
+  "native_admission": false,
+  "iterations": [
+    {
+      "iteration": 0,
+      "inside_samples": 2389,
+      "maximum_depth_mm": 3.7122301148022636,
+      "median_depth_mm": 0.6490177826111304,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3783107533278593,
+          "min_normal_cosine": -0.9347352146387021
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.6252198851332392,
+          "min_normal_cosine": -0.8385877510788258
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": true,
+          "min_area_ratio": 0.2766066887973134,
+          "min_normal_cosine": 0.5409554068761424
+        }
+      ],
+      "alpha": 0.25
+    },
+    {
+      "iteration": 1,
+      "inside_samples": 2391,
+      "maximum_depth_mm": 3.700797641158856,
+      "median_depth_mm": 0.6375234479625138,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3510695374831171,
+          "min_normal_cosine": -0.9411166423549425
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.4919978241260644,
+          "min_normal_cosine": -0.9079526296996799
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": false,
+          "min_area_ratio": 0.6379183365004125,
+          "min_normal_cosine": -0.8190789137145833
+        },
+        {
+          "alpha": 0.125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.4204133389070511,
+          "min_normal_cosine": -0.5936566861529329
+        },
+        {
+          "alpha": 0.0625,
+          "pass_orientation": false,
+          "min_area_ratio": 0.2868997359429678,
+          "min_normal_cosine": -0.15132228992036575
+        },
+        {
+          "alpha": 0.03125,
+          "pass_orientation": true,
+          "min_area_ratio": 0.2620561762102262,
+          "min_normal_cosine": 0.20029578752549035
+        }
+      ],
+      "alpha": 0.03125
+    },
+    {
+      "iteration": 2,
+      "inside_samples": 2391,
+      "maximum_depth_mm": 3.6994349827759536,
+      "median_depth_mm": 0.636340898146037,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.36552684240413935,
+          "min_normal_cosine": -0.9336970220055445
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.5523660744614693,
+          "min_normal_cosine": -0.8911248613230758
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": false,
+          "min_area_ratio": 0.6551358811008553,
+          "min_normal_cosine": -0.7894718905401296
+        },
+        {
+          "alpha": 0.125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.40133118028998266,
+          "min_normal_cosine": -0.5757504214352751
+        },
+        {
+          "alpha": 0.0625,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3120317652433003,
+          "min_normal_cosine": -0.3087563020992249
+        },
+        {
+          "alpha": 0.03125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.2789094644886177,
+          "min_normal_cosine": -0.0484563982971314
+        }
+      ],
+      "status": "SOURCE_ORIENTATION_LIMIT"
+    }
+  ],
+  "candidate_sha256": "d0f50cb1f4984ed7bb6da4e275d5f9f5b1656dba0b5437299755a7a833c43ae7",
+  "changed_nodes": 12265,
+  "max_displacement_mm": 0.22499060725023398,
+  "outside_bitwise_unchanged": true,
+  "anchors_bitwise_unchanged": true,
+  "elapsed_s": 20.87851891713217
+}

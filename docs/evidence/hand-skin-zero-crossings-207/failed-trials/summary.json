@@ -1,0 +1,59 @@
+{
+  "host": "numi.local",
+  "baseline_sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756",
+  "baseline_raw_crossings": 977,
+  "native_scene_modified": false,
+  "trials": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/run-001/report.json",
+      "candidate_sha256": "882ecc5caeba0e8ff1202074df5656f507fafb58e251bc0a5dcc13b66e71415d",
+      "native_admission": false,
+      "maximum_displacement_mm": 0.27024058553094166,
+      "iterations": 4,
+      "exact_bank_audit_complete": true,
+      "raw_crossings": 985,
+      "disposition": "NOT_ACCEPTED_PENDING_COMPLETE_GEOMETRY_AND_PHYSICAL_CHECKS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/run-002-normal/report.json",
+      "candidate_sha256": "6d74d90d514ec0d3ee2d6ae790ee2578689ffdf41269c3d1b6b088b47a37cabd",
+      "native_admission": false,
+      "maximum_displacement_mm": 0.0,
+      "iterations": 1,
+      "disposition": "NOT_ACCEPTED_PENDING_COMPLETE_GEOMETRY_AND_PHYSICAL_CHECKS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/run-003-spatial/report.json",
+      "candidate_sha256": "6d74d90d514ec0d3ee2d6ae790ee2578689ffdf41269c3d1b6b088b47a37cabd",
+      "native_admission": false,
+      "maximum_displacement_mm": 0.0,
+      "iterations": 16,
+      "disposition": "NOT_ACCEPTED_PENDING_COMPLETE_GEOMETRY_AND_PHYSICAL_CHECKS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/run-004-wholehand/report.json",
+      "candidate_sha256": "d0f50cb1f4984ed7bb6da4e275d5f9f5b1656dba0b5437299755a7a833c43ae7",
+      "native_admission": false,
+      "maximum_displacement_mm": 0.22499060725023398,
+      "iterations": 3,
+      "disposition": "NOT_ACCEPTED_PENDING_COMPLETE_GEOMETRY_AND_PHYSICAL_CHECKS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/run-005-spatial-continuation/report.json",
+      "candidate_sha256": "4d68288b30d612bdf7104dd9e02d035590a8dbd34a7e864e6e1988e10cdc36ea",
+      "native_admission": false,
+      "maximum_displacement_mm": 7.2722740501109495,
+      "iterations": 11,
+      "exact_bank_audit_complete": true,
+      "raw_crossings": 1330,
+      "disposition": "NOT_ACCEPTED_PENDING_COMPLETE_GEOMETRY_AND_PHYSICAL_CHECKS"
+    }
+  ],
+  "lessons": [
+    "Targets must represent full exit depth, not a small motion toward exit.",
+    "Patch seam coordinates are construction constraints, not anatomical attachments.",
+    "A fixed normal dot with the source frame is not a material orientation invariant.",
+    "Independent nearest-exit displacements do not guarantee a valid connected surface."
+  ],
+  "next_method": "Connected topology reconstruction around a conservative offset of the registered bone envelope, exact provenance and geometry gates."
+}

@@ -1,0 +1,860 @@
+{
+  "bank_identity_note": "Pinned 039 owner records expose body_index/stable_bone_id but no member string; labels below retain those exact numeric identities.",
+  "boundary_loops_oriented_lengths": [
+    24,
+    21
+  ],
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/envelope-006-local-lattice/candidate.npz",
+  "candidate_sha256": "ef51980eea84db5634a4cb61d4b9936d7038bbdf76e08394e464512ad5bea5ee",
+  "component_count_edge_connected": 3,
+  "component_summaries": [
+    {
+      "bbox_mm": {
+        "max": [
+          275.7512,
+          -25.1889,
+          294.8005
+        ],
+        "min": [
+          -328.0475,
+          -1745.1446,
+          0.0057
+        ],
+        "span": [
+          603.7987,
+          1719.9557,
+          294.7948
+        ]
+      },
+      "boundary_loops": 2,
+      "component": 1,
+      "edges": 87699,
+      "euler_characteristic": -84,
+      "faces": 58451,
+      "genus_from_open_surface": 42.0,
+      "open_edges": 45,
+      "signed_volume_outward_convention_m3": 0.0686599311670204,
+      "vertices": 29164
+    },
+    {
+      "bbox_mm": {
+        "max": [
+          -294.6261,
+          -921.353,
+          129.8699
+        ],
+        "min": [
+          -295.2226,
+          -922.161,
+          128.7001
+        ],
+        "span": [
+          0.5965,
+          0.808,
+          1.1698
+        ]
+      },
+      "boundary_loops": 0,
+      "component": 2,
+      "edges": 78,
+      "euler_characteristic": 2,
+      "faces": 52,
+      "genus_from_open_surface": 0.0,
+      "open_edges": 0,
+      "signed_volume_outward_convention_m3": -1.5904497479850168e-11,
+      "vertices": 28
+    },
+    {
+      "bbox_mm": {
+        "max": [
+          -283.5273,
+          -953.1376,
+          83.9462
+        ],
+        "min": [
+          -283.7288,
+          -953.16,
+          83.7882
+        ],
+        "span": [
+          0.2015,
+          0.0224,
+          0.158
+        ]
+      },
+      "boundary_loops": 0,
+      "component": 0,
+      "edges": 9,
+      "euler_characteristic": 2,
+      "faces": 6,
+      "genus_from_open_surface": 0.0,
+      "open_edges": 0,
+      "signed_volume_outward_convention_m3": -1.5079247265817439e-13,
+      "vertices": 5
+    }
+  ],
+  "elapsed_note": "Read-only NumPy/SciPy mesh audit; no Manifold or bone query solver used.",
+  "hand_trim_regions": [
+    {
+      "bbox_max_mm": [
+        275.751,
+        -342.242,
+        189.291
+      ],
+      "bbox_min_mm": [
+        180.963,
+        -1042.468,
+        46.567
+      ],
+      "name": "x_positive_hand_trim_region",
+      "rule": "sign*x > 0.18 m, matching trim_by_plane input",
+      "span_mm": [
+        94.788,
+        700.226,
+        142.724
+      ],
+      "vertex_count": 11496
+    },
+    {
+      "bbox_max_mm": [
+        -180.985,
+        -297.817,
+        193.826
+      ],
+      "bbox_min_mm": [
+        -328.048,
+        -1147.065,
+        33.513
+      ],
+      "name": "x_negative_hand_trim_region",
+      "rule": "sign*x > 0.18 m, matching trim_by_plane input",
+      "span_mm": [
+        147.063,
+        849.248,
+        160.312
+      ],
+      "vertex_count": 13867
+    }
+  ],
+  "main_component_id": 1,
+  "nearest_same_side_offset_bank_vertex_pairs": [
+    {
+      "bank_a": "59/95",
+      "bank_b": "60/96",
+      "sampled_vertex_min_distance_mm": 0.06176307195669891
+    },
+    {
+      "bank_a": "114/117",
+      "bank_b": "115/118",
+      "sampled_vertex_min_distance_mm": 0.1340003199101686
+    },
+    {
+      "bank_a": "57/89",
+      "bank_b": "59/95",
+      "sampled_vertex_min_distance_mm": 0.1357234096230601
+    },
+    {
+      "bank_a": "110/115",
+      "bank_b": "111/116",
+      "sampled_vertex_min_distance_mm": 0.1519349763138144
+    },
+    {
+      "bank_a": "64/98",
+      "bank_b": "65/99",
+      "sampled_vertex_min_distance_mm": 0.16279838787457382
+    },
+    {
+      "bank_a": "124/123",
+      "bank_b": "125/124",
+      "sampled_vertex_min_distance_mm": 0.17681048950926215
+    },
+    {
+      "bank_a": "74/104",
+      "bank_b": "75/105",
+      "sampled_vertex_min_distance_mm": 0.2292461907629521
+    },
+    {
+      "bank_a": "109/114",
+      "bank_b": "110/115",
+      "sampled_vertex_min_distance_mm": 0.23468268619348814
+    },
+    {
+      "bank_a": "125/124",
+      "bank_b": "126/125",
+      "sampled_vertex_min_distance_mm": 0.2437767598227611
+    },
+    {
+      "bank_a": "60/96",
+      "bank_b": "61/97",
+      "sampled_vertex_min_distance_mm": 0.2520563592451405
+    },
+    {
+      "bank_a": "75/105",
+      "bank_b": "76/106",
+      "sampled_vertex_min_distance_mm": 0.26577778789646406
+    },
+    {
+      "bank_a": "109/114",
+      "bank_b": "114/117",
+      "sampled_vertex_min_distance_mm": 1.6272109833146566
+    },
+    {
+      "bank_a": "59/95",
+      "bank_b": "64/98",
+      "sampled_vertex_min_distance_mm": 1.8055141415072575
+    },
+    {
+      "bank_a": "57/89",
+      "bank_b": "64/98",
+      "sampled_vertex_min_distance_mm": 2.9916965007506233
+    },
+    {
+      "bank_a": "110/115",
+      "bank_b": "115/118",
+      "sampled_vertex_min_distance_mm": 10.20799019577794
+    },
+    {
+      "bank_a": "60/96",
+      "bank_b": "65/99",
+      "sampled_vertex_min_distance_mm": 10.389335712635575
+    },
+    {
+      "bank_a": "59/95",
+      "bank_b": "65/99",
+      "sampled_vertex_min_distance_mm": 11.169333608586333
+    },
+    {
+      "bank_a": "109/114",
+      "bank_b": "115/118",
+      "sampled_vertex_min_distance_mm": 11.505550840854257
+    },
+    {
+      "bank_a": "110/115",
+      "bank_b": "114/117",
+      "sampled_vertex_min_distance_mm": 11.994687469334606
+    },
+    {
+      "bank_a": "60/96",
+      "bank_b": "64/98",
+      "sampled_vertex_min_distance_mm": 12.131269237225188
+    }
+  ],
+  "secondary_components_containment": [
+    {
+      "bbox_mm": {
+        "max": [
+          -283.5273,
+          -953.1376,
+          83.9462
+        ],
+        "min": [
+          -283.7288,
+          -953.16,
+          83.7882
+        ],
+        "span": [
+          0.2015,
+          0.0224,
+          0.158
+        ]
+      },
+      "boundary_loops": 0,
+      "component": 0,
+      "contained_by_capped_main_shell_all_samples": true,
+      "edges": 9,
+      "euler_characteristic": 2,
+      "faces": 6,
+      "genus_from_open_surface": 0.0,
+      "main_shell_winding_numbers_at_centroid_and_vertices": [
+        1.0,
+        1.0,
+        1.0,
+        0.9999999999999999
+      ],
+      "nearest_offset_bank_vertex_samples": [
+        {
+          "body": 74,
+          "distance_mm": 1.4377859712086265,
+          "stable_bone_id": 104
+        },
+        {
+          "body": 75,
+          "distance_mm": 18.328421584365007,
+          "stable_bone_id": 105
+        },
+        {
+          "body": 64,
+          "distance_mm": 29.441046439066792,
+          "stable_bone_id": 98
+        },
+        {
+          "body": 76,
+          "distance_mm": 37.003405925359175,
+          "stable_bone_id": 106
+        }
+      ],
+      "open_edges": 0,
+      "outside_capped_main_shell_all_samples": false,
+      "representative_point_mm": [
+        -283.63183,
+        -953.15006,
+        83.87145
+      ],
+      "signed_volume_outward_convention_m3": -1.5079247265817439e-13,
+      "vertices": 5
+    },
+    {
+      "bbox_mm": {
+        "max": [
+          -294.6261,
+          -921.353,
+          129.8699
+        ],
+        "min": [
+          -295.2226,
+          -922.161,
+          128.7001
+        ],
+        "span": [
+          0.5965,
+          0.808,
+          1.1698
+        ]
+      },
+      "boundary_loops": 0,
+      "component": 2,
+      "contained_by_capped_main_shell_all_samples": true,
+      "edges": 78,
+      "euler_characteristic": 2,
+      "faces": 52,
+      "genus_from_open_surface": 0.0,
+      "main_shell_winding_numbers_at_centroid_and_vertices": [
+        1.0000000000000002,
+        1.0,
+        1.0000000000000002,
+        0.9999999999999999
+      ],
+      "nearest_offset_bank_vertex_samples": [
+        {
+          "body": 57,
+          "distance_mm": 0.7835410691612085,
+          "stable_bone_id": 89
+        },
+        {
+          "body": 64,
+          "distance_mm": 24.769784521333587,
+          "stable_bone_id": 98
+        },
+        {
+          "body": 59,
+          "distance_mm": 26.40670844659223,
+          "stable_bone_id": 95
+        },
+        {
+          "body": 74,
+          "distance_mm": 37.61938776965349,
+          "stable_bone_id": 104
+        }
+      ],
+      "open_edges": 0,
+      "outside_capped_main_shell_all_samples": false,
+      "representative_point_mm": [
+        -294.90306,
+        -921.75227,
+        129.29816
+      ],
+      "signed_volume_outward_convention_m3": -1.5904497479850168e-11,
+      "vertices": 28
+    }
+  ],
+  "selected_offset_bank_extents": [
+    {
+      "bank": "109/114",
+      "bbox_max_mm": [
+        265.996,
+        -945.706,
+        149.378
+      ],
+      "bbox_min_mm": [
+        246.439,
+        -987.601,
+        129.701
+      ],
+      "body": 109,
+      "centroid_mm": [
+        256.817,
+        -966.905,
+        140.634
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        19.556,
+        41.894,
+        19.677
+      ],
+      "stable_bone_id": 114,
+      "vertex_count": 503
+    },
+    {
+      "bank": "110/115",
+      "bbox_max_mm": [
+        268.907,
+        -984.051,
+        151.516
+      ],
+      "bbox_min_mm": [
+        257.106,
+        -1011.355,
+        137.779
+      ],
+      "body": 110,
+      "centroid_mm": [
+        263.313,
+        -996.405,
+        144.678
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        11.801,
+        27.304,
+        13.738
+      ],
+      "stable_bone_id": 115,
+      "vertex_count": 392
+    },
+    {
+      "bank": "111/116",
+      "bbox_max_mm": [
+        270.812,
+        -1006.359,
+        152.73
+      ],
+      "bbox_min_mm": [
+        261.035,
+        -1026.931,
+        141.567
+      ],
+      "body": 111,
+      "centroid_mm": [
+        266.825,
+        -1015.831,
+        147.626
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        9.776,
+        20.573,
+        11.162
+      ],
+      "stable_bone_id": 116,
+      "vertex_count": 482
+    },
+    {
+      "bank": "114/117",
+      "bbox_max_mm": [
+        266.356,
+        -944.827,
+        128.543
+      ],
+      "bbox_min_mm": [
+        247.036,
+        -991.017,
+        111.343
+      ],
+      "body": 114,
+      "centroid_mm": [
+        257.688,
+        -969.313,
+        119.831
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        19.32,
+        46.19,
+        17.2
+      ],
+      "stable_bone_id": 117,
+      "vertex_count": 551
+    },
+    {
+      "bank": "115/118",
+      "bbox_max_mm": [
+        270.271,
+        -985.295,
+        127.612
+      ],
+      "bbox_min_mm": [
+        256.902,
+        -1017.675,
+        113.567
+      ],
+      "body": 115,
+      "centroid_mm": [
+        264.484,
+        -1002.021,
+        121.307
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        13.37,
+        32.38,
+        14.045
+      ],
+      "stable_bone_id": 118,
+      "vertex_count": 491
+    },
+    {
+      "bank": "124/123",
+      "bbox_max_mm": [
+        242.142,
+        -937.788,
+        100.148
+      ],
+      "bbox_min_mm": [
+        228.54,
+        -974.265,
+        84.686
+      ],
+      "body": 124,
+      "centroid_mm": [
+        236.01,
+        -956.698,
+        91.794
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        13.602,
+        36.477,
+        15.462
+      ],
+      "stable_bone_id": 123,
+      "vertex_count": 370
+    },
+    {
+      "bank": "125/124",
+      "bbox_max_mm": [
+        241.415,
+        -970.239,
+        94.442
+      ],
+      "bbox_min_mm": [
+        230.42,
+        -994.274,
+        82.359
+      ],
+      "body": 125,
+      "centroid_mm": [
+        235.59,
+        -982.403,
+        87.654
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        10.995,
+        24.035,
+        12.082
+      ],
+      "stable_bone_id": 124,
+      "vertex_count": 359
+    },
+    {
+      "bank": "126/125",
+      "bbox_max_mm": [
+        240.82,
+        -990.36,
+        89.969
+      ],
+      "bbox_min_mm": [
+        232.28,
+        -1008.219,
+        79.991
+      ],
+      "body": 126,
+      "centroid_mm": [
+        236.866,
+        -1000.101,
+        84.739
+      ],
+      "side_by_world_x": "right_x_positive",
+      "span_mm": [
+        8.54,
+        17.859,
+        9.977
+      ],
+      "stable_bone_id": 125,
+      "vertex_count": 333
+    },
+    {
+      "bank": "43/16",
+      "bbox_max_mm": [
+        -222.369,
+        -618.685,
+        139.725
+      ],
+      "bbox_min_mm": [
+        -292.97,
+        -860.374,
+        86.048
+      ],
+      "body": 43,
+      "centroid_mm": [
+        -259.606,
+        -750.048,
+        111.323
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        70.6,
+        241.689,
+        53.677
+      ],
+      "stable_bone_id": 16,
+      "vertex_count": 856
+    },
+    {
+      "bank": "57/89",
+      "bbox_max_mm": [
+        -278.387,
+        -879.594,
+        141.678
+      ],
+      "bbox_min_mm": [
+        -308.703,
+        -950.23,
+        114.667
+      ],
+      "body": 57,
+      "centroid_mm": [
+        -292.024,
+        -912.125,
+        127.925
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        30.316,
+        70.636,
+        27.011
+      ],
+      "stable_bone_id": 89,
+      "vertex_count": 999
+    },
+    {
+      "bank": "59/95",
+      "bbox_max_mm": [
+        -296.292,
+        -944.711,
+        146.078
+      ],
+      "bbox_min_mm": [
+        -316.899,
+        -986.585,
+        126.664
+      ],
+      "body": 59,
+      "centroid_mm": [
+        -306.745,
+        -965.02,
+        138.161
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        20.607,
+        41.873,
+        19.415
+      ],
+      "stable_bone_id": 95,
+      "vertex_count": 509
+    },
+    {
+      "bank": "60/96",
+      "bbox_max_mm": [
+        -307.154,
+        -983.544,
+        148.556
+      ],
+      "bbox_min_mm": [
+        -319.67,
+        -1010.553,
+        134.857
+      ],
+      "body": 60,
+      "centroid_mm": [
+        -313.848,
+        -997.565,
+        142.576
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        12.516,
+        27.01,
+        13.698
+      ],
+      "stable_bone_id": 96,
+      "vertex_count": 378
+    },
+    {
+      "bank": "61/97",
+      "bbox_max_mm": [
+        -312.563,
+        -1007.406,
+        150.06
+      ],
+      "bbox_min_mm": [
+        -320.836,
+        -1028.367,
+        139.158
+      ],
+      "body": 61,
+      "centroid_mm": [
+        -318.061,
+        -1015.615,
+        145.098
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        8.272,
+        20.961,
+        10.902
+      ],
+      "stable_bone_id": 97,
+      "vertex_count": 379
+    },
+    {
+      "bank": "64/98",
+      "bbox_max_mm": [
+        -296.824,
+        -943.824,
+        125.218
+      ],
+      "bbox_min_mm": [
+        -316.992,
+        -990.004,
+        108.067
+      ],
+      "body": 64,
+      "centroid_mm": [
+        -307.324,
+        -967.29,
+        117.206
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        20.168,
+        46.179,
+        17.151
+      ],
+      "stable_bone_id": 98,
+      "vertex_count": 570
+    },
+    {
+      "bank": "65/99",
+      "bbox_max_mm": [
+        -307.465,
+        -984.511,
+        124.602
+      ],
+      "bbox_min_mm": [
+        -320.441,
+        -1017.055,
+        110.618
+      ],
+      "body": 65,
+      "centroid_mm": [
+        -313.889,
+        -998.402,
+        117.531
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        12.976,
+        32.544,
+        13.984
+      ],
+      "stable_bone_id": 99,
+      "vertex_count": 460
+    },
+    {
+      "bank": "74/104",
+      "bbox_max_mm": [
+        -278.368,
+        -936.927,
+        97.487
+      ],
+      "bbox_min_mm": [
+        -292.752,
+        -973.582,
+        82.069
+      ],
+      "body": 74,
+      "centroid_mm": [
+        -285.288,
+        -955.043,
+        88.529
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        14.384,
+        36.655,
+        15.419
+      ],
+      "stable_bone_id": 104,
+      "vertex_count": 411
+    },
+    {
+      "bank": "75/105",
+      "bbox_max_mm": [
+        -280.592,
+        -970.922,
+        91.421
+      ],
+      "bbox_min_mm": [
+        -291.168,
+        -995.005,
+        79.626
+      ],
+      "body": 75,
+      "centroid_mm": [
+        -285.636,
+        -981.863,
+        84.984
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        10.576,
+        24.084,
+        11.795
+      ],
+      "stable_bone_id": 105,
+      "vertex_count": 327
+    },
+    {
+      "bank": "76/106",
+      "bbox_max_mm": [
+        -281.624,
+        -989.91,
+        86.849
+      ],
+      "bbox_min_mm": [
+        -290.354,
+        -1007.847,
+        77.904
+      ],
+      "body": 76,
+      "centroid_mm": [
+        -287.03,
+        -998.413,
+        82.386
+      ],
+      "side_by_world_x": "left_x_negative",
+      "span_mm": [
+        8.73,
+        17.937,
+        8.945
+      ],
+      "stable_bone_id": 106,
+      "vertex_count": 295
+    }
+  ],
+  "spacing_caveat": "Point-cloud vertex minima are quick screening estimates, not exact triangle-surface distances; offset geometry uses the 0.8 mm construction kernel.",
+  "topology_admitted": false
+}

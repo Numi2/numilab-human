@@ -1,0 +1,64 @@
+{
+  "baseline_sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756",
+  "script_sha256": "2f1a9f716355e2faeae00a2e5f08971a923cd33b34fee146f1517e7369c1dc3c",
+  "host": "numi.local",
+  "support_nodes": 3638,
+  "affected_faces": 9102,
+  "sampling_rows": 118326,
+  "construction": "Coherent outward normal ray exit targets; connected quadratic displacement regularization; fixed outside and exact anchors. Offline geometry preparation only.",
+  "native_admission": false,
+  "iterations": [
+    {
+      "iteration": 0,
+      "inside_samples": 4591,
+      "maximum_depth_mm": 43.730256774024724,
+      "median_depth_mm": 5.482940476302952,
+      "max_increment_mm": 0.8,
+      "line_search": [
+        {
+          "alpha": 1.0,
+          "pass_orientation": false,
+          "min_area_ratio": 0.029742342872841537,
+          "min_normal_cosine": -0.9997592500071607
+        },
+        {
+          "alpha": 0.5,
+          "pass_orientation": false,
+          "min_area_ratio": 0.09070201587642501,
+          "min_normal_cosine": -0.9929270454136839
+        },
+        {
+          "alpha": 0.25,
+          "pass_orientation": false,
+          "min_area_ratio": 0.3535068459246313,
+          "min_normal_cosine": -0.9901721088652672
+        },
+        {
+          "alpha": 0.125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.33634416002169293,
+          "min_normal_cosine": -0.9879489086907961
+        },
+        {
+          "alpha": 0.0625,
+          "pass_orientation": false,
+          "min_area_ratio": 0.16193285530738857,
+          "min_normal_cosine": -0.9828137789729608
+        },
+        {
+          "alpha": 0.03125,
+          "pass_orientation": false,
+          "min_area_ratio": 0.5604389695944444,
+          "min_normal_cosine": -0.9528293934602208
+        }
+      ],
+      "status": "SOURCE_ORIENTATION_LIMIT"
+    }
+  ],
+  "candidate_sha256": "6d74d90d514ec0d3ee2d6ae790ee2578689ffdf41269c3d1b6b088b47a37cabd",
+  "changed_nodes": 0,
+  "max_displacement_mm": 0.0,
+  "outside_bitwise_unchanged": true,
+  "anchors_bitwise_unchanged": true,
+  "elapsed_s": 4.8897526250220835
+}
