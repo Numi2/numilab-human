@@ -197,9 +197,20 @@ def build_material_indices(parent:dict[str,Any])->dict[int,dict[str,Any]]:
  for m in (15,16):
   rows=np.flatnonzero(parent['materials']==m)
   if len(rows)==0:continue
-  tets=parent['tets'][rows];tetpoints=parent['points'][tets];cent=tetpoints.mean(axis=1)
+  tetpoints=parent['points'][parent['tets'][rows]];cent=tetpoints.mean(axis=1)
   radii=np.linalg.norm(tetpoints-cent[:,None,:],axis=2).max(axis=1)
-  material_indices[m]={'globalRows':rows,'centroids':cent,'tree':cKDTree(cent),'maxRadius':float(radii.max())+native.QUERY_PAD_M}
+  if not np.isfinite(radii).all() or np.any(radii<=0):
+   raise ValueError('same-material parent radii must be finite and positive')
+  # Every tet lies in its own centroid sphere. Size bins avoid using the
+  # largest whole-body tet radius for every small hand/skin cell query.
+  exponents=np.frexp(radii)[1];bins=[]
+  for exponent in np.unique(exponents):
+   local=np.flatnonzero(exponents==exponent)
+   bins.append({'localRows':local,'tree':cKDTree(cent[local]),
+                'maxRadius':float(radii[local].max())+native.QUERY_PAD_M})
+  material_indices[m]={'globalRows':rows,'centroids':cent,'tree':cKDTree(cent),
+    'maxRadius':float(radii.max())+native.QUERY_PAD_M,'sphereBins':bins,
+    'boundsMin':tetpoints.min(axis=1),'boundsMax':tetpoints.max(axis=1)}
  return material_indices
 
 def load_parent_current(base:Path)->tuple[dict[str,Any],dict[str,Any],dict[int,dict[str,Any]],dict[str,Any]]:
@@ -247,16 +258,31 @@ def closest_same_material(parent:dict[str,Any],index:dict[str,Any],mat_index:dic
  mi=mat_index[material];dist0,local0=mi['tree'].query(point,k=1)
  if not math.isfinite(float(dist0)):raise ValueError('empty same-material parent query')
  seed_row=int(mi['globalRows'][int(local0)])
- _,_,seed_dist=native.closest_point_on_parent_tet(parent,index,seed_row,point)
- radius=float(seed_dist)+mi['maxRadius']+tie_tol+native.QUERY_PAD_M
- local_candidates=mi['tree'].query_ball_point(point,radius)
- measured=[]
- for local in local_candidates:
-  row=int(mi['globalRows'][int(local)])
+ seed_proj,seed_bary,seed_dist=native.closest_point_on_parent_tet(parent,index,seed_row,point)
+ # Triangle inequality certifies this complete candidate set, including all
+ # current tie projections. No fixed nearest-K truncation is used.
+ local_candidates=[]
+ for group in mi['sphereBins']:
+  radius=float(seed_dist)+group['maxRadius']+tie_tol+native.QUERY_PAD_M
+  hit=group['tree'].query_ball_point(point,radius)
+  local_candidates.extend(group['localRows'][hit].tolist())
+ local_candidates=np.asarray(local_candidates,dtype=np.int64)
+ if not len(local_candidates):raise ValueError('same-material parent query returned no candidates')
+ # A tet is contained in its AABB. Its point-to-box distance is therefore a
+ # lower bound on point-to-tet distance; padding protects boundary roundoff.
+ delta=np.maximum(np.maximum(mi['boundsMin'][local_candidates]-point,
+                            point-mi['boundsMax'][local_candidates]),0.0)
+ lower=np.linalg.norm(delta,axis=1)
+ order=np.argsort(lower,kind='stable')
+ measured=[(float(seed_dist),seed_row,np.asarray(seed_proj),np.asarray(seed_bary))]
+ best=float(seed_dist)
+ for j in order:
+  if float(lower[j])>best+tie_tol+native.QUERY_PAD_M:break
+  row=int(mi['globalRows'][int(local_candidates[j])])
+  if row==seed_row:continue
   proj,bary,d=native.closest_point_on_parent_tet(parent,index,row,point)
   measured.append((float(d),row,np.asarray(proj),np.asarray(bary)))
- if not measured:raise ValueError('same-material parent query returned no candidates')
- best=min(x[0] for x in measured)
+  best=min(best,float(d))
  ties=sorted((x for x in measured if abs(x[0]-best)<=tie_tol),key=lambda x:(x[0],x[1]))
  if max(float(np.linalg.norm(x[2]-ties[0][2])) for x in ties)>max(tie_tol,1.0e-9):
   raise ValueError('nearest parent tie has distinct projected current-world points')
