@@ -1,0 +1,1706 @@
+{
+  "baseline_sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756",
+  "start_candidate_sha256": "6885dd9daff61f9f89feb8f9dd0120216f9074b4e45668d63327a266a462fed6",
+  "remaining_exact_bone_report_sha256": "a975fcdb252b994cad21a4cb25686450a1009756378d71d525224c3174ca7bf1",
+  "script_sha256": "86e0febf118a1084a74c0dc6ad6277d1faab0ad544b7b2f9127fda3f6b9184e0",
+  "prior_flow_index_sha256": "1247af1f7001db26d51b40454c2b29f45c6ed8537daa4896281ab79e76de2418",
+  "prior_flow_steps": [
+    {
+      "step": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001/flow-step-000.npz",
+      "sha256": "00e4b539b7f86fccc571f32b70a28708138853011882473f06c9f9f8eadba2a0"
+    },
+    {
+      "step": 1,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001/flow-step-001.npz",
+      "sha256": "9a15513fa4674ef7d4fdea97945648211120c2f23dd8a316d3cf0f90d4334142"
+    },
+    {
+      "step": 2,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001/flow-step-002.npz",
+      "sha256": "f2cc8101ed73445e4ec4a46658e94f05d97a09e63171ac9f5e0126fa7fe567d3"
+    }
+  ],
+  "candidate_scope": "continued from trial-001; offline geometry reconstruction",
+  "native_admission": false,
+  "exact_zero_crossing_claim": false,
+  "seed_face_sources": {
+    "baseline_unique_faces": 564,
+    "current_exact_unique_faces": 462,
+    "union_unique_faces": 573,
+    "current_exact_pairs": 884
+  },
+  "query_ring_count": 3,
+  "query_vertex_count": 2643,
+  "query_face_count": 6811,
+  "query_surface_sample_count": 51115,
+  "flow_support_vertex_count": 13180,
+  "flow_support_face_count": 26725,
+  "control_count": 3313,
+  "spacing_mm": 6.0,
+  "steps": [
+    {
+      "step": 0,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 3164,
+      "inside_seed_crossing_face_rows": 3067,
+      "source_vertex_inside_rows": 683,
+      "interior_probe_inside_rows": 2481,
+      "inside_by_witness_type": {
+        "nearby_flow_support_vertex": 97,
+        "seed_edge_probe": 2200,
+        "seed_face_centroid": 281,
+        "seed_face_vertex": 586
+      },
+      "inside_by_bank_body": {
+        "43": 849,
+        "57": 114,
+        "59": 113,
+        "61": 45,
+        "64": 49,
+        "65": 961,
+        "74": 37,
+        "109": 439,
+        "114": 122,
+        "115": 126,
+        "124": 309
+      },
+      "max_residual_exit_depth_mm": 3.60381293645004,
+      "median_residual_exit_depth_mm": 0.5337324477205517,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "d731041d011962b73e3b94879888cc63a4046f9653581247132f27398445f84b",
+          "raw_bytes": 4889583,
+          "gzip_bytes": 1488538,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "487cbb55051264d8d0429f1e3ab55cf61dcc718abd90eea25b7133d1d2d004f2",
+          "raw_bytes": 10328485,
+          "gzip_bytes": 2900610,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "e902d1803fd5861463123c5097b97141b712f690212692f46bfbb0b041f2135d",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 206329,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 987238400,
+      "elapsed_query_s": 1.8377869999967515,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6379446490885422,
+      "fit_residual_mm_max": 3.7483185133498083,
+      "target_exit_depth_mm_max": 3.60381293645004,
+      "target_exit_depth_mm_median": 0.5337324477205517,
+      "control_max_norm_mm": 2.654937744435804,
+      "control_max_adjacent_difference_mm": 3.8604341393060366,
+      "ambient_lipschitz_bound_per_step": 0.3358003695850585,
+      "alpha": 0.3013253330239601,
+      "max_vertex_flow_mm": 1.2749754030134444,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.3013253330239601,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7643712785352892,
+          "min_flow_face_area_m2": 1.174598207328098e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.3013253330239601,
+      "max_applied_vertex_step_mm": 0.38418758407002723,
+      "moved_vertex_count": 12804,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7643712785352892,
+      "min_flow_face_area_m2": 1.174598207328098e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.0636966228485,
+          -1038.3453369140625,
+          68.4981644153595
+        ],
+        "max": [
+          274.3527293205261,
+          -799.3806600570679,
+          163.0559265613556
+        ]
+      },
+      "elapsed_step_s": 2.336171500151977,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-000.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 1,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 2761,
+      "inside_seed_crossing_face_rows": 2669,
+      "source_vertex_inside_rows": 647,
+      "interior_probe_inside_rows": 2114,
+      "inside_by_witness_type": {
+        "nearby_flow_support_vertex": 92,
+        "seed_edge_probe": 1894,
+        "seed_face_centroid": 220,
+        "seed_face_vertex": 555
+      },
+      "inside_by_bank_body": {
+        "43": 677,
+        "57": 108,
+        "59": 112,
+        "61": 43,
+        "64": 45,
+        "65": 867,
+        "74": 34,
+        "109": 361,
+        "114": 122,
+        "115": 120,
+        "124": 272
+      },
+      "max_residual_exit_depth_mm": 3.6046311993112283,
+      "median_residual_exit_depth_mm": 0.5431262007262121,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "3fbb168df69d127e1f078752906879a0545af25cb509dee1b1594a7688a8d83f",
+          "raw_bytes": 4889916,
+          "gzip_bytes": 1487251,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "aa536c292930956b192e07e8abe5e3516eff73fb224a06eaa55c3efbb4914531",
+          "raw_bytes": 10222286,
+          "gzip_bytes": 2869082,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "29f11c0dc57f3458df5c827e22bb12eaaf113c976b74adb64b57c5b6044cc081",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 206410,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 975167488,
+      "elapsed_query_s": 1.8392276670783758,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6488009449589316,
+      "fit_residual_mm_max": 3.791212144510517,
+      "target_exit_depth_mm_max": 3.6046311993112283,
+      "target_exit_depth_mm_median": 0.5431262007262121,
+      "control_max_norm_mm": 2.675662332380762,
+      "control_max_adjacent_difference_mm": 3.7342976007666593,
+      "ambient_lipschitz_bound_per_step": 0.32231237835133436,
+      "alpha": 0.29899139002647346,
+      "max_vertex_flow_mm": 1.2717297188379175,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.29899139002647346,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.6984463464152428,
+          "min_flow_face_area_m2": 1.1792634191641454e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.29899139002647346,
+      "max_applied_vertex_step_mm": 0.38025414288407094,
+      "moved_vertex_count": 12789,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.6984463464152428,
+      "min_flow_face_area_m2": 1.1792634191641454e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.0774652957916,
+          -1038.3453369140625,
+          68.4979259967804
+        ],
+        "max": [
+          274.4506597518921,
+          -799.3806600570679,
+          163.0614846944809
+        ]
+      },
+      "elapsed_step_s": 2.3219045840669423,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-001.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 2,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 2364,
+      "inside_seed_crossing_face_rows": 2285,
+      "source_vertex_inside_rows": 555,
+      "interior_probe_inside_rows": 1809,
+      "inside_by_witness_type": {
+        "nearby_flow_support_vertex": 79,
+        "seed_edge_probe": 1619,
+        "seed_face_centroid": 190,
+        "seed_face_vertex": 476
+      },
+      "inside_by_bank_body": {
+        "43": 430,
+        "57": 100,
+        "59": 108,
+        "61": 43,
+        "64": 45,
+        "65": 814,
+        "74": 37,
+        "109": 316,
+        "114": 116,
+        "115": 112,
+        "124": 243
+      },
+      "max_residual_exit_depth_mm": 3.601996894143481,
+      "median_residual_exit_depth_mm": 0.5447194776515204,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "2a983889c436c013d52157d24ce044eba52e7b999857c473cfb572adbca83683",
+          "raw_bytes": 4889730,
+          "gzip_bytes": 1488084,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "1bff5cd86152acc50cbaa13211ff9ee6b1c51ae21dbcef7a121cb77ccc06041b",
+          "raw_bytes": 10091158,
+          "gzip_bytes": 2830700,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "de00c597139859d4b9cfc80028eeee044ff7b61e56b84b8aefaf6c700e67c9b5",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 205866,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 963203072,
+      "elapsed_query_s": 1.8326572079677135,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6723543767799698,
+      "fit_residual_mm_max": 3.7068968160371085,
+      "target_exit_depth_mm_max": 3.601996894143481,
+      "target_exit_depth_mm_median": 0.5447194776515204,
+      "control_max_norm_mm": 2.5106157017318242,
+      "control_max_adjacent_difference_mm": 3.4663813284664555,
+      "ambient_lipschitz_bound_per_step": 0.3188566361189395,
+      "alpha": 0.3186469356692701,
+      "max_vertex_flow_mm": 1.1855931660879915,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.3186469356692701,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.520491329734348,
+          "min_flow_face_area_m2": 1.1838510673333147e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.3186469356692701,
+      "max_applied_vertex_step_mm": 0.3777795420771291,
+      "moved_vertex_count": 12782,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.520491329734348,
+      "min_flow_face_area_m2": 1.1838510673333147e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.0899226665497,
+          -1038.3453369140625,
+          68.4976875782013
+        ],
+        "max": [
+          274.55565333366394,
+          -799.3806600570679,
+          163.0672663450241
+        ]
+      },
+      "elapsed_step_s": 2.300876749912277,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-002.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 3,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 2019,
+      "inside_seed_crossing_face_rows": 1948,
+      "source_vertex_inside_rows": 498,
+      "interior_probe_inside_rows": 1521,
+      "inside_by_witness_type": {
+        "nearby_flow_support_vertex": 71,
+        "seed_edge_probe": 1357,
+        "seed_face_centroid": 164,
+        "seed_face_vertex": 427
+      },
+      "inside_by_bank_body": {
+        "43": 312,
+        "46": 2,
+        "57": 95,
+        "59": 100,
+        "61": 43,
+        "64": 43,
+        "65": 720,
+        "74": 37,
+        "109": 228,
+        "114": 114,
+        "115": 111,
+        "124": 214
+      },
+      "max_residual_exit_depth_mm": 3.597352780572386,
+      "median_residual_exit_depth_mm": 0.5572762325736987,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "625bdd5d50f5386d644887e91f9831740b70bdaba0449ad781c15c648fc42478",
+          "raw_bytes": 4889852,
+          "gzip_bytes": 1488708,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "64d703d6db8fd08da4ebf3753c3ddde470c45cd03d2f411deaa246495f6a20a7",
+          "raw_bytes": 9949785,
+          "gzip_bytes": 2791485,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "3f793b5dcfdde64d95f6d9f53b58300164fe02f02dc9adab95a2d3aadde5e50a",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 205761,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 951209984,
+      "elapsed_query_s": 1.8274409999139607,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6933877235431123,
+      "fit_residual_mm_max": 3.6838303201909928,
+      "target_exit_depth_mm_max": 3.597352780572386,
+      "target_exit_depth_mm_median": 0.5572762325736987,
+      "control_max_norm_mm": 2.49878977757246,
+      "control_max_adjacent_difference_mm": 3.3045193930730345,
+      "ambient_lipschitz_bound_per_step": 0.3054062695880756,
+      "alpha": 0.3201549834965265,
+      "max_vertex_flow_mm": 1.193252869552245,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.3201549834965265,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.47863858538759896,
+          "min_flow_face_area_m2": 1.1895409909917807e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.3201549834965265,
+      "max_applied_vertex_step_mm": 0.3820244961913297,
+      "moved_vertex_count": 12779,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.47863858538759896,
+      "min_flow_face_area_m2": 1.1895409909917807e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.10282707214355,
+          -1038.3453369140625,
+          68.49745661020279
+        ],
+        "max": [
+          274.6490240097046,
+          -799.3806600570679,
+          163.07277977466583
+        ]
+      },
+      "elapsed_step_s": 2.290294958045706,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-003.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 4,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 1796,
+      "inside_seed_crossing_face_rows": 1727,
+      "source_vertex_inside_rows": 454,
+      "interior_probe_inside_rows": 1342,
+      "inside_by_witness_type": {
+        "nearby_face_vertex": 4,
+        "nearby_flow_support_vertex": 65,
+        "seed_edge_probe": 1203,
+        "seed_face_centroid": 139,
+        "seed_face_vertex": 385
+      },
+      "inside_by_bank_body": {
+        "43": 237,
+        "46": 2,
+        "57": 91,
+        "59": 99,
+        "61": 48,
+        "64": 43,
+        "65": 661,
+        "74": 37,
+        "109": 174,
+        "114": 106,
+        "115": 106,
+        "124": 192
+      },
+      "max_residual_exit_depth_mm": 3.588376432100157,
+      "median_residual_exit_depth_mm": 0.5867033748422703,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "60ef26ce6ec3bbb016ad5f10a3bce1453bd98cf09330eb1a0f112dbe5062dd1b",
+          "raw_bytes": 4889967,
+          "gzip_bytes": 1489235,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "869a4edacd6c2073dc5ccf84e8bfcdc9e71b0e41aa4062a6e28ad315ba1e460e",
+          "raw_bytes": 9828083,
+          "gzip_bytes": 2758227,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "7d7ded89e51ced52be4105e6d9d253503781885da6dbd15b0d66545a40b5a496",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 205473,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 939266048,
+      "elapsed_query_s": 1.8220986248925328,
+      "field_coverage_min": 0.9999999999999997,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7054618448368023,
+      "fit_residual_mm_max": 3.6674472217874903,
+      "target_exit_depth_mm_max": 3.588376432100157,
+      "target_exit_depth_mm_median": 0.5867033748422703,
+      "control_max_norm_mm": 2.3847936637165343,
+      "control_max_adjacent_difference_mm": 3.064885126748779,
+      "ambient_lipschitz_bound_per_step": 0.2967992208107475,
+      "alpha": 0.335458791329249,
+      "max_vertex_flow_mm": 1.1439720462071097,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.335458791329249,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7577406401889815,
+          "min_flow_face_area_m2": 1.1946836083282984e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.335458791329249,
+      "max_applied_vertex_step_mm": 0.38373785845230557,
+      "moved_vertex_count": 12775,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7577406401889815,
+      "min_flow_face_area_m2": 1.1946836083282984e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.11519503593445,
+          -1038.3453369140625,
+          68.49722564220428
+        ],
+        "max": [
+          274.7368812561035,
+          -799.3806600570679,
+          163.07805478572845
+        ]
+      },
+      "elapsed_step_s": 2.279420374892652,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-004.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 5,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 1610,
+      "inside_seed_crossing_face_rows": 1544,
+      "source_vertex_inside_rows": 419,
+      "interior_probe_inside_rows": 1191,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 4,
+        "nearby_flow_support_vertex": 60,
+        "seed_edge_probe": 1071,
+        "seed_face_centroid": 118,
+        "seed_face_vertex": 355
+      },
+      "inside_by_bank_body": {
+        "43": 188,
+        "46": 4,
+        "57": 88,
+        "59": 97,
+        "61": 48,
+        "64": 43,
+        "65": 612,
+        "74": 35,
+        "109": 123,
+        "114": 100,
+        "115": 104,
+        "124": 168
+      },
+      "max_residual_exit_depth_mm": 3.5768433179389123,
+      "median_residual_exit_depth_mm": 0.634723572684408,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "b030df3a00ac453ec4e43f65898373157dba61586132b04a3870f87b98a4751c",
+          "raw_bytes": 4889950,
+          "gzip_bytes": 1489833,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "f27e2e47a816dfe3d7aafe2df1f15e4ccdf0d8818707e2825b3c565cc3803271",
+          "raw_bytes": 9703974,
+          "gzip_bytes": 2720516,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "3705c87bb17733f4a65c61581da88f89fa3aba9802f938946bc51c8c7349c6c3",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 205417,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 927350784,
+      "elapsed_query_s": 1.8021762499120086,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.718008986868798,
+      "fit_residual_mm_max": 3.647727408366393,
+      "target_exit_depth_mm_max": 3.5768433179389123,
+      "target_exit_depth_mm_median": 0.634723572684408,
+      "control_max_norm_mm": 2.2571505865074064,
+      "control_max_adjacent_difference_mm": 2.8502660493516325,
+      "ambient_lipschitz_bound_per_step": 0.29162464935962157,
+      "alpha": 0.3544291660388849,
+      "max_vertex_flow_mm": 1.0785269165275737,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.3544291660388849,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.6883396892811057,
+          "min_flow_face_area_m2": 1.2016687554257999e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.3544291660388849,
+      "max_applied_vertex_step_mm": 0.3822749045543972,
+      "moved_vertex_count": 12776,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.6883396892811057,
+      "min_flow_face_area_m2": 1.2016687554257999e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.12637090682983,
+          -1038.3453369140625,
+          68.49699467420578
+        ],
+        "max": [
+          274.8206555843353,
+          -799.3806600570679,
+          163.08382153511047
+        ]
+      },
+      "elapsed_step_s": 2.2593836248852313,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-005.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 6,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 1425,
+      "inside_seed_crossing_face_rows": 1362,
+      "source_vertex_inside_rows": 398,
+      "interior_probe_inside_rows": 1027,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 4,
+        "nearby_flow_support_vertex": 57,
+        "seed_edge_probe": 933,
+        "seed_face_centroid": 92,
+        "seed_face_vertex": 337
+      },
+      "inside_by_bank_body": {
+        "43": 141,
+        "46": 4,
+        "57": 82,
+        "59": 92,
+        "61": 48,
+        "64": 41,
+        "65": 553,
+        "74": 33,
+        "109": 92,
+        "114": 95,
+        "115": 98,
+        "124": 146
+      },
+      "max_residual_exit_depth_mm": 3.562037293886779,
+      "median_residual_exit_depth_mm": 0.6915131291375303,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "7abc4022ff15cd4aa8c8c31c3f5619ac72188026517ee321c9bfb01fb392d646",
+          "raw_bytes": 4890185,
+          "gzip_bytes": 1489722,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "1fd823b35ae476c41b7b6f9d3bab4e9e6e100340a0aed4087df2701befb8f06f",
+          "raw_bytes": 9599067,
+          "gzip_bytes": 2692643,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "230248f3ee3adcf6199c831072f0d061a4fa8e7ec8ff864b3a112934754e1929",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 205267,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 915460096,
+      "elapsed_query_s": 1.7992575420066714,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7359417645309575,
+      "fit_residual_mm_max": 3.6340756030912904,
+      "target_exit_depth_mm_max": 3.562037293886779,
+      "target_exit_depth_mm_median": 0.6915131291375303,
+      "control_max_norm_mm": 2.1784849219642286,
+      "control_max_adjacent_difference_mm": 2.6949458296466156,
+      "ambient_lipschitz_bound_per_step": 0.28568987272035506,
+      "alpha": 0.36722769661342475,
+      "max_vertex_flow_mm": 1.0604946928246646,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.36722769661342475,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.522837559967339,
+          "min_flow_face_area_m2": 1.2202756615015638e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.36722769661342475,
+      "max_applied_vertex_step_mm": 0.3894570388781372,
+      "moved_vertex_count": 12783,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.522837559967339,
+      "min_flow_face_area_m2": 1.2202756615015638e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.1366229057312,
+          -1038.3453369140625,
+          68.49676370620728
+        ],
+        "max": [
+          274.90001916885376,
+          -799.3806600570679,
+          163.08949887752533
+        ]
+      },
+      "elapsed_step_s": 2.2537165000103414,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-006.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 7,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 1266,
+      "inside_seed_crossing_face_rows": 1195,
+      "source_vertex_inside_rows": 364,
+      "interior_probe_inside_rows": 902,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 18,
+        "nearby_flow_support_vertex": 51,
+        "seed_edge_probe": 816,
+        "seed_face_centroid": 84,
+        "seed_face_vertex": 295
+      },
+      "inside_by_bank_body": {
+        "43": 101,
+        "46": 4,
+        "57": 82,
+        "59": 83,
+        "61": 48,
+        "62": 15,
+        "64": 41,
+        "65": 471,
+        "74": 32,
+        "109": 80,
+        "114": 91,
+        "115": 96,
+        "124": 122
+      },
+      "max_residual_exit_depth_mm": 3.54720262616992,
+      "median_residual_exit_depth_mm": 0.7136158425180086,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "279a2fe7e8f9b2dea2dbc3519a2e909639b38c2911d400be561dc8a9a115620f",
+          "raw_bytes": 4889967,
+          "gzip_bytes": 1489930,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "f6d34c7ec6a75aff2556166bc127285a9f57368870b802c0a19505dacafbc83c",
+          "raw_bytes": 9509360,
+          "gzip_bytes": 2665221,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "7271ac1966946c88305052c68097273b88bf0bf6c68251a9f154fc59d3551e86",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 205141,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 903606272,
+      "elapsed_query_s": 1.797651750035584,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7507272682814603,
+      "fit_residual_mm_max": 3.6146148556101467,
+      "target_exit_depth_mm_max": 3.54720262616992,
+      "target_exit_depth_mm_median": 0.7136158425180086,
+      "control_max_norm_mm": 2.0521982158133243,
+      "control_max_adjacent_difference_mm": 2.522392878507923,
+      "ambient_lipschitz_bound_per_step": 0.2838525433239174,
+      "alpha": 0.3898258919803929,
+      "max_vertex_flow_mm": 1.0115616116679877,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.3898258919803929,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.2830962974805671,
+          "min_flow_face_area_m2": 1.2233409269491445e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.3898258919803929,
+      "max_applied_vertex_step_mm": 0.3943324584597547,
+      "moved_vertex_count": 12782,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.2830962974805671,
+      "min_flow_face_area_m2": 1.2233409269491445e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.1494379043579,
+          -1038.3453369140625,
+          68.49651783704758
+        ],
+        "max": [
+          274.97759461402893,
+          -799.3806600570679,
+          163.0953699350357
+        ]
+      },
+      "elapsed_step_s": 2.25217920797877,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-007.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 8,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 1136,
+      "inside_seed_crossing_face_rows": 1066,
+      "source_vertex_inside_rows": 333,
+      "interior_probe_inside_rows": 803,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 21,
+        "nearby_flow_support_vertex": 47,
+        "seed_edge_probe": 722,
+        "seed_face_centroid": 79,
+        "seed_face_vertex": 265
+      },
+      "inside_by_bank_body": {
+        "43": 79,
+        "46": 4,
+        "57": 73,
+        "59": 81,
+        "61": 46,
+        "62": 15,
+        "64": 41,
+        "65": 419,
+        "74": 36,
+        "109": 71,
+        "114": 89,
+        "115": 89,
+        "124": 93
+      },
+      "max_residual_exit_depth_mm": 3.5296664462948493,
+      "median_residual_exit_depth_mm": 0.7316287341879604,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "7dca6bbc5b5a00003493e416bbb78487b4ccfa4cd403ba5f7a8ee940a31e8638",
+          "raw_bytes": 4889824,
+          "gzip_bytes": 1491047,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "3913cc220614f284cc0fbccbd7d305d296a60a67b93159146063cdb08be59dde",
+          "raw_bytes": 9422987,
+          "gzip_bytes": 2639401,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "ca9834cec95f861a31ca129c07ca8a7bee4d1f30d8cdb0b48b9b71d1df09c207",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204830,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 891768832,
+      "elapsed_query_s": 1.8098451669793576,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7511616635491387,
+      "fit_residual_mm_max": 3.58752245848513,
+      "target_exit_depth_mm_max": 3.5296664462948493,
+      "target_exit_depth_mm_median": 0.7316287341879604,
+      "control_max_norm_mm": 2.0419057348193217,
+      "control_max_adjacent_difference_mm": 2.4316033202337235,
+      "ambient_lipschitz_bound_per_step": 0.27501501319277133,
+      "alpha": 0.3917908580979563,
+      "max_vertex_flow_mm": 1.0217458312418146,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.3917908580979563,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7416566349564608,
+          "min_flow_face_area_m2": 1.224769428752012e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.3917908580979563,
+      "max_applied_vertex_step_mm": 0.40031214387128156,
+      "moved_vertex_count": 12786,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7416566349564608,
+      "min_flow_face_area_m2": 1.224769428752012e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.3672630786896,
+          -1038.3453369140625,
+          68.49627941846848
+        ],
+        "max": [
+          275.04637837409973,
+          -799.3806600570679,
+          163.10088336467743
+        ]
+      },
+      "elapsed_step_s": 2.2567425000015646,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-008.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 9,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 1053,
+      "inside_seed_crossing_face_rows": 1005,
+      "source_vertex_inside_rows": 300,
+      "interior_probe_inside_rows": 753,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 1,
+        "nearby_face_vertex": 4,
+        "nearby_flow_support_vertex": 43,
+        "seed_edge_probe": 682,
+        "seed_face_centroid": 70,
+        "seed_face_vertex": 253
+      },
+      "inside_by_bank_body": {
+        "43": 62,
+        "46": 3,
+        "57": 66,
+        "59": 76,
+        "61": 46,
+        "64": 39,
+        "65": 406,
+        "74": 31,
+        "109": 68,
+        "114": 85,
+        "115": 85,
+        "124": 86
+      },
+      "max_residual_exit_depth_mm": 3.5085581798034657,
+      "median_residual_exit_depth_mm": 0.668733420379183,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "adfb2bfe7a587738c208b651940d3ffbe8f8915408e1951e018f8923a301c525",
+          "raw_bytes": 4890475,
+          "gzip_bytes": 1490932,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "54a9ab08e7fa6f4db22ff18eae52ad002edd4ce4220d0fe72efb524ef829214e",
+          "raw_bytes": 9334670,
+          "gzip_bytes": 2612147,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "afd2b10a3359f672e79830b2ee146376c51efce22f29a8726ef9a2a0048ae8cf",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204692,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 879980544,
+      "elapsed_query_s": 1.8025154580827802,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7412887942950903,
+      "fit_residual_mm_max": 3.5489497507767105,
+      "target_exit_depth_mm_max": 3.5085581798034657,
+      "target_exit_depth_mm_median": 0.668733420379183,
+      "control_max_norm_mm": 1.8792578628667427,
+      "control_max_adjacent_difference_mm": 2.2446000583233885,
+      "ambient_lipschitz_bound_per_step": 0.2758366424327051,
+      "alpha": 0.4256999615686736,
+      "max_vertex_flow_mm": 0.9361616820128358,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.4256999615686736,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.6346429791277353,
+          "min_flow_face_area_m2": 1.222604462402574e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.4256999615686736,
+      "max_applied_vertex_step_mm": 0.398534566785018,
+      "moved_vertex_count": 12790,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.6346429791277353,
+      "min_flow_face_area_m2": 1.222604462402574e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.58288288116455,
+          -1038.3453369140625,
+          68.49601864814758
+        ],
+        "max": [
+          275.11584758758545,
+          -799.3806600570679,
+          163.10666501522064
+        ]
+      },
+      "elapsed_step_s": 2.2527477080002427,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-009.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 10,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 973,
+      "inside_seed_crossing_face_rows": 907,
+      "source_vertex_inside_rows": 291,
+      "interior_probe_inside_rows": 682,
+      "inside_by_witness_type": {
+        "nearby_edge_probe": 2,
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 21,
+        "nearby_flow_support_vertex": 41,
+        "seed_edge_probe": 614,
+        "seed_face_centroid": 64,
+        "seed_face_vertex": 229
+      },
+      "inside_by_bank_body": {
+        "43": 49,
+        "46": 4,
+        "57": 60,
+        "59": 70,
+        "61": 46,
+        "62": 15,
+        "64": 39,
+        "65": 373,
+        "66": 4,
+        "74": 35,
+        "109": 59,
+        "114": 77,
+        "115": 74,
+        "124": 68
+      },
+      "max_residual_exit_depth_mm": 3.47913640046745,
+      "median_residual_exit_depth_mm": 0.6240573198807261,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "f7d92ec71b297a2c1ee3b33b36eee42456dec7b00d7227010cd05b836582e5da",
+          "raw_bytes": 4890410,
+          "gzip_bytes": 1491242,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "abfc690c20b4b7b4b2eef33225050202f5aa454b5bd4568fb595df859fe1e08a",
+          "raw_bytes": 9228242,
+          "gzip_bytes": 2583578,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "eb7e0cd5524d399dbcb09fe2e4f7682b983bdd7767419074af642b9c66974e69",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204712,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 868175872,
+      "elapsed_query_s": 1.7956636659801006,
+      "field_coverage_min": 0.9999999999999997,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7284030607154435,
+      "fit_residual_mm_max": 3.50677965872277,
+      "target_exit_depth_mm_max": 3.47913640046745,
+      "target_exit_depth_mm_median": 0.6240573198807261,
+      "control_max_norm_mm": 1.7215474363158763,
+      "control_max_adjacent_difference_mm": 2.0268359737014916,
+      "ambient_lipschitz_bound_per_step": 0.27189359301629173,
+      "alpha": 0.46469820297952735,
+      "max_vertex_flow_mm": 0.8623989178130568,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.46469820297952735,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.4053023099006355,
+          "min_flow_face_area_m2": 1.019958562266586e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.46469820297952735,
+      "max_applied_vertex_step_mm": 0.4007339755029739,
+      "moved_vertex_count": 12795,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.4053023099006355,
+      "min_flow_face_area_m2": 1.019958562266586e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -328.79340648651123,
+          -1038.3453369140625,
+          68.4957504272461
+        ],
+        "max": [
+          275.1851975917816,
+          -799.3806600570679,
+          163.11274468898773
+        ]
+      },
+      "elapsed_step_s": 2.2441230409312993,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-010.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 11,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 921,
+      "inside_seed_crossing_face_rows": 859,
+      "source_vertex_inside_rows": 277,
+      "interior_probe_inside_rows": 644,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 21,
+        "nearby_flow_support_vertex": 39,
+        "seed_edge_probe": 584,
+        "seed_face_centroid": 58,
+        "seed_face_vertex": 217
+      },
+      "inside_by_bank_body": {
+        "43": 43,
+        "46": 4,
+        "57": 58,
+        "59": 66,
+        "61": 44,
+        "62": 15,
+        "64": 38,
+        "65": 345,
+        "74": 35,
+        "109": 57,
+        "114": 76,
+        "115": 74,
+        "124": 66
+      },
+      "max_residual_exit_depth_mm": 3.441340849233745,
+      "median_residual_exit_depth_mm": 0.5465167817835942,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "9dae6f5d4537ee89291da2f4c72be69e7d021318e53fa96db4c6f4f09e077b5b",
+          "raw_bytes": 4889742,
+          "gzip_bytes": 1491239,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "67ed83798a42ec2e13eaaf5737957984dc15460741c49e6e9819905a8d20b3d6",
+          "raw_bytes": 9115347,
+          "gzip_bytes": 2556195,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "d82256c431475b08971c9dfd5234ece4fffdffa0a2cf8f3701cf8c7f2830aa68",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204444,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 856420352,
+      "elapsed_query_s": 1.7858180420007557,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7015629531796822,
+      "fit_residual_mm_max": 3.459064046839421,
+      "target_exit_depth_mm_max": 3.441340849233745,
+      "target_exit_depth_mm_median": 0.5465167817835942,
+      "control_max_norm_mm": 1.5422369842314851,
+      "control_max_adjacent_difference_mm": 1.78262011525327,
+      "ambient_lipschitz_bound_per_step": 0.2669359414739176,
+      "alpha": 0.5187270232652665,
+      "max_vertex_flow_mm": 0.7758078116312477,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.5187270232652665,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.5619415384656842,
+          "min_flow_face_area_m2": 9.216242975394703e-10
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.5187270232652665,
+      "max_applied_vertex_step_mm": 0.40243242191092043,
+      "moved_vertex_count": 12797,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.5619415384656842,
+      "min_flow_face_area_m2": 9.216242975394703e-10,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -329.00041341781616,
+          -1038.3453369140625,
+          68.49545240402222
+        ],
+        "max": [
+          275.25973320007324,
+          -799.3806600570679,
+          163.11948001384735
+        ]
+      },
+      "elapsed_step_s": 2.2401287499815226,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-011.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 12,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 826,
+      "inside_seed_crossing_face_rows": 784,
+      "source_vertex_inside_rows": 241,
+      "interior_probe_inside_rows": 585,
+      "inside_by_witness_type": {
+        "nearby_face_vertex": 7,
+        "nearby_flow_support_vertex": 35,
+        "seed_edge_probe": 532,
+        "seed_face_centroid": 53,
+        "seed_face_vertex": 199
+      },
+      "inside_by_bank_body": {
+        "43": 40,
+        "46": 2,
+        "57": 42,
+        "59": 63,
+        "61": 44,
+        "64": 34,
+        "65": 322,
+        "74": 33,
+        "109": 49,
+        "114": 65,
+        "115": 68,
+        "124": 64
+      },
+      "max_residual_exit_depth_mm": 3.3944116784539915,
+      "median_residual_exit_depth_mm": 0.5197170427883162,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "0a26e063ef807e0d52f101c2fba49cb56fb80da7d1862888d3cafdddd8e30d30",
+          "raw_bytes": 4890462,
+          "gzip_bytes": 1491405,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "0afcd9cd147e439420a79239c8ce51b6ab38cf43f7cd119688d8c7e7a99edf5d",
+          "raw_bytes": 9017061,
+          "gzip_bytes": 2527693,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "25685fc928fab45dfd2b06f80bd1db2ec6f033ff1026687c3ec3f1cc775e277b",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204456,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 844681216,
+      "elapsed_query_s": 1.7795610420871526,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.7092328667223713,
+      "fit_residual_mm_max": 3.412004315354515,
+      "target_exit_depth_mm_max": 3.3944116784539915,
+      "target_exit_depth_mm_median": 0.5197170427883162,
+      "control_max_norm_mm": 1.3972356686228011,
+      "control_max_adjacent_difference_mm": 1.5783392102081484,
+      "ambient_lipschitz_bound_per_step": 0.2608735486360444,
+      "alpha": 0.5725591022082394,
+      "max_vertex_flow_mm": 0.71017675202547,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.5725591022082394,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7371123177369557,
+          "min_flow_face_area_m2": 1.0572355182600387e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.5725591022082394,
+      "max_applied_vertex_step_mm": 0.40663140771948236,
+      "moved_vertex_count": 12799,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7371123177369557,
+      "min_flow_face_area_m2": 1.0572355182600387e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -329.2006850242615,
+          -1038.3453369140625,
+          68.49511712789536
+        ],
+        "max": [
+          275.3359377384186,
+          -799.3806600570679,
+          163.12655806541443
+        ]
+      },
+      "elapsed_step_s": 2.225169250043109,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-012.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 13,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 772,
+      "inside_seed_crossing_face_rows": 721,
+      "source_vertex_inside_rows": 223,
+      "interior_probe_inside_rows": 549,
+      "inside_by_witness_type": {
+        "nearby_face_centroid": 2,
+        "nearby_face_vertex": 18,
+        "nearby_flow_support_vertex": 31,
+        "seed_edge_probe": 498,
+        "seed_face_centroid": 49,
+        "seed_face_vertex": 174
+      },
+      "inside_by_bank_body": {
+        "43": 29,
+        "46": 4,
+        "57": 40,
+        "59": 54,
+        "61": 44,
+        "62": 15,
+        "64": 32,
+        "65": 301,
+        "74": 29,
+        "109": 47,
+        "114": 48,
+        "115": 66,
+        "124": 63
+      },
+      "max_residual_exit_depth_mm": 3.3424689865822987,
+      "median_residual_exit_depth_mm": 0.44384572303567477,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "280ef9ce6da19a395b797a6ef2e02d4babdff3e9c0d304fcc41064f68093ad8c",
+          "raw_bytes": 4890194,
+          "gzip_bytes": 1491362,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "52c1d06ed9969cc7766ad83636f390bf448a112c09fd07ce39ace10266e4635b",
+          "raw_bytes": 8933231,
+          "gzip_bytes": 2504947,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "8135752c51fbd3dc7b7fe8ad98cdca613a34590f9a5ba06fcc9512d15fd06691",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204330,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 832978944,
+      "elapsed_query_s": 1.7704854172188789,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6917405405949656,
+      "fit_residual_mm_max": 3.36430671890683,
+      "target_exit_depth_mm_max": 3.3424689865822987,
+      "target_exit_depth_mm_median": 0.44384572303567477,
+      "control_max_norm_mm": 1.3013939306136986,
+      "control_max_adjacent_difference_mm": 1.4269526872923461,
+      "ambient_lipschitz_bound_per_step": 0.2532212572224283,
+      "alpha": 0.6147254733412995,
+      "max_vertex_flow_mm": 0.6654014731992579,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.6147254733412995,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7222021210384874,
+          "min_flow_face_area_m2": 1.2340692192735118e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.6147254733412995,
+      "max_applied_vertex_step_mm": 0.409041168739388,
+      "moved_vertex_count": 12796,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7222021210384874,
+      "min_flow_face_area_m2": 1.2340692192735118e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -329.38963174819946,
+          -1038.345456123352,
+          68.4947595000267
+        ],
+        "max": [
+          275.41449666023254,
+          -799.3806600570679,
+          163.13380002975464
+        ]
+      },
+      "elapsed_step_s": 2.2117138751782477,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-013.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 14,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 716,
+      "inside_seed_crossing_face_rows": 665,
+      "source_vertex_inside_rows": 213,
+      "interior_probe_inside_rows": 503,
+      "inside_by_witness_type": {
+        "nearby_face_vertex": 21,
+        "nearby_flow_support_vertex": 30,
+        "seed_edge_probe": 456,
+        "seed_face_centroid": 47,
+        "seed_face_vertex": 162
+      },
+      "inside_by_bank_body": {
+        "43": 27,
+        "46": 2,
+        "57": 36,
+        "59": 50,
+        "61": 38,
+        "62": 15,
+        "64": 32,
+        "65": 261,
+        "74": 33,
+        "109": 45,
+        "114": 48,
+        "115": 66,
+        "124": 63
+      },
+      "max_residual_exit_depth_mm": 3.2894533395687344,
+      "median_residual_exit_depth_mm": 0.3747598764696211,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "ec1fb9a8909b96be2811d8c753e3aa2c23f0a2fdc1ce3f2d9f19795f0d87edb2",
+          "raw_bytes": 4890154,
+          "gzip_bytes": 1491604,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "b0fd58eabccd15999f7d0f40c57777321c6a2e178ea7a1972575b9857869c9f4",
+          "raw_bytes": 8851579,
+          "gzip_bytes": 2480098,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "1dae83e97660f02592922d294e151d800c616a87da807ccfb196a3376f9b069d",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 204309,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 821301248,
+      "elapsed_query_s": 1.7652657080907375,
+      "field_coverage_min": 0.9999999999999996,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6771334869348197,
+      "fit_residual_mm_max": 3.3216316608688827,
+      "target_exit_depth_mm_max": 3.2894533395687344,
+      "target_exit_depth_mm_median": 0.3747598764696211,
+      "control_max_norm_mm": 1.2148070297055151,
+      "control_max_adjacent_difference_mm": 1.2978661044837023,
+      "ambient_lipschitz_bound_per_step": 0.24672999957117536,
+      "alpha": 0.6585408056075625,
+      "max_vertex_flow_mm": 0.62419578690314,
+      "max_ambient_step_bound_mm": 0.7999999999999999,
+      "area_backtracks": [
+        {
+          "alpha": 0.6585408056075625,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.8139351932049728,
+          "min_flow_face_area_m2": 1.2359932848754188e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.6585408056075625,
+      "max_applied_vertex_step_mm": 0.4110652731199723,
+      "moved_vertex_count": 12798,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.8139351932049728,
+      "min_flow_face_area_m2": 1.2359932848754188e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -329.56662774086,
+          -1038.3455753326416,
+          68.49440187215805
+        ],
+        "max": [
+          275.49290657043457,
+          -799.3806600570679,
+          163.14134001731873
+        ]
+      },
+      "elapsed_step_s": 2.209567666053772,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-014.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 15,
+      "queried_face_witness_rows": 51115,
+      "queried_seed_crossing_face_rows": 7449,
+      "queried_flow_support_vertices": 13180,
+      "inside_rows": 636,
+      "inside_seed_crossing_face_rows": 602,
+      "source_vertex_inside_rows": 178,
+      "interior_probe_inside_rows": 458,
+      "inside_by_witness_type": {
+        "nearby_face_vertex": 7,
+        "nearby_flow_support_vertex": 27,
+        "seed_edge_probe": 412,
+        "seed_face_centroid": 46,
+        "seed_face_vertex": 144
+      },
+      "inside_by_bank_body": {
+        "43": 23,
+        "46": 3,
+        "57": 36,
+        "59": 47,
+        "61": 38,
+        "64": 32,
+        "65": 229,
+        "74": 33,
+        "109": 45,
+        "114": 42,
+        "115": 60,
+        "124": 48
+      },
+      "max_residual_exit_depth_mm": 3.2393993376624755,
+      "median_residual_exit_depth_mm": 0.3985875213868808,
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "045f413c8b8b75a816f35f59e26ee1e9198090e113c06be7da7d337a0f100c0d",
+          "raw_bytes": 4890032,
+          "gzip_bytes": 1492145,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "d4e46a15942012d29f2be633871347410ca2ce8bc8c1200670d2e1ad373907f1",
+          "raw_bytes": 8756406,
+          "gzip_bytes": 2457119,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "cde41259fc176310bcf35ae665c4e0c5bce8eabf0c862c5cc4e305681c5251d9",
+          "raw_bytes": 1532106,
+          "gzip_bytes": 203910,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 809680896,
+      "elapsed_query_s": 1.7765179998241365,
+      "field_coverage_min": 0.9999999898177515,
+      "unsupported_witness_rows": 0,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 0.6969018382573812,
+      "fit_residual_mm_max": 3.2933568442483674,
+      "target_exit_depth_mm_max": 3.2393993376624755,
+      "target_exit_depth_mm_median": 0.3985875213868808,
+      "control_max_norm_mm": 1.1058378849632367,
+      "control_max_adjacent_difference_mm": 1.1790389489085142,
+      "ambient_lipschitz_bound_per_step": 0.24622721423945948,
+      "alpha": 0.723433344867359,
+      "max_vertex_flow_mm": 0.5674622373635716,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.723433344867359,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7782713766403702,
+          "min_flow_face_area_m2": 1.2376918227895086e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.723433344867359,
+      "max_applied_vertex_step_mm": 0.41053870828248734,
+      "moved_vertex_count": 12792,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7782713766403702,
+      "min_flow_face_area_m2": 1.2376918227895086e-09,
+      "changed_vertex_bbox_mm": {
+        "min": [
+          -329.73942160606384,
+          -1038.3456945419312,
+          68.49401444196701
+        ],
+        "max": [
+          275.5725383758545,
+          -799.3806600570679,
+          163.1491780281067
+        ]
+      },
+      "elapsed_step_s": 2.218384791864082,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-continuation/flow-step-015.npz",
+      "consecutive_stalled_steps": 0
+    }
+  ],
+  "limitations": [
+    "sampled occupancy is not the exact fixed-bone crossing gate",
+    "same-mesh self-intersection audit is separate",
+    "named torso/back anatomy mask is unavailable in baseline-806; a distance-based remote-region proxy will be reported",
+    "native physics admission remains false"
+  ]
+}

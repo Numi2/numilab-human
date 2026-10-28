@@ -1,0 +1,17 @@
+# Connected hand skin: zero-crossing reference geometry
+
+Candidate `549fab40b3cdfec2d0e1c9a004451d276f87b445f1c7dc9d5a56c1b5a1a53be4` passes the ordered reference-pose gate on SSH Numi (Apple M6): **0 skin/bone triangle pairs across all 185 banks, 0 exact self-intersections, and 0 contained skin-vertex/bone pairs**. It is one genus-0 component with no nonmanifold edges or degenerate faces. The original two head boundary loops (45 edges) remain exactly unchanged and open.
+
+Unlike the retained candidate006 at `../hand-skin-zero-crossings-207`, this candidate has no added handles or nested cavity shells. Both checkpoints remain available; candidate006 stays rejected. This checkpoint is **reference geometry only, not physical or whole-anatomy acceptance**. The native scene is unchanged. Matching physical skin/fat volume, conservative cell mass/ancestry, retained motion and native accepted-state qualification remain required.
+
+The connected bone envelopes and measured cycle fills reconstruct a single surface; a final rounded fill resolves the last handle. Exact witness-directed seam repair moved only 14 derived vertices, by at most 0.996 micrometres, to clear 151 measured self-pairs. All original source vertices are pinned during that final repair. Of 42,379 baseline faces, 34,547 remain bitwise exact. All 9,868 faces over 100 mm from original crossing witnesses are unchanged; changed source faces lie within a conservative 38.84 mm witness bound. See `source-preservation.json` and the source-identity map.
+
+`construction/` retains exact-double parent geometry, constructive original/face IDs and inferred fill solids. These are geometric ancestry records, **not** conservative physical cell-mass ancestry. The 0.8 mm bone-envelope kernel and fill radii are authoring choices, not measured skin thickness. Numeric bone IDs remain the pinned source identities; no unverified anatomical names are assigned.
+
+The ordered gate first checks finite Float32 emission and topology, then all 185 exact bone banks, rational exact self-intersections and complete static containment accounting. `audit/` pins the final candidate hash. `verify_checkpoint.py` verifies restoration, topology and retained receipts; it does not rerun native physics. Source tools retain prepared owner paths and dependency snapshots in `inputs/owners-and-bank-hashes.json`. The parent candidate006 and offsets are retained at commit `9ccf48b96c7d9a9f6e87a9581cf1a5435b2969df`. Authoring uses existing NumPy/SciPy plus Manifold 3.5.1; no new native runtime dependency is added.
+
+Rejected flow trials are explicitly retained. Nearest-exit displacement reduced sampled inside rows but caused severe local thinning; outward-normal ray flow worsened penetration. Neither was admitted. Their full recovery archives are in the linked recovery receipts. Only independently downloaded, SHA-verified and restored query dumps were retired locally; source, candidate and flow replay maps remain.
+
+No visual inspection, physiological qualification, native physical advancement or performance claim was made in this checkpoint.
+
+The final fill follows the serial numeric bone chain 61/97–60/96–59/95. A limited 1 mm / 9-point interdigit-ray check leaves the four central samples outside at every tested section; it is evidence against a continuous bridge at those samples. Web-facing expansion of roughly 2.5–5.2 mm remains an anatomy-review limitation. See `audit/chain-gap-audit.json`; this sampled check does not replace motion or full anatomical review.

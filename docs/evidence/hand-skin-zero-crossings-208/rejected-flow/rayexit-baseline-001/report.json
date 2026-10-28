@@ -1,0 +1,660 @@
+{
+  "baseline_sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756",
+  "baseline_audit_sha256": "4cc8fd5d5e8fb651733fd380001e2b9847a0040960d7c8865c37f25fe5b8a09d",
+  "bank_pin_set": {
+    "exact-emitted.triangles.csv": "0d3418064af1d4f34d19a1ec91992afceacaaa70b6c982d4a2637ded1d829eac",
+    "exact-emitted.nodes.csv": "99e58d6afb68e0939670f69d4132bfa730cf3e988a7f70a179a41a89eac3802c",
+    "exact-emitted.bodies.csv": "dae52ab190e02586421b56381b03a4453aff1058edca7b6a42afcb9051b50b90",
+    "all-bank-containment.csv.banks.csv": "46568d191d84dd68f1fbcfe02b7938b15d4a7b3b786f268f46bcfe916070c6df"
+  },
+  "script_sha256": "37571b95564178e1e564cee17a4ba2a40fdf2641329ec4b997ce1e99545f4060",
+  "candidate_scope": "baseline-806; outward-cone exact ray-exit target selection; offline geometry only",
+  "native_admission": false,
+  "seed_face_count": 564,
+  "seed_triangle_pair_count": 977,
+  "query_ring_count": 3,
+  "query_face_count": 6064,
+  "query_surface_sample_count": 45832,
+  "flow_support_vertex_count": 13154,
+  "flow_support_face_count": 26695,
+  "control_count": 2979,
+  "grid_spacing_mm": 6.0,
+  "ray_beta_values": [
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    null
+  ],
+  "ray_direction_modes": [
+    "normalize(nearest_exit_direction + beta * current_outward_skin_normal) for beta 0.25,0.5,1,2,4",
+    "pure current outward skin normal"
+  ],
+  "ray_direction_gate": "require dot(direction, outward_normal) >= 0.25 for all five beta candidates and pure-normal candidate",
+  "ray_exit_rule": "exact segment-triangle hits in the matching typed bank; use the last positive hit before an endpoint beyond the bank's world-space bounding sphere, then add 0.15 mm",
+  "step_bound": "alpha * sqrt(3) * maximum adjacent control difference / spacing <= lipschitz_step; alpha * max coefficient norm <= max_step_mm",
+  "outside_rule": "source vertices with no active compact-support basis are copied bitwise",
+  "iterations": [
+    {
+      "step": 0,
+      "queried_surface_witness_rows": 45832,
+      "queried_seed_face_witness_rows": 7332,
+      "queried_flow_support_vertices": 13154,
+      "inside_rows": 4716,
+      "inside_seed_face_rows": 4591,
+      "inside_source_vertex_rows": 879,
+      "inside_edge_centroid_probe_rows": 3837,
+      "inside_by_witness_type": {
+        "edge_probe": 3382,
+        "face_centroid": 455,
+        "face_vertex": 754,
+        "flow_support_vertex": 125
+      },
+      "inside_by_typed_bank": {
+        "109/114": 852,
+        "114/117": 153,
+        "115/118": 143,
+        "124/123": 394,
+        "43/16": 1614,
+        "57/89": 123,
+        "59/95": 142,
+        "61/97": 52,
+        "64/98": 57,
+        "65/99": 1165,
+        "74/104": 21
+      },
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "6755a09dfb4d7f9a3fdd2fecb4792ebeb9aec7a1b7e788478e6b7077ee999095",
+          "raw_bytes": 4483054,
+          "gzip_bytes": 1379628,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "1417196f919bb38ff297c5d9592cf03653ab52590e2852308763bded395243d4",
+          "raw_bytes": 9900274,
+          "gzip_bytes": 2807617,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "02d5f2bcbfea204f559b267f5c064f0f72b2cee3401be09aea2ae74df9209894",
+          "raw_bytes": 1404690,
+          "gzip_bytes": 189823,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 681664512,
+      "elapsed_query_s": 1.8542394579853863,
+      "ray_target_rows": 4716,
+      "ray_failure_rows": 0,
+      "ray_failure_reasons": {},
+      "ray_evaluations": {
+        "rays_considered": 28296,
+        "rays_accepted_cone": 24903,
+        "rays_with_exact_exit": 24903,
+        "ray_exact_triangle_tests": 25951
+      },
+      "nearest_exit_depth_mm_max": 3.7122300795207606,
+      "actual_ray_exit_depth_mm_max": 19.03411525243481,
+      "actual_ray_exit_depth_mm_median": 0.7918719023897498,
+      "selected_beta_counts": {
+        "0.25": 2607,
+        "0.5": 1017,
+        "1.0": 878,
+        "2.0": 110,
+        "pure_normal": 104
+      },
+      "selected_outward_dot_min": 0.2500450781277194,
+      "selected_outward_dot_mean": 0.5406490012852557,
+      "nearest_exit_opposing_outward_normal_rows": 2079,
+      "ray_target_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-000.npz",
+      "ray_target_file_sha256": "6ed568a66b1426aac6ceba77372b1e3418e72eef13cece71186461560968ff49",
+      "field_coverage_min": 0.9999999999999994,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 1.664643387696547,
+      "fit_residual_mm_max": 18.47813050850265,
+      "ray_target_depth_mm_max": 19.184115252434815,
+      "ray_target_depth_mm_median": 0.9418719023897497,
+      "control_max_norm_mm": 3.6944702296488585,
+      "control_max_adjacent_difference_mm": 5.281032261585963,
+      "ambient_lipschitz_bound_per_step": 0.3301155736329262,
+      "alpha": 0.21653984205362947,
+      "max_vertex_flow_mm": 2.216179327234399,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.21653984205362947,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.5774453286526093,
+          "min_flow_face_area_m2": 1.157541504625499e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.21653984205362947,
+      "max_applied_vertex_step_mm": 0.47988006100328473,
+      "moved_vertex_count": 12806,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.5774453286526093,
+      "min_flow_face_area_m2": 1.157541504625499e-09,
+      "elapsed_step_s": 4.564891917165369,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-000.npz",
+      "consecutive_stalled_steps": 0
+    },
+    {
+      "step": 1,
+      "queried_surface_witness_rows": 45832,
+      "queried_seed_face_witness_rows": 7332,
+      "queried_flow_support_vertices": 13154,
+      "inside_rows": 5813,
+      "inside_seed_face_rows": 5068,
+      "inside_source_vertex_rows": 1449,
+      "inside_edge_centroid_probe_rows": 4364,
+      "inside_by_witness_type": {
+        "edge_probe": 3849,
+        "face_centroid": 515,
+        "face_vertex": 1213,
+        "flow_support_vertex": 236
+      },
+      "inside_by_typed_bank": {
+        "109/114": 1212,
+        "114/117": 142,
+        "115/118": 139,
+        "124/123": 373,
+        "43/16": 2427,
+        "57/89": 117,
+        "59/95": 134,
+        "61/97": 52,
+        "64/98": 55,
+        "65/99": 1131,
+        "74/104": 31
+      },
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "c57f1d3f2ca8fc908561202b923353eae9324d26d94a7dc4807850ab1eb20c8a",
+          "raw_bytes": 4482910,
+          "gzip_bytes": 1379807,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "12b4dac5b9c37b576abb647806ae4630760c0b5d563b97c0a857393b3ea799f1",
+          "raw_bytes": 9827901,
+          "gzip_bytes": 2788107,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "e72debf112a7f93882319f952fd097eecc0af157d6a2512605b0a34d47902e69",
+          "raw_bytes": 1404690,
+          "gzip_bytes": 190497,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 669429760,
+      "elapsed_query_s": 1.8559143329039216,
+      "ray_target_rows": 5813,
+      "ray_failure_rows": 0,
+      "ray_failure_reasons": {},
+      "ray_evaluations": {
+        "rays_considered": 34878,
+        "rays_accepted_cone": 30302,
+        "rays_with_exact_exit": 30302,
+        "ray_exact_triangle_tests": 31484
+      },
+      "nearest_exit_depth_mm_max": 3.646785858064454,
+      "actual_ray_exit_depth_mm_max": 20.56819696251981,
+      "actual_ray_exit_depth_mm_median": 0.6804060393281145,
+      "selected_beta_counts": {
+        "0.25": 3156,
+        "0.5": 1077,
+        "1.0": 1222,
+        "2.0": 183,
+        "4.0": 1,
+        "pure_normal": 174
+      },
+      "selected_outward_dot_min": 0.2501515722591554,
+      "selected_outward_dot_mean": 0.5621084470955215,
+      "nearest_exit_opposing_outward_normal_rows": 2614,
+      "ray_target_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-001.npz",
+      "ray_target_file_sha256": "cc02e151854cc22c52ca9e4fe990ab2dae662c041ec6b924fd1789ebd8e94a55",
+      "field_coverage_min": 0.9999999999999996,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 1.8717020290586515,
+      "fit_residual_mm_max": 19.479009986136994,
+      "ray_target_depth_mm_max": 20.71819696251981,
+      "ray_target_depth_mm_median": 0.8304060393281145,
+      "control_max_norm_mm": 5.683457178812303,
+      "control_max_adjacent_difference_mm": 8.394969292548426,
+      "ambient_lipschitz_bound_per_step": 0.3411189794099471,
+      "alpha": 0.14075939605604268,
+      "max_vertex_flow_mm": 2.3091670490235856,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.14075939605604268,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.2968645168338525,
+          "min_flow_face_area_m2": 1.1611147008567463e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.14075939605604268,
+      "max_applied_vertex_step_mm": 0.32502993650554485,
+      "moved_vertex_count": 12779,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.2968645168338525,
+      "min_flow_face_area_m2": 1.1611147008567463e-09,
+      "elapsed_step_s": 5.067171874921769,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-001.npz",
+      "consecutive_stalled_steps": 1
+    },
+    {
+      "step": 2,
+      "queried_surface_witness_rows": 45832,
+      "queried_seed_face_witness_rows": 7332,
+      "queried_flow_support_vertices": 13154,
+      "inside_rows": 6099,
+      "inside_seed_face_rows": 5143,
+      "inside_source_vertex_rows": 1618,
+      "inside_edge_centroid_probe_rows": 4481,
+      "inside_by_witness_type": {
+        "edge_probe": 3946,
+        "face_centroid": 535,
+        "face_vertex": 1342,
+        "flow_support_vertex": 276
+      },
+      "inside_by_typed_bank": {
+        "109/114": 1332,
+        "114/117": 134,
+        "115/118": 137,
+        "124/123": 367,
+        "43/16": 2641,
+        "57/89": 117,
+        "59/95": 130,
+        "61/97": 52,
+        "64/98": 53,
+        "65/99": 1105,
+        "74/104": 31
+      },
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "2a75d65d75eff61e659a09b86d9538b1214eed4c3280c617afe015e1486c8f6f",
+          "raw_bytes": 4483374,
+          "gzip_bytes": 1380277,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "6164df3bb42da074f5f0e37f9d0da0bae85c831b1745d21a1517765fc78073fe",
+          "raw_bytes": 9772435,
+          "gzip_bytes": 2771543,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "e5f6df879b637e8f2d514bad3455e4a78e9bfa4d45297a3d9ec72a646dd35171",
+          "raw_bytes": 1404690,
+          "gzip_bytes": 190474,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 657117184,
+      "elapsed_query_s": 1.8246677920687944,
+      "ray_target_rows": 6099,
+      "ray_failure_rows": 0,
+      "ray_failure_reasons": {},
+      "ray_evaluations": {
+        "rays_considered": 36594,
+        "rays_accepted_cone": 31746,
+        "rays_with_exact_exit": 31746,
+        "ray_exact_triangle_tests": 32838
+      },
+      "nearest_exit_depth_mm_max": 3.606471550799713,
+      "actual_ray_exit_depth_mm_max": 20.74968780295711,
+      "actual_ray_exit_depth_mm_median": 0.6891719044468064,
+      "selected_beta_counts": {
+        "0.25": 3322,
+        "0.5": 1072,
+        "1.0": 1313,
+        "2.0": 212,
+        "4.0": 1,
+        "pure_normal": 179
+      },
+      "selected_outward_dot_min": 0.2501551690481607,
+      "selected_outward_dot_mean": 0.568516815865792,
+      "nearest_exit_opposing_outward_normal_rows": 2742,
+      "ray_target_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-002.npz",
+      "ray_target_file_sha256": "19c3ab13543654ccf62c88a7fba26a3de3c5d6ddf758bf0075a700f413598d7d",
+      "field_coverage_min": 0.9977029359593289,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 1.8996558104266934,
+      "fit_residual_mm_max": 20.272057784961262,
+      "ray_target_depth_mm_max": 20.89968780295711,
+      "ray_target_depth_mm_median": 0.8391719044468064,
+      "control_max_norm_mm": 5.6625543440818085,
+      "control_max_adjacent_difference_mm": 7.890378653864544,
+      "ambient_lipschitz_bound_per_step": 0.3217991007593909,
+      "alpha": 0.14127899731966656,
+      "max_vertex_flow_mm": 2.044737717436294,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.14127899731966656,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.5292809910290379,
+          "min_flow_face_area_m2": 1.1644984144362112e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.14127899731966656,
+      "max_applied_vertex_step_mm": 0.2888926301405918,
+      "moved_vertex_count": 12793,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.5292809910290379,
+      "min_flow_face_area_m2": 1.1644984144362112e-09,
+      "elapsed_step_s": 5.164539749966934,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-002.npz",
+      "consecutive_stalled_steps": 2
+    },
+    {
+      "step": 3,
+      "queried_surface_witness_rows": 45832,
+      "queried_seed_face_witness_rows": 7332,
+      "queried_flow_support_vertices": 13154,
+      "inside_rows": 6179,
+      "inside_seed_face_rows": 5111,
+      "inside_source_vertex_rows": 1690,
+      "inside_edge_centroid_probe_rows": 4489,
+      "inside_by_witness_type": {
+        "edge_probe": 3949,
+        "face_centroid": 540,
+        "face_vertex": 1393,
+        "flow_support_vertex": 297
+      },
+      "inside_by_typed_bank": {
+        "109/114": 1426,
+        "114/117": 132,
+        "115/118": 132,
+        "124/123": 342,
+        "43/16": 2705,
+        "57/89": 117,
+        "59/95": 129,
+        "61/97": 45,
+        "64/98": 53,
+        "65/99": 1067,
+        "74/104": 31
+      },
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "efc949c6060f2b2991c8de409af1a7689e11ee9975c4c3a69a3bd10145f802a3",
+          "raw_bytes": 4483080,
+          "gzip_bytes": 1379786,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "89198890c78ae7a7bd4a6b6afdb3090c8ab25844f910a3995c569618c4bd866b",
+          "raw_bytes": 9714024,
+          "gzip_bytes": 2755910,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "86685f8c8534ed4cfbe9020d1185dab66737b67ea8c1c8f40df06570a53f9f04",
+          "raw_bytes": 1404690,
+          "gzip_bytes": 190834,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 643919872,
+      "elapsed_query_s": 1.8245362078305334,
+      "ray_target_rows": 6179,
+      "ray_failure_rows": 0,
+      "ray_failure_reasons": {},
+      "ray_evaluations": {
+        "rays_considered": 37074,
+        "rays_accepted_cone": 32103,
+        "rays_with_exact_exit": 32103,
+        "ray_exact_triangle_tests": 33119
+      },
+      "nearest_exit_depth_mm_max": 3.5921407390947087,
+      "actual_ray_exit_depth_mm_max": 23.500164134465848,
+      "actual_ray_exit_depth_mm_median": 0.74483618835349,
+      "selected_beta_counts": {
+        "0.25": 3357,
+        "0.5": 1047,
+        "1.0": 1370,
+        "2.0": 231,
+        "4.0": 1,
+        "pure_normal": 173
+      },
+      "selected_outward_dot_min": 0.25023759406039076,
+      "selected_outward_dot_mean": 0.5713317117353871,
+      "nearest_exit_opposing_outward_normal_rows": 2759,
+      "ray_target_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-003.npz",
+      "ray_target_file_sha256": "cd0655c168ff095c81d6fb5bed51140ae68dcc22668fc400ca23ae33dab12f2c",
+      "field_coverage_min": 0.9977638371781141,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 1.951107256304389,
+      "fit_residual_mm_max": 23.57536387218035,
+      "ray_target_depth_mm_max": 23.650164134465847,
+      "ray_target_depth_mm_median": 0.89483618835349,
+      "control_max_norm_mm": 5.485070585901708,
+      "control_max_adjacent_difference_mm": 7.273930027179443,
+      "ambient_lipschitz_bound_per_step": 0.30625716796081426,
+      "alpha": 0.14585044758699045,
+      "max_vertex_flow_mm": 1.809147056959558,
+      "max_ambient_step_bound_mm": 0.8,
+      "area_backtracks": [
+        {
+          "alpha": 0.14585044758699045,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.7199826673759546,
+          "min_flow_face_area_m2": 1.1690551407225238e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.14585044758699045,
+      "max_applied_vertex_step_mm": 0.2638532316108603,
+      "moved_vertex_count": 12797,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.7199826673759546,
+      "min_flow_face_area_m2": 1.1690551407225238e-09,
+      "elapsed_step_s": 5.168085417011753,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-003.npz",
+      "consecutive_stalled_steps": 3
+    },
+    {
+      "step": 4,
+      "queried_surface_witness_rows": 45832,
+      "queried_seed_face_witness_rows": 7332,
+      "queried_flow_support_vertices": 13154,
+      "inside_rows": 6234,
+      "inside_seed_face_rows": 5064,
+      "inside_source_vertex_rows": 1753,
+      "inside_edge_centroid_probe_rows": 4481,
+      "inside_by_witness_type": {
+        "edge_probe": 3936,
+        "face_centroid": 545,
+        "face_vertex": 1432,
+        "flow_support_vertex": 321
+      },
+      "inside_by_typed_bank": {
+        "109/114": 1465,
+        "114/117": 132,
+        "115/118": 128,
+        "124/123": 332,
+        "43/16": 2774,
+        "57/89": 116,
+        "59/95": 122,
+        "61/97": 45,
+        "64/98": 53,
+        "65/99": 1033,
+        "74/104": 34
+      },
+      "query_files": {
+        "points.csv": {
+          "raw_sha256": "6fb6bb7ec40f56366b228ac78db6762fff75fb12241a42c174cdd045aad19b59",
+          "raw_bytes": 4483077,
+          "gzip_bytes": 1379994,
+          "gzip_roundtrip_verified": true
+        },
+        "pairs.csv": {
+          "raw_sha256": "42fdf4884fa1c7ca4c23fcdd9f6012be1ba494c8319d3e0fcd860c1463fb8fff",
+          "raw_bytes": 9655705,
+          "gzip_bytes": 2739844,
+          "gzip_roundtrip_verified": true
+        },
+        "nodes.csv": {
+          "raw_sha256": "a4437b986038739d0c9f592098ff24ed8771cfe057b1eb467342cc80a6edf7bb",
+          "raw_bytes": 1404690,
+          "gzip_bytes": 190867,
+          "gzip_roundtrip_verified": true
+        }
+      },
+      "free_disk_bytes_after_query": 631574528,
+      "elapsed_query_s": 1.820346999913454,
+      "ray_target_rows": 6234,
+      "ray_failure_rows": 0,
+      "ray_failure_reasons": {},
+      "ray_evaluations": {
+        "rays_considered": 37404,
+        "rays_accepted_cone": 32331,
+        "rays_with_exact_exit": 32331,
+        "ray_exact_triangle_tests": 33279
+      },
+      "nearest_exit_depth_mm_max": 3.5912871724645417,
+      "actual_ray_exit_depth_mm_max": 25.269131262425137,
+      "actual_ray_exit_depth_mm_median": 0.7741342447788011,
+      "selected_beta_counts": {
+        "0.25": 3378,
+        "0.5": 1020,
+        "1.0": 1425,
+        "2.0": 262,
+        "pure_normal": 149
+      },
+      "selected_outward_dot_min": 0.25012118806973727,
+      "selected_outward_dot_mean": 0.5728623745005633,
+      "nearest_exit_opposing_outward_normal_rows": 2797,
+      "ray_target_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-004.npz",
+      "ray_target_file_sha256": "f7e3b7fee6476a6729f87150fdb501a86426f6f9c410c5f0319a7c1085d0c698",
+      "field_coverage_min": 0.9976206812022435,
+      "cg_info": [
+        0,
+        0,
+        0
+      ],
+      "fit_residual_mm_mean": 1.9155500323455685,
+      "fit_residual_mm_max": 25.26909027913815,
+      "ray_target_depth_mm_max": 25.41913126242514,
+      "ray_target_depth_mm_median": 0.9241342447788009,
+      "control_max_norm_mm": 4.5922461852628995,
+      "control_max_adjacent_difference_mm": 6.759079967300478,
+      "ambient_lipschitz_bound_per_step": 0.33990831337555855,
+      "alpha": 0.17420668834508513,
+      "max_vertex_flow_mm": 1.7868793719522724,
+      "max_ambient_step_bound_mm": 0.7999999999999999,
+      "area_backtracks": [
+        {
+          "alpha": 0.17420668834508513,
+          "pass_finite_nondegenerate": true,
+          "min_flow_face_area_ratio": 0.5803366902676168,
+          "min_flow_face_area_m2": 1.1742386724389962e-09
+        }
+      ],
+      "status": "APPLIED_AMBIENT_STEP",
+      "accepted_alpha": 0.17420668834508513,
+      "max_applied_vertex_step_mm": 0.3112910312183984,
+      "moved_vertex_count": 12821,
+      "outside_bitwise_unchanged": true,
+      "source_faces_bitwise_unchanged": true,
+      "min_flow_face_area_ratio": 0.5803366902676168,
+      "min_flow_face_area_m2": 1.1742386724389962e-09,
+      "elapsed_step_s": 5.1938055830542,
+      "flow_step_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-004.npz",
+      "consecutive_stalled_steps": 4
+    }
+  ],
+  "limitations": [
+    "sampled inside counts are not the full exact skin-bone intersection gate",
+    "same-mesh exact self-intersection audit remains separate",
+    "the ray endpoint is proven outside the typed bank's vertex bounding sphere; exact triangles certify all intervening surface hits",
+    "no native physics state is changed"
+  ],
+  "status": "FOUR_STALLED_STEPS",
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/candidate.npz",
+  "candidate_sha256": "e68aa8cc066c27797aa837ab90662ceca58f3fbb3ddc3719eeebba791c6e90ad",
+  "candidate_vertex_count": 21212,
+  "candidate_face_count": 42379,
+  "source_faces_unchanged": true,
+  "changed_vertex_count": 12841,
+  "changed_vertex_bbox_mm": {
+    "min": [
+      -328.04927229881287,
+      -1038.3446216583252,
+      68.49858164787292
+    ],
+    "max": [
+      274.2394804954529,
+      -799.3808388710022,
+      163.04826736450195
+    ]
+  },
+  "max_total_displacement_mm": 1.4633281467310064,
+  "remote_torso_back_proxy": {
+    "definition": "baseline vertices more than 100 mm Euclidean distance from audited seed-face vertices",
+    "vertex_count": 4948,
+    "max_displacement_mm": 0.0,
+    "changed_vertex_count": 0
+  },
+  "flow_steps": [
+    {
+      "step": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-000.npz",
+      "sha256": "9e49bfedc6de9ae49a833315b67a7fe174d2fd8812c3db03f2b75483ffecd000"
+    },
+    {
+      "step": 1,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-001.npz",
+      "sha256": "053255dcbbadbeaf28e595f5b31ef73ebe408403eefdb25b2ad54d0b8ecf633d"
+    },
+    {
+      "step": 2,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-002.npz",
+      "sha256": "86c85429d1deccf3de8017640766255e9a24293f57ee9aac0642c0b538bcdd0d"
+    },
+    {
+      "step": 3,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-003.npz",
+      "sha256": "981456f8192c0d35cff5089b3ba0daeecacefa40d36ebdec81333422aa636264"
+    },
+    {
+      "step": 4,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/flow-step-004.npz",
+      "sha256": "58380a898545d3452298b2cd4ba3006459594df53cec9b546ba3b6f785caaa1c"
+    }
+  ],
+  "ray_target_choice_files": [
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-000.npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-001.npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-002.npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-003.npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/rayexit-baseline-001/ray-targets-step-004.npz"
+  ],
+  "elapsed_s": 33.337991249980405
+}

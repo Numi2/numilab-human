@@ -1,0 +1,265 @@
+{
+  "title": "Read-only chain and inter-digit gap audit for envelope 033",
+  "scope": {
+    "candidate": "envelope-033-exact-seams/candidate.npz",
+    "candidate_sha256": "549fab40b3cdfec2d0e1c9a004451d276f87b445f1c7dc9d5a56c1b5a1a53be4",
+    "comparison_states": [
+      "baseline 806",
+      "envelope 006",
+      "envelope 014",
+      "envelope 031 (explicit proxy for 033; 14 seam edits <=0.9957053585 um)"
+    ],
+    "physical_steps": 0,
+    "mass_admitted": false,
+    "native_admission": false,
+    "read_only": true
+  },
+  "patch": {
+    "vertices": 94,
+    "faces": 184,
+    "cycle_points": 53,
+    "pca_axis": [
+      0.1814141396,
+      0.9762982778,
+      -0.1180278896
+    ],
+    "centroid_mm": [
+      -307.1213779,
+      -985.3280271,
+      139.736451
+    ],
+    "bbox_min_mm": [
+      -315.3349,
+      -1014.6993,
+      133.6722
+    ],
+    "bbox_max_mm": [
+      -298.4838,
+      -960.6089,
+      146.0141
+    ],
+    "axial_span_from_centroid_mm": [
+      -30.5677,
+      25.2598
+    ]
+  },
+  "geometric_chain_inference": {
+    "patched_serial_chain": [
+      "61/97",
+      "60/96",
+      "59/95",
+      "57/89"
+    ],
+    "adjacent_parallel_chain": [
+      "66/100",
+      "65/99",
+      "64/98"
+    ],
+    "bank_axis_and_1mm_endpoint_bands": [
+      {
+        "bank": "61/97",
+        "axis": [
+          0.10262,
+          0.98527,
+          -0.13676
+        ],
+        "low_mm": [
+          -319.034,
+          -1026.884,
+          147.219
+        ],
+        "high_mm": [
+          -317.371,
+          -1008.74,
+          144.149
+        ]
+      },
+      {
+        "bank": "60/96",
+        "axis": [
+          0.19291,
+          0.97072,
+          -0.14313
+        ],
+        "low_mm": [
+          -316.27,
+          -1008.852,
+          145.061
+        ],
+        "high_mm": [
+          -312.266,
+          -985.173,
+          140.71
+        ]
+      },
+      {
+        "bank": "59/95",
+        "axis": [
+          0.25359,
+          0.95068,
+          -0.17862
+        ],
+        "low_mm": [
+          -312.711,
+          -984.484,
+          141.553
+        ],
+        "high_mm": [
+          -303.015,
+          -947.01,
+          135.234
+        ]
+      },
+      {
+        "bank": "57/89",
+        "axis": [
+          0.25103,
+          0.95386,
+          -0.16472
+        ],
+        "low_mm": [
+          -303.288,
+          -948.589,
+          134.501
+        ],
+        "high_mm": [
+          -287.537,
+          -881.205,
+          118.94
+        ]
+      }
+    ],
+    "patch_axis_interval_mm": {
+      "61/97": [
+        -43.9209,
+        -24.8382
+      ],
+      "60/96": [
+        -25.7502,
+        -0.3792
+      ],
+      "59/95": [
+        -1.1236,
+        39.6011
+      ],
+      "57/89": [
+        36.7323,
+        108.1154
+      ]
+    },
+    "serial_links": [
+      {
+        "from": "61/97",
+        "to": "60/96",
+        "endpoint_gap_mm": 1.4339,
+        "abs_axis_dot": 0.9958
+      },
+      {
+        "from": "60/96",
+        "to": "59/95",
+        "endpoint_gap_mm": 1.1762,
+        "abs_axis_dot": 0.9973
+      },
+      {
+        "from": "59/95",
+        "to": "57/89",
+        "endpoint_gap_mm": 1.7623,
+        "abs_axis_dot": 0.999895
+      }
+    ],
+    "adjacent_links": [
+      {
+        "from": "66/100",
+        "to": "65/99",
+        "endpoint_gap_mm": 1.6444,
+        "abs_axis_dot": 0.99774
+      },
+      {
+        "from": "65/99",
+        "to": "64/98",
+        "endpoint_gap_mm": 4.6734,
+        "abs_axis_dot": 0.99633
+      }
+    ],
+    "minimum_patch_to_bone_surface_distance_mm": {
+      "59/95": 0.4637,
+      "60/96": 0.4502,
+      "61/97": 0.4855,
+      "57/89": 11.6496,
+      "65/99": 11.1527,
+      "64/98": 11.344,
+      "66/100": 18.4382
+    },
+    "identity_limit": "Source records expose body/stable-bone identifiers only; no anatomical member-name mapping was established. Chain classification is geometric."
+  },
+  "gap_sampling": {
+    "method": "25 one-millimetre axial slabs s=-25..-1 along patch PCA axis; nine chord samples t=.1.. .9 between 60/96 and adjacent 65/99 cross-section centers; occupancy from saved section-loop parity results.",
+    "central_chord_samples": {
+      "t_values": [
+        0.3,
+        0.4,
+        0.5,
+        0.6
+      ],
+      "slabs": 25,
+      "inside_by_state": {
+        "baseline 806": 0,
+        "envelope 006": 0,
+        "envelope 014": 0,
+        "envelope 031 proxy for 033": 0
+      }
+    },
+    "actual_per_sample_xyz_rows": "Not present in retained audit artifacts; no coordinates reconstructed. Actual patch and bank endpoint coordinates are recorded above.",
+    "outer_sample_occupancy_snapshots_t01_to_t09": [
+      {
+        "s_mm": -25,
+        "baseline": "000000011",
+        "envelope006": null,
+        "envelope014": null,
+        "envelope031": "110000011"
+      },
+      {
+        "s_mm": -22,
+        "baseline": "000000111",
+        "envelope006": null,
+        "envelope014": null,
+        "envelope031": "110000111"
+      },
+      {
+        "s_mm": -20,
+        "baseline": "000000000",
+        "envelope006": "100000001",
+        "envelope014": "100000001",
+        "envelope031": "100000001"
+      },
+      {
+        "s_mm": -14,
+        "baseline": "000000000",
+        "envelope006": "100000001",
+        "envelope014": "100000001",
+        "envelope031": "110000001"
+      },
+      {
+        "s_mm": -10,
+        "baseline": "000000000",
+        "envelope006": "100000001",
+        "envelope014": "100000001",
+        "envelope031": "110000001"
+      },
+      {
+        "s_mm": -2,
+        "baseline": "000000000",
+        "envelope006": "100000011",
+        "envelope014": "100000011",
+        "envelope031": "110000011"
+      }
+    ],
+    "interpretation": "Patch follows serial chain 61/97->60/96->59/95. It does not close the sampled central gap toward 65/99. At sampled outer chord points envelope 031 expands about 2.5-5.2 mm toward the inter-digit gap relative to baseline; central gap remains outside.",
+    "limitations": "Finite 1 mm slabs and nine chord points do not prove continuous 3D clearance. Section-loop parity is diagnostic only. Envelope 031 is an explicitly scoped proxy for 033 (14 seam edits <=0.996 um)."
+  },
+  "admission": {
+    "reference_geometry_gate": "PASS_REFERENCE_GEOMETRY_ONLY per envelope-033 report; distinct from anatomy review",
+    "mass": "NOT ADMITTED",
+    "reason": "Discrete gap sampling, unverified anatomical member naming, and measured outer-gap expansion require owner/anatomy review."
+  }
+}

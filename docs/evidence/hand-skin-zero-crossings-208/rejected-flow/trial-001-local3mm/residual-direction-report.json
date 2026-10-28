@@ -1,0 +1,776 @@
+{
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-local3mm/candidate.npz",
+  "candidate_sha256": "069ef770b344a1244b2b9068788ee796f9fae0ee9a53922f68aee247fb74efd9",
+  "query_source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/R/ambient-flow-030/trial-001-local3mm/final-measurement/query",
+  "inside_rows": 261,
+  "world_exit_depth_max_mm": 3.2339689822893116,
+  "world_exit_depth_median_mm": 0.40416717320447754,
+  "rows_with_exit_against_outward_normal": 93,
+  "rows_with_exit_against_outward_normal_fraction": 0.3563218390804598,
+  "current_outward_normal_rule": "baseline face winding is inward; face probes use negative current face cross-product; vertex probes use negative area-weighted incident-face normal",
+  "row_fit": {
+    "control_spacing_mm": 3.0,
+    "fit_witness_count": 261,
+    "cg_info_per_axis": [
+      0,
+      0,
+      0
+    ],
+    "signed_residual_definition": "dot(fitted_velocity - full_world_closest_exit_target, unit_exit_direction); negative means underfit along requested exit"
+  },
+  "per_body": [
+    {
+      "body": 64,
+      "stable_bone_id": 98,
+      "inside_rows": 17,
+      "max_world_depth_mm": 3.2339689822893116,
+      "median_world_depth_mm": 0.4165717999721622,
+      "mean_target_outward_normal_dot": 0.02586907557774179,
+      "negative_outward_dot_rows": 6
+    },
+    {
+      "body": 57,
+      "stable_bone_id": 89,
+      "inside_rows": 25,
+      "max_world_depth_mm": 3.033692806382082,
+      "median_world_depth_mm": 0.4486067289540799,
+      "mean_target_outward_normal_dot": 0.029137816769507587,
+      "negative_outward_dot_rows": 12
+    },
+    {
+      "body": 109,
+      "stable_bone_id": 114,
+      "inside_rows": 14,
+      "max_world_depth_mm": 2.398295623779476,
+      "median_world_depth_mm": 0.8537132670173796,
+      "mean_target_outward_normal_dot": 0.12358689418916856,
+      "negative_outward_dot_rows": 3
+    },
+    {
+      "body": 59,
+      "stable_bone_id": 95,
+      "inside_rows": 18,
+      "max_world_depth_mm": 2.1810297000175978,
+      "median_world_depth_mm": 0.7708535264938174,
+      "mean_target_outward_normal_dot": -0.11841381009083385,
+      "negative_outward_dot_rows": 13
+    },
+    {
+      "body": 114,
+      "stable_bone_id": 117,
+      "inside_rows": 15,
+      "max_world_depth_mm": 2.1585336758260336,
+      "median_world_depth_mm": 0.48593730020312226,
+      "mean_target_outward_normal_dot": 0.14646740474743652,
+      "negative_outward_dot_rows": 6
+    },
+    {
+      "body": 124,
+      "stable_bone_id": 123,
+      "inside_rows": 16,
+      "max_world_depth_mm": 2.140320767489123,
+      "median_world_depth_mm": 0.6747170708876509,
+      "mean_target_outward_normal_dot": 0.09575619406857033,
+      "negative_outward_dot_rows": 6
+    },
+    {
+      "body": 115,
+      "stable_bone_id": 118,
+      "inside_rows": 19,
+      "max_world_depth_mm": 1.8320627761385908,
+      "median_world_depth_mm": 0.6776807033898948,
+      "mean_target_outward_normal_dot": 0.03158831710583585,
+      "negative_outward_dot_rows": 8
+    },
+    {
+      "body": 65,
+      "stable_bone_id": 99,
+      "inside_rows": 89,
+      "max_world_depth_mm": 1.7966071967451491,
+      "median_world_depth_mm": 0.37502885235843814,
+      "mean_target_outward_normal_dot": 0.025064488511302278,
+      "negative_outward_dot_rows": 28
+    },
+    {
+      "body": 61,
+      "stable_bone_id": 97,
+      "inside_rows": 16,
+      "max_world_depth_mm": 1.4052530872624507,
+      "median_world_depth_mm": 0.5124952373463514,
+      "mean_target_outward_normal_dot": 0.020998540888464555,
+      "negative_outward_dot_rows": 6
+    },
+    {
+      "body": 74,
+      "stable_bone_id": 104,
+      "inside_rows": 11,
+      "max_world_depth_mm": 1.1807885542809358,
+      "median_world_depth_mm": 1.0720933719358323,
+      "mean_target_outward_normal_dot": 0.06555387644596188,
+      "negative_outward_dot_rows": 5
+    },
+    {
+      "body": 43,
+      "stable_bone_id": 16,
+      "inside_rows": 5,
+      "max_world_depth_mm": 0.11465242955855567,
+      "median_world_depth_mm": 0.058960246627299026,
+      "mean_target_outward_normal_dot": 0.8369932396161783,
+      "negative_outward_dot_rows": 0
+    },
+    {
+      "body": 62,
+      "stable_bone_id": 90,
+      "inside_rows": 15,
+      "max_world_depth_mm": 0.0077599056599675885,
+      "median_world_depth_mm": 0.0077599056599675885,
+      "mean_target_outward_normal_dot": 0.31921778396981154,
+      "negative_outward_dot_rows": 0
+    },
+    {
+      "body": 46,
+      "stable_bone_id": 74,
+      "inside_rows": 1,
+      "max_world_depth_mm": 0.0007824109923250346,
+      "median_world_depth_mm": 0.0007824109923250346,
+      "mean_target_outward_normal_dot": 0.9214809099355376,
+      "negative_outward_dot_rows": 0
+    }
+  ],
+  "neighbor_exit_direction_opposition_within_6mm": {
+    "61": {
+      "pairs_within_6mm": 120,
+      "negative_direction_pairs": 79,
+      "minimum_direction_dot": -0.9962822549112875,
+      "median_direction_dot": -0.21608586182894657
+    },
+    "62": {
+      "pairs_within_6mm": 105,
+      "negative_direction_pairs": 0,
+      "minimum_direction_dot": 0.999999994304763,
+      "median_direction_dot": 0.999999994304763
+    },
+    "57": {
+      "pairs_within_6mm": 100,
+      "negative_direction_pairs": 37,
+      "minimum_direction_dot": -0.9179950906051864,
+      "median_direction_dot": 0.36440111779573026
+    },
+    "59": {
+      "pairs_within_6mm": 103,
+      "negative_direction_pairs": 44,
+      "minimum_direction_dot": -0.9968504253171578,
+      "median_direction_dot": 0.25484147666674506
+    },
+    "65": {
+      "pairs_within_6mm": 3874,
+      "negative_direction_pairs": 1820,
+      "minimum_direction_dot": -0.995762657882136,
+      "median_direction_dot": 0.28740360117703995
+    },
+    "64": {
+      "pairs_within_6mm": 85,
+      "negative_direction_pairs": 36,
+      "minimum_direction_dot": -0.9879610114860832,
+      "median_direction_dot": 0.5219705163905088
+    },
+    "43": {
+      "pairs_within_6mm": 10,
+      "negative_direction_pairs": 0,
+      "minimum_direction_dot": 0.5272805499827307,
+      "median_direction_dot": 0.5361643821783546
+    },
+    "74": {
+      "pairs_within_6mm": 54,
+      "negative_direction_pairs": 27,
+      "minimum_direction_dot": -0.9977305710066955,
+      "median_direction_dot": -0.09283782374612308
+    },
+    "124": {
+      "pairs_within_6mm": 111,
+      "negative_direction_pairs": 52,
+      "minimum_direction_dot": -0.9969100221744162,
+      "median_direction_dot": 0.17164493718620505
+    },
+    "115": {
+      "pairs_within_6mm": 161,
+      "negative_direction_pairs": 84,
+      "minimum_direction_dot": -0.999723187187976,
+      "median_direction_dot": -0.5004295487981901
+    },
+    "109": {
+      "pairs_within_6mm": 67,
+      "negative_direction_pairs": 33,
+      "minimum_direction_dot": -0.9988298797291423,
+      "median_direction_dot": 0.06661958750669411
+    },
+    "114": {
+      "pairs_within_6mm": 67,
+      "negative_direction_pairs": 29,
+      "minimum_direction_dot": -0.9420232049306244,
+      "median_direction_dot": 0.437097571883439
+    }
+  },
+  "deepest_witness_rows": [
+    {
+      "query_row": 20998,
+      "body": 64,
+      "stable_bone_id": 98,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 17574,
+      "point_world_mm": [
+        -309.6822,
+        -962.6939,
+        117.8755
+      ],
+      "target_mm": [
+        -2.994582,
+        0.617058,
+        1.450161
+      ],
+      "target_hat": [
+        -0.88493183,
+        0.1823473,
+        0.42853836
+      ],
+      "world_depth_mm": 3.2339689822893116,
+      "target_outward_normal_dot": -0.011969767633335363,
+      "fit_signed_error_along_exit_mm": -3.3935645873100038,
+      "fit_residual_norm_mm": 3.394294838709976,
+      "fit_projection_along_exit_mm": -0.00959560641190933
+    },
+    {
+      "query_row": 10488,
+      "body": 57,
+      "stable_bone_id": 89,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 13193,
+      "point_world_mm": [
+        -300.3472,
+        -923.4716,
+        131.7248
+      ],
+      "target_mm": [
+        -0.488397,
+        -0.248735,
+        -3.13616
+      ],
+      "target_hat": [
+        -0.15340567,
+        -0.07812774,
+        -0.98506992
+      ],
+      "world_depth_mm": 3.033692806382082,
+      "target_outward_normal_dot": -0.2655257190348456,
+      "fit_signed_error_along_exit_mm": -3.1453296661864836,
+      "fit_residual_norm_mm": 3.1454733166420126,
+      "fit_projection_along_exit_mm": 0.038363138793277914
+    },
+    {
+      "query_row": 5829,
+      "body": 57,
+      "stable_bone_id": 89,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 11068,
+      "point_world_mm": [
+        -298.2054,
+        -916.0129,
+        133.0747
+      ],
+      "target_mm": [
+        -0.589633,
+        0.768683,
+        2.733364
+      ],
+      "target_hat": [
+        -0.20332377,
+        0.26506601,
+        0.94254944
+      ],
+      "world_depth_mm": 2.7499690129055923,
+      "target_outward_normal_dot": -0.13197162687651118,
+      "fit_signed_error_along_exit_mm": -2.7130180864324283,
+      "fit_residual_norm_mm": 2.7130917128007463,
+      "fit_projection_along_exit_mm": 0.1869509251763996
+    },
+    {
+      "query_row": 5848,
+      "body": 57,
+      "stable_bone_id": 89,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 11069,
+      "point_world_mm": [
+        -298.2054,
+        -916.0129,
+        133.0747
+      ],
+      "target_mm": [
+        -0.589633,
+        0.768683,
+        2.733364
+      ],
+      "target_hat": [
+        -0.20332377,
+        0.26506601,
+        0.94254944
+      ],
+      "world_depth_mm": 2.7499690129055923,
+      "target_outward_normal_dot": -0.11354688586922286,
+      "fit_signed_error_along_exit_mm": -2.7130180864324283,
+      "fit_residual_norm_mm": 2.7130917128007463,
+      "fit_projection_along_exit_mm": 0.1869509251763996
+    },
+    {
+      "query_row": 5850,
+      "body": 57,
+      "stable_bone_id": 89,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 11069,
+      "point_world_mm": [
+        -298.1234,
+        -916.2763,
+        130.4459
+      ],
+      "target_mm": [
+        -0.433703,
+        -0.22088,
+        -2.784954
+      ],
+      "target_hat": [
+        -0.15340567,
+        -0.07812774,
+        -0.98506992
+      ],
+      "world_depth_mm": 2.6771639189007628,
+      "target_outward_normal_dot": 0.032619578747746666,
+      "fit_signed_error_along_exit_mm": -2.8602503247583893,
+      "fit_residual_norm_mm": 2.860429804984485,
+      "fit_projection_along_exit_mm": -0.033086407259946694
+    },
+    {
+      "query_row": 47632,
+      "body": 109,
+      "stable_bone_id": 114,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 35341,
+      "point_world_mm": [
+        258.2351,
+        -963.6694,
+        140.4008
+      ],
+      "target_mm": [
+        -2.194537,
+        -0.727801,
+        -1.071505
+      ],
+      "target_hat": [
+        -0.86117842,
+        -0.28560313,
+        -0.42047899
+      ],
+      "world_depth_mm": 2.398295623779476,
+      "target_outward_normal_dot": 0.19070045663309804,
+      "fit_signed_error_along_exit_mm": -2.4225547271092798,
+      "fit_residual_norm_mm": 2.4226253848225405,
+      "fit_projection_along_exit_mm": 0.12574090917572006
+    },
+    {
+      "query_row": 47651,
+      "body": 109,
+      "stable_bone_id": 114,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 35342,
+      "point_world_mm": [
+        258.2351,
+        -963.6694,
+        140.4008
+      ],
+      "target_mm": [
+        -2.194537,
+        -0.727801,
+        -1.071505
+      ],
+      "target_hat": [
+        -0.86117842,
+        -0.28560313,
+        -0.42047899
+      ],
+      "world_depth_mm": 2.398295623779476,
+      "target_outward_normal_dot": 0.2141077935039642,
+      "fit_signed_error_along_exit_mm": -2.4225547271092798,
+      "fit_residual_norm_mm": 2.4226253848225405,
+      "fit_projection_along_exit_mm": 0.12574090917572006
+    },
+    {
+      "query_row": 20957,
+      "body": 64,
+      "stable_bone_id": 98,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 17571,
+      "point_world_mm": [
+        -308.5768,
+        -962.5894,
+        115.4026
+      ],
+      "target_mm": [
+        2.318794,
+        -0.901147,
+        -0.102828
+      ],
+      "target_hat": [
+        0.93129174,
+        -0.36192556,
+        -0.04129867
+      ],
+      "world_depth_mm": 2.3398688556684584,
+      "target_outward_normal_dot": 0.1303404930515203,
+      "fit_signed_error_along_exit_mm": -2.359027554891727,
+      "fit_residual_norm_mm": 2.359272679130465,
+      "fit_projection_along_exit_mm": 0.13084129949344245
+    },
+    {
+      "query_row": 20993,
+      "body": 64,
+      "stable_bone_id": 98,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 17574,
+      "point_world_mm": [
+        -308.5768,
+        -962.5894,
+        115.4026
+      ],
+      "target_mm": [
+        2.318794,
+        -0.901147,
+        -0.102828
+      ],
+      "target_hat": [
+        0.93129174,
+        -0.36192556,
+        -0.04129867
+      ],
+      "world_depth_mm": 2.3398688556684584,
+      "target_outward_normal_dot": 0.11088727996173676,
+      "fit_signed_error_along_exit_mm": -2.359027554891727,
+      "fit_residual_norm_mm": 2.359272679130465,
+      "fit_projection_along_exit_mm": 0.13084129949344245
+    },
+    {
+      "query_row": 47653,
+      "body": 109,
+      "stable_bone_id": 114,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 35342,
+      "point_world_mm": [
+        260.2989,
+        -963.4236,
+        140.7608
+      ],
+      "target_mm": [
+        2.399144,
+        0.650103,
+        0.034539
+      ],
+      "target_hat": [
+        0.96509918,
+        0.26151582,
+        0.01389411
+      ],
+      "world_depth_mm": 2.335904213944997,
+      "target_outward_normal_dot": -0.12425725772515965,
+      "fit_signed_error_along_exit_mm": -2.4834455869528136,
+      "fit_residual_norm_mm": 2.4838948088345143,
+      "fit_projection_along_exit_mm": 0.002458639555638467
+    },
+    {
+      "query_row": 7776,
+      "body": 59,
+      "stable_bone_id": 95,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 12188,
+      "point_world_mm": [
+        -308.0422,
+        -961.1525,
+        137.4977
+      ],
+      "target_mm": [
+        2.093284,
+        -0.636064,
+        -0.804539
+      ],
+      "target_hat": [
+        0.89800842,
+        -0.2728682,
+        -0.34514318
+      ],
+      "world_depth_mm": 2.1810297000175978,
+      "target_outward_normal_dot": 0.15537588903174593,
+      "fit_signed_error_along_exit_mm": -2.211063282127446,
+      "fit_residual_norm_mm": 2.2112643136425163,
+      "fit_projection_along_exit_mm": 0.11996641654901419
+    },
+    {
+      "query_row": 50481,
+      "body": 114,
+      "stable_bone_id": 117,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 42110,
+      "point_world_mm": [
+        263.0458,
+        -978.6566,
+        121.3262
+      ],
+      "target_mm": [
+        1.979809,
+        0.147193,
+        1.178142
+      ],
+      "target_hat": [
+        0.85760457,
+        0.06376054,
+        0.51034204
+      ],
+      "world_depth_mm": 2.1585336758260336,
+      "target_outward_normal_dot": -0.19028804702561553,
+      "fit_signed_error_along_exit_mm": -2.2945394582756844,
+      "fit_residual_norm_mm": 2.2947996129165973,
+      "fit_projection_along_exit_mm": 0.013994230691969076
+    },
+    {
+      "query_row": 35031,
+      "body": 124,
+      "stable_bone_id": 123,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 27021,
+      "point_world_mm": [
+        236.3907,
+        -954.7681,
+        90.0195
+      ],
+      "target_mm": [
+        -1.427943,
+        -0.229641,
+        1.775898
+      ],
+      "target_hat": [
+        -0.62346861,
+        -0.10026582,
+        0.77539258
+      ],
+      "world_depth_mm": 2.140320767489123,
+      "target_outward_normal_dot": -0.0341847525950335,
+      "fit_signed_error_along_exit_mm": -2.1425862307617103,
+      "fit_residual_norm_mm": 2.142727562319942,
+      "fit_projection_along_exit_mm": 0.14773454972704808
+    },
+    {
+      "query_row": 35220,
+      "body": 124,
+      "stable_bone_id": 123,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 27045,
+      "point_world_mm": [
+        236.3907,
+        -954.7681,
+        90.0195
+      ],
+      "target_mm": [
+        -1.427943,
+        -0.229641,
+        1.775898
+      ],
+      "target_hat": [
+        -0.62346861,
+        -0.10026582,
+        0.77539258
+      ],
+      "world_depth_mm": 2.140320767489123,
+      "target_outward_normal_dot": -0.0072584674082148345,
+      "fit_signed_error_along_exit_mm": -2.1425862307617103,
+      "fit_residual_norm_mm": 2.142727562319942,
+      "fit_projection_along_exit_mm": 0.14773454972704808
+    },
+    {
+      "query_row": 47631,
+      "body": 109,
+      "stable_bone_id": 114,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 35341,
+      "point_world_mm": [
+        258.6368,
+        -964.0279,
+        143.6069
+      ],
+      "target_mm": [
+        1.37397,
+        0.521415,
+        1.557547
+      ],
+      "target_hat": [
+        0.64162044,
+        0.2434917,
+        0.72734793
+      ],
+      "world_depth_mm": 1.9914060184415823,
+      "target_outward_normal_dot": -0.22596648404303218,
+      "fit_signed_error_along_exit_mm": -2.0702743946768534,
+      "fit_residual_norm_mm": 2.070718402484406,
+      "fit_projection_along_exit_mm": 0.07113163650408359
+    },
+    {
+      "query_row": 47652,
+      "body": 109,
+      "stable_bone_id": 114,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 35342,
+      "point_world_mm": [
+        258.6368,
+        -964.0279,
+        143.6069
+      ],
+      "target_mm": [
+        1.37397,
+        0.521415,
+        1.557547
+      ],
+      "target_hat": [
+        0.64162044,
+        0.2434917,
+        0.72734793
+      ],
+      "world_depth_mm": 1.9914060184415823,
+      "target_outward_normal_dot": -0.24235610145675657,
+      "fit_signed_error_along_exit_mm": -2.0702743946768534,
+      "fit_residual_norm_mm": 2.070718402484406,
+      "fit_projection_along_exit_mm": 0.07113163650408359
+    },
+    {
+      "query_row": 50440,
+      "body": 114,
+      "stable_bone_id": 117,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 42107,
+      "point_world_mm": [
+        261.3057,
+        -978.3638,
+        119.4441
+      ],
+      "target_mm": [
+        -2.013684,
+        -0.382782,
+        -0.436777
+      ],
+      "target_hat": [
+        -0.96083603,
+        -0.18264585,
+        -0.20840971
+      ],
+      "world_depth_mm": 1.9457622503629068,
+      "target_outward_normal_dot": 0.3208467705871797,
+      "fit_signed_error_along_exit_mm": -1.9902800084420433,
+      "fit_residual_norm_mm": 1.9904172833733378,
+      "fit_projection_along_exit_mm": 0.10548225486668034
+    },
+    {
+      "query_row": 50476,
+      "body": 114,
+      "stable_bone_id": 117,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 42110,
+      "point_world_mm": [
+        261.3057,
+        -978.3638,
+        119.4441
+      ],
+      "target_mm": [
+        -2.013684,
+        -0.382782,
+        -0.436777
+      ],
+      "target_hat": [
+        -0.96083603,
+        -0.18264585,
+        -0.20840971
+      ],
+      "world_depth_mm": 1.9457622503629068,
+      "target_outward_normal_dot": 0.3094620043931483,
+      "fit_signed_error_along_exit_mm": -1.9902800084420433,
+      "fit_residual_norm_mm": 1.9904172833733378,
+      "fit_projection_along_exit_mm": 0.10548225486668034
+    },
+    {
+      "query_row": 35225,
+      "body": 124,
+      "stable_bone_id": 123,
+      "kind": "centroid",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 27045,
+      "point_world_mm": [
+        235.8947,
+        -954.6953,
+        88.5949
+      ],
+      "target_mm": [
+        0.022392,
+        0.179997,
+        -2.062393
+      ],
+      "target_hat": [
+        0.01081542,
+        0.08694044,
+        -0.9961548
+      ],
+      "world_depth_mm": 1.9203538597857328,
+      "target_outward_normal_dot": -0.008808866716113667,
+      "fit_signed_error_along_exit_mm": -2.134177882314516,
+      "fit_residual_norm_mm": 2.135010042760467,
+      "fit_projection_along_exit_mm": -0.06382400961996866
+    },
+    {
+      "query_row": 40315,
+      "body": 115,
+      "stable_bone_id": 118,
+      "kind": "edge_probe",
+      "seed_crossing_face_witness": true,
+      "face_or_vertex_row": 31456,
+      "point_world_mm": [
+        267.3741,
+        -1007.1481,
+        120.4842
+      ],
+      "target_mm": [
+        1.858074,
+        0.087614,
+        -0.68444
+      ],
+      "target_hat": [
+        0.93744441,
+        0.04420368,
+        -0.34531725
+      ],
+      "world_depth_mm": 1.8320627761385908,
+      "target_outward_normal_dot": 0.1295655127503469,
+      "fit_signed_error_along_exit_mm": -1.9188361824273503,
+      "fit_residual_norm_mm": 1.9189194594986847,
+      "fit_projection_along_exit_mm": 0.06322660685150551
+    }
+  ]
+}
