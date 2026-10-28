@@ -59,6 +59,21 @@ def load_pose(p,binds):
  if set(z["body"] for z in binds)-set(b):raise ValueError("D37 matched poses omit a source binding body")
  return x,b
 
+def load_target_pose(path,binds,source_bodies):
+ x=json.loads(Path(path).read_text())
+ ids=[int(y["body_index"]) for y in x["bodies"]]
+ if len(set(ids))!=len(ids):raise ValueError("target pose contains duplicate body identities")
+ target,bodies=load_pose(path,binds)
+ for binding in binds:
+  i=binding["body"];body=bodies[i]
+  for state in ("rest","current"):
+   if body[state+"_p"].shape!=(3,) or body[state+"_q"].shape!=(4,) or not np.isfinite(body[state+"_p"]).all() or not np.isfinite(body[state+"_q"]).all() or abs(float(np.linalg.norm(body[state+"_q"].astype(float)))-1)>1e-5:
+    raise ValueError("target pose has invalid position or quaternion")
+  for key in ("rest_p","rest_q"):
+   if not np.array_equal(body[key],source_bodies[i][key]):
+    raise ValueError("target pose changes the pinned D37 rest/binding frame")
+ return target,bodies
+
 def replay(local,w,binds,bodies,state):
  out=np.zeros((len(local),3),np.float32)
  for j,b in enumerate(binds):
@@ -258,31 +273,47 @@ def main():
  for x in ("source-payload","source-csv-gzip","source-poses","candidate","baseline","identity","p1-crosswalk","output-dir"):a.add_argument("--"+x,required=True)
  a.add_argument("--conditioned-candidate",default=None)
  a.add_argument("--compact-node-map",default=None)
+ a.add_argument("--local-repair-candidate",default=None)
+ a.add_argument("--local-repair-sha256",default=None)
+ a.add_argument("--target-poses",default=None)
+ a.add_argument("--target-poses-sha256",default=None)
  a.add_argument("--max-projection-distance-m",type=float,default=None);a=a.parse_args()
  start=time.time();paths={k:Path(getattr(a,k.replace("-","_"))) for k in ("source-payload","source-csv-gzip","source-poses","candidate","baseline","identity","p1-crosswalk")}
  if a.conditioned_candidate:paths["conditioned-candidate"]=Path(a.conditioned_candidate)
  if a.compact_node_map:paths["compact-node-map"]=Path(a.compact_node_map)
+ if a.local_repair_candidate:paths["local-repair-candidate"]=Path(a.local_repair_candidate)
+ if a.target_poses:paths["target-poses"]=Path(a.target_poses)
+ if bool(a.target_poses)!=bool(a.target_poses_sha256):raise ValueError("native target placement requires its explicit pose SHA-256")
+ if bool(a.local_repair_candidate)!=bool(a.local_repair_sha256) or (a.local_repair_candidate and not a.conditioned_candidate):raise ValueError("local repair requires pinned conditioned reference and explicit repair SHA-256")
  if bool(a.conditioned_candidate)!=bool(a.compact_node_map):raise ValueError("conditioned O requires its explicit compact-node-map CSV")
  out=Path(a.output_dir);out.mkdir(parents=True,exist_ok=False)
  hashes={k:sha(v) for k,v in paths.items()}
  if hashes["source-payload"]!=D37 or hashes["source-csv-gzip"]!=SOURCE_CSV_SHA or hashes["source-poses"]!=POSE_SHA or hashes["candidate"]!=CAND or hashes["baseline"]!=BASE or hashes["identity"]!=IDENTITY_SHA or hashes["p1-crosswalk"]!=P1_SHA:raise ValueError("input SHA differs from pinned D37/candidate033/baseline806/identity/P1 crosswalk")
  if a.conditioned_candidate and hashes["conditioned-candidate"]!=CONDITIONED_CAND:raise ValueError("conditioned candidate SHA differs from pinned canonical conditioned O")
+ if a.target_poses and hashes["target-poses"]!=a.target_poses_sha256:raise ValueError("native target placement pose SHA mismatch")
+ if a.local_repair_candidate and hashes["local-repair-candidate"]!=a.local_repair_sha256:raise ValueError("local repair candidate SHA mismatch")
  if a.compact_node_map and hashes["compact-node-map"]!=COMPACT_MAP_SHA:raise ValueError("compact node map SHA differs from pinned canonical O compact map")
  raw,source_sha,binds,sv,sf,sw,binding_bytes=load_skin(paths["source-payload"])
  pose,bodies=load_pose(paths["source-poses"],binds);csvrows,srcworld=read_source_csv(paths["source-csv-gzip"])
  source_replay=replay(sv[:,:3],sw,binds,bodies,"current");source_err=np.linalg.norm(source_replay.astype(float)-srcworld.astype(float),axis=1)
  if source_err.max()>2e-6:raise ValueError("D37 payload/pose/CSV F32 replay mismatch >2um")
+ source_pose=pose
+ if a.target_poses:pose,bodies=load_target_pose(paths["target-poses"],binds,bodies)
  crosswalk=build_source_crosswalk(paths["p1-crosswalk"],csvrows)
  source_ca=np.load(paths["candidate"],allow_pickle=False)
- canonical_candidate_rows=None
+ canonical_candidate_rows=None;local_repair_report=None
  if a.conditioned_candidate:
   ca=np.load(paths["conditioned-candidate"],allow_pickle=False)
+  if a.local_repair_candidate:
+   from validate_connected_skin_local_repair import validate_local_repair
+   repaired=np.load(paths["local-repair-candidate"],allow_pickle=False)
+   local_repair_report=validate_local_repair(ca,repaired,hashes["conditioned-candidate"]);ca=repaired
   canonical_points=np.asarray(ca["points_world_m"],np.float32);canonical_faces=np.asarray(ca["source_O_faces"],np.int64)
-  if canonical_points.shape!=np.asarray(source_ca["points_world_m"]).shape or not np.array_equal(canonical_points,source_ca["points_world_m"]):raise ValueError("conditioned O must preserve the exact O033 Float32 point table")
+  if canonical_points.shape!=np.asarray(source_ca["points_world_m"]).shape or (local_repair_report is None and not np.array_equal(canonical_points,source_ca["points_world_m"])):raise ValueError("conditioned O must preserve the exact O033 Float32 point table")
   if "candidate_vertex_to_O033_row" not in ca.files:raise ValueError("conditioned O is missing explicit candidate-to-O033 vertex map")
   candidate_to_o033=np.asarray(ca["candidate_vertex_to_O033_row"],np.int64)
   if candidate_to_o033.shape!=(len(canonical_points),) or np.any(candidate_to_o033<0) or np.any(candidate_to_o033>=len(source_ca["points_world_m"])) or len(np.unique(candidate_to_o033))!=len(canonical_points):raise ValueError("conditioned candidate-to-O033 vertex map is incomplete or non-bijective")
-  if not np.array_equal(canonical_points,source_ca["points_world_m"][candidate_to_o033]):raise ValueError("conditioned O candidate-to-O033 map disagrees with exact point coordinates")
+  if local_repair_report is None and not np.array_equal(canonical_points,source_ca["points_world_m"][candidate_to_o033]):raise ValueError("conditioned O candidate-to-O033 map disagrees with exact point coordinates")
   canonical_candidate_rows,_=load_compact_candidate_rows(paths["compact-node-map"],len(canonical_points),candidate_to_o033)
   if "output_face_to_precontraction_candidate_face_row" not in ca.files:raise ValueError("conditioned O is missing face-to-O033 source map")
   face_parent=np.asarray(ca["output_face_to_precontraction_candidate_face_row"],np.int64)
@@ -440,7 +471,7 @@ def main():
  payload_sha=sha(payload);reg_sha=sha(reg);face_sha=sha(fc);weight_sha=sha(wp);frame_sha=sha(fp)
  hpp.write_text("#pragma once\n#include <array>\n#include <cstdint>\n#include <string_view>\nnamespace numi::human::candidate033 {\ninline constexpr std::uint32_t kPayloadABI=5u,kBindingCount=86u,kOuterVertexCount="+str(len(points))+"u,kOuterFaceCount="+str(len(faces))+"u,kRegistrationFingerprint=835155552u;\ninline constexpr std::array<std::uint64_t,4> kReferenceSourceIdentity={"+",".join(str(x)+"ull" for x in words)+"};\n"+
  "inline constexpr std::string_view kNHSKIN=\"candidate-d37-033.nhskin\",kRegisteredOuter=\"registered-O.csv\",kOuterFaces=\"registered-O-faces.csv\",kFull86Weights=\"full-weights.csv.gz\",kDonorFrames=\"donor-frames.csv\",kSourceMap=\"source-transfer-map.csv\",kReplay=\"reference-f32-replay.csv\",kFaceAncestry=\"registered-O-face-ancestry.csv.gz\";\n"+
- "inline constexpr std::string_view kCandidateSHA256=\""+hashes.get("conditioned-candidate",hashes["candidate"])+"\",kO033SourceCandidateSHA256=\""+hashes["candidate"]+"\",kD37PayloadSHA256=\""+hashes["source-payload"]+"\",kD37PoseSHA256=\""+hashes["source-poses"]+"\",kD37RegisteredCSVGzipSHA256=\""+hashes["source-csv-gzip"]+"\",kBaseline806SHA256=\""+hashes["baseline"]+"\",kP1CrosswalkSHA256=\""+hashes["p1-crosswalk"]+"\",kReferenceIdentitySHA256=\""+combined+"\";\n"+
+ "inline constexpr std::string_view kCandidateSHA256=\""+hashes.get("local-repair-candidate",hashes.get("conditioned-candidate",hashes["candidate"]))+"\",kO033SourceCandidateSHA256=\""+hashes["candidate"]+"\",kD37PayloadSHA256=\""+hashes["source-payload"]+"\",kD37PoseSHA256=\""+hashes["source-poses"]+"\",kD37RegisteredCSVGzipSHA256=\""+hashes["source-csv-gzip"]+"\",kBaseline806SHA256=\""+hashes["baseline"]+"\",kP1CrosswalkSHA256=\""+hashes["p1-crosswalk"]+"\",kReferenceIdentitySHA256=\""+combined+"\";\n"+
  "inline constexpr std::string_view kOutputPayloadSHA256=\""+payload_sha+"\",kRegisteredOuterSHA256=\""+reg_sha+"\",kOuterFacesSHA256=\""+face_sha+"\",kFull86WeightsSHA256=\""+weight_sha+"\",kDonorFramesSHA256=\""+frame_sha+"\";\ninline constexpr bool kPhysicalAdmission=false;\n}\n")
  receipt={"classification":"D37-derived ABI5 surface source preparation; reference pose replay only",
  "inputs":{k:{"path":str(v),"sha256":hashes[k]} for k,v in paths.items()},
@@ -458,6 +489,8 @@ def main():
  "current_reference_f32_orientation_audit":{"flipped_or_degenerate_faces":int(current_flip.sum()),"degenerate_faces":int((rrca<=1e-15).sum()),"minimum_face_cosine":float(np.min(rcd/np.maximum(rca*rrca,1e-300)))},
  "source_rest_unposed_orientation_audit":{"flipped_or_degenerate_faces":int(flip.sum()),"degenerate_faces":int((ar<=1e-15).sum()),"minimum_face_cosine":float(np.min(fd/np.maximum(ac*ar,1e-300)))}},
  "admission":{"native_runtime_verified":False,"physical_motion_qualified":False,"mass_ledger_pinned":False,"admitted":False},"elapsed_s":time.time()-start}
+ receipt["target_placement"]={"source_pose_schema":source_pose["schema"],"target_pose_schema":pose["schema"],"explicit_native_target":bool(a.target_poses),"D37_rest_binding_frames_unchanged":True}
+ receipt["local_repair"]=local_repair_report
  (out/"receipt.json").write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
  print(json.dumps({"output":str(out),"payload_sha256":sha(payload),"exact_detail_id_rows":int(exact_detail.sum()),"kind0_representative_support_rows":int(np.sum((legacy_kind==0)&mapped_support)),"geometry_triangle_weight_rows":int((~mapped_support).sum()),"geometry_registration_rows":int(needs_projection.sum()),"projection_max_m":float(dist[needs_projection].max()),"source_registration_max_m":float(source_registration_distance.max()),"replay_max_m":float(resn.max()),"exact_vertices":int(np.all(ulp==0,axis=1).sum()),"normal_replay_max":float(nresn.max()),"current_reference_flips":int(current_flip.sum()),"rest_flips":int(flip.sum()),"receipt":str(out/"receipt.json")},indent=2))
 if __name__=="__main__":main()

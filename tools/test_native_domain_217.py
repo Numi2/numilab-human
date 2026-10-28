@@ -139,8 +139,9 @@ def run_joint_tissue_fixture(root: Path) -> dict[str, object]:
     receipt = module.combine_tetgen_children(
         root / "fixture-skin-positive.node", root / "fixture-skin-positive.ele",
         root / "fixture-fat-positive.node", root / "fixture-fat-positive.ele",
-        skin, fat, inner, root)
+        skin, fat, inner, root, require_registered_surface_maps=False)
     assert receipt["status"] == "COMBINED_POSITIVE_F32_CHILD_MESH_NOT_PHYSICAL_ADMISSION"
+    assert receipt["registered_surface_node_map_complete"] is False
     assert receipt["nodes"] == 7 and receipt["combined_tetrahedra"] == 2
     assert receipt["registered_I_source_vertices"] == 3
     assert receipt["registered_I_source_faces"] == 1
@@ -152,6 +153,14 @@ def run_joint_tissue_fixture(root: Path) -> dict[str, object]:
              if row["source_tetgen_node_id"] in ("50", "150")}
     assert set(spare) == {"skin", "fat"}
     assert spare["skin"]["joint_node_id"] != spare["fat"]["joint_node_id"]
+    assert {"registered_surface_layer", "registered_surface_vertex_row"} <= set(node_rows[0])
+    assert all(row["registered_surface_layer"] in ("", "I") for row in node_rows)
+    legacy_i = {}
+    for row in node_rows:
+        if row["registered_surface_layer"] == "I":
+            legacy_i.setdefault(row["source_partition"], {})[
+                int(row["registered_surface_vertex_row"])] = int(row["joint_node_id"])
+    assert legacy_i["skin"] == legacy_i["fat"] == {0: 1, 1: 2, 2: 3}
     with gzip.open(root / "skin-fat-combined-element-map.csv.gz", "rt", newline="") as stream:
         cells = list(csv.DictReader(stream))
     assert [row["child_tet_row"] for row in cells] == ["0", "1"]
@@ -172,6 +181,56 @@ def run_joint_tissue_fixture(root: Path) -> dict[str, object]:
     assert len(combined["tetrahedra"]) == 2
     assert set(combined["material_indices"].tolist()) == {15, 16}
     return receipt
+
+def assert_registered_surface_maps(outer, inner, deep, skin, fat):
+    def verify(surface, shell, layer, marker, role, node_offset, face_offset):
+        source_points = np.asarray(surface["points"], dtype=np.float32)
+        source_faces = np.asarray(surface["faces"], dtype=np.int64)
+        source_vertex_rows = np.arange(len(source_points), dtype=np.int64)
+        source_face_rows = np.arange(len(source_faces), dtype=np.int64)
+        source_nodes = np.asarray(shell[f"registered_{layer}_source_vertex_rows"], dtype=np.int64)
+        shell_nodes = np.asarray(shell[f"registered_{layer}_shell_node_rows"], dtype=np.int64)
+        shell_source_faces = np.asarray(shell[f"registered_{layer}_source_faces"], dtype=np.int64)
+        shell_face_rows = np.asarray(shell[f"registered_{layer}_shell_face_rows"], dtype=np.int64)
+        assert np.array_equal(source_nodes, source_vertex_rows)
+        assert np.array_equal(shell_nodes, source_vertex_rows + node_offset)
+        assert np.array_equal(shell["points_world_m"][shell_nodes], source_points)
+        assert np.array_equal(shell_source_faces, source_faces)
+        assert np.array_equal(shell_face_rows, source_face_rows + face_offset)
+        actual_faces = np.asarray(shell["faces"], dtype=np.int64)[shell_face_rows]
+        expected_faces = source_faces + node_offset
+        assert np.array_equal(np.sort(actual_faces, axis=1), np.sort(expected_faces, axis=1))
+        assert np.all(np.asarray(shell["face_marker"], dtype=np.int64)[shell_face_rows] == marker)
+        roles = np.asarray(shell["face_ancestry"]["face_source_role"]).astype(str)
+        assert np.all(roles[shell_face_rows] == role)
+        ancestry = shell["face_ancestry"]
+        assert np.array_equal(np.asarray(ancestry["face_source_row"])[shell_face_rows],
+                              np.asarray(surface["source_rows"]))
+        assert np.array_equal(np.asarray(ancestry["face_exact_source_row"])[shell_face_rows],
+                              np.asarray(surface["exact_source_rows"]))
+
+    no, ni = len(outer["points"]), len(inner["points"])
+    verify(outer, skin, "O", module.MARKER["skin_outer_O"], "outer_O", 0, 0)
+    verify(inner, skin, "I", module.MARKER["skin_inner_I"], "inner_I", no, len(outer["faces"]))
+    verify(inner, fat, "I", module.MARKER["fat_outer_I"], "outer_I", 0, 0)
+    verify(deep, fat, "D", module.MARKER["fat_inner_D"], "inner_D", ni, len(inner["faces"]))
+    assert np.array_equal(skin["registered_I_source_vertex_rows"],
+                          fat["registered_I_source_vertex_rows"])
+    assert np.array_equal(skin["registered_I_source_faces"],
+                          fat["registered_I_source_faces"])
+    assert np.array_equal(
+        np.sort(skin["registered_I_shell_faces"], axis=1),
+        np.sort(np.asarray(inner["faces"], dtype=np.int64) + no, axis=1))
+    assert np.array_equal(
+        np.sort(fat["registered_I_shell_faces"], axis=1),
+        np.sort(np.asarray(inner["faces"], dtype=np.int64), axis=1))
+    roles = np.asarray(skin["face_ancestry"]["face_source_role"]).astype(str)
+    assert np.all(roles[len(outer["faces"]) + len(inner["faces"]):] ==
+                  "donor_skin_OI_headwall")
+    roles = np.asarray(fat["face_ancestry"]["face_source_role"]).astype(str)
+    assert np.all(roles[len(inner["faces"]) + len(deep["faces"]):] ==
+                  "donor_fat_ID_headwall")
+
 
 def run_fixture() -> dict[str, object]:
     with tempfile.TemporaryDirectory(prefix="native-domain-217-") as tmp:
@@ -194,6 +253,7 @@ def run_fixture() -> dict[str, object]:
             "fat_materials": np.full(6, 16, dtype=np.int64),
         }
         skin, fat, assembly = module.assemble_shells(outer, inner, deep, collar, wall_rows)
+        assert_registered_surface_maps(outer, inner, deep, skin, fat)
         for label, shell in (("skin", skin), ("fat", fat)):
             edge = module.edge_report(shell["faces"])
             assert edge["boundary_edges"] == 0 and edge["nonmanifold_edges"] == 0
@@ -206,6 +266,11 @@ def run_fixture() -> dict[str, object]:
             assert "registered_I_source_vertex_rows" in written_shell.files
             assert "registered_I_shell_node_rows" in written_shell.files
             assert "registered_I_source_faces" in written_shell.files
+            assert "registered_I_shell_face_rows" in written_shell.files
+            if label == "skin":
+                assert "registered_O_source_vertex_rows" in written_shell.files
+            if label == "fat":
+                assert "registered_D_source_vertex_rows" in written_shell.files
             module.write_face_ancestry_csv(root / f"{label}-faces.csv.gz", shell)
         assert set(skin["face_marker"].tolist()) == {1, 2, 3}
         assert set(fat["face_marker"].tolist()) == {4, 5, 6}
@@ -232,6 +297,7 @@ def run_fixture() -> dict[str, object]:
         joint = run_joint_tissue_fixture(root)
         return {
             "status": "FIXTURE_PASS_NOT_PHYSICAL_ADMISSION",
+            "assembled_O_I_D_source_point_face_and_role_maps_exact": True,
             "skin_faces": len(skin["faces"]),
             "fat_faces": len(fat["faces"]),
             "skin_signed_volume_m3": skin["shell_signed_volume_m3"],

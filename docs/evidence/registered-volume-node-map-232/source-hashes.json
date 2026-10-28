@@ -1,0 +1,82 @@
+{
+  "conditioned_inputs": [
+    {
+      "bytes": 1857404,
+      "label": "conditioned compact O",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-skin-volume-collar-228/run-002/conditioned-compact-O.npz",
+      "sha256": "1089cd863b9cf10b07a198dfa4a1c1ad1230f5fec5506e979a18f98c08963a7e"
+    },
+    {
+      "bytes": 1015943,
+      "label": "conditioned head collar",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-skin-volume-collar-228/run-002/conditioned-head-collar.npz",
+      "sha256": "a74cc64ab77776e807966554ef4b6d77a869803db2d9233814aaad9cbb47013a"
+    },
+    {
+      "bytes": 10367,
+      "label": "conditioned donor sidewall ancestry",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-skin-volume-collar-228/run-002/donor-sidewall-faces.csv",
+      "sha256": "80cf0b7546f193618065cfafdc2dedf5b10bf5eea56c6d3031c98909dbe5f2a6"
+    },
+    {
+      "bytes": 1430540,
+      "label": "parent cell mass source for head-wall check",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz",
+      "sha256": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f"
+    },
+    {
+      "bytes": 600410,
+      "label": "parent node source for head-wall check",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz",
+      "sha256": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878"
+    }
+  ],
+  "scope": "source and input pins for the 217 surface-node map regression; not a production volume receipt",
+  "sources": [
+    {
+      "bytes": 90175,
+      "label": "native-domain-217 builder",
+      "path": "/Users/numi/numilab-human/tools/build_native_domain_217.py",
+      "sha256": "c98b0c6657ebfab5b489c88991e445168b42089dff8a23fdbae181912b3efb02"
+    },
+    {
+      "bytes": 17658,
+      "label": "assembled-shell map and legacy 7-node/2-tet regression",
+      "path": "/Users/numi/numilab-human/tools/test_native_domain_217.py",
+      "sha256": "fcbbe5f30e4b84c6e4d31f6ce4787b5bf48ca0e491b47133589d72fa7a6c8b9c"
+    },
+    {
+      "bytes": 11980,
+      "label": "positive prism O/I/D registration regression",
+      "path": "/Users/numi/numilab-human/tools/test_native_domain_217_registered_surface_node_map.py",
+      "sha256": "31948e58f5b291e0fd9aaf9286f3f0a7f33f1344be0218191de649f46e2caa77"
+    },
+    {
+      "bytes": 6040,
+      "label": "conditioned O and donor-collar input review",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/registered-volume-node-map-232/review_conditioned_input_maps_232.py",
+      "sha256": "bb46d7d4c602020b459b2985768d90a2ec5c76d81a1d108a311bf7986cf8c1b8"
+    }
+  ],
+  "worker_copies": [
+    {
+      "bytes": 90175,
+      "label": "worker copy of builder",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/native-domain-217/build_native_domain_217.py",
+      "sha256": "c98b0c6657ebfab5b489c88991e445168b42089dff8a23fdbae181912b3efb02"
+    },
+    {
+      "bytes": 17658,
+      "label": "worker copy of assembled-shell regression",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/native-domain-217/test_native_domain_217.py",
+      "sha256": "fcbbe5f30e4b84c6e4d31f6ce4787b5bf48ca0e491b47133589d72fa7a6c8b9c"
+    },
+    {
+      "bytes": 11980,
+      "label": "worker copy of prism regression",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/native-domain-217/test_native_domain_217_registered_surface_node_map.py",
+      "sha256": "31948e58f5b291e0fd9aaf9286f3f0a7f33f1344be0218191de649f46e2caa77"
+    }
+  ],
+  "worker_copies_match_human_tools": true
+}

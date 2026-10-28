@@ -396,7 +396,7 @@ def assemble_shells(outer: dict[str, Any], inner: dict[str, Any],
     for source_rows in inner["ancestry"]:
         registered_i_ancestry_rows.extend(map(int, source_rows))
         registered_i_offsets.append(len(registered_i_ancestry_rows))
-    registered_i = {
+    registered_i_source = {
         "registered_I_source_vertex_rows": np.arange(ni, dtype=np.int64),
         "registered_I_source_faces": np.asarray(inner["faces"], dtype=np.int64),
         "registered_I_source_face_rows": np.asarray(inner["source_rows"], dtype=np.int64),
@@ -405,19 +405,42 @@ def assemble_shells(outer: dict[str, Any], inner: dict[str, Any],
         "registered_I_source_ancestry_offsets": np.asarray(registered_i_offsets, dtype=np.int64),
         "registered_I_source_ancestry_rows": np.asarray(registered_i_ancestry_rows, dtype=np.int64),
     }
+    registered_o = {
+        "registered_O_source_vertex_rows": np.arange(no, dtype=np.int64),
+        "registered_O_shell_node_rows": np.arange(no, dtype=np.int64),
+        "registered_O_source_faces": np.asarray(outer["faces"], dtype=np.int64),
+        "registered_O_shell_face_rows": np.arange(len(outer["faces"]), dtype=np.int64),
+    }
+    registered_d = {
+        "registered_D_source_vertex_rows": np.arange(nd, dtype=np.int64),
+        "registered_D_shell_node_rows": np.arange(ni, ni + nd, dtype=np.int64),
+        "registered_D_source_faces": np.asarray(deep["faces"], dtype=np.int64),
+        "registered_D_shell_face_rows": np.arange(len(inner_fat_faces),
+                                                   len(inner_fat_faces) + len(deep_faces),
+                                                   dtype=np.int64),
+    }
+    registered_i_skin = {
+        **registered_i_source,
+        "registered_I_shell_node_rows": np.arange(no, no + ni, dtype=np.int64),
+        "registered_I_shell_faces": inner_skin_faces.copy(),
+        "registered_I_shell_face_rows": np.arange(len(outer_faces),
+            len(outer_faces) + len(inner_skin_faces), dtype=np.int64),
+    }
+    registered_i_fat = {
+        **registered_i_source,
+        "registered_I_shell_node_rows": np.arange(ni, dtype=np.int64),
+        "registered_I_shell_faces": inner_fat_faces.copy(),
+        "registered_I_shell_face_rows": np.arange(len(inner_fat_faces), dtype=np.int64),
+    }
     skin = {"points_world_m": skin_points, "faces": skin_faces,
             "face_marker": np.asarray([r["marker"] for r in skin_records], dtype=np.int32),
             "face_ancestry": _merge_face_records([skin_records]),
-            "registered_I_shell_node_rows": np.arange(no, no + ni, dtype=np.int64),
-            "registered_I_shell_faces": inner_skin_faces.copy(),
-            **registered_i,
+            **registered_o, **registered_i_skin,
             "shell_signed_volume_m3": skin_volume}
     fat = {"points_world_m": fat_points, "faces": fat_faces,
            "face_marker": np.asarray([r["marker"] for r in fat_records], dtype=np.int32),
            "face_ancestry": _merge_face_records([fat_records]),
-           "registered_I_shell_node_rows": np.arange(ni, dtype=np.int64),
-           "registered_I_shell_faces": inner_fat_faces.copy(),
-           **registered_i,
+           **registered_i_fat, **registered_d,
            "shell_signed_volume_m3": fat_volume}
     if len(skin["faces"]) != len(skin["face_marker"]) or len(fat["faces"]) != len(fat["face_marker"]):
         raise ValueError("shell marker and ancestry face counts differ")
@@ -524,12 +547,21 @@ def write_shell_npz(path: Path, shell: dict[str, Any], label: str) -> None:
               }, separators=(",", ":"))])}
     values.update({k: v for k, v in shell["face_ancestry"].items()
                    if k not in ("face_source_role", "face_ancestry_offsets", "face_ancestry_source_rows")})
-    values.update({k: np.asarray(shell[k]) for k in (
+    required_i_map_keys = (
         "registered_I_source_vertex_rows", "registered_I_shell_node_rows",
         "registered_I_source_faces", "registered_I_shell_faces",
-        "registered_I_source_face_rows", "registered_I_source_exact_face_rows",
-        "registered_I_source_face_ids", "registered_I_source_ancestry_offsets",
-        "registered_I_source_ancestry_rows")})
+        "registered_I_shell_face_rows", "registered_I_source_face_rows",
+        "registered_I_source_exact_face_rows", "registered_I_source_face_ids",
+        "registered_I_source_ancestry_offsets", "registered_I_source_ancestry_rows")
+    if any(k not in shell for k in required_i_map_keys):
+        raise ValueError("shell lost its exact registered-I node/face map")
+    values.update({k: np.asarray(shell[k]) for k in required_i_map_keys})
+    optional_layer_map_keys = (
+        "registered_O_source_vertex_rows", "registered_O_shell_node_rows",
+        "registered_O_source_faces", "registered_O_shell_face_rows",
+        "registered_D_source_vertex_rows", "registered_D_shell_node_rows",
+        "registered_D_source_faces", "registered_D_shell_face_rows")
+    values.update({k: np.asarray(shell[k]) for k in optional_layer_map_keys if k in shell})
     np.savez_compressed(path, **values)
 
 
@@ -830,10 +862,76 @@ def _opposite_triangle_orientation(a: tuple[int, int, int],
                for shift in range(3))
 
 
+def _registered_surface_tetgen_rows(
+        shell: dict[str, Any], mesh: dict[str, Any], point_map: np.ndarray,
+        joint_map: np.ndarray, layer: str, expected_marker: int,
+        expected_role: str, label: str) -> tuple[np.ndarray, np.ndarray]:
+    prefix = f"registered_{layer}"
+    keys = (f"{prefix}_source_vertex_rows", f"{prefix}_shell_node_rows",
+            f"{prefix}_source_faces", f"{prefix}_shell_face_rows")
+    if any(key not in shell for key in keys):
+        raise ValueError(f"{label} is missing its exact registered-{layer} source/node/face map")
+    source_vertices = np.asarray(shell[keys[0]], dtype=np.int64)
+    shell_nodes = np.asarray(shell[keys[1]], dtype=np.int64)
+    source_faces = np.asarray(shell[keys[2]], dtype=np.int64)
+    shell_face_rows = np.asarray(shell[keys[3]], dtype=np.int64)
+    shell_points = np.asarray(shell["points_world_m"], dtype=np.float32)
+    shell_faces = np.asarray(shell["faces"], dtype=np.int64)
+    markers = np.asarray(shell["face_marker"], dtype=np.int64)
+    ancestry = shell["face_ancestry"]
+    roles = np.asarray(ancestry["face_source_role"]).astype(str)
+    if source_vertices.ndim != 1 or len(source_vertices) == 0 or \
+       not np.array_equal(source_vertices, np.arange(len(source_vertices), dtype=np.int64)) or \
+       shell_nodes.shape != source_vertices.shape or \
+       len(set(map(int, shell_nodes))) != len(shell_nodes) or \
+       np.any(shell_nodes < 0) or np.any(shell_nodes >= len(shell_points)):
+        raise ValueError(f"{label} has a missing, duplicate, or invalid registered-{layer} node row")
+    if source_faces.ndim != 2 or source_faces.shape[1] != 3 or len(source_faces) == 0 or \
+       shell_face_rows.shape != (len(source_faces),) or \
+       np.any(source_faces < 0) or np.any(source_faces >= len(source_vertices)) or \
+       np.any(shell_face_rows < 0) or np.any(shell_face_rows >= len(shell_faces)) or \
+       len(set(map(int, shell_face_rows))) != len(shell_face_rows):
+        raise ValueError(f"{label} has a missing, duplicate, or invalid registered-{layer} face row")
+    if not np.array_equal(np.unique(source_faces), np.arange(len(source_vertices), dtype=np.int64)):
+        raise ValueError(f"{label} registered-{layer} source faces omit or duplicate surface point coverage")
+    selected = np.flatnonzero((markers == expected_marker) & (roles == expected_role))
+    if not np.array_equal(np.sort(selected), np.sort(shell_face_rows)):
+        raise ValueError(f"{label} registered-{layer} face markers/roles are missing, duplicated, or mismapped")
+    expected_shell_faces = shell_nodes[source_faces]
+    actual_shell_faces = shell_faces[shell_face_rows]
+    if not np.array_equal(np.sort(expected_shell_faces, axis=1),
+                          np.sort(actual_shell_faces, axis=1)):
+        raise ValueError(f"{label} registered-{layer} source face rows do not match marker-selected shell facets")
+    point_map = np.asarray(point_map, dtype=np.int64)
+    joint_map = np.asarray(joint_map, dtype=np.int64)
+    mesh_points = np.asarray(mesh["points"], dtype=np.float32)
+    if point_map.shape != (len(shell_points),) or joint_map.shape != (len(mesh_points),):
+        raise ValueError(f"{label} exact shell-to-TetGen node map has the wrong domain")
+    tetgen_rows = point_map[shell_nodes]
+    if np.any(tetgen_rows < 0) or np.any(tetgen_rows >= len(mesh_points)) or \
+       not np.array_equal(mesh_points[tetgen_rows], shell_points[shell_nodes]):
+        raise ValueError(f"{label} registered-{layer} source points do not exactly match mapped TetGen Float32 rows")
+    joint_rows = joint_map[tetgen_rows]
+    if np.any(joint_rows < 0) or len(set(map(int, joint_rows))) != len(joint_rows):
+        raise ValueError(f"{label} registered-{layer} source-node map is collapsed or noninjective")
+    return tetgen_rows, joint_rows
+
+
+def _add_surface_owner_rows(owner: dict[int, tuple[str, int]],
+                            tetgen_rows: np.ndarray, layer: str,
+                            label: str) -> None:
+    for source_row, raw_tetgen_row in enumerate(np.asarray(tetgen_rows, dtype=np.int64)):
+        tetgen_row = int(raw_tetgen_row)
+        if tetgen_row in owner:
+            raise ValueError(f"{label} registered surface rows collapse across layers at TetGen node {tetgen_row}")
+        owner[tetgen_row] = (layer, source_row)
+
+
 def combine_tetgen_children(skin_node_path: Path, skin_ele_path: Path,
                             fat_node_path: Path, fat_ele_path: Path,
                             skin_shell: dict[str, Any], fat_shell: dict[str, Any],
-                            inner: dict[str, Any], out_dir: Path) -> dict[str, Any]:
+                            inner: dict[str, Any], out_dir: Path,
+                            require_registered_surface_maps: bool = True) -> dict[str, Any]:
     skin = read_tetgen_mesh(skin_node_path, skin_ele_path, 15)
     fat = read_tetgen_mesh(fat_node_path, fat_ele_path, 16)
     total_cells = len(skin["tetrahedra"]) + len(fat["tetrahedra"])
@@ -889,6 +987,42 @@ def combine_tetgen_children(skin_node_path: Path, skin_ele_path: Path,
     joint_points_array = np.asarray(joint_points, dtype=np.float32)
     if len(joint_points_array) > 300_000:
         raise ValueError("combined TetGen node count exceeds the native loader limit of 300000")
+
+    skin_surface_owner: dict[int, tuple[str, int]] = {}
+    fat_surface_owner: dict[int, tuple[str, int]] = {}
+    registered_surface_joint_rows: dict[str, np.ndarray] = {}
+    if require_registered_surface_maps:
+        skin_o_tet, skin_o_joint = _registered_surface_tetgen_rows(
+            skin_shell, skin, skin_point_map, skin_joint, "O",
+            MARKER["skin_outer_O"], "outer_O", "skin")
+        skin_i_tet, skin_i_joint = _registered_surface_tetgen_rows(
+            skin_shell, skin, skin_point_map, skin_joint, "I",
+            MARKER["skin_inner_I"], "inner_I", "skin")
+        fat_i_tet, fat_i_joint = _registered_surface_tetgen_rows(
+            fat_shell, fat, fat_point_map, fat_joint, "I",
+            MARKER["fat_outer_I"], "outer_I", "fat")
+        fat_d_tet, fat_d_joint = _registered_surface_tetgen_rows(
+            fat_shell, fat, fat_point_map, fat_joint, "D",
+            MARKER["fat_inner_D"], "inner_D", "fat")
+        if not np.array_equal(skin_i_joint, fat_i_joint):
+            raise ValueError("skin/fat registered-I source rows do not map to the same combined nodes")
+        _add_surface_owner_rows(skin_surface_owner, skin_o_tet, "O", "skin")
+        _add_surface_owner_rows(skin_surface_owner, skin_i_tet, "I", "skin")
+        _add_surface_owner_rows(fat_surface_owner, fat_i_tet, "I", "fat")
+        _add_surface_owner_rows(fat_surface_owner, fat_d_tet, "D", "fat")
+        registered_surface_joint_rows = {"O": skin_o_joint, "I": skin_i_joint,
+                                         "D": fat_d_joint}
+    else:
+        # Kept only for the historical 7-node/2-cell synthetic interface fixture.
+        # Production callers use the strict default and must supply O/I/D maps.
+        skin_i_tet = np.asarray([skin_i[i] for i in range(len(inner["points"]))], dtype=np.int64)
+        fat_i_tet = np.asarray([fat_i[i] for i in range(len(inner["points"]))], dtype=np.int64)
+        _add_surface_owner_rows(skin_surface_owner, skin_i_tet, "I", "legacy fixture skin")
+        _add_surface_owner_rows(fat_surface_owner, fat_i_tet, "I", "legacy fixture fat")
+        registered_surface_joint_rows = {"O": np.empty(0, dtype=np.int64),
+                                         "I": np.asarray([source_vertex_to_joint[i]
+                                                          for i in range(len(inner["points"]))], dtype=np.int64),
+                                         "D": np.empty(0, dtype=np.int64)}
 
     joint_tetrahedra: list[list[int]] = []
     joint_materials: list[int] = []
@@ -978,19 +1112,24 @@ def combine_tetgen_children(skin_node_path: Path, skin_ele_path: Path,
         writer = csv.writer(stream)
         writer.writerow(["joint_node_id", "source_partition", "source_tetgen_node_id",
                          "registered_I_source_vertex_row", "merge_peer_partition",
-                         "merge_peer_tetgen_node_id"])
+                         "merge_peer_tetgen_node_id", "registered_surface_layer",
+                         "registered_surface_vertex_row"])
         fat_source_by_i = {source: int(fat["node_ids"][row]) for source, row in fat_i.items()}
         skin_source_by_i = {source: int(skin["node_ids"][row]) for source, row in skin_i.items()}
         skin_source_i_by_row = {row: source for source, row in skin_i.items()}
         fat_source_i_by_row = {row: source for source, row in fat_i.items()}
         for row, node_id in enumerate(skin["node_ids"]):
             source_i = skin_source_i_by_row.get(row, INVALID)
-            writer.writerow([row + 1, "skin", int(node_id), source_i,
-                             "fat" if source_i != INVALID else "", fat_source_by_i.get(source_i, "")])
+            surface_layer, surface_vertex = skin_surface_owner.get(row, ("", INVALID))
+            writer.writerow([int(skin_joint[row]) + 1, "skin", int(node_id), source_i,
+                             "fat" if source_i != INVALID else "", fat_source_by_i.get(source_i, ""),
+                             surface_layer, surface_vertex])
         for row, node_id in enumerate(fat["node_ids"]):
             source_i = fat_source_i_by_row.get(row, INVALID)
+            surface_layer, surface_vertex = fat_surface_owner.get(row, ("", INVALID))
             writer.writerow([int(fat_joint[row]) + 1, "fat", int(node_id), source_i,
-                             "skin" if source_i != INVALID else "", skin_source_by_i.get(source_i, "")])
+                             "skin" if source_i != INVALID else "", skin_source_by_i.get(source_i, ""),
+                             surface_layer, surface_vertex])
     with gzip.open(out_dir / "skin-fat-combined-element-map.csv.gz", "wt", newline="") as stream:
         writer = csv.writer(stream)
         writer.writerow(["joint_element_id", "child_tet_row", "source_partition",
@@ -1048,6 +1187,9 @@ def combine_tetgen_children(skin_node_path: Path, skin_ele_path: Path,
         "fat_tetrahedra": len(fat["tetrahedra"]), "combined_tetrahedra": total_cells,
         "registered_I_source_vertices": len(skin_i),
         "registered_I_source_faces": len(i_interface_rows),
+        "registered_surface_node_map_complete": bool(require_registered_surface_maps),
+        "registered_surface_node_rows": {key: int(len(value))
+                                         for key, value in registered_surface_joint_rows.items()},
         "positive_float32_cells": total_cells,
         "combined_cell_budget_200000_pass": total_cells <= 200_000,
         "only_registered_I_nodes_merged": True,

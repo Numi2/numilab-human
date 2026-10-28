@@ -18,7 +18,7 @@ def boundary(faces):
     directed=edges[count[inverse]==1]
     return {tuple(sorted(map(int,e))):tuple(map(int,e)) for e in directed}
 
-def prepare(candidate,collar,face_csv):
+def prepare(candidate,collar,face_csv,local_repair_reference=None,local_repair_reference_sha256=None):
     points=np.asarray(candidate["points_world_m"],np.float32)
     faces=np.asarray(candidate["source_O_faces"],np.int64)
     cp=np.asarray(collar["points_world_m"],np.float32)
@@ -29,7 +29,15 @@ def prepare(candidate,collar,face_csv):
     if np.any(np.linalg.norm(np.cross(tri[:,1]-tri[:,0],tri[:,2]-tri[:,0]),axis=1)==0):raise ValueError("degenerate conditioned triangle")
     ni=len(collar["donor_I_parent_node_rows"]);nd=len(collar["donor_D_parent_node_rows"])
     old_n=len(cp)-ni-nd
-    if old_n!=len(points) or not np.array_equal(cp[:old_n],points):raise ValueError("conditioned O must preserve exact original point table")
+    local_repair_report=None
+    reference_points=points
+    if local_repair_reference is not None:
+        from validate_connected_skin_local_repair import validate_local_repair
+        if local_repair_reference_sha256!="5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b":
+            raise ValueError("local collar repair requires the pinned conditioned reference")
+        local_repair_report=validate_local_repair(local_repair_reference,candidate,local_repair_reference_sha256)
+        reference_points=np.asarray(local_repair_reference["points_world_m"],np.float32)
+    if old_n!=len(points) or not np.array_equal(cp[:old_n],reference_points):raise ValueError("conditioned O must preserve exact original point table")
     old_boundary=boundary(old_faces);new_boundary=boundary(faces)
     if old_boundary.keys()!=new_boundary.keys():raise ValueError("conditioned O changed retained head boundary edges")
     same=sum(old_boundary[k]==new_boundary[k] for k in old_boundary)
@@ -83,12 +91,14 @@ def prepare(candidate,collar,face_csv):
         "current_O_faces":len(faces),"sidewall_faces":len(out["skin_sidewall_faces"])+len(out["fat_sidewall_faces"]),
         "boundary_edges":len(boundary(faces)),"O_boundary_globally_reversed":global_reversal,"full_ancestry_entries":int(off[-1]),
         "source_original_ids":np.unique(arrays[1]).tolist(),"sidewall_coordinates_exact":True,
-        "admitted":False,"physical_steps":0}
+        "local_repair":local_repair_report,"admitted":False,"physical_steps":0}
 
 def main():
-    a=argparse.ArgumentParser();a.add_argument("--candidate",type=Path,required=True);a.add_argument("--collar",type=Path,required=True);a.add_argument("--registered-faces",type=Path,required=True);a.add_argument("--wall-csv",type=Path,required=True);a.add_argument("--output",type=Path,required=True);args=a.parse_args()
+    a=argparse.ArgumentParser();a.add_argument("--candidate",type=Path,required=True);a.add_argument("--collar",type=Path,required=True);a.add_argument("--registered-faces",type=Path,required=True);a.add_argument("--wall-csv",type=Path,required=True);a.add_argument("--output",type=Path,required=True);a.add_argument("--local-repair-reference",type=Path);args=a.parse_args()
     with args.registered_faces.open(newline="") as f:rows=list(csv.DictReader(f))
-    outer,collar,receipt=prepare(np.load(args.candidate,allow_pickle=False),np.load(args.collar,allow_pickle=False),rows)
+    reference=np.load(args.local_repair_reference,allow_pickle=False) if args.local_repair_reference else None
+    reference_sha=sha(args.local_repair_reference) if args.local_repair_reference else None
+    outer,collar,receipt=prepare(np.load(args.candidate,allow_pickle=False),np.load(args.collar,allow_pickle=False),rows,reference,reference_sha)
     with args.wall_csv.open(newline="") as f:
         reader=csv.DictReader(f);wall_header=reader.fieldnames;wall_rows=list(reader)
     old=np.load(args.collar,allow_pickle=False);old_walls=np.vstack([old["skin_sidewall_faces"],old["fat_sidewall_faces"]]);new_walls=np.vstack([collar["skin_sidewall_faces"],collar["fat_sidewall_faces"]])
@@ -102,6 +112,7 @@ def main():
     with (args.output/"donor-sidewall-faces.csv").open("w",newline="") as f:
         writer=csv.DictWriter(f,fieldnames=wall_header,lineterminator="\n");writer.writeheader();writer.writerows(wall_rows)
     receipt["inputs"]={str(p):sha(p) for p in (args.candidate,args.collar,args.registered_faces,args.wall_csv)}
+    if args.local_repair_reference:receipt["inputs"][str(args.local_repair_reference)]=reference_sha
     receipt["outputs"]={p.name:sha(p) for p in args.output.iterdir() if p.is_file()}
     (args.output/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
     print(json.dumps(receipt,indent=2))

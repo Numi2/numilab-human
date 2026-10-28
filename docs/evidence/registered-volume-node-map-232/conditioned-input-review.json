@@ -1,0 +1,68 @@
+{
+  "O": {
+    "face_rows": 63959,
+    "face_source_rows_preserved": true,
+    "point_rows": 32002,
+    "registered_shell_face_rows_exact_identity": true,
+    "registered_shell_node_rows_exact_identity": true,
+    "registered_source_faces_exact": true,
+    "registered_source_vertex_rows_exact_identity": true,
+    "typed_ancestry_entries": 67296,
+    "unique_points_covered_by_source_faces": 32002
+  },
+  "assembled_shell_role_contract": {
+    "D_fat": {
+      "marker": 5,
+      "role": "inner_D"
+    },
+    "I_fat": {
+      "marker": 4,
+      "role": "outer_I"
+    },
+    "I_skin": {
+      "marker": 2,
+      "role": "inner_I"
+    },
+    "O_skin": {
+      "marker": 1,
+      "role": "outer_O"
+    },
+    "fat_wall": {
+      "marker": 6,
+      "role": "donor_fat_ID_headwall"
+    },
+    "skin_wall": {
+      "marker": 3,
+      "role": "donor_skin_OI_headwall"
+    }
+  },
+  "collar": {
+    "O_I_D_head_ring_row_ids_unique": true,
+    "O_I_D_head_ring_rows_each": 45,
+    "fat_sidewall_materials": [
+      16
+    ],
+    "fat_sidewall_source_faces": 90,
+    "outer_faces_exact_equal_to_conditioned_O": true,
+    "outer_points_bitwise_equal_to_conditioned_O": true,
+    "skin_sidewall_materials": [
+      15
+    ],
+    "skin_sidewall_source_faces": 90
+  },
+  "full_production_I_D_surface_face_maps_checked": false,
+  "full_scene_audit": false,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-skin-volume-collar-228/run-002/conditioned-compact-O.npz": "1089cd863b9cf10b07a198dfa4a1c1ad1230f5fec5506e979a18f98c08963a7e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-skin-volume-collar-228/run-002/conditioned-head-collar.npz": "a74cc64ab77776e807966554ef4b6d77a869803db2d9233814aaad9cbb47013a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-skin-volume-collar-228/run-002/donor-sidewall-faces.csv": "80cf0b7546f193618065cfafdc2dedf5b10bf5eea56c6d3031c98909dbe5f2a6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/native-domain-217/build_native_domain_217.py": "c98b0c6657ebfab5b489c88991e445168b42089dff8a23fdbae181912b3efb02"
+  },
+  "physical_admission": false,
+  "reason": "The retained conditioned input check contains O and head-collar rings/walls, not full production I/D surface inputs.",
+  "scope": "existing conditioned O/collar input check; no TetGen, full-shell assembly, or physical admission",
+  "status": "CONDITIONED_O_AND_DONOR_COLLAR_ROW_MAPS_PASS",
+  "tetgen_run": false
+}
