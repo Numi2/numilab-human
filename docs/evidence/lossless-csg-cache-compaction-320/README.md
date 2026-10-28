@@ -1,0 +1,9 @@
+# Preserve geometry while compacting CSG source-cache runs
+
+The existing Manifold authoring path can accumulate millions of source runs with no triangle rows. `tools/compact_csg_source_cache.py` removes only those empty runs from an existing Mesh64 cache. It keeps triangle order, coordinates, vertex properties, source original IDs, source face IDs, per-run transforms and flags, merge maps and halfedge tangents. Repeated nonempty runs carrying the same source ID remain separate when their transforms differ. The function returns a Mesh64, without constructing a Manifold or changing anatomical geometry.
+
+A source/oriented-triangle digest must agree before and after. An additional ordinary-resume check compares `Manifold(original_cache)` with `Manifold(compacted_cache)`. Ordinary Manifold recovery can normalize near-degenerate geometry: that normalization is reported separately and must not be described as lossless geometry repair. The compactor itself performs no geometric simplification, source-ID replacement or `as_original()` call.
+
+The focused test covers empty source runs, repeated IDs with distinct transforms, orientation-sensitive face identity, empty caches and ordinary-resume parity. The recorded real authoring checkpoint contained 4,461,814 source runs and 330,528 triangles; 11,091 source runs actually held triangles. Raw geometry and source identity were identical after empty-run removal. Ordinary recovery of both caches produced the same 330,160-triangle result, which remains an unqualified geometry candidate.
+
+This utility uses the already installed NumPy and Manifold authoring dependencies. It is CPU asset preparation, not simulation physics or a measured solver speedup. The connected nesting driver now applies it to checkpoint saves only. Complete tissue geometry, mass mapping, physical admission and motion still require their existing gates.
