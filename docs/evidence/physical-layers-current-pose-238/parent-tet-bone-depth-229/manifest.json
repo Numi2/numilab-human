@@ -1,0 +1,43 @@
+{
+  "schema": "numi.parent-tet-bone-depth-two-region-evidence.v1",
+  "scope": "Two local typed-bank exact diagnostics against native current parent tetrahedral cells; no all-bank audit, no admission.",
+  "command_line": "ssh numi /Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-007-parent-tet-bone-current-pose/audit_two_bone_regions_current_pose.py",
+  "command_argv": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-007-parent-tet-bone-current-pose/audit_two_bone_regions_current_pose.py"
+  ],
+  "command_sha256": "c8fdca08b36ad8fb363ef7ed4577964a55835bd47c3bddebe45a5602d58e823f",
+  "run_exit_code": 0,
+  "elapsed_s": 1.884467750089243,
+  "script_sha256": "3ea7a23e967240933fe316d319011fc98dbcbc39a3a29605a913036aa13924d0",
+  "report_sha256": "1b3d784cb9b7cd64bf2b686ad84d8765581c209f079a6e7de507bbbecbe895de",
+  "native_cell_inputs": {
+    "nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "tets_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+  },
+  "native_pose_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/registered-skin-poses-100.json",
+  "native_pose_sha256": "eb2ae08f74852f08d5b08a18f3d7738b53b8e7265336f77646cbe8f949ece117",
+  "native_pose_rebind_policy": "retained pinned 039 local triangle and COM-offset arrays; re-bound position and world_to_body from current all_bodies entries in native registered-skin-poses-100.json using Float32 quaternion/position promoted to Float64",
+  "pose_comparison": {
+    "bitwise_position_matches": 0,
+    "bitwise_orientation_matches": 86,
+    "max_position_delta_m": 5.662441253662109e-06,
+    "max_world_to_body_delta": 0.0
+  },
+  "bank_parser_sha256": "ea833990d8b1ffb309d4960e62fb8c67e5cf0ecdbcdc0d8e9ad40c20eaf4c6db",
+  "exact_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+  "bank_pins": {
+    "exact-emitted.triangles.csv": "0d3418064af1d4f34d19a1ec91992afceacaaa70b6c982d4a2637ded1d829eac",
+    "exact-emitted.nodes.csv": "99e58d6afb68e0939670f69d4132bfa730cf3e988a7f70a179a41a89eac3802c",
+    "exact-emitted.bodies.csv": "dae52ab190e02586421b56381b03a4453aff1058edca7b6a42afcb9051b50b90",
+    "all-bank-containment.csv.banks.csv": "46568d191d84dd68f1fbcfe02b7938b15d4a7b3b786f268f46bcfe916070c6df"
+  },
+  "previous_stale_pose_report_sha256": "4c1042b6d233a05a3698ee73d7c3b16fedf52fed5ff5a9509337f1fb78809705",
+  "negative_evidence": [
+    "Bank 59/95 local body region: 615 exact tetra-face/bone triangle pairs; 41 exact material-15/16 interface pairs. The stored worst I and D surface witnesses remain inside the closed bank at approximately -3.481 mm and -3.316 mm.",
+    "Bank 92/15 local body region: 536 exact tetra-face/bone triangle pairs; 41 exact material-15/16 interface pairs. The stored worst D and I witnesses remain inside the closed bank at approximately -2.923 mm and -2.468 mm.",
+    "Both selected typed banks have edge-incidence valence 2 throughout (no boundary/nonmanifold edges); the cell intersections and winding signs survive rebinding to native current poses. This rules out a stale 5.66 um pose offset or open-bank sign artifact as the cause in these regions."
+  ],
+  "physical_admission": false
+}
