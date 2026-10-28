@@ -1,0 +1,128 @@
+{
+  "schema": "numi.connectedfit-O-link-condition-q-quality-contraction.v1",
+  "status": "BOUNDED_CONTRACTION_STOPPED_WITH_Q_POOR_FACES",
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-003/candidate.npz",
+  "input_sha256": "f0ef548904fda906d3831e94d464298a6a11033a15d9b3c6fa9f8c9bd22fd2d7",
+  "output_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-003/contraction-003/candidate.npz",
+  "output_sha256": "52e4c9d165ebcb38fd12118df83b05129489a6f07288c1f54ab9db342fe0d304",
+  "helper_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-edge-flips/local_float32_edge_flip.py",
+  "helper_sha256": "7d64110d7522ecd3015d4298c73968e94a172e9123ffdf8852a73d670c6f4187",
+  "script_path": "/tmp/contract_o_quality_3.py",
+  "script_sha256": "661cae2aeca1c41542639519ee26da3443e69999f7eb9299d53ee46eee292584",
+  "quality_threshold": 0.001,
+  "quality_definition": "Float32 cross-product norm divided by squared longest edge; dimensionless.",
+  "max_edge_um": 1000.0,
+  "accepted_operations": 1,
+  "operations": [
+    {
+      "operation_index": 0,
+      "edge_vertex_rows": [
+        27773,
+        27774
+      ],
+      "kept_vertex_row": 27774,
+      "collapsed_vertex_row": 27773,
+      "collapse_length_um": 548.9353221015268,
+      "max_source_coordinate_change_um": 548.9353221015268,
+      "face_rows_affected_input_candidate": [
+        54594,
+        54595,
+        54598
+      ],
+      "face_rows_removed_input_candidate": [
+        54594,
+        54598
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        54595
+      ],
+      "target_sliver_face_row": 54594,
+      "target_face_quality_before": 0.0007185927825048566,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0007185927825048566,
+        0.0781677352618213
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1
+      ],
+      "source_face_rows_union_before": [
+        53802,
+        53803,
+        53806
+      ],
+      "parent_source_face_rows_after": [
+        54979,
+        54980,
+        54983
+      ],
+      "max_normal_rotation_rad": 0.005451284336291282,
+      "score": [
+        1.0,
+        108.7789039424328,
+        1.2172933901336593,
+        -0.0005489353221015268,
+        0
+      ]
+    }
+  ],
+  "rejections": {
+    "link_condition": 4
+  },
+  "before_topology": {
+    "used_vertices": 32006,
+    "faces": 63967,
+    "boundary_loops": [
+      21,
+      24
+    ],
+    "genus": 0
+  },
+  "after_topology": {
+    "used_vertices": 32005,
+    "edges": 95970,
+    "faces": 63965,
+    "components": 1,
+    "boundary_loops": [
+      21,
+      24
+    ],
+    "boundary_edges": 45,
+    "nonmanifold_edges": 0,
+    "euler_characteristic": 0,
+    "genus": 0
+  },
+  "before_q_below_0p001": 3,
+  "after_q_below_0p001": 2,
+  "remaining_q_below_0p001_face_rows": [
+    7001,
+    37907
+  ],
+  "after_min_quality": 0.00032305798958987,
+  "after_min_altitude_um": 0.2551548480987549,
+  "changed_input_candidate_face_rows": [
+    54595
+  ],
+  "removed_input_candidate_face_rows": [
+    54594,
+    54598
+  ],
+  "positions_bitwise_unchanged": true,
+  "source_node_count_preserved": 32218,
+  "O033_to_candidate_vertex_row": "explicit contraction endpoint remap; full point table retained; no nearest neighbor",
+  "faces_and_source_O_faces_equal": true,
+  "face_ancestry_csr_rows": 67175,
+  "all_surviving_faces_have_ancestry": true,
+  "all_float32_faces_positive_area": true,
+  "all_positive_area_exact_float32": true,
+  "local_exact_self_pairs_after_each_operation": 0,
+  "local_exact_self_gate_scope": "Every trial was exact-checked against all AABB-near O faces before commit; exact failures were backed out. Final changed-face self and all-185 bone audit pending.",
+  "geometry_admission": false,
+  "elapsed_seconds": 0.3945153329987079
+}

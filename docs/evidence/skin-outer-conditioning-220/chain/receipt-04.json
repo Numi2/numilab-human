@@ -1,0 +1,1212 @@
+{
+  "schema": "numi.connectedfit-O-link-condition-q-quality-contraction.v1",
+  "status": "BOUNDED_CONTRACTION_STOPPED_WITH_Q_POOR_FACES",
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-002/candidate.npz",
+  "input_sha256": "41c4c8d97b5ae9a11e25636c89c6592de7153cc8db99ab6354ea556c1f3e79e3",
+  "output_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-002/contraction-002/candidate.npz",
+  "output_sha256": "f80be7e8ba8b97cef6c9baef97422cdedaa9f433567ca722def05f5ba5217293",
+  "helper_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-edge-flips/local_float32_edge_flip.py",
+  "helper_sha256": "7d64110d7522ecd3015d4298c73968e94a172e9123ffdf8852a73d670c6f4187",
+  "script_path": "/tmp/contract_o_quality_2.py",
+  "script_sha256": "7940800d5c29415a811084366db37f30d3cf288871d35e8e8ee91140db86d9d2",
+  "quality_threshold": 0.001,
+  "quality_definition": "Float32 cross-product norm divided by squared longest edge; dimensionless.",
+  "max_edge_um": 250.0,
+  "accepted_operations": 16,
+  "operations": [
+    {
+      "operation_index": 0,
+      "edge_vertex_rows": [
+        6736,
+        6737
+      ],
+      "kept_vertex_row": 6736,
+      "collapsed_vertex_row": 6737,
+      "collapse_length_um": 52.41848340936947,
+      "max_source_coordinate_change_um": 52.41848340936947,
+      "face_rows_affected_input_candidate": [
+        13283,
+        13287,
+        13520,
+        13521
+      ],
+      "face_rows_removed_input_candidate": [
+        13283,
+        13520
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        13287,
+        13521
+      ],
+      "target_sliver_face_row": 13520,
+      "target_face_quality_before": 0.0006507691578008235,
+      "local_bad_faces_before_after": [
+        2,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0006507691578008235,
+        0.0013335604300666658
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1
+      ],
+      "source_face_rows_union_before": [
+        13065,
+        13069,
+        63134,
+        63135
+      ],
+      "parent_source_face_rows_after": [
+        13374,
+        13378,
+        13640,
+        13641
+      ],
+      "max_normal_rotation_rad": 0.000456637283148988,
+      "score": [
+        2.0,
+        2.049206564387951,
+        1.803895424458053,
+        -5.241848340936947e-05,
+        1
+      ]
+    },
+    {
+      "operation_index": 1,
+      "edge_vertex_rows": [
+        5203,
+        5204
+      ],
+      "kept_vertex_row": 5203,
+      "collapsed_vertex_row": 5204,
+      "collapse_length_um": 44.95708978673586,
+      "max_source_coordinate_change_um": 44.95708978673586,
+      "face_rows_affected_input_candidate": [
+        11026,
+        11027,
+        11030,
+        63500,
+        63502,
+        63503
+      ],
+      "face_rows_removed_input_candidate": [
+        11026,
+        63500
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        11027,
+        11030,
+        63502,
+        63503
+      ],
+      "target_sliver_face_row": 63500,
+      "target_face_quality_before": 0.0006992897833697498,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0006992897833697498,
+        0.05251556369106044
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        55,
+        10287,
+        10949
+      ],
+      "parent_source_face_rows_after": [
+        11087,
+        11088,
+        11091,
+        63873,
+        63875,
+        63876
+      ],
+      "max_normal_rotation_rad": 0.009159275693359253,
+      "score": [
+        1.0,
+        75.09842834825575,
+        1.511079078904558,
+        -4.495708978673586e-05,
+        1
+      ]
+    },
+    {
+      "operation_index": 2,
+      "edge_vertex_rows": [
+        9650,
+        9651
+      ],
+      "kept_vertex_row": 9651,
+      "collapsed_vertex_row": 9650,
+      "collapse_length_um": 115.66061312311278,
+      "max_source_coordinate_change_um": 115.66061312311278,
+      "face_rows_affected_input_candidate": [
+        18291,
+        18292,
+        63861,
+        63863
+      ],
+      "face_rows_removed_input_candidate": [
+        18292,
+        63861
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        18291,
+        63863
+      ],
+      "target_sliver_face_row": 63861,
+      "target_face_quality_before": 0.0009627662948332727,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0009627662948332727,
+        0.0696740564110821
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        17823,
+        17824
+      ],
+      "parent_source_face_rows_after": [
+        18459,
+        18460,
+        64250,
+        64252
+      ],
+      "max_normal_rotation_rad": 5.056853461021559e-06,
+      "score": [
+        1.0,
+        72.36860781790031,
+        1.9511527136239903,
+        -0.00011566061312311279,
+        0
+      ]
+    },
+    {
+      "operation_index": 3,
+      "edge_vertex_rows": [
+        9486,
+        9488
+      ],
+      "kept_vertex_row": 9488,
+      "collapsed_vertex_row": 9486,
+      "collapse_length_um": 32.12106971110531,
+      "max_source_coordinate_change_um": 32.12106971110531,
+      "face_rows_affected_input_candidate": [
+        18270,
+        18273,
+        63878,
+        63879,
+        63886
+      ],
+      "face_rows_removed_input_candidate": [
+        18270,
+        63878
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        18273,
+        63879,
+        63886
+      ],
+      "target_sliver_face_row": 63878,
+      "target_face_quality_before": 9.403311560163274e-05,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        9.403311560163274e-05,
+        0.004273383967508949
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        17792
+      ],
+      "parent_source_face_rows_after": [
+        18437,
+        18438,
+        18441,
+        64267,
+        64268,
+        64269,
+        64276
+      ],
+      "max_normal_rotation_rad": 0.022242407987468363,
+      "score": [
+        1.0,
+        45.44552140134287,
+        1.5864877030472209,
+        -3.212106971110531e-05,
+        0
+      ]
+    },
+    {
+      "operation_index": 4,
+      "edge_vertex_rows": [
+        5593,
+        5594
+      ],
+      "kept_vertex_row": 5593,
+      "collapsed_vertex_row": 5594,
+      "collapse_length_um": 130.19474635005886,
+      "max_source_coordinate_change_um": 130.19474635005886,
+      "face_rows_affected_input_candidate": [
+        11013,
+        11153,
+        63548,
+        63586
+      ],
+      "face_rows_removed_input_candidate": [
+        11013,
+        63548
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        11153,
+        63586
+      ],
+      "target_sliver_face_row": 63548,
+      "target_face_quality_before": 0.00029643543530255556,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.00029643543530255556,
+        0.009122522079086284
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        53,
+        10858,
+        10942
+      ],
+      "parent_source_face_rows_after": [
+        11074,
+        11215,
+        63923,
+        63931,
+        63963
+      ],
+      "max_normal_rotation_rad": 0.0004490554817068938,
+      "score": [
+        1.0,
+        30.774060698159854,
+        1.8035004535953403,
+        -0.00013019474635005886,
+        1
+      ]
+    },
+    {
+      "operation_index": 5,
+      "edge_vertex_rows": [
+        6654,
+        6655
+      ],
+      "kept_vertex_row": 6654,
+      "collapsed_vertex_row": 6655,
+      "collapse_length_um": 31.475352286714646,
+      "max_source_coordinate_change_um": 31.475352286714646,
+      "face_rows_affected_input_candidate": [
+        11563,
+        11564,
+        11565,
+        13146,
+        13150,
+        13151,
+        13323
+      ],
+      "face_rows_removed_input_candidate": [
+        11563,
+        13151
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        11564,
+        11565,
+        13146,
+        13150,
+        13323
+      ],
+      "target_sliver_face_row": 11563,
+      "target_face_quality_before": 0.00018393818754702806,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.00018393818754702806,
+        0.0037945423646353793
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        12973,
+        12974
+      ],
+      "parent_source_face_rows_after": [
+        7026,
+        11627,
+        11628,
+        11629,
+        11630,
+        11631,
+        13223,
+        13226,
+        13228,
+        13229,
+        13230,
+        13355,
+        13356,
+        13359,
+        13415
+      ],
+      "max_normal_rotation_rad": 0.05925874760776115,
+      "score": [
+        1.0,
+        20.629443049531062,
+        0.957077744089684,
+        -3.1475352286714644e-05,
+        1
+      ]
+    },
+    {
+      "operation_index": 6,
+      "edge_vertex_rows": [
+        26960,
+        26963
+      ],
+      "kept_vertex_row": 26960,
+      "collapsed_vertex_row": 26963,
+      "collapse_length_um": 32.702926357362756,
+      "max_source_coordinate_change_um": 32.702926357362756,
+      "face_rows_affected_input_candidate": [
+        50644,
+        50649,
+        50655,
+        50660,
+        50801
+      ],
+      "face_rows_removed_input_candidate": [
+        50644,
+        50655
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        50649,
+        50660,
+        50801
+      ],
+      "target_sliver_face_row": 50644,
+      "target_face_quality_before": 0.0008408146677538753,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0008408146677538753,
+        0.01425403963847553
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        49971,
+        49976,
+        63351
+      ],
+      "parent_source_face_rows_after": [
+        50971,
+        50976,
+        50982,
+        50987,
+        51137
+      ],
+      "max_normal_rotation_rad": 0.012921401339960439,
+      "score": [
+        1.0,
+        16.952653402863803,
+        1.6631163007243959,
+        -3.270292635736276e-05,
+        1
+      ]
+    },
+    {
+      "operation_index": 7,
+      "edge_vertex_rows": [
+        9488,
+        9489
+      ],
+      "kept_vertex_row": 9488,
+      "collapsed_vertex_row": 9489,
+      "collapse_length_um": 127.27547591990154,
+      "max_source_coordinate_change_um": 127.27547591990154,
+      "face_rows_affected_input_candidate": [
+        18271,
+        18278,
+        63875,
+        63877
+      ],
+      "face_rows_removed_input_candidate": [
+        18271,
+        63877
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        18278,
+        63875
+      ],
+      "target_sliver_face_row": 63877,
+      "target_face_quality_before": 0.0003678332141134888,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0003678332141134888,
+        0.004838098959334259
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        86,
+        17803
+      ],
+      "parent_source_face_rows_after": [
+        18439,
+        18446,
+        64244,
+        64245,
+        64264,
+        64266
+      ],
+      "max_normal_rotation_rad": 0.0023525255481534795,
+      "score": [
+        1.0,
+        13.152969263513937,
+        1.7991306930666422,
+        -0.00012727547591990154,
+        1
+      ]
+    },
+    {
+      "operation_index": 8,
+      "edge_vertex_rows": [
+        25888,
+        25889
+      ],
+      "kept_vertex_row": 25889,
+      "collapsed_vertex_row": 25888,
+      "collapse_length_um": 34.60354120593276,
+      "max_source_coordinate_change_um": 34.60354120593276,
+      "face_rows_affected_input_candidate": [
+        50819,
+        50834,
+        50869,
+        50870
+      ],
+      "face_rows_removed_input_candidate": [
+        50834,
+        50870
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        50819,
+        50869
+      ],
+      "target_sliver_face_row": 50834,
+      "target_face_quality_before": 0.0009475007536821067,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0009475007536821067,
+        0.010979911679074795
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1
+      ],
+      "source_face_rows_union_before": [
+        50138,
+        50139,
+        63404,
+        63409
+      ],
+      "parent_source_face_rows_after": [
+        51155,
+        51171,
+        51208,
+        51209
+      ],
+      "max_normal_rotation_rad": 0.03526051708024355,
+      "score": [
+        1.0,
+        11.588288068801509,
+        0.22018312635492887,
+        -3.460354120593276e-05,
+        0
+      ]
+    },
+    {
+      "operation_index": 9,
+      "edge_vertex_rows": [
+        5565,
+        5566
+      ],
+      "kept_vertex_row": 5566,
+      "collapsed_vertex_row": 5565,
+      "collapse_length_um": 27.40363652416508,
+      "max_source_coordinate_change_um": 27.40363652416508,
+      "face_rows_affected_input_candidate": [
+        10958,
+        10959,
+        63569,
+        63570
+      ],
+      "face_rows_removed_input_candidate": [
+        10959,
+        63570
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        10958,
+        63569
+      ],
+      "target_sliver_face_row": 63570,
+      "target_face_quality_before": 0.0007903739460743964,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0007903739460743964,
+        0.008456713062193167
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        56,
+        86,
+        10891
+      ],
+      "parent_source_face_rows_after": [
+        11019,
+        11020,
+        63946,
+        63947
+      ],
+      "max_normal_rotation_rad": 0.027668574015284622,
+      "score": [
+        1.0,
+        10.699635412067535,
+        1.9265289042489484,
+        -2.740363652416508e-05,
+        0
+      ]
+    },
+    {
+      "operation_index": 10,
+      "edge_vertex_rows": [
+        9303,
+        9304
+      ],
+      "kept_vertex_row": 9304,
+      "collapsed_vertex_row": 9303,
+      "collapse_length_um": 58.12450011610797,
+      "max_source_coordinate_change_um": 58.12450011610797,
+      "face_rows_affected_input_candidate": [
+        18091,
+        18093,
+        63745,
+        63749,
+        63751,
+        63752,
+        63767
+      ],
+      "face_rows_removed_input_candidate": [
+        18093,
+        63752
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        18091,
+        63745,
+        63749,
+        63751,
+        63767
+      ],
+      "target_sliver_face_row": 63752,
+      "target_face_quality_before": 0.0004769469960592687,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0004769469960592687,
+        0.004730942720139748
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        117,
+        17631
+      ],
+      "parent_source_face_rows_after": [
+        18252,
+        18255,
+        64126,
+        64130,
+        64132,
+        64133,
+        64150
+      ],
+      "max_normal_rotation_rad": 0.06050806271843536,
+      "score": [
+        1.0,
+        9.919221127774644,
+        1.3807221860545156,
+        -5.8124500116107965e-05,
+        0
+      ]
+    },
+    {
+      "operation_index": 11,
+      "edge_vertex_rows": [
+        8358,
+        8359
+      ],
+      "kept_vertex_row": 8358,
+      "collapsed_vertex_row": 8359,
+      "collapse_length_um": 33.61365087095867,
+      "max_source_coordinate_change_um": 33.61365087095867,
+      "face_rows_affected_input_candidate": [
+        16333,
+        16336,
+        63669,
+        63670
+      ],
+      "face_rows_removed_input_candidate": [
+        16333,
+        63669
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        16336,
+        63670
+      ],
+      "target_sliver_face_row": 63669,
+      "target_face_quality_before": 0.0008362947264686227,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0008362947264686227,
+        0.008184429012961469
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        58,
+        15796,
+        15802
+      ],
+      "parent_source_face_rows_after": [
+        16492,
+        16495,
+        64050,
+        64051
+      ],
+      "max_normal_rotation_rad": 0.0009624085844139453,
+      "score": [
+        1.0,
+        9.786536676515254,
+        1.9420951584787591,
+        -3.361365087095867e-05,
+        1
+      ]
+    },
+    {
+      "operation_index": 12,
+      "edge_vertex_rows": [
+        9653,
+        9654
+      ],
+      "kept_vertex_row": 9654,
+      "collapsed_vertex_row": 9653,
+      "collapse_length_um": 139.368539662413,
+      "max_source_coordinate_change_um": 139.368539662413,
+      "face_rows_affected_input_candidate": [
+        18294,
+        18313,
+        18535,
+        63873,
+        63876,
+        63885,
+        63923
+      ],
+      "face_rows_removed_input_candidate": [
+        18294,
+        63873
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        18313,
+        18535,
+        63876,
+        63885,
+        63923
+      ],
+      "target_sliver_face_row": 63873,
+      "target_face_quality_before": 0.0008468857849948108,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0008468857849948108,
+        0.007854551996655497
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        56,
+        17826,
+        17841
+      ],
+      "parent_source_face_rows_after": [
+        18462,
+        18481,
+        18707,
+        64262,
+        64265,
+        64274,
+        64275,
+        64314
+      ],
+      "max_normal_rotation_rad": 5.387411741126496e-05,
+      "score": [
+        1.0,
+        9.27462963226337,
+        1.3109534330878276,
+        -0.00013936853966241302,
+        0
+      ]
+    },
+    {
+      "operation_index": 13,
+      "edge_vertex_rows": [
+        3415,
+        3416
+      ],
+      "kept_vertex_row": 3416,
+      "collapsed_vertex_row": 3415,
+      "collapse_length_um": 31.092425301761615,
+      "max_source_coordinate_change_um": 31.092425301761615,
+      "face_rows_affected_input_candidate": [
+        6775,
+        6963,
+        6964,
+        6965,
+        6969,
+        6971,
+        6973
+      ],
+      "face_rows_removed_input_candidate": [
+        6775,
+        6969
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        6963,
+        6964,
+        6965,
+        6971,
+        6973
+      ],
+      "target_sliver_face_row": 6969,
+      "target_face_quality_before": 0.0005464309360831976,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0005464309360831976,
+        0.003741386529163301
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1
+      ],
+      "source_face_rows_union_before": [
+        6906,
+        6907,
+        6909,
+        6911,
+        63540,
+        63601,
+        63602
+      ],
+      "parent_source_face_rows_after": [
+        6786,
+        6980,
+        6981,
+        6982,
+        6987,
+        6989,
+        6991
+      ],
+      "max_normal_rotation_rad": 0.021967059129207312,
+      "score": [
+        1.0,
+        6.846952253438395,
+        1.3480059161961835,
+        -3.1092425301761616e-05,
+        0
+      ]
+    },
+    {
+      "operation_index": 14,
+      "edge_vertex_rows": [
+        8358,
+        8360
+      ],
+      "kept_vertex_row": 8360,
+      "collapsed_vertex_row": 8358,
+      "collapse_length_um": 36.840423225095684,
+      "max_source_coordinate_change_um": 36.840423225095684,
+      "face_rows_affected_input_candidate": [
+        16330,
+        16331,
+        16336,
+        63660,
+        63661,
+        63670
+      ],
+      "face_rows_removed_input_candidate": [
+        16330,
+        63660
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        16331,
+        16336,
+        63661,
+        63670
+      ],
+      "target_sliver_face_row": 63660,
+      "target_face_quality_before": 0.0004580185341183096,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0004580185341183096,
+        0.0018337799792095784
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1,
+        149
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        58,
+        15795,
+        15796
+      ],
+      "parent_source_face_rows_after": [
+        16489,
+        16490,
+        16492,
+        16495,
+        64041,
+        64042,
+        64050,
+        64051
+      ],
+      "max_normal_rotation_rad": 0.014040422890046483,
+      "score": [
+        1.0,
+        4.003724396742205,
+        1.46186681912164,
+        -3.684042322509568e-05,
+        0
+      ]
+    },
+    {
+      "operation_index": 15,
+      "edge_vertex_rows": [
+        27541,
+        27542
+      ],
+      "kept_vertex_row": 27541,
+      "collapsed_vertex_row": 27542,
+      "collapse_length_um": 51.68860573449585,
+      "max_source_coordinate_change_um": 51.68860573449585,
+      "face_rows_affected_input_candidate": [
+        54133,
+        54135,
+        54152,
+        54153,
+        54330
+      ],
+      "face_rows_removed_input_candidate": [
+        54133,
+        54152
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        54135,
+        54153,
+        54330
+      ],
+      "target_sliver_face_row": 54152,
+      "target_face_quality_before": 0.0009744110866449773,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0009744110866449773,
+        0.003779294064144233
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1
+      ],
+      "source_face_rows_union_before": [
+        53351,
+        53353,
+        53370,
+        53371,
+        53531
+      ],
+      "parent_source_face_rows_after": [
+        54494,
+        54496,
+        54513,
+        54514,
+        54692
+      ],
+      "max_normal_rotation_rad": 0.006369686955837929,
+      "score": [
+        1.0,
+        3.8785417324805165,
+        1.781143644906545,
+        -5.168860573449585e-05,
+        1
+      ]
+    }
+  ],
+  "rejections": {
+    "link_condition": 34,
+    "orientation_flip": 12
+  },
+  "before_topology": {
+    "used_vertices": 32022,
+    "faces": 63999,
+    "boundary_loops": [
+      21,
+      24
+    ],
+    "genus": 0
+  },
+  "after_topology": {
+    "used_vertices": 32006,
+    "edges": 95973,
+    "faces": 63967,
+    "components": 1,
+    "boundary_loops": [
+      21,
+      24
+    ],
+    "boundary_edges": 45,
+    "nonmanifold_edges": 0,
+    "euler_characteristic": 0,
+    "genus": 0
+  },
+  "before_q_below_0p001": 20,
+  "after_q_below_0p001": 3,
+  "remaining_q_below_0p001_face_rows": [
+    7003,
+    37907,
+    54594
+  ],
+  "after_min_quality": 0.00032305798958987,
+  "after_min_altitude_um": 0.2551548480987549,
+  "changed_input_candidate_face_rows": [
+    6963,
+    6964,
+    6965,
+    6971,
+    6973,
+    10958,
+    11027,
+    11030,
+    11153,
+    11564,
+    11565,
+    13146,
+    13150,
+    13287,
+    13323,
+    13521,
+    16331,
+    16336,
+    18091,
+    18273,
+    18278,
+    18291,
+    18313,
+    18535,
+    50649,
+    50660,
+    50801,
+    50819,
+    50869,
+    54135,
+    54153,
+    54330,
+    63502,
+    63503,
+    63569,
+    63586,
+    63661,
+    63670,
+    63745,
+    63749,
+    63751,
+    63767,
+    63863,
+    63875,
+    63876,
+    63879,
+    63885,
+    63886,
+    63923
+  ],
+  "removed_input_candidate_face_rows": [
+    6775,
+    6969,
+    10959,
+    11013,
+    11026,
+    11563,
+    13151,
+    13283,
+    13520,
+    16330,
+    16333,
+    18093,
+    18270,
+    18271,
+    18292,
+    18294,
+    50644,
+    50655,
+    50834,
+    50870,
+    54133,
+    54152,
+    63500,
+    63548,
+    63570,
+    63660,
+    63669,
+    63752,
+    63861,
+    63873,
+    63877,
+    63878
+  ],
+  "positions_bitwise_unchanged": true,
+  "source_node_count_preserved": 32218,
+  "O033_to_candidate_vertex_row": "explicit contraction endpoint remap; full point table retained; no nearest neighbor",
+  "faces_and_source_O_faces_equal": true,
+  "face_ancestry_csr_rows": 67167,
+  "all_surviving_faces_have_ancestry": true,
+  "all_float32_faces_positive_area": true,
+  "all_positive_area_exact_float32": true,
+  "local_exact_self_pairs_after_each_operation": 0,
+  "local_exact_self_gate_scope": "Every trial was exact-checked against all AABB-near O faces before commit; exact failures were backed out. Final changed-face self and all-185 bone audit pending.",
+  "geometry_admission": false,
+  "elapsed_seconds": 0.4783302501309663
+}

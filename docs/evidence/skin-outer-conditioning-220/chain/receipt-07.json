@@ -1,0 +1,91 @@
+{
+  "scope": "local connectivity candidate; requires full F64/F32 self/clearance/thickness/cell gates before physical admission",
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-003/contraction-003/candidate.npz",
+  "input_sha256": "52e4c9d165ebcb38fd12118df83b05129489a6f07288c1f54ab9db342fe0d304",
+  "output_sha256": "35464898e7f5b3fb66de0ceaf3121089315a0bcb3cc3b3afac954c5ca165d188",
+  "attempts": 15,
+  "passes": 3,
+  "accepted_flips": 2,
+  "emitted_collapsed_faces": 0,
+  "vertices_moved": 0,
+  "elapsed_s": 0.26302720815874636,
+  "edits": [
+    {
+      "faces": [
+        6997,
+        7001
+      ],
+      "old_corners": [
+        [
+          3395,
+          3485,
+          6724
+        ],
+        [
+          3485,
+          6654,
+          6724
+        ]
+      ],
+      "new_corners": [
+        [
+          3395,
+          6654,
+          6724
+        ],
+        [
+          6654,
+          3395,
+          3485
+        ]
+      ],
+      "old_min_altitude_m": 3.3945922491528926e-06,
+      "new_min_altitude_m": 2.4035410634703405e-05,
+      "old_exact_touching_pairs": 0,
+      "new_exact_touching_pairs": 0,
+      "source_face_ancestry": [
+        6997,
+        7001
+      ]
+    },
+    {
+      "faces": [
+        6965,
+        7001
+      ],
+      "old_corners": [
+        [
+          3395,
+          3482,
+          3485
+        ],
+        [
+          6654,
+          3395,
+          3485
+        ]
+      ],
+      "new_corners": [
+        [
+          3482,
+          6654,
+          3395
+        ],
+        [
+          6654,
+          3482,
+          3485
+        ]
+      ],
+      "old_min_altitude_m": 1.4376758839555902e-05,
+      "new_min_altitude_m": 2.7977193440586696e-05,
+      "old_exact_touching_pairs": 0,
+      "new_exact_touching_pairs": 0,
+      "source_face_ancestry": [
+        6965,
+        6997,
+        7001
+      ]
+    }
+  ]
+}

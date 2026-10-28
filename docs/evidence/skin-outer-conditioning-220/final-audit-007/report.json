@@ -1,0 +1,42 @@
+{
+  "schema": "numi.connectedfit-O-final-shape-repair-sampled-solid-containment.v1",
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-005/contraction-001/candidate.npz",
+  "candidate_sha256": "5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b",
+  "surface_audit_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-005/contraction-001/final-audit-006/report.json",
+  "surface_audit_sha256": "37adfad28ed9f103e267d2e592360d2d64ff0bae8fa7e866dac72230d59d9a66",
+  "bone_query_module": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/bone-distance-query-001/bone_distance_query.py",
+  "bone_query_module_sha256": "5dbe11f400964cbde4ed6f0cc35df445a3b4058cb2be105684d774053571e71a",
+  "bone_query_bank_count": 185,
+  "bone_query_bank_hashes": {
+    "exact-emitted.triangles.csv": "0d3418064af1d4f34d19a1ec91992afceacaaa70b6c982d4a2637ded1d829eac",
+    "exact-emitted.nodes.csv": "99e58d6afb68e0939670f69d4132bfa730cf3e988a7f70a179a41a89eac3802c",
+    "exact-emitted.bodies.csv": "dae52ab190e02586421b56381b03a4453aff1058edca7b6a42afcb9051b50b90",
+    "all-bank-containment.csv.banks.csv": "46568d191d84dd68f1fbcfe02b7938b15d4a7b3b786f268f46bcfe916070c6df"
+  },
+  "changed_face_count": 659,
+  "samples_per_changed_face": 4,
+  "sample_points": 2636,
+  "sample_definition": "Float32 centroid and three edge midpoints of every changed Float32 face.",
+  "query_margin_m": 0.0,
+  "query_load_seconds": 1.2196735830511898,
+  "query_seconds": 0.449736500158906,
+  "returned_nonpositive_or_ambiguous_sample_bank_rows": 0,
+  "strict_inside_sample_bank_rows": [],
+  "strict_inside_count": 0,
+  "ambiguous_rows": [],
+  "ambiguous_resolved_rows": [],
+  "ambiguous_resolved_inside_count": 0,
+  "ambiguous_unresolved_count": 0,
+  "boundary_rows": [],
+  "all_185_typed_banks_queried": true,
+  "face_source_O_faces_equal": true,
+  "source_vertex_map_composed_idempotent": true,
+  "face_ancestry_csr_valid_nonempty": true,
+  "limitations": [
+    "This is a sampled solid-containment gate over changed-face centroids and edge midpoints, with pinned signed-distance/Fast-Winding queries and exact rational ray-parity resolution for ambiguous samples. It is not exhaustive triangle-in-solid containment or physical admission.",
+    "Exact surface pair crossings are separately reported by the pinned final-audit-006 report."
+  ],
+  "status": "PASS_ORIGINAL_O033_BASELINE_CHANGED_FACE_SAMPLED_CONTAINMENT_GATE",
+  "source_script_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-005/contraction-001/final-audit-007/source.py",
+  "source_script_sha256": "240518c3557bcf560a0bfbb352a065525ffae2f4335b357eacd58a4307ebf9e0"
+}

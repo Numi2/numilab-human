@@ -1,0 +1,304 @@
+{
+  "schema": "numi.connectedfit-O-link-condition-q-quality-contraction.v1",
+  "status": "CANDIDATE_REQUIRES_FINAL_CHANGED_FACE_SELF_AND_185_BONE_GATES",
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-004/candidate.npz",
+  "input_sha256": "b0c9595dcbcf310f1b59317330d7b06e707544006fdb0a1973c13b8149584e7c",
+  "output_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-005/contraction-001/candidate.npz",
+  "output_sha256": "5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b",
+  "helper_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-edge-flips/local_float32_edge_flip.py",
+  "helper_sha256": "7d64110d7522ecd3015d4298c73968e94a172e9123ffdf8852a73d670c6f4187",
+  "script_path": "/tmp/contract_o_quality_5.py",
+  "script_sha256": "68b685db1ec53f8e2b4d044734cf5a4af19cca658ef5d7d934c620b0f5daa92e",
+  "quality_threshold": 0.001,
+  "quality_definition": "Float32 cross-product norm divided by squared longest edge; dimensionless.",
+  "max_edge_um": 25.0,
+  "accepted_operations": 3,
+  "operations": [
+    {
+      "operation_index": 0,
+      "edge_vertex_rows": [
+        19366,
+        19376
+      ],
+      "kept_vertex_row": 19366,
+      "collapsed_vertex_row": 19376,
+      "collapse_length_um": 12.732124508289768,
+      "max_source_coordinate_change_um": 12.732124508289768,
+      "face_rows_affected_input_candidate": [
+        37916,
+        37923,
+        37924,
+        37934,
+        37935
+      ],
+      "face_rows_removed_input_candidate": [
+        37916,
+        37924
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        37923,
+        37934,
+        37935
+      ],
+      "target_sliver_face_row": 37907,
+      "target_face_quality_before": 0.00032305798958987,
+      "local_bad_faces_before_after": [
+        0,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.009153332561254501,
+        0.24647336803142503
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        37433,
+        37445,
+        37446
+      ],
+      "parent_source_face_rows_after": [
+        38151,
+        38152,
+        38153,
+        38159,
+        38161,
+        38168,
+        38169,
+        38170,
+        38180,
+        38181,
+        38450,
+        38456,
+        38463
+      ],
+      "max_normal_rotation_rad": 0.002261449500291525,
+      "score": [
+        0.0,
+        26.92717285010836,
+        1.4544435368409776,
+        -1.2732124508289769e-05,
+        1
+      ]
+    },
+    {
+      "operation_index": 1,
+      "edge_vertex_rows": [
+        19366,
+        19367
+      ],
+      "kept_vertex_row": 19366,
+      "collapsed_vertex_row": 19367,
+      "collapse_length_um": 2.1891144727133978,
+      "max_source_coordinate_change_um": 2.1891144727133978,
+      "face_rows_affected_input_candidate": [
+        37919,
+        38195,
+        38196
+      ],
+      "face_rows_removed_input_candidate": [
+        37919,
+        38195
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        38196
+      ],
+      "target_sliver_face_row": 37907,
+      "target_face_quality_before": 0.00032305798958987,
+      "local_bad_faces_before_after": [
+        0,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.0028474098071455956,
+        0.004414304607638895
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        1
+      ],
+      "source_face_rows_union_before": [
+        37429,
+        37714,
+        37716
+      ],
+      "parent_source_face_rows_after": [
+        38164,
+        38449,
+        38451
+      ],
+      "max_normal_rotation_rad": 0.6950178375183651,
+      "score": [
+        0.0,
+        1.5502877726139614,
+        0.031228760915775183,
+        -2.1891144727133977e-06,
+        1
+      ]
+    },
+    {
+      "operation_index": 2,
+      "edge_vertex_rows": [
+        19365,
+        19366
+      ],
+      "kept_vertex_row": 19365,
+      "collapsed_vertex_row": 19366,
+      "collapse_length_um": 3.508203010343705,
+      "max_source_coordinate_change_um": 3.508203010343705,
+      "face_rows_affected_input_candidate": [
+        36417,
+        36418,
+        37907,
+        37908,
+        37914,
+        37923,
+        37934,
+        37935,
+        38196,
+        38201,
+        38208
+      ],
+      "face_rows_removed_input_candidate": [
+        37907,
+        38196
+      ],
+      "face_rows_surviving_changed_input_candidate": [
+        36417,
+        36418,
+        37908,
+        37914,
+        37923,
+        37934,
+        37935,
+        38201,
+        38208
+      ],
+      "target_sliver_face_row": 37907,
+      "target_face_quality_before": 0.00032305798958987,
+      "local_bad_faces_before_after": [
+        1,
+        0
+      ],
+      "local_min_quality_before_after": [
+        0.00032305798958987,
+        0.07198035357843184
+      ],
+      "local_exact_self_pairs_after": 0,
+      "link_condition_pass": true,
+      "boundary_vertices_touched": false,
+      "source_marker_union_before": [
+        -1,
+        1
+      ],
+      "source_face_rows_union_before": [
+        -1,
+        35919,
+        35920,
+        37415
+      ],
+      "parent_source_face_rows_after": [
+        36654,
+        36655,
+        38150,
+        38151,
+        38152,
+        38153,
+        38159,
+        38161,
+        38164,
+        38168,
+        38169,
+        38170,
+        38180,
+        38181,
+        38449,
+        38450,
+        38451,
+        38456,
+        38463
+      ],
+      "max_normal_rotation_rad": 0.013441741274988765,
+      "score": [
+        1.0,
+        222.8093899482649,
+        1.2248093402642062,
+        -3.508203010343705e-06,
+        1
+      ]
+    }
+  ],
+  "rejections": {
+    "link_condition": 2,
+    "orientation_flip": 3,
+    "no_local_quality_progress": 2
+  },
+  "before_topology": {
+    "used_vertices": 32005,
+    "faces": 63965,
+    "boundary_loops": [
+      21,
+      24
+    ],
+    "genus": 0
+  },
+  "after_topology": {
+    "used_vertices": 32002,
+    "edges": 95961,
+    "faces": 63959,
+    "components": 1,
+    "boundary_loops": [
+      21,
+      24
+    ],
+    "boundary_edges": 45,
+    "nonmanifold_edges": 0,
+    "euler_characteristic": 0,
+    "genus": 0
+  },
+  "before_q_below_0p001": 1,
+  "after_q_below_0p001": 0,
+  "remaining_q_below_0p001_face_rows": [],
+  "after_min_quality": 0.001006690668873489,
+  "after_min_altitude_um": 0.2551548480987549,
+  "changed_input_candidate_face_rows": [
+    36417,
+    36418,
+    37908,
+    37914,
+    37923,
+    37934,
+    37935,
+    38196,
+    38201,
+    38208
+  ],
+  "removed_input_candidate_face_rows": [
+    37907,
+    37916,
+    37919,
+    37924,
+    38195,
+    38196
+  ],
+  "positions_bitwise_unchanged": true,
+  "source_node_count_preserved": 32218,
+  "O033_to_candidate_vertex_row": "explicit contraction endpoint remap; full point table retained; no nearest neighbor",
+  "faces_and_source_O_faces_equal": true,
+  "face_ancestry_csr_rows": 67296,
+  "all_surviving_faces_have_ancestry": true,
+  "all_float32_faces_positive_area": true,
+  "all_positive_area_exact_float32": true,
+  "local_exact_self_pairs_after_each_operation": 0,
+  "local_exact_self_gate_scope": "Every trial was exact-checked against all AABB-near O faces before commit; exact failures were backed out. Final changed-face self and all-185 bone audit pending.",
+  "geometry_admission": false,
+  "elapsed_seconds": 0.41035095881670713
+}
