@@ -1,0 +1,291 @@
+{
+  "admission": {
+    "admitted": false,
+    "mass_ledger_pinned": false,
+    "native_runtime_verified": false,
+    "physical_motion_qualified": false
+  },
+  "checks": {
+    "D37_source_replay_max_error_m": 5.813847841222429e-07,
+    "barycentric_weight_rows": 23386,
+    "candidate_outer_normal_orientation": {
+      "candidate_face_winding": "inward",
+      "direct_D37_native_normal_alignment_outward": {
+        "median_dot": 0.9873890779237444,
+        "p05_dot": 0.7364708817937207,
+        "p95_dot": 0.9997039269562878,
+        "positive_fraction": 0.9951042324699937
+      },
+      "direct_D37_native_normal_alignment_raw": {
+        "median_dot": -0.9873890779237444,
+        "p05_dot": -0.9997039269562878,
+        "p95_dot": -0.7364708817937208,
+        "positive_fraction": 0.004895767530006317
+      },
+      "normal_sign_applied": -1,
+      "temporary_cap_loop_lengths": [
+        21,
+        24
+      ],
+      "temporary_capped_signed_volume_m3": -0.06867801542818665
+    },
+    "current_reference_f32_orientation_audit": {
+      "degenerate_faces": 0,
+      "flipped_or_degenerate_faces": 0,
+      "minimum_face_cosine": 0.9200355488931341
+    },
+    "direct_source_weight_rows": 6332,
+    "mapped_weights_bitwise_preserved": true,
+    "normal_blend_cond_max": 1.001241521258,
+    "normal_blend_det_min": 0.9975071603569382,
+    "position_jacobian_cond_max": 1.001241515231613,
+    "position_jacobian_det_min": 1.0204574480456192,
+    "projection_distance_m": {
+      "max": 0.014984307733611694,
+      "median": 0.00170563830362398,
+      "min": 6.8073833481047e-11,
+      "p95": 0.0073909759296369604
+    },
+    "reference_f32_normal_replay": {
+      "bitwise_exact_vertices": 501,
+      "residual_max": 5.029932807997418e-07,
+      "residual_p95": 1.799593213480184e-07,
+      "ulp_max": 16733
+    },
+    "reference_f32_replay": {
+      "bitwise_exact_vertices": 588,
+      "residual_max_m": 4.600856059412551e-07,
+      "residual_p95_m": 2.2608089303377261e-07,
+      "ulp_max": 7542
+    },
+    "representative_binding_support_rows": 2284,
+    "source_registration_distance_m": {
+      "max": 0.036306840715865527,
+      "p50": 0.0017694949097001524,
+      "p95": 0.007267664178920948
+    },
+    "source_rest_unposed_orientation_audit": {
+      "degenerate_faces": 0,
+      "flipped_or_degenerate_faces": 179,
+      "minimum_face_cosine": -0.24191498363228048
+    },
+    "weight_max": 1.0,
+    "weight_min": 0.0,
+    "weight_sum_error_max": 2.996517131093057e-07
+  },
+  "classification": "D37-derived ABI5 surface source preparation; reference pose replay only",
+  "elapsed_s": 13.334385871887207,
+  "fields": {
+    "full-weights.csv.gz": [
+      "vertex",
+      "w0..w85"
+    ],
+    "registered-O-face-ancestry.csv.gz": [
+      "candidate_face_row",
+      "ancestry_entry_row",
+      "parent_face_row",
+      "source_original_id",
+      "source_face_row"
+    ],
+    "registered-O-faces.csv": [
+      "face",
+      "v0",
+      "v1",
+      "v2",
+      "O033_source_face_parent_row",
+      "baseline806_source_face_row_exact"
+    ],
+    "registered-O.csv": [
+      "vertex",
+      "canonical_candidate_vertex_row",
+      "O033_source_vertex_row",
+      "donor",
+      "wx",
+      "wy",
+      "wz",
+      "nx",
+      "ny",
+      "nz",
+      "lx",
+      "ly",
+      "lz",
+      "m00",
+      "m01",
+      "m02",
+      "m10",
+      "m11",
+      "m12",
+      "m20",
+      "m21",
+      "m22",
+      "baseline806_node_row",
+      "baseline806_node_kind",
+      "baseline806_node_source_row",
+      "baseline806_source_domain",
+      "source_domain",
+      "source_mapping_kind",
+      "source_registration_method",
+      "frame_owner_method",
+      "p1_crosswalk_row",
+      "d37_source_vertex_row",
+      "d37_binding_support_vertex_row",
+      "d37_binding_support_vertex_id",
+      "d37_source_face_row",
+      "beta0",
+      "beta1",
+      "beta2",
+      "projection_distance_m",
+      "source_registration_distance_m",
+      "residual_x",
+      "residual_y",
+      "residual_z"
+    ]
+  },
+  "identity": {
+    "abi": 5,
+    "bindings": 86,
+    "fingerprint": 835155552,
+    "geometry_parent": "D37",
+    "mass_ledger_included": false,
+    "matching_pose_schema": "numi.human.native-skin-pose-snapshot.v1",
+    "native_physical_admission": false,
+    "source_faces": 108987,
+    "source_vertices": 61950
+  },
+  "inputs": {
+    "baseline": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/inputs/baseline-806.npz",
+      "sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756"
+    },
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/publication-033/candidate.npz",
+      "sha256": "549fab40b3cdfec2d0e1c9a004451d276f87b445f1c7dc9d5a56c1b5a1a53be4"
+    },
+    "compact-node-map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-006-used-compact/O-compact-node-map.csv",
+      "sha256": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4"
+    },
+    "conditioned-candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-005/contraction-001/candidate.npz",
+      "sha256": "5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b"
+    },
+    "identity": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/publication-033/source-face-identity.npz",
+      "sha256": "28059226506d5602cdae1c8af2627c7a8bfa18f4b010e6c047affee29c6671e0"
+    },
+    "p1-crosswalk": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/publication-072/evidence/run-006-direct-detail-p1-075/direct-detail-p1-075.npz",
+      "sha256": "21f1869b418a2eca1e5a0522059c8f9cc6f8afe1a270ccc7c7d99c9c19fdd2a4"
+    },
+    "source-csv-gzip": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/publication-070/evidence/mass/compiled-cell-export-068/run-003/source-preflight/registered-skin.csv.gz",
+      "sha256": "5f90732814c2eb7d372c25ff1336e5e884df28d4463185bc70e398aecfef0e61"
+    },
+    "source-payload": {
+      "path": "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/bilateral-hand-functional-rebind-020/run-001/candidate.nhskin",
+      "sha256": "7456bd4e1c646207ac69978a31a0298464d1e157b96ac4d97683051120738ddb"
+    },
+    "source-poses": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/publication-070/evidence/mass/compiled-cell-export-068/run-003/source-preflight/registered-skin-poses.json",
+      "sha256": "0e476dcacbf89bc79b986a312c75b0dca3894972db87ecff0f9e2d95f3ce48cd"
+    }
+  },
+  "kind_aware_mapping": {
+    "baseline_node_kind_counts": {
+      "-1": 12436,
+      "0": 2368,
+      "1": 4886,
+      "2": 1500,
+      "5": 22
+    },
+    "candidate_mapping_counts": {
+      "geometry_triangle_registration_rows": 25670,
+      "geometry_triangle_weight_rows": 23386,
+      "kind0_p1_representative_binding_support_rows": 2284,
+      "kind0_unresolved_rows": 79,
+      "kind1_2_exact_detail_id_rows": 6332
+    },
+    "conditioned_candidate": {
+      "candidate_face_parent_map_sha256": "364b34ff5ccaba8a2535d1a9492c5c1567e5d7abfa03a393e10a1f47d51a5362",
+      "candidate_to_O033_vertex_map_sha256": "5b25f565b5f72240cfdb0825febc1f26002d1cfd4ec21835fa1f6c51e62f7007",
+      "canonical_candidate_vertex_rows_sha256": "5b25f565b5f72240cfdb0825febc1f26002d1cfd4ec21835fa1f6c51e62f7007",
+      "compact_node_map_sha256": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4",
+      "compact_output_vertex_count": 32002,
+      "enabled": true,
+      "faces_directly_matching_O033_source_triangles": 34540,
+      "faces_with_only_full_multi_source_ancestry": 29419,
+      "full_face_ancestry_entries": 67296,
+      "source_face_ancestry_status": "pinned conditioned-candidate CSR copied losslessly"
+    },
+    "crosswalk_coverage": {
+      "P1_detail_donors_match_current_payload_donors": true,
+      "P1_detail_ids_match_current_payload_vertex_rows": true,
+      "p1_detail_rows": 61950,
+      "unique_source_ids": 61950,
+      "unique_status1_coarse_representatives": 2332
+    },
+    "kind0_node_source_semantics": "coarse representative row; P1 status-1 unique representative is binding-weight support only, not topology ancestry",
+    "kind1_2_node_source_semantics": "exact detail_source_vertex_id",
+    "other_kind_semantics": "unmatched for direct mapping; use explicit geometric triangle registration only",
+    "p1_crosswalk_path": "/Users/numi/Work/numi-human-connected-surface-069/publication-072/evidence/run-006-direct-detail-p1-075/direct-detail-p1-075.npz",
+    "p1_crosswalk_sha256": "21f1869b418a2eca1e5a0522059c8f9cc6f8afe1a270ccc7c7d99c9c19fdd2a4",
+    "p1_detail_id_to_current_payload_row": "validated bijection by source ID; P1 donor equals current D37 registered CSV donor for all 61,950 rows",
+    "row_16398_witness": {
+      "O033_source_vertex_row": 16398,
+      "baseline806_node_kind": 0,
+      "baseline806_node_row": 1203,
+      "canonical_candidate_vertex_row": 16398,
+      "d37_binding_support_vertex_id": 24939,
+      "d37_binding_support_vertex_row": 24939,
+      "d37_geometric_source_face_row": 99843,
+      "d37_source_vertex_row_exact_geometry_ancestry": -1,
+      "legacy_node_source_row": 1233,
+      "legacy_row_used_as_D37_detail_index": false,
+      "legacy_source_domain": "coarse_representative_row",
+      "output_vertex_row": 16264,
+      "p1_crosswalk_row": 24939,
+      "source_domain": "D37_NHSKIN_triangle_inferred",
+      "source_mapping_kind": "baseline_kind0_unique_P1_representative_binding_support",
+      "source_registration_distance_m": 7.224794164122461e-07,
+      "source_registration_method": "nearest_D37_triangle_geometry_registration"
+    }
+  },
+  "outputs": {
+    "NumiHumanCandidateSkin033.hpp": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/NumiHumanCandidateSkin033.hpp",
+      "sha256": "3ec1801ea18d8244c175699fe6097c01cb950c3f867895fefe287878b34279fa"
+    },
+    "candidate-d37-033.nhskin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/candidate-d37-033.nhskin",
+      "sha256": "7a6c44b641b286497fbef73157e2945e2b7c4d5d2c423eff3b26590aa496abf4"
+    },
+    "donor-frames.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/donor-frames.csv",
+      "sha256": "ccd067c073c89cf928961a6b67985ffe761277a287edd1637b7917f66d4dac13"
+    },
+    "full-weights.csv.gz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/full-weights.csv.gz",
+      "sha256": "85c0a612b48279d88c8f00b9e3eea46e480f9ee243df71093c82fb0d9556d98f"
+    },
+    "reference-f32-replay.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/reference-f32-replay.csv",
+      "sha256": "8e07f51ddd749e1243eac3a8436598f545a3a9cacc669545eaf19027180095c9"
+    },
+    "registered-O-face-ancestry.csv.gz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/registered-O-face-ancestry.csv.gz",
+      "sha256": "8b6fbb24960b88eb0834b461d99542ac5058eb0c613bfc1d5d29c91bd4f8ba29"
+    },
+    "registered-O-faces.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/registered-O-faces.csv",
+      "sha256": "77138f1ebf882611a57955f310cb974141334818dda3c059656ef003d25a8ad8"
+    },
+    "registered-O.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/registered-O.csv",
+      "sha256": "9e1fcdcb2d8812718a2cabd37908b4064553d89f8e3bab54a151afb75045b3cd"
+    },
+    "source-transfer-map.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact/source-transfer-map.csv",
+      "sha256": "817ce234b289dea3499c484185c613018861694c1c7abaf8b3a4c7c587d53b7f"
+    }
+  }
+}

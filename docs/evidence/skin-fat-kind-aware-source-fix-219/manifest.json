@@ -1,0 +1,68 @@
+{
+  "admission": {
+    "admitted": false,
+    "mass_ledger_pinned": false,
+    "native_runtime_verified": false,
+    "physical_motion_qualified": false
+  },
+  "classification": "source preparation regression and diagnostic reference evidence only",
+  "file_bytes_before_manifest": 121319,
+  "files": {
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/README.md": {
+      "bytes": 4053,
+      "sha256": "dcb9b267978b9e216b814e76fa2aa27a74524882e20866bd67417b7772848d9d"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/canonical-007-preparation-receipt.json": {
+      "bytes": 13144,
+      "sha256": "4e131369dc283da8185073e4611413386f44f2957c7cc3728d561b560a33a23f"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/canonical-generated-NumiHumanCandidateSkin033.hpp": {
+      "bytes": 2022,
+      "sha256": "3ec1801ea18d8244c175699fe6097c01cb950c3f867895fefe287878b34279fa"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/canonical-preparation-invocation.json": {
+      "bytes": 3576,
+      "sha256": "66d5cafc366bc8b08121acd5bd38725dc20badcdecfa5e0d86884f1de4668493"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/regression-test.log": {
+      "bytes": 934,
+      "sha256": "2618ea2036a590357b521cad40b58b4dc4cf9bf1d6de810438e6eeecfc834a25"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/source-provenance-crosswalk-summary.json": {
+      "bytes": 17421,
+      "sha256": "6c29a6d72733949aee3c60ff5657419e89c545c23c033bd3387f85193adb1a6c"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/source-rest-orientation-witness-receipt.json": {
+      "bytes": 994,
+      "sha256": "c7a015c1077b7457c1d1b0aa3d6c1404443582bf5e886ad2114e257f7d1441eb"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/source-rest-orientation-witnesses.csv": {
+      "bytes": 18570,
+      "sha256": "d4259c0924e92e807e0cff5912ba61b84187155d392c3aad027c93e2b4043793"
+    },
+    "docs/evidence/skin-fat-kind-aware-source-fix-219/worst-canonical-O-row-16398-trace.json": {
+      "bytes": 8884,
+      "sha256": "a5cd76141b7c07fa1916038f9aa946f102e93e090e52accedbf4a71c5fe193ff"
+    },
+    "tools/prepare_candidate033_d37.py": {
+      "bytes": 44698,
+      "sha256": "fbeca468a53a23651238be23cf67825bd7b389d8ca71b1adb627a028e824bcf3"
+    },
+    "tools/test_prepare_candidate033_kind_aware.py": {
+      "bytes": 7023,
+      "sha256": "011a9e45c61134a3389740f9bffa1165f2c291b65b7cd54461124d00c8f2892f"
+    }
+  },
+  "git_changes": "add-only untracked source/evidence paths; no index changes, commit, or push by this worker",
+  "packet": "skin-fat-kind-aware-source-fix-219",
+  "test": {
+    "argv": [
+      "PYTHONDONTWRITEBYTECODE=1",
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "tools/test_prepare_candidate033_kind_aware.py"
+    ],
+    "log": "docs/evidence/skin-fat-kind-aware-source-fix-219/regression-test.log",
+    "result": "PASS"
+  },
+  "worktree_base_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996"
+}

@@ -1,0 +1,420 @@
+{
+  "admission": {
+    "admitted": false,
+    "mass_ledger_pinned": false,
+    "native_runtime_verified": false,
+    "physical_motion_qualified": false
+  },
+  "baseline806_kind_counts": {
+    "-1": 12436,
+    "0": 2368,
+    "1": 4886,
+    "2": 1500,
+    "5": 22
+  },
+  "bug": "baseline806 node_source_row has kind-dependent meaning. Kind 0 is a coarse representative row and must not be used as a detailed D37 vertex index. Kinds 1/2 are exact detail source IDs. Kind 5 and -1 are unmapped.",
+  "canonical_export": {
+    "face_count": 63959,
+    "node_count": 32002,
+    "output_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/skin-source-033/prepared-007-kind-aware-canonical-compact",
+    "payload_sha256": "7a6c44b641b286497fbef73157e2945e2b7c4d5d2c423eff3b26590aa496abf4",
+    "registered_O_sha256": "9e1fcdcb2d8812718a2cabd37908b4064553d89f8e3bab54a151afb75045b3cd",
+    "source_transfer_map_sha256": "817ce234b289dea3499c484185c613018861694c1c7abaf8b3a4c7c587d53b7f"
+  },
+  "classification": "kind-aware source preparation and crosswalk report; reference replay evidence only",
+  "critical_canonical_vertex_16398": {
+    "D37_binding_support_payload_row": 24939,
+    "O033_vertex": 16398,
+    "P1_baseline_rep_distance_m": 7.612204815783905e-07,
+    "P1_binding_support_detail_id": 24939,
+    "bad_legacy_as_detail_distance_m": 1.0341010335112586,
+    "baseline806_node": 1203,
+    "binding_support_donor": 23,
+    "canonical_O_vertex": 16398,
+    "compact_output_vertex_row": 16264,
+    "correct_support_current_distance_m": 7.612204815783905e-07,
+    "legacy_coarse_source_row": 1233,
+    "legacy_kind": 0,
+    "source_domain_kind0": "coarse_representative_row",
+    "topology_source_vertex_row": -1
+  },
+  "crosswalk_coverage": {
+    "P1_detail_donors_match_current_payload_donors": true,
+    "P1_detail_ids_match_current_payload_vertex_rows": true,
+    "p1_detail_rows": 61950,
+    "unique_source_ids": 61950,
+    "unique_status1_coarse_representatives": 2332
+  },
+  "mapping_counts": {
+    "geometry_triangle_registration_rows": 25670,
+    "geometry_triangle_weight_rows": 23386,
+    "kind0_p1_representative_binding_support_rows": 2284,
+    "kind0_unresolved_rows": 79,
+    "kind1_2_exact_detail_id_rows": 6332
+  },
+  "old_failure_trace": {
+    "file": "worst-canonical-O-row-16398-trace.json",
+    "sha256": "a5cd76141b7c07fa1916038f9aa946f102e93e090e52accedbf4a71c5fe193ff",
+    "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/source-trace-016/worst-canonical-compact-O-row-16398.json",
+    "summary": {
+      "D37_source": {
+        "accepted_coarse_face": {
+          "coarse_face_row": "302",
+          "stable_source_face_id": "2442",
+          "vertex0": "202",
+          "vertex1": "128",
+          "vertex2": "213"
+        },
+        "accepted_transfer_row": {
+          "active": "1",
+          "coarse_vertex0": "202",
+          "coarse_vertex1": "128",
+          "coarse_vertex2": "213",
+          "detail_donor_body": "61",
+          "detail_row": "1233",
+          "detail_source_vertex_id": "1233",
+          "rest_distance_m": "0.00015932480164337903",
+          "rest_offset_x_m": "0.00011698783563057757",
+          "rest_offset_y_m": "-6.104383355398646e-05",
+          "rest_offset_z_m": "-8.9285424127200086e-05",
+          "selected_face_row": "302",
+          "selected_face_stable_id": "2442",
+          "transfer_donor_body": "61",
+          "weight0": "0.31132176518440247",
+          "weight1": "0.19249144196510315",
+          "weight2": "0.49618679285049438"
+        },
+        "canonical_O_to_source_world_distance_m": 1.0341010335112586,
+        "coarse_to_capture016_node_ids": [
+          {
+            "accepted_coarse_vertex": 202,
+            "capture016_parent_node": 202,
+            "compiled_global_node": 1868
+          },
+          {
+            "accepted_coarse_vertex": 128,
+            "capture016_parent_node": 128,
+            "compiled_global_node": 1794
+          },
+          {
+            "accepted_coarse_vertex": 213,
+            "capture016_parent_node": 213,
+            "compiled_global_node": 1879
+          }
+        ],
+        "detail_row": 1233,
+        "owner_coarse_face_reference_points_world_m": [
+          [
+            -0.3098677400760914,
+            -1.0269580443799493,
+            0.14778766751138545
+          ],
+          [
+            -0.31020998507707814,
+            -1.0289462325976642,
+            0.14869854561790585
+          ],
+          [
+            -0.30801648169206963,
+            -1.026370165697663,
+            0.1498113827787653
+          ]
+        ],
+        "owner_detail_registered_world_m": [
+          -0.30889806151390076,
+          -1.0271100997924805,
+          0.14887785911560059
+        ],
+        "owner_rest_offset_reconstruction_error_m": 0.0,
+        "owner_rest_offset_world_m": [
+          0.00011698783563057757,
+          -6.104383355398646e-05,
+          -8.928542412720009e-05
+        ],
+        "owner_weighted_coarse_point_world_m": [
+          -0.30901504934953133,
+          -1.0270490559589265,
+          0.14896714453972779
+        ],
+        "owner_weighted_point_plus_rest_offset_world_m": [
+          -0.30889806151390076,
+          -1.0271100997924805,
+          0.14887785911560059
+        ],
+        "retained_registered_skin_world_m": [
+          -0.30889806151390076,
+          -1.0271100997924805,
+          0.14887785911560059
+        ],
+        "source_payload_local_xyz_m": [
+          -0.21157555282115936,
+          -0.10787446796894073,
+          0.6353787183761597
+        ],
+        "source_payload_source_pose_replay_world_m": [
+          -0.30889803171157837,
+          -1.02711021900177,
+          0.14887791872024536
+        ],
+        "source_payload_top_weights": [
+          {
+            "binding_row": 28,
+            "body": 61,
+            "weight_f32": 0.7191657423973083
+          },
+          {
+            "binding_row": 27,
+            "body": 60,
+            "weight_f32": 0.1863132268190384
+          },
+          {
+            "binding_row": 26,
+            "body": 59,
+            "weight_f32": 0.06801008433103561
+          },
+          {
+            "binding_row": 25,
+            "body": 57,
+            "weight_f32": 0.006888610310852528
+          },
+          {
+            "binding_row": 30,
+            "body": 64,
+            "weight_f32": 0.006523946300148964
+          },
+          {
+            "binding_row": 21,
+            "body": 53,
+            "weight_f32": 0.002848803298547864
+          },
+          {
+            "binding_row": 20,
+            "body": 52,
+            "weight_f32": 0.002099066274240613
+          },
+          {
+            "binding_row": 31,
+            "body": 65,
+            "weight_f32": 0.0017209404613822699
+          }
+        ],
+        "source_payload_weights_row_sha256": "5355cc92f49287403820480de97db7255657b6caef3a96442f1355a68ce985de",
+        "source_replay_vs_registered_skin_m": 1.3657139822709083e-07
+      },
+      "canonical_O": {
+        "ABI5_replay_vs_O_point_m": 3.247632789269592e-08,
+        "canonical_vs_registered_compact_delta_m": 0.0,
+        "point_world_m": [
+          -0.04272537678480148,
+          -0.029724150896072388,
+          0.08773607015609741
+        ],
+        "prepared_candidate_ABI5_local_xyz_m": [
+          -0.04753931984305382,
+          -0.04107996076345444,
+          1.6462701559066772
+        ],
+        "prepared_candidate_ABI5_source_pose_replay_world_m": [
+          -0.04272535443305969,
+          -0.029724158346652985,
+          0.0877360925078392
+        ],
+        "prepared_candidate_ABI5_top_weights": [
+          {
+            "binding_row": 28,
+            "body": 61,
+            "weight_f32": 0.7191657423973083
+          },
+          {
+            "binding_row": 27,
+            "body": 60,
+            "weight_f32": 0.1863132268190384
+          },
+          {
+            "binding_row": 26,
+            "body": 59,
+            "weight_f32": 0.06801008433103561
+          },
+          {
+            "binding_row": 25,
+            "body": 57,
+            "weight_f32": 0.006888610310852528
+          },
+          {
+            "binding_row": 30,
+            "body": 64,
+            "weight_f32": 0.006523946300148964
+          },
+          {
+            "binding_row": 21,
+            "body": 53,
+            "weight_f32": 0.002848803298547864
+          },
+          {
+            "binding_row": 20,
+            "body": 52,
+            "weight_f32": 0.002099066274240613
+          },
+          {
+            "binding_row": 31,
+            "body": 65,
+            "weight_f32": 0.0017209404613822699
+          }
+        ],
+        "prepared_candidate_ABI5_weight_row_sha256": "5355cc92f49287403820480de97db7255657b6caef3a96442f1355a68ce985de",
+        "registered_compact_O_point_world_m": [
+          -0.04272537678480148,
+          -0.029724150896072388,
+          0.08773607015609741
+        ]
+      },
+      "capture016_parent": {
+        "O_minus_parent_point_world_m": [
+          0.2662897017753494,
+          0.9973249350794262,
+          -0.06122542538049025
+        ],
+        "O_to_registered_parent_residual_norm_m": 1.0340772621597518,
+        "accepted_transfer_face_parent_node_rows": [
+          202,
+          128,
+          213
+        ],
+        "all_three_owner_triangle_weights_preserved": true,
+        "anatomical_region_id": 61,
+        "geometric_donor_body": 61,
+        "material_index": 15,
+        "ordered_capture016_current_node_world_m": [
+          [
+            -0.3098677694797516,
+            -1.0269581079483032,
+            0.14778201282024384
+          ],
+          [
+            -0.3102100193500519,
+            -1.0289462804794312,
+            0.14869289100170135
+          ],
+          [
+            -0.30801650881767273,
+            -1.0263701677322388,
+            0.14980573952198029
+          ],
+          [
+            -0.3095793128013611,
+            -1.0249748229980469,
+            0.15107616782188416
+          ]
+        ],
+        "ordered_tet_parent_node_rows": [
+          202,
+          128,
+          213,
+          2624
+        ],
+        "parent_tet_ordered_corner_barycentric": [
+          0.31132176518440247,
+          0.19249144196510315,
+          0.4961867928504944,
+          0.0
+        ],
+        "parent_tet_row": 1182,
+        "registered_parent_point_world_m": [
+          -0.30901507856015087,
+          -1.0270490859754986,
+          0.14896149553658766
+        ],
+        "stable_source_face_id": 2442
+      },
+      "diagnosis": "The D37 source ABI replay, retained source CSV, AcceptedFEM transfer face/bary, coarse-node crosswalk, exact material-15 capture-016 facet, and ordered parent-tet bary are internally consistent. The candidate ABI5 replay matches this O point, while the same row's direct D37 source ancestry is 1.034 m away. The large residual is therefore already present at the O-to-source geometry correspondence for this row; it is not caused by dropped owner triangle weights or a reordered parent-tet corner. Keep this inferred pullback unadmitted.",
+      "input_hashes": {
+        "D37_source_NHSKIN": "7456bd4e1c646207ac69978a31a0298464d1e157b96ac4d97683051120738ddb",
+        "accepted_coarse_faces_gzip": "8270d42f41289b6a077e33aae6ffb6af9ddfa40d90ceeb7a5bd93d4f8d4cb79a",
+        "accepted_coarse_reference_gzip": "00b24dd1f09d3f890cf085ceeb1665715a2de7e116275e84165b5c14f43585d4",
+        "accepted_transfer_rows_gzip": "46d6e0fb7f44cdb9dc0b48233d14f42b95b93ddf66b47144971c79088959db21",
+        "canonical_O_npz": "5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b",
+        "capture016_labels": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+        "capture016_nodes": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+        "capture016_tets": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+        "compact_O_node_map": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4",
+        "compact_O_nodes": "5ea1d6bafa5b6f2328820eb82c5ea63ace42e08cffbef3605ed16fa1ac4f3a34",
+        "prepared_candidate_NHSKIN": "14096a1251feb89275c1dea7a608349d9f15ada3e80e30799e3e1490178bb0f4"
+      },
+      "physical_admission": false,
+      "row_identity": {
+        "O033_source_vertex_row": 16398,
+        "canonical_candidate_vertex_row": 16398,
+        "compact_registered_O_vertex_row": 16264,
+        "source86_dominant_body": 61,
+        "source_face_row": -1,
+        "source_vertex_row": 1233
+      },
+      "scope": "single worst face-used canonical O source-to-parent trace; no geometry edit or mass inference"
+    }
+  },
+  "orientation": {
+    "current_reference_f32": {
+      "degenerate_faces": 0,
+      "flipped_or_degenerate_faces": 0,
+      "minimum_face_cosine": 0.9200355488931341
+    },
+    "source_rest_unposed": {
+      "degenerate_faces": 0,
+      "flipped_or_degenerate_faces": 179,
+      "minimum_face_cosine": -0.24191498363228048
+    },
+    "source_rest_witness_file": "source-rest-orientation-witnesses.csv",
+    "source_rest_witness_receipt_sha256": "c7a015c1077b7457c1d1b0aa3d6c1404443582bf5e886ad2114e257f7d1441eb",
+    "source_rest_witness_sha256": "d4259c0924e92e807e0cff5912ba61b84187155d392c3aad027c93e2b4043793"
+  },
+  "pinned_inputs": {
+    "baseline": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/inputs/baseline-806.npz",
+      "sha256": "806abdf650524b249951c81a95cd467e1a3864d24c2cb185b5a8c3297cf1c756"
+    },
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/publication-033/candidate.npz",
+      "sha256": "549fab40b3cdfec2d0e1c9a004451d276f87b445f1c7dc9d5a56c1b5a1a53be4"
+    },
+    "compact-node-map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-006-used-compact/O-compact-node-map.csv",
+      "sha256": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4"
+    },
+    "conditioned-candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/limiting-O-edge-audit-001/quality-failure-inventory-001/contraction-batch-001/shape-repair-batch-005/contraction-001/candidate.npz",
+      "sha256": "5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b"
+    },
+    "identity": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/publication-033/source-face-identity.npz",
+      "sha256": "28059226506d5602cdae1c8af2627c7a8bfa18f4b010e6c047affee29c6671e0"
+    },
+    "p1-crosswalk": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/publication-072/evidence/run-006-direct-detail-p1-075/direct-detail-p1-075.npz",
+      "sha256": "21f1869b418a2eca1e5a0522059c8f9cc6f8afe1a270ccc7c7d99c9c19fdd2a4"
+    },
+    "source-csv-gzip": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/publication-070/evidence/mass/compiled-cell-export-068/run-003/source-preflight/registered-skin.csv.gz",
+      "sha256": "5f90732814c2eb7d372c25ff1336e5e884df28d4463185bc70e398aecfef0e61"
+    },
+    "source-payload": {
+      "path": "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/bilateral-hand-functional-rebind-020/run-001/candidate.nhskin",
+      "sha256": "7456bd4e1c646207ac69978a31a0298464d1e157b96ac4d97683051120738ddb"
+    },
+    "source-poses": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/publication-070/evidence/mass/compiled-cell-export-068/run-003/source-preflight/registered-skin-poses.json",
+      "sha256": "0e476dcacbf89bc79b986a312c75b0dca3894972db87ecff0f9e2d95f3ce48cd"
+    }
+  },
+  "pinned_output_hashes": {
+    "NumiHumanCandidateSkin033.hpp": "3ec1801ea18d8244c175699fe6097c01cb950c3f867895fefe287878b34279fa",
+    "candidate-d37-033.nhskin": "7a6c44b641b286497fbef73157e2945e2b7c4d5d2c423eff3b26590aa496abf4",
+    "donor-frames.csv": "ccd067c073c89cf928961a6b67985ffe761277a287edd1637b7917f66d4dac13",
+    "full-weights.csv.gz": "85c0a612b48279d88c8f00b9e3eea46e480f9ee243df71093c82fb0d9556d98f",
+    "reference-f32-replay.csv": "8e07f51ddd749e1243eac3a8436598f545a3a9cacc669545eaf19027180095c9",
+    "registered-O-face-ancestry.csv.gz": "8b6fbb24960b88eb0834b461d99542ac5058eb0c613bfc1d5d29c91bd4f8ba29",
+    "registered-O-faces.csv": "77138f1ebf882611a57955f310cb974141334818dda3c059656ef003d25a8ad8",
+    "registered-O.csv": "9e1fcdcb2d8812718a2cabd37908b4064553d89f8e3bab54a151afb75045b3cd",
+    "source-transfer-map.csv": "817ce234b289dea3499c484185c613018861694c1c7abaf8b3a4c7c587d53b7f"
+  },
+  "resolver": "For kind 0, map through the unique P1 status-1 representative only to obtain full 86-weight binding support. Preserve its baseline coarse row/domain as provenance. Use explicit current D37 triangle geometry registration (face, barycentric coordinates, residual) for geometry; do not call P1 support a topology source vertex. For kinds 1/2 retain the exact detail ID. Unresolved records use triangle geometry registration."
+}
