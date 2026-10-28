@@ -98,6 +98,48 @@ def validate_candidate(path:Path,layer:str,require_f32:bool=True)->dict[str,Any]
      if missing_pairs:errors.append(f'{sid}: {len(missing_pairs)} output face identity pairs absent from pinned source')
    ancestry[str(sid)]={'sourcePath':str(info.get('path','')),'sourceSHA256':info.get('sha256'),
       'outputFaces':int(mask.sum()),'identityKeys':info.get('identity_keys')}
+  elif info.get('derived_operation') and info.get('role')==layer:
+   # A same-layer repair is a typed derived source, never a bone or NHSKIN ID.
+   if len(np.unique(lay[mask]))!=1 or int(lay[mask][0])!=ROLE[layer][2]:
+    errors.append(f'{sid}: derived source has wrong layer role')
+   source_path=Path(info.get('path',''))
+   parents=info.get('derived_parent_assets')
+   if not isinstance(parents,list) or not parents:
+    errors.append(f'{sid}: derived source has no pinned parent asset')
+   else:
+    for asset in parents:
+     if not isinstance(asset,dict) or not Path(asset.get('path','')).is_file() or sha(Path(asset['path']))!=asset.get('sha256'):
+      errors.append(f'{sid}: derived parent file/hash unavailable or mismatched')
+   if not isinstance(info.get('derived_parent_source_ids'),list) or not info['derived_parent_source_ids']:
+    errors.append(f'{sid}: derived source lacks explicit parent source identities')
+   if not source_path.is_file() or sha(source_path)!=info.get('sha256'):
+    errors.append(f'{sid}: derived source file/hash unavailable or mismatched')
+   else:
+    src=np.load(source_path,allow_pickle=False)
+    keys=info.get('identity_keys')
+    face_key=info.get('identity_face_id_key')
+    if not isinstance(keys,list) or len(keys)!=2 or any(k not in src.files for k in keys) or face_key not in src.files:
+     errors.append(f'{sid}: derived source identity/face arrays absent')
+    else:
+     a,b,c=(np.asarray(src[k],dtype=np.int64) for k in [face_key,*keys])
+     if a.ndim!=1 or b.shape!=a.shape or c.shape!=a.shape:
+      errors.append(f'{sid}: derived source identity array domains differ')
+     else:
+      selected=np.ones(len(a),dtype=bool)
+      filter_key=info.get('identity_original_id_key')
+      if filter_key is not None:
+       if filter_key not in src.files or np.asarray(src[filter_key]).shape!=a.shape or info.get('identity_original_id')!=sid:
+        errors.append(f'{sid}: derived source original-ID filter is invalid');selected[:]=False
+       else:selected=np.asarray(src[filter_key],dtype=np.int64)==sid
+      if not np.any(selected):errors.append(f'{sid}: derived source filter selects no source faces')
+      triples=set(zip(a[selected].tolist(),b[selected].tolist(),c[selected].tolist()))
+      outtriples=set(zip(np.asarray(z['face_source_face_id'],dtype=np.int64)[mask].tolist(),id0[mask].tolist(),id1[mask].tolist()))
+      if outtriples-triples:errors.append(f'{sid}: output derived face identities absent from pinned source view')
+   ancestry[str(sid)]={'role':layer,'operation':info.get('derived_operation'),'sourcePath':str(source_path),
+    'sourceSHA256':info.get('sha256'),'outputFaces':int(mask.sum()),'identityKeys':info.get('identity_keys'),
+    'identityFaceIDKey':info.get('identity_face_id_key'),'identityOriginalIDFilter':info.get('identity_original_id'),
+    'parentAssets':parents,'parentSourceIDs':info.get('derived_parent_source_ids'),
+    'sourceGeometryScope':info.get('source_geometry_scope')}
   else:
    if info.get('role')!='BONE' or not isinstance(info.get('face_count'),int) or info['face_count']<=0:
     errors.append(f'{sid}: bone source schema lacks declared face_count')

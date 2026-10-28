@@ -33,6 +33,35 @@ def main():
    face_source_identity0=np.array([11],np.int64),face_source_identity1=np.array([22],np.int64),
    face_source_identity_schema_by_original_id_json=np.array([json.dumps(schema)]))
   surface=m.validate_candidate(out,'O',True)
+  derived=root/'derived-O-source.npz'
+  np.savez(derived,face_id=np.array([7,8]),face_source_identity0=np.array([70,80]),
+   face_source_identity1=np.array([-1,-1]),face_run_original_id=np.array([99,100]))
+  derived_meta={'role':'O','derived_operation':'local_connected_patch_retriangulation',
+   'path':str(derived),'sha256':sha(derived),'identity_keys':['face_source_identity0','face_source_identity1'],
+   'identity_face_id_key':'face_id','identity_original_id_key':'face_run_original_id','identity_original_id':99,
+   'derived_parent_source_ids':[1],'derived_parent_assets':[{'path':str(src),'sha256':sha(src)}],
+   'source_geometry_scope':'referenced_descendant_faces_only'}
+  def derived_candidate(target,meta=derived_meta,identity=70):
+   np.savez(target,points_world_m=points,faces=np.array([[0,1,2],[0,2,1]],np.int64),
+    face_source_layer=np.array([0,0],np.int8),face_source_body=np.array([-1,-1],np.int32),
+    face_source_bone=np.array([-1,-1],np.int32),face_source_face_id=np.array([0,7],np.int64),
+    face_source_original_id=np.array([1,99],np.int64),face_source_identity0=np.array([11,identity],np.int64),
+    face_source_identity1=np.array([22,-1],np.int64),
+    face_source_identity_schema_by_original_id_json=np.array([json.dumps({**schema,'99':meta})]))
+  good=root/'derived-candidate.npz';derived_candidate(good)
+  check(m.validate_candidate(good,'O')['faceAncestry']['99']['role']=='O','derived source stays distinct from BONE')
+  bad_cases=[('wrong_source_hash',{**derived_meta,'sha256':'0'*64},70),
+   ('wrong_parent_hash',{**derived_meta,'derived_parent_assets':[{'path':str(src),'sha256':'0'*64}]},70),
+   ('missing_parent_assets',{**derived_meta,'derived_parent_assets':[]},70),
+   ('wrong_original_filter',{**derived_meta,'identity_original_id':100},70),
+   ('missing_derived_identity',derived_meta,80),
+   ('wrong_role',{**derived_meta,'role':'I'},70)]
+  for name,meta,identity in bad_cases:
+   target=root/(name+'.npz');derived_candidate(target,meta,identity)
+   rejected=False
+   try:m.validate_candidate(target,'O')
+   except ValueError:rejected=True
+   check(rejected,'invalid derived ancestry rejected: '+name)
   parent={'points':current,'tets':np.array([[0,1,2,3]],np.int64),'materials':np.array([15],np.uint32),
    'donors':np.array([7],np.uint32),'regions':np.array([42],np.uint32),'faces':np.array([98586],np.uint32)}
   index=m.native.build_index(parent);mi=m.build_material_indices(parent)
