@@ -6,7 +6,9 @@ source identity from the candidate NPZ and never copies D37/NHSKIN node identity
 new Boolean vertices. Geometry admission remains a separate gate.
 """
 from __future__ import annotations
-import argparse,csv,hashlib,json,math,os,shutil,sys,tempfile
+import argparse,csv,hashlib,json,math,os,shutil,sys,tempfile,time
+from fractions import Fraction
+from decimal import Decimal, localcontext
 from pathlib import Path
 from typing import Any
 import numpy as np
@@ -39,6 +41,11 @@ PARENT_HEADER=['layer','surface_vertex_row','parent_registration_kind','parent_t
  'source_bary0','source_bary1','source_bary2','source_residual_x_m','source_residual_y_m','source_residual_z_m']
 WEIGHT_HEADER=['vertex']+[f'w{i}' for i in range(86)]
 WEIGHT_OWNER_HEADER=['vertex','dominant_binding_index','dominant_binding_body','parent_geometric_donor_body','parent_tet_row','parent_bary0','parent_bary1','parent_bary2','parent_bary3','parent_anatomical_region_id']
+FRAME_HEADER=['binding','donor',
+ *[f'current_{a}' for a in 'xyz'],
+ *[f'current_R{i}{j}' for i in range(3) for j in range(3)],
+ *[f'rest_{a}' for a in 'xyz'],
+ *[f'rest_R{i}{j}' for i in range(3) for j in range(3)]]
 
 def sha(path:Path)->str:
  h=hashlib.sha256()
@@ -174,23 +181,77 @@ def surface_normals(points:np.ndarray,faces:np.ndarray)->np.ndarray:
 
 def load_frames(path:Path)->tuple[dict[int,dict[str,np.ndarray]],dict[str,Any],list[int]]:
  d=json.loads(path.read_text());rows=d.get('bodies')
- if not isinstance(rows,list) or len(rows)!=int(d.get('binding_count',-1)):raise ValueError('pose snapshot must contain every explicitly registered body frame')
- out={};binding_by_body={};binding_bodies=[]
+ if not isinstance(rows,list) or len(rows)!=int(d.get('binding_count',-1)):
+  raise ValueError('pose snapshot must contain every explicitly registered body frame')
+ all_rows=d.get('all_bodies');use_native_matrices=False
+ if all_rows is not None:
+  if not isinstance(all_rows,list):raise ValueError('all_bodies pose snapshot must be a body-indexed list')
+  for i,native_row in enumerate(all_rows):
+   if not isinstance(native_row,dict) or int(native_row.get('body_index',-1))!=i:
+    raise ValueError(f'all_bodies body-index identity mismatch at row {i}')
+  matrix_flags=[]
+  for row in rows:
+   body=int(row['body_index'])
+   if body<0 or body>=len(all_rows):raise ValueError(f'registered body {body} is outside all_bodies')
+   for state in ('current','rest'):
+    matrix_flags.append('local_to_world_row_major_f32' in all_rows[body].get(state,{}))
+  if any(matrix_flags) and not all(matrix_flags):
+   raise ValueError('all_bodies pose snapshot has incomplete native current/rest matrices for registered bodies')
+  use_native_matrices=bool(matrix_flags and all(matrix_flags))
+ out={};binding_by_body={};binding_bodies=[];orthogonality_error_max=0.0;determinant_error_max=0.0
+ f32_eps=float(np.finfo(np.float32).eps);rotation_bound=8.0*f32_eps
  for binding,row in enumerate(rows):
   body=int(row['body_index'])
   if body in out:raise ValueError(f'duplicate pose body {body}')
-  binding_bodies.append(body)
-  entry={}
+  binding_bodies.append(body);entry={}
+  native_row=all_rows[body] if use_native_matrices else None
+  if use_native_matrices and int(native_row.get('body_index',-1))!=body:
+   raise ValueError(f'all_bodies identity differs for registered body {body}')
   for state in ('current','rest'):
-   origin=np.asarray(row[state]['position_world_m'],dtype=np.float64)
-   R=Rotation.from_quat(np.asarray(row[state]['orientation_world_xyzw'],dtype=np.float64)).as_matrix()
-   if origin.shape!=(3,) or not np.isfinite(origin).all() or not np.isfinite(R).all() or np.linalg.det(R)<0.999999:
+   binding_origin=np.asarray(row[state]['position_world_m'],dtype=np.float64)
+   binding_quat=np.asarray(row[state]['orientation_world_xyzw'],dtype=np.float64)
+   if binding_origin.shape!=(3,) or not np.isfinite(binding_origin).all() or binding_quat.shape!=(4,) or not np.isfinite(binding_quat).all():
     raise ValueError(f'invalid {state} pose for body {body}')
-   entry[state+'Origin']=origin;entry[state+'R']=R
-  entry['registeredBindingRow']=binding
+   if use_native_matrices:
+    source=native_row[state]
+    native_origin_raw=np.asarray(source['position_world_m'],dtype=np.float64)
+    native_quat_raw=np.asarray(source['orientation_world_xyzw'],dtype=np.float64)
+    if native_origin_raw.shape!=(3,) or not np.isfinite(native_origin_raw).all() or native_quat_raw.shape!=(4,) or not np.isfinite(native_quat_raw).all():
+     raise ValueError(f'invalid native {state} origin/quaternion for body {body}')
+    if not np.array_equal(binding_origin.astype(np.float32),native_origin_raw.astype(np.float32)) or not np.array_equal(binding_quat.astype(np.float32),native_quat_raw.astype(np.float32)):
+     raise ValueError(f'all_bodies {state} pose differs from registered binding body {body}')
+    origin=native_origin_raw.astype(np.float32).astype(np.float64)
+    matrix_raw=np.asarray(source['local_to_world_row_major_f32'],dtype=np.float64)
+    if matrix_raw.shape!=(9,) or not np.isfinite(matrix_raw).all():
+     raise ValueError(f'invalid native {state} local_to_world matrix for body {body}')
+    R=matrix_raw.astype(np.float32).astype(np.float64).reshape(3,3)
+    if not np.array_equal(R.reshape(-1),matrix_raw):
+     raise ValueError(f'native {state} local_to_world matrix is not exact Float32 data for body {body}')
+    orth_error=float(np.max(np.abs(R.T@R-np.eye(3))))
+    det=float(np.linalg.det(R));det_error=abs(det-1.0)
+    orthogonality_error_max=max(orthogonality_error_max,orth_error);determinant_error_max=max(determinant_error_max,det_error)
+    if orth_error>rotation_bound or det<=0.0 or det_error>rotation_bound:
+     raise ValueError(f'native {state} local_to_world matrix is outside the bounded Float32 SO(3) envelope for body {body}: orth={orth_error:.9g}, det={det:.9g}')
+    world_to_local=np.linalg.inv(R)
+    if not np.isfinite(world_to_local).all():raise ValueError(f'native {state} world_to_local inverse is nonfinite for body {body}')
+   else:
+    origin=binding_origin;R=Rotation.from_quat(binding_quat).as_matrix()
+    if not np.isfinite(R).all() or np.linalg.det(R)<0.999999:
+     raise ValueError(f'invalid legacy quaternion rotation for body {body}')
+    # Compatibility route preserves the previously emitted transpose exactly.
+    world_to_local=R.T
+   entry[state+'Origin']=origin;entry[state+'R']=R;entry[state+'WorldToLocalR']=world_to_local
+  entry['registeredBindingRow']=binding;entry['nativeMatrixFrame']=use_native_matrices
   out[body]=entry;binding_by_body[body]=binding
- return out,{'sha256':sha(path),'path':str(path),'registeredPoseBodyCount':len(out),
-             'snapshotBindingCount':int(d['binding_count']),'poseBodyRows':sorted(out),'bindingByBody':binding_by_body},binding_bodies
+ metadata={'sha256':sha(path),'path':str(path),'registeredPoseBodyCount':len(out),
+  'snapshotBindingCount':int(d['binding_count']),'poseBodyRows':sorted(out),'bindingByBody':binding_by_body}
+ if use_native_matrices:
+  metadata.update({'frameSourceMethod':'native_all_bodies_f32_local_to_world_matrix_and_inverse',
+   'nativeMatrixFrameBodyCount':len(out),'nativeMatrixOrthogonalityErrorMax':orthogonality_error_max,
+   'nativeMatrixDeterminantErrorMax':determinant_error_max,'nativeMatrixSO3Bound':rotation_bound})
+ # The legacy record intentionally keeps its previous metadata shape. It does
+ # not assert that quaternion-reconstructed frames are native-admitted frames.
+ return out,metadata,binding_bodies
 
 def build_material_indices(parent:dict[str,Any])->dict[int,dict[str,Any]]:
  material_indices={}
@@ -253,6 +314,136 @@ def load_parent_full86_weights(path:Path,parent:dict[str,Any],parentmeta:dict[st
   'rowDomain':'parent_node_index','parentNodesPath':parentmeta['nodesPath'],'parentNodesSHA256':parentmeta['nodeSHA256'],
   'sourceMeaning':'actual WholeBodySkinSourceConsumerRows fullBodyWeights86 captured on the exact parent node domain'}
 
+class ExactProjectionTieError(ValueError):
+ def __init__(self,message:str,diagnostic:dict[str,Any]):
+  super().__init__(message);self.diagnostic=diagnostic
+
+def _fraction(x:float)->Fraction:
+ return Fraction.from_float(float(x))
+
+def _vsub(a,b):return tuple(a[i]-b[i] for i in range(3))
+def _vadd_scaled(a,v,s):return tuple(a[i]+s*v[i] for i in range(3))
+def _dot_exact(a,b):return sum((a[i]*b[i] for i in range(3)),Fraction(0))
+def _dist2_exact(a,b):return _dot_exact(_vsub(a,b),_vsub(a,b))
+def _det3_exact(a,b,c):
+ return (a[0]*(b[1]*c[2]-b[2]*c[1])-
+         b[0]*(a[1]*c[2]-a[2]*c[1])+
+         c[0]*(a[1]*b[2]-a[2]*b[1]))
+def _ratio_text(x:Fraction)->str:return f'{x.numerator}/{x.denominator}'
+def _sqrt_fraction_decimal_text(x:Fraction,precision:int=80)->str:
+ with localcontext() as ctx:
+  ctx.prec=precision
+  return str((Decimal(x.numerator)/Decimal(x.denominator)).sqrt())
+
+def _sqrt_fraction_gap_decimal_text(high:Fraction,low:Fraction,precision:int=80)->str:
+ with localcontext() as ctx:
+  ctx.prec=precision
+  high_distance=(Decimal(high.numerator)/Decimal(high.denominator)).sqrt()
+  low_distance=(Decimal(low.numerator)/Decimal(low.denominator)).sqrt()
+  return str(high_distance-low_distance)
+
+def _closest_segment_exact(p,a,b):
+ ab=_vsub(b,a);den=_dot_exact(ab,ab)
+ if den==0:return a
+ t=_dot_exact(_vsub(p,a),ab)/den
+ t=max(Fraction(0),min(Fraction(1),t))
+ return _vadd_scaled(a,ab,t)
+
+def _closest_triangle_exact(p,a,b,c):
+ u=_vsub(b,a);v=_vsub(c,a);w=_vsub(p,a)
+ d00=_dot_exact(u,u);d01=_dot_exact(u,v);d11=_dot_exact(v,v)
+ d20=_dot_exact(w,u);d21=_dot_exact(w,v);den=d00*d11-d01*d01
+ if den<=0:raise ValueError('exact nearest projection encountered a degenerate parent tetrahedron face')
+ beta=(d11*d20-d01*d21)/den;gamma=(d00*d21-d01*d20)/den;alpha=1-beta-gamma
+ if alpha>=0 and beta>=0 and gamma>=0:
+  return _vadd_scaled(_vadd_scaled(a,u,beta),v,gamma)
+ # Outside the triangle, the exact closest point lies on one of its three edges.
+ edge_points=(_closest_segment_exact(p,a,b),_closest_segment_exact(p,b,c),_closest_segment_exact(p,c,a))
+ return min(edge_points,key=lambda q:(_dist2_exact(p,q),q))
+
+def _tetra_barycentric_exact(vertices,p):
+ a,b,c,d=vertices;u=_vsub(b,a);v=_vsub(c,a);w=_vsub(d,a);rhs=_vsub(p,a)
+ det=_det3_exact(u,v,w)
+ if det==0:raise ValueError('exact nearest projection encountered a degenerate parent tetrahedron')
+ b1=_det3_exact(rhs,v,w)/det;b2=_det3_exact(u,rhs,w)/det;b3=_det3_exact(u,v,rhs)/det
+ return (1-b1-b2-b3,b1,b2,b3)
+
+def _closest_tetra_exact(vertices,p):
+ bary=_tetra_barycentric_exact(vertices,p)
+ if min(bary)>=0:q=p
+ else:
+  candidates=[]
+  for omit in range(4):
+   face=tuple(vertices[i] for i in range(4) if i!=omit)
+   candidates.append(_closest_triangle_exact(p,*face))
+  q=min(candidates,key=lambda x:(_dist2_exact(p,x),x))
+  bary=_tetra_barycentric_exact(vertices,q)
+ return q,bary,_dist2_exact(p,q)
+
+def _exact_aabb_distance_squared(point,lo,hi):
+ total=Fraction(0)
+ for k in range(3):
+  q=_fraction(point[k]);a=_fraction(lo[k]);b=_fraction(hi[k])
+  delta=a-q if q<a else q-b if q>b else Fraction(0)
+  total+=delta*delta
+ return total
+
+def _exact_nearest_same_material(parent,mi,material,point,seed_row):
+ """Certify the nearest projection by exact dyadic arithmetic over all material tets.
+
+ The seed tet supplies an exact upper bound. Every tet whose exact point-to-AABB
+ lower bound can meet that upper bound is evaluated exactly; all other tets are
+ proven unable to win. The scan covers the complete same-material row set, not a
+ floating nearest-K or rounded-distance shortlist.
+ """
+ p=tuple(_fraction(x) for x in point);rows=np.asarray(mi['globalRows'],dtype=np.int64)
+ row_to_local=np.flatnonzero(rows==int(seed_row))
+ if len(row_to_local)!=1:raise ValueError('exact near-tie seed is outside its declared material row set')
+ def exact_tet(row):
+  vertices=tuple(tuple(_fraction(x) for x in parent['points'][int(node)]) for node in parent['tets'][int(row)])
+  q,bary,d2=_closest_tetra_exact(vertices,p)
+  return {'row':int(row),'q':q,'bary':bary,'d2':d2}
+ seed=exact_tet(int(seed_row));seed_d2=seed['d2'];evaluated=[seed];aabb_count=0
+ for local,raw_row in enumerate(rows):
+  row=int(raw_row)
+  if row==int(seed_row):continue
+  if _exact_aabb_distance_squared(point,mi['boundsMin'][local],mi['boundsMax'][local])<=seed_d2:
+   aabb_count+=1;evaluated.append(exact_tet(row))
+ best_d2=min(x['d2'] for x in evaluated)
+ minimizers=[x for x in evaluated if x['d2']==best_d2]
+ projections={x['q'] for x in minimizers}
+ ranked=sorted(evaluated,key=lambda x:(x['d2'],x['row']))[:8]
+ projection_best={}
+ for item in evaluated:
+  incumbent=projection_best.get(item['q'])
+  if incumbent is None or (item['d2'],item['row'])<(incumbent['d2'],incumbent['row']):projection_best[item['q']]=item
+ ranked_projections=sorted(projection_best.values(),key=lambda x:(x['d2'],x['row']))[:8]
+ diagnostic={'method':'exact_binary64_rational_simplex_projection_with_full_material_AABB_certificate',
+  'status':'rejected_exact_equal_distance_distinct_projections' if len(projections)>1 else 'accepted_exact_nearest_projection',
+  'material':int(material),'pointWorldM':[float(x) for x in point],
+  'sameMaterialParentTetCount':int(len(rows)),'exactAABBCandidateCount':int(aabb_count+1),
+  'seedParentTetRow':int(seed_row),'seedDistanceSquaredM2Exact':_ratio_text(seed_d2),
+  'nearestDistanceSquaredM2Exact':_ratio_text(best_d2),
+  'exactMinimizerParentTetRows':sorted(x['row'] for x in minimizers),
+  'exactNearestDistinctProjectionCount':int(len(projections)),
+  'rankedExactCandidates':[{'parentTetRow':x['row'],'distanceSquaredM2Exact':_ratio_text(x['d2']),
+      'projectionWorldMExact':[_ratio_text(v) for v in x['q']],
+      'barycentricExact':[_ratio_text(v) for v in x['bary']]} for x in ranked],
+  'rankedDistinctProjections':[{'representativeParentTetRow':x['row'],'distanceSquaredM2Exact':_ratio_text(x['d2']),
+      'projectionWorldMExact':[_ratio_text(v) for v in x['q']],
+      'distanceMDecimal80':_sqrt_fraction_decimal_text(x['d2'])} for x in ranked_projections],
+  'nextDistinctProjectionDistanceSquaredGapM2Exact':(_ratio_text(ranked_projections[1]['d2']-best_d2) if len(ranked_projections)>1 else None),
+  'nextDistinctProjectionDistanceGapMDecimal80':(_sqrt_fraction_gap_decimal_text(
+    ranked_projections[1]['d2'],best_d2) if len(ranked_projections)>1 else None),
+  'candidateCompletenessProof':'Every same-material parent tetrahedron was scanned; exact point-to-AABB lower bounds greater than the seed tetrahedron exact distance were excluded.'}
+ if len(projections)>1:
+  raise ExactProjectionTieError('nearest parent tie has distinct projected current-world points (exact equal-distance projections)',diagnostic)
+ chosen=min(minimizers,key=lambda x:x['row']);ties=sorted(x['row'] for x in minimizers)
+ diagnostic['selectedParentTetRow']=chosen['row'];diagnostic['sameProjectionExactTieCount']=len(ties)-1
+ diagnostic['selectedProjectionWorldMExact']=[_ratio_text(v) for v in chosen['q']]
+ diagnostic['selectedBarycentricExact']=[_ratio_text(v) for v in chosen['bary']]
+ return {'row':chosen['row'],'q':chosen['q'],'bary':chosen['bary'],'d2':best_d2,'ties':ties,'diagnostic':diagnostic}
+
 def closest_same_material(parent:dict[str,Any],index:dict[str,Any],mat_index:dict[str,Any],material:int,
                           point:np.ndarray,max_distance:float,tie_tol:float)->dict[str,Any]:
  mi=mat_index[material];dist0,local0=mi['tree'].query(point,k=1)
@@ -284,16 +475,26 @@ def closest_same_material(parent:dict[str,Any],index:dict[str,Any],mat_index:dic
   measured.append((float(d),row,np.asarray(proj),np.asarray(bary)))
   best=min(best,float(d))
  ties=sorted((x for x in measured if abs(x[0]-best)<=tie_tol),key=lambda x:(x[0],x[1]))
+ exact_fallback=None
  if max(float(np.linalg.norm(x[2]-ties[0][2])) for x in ties)>max(tie_tol,1.0e-9):
-  raise ValueError('nearest parent tie has distinct projected current-world points')
- chosen=ties[0];distance=chosen[0]
+  exact_started=time.perf_counter()
+  exact=_exact_nearest_same_material(parent,mi,material,point,seed_row)
+  exact['diagnostic']['exactFallbackElapsedSeconds']=time.perf_counter()-exact_started
+  chosen_row=exact['row'];q=np.asarray([float(x) for x in exact['q']],dtype=np.float64)
+  bary=np.asarray([float(x) for x in exact['bary']],dtype=np.float64)
+  distance=math.sqrt(float(exact['d2']));ties=exact['ties'];exact_fallback=exact['diagnostic']
+ else:
+  chosen=ties[0];chosen_row=chosen[1];q=chosen[2];bary=chosen[3];distance=chosen[0]
  if distance>max_distance:raise ValueError(f'nearest material-{material} parent residual {distance:.9g} exceeds {max_distance:.9g} m')
- row=chosen[1]
- return {'distance':distance,'tet':row,'projected':chosen[2],'bary':chosen[3],
-         'residual':np.asarray(point,dtype=np.float64)-chosen[2],
-         'ties':[x[1] for x in ties],'tieCount':len(ties)-1,
+ row=chosen_row
+ result={'distance':distance,'tet':row,'projected':q,'bary':bary,
+         'residual':np.asarray(point,dtype=np.float64)-q,
+         'ties':ties if exact_fallback is not None else [x[1] for x in ties],
+         'tieCount':len(ties)-1,
          'material':int(parent['materials'][row]),'donor':int(parent['donors'][row]),
          'region':int(parent['regions'][row]),'stableFace':int(parent['faces'][row])}
+ if exact_fallback is not None:result['exactTieFallback']=exact_fallback
+ return result
 
 def fmt_vec(v):return [f64(x) for x in np.asarray(v,dtype=np.float64)]
 def register_layer(surface:dict[str,Any],parent:dict[str,Any],index:dict[str,Any],material_index:dict[int,dict[str,Any]],
@@ -302,7 +503,7 @@ def register_layer(surface:dict[str,Any],parent:dict[str,Any],index:dict[str,Any
  layer=surface['layer'];points=surface['points'];faces=surface['faces'];normals=surface_normals(points,faces)
  if parent_weights86.shape!=(len(parent['points']),86) or len(binding_bodies)!=86 or len(set(binding_bodies))!=86:
   raise ValueError('parent full86 table or binding-body lane map does not match exact 86-body domain')
- rows=[];registrations=[];weight_rows=[];weight_owner_rows=[];distances=[];tie_total=0;frame_owners=set();geometric_donors=set();weight_donor_mismatch=0;max_weight_sum_error=0.0
+ rows=[];registrations=[];weight_rows=[];weight_owner_rows=[];distances=[];tie_total=0;frame_owners=set();geometric_donors=set();weight_donor_mismatch=0;max_weight_sum_error=0.0;exact_fallbacks=[]
  for vertex,point in enumerate(points):
   m=MATERIAL[layer]
   reg=closest_same_material(parent,index,material_index,m,point,maximum_distance,tie_tol)
@@ -315,7 +516,7 @@ def register_layer(surface:dict[str,Any],parent:dict[str,Any],index:dict[str,Any
   dominant_binding=int(np.argmax(weights));frame_owner=int(binding_bodies[dominant_binding])
   if frame_owner not in frames:raise ValueError(f'{layer} row {vertex} dominant full86 binding body {frame_owner} lacks an actual pose frame')
   if frame_owner!=geometric_donor:weight_donor_mismatch+=1
-  frame=frames[frame_owner];R=frame['currentR'];origin=frame['currentOrigin'];local=R.T@(point-origin)
+  frame=frames[frame_owner];R=frame['currentR'];origin=frame['currentOrigin'];world_to_local=frame.get('currentWorldToLocalR',R.T);local=world_to_local@(point-origin)
   # Direct authoring-node identity is not D37/NHSKIN ancestry. The output NPZ SHA
   # pins this node table; all original/bone source identity stays face-level.
   row={'vertex':vertex,'donor':frame_owner,'wx':f64(point[0]),'wy':f64(point[1]),'wz':f64(point[2]),
@@ -334,12 +535,15 @@ def register_layer(surface:dict[str,Any],parent:dict[str,Any],index:dict[str,Any
        'parent_material_index':reg['material'],'parent_geometric_donor_body':geometric_donor,
        'parent_anatomical_region_id':reg['region'],'parent_stable_source_face_id':reg['stableFace']}
   for i in range(3):
-   for j in range(3):row[f'm{i}{j}']=f64(R.T[i,j])
+   for j in range(3):row[f'm{i}{j}']=f64(world_to_local[i,j])
   rows.append(row);distances.append(reg['distance']);tie_total+=reg['tieCount'];frame_owners.add(frame_owner);geometric_donors.add(geometric_donor)
   weight_rows.append({'vertex':vertex,**{f'w{i}':f64(weights[i]) for i in range(86)}})
   weight_owner_rows.append({'vertex':vertex,'dominant_binding_index':dominant_binding,'dominant_binding_body':frame_owner,
    'parent_geometric_donor_body':geometric_donor,'parent_tet_row':reg['tet'],
    **{f'parent_bary{i}':f64(reg['bary'][i]) for i in range(4)},'parent_anatomical_region_id':reg['region']})
+  if 'exactTieFallback' in reg:
+   fallback=dict(reg['exactTieFallback']);fallback['layer']=layer;fallback['surfaceVertexRow']=vertex
+   exact_fallbacks.append(fallback)
   registrations.append({'layer':layer,'surface_vertex_row':vertex,'parent_registration_kind':INFERRED,
    'parent_tet_row':reg['tet'],**{f'parent_bary{i}':f64(reg['bary'][i]) for i in range(4)},
    'parent_residual_x_m':f64(reg['residual'][0]),'parent_residual_y_m':f64(reg['residual'][1]),
@@ -357,7 +561,7 @@ def register_layer(surface:dict[str,Any],parent:dict[str,Any],index:dict[str,Any
  role,role_index,_=ROLE[layer]
  regdomain={'domain':DOMAIN,'role':role,'roleIndex':role_index,'sourceSHA256':surface['sha256'],
             'vertexCount':int(len(points)),'faceCount':int(len(faces))}
- return {'nodes':rows,'faces':face_rows,'registrations':registrations,'weightRows':weight_rows,
+ result={'nodes':rows,'faces':face_rows,'registrations':registrations,'weightRows':weight_rows,
   'weightOwnerRows':weight_owner_rows,'sourceDomain':regdomain,
   'metrics':{'nodes':len(rows),'faces':len(face_rows),'maximumParentRegistrationDistanceM':max(distances),
    'p95ParentRegistrationDistanceM':float(np.quantile(distances,.95)),'parentRegistrationTieCountTotal':tie_total,
@@ -366,14 +570,17 @@ def register_layer(surface:dict[str,Any],parent:dict[str,Any],index:dict[str,Any
    'maximumInterpolatedFull86NormalizationError':max_weight_sum_error,
    'full86DominantBindingDiffersFromParentGeometricDonorRows':weight_donor_mismatch,
    'allSourceNodeIDsDirectCandidateRowIdentity':True}}
+ if exact_fallbacks:
+  result['exactNearTieFallbacks']=exact_fallbacks
+  result['metrics']['exactNearTieFallbackCount']=len(exact_fallbacks)
+ return result
 
-def frame_csv_rows(frames:list[dict[str,Any]])->list[dict[str,Any]]:
+def frame_csv_rows(frames:dict[int,dict[str,np.ndarray]],binding_bodies:list[int])->list[dict[str,Any]]:
  out=[]
- for binding,row in enumerate(frames):
-  donor=int(row['body_index']);x={'binding':binding,'donor':donor}
+ for binding,donor in enumerate(binding_bodies):
+  donor=int(donor);frame=frames[donor];x={'binding':binding,'donor':donor}
   for state in ('current','rest'):
-   origin=np.asarray(row[state]['position_world_m'],dtype=np.float64)
-   R=Rotation.from_quat(np.asarray(row[state]['orientation_world_xyzw'],dtype=np.float64)).as_matrix()
+   origin=frame[state+'Origin'];R=frame[state+'R']
    for a,v in zip('xyz',origin):x[f'{state}_{a}']=f64(v)
    for i in range(3):
     for j in range(3):x[f'{state}_R{i}{j}']=f64(R[i,j])
@@ -395,21 +602,26 @@ def export(args:argparse.Namespace)->dict[str,Any]:
  if staged.exists():raise ValueError(f'refuse existing staging directory {staged}')
  staged.mkdir(parents=True)
  try:
-  outputs={};regrows=[];metrics={}
+  outputs={};regrows=[];metrics={};exact_fallback_reports={}
   for layer in ('O','I','D'):
    result=register_layer(surfaces[layer],parent,index,
        material_indices,frames,parent_weights86,binding_bodies,
        args.maximum_parent_distance_m,args.tie_tolerance_m)
    outputs[layer]=result;metrics[layer]=result['metrics']
+   if result.get('exactNearTieFallbacks'):
+    report=staged/f'exact-parent-near-tie-fallbacks-{layer}.json'
+    report.write_text(json.dumps({'schema':'exact-parent-near-tie-fallbacks.v1','layer':layer,
+      'candidatePath':surfaces[layer]['path'],'candidateSHA256':surfaces[layer]['sha256'],
+      'parentCurrentSHA256':parentmeta['nodeSHA256'],'poseSnapshotSHA256':posemeta['sha256'],
+      'fallbacks':result['exactNearTieFallbacks'],'physical_admission':False,'native_steps':0},indent=2,sort_keys=True)+'\n')
+    exact_fallback_reports[layer]={'path':report.name,'sha256':sha(report),'count':len(result['exactNearTieFallbacks'])}
    write_csv(staged/f'registered-{layer}.csv',NODE_HEADER,result['nodes'])
    write_csv(staged/f'registered-{layer}-faces.csv',FACE_HEADER,result['faces'])
    write_csv(staged/f'parent-tet-full-weights-{layer}.csv',WEIGHT_HEADER,result['weightRows'])
    write_csv(staged/f'parent-tet-full-weight-owners-{layer}.csv',WEIGHT_OWNER_HEADER,result['weightOwnerRows'])
    regrows.extend(result['registrations'])
   write_csv(staged/'node-parent-registration.csv',PARENT_HEADER,regrows)
-  frame_header=['binding','donor',*[f'{s}_{a}' for s in ('current','rest') for a in 'xyz'],
-      *[f'{s}_R{i}{j}' for s in ('current','rest') for i in range(3) for j in range(3)]]
-  write_csv(staged/'donor-frames.csv',frame_header,frame_csv_rows(json.loads(args.poses.read_text())['bodies']))
+  write_csv(staged/'donor-frames.csv',FRAME_HEADER,frame_csv_rows(frames,binding_bodies))
   registry=[outputs[l]['sourceDomain'] for l in ('O','I','D')]
   (staged/'source-domain-registry.json').write_text(json.dumps(registry,indent=2,sort_keys=True)+'\n')
   source_schemas={l:surfaces[l]['sourceSchema'] for l in ('O','I','D')}
@@ -429,6 +641,9 @@ def export(args:argparse.Namespace)->dict[str,Any]:
       'materialBySurface':MATERIAL,'selectedTie':'minimum distance then lowest parent_tet_row among geometrically indistinguishable projections',
       'outsideOrMissingPose':'reject'},
    'results':metrics,'outputSHA256':output_hashes}
+  if exact_fallback_reports:
+   receipt['exactParentNearTieFallbackReports']=exact_fallback_reports
+   receipt['exactParentNearTieFallbackPolicy']='Fallback runs only after the existing floating tie guard rejects distinct projections. Exact binary64 rationals select the global nearest projection using a complete same-material exact-AABB candidate certificate. Exact equal-distance distinct projections still reject.'
   (staged/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
   args.out.parent.mkdir(parents=True,exist_ok=True);os.replace(staged,args.out)
   receipt['receiptSHA256']=sha(args.out/'receipt.json')

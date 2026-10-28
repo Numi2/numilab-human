@@ -153,18 +153,54 @@ def read_child(node:Path,ele:Path,labels:Path):
 def read_poses(path:Path,frame_path:Path):
  data=json.loads(path.read_text(encoding="utf-8"));raw=data.get("all_bodies")
  if not isinstance(raw,list) or len(raw)!=157: raise ValueError("expected exact native all_bodies 157-pose table")
- poses=[]
  for i,row in enumerate(raw):
-  if u(row.get("body_index"),f"all_bodies body {i}")!=i: raise ValueError("all_bodies is not exact body-index order")
+  if not isinstance(row,dict) or u(row.get("body_index"),f"all_bodies body {i}")!=i:
+   raise ValueError("all_bodies is not exact body-index order")
+ matrix_flags=[]
+ for row in raw:
+  for phase in ("current","rest"):
+   x=row.get(phase,{})
+   matrix_flags.append(isinstance(x,dict) and "local_to_world_row_major_f32" in x)
+ if any(matrix_flags) and not all(matrix_flags):
+  raise ValueError("all_bodies has an incomplete native current/rest matrix table")
+ use_native_matrices=bool(matrix_flags and all(matrix_flags))
+ f32_eps=float(np.finfo(np.float32).eps);rotation_bound=8.0*f32_eps
+ orthogonality_error_max=0.0;determinant_error_max=0.0;poses=[]
+ for i,row in enumerate(raw):
   q={}
   for phase in ("current","rest"):
    x=row.get(phase,{})
-   origin=np.asarray(x.get("position_world_m"),dtype=np.float64)
+   origin_raw=np.asarray(x.get("position_world_m"),dtype=np.float64)
    quat=np.asarray(x.get("orientation_world_xyzw"),dtype=np.float64)
-   if origin.shape!=(3,) or quat.shape!=(4,) or not np.isfinite(origin).all() or not np.isfinite(quat).all():
+   if origin_raw.shape!=(3,) or quat.shape!=(4,) or not np.isfinite(origin_raw).all() or not np.isfinite(quat).all():
     raise ValueError(f"all_bodies {phase} pose {i} invalid")
-   q[phase+"_origin"]=origin;q[phase+"_R"]=Rotation.from_quat(quat).as_matrix()
-  q["binding"]=INVALID;poses.append(q)
+   if use_native_matrices:
+    origin=origin_raw.astype(np.float32).astype(np.float64)
+    if not np.isfinite(origin).all():raise ValueError(f"all_bodies {phase} origin {i} is outside finite Float32 range")
+    matrix_raw=np.asarray(x["local_to_world_row_major_f32"],dtype=np.float64)
+    if matrix_raw.shape!=(9,) or not np.isfinite(matrix_raw).all():
+     raise ValueError(f"all_bodies {phase} native local_to_world matrix {i} invalid")
+    R=matrix_raw.astype(np.float32).astype(np.float64).reshape(3,3)
+    if not np.array_equal(R.reshape(-1),matrix_raw):
+     raise ValueError(f"all_bodies {phase} native matrix {i} is not exact Float32 data")
+    orth_error=float(np.max(np.abs(R.T@R-np.eye(3))))
+    det=float(np.linalg.det(R));det_error=abs(det-1.0)
+    orthogonality_error_max=max(orthogonality_error_max,orth_error)
+    determinant_error_max=max(determinant_error_max,det_error)
+    if orth_error>rotation_bound or det<=0.0 or det_error>rotation_bound:
+     raise ValueError(f"all_bodies {phase} native matrix {i} is outside the bounded Float32 SO(3) envelope")
+    world_to_local=np.linalg.inv(R)
+    if not np.isfinite(world_to_local).all():raise ValueError(f"all_bodies {phase} inverse {i} is nonfinite")
+   else:
+    origin=origin_raw
+    R=Rotation.from_quat(quat).as_matrix()
+    if not np.isfinite(R).all() or np.linalg.det(R)<0.999999:
+     raise ValueError(f"all_bodies {phase} pose {i} has invalid legacy quaternion rotation")
+    # Preserve the legacy quaternion route exactly when native matrices are absent.
+    world_to_local=R.T
+   q[phase+"_origin"]=origin;q[phase+"_R"]=R;q[phase+"_world_to_local_R"]=world_to_local
+  q["binding"]=INVALID;q["nativeMatrixFrame"]=use_native_matrices
+  poses.append(q)
  bindings={};used=set()
  for i,r in enumerate(csvread(frame_path,FRAME_HEADER)):
   binding=u(r["binding"],f"registered binding {i}");donor=u(r["donor"],f"registered donor {i}")
@@ -176,6 +212,10 @@ def read_poses(path:Path,frame_path:Path):
    if not np.array_equal(origin,p[phase+"_origin"]) or not np.array_equal(R,p[phase+"_R"]):
     raise ValueError(f"registered donor frame {donor} differs from exact all_bodies {phase} pose")
   p["binding"]=binding
+ if poses:
+  poses[0]["nativeMatrixSO3Bound"]=rotation_bound if use_native_matrices else None
+  poses[0]["nativeMatrixOrthogonalityErrorMax"]=orthogonality_error_max if use_native_matrices else None
+  poses[0]["nativeMatrixDeterminantErrorMax"]=determinant_error_max if use_native_matrices else None
  return poses,bindings
 
 def read_surfaces(directory:Path):
@@ -317,7 +357,7 @@ def build_rows(maprows,child,surfaces,registrations,parent,owner,poses,maxdist,t
    mapped[layer].add(sr);role=layer;s=surfaces[layer][sr];point=child["points"][node].astype(np.float64)
    if not np.array_equal(s["point"].astype(np.float32),child["points"][node]): raise ValueError(f"{layer} volume point differs from exact F32 surface point")
    donor=s["donor"];pose=poses[donor];local=s["local"]
-   if not np.array_equal(s["matrix"],pose["current_R"].T) or np.linalg.norm(pose["current_origin"]+pose["current_R"]@local-point)>2e-8:
+   if not np.array_equal(s["matrix"],pose["current_world_to_local_R"]) or np.linalg.norm(pose["current_origin"]+pose["current_R"]@local-point)>2e-8:
     raise ValueError(f"{layer} donor frame/local point mismatch")
    domain=s["source_domain"];sv=s["source_vertex"];sf=s["source_face"]
    kind="vertex" if sv!=INVALID else "face";sb=s["source_bary"];sres=s["source_residual"];fmethod=s["frame_method"]
@@ -349,7 +389,7 @@ def build_rows(maprows,child,surfaces,registrations,parent,owner,poses,maxdist,t
    choices=bounded
    choices.sort(key=lambda x:(x["distance"],x["tuple"],x["tet"]))
    selected=choices[0];semantic=selected["tuple"];donor=semantic[1];pose=poses[donor]
-   local=pose["current_R"].T@(point-pose["current_origin"])
+   local=pose["current_world_to_local_R"]@(point-pose["current_origin"])
    if np.linalg.norm(pose["current_origin"]+pose["current_R"]@local-point)>1e-8: raise ValueError("interior donor local point does not reconstruct")
    domain=SOURCE_ABSENCE;kind="none";sv=sf=INVALID;sb=np.zeros(3);sres=np.zeros(3)
    fmethod=NO_SOURCE_METHOD;parentkind="inferred_current_parent_tet_same_material_donor_region"
@@ -425,6 +465,10 @@ def emit(args):
   "interior_parent_method":"inferred_current_parent_tet_same_material_donor_region",
   "parent_coordinates":"actual current-world parent nodes","maximum_parent_distance_m":args.maximum_parent_distance_m,
   "ambiguity_tolerance_m":args.ambiguity_tolerance_m,"all_bodies":len(poses),"registered_bindings":len(bindings),
+  "poseFrameSourceMethod":("exact_all_bodies_f32_local_to_world_matrix_and_numpy_inverse" if all(x["nativeMatrixFrame"] for x in poses) else "legacy_all_bodies_quaternion_and_transpose"),
+  "nativeMatrixSO3Bound":next((x["nativeMatrixSO3Bound"] for x in poses if x["nativeMatrixFrame"]),None),
+  "nativeMatrixOrthogonalityErrorMax":next((x["nativeMatrixOrthogonalityErrorMax"] for x in poses if x["nativeMatrixFrame"]),None),
+  "nativeMatrixDeterminantErrorMax":next((x["nativeMatrixDeterminantErrorMax"] for x in poses if x["nativeMatrixFrame"]),None),
   "inputs":{k:{"path":str(v),"sha256":sha(v)} for k,v in input_paths.items()},
   "output":{"path":str(args.output.resolve()),"sha256":sha(args.output.resolve())},**measured}
  if args.receipt:

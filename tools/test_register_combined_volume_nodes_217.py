@@ -168,11 +168,70 @@ def fixture(root,persist):
   "registered":reg,"poses":posepath,"surface_nodes":surf,"registrations":registrations,
   "persist":persist}
 
+def test_native_matrix_pose_path(root):
+ allbodies=[]
+ identity=[1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0]
+ near=float(np.float32(1.0000002))
+ current=[near,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0]
+ origin=np.asarray([0.1,-0.2,0.3],dtype=np.float32).astype(np.float64).tolist()
+ for i in range(157):
+  matrix=current if i==0 else identity
+  allbodies.append({"body_index":i,
+   "current":{"position_world_m":origin,"orientation_world_xyzw":[0.0,0.0,0.0,1.0],"local_to_world_row_major_f32":matrix},
+   "rest":{"position_world_m":origin,"orientation_world_xyzw":[0.0,0.0,0.0,1.0],"local_to_world_row_major_f32":identity}})
+ poses_path=root/"native-matrix-poses.json"
+ frames_path=root/"native-matrix-donor-frames.csv"
+ poses_path.write_text(json.dumps({"all_bodies":allbodies}),encoding="utf-8")
+ frame={k:"0" for k in mod.FRAME_HEADER};frame.update({"binding":"7","donor":"0"})
+ for state,matrix in (("current",current),("rest",identity)):
+  for axis,value in zip("xyz",origin):frame[f"{state}_{axis}"]=pfloat(value)
+  for i in range(3):
+   for j in range(3):frame[f"{state}_R{i}{j}"]=pfloat(matrix[3*i+j])
+ writecsv(frames_path,mod.FRAME_HEADER,[frame])
+ registered,bindings=mod.read_poses(poses_path,frames_path)
+ pose=registered[0];R=np.asarray(current,dtype=np.float32).astype(np.float64).reshape(3,3)
+ assert bindings=={0:7} and pose["nativeMatrixFrame"]
+ assert np.array_equal(pose["current_R"],R)
+ assert np.array_equal(pose["current_world_to_local_R"],np.linalg.inv(R))
+ assert not np.array_equal(pose["current_world_to_local_R"],R.T)
+ assert pose["nativeMatrixSO3Bound"]==8.0*float(np.finfo(np.float32).eps)
+ point=np.asarray([0.4,0.6,0.8]);local=pose["current_world_to_local_R"]@(point-pose["current_origin"])
+ assert np.linalg.norm(pose["current_origin"]+R@local-point)<1e-14
+ # Keep the legacy quaternion route and its transpose behavior intact.
+ legacy=[dict(row,current=dict(row["current"]),rest=dict(row["rest"])) for row in allbodies]
+ for row in legacy:
+  for state in ("current","rest"):row[state].pop("local_to_world_row_major_f32")
+ legacy_path=root/"legacy-poses.json";legacy_path.write_text(json.dumps({"all_bodies":legacy}),encoding="utf-8")
+ legacy_frame=dict(frame);legacy_frame["current_R00"]="1"
+ legacy_frames_path=root/"legacy-donor-frames.csv";writecsv(legacy_frames_path,mod.FRAME_HEADER,[legacy_frame])
+ legacy_poses,_=mod.read_poses(legacy_path,legacy_frames_path)
+ assert not legacy_poses[0]["nativeMatrixFrame"]
+ assert np.array_equal(legacy_poses[0]["current_world_to_local_R"],legacy_poses[0]["current_R"].T)
+ bad=[dict(row,current=dict(row["current"]),rest=dict(row["rest"])) for row in allbodies]
+ bad[0]["rest"].pop("local_to_world_row_major_f32")
+ bad_path=root/"partial-matrix-poses.json";bad_path.write_text(json.dumps({"all_bodies":bad}),encoding="utf-8")
+ try:mod.read_poses(bad_path,frames_path)
+ except ValueError as exc:assert "incomplete native" in str(exc)
+ else:raise AssertionError("partial native all_bodies matrix table accepted")
+ bad=[dict(row,current=dict(row["current"]),rest=dict(row["rest"])) for row in allbodies]
+ bad[0]["current"]["local_to_world_row_major_f32"][0]+=1e-10
+ bad_path=root/"non-f32-matrix-poses.json";bad_path.write_text(json.dumps({"all_bodies":bad}),encoding="utf-8")
+ try:mod.read_poses(bad_path,frames_path)
+ except ValueError as exc:assert "not exact Float32" in str(exc)
+ else:raise AssertionError("non-Float32 native matrix accepted")
+ bad=[dict(row,current=dict(row["current"]),rest=dict(row["rest"])) for row in allbodies]
+ bad[0]["current"]["local_to_world_row_major_f32"][0]=float(np.float32(1.000002))
+ bad_path=root/"outside-so3-matrix-poses.json";bad_path.write_text(json.dumps({"all_bodies":bad}),encoding="utf-8")
+ try:mod.read_poses(bad_path,frames_path)
+ except ValueError as exc:assert "SO(3)" in str(exc)
+ else:raise AssertionError("native matrix outside trusted SO(3) envelope accepted")
+
 def main():
  persist=Path(sys.argv[1]);persist.mkdir(parents=True,exist_ok=True)
  inputs=persist/"inputs"
  if inputs.exists(): shutil.rmtree(inputs)
  inputs.mkdir(parents=True)
+ test_native_matrix_pose_path(inputs)
  x=fixture(inputs,persist)
  args=type("Args",(),{})()
  args.node_map=x["node_map"];args.node=x["node"];args.ele=x["ele"];args.labels=x["labels"]
@@ -218,5 +277,5 @@ def main():
   try: mod.build_rows(wrong_map,child,surfaces,regs,parent,owner,poses,.02,1e-10)
   except ValueError as e: assert message in str(e)
   else: raise AssertionError(f"accepted {layer} node in wrong singleton partition")
- print("PASS combined registered node-map producer: 7 nodes/4 cells, 2 interior nodes, far alternate semantic parent filtered while valid incident parent selected, exact shared I maps, shuffled source IDs/map rows, source vertex/face ancestry, wrong O/D singleton partitions and wrong donor/parent rejected; physical admission false")
+ print("PASS exact native matrix/inverse and legacy frame paths; combined registered node-map producer: 7 nodes/4 cells, 2 interior nodes, far alternate semantic parent filtered while valid incident parent selected, exact shared I maps, shuffled source IDs/map rows, source vertex/face ancestry, wrong O/D singleton partitions and wrong donor/parent rejected; physical admission false")
 if __name__=="__main__":main()
