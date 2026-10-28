@@ -1,0 +1,27 @@
+usage: export_authoring_registered_surface_sidecars_230.py [-h]
+                                                           [--outer OUTER]
+                                                           [--inner INNER]
+                                                           [--deep DEEP]
+                                                           [--parent PARENT]
+                                                           [--poses POSES]
+                                                           [--parent-full86-weights PARENT_FULL86_WEIGHTS]
+                                                           [--out OUT]
+                                                           [--maximum-parent-distance-m MAXIMUM_PARENT_DISTANCE_M]
+                                                           [--tie-tolerance-m TIE_TOLERANCE_M]
+                                                           [--preflight-only]
+                                                           [--sample-check-count SAMPLE_CHECK_COUNT]
+
+options:
+  -h, --help            show this help message and exit
+  --outer OUTER
+  --inner INNER
+  --deep DEEP
+  --parent PARENT       base path without .nodes.csv/.tets.csv suffix
+  --poses POSES
+  --parent-full86-weights PARENT_FULL86_WEIGHTS
+                        captured parent_node_index keyed vertex,w0..w85 table
+  --out OUT
+  --maximum-parent-distance-m MAXIMUM_PARENT_DISTANCE_M
+  --tie-tolerance-m TIE_TOLERANCE_M
+  --preflight-only
+  --sample-check-count SAMPLE_CHECK_COUNT
