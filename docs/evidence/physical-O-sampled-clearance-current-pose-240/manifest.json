@@ -1,0 +1,85 @@
+{
+  "schema": "numi.physical-O-sampled-185-bank-current-pose-clearance-evidence.v1",
+  "created_utc": "2026-10-28T18:44:31.996060+00:00",
+  "scope": "Sampled-clearance diagnostic only. All O vertices, face centroids, and unique-edge midpoints cast to F32, queried against all 185 typed bank BVHs with current native all_bodies transforms.",
+  "command_argv": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-009-physicalO-sampled-clearance-185bank/sample_physical_O_clearance_185bank.py"
+  ],
+  "command_line": "ssh numi /Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-009-physicalO-sampled-clearance-185bank/sample_physical_O_clearance_185bank.py",
+  "command_sha256": "feb0e0f8311d360e2844ffd14e3dca68c8fe87d2f110ce2479a573b826161d09",
+  "run_exit_code": 0,
+  "elapsed_s": 4.165296207880601,
+  "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-009-physicalO-sampled-clearance-185bank/sample_physical_O_clearance_185bank.py",
+  "source_sha256": "0657a592ee1f594ba7eaf3cb5dcef8eefddd53339771aca7a5d66004da750a7e",
+  "published_source_sha256": "0657a592ee1f594ba7eaf3cb5dcef8eefddd53339771aca7a5d66004da750a7e",
+  "report_source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-009-physicalO-sampled-clearance-185bank/report.json",
+  "report_sha256": "696675692aaba358dbc56b923816e774d214fc16038be58e87f06887461ef3c9",
+  "published_report_sha256": "696675692aaba358dbc56b923816e774d214fc16038be58e87f06887461ef3c9",
+  "inputs": {
+    "physical_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/physical-outer-direct-placement-235/O-direct-native-placement.npz",
+      "sha256": "7973e1207f6016e92c3923b1b330d3fecf4d2aa4cc98fd6c4e43188b9229550c"
+    },
+    "physical_O_direct_placement_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/physical-outer-direct-placement-235/report.json",
+      "sha256": "51f9cc17a6e723669c25bbe3fbb59705ab545d2bd89924ce481cc3ebe13be138"
+    },
+    "native_pose": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/registered-skin-poses-100.json",
+      "sha256": "eb2ae08f74852f08d5b08a18f3d7738b53b8e7265336f77646cbe8f949ece117"
+    },
+    "bone_distance_query_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/bone-distance-query-001/bone_distance_query.py",
+      "sha256": "5dbe11f400964cbde4ed6f0cc35df445a3b4058cb2be105684d774053571e71a"
+    },
+    "bone_audit_parser": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/tools/human_skin_fat_bone_audit.py",
+      "sha256": "ea833990d8b1ffb309d4960e62fb8c67e5cf0ecdbcdc0d8e9ad40c20eaf4c6db"
+    }
+  },
+  "bank_input_directory": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-connectivity-218/euler-localization-001/verified-039-inputs",
+  "bank_input_hashes": {
+    "exact-emitted.triangles.csv": "0d3418064af1d4f34d19a1ec91992afceacaaa70b6c982d4a2637ded1d829eac",
+    "exact-emitted.nodes.csv": "99e58d6afb68e0939670f69d4132bfa730cf3e988a7f70a179a41a89eac3802c",
+    "exact-emitted.bodies.csv": "dae52ab190e02586421b56381b03a4453aff1058edca7b6a42afcb9051b50b90",
+    "all-bank-containment.csv.banks.csv": "46568d191d84dd68f1fbcfe02b7938b15d4a7b3b786f268f46bcfe916070c6df"
+  },
+  "sample_counts": {
+    "vertices": 32002,
+    "face_centroids": 63959,
+    "unique_edge_midpoints": 95961,
+    "total": 191922
+  },
+  "minimum_positive_sampled_clearance_m": 8.264700629484141e-06,
+  "minimum_witness": {
+    "body": 23,
+    "stable_bone_id": 32,
+    "sample": {
+      "sample_kind": "face_centroid",
+      "sample_index": 33096,
+      "source_original_id": 1,
+      "source_face_row": 32592,
+      "source_ancestry_parent_face_rows": [
+        33327
+      ]
+    },
+    "unsigned_distance_m": 8.264700629484141e-06,
+    "signed_distance_m": 8.264700629484141e-06,
+    "winding_number": -0.0013612804175181595,
+    "closest_bone_point_world_m": [
+      -0.0555888106871044,
+      -0.08984646162181674,
+      0.2221669375273011
+    ],
+    "bone_triangle_stable_id": 3557,
+    "bone_source_record_index": 11
+  },
+  "near_5um_bank_count": 0,
+  "physical_admission": false,
+  "limitations": [
+    "Minima are over vertices, face centroids, and unique-edge midpoints, not all points on triangles; this can miss between-sample closest approaches.",
+    "Signs use the pinned Fast Winding Number policy; ambiguous samples are reported separately. The exact all-surface crossing audit is separate.",
+    "This report does not establish a solid containment certificate, layer thickness, positive cell Jacobians, mass conservation, native dynamics, or admission."
+  ]
+}
