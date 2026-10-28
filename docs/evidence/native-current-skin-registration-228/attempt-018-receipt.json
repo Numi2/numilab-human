@@ -1,0 +1,386 @@
+{
+  "I_D_surface_topology_and_face_ancestry": "copied unchanged; only world coordinate frame and derived local/frame values rebuilt",
+  "O_face_ancestry_and_surface_topology": "copied unchanged from attempt016; O point row domain exact run006 compact candidate table",
+  "artifact": "native-current registered O/I/D sidecars",
+  "attempt016_input_hashes": {
+    "O-compact-face-ancestry.csv": "e60fc0ec98b4f810d839ccb3f70c892ec696a38f2b7cf0e00b35efae04f93c09",
+    "O-compact-face-map.csv": "be81ebb309d3341502a4849f2d1f7e9cbb450ce3da96ff36e7616b9d79824f77",
+    "O-compact-node-map.csv": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4",
+    "O-face-ancestry.csv": "33d9e894ed35c4807dce94aad6ad8a7da6ed08603ea6476afd635497757f0feb",
+    "accepted-transfer-reference-support.csv": "98595a9162e690dbe67186c84b2e70f385ddf8a5723efa215e532dc90f4202a6",
+    "d37-parent-node-to-capture016.csv": "288021b027ea40464cb9761033550862c3ab0c5bf4b01caee4405a36976fc716",
+    "donor-frames.csv": "5ab076c2861a4e965d807c5bfebce9de3a54a348118b664a573028b62f19b74d",
+    "node-parent-registration.csv": "ab8be5cb80ce1e749c22c3b2510a36b5334d1dc1fdbe626c3cdc023723696408",
+    "receipt.json": "ee0b23e4ca1d607f0606d78385d5649890317c39f3c2b0b8414d2bcea4686daf",
+    "registered-D-faces.csv": "8f380ce85a2625be901caf3eaa054519b4c359f197acdfa10de3cd0c2df1fea6",
+    "registered-D.csv": "be864434b74a46fe1c0b0c9316238fec6dff527c7c6523f450ccbaa0760ec8dc",
+    "registered-I-faces.csv": "0a08d73b4dc4d6cd5f7260a8795364e4da49991c9ba50e0cf14d8bfa1d909cc1",
+    "registered-I.csv": "746f3db1679b1db94112ee183e148fa4351b3582eeb33acac6142f30287bf680",
+    "registered-O-faces.csv": "77138f1ebf882611a57955f310cb974141334818dda3c059656ef003d25a8ad8",
+    "registered-O.csv": "9e1fcdcb2d8812718a2cabd37908b4064553d89f8e3bab54a151afb75045b3cd",
+    "six-parent-registration-diagnostic-227.json": "ab3915ba3a406fb29113d7b04c4bacaf3895d9145eef625d96caa7749e9115f5",
+    "source-bary-normalization-deltas.csv": "0058eea037a17a68c72ffd5e62f90ed2c6f22a90222584aac431bcf5e82dafed"
+  },
+  "canonical_conditioned_O_sha256": "5e686b14d9360267f4b40bbeb5ed6c9c68bf871933874b5aa8eaa5898757ec2b",
+  "common_native_SE3": {
+    "rotation_row_major": [
+      0.9999999999999996,
+      -7.6046974895341e-10,
+      -3.195341290709369e-08,
+      7.604699335557185e-10,
+      1.0,
+      5.777232895524813e-09,
+      3.195341290270028e-08,
+      -5.77723291982442e-09,
+      0.9999999999999996
+    ],
+    "source": "run006 stdout native placement witness",
+    "translation_m": [
+      1.188898923754067e-09,
+      -1.256228454593611e-10,
+      -5.654962409167019e-06
+    ]
+  },
+  "compact_O_map_rows": 32002,
+  "compact_O_map_sha256": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4",
+  "current_native_donor_frames": {
+    "F64_quaternion_matrix_matches_attempt016_frames_exactly": true,
+    "local_and_frame_maps_recomputed_from_pose_json": true,
+    "rows": 86,
+    "source_hash": "eb2ae08f74852f08d5b08a18f3d7738b53b8e7265336f77646cbe8f949ece117"
+  },
+  "geometry_admission": false,
+  "input_attempt016_receipt_sha256": "ee0b23e4ca1d607f0606d78385d5649890317c39f3c2b0b8414d2bcea4686daf",
+  "kind0_direct_coarse_registration": {
+    "P1_binding_support_detail_row": 24939,
+    "P1_support_stable_source_face_id": 98586,
+    "canonical_candidate_and_O033_row": 16398,
+    "capture016_parent_node": 1233,
+    "coarse_representative_row": 1233,
+    "compact_O_row": 16264,
+    "d37_ancestry_and_P1_binding_support_are_not_parent_source_identity": true,
+    "incident_material15_tets": 8,
+    "selected_geometric_parent_stable_face_id": 98586,
+    "unique_support_face_tet_row": 13455
+  },
+  "max_parent_distance_row": {
+    "D": 4740,
+    "I": 2846,
+    "O": 16971
+  },
+  "max_parent_reconstruction_error_m": {
+    "D": 0.0,
+    "I": 0.0,
+    "O": 0.0
+  },
+  "max_parent_registration_distance_m": {
+    "D": 5.668270998937786e-06,
+    "I": 5.672332522941697e-06,
+    "O": 0.018060564271667814
+  },
+  "method": "single common native SE(3) coordinate frame; O points from run006 F32 observation; I/D authoring points transformed then F32; F64 donor frames/locals rebuilt from run006 native poses",
+  "motion_or_step_claim": false,
+  "native_O_F32_observation": {
+    "max_difference_from_SE3_prediction_m": 4.3438164656950413e-07,
+    "mean_difference_from_SE3_prediction_m": 9.367382288206659e-08,
+    "rows": 32002,
+    "source_hash": "0280ea7f3563304a9969e2facc8b9bb083bce44d5206b85179ccbdf4c809a462"
+  },
+  "native_current_inputs_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/registered-skin-100-native.csv.candidate033.csv": "0280ea7f3563304a9969e2facc8b9bb083bce44d5206b85179ccbdf4c809a462",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/registered-skin-poses-100.json": "eb2ae08f74852f08d5b08a18f3d7738b53b8e7265336f77646cbe8f949ece117",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/stdout.txt": "631ce8ea45eb4bb1078b04efad3061af99a881ecba428273ebdb374c0170c71a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-parent-label-capture-016/compiled-parent-cell-mass.csv": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-parent-label-capture-016/compiled-parent-cell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-parent-label-capture-016/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-parent-label-capture-016/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-016-kindaware-registration/d37-parent-node-to-capture016.csv": "288021b027ea40464cb9761033550862c3ab0c5bf4b01caee4405a36976fc716",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-016-kindaware-registration/receipt.json": "ee0b23e4ca1d607f0606d78385d5649890317c39f3c2b0b8414d2bcea4686daf",
+    "/Users/numi/Work/numi-human-connected-surface-069/publication-071/evidence/exact-transfer-075/run-001/source-preflight/accepted-transfer-rows.csv.gz": "46d6e0fb7f44cdb9dc0b48233d14f42b95b93ddf66b47144971c79088959db21"
+  },
+  "outer_faces": 63959,
+  "output_files_sha256": {
+    "O-compact-face-ancestry.csv": "e60fc0ec98b4f810d839ccb3f70c892ec696a38f2b7cf0e00b35efae04f93c09",
+    "O-compact-face-map.csv": "be81ebb309d3341502a4849f2d1f7e9cbb450ce3da96ff36e7616b9d79824f77",
+    "O-compact-node-map.csv": "5ed0c63d4a35a023bd91d0cbec1a933c8ad1f7b5fc1d32148cd8568ac77db8f4",
+    "O-face-ancestry.csv": "33d9e894ed35c4807dce94aad6ad8a7da6ed08603ea6476afd635497757f0feb",
+    "accepted-transfer-reference-support.csv": "98595a9162e690dbe67186c84b2e70f385ddf8a5723efa215e532dc90f4202a6",
+    "d37-parent-node-to-capture016.csv": "288021b027ea40464cb9761033550862c3ab0c5bf4b01caee4405a36976fc716",
+    "donor-frames.csv": "5ab076c2861a4e965d807c5bfebce9de3a54a348118b664a573028b62f19b74d",
+    "node-parent-registration.csv": "03809c59e662cce3e604094ff58af8b850f73f11744451938f57fc4b82ea5d45",
+    "registered-D-faces.csv": "8f380ce85a2625be901caf3eaa054519b4c359f197acdfa10de3cd0c2df1fea6",
+    "registered-D.csv": "b3ac702c90edee54af958909273cf98f7258ed3aa17e7952f34ab8d17629d2e4",
+    "registered-I-faces.csv": "0a08d73b4dc4d6cd5f7260a8795364e4da49991c9ba50e0cf14d8bfa1d909cc1",
+    "registered-I.csv": "724904ba84df7efd561aa2cd8bb6c29c4cecf18d033eb738a0d4f7f160258717",
+    "registered-O-faces.csv": "77138f1ebf882611a57955f310cb974141334818dda3c059656ef003d25a8ad8",
+    "registered-O.csv": "cfd30b5b4e7544a849e8a75e99e280f2bd1fcdc90a22741d98eb7c5d370c3206",
+    "six-parent-registration-diagnostic-227.json": "ab3915ba3a406fb29113d7b04c4bacaf3895d9145eef625d96caa7749e9115f5",
+    "source-bary-normalization-deltas.csv": "0058eea037a17a68c72ffd5e62f90ed2c6f22a90222584aac431bcf5e82dafed"
+  },
+  "parent_current_geometry": "capture016 current_x/y/z, same exact pinned parent cell/material/donor/region/face packet",
+  "parent_distance_bound_m": 0.02,
+  "physical_admission": false,
+  "six_inferred_current_parent_registrations": {
+    "method": "inferred_current_parent_tet_same_material_donor_region",
+    "required_labels": "material15 + source geometric donor + source anatomical region",
+    "rows": {
+      "13498": {
+        "anatomical_region_id": 42,
+        "bary": [
+          0.653813462451024,
+          0.346186537548976,
+          0.0,
+          0.0
+        ],
+        "distance_m": 7.280268113108532e-06,
+        "geometric_donor_body": 42,
+        "geometric_registration_stable_source_face_id": 14318,
+        "material_index": 15,
+        "parent_tet_row": 4031,
+        "tie_count": 2,
+        "ties": [
+          {
+            "anatomical_region_id": 42,
+            "distance_m": 7.280268113108532e-06,
+            "geometric_donor_body": 42,
+            "material_index": 15,
+            "parent_tet_row": 4031,
+            "stable_source_face_id": 14318
+          },
+          {
+            "anatomical_region_id": 42,
+            "distance_m": 7.280268113108532e-06,
+            "geometric_donor_body": 42,
+            "material_index": 15,
+            "parent_tet_row": 4033,
+            "stable_source_face_id": 14318
+          },
+          {
+            "anatomical_region_id": 42,
+            "distance_m": 7.280268113108532e-06,
+            "geometric_donor_body": 42,
+            "material_index": 15,
+            "parent_tet_row": 4034,
+            "stable_source_face_id": 14318
+          }
+        ]
+      },
+      "13499": {
+        "anatomical_region_id": 42,
+        "bary": [
+          0.5952199215080298,
+          0.4047800784919702,
+          0.0,
+          0.0
+        ],
+        "distance_m": 8.203311228081271e-06,
+        "geometric_donor_body": 42,
+        "geometric_registration_stable_source_face_id": 14318,
+        "material_index": 15,
+        "parent_tet_row": 4031,
+        "tie_count": 2,
+        "ties": [
+          {
+            "anatomical_region_id": 42,
+            "distance_m": 8.203311228081271e-06,
+            "geometric_donor_body": 42,
+            "material_index": 15,
+            "parent_tet_row": 4031,
+            "stable_source_face_id": 14318
+          },
+          {
+            "anatomical_region_id": 42,
+            "distance_m": 8.203311228090331e-06,
+            "geometric_donor_body": 42,
+            "material_index": 15,
+            "parent_tet_row": 4033,
+            "stable_source_face_id": 14318
+          },
+          {
+            "anatomical_region_id": 42,
+            "distance_m": 8.203311228090331e-06,
+            "geometric_donor_body": 42,
+            "material_index": 15,
+            "parent_tet_row": 4034,
+            "stable_source_face_id": 14318
+          }
+        ]
+      },
+      "16946": {
+        "anatomical_region_id": 150,
+        "bary": [
+          0.8860734793893489,
+          0.11392627944248145,
+          2.411681696355138e-07,
+          0.0
+        ],
+        "distance_m": 5.268260286446316e-08,
+        "geometric_donor_body": 150,
+        "geometric_registration_stable_source_face_id": 63821,
+        "material_index": 15,
+        "parent_tet_row": 8707,
+        "tie_count": 2,
+        "ties": [
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 5.268260286446316e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 8707,
+            "stable_source_face_id": 63821
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 5.3215344649345424e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 8708,
+            "stable_source_face_id": 63821
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 5.559333138286407e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 8218,
+            "stable_source_face_id": 59541
+          }
+        ]
+      },
+      "17203": {
+        "anatomical_region_id": 150,
+        "bary": [
+          0.8419894886620636,
+          0.15800956441473057,
+          9.469232058939386e-07,
+          0.0
+        ],
+        "distance_m": 5.995397809406744e-08,
+        "geometric_donor_body": 150,
+        "geometric_registration_stable_source_face_id": 70119,
+        "material_index": 15,
+        "parent_tet_row": 9168,
+        "tie_count": 2,
+        "ties": [
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 5.995397809406744e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 9168,
+            "stable_source_face_id": 70119
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 6.212120151708731e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 9169,
+            "stable_source_face_id": 70119
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 6.94884681751207e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 8905,
+            "stable_source_face_id": 66584
+          }
+        ]
+      },
+      "17204": {
+        "anatomical_region_id": 150,
+        "bary": [
+          2.432709260008492e-07,
+          0.11283276096310675,
+          0.8871669957659672,
+          0.0
+        ],
+        "distance_m": 8.552275103858811e-08,
+        "geometric_donor_body": 150,
+        "geometric_registration_stable_source_face_id": 66584,
+        "material_index": 15,
+        "parent_tet_row": 8905,
+        "tie_count": 2,
+        "ties": [
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 8.552275103858811e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 8905,
+            "stable_source_face_id": 66584
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 8.59593503633819e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 9168,
+            "stable_source_face_id": 70119
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 8.595935037699968e-08,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 9169,
+            "stable_source_face_id": 70119
+          }
+        ]
+      },
+      "17223": {
+        "anatomical_region_id": 150,
+        "bary": [
+          0.656271564482789,
+          0.3437276625204696,
+          7.729967413474878e-07,
+          0.0
+        ],
+        "distance_m": 1.2575923030990868e-07,
+        "geometric_donor_body": 150,
+        "geometric_registration_stable_source_face_id": 70119,
+        "material_index": 15,
+        "parent_tet_row": 9168,
+        "tie_count": 2,
+        "ties": [
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 1.2575923030990868e-07,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 9168,
+            "stable_source_face_id": 70119
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 1.2736425018315566e-07,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 9169,
+            "stable_source_face_id": 70119
+          },
+          {
+            "anatomical_region_id": 150,
+            "distance_m": 1.2898765827029615e-07,
+            "geometric_donor_body": 150,
+            "material_index": 15,
+            "parent_tet_row": 8905,
+            "stable_source_face_id": 66584
+          }
+        ]
+      }
+    },
+    "source_ancestry_claimed": false
+  },
+  "source_ancestry_separate_from_parent_registration": true,
+  "source_payload_and_canonical_authoring_preserved": true,
+  "source_payload_sha256": null,
+  "status": "reference-registration-exported_not_physical_admission",
+  "surface_rows": {
+    "D": 15022,
+    "I": 15022,
+    "O": 32002
+  },
+  "typed_node_ancestry_rows": 62046
+}
