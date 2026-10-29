@@ -1,0 +1,315 @@
+{
+  "frozen_at_utc": "2026-10-29T18:01:55.076464+00:00",
+  "geometry_launch": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/launch-013.json",
+  "geometry_launch_sha256": "4d3199ecb979dc8a04a110c3fcf0a7549d29dd088b53ef9c98d622aa232e8375",
+  "geometry_scope": {
+    "accepted_physical_steps": 0,
+    "closed_surface_face_count": 317392,
+    "closed_surface_vertex_count": 158676,
+    "manifold_status": "Error.NoError",
+    "manifold_volume_m3": 0.0036098817768541605,
+    "physical_admission": false,
+    "rim_native_F32_bone_pairs": 0,
+    "rim_self_pairs": 0,
+    "rim_source_F64_bone_pairs": 0,
+    "rim_vs_O_reversed_I_pairs": 0,
+    "runtime_created": 0
+  },
+  "geometry_status": "PASS_FINE_PAIRED_SKIN_RIM_GEOMETRY_DIAGNOSTIC",
+  "global_skin_mass_capacity": {
+    "admissible_density_kg_m3": {
+      "lower": 900.0,
+      "upper": 1100.0
+    },
+    "closed_skin_volume_m3": 0.0036098817768541605,
+    "required_global_mean_density_kg_m3": 956.4220267852438,
+    "scope": "necessary global capacity only; not regional mass transport, thickness, volume mesh, or physical qualification",
+    "source_mass_kg": 3.4525704454739734,
+    "status": "PASS_GLOBAL_DENSITY_CAPACITY_ONLY",
+    "within_global_capacity": true
+  },
+  "limitations": [
+    "No tetrahedral volume admission",
+    "No native runtime or accepted physical step",
+    "Global mass capacity does not prove donor/region mass transfer or thickness",
+    "No joint skin/fat non-overlap claim is made",
+    "Closed-surface/source-map construction is a preparation diagnostic only"
+  ],
+  "retained_failure_evidence": {
+    "run011_failure_sha256": "acd64357ce7592a11c5c38b70959c7cf345d5fb98b67e18f830100000e845586",
+    "run012_finalization_failure_sha256": "ab91b04c1ef4ad9dcc62dd3254e96f0e69c4d36eb632658c9d0a3b5445a4e2bb",
+    "run012_preserved": true,
+    "run013_is_fresh_rerun": true
+  },
+  "run": "013",
+  "schema": "numi.paired-fine-skin-run013-frozen-source-manifest.v1",
+  "source_map": {
+    "O_mapping_contract": "full parent-tet and four barycentric registration preserved; dominant corner is a derived topological representative, not one-hot source identity",
+    "exact_face_order_and_winding_reconstruction": true,
+    "exact_point_reconstruction": true,
+    "face_count": 317392,
+    "negative_controls": {
+      "changed_face_winding_rejected": true,
+      "correct_O_face_row": 0,
+      "correct_O_source_row": 0,
+      "one_F32_ulp_coordinate_change_rejected": true,
+      "witness_output_face_row": 0,
+      "witness_output_vertex_row": 0,
+      "wrong_O_face_id_rejected": true,
+      "wrong_O_face_row": 1,
+      "wrong_O_point_id_rejected": true,
+      "wrong_O_source_row": 1
+    },
+    "physical_admission": false,
+    "point_count": 158676,
+    "sha256": "2f8643089a3723928a5c13492373db657c9e5f0b4ec3fc6999da8bcbde5942d9",
+    "status": "PASS_EXACT_COMPACTED_VERTEX_FACE_SOURCE_MAP"
+  },
+  "source_map_registry_545_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/receipt.json",
+    "sha256": "1bc91a6a8f9ba5daef2b96f04c3b1de8996f7e4ecb078f64fe860d5e8e3c3dcf"
+  },
+  "source_programs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/attach_closed_skin_source_map_run013.py": "81e481d6652f17871fad948601d9768deb92526586d9bddd1d5118dadb4de91f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/audit_paired_skin_rim_run013.py": "a977ecc4c0d2a95eea49c565d7f4fa806c45899d36d8b2778edebaa82a5b079f"
+  },
+  "verified_545_asset_output_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/donor-frames.csv": "b1704fb7b846254583f4b6a08c394ed3cad1603554244078706ca4b3811ac674",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/node-parent-registration.csv": "7035a38566db8a84aefa2a05cc48efbfb9f93c2eb81ac732a3386532ce5f51e2",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/outer-face-ancestry.csv": "ae73608f03d21b7a85e23d501578cf02ef50e3e8e99c675c915b2b99bbbf89b1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-D-faces.csv": "d0a3be10962313e0060cee145790e2ad9b6d1197441fd9df7b369e94bf2b3469",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-D.csv": "79d71016df010db4434f821a3101554fea656b5670542538f23fa68de328f714",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-I-faces.csv": "57fd829c549d6d66260ca3910d45290160b02d0641f12808774a59497ee449c2",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-I.csv": "509352702a865ce0905efbd52c4efd21222140bbcda6e9164086835c9f68690c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-O-faces.csv": "a3fae0cb586611ee127d841cadcb10db64c20b91ef00a787abd024a9b47fe01c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-O.csv": "8fed2b89fbfa4a4e20b83f097722e94a06d8bdd628563ae8d8e83c79cfa95fd1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/D-contact-thickness.csv": "46335d5a09d0c5a74b23d9b7dadd2bf3e0574aeafaa918c73a1a36c1c6896d9f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/D-full86.csv": "0d55fa61188ef8338468c8878100331b2710ebad04cf1dc4d78d8e567f5a4ff1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/D-source.json": "8d9316330755bee95a100138e21bed2aff63ea51616cfce868948a3fcc9a1728",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/I-contact-thickness.csv": "46335d5a09d0c5a74b23d9b7dadd2bf3e0574aeafaa918c73a1a36c1c6896d9f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/I-full86.csv": "0d55fa61188ef8338468c8878100331b2710ebad04cf1dc4d78d8e567f5a4ff1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/I-source.json": "58a656a08d8e23100903a31ee8c3b39145aa71b20f63e8e331f100025a1177e8",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/O-contact-thickness.csv": "46335d5a09d0c5a74b23d9b7dadd2bf3e0574aeafaa918c73a1a36c1c6896d9f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/O-full86.csv": "0d55fa61188ef8338468c8878100331b2710ebad04cf1dc4d78d8e567f5a4ff1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/O-source.json": "dd1889ce77ae87df7e4ff46225f29a7c39b5322714c9569e9745466317c19e93",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/source-domain-registry.json": "d3ff8c5664e1055b39980cec5a176c8279c214f52210433acb74c028603d8794",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/cell-parent-map.csv": "67b9b1c5355a366f5421f3e1403deacf97245e2b8fa38e5f84204b295b4e093d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/child.labels.csv": "4b6bfa518429deaec76ec7bf69487c3c029005728710c1d3750929ebc63d190f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/combined-node-map.csv": "b3bf0870519d81c3ff8c98d15ce61c107905beec21615da85505f2da2bd03bcf",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/facet-ancestry.csv": "935c483627e99c572c3b41684c40cc092d16ae4a998b9f16f1e84e6040d9ed81",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/mesh.ele": "8f1f83ff535840ce7ad3f4ecdaba46d4094cf191cc765a8ff8ee17a8fc26e44c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/mesh.node": "2299051f9d498dd562d7730faf88ae6e1260db85d4efeb8bc2f05ca38ce875ca"
+  },
+  "verified_artifacts": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/receipt.json": {
+      "sha256": "1bc91a6a8f9ba5daef2b96f04c3b1de8996f7e4ecb078f64fe860d5e8e3c3dcf",
+      "size_bytes": 15360
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/donor-frames.csv": {
+      "sha256": "b1704fb7b846254583f4b6a08c394ed3cad1603554244078706ca4b3811ac674",
+      "size_bytes": 41610
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/node-parent-registration.csv": {
+      "sha256": "7035a38566db8a84aefa2a05cc48efbfb9f93c2eb81ac732a3386532ce5f51e2",
+      "size_bytes": 1691220
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/outer-face-ancestry.csv": {
+      "sha256": "ae73608f03d21b7a85e23d501578cf02ef50e3e8e99c675c915b2b99bbbf89b1",
+      "size_bytes": 294272
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-D-faces.csv": {
+      "sha256": "d0a3be10962313e0060cee145790e2ad9b6d1197441fd9df7b369e94bf2b3469",
+      "size_bytes": 312841
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-D.csv": {
+      "sha256": "79d71016df010db4434f821a3101554fea656b5670542538f23fa68de328f714",
+      "size_bytes": 1156388
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-I-faces.csv": {
+      "sha256": "57fd829c549d6d66260ca3910d45290160b02d0641f12808774a59497ee449c2",
+      "size_bytes": 309135
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-I.csv": {
+      "sha256": "509352702a865ce0905efbd52c4efd21222140bbcda6e9164086835c9f68690c",
+      "size_bytes": 1156092
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-O-faces.csv": {
+      "sha256": "a3fae0cb586611ee127d841cadcb10db64c20b91ef00a787abd024a9b47fe01c",
+      "size_bytes": 114835
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/registered/registered-O.csv": {
+      "sha256": "8fed2b89fbfa4a4e20b83f097722e94a06d8bdd628563ae8d8e83c79cfa95fd1",
+      "size_bytes": 1235555
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/D-contact-thickness.csv": {
+      "sha256": "46335d5a09d0c5a74b23d9b7dadd2bf3e0574aeafaa918c73a1a36c1c6896d9f",
+      "size_bytes": 120919
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/D-full86.csv": {
+      "sha256": "0d55fa61188ef8338468c8878100331b2710ebad04cf1dc4d78d8e567f5a4ff1",
+      "size_bytes": 4846875
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/D-source.json": {
+      "sha256": "8d9316330755bee95a100138e21bed2aff63ea51616cfce868948a3fcc9a1728",
+      "size_bytes": 2936447
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/I-contact-thickness.csv": {
+      "sha256": "46335d5a09d0c5a74b23d9b7dadd2bf3e0574aeafaa918c73a1a36c1c6896d9f",
+      "size_bytes": 120919
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/I-full86.csv": {
+      "sha256": "0d55fa61188ef8338468c8878100331b2710ebad04cf1dc4d78d8e567f5a4ff1",
+      "size_bytes": 4846875
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/I-source.json": {
+      "sha256": "58a656a08d8e23100903a31ee8c3b39145aa71b20f63e8e331f100025a1177e8",
+      "size_bytes": 2928733
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/O-contact-thickness.csv": {
+      "sha256": "46335d5a09d0c5a74b23d9b7dadd2bf3e0574aeafaa918c73a1a36c1c6896d9f",
+      "size_bytes": 120919
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/O-full86.csv": {
+      "sha256": "0d55fa61188ef8338468c8878100331b2710ebad04cf1dc4d78d8e567f5a4ff1",
+      "size_bytes": 4846875
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/roles/O-source.json": {
+      "sha256": "dd1889ce77ae87df7e4ff46225f29a7c39b5322714c9569e9745466317c19e93",
+      "size_bytes": 2918702
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/source-domain-registry.json": {
+      "sha256": "d3ff8c5664e1055b39980cec5a176c8279c214f52210433acb74c028603d8794",
+      "size_bytes": 6230
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/cell-parent-map.csv": {
+      "sha256": "67b9b1c5355a366f5421f3e1403deacf97245e2b8fa38e5f84204b295b4e093d",
+      "size_bytes": 2884441
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/child.labels.csv": {
+      "sha256": "4b6bfa518429deaec76ec7bf69487c3c029005728710c1d3750929ebc63d190f",
+      "size_bytes": 626921
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/combined-node-map.csv": {
+      "sha256": "b3bf0870519d81c3ff8c98d15ce61c107905beec21615da85505f2da2bd03bcf",
+      "size_bytes": 4444966
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/facet-ancestry.csv": {
+      "sha256": "935c483627e99c572c3b41684c40cc092d16ae4a998b9f16f1e84e6040d9ed81",
+      "size_bytes": 2583980
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/mesh.ele": {
+      "sha256": "8f1f83ff535840ce7ad3f4ecdaba46d4094cf191cc765a8ff8ee17a8fc26e44c",
+      "size_bytes": 834667
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/mesh.node": {
+      "sha256": "2299051f9d498dd562d7730faf88ae6e1260db85d4efeb8bc2f05ca38ce875ca",
+      "size_bytes": 501033
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/receipt.json": {
+      "sha256": "06ca892d7d9e11e7aad807a679bc6c6c753c34cf811355664dc269d8c70d3f88",
+      "size_bytes": 293450
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/registered-O.csv": {
+      "sha256": "e3b2da9a2a65d2b0dd3d5dbab60d6146f6b7653cf830c8fd5d334c36900e0c9f",
+      "size_bytes": 43716733
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/attach_closed_skin_source_map_run013.py": {
+      "sha256": "81e481d6652f17871fad948601d9768deb92526586d9bddd1d5118dadb4de91f",
+      "size_bytes": 12867
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/audit_paired_skin_rim_run013.py": {
+      "sha256": "a977ecc4c0d2a95eea49c565d7f4fa806c45899d36d8b2778edebaa82a5b079f",
+      "size_bytes": 45957
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/exit-code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size_bytes": 2
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/launch-013.json": {
+      "sha256": "4d3199ecb979dc8a04a110c3fcf0a7549d29dd088b53ef9c98d622aa232e8375",
+      "size_bytes": 5845
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/closed-skin-boundary-stage.json": {
+      "sha256": "6a582e502840d86f9a1cc75039628ce781096b02ce8cee43d8d02812cc7419c4",
+      "size_bytes": 1997
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/closed-skin-source-map.npz": {
+      "sha256": "2f8643089a3723928a5c13492373db657c9e5f0b4ec3fc6999da8bcbde5942d9",
+      "size_bytes": 974242
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/exact-rim-surface-stage.json": {
+      "sha256": "71ab703a71d8f311291be0ca13d06ea32a1c0591a35185ab58f59bdea64ac6d4",
+      "size_bytes": 1005
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/fine-rim-source-map.npz": {
+      "sha256": "9d5dad80cbeeaca11584a8e3f8bf83e4d0bcecc2e3d4e4e6bb41fab63f8e4029",
+      "size_bytes": 10961
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/fine-skin-closed-boundary.npz": {
+      "sha256": "352dc5e1ebfeca7f8c7dc13075dbcf0abc8d15a842f52057ba7744f998d5fa23",
+      "size_bytes": 4292620
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/fine-skin-rim-oriented-faces.npz": {
+      "sha256": "2e46017738573dacd4c31c6ff7002c09427026db671ebed98a3a65a1154f94f9",
+      "size_bytes": 1365
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/global-skin-mass-capacity.json": {
+      "sha256": "e033fb1167f8357b9baeabd27b347317f72a602cf8f6fa6934a48709c3d38c20",
+      "size_bytes": 2469
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/progress.json": {
+      "sha256": "86ef03f80969191cf0a387f879185186cd636ff01861bce0cbd8a905280b9bba",
+      "size_bytes": 127
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/report.json": {
+      "sha256": "24ed76b7725d1b097e92d1859662b9725532e651abea5052f42dc0f14fb87b8c",
+      "size_bytes": 43821
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/rim-bone-exact-witnesses.npz": {
+      "sha256": "f96475797ad08245348ed48ccfff63aa709bff23a80f8f80e179879b1ead7770",
+      "size_bytes": 480
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/source-map-receipt.json": {
+      "sha256": "7cf1dbceae3ed49f614b21c2f2c2e0391b15fc98e9d5cc141d6c9dd637e5e45a",
+      "size_bytes": 2039
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/output/source-registry.json": {
+      "sha256": "e93fde5dcb928176c607d6bfc97e6448b80f65812d1afe25b5d87dae352cb150",
+      "size_bytes": 2401
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-fine-headwall-rim-635/run-013/stdout.log": {
+      "sha256": "7385845e2fd30cd56bd06d49e7d3edc0f9588de4d07027c40885d15e3e6f7559",
+      "size_bytes": 4111
+    }
+  },
+  "verified_input_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bone-barrier-remeshing-609/bone_barrier.py": "734527f060dcae186ae1b9609eca1ab95768d952aa0e9e8c7af76cae882b236b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/receipt.json": "1bc91a6a8f9ba5daef2b96f04c3b1de8996f7e4ecb078f64fe860d5e8e3c3dcf",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/receipt.json": "06ca892d7d9e11e7aad807a679bc6c6c753c34cf811355664dc269d8c70d3f88",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/registered-O.csv": "e3b2da9a2a65d2b0dd3d5dbab60d6146f6b7653cf830c8fd5d334c36900e0c9f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/D-witness-contract-001/run-042-abstract-cycle-coupled-remesh/remesh.py": "f1d697b42fc9d97472fbd70cec2d8adfe178bb591d3513680609396ec4c204ad",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/candidate-f32-typed.npz": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.weights.csv": "98205ae7de44401544b7969184788f5c2ee39cd4404cd34b8037377e7ae63a76",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/parent-layer-rows.csv": "ae8f0c96ce34f3dedf4b2950eb7009436f827998ad5a35b7f9287d2cf4cc384f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-rim-006-632/run-001/report.json": "495d5544c674c29aa93ac3c175306d03f561e92c8511a9e8f3dd5be472796666",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.node": "2299051f9d498dd562d7730faf88ae6e1260db85d4efeb8bc2f05ca38ce875ca",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/coarse-node-to-fine-surface.csv": "a5696b87c21acb986dc7493018eca92ba69217887ad90de4aa323d7877cbfc73",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/inserted-node-ancestry.csv": "2e94d3c5f3e6bcc3ba78c1246b1a46025f7ac9c7b60b769e437fe36e3b7ef8c8",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/receipt.json": "74fcbaf6a6776067d8d2fd90158afa3b1b9c815226ce3d60ba612ab5e9625fbf",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/root-connected-layer-fit-219/canonical-registration-diagnostic-228/attempt-004-parent-paired-projection/I-current-anchor.npz": "a751eaeabe3812755ba1a0e52f5c8a48b87673f728d286a2905807499394d22c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/surface-transfer-checkpoint-392/payload/O/candidate.npz": "2958a704db4b8b68422640a5e991c6b51af25f19d525c49adc8a742f0c207d7a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/tools/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+  }
+}
