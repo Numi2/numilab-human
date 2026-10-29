@@ -1,0 +1,7 @@
+# Regional mass capacity before native compilation
+
+This preflight uses canonical Float32 reference coordinates and the unchanged material density bounds (skin 900-1100 kg/m3, fat 850-950 kg/m3). It reports exact parent mass supply, candidate aggregate volume and admissible volume interval for every current material/geometric-donor/anatomical-region group. Sparse analytic volume gradients identify how each node changes each group's capacity. It does not assign mass, change labels, relax density or spatial transport limits, or admit physical geometry.
+
+The source002 baseline passes all 628 necessary group capacity checks and has no nonpositive cells. The positive D81 proposal fails 21 groups, exactly matching the prior independent witnesses. Its all185-bank inventory reduces fat overlap for 35 banks but increases it for 17; it is a failed geometry proposal and is not integrated. The combined O/I/D coordinate proposal fails 121 group capacities and has 60 nonpositive cells. It is being used as a connected remesh target rather than a physical candidate.
+
+The focused test checks analytical volume gradients against centered directional differences, translation cancellation, both fixed material bounds and missing child-group failure. Maximum directional discrepancy is 5.3e-11 cubic metres per unit parameter. Passing this necessary capacity check still does not establish sparse distance-limited transport, positive cells, anatomical clearance, conservative embedding, supported rest or accepted native motion.
