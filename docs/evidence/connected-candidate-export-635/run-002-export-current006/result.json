@@ -1,0 +1,67 @@
+{
+  "accepted_steps": 0,
+  "argv": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/export_refined_coarse_registered_volume_433.py",
+    "--candidate-npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz",
+    "--candidate-node",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.node",
+    "--candidate-node-map",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/coarse-node-to-fine-surface.csv",
+    "--inserted-node-ancestry",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/inserted-node-ancestry.csv",
+    "--capture",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003",
+    "--out",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-candidate-export-634/run-002-export-current006/registered-assets",
+    "--maximum-mass-transport-distance-m",
+    "0.019353",
+    "--candidate-operational-reference"
+  ],
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz",
+    "sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63"
+  },
+  "cheap_connected_volume_gate": {
+    "immutable_fields_checked": [
+      "volume_tetrahedra",
+      "material_index",
+      "geometric_donor_body",
+      "anatomical_region_id",
+      "stable_source_face_id",
+      "parent_volume_node_row",
+      "child_parent_tet_row",
+      "full86_weights",
+      "coarse_boundary_faces_O",
+      "coarse_boundary_faces_I",
+      "coarse_boundary_faces_D",
+      "refinement_node_source_offsets",
+      "refinement_node_source_rows",
+      "refinement_node_source_weights",
+      "refinement_child_source_tet_rows",
+      "refinement_child_source_measure_fractions",
+      "pinned_volume_node_rows"
+    ],
+    "maximum_node_displacement_m": 0.0,
+    "minimum_six_volume_m3": 2.692208533924355e-12,
+    "moved_node_count": 0,
+    "positive_tetrahedra": 29642,
+    "protected_rows_unchanged": 149
+  },
+  "export_exit_code": 0,
+  "export_wall_s": 10.175739125115797,
+  "exporter_sha256": "ad63b10701c42b37b1aa6aa79e0dc0c9f7ac87cdea7622f65582f9d1a63af2b1",
+  "finished_unix": 1793291866.65796,
+  "input_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.node": "2299051f9d498dd562d7730faf88ae6e1260db85d4efeb8bc2f05ca38ce875ca",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/coarse-node-to-fine-surface.csv": "a5696b87c21acb986dc7493018eca92ba69217887ad90de4aa323d7877cbfc73",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/inserted-node-ancestry.csv": "2e94d3c5f3e6bcc3ba78c1246b1a46025f7ac9c7b60b769e437fe36e3b7ef8c8"
+  },
+  "physical_admission": false,
+  "runtime": 0,
+  "started_unix": 1793291856.43426,
+  "status": "PASS_REGISTERED_ASSET_PREPARATION_ONLY",
+  "verified_asset_outputs": 25
+}

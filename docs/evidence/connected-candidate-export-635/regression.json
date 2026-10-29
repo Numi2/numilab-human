@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "unchanged_real_006",
+      "actual": "PASS",
+      "reason": null
+    },
+    {
+      "name": "unprotected_one_ULP_change",
+      "actual": "PASS",
+      "reason": null
+    },
+    {
+      "name": "protected_row_move",
+      "actual": "REJECTED",
+      "reason": "protected back/head-ring row coordinates changed"
+    },
+    {
+      "name": "stale_reference_alias",
+      "actual": "REJECTED",
+      "reason": "current coordinates are not the emitted Float32 operational-reference alias"
+    },
+    {
+      "name": "nonfinite_coordinate",
+      "actual": "REJECTED",
+      "reason": "nonfinite current/reference coordinates"
+    },
+    {
+      "name": "altered_binding",
+      "actual": "REJECTED",
+      "reason": "changed immutable topology, identity, mass ancestry, binding, or protected-row field: full86_weights"
+    },
+    {
+      "name": "altered_source_identity",
+      "actual": "REJECTED",
+      "reason": "changed immutable topology, identity, mass ancestry, binding, or protected-row field: stable_source_face_id"
+    },
+    {
+      "name": "altered_mass_ancestry",
+      "actual": "REJECTED",
+      "reason": "changed immutable topology, identity, mass ancestry, binding, or protected-row field: refinement_child_source_measure_fractions"
+    },
+    {
+      "name": "collapsed_emitted_cell",
+      "actual": "REJECTED",
+      "reason": "invalid emitted tetrahedra: [0, 1, 144, 145, 149, 503] count=6"
+    }
+  ],
+  "source_sha256": "d4de1c7f9b32649663d8a5b459c22340009dad854ba965433f9b2fa9aed29566",
+  "physical_admission": false
+}
