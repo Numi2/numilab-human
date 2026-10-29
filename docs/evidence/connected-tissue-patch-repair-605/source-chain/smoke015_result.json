@@ -1,0 +1,54 @@
+{
+  "D_minus_I_gate": "NOT_RUN",
+  "aabb_lattice_regression": {
+    "filter_domain": "same exact integer lattice",
+    "old_world_bounds_would_miss": true,
+    "record_domain": "exact integer lattice at denominator 2^149",
+    "status": "PASS"
+  },
+  "accepted_patch_count": 4,
+  "accepted_transaction_count": 4,
+  "all185_gate": "NOT_RUN",
+  "candidate_input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/candidate-f32.npz",
+  "candidate_input_sha256": "e8e332fb4ab421db6e44f0f5fe638e378646fd63438a318dcf94ad84b7a8ce96",
+  "elapsed_s": 6.794178624870256,
+  "exact_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/exact-native-387-001/self.json",
+  "exact_report_sha256": "e725631f7f337b58a0dbc49d33c4b2f555ce319f0dbed1b0a6c4f58f99b4716d",
+  "exact_self_gate": "NOT_RUN",
+  "failed_transaction_count": 0,
+  "failed_transactions": [],
+  "input_faces": 259971,
+  "input_vertices": 129546,
+  "new_faces": 31,
+  "output_faces": 259957,
+  "output_vertices": 129546,
+  "physical_admission": false,
+  "plan_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/pair-exceptional-collar-prep-602/shared-engine-prepared-plan-tx227-handle-fill-proposal-003.json",
+  "plan_sha256": "b1131e56a98e800c11fcb6fee842dbb79b8fa0ce9a28d25a6486d3d6f47b705c",
+  "raw_geometry_checkpoint": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/pair-geometry-014-linked-remesh/overlap-fixed-smoke-015/candidate-geometry-final-checkpoint.npz",
+  "raw_geometry_sha256": "70c5fc781f6e171df252ff12750e04da563c0ec8b73dc83c7076f7c890cabcb7",
+  "removed_faces": 45,
+  "replay_operations_sha256": "8765271b474c4081cf0aece2218793c3eac326677dad739eaf3cf2486a108130",
+  "replay_source_plan_matches_current": false,
+  "replay_source_plan_sha256": "2c9ead7bef839536f7d96f5d4a7eb7f44f37ceb416ee608b79bc8fe0855c9aac",
+  "schema": "pair-linked-connected-remesh-result.v1",
+  "selected_transaction_count": 4,
+  "stale_replay_proposal_count": 2,
+  "stale_replay_proposals": [
+    {
+      "error": "ValueError('saved proposal intersects retained/accepted geometry: [[1049000000000003, 1051000000000001]]')",
+      "patch_index": 0,
+      "reason": "saved_proposal_failed_current_exact_revalidation",
+      "transaction_id": 49
+    },
+    {
+      "error": "ValueError('saved proposal intersects retained/accepted geometry: [[1102000000000003, 1101000000000009]]')",
+      "patch_index": 0,
+      "reason": "saved_proposal_failed_current_exact_revalidation",
+      "transaction_id": 102
+    }
+  ],
+  "topology_repair_exceptions": [],
+  "typed_candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/pair-geometry-014-linked-remesh/overlap-fixed-smoke-015/candidate-f32-linked-remesh-typed.npz",
+  "typed_candidate_sha256": "dce96f1ac7862113542aaed0349ef42e1b0848e44f1cb1b5d329e2e121a10a8e"
+}

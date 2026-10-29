@@ -1,0 +1,167 @@
+{
+  "schema": "pair-linked-remesh-operations.v1",
+  "candidate_sha256": "e8e332fb4ab421db6e44f0f5fe638e378646fd63438a318dcf94ad84b7a8ce96",
+  "exact_report_sha256": "e725631f7f337b58a0dbc49d33c4b2f555ce319f0dbed1b0a6c4f58f99b4716d",
+  "accepted_transactions": [
+    270,
+    309
+  ],
+  "operations": [
+    {
+      "transaction_id": 270,
+      "patch_index": 0,
+      "removed_face_rows": [
+        105679,
+        105680,
+        105681,
+        105682,
+        129971,
+        129972,
+        129973,
+        129974
+      ],
+      "boundary_loops": [],
+      "new_faces": [
+        [
+          78119,
+          78122,
+          78116
+        ],
+        [
+          78119,
+          78116,
+          78118
+        ],
+        [
+          78120,
+          78118,
+          78122
+        ],
+        [
+          78120,
+          78122,
+          78119
+        ],
+        [
+          78120,
+          78119,
+          78118
+        ],
+        [
+          78117,
+          78116,
+          78122
+        ],
+        [
+          78117,
+          78118,
+          78116
+        ],
+        [
+          78117,
+          78122,
+          78118
+        ]
+      ],
+      "parent_face_rows": [
+        105679,
+        105680,
+        105681,
+        105682,
+        129971,
+        129972,
+        129973,
+        129974
+      ],
+      "details": {
+        "operation": "whole_closed_component_convex_hull_existing_vertices_preserving_negative_void_orientation",
+        "source_euler_characteristic": 2,
+        "output_euler_characteristic": 2,
+        "coordinate_changes": 0,
+        "exact_external_self_pairs": 0,
+        "exact_internal_self_pairs": 0,
+        "all185_positive_hull_bone_intersection_empty_both_f64_and_native_f32": true,
+        "positive_hull_minus_I_empty": true
+      }
+    },
+    {
+      "transaction_id": 309,
+      "patch_index": 0,
+      "removed_face_rows": [
+        143033,
+        143034,
+        143035,
+        143036,
+        170892,
+        170893,
+        170897,
+        170898
+      ],
+      "boundary_loops": [],
+      "new_faces": [
+        [
+          83753,
+          83759,
+          83736
+        ],
+        [
+          83758,
+          83730,
+          83736
+        ],
+        [
+          83758,
+          83736,
+          83759
+        ],
+        [
+          83758,
+          83753,
+          83730
+        ],
+        [
+          83758,
+          83759,
+          83753
+        ],
+        [
+          83731,
+          83736,
+          83730
+        ],
+        [
+          83731,
+          83730,
+          83753
+        ],
+        [
+          83731,
+          83753,
+          83736
+        ]
+      ],
+      "parent_face_rows": [
+        143033,
+        143034,
+        143035,
+        143036,
+        170892,
+        170893,
+        170897,
+        170898
+      ],
+      "details": {
+        "operation": "whole_closed_component_convex_hull_existing_vertices_preserving_negative_void_orientation",
+        "source_euler_characteristic": 2,
+        "output_euler_characteristic": 2,
+        "coordinate_changes": 0,
+        "exact_external_self_pairs": 0,
+        "exact_internal_self_pairs": 0,
+        "all185_positive_hull_bone_intersection_empty_both_f64_and_native_f32": true,
+        "positive_hull_minus_I_empty": true
+      }
+    }
+  ],
+  "physical_admission": false,
+  "scope": "local construction gates only; combine with other unchanged-domain operations and recheck"
+}

@@ -1,0 +1,194 @@
+{
+  "schema": "numi.region23-current-fine-OID-capacity.v1",
+  "status": "COMPLETE_EXACT_MANIFOLD_SPATIAL_DIAGNOSTIC",
+  "physical_admission": false,
+  "source_candidate_sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54",
+  "source_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/candidate.npz",
+  "parent_mass_csv_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+  "fine_O": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-001/O-closed-F32.npz",
+    "sha256": "f6825de542239097f703e3c29debd5eb0b3dd7d6e45f872389d8b8baa96c3b15",
+    "vertices": 56054,
+    "faces": 112104,
+    "bbox_min": [
+      -0.3280475437641144,
+      -1.7451446056365967,
+      4.043023693611758e-08
+    ],
+    "bbox_max": [
+      0.27575117349624634,
+      -0.02518889121711254,
+      0.29479485750198364
+    ],
+    "status": "Error.NoError",
+    "volume_m3": 0.06871815883186148
+  },
+  "fine_I": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-001/I-closed-F32.npz",
+    "sha256": "309271f9803cc7eab8e7d0834274c25fba4f75de6aede713fd2d6174950a83fd",
+    "vertices": 102622,
+    "faces": 205280,
+    "bbox_min": [
+      -0.32656702399253845,
+      -1.7435221672058105,
+      0.002375737065449357
+    ],
+    "bbox_max": [
+      0.2746642231941223,
+      -0.02735031582415104,
+      0.2924842834472656
+    ],
+    "status": "Error.NoError",
+    "volume_m3": 0.06510798632194593
+  },
+  "fine_D037": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/D-geometry-run037-f32.npz",
+    "sha256": "073db24d046703097150b97b9644b5d74e6f46c2ac5a79ace30dd8977f76f22f",
+    "source_D037_sha256": "f94b61ca212f143a4b7257fb2bae6adcb3898e7642d29698e173039458c7cc55",
+    "vertices": 67239,
+    "open_faces": 136013,
+    "caps": 41,
+    "faces": 136054,
+    "status": "Error.NoError",
+    "volume_m3": 0.05381758571915104
+  },
+  "fine_skin_global": {
+    "status": "Error.NoError",
+    "volume_m3": 0.0036101774840130163,
+    "vertices": 158725,
+    "faces": 317506
+  },
+  "fine_fat_global": {
+    "status": "Error.NoError",
+    "volume_m3": 0.011290405639105818,
+    "vertices": 169906,
+    "faces": 341448
+  },
+  "coarse_region23_groups": {
+    "skin": {
+      "cells": 1990,
+      "mass_kg": 0.2380884346646555,
+      "tet_volume_m3": 0.00023834570351565252,
+      "boundary_vertices": 721,
+      "boundary_faces": 1446,
+      "volume_m3": 0.00023834570351565247,
+      "density_kg_m3": 998.9206062991602,
+      "allowed_volume_m3": [
+        0.0002164440315133232,
+        0.0002645427051829506
+      ],
+      "mass_bound_slack_shrink_m3": 2.190167200232933e-05,
+      "mass_bound_slack_expand_m3": 2.6197001667298075e-05
+    },
+    "fat": {
+      "cells": 1990,
+      "mass_kg": 0.6823952617656361,
+      "tet_volume_m3": 0.0007582595163325044,
+      "boundary_vertices": 721,
+      "boundary_faces": 1446,
+      "volume_m3": 0.0007582595163325043,
+      "density_kg_m3": 899.949485719872,
+      "allowed_volume_m3": [
+        0.0007183108018585644,
+        0.0008028179550183955
+      ],
+      "mass_bound_slack_shrink_m3": 3.994871447394002e-05,
+      "mass_bound_slack_expand_m3": 4.4558438685891096e-05
+    }
+  },
+  "region23_combined_volume_m3": 0.0009966052198481568,
+  "spatial_intersection_volumes_m3": {
+    "region23_x_fine_skin": {
+      "status": "Error.NoError",
+      "volume_m3": 0.0002102186065965875,
+      "vertices": 17894,
+      "faces": 35840
+    },
+    "region23_x_fine_fat": {
+      "status": "Error.NoError",
+      "volume_m3": 0.0005060604208879117,
+      "vertices": 54459,
+      "faces": 110334
+    },
+    "region23_x_fine_I": {
+      "status": "Error.NoError",
+      "volume_m3": 0.00078636812557196,
+      "vertices": 16909,
+      "faces": 33790
+    },
+    "region23_x_fine_O": {
+      "status": "Error.NoError",
+      "volume_m3": 0.0009965867232367863,
+      "vertices": 1801,
+      "faces": 3606
+    },
+    "region23_x_D037": {
+      "status": "Error.NoError",
+      "volume_m3": 0.00028031081868494924,
+      "vertices": 37975,
+      "faces": 77498
+    },
+    "skin_x_fine_skin": {
+      "status": "Error.NoError",
+      "volume_m3": 0.00021021765663128432,
+      "vertices": 19889,
+      "faces": 39830
+    },
+    "skin_x_fine_fat": {
+      "status": "Error.NoError",
+      "volume_m3": 7.03965167219775e-06,
+      "vertices": 23929,
+      "faces": 47910
+    },
+    "skin_x_fine_I": {
+      "status": "Error.NoError",
+      "volume_m3": 2.8109559204758947e-05,
+      "vertices": 18396,
+      "faces": 36800
+    },
+    "skin_x_D037": {
+      "status": "Error.NoError",
+      "volume_m3": 2.1073021475898282e-05,
+      "vertices": 5588,
+      "faces": 11308
+    },
+    "fat_x_fine_skin": {
+      "status": "Error.NoError",
+      "volume_m3": 9.499653035178872e-10,
+      "vertices": 4591,
+      "faces": 9098
+    },
+    "fat_x_fine_fat": {
+      "status": "Error.NoError",
+      "volume_m3": 0.0004990207692157139,
+      "vertices": 41653,
+      "faces": 84662
+    },
+    "fat_x_fine_I": {
+      "status": "Error.NoError",
+      "volume_m3": 0.0007582585663672011,
+      "vertices": 4820,
+      "faces": 9640
+    },
+    "fat_x_D037": {
+      "status": "Error.NoError",
+      "volume_m3": 0.00025923779720905094,
+      "vertices": 37232,
+      "faces": 75904
+    }
+  },
+  "capacity_from_current_fine_geometry": {
+    "fine_skin_within_source_region_m3": 0.0002102186065965875,
+    "fine_fat_after_D037_within_source_region_m3": 0.0005060604208879117,
+    "D037_inside_fat_source_region_m3": 0.00025923779720905094,
+    "skin_min_volume_m3": 0.0002164440315133232,
+    "fat_min_volume_m3": 0.0007183108018585644,
+    "minimum_fat_addition_needed_m3": 0.00021225038097065268,
+    "minimum_skin_addition_needed_before_outer_motion_m3": 6.225424916735697e-06,
+    "minimum_O_outward_addition_if_I_moves_outward_by_fat_deficit_m3": 0.00021847580588738838,
+    "skin_capacity_headroom_above_current_fine_skin_m3": 5.43240985863631e-05,
+    "fat_capacity_headroom_above_current_fine_fat_m3": 0.0002967575341304838
+  },
+  "limits": "Manifold spatial Boolean screen only; no exact predicate, native mass remap, physical admission, or claim that a local material boundary can be changed without a connected patch. The region23 measure is the whole pinned source002 15/23/23 and 16/23/23 tetrahedral subdomains, intersected with current accepted fine closed surfaces.",
+  "elapsed_s": 0.3803956669289619
+}

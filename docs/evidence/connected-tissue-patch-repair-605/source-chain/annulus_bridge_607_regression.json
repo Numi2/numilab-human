@@ -1,0 +1,107 @@
+{
+  "schema": "bounded-annulus-bridge-regression.v1",
+  "source_sha256": "6d8737c8dec967815085eb9825285e936c695fba39963de5de543578d921a11f",
+  "fixtures": [
+    {
+      "fixture": "square",
+      "status": "PASS",
+      "exact_self_pairs": 0,
+      "oriented_area": 12.0,
+      "expected_area": 12.0,
+      "negative_controls": [
+        "duplicate_triangle",
+        "retained_interior_edge"
+      ],
+      "seconds": 0.004830958088859916,
+      "details": {
+        "method": "exact_collision_aware_annulus_bridge_and_ear_search",
+        "coordinate_changes": 0,
+        "bridge_vertices": [
+          0,
+          4
+        ],
+        "bridge_trial": 0,
+        "prior_failed_trials": [],
+        "topology": {
+          "vertices": 8,
+          "edges": 16,
+          "faces": 8,
+          "euler_characteristic": 0,
+          "boundary_components": 2,
+          "same_boundary_only_triangles": 0
+        },
+        "ear_search": {
+          "basis": "abstract_unit_circle_in_boundary_order",
+          "boundary_vertex_count": 10,
+          "min_unit_circle_triangle_quality": 0.3624306734166956,
+          "occupied_external_diagonal_count": 0,
+          "exact_search": {
+            "nodes": 11,
+            "triangle_candidates": 26,
+            "exact_external_calls": 20,
+            "exact_external_pairs": 0,
+            "exact_internal_calls": 68,
+            "exact_internal_pairs": 10,
+            "external_cache_hits": 6,
+            "internal_cache_hits": 23,
+            "backtracks": 3,
+            "max_depth": 7
+          },
+          "elapsed_s": 0.00398329203017056
+        },
+        "elapsed_s": 0.004073084099218249
+      }
+    },
+    {
+      "fixture": "concave_outer",
+      "status": "PASS",
+      "exact_self_pairs": 0,
+      "oriented_area": 29.0,
+      "expected_area": 29.0,
+      "negative_controls": [
+        "duplicate_triangle",
+        "retained_interior_edge"
+      ],
+      "seconds": 0.09500770783051848,
+      "details": {
+        "method": "exact_collision_aware_annulus_bridge_and_ear_search",
+        "coordinate_changes": 0,
+        "bridge_vertices": [
+          3,
+          8
+        ],
+        "bridge_trial": 0,
+        "prior_failed_trials": [],
+        "topology": {
+          "vertices": 9,
+          "edges": 18,
+          "faces": 9,
+          "euler_characteristic": 0,
+          "boundary_components": 2,
+          "same_boundary_only_triangles": 2
+        },
+        "ear_search": {
+          "basis": "abstract_unit_circle_in_boundary_order",
+          "boundary_vertex_count": 11,
+          "min_unit_circle_triangle_quality": 0.3295789529720594,
+          "occupied_external_diagonal_count": 0,
+          "exact_search": {
+            "nodes": 568,
+            "triangle_candidates": 2986,
+            "exact_external_calls": 55,
+            "exact_external_pairs": 0,
+            "exact_internal_calls": 364,
+            "exact_internal_pairs": 95,
+            "external_cache_hits": 2931,
+            "internal_cache_hits": 7289,
+            "backtracks": 559,
+            "max_depth": 8
+          },
+          "elapsed_s": 0.09389279200695455
+        },
+        "elapsed_s": 0.09396395902149379
+      }
+    }
+  ],
+  "physical_admission": false
+}
