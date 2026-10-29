@@ -1,0 +1,22 @@
+{
+  "status": "NATIVE_INITIALIZATION_DOMAIN_INTERPRETATION",
+  "raw_diagnostics_retained": true,
+  "evidence_source": "/Users/numi/Work/skin-fat-native-integration-209/apps/NumiHumanPhysicalSkinChildRegisteredVolumeImport.hpp",
+  "evidence_source_sha256": "04e54b1c7b1fbea383b61b5d5df5dfbf9dd0fe0334097bb2c0a825eb5b70a4d4",
+  "native_contract": {
+    "parser": "loadPhysicalSkinChildTetGenReference",
+    "geometry": "Canonical Float32 TetGen reference coordinates in initialization world.",
+    "node_map": "compilePhysicalSkinRegisteredVolumeImport requires row.currentWorldPoint to match parsed referenceWorldPoints within 2e-8 m, then initializes currentWorldPoints from that row.",
+    "consequence": "The NPZ historical points_current_world_m_f32 array is not itself the runtime state. Its ratio to source NPZ reference volumes is not evidence of native initial physical strain."
+  },
+  "corrected_interpretation": {
+    "frame_bug_029": "New absolute skeleton-rest targets jump 1.47-1.72 m out of the initialization-world domain; this remains a real authoring error.",
+    "source002_initial_strain_json": "Array-domain diagnostic only. The .5999-2.2783 volume ratio must not be reported as native current/reference Jacobians or used to infer unexplained runtime prestress.",
+    "source002_current_capacity_json": "Capacity of a distinct unadmitted geometry proposal based on historical current coordinates, not the imported source geometry.",
+    "initialized_reference_control_537": "A new geometry/reference proposal using historical current points; current geometry field unchanged in that NPZ, but native operational geometry differs from the original source002 reference. Native mass transfer rejected its fixed 100/200um trial envelopes.",
+    "next_fit": "Begin with source002 canonical reference as the one operational initialization geometry. Query fine458 anatomical targets in that same world domain. Keep immutable330 mass and source ancestry distinct."
+  },
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0
+}

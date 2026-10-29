@@ -1,0 +1,80 @@
+{
+  "status": "coarse_material_bone_volume_inventory",
+  "coordinate_field": "reference",
+  "scope": "canonical Float32 physical material solids; positive intersection volumes are unresolved, no admission tolerance applied; per-bank volumes overlap and must not be summed as a union",
+  "candidate_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+  "bank_manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+  "script_sha256": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+  "point_count": 7491,
+  "tet_count": 29642,
+  "minimum_cell_volume_m3": 4.487014223207258e-13,
+  "layers": {
+    "skin": {
+      "material_index": 15,
+      "tetrahedra": 14821,
+      "boundary_vertices": 4994,
+      "boundary_faces": 9988,
+      "status": "Error.NoError",
+      "tet_volume_sum_m3": 0.003453980463501951,
+      "solid_volume_m3": 0.0034539804635019514,
+      "volume_closure_m3": 4.336808689942018e-19
+    },
+    "fat": {
+      "material_index": 16,
+      "tetrahedra": 14821,
+      "boundary_vertices": 4994,
+      "boundary_faces": 9988,
+      "status": "Error.NoError",
+      "tet_volume_sum_m3": 0.01165225701649411,
+      "solid_volume_m3": 0.01165225701649411,
+      "volume_closure_m3": 0.0
+    }
+  },
+  "banks": [
+    {
+      "body": 23,
+      "bone": 29,
+      "index": 45,
+      "operand_sha256": "388201b584370eddf023655bffc514a04330d70cd8a2603dd9062cbcb2dd4195",
+      "layers": {
+        "skin": {
+          "intersection_m3": 6.082298994208934e-06,
+          "vertices": 1372,
+          "faces": 2716,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.03001429347770314,
+              -0.1445202033565673,
+              0.04487338067400951
+            ],
+            [
+              0.05050511049646765,
+              -0.029430501277860854,
+              0.17415736342944058
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.088069866185473e-05,
+          "vertices": 6207,
+          "faces": 12410,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.03263635343306408,
+              -0.14662949143045603,
+              0.03436818127908823
+            ],
+            [
+              0.04990238987822846,
+              -0.030444980633018478,
+              0.17667802455370898
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "elapsed_s": 0.0845737918280065
+}

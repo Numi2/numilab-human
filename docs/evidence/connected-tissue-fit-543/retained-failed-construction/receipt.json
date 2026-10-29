@@ -1,0 +1,158 @@
+{
+  "artifacts": {
+    "candidate.ele": "54e55fe27a337c16f1b8e9fdfa6fcf1479b0714ff5ca33f403ef525fcdc7566c",
+    "candidate.labels.csv": "0dfc1d36b8f4ebb11bf2045fb0475b8def0c9b1cb3b21c1bda9d7bfceca4103f",
+    "candidate.node": "2299051f9d498dd562d7730faf88ae6e1260db85d4efeb8bc2f05ca38ce875ca",
+    "candidate.npz": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "child-parent-identity.csv": "c1b1e97b73119685643faa8be51677cb48089e071c8e249464e7e34b4d356712",
+    "coarse-boundary-faces.csv": "63b19d6420136c4921bdf9573c6e435db2930a708f1fb1c1a528ee4b1c068ce3",
+    "coarse-node-to-fine-surface.csv": "a5696b87c21acb986dc7493018eca92ba69217887ad90de4aa323d7877cbfc73",
+    "inserted-node-ancestry.csv": "2e94d3c5f3e6bcc3ba78c1246b1a46025f7ac9c7b60b769e437fe36e3b7ef8c8",
+    "requeried-edge-target-proposal.json": "98eddc6a8cafeedae1adf4da697a7cbb05cfd8e47f3c437056856bc0a791b09e"
+  },
+  "candidate_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+  "evidence_boundary": {
+    "185_bank_audit": "NOT_RUN",
+    "coarse/fine detail bridge": "NOT_RUN",
+    "exact_full_surface_self_audit": "NOT_RUN",
+    "native conservative mass mapper": "NOT_RUN",
+    "physical_admission": false
+  },
+  "finalizer_script_sha256": "5ac966774c2229ae813f77bdf3d92f932d3a812715341e97fc7393755d9fca3b",
+  "gates": {
+    "current_nonpositive_affected": 0,
+    "current_nonpositive_tets": 0,
+    "current_nonpositive_unaffected": 0,
+    "current_signed_volume_m3_all": {
+      "max": 1.9922954342287515e-05,
+      "min": 4.487014223207258e-13,
+      "p50": 4.986585976080557e-08,
+      "p95": 2.6591904139353803e-06
+    },
+    "full86_max_abs_sum_error": 5.168687611245559e-08,
+    "full86_partition_tolerance_1e-6_pass": true,
+    "node_file_exact_f32_roundtrip": true,
+    "paired_thickness_distance_m": {
+      "max": 0.009951934023377984,
+      "min": 0.0015496996379709925,
+      "p50": 0.002450383592265272,
+      "p95": 0.009874752971158914
+    },
+    "paired_thickness_failures": 0,
+    "reference_density_kg_m3_by_material": {
+      "15": {
+        "max": 1098.6115371372127,
+        "min": 903.3141132694354,
+        "p50": 999.9841013885228,
+        "p95": 1003.0960486792236
+      },
+      "16": {
+        "max": 949.3071851533684,
+        "min": 852.9620674022958,
+        "p50": 900.000004367128,
+        "p95": 900.0616330536864
+      }
+    },
+    "reference_mass_density_outside_900_1100_or_850_950": 0,
+    "reference_mass_density_outside_affected": 0,
+    "reference_mass_density_outside_unaffected": 0,
+    "reference_signed_volume_m3_all": {
+      "max": 1.9922954342287515e-05,
+      "min": 4.487014223207258e-13,
+      "p50": 4.986585976080557e-08,
+      "p95": 2.6591904139353803e-06
+    }
+  },
+  "generation_script_sha256": "db27d0b7f6bc5333cfa98f2bc2867acf5d95555dbdb69e9ae6ee6edd345c1390",
+  "inputs": {
+    "458_registered_receipt": "c68a839a0c7c1baf45f1cf9dc514bc218c3542a161662b6bc3224ce65f17dad9",
+    "530_refinement_control": "bc3831a56663cd561d5465d5943eb7cab275ca82b3c0be92561d62c42e8e8606",
+    "534_reference_mass_ledger": "ed320a79755132a7418cd7dafbb97d034b491ee5ccba587e33324bc7e61b0210",
+    "source002_candidate": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54"
+  },
+  "native_reference_contract": {
+    "historical_source002_current_difference": {
+      "max_m": 0.00048669081125249613,
+      "p50_m": 2.9802322387695312e-08,
+      "p95_m": 8.786090586109206e-06
+    },
+    "operational_baseline": "source002 points_reference_world_m_f64 rounded once to F32 and widened; same field used for both native current and reference",
+    "operational_current_equals_reference": true
+  },
+  "optimizer": {
+    "accepted_alpha_all_nodes": {
+      "max": 0.2,
+      "min": 0.0029114805556129577,
+      "p50": 0.18631295439550427,
+      "p95": 0.2
+    },
+    "accepted_alpha_triplets": {
+      "max": 0.2,
+      "min": 0.0029114805556129577,
+      "p50": 0.18631295439550427,
+      "p95": 0.2
+    },
+    "inserted_ancestry_row_count": 258,
+    "method": "sparse sequential LP with analytic signed-tet volume derivatives; four trust-region rounds; exact-coordinate gate recomputed from saved artifact",
+    "target_residual_m_by_role": {
+      "D": {
+        "max": 0.004447799971733139,
+        "min": 3.042019456194337e-09,
+        "p50": 5.159277137119877e-08,
+        "p95": 0.0020667650120709943
+      },
+      "I": {
+        "max": 0.006622320247175624,
+        "min": 2.0303581819096632e-09,
+        "p50": 2.933670899733216e-08,
+        "p95": 0.0019493478134851978
+      },
+      "O": {
+        "max": 0.006930861190026364,
+        "min": 3.224776292747349e-09,
+        "p50": 5.282083564734636e-07,
+        "p95": 0.0006810317356484495
+      }
+    },
+    "weighted_target_progress_m": 0.003915763930185036
+  },
+  "runtime_finalizer_s": 0.06308627128601074,
+  "schema": "numi.connected-constrained-edge-fit-finalization.v1",
+  "status": "CONSTRUCTION_CANDIDATE_ONLY",
+  "target_provenance": {
+    "canonical_midpoint_to_target_distance_m_by_role": {
+      "D": {
+        "max": 0.004460789264477243,
+        "min": 3.2141207515427784e-10,
+        "p50": 5.629616234914544e-08,
+        "p95": 0.002184950133711673
+      },
+      "I": {
+        "max": 0.006711670839446443,
+        "min": 1.6835432383217789e-09,
+        "p50": 3.4848624040884046e-08,
+        "p95": 0.0020496536840101214
+      },
+      "O": {
+        "max": 0.007024376056846854,
+        "min": 3.885537332607455e-09,
+        "p50": 6.161691791623299e-07,
+        "p95": 0.0007031515275082487
+      }
+    },
+    "canonical_target_map_sha256": "98eddc6a8cafeedae1adf4da697a7cbb05cfd8e47f3c437056856bc0a791b09e",
+    "global_donor_region_face_requery_used": false,
+    "max_old_to_canonical_query_shift_m": 0.0002006621039747666,
+    "method": "reuse each qualified 029 local registered-surface face, barycentric point, and source ancestry after hash-verifying the 458 role CSVs/faces; replace query with canonical source002 reference edge midpoint only",
+    "source_proposal_sha256": "282cb34517d3f10c5c156bd3325d14c50f06481d517244c26c0b4e594ffc30df"
+  },
+  "topology": {
+    "affected_tetrahedra": 1420,
+    "inserted_triplets": 86,
+    "nodes": 7491,
+    "old_nodes_equal_canonical_operational_baseline": true,
+    "pinned_149_rows_equal_canonical_baseline": true,
+    "tetrahedra": 29642,
+    "unaffected_tetrahedra": 28222
+  }
+}

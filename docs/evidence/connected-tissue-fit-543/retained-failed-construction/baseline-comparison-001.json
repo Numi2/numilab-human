@@ -1,0 +1,86 @@
+{
+  "schema": "numi.run006-bone29-baseline-comparison.v1",
+  "source002_canonical_reference_audit": {
+    "candidate_sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54",
+    "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/coarse-material-bone-volume-429/receipt.json",
+    "receipt_sha256": "a74b0dfccba3442dd84170ebe19d96987325b2beeda62cee551e78fd122b3317",
+    "script_sha256_recorded": "1379c94f0713cbe2ab327f342c846482322e14b626709768954da1c40d215e67",
+    "script_sha256_current": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+    "bank_manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+    "coordinate_field": "reference"
+  },
+  "530_unprojected_control_equivalence": {
+    "control_sha256": "bc3831a56663cd561d5465d5943eb7cab275ca82b3c0be92561d62c42e8e8606",
+    "control_points": 7491,
+    "control_tets": 29642,
+    "original_points_exact_canonical_source002": true,
+    "inserted_rows": 258,
+    "inserted_points_exact_midpoints_max_error_m": 0.0,
+    "all_control_and_source_cells_positive": true,
+    "per_original_tet_volume_closure_max_abs_m3": 8.470329472543003e-22,
+    "child_source_fraction_sum_max_abs_error": 0.0,
+    "ledger_child_parent_rows_equal_control_source_rows": true,
+    "geometry_interpretation": "530 is exact subdivision of source002 reference-coordinate tetrahedra: original points unchanged and every added point is a source-edge midpoint; no boundary shape displacement"
+  },
+  "bank": {
+    "body": 23,
+    "bone": 29,
+    "index": 45,
+    "operand_sha256": "388201b584370eddf023655bffc514a04330d70cd8a2603dd9062cbcb2dd4195"
+  },
+  "intersection_comparison": {
+    "skin": {
+      "baseline_m3": 6.287870402902898e-06,
+      "run006_m3": 6.082298994208934e-06,
+      "delta_m3": -2.0557140869396375e-07,
+      "delta_ml": -0.20557140869396376
+    },
+    "fat": {
+      "baseline_m3": 7.063632127707927e-05,
+      "run006_m3": 7.088069866185473e-05,
+      "delta_m3": 2.443773847754543e-07,
+      "delta_ml": 0.2443773847754543
+    }
+  },
+  "run006": {
+    "candidate_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "receipt_sha256": "81284860c640dc0fd4e1e5d1c3a92f2e01bf2abb7db11cd2224fca20be9bd25f",
+    "skin_intersection_mesh": {
+      "vertices": 1372,
+      "faces": 2716,
+      "bbox": [
+        [
+          -0.03001429347770314,
+          -0.1445202033565673,
+          0.04487338067400951
+        ],
+        [
+          0.05050511049646765,
+          -0.029430501277860854,
+          0.17415736342944058
+        ]
+      ]
+    },
+    "fat_intersection_mesh": {
+      "vertices": 6207,
+      "faces": 12410,
+      "bbox": [
+        [
+          -0.03263635343306408,
+          -0.14662949143045603,
+          0.03436818127908823
+        ],
+        [
+          0.04990238987822846,
+          -0.030444980633018478,
+          0.17667802455370898
+        ]
+      ]
+    }
+  },
+  "limitations": {
+    "baseline_per_component_mesh_not_saved": true,
+    "run006_per_component_mesh_not_saved": true,
+    "row_contribution_counts_not_available_from_427_receipt": true
+  }
+}

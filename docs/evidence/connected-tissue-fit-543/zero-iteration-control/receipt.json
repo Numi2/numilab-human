@@ -1,0 +1,138 @@
+{
+  "canonical_query_to_retained_target_distance_m": {
+    "D": {
+      "max": 0.004460789264477243,
+      "min": 3.2141207515427784e-10,
+      "p50": 5.629616234914544e-08,
+      "p95": 0.002184950133711673
+    },
+    "I": {
+      "max": 0.006711670839446443,
+      "min": 1.6835432383217789e-09,
+      "p50": 3.4848624040884046e-08,
+      "p95": 0.0020496536840101214
+    },
+    "O": {
+      "max": 0.007024376056846854,
+      "min": 3.885537332607455e-09,
+      "p50": 6.161691791623299e-07,
+      "p95": 0.0007031515275082487
+    }
+  },
+  "gates": {
+    "baseline_reference_density_violations": 0,
+    "current_nonpositive_total": 0,
+    "current_signed_volume_m3": {
+      "max": 1.460084951837362e-06,
+      "min": 1.0890690027085936e-10,
+      "p50": 1.5520486584689862e-07,
+      "p95": 7.671401410400379e-07
+    },
+    "final_affected_current_nonpositive_or_floor": 0,
+    "final_affected_reference_outside_mass_density": 0,
+    "final_paired_thickness_failures": 0,
+    "min_current_volume_m3": 4.487014223207258e-13,
+    "min_reference_volume_m3": 4.487014223207258e-13,
+    "reference_density_kg_m3_by_material": {
+      "15": {
+        "max": 1003.5683915422042,
+        "min": 965.7178535230603,
+        "p50": 999.9908670567775,
+        "p95": 1000.0792948424092
+      },
+      "16": {
+        "max": 901.9289662747641,
+        "min": 886.3554402683361,
+        "p50": 899.9996365638951,
+        "p95": 900.3446559919549
+      }
+    },
+    "reference_nonpositive_total": 0,
+    "reference_signed_volume_m3": {
+      "max": 1.460084951837362e-06,
+      "min": 1.0890690027085936e-10,
+      "p50": 1.5520486584689862e-07,
+      "p95": 7.671401410400379e-07
+    }
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-refinement-control-530/run-001/refinement-connectivity.npz": "bc3831a56663cd561d5465d5943eb7cab275ca82b3c0be92561d62c42e8e8606",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-458/run-001/sidecars/registered-D-faces.csv": "ccb358cdeae71b22e5a9a11689188b079673c78f36f112d837e3af086f5e5f34",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-458/run-001/sidecars/registered-D.csv": "2df47f400f20c00560d903595c80e905a17f3b6b850e7bceaf0efcbe319ab16e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-458/run-001/sidecars/registered-I-faces.csv": "fe5db6606b2cd2621e06fd7c9103199f1ee28d173017890ae9bad8574e8905a9",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-458/run-001/sidecars/registered-I.csv": "31b7be649979c468584dc13626b69887d7d0d1a7e804403649585b51765f49dd",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-458/run-001/sidecars/registered-O-faces.csv": "2ccdbf1fbfd7d977a9989a8b6f2d9a4a5fa6e9470d8e14ba7dfcee1792244fbb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-458/run-001/sidecars/registered-O.csv": "e3b2da9a2a65d2b0dd3d5dbab60d6146f6b7653cf830c8fd5d334c36900e0c9f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/candidate.npz": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-029-matched-fine-edge-bisection/run-001/edge-target-proposal.json": "282cb34517d3f10c5c156bd3325d14c50f06481d517244c26c0b4e594ffc30df",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/child-parent-reference-ledger.npz": "ed320a79755132a7418cd7dafbb97d034b491ee5ccba587e33324bc7e61b0210"
+  },
+  "optimizer": {
+    "final_alpha": {
+      "max": 0.0,
+      "min": 0.0,
+      "p50": 0.0,
+      "p95": 0.0
+    },
+    "iterations": [],
+    "method": "sequential sparse linear programming with analytic tet-volume gradients; exact-coordinate nonlinear backtracking",
+    "target_residual_m_by_role": {
+      "D": {
+        "max": 0.0044607923064204835,
+        "min": 3.417989749968048e-09,
+        "p50": 5.687553755502825e-08,
+        "p95": 0.002184945766032361
+      },
+      "I": {
+        "max": 0.006711670741586922,
+        "min": 2.0303581819096632e-09,
+        "p50": 3.50969896701703e-08,
+        "p95": 0.0020496557537766085
+      },
+      "O": {
+        "max": 0.007024374161473347,
+        "min": 3.224776292747349e-09,
+        "p50": 6.127879135820098e-07,
+        "p95": 0.0007031512206014729
+      }
+    },
+    "weighted_target_progress_m": 0.0
+  },
+  "projection_reproduction_max_m": {
+    "D": 3.98609107286759e-17,
+    "I": 3.98609107286759e-17,
+    "O": 3.3993498887762956e-17
+  },
+  "reference_mapping": "canonical source002 reference geometry is the initialized operational geometry for both native current and reference; target corrections are direct initialized-world deltas",
+  "reference_mapping_basis": {
+    "legacy_rest_absolute_path_used": false,
+    "legacy_rest_rotation_applied_to_delta": false,
+    "operational_baseline": "source002 points_reference_world_m_f64 rounded once to canonical F32 and widened; same coordinates used for current and reference",
+    "source002_historical_ref_current_max_m": 0.00048669081125249613,
+    "source002_historical_ref_current_p95_m": 8.786090586109206e-06
+  },
+  "runtime_s": 3.272265911102295,
+  "schema": "numi.connected-constrained-edge-fit.v1",
+  "source_preservation": {
+    "all_original_node_rows_and_onehot_parent_ids_retained": true,
+    "all_source_labels_retained_from_029_typed_topology": true,
+    "canonical_source_reference_coordinates_used_as_operational_baseline": true,
+    "cap_and_head_ring_nodes_preserved_in_canonical_reference_state": true,
+    "historical_source002_current_coordinates_preserved_as_input_diagnostic": true,
+    "original_parent_candidate_sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54",
+    "parent_node_rows": 7233
+  },
+  "status": "CONSTRUCTION_CANDIDATE_ONLY",
+  "topology": {
+    "affected_tets": 1420,
+    "edge_triplet_variable_count": 86,
+    "inserted_node_count": 258,
+    "max_old_historical_current_to_operational_delta_m": 0.00048669081125249613,
+    "node_count": 7491,
+    "old_nodes_equal_canonical_source_reference_baseline": true,
+    "old_rows_differing_from_historical_source002_current": 5609,
+    "tet_count": 29642,
+    "unaffected_tets": 28222
+  }
+}
