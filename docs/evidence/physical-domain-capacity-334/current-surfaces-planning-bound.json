@@ -1,0 +1,50 @@
+{
+  "inputs": {
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/minimum-thickness-minkowski-328/attempt-005-postbuffer-simplify/candidate-O-set_tolerance-f64.npz",
+      "sha256": "c617877ab1eb30e1e7df00cc7da45c03651769fc5c11519a285108683dfe7e16",
+      "referenced_index_vertices": 61146,
+      "unique_f32_coordinate_vertices": 61007,
+      "indexed_boundary_components": 1
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/minimum-thickness-minkowski-328/attempt-004-prebuffer-simplify/candidate-I-after-fat-f64.npz",
+      "sha256": "1bbe4dda135dc7cc18b9634ffa178c4a707f7b29307630a67936cc32a0a341da",
+      "referenced_index_vertices": 104083,
+      "unique_f32_coordinate_vertices": 103699,
+      "indexed_boundary_components": 2
+    },
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/D-typed-union-finalizer-323/all185-topology-conditioning-009/candidate-f32.npz",
+      "sha256": "a6776f995890d755dbaa777da592ddbdc4e77152c7349cea46377c055c1e78b6",
+      "referenced_index_vertices": 85168,
+      "unique_f32_coordinate_vertices": 85168,
+      "indexed_boundary_components": 303
+    }
+  },
+  "material_bounds": {
+    "skin": {
+      "unique_input_boundary_points": 164706,
+      "maximum_valid_material_components": 3,
+      "tetrahedron_lower_bound": 164697
+    },
+    "fat": {
+      "unique_input_boundary_points": 188867,
+      "maximum_valid_material_components": 305,
+      "tetrahedron_lower_bound": 187952
+    }
+  },
+  "combined_tetrahedron_lower_bound": 352649,
+  "existing_combined_cell_cap": 200000,
+  "below_existing_cap": false,
+  "proof": "For each facet-connected tetrahedral domain, traverse a dual spanning tree: the first tetrahedron has four vertices and every subsequent tetrahedron introduces at most one, hence T>=V-3. A valid material volume component has at least one boundary component. Counts merge identical F32 boundary points to make this bound conservative.",
+  "assumptions": [
+    "valid manifold tetrahedral material domains",
+    "all required source facets/vertices retained",
+    "skin and fat use separate TetGen domains with I shared only at assembly"
+  ],
+  "physical_admission": false,
+  "input_f32_geometry_qualified": false,
+  "geometry_mutated": false,
+  "wall_s": 0.19863625010475516
+}

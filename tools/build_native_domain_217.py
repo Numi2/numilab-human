@@ -31,6 +31,7 @@ DEFAULT_TETGEN = Path(
 MARKER = {"skin_outer_O": 1, "skin_inner_I": 2, "skin_wall_OI": 3,
           "fat_outer_I": 4, "fat_inner_D": 5, "fat_wall_ID": 6}
 INVALID = -1
+MAX_COMBINED_TETRAHEDRA = 200_000
 
 
 def sha256(path: Path) -> str:
@@ -76,25 +77,7 @@ def _optional_face_array(z: Any, key: str, count: int, dtype: Any, fill: int) ->
 def load_surface(path: Path, layer: str, collar: Any | None = None) -> dict[str, Any]:
     z = np.load(path, allow_pickle=False)
     points = np.asarray(_npz_array(z, "points_world_m"), dtype=np.float32)
-    if "face_source_identity_schema_by_original_id_json" in z.files:
-        # Reuse the current typed authoring contract. These are source-face IDs
-        # within pinned source namespaces, never NHSKIN vertex/face indices.
-        from export_authoring_registered_surface_sidecars_230 import validate_candidate
-        validate_candidate(path, layer, require_f32=True)
-        faces = np.asarray(z["faces"], dtype=np.int64)
-        rows = np.arange(len(faces), dtype=np.int64)
-        exact = np.full(len(faces), INVALID, dtype=np.int64)
-        original = np.asarray(z["face_source_original_id"], dtype=np.int64)
-        face_ids = np.asarray(z["face_source_face_id"], dtype=np.int64)
-        layers = np.asarray(z["face_source_layer"], dtype=np.int8)
-        bodies = np.asarray(z["face_source_body"], dtype=np.int32)
-        bones = np.asarray(z["face_source_bone"], dtype=np.int32)
-        run_ids = original.copy()
-        ancestry = [[int(v)] for v in face_ids]
-        ancestry_ids = [[int(v)] for v in original]
-        ancestry_parents = [[int(v)] for v in rows]
-        ancestry_kind = np.full(len(faces), 7, dtype=np.int8)
-    elif layer == "O":
+    if layer == "O":
         faces = np.asarray(_npz_array(z, "source_O_faces", "faces"), dtype=np.int64)
         rows = np.asarray(_npz_array(z, "envelope_source_face_row", "face_source_row"),
                           dtype=np.int64)
@@ -159,10 +142,6 @@ def load_surface(path: Path, layer: str, collar: Any | None = None) -> dict[str,
               np.all(tri[:, 1] == tri[:, 2], axis=1) |
               np.all(tri[:, 2] == tri[:, 0], axis=1)):
         raise ValueError(f"{layer} has Float32-collapsed triangles")
-    cross = np.cross(tri[:,1].astype(np.float64)-tri[:,0],
-                     tri[:,2].astype(np.float64)-tri[:,0])
-    if np.any(np.all(cross == 0.0, axis=1)):
-        raise ValueError(f"{layer} has zero-area emitted triangles")
     if len(exact) != len(faces) or len(original) != len(faces):
         raise ValueError(f"{layer} source ancestry row counts are incomplete")
     return {"path": str(path), "points": points, "faces": faces,
@@ -326,57 +305,6 @@ def _merge_face_records(parts: list[list[dict[str, Any]]]) -> dict[str, np.ndarr
     merged["face_ancestry_source_original_ids"]=np.asarray(ancestry_ids,np.int64)
     merged["face_ancestry_parent_face_rows"]=np.asarray(ancestry_parents,np.int64)
     return merged
-
-
-def place_verified_donor_collar(collar: Any, placement: Path) -> dict[str,np.ndarray]:
-    """Apply the already-declared native source registration to donor annuli."""
-    packet = np.load(placement,allow_pickle=False)
-    rotation = np.asarray(packet["native_placement_rotation_row_major"],np.float64)
-    translation = np.asarray(packet["native_placement_translation_m"],np.float64)
-    if rotation.shape!=(9,) or translation.shape!=(3,) or not np.isfinite(rotation).all() or not np.isfinite(translation).all():
-        raise ValueError("donor collar native placement is not a finite 3D transform")
-    rotation = rotation.reshape(3,3)
-    if np.max(np.abs(rotation.T@rotation-np.eye(3)))>1e-6 or abs(np.linalg.det(rotation)-1.0)>1e-6:
-        raise ValueError("donor collar native placement must be a proper rigid transform")
-    result = {k: np.array(collar[k],copy=True) for k in collar.files}
-    result["points_world_m"] = (np.asarray(result["points_world_m"],np.float64)@rotation.T+translation).astype(np.float32)
-    return result
-
-
-def rebind_typed_collar_outer(collar: Any, outer: dict[str, Any]) -> dict[str, np.ndarray]:
-    """Keep the verified donor annuli, remapping only their exact outer rows.
-
-    Call read_wall_provenance on the original packet first. The returned packet
-    uses the current O domain; I/D donor ring coordinates and parent IDs stay exact.
-    """
-    old = {k: np.array(collar[k], copy=True) for k in (collar.files if hasattr(collar,"files") else collar)}
-    ni, nd = len(old["donor_I_parent_node_rows"]), len(old["donor_D_parent_node_rows"])
-    old_no = len(old["points_world_m"]) - ni - nd
-    old_outer_rows = np.asarray(old["donor_O_to_candidate_vertex"], dtype=np.int64)
-    if ni != nd or len(old_outer_rows) != ni:
-        raise ValueError("typed collar donor ring counts differ")
-    old_points = np.asarray(old["points_world_m"], dtype=np.float32)
-    points = np.asarray(outer["points"], dtype=np.float32)
-    new_no = len(points)
-    new_outer_rows = np.asarray([
-        _unique_coordinate_index(points, old_points[row], "O")
-        for row in old_outer_rows], dtype=np.int64)
-    if len(set(map(int,new_outer_rows))) != ni:
-        raise ValueError("typed collar outer ring reuses a candidate row")
-    remap = dict(zip(map(int,old_outer_rows),map(int,new_outer_rows)))
-    for row in range(ni+nd):
-        remap[old_no+row] = new_no+row
-    for key in ("skin_sidewall_faces","fat_sidewall_faces"):
-        source = np.asarray(old[key], dtype=np.int64)
-        if any(int(v) not in remap for v in source.flat):
-            raise ValueError("typed collar wall references a non-ring vertex")
-        old[key] = np.asarray([[remap[int(v)] for v in face] for face in source],
-                              dtype=np.int64)
-    old["points_world_m"] = np.vstack((points,old_points[old_no:])).astype(np.float32)
-    old["outer_faces"] = np.asarray(outer["faces"],dtype=np.int64).copy()
-    old["donor_O_to_candidate_vertex"] = new_outer_rows
-    old["exact_candidate_face_source_rows"] = np.full(len(outer["faces"]),INVALID,np.int64)
-    return old
 
 
 def _map_collar_faces(outer: dict[str, Any], inner: dict[str, Any],
@@ -1334,6 +1262,69 @@ def _test_tetgen_result(node_path: Path, ele_path: Path, material: int,
             "positive_element_sha256": sha256(positive_ele_path),
             "cells_reoriented_positive": int(np.count_nonzero(mesh["element_reoriented"]))}
 
+def plc_capacity_preflight(shells: dict[str, dict[str, Any]],
+                           maximum_cells: int = MAX_COMBINED_TETRAHEDRA) -> dict[str, Any]:
+    """Conservative necessary capacity bound, not a mesh-quality certificate.
+
+    A connected tetrahedral domain needs at least V-3 tetrahedra: along a
+    spanning tree of its dual graph, the first tetrahedron has four vertices
+    and each later tetrahedron introduces at most one. Every volume component
+    has a boundary component, so the indexed shell-component count is a safe
+    upper bound on the number of volume components. Merge equal Float32 points
+    only for this lower bound; this never welds the actual PLC or owner maps.
+    """
+    if maximum_cells < 1 or not shells:
+        raise ValueError("positive cell budget and nonempty PLC shells are required")
+    domains: dict[str, Any] = {}
+    for name, shell in shells.items():
+        points = np.asarray(shell["points_world_m"], dtype=np.float64)
+        faces = np.asarray(shell["faces"], dtype=np.int64)
+        if points.ndim != 2 or points.shape[1] != 3 or not np.all(np.isfinite(points)):
+            raise ValueError(f"{name} capacity preflight has invalid points")
+        if faces.ndim != 2 or faces.shape[1] != 3 or not len(faces) or \
+           np.any(faces < 0) or np.any(faces >= len(points)):
+            raise ValueError(f"{name} capacity preflight has invalid facets")
+        referenced = np.unique(faces)
+        points_f32 = points[referenced].astype(np.float32)
+        if not np.all(np.isfinite(points_f32)):
+            raise ValueError(f"{name} capacity preflight overflows Float32")
+        unique_points = len(np.unique(points_f32, axis=0))
+        parent = np.arange(len(points), dtype=np.int64)
+        size = np.ones(len(points), dtype=np.uint32)
+
+        def find(node: int) -> int:
+            while parent[node] != node:
+                parent[node] = parent[parent[node]]
+                node = int(parent[node])
+            return node
+
+        for a, b, c in faces:
+            for u, v in ((int(a), int(b)), (int(a), int(c))):
+                u, v = find(u), find(v)
+                if u != v:
+                    if size[u] < size[v]:
+                        u, v = v, u
+                    parent[v] = u
+                    size[u] += size[v]
+        components = len({find(int(node)) for node in referenced})
+        domains[name] = {
+            "referenced_input_points": int(len(referenced)),
+            "unique_float32_boundary_points": int(unique_points),
+            "maximum_volume_components": int(components),
+            "minimum_tetrahedra": max(0, int(unique_points) - 3 * components),
+        }
+    total = sum(domain["minimum_tetrahedra"] for domain in domains.values())
+    return {
+        "domains": domains,
+        "minimum_combined_tetrahedra": total,
+        "maximum_combined_tetrahedra": maximum_cells,
+        "capacity_possible": total <= maximum_cells,
+        "assumptions": ["valid manifold tetrahedral domains",
+                        "all required boundary vertices retained"],
+        "physical_admission": False,
+    }
+
+
 def run_tetgen(poly_path: Path, tetgen_binary: Path, out_dir: Path,
                label: str, material: int, timeout_s: int = 60) -> dict[str, Any]:
     if not tetgen_binary.is_file():
@@ -1502,8 +1493,6 @@ def main() -> int:
     parser.add_argument("--deep", type=Path, required=True)
     parser.add_argument("--collar", type=Path, default=PROPOSAL)
     parser.add_argument("--wall-csv", type=Path, default=WALL_CSV)
-    parser.add_argument("--collar-native-placement",type=Path,
-                        help="existing native-placement NPZ; original wall ancestry is validated before placement")
     parser.add_argument("--parent-cells", type=Path, default=PARENT_CELLS)
     parser.add_argument("--parent-nodes", type=Path, default=PARENT_NODES)
     parser.add_argument("--inner-hole-core", type=Path, action="append", default=[])
@@ -1521,15 +1510,25 @@ def main() -> int:
     deep = load_surface(args.deep, "D")
     wall_rows = read_wall_provenance(collar, args.wall_csv, args.parent_cells,
                                      args.parent_nodes)
-    if "face_source_identity_schema_by_original_id_json" in outer["raw_npz_keys"]:
-        # Parent wall provenance is checked against its untouched original packet
-        # above. Rebinding changes only role-local indices, never donor geometry.
-        if args.collar_native_placement is not None:
-            collar = place_verified_donor_collar(collar,args.collar_native_placement)
-        collar = rebind_typed_collar_outer(collar, outer)
-    elif args.collar_native_placement is not None:
-        raise ValueError("native collar placement requires the typed authoring domain")
     skin, fat, assembly = assemble_shells(outer, inner, deep, collar, wall_rows)
+    capacity = plc_capacity_preflight({"skin": skin, "fat": fat})
+    if args.run_tetgen and not capacity["capacity_possible"]:
+        # Retain the failed necessary condition before hole search or TetGen.
+        # Raising the cap or discarding boundary physics is not a remedy here.
+        args.output.mkdir(parents=True)
+        report = {
+            "classification": "native domain adapter capacity rejection",
+            "status": "TETGEN_CAPACITY_REJECTED",
+            "inputs": {str(p): sha256(p) for p in (
+                args.outer, args.inner, args.deep, args.collar, args.wall_csv,
+                args.parent_cells, args.parent_nodes)},
+            "assembly": assembly, "capacity": capacity,
+            "tetgen": None, "physical_admission": False,
+            "elapsed_s": time.monotonic() - start,
+        }
+        (args.output / "adapter-receipt.json").write_text(json.dumps(report, indent=2) + "\n")
+        print(json.dumps(report, separators=(",", ":")))
+        return 2
     skin_holes: list[np.ndarray] = []
     fat_holes: list[np.ndarray] = []
     regions: dict[str, np.ndarray] = {}
@@ -1579,9 +1578,6 @@ def main() -> int:
                                "reason": str(error), "physical_admission": False}
     report = {
         "classification": "existing-format native domain adapter; no physical admission",
-        "collar_native_placement": None if args.collar_native_placement is None else {
-            "path":str(args.collar_native_placement),"sha256":sha256(args.collar_native_placement),
-            "original_wall_provenance_checked_before_placement":True},
         "inputs": {str(p): sha256(p) for p in (
             args.outer, args.inner, args.deep, args.collar, args.wall_csv,
             args.parent_cells, args.parent_nodes)},
@@ -1592,6 +1588,7 @@ def main() -> int:
             "fat_rows": wall_rows["fat_parent_tets"].tolist(),
             "all_positive_reference_volume": True},
         "assembly": assembly,
+        "capacity": capacity,
         "material_region_attributes": {"skin": 15, "fat": 16},
         "face_ancestry_files": ["skin-face-ancestry.csv.gz", "fat-face-ancestry.csv.gz"],
         "tetgen": tetgen_results,

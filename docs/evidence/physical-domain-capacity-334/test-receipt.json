@@ -1,0 +1,33 @@
+{
+  "host": "ssh numi",
+  "tests": [
+    {
+      "test": "test_native_domain_217.py",
+      "exit_code": 0,
+      "wall_s": 0.05904845893383026,
+      "stdout": "{\"assembled_O_I_D_source_point_face_and_role_maps_exact\": true, \"fat_faces\": 8, \"fat_signed_volume_m3\": 0.40666667183240257, \"joint_mesh\": {\"combined_cell_budget_200000_pass\": true, \"combined_node_order\": \"legacy_fixture_TetGen_rows\", \"combined_tetrahedra\": 2, \"fat_tetrahedra\": 1, \"nodes\": 7, \"only_registered_I_nodes_merged\": true, \"outputs\": {\"skin-fat-combined-I-interface.csv.gz\": \"c7cadfc1fbe00acbcaa6c40a120854215aac615002d67170d3364ca8daa8c2a5\", \"skin-fat-combined-element-map.csv.gz\": \"54a431b5669ed7f1040ba6dcb3527b6d36f7f4acadfa2670f04c85fe278abc09\", \"skin-fat-combined-facet-ancestry.csv.gz\": \"db76551d52bf8a691ce53bcb41d1828773a5f7f6c7494d374b992af4330e3596\", \"skin-fat-combined-node-map.csv.gz\": \"b8da11e296dfef98d893b89084f0246db4b8e99ba17c9a649f6b023fbeee3a01\", \"skin-fat-combined.ele\": \"10c83684b111c437e6ef787c6cc93b39bfa7382d780f7809b9d61273be216690\", \"skin-fat-combined.node\": \"d33cd465908f6f47178e780d21230e0a8521351a22460203900a502a10358b80\"}, \"physical_admission\": false, \"positive_float32_cells\": 2, \"registered_I_source_faces\": 1, \"registered_I_source_vertices\": 3, \"registered_outer_nodes_are_mechanical_prefix\": false, \"registered_surface_node_map_complete\": false, \"registered_surface_node_rows\": {\"D\": 0, \"I\": 3, \"O\": 0}, \"skin_tetrahedra\": 1, \"source_orientation_normalization\": {\"fat_cells_reoriented\": 1, \"skin_cells_reoriented\": 0}, \"status\": \"COMBINED_POSITIVE_F32_CHILD_MESH_NOT_PHYSICAL_ADMISSION\", \"unregistered_equal_coordinate_nodes_welded\": false}, \"physical_admission\": false, \"poly_sections_valid\": true, \"positive_f32_tet_and_collapse_rejection\": true, \"skin_faces\": 8, \"skin_signed_volume_m3\": 1.1666666666666667, \"status\": \"FIXTURE_PASS_NOT_PHYSICAL_ADMISSION\"}\n",
+      "stderr": ""
+    },
+    {
+      "test": "test_native_domain_217_registered_surface_node_map.py",
+      "exit_code": 0,
+      "wall_s": 0.06001675012521446,
+      "stdout": "PASS synthetic prism O/I/D node-row maps; 9 combined nodes, 6 positive F32 cells; reordered TetGen IDs and rows; exact O prefix and shared I; 8 fail-closed O/D mapping cases; no physical admission\n",
+      "stderr": ""
+    },
+    {
+      "test": "test_native_domain_217_capacity.py",
+      "exit_code": 0,
+      "wall_s": 0.06658729095943272,
+      "stdout": "",
+      "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.008s\n\nOK\n"
+    }
+  ],
+  "physical_admission": false,
+  "source_hashes": {
+    "/Users/numi/numilab-human/tools/build_native_domain_217.py": "dfc89f92931826c35f25332acf34c223dd5e561ed6ee54dbec84215826a15f2e",
+    "/Users/numi/numilab-human/tools/test_native_domain_217.py": "fcbbe5f30e4b84c6e4d31f6ce4787b5bf48ca0e491b47133589d72fa7a6c8b9c",
+    "/Users/numi/numilab-human/tools/test_native_domain_217_registered_surface_node_map.py": "dd678fdd53613a7c7f3a79baea1a36a494a7471b5f1089c4c6ca8d8f556e9940",
+    "/Users/numi/numilab-human/tools/test_native_domain_217_capacity.py": "93ae0a903f9c0acc2ac07218d390cb5e22667ee9467a62e81a45d42d15c2a7b1"
+  }
+}

@@ -1,0 +1,7 @@
+# Stop impossible boundary-preserving volume jobs before TetGen
+
+The existing native O/I/D domain compiler now computes a conservative necessary tetrahedron budget immediately after shell assembly. For each material, it counts referenced boundary vertices after Float32-coordinate deduplication and an upper bound on volume components from indexed boundary components. A dual spanning-tree argument gives T >= V - 3 C. Coordinate merging is used only for the lower-bound calculation; source geometry, contact, owner maps and material equations remain unchanged.
+
+If the combined lower bound exceeds the existing 200,000-cell limit, --run-tetgen exits with status 2 and retains an adapter-receipt.json rejection before hole searches or TetGen. Surface-only export retains the capacity report. Passing the capacity gate establishes neither mesh validity nor practical runtime and does not guarantee that TetGen will stay within the limit.
+
+Four new checks cover exact connected/disconnected bounds, unused/coincident Float32 vertices, invalid inputs, and early rejection without calling hole search or TetGen. Both existing domain/mapping fixtures also pass on SSH Numi. The separately retained current-surface planning receipt gives a minimum of 352,649 combined cells before Steiner points; those inputs have unqualified Float32 geometry. The solution must reduce construction complexity or supply a justified capacity change, rather than launching a job already known to exceed its bound. No repaired Human volume or accepted motion is claimed.
